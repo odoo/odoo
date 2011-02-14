@@ -47,8 +47,3 @@ for a in account_lists:
             (a2['parent_right']<a['parent_right']))
         if a2['parent_id']==a['id']:
             assert (a2['parent_left']>a['parent_left']) and (a2['parent_right']<a['parent_right'])
-
-print 'Tests Ok'
-
-
-

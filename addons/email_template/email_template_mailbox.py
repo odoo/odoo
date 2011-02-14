@@ -40,12 +40,12 @@ class email_template_mailbox(osv.osv):
         to periodically send emails
         """
         try:
-            self.send_all_mail(cursor, user, context)
+            self.send_all_mail(cursor, user, context=context)
         except Exception, e:
             LOGGER.notifyChannel(
-                                 _("Email Template"),
+                                 "Email Template",
                                  netsvc.LOG_ERROR,
-                                 _("Error sending mail: %s" % str(e)))
+                                 _("Error sending mail: %s") % e)
         
     def send_all_mail(self, cr, uid, ids=None, context=None):
         if ids is None:
@@ -60,8 +60,9 @@ class email_template_mailbox(osv.osv):
         self.write(cr, uid, ids, {'state':'sending'}, context)
         self.send_this_mail(cr, uid, ids, context)
         return True
-    
+
     def send_this_mail(self, cr, uid, ids=None, context=None):
+        #previous method to send email (link with email account can be found at the revision 4172 and below
         result = True
         attachment_pool = self.pool.get('ir.attachment')
         for id in (ids or []):
@@ -82,7 +83,7 @@ class email_template_mailbox(osv.osv):
                               values['subject'] or u'',
                               {'text':values.get('body_text') or u'', 'html':values.get('body_html') or u''},
                               payload=payload,
-                              message_id=values['message_id'], 
+                              message_id=values['message_id'],
                               context=context)
                 if result == True:
                     account = account_obj.browse(cr, uid, values['account_id'][0], context=context)
@@ -196,8 +197,6 @@ class email_template_mailbox(osv.osv):
         It just changes the folder of the item to "Trash", if it is no in Trash folder yet, 
         or completely deletes it if it is already in Trash.
         """
-        if not context:
-            context = {}
         to_update = []
         to_remove = []
         for mail in self.browse(cr, uid, ids, context=context):

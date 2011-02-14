@@ -22,7 +22,8 @@
 from osv import fields, osv
 from caldav import calendar
 from datetime import datetime
-
+from tools.translate import _
+from base_calendar import base_calendar
 from project.project import task as base_project_task
 
 class project_task(osv.osv):
@@ -32,6 +33,7 @@ class project_task(osv.osv):
         # force inherit from project.project_task so that 
         # calendar.todo.active is masked oute
         'active': base_project_task._columns['active'],
+        'date_deadline': base_project_task._columns['date_deadline'],
         'write_date': fields.datetime('Write Date'),
         'create_date': fields.datetime('Create Date', readonly=True),
         'attendee_ids': fields.many2many('calendar.attendee', \
@@ -44,6 +46,38 @@ class project_task(osv.osv):
         'state': 'draft',
     }
 
+
+    def open_task(self, cr, uid, ids, context=None):
+        """
+        Open Task Form for Project Task.
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of project task’s IDs
+        @param context: A standard dictionary for contextual values
+        @return: Dictionary value which open Project Task form.
+        """
+
+        data_pool = self.pool.get('ir.model.data')
+        value = {}
+        task_form_id = data_pool.get_object(cr, uid, 'project', 'view_task_form2')
+        task_tree_id = data_pool.get_object(cr, uid, 'project', 'view_task_tree2')
+        task_calendar_id = data_pool.get_object(cr, uid, 'project', 'view_task_calendar')
+        for id in ids:
+            value = {
+                    'name': _('Tasks'),
+                    'view_type': 'form',
+                    'view_mode': 'form,tree',
+                    'res_model': 'project.task',
+                    'view_id': False,
+                    'views': [(task_form_id, 'form'), (task_tree_id, 'tree'), (task_calendar_id, 'calendar')],
+                    'type': 'ir.actions.act_window',
+                    'res_id': base_calendar.base_calendar_id2real_id(id),
+                    'nodestroy': True
+                    }
+
+        return value
+
+
     def import_cal(self, cr, uid, data, data_id=None, context=None):
         todo_obj = self.pool.get('basic.calendar.todo')
         vals = todo_obj.import_cal(cr, uid, data, context=context)
@@ -54,7 +88,7 @@ class project_task(osv.osv):
             context = {}
         ids = []
         for val in vals:
-            obj_tm = self.pool.get('res.users').browse(cr, uid, uid, context).company_id.project_time_mode_id
+            obj_tm = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.project_time_mode_id
             if not val.get('planned_hours', False):
                 # 'Computes duration' in days
                 plan = 0.0

@@ -1,29 +1,34 @@
 <?xml version="1.0"?>
 <openerp>
    <data>
+
     <!-- report , event on registration... start -->
         <record model="ir.ui.view" id="report_event_registration_tree">
             <field name="name">report.event.registration.tree</field>
             <field name="model">report.event.registration</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state in ('draft');black:state in ('confirm','approved');gray:state in('done','cancel')" string="Event on Registration">
+                <tree colors="blue:state in ('draft');black:state in ('confirm');gray:state in('done','cancel')" string="Events Analysis">
                     <field name="date" invisible="1"/>
                     <field name="user_id" invisible="1"/>
                     <field name="speaker_id" invisible="1"/>
                     <field name="year" invisible="1"/>
-                    <field name="day" invisible="1"/>
                     <field name="month" invisible="1"/>
                     <field name="event_id" invisible="1"/>
                     <field name="state" invisible="1"/>
                     <field name="type" invisible="1"/>
                     <field name="nbevent"/>
-                    <field name="draft_state"/>
+                    <field name="draft_state" invisible="context.get('no_of_draft_invisible', False)"/>
                     <field name="confirm_state"/>
-                    <field name="register_max"/>
+                    <field name="register_max" invisible="context.get('max_reg_event_visible', True)"/>
+                    <field name="company_id" invisible="1"/>
+                    <field name="product_id" invisible="1"/>
+                    <field name="section_id" invisible="1"/>
+                    <field name="total" invisible="context.get('total_invisible', True)" sum="Total"/>
                 </tree>
             </field>
         </record>
+
 
         <record model ="ir.ui.view" id="report_event_registration_graph">
             <field name="name">report.event.registration.graph</field>
@@ -42,73 +47,87 @@
               <!-- Event on Registration search view -->
 
         <record model="ir.ui.view" id="view_report_event_registration_search">
-            <field name="name">.search</field>
+            <field name="name">report.event.registration.search</field>
             <field name="model">report.event.registration</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Event on Registration">
                     <group col="8" colspan="4">
-                    <filter icon="terp-go-year" string="Last 365 Days"
+                    <filter icon="terp-go-year" string="Last 365 Days" name="365day"
                         domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
-                        help="Tasks performed in last 365 days"/>
+                        help="Events with beginning date in last 365 days"/>
                     <filter icon="terp-go-month" string="Last 30 Days"
                         name="month"
                         domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"
-                        help="Tasks performed in last 30 days"/>
+                        help="Events with beginning date in last 30 days"/>
                     <filter icon="terp-go-week"
                          string="Last 7 Days"
                          separator="1"
                          domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
-                         help="Tasks during last 7 days"/>
-
+                         help="Events with beginning date in last 7 days"/>
                     <separator orientation="vertical"/>
-                      <filter icon="terp-document-new"
-                        string="Draft"
-                        domain="[('state','=','draft')]"/>
+                    <filter icon="terp-check"
+                        string="Current Events" name="draft"
+                        domain="[('state','in',('draft', 'confirm'))]" help="Events in draft or confirmed state"/>
+                    <separator orientation="vertical"/>
                     <filter icon="terp-camera_test"
-                        string="Confirm"
-                        domain="[('state', '=', 'confirm')]"/>
+                          string="Confirmed Registrations"
+                          help="Registrations in confirmed or done state"
+                          context="{'no_of_draft_invisible':1}"/>
+                    <filter string="Invoiced"
+                        name="invoiced"
+                        icon="terp-dolar"
+                        help = "Invoiced Registrations only" context="{'total_invisible':0, 'no_of_draft_invisible':1}"/>
                     <separator orientation="vertical"/>
-                        <field name="event_id" widget="selection"/>
-                         <field name="type" widget="selection"/>
-                         <field name="user_id" widget="selection">
-                            <filter icon="terp-personal"
-                                string="My Events"
-                                help="My Events"
-                                domain="[('user_id','=',uid)]"/>
-                        </field>
-                         <field name="date"/>
+                    <field name="event_id" string="Event"/>
+                    <field name="user_id" widget="selection">
+                        <filter icon="terp-personal"
+                        string="My Events"
+                        help="My Events"
+                        domain="[('user_id','=',uid)]"/>
+                    </field>
                     </group>
                     <newline/>
-                    <group expand="0" string="Group By..." colspan="4" col="12">
-                        <filter string="Event" name="event" icon="terp-crm" context="{'group_by':'event_id'}"/>
+                    <group expand="0" string="Extended Filters..." groups="base.group_extended">
+                        <field name="type" widget="selection"/>
+                        <field name="date"/>
+                    </group>
+                    <newline/>
+
+                    <group expand="1" string="Group By..." colspan="4" col="12">
+                        <filter string="Responsible" name="user_id" icon="terp-personal" context="{'group_by': 'user_id'}"/>
+                        <filter string="Speaker" name="speaker" icon="terp-personal+" context="{'group_by': 'speaker_id'}"/>
+                        <filter string="Sale Team"  icon="terp-personal" context="{'group_by': 'section_id'}"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Event" name="event" icon="terp-crm" context="{'group_by':'event_id', 'max_reg_event_visible':0}"/>
+                        <filter string="Product"  icon="terp-accessories-archiver" context="{'group_by': 'product_id'}"/>
+                        <separator orientation="vertical"/>
                         <filter string="Event Type" icon="terp-crm"  context="{'group_by':'type'}"/>
-                        <separator orientation="vertical"/>
-                        <filter string="state" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
-                        <separator orientation="vertical"/>
-                        <filter string="Speaker" name="user" icon="terp-personal+" context="{'group_by': 'speaker_id'}"/>
+                        <filter string="State" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}" help="Events States"/>
+                        <separator orientation="vertical" groups="base.group_multi_company"/>
+                        <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                         <separator orientation="vertical" />
-                        <filter string="Day" icon="terp-go-month"
-                            domain="[]" context="{'group_by':'day'}"/>
+                        <filter string="Date" icon="terp-go-month"
+                            domain="[]" context="{'group_by':'date'}" help="Event Beginning Date"/>
                         <filter string="Month" icon="terp-go-month"
-                            domain="[]" context="{'group_by':'month'}"/>
+                            domain="[]" context="{'group_by':'month'}" help="Event Beginning Date"/>
                         <filter string="Year" icon="terp-go-year"
-                            domain="[]" context="{'group_by':'year'}"/>
+                            domain="[]" context="{'group_by':'year'}" help="Event Beginning Date"/>
                     </group>
                 </search>
             </field>
         </record>
 
         <record  model="ir.actions.act_window" id="action_report_event_registration">
-            <field name="name">Events On Registrations</field>
+            <field name="name">Events Analysis</field>
             <field name="res_model">report.event.registration</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,graph</field>
             <field name="search_view_id" ref="view_report_event_registration_search"/>
-            <field name="context">{"search_default_user":1,"search_default_month":1,'group_by_no_leaf':1,'group_by':[]}</field>
+            <field name="context">{"search_default_365day":1, "search_default_invoiced":1, "search_default_event":1, 'group_by_no_leaf':1, 'group_by':[]}</field>
         </record>
 
-      <record model="ir.actions.act_window.view" id="action_report_event_registration_tree">
+       <record model="ir.actions.act_window.view" id="action_report_event_registration_tree">
             <field name="sequence" eval="1"/>
             <field name="view_mode">tree</field>
             <field name="view_id" ref="report_event_registration_tree"/>
@@ -122,8 +141,7 @@
             <field name="act_window_id" ref="action_report_event_registration"/>
        </record>
 
-        <menuitem parent="base.menu_report_association" action="action_report_event_registration" id="menu_report_event_registration" sequence="3" groups="base.group_system,base.group_marketing_manager"/>
+        <menuitem parent="base.menu_report_association" action="action_report_event_registration" id="menu_report_event_registration" sequence="3" groups="marketing.group_marketing_manager"/>
 
-    <!-- end...  -->
     </data>
 </openerp>

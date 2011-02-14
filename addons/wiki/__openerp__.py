@@ -44,10 +44,11 @@ keep track for the wiki groups, pages, and history
         'security/wiki_security.xml',
         'security/ir.model.access.csv'
     ],
-    'demo_xml': [],
+    'demo_xml': ['wiki_demo.xml'],
     'test': ['test/wiki_test00.yml'],
     'installable': True,
     'active': False,
     'certificate': '0086363630317',
+    'web': True,
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

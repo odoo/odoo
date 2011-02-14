@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-08-18 10:09+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"PO-Revision-Date: 2011-01-19 12:00+0000\n"
+"Last-Translator: Nicola Riolini - Micronaet <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-08-19 03:48+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-25 06:41+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: hr_contract
 #: view:hr.contract.wage.type:0
@@ -27,23 +27,44 @@ msgid "Gross"
 msgstr "Lordo"
 
 #. module: hr_contract
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Il nome dell'oggetto deve iniziare per x_ e non deve contenere caratteri "
-"speciali!"
+#: view:hr.contract:0
+msgid "Trial Period"
+msgstr "Periodo di prova"
+
+#. module: hr_contract
+#: field:hr.contract,trial_date_start:0
+msgid "Trial Start Date"
+msgstr "Data inizio prova"
 
 #. module: hr_contract
 #: view:hr.contract:0
-#: view:hr.employee:0
-msgid "Generalities"
-msgstr "Generalità"
+msgid "Passport"
+msgstr "Passaporto"
 
 #. module: hr_contract
-#: field:hr.employee,children:0
-msgid "Number of children"
-msgstr "Numero Figli"
+#: view:hr.employee:0
+msgid "Medical Examination"
+msgstr "Esame medico"
+
+#. module: hr_contract
+#: field:hr.employee,vehicle:0
+msgid "Company Vehicle"
+msgstr "Veicolo aziendale"
+
+#. module: hr_contract
+#: field:hr.contract.wage.type,name:0
+msgid "Wage Type Name"
+msgstr "Nome Tipo Retribuzione"
+
+#. module: hr_contract
+#: view:hr.employee:0
+msgid "Miscellaneous"
+msgstr "Varie"
+
+#. module: hr_contract
+#: view:hr.contract:0
+msgid "Current"
+msgstr "Attuale"
 
 #. module: hr_contract
 #: field:hr.contract.wage.type,factor_type:0
@@ -51,17 +72,29 @@ msgid "Factor for hour cost"
 msgstr "Fattore di Costo Orario"
 
 #. module: hr_contract
+#: view:hr.contract:0
+msgid "Overpassed"
+msgstr ""
+
+#. module: hr_contract
 #: view:hr.contract.wage.type:0
 msgid "Wage Types"
 msgstr "Tipi Retribuzione"
 
 #. module: hr_contract
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nome modello non valido nella definizione dell'azione."
+#: field:hr.contract,department_id:0
+msgid "Department"
+msgstr "Reparto"
 
 #. module: hr_contract
+#: selection:hr.contract.wage.type,type:0
+msgid "Basic"
+msgstr ""
+
+#. module: hr_contract
+#: view:hr.contract:0
 #: field:hr.contract,employee_id:0
+#: model:ir.model,name:hr_contract.model_hr_employee
 msgid "Employee"
 msgstr "Dipendente"
 
@@ -81,72 +114,96 @@ msgid "Hours in the period"
 msgstr "Ore nel Periodo"
 
 #. module: hr_contract
-#: field:hr.contract,function:0
-msgid "Function"
-msgstr "Funzione"
-
-#. module: hr_contract
-#: field:hr.employee,marital_status:0
-#: view:hr.employee.marital.status:0
-#: field:hr.employee.marital.status,name:0
-#: model:ir.actions.act_window,name:hr_contract.action_hr_marital_status
-#: model:ir.ui.menu,name:hr_contract.hr_menu_marital_status
-msgid "Marital Status"
-msgstr "Stato civile"
-
-#. module: hr_contract
-#: view:hr.employee:0
-msgid "Miscelleanous"
-msgstr "Varie"
+#: field:hr.employee,vehicle_distance:0
+msgid "Home-Work Distance"
+msgstr ""
 
 #. module: hr_contract
 #: view:hr.contract:0
-#: view:hr.employee:0
 #: field:hr.employee,contract_ids:0
+#: model:ir.actions.act_window,name:hr_contract.act_hr_employee_2_hr_contract
+#: model:ir.actions.act_window,name:hr_contract.action_hr_contract
+#: model:ir.ui.menu,name:hr_contract.hr_menu_contract
 msgid "Contracts"
 msgstr "Contratti"
 
 #. module: hr_contract
-#: field:hr.contract.wage.type,type:0
-msgid "Type"
-msgstr "Tipo"
+#: view:hr.employee:0
+msgid "Personal Info"
+msgstr "Informazioni personali"
+
+#. module: hr_contract
+#: view:hr.contract:0
+msgid "Job"
+msgstr "Lavoro"
+
+#. module: hr_contract
+#: view:hr.contract:0
+msgid "Search Contract"
+msgstr "Cerca contratto"
+
+#. module: hr_contract
+#: help:hr.employee,contract_id:0
+msgid "Latest contract of the employee"
+msgstr "Ultimo contratto dell'impiegato"
+
+#. module: hr_contract
+#: field:hr.contract,advantages_net:0
+msgid "Deductions"
+msgstr ""
+
+#. module: hr_contract
+#: model:ir.module.module,description:hr_contract.module_meta_information
+msgid ""
+"\n"
+"    Add all information on the employee form to manage contracts:\n"
+"    * Marital status,\n"
+"    * Security number,\n"
+"    * Place of birth, birth date, ...\n"
+"    You can assign several contracts per employee.\n"
+"    "
+msgstr ""
+
+#. module: hr_contract
+#: view:hr.contract:0
+#: field:hr.contract,advantages:0
+msgid "Advantages"
+msgstr ""
+
+#. module: hr_contract
+#: view:hr.contract:0
+msgid "Valid for"
+msgstr "Valido per"
+
+#. module: hr_contract
+#: view:hr.contract:0
+msgid "Work Permit"
+msgstr ""
+
+#. module: hr_contract
+#: field:hr.employee,children:0
+msgid "Number of Children"
+msgstr "Numero di figli"
+
+#. module: hr_contract
+#: model:ir.actions.act_window,name:hr_contract.action_hr_contract_type
+#: model:ir.ui.menu,name:hr_contract.hr_menu_contract_type
+msgid "Contract Types"
+msgstr "Tipi contratto"
 
 #. module: hr_contract
 #: field:hr.contract,wage_type_id:0
 #: view:hr.contract.wage.type:0
+#: model:ir.actions.act_window,name:hr_contract.action_hr_contract_wage_type
 #: model:ir.model,name:hr_contract.model_hr_contract_wage_type
+#: model:ir.ui.menu,name:hr_contract.hr_menu_contract_wage_type
 msgid "Wage Type"
 msgstr "Tipo Retribuzione"
 
 #. module: hr_contract
-#: field:hr.contract.wage.type.period,name:0
-msgid "Period Name"
-msgstr "Nome Periodo"
-
-#. module: hr_contract
-#: model:ir.model,name:hr_contract.model_hr_employee_marital_status
-msgid "Employee Marital Status"
-msgstr "Stato Civile"
-
-#. module: hr_contract
-#: field:hr.employee,medic_exam:0
-msgid "Medical examination date"
-msgstr "Data Esami Medici"
-
-#. module: hr_contract
-#: field:hr.contract.wage.type,name:0
-msgid "Wage Type Name"
-msgstr "Nome Tipo Retribuzione"
-
-#. module: hr_contract
-#: field:hr.contract,working_hours_per_day:0
-msgid "Working hours per day"
-msgstr "Ore Lavorative Giornaliere"
-
-#. module: hr_contract
-#: view:hr.employee:0
-msgid "Salary"
-msgstr "Salario"
+#: constraint:hr.employee:0
+msgid "Error ! You cannot create recursive Hierarchy of Employees."
+msgstr "Errore! Non è possibile creare gerarchie ricorsive di impiegati."
 
 #. module: hr_contract
 #: field:hr.contract,date_end:0
@@ -154,58 +211,124 @@ msgid "End Date"
 msgstr "Data di fine"
 
 #. module: hr_contract
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML non valido per Visualizzazione Architettura!"
+#: field:hr.contract,wage:0
+msgid "Wage"
+msgstr "Retribuzione"
+
+#. module: hr_contract
+#: field:hr.contract,name:0
+msgid "Contract Reference"
+msgstr ""
+
+#. module: hr_contract
+#: help:hr.employee,vehicle_distance:0
+msgid "In kilometers"
+msgstr "In kilometri"
 
 #. module: hr_contract
 #: view:hr.contract:0
 #: field:hr.contract,notes:0
-#: view:hr.employee:0
 msgid "Notes"
 msgstr "Note"
 
 #. module: hr_contract
+#: constraint:hr.employee:0
+msgid ""
+"Error ! You cannot select a department for which the employee is the manager."
+msgstr ""
+"Errore! Non è possibile selezionare un reparto per il quale l'impiegato è "
+"manager."
+
+#. module: hr_contract
 #: view:hr.contract:0
-#: view:hr.employee:0
-#: model:ir.actions.act_window,name:hr_contract.action_hr_contract
+#: field:hr.employee,contract_id:0
 #: model:ir.model,name:hr_contract.model_hr_contract
-#: model:ir.ui.menu,name:hr_contract.hr_menu_contract
 #: model:ir.ui.menu,name:hr_contract.next_id_56
 msgid "Contract"
 msgstr "Contratto"
 
 #. module: hr_contract
+#: view:hr.contract:0
+#: field:hr.contract,type_id:0
 #: view:hr.contract.type:0
+#: field:hr.contract.type,name:0
+#: model:ir.model,name:hr_contract.model_hr_contract_type
 msgid "Contract Type"
 msgstr "Tipo Contratto"
 
 #. module: hr_contract
+#: view:hr.contract.wage.type.period:0
+msgid "Search Wage Period"
+msgstr "Cerca periodo salario"
+
+#. module: hr_contract
+#: view:hr.contract:0
+#: field:hr.contract,working_hours:0
+msgid "Working Schedule"
+msgstr "Programma di lavoro"
+
+#. module: hr_contract
+#: view:hr.employee:0
+msgid "Job Info"
+msgstr ""
+
+#. module: hr_contract
 #: field:hr.contract.wage.type,period_id:0
+#: view:hr.contract.wage.type.period:0
 #: model:ir.model,name:hr_contract.model_hr_contract_wage_type_period
 msgid "Wage Period"
 msgstr "Periodo Retribuzione"
 
 #. module: hr_contract
-#: field:hr.employee,audiens_num:0
-msgid "AUDIENS Number"
-msgstr "Numero AUDIENS"
+#: field:hr.contract,job_id:0
+msgid "Job Title"
+msgstr ""
+
+#. module: hr_contract
+#: field:hr.employee,manager:0
+msgid "Is a Manager"
+msgstr "E' un manager"
+
+#. module: hr_contract
+#: field:hr.contract,date_start:0
+msgid "Start Date"
+msgstr "Data di inizio"
+
+#. module: hr_contract
+#: constraint:hr.contract:0
+msgid "Error! contract start-date must be lower then contract end-date."
+msgstr ""
+
+#. module: hr_contract
+#: view:hr.contract.wage.type:0
+msgid "Search Wage Type"
+msgstr "Cerca tipo di salario"
+
+#. module: hr_contract
+#: field:hr.contract.wage.type,type:0
+msgid "Type"
+msgstr "Tipo"
+
+#. module: hr_contract
+#: field:hr.contract,trial_date_end:0
+msgid "Trial End Date"
+msgstr "Scadenza prova"
 
 #. module: hr_contract
 #: view:hr.contract:0
-msgid "Remuneration"
-msgstr "Remunerazione"
+#: view:hr.contract.wage.type:0
+msgid "Group By..."
+msgstr "Raggruppa per..."
 
 #. module: hr_contract
-#: field:hr.contract,name:0
-msgid "Contract Name"
-msgstr "Nome contratto"
+#: field:hr.contract.wage.type.period,name:0
+msgid "Period Name"
+msgstr "Nome Periodo"
 
 #. module: hr_contract
-#: model:ir.actions.act_window,name:hr_contract.action_hr_contract_wage_type
-#: model:ir.ui.menu,name:hr_contract.hr_menu_contract_wage_type
-msgid "Contract Wage Type"
-msgstr "Tipo Retribuzione Contratto"
+#: view:hr.contract.wage.type:0
+msgid "Period"
+msgstr "Periodo"
 
 #. module: hr_contract
 #: field:hr.employee,place_of_birth:0
@@ -213,12 +336,6 @@ msgid "Place of Birth"
 msgstr "Luogo di Nascita"
 
 #. module: hr_contract
-#: field:hr.employee,manager:0
-msgid "Manager"
-msgstr "Responsabile"
-
-#. module: hr_contract
-#: view:hr.contract.wage.type.period:0
 #: model:ir.actions.act_window,name:hr_contract.action_hr_contract_wage_type_period
 #: model:ir.ui.menu,name:hr_contract.hr_menu_contract_wage_type_period
 msgid "Wage period"
@@ -235,22 +352,26 @@ msgstr ""
 "di lavoro sulla base del contratto del dipendente"
 
 #. module: hr_contract
-#: field:hr.contract,wage:0
-msgid "Wage"
-msgstr "Retribuzione"
+#: view:hr.contract:0
+msgid "Duration"
+msgstr "Durata"
 
 #. module: hr_contract
-#: field:hr.contract,date_start:0
-msgid "Start Date"
-msgstr "Data di inizio"
+#: field:hr.employee,medic_exam:0
+msgid "Medical Examination Date"
+msgstr "Data esame medico"
 
 #. module: hr_contract
-#: field:hr.employee.marital.status,description:0
-msgid "Status Description"
-msgstr "Descrizione Stato"
+#: field:hr.contract,advantages_gross:0
+msgid "Allowances"
+msgstr ""
 
 #. module: hr_contract
 #: view:hr.contract:0
-#: view:hr.employee:0
-msgid "Contract Duration"
-msgstr "Durata Contratto"
+msgid "Main Data"
+msgstr ""
+
+#. module: hr_contract
+#: view:hr.contract.type:0
+msgid "Search Contract Type"
+msgstr "Cerca tipo contratto"

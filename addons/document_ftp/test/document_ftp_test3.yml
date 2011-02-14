@@ -80,3 +80,13 @@
         ftp = te.get_ftp_folder(cr, uid, self, 'Documents/Δοκιμαστικός Φάκελλος/άλλος')
         vuvuzela = 'b'+''.join('z' * 200)+'!'
         ftp.delete(vuvuzela)
+
+-
+    I delete the testing folders
+-
+    !python {model: ir.attachment}: |
+        from document_ftp import test_easyftp as te
+        from cStringIO import StringIO
+        ftp = te.get_ftp_folder(cr, uid, self, 'Documents')
+        ftp.rmd('Δοκιμαστικός Φάκελλος/άλλος')
+        ftp.rmd('Δοκιμαστικός Φάκελλος')

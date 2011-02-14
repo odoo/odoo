@@ -9,16 +9,15 @@
             <field name="arch" type="xml">
 			<form string="Holidays by Department">
 			    <group col="4" colspan="6">
-				    <field name="date_from"/>
+				    <field name="date_from" />
 				    <newline/>
-				    <field name="holiday_type"/>
+				    <field name="holiday_type" colspan="4"/>
 				    <newline/>
-				    <field name="depts"/>
-				</group>
-				<separator colspan="4"/>
-			    <group col="2" colspan="4">
-	            		<button special="cancel"  string="Cancel" icon='gtk-cancel'/>
-						<button name="print_report" string="Print" colspan="1" type="object" icon="gtk-yes"/>
+				    <field name="depts" colspan="4"/>
+					<separator colspan="4"/>
+					<label align="0.0" colspan="2" string="" />
+					<button colspan="1" icon="gtk-cancel" special="cancel" string="Cancel"/>
+					<button colspan="1" icon="gtk-print" name="print_report" string="Print" type="object"/>
 				</group>
 			</form>
             </field>

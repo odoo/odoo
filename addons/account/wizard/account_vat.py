@@ -24,40 +24,35 @@ from osv import osv, fields
 class account_vat_declaration(osv.osv_memory):
     _name = 'account.vat.declaration'
     _description = 'Account Vat Declaration'
-
+    _inherit = "account.common.report"
     _columns = {
-        'based_on': fields.selection([('invoices','Invoices'),
-                                     ('payments','Payments'),],
+        'based_on': fields.selection([('invoices', 'Invoices'),
+                                      ('payments', 'Payments'),],
                                       'Based On', required=True),
-        'company_id': fields.many2one('res.company', 'Company', required=True),
-        'periods': fields.many2many('account.period', 'vat_period_rel', 'vat_id', 'period_id', 'Periods', help="All periods if empty"),
-        }
+        'chart_tax_id': fields.many2one('account.tax.code', 'Chart of Tax', help='Select Charts of Taxes', required=True, domain = [('parent_id','=', False)]),
+    }
 
-    def _get_company(self, cr, uid, context={}):
-        user_obj = self.pool.get('res.users')
-        company_obj = self.pool.get('res.company')
-        user = user_obj.browse(cr, uid, uid, context=context)
-        if user.company_id:
-            return user.company_id.id
-        else:
-            return company_obj.search(cr, uid, [('parent_id', '=', False)])[0]
+    def _get_tax(self, cr, uid, context=None):
+        taxes = self.pool.get('account.tax.code').search(cr, uid, [('parent_id', '=', False)], limit=1)
+        return taxes and taxes[0] or False
 
     _defaults = {
-            'based_on': 'invoices',
-            'company_id': _get_company
-        }
+        'based_on': 'invoices',
+        'chart_tax_id': _get_tax
+    }
 
-    def create_vat(self, cr, uid, ids, context={}):
+    def create_vat(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
         datas = {'ids': context.get('active_ids', [])}
         datas['model'] = 'account.tax.code'
         datas['form'] = self.read(cr, uid, ids)[0]
+        datas['form']['company_id'] = self.pool.get('account.tax.code').browse(cr, uid, [datas['form']['chart_tax_id']], context=context)[0].company_id.id
         return {
             'type': 'ir.actions.report.xml',
             'report_name': 'account.vat.declaration',
             'datas': datas,
-            }
+        }
 
 account_vat_declaration()
 

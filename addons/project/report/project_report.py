@@ -49,7 +49,7 @@ class report_project_task_user(osv.osv):
         'delay_endings_days': fields.float('Overpassed Deadline', digits=(16,2), readonly=True),
         'nbr': fields.integer('# of tasks', readonly=True),
         'priority' : fields.selection([('4','Very Low'), ('3','Low'), ('2','Medium'), ('1','Urgent'),
-('0','Very urgent')], 'Importance', readonly=True),
+('0','Very urgent')], 'Priority', readonly=True),
         'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'), ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')], 'Month', readonly=True),
         'state': fields.selection([('draft', 'Draft'), ('open', 'In Progress'), ('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')],'State', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True, groups="base.group_multi_company"),
@@ -72,7 +72,7 @@ class report_project_task_user(osv.osv):
                     date_trunc('day',t.date_end) as date_end,
                     to_date(to_char(t.date_deadline, 'dd-MM-YYYY'),'dd-MM-YYYY') as date_deadline,
 --                    sum(cast(to_char(date_trunc('day',t.date_end) - date_trunc('day',t.date_start),'DD') as int)) as no_of_days,
-                    (extract('epoch' from (t.date_end-t.date_start)))/(3600*24)  as no_of_days,
+                    abs((extract('epoch' from (t.date_end-t.date_start)))/(3600*24))  as no_of_days,
                     t.user_id,
                     progress as progress,
                     t.project_id,
@@ -89,7 +89,7 @@ class report_project_task_user(osv.osv):
                     planned_hours as hours_planned,
                     (extract('epoch' from (t.date_end-t.create_date)))/(3600*24)  as closing_days,
                     (extract('epoch' from (t.date_start-t.create_date)))/(3600*24)  as opening_days,
-                    (extract('epoch' from (t.date_deadline-t.date_end)))/(3600*24)  as delay_endings_days
+                    abs((extract('epoch' from (t.date_deadline-t.date_end)))/(3600*24))  as delay_endings_days
               FROM project_task t
 
                 GROUP BY

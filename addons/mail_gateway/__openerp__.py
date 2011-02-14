@@ -34,10 +34,11 @@
         "mail_gateway_view.xml",
         "res_partner_view.xml",
         'security/ir.model.access.csv'
+
     ],
     'demo_xml': [],
     'installable': True,
     'active': False,
-    'certificate': None,
+    'certificate': '001056784984222247309',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

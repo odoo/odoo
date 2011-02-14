@@ -11,7 +11,7 @@
         <record id="user_type_capitaux" model="account.account.type">
             <field name="name">Capital</field>
             <field name="code">capital</field>
-            <field name="report_type">asset</field>
+            <field name="report_type">liability</field>
             <field name="close_method">balance</field>
         </record>
         <record id="user_type_immo" model="account.account.type">
@@ -2913,17 +2913,25 @@
             <field name="user_type" ref="user_type_view"/>
             <field ref="a40" name="parent_id"/>
         </record>
+        <record id="a_recv" model="account.account.template">
+            <field name="name">Clients</field>
+            <field name="code">4000</field>
+            <field name="type">receivable</field>
+            <field name="user_type" ref="user_type_tiers_receiv"/>
+            <field eval="True" name="reconcile"/>
+            <field ref="a400" name="parent_id"/>
+        </record>
         <record id="a4007" model="account.account.template">
             <field name="name">Rabais, remises, ristournes à accorder et autres notes de crédit à établir</field>
             <field name="code">4007</field>
-            <field name="type">receivable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_receiv"/>
             <field ref="a400" name="parent_id"/>
         </record>
         <record id="a4008" model="account.account.template">
             <field name="name">Créances résultant de livraisons de biens</field>
             <field name="code">4008</field>
-            <field name="type">receivable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_receiv"/>
             <field ref="a400" name="parent_id"/>
         </record>
@@ -2934,26 +2942,24 @@
             <field name="user_type" ref="user_type_view"/>
             <field ref="a40" name="parent_id"/>
         </record>
-        <record id="a_recv" model="account.account.template">
+        <record id="a4010" model="account.account.template">
             <field name="name">Effets à recevoir</field>
             <field name="code">4010</field>
-            <field name="type">receivable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_receiv"/>
-            <field eval="True" name="reconcile"/>
             <field ref="a401" name="parent_id"/>
         </record>
-
         <record id="a4013" model="account.account.template">
             <field name="name">Effets à l'encaissement</field>
             <field name="code">4013</field>
-            <field name="type">receivable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_receiv"/>
             <field ref="a401" name="parent_id"/>
         </record>
         <record id="a4015" model="account.account.template">
             <field name="name">Effets à l'escompte</field>
             <field name="code">4015</field>
-            <field name="type">receivable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_receiv"/>
             <field ref="a401" name="parent_id"/>
         </record>
@@ -2967,21 +2973,21 @@
         <record id="a4020" model="account.account.template">
             <field name="name">Entreprises liées</field>
             <field name="code">4020</field>
-            <field name="type">receivable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_receiv"/>
             <field ref="a402" name="parent_id"/>
         </record>
         <record id="a4021" model="account.account.template">
             <field name="name">Autres entreprises avec lesquelles il existe un lien de participation</field>
             <field name="code">4021</field>
-            <field name="type">receivable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_receiv"/>
             <field ref="a402" name="parent_id"/>
         </record>
         <record id="a4022" model="account.account.template">
             <field name="name">Administrateurs et gérants d'entreprise</field>
             <field name="code">4022</field>
-            <field name="type">receivable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_receiv"/>
             <field ref="a402" name="parent_id"/>
         </record>
@@ -2995,63 +3001,63 @@
         <record id="a4030" model="account.account.template">
             <field name="name">Entreprises liées</field>
             <field name="code">4030</field>
-            <field name="type">receivable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_receiv"/>
             <field ref="a403" name="parent_id"/>
         </record>
         <record id="a4031" model="account.account.template">
             <field name="name">Autres entreprises avec lesquelles il existe un lien de participation</field>
             <field name="code">4031</field>
-            <field name="type">receivable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_receiv"/>
             <field ref="a403" name="parent_id"/>
         </record>
         <record id="a4032" model="account.account.template">
             <field name="name">Administrateurs et gérants de l'entreprise</field>
             <field name="code">4032</field>
-            <field name="type">receivable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_receiv"/>
             <field ref="a403" name="parent_id"/>
         </record>
         <record id="a404" model="account.account.template">
             <field name="name">Produits à recevoir</field>
             <field name="code">404</field>
-            <field name="type">receivable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_receiv"/>
             <field ref="a40" name="parent_id"/>
         </record>
         <record id="a405" model="account.account.template">
             <field name="name">Clients : retenues sur garanties</field>
             <field name="code">405</field>
-            <field name="type">receivable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_receiv"/>
             <field ref="a40" name="parent_id"/>
         </record>
         <record id="a406" model="account.account.template">
             <field name="name">Acomptes versés</field>
             <field name="code">406</field>
-            <field name="type">receivable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_receiv"/>
             <field ref="a40" name="parent_id"/>
         </record>
         <record id="a407" model="account.account.template">
             <field name="name">Créances douteuses</field>
             <field name="code">407</field>
-            <field name="type">receivable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_receiv"/>
             <field ref="a40" name="parent_id"/>
         </record>
         <record id="a408" model="account.account.template">
             <field name="name">Compensation clients</field>
             <field name="code">408</field>
-            <field name="type">receivable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_receiv"/>
             <field ref="a40" name="parent_id"/>
         </record>
         <record id="a409" model="account.account.template">
             <field name="name">Réductions de valeur actées</field>
             <field name="code">409</field>
-            <field name="type">receivable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_receiv"/>
             <field ref="a40" name="parent_id"/>
         </record>
@@ -3072,14 +3078,14 @@
         <record id="a4100" model="account.account.template">
             <field name="name">Appels de fonds</field>
             <field name="code">4100</field>
-            <field name="type">receivable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_receiv"/>
             <field ref="a410" name="parent_id"/>
         </record>
         <record id="a4101" model="account.account.template">
             <field name="name">Actionnaires défaillants</field>
             <field name="code">4101</field>
-            <field name="type">receivable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_receiv"/>
             <field ref="a410" name="parent_id"/>
         </record>
@@ -3128,21 +3134,21 @@
         <record id="a4111" model="account.account.template">
             <field name="name">T.V.A. déductible</field>
             <field name="code">4111</field>
-            <field name="type">receivable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tax"/>
             <field ref="a411" name="parent_id"/>
         </record>
         <record id="a4112" model="account.account.template">
             <field name="name">Compte courant administration T.V.A.</field>
             <field name="code">4112</field>
-            <field name="type">receivable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tax"/>
             <field ref="a411" name="parent_id"/>
         </record>
         <record id="a4118" model="account.account.template">
             <field name="name">Taxe d'égalisation due</field>
             <field name="code">4118</field>
-            <field name="type">receivable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tax"/>
             <field ref="a411" name="parent_id"/>
         </record>
@@ -3156,28 +3162,28 @@
         <record id="a4120" model="account.account.template">
             <field name="name">à 4124 Impôts belges sur le résultat</field>
             <field name="code">4120</field>
-            <field name="type">receivable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_receiv"/>
             <field ref="a412" name="parent_id"/>
         </record>
         <record id="a4125" model="account.account.template">
             <field name="name">à 4127 Autres impôts belges</field>
             <field name="code">4125</field>
-            <field name="type">receivable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_receiv"/>
             <field ref="a412" name="parent_id"/>
         </record>
         <record id="a4128" model="account.account.template">
             <field name="name">Impôts étrangers</field>
             <field name="code">4128</field>
-            <field name="type">receivable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_receiv"/>
             <field ref="a412" name="parent_id"/>
         </record>
         <record id="a414" model="account.account.template">
             <field name="name">Produits à recevoir</field>
             <field name="code">414</field>
-            <field name="type">receivable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_receiv"/>
             <field ref="a41" name="parent_id"/>
         </record>
@@ -3191,42 +3197,42 @@
         <record id="a4160" model="account.account.template">
             <field name="name">Associés</field>
             <field name="code">4160</field>
-            <field name="type">receivable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_receiv"/>
             <field ref="a416" name="parent_id"/>
         </record>
         <record id="a4161" model="account.account.template">
             <field name="name">Avances et prêts au personnel</field>
             <field name="code">4161</field>
-            <field name="type">receivable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_receiv"/>
             <field ref="a416" name="parent_id"/>
         </record>
         <record id="a4162" model="account.account.template">
             <field name="name">Compte courant des associés en S.P.R.L.</field>
             <field name="code">4162</field>
-            <field name="type">receivable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_receiv"/>
             <field ref="a416" name="parent_id"/>
         </record>
         <record id="a4163" model="account.account.template">
             <field name="name">Compte courant des administrateurs et gérants</field>
             <field name="code">4163</field>
-            <field name="type">receivable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_receiv"/>
             <field ref="a416" name="parent_id"/>
         </record>
         <record id="a4164" model="account.account.template">
             <field name="name">Créances sur sociétés apparentées</field>
             <field name="code">4164</field>
-            <field name="type">receivable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_receiv"/>
             <field ref="a416" name="parent_id"/>
         </record>
         <record id="a4166" model="account.account.template">
             <field name="name">Emballages et matériel à rendre</field>
             <field name="code">4166</field>
-            <field name="type">receivable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_receiv"/>
             <field ref="a416" name="parent_id"/>
         </record>
@@ -3240,42 +3246,42 @@
         <record id="a41670" model="account.account.template">
             <field name="name">Subsides à recevoir</field>
             <field name="code">41670</field>
-            <field name="type">receivable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_receiv"/>
             <field ref="a4167" name="parent_id"/>
         </record>
         <record id="a41671" model="account.account.template">
             <field name="name">Autres créances</field>
             <field name="code">41671</field>
-            <field name="type">receivable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_receiv"/>
             <field ref="a4167" name="parent_id"/>
         </record>
         <record id="a4168" model="account.account.template">
             <field name="name">Rabais, ristournes, remises à obtenir et autres avoirs non encore reçus</field>
             <field name="code">4168</field>
-            <field name="type">receivable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_receiv"/>
             <field ref="a416" name="parent_id"/>
         </record>
         <record id="a417" model="account.account.template">
             <field name="name">Créances douteuses</field>
             <field name="code">417</field>
-            <field name="type">receivable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_receiv"/>
             <field ref="a41" name="parent_id"/>
         </record>
         <record id="a418" model="account.account.template">
             <field name="name">Cautionnements versés en numéraires</field>
             <field name="code">418</field>
-            <field name="type">receivable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_receiv"/>
             <field ref="a41" name="parent_id"/>
         </record>
         <record id="a419" model="account.account.template">
             <field name="name">Réductions de valeur actées</field>
             <field name="code">419</field>
-            <field name="type">receivable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_receiv"/>
             <field ref="a41" name="parent_id"/>
         </record>
@@ -3296,14 +3302,14 @@
         <record id="a4200" model="account.account.template">
             <field name="name">Convertibles</field>
             <field name="code">4200</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a420" name="parent_id"/>
         </record>
         <record id="a4201" model="account.account.template">
             <field name="name">Non convertibles</field>
             <field name="code">4201</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a420" name="parent_id"/>
         </record>
@@ -3317,14 +3323,14 @@
         <record id="a4210" model="account.account.template">
             <field name="name">Convertibles</field>
             <field name="code">4210</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a421" name="parent_id"/>
         </record>
         <record id="a4211" model="account.account.template">
             <field name="name">Non convertibles</field>
             <field name="code">4211</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a421" name="parent_id"/>
         </record>
@@ -3338,14 +3344,14 @@
         <record id="a4220" model="account.account.template">
             <field name="name">Financement de biens immobiliers</field>
             <field name="code">4220</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a422" name="parent_id"/>
         </record>
         <record id="a4221" model="account.account.template">
             <field name="name">Financement de biens mobiliers</field>
             <field name="code">4221</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a422" name="parent_id"/>
         </record>
@@ -3359,28 +3365,28 @@
         <record id="a4230" model="account.account.template">
             <field name="name">Dettes en compte</field>
             <field name="code">4230</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a423" name="parent_id"/>
         </record>
         <record id="a4231" model="account.account.template">
             <field name="name">Promesses</field>
             <field name="code">4231</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a423" name="parent_id"/>
         </record>
         <record id="a4232" model="account.account.template">
             <field name="name">Crédits d'acceptation</field>
             <field name="code">4232</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a423" name="parent_id"/>
         </record>
         <record id="a424" model="account.account.template">
             <field name="name">Autres emprunts</field>
             <field name="code">424</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a42" name="parent_id"/>
         </record>
@@ -3394,21 +3400,21 @@
         <record id="a4250" model="account.account.template">
             <field name="name">Fournisseurs</field>
             <field name="code">4250</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a425" name="parent_id"/>
         </record>
         <record id="a4251" model="account.account.template">
             <field name="name">Effets à payer</field>
             <field name="code">4251</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a425" name="parent_id"/>
         </record>
         <record id="a426" model="account.account.template">
             <field name="name">Cautionnements reçus en numéraires</field>
             <field name="code">426</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a42" name="parent_id"/>
         </record>
@@ -3422,28 +3428,28 @@
         <record id="a4290" model="account.account.template">
             <field name="name">Entreprises liées</field>
             <field name="code">4290</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a429" name="parent_id"/>
         </record>
         <record id="a4291" model="account.account.template">
             <field name="name">Entreprises avec lesquelles il existe un lien de participation</field>
             <field name="code">4291</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a429" name="parent_id"/>
         </record>
         <record id="a4292" model="account.account.template">
             <field name="name">Administrateurs, gérants, associés</field>
             <field name="code">4292</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a429" name="parent_id"/>
         </record>
         <record id="a4299" model="account.account.template">
             <field name="name">Autres dettes</field>
             <field name="code">4299</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a429" name="parent_id"/>
         </record>
@@ -3457,35 +3463,35 @@
         <record id="a430" model="account.account.template">
             <field name="name">Etablissements de crédit. Emprunts en compte à terme fixe</field>
             <field name="code">430</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a43" name="parent_id"/>
         </record>
         <record id="a431" model="account.account.template">
             <field name="name">Etablissements de crédit. Promesses</field>
             <field name="code">431</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a43" name="parent_id"/>
         </record>
         <record id="a432" model="account.account.template">
             <field name="name">Etablissements de crédit. Crédits d'acceptation</field>
             <field name="code">432</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a43" name="parent_id"/>
         </record>
         <record id="a433" model="account.account.template">
             <field name="name">Etablissements de crédit. Dettes en compte courant</field>
             <field name="code">433</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a43" name="parent_id"/>
         </record>
         <record id="a439" model="account.account.template">
             <field name="name">Autres emprunts</field>
             <field name="code">439</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a43" name="parent_id"/>
         </record>
@@ -3521,7 +3527,7 @@
         <record id="a44001" model="account.account.template">
             <field name="name">Entreprises avec lesquelles il existe un lien de participation</field>
             <field name="code">44001</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a4400" name="parent_id"/>
         </record>
@@ -3535,35 +3541,35 @@
         <record id="a44010" model="account.account.template">
             <field name="name">Fournisseurs belges</field>
             <field name="code">44010</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a4401" name="parent_id"/>
         </record>
         <record id="a44011" model="account.account.template">
             <field name="name">Fournisseurs CEE</field>
             <field name="code">44011</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a4401" name="parent_id"/>
         </record>
         <record id="a44012" model="account.account.template">
             <field name="name">Fournisseurs importation</field>
             <field name="code">44012</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a4401" name="parent_id"/>
         </record>
         <record id="a4402" model="account.account.template">
             <field name="name">Dettes envers les coparticipants</field>
             <field name="code">4402</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a440" name="parent_id"/>
         </record>
         <record id="a4403" model="account.account.template">
             <field name="name">Fournisseurs - retenues de garanties</field>
             <field name="code">4403</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a440" name="parent_id"/>
         </record>
@@ -3584,14 +3590,14 @@
         <record id="a44100" model="account.account.template">
             <field name="name">Entreprises liées</field>
             <field name="code">44100</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a4410" name="parent_id"/>
         </record>
         <record id="a44101" model="account.account.template">
             <field name="name">Entreprises avec lesquelles il existe un lien de participation</field>
             <field name="code">44101</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a4410" name="parent_id"/>
         </record>
@@ -3605,42 +3611,42 @@
         <record id="a44110" model="account.account.template">
             <field name="name">Fournisseurs belges</field>
             <field name="code">44110</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a4411" name="parent_id"/>
         </record>
         <record id="a44111" model="account.account.template">
             <field name="name">Fournisseurs CEE</field>
             <field name="code">44111</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a4411" name="parent_id"/>
         </record>
         <record id="a44112" model="account.account.template">
             <field name="name">Fournisseurs importation</field>
             <field name="code">44112</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a4411" name="parent_id"/>
         </record>
         <record id="a444" model="account.account.template">
             <field name="name">Factures à recevoir</field>
             <field name="code">444</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a44" name="parent_id"/>
         </record>
         <record id="a446" model="account.account.template">
             <field name="name">Acomptes reçus</field>
             <field name="code">446</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a44" name="parent_id"/>
         </record>
         <record id="a448" model="account.account.template">
             <field name="name">Compensations fournisseurs</field>
             <field name="code">448</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a44" name="parent_id"/>
         </record>
@@ -3661,21 +3667,21 @@
         <record id="a4501" model="account.account.template">
             <field name="name">à 4504 Impôts sur le résultat</field>
             <field name="code">4501</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a450" name="parent_id"/>
         </record>
         <record id="a4505" model="account.account.template">
             <field name="name">à 4507 Autres impôts en Belgique</field>
             <field name="code">4505</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a450" name="parent_id"/>
         </record>
         <record id="a4508" model="account.account.template">
             <field name="name">Impôts à l'étranger</field>
             <field name="code">4508</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a450" name="parent_id"/>
         </record>
@@ -3724,21 +3730,21 @@
         <record id="a4511" model="account.account.template">
             <field name="name">T.V.A. déductible</field>
             <field name="code">4511</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tax"/>
             <field ref="a451" name="parent_id"/>
         </record>
         <record id="a4512" model="account.account.template">
             <field name="name">Compte courant administration T.V.A.</field>
             <field name="code">4512</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tax"/>
             <field ref="a451" name="parent_id"/>
         </record>
         <record id="a4518" model="account.account.template">
             <field name="name">Taxe d'égalisation due</field>
             <field name="code">4518</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tax"/>
             <field ref="a451" name="parent_id"/>
         </record>
@@ -3752,7 +3758,7 @@
         <record id="a4520" model="account.account.template">
             <field name="name">Autres impôts sur le résultat</field>
             <field name="code">4520</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a452" name="parent_id"/>
         </record>
@@ -3766,35 +3772,35 @@
         <record id="a45250" model="account.account.template">
             <field name="name">Précompte immobilier</field>
             <field name="code">45250</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a4525" name="parent_id"/>
         </record>
         <record id="a45251" model="account.account.template">
             <field name="name">Impôts communaux à payer</field>
             <field name="code">45251</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a4525" name="parent_id"/>
         </record>
         <record id="a45252" model="account.account.template">
             <field name="name">Impôts provinciaux à payer</field>
             <field name="code">45252</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a4525" name="parent_id"/>
         </record>
         <record id="a45253" model="account.account.template">
             <field name="name">Autres impôts et taxes à payer</field>
             <field name="code">45253</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a4525" name="parent_id"/>
         </record>
         <record id="a4528" model="account.account.template">
             <field name="name">Impôts et taxes à l'étranger</field>
             <field name="code">4528</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a452" name="parent_id"/>
         </record>
@@ -3808,35 +3814,35 @@
         <record id="a4530" model="account.account.template">
             <field name="name">Précompte professionnel retenu sur rémunérations</field>
             <field name="code">4530</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a453" name="parent_id"/>
         </record>
         <record id="a4531" model="account.account.template">
             <field name="name">Précompte professionnel retenu sur tantièmes</field>
             <field name="code">4531</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a453" name="parent_id"/>
         </record>
         <record id="a4532" model="account.account.template">
             <field name="name">Précompte mobilier retenu sur dividendes attribués</field>
             <field name="code">4532</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a453" name="parent_id"/>
         </record>
         <record id="a4533" model="account.account.template">
             <field name="name">Précompte mobilier retenu sur intérêts payés</field>
             <field name="code">4533</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a453" name="parent_id"/>
         </record>
         <record id="a4538" model="account.account.template">
             <field name="name">Autres précomptes retenus</field>
             <field name="code">4538</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a453" name="parent_id"/>
         </record>
@@ -3850,35 +3856,35 @@
         <record id="a4540" model="account.account.template">
             <field name="name">Arriérés</field>
             <field name="code">4540</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a454" name="parent_id"/>
         </record>
         <record id="a4541" model="account.account.template">
             <field name="name">1er trimestre</field>
             <field name="code">4541</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a454" name="parent_id"/>
         </record>
         <record id="a4542" model="account.account.template">
             <field name="name">2ème trimestre</field>
             <field name="code">4542</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a454" name="parent_id"/>
         </record>
         <record id="a4543" model="account.account.template">
             <field name="name">3ème trimestre</field>
             <field name="code">4543</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a454" name="parent_id"/>
         </record>
         <record id="a4544" model="account.account.template">
             <field name="name">4ème trimestre</field>
             <field name="code">4544</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a454" name="parent_id"/>
         </record>
@@ -3892,28 +3898,28 @@
         <record id="a4550" model="account.account.template">
             <field name="name">Administrateurs, gérants et commissaires</field>
             <field name="code">4550</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a455" name="parent_id"/>
         </record>
         <record id="a4551" model="account.account.template">
             <field name="name">Direction</field>
             <field name="code">4551</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a455" name="parent_id"/>
         </record>
         <record id="a4552" model="account.account.template">
             <field name="name">Employés</field>
             <field name="code">4552</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a455" name="parent_id"/>
         </record>
         <record id="a4553" model="account.account.template">
             <field name="name">Ouvriers</field>
             <field name="code">4553</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a455" name="parent_id"/>
         </record>
@@ -3927,21 +3933,21 @@
         <record id="a4560" model="account.account.template">
             <field name="name">Direction</field>
             <field name="code">4560</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a456" name="parent_id"/>
         </record>
         <record id="a4561" model="account.account.template">
             <field name="name">Employés</field>
             <field name="code">4561</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a456" name="parent_id"/>
         </record>
         <record id="a4562" model="account.account.template">
             <field name="name">Ouvriers</field>
             <field name="code">4562</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a456" name="parent_id"/>
         </record>
@@ -3955,21 +3961,21 @@
         <record id="a4590" model="account.account.template">
             <field name="name">Provision pour gratifications de fin d'année</field>
             <field name="code">4590</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a459" name="parent_id"/>
         </record>
         <record id="a4591" model="account.account.template">
             <field name="name">Départs de personnel</field>
             <field name="code">4591</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a459" name="parent_id"/>
         </record>
         <record id="a4592" model="account.account.template">
             <field name="name">Oppositions sur rémunérations</field>
             <field name="code">4592</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a459" name="parent_id"/>
         </record>
@@ -3983,49 +3989,49 @@
         <record id="a45930" model="account.account.template">
             <field name="name">Assurance loi</field>
             <field name="code">45930</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a4593" name="parent_id"/>
         </record>
         <record id="a45931" model="account.account.template">
             <field name="name">Assurance salaire garanti </field>
             <field name="code">45931</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a4593" name="parent_id"/>
         </record>
         <record id="a45932" model="account.account.template">
             <field name="name">Assurance groupe </field>
             <field name="code">45932</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a4593" name="parent_id"/>
         </record>
         <record id="a45933" model="account.account.template">
             <field name="name">Assurances individuelles</field>
             <field name="code">45933</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a4593" name="parent_id"/>
         </record>
         <record id="a4594" model="account.account.template">
             <field name="name">Caisse d'assurances sociales pour travailleurs indépendants</field>
             <field name="code">4594</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a459" name="parent_id"/>
         </record>
         <record id="a4597" model="account.account.template">
             <field name="name">Dettes et provisions sociales diverses</field>
             <field name="code">4597</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a459" name="parent_id"/>
         </record>
         <record id="a46" model="account.account.template">
             <field name="name">ACOMPTES RECUS SUR COMMANDES</field>
             <field name="code">46</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a4" name="parent_id"/>
         </record>
@@ -4039,28 +4045,28 @@
         <record id="a470" model="account.account.template">
             <field name="name">Dividendes et tantièmes d'exercices antérieurs</field>
             <field name="code">470</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a47" name="parent_id"/>
         </record>
         <record id="a471" model="account.account.template">
             <field name="name">Dividendes de l'exercice</field>
             <field name="code">471</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a47" name="parent_id"/>
         </record>
         <record id="a472" model="account.account.template">
             <field name="name">Tantièmes de l'exercice</field>
             <field name="code">472</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a47" name="parent_id"/>
         </record>
         <record id="a473" model="account.account.template">
             <field name="name">Autres allocataires</field>
             <field name="code">473</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a47" name="parent_id"/>
         </record>
@@ -4074,49 +4080,49 @@
         <record id="a480" model="account.account.template">
             <field name="name">Obligations et coupons échus</field>
             <field name="code">480</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a48" name="parent_id"/>
         </record>
         <record id="a481" model="account.account.template">
             <field name="name">Actionnaires - capital à rembourser</field>
             <field name="code">481</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a48" name="parent_id"/>
         </record>
         <record id="a482" model="account.account.template">
             <field name="name">Participation du personnel à payer</field>
             <field name="code">482</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a48" name="parent_id"/>
         </record>
         <record id="a483" model="account.account.template">
             <field name="name">Acomptes reçus d'autres tiers à moins d'un an</field>
             <field name="code">483</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a48" name="parent_id"/>
         </record>
         <record id="a486" model="account.account.template">
             <field name="name">Emballages et matériel consignés</field>
             <field name="code">486</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a48" name="parent_id"/>
         </record>
         <record id="a488" model="account.account.template">
             <field name="name">Cautionnements reçus en numéraires</field>
             <field name="code">488</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a48" name="parent_id"/>
         </record>
         <record id="a489" model="account.account.template">
             <field name="name">Autres dettes diverses</field>
             <field name="code">489</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a48" name="parent_id"/>
         </record>
@@ -4130,7 +4136,7 @@
         <record id="a490" model="account.account.template">
             <field name="name">Charges à reporter</field>
             <field name="code">490</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a49" name="parent_id"/>
         </record>
@@ -4151,21 +4157,21 @@
         <record id="a49100" model="account.account.template">
             <field name="name">Ristournes, rabais à obtenir</field>
             <field name="code">49100</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a4910" name="parent_id"/>
         </record>
         <record id="a49101" model="account.account.template">
             <field name="name">Commissions à obtenir</field>
             <field name="code">49101</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a4910" name="parent_id"/>
         </record>
         <record id="a49102" model="account.account.template">
             <field name="name">Autres produits d'exploitation</field>
             <field name="code">49102</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a4910" name="parent_id"/>
         </record>
@@ -4179,21 +4185,21 @@
         <record id="a49110" model="account.account.template">
             <field name="name">Intérêts courus et non échus sur prêts et débits</field>
             <field name="code">49110</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a4911" name="parent_id"/>
         </record>
         <record id="a49111" model="account.account.template">
             <field name="name">Autres produits financiers</field>
             <field name="code">49111</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a4911" name="parent_id"/>
         </record>
         <record id="a492" model="account.account.template">
             <field name="name">Charges à imputer</field>
             <field name="code">492</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a49" name="parent_id"/>
         </record>
@@ -4207,14 +4213,14 @@
         <record id="a4930" model="account.account.template">
             <field name="name">Produits d'exploitation à reporter</field>
             <field name="code">4930</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a493" name="parent_id"/>
         </record>
         <record id="a4931" model="account.account.template">
             <field name="name">Produits financiers à reporter</field>
             <field name="code">4931</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a493" name="parent_id"/>
         </record>
@@ -4228,21 +4234,21 @@
         <record id="a4990" model="account.account.template">
             <field name="name">Compte d'attente</field>
             <field name="code">4990</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a499" name="parent_id"/>
         </record>
         <record id="a4991" model="account.account.template">
             <field name="name">Compte de répartition périodique des charges</field>
             <field name="code">4991</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a499" name="parent_id"/>
         </record>
         <record id="a4999" model="account.account.template">
             <field name="name">Transferts d'exercice</field>
             <field name="code">4999</field>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="user_type_tiers_payable"/>
             <field ref="a499" name="parent_id"/>
         </record>
@@ -6718,12 +6724,14 @@
             <field name="ref_base_code_id" ref="vat_code_a49"/>
             <field name="ref_tax_code_id" ref="vat_code_a64"/>
             <field name="type_tax_use">sale</field>
+            <field name="sequence">0</field>
         </record>
         <record id="vat_21_s" model="account.tax.template">
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="name">TVA 21% Services</field>
             <field name="description">V-NAT-S 21</field>
             <field eval="0.21" name="amount"/>
+            <field eval="0" name="sequence"/>
             <field name="type">percent</field>
             <field name="account_collected_id" ref="vat_payable21"/>
             <field name="account_paid_id" ref="vat_payable21"/>
@@ -6898,6 +6906,7 @@
             <field name="name">Services Divers Déductibles 21%</field>
             <field name="description">A-NAT-S 21</field>
             <field eval="1.00" name="amount"/>
+            <field eval="0" name="sequence"/>
             <field name="type">percent</field>
             <field eval="1" name="child_depend"/>
             <field name="type_tax_use">purchase</field>

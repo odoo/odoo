@@ -31,34 +31,22 @@ class project_installer(osv.osv_memory):
         'Long Term Planning',
             help="Enables long-term projects tracking, including "
                  "multiple-phase projects and resource allocation handling."),
-        'project_wiki': fields.boolean('Specifications in a Wiki',
-            help=""),
         'hr_timesheet_sheet': fields.boolean('Timesheets',
             help="Tracks and helps employees encode and validate timesheets "
-                 "and attendance."),
-        'hr_timesheet_invoice': fields.boolean('Invoice Based on Hours',
-            help="Helps generate invoice based on human resources "
-                 "costs and general expenses."),
+                 "and attendances."),
+        'project_timesheet': fields.boolean('Bill Time on Tasks',
+            help="Helps generate invoices based on time spent on tasks, if activated on the project."),
         'account_budget': fields.boolean('Budgets',
             help="Helps accountants manage analytic and crossover budgets."),
-        'project_messages': fields.boolean('Project Messages',
-            help="Lets employees send messages to other members of the "
-                 "projects they're working on."),
-        'project_crm': fields.boolean('Issues Tracker',
+        'project_issue': fields.boolean('Issues Tracker',
             help="Automatically synchronizes project tasks and crm cases."),
         # Methodologies
         'project_scrum': fields.boolean('SCRUM',
             help="Implements and tracks the concepts and task types defined "
                  "in the SCRUM methodology."),
         'project_gtd': fields.boolean('Getting Things Done',
-            help="Embeds the 'Getting Things Done concepts' into OpenERP's "
-                 "project management."),
-        }
-
-    _defaults={
-        'project_crm': True,
+            help="GTD is a methodology to efficiently organise yourself and your tasks. This module fully integrates GTD principle with OpenERP's project management."),
     }
-
 project_installer()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -47,6 +47,7 @@ class account_balance(report_sxw.rml_parse, common_report_header):
             'get_journal': self._get_journal,
             'get_start_date':self._get_start_date,
             'get_end_date':self._get_end_date,
+            'get_target_move': self._get_target_move,
         })
         self.context = context
 
@@ -55,7 +56,6 @@ class account_balance(report_sxw.rml_parse, common_report_header):
         if (data['model'] == 'ir.ui.menu'):
             new_ids = 'chart_account_id' in data['form'] and [data['form']['chart_account_id']] or []
             objects = self.pool.get('account.account').browse(self.cr, self.uid, new_ids)
-        self.query_get_clause = data['form'].get('query_line', False) or ''
         return super(account_balance, self).set_context(objects, data, new_ids, report_type=report_type)
 
     #def _add_header(self, node, header=1):
@@ -71,6 +71,9 @@ class account_balance(report_sxw.rml_parse, common_report_header):
     def lines(self, form, ids=[], done=None):#, level=1):
         def _process_child(accounts, disp_acc, parent):
                 account_rec = [acct for acct in accounts if acct['id']==parent][0]
+                currency_obj = self.pool.get('res.currency')
+                acc_id = self.pool.get('account.account').browse(self.cr, self.uid, account_rec['id'])
+                currency = acc_id.currency_id and acc_id.currency_id or acc_id.company_id.currency_id
                 res = {
                     'id': account_rec['id'],
                     'type': account_rec['type'],
@@ -86,10 +89,10 @@ class account_balance(report_sxw.rml_parse, common_report_header):
                 self.sum_debit += account_rec['debit']
                 self.sum_credit += account_rec['credit']
                 if disp_acc == 'bal_movement':
-                    if res['credit'] > 0 or res['debit'] > 0 or res['balance'] > 0 :
+                    if currency_obj.is_zero(self.cr, self.uid, currency, res['credit']) > 0 or currency_obj.is_zero(self.cr, self.uid, currency, res['debit']) > 0 or currency_obj.is_zero(self.cr, self.uid, currency, res['balance']) != 0:
                         self.result_acc.append(res)
                 elif disp_acc == 'bal_solde':
-                    if  res['balance'] != 0:
+                    if currency_obj.is_zero(self.cr, self.uid, currency, res['debit']) != 0:
                         self.result_acc.append(res)
                 else:
                     self.result_acc.append(res)
@@ -109,7 +112,8 @@ class account_balance(report_sxw.rml_parse, common_report_header):
 
         ctx['fiscalyear'] = form['fiscalyear_id']
         if form['filter'] == 'filter_period':
-            ctx['periods'] = form['periods']
+            ctx['period_from'] = form['period_from']
+            ctx['period_to'] = form['period_to']
         elif form['filter'] == 'filter_date':
             ctx['date_from'] = form['date_from']
             ctx['date_to'] =  form['date_to']

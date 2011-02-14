@@ -28,14 +28,14 @@ form_rep = '''<?xml version="1.0"?>
     <label colspan="2" string="(Relationship Graphs generated)" align="0.0"/>
 </form>'''
 
-def _get_graph(self, cr, uid, datas, context={}):
+def _get_graph(self, cr, uid, datas, context=None):
     mod_obj = pooler.get_pool(cr.dbname).get('ir.module.module')
     modules = mod_obj.browse(cr, uid, datas['ids'], context=context)
     for module in modules:
         module_data = mod_obj.get_relation_graph(cr, uid, module.name, context=context)
         if module_data['module_file']:
             mod_obj.write(cr, uid, [module.id], {'file_graph': module_data['module_file']}, context=context)
-    return {}
+    return {'type': 'ir.actions.act_window_close'}
 
 class create_graph(wizard.interface):
     states = {

@@ -1,37 +1,26 @@
-# -*- coding: utf-8 -*-
-#
-#  dta_wizard.py
-#  l10n_ch
-#
-#  Created by Nicolas Bessi based on Credric Krier contribution
-#
-#  Copyright (c) 2009 CamptoCamp. All rights reserved.
+# -*- encoding: utf-8 -*-
 ##############################################################################
-# WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
-# consequences resulting from its eventual inadequacies and bugs
-# End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
-# Service Company
 #
-# This program is Free Software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
+#    Author: Nicolas Bessi. Copyright Camptocamp SA
+#    Donors: Hasa Sàrl, Open Net Sàrl and Prisme Solutions Informatique SA
 #
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
 #
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
+#
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
 import time
-import mx.DateTime
+from datetime import datetime
 import base64
 
 from osv import osv, fields
@@ -351,9 +340,9 @@ def _create_dta(obj, cr, uid, data, context=None):
         context = {}
     payment = payment_obj.browse(cr, uid, data['id'], context=context)
 
-    if not payment.mode or payment.mode.type.code != 'dta':
+    if not payment.mode:
         raise osv.except_osv(_('Error'),
-                _('No payment mode or payment type code invalid.'))
+                _('No payment mode'))
     bank = payment.mode.bank_id
     if not bank:
         raise osv.except_osv(_('Error'), _('No bank account for the company.'))
@@ -405,7 +394,7 @@ def _create_dta(obj, cr, uid, data, context=None):
         v['sequence'] = str(seq).rjust(5).replace(' ', '0')
         v['amount_to_pay']= str(pline.amount_currency).replace('.', ',')
         v['number'] = pline.name
-        v['currency'] = pline.currency.code
+        v['currency'] = pline.currency.name
 
         v['partner_bank_name'] =  pline.bank_id.bank.name or False
         v['partner_bank_clearing'] =  pline.bank_id.bank.clearing or False
@@ -469,11 +458,11 @@ def _create_dta(obj, cr, uid, data, context=None):
                     'on line: ' + pline.name)
 
         if pline.order_id.date_scheduled:
-            date_value = mx.DateTime.strptime(pline.order_id.date_scheduled, '%Y-%m-%d')
+            date_value = datetime.strptime(pline.order_id.date_scheduled, '%Y-%m-%d')
         elif pline.date:
-            date_value = mx.DateTime.strptime(pline.date, '%Y-%m-%d')
+            date_value = datetime.strptime(pline.date, '%Y-%m-%d')
         else:
-            date_value = mx.DateTime.now()
+            date_value = datetime.now()
         v['date_value'] = date_value.strftime("%y%m%d")
 
         # si compte iban -> iban (836)

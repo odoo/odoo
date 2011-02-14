@@ -1,8 +1,9 @@
 <?xml version="1.0"?>
 <openerp>
 <data>
-    <menuitem name="Auction Management" id="auction_menu_root" icon="terp-purchase" sequence="26" groups="base.group_system"/>
-    <menuitem name="Configuration" parent="auction_menu_root" id="auction_config_menu" sequence="7"/>
+    <menuitem name="Auction" id="auction_menu_root" icon="terp-purchase" sequence="26" 
+                groups="group_auction_manager,group_auction_user"/>
+    <menuitem name="Configuration" parent="auction_menu_root" id="auction_config_menu" sequence="7" groups="group_auction_manager"/>
     <menuitem name="Tools Bar Codes" id="auction_outils_menu" parent="auction_menu_root" sequence="5" />
     <menuitem name="Deliveries Management" action="action_auction_taken" id="menu_wizard_emporte" parent="auction_outils_menu"/>
 
@@ -14,9 +15,8 @@
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Artists">
-            <field name="name"/>
+                <field name="name"/>
                 <field name="birth_death_dates"/>
-                <field name="biography"/>
             </tree>
         </field>
     </record>
@@ -26,12 +26,15 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Artists">
-                <field colspan="4" name="name" select="1"/>
-                <field colspan="4" name="pseudo" select="1"/>
+                <separator string="Author/Artist" colspan="4"/>
+                <group colspan="4" col="6">
+                    <field name="name" colspan="4" string="Name" select="1"/>
                     <newline/>
-                <field colspan="4" name="birth_death_dates"/>
-                    <newline/>
-                <field colspan="4" name="biography"/>
+                    <field name="pseudo"/>
+                    <field name="birth_death_dates"/>
+                </group>
+                <separator string="Biography" colspan="4"/>
+                <field name="biography" nolabel="1" colspan="4"/>
             </form>
         </field>
     </record>
@@ -78,7 +81,8 @@
         <field name="view_id" ref="view_auction_object_categories_tree"/>
     </record>
 
-    <menuitem name="Object Categories" parent="auction_config_menu" action="action_auction_object_categories" id="menu_auction_object_cat"/>
+    <menuitem name="Object Categories" parent="auction_config_menu" action="action_auction_object_categories" 
+                id="menu_auction_object_cat" groups="group_auction_manager"/>
 
    <!--  Auction Management/Auction Dates/New Auction Dates  -->
 
@@ -105,27 +109,39 @@
                 <field name="name" colspan="2" select="1"/>
                 <notebook colspan="4">
                     <page string="Auction Dates">
-                        <separator string="Exposition Dates" colspan="4"/>
-                        <field name="expo1"/>
-                        <field name="expo2"/>
-                        <separator string="Auction Dates" colspan="4"/>
-                        <field name="auction1" select="1"/>
-                        <field name="auction2" select="1"/>
+                        <group colspan="4" col="4">
+                            <group colspan="2" col="2">
+                                <separator string="Exposition Dates" colspan="4"/>
+                                <field name="expo1"/>
+                                <field name="expo2"/>
+                            </group>
+                            <group colspan="2" col="2">
+                                <separator string="Auction Dates" colspan="4"/>
+                                <field name="auction1" select="1"/>
+                                <field name="auction2" select="1"/>
+                            </group>
+                        </group>
                         <separator string="" colspan="4"/>
                         <field name="state"/>
-                        <button name="close" states="draft" string="Create Invoices" type="object" colspan="2" icon="gtk-yes"/>
+                        <button name="close" states="draft" string="Create Invoices" type="object" colspan="2" icon="terp-gtk-go-back-rtl"/>
                     </page>
                     <page string="Accounting" >
-                        <separator string="Accounting" colspan="4"/>
-                        <field name="acc_expense" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
-                        <field name="acc_income" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
-                        <separator string="Analytic" colspan="4"/>
-                        <field name="journal_id"/>
-                        <field name="journal_seller_id"/>
-                        <field name="account_analytic_id" groups="base.group_extended"/>
+                        <group colspan="4" col="4">
+                            <group colspan="2" col="2">
+                                <separator string="Accounting" colspan="4"/>
+                                <field name="acc_expense" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                                <field name="acc_income" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                            </group>
+                            <group colspan="2" col="2">
+                                <separator string="Analytic" colspan="4"/>
+                                <field name="journal_id"/>
+                                <field name="journal_seller_id"/>
+                                <field name="account_analytic_id" groups="analytic.group_analytic_accounting"/>
+                            </group>
+                        </group>
                     </page>
                     <page string="Commissions">
-                        <group col="4" colspan="4">
+                        <group col="4" colspan="4" expand="1">
                             <group col="2" colspan="4">
                                <separator string="Buyer Commissions" colspan="4"/>
                                 <field name="buyer_costs" domain="[('parent_id','=',False),('domain','=','auction'),('type_tax_use','&lt;&gt;','sale')]" nolabel="1" colspan="4"/>
@@ -134,6 +150,44 @@
                                  <separator string="Seller Commissions" colspan="4"/>
                                  <field name="seller_costs" domain="[('parent_id','=',False),('domain','=','auction'),('type_tax_use','&lt;&gt;','purchase')]" nolabel="1" colspan="4"/>
                              </group>
+                        </group>
+                    </page>
+                    <page string="History">
+                        <group colspan="4" col="4">
+                            <group colspan="2" col="2">
+                                <separator string="Buyer Invoices" colspan="2"/>
+                                <field name="buyer_invoice_history" nolabel="1" widget="one2many_list"
+                                        height="400">
+                                    <tree colors="blue:state in ('draft');black:state in ('proforma','proforma2','open');gray:state in ('cancel')" string="Invoice">
+                                        <field name="date_invoice"/>
+                                        <field name="number"/>
+                                        <field name="partner_id" groups="base.group_user"/>
+                                        <field name="name"/>
+                                        <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                                        <field name="user_id"/>
+                                        <field name="date_due"/>
+                                        <field name="origin"/>
+                                        <field name="state"/>
+                                    </tree>
+                                </field>
+                            </group>
+                            <group colspan="2" col="2">
+                                <separator string="Seller Invoices" colspan="2"/>
+                                <field name="seller_invoice_history" nolabel="1" widget="one2many_list"
+                                        height="400">
+                                    <tree colors="blue:state in ('draft');black:state in ('proforma','proforma2','open');gray:state in ('cancel')" string="Invoice">
+                                        <field name="date_invoice"/>
+                                        <field name="number"/>
+                                        <field name="partner_id" groups="base.group_user"/>
+                                        <field name="name"/>
+                                        <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                                        <field name="user_id"/>
+                                        <field name="date_due"/>
+                                        <field name="origin"/>
+                                        <field name="state"/>
+                                    </tree>
+                                </field>
+                            </group>
                         </group>
                     </page>
                 </notebook>
@@ -224,6 +278,7 @@
                 <field name="bord_vnd_id"/>
                 <field name="lot_num"/>
                 <field name="auction_id"/>
+                <field name="lot_type"/>
                 <field name="state" select="1"/>
                 <button name="button_bought" string="Sold" states="draft" type="object" icon="gtk-jump-to"/>
                 <button name="button_not_bought" string="Not sold" states="draft" type="object" icon="gtk-undo"/>
@@ -332,13 +387,10 @@
                             </form>
                         </field>
                     </page>
-                    <page string="Note">
-                        <field name="obj_desc" colspan="4" nolabel="1"/>
-                    </page>
                     <page string="History" groups="base.group_extended">
                             <group colspan="2" col="2">
                                 <field name="statement_id" domain="[('state','=','draft')]" colspan="4" nolabel="1"
-                                    widget="one2many_list">
+                                    height="575" width="285" widget="one2many_list">
                                     <tree string="Buyer's Payment History">
                                         <field name="statement_id"/>
                                         <field name="amount"/>
@@ -352,14 +404,12 @@
                                         <field name="account_id"/>
                                         <field name="type"/>
                                         <field name="statement_id"/>
-                                        <field name="reconcile_id"/>
                                         <field name="amount"/>
-                                        <field name="reconcile_amount"/>
                                     </form>
                                 </field>
                             </group>
                             <group colspan="2" col="2">
-                               <field name="history_ids" colspan="4" readonly="1" nolabel="1">
+                               <field name="history_ids" colspan="4" readonly="1" nolabel="1" height="575">
                                   <tree string="History">
                                      <field name="name"/>
                                      <field name="lot_id"/>
@@ -368,6 +418,9 @@
                                   </tree>
                                </field>
                             </group>
+                    </page>
+                    <page string="Notes">
+                        <field name="obj_desc" colspan="4" nolabel="1"/>
                     </page>
                 </notebook>
            </form>
@@ -384,12 +437,13 @@
                      string="Draft"  help="New Object"
                      name="draft"
                      domain="[('state','=', 'draft')]"/>
-                 <filter icon="terp-dolar_ok!"
+                 <filter icon="terp-dolar"
                      string="Sold"  help="Buy object"
                      domain="[('state','=','sold')]"/>
                  <separator orientation="vertical"/>
-                 <field name="name" string="Object Name"/>
-                 <field name="lot_type"/>
+                 <field name="name"/>
+                 <field name="ach_uid"/>
+                 <field name="bord_vnd_id"/>
                  <field name="state"/>
                  <newline/>
                  <group expand="0" string="Group By..." colspan="16">
@@ -434,6 +488,7 @@
     </record>
 
     <record model="ir.actions.act_window" id="action_all_objects">
+        <field name="name">Objects</field>
         <field name="res_model">auction.lots</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form,graph</field>
@@ -449,8 +504,7 @@
         src_model="auction.lots"
         id="act_auction_lot_open_bid"/>
 
-    <menuitem name="Objects" parent="auction_menu_root" id="auction_objects_menu" sequence="2"/>
-    <menuitem name="Objects" action="action_all_objects" parent="auction_objects_menu" id="auction_all_objects_menu"/>
+    <menuitem name="Objects" action="action_all_objects" parent="auction_date_menu" id="auction_all_objects_menu"/>
 
     <record model="ir.ui.view" id="view_deposit_border_form">
         <field name="name">auction.deposit.form</field>
@@ -458,14 +512,15 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Deposit Border Form">
-               <field name="name" select="1"/>
-               <field name="date_dep" select="1"/>
-               <field name="partner_id" select="1"/>
-               <field name="method"/>
-               <newline/>
-               <field name="tax_id" domain="[('domain','=','auction'),('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]"/>
-               <field name="transfer"/>
-               <newline/>
+                <group colspan="4" col="6">
+                   <field name="name" string="Reference"/>
+                   <field name="date_dep"/>
+                   <field name="partner_id"/>
+                   <newline/>
+                   <field name="method"/>
+                   <field name="tax_id" domain="[('domain','=','auction'),('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]"/>
+                   <field name="transfer"/>
+                </group>
                <notebook colspan="4">
                 <page string="General Information">
                  <field name="lot_id" colspan="4" mode="tree,graph" nolabel="1">
@@ -639,11 +694,13 @@
         <field name="model">auction.bid</field>
         <field name="arch" type="xml">
             <form string="Bids">
-                <field name="name" select="1"/>
-                 <field name="auction_id" select="1"/>
-                <newline/>
-                <field name="partner_id" select="1" on_change="onchange_contact(partner_id)"/>
-                <field  name="contact_tel"/>
+                <group colspan="4" col="6">
+                    <field name="name"/>
+                    <field name="auction_id"/>
+                    <field name="contact_tel"/>
+                    <newline/>
+                    <field name="partner_id" on_change="onchange_contact(partner_id)" colspan="4"/>
+                </group>
                 <field name="bid_lines" colspan="4" nolabel="1">
                     <tree string="Bids Lines" editable="bottom">
                         <field name="lot_id" domain="[('auction_id','=',parent.auction_id)]"/>
@@ -709,10 +766,10 @@
     <menuitem name="Buyers" id="auction_buyers_menu" parent="auction_menu_root" sequence="4"/>
     <menuitem name="Bids" parent="auction_buyers_menu" action="action_bid_open" id="menu_action_bid_open"/>
 
-    <menuitem name="Reporting" id="auction_report_menu" parent="auction_menu_root" sequence="6"/>
+    <menuitem name="Reporting" id="auction_report_menu" parent="auction_menu_root" sequence="6" groups="group_auction_manager"/>
 
     <act_window name="Deposit slip"
-        domain="[('partner_id', '=', active_id)]"
+        context="{'search_default_partner_id': [active_id]}"
         res_model="auction.deposit"
         src_model="res.partner"
         id="act_auction_lot_open_deposit"/>

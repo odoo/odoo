@@ -27,7 +27,7 @@ class stock_ups(osv.osv_memory):
     _name = "stock.ups"
     _description = "Stock ups"
 
-    def ups_save(self, cr, uid, ids, context = {}):
+    def ups_save(self, cr, uid, ids, context=None):
         return {
             'name': False,
             'view_type': 'form',
@@ -37,7 +37,7 @@ class stock_ups(osv.osv_memory):
             'target':'new',
         }
 
-    def ups_upload(self, cr, uid, ids, context = {}):
+    def ups_upload(self, cr, uid, ids, context=None):
         return {
             'name': False,
             'view_type': 'form',
@@ -60,7 +60,7 @@ class stock_ups_final(osv.osv_memory):
     _name = "stock.ups.final"
     _description = "Stock ups final"
 
-    def create_xmlfile(self, cr, uid, ids, context = {}):
+    def create_xmlfile(self, cr, uid, ids, context=None):
         """ Creates xml report file.
         @return: xml file
         """
@@ -79,7 +79,7 @@ class stock_ups_upload(osv.osv_memory):
     _name = "stock.ups.upload"
     _description = "Stock ups upload"
 
-    def upload_xmlfile(self, cr, uid, ids, context = {}):
+    def upload_xmlfile(self, cr, uid, ids, context=None):
         """ Uploads xml report file.
         @return: 
         """
@@ -87,7 +87,7 @@ class stock_ups_upload(osv.osv_memory):
         report = netsvc._group['report']['report.stock.move.lot.ups_xml']
         data['report_type'] = 'raw'
         fp = file('/tmp/test.xml', 'w').write(report.create(uid, context['active_id'], ids, {}))
-        return {}
+        return {'type': 'ir.actions.act_window_close'}
 
 stock_ups_upload()
 

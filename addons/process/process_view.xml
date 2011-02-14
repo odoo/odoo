@@ -4,7 +4,7 @@
 
     <menuitem
         id="menu_process"
-        name="Enterprise Processes"
+        name="Enterprise Process"
         parent="base.menu_custom"
         groups="base.group_extended"/>
 
@@ -35,7 +35,7 @@
                                     <field name="flow_start"/>
                                     <field name="kind" select="1"/>
                                     <field name="subflow_id" attrs="{'invisible':[('kind','!=','subflow')]}"/>
-                        
+
                                 </group>
                                 <notebook colspan="4">
 	                                <page string="Properties">
@@ -74,14 +74,14 @@
 		                                   </group>
 		                                </group>
 		                            </page>
-                	                <page string="Notes">        
+                	                <page string="Notes">
 	                                   <field name="note" nolabel="1" colspan="4"/>
 	                                </page>
 	                            </notebook>
                             </form>
                         </field>
                     </page>
-                    <page string="Extra Information">
+                    <page string="Notes">
                         <field name="note" colspan="4" nolabel="1"/>
                     </page>
                 </notebook>
@@ -114,14 +114,14 @@
                     </group>
                     <newline/>
                     <group expand="0" string="Group By..." colspan="4" col="4">
-                        <filter string="Object" icon="terp-personal" domain="[]" context="{'group_by':'model_id'}"/>
+                        <filter string="Object" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'model_id'}"/>
                     </group>
                 </search>
             </field>
         </record>
 
     <record model="ir.actions.act_window" id="action_process_form">
-        <field name="name">Process</field>
+        <field name="name">Processes</field>
         <field name="res_model">process.process</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
@@ -160,7 +160,7 @@
                     <field name="flow_start"/>
                     <field name="kind" select="1"/>
                     <field name="subflow_id" attrs="{'invisible':[('kind','!=','subflow')]}"/>
-                    
+
                 </group>
                 <notebook colspan="4">
 	                <page string="Properties">
@@ -199,7 +199,7 @@
 		                    </group>
 		                </group>
 		            </page>
-	                <page string="Notes">        
+	                <page string="Notes">
 	                   <field name="note" nolabel="1" colspan="4"/>
 	                </page>
 	            </notebook>
@@ -220,8 +220,8 @@
                 </group>
                 <newline/>
                 <group expand="0" string="Group By..." colspan="4" col="4">
-                    <filter string="Object" icon="terp-personal" domain="[]" context="{'group_by':'model_id'}"/>
-                    <filter string="Kind Of Node" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'kind'}"/>
+                    <filter string="Object" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'model_id'}"/>
+                    <filter string="Kind Of Node" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'kind'}"/>
                 </group>
             </search>
         </field>
@@ -261,9 +261,8 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Process Transition">
-                <group>
+                <group col="6" colspan="4">
                     <field name="name" select="1"/>
-                    <newline/>
                     <field name="source_node_id" select="1"/>
                     <field name="target_node_id" select="1"/>
                 </group>
@@ -283,11 +282,11 @@
                             </form>
                         </field>
                     </page>
-                    <page string="Roles Required">
-                        <field name="role_ids" colspan="4" nolabel="1"/>
-                    </page>
-                    <page string="Roles from Workflow">
+                    <page string="Workflow Transitions">
                         <field name="transition_ids" colspan="4" nolabel="1"/>
+                    </page>
+                    <page string="Associated Groups">
+                        <field name="group_ids" colspan="4" nolabel="1"/>
                     </page>
                     <page string="Notes">
                         <field name="note" nolabel="1" colspan="4"/>
@@ -308,11 +307,13 @@
                     <field name="source_node_id"/>
                     <field name="target_node_id" />
                 </group>
+<!--
                 <newline/>
                 <group expand="0" string="Group By..." colspan="4" col="4">
                     <filter string="Source Node" icon="terp-personal" domain="[]" context="{'group_by':'source_node_id'}"/>
                     <filter string="Target Node" icon="terp-personal" domain="[]" context="{'group_by':'target_node_id'}"/>
                 </group>
+-->
             </search>
         </field>
     </record>

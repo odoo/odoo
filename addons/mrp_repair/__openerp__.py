@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -31,13 +31,13 @@
            * Invoicing (products and/or services)
            * Warranty concept
            * Repair quotation report
-           * Notes for the technician and for the final customer           
+           * Notes for the technician and for the final customer
 """,
     'author': 'OpenERP SA',
     'depends': ['mrp', 'sale', 'account'],
     'update_xml': [
         'security/ir.model.access.csv',
-        'mrp_repair_sequence.xml',        
+        'mrp_repair_sequence.xml',
         'wizard/mrp_repair_cancel_view.xml',
         'wizard/mrp_repair_make_invoice_view.xml',
         'mrp_repair_view.xml',
@@ -45,7 +45,7 @@
         'mrp_repair_report.xml',
     ],
     'demo_xml': [],
-    'test': ['test/test_mrp_repair.yml'],
+    'test': ['test/test_mrp_repair.yml', 'test/mrp_repair_report.yml'],
     'installable': True,
     'active': False,
     'certificate': '0060814381277',

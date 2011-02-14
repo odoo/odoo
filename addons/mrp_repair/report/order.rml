@@ -161,6 +161,28 @@
   </stylesheet>
   <images/>
   <story>
+  <pto>
+  <pto_header>
+    <blockTable colWidths="254.0,100.0,60.0,60.0,60.0" repeatRows="1" style="Table4">
+      <tr>
+        <td>
+          <para style="terp_tblheader_Details">Description</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details_Centre">VAT</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details_Right">Quantity</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details_Right">Unit Price</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details_Right">Price</para>
+        </td>
+      </tr>
+    </blockTable>
+  </pto_header>
     <para style="P12">[[ repeatIn(objects,'o') ]]</para>
     <blockTable colWidths="265.0,51.0,225.0" style="Table1">
       <tr>
@@ -175,7 +197,7 @@
           <para style="P3">
             <font color="white"> </font>
           </para>
-          <para style="P13">Invoice address</para>
+          <para style="P13">Invoice address :</para>
           <para style="P3">[[ o.partner_id and o.partner_id.property_payment_term.name ]]</para>
           <para style="P3">[[ o.partner_invoice_id.street ]]</para>
           <para style="P3">[[ o.partner_invoice_id.street2 or removeParentNode('para') ]]</para>
@@ -189,12 +211,12 @@
           </para>
         </td>
         <td>
-          <para style="P3">[[ o.partner_id.name ]]</para>
-          <para style="P3">[[ o.partner_id and adr_get(o.partner_id, 'default')['street'] ]]</para>
-          <para style="P3">[[ o.partner_id and adr_get(o.partner_id, 'default')['street2'] or removeParentNode('para') ]]</para>
-          <para style="P3">[[ o.partner_id and adr_get(o.partner_id, 'default')['zip'] ]][[ o.partner_id and adr_get(o.partner_id, 'default')['city'] ]]</para>
-          <para style="P3">[[ (o.partner_id and adr_get(o.partner_id, 'default')['state_id'] and adr_get(o.partner_id, 'default')['state_id'][1]) or removeParentNode('para') ]]</para>
-          <para style="P3">[[ o.partner_id and adr_get(o.partner_id, 'default')['country_id'] and adr_get(o.partner_id, 'default')['country_id'][1] ]]</para>
+          <para style="P3">[[ o.partner_id.name or removeParentNode('para') ]]</para>
+          <para style="P3">[[ o.default_address_id and o.default_address_id.street or removeParentNode('para') ]]</para>
+          <para style="P3">[[ o.default_address_id and o.default_address_id.street2 or removeParentNode('para') ]]</para>
+          <para style="P3">[[ o.default_address_id and o.default_address_id.zip or removeParentNode('para') ]][[ o.default_address_id and o.default_address_id.city or removeParentNode('para') ]]</para>
+          <para style="P3">[[ o.default_address_id and o.default_address_id.state_id and o.default_address_id.state_id.name or removeParentNode('para') ]]</para>
+          <para style="P3">[[ o.default_address_id and o.default_address_id.country_id and o.default_address_id.country_id.name or removeParentNode('para') ]]</para>
           <para style="P3">
             <font color="white"> </font>
           </para>
@@ -277,14 +299,14 @@
           <para style="terp_tblheader_Details_Right">Unit Price</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">Price([[ o.pricelist_id.currency_id. name ]])</para>
+          <para style="terp_tblheader_Details_Right">Price</para>
         </td>
       </tr>
     </blockTable>
     <para style="P29">Operation Line(s)</para>
     <section>
       <para style="P30"><font color="white">[[ repeatIn(o.operations,'line') ]] </font></para>
-      <para style="P30"><font color="white">[[ line or removeParentNode('section')]]</font></para>
+      <para style="P29">[[ (not line) and removeParentNode('section') ]]</para>
       <blockTable colWidths="254.0,100.0,60.0,60.0,60.0" style="Table5">[[ (line.to_invoice==True) or removeParentNode('blockTable') ]]
         <tr>
           <td>
@@ -307,13 +329,10 @@
         </tr>
       </blockTable>
     </section>
-	 <para style="P12">
-      <font color="white"> </font>
-    </para>
     <para style="P29">Fees Line(s) [[ (o.fees_lines ==[] and  removeParentNode('para') )  ]]</para>
     <section>
     <para style="P30"><font color="white">[[ repeatIn(o.fees_lines,'fees') ]]</font></para>
-    <para style="P30"><font color="white">[[ fees or removeParentNode('section')]]</font></para>
+    <para style="P29">[[ (not fees) and removeParentNode('section') ]]</para>
 
     <blockTable colWidths="254.0,100.0,60.0,60.0,60.0" style="Table6">[[ (fees.to_invoice==True) or removeParentNode('blockTable') ]]
       <tr>
@@ -346,7 +365,7 @@
           <para style="terp_default_9">Net Total :</para>
         </td>
         <td>
-          <para style="P26">[[ formatLang(o.amount_untaxed)]] [[ o.pricelist_id.currency_id. symbol ]]</para>
+          <para style="P26">[[ formatLang(o.amount_untaxed, dp='Sale Price')]] [[ o.pricelist_id.currency_id. symbol ]]</para>
         </td>
 
       </tr>
@@ -360,7 +379,7 @@
           <para style="terp_default_9">Taxes:</para>
         </td>
         <td>
-          <para style="P26">[[ formatLang(o.amount_tax)]] [[ o.pricelist_id.currency_id. symbol ]]</para>
+          <para style="P26">[[ formatLang(o.amount_tax, dp='Account')]] [[ o.pricelist_id.currency_id. symbol ]]</para>
         </td>
       </tr>
       <tr>
@@ -373,7 +392,7 @@
           <para style="terp_tblheader_Details">Total :</para>
         </td>
         <td>
-          <para style="terp_default_right_bold_9">[[ formatLang(total(o)) ]] [[ o.pricelist_id.currency_id. symbol ]]</para>
+          <para style="terp_default_right_bold_9">[[ formatLang(total(o), dp='Sale Price') ]] [[ o.pricelist_id.currency_id. symbol ]]</para>
         </td>
       </tr>
     </blockTable>
@@ -386,12 +405,13 @@
     <blockTable colWidths="534.0" style="Table8">
       <tr>
         <td>
-          <para style="P3">[[ format(o.quotation_notes) or removeParentNode('blockTable') ]]</para>
+          <para style="P3">[[ format(o.quotation_notes or '') or removeParentNode('blockTable') ]]</para>
         </td>
       </tr>
     </blockTable>
     <para style="P24">
       <font color="white"> </font>
     </para>
+  </pto>
   </story>
 </document>

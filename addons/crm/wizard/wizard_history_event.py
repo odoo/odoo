@@ -6,16 +6,16 @@
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
+#    it under the terms of the GNU Affero General Public License as published by
 #    the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+#    GNU Affero General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License
+#    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
@@ -24,7 +24,7 @@ import wizard
 import pooler
 import time
 
-def _open_history_event(self, cr, uid, data, context): 
+def _open_history_event(self, cr, uid, data, context=None):
     pool = pooler.get_pool(cr.dbname)
     data_obj = pool.get('ir.model.data')
     result = data_obj._get_id(cr, uid, 'crm', 'view_crm_case_filter')
@@ -35,7 +35,7 @@ def _open_history_event(self, cr, uid, data, context):
     res = ''    
     if data.get('model',False) and data.get('ids',False):           
         model_obj = pooler.get_pool(cr.dbname).get(data['model'])
-        res = model_obj.browse(cr,uid,data['ids'])
+        res = model_obj.browse(cr, uid, data['ids'], context=context)
         if len(res):
             res = res[0].name       
     return {

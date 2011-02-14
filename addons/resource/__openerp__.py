@@ -28,7 +28,7 @@
     "description": """
     Module for resource management
      A resource represent something that can be scheduled
-     (a developer on a task or a workcenter on manufacturing orders).
+     (a developer on a task or a work center on manufacturing orders).
      This module manages a resource calendar associated to every resource.
      It also manages the leaves of every resource.
 
@@ -45,7 +45,7 @@
     ],
     'installable': True,
     'active': False,
-    'certificate': None,
+    'certificate': '00746371192190459469',
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

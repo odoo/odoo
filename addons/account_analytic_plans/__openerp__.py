@@ -59,6 +59,7 @@ of distribution models.
     'depends'   : ['account', 'account_analytic_default'],
     'init_xml'  : [],
     'update_xml': [
+        'security/account_analytic_plan_security.xml',
         'security/ir.model.access.csv',
         'account_analytic_plans_view.xml',
         'account_analytic_plans_report.xml',
@@ -66,6 +67,7 @@ of distribution models.
         'wizard/account_crossovered_analytic_view.xml'
     ],
     'demo_xml'  : [],
+    'test' : ['test/acount_analytic_plans_report.yml'],
     'installable': True,
     'active'    : False,
     'certificate': '0036417675373',

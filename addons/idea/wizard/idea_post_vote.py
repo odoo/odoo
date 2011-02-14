@@ -39,7 +39,7 @@ class idea_post_vote(osv.osv_memory):
         'note': fields.text('Description'),
     }
 
-    def get_default(self, cr, uid, context={}):
+    def get_default(self, cr, uid, context=None):
         """
         This function checks for precondition before wizard executes
         @param self: The object pointer
@@ -48,10 +48,12 @@ class idea_post_vote(osv.osv_memory):
         @param fields: List of fields for default value
         @param context: A standard dictionary for contextual values
         """
+        if context is None:
+            context = {}
         idea_obj = self.pool.get('idea.idea')
 
         if context.get('active_id'):
-            idea = idea_obj.browse(cr, uid, context.get('active_id'))
+            idea = idea_obj.browse(cr, uid, context.get('active_id'), context=context)
             return idea.my_vote
         else:
             return 75
@@ -72,7 +74,7 @@ class idea_post_vote(osv.osv_memory):
         idea_obj = self.pool.get('idea.idea')
         vote_obj = self.pool.get('idea.vote')
 
-        for idea in idea_obj.browse(cr, uid, context.get('active_ids', [])):
+        for idea in idea_obj.browse(cr, uid, context.get('active_ids', []), context=context):
 
             for active_id in context.get('active_ids'):
 
@@ -106,7 +108,7 @@ class idea_post_vote(osv.osv_memory):
         idea_pool = self.pool.get('idea.idea')
         comment_pool = self.pool.get('idea.comment')
 
-        for do_vote_obj in self.read(cr, uid, ids):
+        for do_vote_obj in self.read(cr, uid, ids, context=context):
             score = str(do_vote_obj['vote'])
             comment = do_vote_obj.get('note', False)
             vote = {
@@ -124,7 +126,7 @@ class idea_post_vote(osv.osv_memory):
 
             idea_pool._vote_save(cr, uid, vote_id, None, score, context)
             #vote = vote_pool.create(cr, uid, vote)
-            return {}
+            return {'type': 'ir.actions.act_window_close'}
 
 idea_post_vote()
 
@@ -147,7 +149,9 @@ class idea_select(osv.osv_memory):
        @param ids: List of load column,
        @return: dictionary of query logs clear message window
        """
-       idea_obj = self.browse(cr, uid, ids)
+       if context is None:
+            context = {}
+       idea_obj = self.browse(cr, uid, ids, context=context)
        for idea in idea_obj:
            idea_id = idea.idea_id.id
 

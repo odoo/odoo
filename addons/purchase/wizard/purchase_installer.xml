@@ -2,25 +2,25 @@
 <openerp>
     <data>
         <record id="view_purchase_install_module_form" model="ir.ui.view">
-            <field name="name">Purchase Requisition</field>
+            <field name="name">Purchases Application Configuration</field>
             <field name="model">purchase.installer</field>
             <field name="type">form</field>
             <field name="inherit_id" ref="base.res_config_installer"/>
             <field name="arch" type="xml">
               <data>
               <form position="attributes">
-                <attribute name="string"> Purchase Modules Configuration</attribute>
+                <attribute name="string">Purchases Application Configuration</attribute>
               </form>
               <xpath expr='//separator[@string="vsep"]' position='attributes'>
                     <attribute name='string'></attribute>
                   </xpath>
               <separator string="title" position="attributes">
                 <attribute name="string"
-                           >Configure Your Purchase System</attribute>
+                           >Configure Your Purchases Management Application</attribute>
               </separator>
               <xpath expr="//label[@string='description']"
                      position="attributes">
-                <attribute name="string">In this page, you can extend your purchase system with purchase requisition facility and analytic distribution of purchase orders.</attribute>
+                <attribute name="string">Extend your Purchases Management Application with additional functionalities.</attribute>
               </xpath>
               <xpath expr="//button[@string='Install Modules']" position="attributes">
                    <attribute name="string">Configure</attribute>
@@ -34,7 +34,7 @@
         </record>
 
         <record id="action_purchase_install_module" model="ir.actions.act_window">
-            <field name="name">Purchase  Profile : Install Extra Modules</field>
+            <field name="name">Purchases Application Configuration</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">purchase.installer</field>
             <field name="view_id" ref="view_purchase_install_module_form"/>

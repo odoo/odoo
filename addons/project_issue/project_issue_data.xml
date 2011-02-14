@@ -19,56 +19,16 @@
 
         <!-- Case type_id -->
         <!--    For Bugs    -->
-        <record model="crm.case.resource.type" id="type1">
-            <field name="name">Version 4.2</field>
-            <field name="section_id" ref="crm.section_sales_department"/>
-            <field name="object_id" search="[('model','=','project.issue')]" model="ir.model"/>        
+        <record model="project.issue.version" id="type1">
+            <field name="name">v1.0</field>
         </record>
 
-        <record model="crm.case.resource.type" id="type2">
-            <field name="name">Version 5.0</field>
-            <field name="section_id" ref="crm.section_sales_department"/>
-            <field name="object_id" search="[('model','=','project.issue')]" model="ir.model"/>        
+        <record model="project.issue.version" id="type2">
+            <field name="name">v2.0</field>
         </record>
 
-        <record model="crm.case.resource.type" id="type2">
-            <field name="name">Version 6.0</field>
-            <field name="section_id" ref="crm.section_sales_department"/>
-            <field name="object_id" search="[('model','=','project.issue')]" model="ir.model"/>        
-        </record>
-
-        <!-- Case Stage -->
-        <!--    For Bugs    -->
-
-        <record model="crm.case.stage" id="stage1">
-            <field name="name">Accepted as Bug</field>
-            <field name="section_id" ref="crm.section_sales_department"/>
-            <field name="object_id" search="[('model','=','project.issue')]" model="ir.model"/>         
-        </record>    
-        <record model="crm.case.stage" id="stage2">
-            <field name="name">Fixed</field>
-            <field name="section_id" ref="crm.section_sales_department"/>
-            <field name="object_id" search="[('model','=','project.issue')]" model="ir.model"/>         
-        </record>    
-        <record model="crm.case.stage" id="stage3">
-            <field name="name">Won't fix</field>
-            <field name="section_id" ref="crm.section_sales_department"/>
-            <field name="object_id" search="[('model','=','project.issue')]" model="ir.model"/>         
-        </record>    
-        <record model="crm.case.stage" id="stage4">
-            <field name="name">Invalid</field>
-            <field name="section_id" ref="crm.section_sales_department"/>
-            <field name="object_id" search="[('model','=','project.issue')]" model="ir.model"/>         
-        </record>    
-        <record model="crm.case.stage" id="stage5">
-            <field name="name">Awaiting Response</field>
-            <field name="section_id" ref="crm.section_sales_department"/>
-            <field name="object_id" search="[('model','=','project.issue')]" model="ir.model"/>         
-        </record>    
-        <record model="crm.case.stage" id="stage6">
-            <field name="name">Works For Me</field>
-            <field name="section_id" ref="crm.section_sales_department"/>
-            <field name="object_id" search="[('model','=','project.issue')]" model="ir.model"/>         
+        <record model="project.issue.version" id="type3">
+            <field name="name">v3.0</field>
         </record>
 
     </data>

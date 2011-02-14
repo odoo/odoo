@@ -23,9 +23,8 @@ import pydot
 import base64
 
 import report
-from osv import fields, osv, orm
-import tools
-from tools.translate import _
+from osv import fields, osv
+import addons
 
 class module(osv.osv):
     _inherit = 'ir.module.module'
@@ -34,7 +33,7 @@ class module(osv.osv):
         'file_graph': fields.binary('Relationship Graph'),
             }
 
-    def _get_graphical_representation(self, cr, uid, model_ids, level=1, context={}):
+    def _get_graphical_representation(self, cr, uid, model_ids, level=1, context=None):
         obj_model = self.pool.get('ir.model')
         if level == 0:
             return tuple()
@@ -85,7 +84,7 @@ class module(osv.osv):
             )
         return res
 
-    def _get_module_objects(self, cr, uid, module, context={}):
+    def _get_module_objects(self, cr, uid, module, context=None):
         obj_model = self.pool.get('ir.model')
         obj_mod_data = self.pool.get('ir.model.data')
         obj_ids = []
@@ -98,13 +97,14 @@ class module(osv.osv):
         return obj_ids
 
     def get_relation_graph(self, cr, uid, module_name, context=None):
+        if context is None: context = {}
         object_ids = self._get_module_objects(cr, uid, module_name, context=context)
         if not object_ids:
             return {'module_file': False}
         context.update({'level': 1})
         dots = self.get_graphical_representation(cr, uid, object_ids, context=context)
         # todo: use os.realpath
-        file_path = tools.config['addons_path']+"/base_module_doc_rst/"
+        file_path = addons.get_module_resource('base_module_doc_rst')
         path_png = file_path + "/module.png"
         for key, val in dots.items():
            path_dotfile = file_path + "/%s.dot" % (key,)

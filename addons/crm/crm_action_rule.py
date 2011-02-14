@@ -50,7 +50,7 @@ this if you want the rule to send an email to the partner."),
     }
     
 
-    def email_send(self, cr, uid, obj, emails, body, emailfrom=tools.config.get('email_from', False), context={}):
+    def email_send(self, cr, uid, obj, emails, body, emailfrom=tools.config.get('email_from', False), context=None):
         body = self.format_mail(obj, body)
         if not emailfrom:
             if hasattr(obj, 'user_id')  and obj.user_id and obj.user_id.address_id and obj.user_id.address_id.email:
@@ -67,7 +67,7 @@ this if you want the rule to send an email to the partner."),
                     _("No E-Mail ID Found for your Company address!"))
         return tools.email_send(emailfrom, emails, name, body, reply_to=reply_to, openobject_id=str(obj.id))
     
-    def do_check(self, cr, uid, action, obj, context={}):
+    def do_check(self, cr, uid, action, obj, context=None):
         """ @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
@@ -96,12 +96,13 @@ this if you want the rule to send an email to the partner."),
         res_count = True
         if action.trg_max_history:
             res_count = False
-            if len(obj.message_ids) <= action.trg_max_history:
+            history_ids = filter(lambda x: x.history, obj.message_ids)
+            if len(history_ids) <= action.trg_max_history:
                 res_count = True
         ok = ok and res_count
         return ok
 
-    def do_action(self, cr, uid, action, model_obj, obj, context={}):
+    def do_action(self, cr, uid, action, model_obj, obj, context=None):
         """ @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
@@ -120,7 +121,11 @@ this if you want the rule to send an email to the partner."),
                     write['email_cc'] = obj.email_cc+','+obj.act_email_cc
             else:
                 write['email_cc'] = obj.act_email_cc
-        
+
+        # Put state change by rule in communication history
+        if hasattr(obj, 'state') and action.act_state:
+            model_obj._history(cr, uid, [obj], _(action.act_state))
+
         model_obj.write(cr, uid, [obj.id], write, context)
         emails = []
 
@@ -133,7 +138,7 @@ this if you want the rule to send an email to the partner."),
         return True
 
 
-    def state_get(self, cr, uid, context={}):
+    def state_get(self, cr, uid, context=None):
         """Gets available states for crm
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
@@ -142,7 +147,7 @@ this if you want the rule to send an email to the partner."),
         res = super(base_action_rule, self).state_get(cr, uid, context=context)
         return res  + crm.AVAILABLE_STATES
 
-    def priority_get(self, cr, uid, context={}):
+    def priority_get(self, cr, uid, context=None):
         """@param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,

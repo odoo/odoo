@@ -1,37 +1,26 @@
-# -*- coding: utf-8 -*-
-#
-#  __terp__.py
-#  l10n_ch
-#
-#  Created by Nicolas Bessi based on Credric Krier contribution
-#
-#  Copyright (c) 2009 CamptoCamp. All rights reserved.
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
-# WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
-# consequences resulting from its eventual inadequacies and bugs
-# End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
-# Service Company
+#    Author: Nicolas Bessi. Copyright Camptocamp SA
+#    Donors: Hasa Sàrl, Open Net Sàrl and Prisme Solutions Informatique SA
 #
-# This program is Free Software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
 #
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
 #
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 {
-    "name" : "Switzerland localisation corrected by Camptocamp",
+    "name" : "Switzerland localization with 2011 taxes Beta 1",
     "description" : """
 Swiss localisation :
  - DTA generation for a lot of payment types
@@ -39,10 +28,12 @@ Swiss localisation :
  - Import account move from the bank file (like v11 etc..)
  - Simplify the way you handle the bank statement for reconciliation
 
-You can also add with this module one of the following account plan:
- - l10n_ch_c2c_pcg
-
-
+You can also add ZIP and bank completion with:
+ - l10n_ch_zip
+ - l10n_ch_bank
+ 
+ Author: Camptocamp SA
+ Donors: Hasa Sàrl, Open Net Sàrl and Prisme Solutions Informatique SA
 
 ------------------------------------------------------------------------
 
@@ -51,10 +42,14 @@ comprend la gestion et l'émissionde BVR, le paiement électronique via DTA (pou
 et l'import du relevé de compte depuis la banque de manière automatisée.
 De plus, nous avons intégré la définition de toutes les banques Suisses(adresse, swift et clearing).
 
-Par ailleurs, conjointement à ce module, nous proposons 1 plan comptables issus de l'USAM :
+Par ailleurs, conjointement à ce module, nous proposons la complétion NPA:
 
-
- - l10n_ch_c2c_pcg
+Vous pouvez ajouter la completion des banques et des NPA avec with:
+ - l10n_ch_zip
+ - l10n_ch_bank
+ 
+ Auteur: Camptocamp SA
+ Donateurs: Hasa Sàrl, Open Net Sàrl and Prisme Solutions Informatique SA
 
 --------------------------------------------------------------------------
 TODO :
@@ -66,35 +61,46 @@ TODO :
 
 
 """,
-    "version" : "5.0",
+    "version" : "6.0",
     "author" : "Camptocamp SA",
-    "category" : "Localisation/Europe",
+    "category" : "Localization/Account Charts",
     "website": "http://www.camptocamp.com",
 
     "depends" : [
-        "base_vat",
+        "account_cancel",
         "base_iban",
         "account_payment",
+        "account_voucher",
+        "report_webkit",
     ],
     "init_xml" : [
         "dta_data.xml",
-        "vaudtax_data.xml",
+        "journal_data.xml",
+        #FR sterchi chart data
+        'sterchi_chart/account.xml',
+        'sterchi_chart/vat.xml', #JUST REMOVE THIS FILE WHEN OBSOLETE. ALL REQUIERED DATA IN VAT2011.XML
+        'sterchi_chart/vat2011.xml',
+        'sterchi_chart/fiscal_position.xml',
     ],
     "demo_xml" : [
-        "demo/vaudtax_data_demo.xml",
+        "demo/demo.xml",
     ],
     "update_xml" : [
+        "wizard.xml",
         "dta_view.xml",
         "wizard/bvr_import_view.xml",
-        "wizard/bvr_report_view.xml",
         "wizard/create_dta_view.xml",
         "company_view.xml",
         "account_invoice.xml",
         "bank_view.xml",
-        "account_journal_view.xml",
         "security/ir.model.access.csv",
+        "report/report_webkit_html_view.xml",
+    ],
+    'test' : [
+        'test/l10n_ch_report.yml',
     ],
     "active": False,
     "installable": True,
+    "certificate" : "001103836064567088989",
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

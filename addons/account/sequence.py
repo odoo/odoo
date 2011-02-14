@@ -43,13 +43,13 @@ ir_sequence_fiscalyear()
 class ir_sequence(osv.osv):
     _inherit = 'ir.sequence'
     _columns = {
-        'fiscal_ids' : fields.one2many('account.sequence.fiscalyear',
+        'fiscal_ids': fields.one2many('account.sequence.fiscalyear',
             'sequence_main_id', 'Sequences')
     }
     def get_id(self, cr, uid, sequence_id, test='id', context=None):
         if context is None:
             context = {}
-        cr.execute('select id from ir_sequence where ' 
+        cr.execute('select id from ir_sequence where '
                    + test + '=%s and active=%s', (sequence_id, True,))
         res = cr.dictfetchone()
         if res:
@@ -62,6 +62,7 @@ class ir_sequence(osv.osv):
                                                            context=context)
         return super(ir_sequence, self).get_id(cr, uid, sequence_id, test,
                                                context=context)
+
 ir_sequence()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

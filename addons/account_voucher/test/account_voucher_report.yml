@@ -1,0 +1,25 @@
+-
+  Demo for Account Voucher
+-
+  !record {model: account.voucher, id: account_voucher_voucheraxelor0}:
+    account_id: account.cash
+    company_id: base.main_company
+    currency_id: base.EUR
+    journal_id: account.bank_journal
+    name: Voucher Axelor
+    narration: Basic PC
+    amount: 1000.0
+    line_ids:
+      - account_id: account.cash
+        amount: 1000.0
+        name: Voucher Axelor
+    period_id: account.period_6
+
+-
+  In order to test the PDF reports defined on a account_voucher, we will print account voucher Report
+-
+  !python {model: account.voucher}: |
+    import netsvc, tools, os
+    (data, format) = netsvc.LocalService('report.voucher.cash_receipt.drcr').create(cr, uid, [ref("account_voucher_voucheraxelor0")], {}, {})
+    if tools.config['test_report_directory']:
+        file(os.path.join(tools.config['test_report_directory'], 'account_voucher-report.'+format), 'wb+').write(data)

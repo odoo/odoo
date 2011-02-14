@@ -10,16 +10,16 @@
       <field name="arch" type="xml">
         <data>
             <form position="attributes">
-                <attribute name="string">Human Resources Modules Configuration</attribute>
+                <attribute name="string">Human Resources Application Configuration</attribute>
             </form>
             <separator string="title" position="attributes">
-                <attribute name="string">Select Human Resources Modules To Install</attribute>
+                <attribute name="string">Configure Your Human Resources Application</attribute>
             </separator>
             <xpath expr='//separator[@string="vsep"]' position='attributes'>
                 <attribute name='string'></attribute>
             </xpath>
             <xpath expr="//label[@string='description']" position="attributes">
-                <attribute name="string">You can enhance the base HR addon by installing few HR-related applications.</attribute>
+                <attribute name="string">You can enhance the base HR Application by installing few HR-related functionalities.</attribute>
             </xpath>
           <group colspan="8">
             <field name="hr_holidays"/>
@@ -27,8 +27,8 @@
             <field name="hr_recruitment"/>
             <field name="hr_timesheet_sheet"/>
             <field name="hr_contract"/>
-            <field name="hr_evaluation"/>
             <field name="hr_attendance"/>
+            <field name="hr_evaluation" groups="base.group_extended"/>
             <field name="hr_payroll" groups="base.group_extended"/>
             <field name="hr_payroll_account" groups="base.group_extended"/>
           </group>
@@ -40,7 +40,7 @@
     </record>
 
     <record id="action_hr_installer" model="ir.actions.act_window">
-      <field name="name">Human Resources Modules Installation</field>
+      <field name="name">Human Resources Application Configuration</field>
       <field name="type">ir.actions.act_window</field>
       <field name="res_model">hr.installer</field>
       <field name="view_id" ref="view_hr_installer"/>
@@ -52,6 +52,7 @@
     <record id="hr_installer_todo" model="ir.actions.todo">
       <field name="action_id" ref="action_hr_installer"/>
       <field name="sequence">3</field>
+            <field name="restart">always</field>
     </record>
 
   </data>

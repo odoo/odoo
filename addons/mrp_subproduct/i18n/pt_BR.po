@@ -6,85 +6,118 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-09-08 16:19+0000\n"
+"POT-Creation-Date: 2011-01-03 16:58+0000\n"
+"PO-Revision-Date: 2011-01-19 12:00+0000\n"
 "Last-Translator: Aldo Giovani <aldogiovani@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-08-12 04:06+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
-
-#. module: mrp_subproduct
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Invalido XML para Arquitetura da View"
-
-#. module: mrp_subproduct
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"O nome do objeto precisa iniciar com x_ e não conter nenhum caracter "
-"especial!"
-
-#. module: mrp_subproduct
-#: view:mrp.bom:0
-msgid "sub products"
-msgstr ""
+"X-Launchpad-Export-Date: 2011-01-25 06:51+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: mrp_subproduct
 #: field:mrp.subproduct,product_id:0
 msgid "Product"
-msgstr ""
+msgstr "Produto"
 
 #. module: mrp_subproduct
-#: model:ir.model,name:mrp_subproduct.model_mrp_subproduct
-msgid "Mrp Sub Product"
+#: sql_constraint:mrp.bom:0
+msgid ""
+"All product quantities must be greater than 0.\n"
+"You should install the mrp_subproduct module if you want to manage extra "
+"products on BoMs !"
 msgstr ""
+"Todas as quantidades de produto devem ser maiores que 0.\n"
+"Você deve instalar o módulo mrp_subproduct se você deseja gerenciar produtos "
+"extras nas LdMs."
 
 #. module: mrp_subproduct
-#: field:mrp.subproduct,subproduct_type:0
-msgid "Quantity Type"
+#: view:mrp.bom:0
+msgid "sub products"
+msgstr "Subprodutos"
+
+#. module: mrp_subproduct
+#: model:ir.model,name:mrp_subproduct.model_mrp_production
+msgid "Manufacturing Order"
+msgstr "Ordem de Produção"
+
+#. module: mrp_subproduct
+#: model:ir.module.module,shortdesc:mrp_subproduct.module_meta_information
+msgid ""
+"MRP Sub Product - To produce several products from one production order"
 msgstr ""
 
 #. module: mrp_subproduct
 #: field:mrp.subproduct,product_qty:0
 msgid "Product Qty"
+msgstr "Qtd do Produto"
+
+#. module: mrp_subproduct
+#: field:mrp.bom,sub_products:0
+msgid "sub_products"
+msgstr "sub_produtos"
+
+#. module: mrp_subproduct
+#: field:mrp.subproduct,subproduct_type:0
+msgid "Quantity Type"
+msgstr "Tipo de Quantidade"
+
+#. module: mrp_subproduct
+#: model:ir.model,name:mrp_subproduct.model_mrp_bom
+msgid "Bill of Material"
+msgstr "Lista de Materiais"
+
+#. module: mrp_subproduct
+#: model:ir.module.module,description:mrp_subproduct.module_meta_information
+msgid ""
+"\n"
+"This module allows you to produce several products from one production "
+"order.\n"
+"You can configure sub-products in the bill of material.\n"
+"Without this module:\n"
+"    A + B + C -> D\n"
+"With this module:\n"
+"    A + B + C -> D + E\n"
+"    "
 msgstr ""
 
 #. module: mrp_subproduct
 #: field:mrp.subproduct,product_uom:0
 msgid "Product UOM"
-msgstr ""
+msgstr "UdM do Produto"
 
 #. module: mrp_subproduct
 #: field:mrp.subproduct,bom_id:0
 msgid "BoM"
-msgstr ""
+msgstr "Lista de Material (BoM)"
+
+#. module: mrp_subproduct
+#: constraint:mrp.bom:0
+msgid "Error ! You can not create recursive BoM."
+msgstr "Erro! Você não pode criar uma lista de materiais recursiva"
 
 #. module: mrp_subproduct
 #: view:mrp.bom:0
 msgid "Sub Products"
-msgstr ""
+msgstr "Sub Produtos"
 
 #. module: mrp_subproduct
 #: selection:mrp.subproduct,subproduct_type:0
 msgid "Variable"
-msgstr ""
+msgstr "Variável"
 
 #. module: mrp_subproduct
-#: field:mrp.bom,sub_products:0
-msgid "sub_products"
+#: constraint:mrp.production:0
+msgid "Order quantity cannot be negative or zero !"
+msgstr "Quantidade da Ordem não pode ser negativa ou zero !"
+
+#. module: mrp_subproduct
+#: model:ir.model,name:mrp_subproduct.model_mrp_subproduct
+msgid "Sub Product"
 msgstr ""
 
 #. module: mrp_subproduct
 #: selection:mrp.subproduct,subproduct_type:0
 msgid "Fixed"
-msgstr ""
-
-#. module: mrp_subproduct
-#: model:ir.module.module,shortdesc:mrp_subproduct.module_meta_information
-msgid "MRP Sub Product"
-msgstr ""
+msgstr "Fixado"

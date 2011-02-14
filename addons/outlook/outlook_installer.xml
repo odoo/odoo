@@ -12,13 +12,19 @@
                         <attribute name="string">Outlook Plug-In Configuration</attribute>
                     </form>
                     <separator string="title" position="attributes">
-                        <attribute name="string">Outlook</attribute>
+                        <attribute name="string">Outlook Plug-In</attribute>
                     </separator>
                     <xpath expr="//label[@string='description']" position="attributes">
                         <attribute name="string">This plug-in allows you to link your e-mail to OpenERP's documents. You can attach it to any existing one in OpenERP or create a new one.</attribute>
                     </xpath>
-                    <xpath expr="//button[@string='Install Modules']" position="attributes">
-                        <attribute name="string">Configure</attribute>
+                    <xpath expr="//button[@string='Install Modules']" position="replace">
+                        <button colspan="1" icon="gtk-close" special="cancel" string="_Close" invisible="not context.get('menu',False)"/>
+                        <button name="action_next" icon="gtk-go-forward"
+                                type="object" string="Configure" colspan="1" invisible="context.get('menu',False)"/>
+                    </xpath>
+                    <xpath expr="//button[@string='Skip']" position="replace">
+                        <button name="action_skip" icon="gtk-jump-to" special="cancel"
+                                type="object" string="Skip" colspan="1" invisible="context.get('menu',False)"/>
                     </xpath>
                     <xpath expr='//separator[@string="vsep"]' position='attributes'>
                         <attribute name='string'></attribute>
@@ -32,7 +38,7 @@
                                 <newline/>
                             <field name="plugin_file" filename="name"/>
                                 <newline/>
-                            <field name="doc_file" filename="doc_name"/>
+                            <field name="doc_file" filename="doc_name" widget="url"/>
                                 <newline/>
                             <separator string="Installation and Configuration Steps" colspan="4"/>
                             <field name="description" nolabel="1" colspan="8"/>
@@ -43,7 +49,7 @@
         </record>
 
         <record id="action_outlook_installer" model="ir.actions.act_window">
-            <field name="name">Outlook Module Installation</field>
+            <field name="name">Outlook Plug-In Configuration</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">outlook.installer</field>
             <field name="view_id" ref="view_outlook_installer"/>
@@ -57,69 +63,26 @@
             <field name="sequence">4</field>
         </record>
 
-    <!--	  Configuration wizard.  -->
-
-        <record id="view_outlook_wizard" model="ir.ui.view">
-        <field name="name">outlook.wizard</field>
-        <field name="model">outlook.installer</field>
-        <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string= "Outlook Plug-In Configuration">
-                    <group colspan="4">
-                        <separator string="Configure Outlook Module" colspan="4"/>
-                        <group colspan="4" col="10">
-                            <group colspan="2">
-                                <image name="gtk-dialog-info"/>
-                                    <newline/>
-                                <label align="0.0" string="This Module allows you to select an object that you would like to add to your email and its attachments from MS Outlook. You can select a partner, a task, a project, an analytical account, or any other object and Archived selected mail in mailgate.messages with attachments" width="200"/>
-                            </group>
-                            <group colspan="8">
-                                <field name="outlook" invisible="1"/>
-                                <field name="name" invisible="1"/>
-                                <field name="doc_name" invisible="1"/>
-                                    <newline/>
-                                <field name="plugin_file" filename="name"/>
-                                    <newline/>
-                                <field name="doc_file" filename="doc_name"/>
-                                    <newline/>
-                                <separator string="Outlook plugin installation note." colspan="4"/>
-                                <field name="description" nolabel="1" colspan="8"/>
-                            </group>
-                        </group>
-                    </group>
-                    <separator string="" colspan="4"/>
-                    <group colspan="4">
-                        <label align="0.0" string="" colspan="3"/>
-                        <button colspan="1" icon="gtk-close" special="cancel" string="_Close"/>
-                    </group>
-                </form>
-            </field>
-        </record>
-
         <record id="action_outlook_wizard" model="ir.actions.act_window">
-            <field name="name">Outlook Module Installation</field>
+            <field name="name">Outlook Plug-In Configuration</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">outlook.installer</field>
-            <field name="view_id" ref="view_outlook_wizard"/>
+            <field name="view_id" ref="view_outlook_installer"/>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
+            <field name="context">{'menu':True}</field>
         </record>
 
-        <menuitem id="base.menu_base_config_mail" 
-                  name="Mail" 
-                  parent="base.menu_base_config" 
-                  sequence="10"/>
-                  
-        <menuitem id="base.menu_base_config_plugins" 
-                  name="Plugins" 
-                  parent="base.menu_base_config_mail" 
+        <menuitem id="base.menu_base_config_plugins"
+                  name="Plugins"
+                  parent="base.menu_base_config"
                   sequence="10" />
-                  
-        <menuitem id="menu_base_config_plugins_outlook" 
-                  action="action_outlook_wizard" 
-                  name="Outlook" 
-                  parent="base.menu_base_config_plugins" 
+
+        <menuitem id="menu_base_config_plugins_outlook"
+                  action="action_outlook_wizard"
+                  name="Outlook Plug-In"
+                  parent="base.menu_base_config_plugins"
                   sequence="10" />
     </data>
 </openerp>

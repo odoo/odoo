@@ -19,44 +19,60 @@
 #
 ##############################################################################
 
-
-from mx import DateTime
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 import time
+import pooler
+from report.render import render
+class external_pdf(render):
+    def __init__(self, pdf):
+        render.__init__(self)
+        self.pdf = pdf
+        self.output_type='pdf'
+    def _render(self):
+        return self.pdf
 
-def compute_burndown(cr, uid, tasks_id, date_start, date_stop):
+def compute_burndown(cr, uid, tasks_ids, date_start, date_stop):
     latest = False
-    if len(tasks_id):
-        cr.execute('select id,create_date,state,planned_hours from project_task where id IN %s order by create_date',(tuple(tasks_id),))
-        tasks = cr.fetchall()
-
-        cr.execute('select w.date,w.hours from project_task_work w left join project_task t on (t.id=w.task_id) where t.id IN %s and t.state in (%s,%s) order by date',(tuple(tasks_id),'open','progress',))
-        tasks2 = cr.fetchall()
-
-        cr.execute('select date_end,planned_hours from project_task where id IN %s and state in (%s,%s) order by date_end' ,(tuple(tasks_id),'cancelled','done',))
-        tasks2 += cr.fetchall()
-        tasks2.sort()
+    pool = pooler.get_pool(cr.dbname)
+    project_task_pool = pool.get('project.task')
+    task_work_pool = pool.get('project.task.work')
+    if len(tasks_ids):
+        tasks_ids = project_task_pool.search(cr, uid, [('id','in',tasks_ids)], order='create_date')
+        tasks = project_task_pool.read(cr, uid, tasks_ids, ['create_date','planned_hours','state'])
+        tasks_ids = project_task_pool.search(cr, uid, [('id','in',tasks_ids),('state', 'in', ['open','progress'])], order='create_date')
+        work_ids = task_work_pool.search(cr, uid, [('task_id','in',tasks_ids)], order='date')
+        close_tasks = task_work_pool.read(cr, uid, work_ids, ['date','hours','state'])        
+        tasks_ids = project_task_pool.search(cr, uid, [('id','in',tasks_ids),('state', 'in', ['cancelled','done'])], order='date_end')
+        close_tasks += project_task_pool.read(cr, uid, tasks_ids, ['date_end','planned_hours'])
+        
     else:
         tasks = []
-        tasks2 = []
+        close_tasks = []
 
     current_date = date_start
     total = 0
     done = 0
     result = []
-    while current_date<=date_stop:
-        while len(tasks) and tasks[0][1] and tasks[0][1][:10]<=current_date:
+    while datetime.strptime(current_date, '%Y-%m-%d') <= datetime.strptime(date_stop, '%Y-%m-%d'):
+        while len(tasks) and tasks[0]['create_date'] and datetime.strptime(tasks[0]['create_date'][:10], '%Y-%m-%d')<=datetime.strptime(current_date, '%Y-%m-%d'):
             latest = tasks.pop(0)
-            total += latest[3]
+            total += float(latest.get('planned_hours',0.0))
         i = 0
-        while i<len(tasks2):
-            if tasks2[i][0] and tasks2[i][0][:10]<=current_date:
-                t = tasks2.pop(i)
-                done += t[1]
-            else:
-                i+=1
+        while i < len(close_tasks):
+            if close_tasks[i]:
+                date_end = close_tasks[i].get('date',False)
+                hours = float(close_tasks[i].get('hours',0.0))
+                if not date_end:
+                    date_end = close_tasks[i].get('date_end',False)
+                    hours = float(close_tasks[i].get('planned_hours',0.0))
+                if datetime.strptime(date_end[:10], '%Y-%m-%d')<=datetime.strptime(current_date, '%Y-%m-%d'):
+                    t = close_tasks.pop(i)
+                    done += hours
+            i+=1
         result.append( (int(time.mktime(time.strptime(current_date,'%Y-%m-%d'))), total-done) )
-        current_date = (DateTime.strptime(current_date, '%Y-%m-%d') + DateTime.RelativeDateTime(days=1)).strftime('%Y-%m-%d')
-        if not len(tasks) and not len(tasks2):
+        current_date = (datetime.strptime(current_date, '%Y-%m-%d') + relativedelta(days=1)).strftime('%Y-%m-%d')
+        if not len(tasks) and not len(close_tasks):
             break
     result.append( (int(time.mktime(time.strptime(date_stop,'%Y-%m-%d'))), 0) )
     return result

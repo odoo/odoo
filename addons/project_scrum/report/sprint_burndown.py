@@ -25,22 +25,13 @@ import pooler
 from report.render import render
 from report.interface import report_int
 
-from mx import DateTime
+from datetime import datetime
 import time
 
 from pychart import *
 import pychart.legend
 
 import _burndown
-
-class external_pdf(render):
-    def __init__(self, pdf):
-        render.__init__(self)
-        self.pdf = pdf
-        self.output_type='pdf'
-    def _render(self):
-        return self.pdf
-
 class report_tasks(report_int):
     def create(self, cr, uid, ids, datas, context=None):
         if context is None:
@@ -49,24 +40,23 @@ class report_tasks(report_int):
 
         canv = canvas.init(fname=io, format='pdf')
         canv.set_author("OpenERP")
-
-        cr.execute('select id,date_start,date_stop from project_scrum_sprint where id=%s', (datas['id'],))
-        for (id,date_start,date_stop) in cr.fetchall():
-            cr.execute('select id from project_task where product_backlog_id in(select id from project_scrum_product_backlog where sprint_id=%s)', (id,))
-
-            ids = map(lambda x: x[0], cr.fetchall())
-            datas = _burndown.compute_burndown(cr, uid, ids, date_start, date_stop)
-
+        canv.set_title("Burndown Chart")
+        pool = pooler.get_pool(cr.dbname)
+        sprint_pool = pool.get('project.scrum.sprint')
+        task_pool = pool.get('project.task')
+        # For add the report header on the top of the report.
+        tb = text_box.T(loc=(320, 500), text="/hL/15/bBurndown Chart", line_style=None)
+        tb.draw()
+        int_to_date = lambda x: '/a60{}' + datetime(time.localtime(x).tm_year, time.localtime(x).tm_mon, time.localtime(x).tm_mday).strftime('%d %m %Y')
+        for sprint in sprint_pool.browse(cr, uid, ids, context=context):
+            task_ids = task_pool.search(cr, uid, [('sprint_id','=',sprint.id)], context=context)
+            datas = _burndown.compute_burndown(cr, uid, task_ids, sprint.date_start, sprint.date_stop)
             max_hour = reduce(lambda x,y: max(y[1],x), datas, 0)
-
-            date_to_int = lambda x: int(x.ticks())
-            int_to_date = lambda x: '/a60{}'+DateTime.localtime(x).strftime('%d %m %Y')
-
             def _interval_get(*args):
                 result = []
                 for i in range(20):
-                    d = DateTime.localtime(datas[0][0] + (((datas[-1][0]-datas[0][0])/20)*(i+1)))
-                    res = DateTime.DateTime(d.year, d.month, d.day).ticks()
+                    d = time.localtime(datas[0][0] + (((datas[-1][0]-datas[0][0])/20)*(i+1)))
+                    res = time.mktime(d)
                     if (not result) or result[-1]<>res:
                         result.append(res)
                 return result
@@ -92,7 +82,7 @@ class report_tasks(report_int):
             ar.draw(canv)
         canv.close()
 
-        self.obj = external_pdf(io.getvalue())
+        self.obj = _burndown.external_pdf(io.getvalue())
         self.obj.render()
         return (self.obj.pdf, 'pdf')
 report_tasks('report.scrum.sprint.burndown')

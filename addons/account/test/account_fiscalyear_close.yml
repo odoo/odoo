@@ -1,36 +1,44 @@
 -
-  In order to test Generate Fiscalyear Opening Entries wizard of OpenERP I first create a fiscalyear "Fiscal Year 2011" to which the entries will move
+  In order to test Generate Fiscalyear Opening Entries wizard of OpenERP I first create a fiscalyear to which the entries will move
 -
   !record {model: account.fiscalyear, id: account_fiscalyear_fiscalyear0}:
-    code: FY2011
+    code: !eval "'FY%s'% (datetime.now().year+1)"
     company_id: base.main_company
-    date_start: '2011-01-01'
-    date_stop: '2011-12-31'
-    name: Fiscal Year 2011
+    date_start: !eval "'%s-01-01' %(datetime.now().year+1)"
+    date_stop: !eval "'%s-12-31' %(datetime.now().year+1)"
+    name: !eval "'Fiscal Year %s' %(datetime.now().year+1)"
 -
-  I create a period "Jan2011" for the new fiscalyear
+  I create a period for the opening entries for the new fiscalyear
 -
   !record {model: account.period, id: account_period_jan11}:
     company_id: base.main_company
-    date_start: '2011-01-01'
-    date_stop: '2011-12-31'
+    date_start: !eval "'%s-01-01'% (datetime.now().year+1)"
+    date_stop: !eval "'%s-01-01'% (datetime.now().year+1)"
     fiscalyear_id: account_fiscalyear_fiscalyear0
-    name: Jan2011
+    name: !eval "'OP %s' %(datetime.now().year+1)"
     special: 1
 
 -
   I made modification in journal so it can move entries
 -
-  !record {model: account.journal, id: account.sales_journal}:
+  !record {model: account.journal, id: account.close_journal}:
+    name: End of Year
+    code: NEW
+    type: situation
+    analytic_journal_id: sit
+    sequence_id: sequence_journal
+    default_debit_account_id: cash
+    default_credit_account_id: cash
+    company_id: base.main_company
+    view_id: account_journal_bank_view
     centralisation: 1
-
 -
   I called the Generate Fiscalyear Opening Entries wizard
 -
   !record {model: account.fiscalyear.close, id: account_fiscalyear_close_0}:
     fy2_id: account_fiscalyear_fiscalyear0
     fy_id: account.data_fiscalyear
-    journal_id: account.sales_journal
+    journal_id: account.close_journal
     period_id: account_period_jan11
     report_name: End of Fiscal Year Entry
 -
@@ -84,6 +92,3 @@
 #      "active_model": "ir.ui.menu", "active_ids": [ref("account.menu_action_move_journal_line_form")],
 #      "tz": False, "active_id": ref("account.menu_action_move_journal_line_form"),
 #      })
-
-
-

@@ -1,0 +1,210 @@
+-
+  In order to test the PDF reports defined on an invoice, we will create a Invoice Record
+-
+  !record {model: account.invoice, id: test_invoice_1}:
+    currency_id: base.EUR
+    company_id: base.main_company
+    address_invoice_id: base.res_partner_address_tang
+    partner_id: base.res_partner_asus
+    state: draft
+    type: out_invoice
+    account_id: account.a_recv
+    name: Test invoice 1
+    address_contact_id: base.res_partner_address_tang
+-
+  In order to test the PDF reports defined on an invoice, we will print an Invoice Report
+-
+  !python {model: account.invoice}: |
+    import netsvc, tools, os
+    (data, format) = netsvc.LocalService('report.account.invoice').create(cr, uid, [ref('account.account_invoice_customer0')], {}, {})
+    if tools.config['test_report_directory']:
+        file(os.path.join(tools.config['test_report_directory'], 'account-invoice.'+format), 'wb+').write(data)
+
+-
+  In order to test the PDF reports defined on a partner, we will print the Overdue Report
+-
+  !python {model: res.partner}: |
+    import netsvc, tools, os
+    (data, format) = netsvc.LocalService('report.account.overdue').create(cr, uid, [ref('base.res_partner_asus'),ref('base.res_partner_agrolait'),ref('base.res_partner_c2c')], {}, {})
+    if tools.config['test_report_directory']:
+        file(os.path.join(tools.config['test_report_directory'], 'account-report_overdue.'+format), 'wb+').write(data)
+-
+  Print the Aged Partner Balance Report
+-
+  !python {model: account.account}: |
+    ctx={}
+    ctx.update({'model': 'account.account','active_ids':[ref('account.chart0')],'active_id':ref('account.chart0')})
+    data_dict = {'chart_account_id':ref('account.chart0')}
+    from tools import test_reports
+    test_reports.try_report_action(cr, uid, 'action_account_aged_balance_view',wiz_data=data_dict, context=ctx, our_module='account')
+-
+  Print the Account Balance Sheet in Horizontal mode
+-
+  !python {model: account.account}: |
+    ctx={}
+    ctx.update({'model': 'account.account','active_ids':[ref('account.chart0')]})
+    data_dict = {'chart_account_id':ref('account.chart0'),'display_type': True}
+    from tools import test_reports
+    test_reports.try_report_action(cr, uid, 'action_account_bs_report',wiz_data=data_dict, context=ctx, our_module='account')
+-
+  Print the Account Balance Sheet in Normal mode
+-
+  !python {model: account.account}: |
+    ctx={}
+    ctx.update({'model': 'account.account','active_ids':[ref('account.chart0')]})
+    data_dict = {'chart_account_id':ref('account.chart0'),'display_type': False}
+    from tools import test_reports
+    test_reports.try_report_action(cr, uid, 'action_account_bs_report',wiz_data=data_dict, context=ctx, our_module='account')
+-
+  Print the Account Balance Report in Normal mode through the wizard - From Account Chart
+-
+  !python {model: account.account}: |
+    ctx={}
+    ctx.update({'model': 'account.account','active_ids':[ref('account.chart0')]})
+    data_dict = {'chart_account_id':ref('account.chart0')}
+    from tools import test_reports
+    test_reports.try_report_action(cr, uid, 'action_account_balance_menu',wiz_data=data_dict, context=ctx, our_module='account')
+-
+  Print the Central Journal Report - From Account
+-
+  !python {model: account.journal.period}: |
+    journal_ids = [ref('account.sales_journal'),ref('account.refund_sales_journal'),ref('account.expenses_journal'),ref('account.refund_expenses_journal'),
+                         ref('account.bank_journal'),ref('account.check_journal'),ref('account.cash_journal')]
+    ctx={}
+    ctx.update({'model': 'account.journal.period','active_ids':journal_ids})
+    data_dict = {'chart_account_id':ref('account.chart0')}
+    from tools import test_reports
+    test_reports.try_report_action(cr, uid, 'action_account_central_journal',wiz_data=data_dict, context=ctx, our_module='account')
+-
+  Print the General Journal Report - From Journal
+-
+  !python {model: account.journal.period}: |
+    journal_ids = [ref('account.sales_journal'),ref('account.refund_sales_journal'),ref('account.expenses_journal'),ref('account.refund_expenses_journal'),
+                         ref('account.bank_journal'),ref('account.check_journal'),ref('account.cash_journal')]
+    ctx={}
+    ctx.update({'model': 'account.journal.period','active_ids':journal_ids})
+    data_dict = {'chart_account_id':ref('account.chart0')}
+    from tools import test_reports
+    test_reports.try_report_action(cr, uid, 'action_account_general_journal',wiz_data=data_dict, context=ctx, our_module='account')
+-
+  Print the General Ledger Report in Normal Mode
+-
+  !python {model: account.account}: |
+    ctx={}
+    ctx.update({'model': 'account.account','active_ids':[ref('account.chart0')]})
+    data_dict = {'chart_account_id':ref('account.chart0'),'landscape':False}
+    from tools import test_reports
+    test_reports.try_report_action(cr, uid, 'action_account_general_ledger_menu',wiz_data=data_dict, context=ctx, our_module='account')
+-
+  Print the General Ledger Report in Landscape Mode
+-
+  !python {model: account.account}: |
+    ctx={}
+    ctx.update({'model': 'account.account','active_ids':[ref('account.chart0')]})
+    data_dict = {'chart_account_id':ref('account.chart0'),'landscape':True}
+    from tools import test_reports
+    test_reports.try_report_action(cr, uid, 'action_account_general_ledger_menu',wiz_data=data_dict, context=ctx, our_module='account')
+-
+  Print Journal Report - From Model
+-
+  !python {model: account.journal.period}: |
+    journal_ids = [ref('account.sales_journal'),ref('account.refund_sales_journal'),ref('account.expenses_journal'),ref('account.refund_expenses_journal'),ref('account.bank_journal'),ref('account.check_journal'),ref('account.cash_journal')]
+    ctx={}
+    ctx.update({'model': 'account.journal.period','active_ids':journal_ids})
+    data_dict = {'chart_account_id':ref('account.chart0')}
+    from tools import test_reports
+    test_reports.try_report_action(cr, uid, 'action_account_print_journal',wiz_data=data_dict, context=ctx, our_module='account')
+-
+  Print the Partner Balance Report
+-
+  !python {model: account.account}: |
+    ctx={}
+    data_dict = {'chart_account_id':ref('account.chart0')}
+    ctx.update({'model': 'account.account','active_ids':[ref('account.chart0')],'active_id':ref('account.chart0')})
+    from tools import test_reports
+    test_reports.try_report_action(cr, uid, 'action_account_partner_balance',wiz_data=data_dict, context=ctx, our_module='account')
+-
+  Print the Partner Ledger Report
+-
+  !python {model: account.account}: |
+    ctx={}
+    data_dict = {'chart_account_id':ref('account.chart0'),'page_split': True}
+    ctx.update({'model': 'account.account','active_ids':[ref('account.chart0')],'active_id':ref('account.chart0')})
+    from tools import test_reports
+    test_reports.try_report_action(cr, uid, 'action_account_partner_ledger',wiz_data=data_dict, context=ctx, our_module='account')
+-
+  Print the Partner Ledger-Other Report
+-
+  !python {model: res.partner}: |
+    ctx={}
+    data_dict = {'chart_account_id':ref('account.chart0'),'page_split': False}
+    ctx.update({'model': 'account.account','active_ids':[ref('account.chart0')],'active_id':ref('account.chart0')})
+    from tools import test_reports
+    test_reports.try_report_action(cr, uid, 'action_account_partner_ledger',wiz_data=data_dict, context=ctx, our_module='account')
+-
+  Print the Profit-Loss Report in Normal Mode
+-
+  !python {model: account.account}: |
+    ctx={}
+    ctx.update({'model': 'account.account','active_ids':[ref('account.chart0')]})
+    data_dict = {'chart_account_id':ref('account.chart0'),'display_type': False}
+    from tools import test_reports
+    test_reports.try_report_action(cr, uid, 'action_account_pl_report',wiz_data=data_dict, context=ctx, our_module='account')
+-
+  Print the Profit-Loss Report in Horizontal Mode
+-
+  !python {model: account.account}: |
+    ctx={}
+    ctx.update({'model': 'account.account','active_ids':[ref('account.chart0')]})
+    data_dict = {'chart_account_id':ref('account.chart0'),'display_type': True}
+    from tools import test_reports
+    test_reports.try_report_action(cr, uid, 'action_account_pl_report',wiz_data=data_dict, context=ctx, our_module='account')
+-
+ Print the Analytic Balance Report through the wizard
+-
+  !python {model: account.analytic.account}: |
+    ctx={}
+    ctx.update({'model': 'account.analytic.account','active_ids': [ref('account.analytic_root')]})
+    data_dict = {}
+    from tools import test_reports
+    test_reports.try_report_action(cr, uid, 'action_account_analytic_balance',wiz_data=data_dict, context=ctx, our_module='account')
+
+-
+ Print the Cost Ledger Report through the wizard
+-
+  !python {model: account.analytic.account}: |
+    ctx={}
+    ctx.update({'model': 'account.analytic.account','active_ids': [ref('account.analytic_root'),ref('account.analytic_absences'),ref('account.analytic_internal'),ref('account.analytic_our_super_product')]})
+    data_dict = {}
+    from tools import test_reports
+    test_reports.try_report_action(cr, uid, 'action_account_analytic_cost',wiz_data=data_dict, context=ctx, our_module='account')
+
+-
+ Print the Cost Ledger(Only Quantities) Report through the wizard
+-
+  !python {model: account.analytic.account}: |
+    ctx={}
+    ctx.update({'model': 'account.analytic.account','active_ids': [ref('account.analytic_root'),ref('account.analytic_absences'),ref('account.analytic_internal'),ref('account.analytic_our_super_product')]})
+    data_dict = {}
+    from tools import test_reports
+    test_reports.try_report_action(cr, uid, 'action_account_analytic_cost_ledger_journal',wiz_data=data_dict, context=ctx, our_module='account')
+
+-
+ Print the Analytic Journal Report through the wizard
+-
+  !python {model: account.analytic.journal}: |
+    ctx={}
+    ctx.update({'model': 'account.analytic.journal','active_ids': [ref('account.cose_journal_sale'), ref('account.exp'), ref('account.sit')]})
+    data_dict = {}
+    from tools import test_reports
+    test_reports.try_report_action(cr, uid, 'action_account_analytic_journal',wiz_data=data_dict, context=ctx, our_module='account')
+
+-
+ Print the Inverted Analytic Balance Report through the wizard
+-
+  !python {model: account.analytic.account}: |
+    ctx={}
+    ctx.update({'model': 'account.analytic.account','active_ids': [ref('account.analytic_root')]})
+    data_dict = {}
+    from tools import test_reports
+    test_reports.try_report_action(cr, uid, 'action_account_analytic_invert_balance',wiz_data=data_dict, context=ctx, our_module='account')

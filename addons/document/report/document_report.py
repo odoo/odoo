@@ -21,7 +21,6 @@
 
 
 from osv import fields,osv
-import time
 import tools
 
 class report_document_user(osv.osv):
@@ -35,6 +34,7 @@ class report_document_user(osv.osv):
         'user_id':fields.integer('Owner', readonly=True),
         'user':fields.char('User',size=64,readonly=True),
         'directory': fields.char('Directory',size=64,readonly=True),
+        'datas_fname': fields.char('File Name',size=64,readonly=True),
         'create_date': fields.datetime('Date Created', readonly=True),
         'change_date': fields.datetime('Modified Date', readonly=True),
         'file_size': fields.integer('File Size', readonly=True),
@@ -53,6 +53,7 @@ class report_document_user(osv.osv):
                      u.name as user,
                      count(*) as nbr,
                      d.name as directory,
+                     f.datas_fname as datas_fname,
                      f.create_date as create_date,
                      f.file_size as file_size,
                      min(d.type) as type,
@@ -60,10 +61,12 @@ class report_document_user(osv.osv):
                  FROM ir_attachment f
                      left join document_directory d on (f.parent_id=d.id and d.name<>'')
                      inner join res_users u on (f.user_id=u.id)
-                 group by to_char(f.create_date, 'YYYY'), to_char(f.create_date, 'MM'),d.name,f.parent_id,d.type,f.create_date,f.user_id,f.file_size,u.name,d.type,f.write_date
+                 group by to_char(f.create_date, 'YYYY'), to_char(f.create_date, 'MM'),d.name,f.parent_id,d.type,f.create_date,f.user_id,f.file_size,u.name,d.type,f.write_date,f.datas_fname
              )
         """)
 report_document_user()
+
+
 
 class report_files_partner(osv.osv):
     _name = "report.files.partner"
@@ -87,7 +90,7 @@ class report_files_partner(osv.osv):
                        to_char(date_trunc('month', f.create_date),'MM') AS month,
                        SUM(f.file_size) AS file_size,
                        p.name AS partner
-                       
+
                 FROM ir_attachment f
                   LEFT JOIN res_partner p ON (f.partner_id=p.id)
                 WHERE f.datas_fname IS NOT NULL

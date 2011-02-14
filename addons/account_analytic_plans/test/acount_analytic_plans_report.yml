@@ -1,0 +1,9 @@
+-
+  Print the Crossovered Analytic Report in Normal mode
+-
+  !python {model: account.analytic.account}: |
+    import netsvc, tools, os, time
+    data_dict = {'model': 'account.analytic.account', 'form': {'date1':time.strftime("%Y-01-01"),'date2':time.strftime('%Y-%m-%d'),'journal_ids':[6,0,(ref('account.cose_journal_sale'))],'ref':ref('account.analytic_root'),'empty_line':True,'id':ref('account.analytic_root'),'context':{}}}
+    (data, format) = netsvc.LocalService('report.account.analytic.account.crossovered.analytic').create(cr, uid, [ref('account.analytic_root')], data_dict, {})
+    if tools.config['test_report_directory']:
+       file(os.path.join(tools.config['test_report_directory'], 'account_analytic_plans-crossovered_analyitic.'+format), 'wb+').write(data)

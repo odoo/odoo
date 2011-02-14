@@ -1,3 +1,28 @@
+# This module is part of the spambayes project, which is Copyright 2003
+# The Python Software Foundation and is covered by the Python Software
+# Foundation license.
+
+# -*- coding: utf-8 -*-
+##############################################################################
+#
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
+#
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+##############################################################################
+
 import os
 import sys
 import win32api, win32con
@@ -79,10 +104,10 @@ class OpenERPManager:
         self.application_directory = os.path.dirname(this_filename)
         self.windows_data_directory = self.LocateDataDirectory()
         self.data_directory = self.windows_data_directory
-        self.default_objects = [('Partners','res.partner',''),('Partner Address','res.partner.address',''), \
-                               ('Account Invoices','account.invoice',''), ('Accounts','account.account',''), \
-                               ('Projects', 'project.project',''),('Sale Orders','sale.order',''), \
-                               ('Project Tasks','project.task',''), ('Products', 'product.product', '')]
+        self.default_objects = [('Partners','res.partner',''),('Account Invoices','account.invoice',''), \
+                                ('Products', 'product.product',''),('Sale Orders','sale.order',''), \
+                               ('Leads','crm.lead','')]
+
         self.config=self.LoadConfig()
 
     def WorkerThreadStarting(self):
@@ -115,7 +140,7 @@ class OpenERPManager:
     def LoadConfig(self):
         import win32ui
         path = os.path.join(self.data_directory, 'tiny.ini')
-        data = {'server' : 'localhost', 'port' : '8069', 'protocol' : 'http://', 'database' : '', 'objects' : self.default_objects, 'uname':'admin', 'pwd':'a', 'login':False}
+        data = {'server' : 'localhost', 'port' : '8069', 'protocol' : 'http://', 'database' : '', 'objects' : self.default_objects, 'uname':'admin', 'pwd':'a', 'login':False,'webserver':'localhost','webport':'8080'}
         if os.path.exists(path):
             fp = open(path, 'r')
             data = fp.readlines()

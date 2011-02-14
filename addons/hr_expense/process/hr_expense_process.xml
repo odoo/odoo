@@ -1,21 +1,21 @@
 <?xml version="1.0" ?>
 <openerp>
 	<data>
-	
+
 		<!--
 			Process
 		-->
-    
+
 		<record id="process_process_expenseprocess0" model="process.process">
 			<field eval="1" name="active"/>
 			<field name="model_id" ref="model_hr_expense_expense"/>
 			<field eval="&quot;&quot;&quot;Expense&quot;&quot;&quot;" name="name"/>
 		</record>
-		
+
 		<!--
 			Process Node
 		-->
-		
+
 		<record id="process_node_draftexpenses0" model="process.node">
 			<field name="menu_id" ref="menu_expense_all"/>
 			<field name="model_id" ref="model_hr_expense_expense"/>
@@ -26,7 +26,7 @@
 			<field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
 			<field eval="1" name="flow_start"/>
 		</record>
-		
+
 		<record id="process_node_confirmedexpenses0" model="process.node">
 			<field name="menu_id" ref="menu_expense_all"/>
 			<field name="model_id" ref="model_hr_expense_expense"/>
@@ -37,7 +37,7 @@
 			<field eval="&quot;&quot;&quot;object.state=='confirm'&quot;&quot;&quot;" name="model_states"/>
 			<field eval="0" name="flow_start"/>
 		</record>
-		
+
 		<record id="process_node_refused0" model="process.node">
 			<field name="menu_id" ref="menu_expense_all"/>
 			<field name="model_id" ref="model_hr_expense_expense"/>
@@ -48,7 +48,7 @@
 			<field eval="&quot;&quot;&quot;object.state=='canceled'&quot;&quot;&quot;" name="model_states"/>
 			<field eval="0" name="flow_start"/>
 		</record>
-		
+
 		<record id="process_node_approved0" model="process.node">
 			<field name="menu_id" ref="menu_expense_all"/>
 			<field name="model_id" ref="model_hr_expense_expense"/>
@@ -59,7 +59,7 @@
 			<field eval="&quot;&quot;&quot;object.state=='accepted'&quot;&quot;&quot;" name="model_states"/>
 			<field eval="0" name="flow_start"/>
 		</record>
-		
+
 		<record id="process_node_supplierinvoice0" model="process.node">
 			<field name="menu_id" ref="account.menu_action_invoice_tree2"/>
 			<field name="model_id" ref="account.model_account_invoice"/>
@@ -70,7 +70,7 @@
 			<field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
 			<field eval="0" name="flow_start"/>
 		</record>
-		
+
 		<record id="process_node_reimbursement0" model="process.node">
 			<field name="menu_id" ref="account.menu_action_invoice_tree2"/>
 			<field name="model_id" ref="account.model_account_invoice"/>
@@ -81,7 +81,7 @@
 			<field eval="&quot;&quot;&quot;object.state=='paid'&quot;&quot;&quot;" name="model_states"/>
 			<field eval="0" name="flow_start"/>
 		</record>
-		
+
 		<record id="process_node_reinvoicing0" model="process.node">
 			<field name="menu_id" ref="account.menu_action_invoice_tree1"/>
 			<field name="model_id" ref="account.model_account_invoice"/>
@@ -92,96 +92,90 @@
 			<field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
 			<field eval="0" name="flow_start"/>
 		</record>
-		
+
 		<!--
 			Process Transition
 		-->
-		
+
 		<record id="process_transition_confirmexpense0" model="process.transition">
-            <field eval="[(6,0,[])]" name="role_ids"/>
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Confirm expense&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Expense is confirmed.&quot;&quot;&quot;" name="note"/>
             <field model="process.node" name="target_node_id" ref="process_node_confirmedexpenses0"/>
             <field model="process.node" name="source_node_id" ref="process_node_draftexpenses0"/>
         </record>
-        
+
         <record id="process_transition_refuseexpense0" model="process.transition">
-            <field eval="[(6,0,[])]" name="role_ids"/>
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Refuse expense&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Expense is refused.&quot;&quot;&quot;" name="note"/>
             <field model="process.node" name="target_node_id" ref="process_node_refused0"/>
             <field model="process.node" name="source_node_id" ref="process_node_confirmedexpenses0"/>
         </record>
-		
+
 		<record id="process_transition_approveexpense0" model="process.transition">
-            <field eval="[(6,0,[])]" name="role_ids"/>
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Approve expense&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Expense is approved.&quot;&quot;&quot;" name="note"/>
             <field model="process.node" name="target_node_id" ref="process_node_approved0"/>
             <field model="process.node" name="source_node_id" ref="process_node_confirmedexpenses0"/>
         </record>
-        
+
         <record id="process_transition_approveinvoice0" model="process.transition">
-            <field eval="[(6,0,[])]" name="role_ids"/>
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Supplier Invoice&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Creates supplier invoice.&quot;&quot;&quot;" name="note"/>
             <field model="process.node" name="target_node_id" ref="process_node_supplierinvoice0"/>
             <field model="process.node" name="source_node_id" ref="process_node_approved0"/>
         </record>
-        
+
         <record id="process_transition_reimburseexpense0" model="process.transition">
-            <field eval="[(6,0,[])]" name="role_ids"/>
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Reimburse expense&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;After creating invoice, reimburse expenses&quot;&quot;&quot;" name="note"/>
             <field model="process.node" name="target_node_id" ref="process_node_reimbursement0"/>
             <field model="process.node" name="source_node_id" ref="process_node_supplierinvoice0"/>
         </record>
-        
+
         <record id="process_transition_reimbursereinvoice0" model="process.transition">
-            <field eval="[(6,0,[])]" name="role_ids"/>
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Reinvoice&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Create Customer invoice&quot;&quot;&quot;" name="note"/>
             <field model="process.node" name="target_node_id" ref="process_node_reinvoicing0"/>
             <field model="process.node" name="source_node_id" ref="process_node_reimbursement0"/>
         </record>
-        
+
         <!--
 			Process Transition Action
 		-->
-		
+
 		<record id="process_transition_action_confirm0" model="process.transition.action">
 			<field eval="&quot;&quot;&quot;expense_confirm&quot;&quot;&quot;" name="action"/>
 			<field eval="&quot;&quot;&quot;object&quot;&quot;&quot;" name="state"/>
 			<field eval="&quot;&quot;&quot;Confirm&quot;&quot;&quot;" name="name"/>
 			<field name="transition_id" ref="process_transition_confirmexpense0"/>
 		</record>
-		
+
 		<record id="process_transition_action_refuse0" model="process.transition.action">
 			<field eval="&quot;&quot;&quot;expense_canceled&quot;&quot;&quot;" name="action"/>
 			<field eval="&quot;&quot;&quot;object&quot;&quot;&quot;" name="state"/>
 			<field eval="&quot;&quot;&quot;Refuse&quot;&quot;&quot;" name="name"/>
 			<field name="transition_id" ref="process_transition_refuseexpense0"/>
 		</record>
-		
+
 		<record id="process_transition_action_accept0" model="process.transition.action">
 			<field eval="&quot;&quot;&quot;expense_accept&quot;&quot;&quot;" name="action"/>
 			<field eval="&quot;&quot;&quot;object&quot;&quot;&quot;" name="state"/>
 			<field eval="&quot;&quot;&quot;Accept&quot;&quot;&quot;" name="name"/>
 			<field name="transition_id" ref="process_transition_approveexpense0"/>
 		</record>
-		
+
 		<record id="process_transition_action_supplierinvoice0" model="process.transition.action">
 			<field eval="&quot;&quot;&quot;action_invoice_create&quot;&quot;&quot;" name="action"/>
 			<field eval="&quot;&quot;&quot;object&quot;&quot;&quot;" name="state"/>
 			<field eval="&quot;&quot;&quot;Invoice&quot;&quot;&quot;" name="name"/>
 			<field name="transition_id" ref="process_transition_approveinvoice0"/>
 		</record>
-		
+
 	</data>
 </openerp>

@@ -101,7 +101,7 @@
   I create an Evaluation for employee under "Manager Evaluation Plan".
 -
   !record {model: hr_evaluation.evaluation, id: hr_evaluation_evaluation_0}:
-    date: '2010-06-28'
+    date: !eval time.strftime('%Y-%m-%d')
     employee_id: 'hr_employee_employee1'
     plan_id: 'hr_evaluation_plan_managersplan0'
     progress: 0.0
@@ -110,7 +110,7 @@
   I create an Interview Request record
 - 
   !record {model: hr.evaluation.interview, id: hr_evaluation_interview_0}:
-    date_deadline: '2010-06-28'
+    date_deadline: !eval time.strftime('%Y-%m-%d')
     evaluation_id: 'hr_evaluation_evaluation_0'
     survey_id:  hr_evaluation.survey_0
 -
@@ -125,7 +125,7 @@
      self.button_plan_in_progress(cr, uid, [ref('hr_evaluation_evaluation_0')])
 
 -
-  I close this servey request by giving answer of survey question.
+  I close this survey request by giving answer of survey question.
 -
   !python {model: hr.evaluation.interview}: |
     self.survey_req_done(cr, uid, [ref('hr_evaluation_interview_0')])

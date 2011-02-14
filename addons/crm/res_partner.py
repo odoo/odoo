@@ -31,8 +31,6 @@ class res_partner(osv.osv):
             'Meetings'),
         'phonecall_ids': fields.one2many('crm.phonecall', 'partner_id',\
             'Phonecalls'),
-        'opportunity_assigned_ids': fields.one2many('crm.lead', 'partner_assigned_id',\
-            'Assigned Opportunities'), 
     }
 res_partner()
 

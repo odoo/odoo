@@ -1,0 +1,40 @@
+About OpenERP Report Designer Plugin
+===================================================================
+OpenERP Report Desinger Plugin is a Package of OpenOffice Writer.
+Using this Plugin , we can modify existing OpenERP Reports and also we can make new nice OpenERP Reports.
+
+
+How to Install OpenERP Report Designer Plugin into Openoffice 3.2 in Linux?
+=====================================================================
+- In Openoffice writer, Open Extension Manager window from Tools > Extension Menu
+
+- Click on "Add" button and select path where the openerp_report_designer.zip is located.
+
+- On the completion of adding package you will get your package
+  under 'Extension Manager' and the status of your package become 'Enabled'
+
+- Close openoffice writer.
+
+- Restart openoffice writer, Now you will find one new menu "OpenERP Report Designer" in Menubar.
+
+
+How to install the plugin with OpenOffice 2.4 on Windows
+========================================================
+
+If you get an error for the installation of the plugin, edit the pythonloader.py file
+in $(OPEN_OFFICE_DIR)\program\ and change the value of DEBUG to None.
+
+If you get an error for the uno.exe in window then just close the Quick starter
+	Openoffice.2.4.1 Too\Option\Openoffic.org in that select the Memory
+	in that Openoffice.org.QuickStarter
+	if checked mark is there then just remove it..
+
+If you are using OpenOffice 3.0 and install the Report Desinger with make all
+	command then change  path in makefile
+
+	sh /opt/openoffice.org3/program/unopkg add or remove both
+
+	And for previous version of Openoffice used
+
+	sh /usr/lib/openoffice/program/unopkg add -v $(ZIP_FILE)
+

@@ -6,30 +6,35 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-11-21 15:56+0000\n"
-"Last-Translator: Andrzej MoST (Marcin Ostajewski) <Unknown>\n"
+"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"PO-Revision-Date: 2011-01-19 12:00+0000\n"
+"Last-Translator: Grzegorz Grzelak (OpenGLOBE.pl) <grzegorz@openglobe.pl>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-08-12 04:02+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-25 06:33+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: board
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Nazwa obiektu musi zaczynać się od x_ oraz nie może zawierać znaków "
-"specjalnych !"
+#: view:res.log.report:0
+msgid "  Year  "
+msgstr "  Rok  "
 
 #. module: board
-#: model:ir.model,name:board.model_board_board
-msgid "board.board"
-msgstr ""
+#: model:ir.model,name:board.model_board_menu_create
+msgid "Menu Create"
+msgstr "Utwórz menu"
 
 #. module: board
+#: view:board.note:0
+#: field:board.note.type,name:0
+#: model:ir.model,name:board.model_board_note_type
+msgid "Note Type"
+msgstr "Typ notatki"
+
+#. module: board
+#: view:board.note:0
 #: field:board.note,user_id:0
 msgid "Author"
 msgstr "Autor"
@@ -37,28 +42,83 @@ msgstr "Autor"
 #. module: board
 #: model:ir.module.module,shortdesc:board.module_meta_information
 msgid "Dashboard main module"
-msgstr ""
+msgstr "Główny moduł konsol"
+
+#. module: board
+#: view:res.users:0
+msgid "Latest Connections"
+msgstr "Ostatnie połączenia"
+
+#. module: board
+#: code:addons/board/wizard/board_menu_create.py:45
+#, python-format
+msgid "User Error!"
+msgstr "Błąd użytkownika!"
+
+#. module: board
+#: view:board.board:0
+#: model:ir.actions.act_window,name:board.open_board_administration_form
+#: model:ir.ui.menu,name:board.menu_board_admin
+msgid "Administration Dashboard"
+msgstr "Konsola administracyjna"
 
 #. module: board
 #: view:board.note:0
 #: field:board.note,note:0
+#: model:ir.model,name:board.model_board_note
 msgid "Note"
 msgstr "Uwagi"
 
 #. module: board
-#: field:board.board.line,width:0
-msgid "Width"
-msgstr "Szerokość"
+#: view:board.note:0
+#: view:res.log.report:0
+msgid "Group By..."
+msgstr "Grupuj wg..."
 
 #. module: board
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr ""
+#: model:ir.model,name:board.model_board_board
+msgid "Board"
+msgstr "Konsola"
+
+#. module: board
+#: view:board.board:0
+#: model:ir.actions.act_window,name:board.board_weekly_res_log_report_action
+#: view:res.log.report:0
+msgid "Weekly Global Activity"
+msgstr "Ogólna tygodniowa aktywność"
 
 #. module: board
 #: field:board.board.line,name:0
 msgid "Title"
 msgstr "Tytuł"
+
+#. module: board
+#: field:res.log.report,nbr:0
+msgid "# of Entries"
+msgstr "# Zapisów"
+
+#. module: board
+#: view:res.log.report:0
+#: field:res.log.report,month:0
+msgid "Month"
+msgstr "Miesiąc"
+
+#. module: board
+#: model:ir.actions.act_window,name:board.dashboard_open
+msgid "Open Dashboard"
+msgstr "Otwórz konsolę"
+
+#. module: board
+#: view:board.board:0
+#: model:ir.actions.act_window,name:board.board_monthly_res_log_report_action
+#: view:res.log.report:0
+msgid "Monthly Activity per Document"
+msgstr "Miesięczna aktywność wg dokumentów"
+
+#. module: board
+#: view:res.log.report:0
+msgid "Log Analysis"
+msgstr "Analiza logów"
 
 #. module: board
 #: model:ir.actions.act_window,name:board.action_view_board_list_form
@@ -67,55 +127,113 @@ msgid "Dashboard Definition"
 msgstr "Definicja konsoli"
 
 #. module: board
+#: selection:res.log.report,month:0
+msgid "March"
+msgstr "Marzec"
+
+#. module: board
+#: selection:res.log.report,month:0
+msgid "August"
+msgstr "Sierpień"
+
+#. module: board
+#: view:board.board:0
+#: model:ir.actions.act_window,name:board.action_user_connection_tree
+msgid "User Connections"
+msgstr "Połaczenia użytkownika"
+
+#. module: board
+#: field:res.log.report,creation_date:0
+msgid "Creation Date"
+msgstr "Data utworzenia"
+
+#. module: board
 #: model:ir.actions.act_window,name:board.action_view_board_note_form
 #: model:ir.ui.menu,name:board.menu_view_board_note_form
 msgid "Publish a note"
-msgstr ""
+msgstr "Publikuj notatkę"
 
 #. module: board
-#: wizard_view:board.board.menu.create,init:0
+#: view:board.menu.create:0
 msgid "Menu Information"
 msgstr "Informacja o menu"
 
 #. module: board
+#: selection:res.log.report,month:0
+msgid "June"
+msgstr "Czerwiec"
+
+#. module: board
+#: field:board.note,type:0
+msgid "Note type"
+msgstr "Typ uwagi"
+
+#. module: board
 #: field:board.board,line_ids:0
 msgid "Action Views"
-msgstr ""
+msgstr "Widoki akcji"
 
 #. module: board
-#: model:ir.model,name:board.model_board_note
-msgid "board.note"
-msgstr ""
+#: model:ir.model,name:board.model_res_log_report
+msgid "Log Report"
+msgstr "Raport logów"
 
 #. module: board
+#: view:board.note:0
 #: field:board.note,date:0
 msgid "Date"
 msgstr "Data"
 
 #. module: board
-#: model:ir.ui.menu,name:board.next_id_50
-msgid "Configuration"
-msgstr "Ustawienia"
+#: selection:res.log.report,month:0
+msgid "July"
+msgstr "Lipiec"
 
 #. module: board
-#: field:board.note.type,name:0
-msgid "Note Type"
-msgstr "Typ notatki"
+#: view:res.log.report:0
+msgid "Extended Filters..."
+msgstr "Rozszerzone filtry..."
 
 #. module: board
-#: wizard_view:board.board.menu.create,init:0
+#: view:res.log.report:0
+#: field:res.log.report,day:0
+msgid "Day"
+msgstr "Dzień"
+
+#. module: board
+#: view:board.menu.create:0
 msgid "Create Menu For Dashboard"
 msgstr "Utwórz menu dla konsoli"
 
 #. module: board
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML niewłaściwy dla tej architektury wyświetlania!"
+#: selection:res.log.report,month:0
+msgid "February"
+msgstr "Luty"
 
 #. module: board
-#: wizard_field:board.board.menu.create,init,menu_parent_id:0
+#: selection:res.log.report,month:0
+msgid "October"
+msgstr "Październik"
+
+#. module: board
+#: model:ir.model,name:board.model_board_board_line
+msgid "Board Line"
+msgstr "Pozycja konsoli"
+
+#. module: board
+#: field:board.menu.create,menu_parent_id:0
 msgid "Parent Menu"
 msgstr "Menu nadrzędne"
+
+#. module: board
+#: view:res.log.report:0
+msgid "    Month-1    "
+msgstr "    Miesiąc-1    "
+
+#. module: board
+#: selection:res.log.report,month:0
+msgid "January"
+msgstr "Styczeń"
 
 #. module: board
 #: view:board.note:0
@@ -123,21 +241,40 @@ msgid "Notes"
 msgstr "Uwagi"
 
 #. module: board
-#: model:ir.model,name:board.model_board_note_type
-msgid "board.note.type"
-msgstr ""
+#: selection:res.log.report,month:0
+msgid "November"
+msgstr "Listopad"
+
+#. module: board
+#: help:board.board.line,sequence:0
+msgid ""
+"Gives the sequence order                         when displaying a list of "
+"board lines."
+msgstr "Określa kolejność pozycji konsoli w listach."
+
+#. module: board
+#: selection:res.log.report,month:0
+msgid "April"
+msgstr "Kwiecień"
 
 #. module: board
 #: view:board.board:0
 #: field:board.board,name:0
 #: field:board.board.line,board_id:0
+#: model:ir.ui.menu,name:board.admin_menu_dasboard
+#: model:ir.ui.menu,name:board.menu_dasboard
 msgid "Dashboard"
 msgstr "Konsola"
 
 #. module: board
 #: model:ir.module.module,description:board.module_meta_information
 msgid "Base module for all dashboards."
-msgstr ""
+msgstr "Moduł podstawowy dla wszystkich konsol"
+
+#. module: board
+#: field:board.board.line,action_id:0
+msgid "Action"
+msgstr "Akcja"
 
 #. module: board
 #: field:board.board.line,position:0
@@ -145,19 +282,20 @@ msgid "Position"
 msgstr "Położenie"
 
 #. module: board
-#: model:ir.actions.act_window,name:board.dashboard_open
-msgid "Open Dashboard"
-msgstr "Otwórz konsolę"
+#: view:res.log.report:0
+msgid "Model"
+msgstr ""
 
 #. module: board
-#: wizard_field:board.board.menu.create,init,menu_name:0
+#: field:board.menu.create,menu_name:0
 msgid "Menu Name"
 msgstr "Menu nazwy"
 
 #. module: board
-#: field:board.note,type:0
-msgid "Note type"
-msgstr ""
+#: view:board.board:0
+#: model:ir.actions.act_window,name:board.action_latest_activities_tree
+msgid "Latest Activities"
+msgstr "Ostatnia aktywność"
 
 #. module: board
 #: selection:board.board.line,position:0
@@ -175,20 +313,35 @@ msgid "Right"
 msgstr "Po prawej"
 
 #. module: board
+#: field:board.board.line,width:0
+msgid "Width"
+msgstr "Szerokość"
+
+#. module: board
+#: view:res.log.report:0
+msgid "   Month   "
+msgstr "   Miesiąc   "
+
+#. module: board
 #: field:board.board.line,sequence:0
 msgid "Sequence"
 msgstr "Sekwencja"
 
 #. module: board
-#: view:board.board:0
-#: wizard_button:board.board.menu.create,init,create_menu:0
-msgid "Create Menu"
-msgstr "Utwórz menu"
+#: selection:res.log.report,month:0
+msgid "September"
+msgstr "Wrzesień"
 
 #. module: board
-#: model:ir.ui.menu,name:board.dashboard_menu
-msgid "Dashboards"
-msgstr "Konsole"
+#: selection:res.log.report,month:0
+msgid "December"
+msgstr "Grudzień"
+
+#. module: board
+#: view:board.board:0
+#: view:board.menu.create:0
+msgid "Create Menu"
+msgstr "Utwórz menu"
 
 #. module: board
 #: field:board.board.line,height:0
@@ -196,12 +349,28 @@ msgid "Height"
 msgstr "Wysokość"
 
 #. module: board
-#: model:ir.actions.wizard,name:board.wizard_board_create_menu
+#: model:ir.actions.act_window,name:board.action_board_menu_create
 msgid "Create Board Menu"
 msgstr "Utwórz menu konsoli"
 
 #. module: board
-#: wizard_button:board.board.menu.create,init,end:0
+#: selection:res.log.report,month:0
+msgid "May"
+msgstr "Maj"
+
+#. module: board
+#: field:res.log.report,res_model:0
+msgid "Object"
+msgstr "Obiekt"
+
+#. module: board
+#: view:res.log.report:0
+#: field:res.log.report,name:0
+msgid "Year"
+msgstr "Rok"
+
+#. module: board
+#: view:board.menu.create:0
 msgid "Cancel"
 msgstr "Anuluj"
 
@@ -211,11 +380,13 @@ msgid "Dashboard View"
 msgstr "Widok konsoli"
 
 #. module: board
-#: model:ir.model,name:board.model_board_board_line
-msgid "board.board.line"
-msgstr ""
+#: code:addons/board/wizard/board_menu_create.py:46
+#, python-format
+msgid "Please Insert Dashboard View(s) !"
+msgstr "Proszę wstawić Widoki konsoli !"
 
 #. module: board
+#: view:board.note:0
 #: field:board.note,name:0
 msgid "Subject"
 msgstr "Temat"

@@ -27,7 +27,7 @@
     This module provides features to improve the layout of the Sales Order.
 
     It gives you the possibility to
-        * order all the lines of an sale order
+        * order all the lines of a sales order
         * add titles, comment lines, sub total lines
         * draw horizontal lines and put page breaks
 
@@ -40,7 +40,9 @@
         "sale_layout_view.xml",
         "sale_layout_report.xml",
     ],
+    "test" : ['test/sale_layout_report.yml'],
     "active": False,
-    "installable": True
+    "installable": True,
+    "certificate" : "00982333536005187677",
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

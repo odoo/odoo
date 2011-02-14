@@ -2,11 +2,6 @@
 <openerp>
     <data>
 
-        <record id="res_roles_invoice0" model="res.roles">
-            <field eval="&quot;&quot;&quot;Invoice&quot;&quot;&quot;" name="name"/>
-            <field name="description">Assign this role to the persons that should have the rights to confirm a draft invoice.</field>
-        </record>
-
         <record id="wkf" model="workflow">
             <field name="name">account.invoice.basic</field>
             <field name="osv">account.invoice</field>

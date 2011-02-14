@@ -35,8 +35,9 @@
         'knowledge_installer.xml',
         'knowledge_view.xml',
     ],
-    'demo_xml': [],
+    'demo_xml': ['knowledge_demo.xml'],
     'installable': True,
     'active': False,
+    'certificate' : '001278773815843749581',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

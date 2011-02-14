@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+	    <!--
+	    Work Order Report
+	    -->
+
+        <record id="view_report_mrp_workorder_tree" model="ir.ui.view">
+            <field name="name">mrp.workorder.tree</field>
+            <field name="model">mrp.workorder</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+               <tree string="Work Orders">
+                      <field name="date" invisible="1"/>
+                      <field name="product_id" invisible="1"/>
+                      <field name="product_qty" sum="Product Qty"/>
+                      <field name="nbr" string="#Line Orders" sum="#Line Orders"/>
+                      <field name="total_hours" sum="Total Hours"/>
+                      <field name="total_cycles" sum="Total Cycles"/>
+                      <field name="delay" invisible="1"/>
+                      <field name="production_id" invisible="1"/>
+                      <field name="workcenter_id" invisible="1"/>
+                      <field name="state" invisible="1"/>
+                      <field name="day" invisible="1" />
+                      <field name="month" invisible="1" />
+                      <field name="year" invisible="1" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_report_mrp_workorder_graph" model="ir.ui.view">
+            <field name="name">mrp.workorder.graph</field>
+            <field name="model">mrp.workorder</field>
+            <field name="type">graph</field>
+            <field name="arch" type="xml">
+                <graph orientation="horizontal" string="Work Orders" type="bar">
+                    <field name="state"/>
+                    <field name="nbr" operator="+"/>
+                </graph>
+            </field>
+        </record>
+
+        <record id="view_report_mrp_workorder_filter" model="ir.ui.view">
+            <field name="name">mrp.workorder.select</field>
+            <field name="model">mrp.workorder</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search">
+                  <group col="16" colspan="6">
+                        <filter icon="terp-go-year" string="Year"
+                                domain="[('year','=',time.strftime('%%Y'))]"
+                                help="Work orders made during current year"/>
+                        <filter icon="terp-go-month" string="Month"
+                                name="month"
+                                domain="[('month','=',time.strftime('%%m'))]"
+                                help="Work orders made during current month"/>
+                        <filter icon="terp-go-week"
+                                string="Month -1"
+                                separator="1"
+                                domain="[('month','=',(datetime.date.today() - datetime.timedelta(365/12)).strftime('%%m'))]"
+                                help="Work orders during last month"/>
+                      <separator orientation="vertical"/>
+                        <filter string="Current" icon="terp-check" domain="[('state','not in',('draft','cancel','done'))]"/>
+                        <filter icon="terp-check" string="Started" domain="[('state','=','startworking')]"/>
+                        <filter icon="terp-dialog-close" string="Done" domain="[('state','=','done')]"/>
+                      <separator orientation="vertical"/>
+                        <field name="product_id" />
+                        <field name="workcenter_id"/>
+                   </group>
+                   <newline/>
+                   <group expand="1" string="Group By...">
+                        <filter string="Product" name="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id'}" />
+                        <filter string="Workcenter" name="Workcenter" icon="terp-go-home" context="{'group_by':'workcenter_id'}" />
+                        <separator orientation="vertical"/>
+                        <filter string="Production" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'production_id'}"/>
+                        <separator orientation="vertical"/>
+                        <filter string="State" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Day" icon="terp-go-today" context="{'group_by':'day'}" help="Planned Day"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Month" name="terp-go-month" icon="terp-go-month" context="{'group_by':'month'}" help="Planned Month"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Year" icon="terp-go-year" context="{'group_by':'year'}" help="Planned Year"/>
+                   </group>
+                  </search>
+            </field>
+        </record>
+        <record id="action_report_mrp_workorder" model="ir.actions.act_window">
+            <field name="name">Work Order</field>
+            <field name="res_model">mrp.workorder</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">graph,tree</field>
+            <field name="view_id" ref="view_report_mrp_workorder_tree"/>
+            <field name="search_view_id" ref="view_report_mrp_workorder_filter"/>
+            <field name="context">{'search_default_Workcenter': 1,'search_default_month':1,'group_by_no_leaf':1,'group_by':[]}</field>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="action_report_mrp_workorder_tree">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_report_mrp_workorder_tree"/>
+            <field name="act_window_id" ref="action_report_mrp_workorder"/>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="action_report_mrp_workorder_graph">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">graph</field>
+            <field name="view_id" ref="view_report_mrp_workorder_graph"/>
+            <field name="act_window_id" ref="action_report_mrp_workorder"/>
+        </record>
+
+        <menuitem name="Work Order Analysis" action="action_report_mrp_workorder" id="menu_report_mrp_workorders_tree" parent="mrp.next_id_77"/>
+
+  </data>
+</openerp>

@@ -26,9 +26,8 @@
     'category': 'Generic Modules/Accounting',
     'description': """This module allows accountants to manage analytic and crossovered budgets.
 
-Once the Master Budgets and the Budgets defined (in Financial
-Management/Budgets/), the Project Managers can set the planned amount on each
-Analytic Account.
+Once the Master Budgets and the Budgets are defined (in Accounting/Budgets/),
+the Project Managers can set the planned amount on each Analytic Account.
 
 The accountant has the possibility to see the total of amount planned for each
 Budget and Master Budget in order to ensure the total planned is not
@@ -50,19 +49,18 @@ Three reports are available:
     'update_xml': [
         'security/ir.model.access.csv',
         'security/account_budget_security.xml',
-        'wizard/account_budget_spread_view.xml',
-        'crossovered_budget_view.xml',
-        'crossovered_budget_report.xml',
-        'crossovered_budget_workflow.xml',
+        'account_budget_view.xml',
+        'account_budget_report.xml',
+        'account_budget_workflow.xml',
         'wizard/account_budget_analytic_view.xml',
         'wizard/account_budget_report_view.xml',
-        'wizard/account_budget_spread_view.xml',
         'wizard/account_budget_crossovered_summary_report_view.xml',
         'wizard/account_budget_crossovered_report_view.xml',
     ],
-    'demo_xml': ['crossovered_budget_demo.xml'],
+    'demo_xml': ['account_budget_demo.xml'],
     'test':[
             'test/account_budget.yml',
+            'test/account_budget_report.yml',
             ],
     'installable': True,
     'active': False,

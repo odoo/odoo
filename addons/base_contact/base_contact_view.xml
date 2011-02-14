@@ -408,8 +408,9 @@
     <!-- Act window defining a shorcut on partner address to open all his jobs -->
 
     <act_window
-        id="act_res_partner_jobs" name="Open Jobs"
-        domain="[('address_id', '=', active_id)]"
+        id="act_res_partner_jobs" 
+        name="Open Jobs"
+        context="{'search_default_address_id': [active_id]}"
         res_model="res.partner.job"
         src_model="res.partner.address"
         />

@@ -21,6 +21,8 @@
 
 import tools
 from osv import fields,osv
+from decimal_precision import decimal_precision as dp
+
 
 class hr_timesheet_report(osv.osv):
     _name = "hr.timesheet.report"
@@ -28,6 +30,7 @@ class hr_timesheet_report(osv.osv):
     _auto = False
     _columns = {
         'year': fields.char('Year',size=64,required=False, readonly=True),
+        'day': fields.char('Day', size=128, readonly=True),
         'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'),
             ('05','May'), ('06','June'), ('07','July'), ('08','August'), ('09','September'),
             ('10','October'), ('11','November'), ('12','December')], 'Month',readonly=True),
@@ -39,7 +42,7 @@ class hr_timesheet_report(osv.osv):
         'user_id': fields.many2one('res.users', 'User',readonly=True),
         'account_id': fields.many2one('account.analytic.account', 'Analytic Account',readonly=True),
         'company_id': fields.many2one('res.company', 'Company',readonly=True),
-        'cost': fields.float('Cost',readonly=True),
+        'cost': fields.float('Cost',readonly=True, digits_compute=dp.get_precision('Account')),
         'quantity': fields.float('Quantity',readonly=True),
     }
 
@@ -50,6 +53,7 @@ class hr_timesheet_report(osv.osv):
                 select
                     min(t.id) as id,
                     l.date as date,
+                    to_char(l.date, 'YYYY-MM-DD') as day,
                     to_char(l.date,'YYYY') as year,
                     to_char(l.date,'MM') as month,
                     sum(l.amount) as cost,

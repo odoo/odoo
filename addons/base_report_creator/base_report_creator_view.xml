@@ -143,34 +143,9 @@
 
     <menuitem
         name="Custom Reports" id="base.menu_custom_reports"
-        groups="base.group_extended"
         action="base_report_creator_action" parent="base.reporting_menu" sequence="1"/>
 
-    <menuitem
-        parent="base.next_id_50"
-        id="menu_base_report_creator_action_config"
-        action="base_report_creator_action"/>
-
-    <record model="ir.ui.view" id="base_report_creator_tree_simple">
-        <field name="name">base_report_creator.report.simple.tree</field>
-        <field name="model">base_report_creator.report</field>
-        <field name="type">tree</field>
-        <field name="arch" type="xml">
-            <tree string="Reports">
-                <field name="name"/>
-            </tree>
-        </field>
-    </record>
-
-    <record model="ir.actions.act_window" id="base_report_creator_action_tree">
-        <field name="res_model">base_report_creator.report</field>
-        <field name="view_type">tree</field>
-    </record>
-
-    <menuitem
-        name="Custom Reports" parent="base.menu_custom_reports"
-        id="menu_base_report_creator_action"
-        action="base_report_creator_action_tree"/>
+    
 
     </data>
 </openerp>

@@ -34,7 +34,7 @@ class crm_opportunity2phonecall(osv.osv_memory):
         'date': fields.datetime('Date' , required=True),
         'section_id': fields.many2one('crm.case.section', 'Sales Team'),
         'categ_id': fields.many2one('crm.case.categ', 'Category', required=True, \
-                        domain="[('section_id','=',section_id),\
+                        domain="['|',('section_id','=',False),('section_id','=',section_id),\
                         ('object_id.model', '=', 'crm.phonecall')]"), 
     }
 
@@ -85,7 +85,7 @@ class crm_opportunity2phonecall(osv.osv_memory):
         This converts Opportunity to Phonecall and opens Phonecall view
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
+        @param uid: the current user's ID for security checks,
         @param ids: List of Opportunity to Phonecall IDs
         @param context: A standard dictionary for contextual values
 
@@ -137,7 +137,7 @@ class crm_opportunity2phonecall(osv.osv_memory):
                 'view_mode': 'tree,form',
                 'res_model': 'crm.phonecall',
                 'res_id' : new_case,
-                'views': [(id3, 'form'), (id2, 'tree'), (False, 'calendar'), (False, 'graph')],
+                'views': [(id3, 'form'), (id2, 'tree'), (False, 'calendar')],
                 'type': 'ir.actions.act_window',
                 'search_view_id': res['res_id']
             }

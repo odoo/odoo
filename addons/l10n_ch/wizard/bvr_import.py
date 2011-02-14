@@ -1,35 +1,23 @@
-# -*- coding: utf-8 -*-
-#
-#  bvr_import.py
-#  l10n_ch
-#
-#  Created by Nicolas Bessi based on Credric Krier contribution
-#
-#  Copyright (c) 2009 CamptoCamp. All rights reserved.
+# -*- encoding: utf-8 -*-
 ##############################################################################
-# WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
-# consequences resulting from its eventual inadequacies and bugs
-# End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
-# Service Company
 #
-# This program is Free Software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
+#    Author: Nicolas Bessi. Copyright Camptocamp SA
+#    Donors: Hasa Sàrl, Open Net Sàrl and Prisme Solutions Informatique SA
 #
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
 #
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
+#
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
 import base64
 import time
 import re
@@ -69,15 +57,16 @@ def _reconstruct_invoice_ref(cursor, user, reference, context=None):
         return []
     return True
 
-def _import(obj, cursor, user, data, context=None):
+def _import(self, cursor, user, data, context=None):
 
-    pool = pooler.get_pool(cursor.dbname)
-    statement_line_obj = pool.get('account.bank.statement.line')
-    statement_reconcile_obj = pool.get('account.bank.statement.reconcile')
-    move_line_obj = pool.get('account.move.line')
-    property_obj = pool.get('ir.property')
-    model_fields_obj = pool.get('ir.model.fields')
-    attachment_obj = pool.get('ir.attachment')
+    statement_line_obj = self.pool.get('account.bank.statement.line')
+#    statement_reconcile_obj = pool.get('account.bank.statement.reconcile')
+    voucher_obj = self.pool.get('account.voucher')
+    voucher_line_obj = self.pool.get('account.voucher.line')
+    move_line_obj = self.pool.get('account.move.line')
+    property_obj = self.pool.get('ir.property')
+    model_fields_obj = self.pool.get('ir.model.fields')
+    attachment_obj = self.pool.get('ir.attachment')
     file = data['form']['file']
     statement_id = data['id']
     records = []
@@ -135,22 +124,17 @@ def _import(obj, cursor, user, data, context=None):
                 total_cost += record['cost']
                 records.append(record)
 
-    model_fields_ids = model_fields_obj.search(cursor, user, [
-        ('name', 'in', ['property_account_receivable', 'property_account_payable']),
-        ('model', '=', 'res.partner'),
-        ], context=context)
-    property_ids = property_obj.search(cursor, user, [
-        ('fields_id', 'in', model_fields_ids),
-        ('res_id', '=', False),
-        ], context=context)
-
+#    model_fields_ids = model_fields_obj.search(cursor, user, [
+#        ('name', 'in', ['property_account_receivable', 'property_account_payable']),
+#        ('model', '=', 'res.partner'),
+#        ], context=context)
+#    property_ids = property_obj.search(cursor, user, [
+#        ('fields_id', 'in', model_fields_ids),
+#        ('res_id', '=', False),
+#        ], context=context)
     account_receivable = False
     account_payable = False
-    for property in property_obj.browse(cursor, user, property_ids, context=context):
-        if property.fields_id.name == 'property_account_receivable':
-            account_receivable = int(property.value.split(',')[1])
-        elif property.fields_id.name == 'property_account_payable':
-            account_payable = int(property.value.split(',')[1])
+    statement = statement_obj.browse(cursor, user, statement_id, context=context)
 
     for record in records:
         # Remove the 11 first char because it can be adherent number
@@ -164,6 +148,7 @@ def _import(obj, cursor, user, data, context=None):
             'type': (record['amount'] >= 0 and 'customer') or 'supplier',
             'statement_id': statement_id,
         }
+
         line_ids = move_line_obj.search(cursor, user, [
             ('ref', 'like', reference),
             ('reconcile_id', '=', False),
@@ -172,22 +157,49 @@ def _import(obj, cursor, user, data, context=None):
         if not line_ids:
             line_ids = _reconstruct_invoice_ref(cursor, user, reference, None)
 
-        line2reconcile = False
         partner_id = False
         account_id = False
         for line in move_line_obj.browse(cursor, user, line_ids, context=context):
-            if line.partner_id.id:
-                partner_id = line.partner_id.id
+            account_receivable = line.partner_id.property_account_receivable.id
+            account_payable = line.partner_id.property_account_payable.id
+            partner_id = line.partner_id.id
+            move_id = line.move_id.id
             if record['amount'] >= 0:
                 if round(record['amount'] - line.debit, 2) < 0.01:
-                    line2reconcile = line.id
+#                    line2reconcile = line.id
                     account_id = line.account_id.id
                     break
             else:
                 if round(line.credit + record['amount'], 2) < 0.01:
-                    line2reconcile = line.id
+#                    line2reconcile = line.id
                     account_id = line.account_id.id
                     break
+        result = voucher_obj.onchange_partner_id(cursor, user, [], partner_id=partner_id, journal_id=statement.journal_id.id, price=abs(record['amount']), currency_id= statement.currency.id, ttype='payment', context=context)
+        voucher_res = { 'type': 'payment' ,
+
+             'name': values['name'],
+             'partner_id': partner_id,
+             'journal_id': statement.journal_id.id,
+             'account_id': result.get('account_id', statement.journal_id.default_credit_account_id.id),
+             'company_id': statement.company_id.id,
+             'currency_id': statement.currency.id,
+             'date': record['date'] or time.strftime('%Y-%m-%d'),
+             'amount': abs(record['amount']),
+            'period_id': statement.period_id.id
+             }
+        voucher_id = voucher_obj.create(cursor, user, voucher_res, context=context)
+        context.update({'move_line_ids': line_ids})
+        values['voucher_id'] = voucher_id
+        voucher_line_dict =  False
+        if result['value']['line_ids']:
+             for line_dict in result['value']['line_ids']:
+                 move_line = move_line_obj.browse(cursor, user, line_dict['move_line_id'], context)
+                 if move_id == move_line.move_id.id:
+                     voucher_line_dict = line_dict
+        if voucher_line_dict:
+             voucher_line_dict.update({'voucher_id':voucher_id})
+             voucher_line_obj.create(cursor, user, voucher_line_dict, context=context)                
+             
         if not account_id:
             if record['amount'] >= 0:
                 account_id = account_receivable
@@ -199,10 +211,9 @@ def _import(obj, cursor, user, data, context=None):
         values['account_id'] = account_id
         values['partner_id'] = partner_id
 
-        if line2reconcile:
-            values['reconcile_id'] = statement_reconcile_obj.create(cursor, user, {
-                'line_ids': [(6, 0, [line2reconcile])],
-                }, context=context)
+#            values['reconcile_id'] = statement_reconcile_obj.create(cursor, user, {
+#                'line_ids': [(6, 0, [line2reconcile])],
+#                }, context=context)
 
         statement_line_obj.create(cursor, user, values, context=context)
     attachment_obj.create(cursor, user, {

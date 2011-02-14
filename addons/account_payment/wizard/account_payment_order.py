@@ -18,6 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 import time
 from lxml import etree
 
@@ -28,7 +29,7 @@ class payment_order_create(osv.osv_memory):
     Create a payment object with lines corresponding to the account move line
     to pay according to the date and the mode provided by the user.
     Hypothesis:
-    - Small number of non-reconcilied move line , payment mode and bank account type,
+    - Small number of non-reconcilied move line, payment mode and bank account type,
     - Big number of partner and bank account.
 
     If a type is given, unsuitable account Entry lines are ignored.
@@ -39,10 +40,10 @@ class payment_order_create(osv.osv_memory):
     _columns = {
         'duedate': fields.date('Due Date', required=True),
         'entries': fields.many2many('account.move.line', 'line_pay_rel', 'pay_id', 'line_id', 'Entries')
-                }
+    }
     _defaults = {
-         'duedate': time.strftime('%Y-%m-%d'),
-                 }
+         'duedate': lambda *a: time.strftime('%Y-%m-%d'),
+    }
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         res = super(payment_order_create, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=False)
@@ -61,9 +62,10 @@ class payment_order_create(osv.osv_memory):
         payment_obj = self.pool.get('payment.line')
         if context is None:
             context = {}
-        data = self.read(cr, uid, ids, [])[0]
+        data = self.read(cr, uid, ids, [], context=context)[0]
         line_ids = data['entries']
-        if not line_ids: return {}
+        if not line_ids:
+            return {'type': 'ir.actions.act_window_close'}
 
         payment = order_obj.browse(cr, uid, context['active_id'], context=context)
         t = None
@@ -88,27 +90,23 @@ class payment_order_create(osv.osv_memory):
                 'date': date_to_pay,
                 'currency': line.invoice and line.invoice.currency_id.id or False,
                 }, context=context)
-        return {}
+        return {'type': 'ir.actions.act_window_close'}
 
     def search_entries(self, cr, uid, ids, context=None):
-        order_obj = self.pool.get('payment.order')
         line_obj = self.pool.get('account.move.line')
         mod_obj = self.pool.get('ir.model.data')
         if context is None:
             context = {}
         data = self.read(cr, uid, ids, [], context=context)[0]
         search_due_date = data['duedate']
-        payment = order_obj.browse(cr, uid, context['active_id'], context=context)
-        ctx = ''
-        if payment.mode:
-            ctx = '''context="{'journal_id': %d}"''' % payment.mode.journal.id
+#        payment = self.pool.get('payment.order').browse(cr, uid, context['active_id'], context=context)
 
         # Search for move line to pay:
-        domain = [('reconcile_id', '=', False),('account_id.type', '=', 'payable'),('amount_to_pay', '>', 0)]
-        domain = domain + ['|',('date_maturity','<=',search_due_date),('date_maturity','=',False)]
+        domain = [('reconcile_id', '=', False), ('account_id.type', '=', 'payable'), ('amount_to_pay', '>', 0)]
+        domain = domain + ['|', ('date_maturity', '<=', search_due_date), ('date_maturity', '=', False)]
         line_ids = line_obj.search(cr, uid, domain, context=context)
         context.update({'line_ids': line_ids})
-        model_data_ids = mod_obj.search(cr, uid,[('model','=','ir.ui.view'),('name','=','view_create_payment_order_lines')], context=context)
+        model_data_ids = mod_obj.search(cr, uid,[('model', '=', 'ir.ui.view'), ('name', '=', 'view_create_payment_order_lines')], context=context)
         resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
         return {'name': ('Entrie Lines'),
                 'context': context,
@@ -118,7 +116,7 @@ class payment_order_create(osv.osv_memory):
                 'views': [(resource_id,'form')],
                 'type': 'ir.actions.act_window',
                 'target': 'new',
-                }
+        }
 
 payment_order_create()
 

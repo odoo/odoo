@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
-<document filename="test.pdf">
-  <template pageSize="(595.0,842.0)" title="Request for Quotation" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
+<document filename="Request for Quotation.pdf">
+  <template pageSize="(595.0,842.0)" title="Request for Quotation" author="OpenERP S.A.(sales@openerp.com)" allowSplitting="20">
     <pageTemplate id="first">
       <frame id="first" x1="23.0" y1="43.0" width="530" height="799"/>
     </pageTemplate>
@@ -69,6 +69,22 @@
     <images/>
   </stylesheet>
   <story>
+  <pto>
+  <pto_header>
+    <blockTable colWidths="371.0,98.0,61.0" repeatRows="1" style="Table_Product_Header_Title">
+      <tr>
+        <td>
+          <para style="terp_tblheader_Details">Description</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details_Centre">Expected Date</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details_Centre">Qty</para>
+        </td>
+      </tr>
+    </blockTable>
+  </pto_header>
     <para style="terp_default_9">[[repeatIn(objects,'order')]]</para>
     <para style="terp_default_9">[[ setLang(order.partner_id.lang) ]]</para>
     <blockTable colWidths="250.0,59.0,221.0" style="Table_Address_Detail">
@@ -88,7 +104,7 @@
           </para>
         </td>
         <td>
-          <para style="terp_default_9">[[ (order.partner_id and order.partner_id.title) or '' ]] [[ order.partner_id.name ]]</para>
+          <para style="terp_default_9">[[ (order.partner_id and order.partner_id.title and order.partner_id.title.name) or '' ]] [[ order.partner_id.name ]]</para>
           <para style="terp_default_9">[[ (order.partner_address_id and order.partner_address_id.street) or '']]</para>
           <para style="terp_default_9">[[ (order.partner_address_id.street2) or removeParentNode('para') ]]</para>
           <para style="terp_default_9">[[ (order.partner_address_id and order.partner_address_id.zip) or '' ]][[ (order.partner_address_id and order.partner_address_id.city) or '' ]]</para>
@@ -97,9 +113,9 @@
           <para style="terp_default_9">
             <font color="white"> </font>
           </para>
-          <para style="terp_default_9">Tel.: [[ (order.partner_address_id and order.partner_address_id.phone) or '' ]]</para>
-          <para style="terp_default_9">Fax: [[ (order.partner_address_id and order.partner_address_id.fax) or '' ]]</para>
-          <para style="terp_default_9">TVA: [[ (order.partner_id and order.partner_id.vat) or '' ]]</para>
+          <para style="terp_default_9">Tel.: [[ (order.partner_address_id and order.partner_address_id.phone) or removeParentNode('para') ]]</para>
+          <para style="terp_default_9">Fax: [[ (order.partner_address_id and order.partner_address_id.fax) or removeParentNode('para') ]]</para>
+          <para style="terp_default_9">TVA: [[ (order.partner_id and order.partner_id.vat) or removeParentNode('para') ]]</para>
         </td>
       </tr>
     </blockTable>
@@ -124,7 +140,7 @@
       </tr>
     </blockTable>
     <section>
-      <para style="terp_default_9">[[repeatIn(order.order_line,'order_line')]]</para>
+      <para style="terp_default_2">[[repeatIn(order.order_line,'order_line')]]</para>
       <blockTable colWidths="370.0,100.0,39.0,20.0" style="Table_Product_Line">
         <tr>
           <td>
@@ -162,5 +178,6 @@
       <font color="white"> </font>
     </para>
     <para style="terp_default_9">[[ user.signature or '' ]]</para>
+  </pto>
   </story>
 </document>

@@ -42,7 +42,6 @@
     'author': 'OpenERP SA',
     'depends': [
                 'account',
-                'account_report',
                 'base_vat',
                 'base_iban',
                 'account_chart',
@@ -59,7 +58,7 @@
                 'fiscal_templates.xml',
                 'security/ir.model.access.csv'
                    ],
-    'demo_xml': ['account.report.report.csv'],
+    'demo_xml': [],
     'installable': True,
     'certificate': '0031977724637',
 }

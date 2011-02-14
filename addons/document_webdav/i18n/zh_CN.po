@@ -6,207 +6,200 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-30 15:14+0000\n"
-"PO-Revision-Date: 2010-08-03 06:12+0000\n"
+"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"PO-Revision-Date: 2011-01-19 12:00+0000\n"
 "Last-Translator: Black Jack <onetimespeed@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-08-12 04:07+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-25 06:38+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
-#. module: document_webdav_old
-#: model:ir.module.module,description:document_webdav_old.module_meta_information
-msgid ""
-"This is a complete document management system:\n"
-"\t* WebDav Interface\n"
-"\t* User Authentification\n"
-"\t* Document Indexation\n"
+#. module: document_webdav
+#: field:document.webdav.dir.property,create_date:0
+#: field:document.webdav.file.property,create_date:0
+msgid "Date Created"
 msgstr ""
-"这是一个完整的文档管理系统：\n"
-"\t* WebDav 接口\n"
-"\t* 用户认证\n"
-"\t* 文档索引\n"
 
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr "对象名必须要以X_开头并且不能含有特殊字符!"
+#. module: document_webdav
+#: constraint:document.directory:0
+msgid "Error! You can not create recursive Directories."
+msgstr "错误:你无法建立递归的目录"
 
-#~ msgid "Error! You can not create recursive Directories."
-#~ msgstr "错误:你无法建立递归的目录"
+#. module: document_webdav
+#: view:document.webdav.dir.property:0
+#: view:document.webdav.file.property:0
+msgid "Search Document properties"
+msgstr ""
 
-#~ msgid "Jobs Hiring Process"
-#~ msgstr "招聘过程"
+#. module: document_webdav
+#: view:document.webdav.dir.property:0
+#: field:document.webdav.dir.property,namespace:0
+#: view:document.webdav.file.property:0
+#: field:document.webdav.file.property,namespace:0
+msgid "Namespace"
+msgstr ""
 
-#~ msgid "Configure Calendars for CRM Sections"
-#~ msgstr "客户关系管理部分设置日程表"
+#. module: document_webdav
+#: field:document.directory,dav_prop_ids:0
+msgid "DAV properties"
+msgstr ""
 
-#~ msgid "Helpdesk"
-#~ msgstr "求助"
+#. module: document_webdav
+#: model:ir.model,name:document_webdav.model_document_webdav_file_property
+msgid "document.webdav.file.property"
+msgstr ""
 
-#~ msgid "Open ERP Field"
-#~ msgstr "系统字段"
+#. module: document_webdav
+#: view:document.webdav.dir.property:0
+#: view:document.webdav.file.property:0
+msgid "Group By..."
+msgstr ""
 
-#~ msgid "Next"
-#~ msgstr "下一个"
+#. module: document_webdav
+#: view:document.directory:0
+msgid "These properties will be added to WebDAV requests"
+msgstr ""
 
-#~ msgid "Content"
-#~ msgstr "内容"
+#. module: document_webdav
+#: model:ir.ui.menu,name:document_webdav.menu_file_props
+msgid "DAV properties for documents"
+msgstr ""
 
-#~ msgid "Calendar of Meetings"
-#~ msgstr "会议日程表"
+#. module: document_webdav
+#: code:addons/document_webdav/webdav.py:37
+#, python-format
+msgid "PyWebDAV Import Error!"
+msgstr ""
 
-#~ msgid "Shared Calendar Meetings"
-#~ msgstr "共享的会议日程表"
+#. module: document_webdav
+#: view:document.webdav.file.property:0
+#: field:document.webdav.file.property,file_id:0
+msgid "Document"
+msgstr ""
 
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "在这动作定义中有无效的模块名"
+#. module: document_webdav
+#: model:ir.module.module,description:document_webdav.module_meta_information
+msgid ""
+" With this module, the WebDAV server for the documents is activated.\n"
+"        You can then use any compatible browser to remotely see the "
+"attachments of OpenObject.\n"
+"\n"
+"        After installation, the webDAV server can be controlled by a "
+"[webdav] section in the server's config.\n"
+"        Server Configuration Parameter:\n"
+"        [webdav]\n"
+"        ; enable = True ; Serve webdav over the http(s) servers\n"
+"        ; vdir = webdav ; the directory that webdav will be served at\n"
+"          ; this default val means that webdav will be\n"
+"          ; on \"http://localhost:8069/webdav/\n"
+"        ; verbose = True ; Turn on the verbose messages of webdav\n"
+"        ; debug = True ; Turn on the debugging messages of webdav\n"
+"          ; since the messages are routed to the python logging, with\n"
+"          ; levels \"debug\" and \"debug_rpc\" respectively, you can leave\n"
+"          ; these options on\n"
+msgstr ""
 
-#~ msgid "Used by companies to track bugs and support requests on softwares"
-#~ msgstr "公司用于跟踪缺陷和支持请求的软件"
+#. module: document_webdav
+#: sql_constraint:document.directory:0
+msgid "Directory cannot be parent of itself!"
+msgstr ""
 
-#~ msgid ""
-#~ "This Configuration step use to create Calendars in document for all Case "
-#~ "Sections"
-#~ msgstr "这设置步骤用于创建在所有业务个案项文档的日程表"
+#. module: document_webdav
+#: view:document.directory:0
+msgid "Dynamic context"
+msgstr ""
 
-#~ msgid "dtend"
-#~ msgstr "结束"
+#. module: document_webdav
+#: view:document.directory:0
+msgid "WebDAV properties"
+msgstr ""
 
-#~ msgid ""
-#~ "Help you to organise the jobs hiring process: evaluation, meetings, email "
-#~ "integration..."
-#~ msgstr "帮助你组织招聘过程:评论,会议,电子邮件一体化"
+#. module: document_webdav
+#: sql_constraint:document.directory:0
+msgid "The directory name must be unique !"
+msgstr ""
 
-#~ msgid "description"
-#~ msgstr "说明"
+#. module: document_webdav
+#: code:addons/document_webdav/webdav.py:37
+#, python-format
+msgid ""
+"Please install PyWebDAV from "
+"http://code.google.com/p/pywebdav/downloads/detail?name=PyWebDAV-"
+"0.9.4.tar.gz&can=2&q=/"
+msgstr ""
 
-#~ msgid "Configure Calendars for Sections "
-#~ msgstr "部分设置日程表 "
+#. module: document_webdav
+#: model:ir.ui.menu,name:document_webdav.menu_dir_props
+msgid "DAV properties for folders"
+msgstr ""
 
-#~ msgid "Tracks identified business opportunities for your sales pipeline."
-#~ msgstr "从你的销售管线跟踪出销售机会"
+#. module: document_webdav
+#: view:document.directory:0
+#: view:document.webdav.dir.property:0
+#: view:document.webdav.file.property:0
+msgid "Properties"
+msgstr ""
 
-#~ msgid ""
-#~ "This may help associations in their fund raising process and tracking."
-#~ msgstr "这可能有助于协会在资助和投资过程和跟踪"
+#. module: document_webdav
+#: field:document.webdav.dir.property,name:0
+#: field:document.webdav.file.property,name:0
+msgid "Name"
+msgstr "名称"
 
-#~ msgid "Manages an Helpdesk service."
-#~ msgstr "管理求助服务"
+#. module: document_webdav
+#: model:ir.model,name:document_webdav.model_document_webdav_dir_property
+msgid "document.webdav.dir.property"
+msgstr ""
 
-#~ msgid "Fund Raising Operations"
-#~ msgstr "资助和投资行动"
+#. module: document_webdav
+#: field:document.webdav.dir.property,value:0
+#: field:document.webdav.file.property,value:0
+msgid "Value"
+msgstr ""
 
-#~ msgid "Object"
-#~ msgstr "对象"
+#. module: document_webdav
+#: field:document.webdav.dir.property,dir_id:0
+#: model:ir.model,name:document_webdav.model_document_directory
+msgid "Directory"
+msgstr ""
 
-#~ msgid "Error ! You cannot create recursive sections."
-#~ msgstr "错误！你不能创建递归的项"
+#. module: document_webdav
+#: field:document.webdav.dir.property,write_uid:0
+#: field:document.webdav.file.property,write_uid:0
+msgid "Last Modification User"
+msgstr ""
 
-#~ msgid "Support for iCal based on Document Management System"
-#~ msgstr "支持iCal的文档管理系统"
+#. module: document_webdav
+#: view:document.webdav.dir.property:0
+msgid "Dir"
+msgstr ""
 
-#~ msgid ""
-#~ " Will allow you to synchronise your Open ERP calendars with your phone, "
-#~ "outlook, Sunbird, ical, ..."
-#~ msgstr " 允许同步系统日程表,电话等等"
+#. module: document_webdav
+#: field:document.webdav.dir.property,write_date:0
+#: field:document.webdav.file.property,write_date:0
+msgid "Date Modified"
+msgstr ""
 
-#~ msgid "location"
-#~ msgstr "本地"
+#. module: document_webdav
+#: field:document.webdav.dir.property,create_uid:0
+#: field:document.webdav.file.property,create_uid:0
+msgid "Creator"
+msgstr ""
 
-#~ msgid "ICS Calendar"
-#~ msgstr "ICS日程表"
+#. module: document_webdav
+#: model:ir.module.module,shortdesc:document_webdav.module_meta_information
+msgid "WebDAV server for Document Management"
+msgstr ""
 
-#~ msgid "ICS Value"
-#~ msgstr "ICS值"
+#. module: document_webdav
+#: sql_constraint:document.directory:0
+msgid "Directory must have a parent or a storage"
+msgstr ""
 
-#~ msgid "Allows to synchronise calendars with others applications."
-#~ msgstr "允许的同步其它应用日程表"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "无效XML视图结构!"
-
-#~ msgid ""
-#~ "Allows you to track and manage prospects which are pre-sales requests or "
-#~ "contacts, the very first contact with a customer request."
-#~ msgstr "允许你跟踪管理潜在客户的售前请求和联系,初次联系客户的请求"
-
-#~ msgid "Name"
-#~ msgstr "名称"
-
-#~ msgid "Manages the calendar of meetings of the users."
-#~ msgstr "管理用户的会议日程表"
-
-#~ msgid "Domain"
-#~ msgstr "隶属"
-
-#~ msgid ""
-#~ "Manages the supplier and customers claims, including your corrective or "
-#~ "preventive actions."
-#~ msgstr "管理这支援和客户服务要求包括你的纠正或预防"
-
-#~ msgid "last-modified"
-#~ msgstr "最近修改"
-
-#~ msgid "ICS Mapping"
-#~ msgstr "ICS一览"
-
-#~ msgid "Duration(In Hour)"
-#~ msgstr "持续时间(小时)"
-
-#~ msgid "Shared Calendar"
-#~ msgstr "共享的日程表"
-
-#~ msgid "Claims"
-#~ msgstr "服务要求"
-
-#~ msgid ""
-#~ "Help you to encode the result of a phone call or to planify a list of phone "
-#~ "calls to process."
-#~ msgstr "帮助你编电话呼叫结果或编制电话呼叫处理的列表"
-
-#~ msgid "dtstart"
-#~ msgstr "开始"
-
-#~ msgid "Phone Calls"
-#~ msgstr "电话呼叫"
-
-#~ msgid "Bug Tracking"
-#~ msgstr "缺陷跟踪"
-
-#~ msgid "categories"
-#~ msgstr "分类"
-
-#~ msgid "Prospect"
-#~ msgstr "潜在客户"
-
-#~ msgid "Create Pre-Configured Calendars"
-#~ msgstr "创建预先设置的日程表"
-
-#~ msgid "created"
-#~ msgstr "创建"
-
-#~ msgid "Calendar Code"
-#~ msgstr "日程表代码"
-
-#~ msgid "summary"
-#~ msgstr "参考"
-
-#~ msgid "attendee"
-#~ msgstr "出勤者"
-
-#~ msgid "document.directory.ics.fields"
-#~ msgstr "字段"
-
-#~ msgid "Fields Mapping"
-#~ msgstr "字段一览"
-
-#~ msgid "Cancel"
-#~ msgstr "取消"
-
-#~ msgid "Business Opportunities"
-#~ msgstr "销售机会"
-
-#~ msgid "dtstamp"
-#~ msgstr "标记"
+#. module: document_webdav
+#: field:document.webdav.dir.property,do_subst:0
+#: field:document.webdav.file.property,do_subst:0
+msgid "Substitute"
+msgstr ""

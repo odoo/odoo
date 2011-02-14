@@ -1,8 +1,7 @@
 <?xml version="1.0"?>
 <?xml-stylesheet href="chrome://global/skin/global.css" type="text/css"?>
 <!DOCTYPE window SYSTEM "chrome://openerp_plugin/locale/selectpartner.dtd">
-<window id="partnerwindowsid" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
-	xmlns:html="http://www.w3.org/1999/xhtml" onload="getPartnerList()"
+<window id="partnerwindowsid" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" xmlns:html="http://www.w3.org/1999/xhtml" onload="getPartnerList()"
 	title="&title.label;" height="500" width="375">
 <script type="text/javascript" src="chrome://openerp_plugin/content/tiny_xmlrpc.js"></script>
 <script type="text/javascript" src="chrome://openerp_plugin/content/config.js"></script>
@@ -29,7 +28,7 @@
   <button label="Create Partner" image="&imagecreate.value;" oncommand="CreatePartner.onMenuItemCommand(event);"/>
   <spacer width="45"/>
   <button label="&cancel.label;" image="&imagecancel.value;" oncommand="close();" />
-  <button label="&select.label;" image="&imageok.value;" oncommand="selectPartner();close()"/>
+  <button label="&select.label;" image="&imageok.value;" oncommand="selectPartner();close();"/>
 </hbox>
 
 </window>

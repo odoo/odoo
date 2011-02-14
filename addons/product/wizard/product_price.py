@@ -48,10 +48,11 @@ class product_price_list(osv.osv_memory):
         To get the date and print the report
         @return : return report
         """
+        if context is None:
+            context = {}
         datas = {'ids': context.get('active_ids', [])}
-        res = self.read(cr, uid, ids, ['price_list','qty1', 'qty2','qty3','qty4','qty5'], context)
+        res = self.read(cr, uid, ids, ['price_list','qty1', 'qty2','qty3','qty4','qty5'], context=context)
         res = res and res[0] or {}
-        price_dict = self.pool.get('product.pricelist').price_get(cr, uid, [res['price_list']], 1, 1.0)
         datas['form'] = res
         return {
             'type': 'ir.actions.report.xml',

@@ -19,7 +19,8 @@
 #
 ##############################################################################
 
-from mx import DateTime
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 from osv import fields
 from osv import osv
 from tools.translate import _
@@ -40,10 +41,10 @@ class procurement_order(osv.osv):
         """
         properties = [x.id for x in procurement.property_ids]
         bom_id = self.pool.get('mrp.bom')._bom_find(cr, uid, procurement.product_id.id, procurement.product_uom.id, properties)
-        if not bom_id:            
+        if not bom_id:
             cr.execute('update procurement_order set message=%s where id=%s', (_('No BoM defined for this product !'), procurement.id))
             for (id, name) in self.name_get(cr, uid, procurement.id):
-                message = _('Procurement ') + " '" + name + "' "+ _("has an exception.") + _('No BoM defined for this product !')
+                message = _("Procurement '%s' has an exception: 'No BoM defined for this product !'") % name
                 self.log(cr, uid, id, message)
             return False
         return True
@@ -59,7 +60,7 @@ class procurement_order(osv.osv):
                     return phantom_bom_id 
         return False
     
-    def action_produce_assign_product(self, cr, uid, ids, context={}):
+    def action_produce_assign_product(self, cr, uid, ids, context=None):
         """ This is action which call from workflow to assign production order to procurements
         @return: True
         """
@@ -68,7 +69,7 @@ class procurement_order(osv.osv):
         res = res.values()
         return len(res) and res[0] or 0
     
-    def make_mo(self, cr, uid, ids, context={}):
+    def make_mo(self, cr, uid, ids, context=None):
         """ Make Manufacturing(production) order from procurement
         @return: New created Production Orders procurement wise 
         """
@@ -78,11 +79,11 @@ class procurement_order(osv.osv):
         move_obj = self.pool.get('stock.move')
         wf_service = netsvc.LocalService("workflow")
         procurement_obj = self.pool.get('procurement.order')
-        for procurement in procurement_obj.browse(cr, uid, ids):
+        for procurement in procurement_obj.browse(cr, uid, ids, context=context):
             res_id = procurement.move_id.id
             loc_id = procurement.location_id.id
-            newdate = DateTime.strptime(procurement.date_planned, '%Y-%m-%d %H:%M:%S') - DateTime.RelativeDateTime(days=procurement.product_id.product_tmpl_id.produce_delay or 0.0)
-            newdate = newdate - DateTime.RelativeDateTime(days=company.manufacturing_lead)
+            newdate = datetime.strptime(procurement.date_planned, '%Y-%m-%d %H:%M:%S') - relativedelta(days=procurement.product_id.product_tmpl_id.produce_delay or 0.0)
+            newdate = newdate - relativedelta(days=company.manufacturing_lead)
             produce_id = production_obj.create(cr, uid, {
                 'origin': procurement.origin,
                 'product_id': procurement.product_id.id,

@@ -20,7 +20,7 @@
 ##############################################################################
 
 import crm_send_email
-import crm_forward_to_partner
+import crm_add_note
 
 import crm_lead_to_partner
 import crm_lead_to_opportunity

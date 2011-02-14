@@ -1,0 +1,79 @@
+<?xml version="1.0"?>
+<openerp>
+  <data>
+    <record model="workflow" id="wkf_pos">
+      <field name="name">Pos workflow</field>
+      <field name="osv">pos.order</field>
+      <field name="on_create">True</field>
+    </record>
+
+<!--Activities-->
+
+    <record model="workflow.activity" id="act_draft">
+      <field name="wkf_id" ref="wkf_pos"/>
+      <field name="flow_start">True</field>
+      <field name="name">draft</field>
+    </record>
+
+    <record model="workflow.activity" id="act_paid">
+      <field name="wkf_id" ref="wkf_pos"/>
+      <field name="name">paid</field>
+      <field name="action">action_paid()</field>
+      <field name="kind">function</field>
+    </record>
+
+    <record model="workflow.activity" id="act_done">
+      <field name="wkf_id" ref="wkf_pos"/>
+      <field name="name">done</field>
+      <field name="flow_stop">True</field>
+      <field name="action">action_done()</field>
+      <field name="kind">function</field>
+    </record>
+
+    <record model="workflow.activity" id="act_invoiced">
+      <field name="wkf_id" ref="wkf_pos"/>
+      <field name="name">invoiced</field>
+      <field name="flow_stop">True</field>
+      <field name="action">action_invoice()</field>
+      <field name="kind">function</field>
+    </record>
+
+    <record model="workflow.activity" id="act_cancel">
+      <field name="wkf_id" ref="wkf_pos"/>
+      <field name="name">cancel</field>
+      <field name="flow_stop">True</field>
+      <field name="action">action_cancel()</field>
+      <field name="kind">function</field>
+    </record>
+
+
+<!--Transitions-->
+
+    <record model="workflow.transition" id="trans_draft_paid">
+      <field name="act_from" ref="act_draft"/>
+      <field name="act_to" ref="act_paid"/>
+      <field name="condition">test_paid()</field>
+      <field name="signal">paid</field>
+    </record>
+
+    <record model="workflow.transition" id="trans_paid_done">
+        <field name="act_from" ref="act_paid"/>
+        <field name="act_to" ref="act_done"/>
+        <field name="signal">done</field>
+    </record>
+
+    <record model="workflow.transition" id="trans_paid_invoice">
+      <field name="act_from" ref="act_paid"/>
+      <field name="act_to" ref="act_invoiced"/>
+      <field name="signal">invoice</field>
+    </record>
+
+    <record model="workflow.transition" id="trans_paid_cancel">
+      <field name="act_from" ref="act_paid"/>
+      <field name="act_to" ref="act_cancel"/>
+      <field name="signal">cancel</field>
+    </record>
+
+
+  </data>
+</openerp>

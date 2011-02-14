@@ -27,7 +27,7 @@
     The base module to manage quotations and sales orders.
 
     * Workflow with validation steps:
-        - Quotation -> Sale order -> Invoice
+        - Quotation -> Sales order -> Invoice
     * Invoicing methods:
         - Invoice on order (before or after shipping)
         - Invoice on delivery
@@ -79,7 +79,7 @@
         'test/sale_procurement.yml',
         'test/invoice_on_ordered_qty.yml',
         'test/invoice_on_shipped_qty.yml',
-        'test/sale_order_print.yml',
+        'test/sale_report.yml',
     ],
     'installable': True,
     'active': False,

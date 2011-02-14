@@ -27,7 +27,7 @@ class event_confirm_registration(osv.osv_memory):
     Confirm Event Registration
     """
     _name = "event.confirm.registration"
-    _description = "Event Registraion"
+    _description = "Confirmation for Event Registration"
 
     _columns = {
         'msg': fields.text('Message', readonly=True),
@@ -40,13 +40,14 @@ class event_confirm_registration(osv.osv_memory):
         """
         This function gets default values
         """
+        if context is None:
+            context = {}
         registration_pool = self.pool.get('event.registration')
         registration_ids = context.get('registration_ids', [])
         res = super(event_confirm_registration, self).default_get(cr, uid, fields, context=context)
         msg = ""
         overlimit_event_ids = []
         for registration in registration_pool.browse(cr, uid, registration_ids, context=context):
-            total_confirmed = registration.event_id.register_current
             register_max = registration.event_id.register_max
             if registration.event_id.id not in overlimit_event_ids:
                 overlimit_event_ids.append(registration.event_id.id)
@@ -56,11 +57,13 @@ class event_confirm_registration(osv.osv_memory):
             res.update({'msg': msg})
         return res
 
-    def confirm(self, cr, uid, ids, context):
+    def confirm(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
         registration_pool = self.pool.get('event.registration')
         registration_ids = context.get('registration_ids', [])
         registration_pool.do_open(cr, uid, registration_ids, context=context)
-        return {}
+        return {'type': 'ir.actions.act_window_close'}
 
 event_confirm_registration()
 

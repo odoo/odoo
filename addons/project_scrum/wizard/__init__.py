@@ -22,6 +22,8 @@
 import project_scrum_backlog_create_task
 import project_scrum_backlog_sprint
 import project_scrum_backlog_merger
+import project_scrum_postpone
+import project_scrum_email
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

@@ -20,12 +20,7 @@
 ##############################################################################
 
 from lxml import etree
-from operator import itemgetter
 from osv import fields, osv
-import netsvc
-import os
-import pooler
-import tools
 
 class crm_installer(osv.osv_memory):
     _name = 'crm.installer'
@@ -33,15 +28,15 @@ class crm_installer(osv.osv_memory):
 
     _columns = {
         'name': fields.char('Name', size=64),
-        'crm_helpdesk': fields.boolean('Helpdesk', help="Manages an Helpdesk service."),
+        'crm_helpdesk': fields.boolean('Helpdesk', help="Manages a Helpdesk service."),
         'crm_fundraising': fields.boolean('Fundraising', help="This may help associations in their fundraising process and tracking."),
         'crm_claim': fields.boolean('Claims', help="Manages the suppliers and customers claims, including your corrective or preventive actions."),
         'crm_caldav': fields.boolean('Calendar Synchronizing', help="Helps you to synchronize the meetings with other calendar clients and mobiles."),
         'sale_crm': fields.boolean('Opportunity to Quotation', help="This module relates sale from opportunity cases in the CRM."),
-        'fetchmail': fields.boolean('Fetch Emails', help="Fetchmail Server."),
-        'thunderbird': fields.boolean('Thunderbird', help="Allows you to link your e-mail to OpenERP's documents. You can attach it to any existing one in OpenERP or create a new one"),
-        'outlook': fields.boolean('MS-Outlook', help="Allows you to link your e-mail to OpenERP's documents. You can attach it to any existing one in OpenERP or create a new one"),
-        'wiki_sale_faq': fields.boolean('Sale FAQ', help="Sale FAQ."),
+        'fetchmail': fields.boolean('Fetch Emails', help="Allows you to receive E-Mails from POP/IMAP server."),
+        'thunderbird': fields.boolean('Thunderbird', help="Allows you to link your e-mail to OpenERP's documents. You can attach it to any existing one in OpenERP or create a new one."),
+        'outlook': fields.boolean('MS-Outlook', help="Allows you to link your e-mail to OpenERP's documents. You can attach it to any existing one in OpenERP or create a new one."),
+        'wiki_sale_faq': fields.boolean('Sale FAQ', help="Helps you manage wiki pages for Frequently Asked Questions on Sales Application."),
     }
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):

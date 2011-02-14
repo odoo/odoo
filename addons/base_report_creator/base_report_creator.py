@@ -23,35 +23,15 @@ from osv import fields, osv
 from tools.translate import _
 from tools import ustr
 
-class report_creator(osv.osv):
+class report_result(osv.osv):
     """
     Report Creator
     """
-    _name = "base_report_creator.report"
+    _name = "base_report_creator_report.result"
     _description = "Report"
-    model_set_id = False
     #
     # Should request only used fields
     #
-    def export_data(self, cr, uid, ids, fields_to_export, context=None):
-
-        if context is None:
-            context = {}
-        data_l = self.read(cr, uid, ids, ['sql_query'], context)
-        final_datas = []
-        #start Loop
-        for i in data_l:
-            datas = []
-            for key, value in i.items():
-                if key not in fields_to_export:
-                    continue
-                if isinstance(value, tuple):
-                    datas.append(ustr(value[1]))
-                else:
-                    datas.append(ustr(value))
-            final_datas += [datas]
-            #End Loop
-        return {'datas': final_datas}
 
     def fields_get(self, cr, user, fields=None, context=None):
         """
@@ -66,9 +46,9 @@ class report_creator(osv.osv):
 
         data = context and context.get('report_id', False) or False
         if (not context) or 'report_id' not in context:
-            return super(report_creator, self).fields_get(cr, user, fields, context)
+            return super(report_result, self).fields_get(cr, user, fields, context)
         if data:
-            report = self.browse(cr, user, data)
+            report = self.pool.get('base_report_creator.report').browse(cr, user, data,context=context)
             models = {}
         #Start Loop
             for model in report.model_ids:
@@ -82,12 +62,8 @@ class report_creator(osv.osv):
                     i += 1
                 else:
                     fields['column_count'] = {'readonly': True, 'type': 'integer', 'string': 'Count', 'size': 64, 'name': 'column_count'}
-
             return fields
 
-    #
-    # Should Call self.fields_get !
-    #
     def fields_view_get(self, cr, user, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         """
         Overrides orm field_view_get.
@@ -100,8 +76,8 @@ class report_creator(osv.osv):
 
         data = context and context.get('report_id', False) or False
         if (not context) or 'report_id' not in context:
-            return super(report_creator, self).fields_view_get(cr, user, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
-        report = self.browse(cr, user, data)
+            return super(report_result, self).fields_view_get(cr, user, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
+        report = self.pool.get('base_report_creator.report').browse(cr, user, context.get('report_id'), context=context)
         models = {}
         for model in report.model_ids:
             models[model.model] = self.pool.get(model.model).fields_get(cr, user, context=context)
@@ -183,7 +159,7 @@ class report_creator(osv.osv):
         }
         return result
 
-    def read(self, cr, user, ids, fields = None, context = None, load = '_classic_read'):
+    def read(self, cr, user, ids, fields=None, context=None, load='_classic_read'):
         """
         overrides  orm Read method.Read List of fields for report creator.
         @param cr: the current row, from the database cursor,
@@ -194,31 +170,11 @@ class report_creator(osv.osv):
         """
         if context is None:
             context = {}
-        data = context.get('report_id', False)
-        if (not context) or 'report_id' not in context:
-            return super(report_creator, self).read(cr, user, ids, fields, context, load)
-        ctx = context or {}
-        wp = ''
-        if data:
-            if self.model_set_id:
-                wp = [self._id_get(cr, user, data, context) + (' in (%s)' % (','.join(map(lambda x: "'" + str(x) + "'", ids))))]
-            report = self._sql_query_get(cr, user, [data], 'sql_query', None, ctx, where_plus = wp)
-            sql_query = report[data]
-            cr.execute(sql_query)
-            res = cr.dictfetchall()
-            fields_get = self.fields_get(cr, user, None, context)
-            for r in res:
-                for k in r:
-                    r[k] = r[k] or False
-                    field_dict = fields_get.get(k)
-                    field_type = field_dict and field_dict.get('type', False) or False
-                    if field_type and field_type == 'many2one':
-                        if r[k] == False:
-                            continue
-                        related_name = self.pool.get(field_dict.get('relation')).name_get(cr, user, [r[k]], context)[0]
-                        r[k] = related_name
-
-            return res
+        report_id = context.get('active_id', False)
+        report = self.pool.get('base_report_creator.report').browse(cr, user, context.get('report_id'), context=context)
+        cr.execute(report.sql_query)
+        result = cr.dictfetchall()
+        return result
 
     def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
         """
@@ -233,9 +189,9 @@ class report_creator(osv.osv):
         context_id = context.get('report_id', False)
 
         if (not context) or 'report_id' not in context:
-            return super(report_creator, self).search(cr, user, args, offset, limit, order, context, count)
+            return {}
         if context_id:
-            report = self.browse(cr, user, context_id)
+            report = self.pool.get('base_report_creator.report').browse(cr, user, context_id, context=context)
             i = 0
             fields = {}
             for f in report.field_ids:
@@ -255,11 +211,42 @@ class report_creator(osv.osv):
                     newargs += [("count(*) " + a[1] +" " + str(a[2]))]
             ctx = context or {}
             ctx['getid'] = True
-            report = self._sql_query_get(cr, user, [context_id], 'sql_query', None, ctx, where_plus = newargs, limit=limit, offset=offset)
-            query = report[context_id]
-            cr.execute(query, newargs2)
+            sql_query = report.sql_query
+            cr.execute(sql_query) # TODO: FILTER
             result = cr.fetchall()
             return map(lambda x: x[0], result)
+
+report_result()
+
+
+class report_creator(osv.osv):
+    """
+    Report Creator
+    """
+    _name = "base_report_creator.report"
+    _description = "Report"
+    model_set_id = False
+    #
+    # Should request only used fields
+    #
+    def export_data(self, cr, uid, ids, fields_to_export, context=None):
+        if context is None:
+            context = {}
+        data_l = self.read(cr, uid, ids, ['sql_query'], context=context)
+        final_datas = []
+        #start Loop
+        for record in data_l:
+            datas = []
+            for key in fields_to_export:
+                value = record.get(key,'')
+                if isinstance(value, tuple):
+                    datas.append(ustr(value[1]))
+                else:
+                    datas.append(ustr(value))
+            final_datas += [datas]
+            #End Loop
+        return {'datas': final_datas}
+
 
     def _path_get(self, cr, uid, models, filter_ids=[]):
         """
@@ -357,13 +344,13 @@ class report_creator(osv.osv):
         """
         return self.model_set_id and 'min('+self.model_set_id+'.id)'
 
-    def _sql_query_get(self, cr, uid, ids, prop, unknow_none, context, where_plus=[], limit=None, offset=None):
+    def _sql_query_get(self, cr, uid, ids, prop, unknow_none, context=None, where_plus=[], limit=None, offset=None):
         """
         Get sql query which return on sql_query field.
         @return: Dictionary of sql query.
         """
         result = {}
-        for obj in self.browse(cr, uid, ids):
+        for obj in self.browse(cr, uid, ids, context=context):
             fields = []
             groupby = []
             i = 0
@@ -406,7 +393,7 @@ class report_creator(osv.osv):
     _columns = {
         'name': fields.char('Report Name', size=64, required=True),
         'type': fields.selection([('list', 'Rows And Columns Report'), ], 'Report Type', required=True), #('sum','Summation Report')
-        'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the report without removing it."),
+        'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the report without removing it."),
         'view_type1': fields.selection([('form', 'Form'),
                                         ('tree', 'Tree'),
                                         ('graph', 'Graph'),
@@ -451,7 +438,7 @@ class report_creator(osv.osv):
         @param context: A standard dictionary for contextual values
         @return : Dictionary value for base creator report form
         """
-        if not context:
+        if context is None:
             context = {}
 
         rep = self.browse(cr, uid, ids, context=context)
@@ -468,7 +455,7 @@ class report_creator(osv.osv):
             'name': rep.name,
             'view_type': 'form',
             'view_mode': view_mode,
-            'res_model': 'base_report_creator.report',
+            'res_model': 'base_report_creator_report.result',
             'type': 'ir.actions.act_window',
             'context': "{'report_id':%d}" % (rep.id,),
             'nodestroy': True,
@@ -476,7 +463,7 @@ class report_creator(osv.osv):
 
         return value
 
-    def _function_field(self, cr, uid, ids):
+    def _function_field(self, cr, uid, ids, context=None):
         """
         constraints function which specify that
                 not display field which are not stored in Database.
@@ -486,7 +473,7 @@ class report_creator(osv.osv):
         @return: True if display field which are  stored in database.
                      or false if display field which are not store in dtabase.
         """
-        this_objs = self.browse(cr, uid, ids)
+        this_objs = self.browse(cr, uid, ids, context=context)
         for obj in this_objs:
             for fld in obj.field_ids:
                 # Allowing to use count(*)
@@ -497,7 +484,7 @@ class report_creator(osv.osv):
                     return False
         return True
 
-    def _aggregation_error(self, cr, uid, ids):
+    def _aggregation_error(self, cr, uid, ids, context=None):
         """
         constraints function which specify that
                 aggregate function to the non calculated field..
@@ -507,10 +494,9 @@ class report_creator(osv.osv):
         @return: True if model colume type is in integer or float.
                      or false model colume type is not in integer or float.
         """
-
         aggregate_columns = ('integer', 'float')
         apply_functions = ('sum', 'min', 'max', 'avg', 'count')
-        this_objs = self.browse(cr, uid, ids)
+        this_objs = self.browse(cr, uid, ids, context=context)
         for obj in this_objs:
             for fld in obj.field_ids:
                 # Allowing to use count(*)
@@ -521,9 +507,9 @@ class report_creator(osv.osv):
                     return False
         return True
 
-    def _calander_view_error(self, cr, uid, ids):
+    def _calander_view_error(self, cr, uid, ids, context=None):
         required_types = []
-        this_objs = self.browse(cr, uid, ids)
+        this_objs = self.browse(cr, uid, ids, context=context)
         for obj in this_objs:
             if obj.view_type1 == 'calendar' or obj.view_type2 == 'calendar' or obj.view_type3 == 'calendar':
                 for fld in obj.field_ids:
@@ -600,3 +586,4 @@ class report_creator_filter(osv.osv):
     }
 report_creator_filter()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

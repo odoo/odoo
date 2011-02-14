@@ -42,8 +42,13 @@ class calendar_event_import(osv.osv_memory):
         @param ids: List of calendar event import’s IDs
         @return: dictionary of calendar evet import  window with Import successful msg.
         """
+        if context is None:
+            context = {}
+        else:
+            context = context.copy()
+        context['uid'] = uid
 
-        for data in self.read(cr, uid, ids):
+        for data in self.read(cr, uid, ids, context=context):
             model = data.get('model', 'basic.calendar')
             model_obj = self.pool.get(model)
             context.update({'model': model})
@@ -51,7 +56,11 @@ class calendar_event_import(osv.osv_memory):
             id2 = data_obj._get_id(cr, uid, 'caldav', 'view_calendar_event_import_display')
             if id2:
                  id2 = data_obj.browse(cr, uid, id2, context=context).res_id
-            vals = model_obj.import_cal(cr, uid, base64.decodestring(data['file_path']), context['active_id'], context)
+            vals = None
+            try:
+                vals = model_obj.import_cal(cr, uid, base64.decodestring(data['file_path']), context['active_id'], context)
+            except:
+                raise osv.except_osv(_('Warning !'),_('Invalid format of the ics, file can not be imported'))
             global cnt
             if vals:
                 cnt = len(vals)
@@ -73,8 +82,11 @@ class calendar_event_import(osv.osv_memory):
                   'msg': fields.text('', readonly=True),
                }
 
+    def _get_msg(self, cr, uid, context):
+        return _('Import Sucessful')
+        
     _defaults = {
-               'msg':lambda *a:'Import Sucessful'
+               'msg': _get_msg,
                }
 
 calendar_event_import()

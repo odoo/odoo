@@ -1,42 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data noupdate="1">
-        <!-- Create a transporter -->
-        
+
+         <!-- Create a transporter -->
+
         <record id="delivery_partner" model="res.partner">
             <field name="name">The Poste</field>
-            <field name="website">http://www.openerp.com</field>
         </record>
         <record id="delivery_partner_address" model="res.partner.address">
-            <field name="name">Fabien Pinckaers</field>
             <field name="type">default</field>
             <field name="partner_id" ref="delivery_partner"/>
         </record>
-        
+
         <!-- Create a partner -->
-        
+
         <record id="delivery_product" model="product.product">
             <field name="name">Delivery by Poste</field>
             <field name="type">service</field>
             <field model="product.category" name="categ_id" search="[]"/>
         </record>
-        
+
         <!-- Carrier -->
-        
+
         <record id="delivery_carrier" model="delivery.carrier">
-            <field name="name">The Poste - Express</field>
+            <field name="name">The Poste</field>
             <field name="partner_id" ref="delivery_partner"/>
             <field name="product_id" ref="delivery_product"/>
         </record>
-        
+
         <!-- Carrier Grids -->
-        
+
         <record id="delivery_grid" model="delivery.grid">
-            <field name="name">The Poste Express - Pricelist</field>
+            <field name="name">The Poste - Pricelist</field>
             <field name="carrier_id" ref="delivery_carrier"/>
         </record>
+        <record id="delivery_grid_line1" model="delivery.grid.line">
+            <field name="name">Weight &lt;= 5kg</field>
+            <field name="grid_id" ref="delivery_grid"/>
+            <field eval="5" name="max_value"/>
+            <field eval="20" name="list_price"/>
+            <field eval="10" name="standard_price"/>
+        </record>
+        <record id="delivery_grid_line2" model="delivery.grid.line">
+            <field name="name">Weight &gt; 5kg</field>
+            <field name="grid_id" ref="delivery_grid"/>
+            <field name="operator">&gt;=</field>
+            <field eval="5" name="max_value"/>
+            <field eval="50" name="list_price"/>
+            <field eval="30" name="standard_price"/>
+        </record>
+
         <record id="delivery_grid_line3" model="delivery.grid.line">
-            <field name="name">Franco, price &gt;= 300</field>
+            <field name="name">Free if price &gt;= 300</field>
             <field name="grid_id" ref="delivery_grid"/>
             <field eval="300" name="max_value"/>
             <field name="operator">&gt;=</field>
@@ -44,21 +59,5 @@
             <field eval="0" name="list_price"/>
             <field eval="20" name="standard_price"/>
         </record>
-        <record id="delivery_grid_line1" model="delivery.grid.line">
-            <field name="name">Weight &lt;= 250</field>
-            <field name="grid_id" ref="delivery_grid"/>
-            <field eval="250" name="max_value"/>
-            <field eval="100" name="list_price"/>
-            <field eval="80" name="standard_price"/>
-        </record>
-        <record id="delivery_grid_line2" model="delivery.grid.line">
-            <field name="name">Weight &gt; 250</field>
-            <field name="grid_id" ref="delivery_grid"/>
-            <field name="operator">&gt;=</field>
-            <field eval="250" name="max_value"/>
-            <field eval="120" name="list_price"/>
-            <field eval="100" name="standard_price"/>
-        </record>
-        
     </data>
 </openerp>

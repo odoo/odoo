@@ -6,16 +6,16 @@
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
+#    it under the terms of the GNU Affero General Public License as published by
 #    the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+#    GNU Affero General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License
+#    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
@@ -50,7 +50,7 @@ class survey_form(report_rml):
         _tbl_widths = tools.ustr(float(_pageSize[0].replace('cm','')) - float(2.10))+'cm'
 
         rml="""<document filename="Survey Form.pdf">
-            <template pageSize="("""+_pageSize[0]+""","""+_pageSize[1]+""")" title='Survey Form.pdf' author="Martin Simon" allowSplitting="20" >
+            <template pageSize="("""+_pageSize[0]+""","""+_pageSize[1]+""")" title='Survey Form' author="OpenERP S.A.(sales@openerp.com)" allowSplitting="20" >
                 <pageTemplate id="first">
                     <frame id="first" x1="0.0cm" y1="1.0cm" width='"""+_frame_width+"""' height='"""+_frame_height+"""'/>
                     <pageGraphics>
@@ -390,7 +390,6 @@ class survey_form(report_rml):
         report_type = datas.get('report_type', 'pdf')
         create_doc = self.generators[report_type]
         pdf = create_doc(rml, title=self.title)
-
         return (pdf, report_type)
 
 survey_form('report.survey.form', 'survey','','')

@@ -21,7 +21,6 @@
 import time
 
 from osv import osv, fields
-from tools.translate import _
 
 class hr_holidays_summary_employee(osv.osv_memory):
     _name = 'hr.holidays.summary.employee'
@@ -33,13 +32,11 @@ class hr_holidays_summary_employee(osv.osv_memory):
     }
 
     _defaults = {
-         'date_from': time.strftime('%Y-%m-01'),
+         'date_from': lambda *a: time.strftime('%Y-%m-01'),
          'holiday_type': 'Validated',
     }
 
     def print_report(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         data = self.read(cr, uid, ids, [], context=context)[0]
         data['emp'] = context['active_ids']
         datas = {

@@ -35,7 +35,7 @@ class hr_installer(osv.osv_memory):
             help="Helps you manage and streamline your recruitment process."),
         'hr_timesheet_sheet':fields.boolean('Timesheets',
             help="Tracks and helps employees encode and validate timesheets "
-                 "and attendance."),
+                 "and attendances."),
         'hr_contract': fields.boolean("Employee's Contracts",
             help="Extends employee profiles to help manage their contracts."),
         'hr_evaluation': fields.boolean('Periodic Evaluations',
@@ -44,15 +44,10 @@ class hr_installer(osv.osv_memory):
         'hr_attendance': fields.boolean('Attendances',
             help="Simplifies the management of employee's attendances."),
         'hr_payroll': fields.boolean('Payroll',
-            help="Generic Payroll system"),
+            help="Generic Payroll system."),
         'hr_payroll_account': fields.boolean('Payroll Accounting',
             help="Generic Payroll system Integrated with Accountings."),
         }
-    _defaults = {
-        'hr_holidays': True,
-        'hr_expense': True,
-        }
-
 hr_installer()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

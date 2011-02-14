@@ -26,7 +26,7 @@
     'category': 'Generic Modules/Human Resources',
     'description': """
     Add all information on the employee form to manage contracts:
-    * Martial status,
+    * Marital status,
     * Security number,
     * Place of birth, birth date, ...
     You can assign several contracts per employee.
@@ -36,7 +36,6 @@
     'depends': ['hr'],
     'init_xml': ['hr_contract_data.xml'],
     'update_xml': [
-        'security/hr_contract_security.xml',
         'security/ir.model.access.csv',
         'hr_contract_view.xml'
         ],

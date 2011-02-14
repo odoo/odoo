@@ -6,15 +6,31 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-11-09 13:54+0000\n"
-"Last-Translator: <>\n"
+"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"PO-Revision-Date: 2011-01-19 12:00+0000\n"
+"Last-Translator: moelyana <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-08-12 03:45+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-25 07:00+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
+
+#. module: purchase
+#: model:process.transition,note:purchase.process_transition_confirmingpurchaseorder0
+msgid ""
+"The buyer has to approve the RFQ before being sent to the supplier. The RFQ "
+"becomes a confirmed Purchase Order."
+msgstr ""
+"Pembeli telah menyetujui RFQ sebelum dikirim ke pemasok.  RFQ menjadi order "
+"pembelian yang telah dikonfirmasi."
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:282
+#, python-format
+msgid "You can not confirm purchase order without Purchase Order Lines."
+msgstr ""
+"Anda tidak dapat mengkonfirmasi  order pembelian tanpa daftar Order Pembelian"
 
 #. module: purchase
 #: field:purchase.order,invoiced:0
@@ -22,70 +38,181 @@ msgid "Invoiced & Paid"
 msgstr ""
 
 #. module: purchase
-#: model:process.node,note:purchase.process_node_invoiceafterpacking0
-msgid "Supplier Invoice pre-generated on receptions for control"
-msgstr ""
+#: field:purchase.order,location_id:0
+#: view:purchase.report:0
+#: field:purchase.report,location_id:0
+msgid "Destination"
+msgstr "Tujuan"
 
 #. module: purchase
-#: field:purchase.order,location_id:0
-msgid "Destination"
+#: code:addons/purchase/purchase.py:710
+#, python-format
+msgid ""
+"You have to select a product UOM in the same category than the purchase UOM "
+"of the product"
 msgstr ""
+"Anda harus memilih UOM produk dalam kategori yang sama dari UOM pembelian "
+"produk"
+
+#. module: purchase
+#: help:purchase.report,date:0
+msgid "Date on which this document has been created"
+msgstr "Tanggal dokumen ini telah dibuat"
+
+#. module: purchase
+#: model:ir.actions.act_window,help:purchase.purchase_rfq
+msgid ""
+"You can create a request for quotation when you want to buy products to a "
+"supplier but the purchase is not confirmed yet. Use also this menu to review "
+"requests for quotation created automatically based on your logistic rules "
+"(minimum stock, MTO, etc). You can convert the request for quotation into a "
+"purchase order once the order is confirmed. If you use the extended "
+"interface (from user's preferences), you can select the way to control your "
+"supplier invoices: based on the order, based on the receptions or manual "
+"encoding."
+msgstr ""
+"Anda dapat membuat permintaan penawaran, bila Anda ingin membeli produk  "
+"kepada  pemasok  tetapi  pembelian  ini belum dikonfirmasi. Gunakan juga "
+"menu ini untuk meninjau permintaan penawaran dibuat secara otomatis "
+"berdasarkan aturan logistik Anda (persediaan minimum, MTO, dll). Anda dapat "
+"mengkonversi  permintaan penawaran  ke dalam  pesanan  pembelian  setelah  "
+"pesanan  dikonfirmasi. Jika Anda menggunakan antarmuka tambahan (dari "
+"preferensi pengguna), Anda dapat memilih cara untuk mengontrol faktur "
+"pemasok Anda: berdasarkan pesanan, berdasarkan pada resepsi atau encoding "
+"manual"
 
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
 msgid "From Picking"
-msgstr ""
-
-#. module: purchase
-#: rml:purchase.order:0
-msgid "Validated By"
-msgstr ""
-
-#. module: purchase
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr ""
-
-#. module: purchase
-#: field:purchase.order,partner_id:0
-msgid "Supplier"
-msgstr ""
+msgstr "Formulir Pengambilan"
 
 #. module: purchase
 #: view:purchase.order:0
-msgid "Delivery"
+msgid "Not Invoiced"
+msgstr "Belum Difakturkan"
+
+#. module: purchase
+#: field:purchase.order,dest_address_id:0
+msgid "Destination Address"
+msgstr "Alamat Tujuan"
+
+#. module: purchase
+#: report:purchase.order:0
+#: field:purchase.report,validator:0
+msgid "Validated By"
+msgstr "Divalidasi oleh .."
+
+#. module: purchase
+#: view:purchase.order:0
+#: field:purchase.order,partner_id:0
+#: view:purchase.order.line:0
+#: view:purchase.report:0
+#: field:purchase.report,partner_id:0
+msgid "Supplier"
+msgstr "Pemasok"
+
+#. module: purchase
+#: view:purchase.order.line_invoice:0
+msgid "Do you want to generate the supplier invoices ?"
 msgstr ""
+
+#. module: purchase
+#: model:ir.actions.act_window,help:purchase.purchase_form_action
+msgid ""
+"Use this menu to search within your purchase orders by references, supplier, "
+"products, etc. For each purchase order, you can track the products received, "
+"and control the supplier invoices."
+msgstr ""
+"pemasok, produk, dll Untuk setiap order pembelian, Anda dapat melacak produk "
+"diterima, dan mengkontrol  faktur  pemasok"
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:722
+#, python-format
+msgid "The selected supplier only sells this product by %s"
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/wizard/purchase_line_invoice.py:156
+#, python-format
+msgid "Supplier Invoices"
+msgstr "Faktur Pemasok"
+
+#. module: purchase
+#: sql_constraint:purchase.order:0
+msgid "Order Reference must be unique !"
+msgstr "Referensi order harus unik !"
+
+#. module: purchase
+#: model:process.transition,name:purchase.process_transition_packinginvoice0
+#: model:process.transition,name:purchase.process_transition_productrecept0
+msgid "From a Pick list"
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:649
+#, python-format
+msgid "No Pricelist !"
+msgstr "Tidak ada daftar harga !"
 
 #. module: purchase
 #: field:purchase.order.line,product_qty:0
+#: view:purchase.report:0
+#: field:purchase.report,quantity:0
 msgid "Quantity"
-msgstr ""
+msgstr "Kuantitas"
 
 #. module: purchase
-#: selection:purchase.order,invoice_method:0
-msgid "From Order"
-msgstr ""
+#: view:purchase.order.line_invoice:0
+msgid "Select an Open Sale Order"
+msgstr "Pilih Order Penjualan"
 
 #. module: purchase
-#: model:process.node,name:purchase.process_node_confirmpurchaseorder0
-msgid "Confirmed Purchase"
-msgstr ""
+#: field:purchase.order,company_id:0
+#: field:purchase.order.line,company_id:0
+#: view:purchase.report:0
+#: field:purchase.report,company_id:0
+msgid "Company"
+msgstr "Perusahaan"
+
+#. module: purchase
+#: view:board.board:0
+#: model:ir.actions.act_window,name:purchase.action_purchase_order_monthly_categ_graph
+#: view:purchase.report:0
+msgid "Monthly Purchase by Category"
+msgstr "Pembelian Bulanan berdasarkan Kategori"
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Set to Draft"
+msgstr "Atur ke draft"
 
 #. module: purchase
 #: selection:purchase.order,state:0
-#: code:addons/purchase/purchase.py:0
+#: selection:purchase.report,state:0
 msgid "Invoice Exception"
-msgstr ""
+msgstr "Faktur pengecualian"
 
 #. module: purchase
 #: model:product.pricelist,name:purchase.list0
 msgid "Default Purchase Pricelist"
+msgstr "Dasar Harga Pembelian"
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.action_current_purchases
+msgid "Current purchases"
 msgstr ""
 
 #. module: purchase
-#: model:process.transition.action,name:purchase.process_transition_action_invoicefrompurchaseorder0
-msgid "Create invoice"
+#: help:purchase.order,dest_address_id:0
+msgid ""
+"Put an address if you want to deliver directly from the supplier to the "
+"customer.In this case, it will remove the warehouse link and set the "
+"customer location."
 msgstr ""
+"Masukkan alamat jika Anda ingin mengirimkan secara langsung  dari pemasok ke "
+"customer.Dalam  kasus  ini, akan menghapus link ke gudang dan menetapkan "
+"lokasi pelanggan."
 
 #. module: purchase
 #: help:res.partner,property_product_pricelist_purchase:0
@@ -93,16 +220,13 @@ msgid ""
 "This pricelist will be used, instead of the default one, for purchases from "
 "the current partner"
 msgstr ""
+"Daftar harga ini akan digunakan, bahkan menjadi acuan dasar, untuk pembelian "
+"dari mitra saat ini"
 
 #. module: purchase
-#: rml:purchase.order:0
+#: report:purchase.order:0
 msgid "Fax :"
-msgstr ""
-
-#. module: purchase
-#: model:process.transition,note:purchase.process_transition_productrecept0
-msgid "Create invoice from product recept"
-msgstr ""
+msgstr "Fax :"
 
 #. module: purchase
 #: help:purchase.order,pricelist_id:0
@@ -112,36 +236,48 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: model:process.process,name:purchase.process_process_purchaseprocess0
-msgid "Purchase Process"
-msgstr ""
+#: model:ir.model,name:purchase.model_stock_partial_picking
+msgid "Partial Picking"
+msgstr "Pengambilan Sebagian"
 
 #. module: purchase
-#: model:process.transition,name:purchase.process_transition_invoicefrompackinglist0
-msgid "Invoice from Packing list"
-msgstr ""
+#: code:addons/purchase/purchase.py:286
+#, python-format
+msgid "Purchase order '%s' is confirmed."
+msgstr "Order Pembelian '%s' telah dikonfirmasi"
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Approve Purchase"
-msgstr ""
+msgstr "Pembelian disetujui"
 
 #. module: purchase
+#: model:process.node,name:purchase.process_node_approvepurchaseorder0
+#: view:purchase.order:0
 #: selection:purchase.order,state:0
-#: code:addons/purchase/purchase.py:0
+#: selection:purchase.report,state:0
 msgid "Approved"
-msgstr ""
+msgstr "Disetujui"
 
 #. module: purchase
-#: model:ir.actions.act_window,name:purchase.purchase_form_action4
-#: model:ir.ui.menu,name:purchase.menu_purchase_form_action4
-msgid "Purchase Orders in Progress"
-msgstr ""
+#: view:purchase.report:0
+msgid "Reference UOM"
+msgstr "Referensi UoM"
 
 #. module: purchase
-#: field:purchase.order,amount_untaxed:0
-msgid "Untaxed Amount"
-msgstr ""
+#: view:purchase.order:0
+msgid "Origin"
+msgstr "Sumber"
+
+#. module: purchase
+#: field:purchase.report,product_uom:0
+msgid "Reference UoM"
+msgstr "Referensi UoM"
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.action_purchase_line_product_tree
+msgid "Purchases"
+msgstr "Pembelian"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -149,38 +285,1013 @@ msgstr ""
 #: view:purchase.order.line:0
 #: field:purchase.order.line,notes:0
 msgid "Notes"
-msgstr ""
+msgstr "Catatan"
 
 #. module: purchase
-#: rml:purchase.order:0
+#: code:addons/purchase/purchase.py:649
+#, python-format
+msgid ""
+"You have to select a pricelist or a supplier in the purchase form !\n"
+"Please set one before choosing a product."
+msgstr ""
+"Anda harus memilih daftar harga  atau pemasok dalam bentuk pembelian!\n"
+"Harap menetapkan satu sebelum memilih produk."
+
+#. module: purchase
+#: selection:purchase.report,month:0
+msgid "September"
+msgstr "September"
+
+#. module: purchase
+#: report:purchase.order:0
 #: field:purchase.order,amount_tax:0
+#: view:purchase.order.line:0
 #: field:purchase.order.line,taxes_id:0
 msgid "Taxes"
-msgstr ""
+msgstr "Pajak"
 
 #. module: purchase
 #: model:ir.actions.report.xml,name:purchase.report_purchase_order
+#: model:ir.model,name:purchase.model_purchase_order
 #: model:process.node,name:purchase.process_node_purchaseorder0
+#: field:procurement.order,purchase_id:0
 #: view:purchase.order:0
 #: model:res.request.link,name:purchase.req_link_purchase_order
 #: field:stock.picking,purchase_id:0
 msgid "Purchase Order"
-msgstr ""
+msgstr "Order Pembelian"
 
 #. module: purchase
-#: rml:purchase.quotation:0
-msgid "Regards,"
-msgstr ""
+#: field:purchase.order,name:0
+#: view:purchase.order.line:0
+#: field:purchase.order.line,order_id:0
+msgid "Order Reference"
+msgstr "Referensi Order"
 
 #. module: purchase
-#: rml:purchase.order:0
+#: report:purchase.order:0
 msgid "Net Total :"
+msgstr "Total bersih"
+
+#. module: purchase
+#: view:purchase.installer:0
+msgid "Configure Your Purchases Management Application"
+msgstr "Mengkonfigurasi Pembelian Manajemen Aplikasi  Anda"
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_procurement_management_product
+#: model:ir.ui.menu,name:purchase.menu_procurement_partner_contact_form
+msgid "Products"
+msgstr "Produk"
+
+#. module: purchase
+#: field:purchase.installer,progress:0
+msgid "Configuration Progress"
+msgstr "Konfigurasi yang sedang berlangsung"
+
+#. module: purchase
+#: model:process.transition,note:purchase.process_transition_packinginvoice0
+msgid ""
+"A Pick list generates an invoice. Depending on the Invoicing control of the "
+"sale order, the invoice is based on delivered or on ordered quantities."
+msgstr ""
+"Daftar Pengambilan untuk membuat  faktur. Tergantung pada kontrol Faktur "
+"dari order penjualan, faktur berdasarkan  pengiriman  atau jumlah yang "
+"diminta."
+
+#. module: purchase
+#: selection:purchase.order,state:0
+#: selection:purchase.order.line,state:0
+#: selection:purchase.report,state:0
+msgid "Cancelled"
+msgstr "Dibatalkan"
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:305
+#, python-format
+msgid "Purchase amount over the limit"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Convert to Purchase Order"
+msgstr "Konversi ke Order Pembelian"
+
+#. module: purchase
+#: field:purchase.order,pricelist_id:0
+#: field:purchase.report,pricelist_id:0
+msgid "Pricelist"
+msgstr "Harga"
+
+#. module: purchase
+#: selection:purchase.order,state:0
+#: selection:purchase.report,state:0
+msgid "Shipping Exception"
+msgstr "Pengecualian dalam pengiriman"
+
+#. module: purchase
+#: field:purchase.order.line,invoice_lines:0
+msgid "Invoice Lines"
+msgstr "Daftar faktur"
+
+#. module: purchase
+#: model:process.node,name:purchase.process_node_packinglist0
+#: model:process.node,name:purchase.process_node_productrecept0
+msgid "Incoming Products"
+msgstr "Barang keluar"
+
+#. module: purchase
+#: model:process.node,name:purchase.process_node_packinginvoice0
+msgid "Outgoing Products"
+msgstr "Barang Keluar"
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Manually Corrected"
+msgstr "Dikoreksi secara manual"
+
+#. module: purchase
+#: view:purchase.report:0
+msgid "   Month   "
+msgstr "   Bulan   "
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Reference"
+msgstr "Referensi"
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:237
+#, python-format
+msgid "Cannot delete Purchase Order(s) which are in %s State!"
+msgstr "Tidak dapat menghapus Purchase Order  yang berada di bagian %s"
+
+#. module: purchase
+#: field:purchase.report,dest_address_id:0
+msgid "Dest. Address Contact Name"
+msgstr "Nama kontak alamat tujuan"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_stock_move
+msgid "Stock Move"
+msgstr "Perpindahan Stok"
+
+#. module: purchase
+#: view:purchase.report:0
+#: field:purchase.report,day:0
+msgid "Day"
+msgstr "Hari"
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:334
+#, python-format
+msgid "Purchase order '%s' has been set in draft state."
+msgstr "'% s' Order pembelian telah diatur di bagian draft."
+
+#. module: purchase
+#: field:purchase.order.line,account_analytic_id:0
+msgid "Analytic Account"
+msgstr "Akun Analisis"
+
+#. module: purchase
+#: view:purchase.report:0
+#: field:purchase.report,nbr:0
+msgid "# of Lines"
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:685
+#: code:addons/purchase/purchase.py:722
+#: code:addons/purchase/wizard/purchase_order_group.py:47
+#, python-format
+msgid "Warning"
+msgstr "Peringatan"
+
+#. module: purchase
+#: field:purchase.installer,purchase_analytic_plans:0
+msgid "Purchase Analytic Plans"
+msgstr "Analisa Rencana Pembelian"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_purchase_installer
+msgid "purchase.installer"
+msgstr "Installer pembelian"
+
+#. module: purchase
+#: selection:purchase.order.line,state:0
+msgid "Draft"
+msgstr "Draft"
+
+#. module: purchase
+#: report:purchase.order:0
+msgid "Net Price"
+msgstr "Harga Bersih"
+
+#. module: purchase
+#: view:purchase.order.line:0
+msgid "Order Line"
+msgstr ""
+
+#. module: purchase
+#: help:purchase.order,shipped:0
+msgid "It indicates that a picking has been done"
+msgstr "Hal ini menunjukkan bahwa  pengambilan  telah  dilakukan"
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:710
+#, python-format
+msgid "Wrong Product UOM !"
+msgstr "Produk UoM Salah !"
+
+#. module: purchase
+#: model:process.node,name:purchase.process_node_confirmpurchaseorder0
+#: selection:purchase.order.line,state:0
+msgid "Confirmed"
+msgstr "Dikonfirmasi"
+
+#. module: purchase
+#: view:purchase.report:0
+#: field:purchase.report,price_average:0
+msgid "Average Price"
+msgstr "Harga Rata-rata"
+
+#. module: purchase
+#: report:purchase.order:0
+msgid "Total :"
+msgstr "Total :"
+
+#. module: purchase
+#: model:process.transition.action,name:purchase.process_transition_action_confirmpurchaseorder0
+#: view:purchase.order.line_invoice:0
+msgid "Confirm"
+msgstr "Konfirmasi"
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_procurement_management_invoice
+#: view:purchase.order:0
+msgid "Invoice Control"
+msgstr "Kontrol Faktur"
+
+#. module: purchase
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
+msgstr "Error! Anda tidak dapat membuat perusahaan secara berulang ulang"
+
+#. module: purchase
+#: field:purchase.order,partner_ref:0
+msgid "Supplier Reference"
+msgstr "Referensi Pemasok"
+
+#. module: purchase
+#: help:purchase.order,amount_tax:0
+msgid "The tax amount"
+msgstr "Jumlah Pajak"
+
+#. module: purchase
+#: model:process.transition,note:purchase.process_transition_productrecept0
+msgid ""
+"A Pick list generates a supplier invoice. Depending on the Invoicing control "
+"of the purchase order, the invoice is based on received or on ordered "
+"quantities."
+msgstr ""
+"Daftar Pilihlah menghasilkan faktur pemasok. Tergantung pada kontrol Faktur "
+"dari pesanan pembelian, faktur berdasarkan  diterima  atau jumlah permintaan."
+
+#. module: purchase
+#: view:purchase.order:0
+#: field:purchase.order,state:0
+#: view:purchase.order.line:0
+#: field:purchase.order.line,state:0
+#: view:purchase.report:0
+msgid "State"
+msgstr "State"
+
+#. module: purchase
+#: model:ir.actions.act_window,help:purchase.action_stock_move_report_po
+msgid ""
+"Reception Analysis allows you to easily check and analyse your company order "
+"receptions and the performance of your supplier's deliveries."
+msgstr ""
+"Analisis Penerimaan memungkinkan Anda dengan mudah memeriksa dan "
+"menganalisis perusahaan resepsi pesanan Anda dan kinerja pemasok pengiriman  "
+"Anda."
+
+#. module: purchase
+#: report:purchase.quotation:0
+msgid "Tel.:"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_stock_picking
+#: field:purchase.order,picking_ids:0
+msgid "Picking List"
+msgstr "Daftar Jemput"
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Print"
+msgstr "Cetak"
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.action_view_purchase_order_group
+msgid "Merge Purchase orders"
+msgstr "Menggabungkan Order Pembelian"
+
+#. module: purchase
+#: field:purchase.order,order_line:0
+msgid "Order Lines"
+msgstr "Daftar Order"
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:651
+#, python-format
+msgid "No Partner!"
+msgstr "Rekanan Tidak ada"
+
+#. module: purchase
+#: report:purchase.quotation:0
+msgid "Fax:"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.report:0
+#: field:purchase.report,price_total:0
+msgid "Total Price"
+msgstr "Total Harga"
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Untaxed amount"
+msgstr "Total sebelum pajak"
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_product_pricelist_action2_purchase
+#: model:ir.ui.menu,name:purchase.menu_purchase_config_pricelist
+msgid "Pricelists"
+msgstr "Daftar harga"
+
+#. module: purchase
+#: field:purchase.report,partner_address_id:0
+msgid "Address Contact Name"
+msgstr "Nama Kontak Alamat"
+
+#. module: purchase
+#: help:purchase.order,invoice_method:0
+msgid ""
+"From Order: a draft invoice will be pre-generated based on the purchase "
+"order. The accountant will just have to validate this invoice for control.\n"
+"From Picking: a draft invoice will be pre-generated based on validated "
+"receptions.\n"
+"Manual: allows you to generate suppliers invoices by chosing in the "
+"uninvoiced lines of all manual purchase orders."
+msgstr ""
+
+#. module: purchase
+#: help:purchase.order,invoice_ids:0
+msgid "Invoices generated for a purchase order"
+msgstr "Faktur dibuat untuk pesanan pembelian"
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:282
+#: code:addons/purchase/purchase.py:352
+#: code:addons/purchase/purchase.py:362
+#: code:addons/purchase/wizard/purchase_line_invoice.py:122
+#, python-format
+msgid "Error !"
+msgstr "Ada Kesalahan !!!"
+
+#. module: purchase
+#: view:purchase.order.line:0
+msgid "General Information"
+msgstr "Informasi Umum"
+
+#. module: purchase
+#: view:board.board:0
+msgid "My Board"
+msgstr ""
+
+#. module: purchase
+#: report:purchase.order:0
+msgid "Purchase Order Confirmation N°"
+msgstr "Konfirmasi order pembelian ke N°"
+
+#. module: purchase
+#: model:ir.actions.act_window,help:purchase.action_purchase_order_report_all
+msgid ""
+"Purchase Analysis allows you to easily check and analyse your company "
+"purchase history and performance. From this menu you can track your "
+"negotiation performance, the delivery performance of your suppliers, etc."
+msgstr ""
+"Analisa Pembelian  memungkinkan Anda dengan mudah memeriksa dan menganalisis "
+"perusahaan pembelian Anda sejarah dan kinerja. Dari menu ini Anda dapat "
+"melacak kinerja negosiasi Anda, kinerja pengiriman pemasok Anda, dll"
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Approved by Supplier"
+msgstr "Distujui oleh Pemasok"
+
+#. module: purchase
+#: model:process.transition,note:purchase.process_transition_invoicefrompackinglist0
+msgid ""
+"The invoice is created automatically if the Invoice control of the purchase "
+"order is 'On picking'. The invoice can also be generated manually by the "
+"accountant (Invoice control = Manual)."
+msgstr ""
+"Faktur dibuat secara otomatis jika kontrol Faktur dari pesanan pembelian  "
+"adalah  \"Dalam status Pengambilan\". Faktur ini juga dapat dihasilkan "
+"secara manual  oleh akuntan (Faktur kontrol = Manual)."
+
+#. module: purchase
+#: selection:purchase.order,invoice_method:0
+msgid "From Order"
+msgstr "Dari Order"
+
+#. module: purchase
+#: model:process.transition.action,name:purchase.process_transition_action_invoicefrompurchaseorder0
+msgid "Create invoice"
+msgstr "Buat Faktur"
+
+#. module: purchase
+#: field:purchase.order.line,move_dest_id:0
+msgid "Reservation Destination"
+msgstr "Reservasi Tujuan"
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:237
+#, python-format
+msgid "Invalid action !"
+msgstr "Tindakan tidak valid !"
+
+#. module: purchase
+#: selection:purchase.order,state:0
+#: selection:purchase.order.line,state:0
+#: selection:purchase.report,state:0
+msgid "Done"
+msgstr "Selesai"
+
+#. module: purchase
+#: selection:purchase.report,month:0
+msgid "July"
+msgstr "Juli"
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_purchase_config_purchase
+#: view:res.company:0
+msgid "Configuration"
+msgstr "Konfigurasi"
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.action_purchase_by_supplier
+#: view:purchase.report:0
+msgid "Purchase by supplier"
+msgstr "Pembelian oleh pemasok"
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Total amount"
+msgstr "Jumlah total"
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.act_purchase_order_2_stock_picking
+msgid "Receptions"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.order,validator:0
+#: view:purchase.report:0
+msgid "Validated by"
+msgstr "Divalidasi oleh .."
+
+#. module: purchase
+#: model:ir.actions.act_window,help:purchase.action_invoice_pending
+msgid ""
+"Use this menu to control the invoices to be received from your supplier. "
+"OpenERP pregenerates draft invoices from your purchase orders or receptions, "
+"according to your settings. Once you receive a supplier invoice, you can "
+"match it with the draft invoice and validate it."
+msgstr ""
+"Gunakan menu ini untuk mengontrol faktur yang akan diterima dari pemasok  "
+"Anda. OpenERP pregenerates  faktur  draft  dari pesanan pembelian atau "
+"resepsi, sesuai dengan pengaturan Anda. Setelah Anda menerima faktur "
+"pemasok, Anda dapat mencocokkannya dengan faktur draft dan memvalidasinya"
+
+#. module: purchase
+#: model:process.node,name:purchase.process_node_draftpurchaseorder0
+#: model:process.node,name:purchase.process_node_draftpurchaseorder1
+msgid "RFQ"
+msgstr ""
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_procurement_management_pending_invoice
+msgid "Supplier Invoices to Receive"
+msgstr "Faktur Supplier untuk Menerima"
+
+#. module: purchase
+#: help:purchase.installer,purchase_requisition:0
+msgid ""
+"Manages your Purchase Requisition and allows you to easily keep track and "
+"manage all your purchase orders."
+msgstr ""
+"Mengatur Permintaan  Pembelian Anda dan memungkinkan  Anda untuk  dengan "
+"mudah  melacak  dan mengelola semua pesanan pembelian Anda."
+
+#. module: purchase
+#: view:purchase.report:0
+msgid "    Month-1    "
+msgstr "    Bulan - 1    "
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:363
+#, python-format
+msgid "There is no purchase journal defined for this company: \"%s\" (id:%d)"
+msgstr ""
+"Tidak ada jurnal pembelian ditentukan untuk perusahaan ini: \"% s\" (id:% d)"
+
+#. module: purchase
+#: selection:purchase.order,invoice_method:0
+msgid "Manual"
+msgstr "Manual"
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:400
+#, python-format
+msgid "You must first cancel all picking attached to this purchase order."
+msgstr ""
+
+#. module: purchase
+#: view:purchase.order:0
+#: field:purchase.order.line,date_order:0
+#: field:purchase.report,date:0
+msgid "Order Date"
+msgstr "Tanggal Order"
+
+#. module: purchase
+#: model:process.node,note:purchase.process_node_productrecept0
+msgid "Incoming products to control"
+msgstr "Kontrol Kedatangan Produk"
+
+#. module: purchase
+#: model:process.transition,name:purchase.process_transition_approvingpurchaseorder0
+msgid "Approbation"
+msgstr "Penerimaan dengan baik"
+
+#. module: purchase
+#: view:purchase.report:0
+msgid "Purchase Orders Statistics"
+msgstr "Statistik order pembelian"
+
+#. module: purchase
+#: model:ir.actions.act_window,help:purchase.purchase_line_form_action2
+msgid ""
+"If you set the invoicing control on a purchase order as \"Manual\", you can "
+"track here all the purchase order lines for which you have not received the "
+"supplier invoice yet. Once you are ready to receive a supplier invoice, you "
+"can generate a draft supplier invoice based on the lines from this menu."
+msgstr ""
+"Jika anda mengatur kontrol faktur pada manual , anda dapan melacak smua "
+"daftar order pembelian yang mana fakturnya belum di buatkan untuk "
+"pemasok.Setelah anda siap untuk menerima faktur , anda dapat membuat draft "
+"faktur untuk pemasok berdasarkan dari menu ini"
+
+#. module: purchase
+#: model:process.node,name:purchase.process_node_invoiceafterpacking0
+#: model:process.node,name:purchase.process_node_invoicecontrol0
+msgid "Draft Invoice"
+msgstr "Konsep Faktur"
+
+#. module: purchase
+#: help:purchase.installer,purchase_analytic_plans:0
+msgid "Manages analytic distribution and purchase orders."
+msgstr ""
+
+#. module: purchase
+#: help:purchase.order,minimum_planned_date:0
+msgid ""
+"This is computed as the minimum scheduled date of all purchase order lines' "
+"products."
+msgstr ""
+
+#. module: purchase
+#: selection:purchase.report,month:0
+msgid "August"
+msgstr "Agustus"
+
+#. module: purchase
+#: field:purchase.installer,purchase_requisition:0
+msgid "Purchase Requisition"
+msgstr "Permintaan Pembelian"
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_purchase_uom_categ_form_action
+msgid "Units of Measure Categories"
+msgstr "Kategori berdasarkan satuan unit"
+
+#. module: purchase
+#: view:purchase.report:0
+#: field:purchase.report,delay_pass:0
+msgid "Days to Deliver"
+msgstr ""
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_action_picking_tree_in_move
+#: model:ir.ui.menu,name:purchase.menu_procurement_management_inventory
+msgid "Receive Products"
+msgstr "Penerimaan Produk"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_procurement_order
+msgid "Procurement"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.order:0
+#: field:purchase.order,invoice_ids:0
+msgid "Invoices"
+msgstr "Faktur"
+
+#. module: purchase
+#: model:process.node,note:purchase.process_node_purchaseorder0
+msgid "Confirmed purchase order to invoice"
+msgstr ""
+
+#. module: purchase
+#: field:purchase.installer,config_logo:0
+msgid "Image"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.report:0
+msgid "Total Orders Lines by User per month"
+msgstr "Total daftar order user per bulan"
+
+#. module: purchase
+#: view:purchase.report:0
+#: field:purchase.report,month:0
+msgid "Month"
 msgstr ""
 
 #. module: purchase
 #: selection:purchase.order,state:0
-msgid "Cancelled"
+#: selection:purchase.report,state:0
+msgid "Waiting Supplier Ack"
 msgstr ""
+
+#. module: purchase
+#: report:purchase.quotation:0
+msgid "Request for Quotation :"
+msgstr "Permintaan Penawaran"
+
+#. module: purchase
+#: view:board.board:0
+#: model:ir.actions.act_window,name:purchase.purchase_waiting
+msgid "Purchase Order Waiting Approval"
+msgstr "Purchase Order Menunggu Persetujuan"
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Total Untaxed amount"
+msgstr "Jumlah total tidak kena pajak"
+
+#. module: purchase
+#: field:purchase.order,shipped:0
+#: field:purchase.order,shipped_rate:0
+msgid "Received"
+msgstr "Diterima"
+
+#. module: purchase
+#: model:process.node,note:purchase.process_node_packinglist0
+msgid "List of ordered products."
+msgstr "Daftar produk yang dipesan"
+
+#. module: purchase
+#: help:purchase.order,picking_ids:0
+msgid ""
+"This is the list of picking list that have been generated for this purchase"
+msgstr ""
+"Ini adalah daftar dari daftar pengambilan  yang telah dibuat untuk  "
+"pembelian  ini"
+
+#. module: purchase
+#: model:ir.module.module,shortdesc:purchase.module_meta_information
+#: model:ir.ui.menu,name:purchase.menu_procurement_management
+msgid "Purchase Management"
+msgstr "Manajemen Pembelian"
+
+#. module: purchase
+#: model:process.node,note:purchase.process_node_invoiceafterpacking0
+#: model:process.node,note:purchase.process_node_invoicecontrol0
+msgid "To be reviewed by the accountant."
+msgstr "Untuk di review oleh akuntan"
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.purchase_line_form_action2
+#: model:ir.ui.menu,name:purchase.menu_purchase_line_order_draft
+msgid "Purchase Lines Not Invoiced"
+msgstr "Daftar pembelian tidak difakturkan"
+
+#. module: purchase
+#: report:purchase.order:0
+msgid "Taxes :"
+msgstr "Pajak"
+
+#. module: purchase
+#: field:purchase.order,invoiced_rate:0
+#: field:purchase.order.line,invoiced:0
+msgid "Invoiced"
+msgstr "Difakturkan"
+
+#. module: purchase
+#: view:purchase.report:0
+#: field:purchase.report,category_id:0
+msgid "Category"
+msgstr "Kategori"
+
+#. module: purchase
+#: model:process.node,note:purchase.process_node_approvepurchaseorder0
+#: model:process.node,note:purchase.process_node_confirmpurchaseorder0
+msgid "State of the Purchase Order."
+msgstr ""
+
+#. module: purchase
+#: view:purchase.report:0
+msgid "  Year  "
+msgstr "  Tahun  "
+
+#. module: purchase
+#: field:purchase.report,state:0
+msgid "Order State"
+msgstr ""
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.action_view_purchase_line_invoice
+msgid "Create invoices"
+msgstr "Buat Faktur"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_purchase_order_line
+#: view:purchase.order.line:0
+#: field:stock.move,purchase_line_id:0
+msgid "Purchase Order Line"
+msgstr "Daftar Order Pembelian"
+
+#. module: purchase
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
+msgstr "Error! Anda tidak dapat membuat anggota terkait secara terus menerus"
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Calendar View"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_purchase_order_group
+msgid "Purchase Order Merge"
+msgstr "Penggabungan order pembelian"
+
+#. module: purchase
+#: report:purchase.quotation:0
+msgid "Regards,"
+msgstr "Salam"
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.action_negotiation_by_supplier
+#: view:purchase.report:0
+msgid "Negotiation by Supplier"
+msgstr "Negoisasi oleh supplier"
+
+#. module: purchase
+#: view:res.partner:0
+msgid "Purchase Properties"
+msgstr ""
+
+#. module: purchase
+#: model:process.transition,note:purchase.process_transition_purchaseinvoice0
+msgid ""
+"A purchase order generates a supplier invoice, as soon as it is confirmed by "
+"the buyer. Depending on the Invoicing control of the purchase order, the "
+"invoice is based on received or on ordered quantities."
+msgstr ""
+"Sebuah order pembelian menghasilkan  faktur  supplier, segera setelah "
+"dikonfirmasi  oleh pembeli. Tergantung pada kontrol Faktur dari pesanan "
+"pembelian, faktur berdasarkan diterima atau jumlah yang dipesan."
+
+#. module: purchase
+#: field:purchase.order,amount_untaxed:0
+msgid "Untaxed Amount"
+msgstr "Jumlah sebelum kena pajak"
+
+#. module: purchase
+#: help:purchase.order,invoiced:0
+msgid "It indicates that an invoice has been paid"
+msgstr "Ini adalah indikator bahwa faktur telah dibayarkan"
+
+#. module: purchase
+#: model:process.node,note:purchase.process_node_packinginvoice0
+msgid "Outgoing products to invoice"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.installer:0
+msgid "Configure"
+msgstr "Pengaturan"
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.action_qty_per_product
+#: view:purchase.report:0
+msgid "Qty. per product"
+msgstr "Kuantitas per produk"
+
+#. module: purchase
+#: constraint:stock.move:0
+msgid "You try to assign a lot which is not from the same product"
+msgstr ""
+"Anda mencoba untuk menetapkan banyak yang tidak dari produk yang sama"
+
+#. module: purchase
+#: help:purchase.order,date_order:0
+msgid "Date on which this document has been created."
+msgstr ""
+
+#. module: purchase
+#: view:res.partner:0
+msgid "Sales & Purchases"
+msgstr "Penjualan & Pembelian"
+
+#. module: purchase
+#: selection:purchase.report,month:0
+msgid "June"
+msgstr "Juni"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_purchase_report
+msgid "Purchases Orders"
+msgstr "Order Pembelian"
+
+#. module: purchase
+#: view:purchase.order.line:0
+msgid "Manual Invoices"
+msgstr "Faktur secara manual"
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:308
+#, python-format
+msgid ""
+"Somebody has just confirmed a purchase with an amount over the defined limit"
+msgstr ""
+"Seseorang baru saja dikonfirmasi  pembelian  dengan  jumlah  yang melebihi "
+"batas  yang ditetapkan"
+
+#. module: purchase
+#: selection:purchase.report,month:0
+msgid "November"
+msgstr "Nopember"
+
+#. module: purchase
+#: view:purchase.report:0
+msgid "Extended Filters..."
+msgstr "Filter Tambahan"
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:352
+#: code:addons/purchase/wizard/purchase_line_invoice.py:123
+#, python-format
+msgid "There is no expense account defined for this product: \"%s\" (id:%d)"
+msgstr ""
+"Tidak ada account beban yang ditetapkan untuk produk  ini  \"%s\" (id:%d)"
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:408
+#, python-format
+msgid "You must first cancel all invoices attached to this purchase order."
+msgstr ""
+"Anda harus terlebih dahulu membatalkan  semua  faktur  yang dilampirkan "
+"dalam pesanan pembelian"
+
+#. module: purchase
+#: code:addons/purchase/wizard/purchase_order_group.py:48
+#, python-format
+msgid "Please select multiple order to merge in the list view."
+msgstr "Silakan memilih urutan ganda untuk bergabung dalam tampilan daftar"
+
+#. module: purchase
+#: model:process.transition,name:purchase.process_transition_createpackinglist0
+msgid "Pick list generated"
+msgstr "Pilih daftar yang dihasilkan"
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Exception"
+msgstr "Pengecualian"
+
+#. module: purchase
+#: selection:purchase.report,month:0
+msgid "October"
+msgstr "Oktober"
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Compute"
+msgstr "Hitung"
+
+#. module: purchase
+#: model:ir.module.module,description:purchase.module_meta_information
+msgid ""
+"\n"
+"    Purchase module is for generating a purchase order for purchase of goods "
+"from a supplier.\n"
+"    A supplier invoice is created for the particular order placed\n"
+"    Dashboard for purchase management that includes:\n"
+"    * Current Purchase Orders\n"
+"    * Draft Purchase Orders\n"
+"    * Graph for quantity and amount per month    \n"
+"\n"
+"    "
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:685
+#, python-format
+msgid ""
+"The selected supplier has a minimal quantity set to %s, you cannot purchase "
+"less."
+msgstr ""
+
+#. module: purchase
+#: selection:purchase.report,month:0
+msgid "January"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_res_company
+msgid "Companies"
+msgstr "Perusahaan"
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Cancel Purchase Order"
+msgstr "Order Pembelian di batalkan"
+
+#. module: purchase
+#: constraint:stock.move:0
+msgid "You must assign a production lot for this product"
+msgstr "Anda harus menetapkan lot produksi untuk produk  ini"
+
+#. module: purchase
+#: model:process.transition,note:purchase.process_transition_createpackinglist0
+msgid "A pick list is generated to track the incoming products."
+msgstr ""
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_purchase_deshboard
+msgid "Dashboard"
+msgstr ""
+
+#. module: purchase
+#: view:purchase.report:0
+#: field:purchase.report,price_standard:0
+msgid "Products Value"
+msgstr "Nilai Produk"
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_purchase_product_pricelist_type
+msgid "Pricelists Types"
+msgstr "Jenis Daftar Harga"
+
+#. module: purchase
+#: view:purchase.order:0
+#: view:purchase.report:0
+msgid "Quotations"
+msgstr "Penawaran"
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.action_po_per_month_tree
+#: view:purchase.report:0
+msgid "Purchase order per month"
+msgstr "Order Pembelian per bulan"
+
+#. module: purchase
+#: view:purchase.order.line:0
+msgid "History"
+msgstr ""
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_product_by_category_purchase_form
+msgid "Products by Category"
+msgstr "Produk berdasarkan kategori"
+
+#. module: purchase
+#: view:purchase.report:0
+#: field:purchase.report,delay:0
+msgid "Days to Validate"
+msgstr "Haru untuk memvalidasi"
+
+#. module: purchase
+#: help:purchase.order,origin:0
+msgid "Reference of the document that generated this purchase order request."
+msgstr ""
+"Referensi dokumen yang dihasilkan oleh  order  pembelian yang di minta"
 
 #. module: purchase
 #: help:purchase.order,state:0
@@ -192,453 +1303,13 @@ msgid ""
 "received, the state becomes 'Done'. If a cancel action occurs in the invoice "
 "or in the reception of goods, the state becomes in exception."
 msgstr ""
-
-#. module: purchase
-#: field:purchase.order,origin:0
-msgid "Origin"
-msgstr ""
-
-#. module: purchase
-#: model:process.node,name:purchase.process_node_packinglist0
-msgid "Incoming Products"
-msgstr ""
-
-#. module: purchase
-#: rml:purchase.order:0
-#: rml:purchase.quotation:0
-msgid "Qty"
-msgstr ""
-
-#. module: purchase
-#: view:purchase.order:0
-msgid "Manually Corrected"
-msgstr ""
-
-#. module: purchase
-#: view:purchase.order:0
-msgid "Reference"
-msgstr ""
-
-#. module: purchase
-#: rml:purchase.order:0
-msgid "TVA :"
-msgstr ""
-
-#. module: purchase
-#: rml:purchase.quotation:0
-msgid "Tel.:"
-msgstr ""
-
-#. module: purchase
-#: field:purchase.order.line,account_analytic_id:0
-msgid "Analytic Account"
-msgstr ""
-
-#. module: purchase
-#: model:ir.model,name:purchase.model_purchase_order_line
-msgid "Purchase Order lines"
-msgstr ""
-
-#. module: purchase
-#: field:purchase.order,validator:0
-msgid "Validated by"
-msgstr ""
-
-#. module: purchase
-#: help:purchase.order,invoice_method:0
-msgid ""
-"From Order: a draft invoice will be pre-generated based on the purchase "
-"order. The accountant will just have to validate this invoice for control.\n"
-"From Picking: a draft invoice will be pre-genearted based on validated "
-"receptions.\n"
-"Manual: no invoice will be pre-generated. The accountant will have to encode "
-"manually."
-msgstr ""
-
-#. module: purchase
-#: model:process.node,note:purchase.process_node_packinginvoice0
-msgid "Invoice based on deliveries"
-msgstr ""
-
-#. module: purchase
-#: rml:purchase.order:0
-msgid "Net Price"
-msgstr ""
-
-#. module: purchase
-#: view:purchase.order.line:0
-msgid "Order Line"
-msgstr ""
-
-#. module: purchase
-#: selection:purchase.order,state:0
-#: code:addons/purchase/purchase.py:0
-msgid "Confirmed"
-msgstr ""
-
-#. module: purchase
-#: model:process.node,name:purchase.process_node_productrecept0
-msgid "Product Receipt"
-msgstr ""
-
-#. module: purchase
-#: model:process.transition.action,name:purchase.process_transition_action_confirmpurchaseorder0
-msgid "Confirm"
-msgstr ""
-
-#. module: purchase
-#: view:purchase.order:0
-msgid "Invoice Control"
-msgstr ""
-
-#. module: purchase
-#: model:process.node,name:purchase.process_node_draftpurchaseorder0
-#: model:process.node,name:purchase.process_node_draftpurchaseorder1
-msgid "RFQ"
-msgstr ""
-
-#. module: purchase
-#: selection:purchase.order,state:0
-#: code:addons/purchase/purchase.py:0
-msgid "Waiting"
-msgstr ""
-
-#. module: purchase
-#: field:purchase.order,picking_ids:0
-msgid "Picking List"
-msgstr ""
-
-#. module: purchase
-#: field:purchase.order,warehouse_id:0
-msgid "Warehouse"
-msgstr ""
-
-#. module: purchase
-#: field:purchase.order,order_line:0
-msgid "Order Lines"
-msgstr ""
-
-#. module: purchase
-#: model:process.transition,note:purchase.process_transition_confirmingpurchaseorder1
-msgid "Confirm Purchase order from Request for quotation without origin"
-msgstr ""
-
-#. module: purchase
-#: rml:purchase.quotation:0
-msgid "Fax:"
-msgstr ""
-
-#. module: purchase
-#: view:purchase.order:0
-msgid "Untaxed amount"
-msgstr ""
-
-#. module: purchase
-#: rml:purchase.quotation:0
-msgid "Expected Date"
-msgstr ""
-
-#. module: purchase
-#: rml:purchase.order:0
-msgid "Shipping address :"
-msgstr ""
-
-#. module: purchase
-#: model:product.pricelist.type,name:purchase.pricelist_type_purchase
-#: field:res.partner,property_product_pricelist_purchase:0
-msgid "Purchase Pricelist"
-msgstr ""
-
-#. module: purchase
-#: field:purchase.order,minimum_planned_date:0
-msgid "Planned Date"
-msgstr ""
-
-#. module: purchase
-#: view:purchase.order:0
-msgid "Approved by Supplier"
-msgstr ""
-
-#. module: purchase
-#: model:ir.actions.act_window,name:purchase.act_purchase_order_2_stock_picking
-msgid "Packing"
-msgstr ""
-
-#. module: purchase
-#: model:ir.actions.wizard,name:purchase.purchase_order_merge
-msgid "Merge purchases"
-msgstr ""
-
-#. module: purchase
-#: field:purchase.order.line,move_dest_id:0
-msgid "Reservation Destination"
-msgstr ""
-
-#. module: purchase
-#: field:purchase.order,name:0
-msgid "Order Reference"
-msgstr ""
-
-#. module: purchase
-#: selection:purchase.order,state:0
-#: code:addons/purchase/purchase.py:0
-msgid "Done"
-msgstr ""
-
-#. module: purchase
-#: field:purchase.order,pricelist_id:0
-msgid "Pricelist"
-msgstr ""
-
-#. module: purchase
-#: model:process.node,note:purchase.process_node_purchaseorder0
-msgid "When controlling invoice from orders"
-msgstr ""
-
-#. module: purchase
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr ""
-
-#. module: purchase
-#: model:process.node,note:purchase.process_node_invoicecontrol0
-msgid "Pre-generated supplier invoice to control based on order"
-msgstr ""
-
-#. module: purchase
-#: model:process.transition,name:purchase.process_transition_invoicefrompurchase0
-msgid "Invoice from Purchase"
-msgstr ""
-
-#. module: purchase
-#: model:process.node,note:purchase.process_node_packinglist0
-msgid "Packing is created for the products reception control."
-msgstr ""
-
-#. module: purchase
-#: selection:purchase.order,invoice_method:0
-msgid "Manual"
-msgstr ""
-
-#. module: purchase
-#: model:process.transition,name:purchase.process_transition_confirmingpurchaseorder1
-msgid "Confirming Purchase"
-msgstr ""
-
-#. module: purchase
-#: model:process.transition,note:purchase.process_transition_approvingpurchaseorder0
-msgid "Approve Purchase order after Confirming"
-msgstr ""
-
-#. module: purchase
-#: selection:purchase.order,state:0
-#: code:addons/purchase/purchase.py:0
-msgid "Shipping Exception"
-msgstr ""
-
-#. module: purchase
-#: model:process.node,note:purchase.process_node_draftpurchaseorder1
-msgid "Encoded manually by the user."
-msgstr ""
-
-#. module: purchase
-#: help:purchase.order,minimum_planned_date:0
-msgid ""
-"This is computed as the minimum scheduled date of all purchase order lines' "
-"products."
-msgstr ""
-
-#. module: purchase
-#: model:ir.actions.act_window,name:purchase.act_res_partner_2_purchase_order
-msgid "Purchase orders"
-msgstr ""
-
-#. module: purchase
-#: help:purchase.order,dest_address_id:0
-msgid ""
-"Put an address if you want to deliver directly from the supplier to the "
-"customer.In this case, it will remove the warehouse link and set the "
-"customer location."
-msgstr ""
-
-#. module: purchase
-#: rml:purchase.quotation:0
-msgid "Request for Quotation :"
-msgstr ""
-
-#. module: purchase
-#: model:process.transition,note:purchase.process_transition_confirmingpurchaseorder0
-msgid "Confirm Purchase order from Request for quotation"
-msgstr ""
-
-#. module: purchase
-#: view:purchase.order:0
-msgid "Confirm Purchase Order"
-msgstr ""
-
-#. module: purchase
-#: help:purchase.order,picking_ids:0
-msgid ""
-"This is the list of picking list that have been generated for this purchase"
-msgstr ""
-
-#. module: purchase
-#: model:ir.module.module,shortdesc:purchase.module_meta_information
-#: model:ir.ui.menu,name:purchase.menu_purchase_root
-msgid "Purchase Management"
-msgstr ""
-
-#. module: purchase
-#: field:purchase.order,partner_ref:0
-msgid "Partner Ref."
-msgstr ""
-
-#. module: purchase
-#: rml:purchase.order:0
-msgid "Taxes :"
-msgstr ""
-
-#. module: purchase
-#: field:purchase.order,invoiced_rate:0
-msgid "Invoiced"
-msgstr ""
-
-#. module: purchase
-#: field:purchase.order,dest_address_id:0
-msgid "Destination Address"
-msgstr ""
-
-#. module: purchase
-#: view:purchase.order.line:0
-#: field:stock.move,purchase_line_id:0
-msgid "Purchase Order Line"
-msgstr ""
-
-#. module: purchase
-#: view:purchase.order:0
-msgid "Calendar View"
-msgstr ""
-
-#. module: purchase
-#: view:purchase.order:0
-msgid "Set to Draft"
-msgstr ""
-
-#. module: purchase
-#: model:process.node,note:purchase.process_node_approvepurchaseorder0
-msgid "Purchase order is approved by supplier."
-msgstr ""
-
-#. module: purchase
-#: model:process.node,name:purchase.process_node_invoiceafterpacking0
-#: model:process.node,name:purchase.process_node_invoicecontrol0
-msgid "Draft Invoice"
-msgstr ""
-
-#. module: purchase
-#: model:ir.model,name:purchase.model_purchase_order
-msgid "Purchase order"
-msgstr ""
-
-#. module: purchase
-#: model:process.node,note:purchase.process_node_draftpurchaseorder0
-msgid "Request for quotation is proposed by the system."
-msgstr ""
-
-#. module: purchase
-#: model:process.transition,name:purchase.process_transition_packinginvoice0
-msgid "Packing Invoice"
-msgstr ""
-
-#. module: purchase
-#: model:process.transition,note:purchase.process_transition_invoicefrompackinglist0
-msgid "Creates invoice from packin list"
-msgstr ""
-
-#. module: purchase
-#: help:purchase.order,date_order:0
-msgid "Date on which this document has been created."
-msgstr ""
-
-#. module: purchase
-#: view:purchase.order:0
-msgid "Delivery & Invoices"
-msgstr ""
-
-#. module: purchase
-#: field:purchase.order,date_order:0
-msgid "Date"
-msgstr ""
-
-#. module: purchase
-#: help:purchase.order,origin:0
-msgid "Reference of the document that generated this purchase order request."
-msgstr ""
-
-#. module: purchase
-#: rml:purchase.order:0
-msgid "Tél. :"
-msgstr ""
-
-#. module: purchase
-#: model:process.transition,note:purchase.process_transition_purchaseinvoice0
-msgid "After Purchase order , Create invoice."
-msgstr ""
-
-#. module: purchase
-#: field:purchase.order.line,date_planned:0
-msgid "Scheduled date"
-msgstr ""
-
-#. module: purchase
-#: rml:purchase.order:0
-msgid "Our Order Reference"
-msgstr ""
-
-#. module: purchase
-#: rml:purchase.quotation:0
-msgid "TVA:"
-msgstr ""
-
-#. module: purchase
-#: view:purchase.order:0
-msgid "Compute"
-msgstr ""
-
-#. module: purchase
-#: constraint:product.pricelist.version:0
-msgid "You cannot have 2 pricelist versions that overlap!"
-msgstr ""
-
-#. module: purchase
-#: view:purchase.order:0
-msgid "Cancel Purchase Order"
-msgstr ""
-
-#. module: purchase
-#: model:process.transition,name:purchase.process_transition_createpackinglist0
-msgid "Create Packing list"
-msgstr ""
-
-#. module: purchase
-#: rml:purchase.order:0
-msgid "Total :"
-msgstr ""
-
-#. module: purchase
-#: model:process.transition,note:purchase.process_transition_createpackinglist0
-msgid "When purchase order is approved , it creates its packing list."
-msgstr ""
-
-#. module: purchase
-#: view:purchase.order.line:0
-msgid "History"
-msgstr ""
-
-#. module: purchase
-#: field:purchase.order,state:0
-msgid "Order Status"
-msgstr ""
+"Keadaan pesanan pembelian  atau permintaan penawaran, Quotation adalah "
+"pesanan pembelian dalam keadaan 'Konsep'. Maka order harus dikonfirmasikan  "
+"oleh pengguna,  beralih ke 'Dikonfirmasi'. Kemudian pemasok harus "
+"mengkonfirmasi perintah untuk mengubah negara untuk 'Disetujui'. Ketika "
+"pesanan pembelian dibayar dan diterima, negara menjadi 'Selesai'. Jika "
+"membatalkan  terjadi dalam tagihan atau dalam penerimaan barang, maka "
+"statusnya  menjadi dalam pengecualian."
 
 #. module: purchase
 #: field:purchase.order.line,price_subtotal:0
@@ -646,148 +1317,270 @@ msgid "Subtotal"
 msgstr ""
 
 #. module: purchase
+#: model:ir.actions.act_window,name:purchase.purchase_rfq
+#: model:ir.ui.menu,name:purchase.menu_purchase_rfq
+msgid "Requests for Quotation"
+msgstr "Permintaan Penawaran"
+
+#. module: purchase
+#: help:purchase.order,date_approve:0
+msgid "Date on which purchase order has been approved"
+msgstr "Tanggal order pembelian yang telah disetujui"
+
+#. module: purchase
+#: selection:purchase.order,state:0
+#: selection:purchase.report,state:0
+msgid "Waiting"
+msgstr "Menunggu"
+
+#. module: purchase
 #: model:product.pricelist.version,name:purchase.ver0
 msgid "Default Purchase Pricelist Version"
 msgstr ""
 
 #. module: purchase
-#: rml:purchase.order:0
-#: field:purchase.order.line,price_unit:0
-msgid "Unit Price"
+#: view:purchase.installer:0
+msgid ""
+"Extend your Purchases Management Application with additional functionalities."
 msgstr ""
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.action_purchase_install_module
+#: view:purchase.installer:0
+msgid "Purchases Application Configuration"
+msgstr "Konfigurasi Aplikasi Pembelian"
 
 #. module: purchase
 #: field:purchase.order,fiscal_position:0
 msgid "Fiscal Position"
-msgstr ""
+msgstr "Posisi Fiskal"
 
 #. module: purchase
-#: rml:purchase.order:0
+#: report:purchase.order:0
 msgid "Request for Quotation N°"
 msgstr ""
 
 #. module: purchase
-#: field:purchase.order,invoice_id:0
+#: model:process.transition,name:purchase.process_transition_invoicefrompackinglist0
+#: model:process.transition,name:purchase.process_transition_invoicefrompurchase0
 msgid "Invoice"
-msgstr ""
+msgstr "Faktur"
+
+#. module: purchase
+#: selection:purchase.report,month:0
+msgid "December"
+msgstr "Desember"
 
 #. module: purchase
 #: model:process.transition.action,name:purchase.process_transition_action_approvingcancelpurchaseorder0
 #: model:process.transition.action,name:purchase.process_transition_action_cancelpurchaseorder0
-#: wizard_button:purchase.order.merge,init,end:0
+#: view:purchase.order:0
+#: view:purchase.order.group:0
+#: view:purchase.order.line_invoice:0
 msgid "Cancel"
-msgstr ""
+msgstr "Batal"
 
 #. module: purchase
-#: view:res.partner:0
-msgid "Purchases Properties"
-msgstr ""
+#: view:purchase.order:0
+#: view:purchase.order.line:0
+msgid "Purchase Order Lines"
+msgstr "Daftar Order Pembelian"
 
 #. module: purchase
-#: field:purchase.order.line,order_id:0
-msgid "Order Ref"
-msgstr ""
+#: model:process.transition,note:purchase.process_transition_approvingpurchaseorder0
+msgid "The supplier approves the Purchase Order."
+msgstr "Pemasok menyetujui Order Pembelian"
 
 #. module: purchase
+#: model:ir.actions.act_window,name:purchase.act_res_partner_2_purchase_order
 #: model:ir.actions.act_window,name:purchase.purchase_form_action
 #: model:ir.ui.menu,name:purchase.menu_purchase_form_action
+#: view:purchase.report:0
 msgid "Purchase Orders"
-msgstr ""
+msgstr "Order Pembelian"
 
 #. module: purchase
-#: wizard_view:purchase.order.merge,init:0
-#: wizard_button:purchase.order.merge,init,merge:0
+#: field:purchase.order,origin:0
+msgid "Source Document"
+msgstr "Sumber berkas"
+
+#. module: purchase
+#: view:purchase.order.group:0
 msgid "Merge orders"
+msgstr "Gabungkan Order"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_purchase_order_line_invoice
+msgid "Purchase Order Line Make Invoice"
 msgstr ""
 
 #. module: purchase
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
+#: model:ir.ui.menu,name:purchase.menu_action_picking_tree4
+msgid "Incoming Shipments"
+msgstr "Pengiriman barang masuk"
 
 #. module: purchase
-#: model:ir.actions.act_window,name:purchase.purchase_form_action_new
-#: model:ir.ui.menu,name:purchase.menu_purchase_form_action_new
-msgid "New Purchase Order"
-msgstr ""
-
-#. module: purchase
-#: field:purchase.order,shipped:0
-#: field:purchase.order,shipped_rate:0
-msgid "Received"
-msgstr ""
+#: model:ir.actions.act_window,name:purchase.action_purchase_order_by_user_all
+msgid "Total Orders by User per month"
+msgstr "Jumlah Pesanan oleh Pengguna per bulan"
 
 #. module: purchase
 #: model:ir.actions.report.xml,name:purchase.report_purchase_quotation
 #: selection:purchase.order,state:0
+#: selection:purchase.report,state:0
 msgid "Request for Quotation"
 msgstr ""
 
 #. module: purchase
-#: model:process.node,name:purchase.process_node_packinginvoice0
-msgid "Out Packing"
+#: report:purchase.order:0
+msgid "Tél. :"
 msgstr ""
 
 #. module: purchase
-#: model:process.node,note:purchase.process_node_productrecept0
-msgid "Control invoices on receptions"
+#: field:purchase.order,create_uid:0
+#: view:purchase.report:0
+#: field:purchase.report,user_id:0
+msgid "Responsible"
+msgstr "Yang Bertanggung Jawab"
+
+#. module: purchase
+#: report:purchase.order:0
+msgid "Our Order Reference"
+msgstr "Referensi Order Kita"
+
+#. module: purchase
+#: view:purchase.order:0
+#: view:purchase.order.line:0
+msgid "Search Purchase Order"
+msgstr "Mencari Order Pembelian"
+
+#. module: purchase
+#: field:purchase.order,warehouse_id:0
+#: view:purchase.report:0
+#: field:purchase.report,warehouse_id:0
+msgid "Warehouse"
+msgstr "Gudang"
+
+#. module: purchase
+#: model:process.node,note:purchase.process_node_draftpurchaseorder0
+#: model:process.node,note:purchase.process_node_draftpurchaseorder1
+msgid "Request for Quotations."
 msgstr ""
 
 #. module: purchase
-#: rml:purchase.order:0
+#: report:purchase.order:0
 msgid "Date Req."
 msgstr ""
 
 #. module: purchase
 #: field:purchase.order,date_approve:0
+#: field:purchase.report,date_approve:0
 msgid "Date Approved"
+msgstr "Tanggal Disetujui"
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:407
+#, python-format
+msgid "Could not cancel this purchase order !"
+msgstr "Order Pembelian tidak dapat dibatalkan"
+
+#. module: purchase
+#: report:purchase.order:0
+#: field:purchase.order.line,price_unit:0
+msgid "Unit Price"
+msgstr "Harga Satuan"
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Delivery & Invoicing"
+msgstr "Pengiriman dan faktur"
+
+#. module: purchase
+#: field:purchase.order.line,date_planned:0
+msgid "Scheduled Date"
 msgstr ""
 
 #. module: purchase
-#: model:ir.module.module,description:purchase.module_meta_information
-msgid ""
-"Module for purchase management\n"
-"    Request for quotation, Create Supplier Invoice, Print Order..."
-msgstr ""
-
-#. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_product_in_config_purchase
+#: field:purchase.order,product_id:0
+#: view:purchase.order.line:0
 #: field:purchase.order.line,product_id:0
+#: view:purchase.report:0
+#: field:purchase.report,product_id:0
 msgid "Product"
-msgstr ""
+msgstr "Produk"
 
 #. module: purchase
-#: rml:purchase.order:0
+#: model:process.transition,name:purchase.process_transition_confirmingpurchaseorder0
+#: model:process.transition,name:purchase.process_transition_confirmingpurchaseorder1
+msgid "Confirmation"
+msgstr "Konfirmasi"
+
+#. module: purchase
+#: report:purchase.order:0
 #: field:purchase.order.line,name:0
-#: rml:purchase.quotation:0
+#: report:purchase.quotation:0
 msgid "Description"
+msgstr "Keterangan"
+
+#. module: purchase
+#: help:res.company,po_lead:0
+msgid "This is the leads/security time for each purchase order."
 msgstr ""
 
 #. module: purchase
-#: model:process.transition,name:purchase.process_transition_productrecept0
-msgid "Product recept invoice"
-msgstr ""
-
-#. module: purchase
-#: rml:purchase.quotation:0
+#: report:purchase.quotation:0
 msgid "Expected Delivery address:"
 msgstr ""
 
 #. module: purchase
-#: model:ir.actions.act_window,name:purchase.purchase_form_action3
-#: model:ir.ui.menu,name:purchase.menu_purchase_form_action3
-msgid "Purchase Order Waiting Approval"
-msgstr ""
+#: model:ir.actions.act_window,name:purchase.action_stock_move_report_po
+#: model:ir.ui.menu,name:purchase.menu_action_stock_move_report_po
+msgid "Receptions Analysis"
+msgstr "Analisis resepsi"
 
 #. module: purchase
-#: model:process.transition,name:purchase.process_transition_confirmingpurchaseorder0
-msgid "Confirming Purchase Order"
+#: help:purchase.order,amount_untaxed:0
+msgid "The amount without tax"
+msgstr "Jumlah tanpa pajak"
+
+#. module: purchase
+#: model:ir.actions.act_window,help:purchase.action_supplier_address_form
+msgid ""
+"Access your supplier records and maintain a good relationship with your "
+"suppliers. You can track all your interactions with them through the History "
+"tab: emails, orders, meetings, etc."
+msgstr ""
+"Mengakses catatan pemasok Anda dan menjaga hubungan yang  baik dengan para "
+"pemasok  Anda. Anda dapat melacak semua  interaksi  Anda dengan mereka  "
+"melalui  tab Sejarah: email, pesanan, rapat, dll"
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Delivery"
+msgstr "Pengiriman"
+
+#. module: purchase
+#: view:board.board:0
+#: model:ir.actions.act_window,name:purchase.purchase_draft
+msgid "Request for Quotations"
 msgstr ""
 
 #. module: purchase
 #: field:purchase.order.line,product_uom:0
 msgid "Product UOM"
-msgstr ""
+msgstr "Produk UOM"
+
+#. module: purchase
+#: report:purchase.order:0
+#: report:purchase.quotation:0
+msgid "Qty"
+msgstr "Qty"
+
+#. module: purchase
+#: field:purchase.order,partner_address_id:0
+msgid "Address"
+msgstr "Alamat"
 
 #. module: purchase
 #: field:purchase.order.line,move_ids:0
@@ -795,123 +1588,280 @@ msgid "Reservation"
 msgstr ""
 
 #. module: purchase
-#: model:process.node,note:purchase.process_node_confirmpurchaseorder0
-msgid "Purchase order is confirmed by the user."
-msgstr ""
+#: model:ir.actions.act_window,name:purchase.action_purchase_order_report_graph
+#: view:purchase.report:0
+msgid "Total Qty and Amount by month"
+msgstr "Total Qty dan Jumlah berdasarkan bulan"
 
 #. module: purchase
-#: model:process.transition,name:purchase.process_transition_purchaseinvoice0
-msgid "Purchase Invoice"
-msgstr ""
+#: code:addons/purchase/purchase.py:399
+#, python-format
+msgid "Could not cancel purchase order !"
+msgstr "Order Pembelian tidak dapat dibatalkan !"
 
 #. module: purchase
-#: rml:purchase.order:0
+#: model:process.transition,note:purchase.process_transition_confirmingpurchaseorder1
+msgid ""
+"In case there is no supplier for this product, the buyer can fill the form "
+"manually and confirm it. The RFQ becomes a confirmed Purchase Order."
+msgstr ""
+"Dalam hal tidak ada pemasok untuk produk ini, pembeli dapat mengisi formulir "
+"secara manual dan  mengkonfirmasikannya. The RFQ menjadi Purchase Order yang "
+"sudah dikonfirmasi"
+
+#. module: purchase
+#: selection:purchase.report,month:0
+msgid "February"
+msgstr "Februari"
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_product_category_config_purchase
+msgid "Products Categories"
+msgstr "Kategori Produk"
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.action_purchase_order_report_all
+#: model:ir.ui.menu,name:purchase.menu_action_purchase_order_report_all
+msgid "Purchase Analysis"
+msgstr "Analisa Pembelian"
+
+#. module: purchase
+#: report:purchase.order:0
 msgid "Your Order Reference"
-msgstr ""
-
-#. module: purchase
-#: rml:purchase.order:0
-msgid "Purchase Order Confirmation N°"
-msgstr ""
+msgstr "Referensi Order Anda"
 
 #. module: purchase
 #: view:purchase.order:0
-msgid "Total amount"
+#: field:purchase.order,minimum_planned_date:0
+#: report:purchase.quotation:0
+#: field:purchase.report,expected_date:0
+msgid "Expected Date"
+msgstr "Tanggal yang di harapkan"
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.action_total_price_by_product_by_state
+#: view:purchase.report:0
+msgid "Total price by product by state"
 msgstr ""
 
 #. module: purchase
-#: rml:purchase.order:0
-msgid "Date Ordered"
+#: report:purchase.quotation:0
+msgid "TVA:"
 msgstr ""
+
+#. module: purchase
+#: report:purchase.order:0
+#: field:purchase.order,date_order:0
+msgid "Date Ordered"
+msgstr "Tanggal pemesanan"
+
+#. module: purchase
+#: report:purchase.order:0
+msgid "Shipping address :"
+msgstr "Alamat pengiriman :"
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Purchase Control"
+msgstr "Kontrol Pembelian"
+
+#. module: purchase
+#: selection:purchase.report,month:0
+msgid "March"
 msgstr ""
 
 #. module: purchase
-#: model:ir.actions.act_window,name:purchase.purchase_form_action2
-#: model:ir.ui.menu,name:purchase.menu_purchase_order_draft
-msgid "Request For Quotations"
+#: selection:purchase.report,month:0
+msgid "April"
 msgstr ""
+
+#. module: purchase
+#: view:purchase.order.group:0
+msgid ""
+" Please note that: \n"
+" \n"
+" Orders will only be merged if: \n"
+" * Purchase Orders are in draft \n"
+" * Purchase Orders belong to the same supplier \n"
+" * Purchase Orders are have same stock location, same pricelist \n"
+" \n"
+" Lines will only be merged if: \n"
+" * Order lines are exactly the same except for the product,quantity and unit "
+"\n"
+" "
+msgstr ""
+
+#. module: purchase
+#: view:purchase.report:0
+#: field:purchase.report,name:0
+msgid "Year"
+msgstr "Tahun"
+
+#. module: purchase
+#: field:purchase.report,negociation:0
+msgid "Purchase-Standard Price"
+msgstr "Standar Harga Pembelian"
+
+#. module: purchase
+#: model:product.pricelist.type,name:purchase.pricelist_type_purchase
+#: field:res.partner,property_product_pricelist_purchase:0
+msgid "Purchase Pricelist"
+msgstr "Daftar harga Pembelian"
 
 #. module: purchase
 #: field:purchase.order,invoice_method:0
 msgid "Invoicing Control"
-msgstr ""
+msgstr "Kontrol Tagihan"
 
 #. module: purchase
 #: model:process.transition.action,name:purchase.process_transition_action_approvingpurchaseorder0
 msgid "Approve"
+msgstr "Disetujui"
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "To Approve"
+msgstr "Untuk Disetujui"
+
+#. module: purchase
+#: view:purchase.order.line:0
+msgid "Invoicing"
+msgstr "Faktur"
+
+#. module: purchase
+#: help:purchase.order.line,state:0
+msgid ""
+" * The 'Draft' state is set automatically when purchase order in draft "
+"state.                                        \n"
+"* The 'Confirmed' state is set automatically as confirm when purchase order "
+"in confirm state.                                        \n"
+"* The 'Done' state is set automatically when purchase order is set as done.  "
+"                                      \n"
+"* The 'Cancelled' state is set automatically when user cancel purchase order."
 msgstr ""
 
 #. module: purchase
-#: model:process.node,name:purchase.process_node_approvepurchaseorder0
-msgid "Approved Purchase"
-msgstr ""
-
-#. module: purchase
-#: model:process.transition,note:purchase.process_transition_packinginvoice0
-msgid "From Packing list, Create invoice."
-msgstr ""
+#: code:addons/purchase/purchase.py:414
+#, python-format
+msgid "Purchase order '%s' is cancelled."
+msgstr "Order Pembelian '%s' dibatalkan."
 
 #. module: purchase
 #: field:purchase.order,amount_total:0
 msgid "Total"
-msgstr ""
+msgstr "Total"
 
 #. module: purchase
-#: wizard_view:purchase.order.merge,init:0
+#: model:ir.ui.menu,name:purchase.menu_product_pricelist_action_purhase
+msgid "Pricelist Versions"
+msgstr "Versi Daftar Harga"
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.action_supplier_address_form
+msgid "Addresses"
+msgstr "Alamat"
+
+#. module: purchase
+#: view:purchase.order.group:0
 msgid "Are you sure you want to merge these orders ?"
+msgstr "Anda yakin untuk menggabungkan order ini ?"
+
+#. module: purchase
+#: view:purchase.order:0
+#: view:purchase.order.line:0
+#: view:purchase.report:0
+msgid "Group By..."
+msgstr "Dikelompokan berdasarkan ..."
+
+#. module: purchase
+#: model:process.transition,name:purchase.process_transition_purchaseinvoice0
+msgid "From a purchase order"
+msgstr "Dari Order Pembelian"
+
+#. module: purchase
+#: report:purchase.order:0
+msgid "TVA :"
 msgstr ""
 
 #. module: purchase
-#: model:process.transition,name:purchase.process_transition_approvingpurchaseorder0
-msgid "Approving Purchase Order"
+#: help:purchase.order,amount_total:0
+msgid "The total amount"
+msgstr "Jumlah Total"
+
+#. module: purchase
+#: selection:purchase.report,month:0
+msgid "May"
+msgstr "Mei"
+
+#. module: purchase
+#: field:res.company,po_lead:0
+msgid "Purchase Lead Time"
 msgstr ""
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_invoicefrompurchase0
-msgid "After approved purchase order , it comes into the supplier invoice"
+msgid ""
+"The invoice is created automatically if the Invoice control of the purchase "
+"order is 'On order'. The invoice can also be generated manually by the "
+"accountant (Invoice control = Manual)."
 msgstr ""
+
+#. module: purchase
+#: model:process.process,name:purchase.process_process_purchaseprocess0
+msgid "Purchase"
+msgstr ""
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_res_partner
+#: field:purchase.order.line,partner_id:0
+msgid "Partner"
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:651
+#, python-format
+msgid ""
+"You have to select a partner in the purchase form !\n"
+"Please set one partner before choosing a product."
+msgstr ""
+
+#. module: purchase
+#: view:purchase.installer:0
+msgid "title"
+msgstr "Judul:"
+
+#. module: purchase
+#: model:ir.model,name:purchase.model_stock_partial_move
+msgid "Partial Move"
+msgstr "Pindah Sebagian"
 
 #. module: purchase
 #: view:purchase.order.line:0
 msgid "Stock Moves"
+msgstr "Perpindahan Stok"
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_purchase_unit_measure_purchase
+#: model:ir.ui.menu,name:purchase.menu_purchase_uom_form_action
+msgid "Units of Measure"
+msgstr "Satuan Unit"
+
+#. module: purchase
+#: view:purchase.report:0
+msgid "Orders"
 msgstr ""
 
 #. module: purchase
-#: selection:report.purchase.order.category,state:0
-#: selection:report.purchase.order.product,state:0
-msgid "Waiting Schedule"
+#: help:purchase.order,name:0
+msgid ""
+"unique number of the purchase order,computed automatically when the purchase "
+"order is created"
 msgstr ""
+"Nomor unik pesanan pembelian, komputer secara otomatis  ketika  pesanan  "
+"pembelian  dibuat"
 
 #. module: purchase
-#: field:report.purchase.order.category,price_total:0
-#: field:report.purchase.order.product,price_total:0
-msgid "Total Price"
-msgstr ""
-
-#. module: purchase
-#: selection:report.purchase.order.category,state:0
-#: selection:report.purchase.order.product,state:0
-msgid "Quotation"
-msgstr ""
-
-#. module: purchase
-#: selection:report.purchase.order.category,state:0
-#: selection:report.purchase.order.product,state:0
-msgid "Manual in progress"
-msgstr ""
-
-#. module: purchase
-#: selection:report.purchase.order.category,state:0
-#: selection:report.purchase.order.product,state:0
-msgid "In progress"
-msgstr ""
-
-#. module: purchase
-#: code:addons/purchase/purchase.py:0
-#, python-format
-msgid "Cannot delete Purchase Order(s) which are in %s State!"
+#: model:ir.actions.act_window,name:purchase.open_board_purchase
+#: model:ir.ui.menu,name:purchase.menu_board_purchase
+msgid "Purchase Dashboard"
 msgstr ""

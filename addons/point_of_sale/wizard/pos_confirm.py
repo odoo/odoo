@@ -21,14 +21,13 @@
 
 import netsvc
 from osv import osv
-from tools.translate import _
 
 
 class pos_confirm(osv.osv_memory):
     _name = 'pos.confirm'
     _description = 'Point of Sale Confirm'
 
-    def action_confirm(self, cr, uid, ids, context):
+    def action_confirm(self, cr, uid, ids, context=None):
         """
              Confirm the order and close the sales.
              @param self: The object pointer.
@@ -37,7 +36,8 @@ class pos_confirm(osv.osv_memory):
              @param context: A standard dictionary
              @return :Blank dictionary
         """
-
+        if context is None:
+            context = {}
         record_id = context and context.get('active_id', False)
         if record_id:
             if isinstance(record_id, (int, long)):
@@ -47,7 +47,7 @@ class pos_confirm(osv.osv_memory):
 
                 for order_id in order_obj.browse(cr, uid, record_id, context=context):
                     if  order_id.state == 'paid':
-                        order_obj.write(cr, uid, [order_id.id], {'journal_entry': True})
+                        order_obj.write(cr, uid, [order_id.id], {'journal_entry': True}, context=context)
                         order_obj.create_account_move(cr, uid, [order_id.id], context=context)
 
                 wf_service = netsvc.LocalService("workflow")

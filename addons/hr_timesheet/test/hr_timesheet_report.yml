@@ -1,0 +1,21 @@
+-
+ Print the HR Timesheet By Employee report through the wizard
+-
+  !python {model: hr.employee}: |
+    import netsvc, tools, os, time
+    ctx={}
+    ctx.update({'model': 'hr.employee','active_ids': []})
+    data_dict = {'month': time.gmtime()[1], 'year': time.gmtime()[0], 'employee_id' : ref('hr.employee1')}
+    from tools import test_reports
+    test_reports.try_report_action(cr, uid, 'action_hr_timesheet_my',wiz_data=data_dict, context=ctx, our_module='hr_timesheet')
+
+-
+ Print the HR Timesheet By Employee report through the wizard
+-
+  !python {model: hr.employee}: |
+    import netsvc, tools, os, time
+    ctx={}
+    ctx.update({'model': 'hr.employee','active_ids': []})
+    data_dict = {'month': time.gmtime()[1], 'year': time.gmtime()[0], 'employee_ids' : [(6,0,[ref('hr.employee1'),ref('hr.employee2'),ref('hr.employee3')])]}
+    from tools import test_reports
+    test_reports.try_report_action(cr, uid, 'action_hr_timesheet_users',wiz_data=data_dict, context=ctx, our_module='hr_timesheet')

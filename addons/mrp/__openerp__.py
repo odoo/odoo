@@ -34,7 +34,7 @@
     * Make to Stock / Make to Order (by line)
     * Multi-level BoMs, no limit
     * Multi-level routing, no limit
-    * Routing and workcenter integrated with analytic accounting
+    * Routing and work center integrated with analytic accounting
     * Scheduler computation periodically / Just In Time module
     * Multi-pos, multi-warehouse
     * Different reordering policies
@@ -85,14 +85,14 @@
     ],
     'demo_xml': [
          'mrp_demo.xml',
-         'board_manufacturing_demo.xml'
     ],
     'test': [
          'test/mrp_procurement.yml',
          'test/mrp_packs.yml',
          'test/mrp_phantom_bom.yml',
          'test/mrp_production_order.yml',
-         
+         'test/mrp_report.yml',
+
     ],
     'installable': True,
     'active': False,

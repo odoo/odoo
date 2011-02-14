@@ -20,7 +20,6 @@
 ##############################################################################
 
 from osv import fields, osv
-from tools.translate import _
 
 class account_period_close(osv.osv_memory):
     """
@@ -39,6 +38,7 @@ class account_period_close(osv.osv_memory):
         @param uid: the current user’s ID for security checks,
         @param ids: account period close’s ID or list of IDs
          """
+        period_pool = self.pool.get('account.period')
 
         mode = 'done'
         for form in self.read(cr, uid, ids, context=context):
@@ -48,10 +48,9 @@ class account_period_close(osv.osv_memory):
                     cr.execute('update account_period set state=%s where id=%s', (mode, id))
 
                     # Log message for Period
-                    period_pool = self.pool.get('account.period')
                     for period_id, name in period_pool.name_get(cr, uid, [id]):
                         period_pool.log(cr, uid, period_id, "Period '%s' is closed, no more modification allowed for this period." % (name))
-        return {}
+        return {'type': 'ir.actions.act_window_close'}
 
 account_period_close()
 

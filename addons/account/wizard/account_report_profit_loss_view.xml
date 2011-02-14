@@ -8,10 +8,22 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="account.account_common_report_view" />
             <field name="arch" type="xml">
-               <field name="fiscalyear_id" position="after">
+            <data>
+            <xpath expr="//field[@name='target_move']" position="replace">
+                <field name="target_move" required="0" readonly="1"/>
+            </xpath>
+            <xpath expr="//field[@name='journal_ids']" position="replace">
+                <field name="journal_ids" required="0" colspan="4" nolabel="1" readonly="1"/>
+            </xpath>
+            <xpath expr="/form/label[@string='']" position="replace">
+                <separator string="Profit And Loss" colspan="4"/>
+                <label nolabel="1" colspan="4" string="The Profit and Loss report gives you an overview of your company profit and loss in a single document"/>
+            </xpath>
+            <xpath expr="//field[@name='fiscalyear_id']" position="after">
                    <field name="display_account"/>
                    <field name="display_type"/>
-               </field>
+            </xpath>
+            </data>
             </field>
         </record>
 

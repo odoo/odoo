@@ -1,19 +1,18 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-          <menuitem icon="STOCK_PREFERENCES" id="base.menu_tools" name="Tools" sequence="28"/>
           <menuitem name="Lunch Order" parent="base.menu_tools"
               id="menu_lunch" sequence="1" />
 
           <menuitem name="Reporting" parent="base.menu_tools"
-              id="base.menu_lunch_reporting" sequence="6" groups="base.group_system,base.group_tool_manager"/>
+              id="base.menu_lunch_reporting" sequence="6" groups="base.group_tool_manager"/>
 
           <menuitem name="Lunch Orders"
               parent="base.menu_lunch_reporting"
               id="menu_lunch_reporting_order" sequence="1" />
 
           <menuitem name="Configuration" parent="base.menu_tools"
-              id="base.menu_lunch_survey_root" sequence="20" groups="base.group_system"/>
+              id="base.menu_lunch_survey_root" sequence="20" groups="base.group_tool_manager"/>
 
           <menuitem name="Lunch" parent="base.menu_lunch_survey_root"
               id="menu_lunch_category_root_configuration" sequence="1" />
@@ -55,15 +54,15 @@
                     <field name="price" sum="Total price"/>
                     <field name="state"/>
                     <button colspan="1"
-                              name="%(action_lunch_order_confirm)d"
-                              string="Confirm Order"
-                              type="action" states="draft"
-                              icon="terp-gtk-go-back-rtl" />
-                    <button colspan="1"
                               name="%(action_lunch_order_cancel)d"
                               string="Cancel Order"
                               type="action" states="confirmed"
                               icon="gtk-cancel" />
+                    <button colspan="1"
+                              name="%(action_lunch_order_confirm)d"
+                              string="Confirm Order"
+                              type="action" states="draft"
+                              icon="terp-gtk-go-back-rtl" />
                 </tree>
             </field>
         </record>
@@ -368,13 +367,13 @@
                         domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;=',time.strftime('%%Y-01-01'))]"
                         help="Box amount in current year"/>
                         <filter icon="terp-go-month" string="   Month   "
-                        name="month"
-                        domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;=',time.strftime('%%Y-%%m-01'))]"
-                        help="Box amount in current month"/>
+                                name="month"
+                                domain="[('date','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"
+                                help="Box amount in current month"/>
                         <filter icon="terp-go-month"
                          string="    Month-1    "
                          separator="1"
-                         domain="[('date','&lt;=', (datetime.date (int(time.strftime('%%Y')), datetime.date.today().month, 1) - datetime.timedelta (days = 1)).strftime('%%Y-%%m-%%d')),('date','&gt;',(datetime.date (int(time.strftime('%%Y')), datetime.date.today().month-1, 1)).strftime('%%Y-%%m-%%d'))]"
+                         domain="[('date','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
                          help="Box amount in last month"/>
                     <separator orientation="vertical"/>
                         <field name="user_id" select="1"/>

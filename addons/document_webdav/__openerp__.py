@@ -29,20 +29,40 @@
 ##############################################################################
 
 {
-	"name" : "WebDAV server for Document Management",
-	"version" : "2.0",
-	"author" : "OpenERP SA",
-	"category" : "Generic Modules/Others",
-	"website": "http://www.openerp.com",
-	"description": """ With this module, the WebDAV server for the documents is activated.
-	You can then use any compatible browser to remotely see the attachments of OpenObject.
+        "name" : "WebDAV server for Document Management",
+        "version" : "2.3",
+        "author" : "OpenERP SA",
+        "category" : "Generic Modules/Others",
+        "website": "http://www.openerp.com",
+        "description": """ With this module, the WebDAV server for the documents is activated.
+        You can then use any compatible browser to remotely see the attachments of OpenObject.
 
-	After installation, the webDAV server can be controlled by a [webdav] section in the server's config.
+        After installation, the webDAV server can be controlled by a [webdav] section in the server's config.
+        Server Configuration Parameter:
+        [webdav]
+        ; enable = True ; Serve webdav over the http(s) servers
+        ; vdir = webdav ; the directory that webdav will be served at
+          ; this default val means that webdav will be
+          ; on "http://localhost:8069/webdav/
+        ; verbose = True ; Turn on the verbose messages of webdav
+        ; debug = True ; Turn on the debugging messages of webdav
+          ; since the messages are routed to the python logging, with
+          ; levels "debug" and "debug_rpc" respectively, you can leave
+          ; these options on
+          
+        Also implements IETF RFC 5785 for services discovery on a http server,
+        which needs explicit configuration in openerp-server.conf, too.
 """,
-	"depends" : ["base", "document"],
-	"init_xml" : [],
-	"update_xml" : [],
-	"demo_xml" : [],
-	"active": False,
-	"installable": True
+        "depends" : ["base", "document"],
+        "init_xml" : [],
+        "update_xml" : ['security/ir.model.access.csv', 
+                        'webdav_view.xml',
+                        'webdav_setup.xml',
+                        ],
+        "demo_xml" : [],
+        "test": [ #'test/webdav_test1.yml', 
+                ],
+        "active": False,
+        "installable": True,
+        "certificate" : "001236490750845657973",
 }

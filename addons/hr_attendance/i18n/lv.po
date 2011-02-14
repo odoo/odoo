@@ -7,395 +7,594 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-10-22 14:29+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"PO-Revision-Date: 2011-01-28 14:12+0000\n"
+"Last-Translator: Normunds <Unknown>\n"
 "Language-Team: Latvian <lv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-08-12 04:04+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-29 05:44+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
+
+#. module: hr_attendance
+#: model:ir.ui.menu,name:hr_attendance.menu_hr_time_tracking
+msgid "Time Tracking"
+msgstr "Patērētā laika Uzskaite"
+
+#. module: hr_attendance
+#: view:hr.attendance:0
+msgid "Group By..."
+msgstr "Grupēt pēc..."
+
+#. module: hr_attendance
+#: view:hr.attendance:0
+msgid "Today"
+msgstr "Šodien"
+
+#. module: hr_attendance
+#: selection:hr.attendance.month,month:0
+msgid "March"
+msgstr "Marts"
+
+#. module: hr_attendance
+#: view:hr.sign.in.out.ask:0
+msgid ""
+"You did not sign out the last time. Please enter the date and time you "
+"signed out."
+msgstr ""
+"Jūs pēdējo reizi neesat izgājis/-usi no sistēmas. Lūdzu ievadiet datumu un "
+"laiku, kad tas notika."
+
+#. module: hr_attendance
+#: report:report.hr.timesheet.attendance.error:0
+msgid "Total period:"
+msgstr "Periods kopā:"
+
+#. module: hr_attendance
+#: field:hr.action.reason,name:0
+msgid "Reason"
+msgstr "Iemesls"
+
+#. module: hr_attendance
+#: view:hr.attendance.error:0
+msgid "Print Attendance Report Error"
+msgstr "Drukāt Apmeklējuma Atskaites Kļūdu"
+
+#. module: hr_attendance
+#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:156
+#, python-format
+msgid "The sign-out date must be in the past"
+msgstr "Iziešanas no sistēmas datumam ir jābūt pagātnē"
+
+#. module: hr_attendance
+#: report:report.hr.timesheet.attendance.error:0
+msgid "Date Signed"
+msgstr "Reģistrācijas sistēmā Datums"
+
+#. module: hr_attendance
+#: model:ir.actions.act_window,help:hr_attendance.open_view_attendance
+msgid ""
+"The Time Tracking functionality aims to manage employee attendances from "
+"Sign in/Sign out actions. You can also link this feature to an attendance "
+"device using OpenERP's web service features."
+msgstr ""
+"Darba laika uzskaitē tiek izmantoti darbinieku reģistrācijas/iziešanas no "
+"sistēmas dati. Šo moduli, izmantojot OpenERP web servisa fukcionalitāti, var "
+"pieslēgt pie specializētām viedkaršu sistēmām."
+
+#. module: hr_attendance
+#: view:hr.action.reason:0
+msgid "Attendance reasons"
+msgstr "Apmeklējuma iemesli"
+
+#. module: hr_attendance
+#: view:hr.attendance:0
+#: field:hr.attendance,day:0
+msgid "Day"
+msgstr "Diena"
+
+#. module: hr_attendance
+#: selection:hr.employee,state:0
+msgid "Present"
+msgstr "Klātesošs"
+
+#. module: hr_attendance
+#: model:ir.model,name:hr_attendance.model_hr_sign_in_out_ask
+msgid "Ask for Sign In Out"
+msgstr "Pieprasīt, lai Iziet no sistēmas"
+
+#. module: hr_attendance
+#: field:hr.attendance,action_desc:0
+#: model:ir.model,name:hr_attendance.model_hr_action_reason
+msgid "Action Reason"
+msgstr "Darbības iemesls"
+
+#. module: hr_attendance
+#: view:hr.sign.in.out:0
+msgid "Ok"
+msgstr "Labi"
+
+#. module: hr_attendance
+#: view:hr.action.reason:0
+msgid "Define attendance reason"
+msgstr "Definēt apmeklējuma iemeslu"
+
+#. module: hr_attendance
+#: constraint:hr.employee:0
+msgid ""
+"Error ! You cannot select a department for which the employee is the manager."
+msgstr ""
+"Kļūda! Nevar izvēlēties nodaļu, kurai darbinieks pats ir nodaļas vadītājs."
+
+#. module: hr_attendance
+#: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_month
+msgid "Attendances By Month"
+msgstr "Apmeklējumi Mēneša skatījumā"
+
+#. module: hr_attendance
+#: field:hr.sign.in.out,name:0
+#: field:hr.sign.in.out.ask,name:0
+msgid "Employees name"
+msgstr "Darbinieka Vārds"
+
+#. module: hr_attendance
+#: model:ir.actions.act_window,name:hr_attendance.open_view_attendance_reason
+#: model:ir.ui.menu,name:hr_attendance.menu_open_view_attendance_reason
+msgid "Attendance Reasons"
+msgstr "Apmeklējuma Iemesli"
+
+#. module: hr_attendance
+#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:156
+#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:162
+#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:169
+#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:174
+#, python-format
+msgid "UserError"
+msgstr "Lietotāja Kļūda"
+
+#. module: hr_attendance
+#: field:hr.attendance.error,end_date:0
+#: field:hr.attendance.week,end_date:0
+msgid "Ending Date"
+msgstr "Beigu Datums"
+
+#. module: hr_attendance
+#: view:hr.attendance:0
+msgid "Employee attendance"
+msgstr "Darbinieka ierašanās darbā"
+
+#. module: hr_attendance
+#: code:addons/hr_attendance/hr_attendance.py:136
+#, python-format
+msgid "Warning"
+msgstr "Brīdinājums"
+
+#. module: hr_attendance
+#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:169
+#, python-format
+msgid "The Sign-in date must be in the past"
+msgstr "Reģistrācijas sistēmā datumam ir jābūt pagātnē"
+
+#. module: hr_attendance
+#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:162
+#, python-format
+msgid "A sign-in must be right after a sign-out !"
+msgstr "Reģistrācijai sistēmā jāseko secīgi pēc iziešanas no sistēmas!"
 
 #. module: hr_attendance
 #: field:hr.employee,state:0
 #: model:ir.model,name:hr_attendance.model_hr_attendance
 msgid "Attendance"
-msgstr ""
+msgstr "Ierašanās Darbā"
 
 #. module: hr_attendance
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
+#: field:hr.attendance.error,max_delay:0
+msgid "Max. Delay (Min)"
+msgstr "Max. Kavējums (min.)"
 
 #. module: hr_attendance
-#: wizard_view:hr.si_so,init:0
-#: wizard_view:hr.si_so,si_ask_so:0
-#: wizard_view:hr.si_so,so_ask_si:0
-#: model:ir.actions.wizard,name:hr_attendance.si_so
-#: model:ir.ui.menu,name:hr_attendance.menu_si_so
-msgid "Sign in / Sign out"
-msgstr ""
-
-#. module: hr_attendance
-#: rml:report.hr.timesheet.attendance.error:0
-msgid ""
-"(*) A positive delay means that the employee worked less than recorded."
-msgstr ""
+#: view:hr.attendance.error:0
+#: view:hr.attendance.month:0
+msgid "Print"
+msgstr "Drukāt"
 
 #. module: hr_attendance
 #: view:hr.attendance:0
-msgid "Employee attendances"
-msgstr ""
+msgid "Hr Attendance Search"
+msgstr "Meklēt Apmeklējumu sarakstā"
 
 #. module: hr_attendance
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
+#: model:ir.module.module,description:hr_attendance.module_meta_information
+msgid ""
+"\n"
+"    This module aims to manage employee's attendances.\n"
+"    Keeps account of the attendances of the employees on the basis of the\n"
+"    actions(Sign in/Sign out) performed by them.\n"
+"       "
 msgstr ""
+"\n"
+"    Modulis nodrošina darbinieku darbā ierašanās/došanās projām uzskaiti un "
+"vadību.\n"
+"    Uzskaita darba apmeklējuma uzskaiti, ko nodrošina paši darbinieki "
+"izmantojot apmeklējumu vedni.\n"
+"       "
 
 #. module: hr_attendance
-#: wizard_view:hr.si_so,init:0
-msgid "You are now ready to sign in or out of the attendance follow up"
-msgstr ""
+#: constraint:hr.attendance:0
+msgid "Error: Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
+msgstr "Kļūda: Reģistrācija sistēmā seko secīgi pēc Iziešanas no sistēmas."
 
 #. module: hr_attendance
-#: selection:hr.action.reason,action_type:0
-#: wizard_button:hr.si_so,init,so_test:0
-#: wizard_button:hr.si_so,so_ask_si,so:0
-msgid "Sign out"
-msgstr ""
+#: selection:hr.attendance.month,month:0
+msgid "July"
+msgstr "Jūlijs"
 
 #. module: hr_attendance
-#: rml:report.hr.timesheet.attendance.error:0
-msgid "Delay"
-msgstr ""
+#: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_error
+#: model:ir.actions.report.xml,name:hr_attendance.attendance_error_report
+msgid "Attendance Error Report"
+msgstr "Apmeklējumu Kļūdas Atskaite"
 
 #. module: hr_attendance
-#: wizard_field:hr.si_so,init,name:0
-#: wizard_field:hr.si_so,si_ask_so,name:0
-#: wizard_field:hr.si_so,so_ask_si,name:0
-msgid "Employee's name"
-msgstr ""
+#: field:hr.attendance.error,init_date:0
+#: field:hr.attendance.week,init_date:0
+msgid "Starting Date"
+msgstr "Sākuma Datums"
 
 #. module: hr_attendance
-#: wizard_button:hr.attendance.print_month,init,print:0
-#: wizard_button:hr.attendance.print_week,init,print:0
-msgid "Print Timesheet"
-msgstr ""
-
-#. module: hr_attendance
-#: model:ir.actions.wizard,name:hr_attendance.wizard_attendance_error
-msgid "Print Attendance Error Report"
-msgstr ""
-
-#. module: hr_attendance
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr ""
-
-#. module: hr_attendance
-#: model:ir.actions.wizard,name:hr_attendance.print_week
-msgid "Print Timesheet by week"
-msgstr ""
-
-#. module: hr_attendance
-#: field:hr.attendance,employee_id:0
-msgid "Employee"
-msgstr ""
-
-#. module: hr_attendance
-#: wizard_view:hr.attendance.print_week,init:0
-#: wizard_view:hr.attendance.report,init:0
-msgid "Select a time span"
-msgstr ""
-
-#. module: hr_attendance
-#: rml:report.hr.timesheet.attendance.error:0
-msgid "Date Recorded"
-msgstr ""
+#: report:report.hr.timesheet.attendance.error:0
+msgid "Min Delay"
+msgstr "Min. Kavējums"
 
 #. module: hr_attendance
 #: selection:hr.attendance,action:0
 #: view:hr.employee:0
 msgid "Sign In"
-msgstr ""
+msgstr "Reģistrēties Sistēmā"
 
 #. module: hr_attendance
-#: rml:report.hr.timesheet.attendance.error:0
-msgid "Total period:"
-msgstr ""
+#: report:report.hr.timesheet.attendance.error:0
+msgid "Operation"
+msgstr "Darbība"
 
 #. module: hr_attendance
-#: field:hr.attendance,action_desc:0
-#: model:ir.model,name:hr_attendance.model_hr_action_reason
-msgid "Action reason"
-msgstr ""
+#: code:addons/hr_attendance/wizard/hr_attendance_error.py:49
+#, python-format
+msgid "No Data Available"
+msgstr "Nav Datu"
 
 #. module: hr_attendance
-#: selection:hr.attendance.print_month,init,month:0
-msgid "March"
-msgstr ""
+#: selection:hr.attendance.month,month:0
+msgid "September"
+msgstr "Septembris"
 
 #. module: hr_attendance
-#: selection:hr.attendance.print_month,init,month:0
+#: selection:hr.attendance.month,month:0
+msgid "December"
+msgstr "Decembris"
+
+#. module: hr_attendance
+#: field:hr.attendance.month,month:0
+msgid "Month"
+msgstr "Mēnesis"
+
+#. module: hr_attendance
+#: report:report.hr.timesheet.attendance.error:0
+msgid ""
+"(*) A negative delay means that the employee worked more than encoded."
+msgstr ""
+"(*) Negatīva starpība nozīmē to, ka darbinieks ir strādājis vairāk, kā "
+"uzskaitījis."
+
+#. module: hr_attendance
+#: help:hr.attendance,action_desc:0
+msgid ""
+"Specifies the reason for Signing In/Signing Out in case of extra hours."
+msgstr ""
+"Pamatojums par virsstundām. Tiek norādīts pie Reģistrācija vai Iziet no "
+"sistēmas."
+
+#. module: hr_attendance
+#: model:ir.model,name:hr_attendance.model_hr_attendance_month
+msgid "Print Monthly Attendance Report"
+msgstr "Drukāt Ikmēneša apmeklējumu Atskaiti"
+
+#. module: hr_attendance
+#: model:ir.model,name:hr_attendance.model_hr_sign_in_out
+msgid "Sign In Sign Out"
+msgstr "Reģistrēties Iziet"
+
+#. module: hr_attendance
+#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:103
+#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:125
+#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:141
+#: view:hr.sign.in.out:0
+#: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_sigh_in_out
+#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_sigh_in_out
+#, python-format
+msgid "Sign in / Sign out"
+msgstr "Reģistrēties / Iziet"
+
+#. module: hr_attendance
+#: view:hr.sign.in.out.ask:0
+msgid "hr.sign.out.ask"
+msgstr "hr.sign.out.ask"
+
+#. module: hr_attendance
+#: selection:hr.attendance.month,month:0
 msgid "August"
-msgstr ""
+msgstr "Augusts"
 
 #. module: hr_attendance
-#: selection:hr.attendance.print_month,init,month:0
-msgid "May"
-msgstr ""
+#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:174
+#, python-format
+msgid "A sign-out must be right after a sign-in !"
+msgstr "\"Iziet\" jābūt secīgi pēc \"Reģistrācija\"!"
 
 #. module: hr_attendance
-#: wizard_field:hr.si_so,so_ask_si,last_time:0
-msgid "Your last sign in"
-msgstr ""
-
-#. module: hr_attendance
-#: selection:hr.attendance.print_month,init,month:0
+#: selection:hr.attendance.month,month:0
 msgid "June"
-msgstr ""
+msgstr "Jūnijs"
 
 #. module: hr_attendance
-#: model:ir.actions.wizard,name:hr_attendance.print_month
-msgid "Print Timesheet by month"
-msgstr ""
-
-#. module: hr_attendance
-#: selection:hr.attendance,action:0
-#: view:hr.employee:0
-msgid "Sign Out"
-msgstr ""
+#: model:ir.model,name:hr_attendance.model_hr_attendance_error
+msgid "Print Error Attendance Report"
+msgstr "Drukas Kļūda Apmeklējumu Atskaitei"
 
 #. module: hr_attendance
 #: model:ir.module.module,shortdesc:hr_attendance.module_meta_information
 msgid "Attendances Of Employees"
-msgstr ""
-
-#. module: hr_attendance
-#: field:hr.action.reason,name:0
-msgid "Reason"
-msgstr ""
-
-#. module: hr_attendance
-#: constraint:hr.attendance:0
-msgid "Error: Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
-msgstr ""
-
-#. module: hr_attendance
-#: rml:report.hr.timesheet.attendance.error:0
-msgid "Date Signed"
-msgstr ""
+msgstr "Darbinieku Apmeklējumi"
 
 #. module: hr_attendance
 #: field:hr.attendance,name:0
 msgid "Date"
-msgstr ""
+msgstr "Datums"
 
 #. module: hr_attendance
-#: selection:hr.attendance.print_month,init,month:0
-msgid "July"
-msgstr ""
+#: selection:hr.attendance.month,month:0
+msgid "November"
+msgstr "Novembris"
 
 #. module: hr_attendance
-#: wizard_view:hr.si_so,si_ask_so:0
-msgid ""
-"You did not signed out the last time. Please enter the date and time you "
-"signed out."
-msgstr ""
+#: constraint:hr.employee:0
+msgid "Error ! You cannot create recursive Hierarchy of Employees."
+msgstr "Kļūda! Nevar izveidot rekursīvu Darbinieku Hierarhiju."
 
 #. module: hr_attendance
-#: view:hr.action.reason:0
-msgid "Attendance reasons"
-msgstr ""
-
-#. module: hr_attendance
-#: wizard_field:hr.attendance.print_week,init,init_date:0
-#: wizard_field:hr.attendance.report,init,init_date:0
-msgid "Starting Date"
-msgstr ""
-
-#. module: hr_attendance
-#: selection:hr.employee,state:0
-msgid "Present"
-msgstr ""
-
-#. module: hr_attendance
-#: selection:hr.employee,state:0
-msgid "Absent"
-msgstr ""
-
-#. module: hr_attendance
-#: selection:hr.attendance.print_month,init,month:0
-msgid "February"
-msgstr ""
-
-#. module: hr_attendance
-#: selection:hr.attendance.print_month,init,month:0
+#: selection:hr.attendance.month,month:0
 msgid "October"
-msgstr ""
+msgstr "Oktobris"
 
 #. module: hr_attendance
-#: wizard_field:hr.si_so,si_ask_so,last_time:0
-msgid "Your last sign out"
-msgstr ""
+#: view:hr.attendance:0
+msgid "My Attendances"
+msgstr "Personīgie Apmeklējumi"
 
 #. module: hr_attendance
-#: rml:report.hr.timesheet.attendance.error:0
-msgid "Min Delay"
-msgstr ""
-
-#. module: hr_attendance
-#: field:hr.action.reason,action_type:0
-msgid "Action's type"
-msgstr ""
-
-#. module: hr_attendance
-#: view:hr.action.reason:0
-msgid "Define attendance reason"
-msgstr ""
+#: selection:hr.attendance.month,month:0
+msgid "January"
+msgstr "Janvāris"
 
 #. module: hr_attendance
 #: selection:hr.action.reason,action_type:0
-#: wizard_button:hr.si_so,init,si_test:0
-#: wizard_button:hr.si_so,si_ask_so,si:0
+#: view:hr.sign.in.out:0
+#: view:hr.sign.in.out.ask:0
 msgid "Sign in"
-msgstr ""
+msgstr "Reģistrēties"
 
 #. module: hr_attendance
-#: wizard_view:hr.attendance.report,init:0
+#: view:hr.attendance.error:0
 msgid "Analysis Information"
-msgstr ""
+msgstr "Analīzes informācija"
 
 #. module: hr_attendance
-#: wizard_field:hr.si_so,init,state:0
-msgid "Current state"
-msgstr ""
+#: view:hr.sign.in.out:0
+msgid "Sign-Out Entry must follow Sign-In."
+msgstr "\"Iziet\" ierakstam jāseko pēc \"Reģistrēties\" ieraksta."
 
 #. module: hr_attendance
-#: selection:hr.attendance.print_month,init,month:0
-msgid "January"
-msgstr ""
+#: report:report.hr.timesheet.attendance.error:0
+msgid "Attendance Errors"
+msgstr "Apmeklējuma Kļūdas"
 
 #. module: hr_attendance
-#: selection:hr.attendance.print_month,init,month:0
-msgid "April"
+#: field:hr.attendance,action:0
+#: selection:hr.attendance,action:0
+msgid "Action"
+msgstr "Darbība"
+
+#. module: hr_attendance
+#: view:hr.sign.in.out:0
+msgid ""
+"If you need your staff to sign in when they arrive at work and sign out "
+"again at the end of the day, OpenERP allows you to manage this with this "
+"tool. If each employee has been linked to a system user, then they can "
+"encode their time with this action button."
 msgstr ""
+"Darbiniekiem nepieciešams Reģistrēties sistēmā, kad tie ierodas darbā un "
+"Iziet no sistēmas, kad tie dodas prom no darba. OpenERP modulis nodrošina šo "
+"funkcionalitāti. Ja darbinieks ir savienots ar attiecīgo sistēmas lietotāju, "
+"tad darba laika uzskaite notiek caur šo pogu."
+
+#. module: hr_attendance
+#: field:hr.sign.in.out,emp_id:0
+msgid "Employee ID"
+msgstr "Darbinieka ID"
+
+#. module: hr_attendance
+#: model:ir.model,name:hr_attendance.model_hr_attendance_week
+msgid "Print Week Attendance Report"
+msgstr "Drukāt Apmeklējumu Atskaiti (Nedēļa)"
+
+#. module: hr_attendance
+#: field:hr.sign.in.out.ask,emp_id:0
+msgid "Empoyee ID"
+msgstr "Darbinieka ID"
+
+#. module: hr_attendance
+#: view:hr.attendance.error:0
+#: view:hr.attendance.month:0
+#: view:hr.sign.in.out:0
+#: view:hr.sign.in.out.ask:0
+msgid "Cancel"
+msgstr "Atcelt"
+
+#. module: hr_attendance
+#: help:hr.action.reason,name:0
+msgid "Specifies the reason for Signing In/Signing Out."
+msgstr "\"Reģistrācijas/Iziet\" pamatojums"
+
+#. module: hr_attendance
+#: report:report.hr.timesheet.attendance.error:0
+msgid ""
+"(*) A positive delay means that the employee worked less than recorded."
+msgstr ""
+"(*) pozitīvs nozīmē to, ka darbinieks strādājis mazāk kā pierakstījis."
+
+#. module: hr_attendance
+#: view:hr.attendance.month:0
+msgid "Print Attendance Report Monthly"
+msgstr "Drukāt Apmeklējuma Atskati (Mēnesis)"
+
+#. module: hr_attendance
+#: selection:hr.action.reason,action_type:0
+#: view:hr.sign.in.out:0
+#: view:hr.sign.in.out.ask:0
+msgid "Sign out"
+msgstr "Iziet"
+
+#. module: hr_attendance
+#: report:report.hr.timesheet.attendance.error:0
+msgid "Delay"
+msgstr "Kavējums"
+
+#. module: hr_attendance
+#: view:hr.attendance:0
+#: model:ir.model,name:hr_attendance.model_hr_employee
+msgid "Employee"
+msgstr "Darbinieks"
+
+#. module: hr_attendance
+#: code:addons/hr_attendance/hr_attendance.py:136
+#, python-format
+msgid ""
+"You tried to %s with a date anterior to another event !\n"
+"Try to contact the administrator to correct attendances."
+msgstr ""
+"Nepareiza darbība: %s - pārklājas ar citu darbību.\n"
+"Lai izlabotu apmeklējumu ierakstus kontaktējieties ar sistēmas "
+"administratoru."
+
+#. module: hr_attendance
+#: view:hr.sign.in.out.ask:0
+#: field:hr.sign.in.out.ask,last_time:0
+msgid "Your last sign out"
+msgstr "Pagājušo reizi Iziets no sistēmas"
+
+#. module: hr_attendance
+#: report:report.hr.timesheet.attendance.error:0
+msgid "Date Recorded"
+msgstr "Datums, kad ievadīts"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.open_view_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_open_view_attendance
 msgid "Attendances"
-msgstr ""
+msgstr "Apmeklējumi"
 
 #. module: hr_attendance
-#: rml:report.hr.timesheet.attendance.error:0
-msgid "Attendance Errors"
-msgstr ""
+#: selection:hr.attendance.month,month:0
+msgid "May"
+msgstr "Maijs"
 
 #. module: hr_attendance
-#: field:hr.attendance,action:0
+#: view:hr.sign.in.out.ask:0
+msgid "Your last sign in"
+msgstr "Iepriekšējais Reģistrācijas datums"
+
+#. module: hr_attendance
 #: selection:hr.attendance,action:0
-msgid "Action"
-msgstr ""
+#: view:hr.employee:0
+msgid "Sign Out"
+msgstr "Iziet"
 
 #. module: hr_attendance
-#: wizard_button:hr.attendance.report,init,print:0
-msgid "Print Attendance Report"
-msgstr ""
-
-#. module: hr_attendance
-#: model:ir.actions.act_window,name:hr_attendance.open_view_attendance_reason
-#: model:ir.ui.menu,name:hr_attendance.menu_open_view_attendance_reason
-msgid "Attendance Reasons"
-msgstr ""
-
-#. module: hr_attendance
-#: selection:hr.attendance.print_month,init,month:0
-msgid "November"
-msgstr ""
-
-#. module: hr_attendance
-#: wizard_view:hr.attendance.report,init:0
-msgid "Bellow this delay, the error is considered to be voluntary"
-msgstr ""
-
-#. module: hr_attendance
-#: wizard_field:hr.attendance.report,init,max_delay:0
-msgid "Max. Delay (Min)"
-msgstr ""
-
-#. module: hr_attendance
-#: wizard_view:hr.attendance.print_week,init:0
-msgid "Select a starting and a end date"
-msgstr ""
-
-#. module: hr_attendance
-#: wizard_field:hr.attendance.print_week,init,end_date:0
-#: wizard_field:hr.attendance.report,init,end_date:0
-msgid "Ending Date"
-msgstr ""
-
-#. module: hr_attendance
-#: wizard_view:hr.si_so,so_ask_si:0
+#: model:ir.actions.act_window,help:hr_attendance.action_hr_attendance_sigh_in_out
 msgid ""
-"You did not signed in the last time. Please enter the date and time you "
-"signed in."
+"Sign in / Sign out. In some companies, staff have to sign in when they "
+"arrive at work and sign out again at the end of the day. If each employee "
+"has been linked to a system user, then they can encode their time with this "
+"action button."
 msgstr ""
+"Reģistrēties / Iziet. Daudzos uzņēmumos darbiniekiem nepieciešams "
+"Reģistrēties sistēmā, kad tie ierodas darbā un Iziet no sistēmas, kad tie "
+"dodas prom no darba. Ja darbinieks ir savienots ar attiecīgo sistēmas "
+"lietotāju, tad darba laika uzskaite notiek caur šo pogu."
 
 #. module: hr_attendance
-#: selection:hr.attendance.print_month,init,month:0
-msgid "September"
-msgstr ""
+#: field:hr.attendance,employee_id:0
+msgid "Employee's Name"
+msgstr "Darbinieka Vārds"
 
 #. module: hr_attendance
-#: selection:hr.attendance.print_month,init,month:0
-msgid "December"
-msgstr ""
+#: selection:hr.employee,state:0
+msgid "Absent"
+msgstr "Nav Darbā"
+
+#. module: hr_attendance
+#: selection:hr.attendance.month,month:0
+msgid "February"
+msgstr "Februāris"
+
+#. module: hr_attendance
+#: field:hr.action.reason,action_type:0
+msgid "Action's type"
+msgstr "Darbības tips"
 
 #. module: hr_attendance
 #: view:hr.attendance:0
-msgid "Employee attendance"
-msgstr ""
+msgid "Employee attendances"
+msgstr "Darbinieku apmeklējumi"
 
 #. module: hr_attendance
-#: wizard_view:hr.attendance.print_month,init:0
-msgid "Select a month"
-msgstr ""
+#: field:hr.sign.in.out,state:0
+msgid "Current state"
+msgstr "Statuss"
 
 #. module: hr_attendance
-#: wizard_field:hr.attendance.print_month,init,month:0
-msgid "Month"
-msgstr ""
+#: selection:hr.attendance.month,month:0
+msgid "April"
+msgstr "Aprīlis"
 
 #. module: hr_attendance
-#: model:ir.module.module,description:hr_attendance.module_meta_information
-msgid "This module aims to manage employee's attendances."
-msgstr ""
+#: view:hr.attendance.error:0
+msgid "Bellow this delay, the error is considered to be voluntary"
+msgstr "Zem šīs robežas kļūda ir pieļaujama."
 
 #. module: hr_attendance
-#: model:ir.actions.report.xml,name:hr_attendance.attendance_error_report
-msgid "Attendance Error Report"
-msgstr ""
+#: code:addons/hr_attendance/wizard/hr_attendance_error.py:49
+#, python-format
+msgid "No records found for your selection!"
+msgstr "Iezīmētajam nav atrasts neviens ieraksts!"
 
 #. module: hr_attendance
-#: wizard_field:hr.attendance.print_month,init,year:0
+#: view:hr.sign.in.out.ask:0
+msgid ""
+"You did not sign in the last time. Please enter the date and time you signed "
+"in."
+msgstr ""
+"Pagājušo reizi Jūs neesat Reģistrējies/-usies sistēmā. Lūdzu ievadiet datumu "
+"un laiku, kad Reģistrējāties sistēmā."
+
+#. module: hr_attendance
+#: field:hr.attendance.month,year:0
 msgid "Year"
-msgstr ""
+msgstr "Gads"
 
 #. module: hr_attendance
-#: wizard_button:hr.attendance.print_month,init,end:0
-#: wizard_button:hr.attendance.print_week,init,end:0
-#: wizard_button:hr.attendance.report,init,end:0
-#: wizard_button:hr.si_so,init,end:0
-#: wizard_button:hr.si_so,si_ask_so,end:0
-#: wizard_button:hr.si_so,so_ask_si,end:0
-msgid "Cancel"
-msgstr ""
-
-#. module: hr_attendance
-#: rml:report.hr.timesheet.attendance.error:0
-msgid "Operation"
-msgstr ""
+#: view:hr.sign.in.out.ask:0
+msgid "hr.sign.in.out.ask"
+msgstr "hr.sign.in.out.ask"

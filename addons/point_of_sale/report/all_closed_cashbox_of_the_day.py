@@ -22,11 +22,10 @@
 import time
 from report import report_sxw
 
-
 class all_closed_cashbox_of_the_day(report_sxw.rml_parse):
-
+    #TOFIX: sql injection problem: SQL Request must be pass from sql injection...
     def __init__(self, cr, uid, name, context):
-        super(all_closed_cashbox_of_the_day, self).__init__(cr, uid, name, context)
+        super(all_closed_cashbox_of_the_day, self).__init__(cr, uid, name, context=context)
         self.localcontext.update({
                 'time': time,
                 'get_data':self._get_data,
@@ -38,6 +37,7 @@ class all_closed_cashbox_of_the_day(report_sxw.rml_parse):
                 'get_sub_total':self._get_sub_total,
                 'get_net_total_starting':self._get_net_total_starting,
         })
+
     def _get_user(self,line_ids):
         sql = "select name from res_users where id = %d"%(line_ids['create_uid'])
         self.cr.execute(sql)
@@ -67,12 +67,12 @@ class all_closed_cashbox_of_the_day(report_sxw.rml_parse):
 
     def _get_bal(self,data):
         res = {}
-        sql =""" select sum(pieces*number) as bal from singer_statement where starting_id = %d """%(data['id'])
+        sql =""" select sum(pieces*number) as bal from account_cashbox_line where starting_id = %d """%(data['id'])
         self.cr.execute(sql)
         res = self.cr.dictfetchall()
-        if res :
+        if res:
             return res[0]['bal']
-        else :
+        else:
             return False
 
     def _get_sub_total(self,user,data,date):
@@ -89,18 +89,18 @@ class all_closed_cashbox_of_the_day(report_sxw.rml_parse):
             return res[0][0]
         else:
             return False
+
     def _get_partner(self,statement):
         res = {}
-        sql =""" select rp.name  from account_bank_statement_line as absl,res_partner as rp
-                                        where absl.partner_id = rp.id
-                                        and absl.pos_statement_id = %d"""%(statement['pos_statement_id'])
-        self.cr.execute(sql)
-        res = self.cr.dictfetchall()
-        if res :
-            return res[0]['name']
-        else :
+        if statement['pos_statement_id']:
+            sql =""" select rp.name  from account_bank_statement_line as absl,res_partner as rp
+                                            where absl.partner_id = rp.id
+                                            and absl.pos_statement_id = %d"""%(statement['pos_statement_id'])
+            self.cr.execute(sql)
+            res = self.cr.dictfetchall() or {}
+            return res and res[0]['name']
+        else:
             return 0.00
-
 
     def _get_net_total_starting(self,user):
         lst = []
@@ -113,9 +113,9 @@ class all_closed_cashbox_of_the_day(report_sxw.rml_parse):
                     and abs.user_id = %d"""%(user.id)
         self.cr.execute(sql)
         res = self.cr.dictfetchall()
-        for r in res :
+        for r in res:
             total_ending_bal += (r['net_total'] or 0.0)
-            sql1 =""" select sum(pieces*number) as bal from singer_statement where starting_id = %d"""%(r['id'])
+            sql1 =""" select sum(pieces*number) as bal from account_cashbox_line where starting_id = %d"""%(r['id'])
             self.cr.execute(sql1)
             data = self.cr.dictfetchall()
             if data[0]['bal']:
@@ -125,10 +125,7 @@ class all_closed_cashbox_of_the_day(report_sxw.rml_parse):
         return lst
 
     def _get_net_total(self,user):
-        lst = []
         res={}
-        total_ending_bal = 0.0
-        total_starting_bal = 0.0
         sql = """select sum(absl.amount) as net_total from account_bank_statement as abs
                     LEFT JOIN account_bank_statement_line as absl ON abs.id = absl.statement_id
                     where abs.state IN ('confirm','open') and abs.user_id = %d
@@ -139,3 +136,5 @@ class all_closed_cashbox_of_the_day(report_sxw.rml_parse):
         return res[0]['net_total'] or 0.0
 
 report_sxw.report_sxw('report.all.closed.cashbox.of.the.day', 'account.bank.statement', 'addons/point_of_sale/report/all_closed_cashbox_of_the_day.rml', parser=all_closed_cashbox_of_the_day,header='internal')
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -9,11 +9,15 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Close Statements">
-				     	<separator string="Are you sure you want to close the statements ?" colspan="4"/>
-                		<button icon='gtk-cancel' special="cancel"
-                			string="No" colspan="1" />
-                		<button name="close_statement" string="Yes"
-                			colspan="1" type="object" icon="gtk-ok"/>
+				    <label string="Are you sure you want to close the statements ?"/>
+                    <separator colspan="4"/>
+                    <group col="4" colspan="4">
+                        <group col="2" colspan="2"/>
+                        <button icon='gtk-stop' special="cancel"
+                            string="No" />
+                        <button name="close_statement" string="Yes"
+                             type="object" icon="gtk-ok"/>
+                   </group>
                 </form>
             </field>
         </record>
@@ -28,7 +32,7 @@
    	
    	
         <record id="action_pos_close_statement" model="ir.actions.act_window">
-            <field name="name">Close Register</field>
+            <field name="name">Close Cash Register</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">pos.close.statement</field>
             <field name="view_type">form</field>

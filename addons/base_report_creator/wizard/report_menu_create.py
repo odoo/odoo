@@ -40,7 +40,7 @@ class report_menu_create(osv.osv_memory):
         @param ids: List of Report Menu Create's IDs
         @return: Dictionary {}.
         """
-        if not context:
+        if context is None:
             context = {}
         context_id = context and context.get('active_id', False) or False
         obj_menu = self.pool.get('ir.ui.menu')
@@ -49,10 +49,10 @@ class report_menu_create(osv.osv_memory):
         if context_id:
             data = self.browse(cr, uid, ids, context=context)
             if not data:
-                return {}
+                return {'type': 'ir.actions.act_window_close'}
             data = data[0]
 
-            board = obj_board.browse(cr, uid, context_id)
+            board = obj_board.browse(cr, uid, context_id, context=context)
             view = board.view_type1
             if board.view_type2:
                 view += ',' + board.view_type2
@@ -77,7 +77,7 @@ class report_menu_create(osv.osv_memory):
                 'action': 'ir.actions.act_window, ' + str(action_id)
                 }, context=context)
             obj_board.write(cr, uid, context_id, {'menu_id': menu_id})
-        return {}
+        return {'type': 'ir.actions.act_window_close'}
 report_menu_create()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

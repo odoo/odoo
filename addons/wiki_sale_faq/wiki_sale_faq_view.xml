@@ -13,7 +13,7 @@
            <field name="res_model">ir.attachment</field>
            <field name="view_type">form</field>
            <field name="domain" eval="[('parent_id','=',ref('dir_sale'))]"></field>
-           <field name="help">Documents give your access to all attached documents; it's a repository of all attached documents (mails, documents attached to a project, etc.)</field>
+           <field name="help">Documents give you access to all files attached to any record. It is a repository of all documents such as emails, project-related attachments or any other documents. From this view, you can search through the content of the documents. OpenERP automatically assign meta data based on the record like the related partner and indexes the content of .DOC, .ODT, .TXT, .SXW and .PDF documents.</field>
        </record>
 
        <record model="ir.actions.act_window" id="action_wiki_test">
@@ -23,7 +23,7 @@
            <field name="view_mode">tree,form</field>
            <field name="domain" eval="[('group_id','=',ref('wiki_groups_sale_faq'))]"/>
            <field name="search_view_id" ref="wiki.view_wiki_filter"/>
-           <field name="help">FAQ is a wiki page used to share frequently ask questions.</field>
+           <field name="help">Wiki pages allow you to share ideas and questions with coworkers. You can create a new document that can be linked to one or several applications (specifications of a project, FAQ for sales teams, etc.). Keywords can be used to easily tag wiki pages. You should use this application with the OpenERP web client interface.</field>
        </record>
 
         <menuitem

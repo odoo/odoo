@@ -35,6 +35,7 @@ class account_partner_ledger(osv.osv_memory):
         'reconcil': fields.boolean('Include Reconciled Entries', help='Consider reconciled entries'),
         'page_split': fields.boolean('One Partner Per Page', help='Display Ledger Report with One partner per page'),
         'amount_currency': fields.boolean("With Currency", help="It adds the currency column if the currency is different then the company currency"),
+
     }
     _defaults = {
        'reconcil': True,
@@ -42,17 +43,17 @@ class account_partner_ledger(osv.osv_memory):
        'page_split': False,
     }
 
-    def _print_report(self, cr, uid, ids, data, query_line, context=None):
+    def _print_report(self, cr, uid, ids, data, context=None):
         if context is None:
             context = {}
-        data = self.pre_print_report(cr, uid, ids, data, query_line, context=context)
+        data = self.pre_print_report(cr, uid, ids, data, context=context)
         data['form'].update(self.read(cr, uid, ids, ['initial_balance', 'reconcil', 'page_split', 'amount_currency'])[0])
         if data['form']['page_split']:
             return {
                 'type': 'ir.actions.report.xml',
                 'report_name': 'account.third_party_ledger',
                 'datas': data,
-            }
+        }
         return {
                 'type': 'ir.actions.report.xml',
                 'report_name': 'account.third_party_ledger_other',

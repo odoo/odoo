@@ -30,13 +30,15 @@ import pytz
 import re
 import tools
 import time
+import logging
 from caldav_node import res_node_calendar
+from orm_utils import get_last_modified
+from tools.safe_eval import safe_eval as eval
 
 try:
     import vobject
 except ImportError:
-    raise osv.except_osv('vobject Import Error!','Please install python-vobject \
-                     from http://vobject.skyhouseconsulting.com/')
+    raise osv.except_osv(_('vobject Import Error!'), _('Please install python-vobject from http://vobject.skyhouseconsulting.com/'))
 
 # O-1  Optional and can come only once
 # O-n  Optional and can come more than once
@@ -61,13 +63,15 @@ def uid2openobjectid(cr, uidval, oomodel, rdate):
         model_obj = pooler.get_pool(cr.dbname).get(model)
         if (not model == oomodel) or (not dbname == cr.dbname):
             return (False, None)
-        qry = 'select distinct(id) from %s' % model_obj._table
+        qry = 'SELECT DISTINCT(id) FROM %s' % model_obj._table
         if rdate:
-            qry += " where recurrent_id='%s'" % (rdate)
-            cr.execute(qry)
+            qry += " WHERE recurrent_id=%s"
+            cr.execute(qry, (rdate,))
             r_id = cr.fetchone()
             if r_id:
                 return (id, r_id[0])
+            else:
+                return (False, None)
         cr.execute(qry)
         ids = map(lambda x: str(x[0]), cr.fetchall())
         if id in ids:
@@ -144,7 +148,7 @@ def get_attribute_mapping(cr, uid, calname, context=None):
         @param calname: Get Calendar name
         @param context: A standard dictionary for contextual values """
 
-    if not context:
+    if context is None:
         context = {}
     pool = pooler.get_pool(cr.dbname)
     field_obj = pool.get('basic.calendar.fields')
@@ -155,11 +159,13 @@ def get_attribute_mapping(cr, uid, calname, context=None):
     type_id = type_obj.search(cr, uid, domain)
     fids = field_obj.search(cr, uid, [('type_id', '=', type_id[0])])
     res = {}
-    for field in field_obj.browse(cr, uid, fids):
+    for field in field_obj.browse(cr, uid, fids, context=context):
         attr = field.name.name
         res[attr] = {}
         res[attr]['field'] = field.field_id.name
         res[attr]['type'] = field.field_id.ttype
+        if field.fn == 'datetime_utc':
+            res[attr]['type'] = 'utc'
         if field.fn == 'hours':
             res[attr]['type'] = "timedelta"
         if res[attr]['type'] in ('one2many', 'many2many', 'many2one'):
@@ -231,6 +237,7 @@ def map_data(cr, uid, obj, context=None):
 
 class CalDAV(object):
     __attribute__ = {}
+    _logger = logging.getLogger('document.caldav')
 
     def ical_set(self, name, value, type):
         """ set calendar Attribute
@@ -249,7 +256,6 @@ class CalDAV(object):
          @param name: Get Attribute Name
          @param type: Get Attribute Type
         """
-
         if self.__attribute__.get(name):
             val = self.__attribute__.get(name).get(type, None)
             valtype =  self.__attribute__.get(name).get('type', None)
@@ -268,7 +274,6 @@ class CalDAV(object):
          @param self: The object pointer,
          @param type: Get Attribute Type
         """
-
         for name in self.__attribute__:
             if self.__attribute__[name]:
                 self.__attribute__[name][type] = None
@@ -329,8 +334,8 @@ class CalDAV(object):
             if cal_data.name.lower() in self.__attribute__:
                 if cal_data.params.get('X-VOBJ-ORIGINAL-TZID'):
                     self.ical_set('vtimezone', cal_data.params.get('X-VOBJ-ORIGINAL-TZID'), 'value')
-                    date_utc = cal_data.value.astimezone(pytz.utc)
-                    self.ical_set(cal_data.name.lower(), date_utc, 'value')
+                    date_local = cal_data.value.astimezone(_server_tzinfo)
+                    self.ical_set(cal_data.name.lower(), date_local, 'value')
                     continue
                 self.ical_set(cal_data.name.lower(), cal_data.value, 'value')
         vals = map_data(cr, uid, self, context=context)
@@ -365,8 +370,8 @@ class CalDAV(object):
                         model_obj = self.pool.get(model)
                         r_ids = []
                         if model_obj._columns.get('recurrent_uid', None):
-                            cr.execute('select id from %s  where recurrent_uid=%s'
-                                           % (model_obj._table, data[map_field]))
+                            cr.execute('SELECT id FROM %s WHERE recurrent_uid=%%s' % model_obj._table,
+                                        (data[map_field],))
                             r_ids = map(lambda x: x[0], cr.fetchall())
                         if r_ids:
                             r_datas = model_obj.read(cr, uid, r_ids, context=context)
@@ -441,6 +446,21 @@ class CalDAV(object):
                                 dtfield.value = self.format_date_tz(parser.parse(data[map_field]), tzval.title())
                             else:
                                 dtfield.value = parser.parse(data[map_field])
+                                
+                        elif map_type == 'utc'and data[map_field]:
+                            if tzval:
+                                local = pytz.timezone (tzval.title())
+                                naive = datetime.strptime (data[map_field], "%Y-%m-%d %H:%M:%S")
+                                local_dt = naive.replace (tzinfo = local)
+                                utc_dt = local_dt.astimezone (pytz.utc)
+                                vevent.add(field).value = utc_dt
+                            else:
+                               utc_timezone = pytz.timezone ('UTC')
+                               naive = datetime.strptime (data[map_field], "%Y-%m-%d %H:%M:%S")
+                               local_dt = naive.replace (tzinfo = utc_timezone)
+                               utc_dt = local_dt.astimezone (pytz.utc)
+                               vevent.add(field).value = utc_dt
+
                         elif map_type == "timedelta":
                             vevent.add(field).value = timedelta(hours=data[map_field])
                         elif map_type == "many2one":
@@ -453,7 +473,7 @@ class CalDAV(object):
                             else:
                                 for key1, val1 in self.ical_get(field, 'mapping').items():
                                     if val1 == data[map_field]:
-                                        vevent.add(field).value = key1
+                                        vevent.add(field).value = key1.upper()
         return vevent
 
     def check_import(self, cr, uid, vals, context=None):
@@ -464,7 +484,7 @@ class CalDAV(object):
             @param vals: Get Values
             @param context: A standard dictionary for contextual values
         """
-        if not context:
+        if context is None:
             context = {}
         ids = []
         model_obj = self.pool.get(context.get('model'))
@@ -521,7 +541,7 @@ class CalDAV(object):
             ical = vobject.iCalendar()
             self.create_ics(cr, uid, datas, vobj, ical, context=context)
             return ical
-        except Exception, e:
+        except:
             raise  # osv.except_osv(('Error !'), (str(e)))
 
     def import_cal(self, cr, uid, content, data_id=None, context=None):
@@ -574,12 +594,19 @@ class Calendar(CalDAV, osv.osv):
                                     string="Type", size=64),
             'line_ids': fields.one2many('basic.calendar.lines', 'calendar_id', 'Calendar Lines'),
             'create_date': fields.datetime('Created Date', readonly=True),
-            'write_date': fields.datetime('Modifided Date', readonly=True),
-            'description': fields.text("description"),
+            'write_date': fields.datetime('Write Date', readonly=True),
+            'description': fields.text("Description"),
+            'calendar_color': fields.char('Color', size=20, help="For supporting clients, the color of the calendar entries"),
+            'calendar_order': fields.integer('Order', help="For supporting clients, the order of this folder among the calendars"),
+            'has_webcal': fields.boolean('WebCal', required=True, help="Also export a <name>.ics entry next to the calendar folder, with WebCal content."),
+    }
+    
+    _defaults = {
+        'has_webcal': False,
     }
 
     def get_calendar_objects(self, cr, uid, ids, parent=None, domain=None, context=None):
-        if not context:
+        if context is None:
             context = {}
         if not domain:
             domain = []
@@ -592,7 +619,7 @@ class Calendar(CalDAV, osv.osv):
                     continue
                 if line.name in ('valarm', 'attendee'):
                     continue
-                line_domain = eval(line.domain or '[]')
+                line_domain = eval(line.domain or '[]', context)
                 line_domain += domain
                 if ctx_res_id:
                     line_domain += [('id','=',ctx_res_id)]
@@ -606,6 +633,32 @@ class Calendar(CalDAV, osv.osv):
                     node = res_node_calendar('%s.ics' %data.id, parent, ctx, data, line.object_id.model, data.id)
                     res.append(node)
         return res
+        
+
+    def get_cal_max_modified(self, cr, uid, ids, parent=None, domain=None, context=None):
+        if context is None:
+            context = {}
+        if not domain:
+            domain = []
+        res = None
+        ctx_res_id = context.get('res_id', None)
+        ctx_model = context.get('model', None)
+        for cal in self.browse(cr, uid, ids):
+            for line in cal.line_ids:
+                if ctx_model and ctx_model != line.object_id.model:
+                    continue
+                if line.name in ('valarm', 'attendee'):
+                    continue
+                line_domain = eval(line.domain or '[]', context)
+                line_domain += domain
+                if ctx_res_id:
+                    line_domain += [('id','=',ctx_res_id)]
+                mod_obj = self.pool.get(line.object_id.model)
+                max_data = get_last_modified(mod_obj, cr, uid, line_domain, context=context)
+                if res and res > max_data:
+                    continue
+                res = max_data
+        return res
 
     def export_cal(self, cr, uid, ids, vobj='vevent', context=None):
         """ Export Calendar
@@ -613,18 +666,18 @@ class Calendar(CalDAV, osv.osv):
             @param vobj: the type of object to export
             @return the ical data.
         """
-        if not context:
+        if context is None:
            context = {}
         ctx_model = context.get('model', None)
         ctx_res_id = context.get('res_id', None)
         ical = vobject.iCalendar()
-        for cal in self.browse(cr, uid, ids):
+        for cal in self.browse(cr, uid, ids, context=context):
             for line in cal.line_ids:
                 if ctx_model and ctx_model != line.object_id.model:
                     continue
                 if line.name in ('valarm', 'attendee'):
                     continue
-                domain = eval(line.domain or '[]')
+                domain = eval(line.domain or '[]', context)
                 if ctx_res_id:
                     domain += [('id','=',ctx_res_id)]
                 mod_obj = self.pool.get(line.object_id.model)
@@ -645,7 +698,7 @@ class Calendar(CalDAV, osv.osv):
             @param data_id: Get Data’s ID or False
             @param context: A standard dictionary for contextual values
         """
-        if not context:
+        if context is None:
             context = {}
         vals = []
         ical_data = content
@@ -654,7 +707,7 @@ class Calendar(CalDAV, osv.osv):
             data_id = self.search(cr, uid, [])[0]
         cal = self.browse(cr, uid, data_id, context=context)
         cal_children = {}
-        count = 0
+
         for line in cal.line_ids:
             cal_children[line.name] = line.object_id.model
         objs = []
@@ -668,6 +721,15 @@ class Calendar(CalDAV, osv.osv):
                 val = self.parse_ics(cr, uid, child, cal_children=cal_children, context=context)
                 vals.append(val)
                 objs.append(cal_children[child.name.lower()])
+            elif child.name.upper() == 'CALSCALE':
+                if child.value.upper() != 'GREGORIAN':
+                    self._logger.warning('How do I handle %s calendars?',child.value)
+            elif child.name.upper() in ('PRODID', 'VERSION'):
+                pass
+            elif child.name.upper().startswith('X-'):
+                self._logger.debug("skipping custom node %s", child.name)
+            else:
+                self._logger.debug("skipping node %s", child.name)
         
         res = []
         for obj_name in list(set(objs)):
@@ -716,17 +778,41 @@ class basic_calendar_line(osv.osv):
             @param context: A standard dictionary for contextual values
         """
 
-        cr.execute("Select count(id) from basic_calendar_lines \
-                                where name='%s' and calendar_id=%s" % (vals.get('name'), vals.get('calendar_id')))
+        cr.execute("SELECT COUNT(id) FROM basic_calendar_lines \
+                                WHERE name=%s AND calendar_id=%s", 
+                                (vals.get('name'), vals.get('calendar_id')))
         res = cr.fetchone()
         if res:
             if res[0] > 0:
-                raise osv.except_osv(_('Warning !'), _('Can not create \
-line "%s" more than once' % (vals.get('name'))))
+                raise osv.except_osv(_('Warning !'), _('Can not create line "%s" more than once') % (vals.get('name')))
         return super(basic_calendar_line, self).create(cr, uid, vals, context=context)
 
 basic_calendar_line()
 
+class basic_calendar_alias(osv.osv):
+    """ Mapping of client filenames to ORM ids of calendar records
+    
+        Since some clients insist on putting arbitrary filenames on the .ics data
+        they send us, and they won't respect the redirection "Location:" header, 
+        we have to store those filenames and allow clients to call our calendar
+        records with them.
+        Note that adding a column to all tables that would possibly hold calendar-
+        mapped data won't work. The user is always allowed to specify more 
+        calendars, on any arbitrary ORM object, without need to alter those tables'
+        data or structure
+    """
+    _name = 'basic.calendar.alias'
+    _columns = {
+        'name': fields.char('Filename', size=512, required=True, select=1),
+        'cal_line_id': fields.many2one('basic.calendar.lines', 'Calendar', required=True,
+                        select=1, help='The calendar/line this mapping applies to'),
+        'res_id': fields.integer('Res. ID', required=True, select=1),
+        }
+        
+    _sql_constraints = [ ('name_cal_uniq', 'UNIQUE(cal_line_id, name)',
+                _('The same filename cannot apply to two records!')), ]
+
+basic_calendar_alias()
 
 class basic_calendar_attribute(osv.osv):
     _name = 'basic.calendar.attributes'
@@ -747,6 +833,7 @@ class basic_calendar_fields(osv.osv):
 
     _name = 'basic.calendar.fields'
     _description = 'Calendar fields'
+    _order = 'name'
 
     _columns = {
         'field_id': fields.many2one('ir.model.fields', 'OpenObject Field'),
@@ -757,12 +844,13 @@ class basic_calendar_fields(osv.osv):
         'fn': fields.selection([('field', 'Use the field'),
                         ('const', 'Expression as constant'),
                         ('hours', 'Interval in hours'),
+                        ('datetime_utc', 'Datetime In UTC'),
                         ], 'Function'),
         'mapping': fields.text('Mapping'),
     }
 
     _defaults = {
-        'fn': lambda *a: 'field',
+        'fn': 'field',
     }
 
     _sql_constraints = [
@@ -786,7 +874,7 @@ class basic_calendar_fields(osv.osv):
             line = line_obj.browse(cr, uid, l_id, context=context)[0]
             line_rel = line.object_id.model
             if (relation != 'NULL') and (not relation == line_rel):
-                raise osv.except_osv(_('Warning !'), _('Please provide proper configuration of "%s" in Calendar Lines' % (name)))
+                raise osv.except_osv(_('Warning !'), _('Please provide proper configuration of "%s" in Calendar Lines') % (name))
         return True
 
     def create(self, cr, uid, vals, context=None):
@@ -798,8 +886,8 @@ class basic_calendar_fields(osv.osv):
             @param context: A standard dictionary for contextual values
         """
 
-        cr.execute('select name from basic_calendar_attributes \
-                            where id=%s' % (vals.get('name')))
+        cr.execute('SELECT name FROM basic_calendar_attributes \
+                            WHERE id=%s', (vals.get('name'),))
         name = cr.fetchone()
         name = name[0]
         if name in ('valarm', 'attendee'):
@@ -994,7 +1082,7 @@ class Timezone(CalDAV, osv.osv_memory):
             @param model: Get Model's name
             @param context: A standard dictionary for contextual values
         """
-        if not context:
+        if context is None:
             context = {}
         ctx = context.copy()
         ctx.update({'model': model})
@@ -1053,8 +1141,6 @@ class Alarm(CalDAV, osv.osv_memory):
             @param alarm_id: Get Alarm's Id
             @param context: A standard dictionary for contextual values
         """
-        if not context:
-            context = {}
         valarm = vevent.add('valarm')
         alarm_object = self.pool.get(model)
         alarm_data = alarm_object.read(cr, uid, alarm_id, [])
@@ -1088,17 +1174,23 @@ class Alarm(CalDAV, osv.osv_memory):
             @param ical_data: Get calendar's Data
             @param context: A standard dictionary for contextual values
         """
-
+        if context is None:
+            context = {}
         ctx = context.copy()
         ctx.update({'model': context.get('model', None)})
         self.__attribute__ = get_attribute_mapping(cr, uid, self._calname, ctx)
         for child in ical_data.getChildren():
             if child.name.lower() == 'trigger':
-                seconds = child.value.seconds
-                days = child.value.days
-                diff = (days * 86400) +  seconds
-                interval = 'days'
-                related = 'before'
+                if isinstance(child.value, timedelta):
+                    seconds = child.value.seconds
+                    days = child.value.days
+                    diff = (days * 86400) +  seconds
+                    interval = 'days'
+                    related = 'before'
+                elif isinstance(child.value, datetime):
+                    # TODO
+                    # remember, spec says this datetime is in UTC
+                    raise NotImplementedError("we cannot parse absolute triggers")
                 if not seconds:
                     duration = abs(days)
                     related = days > 0 and 'after' or 'before'
@@ -1150,7 +1242,8 @@ class Attendee(CalDAV, osv.osv_memory):
             @param ical_data: Get calendar's Data
             @param context: A standard dictionary for contextual values
         """
-
+        if context is None:
+            context = {}
         ctx = context.copy()
         ctx.update({'model': context.get('model', None)})
         self.__attribute__ = get_attribute_mapping(cr, uid, self._calname, ctx)
@@ -1174,7 +1267,7 @@ class Attendee(CalDAV, osv.osv_memory):
             @param attendee_ids: Get Attendee's Id
             @param context: A standard dictionary for contextual values
         """
-        if not context:
+        if context is None:
             context = {}
         attendee_object = self.pool.get(model)
         ctx = context.copy()

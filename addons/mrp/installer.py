@@ -28,7 +28,7 @@ class mrp_installer(osv.osv_memory):
         # Manufacturing Resource Planning
         'stock_location': fields.boolean('Advanced Routes',
             help="Manages product routes and paths within and between "
-                 "locations (e.g. warehouses)"),
+                 "locations (e.g. warehouses)."),
         'mrp_jit': fields.boolean('Just In Time Scheduling',
             help="Enables Just In Time computation of procurement orders."
                  "\n\nWhile it's more resource intensive than the default "
@@ -37,7 +37,7 @@ class mrp_installer(osv.osv_memory):
                  "procurement scheduler manually."),
         'mrp_operations': fields.boolean('Manufacturing Operations',
             help="Enhances production orders with readiness states as well "
-                 "as the date of start and end of execution of the order."),
+                 "as the start date and end date of execution of the order."),
         'mrp_subproduct': fields.boolean('MRP Subproducts',
             help="Enables multiple product output from a single production "
                  "order: without this, a production order can have only one "

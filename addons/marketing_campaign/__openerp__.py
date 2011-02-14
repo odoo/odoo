@@ -25,7 +25,8 @@
     "version" : "1.1",
     "depends" : ["marketing",
                  "document",
-                 "email_template"
+                 "email_template",
+                 "decimal_precision"
                 ],
     "author" : "OpenERP SA",
     "category": 'Generic Modules/Marketing',
@@ -56,5 +57,6 @@ This module provides leads automation through marketing campaigns (campaigns can
     ],
     'installable': True,
     'active': False,
+    'certificate' : '00421723279617928365',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -26,6 +26,7 @@ import tools
 import base64
 import errno
 import logging
+import shutil
 from StringIO import StringIO
 import psycopg2
 
@@ -48,7 +49,7 @@ DMS_ROOT_PATH = tools.config.get('document_path', os.path.join(tools.config.get(
 We have to consider 3 cases of data /retrieval/:
  Given (context,path) we need to access the file (aka. node).
  given (directory, context), we need one of its children (for listings, views)
- given (ir.attachment, context), we needs its data and metadata (node).
+ given (ir.attachment, context), we need its data and metadata (node).
 
 For data /storage/ we have the cases:
  Have (ir.attachment, context), we modify the file (save, update, rename etc).
@@ -100,9 +101,16 @@ class nodefd_file(nodes.node_descriptor):
         if mode.endswith('b'):
             mode = mode[:-1]
         self.mode = mode
+        self._size = os.stat(path).st_size
         
-        for attr in ('closed', 'read', 'write', 'seek', 'tell'):
+        for attr in ('closed', 'read', 'write', 'seek', 'tell', 'next'):
             setattr(self,attr, getattr(self.__file, attr))
+
+    def size(self):
+        return self._size
+        
+    def __iter__(self):
+        return self
 
     def close(self):
         # TODO: locking in init, close()
@@ -165,6 +173,7 @@ class nodefd_db(StringIO, nodes.node_descriptor):
     """
     def __init__(self, parent, ira_browse, mode):
         nodes.node_descriptor.__init__(self, parent)
+        self._size = 0L
         if mode.endswith('b'):
             mode = mode[:-1]
         
@@ -172,6 +181,8 @@ class nodefd_db(StringIO, nodes.node_descriptor):
             cr = ira_browse._cr # reuse the cursor of the browse object, just now
             cr.execute('SELECT db_datas FROM ir_attachment WHERE id = %s',(ira_browse.id,))
             data = cr.fetchone()[0]
+            if data:
+                self._size = len(data)
             StringIO.__init__(self, data)
         elif mode in ('w', 'w+'):
             StringIO.__init__(self, None)
@@ -183,6 +194,9 @@ class nodefd_db(StringIO, nodes.node_descriptor):
             logging.getLogger('document.storage').error("Incorrect mode %s specified", mode)
             raise IOError(errno.EINVAL, "Invalid file mode")
         self.mode = mode
+
+    def size(self):
+        return self._size
 
     def close(self):
         # we now open a *separate* cursor, to update the data.
@@ -241,11 +255,15 @@ class nodefd_db64(StringIO, nodes.node_descriptor):
     """
     def __init__(self, parent, ira_browse, mode):
         nodes.node_descriptor.__init__(self, parent)
+        self._size = 0L
         if mode.endswith('b'):
             mode = mode[:-1]
         
         if mode in ('r', 'r+'):
-            StringIO.__init__(self, base64.decodestring(ira_browse.db_datas))
+            data = base64.decodestring(ira_browse.db_datas)
+            if data:
+                self._size = len(data)
+            StringIO.__init__(self, data)
         elif mode in ('w', 'w+'):
             StringIO.__init__(self, None)
             # at write, we start at 0 (= overwrite), but have the original
@@ -256,6 +274,9 @@ class nodefd_db64(StringIO, nodes.node_descriptor):
             logging.getLogger('document.storage').error("Incorrect mode %s specified", mode)
             raise IOError(errno.EINVAL, "Invalid file mode")
         self.mode = mode
+
+    def size(self):
+        return self._size
 
     def close(self):
         # we now open a *separate* cursor, to update the data.
@@ -401,9 +422,7 @@ class document_storage(osv.osv):
             optionally, fil_obj could point to the browse object of the file
             (ir.attachment)
         """
-        if not context:
-            context = {}
-        boo = self.browse(cr, uid, id, context)
+        boo = self.browse(cr, uid, id, context=context)
         if not boo.online:
             raise IOError(errno.EREMOTE, 'medium offline')
         
@@ -418,7 +437,7 @@ class document_storage(osv.osv):
         """
         if context is None:
             context = {}
-        boo = self.browse(cr, uid, id, context)
+        boo = self.browse(cr, uid, id, context=context)
         if not boo.online:
             raise IOError(errno.EREMOTE, 'medium offline')
         
@@ -452,11 +471,11 @@ class document_storage(osv.osv):
 
         elif boo.type == 'realstore':
             path, npath = self.__prepare_realpath(cr, file_node, ira, boo.path,
-                            do_create = (mode[1] in ('w','a'))  )
+                            do_create = (mode[0] in ('w','a'))  )
             fpath = os.path.join(path, npath[-1])
-            if (not os.path.exists(fpath)) and mode[1] == 'r':
+            if (not os.path.exists(fpath)) and mode[0] == 'r':
                 raise IOError("File not found: %s" % fpath)
-            elif mode[1] in ('w', 'a') and not ira.store_fname:
+            elif mode[0] in ('w', 'a') and not ira.store_fname:
                 store_fname = os.path.join(*npath)
                 cr.execute('UPDATE ir_attachment SET store_fname = %s WHERE id = %s',
                                 (store_fname, ira.id))
@@ -519,9 +538,7 @@ class document_storage(osv.osv):
             This function MUST be used from an ir.attachment. It wouldn't make sense
             to store things persistently for other types (dynamic).
         """
-        if not context:
-            context = {}
-        boo = self.browse(cr, uid, id, context)
+        boo = self.browse(cr, uid, id, context=context)
         if fil_obj:
             ira = fil_obj
         else:
@@ -541,9 +558,11 @@ class document_storage(osv.osv):
             try:
                 store_fname = self.__get_random_fname(path)
                 fname = os.path.join(path, store_fname)
-                fp = file(fname, 'wb')
-                fp.write(data)
-                fp.close()
+                fp = open(fname, 'wb')
+                try:
+                    fp.write(data)
+                finally:    
+                    fp.close()
                 self._doclog.debug( "Saved data to %s" % fname)
                 filesize = len(data) # os.stat(fname).st_size
                 
@@ -568,9 +587,11 @@ class document_storage(osv.osv):
             try:
                 path, npath = self.__prepare_realpath(cr, file_node, ira, boo.path, do_create=True)
                 fname = os.path.join(path, npath[-1])
-                fp = file(fname,'wb')
-                fp.write(data)
-                fp.close()
+                fp = open(fname,'wb')
+                try:
+                    fp.write(data)
+                finally:    
+                    fp.close()
                 self._doclog.debug("Saved data to %s", fname)
                 filesize = len(data) # os.stat(fname).st_size
                 store_fname = os.path.join(*npath)
@@ -649,7 +670,7 @@ class document_storage(osv.osv):
             if ktype == 'file':
                 try:
                     os.unlink(fname)
-                except Exception, e:
+                except Exception:
                     self._doclog.warning("Could not remove file %s, please remove manually.", fname, exc_info=True)
             else:
                 self._doclog.warning("Unknown unlink key %s" % ktype)
@@ -729,26 +750,34 @@ class document_storage(osv.osv):
             # nothing to do for a rename, allow to change the db field
             return { 'parent_id': ndir_bro.id }
         elif sbro.type == 'realstore':
-            raise NotImplementedError("Cannot move in realstore, yet") # TODO
-            fname = fil_bo.store_fname
+            ira = self.pool.get('ir.attachment').browse(cr, uid, file_node.file_id, context=context)
+
+            path, opath = self.__prepare_realpath(cr, file_node, ira, sbro.path, do_create=False)
+            fname = ira.store_fname
+
             if not fname:
-                return ValueError("Tried to rename a non-stored file")
-            path = sbro.path
-            oldpath = os.path.join(path, fname)
+                self._doclog.warning("Trying to rename a non-stored file")
+            if fname != os.path.join(*opath):
+                self._doclog.warning("inconsistency in realstore: %s != %s" , fname, repr(opath))
+
+            oldpath = os.path.join(path, opath[-1])
             
-            for ch in ('*', '|', "\\", '/', ':', '"', '<', '>', '?', '..'):
-                if ch in new_name:
-                    raise ValueError("Invalid char %s in name %s" %(ch, new_name))
-                
-            file_node.fix_ppath(cr, ira)
-            npath = file_node.full_path() or []
-            dpath = [path,]
-            dpath.extend(npath[:-1])
-            dpath.append(new_name)
-            newpath = os.path.join(*dpath)
-            # print "old, new paths:", oldpath, newpath
-            os.rename(oldpath, newpath)
-            return { 'name': new_name, 'datas_fname': new_name, 'store_fname': new_name }
+            npath = [sbro.path,] + (ndir_bro.get_full_path() or [])
+            npath = filter(lambda x: x is not None, npath)
+            newdir = os.path.join(*npath)
+            if not os.path.isdir(newdir):
+                self._doclog.debug("Must create dir %s", newdir)
+                os.makedirs(newdir)
+            npath.append(opath[-1])
+            newpath = os.path.join(*npath)
+            
+            self._doclog.debug("Going to move %s from %s to %s", opath[-1], oldpath, newpath)
+            shutil.move(oldpath, newpath)
+            
+            store_path = npath[1:] + [opath[-1],]
+            store_fname = os.path.join(*store_path)
+            
+            return { 'store_fname': store_fname }
         else:
             raise TypeError("No %s storage" % sbro.type)
 

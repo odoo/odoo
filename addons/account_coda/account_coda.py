@@ -22,6 +22,7 @@
 import time
 
 from osv import osv,fields
+from tools.translate import _
 
 class account_coda(osv.osv):
     _name = "account.coda"
@@ -36,10 +37,19 @@ class account_coda(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', readonly=True)
     }
     _defaults = {
-        'date': time.strftime('%Y-%m-%d'),
+        'date': lambda *a: time.strftime('%Y-%m-%d'),
         'user_id': lambda self,cr,uid,context: uid,
         'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'account.coda', context=c),
     }
+
+    def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
+        if context is None: 
+            context = {}
+        res = super(account_coda, self).search(cr, user, args=args, offset=offset, limit=limit, order=order,
+                context=context, count=count)
+        if context.get('bank_statement', False) and not res:
+            raise osv.except_osv('Error', _('Coda file not found for bank statement !!'))
+        return res
 
 account_coda()
 

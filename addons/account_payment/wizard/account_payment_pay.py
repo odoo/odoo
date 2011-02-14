@@ -18,11 +18,12 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from osv import fields, osv
+
+from osv import osv
 
 class account_payment_make_payment(osv.osv_memory):
-    _name = 'account.payment.make.payment'
-    _description = 'Account make payment'
+    _name = "account.payment.make.payment"
+    _description = "Account make payment"
 
     def launch_wizard(self, cr, uid, ids, context=None):
         """
@@ -30,13 +31,15 @@ class account_payment_make_payment(osv.osv_memory):
         If type is manual. just confirm the order.
         """
         obj_payment_order = self.pool.get('payment.order')
+        if context is None:
+            context = {}
 #        obj_model = self.pool.get('ir.model.data')
 #        obj_act = self.pool.get('ir.actions.act_window')
 #        order = obj_payment_order.browse(cr, uid, context['active_id'], context)
-        obj_payment_order.set_done(cr, uid, context['active_id'], context)
-        return {}
+        obj_payment_order.set_done(cr, uid, [context['active_id']], context)
+        return {'type': 'ir.actions.act_window_close'}
 #        t = order.mode and order.mode.type.code or 'manual'
-#        if t == 'manual' :
+#        if t == 'manual':
 #            obj_payment_order.set_done(cr,uid,context['active_id'],context)
 #            return {}
 #

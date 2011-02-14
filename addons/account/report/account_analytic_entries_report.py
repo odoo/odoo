@@ -33,19 +33,19 @@ class analytic_entries_report(osv.osv):
         'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'),
             ('05','May'), ('06','June'), ('07','July'), ('08','August'), ('09','September'),
             ('10','October'), ('11','November'), ('12','December')], 'Month',readonly=True),
-        'user_id' : fields.many2one('res.users', 'User',readonly=True),
+        'user_id': fields.many2one('res.users', 'User',readonly=True),
         'name': fields.char('Description', size=64, readonly=True),
+        'partner_id': fields.many2one('res.partner', 'Partner'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'currency_id': fields.many2one('res.currency', 'Currency', required=True),
-        'account_id': fields.many2one('account.analytic.account', 'Account', required=True),
+        'account_id': fields.many2one('account.analytic.account', 'Account', required=False),
         'general_account_id': fields.many2one('account.account', 'General Account', required=True),
         'journal_id': fields.many2one('account.analytic.journal', 'Journal', required=True),
         'move_id': fields.many2one('account.move.line', 'Move', required=True),
         'product_id': fields.many2one('product.product', 'Product', required=True),
         'product_uom_id': fields.many2one('product.uom', 'Product UOM', required=True),
         'amount': fields.float('Amount', readonly=True),
-        'unit_amount': fields.float('Unit Amount', readonly=True),
-        'amount_currency': fields.float('Amount Currency', readonly=True),
+        'unit_amount': fields.float('Quantity', readonly=True),
         'nbr': fields.integer('#Entries', readonly=True),
     }
     def init(self, cr):
@@ -61,6 +61,7 @@ class analytic_entries_report(osv.osv):
                      to_char(a.create_date, 'YYYY-MM-DD') as day,
                      a.user_id as user_id,
                      a.name as name,
+                     analytic.partner_id as partner_id,
                      a.company_id as company_id,
                      a.currency_id as currency_id,
                      a.account_id as account_id,
@@ -70,12 +71,12 @@ class analytic_entries_report(osv.osv):
                      a.product_id as product_id,
                      a.product_uom_id as product_uom_id,
                      sum(a.amount) as amount,
-                     sum(a.unit_amount) as unit_amount,
-                     sum(a.amount_currency) as amount_currency
+                     sum(a.unit_amount) as unit_amount
                  from
-                     account_analytic_line a
+                     account_analytic_line a, account_analytic_account analytic
+                 where analytic.id = a.account_id
                  group by
-                     a.create_date, a.user_id,a.name,company_id,a.currency_id,
+                     a.create_date, a.user_id,a.name,analytic.partner_id,a.company_id,a.currency_id,
                      a.account_id,a.general_account_id,a.journal_id,
                      a.move_id,a.product_id,a.product_uom_id
             )

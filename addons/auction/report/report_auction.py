@@ -18,19 +18,10 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from mx import DateTime
-from osv import fields, osv, orm
-from tools import config
-from tools.translate import _
-import ir
-import netsvc
-import os
-import time
+from osv import fields, osv
 import tools
 
 def _type_get(self, cr, uid, context=None):
-    if not context:
-        context = {}
     obj = self.pool.get('auction.lot.category')
     ids = obj.search(cr, uid, [])
     res = obj.read(cr, uid, ids, ['name'], context)
@@ -127,6 +118,7 @@ class report_auction_object_date(osv.osv):
     }
 
     def init(self, cr):
+        tools.drop_view_if_exists(cr, 'report_auction_object_date')
         cr.execute("""create or replace view report_auction_object_date as
             (select
                min(l.id) as id,
@@ -158,6 +150,7 @@ class report_auction_adjudication(osv.osv):
     }
 
     def init(self, cr):
+        tools.drop_view_if_exists(cr, 'report_auction_adjudication')
         cr.execute("""
             create or replace view report_auction_adjudication as (
                 select
@@ -195,6 +188,7 @@ class report_object_encoded(osv.osv):
         'state': fields.selection((('draft','Draft'),('unsold','Unsold'),('paid','Paid'),('invoiced','Invoiced')),'Status', required=True,select=1),
     }
     def init(self, cr):
+        tools.drop_view_if_exists(cr, 'report_object_encoded')
         cr.execute('''create or replace view report_object_encoded  as
             (select
                 min(al.id) as id,

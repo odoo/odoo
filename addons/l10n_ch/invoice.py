@@ -1,37 +1,25 @@
-# -*- coding: utf-8 -*-
-#
-#  bank.py
-#  invoice.py
-#
-#  Created by Nicolas Bessi based on Credric Krier contribution
-#
-#  Copyright (c) 2009 CamptoCamp. All rights reserved.
+# -*- encoding: utf-8 -*-
 ##############################################################################
-# WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
-# consequences resulting from its eventual inadequacies and bugs
-# End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
-# Service Company
 #
-# This program is Free Software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
+#    Author: Nicolas Bessi. Copyright Camptocamp SA
+#    Donors: Hasa Sàrl, Open Net Sàrl and Prisme Solutions Informatique SA
 #
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
 #
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
+#
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
-from mx import DateTime
-
+from datetime import datetime
 from osv import fields, osv
 from tools import mod10r
 
@@ -71,8 +59,8 @@ class account_invoice(osv.osv):
             if invoice.move_id:
                 for line in invoice.move_id.line_id:
                     if not line.date_maturity or \
-                            DateTime.strptime(line.date_maturity, '%Y-%m-%d') \
-                            < DateTime.now():
+                            datetime.strptime(line.date_maturity, '%Y-%m-%d') \
+                            < datetime.now():
                         res[invoice.id] += line.amount_to_pay
         return res
 
@@ -203,7 +191,7 @@ class account_tax_code(osv.osv):
     _name = 'account.tax.code'
     _inherit = "account.tax.code"
     _columns = {
-        ### The case code of the taxt code
+        ### The case code of the tax code
         'code': fields.char('Case Code', size=512),
     }
 

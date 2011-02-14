@@ -30,7 +30,7 @@ class document_ftp_configuration(osv.osv_memory):
     _rec_name = 'host'
     _columns = {
         'host': fields.char('Address', size=64,
-                            help="Server address or IP and port to which users should connect to for DMS access", 
+                            help="Server address or IP and port to which users should connect to for DMS access",
                             required=True),
     }
 
@@ -39,11 +39,12 @@ class document_ftp_configuration(osv.osv_memory):
     }
 
     def execute(self, cr, uid, ids, context=None):
-        conf = self.browse(cr, uid, ids[0], context)
+        conf = self.browse(cr, uid, ids[0], context=context)
         data_pool = self.pool.get('ir.model.data')
         # Update the action for FTP browse.
         aid = data_pool._get_id(cr, uid, 'document_ftp', 'action_document_browse')
         aid = data_pool.browse(cr, uid, aid, context=context).res_id
-        self.pool.get('ir.actions.url').write(cr, uid, [aid], {'url': 'ftp://'+(conf.host or 'localhost:8021')+'/'})
+        self.pool.get('ir.actions.url').write(cr, uid, [aid], 
+                {'url': 'ftp://'+(conf.host or 'localhost:8021')+'/' + cr.dbname+'/'})
 
 document_ftp_configuration()

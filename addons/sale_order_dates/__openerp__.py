@@ -21,7 +21,7 @@
 
 
 {
-    'name': 'Sale Order Dates',
+    'name': 'Sales Order Dates',
     'version': '1.0',
     'category': 'Generic Modules/CRM & SRM',
     'description': """
@@ -41,6 +41,7 @@ Add commitment, requested and effective dates on the sales order.
     'test': [],
     'installable': True,
     'active': False,
+    'certificate' : '00867497685972962845',
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

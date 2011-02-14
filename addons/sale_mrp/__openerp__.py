@@ -25,7 +25,7 @@
     'version': '1.0',
     'category': 'Generic Modules/Sales & MRP',
     'description': """
-    This module provides facility to the user to install mrp and sale modules
+    This module provides facility to the user to install mrp and sales modules
     at a time. It is basically used when we want to keep track of production
     orders generated from sales order.
     It adds sales name and sales Reference on production order
@@ -35,12 +35,14 @@
     'depends': ['mrp', 'sale'],
     'init_xml': [],
     'update_xml': [
+        'security/sale_mrp_security.xml',
+        'security/ir.model.access.csv',
         'sale_mrp_view.xml',
     ],
     'demo_xml': [],
     'test':['test/sale_mrp.yml'],
     'installable': True,
     'active': False,
-    'certificate': '',
+    'certificate': '00395598976683092013',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -34,7 +34,7 @@ class auction_lots_send_aie(osv.osv_memory):
     _name = 'auction.lots.send.aie'
     _descritption = 'Send to website'
     
-    def _date_get(self, cr, uid, context={}):
+    def _date_get(self, cr, uid, context=None):
         selection = context and context.get('selection')
         if selection:
             return [('','')] + selection
@@ -50,7 +50,7 @@ class auction_lots_send_aie(osv.osv_memory):
         'img_send': fields.boolean('Send Image also ?'),   
     }
     
-    def default_get(self, cr, uid, fields, context):
+    def default_get(self, cr, uid, fields, context=None):
         """ 
          To get default values for the object.
          @param self: The object pointer.
@@ -60,6 +60,8 @@ class auction_lots_send_aie(osv.osv_memory):
          @param context: A standard dictionary 
          @return: A dictionary which of fields with values. 
         """
+        if context is None: 
+            context = {}
         res = super(auction_lots_send_aie, self).default_get(cr, uid, fields, context=context)
         if 'uname' in fields and context.get('uname',False):
             res['uname'] = context.get('uname')
@@ -147,7 +149,9 @@ class auction_lots_send_aie(osv.osv_memory):
                 fname = datas[0]['name']
                 self._photo_bin_send(uname, passwd, ref, did, fname, bin)
     
-    def get_dates(self, cr, uid, ids, context={}):
+    def get_dates(self, cr, uid, ids, context=None):
+        if context is None: 
+            context = {}
         import httplib
         data_obj = self.pool.get('ir.model.data')
         conn = httplib.HTTPConnection('www.auction-in-europe.com')
@@ -174,14 +178,16 @@ class auction_lots_send_aie(osv.osv_memory):
             'context': context
         }
     
-    def _send(self, cr, uid, ids, context={}):
+    def _send(self, cr, uid, ids, context=None):
         import pickle, thread, sql_db
         cr.execute('select name,aie_categ from auction_lot_category')
         vals = dict(cr.fetchall())
         cr.close()
+        if context is None: 
+            context = {}
     
         service = netsvc.LocalService("object_proxy")
-        lots = service.execute(cr.dbname, uid, 'auction.lots', 'read', context['active_ids'],  ['obj_num','lot_num','obj_desc','bord_vnd_id','lot_est1','lot_est2','artist_id','lot_type','aie_categ'])
+        lots = service.execute(cr.dbname, uid, 'auction.lots', 'read', context.get('active_ids',[]),  ['obj_num','lot_num','obj_desc','bord_vnd_id','lot_est1','lot_est2','artist_id','lot_type','aie_categ'])
         lots_ids = []
         datas = self.read(cr, uid, ids[0],['uname','login','lang','numerotation','dates'])
         for l in lots:
@@ -211,10 +217,10 @@ class auction_lots_send_aie(osv.osv_memory):
             thread.start_new_thread(_photos_send, (cr.dbname, uid, datas['uname'], datas['password'],datas['dates'], lots_ids))
         return {}
     
-    def send_pdf(self, cr, uid, ids, context):
+    def send_pdf(self, cr, uid, ids, context=None):
         threaded_calculation = threading.Thread(target=self._send, args=(cr, uid, ids, context))
         threaded_calculation.start()
-        return {}
+        return {'type': 'ir.actions.act_window_close'}
 
 auction_lots_send_aie()
 

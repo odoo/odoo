@@ -31,7 +31,7 @@ class wiki_create_menu(osv.osv_memory):
         'menu_parent_id': fields.many2one('ir.ui.menu', 'Parent Menu', required=True),
     }
 
-    def wiki_menu_create(self, cr, uid, ids, context):
+    def wiki_menu_create(self, cr, uid, ids, context=None):
 
         """ Create Menu On the base of Group id and Action id
         @param cr: the current row, from the database cursor,
@@ -39,6 +39,8 @@ class wiki_create_menu(osv.osv_memory):
         @param ids: List of create menu’s IDs
 
         """
+        if context is None:
+            context = {}
         obj_wiki_group = self.pool.get('wiki.groups')
         obj_view = self.pool.get('ir.ui.view')
         obj_menu = self.pool.get('ir.ui.menu')
@@ -70,7 +72,7 @@ class wiki_create_menu(osv.osv_memory):
             value['view_type'] = 'form'
             value['view_mode'] = 'tree,form'
         elif group.method == 'tree':
-            view_id = obj_view.search(cr, uid, [('name', '=', 'wiki.wiki.tree.childs')])
+            view_id = obj_view.search(cr, uid, [('name', '=', 'wiki.wiki.tree.children')])
             value['view_id'] = view_id
             value['domain'] = [('group_id', '=', group.id), ('parent_id', '=', False)]
             value['view_type'] = 'tree'
@@ -84,7 +86,7 @@ class wiki_create_menu(osv.osv_memory):
                         'action': 'ir.actions.act_window,'+ str(action_id),
                         }, context)
         obj_wiki_group.write(cr, uid, [group_id], {'menu_id':menu_id})        
-        return {}
+        return {'type':  'ir.actions.act_window_close'}
 
 
 wiki_create_menu()

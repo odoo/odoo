@@ -1,136 +1,270 @@
 # Translation of OpenERP Server.
 # This file contains the translation of the following modules:
-#	* board
+#    * board
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-02-03 06:25+0000\n"
-"Last-Translator: <>\n"
+"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"PO-Revision-Date: 2011-01-19 12:00+0000\n"
+"Last-Translator: NOVOTRADE RENDSZERHÁZ <openerp@novotrade.hu>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-08-12 04:02+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-25 06:33+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: board
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
+#: view:res.log.report:0
+msgid "  Year  "
+msgstr "  Év  "
 
 #. module: board
-#: model:ir.model,name:board.model_board_board
-msgid "board.board"
-msgstr ""
+#: model:ir.model,name:board.model_board_menu_create
+msgid "Menu Create"
+msgstr "Menü létrehozása"
 
 #. module: board
+#: view:board.note:0
+#: field:board.note.type,name:0
+#: model:ir.model,name:board.model_board_note_type
+msgid "Note Type"
+msgstr "Megjegyzés típusa"
+
+#. module: board
+#: view:board.note:0
 #: field:board.note,user_id:0
 msgid "Author"
-msgstr ""
+msgstr "Szerző"
 
 #. module: board
 #: model:ir.module.module,shortdesc:board.module_meta_information
 msgid "Dashboard main module"
-msgstr ""
+msgstr "Vezérlőpult főmodulja"
+
+#. module: board
+#: view:res.users:0
+msgid "Latest Connections"
+msgstr "Legutolsó kapcsolatok"
+
+#. module: board
+#: code:addons/board/wizard/board_menu_create.py:45
+#, python-format
+msgid "User Error!"
+msgstr "Felhasználói hiba!"
+
+#. module: board
+#: view:board.board:0
+#: model:ir.actions.act_window,name:board.open_board_administration_form
+#: model:ir.ui.menu,name:board.menu_board_admin
+msgid "Administration Dashboard"
+msgstr "Adminisztrációs vezérlőpult"
 
 #. module: board
 #: view:board.note:0
 #: field:board.note,note:0
+#: model:ir.model,name:board.model_board_note
 msgid "Note"
+msgstr "Megjegyzés"
+
+#. module: board
+#: view:board.note:0
+#: view:res.log.report:0
+msgid "Group By..."
+msgstr "Csoportosítás..."
+
+#. module: board
+#: model:ir.model,name:board.model_board_board
+msgid "Board"
 msgstr ""
 
 #. module: board
-#: field:board.board.line,width:0
-msgid "Width"
-msgstr ""
-
-#. module: board
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
+#: view:board.board:0
+#: model:ir.actions.act_window,name:board.board_weekly_res_log_report_action
+#: view:res.log.report:0
+msgid "Weekly Global Activity"
 msgstr ""
 
 #. module: board
 #: field:board.board.line,name:0
 msgid "Title"
+msgstr "Pozíció"
+
+#. module: board
+#: field:res.log.report,nbr:0
+msgid "# of Entries"
+msgstr "Tételek száma"
+
+#. module: board
+#: view:res.log.report:0
+#: field:res.log.report,month:0
+msgid "Month"
+msgstr "Hónap"
+
+#. module: board
+#: model:ir.actions.act_window,name:board.dashboard_open
+msgid "Open Dashboard"
+msgstr "Vezérlőpult megnyitása"
+
+#. module: board
+#: view:board.board:0
+#: model:ir.actions.act_window,name:board.board_monthly_res_log_report_action
+#: view:res.log.report:0
+msgid "Monthly Activity per Document"
+msgstr ""
+
+#. module: board
+#: view:res.log.report:0
+msgid "Log Analysis"
 msgstr ""
 
 #. module: board
 #: model:ir.actions.act_window,name:board.action_view_board_list_form
 #: model:ir.ui.menu,name:board.menu_view_board_form
 msgid "Dashboard Definition"
-msgstr ""
+msgstr "Vezérlőpult meghatározása"
+
+#. module: board
+#: selection:res.log.report,month:0
+msgid "March"
+msgstr "Március"
+
+#. module: board
+#: selection:res.log.report,month:0
+msgid "August"
+msgstr "Augusztus"
+
+#. module: board
+#: view:board.board:0
+#: model:ir.actions.act_window,name:board.action_user_connection_tree
+msgid "User Connections"
+msgstr "Felhasználói kapcsolatok"
+
+#. module: board
+#: field:res.log.report,creation_date:0
+msgid "Creation Date"
+msgstr "Létrehozás dátuma"
 
 #. module: board
 #: model:ir.actions.act_window,name:board.action_view_board_note_form
 #: model:ir.ui.menu,name:board.menu_view_board_note_form
 msgid "Publish a note"
-msgstr ""
+msgstr "Jegyzet publikálása"
 
 #. module: board
-#: wizard_view:board.board.menu.create,init:0
+#: view:board.menu.create:0
 msgid "Menu Information"
-msgstr ""
+msgstr "Menü infrormáció"
+
+#. module: board
+#: selection:res.log.report,month:0
+msgid "June"
+msgstr "Június"
+
+#. module: board
+#: field:board.note,type:0
+msgid "Note type"
+msgstr "Megjegyzés típusa"
 
 #. module: board
 #: field:board.board,line_ids:0
 msgid "Action Views"
-msgstr ""
+msgstr "Művelet nézetek"
 
 #. module: board
-#: model:ir.model,name:board.model_board_note
-msgid "board.note"
-msgstr ""
-
-#. module: board
-#: field:board.note,date:0
-msgid "Date"
-msgstr ""
-
-#. module: board
-#: model:ir.ui.menu,name:board.next_id_50
-msgid "Configuration"
-msgstr ""
-
-#. module: board
-#: field:board.note.type,name:0
-msgid "Note Type"
-msgstr ""
-
-#. module: board
-#: wizard_view:board.board.menu.create,init:0
-msgid "Create Menu For Dashboard"
-msgstr ""
-
-#. module: board
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr ""
-
-#. module: board
-#: wizard_field:board.board.menu.create,init,menu_parent_id:0
-msgid "Parent Menu"
+#: model:ir.model,name:board.model_res_log_report
+msgid "Log Report"
 msgstr ""
 
 #. module: board
 #: view:board.note:0
-msgid "Notes"
+#: field:board.note,date:0
+msgid "Date"
+msgstr "Dátum"
+
+#. module: board
+#: selection:res.log.report,month:0
+msgid "July"
+msgstr "Július"
+
+#. module: board
+#: view:res.log.report:0
+msgid "Extended Filters..."
+msgstr "Kiterjesztett szűrők…"
+
+#. module: board
+#: view:res.log.report:0
+#: field:res.log.report,day:0
+msgid "Day"
+msgstr "Nap"
+
+#. module: board
+#: view:board.menu.create:0
+msgid "Create Menu For Dashboard"
+msgstr "Menü létrehozása a vezérlőpulton"
+
+#. module: board
+#: selection:res.log.report,month:0
+msgid "February"
+msgstr "Február"
+
+#. module: board
+#: selection:res.log.report,month:0
+msgid "October"
+msgstr "Október"
+
+#. module: board
+#: model:ir.model,name:board.model_board_board_line
+msgid "Board Line"
 msgstr ""
 
 #. module: board
-#: model:ir.model,name:board.model_board_note_type
-msgid "board.note.type"
+#: field:board.menu.create,menu_parent_id:0
+msgid "Parent Menu"
+msgstr "Főmenü"
+
+#. module: board
+#: view:res.log.report:0
+msgid "    Month-1    "
+msgstr "    Hónap-1    "
+
+#. module: board
+#: selection:res.log.report,month:0
+msgid "January"
+msgstr "Január"
+
+#. module: board
+#: view:board.note:0
+msgid "Notes"
+msgstr "Megjegyzések"
+
+#. module: board
+#: selection:res.log.report,month:0
+msgid "November"
+msgstr "November"
+
+#. module: board
+#: help:board.board.line,sequence:0
+msgid ""
+"Gives the sequence order                         when displaying a list of "
+"board lines."
 msgstr ""
+
+#. module: board
+#: selection:res.log.report,month:0
+msgid "April"
+msgstr "Április"
 
 #. module: board
 #: view:board.board:0
 #: field:board.board,name:0
 #: field:board.board.line,board_id:0
+#: model:ir.ui.menu,name:board.admin_menu_dasboard
+#: model:ir.ui.menu,name:board.menu_dasboard
 msgid "Dashboard"
-msgstr ""
+msgstr "Vezérlőpult"
 
 #. module: board
 #: model:ir.module.module,description:board.module_meta_information
@@ -138,29 +272,35 @@ msgid "Base module for all dashboards."
 msgstr ""
 
 #. module: board
+#: field:board.board.line,action_id:0
+msgid "Action"
+msgstr "Művelet"
+
+#. module: board
 #: field:board.board.line,position:0
 msgid "Position"
-msgstr ""
+msgstr "Pozíció"
 
 #. module: board
-#: model:ir.actions.act_window,name:board.dashboard_open
-msgid "Open Dashboard"
-msgstr ""
+#: view:res.log.report:0
+msgid "Model"
+msgstr "Modell"
 
 #. module: board
-#: wizard_field:board.board.menu.create,init,menu_name:0
+#: field:board.menu.create,menu_name:0
 msgid "Menu Name"
-msgstr ""
+msgstr "Menü"
 
 #. module: board
-#: field:board.note,type:0
-msgid "Note type"
-msgstr ""
+#: view:board.board:0
+#: model:ir.actions.act_window,name:board.action_latest_activities_tree
+msgid "Latest Activities"
+msgstr "Legutolsó tevékenységek"
 
 #. module: board
 #: selection:board.board.line,position:0
 msgid "Left"
-msgstr ""
+msgstr "bal"
 
 #. module: board
 #: field:board.board,view_id:0
@@ -170,50 +310,83 @@ msgstr ""
 #. module: board
 #: selection:board.board.line,position:0
 msgid "Right"
-msgstr ""
+msgstr "jobb"
+
+#. module: board
+#: field:board.board.line,width:0
+msgid "Width"
+msgstr "Szélesség"
+
+#. module: board
+#: view:res.log.report:0
+msgid "   Month   "
+msgstr "   Hónap   "
 
 #. module: board
 #: field:board.board.line,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Sorszám"
+
+#. module: board
+#: selection:res.log.report,month:0
+msgid "September"
+msgstr "Szeptember"
+
+#. module: board
+#: selection:res.log.report,month:0
+msgid "December"
+msgstr "December"
 
 #. module: board
 #: view:board.board:0
-#: wizard_button:board.board.menu.create,init,create_menu:0
+#: view:board.menu.create:0
 msgid "Create Menu"
-msgstr ""
-
-#. module: board
-#: model:ir.ui.menu,name:board.dashboard_menu
-msgid "Dashboards"
-msgstr ""
+msgstr "Menü létrehozása"
 
 #. module: board
 #: field:board.board.line,height:0
 msgid "Height"
-msgstr ""
+msgstr "Magasság"
 
 #. module: board
-#: model:ir.actions.wizard,name:board.wizard_board_create_menu
+#: model:ir.actions.act_window,name:board.action_board_menu_create
 msgid "Create Board Menu"
 msgstr ""
 
 #. module: board
-#: wizard_button:board.board.menu.create,init,end:0
+#: selection:res.log.report,month:0
+msgid "May"
+msgstr "Május"
+
+#. module: board
+#: field:res.log.report,res_model:0
+msgid "Object"
+msgstr "Tárgy"
+
+#. module: board
+#: view:res.log.report:0
+#: field:res.log.report,name:0
+msgid "Year"
+msgstr "Év"
+
+#. module: board
+#: view:board.menu.create:0
 msgid "Cancel"
 msgstr ""
 
 #. module: board
 #: view:board.board:0
 msgid "Dashboard View"
+msgstr "Vezérlőpult nézet"
+
+#. module: board
+#: code:addons/board/wizard/board_menu_create.py:46
+#, python-format
+msgid "Please Insert Dashboard View(s) !"
 msgstr ""
 
 #. module: board
-#: model:ir.model,name:board.model_board_board_line
-msgid "board.board.line"
-msgstr ""
-
-#. module: board
+#: view:board.note:0
 #: field:board.note,name:0
 msgid "Subject"
-msgstr ""
+msgstr "Tárgy"

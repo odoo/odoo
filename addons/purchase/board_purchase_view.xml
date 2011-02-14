@@ -8,7 +8,7 @@
             parent="base.next_id_73" sequence="0"/>
 
         <record id="purchase_draft" model="ir.actions.act_window">
-            <field name="name">Draft Purchases</field>
+            <field name="name">Request for Quotations</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">purchase.order</field>
             <field name="view_type">form</field>
@@ -17,7 +17,7 @@
             <field name="search_view_id" ref="purchase.purchase_order_tree"/>
         </record>
         <record id="purchase_waiting" model="ir.actions.act_window">
-            <field name="name">Quotation Request</field>
+            <field name="name">Purchase Order Waiting Approval</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">purchase.order</field>
             <field name="view_type">form</field>
@@ -25,6 +25,94 @@
             <field name="domain">[('date_order','&gt;',time.strftime('%Y-01-01 00:00:00')),('date_order','&lt;',time.strftime('%Y-12-31 23:59:59')), ('state','in',('wait','confirmed'))]</field>
             <field name="search_view_id" ref="purchase.purchase_order_tree"/>
         </record>
+
+		<record model="ir.ui.view" id="view_purchase_order_monthly_categ_tree">
+            <field name="name">purchase.order.monthly.categ.tree</field>
+            <field name="model">purchase.report</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Monthly Purchase by Category">
+                    <field name="month"/>
+                    <field name="category_id"/>
+                    <field name="price_total"/>
+                </tree>
+            </field>
+        </record>
+    	<record model="ir.ui.view" id="view_purchase_order_monthly_categ_graph">
+            <field name="name">purchase.order.monthly.categ.graph</field>
+            <field name="model">purchase.report</field>
+            <field name="type">graph</field>
+            <field name="arch" type="xml">
+                <graph string="Monthly Purchase by Category" type="bar">
+                    <field name="month"/>
+                    <field name="price_total" operator="+"/>
+                    <field name="category_id" group="True"/>
+                </graph>
+            </field>
+        </record>
+	    <record id="action_purchase_order_monthly_categ_graph" model="ir.actions.act_window">
+	        <field name="name">Monthly Purchase by Category</field>
+	        <field name="res_model">purchase.report</field>
+	        <field name="view_type">form</field>
+	        <field name="view_mode">graph,tree</field>
+		<field name="context">{'group_by':['month','category_id'],'group_by_no_leaf':1}</field>
+	        <field name="view_id" ref="view_purchase_order_monthly_categ_graph"></field>
+	    </record>
+	    <record id="open_view_purchase_order_monthly_categ_tree" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_purchase_order_monthly_categ_tree"/>
+            <field name="act_window_id" ref="action_purchase_order_monthly_categ_graph"/>
+	    </record>
+	    <record id="open_view_purchase_order_monthly_categ_graph" model="ir.actions.act_window.view">
+	            <field eval="1" name="sequence"/>
+	            <field name="view_mode">graph</field>
+	            <field name="view_id" ref="view_purchase_order_monthly_categ_graph"/>
+	            <field name="act_window_id" ref="action_purchase_order_monthly_categ_graph"/>
+	    </record>
+
+        <record model="ir.ui.view" id="view_negotiation_by_supplier_tree">
+            <field name="name">negotiation.by.supplier.tree</field>
+            <field name="model">purchase.report</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Negotiation by Supplier">
+                    <field name="partner_id"/>
+                    <field name="negociation"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_negotiation_by_supplier_graph">
+            <field name="name">negotiation.by.supplier.graph</field>
+            <field name="model">purchase.report</field>
+            <field name="type">graph</field>
+            <field name="arch" type="xml">
+                <graph string="Negotiation by Supplier" type="bar">
+                    <field name="partner_id"/>
+                    <field name="negociation"/>
+                </graph>
+            </field>
+        </record>
+		<record id="action_negotiation_by_supplier" model="ir.actions.act_window">
+	        <field name="name">Negotiation by Supplier</field>
+	        <field name="res_model">purchase.report</field>
+	        <field name="view_type">form</field>
+	        <field name="view_mode">graph,tree</field>
+		<field name="context">{'group_by':['partner_id'],'group_by_no_leaf':1}</field>
+	        <field name="view_id" ref="view_negotiation_by_supplier_graph"/>
+	    </record>
+	    <record id="open_view_negotiation_by_supplier_tree" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_negotiation_by_supplier_tree"/>
+            <field name="act_window_id" ref="action_negotiation_by_supplier"/>
+	    </record>
+	    <record id="open_view_negotiation_by_supplier_graph" model="ir.actions.act_window.view">
+	            <field eval="1" name="sequence"/>
+	            <field name="view_mode">graph</field>
+	            <field name="view_id" ref="view_negotiation_by_supplier_graph"/>
+	            <field name="act_window_id" ref="action_negotiation_by_supplier"/>
+	    </record>
 
         <record id="board_purchase_form" model="ir.ui.view">
             <field name="name">board.purchase.form</field>
@@ -34,13 +122,21 @@
                 <form string="My Board">
                     <hpaned>
                         <child1>
+                        <!--
                             <action colspan="4" height="220" name="%(purchase.action_current_purchases)d" string="Current purchases"  width="510"/>
                             <action colspan="4" height="220" name="%(purchase.action_po_per_month_tree)d" string="Purchase order per month"  width="510"/>
+                        -->
+                        	<action colspan="4" height="220" name="%(purchase_draft)d" string="Request for Quotations"  width="510"/>
+                        	<action colspan="4" height="220" name="%(purchase_waiting)d" string="Purchase Order Waiting Approval"  width="510"/>
                         </child1>
                         <child2>
+                        	<action colspan="4" height="220" name="%(action_purchase_order_monthly_categ_graph)d" string="Monthly Purchase by Category"  />
+                        <!--
                             <action colspan="4" height="220" name="%(purchase.action_purchase_by_supplier)d" string="Purchase by supplier"  />
                             <action colspan="4" height="220" name="%(purchase.action_total_price_by_product_by_state)d" string="Total price by product by state"  />
                             <action colspan="4" height="220" name="%(purchase.action_qty_per_product)d" string="Total Quantity per product"  />
+                        -->
+
                         </child2>
                     </hpaned>
                 </form>
@@ -61,7 +157,9 @@
             id="menu_board_purchase"
             parent="menu_purchase_deshboard"
             sequence="4"/>
-        <menuitem icon="terp-purchase" id="base.menu_purchase_root" name="Purchases" sequence="3" groups="base.group_system,group_purchase_manager,group_purchase_user,base.group_extended" action="open_board_purchase"/>
+
+        <menuitem icon="terp-purchase" id="base.menu_purchase_root" action="open_board_purchase" name="Purchases"/>
+
 
     </data>
 </openerp>

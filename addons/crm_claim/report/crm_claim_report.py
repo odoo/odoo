@@ -59,21 +59,23 @@ class crm_claim_report(osv.osv):
                                   ('09', 'September'), ('10', 'October'),\
                                   ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
-        'create_date': fields.datetime('Create Date', readonly=True),
+        'create_date': fields.datetime('Create Date', readonly=True, select=True),
         'day': fields.char('Day', size=128, readonly=True), 
         'delay_close': fields.float('Delay to close', digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to close the case"),
-        'stage_id': fields.many2one ('crm.case.stage', 'Stage', \
-                        domain="[('section_id','=',section_id),\
-                        ('object_id.model', '=', 'crm.claim')]", readonly=True),
+        'stage_id': fields.many2one ('crm.case.stage', 'Stage', readonly=True, domain="[('type','=','claim')]"),
         'categ_id': fields.many2one('crm.case.categ', 'Category',\
                          domain="[('section_id','=',section_id),\
                         ('object_id.model', '=', 'crm.claim')]", readonly=True),
+        'probability': fields.float('Probability',digits=(16,2),readonly=True, group_operator="avg"),
         'partner_id': fields.many2one('res.partner', 'Partner', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'priority': fields.selection(AVAILABLE_PRIORITIES, 'Priority'),
-        'type_id': fields.many2one('crm.case.resource.type', 'Claim Type',\
-                         domain="[('section_id','=',section_id),\
-                         ('object_id.model', '=', 'crm.claim')]"),
+        'type_action': fields.selection([('correction','Corrective Action'),('prevention','Preventive Action')], 'Action Type'),
+        'date_closed': fields.date('Close Date', readonly=True, select=True), 
+        'date_deadline': fields.date('Deadline', readonly=True, select=True), 
+        'delay_expected': fields.float('Overpassed Deadline',digits=(16,2),readonly=True, group_operator="avg"),
+        'email': fields.integer('# Emails', size=128, readonly=True),
+         'probability': fields.float('Probability',digits=(16,2),readonly=True, group_operator="avg")
     }
 
     def init(self, cr):
@@ -87,9 +89,11 @@ class crm_claim_report(osv.osv):
             create or replace view crm_claim_report as (
                 select
                     min(c.id) as id,
-                    to_char(c.create_date, 'YYYY') as name,
-                    to_char(c.create_date, 'MM') as month,
-                    to_char(c.create_date, 'YYYY-MM-DD') as day,
+                    to_char(c.date, 'YYYY') as name,
+                    to_char(c.date, 'MM') as month,
+                    to_char(c.date, 'YYYY-MM-DD') as day,
+                    to_char(c.date_closed, 'YYYY-MM-DD') as date_closed,
+                    to_char(c.date_deadline, 'YYYY-MM-DD') as date_deadline,
                     c.state,
                     c.user_id,
                     c.stage_id,
@@ -99,15 +103,18 @@ class crm_claim_report(osv.osv):
                     c.categ_id,
                     count(*) as nbr,
                     c.priority as priority,
-                    c.type_id as type_id,
+                    c.type_action as type_action,
                     date_trunc('day',c.create_date) as create_date,
-                    avg(extract('epoch' from (c.date_closed-c.create_date)))/(3600*24) as  delay_close
+                    avg(extract('epoch' from (c.date_closed-c.create_date)))/(3600*24) as  delay_close,
+                    (SELECT count(id) FROM mailgate_message WHERE model='crm.claim' AND res_id=c.id AND history=True) AS email,
+                    (SELECT avg(probability) FROM crm_case_stage WHERE type='claim' AND id=c.stage_id) AS probability,
+                    extract('epoch' from (c.date_deadline - c.date_closed))/(3600*24) as  delay_expected
                 from
                     crm_claim c
-                group by to_char(c.create_date, 'YYYY'), to_char(c.create_date, 'MM'), \
+                group by to_char(c.date, 'YYYY'), to_char(c.date, 'MM'),to_char(c.date, 'YYYY-MM-DD'),\
                         c.state, c.user_id,c.section_id, c.stage_id,\
-                        c.categ_id,c.partner_id,c.company_id,c.create_date,to_char(c.create_date, 'YYYY-MM-DD')
-                        ,c.priority,c.type_id
+                        c.categ_id,c.partner_id,c.company_id,c.create_date,
+                        c.priority,c.type_action,c.date_deadline,c.date_closed,c.id
             )""")
 
 crm_claim_report()

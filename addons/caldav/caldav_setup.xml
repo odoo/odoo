@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <!-- /calendars tree -->
+        <record id="document_directory_calendars0" model="document.directory">
+            <field name="domain">[]</field>
+            <field eval="1" name="resource_find_all"/>
+            <field eval="0" name="ressource_tree"/>
+            <field name="user_id" eval="False"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="storage_id" ref="document.storage_default"/>
+            <field name="type">directory</field>
+            <field eval="[(6,0,[])]" name="group_ids"/>
+            <field name="name">calendars</field>
+        </record>
+        <record id="document_directory_resources1" model="document.directory">
+            <field name="domain">[]</field>
+            <field eval="1" name="resource_find_all"/>
+            <field eval="0" name="ressource_tree"/>
+            <field name="user_id" eval="False"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field model="document.directory" name="parent_id" ref="document_directory_calendars0"/>
+            <field name="type">directory</field>
+            <field eval="[(6,0,[])]" name="group_ids"/>
+            <field name="name">resources</field>
+        </record>
+        <record id="document_directory_uids0" model="document.directory">
+            <field name="domain">[('id','=',uid)]</field>
+            <field eval="1" name="resource_find_all"/>
+            <field eval="0" name="ressource_tree"/>
+            <field name="user_id" eval="False"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field model="document.directory" name="parent_id" ref="document_directory_calendars0"/>
+            <field name="type">ressource</field>
+            <field name="ressource_type_id" ref="base.model_res_users"/>
+            <field eval="[(6,0,[ref('base.group_system')])]" name="group_ids"/>
+            <field name="name">__uids__</field>
+        </record>
+        <record id="document_directory_users0" model="document.directory">
+            <field name="domain">[('id','=',uid)]</field>
+            <field eval="1" name="resource_find_all"/>
+            <field eval="0" name="ressource_tree"/>
+            <field name="user_id" eval="False"/>
+            <field name="resource_field" ref="base.field_res_users_login"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field model="document.directory" name="parent_id" ref="document_directory_calendars0"/>
+            <field name="storage_id" ref="document.storage_default"/>
+            <field name="type">ressource</field>
+            <field name="ressource_type_id" ref="base.model_res_users"/>
+            <field eval="[(6,0,[])]" name="group_ids"/>
+            <field name="name">users</field>
+        </record>
+        <record id="document_directory_dctx_0" model="document.directory.dctx">
+            <field model="document.directory" name="dir_id" ref="document_directory_users0"/>
+            <field name="field">user_id</field>
+            <field name="expr">res_id</field>
+        </record>
+        <record id="document_directory_c0" model="document.directory">
+            <field name="domain">[]</field>
+            <field eval="1" name="resource_find_all"/>
+            <field name="user_id" eval="False"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field model="document.directory" name="parent_id" ref="document_directory_users0"/>
+            <field name="storage_id" ref="document.storage_default"/>
+            <field name="type">directory</field>
+            <field eval="[(6,0,[])]" name="group_ids"/>
+            <field name="name">c</field>
+            <field eval="1" name="calendar_collection"/>
+        </record>
+        <record id="document_directory_groups1" model="document.directory">
+            <field name="domain">[]</field>
+            <field eval="1" name="resource_find_all"/>
+            <field eval="0" name="ressource_tree"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field model="document.directory" name="parent_id" ref="document_directory_calendars0"/>
+            <field name="storage_id" ref="document.storage_default"/>
+            <field name="type">directory</field>
+            <field eval="[(6,0,[])]" name="group_ids"/>
+            <field name="name">groups</field>
+        </record>
+        <record id="document_webdav_dir_property_calendarhomeset0" model="document.webdav.dir.property">
+            <field model="document.directory" name="dir_id" ref="document_directory_calendars0"/>
+            <field name="namespace">urn:ietf:params:xml:ns:caldav</field>
+            <!-- no parent, it is a global property -->
+            <field name="name">calendar-home-set</field>
+            <field name="value">('href','DAV:','/%s/%s/calendars/users/%s/c' % ('webdav',dbname,username) )</field>
+            <field eval="1" name="do_subst"/>
+        </record>
+    </data>
+</openerp>

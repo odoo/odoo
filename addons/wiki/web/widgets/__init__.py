@@ -1,0 +1,1 @@
+from wiki import WikiWidget

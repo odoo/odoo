@@ -6,32 +6,36 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-09-08 09:09+0000\n"
-"Last-Translator: Black Jack <onetimespeed@hotmail.com>\n"
+"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"PO-Revision-Date: 2011-01-19 12:00+0000\n"
+"Last-Translator: Wei \"oldrev\" Li <oldrev@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-09 04:47+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-25 06:40+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: hr
 #: model:process.node,name:hr.process_node_openerpuser0
-#: model:process.transition,name:hr.process_transition_employeeuser0
 msgid "Openerp user"
 msgstr "系统用户"
 
 #. module: hr
-#: model:ir.actions.act_window,name:hr.edit_workgroup
-#: model:ir.ui.menu,name:hr.menu_edit_workgroup
-msgid "Working Time Categories"
-msgstr "工作时间分类"
+#: view:hr.job:0
+#: field:hr.job,requirements:0
+msgid "Requirements"
+msgstr "必备条件"
 
 #. module: hr
 #: constraint:hr.department:0
 msgid "Error! You can not create recursive departments."
 msgstr "错误:你不能建立递归部门"
+
+#. module: hr
+#: model:process.transition,name:hr.process_transition_contactofemployee0
+msgid "Link the employee to information"
+msgstr "连接员工到信息"
 
 #. module: hr
 #: field:hr.employee,sinid:0
@@ -40,72 +44,146 @@ msgstr "身份证号"
 
 #. module: hr
 #: model:ir.module.module,shortdesc:hr.module_meta_information
+#: model:ir.ui.menu,name:hr.menu_hr_deshboard
+#: model:ir.ui.menu,name:hr.menu_hr_main
+#: model:ir.ui.menu,name:hr.menu_hr_management
 #: model:ir.ui.menu,name:hr.menu_hr_root
 msgid "Human Resources"
 msgstr "人力资源"
 
 #. module: hr
-#: selection:hr.timesheet,dayofweek:0
-msgid "Sunday"
-msgstr "日"
+#: view:hr.employee:0
+#: view:hr.job:0
+msgid "Group By..."
+msgstr "分组于"
 
 #. module: hr
+#: model:ir.actions.act_window,help:hr.action_hr_job
+msgid ""
+"Job Positions are used to define jobs and their requirements. You can keep "
+"track of the number of employees you have per job position and how many you "
+"expect in the future. You can also attach a survey to a job position that "
+"will be used in the recruitment process to evaluate the applicants for this "
+"job position."
+msgstr "职务用于定义工作以及工作的要求。 你可以跟踪到每个职务的当前员工数量以及在未来所期望的员工数量。"
+
+#. module: hr
+#: view:hr.employee:0
+#: field:hr.employee,department_id:0
+#: view:hr.job:0
+#: field:hr.job,department_id:0
 #: view:res.users:0
-msgid "Parents"
-msgstr "上级"
-
-#. module: hr
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "在动作定义中使用了无效的模快名。"
-
-#. module: hr
-#: view:hr.department:0
 msgid "Department"
 msgstr "部门"
 
 #. module: hr
-#: model:process.transition,name:hr.process_transition_contactofemployee0
-msgid "Contact  of employee"
-msgstr "员工分类"
+#: help:hr.installer,hr_attendance:0
+msgid "Simplifies the management of employee's attendances."
+msgstr "简化雇员考勤管理"
 
 #. module: hr
-#: field:hr.employee,work_email:0
-msgid "Work Email"
-msgstr "工作Email"
+#: view:hr.job:0
+msgid "Mark as Old"
+msgstr "标记为老的"
 
 #. module: hr
-#: field:hr.timesheet.group,name:0
-msgid "Group name"
-msgstr "组名"
+#: view:hr.job:0
+msgid "Jobs"
+msgstr "职位空缺"
+
+#. module: hr
+#: view:hr.job:0
+msgid "In Recruitment"
+msgstr "正在招聘"
+
+#. module: hr
+#: view:hr.installer:0
+msgid "title"
+msgstr "职位"
 
 #. module: hr
 #: field:hr.department,company_id:0
-#: field:hr.employee,company_id:0
+#: view:hr.employee:0
+#: view:hr.job:0
+#: field:hr.job,company_id:0
 msgid "Company"
 msgstr "公司"
 
 #. module: hr
-#: selection:hr.timesheet,dayofweek:0
-msgid "Friday"
-msgstr "五"
+#: field:hr.job,no_of_recruitment:0
+msgid "Expected in Recruitment"
+msgstr "招聘人数"
 
 #. module: hr
-#: field:hr.department,parent_id:0
-msgid "Parent Department"
-msgstr "上级部门"
+#: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_config
+msgid "Holidays"
+msgstr "假期"
 
 #. module: hr
-#: view:hr.department:0
+#: help:hr.installer,hr_holidays:0
+msgid "Tracks employee leaves, allocation requests and planning."
+msgstr "跟踪员工离职、调配申请与计划。"
+
+#. module: hr
+#: model:ir.model,name:hr.model_hr_employee_marital_status
+msgid "Employee Marital Status"
+msgstr "员工婚姻状况"
+
+#. module: hr
+#: help:hr.employee,partner_id:0
+msgid ""
+"Partner that is related to the current employee. Accounting transaction will "
+"be written on this partner belongs to employee."
+msgstr "跟当前雇员关联的业务伙伴信息，跟当前员工相关的财务事务将写到此业务伙伴上。"
+
+#. module: hr
+#: model:process.transition,name:hr.process_transition_employeeuser0
+msgid "Link a user to an employee"
+msgstr "链接一个用户信息到一个员工信息"
+
+#. module: hr
+#: field:hr.installer,hr_contract:0
+msgid "Employee's Contracts"
+msgstr "雇员合同"
+
+#. module: hr
+#: help:hr.installer,hr_payroll:0
+msgid "Generic Payroll system."
+msgstr "通用工资表系统"
+
+#. module: hr
 #: view:hr.employee:0
-#: field:hr.employee,notes:0
-msgid "Notes"
-msgstr "备注"
+msgid "My Departments Employee"
+msgstr "我的部门雇员"
 
 #. module: hr
-#: field:hr.timesheet,hour_from:0
-msgid "Work from"
-msgstr "工作从"
+#: model:hr.employee.marital.status,name:hr.hr_employee_marital_status_married
+msgid "Married"
+msgstr "已婚"
+
+#. module: hr
+#: constraint:hr.employee:0
+msgid ""
+"Error ! You cannot select a department for which the employee is the manager."
+msgstr "错误！您不能选择该雇员担任经理的部门。"
+
+#. module: hr
+#: help:hr.employee,passport_id:0
+msgid "Employee Passport Information"
+msgstr "雇员护照信息"
+
+#. module: hr
+#: model:ir.actions.act_window,help:hr.open_module_tree_department
+msgid ""
+"Your Company's Department Structure is used to manage all documents related "
+"to employees by departments: expenses and timesheet validation, leaves "
+"management, recruitments, etc."
+msgstr "您公司的部门结构用于管理所有需要按部门分类的员工相关单据：报销单、工作时间表、请假管理、招聘等等"
+
+#. module: hr
+#: view:hr.employee:0
+msgid "Position"
+msgstr "职位"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action2
@@ -113,14 +191,27 @@ msgid "Employee Hierarchy"
 msgstr "员工层次"
 
 #. module: hr
-#: model:ir.ui.menu,name:hr.menu_hr_configuration
-msgid "Configuration"
-msgstr "设置"
+#: model:process.transition,note:hr.process_transition_employeeuser0
+msgid ""
+"The Related user field on the Employee form allows to link the OpenERP user "
+"(and her rights) to the employee."
+msgstr "此用户字段允许连接到一个系统用户（包括他/她的权限）到此雇员。"
 
 #. module: hr
-#: selection:hr.employee,marital:0
-msgid "Unmaried"
-msgstr "未婚"
+#: view:hr.job:0
+#: selection:hr.job,state:0
+msgid "In Recruitement"
+msgstr "招聘中"
+
+#. module: hr
+#: field:hr.employee,identification_id:0
+msgid "Identification No"
+msgstr "身份证号"
+
+#. module: hr
+#: field:hr.job,no_of_employee:0
+msgid "No of Employee"
+msgstr "无雇员信息"
 
 #. module: hr
 #: selection:hr.employee,gender:0
@@ -128,13 +219,23 @@ msgid "Female"
 msgstr "女性"
 
 #. module: hr
-#: view:hr.timesheet.group:0
-msgid "Working Time Category"
-msgstr "工作时间分类"
+#: help:hr.installer,hr_timesheet_sheet:0
+msgid ""
+"Tracks and helps employees encode and validate timesheets and attendances."
+msgstr "跟踪并帮助员工制定、检验时间表和考勤。"
+
+#. module: hr
+#: field:hr.installer,hr_evaluation:0
+msgid "Periodic Evaluations"
+msgstr "试用期"
+
+#. module: hr
+#: field:hr.installer,hr_timesheet_sheet:0
+msgid "Timesheets"
+msgstr "工作时间表列表"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_employee_tree
-#: model:ir.ui.menu,name:hr.menu_open_view_employee_tree
 msgid "Employees Structure"
 msgstr "员工架构"
 
@@ -142,6 +243,11 @@ msgstr "员工架构"
 #: view:hr.employee:0
 msgid "Social IDs"
 msgstr "社保ID"
+
+#. module: hr
+#: help:hr.job,no_of_employee:0
+msgid "Number of employee with that job."
+msgstr "该职位相关的员工数"
 
 #. module: hr
 #: field:hr.employee,work_phone:0
@@ -154,27 +260,45 @@ msgid "Child Categories"
 msgstr "子类"
 
 #. module: hr
+#: view:hr.job:0
+#: field:hr.job,description:0
+#: model:ir.model,name:hr.model_hr_job
+msgid "Job Description"
+msgstr "职位描述"
+
+#. module: hr
 #: field:hr.employee,work_location:0
 msgid "Office Location"
 msgstr "办公地点"
 
 #. module: hr
 #: view:hr.employee:0
-#: field:hr.employee,name:0
+#: view:hr.job:0
 #: model:ir.model,name:hr.model_hr_employee
 #: model:process.node,name:hr.process_node_employee0
 msgid "Employee"
 msgstr "员工"
 
 #. module: hr
-#: field:hr.timesheet.group,manager:0
-msgid "Workgroup manager"
-msgstr "工作组主管"
+#: model:process.node,note:hr.process_node_employeecontact0
+msgid "Other information"
+msgstr "其他信息"
 
 #. module: hr
-#: field:hr.employee,child_ids:0
-msgid "Subordinates"
-msgstr "下属"
+#: field:hr.employee,work_email:0
+msgid "Work E-mail"
+msgstr "工作电邮"
+
+#. module: hr
+#: field:hr.department,complete_name:0
+#: field:hr.employee.category,complete_name:0
+msgid "Name"
+msgstr "名称"
+
+#. module: hr
+#: field:hr.employee,birthday:0
+msgid "Date of Birth"
+msgstr "出生日期"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_reporting
@@ -182,27 +306,57 @@ msgid "Reporting"
 msgstr "报表"
 
 #. module: hr
+#: model:ir.model,name:hr.model_ir_actions_act_window
+msgid "ir.actions.act_window"
+msgstr "ir.actions.act_window"
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.open_board_hr
+msgid "Human Resources Dashboard"
+msgstr "人事管理一览表"
+
+#. module: hr
+#: view:hr.employee:0
+#: field:hr.employee,job_id:0
+#: view:hr.job:0
+msgid "Job"
+msgstr "工作"
+
+#. module: hr
+#: view:hr.department:0
 #: field:hr.department,member_ids:0
 msgid "Members"
 msgstr "成员"
 
 #. module: hr
-#: field:hr.employee,ssnid:0
-msgid "SSN No"
-msgstr "社保号"
+#: model:ir.ui.menu,name:hr.menu_hr_configuration
+msgid "Configuration"
+msgstr "设置"
 
 #. module: hr
-#: model:process.transition,note:hr.process_transition_contactofemployee0
-msgid "Fill up contact information"
-msgstr "填写联系信息"
+#: view:hr.installer:0
+msgid ""
+"You can enhance the base HR Application by installing few HR-related "
+"functionalities."
+msgstr "您可以安装一些人事相关模块来增强基本的人事管理应用程序。"
 
 #. module: hr
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "无效的视图结构xml文件!"
+#: view:hr.employee:0
+msgid "Categories"
+msgstr "分类"
 
 #. module: hr
-#: selection:hr.employee,marital:0
+#: field:hr.job,expected_employees:0
+msgid "Expected Employees"
+msgstr "预期的雇员"
+
+#. module: hr
+#: help:hr.employee,sinid:0
+msgid "Social Insurance Number"
+msgstr "社会保险号"
+
+#. module: hr
+#: model:hr.employee.marital.status,name:hr.hr_employee_marital_status_divorced
 msgid "Divorced"
 msgstr "离婚"
 
@@ -212,10 +366,16 @@ msgid "Parent Category"
 msgstr "上级分类"
 
 #. module: hr
+#: constraint:hr.employee.category:0
+msgid "Error ! You cannot create recursive Categories."
+msgstr "错误！您不能创建循环分类。"
+
+#. module: hr
+#: view:hr.department:0
 #: model:ir.actions.act_window,name:hr.open_module_tree_department
-#: model:ir.actions.act_window,name:hr.open_module_tree_department_tree
-#: model:ir.ui.menu,name:hr.menu_department_def
-#: model:ir.ui.menu,name:hr.menu_department_tree
+#: model:ir.ui.menu,name:hr.menu_hr_department_tree
+#: view:res.users:0
+#: field:res.users,context_department_id:0
 msgid "Departments"
 msgstr "部门"
 
@@ -225,14 +385,9 @@ msgid "Employee Contact"
 msgstr "员工联系方式"
 
 #. module: hr
-#: selection:hr.employee,marital:0
-msgid "Maried"
-msgstr "已婚"
-
-#. module: hr
-#: field:hr.timesheet,tgroup_id:0
-msgid "Employee's timesheet group"
-msgstr "员工工作时间表"
+#: view:board.board:0
+msgid "My Board"
+msgstr "我的面板"
 
 #. module: hr
 #: selection:hr.employee,gender:0
@@ -240,9 +395,15 @@ msgid "Male"
 msgstr "男性"
 
 #. module: hr
-#: model:process.transition,note:hr.process_transition_employeeuser0
-msgid "Create openerp user"
-msgstr "创建系统用户"
+#: field:hr.installer,progress:0
+msgid "Configuration Progress"
+msgstr "配置进度"
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.open_view_categ_form
+#: model:ir.ui.menu,name:hr.menu_view_employee_category_form
+msgid "Categories of Employee"
+msgstr "员工分类"
 
 #. module: hr
 #: view:hr.employee.category:0
@@ -251,25 +412,62 @@ msgid "Employee Category"
 msgstr "员工类别"
 
 #. module: hr
-#: selection:hr.timesheet,dayofweek:0
-msgid "Tuesday"
-msgstr "二"
+#: field:hr.installer,config_logo:0
+msgid "Image"
+msgstr "图片"
+
+#. module: hr
+#: model:process.process,name:hr.process_process_employeecontractprocess0
+msgid "Employee Contract"
+msgstr "劳动合同"
+
+#. module: hr
+#: help:hr.installer,hr_evaluation:0
+msgid ""
+"Lets you create and manage the periodic evaluation and performance review of "
+"employees."
+msgstr "允许您周期性评估和复审员工。"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_department
 msgid "hr.department"
-msgstr ""
+msgstr "hr.department"
 
 #. module: hr
-#: field:hr.employee,user_id:0
-msgid "Related User"
-msgstr "相关用户"
+#: help:hr.employee,parent_id:0
+msgid "It is linked with manager of Department"
+msgstr "此处链接到部门经理信息"
 
 #. module: hr
-#: field:hr.employee,category_id:0
+#: field:hr.installer,hr_recruitment:0
+msgid "Recruitment Process"
+msgstr "招聘流程"
+
+#. module: hr
+#: field:hr.employee,category_ids:0
 #: field:hr.employee.category,name:0
 msgid "Category"
 msgstr "分类"
+
+#. module: hr
+#: model:ir.actions.act_window,help:hr.open_view_employee_list_my
+msgid ""
+"Here you can manage your work force by creating employees and assigning them "
+"specific properties in the system. Maintain all employee related information "
+"and keep track of anything that needs to be recorded for them. The personal "
+"information tab will help you maintain their identity data. The Categories "
+"tab gives you the opportunity to assign them related employee categories "
+"depending on their position and activities within the company. A category "
+"can be a seniority level within the company or a department. The Timesheets "
+"tab allows to assign them a specific timesheet and analytic journal where "
+"they will be able to enter time through the system. In the note tab, you can "
+"enter text data that should be recorded for a specific employee."
+msgstr ""
+
+#. module: hr
+#: help:hr.employee,bank_account_id:0
+msgid "Employee bank salary account"
+msgstr "员工工资帐号"
 
 #. module: hr
 #: field:hr.department,note:0
@@ -277,9 +475,24 @@ msgid "Note"
 msgstr "备注"
 
 #. module: hr
+#: constraint:res.users:0
+msgid "The chosen company is not in the allowed companies for this user"
+msgstr "选择的公司不属于此用户允许访问的公司。"
+
+#. module: hr
 #: view:hr.employee:0
 msgid "Contact Information"
 msgstr "联系信息"
+
+#. module: hr
+#: field:hr.employee,address_id:0
+msgid "Working Address"
+msgstr "工作地址"
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.open_board_hr_manager
+msgid "HR Manager Dashboard"
+msgstr "人事经理一览表"
 
 #. module: hr
 #: view:hr.employee:0
@@ -287,9 +500,9 @@ msgid "Status"
 msgstr "状态"
 
 #. module: hr
-#: selection:hr.timesheet,dayofweek:0
-msgid "Monday"
-msgstr "一"
+#: view:hr.installer:0
+msgid "Configure"
+msgstr "配置"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_categ_tree
@@ -298,17 +511,22 @@ msgid "Categories structure"
 msgstr "分类结构"
 
 #. module: hr
-#: field:hr.timesheet,dayofweek:0
-msgid "Day of week"
-msgstr "星期几"
+#: field:hr.employee,partner_id:0
+msgid "unknown"
+msgstr "未知的"
 
 #. module: hr
-#: field:hr.employee,birthday:0
-msgid "Birthday"
-msgstr "出生日期"
+#: field:hr.installer,hr_holidays:0
+msgid "Holidays / Leaves Management"
+msgstr "假期与请假管理"
 
 #. module: hr
-#: field:hr.employee,active:0
+#: field:hr.employee,ssnid:0
+msgid "SSN No"
+msgstr "社保号"
+
+#. module: hr
+#: view:hr.employee:0
 msgid "Active"
 msgstr "有效"
 
@@ -318,60 +536,94 @@ msgid "Error ! You cannot create recursive Hierarchy of Employees."
 msgstr "错误:你不能创建递归的员工"
 
 #. module: hr
-#: model:process.process,name:hr.process_process_employeecontractprocess0
-msgid "Employee Contract Process"
-msgstr "员工合同处理"
-
-#. module: hr
-#: model:process.node,note:hr.process_node_openerpuser0
-msgid "Create OpenERP User"
-msgstr "创建系统用户"
-
-#. module: hr
-#: model:process.node,note:hr.process_node_employee0
-msgid "Employee Complete Form"
-msgstr "完整员工信息"
-
-#. module: hr
 #: view:hr.department:0
 msgid "Companies"
 msgstr "公司"
 
 #. module: hr
-#: selection:hr.timesheet,dayofweek:0
-msgid "Wednesday"
-msgstr "三"
+#: model:ir.module.module,description:hr.module_meta_information
+msgid ""
+"\n"
+"    Module for human resource management. You can manage:\n"
+"    * Employees and hierarchies : You can define your employee with User and "
+"display hierarchies\n"
+"    * HR Departments\n"
+"    * HR Jobs\n"
+"    "
+msgstr ""
+"\n"
+"    人力资源管理模块，您可以管理:\n"
+"    * 员工信息与员工级次：您可以定义您的员工信息并包含登录用户及显示级次。\n"
+"    * 部门信息\n"
+"    * 职位信息\n"
+"    "
 
 #. module: hr
-#: model:ir.actions.act_window,name:hr.open_view_categ_form
-#: model:ir.ui.menu,name:hr.menu_view_employee_category_form
-msgid "Categories of Employee"
-msgstr "员工分类"
+#: model:process.transition,note:hr.process_transition_contactofemployee0
+msgid ""
+"In the Employee form, there are different kind of information like Contact "
+"information."
+msgstr "员工信息表单里有多种不同的信息如联系人信息。"
 
 #. module: hr
-#: field:hr.timesheet,date_from:0
-msgid "Starting date"
-msgstr "开始日期"
+#: help:hr.job,expected_employees:0
+msgid "Required number of Employees in total for that job."
+msgstr "该职位需要的总雇员数量。"
 
 #. module: hr
-#: field:res.users,parent_id:0
-msgid "Parent Users"
-msgstr "上级用户"
+#: selection:hr.job,state:0
+msgid "Old"
+msgstr "老的"
 
 #. module: hr
-#: field:hr.employee,address_id:0
-msgid "Working Address"
-msgstr "工作地址"
+#: field:hr.employee.marital.status,description:0
+msgid "Status Description"
+msgstr "状态说明"
+
+#. module: hr
+#: sql_constraint:res.users:0
+msgid "You can not have two users with the same login !"
+msgstr "两个用户不能使用相同的用户名！"
+
+#. module: hr
+#: view:hr.job:0
+#: field:hr.job,state:0
+msgid "State"
+msgstr "状态"
 
 #. module: hr
 #: field:hr.employee,marital:0
+#: view:hr.employee.marital.status:0
+#: field:hr.employee.marital.status,name:0
+#: model:ir.actions.act_window,name:hr.action_hr_marital_status
+#: model:ir.ui.menu,name:hr.hr_menu_marital_status
 msgid "Marital Status"
 msgstr "婚姻状况"
 
 #. module: hr
-#: model:ir.model,name:hr.model_hr_timesheet
-msgid "Timesheet Line"
-msgstr "工作时间表明细"
+#: help:hr.installer,hr_recruitment:0
+msgid "Helps you manage and streamline your recruitment process."
+msgstr "帮助您管理并流水化您的招聘流程。"
+
+#. module: hr
+#: model:process.node,note:hr.process_node_employee0
+msgid "Employee form and structure"
+msgstr "员工表单与组成结构"
+
+#. module: hr
+#: field:hr.employee,photo:0
+msgid "Photo"
+msgstr "相片"
+
+#. module: hr
+#: model:ir.model,name:hr.model_res_users
+msgid "res.users"
+msgstr "res.users"
+
+#. module: hr
+#: field:hr.installer,hr_payroll_account:0
+msgid "Payroll Accounting"
+msgstr "工资表记账"
 
 #. module: hr
 #: view:hr.employee:0
@@ -379,32 +631,31 @@ msgid "Personal Information"
 msgstr "个人信息"
 
 #. module: hr
-#: constraint:ir.model:0
+#: field:hr.employee,passport_id:0
+msgid "Passport No"
+msgstr "护照号"
+
+#. module: hr
+#: view:res.users:0
+msgid "Current Activity"
+msgstr "当前活动"
+
+#. module: hr
+#: help:hr.installer,hr_expense:0
 msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr "对象名称必须以“x_”开头且不能包含任何特殊字符！"
+"Tracks and manages employee expenses, and can automatically re-invoice "
+"clients if the expenses are project-related."
+msgstr "跟踪与管理员工开支，如果相关会计项目可用的情况下可以自动重新开发票给客户"
 
 #. module: hr
-#: view:hr.timesheet:0
-#: field:hr.timesheet.group,timesheet_id:0
-#: model:ir.model,name:hr.model_hr_timesheet_group
-msgid "Working Time"
-msgstr "工作时间"
+#: view:hr.job:0
+msgid "Current"
+msgstr "当前的"
 
 #. module: hr
-#: selection:hr.timesheet,dayofweek:0
-msgid "Thursday"
-msgstr "四"
-
-#. module: hr
-#: field:hr.timesheet,hour_to:0
-msgid "Work to"
-msgstr "工作到"
-
-#. module: hr
-#: selection:hr.employee,marital:0
-msgid "Other"
-msgstr "其它"
+#: field:hr.department,parent_id:0
+msgid "Parent Department"
+msgstr "上级部门"
 
 #. module: hr
 #: view:hr.employee.category:0
@@ -417,6 +668,49 @@ msgid "Home Address"
 msgstr "家庭地址"
 
 #. module: hr
+#: field:hr.installer,hr_attendance:0
+#: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_new_config
+msgid "Attendances"
+msgstr "考勤列表"
+
+#. module: hr
+#: view:hr.employee.marital.status:0
+#: view:hr.job:0
+msgid "Description"
+msgstr "说明"
+
+#. module: hr
+#: help:hr.installer,hr_contract:0
+msgid "Extends employee profiles to help manage their contracts."
+msgstr "扩展员工档案帮助您管理员工的联系信息。"
+
+#. module: hr
+#: field:hr.installer,hr_payroll:0
+msgid "Payroll"
+msgstr "工资表"
+
+#. module: hr
+#: model:hr.employee.marital.status,name:hr.hr_employee_marital_status_single
+msgid "Single"
+msgstr "单身"
+
+#. module: hr
+#: field:hr.job,name:0
+msgid "Job Name"
+msgstr "职位名称"
+
+#. module: hr
+#: view:hr.job:0
+#: selection:hr.job,state:0
+msgid "In Position"
+msgstr "在职"
+
+#. module: hr
+#: field:hr.employee,mobile_phone:0
+msgid "Mobile"
+msgstr "手机"
+
+#. module: hr
 #: view:hr.department:0
 msgid "department"
 msgstr "部门"
@@ -427,14 +721,32 @@ msgid "Nationality"
 msgstr "国籍"
 
 #. module: hr
-#: field:hr.employee,otherid:0
-msgid "Other ID"
-msgstr "其它ID"
+#: view:hr.department:0
+#: view:hr.employee:0
+#: field:hr.employee,notes:0
+msgid "Notes"
+msgstr "备注"
 
 #. module: hr
-#: field:hr.timesheet,name:0
-msgid "Name"
-msgstr "名称"
+#: model:ir.model,name:hr.model_hr_installer
+msgid "hr.installer"
+msgstr "hr.installer"
+
+#. module: hr
+#: view:board.board:0
+msgid "HR Manager Board"
+msgstr "人事经理一览表"
+
+#. module: hr
+#: field:hr.employee,resource_id:0
+msgid "Resource"
+msgstr "资源"
+
+#. module: hr
+#: view:hr.installer:0
+#: model:ir.actions.act_window,name:hr.action_hr_installer
+msgid "Human Resources Application Configuration"
+msgstr "人力资源应用配置"
 
 #. module: hr
 #: field:hr.employee,gender:0
@@ -443,10 +755,19 @@ msgstr "性别"
 
 #. module: hr
 #: view:hr.employee:0
+#: field:hr.job,employee_ids:0
+#: model:ir.actions.act_window,name:hr.hr_employee_normal_action_tree
 #: model:ir.actions.act_window,name:hr.open_view_employee_list
-#: model:ir.ui.menu,name:hr.menu_open_view_employee_list
+#: model:ir.actions.act_window,name:hr.open_view_employee_list_my
+#: model:ir.ui.menu,name:hr.menu_open_view_employee_list_my
+#: model:ir.ui.menu,name:hr.menu_view_employee_category_configuration_form
 msgid "Employees"
 msgstr "员工"
+
+#. module: hr
+#: field:hr.employee,bank_account_id:0
+msgid "Bank Account"
+msgstr "银行账户"
 
 #. module: hr
 #: field:hr.department,name:0
@@ -454,58 +775,60 @@ msgid "Department Name"
 msgstr "部门名称"
 
 #. module: hr
+#: help:hr.employee,ssnid:0
+msgid "Social Security Number"
+msgstr "社会安全号"
+
+#. module: hr
+#: model:process.node,note:hr.process_node_openerpuser0
+msgid "Creation of a OpenERP user"
+msgstr "创建 OpenERP 用户"
+
+#. module: hr
 #: field:hr.department,child_ids:0
 msgid "Child Departments"
 msgstr "子部门"
 
 #. module: hr
-#: view:hr.employee:0
-msgid "Job Information"
-msgstr "工作信息"
+#: model:ir.actions.act_window,name:hr.action_hr_job
+#: model:ir.ui.menu,name:hr.menu_hr_job
+msgid "Job Positions"
+msgstr "职位"
 
 #. module: hr
-#: model:process.node,note:hr.process_node_employeecontact0
-msgid "Fill up employee's contact information"
-msgstr "填写员工联系信息"
+#: view:hr.employee:0
+#: field:hr.employee,coach_id:0
+msgid "Coach"
+msgstr "师傅"
+
+#. module: hr
+#: view:hr.installer:0
+msgid "Configure Your Human Resources Application"
+msgstr "配置您的人力资源管理应用"
+
+#. module: hr
+#: field:hr.installer,hr_expense:0
+msgid "Expenses"
+msgstr "支出"
 
 #. module: hr
 #: field:hr.department,manager_id:0
+#: view:hr.employee:0
 #: field:hr.employee,parent_id:0
 msgid "Manager"
 msgstr "主管"
 
 #. module: hr
-#: model:ir.actions.act_window,name:hr.open_view_employee_list_my
-#: model:ir.ui.menu,name:hr.menu_open_view_employee_list_my
-msgid "All Employees"
-msgstr "所有员工"
+#: model:hr.employee.marital.status,name:hr.hr_employee_marital_status_widower
+msgid "Widower"
+msgstr "鳏夫"
 
 #. module: hr
-#: selection:hr.timesheet,dayofweek:0
-msgid "Saturday"
-msgstr "六"
+#: help:hr.installer,hr_payroll_account:0
+msgid "Generic Payroll system Integrated with Accountings."
+msgstr "整合财务的通用工资表系统"
 
 #. module: hr
-#: model:ir.actions.act_window,name:hr.open_view_employee_new
-#: model:ir.ui.menu,name:hr.menu_open_view_employee_new
-msgid "New Employee"
-msgstr "新员工"
-
-#~ msgid ""
-#~ "\n"
-#~ "    Module for human resource management. You can manage:\n"
-#~ "    * Employees and hierarchies\n"
-#~ "    * Work hours sheets\n"
-#~ "    * Attendances and sign in/out system\n"
-#~ "\n"
-#~ "    Different reports are also provided, mainly for attendance statistics.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "    人力资源模块你能管理:\n"
-#~ "                  * 员工和职位\n"
-#~ "                  * 工时表\n"
-#~ "                  * 出勤和登入/登出系统\n"
-#~ "\n"
-#~ "   提供的不同报表主要为考勤统计.\n"
-#~ "    "
+#: field:hr.employee,child_ids:0
+msgid "Subordinates"
+msgstr "下属"

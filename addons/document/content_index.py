@@ -21,11 +21,11 @@
 import logging
 import os
 import tempfile
+from subprocess import Popen, PIPE
 
 class NhException(Exception):
     pass
 
-from subprocess import Popen, PIPE
 
 class indexer(object):
     """ An indexer knows how to parse the content of some file.
@@ -71,8 +71,10 @@ class indexer(object):
                 pass
             
             fp = open(realfile,'rb')
-            content2 = fp.read()
-            fp.close()
+            try:
+                content2 = fp.read()
+            finally:    
+                fp.close()
             
             # The not-handled exception may be raised here
             return self._doIndexContent(content2)
@@ -163,9 +165,9 @@ class contentIndex(object):
                     os.write(fd, content)
                     os.close(fd)
             
-                fp = Popen(['file','-b','--mime',fname], shell=False, stdout=PIPE).stdout
-                result = fp.read()
-                fp.close()
+                pop = Popen(['file','-b','--mime',fname], shell=False, stdout=PIPE)
+                (result, _) = pop.communicate()
+                
                 mime2 = result.split(';')[0]
                 self.__logger.debug('File gave us: %s', mime2)
                 # Note that the temporary file still exists now.

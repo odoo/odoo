@@ -30,16 +30,18 @@
 """,
     "depends" : ["purchase","mrp"],
     "init_xml" : [],
-    "demo_xml" : [],
-    "update_xml" : ["wizard/purchase_requisition_partner_view.xml",
+    "demo_xml" : ['purchase_requisition_demo.xml'],
+    "update_xml" : ["security/purchase_tender.xml",
+                    "wizard/purchase_requisition_partner_view.xml",
                     "purchase_requisition_data.xml",
                     "purchase_requisition_view.xml",
                     "purchase_requisition_report.xml",
                     "security/ir.model.access.csv","purchase_requisition_sequence.xml"
     ],
     "active": False,
-    "test":[],
-    "installable": True
+    "test":['test/purchase_requisition_report.yml'],
+    "installable": True,
+    "certificate" : "001023264099823179629",
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

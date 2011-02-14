@@ -127,12 +127,12 @@
     </blockTable>
         <para style="terp_default_Centre_9">[[ get_journal_amt(o)[0] ]] : [[ get_journal_amt(o)[1] ]]</para>
 
-	<section>
-		[[ repeatIn((o.state=='cancel' and o.statement_ids) and [1] or [], 'p') ]]
-		<para style="P31">
-			Ce bon est valide jusqu'au [[ time.strftime('%d/%m/%Y', time.strptime(o.date_validity,'%Y-%m-%d')) ]].
-		</para>
-	</section>
+<!--	<section>-->
+<!--		[[ repeatIn((o.state=='cancel' and o.statement_ids) and [1] or [], 'p') ]]-->
+<!--		<para style="P31">-->
+<!--			Ce bon est valide jusqu'au [[ time.strftime('%d/%m/%Y', time.strptime(o.date_validity,'%Y-%m-%d')) ]].-->
+<!--		</para>-->
+<!--	</section>-->
   </story>
 </document>
 

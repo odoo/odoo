@@ -29,8 +29,8 @@
 
     """,
     "version": "0.1",
-    "depends": ["base"],
-    "category" : "Generic Modules/Others",
+    "depends": ["base_tools"],
+    "category" : "Tools",
     'description': """
     The base module to manage lunch
 
@@ -49,9 +49,9 @@
         'report/report_lunch_order_view.xml',
     ],
     "demo_xml": ['lunch_demo.xml'],
-    "test": ['test/test_lunch.yml'],
+    "test": ['test/test_lunch.yml', 'test/lunch_report.yml'],
     "installable": True,
+    "certificate" : "001292377792581874189",
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

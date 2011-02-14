@@ -38,7 +38,7 @@ class knowledge_installer(osv.osv_memory):
             help="Lets you create wiki pages and page groups in order "
                  "to keep track of business knowledge and share it with "
                  "and  between your employees."),
-        # Templates of Content
+        # Content templates
         'wiki_faq':fields.boolean('Internal FAQ',
             help="Creates a skeleton internal FAQ pre-filled with "
                  "documentation about OpenERP's Document Management "

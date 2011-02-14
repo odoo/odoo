@@ -103,7 +103,7 @@ class crm_phonecall2phonecall(osv.osv_memory):
                 'name' : fields.char('Call summary', size=64, required=True, select=1),
                 'user_id' : fields.many2one('res.users',"Assign To"),
                 'categ_id': fields.many2one('crm.case.categ', 'Category', required=True, \
-                        domain="[('section_id','=',section_id),\
+                        domain="['|',('section_id','=',False),('section_id','=',section_id),\
                         ('object_id.model', '=', 'crm.phonecall')]"), 
                 'date': fields.datetime('Date', required=True),
                 'section_id':fields.many2one('crm.case.section','Sales Team'),

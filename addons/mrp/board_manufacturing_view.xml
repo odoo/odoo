@@ -13,14 +13,13 @@
                 <form string="Manufacturing board">
                     <hpaned position="100">
                         <child1>
-                            <action colspan="4" height="200" name="%(mrp.mrp_production_action2)d" string="Next production orders" width="510"/>
-                            <action colspan="4" name="%(stock.action_picking_tree)d" string="Deliveries (Out picking)" domain="[('state','=','assigned'),('type','=','out')]"/>
-                            <action colspan="4" name="%(procurement.procurement_action4)d" string="Procurements in Exception"/>
+                            <action colspan="4" height="200" name="%(mrp.mrp_production_action2)d" string="Next Production Orders" width="510"/>
+                            <action colspan="4" name="%(procurement.procurement_exceptions)d" string="Procurements in Exception" domain="[('state','=','exception')]"/>
                         </child1>
                         <child2>
-                            <action colspan="4" name="%(mrp.action_report_workcenter_load_tree)d" string="Work Center future load"/>
+                            <action colspan="4" name="%(mrp.action_report_workcenter_load_tree)d" string="Work Center Future Load" groups="base.group_extended"/>
 
-                            <action colspan="4" name="%(mrp.action_report_in_out_picking_tree)d" string="Stock value variation"/>
+                            <action colspan="4" name="%(mrp.action_report_in_out_picking_tree)d" string="Stock Value Variation"/>
                         </child2>
                     </hpaned>
                 </form>
@@ -38,13 +37,13 @@
         <menuitem id="menus_dash_mrp" name="Dashboard"
             parent="next_id_77" sequence="0"/>
         <menuitem
-            action="open_board_manufacturing"
-            icon="terp-graph"
-            id="menu_board_manufacturing"
-            parent="menus_dash_mrp"
-            sequence="1" groups="mrp.group_mrp_manager,mrp.group_mrp_user"/>
-        <menuitem icon="terp-mrp" id="base.menu_mrp_root" name="Manufacturing"
-            groups="group_mrp_user,group_mrp_manager,base.group_system" sequence="8"
+            action="open_board_manufacturing" icon="terp-graph"
+            id="menu_board_manufacturing" parent="menus_dash_mrp"
+            sequence="1"/>
+
+        <menuitem icon="terp-mrp" id="base.menu_mrp_root" name="Manufacturing" sequence="8"
             action="open_board_manufacturing"/>
+
+
     </data>
 </openerp>

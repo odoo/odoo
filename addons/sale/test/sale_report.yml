@@ -1,0 +1,8 @@
+-
+  In order to test the PDF reports defined on a sale order, we will print a sale order
+-
+  !python {model: sale.order}: |
+    import netsvc, tools, os
+    (data, format) = netsvc.LocalService('report.sale.order').create(cr, uid, [ref('sale.order'),ref('sale.order2')], {}, {})
+    if tools.config['test_report_directory']:
+        file(os.path.join(tools.config['test_report_directory'], 'sale-sale_order.'+format), 'wb+').write(data)

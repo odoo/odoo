@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-from lxml import etree
 from osv import fields, osv
 
 class base_contact_installer(osv.osv_memory):
@@ -29,40 +28,39 @@ class base_contact_installer(osv.osv_memory):
     _columns = {
         'name': fields.char('Name', size=64),
         'migrate': fields.boolean('Migrate', help="If you select this, all addresses will be migrated."),
-        'nomigrate': fields.boolean('NoMigrate', help="If you select this, all addresses will not be migrated."),
     }
 
     def execute(self, cr, uid, ids, context=None):
         """
         This function is used to create contact and address from existing partner address
         """
-        obj = self.pool.get("base.contact.installer").browse(cr, uid, uid)
+        obj = self.pool.get("base.contact.installer").browse(cr, uid, uid, context=context)
         if obj.migrate:
-            cr.execute("""DROP TRIGGER  IF EXISTS contactjob on res_partner_contact;
-                            DROP LANGUAGE  IF EXISTS  plpgsql CASCADE;
-                            CREATE LANGUAGE plpgsql ;
-                            CREATE OR REPLACE FUNCTION add_to_job() RETURNS TRIGGER AS $contactjob$
+            # Enable PL/pgSQL if not enabled yet in the database
+            cr.execute("SELECT 1 FROM pg_language WHERE lanname = 'plpgsql'")
+            if not cr.fetchone():
+                cr.execute("CREATE LANGUAGE plpgsql;")
+
+            cr.execute("""DROP TRIGGER IF EXISTS contactjob on res_partner_contact;
+                          CREATE OR REPLACE FUNCTION add_to_job() RETURNS TRIGGER AS $contactjob$
                             DECLARE
                             new_name varchar;
                             new_phonenum varchar;
                             BEGIN
-                            IF(TG_OP='INSERT') THEN
-                            INSERT INTO res_partner_job(contact_id, address_id, function, state) VALUES(NEW.id, NEW.website::integer,NEW.first_name, 'current');
-                            UPDATE res_partner_contact set first_name=Null, website=Null, active=True where id=NEW.id;
+                               IF(TG_OP='INSERT') THEN
+                               INSERT INTO res_partner_job(contact_id, address_id, function, state) VALUES(NEW.id, NEW.website::integer,NEW.first_name, 'current');
+                               UPDATE res_partner_contact set first_name=Null, website=Null, active=True where id=NEW.id;
                             END IF;
                             RETURN NEW;
                             END;
-                            $contactjob$ LANGUAGE plpgsql;
-                            CREATE TRIGGER contactjob AFTER INSERT ON res_partner_contact FOR EACH ROW EXECUTE PROCEDURE add_to_job();""")
-            cr.commit()
+                          $contactjob$ LANGUAGE plpgsql;
+                          CREATE TRIGGER contactjob AFTER INSERT ON res_partner_contact FOR EACH ROW EXECUTE PROCEDURE add_to_job();""")
 
             cr.execute("INSERT into res_partner_contact (name, title, email, first_name, website)  (SELECT coalesce(name, 'Noname'), title, email, function , to_char(id, '99999999') from res_partner_address)")
-            cr.commit()
 
             cr.execute("DROP TRIGGER  IF EXISTS contactjob  on res_partner_contact")
-            cr.execute("DROP LANGUAGE  IF EXISTS  plpgsql CASCADE;")
+
             cr.execute("DROP FUNCTION IF EXISTS  add_to_job()")
-            cr.commit()
 
 base_contact_installer()
 

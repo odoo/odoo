@@ -18,7 +18,8 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import mx.DateTime
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 from osv import fields,osv
 import tools
@@ -31,8 +32,8 @@ class report_timesheet_task_user(osv.osv):
     def _get_task_hours(self, cr, uid, ids, name,args,context):
         result = {}
         for record in self.browse(cr, uid, ids,context):
-            last_date = mx.DateTime.strptime(record.name, '%Y-%m-%d') + mx.DateTime.RelativeDateTime(months=1) - 1
-            task_obj=self.pool.get('project.task.work')
+            last_date = datetime.strptime(record.name, '%Y-%m-%d') + relativedelta(months=1) - relativedelta(days=1)
+            task_obj = self.pool.get('project.task.work')
             task_ids = task_obj.search(cr, uid, [('user_id','=',record.user_id.id),('date','>=',record.name),('date','<=',last_date.strftime('%Y-%m-%d'))])
             tsk_hrs = task_obj.read(cr, uid, task_ids, ['hours','date','user_id'])
             total = 0.0
@@ -45,8 +46,8 @@ class report_timesheet_task_user(osv.osv):
         result = {}
         sum = 0.0
         for record in self.browse(cr, uid, ids, context):
-            last_date = mx.DateTime.strptime(record.name, '%Y-%m-%d') + mx.DateTime.RelativeDateTime(months=1) - 1
-            obj=self.pool.get('hr_timesheet_sheet.sheet.day')
+            last_date = datetime.strptime(record.name, '%Y-%m-%d') + relativedelta(months=1) - relativedelta(days=1)
+            obj = self.pool.get('hr_timesheet_sheet.sheet.day')
             sheet_ids = obj.search(cr, uid, [('sheet_id.user_id','=',record.user_id.id),('name','>=',record.name),('name','<=',last_date.strftime('%Y-%m-%d'))])
             data_days = obj.read(cr, uid, sheet_ids, ['name','sheet_id.user_id','total_attendance'])
             total = 0.0

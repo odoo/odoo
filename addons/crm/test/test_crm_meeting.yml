@@ -6,8 +6,8 @@
 - 
   !record {model: crm.meeting, id: crm_meeting_regardingpresentation0}:
     categ_id: crm.categ_meet2
-    date: '2010-04-21 16:04:00'
-    date_deadline: '2010-04-22 00:04:00'
+    date: !eval time.strftime('%Y-%m-%d 16:04:00')
+    date_deadline: !eval "'%s-%s-%s 00:04:00' %(datetime.now().year,datetime.now().month,datetime.now().day+1)"
     duration: 8.0
     email_from: info@balmerinc.be
     location: Ahmedabad
@@ -39,10 +39,10 @@
      self.write(cr, uid, [ref('crm_meeting_regardingpresentation0')], {'alarm_id': ref("res_alarm_minituesbefore0")})
 - |
   In order to check recurrence on meetings I will set Recurrency to Custom
-  and I set the fields so that the meeting will occure weekly on Monday and Friday 10 times
+  and I set the fields so that the meeting will occur weekly on Monday and Friday 10 times
 -
   !python {model: crm.meeting}: |
-     self.write(cr, uid, [ref("crm_meeting_regardingpresentation0")], {'fr': 1, 'mo': 1, 'th': 1, 'tu': 1, 'we':1,   'count':10, 'interval': 1, 'freq': 'weekly', 'rrule_type': 'custom'})
+     self.write(cr, uid, [ref("crm_meeting_regardingpresentation0")], {'fr': 1, 'mo': 1, 'th': 1, 'tu': 1, 'we':1,   'count':10, 'interval': 1, 'rrule_type': 'weekly'})
       
 - |
   I can see from the calendar view that the meeting is scheduled on Monday and Friday
@@ -55,18 +55,20 @@
   I will search for one of the recurrent event and count the number of meeting.
 -
   !python {model: crm.meeting}: |
-     ids = self.search(cr, uid, [('date', '>=', '2010-04-21 00:00:00'), ('date', '<=', '2010-05-21 00:00:00')] )
+     import time
+     from datetime import datetime, date, timedelta
+     ids = self.search(cr, uid, [('date', '>=', time.strftime('%Y-%m-%d 00:00:00')), ('date', '<=', (datetime.now()+timedelta(31)).strftime('%Y-%m-%d 00:00:00')), ('name', '=', 'Regarding Presentation')] )
      assert len(ids) == 10      
 
 - |
-  Now If I want to edit meetings information for all occurence I click on "Edit All" button.
+  Now If I want to edit meetings information for all occurrence I click on "Edit All" button.
 -
   !python {model: crm.meeting}: |
-    self.open_meeting(cr, uid, [ref('crm_meeting_regardingpresentation0')])
+     self.write(cr, uid, [ref('crm_meeting_regardingpresentation0')], {'edit_all':'True'},context)
 - |   
   I can see that new meeting form is opened with same value
   I change some data for meeting and save it
-  I can see from meeting's calendar view that all meeting occurences are changed accordingly
+  I can see from meeting's calendar view that all meeting occurrences are changed accordingly
 - 
   !record {model: crm.meeting, id: crm.crm_meeting_regardingpresentation0}:
     alarm_id: base_calendar.alarm9

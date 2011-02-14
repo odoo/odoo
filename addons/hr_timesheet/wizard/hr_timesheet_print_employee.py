@@ -21,6 +21,7 @@
 import datetime
 
 from osv import osv, fields
+from tools.translate import _
 
 class analytical_timesheet_employee(osv.osv_memory):
     _name = 'hr.analytical.timesheet.employee'
@@ -29,23 +30,25 @@ class analytical_timesheet_employee(osv.osv_memory):
         'month': fields.selection([(x, datetime.date(2000, x, 1).strftime('%B')) for x in range(1, 13)],
                                   'Month', required=True),
         'year': fields.integer('Year', required=True),
-        'user_id': fields.many2one('res.users', 'User', required=True)
+        'employee_id': fields.many2one('hr.employee', 'Employee', required=True)
+    
                 }
 
     def _get_user(self, cr, uid, context=None):
-        if context is None:
-            context = {}
-        return uid
+
+        emp_obj = self.pool.get('hr.employee')
+        emp_id = emp_obj.search(cr, uid, [('user_id', '=', uid)], context=context)
+        if not emp_id:
+            raise osv.except_osv(_("Warning"), _("No employee defined for this user"))
+        return emp_id and emp_id[0] or False
 
     _defaults = {
-         'month': datetime.date.today().month,
-         'year': datetime.date.today().year,
-         'user_id': _get_user
+         'month': lambda *a: datetime.date.today().month,
+         'year': lambda *a: datetime.date.today().year,
+         'employee_id': _get_user
              }
 
     def print_report(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         data = self.read(cr, uid, ids, context=context)[0]
         datas = {
              'ids': [],

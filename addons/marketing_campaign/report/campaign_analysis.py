@@ -20,13 +20,15 @@
 ##############################################################################
 import tools
 from osv import fields, osv
+from decimal_precision import decimal_precision as dp
+
 
 class campaign_analysis(osv.osv):
     _name = "campaign.analysis"
     _description = "Campaign Analysis"
     _auto = False
     _rec_name = 'date'
-    def _total_cost(self, cr, uid, ids, field_name, arg, context={}):
+    def _total_cost(self, cr, uid, ids, field_name, arg, context=None):
         """
             @param cr: the current row, from the database cursor,
             @param uid: the current user’s ID for security checks,
@@ -34,11 +36,11 @@ class campaign_analysis(osv.osv):
             @param context: A standard dictionary for contextual values
         """
         result = {}
-        for ca_obj in self.browse(cr, uid, ids, context):
+        for ca_obj in self.browse(cr, uid, ids, context=context):
             wi_ids = self.pool.get('marketing.campaign.workitem').search(cr, uid,
                         [('segment_id.campaign_id', '=', ca_obj.campaign_id.id)])
             total_cost = ca_obj.activity_id.variable_cost + \
-                                ((ca_obj.campaign_id.fixed_cost or 0.00) / len(wi_ids))
+                                ((ca_obj.campaign_id.fixed_cost or 1.00) / len(wi_ids))
             result[ca_obj.id] = total_cost
         return result
     _columns = {
@@ -50,7 +52,7 @@ class campaign_analysis(osv.osv):
                                      ('10','October'), ('11','November'), ('12','December')],
                                   'Month', readonly=True),
         'day': fields.char('Day', size=10, readonly=True),
-        'date': fields.date('Date', readonly=True),
+        'date': fields.date('Date', readonly=True, select=True),
         'campaign_id': fields.many2one('marketing.campaign', 'Campaign',
                                                                 readonly=True),
         'activity_id': fields.many2one('marketing.campaign.activity', 'Activity',
@@ -61,8 +63,8 @@ class campaign_analysis(osv.osv):
         'country_id': fields.related('partner_id','address', 'country_id',
                     type='many2one', relation='res.country',string='Country'),
         'total_cost' : fields.function(_total_cost, string='Cost', method=True,
-                                    type="float" ),
-        'revenue': fields.float('Revenue',digits=(16,2),readonly=True),
+                                    type="float", digits_compute=dp.get_precision('Purchase Price')),
+        'revenue': fields.float('Revenue', readonly=True, digits_compute=dp.get_precision('Sale Price')),
         'count' : fields.integer('# of Actions', readonly=True),
         'state': fields.selection([('todo', 'To Do'),
                                    ('exception', 'Exception'), ('done', 'Done'),

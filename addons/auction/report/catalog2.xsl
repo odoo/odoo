@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:fo="http://www.w3.org/1999/XSL/Format"  xmlns:date="http://exslt.org/dates-and-times"extension-element-prefixes="date">
+<?xml version="1.0" encoding="iso-8859-1"?>
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:fo="http://www.w3.org/1999/XSL/Format"  xmlns:date="http://exslt.org/dates-and-times" extension-element-prefixes="date">
 
 
 <xsl:template match="report">
@@ -30,7 +30,7 @@
 		<pageGraphics>
 <!--			<image x="1.0cm" y="27.3cm" file="/home/tiny/terp/4.2/server/bin/addons/auction/report/images/flagey_head.png"/>-->
 -			<image x="1.0cm" y="26.1cm" file="flagey_logo.jpg"/>
-			<drawRightString x="19.0cm" y="26.6cm"> Vente  antiquitée le  <xsl:value-of select="date:day-name(catalog/AuctionDate1)"/> &#160;<xsl:value-of select="date:day-in-month(catalog/AuctionDate1)"/>&#160;<xsl:value-of select="date:month-name(catalog/AuctionDate1)"/> &#160;<xsl:value-of select="date:year(catalog/AuctionDate1)"/></drawRightString>
+			<drawRightString x="19.0cm" y="26.6cm"> Antiques on sale  <xsl:value-of select="date:day-name(catalog/AuctionDate1)"/> <xsl:value-of select="date:day-in-month(catalog/AuctionDate1)"/><xsl:value-of select="date:month-name(catalog/AuctionDate1)"/> <xsl:value-of select="date:year(catalog/AuctionDate1)"/></drawRightString>
 			<lineMode width="1mm"/>
 			<setFont name="Helvetica" size="26"/>
 <!--			<drawString x="10mm" y="27.8cm">Flagey.com</drawString>-->

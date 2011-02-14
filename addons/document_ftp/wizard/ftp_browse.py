@@ -43,14 +43,16 @@ class document_ftp_browse(osv.osv_memory):
             url = ftp_url.url and ftp_url.url.split('ftp://') or []
             if url:
                 url = url[1]
+                if url[-1] == '/':
+                    url = url[:-1]
             else:
                 url = '%s:%s' %(ftpserver.HOST, ftpserver.PORT)
-            res['url'] = 'ftp://%s@%s'%(current_user.login, url)
+            res['url'] = 'ftp://%s@%s/%s'%(current_user.login, url, cr.dbname)
         return res
 
-    def browse_ftp(self, cr, uid, ids, context):
+    def browse_ftp(self, cr, uid, ids, context=None):
         data_id = ids and ids[0] or False
-        data = self.browse(cr, uid, data_id, context)
+        data = self.browse(cr, uid, data_id, context=context)
         final_url = data.url
         return {
         'type': 'ir.actions.act_url',

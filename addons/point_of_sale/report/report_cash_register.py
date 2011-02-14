@@ -18,6 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 import tools
 from osv import fields,osv
 
@@ -33,12 +34,13 @@ class report_cash_register(osv.osv):
             ('10','October'), ('11','November'), ('12','December')], 'Month',readonly=True),
         'day': fields.char('Day', size=128, readonly=True),
         'user_id':fields.many2one('res.users', 'User', readonly=True),
-        'state':fields.selection([('draft', 'Draft'),('confirm', 'Confirmed')],'State'),
+        'state': fields.selection([('draft', 'Quotation'),('open','Open'),('confirm', 'Confirmed')],'State'),
         'journal_id': fields.many2one('account.journal', 'Journal'),
         'balance_start': fields.float('Opening Balance'),
         'balance_end_real': fields.float('Closing Balance'),
     }
     _order = 'date desc'
+
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'report_cash_register')
         cr.execute("""
@@ -62,3 +64,5 @@ class report_cash_register(osv.osv):
                         to_char(s.create_date, 'YYYY-MM-DD'))""")
 
 report_cash_register()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

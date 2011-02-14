@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <!-- This file must be loaded  _after_  account_demo.xml ! --> 
+        <!-- This file must be loaded  _after_  account_demo.xml ! -->
         <record id="test_invoice_1" model="account.invoice">
             <field name="currency_id" ref="base.EUR"/>
             <field name="company_id" ref="base.main_company"/>
@@ -13,6 +13,13 @@
             <field name="account_id" ref="account.a_recv"/>
             <field name="name">Test invoice 1</field>
             <field name="address_contact_id" ref="base.res_partner_address_tang"/>
+        </record>
+        <record id="test_tax_line" model="account.invoice.tax">
+            <field name="name">Test Tax</field>
+            <field name="base">5.00</field>
+            <field name="amount">100.00</field>
+            <field name="account_id" ref="account.ova"/>
+            <field name="invoice_id" ref="test_invoice_1"/>
         </record>
         <record id="test_invoice_1_line_1" model="account.invoice.line">
             <field name="name">Basic computer with Dvorak keyboard and left-handed mouse</field>
@@ -28,18 +35,18 @@
             <field name="quantity">2</field>
             <field name="account_id" ref="account.a_sale"/>
         </record>
-        
+
         <assert id="test_invoice_1" model="account.invoice" string="The currency unit of Test invoice 1 is EUR">
-            <test expr="currency_id.code">EUR</test>
+            <test expr="currency_id.symbol">€</test>
         </assert>
-        
+
         <assert id="test_invoice_1" model="account.invoice" severity="error" string="The amount of Test invoice 1 is correct">
             <test expr="sum([l.price_subtotal for l in invoice_line]) == 1850"/>
             <test expr="sum([l.price_subtotal for l in invoice_line]) == amount_untaxed"/>
         </assert>
-        
+
         <workflow action="invoice_open" model="account.invoice" ref="test_invoice_1"/>
-        
+
         <assert id="test_invoice_1" model="account.invoice" string="Test invoice 1 is now open">
             <test expr="state">open</test>
         </assert>
@@ -55,7 +62,7 @@
             <!-- context = -->              <value eval="{}"/>
             <!-- name = -->                 <value eval="str('Payment from ASUStek')"/>
         </function>
-        
+
         <assert id="test_invoice_1" model="account.invoice" string="Test invoice 1 is now paid">
             <test expr="state">paid</test>
         </assert>

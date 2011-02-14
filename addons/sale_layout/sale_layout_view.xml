@@ -4,18 +4,6 @@
              <record id="sale.action_order_line_tree2" model="ir.actions.act_window">
                <field name="domain">[('layout_type','=', 'article')]</field>
              </record>
-		<record model="ir.ui.view" id="view_order_line_form2_inherit_1">
-			<field name="name">sale.order.line.form2.inherit_1</field>
-			<field name="model">sale.order.line</field>
-			<field name="inherit_id" ref="sale.view_order_line_form2"/>
-			<field name="type">form</field>
-			<field name="arch" type="xml">
-				<xpath expr="/form/notebook/page/field[@name='name']" position="before">
-					<field name="layout_type" select="1" on_change="onchange_sale_order_line_view(layout_type)" />
-					<field name="sequence"/>
-				</xpath>
-			</field>
-		</record>
 
 		<record model="ir.ui.view" id="view_order_form_inherit_1">
 			<field name="name">sale.order.form.inherit_1</field>

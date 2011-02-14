@@ -19,10 +19,9 @@
 #
 ##############################################################################
 
-from osv import osv, fields
-from tools.translate import _
 import time
 
+from osv import osv, fields
 
 class pos_details(osv.osv_memory):
     _name = 'pos.details'
@@ -37,7 +36,7 @@ class pos_details(osv.osv_memory):
         'date_end': lambda *a: time.strftime('%Y-%m-%d'),
     }
 
-    def print_report(self, cr, uid, ids, context={}):
+    def print_report(self, cr, uid, ids, context=None):
         """
          To get the date and print the report
          @param self: The object pointer.
@@ -46,17 +45,19 @@ class pos_details(osv.osv_memory):
          @param context: A standard dictionary
          @return : retrun report
         """
-
+        if context is None:
+            context = {}
         datas = {'ids': context.get('active_ids', [])}
-        res = self.read(cr, uid, ids, ['date_start', 'date_end'], context)
+        res = self.read(cr, uid, ids, ['date_start', 'date_end'], context=context)
         res = res and res[0] or {}
         datas['form'] = res
-
+        if res.get('id',False):
+            datas['ids']=[res['id']]
         return {
             'type': 'ir.actions.report.xml',
             'report_name': 'pos.details',
             'datas': datas,
-       }
+        }
 
 pos_details()
 

@@ -117,7 +117,7 @@
         <record model="account.account.template" id="IA_AC01121">
             <field name="name">Cash Account</field>
             <field name="code">IA_AC01121</field>
-            <field name="type">liquidity</field>
+            <field name="type">view</field>
             <field name="user_type" ref="account_type_asset1"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="IA_AC0112"/>
@@ -268,7 +268,7 @@
         </record>
 
         <record model="account.account.template" id="IA_AC0232">
-            <field name="name">Reserve and Surplus Account</field>
+            <field name="name">Reserve and Profit/Loss Account</field>
             <field name="code">IA_AC0232</field>
             <field name="type">other</field>
             <field name="user_type" ref="account_type_liability1"/>
@@ -366,7 +366,7 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="IA_AC11"/>
         </record>
-        
+
         <record model="account.account.template" id="IA_AC114">
             <field name="name">Opening Stock</field>
             <field name="code">IA_AC114</field>
@@ -466,7 +466,7 @@
             <field name="name">Base of Taxed Purchases</field>
             <field name="parent_id" ref="vat_code_base_net"/>
         </record>
-
+<!--
         <record id="opening_journal" model="account.journal">
             <field name="name">Opening Journal</field>
             <field name="code">OPJ</field>
@@ -475,7 +475,7 @@
             <field name="sequence_id" ref="account.sequence_journal"/>
             <field name="user_id" ref="base.user_root"/>
         </record>
-
+-->
         <record id="cose_journal_opening" model="account.analytic.journal">
             <field name="code">OPJ</field>
             <field name="name">Opening Journal</field>
@@ -494,6 +494,6 @@
             <field name="property_account_income_categ" ref="IA_AC122"/>
             <field name="property_reserve_and_surplus_account" ref="IA_AC0232"/>
         </record>
-        
+
     </data>
 </openerp>

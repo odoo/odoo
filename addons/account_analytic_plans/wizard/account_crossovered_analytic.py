@@ -18,37 +18,38 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 import time
 
 from osv import osv, fields
 from tools.translate import _
 
 class account_crossovered_analytic(osv.osv_memory):
-    _name = 'account.crossovered.analytic'
-    _description = 'Print Crossovered Analytic'
+    _name = "account.crossovered.analytic"
+    _description = "Print Crossovered Analytic"
     _columns = {
         'date1': fields.date('Start Date', required=True),
         'date2': fields.date('End Date', required=True),
         'journal_ids': fields.many2many('account.analytic.journal', 'crossovered_journal_rel', 'crossover_id', 'journal_id', 'Analytic Journal'),
         'ref': fields.many2one('account.analytic.account', 'Analytic Account Reference', required=True),
         'empty_line': fields.boolean('Dont show empty lines'),
-                }
+    }
     _defaults = {
          'date1': lambda *a: time.strftime('%Y-01-01'),
          'date2': lambda *a: time.strftime('%Y-%m-%d'),
-                 }
+    }
 
     def print_report(self, cr, uid, ids, context=None):
-        cr.execute('select account_id from account_analytic_line')
+        cr.execute('SELECT account_id FROM account_analytic_line')
         res = cr.fetchall()
         acc_ids = [x[0] for x in res]
 
         data = self.read(cr, uid, ids, [], context=context)[0]
 
-        obj_acc = self.pool.get('account.analytic.account').browse(cr, uid, data['ref'])
+        obj_acc = self.pool.get('account.analytic.account').browse(cr, uid, data['ref'], context=context)
         name = obj_acc.name
 
-        account_ids = self.pool.get('account.analytic.account').search(cr, uid, [('parent_id', 'child_of', [data['ref']])])
+        account_ids = self.pool.get('account.analytic.account').search(cr, uid, [('parent_id', 'child_of', [data['ref']])], context=context)
 
         flag = True
         for acc in account_ids:
@@ -62,12 +63,12 @@ class account_crossovered_analytic(osv.osv_memory):
              'ids': [],
              'model': 'account.analytic.account',
              'form': data
-                 }
+        }
         return {
             'type': 'ir.actions.report.xml',
             'report_name': 'account.analytic.account.crossovered.analytic',
             'datas': datas,
-            }
+        }
 
 account_crossovered_analytic()
 

@@ -32,7 +32,7 @@ This module installs:
     *the main taxes used in Luxembourg""",
     'author': 'OpenERP SA',
     'website': 'http://openerp.com',
-    'depends': ['account', 'account_report', 'base_vat', 'base_iban'],
+    'depends': ['account', 'base_vat', 'base_iban'],
     'init_xml': [],
     'update_xml': [
         'account.tax.code.template.csv',
@@ -41,7 +41,8 @@ This module installs:
         'account.tax.template.csv',
         'wizard/print_vat_view.xml'
     ],
-    'demo_xml': ['account.report.report.csv'],
+    'test': ['test/l10n_lu_report.yml'],
+    'demo_xml': [],
     'installable': True,
     'active': False,
     'certificate': '0078164766621',

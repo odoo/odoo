@@ -20,8 +20,6 @@
 ##############################################################################
 
 from osv import fields, osv
-from tools.translate import _
-import tools
 
 class account_move_line_unreconcile_select(osv.osv_memory):
     _name = "account.move.line.unreconcile.select"
@@ -29,7 +27,7 @@ class account_move_line_unreconcile_select(osv.osv_memory):
     _columns ={
        'account_id': fields.many2one('account.account','Account',required=True),
     }
-    def action_open_window(self, cr, uid, ids, context={}):
+    def action_open_window(self, cr, uid, ids, context=None):
         data = self.read(cr, uid, ids, context=context)[0]
         return {
                 'domain': "[('account_id','=',%d),('reconcile_id','<>',False),('state','<>','draft')]" % data['account_id'],

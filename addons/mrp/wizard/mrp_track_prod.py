@@ -38,7 +38,7 @@ class mrp_track_move(osv.osv_memory):
         if record_id:
             prod_obj = self.pool.get('mrp.production')
             try:
-                prod = prod_obj.browse(cr, uid, record_id)
+                prod = prod_obj.browse(cr, uid, record_id, context=context)
                 for m in [line for line in prod.move_created_ids]:
                     if 'track%s'%(m.id) not in self._columns:
                         self._columns['track%s'%(m.id)] = fields.boolean(string=m.product_id.name)
@@ -54,6 +54,8 @@ class mrp_track_move(osv.osv_memory):
          @param context: A standard dictionary 
          @return: New arch of view.
         """
+        if context is None:
+            context = {}
         res = super(mrp_track_move, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar,submenu=False)
         record_id = context and context.get('active_id', False) or False
         active_model = context.get('active_model')
@@ -62,7 +64,7 @@ class mrp_track_move(osv.osv_memory):
             return res
         
         prod_obj = self.pool.get('mrp.production')
-        prod = prod_obj.browse(cr, uid, record_id)
+        prod = prod_obj.browse(cr, uid, record_id, context=context)
         if prod.state != 'done':
             res['arch'] = '''<form string="Track lines">
                                 <label colspan="4" string="You can not split an unfinished production Output." />
@@ -87,7 +89,7 @@ class mrp_track_move(osv.osv_memory):
         
         return res
     
-    def track_lines(self, cr, uid, ids, context):
+    def track_lines(self, cr, uid, ids, context=None):
         """ Tracks Finished products and splits products to finish lines.
          @param self: The object pointer.
          @param cr: A database cursor
@@ -96,17 +98,19 @@ class mrp_track_move(osv.osv_memory):
          @param context: A standard dictionary 
          @return: 
         """
+        if context is None:
+            context = {}
         record_id = context and context.get('active_id', False) or False
         assert record_id, 'Active ID not found'
         data = self.read(cr, uid, ids[0])
         prod_obj = self.pool.get('mrp.production')
-        prod = prod_obj.browse(cr, uid, record_id)
+        prod = prod_obj.browse(cr, uid, record_id, context=context)
         if not prod.move_created_ids and prod.state != 'done':
             return {}
         prodlot_obj = self.pool.get('stock.production.lot')
         move_obj = self.pool.get('stock.move')
         move_ids = [m.id for m in [line for line in prod.move_created_ids]]
-        for idx, move in enumerate(move_obj.browse(cr, uid, move_ids)):
+        for idx, move in enumerate(move_obj.browse(cr, uid, move_ids, context=context)):
             if data['track%s' %move.id]:
                 for idx in range(int(move.product_qty)):
                     update_val = {'product_qty': 1}
@@ -117,7 +121,7 @@ class mrp_track_move(osv.osv_memory):
                     new_prodlot = prodlot_obj.create(cr, uid, {'name': 'PRODUCTION:%d:LOT:%d' % (record_id, idx+1), 'product_id': move.product_id.id})
                     update_val['prodlot_id'] = new_prodlot
                     move_obj.write(cr, uid, [current_move], update_val)
-        return {}
+        return {'type': 'ir.actions.act_window_close'}
 
 mrp_track_move()
 

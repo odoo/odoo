@@ -21,6 +21,7 @@
 
 from osv import osv, fields
 from tools.translate import _
+import re
 
 class crm_lead2partner(osv.osv_memory):
     """ Converts lead to partner """
@@ -32,8 +33,8 @@ class crm_lead2partner(osv.osv_memory):
         'action': fields.selection([('exist', 'Link to an existing partner'), \
                                     ('create', 'Create a new partner')], \
                                     'Action', required=True),
-        'partner_id': fields.many2one('res.partner', 'Partner')
-        }
+        'partner_id': fields.many2one('res.partner', 'Partner'),
+    }
 
     def view_init(self, cr, uid, fields, context=None):
         """
@@ -64,31 +65,47 @@ class crm_lead2partner(osv.osv_memory):
 
         @return : default values of fields.
         """
+
         lead_obj = self.pool.get('crm.lead')
         partner_obj = self.pool.get('res.partner')
         contact_obj = self.pool.get('res.partner.address')
-        rec_ids = context and context.get('active_ids', [])
         partner_id = False
 
         data = context and context.get('active_ids', []) or []
         res = super(crm_lead2partner, self).default_get(cr, uid, fields, context=context)
 
         for lead in lead_obj.browse(cr, uid, data, context=context):
-            partner_ids = partner_obj.search(cr, uid, [('name', '=', lead.partner_name or lead.name)])
-            if not partner_ids and lead.email_from:
-                address_ids = contact_obj.search(cr, uid, [('email', '=', lead.email_from)])
+            partner_ids = []
+            # Find partner address matches the email_from of the lead
+            email = re.findall(r'([^ ,<@]+@[^> ,]+)', lead.email_from or '')
+            email = map(lambda x: "'" + x + "'", email)
+            if email:
+                cr.execute("""select id from res_partner_address
+                                where
+                                substring(email from '([^ ,<@]+@[^> ,]+)') in (%s)""" % (','.join(email)))
+                address_ids = map(lambda x: x[0], cr.fetchall())
                 if address_ids:
                     addresses = contact_obj.browse(cr, uid, address_ids)
                     partner_ids = addresses and [addresses[0].partner_id.id] or False
+
+            # Find partner name that matches the name of the lead
+            if not partner_ids and lead.partner_name:
+                partner_ids = partner_obj.search(cr, uid, [('name', '=', lead.partner_name)], context=context)
+            if not partner_ids:
+                cr.execute("""SELECT p.id from res_partner p
+                            where regexp_replace(lower(p.name), '[^a-z]*', '', 'g') = regexp_replace(%s, '[^a-z]*', '', 'g')""", (lead.name.lower(), ))
+                partner_ids = map(lambda x: x[0], cr.fetchall())
             partner_id = partner_ids and partner_ids[0] or False
 
             if 'partner_id' in fields:
                 res.update({'partner_id': partner_id})
             if 'action' in fields:
                 res.update({'action': partner_id and 'exist' or 'create'})
+            if 'opportunity_ids' in fields:
+                res.update({'opportunity_ids': data})
 
         return res
-    
+
     def open_create_partner(self, cr, uid, ids, context=None):
         """
         This function Opens form of create partner.
@@ -100,7 +117,7 @@ class crm_lead2partner(osv.osv_memory):
 
         @return : Dictionary value for next form.
         """
-        if not context:
+        if context is None:
             context = {}
 
         view_obj = self.pool.get('ir.ui.view')
@@ -128,7 +145,7 @@ class crm_lead2partner(osv.osv_memory):
 
         @return : Dictionary {}.
         """
-        if not context:
+        if context is None:
             context = {}
 
         lead_obj = self.pool.get('crm.lead')
@@ -139,17 +156,17 @@ class crm_lead2partner(osv.osv_memory):
         contact_id = False
         rec_ids = context and context.get('active_ids', [])
 
-        for data in self.browse(cr, uid, ids):
-            for lead in lead_obj.browse(cr, uid, rec_ids):
+        for data in self.browse(cr, uid, ids, context=context):
+            for lead in lead_obj.browse(cr, uid, rec_ids, context=context):
                 if data.action == 'create':
                     partner_id = partner_obj.create(cr, uid, {
-                        'name': lead.partner_name or lead.name,
+                        'name': lead.partner_name or lead.contact_name or lead.name,
                         'user_id': lead.user_id.id,
                         'comment': lead.description,
                     })
                     contact_id = contact_obj.create(cr, uid, {
                         'partner_id': partner_id,
-                        'name': lead.name,
+                        'name': lead.contact_name,
                         'phone': lead.phone,
                         'mobile': lead.mobile,
                         'email': lead.email_from,
@@ -168,16 +185,14 @@ class crm_lead2partner(osv.osv_memory):
                     if data.partner_id:
                         partner_id = data.partner_id.id
                         contact_id = partner_obj.address_get(cr, uid, [partner_id])['default']
-
+                self.assign_partner(cr, uid, lead.id, partner_id)
                 partner_ids.append(partner_id)
-
-                vals = {}
-                if partner_id:
-                    vals.update({'partner_id': partner_id})
-                if contact_id:
-                    vals.update({'partner_address_id': contact_id})
-                lead_obj.write(cr, uid, [lead.id], vals)
         return partner_ids
+
+
+    def assign_partner(self, cr, uid, lead_id, partner_id):
+        self.pool.get("crm.lead").write(cr, uid, [lead_id], {'partner_id' : partner_id})
+
 
     def make_partner(self, cr, uid, ids, context=None):
         """
@@ -190,26 +205,15 @@ class crm_lead2partner(osv.osv_memory):
 
         @return : Dictionary value for created Partner form.
         """
-        if not context:
+        if context is None:
             context = {}
 
-        partner_ids = self._create_partner(cr, uid, ids, context)
+        partner_ids = self._create_partner(cr, uid, ids, context=context)
         mod_obj = self.pool.get('ir.model.data')
         result = mod_obj._get_id(cr, uid, 'base', 'view_res_partner_filter')
         res = mod_obj.read(cr, uid, result, ['res_id'])
-
-        value = {
-            'domain': "[]",
-            'view_type': 'form',
-            'view_mode': 'form,tree',
-            'res_model': 'res.partner',
-            'res_id': partner_ids and int(partner_ids[0]) or False,
-            'view_id': False,
-            'context': context,
-            'type': 'ir.actions.act_window',
-            'search_view_id': res['res_id']
-        }
-        return value
+        print partner_ids
+        return {'type': 'ir.actions.act_window_close'}
 
 crm_lead2partner()
 

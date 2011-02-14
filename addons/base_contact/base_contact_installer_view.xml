@@ -31,9 +31,7 @@
                             <label string="Otherwise these details will not be visible from address/contact."  colspan="4"/>
                             <label string="Do you want to migrate your Address data in Contact Data?" colspan="4" />
                             <group colspan="6">
-                                <label string="Migrate:" colspan="1"/>
-                                <field name="migrate" string="Yes" colspan="1"/>
-                                <field name="nomigrate" string="No" colspan="1"/>
+                                <field name="migrate" string="Migrate" colspan="1"/>
                             </group>
                         </group>
                     </group>
@@ -54,6 +52,7 @@
         <record id="base_contact_installer_todo" model="ir.actions.todo">
             <field name="action_id" ref="action_base_contact_installer"/>
             <field name="sequence">3</field>
+            <field name="state">skip</field>
         </record>
 
     </data>
