@@ -97,7 +97,7 @@ class survey_send_invitation(osv.osv_memory):
         if context is None:
             context = {}
         record = self.read(cr, uid, ids, [])
-        survey_ids =  context.get('active_ids', [])
+        survey_ids =  context.get('active_ids', [], context=context)
         record = record and record[0]
         partner_ids = record['partner_ids']
         user_ref= self.pool.get('res.users')

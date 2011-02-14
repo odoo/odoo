@@ -42,14 +42,14 @@ class auction_pay_sel(osv.osv_memory):
         @param context: A standard dictionary
         @return:
         """
-        if context is None: 
+        if context is None:
             context = {}
         lot = self.pool.get('auction.lots').browse(cr, uid, context['active_id'], context=context)
         invoice_obj = self.pool.get('account.invoice')
-        for datas in self.read(cr, uid, ids, context=context):
-            account_id = datas.get('writeoff_acc_id', False)
-            period_id = datas.get('period_id', False)
-            journal_id = datas.get('journal_id', False)
+        for datas in self.browse(cr, uid, ids, context=context):
+            account_id = datas.dest_account_id and datas.dest_account_id.id or False
+            period_id = datas.period_id and datas.period_id.id or False
+            journal_id = datas.journal_id and datas.journal_id.id or False
             if lot.sel_inv_id:
                 p = invoice_obj.pay_and_reconcile(['lot.sel_inv_id.id'], datas['amount'], datas['dest_account_id'], journal_id, account_id, period_id, journal_id, context)
             return {'type': 'ir.actions.act_window_close'}

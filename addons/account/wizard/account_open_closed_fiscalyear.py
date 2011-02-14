@@ -35,6 +35,8 @@ class account_open_closed_fiscalyear(osv.osv_memory):
         move_obj = self.pool.get('account.move')
 
         data = self.read(cr, uid, ids, [], context=context)[0]
+        if isinstance(data['fyear_id'], tuple):
+            data['fyear_id'] = data['fyear_id'][0]
         data_fyear = fy_obj.browse(cr, uid, data['fyear_id'], context=context)
         if not data_fyear.end_journal_period_id:
             raise osv.except_osv(_('Error !'), _('No End of year journal defined for the fiscal year'))

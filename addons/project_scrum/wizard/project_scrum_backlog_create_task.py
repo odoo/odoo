@@ -34,7 +34,9 @@ class backlog_create_task(osv.osv_memory):
         document_pool = self.pool.get('ir.attachment')
         ids_task = []
 
-        data = self.read(cr, uid, ids, [], context=context)[0]
+        record = self.browse(cr, uid, ids, context=context)[0]
+        user = record.user_id and record.user_id.id or False
+
         backlogs = backlog_id.browse(cr, uid, context['active_ids'], context=context)
         result = mod_obj._get_id(cr, uid, 'project', 'view_task_search_form')
         id = mod_obj.read(cr, uid, result, ['res_id'])
@@ -45,7 +47,7 @@ class backlog_create_task(osv.osv_memory):
                 'name': backlog.name,
                 'description': backlog.note,
                 'project_id': backlog.project_id.id,
-                'user_id': data['user_id'] or False,
+                'user_id': user,
                 'planned_hours': backlog.expected_hours,
                 'remaining_hours':backlog.expected_hours,
                 'sequence':backlog.sequence,
