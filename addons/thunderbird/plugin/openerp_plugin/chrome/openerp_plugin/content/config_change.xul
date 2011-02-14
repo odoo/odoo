@@ -3,23 +3,33 @@
 <!DOCTYPE window SYSTEM "chrome://openerp_plugin/locale/config_change.dtd">
 <window xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
 	xmlns:html="http://www.w3.org/1999/xhtml"  onload="config_change_load();"
-	title="Openerp Connection" height="140" width="240">
+	title="Openerp Connection" height="180" width="320">
 <script type="text/javascript" src="chrome://openerp_plugin/content/tiny_xmlrpc.js"></script>
 <script type="text/javascript" src="chrome://openerp_plugin/content/config.js"></script>
 <script type="text/javascript" src="chrome://openerp_plugin/content/loaddata.js"></script>
 <script type="text/javascript" src="chrome://openerp_plugin/content/static.js"></script>
 <script type="text/javascript" src="chrome://openerp_plugin/content/overlay.js"></script>
 	<hbox>
-	 <label  align="center" id="heading"  value="&lblheading.label;" style="padding-left:38px" />
+	 <label  align="left" id="heading"  value="&lblheading.label;" style="padding-left:38px" />
     </hbox>
-<groupbox id="gpData" width="200">
+    <vbox style="border:0.5px solid gray" width="190"/>
+	<groupbox id="gpData" width="200">
 	<hbox >
 		<label id="lblurl" control="txtcurl" value="&lblurl.label;" width="50"/>
-		<textbox id="txtcurl" width="140" />
+		<textbox id="txtcurl" width="170" />
 	</hbox>
 	<hbox>	
 		<label id="lblport" control="txtcport" value="&lblport.label;" width="50"/>
-		<textbox id="txtcport" width="140" />
+		<textbox id="txtcport" width="170" />
+	</hbox>
+
+	<hbox>
+		<label id="dbprotocol"  value="&lblprotocol.label;" width="97" />
+		<menulist id="dbprotocol_list" width="140">
+			<menupopup>
+				<menuitem label="" value=""/>
+			</menupopup>
+		</menulist>
 	</hbox>
     
 </groupbox>
