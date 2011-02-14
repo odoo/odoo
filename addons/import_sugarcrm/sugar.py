@@ -1,9 +1,6 @@
 
 import hashlib
-import datetime, time
 from sugarsoap_services import *
-import unittest
-
 class LoginError(Exception): pass
 
 class SugarCRM:

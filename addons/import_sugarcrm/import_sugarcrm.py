@@ -21,7 +21,6 @@
 
 from osv import fields, osv
 import sugar
-import tools
 from tools.translate import _
 
 class import_sugarcrm(osv.osv):
