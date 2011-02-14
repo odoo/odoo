@@ -759,7 +759,7 @@ class account_voucher(osv.osv):
                 else:
                     account_id = inv.partner_id.property_account_payable.id
                 move_line = {
-                    'name': name,
+                    'name': inv.comment and inv.comment or name,
                     'account_id': account_id,
                     'move_id': move_id,
                     'partner_id': inv.partner_id.id,
