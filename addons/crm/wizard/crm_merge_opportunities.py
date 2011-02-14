@@ -68,7 +68,7 @@ class crm_merge_opportunity(osv.osv_memory):
         record_id = context and context.get('active_id', False) or False
         if record_id:
             opp_obj = self.pool.get('crm.lead')
-            message_obj = self.pool.get('mailgate.message')
+            message_obj = self.pool.get('email.message')
             current_opp = opp_obj.browse(cr, uid, record_id, context=context)
 
             for this in self.browse(cr, uid, ids, context=context):

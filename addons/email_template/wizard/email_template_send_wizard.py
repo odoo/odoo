@@ -29,7 +29,6 @@ from tools.translate import _
 import tools
 from email_template.email_template import get_value
 
-
 ## FIXME: this wizard duplicates a lot of features of the email template preview,
 ##        one of the 2 should inherit from the other!
 
@@ -51,45 +50,42 @@ class email_template_send_wizard(osv.osv_memory):
         if template.from_account:
             return [(template.from_account.id, '%s (%s)' % (template.from_account.name, template.from_account.email_id))]
         else:
-            account_id = self.pool.get('email_template.account').search(cr,uid,[('company','=','no'),('user','=',uid)], context=context)
-            if account_id:
-                account = self.pool.get('email_template.account').browse(cr,uid,account_id, context)
-                return [(r.id,r.name + " (" + r.email_id + ")") for r in account]
-            else:
-                logger.notifyChannel(_("email-template"), netsvc.LOG_ERROR, _("No personal email accounts are configured for you. \nEither ask admin to enforce an account for this template or get yourself a personal email account."))
-                raise osv.except_osv(_("Missing mail account"),_("No personal email accounts are configured for you. \nEither ask admin to enforce an account for this template or get yourself a personal email account."))
+            logger.notifyChannel(_("email-template"), netsvc.LOG_ERROR, _("No personal email accounts are configured for you. \nEither ask admin to enforce an account for this template or get yourself a personal email account."))
+            raise osv.except_osv(_("Missing mail account"),_("No personal email accounts are configured for you. \nEither ask admin to enforce an account for this template or get yourself a personal email account."))
 
     def get_value(self, cursor, user, template, message, context=None, id=None):
         """Gets the value of the message parsed with the content of object id (or the first 'src_rec_ids' if id is not given)"""
+        if context is None:
+            context = {}
         if not message:
             return ''
         if not id:
-            id = context['src_rec_ids'][0]
+            id = context.get('src_rec_ids',[]) and context.get('src_rec_ids')[0]
         return get_value(cursor, user, id, message, template, context)
-    
+
     def _get_template(self, cr, uid, context=None):
         if context is None:
             context = {}
+        email_temp_obj = self.pool.get('email.template')
         if not 'template' in context and not 'template_id' in context:
             return None
         if 'template_id' in context.keys():
-            template_ids = self.pool.get('email.template').search(cr, uid, [('id','=',context['template_id'])], context=context)
+            template_ids = email_temp_obj.search(cr, uid, [('id','=',context['template_id'])], context=context)
         elif 'template' in context.keys():
             # Old versions of email_template used the name of the template. This caused
             # problems when the user changed the name of the template, but we keep the code
             # for compatibility with those versions.
-            template_ids = self.pool.get('email.template').search(cr, uid, [('name','=',context['template'])], context=context)
+            template_ids = email_temp_obj.search(cr, uid, [('name','=',context['template'])], context=context)
         if not template_ids:
             return None
 
-        template = self.pool.get('email.template').browse(cr, uid, template_ids[0], context)
-
+        template = email_temp_obj.browse(cr, uid, template_ids[0], context)
         lang = self.get_value(cr, uid, template, template.lang, context)
         if lang:
             # Use translated template if necessary
             ctx = context.copy()
             ctx['lang'] = lang
-            template = self.pool.get('email.template').browse(cr, uid, template.id, ctx)
+            template = email_temp_obj.browse(cr, uid, template.id, ctx)
         return template
 
     def _get_template_value(self, cr, uid, field, context=None):
@@ -102,6 +98,15 @@ class email_template_send_wizard(osv.osv_memory):
             return getattr(template, field)
         else: # Simple Mail: Gets computed template values
             return self.get_value(cr, uid, template, getattr(template, field), context)
+
+    def default_get(self, cr, uid, fields, context=None):
+        if context is None:
+            context = {}
+        result = super(email_template_send_wizard, self).default_get(cr, uid, fields, context=context)
+        if 'template_id' in context and context.get('template_id'):
+            temp_data = self.pool.get('email.template').read(cr, uid, int(context.get('template_id')), ['attachment_ids'])
+            result['attachment_ids'] = temp_data['attachment_ids']
+        return result
 
     _columns = {
         'state':fields.selection([
@@ -116,13 +121,13 @@ class email_template_send_wizard(osv.osv_memory):
         'to':fields.char('To',size=250,required=True),
         'cc':fields.char('CC',size=250,),
         'bcc':fields.char('BCC',size=250,),
-        'reply_to':fields.char('Reply-To', 
-                    size=250, 
+        'reply_to':fields.char('Reply-To',
+                    size=250,
                     help="The address recipients should reply to,"
                          " if different from the From address."
                          " Placeholders can be used here."),
-        'message_id':fields.char('Message-ID', 
-                    size=250, 
+        'message_id':fields.char('Message-ID',
+                    size=250,
                     help="The Message-ID header value, if you need to"
                          "specify it, for example to automatically recognize the replies later."
                         " Placeholders can be used here."),
@@ -133,15 +138,15 @@ class email_template_send_wizard(osv.osv_memory):
         'signature':fields.boolean('Attach my signature to mail'),
         #'filename':fields.text('File Name'),
         'requested':fields.integer('No of requested Mails',readonly=True),
-        'generated':fields.integer('No of generated Mails',readonly=True), 
+        'generated':fields.integer('No of generated Mails',readonly=True),
         'full_success':fields.boolean('Complete Success',readonly=True),
         'attachment_ids': fields.many2many('ir.attachment','send_wizard_attachment_rel', 'wizard_id', 'attachment_id', 'Attachments'),
     }
 
-    #FIXME: probably better by overriding default_get directly 
+    #FIXME: probably better by overriding default_get directly
     _defaults = {
-        'state': lambda self,cr,uid,ctx: len(ctx['src_rec_ids']) > 1 and 'multi' or 'single',
-        'rel_model': lambda self,cr,uid,ctx: self.pool.get('ir.model').search(cr,uid,[('model','=',ctx['src_model'])],context=ctx)[0],
+        'state': lambda self,cr,uid,ctx: len(ctx.get('src_rec_ids','')) > 1 and 'multi' or 'single',
+        'rel_model': lambda self,cr,uid,ctx: self.pool.get('ir.model').search(cr,uid,[('model','=',ctx.get('src_model'))],context=ctx)[0],
         'rel_model_ref': lambda self,cr,uid,ctx: ctx['active_id'],
         'to': lambda self,cr,uid,ctx: self._get_template_value(cr, uid, 'def_to', ctx),
         'cc': lambda self,cr,uid,ctx: self._get_template_value(cr, uid, 'def_cc', ctx),
@@ -154,9 +159,7 @@ class email_template_send_wizard(osv.osv_memory):
         'ref_template':lambda self,cr,uid,ctx: self._get_template(cr, uid, ctx).id,
         'reply_to': lambda self,cr,uid,ctx: self._get_template_value(cr, uid, 'reply_to', ctx),
         'reply_to': lambda self,cr,uid,ctx: self._get_template_value(cr, uid, 'reply_to', ctx),
-        'requested':lambda self,cr,uid,ctx: len(ctx['src_rec_ids']),
-        'full_success': False,
-        'attachment_ids': [], 
+        'requested':lambda self,cr,uid,ctx: len(ctx.get('src_rec_ids','')),
     }
 
     def fields_get(self, cr, uid, fields=None, context=None, write_access=True):
@@ -171,15 +174,15 @@ class email_template_send_wizard(osv.osv_memory):
         if context is None:
             context = {}
         mailid = self.save_to_mailbox(cr, uid, ids, context=context)
-        if self.pool.get('email_template.mailbox').write(cr, uid, mailid, {'folder':'drafts'}, context):
-            return {'type':'ir.actions.act_window_close' }
+        self.pool.get('email.message').write(cr, uid, mailid, {'folder':'drafts', 'state': 'na'}, context)
+        return {}
 
     def send_mail(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
         mailid = self.save_to_mailbox(cr, uid, ids, context)
-        if self.pool.get('email_template.mailbox').write(cr, uid, mailid, {'folder':'outbox'}, context):
-            return {'type':'ir.actions.act_window_close' }
+        self.pool.get('email.message').write(cr, uid, mailid, {'folder':'outbox', 'state': 'waiting'}, context)
+        return {}
 
     def get_generated(self, cr, uid, ids=None, context=None):
         if ids is None:
@@ -187,11 +190,11 @@ class email_template_send_wizard(osv.osv_memory):
         if context is None:
             context = {}
         logger = netsvc.Logger()
-        if context['src_rec_ids'] and len(context['src_rec_ids'])>1:
+        if context.get('src_rec_ids'):
             #Means there are multiple items selected for email.
             mail_ids = self.save_to_mailbox(cr, uid, ids, context)
             if mail_ids:
-                self.pool.get('email_template.mailbox').write(cr, uid, mail_ids, {'folder':'outbox'}, context)
+                self.pool.get('email.message').write(cr, uid, mail_ids, {'folder':'outbox', 'state': 'waiting'}, context)
                 logger.notifyChannel("email-template", netsvc.LOG_INFO, _("Emails for multiple items saved in outbox."))
                 self.write(cr, uid, ids, {
                     'generated':len(mail_ids),
@@ -200,48 +203,48 @@ class email_template_send_wizard(osv.osv_memory):
             else:
                 raise osv.except_osv(_("Email Template"),_("Email sending failed for one or more objects."))
         return True
-     
+
     def save_to_mailbox(self, cr, uid, ids, context=None):
         def get_end_value(id, value):
             if len(context['src_rec_ids']) > 1: # Multiple Mail: Gets value from the template
                 return self.get_value(cr, uid, template, value, context, id)
             else:
                 return value
-
         if context is None:
             context = {}
         mail_ids = []
+        email_message_obj = self.pool.get('email.message')
+        attahcment_obj = self.pool.get('ir.attachment')
+        smtp_obj = self.pool.get('email.smtp_server')
+        user_obj = self.pool.get('res.users')
+        report_xml_obj = self.pool.get('ir.actions.report.xml')
+        model_obj = self.pool.get('ir.model')
         template = self._get_template(cr, uid, context)
-        for id in context['src_rec_ids']:
-            screen_vals = self.read(cr, uid, ids[0], [],context)
-            account = self.pool.get('email_template.account').read(cr, uid, screen_vals['from'], context=context)
+        for id in context.get('src_rec_ids',[]):
+            screen_vals = self.read(cr, uid, ids[0], [], context)
+            smtp_data = smtp_obj.browse(cr, uid, screen_vals['from'], context=context)
             vals = {
-                'email_from': tools.ustr(account['name']) + "<" + tools.ustr(account['email_id']) + ">",
+                'email_from': tools.ustr(smtp_data.name) + "<" + tools.ustr(smtp_data.email_id) + ">",
                 'email_to': get_end_value(id, screen_vals['to']),
                 'email_cc': get_end_value(id, screen_vals['cc']),
                 'email_bcc': get_end_value(id, screen_vals['bcc']),
-                'subject': get_end_value(id, screen_vals['subject']),
-                'body_text': get_end_value(id, screen_vals['body_text']),
-                'body_html': get_end_value(id, screen_vals['body_html']),
-                'account_id': screen_vals['from'],
+                'name': get_end_value(id, screen_vals['subject']),
+                'description': get_end_value(id, screen_vals['body_text']) + "\n" + get_end_value(id, screen_vals['body_html'] or ''),
                 'state':'na',
-                'mail_type':'multipart/alternative' #Options:'multipart/mixed','multipart/alternative','text/plain','text/html'
             }
             if screen_vals['signature']:
-                signature = self.pool.get('res.users').read(cr, uid, uid, ['signature'], context)['signature']
+                signature = user_obj.browse(cr, uid, uid, context).signature
                 if signature:
-                    vals['body_text'] = tools.ustr(vals['body_text'] or '') + signature
-                    vals['body_html'] = tools.ustr(vals['body_html'] or '') + signature
+                    vals['description'] = tools.ustr(vals['description'] or '') + signature
 
             attachment_ids = []
-
             #Create partly the mail and later update attachments
-            mail_id = self.pool.get('email_template.mailbox').create(cr, uid, vals, context)
+            mail_id = email_message_obj.create(cr, uid, vals, context)
             mail_ids.append(mail_id)
             if template.report_template:
-                reportname = 'report.' + self.pool.get('ir.actions.report.xml').read(cr, uid, template.report_template.id, ['report_name'], context)['report_name']
+                reportname = 'report.' + report_xml_obj.browse(cr, uid, template.report_template.id, context).report_name
                 data = {}
-                data['model'] = self.pool.get('ir.model').browse(cr, uid, screen_vals['rel_model'], context).model
+                data['model'] = model_obj.browse(cr, uid, screen_vals['rel_model'], context).model
 
                 # Ensure report is rendered using template's language
                 ctx = context.copy()
@@ -249,31 +252,29 @@ class email_template_send_wizard(osv.osv_memory):
                     ctx['lang'] = self.get_value(cr, uid, template, template.lang, context, id)
                 service = netsvc.LocalService(reportname)
                 (result, format) = service.create(cr, uid, [id], data, ctx)
-                attachment_id = self.pool.get('ir.attachment').create(cr, uid, {
-                    'name': _('%s (Email Attachment)') % tools.ustr(vals['subject']),
+                attachment_id = attahcment_obj.create(cr, uid, {
+                    'name': _('%s (Email Attachment)') % tools.ustr(vals['name']),
                     'datas': base64.b64encode(result),
                     'datas_fname': tools.ustr(get_end_value(id, screen_vals['report']) or _('Report')) + "." + format,
-                    'description': vals['body_text'] or _("No Description"),
-                    'res_model': 'email_template.mailbox',
+                    'description': vals['description'] or _("No Description"),
+                    'res_model': 'email.message',
                     'res_id': mail_id
                 }, context)
-                attachment_ids.append( attachment_id )
+                attachment_ids.append(attachment_id)
 
             # Add document attachments
             for attachment_id in screen_vals.get('attachment_ids',[]):
-                new_id = self.pool.get('ir.attachment').copy(cr, uid, attachment_id, {
-                    'res_model': 'email_template.mailbox',
+                new_id = attahcment_obj.copy(cr, uid, attachment_id, {
+                    'res_model': 'email.message',
                     'res_id': mail_id,
                 }, context)
-                attachment_ids.append( new_id )
-
+                attachment_ids.append(new_id)
             if attachment_ids:
-                self.pool.get('email_template.mailbox').write(cr, uid, mail_id, {
-                    'attachments_ids': [[6, 0, attachment_ids]],
-                    'mail_type': 'multipart/mixed'
+                email_message_obj.write(cr, uid, mail_id, {
+                    'attachment_ids': [[6, 0, attachment_ids]],
                 }, context)
-
         return mail_ids
+
 email_template_send_wizard()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

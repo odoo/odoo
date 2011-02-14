@@ -57,14 +57,13 @@ class crm_send_new_email(osv.osv_memory):
         'body': fields.text('Message Body', required=True),
         'state': fields.selection(AVAILABLE_STATES, string='Set New State To', required=True),
         'attachment_ids' : fields.one2many('crm.send.mail.attachment', 'wizard_id'),
-        'html': fields.boolean('HTML formatting?', help="Select this if you want to send email with HTML formatting."), 
+        'html': fields.boolean('HTML formatting?', help="Select this if you want to send email with HTML formatting."),
     }
 
     def action_send(self, cr, uid, ids, context=None):
         """ This sends an email to ALL the addresses of the selected partners.
         """
-        hist_obj = self.pool.get('mailgate.message')
-
+        email_message_obj = self.pool.get('email.message')
         if context is None:
             context = {}
 
@@ -103,7 +102,7 @@ class crm_send_new_email(osv.osv_memory):
                 attach += attach_all
 
             else:
-                hist = hist_obj.browse(cr, uid, res_id, context=context)
+                hist = email_message_obj.browse(cr, uid, res_id, context=context)
                 message_id = hist.message_id
                 model = hist.model
                 case_pool = self.pool.get(model)
@@ -124,11 +123,12 @@ class crm_send_new_email(osv.osv_memory):
             if obj.html:
                 subtype = 'html'
 
-            flag = tools.email_send(
+            flag = email_message_obj.email_send(cr, uid,
                 email_from,
                 emails,
                 obj.subject,
                 body,
+                model='crm.send.mail',
                 email_cc=email_cc,
                 attach=attach,
                 subtype=subtype,
@@ -204,7 +204,7 @@ class crm_send_new_email(osv.osv_memory):
         """
         This function gets default values for reply mail
         """
-        hist_obj = self.pool.get('mailgate.message')
+        hist_obj = self.pool.get('email.message')
         res_ids = context and context.get('active_ids', []) or []
 
         user_obj = self.pool.get('res.users')

@@ -20,8 +20,8 @@
 #
 ##############################################################################
 
-import email_template_account
 import email_template
-import email_template_mailbox
 import wizard
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
