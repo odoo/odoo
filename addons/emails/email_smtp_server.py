@@ -133,10 +133,8 @@ unless it is already specified in the From Email, e.g: John Doe <john@doe.com>",
         default_ids = self.search(cr, uid, [('default','=',True)])
         if len(default_ids) > 1:
             return False
-        elif not default_ids:
-            return False
-        else:
-            return True
+        
+        return True
 
     _constraints = [
         (_constraint_unique,

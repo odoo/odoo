@@ -160,7 +160,6 @@
                             <separator string="" colspan="4"/>
                             <label string="" colspan="2"/>
                             <button name="test_smtp_connection" type="object" string="Test Connection" icon="gtk-network" colspan="2"/>
-                           
                         </page>
                     </notebook>
                 </form>
@@ -172,12 +171,12 @@
             <field name="model">email.smtp_server</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Email Accounts">
+                <tree string="SMTP Server">
                     <field name="name"/>
                     <field name="email_id"/>
-                    <field name="smtpuname"/>
                     <field name="smtpserver"/>
-                    <field name="smtpport"/>
+                    <field name="default"/>
+                    <button name="test_smtp_connection" type="object" string="Test Connection" icon="gtk-network"/>
                 </tree>
             </field>
         </record>
@@ -187,7 +186,7 @@
             <field name="model">email.smtp_server</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
-                <search string="Email Smtp Server">
+                <search string="Smtp Server">
                     <field name="name"/>
                     <field name="email_id"/>
                 </search>

@@ -3,7 +3,7 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2009 Sharoon Thomas
-#    Copyright (C) 2010-2011 OpenERP SA (<http://www.openerp.com>)
+#    Copyright (C) 2010-Today OpenERP SA (<http://www.openerp.com>)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -31,90 +31,46 @@ from tools.translate import _
 import tools
 import pooler
 
-try:
-    from mako.template import Template as MakoTemplate
-except ImportError:
-    logging.getLogger('init').warning("module email_template: Mako templates not installed")
-
-def get_value(cursor, user, recid, message=None, template=None, context=None):
-    """
-    Evaluates an expression and returns its value
-    @param cursor: Database Cursor
-    @param user: ID of current user
-    @param recid: ID of the target record under evaluation
-    @param message: The expression to be evaluated
-    @param template: BrowseRecord object of the current template
-    @param context: OpenERP Context
-    @return: Computed message (unicode) or u""
-    """
-    pool = pooler.get_pool(cursor.dbname)
-    if message is None:
-        message = {}
-    #Returns the computed expression
-    if message:
-        try:
-            message = tools.ustr(message)
-            object = pool.get(template.model_int_name).browse(cursor, user, recid, context=context)
-            env = {
-                'user':pool.get('res.users').browse(cursor, user, user, context=context),
-                'db':cursor.dbname
-               }
-            templ = MakoTemplate(message, input_encoding='utf-8')
-            reply = MakoTemplate(message).render_unicode(object=object, peobject=object, env=env, format_exceptions=True)
-            return reply or False
-        except Exception:
-            logging.exception("can't render %r", message)
-            return u""
-    else:
-        return message
-
 class email_template(osv.osv):
     "Templates for sending Email"
-
+    _inherit = 'email.message'
     _name = "email.template"
     _description = 'Email Templates for Models'
 
-    def change_model(self, cursor, user, ids, object_name, context=None):
+    def get_template_value(self, cr, uid, message=None, model=None, record_id=None, context=None):
+        import mako_template
+        return mako_template.get_value(cr, uid, message=message, model=model, record_id=record_id, context=context)
+
+    def get_email_template(self, cr, uid, template_id=False, record_id=None, context=None):
+        "Return Template Object"
+        if context is None:
+            context = {}
+        if not template_id:
+            template_id = context.get('template_id', False)
+    
+        if not template_id:
+            return False
+
+        template_pool = self.pool.get('email.template')
+        template = template_pool.browse(cr, uid, int(template_id), context)
+        lang = self.get_template_value(cr, uid, template.lang, template.model, record_id, context)
+        if lang:
+            # Use translated template if necessary
+            ctx = context.copy()
+            ctx['lang'] = lang
+            template = self.browse(cr, uid, template.id, ctx)
+        return template
+
+    def onchange_model_id(self, cr, uid, ids, model_id, context=None):
         mod_name = False
-        if object_name:
-            mod_name = self.pool.get('ir.model').browse(cursor, user, object_name, context).model
-        return {'value':{'model_int_name':mod_name}}
+        if model_id:
+            mod_name = self.pool.get('ir.model').browse(cr, uid, model_id, context).model
+        return {'value':{'model':mod_name}}
 
     _columns = {
-        'name' : fields.char('Name', size=100, required=True),
-        'object_name':fields.many2one('ir.model', 'Resource'),
-        'model_int_name':fields.char('Model Internal Name', size=200,),
-        'smtp_server_id':fields.many2one(
-                   'email.smtp_server',
-                   string="SMTP Server",
-                   help="Emails will be sent from this SMTP Server."),
-        'def_to':fields.char(
-                 'Recipient (To)',
-                 size=250,
-                 help="The Recipient of email. "
-                 "Placeholders can be used here. "
-                 "e.g. ${object.email_to}"),
-        'def_cc':fields.char(
-                 'CC',
-                 size=250,
-                 help="Carbon Copy address(es), comma-separated."
-                    " Placeholders can be used here. "
-                    "e.g. ${object.email_cc}"),
-        'def_bcc':fields.char(
-                  'BCC',
-                  size=250,
-                  help="Blind Carbon Copy address(es), comma-separated."
-                    " Placeholders can be used here. "
-                    "e.g. ${object.email_bcc}"),
-        'reply_to':fields.char('Reply-To',
-                    size=250,
-                    help="The address recipients should reply to,"
-                    " if different from the From address."
-                    " Placeholders can be used here. "
-                    "e.g. ${object.email_reply_to}"),
-        'message_id':fields.char('Message-ID',
-                    size=250,
-                    help="Specify the Message-ID SMTP header to use in outgoing emails. Please note that this overrides the Resource tracking option! Placeholders can be used here."),
+        'name': fields.char('Name', size=250, required=True),
+        'model_id':fields.many2one('ir.model', 'Resource'),
+        'model': fields.related('model_id', 'model', string='Model', type="char", size=128, store=True, readonly=True),
         'track_campaign_item':fields.boolean('Resource Tracking',
                                 help="Enable this is you wish to include a special \
 tracking marker in outgoing emails so you can identify replies and link \
@@ -126,25 +82,25 @@ This is useful for CRM leads for example"),
                    help="The default language for the email."
                    " Placeholders can be used here. "
                    "eg. ${object.partner_id.lang}"),
-        'def_subject':fields.char(
+        'subject':fields.char(
                   'Subject',
                   size=200,
                   help="The subject of email."
                   " Placeholders can be used here.",
                   translate=True),
-        'def_body_text':fields.text(
+        'description':fields.text(
                     'Standard Body (Text)',
                     help="The text version of the mail",
                     translate=True),
-        'def_body_html':fields.text(
+        'body_html':fields.text(
                     'Body (Text-Web Client Only)',
                     help="The text version of the mail",
                     translate=True),
-        'use_sign':fields.boolean(
+        'user_signature':fields.boolean(
                   'Signature',
                   help="the signature from the User details"
                   " will be appended to the mail"),
-        'file_name':fields.char(
+        'report_name':fields.char(
                 'Report Filename',
                 size=200,
                 help="Name of the generated report file. Placeholders can be used in the filename. eg: 2009_SO003.pdf",
@@ -226,7 +182,7 @@ This is useful for CRM leads for example"),
             context = {}
         action_obj = self.pool.get('ir.actions.act_window')
         for template in self.browse(cr, uid, ids, context=context):
-            src_obj = template.object_name.model
+            src_obj = template.model_id.model
             vals['ref_ir_act_window'] = action_obj.create(cr, uid, {
                  'name': template.name,
                  'type': 'ir.actions.act_window',
@@ -401,197 +357,106 @@ This is useful for CRM leads for example"),
                         })
         return {'value':result}
 
-    def _add_attachment(self, cursor, user, mailbox_id, name, data, filename, context=None):
-        """
-        Add an attachment to a given mailbox entry.
-        :param data: base64 encoded attachment data to store
-        """
-        attachment_obj = self.pool.get('ir.attachment')
-        attachment_data = {
-            'name':  (name or '') + _(' (Email Attachment)'),
-            'datas': data,
-            'datas_fname': filename,
-            'description': name or _('No Description'),
-            'res_model':'email.message',
-            'res_id': mailbox_id,
-        }
-        attachment_id = attachment_obj.create(cursor, user, attachment_data, context)
-        if attachment_id:
-            self.pool.get('email.message').write(cursor, user, mailbox_id,
-                              {
-                               'attachments_ids':[(4, attachment_id)],
-                               'mail_type':'multipart/mixed'
-                              },
-                              context)
-
-    def generate_attach_reports(self, cursor, user, template, record_id, mail, context=None):
-        """
-        Generate report to be attached and attach it
-        to the email, and add any directly attached files as well.
-
-        @param cursor: Database Cursor
-        @param user: ID of User
-        @param template: Browse record of
-                         template
-        @param record_id: ID of the target model
-                          for which this mail has
-                          to be generated
-        @param mail: Browse record of email object
-        @return: True
-        """
-        if template.report_template:
-            reportname = 'report.' + self.pool.get('ir.actions.report.xml').browse(cursor,
-                                user, template.report_template.id, context).report_name
-            service = netsvc.LocalService(reportname)
-            data = {}
-            data['model'] = template.model_int_name
-            (result, format) = service.create(cursor, user, [record_id], data, context)
-            fname = tools.ustr(get_value(cursor, user, record_id,
-                                         template.file_name, template, context)
-                               or 'Report')
-            ext = '.' + format
-            if not fname.endswith(ext):
-                fname += ext
-            self._add_attachment(cursor, user, mail.id, mail.subject, base64.b64encode(result), fname, context)
-
-        if template.attachment_ids:
-            for attachment in template.attachment_ids:
-                self._add_attachment(cursor, user, mail.id, attachment.name, attachment.datas, attachment.datas_fname, context)
-
-        return True
-
-    def _generate_mailbox_item_from_template(self, cursor, user, template, record_id, context=None):
+    
+    def _generate_email(self, cr, uid, template_id, record_id, context=None):
         """
         Generates an email from the template for
         record record_id of target object
-
-        @param cursor: Database Cursor
-        @param user: ID of User
-        @param template: Browse record of
-                         template
-        @param record_id: ID of the target model
-                          for which this mail has
-                          to be generated
-        @return: ID of created object
         """
         if context is None:
             context = {}
-        #If account to send from is in context select it, else use enforced account
-        if 'account_id' in context.keys():
-            smtp_server_id = self.pool.get('email.smtp_server').read(cursor, user, context.get('account_id'), ['name', 'email_id'], context)
-        else:
-            smtp_server_id = {
-                            'id':template.smtp_server_id.id,
-                            'name':template.smtp_server_id.name,
-                            'email_id':template.smtp_server_id.email_id
-                            }
-        lang = get_value(cursor, user, record_id, template.lang, template, context)
-        if lang:
-            ctx = context.copy()
-            ctx.update({'lang':lang})
-            template = self.browse(cursor, user, template.id, context=ctx)
-
-        # determine name of sender, either it is specified in email_id or we
-        # use the account name
-        email_id = smtp_server_id['email_id'].strip()
+        smtp_pool = self.pool.get('email.smtp_server')
+        email_message_pool = self.pool.get('email.message')
+        report_xml_pool = self.pool.get('ir.actions.report.xml')
+        template = self.get_email_template(cr, uid, template_id, record_id, context)
+        smtp_server_id = context.get('smtp_server_id', False)
+        if not smtp_server_id:
+            smtp_server_id = template.smtp_server_id.id
+        smtp_server = smtp_pool.browse(cr, uid, smtp_server_id, context=context)
+        # determine name of sender, either it is specified in email_id
+        
+        email_id = smtp_server.email_id.strip()
         email_from = re.findall(r'([^ ,<@]+@[^> ,]+)', email_id)[0]
         if email_from != email_id:
-            # we should keep it all, name is probably specified in the address
-            email_from = smtp_server_id['email_id']
+            email_from = smtp_server.email_id
         else:
-            email_from = tools.ustr(smtp_server_id['name']) + "<" + tools.ustr(email_id) + ">"
+            email_from = tools.ustr(smtp_server.name) + "<" + tools.ustr(email_id) + ">"
 
-        # FIXME: should do this in a loop and rename template fields to the corresponding
-        # mailbox fields. (makes no sense to have different names I think.
-        mailbox_values = {
+        model = template.model
+        values = {
             'email_from': email_from,
-            'email_to':get_value(cursor,
-                               user,
-                               record_id,
-                               template.def_to,
-                               template,
-                               context),
-            'email_cc':get_value(cursor,
-                               user,
-                               record_id,
-                               template.def_cc,
-                               template,
-                               context),
-            'email_bcc':get_value(cursor,
-                                user,
-                                record_id,
-                                template.def_bcc,
-                                template,
-                                context),
-            'reply_to':get_value(cursor,
-                                user,
-                                record_id,
-                                template.reply_to,
-                                template,
-                                context),
-            'subject':get_value(cursor,
-                                    user,
-                                    record_id,
-                                    template.def_subject,
-                                    template,
-                                    context),
-            'body_text':get_value(cursor,
-                                      user,
-                                      record_id,
-                                      template.def_body_text,
-                                      template,
-                                      context),
-            'body_html':get_value(cursor,
-                                      user,
-                                      record_id,
-                                      template.def_body_html,
-                                      template,
-                                      context),
-            #This is a mandatory field when automatic emails are sent
-            'state':'na',
-            'folder':'drafts',
-            'mail_type':'multipart/alternative',
-            'template_id': template.id
+            'email_to': self.get_template_value(cr, uid, template.email_to, model, record_id, context),
+            'email_cc': self.get_template_value(cr, uid, template.email_cc, model, record_id, context),
+            'email_bcc': self.get_template_value(cr, uid, template.email_bcc, model, record_id, context),
+            'reply_to': self.get_template_value(cr, uid, template.reply_to, model, record_id, context),
+            'name': self.get_template_value(cr, uid, template.subject, model, record_id, context),
+            'description': self.get_template_value(cr, uid, template.description, model, record_id, context),
+            #'body_html': self.get_template_value(cr, uid, template.body_html, model, record_id, context),
         }
 
-        if template['message_id']:
+        if template.message_id:
             # use provided message_id with placeholders
-            mailbox_values.update({'message_id': get_value(cursor, user, record_id, template['message_id'], template, context)})
+            values.update({'message_id': self.get_template_value(cr, uid, template.message_id, model, record_id, context)})
 
         elif template['track_campaign_item']:
             # get appropriate message-id
-            mailbox_values.update({'message_id': tools.misc.generate_tracking_message_id(record_id)})
-#
-#        if not mailbox_values['account_id']:
-#            raise Exception("Unable to send the mail. No account linked to the template.")
+            values.update({'message_id': tools.misc.generate_tracking_message_id(record_id)})
+
         #Use signatures if allowed
-        if template.use_sign:
-            sign = self.pool.get('res.users').read(cursor, user, user, ['signature'], context)['signature']
-            if mailbox_values['body_text']:
-                mailbox_values['body_text'] += sign
-            if mailbox_values['body_html']:
-                mailbox_values['body_html'] += sign
-        mailbox_id = self.pool.get('email.message').create(cursor, user, mailbox_values, context)
+        if template.user_signature:
+            sign = self.pool.get('res.users').read(cr, uid, uid, ['signature'], context)['signature']
+            if values['description']:
+                values['description'] += sign
+            #if values['body_html']:
+            #    values['body_html'] += sign
+        
+        attachment = []
+        
+        # Add report as a Document
+        if template.report_template:
+            report_name = template.report_name
+            reportname = 'report.' + report_xml_pool.browse(cr, uid, template.report_template.id, context).report_name
+            data = {}
+            data['model'] = template.model
 
-        return mailbox_id
+            # Ensure report is rendered using template's language
+            ctx = context.copy()
+            if template.lang:
+                ctx['lang'] = self.get_template_value(cr, uid, template.lang, template.model, record_id, context)
+            service = netsvc.LocalService(reportname)
+            (result, format) = service.create(cr, uid, [record_id], data, ctx)
+            result = base64.b64encode(result)
+            if not report_name:
+                report_name = reportname
+            report_name = report_name + "." + format
+            attachment.append((report_name, result))
+            
+
+        # Add document attachments
+        for attach in template.attachment_ids:
+            #attach = attahcment_obj.browse(cr, uid, attachment_id, context)
+            attachment.append((attach.datas_fname, attach.datas))
+       
+        #Send emails
+        email_id = email_message_pool.email_send(cr, uid, values.get('email_from'), values.get('email_to'), values.get('name'), values.get('description'), 
+                    model=template.model, email_cc=values.get('email_cc'), email_bcc=values.get('email_bcc'), reply_to=values.get('reply_to'), 
+                    attach=attachment, openobject_id=record_id, debug=True, subtype='plain', x_headers={}, priority='3', smtp_server_id=smtp_server.id, context=context)
+        email_message_pool.write(cr, uid, email_id, {'template_id': template.id})
+        return email_id
 
 
-    def generate_mail(self, cursor, user, template_id, record_ids,  context=None):
+
+    def generate_email(self, cr, uid, ids, record_ids,  context=None):
         if context is None:
             context = {}
-        template = self.browse(cursor, user, template_id, context=context)
-        if not template:
-            raise Exception("The requested template could not be loaded")
-        result = True
-        mailbox_obj = self.pool.get('email.message')
-        for record_id in record_ids:
-            mailbox_id = self._generate_mailbox_item_from_template(cursor, user, template, record_id, context)
-            mail = mailbox_obj.browse(cursor, user, mailbox_id, context=context)
-            if template.report_template or template.attachment_ids:
-                self.generate_attach_reports(cursor, user, template, record_id, mail, context )
-            mailbox_obj.write(cursor, user, mailbox_id, {'folder':'outbox', 'state': 'waiting'}, context=context)
-        return result
-
+        email_message_pool = self.pool.get('email.message')
+        email_ids = []
+        for template in self.browse(cr, uid, ids, context=context):
+            for record_id in record_ids:
+                email_id = self._generate_email(cr, uid, template.id, record_id, context)
+                email_message_pool.write(cr, uid, email_id, {'folder':'outbox', 'state': 'waiting'}, context=context)
+                email_ids.append(email_id)
+        return email_ids
 email_template()
 
 class email_message(osv.osv):

@@ -7,38 +7,38 @@
             <field name="model">email.template</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Email Templates">
+                <form string="Templates">
                     <field name="name"/>
-                    <field name="object_name" required="1"
-                        on_change="change_model(object_name)"/>
-                    <field name="model_int_name" invisible="1"/>
+                    <field name="model_id" required="1"
+                        on_change="onchange_model_id(model_id)"/>
+                    <field name="model" invisible="1"/>
                     <notebook colspan="4">
-                        <page string="Mail Details">
+                        <page string="Email Details">
                             <group col="2" colspan="2">
                                 <separator string="Addresses" colspan="2"/>
                                 <field name="smtp_server_id"/>
-                                <field name="def_to" required="1"/>
-                                <field name="def_cc"/>
-                                <field name="def_bcc"/>
+                                <field name="email_to" required="1"/>
+                                <field name="email_cc"/>
+                                <field name="email_bcc"/>
                                 <field name="reply_to"/>
                             </group>
                             <group col="2" colspan="2">
                                 <separator string="Options" colspan="2"/>
                                 <field name="lang" colspan="4" />
-                                <field name="use_sign" colspan="4" />
+                                <field name="user_signature" colspan="4" />
                                 <field name="track_campaign_item" colspan="4"/>
                             </group>
                             <group col="2" colspan="2">
                                 <separator colspan="2" string="Email Content"/>
-                                <field name="def_subject" colspan="4" required="1"/>
+                                <field name="subject" colspan="4" required="1"/>
                                 <notebook>
-                                    <page string="Body (Text)">
-                                        <field name="def_body_text" colspan="4" nolabel="1"/>
+                                    <page string="Body">
+                                        <field name="description" colspan="4" nolabel="1"/>
                                     </page>
-                                    <page string="Body (Raw HTML)">
+                                    <!-- <page string="Body (Raw HTML)">
                                         <field name="def_body_html" colspan="4" nolabel="1"/>
                                         <label string="Note: This is Raw HTML." colspan="4"/>
-                                    </page>
+                                    </page> -->
                                 </notebook>
                             </group>
                             <group col="4" colspan="2">
@@ -60,7 +60,7 @@
                                     </page>
                                 </notebook>
                                 <button name="%(wizard_email_template_preview)d" string="Preview Template"
-                                    type="action" colspan="4" target="new" icon="gtk-zoom-fit"/>
+                                    type="action" colspan="4" target="new" icon="gtk-zoom-fit" context="{'template_id':active_id}"/>
                             </group>
                         </page>
                         <page string="Advanced">
@@ -86,8 +86,8 @@
                                     </page>
                                     <page string="Report">
                                         <field name="report_template" colspan="4"
-                                            domain="[('model','=',model_int_name)]"/>
-                                        <field name="file_name" colspan="4" />
+                                            domain="[('model','=',model)]"/>
+                                        <field name="report_name" colspan="4" />
                                     </page>
                                 </notebook>
                             </group>
@@ -102,16 +102,16 @@
             <field name="model">email.template</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Email Templates">
+                <tree string="Templates">
                     <field name="name"/>
                     <field name="smtp_server_id"/>
-                    <field name="object_name"/>
-                    <field name="def_to"/>
-                    <field name="def_cc"/>
-                    <field name="def_bcc"/>
-                    <field name="def_subject"/>
-                    <field name="use_sign"/>
-                    <field name="file_name"/>
+                    <field name="model_id"/>
+                    <field name="email_to"/>
+                    <field name="email_cc"/>
+                    <field name="email_bcc"/>
+                    <field name="subject"/>
+                    <field name="user_signature"/>
+                    <field name="report_name"/>
                     <button name="%(wizard_email_template_preview)d" string="Preview Template"
                             type="action" target="new" icon="gtk-zoom-fit"/>
                 </tree>
@@ -126,25 +126,25 @@
                <search string="Templates">
                     <group col="13" colspan="4">
                         <field name="name"/>
-                        <field name="object_name"/>
-                        <field name="def_to"/>
+                        <field name="model_id"/>
+                        <field name="email_to"/>
                         <separator orientation="vertical"/>
                         <field name="lang"/>
-                        <field name="def_subject"/>
-                        <field name="file_name"/>
+                        <field name="subject"/>
+                        <field name="report_name"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group by..." colspan="4" col="10">
-                        <filter string="Account" domain="[]" context="{'group_by':'smtp_server_id'}" icon="terp-folder-orange"/>
+                        <filter string="SMTP Server" domain="[]" context="{'group_by':'smtp_server_id'}" icon="terp-folder-orange"/>
                         <separator orientation="vertical"/>
-                        <filter string="Resource" domain="[]" context="{'group_by':'object_name'}" icon="terp-accessories-archiver"/>
+                        <filter string="Model" domain="[]" context="{'group_by':'model_id'}" icon="terp-accessories-archiver"/>
                     </group>
                </search>
            </field>
         </record>
 
         <record model="ir.actions.act_window" id="action_email_template_tree_all">
-            <field name="name">Email Templates</field>
+            <field name="name">Templates</field>
             <field name="res_model">email.template</field>
             <field name="view_type">form</field>
             <field name="view_mode">form,tree</field>

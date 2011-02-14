@@ -9,25 +9,25 @@
             <field name="arch" type="xml">
                 <form string="Email Preview">
                     <group col="4" colspan="4">
-                        <field name="rel_model"/>
-                        <field name="rel_model_ref" on_change="on_change_ref(rel_model_ref, context)"/>
+                        <field name="model_id" readonly="1"/>
+                        <field name="res_id" on_change="on_change_ref(res_id, context)"/>
                     </group>
                     <group col="8" colspan="4">
-                        <field name="to"/>
-                        <field name="cc"/>
-                        <field name="bcc"/>
-                        <field name="reply_to"/>
-                        <field name="message_id" attrs="{'invisible':[('message_id','=',False)]}" groups="base.group_extended"/>
-                        <field name="subject" colspan="8"/>
+                        <field name="email_to" readonly="1"/>
+                        <field name="email_cc" readonly="1"/>
+                        <field name="email_bcc" readonly="1"/>
+                        <field name="reply_to" readonly="1"/>
+                        <field name="message_id" readonly="1" attrs="{'invisible':[('message_id','=',False)]}" groups="base.group_extended"/>
+                        <field name="subject" colspan="8" readonly="1"/>
                     </group>
                     <group col="4" colspan="4">
-                        <separator string= "Body(Text)" colspan="2"/>
-                        <separator string= "Body(Html)" colspan="2"/>
+                        <separator string= "Body" colspan="2" />
+                        <!--<separator string= "Body(Html)" colspan="2" />-->
                         <newline/>
-                        <field name="body_text" nolabel="1" colspan="2"/>
-                        <field name="body_html" nolabel="1" colspan="2"/>
+                        <field name="description" nolabel="1" colspan="2" readonly="1"/>
+                        <!-- <field name="body_html" nolabel="1" colspan="2" readonly="1"/>-->
                     </group>
-                    <field name="report" colspan="2"/>
+                    <field name="report_name" colspan="2" readonly="1"/>
                     <button icon="gtk-ok" special="cancel" string="OK" colspan="1"/>
                 </form>
             </field>

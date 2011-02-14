@@ -3,7 +3,7 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2009 Sharoon Thomas
-#    Copyright (C) 2010-2010 OpenERP SA (<http://www.openerp.com>)
+#    Copyright (C) 2010-Today OpenERP SA (<http://www.openerp.com>)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -21,167 +21,118 @@
 ##############################################################################
 
 from osv import osv, fields
-from mako.template import Template
-from mako import exceptions
 import netsvc
 import base64
 from tools.translate import _
 import tools
-from email_template.email_template import get_value
-
-## FIXME: this wizard duplicates a lot of features of the email template preview,
-##        one of the 2 should inherit from the other!
 
 class email_template_send_wizard(osv.osv_memory):
     _name = 'email_template.send.wizard'
+    _inherit = 'email_template.preview'
     _description = 'This is the wizard for sending mail'
-    _rec_name = "subject"
-
-    def _get_accounts(self, cr, uid, context=None):
-        if context is None:
-            context = {}
-
-        template = self._get_template(cr, uid, context)
-        if not template:
-            return []
-
-        logger = netsvc.Logger()
-
-        if template.smtp_server_id:
-            return [(template.smtp_server_id.id, '%s (%s)' % (template.smtp_server_id.name, template.smtp_server_id.email_id))]
-        else:
-            logger.notifyChannel(_("email-template"), netsvc.LOG_ERROR, _("No personal email accounts are configured for you. \nEither ask admin to enforce an account for this template or get yourself a personal email account."))
-            raise osv.except_osv(_("Missing mail account"),_("No personal email accounts are configured for you. \nEither ask admin to enforce an account for this template or get yourself a personal email account."))
-
-    def get_value(self, cursor, user, template, message, context=None, id=None):
-        """Gets the value of the message parsed with the content of object id (or the first 'src_rec_ids' if id is not given)"""
-        if context is None:
-            context = {}
-        if not message:
-            return ''
-        if not id:
-            id = context.get('src_rec_ids',[]) and context.get('src_rec_ids')[0]
-        return get_value(cursor, user, id, message, template, context)
-
-    def _get_template(self, cr, uid, context=None):
-        if context is None:
-            context = {}
-        email_temp_obj = self.pool.get('email.template')
-        if not 'template' in context and not 'template_id' in context:
-            return None
-        if 'template_id' in context.keys():
-            template_ids = email_temp_obj.search(cr, uid, [('id','=',context['template_id'])], context=context)
-        elif 'template' in context.keys():
-            # Old versions of email_template used the name of the template. This caused
-            # problems when the user changed the name of the template, but we keep the code
-            # for compatibility with those versions.
-            template_ids = email_temp_obj.search(cr, uid, [('name','=',context['template'])], context=context)
-        if not template_ids:
-            return None
-
-        template = email_temp_obj.browse(cr, uid, template_ids[0], context)
-        lang = self.get_value(cr, uid, template, template.lang, context)
-        if lang:
-            # Use translated template if necessary
-            ctx = context.copy()
-            ctx['lang'] = lang
-            template = email_temp_obj.browse(cr, uid, template.id, ctx)
-        return template
-
-    def _get_template_value(self, cr, uid, field, context=None):
-        if context is None:
-            context = {}
-        template = self._get_template(cr, uid, context)
-        if not template:
-            return False
-        if len(context['src_rec_ids']) > 1: # Multiple Mail: Gets original template values for multiple email change
-            return getattr(template, field)
-        else: # Simple Mail: Gets computed template values
-            return self.get_value(cr, uid, template, getattr(template, field), context)
 
     def default_get(self, cr, uid, fields, context=None):
         if context is None:
             context = {}
         result = super(email_template_send_wizard, self).default_get(cr, uid, fields, context=context)
-        if 'template_id' in context and context.get('template_id'):
-            temp_data = self.pool.get('email.template').read(cr, uid, int(context.get('template_id')), ['attachment_ids'])
-            result['attachment_ids'] = temp_data['attachment_ids']
+        
+        template_pool = self.pool.get('email.template')
+        model_pool = self.pool.get('ir.model')
+        template_id=context.get('template_id', False)
+        template = self.get_email_template(cr, uid, template_id=template_id, context=context)
+        def _get_template_value(field):
+            if not template:
+                return False
+            if len(context['src_rec_ids']) > 1: # Multiple Mail: Gets original template values for multiple email change
+                return getattr(template, field)
+            else: # Simple Mail: Gets computed template values
+                return self.get_template_value(cr, uid, getattr(template, field), template.model, context)
+
+        if 'user_signature' in fields:
+            result['user_signature'] = template.user_signature
+
+        if 'template_id' in fields:
+            result['template_id'] = template.id
+
+        if 'smtp_server_id' in fields:
+            result['smtp_server_id'] = template.smtp_server_id.id
+
+        if 'attachment_ids' in fields:
+            result['attachment_ids'] = template_pool.read(cr, uid, template.id, ['attachment_ids'])['attachment_ids']
+
+        if 'requested' in fields:
+            result['requested'] = len(context.get('src_rec_ids',''))
+
+        if 'state' in fields:
+            result['state'] =  len(context.get('src_rec_ids','')) > 1 and 'multi' or 'single'
+  
+        if 'model_id' in fields:
+            result['model_id'] = model_pool.search(cr, uid, [('model','=',context.get('src_model'))],context=context)[0]
+
+        if 'res_id' in fields:
+            result['res_id'] = context['active_id']
+
+        if 'email_to' in fields:
+            result['email_to'] = _get_template_value('email_to')
+
+        if 'email_cc' in fields:
+            result['email_cc'] = _get_template_value('email_cc')
+
+        if 'email_bcc' in fields:
+            result['email_bcc'] = _get_template_value('email_bcc')
+
+        if 'subject' in fields:
+            result['subject'] = _get_template_value('subject')
+
+        if 'description' in fields:
+            result['description'] = _get_template_value('description')
+
+        #if 'body_html' in fields:
+        #    result['body_html'] = _get_template_value('body_html')
+
+        if 'reply_to' in fields:
+            result['reply_to'] = _get_template_value('reply_to')
+
+        if 'report_name' in fields:
+            result['report_name'] = _get_template_value('report_name')
+
+        
         return result
 
     _columns = {
-        'state':fields.selection([
-                        ('single','Simple Mail Wizard Step 1'),
-                        ('multi','Multiple Mail Wizard Step 1'),
-                        ('done','Wizard Complete')
-                                  ],'Status',readonly=True),
-        'ref_template':fields.many2one('email.template','Template',readonly=True),
-        'rel_model':fields.many2one('ir.model','Model',readonly=True),
-        'rel_model_ref':fields.integer('Referred Document',readonly=True),
-        'from':fields.selection(_get_accounts,'From Account',select=True),
-        'to':fields.char('To',size=250,required=True),
-        'cc':fields.char('CC',size=250,),
-        'bcc':fields.char('BCC',size=250,),
-        'reply_to':fields.char('Reply-To',
-                    size=250,
-                    help="The address recipients should reply to,"
-                         " if different from the From address."
-                         " Placeholders can be used here."),
-        'message_id':fields.char('Message-ID',
-                    size=250,
-                    help="The Message-ID header value, if you need to"
-                         "specify it, for example to automatically recognize the replies later."
-                        " Placeholders can be used here."),
-        'subject':fields.char('Subject',size=200),
-        'body_text':fields.text('Body',),
-        'body_html':fields.text('Body',),
-        'report':fields.char('Report File Name',size=100,),
-        'signature':fields.boolean('Attach my signature to mail'),
-        #'filename':fields.text('File Name'),
         'requested':fields.integer('No of requested Mails',readonly=True),
         'generated':fields.integer('No of generated Mails',readonly=True),
         'full_success':fields.boolean('Complete Success',readonly=True),
         'attachment_ids': fields.many2many('ir.attachment','send_wizard_attachment_rel', 'wizard_id', 'attachment_id', 'Attachments'),
+        'state':fields.selection([
+                        ('single','Simple Mail Wizard Step 1'),
+                        ('multi','Multiple Mail Wizard Step 1'),
+                        ('done','Wizard Complete')
+                                  ],'State',readonly=True),
     }
 
-    #FIXME: probably better by overriding default_get directly
     _defaults = {
-        'state': lambda self,cr,uid,ctx: len(ctx.get('src_rec_ids','')) > 1 and 'multi' or 'single',
-        'rel_model': lambda self,cr,uid,ctx: self.pool.get('ir.model').search(cr,uid,[('model','=',ctx.get('src_model'))],context=ctx)[0],
-        'rel_model_ref': lambda self,cr,uid,ctx: ctx['active_id'],
-        'to': lambda self,cr,uid,ctx: self._get_template_value(cr, uid, 'def_to', ctx),
-        'cc': lambda self,cr,uid,ctx: self._get_template_value(cr, uid, 'def_cc', ctx),
-        'bcc': lambda self,cr,uid,ctx: self._get_template_value(cr, uid, 'def_bcc', ctx),
-        'subject':lambda self,cr,uid,ctx: self._get_template_value(cr, uid, 'def_subject', ctx),
-        'body_text':lambda self,cr,uid,ctx: self._get_template_value(cr, uid, 'def_body_text', ctx),
-        'body_html':lambda self,cr,uid,ctx: self._get_template_value(cr, uid, 'def_body_html', ctx),
-        'report': lambda self,cr,uid,ctx: self._get_template_value(cr, uid, 'file_name', ctx),
-        'signature': lambda self,cr,uid,ctx: self._get_template(cr, uid, ctx).use_sign,
-        'ref_template':lambda self,cr,uid,ctx: self._get_template(cr, uid, ctx).id,
-        'reply_to': lambda self,cr,uid,ctx: self._get_template_value(cr, uid, 'reply_to', ctx),
-        'reply_to': lambda self,cr,uid,ctx: self._get_template_value(cr, uid, 'reply_to', ctx),
-        'requested':lambda self,cr,uid,ctx: len(ctx.get('src_rec_ids','')),
     }
 
-    def fields_get(self, cr, uid, fields=None, context=None, write_access=True):
-        if context is None:
-            context = {}
-        result = super(email_template_send_wizard, self).fields_get(cr, uid, fields, context, write_access)
-        if 'attachment_ids' in result and 'src_model' in context:
-            result['attachment_ids']['domain'] = [('res_model','=',context['src_model']),('res_id','=',context['active_id'])]
-        return result
+    #def fields_get(self, cr, uid, fields=None, context=None, write_access=True):
+    #    if context is None:
+    #        context = {}
+    #    result = super(email_template_send_wizard, self).fields_get(cr, uid, fields, context, write_access)
+    #    if 'attachment_ids' in result and 'src_model' in context:
+    #        result['attachment_ids']['domain'] = [('res_model','=',context['src_model']),('res_id','=',context['active_id'])]
+    #    return result
 
-    def sav_to_drafts(self, cr, uid, ids, context=None):
+    def save_to_drafts(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
         mailid = self.save_to_mailbox(cr, uid, ids, context=context)
-        self.pool.get('email.message').write(cr, uid, mailid, {'folder':'drafts', 'state': 'na'}, context)
+        self.pool.get('email.message').write(cr, uid, mailid, {'folder':'drafts', 'state': 'draft'}, context)
         return {}
 
     def send_mail(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
         mailid = self.save_to_mailbox(cr, uid, ids, context)
-        self.pool.get('email.message').write(cr, uid, mailid, {'folder':'outbox', 'state': 'waiting'}, context)
         return {}
 
     def get_generated(self, cr, uid, ids=None, context=None):
@@ -194,7 +145,6 @@ class email_template_send_wizard(osv.osv_memory):
             #Means there are multiple items selected for email.
             mail_ids = self.save_to_mailbox(cr, uid, ids, context)
             if mail_ids:
-                self.pool.get('email.message').write(cr, uid, mail_ids, {'folder':'outbox', 'state': 'waiting'}, context)
                 logger.notifyChannel("email-template", netsvc.LOG_INFO, _("Emails for multiple items saved in outbox."))
                 self.write(cr, uid, ids, {
                     'generated':len(mail_ids),
@@ -205,75 +155,18 @@ class email_template_send_wizard(osv.osv_memory):
         return True
 
     def save_to_mailbox(self, cr, uid, ids, context=None):
-        def get_end_value(id, value):
-            if len(context['src_rec_ids']) > 1: # Multiple Mail: Gets value from the template
-                return self.get_value(cr, uid, template, value, context, id)
-            else:
-                return value
-        if context is None:
-            context = {}
-        mail_ids = []
-        email_message_obj = self.pool.get('email.message')
-        attahcment_obj = self.pool.get('ir.attachment')
-        smtp_obj = self.pool.get('email.smtp_server')
-        user_obj = self.pool.get('res.users')
-        report_xml_obj = self.pool.get('ir.actions.report.xml')
-        model_obj = self.pool.get('ir.model')
-        template = self._get_template(cr, uid, context)
-        for id in context.get('src_rec_ids',[]):
-            screen_vals = self.read(cr, uid, ids[0], [], context)
-            smtp_data = smtp_obj.browse(cr, uid, screen_vals['from'], context=context)
-            vals = {
-                'email_from': tools.ustr(smtp_data.name) + "<" + tools.ustr(smtp_data.email_id) + ">",
-                'email_to': get_end_value(id, screen_vals['to']),
-                'email_cc': get_end_value(id, screen_vals['cc']),
-                'email_bcc': get_end_value(id, screen_vals['bcc']),
-                'name': get_end_value(id, screen_vals['subject']),
-                'description': get_end_value(id, screen_vals['body_text']) + "\n" + get_end_value(id, screen_vals['body_html'] or ''),
-                'state':'na',
-            }
-            if screen_vals['signature']:
-                signature = user_obj.browse(cr, uid, uid, context).signature
-                if signature:
-                    vals['description'] = tools.ustr(vals['description'] or '') + signature
-
-            attachment_ids = []
-            #Create partly the mail and later update attachments
-            mail_id = email_message_obj.create(cr, uid, vals, context)
-            mail_ids.append(mail_id)
-            if template.report_template:
-                reportname = 'report.' + report_xml_obj.browse(cr, uid, template.report_template.id, context).report_name
-                data = {}
-                data['model'] = model_obj.browse(cr, uid, screen_vals['rel_model'], context).model
-
-                # Ensure report is rendered using template's language
-                ctx = context.copy()
-                if template.lang:
-                    ctx['lang'] = self.get_value(cr, uid, template, template.lang, context, id)
-                service = netsvc.LocalService(reportname)
-                (result, format) = service.create(cr, uid, [id], data, ctx)
-                attachment_id = attahcment_obj.create(cr, uid, {
-                    'name': _('%s (Email Attachment)') % tools.ustr(vals['name']),
-                    'datas': base64.b64encode(result),
-                    'datas_fname': tools.ustr(get_end_value(id, screen_vals['report']) or _('Report')) + "." + format,
-                    'description': vals['description'] or _("No Description"),
-                    'res_model': 'email.message',
-                    'res_id': mail_id
-                }, context)
-                attachment_ids.append(attachment_id)
-
-            # Add document attachments
-            for attachment_id in screen_vals.get('attachment_ids',[]):
-                new_id = attahcment_obj.copy(cr, uid, attachment_id, {
-                    'res_model': 'email.message',
-                    'res_id': mail_id,
-                }, context)
-                attachment_ids.append(new_id)
-            if attachment_ids:
-                email_message_obj.write(cr, uid, mail_id, {
-                    'attachment_ids': [[6, 0, attachment_ids]],
-                }, context)
-        return mail_ids
+        #def get_end_value(id, value):
+        #    if len(context['src_rec_ids']) > 1: # Multiple Mail: Gets value from the template
+        #        return self.get_value(cr, uid, template, value, context, id)
+        #    else:
+        #        return value
+        
+        email_ids = []
+        for template in self.browse(cr, uid, ids, context=context):
+            for record_id in context.get('src_rec_ids',[]):
+                email_id = self._generate_email(cr, uid, template.id, record_id, context)
+                email_ids.append(email_id)
+        return email_ids
 
 email_template_send_wizard()
 
