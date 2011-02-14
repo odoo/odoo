@@ -26,14 +26,12 @@
 # You can see the MPL licence at: http://www.mozilla.org/MPL/MPL-1.1.html
 #
 ###############################################################################
-
 import base64
 
 import cherrypy
 
+import openobject
 from openobject.tools import expose
-
-from openerp.utils import rpc
 
 from openerp.controllers import SecuredController
 
@@ -42,7 +40,7 @@ class WikiView(SecuredController):
     _cp_path = "/wiki/wiki"
 
     def get_attachment(self, **kwargs):
-        attachments = rpc.RPCProxy('ir.attachment')
+        attachments = openobject.rpc.RPCProxy('ir.attachment')
         file_name = kwargs.get('file').replace("'", '').strip()
         id = kwargs.get('id').strip()
 
