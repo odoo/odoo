@@ -37,9 +37,11 @@ from os.path import join
 from datetime import datetime
 from lxml import etree
 
+import config
 import misc
 from misc import UpdateableStr
 from misc import SKIPPED_ELEMENT_TYPES
+import osutil
 
 _LOCALE2WIN32 = {
     'af_ZA': 'Afrikaans_South Africa',
