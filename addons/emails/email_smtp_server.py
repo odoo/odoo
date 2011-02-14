@@ -88,44 +88,38 @@ class email_smtp_server(osv.osv):
     _columns = {
         'name': fields.char('Name',
                         size=64, required=True,
-                        readonly=True, select=True,
+                        select=True,
                         help="The Name is used as the Sender name along with the provided From Email, \
 unless it is already specified in the From Email, e.g: John Doe <john@doe.com>",
-                        states={'draft':[('readonly', False)]}),
+                        ),
         'email_id': fields.char('From Email',
                         size=120, required=True,
-                        readonly=True, states={'draft':[('readonly', False)]} ,
                         help="eg: 'john@doe.com' or 'John Doe <john@doe.com>'"),
         'smtpserver': fields.char('Server',
                         size=120, required=True,
-                        readonly=True, states={'draft':[('readonly', False)]},
                         help="Enter name of outgoing server, eg: smtp.yourdomain.com"),
         'smtpport': fields.integer('SMTP Port',
                         size=64, required=True,
-                        readonly=True, states={'draft':[('readonly', False)]},
                         help="Enter port number, eg: 25 or 587"),
         'smtpuname': fields.char('User Name',
                         size=120, required=False,
-                        readonly=True, states={'draft':[('readonly', False)]},
                         help="Specify the username if your SMTP server requires authentication, "
                         "otherwise leave it empty."),
         'smtppass': fields.char('Password',
-                        size=120, invisible=True,
-                        required=False, readonly=True,
-                        states={'draft':[('readonly', False)]}),
-        'smtptls':fields.boolean('TLS',
-                        states={'draft':[('readonly', False)]}, readonly=True),
-        'smtpssl':fields.boolean('SSL/TLS (only in python 2.6)',
-                        states={'draft':[('readonly', False)]}, readonly=True),
+                        size=120, 
+                        required=False),
+        'smtptls':fields.boolean('TLS'),
+        'smtpssl':fields.boolean('SSL/TLS (only in python 2.6)'),
         'default': fields.boolean('Default', help="Only one account can be default at a time"),
     }
 
     _defaults = {
          'name':lambda self, cursor, user, context:self.pool.get( 'res.users'
                                                 ).read(cursor, user, user, ['name'], context)['name'],
-         'smtpport':lambda *a:25,
-         'smtpserver':lambda *a:'localhost',
-         'smtptls':lambda *a:True,
+         'smtpport': tools.config.get('smtp_port',25),
+         'smtpserver': tools.config.get('smtp_server','localhost'),
+         'smtpssl': tools.config.get('smtp_ssl',False),
+         'smtptls': True,
      }
 
     _sql_constraints = [
