@@ -14,7 +14,7 @@
                     <group colspan="4" col="6">
                        <field name="name" widget="char" size="512"/>
                        <field name="date"/>
-                       <field name="user_id" string="Owner"/>
+                       <field name="user_id" string="User"/>
                        <field name="partner_id" readonly="1" />
                     </group>
                     <notebook colspan="4">
@@ -73,7 +73,7 @@
                     <field name="date"/>
                     <field name="name"/>
                     <field name="email_from"/>
-                    <field name="user_id" string="Owner"/>
+                    <field name="user_id" string="User"/>
                     <field name="message_id" string="Message" invisible="1"/>
                     <field name="partner_id" invisible="1"/>
                     <field name="folder"/>
@@ -100,13 +100,13 @@
                     <filter icon="terp-gtk-stop" string="Exception" domain="[('state','=','exception')]"/>
                     <field name="name"/>
                     <field name="date"/>
-                    <field name="user_id" string="Owner"/>
+                    <field name="user_id" string="User"/>
                     <field name="partner_id" string="Partner Name"/>
                     <newline/>
                     <group expand="0" string="Group By..." groups="base.group_extended">
                         <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                         <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
-                        <filter string="Ower" name="Ower" icon="terp-personal" context="{'group_by':'user_id'}"/>
+                        <filter string="User" name="User" icon="terp-personal" context="{'group_by':'user_id'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Thread" icon="terp-mail-" domain="[]" context="{'group_by':'message_id'}"/>
                         <separator orientation="vertical"/>

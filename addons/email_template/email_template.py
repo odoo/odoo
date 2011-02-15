@@ -179,8 +179,11 @@ This is useful for CRM leads for example"),
         if context is None:
             context = {}
         action_obj = self.pool.get('ir.actions.act_window')
+        data_obj = self.pool.get('ir.model.data')
         for template in self.browse(cr, uid, ids, context=context):
             src_obj = template.model_id.model
+            model_data_id = data_obj._get_id(cr, uid, 'email_template', 'email_template_send_wizard_form')
+            res_id = data_obj.browse(cr, uid, model_data_id, context=context).res_id
             vals['ref_ir_act_window'] = action_obj.create(cr, uid, {
                  'name': template.name,
                  'type': 'ir.actions.act_window',
@@ -189,7 +192,7 @@ This is useful for CRM leads for example"),
                  'view_type': 'form',
                  'context': "{'src_model':'%s','template_id':'%d','src_rec_id':active_id,'src_rec_ids':active_ids}" % (src_obj, template.id),
                  'view_mode':'form,tree',
-                 'view_id': self.pool.get('ir.ui.view').search(cr, uid, [('name', '=', 'email_template.send.wizard.form')], context=context)[0],
+                 'view_id': res_id,
                  'target': 'new',
                  'auto_refresh':1
             }, context)
