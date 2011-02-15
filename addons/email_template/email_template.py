@@ -404,7 +404,7 @@ This is useful for CRM leads for example"),
         if template.user_signature:
             sign = self.pool.get('res.users').read(cr, uid, uid, ['signature'], context)['signature']
             if values['description']:
-                values['description'] += sign
+                values['description'] += '\n\n' + sign
             #if values['body_html']:
             #    values['body_html'] += sign
         

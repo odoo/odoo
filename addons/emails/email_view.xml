@@ -40,7 +40,8 @@
                             <field name="description" nolabel="1" colspan="4"/>
                             <separator string="" colspan="4"/>
                             <field name="state"/>
-                            <button name="process_queue" string="Send" type="object" icon="gtk-execute" states='draft,waiting'/>
+                            <button name="process_queue" string="Send" type="object" icon="gtk-execute" states='draft,waiting,sending'/>
+                            <button name="process_retry" string="Re-Try" type="object" icon="gtk-execute" states='exception'/>
                         </page>
                         <page string="Attachments">
                             <separator string="Attachments" colspan="4"/>

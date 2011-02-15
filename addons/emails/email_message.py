@@ -246,8 +246,7 @@ class email_message(osv.osv):
             email_cc = [email_cc]
         if email_bcc and type(email_bcc) != list:
             email_bcc = [email_bcc]
-        if reply_to and type(reply_to) != list:
-            reply_to = [reply_to]
+        
         msg_vals = {
                 'name': subject,
                 'model': model or '',
@@ -258,7 +257,7 @@ class email_message(osv.osv):
                 'email_to': email_to and ','.join(email_to) or '',
                 'email_cc': email_cc and ','.join(email_cc) or '',
                 'email_bcc': email_bcc and ','.join(email_bcc) or '',
-                'reply_to': reply_to and ','.join(reply_to) or '',
+                'reply_to': reply_to,
                 'res_id':openobject_id,
                 #'message_id': message_id,
                 'sub_type': subtype or '',
@@ -286,6 +285,9 @@ class email_message(osv.osv):
             self.write(cr, uid, email_msg_id,
                               { 'attachment_ids': [[6, 0, attachment_ids]] }, context)
         return email_msg_id
+
+    def process_retry(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {'state':'waiting'}, context)
 
     def process_email_queue(self, cr, uid, ids=None, context=None):
         if ids is None:
@@ -315,17 +317,16 @@ class email_message(osv.osv):
                         message.name, message.description,
                         email_cc=message.email_cc and message.email_cc.split(',') or [],
                         email_bcc=message.email_bcc and message.email_bcc.split(',') or [],
-                        reply_to=message.reply_to and message.reply_to.split(',') or [],
+                        reply_to=message.reply_to,
                         attach=attachments, openobject_id=message.message_id,
                         subtype=message.sub_type,
                         x_headers=message.headers and eval(message.headers) or {},
                         priority=message.priority, debug=message.debug,
-                        smtp_email_from=smtp_account and smtp_account.email_id or None,
-                        smtp_server=smtp_account and smtp_account.smtpserver or None,
-                        smtp_port=smtp_account and smtp_account.smtpport or None,
-                        ssl=smtp_account and smtp_account.smtpssl or False,
-                        smtp_user=smtp_account and smtp_account.smtpuname or None,
-                        smtp_password=smtp_account and smtp_account.smtppass or None)
+                        smtp_server=smtp_server and smtp_server.smtpserver or None,
+                        smtp_port=smtp_server and smtp_server.smtpport or None,
+                        ssl=smtp_server and smtp_server.smtpssl or False,
+                        smtp_user=smtp_server and smtp_server.smtpuname or None,
+                        smtp_password=smtp_server and smtp_server.smtppass or None)
                 if res:
                     self.write(cr, uid, [message.id], {'state':'sent'}, context)
                 else:
