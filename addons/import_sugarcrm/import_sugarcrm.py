@@ -18,6 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+from operator import itemgetter
 from osv import fields, osv
 import sugar
 from tools.translate import _
@@ -36,17 +37,102 @@ class import_sugarcrm(osv.osv):
         ],'Module Name', help="Module Name is used to specify which Module data want to Import"),
      }
 
+     def _get_all(self, cr, uid, model, sugar_val, context=None):
+           models = self.pool.get(model)
+           all_model_ids = models.search(cr, uid, [('name', '=', sugar_val)])
+           output = [(False, '')]
+           output = sorted([(o.id, o.name)
+                    for o in models.browse(cr, uid, all_model_ids,
+                                           context=context)],
+                   key=itemgetter(1))
+           return output
+
+     def _get_all_states(self, cr, uid, sugar_val, context=None):
+        return self._get_all(
+            cr, uid, 'res.country.state', sugar_val, context=context)
+
+     def _get_all_countries(self, cr, uid, sugar_val, context=None):
+        return self._get_all(
+            cr, uid, 'res.country', sugar_val, context=context)
+
+     def _create_lead(self, cr, uid, sugar_val, country, state, context=None):
+           lead_pool = self.pool.get("crm.lead")
+           vals = {'name': sugar_val.get('first_name','')+' '+ sugar_val.get('last_name',''),
+                   'contact_name': sugar_val.get('first_name','')+' '+ sugar_val.get('last_name',''),
+                   'user_id':sugar_val.get('created_by',''),
+                   'partner_name': sugar_val.get('first_name','')+' '+ sugar_val.get('last_name',''),
+                   'email_from': sugar_val.get('email1',''),
+                   'phone': sugar_val.get('phone_work',''),
+                   'mobile': sugar_val.get('phone_mobile',''),
+                   'write_date':sugar_val.get('date_modified',''),
+                   'function':sugar_val.get('title',''),
+                   'street': sugar_val.get('primary_address_street',''),
+                   'zip': sugar_val.get('primary_address_postalcode',''),
+                   'city':sugar_val.get('primary_address_city',''),
+                   'country_id': country and country[0][0] or False,
+                   'state_id': state and state[0][0] or False
+           }
+           new_lead_id = lead_pool.create(cr, uid, vals)
+           return new_lead_id
+
+     def _create_opportunity(self, cr, uid, sugar_val, country, state, context=None):
+
+           lead_pool = self.pool.get("crm.lead")
+           stage_id = ''
+           stage_pool = self.pool.get('crm.case.stage')
+           stage_ids = stage_pool.search(cr, uid, [("type", '=', 'opportunity'), ('name', '=', sugar_val.get('opportunity_type',''))])
+           for stage in stage_pool.browse(cr, uid, stage_ids):
+               stage_id = stage.id
+           vals = {'name': sugar_val.get('name',''),
+               'probability': sugar_val.get('probability',''),
+               'user_id': sugar_val.get('created_by', ''),
+               'stage_id': stage_id or '',
+               'type': 'opportunity',
+               'user_id': sugar_val.get('created_by',''),
+               'planned_revenue': sugar_val.get('amount_usdollar'),
+               'write_date':sugar_val.get('date_modified',''),
+           }
+           new_opportunity_id = lead_pool.create(cr, uid, vals)
+           return new_opportunity_id
+
+     def _create_contact(self, cr, uid, sugar_val, country, state, context=None):
+           addr_pool = self.pool.get("res.partner.address")
+           partner_pool = self.pool.get("res.partner")
+
+           vals =  {'name': sugar_val.get('first_name','')+' '+ sugar_val.get('last_name',''),
+                            'partner_id': sugar_val.get('account_id'),
+           }
+           new_partner_id = partner_pool.create(cr, uid, vals)
+           addr_vals = {'partner_id': new_partner_id,
+                        'name': sugar_val.get('first_name','')+' '+ sugar_val.get('last_name',''),
+                        'function':sugar_val.get('title',''),
+                        'phone': sugar_val.get('phone_home'),
+                        'mobile': sugar_val.get('phone_mobile'),
+                        'fax': sugar_val.get('phone_fax'),
+                        'street': sugar_val.get('primary_address_street',''),
+                        'zip': sugar_val.get('primary_address_postalcode',''),
+                        'city':sugar_val.get('primary_address_city',''),
+                        'country_id': country and country[0][0] or False,
+                        'state_id': state and state[0][0] or False,
+                        'email': sugar_val.get('email1'),
+           }
+           new_add_id = addr_pool.create(cr, uid, addr_vals)
+           return new_partner_id
+
 
      def import_data(self, cr, uid, ids,context=None):
        if not context:
         context={}
-       lead_pool = self.pool.get("crm.lead")
+
        for current in self.browse(cr, uid, ids):
         if current.mod_name == 'lead' or current.mod_name == 'opportunity':
           module_name = 'crm'
 
         elif current.mod_name == "accounts":
           module_name = 'account'
+        else:
+          module_name = 'base'
+
         ids = self.pool.get("ir.module.module").search(cr, uid, [("name", '=',
            module_name), ('state', '=', 'installed')])
         if not ids:
@@ -63,21 +149,16 @@ class import_sugarcrm(osv.osv):
 
        sugar_data = sugar.test(sugar_name)
        for sugar_val in sugar_data:
-           if sugar_name == "Leads":
-               vals = {'name':sugar_val.get('first_name', ''),
-                       'user_id':sugar_val.get('created_by',''),
-                       'partner_name': sugar_val.get('first_name','')+''+ sugar_val.get('last_name',''),
-                       'email_from': sugar_val.get('email1',''),
-                       'phone': sugar_val.get('phone_work',''),
-                       'mobile': sugar_val.get('phone_mobile',''),
-                       'write_date':sugar_val.get('date_modified',''),
-                       'function':sugar_val.get('title',''),
-                       'street': sugar_val.get('primary_address_street',''),
-                       'zip': sugar_val.get('primary_address_postalcode',''),
-                       'city':sugar_val.get('primary_address_city',''),
-                       }
-               lead_pool.create(cr, uid, vals)
+            country = self._get_all_countries(cr, uid, sugar_val.get('primary_address_country'), context)
+            state = self._get_all_states(cr, uid, sugar_val.get('primary_address_state'), context)
+            if sugar_name == "Leads":
+                self._create_lead(cr, uid, sugar_val, country, state, context)
 
+            elif sugar_name == "Opportunities":
+                self._create_opportunity(cr, uid, sugar_val, country, state,context)
+
+            elif sugar_name == "Contacts":
+                self._create_contact(cr, uid, sugar_val, country, state, context)
        return {}
 
 import_sugarcrm()
