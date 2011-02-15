@@ -35,7 +35,7 @@ class email_template_send_wizard(osv.osv_memory):
         if context is None:
             context = {}
         result = super(email_template_send_wizard, self).default_get(cr, uid, fields, context=context)
-        
+
         template_pool = self.pool.get('email.template')
         model_pool = self.pool.get('ir.model')
         template_id=context.get('template_id', False)
@@ -52,7 +52,7 @@ class email_template_send_wizard(osv.osv_memory):
             result['user_signature'] = template.user_signature
 
         if 'report_template' in fields:
-            result['report_template'] = template.report_template
+            result['report_template'] = template.report_template and template.report_template.id or False
 
         if 'template_id' in fields:
             result['template_id'] = template.id
@@ -74,7 +74,7 @@ class email_template_send_wizard(osv.osv_memory):
 
         if 'state' in fields:
             result['state'] =  len(context.get('src_rec_ids','')) > 1 and 'multi' or 'single'
-  
+
         if 'model_id' in fields:
             result['model_id'] = model_pool.search(cr, uid, [('model','=',context.get('src_model'))],context=context)[0]
 
@@ -168,7 +168,7 @@ class email_template_send_wizard(osv.osv_memory):
         #        return self.get_value(cr, uid, template, value, context, id)
         #    else:
         #        return value
-        
+
         email_ids = []
         for template in self.browse(cr, uid, ids, context=context):
             for record_id in context.get('src_rec_ids',[]):
