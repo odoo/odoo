@@ -24,7 +24,7 @@ from osv import fields
 from tools.translate import _
 import tools
 import netsvc
-
+import base64
 import time
 #import binascii
 #import email
@@ -315,7 +315,7 @@ class email_message(osv.osv):
             try:
                 attachments = []
                 for attach in message.attachment_ids:
-                    attachments.append((attach.datas_fname ,attach.datas))
+                    attachments.append((attach.datas_fname ,base64.b64decode(attach.datas)))
                 smtp_server = message.smtp_server_id
                 if not smtp_server:
                     smtp_ids = smtp_server_obj.search(cr, uid, [('default','=',True)])
