@@ -47,13 +47,15 @@ class google_contact_import(osv.osv_memory):
             addresses = []
             while contact:
                 for entry in contact.entry:
+                    google_id= entry.id.text
                     name = entry.title.text
                     phone_numbers = ','.join(phone_number.text for phone_number in entry.phone_number)
                     emails = ','.join(email.address for email in entry.email)
                     data = {
                             'name': name,
                             'phone': phone_numbers,
-                            'email': emails
+                            'email': emails,
+                            'google_id':google_id
                      }
                     contact_ids = addresss_obj.search(cr, uid, [('email','ilike',emails)])
                     if not contact_ids:

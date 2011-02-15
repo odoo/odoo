@@ -225,12 +225,6 @@ class CSComboProcessor(ComboProcessor):
         try:
             list=['CRM Lead']#, 'CRM Helpdesk', 'CRM Lead', 'CRM Meeting', 'CRM Opportunity', 'CRM Phonecall']
             objlist = conn.GetAllObjects()
-#            if 'crm.claim' in objlist:
-#                list.append('CRM Claim')
-#            if 'crm.helpdesk' in objlist:
-#                list.append('CRM Helpdesk')
-#            if 'crm.fundraising' in objlist:
-#                list.append('CRM Fundraising')
             if'hr.applicant' in objlist:
                 list.append('HR Applicant')
             if'project.issue' in objlist:
@@ -306,3 +300,19 @@ class GroupProcessor(OptionControlProcessor):
         pass
     def UpdateValue_FromControl(self):
         pass
+
+
+class ProtocolComboProcessor(ComboProcessor):
+    def Init(self):
+        self.UpdateControl_FromValue()
+
+    def UpdateControl_FromValue(self):
+        combo = self.GetControl()
+        list = ['XML-RPC', 'XML-RPCS']
+        win32gui.ShowWindow(combo, True)
+        win32gui.SendMessage(combo, win32con.CB_RESETCONTENT, 0, 0);
+        for item in list:
+            win32gui.SendMessage(combo, win32con.CB_ADDSTRING, 0, str(item))
+        if sel == -1:
+            win32gui.SendMessage(combo, win32con.CB_SETCURSEL, 1, 0)
+        self.active_control_id = self.control_id

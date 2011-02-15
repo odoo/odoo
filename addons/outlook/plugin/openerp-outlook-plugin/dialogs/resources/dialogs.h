@@ -208,6 +208,8 @@
 #define IDPB_NC_SEARCH_STATE1			2107
 #define IDET_NC_PARTNER_COUNTRY			2108
 #define IDPB_NC_SEARCH_COUNTRY1			2109
+#define ID_DROPDOWNLIST_PROTOCOL		2110
+#define IDCB_WEB_SECURE					2111
 // Next default values for new objects
 //
 #ifdef APSTUDIO_INVOKED
