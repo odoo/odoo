@@ -1,0 +1,188 @@
+-   |
+    To check that common dangerous operations are not allowed by the safe_eval mechanism, attempt to 
+    evaluate unauthorized expressions, and verify that they trigger an error.
+-
+    1. Try a few common expressions to verify they work with safe_eval
+-
+    !python {model: ir.model}: |
+        from tools.safe_eval import safe_eval
+        expected = (1, {"a": 9 * 2}, (True, False, None))
+        actual = safe_eval('(1, {"a": 9 * 2}, (True, False, None))')
+        assert actual == expected, "Simple python expressions are not working with safe_eval"
+-
+    2. Try simple literal definition to verify it works with literal_eval
+-
+    !python {model: ir.model}: |
+        from tools.safe_eval import literal_eval
+        expected = (1, {"a": 9}, (True, False, None))
+        actual = literal_eval('(1, {"a": 9}, (True, False, None))')
+        assert actual == expected, "Simple python expressions are not working with literal_eval"
+-
+    3. Try arithmetic expression in literal_eval to verify it does not work
+-
+    !python {model: ir.model}: |
+        from tools.safe_eval import literal_eval
+        try:
+           literal_eval('(1, {"a": 2*9}, (True, False, None))')
+           assert False, "literal_eval should not accept arithmetic expressions"
+        except ValueError:
+           pass
+-
+    4. Try forbidden expressions in literal_eval to verify they are not allowed
+-
+    !python {model: ir.model}: |
+        from tools.safe_eval import literal_eval
+        try:
+           literal_eval('{"a": True.__class__}')
+           assert False, "literal_eval should accept only literals"
+        except ValueError:
+           pass
+-
+    5. Try forbidden expressions in safe_eval to verify they are not allowed (open)
+-
+    !python {model: ir.model}: |
+        from tools.safe_eval import safe_eval
+        try:
+           safe_eval('open("/etc/passwd","r")')
+           assert False, "safe_eval should not allow calling open() builtin"
+        except NameError:
+           pass
+        except:
+           # NameError should be raised because open() builtin is not found,
+           # but other exceptions probably indicate that open() was executed!
+           assert False, "safe_eval should not allow calling open() builtin"
+
+-
+    "ORM test: verify that parent_store computation are going right"
+-
+    0. Emulate normal behavior of tree structure storing
+-
+    !python {model: res.partner.category}: |
+        # pretend the pool has finished loading to avoid deferring parent_store computation
+        self.pool._init = False
+-
+    "1.0 Setup test partner categories: parent root"
+-
+    !record {model: res.partner.category, id: test_categ_root}:
+        name: Root category
+-
+    "1.1 Setup test partner categories: parent category"
+-
+    !record {model: res.partner.category, id: test_categ_0}:
+        name: Parent category
+        parent_id: test_categ_root
+-
+    "1.2 Setup test partner categories: child 1"
+-
+    !record {model: res.partner.category, id: test_categ_1}:
+        name: Child 1
+        parent_id: test_categ_0
+-
+    "1.3 Setup test partner categories: child 2"
+-
+    !record {model: res.partner.category, id: test_categ_2}:
+        name: Child 2
+        parent_id: test_categ_0
+-
+    "1.4 Setup test partner categories: child 2-1"
+-
+    !record {model: res.partner.category, id: test_categ_21}:
+        name: Child 2-1
+        parent_id: test_categ_2
+-
+    2. Duplicate the parent category and verify that the children have been duplicated too and are below the new parent
+-
+    !python {model: res.partner.category}: |
+        new_id = self.copy(cr, uid, ref('test_categ_0'))
+        new_struct = self.search(cr, uid, [('parent_id', 'child_of', new_id)])
+        assert len(new_struct) == 4, "After duplication, the new object must have the childs records"
+        old_struct = self.search(cr, uid, [('parent_id', 'child_of', ref('test_categ_0'))])
+        assert len(old_struct) == 4, "After duplication, previous record must have old childs records only"
+        assert (not set(new_struct).intersection(old_struct)), "After duplication, nodes should not be mixed"
+-
+    3. Duplicate the children then reassign them to the new parent (1st method) and check the parent_store structure.
+-
+    !python {model: res.partner.category}: |
+        new_child1_id = self.copy(cr, uid, ref('test_categ_1'))
+        new_child2_id = self.copy(cr, uid, ref('test_categ_2'))
+        new_id = self.copy(cr, uid, ref('test_categ_0'), {'child_ids': []})
+        self.write(cr, uid, [new_child1_id, new_child2_id], {'parent_id': new_id})
+        new_struct = self.search(cr, uid, [('parent_id', 'child_of', new_id)])
+        assert len(new_struct) == 4, "After duplication, the new object must have the childs records"
+        old_struct = self.search(cr, uid, [('parent_id', 'child_of', ref('test_categ_0'))])
+        assert len(old_struct) == 4, "After duplication, previous record must have old childs records only"
+        assert (not set(new_struct).intersection(old_struct)), "After duplication, nodes should not be mixed"
+-
+    4. Duplicate the children then reassign them to the new parent (2nd method) and check the parent_store structure.
+-
+    !python {model: res.partner.category}: |
+        new_child1_id = self.copy(cr, uid, ref('test_categ_1'))
+        new_child2_id = self.copy(cr, uid, ref('test_categ_2'))
+        old_struct = self.search(cr, uid, [('parent_id', 'child_of', ref('test_categ_0'))])
+        new_id = self.copy(cr, uid, ref('test_categ_0'), {'child_ids': [(6,0,[new_child1_id, new_child2_id])]})
+        new_struct = self.search(cr, uid, [('parent_id', 'child_of', new_id)])
+        assert len(new_struct) == 4, "After duplication, the new object must have the childs records"
+        old_struct = self.search(cr, uid, [('parent_id', 'child_of', ref('test_categ_0'))])
+        assert len(old_struct) == 4, "After duplication, previous record must have old childs records only"
+        assert (not set(new_struct).intersection(old_struct)), "After duplication, nodes should not be mixed"
+-
+    5. Duplicate the children then reassign them to the new parent (3rd method) and make sure the parent_store structure is still right.
+-
+    !python {model: res.partner.category}: |
+        new_child1_id = self.copy(cr, uid, ref('test_categ_1'))
+        new_child2_id = self.copy(cr, uid, ref('test_categ_2'))
+        new_id = self.copy(cr, uid, ref('test_categ_0'), {'child_ids': []})
+        self.write(cr, uid, [new_id], {'child_ids': [(4,new_child1_id), (4,new_child2_id)]})
+        new_struct = self.search(cr, uid, [('parent_id', 'child_of', new_id)])
+        assert len(new_struct) == 4, "After duplication, the new object must have the childs records"
+        old_struct = self.search(cr, uid, [('parent_id', 'child_of', ref('test_categ_0'))])
+        assert len(old_struct) == 4, "After duplication, previous record must have old childs records only"
+        assert (not set(new_struct).intersection(old_struct)), "After duplication, nodes should not be mixed"
+-
+    6. Restore pool state after the test
+-
+    !python {model: res.partner.category}: |
+        self.pool._init = True
+
+-
+    "OSV Memory: Verify that osv_memory properly handles large data allocation"
+-
+    1. No "count-based" auto-vaccuum when max_count is disabled
+-
+    !python {model: base.language.export}: |
+        # setup special limits for the test, these will be reset at next pool reload anyway
+        self._max_count = None
+        num_recs = 250
+        for i in xrange(num_recs):
+            self.create(cr, uid, {'format':'po'})
+        assert (len(self.datas) >= num_recs), "OSV Memory must not auto-vaccum records from the current transaction if max_count is not set"
+-
+    2. Auto-vaccuum should be enabled when max_count is set
+-
+    !python {model: base.language.export}: |
+        # setup special limits for the test, these will be reset at next pool reload anyway
+        self._max_count = 100
+        num_recs = 219
+        for i in xrange(num_recs):
+            self.create(cr, uid, {'name': i, 'format':'po'})
+        assert (self._max_count <= len(self.datas) < self._max_count + self._check_time), "OSV Memory must auto-expire records when max_count is reached"
+        for k,v in self.datas.iteritems():
+            assert (int(v['name']) >= (num_recs - (self._max_count + self._check_time))), "OSV Memory must auto-expire records based on age"
+-
+    3. Auto-vaccuum should be based on age only when max_count is not set
+-
+    !python {model: base.language.export}: |
+        # setup special limits for the test, these will be reset at next pool reload anyway
+        self._max_count = None
+        self._max_hours = 0.01 #36 seconds
+        num_recs = 200
+        for i in xrange(num_recs):
+            self.create(cr, uid, {'format':'po'})
+        assert (len(self.datas) >= num_recs), "OSV Memory must not auto-expire records from the current transaction"
+
+        # expire all records
+        for k,v in self.datas.iteritems():
+            v['internal.date_access'] = 0
+        self.vaccum(cr, 1, force=True)
+
+        assert (len(self.datas) == 0), "OSV Memory must expire old records after vaccuum"
