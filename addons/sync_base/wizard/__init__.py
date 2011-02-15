@@ -19,15 +19,6 @@
 #
 ##############################################################################
 
-from osv import fields,osv,orm
+import synchronize_base
 
-    
-class res_users(osv.osv):
-    _inherit = "res.users"
-    _columns = {
-        'gmail_user': fields.char('User Name', size=64,),
-        'gmail_password': fields.char('Password', size=64),
-    }
-res_users()    
-# vim:expandtab:smartindent:toabstop=4:softtabstop=4:shiftwidth=4:
-
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

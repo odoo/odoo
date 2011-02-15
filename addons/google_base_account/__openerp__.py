@@ -31,6 +31,7 @@
     'init_xml': [],
     'update_xml': [
                   'google_base_account_view.xml',
+                  'wizard/google_login_view.xml',
                    ],
     'demo_xml': [],
     'installable': True,

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#
+#    
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,19 +15,11 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
 
-from osv import fields,osv,orm
-
-    
-class res_users(osv.osv):
-    _inherit = "res.users"
-    _columns = {
-        'gmail_user': fields.char('User Name', size=64,),
-        'gmail_password': fields.char('Password', size=64),
-    }
-res_users()    
-# vim:expandtab:smartindent:toabstop=4:softtabstop=4:shiftwidth=4:
+import sync_base
+import wizard
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

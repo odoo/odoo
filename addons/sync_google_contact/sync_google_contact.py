@@ -36,7 +36,7 @@ class google_lib(object):
         self.contact = gdata.contacts.service.ContactsService()
         self.contact.email = email
         self.contact.password = password
-        self.contact.source = 'GoogleInc-ContactsPythonSample-1'
+        self.contact.source = 'OpenERP'
         try:
             self.contact.ProgrammaticLogin()
         except Exception, e:
@@ -65,6 +65,8 @@ class google_lib(object):
     def _delete_contact(self):
         self.contact.DeleteContact(selected_entry.GetEditLink().href)        
         return True
+
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

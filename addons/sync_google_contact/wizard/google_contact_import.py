@@ -22,21 +22,27 @@
 from osv import fields,osv,orm
 from tools.translate import _
 
-from google_contact import google_contact
+from sync_google_contact import sync_google_contact
 
 class google_contact_import(osv.osv_memory):
-    _description ='Google Contact'
-    _name = 'google.contact.import'
+    _name = "synchronize.base"    
+    _inherit = 'synchronize.base'
     _columns = {
-        'user': fields.char('User Name', size=64, required=True),
-        'password': fields.char('Password', size=64),
-    }
-    
-    def get_contact(self, cr, uid, ids, context=None):
+        'tools':  fields.selection([('gmail','Gmail')],'Tools'),
+        'create_partner':fields.selection([('group','Group'),('email_address','Email address'),('gmail_user','Gmail user')], 'Create Partner'),
+     }
+        
+    def import_contact(self, cr, uid, ids, context=None):
         # Only see the result, we will change the code
+        
         addresss_obj = self.pool.get('res.partner.address')
+        user_obj=self.pool.get('res.users').browse(cr, uid, uid)
+        gmail_user=user_obj.gmail_user
+        gamil_pwd=user_obj.gmail_password
+        if not gmail_user or not gamil_pwd:
+            raise osv.except_osv(_('Error'), _("Please specify the user and password !"))      
         for obj in self.browse(cr, uid, ids, context=context):
-            google_obj = google_contact.google_lib(obj.user, obj.password)
+            google_obj = sync_google_contact.google_lib(gmail_user, gamil_pwd)
             contact = google_obj._get_contact()
             addresses = []
             while contact:

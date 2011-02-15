@@ -19,15 +19,21 @@
 #
 ##############################################################################
 
-from osv import fields,osv,orm
 
-    
-class res_users(osv.osv):
-    _inherit = "res.users"
-    _columns = {
-        'gmail_user': fields.char('User Name', size=64,),
-        'gmail_password': fields.char('Password', size=64),
-    }
-res_users()    
-# vim:expandtab:smartindent:toabstop=4:softtabstop=4:shiftwidth=4:
-
+{
+    'name': 'Google Contact',
+    'version': '1.0',
+    'category': 'Generic Modules/Others',
+    'description': """The module adds synchronization with multiple app """,
+    'author': 'OpenERP SA',
+    'website': 'http://www.openerp.com',
+    'depends': ['base'],
+    'init_xml': [],
+    'update_xml': [
+                   ],
+    'demo_xml': [],
+    'installable': True,
+    'active': False,
+    'certificate': '',
+}
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
