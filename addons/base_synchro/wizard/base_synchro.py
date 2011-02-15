@@ -125,16 +125,14 @@ class base_synchro(osv.osv_memory):
                 self.report_write+=1
             else:
                 print value
-                new_value = pool_dest.get(object.model_id.model).search(cr, uid, [('name','=',value['name'])])
-                if not new_value:
-                    idnew = pool_dest.get(object.model_id.model).create(cr, uid, value)
-                    synid = self.pool.get('base.synchro.obj.line').create(cr, uid, {
-                        'obj_id': object.id,
-                        'local_id': (action=='u') and id or idnew,
-                        'remote_id': (action=='d') and id or idnew
-                    })
-                    self.report_total+=1
-                    self.report_create+=1
+                idnew = pool_dest.get(object.model_id.model).create(cr, uid, value)
+                synid = self.pool.get('base.synchro.obj.line').create(cr, uid, {
+                    'obj_id': object.id,
+                    'local_id': (action=='u') and id or idnew,
+                    'remote_id': (action=='d') and id or idnew
+                })
+                self.report_total+=1
+                self.report_create+=1
             self.meta = {}
         return True
 
@@ -218,7 +216,7 @@ class base_synchro(osv.osv_memory):
         start_date = time.strftime('%Y-%m-%d, %Hh %Mm %Ss')
         syn_obj = self.browse(cr, uid, ids, context=context)[0]
         pool = pooler.get_pool(cr.dbname)
-        server = pool.get('base.synchro.server').browse(cr, uid, ids, context=context)[0]
+        server = pool.get('base.synchro.server').browse(cr, uid, syn_obj.server_url.id, context=context)
         for object in server.obj_ids:
             dt = time.strftime('%Y-%m-%d %H:%M:%S')
             self.synchronize(cr, uid, server, object, context=context)
@@ -252,8 +250,7 @@ Exceptions:
             return True
 
     def upload_download_multi_thread(self, cr, uid, data, context=None):
-        cr1 = pooler.get_db(cr.dbname).cursor()
-        threaded_synchronization = threading.Thread(target=self.upload_download, args=(cr1, uid, data, context))
+        threaded_synchronization = threading.Thread(target=self.upload_download, args=(cr, uid, data, context))
         threaded_synchronization.run()
         data_obj = self.pool.get('ir.model.data')
         id2 = data_obj._get_id(cr, uid, 'base_synchro', 'view_base_synchro_finish')
