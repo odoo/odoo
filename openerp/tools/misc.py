@@ -458,7 +458,7 @@ def connect_smtp_server(server_host, server_port,  user_name=None, user_password
     return smtp_server
         
 
-def _email_send(smtp_from, smtp_to_list, message, openobject_id=None, ssl=False, debug=False,
+def _email_send(smtp_from, smtp_to_list, message, ssl=False, debug=False,
             smtp_server=None, smtp_port=None, smtp_user=None, smtp_password=None):
     """Low-level method to send directly a Message through the configured smtp server.
         :param smtp_from: RFC-822 envelope FROM (not displayed to recipient)
@@ -475,9 +475,6 @@ def _email_send(smtp_from, smtp_to_list, message, openobject_id=None, ssl=False,
 
         def write(self, s):
             self.logger.notifyChannel('email_send', loglevels.LOG_DEBUG, s)
-
-    if openobject_id:
-        message['Message-Id'] = generate_tracking_message_id(openobject_id)
 
     try:
         smtp_server = smtp_server or config['smtp_server']
@@ -517,7 +514,7 @@ def _email_send(smtp_from, smtp_to_list, message, openobject_id=None, ssl=False,
 
 
 def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=None, reply_to=False,
-               attach=None, openobject_id=False, debug=False, subtype='plain', x_headers=None, priority='3',
+               attach=None, message_id=None, openobject_id=False, debug=False, subtype='plain', x_headers=None, priority='3',
                smtp_server=None, smtp_port=None, ssl=False, smtp_user=None, smtp_password=None):
 
     """Send an email.
@@ -548,6 +545,11 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
     email_body = ustr(body).encode('utf-8')
     email_text = MIMEText(email_body or '',_subtype=subtype,_charset='utf-8')
     msg = MIMEMultipart()
+
+    if message_id:
+        msg['Message-Id'] = message_id
+    elif openobject_id:
+        msg['Message-Id'] = generate_tracking_message_id(openobject_id)
 
     msg['Subject'] = Header(ustr(subject), 'utf-8')
     msg['From'] = email_from
@@ -586,7 +588,7 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
             part.add_header('Content-Disposition', 'attachment; filename="%s"' % (fname,))
             msg.attach(part)
 
-    return _email_send(email_from, flatten([email_to, email_cc, email_bcc]), msg, openobject_id=openobject_id, ssl=ssl, debug=debug,
+    return _email_send(email_from, flatten([email_to, email_cc, email_bcc]), msg, ssl=ssl, debug=debug,
                        smtp_server=smtp_server, smtp_port=smtp_port, smtp_user=smtp_user, smtp_password=smtp_password)
 
 #----------------------------------------------------------
