@@ -451,7 +451,6 @@ This is useful for CRM leads for example"),
     def generate_email(self, cr, uid, ids, record_ids,  context=None):
         if context is None:
             context = {}
-        email_message_pool = self.pool.get('email.message')
         email_ids = []
         for template in self.browse(cr, uid, ids, context=context):
             for record_id in record_ids:
