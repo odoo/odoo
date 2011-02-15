@@ -26,6 +26,7 @@ try:
     import gdata
     from gdata import contacts
     import gdata.contacts.service
+    import atom
 except ImportError:
     raise osv.except_osv(_('Google Contacts Import Error!'), _('Please install gdata-python-client from http://code.google.com/p/gdata-python-client/downloads/list'))
 
@@ -58,7 +59,8 @@ class google_lib(object):
     
         new_contact = gdata.contacts.ContactEntry(title=atom.Title(text=name))
         # Create a work email address for the contact and use as primary. 
-        new_contact.email.append(gdata.contacts.Email(address=primary_email, 
+        if primary_email:
+            new_contact.email.append(gdata.contacts.Email(address=primary_email, 
             primary='true', rel=gdata.contacts.REL_WORK))
         entry = self.contact.CreateContact(new_contact)
         return entry
@@ -75,6 +77,29 @@ class res_partner_address(osv.osv):
     }    
     
 
+    def create(self, cr, uid, vals, context=None):
+        
+        if context is None:
+            context = {}
+        if vals.get('sync_google') :
+            self.sync_create(cr,uid,vals,context=context,synchronize=vals.get('sync_google'))
+        return super(res_partner_address, self).create(cr, uid, vals, context=context)   
+
+    def write(self, cr, uid, ids, vals, context=None, check=True, update_check=True):
+        if context is None:
+            context = {}
+        return super(res_partner_address, self).write(cr, uid, ids, vals, context=context)
+        
+    def sync_create(self, cr, uid, vals, context=None,synchronize=True):
+        # we all more detail soon
+        user_obj=self.pool.get('res.users').browse(cr, uid, uid)
+        gmail_user=user_obj.gmail_user
+        gamil_pwd=user_obj.gmail_password
+        google_obj =google_lib(gmail_user, gamil_pwd)
+        name=vals.get('name')
+        email=vals.get('email')
+        contact = google_obj._create_contact(name,email)            
+        return True
 res_partner_address()
 
 

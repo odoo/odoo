@@ -57,7 +57,7 @@ class google_contact_import(osv.osv_memory):
                             'email': emails,
                             'google_id':google_id
                      }
-                    contact_ids = addresss_obj.search(cr, uid, [('email','ilike',emails)])
+                    contact_ids = addresss_obj.search(cr, uid, [('email','ilike',emails),])
                     if not contact_ids:
                         addresses.append(addresss_obj.create(cr, uid, data, context=context))
                 if not contact:
