@@ -67,7 +67,7 @@ def format_date_tz(date, tz=None):
 class email_message_template(osv.osv_memory):
     _name = 'email.message.template'
     _columns = {
-        'name':fields.text('Subject'),
+        'name':fields.text('Subject', translate=True),
         'model': fields.char('Object Name', size=128, select=1),
         'res_id': fields.integer('Resource ID', select=1),
         'date': fields.datetime('Date'),
@@ -82,7 +82,7 @@ class email_message_template(osv.osv_memory):
         'sub_type': fields.char('Sub Type', size=32),
         'headers': fields.char('x_headers',size=256),
         'priority':fields.integer('Priority'),
-        'description': fields.text('Description'),
+        'description': fields.text('Description', translate=True),
         'smtp_server_id':fields.many2one('email.smtp_server', 'SMTP Server'),
     }
     _sql_constraints = []

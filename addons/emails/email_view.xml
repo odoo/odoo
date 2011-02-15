@@ -76,6 +76,8 @@
                     <field name="user_id" string="Owner"/>
                     <field name="message_id" string="Message" invisible="1"/>
                     <field name="partner_id" invisible="1"/>
+                    <field name="folder"/>
+                    <field name="state"/>
                     <button name="open_document" string="Open Document" type="object" icon="gtk-jump-to"/>
                     <button name="open_attachment" string="Open Attachments" type="object" icon="gtk-jump-to"/>
                 </tree>
@@ -88,14 +90,23 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Email Search">
+                    <filter icon="terp-document-new" string="Draft" domain="[('folder','=','drafts')]"/>
+                    <filter icon="terp-personal" string="Inbox" domain="[('folder','=','inbox')]"/>
+                    <filter icon="terp-check" string="Outbox" domain="[('folder','=','outbox')]"/>
+                    <filter icon="terp-partner" string="Sent Items" domain="[('folder','=','sent')]"/>
+                    <filter icon="terp-mail_delete" string="Trash" domain="[('folder','=','trash')]"/>
+                    <separator orientation="vertical"/>
+                    <filter icon="terp-call-start" string="Waiting" domain="[('state','=','waiting')]"/>
+                    <filter icon="terp-gtk-stop" string="Exception" domain="[('state','=','exception')]"/>
                     <field name="name"/>
                     <field name="date"/>
                     <field name="user_id" string="Owner"/>
                     <field name="partner_id" string="Partner Name"/>
                     <newline/>
                     <group expand="0" string="Group By..." groups="base.group_extended">
+                        <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                         <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
-                        <filter string="Owner" name="User" icon="terp-personal" context="{'group_by':'user_id'}"/>
+                        <filter string="Ower" name="Ower" icon="terp-personal" context="{'group_by':'user_id'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Thread" icon="terp-mail-" domain="[]" context="{'group_by':'message_id'}"/>
                         <separator orientation="vertical"/>
@@ -152,14 +163,14 @@
                                 <field name="smtpport"/>
                                 <field name="smtpssl"/>
                                 <field name="smtptls"/>
-                             </group>   
-                               
+                             </group>
+
                             <separator string="User Information" colspan="4"/>
                             <group col="6" colspan="4">
                                 <field name="email_id"/>
                                 <field name="smtpuname"/>
                                 <field name="smtppass" password="True"/>
-                                
+
                             </group>
                             <separator string="" colspan="4"/>
                             <label string="" colspan="2"/>
