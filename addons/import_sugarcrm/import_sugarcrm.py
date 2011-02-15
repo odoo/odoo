@@ -155,6 +155,7 @@ class import_sugarcrm(osv.osv):
                 self._create_lead(cr, uid, sugar_val, country, state, context)
 
             elif sugar_name == "Opportunities":
+                self._create_contact(cr, uid, sugar_val, country, state, context)
                 self._create_opportunity(cr, uid, sugar_val, country, state,context)
 
             elif sugar_name == "Contacts":

@@ -5,7 +5,8 @@
 
 
 from sugarsoap_services_types import *
-from osv import osv, fields
+from osv import osv
+from tools.translate import _
 
 
 try:
