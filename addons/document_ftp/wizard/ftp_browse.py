@@ -47,7 +47,7 @@ class document_ftp_browse(osv.osv_memory):
                     url = url[:-1]
             else:
                 url = '%s:%s' %(ftpserver.HOST, ftpserver.PORT)
-            res['url'] = 'ftp://%s@%s/%s'%(current_user.login, url, cr.dbname)
+            res['url'] = 'ftp://%s@%s'%(current_user.login, url)
         return res
 
     def browse_ftp(self, cr, uid, ids, context=None):

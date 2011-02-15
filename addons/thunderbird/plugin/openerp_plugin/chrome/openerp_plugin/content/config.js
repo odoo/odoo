@@ -5,11 +5,22 @@ function config_close()
     window.open("chrome://openerp_plugin/content/config.xul", "", "chrome");
 }
 
+
+function createMenuItem(aLabel, aValue) {
+    const XUL_NS = "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul";
+    var item = document.createElementNS(XUL_NS, "menuitem"); // create a new XUL menuitem
+    item.setAttribute("label", aLabel);
+    item.setAttribute("value", aValue);
+    return item;
+}
 //set the value of the configuration fields
 function config_change_load()
 {
     var s = getServer();
     var a =s.split(':');
+    var popup = document.getElementById("dbprotocol_list");
+    popup.menupopup.appendChild(createMenuItem('XML-RPC','http://'));
+    popup.menupopup.appendChild(createMenuItem('XML-RPCS','https://'));
     if (String(a)=="" || String(a)=="undefined"){
         document.getElementById('txtcurl').value = "localhost"
         document.getElementById('txtcport').value = "8069"
@@ -91,6 +102,7 @@ function config_change_load_web()
 
 function config_ok()
 {
+    var protocol = document.getElementById("dbprotocol_list").value
     if (document.getElementById('txtcurl').value == '')
     {
         alert("You Must Enter Server Name!")
@@ -102,7 +114,12 @@ function config_ok()
         alert("You Must Enter Port!")
         return false;
     }
-    setServer("http://"+document.getElementById('txtcurl').value +":" + document.getElementById('txtcport').value);
+    if (protocol == '')
+    {
+        alert("Invalid Porotocol!\nPlease Select protocol from Connection protocol list.")
+        return false;
+    }
+    setServer(document.getElementById("dbprotocol_list").value+document.getElementById('txtcurl').value +":" + document.getElementById('txtcport').value);
     window.close("chrome://openerp_plugin/content/config_change.xul", "", "chrome");
     window.open("chrome://openerp_plugin/content/config.xul", "", "chrome");
 }

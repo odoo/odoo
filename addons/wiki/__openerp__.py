@@ -21,7 +21,7 @@
 
 {
     'name': 'Document Management - Wiki',
-    'version': '1.0',
+    'version': '1.0.1',
     'category': 'Generic Modules/Others',
     'description': """
 The base module to manage documents(wiki)
