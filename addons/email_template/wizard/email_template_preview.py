@@ -33,7 +33,7 @@ class email_template_preview(osv.osv_memory):
 
     def _get_records(self, cr, uid, context=None):
         """
-        Return Records of particular Email Template's Model  
+        Return Records of particular Email Template's Model
         """
         if context is None:
             context = {}
@@ -50,9 +50,9 @@ class email_template_preview(osv.osv_memory):
         default_id = context.get('default_res_id')
         if default_id and default_id not in record_ids:
             record_ids.insert(0, default_id)
-        
+
         return model.name_get(cr, uid, record_ids, context)
-        
+
 
     def default_get(self, cr, uid, fields, context=None):
         if context is None:
@@ -80,7 +80,7 @@ class email_template_preview(osv.osv_memory):
             return {}
         vals = {}
         if context == {}:
-            context = self.context 
+            context = self.context
 
         template_pool = self.pool.get('email.template')
         template_id = context.get('template_id', False)
@@ -93,10 +93,9 @@ class email_template_preview(osv.osv_memory):
         if template.message_id:
             vals['message_id'] = self.get_template_value(cr, uid, message_id, model, res_id, context)
         elif template.track_campaign_item:
-            vals['message_id'] = tools.misc.generate_tracking_message_id(rel_model_ref)
+            vals['message_id'] = tools.misc.generate_tracking_message_id(res_id)
         vals['subject'] = self.get_template_value(cr, uid, template.subject, model, res_id, context)
         vals['description'] = self.get_template_value(cr, uid, template.description, model, res_id, context)
-        vals['body_html'] = self.get_template_value(cr, uid, template.body_html, model, res_id, context)
         vals['report_name'] = self.get_template_value(cr, uid, template.report_name, model, res_id, context)
         return {'value':vals}
 

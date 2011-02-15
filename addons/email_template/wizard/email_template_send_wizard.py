@@ -46,7 +46,7 @@ class email_template_send_wizard(osv.osv_memory):
             if len(context['src_rec_ids']) > 1: # Multiple Mail: Gets original template values for multiple email change
                 return getattr(template, field)
             else: # Simple Mail: Gets computed template values
-                return self.get_template_value(cr, uid, getattr(template, field), template.model, context)
+                return self.get_template_value(cr, uid, getattr(template, field), template.model, context.get('active_id'), context)
 
         if 'user_signature' in fields:
             result['user_signature'] = template.user_signature

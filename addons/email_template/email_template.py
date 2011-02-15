@@ -86,14 +86,14 @@ This is useful for CRM leads for example"),
                   help="The subject of email."
                   " Placeholders can be used here.",
                   translate=True),
-        'description':fields.text(
-                    'Standard Body (Text)',
-                    help="The text version of the mail",
-                    translate=True),
-        'body_html':fields.text(
-                    'Body (Text-Web Client Only)',
-                    help="The text version of the mail",
-                    translate=True),
+#        'description':fields.text(
+#                    'Standard Body (Text)',
+#                    help="The text version of the mail",
+#                    translate=True),
+#        'body_html':fields.text(
+#                    'Body (Text-Web Client Only)',
+#                    help="The text version of the mail",
+#                    translate=True),
         'user_signature':fields.boolean(
                   'Signature',
                   help="the signature from the User details"
