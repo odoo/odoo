@@ -196,7 +196,7 @@
         </record>
 
         <record model="ir.actions.act_window" id="action_email_smtp_server_tree_all">
-            <field name="name">Smtp Server</field>
+            <field name="name">Outgoing Servers</field>
             <field name="res_model">email.smtp_server</field>
             <field name="view_type">form</field>
             <field name="view_mode">form,tree</field>
@@ -207,7 +207,7 @@
 
         <menuitem name="Email" id="menu_config_email" parent="base.menu_lunch_survey_root" sequence="20"/>
 
-        <menuitem name="Smtp Server" id="menu_email_smtp_server_all" parent="menu_config_email" action="action_email_smtp_server_tree_all"/>
+        <menuitem name="Outgoing Servers" id="menu_email_smtp_server_all" parent="menu_config_email" action="action_email_smtp_server_tree_all"/>
 
     </data>
 </openerp>

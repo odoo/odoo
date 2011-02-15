@@ -93,7 +93,7 @@
         </record>
 
         <record model="ir.actions.act_window" id="action_email_server_tree">
-            <field name="name">Email Servers</field>
+            <field name="name">Incomming Servers</field>
             <field name="res_model">email.server</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -102,10 +102,10 @@
         </record>
 
         <menuitem
-            parent="emails.menu_email_message_tools"
+            parent="emails.menu_config_email"
             id="menu_action_fetchmail_server_tree"
             action="action_email_server_tree"
-            name="Email Servers"
+            name="Incomming Servers"
         />
 
       <record model="ir.ui.view" id="email_message_tree_view">
