@@ -28,7 +28,7 @@ import tools
 
 class email_template_send_wizard(osv.osv_memory):
     _name = 'email_template.send.wizard'
-    _inherit = 'email_template.preview'
+    _inherit = 'email.template'
     _description = 'This is the wizard for sending mail'
 
     def default_get(self, cr, uid, fields, context=None):
@@ -39,7 +39,7 @@ class email_template_send_wizard(osv.osv_memory):
         template_pool = self.pool.get('email.template')
         model_pool = self.pool.get('ir.model')
         template_id=context.get('template_id', False)
-        template = self.get_email_template(cr, uid, template_id=template_id, context=context)
+        template = template_pool.get_email_template(cr, uid, template_id=template_id, context=context)
         def _get_template_value(field):
             if not template:
                 return False
@@ -50,6 +50,9 @@ class email_template_send_wizard(osv.osv_memory):
 
         if 'user_signature' in fields:
             result['user_signature'] = template.user_signature
+
+        if 'report_template' in fields:
+            result['report_template'] = template.report_template
 
         if 'template_id' in fields:
             result['template_id'] = template.id

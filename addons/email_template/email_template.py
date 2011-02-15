@@ -47,12 +47,10 @@ class email_template(osv.osv):
             context = {}
         if not template_id:
             template_id = context.get('template_id', False)
-    
         if not template_id:
             return False
 
-        template_pool = self.pool.get('email.template')
-        template = template_pool.browse(cr, uid, int(template_id), context)
+        template = self.browse(cr, uid, int(template_id), context)
         lang = self.get_template_value(cr, uid, template.lang, template.model, record_id, context)
         if lang:
             # Use translated template if necessary
@@ -382,7 +380,7 @@ This is useful for CRM leads for example"),
         else:
             email_from = tools.ustr(smtp_server.name) + "<" + tools.ustr(email_id) + ">"
 
-        model = template.model
+        model = template.model_id.model
         values = {
             'email_from': email_from,
             'email_to': self.get_template_value(cr, uid, template.email_to, model, record_id, context),
@@ -439,7 +437,7 @@ This is useful for CRM leads for example"),
        
         #Send emails
         email_id = email_message_pool.email_send(cr, uid, values.get('email_from'), values.get('email_to'), values.get('name'), values.get('description'), 
-                    model=template.model, email_cc=values.get('email_cc'), email_bcc=values.get('email_bcc'), reply_to=values.get('reply_to'), 
+                    model=model, email_cc=values.get('email_cc'), email_bcc=values.get('email_bcc'), reply_to=values.get('reply_to'), 
                     attach=attachment, openobject_id=record_id, debug=True, subtype='plain', x_headers={}, priority='3', smtp_server_id=smtp_server.id, context=context)
         email_message_pool.write(cr, uid, email_id, {'template_id': template.id})
         return email_id
@@ -454,7 +452,6 @@ This is useful for CRM leads for example"),
         for template in self.browse(cr, uid, ids, context=context):
             for record_id in record_ids:
                 email_id = self._generate_email(cr, uid, template.id, record_id, context)
-                email_message_pool.write(cr, uid, email_id, {'folder':'outbox', 'state': 'waiting'}, context=context)
                 email_ids.append(email_id)
         return email_ids
 email_template()

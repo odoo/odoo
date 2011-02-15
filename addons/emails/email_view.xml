@@ -34,11 +34,13 @@
                                     <field name="res_id"  readonly="1"/>
                                     <button name="open_document" string="Open Document" type="object" icon="gtk-jump-to"/>
 	                                <field name="message_id"/>
-	                                <button name="process_queue" string="Process Queue" type="object" icon="gtk-execute"/>
                                 </group>
                             </group>
                             <separator string="Description" colspan="4"/>
                             <field name="description" nolabel="1" colspan="4"/>
+                            <separator string="" colspan="4"/>
+                            <field name="state"/>
+                            <button name="process_queue" string="Send" type="object" icon="gtk-execute" states='draft,waiting'/>
                         </page>
                         <page string="Attachments">
                             <separator string="Attachments" colspan="4"/>
@@ -47,7 +49,6 @@
                         <page string="Advanced">
                             <group col="4" colspan="4">
 	                            <field name="folder"/>
-	                            <field name="state"/>
 	                            <field name="sub_type"/>
 	                            <field name="headers"/>
 	                            <field name="priority"/>

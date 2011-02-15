@@ -186,6 +186,8 @@ class email_message(osv.osv):
                         ('draft', 'Draft'),
                         ('sending', 'Sending'),
                         ('waiting', 'Waiting'),
+                        ('sent', 'Sent'),
+                        ('exception', 'Exception'),
                         ], 'State', readonly=True),
     }
 
@@ -238,13 +240,13 @@ class email_message(osv.osv):
     def email_send(self, cr, uid, email_from, email_to, subject, body, model=False, email_cc=None, email_bcc=None, reply_to=False, attach=None,
             openobject_id=False, debug=False, subtype='plain', x_headers={}, priority='3', smtp_server_id=False, context=None):
         attachment_obj = self.pool.get('ir.attachment')
-        if type(email_to) != list:
+        if email_to and type(email_to) != list:
             email_to = [email_to]
-        if type(email_cc) != list:
+        if email_cc and type(email_cc) != list:
             email_cc = [email_cc]
-        if type(email_bcc) != list:
+        if email_bcc and type(email_bcc) != list:
             email_bcc = [email_bcc]
-        if type(reply_to) != list:
+        if reply_to and type(reply_to) != list:
             reply_to = [reply_to]
         msg_vals = {
                 'name': subject,
@@ -257,7 +259,8 @@ class email_message(osv.osv):
                 'email_cc': email_cc and ','.join(email_cc) or '',
                 'email_bcc': email_bcc and ','.join(email_bcc) or '',
                 'reply_to': reply_to and ','.join(reply_to) or '',
-                'message_id': openobject_id,
+                'res_id':openobject_id,
+                #'message_id': message_id,
                 'sub_type': subtype or '',
                 'headers': x_headers or False,
                 'priority': priority,
@@ -307,7 +310,7 @@ class email_message(osv.osv):
                     smtp_ids = smtp_server_obj.search(cr, uid, [('default','=',True)])
                     if smtp_ids:
                         smtp_server = smtp_server_obj.browse(cr, uid, smtp_ids, context)[0]
-                tools.email_send(message.email_from,
+                res = tools.email_send(message.email_from,
                         message.email_to and message.email_to.split(',') or [],
                         message.name, message.description,
                         email_cc=message.email_cc and message.email_cc.split(',') or [],
@@ -323,9 +326,14 @@ class email_message(osv.osv):
                         ssl=smtp_account and smtp_account.smtpssl or False,
                         smtp_user=smtp_account and smtp_account.smtpuname or None,
                         smtp_password=smtp_account and smtp_account.smtppass or None)
+                if res:
+                    self.write(cr, uid, [message.id], {'state':'sent'}, context)
+                else:
+                    self.write(cr, uid, [message.id], {'state':'exception'}, context)
             except Exception, error:
                 logger = netsvc.Logger()
                 logger.notifyChannel("email-template", netsvc.LOG_ERROR, _("Sending of Mail %s failed. Probable Reason:Could not login to server\nError: %s") % (message.id, error))
+                self.write(cr, uid, [message.id], {'state':'exception'}, context)
         return ids
 
 # OLD Code.

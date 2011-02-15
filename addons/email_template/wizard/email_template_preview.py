@@ -31,17 +31,6 @@ class email_template_preview(osv.osv_memory):
     _description = "Email Template Preview"
     _rec_name = "subject"
 
-    
-    def get_email_template(self, cr, uid, template_id=None, record_id=None, context=None):
-        if context is None:
-            context = {}
-        
-        template_id = context.get('template_id', False)
-        record_id = context.get('src_rec_ids',[]) and context.get('src_rec_ids')[0]
-        return super(email_template_preview, self).get_email_template(cr, uid, template_id, record_id, context=context)
-        
-    
-
     def _get_records(self, cr, uid, context=None):
         """
         Return Records of particular Email Template's Model  
@@ -94,7 +83,8 @@ class email_template_preview(osv.osv_memory):
             context = self.context 
 
         template_pool = self.pool.get('email.template')
-        template = self.get_email_template(cr, uid, context)
+        template_id = context.get('template_id', False)
+        template = template_pool.get_email_template(cr, uid, template_id=template_id, record_id=res_id, context=context)
         model = template.model
         vals['email_to'] = self.get_template_value(cr, uid, template.email_to, model, res_id, context)
         vals['email_cc'] = self.get_template_value(cr, uid, template.email_cc, model, res_id, context)
