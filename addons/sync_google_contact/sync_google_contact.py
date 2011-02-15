@@ -78,12 +78,13 @@ class res_partner_address(osv.osv):
     
 
     def create(self, cr, uid, vals, context=None):
-        
+        id =super(res_partner_address, self).create(cr, uid, vals, context=context)  
+        vals.update({'ids':id})
         if context is None:
             context = {}
         if vals.get('sync_google') :
             self.sync_create(cr,uid,vals,context=context,synchronize=vals.get('sync_google'))
-        return super(res_partner_address, self).create(cr, uid, vals, context=context)   
+        return id
 
     def write(self, cr, uid, ids, vals, context=None, check=True, update_check=True):
         if context is None:
@@ -98,7 +99,9 @@ class res_partner_address(osv.osv):
         google_obj =google_lib(gmail_user, gamil_pwd)
         name=vals.get('name')
         email=vals.get('email')
-        contact = google_obj._create_contact(name,email)            
+        contact = google_obj._create_contact(name,email) 
+        openerp_id=vals['ids']
+        self.write(cr,uid,[openerp_id],{'google_id':contact.id.text},context=context)
         return True
 res_partner_address()
 
