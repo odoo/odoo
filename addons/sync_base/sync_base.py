@@ -24,7 +24,8 @@ from osv import fields,osv,orm
 #framework to handle synchronization with multiple app
 # we will improve the code and function
 
-class res_partner_sync_base:
+class res_partner_sync_base(osv.osv):
+    
     _inherit = "res.partner.address"
 
     def create(self, cr, uid, vals, context=None):

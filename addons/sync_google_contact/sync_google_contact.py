@@ -66,16 +66,16 @@ class google_lib(object):
         self.contact.DeleteContact(selected_entry.GetEditLink().href)        
         return True
 
-class res_partner_sync_base:
+class res_partner_address(osv.osv):
+    
     _inherit = "res.partner.address"
-
     _columns = {
         'sync_google':fields.boolean('Synchronize with Google'),   
         'google_id': fields.char('Google Contact Id', size=128, readonly=True),  
     }    
     
 
-res_partner_sync_base()
+res_partner_address()
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
