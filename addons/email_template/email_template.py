@@ -438,7 +438,7 @@ This is useful for CRM leads for example"),
         #Send emails
         email_id = email_message_pool.email_send(cr, uid, values.get('email_from'), values.get('email_to'), values.get('name'), values.get('description'), 
                     model=model, email_cc=values.get('email_cc'), email_bcc=values.get('email_bcc'), reply_to=values.get('reply_to'), 
-                    attach=attachment, openobject_id=record_id, debug=True, subtype='plain', x_headers={}, priority='3', smtp_server_id=smtp_server.id, context=context)
+                    attach=attachment, message_id=values.get('message_id'), openobject_id=record_id, debug=True, subtype='plain', x_headers={}, priority='3', smtp_server_id=smtp_server.id, context=context)
         email_message_pool.write(cr, uid, email_id, {'template_id': template.id})
         return email_id
 

@@ -238,7 +238,7 @@ class email_message(osv.osv):
                                  _("Error sending mail: %s") % e)
 
     def email_send(self, cr, uid, email_from, email_to, subject, body, model=False, email_cc=None, email_bcc=None, reply_to=False, attach=None,
-            openobject_id=False, debug=False, subtype='plain', x_headers={}, priority='3', smtp_server_id=False, context=None):
+            message_id=False, openobject_id=False, debug=False, subtype='plain', x_headers={}, priority='3', smtp_server_id=False, context=None):
         attachment_obj = self.pool.get('ir.attachment')
         if email_to and type(email_to) != list:
             email_to = [email_to]
@@ -258,8 +258,8 @@ class email_message(osv.osv):
                 'email_cc': email_cc and ','.join(email_cc) or '',
                 'email_bcc': email_bcc and ','.join(email_bcc) or '',
                 'reply_to': reply_to,
-                'res_id':openobject_id,
-                #'message_id': message_id,
+                'res_id': openobject_id,
+                'message_id': message_id,
                 'sub_type': subtype or '',
                 'headers': x_headers or False,
                 'priority': priority,
@@ -318,7 +318,7 @@ class email_message(osv.osv):
                         email_cc=message.email_cc and message.email_cc.split(',') or [],
                         email_bcc=message.email_bcc and message.email_bcc.split(',') or [],
                         reply_to=message.reply_to,
-                        attach=attachments, openobject_id=message.message_id,
+                        attach=attachments, message_id=message.message_id, openobject_id=message.res_id,
                         subtype=message.sub_type,
                         x_headers=message.headers and eval(message.headers) or {},
                         priority=message.priority, debug=message.debug,
