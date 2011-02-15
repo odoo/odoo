@@ -88,13 +88,13 @@ class account_invoice_refund(osv.osv_memory):
         if context is None:
             context = {}
 
-        for form in  self.read(cr, uid, ids, context=context):
+        for form in self.browse(cr, uid, ids, context=context):
             created_inv = []
             date = False
             period = False
             description = False
             company = res_users_obj.browse(cr, uid, uid, context=context).company_id
-            journal_id = form.get('journal_id', False)
+            journal_id = form.journal_id.id
             if isinstance(journal_id, tuple):
                 journal_id = journal_id[0]
             for inv in inv_obj.browse(cr, uid, context.get('active_ids'), context=context):
@@ -102,19 +102,17 @@ class account_invoice_refund(osv.osv_memory):
                     raise osv.except_osv(_('Error !'), _('Can not %s draft/proforma/cancel invoice.') % (mode))
                 if inv.reconciled and mode in ('cancel', 'modify'):
                     raise osv.except_osv(_('Error !'), _('Can not %s invoice which is already reconciled, invoice should be unreconciled first. You can only Refund this invoice') % (mode))
-                if form['period']:
-                    period = form['period']
-                    if isinstance(period, tuple):
-                        period = period[0]
+                if form.period.id:
+                    period = form.period.id
                 else:
                     period = inv.period_id and inv.period_id.id or False
 
                 if not journal_id:
                     journal_id = inv.journal_id.id
 
-                if form['date']:
-                    date = form['date']
-                    if not form['period']:
+                if form.date:
+                    date = form.date
+                    if not form.period.id:
                             cr.execute("select name from ir_model_fields \
                                             where model = 'account.period' \
                                             and name = 'company_id'")
@@ -132,8 +130,8 @@ class account_invoice_refund(osv.osv_memory):
                                 period = res[0]
                 else:
                     date = inv.date_invoice
-                if form['description']:
-                    description = form['description']
+                if form.description:
+                    description = form.description
                 else:
                     description = inv.name
 
@@ -215,7 +213,7 @@ class account_invoice_refund(osv.osv_memory):
             return result
 
     def invoice_refund(self, cr, uid, ids, context=None):
-        data_refund = self.read(cr, uid, ids, [],context=context)[0]['filter_refund']
+        data_refund = self.read(cr, uid, ids, ['filter_refund'],context=context)[0]['filter_refund']
         return self.compute_refund(cr, uid, ids, data_refund, context=context)
 
 

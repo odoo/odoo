@@ -46,7 +46,7 @@ class account_vat_declaration(osv.osv_memory):
             context = {}
         datas = {'ids': context.get('active_ids', [])}
         datas['model'] = 'account.tax.code'
-        datas['form'] = self.read(cr, uid, ids)[0]
+        datas['form'] = self.read(cr, uid, ids, context=context)[0]
         for field in datas['form'].keys():
             if isinstance(datas['form'][field], tuple):
                 datas['form'][field] = datas['form'][field][0]
