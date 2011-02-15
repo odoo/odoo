@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-01-19 12:00+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"PO-Revision-Date: 2011-02-10 23:00+0000\n"
+"Last-Translator: Dimitar Markov <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-25 06:22+0000\n"
+"X-Launchpad-Export-Date: 2011-02-11 06:26+0000\n"
 "X-Generator: Launchpad (build 12177)\n"
 
 #. module: account_analytic_analysis
@@ -29,11 +29,12 @@ msgstr ""
 #: help:account.analytic.account,remaining_ca:0
 msgid "Computed using the formula: Max Invoice Price - Invoiced Amount."
 msgstr ""
+"Пресметнато по формулата: Максимална фактурна цена - фактурирани количества."
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_hours:0
 msgid "Computed using the formula: Maximum Quantity - Hours Tot."
-msgstr ""
+msgstr "Пресметнато по формулата: Максимално количество - часове общо"
 
 #. module: account_analytic_analysis
 #: code:addons/account_analytic_analysis/account_analytic_analysis.py:532
@@ -99,7 +100,7 @@ msgstr "Дата на последния разход/труд"
 #. module: account_analytic_analysis
 #: field:account.analytic.account,total_cost:0
 msgid "Total Costs"
-msgstr ""
+msgstr "Крайни разходи"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,hours_quantity:0
@@ -107,6 +108,8 @@ msgid ""
 "Number of hours you spent on the analytic account (from timesheet). It "
 "computes on all journal of type 'general'."
 msgstr ""
+"Брой часове които сте прекарали върху аналитичната сметка (по график). "
+"Пресмята по всички дневници от тип 'общ'."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,remaining_hours:0
@@ -175,7 +178,7 @@ msgstr "Сума по фактура"
 #: code:addons/account_analytic_analysis/account_analytic_analysis.py:704
 #, python-format
 msgid "You try to bypass an access rule (Document type: %s)."
-msgstr ""
+msgstr "Опитвате се да прескочите правило за достъп (Документ тип: %s)."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_worked_invoiced_date:0
@@ -202,7 +205,7 @@ msgstr ""
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_invoiced:0
 msgid "Total customer invoiced amount for this account."
-msgstr "Тотално количество фактурирано към клиент за тази сметка."
+msgstr "Тотална сума по фактури към клиент за тази сметка."
 
 #. module: account_analytic_analysis
 #: model:ir.model,name:account_analytic_analysis.model_account_analytic_analysis_summary_month
@@ -273,7 +276,7 @@ msgstr "Аналитична сметка"
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_managed_overpassed
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_action_account_analytic_managed_overpassed
 msgid "Overpassed Accounts"
-msgstr ""
+msgstr "Просрочени сметки"
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_hr_tree_invoiced_all
@@ -297,3 +300,5 @@ msgid ""
 "Total of costs for this account. It includes real costs (from invoices) and "
 "indirect costs, like time spent on timesheets."
 msgstr ""
+"Общо разходи за тази сметка. Включва реални разходи (по фактури) и непреки "
+"разходи, като прекарано време по графици."

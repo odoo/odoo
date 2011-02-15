@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-02-08 10:28+0000\n"
-"Last-Translator: Amós Oviedo <Unknown>\n"
+"PO-Revision-Date: 2011-02-14 13:23+0000\n"
+"Last-Translator: Alberto Luengo Cabanillas (Pexego) <alberto@pexego.es>\n"
 "Language-Team: Galician <gl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-02-09 06:01+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-02-15 05:38+0000\n"
+"X-Generator: Launchpad (build 12351)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -1544,6 +1544,8 @@ msgstr "Buscar Extractos Bancarios"
 msgid ""
 "Wrong credit or debit value in model (Credit + Debit Must Be greater \"0\")!"
 msgstr ""
+"¡Valor do crédito ou débito incorrecto no modelo (Crédito + Débito debe ser "
+"superior a \"0\")!"
 
 #. module: account
 #: view:account.chart.template:0
@@ -1573,6 +1575,12 @@ msgid ""
 "the Payment column of a line, you can press F1 to open the reconciliation "
 "form."
 msgstr ""
+"Un extracto bancario é un resumo de tódalas transaccións ocurridas nun "
+"periodo de tempo sobre unha conta de depósito, unha tarxeta de crédito ou "
+"calqueira outro tipo de conta financieira. O balance de apertura proporase "
+"automáticamente e o balance de peche procederá do seu extracto. Cando se "
+"atope na columna de 'Pago' dunha liña, pode pulsar F1 para abri-lo "
+"formulario de conciliación."
 
 #. module: account
 #: report:account.analytic.account.cost_ledger:0
@@ -1615,7 +1623,7 @@ msgstr "Secuencia do Ano Fiscal"
 #. module: account
 #: field:wizard.multi.charts.accounts,seq_journal:0
 msgid "Separated Journal Sequences"
-msgstr ""
+msgstr "Secuencias Separadas de Diario"
 
 #. module: account
 #: field:account.bank.statement,user_id:0
@@ -1631,7 +1639,7 @@ msgstr "Sub-Total:"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_report_account_type_sales_tree_all
 msgid "Sales by Account Type"
-msgstr ""
+msgstr "Ventas por Tipo de Conta"
 
 #. module: account
 #: view:account.invoice.refund:0
@@ -1639,6 +1647,8 @@ msgid ""
 "Cancel Invoice: Creates the refund invoice, validate and reconcile it to "
 "cancel the current invoice."
 msgstr ""
+"Cancelar Factura: Crea-la factura rectificativa, validala e conciliala para "
+"cancela-la factura actual."
 
 #. module: account
 #: model:ir.ui.menu,name:account.periodical_processing_invoicing
@@ -1648,28 +1658,28 @@ msgstr "Facturando"
 #. module: account
 #: field:account.chart.template,tax_code_root_id:0
 msgid "Root Tax Code"
-msgstr ""
+msgstr "Código Imposto Raíz"
 
 #. module: account
 #: field:account.partner.ledger,initial_balance:0
 #: field:account.report.general.ledger,initial_balance:0
 msgid "Include initial balances"
-msgstr ""
+msgstr "Incluir balances iniciais"
 
 #. module: account
 #: field:account.tax.code,sum:0
 msgid "Year Sum"
-msgstr ""
+msgstr "Suma Anual"
 
 #. module: account
 #: model:ir.actions.report.xml,name:account.report_account_voucher_new
 msgid "Print Voucher"
-msgstr ""
+msgstr "Imprimir Comprobante de Pago"
 
 #. module: account
 #: view:account.change.currency:0
 msgid "This wizard will change the currency of the invoice"
-msgstr ""
+msgstr "Este asistente cambiará a divisa da factura"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_chart
@@ -1678,17 +1688,20 @@ msgid ""
 "Have a complete tree view of all journal items per account code by clicking "
 "on an account."
 msgstr ""
+"Amosa o plan contable da súa compañía por ano contable e filtrado por "
+"período. Ofrece unha vista en árbore completa de tódolos elementos do diario "
+"por código de conta facendo click nunha conta."
 
 #. module: account
 #: constraint:account.fiscalyear:0
 msgid "Error! You cannot define overlapping fiscal years"
-msgstr ""
+msgstr "¡Erro! Non pode definir anos fiscais que se sobrepoñan!"
 
 #. module: account
 #: code:addons/account/account_move_line.py:808
 #, python-format
 msgid "The account is not defined to be reconciled !"
-msgstr ""
+msgstr "¡A conta non se definiu para ser conciliada!"
 
 #. module: account
 #: field:account.cashbox.line,pieces:0
@@ -1701,32 +1714,34 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the journal "
 "period without removing it."
 msgstr ""
+"Se o campo activo está marcado como Falso, permitiralle agocha-lo periodo do "
+"diario sen borralo."
 
 #. module: account
 #: view:res.partner:0
 msgid "Supplier Debit"
-msgstr ""
+msgstr "Débito do Proveedor"
 
 #. module: account
 #: help:account.model.line,quantity:0
 msgid "The optional quantity on entries"
-msgstr ""
+msgstr "A cantidade opcional nas entradas"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_partner_account_move_all
 msgid "Receivables & Payables"
-msgstr ""
+msgstr "A Recibir e A Pagar"
 
 #. module: account
 #: code:addons/account/account_move_line.py:815
 #, python-format
 msgid "You have to provide an account for the write off entry !"
-msgstr ""
+msgstr "Ten que indicar unha conta para a entrada a cancelar"
 
 #. module: account
 #: model:ir.model,name:account.model_account_common_journal_report
 msgid "Account Common Journal Report"
-msgstr ""
+msgstr "Informe do Diario Contable Común"
 
 #. module: account
 #: selection:account.partner.balance,display_partner:0
@@ -1741,7 +1756,7 @@ msgstr "Ref.:"
 #. module: account
 #: view:account.analytic.chart:0
 msgid "Analytic Account Charts"
-msgstr ""
+msgstr "Plan de Contas Analítico"
 
 #. module: account
 #: view:account.analytic.line:0
@@ -1751,44 +1766,44 @@ msgstr "Meus Asentos"
 #. module: account
 #: report:account.overdue:0
 msgid "Customer Ref:"
-msgstr ""
+msgstr "Ref do Cliente:"
 
 #. module: account
 #: code:addons/account/account_cash_statement.py:328
 #, python-format
 msgid "User %s does not have rights to access %s journal !"
-msgstr ""
+msgstr "¡O usuario %s non ten permisos para acceder ó diario %s!"
 
 #. module: account
 #: help:account.period,special:0
 msgid "These periods can overlap."
-msgstr ""
+msgstr "Estes períodos poden superpoñerse."
 
 #. module: account
 #: model:process.node,name:account.process_node_draftstatement0
 msgid "Draft statement"
-msgstr ""
+msgstr "Extracto en borrador"
 
 #. module: account
 #: view:account.tax:0
 msgid "Tax Declaration: Credit Notes"
-msgstr ""
+msgstr "Declaración de Impostos: Notas de Crédito"
 
 #. module: account
 #: code:addons/account/account.py:499
 #, python-format
 msgid "You cannot deactivate an account that contains account moves."
-msgstr ""
+msgstr "Non pode desactivar unha conta que contén movimientos contables."
 
 #. module: account
 #: field:account.move.line.reconcile,credit:0
 msgid "Credit amount"
-msgstr ""
+msgstr "Importe do Crédito"
 
 #. module: account
 #: constraint:account.move.line:0
 msgid "You can not create move line on closed account."
-msgstr ""
+msgstr "Non pode crear unha liña de movemento sobre unha conta cerrada"
 
 #. module: account
 #: code:addons/account/account.py:519
@@ -1797,16 +1812,18 @@ msgid ""
 "You cannot change the type of account from 'Closed' to any other type which "
 "contains account entries!"
 msgstr ""
+"¡Non pode cambia-lo tipo da conta de 'Cerrada' a calqueira outro tipo que "
+"conteña entradas contables!"
 
 #. module: account
 #: view:res.company:0
 msgid "Reserve And Profit/Loss Account"
-msgstr ""
+msgstr "Conta de Reservas e Pérdidas/Ganancias"
 
 #. module: account
 #: sql_constraint:account.move.line:0
 msgid "Wrong credit or debit value in accounting entry !"
-msgstr ""
+msgstr "¡Valor incorrecto de débito ou crédito na entrada contable!"
 
 #. module: account
 #: view:account.invoice.report:0
