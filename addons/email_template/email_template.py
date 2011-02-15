@@ -436,6 +436,7 @@ This is useful for CRM leads for example"),
             attachment.append((attach.datas_fname, attach.datas))
        
         #Send emails
+        context.update({'notemplate':True})
         email_id = email_message_pool.email_send(cr, uid, values.get('email_from'), values.get('email_to'), values.get('name'), values.get('description'), 
                     model=model, email_cc=values.get('email_cc'), email_bcc=values.get('email_bcc'), reply_to=values.get('reply_to'), 
                     attach=attachment, message_id=values.get('message_id'), openobject_id=record_id, debug=True, subtype='plain', x_headers={}, priority='3', smtp_server_id=smtp_server.id, context=context)
@@ -472,6 +473,19 @@ class email_message(osv.osv):
                 attachment_obj.unlink(cr, uid, attachment_ids, context=context)
         return result
 
+    def email_send(self, cr, uid, email_from, email_to, subject, body, model=False, email_cc=None, email_bcc=None, reply_to=False, attach=None,
+            message_id=False, openobject_id=False, debug=False, subtype='plain', x_headers={}, priority='3', smtp_server_id=False, context=None):
+        if context is None:
+            context = {}
+        notemplate = context.get('notemplate', False)
+        if (not notemplate) and model and openobject_id:
+            template_pool = self.pool.get('email.template')
+            template_ids = template_pool.search(cr, uid, [('model','=',model)]
+            if template_ids and len(template_ids):
+                template_id = template_ids[0]
+                return template_pool.generate_email(cr, uid, [template_id], openobject_id, context=context)
+         return super(email_message, self).email_send(cr, uid, email_from, email_to, subject, body, model=model, email_cc=email_cc, email_bcc=email_bc, reply_to=reply_to, attach=attach,
+                message_id=message_id, openobject_id=openobject_id, debug=debug, subtype=subtype, x_headers=x_headers, priority=priority, smtp_server_id=smtp_server_id, context=context)
 email_message()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
