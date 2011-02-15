@@ -777,7 +777,7 @@ marketing_campaign_workitem()
 class email_template(osv.osv):
     _inherit = "email.template"
     _defaults = {
-        'object_name': lambda obj, cr, uid, context: context.get('object_id',False),
+        'model_id': lambda obj, cr, uid, context: context.get('object_id',False),
     }
 
     # TODO: add constraint to prevent disabling / disapproving an email account used in a running campaign

@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>)
+#    Copyright (C) 2004-2011 Tiny SPRL (<http://tiny.be>)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -88,44 +88,38 @@ class email_smtp_server(osv.osv):
     _columns = {
         'name': fields.char('Name',
                         size=64, required=True,
-                        readonly=True, select=True,
+                        select=True,
                         help="The Name is used as the Sender name along with the provided From Email, \
 unless it is already specified in the From Email, e.g: John Doe <john@doe.com>",
-                        states={'draft':[('readonly', False)]}),
+                        ),
         'email_id': fields.char('From Email',
                         size=120, required=True,
-                        readonly=True, states={'draft':[('readonly', False)]} ,
                         help="eg: 'john@doe.com' or 'John Doe <john@doe.com>'"),
         'smtpserver': fields.char('Server',
                         size=120, required=True,
-                        readonly=True, states={'draft':[('readonly', False)]},
                         help="Enter name of outgoing server, eg: smtp.yourdomain.com"),
         'smtpport': fields.integer('SMTP Port',
                         size=64, required=True,
-                        readonly=True, states={'draft':[('readonly', False)]},
                         help="Enter port number, eg: 25 or 587"),
         'smtpuname': fields.char('User Name',
                         size=120, required=False,
-                        readonly=True, states={'draft':[('readonly', False)]},
                         help="Specify the username if your SMTP server requires authentication, "
                         "otherwise leave it empty."),
         'smtppass': fields.char('Password',
-                        size=120, invisible=True,
-                        required=False, readonly=True,
-                        states={'draft':[('readonly', False)]}),
-        'smtptls':fields.boolean('TLS',
-                        states={'draft':[('readonly', False)]}, readonly=True),
-        'smtpssl':fields.boolean('SSL/TLS (only in python 2.6)',
-                        states={'draft':[('readonly', False)]}, readonly=True),
+                        size=120, 
+                        required=False),
+        'smtptls':fields.boolean('TLS'),
+        'smtpssl':fields.boolean('SSL/TLS'),
         'default': fields.boolean('Default', help="Only one account can be default at a time"),
     }
 
     _defaults = {
          'name':lambda self, cursor, user, context:self.pool.get( 'res.users'
                                                 ).read(cursor, user, user, ['name'], context)['name'],
-         'smtpport':lambda *a:25,
-         'smtpserver':lambda *a:'localhost',
-         'smtptls':lambda *a:True,
+         'smtpport': tools.config.get('smtp_port',25),
+         'smtpserver': tools.config.get('smtp_server','localhost'),
+         'smtpssl': tools.config.get('smtp_ssl',False),
+         'smtptls': True,
      }
 
     _sql_constraints = [
@@ -139,10 +133,8 @@ unless it is already specified in the From Email, e.g: John Doe <john@doe.com>",
         default_ids = self.search(cr, uid, [('default','=',True)])
         if len(default_ids) > 1:
             return False
-        elif not default_ids:
-            return False
-        else:
-            return True
+        
+        return True
 
     _constraints = [
         (_constraint_unique,
@@ -153,67 +145,28 @@ unless it is already specified in the From Email, e.g: John Doe <john@doe.com>",
     def name_get(self, cr, uid, ids, context=None):
         return [(a["id"], "%s (%s)" % (a['email_id'], a['name'])) for a in self.read(cr, uid, ids, ['name', 'email_id'], context=context)]
 
-    def get_outgoing_server(self, cursor, user, id, context=None):
-        """
-        Returns the Out Going Connection (SMTP) object
+    
 
-        @attention: DO NOT USE except_osv IN THIS METHOD
-        @param cursor: Database Cursor
-        @param user: ID of current user
-        @param ids: ID/list of ids of current object for
-                    which connection is required
-                    First ID will be chosen from lists
-        @param context: Context
-
-        @return: SMTP server object or Exception
+    def test_smtp_connection(self, cr, uid, ids, context=None):
         """
-        #Type cast ids to integer
-        if type(id) == list:
-            id = id[0]
-        smtp_data = self.browse(cursor, user, id, context=context)
-        if smtp_data:
-            if smtp_data.smtpserver and smtp_data.smtpport:
-                try:
-                    if smtp_data.smtpssl:
-                        serv = smtplib.SMTP_SSL(smtp_data.smtpserver, smtp_data.smtpport)
-                    else:
-                        serv = smtplib.SMTP(smtp_data.smtpserver, smtp_data.smtpport)
-                    if smtp_data.smtptls:
-                        serv.ehlo()
-                        serv.starttls()
-                        serv.ehlo()
-                except Exception, error:
-                    raise error
-                try:
-                    if serv.has_extn('AUTH') or smtp_data.smtpuname or smtp_data.smtppass:
-                        serv.login(str(smtp_data.smtpuname), str(smtp_data.smtppass))
-                except Exception, error:
-                    raise error
-                return serv
-            raise Exception(_("SMTP SERVER or PORT not specified"))
-        raise Exception(_("Core connection for the given ID does not exist"))
-
-    def check_outgoing_connection(self, cursor, user, ids, context=None):
-        """
-        checks SMTP credentials and confirms if outgoing connection works
-        (Attached to button)
-        @param cursor: Database Cursor
-        @param user: ID of current user
-        @param ids: list of ids of current object for
-                    which connection is required
-        @param context: Context
+        Test SMTP connection works
         """
         try:
-            for id in ids:
-                self.get_outgoing_server(cursor, user, id, context)
-            raise osv.except_osv(_("SMTP Test Connection Was Successful"), '')
-        except osv.except_osv, success_message:
-            raise success_message
+            for smtp_server in self.browse(cr, uid, ids, context=context):
+                smtp = tools.connect_smtp_server(smtp_server.smtpserver, smtp_server.smtpport,  user_name=smtp_server.smtpuname, 
+                                user_password=smtp_server.smtppass, ssl=smtp_server.smtpssl, tls=smtp_server.smtptls)
+                try:
+                    smtp.quit()
+                except Exception:
+                    # ignored, just a consequence of the previous exception
+                    pass
         except Exception, error:
             raise osv.except_osv(
-                                 _("Out going connection test failed"),
+                                 _("SMTP Connection: Test failed"),
                                  _("Reason: %s") % error
                                  )
+
+        raise osv.except_osv(_("SMTP Connection: Test Successfully!"), '')
 
 #    def do_approval(self, cr, uid, ids, context=None):
 #        #TODO: Check if user has rights

@@ -34,11 +34,16 @@
                                     <field name="res_id"  readonly="1"/>
                                     <button name="open_document" string="Open Document" type="object" icon="gtk-jump-to"/>
 	                                <field name="message_id"/>
-	                                <button name="process_queue" string="Process Queue" type="object" icon="gtk-execute"/>
                                 </group>
                             </group>
                             <separator string="Description" colspan="4"/>
                             <field name="description" nolabel="1" colspan="4"/>
+                            <group col="4" colspan="4" attrs="{'invisible':[('folder','not in',['drafts','outbox'])]}">
+                                <separator string="" colspan="4"/>
+                                <field name="state"/>
+                                <button name="process_queue" string="Send" type="object" icon="gtk-execute" states='draft,waiting,sending'/>
+                                <button name="process_retry" string="Re-Try" type="object" icon="gtk-execute" states='exception'/>
+                            </group>
                         </page>
                         <page string="Attachments">
                             <separator string="Attachments" colspan="4"/>
@@ -47,7 +52,6 @@
                         <page string="Advanced">
                             <group col="4" colspan="4">
 	                            <field name="folder"/>
-	                            <field name="state"/>
 	                            <field name="sub_type"/>
 	                            <field name="headers"/>
 	                            <field name="priority"/>
@@ -106,6 +110,7 @@
             <field name="res_model">email.message</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="domain">[('history', '=', True)]</field>
             <field name="search_view_id" ref="view_email_message_search"/>
         </record>
 
@@ -121,10 +126,10 @@
 	       src_model="email.message"
 	       domain="[('res_id', '=', res_id),('res_model','=',model)]"/>
 
-        <menuitem name="Email Message" id="menu_email_message_tools"
+        <menuitem name="Email" id="menu_email_message_tools"
             parent="base.menu_tools" />
 
-        <menuitem name="Message"
+        <menuitem name="Messages"
             id="menu_email_message"
             parent="menu_email_message_tools"
             action="action_view_mail_message" />
@@ -134,29 +139,31 @@
             <field name="model">email.smtp_server</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Email Smtp Server Configuration">
-                    <group colspan="2">
+                <form string="Smtp Server Configuration">
+                    <group colspan="4">
                         <field name="name"/>
                         <field name="default"/>
                     </group>
                     <notebook colspan="4">
-                        <page string="Outgoing">
+                        <page string="Configuration">
                             <separator string="Server Information" colspan="4"/>
-                            <group colspan="4" col="4">
+                            <group colspan="4" col="8">
                                 <field name="smtpserver"/>
-                                <button name="check_outgoing_connection" type="object" string="Test Outgoing Connection" icon="gtk-network" colspan="2"/>
                                 <field name="smtpport"/>
                                 <field name="smtpssl"/>
                                 <field name="smtptls"/>
-                            </group>
+                             </group>   
+                               
                             <separator string="User Information" colspan="4"/>
-                            <group col="2" colspan="2">
-                                <field name="email_id" colspan="2"/>
-                                <field name="smtppass" password="True" colspan="2"/>
+                            <group col="6" colspan="4">
+                                <field name="email_id"/>
+                                <field name="smtpuname"/>
+                                <field name="smtppass" password="True"/>
+                                
                             </group>
-                            <group col="2" colspan="2">
-                                <field name="smtpuname" colspan="2"/>
-                            </group>
+                            <separator string="" colspan="4"/>
+                            <label string="" colspan="2"/>
+                            <button name="test_smtp_connection" type="object" string="Test Connection" icon="gtk-network" colspan="2"/>
                         </page>
                     </notebook>
                 </form>
@@ -168,12 +175,12 @@
             <field name="model">email.smtp_server</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Email Accounts">
+                <tree string="SMTP Server">
                     <field name="name"/>
                     <field name="email_id"/>
-                    <field name="smtpuname"/>
                     <field name="smtpserver"/>
-                    <field name="smtpport"/>
+                    <field name="default"/>
+                    <button name="test_smtp_connection" type="object" string="Test Connection" icon="gtk-network"/>
                 </tree>
             </field>
         </record>
@@ -183,7 +190,7 @@
             <field name="model">email.smtp_server</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
-                <search string="Email Smtp Server">
+                <search string="Smtp Server">
                     <field name="name"/>
                     <field name="email_id"/>
                 </search>
@@ -191,7 +198,7 @@
         </record>
 
         <record model="ir.actions.act_window" id="action_email_smtp_server_tree_all">
-            <field name="name">Smtp Server</field>
+            <field name="name">Outgoing Servers</field>
             <field name="res_model">email.smtp_server</field>
             <field name="view_type">form</field>
             <field name="view_mode">form,tree</field>
@@ -202,7 +209,7 @@
 
         <menuitem name="Email" id="menu_config_email" parent="base.menu_lunch_survey_root" sequence="20"/>
 
-        <menuitem name="Email Smtp Server" id="menu_email_smtp_server_all" parent="menu_config_email" action="action_email_smtp_server_tree_all"/>
+        <menuitem name="Outgoing Servers" id="menu_email_smtp_server_all" parent="menu_config_email" action="action_email_smtp_server_tree_all"/>
 
     </data>
 </openerp>

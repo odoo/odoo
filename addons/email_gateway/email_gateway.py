@@ -98,7 +98,7 @@ class mailgate_thread(osv.osv):
         @param uid: the current user’s ID for security checks,
         @param cases: a browse record list
         @param keyword: Case action keyword e.g.: If case is closed "Close" keyword is used
-        @param history: Value True/False, If True it makes entry in case History otherwise in Case Log
+        @param history: Value True/False, If True it makes entry as a Emails Messages otherwise Log Messages
         @param email: Email-To / Recipient address
         @param email_from: Email From / Sender address if any
         @param email_cc: Comma-Separated list of Carbon Copy Emails To addresse if any
@@ -167,6 +167,7 @@ class mailgate_thread(osv.osv):
                     'partner_id': partner_id,
                     'references': references,
                     'message_id': message_id,
+                    'folder': 'inbox',
                     'attachment_ids': [(6, 0, attachments)]
                 }
             obj.create(cr, uid, data, context=context)
@@ -226,6 +227,7 @@ class mailgate_tool(osv.osv_memory):
                 'references': msg.get('references') or msg.get('in-reply-to'),
                 'res_id': res_id,
                 'user_id': uid,
+                'folder': 'inbox',
                 'attachment_ids': [(6, 0, attach)]
             }
             msg_pool.create(cr, uid, msg_data, context=context)

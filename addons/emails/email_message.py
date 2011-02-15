@@ -64,10 +64,35 @@ def format_date_tz(date, tz=None):
     format = tools.DEFAULT_SERVER_DATETIME_FORMAT
     return tools.server_to_local_timestamp(date, format, format, tz)
 
+class email_message_template(osv.osv_memory):
+    _name = 'email.message.template'
+    _columns = {
+        'name':fields.text('Subject'),
+        'model': fields.char('Object Name', size=128, select=1),
+        'res_id': fields.integer('Resource ID', select=1),
+        'date': fields.datetime('Date'),
+        'user_id': fields.many2one('res.users', 'User Responsible'),
+        'email_from': fields.char('From', size=128, help="Email From"),
+        'email_to': fields.char('To', help="Email Recipients", size=256),
+        'email_cc': fields.char('Cc', help="Carbon Copy Email Recipients", size=256),
+        'email_bcc': fields.char('Bcc', help='Blind Carbon Copy Email Recipients', size=256),
+        'message_id': fields.char('Message Id', size=1024, help="Message Id on Email.", select=True),
+        'references': fields.text('References', help="References emails."),
+        'reply_to':fields.char('Reply-To', size=250),
+        'sub_type': fields.char('Sub Type', size=32),
+        'headers': fields.char('x_headers',size=256),
+        'priority':fields.integer('Priority'),
+        'description': fields.text('Description'),
+        'smtp_server_id':fields.many2one('email.smtp_server', 'SMTP Server'),
+    }
+    _sql_constraints = []
+email_message_template()
+
 class email_message(osv.osv):
     '''
     Email Message
     '''
+    _inherit = 'email.message.template'
     _name = 'email.message'
     _description = 'Email Message'
     _order = 'date desc'
@@ -153,45 +178,30 @@ class email_message(osv.osv):
         return result
 
     _columns = {
-        'name':fields.text('Subject', readonly=True),
-        'model': fields.char('Object Name', size=128, select=1, readonly=True),
-        'res_id': fields.integer('Resource ID', select=1, readonly=True),
-        'date': fields.datetime('Date', readonly=True),
-        'user_id': fields.many2one('res.users', 'User Responsible', readonly=True),
-        'message': fields.text('Description', readonly=True),
-        'email_from': fields.char('From', size=128, help="Email From", readonly=True),
-        'email_to': fields.char('To', help="Email Recipients", size=256, readonly=True),
-        'email_cc': fields.char('Cc', help="Carbon Copy Email Recipients", size=256, readonly=True),
-        'email_bcc': fields.char('Bcc', help='Blind Carbon Copy Email Recipients', size=256, readonly=True),
-        'message_id': fields.char('Message Id', size=1024, readonly=True, help="Message Id on Email.", select=True),
-        'references': fields.text('References', readonly=True, help="References emails."),
-        'partner_id': fields.many2one('res.partner', 'Partner', required=False),
-        'attachment_ids': fields.many2many('ir.attachment', 'message_attachment_rel', 'message_id', 'attachment_id', 'Attachments', readonly=True),
+        'message': fields.text('Description'),
+        'partner_id': fields.many2one('res.partner', 'Partner'),
+        'attachment_ids': fields.many2many('ir.attachment', 'message_attachment_rel', 'message_id', 'attachment_id', 'Attachments'),
         'display_text': fields.function(_get_display_text, method=True, type='text', size="512", string='Display Text'),
-        'reply_to':fields.char('Reply-To', size=250, readonly=True),
-        'sub_type': fields.char('Sub Type', size=32, readonly=True),
-        'headers': fields.char('x_headers',size=256, readonly=True),
-        'priority':fields.integer('Priority', readonly=True),
         'debug':fields.boolean('Debug', readonly=True),
         'history': fields.boolean('History', readonly=True),
-        'description': fields.text('Description', readonly=True),
-        #I like GMAIL which allows putting same mail in many folders
-        #Lets plan it for 0.9
         'folder':fields.selection([
                         ('drafts', 'Drafts'),
+                        ('inbox', 'Inbox'),
                         ('outbox', 'Outbox'),
                         ('trash', 'Trash'),
                         ('sent', 'Sent Items'),
-                        ], 'Folder', readonly=True),
+                        ], 'Folder'),
         'state':fields.selection([
-                        ('na', 'Not Applicable'),
+                        ('draft', 'Draft'),
                         ('sending', 'Sending'),
                         ('waiting', 'Waiting'),
+                        ('sent', 'Sent'),
+                        ('exception', 'Exception'),
                         ], 'State', readonly=True),
     }
 
     _defaults = {
-        'state': lambda * a: 'na',
+        'state': lambda * a: 'draft',
         'folder': lambda * a: 'outbox',
     }
 
@@ -237,8 +247,15 @@ class email_message(osv.osv):
                                  _("Error sending mail: %s") % e)
 
     def email_send(self, cr, uid, email_from, email_to, subject, body, model=False, email_cc=None, email_bcc=None, reply_to=False, attach=None,
-            openobject_id=False, debug=False, subtype='plain', x_headers={}, priority='3', context=None):
+            message_id=False, openobject_id=False, debug=False, subtype='plain', x_headers={}, priority='3', smtp_server_id=False, context=None):
         attachment_obj = self.pool.get('ir.attachment')
+        if email_to and type(email_to) != list:
+            email_to = [email_to]
+        if email_cc and type(email_cc) != list:
+            email_cc = [email_cc]
+        if email_bcc and type(email_bcc) != list:
+            email_bcc = [email_bcc]
+        
         msg_vals = {
                 'name': subject,
                 'model': model or '',
@@ -249,13 +266,16 @@ class email_message(osv.osv):
                 'email_to': email_to and ','.join(email_to) or '',
                 'email_cc': email_cc and ','.join(email_cc) or '',
                 'email_bcc': email_bcc and ','.join(email_bcc) or '',
-                'reply_to': reply_to and ','.join(reply_to) or '',
-                'message_id': openobject_id,
+                'reply_to': reply_to,
+                'res_id': openobject_id,
+                'message_id': message_id,
                 'sub_type': subtype or '',
                 'headers': x_headers or False,
                 'priority': priority,
                 'debug': debug,
                 'folder': 'outbox',
+                'history': True,
+                'smtp_server_id': smtp_server_id,
                 'state': 'waiting',
             }
         email_msg_id = self.create(cr, uid, msg_vals, context)
@@ -273,7 +293,10 @@ class email_message(osv.osv):
                 attachment_ids.append(attachment_obj.create(cr, uid, attachment_data, context))
             self.write(cr, uid, email_msg_id,
                               { 'attachment_ids': [[6, 0, attachment_ids]] }, context)
-        return True
+        return email_msg_id
+
+    def process_retry(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {'state':'waiting'}, context)
 
     def process_email_queue(self, cr, uid, ids=None, context=None):
         if ids is None:
@@ -281,7 +304,7 @@ class email_message(osv.osv):
         if context is None:
             context = {}
         attachment_obj = self.pool.get('ir.attachment')
-        account_obj = self.pool.get('email.smtp_server')
+        smtp_server_obj = self.pool.get('email.smtp_server')
         if not ids:
             filters = [('folder', '=', 'outbox'), ('state', '!=', 'sending')]
             if 'filters' in context:
@@ -293,29 +316,34 @@ class email_message(osv.osv):
                 attachments = []
                 for attach in message.attachment_ids:
                     attachments.append((attach.datas_fname ,attach.datas))
-                smtp_account = False
-                smtp_ids = account_obj.search(cr, uid, [('default','=',True)])
-                if smtp_ids:
-                    smtp_account = account_obj.browse(cr, uid, smtp_ids, context)[0]
-                tools.email_send(message.email_from,
+                smtp_server = message.smtp_server_id
+                if not smtp_server:
+                    smtp_ids = smtp_server_obj.search(cr, uid, [('default','=',True)])
+                    if smtp_ids:
+                        smtp_server = smtp_server_obj.browse(cr, uid, smtp_ids, context)[0]
+                res = tools.email_send(message.email_from,
                         message.email_to and message.email_to.split(',') or [],
                         message.name, message.description,
                         email_cc=message.email_cc and message.email_cc.split(',') or [],
                         email_bcc=message.email_bcc and message.email_bcc.split(',') or [],
-                        reply_to=message.reply_to and message.reply_to.split(',') or [],
-                        attach=attachments, openobject_id=message.message_id,
+                        reply_to=message.reply_to,
+                        attach=attachments, message_id=message.message_id, openobject_id=message.res_id,
                         subtype=message.sub_type,
                         x_headers=message.headers and eval(message.headers) or {},
                         priority=message.priority, debug=message.debug,
-                        smtp_email_from=smtp_account and smtp_account.email_id or None,
-                        smtp_server=smtp_account and smtp_account.smtpserver or None,
-                        smtp_port=smtp_account and smtp_account.smtpport or None,
-                        ssl=smtp_account and smtp_account.smtpssl or False,
-                        smtp_user=smtp_account and smtp_account.smtpuname or None,
-                        smtp_password=smtp_account and smtp_account.smtppass or None)
+                        smtp_server=smtp_server and smtp_server.smtpserver or None,
+                        smtp_port=smtp_server and smtp_server.smtpport or None,
+                        ssl=smtp_server and smtp_server.smtpssl or False,
+                        smtp_user=smtp_server and smtp_server.smtpuname or None,
+                        smtp_password=smtp_server and smtp_server.smtppass or None)
+                if res:
+                    self.write(cr, uid, [message.id], {'state':'sent'}, context)
+                else:
+                    self.write(cr, uid, [message.id], {'state':'exception'}, context)
             except Exception, error:
                 logger = netsvc.Logger()
                 logger.notifyChannel("email-template", netsvc.LOG_ERROR, _("Sending of Mail %s failed. Probable Reason:Could not login to server\nError: %s") % (message.id, error))
+                self.write(cr, uid, [message.id], {'state':'exception'}, context)
         return ids
 
 # OLD Code.
