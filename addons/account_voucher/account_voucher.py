@@ -710,7 +710,7 @@ class account_voucher(osv.osv):
                 move_line = {
                     'journal_id': inv.journal_id.id,
                     'period_id': inv.period_id.id,
-                    'name': line.name and line.name or '/',
+                    'name': line.name or '/',
                     'account_id': line.account_id.id,
                     'move_id': move_id,
                     'partner_id': inv.partner_id.id,
@@ -752,14 +752,16 @@ class account_voucher(osv.osv):
             if not currency_pool.is_zero(cr, uid, inv.currency_id, line_total):
                 diff = line_total
                 account_id = False
+                write_off_name = ''
                 if inv.payment_option == 'with_writeoff':
                     account_id = inv.writeoff_acc_id.id
+                    write_off_name = inv.comment
                 elif inv.type in ('sale', 'receipt'):
                     account_id = inv.partner_id.property_account_receivable.id
                 else:
                     account_id = inv.partner_id.property_account_payable.id
                 move_line = {
-                    'name': name,
+                    'name': write_off_name or name,
                     'account_id': account_id,
                     'move_id': move_id,
                     'partner_id': inv.partner_id.id,
