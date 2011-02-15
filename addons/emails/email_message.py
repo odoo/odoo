@@ -64,10 +64,35 @@ def format_date_tz(date, tz=None):
     format = tools.DEFAULT_SERVER_DATETIME_FORMAT
     return tools.server_to_local_timestamp(date, format, format, tz)
 
+class email_message_template(osv.osv_memory):
+    _name = 'email.message.template'
+    _columns = {
+        'name':fields.text('Subject'),
+        'model': fields.char('Object Name', size=128, select=1),
+        'res_id': fields.integer('Resource ID', select=1),
+        'date': fields.datetime('Date'),
+        'user_id': fields.many2one('res.users', 'User Responsible'),
+        'email_from': fields.char('From', size=128, help="Email From"),
+        'email_to': fields.char('To', help="Email Recipients", size=256),
+        'email_cc': fields.char('Cc', help="Carbon Copy Email Recipients", size=256),
+        'email_bcc': fields.char('Bcc', help='Blind Carbon Copy Email Recipients', size=256),
+        'message_id': fields.char('Message Id', size=1024, help="Message Id on Email.", select=1),
+        'references': fields.text('References', help="References emails."),
+        'reply_to':fields.char('Reply-To', size=250),
+        'sub_type': fields.char('Sub Type', size=32),
+        'headers': fields.char('x_headers',size=256),
+        'priority':fields.integer('Priority'),
+        'description': fields.text('Description'),
+        'smtp_server_id':fields.many2one('email.smtp_server', 'SMTP Server'),
+    }
+    _sql_constraints = []
+email_message_template()
+
 class email_message(osv.osv):
     '''
     Email Message
     '''
+    _inherit = 'email.message.template'
     _name = 'email.message'
     _description = 'Email Message'
     _order = 'date desc'
@@ -153,29 +178,12 @@ class email_message(osv.osv):
         return result
 
     _columns = {
-        'name':fields.text('Subject'),
-        'model': fields.char('Object Name', size=128, select=1),
-        'res_id': fields.integer('Resource ID', select=1),
-        'date': fields.datetime('Date'),
-        'user_id': fields.many2one('res.users', 'User Responsible'),
         'message': fields.text('Description'),
-        'email_from': fields.char('From', size=128, help="Email From"),
-        'email_to': fields.char('To', help="Email Recipients", size=256),
-        'email_cc': fields.char('Cc', help="Carbon Copy Email Recipients", size=256),
-        'email_bcc': fields.char('Bcc', help='Blind Carbon Copy Email Recipients', size=256),
-        'message_id': fields.char('Message Id', size=1024, help="Message Id on Email.", select=True),
-        'references': fields.text('References', help="References emails."),
         'partner_id': fields.many2one('res.partner', 'Partner'),
         'attachment_ids': fields.many2many('ir.attachment', 'message_attachment_rel', 'message_id', 'attachment_id', 'Attachments'),
         'display_text': fields.function(_get_display_text, method=True, type='text', size="512", string='Display Text'),
-        'reply_to':fields.char('Reply-To', size=250),
-        'sub_type': fields.char('Sub Type', size=32),
-        'headers': fields.char('x_headers',size=256),
-        'priority':fields.integer('Priority'),
         'debug':fields.boolean('Debug', readonly=True),
         'history': fields.boolean('History', readonly=True),
-        'description': fields.text('Description'),
-        'smtp_server_id':fields.many2one('email.smtp_server', 'SMTP Server'),
         'folder':fields.selection([
                         ('drafts', 'Drafts'),
                         ('inbox', 'Inbox'),
@@ -247,7 +255,7 @@ class email_message(osv.osv):
             email_cc = [email_cc]
         if email_bcc and type(email_bcc) != list:
             email_bcc = [email_bcc]
-        
+
         msg_vals = {
                 'name': subject,
                 'model': model or '',
