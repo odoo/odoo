@@ -27,13 +27,6 @@ from osv import fields,osv,orm
 class res_partner_sync_base:
     _inherit = "res.partner.address"
 
-    _columns = {
-        'sync_google':fields.boolean('Synchronize with Google', required=False),     
-    }    
-    _defaults = {
-        'sync_google':lambda *a:True
-        }
-         
     def create(self, cr, uid, vals, context=None):
         id = super(res_partner_sync_base, self).create(cr, uid, vals, context=context)   
         return id 
@@ -53,7 +46,7 @@ class res_partner_sync_base:
     def sync_modify(self, cr, uid, ids, vals, context=None, synchronize=True):
         return True    
  
-    def sync_modify(self, cr, uid, ids,context=None, synchronize=True):
+    def sync_unlink(self, cr, uid, ids,context=None, synchronize=True):
         return True      
 
 res_partner_sync_base()
