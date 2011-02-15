@@ -76,7 +76,7 @@ class email_message_template(osv.osv_memory):
         'email_to': fields.char('To', help="Email Recipients", size=256),
         'email_cc': fields.char('Cc', help="Carbon Copy Email Recipients", size=256),
         'email_bcc': fields.char('Bcc', help='Blind Carbon Copy Email Recipients', size=256),
-        'message_id': fields.char('Message Id', size=1024, help="Message Id on Email.", select=True),
+        'message_id': fields.char('Message Id', size=1024, help="Message Id on Email.", select=1),
         'references': fields.text('References', help="References emails."),
         'reply_to':fields.char('Reply-To', size=250),
         'sub_type': fields.char('Sub Type', size=32),
@@ -255,7 +255,7 @@ class email_message(osv.osv):
             email_cc = [email_cc]
         if email_bcc and type(email_bcc) != list:
             email_bcc = [email_bcc]
-        
+
         msg_vals = {
                 'name': subject,
                 'model': model or '',
