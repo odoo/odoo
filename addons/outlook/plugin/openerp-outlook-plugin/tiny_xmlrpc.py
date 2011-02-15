@@ -80,7 +80,8 @@ class XMLRpcConn(object):
         self._iscrm=True
         self.partner_id_list=None
         self.protocol=None
-
+        self._webprotocol=None
+        self._weburi=None
 
     def getitem(self, attrib):
         v=self.__getattribute__(attrib)
@@ -442,16 +443,14 @@ class XMLRpcConn(object):
     	return country_list
 
     def SearchPartner(self, mail_id = ""):
-    	conn = xmlrpclib.ServerProxy(self._uri+ '/xmlrpc/object')
-    	address = execute( conn, 'execute', self._dbname, int(self._uid), self._pwd, 'res.partner.address', 'search', [('email','=',ustr(mail_id))])
-    	if not address:
-    		return None
-    	else:
-    		add_rec = execute( conn, 'execute', self._dbname, int(self._uid), self._pwd, 'res.partner.address', 'read', address[0])
-    		partner = add_rec.get('partner_id',False)
-    		if partner:
-    			return partner[0]
-        return True
+        conn = xmlrpclib.ServerProxy(self._uri+ '/xmlrpc/object')
+        address = execute( conn, 'execute', self._dbname, int(self._uid), self._pwd, 'res.partner.address', 'search', [('email','=',ustr(mail_id))])
+        if not address:
+        	return False
+        add_rec = execute( conn, 'execute', self._dbname, int(self._uid), self._pwd, 'res.partner.address', 'read', address[0])
+        partner = add_rec.get('partner_id',False)
+        if partner:  return partner[0]
+        else:  return partner
 
     def SearchEmailResources(self, message_id):
         import win32ui
@@ -462,9 +461,7 @@ class XMLRpcConn(object):
     	if not mail_id:
             ref_mail_id = execute( conn, 'execute', self._dbname, int(self._uid), self._pwd, 'mailgate.message', 'search', [('references','=',message_id)])
             if ref_mail_id:
-                win32ui.MessageBox(str(ref_mail_id),"ref_mail_id")
                 address = execute( conn, 'execute', self._dbname, int(self._uid), self._pwd, 'mailgate.message','read',ref_mail_id[0],['model','res_id'])
-                win32ui.MessageBox(str(address),"address")
                 for key, vals in address.items():
                     res_vals.append([key,vals])
                 return res_vals
