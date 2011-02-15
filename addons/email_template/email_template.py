@@ -33,7 +33,7 @@ import pooler
 
 class email_template(osv.osv):
     "Templates for sending Email"
-    _inherit = 'email.message'
+    _inherit = 'email.message.template'
     _name = "email.template"
     _description = 'Email Templates for Models'
 

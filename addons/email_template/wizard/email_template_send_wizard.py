@@ -105,7 +105,6 @@ class email_template_send_wizard(osv.osv_memory):
         if 'report_name' in fields:
             result['report_name'] = _get_template_value('report_name')
 
-        
         return result
 
     _columns = {
