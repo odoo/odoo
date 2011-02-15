@@ -5,11 +5,12 @@
 
 
 from sugarsoap_services_types import *
-import urlparse, types
+from osv import osv, fields
+
 
 try:
     import ZSI
-    from ZSI.TCcompound import ComplexType, Struct
+    from ZSI.TCcompound import Struct
     from ZSI import client
 except ImportError:
     raise osv.except_osv(_('ZSI Import Error!'), _('Please install SOAP for python - ZSI-2.0-rc3.tar.gz'))

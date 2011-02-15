@@ -116,7 +116,7 @@ class import_sugarcrm(osv.osv):
                         'state_id': state and state[0][0] or False,
                         'email': sugar_val.get('email1'),
            }
-           new_add_id = addr_pool.create(cr, uid, addr_vals)
+           addr_pool.create(cr, uid, addr_vals)
            return new_partner_id
 
 
