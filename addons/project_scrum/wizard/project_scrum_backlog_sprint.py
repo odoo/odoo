@@ -42,6 +42,9 @@ class backlog_sprint_assign(osv.osv_memory):
         if context is None:
             context = {}
         data = self.read(cr, uid, ids, [], context=context)[0]
+        if isinstance(data['sprint_id'], tuple):
+            data['sprint_id'] = data['sprint_id'][0]
+
         for backlog in backlog_obj.browse(cr, uid, context['active_ids'], context=context):
             backlog_ids.append(backlog.id)
             if data['convert_to_task']:

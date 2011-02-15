@@ -59,6 +59,9 @@ class final_invoice_create(osv.osv_memory):
         res = mod_obj.read(cr, uid, result, ['res_id'], context=context)
 
         data = self.read(cr, uid, ids, [], context=context)[0]
+        if isinstance(data['balance_product'], tuple):
+            data['balance_product'] = data['balance_product'][0]
+
         account_ids = 'active_ids' in context and context['active_ids'] or []
 
         for account in analytic_account_obj.browse(cr, uid, account_ids, context=context):
