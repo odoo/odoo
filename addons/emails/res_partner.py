@@ -19,26 +19,16 @@
 #
 ##############################################################################
 
-{
-    'name': 'Email Gateway System',
-    'version': '1.0',
-    'category': 'Generic Modules/Mail Service',
-    'description': """The generic email gateway system allows to send and receive emails
-    * History for Emails
-    * Easy Integration with any Module""",
-    'author': 'OpenERP SA',
-    'website': 'http://www.openerp.com',
-    'depends': ['base'],
-    'init_xml': [],
-    'update_xml': [
-        "mail_gateway_view.xml",
-        "res_partner_view.xml",
-        'security/ir.model.access.csv'
+from osv import osv
+from osv import fields
 
-    ],
-    'demo_xml': [],
-    'installable': True,
-    'active': False,
-    'certificate': '001056784984222247309',
-}
+class res_partner(osv.osv):
+    """ Inherits partner and adds CRM information in the partner form """
+    _inherit = 'res.partner'
+    _columns = {
+        'emails': fields.one2many('email.message', 'partner_id', 'Emails', readonly=True, domain=[('history','=',True)]),
+    }
+
+res_partner()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

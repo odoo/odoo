@@ -152,7 +152,7 @@ class thunderbird_partner(osv.osv_memory):
         msg = self.pool.get('email.server.tools').parse_message(msg)
         server_tools_pool = self.pool.get('email.server.tools')
         message_id = msg.get('message-id', False)
-        msg_pool = self.pool.get('mailgate.message')
+        msg_pool = self.pool.get('email.message')
         msg_ids = []
         res = {}
         res_ids = []
@@ -213,7 +213,7 @@ class thunderbird_partner(osv.osv_memory):
         references = False
         if refs:
             references = refs.split()
-        msg_pool = self.pool.get('mailgate.message')
+        msg_pool = self.pool.get('email.message')
         model = ''
         res_id = 0
         if message_id:

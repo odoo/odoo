@@ -22,7 +22,6 @@ import logging
 import random
 import time
 
-import tools
 from osv import osv, fields
 from osv.expression import expression
 from tools.translate import _
@@ -171,7 +170,7 @@ class share_create(osv.osv_memory):
                                    during recursion
            @param suffix: optional suffix to append to the field path to reach the main object
         """
-        
+
         if relation_fields is None:
             relation_fields = []
         local_rel_fields = []
@@ -222,7 +221,7 @@ class share_create(osv.osv_memory):
         """
         model_access_obj = self.pool.get('ir.model.access')
         user_obj = self.pool.get('res.users')
-        target_model_ids = [x[1].id for x in fields_relations] 
+        target_model_ids = [x[1].id for x in fields_relations]
         perms_to_add = (mode == 'readonly') and READ_ONLY_ACCESS or FULL_ACCESS
         current_user = user_obj.browse(cr, uid, uid, context=context)
 
@@ -296,7 +295,7 @@ class share_create(osv.osv_memory):
                     related_domain = []
                     for element in domain:
                         if domain_expr._is_leaf(element):
-                            left, operator, right = element 
+                            left, operator, right = element
                             left = '%s.%s'%(rel_field, left)
                             element = left, operator, right
                         related_domain.append(element)
@@ -368,7 +367,7 @@ class share_create(osv.osv_memory):
             user_obj.write(cr, 1, user_ids, {
                                    'groups_id': [(4,group_id)],
                             })
-        self._setup_action_and_shortcut(cr, uid, wizard_data, user_ids, 
+        self._setup_action_and_shortcut(cr, uid, wizard_data, user_ids,
             (wizard_data.user_type == 'new'), context=context)
 
 
@@ -388,7 +387,7 @@ class share_create(osv.osv_memory):
         obj0, obj1, obj2, obj3 = self._get_relationship_classes(cr, uid, model, context=context)
         mode = wizard_data.access_mode
 
-        # Add access to [obj0] and [obj1] according to chosen mode   
+        # Add access to [obj0] and [obj1] according to chosen mode
         self._add_access_rights_for_share_group(cr, uid, group_id, mode, obj0, context=context)
         self._add_access_rights_for_share_group(cr, uid, group_id, mode, obj1, context=context)
 
@@ -399,18 +398,18 @@ class share_create(osv.osv_memory):
 
         # IR.RULES
         #   A. On [obj0]: 1 rule with domain of shared action
-        #   B. For each model in [obj1]: 1 rule in the form: 
+        #   B. For each model in [obj1]: 1 rule in the form:
         #           many2one_rel.domain_of_obj0
         #        where many2one_rel is the many2one used in the definition of the
         #        one2many, and domain_of_obj0 is the sharing domain
-        #        For example if [obj0] is project.project with a domain of 
+        #        For example if [obj0] is project.project with a domain of
         #                ['id', 'in', [1,2]]
-        #        then we will have project.task in [obj1] and we need to create this 
+        #        then we will have project.task in [obj1] and we need to create this
         #        ir.rule on project.task:
         #                ['project_id.id', 'in', [1,2]]
-        #   C. And on [obj0], [obj1], [obj2], [obj3]: add all rules from all groups of 
-        #     the user that is sharing 
-        #     (Warning: rules must be copied instead of linked if they contain a reference 
+        #   C. And on [obj0], [obj1], [obj2], [obj3]: add all rules from all groups of
+        #     the user that is sharing
+        #     (Warning: rules must be copied instead of linked if they contain a reference
         #     to uid, and it must be replaced correctly)
         rule_obj = self.pool.get('ir.rule')
         # A.
@@ -443,6 +442,7 @@ class share_create(osv.osv_memory):
         }
 
     def send_emails(self, cr, uid, ids, context=None):
+        email_message_obj = self.pool.get('email.message')
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         if not user.user_email:
             raise osv.except_osv(_('Email required'), _('The current user must have an email address configured in User Preferences to be able to send outgoing emails.'))
@@ -462,11 +462,12 @@ class share_create(osv.osv_memory):
                     body += _("This additional data has been automatically added to your current access.\n")
                     body += _("You may use your existing login and password to view it. As a reminder, your login is %s.\n") % result_line.login
 
-                if not tools.email_send(
+                if not email_message_obj.email_send(cr, uid,
                                             user.user_email,
                                             [email_to],
                                             subject,
-                                            body):
+                                            body,
+                                            model='share.wizard'):
                     self.__logger.warning('Failed to send sharing email from %s to %s', user.user_email, email_to)
         return {'type': 'ir.actions.act_window_close'}
 share_create()

@@ -61,7 +61,7 @@ class email_server(osv.osv):
         'object_id': fields.many2one('ir.model', "Model", required=True, help="OpenObject Model. Generates a record of this model.\nSelect Object with message_new attrbutes."),
         'priority': fields.integer('Server Priority', readonly=True, states={'draft':[('readonly', False)]}, help="Priority between 0 to 10, select define the order of Processing"),
         'user_id':fields.many2one('res.users', 'User', required=False),
-        'message_ids': fields.one2many('mailgate.message', 'server_id', 'Messages', readonly=True),
+        'message_ids': fields.one2many('email.message', 'server_id', 'Messages', readonly=True),
     }
     _defaults = {
         'state': lambda *a: "draft",
@@ -110,7 +110,7 @@ class email_server(osv.osv):
     def set_draft(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids , {'state':'draft'})
         return True
-    
+
     def button_confirm_login(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
@@ -127,7 +127,7 @@ class email_server(osv.osv):
 
                     imap_server.login(server.user, server.password)
                     ret_server = imap_server
-                    
+
                 elif server.type == 'pop':
                     pop_server = None
                     if server.is_ssl:
@@ -140,7 +140,7 @@ class email_server(osv.osv):
                     pop_server.user(server.user)
                     pop_server.pass_(server.password)
                     ret_server = pop_server
-                    
+
                 self.write(cr, uid, [server.id], {'state':'done'})
                 if context.get('get_server',False):
                     return ret_server
@@ -207,9 +207,9 @@ class email_server(osv.osv):
 
 email_server()
 
-class mailgate_message(osv.osv):
+class email_message(osv.osv):
 
-    _inherit = "mailgate.message"
+    _inherit = "email.message"
 
     _columns = {
         'server_id': fields.many2one('email.server', "Mail Server", readonly=True, select=True),
@@ -229,7 +229,7 @@ class mailgate_message(osv.osv):
             values['server_id'] = server_id
         if server_type:
             values['server_type'] = server_type
-        res = super(mailgate_message,self).create(cr, uid, values, context=context)
+        res = super(email_message,self).create(cr, uid, values, context=context)
         return res
 
     def write(self, cr, uid, ids, values, context=None):
@@ -241,9 +241,9 @@ class mailgate_message(osv.osv):
             values['server_id'] = server_id
         if server_type:
             values['server_type'] = server_type
-        res = super(mailgate_message,self).write(cr, uid, ids, values, context=context)
+        res = super(email_message,self).write(cr, uid, ids, values, context=context)
         return res
 
-mailgate_message()
+email_message()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
