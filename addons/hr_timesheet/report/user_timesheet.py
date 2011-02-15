@@ -61,23 +61,25 @@ class report_custom(report_rml):
         date_xml.append('</days>')
         date_xml.append('<cols>2.5cm%s,2cm</cols>\n' % (',0.7cm' * lengthmonth(som.year, som.month)))
 
-        # Computing the attendence by analytical account
-        cr.execute(
-            "select line.date, (unit_amount * unit.factor) as amount, account_id, account.name "\
-            "from account_analytic_line as line, hr_analytic_timesheet as hr, "\
-            "account_analytic_account as account, product_uom as unit "\
-            "where hr.line_id=line.id and line.account_id=account.id "\
-            "and product_uom_id = unit.id "\
-            "and line.user_id=%s and line.date >= %s and line.date < %s "
-            "order by line.date",
-            (user_id, som.strftime('%Y-%m-%d'), eom.strftime('%Y-%m-%d')))
-
         # Sum attendence by account, then by day
         accounts = {}
-        for presence in cr.dictfetchall():
-            day = int(presence['date'][-2:])
-            account = accounts.setdefault((presence['account_id'], presence['name']), {})
-            account[day] = account.get(day, 0.0) + presence['amount']
+        header_xml = ''
+        if user_id:
+            # Computing the attendence by analytical account
+            cr.execute(
+                "select line.date, (unit_amount * unit.factor) as amount, account_id, account.name "\
+                "from account_analytic_line as line, hr_analytic_timesheet as hr, "\
+                "account_analytic_account as account, product_uom as unit "\
+                "where hr.line_id=line.id and line.account_id=account.id "\
+                "and product_uom_id = unit.id "\
+                "and line.user_id=%s and line.date >= %s and line.date < %s "
+                "order by line.date",
+                (user_id, som.strftime('%Y-%m-%d'), eom.strftime('%Y-%m-%d')))
+
+            for presence in cr.dictfetchall():
+                day = int(presence['date'][-2:])
+                account = accounts.setdefault((presence['account_id'], presence['name']), {})
+                account[day] = account.get(day, 0.0) + presence['amount']
 
         xml = '''
         <time-element date="%s">
@@ -85,13 +87,14 @@ class report_custom(report_rml):
         </time-element>
         '''
         rpt_obj = pooler.get_pool(cr.dbname).get('hr.employee')
-        rml_obj=report_sxw.rml_parse(cr, uid, rpt_obj._name,context)
-        header_xml = '''
-        <header>
-        <date>%s</date>
-        <company>%s</company>
-        </header>
-        ''' %  (str(rml_obj.formatLang(time.strftime("%Y-%m-%d"),date=True))+' ' + str(time.strftime("%H:%M")),pooler.get_pool(cr.dbname).get('res.users').browse(cr,uid,user_id).company_id.name)
+        rml_obj = report_sxw.rml_parse(cr, uid, rpt_obj._name,context)
+        if user_id:
+            header_xml = '''
+            <header>
+            <date>%s</date>
+            <company>%s</company>
+            </header>
+            ''' %  (str(rml_obj.formatLang(time.strftime("%Y-%m-%d"),date=True))+' ' + str(time.strftime("%H:%M")),pooler.get_pool(cr.dbname).get('res.users').browse(cr,uid,user_id).company_id.name)
 
         account_xml = []
         for account, telems in accounts.iteritems():

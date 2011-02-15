@@ -28,6 +28,7 @@ from poplib import POP3_SSL
 
 import netsvc
 from osv import osv, fields
+import tools
 
 logger = netsvc.Logger()
 
@@ -201,7 +202,7 @@ class email_server(osv.osv):
                     logger.notifyChannel('imap', netsvc.LOG_INFO, 'fetchmail fetch %s email(s) from %s' % (numMsgs, server.name))
 
             except Exception, e:
-                logger.notifyChannel(server.type, netsvc.LOG_WARNING, '%s' % (e))
+                logger.notifyChannel(server.type, netsvc.LOG_WARNING, '%s' % (tools.ustr(e)))
 
         return True
 
