@@ -518,7 +518,7 @@ def _email_send(smtp_from, smtp_to_list, message, openobject_id=None, ssl=False,
 
 def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=None, reply_to=False,
                attach=None, openobject_id=False, debug=False, subtype='plain', x_headers=None, priority='3',
-               smtp_email_from=None, smtp_server=None, smtp_port=None, ssl=False, smtp_user=None, smtp_password=None):
+               smtp_server=None, smtp_port=None, ssl=False, smtp_user=None, smtp_password=None):
 
     """Send an email.
 
@@ -534,11 +534,11 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
         x_headers = {}
 
 
-    if not (email_from or smtp_email_from or config['email_from']):
+    if not (email_from or config['email_from']):
         raise ValueError("Sending an email requires either providing a sender "
                          "address or having configured one")
 
-    if not email_from: email_from = smtp_email_from or config.get('email_from', False)
+    if not email_from: email_from = config.get('email_from', False)
     email_from = ustr(email_from).encode('utf-8')
 
     if not email_cc: email_cc = []
@@ -547,7 +547,6 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
 
     email_body = ustr(body).encode('utf-8')
     email_text = MIMEText(email_body or '',_subtype=subtype,_charset='utf-8')
-
     msg = MIMEMultipart()
 
     msg['Subject'] = Header(ustr(subject), 'utf-8')
