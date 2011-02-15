@@ -167,6 +167,7 @@ class mailgate_thread(osv.osv):
                     'partner_id': partner_id,
                     'references': references,
                     'message_id': message_id,
+                    'folder': 'inbox',
                     'attachment_ids': [(6, 0, attachments)]
                 }
             obj.create(cr, uid, data, context=context)
@@ -226,6 +227,7 @@ class mailgate_tool(osv.osv_memory):
                 'references': msg.get('references') or msg.get('in-reply-to'),
                 'res_id': res_id,
                 'user_id': uid,
+                'folder': 'inbox',
                 'attachment_ids': [(6, 0, attach)]
             }
             msg_pool.create(cr, uid, msg_data, context=context)

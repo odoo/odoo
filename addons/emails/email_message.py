@@ -178,6 +178,7 @@ class email_message(osv.osv):
         'smtp_server_id':fields.many2one('email.smtp_server', 'SMTP Server'),
         'folder':fields.selection([
                         ('drafts', 'Drafts'),
+                        ('inbox', 'Inbox'),
                         ('outbox', 'Outbox'),
                         ('trash', 'Trash'),
                         ('sent', 'Sent Items'),
