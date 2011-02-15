@@ -32,13 +32,13 @@ class RPCProxyOne(object):
     def __init__(self, server, ressource):
         self.server = server
         local_url = 'http://%s:%d/xmlrpc/common'%(server.server_url,server.server_port)
-        rpc = xmlrpclib.ServerProxy(local_url)
+        rpc = xmlrpclib.ServerProxy(local_url, allow_none=True)
         self.uid = rpc.login(server.server_db, server.login, server.password)
         local_url = 'http://%s:%d/xmlrpc/object'%(server.server_url,server.server_port)
-        self.rpc = xmlrpclib.ServerProxy(local_url)
+        self.rpc = xmlrpclib.ServerProxy(local_url, allow_none=True)
         self.ressource = ressource
     def __getattr__(self, name):
-        return lambda cr, uid, *args, **kwargs: self.rpc.execute(self.server.server_db, self.uid, self.server.password, self.ressource, name, *args, **kwargs)
+        return lambda cr, uid, *args, **kwargs: self.rpc.execute(self.server.server_db, self.uid, self.server.password, self.ressource, name, *args)
 
 class RPCProxy(object):
     def __init__(self, server):
@@ -79,6 +79,7 @@ class base_synchro(osv.osv_memory):
                 eval(object.domain),
                 {'action':'d'}
             )
+
         if object.action in ('u','b'):
             ids += pool2.get('base.synchro.obj').get_ids(cr, uid,
                 object.model_id.model,
@@ -102,7 +103,7 @@ class base_synchro(osv.osv_memory):
             if object.model_id.model=='crm.case.history':
                 fields = ['email','description','log_id']
             value = pool_src.get(object.model_id.model).read(cr, uid, [id], fields)[0]
-            value = self.data_transform(cr, uid, pool_src, pool_dest, object.model_id.model, value, action)
+            value = self.data_transform(cr, uid, pool_src, pool_dest, object.model_id.model, value, action, context=context)
             id2 = self.get_id(cr, uid, object.id, id, action, context)
             #
             # Transform value
@@ -110,7 +111,6 @@ class base_synchro(osv.osv_memory):
             #tid=pool_dest.get(object.model_id.model).name_search(cr, uid, value['name'],[],'=',)
             if not (iii%50):
                 print 'Record', iii
-
             # Filter fields to not sync
             for field in object.avoid_ids:
                 if field.name in value:
@@ -125,15 +125,17 @@ class base_synchro(osv.osv_memory):
                 self.report_write+=1
             else:
                 print value
-                idnew = pool_dest.get(object.model_id.model).create(cr, uid, value)
-                synid = self.pool.get('base.synchro.obj.line').create(cr, uid, {
-                    'obj_id': object.id,
-                    'local_id': (action=='u') and id or idnew,
-                    'remote_id': (action=='d') and id or idnew
-                })
-                self.report_total+=1
-                self.report_create+=1
-        self.meta = {}
+                new_value = pool_dest.get(object.model_id.model).search(cr, uid, [('name','=',value['name'])])
+                if not new_value:
+                    idnew = pool_dest.get(object.model_id.model).create(cr, uid, value)
+                    synid = self.pool.get('base.synchro.obj.line').create(cr, uid, {
+                        'obj_id': object.id,
+                        'local_id': (action=='u') and id or idnew,
+                        'remote_id': (action=='d') and id or idnew
+                    })
+                    self.report_total+=1
+                    self.report_create+=1
+            self.meta = {}
         return True
 
     def get_id(self, cr, uid, object_id, id, action, context=None):
@@ -219,13 +221,13 @@ class base_synchro(osv.osv_memory):
         server = pool.get('base.synchro.server').browse(cr, uid, ids, context=context)[0]
         for object in server.obj_ids:
             dt = time.strftime('%Y-%m-%d %H:%M:%S')
-            self.synchronize(cr, uid, server, object, context)
+            self.synchronize(cr, uid, server, object, context=context)
             if object.action=='b':
                 time.sleep(1)
                 dt = time.strftime('%Y-%m-%d %H:%M:%S')
             self.pool.get('base.synchro.obj').write(cr, uid, [object.id], {'synchronize_date': dt})
         end_date = time.strftime('%Y-%m-%d, %Hh %Mm %Ss')
-        if 'user_id' in syn_obj.user_id:
+        if syn_obj.user_id:
             request = pooler.get_pool(cr.dbname).get('res.request')
             if not self.report:
                 self.report.append('No exception.')
@@ -244,18 +246,20 @@ Exceptions:
             request.create(cr, uid, {
                 'name' : "Synchronization report",
                 'act_from' : uid,
-                'act_to' : syn_obj.user_id,
+                'act_to' : syn_obj.user_id.id,
                 'body': summary,
             })
             return True
 
     def upload_download_multi_thread(self, cr, uid, data, context=None):
-        threaded_synchronization = threading.Thread(target=self.upload_download, args=(cr, uid, data, context))
+        cr1 = pooler.get_db(cr.dbname).cursor()
+        threaded_synchronization = threading.Thread(target=self.upload_download, args=(cr1, uid, data, context))
         threaded_synchronization.run()
         data_obj = self.pool.get('ir.model.data')
         id2 = data_obj._get_id(cr, uid, 'base_synchro', 'view_base_synchro_finish')
         if id2:
             id2 = data_obj.browse(cr, uid, id2, context=context).res_id
+        cr.commit()
         return {
             'view_type': 'form',
             'view_mode': 'form',
