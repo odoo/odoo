@@ -66,7 +66,7 @@ class email_template(osv.osv):
         return {'value':{'model':mod_name}}
 
     _columns = {
-        'name': fields.char('Name', size=250, required=True),
+        'name': fields.char('Name', size=250),
         'model_id':fields.many2one('ir.model', 'Resource'),
         'model': fields.related('model_id', 'model', string='Model', type="char", size=128, store=True, readonly=True),
         'track_campaign_item':fields.boolean('Resource Tracking',
@@ -355,7 +355,7 @@ This is useful for CRM leads for example"),
                         })
         return {'value':result}
 
-    
+
     def _generate_email(self, cr, uid, template_id, record_id, context=None):
         """
         Generates an email from the template for
@@ -372,7 +372,7 @@ This is useful for CRM leads for example"),
             smtp_server_id = template.smtp_server_id.id
         smtp_server = smtp_pool.browse(cr, uid, smtp_server_id, context=context)
         # determine name of sender, either it is specified in email_id
-        
+
         email_id = smtp_server.email_id.strip()
         email_from = re.findall(r'([^ ,<@]+@[^> ,]+)', email_id)[0]
         if email_from != email_id:
@@ -407,9 +407,9 @@ This is useful for CRM leads for example"),
                 values['description'] += '\n\n' + sign
             #if values['body_html']:
             #    values['body_html'] += sign
-        
+
         attachment = []
-        
+
         # Add report as a Document
         if template.report_template:
             report_name = template.report_name
@@ -428,19 +428,19 @@ This is useful for CRM leads for example"),
                 report_name = reportname
             report_name = report_name + "." + format
             attachment.append((report_name, result))
-            
+
 
         # Add document attachments
         for attach in template.attachment_ids:
             #attach = attahcment_obj.browse(cr, uid, attachment_id, context)
             attachment.append((attach.datas_fname, attach.datas))
-       
+
         #Send emails
         context.update({'notemplate':True})
-        email_id = email_message_pool.email_send(cr, uid, values.get('email_from'), values.get('email_to'), values.get('name'), values.get('description'), 
-                    model=model, email_cc=values.get('email_cc'), email_bcc=values.get('email_bcc'), reply_to=values.get('reply_to'), 
+        email_id = email_message_pool.email_send(cr, uid, values.get('email_from'), values.get('email_to'), values.get('name'), values.get('description'),
+                    model=model, email_cc=values.get('email_cc'), email_bcc=values.get('email_bcc'), reply_to=values.get('reply_to'),
                     attach=attachment, message_id=values.get('message_id'), openobject_id=record_id, debug=True, subtype='plain', x_headers={}, priority='3', smtp_server_id=smtp_server.id, context=context)
-        email_message_pool.write(cr, uid, email_id, {'template_id': template.id})
+        email_message_pool.write(cr, uid, email_id, {'template_id': context.get('template_id',template.id)})
         return email_id
 
 
@@ -484,7 +484,7 @@ class email_message(osv.osv):
             if template_ids and len(template_ids):
                 template_id = template_ids[0]
                 return template_pool.generate_email(cr, uid, [template_id], openobject_id, context=context)
-        return super(email_message, self).email_send(cr, uid, email_from, email_to, subject, body, model=model, email_cc=email_cc, email_bcc=email_bc, reply_to=reply_to, attach=attach,
+        return super(email_message, self).email_send(cr, uid, email_from, email_to, subject, body, model=model, email_cc=email_cc, email_bcc=email_bcc, reply_to=reply_to, attach=attach,
                 message_id=message_id, openobject_id=openobject_id, debug=debug, subtype=subtype, x_headers=x_headers, priority=priority, smtp_server_id=smtp_server_id, context=context)
 email_message()
 
