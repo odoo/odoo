@@ -424,7 +424,7 @@ class account_account(osv.osv):
             context = {}
         accounts = self.browse(cr, uid, ids, context=context)
         for account in accounts:
-            if account.child_id and account.type != 'view':
+            if account.child_id and account.type not in ('view', 'consolidation'):
                 return False
         return True
 
