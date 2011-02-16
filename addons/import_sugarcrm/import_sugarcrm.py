@@ -57,11 +57,32 @@ class import_sugarcrm(osv.osv):
 
      def _create_lead(self, cr, uid, sugar_val, country, state, context=None):
            lead_pool = self.pool.get("crm.lead")
+           stage_id = ''
+           stage_pool = self.pool.get('crm.case.stage')
+           if sugar_val.get('status','') == 'New':
+               sugar_stage = 'New'
+           elif sugar_val.get('status','') == 'Assigned':
+               sugar_stage = 'Qualification'
+           elif sugar_val.get('status','') == 'In Progress':
+               sugar_stage = 'Proposition'
+           elif sugar_val.get('status','') == 'Recycled':
+               sugar_stage = 'Negotiation'
+           elif sugar_val.get('status','') == 'Dead':
+               sugar_stage = 'Lost'
+           else:
+               sugar_stage = ''
+           stage_ids = stage_pool.search(cr, uid, [("type", '=', 'lead'), ('name', '=', sugar_stage)])
+
+           for stage in stage_pool.browse(cr, uid, stage_ids):
+               stage_id = stage.id     
+                     
            vals = {'name': sugar_val.get('first_name','')+' '+ sugar_val.get('last_name',''),
                    'contact_name': sugar_val.get('first_name','')+' '+ sugar_val.get('last_name',''),
                    'user_id':sugar_val.get('created_by',''),
+                   'description': sugar_val.get('description',''),
                    'partner_name': sugar_val.get('first_name','')+' '+ sugar_val.get('last_name',''),
                    'email_from': sugar_val.get('email1',''),
+                   'stage_id': stage_id or '',
                    'phone': sugar_val.get('phone_work',''),
                    'mobile': sugar_val.get('phone_mobile',''),
                    'write_date':sugar_val.get('date_modified',''),
@@ -80,7 +101,19 @@ class import_sugarcrm(osv.osv):
            lead_pool = self.pool.get("crm.lead")
            stage_id = ''
            stage_pool = self.pool.get('crm.case.stage')
-           stage_ids = stage_pool.search(cr, uid, [("type", '=', 'opportunity'), ('name', '=', sugar_val.get('opportunity_type',''))])
+           if sugar_val.get('sales_stage','') == 'Need Analysis':
+               sugar_stage = 'New'
+           elif sugar_val.get('sales_stage','') == 'Closed Lost':
+               sugar_stage = 'Lost'
+           elif sugar_val.get('sales_stage','') == 'Closed Won':
+               sugar_stage = 'Won'
+           elif sugar_val.get('sales_stage','') == 'Value Proposition':
+               sugar_stage = 'Proposition'
+           elif sugar_val.get('sales_stage','') == 'Negotiation/Review':
+               sugar_stage = 'Negotiation'
+           else:
+               sugar_stage = ''
+           stage_ids = stage_pool.search(cr, uid, [("type", '=', 'opportunity'), ('name', '=', sugar_stage)])           
            for stage in stage_pool.browse(cr, uid, stage_ids):
                stage_id = stage.id
            vals = {'name': sugar_val.get('name',''),
@@ -155,7 +188,6 @@ class import_sugarcrm(osv.osv):
                 self._create_lead(cr, uid, sugar_val, country, state, context)
 
             elif sugar_name == "Opportunities":
-                self._create_contact(cr, uid, sugar_val, country, state, context)
                 self._create_opportunity(cr, uid, sugar_val, country, state,context)
 
             elif sugar_name == "Contacts":
