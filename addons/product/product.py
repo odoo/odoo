@@ -482,7 +482,7 @@ class product_product(osv.osv):
         'pricelist_id': fields.dummy(string='Pricelist', relation='product.pricelist', type='many2one'),
         'name_template': fields.related('product_tmpl_id', 'name', string="Name", type='char', size=128, store=True),
     }
-    
+
     def unlink(self, cr, uid, ids, context=None):
         unlink_ids = []
         unlink_product_tmpl_ids = []
@@ -715,10 +715,14 @@ class product_supplierinfo(osv.osv):
             result[supplier_info.id]['qty'] = qty
         return result
 
-    def _get_uom_id(self, cr, uid, *args):
-        cr.execute('select id from product_uom order by id limit 1')
-        res = cr.fetchone()
-        return res and res[0] or False
+    def _get_uom_id(self, cr, uid, context=None):
+        uom_id = context.get('uom_id', False)
+        if uom_id:
+            return uom_id
+        else:
+            cr.execute('select id from product_uom order by id limit 1')
+            res = cr.fetchone()
+            return res and res[0] or False
 
     _columns = {
         'name' : fields.many2one('res.partner', 'Supplier', required=True,domain = [('supplier','=',True)], ondelete='cascade', help="Supplier of this product"),
