@@ -716,6 +716,8 @@ class product_supplierinfo(osv.osv):
         return result
 
     def _get_uom_id(self, cr, uid, context=None):
+        if context is None:
+            context = {}
         uom_id = context.get('uom_id', False)
         if uom_id:
             return uom_id
