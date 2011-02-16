@@ -22,9 +22,7 @@
 
 from osv import osv, fields
 import netsvc
-import base64
 from tools.translate import _
-import tools
 
 class email_template_send_wizard(osv.osv_memory):
     _name = 'email_template.send.wizard'

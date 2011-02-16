@@ -306,7 +306,7 @@ class email_message(osv.osv):
         attachment_obj = self.pool.get('ir.attachment')
         smtp_server_obj = self.pool.get('email.smtp_server')
         if not ids:
-            filters = [('folder', '=', 'outbox'), ('state', '!=', 'sending')]
+            filters = [('folder', '=', 'outbox'), ('state', '=', 'waiting')]
             if 'filters' in context:
                 filters.extend(context['filters'])
             ids = self.search(cr, uid, filters, context=context)
