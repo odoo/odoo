@@ -30,7 +30,6 @@ import re
 from tools.translate import _
 import tools
 import pooler
-import types
 
 class email_template(osv.osv):
     "Templates for sending Email"
@@ -452,14 +451,13 @@ This is useful for CRM leads for example"),
 
 
 
-    def generate_email(self, cr, uid, ids, record_ids,  context=None):
+    def generate_email(self, cr, uid, ids, record_id,  context=None):
         if context is None:
             context = {}
         email_ids = []
         for template in self.browse(cr, uid, ids, context=context):
-            for record_id in record_ids:
-                email_id = self._generate_email(cr, uid, template.id, record_id, context)
-                email_ids.append(email_id)
+            email_id = self._generate_email(cr, uid, template.id, record_id, context)
+            email_ids.append(email_id)
         return email_ids
 email_template()
 
@@ -485,8 +483,6 @@ class email_message(osv.osv):
             context = {}
         notemplate = context.get('notemplate', False)
         if (not notemplate) and model and openobject_id:
-            if type(openobject_id) != list:
-                openobject_id = [openobject_id]
             template_pool = self.pool.get('email.template')
             template_ids = template_pool.search(cr, uid, [('model','=',model)])
             if template_ids and len(template_ids):
