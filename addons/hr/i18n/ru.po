@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2011-01-19 12:00+0000\n"
-"Last-Translator: Alexey Y. Fedotov <Unknown>\n"
+"PO-Revision-Date: 2011-02-16 00:50+0000\n"
+"Last-Translator: Stanislav Hanzhin <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-25 06:40+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-02-16 06:12+0000\n"
+"X-Generator: Launchpad (build 12351)\n"
 
 #. module: hr
 #: model:process.node,name:hr.process_node_openerpuser0
@@ -25,7 +25,7 @@ msgstr "Пользователь Openerp"
 #: view:hr.job:0
 #: field:hr.job,requirements:0
 msgid "Requirements"
-msgstr ""
+msgstr "Требования"
 
 #. module: hr
 #: constraint:hr.department:0
@@ -40,7 +40,7 @@ msgstr ""
 #. module: hr
 #: field:hr.employee,sinid:0
 msgid "SIN No"
-msgstr "Карта социальной защиты(ИНН)"
+msgstr "Страховой номер индивидуального лицевого счета (СНИЛС)"
 
 #. module: hr
 #: model:ir.module.module,shortdesc:hr.module_meta_information
@@ -99,7 +99,7 @@ msgstr ""
 #. module: hr
 #: view:hr.installer:0
 msgid "title"
-msgstr ""
+msgstr "обращение"
 
 #. module: hr
 #: field:hr.department,company_id:0
@@ -117,7 +117,7 @@ msgstr ""
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_config
 msgid "Holidays"
-msgstr ""
+msgstr "Отпуска"
 
 #. module: hr
 #: help:hr.installer,hr_holidays:0
@@ -127,7 +127,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model,name:hr.model_hr_employee_marital_status
 msgid "Employee Marital Status"
-msgstr ""
+msgstr "Семейное положение сотрудника"
 
 #. module: hr
 #: help:hr.employee,partner_id:0
@@ -144,33 +144,35 @@ msgstr ""
 #. module: hr
 #: field:hr.installer,hr_contract:0
 msgid "Employee's Contracts"
-msgstr ""
+msgstr "Договор сотрудника"
 
 #. module: hr
 #: help:hr.installer,hr_payroll:0
 msgid "Generic Payroll system."
-msgstr ""
+msgstr "Общая система оплаты"
 
 #. module: hr
 #: view:hr.employee:0
 msgid "My Departments Employee"
-msgstr ""
+msgstr "Сотрудники моего подразделения"
 
 #. module: hr
 #: model:hr.employee.marital.status,name:hr.hr_employee_marital_status_married
 msgid "Married"
-msgstr ""
+msgstr "В браке"
 
 #. module: hr
 #: constraint:hr.employee:0
 msgid ""
 "Error ! You cannot select a department for which the employee is the manager."
 msgstr ""
+"Ошибка ! Вы не можете выбрать подразделение, руководителем которого является "
+"сотрудник."
 
 #. module: hr
 #: help:hr.employee,passport_id:0
 msgid "Employee Passport Information"
-msgstr ""
+msgstr "Информация о паспорте сотрудника"
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.open_module_tree_department
@@ -183,7 +185,7 @@ msgstr ""
 #. module: hr
 #: view:hr.employee:0
 msgid "Position"
-msgstr ""
+msgstr "Должность"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action2
@@ -206,12 +208,12 @@ msgstr ""
 #. module: hr
 #: field:hr.employee,identification_id:0
 msgid "Identification No"
-msgstr ""
+msgstr "Идентификационный номер"
 
 #. module: hr
 #: field:hr.job,no_of_employee:0
 msgid "No of Employee"
-msgstr ""
+msgstr "№ сотрудника"
 
 #. module: hr
 #: selection:hr.employee,gender:0
@@ -232,7 +234,7 @@ msgstr ""
 #. module: hr
 #: field:hr.installer,hr_timesheet_sheet:0
 msgid "Timesheets"
-msgstr ""
+msgstr "Табели"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_employee_tree
@@ -247,7 +249,7 @@ msgstr "Страховое удостоверение"
 #. module: hr
 #: help:hr.job,no_of_employee:0
 msgid "Number of employee with that job."
-msgstr ""
+msgstr "Количество сотрудников с этой обязанностью"
 
 #. module: hr
 #: field:hr.employee,work_phone:0
@@ -264,7 +266,7 @@ msgstr "Подчиненные категории"
 #: field:hr.job,description:0
 #: model:ir.model,name:hr.model_hr_job
 msgid "Job Description"
-msgstr ""
+msgstr "Должностные обязанности"
 
 #. module: hr
 #: field:hr.employee,work_location:0
@@ -282,12 +284,12 @@ msgstr "Сотрудник"
 #. module: hr
 #: model:process.node,note:hr.process_node_employeecontact0
 msgid "Other information"
-msgstr ""
+msgstr "Прочая информация"
 
 #. module: hr
 #: field:hr.employee,work_email:0
 msgid "Work E-mail"
-msgstr ""
+msgstr "Рабочий e-mail"
 
 #. module: hr
 #: field:hr.department,complete_name:0
@@ -308,12 +310,12 @@ msgstr "Отчетность"
 #. module: hr
 #: model:ir.model,name:hr.model_ir_actions_act_window
 msgid "ir.actions.act_window"
-msgstr ""
+msgstr "ir.actions.act_window"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_board_hr
 msgid "Human Resources Dashboard"
-msgstr ""
+msgstr "Инф. панель отдела кадров"
 
 #. module: hr
 #: view:hr.employee:0
@@ -343,7 +345,7 @@ msgstr ""
 #. module: hr
 #: view:hr.employee:0
 msgid "Categories"
-msgstr ""
+msgstr "Категории"
 
 #. module: hr
 #: field:hr.job,expected_employees:0
@@ -353,7 +355,7 @@ msgstr ""
 #. module: hr
 #: help:hr.employee,sinid:0
 msgid "Social Insurance Number"
-msgstr ""
+msgstr "Cтраховой номер индивидуального лицевого счета"
 
 #. module: hr
 #: model:hr.employee.marital.status,name:hr.hr_employee_marital_status_divorced
@@ -368,7 +370,7 @@ msgstr "Родительская категория"
 #. module: hr
 #: constraint:hr.employee.category:0
 msgid "Error ! You cannot create recursive Categories."
-msgstr ""
+msgstr "Ошибка! Вы не можете создавать рекурсивные категории."
 
 #. module: hr
 #: view:hr.department:0
@@ -387,7 +389,7 @@ msgstr "Контакты сотрудника"
 #. module: hr
 #: view:board.board:0
 msgid "My Board"
-msgstr ""
+msgstr "Моя панель"
 
 #. module: hr
 #: selection:hr.employee,gender:0
@@ -397,7 +399,7 @@ msgstr "Мужской"
 #. module: hr
 #: field:hr.installer,progress:0
 msgid "Configuration Progress"
-msgstr ""
+msgstr "Состояние настройки"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_categ_form
@@ -414,12 +416,12 @@ msgstr "Категория сотрудника"
 #. module: hr
 #: field:hr.installer,config_logo:0
 msgid "Image"
-msgstr ""
+msgstr "Изображение"
 
 #. module: hr
 #: model:process.process,name:hr.process_process_employeecontractprocess0
 msgid "Employee Contract"
-msgstr ""
+msgstr "Договор с работником"
 
 #. module: hr
 #: help:hr.installer,hr_evaluation:0
@@ -467,7 +469,7 @@ msgstr ""
 #. module: hr
 #: help:hr.employee,bank_account_id:0
 msgid "Employee bank salary account"
-msgstr ""
+msgstr "Зарплатный счёт сотрудника в банке"
 
 #. module: hr
 #: field:hr.department,note:0
@@ -492,7 +494,7 @@ msgstr "Рабочий адрес"
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_board_hr_manager
 msgid "HR Manager Dashboard"
-msgstr ""
+msgstr "Инф. панель менеджера отдела кадров"
 
 #. module: hr
 #: view:hr.employee:0
@@ -502,7 +504,7 @@ msgstr "Статус"
 #. module: hr
 #: view:hr.installer:0
 msgid "Configure"
-msgstr ""
+msgstr "Настроить"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_categ_tree
@@ -513,22 +515,22 @@ msgstr "Структура категорий"
 #. module: hr
 #: field:hr.employee,partner_id:0
 msgid "unknown"
-msgstr ""
+msgstr "неизвестен"
 
 #. module: hr
 #: field:hr.installer,hr_holidays:0
 msgid "Holidays / Leaves Management"
-msgstr ""
+msgstr "Управление отпусками/пропусками"
 
 #. module: hr
 #: field:hr.employee,ssnid:0
 msgid "SSN No"
-msgstr "Карта социальной защиты (ИНН)"
+msgstr "Номер карты социальной защиты"
 
 #. module: hr
 #: view:hr.employee:0
 msgid "Active"
-msgstr "Активен"
+msgstr "Активные"
 
 #. module: hr
 #: constraint:hr.employee:0
@@ -572,12 +574,13 @@ msgstr ""
 #. module: hr
 #: field:hr.employee.marital.status,description:0
 msgid "Status Description"
-msgstr ""
+msgstr "Описание статуса"
 
 #. module: hr
 #: sql_constraint:res.users:0
 msgid "You can not have two users with the same login !"
 msgstr ""
+"Вы не можете иметь двух пользователей с одинаковым именем пользователя!"
 
 #. module: hr
 #: view:hr.job:0
@@ -622,17 +625,17 @@ msgstr ""
 #. module: hr
 #: view:hr.employee:0
 msgid "Personal Information"
-msgstr "Персональная информация"
+msgstr "Личные данные"
 
 #. module: hr
 #: field:hr.employee,passport_id:0
 msgid "Passport No"
-msgstr ""
+msgstr "№ паспорта"
 
 #. module: hr
 #: view:res.users:0
 msgid "Current Activity"
-msgstr ""
+msgstr "Текущая деятельность"
 
 #. module: hr
 #: help:hr.installer,hr_expense:0
@@ -644,7 +647,7 @@ msgstr ""
 #. module: hr
 #: view:hr.job:0
 msgid "Current"
-msgstr ""
+msgstr "Текущие"
 
 #. module: hr
 #: field:hr.department,parent_id:0
@@ -671,7 +674,7 @@ msgstr ""
 #: view:hr.employee.marital.status:0
 #: view:hr.job:0
 msgid "Description"
-msgstr ""
+msgstr "Описание"
 
 #. module: hr
 #: help:hr.installer,hr_contract:0
@@ -681,23 +684,23 @@ msgstr ""
 #. module: hr
 #: field:hr.installer,hr_payroll:0
 msgid "Payroll"
-msgstr ""
+msgstr "Платежная ведомость"
 
 #. module: hr
 #: model:hr.employee.marital.status,name:hr.hr_employee_marital_status_single
 msgid "Single"
-msgstr ""
+msgstr "Холост/Не замужем"
 
 #. module: hr
 #: field:hr.job,name:0
 msgid "Job Name"
-msgstr ""
+msgstr "Название задачи"
 
 #. module: hr
 #: view:hr.job:0
 #: selection:hr.job,state:0
 msgid "In Position"
-msgstr ""
+msgstr "В должности"
 
 #. module: hr
 #: field:hr.employee,mobile_phone:0
@@ -724,17 +727,17 @@ msgstr "Примечания"
 #. module: hr
 #: model:ir.model,name:hr.model_hr_installer
 msgid "hr.installer"
-msgstr ""
+msgstr "hr.installer"
 
 #. module: hr
 #: view:board.board:0
 msgid "HR Manager Board"
-msgstr ""
+msgstr "Инф. панель кадрового менеджера"
 
 #. module: hr
 #: field:hr.employee,resource_id:0
 msgid "Resource"
-msgstr ""
+msgstr "Ресурс"
 
 #. module: hr
 #: view:hr.installer:0
@@ -771,12 +774,12 @@ msgstr "Название отдела"
 #. module: hr
 #: help:hr.employee,ssnid:0
 msgid "Social Security Number"
-msgstr ""
+msgstr "Номер карты социальной защиты"
 
 #. module: hr
 #: model:process.node,note:hr.process_node_openerpuser0
 msgid "Creation of a OpenERP user"
-msgstr ""
+msgstr "Создание пользователя OpenERP"
 
 #. module: hr
 #: field:hr.department,child_ids:0
@@ -793,7 +796,7 @@ msgstr ""
 #: view:hr.employee:0
 #: field:hr.employee,coach_id:0
 msgid "Coach"
-msgstr ""
+msgstr "Тренер"
 
 #. module: hr
 #: view:hr.installer:0
@@ -810,7 +813,7 @@ msgstr ""
 #: view:hr.employee:0
 #: field:hr.employee,parent_id:0
 msgid "Manager"
-msgstr "Менеджер"
+msgstr "Руководитель"
 
 #. module: hr
 #: model:hr.employee.marital.status,name:hr.hr_employee_marital_status_widower

@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2011-02-10 22:49+0000\n"
+"PO-Revision-Date: 2011-02-15 18:17+0000\n"
 "Last-Translator: Dimitar Markov <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-02-11 06:26+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-02-16 06:12+0000\n"
+"X-Generator: Launchpad (build 12351)\n"
 
 #. module: idea
 #: help:idea.category,visibility:0
@@ -120,7 +120,7 @@ msgstr "Брой гласувания"
 #. module: idea
 #: model:ir.model,name:idea.model_report_vote
 msgid "Idea Vote Statistics"
-msgstr ""
+msgstr "Статистика за гласовете за идеята"
 
 #. module: idea
 #: selection:idea.idea,my_vote:0
@@ -179,7 +179,7 @@ msgstr "Много лошо"
 #. module: idea
 #: view:idea.vote:0
 msgid "Ideas vote"
-msgstr ""
+msgstr "Гласувай за идея"
 
 #. module: idea
 #: view:report.vote:0
@@ -191,12 +191,12 @@ msgstr "# от редове"
 #: code:addons/idea/wizard/idea_post_vote.py:89
 #, python-format
 msgid "You can not give Vote for this idea more than %s times"
-msgstr ""
+msgstr "Не можете да гласувате за тази идея повече %s пъти"
 
 #. module: idea
 #: view:idea.category:0
 msgid "Ideas Categories"
-msgstr ""
+msgstr "Категории на идеите"
 
 #. module: idea
 #: help:idea.idea,description:0
@@ -225,7 +225,7 @@ msgstr "Няма гласуване"
 #. module: idea
 #: sql_constraint:idea.category:0
 msgid "The name of the category must be unique"
-msgstr "Името на категорията трябва да е уникално"
+msgstr "Името на категорията трябва да бъде уникално"
 
 #. module: idea
 #: model:ir.model,name:idea.model_idea_select
@@ -235,7 +235,7 @@ msgstr "избери идея"
 #. module: idea
 #: view:idea.stat:0
 msgid "stat"
-msgstr ""
+msgstr "стат"
 
 #. module: idea
 #: field:idea.category,child_ids:0
@@ -266,12 +266,12 @@ msgstr "Добро"
 #. module: idea
 #: help:idea.idea,open_date:0
 msgid "Date when an idea opened"
-msgstr "Дата на идеята"
+msgstr "Дата на отваряне на идеята"
 
 #. module: idea
 #: view:idea.idea:0
 msgid "Idea Detail"
-msgstr ""
+msgstr "Подробности за идеята"
 
 #. module: idea
 #: help:idea.idea,state:0
@@ -280,12 +280,15 @@ msgid ""
 " It is             opened by the user, the state is 'Opened'.            \n"
 "If the idea is accepted, the state is 'Accepted'."
 msgstr ""
+"Когато се създаде идея състоянието и е 'Draft'.\n"
+" Когато е отворена от потребител е  'Отворена'.            \n"
+"Ако идеата е приета състоянието и е 'Приета'."
 
 #. module: idea
 #: field:idea.category,visibility:0
 #: field:idea.idea,visibility:0
 msgid "Open Idea?"
-msgstr ""
+msgstr "Отвори идея?"
 
 #. module: idea
 #: selection:report.vote,month:0
@@ -298,7 +301,7 @@ msgstr "Юли"
 #: view:report.vote:0
 #: selection:report.vote,idea_state:0
 msgid "Accepted"
-msgstr "Прието"
+msgstr "Приета"
 
 #. module: idea
 #: model:ir.actions.act_window,name:idea.action_idea_category
@@ -309,12 +312,12 @@ msgstr "Категории"
 #. module: idea
 #: view:report.vote:0
 msgid "    Month-1    "
-msgstr ""
+msgstr "    Месец-1    "
 
 #. module: idea
 #: field:idea.idea,open_date:0
 msgid "Open date"
-msgstr ""
+msgstr "Дата на откриване"
 
 #. module: idea
 #: field:idea.idea,vote_ids:0
@@ -331,12 +334,12 @@ msgstr "Статистика на гласовете"
 #. module: idea
 #: field:idea.idea,vote_limit:0
 msgid "Maximum Vote per User"
-msgstr ""
+msgstr "Максимум гласове за един потребител"
 
 #. module: idea
 #: view:idea.category:0
 msgid "Parent Category"
-msgstr ""
+msgstr "Родителска категория"
 
 #. module: idea
 #: field:idea.comment,content:0
@@ -355,19 +358,19 @@ msgstr "Септември"
 #. module: idea
 #: selection:report.vote,month:0
 msgid "December"
-msgstr ""
+msgstr "Декември"
 
 #. module: idea
 #: view:report.vote:0
 #: field:report.vote,month:0
 msgid "Month"
-msgstr ""
+msgstr "Месец"
 
 #. module: idea
 #: model:ir.actions.act_window,name:idea.action_idea_idea_categ_open
 #: model:ir.actions.act_window,name:idea.action_idea_idea_open
 msgid "Open Ideas"
-msgstr ""
+msgstr "Отворени идеи"
 
 #. module: idea
 #: view:idea.category:0
@@ -390,7 +393,7 @@ msgstr "Много добре"
 #. module: idea
 #: view:report.vote:0
 msgid "  Year  "
-msgstr ""
+msgstr "  Година  "
 
 #. module: idea
 #: selection:idea.idea,state:0
@@ -411,7 +414,7 @@ msgstr "Нова идея"
 #. module: idea
 #: view:idea.vote.stat:0
 msgid "vote_stat of ideas"
-msgstr ""
+msgstr "vote_stat за идеи"
 
 #. module: idea
 #: model:ir.actions.act_window,name:idea.action_idea_category_tree
@@ -423,12 +426,12 @@ msgstr "Идеи по категории"
 #: selection:idea.idea,state:0
 #: selection:report.vote,idea_state:0
 msgid "Draft"
-msgstr "Чернова"
+msgstr "Проект"
 
 #. module: idea
 #: selection:report.vote,month:0
 msgid "August"
-msgstr ""
+msgstr "Август"
 
 #. module: idea
 #: selection:idea.idea,my_vote:0
@@ -441,18 +444,18 @@ msgstr "Нормален"
 #. module: idea
 #: selection:report.vote,month:0
 msgid "June"
-msgstr ""
+msgstr "Юни"
 
 #. module: idea
 #: field:report.vote,creater_id:0
 #: field:report.vote,user_id:0
 msgid "User Name"
-msgstr ""
+msgstr "Име на потребител"
 
 #. module: idea
 #: model:ir.model,name:idea.model_idea_vote_stat
 msgid "Idea Votes Statistics"
-msgstr ""
+msgstr "Статистика за гласовете за идея"
 
 #. module: idea
 #: field:idea.comment,user_id:0
@@ -491,7 +494,7 @@ msgstr "Дата на създаване"
 #. module: idea
 #: selection:report.vote,month:0
 msgid "January"
-msgstr ""
+msgstr "Януари"
 
 #. module: idea
 #: model:ir.model,name:idea.model_idea_idea
@@ -506,7 +509,7 @@ msgstr "Обобщение"
 #. module: idea
 #: field:idea.idea,name:0
 msgid "Idea Summary"
-msgstr ""
+msgstr "Равносметка за идеята"
 
 #. module: idea
 #: selection:report.vote,month:0
@@ -521,12 +524,12 @@ msgstr "История"
 #. module: idea
 #: view:idea.idea:0
 msgid "Vots Statistics"
-msgstr ""
+msgstr "Статистика за гласуване"
 
 #. module: idea
 #: field:report.vote,date:0
 msgid "Date Order"
-msgstr "Дата на заявка"
+msgstr "По дата"
 
 #. module: idea
 #: view:idea.idea:0
@@ -539,12 +542,12 @@ msgstr "Създал"
 #: view:idea.post.vote:0
 #: model:ir.ui.menu,name:idea.menu_give_vote
 msgid "Give Vote"
-msgstr ""
+msgstr "Дайте си гласа"
 
 #. module: idea
 #: help:idea.idea,vote_limit:0
 msgid "Set to one if  you require only one Vote per user"
-msgstr ""
+msgstr "Сложете едно ако изисквате само по един глас за потремител"
 
 #. module: idea
 #: view:idea.post.vote:0
@@ -619,7 +622,7 @@ msgstr "Отказан"
 #: code:addons/idea/idea.py:253
 #, python-format
 msgid "Draft/Accepted/Cancelled ideas Could not be voted"
-msgstr ""
+msgstr "За Проект/Приети/Отказани идеи не може да се гласува"
 
 #. module: idea
 #: view:idea.vote:0
@@ -654,7 +657,7 @@ msgstr "Брой коментари"
 #. module: idea
 #: field:idea.vote,score:0
 msgid "Vote Status"
-msgstr ""
+msgstr "Статус гласуване"
 
 #. module: idea
 #: field:idea.idea,vote_avg:0
