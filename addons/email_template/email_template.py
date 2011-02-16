@@ -30,6 +30,7 @@ import re
 from tools.translate import _
 import tools
 import pooler
+import types
 
 class email_template(osv.osv):
     "Templates for sending Email"
@@ -371,8 +372,11 @@ This is useful for CRM leads for example"),
         report_xml_pool = self.pool.get('ir.actions.report.xml')
         template = self.get_email_template(cr, uid, template_id, record_id, context)
         smtp_server_id = context.get('smtp_server_id', False)
-        if not smtp_server_id:
+        if not smtp_server_id and template.smtp_server_id:
             smtp_server_id = template.smtp_server_id.id
+        else:
+            smtp_ids = smtp_pool.search(cr, uid, [('default','=',True)])
+            smtp_server_id = smtp_ids and smtp_ids[0]
         smtp_server = smtp_pool.browse(cr, uid, smtp_server_id, context=context)
         # determine name of sender, either it is specified in email_id
 
@@ -481,6 +485,8 @@ class email_message(osv.osv):
             context = {}
         notemplate = context.get('notemplate', False)
         if (not notemplate) and model and openobject_id:
+            if type(openobject_id) != list:
+                openobject_id = [openobject_id]
             template_pool = self.pool.get('email.template')
             template_ids = template_pool.search(cr, uid, [('model','=',model)])
             if template_ids and len(template_ids):
