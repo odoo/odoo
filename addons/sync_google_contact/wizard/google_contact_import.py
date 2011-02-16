@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from osv import fields,osv,orm
+from osv import fields,osv
 from tools.translate import _
 
 from sync_google_contact import sync_google_contact
