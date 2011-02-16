@@ -33,7 +33,7 @@ system to store and search in your CV base.
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
-    'depends': ['hr','survey','crm'],
+    'depends': ['hr','survey','crm','decimal_precision'],
     'update_xml': [
         'wizard/hr_recruitment_phonecall_view.xml',
         'wizard/hr_recruitment_create_partner_job_view.xml',
