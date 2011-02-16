@@ -24,8 +24,6 @@ from tools.translate import _
 import gdata.contacts
 import gdata.contacts.service
 
-from sync_google_contact import sync_google_contact
-
 class google_login(osv.osv_memory):
     _description ='Google Contact'
     _name = 'google.login'
@@ -35,24 +33,26 @@ class google_login(osv.osv_memory):
     }
     
     def check_login(self, cr, uid, ids, context=None):
-        if context==None:
-            context={}
-        data=self.read(cr,uid,ids)[0]
-        user=data['user']
-        password=data['password']
+        if context == None:
+            context = {}
+        data = self.read(cr, uid, ids)[0]
+        user = data['user']
+        password = data['password']
         gd_client = gdata.contacts.service.ContactsService()
         gd_client.email = user
         gd_client.password = password
         gd_client.source = 'OpenERP'
         try:
             gd_client.ProgrammaticLogin()     
-            res={'gmail_user':user,
-            'gmail_password':password}
-            self.pool.get('res.users').write(cr,uid,uid,res,context=context)            
+            res = {
+                   'gmail_user': user,
+                   'gmail_password': password
+            }
+            self.pool.get('res.users').write(cr, uid, uid, res, context=context)            
         except Exception, e:
             raise osv.except_osv(_('Error!'),_('%s' % (e))) 
         
-        return {}
+        return gd_client
 google_login()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

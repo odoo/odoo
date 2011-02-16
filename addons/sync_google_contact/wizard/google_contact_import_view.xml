@@ -3,15 +3,18 @@
     <data>
     
         <record model="ir.ui.view" id="view_google_contact_import_form">
-            <field name="name">synchronize.base.import.form</field>
-            <field name="model">synchronize.base</field>
+            <field name="name">google.import.contact.form</field>
+            <field name="model">google.import.contact</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Import Google Contacts">
 	                <group colspan="2" col="2">
-	                    <field name="tools"/>
-	                    <field name="create_partner" />
+	                   <field name="user"/>
+	                   <field name="password" password="True"/>
 	                </group>
+	                <newline/>
+	                <separator string="Do you want to create partner?" colspan="4"/>
+	                <field name="create_partner" string="Yes/No"/>
 	                <separator string="" colspan="4"/>
 	                <group colspan="2" col="2">
 	                    <button special="cancel" string="Cancel" icon="gtk-cancel"/>
@@ -24,7 +27,7 @@
         <record model="ir.actions.act_window" id="act_google_contact_import_form">
           <field name="name">Import Google Contacts</field>
           <field name="type">ir.actions.act_window</field>
-          <field name="res_model">synchronize.base</field>
+          <field name="res_model">google.import.contact</field>
           <field name="view_type">form</field>
           <field name="view_mode">form</field>
           <field name="target">new</field>
