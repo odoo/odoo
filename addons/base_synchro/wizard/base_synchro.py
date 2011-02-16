@@ -32,10 +32,10 @@ class RPCProxyOne(object):
     def __init__(self, server, ressource):
         self.server = server
         local_url = 'http://%s:%d/xmlrpc/common'%(server.server_url,server.server_port)
-        rpc = xmlrpclib.ServerProxy(local_url, allow_none=True)
+        rpc = xmlrpclib.ServerProxy(local_url)
         self.uid = rpc.login(server.server_db, server.login, server.password)
         local_url = 'http://%s:%d/xmlrpc/object'%(server.server_url,server.server_port)
-        self.rpc = xmlrpclib.ServerProxy(local_url, allow_none=True)
+        self.rpc = xmlrpclib.ServerProxy(local_url)
         self.ressource = ressource
     def __getattr__(self, name):
         return lambda cr, uid, *args, **kwargs: self.rpc.execute(self.server.server_db, self.uid, self.server.password, self.ressource, name, *args)
@@ -256,7 +256,6 @@ Exceptions:
         id2 = data_obj._get_id(cr, uid, 'base_synchro', 'view_base_synchro_finish')
         if id2:
             id2 = data_obj.browse(cr, uid, id2, context=context).res_id
-        cr.commit()
         return {
             'view_type': 'form',
             'view_mode': 'form',
