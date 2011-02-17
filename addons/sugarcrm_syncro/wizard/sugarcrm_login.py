@@ -20,7 +20,7 @@
 ##############################################################################
 from osv import fields, osv
 from tools.translate import _
-from import_sugarcrm import sugar
+from sugarcrm_syncro import sugar
 
 class sugarcrm_login(osv.osv):
      """SugarCRM Login"""
