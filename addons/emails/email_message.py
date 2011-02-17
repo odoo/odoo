@@ -284,7 +284,7 @@ class email_message(osv.osv):
             for attachment in attach:
                 attachment_data = {
                         'name':  (subject or '') + _(' (Email Attachment)'),
-                        'datas': base64.b64encode(attachment[1]),
+                        'datas': attachment[1],
                         'datas_fname': attachment[0],
                         'description': subject or _('No Description'),
                         'res_model':'email.message',

@@ -451,14 +451,12 @@ This is useful for CRM leads for example"),
 
 
 
-    def generate_email(self, cr, uid, ids, record_id,  context=None):
+    def generate_email(self, cr, uid, template_id, record_id,  context=None):
         if context is None:
             context = {}
-        email_ids = []
-        for template in self.browse(cr, uid, ids, context=context):
-            email_id = self._generate_email(cr, uid, template.id, record_id, context)
-            email_ids.append(email_id)
-        return email_ids
+        email_id = self._generate_email(cr, uid, template_id, record_id, context)
+        return email_id
+
 email_template()
 
 class email_message(osv.osv):
@@ -481,15 +479,17 @@ class email_message(osv.osv):
             message_id=False, openobject_id=False, debug=False, subtype='plain', x_headers={}, priority='3', smtp_server_id=False, context=None):
         if context is None:
             context = {}
-        notemplate = context.get('notemplate', False)
+        notemplate = context.get('notemplate', True)
         if (not notemplate) and model and openobject_id:
             template_pool = self.pool.get('email.template')
             template_ids = template_pool.search(cr, uid, [('model','=',model)])
             if template_ids and len(template_ids):
                 template_id = template_ids[0]
-                return template_pool.generate_email(cr, uid, [template_id], openobject_id, context=context)
+                return template_pool.generate_email(cr, uid, template_id, openobject_id, context=context)
+
         return super(email_message, self).email_send(cr, uid, email_from, email_to, subject, body, model=model, email_cc=email_cc, email_bcc=email_bcc, reply_to=reply_to, attach=attach,
                 message_id=message_id, openobject_id=openobject_id, debug=debug, subtype=subtype, x_headers=x_headers, priority=priority, smtp_server_id=smtp_server_id, context=context)
+
 email_message()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -3,7 +3,7 @@
     <data>
 
         <menuitem name="Configuration" parent="base.menu_tools"
-              id="base.menu_lunch_survey_root" sequence="20" />
+              id="base.menu_lunch_survey_root" sequence="20"/>
 
         <record model="ir.ui.view" id="view_email_message_form">
             <field name="name">email.message.form</field>
@@ -34,6 +34,7 @@
                                     <field name="res_id"  readonly="1"/>
                                     <button name="open_document" string="Open Document" type="object" icon="gtk-jump-to"/>
 	                                <field name="message_id"/>
+	                                <button name="%(action_email_message_wizard_send)d" string="Reply" type="action" icon="terp-mail-replied"/>
                                 </group>
                             </group>
                             <separator string="Description" colspan="4"/>

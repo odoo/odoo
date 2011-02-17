@@ -32,11 +32,11 @@
     'depends': ['base', 'base_tools'],
     'init_xml': [],
     'update_xml': [
+        "wizard/email_message_wizard_send_view.xml",
         "email_view.xml",
         "res_partner_view.xml",
         'security/ir.model.access.csv',
         'email_data.xml',
-
     ],
     'demo_xml': [],
     'installable': True,
