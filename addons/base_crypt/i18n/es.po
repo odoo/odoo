@@ -1,17 +1,16 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-# 	* base_crypt
+# Spanish translation for openobject-addons
+# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
 #
-# Copyright (C) 2008,2009 P. Christeas <p_christ@hol.gr>
-# <> <>, 2009.
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
 "PO-Revision-Date: 2011-02-15 15:37+0000\n"
-"Last-Translator: <> <>\n"
-"Language-Team: <>\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -21,34 +20,35 @@ msgstr ""
 #. module: base_crypt
 #: sql_constraint:res.users:0
 msgid "You can not have two users with the same login !"
-msgstr ""
+msgstr "¡No puede tener dos usuarios con el mismo identificador de usuario!"
 
 #. module: base_crypt
 #: model:ir.model,name:base_crypt.model_res_users
 msgid "res.users"
-msgstr ""
+msgstr "res.usuarios"
 
 #. module: base_crypt
 #: constraint:res.users:0
 msgid "The chosen company is not in the allowed companies for this user"
 msgstr ""
+"La compañía seleccionada no está autorizada como compañía para este usuario"
 
 #. module: base_crypt
 #: code:addons/base_crypt/crypt.py:132
 #, python-format
 msgid "Please specify the password !"
-msgstr ""
+msgstr "¡Por favor, escriba una contraseña!"
 
 #. module: base_crypt
 #: model:ir.module.module,shortdesc:base_crypt.module_meta_information
 msgid "Base - Password Encryption"
-msgstr ""
+msgstr "Base - Encriptación de la Contraseña"
 
 #. module: base_crypt
 #: code:addons/base_crypt/crypt.py:132
 #, python-format
 msgid "Error"
-msgstr ""
+msgstr "Error"
 
 #. module: base_crypt
 #: model:ir.module.module,description:base_crypt.module_meta_information
@@ -70,3 +70,17 @@ msgid ""
 "unless you are using a secure protocol such as XML-RPCS.\n"
 "                    "
 msgstr ""
+"Este módulo sustituye la contraseña en texto plano por un hash codificado,\n"
+"previniendo que alguien pueda leer la contraseña original.\n"
+"Para un usuario existente, el borrado de la contraseña en texto plano se "
+"realiza la primera vez\n"
+"que el usuario se conecte después de instalar base_crypt.\n"
+"Después de instalar este módulo los usuarios no podrán recuperar su "
+"contraseña,\n"
+"un administrador tendrá que introducir una nueva contraseña.\n"
+"\n"
+"Nota: instalar este módulo no significa que pueda ignorar las medidas "
+"básicas de seguridad,\n"
+"porque la contraseña es enviada sin codificar por el cliente,\n"
+"a menos que utilice un protocolo seguro como XML-RPCS.\n"
+"                    "
