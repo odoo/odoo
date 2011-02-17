@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+    <!-- Import Message Form View -->
+        <record model="ir.ui.view" id="view_import_message_form">
+            <field name="name">import.message.form</field>
+            <field name="model">import.message</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Import Message">
+                   <label string="Import Data Successfully" colspan="4"/>  
+                   <separator string="" colspan="4" />
+                   <label string="" colspan="2"/>
+                   <button  icon="gtk-ok" special="cancel" string="_Ok"/>
+                </form>
+            </field>
+        </record>
+        
+    </data>
+</openerp>        
