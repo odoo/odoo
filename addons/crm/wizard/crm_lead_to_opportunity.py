@@ -37,31 +37,31 @@ class crm_lead2opportunity_partner(osv.osv_memory):
         'name': fields.selection([('convert', 'Convert to Opportunity'), ('merge', 'Merge with existing Opportunity')],'Select Action', required=True),
         'opportunity_ids': fields.many2many('crm.lead',  'merge_opportunity_rel', 'merge_id', 'opportunity_id', 'Opportunities', domain=[('type', '=', 'opportunity')]),
     }
-    
+
     def default_get(self, cr, uid, fields, context=None):
         """
             Default get for name, opportunity_ids
-            if there is an exisitng  partner link to the lead, find all existing opportunity link with this partnet to merge 
+            if there is an exisitng  partner link to the lead, find all existing opportunity link with this partnet to merge
             all information together
         """
         lead_obj = self.pool.get('crm.lead')
 
-        
+
         res = super(crm_lead2opportunity_partner, self).default_get(cr, uid, fields, context=context)
         opportunities = res.get('opportunity_ids') or []
-        
+
         partner_id = False
         for lead in lead_obj.browse(cr, uid, opportunities, context=context):
             partner_id = lead.partner_id and lead.partner_id.id or False
 
-        if not partner_id and res.get('partner_id'):            
+        if not partner_id and res.get('partner_id'):
             partner_id = res.get('partner_id')
 
         ids = []
         if partner_id:
             ids = lead_obj.search(cr, uid, [('partner_id', '=', partner_id), ('type', '=', 'opportunity')])
             opportunities += ids
-            
+
         if 'action' in fields:
             res.update({'action' : partner_id and 'exist' or 'create'})
         if 'partner_id' in fields:
@@ -70,10 +70,10 @@ class crm_lead2opportunity_partner(osv.osv_memory):
             res.update({'name' : ids and 'merge' or 'convert'})
         if 'opportunity_ids' in fields:
             res.update({'opportunity_ids': opportunities})
-        
+
 
         return res
-    
+
     def view_init(self, cr, uid, fields, context=None):
         """
         This function checks for precondition before wizard executes
@@ -93,7 +93,7 @@ class crm_lead2opportunity_partner(osv.osv_memory):
                 raise osv.except_osv(_("Warning !"), _("Closed/Cancelled \
 Leads Could not convert into Opportunity"))
         return False
-    
+
     def _convert(self, cr, uid, ids, lead, partner_id, stage_ids, context=None):
         leads = self.pool.get('crm.lead')
         vals = {
@@ -114,8 +114,8 @@ Leads Could not convert into Opportunity"))
                         'partner_id': lead.partner_id.id
                     }, context=context)
             leads.log(cr, uid, lead.id, _("Lead '%s' has been converted to an opportunity.") % lead.name)
-        
-    
+
+
     def action_apply(self, cr, uid, ids, context=None):
         """
         This converts lead to opportunity and opens Opportunity view
@@ -151,16 +151,17 @@ Leads Could not convert into Opportunity"))
                 stage_ids = self.pool.get('crm.case.stage').search(cr, uid, [('type','=','opportunity'),('sequence','>=',1), ('section_ids','=', lead.section_id.id)])
             else:
                 stage_ids = self.pool.get('crm.case.stage').search(cr, uid, [('type','=','opportunity'),('sequence','>=',1)])
-            
+
             data = self.browse(cr, uid, ids[0], context=context)
             partner_ids = []
             if data.action == 'create':
                 partner_ids = self._create_partner(cr, uid, ids, context=context)
-                
-            partner_id = partner_ids and partner_ids[0] or data.partner_id.id 
+
+            partner_id = partner_ids and partner_ids[0] or data.partner_id.id
             self._convert(cr, uid, ids, lead, partner_id, stage_ids, context=context)
             if data.name == 'merge':
                 merge_obj = self.pool.get('crm.merge.opportunity')
+                self.write(cr, uid, ids, {'opportunity_ids' : [(6,0, [data.opportunity_ids[0].id])]}, context=context)
                 return merge_obj.merge(cr, uid, data.opportunity_ids, context=context)
 
         return {
@@ -177,7 +178,7 @@ Leads Could not convert into Opportunity"))
             'type': 'ir.actions.act_window',
             'search_view_id': opportunity_view_search
         }
-        
+
 crm_lead2opportunity_partner()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
