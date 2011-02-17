@@ -162,6 +162,7 @@ Leads Could not convert into Opportunity"))
             if data.name == 'merge':
                 merge_obj = self.pool.get('crm.merge.opportunity')
                 self.write(cr, uid, ids, {'opportunity_ids' : [(6,0, [data.opportunity_ids[0].id])]}, context=context)
+                context.update({'lead_ids' : record_id})
                 return merge_obj.merge(cr, uid, data.opportunity_ids, context=context)
 
         return {

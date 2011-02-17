@@ -62,11 +62,21 @@ class crm_merge_opportunity(osv.osv_memory):
         opp_obj = self.pool.get('crm.lead')
         message_obj = self.pool.get('mailgate.message')
 
+        lead_ids = context and context.pop('lead_ids', []) or []
 
         if len(op_ids) <= 1:
             raise osv.except_osv(_('Warning !'),_('Please select more than one opportunities.'))
 
-        first_opp = op_ids[0]
+        opportunities = opp_obj.browse(cr, uid, lead_ids, context=context)
+        opportunities_list = list(set(op_ids) - set(opportunities))
+
+        if opportunities :
+            first_opportunity = opportunities[0]
+            tail_opportunities = opportunities_list
+        else:
+            first_opportunity = opportunities_list[0]
+            tail_opportunities = opportunities_list[1:]
+
         data = {
                 'partner_id': self._get_first_not_null_id('partner_id', op_ids),  # !!
                 'title': self._get_first_not_null_id('title', op_ids),
@@ -99,12 +109,10 @@ class crm_merge_opportunity(osv.osv_memory):
 
             }
 
-
-
         #copy message into the first opportunity + merge attachement
-        for opp in op_ids[1:]:
+        for opp in tail_opportunities:
             attach_ids = self.get_attachments(cr, uid, opp, context=context)
-            self.set_attachements_res_id(cr, uid, first_opp.id, attach_ids)
+            self.set_attachements_res_id(cr, uid, first_opportunity.id, attach_ids)
             for history in opp.message_ids:
                 new_history = message_obj.copy(cr, uid, history.id, default={'res_id': opp.id})
 
@@ -138,13 +146,13 @@ class crm_merge_opportunity(osv.osv_memory):
         subject = subject[0] + ", ".join(subject[1:])
         details = "\n\n".join(details)
 
-        opp_obj._history(cr, uid, [first_opp], subject, details=details)
+        opp_obj._history(cr, uid, [first_opportunity], subject, details=details)
 
         #data.update({'message_ids' : [(6, 0 ,self._concat_o2m('message_ids', op_ids))]})
-        opp_obj.write(cr, uid, [first_opp.id], data)
+        opp_obj.write(cr, uid, [first_opportunity.id], data)
 
-        unlink_ids = map(lambda x: x.id, op_ids[1:])
-        opp_obj.unlink(cr, uid, unlink_ids)
+        unlink_ids = map(lambda x: x.id, tail_opportunities)
+        opp_obj.unlink(cr, uid, unlink_ids, context=context)
 
         models_data = self.pool.get('ir.model.data')
 
@@ -170,7 +178,7 @@ class crm_merge_opportunity(osv.osv_memory):
                 'view_mode': 'tree, form',
                 'res_model': 'crm.lead',
                 'domain': [('type', '=', 'opportunity')],
-                'res_id': int(first_opp.id),
+                'res_id': int(first_opportunity.id),
                 'view_id': False,
                 'views': [(opportunity_view_form, 'form'),
                           (opportunity_view_tree, 'tree'),
@@ -181,8 +189,7 @@ class crm_merge_opportunity(osv.osv_memory):
 
     def action_merge(self, cr, uid, ids, context=None):
         obj_opportunity = self.browse(cr, uid, ids[0], context=context)
-        if hasattr(obj_opportunity, 'opportunity_ids'):
-            op_ids = obj_opportunity.opportunity_ids
+        op_ids = obj_opportunity.opportunity_ids
 
         self.write(cr, uid, ids, {'opportunity_ids' : [(6,0, [op_ids[0].id])]}, context=context)
         return self.merge(cr, uid, op_ids, context)
