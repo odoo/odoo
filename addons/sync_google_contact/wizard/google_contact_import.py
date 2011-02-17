@@ -23,10 +23,8 @@ from osv import fields,osv
 from tools.translate import _
 
 class google_contact_import(osv.osv_memory):
-    _name = "google.import.contact"    
     _inherit = 'google.login'
     _columns = {
-        'create_partner': fields.boolean('Create Partner', help="It will create Partner for given gmail user otherwise only adds contacts in Partner Addresses.")
      }
     
     def default_get(self, cr, uid, fields, context=None):
@@ -37,19 +35,60 @@ class google_contact_import(osv.osv_memory):
         if 'password' in fields:
             res.update({'password': user_obj.gmail_password})
         return res
-        
     def import_contact(self, cr, uid, ids, context=None):
-        # Only see the result, we will change the code
-        
         gd_client = self.check_login(cr, uid, ids, context=context)
         if not gd_client:
-            return {'type': 'ir.actions.act_window_close'}
+           raise osv.except_osv(_('Error'), _("Authication fail check  the user and password !"))    
+        data_obj = self.pool.get('ir.model.data')
+        data_id = data_obj._get_id(cr, uid, 'sync_google_contact', 'view_synchronize_google_contact_import_form')
+        view_id = False
+        if data_id:
+            view_id = data_obj.browse(cr, uid, data_id, context=context).res_id        
+        value = {
+            'name': _('Import Contact'),
+            'view_type': 'form',
+            'view_mode': 'form,tree',
+            'res_model': 'synchronize.base',
+            'view_id': False,
+            'context': context,
+            'views': [(view_id, 'form')],
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+        }
+        return value        
+         
+google_contact_import()
 
+class synchronize_google_contact(osv.osv_memory):
+    _name = "synchronize.base"    
+    _inherit = 'synchronize.base'
+    def _get_group(self, cr, uid, context=None):
+        user_obj = self.pool.get('res.users').browse(cr, uid, uid)
+        google=self.pool.get('google.login')
+        gd_client=google.google_login(cr,uid,user_obj.gmail_user,user_obj.gmail_password)
+        res=[]
+        if gd_client:
+            groups=gd_client.GetGroupsFeed()
+            for grp in groups.entry:
+                res.append((grp.id.text ,grp.title.text))
+        res.append(('none','None'))
+        res.append(('all','All Group'))
+        return res    
+    _columns = {
+        'tools': fields.selection([('gmail','Gmail')], 'Tools'),
+        'create_partner': fields.boolean('Create Partner', help="It will create Partner for given gmail user otherwise only adds contacts in Partner Addresses.")  ,      
+        'group_name': fields.selection(_get_group, "Group Name", size=32,help="Choose which group to import, By defult it take all "),        
+      
+     }        
+    
+    def import_contact(self, cr, uid, ids, context=None):
         addresss_obj = self.pool.get('res.partner.address')
         partner_obj = self.pool.get('res.partner')
         user_obj = self.pool.get('res.users').browse(cr, uid, uid)
         gmail_user = user_obj.gmail_user
         gamil_pwd = user_obj.gmail_password
+        google=self.pool.get('google.login')
+        gd_client=google.google_login(cr,uid,user_obj.gmail_user,user_obj.gmail_password)        
         if not gmail_user or not gamil_pwd:
             raise osv.except_osv(_('Error'), _("Please specify the user and password !"))      
 
@@ -58,6 +97,7 @@ class google_contact_import(osv.osv_memory):
         addresses = []
 
         for obj in self.browse(cr, uid, ids, context=context):
+            
             if obj.create_partner:
                 for user in contact.author:
                     partner_name = user.name.text
@@ -76,8 +116,13 @@ class google_contact_import(osv.osv_memory):
                             'partner_id': partner_id and partner_id[0]
                      }
                     contact_ids = addresss_obj.search(cr, uid, [('email','ilike',emails)])
-                    if not contact_ids:
-                        addresses.append(addresss_obj.create(cr, uid, data, context=context))
+                    if obj.group_name and entry.group_membership_info and  not contact_ids:
+                        for grp in entry.group_membership_info:
+                            if grp.href ==  obj.group_name:
+                                addresss_obj.create(cr, uid, data, context=context)                        
+                    else:
+                        if obj.group_name=='all':
+                            addresses.append(addresss_obj.create(cr, uid, data, context=context))
                 if not contact:
                     break
                 next = contact.GetNextLink()
@@ -110,6 +155,6 @@ class google_contact_import(osv.osv_memory):
         else:
             return {'type': 'ir.actions.act_window_close'}
 
-google_contact_import()
+synchronize_google_contact()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
