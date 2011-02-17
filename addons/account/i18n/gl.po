@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-02-15 18:49+0000\n"
+"PO-Revision-Date: 2011-02-16 20:31+0000\n"
 "Last-Translator: Alberto Luengo Cabanillas (Pexego) <alberto@pexego.es>\n"
 "Language-Team: Galician <gl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-02-16 06:12+0000\n"
+"X-Launchpad-Export-Date: 2011-02-17 05:38+0000\n"
 "X-Generator: Launchpad (build 12351)\n"
 
 #. module: account
@@ -1963,7 +1963,7 @@ msgstr ""
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_pl_report
 msgid "Account Profit And Loss"
-msgstr ""
+msgstr "Conta de Pérdidas e Ganancias"
 
 #. module: account
 #: field:account.installer,config_logo:0
@@ -1989,6 +1989,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the tax "
 "without removing it."
 msgstr ""
+"Se o campo activo está marcado a Falso, permitiralle oculta-lo imposto sen "
+"eliminalo"
 
 #. module: account
 #: help:account.bank.statement,name:0
@@ -1997,18 +1999,21 @@ msgid ""
 "be with same name as statement name. This allows the statement entries to "
 "have the same references than the statement itself"
 msgstr ""
+"Se lle da un nome distinto de '/', os movementos contables creados terán o "
+"mesmo nome que o do extracto. Esto permite que as entradas do extracto teñan "
+"as mesmas referencias cas do propio extracto."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_unreconcile
 #: model:ir.actions.act_window,name:account.action_account_unreconcile_reconcile
 #: model:ir.actions.act_window,name:account.action_account_unreconcile_select
 msgid "Unreconcile Entries"
-msgstr ""
+msgstr "Entradas Sen Conciliar"
 
 #. module: account
 #: field:account.move.reconcile,line_partial_ids:0
 msgid "Partial Entry lines"
-msgstr ""
+msgstr "Liñas de Entrada Parcial"
 
 #. module: account
 #: view:account.fiscalyear:0
@@ -2024,17 +2029,17 @@ msgstr "Asentos Abertos"
 #. module: account
 #: field:account.automatic.reconcile,account_ids:0
 msgid "Accounts to Reconcile"
-msgstr ""
+msgstr "Contas a Conciliar"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_filestatement0
 msgid "Import of the statement in the system from an electronic file"
-msgstr ""
+msgstr "Importación do extracto no sistema dende un ficheiro electrónico"
 
 #. module: account
 #: model:process.node,name:account.process_node_importinvoice0
 msgid "Import from invoice"
-msgstr ""
+msgstr "Importar dende factura"
 
 #. module: account
 #: selection:account.entries.report,month:0
@@ -2048,7 +2053,7 @@ msgstr "Enero"
 #. module: account
 #: view:account.journal:0
 msgid "Validations"
-msgstr ""
+msgstr "Validacións"
 
 #. module: account
 #: view:account.entries.report:0
@@ -2058,7 +2063,7 @@ msgstr "Este Ano Fiscal"
 #. module: account
 #: view:account.tax.chart:0
 msgid "Account tax charts"
-msgstr ""
+msgstr "Plan de impostos contables"
 
 #. module: account
 #: constraint:account.period:0
@@ -2066,6 +2071,8 @@ msgid ""
 "Invalid period ! Some periods overlap or the date period is not in the scope "
 "of the fiscal year. "
 msgstr ""
+"¡Período inválido! Algúns periodos superpóñense ou a data do periodo non "
+"está no ámbito do ano fiscal. "
 
 #. module: account
 #: selection:account.invoice,state:0
@@ -2073,7 +2080,7 @@ msgstr ""
 #: selection:account.invoice.report,state:0
 #: selection:report.invoice.created,state:0
 msgid "Pro-forma"
-msgstr ""
+msgstr "Pro-forma"
 
 #. module: account
 #: code:addons/account/installer.py:348
@@ -2087,7 +2094,7 @@ msgstr " Diario"
 msgid ""
 "There is no default default debit account defined \n"
 "on journal \"%s\""
-msgstr ""
+msgstr "Non hai unha conta de débito definida por defecto no diario \"%s\""
 
 #. module: account
 #: help:account.account,type:0
@@ -2100,11 +2107,16 @@ msgid ""
 "partners accounts (for debit/credit computations), closed for depreciated "
 "accounts."
 msgstr ""
+"Este tipo emprégase para diferencia-los tipos que teñen efectos particulares "
+"en OpeERP: a vista non pode ter entradas, as contas de consolidación poden "
+"ter contas fillas para a consolidación multi-compañía, as contas por "
+"pagar/recibir empréganse nos cálculos do débito/crédito dos partners e o "
+"estado \"cerrado\" para contas depreciadas."
 
 #. module: account
 #: view:account.chart.template:0
 msgid "Search Chart of Account Templates"
-msgstr ""
+msgstr "Busca as Plantillas do Plan de Contas"
 
 #. module: account
 #: view:account.installer:0
@@ -2113,6 +2125,9 @@ msgid ""
 "certified Chart of Accounts exists for your specified country, a generic one "
 "can be installed and will be selected by default."
 msgstr ""
+"O Plan de Contas por defecto coincide coa selección do seu país. Se non "
+"existe un Plan de Contas certificado para o país que especificou, pode "
+"instalarse un xenérico que escollerase por defecto."
 
 #. module: account
 #: view:account.account.type:0
@@ -2131,7 +2146,7 @@ msgstr ""
 #: field:analytic.entries.report,name:0
 #: field:report.invoice.created,name:0
 msgid "Description"
-msgstr ""
+msgstr "Descripción"
 
 #. module: account
 #: code:addons/account/account.py:2844
@@ -2151,24 +2166,24 @@ msgstr "Executando"
 #: field:product.category,property_account_income_categ:0
 #: field:product.template,property_account_income:0
 msgid "Income Account"
-msgstr ""
+msgstr "Conta de Ingresos"
 
 #. module: account
 #: code:addons/account/invoice.py:352
 #, python-format
 msgid "There is no Accounting Journal of type Sale/Purchase defined!"
-msgstr ""
+msgstr "¡Non hai definido un Diario Contable de tipo Compra/Venta!"
 
 #. module: account
 #: view:product.category:0
 msgid "Accounting Properties"
-msgstr ""
+msgstr "Propiedades Contables"
 
 #. module: account
 #: report:account.journal.period.print:0
 #: field:account.print.journal,sort_selection:0
 msgid "Entries Sorted By"
-msgstr ""
+msgstr "Entradas Ordenadas Por"
 
 #. module: account
 #: field:account.change.currency,currency_id:0
@@ -2178,12 +2193,12 @@ msgstr "Cambiar a"
 #. module: account
 #: view:account.entries.report:0
 msgid "# of Products Qty "
-msgstr ""
+msgstr "Cantidade de Productos "
 
 #. module: account
 #: model:ir.model,name:account.model_product_template
 msgid "Product Template"
-msgstr ""
+msgstr "Modelo de Producto"
 
 #. module: account
 #: report:account.account.balance:0
@@ -2222,12 +2237,12 @@ msgstr "Ano Fiscal"
 #: help:account.report.general.ledger,fiscalyear_id:0
 #: help:account.vat.declaration,fiscalyear_id:0
 msgid "Keep empty for all open fiscal year"
-msgstr ""
+msgstr "Manter baleiro para tódolos anos fiscais abertos"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move
 msgid "Account Entry"
-msgstr ""
+msgstr "Entrada Contable"
 
 #. module: account
 #: field:account.sequence.fiscalyear,sequence_main_id:0
@@ -2250,7 +2265,7 @@ msgstr "Prazos de Pago"
 #: model:ir.actions.act_window,name:account.action_account_fiscal_position_form
 #: model:ir.ui.menu,name:account.menu_action_account_fiscal_position_form
 msgid "Fiscal Positions"
-msgstr ""
+msgstr "Posicións Fiscais"
 
 #. module: account
 #: field:account.period.close,sure:0
@@ -2281,18 +2296,18 @@ msgstr "Aberto"
 #: model:process.node,note:account.process_node_draftinvoices0
 #: model:process.node,note:account.process_node_supplierdraftinvoices0
 msgid "Draft state of an invoice"
-msgstr ""
+msgstr "Estado Borrador dunha factura"
 
 #. module: account
 #: help:account.account,reconcile:0
 msgid ""
 "Check this if the user is allowed to reconcile entries in this account."
-msgstr ""
+msgstr "Marcar se se lle permite ó usuario conciliar entradas nesta conta."
 
 #. module: account
 #: view:account.partner.reconcile.process:0
 msgid "Partner Reconciliation"
-msgstr ""
+msgstr "Conciliación do Partner"
 
 #. module: account
 #: field:account.tax,tax_code_id:0
@@ -2309,6 +2324,10 @@ msgid ""
 "You can create one in the menu: \n"
 "Configuration\\Financial Accounting\\Accounts\\Journals."
 msgstr ""
+"Non se pode atopar ningún diario contable do tipo %s para esta compañía.\n"
+"\n"
+"Pode crear un no menú: \n"
+"Configuración/Contabilidade Financieira/Contas/Diarios."
 
 #. module: account
 #: field:account.invoice.tax,base_code_id:0
