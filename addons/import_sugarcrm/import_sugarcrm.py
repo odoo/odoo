@@ -206,7 +206,7 @@ class import_sugarcrm(osv.osv):
             'views': [(resource_id,'form')],
             'type': 'ir.actions.act_window',
             'target': 'new',
-        }                    
+        }                 
 
 import_sugarcrm()
 
