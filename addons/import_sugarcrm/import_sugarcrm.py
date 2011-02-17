@@ -35,6 +35,8 @@ class import_sugarcrm(osv.osv):
             ('accounts','Accounts'),
             ('contact','Contacts'),
         ],'Module Name', help="Module Name is used to specify which Module data want to Import"),
+         'username': fields.char('User Name', size=64),
+         'password': fields.char('Password', size=24),
      }
 
      def _get_all(self, cr, uid, model, sugar_val, context=None):
@@ -57,6 +59,7 @@ class import_sugarcrm(osv.osv):
 
      def _create_lead(self, cr, uid, sugar_val, country, state, context=None):
            lead_pool = self.pool.get("crm.lead")
+           
            stage_id = ''
            stage_pool = self.pool.get('crm.case.stage')
            if sugar_val.get('status','') == 'New':
@@ -156,7 +159,6 @@ class import_sugarcrm(osv.osv):
      def import_data(self, cr, uid, ids,context=None):
        if not context:
         context={}
-
        for current in self.browse(cr, uid, ids):
         if current.mod_name == 'lead' or current.mod_name == 'opportunity':
           module_name = 'crm'
@@ -179,20 +181,32 @@ class import_sugarcrm(osv.osv):
            sugar_name="Accounts"
         elif current.mod_name == 'contact':
            sugar_name="Contacts"
-
-       sugar_data = sugar.test(sugar_name)
-       for sugar_val in sugar_data:
-            country = self._get_all_countries(cr, uid, sugar_val.get('primary_address_country'), context)
-            state = self._get_all_states(cr, uid, sugar_val.get('primary_address_state'), context)
-            if sugar_name == "Leads":
-                self._create_lead(cr, uid, sugar_val, country, state, context)
-
-            elif sugar_name == "Opportunities":
-                self._create_opportunity(cr, uid, sugar_val, country, state,context)
-
-            elif sugar_name == "Contacts":
-                self._create_contact(cr, uid, sugar_val, country, state, context)
-       return {}
+       PortType,sessionid = sugar.login(context.get('username',''), context.get('password',''))
+       sugar_data = sugar.search(PortType,sessionid,sugar_name)
+       if sugar_data:    
+           for sugar_val in sugar_data:
+                country = self._get_all_countries(cr, uid, sugar_val.get('primary_address_country'), context)
+                state = self._get_all_states(cr, uid, sugar_val.get('primary_address_state'), context)
+                if sugar_name == "Leads":
+                    self._create_lead(cr, uid, sugar_val, country, state, context)
+    
+                elif sugar_name == "Opportunities":
+                    self._create_opportunity(cr, uid, sugar_val, country, state,context)
+    
+                elif sugar_name == "Contacts":
+                    self._create_contact(cr, uid, sugar_val, country, state, context)
+                    
+       obj_model = self.pool.get('ir.model.data')
+       model_data_ids = obj_model.search(cr,uid,[('model','=','ir.ui.view'),('name','=','import.message.form')])
+       resource_id = obj_model.read(cr, uid, model_data_ids, fields=['res_id'])
+       return {
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'import.message',
+            'views': [(resource_id,'form')],
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+        }                    
 
 import_sugarcrm()
 

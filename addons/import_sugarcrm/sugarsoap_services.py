@@ -213,7 +213,10 @@ class sugarsoapBindingSOAP:
         self.binding.Send(None, None, request, soapaction="http://localhost/sugarcrm/soap.php/get_entry_list", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
         # no output wsaction
         typecode = Struct(pname=None, ofwhat=get_entry_listResponse.typecode.ofwhat, pyclass=get_entry_listResponse.typecode.pyclass)
-        response = self.binding.Receive(typecode)
+        try:
+            response = self.binding.Receive(typecode)
+        except:
+            return None    
         return response
 
     # op: get_entry

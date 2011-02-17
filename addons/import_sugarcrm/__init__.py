@@ -21,3 +21,4 @@
 
 import import_sugarcrm
 import sugar
+import wizard
