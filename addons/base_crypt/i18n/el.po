@@ -8,20 +8,65 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-30 15:14:08+0000\n"
-"PO-Revision-Date: 2009-03-27 14:30+0200\n"
+"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"PO-Revision-Date: 2011-02-15 15:37+0000\n"
 "Last-Translator: <> <>\n"
-"Language-Team:  <>\n"
+"Language-Team: <>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2011-02-16 05:03+0000\n"
+"X-Generator: Launchpad (build 12351)\n"
 
-#~ msgid "Module for password encryption."
-#~ msgstr "Άρθρωμα για κρυπτογράφηση κωδικών."
+#. module: base_crypt
+#: sql_constraint:res.users:0
+msgid "You can not have two users with the same login !"
+msgstr ""
 
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Άκυρο XML για αρχιτεκτονική προβολής!"
+#. module: base_crypt
+#: model:ir.model,name:base_crypt.model_res_users
+msgid "res.users"
+msgstr ""
 
-#~ msgid "Password"
-#~ msgstr "Κωδικός"
+#. module: base_crypt
+#: constraint:res.users:0
+msgid "The chosen company is not in the allowed companies for this user"
+msgstr ""
+
+#. module: base_crypt
+#: code:addons/base_crypt/crypt.py:132
+#, python-format
+msgid "Please specify the password !"
+msgstr ""
+
+#. module: base_crypt
+#: model:ir.module.module,shortdesc:base_crypt.module_meta_information
+msgid "Base - Password Encryption"
+msgstr ""
+
+#. module: base_crypt
+#: code:addons/base_crypt/crypt.py:132
+#, python-format
+msgid "Error"
+msgstr ""
+
+#. module: base_crypt
+#: model:ir.module.module,description:base_crypt.module_meta_information
+msgid ""
+"This module replaces the cleartext password in the database with a password "
+"hash,\n"
+"preventing anyone from reading the original password.\n"
+"For your existing user base, the removal of the cleartext passwords occurs "
+"the first time\n"
+"a user logs into the database, after installing base_crypt.\n"
+"After installing this module it won't be possible to recover a forgotten "
+"password for your\n"
+"users, the only solution is for an admin to set a new password.\n"
+"\n"
+"Note: installing this module does not mean you can ignore basic security "
+"measures,\n"
+"as the password is still transmitted unencrypted on the network (by the "
+"client),\n"
+"unless you are using a secure protocol such as XML-RPCS.\n"
+"                    "
+msgstr ""
