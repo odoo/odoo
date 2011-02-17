@@ -35,7 +35,7 @@ class google_contact_import(osv.osv_memory):
         if 'password' in fields:
             res.update({'password': user_obj.gmail_password})
         return res
-    def import_contact(self, cr, uid, ids, context=None):
+    def check_login_contact(self, cr, uid, ids, context=None):
         gd_client = self.check_login(cr, uid, ids, context=context)
         if not gd_client:
            raise osv.except_osv(_('Error'), _("Authication fail check  the user and password !"))    
