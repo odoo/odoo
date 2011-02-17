@@ -95,63 +95,62 @@ class synchronize_google_contact(osv.osv_memory):
         contact = gd_client.GetContactsFeed()
         partner_id = []
         addresses = []
-
         for obj in self.browse(cr, uid, ids, context=context):
-            
-            if obj.create_partner:
-                for user in contact.author:
-                    partner_name = user.name.text
-                partner_id = partner_obj.search(cr, uid, [('name','ilike',partner_name)], context=context)
-                if not partner_id:
-                    partner_id.append(partner_obj.create(cr, uid, {'name': partner_name}, context=context))
-            while contact:
-                for entry in contact.entry:
-                    name = entry.title.text
-                    phone_numbers = ','.join(phone_number.text for phone_number in entry.phone_number)
-                    emails = ','.join(email.address for email in entry.email)
-                    data = {
-                            'name': name,
-                            'phone': phone_numbers,
-                            'email': emails,
-                            'partner_id': partner_id and partner_id[0]
-                     }
-                    contact_ids = addresss_obj.search(cr, uid, [('email','ilike',emails)])
-                    if obj.group_name and entry.group_membership_info and  not contact_ids:
-                        for grp in entry.group_membership_info:
-                            if grp.href ==  obj.group_name:
-                                addresss_obj.create(cr, uid, data, context=context)                        
-                    else:
-                        if obj.group_name=='all':
-                            addresses.append(addresss_obj.create(cr, uid, data, context=context))
-                if not contact:
-                    break
-                next = contact.GetNextLink()
-                contact = None
-                if next:
-                    contact = gd_client.GetContactsFeed(next.href)
-        if partner_id:
-            partner_id = partner_id[0]
-            return {
-                    'name': _('Partner'),
-                    'domain': "[('id','=',"+str(partner_id)+")]",
-                    'view_type': 'form',
-                    'view_mode': 'tree,form',
-                    'res_model': 'res.partner',
-                    'context': context,
-                    'views': [(False, 'tree'),(False, 'form')],
-                    'type': 'ir.actions.act_window',
-            }
-        elif addresses:
-            return {
-                    'name': _('Contacts'),
-                    'domain': "[('id','in', ["+','.join(map(str,addresses))+"])]",
-                    'view_type': 'form',
-                    'view_mode': 'tree,form',
-                    'res_model': 'res.partner.address',
-                    'context': context,
-                    'views': [(False, 'tree'),(False, 'form')],
-                    'type': 'ir.actions.act_window',
-            }
+            if obj.tools=='gmail':
+                if obj.create_partner:
+                    for user in contact.author:
+                        partner_name = user.name.text
+                    partner_id = partner_obj.search(cr, uid, [('name','ilike',partner_name)], context=context)
+                    if not partner_id:
+                        partner_id.append(partner_obj.create(cr, uid, {'name': partner_name}, context=context))
+                while contact:
+                    for entry in contact.entry:
+                        name = entry.title.text
+                        phone_numbers = ','.join(phone_number.text for phone_number in entry.phone_number)
+                        emails = ','.join(email.address for email in entry.email)
+                        data = {
+                                'name': name,
+                                'phone': phone_numbers,
+                                'email': emails,
+                                'partner_id': partner_id and partner_id[0]
+                         }
+                        contact_ids = addresss_obj.search(cr, uid, [('email','ilike',emails)])
+                        if obj.group_name and entry.group_membership_info and  not contact_ids:
+                            for grp in entry.group_membership_info:
+                                if grp.href ==  obj.group_name:
+                                    addresss_obj.create(cr, uid, data, context=context)                        
+                        else:
+                            if obj.group_name=='all':
+                                addresses.append(addresss_obj.create(cr, uid, data, context=context))
+                    if not contact:
+                        break
+                    next = contact.GetNextLink()
+                    contact = None
+                    if next:
+                        contact = gd_client.GetContactsFeed(next.href)
+            if partner_id:
+                partner_id = partner_id[0]
+                return {
+                        'name': _('Partner'),
+                        'domain': "[('id','=',"+str(partner_id)+")]",
+                        'view_type': 'form',
+                        'view_mode': 'tree,form',
+                        'res_model': 'res.partner',
+                        'context': context,
+                        'views': [(False, 'tree'),(False, 'form')],
+                        'type': 'ir.actions.act_window',
+                }
+            elif addresses:
+                return {
+                        'name': _('Contacts'),
+                        'domain': "[('id','in', ["+','.join(map(str,addresses))+"])]",
+                        'view_type': 'form',
+                        'view_mode': 'tree,form',
+                        'res_model': 'res.partner.address',
+                        'context': context,
+                        'views': [(False, 'tree'),(False, 'form')],
+                        'type': 'ir.actions.act_window',
+                }
         else:
             return {'type': 'ir.actions.act_window_close'}
 
