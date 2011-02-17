@@ -21,6 +21,7 @@
 
 from osv import fields,osv
 from tools.translate import _
+import tools
 
 class google_contact_import(osv.osv_memory):
     _inherit = 'google.login'
@@ -95,24 +96,35 @@ class synchronize_google_contact(osv.osv_memory):
         contact = gd_client.GetContactsFeed()
         partner_id = []
         addresses = []
+        partner_ids=[]
+        
         for obj in self.browse(cr, uid, ids, context=context):
             if obj.tools=='gmail':
-                if obj.create_partner:
-                    for user in contact.author:
-                        partner_name = user.name.text
-                    partner_id = partner_obj.search(cr, uid, [('name','ilike',partner_name)], context=context)
-                    if not partner_id:
-                        partner_id.append(partner_obj.create(cr, uid, {'name': partner_name}, context=context))
+#                if obj.create_partner:
+#                    for user in contact.author:
+#                        partner_name = user.name.text
+#                    if not partner_id:
+#                        partner_id.append(partner_obj.create(cr, uid, {'name': partner_name}, context=context))
                 while contact:
+                    data={}
                     for entry in contact.entry:
+                        partner_id=False   
+                        if obj.create_partner:
+                            partner_name = tools.ustr(entry.title.text)
+                            if partner_name:
+                                partner_id = partner_obj.search(cr, uid, [('name','ilike',partner_name)], context=context)   
+                                if not partner_id:
+                                    partner_id.append(partner_obj.create(cr, uid, {'name': partner_name}, context=context)) 
+                                partner_ids.append(partner_id)  
+                                data.update({'partner_id': partner_id and partner_id[0]} ) 
+                                              
                         name = entry.title.text
                         phone_numbers = ','.join(phone_number.text for phone_number in entry.phone_number)
                         emails = ','.join(email.address for email in entry.email)
                         data = {
-                                'name': name,
+                                'name': name or '',
                                 'phone': phone_numbers,
                                 'email': emails,
-                                'partner_id': partner_id and partner_id[0]
                          }
                         contact_ids = addresss_obj.search(cr, uid, [('email','ilike',emails)])
                         if obj.group_name and entry.group_membership_info and  not contact_ids:
@@ -128,11 +140,10 @@ class synchronize_google_contact(osv.osv_memory):
                     contact = None
                     if next:
                         contact = gd_client.GetContactsFeed(next.href)
-            if partner_id:
-                partner_id = partner_id[0]
+            if partner_ids:
                 return {
                         'name': _('Partner'),
-                        'domain': "[('id','=',"+str(partner_id)+")]",
+                          'domain': "[('id','in', ["+','.join(map(str,partner_ids))+"])]",
                         'view_type': 'form',
                         'view_mode': 'tree,form',
                         'res_model': 'res.partner',
