@@ -39,9 +39,9 @@ class account_move_line_reconcile_select(osv.osv_memory):
         @return: dictionary of  Open  account move line window for reconcile on given account id
 
          """
-        data = self.browse(cr, uid, ids, context=context)[0]
+        data = self.read(cr, uid, ids, context=context)[0]
         return {
-            'domain': "[('account_id','=',%d),('reconcile_id','=',False),('state','<>','draft')]" % data.account_id.id,
+            'domain': "[('account_id','=',%d),('reconcile_id','=',False),('state','<>','draft')]" % data['account_id'],
             'name': _('Reconciliation'),
             'view_type': 'form',
             'view_mode': 'tree,form',

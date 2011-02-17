@@ -56,10 +56,7 @@ class account_fiscalyear_close(osv.osv_memory):
         obj_acc_account = self.pool.get('account.account')
         obj_acc_journal_period = self.pool.get('account.journal.period')
 
-        data = self.read(cr, uid, ids, context=context)
-        for m2o_field in ['fy_id','fy2_id','journal_id','period_id']:
-            if isinstance(data[0][m2o_field], tuple):
-                data[0][m2o_field] = data[0][m2o_field][0]
+        data =  self.read(cr, uid, ids, context=context)
 
         if context is None:
             context = {}

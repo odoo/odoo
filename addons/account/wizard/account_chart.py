@@ -79,17 +79,17 @@ class account_chart(osv.osv_memory):
         fy_obj = self.pool.get('account.fiscalyear')
         if context is None:
             context = {}
-        data = self.browse(cr, uid, ids, context=context)[0]
+        data = self.read(cr, uid, ids, [], context=context)[0]
         result = mod_obj.get_object_reference(cr, uid, 'account', 'action_account_tree')
         id = result and result[1] or False
         result = act_obj.read(cr, uid, [id], context=context)[0]
         result['periods'] = []
-        if data.period_from and data.period_to:
-            result['periods'] = period_obj.build_ctx_periods(cr, uid, data.period_from.id, data.period_to.id)
-        result['context'] = str({'fiscalyear': data.fiscalyear.id, 'periods': result['periods'], \
-                                    'state': data.target_move})
-        if data.fiscalyear:
-            result['name'] += ':' + fy_obj.read(cr, uid, [data.fiscalyear.id], context=context)[0]['code']
+        if data['period_from'] and data['period_to']:
+            result['periods'] = period_obj.build_ctx_periods(cr, uid, data['period_from'], data['period_to'])
+        result['context'] = str({'fiscalyear': data['fiscalyear'], 'periods': result['periods'], \
+                                    'state': data['target_move']})
+        if data['fiscalyear']:
+            result['name'] += ':' + fy_obj.read(cr, uid, [data['fiscalyear']], context=context)[0]['code']
         return result
 
     _defaults = {

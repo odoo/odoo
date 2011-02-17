@@ -148,9 +148,6 @@ class pos_make_payment(osv.osv_memory):
         order = order_obj.browse(cr, uid, active_id, context=context)
         amount = order.amount_total - order.amount_paid
         data =  self.read(cr, uid, ids, context=context)[0]
-        for m2o_field in ['product_id','pricelist_id','partner_id']:
-            if data[m2o_field] and isinstance(data[m2o_field], (list,tuple)):
-               data[m2o_field] = data[m2o_field][0]
         if data['is_acc']:
             amount = self.pool.get('product.product').browse(cr, uid, data['product_id'], context=context).list_price
 

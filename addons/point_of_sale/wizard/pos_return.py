@@ -353,8 +353,8 @@ class add_product(osv.osv_memory):
             data = return_boj.read(cr,uid,return_id,[])[0]
 
         wf_service = netsvc.LocalService("workflow")
-        self_data = self.browse(cr, uid, ids)[0]
-        order_obj.add_product(cr, uid, active_ids[0], self_data.product_id.id, self_data.quantity, context=context)
+        self_data = self.read(cr, uid, ids)[0]
+        order_obj.add_product(cr, uid, active_ids[0], self_data['product_id'], self_data['quantity'], context=context)
         
         for order_id in order_obj.browse(cr, uid, active_ids, context=context):
             prop_ids =property_obj.search(cr, uid, [('name', '=', 'property_stock_customer')])

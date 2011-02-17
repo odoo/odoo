@@ -144,9 +144,6 @@ class account_automatic_reconcile(osv.osv_memory):
         if context is None:
             context = {}
         form = self.read(cr, uid, ids, [])[0]
-        for m2o_field in ['journal_id','period_id','writeoff_acc_id']:
-            if form[m2o_field] and isinstance(form[m2o_field], tuple):
-                form[m2o_field] = form[m2o_field][0]
         max_amount = form.get('max_amount', False) and form.get('max_amount') or 0.0
         power = form['power']
         allow_write_off = form['allow_write_off']
