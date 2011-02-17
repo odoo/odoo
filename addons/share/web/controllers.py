@@ -1,11 +1,10 @@
 import urlparse
+import cherrypy
 
+from openobject import rpc
 from openobject.tools import expose, ast
-from openerp.controllers import actions
-from openerp.utils import rpc
 
 import openerp.controllers
-import cherrypy
 
 
 
@@ -13,17 +12,22 @@ class ShareWizardController(openerp.controllers.SecuredController):
     _cp_path = "/share"
 
     @expose()
-    def index(self, domain, search_domain, context, view_id):
+    def index(self, domain, search_domain, context, view_id, action_id=None):
         context = ast.literal_eval(context)
 
-        action_id = rpc.RPCProxy('ir.actions.act_window').search(
-            [('view_id','=',int(view_id))], context=context)
-        if not action_id: return ""
+        if not action_id:
+            # This should not be needed anymore, but just in case users are
+            # running the module with an order version of the web client...
+
+            # to remove soon-ish
+            action_id = rpc.RPCProxy('ir.actions.act_window').search(
+                [('view_id','=',int(view_id))], context=context)
+            if not action_id: return ""
+
+            action_id = action_id[0]
 
         domain = ast.literal_eval(domain)
         domain.extend(ast.literal_eval(search_domain))
-
-        action_id = action_id[0]
 
         scheme, netloc, _, _, _ = urlparse.urlsplit(cherrypy.request.base)
         share_root_url = urlparse.urlunsplit((
@@ -42,6 +46,6 @@ class ShareWizardController(openerp.controllers.SecuredController):
             'domain': str(domain),
             'action_id':action_id
         }, context)
-        return actions.execute(
+        return openerp.controllers.actions.execute(
             Share.go_step_1([sharing_view_id], context),
             ids=[sharing_view_id], context=context)
