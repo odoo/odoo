@@ -124,6 +124,25 @@ class hr_expense_expense(osv.osv):
         self.write(cr, uid, ids, {'state':'paid'})
         return True
 
+    def invoice(self, cr, uid, ids, context=None):
+        mod_obj = self.pool.get('ir.model.data')
+        inv_id = self.action_invoice_create(cr, uid, ids)
+        res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_form')
+        res_id = res and res[1] or False,
+
+        return {
+            'name': 'Supplier Invoices',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': [res_id],
+            'res_model': 'account.invoice',
+            'context': "{'type':'out_invoice', 'journal_type': 'purchase'}",
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'current',
+            'res_id': inv_id,
+        }
+
     def action_invoice_create(self, cr, uid, ids):
         res = False
         invoice_obj = self.pool.get('account.invoice')
