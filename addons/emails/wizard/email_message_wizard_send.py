@@ -70,8 +70,13 @@ class email_message_wizard_send(osv.osv_memory):
                 result['name'] = "Re : " + message_data.name
 
             if 'description' in fields:
-                result['description'] = "On %s %s  wrote :- \n >\t %s " %(str(message_data.date) ,
-                            message_data.email_from , message_data.description and message_data.description.replace('\n', "\n > \t") or '')
+                header = '-------- Original Message --------'
+                sender = 'From: %s'  % (message_data.email_from or '')
+                email_to = 'To: %s' %  (message_data.email_to or '')
+                sentdate = 'Date: %s' % message_data.date
+                desc = '\n > \t %s' % (message_data.description and message_data.description.replace('\n', "\n > \t") or '')
+                original = [header, sender, email_to, sentdate, desc]
+                result['description'] = '\n'.join(original)
 
             if 'reply_to' in fields:
                 result['reply_to'] = message_data.reply_to
