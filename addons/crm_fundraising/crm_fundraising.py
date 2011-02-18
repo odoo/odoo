@@ -94,38 +94,6 @@ class crm_fundraising(crm.crm_case, osv.osv):
             'planned_revenue': lambda *a:0.0,
             }
 
-    def action_send_email(self, cr, uid, ids, context=None):
-        """
-            Open Send email wizard.
-        """
-        if context is None:
-            context = {}
-        for data in self.browse(cr, uid ,ids, context):
-            context.update({
-                    'mail':'new',
-                    'default_name': data.name,
-                    'default_email_to': data.email_from,
-                    'default_email_from': data.user_id and data.user_id.address_id and data.user_id.address_id.email,
-                    'default_description': '\n' + (tools.ustr(data.user_id.signature or '')),
-                    'default_model': context.get('model',''),
-                    'default_email_cc': tools.ustr(data.email_cc or ''),
-                    'default_res_id': context.get('rec_id',0)
-                })
-            if hasattr(data, 'section_id'):
-                context.update({'default_reply_to': data.section_id and data.section_id.reply_to or False})
-
-        result = {
-                'view_type': 'form',
-                'view_mode': 'form',
-                'res_model': 'email.message.wizard_send',
-                'view_id': False,
-                'context': context,
-                'type': 'ir.actions.act_window',
-                'target': 'new',
-                'nodestroy': True
-                }
-        return result
-
 crm_fundraising()
 
 

@@ -34,11 +34,36 @@ class email_message_wizard_send(osv.osv_memory):
             context = {}
         result = super(email_message_wizard_send, self).default_get(cr, uid, fields, context=context)
         message_pool = self.pool.get('email.message')
-
-        model_pool = self.pool.get('ir.model')
         message_id = context.get('message_id', False)
         message_data = False
-        if message_id:
+        if context.get('record_id',False) and context.get('model',False):
+            model_obj = self.pool.get(context.get('model'))
+            data = model_obj.browse(cr, uid ,context.get('record_id'), context)
+            if 'name' in fields:
+                result['name'] = data.name
+
+            if 'email_to' in fields:
+                result['email_to'] = data.email_from
+
+            if 'email_from' in fields:
+                result['email_from'] = data.user_id and data.user_id.address_id and data.user_id.address_id.email
+
+            if 'description' in fields:
+                result['description'] = '\n' + (tools.ustr(data.user_id.signature or ''))
+
+            if 'model' in fields:
+                result['model'] = context.get('model','')
+
+            if 'email_cc' in fields:
+                result['email_cc'] = tools.ustr(data.email_cc or '')
+
+            if 'res_id' in fields:
+                result['res_id'] = context.get('record_id',0)
+
+            if 'reply_to' in fields and hasattr(data, 'section_id'):
+                result['reply_to'] = data.section_id and data.section_id.reply_to or False
+
+        elif message_id:
             message_data = message_pool.browse(cr, uid, int(message_id), context)
             if 'template_id' in fields:
                 result['template_id'] = message_data and message_data.template_id and message_data.template_id.id or False
