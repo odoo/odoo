@@ -19,6 +19,8 @@
 #
 ##############################################################################
 
+import itertools
+
 from osv import fields,osv
 from osv.orm import except_orm
 import tools
@@ -40,17 +42,17 @@ class ir_attachment(osv.osv):
             for rmod, rid in cr.fetchall():
                 if not (rmod and rid):
                     continue
-                res_ids.setdefault(rmod,[]).append(rid)
+                res_ids.setdefault(rmod,set()).add(rid)
         if values:
             if 'res_model' in values and 'res_id' in values:
-                res_ids.setdefault(values['res_model'],[]).append(values['res_id'])
+                res_ids.setdefault(values['res_model'],set()).add(values['res_id'])
 
         for model, mids in res_ids.items():
             # ignore attachments that are not attached to a resource anymore when checking access rights
             # (resource was deleted but attachment was not)
             cr.execute('select id from '+self.pool.get(model)._table+' where id in %s', (tuple(mids),))
             mids = [x[0] for x in cr.fetchall()]
-
+            ima.check(cr, uid, model, mode, context=context)
             self.pool.get(model).check_access_rule(cr, uid, mids, mode, context=context)
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None,
@@ -62,17 +64,35 @@ class ir_attachment(osv.osv):
             if count:
                 return 0
             return []
-        models = super(ir_attachment,self).read(cr, uid, ids, ['id', 'res_model'])
-        cache = {}
-        ima = self.pool.get('ir.model.access')
-        for m in models:
-            if m['res_model']:
-                if m['res_model'] not in cache:
-                    cache[m['res_model']] = ima.check(cr, uid, m['res_model'], 'read',
-                                                      raise_exception=False, context=context)
-                if not cache[m['res_model']]:
-                    ids.remove(m['id'])
 
+        # For attachments, the permissions of the document they are attached to
+        # apply, so we must remove attachments for which the user cannot access
+        # the linked document.
+        targets = super(ir_attachment,self).read(cr, uid, ids, ['id', 'res_model', 'res_id'])
+        model_attachments = {}
+        for target_dict in targets:
+            if not (target_dict['res_id'] and target_dict['res_model']):
+                continue
+            # model_attachments = { 'model': { 'res_id': [id1,id2] } }
+            model_attachments.setdefault(target_dict['res_model'],{}).setdefault(target_dict['res_id'],set()).add(target_dict['id'])
+
+        # To avoid multiple queries for each attachment found, checks are
+        # performed in batch as much as possible.
+        ima = self.pool.get('ir.model.access')
+        for model, targets in model_attachments.iteritems():
+            if not ima.check(cr, uid, model, 'read', raise_exception=False, context=context):
+                # remove all corresponding attachment ids
+                for attach_id in itertools.chain(*targets.values()):
+                    ids.remove(attach_id)
+                continue # skip ir.rule processing, these ones are out already
+
+            # filter ids according to what access rules permit
+            target_ids = targets.keys()
+            allowed_ids = self.pool.get(model).search(cr, uid, [('id', 'in', target_ids)], context=context)
+            disallowed_ids = set(target_ids).difference(allowed_ids)
+            for res_id in disallowed_ids:
+                for attach_id in targets[res_id]:
+                    ids.remove(attach_id)
         if count:
             return len(ids)
         return ids
@@ -135,7 +155,7 @@ class ir_attachment(osv.osv):
         'create_uid':  fields.many2one('res.users', 'Owner', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', change_default=True),
     }
-    
+
     _defaults = {
         'type': 'binary',
         'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'ir.attachment', context=c),
