@@ -31,7 +31,16 @@ class google_login(osv.osv_memory):
         'user': fields.char('User Name', size=64, required=True),
         'password': fields.char('Password', size=64),
     }
-    
+    def google_login(self,cr,uid,user,password,context=None):
+        gd_client = gdata.contacts.service.ContactsService()
+        gd_client.email = user
+        gd_client.password = password
+        gd_client.source = 'OpenERP'    
+        try:
+            gd_client.ProgrammaticLogin()     
+        except Exception, e:
+           return False
+        return gd_client    
     def check_login(self, cr, uid, ids, context=None):
         if context == None:
             context = {}
