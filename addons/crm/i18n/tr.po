@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2011-02-16 16:02+0000\n"
+"PO-Revision-Date: 2011-02-17 14:39+0000\n"
 "Last-Translator: Özge Altınışık <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-02-17 05:39+0000\n"
+"X-Launchpad-Export-Date: 2011-02-18 05:44+0000\n"
 "X-Generator: Launchpad (build 12351)\n"
 
 #. module: crm
@@ -31,7 +31,7 @@ msgstr "Talep"
 #. module: crm
 #: model:crm.case.categ,name:crm.categ_oppor3
 msgid "Need Services"
-msgstr ""
+msgstr "İstenen Hizmetler"
 
 #. module: crm
 #: selection:crm.meeting,rrule_type:0
@@ -254,13 +254,13 @@ msgstr "Telefon Görüşmesi"
 #. module: crm
 #: field:crm.lead,optout:0
 msgid "Opt-Out"
-msgstr ""
+msgstr "Üyelikten çık"
 
 #. module: crm
 #: code:addons/crm/crm_opportunity.py:108
 #, python-format
 msgid "The opportunity '%s' has been marked as lost."
-msgstr ""
+msgstr "'%s' fırsatı kaybedildi olarak işaretlendi"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.action_report_crm_lead
@@ -270,6 +270,11 @@ msgid ""
 "sort out your leads analysis by different groups to get accurate grained "
 "analysis."
 msgstr ""
+"Talep analizi müşteri ilişkileri yönetimi ile ilgili farklı bilgileri "
+"kontrol etmenize imkan sağlar. İşlerin gecikmesi, verilen yanıtların ve "
+"gönderilen e-postaların sayısı gibi ayrıntıları kontrol edebilirsiniz. Talep "
+"analizinizi eksiksiz sonuç almak için farklı gruplara göre "
+"sıralayabilirsiniz."
 
 #. module: crm
 #: view:crm.lead:0
@@ -759,7 +764,7 @@ msgstr ""
 #. module: crm
 #: selection:crm.meeting,freq:0
 msgid "Years"
-msgstr ""
+msgstr "Yıllar"
 
 #. module: crm
 #: help:crm.installer,crm_claim:0
@@ -806,7 +811,7 @@ msgstr ""
 #: view:board.board:0
 #: model:ir.ui.menu,name:crm.menu_board_statistics_dash
 msgid "Statistics Dashboard"
-msgstr ""
+msgstr "İstatistiksel Kontrol Paneli"
 
 #. module: crm
 #: code:addons/crm/wizard/crm_lead_to_opportunity.py:86
@@ -863,7 +868,7 @@ msgstr "Güne göre"
 #. module: crm
 #: field:base.action.rule,act_section_id:0
 msgid "Set Team to"
-msgstr ""
+msgstr "Takımı ayarla"
 
 #. module: crm
 #: view:calendar.attendee:0
@@ -926,6 +931,36 @@ msgid ""
 "    * My Cases (list)\n"
 "    * Jobs Tracking (graph)\n"
 msgstr ""
+"Jenerik OpenERP Müşteri İlişkileri Yönetimi\n"
+"sistem bir grup insanı zekice ve etkili şekilde yönetmeye imkan sağlar\n"
+"talepler, fırsatlar, buluşma, telefon görüşmeleri vb.\n"
+"İletişim, kimlik saptama, öncelik belirleme, \n"
+"görevlendirme, çözüme ulaştırma ve bilgilendirme gibi anahtar görevleri "
+"yönetir.\n"
+"\n"
+"OpenERP bütün konuların kullanıcılar, yöneticiler ve tedarikçiler\n"
+"tarafından başarılı bir şekilde takip edildiğini garanti eder. Otomatik "
+"olarak hatırlatma gönderir,\n"
+"isteklerin önem sırasını belirler, belirli yöntemlerin kullanımını sağlar ve "
+"işletmenin kurallarını uygun şekilde bir çok işlem yapabilir.\n"
+"\n"
+"Bu sistemle ilgili en önemli şey, kullanıcıların herhangi özel bir şey "
+"yapmasına gerek\n"
+"olmamasıdır. Sadece talep takibi için e-posta gönderirler. OpenERP mesajları "
+"için teşekkür eder, otomatik olarak ilgili\n"
+"uygun kişiye yönlendirir, ve gelecek bütün yazışmaların doğru yere "
+"gitmesini\n"
+"sağlar.\n"
+"\n"
+"MİY modülünün eşzamanlama arayüzü için\n"
+"e-posta ve OpenERP arasında e-posta yolu vardır. \n"
+"MİY için aşağıdakileri içeren kontrol paneli oluştur:\n"
+"    * Benim taleplerim (liste)\n"
+"    * Taleplerin aşamaları (grafik)\n"
+"    * Toplantılarım (Liste)\n"
+"    * Satış düzenlemesi aşamaları göre (grafik)\n"
+"    * Benim takip ettiğim vakalar (liste)\n"
+"    * İşlerin Takibi (grafik)\n"
 
 #. module: crm
 #: field:crm.lead.report,create_date:0
@@ -964,7 +999,7 @@ msgstr "Fırsata dönüştür "
 #. module: crm
 #: help:crm.case.stage,sequence:0
 msgid "Gives the sequence order when displaying a list of case stages."
-msgstr ""
+msgstr "Vakaların aşamaları ardışık sıraya göre görüntülenir."
 
 #. module: crm
 #: view:crm.lead:0
@@ -1022,7 +1057,7 @@ msgstr "Mart"
 #: code:addons/crm/crm_lead.py:230
 #, python-format
 msgid "The opportunity '%s' has been closed."
-msgstr ""
+msgstr "'%s' fırsatı kapandı."
 
 #. module: crm
 #: field:crm.lead,day_open:0
@@ -1103,7 +1138,7 @@ msgstr "Toplantılar"
 #. module: crm
 #: view:crm.meeting:0
 msgid "Choose day where repeat the meeting"
-msgstr ""
+msgstr "Görüşmenin tekrarlanacağı günü seç"
 
 #. module: crm
 #: field:crm.lead,date_action_next:0
@@ -1175,7 +1210,7 @@ msgstr "İleri"
 #. module: crm
 #: view:crm.lead:0
 msgid "Stage:"
-msgstr ""
+msgstr "Aşama:"
 
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_lead5
@@ -1268,7 +1303,7 @@ msgstr "Konu"
 #. module: crm
 #: field:crm.meeting,tu:0
 msgid "Tue"
-msgstr ""
+msgstr "Salı"
 
 #. module: crm
 #: code:addons/crm/crm_lead.py:300
@@ -1516,7 +1551,7 @@ msgstr "Kategorilere göre fırsatlar"
 #. module: crm
 #: view:crm.meeting:0
 msgid "Choose day in the month where repeat the meeting"
-msgstr ""
+msgstr "Ay içinde görüşmenin tekrarlanacağı günü seç"
 
 #. module: crm
 #: view:crm.segmentation:0
@@ -1545,7 +1580,7 @@ msgstr "Kod"
 #. module: crm
 #: field:crm.case.section,child_ids:0
 msgid "Child Teams"
-msgstr ""
+msgstr "Çocuk Takımları"
 
 #. module: crm
 #: view:crm.lead:0
@@ -1558,12 +1593,12 @@ msgstr ""
 #: view:crm.phonecall.report:0
 #: field:crm.phonecall.report,state:0
 msgid "State"
-msgstr ""
+msgstr "Durum"
 
 #. module: crm
 #: field:crm.meeting,freq:0
 msgid "Frequency"
-msgstr ""
+msgstr "Frekans"
 
 #. module: crm
 #: view:crm.lead:0
@@ -1695,7 +1730,7 @@ msgstr ""
 #: view:crm.lead.report:0
 #: view:crm.phonecall.report:0
 msgid "My Case(s)"
-msgstr ""
+msgstr "Benim takip ettiğim vaka(lar)"
 
 #. module: crm
 #: field:crm.lead,birthdate:0
