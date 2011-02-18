@@ -109,10 +109,10 @@ class mrp_routing_workcenter(osv.osv):
     _columns = {
         'workcenter_id': fields.many2one('mrp.workcenter', 'Work Center', required=True),
         'name': fields.char('Name', size=64, required=True),
-        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of routing work Centers."),
+        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of routing Work Centers."),
         'cycle_nbr': fields.float('Number of Cycles', required=True,
             help="Number of iterations this work center has to do in the specified operation of the routing."),
-        'hour_nbr': fields.float('Number of Hours', required=True, help="Time in hours for this work Center to achieve the operation of the specified routing."),
+        'hour_nbr': fields.float('Number of Hours', required=True, help="Time in hours for this Work Center to achieve the operation of the specified routing."),
         'routing_id': fields.many2one('mrp.routing', 'Parent Routing', select=True, ondelete='cascade',
              help="Routing indicates all the Work Centers used, for how long and/or cycles." \
                 "If Routing is indicated then,the third tab of a production order (Work Centers) will be automatically pre-completed."),

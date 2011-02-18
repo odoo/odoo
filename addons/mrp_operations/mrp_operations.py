@@ -97,7 +97,7 @@ class mrp_production_workcenter_line(osv.osv):
        'date_planned_end': fields.function(_get_date_end, method=True, string='End Date', type='datetime'),
        'date_start': fields.datetime('Start Date'),
        'date_finished': fields.datetime('End Date'),
-       'delay': fields.float('Working Hours',help="This is lead time between operation start and stop in this work center",readonly=True),
+       'delay': fields.float('Working Hours',help="This is lead time between operation start and stop in this Work Center",readonly=True),
        'production_state':fields.related('production_id','state',
             type='selection',
             selection=[('draft','Draft'),('picking_except', 'Picking Exception'),('confirmed','Waiting Goods'),('ready','Ready to Produce'),('in_production','In Production'),('cancel','Canceled'),('done','Done')],
@@ -174,12 +174,12 @@ class mrp_production_workcenter_line(osv.osv):
         delay = 0.0
         date_now = time.strftime('%Y-%m-%d %H:%M:%S')
         obj_line = self.browse(cr, uid, ids[0])
-        
+
         date_start = datetime.strptime(obj_line.date_start,'%Y-%m-%d %H:%M:%S')
         date_finished = datetime.strptime(date_now,'%Y-%m-%d %H:%M:%S')
         delay += (date_finished-date_start).days * 24
         delay += (date_finished-date_start).seconds / float(60*60)
-        
+
         self.write(cr, uid, ids, {'state':'done', 'date_finished': date_now,'delay':delay})
         self.modify_production_order_state(cr,uid,ids,'done')
         return True
@@ -233,17 +233,17 @@ class mrp_production(osv.osv):
         for workcenter_line in obj.workcenter_lines:
             wf_service.trg_validate(uid, 'mrp.production.workcenter.line', workcenter_line.id, 'button_done', cr)
         return super(mrp_production,self).action_production_end(cr, uid, ids)
-    
+
     def action_in_production(self, cr, uid, ids):
         """ Changes state to In Production and writes starting date.
-        @return: True 
-        """        
+        @return: True
+        """
         obj = self.browse(cr, uid, ids)[0]
         wf_service = netsvc.LocalService("workflow")
         for workcenter_line in obj.workcenter_lines:
             wf_service.trg_validate(uid, 'mrp.production.workcenter.line', workcenter_line.id, 'button_start_working', cr)
         return super(mrp_production,self).action_in_production(cr, uid, ids)
-    
+
     def action_cancel(self, cr, uid, ids):
         """ Cancels work order if production order is canceled.
         @return: Super method
@@ -298,7 +298,7 @@ class mrp_production(osv.osv):
 
     def _move_pass(self, cr, uid, ids, context=None):
         """ Calculates start date for stock moves finding interval from resource calendar.
-        @return: True 
+        @return: True
         """
         for po in self.browse(cr, uid, ids, context=context):
             if po.allow_reorder:
@@ -326,7 +326,7 @@ class mrp_production(osv.osv):
 
     def _move_futur(self, cr, uid, ids, context=None):
         """ Calculates start date for stock moves.
-        @return: True 
+        @return: True
         """
         for po in self.browse(cr, uid, ids, context=context):
             if po.allow_reorder:
@@ -510,7 +510,7 @@ class mrp_operations_operation(osv.osv):
             if code.start_stop=='start':
                 self.pool.get('mrp.production.workcenter.line').action_start_working(cr,uid,wc_op_id)
                 wf_service.trg_validate(uid, 'mrp.production.workcenter.line', wc_op_id[0], 'button_start_working', cr)
-                
+
 
             if code.start_stop=='done':
                 self.pool.get('mrp.production.workcenter.line').action_done(cr,uid,wc_op_id)
@@ -537,7 +537,7 @@ class mrp_operations_operation(osv.osv):
         if vals.get('date_start',False):
             if code.start_stop == 'done':
                 line_vals['date_finished'] = vals['date_start']
-            elif code.start_stop == 'start':    
+            elif code.start_stop == 'start':
                 line_vals['date_start'] = vals['date_start']
 
         self.pool.get('mrp.production.workcenter.line').write(cr, uid, wc_op_id, line_vals, context=context)
