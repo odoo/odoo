@@ -21,7 +21,6 @@
 
 from osv import fields, osv
 from crm import crm
-import tools
 
 class crm_fundraising(crm.crm_case, osv.osv):
     """ Fund Raising Cases """

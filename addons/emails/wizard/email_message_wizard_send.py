@@ -19,9 +19,8 @@
 #
 ##############################################################################
 
-from osv import osv, fields
-import netsvc
-from tools.translate import _
+from osv import osv
+from osv import fields
 import tools
 
 class email_message_wizard_send(osv.osv_memory):

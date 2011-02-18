@@ -22,7 +22,6 @@
 from crm import crm
 from osv import fields, osv
 import time
-import tools
 
 class crm_helpdesk(crm.crm_case, osv.osv):
     """ Helpdesk Cases """

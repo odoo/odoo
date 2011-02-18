@@ -22,7 +22,6 @@
 from osv import fields, osv
 from crm import crm
 import time
-import tools
 
 class crm_claim(crm.crm_case, osv.osv):
     """
