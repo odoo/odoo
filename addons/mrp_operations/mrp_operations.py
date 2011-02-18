@@ -38,7 +38,7 @@ class stock_move(osv.osv):
     _columns = {
         'move_dest_id_lines': fields.one2many('stock.move','move_dest_id', 'Children Moves')
     }
-    
+
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}
@@ -46,7 +46,7 @@ class stock_move(osv.osv):
             'move_dest_id_lines': [],
         })
         return super(stock_move, self).copy(cr, uid, id, default, context)
-    
+
 stock_move()
 
 class mrp_production_workcenter_line(osv.osv):
@@ -97,7 +97,7 @@ class mrp_production_workcenter_line(osv.osv):
        'date_planned_end': fields.function(_get_date_end, method=True, string='End Date', type='datetime'),
        'date_start': fields.datetime('Start Date'),
        'date_finished': fields.datetime('End Date'),
-       'delay': fields.float('Working Hours',help="This is lead time between operation start and stop in this workcenter",readonly=True),
+       'delay': fields.float('Working Hours',help="This is lead time between operation start and stop in this work center",readonly=True),
        'production_state':fields.related('production_id','state',
             type='selection',
             selection=[('draft','Draft'),('picking_except', 'Picking Exception'),('confirmed','Waiting Goods'),('ready','Ready to Produce'),('in_production','In Production'),('cancel','Canceled'),('done','Done')],
@@ -107,7 +107,7 @@ class mrp_production_workcenter_line(osv.osv):
        'qty':fields.related('production_id','product_qty',type='float',string='Qty',readonly=True, store=True),
        'uom':fields.related('production_id','product_uom',type='many2one',relation='product.uom',string='UOM',readonly=True),
     }
-    
+
     _defaults = {
         'state': lambda *a: 'draft',
         'delay': lambda *a: 0.0

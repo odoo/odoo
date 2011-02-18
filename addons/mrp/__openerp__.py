@@ -50,7 +50,7 @@
 
     Reports provided by this module:
     * Bill of Material structure and components
-    * Load forecast on workcenters
+    * Load forecast on work Centers
     * Print a production order
     * Stock forecasts
     Dashboard provided by this module::
