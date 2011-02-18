@@ -33,7 +33,7 @@
             <field name="context">{'type':'fundraising'}</field>
             <field name="help">Create and manage fund raising activity categories you want to be maintained in the system.</field>
         </record>
-        
+
 
 
          <menuitem action="crm_fundraising_stage_act"
@@ -148,11 +148,11 @@
                                 <tree string="History">
                                     <field name="display_text" string="History Information"/>
                                     <field name="history" invisible="1"/>
-                                    <button
-                                        string="Reply" attrs="{'invisible': [('history', '!=', True)]}"
-                                        name="%(crm.action_crm_send_mail)d"
-                                        context="{'mail':'reply', 'model': 'crm.fundraising', 'include_original' : True}"
-                                        icon="terp-mail-replied" type="action" />
+		                            <button
+		                                string="Reply" attrs="{'invisible': [('history', '!=', True)]}"
+		                                name="%(emails.action_email_message_wizard_send)d"
+		                                context="{'mail':'reply', 'model': 'crm.fundraising', 'include_original' : True, 'message_id':active_id}"
+		                                icon="terp-mail-replied" type="action" />
                                 </tree>
                                 <form string="History">
                                     <group col="4" colspan="4">
@@ -167,11 +167,10 @@
                                         <page string="Details">
                                             <group attrs="{'invisible': [('history', '!=', True)]}">
                                                 <field name="description" colspan="4" nolabel="1" height="250"/>
-                                                <button colspan="4"
-                                                    string="Reply"
-                                                    name="%(crm.action_crm_send_mail)d"
-                                                    context="{'mail':'reply', 'model': 'crm.fundraising', 'include_original' : True}"
-                                                    icon="terp-mail-replied" type="action" />
+		                                        <button colspan="4" string="Reply"
+		                                            name="%(emails.action_email_message_wizard_send)d"
+		                                            context="{'mail':'reply', 'model': 'crm.fundraising', 'include_original' : True, 'message_id':active_id}"
+		                                            icon="terp-mail-replied" type="action"/>
                                             </group>
                                             <group attrs="{'invisible': [('history', '=', True)]}">
                                                 <field name="display_text" colspan="4" nolabel="1"  height="250"/>
@@ -187,10 +186,10 @@
                                 name="%(crm.action_crm_add_note)d"
                                 context="{'model': 'crm.lead' }"
                                 icon="terp-document-new" type="action" />
-                            <button string="Send New Email"
-                                name="%(crm.action_crm_send_mail)d"
-                                context="{'mail':'new', 'model': 'crm.fundraising'}"
-                                icon="terp-mail-message-new" type="action" />
+		                    <button string="Send New Email"
+		                        name="action_send_email"
+		                        context="{'mail':'new', 'model': 'crm.fundraising', 'rec_id' : active_id}"
+		                        icon="terp-mail-message-new" type="object"/>
                         </page>
                         <page string="Extra Info" groups="base.group_extended">
                             <group col="2" colspan="2">
