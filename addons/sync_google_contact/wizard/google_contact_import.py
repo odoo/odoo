@@ -108,14 +108,14 @@ class synchronize_google_contact(osv.osv_memory):
                 while contact:
                     data={}
                     for entry in contact.entry:
-                        partner_id=False   
+                        partner_id = False   
                         if obj.create_partner:
                             partner_name = tools.ustr(entry.title.text)
                             if partner_name:
                                 partner_id = partner_obj.search(cr, uid, [('name','ilike',partner_name)], context=context)   
                                 if not partner_id:
                                     partner_id.append(partner_obj.create(cr, uid, {'name': partner_name}, context=context)) 
-                                partner_ids.append(partner_id)  
+                                partner_ids.append(partner_id[0])  
                                 data.update({'partner_id': partner_id and partner_id[0]} ) 
                                               
                         name = entry.title.text
