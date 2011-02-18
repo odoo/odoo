@@ -22,6 +22,7 @@
 from osv import osv, fields
 import netsvc
 from tools.translate import _
+import tools
 
 class email_message_wizard_send(osv.osv_memory):
     _name = 'email.message.wizard_send'
@@ -36,74 +37,76 @@ class email_message_wizard_send(osv.osv_memory):
 
         model_pool = self.pool.get('ir.model')
         message_id = context.get('message_id', False)
+        message_data = None
         if message_id:
             message_data = message_pool.browse(cr, uid, message_id, context)
 
-            if 'template_id' in fields:
-                result['template_id'] = message_data.template_id and message_data.template_id.id or False
+        if 'template_id' in fields:
+            result['template_id'] = context.get('default_template_id',False) or (message_data and message_data.template_id and message_data.template_id.id or False)
 
-            if 'smtp_server_id' in fields:
-                result['smtp_server_id'] = message_data.smtp_server_id and message_data.smtp_server_id.id or False
+        if 'smtp_server_id' in fields:
+            result['smtp_server_id'] = context.get('default_smtp_server_id',False) or (message_data and message_data.smtp_server_id and message_data.smtp_server_id.id or False)
 
-            if 'message_id' in fields:
-                result['message_id'] = message_data.message_id
+        if 'message_id' in fields:
+            result['message_id'] =  context.get('default_message_id','') or (message_data and message_data.message_id)
 
-            if 'attachment_ids' in fields:
-                result['attachment_ids'] = message_pool.read(cr, uid, message_id, ['attachment_ids'])['attachment_ids']
+        if 'attachment_ids' in fields:
+            result['attachment_ids'] =  context.get('default_attachment_ids',[]) or (message_data and message_pool.read(cr, uid, message_id, ['attachment_ids'])['attachment_ids'])
 
-            if 'res_id' in fields:
-                result['res_id'] = message_data.res_id
+        if 'res_id' in fields:
+            result['res_id'] =  context.get('default_res_id',0) or (message_data and message_data.res_id)
 
-            if 'email_from' in fields:
-                result['email_from'] = message_data.email_from
+        if 'email_from' in fields:
+            result['email_from'] =  context.get('default_email_from','') or (message_data and message_data.email_from)
 
-            if 'email_to' in fields:
-                result['email_to'] = message_data.email_to
+        if 'email_to' in fields:
+            result['email_to'] =  context.get('default_email_to','') or (message_data and message_data.email_to)
 
-            if 'email_cc' in fields:
-                result['email_cc'] = message_data.email_cc
+        if 'email_cc' in fields:
+            result['email_cc'] =  context.get('default_email_cc', '') or (message_data and message_data.email_cc)
 
-            if 'email_bcc' in fields:
-                result['email_bcc'] = message_data.email_bcc
+        if 'email_bcc' in fields:
+            result['email_bcc'] =  context.get('default_email_bcc', '') or (message_data and message_data.email_bcc)
 
-            if 'name' in fields:
-                result['name'] = "Re : " + message_data.name
+        if 'name' in fields:
+            result['name'] = "Re : " +  tools.ustr(context.get('default_name', '') or (message_data and message_data.name))
 
-            if 'description' in fields:
-                header = '-------- Original Message --------'
-                sender = 'From: %s'  % (message_data.email_from or '')
-                email_to = 'To: %s' %  (message_data.email_to or '')
-                sentdate = 'Date: %s' % message_data.date
-                desc = '\n > \t %s' % (message_data.description and message_data.description.replace('\n', "\n > \t") or '')
-                original = [header, sender, email_to, sentdate, desc]
-                result['description'] = '\n'.join(original)
+        if 'description' in fields:
+            description =  context.get('default_description', '') or (message_data and message_data.description and message_data.description or '')
+            header = '-------- Original Message --------'
+            sender = 'From: %s'  % tools.ustr(message_data.email_from or '')
+            email_to = 'To: %s' %  tools.ustr(message_data.email_to or '')
+            sentdate = 'Date: %s' % message_data.date
+            desc = '\n > \t %s' % tools.ustr(description.replace('\n', "\n > \t") or '')
+            original = [header, sender, email_to, sentdate, desc]
+            result['description'] = '\n'.join(original)
 
-            if 'reply_to' in fields:
-                result['reply_to'] = message_data.reply_to
+        if 'reply_to' in fields:
+            result['reply_to'] = context.get('default_reply_to', '') or (message_data and message_data.reply_to)
 
-            if 'model' in fields:
-                result['model'] = message_data.model
+        if 'model' in fields:
+            result['model'] = context.get('default_model', '') or (message_data and message_data.model)
 
-            if 'user_id' in fields:
-                result['user_id'] = message_data.user_id and message_data.user_id.id or False
+        if 'user_id' in fields:
+            result['user_id'] = context.get('default_user_id', False) or (message_data and message_data.user_id and message_data.user_id.id or False)
 
-            if 'references' in fields:
-                result['references'] = message_data.references
+        if 'references' in fields:
+            result['references'] = tools.ustr(context.get('default_references', '') or (message_data and message_data.references))
 
-            if 'sub_type' in fields:
-                result['sub_type'] = message_data.sub_type
+        if 'sub_type' in fields:
+            result['sub_type'] = context.get('default_sub_type') or (message_data and message_data.sub_type)
 
-            if 'headers' in fields:
-                result['headers'] = message_data.headers
+        if 'headers' in fields:
+            result['headers'] = context.get('default_headers', {}) or (message_data and message_data.headers)
 
-            if 'priority' in fields:
-                result['priority'] = message_data.priority
+        if 'priority' in fields:
+            result['priority'] = context.get('default_priority') or (message_data and message_data.priority)
 
-            if 'partner_id' in fields:
-                result['partner_id'] = message_data.partner_id and message_data.partner_id.id or False
+        if 'partner_id' in fields:
+            result['partner_id'] = context.get('default_partner_id', False) or (message_data and message_data.partner_id and message_data.partner_id.id or False)
 
-            if 'debug' in fields:
-                result['debug'] = message_data.debug
+        if 'debug' in fields:
+            result['debug'] = context.get('default_debug', False) or (message_data and message_data.debug)
 
         return result
 
