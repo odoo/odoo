@@ -239,6 +239,7 @@ class project(osv.osv):
                 start_date = date(*time.strptime(proj.date_start,'%Y-%m-%d')[:3])
                 end_date = date(*time.strptime(proj.date,'%Y-%m-%d')[:3])
                 new_date_end = (datetime(*time.strptime(new_date_start,'%Y-%m-%d')[:3])+(end_date-start_date)).strftime('%Y-%m-%d')
+            context.update({'copy':True})
             new_id = project_obj.copy(cr, uid, proj.id, default = {
                                     'name': proj.name +_(' (copy)'),
                                     'state':'open',
@@ -365,7 +366,9 @@ class task(osv.osv):
         default['active'] = True
         default['type_id'] = False
         if not default.get('name', False):
-            default['name'] = self.browse(cr, uid, id, context=context).name
+            default['name'] = self.browse(cr, uid, id, context=context).name or ''
+            if not context.get('copy',False):
+                 default.update({'name':(default.get('name','')+_(" (copy)"))})            
         return super(task, self).copy_data(cr, uid, id, default, context)
 
     def _check_dates(self, cr, uid, ids, context=None):
