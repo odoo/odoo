@@ -368,7 +368,8 @@ class task(osv.osv):
         if not default.get('name', False):
             default['name'] = self.browse(cr, uid, id, context=context).name or ''
             if not context.get('copy',False):
-                 default.update({'name':(default.get('name','')+_(" (copy)"))})            
+                 new_name = _("%s (copy)")%default.get('name','')
+                 default.update({'name':new_name})            
         return super(task, self).copy_data(cr, uid, id, default, context)
 
     def _check_dates(self, cr, uid, ids, context=None):
