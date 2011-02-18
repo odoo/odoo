@@ -7,8 +7,8 @@
         <record id="project_plannning_1" model="report_account_analytic.planning">
             <field name="name">Project_Planning</field>
             <field name="business_days">20</field>
-            <field name="date_from" eval="time.strftime('%Y-%m-01 10:00:00')"/>
-            <field name="date_to" eval="time.strftime('%Y-%m-28 15:00:00')"/>
+            <field name="date_from" eval="time.strftime('%Y-%m-01')"/>
+            <field name="date_to" eval="time.strftime('%Y-%m-28')"/>
             <field name="state">open</field>
             <field name="user_id" ref="project.res_users_project_manager"/>
         </record>
