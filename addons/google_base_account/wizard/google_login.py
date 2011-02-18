@@ -21,7 +21,6 @@
 
 from osv import fields,osv,orm
 from tools.translate import _
-import gdata.contacts
 import gdata.contacts.service
 
 class google_login(osv.osv_memory):
@@ -40,7 +39,8 @@ class google_login(osv.osv_memory):
             gd_client.ProgrammaticLogin()     
         except Exception, e:
            return False
-        return gd_client    
+        return gd_client
+        
     def check_login(self, cr, uid, ids, context=None):
         if context == None:
             context = {}

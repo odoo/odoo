@@ -25,8 +25,6 @@ import tools
 
 class google_contact_import(osv.osv_memory):
     _inherit = 'google.login'
-    _columns = {
-     }
     
     def default_get(self, cr, uid, fields, context=None):
         res = super(google_contact_import, self).default_get(cr, uid, fields, context=context)
@@ -36,6 +34,7 @@ class google_contact_import(osv.osv_memory):
         if 'password' in fields:
             res.update({'password': user_obj.gmail_password})
         return res
+    
     def check_login_contact(self, cr, uid, ids, context=None):
         gd_client = self.check_login(cr, uid, ids, context=context)
         if not gd_client:
@@ -63,24 +62,41 @@ google_contact_import()
 class synchronize_google_contact(osv.osv_memory):
     _name = "synchronize.base"    
     _inherit = 'synchronize.base'
+    
     def _get_group(self, cr, uid, context=None):
         user_obj = self.pool.get('res.users').browse(cr, uid, uid)
         google=self.pool.get('google.login')
-        gd_client=google.google_login(cr,uid,user_obj.gmail_user,user_obj.gmail_password)
-        res=[]
+        gd_client = google.google_login(cr,uid,user_obj.gmail_user,user_obj.gmail_password)
+        res = []
         if gd_client:
-            groups=gd_client.GetGroupsFeed()
+            groups = gd_client.GetGroupsFeed()
             for grp in groups.entry:
-                res.append((grp.id.text ,grp.title.text))
+                res.append((grp.id.text, grp.title.text))
         res.append(('none','None'))
-        res.append(('all','All Group'))
-        return res    
+        res.append(('all','All Groups'))
+        return res
+    
+    def _get_default_group(self, cr, uid, context=None):
+        return 'all'
+    
     _columns = {
         'tools': fields.selection([('gmail','Gmail')], 'Tools'),
         'create_partner': fields.boolean('Create Partner', help="It will create Partner for given gmail user otherwise only adds contacts in Partner Addresses.")  ,      
         'group_name': fields.selection(_get_group, "Group Name", size=32,help="Choose which group to import, By defult it take all "),        
-      
-     }        
+     }
+    
+    _defaults = {
+        'group_name': _get_default_group,
+    }
+    
+    def create_partner(self, cr, uid, ids, data={}, context=None):
+        partner_obj = self.pool.get('res.partner')
+        name = data.get('name', '')
+        partner_id = partner_obj.search(cr, uid, [('name','ilike',name)], context=context)   
+        if not partner_id:
+            partner_id.append(partner_obj.create(cr, uid, {'name': name}, context=context)) 
+        data.update({'partner_id': partner_id and partner_id[0]})
+        return partner_id, data
     
     def import_contact(self, cr, uid, ids, context=None):
         addresss_obj = self.pool.get('res.partner.address')
@@ -88,52 +104,49 @@ class synchronize_google_contact(osv.osv_memory):
         user_obj = self.pool.get('res.users').browse(cr, uid, uid)
         gmail_user = user_obj.gmail_user
         gamil_pwd = user_obj.gmail_password
-        google=self.pool.get('google.login')
-        gd_client=google.google_login(cr,uid,user_obj.gmail_user,user_obj.gmail_password)        
+        google = self.pool.get('google.login')
+        gd_client = google.google_login(cr,uid,user_obj.gmail_user,user_obj.gmail_password)        
+        
         if not gmail_user or not gamil_pwd:
             raise osv.except_osv(_('Error'), _("Please specify the user and password !"))      
 
         contact = gd_client.GetContactsFeed()
         partner_id = []
         addresses = []
-        partner_ids=[]
+        partner_ids = []
         
         for obj in self.browse(cr, uid, ids, context=context):
-            if obj.tools=='gmail':
-#                if obj.create_partner:
-#                    for user in contact.author:
-#                        partner_name = user.name.text
-#                    if not partner_id:
-#                        partner_id.append(partner_obj.create(cr, uid, {'name': partner_name}, context=context))
+            if obj.tools == 'gmail':
                 while contact:
-                    data={}
                     for entry in contact.entry:
-                        partner_id = False   
-                        if obj.create_partner:
-                            partner_name = tools.ustr(entry.title.text)
-                            if partner_name:
-                                partner_id = partner_obj.search(cr, uid, [('name','ilike',partner_name)], context=context)   
-                                if not partner_id:
-                                    partner_id.append(partner_obj.create(cr, uid, {'name': partner_name}, context=context)) 
-                                partner_ids.append(partner_id[0])  
-                                data.update({'partner_id': partner_id and partner_id[0]} ) 
-                                              
-                        name = entry.title.text
+                        partner_id = False
+                        name = tools.ustr(entry.title.text)
                         phone_numbers = ','.join(phone_number.text for phone_number in entry.phone_number)
                         emails = ','.join(email.address for email in entry.email)
                         data = {
                                 'name': name or '',
                                 'phone': phone_numbers,
                                 'email': emails,
-                         }
+                        }
+                        if obj.create_partner and obj.group_name == 'all':
+                            if name:
+                                partner_id, data = self.create_partner(cr, uid, ids, data, context=context)
+                                partner_ids.append(partner_id[0])
+                            addresses.append(addresss_obj.create(cr, uid, data, context=context))
                         contact_ids = addresss_obj.search(cr, uid, [('email','ilike',emails)])
-                        if obj.group_name and entry.group_membership_info and  not contact_ids:
-                            for grp in entry.group_membership_info:
-                                if grp.href ==  obj.group_name:
-                                    addresss_obj.create(cr, uid, data, context=context)                        
+                        if not contact_ids:
+                            if obj.group_name and entry.group_membership_info:
+                                for grp in entry.group_membership_info:
+                                    if grp.href == obj.group_name:
+                                        if obj.create_partner:
+                                            partner_id, data = self.create_partner(cr, uid, ids, data, context=context)
+                                            partner_ids.append(partner_id[0])
+                                        addresses.append(addresss_obj.create(cr, uid, data, context=context))                        
+                            else:
+                                if obj.group_name == 'all':
+                                    addresses.append(addresss_obj.create(cr, uid, data, context=context))
                         else:
-                            if obj.group_name=='all':
-                                addresses.append(addresss_obj.create(cr, uid, data, context=context))
+                            addresss_obj.write(cr, uid, contact_ids, data, context=context)
                     if not contact:
                         break
                     next = contact.GetNextLink()
