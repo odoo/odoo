@@ -100,19 +100,20 @@ class crm_fundraising(crm.crm_case, osv.osv):
         """
         if context is None:
             context = {}
-        for lead in self.browse(cr, uid ,ids, context):
+        for data in self.browse(cr, uid ,ids, context):
             context.update({
                     'mail':'new',
-                    'model': 'crm.lead',
-                    'default_name': lead.name,
-                    'default_email_to': lead.email_from,
-                    'default_email_from': lead.user_id and lead.user_id.address_id and lead.user_id.address_id.email,
-                    'default_description': '\n' + (tools.ustr(lead.user_id.signature or '')),
-                    'default_reply_to': lead.section_id and lead.section_id.reply_to or False,
+                    'default_name': data.name,
+                    'default_email_to': data.email_from,
+                    'default_email_from': data.user_id and data.user_id.address_id and data.user_id.address_id.email,
+                    'default_description': '\n' + (tools.ustr(data.user_id.signature or '')),
                     'default_model': context.get('model',''),
-                    'default_email_cc': tools.ustr(lead.email_cc or ''),
+                    'default_email_cc': tools.ustr(data.email_cc or ''),
                     'default_res_id': context.get('rec_id',0)
                 })
+            if hasattr(data, 'section_id'):
+                context.update({'default_reply_to': data.section_id and data.section_id.reply_to or False})
+
         result = {
                 'view_type': 'form',
                 'view_mode': 'form',
