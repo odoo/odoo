@@ -151,8 +151,8 @@
                     </group>
                     <group colspan="2" col="2">
                         <separator string="Mailings" colspan="2" col="2"/>
-                        <field name="optin"/>
-                        <field name="optout"/>
+                        <field name="optin" attrs="{'readonly':[('optout','=',True)]}"/>
+                        <field name="optout" attrs="{'readonly':[('optin','=',True)]}"/>
                     </group>
                     <group colspan="2" col="2">
                         <separator string="Statistics" colspan="2" col="2"/>
