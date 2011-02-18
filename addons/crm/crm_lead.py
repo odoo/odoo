@@ -288,6 +288,37 @@ class crm_lead(crm_case, osv.osv):
                         }
         return value
 
+    def action_send_email(self, cr, uid, ids, context=None):
+        """
+            Open Send email wizard.
+        """
+        if context is None:
+            context = {}
+        for lead in self.browse(cr, uid ,ids, context):
+            context.update({
+                    'mail':'new',
+                    'model': 'crm.lead',
+                    'default_name': lead.name,
+                    'default_email_to': lead.email_from,
+                    'default_email_from': lead.user_id and lead.user_id.address_id and lead.user_id.address_id.email,
+                    'default_description': '\n' + (tools.ustr(lead.user_id.signature or '')),
+                    'default_reply_to': lead.section_id and lead.section_id.reply_to or False,
+                    'default_model': context.get('model',''),
+                    'default_email_cc': tools.ustr(lead.email_cc or ''),
+                    'default_res_id': context.get('rec_id',0)
+                })
+        result = {
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'email.message.wizard_send',
+                'view_id': False,
+                'context': context,
+                'type': 'ir.actions.act_window',
+                'target': 'new',
+                'nodestroy': True
+                }
+        return result
+
     def write(self, cr, uid, ids, vals, context=None):
         if not context:
             context = {}

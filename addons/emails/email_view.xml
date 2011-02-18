@@ -31,10 +31,11 @@
                                 <separator string="Message Details" colspan="4"/>
                                 <field name="model" readonly="1"/>
                                 <group col="3" colspan="2">
-                                    <field name="res_id"  readonly="1"/>
+                                    <field name="res_id" readonly="1"/>
                                     <button name="open_document" string="Open Document" type="object" icon="gtk-jump-to"/>
 	                                <field name="message_id"/>
-	                                <button name="%(action_email_message_wizard_send)d" string="Reply" type="action" icon="terp-mail-replied"/>
+	                                <button name="%(action_email_message_wizard_send)d" string="Reply" type="action" icon="terp-mail-replied"
+	                                context="{'mail':'reply', 'message_id':active_id}"/>
                                 </group>
                             </group>
                             <separator string="Description" colspan="4"/>

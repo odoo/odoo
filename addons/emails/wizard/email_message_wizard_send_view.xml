@@ -36,7 +36,6 @@
             </field>
         </record>
 
-
         <record id="action_email_message_wizard_send" model="ir.actions.act_window">
             <field name="name">Send E-mail</field>
             <field name="res_model">email.message.wizard_send</field>
@@ -45,7 +44,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
-            <field name="context">{'message_id':active_id}</field>
+            <field name="context">{'message_id':active_id, 'mail':'reply'}</field>
         </record>
 
 	</data>
