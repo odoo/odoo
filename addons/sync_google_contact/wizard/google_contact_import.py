@@ -134,19 +134,16 @@ class synchronize_google_contact(osv.osv_memory):
                                 partner_ids.append(partner_id[0])
                             addresses.append(addresss_obj.create(cr, uid, data, context=context))
                         contact_ids = addresss_obj.search(cr, uid, [('email','ilike',emails)])
-                        if not contact_ids:
-                            if obj.group_name and entry.group_membership_info:
-                                for grp in entry.group_membership_info:
-                                    if grp.href == obj.group_name:
-                                        if obj.create_partner:
-                                            partner_id, data = self.create_partner(cr, uid, ids, data, context=context)
-                                            partner_ids.append(partner_id[0])
-                                        addresses.append(addresss_obj.create(cr, uid, data, context=context))                        
-                            else:
-                                if obj.group_name == 'all':
-                                    addresses.append(addresss_obj.create(cr, uid, data, context=context))
+                        if obj.group_name and entry.group_membership_info and not contact_ids:
+                            for grp in entry.group_membership_info:
+                                if grp.href == obj.group_name:
+                                    if obj.create_partner:
+                                        partner_id, data = self.create_partner(cr, uid, ids, data, context=context)
+                                        partner_ids.append(partner_id[0])
+                                    addresses.append(addresss_obj.create(cr, uid, data, context=context))                        
                         else:
-                            addresss_obj.write(cr, uid, contact_ids, data, context=context)
+                            if obj.group_name == 'all' and not contact_ids:
+                                addresses.append(addresss_obj.create(cr, uid, data, context=context))
                     if not contact:
                         break
                     next = contact.GetNextLink()
