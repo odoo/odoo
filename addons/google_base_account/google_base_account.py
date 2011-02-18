@@ -29,5 +29,15 @@ class res_users(osv.osv):
         'gmail_password': fields.char('Password', size=64),
     }
 res_users()    
+
+class res_partner_address(osv.osv):
+    
+    _inherit = "res.partner.address"
+    _columns = {
+        'google_id': fields.char('Google Contact Id', size=128, readonly=True),  
+    }
+
+res_partner_address()
+
 # vim:expandtab:smartindent:toabstop=4:softtabstop=4:shiftwidth=4:
 

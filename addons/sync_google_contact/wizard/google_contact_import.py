@@ -121,19 +121,21 @@ class synchronize_google_contact(osv.osv_memory):
                     for entry in contact.entry:
                         partner_id = False
                         name = tools.ustr(entry.title.text)
+                        google_id = entry.id.text
                         phone_numbers = ','.join(phone_number.text for phone_number in entry.phone_number)
                         emails = ','.join(email.address for email in entry.email)
                         data = {
                                 'name': name or '',
                                 'phone': phone_numbers,
                                 'email': emails,
+                                'google_id': google_id,
                         }
                         if obj.create_partner and obj.group_name == 'all':
                             if name:
                                 partner_id, data = self.create_partner(cr, uid, ids, data, context=context)
                                 partner_ids.append(partner_id[0])
                             addresses.append(addresss_obj.create(cr, uid, data, context=context))
-                        contact_ids = addresss_obj.search(cr, uid, [('email','ilike',emails)])
+                        contact_ids = addresss_obj.search(cr, uid, [('google_id','=',google_id)])
                         if obj.group_name and entry.group_membership_info and not contact_ids:
                             for grp in entry.group_membership_info:
                                 if grp.href == obj.group_name:
