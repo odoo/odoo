@@ -24,14 +24,14 @@ from osv import fields
 import tools
 
 class email_compose_message(osv.osv_memory):
-    _name = 'email.compose.message'
     _inherit = 'email.compose.message'
 
     def default_get(self, cr, uid, fields, context=None):
         if context is None:
             context = {}
+        model = ['crm.lead', 'crm.claim', 'crm.fundraising', 'crm.helpdesk', 'event.registration', 'hr.applicant', 'project.issue']
         result = super(email_compose_message, self).default_get(cr, uid, fields, context=context)
-        if context.get('record_id',False) and context.get('model',False):
+        if context.get('record_id',False) and context.get('model',False) and context.get('model') in model:
             model_obj = self.pool.get(context.get('model'))
             data = model_obj.browse(cr, uid ,context.get('record_id'), context)
             if 'name' in fields:

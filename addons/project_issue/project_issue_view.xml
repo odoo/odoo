@@ -104,7 +104,7 @@
 		                            <button
 		                                string="Reply" attrs="{'invisible': [('history', '!=', True)]}"
 		                                name="%(emails.action_email_compose_message_wizard)d"
-		                                context="{'mail':'reply', 'model': 'crm.lead', 'project.issue' : True, 'message_id':active_id}"
+		                                context="{'mail':'reply', 'model': 'project.issue', 'project.issue' : True, 'message_id':active_id}"
 		                                icon="terp-mail-replied" type="action" />
                                 </tree>
                                 <form string="History">
