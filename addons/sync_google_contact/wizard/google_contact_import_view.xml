@@ -1,63 +1,24 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-    
-        <record model="ir.ui.view" id="view_google_contact_login_form">
-            <field name="name">google.import.login.form</field>
-            <field name="model">google.login</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string=" Google Login">
-                 <group width="300" height="150">
-                   <field name="user"/>
-                   <newline/>
-                   <field name="password" password="True"/>
-	                <newline/>
-	                <separator string="" colspan="4"/>
-	                <group colspan="4" col="4">
-	                    <button special="cancel" string="Cancel" icon="gtk-cancel"/>
-	                    <button name="check_login_contact" string="Login" type="object" icon="terp-check"/>
-	                </group>     
-	                </group>             
-                </form>             
-            </field>
-        </record>
-        
-    
         <record model="ir.ui.view" id="view_synchronize_google_contact_import_form">
             <field name="name">synchronize.base.form</field>
             <field name="model">synchronize.base</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Import Google Contacts">
-	                <group colspan="2" col="2">
-	                   <field name="tools"/>
-	                   <field name="group_name" />
-	                   <separator string="Do you want to create partner?" colspan="4"/>
-	              	   <field name="create_partner"/>
-	                </group>
-	                <separator string="" colspan="4"/>
-	                <group colspan="2" col="2">
-	                    <button special="cancel" string="Cancel" icon="gtk-cancel"/>
-	                    <button name="import_contact" string="Import Contacts" type="object" icon="terp-personal+"/>
-	                </group>        
-                </form>             
+                    <group colspan="2" col="2">
+                       <field name="group_name" />
+                       <separator string="Do you want to create partner?" colspan="4"/>
+                       <field name="create_partner"/>
+                    </group>
+                    <separator string="" colspan="4"/>
+                    <group colspan="2" col="2">
+                        <button special="cancel" string="Cancel" icon="gtk-cancel"/>
+                        <button name="import_contact" string="Import Contacts" type="object" icon="terp-personal+"/>
+                    </group>
+                </form>
             </field>
         </record>
-                
-        <record model="ir.actions.act_window" id="act_google_contact_import_form">
-          <field name="name">Import Google Contacts</field>
-          <field name="type">ir.actions.act_window</field>
-          <field name="res_model">google.login</field>
-          <field name="view_type">form</field>
-          <field name="view_mode">form</field>
-          <field name="target">new</field>
-          <field name="view_id" ref="view_google_contact_login_form"/>
-        </record>
-            
-        <menuitem name="Import Google Contacts" id="menu_google_contact"
-	         parent="base.menu_address_book" action="act_google_contact_import_form"
-	         sequence="40" />
-            
     </data>
 </openerp>

@@ -30,6 +30,7 @@
     'depends': ['base'],
     'init_xml': [],
     'update_xml': [
+                    'wizard/sync_base_view.xml'
                    ],
     'demo_xml': [],
     'installable': True,
