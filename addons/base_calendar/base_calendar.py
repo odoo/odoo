@@ -321,7 +321,7 @@ class calendar_attendee(osv.osv):
     _columns = {
         'cutype': fields.selection([('individual', 'Individual'), \
                     ('group', 'Group'), ('resource', 'Resource'), \
-                    ('room', 'Room'), ('unknown', '') ], \
+                    ('room', 'Room'), ('unknown', 'Unknown') ], \
                     'Invite Type', help="Specify the type of Invitation"),
         'member': fields.char('Member', size=124,
                     help="Indicate the groups that the attendee belongs to"),
