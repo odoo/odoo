@@ -1035,8 +1035,8 @@ class mrp_procurement(osv.osv):
             qty = self.pool.get('product.uom')._compute_qty(cr, uid, procurement.product_uom.id, procurement.product_qty, uom_id)
             if procurement.product_id.seller_ids[0].qty:
                 qty=max(qty,procurement.product_id.seller_ids[0].qty)
-
-            price = self.pool.get('product.pricelist').price_get(cr, uid, [pricelist_id], procurement.product_id.id, qty, False, {'uom': uom_id})[pricelist_id]
+                
+            price = self.pool.get('product.pricelist').price_get(cr, uid, [pricelist_id], procurement.product_id.id, qty, partner_id, {'uom': uom_id})[pricelist_id]
 
             newdate = DateTime.strptime(procurement.date_planned, '%Y-%m-%d %H:%M:%S')
             newdate = newdate - DateTime.RelativeDateTime(days=company.po_lead)
