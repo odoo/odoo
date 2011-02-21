@@ -80,7 +80,7 @@ class account_analytic_line(osv.osv):
         j_id = analytic_journal_obj.browse(cr, uid, journal_id, context=context)
         prod = product_obj.browse(cr, uid, prod_id, context=context)
         result = 0.0
-        if prod_id or not unit:
+        if prod_id:
             unit = prod.uom_id.id
             if j_id.type == 'purchase':
                 unit = prod.uom_po_id.id
