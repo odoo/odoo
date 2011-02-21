@@ -68,6 +68,7 @@ class job2phonecall(osv.osv_memory):
                 return content
         return False
 
+
     _defaults = {
          'user_id': _date_user,
          'category_id': _date_category,
