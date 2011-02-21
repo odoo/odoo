@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-02-03 09:58+0000\n"
+"PO-Revision-Date: 2011-02-18 09:21+0000\n"
 "Last-Translator: Emerson <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-02-04 14:10+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-02-19 15:17+0000\n"
+"X-Generator: Launchpad (build 12351)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -722,7 +722,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_aged_receivable
 #, python-format
 msgid "Receivable Accounts"
-msgstr "Contas a receber"
+msgstr "Contas de Recebíveis"
 
 #. module: account
 #: model:ir.model,name:account.model_account_report_general_ledger
@@ -1349,7 +1349,7 @@ msgstr "Dono da conta bancária"
 #. module: account
 #: field:res.partner,property_account_receivable:0
 msgid "Account Receivable"
-msgstr "Conta de recebimento"
+msgstr "Conta de Recebimento"
 
 #. module: account
 #: model:ir.actions.report.xml,name:account.account_central_journal
@@ -1728,7 +1728,7 @@ msgstr "A quantidade opcional nos lançamentos"
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_partner_account_move_all
 msgid "Receivables & Payables"
-msgstr "Receber & Pagar"
+msgstr "Recebíveis & Pagáveis"
 
 #. module: account
 #: code:addons/account/account_move_line.py:815
@@ -2111,7 +2111,7 @@ msgstr ""
 "Este tipo é usado para diferenciar tipos com efeitos especiais no OpenERP: "
 "visualização não pode ter lançamentos, consolidação são contas que possuem "
 "contas filho para consolidação de multi-empresas, pagamentos/recebimentos "
-"são para contas de parceiros (para computação de débito/crédito), fechado "
+"são para contas de parceiros (para computação de débito/crédito), fechado é "
 "para contas de depreciação."
 
 #. module: account
@@ -2167,7 +2167,7 @@ msgstr "Em execução"
 #: field:product.category,property_account_income_categ:0
 #: field:product.template,property_account_income:0
 msgid "Income Account"
-msgstr "Conta de receitas"
+msgstr "Conta de Receita"
 
 #. module: account
 #: code:addons/account/invoice.py:352
@@ -2243,7 +2243,7 @@ msgstr "Mantenha vazia para todos os anos fiscais abertos"
 #. module: account
 #: model:ir.model,name:account.model_account_move
 msgid "Account Entry"
-msgstr "Conta Lançamento"
+msgstr "Lançamento Contábil"
 
 #. module: account
 #: field:account.sequence.fiscalyear,sequence_main_id:0
@@ -3264,7 +3264,7 @@ msgstr "Transferências"
 #. module: account
 #: view:account.payment.term.line:0
 msgid "  value amount: n.a"
-msgstr ""
+msgstr "  valor total: n.a."
 
 #. module: account
 #: view:account.chart:0
@@ -3581,8 +3581,8 @@ msgstr "Conta de pagamento"
 msgid ""
 "You cannot create entries on different periods/journals in the same move"
 msgstr ""
-"Você não pode criar escrituras com períodos ou jornais diferentes na mesma "
-"entrada"
+"Você não pode criar lançamentos em períodos/diários diferentes no mesmo "
+"movimento."
 
 #. module: account
 #: model:process.node,name:account.process_node_supplierpaymentorder0
@@ -4418,7 +4418,7 @@ msgstr "Data Inicial"
 #. module: account
 #: field:account.chart.template,property_account_income:0
 msgid "Income Account on Product Template"
-msgstr "Conta de receita no modelo de produtos"
+msgstr "Conta de Receita no Modelo de Produto"
 
 #. module: account
 #: help:res.partner,last_reconciliation_date:0
@@ -4547,12 +4547,12 @@ msgstr "Aplicação de impostos"
 #: model:ir.ui.menu,name:account.menu_eaction_account_moves_sale
 #, python-format
 msgid "Journal Items"
-msgstr "Itens do Livro"
+msgstr "Itens do Diário"
 
 #. module: account
 #: selection:account.account.type,report_type:0
 msgid "Balance Sheet (Assets Accounts)"
-msgstr ""
+msgstr "Planilha de Balanço (Ativos)"
 
 #. module: account
 #: report:account.tax.code.entries:0
@@ -4645,7 +4645,7 @@ msgstr "Movimentos"
 #: model:ir.actions.act_window,name:account.action_account_vat_declaration
 #: model:ir.model,name:account.model_account_vat_declaration
 msgid "Account Vat Declaration"
-msgstr ""
+msgstr "Conta de Declaração VAT"
 
 #. module: account
 #: view:account.period:0
@@ -5121,6 +5121,9 @@ msgid ""
 "something to reconcile or not. This figure already count the current partner "
 "as reconciled."
 msgstr ""
+"Estes são os parceiros restantes que você deve conferir se há algo para "
+"reconciliar ou não. Esta lista já considera o parceiro atual como "
+"reconciliado."
 
 #. module: account
 #: view:account.subscription.line:0
@@ -5441,7 +5444,7 @@ msgstr "Valorização"
 #: code:addons/account/report/account_partner_balance.py:306
 #, python-format
 msgid "Receivable and Payable Accounts"
-msgstr "Contas a Pagar e Receber"
+msgstr "Contas de Pagamento e Recebimento"
 
 #. module: account
 #: field:account.fiscal.position.account.template,position_id:0
@@ -5476,6 +5479,9 @@ msgid ""
 "document shows your debit and credit taking in consideration some criteria "
 "you can choose by using the search tool."
 msgstr ""
+"Nesta visão, tenha uma análise das suas contas financeiras. O documento "
+"mostra seu débito e crédito levando em consideração alguns critérios que "
+"você pode escolher usando a ferramenta de pesquisa."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_tax_code_list
@@ -5572,7 +5578,7 @@ msgstr "Conta de Impostos da Fatura"
 #: model:ir.actions.act_window,name:account.action_account_general_journal
 #: model:ir.model,name:account.model_account_general_journal
 msgid "Account General Journal"
-msgstr ""
+msgstr "Diário de Contas Gerais"
 
 #. module: account
 #: code:addons/account/report/common_report_header.py:100
@@ -5919,7 +5925,7 @@ msgstr "Nome Tipo de Conta"
 #: selection:account.account.template,type:0
 #: selection:account.entries.report,type:0
 msgid "Receivable"
-msgstr "Receber"
+msgstr "Recebimento"
 
 #. module: account
 #: view:account.invoice:0
@@ -5989,7 +5995,7 @@ msgstr "Visualizar linhas de conta analítica"
 #. module: account
 #: selection:account.account.type,report_type:0
 msgid "Balance Sheet (Liability Accounts)"
-msgstr ""
+msgstr "Planilha de Balanço (Passivos)"
 
 #. module: account
 #: field:account.invoice,internal_number:0
@@ -6318,8 +6324,8 @@ msgid ""
 "This account will be used instead of the default one as the receivable "
 "account for the current partner"
 msgstr ""
-"Esta conta será usada em vez da conta padrão,  como conta de recebível para "
-"o parceiro atual"
+"Esta conta será usada em vez da conta padrão,  como conta de recebimento "
+"para o parceiro atual"
 
 #. module: account
 #: field:account.tax,python_applicable:0
@@ -6574,7 +6580,7 @@ msgstr "Propriedades"
 #. module: account
 #: model:ir.model,name:account.model_account_tax_chart
 msgid "Account tax chart"
-msgstr ""
+msgstr "Gráfico de contas de taxas"
 
 #. module: account
 #: report:account.analytic.account.cost_ledger:0
@@ -6663,7 +6669,7 @@ msgstr "Concluído"
 #. module: account
 #: model:process.transition,note:account.process_transition_invoicemanually0
 msgid "A statement with manual entries becomes a draft statement."
-msgstr ""
+msgstr "Um extrato com lançamentos manuais se torna um extrato provisório."
 
 #. module: account
 #: view:account.aged.trial.balance:0
@@ -6675,6 +6681,12 @@ msgid ""
 "you request an interval of 30 days OpenERP generates an analysis of "
 "creditors for the past month, past two months, and so on. "
 msgstr ""
+"O Saldo de Parceiro Vencido é um relatório mais detalhado dos seus "
+"recebíveis por intervalo. Quando abrir este relatório, o OpenERP pede o nome "
+"da empresa, o período fiscal e o intervalo a ser analisado (em dias). O "
+"OpenERP, então, calcula a tabela de saldo por período. Assim, se você pedir "
+"um intervalo de 30 dias, o OpenERP gera uma análise dos créditos para o mês "
+"passado, o penúltimo mês e assim por diante. "
 
 #. module: account
 #: field:account.invoice,origin:0
@@ -6701,7 +6713,7 @@ msgstr "Lançamentos Não Conciliados"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_menu_Bank_process
 msgid "Statements Reconciliation"
-msgstr ""
+msgstr "Reconciliação de Extrato"
 
 #. module: account
 #: report:account.invoice:0
@@ -6712,6 +6724,7 @@ msgstr "Taxas:"
 #: help:account.tax,amount:0
 msgid "For taxes of type percentage, enter % ratio between 0-1."
 msgstr ""
+"Para impostos do tipo porcentagem, entre com um percentual entre 0 e 1."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_subscription_form
@@ -6800,6 +6813,8 @@ msgid ""
 "Can not find account chart for this company in invoice line account, Please "
 "Create account."
 msgstr ""
+"O plano de contas desta empresa na conta da linha da fatura não foi "
+"encontrado. Por favor, crie uma conta."
 
 #. module: account
 #: view:account.tax.template:0
@@ -6864,6 +6879,25 @@ msgid ""
 "module named account_voucher.\n"
 "    "
 msgstr ""
+"Módulo financeiro e contábil que engloba:\n"
+"    Contabilização geral\n"
+"    Contabilização analítica e de custos\n"
+"    Contas de terceiros\n"
+"    Gerênciamento de impostos\n"
+"    Orçamentos\n"
+"    Faturas de clientes e fornecedores\n"
+"    Extratos de banco\n"
+"    Processo de reconciliação por parceiros\n"
+"    Criação de um painel contábil que inclui:\n"
+"    * Lista de cotações não faturadas\n"
+"    * Gráfico de recebíveis atrasados\n"
+"    * Gráfico de receitas atrasadas\n"
+"\n"
+"Os processos como manutenção de livro-razão geral é feito através da "
+"definição dos diários financeiros (lançamentos únicos ou agrupados são "
+"mantidos com diários) para um ano fiscal e para preparação de recibos que "
+"está em um módulo chamado account_voucher.\n"
+"    "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_journal_period_tree
@@ -6997,7 +7031,7 @@ msgstr "Relatórios"
 #. module: account
 #: sql_constraint:account.journal:0
 msgid "The code of the journal must be unique per company !"
-msgstr "O código do diário deve ser único por empresa !"
+msgstr "O código do diário deve ser único por empresa!"
 
 #. module: account
 #: field:account.bank.statement,ending_details_ids:0
@@ -7106,6 +7140,12 @@ msgid ""
 "Situation' to be used at the time of new fiscal year creation or end of year "
 "entries generation."
 msgstr ""
+"Selecione 'Venda' para o Diário de venda ser usado no momento da criação da "
+"fatura. Selecione 'Compra' para o Diário de compra ser usado no momento da "
+"aprovação do pedido de compra. Selecione 'Caixa' para ser usado no momento "
+"de fazer pagamento. Selecione 'Geral' para operações diversas. Selecione "
+"'Situação de Abertura/Fechamento' para ser usado quando ocorrer a criação de "
+"um novo ano fiscal ou geração de lançamentos de encerramento de ano."
 
 #. module: account
 #: report:account.invoice:0
@@ -7165,8 +7205,8 @@ msgid ""
 "This field is used for payable and receivable journal entries. You can put "
 "the limit date for the payment of this line."
 msgstr ""
-"Este campo é usado para lançamentos pagáveis e recebíveis de diário. Você "
-"pode colocar data limite para o pagamento desta linha."
+"Este campo é usado para lançamentos de pagamento e recebimento em diário. "
+"Você pode colocar data limite para o pagamento desta linha."
 
 #. module: account
 #: code:addons/account/account_move_line.py:1271
@@ -7185,7 +7225,7 @@ msgstr "Diário de vendas"
 #: code:addons/account/wizard/account_move_journal.py:104
 #, python-format
 msgid "Open Journal Items !"
-msgstr ""
+msgstr "Diário com Itens Abertos!"
 
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_tax
@@ -7309,7 +7349,7 @@ msgstr "Sequencia"
 #. module: account
 #: model:ir.model,name:account.model_account_bs_report
 msgid "Account Balance Sheet Report"
-msgstr ""
+msgstr "Relatório da Planilha de Balanço de Contas"
 
 #. module: account
 #: help:account.tax,price_include:0
@@ -7350,6 +7390,11 @@ msgid ""
 "in which they will appear. Then you can create a new journal and link your "
 "view to it."
 msgstr ""
+"Aqui você pode customizar uma exibição de diário ou criar uma nova exibição. "
+"Exibições de diário determinam a forma que você pode registrar os "
+"lançamentos no diário. Selecione os campos que devem aparecer em um diário e "
+"determine a sequência que eles devem aparecer. Então você pode criar um novo "
+"diário e ligar a sua exibição a ele."
 
 #. module: account
 #: view:account.payment.term.line:0
@@ -7675,7 +7720,7 @@ msgstr "Livro de custos"
 #. module: account
 #: view:account.invoice:0
 msgid "Proforma"
-msgstr ""
+msgstr "Pro-forma"
 
 #. module: account
 #: report:account.analytic.account.cost_ledger:0
@@ -7698,6 +7743,7 @@ msgstr "Diário de Reembolso de Compra"
 #: help:account.tax.template,amount:0
 msgid "For Tax Type percent enter % ratio between 0-1."
 msgstr ""
+"Para Tipo de Imposto porcentagem, entre com um percentual entre 0 e 1."
 
 #. module: account
 #: selection:account.automatic.reconcile,power:0
@@ -7772,7 +7818,7 @@ msgstr "Código computacional para Impostos incluídos nos preços"
 #. module: account
 #: field:account.chart.template,property_account_income_categ:0
 msgid "Income Category Account"
-msgstr "Conta da categoria Receita"
+msgstr "Conta da Categoria de Receita"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_fiscal_position_template_form
@@ -7783,7 +7829,7 @@ msgstr "Modelo de posição fiscal"
 #. module: account
 #: view:account.entries.report:0
 msgid "Int.Type"
-msgstr ""
+msgstr "Tipo Int."
 
 #. module: account
 #: field:account.move.line,tax_amount:0
@@ -7798,6 +7844,10 @@ msgid ""
 "can easily generate refunds and reconcile them directly from the invoice "
 "form."
 msgstr ""
+"Com o Reembolso de Clientes você pode gerenciar as notas de crédito para "
+"seus clientes. Um reembolso é um documento que credita completamente ou "
+"parcialmente uma fatura. Você pode facilmente gerar reembolsos e reconciliá-"
+"los diretamente da tela de faturamento."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_vat_declaration
@@ -7851,6 +7901,8 @@ msgid ""
 "You can check this box to mark this journal item as a litigation with the "
 "associated partner"
 msgstr ""
+"Você pode marcar este box para indicar este item de diário como uma "
+"pendência com o parceiro associado."
 
 #. module: account
 #: field:account.move.line,reconcile_partial_id:0
@@ -7919,7 +7971,7 @@ msgstr "Conciliação"
 #: view:account.chart.template:0
 #: field:account.chart.template,property_account_receivable:0
 msgid "Receivable Account"
-msgstr "Conta de recebimento"
+msgstr "Conta de Recebimento"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -8043,7 +8095,7 @@ msgid ""
 "The residual amount on a receivable or payable of a journal entry expressed "
 "in the company currency."
 msgstr ""
-"O valor residual de recebíveis ou pagáveis de um lançamento de diário "
+"O valor residual de um lançamento de recebimento ou pagamento em diário "
 "expresso na moeda da empresa."
 
 #. module: account
@@ -8065,7 +8117,7 @@ msgstr "De"
 #. module: account
 #: model:ir.model,name:account.model_account_fiscalyear_close
 msgid "Fiscalyear Close"
-msgstr ""
+msgstr "Fechar Ano Fiscal"
 
 #. module: account
 #: sql_constraint:account.account:0
@@ -8250,6 +8302,15 @@ msgid ""
 "* The 'Paid' state is set automatically when invoice is paid.            \n"
 "* The 'Cancelled' state is used when user cancel invoice."
 msgstr ""
+" * O status 'Provisório' é usado quando um usuário estiver lançando uma "
+"fatura nova ou não confirmada.              \n"
+"* O status 'Pro-forma' ocorre quando a fatura estiver confirmada mas ainda "
+"não tem um número de nota.\n"
+"* O status 'Aberta' é usado quando o usuário cria a fatura, o número da nota "
+"estiver gerado e a fatura não estiver paga.              \n"
+"* O status 'Pago' é atribuído automaticamente quando a fatura é paga.        "
+"      \n"
+"* O status 'Cancelado' é usado quando o usuário cancela a fatura."
 
 #. module: account
 #: field:account.invoice.refund,period:0
@@ -8488,7 +8549,7 @@ msgstr "Período Inicial"
 #: code:addons/account/account.py:2333
 #, python-format
 msgid "Cannot locate parent code for template account!"
-msgstr ""
+msgstr "Impossível localizar o código da conta pai para o modelo de conta!"
 
 #. module: account
 #: field:account.aged.trial.balance,direction_selection:0
@@ -8678,6 +8739,12 @@ msgid ""
 "the income account. OpenERP will propose to you automatically the Tax "
 "related to this account and the counter-part \"Account receivable\"."
 msgstr ""
+"Esta visualização é usada para gravação de lançamentos em massa no OpenERP. "
+"Se você quiser registrar uma fatura de cliente, selecione o diário e o "
+"período na barra de pesquisa. Então, comece registrando a linha de "
+"lançamento da conta de receita. O OpenERP irá propor automaticamente a Taxa "
+"(Imposto) relacionado a esta conta e a contra-partida \"Conta de "
+"recebimento\"."
 
 #. module: account
 #: code:addons/account/account_bank_statement.py:391
@@ -8760,7 +8827,7 @@ msgstr "Extratos Bancários"
 #: help:account.addtmpl.wizard,cparent_id:0
 msgid ""
 "Creates an account with the selected template under this existing parent."
-msgstr ""
+msgstr "Cria uma conta com o modelo selecionado abaixo desta conta pai."
 
 #. module: account
 #: selection:account.model.line,date_maturity:0
@@ -9083,7 +9150,7 @@ msgstr "Através :"
 #: view:account.general.journal:0
 #: model:ir.ui.menu,name:account.menu_account_general_journal
 msgid "General Journals"
-msgstr ""
+msgstr "Diários Gerais"
 
 #. module: account
 #: view:account.model:0
@@ -9156,7 +9223,7 @@ msgstr "Taxa de Câmbio"
 #. module: account
 #: help:account.payment.term.line,value_amount:0
 msgid "For Value percent enter % ratio between 0-1."
-msgstr ""
+msgstr "Para Valor percentual, entre com um percentual entre 0 e 1."
 
 #. module: account
 #: selection:account.entries.report,month:0
@@ -9636,7 +9703,7 @@ msgstr "Este lançamento já está conciliado"
 #. module: account
 #: model:ir.model,name:account.model_report_account_receivable
 msgid "Receivable accounts"
-msgstr "Contas a receber"
+msgstr "Contas de recebimento"
 
 #. module: account
 #: selection:account.model.line,date_maturity:0
@@ -9710,7 +9777,7 @@ msgstr "Fin.Account"
 #: model:ir.actions.act_window,name:account.action_aged_receivable_graph
 #: view:report.aged.receivable:0
 msgid "Aged Receivable"
-msgstr "A Receber"
+msgstr "Recebimentos Vencidos"
 
 #. module: account
 #: field:account.tax,applicable_type:0
@@ -9754,6 +9821,12 @@ msgid ""
 "may keep several types of specialized journals such as a cash journal, "
 "purchase journal, sales journal..."
 msgstr ""
+"Crie e gerencie os diários de sua empresa neste menu. Um diário é usado para "
+"registrar transações de todos os dados contábeis relacionados aos negócios "
+"do dia a dia. Ele usa o sistema de dupla partida para manter os registros. "
+"Dependendo da natureza das atividades e do número de transações diárias, uma "
+"empresa pode ter vários tipos de diários específicos como um diário de "
+"caixa, um diário de compras, diários de vendas..."
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_chart
@@ -9847,7 +9920,7 @@ msgstr "Contas Bancaria"
 #. module: account
 #: field:res.partner,credit:0
 msgid "Total Receivable"
-msgstr "Total a receber"
+msgstr "Total Recebível"
 
 #. module: account
 #: view:account.account:0
@@ -10031,6 +10104,13 @@ msgid ""
 "certain amount of information. They have to be certified by an external "
 "auditor annually."
 msgstr ""
+"Criar e gerenciar as contas que você precisa que sejam lançadas no diário. A "
+"conta é parte do livro-razão e permite que sua empresa registre todos os "
+"tipos de transações de débito e crédito. Empresas apresentam sua "
+"contabilidade anual em duas partes principais: o balanço e a declaração de "
+"renda (contas de lucros e perdas). A contabilidade anual de uma empresa é "
+"requerida por lei para que possam ser fiscalizadas algumas informações. Elas "
+"devem ser conferidas por um contador anualmente."
 
 #. module: account
 #: help:account.move.line,amount_residual_currency:0
@@ -10038,3 +10118,5 @@ msgid ""
 "The residual amount on a receivable or payable of a journal entry expressed "
 "in its currency (maybe different of the company currency)."
 msgstr ""
+"O valor residual de um recebimento ou pagamento em um lançamento de diário "
+"expresso na respectiva moeda (pode ser diferente da moeda da empresa)"
