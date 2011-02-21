@@ -80,7 +80,11 @@ class account_analytic_line(osv.osv):
         j_id = analytic_journal_obj.browse(cr, uid, journal_id, context=context)
         prod = product_obj.browse(cr, uid, prod_id, context=context)
         result = 0.0
-
+        product_uom_id=False
+        if prod_id:
+            product_uom_id = prod.uom_id.id
+            if j_id.type == 'purchase':
+                product_uom_id = prod.uom_po_id.id
         if j_id.type <> 'sale':
             a = prod.product_tmpl_id.property_account_expense.id
             if not a:
@@ -127,6 +131,7 @@ class account_analytic_line(osv.osv):
         return {'value': {
             'amount': result,
             'general_account_id': a,
+            'product_uom_id':product_uom_id
             }
         }
 
