@@ -38,28 +38,28 @@ class email_message_wizard_send(osv.osv_memory):
         if context.get('record_id',False) and context.get('model',False):
             model_obj = self.pool.get(context.get('model'))
             data = model_obj.browse(cr, uid ,context.get('record_id'), context)
-            if 'name' in fields:
+            if 'name' in fields and hasattr(data, 'name'):
                 result['name'] = data.name
 
-            if 'email_to' in fields:
+            if 'email_to' in fields and hasattr(data, 'email_to'):
                 result['email_to'] = data.email_from
 
-            if 'email_from' in fields:
+            if 'email_from' in fields and hasattr(data, 'email_from'):
                 result['email_from'] = data.user_id and data.user_id.address_id and data.user_id.address_id.email
 
-            if 'description' in fields:
+            if 'description' in fields and hasattr(data, 'description'):
                 result['description'] = '\n' + (tools.ustr(data.user_id.signature or ''))
 
-            if 'model' in fields:
+            if 'model' in fields and hasattr(data, 'model'):
                 result['model'] = context.get('model','')
 
-            if 'email_cc' in fields:
+            if 'email_cc' in fields and hasattr(data, 'email_cc'):
                 result['email_cc'] = tools.ustr(data.email_cc or '')
 
-            if 'res_id' in fields:
+            if 'res_id' in fields and hasattr(data, 'res_id'):
                 result['res_id'] = context.get('record_id',0)
 
-            if 'reply_to' in fields and hasattr(data, 'section_id'):
+            if 'reply_to' in fields and hasattr(data, 'reply_to'):
                 result['reply_to'] = data.section_id and data.section_id.reply_to or False
 
         elif message_id:
