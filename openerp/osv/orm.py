@@ -1553,12 +1553,9 @@ class orm_template(object):
                         view_id = view_ref_res[0]
 
             if view_id:
-                query = "SELECT arch,name,field_parent,id,type,inherit_id,model FROM ir_ui_view WHERE id=%s"
-                params = (view_id,)
-                if model:
-                    query += " AND model=%s"
-                    params += (self._name,)
-                cr.execute(query, params)
+                cr.execute("""SELECT arch,name,field_parent,id,type,inherit_id,model
+                              FROM ir_ui_view
+                              WHERE id=%s""", (view_id,))
             else:
                 cr.execute('''SELECT
                         arch,name,field_parent,id,type,inherit_id,model
