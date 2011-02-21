@@ -24,7 +24,7 @@
         <field name="inherit_id" ref="view_document_directory_form_1"/>
         <field name="arch" type="xml">
             <field name="report_id" position="replace">
-                <field name="report_id" domain="[('type', '=', 'ressource'),('model_id','=',parent.ressource_type_id)]"/>
+                <field name="report_id" domain="[('model_id','=',parent.ressource_type_id)]"/>
                 <separator string="ICS Calendar" colspan="4"/>
                 <field name="ics_domain"/>
                 <field name="ics_field_ids" colspan="4">

@@ -494,6 +494,17 @@ class res_node_calendar(nodes.node_class):
             res = '%d' % (self.calendar_id)
         return res
 
+    def _get_wtag(self, cr):
+        uid = self.context.uid
+        context = self.context.context
+        if self.model and self.res_id:
+            mod_obj = self.context._dirobj.pool.get(self.model)
+            pr = mod_obj.perm_read(cr, uid, [self.res_id], context=context, details=False)[0]
+            self.write_date = pr.get('write_date') or pr.get('create_date')
+        
+        # Super will use self.write_date, so we should be fine.
+        return super(res_node_calendar, self)._get_wtag(cr)
+
     def rm(self, cr):
         uid = self.context.uid
         res = False
