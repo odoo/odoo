@@ -348,6 +348,7 @@
 
                 <group expand="0" string="Extended Filters..." groups="base.group_extended">
                       <field name="stage_id" widget="selection" domain="[('type', '=', 'lead')]"/>
+                      <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'crm.lead')]"/>
                       <separator orientation="vertical"/>
                       <field name="country_id" context="{'invisible_country': False}">
                           <filter icon="terp-personal+" context="{'invisible_country': False}" help="Show countries"/>
