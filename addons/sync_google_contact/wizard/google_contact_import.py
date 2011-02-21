@@ -22,7 +22,7 @@
 from osv import fields,osv
 from tools.translate import _
 import tools
-
+import gdata.contacts
 class google_contact_import(osv.osv_memory):
     _inherit = 'google.login'
     
@@ -119,17 +119,25 @@ class synchronize_google_contact(osv.osv_memory):
             if obj.tools == 'gmail':
                 while contact:
                     for entry in contact.entry:
+                        data={}
                         partner_id = False
                         name = tools.ustr(entry.title.text)
                         google_id = entry.id.text
                         phone_numbers = ','.join(phone_number.text for phone_number in entry.phone_number)
+                        if name:
+                              data['name'] = name
+                        if entry.phone_number:    
+                            for phone in entry.phone_number:
+                                if phone.rel == gdata.contacts.REL_WORK:
+                                    data['phone'] = phone.text
+                                if phone.rel == gdata.contacts.PHONE_MOBILE:
+                                    data['mobile'] = phone.text
+                                if phone.rel == gdata.contacts.PHONE_WORK_FAX:
+                                    data['fax'] = phone.text 
+                                            
                         emails = ','.join(email.address for email in entry.email)
-                        data = {
-                                'name': name or '',
-                                'phone': phone_numbers,
-                                'email': emails,
-                                'google_id': google_id,
-                        }
+                        if emails:
+                             data['email'] = emails
                         if obj.create_partner and obj.group_name == 'all':
                             if name:
                                 partner_id, data = self.create_partner(cr, uid, ids, data, context=context)
