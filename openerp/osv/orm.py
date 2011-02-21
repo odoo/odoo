@@ -240,6 +240,13 @@ class browse_record(object):
                                 #        testing to be sure we got the right
                                 #        object and not the parent one.
                                 if not isinstance(value, browse_record):
+                                    if obj is None:
+                                        # In some cases the target model is not available yet, so we must ignore it,
+                                        # which is safe in most cases, this value will just be loaded later when needed.
+                                        # This situation can be caused by custom fields that connect objects with m2o without
+                                        # respecting module dependencies, causing relationships to be connected to soon when
+                                        # the target is not loaded yet.
+                                        continue
                                     new_data[field_name] = browse_record(self._cr,
                                         self._uid, value, obj, self._cache,
                                         context=self._context,
@@ -272,7 +279,7 @@ class browse_record(object):
                 self._data[result_line['id']].update(new_data)
 
         if not name in self._data[self._id]:
-            #how did this happen?
+            # How did this happen? Could be a missing model due to custom fields used too soon, see above.
             self.logger.notifyChannel("browse_record", netsvc.LOG_ERROR,
                     "Fields to fetch: %s, Field values: %s"%(field_names, field_values))
             self.logger.notifyChannel("browse_record", netsvc.LOG_ERROR,
