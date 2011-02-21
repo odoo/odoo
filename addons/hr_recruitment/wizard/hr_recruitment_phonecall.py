@@ -51,10 +51,22 @@ class job2phonecall(osv.osv_memory):
 
     def _get_note(self, cr, uid, context=None):
         case_obj = self.pool.get('hr.applicant')
+        msg_obj = self.pool.get('mailgate.message')
         if context is None:
             context = {}
-        case = case_obj.browse(cr, uid, context.get('active_id', False), context=context)
-        return case.description or ''
+        content = False
+        msgs = False
+        context_id = context and context.get('active_id', False) or False
+        if context_id:
+            case = case_obj.browse(cr, uid, context_id, context=context)
+            if case and case.description:
+                return case.description
+            elif case and not case.description:
+                msgs = msg_obj.search(cr, uid, [('model', '=', 'hr.applicant'), ('res_id', '=', case.id), ('email_from', '!=', ''), ('email_to', '!=', '')], limit=1)
+            if msgs:
+                content = msg_obj.browse(cr, uid, msgs[0], context=context).description
+                return content
+        return False
 
     _defaults = {
          'user_id': _date_user,
