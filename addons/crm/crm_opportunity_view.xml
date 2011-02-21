@@ -192,9 +192,9 @@
                                 context="{'model': 'crm.lead' }"
                                 icon="terp-document-new" type="action" />
 		                    <button string="Send New Email"
-		                        name="action_send_email"
-		                        context="{'mail':'new', 'model': 'crm.lead', 'rec_id' : active_id}"
-		                        icon="terp-mail-message-new" type="object" />
+		                        name="%(emails.action_email_compose_message_wizard)d"
+		                        context="{'mail':'new', 'model': 'crm.lead', 'record_id' : active_id}"
+		                        icon="terp-mail-message-new" type="action"/>
                         </page>
                         <page string="Extra Info" groups="base.group_extended">
                             <group col="2" colspan="2">
