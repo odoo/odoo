@@ -2,9 +2,9 @@
 <openerp>
 	<data>
 
-        <record model="ir.ui.view" id="email_message_wizard_send_form">
-            <field name="name">email.message.wizard_send.form</field>
-            <field name="model">email.message.wizard_send</field>
+        <record model="ir.ui.view" id="email_compose_message_wizard_form">
+            <field name="name">email.compose.message.form</field>
+            <field name="model">email.compose.message</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Reply Email">
@@ -36,10 +36,10 @@
             </field>
         </record>
 
-        <record id="action_email_message_wizard_send" model="ir.actions.act_window">
+        <record id="action_email_compose_message_wizard" model="ir.actions.act_window">
             <field name="name">Send E-mail</field>
-            <field name="res_model">email.message.wizard_send</field>
-            <field name="src_model">email.message.wizard_send</field>
+            <field name="res_model">email.compose.message</field>
+            <field name="src_model">email.compose.message</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>

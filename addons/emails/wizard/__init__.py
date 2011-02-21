@@ -19,6 +19,6 @@
 #
 ##############################################################################
 
-import email_message_wizard_send
+import email_compose_message
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

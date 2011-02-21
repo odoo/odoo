@@ -23,15 +23,15 @@ from osv import osv
 from osv import fields
 import tools
 
-class email_message_wizard_send(osv.osv_memory):
-    _name = 'email.message.wizard_send'
-    _inherit = 'email.message'
-    _description = 'This is the wizard for send e-mail'
+class email_compose_message(osv.osv_memory):
+    _name = 'email.compose.message'
+    _inherit = 'email.message.template'
+    _description = 'This is the wizard for Compose E-mail'
 
     def default_get(self, cr, uid, fields, context=None):
         if context is None:
             context = {}
-        result = super(email_message_wizard_send, self).default_get(cr, uid, fields, context=context)
+        result = super(email_compose_message, self).default_get(cr, uid, fields, context=context)
         message_pool = self.pool.get('email.message')
         message_id = context.get('message_id', False)
         message_data = False
@@ -50,13 +50,13 @@ class email_message_wizard_send(osv.osv_memory):
             if 'description' in fields and hasattr(data, 'description'):
                 result['description'] = '\n' + (tools.ustr(data.user_id.signature or ''))
 
-            if 'model' in fields and hasattr(data, 'model'):
+            if 'model' in fields:
                 result['model'] = context.get('model','')
 
             if 'email_cc' in fields and hasattr(data, 'email_cc'):
                 result['email_cc'] = tools.ustr(data.email_cc or '')
 
-            if 'res_id' in fields and hasattr(data, 'res_id'):
+            if 'res_id' in fields:
                 result['res_id'] = context.get('record_id',0)
 
             if 'reply_to' in fields and hasattr(data, 'reply_to'):
@@ -64,12 +64,6 @@ class email_message_wizard_send(osv.osv_memory):
 
         elif message_id:
             message_data = message_pool.browse(cr, uid, int(message_id), context)
-            if 'template_id' in fields:
-                result['template_id'] = message_data and message_data.template_id and message_data.template_id.id or False
-
-            if 'smtp_server_id' in fields:
-                result['smtp_server_id'] = message_data and message_data.smtp_server_id and message_data.smtp_server_id.id or False
-
             if 'message_id' in fields:
                 result['message_id'] =  message_data and message_data.message_id
 
@@ -129,9 +123,6 @@ class email_message_wizard_send(osv.osv_memory):
             if 'priority' in fields:
                 result['priority'] = message_data and message_data.priority
 
-            if 'partner_id' in fields:
-                result['partner_id'] = message_data and message_data.partner_id and message_data.partner_id.id or False
-
             if 'debug' in fields:
                 result['debug'] = message_data and message_data.debug
 
@@ -139,6 +130,7 @@ class email_message_wizard_send(osv.osv_memory):
 
     _columns = {
         'attachment_ids': fields.many2many('ir.attachment','email_message_send_attachment_rel', 'wizard_id', 'attachment_id', 'Attachments'),
+        'debug':fields.boolean('Debug', readonly=True),
     }
 
     def save_to_drafts(self, cr, uid, ids, context=None):
@@ -168,6 +160,6 @@ class email_message_wizard_send(osv.osv_memory):
             email_ids.append(email_id)
         return email_ids
 
-email_message_wizard_send()
+email_compose_message()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
