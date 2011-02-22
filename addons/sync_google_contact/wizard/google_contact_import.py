@@ -161,8 +161,12 @@ class synchronize_google_contact(osv.osv_memory):
                     name = tools.ustr(entry.title.text)
                     google_id = entry.id.text
                     phone_numbers = ','.join(phone_number.text for phone_number in entry.phone_number)
+                    emails = ','.join(email.address for email in entry.email)
                     if name:
-                        data['name'] = name
+                        if name=='None':
+                            data['name']=emails
+                        else:
+                            data['name'] = name
                     if google_id:
                         data['google_id'] =google_id
                     if entry.phone_number:
@@ -173,7 +177,7 @@ class synchronize_google_contact(osv.osv_memory):
                                 data['mobile'] = phone.text
                             if phone.rel == gdata.contacts.PHONE_WORK_FAX:
                                 data['fax'] = phone.text
-                    emails = ','.join(email.address for email in entry.email)
+                   
                     if emails:
                         data['email'] = emails                    
                         contact_ids = addresss_obj.search(cr, uid, [('email','ilike',emails)])     
@@ -188,7 +192,7 @@ class synchronize_google_contact(osv.osv_memory):
                         phone = addr.phone or ''
                         mobile = addr.mobile or ''
                         fax = addr.fax or ''
-                        if not name or name=='None':
+                        if not name:
                             res['name']=data.get('name','')
                         if not email:  
                             res['email']=data.get('email','')
@@ -204,7 +208,7 @@ class synchronize_google_contact(osv.osv_memory):
                             if name:
                                 partner_id, data = self.create_partner(cr, uid, ids, data, context=context)
                                 partner_ids.append(partner_id[0])
-                            addresses.append(addresss_obj.create(cr, uid, data, context=context))
+                            #addresses.append(addresss_obj.create(cr, uid, data, context=context))
                         if obj.group_name and entry.group_membership_info and not contact_ids:
                             for grp in entry.group_membership_info:
                                 if grp.href == obj.group_name:
