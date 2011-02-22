@@ -163,6 +163,8 @@ class synchronize_google_contact(osv.osv_memory):
                     phone_numbers = ','.join(phone_number.text for phone_number in entry.phone_number)
                     if name:
                         data['name'] = name
+                    if google_id:
+                        data['google_id'] =google_id
                     if entry.phone_number:
                         for phone in entry.phone_number:
                             if phone.rel == gdata.contacts.REL_WORK:
@@ -171,26 +173,48 @@ class synchronize_google_contact(osv.osv_memory):
                                 data['mobile'] = phone.text
                             if phone.rel == gdata.contacts.PHONE_WORK_FAX:
                                 data['fax'] = phone.text
-
                     emails = ','.join(email.address for email in entry.email)
                     if emails:
-                        data['email'] = emails
-                    if obj.create_partner and obj.group_name == 'all':
-                        if name:
-                            partner_id, data = self.create_partner(cr, uid, ids, data, context=context)
-                            partner_ids.append(partner_id[0])
-                        addresses.append(addresss_obj.create(cr, uid, data, context=context))
-                    contact_ids = addresss_obj.search(cr, uid, [('google_id','=',google_id)])
-                    if obj.group_name and entry.group_membership_info and not contact_ids:
-                        for grp in entry.group_membership_info:
-                            if grp.href == obj.group_name:
-                                if obj.create_partner:
-                                    partner_id, data = self.create_partner(cr, uid, ids, data, context=context)
-                                    partner_ids.append(partner_id[0])
-                                    addresses.append(addresss_obj.create(cr, uid, data, context=context))
+                        data['email'] = emails                    
+                        contact_ids = addresss_obj.search(cr, uid, [('email','ilike',emails)])     
                     else:
-                            if obj.group_name == 'all' and not contact_ids:
-                                addresses.append(addresss_obj.create(cr, uid, data, context=context))
+                        contact_ids = addresss_obj.search(cr, uid, [('google_id','=',google_id)])                             
+                    if  contact_ids :
+                        res={}
+                        addr=addresss_obj.browse(cr,uid,contact_ids)[0]
+                        name = str((addr.name or addr.partner_id and addr.partner_id.name or '').encode('utf-8')) 
+                        notes = addr.partner_id and addr.partner_id.comment or ''
+                        email = addr.email or ''
+                        phone = addr.phone or ''
+                        mobile = addr.mobile or ''
+                        fax = addr.fax or ''
+                        if not name or name=='None':
+                            res['name']=data.get('name','')
+                        if not email:  
+                            res['email']=data.get('email','')
+                        if not mobile:  
+                            res['mobile']=data.get('mobile','')                          
+                        if not phone:  
+                            res['phone']=data.get('phone','')
+                        if not fax:  
+                            res['fax']=data.get('fax','')                            
+                        addresss_obj.write(cr,uid,contact_ids,res,context=context)
+                    else:     
+                        if obj.create_partner and obj.group_name == 'all':
+                            if name:
+                                partner_id, data = self.create_partner(cr, uid, ids, data, context=context)
+                                partner_ids.append(partner_id[0])
+                            addresses.append(addresss_obj.create(cr, uid, data, context=context))
+                        if obj.group_name and entry.group_membership_info and not contact_ids:
+                            for grp in entry.group_membership_info:
+                                if grp.href == obj.group_name:
+                                    if obj.create_partner:
+                                        partner_id, data = self.create_partner(cr, uid, ids, data, context=context)
+                                        partner_ids.append(partner_id[0])
+                                        addresses.append(addresss_obj.create(cr, uid, data, context=context))
+                        else:
+                                if obj.group_name == 'all' and not contact_ids:
+                                    addresses.append(addresss_obj.create(cr, uid, data, context=context))
 
                 if not contact:
                     break
