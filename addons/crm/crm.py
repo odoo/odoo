@@ -303,7 +303,10 @@ class crm_case(object):
         if not add:
             return {'value': {'email_from': False}}
         address = self.pool.get('res.partner.address').browse(cr, uid, add)
-        return {'value': {'email_from': address.email, 'phone': address.phone}}
+        if address.email:
+            return {'value': {'email_from': address.email, 'phone': address.phone}}
+        else:
+            return {'value': {'phone': address.phone}}
 
     def _history(self, cr, uid, cases, keyword, history=False, subject=None, email=False, details=None, email_from=False, message_id=False, attach=[], context=None):
         mailgate_pool = self.pool.get('mailgate.thread')
@@ -744,6 +747,14 @@ class users(osv.osv):
     _columns = {
         'context_section_id': fields.many2one('crm.case.section', 'Sales Team'),
     }
+
+    def create(self, cr, uid, vals, context=None):
+        res = super(users, self).create(cr, uid, vals, context=context)
+        section_obj=self.pool.get('crm.case.section')
+
+        if vals.get('context_section_id', False):
+            section_obj.write(cr, uid, [vals['context_section_id']], {'member_ids':[(4, res)]}, context)
+        return res
 users()
 
 

@@ -412,6 +412,17 @@ class crm_lead(crm_case, osv.osv):
             @param **args: Return Dictionary of Keyword Value
         """
         return True
+
+    def on_chnage_optin(self, cr, uid, ids, optin):
+        if optin:
+            return {'value':{'optin':optin,'optout':False}}
+        return {}
+        
+    def on_chnage_optout(self, cr, uid, ids, optout):
+        if optout:
+            return {'value':{'optout':optout,'optin':False}}
+        return {}
+        
 crm_lead()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

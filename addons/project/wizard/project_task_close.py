@@ -22,7 +22,7 @@
 from osv import fields, osv
 import tools
 from tools.translate import _
-
+import re
 class project_task_close(osv.osv_memory):
     """
     Close Task
@@ -100,8 +100,14 @@ class project_task_close(osv.osv_memory):
                 }
 
                 to_adr = []
-                header = (project.warn_header or '') % val
-                footer = (project.warn_footer or '') % val
+                header = footer = ''
+                try:
+                    header_str = (project.warn_header or '')
+                    footer_str = (project.warn_footer or '')
+                    header = (re.sub(r'\%\W*\(', '%(', header_str)) % val
+                    footer = (re.sub(r'\%\W*\(', '%(', footer_str)) % val
+                except:
+                    raise osv.except_osv(_('Error'), _("Invlaid automatic variables used in project header or foooter."))
                 body = u'%s\n%s\n%s\n\n-- \n%s' % (header, task.description, footer, signature)
                 if data.manager_warn and data.manager_email:
                     to_adr.append(data.manager_email)

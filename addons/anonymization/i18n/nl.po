@@ -1,0 +1,229 @@
+# Dutch translation for openobject-addons
+# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"PO-Revision-Date: 2011-02-16 11:28+0000\n"
+"Last-Translator: Douwe Wullink (Dypalio) <Unknown>\n"
+"Language-Team: Dutch <nl@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2011-02-17 04:36+0000\n"
+"X-Generator: Launchpad (build 12351)\n"
+
+#. module: anonymization
+#: model:ir.model,name:anonymization.model_ir_model_fields_anonymize_wizard
+msgid "ir.model.fields.anonymize.wizard"
+msgstr "ir.model.fields.anonymize.wizard"
+
+#. module: anonymization
+#: field:ir.model.fields.anonymization,field_name:0
+msgid "Field Name"
+msgstr "Veldnaam"
+
+#. module: anonymization
+#: field:ir.model.fields.anonymization,field_id:0
+msgid "Field"
+msgstr "Veld"
+
+#. module: anonymization
+#: field:ir.model.fields.anonymization.history,state:0
+#: field:ir.model.fields.anonymize.wizard,state:0
+msgid "State"
+msgstr "Status"
+
+#. module: anonymization
+#: field:ir.model.fields.anonymize.wizard,file_import:0
+msgid "Import"
+msgstr "Importeren"
+
+#. module: anonymization
+#: model:ir.model,name:anonymization.model_ir_model_fields_anonymization
+msgid "ir.model.fields.anonymization"
+msgstr "ir.model.fields.anonymization"
+
+#. module: anonymization
+#: model:ir.module.module,shortdesc:anonymization.module_meta_information
+msgid "Database anonymization module"
+msgstr "Database anonimisatie module"
+
+#. module: anonymization
+#: field:ir.model.fields.anonymization.history,direction:0
+msgid "Direction"
+msgstr "Richting"
+
+#. module: anonymization
+#: model:ir.actions.act_window,name:anonymization.action_ir_model_fields_anonymization_tree
+#: view:ir.model.fields.anonymization:0
+#: model:ir.ui.menu,name:anonymization.menu_administration_anonymization_fields
+msgid "Anonymized Fields"
+msgstr "Anonieme velden"
+
+#. module: anonymization
+#: model:ir.ui.menu,name:anonymization.menu_administration_anonymization
+msgid "Database anonymization"
+msgstr "Database anonimisatie"
+
+#. module: anonymization
+#: code:addons/anonymization/anonymization.py:55
+#: sql_constraint:ir.model.fields.anonymization:0
+#, python-format
+msgid "You cannot have two records having the same model and the same field"
+msgstr "U kunt niet twee regels hebben met hetzelfde model en veld"
+
+#. module: anonymization
+#: selection:ir.model.fields.anonymization,state:0
+#: selection:ir.model.fields.anonymize.wizard,state:0
+msgid "Anonymized"
+msgstr "Geanonimiseerd"
+
+#. module: anonymization
+#: field:ir.model.fields.anonymization,state:0
+msgid "unknown"
+msgstr "onbekend"
+
+#. module: anonymization
+#: field:ir.model.fields.anonymization,model_id:0
+msgid "Object"
+msgstr "Object"
+
+#. module: anonymization
+#: field:ir.model.fields.anonymization.history,filepath:0
+msgid "File path"
+msgstr "Bestandspad"
+
+#. module: anonymization
+#: field:ir.model.fields.anonymization.history,date:0
+msgid "Date"
+msgstr "Datum"
+
+#. module: anonymization
+#: field:ir.model.fields.anonymize.wizard,file_export:0
+msgid "Export"
+msgstr "Exporteren"
+
+#. module: anonymization
+#: view:ir.model.fields.anonymize.wizard:0
+msgid "Reverse the Database Anonymization"
+msgstr "De database anonimisatie ongedaan maken"
+
+#. module: anonymization
+#: view:ir.model.fields.anonymize.wizard:0
+msgid "Database Anonymization"
+msgstr "Database anonimisatie"
+
+#. module: anonymization
+#: model:ir.ui.menu,name:anonymization.menu_administration_anonymization_wizard
+msgid "Anonymize database"
+msgstr "Database anonimiseren"
+
+#. module: anonymization
+#: view:ir.model.fields.anonymization.history:0
+#: field:ir.model.fields.anonymization.history,field_ids:0
+msgid "Fields"
+msgstr "Velden"
+
+#. module: anonymization
+#: selection:ir.model.fields.anonymization,state:0
+#: selection:ir.model.fields.anonymize.wizard,state:0
+msgid "Clear"
+msgstr "Duidelijk"
+
+#. module: anonymization
+#: selection:ir.model.fields.anonymization.history,direction:0
+msgid "clear -> anonymized"
+msgstr "duidelijk -> geanonimiseerd"
+
+#. module: anonymization
+#: view:ir.model.fields.anonymize.wizard:0
+#: field:ir.model.fields.anonymize.wizard,summary:0
+msgid "Summary"
+msgstr "Samenvatting"
+
+#. module: anonymization
+#: view:ir.model.fields.anonymization:0
+msgid "Anonymized Field"
+msgstr "Geanonimiseerd veld"
+
+#. module: anonymization
+#: model:ir.module.module,description:anonymization.module_meta_information
+msgid ""
+"\n"
+"This module allows you to anonymize a database.\n"
+"    "
+msgstr ""
+"\n"
+"Deze module laat u een database anonimiseren.\n"
+"    "
+
+#. module: anonymization
+#: selection:ir.model.fields.anonymize.wizard,state:0
+msgid "Unstable"
+msgstr "Onstabiel"
+
+#. module: anonymization
+#: selection:ir.model.fields.anonymization.history,state:0
+msgid "Exception occured"
+msgstr "Uitzondering opgetreden"
+
+#. module: anonymization
+#: selection:ir.model.fields.anonymization,state:0
+#: selection:ir.model.fields.anonymize.wizard,state:0
+msgid "Not Existing"
+msgstr "Niet bestaand"
+
+#. module: anonymization
+#: field:ir.model.fields.anonymization,model_name:0
+msgid "Object Name"
+msgstr "Objectnaam"
+
+#. module: anonymization
+#: model:ir.actions.act_window,name:anonymization.action_ir_model_fields_anonymization_history_tree
+#: view:ir.model.fields.anonymization.history:0
+#: model:ir.ui.menu,name:anonymization.menu_administration_anonymization_history
+msgid "Anonymization History"
+msgstr "Anonimisatie geschiedenis"
+
+#. module: anonymization
+#: model:ir.model,name:anonymization.model_ir_model_fields_anonymization_history
+msgid "ir.model.fields.anonymization.history"
+msgstr "ir.model.fields.anonymization.history"
+
+#. module: anonymization
+#: model:ir.actions.act_window,name:anonymization.action_ir_model_fields_anonymize_wizard
+#: view:ir.model.fields.anonymize.wizard:0
+msgid "Anonymize Database"
+msgstr "Database anonimiseren"
+
+#. module: anonymization
+#: field:ir.model.fields.anonymize.wizard,name:0
+msgid "File Name"
+msgstr "Bestandsnaam"
+
+#. module: anonymization
+#: selection:ir.model.fields.anonymization.history,direction:0
+msgid "anonymized -> clear"
+msgstr "geanonimiseerd -> duidelijk"
+
+#. module: anonymization
+#: selection:ir.model.fields.anonymization.history,state:0
+msgid "Started"
+msgstr "Gestart"
+
+#. module: anonymization
+#: selection:ir.model.fields.anonymization.history,state:0
+msgid "Done"
+msgstr "Gereed"
+
+#. module: anonymization
+#: view:ir.model.fields.anonymization.history:0
+#: field:ir.model.fields.anonymization.history,msg:0
+#: field:ir.model.fields.anonymize.wizard,msg:0
+msgid "Message"
+msgstr "Bericht"
