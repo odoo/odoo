@@ -567,7 +567,7 @@ class crm_case_stage(osv.osv):
         'on_change': fields.boolean('Change Probability Automatically', \
                          help="Change Probability on next and previous stages."),
         'requirements': fields.text('Requirements'),
-        'type': fields.selection(_get_type_value, 'Type'),
+        'type': fields.selection(_get_type_value, 'Type', required=True),
     }
 
 
