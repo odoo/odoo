@@ -410,7 +410,7 @@ def _create_dta(obj, cr, uid, data, context=None):
         v['partner_post_number']=  pline.bank_id.post_number \
                 and pline.bank_id.post_number.replace('.', '').replace('-', '') \
                 or  False
-        v['partner_bvr'] = pline.bank_id.bvr_number or ''
+        v['partner_bvr'] = pline.bank_id.post_number or ''
         if v['partner_bvr']:
             v['partner_bvr'] = v['partner_bvr'].replace('-','')
             if len(v['partner_bvr']) < 9:

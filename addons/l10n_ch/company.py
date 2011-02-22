@@ -27,13 +27,12 @@ class res_company(osv.osv):
     _inherit = "res.company"
 
     _columns = {
-        ### horiz. delta in mm 1.2 will print the bvz 1.2mm lefter
         'bvr_delta_horz': fields.float('BVR Horz. Delta (mm)',
-            help='horiz. delta in mm 1.2 will print the bvz 1.2mm lefter'),
-        ### vert. delta in mm 1.2 will print the bvz 1.2mm lefter
+            help='horiz. delta in mm 1.2 will print the bvr 1.2mm lefter, negative value is possible'),
+            
         'bvr_delta_vert': fields.float('BVR Vert. Delta (mm)',
-            help='vert. delta in mm 1.2 will print the bvz 1.2mm lefter'),
-        ### print bvr background image for standard paper or e-mail
+            help='vert. delta in mm 1.2 will print the bvr 1.2mm lower, negative value is possible'),
+            
         'bvr_background': fields.boolean('Insert BVR background ?'),
         
         'bvr_only': fields.boolean('Separated BVR only ?',
