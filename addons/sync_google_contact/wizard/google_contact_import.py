@@ -162,11 +162,10 @@ class synchronize_google_contact(osv.osv_memory):
                     google_id = entry.id.text
                     phone_numbers = ','.join(phone_number.text for phone_number in entry.phone_number)
                     emails = ','.join(email.address for email in entry.email)
-                    if name:
-                        if name=='None':
-                            data['name']=emails
-                        else:
-                            data['name'] = name
+                    data['name'] = ''
+                    if name and name != 'None':
+                        data['name'] = name
+
                     if google_id:
                         data['google_id'] =google_id
                     if entry.phone_number:
@@ -177,16 +176,16 @@ class synchronize_google_contact(osv.osv_memory):
                                 data['mobile'] = phone.text
                             if phone.rel == gdata.contacts.PHONE_WORK_FAX:
                                 data['fax'] = phone.text
-                   
+
                     if emails:
-                        data['email'] = emails                    
-                        contact_ids = addresss_obj.search(cr, uid, [('email','ilike',emails)])     
+                        data['email'] = emails
+                        contact_ids = addresss_obj.search(cr, uid, [('email','ilike',emails)])
                     else:
-                        contact_ids = addresss_obj.search(cr, uid, [('google_id','=',google_id)])                             
+                        contact_ids = addresss_obj.search(cr, uid, [('google_id','=',google_id)])
                     if  contact_ids :
                         res={}
                         addr=addresss_obj.browse(cr,uid,contact_ids)[0]
-                        name = str((addr.name or addr.partner_id and addr.partner_id.name or '').encode('utf-8')) 
+                        name = str((addr.name or addr.partner_id and addr.partner_id.name or '').encode('utf-8'))
                         notes = addr.partner_id and addr.partner_id.comment or ''
                         email = addr.email or ''
                         phone = addr.phone or ''
@@ -194,21 +193,21 @@ class synchronize_google_contact(osv.osv_memory):
                         fax = addr.fax or ''
                         if not name:
                             res['name']=data.get('name','')
-                        if not email:  
+                        if not email:
                             res['email']=data.get('email','')
-                        if not mobile:  
-                            res['mobile']=data.get('mobile','')                          
-                        if not phone:  
+                        if not mobile:
+                            res['mobile']=data.get('mobile','')
+                        if not phone:
                             res['phone']=data.get('phone','')
-                        if not fax:  
-                            res['fax']=data.get('fax','')                            
+                        if not fax:
+                            res['fax']=data.get('fax','')
                         addresss_obj.write(cr,uid,contact_ids,res,context=context)
-                        
+
                     if obj.create_partner and obj.group_name == 'all':
                         if name:
                             partner_id, data = self.create_partner(cr, uid, ids, data, context=context)
                             partner_ids.append(partner_id[0])
-                        if not contact_ids  :  
+                        if not contact_ids  :
                             addresses.append(addresss_obj.create(cr, uid, data, context=context))
                         if contact_ids:
                             addresss_obj.write(cr,uid,contact_ids,{'partner_id':partner_id[0]})
