@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-02-19 23:18+0000\n"
+"PO-Revision-Date: 2011-02-20 20:25+0000\n"
 "Last-Translator: Emerson <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-02-20 04:34+0000\n"
+"X-Launchpad-Export-Date: 2011-02-21 04:50+0000\n"
 "X-Generator: Launchpad (build 12351)\n"
 
 #. module: account
@@ -7483,7 +7483,7 @@ msgstr "Linha do Caixa Físico"
 #: model:ir.actions.report.xml,name:account.account_3rdparty_ledger_other
 #: model:ir.ui.menu,name:account.menu_account_partner_ledger
 msgid "Partner Ledger"
-msgstr "Livro-razão relacionado"
+msgstr "Livro-razão de Parceiro"
 
 #. module: account
 #: report:account.account.balance.landscape:0
@@ -7731,7 +7731,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_account_analytic_cost
 #: model:ir.actions.report.xml,name:account.account_analytic_account_cost_ledger
 msgid "Cost Ledger"
-msgstr "Livro de custos"
+msgstr "Livro-razão de Custo"
 
 #. module: account
 #: view:account.invoice:0
@@ -8302,6 +8302,13 @@ msgid ""
 "would be referred to as FY 2011. You are not obliged to follow the actual "
 "calendar year."
 msgstr ""
+"Defina o ano fiscal da sua empresa de acordo com suas necessidades. Um ano "
+"fiscal é um período no qual as contas da empresa são baseadas (normalmente "
+"12 meses). O ano fiscal, normalmente refere-se à data na qual se encerra. "
+"Por exemplo, se um ano fiscal de uma empresa termina em 30 de Novembro de "
+"2011, então tudo entre 1 de Dezembro de 2010 até 30 de Novembro de 2011 "
+"deveria ser referenciado como AF 2011. Assim, você não é obrigado a seguir o "
+"ano calendário atual."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_acount_move_line_reconcile_open
@@ -8386,7 +8393,7 @@ msgstr "Tipo de referência"
 #. module: account
 #: view:account.analytic.cost.ledger.journal.report:0
 msgid "Cost Ledger for period"
-msgstr ""
+msgstr "Livro-razão de Custo por período"
 
 #. module: account
 #: help:account.tax,child_depend:0
@@ -8534,6 +8541,8 @@ msgid ""
 "Analytic costs (timesheets, some purchased products, ...) come from analytic "
 "accounts. These generate draft invoices."
 msgstr ""
+"Custos analíticos (apontamentos, alguns produtos comprados, ...) vêem de "
+"contas analíticas. Isto gera faturas provisórias."
 
 #. module: account
 #: help:account.journal,view_id:0
@@ -8543,6 +8552,10 @@ msgid ""
 "in which order. You can create your own view for a faster encoding in each "
 "journal."
 msgstr ""
+"Fornece uma exibição usada na escrita ou lista de lançamentos deste diário. "
+"A exibição indica ao OpenERP quais campos devem estar visíveis, obrigatórios "
+"ou apenas leitura e em qual ordem. Você pode criar sua própria exibição para "
+"dinamizar os lançamentos de registros em cada diário."
 
 #. module: account
 #: field:account.period,date_stop:0
@@ -8649,6 +8662,10 @@ msgid ""
 "partially. You can easily generate refunds and reconcile them directly from "
 "the invoice form."
 msgstr ""
+"Com os Reembolsos de Fornecedor, você pode gerenciar as notas de créditos "
+"que recebe dos seus fornecedores. Um reembolso é um documento que credita "
+"uma fatura completamente ou parcialmente. Você pode facilmente gerar "
+"reembolsos e reconciliá-los diretamente a partir da tela de faturas."
 
 #. module: account
 #: view:account.account.template:0
@@ -9318,6 +9335,9 @@ msgid ""
 "and is the process of transferring debit and credit amounts from a journal "
 "of original entry to a ledger book."
 msgstr ""
+"O processo de validação de lançamento no diário é também chamado de "
+"'postagem no livro-razão' e é o processo de transferência de débito e "
+"crédito de um lançamento original do diário para um livro-razão."
 
 #. module: account
 #: report:account.tax.code.entries:0
@@ -9340,6 +9360,8 @@ msgid ""
 "This report allows you to print or generate a pdf of your general ledger "
 "with details of all your account journals"
 msgstr ""
+"Este relatório permite que você imprima ou gere um PDF do seu livro-razão "
+"geral com detalhes de todos os seus diários de contas."
 
 #. module: account
 #: selection:account.account,type:0
@@ -9558,6 +9580,9 @@ msgid ""
 "reconciliation process today. The current partner is counted as already "
 "processed."
 msgstr ""
+"Este valor representa o número total de parceiros que atendidos hoje no "
+"processo de reconciliação. O parceiro atual está computado como já "
+"processado."
 
 #. module: account
 #: view:account.fiscalyear:0
