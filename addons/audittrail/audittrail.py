@@ -508,7 +508,7 @@ class audittrail_objects_proxy(object_proxy):
 
                 return fct_src(db, uid, model, method, *args)
         try:
-            res = my_fct(db, uid, model, method, *args)
+            res = my_fct(db, 1, model, method, *args)
             return res
         finally:
             cr.close()
