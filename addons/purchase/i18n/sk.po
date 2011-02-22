@@ -1,15 +1,16 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* purchase
+# Slovak translation for openobject-addons
+# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2011-02-21 17:22+0000\n"
-"Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
-"Language-Team: \n"
+"PO-Revision-Date: 2011-02-21 09:35+0000\n"
+"Last-Translator: Radoslav Sloboda <rado.sloboda@gmail.com>\n"
+"Language-Team: Slovak <sk@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -22,26 +23,24 @@ msgid ""
 "The buyer has to approve the RFQ before being sent to the supplier. The RFQ "
 "becomes a confirmed Purchase Order."
 msgstr ""
-"Покупатель должен утвердить запрос до его передачи поставщику. Запрос "
-"становится подтвержденным заказом на закупку."
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:282
 #, python-format
 msgid "You can not confirm purchase order without Purchase Order Lines."
-msgstr "Вы не можете подтвердить заказ на закупку без позиций в заказе."
+msgstr "Nemôžete potvrdiť objednávku bez objednávky v zozname."
 
 #. module: purchase
 #: field:purchase.order,invoiced:0
 msgid "Invoiced & Paid"
-msgstr "Счета получены и оплачены"
+msgstr "Fakturácia a platby"
 
 #. module: purchase
 #: field:purchase.order,location_id:0
 #: view:purchase.report:0
 #: field:purchase.report,location_id:0
 msgid "Destination"
-msgstr "Место назначения"
+msgstr "Cieľ"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:710
@@ -50,13 +49,12 @@ msgid ""
 "You have to select a product UOM in the same category than the purchase UOM "
 "of the product"
 msgstr ""
-"Вы должны выбрать ед. изм. товара из одной категории с ед. изм. закупаемого "
-"товара"
+"Musíte vybrať UOM produktu v rovnakej kategórii, ako je nákup produktu"
 
 #. module: purchase
 #: help:purchase.report,date:0
 msgid "Date on which this document has been created"
-msgstr "Дата на которую этот документ был создан"
+msgstr "Odo dňa, keď bol tento dokument vytvorený"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_rfq
@@ -74,23 +72,23 @@ msgstr ""
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
 msgid "From Picking"
-msgstr "Из прихода"
+msgstr ""
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Not Invoiced"
-msgstr "Без счета"
+msgstr "Nefakturované"
 
 #. module: purchase
 #: field:purchase.order,dest_address_id:0
 msgid "Destination Address"
-msgstr "Адрес назначения"
+msgstr "Cieľová adresa"
 
 #. module: purchase
 #: report:purchase.order:0
 #: field:purchase.report,validator:0
 msgid "Validated By"
-msgstr "Утверждено"
+msgstr "Overená"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -99,12 +97,12 @@ msgstr "Утверждено"
 #: view:purchase.report:0
 #: field:purchase.report,partner_id:0
 msgid "Supplier"
-msgstr "Поставщик"
+msgstr "Dodávateľ"
 
 #. module: purchase
 #: view:purchase.order.line_invoice:0
 msgid "Do you want to generate the supplier invoices ?"
-msgstr "Вы хотите создавать счета от поставщиков ?"
+msgstr "Chcete vytvoriť dodávateľskú faktúru?"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_form_action
@@ -118,13 +116,13 @@ msgstr ""
 #: code:addons/purchase/purchase.py:722
 #, python-format
 msgid "The selected supplier only sells this product by %s"
-msgstr ""
+msgstr "Vybraný dodávateľ predáva produkt %s"
 
 #. module: purchase
 #: code:addons/purchase/wizard/purchase_line_invoice.py:156
 #, python-format
 msgid "Supplier Invoices"
-msgstr "Cчета поставщиков"
+msgstr "Faktúry dodávateľov"
 
 #. module: purchase
 #: sql_constraint:purchase.order:0
@@ -135,25 +133,25 @@ msgstr ""
 #: model:process.transition,name:purchase.process_transition_packinginvoice0
 #: model:process.transition,name:purchase.process_transition_productrecept0
 msgid "From a Pick list"
-msgstr "Из комплектовочного листа"
+msgstr "Vyberte zo zoznamu"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:649
 #, python-format
 msgid "No Pricelist !"
-msgstr "Нет каталога !"
+msgstr "Žiadny cenník !"
 
 #. module: purchase
 #: field:purchase.order.line,product_qty:0
 #: view:purchase.report:0
 #: field:purchase.report,quantity:0
 msgid "Quantity"
-msgstr "Количество"
+msgstr "Množstvo"
 
 #. module: purchase
 #: view:purchase.order.line_invoice:0
 msgid "Select an Open Sale Order"
-msgstr "Выберите открытый заказ на продажу"
+msgstr ""
 
 #. module: purchase
 #: field:purchase.order,company_id:0
@@ -161,35 +159,35 @@ msgstr "Выберите открытый заказ на продажу"
 #: view:purchase.report:0
 #: field:purchase.report,company_id:0
 msgid "Company"
-msgstr "Компания"
+msgstr "Spoločnosť"
 
 #. module: purchase
 #: view:board.board:0
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_monthly_categ_graph
 #: view:purchase.report:0
 msgid "Monthly Purchase by Category"
-msgstr "Месячные закупки по категориям"
+msgstr "Mesačný nákup podľa kategórie"
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Set to Draft"
-msgstr "Установить в 'Черновик'"
+msgstr "Nastaviť ako návr"
 
 #. module: purchase
 #: selection:purchase.order,state:0
 #: selection:purchase.report,state:0
 msgid "Invoice Exception"
-msgstr "Исключительная ситуация счета"
+msgstr ""
 
 #. module: purchase
 #: model:product.pricelist,name:purchase.list0
 msgid "Default Purchase Pricelist"
-msgstr "Каталог по умолчанию для закупок"
+msgstr "Predvolený cenník nákupu"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_current_purchases
 msgid "Current purchases"
-msgstr "Текущие закупки"
+msgstr "Aktuálne nákupy"
 
 #. module: purchase
 #: help:purchase.order,dest_address_id:0
@@ -198,9 +196,6 @@ msgid ""
 "customer.In this case, it will remove the warehouse link and set the "
 "customer location."
 msgstr ""
-"Поместите адрес, если доставка будет напрямую от поставщика заказчику. В "
-"этом случае, ссылка на склад будет удалена и установлено местоположение "
-"заказчика."
 
 #. module: purchase
 #: help:res.partner,property_product_pricelist_purchase:0
@@ -208,13 +203,11 @@ msgid ""
 "This pricelist will be used, instead of the default one, for purchases from "
 "the current partner"
 msgstr ""
-"Для закупок у данного партнера вместо каталога по умолчанию будет "
-"применяться указанный каталог."
 
 #. module: purchase
 #: report:purchase.order:0
 msgid "Fax :"
-msgstr "Факс  :"
+msgstr "Fax :"
 
 #. module: purchase
 #: help:purchase.order,pricelist_id:0
@@ -222,24 +215,22 @@ msgid ""
 "The pricelist sets the currency used for this purchase order. It also "
 "computes the supplier price for the selected products/quantities."
 msgstr ""
-"Валюта, используемая в заказе на закупку, определяется каталогом. Так же "
-"рассчитывается цена поставщика для выбранной продукции / количества."
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_partial_picking
 msgid "Partial Picking"
-msgstr "Частичное комплектование"
+msgstr ""
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:286
 #, python-format
 msgid "Purchase order '%s' is confirmed."
-msgstr "Заказ на закупку '%s' подтвержден."
+msgstr ""
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Approve Purchase"
-msgstr "Утвердить закупку"
+msgstr ""
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_approvepurchaseorder0
@@ -247,7 +238,7 @@ msgstr "Утвердить закупку"
 #: selection:purchase.order,state:0
 #: selection:purchase.report,state:0
 msgid "Approved"
-msgstr "Утверждено"
+msgstr ""
 
 #. module: purchase
 #: view:purchase.report:0
@@ -257,7 +248,7 @@ msgstr ""
 #. module: purchase
 #: view:purchase.order:0
 msgid "Origin"
-msgstr "Происхождение"
+msgstr ""
 
 #. module: purchase
 #: field:purchase.report,product_uom:0
@@ -267,7 +258,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_line_product_tree
 msgid "Purchases"
-msgstr "Закупки"
+msgstr ""
 
 #. module: purchase
 #: view:purchase.order:0
@@ -275,7 +266,7 @@ msgstr "Закупки"
 #: view:purchase.order.line:0
 #: field:purchase.order.line,notes:0
 msgid "Notes"
-msgstr "Примечания"
+msgstr ""
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:649
@@ -284,13 +275,11 @@ msgid ""
 "You have to select a pricelist or a supplier in the purchase form !\n"
 "Please set one before choosing a product."
 msgstr ""
-"Вы должны выбрать каталог или поставщика в форме ввода закупки !\n"
-"Пожалуйста выберите, перед выбором ТМЦ."
 
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "September"
-msgstr "Сентябрь"
+msgstr ""
 
 #. module: purchase
 #: report:purchase.order:0
@@ -298,7 +287,7 @@ msgstr "Сентябрь"
 #: view:purchase.order.line:0
 #: field:purchase.order.line,taxes_id:0
 msgid "Taxes"
-msgstr "Налоги"
+msgstr ""
 
 #. module: purchase
 #: model:ir.actions.report.xml,name:purchase.report_purchase_order
@@ -309,35 +298,35 @@ msgstr "Налоги"
 #: model:res.request.link,name:purchase.req_link_purchase_order
 #: field:stock.picking,purchase_id:0
 msgid "Purchase Order"
-msgstr "Заказ на закупку"
+msgstr ""
 
 #. module: purchase
 #: field:purchase.order,name:0
 #: view:purchase.order.line:0
 #: field:purchase.order.line,order_id:0
 msgid "Order Reference"
-msgstr "Ссылка на заказ"
+msgstr ""
 
 #. module: purchase
 #: report:purchase.order:0
 msgid "Net Total :"
-msgstr "Чистый итог:"
+msgstr ""
 
 #. module: purchase
 #: view:purchase.installer:0
 msgid "Configure Your Purchases Management Application"
-msgstr "Настройка модуля управления закупками"
+msgstr ""
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_product
 #: model:ir.ui.menu,name:purchase.menu_procurement_partner_contact_form
 msgid "Products"
-msgstr "ТМЦ"
+msgstr ""
 
 #. module: purchase
 #: field:purchase.installer,progress:0
 msgid "Configuration Progress"
-msgstr "Настройка"
+msgstr ""
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_packinginvoice0
@@ -345,109 +334,106 @@ msgid ""
 "A Pick list generates an invoice. Depending on the Invoicing control of the "
 "sale order, the invoice is based on delivered or on ordered quantities."
 msgstr ""
-"Комплектовочный лист создает счет. В зависимости от метода выставления счета "
-"при заказе на продажу, счет основывается на отгруженном или на заказанном "
-"количестве."
 
 #. module: purchase
 #: selection:purchase.order,state:0
 #: selection:purchase.order.line,state:0
 #: selection:purchase.report,state:0
 msgid "Cancelled"
-msgstr "Отменено"
+msgstr ""
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:305
 #, python-format
 msgid "Purchase amount over the limit"
-msgstr "Закупленное количество сверх лимита"
+msgstr ""
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Convert to Purchase Order"
-msgstr "Преобразовать в заказ на закупку"
+msgstr ""
 
 #. module: purchase
 #: field:purchase.order,pricelist_id:0
 #: field:purchase.report,pricelist_id:0
 msgid "Pricelist"
-msgstr "Каталог"
+msgstr ""
 
 #. module: purchase
 #: selection:purchase.order,state:0
 #: selection:purchase.report,state:0
 msgid "Shipping Exception"
-msgstr "Исключительная ситуация поставки"
+msgstr ""
 
 #. module: purchase
 #: field:purchase.order.line,invoice_lines:0
 msgid "Invoice Lines"
-msgstr "Позиции счета"
+msgstr ""
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_packinglist0
 #: model:process.node,name:purchase.process_node_productrecept0
 msgid "Incoming Products"
-msgstr "Поступающие ТМЦ"
+msgstr ""
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_packinginvoice0
 msgid "Outgoing Products"
-msgstr "Исходящие ТМЦ"
+msgstr ""
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Manually Corrected"
-msgstr "Изменено вручную"
+msgstr ""
 
 #. module: purchase
 #: view:purchase.report:0
 msgid "   Month   "
-msgstr "   Месяц   "
+msgstr ""
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Reference"
-msgstr "Ссылка"
+msgstr ""
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:237
 #, python-format
 msgid "Cannot delete Purchase Order(s) which are in %s State!"
-msgstr "Нельзя удалить Заказ(ы) на закупку в стадии %s !"
+msgstr ""
 
 #. module: purchase
 #: field:purchase.report,dest_address_id:0
 msgid "Dest. Address Contact Name"
-msgstr "Имя контакта получателя"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_move
 msgid "Stock Move"
-msgstr "Перемещение ТМЦ"
+msgstr ""
 
 #. module: purchase
 #: view:purchase.report:0
 #: field:purchase.report,day:0
 msgid "Day"
-msgstr "День"
+msgstr ""
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:334
 #, python-format
 msgid "Purchase order '%s' has been set in draft state."
-msgstr "Заказ на закупку '%s' был установлен в состояние \"Черновик\"."
+msgstr ""
 
 #. module: purchase
 #: field:purchase.order.line,account_analytic_id:0
 msgid "Analytic Account"
-msgstr "Счет аналитики"
+msgstr ""
 
 #. module: purchase
 #: view:purchase.report:0
 #: field:purchase.report,nbr:0
 msgid "# of Lines"
-msgstr "Кол-во позиций"
+msgstr ""
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:685
@@ -455,7 +441,7 @@ msgstr "Кол-во позиций"
 #: code:addons/purchase/wizard/purchase_order_group.py:47
 #, python-format
 msgid "Warning"
-msgstr "Предупреждение"
+msgstr ""
 
 #. module: purchase
 #: field:purchase.installer,purchase_analytic_plans:0
@@ -465,77 +451,77 @@ msgstr ""
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_installer
 msgid "purchase.installer"
-msgstr "purchase.installer"
+msgstr ""
 
 #. module: purchase
 #: selection:purchase.order.line,state:0
 msgid "Draft"
-msgstr "Черновик"
+msgstr ""
 
 #. module: purchase
 #: report:purchase.order:0
 msgid "Net Price"
-msgstr "Цена до налогов"
+msgstr ""
 
 #. module: purchase
 #: view:purchase.order.line:0
 msgid "Order Line"
-msgstr "Позиция заказа"
+msgstr ""
 
 #. module: purchase
 #: help:purchase.order,shipped:0
 msgid "It indicates that a picking has been done"
-msgstr "Показывает, что комплектование выполнено."
+msgstr ""
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:710
 #, python-format
 msgid "Wrong Product UOM !"
-msgstr "Неверная ед. изм."
+msgstr ""
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_confirmpurchaseorder0
 #: selection:purchase.order.line,state:0
 msgid "Confirmed"
-msgstr "Подтверждено"
+msgstr ""
 
 #. module: purchase
 #: view:purchase.report:0
 #: field:purchase.report,price_average:0
 msgid "Average Price"
-msgstr "Средняя цена"
+msgstr ""
 
 #. module: purchase
 #: report:purchase.order:0
 msgid "Total :"
-msgstr "Всего:"
+msgstr ""
 
 #. module: purchase
 #: model:process.transition.action,name:purchase.process_transition_action_confirmpurchaseorder0
 #: view:purchase.order.line_invoice:0
 msgid "Confirm"
-msgstr "Подтвердить"
+msgstr ""
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_invoice
 #: view:purchase.order:0
 msgid "Invoice Control"
-msgstr "Управление счетами"
+msgstr ""
 
 #. module: purchase
 #: constraint:res.company:0
 msgid "Error! You can not create recursive companies."
-msgstr "Ошибка ! Нельзя создать рекурсивные компании."
+msgstr ""
 
 #. module: purchase
 #: field:purchase.order,partner_ref:0
 msgid "Supplier Reference"
-msgstr "Ссылка на поставщика"
+msgstr ""
 
 #. module: purchase
 #: help:purchase.order,amount_tax:0
 msgid "The tax amount"
-msgstr "Сумма налогов"
+msgstr ""
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_productrecept0
@@ -544,9 +530,6 @@ msgid ""
 "of the purchase order, the invoice is based on received or on ordered "
 "quantities."
 msgstr ""
-"Комплектовочный лист создает счет поставщика. В зависимости от метода "
-"выставления счета при заказе на закупку, счет основывается на принятом или "
-"на заказанном количестве."
 
 #. module: purchase
 #: view:purchase.order:0
@@ -555,7 +538,7 @@ msgstr ""
 #: field:purchase.order.line,state:0
 #: view:purchase.report:0
 msgid "State"
-msgstr "Состояние"
+msgstr ""
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_stock_move_report_po
@@ -563,67 +546,65 @@ msgid ""
 "Reception Analysis allows you to easily check and analyse your company order "
 "receptions and the performance of your supplier's deliveries."
 msgstr ""
-"Анализ приходов позволяет вам проверять и анализировать приход заказанных "
-"ТМЦ и исполнение доставок от поставщика."
 
 #. module: purchase
 #: report:purchase.quotation:0
 msgid "Tel.:"
-msgstr "Тел.:"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_picking
 #: field:purchase.order,picking_ids:0
 msgid "Picking List"
-msgstr "Комплектовочный лист"
+msgstr ""
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Print"
-msgstr "Печать"
+msgstr ""
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_view_purchase_order_group
 msgid "Merge Purchase orders"
-msgstr "Объединить заказы на закупку"
+msgstr ""
 
 #. module: purchase
 #: field:purchase.order,order_line:0
 msgid "Order Lines"
-msgstr "Позиции заказа"
+msgstr ""
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:651
 #, python-format
 msgid "No Partner!"
-msgstr "Нет партнера!"
+msgstr ""
 
 #. module: purchase
 #: report:purchase.quotation:0
 msgid "Fax:"
-msgstr "Факс:"
+msgstr ""
 
 #. module: purchase
 #: view:purchase.report:0
 #: field:purchase.report,price_total:0
 msgid "Total Price"
-msgstr "Итоговая цена"
+msgstr ""
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Untaxed amount"
-msgstr "Сумма до налогов"
+msgstr ""
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_pricelist_action2_purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_config_pricelist
 msgid "Pricelists"
-msgstr "Каталоги"
+msgstr ""
 
 #. module: purchase
 #: field:purchase.report,partner_address_id:0
 msgid "Address Contact Name"
-msgstr "Адрес контакта"
+msgstr ""
 
 #. module: purchase
 #: help:purchase.order,invoice_method:0
@@ -639,7 +620,7 @@ msgstr ""
 #. module: purchase
 #: help:purchase.order,invoice_ids:0
 msgid "Invoices generated for a purchase order"
-msgstr "Счета созданные для заказа на закупку"
+msgstr ""
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:282
@@ -648,22 +629,22 @@ msgstr "Счета созданные для заказа на закупку"
 #: code:addons/purchase/wizard/purchase_line_invoice.py:122
 #, python-format
 msgid "Error !"
-msgstr "Ошибка !"
+msgstr ""
 
 #. module: purchase
 #: view:purchase.order.line:0
 msgid "General Information"
-msgstr "Общая информация"
+msgstr ""
 
 #. module: purchase
 #: view:board.board:0
 msgid "My Board"
-msgstr "Моя панель"
+msgstr ""
 
 #. module: purchase
 #: report:purchase.order:0
 msgid "Purchase Order Confirmation N°"
-msgstr "Подтверждение заказа на закупку N°"
+msgstr ""
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_purchase_order_report_all
@@ -676,7 +657,7 @@ msgstr ""
 #. module: purchase
 #: view:purchase.order:0
 msgid "Approved by Supplier"
-msgstr "Утверждено поставщиком"
+msgstr ""
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_invoicefrompackinglist0
@@ -689,12 +670,12 @@ msgstr ""
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
 msgid "From Order"
-msgstr "Из заказа"
+msgstr ""
 
 #. module: purchase
 #: model:process.transition.action,name:purchase.process_transition_action_invoicefrompurchaseorder0
 msgid "Create invoice"
-msgstr "Создать счет"
+msgstr ""
 
 #. module: purchase
 #: field:purchase.order.line,move_dest_id:0
@@ -705,47 +686,47 @@ msgstr ""
 #: code:addons/purchase/purchase.py:237
 #, python-format
 msgid "Invalid action !"
-msgstr "Неверное действие !"
+msgstr ""
 
 #. module: purchase
 #: selection:purchase.order,state:0
 #: selection:purchase.order.line,state:0
 #: selection:purchase.report,state:0
 msgid "Done"
-msgstr "Выполнено"
+msgstr ""
 
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "July"
-msgstr "Июль"
+msgstr ""
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_config_purchase
 #: view:res.company:0
 msgid "Configuration"
-msgstr "Конфигурация"
+msgstr ""
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_by_supplier
 #: view:purchase.report:0
 msgid "Purchase by supplier"
-msgstr "Закупки по поставщику"
+msgstr ""
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Total amount"
-msgstr "Итоговая сумма"
+msgstr ""
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_purchase_order_2_stock_picking
 msgid "Receptions"
-msgstr "Приходы"
+msgstr ""
 
 #. module: purchase
 #: field:purchase.order,validator:0
 #: view:purchase.report:0
 msgid "Validated by"
-msgstr "Проверил(а)"
+msgstr ""
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_invoice_pending
@@ -760,12 +741,12 @@ msgstr ""
 #: model:process.node,name:purchase.process_node_draftpurchaseorder0
 #: model:process.node,name:purchase.process_node_draftpurchaseorder1
 msgid "RFQ"
-msgstr "ЗЦ"
+msgstr ""
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_pending_invoice
 msgid "Supplier Invoices to Receive"
-msgstr "Прием по счетам поставщика"
+msgstr ""
 
 #. module: purchase
 #: help:purchase.installer,purchase_requisition:0
@@ -773,54 +754,50 @@ msgid ""
 "Manages your Purchase Requisition and allows you to easily keep track and "
 "manage all your purchase orders."
 msgstr ""
-"Управляет вашими запросами на закупку и позволяет вам управлять и "
-"отслеживать все ваши заказы на закупку."
 
 #. module: purchase
 #: view:purchase.report:0
 msgid "    Month-1    "
-msgstr "    Месяц-1    "
+msgstr ""
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:363
 #, python-format
 msgid "There is no purchase journal defined for this company: \"%s\" (id:%d)"
-msgstr "Журнал закупок не определен для этой компании:  \"%s\" (id:%d)"
+msgstr ""
 
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
 msgid "Manual"
-msgstr "Вручную"
+msgstr ""
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:400
 #, python-format
 msgid "You must first cancel all picking attached to this purchase order."
 msgstr ""
-"Сначала вы должны отменить все комплектации, связанные с этим заказом на "
-"закупку."
 
 #. module: purchase
 #: view:purchase.order:0
 #: field:purchase.order.line,date_order:0
 #: field:purchase.report,date:0
 msgid "Order Date"
-msgstr "Дата заказа"
+msgstr ""
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_productrecept0
 msgid "Incoming products to control"
-msgstr "Поступающие ТМЦ для проверки"
+msgstr ""
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_approvingpurchaseorder0
 msgid "Approbation"
-msgstr "Утверждение"
+msgstr ""
 
 #. module: purchase
 #: view:purchase.report:0
 msgid "Purchase Orders Statistics"
-msgstr "Статистика заказов на закупку"
+msgstr ""
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_line_form_action2
@@ -835,7 +812,7 @@ msgstr ""
 #: model:process.node,name:purchase.process_node_invoiceafterpacking0
 #: model:process.node,name:purchase.process_node_invoicecontrol0
 msgid "Draft Invoice"
-msgstr "Черновик счета"
+msgstr ""
 
 #. module: purchase
 #: help:purchase.installer,purchase_analytic_plans:0
@@ -848,201 +825,198 @@ msgid ""
 "This is computed as the minimum scheduled date of all purchase order lines' "
 "products."
 msgstr ""
-"Вычислено, как ближайшая запланированная дата из всех позиций заказа на "
-"закупку"
 
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "August"
-msgstr "Август"
+msgstr ""
 
 #. module: purchase
 #: field:purchase.installer,purchase_requisition:0
 msgid "Purchase Requisition"
-msgstr "Запрос на закупку"
+msgstr ""
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_uom_categ_form_action
 msgid "Units of Measure Categories"
-msgstr "Категории единиц измерения"
+msgstr ""
 
 #. module: purchase
 #: view:purchase.report:0
 #: field:purchase.report,delay_pass:0
 msgid "Days to Deliver"
-msgstr "Дней на доставку"
+msgstr ""
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_action_picking_tree_in_move
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_inventory
 msgid "Receive Products"
-msgstr "Получение ТМЦ"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_procurement_order
 msgid "Procurement"
-msgstr "Снабжение"
+msgstr ""
 
 #. module: purchase
 #: view:purchase.order:0
 #: field:purchase.order,invoice_ids:0
 msgid "Invoices"
-msgstr "Счета"
+msgstr ""
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_purchaseorder0
 msgid "Confirmed purchase order to invoice"
-msgstr "Подтвержденный заказ на закупку в счет"
+msgstr ""
 
 #. module: purchase
 #: field:purchase.installer,config_logo:0
 msgid "Image"
-msgstr "Изображение"
+msgstr ""
 
 #. module: purchase
 #: view:purchase.report:0
 msgid "Total Orders Lines by User per month"
-msgstr "Итоговые позиции заказов по пользователю в месяц"
+msgstr ""
 
 #. module: purchase
 #: view:purchase.report:0
 #: field:purchase.report,month:0
 msgid "Month"
-msgstr "Месяц"
+msgstr ""
 
 #. module: purchase
 #: selection:purchase.order,state:0
 #: selection:purchase.report,state:0
 msgid "Waiting Supplier Ack"
-msgstr "Ожидание"
+msgstr ""
 
 #. module: purchase
 #: report:purchase.quotation:0
 msgid "Request for Quotation :"
-msgstr "Запрос цен :"
+msgstr ""
 
 #. module: purchase
 #: view:board.board:0
 #: model:ir.actions.act_window,name:purchase.purchase_waiting
 msgid "Purchase Order Waiting Approval"
-msgstr "Заказ на закупку в ожидании утверждения"
+msgstr ""
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Total Untaxed amount"
-msgstr "Итого без налога"
+msgstr ""
 
 #. module: purchase
 #: field:purchase.order,shipped:0
 #: field:purchase.order,shipped_rate:0
 msgid "Received"
-msgstr "Получено"
+msgstr ""
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_packinglist0
 msgid "List of ordered products."
-msgstr "Список заказанных ТМЦ"
+msgstr ""
 
 #. module: purchase
 #: help:purchase.order,picking_ids:0
 msgid ""
 "This is the list of picking list that have been generated for this purchase"
 msgstr ""
-"Это список комплектовочных листов который был создан для этой закупки"
 
 #. module: purchase
 #: model:ir.module.module,shortdesc:purchase.module_meta_information
 #: model:ir.ui.menu,name:purchase.menu_procurement_management
 msgid "Purchase Management"
-msgstr "Управление закупками"
+msgstr ""
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_invoiceafterpacking0
 #: model:process.node,note:purchase.process_node_invoicecontrol0
 msgid "To be reviewed by the accountant."
-msgstr "Будет проверено бухгалтером."
+msgstr ""
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_line_form_action2
 #: model:ir.ui.menu,name:purchase.menu_purchase_line_order_draft
 msgid "Purchase Lines Not Invoiced"
-msgstr "Закупаемые позиции без счетов"
+msgstr ""
 
 #. module: purchase
 #: report:purchase.order:0
 msgid "Taxes :"
-msgstr "Налоги :"
+msgstr ""
 
 #. module: purchase
 #: field:purchase.order,invoiced_rate:0
 #: field:purchase.order.line,invoiced:0
 msgid "Invoiced"
-msgstr "Счет"
+msgstr ""
 
 #. module: purchase
 #: view:purchase.report:0
 #: field:purchase.report,category_id:0
 msgid "Category"
-msgstr "Категория"
+msgstr ""
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_approvepurchaseorder0
 #: model:process.node,note:purchase.process_node_confirmpurchaseorder0
 msgid "State of the Purchase Order."
-msgstr "Состояние заказа на закупку"
+msgstr ""
 
 #. module: purchase
 #: view:purchase.report:0
 msgid "  Year  "
-msgstr "  Год  "
+msgstr ""
 
 #. module: purchase
 #: field:purchase.report,state:0
 msgid "Order State"
-msgstr "Состояние заказа"
+msgstr ""
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_view_purchase_line_invoice
 msgid "Create invoices"
-msgstr "Создать счета"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_order_line
 #: view:purchase.order.line:0
 #: field:stock.move,purchase_line_id:0
 msgid "Purchase Order Line"
-msgstr "Позиция заказа на закупку"
+msgstr ""
 
 #. module: purchase
 #: constraint:res.partner:0
 msgid "Error ! You can not create recursive associated members."
-msgstr "Ошибка! Вы не можете создать рекурсивно связанных участников."
+msgstr ""
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Calendar View"
-msgstr "Вид календаря"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_order_group
 msgid "Purchase Order Merge"
-msgstr "Объединить заказ на закупку"
+msgstr ""
 
 #. module: purchase
 #: report:purchase.quotation:0
 msgid "Regards,"
-msgstr "С уважением,"
+msgstr ""
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_negotiation_by_supplier
 #: view:purchase.report:0
 msgid "Negotiation by Supplier"
-msgstr "Переговоры с поставщиком"
+msgstr ""
 
 #. module: purchase
 #: view:res.partner:0
 msgid "Purchase Properties"
-msgstr "Свойства закупок"
+msgstr ""
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_purchaseinvoice0
@@ -1055,116 +1029,114 @@ msgstr ""
 #. module: purchase
 #: field:purchase.order,amount_untaxed:0
 msgid "Untaxed Amount"
-msgstr "Сумма до налогов"
+msgstr ""
 
 #. module: purchase
 #: help:purchase.order,invoiced:0
 msgid "It indicates that an invoice has been paid"
-msgstr "Показывает, что счет был оплачен"
+msgstr ""
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_packinginvoice0
 msgid "Outgoing products to invoice"
-msgstr "Исходящие ТМЦ в счет"
+msgstr ""
 
 #. module: purchase
 #: view:purchase.installer:0
 msgid "Configure"
-msgstr "Настройка"
+msgstr ""
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_qty_per_product
 #: view:purchase.report:0
 msgid "Qty. per product"
-msgstr "Кол-во на ТМЦ"
+msgstr ""
 
 #. module: purchase
 #: constraint:stock.move:0
 msgid "You try to assign a lot which is not from the same product"
-msgstr "Вы пытаетесь назначит партию состоящую из другой продукции"
+msgstr ""
 
 #. module: purchase
 #: help:purchase.order,date_order:0
 msgid "Date on which this document has been created."
-msgstr "Дата на которую этот документ был создан."
+msgstr ""
 
 #. module: purchase
 #: view:res.partner:0
 msgid "Sales & Purchases"
-msgstr "Продажи и Закупки"
+msgstr ""
 
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "June"
-msgstr "Июнь"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_report
 msgid "Purchases Orders"
-msgstr "Заказы на закупку"
+msgstr ""
 
 #. module: purchase
 #: view:purchase.order.line:0
 msgid "Manual Invoices"
-msgstr "Счета вручную"
+msgstr ""
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:308
 #, python-format
 msgid ""
 "Somebody has just confirmed a purchase with an amount over the defined limit"
-msgstr "Кто-то подтвердил закупку сверх установленного лимита"
+msgstr ""
 
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "November"
-msgstr "Ноябрь"
+msgstr ""
 
 #. module: purchase
 #: view:purchase.report:0
 msgid "Extended Filters..."
-msgstr "Расширенные фильтры..."
+msgstr ""
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:352
 #: code:addons/purchase/wizard/purchase_line_invoice.py:123
 #, python-format
 msgid "There is no expense account defined for this product: \"%s\" (id:%d)"
-msgstr "Счет расходов не определен для этого товара: \"%s\" (id:%d)"
+msgstr ""
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:408
 #, python-format
 msgid "You must first cancel all invoices attached to this purchase order."
 msgstr ""
-"Сначала вы должны отменить все счета присоединенные к этому заказу на "
-"закупку."
 
 #. module: purchase
 #: code:addons/purchase/wizard/purchase_order_group.py:48
 #, python-format
 msgid "Please select multiple order to merge in the list view."
-msgstr "Пожалуйста, выберите несколько заказов из списка."
+msgstr ""
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_createpackinglist0
 msgid "Pick list generated"
-msgstr "Комплектовочный лист создан"
+msgstr ""
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Exception"
-msgstr "Исключительная ситуация"
+msgstr ""
 
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "October"
-msgstr "Октябрь"
+msgstr ""
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Compute"
-msgstr "Вычислить"
+msgstr ""
 
 #. module: purchase
 #: model:ir.module.module,description:purchase.module_meta_information
@@ -1188,38 +1160,36 @@ msgid ""
 "The selected supplier has a minimal quantity set to %s, you cannot purchase "
 "less."
 msgstr ""
-"Минимальное закупаемое количество у выбранного поставщика: %s. Нельзя купить "
-"меньше."
 
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "January"
-msgstr "Январь"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_res_company
 msgid "Companies"
-msgstr "Компании"
+msgstr ""
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Cancel Purchase Order"
-msgstr "Отмена заказа на закупку"
+msgstr ""
 
 #. module: purchase
 #: constraint:stock.move:0
 msgid "You must assign a production lot for this product"
-msgstr "Вы должны назначить партию изделий для данной ТМЦ"
+msgstr ""
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_createpackinglist0
 msgid "A pick list is generated to track the incoming products."
-msgstr "Комплектовочный лист создан для отслеживания входящих ТМЦ."
+msgstr ""
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_deshboard
 msgid "Dashboard"
-msgstr "Инф. панель"
+msgstr ""
 
 #. module: purchase
 #: view:purchase.report:0
@@ -1230,40 +1200,40 @@ msgstr ""
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_product_pricelist_type
 msgid "Pricelists Types"
-msgstr "Типы каталогов"
+msgstr ""
 
 #. module: purchase
 #: view:purchase.order:0
 #: view:purchase.report:0
 msgid "Quotations"
-msgstr "Предложения"
+msgstr ""
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_po_per_month_tree
 #: view:purchase.report:0
 msgid "Purchase order per month"
-msgstr "Заказ на закупку по месяцу"
+msgstr ""
 
 #. module: purchase
 #: view:purchase.order.line:0
 msgid "History"
-msgstr "История"
+msgstr ""
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_by_category_purchase_form
 msgid "Products by Category"
-msgstr "ТМЦ по категориям"
+msgstr ""
 
 #. module: purchase
 #: view:purchase.report:0
 #: field:purchase.report,delay:0
 msgid "Days to Validate"
-msgstr "Дней на проверку"
+msgstr ""
 
 #. module: purchase
 #: help:purchase.order,origin:0
 msgid "Reference of the document that generated this purchase order request."
-msgstr "Ссылка на документ из которого был создан этот заказ на закупку."
+msgstr ""
 
 #. module: purchase
 #: help:purchase.order,state:0
@@ -1275,73 +1245,66 @@ msgid ""
 "received, the state becomes 'Done'. If a cancel action occurs in the invoice "
 "or in the reception of goods, the state becomes in exception."
 msgstr ""
-"Состояние заказа на закупку или запроса предложения. Предложение - это заказ "
-"на закупку в состоянии 'Черновик'. Когда заказ подтвержден пользователем, "
-"статус меняется на 'Подтверждено'. Затем поставщик должен подтвердить заказ "
-"для изменения состояния в 'Утверждено'. Когда заказ на закупку оплачен и "
-"получен, состояние меняется на 'Выполнено'. Если возникает отмена в процессе "
-"расчетов или поставки товаров, состояние устанавливается в 'Исключительная "
-"ситуация'."
 
 #. module: purchase
 #: field:purchase.order.line,price_subtotal:0
 msgid "Subtotal"
-msgstr "Подитог"
+msgstr ""
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_rfq
 #: model:ir.ui.menu,name:purchase.menu_purchase_rfq
 msgid "Requests for Quotation"
-msgstr "Запросы цен"
+msgstr ""
 
 #. module: purchase
 #: help:purchase.order,date_approve:0
 msgid "Date on which purchase order has been approved"
-msgstr "Дата на которую заказ на закупку был утвержден"
+msgstr ""
 
 #. module: purchase
 #: selection:purchase.order,state:0
 #: selection:purchase.report,state:0
 msgid "Waiting"
-msgstr "В ожидании"
+msgstr ""
 
 #. module: purchase
 #: model:product.pricelist.version,name:purchase.ver0
 msgid "Default Purchase Pricelist Version"
-msgstr "Версия каталога закупок по умолчанию."
+msgstr ""
 
 #. module: purchase
 #: view:purchase.installer:0
 msgid ""
 "Extend your Purchases Management Application with additional functionalities."
-msgstr "Расширение функциональности модуля управления закупками."
+msgstr ""
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_install_module
 #: view:purchase.installer:0
 msgid "Purchases Application Configuration"
-msgstr "Настройка обработки закупок"
+msgstr ""
 
 #. module: purchase
 #: field:purchase.order,fiscal_position:0
 msgid "Fiscal Position"
-msgstr "Налоговая позиция"
+msgstr ""
 
 #. module: purchase
 #: report:purchase.order:0
 msgid "Request for Quotation N°"
-msgstr "Запрос цен №"
+msgstr ""
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_invoicefrompackinglist0
 #: model:process.transition,name:purchase.process_transition_invoicefrompurchase0
 msgid "Invoice"
-msgstr "Счет"
+msgstr ""
 
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "December"
-msgstr "Декабрь"
+msgstr ""
 
 #. module: purchase
 #: model:process.transition.action,name:purchase.process_transition_action_approvingcancelpurchaseorder0
@@ -1350,18 +1313,18 @@ msgstr "Декабрь"
 #: view:purchase.order.group:0
 #: view:purchase.order.line_invoice:0
 msgid "Cancel"
-msgstr "Отмена"
+msgstr ""
 
 #. module: purchase
 #: view:purchase.order:0
 #: view:purchase.order.line:0
 msgid "Purchase Order Lines"
-msgstr "Позиции заказа на закупку"
+msgstr ""
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_approvingpurchaseorder0
 msgid "The supplier approves the Purchase Order."
-msgstr "Продавец утвердил заказ на закупку"
+msgstr ""
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_purchase_order
@@ -1369,108 +1332,108 @@ msgstr "Продавец утвердил заказ на закупку"
 #: model:ir.ui.menu,name:purchase.menu_purchase_form_action
 #: view:purchase.report:0
 msgid "Purchase Orders"
-msgstr "Заказы на закупку"
+msgstr ""
 
 #. module: purchase
 #: field:purchase.order,origin:0
 msgid "Source Document"
-msgstr "Документ-источник"
+msgstr ""
 
 #. module: purchase
 #: view:purchase.order.group:0
 msgid "Merge orders"
-msgstr "Объединить заказы"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_order_line_invoice
 msgid "Purchase Order Line Make Invoice"
-msgstr "Позиция заказа на закупку - Создать счет"
+msgstr ""
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_action_picking_tree4
 msgid "Incoming Shipments"
-msgstr "Поступающие ТМЦ"
+msgstr ""
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_by_user_all
 msgid "Total Orders by User per month"
-msgstr "Всего заказов пользователя за месяц"
+msgstr ""
 
 #. module: purchase
 #: model:ir.actions.report.xml,name:purchase.report_purchase_quotation
 #: selection:purchase.order,state:0
 #: selection:purchase.report,state:0
 msgid "Request for Quotation"
-msgstr "Запрос цен"
+msgstr ""
 
 #. module: purchase
 #: report:purchase.order:0
 msgid "Tél. :"
-msgstr "Тел. :"
+msgstr ""
 
 #. module: purchase
 #: field:purchase.order,create_uid:0
 #: view:purchase.report:0
 #: field:purchase.report,user_id:0
 msgid "Responsible"
-msgstr "Ответственный"
+msgstr ""
 
 #. module: purchase
 #: report:purchase.order:0
 msgid "Our Order Reference"
-msgstr "Ссылка на наш заказ"
+msgstr ""
 
 #. module: purchase
 #: view:purchase.order:0
 #: view:purchase.order.line:0
 msgid "Search Purchase Order"
-msgstr "Искать заказ на закупку"
+msgstr ""
 
 #. module: purchase
 #: field:purchase.order,warehouse_id:0
 #: view:purchase.report:0
 #: field:purchase.report,warehouse_id:0
 msgid "Warehouse"
-msgstr "Склад"
+msgstr ""
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_draftpurchaseorder0
 #: model:process.node,note:purchase.process_node_draftpurchaseorder1
 msgid "Request for Quotations."
-msgstr "Запрос цен"
+msgstr ""
 
 #. module: purchase
 #: report:purchase.order:0
 msgid "Date Req."
-msgstr "Дата заказа"
+msgstr ""
 
 #. module: purchase
 #: field:purchase.order,date_approve:0
 #: field:purchase.report,date_approve:0
 msgid "Date Approved"
-msgstr "Дата утверждения"
+msgstr ""
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:407
 #, python-format
 msgid "Could not cancel this purchase order !"
-msgstr "Не удалось отменить этот заказ на закупку"
+msgstr ""
 
 #. module: purchase
 #: report:purchase.order:0
 #: field:purchase.order.line,price_unit:0
 msgid "Unit Price"
-msgstr "Цена за ед."
+msgstr ""
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Delivery & Invoicing"
-msgstr "Доставка и Счета"
+msgstr ""
 
 #. module: purchase
 #: field:purchase.order.line,date_planned:0
 msgid "Scheduled Date"
-msgstr "Запланированная дата"
+msgstr ""
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_in_config_purchase
@@ -1480,41 +1443,41 @@ msgstr "Запланированная дата"
 #: view:purchase.report:0
 #: field:purchase.report,product_id:0
 msgid "Product"
-msgstr "Продукция"
+msgstr ""
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_confirmingpurchaseorder0
 #: model:process.transition,name:purchase.process_transition_confirmingpurchaseorder1
 msgid "Confirmation"
-msgstr "Подтверждение"
+msgstr ""
 
 #. module: purchase
 #: report:purchase.order:0
 #: field:purchase.order.line,name:0
 #: report:purchase.quotation:0
 msgid "Description"
-msgstr "Описание"
+msgstr ""
 
 #. module: purchase
 #: help:res.company,po_lead:0
 msgid "This is the leads/security time for each purchase order."
-msgstr "Это время запаса для каждого заказа на закупку"
+msgstr ""
 
 #. module: purchase
 #: report:purchase.quotation:0
 msgid "Expected Delivery address:"
-msgstr "Ожидаемый адрес доставки:"
+msgstr ""
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_stock_move_report_po
 #: model:ir.ui.menu,name:purchase.menu_action_stock_move_report_po
 msgid "Receptions Analysis"
-msgstr "Анализ поступлений"
+msgstr ""
 
 #. module: purchase
 #: help:purchase.order,amount_untaxed:0
 msgid "The amount without tax"
-msgstr "Сумма без налогов"
+msgstr ""
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_supplier_address_form
@@ -1527,46 +1490,46 @@ msgstr ""
 #. module: purchase
 #: view:purchase.order:0
 msgid "Delivery"
-msgstr "Доставка"
+msgstr ""
 
 #. module: purchase
 #: view:board.board:0
 #: model:ir.actions.act_window,name:purchase.purchase_draft
 msgid "Request for Quotations"
-msgstr "Запрос цен"
+msgstr ""
 
 #. module: purchase
 #: field:purchase.order.line,product_uom:0
 msgid "Product UOM"
-msgstr "Ед.изм."
+msgstr ""
 
 #. module: purchase
 #: report:purchase.order:0
 #: report:purchase.quotation:0
 msgid "Qty"
-msgstr "Кол-во"
+msgstr ""
 
 #. module: purchase
 #: field:purchase.order,partner_address_id:0
 msgid "Address"
-msgstr "Адрес"
+msgstr ""
 
 #. module: purchase
 #: field:purchase.order.line,move_ids:0
 msgid "Reservation"
-msgstr "Резервирование"
+msgstr ""
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_report_graph
 #: view:purchase.report:0
 msgid "Total Qty and Amount by month"
-msgstr "Общее кол-во и сумма по месяцу"
+msgstr ""
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:399
 #, python-format
 msgid "Could not cancel purchase order !"
-msgstr "Не удалось отменить заказ на закупку !"
+msgstr ""
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_confirmingpurchaseorder1
@@ -1578,23 +1541,23 @@ msgstr ""
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "February"
-msgstr "Февраль"
+msgstr ""
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_category_config_purchase
 msgid "Products Categories"
-msgstr "Категории ТМЦ"
+msgstr ""
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_report_all
 #: model:ir.ui.menu,name:purchase.menu_action_purchase_order_report_all
 msgid "Purchase Analysis"
-msgstr "Анализ закупок"
+msgstr ""
 
 #. module: purchase
 #: report:purchase.order:0
 msgid "Your Order Reference"
-msgstr "Ссылка вашего заказа"
+msgstr ""
 
 #. module: purchase
 #: view:purchase.order:0
@@ -1602,44 +1565,44 @@ msgstr "Ссылка вашего заказа"
 #: report:purchase.quotation:0
 #: field:purchase.report,expected_date:0
 msgid "Expected Date"
-msgstr "Ожидаемая дата"
+msgstr ""
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_total_price_by_product_by_state
 #: view:purchase.report:0
 msgid "Total price by product by state"
-msgstr "Итоговая цена по ТМЦ, по состоянию"
+msgstr ""
 
 #. module: purchase
 #: report:purchase.quotation:0
 msgid "TVA:"
-msgstr "НДС:"
+msgstr ""
 
 #. module: purchase
 #: report:purchase.order:0
 #: field:purchase.order,date_order:0
 msgid "Date Ordered"
-msgstr "Дата заказа"
+msgstr ""
 
 #. module: purchase
 #: report:purchase.order:0
 msgid "Shipping address :"
-msgstr "Адрес поставки :"
+msgstr ""
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Purchase Control"
-msgstr "Контроль закупок"
+msgstr ""
 
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "March"
-msgstr "Март"
+msgstr ""
 
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "April"
-msgstr "Апрель"
+msgstr ""
 
 #. module: purchase
 #: view:purchase.order.group:0
@@ -1661,38 +1624,38 @@ msgstr ""
 #: view:purchase.report:0
 #: field:purchase.report,name:0
 msgid "Year"
-msgstr "Год"
+msgstr ""
 
 #. module: purchase
 #: field:purchase.report,negociation:0
 msgid "Purchase-Standard Price"
-msgstr "Стандартная цена закупки"
+msgstr ""
 
 #. module: purchase
 #: model:product.pricelist.type,name:purchase.pricelist_type_purchase
 #: field:res.partner,property_product_pricelist_purchase:0
 msgid "Purchase Pricelist"
-msgstr "Каталог закупок"
+msgstr ""
 
 #. module: purchase
 #: field:purchase.order,invoice_method:0
 msgid "Invoicing Control"
-msgstr "Контроль счетов"
+msgstr ""
 
 #. module: purchase
 #: model:process.transition.action,name:purchase.process_transition_action_approvingpurchaseorder0
 msgid "Approve"
-msgstr "Утвердить"
+msgstr ""
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "To Approve"
-msgstr "Утвердить"
+msgstr ""
 
 #. module: purchase
 #: view:purchase.order.line:0
 msgid "Invoicing"
-msgstr "Выставление счетов"
+msgstr ""
 
 #. module: purchase
 #: help:purchase.order.line,state:0
@@ -1710,59 +1673,59 @@ msgstr ""
 #: code:addons/purchase/purchase.py:414
 #, python-format
 msgid "Purchase order '%s' is cancelled."
-msgstr "Заказ на закупку '%s' отменен."
+msgstr ""
 
 #. module: purchase
 #: field:purchase.order,amount_total:0
 msgid "Total"
-msgstr "Всего"
+msgstr ""
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_pricelist_action_purhase
 msgid "Pricelist Versions"
-msgstr "Версии каталогов"
+msgstr ""
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_supplier_address_form
 msgid "Addresses"
-msgstr "Адреса"
+msgstr ""
 
 #. module: purchase
 #: view:purchase.order.group:0
 msgid "Are you sure you want to merge these orders ?"
-msgstr "Вы уверены, что хотите объединить данные заказы?"
+msgstr ""
 
 #. module: purchase
 #: view:purchase.order:0
 #: view:purchase.order.line:0
 #: view:purchase.report:0
 msgid "Group By..."
-msgstr "Объединять по..."
+msgstr ""
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_purchaseinvoice0
 msgid "From a purchase order"
-msgstr "Из заказа на закупку"
+msgstr ""
 
 #. module: purchase
 #: report:purchase.order:0
 msgid "TVA :"
-msgstr "НДС :"
+msgstr ""
 
 #. module: purchase
 #: help:purchase.order,amount_total:0
 msgid "The total amount"
-msgstr "Итого"
+msgstr ""
 
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "May"
-msgstr "Май"
+msgstr ""
 
 #. module: purchase
 #: field:res.company,po_lead:0
 msgid "Purchase Lead Time"
-msgstr "Запас по времени на закупку"
+msgstr ""
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_invoicefrompurchase0
@@ -1771,20 +1734,17 @@ msgid ""
 "order is 'On order'. The invoice can also be generated manually by the "
 "accountant (Invoice control = Manual)."
 msgstr ""
-"Счет создается автоматически, если контроль счетов в заказе на закупку 'По "
-"заказу'. Возможно создание счета вручную бухгалтером (контроль счетов = "
-"'Вручную')."
 
 #. module: purchase
 #: model:process.process,name:purchase.process_process_purchaseprocess0
 msgid "Purchase"
-msgstr "Закупка"
+msgstr ""
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_res_partner
 #: field:purchase.order.line,partner_id:0
 msgid "Partner"
-msgstr "Партнер"
+msgstr ""
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:651
@@ -1793,8 +1753,6 @@ msgid ""
 "You have to select a partner in the purchase form !\n"
 "Please set one partner before choosing a product."
 msgstr ""
-"Надо выбрать партнера при заполнении заказа на закупку !\n"
-"Пожалуйста, выберите партнера перед выбором товара."
 
 #. module: purchase
 #: view:purchase.installer:0
@@ -1804,23 +1762,23 @@ msgstr ""
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_partial_move
 msgid "Partial Move"
-msgstr "Частичное перемещение"
+msgstr ""
 
 #. module: purchase
 #: view:purchase.order.line:0
 msgid "Stock Moves"
-msgstr "Движение ТМЦ"
+msgstr ""
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_unit_measure_purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_uom_form_action
 msgid "Units of Measure"
-msgstr "Единицы измерения"
+msgstr ""
 
 #. module: purchase
 #: view:purchase.report:0
 msgid "Orders"
-msgstr "Заказы"
+msgstr ""
 
 #. module: purchase
 #: help:purchase.order,name:0
@@ -1828,11 +1786,9 @@ msgid ""
 "unique number of the purchase order,computed automatically when the purchase "
 "order is created"
 msgstr ""
-"Уникальный номер заказа на закупку, вычисленный автоматически при создании "
-"заказа."
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.open_board_purchase
 #: model:ir.ui.menu,name:purchase.menu_board_purchase
 msgid "Purchase Dashboard"
-msgstr "Панель закупок"
+msgstr ""
