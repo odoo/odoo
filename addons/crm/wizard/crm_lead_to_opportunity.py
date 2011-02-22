@@ -96,6 +96,10 @@ Leads Could not convert into Opportunity"))
 
     def _convert(self, cr, uid, ids, lead, partner_id, stage_ids, context=None):
         leads = self.pool.get('crm.lead')
+        address_id = self.pool.get('res.partner.address').search(cr, uid,
+                                                                 [('partner_id', '=', partner_id)],
+                                                                 order='create_date desc',
+                                                                 limit=1)
         vals = {
             'planned_revenue': lead.planned_revenue,
             'probability': lead.probability,
@@ -104,8 +108,11 @@ Leads Could not convert into Opportunity"))
             'user_id': (lead.user_id and lead.user_id.id),
             'type': 'opportunity',
             'stage_id': stage_ids and stage_ids[0] or False,
-            'date_action': time.strftime('%Y-%m-%d %H:%M:%S')
+            'date_action': time.strftime('%Y-%m-%d %H:%M:%S'),
         }
+        if address_id:
+            vals['partner_address_id'] = address_id[0]
+
         lead.write(vals, context=context)
         leads.history(cr, uid, [lead], _('Converted to opportunity'), details='Converted to Opportunity', context=context)
         if lead.partner_id:
