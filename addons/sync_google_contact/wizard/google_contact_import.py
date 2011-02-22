@@ -225,9 +225,7 @@ class synchronize_google_contact(osv.osv_memory):
                 if not contact:
                     break
                 next = contact.GetNextLink()
-                contact = None
-                if next:
-                    contact = gd_client.GetContactsFeed(next.href)
+                contact = next and gd_client.GetContactsFeed(next.href) or None
 
         if partner_ids:
             return {
