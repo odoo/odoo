@@ -18,7 +18,7 @@ class ShareWizardController(openerp.controllers.SecuredController):
 
         if not action_id:
             # This should not be needed anymore, but just in case users are
-            # running the module with an order version of the web client...
+            # running the module with an older version of the web client...
 
             # to remove soon-ish
             action_id = rpc.RPCProxy('ir.actions.act_window').search(
@@ -46,7 +46,7 @@ class ShareWizardController(openerp.controllers.SecuredController):
             share_root_url=share_root_url)
         sharing_view_id = rpc.RPCProxy(share_model).create({
             'domain': str(domain),
-            'action_id':action_id
+            'action_id': action_id and int(action_id)
         }, context)
         return actions.execute(
             rpc.session.execute('object', 'execute', share_model, 'go_step_1',
