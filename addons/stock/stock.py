@@ -1463,7 +1463,7 @@ class stock_move(osv.osv):
     _description = "Stock Move"
     _order = 'date_expected desc, id'
     _log_create = False
-    
+
     def action_partial_move(self, cr, uid, ids, context=None):
         if context is None: context = {}
         partial_id = self.pool.get("stock.partial.move").create(
@@ -2161,7 +2161,7 @@ class stock_move(osv.osv):
                     'ref': move.picking_id and move.picking_id.name or False,
                     'date': time.strftime('%Y-%m-%d'),
                     'partner_id': partner_id,
-                    'debit': reference_amount * move.product_qty,
+                    'debit': reference_amount,
                     'account_id': dest_account_id,
         }
         credit_line_vals = {
@@ -2171,7 +2171,7 @@ class stock_move(osv.osv):
                     'ref': move.picking_id and move.picking_id.name or False,
                     'date': time.strftime('%Y-%m-%d'),
                     'partner_id': partner_id,
-                    'credit': reference_amount * move.product_qty,
+                    'credit': reference_amount,
                     'account_id': src_account_id,
         }
 
