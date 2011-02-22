@@ -17,37 +17,37 @@
            <tr><td>${inv.address_invoice_id.country_id.name or ''|entity} </td></tr>
            %endif
            %if inv.address_invoice_id.phone :
-           <tr><td>${_("Tel")}: ${inv.address_invoice_id.phone|entity}</td></tr>
+           <tr><td>${_("Tel") |entity}: ${inv.address_invoice_id.phone|entity}</td></tr>
            %endif
            %if inv.address_invoice_id.fax :
-           <tr><td>${_("Fax")}: ${inv.address_invoice_id.fax|entity}</td></tr>
+           <tr><td>${_("Fax") |entity}: ${inv.address_invoice_id.fax|entity}</td></tr>
            %endif
            %if inv.address_invoice_id.email :
-           <tr><td>${_("E-mail")}: ${inv.address_invoice_id.email|entity}</td></tr>
+           <tr><td>${_("E-mail") |entity}: ${inv.address_invoice_id.email|entity}</td></tr>
            %endif
            %if inv.partner_id.vat :
-           <tr><td>${_("VAT")}: ${inv.partner_id.vat|entity}</td></tr>
+           <tr><td>${_("VAT") |entity}: ${inv.partner_id.vat|entity}</td></tr>
            %endif
        </table>
        <br />
        %if inv.type == 'out_invoice' :
-       <span class="title">${_("Invoice")} ${inv.number or ''|entity}</span>
+       <span class="title">${_("Invoice") |entity} ${inv.number or ''|entity}</span>
        %elif inv.type == 'in_invoice' :
-       <span class="title">${_("Supplier Invoice")} ${inv.number or ''|entity}</span>   
+       <span class="title">${_("Supplier Invoice") |entity} ${inv.number or ''|entity}</span>   
        %elif inv.type == 'out_refund' :
-       <span class="title">${_("Refund")} ${inv.number or ''|entity}</span> 
+       <span class="title">${_("Refund") |entity} ${inv.number or ''|entity}</span> 
        %elif inv.type == 'in_refund' :
-       <span class="title">${_("Supplier Refund")} ${inv.number or ''|entity}</span> 
+       <span class="title">${_("Supplier Refund") |entity} ${inv.number or ''|entity}</span> 
        %endif
        <br/>
        <br/>
        <table class="basic_table" width="90%">
-           <tr><td>${_("Document")}</td><td>${_("Invoice Date")}</td><td>${_("Partner Ref.")}</td></tr>
+           <tr><td>${_("Document") |entity}</td><td>${_("Invoice Date") |entity}</td><td>${_("Partner Ref.") |entity}</td></tr>
            <tr><td>${inv.name}</td><td>${formatLang(inv.date_invoice, date=True)|entity}</td><td>&nbsp;</td></tr>
        </table>
        <h1><br /></h1>
        <table class="list_table"  width="90%">
-           <thead><tr><th>${_("Description")}</th><th class>${_("Taxes")}</th><th class>${_("QTY")}</th><th>${_("Unit Price")}</th><th >${_("Disc.(%)")}</th><th>${_("Price")}</th></tr></thead>
+           <thead><tr><th>${_("Description") |entity}</th><th class>${_("Taxes") |entity}</th><th class>${_("QTY") |entity}</th><th>${_("Unit Price") |entity}</th><th >${_("Disc.(%)") |entity}</th><th>${_("Price") |entity}</th></tr></thead>
            %for line in inv.invoice_line :
            <tbody>
            <tr><td>${line.name|entity}</td><td>${ ', '.join([ tax.name or '' for tax in line.invoice_line_tax_id ])|entity}</td><td>${line.quantity}</td><td style="text-align:right;">${formatLang(line.price_unit)}</td><td  style="text-align:center;">${line.discount or 0.00}</td><td style="text-align:right;">${formatLang(line.price_subtotal)}</td></tr>
@@ -62,7 +62,7 @@
        </table>
 
        <table class="list_table" width="40%">
-           <tr><th>Tax</th><th>${_("Base")}</th><th>${_("Amount")}</th></tr>
+           <tr><th>Tax</th><th>${_("Base") |entity}</th><th>${_("Amount") |entity}</th></tr>
           %if inv.tax_line :
            %for t in inv.tax_line :
            <tr>
@@ -74,7 +74,7 @@
            %endif
            <tr>
                <td style="border-style:none"/>
-               <td style="border-top:2px solid"><b>${_("Total")}</b></td>
+               <td style="border-top:2px solid"><b>${_("Total") |entity}</b></td>
                <td style="border-top:2px solid">${ formatLang(inv.amount_tax) }</td>
            </tr>
        </table>
