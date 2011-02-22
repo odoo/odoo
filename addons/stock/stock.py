@@ -1481,7 +1481,7 @@ class stock_move(osv.osv):
             'domain': '[]',
             'context': context
         }
-        
+
 
     def name_get(self, cr, uid, ids, context=None):
         res = []
@@ -2161,7 +2161,7 @@ class stock_move(osv.osv):
                     'ref': move.picking_id and move.picking_id.name or False,
                     'date': time.strftime('%Y-%m-%d'),
                     'partner_id': partner_id,
-                    'debit': reference_amount,
+                    'debit': reference_amount * move.product_qty,
                     'account_id': dest_account_id,
         }
         credit_line_vals = {
@@ -2171,7 +2171,7 @@ class stock_move(osv.osv):
                     'ref': move.picking_id and move.picking_id.name or False,
                     'date': time.strftime('%Y-%m-%d'),
                     'partner_id': partner_id,
-                    'credit': reference_amount,
+                    'credit': reference_amount * move.product_qty,
                     'account_id': src_account_id,
         }
 
