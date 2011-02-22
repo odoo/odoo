@@ -2113,6 +2113,7 @@ class stock_move(osv.osv):
                 todo.append(move.id)
         if todo:
             self.action_confirm(cr, uid, todo, context=context)
+            todo = []
 
         for move in self.browse(cr, uid, ids, context=context):
             if move.state in ['done','cancel']:
@@ -2131,12 +2132,16 @@ class stock_move(osv.osv):
                     if move.move_dest_id.auto_validate:
                         self.action_done(cr, uid, [move.move_dest_id.id], context=context)
 
+            # ?? do we need to invalidate the browse_record?
             self._create_product_valuation_moves(cr, uid, move, context=context)
             prodlot_id = partial_datas and partial_datas.get('move%s_prodlot_id' % (move.id), False)
             if prodlot_id:
                 self.write(cr, uid, [move.id], {'prodlot_id': prodlot_id}, context=context)
             if move.state not in ('confirmed','done'):
-                self.action_confirm(cr, uid, move_ids, context=context)
+                todo.append(move.id)
+
+        if todo:
+            self.action_confirm(cr, uid, todo, context=context)
 
         self.write(cr, uid, move_ids, {'state': 'done', 'date_planned': time.strftime('%Y-%m-%d %H:%M:%S')}, context=context)
         for id in move_ids:
