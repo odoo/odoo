@@ -31,9 +31,9 @@ class email_compose_message(osv.osv_memory):
             context = {}
         model = ['crm.lead', 'crm.claim', 'crm.fundraising', 'crm.helpdesk', 'event.registration', 'hr.applicant', 'project.issue']
         result = super(email_compose_message, self).default_get(cr, uid, fields, context=context)
-        if context.get('record_id',False) and context.get('model',False) and context.get('model') in model:
-            model_obj = self.pool.get(context.get('model'))
-            data = model_obj.browse(cr, uid ,context.get('record_id'), context)
+        if context.get('active_id',False) and context.get('active_model',False) and context.get('active_model') in model:
+            model_obj = self.pool.get(context.get('active_model'))
+            data = model_obj.browse(cr, uid ,context.get('active_id'), context)
             if 'name' in fields:
                 result['name'] = data.name
 
@@ -47,13 +47,13 @@ class email_compose_message(osv.osv_memory):
                 result['description'] = '\n' + (tools.ustr(data.user_id.signature or ''))
 
             if 'model' in fields:
-                result['model'] = context.get('model','')
+                result['model'] = context.get('active_model','')
 
             if 'email_cc' in fields:
                 result['email_cc'] = tools.ustr(data.email_cc or '')
 
             if 'res_id' in fields:
-                result['res_id'] = context.get('record_id',0)
+                result['res_id'] = context.get('active_id',0)
 
             if 'reply_to' in fields and hasattr(data, 'section_id'):
                 result['reply_to'] = data.section_id and data.section_id.reply_to or False

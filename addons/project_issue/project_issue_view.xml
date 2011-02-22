@@ -104,7 +104,7 @@
 		                            <button
 		                                string="Reply" attrs="{'invisible': [('history', '!=', True)]}"
 		                                name="%(emails.action_email_compose_message_wizard)d"
-		                                context="{'mail':'reply', 'model': 'project.issue', 'project.issue' : True, 'message_id':active_id}"
+		                                context="{'mail':'reply', 'message_id':active_id}"
 		                                icon="terp-mail-replied" type="action" />
                                 </tree>
                                 <form string="History">
@@ -122,7 +122,7 @@
                                                 <field name="description" colspan="4" nolabel="1" height="250"/>
 		                                        <button colspan="4" string="Reply"
 		                                            name="%(emails.action_email_compose_message_wizard)d"
-		                                            context="{'mail':'reply', 'model': 'project.issue', 'include_original' : True, 'message_id':active_id}"
+		                                            context="{'mail':'reply', 'message_id':active_id}"
 		                                            icon="terp-mail-replied" type="action"/>
                                             </group>
                                             <group attrs="{'invisible': [('history', '=', True)]}">
@@ -142,7 +142,7 @@
                                 icon="terp-document-new" type="action" />
 		                    <button string="Send New Email"
 		                        name="%(emails.action_email_compose_message_wizard)d"
-		                        context="{'mail':'new', 'model': 'project.issue', 'record_id' : active_id}"
+		                        context="{'mail':'new'}"
 		                        icon="terp-mail-message-new" type="action"/>
                         </page>
                            <page string="Extra Info" groups="base.group_extended">
