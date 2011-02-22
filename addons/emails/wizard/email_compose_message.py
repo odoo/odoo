@@ -31,6 +31,7 @@ class email_compose_message(osv.osv_memory):
     def default_get(self, cr, uid, fields, context=None):
         if context is None:
             context = {}
+
         result = super(email_compose_message, self).default_get(cr, uid, fields, context=context)
         message_pool = self.pool.get('email.message')
         message_id = context.get('message_id', False)
@@ -98,12 +99,32 @@ class email_compose_message(osv.osv_memory):
             if 'debug' in fields:
                 result['debug'] = message_data and message_data.debug
 
+        if 'model' in fields and context.get('email_model',False):
+            result['model'] = context.get('email_model')
+
         return result
+
+    def _get_records(self, cr, uid, context=None):
+        """
+        Return Records of particular  Model
+        """
+        if context is None:
+            context = {}
+        record_ids = []
+        if context.get('email_model',False):
+            model_pool =  self.pool.get(context.get('email_model'))
+            record_ids = model_pool.search(cr, uid, [])
+            return model_pool.name_get(cr, uid, record_ids, context)
+        return record_ids
 
     _columns = {
         'attachment_ids': fields.many2many('ir.attachment','email_message_send_attachment_rel', 'wizard_id', 'attachment_id', 'Attachments'),
         'debug':fields.boolean('Debug', readonly=True),
+        'resource_id':fields.selection(_get_records, 'Referred Document'),
     }
+
+    def on_change_referred_doc(self, cr, uid, ids, model, resource_id, context=None):
+        return {'value':{}}
 
     def save_to_drafts(self, cr, uid, ids, context=None):
         if context is None:
