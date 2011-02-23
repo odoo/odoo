@@ -112,10 +112,17 @@ class email_compose_message(osv.osv_memory):
             context = {}
         record_ids = []
         model_pool = False
-        if context.get('email_model',False):
+        if context.get('message_id'):
+            message_pool = self.pool.get('email.message')
+            message_data = message_pool.browse(cr, uid, int(context.get('message_id')), context)
+            model_pool =  self.pool.get(message_data.model)
+            record_ids = [message_data.res_id]
+        elif context.get('email_model',False):
             model =  context.get('email_model')
             model_pool =  self.pool.get(model)
-            record_ids = model_pool.search(cr, uid, [])
+            record_ids = context.get('record_ids',[])
+            if not record_ids:
+                record_ids = model_pool.search(cr, uid, [])
         elif context.get('active_model',False):
             model =  context.get('active_model')
             model_pool =  self.pool.get(model)
@@ -153,9 +160,15 @@ class email_compose_message(osv.osv_memory):
         for mail in self.browse(cr, uid, ids, context=context):
             for attach in mail.attachment_ids:
                 attachment.append((attach.datas_fname, attach.datas))
+            references = False
+            message_id = False
+            if context.get('mail',False) == 'reply' and  mail.message_id:
+                references = mail.references and str(mail.references) != 'False' and mail.references + "," + mail.message_id or mail.message_id
+            else:
+                message_id = mail.message_id
             email_id = email_message_pool.email_send(cr, uid, mail.email_from, mail.email_to, mail.name, mail.description,
                     model=mail.model, email_cc=mail.email_cc, email_bcc=mail.email_bcc, reply_to=mail.reply_to,
-                    attach=attachment, message_id=mail.message_id, openobject_id=int(mail.res_id), debug=mail.debug,
+                    attach=attachment, message_id=message_id, references=references, openobject_id=int(mail.res_id), debug=mail.debug,
                     subtype=mail.sub_type, x_headers=mail.headers, priority=mail.priority, smtp_server_id=mail.smtp_server_id and mail.smtp_server_id.id, context=context)
             email_ids.append(email_id)
         return email_ids

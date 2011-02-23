@@ -36,7 +36,11 @@ class email_compose_message(osv.osv_memory):
         record_ids = []
         email_temp_pool = self.pool.get('email.template')
         model = False
-        if context.get('email_model',False):
+        if context.get('message_id'):
+            message_pool = self.pool.get('email.message')
+            message_data = message_pool.browse(cr, uid, int(context.get('message_id')), context)
+            model = message_data.model
+        elif context.get('email_model',False):
             model =  context.get('email_model')
         elif context.get('active_model',False):
             model =  context.get('active_model')
@@ -55,6 +59,10 @@ class email_compose_message(osv.osv_memory):
         email_temp_previ_pool = self.pool.get('email_template.preview')
         result = self.on_change_referred_doc(cr, uid, [],  model, resource_id, context=context)
         vals = result.get('value',{})
+        if template_id:
+            email_temp_pool = self.pool.get('email.template')
+            email_temp_data = email_temp_pool.browse(cr, uid, template_id, context)
+            vals.update({'smtp_server_id': email_temp_data.smtp_server_id and email_temp_data.smtp_server_id.id or False})
         if template_id and resource_id:
             context.update({'template_id': template_id})
             value = email_temp_previ_pool.on_change_ref(cr, uid, [], resource_id, context)

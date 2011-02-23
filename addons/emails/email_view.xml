@@ -37,6 +37,7 @@
 	                                <button name="%(action_email_compose_message_wizard)d" string="Reply" type="action" icon="terp-mail-replied"
 	                                context="{'mail':'reply', 'message_id':active_id}"/>
                                 </group>
+                                <field name="references" widget="char" size="4096"/>
                             </group>
                             <separator string="Description" colspan="4"/>
                             <field name="description" nolabel="1" colspan="4"/>
