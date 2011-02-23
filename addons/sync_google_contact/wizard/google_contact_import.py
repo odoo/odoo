@@ -127,7 +127,7 @@ class synchronize_google_contact(osv.osv_memory):
         'group_name': _get_default_group,
     }
 
-    def create_partner(self, cr, uid, ids, data={}, context=None):
+    def create_partner(self, cr, uid, data={}, context=None):
         partner_obj = self.pool.get('res.partner')
         name = data.get('name', '')
         partner_id = partner_obj.search(cr, uid, [('name','ilike',name)], context=context)
@@ -169,7 +169,7 @@ class synchronize_google_contact(osv.osv_memory):
             if obj.create_partner:
                 partner_ids = self.create_contact( cr, uid, gd_client,contact, partner_id=True,context=context)    
             else:
-                addresses = self.create_contact( cr, uid, gd_client,contact, partner_id=True,context=context)           
+                addresses = self.create_contact( cr, uid, gd_client,contact, partner_id=False,context=context)           
             
         if partner_ids:
             return {
@@ -200,7 +200,6 @@ class synchronize_google_contact(osv.osv_memory):
           
         addresss_obj = self.pool.get('res.partner.address')
         partner_obj = self.pool.get('res.partner')
-        partner_id = []
         addresses = []
         partner_ids = []        
         while contact:
@@ -230,7 +229,7 @@ class synchronize_google_contact(osv.osv_memory):
                     contact_ids = addresss_obj.search(cr, uid, [('google_id','=',google_id)])
                     
                 if partner_id:
-                    partner_id, data = self.create_partner(cr, uid, ids, data, context=context)
+                    partner_id, data = self.create_partner(cr, uid, data, context=context)
                     partner_ids.append(partner_id[0]) 
                 if contact_ids:
                     addresses.append(contact_ids[0])
