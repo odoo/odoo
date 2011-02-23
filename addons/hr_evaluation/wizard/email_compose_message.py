@@ -56,6 +56,8 @@ class email_compose_message(osv.osv_memory):
     def on_change_referred_doc(self, cr, uid, ids, model, resource_id, context=None):
         if context is None:
             context = {}
+        if context.get('mail') == 'reply':
+            return {'value':{}}
         result = super(email_compose_message, self).on_change_referred_doc(cr, uid, ids, model, resource_id, context=context)
         value = {}
         if not result.get('value'):

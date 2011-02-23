@@ -56,6 +56,8 @@ class email_compose_message(osv.osv_memory):
     def on_change_template(self, cr, uid, ids, model, resource_id, template_id, context=None):
         if context is None:
             context = {}
+        if context.get('mail') == 'reply':
+            return {'value':{}}
         email_temp_previ_pool = self.pool.get('email_template.preview')
         result = self.on_change_referred_doc(cr, uid, [],  model, resource_id, context=context)
         vals = result.get('value',{})
