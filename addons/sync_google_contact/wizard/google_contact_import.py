@@ -136,8 +136,6 @@ class synchronize_google_contact(osv.osv_memory):
         partner_id = partner_obj.search(cr, uid, [('name','ilike',name)], context=context)
         if not partner_id:
             partner_id.append(partner_obj.create(cr, uid, {'name': name}, context=context))
-        data.update({'partner_id': partner_id and partner_id[0]})
-
         return partner_id, data
 
     def import_contact(self, cr, uid, ids, context=None):
