@@ -206,7 +206,6 @@ class synchronize_google_contact(osv.osv_memory):
                 name = tools.ustr(entry.title.text)
                 google_id = entry.id.text
                 emails = ','.join(email.address for email in entry.email)
-                data['name'] = ''
                 if name and name != 'None':
                     data['name'] = name
                 if google_id:
