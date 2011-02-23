@@ -107,7 +107,7 @@ class project_task_close(osv.osv_memory):
                     footer = (re.sub(r'\%\W*\(', '%(', footer_str)) % val
                 except:
                     raise osv.except_osv(_('Error'), _("Invlaid automatic variables used in project header or foooter."))
-                body = u'%s\n%s\n%s\n\n-- \n%s' % (header, task.description, footer, signature)
+                body = u'%s\n%s\n%s\n\n-- \n%s' % (header, data.description or '', footer, signature)
                 if data.manager_warn and data.manager_email:
                     to_adr.append(data.manager_email)
                 if data.partner_warn and data.partner_email:
