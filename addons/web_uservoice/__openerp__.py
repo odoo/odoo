@@ -23,7 +23,7 @@
     'version': '1.0',
     'category': 'Generic Modules/Others',
     'description': "",
-    'author': 'OpenERP s.a.',
+    'author': 'OpenERP SA',
     'website': 'http://openerp.com',
     'depends': ['base'],
     'data': [],
