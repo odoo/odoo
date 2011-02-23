@@ -159,10 +159,8 @@ class synchronize_google_contact(osv.osv_memory):
         if obj.group_name not in ['all','none']:
             query = gdata.contacts.service.ContactsQuery()
             query.group =obj.group_name
-            print query.ToUri()
             contact = gd_client.GetContactsFeed(query.ToUri())
-            if not contact:
-                raise osv.except_osv(_('Error'), _("No contact in this group!"))
+
             if obj.create_partner:
                 partner_ids = self.create_contact( cr, uid, gd_client,contact, partner_id=True,context=context)
             else :
