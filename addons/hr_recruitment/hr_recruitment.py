@@ -412,9 +412,15 @@ class hr_applicant(crm.crm_case, osv.osv):
             message = _("Applicant '%s' is being hired.") % name
             self.log(cr, uid, id, message)
 
+        address = False
         applicant = self.browse(cr, uid, ids)[0]
         if applicant.job_id:
-            emp_id = employee_obj.create(cr,uid,{'name': applicant.name,'job_id': applicant.job_id.id})
+            if applicant.partner_id:
+                address = applicant.partner_id.address[0].id
+            emp_id = employee_obj.create(cr,uid,{'name': applicant.partner_id.name or applicant.name,
+                                                 'job_id': applicant.job_id.id,
+                                                 'address_home_id':address
+                                                 })
         return res
 
     def case_reset(self, cr, uid, ids, *args):
