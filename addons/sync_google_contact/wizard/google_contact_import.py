@@ -23,6 +23,7 @@ from osv import fields,osv
 from tools.translate import _
 import tools
 import gdata.contacts
+import gdata.contacts.client
 
 class google_base_import(osv.osv_memory):
     _inherit = 'synchronize.base.contact.wizard.import'
@@ -100,12 +101,14 @@ class synchronize_google_contact(osv.osv_memory):
     _name = 'synchronize.google.contact.import'
 
     def _get_group(self, cr, uid, context=None):
+        
         user_obj = self.pool.get('res.users').browse(cr, uid, uid)
-        google=self.pool.get('google.login')
-        gd_client = google.google_login(cr,uid,user_obj.gmail_user,user_obj.gmail_password)
+        gd_client = gdata.contacts.client.ContactsClient('OpenERP')
+        gd_client.ClientLogin(user_obj.gmail_user,user_obj.gmail_password,gd_client.source)
+        query = gdata.contacts.client.ContactsQuery(feed='/m8/feeds/groups/default/full')
+        groups = gd_client.GetGroups(q=query)     
         res = []
         if gd_client:
-            groups = gd_client.GetGroupsFeed()
             for grp in groups.entry:
                 res.append((grp.id.text, grp.title.text))
         res.append(('none','None'))
@@ -136,7 +139,8 @@ class synchronize_google_contact(osv.osv_memory):
     def import_contact(self, cr, uid, ids, context=None):
         addresss_obj = self.pool.get('res.partner.address')
         partner_obj = self.pool.get('res.partner')
-
+        partner_ids=False
+        addresses=False
         user_obj = self.pool.get('res.users').browse(cr, uid, uid)
 
         gmail_user = user_obj.gmail_user
@@ -149,84 +153,24 @@ class synchronize_google_contact(osv.osv_memory):
             raise osv.except_osv(_('Error'), _("Please specify the user and password !"))
 
         contact = gd_client.GetContactsFeed()
-        partner_id = []
-        addresses = []
-        partner_ids = []
-
-        for obj in self.browse(cr, uid, ids, context=context):
-            while contact:
-                for entry in contact.entry:
-                    data={}
-                    partner_id = False
-                    name = tools.ustr(entry.title.text)
-                    google_id = entry.id.text
-                    phone_numbers = ','.join(phone_number.text for phone_number in entry.phone_number)
-                    emails = ','.join(email.address for email in entry.email)
-                    data['name'] = ''
-                    if name and name != 'None':
-                        data['name'] = name
-
-                    if google_id:
-                        data['google_id'] =google_id
-
-                    if entry.phone_number:
-                        for phone in entry.phone_number:
-                            if phone.rel == gdata.contacts.REL_WORK:
-                                data['phone'] = phone.text
-                            if phone.rel == gdata.contacts.PHONE_MOBILE:
-                                data['mobile'] = phone.text
-                            if phone.rel == gdata.contacts.PHONE_WORK_FAX:
-                                data['fax'] = phone.text
-
-                    if emails:
-                        data['email'] = emails
-                        contact_ids = addresss_obj.search(cr, uid, [('email','ilike',emails)])
-                    else:
-                        contact_ids = addresss_obj.search(cr, uid, [('google_id','=',google_id)])
-                    if  contact_ids :
-                        res={}
-                        addr=addresss_obj.browse(cr,uid,contact_ids)[0]
-                        name = str((addr.name or addr.partner_id and addr.partner_id.name or '').encode('utf-8'))
-                        email = addr.email
-                        phone = addr.phone
-                        mobile = addr.mobile
-                        fax = addr.fax
-                        if not name:
-                            res['name']=data.get('name','')
-                        if not email:
-                            res['email']=data.get('email','')
-                        if not mobile:
-                            res['mobile']=data.get('mobile','')
-                        if not phone:
-                            res['phone']=data.get('phone','')
-                        if not fax:
-                            res['fax']=data.get('fax','')
-                        addresss_obj.write(cr,uid,contact_ids,res,context=context)
-
-                    if obj.create_partner and obj.group_name == 'all':
-                        if name:
-                            partner_id, data = self.create_partner(cr, uid, ids, data, context=context)
-                            partner_ids.append(partner_id[0])
-                        if not contact_ids  :
-                            addresses.append(addresss_obj.create(cr, uid, data, context=context))
-                        if contact_ids:
-                            addresss_obj.write(cr,uid,contact_ids,{'partner_id':partner_id[0]})
-                    if obj.group_name and entry.group_membership_info and not contact_ids:
-                        for grp in entry.group_membership_info:
-                            if grp.href == obj.group_name:
-                                if obj.create_partner:
-                                    partner_id, data = self.create_partner(cr, uid, ids, data, context=context)
-                                    partner_ids.append(partner_id[0])
-                                    addresses.append(addresss_obj.create(cr, uid, data, context=context))
-                    else:
-                        if obj.group_name == 'all' and not contact_ids:
-                            addresses.append(addresss_obj.create(cr, uid, data, context=context))
-
-                if not contact:
-                    break
-                next = contact.GetNextLink()
-                contact = next and gd_client.GetContactsFeed(next.href) or None
-
+        obj=self.browse(cr, uid, ids, context=context)[0]
+        if obj.group_name != 'all' or obj.group_name != 'None':
+            query = gdata.contacts.service.ContactsQuery()
+            query.group =obj.group_name        
+            contact = gd_client.GetContactsFeed(query.ToUri())
+            if not contact:
+                raise osv.except_osv(_('Error'), _("No contact in this group!"))
+            if obj.create_partner:
+                partner_ids = self.create_contact( cr, uid, gd_client,contact, partner_id=True,context=context) 
+            else :
+                addresses=self.create_contact( cr, uid, gd_client,contact, partner_id=False,context=context) 
+        if obj.group_name == 'all':  
+            contact = gd_client.GetContactsFeed()
+            if obj.create_partner:
+                partner_ids = self.create_contact( cr, uid, gd_client,contact, partner_id=True,context=context)    
+            else:
+                addresses = self.create_contact( cr, uid, gd_client,contact, partner_id=True,context=context)           
+            
         if partner_ids:
             return {
                     'name': _('Partner'),
@@ -251,7 +195,79 @@ class synchronize_google_contact(osv.osv_memory):
             }
         else:
             return {'type': 'ir.actions.act_window_close'}
-
+        
+    def create_contact(self, cr, uid, gd_client,contact, partner_id=False,context=None):  
+          
+        addresss_obj = self.pool.get('res.partner.address')
+        partner_obj = self.pool.get('res.partner')
+        partner_id = []
+        addresses = []
+        partner_ids = []        
+        while contact:
+            for entry in contact.entry:
+                data={}
+                name = tools.ustr(entry.title.text)
+                google_id = entry.id.text
+                phone_numbers = ','.join(phone_number.text for phone_number in entry.phone_number)
+                emails = ','.join(email.address for email in entry.email)
+                data['name'] = ''
+                if name and name != 'None':
+                    data['name'] = name
+                if google_id:
+                    data['google_id'] =google_id
+                if entry.phone_number:
+                    for phone in entry.phone_number:
+                        if phone.rel == gdata.contacts.REL_WORK:
+                            data['phone'] = phone.text
+                        if phone.rel == gdata.contacts.PHONE_MOBILE:
+                            data['mobile'] = phone.text
+                        if phone.rel == gdata.contacts.PHONE_WORK_FAX:
+                            data['fax'] = phone.text
+                if emails:
+                    data['email'] = emails
+                    contact_ids = addresss_obj.search(cr, uid, [('email','ilike',emails)])
+                else:
+                    contact_ids = addresss_obj.search(cr, uid, [('google_id','=',google_id)])
+                    
+                if partner_id:
+                    partner_id, data = self.create_partner(cr, uid, ids, data, context=context)
+                    partner_ids.append(partner_id[0]) 
+                if contact_ids:
+                    self.update_contact( cr, uid, contact_ids, data,context=context)
+                if not contact_ids:
+                 addresses.append(addresss_obj.create(cr, uid, data, context=context))
+            if not contact:
+                break
+            next = contact.GetNextLink()
+            contact = next and gd_client.GetContactsFeed(next.href) or None
+        if partner_id:
+            return partner_ids
+        else:
+            return addresses
+        
+    def update_contact(self, cr, uid, contact_ids, data,context=None):
+        addresss_obj = self.pool.get('res.partner.address')
+        if context==None:
+            context={}
+        res={}
+        addr=addresss_obj.browse(cr,uid,contact_ids)[0]
+        name = str((addr.name or addr.partner_id and addr.partner_id.name or '').encode('utf-8'))
+        email = addr.email
+        phone = addr.phone
+        mobile = addr.mobile
+        fax = addr.fax
+        if not name:
+            res['name']=data.get('name','')
+        if not email:
+            res['email']=data.get('email','')
+        if not mobile:
+            res['mobile']=data.get('mobile','')
+        if not phone:
+            res['phone']=data.get('phone','')
+        if not fax:
+            res['fax']=data.get('fax','')
+        addresss_obj.write(cr,uid,contact_ids,res,context=context)        
+        pass
 synchronize_google_contact()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
