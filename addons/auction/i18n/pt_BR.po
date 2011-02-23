@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-01-29 01:16+0000\n"
-"Last-Translator: Emerson <Unknown>\n"
+"PO-Revision-Date: 2011-02-20 20:50+0000\n"
+"Last-Translator: Pedro_Maschio <pedro.bicudo@tgtconsult.com.br>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-30 04:51+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-02-21 04:51+0000\n"
+"X-Generator: Launchpad (build 12351)\n"
 
 #. module: auction
 #: model:ir.ui.menu,name:auction.auction_report_menu
@@ -226,7 +226,7 @@ msgstr ""
 #. module: auction
 #: view:auction.lots:0
 msgid "Total Adj."
-msgstr ""
+msgstr "Total Neg."
 
 #. module: auction
 #: view:auction.lots.sms.send:0
@@ -530,7 +530,7 @@ msgstr ""
 #. module: auction
 #: field:auction.lots,paid_vnd:0
 msgid "Seller Paid"
-msgstr ""
+msgstr "Pago pelo Vendedor"
 
 #. module: auction
 #: view:board.board:0
@@ -743,12 +743,12 @@ msgstr ""
 #: field:auction.bid,name:0
 #: field:auction.bid_line,bid_id:0
 msgid "Bid ID"
-msgstr ""
+msgstr "ID do Lance"
 
 #. module: auction
 #: report:auction.total.rml:0
 msgid "Min Estimate:"
-msgstr ""
+msgstr "Mín. Estimado:"
 
 #. module: auction
 #: selection:report.auction,month:0
@@ -849,7 +849,7 @@ msgstr ""
 #. module: auction
 #: field:report.object.encoded,adj:0
 msgid "Adj."
-msgstr ""
+msgstr "Neg."
 
 #. module: auction
 #: field:auction.lot.history,name:0
@@ -885,7 +885,7 @@ msgstr "Data do depósito"
 #. module: auction
 #: model:ir.actions.report.xml,name:auction.id_deposit
 msgid "Deposits"
-msgstr ""
+msgstr "Depósitos"
 
 #. module: auction
 #: field:auction.deposit,specific_cost_ids:0
@@ -1017,13 +1017,13 @@ msgstr "N.Cat."
 #. module: auction
 #: selection:auction.deposit,method:0
 msgid "Decrease limit of 10%"
-msgstr ""
+msgstr "Diminuir o limite em 10%"
 
 #. module: auction
 #: field:auction.dates,adj_total:0
 #: field:report.auction.adjudication,adj_total:0
 msgid "Total Adjudication"
-msgstr ""
+msgstr "Total Negociado"
 
 #. module: auction
 #: model:ir.actions.act_window,name:auction.action_auction_lots_make_invoice_buyer
@@ -1116,7 +1116,7 @@ msgstr "O Comprador não tem endereço de faturamento"
 #. module: auction
 #: view:report.object.encoded:0
 msgid "Total adj."
-msgstr ""
+msgstr "Total neg."
 
 #. module: auction
 #: field:auction.lots.sms.send,user:0
@@ -1205,7 +1205,7 @@ msgstr "Lance"
 #. module: auction
 #: view:report.object.encoded:0
 msgid "Total net rev."
-msgstr ""
+msgstr "Total rev. líquido"
 
 #. module: auction
 #: view:auction.lots.buyer_map:0
@@ -1341,7 +1341,7 @@ msgstr "A Ser Chamado"
 #: view:auction.lots:0
 #: model:ir.actions.act_window,name:auction.action_report_auction_lots_estimation_adj_category_tree
 msgid "Min est/Adj/Max est"
-msgstr ""
+msgstr "Est.mín./Negociado/Est.máx."
 
 #. module: auction
 #: field:auction.lots,lot_est1:0
@@ -1412,7 +1412,7 @@ msgstr "Mês"
 #. module: auction
 #: report:auction.total.rml:0
 msgid "Max Estimate:"
-msgstr ""
+msgstr "Máx. Estimado"
 
 #. module: auction
 #: view:auction.lots:0
@@ -1602,7 +1602,7 @@ msgstr ""
 #. module: auction
 #: view:report.auction.adjudication:0
 msgid "Total adjudication"
-msgstr ""
+msgstr "Total negociado"
 
 #. module: auction
 #: selection:auction.deposit,method:0
@@ -1746,7 +1746,7 @@ msgstr "Custos do comprador("
 #: field:auction.pay.buy,statement_id2:0
 #: field:auction.pay.buy,statement_id3:0
 msgid "Statement"
-msgstr ""
+msgstr "Demonstrativo"
 
 #. module: auction
 #: help:auction.lots,seller_price:0
@@ -1924,7 +1924,7 @@ msgstr ""
 #. module: auction
 #: field:auction.deposit.cost,account:0
 msgid "Destination Account"
-msgstr ""
+msgstr "Conta de Destino"
 
 #. module: auction
 #: model:ir.ui.menu,name:auction.auction_config_menu
@@ -2038,7 +2038,7 @@ msgstr ""
 #. module: auction
 #: report:report.auction.buyer.result:0
 msgid "Adj"
-msgstr ""
+msgstr "Neg"
 
 #. module: auction
 #: view:auction.dates:0
@@ -2161,7 +2161,7 @@ msgstr ""
 #. module: auction
 #: report:bids.phones.details:0
 msgid "Est"
-msgstr ""
+msgstr "Est"
 
 #. module: auction
 #: view:auction.dates:0
@@ -2209,12 +2209,12 @@ msgstr ""
 #. module: auction
 #: field:auction.lots,obj_price:0
 msgid "Adjudication price"
-msgstr ""
+msgstr "Preço Negociado"
 
 #. module: auction
 #: field:auction.dates,acc_income:0
 msgid "Income Account"
-msgstr ""
+msgstr "Conta de Receita"
 
 #. module: auction
 #: field:auction.lots.sms.send,password:0
@@ -2244,7 +2244,7 @@ msgstr "# de Objetos"
 #. module: auction
 #: report:auction.total.rml:0
 msgid "Adjudication:"
-msgstr ""
+msgstr "Negociação:"
 
 #. module: auction
 #: model:ir.actions.report.xml,name:auction.details_bids_phones
@@ -2290,7 +2290,7 @@ msgstr ""
 #. module: auction
 #: field:auction.lots,history_ids:0
 msgid "Auction history"
-msgstr ""
+msgstr "Histórico do leilão"
 
 #~ msgid "Error: UOS must be in a different category than the UOM"
 #~ msgstr ""
