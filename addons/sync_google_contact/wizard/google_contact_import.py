@@ -249,7 +249,6 @@ class synchronize_google_contact(osv.osv_memory):
             return addresses
         
     def update_contact(self, cr, uid, contact_ids, data,context=None):
-
         addresss_obj = self.pool.get('res.partner.address')
         if context==None:
             context={}
@@ -270,6 +269,8 @@ class synchronize_google_contact(osv.osv_memory):
             res['phone']=data.get('phone','')
         if not fax:
             res['fax']=data.get('fax','')
+        if data.get('partner_id'):
+            res['partner_id'] = data.get('partner_id') 
         addresss_obj.write(cr,uid,contact_ids,res,context=context)        
         return {}
 synchronize_google_contact()
