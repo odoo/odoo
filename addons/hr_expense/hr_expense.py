@@ -127,13 +127,14 @@ class hr_expense_expense(osv.osv):
     def invoice(self, cr, uid, ids, context=None):
         wf_service = netsvc.LocalService("workflow")
         mod_obj = self.pool.get('ir.model.data')
-        res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_tree')
+        res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_form')
         res_id = res and res[1] or False,
+        inv_ids = []
         for id in ids:
             wf_service.trg_validate(uid, 'hr.expense.expense', id, 'invoice', cr)
-            inv_id = self.browse(cr, uid, id).invoice_id.id
-            if not inv_id:
-                raise osv.except_osv(_('Error'), _('No Invoice created'))
+            inv_ids.append(self.browse(cr, uid, id).invoice_id.id)
+            if not inv_ids:
+                raise osv.except_osv(_('Error'), _('No Invoices were created'))
         return {
             'name': 'Supplier Invoices',
             'view_type': 'form',
@@ -144,7 +145,7 @@ class hr_expense_expense(osv.osv):
             'type': 'ir.actions.act_window',
             'nodestroy': True,
             'target': 'current',
-            'res_id': inv_id,
+            'res_id': inv_ids and inv_ids[0] or False,
         }
 
     def action_invoice_create(self, cr, uid, ids):
