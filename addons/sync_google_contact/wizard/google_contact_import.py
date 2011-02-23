@@ -129,11 +129,12 @@ class synchronize_google_contact(osv.osv_memory):
 
     def create_partner(self, cr, uid, data={}, context=None):
         partner_obj = self.pool.get('res.partner')
-        name = data.get('name', '')
+        name = data.get('name','')
         partner_id = partner_obj.search(cr, uid, [('name','ilike',name)], context=context)
         if not partner_id:
             partner_id.append(partner_obj.create(cr, uid, {'name': name}, context=context))
         data.update({'partner_id': partner_id and partner_id[0]})
+        
         return partner_id, data
 
     def import_contact(self, cr, uid, ids, context=None):
@@ -223,8 +224,8 @@ class synchronize_google_contact(osv.osv_memory):
                     contact_ids = addresss_obj.search(cr, uid, [('email','ilike',emails)])
                 else:
                     contact_ids = addresss_obj.search(cr, uid, [('google_id','=',google_id)])
-                    
-                if partner_id:
+
+                if partner_id and name!='None':
                     partner_id, data = self.create_partner(cr, uid, data, context=context)
                     partner_ids.append(partner_id[0]) 
                 if contact_ids:
