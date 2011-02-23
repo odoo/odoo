@@ -141,6 +141,10 @@ class synchronize_google_contact(osv.osv_memory):
         return partner_id, data
 
     def import_contact(self, cr, uid, ids, context=None):
+        obj=self.browse(cr, uid, ids, context=context)[0]
+        if obj.group_name == 'none':
+            return { 'type': 'ir.actions.act_window_close' }
+
         partner_ids=False
         addresses=False
         user_obj = self.pool.get('res.users').browse(cr, uid, uid)
@@ -154,23 +158,17 @@ class synchronize_google_contact(osv.osv_memory):
         if not gmail_user or not gamil_pwd:
             raise osv.except_osv(_('Error'), _("Please specify the user and password !"))
 
-
-        obj=self.browse(cr, uid, ids, context=context)[0]
         if obj.group_name not in ['all','none']:
             query = gdata.contacts.service.ContactsQuery()
             query.group =obj.group_name
             contact = gd_client.GetContactsFeed(query.ToUri())
-
-            if obj.create_partner:
-                partner_ids = self.create_contact( cr, uid, gd_client,contact, partner_id=True,context=context)
-            else :
-                addresses=self.create_contact( cr, uid, gd_client,contact, partner_id=False,context=context)
-        if obj.group_name == 'all':
+        else:
             contact = gd_client.GetContactsFeed()
-            if obj.create_partner:
-                partner_ids = self.create_contact( cr, uid, gd_client,contact, partner_id=True,context=context)
-            else:
-                addresses = self.create_contact( cr, uid, gd_client,contact, partner_id=False,context=context)
+
+        if obj.create_partner:
+            partner_ids = self.create_contact( cr, uid, gd_client,contact, partner_id=True,context=context)
+        else :
+            addresses=self.create_contact( cr, uid, gd_client,contact, partner_id=False,context=context)
 
         if partner_ids:
             return {
@@ -233,21 +231,25 @@ class synchronize_google_contact(osv.osv_memory):
                     data['email'] = emails
                     contact_ids = addresss_obj.search(cr, uid, [('email','ilike',emails)])
 
-                if partner_id and name!='None':
-                    partner_id, data = self.create_partner(cr, uid, data, context=context)
-                    partner_ids.append(partner_id[0])
+
+
                 if contact_ids:
                     addresses.append(contact_ids[0])
                     self.update_contact( cr, uid, contact_ids, data,context=context)
                 if not contact_ids:
+                    #create or link to an existing partner only if
+                    if partner_id and name!='None': #to discussed if we want to create a partner if the name is none
+                        partner_id, data = self.create_partner(cr, uid, data, context=context)
+                        partner_ids.append(partner_id[0])
+
                     res_id = addresss_obj.create(cr, uid, data, context=context)
                     addresses.append(res_id)
                     model_data.update({'res_id': res_id})
                     model_obj.create(cr, uid, model_data, context=context)
-            if not contact:
-                break
+
             next = contact.GetNextLink()
             contact = next and gd_client.GetContactsFeed(next.href) or None
+
         if partner_id:
             return partner_ids
         else:
