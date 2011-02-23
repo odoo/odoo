@@ -20,7 +20,6 @@
 ##############################################################################
 
 from osv import fields,osv,orm
-
     
 class res_users(osv.osv):
     _inherit = "res.users"
@@ -30,14 +29,14 @@ class res_users(osv.osv):
     }
 res_users()    
 
-class res_partner_address(osv.osv):
+class ir_model_data(osv.osv):
     
-    _inherit = "res.partner.address"
+    _inherit = "ir.model.data"
     _columns = {
         'google_id': fields.char('Google Contact Id', size=128, readonly=True),  
     }
 
-res_partner_address()
+ir_model_data()
 
 # vim:expandtab:smartindent:toabstop=4:softtabstop=4:shiftwidth=4:
 

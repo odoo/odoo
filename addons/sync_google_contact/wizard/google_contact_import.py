@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 L (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -24,11 +24,9 @@ from tools.translate import _
 import tools
 try:
     import gdata
-    from gdata import contacts
     import gdata.contacts.service
     import gdata.contacts
     import gdata.contacts.client    
-    import atom
 except ImportError:
     raise osv.except_osv(_('Google Contacts Import Error!'), _('Please install gdata-python-client from http://code.google.com/p/gdata-python-client/downloads/list'))
 
@@ -41,7 +39,7 @@ class google_base_import(osv.osv_memory):
         should be overwritten by subclasses
         """
         names = super(google_base_import, self)._get_tools_name(cr, user, context=context)
-        names.append(('gmail','Gmail adress book'))
+        names.append(('gmail','Gmail address book'))
         return names
 
 
@@ -203,20 +201,25 @@ class synchronize_google_contact(osv.osv_memory):
             return {'type': 'ir.actions.act_window_close'}
         
     def create_contact(self, cr, uid, gd_client,contact, partner_id=False,context=None):  
-          
+        model_obj = self.pool.get('ir.model.data')
         addresss_obj = self.pool.get('res.partner.address')
         addresses = []
         partner_ids = []        
         while contact:
             for entry in contact.entry:
-                data={}
+                data = {}
+                model_data = {
+                    'name': 'google_contacts_information_%s' %(entry.id.text),
+                    'model': 'res.partner.address',
+                    'module': 'sync_google_contact',
+                }
                 name = tools.ustr(entry.title.text)
                 google_id = entry.id.text
                 emails = ','.join(email.address for email in entry.email)
                 if name and name != 'None':
                     data['name'] = name
                 if google_id:
-                    data['google_id'] =google_id
+                    model_data.update({'google_id': google_id})
                 if entry.phone_number:
                     for phone in entry.phone_number:
                         if phone.rel == gdata.contacts.REL_WORK:
@@ -225,11 +228,13 @@ class synchronize_google_contact(osv.osv_memory):
                             data['mobile'] = phone.text
                         if phone.rel == gdata.contacts.PHONE_WORK_FAX:
                             data['fax'] = phone.text
-                if emails:
+     
+                data_ids = model_obj.search(cr, uid, [('google_id','=',google_id)])
+                if data_ids:
+                    contact_ids = [model_obj.browse(cr, uid, data_ids[0], context=context).res_id]
+                elif emails:
                     data['email'] = emails
                     contact_ids = addresss_obj.search(cr, uid, [('email','ilike',emails)])
-                else:
-                    contact_ids = addresss_obj.search(cr, uid, [('google_id','=',google_id)])
 
                 if partner_id and name!='None':
                     partner_id, data = self.create_partner(cr, uid, data, context=context)
@@ -238,7 +243,10 @@ class synchronize_google_contact(osv.osv_memory):
                     addresses.append(contact_ids[0])
                     self.update_contact( cr, uid, contact_ids, data,context=context)
                 if not contact_ids:
-                 addresses.append(addresss_obj.create(cr, uid, data, context=context))
+                    res_id = addresss_obj.create(cr, uid, data, context=context)
+                    addresses.append(res_id)
+                    model_data.update({'res_id': res_id})
+                    model_obj.create(cr, uid, model_data, context=context)
             if not contact:
                 break
             next = contact.GetNextLink()
@@ -249,12 +257,11 @@ class synchronize_google_contact(osv.osv_memory):
             return addresses
         
     def update_contact(self, cr, uid, contact_ids, data,context=None):
-
         addresss_obj = self.pool.get('res.partner.address')
         if context==None:
             context={}
-        res={}
-        addr=addresss_obj.browse(cr,uid,contact_ids)[0]
+        res = {}
+        addr = addresss_obj.browse(cr,uid,contact_ids)[0]
         name = str((addr.name or addr.partner_id and addr.partner_id.name or '').encode('utf-8'))
         email = addr.email
         phone = addr.phone
@@ -270,6 +277,8 @@ class synchronize_google_contact(osv.osv_memory):
             res['phone']=data.get('phone','')
         if not fax:
             res['fax']=data.get('fax','')
+        if data.get('partner_id'):
+            res['partner_id'] = data.get('partner_id') 
         addresss_obj.write(cr,uid,contact_ids,res,context=context)        
         return {}
 synchronize_google_contact()
