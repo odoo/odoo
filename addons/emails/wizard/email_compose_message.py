@@ -111,16 +111,23 @@ class email_compose_message(osv.osv_memory):
         if context is None:
             context = {}
         record_ids = []
+        model_pool = False
         if context.get('email_model',False):
-            model_pool =  self.pool.get(context.get('email_model'))
+            model =  context.get('email_model')
+            model_pool =  self.pool.get(model)
             record_ids = model_pool.search(cr, uid, [])
+        elif context.get('active_model',False):
+            model =  context.get('active_model')
+            model_pool =  self.pool.get(model)
+            record_ids = context.get('active_ids',[])
+        if model_pool:
             return model_pool.name_get(cr, uid, record_ids, context)
-        return record_ids
+        return []
 
     _columns = {
         'attachment_ids': fields.many2many('ir.attachment','email_message_send_attachment_rel', 'wizard_id', 'attachment_id', 'Attachments'),
         'debug':fields.boolean('Debug', readonly=True),
-        'resource_id':fields.selection(_get_records, 'Referred Document'),
+        'res_id':fields.selection(_get_records, 'Referred Document'),
     }
 
     def on_change_referred_doc(self, cr, uid, ids, model, resource_id, context=None):
@@ -148,7 +155,7 @@ class email_compose_message(osv.osv_memory):
                 attachment.append((attach.datas_fname, attach.datas))
             email_id = email_message_pool.email_send(cr, uid, mail.email_from, mail.email_to, mail.name, mail.description,
                     model=mail.model, email_cc=mail.email_cc, email_bcc=mail.email_bcc, reply_to=mail.reply_to,
-                    attach=attachment, message_id=mail.message_id, openobject_id=mail.res_id, debug=mail.debug,
+                    attach=attachment, message_id=mail.message_id, openobject_id=int(mail.res_id), debug=mail.debug,
                     subtype=mail.sub_type, x_headers=mail.headers, priority=mail.priority, smtp_server_id=mail.smtp_server_id and mail.smtp_server_id.id, context=context)
             email_ids.append(email_id)
         return email_ids

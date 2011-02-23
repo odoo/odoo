@@ -21,4 +21,5 @@
 ##############################################################################
 import email_template_preview
 import email_template_send_wizard
+import email_compose_message
 

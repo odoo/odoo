@@ -168,6 +168,7 @@ This is useful for CRM leads for example"),
              " body for displaying the info in your mail.",
              store=False),
         'auto_delete': fields.boolean('Auto Delete', help="Permanently delete emails after sending"),
+        'model': fields.related('model_id','model', type='char', size=128, string='Object'),
     }
 
     _sql_constraints = [
