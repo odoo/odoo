@@ -42,6 +42,7 @@ from email.MIMEBase import MIMEBase
 from email.MIMEMultipart import MIMEMultipart
 from email.Header import Header
 from email.Utils import formatdate, COMMASPACE
+from email import Utils
 from email import Encoders
 from itertools import islice, izip
 from lxml import etree
@@ -440,12 +441,12 @@ def connect_smtp_server(server_host, server_port,  user_name=None, user_password
 
         smtp_server.set_debuglevel(int(bool(debug)))  # 0 or 1
 
-        
+
         if tls:
             smtp_server.ehlo()
             smtp_server.starttls()
             smtp_server.ehlo()
-   
+
         #smtp_server.connect(server_host, server_port)
 
         if smtp_server.has_extn('AUTH') or user_name or user_password:
@@ -456,7 +457,7 @@ def connect_smtp_server(server_host, server_port,  user_name=None, user_password
         _logger.error('Could not connect to smtp server : %s' %(error), exc_info=True)
         raise error
     return smtp_server
-        
+
 
 def _email_send(smtp_from, smtp_to_list, message, ssl=False, debug=False,
             smtp_server=None, smtp_port=None, smtp_user=None, smtp_password=None):
@@ -489,7 +490,7 @@ def _email_send(smtp_from, smtp_to_list, message, ssl=False, debug=False,
         if debug:
             oldstderr = smtplib.stderr
             smtplib.stderr = WriteToLogger()
-        
+
         if not ssl: ssl = config.get('smtp_ssl', False)
         smtp = connect_smtp_server(smtp_server, smtp_port, smtp_user, smtp_password, ssl=ssl, tls=True, debug=debug)
         try:
@@ -514,7 +515,7 @@ def _email_send(smtp_from, smtp_to_list, message, ssl=False, debug=False,
 
 
 def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=None, reply_to=False,
-               attach=None, message_id=None, openobject_id=False, debug=False, subtype='plain', x_headers=None, priority='3',
+               attach=None, message_id=None, references=None, openobject_id=False, debug=False, subtype='plain', x_headers=None, priority='3',
                smtp_server=None, smtp_port=None, ssl=False, smtp_user=None, smtp_password=None):
 
     """Send an email.
@@ -546,11 +547,13 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
     email_text = MIMEText(email_body or '',_subtype=subtype,_charset='utf-8')
     msg = MIMEMultipart()
 
-    if message_id:
-        msg['Message-Id'] = message_id
-    elif openobject_id:
-        msg['Message-Id'] = generate_tracking_message_id(openobject_id)
-
+    if not message_id and openobject_id:
+        message_id = generate_tracking_message_id(openobject_id)
+    else:
+        message_id = Utils.make_msgid()
+    if references:
+        msg['references'] = references
+    msg['Message-Id'] = message_id
     msg['Subject'] = Header(ustr(subject), 'utf-8')
     msg['From'] = email_from
     del msg['Reply-To']
@@ -588,8 +591,11 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
             part.add_header('Content-Disposition', 'attachment; filename="%s"' % (fname,))
             msg.attach(part)
 
-    return _email_send(email_from, flatten([email_to, email_cc, email_bcc]), msg, ssl=ssl, debug=debug,
+    res = _email_send(email_from, flatten([email_to, email_cc, email_bcc]), msg, ssl=ssl, debug=debug,
                        smtp_server=smtp_server, smtp_port=smtp_port, smtp_user=smtp_user, smtp_password=smtp_password)
+    if res:
+        return message_id
+    return False
 
 #----------------------------------------------------------
 # SMS
