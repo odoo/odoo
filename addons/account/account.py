@@ -810,10 +810,10 @@ class account_fiscalyear(osv.osv):
         for fy in self.browse(cr, uid, ids, context=context):
             ds = datetime.strptime(fy.date_start, '%Y-%m-%d')
             period_obj.create(cr, uid, {
-                    'name': 'Opening Period',
+                    'name': _('Opening Period'),
                     'code': ds.strftime('00/%Y'),
-                    'date_start': ds + relativedelta(years=-1, days=-1),
-                    'date_stop': ds + relativedelta(years=-1),
+                    'date_start': ds,
+                    'date_stop': ds,
                     'special': True,
                     'fiscalyear_id': fy.id,
                 })
@@ -2638,9 +2638,9 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         return False
 
     def _get_default_accounts(self, cr, uid, context=None):
-        return [{'acc_name':'Current','account_type':'bank'},
-                    {'acc_name':'Deposit','account_type':'bank'},
-                    {'acc_name':'Cash','account_type':'cash'}]
+        return [{'acc_name': _('Current'),'account_type':'bank'},
+                    {'acc_name': _('Deposit'),'account_type':'bank'},
+                    {'acc_name': _('Cash'),'account_type':'cash'}]
 
     _defaults = {
         'company_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, [uid], c)[0].company_id.id,
