@@ -22,8 +22,15 @@
 from osv import fields,osv
 from tools.translate import _
 import tools
-import gdata.contacts
-import gdata.contacts.client
+try:
+    import gdata
+    from gdata import contacts
+    import gdata.contacts.service
+    import gdata.contacts
+    import gdata.contacts.client    
+    import atom
+except ImportError:
+    raise osv.except_osv(_('Google Contacts Import Error!'), _('Please install gdata-python-client from http://code.google.com/p/gdata-python-client/downloads/list'))
 
 class google_base_import(osv.osv_memory):
     _inherit = 'synchronize.base.contact.wizard.import'
@@ -127,18 +134,17 @@ class synchronize_google_contact(osv.osv_memory):
         'group_name': _get_default_group,
     }
 
-    def create_partner(self, cr, uid, ids, data={}, context=None):
+    def create_partner(self, cr, uid, data={}, context=None):
         partner_obj = self.pool.get('res.partner')
-        name = data.get('name', '')
+        name = data.get('name','')
         partner_id = partner_obj.search(cr, uid, [('name','ilike',name)], context=context)
         if not partner_id:
             partner_id.append(partner_obj.create(cr, uid, {'name': name}, context=context))
         data.update({'partner_id': partner_id and partner_id[0]})
+        
         return partner_id, data
 
     def import_contact(self, cr, uid, ids, context=None):
-        addresss_obj = self.pool.get('res.partner.address')
-        partner_obj = self.pool.get('res.partner')
         partner_ids=False
         addresses=False
         user_obj = self.pool.get('res.users').browse(cr, uid, uid)
@@ -152,9 +158,9 @@ class synchronize_google_contact(osv.osv_memory):
         if not gmail_user or not gamil_pwd:
             raise osv.except_osv(_('Error'), _("Please specify the user and password !"))
 
-        contact = gd_client.GetContactsFeed()
+       
         obj=self.browse(cr, uid, ids, context=context)[0]
-        if obj.group_name != 'all' or obj.group_name != 'None':
+        if obj.group_name not in ['all','none']:
             query = gdata.contacts.service.ContactsQuery()
             query.group =obj.group_name        
             contact = gd_client.GetContactsFeed(query.ToUri())
@@ -169,7 +175,7 @@ class synchronize_google_contact(osv.osv_memory):
             if obj.create_partner:
                 partner_ids = self.create_contact( cr, uid, gd_client,contact, partner_id=True,context=context)    
             else:
-                addresses = self.create_contact( cr, uid, gd_client,contact, partner_id=True,context=context)           
+                addresses = self.create_contact( cr, uid, gd_client,contact, partner_id=False,context=context)           
             
         if partner_ids:
             return {
@@ -199,8 +205,6 @@ class synchronize_google_contact(osv.osv_memory):
     def create_contact(self, cr, uid, gd_client,contact, partner_id=False,context=None):  
           
         addresss_obj = self.pool.get('res.partner.address')
-        partner_obj = self.pool.get('res.partner')
-        partner_id = []
         addresses = []
         partner_ids = []        
         while contact:
@@ -208,9 +212,7 @@ class synchronize_google_contact(osv.osv_memory):
                 data={}
                 name = tools.ustr(entry.title.text)
                 google_id = entry.id.text
-                phone_numbers = ','.join(phone_number.text for phone_number in entry.phone_number)
                 emails = ','.join(email.address for email in entry.email)
-                data['name'] = ''
                 if name and name != 'None':
                     data['name'] = name
                 if google_id:
@@ -228,11 +230,12 @@ class synchronize_google_contact(osv.osv_memory):
                     contact_ids = addresss_obj.search(cr, uid, [('email','ilike',emails)])
                 else:
                     contact_ids = addresss_obj.search(cr, uid, [('google_id','=',google_id)])
-                    
-                if partner_id:
-                    partner_id, data = self.create_partner(cr, uid, ids, data, context=context)
+
+                if partner_id and name!='None':
+                    partner_id, data = self.create_partner(cr, uid, data, context=context)
                     partner_ids.append(partner_id[0]) 
                 if contact_ids:
+                    addresses.append(contact_ids[0])
                     self.update_contact( cr, uid, contact_ids, data,context=context)
                 if not contact_ids:
                  addresses.append(addresss_obj.create(cr, uid, data, context=context))
@@ -266,8 +269,10 @@ class synchronize_google_contact(osv.osv_memory):
             res['phone']=data.get('phone','')
         if not fax:
             res['fax']=data.get('fax','')
+        if data.get('partner_id'):
+            res['partner_id'] = data.get('partner_id') 
         addresss_obj.write(cr,uid,contact_ids,res,context=context)        
-        pass
+        return {}
 synchronize_google_contact()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
