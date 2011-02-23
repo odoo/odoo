@@ -263,6 +263,7 @@ class synchronize_google_contact(osv.osv_memory):
         res = {}
         addr = addresss_obj.browse(cr,uid,contact_ids)[0]
         name = str((addr.name or addr.partner_id and addr.partner_id.name or '').encode('utf-8'))
+        addres=addr.partner_id
         email = addr.email
         phone = addr.phone
         mobile = addr.mobile
@@ -277,7 +278,7 @@ class synchronize_google_contact(osv.osv_memory):
             res['phone']=data.get('phone','')
         if not fax:
             res['fax']=data.get('fax','')
-        if data.get('partner_id'):
+        if data.get('partner_id') and not addres :
             res['partner_id'] = data.get('partner_id') 
         addresss_obj.write(cr,uid,contact_ids,res,context=context)        
         return {}
