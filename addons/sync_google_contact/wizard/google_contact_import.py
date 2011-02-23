@@ -131,11 +131,12 @@ class synchronize_google_contact(osv.osv_memory):
     }
 
     def create_partner(self, cr, uid, data={}, context=None):
+        print "data " , data
         partner_obj = self.pool.get('res.partner')
         name = data.get('name','')
         partner_id = partner_obj.search(cr, uid, [('name','ilike',name)], context=context)
         if not partner_id:
-            partner_id.append(partner_obj.create(cr, uid, {'name': name}, context=context))
+            partner_id.append(partner_obj.create(cr, uid, {'name': name, 'address' : [(6, 0, [data['address_id']])]}, context=context))
         return partner_id, data
 
     def import_contact(self, cr, uid, ids, context=None):
@@ -163,35 +164,21 @@ class synchronize_google_contact(osv.osv_memory):
         else:
             contact = gd_client.GetContactsFeed()
 
-        if obj.create_partner:
-            partner_ids = self.create_contact( cr, uid, gd_client,contact, partner_id=True,context=context)
-        else :
-            addresses=self.create_contact( cr, uid, gd_client,contact, partner_id=False,context=context)
-
-        if partner_ids:
-            return {
-                    'name': _('Partner'),
-                    'domain': "[('id','in', ["+','.join(map(str,partner_ids))+"])]",
-                    'view_type': 'form',
-                    'view_mode': 'tree,form',
-                    'res_model': 'res.partner',
-                    'context': context,
-                    'views': [(False, 'tree'),(False, 'form')],
-                    'type': 'ir.actions.act_window',
-            }
-        elif addresses:
-            return {
-                    'name': _('Contacts'),
-                    'domain': "[('id','in', ["+','.join(map(str,addresses))+"])]",
-                    'view_type': 'form',
-                    'view_mode': 'tree,form',
-                    'res_model': 'res.partner.address',
-                    'context': context,
-                    'views': [(False, 'tree'),(False, 'form')],
-                    'type': 'ir.actions.act_window',
-            }
-        else:
+        ids = self.create_contact( cr, uid, gd_client,contact, partner_id=obj.create_partner,context=context)
+        if not ids:
             return {'type': 'ir.actions.act_window_close'}
+
+        return {
+                'name': _('Partner'),
+                'domain': "[('id','in', ["+','.join(map(str,ids))+"])]",
+                'view_type': 'form',
+                'view_mode': 'tree,form',
+                'res_model': obj.create_partner and 'res.partner' or 'res.partner.adress',
+                'context': context,
+                'views': [(False, 'tree'),(False, 'form')],
+                'type': 'ir.actions.act_window',
+        }
+
 
     def create_contact(self, cr, uid, gd_client,contact, partner_id=False,context=None):
         model_obj = self.pool.get('ir.model.data')
@@ -207,10 +194,14 @@ class synchronize_google_contact(osv.osv_memory):
                     'module': 'sync_google_contact',
                 }
                 name = tools.ustr(entry.title.text)
+                if name == "None":
+                    name = entry.email[0].address
+
                 google_id = entry.id.text
                 emails = ','.join(email.address for email in entry.email)
                 if name and name != 'None':
                     data['name'] = name
+
                 if google_id:
                     model_data.update({'google_id': google_id})
                 if entry.phone_number:
@@ -229,18 +220,16 @@ class synchronize_google_contact(osv.osv_memory):
                     data['email'] = emails
                     contact_ids = addresss_obj.search(cr, uid, [('email','ilike',emails)])
 
-
-
                 if contact_ids:
                     addresses.append(contact_ids[0])
                     self.update_contact( cr, uid, contact_ids, data,context=context)
                 if not contact_ids:
-                    #create or link to an existing partner only if
-                    if partner_id and name!='None': #to discussed if we want to create a partner if the name is none
+                    #create or link to an existing partner only if it's a new contact
+                    res_id = addresss_obj.create(cr, uid, data, context=context)
+                    data['address_id'] = res_id
+                    if partner_id:
                         partner_id, data = self.create_partner(cr, uid, data, context=context)
                         partner_ids.append(partner_id[0])
-
-                    res_id = addresss_obj.create(cr, uid, data, context=context)
                     addresses.append(res_id)
                     model_data.update({'res_id': res_id})
                     model_obj.create(cr, uid, model_data, context=context)
@@ -279,6 +268,7 @@ class synchronize_google_contact(osv.osv_memory):
             res['partner_id'] = data.get('partner_id')
         addresss_obj.write(cr,uid,contact_ids,res,context=context)
         return {}
+
 synchronize_google_contact()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
