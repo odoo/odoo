@@ -125,15 +125,19 @@ class hr_expense_expense(osv.osv):
         return True
 
     def invoice(self, cr, uid, ids, context=None):
+        wf_service = netsvc.LocalService("workflow")
         mod_obj = self.pool.get('ir.model.data')
-        inv_id = self.action_invoice_create(cr, uid, ids)
-        res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_form')
+        res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_tree')
         res_id = res and res[1] or False,
-
+        for id in ids:
+            wf_service.trg_validate(uid, 'hr.expense.expense', id, 'invoice', cr)
+            inv_id = self.browse(cr, uid, id).invoice_id.id
+            if not inv_id:
+                raise osv.except_osv(_('Error'), _('No Invoice created'))
         return {
             'name': 'Supplier Invoices',
             'view_type': 'form',
-            'view_mode': 'form',
+            'view_mode': 'tree,form',
             'view_id': [res_id],
             'res_model': 'account.invoice',
             'context': "{'type':'out_invoice', 'journal_type': 'purchase'}",
