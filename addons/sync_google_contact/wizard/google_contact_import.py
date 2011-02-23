@@ -137,8 +137,6 @@ class synchronize_google_contact(osv.osv_memory):
         return partner_id, data
 
     def import_contact(self, cr, uid, ids, context=None):
-        addresss_obj = self.pool.get('res.partner.address')
-        partner_obj = self.pool.get('res.partner')
         partner_ids=False
         addresses=False
         user_obj = self.pool.get('res.users').browse(cr, uid, uid)
@@ -207,7 +205,6 @@ class synchronize_google_contact(osv.osv_memory):
                 data={}
                 name = tools.ustr(entry.title.text)
                 google_id = entry.id.text
-                phone_numbers = ','.join(phone_number.text for phone_number in entry.phone_number)
                 emails = ','.join(email.address for email in entry.email)
                 data['name'] = ''
                 if name and name != 'None':
