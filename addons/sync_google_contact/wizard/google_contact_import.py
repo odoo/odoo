@@ -152,9 +152,9 @@ class synchronize_google_contact(osv.osv_memory):
         if not gmail_user or not gamil_pwd:
             raise osv.except_osv(_('Error'), _("Please specify the user and password !"))
 
-        contact = gd_client.GetContactsFeed()
+       
         obj=self.browse(cr, uid, ids, context=context)[0]
-        if obj.group_name != 'all' or obj.group_name != 'None':
+        if obj.group_name not in ['all','none']:
             query = gdata.contacts.service.ContactsQuery()
             query.group =obj.group_name        
             contact = gd_client.GetContactsFeed(query.ToUri())
@@ -233,6 +233,7 @@ class synchronize_google_contact(osv.osv_memory):
                     partner_id, data = self.create_partner(cr, uid, ids, data, context=context)
                     partner_ids.append(partner_id[0]) 
                 if contact_ids:
+                    addresses.append(contact_ids[0])
                     self.update_contact( cr, uid, contact_ids, data,context=context)
                 if not contact_ids:
                  addresses.append(addresss_obj.create(cr, uid, data, context=context))
@@ -246,6 +247,7 @@ class synchronize_google_contact(osv.osv_memory):
             return addresses
         
     def update_contact(self, cr, uid, contact_ids, data,context=None):
+
         addresss_obj = self.pool.get('res.partner.address')
         if context==None:
             context={}
