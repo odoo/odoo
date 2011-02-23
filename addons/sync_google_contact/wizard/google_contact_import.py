@@ -22,8 +22,15 @@
 from osv import fields,osv
 from tools.translate import _
 import tools
-import gdata.contacts
-import gdata.contacts.client
+try:
+    import gdata
+    from gdata import contacts
+    import gdata.contacts.service
+    import gdata.contacts
+    import gdata.contacts.client    
+    import atom
+except ImportError:
+    raise osv.except_osv(_('Google Contacts Import Error!'), _('Please install gdata-python-client from http://code.google.com/p/gdata-python-client/downloads/list'))
 
 class google_base_import(osv.osv_memory):
     _inherit = 'synchronize.base.contact.wizard.import'
