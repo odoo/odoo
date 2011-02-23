@@ -441,6 +441,7 @@ class crm_case(object):
         @param context: A standard dictionary for contextual values
 
         """
+        
         return self.remind_user(cr, uid, ids, context, attach,
                 destination=False)
 
@@ -451,15 +452,19 @@ class crm_case(object):
         @param uid: the current user’s ID for security checks,
         @param ids: List of Remind user's IDs
         @param context: A standard dictionary for contextual values
-
         """
         for case in self.browse(cr, uid, ids, context=context):
             if not case.section_id.reply_to:
                 raise osv.except_osv(_('Error!'), ("Reply To is not specified in the sales team"))
-            if not case.email_from:
+            
+            if context.get('remind_partner') and not case.email_from:
                 raise osv.except_osv(_('Error!'), ("Partner Email is not specified in Case"))
-            if case.section_id.reply_to and case.email_from:
-                src = case.email_from
+            elif not context.get('remind_partner') and not case.user_id.user_email:    
+                    raise osv.except_osv(_('Error!'), ("User Email is not specified in Case"))
+                
+            case_email = context.get('remind_partner') and case.email_from  or case.user_id.user_email
+            if case.section_id.reply_to and case_email:
+                src = case_email
                 dest = case.section_id.reply_to
                 body = case.description or ""
                 if case.message_ids:
