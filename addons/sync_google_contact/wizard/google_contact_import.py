@@ -267,7 +267,7 @@ class synchronize_google_contact(osv.osv_memory):
         if not fax:
             res['fax']=data.get('fax','')
         addresss_obj.write(cr,uid,contact_ids,res,context=context)        
-        pass
+        return {}
 synchronize_google_contact()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
