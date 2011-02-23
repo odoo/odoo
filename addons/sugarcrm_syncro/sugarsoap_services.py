@@ -14,7 +14,7 @@ try:
     from ZSI.TCcompound import Struct
     from ZSI import client
 except ImportError:
-    raise osv.except_osv(_('ZSI Import Error!'), _('Please install SOAP for python - ZSI-2.0-rc3.tar.gz'))
+    raise osv.except_osv(_('ZSI Import Error!'), _('Please install SOAP for python - ZSI-2.0-rc3.tar.gz - python-zci'))
 
 
 
@@ -216,7 +216,7 @@ class sugarsoapBindingSOAP:
         try:
             response = self.binding.Receive(typecode)
         except:
-            return None    
+            return None
         return response
 
     # op: get_entry
