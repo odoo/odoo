@@ -2113,6 +2113,7 @@ class stock_move(osv.osv):
                 todo.append(move.id)
         if todo:
             self.action_confirm(cr, uid, todo, context=context)
+            todo = []
 
         for move in self.browse(cr, uid, ids, context=context):
             if move.state in ['done','cancel']:
@@ -2136,7 +2137,10 @@ class stock_move(osv.osv):
             if prodlot_id:
                 self.write(cr, uid, [move.id], {'prodlot_id': prodlot_id}, context=context)
             if move.state not in ('confirmed','done'):
-                self.action_confirm(cr, uid, move_ids, context=context)
+                todo.append(move.id)
+
+        if todo:
+            self.action_confirm(cr, uid, todo, context=context)
 
         self.write(cr, uid, move_ids, {'state': 'done', 'date_planned': time.strftime('%Y-%m-%d %H:%M:%S')}, context=context)
         for id in move_ids:
