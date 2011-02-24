@@ -27,8 +27,18 @@ class project_issue(osv.osv):
     _description = 'project issue'
     _columns = {
         'timesheet_ids': fields.one2many('hr.analytic.timesheet', 'issue_id', 'Timesheets'),
-        'analytic_account_id': fields.related('project_id', 'analytic_account_id', type='many2one', relation='account.analytic.account',string='Analytic Account')
+        'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account'), 
     }
+    
+    def on_change_project(self, cr, uid, ids, project_id, context=None):
+        if not project_id:
+            return {}
+        project = self.pool.get('project.project').browse(cr, uid, project_id, context=context)
+        account = project.analytic_account_id
+        if account:
+            return {'value' : {'analytic_account_id' : account.id}}
+        else:
+            return {}
 
 project_issue()
 
