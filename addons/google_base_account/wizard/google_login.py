@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from osv import fields,osv,orm
+from osv import fields,osv
 from tools.translate import _
 import gdata.contacts.service
 
@@ -70,7 +70,7 @@ class google_login(osv.osv_memory):
                    'gmail_password': password
             }
             self.pool.get('res.users').write(cr, uid, uid, res, context=context)
-        except Exception, e:
+        except :
             raise osv.except_osv(_('Error'), _("Authication fail check  the user and password !"))
 
         return self._get_next_action(cr, uid, context=context)
