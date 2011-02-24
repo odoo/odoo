@@ -107,6 +107,7 @@
                       <field name="date_prefered"/>
                       <field name="date_scheduled" select="1" attrs="{'readonly':[('date_prefered','!=','fixed')]}" />
                       <button colspan="2" name="%(action_create_payment_order)d" string="Select Invoices to Pay" type="action" attrs="{'invisible':[('state','=','done')]}" icon="gtk-find"/>
+                      <field name="company_id" widget='selection' groups="base.group_multi_company"/>
                     </group>
                     <field name="line_ids" colspan="4" widget="one2many_list" nolabel="1" default_get="{'order_id': active_id or False}" >
                         <form string="Payment Line">
@@ -128,7 +129,8 @@
                                     <field colspan="4" name="communication"/>
                                     <field colspan="4" name="communication2"/>
                                     <field name="name"/>
-                                     <field name="state"/>
+                                    <field name="state"/>
+                                    <field name="company_id" widget='selection' groups="base.group_multi_company"/>
                                 </page>
                                 <page string="Information">
 
@@ -179,6 +181,7 @@
                     <field name="reference"/>
                     <field name="mode"/>
                     <field name="user_id"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                     <field name="date_created"/>
                     <field name="date_done"/>
                     <field name="total"/>
