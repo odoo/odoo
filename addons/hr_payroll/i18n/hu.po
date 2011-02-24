@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2011-01-19 12:00+0000\n"
+"PO-Revision-Date: 2011-02-03 22:21+0000\n"
 "Last-Translator: NOVOTRADE RENDSZERHÁZ <openerp@novotrade.hu>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-25 06:43+0000\n"
+"X-Launchpad-Export-Date: 2011-02-05 05:01+0000\n"
 "X-Generator: Launchpad (build 12177)\n"
 
 #. module: hr_payroll
@@ -43,7 +43,7 @@ msgstr "Táblázat újraszámítása"
 #. module: hr_payroll
 #: report:employees.salary:0
 msgid "Employees Salary Details"
-msgstr "Alkalmazott fizetésének részletei"
+msgstr "Alkalmazott bérének részletei"
 
 #. module: hr_payroll
 #: report:employees.salary:0
@@ -82,7 +82,7 @@ msgstr "Kölcsön"
 #. module: hr_payroll
 #: report:hr.payroll.register.sheet:0
 msgid "Salary Payment Register"
-msgstr ""
+msgstr "Bérkifizetési nyilvántartás"
 
 #. module: hr_payroll
 #: field:hr.employee,slip_ids:0
@@ -90,18 +90,18 @@ msgstr ""
 #: field:hr.payroll.register,line_ids:0
 #: model:ir.actions.act_window,name:hr_payroll.act_hr_employee_payslip_list
 msgid "Payslips"
-msgstr ""
+msgstr "Fizetési jegyzékek"
 
 #. module: hr_payroll
 #: model:ir.actions.report.xml,name:hr_payroll.year_salary_report
 msgid "Year Salary Report"
-msgstr "Éves fizetési jelentés"
+msgstr "Éves bérkimutatás"
 
 #. module: hr_payroll
 #: selection:hr.payroll.register,state:0
 #: selection:hr.payslip,state:0
 msgid "Paid Salary"
-msgstr "Kifizetett munkabér"
+msgstr "Kifizetett bér"
 
 #. module: hr_payroll
 #: report:payslip.pdf:0
@@ -176,7 +176,7 @@ msgstr "Egyéb"
 #: model:ir.model,name:hr_payroll.model_hr_payslip
 #: report:payslip.pdf:0
 msgid "Pay Slip"
-msgstr ""
+msgstr "Fizetési jegyzék"
 
 #. module: hr_payroll
 #: report:salary.structure:0
@@ -254,7 +254,7 @@ msgstr "Nyilvántartási sorok"
 #. module: hr_payroll
 #: view:hr.payslip:0
 msgid "Salary Computation"
-msgstr "Fizetés kiszámítása"
+msgstr "Bér kiszámítása"
 
 #. module: hr_payroll
 #: field:hr.payroll.advice.line,amount:0
@@ -267,7 +267,7 @@ msgstr "Összeg"
 #: code:addons/hr_payroll/hr_payroll.py:1225
 #, python-format
 msgid "Please check configuration of %s, payroll head is missing"
-msgstr ""
+msgstr "Kérem, ellenőrizze a %s beállítását, a bérlista fej hiányzik."
 
 #. module: hr_payroll
 #: selection:company.contribution,amount_type:0
@@ -350,7 +350,7 @@ msgstr "Kifizetés"
 #: view:hr.payslip.line:0
 #: model:ir.model,name:hr_payroll.model_hr_payslip_line
 msgid "Payslip Line"
-msgstr ""
+msgstr "Fizetési jegyzék sor"
 
 #. module: hr_payroll
 #: report:payslip.pdf:0
@@ -361,18 +361,18 @@ msgstr "Személyi igazolvány száma"
 #: view:hr.allounce.deduction.categoty:0
 #: field:hr.allounce.deduction.categoty,base:0
 msgid "Based on"
-msgstr ""
+msgstr "Alapul"
 
 #. module: hr_payroll
 #: selection:hr.payroll.register,state:0
 #: selection:hr.payslip,state:0
 msgid "Wating for Verification"
-msgstr ""
+msgstr "Várakozás a megerősítésre"
 
 #. module: hr_payroll
 #: model:ir.module.module,shortdesc:hr_payroll.module_meta_information
 msgid "Human Resource Payroll"
-msgstr ""
+msgstr "Bérszámfejtés"
 
 #. module: hr_payroll
 #: report:payroll.advice:0
@@ -398,6 +398,16 @@ msgid ""
 "    * Integrated with Holiday Management\n"
 "    "
 msgstr ""
+"Általános bérszámfejtő rendszer\n"
+"    * Alkalmazottak adatai\n"
+"    * Munkaszerződések\n"
+"    * Útlevél alapú szerződések\n"
+"    * Juttatások/levonások\n"
+"    * Alap/bruttó/nettó bér beállítása\n"
+"    * Fizetési jegyzék\n"
+"    * Havi bérlista\n"
+"    * Szabadságkezeléssel integrálva\n"
+"    "
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_holidays_status
@@ -448,7 +458,7 @@ msgstr "Befejezés dátuma"
 #. module: hr_payroll
 #: model:ir.actions.report.xml,name:hr_payroll.salary_payslip
 msgid "Employee PaySlip"
-msgstr ""
+msgstr "Alkalmazott fizetési jegyzéke"
 
 #. module: hr_payroll
 #: field:hr.payslip,leaves:0
@@ -558,7 +568,7 @@ msgstr "Hiba !"
 #: view:hr.payroll.register:0
 #: view:hr.payslip:0
 msgid "Verify Sheet"
-msgstr ""
+msgstr "Táblázat ellenőrzése"
 
 #. module: hr_payroll
 #: help:hr.contract,working_days_per_week:0
@@ -569,7 +579,7 @@ msgstr "Alkalmazott munkanapjainak/heteinek száma"
 #: selection:hr.payroll.register,state:0
 #: selection:hr.payslip,state:0
 msgid "New Slip"
-msgstr ""
+msgstr "Új fizetési jegyzék"
 
 #. module: hr_payroll
 #: field:hr.payslip,basic:0
@@ -583,7 +593,7 @@ msgstr "Nettó alapbér"
 #: field:hr.payslip,grows:0
 #: report:salary.structure:0
 msgid "Gross Salary"
-msgstr "Bruttó fizetés"
+msgstr "Bruttó bér"
 
 #. module: hr_payroll
 #: report:payslip.pdf:0
@@ -594,7 +604,7 @@ msgstr "Összes jövedelem"
 #: model:ir.actions.act_window,name:hr_payroll.action_hr_payroll_employees_detail
 #: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_employees_detail
 msgid "Employee Salary Statement"
-msgstr ""
+msgstr "Alkalmazott bérkimutatása"
 
 #. module: hr_payroll
 #: selection:hr.allounce.deduction.categoty,type:0
@@ -622,7 +632,7 @@ msgstr "Munkavállalási engedély száma"
 #. module: hr_payroll
 #: field:hr.payroll.advice,line_ids:0
 msgid "Employee Salary"
-msgstr "Alkalmazotti fizetés"
+msgstr "Alkalmazotti bér"
 
 #. module: hr_payroll
 #: field:hr.payroll.advice,chaque_nos:0
@@ -672,7 +682,7 @@ msgstr "hr.payroll.employees.detail"
 #: view:hr.payroll.register:0
 #: view:hr.payslip:0
 msgid "Pay Salary"
-msgstr "Munkabér kifizetése"
+msgstr "Bér kifizetése"
 
 #. module: hr_payroll
 #: field:hr.payroll.advice.line,name:0
@@ -708,7 +718,7 @@ msgstr "Banki értesítő megjegyzés"
 #: view:hr.payroll.register:0
 #: view:hr.payslip:0
 msgid "Payslip"
-msgstr ""
+msgstr "Fizetési jegyzék"
 
 #. module: hr_payroll
 #: constraint:hr.contract:0
@@ -749,7 +759,7 @@ msgstr "Bérszerkezet:"
 #. module: hr_payroll
 #: model:ir.actions.report.xml,name:hr_payroll.year_employees_detail
 msgid "Employees Salary Detail"
-msgstr "Alkalmazott fizetésének részletei"
+msgstr "Alkalmazott bérének részletei"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_line_line
@@ -762,7 +772,7 @@ msgstr "Függvénysor"
 #: selection:hr.payroll.register,state:0
 #: selection:hr.payslip,state:0
 msgid "Confirm Sheet"
-msgstr ""
+msgstr "Táblázat megerősítése"
 
 #. module: hr_payroll
 #: report:employees.salary:0
@@ -842,7 +852,7 @@ msgstr "Kimutatás nyomtatása"
 #. module: hr_payroll
 #: view:hr.payslip:0
 msgid "Draft"
-msgstr "Piszkozat"
+msgstr "Tervezet"
 
 #. module: hr_payroll
 #: report:payslip.pdf:0
@@ -864,7 +874,7 @@ msgstr "Összes útlevél"
 #: model:ir.actions.act_window,name:hr_payroll.action_hr_payroll_year_salary
 #: model:ir.ui.menu,name:hr_payroll.menu_wizard_print_year_salary
 msgid "Salary Register"
-msgstr "Fizetés nyilvántartás"
+msgstr "Bérnyilvántartás"
 
 #. module: hr_payroll
 #: report:employees.salary:0
@@ -966,7 +976,7 @@ msgstr ""
 #. module: hr_payroll
 #: report:year.salary:0
 msgid "Yearly Salary Details"
-msgstr "Éves fizetés részletei"
+msgstr "Éves bér részletei"
 
 #. module: hr_payroll
 #: constraint:hr.employee:0
@@ -1177,7 +1187,7 @@ msgstr "Nyilvántartási sor"
 #: view:hr.payroll.register:0
 #: view:hr.payslip:0
 msgid "Cancel"
-msgstr "Mégsem"
+msgstr "Mégse"
 
 #. module: hr_payroll
 #: view:hr.payroll.employees.detail:0
@@ -1205,7 +1215,7 @@ msgstr ""
 #. module: hr_payroll
 #: report:salary.structure:0
 msgid "Salary"
-msgstr "Fizetés"
+msgstr "Bér"
 
 #. module: hr_payroll
 #: field:hr.contract,passport_id:0
@@ -1221,7 +1231,7 @@ msgstr "Útlevél"
 #. module: hr_payroll
 #: report:hr.payroll.register.sheet:0
 msgid "Total Salary"
-msgstr "Összes fizetés"
+msgstr "Összes bér"
 
 #. module: hr_payroll
 #: report:payroll.advice:0
@@ -1231,7 +1241,7 @@ msgstr "időszakra"
 #. module: hr_payroll
 #: field:hr.holidays.status,head_id:0
 msgid "Payroll Head"
-msgstr ""
+msgstr "Bérlista fej"
 
 #. module: hr_payroll
 #: field:company.contribution,register_id:0
@@ -1329,7 +1339,7 @@ msgstr "Levonás fejek"
 #. module: hr_payroll
 #: report:hr.payroll.register.sheet:0
 msgid "Gross Sal."
-msgstr "Bruttó fizetés"
+msgstr "Bruttó bér"
 
 #. module: hr_payroll
 #: view:company.contribution:0
@@ -1388,7 +1398,7 @@ msgstr "Fizetési típus"
 #. module: hr_payroll
 #: report:hr.payroll.register.sheet:0
 msgid "Net Sal."
-msgstr "Nettó fizetés"
+msgstr "Nettó bér"
 
 #. module: hr_payroll
 #: sql_constraint:hr.passport:0
@@ -1416,7 +1426,7 @@ msgstr "Cím"
 #. module: hr_payroll
 #: field:hr.payslip.line.line,slipline_id:0
 msgid "Slip Line"
-msgstr ""
+msgstr "Fizetési jegyzék sor"
 
 #. module: hr_payroll
 #: report:payslip.pdf:0
@@ -1434,7 +1444,7 @@ msgstr "Bank"
 #. module: hr_payroll
 #: view:hr.payroll.advice:0
 msgid "Cancel Sheet"
-msgstr ""
+msgstr "Táblázat érvénytelenítése"
 
 #. module: hr_payroll
 #: selection:hr.allounce.deduction.categoty,type:0
@@ -1523,7 +1533,7 @@ msgstr "Vállalati levonás"
 #. module: hr_payroll
 #: view:hr.holidays.status:0
 msgid "Payroll Configurtion"
-msgstr ""
+msgstr "Bérlista beállítás"
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/hr_payroll.py:469
@@ -1563,7 +1573,7 @@ msgstr "Bankadatok"
 #. module: hr_payroll
 #: report:payslip.pdf:0
 msgid "Slip ID"
-msgstr ""
+msgstr "Fizetési jegyzék ID"
 
 #. module: hr_payroll
 #: field:company.contribution.line,sequence:0
@@ -1577,7 +1587,7 @@ msgstr "Sorszám"
 #: model:ir.actions.act_window,name:hr_payroll.action_view_hr_payslip_form
 #: model:ir.ui.menu,name:hr_payroll.menu_department_tree
 msgid "Employee Payslip"
-msgstr ""
+msgstr "Alkalmazott fizetési jegyzéke"
 
 #. module: hr_payroll
 #: view:hr.payroll.advice:0
@@ -1588,7 +1598,7 @@ msgstr "Levél tartalma"
 #: view:hr.payroll.employees.detail:0
 #: view:hr.payroll.year.salary:0
 msgid "Year Salary"
-msgstr "Éves fizetés"
+msgstr "Éves bér"
 
 #. module: hr_payroll
 #: view:hr.payroll.register:0
@@ -1603,7 +1613,7 @@ msgstr "Bank átutalás értesítő"
 #. module: hr_payroll
 #: view:hr.payslip:0
 msgid "Search Payslips"
-msgstr ""
+msgstr "Fizetési jegyzékek keresése"
 
 #. module: hr_payroll
 #: report:employees.salary:0

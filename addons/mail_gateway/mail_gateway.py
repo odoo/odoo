@@ -128,7 +128,7 @@ class mailgate_thread(osv.osv):
         for case in cases:
             attachments = []
             for att in attach:
-                    attachments.append(att_obj.create(cr, uid, {'res_model':case._name,'res_id':case.id,'name': att[0], 'datas': base64.encodestring(att[1])}))
+                    attachments.append(att_obj.create(cr, uid, {'res_model':case._name,'res_id':case.id, 'name': att[0], 'datas': base64.encodestring(att[1])}))
 
             partner_id = hasattr(case, 'partner_id') and (case.partner_id and case.partner_id.id or False) or False
             if not partner_id and case._name == 'res.partner':

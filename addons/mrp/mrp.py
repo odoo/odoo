@@ -573,6 +573,7 @@ class mrp_production(osv.osv):
         """
         results = []
         bom_obj = self.pool.get('mrp.bom')
+        uom_obj = self.pool.get('product.uom')
         prod_line_obj = self.pool.get('mrp.production.product.line')
         workcenter_line_obj = self.pool.get('mrp.production.workcenter.line')
         for production in self.browse(cr, uid, ids):
@@ -590,7 +591,7 @@ class mrp_production(osv.osv):
             if not bom_id:
                 raise osv.except_osv(_('Error'), _("Couldn't find bill of material for product"))
 
-            factor = production.product_qty * production.product_uom.factor / bom_point.product_uom.factor
+            factor = uom_obj._compute_qty(cr, uid, production.product_uom.id, production.product_qty, bom_point.product_uom.id)
             res = bom_obj._bom_explode(cr, uid, bom_point, factor / bom_point.product_qty, properties)
             results = res[0]
             results2 = res[1]
@@ -671,7 +672,6 @@ class mrp_production(osv.osv):
         stock_mov_obj = self.pool.get('stock.move')
         production = self.browse(cr, uid, production_id, context=context)
 
-        final_product_todo = []
 
         produced_qty = 0
         if production_mode == 'consume_produce':
@@ -713,7 +713,7 @@ class mrp_production(osv.osv):
 
         if production_mode == 'consume_produce':
             # To produce remaining qty of final product
-            vals = {'state':'confirmed'}
+            #vals = {'state':'confirmed'}
             #final_product_todo = [x.id for x in production.move_created_ids]
             #stock_mov_obj.write(cr, uid, final_product_todo, vals)
             #stock_mov_obj.action_confirm(cr, uid, final_product_todo, context)

@@ -7,19 +7,19 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:16+0000\n"
-"PO-Revision-Date: 2011-01-19 12:00+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"PO-Revision-Date: 2011-02-03 07:56+0000\n"
+"Last-Translator: Wei \"oldrev\" Li <oldrev@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-25 07:06+0000\n"
+"X-Launchpad-Export-Date: 2011-02-05 05:00+0000\n"
 "X-Generator: Launchpad (build 12177)\n"
 
 #. module: stock
 #: field:product.product,track_outgoing:0
 msgid "Track Outgoing Lots"
-msgstr ""
+msgstr "跟踪出库批次"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_ups_upload
@@ -30,7 +30,7 @@ msgstr ""
 #: code:addons/stock/product.py:76
 #, python-format
 msgid "Variation Account is not specified for Product Category: %s"
-msgstr ""
+msgstr "产品种类“%s”没有指定库存变动科目"
 
 #. module: stock
 #: field:stock.location,chained_location_id:0
@@ -74,14 +74,14 @@ msgstr "版本号"
 #: view:stock.move.memory.in:0
 #: view:stock.move.memory.out:0
 msgid "Product Moves"
-msgstr ""
+msgstr "产品调拨"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_move_report
 #: model:ir.ui.menu,name:stock.menu_action_stock_move_report
 #: view:report.stock.move:0
 msgid "Moves Analysis"
-msgstr ""
+msgstr "调拨分析"
 
 #. module: stock
 #: help:stock.production.lot,ref:0
@@ -215,7 +215,7 @@ msgstr "无效"
 #. module: stock
 #: help:stock.tracking,serial:0
 msgid "Other reference or serial number"
-msgstr "其它参考或序列号"
+msgstr "其它编号或序列号"
 
 #. module: stock
 #: field:stock.move,origin:0
@@ -232,7 +232,7 @@ msgstr ""
 #. module: stock
 #: view:stock.tracking:0
 msgid "Pack Identification"
-msgstr ""
+msgstr "包装单标识"
 
 #. module: stock
 #: view:stock.move:0
@@ -240,13 +240,13 @@ msgstr ""
 #: field:stock.picking,name:0
 #: view:stock.production.lot:0
 msgid "Reference"
-msgstr "关联单号"
+msgstr "单号"
 
 #. module: stock
 #: code:addons/stock/stock.py:661
 #, python-format
 msgid "Products to Process"
-msgstr ""
+msgstr "待处理产品"
 
 #. module: stock
 #: constraint:product.category:0
@@ -258,12 +258,12 @@ msgstr "错误!你不能创建递归的分类"
 msgid ""
 "If checked, all product quantities will be set to zero to help ensure a real "
 "physical inventory is done"
-msgstr ""
+msgstr "如果选定此处，那么所有产品数量将设为零以确保真实盘点操作的完成。"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_split_lines
 msgid "Split lines"
-msgstr ""
+msgstr "分拆明细"
 
 #. module: stock
 #: code:addons/stock/stock.py:1127
@@ -301,7 +301,7 @@ msgstr "业务伙伴"
 #: help:stock.move.memory.in,currency:0
 #: help:stock.move.memory.out,currency:0
 msgid "Currency in which Unit cost is expressed"
-msgstr ""
+msgstr "使用单位成本的金额形式表示"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_return_picking.py:135
@@ -319,7 +319,7 @@ msgstr "生产批次"
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_uom_categ_form_action
 msgid "Units of Measure Categories"
-msgstr ""
+msgstr "计量单位类别"
 
 #. module: stock
 #: help:stock.incoterms,code:0
@@ -329,7 +329,7 @@ msgstr "贸易术语编号"
 #. module: stock
 #: field:stock.tracking,move_ids:0
 msgid "Moves for this pack"
-msgstr ""
+msgstr "此包装单包含的库存调拨"
 
 #. module: stock
 #: selection:report.stock.inventory,location_type:0
@@ -366,7 +366,7 @@ msgstr "实际库存值"
 #. module: stock
 #: field:report.stock.move,day_diff2:0
 msgid "Lag (Days)"
-msgstr ""
+msgstr "滞后天数"
 
 #. module: stock
 #: model:ir.model,name:stock.model_action_traceability
@@ -399,24 +399,24 @@ msgstr "可用"
 #: view:stock.picking:0
 #: field:stock.picking,min_date:0
 msgid "Expected Date"
-msgstr ""
+msgstr "预计日期"
 
 #. module: stock
 #: view:board.board:0
 #: model:ir.actions.act_window,name:stock.action_outgoing_product_board
 msgid "Outgoing Product"
-msgstr ""
+msgstr "出库货品"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_warehouse_form
 msgid ""
 "Create and manage your warehouses and assign them a location from here"
-msgstr ""
+msgstr "在此处创建与管理您的实体仓库并给它们分配库位。"
 
 #. module: stock
 #: field:report.stock.move,product_qty_in:0
 msgid "In Qty"
-msgstr ""
+msgstr "按数量"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_fill_inventory.py:115
@@ -433,12 +433,12 @@ msgstr "出库库位"
 #: model:ir.actions.act_window,name:stock.split_into
 #: model:ir.model,name:stock.model_stock_split_into
 msgid "Split into"
-msgstr ""
+msgstr "分拆到"
 
 #. module: stock
 #: field:stock.move,price_currency_id:0
 msgid "Currency for average price"
-msgstr ""
+msgstr "平均价格使用的币别"
 
 #. module: stock
 #: help:product.template,property_stock_account_input:0
@@ -458,22 +458,22 @@ msgstr "库位类型"
 #: help:report.stock.move,type:0
 #: help:stock.picking,type:0
 msgid "Shipping type specify, goods coming in or going out."
-msgstr ""
+msgstr "指定货物进出的货运类型"
 
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.report_move_labels
 msgid "Item Labels"
-msgstr ""
+msgstr "产品标签"
 
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_move
 msgid "Moves Statistics"
-msgstr ""
+msgstr "调拨统计"
 
 #. module: stock
 #: view:stock.production.lot:0
 msgid "Product Lots Filter"
-msgstr ""
+msgstr "产品批次过滤器"
 
 #. module: stock
 #: report:lot.stock.overview:0
@@ -488,12 +488,12 @@ msgstr "["
 msgid ""
 "Current quantity of products with this Production Lot Number available in "
 "company warehouses"
-msgstr ""
+msgstr "当前此产品批次在公司仓库内的产品存量"
 
 #. module: stock
 #: field:stock.move,move_history_ids:0
 msgid "Move History (child moves)"
-msgstr ""
+msgstr "调拨历史记录（下级调拨）"
 
 #. module: stock
 #: code:addons/stock/stock.py:1984
@@ -501,7 +501,7 @@ msgstr ""
 msgid ""
 "There is no stock output account defined for this product or its category: "
 "\"%s\" (id: %d)"
-msgstr ""
+msgstr "此产品或产品种类“%s（标识：%d）”没有设置出库科目"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree6
@@ -513,13 +513,13 @@ msgstr "内部调拨"
 #. module: stock
 #: field:stock.move,location_dest_id:0
 msgid "Destination Location"
-msgstr ""
+msgstr "目标库位"
 
 #. module: stock
 #: code:addons/stock/stock.py:751
 #, python-format
 msgid "You can not process picking without stock moves"
-msgstr ""
+msgstr "您不能处理没有调拨信息的分拣单"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_product_packaging_stock_action
@@ -550,7 +550,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_inventory_control
 msgid "Inventory Control"
-msgstr ""
+msgstr "库存控制"
 
 #. module: stock
 #: view:stock.location:0
@@ -562,18 +562,18 @@ msgstr "附加信息"
 #: report:lot.stock.overview:0
 #: report:lot.stock.overview_all:0
 msgid "Location / Product"
-msgstr ""
+msgstr "库位/产品"
 
 #. module: stock
 #: code:addons/stock/stock.py:1306
 #, python-format
 msgid "Reception"
-msgstr ""
+msgstr "收货"
 
 #. module: stock
 #: field:stock.tracking,serial:0
 msgid "Additional Reference"
-msgstr "附加引用单号"
+msgstr "附加单号"
 
 #. module: stock
 #: view:stock.production.lot.revision:0
@@ -616,12 +616,12 @@ msgstr "调拨信息"
 #. module: stock
 #: view:report.stock.move:0
 msgid "Outgoing"
-msgstr ""
+msgstr "出货"
 
 #. module: stock
 #: selection:report.stock.move,month:0
 msgid "August"
-msgstr ""
+msgstr "八月"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_tracking_form
@@ -634,7 +634,7 @@ msgstr ""
 #. module: stock
 #: constraint:stock.move:0
 msgid "You try to assign a lot which is not from the same product"
-msgstr ""
+msgstr "您尝试为另外的产品赋予批次"
 
 #. module: stock
 #: view:res.partner:0
@@ -644,7 +644,7 @@ msgstr "销售&采购"
 #. module: stock
 #: selection:report.stock.move,month:0
 msgid "June"
-msgstr ""
+msgstr "六月"
 
 #. module: stock
 #: field:product.template,property_stock_procurement:0
@@ -670,17 +670,17 @@ msgstr "接收"
 #: model:ir.actions.act_window,name:stock.action_location_tree
 #: model:ir.ui.menu,name:stock.menu_action_location_tree
 msgid "Location Structure"
-msgstr ""
+msgstr "库位结构"
 
 #. module: stock
 #: selection:report.stock.move,month:0
 msgid "October"
-msgstr ""
+msgstr "十月"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_inventory_line
 msgid "Inventory Line"
-msgstr ""
+msgstr "盘点单明细"
 
 #. module: stock
 #: help:product.category,property_stock_journal:0
@@ -692,13 +692,13 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_partial_picking
 msgid "Process Picking"
-msgstr ""
+msgstr "处理分拣单"
 
 #. module: stock
 #: code:addons/stock/product.py:355
 #, python-format
 msgid "Future Receptions"
-msgstr ""
+msgstr "未来入库的货物"
 
 #. module: stock
 #: help:stock.inventory.line.split,use_exist:0
@@ -711,7 +711,7 @@ msgstr ""
 #. module: stock
 #: field:stock.move,move_dest_id:0
 msgid "Destination Move"
-msgstr ""
+msgstr "调拨目的"
 
 #. module: stock
 #: view:stock.move:0
@@ -748,7 +748,7 @@ msgstr "此单据上的日期"
 #. module: stock
 #: selection:product.product,valuation:0
 msgid "Periodical (manual)"
-msgstr ""
+msgstr "定期（手动进行）"
 
 #. module: stock
 #: model:stock.location,name:stock.location_procurement
@@ -769,19 +769,19 @@ msgstr "盘点单草稿"
 #: selection:report.stock.inventory,location_type:0
 #: selection:stock.location,usage:0
 msgid "Transit Location for Inter-Companies Transfers"
-msgstr ""
+msgstr "用于公司内部调拨的库位"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_view_change_product_quantity
 #: model:ir.model,name:stock.model_stock_change_product_qty
 #: view:stock.change.product.qty:0
 msgid "Change Product Quantity"
-msgstr ""
+msgstr "更改产品数量"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_inventory_merge
 msgid "Merge Inventory"
-msgstr ""
+msgstr "合并盘点单"
 
 #. module: stock
 #: code:addons/stock/product.py:371
@@ -794,14 +794,14 @@ msgstr ""
 #: model:ir.ui.menu,name:stock.menu_action_picking_tree4
 #: view:stock.picking:0
 msgid "Incoming Shipments"
-msgstr ""
+msgstr "来料装运"
 
 #. module: stock
 #: view:report.stock.inventory:0
 #: view:stock.move:0
 #: view:stock.picking:0
 msgid "Scrap"
-msgstr ""
+msgstr "损耗"
 
 #. module: stock
 #: field:stock.location,child_ids:0
@@ -811,12 +811,12 @@ msgstr "包含"
 #. module: stock
 #: view:board.board:0
 msgid "Incoming Products Delay"
-msgstr ""
+msgstr "来料产品延迟"
 
 #. module: stock
 #: view:stock.location:0
 msgid "Stock Locations"
-msgstr ""
+msgstr "库位"
 
 #. module: stock
 #: report:lot.stock.overview:0
@@ -828,7 +828,7 @@ msgstr "单价"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_split_lines_exist
 msgid "Exist Split lines"
-msgstr ""
+msgstr "现有拆分明细"
 
 #. module: stock
 #: field:stock.move,date_expected:0
@@ -838,7 +838,7 @@ msgstr "预定日期"
 #. module: stock
 #: view:stock.tracking:0
 msgid "Pack Search"
-msgstr ""
+msgstr "包装单搜索"
 
 #. module: stock
 #: selection:stock.move,priority:0
@@ -857,12 +857,12 @@ msgid ""
 "Keep empty if you produce at the location where the finished products are "
 "needed.Set a location if you produce at a fixed location. This can be a "
 "partner location if you subcontract the manufacturing operations."
-msgstr ""
+msgstr "如果您在所需成品地点生产，请留空。如在固定地点生产请设置地点。如果您外包这块生产业务，这也可以是业务伙伴的地点。"
 
 #. module: stock
 #: view:res.partner:0
 msgid "Inventory Properties"
-msgstr ""
+msgstr "库存属性"
 
 #. module: stock
 #: field:report.stock.move,day_diff:0
@@ -884,13 +884,13 @@ msgstr ""
 #. module: stock
 #: view:report.stock.move:0
 msgid "Month-1"
-msgstr ""
+msgstr "上月"
 
 #. module: stock
 #: help:stock.location,active:0
 msgid ""
 "By unchecking the active field, you may hide a location without deleting it."
-msgstr ""
+msgstr "如果取消选中“可用”字段那么您可以不删除但隐藏库位。"
 
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.report_picking_list
@@ -917,18 +917,18 @@ msgstr "左父项"
 #: code:addons/stock/wizard/stock_partial_move.py:132
 #, python-format
 msgid "Delivery Information"
-msgstr ""
+msgstr "配送信息"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_fill_inventory.py:48
 #, python-format
 msgid "Stock Inventory is done"
-msgstr ""
+msgstr "库存盘点完成"
 
 #. module: stock
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
-msgstr ""
+msgstr "错误：无效的(EAN)条码"
 
 #. module: stock
 #: code:addons/stock/product.py:148
@@ -945,7 +945,7 @@ msgstr "生产库位"
 #. module: stock
 #: help:stock.picking,address_id:0
 msgid "Address of partner"
-msgstr ""
+msgstr "业务伙伴地址"
 
 #. module: stock
 #: model:res.company,overdue_msg:stock.res_company_shop0
@@ -967,6 +967,20 @@ msgid ""
 "%(company_name)s\n"
 "        "
 msgstr ""
+"\n"
+"尊敬的 %(partner_name)s：\n"
+"\n"
+"附件中是贵单位所有的未付款发票，总金额：\n"
+"\n"
+"%(followup_amount).2f %(company_currency)s\n"
+"\n"
+"感谢！\n"
+"\n"
+"\n"
+"%(user_signature)s\n"
+"%(company_name)s\n"
+"%(date)s\n"
+"        "
 
 #. module: stock
 #: help:stock.location,usage:0
@@ -1005,12 +1019,12 @@ msgstr "作者"
 #: code:addons/stock/stock.py:1305
 #, python-format
 msgid "Delivery Order"
-msgstr ""
+msgstr "送货单"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_memory_in
 msgid "stock.move.memory.in"
-msgstr ""
+msgstr "stock.move.memory.in"
 
 #. module: stock
 #: selection:stock.location,chained_auto_packing:0
@@ -1021,7 +1035,7 @@ msgstr "手动操作"
 #: view:stock.location:0
 #: view:stock.move:0
 msgid "Supplier"
-msgstr ""
+msgstr "供应商"
 
 #. module: stock
 #: field:stock.picking,date_done:0
@@ -1036,12 +1050,12 @@ msgstr "预计运送日期"
 #. module: stock
 #: selection:stock.move,state:0
 msgid "Not Available"
-msgstr ""
+msgstr "不可用"
 
 #. module: stock
 #: selection:report.stock.move,month:0
 msgid "March"
-msgstr ""
+msgstr "三月"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_view_stock_inventory_line_split
@@ -1049,12 +1063,12 @@ msgstr ""
 #: view:stock.inventory:0
 #: view:stock.inventory.line:0
 msgid "Split inventory lines"
-msgstr ""
+msgstr "分隔盘点明细"
 
 #. module: stock
 #: view:stock.inventory:0
 msgid "Physical Inventory"
-msgstr ""
+msgstr "库存盘点"
 
 #. module: stock
 #: help:stock.location,chained_company_id:0
@@ -1074,7 +1088,7 @@ msgstr ""
 #. module: stock
 #: view:stock.move.split:0
 msgid "Lot number"
-msgstr ""
+msgstr "批次号"
 
 #. module: stock
 #: field:stock.inventory.line,product_uom:0
@@ -1092,7 +1106,7 @@ msgstr "业务伙伴库位"
 #: view:report.stock.inventory:0
 #: view:report.stock.move:0
 msgid "Total quantity"
-msgstr ""
+msgstr "总数量"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.move_consume
@@ -1113,7 +1127,7 @@ msgstr ""
 #. module: stock
 #: view:stock.fill.inventory:0
 msgid "Import current product inventory from the following location"
-msgstr ""
+msgstr "从下面的库位导入当前产品的库存量"
 
 #. module: stock
 #: help:stock.location,chained_auto_packing:0
@@ -1128,7 +1142,7 @@ msgstr ""
 #. module: stock
 #: view:stock.production.lot:0
 msgid "Downstream Traceability"
-msgstr ""
+msgstr "下游追溯"
 
 #. module: stock
 #: help:product.template,property_stock_production:0
@@ -1150,14 +1164,14 @@ msgstr ""
 #: code:addons/stock/stock.py:1322
 #, python-format
 msgid "is in draft state."
-msgstr ""
+msgstr "处于草稿状态"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_tracking_form
 msgid ""
 "This is the list of all your packs. When you select a Pack, you can get the "
 "upstream or downstream traceability of the products contained in the pack."
-msgstr ""
+msgstr "此处列出了您所有的包装单。当您选择一个包装单，您可以获取此其中包含产品的上游和下游的追溯信息。"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_ups_final
@@ -1167,18 +1181,18 @@ msgstr ""
 #. module: stock
 #: field:stock.location,chained_auto_packing:0
 msgid "Chaining Type"
-msgstr ""
+msgstr "库链类型"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_return_picking.py:135
 #, python-format
 msgid "To be refunded/invoiced"
-msgstr ""
+msgstr "待开票或退票"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_shop0
 msgid "Shop 1"
-msgstr ""
+msgstr "门店 1"
 
 #. module: stock
 #: view:stock.change.product.qty:0
@@ -1192,12 +1206,12 @@ msgstr ""
 #: view:stock.picking:0
 #: view:stock.split.into:0
 msgid "_Cancel"
-msgstr ""
+msgstr "取消(_C)"
 
 #. module: stock
 #: view:stock.move:0
 msgid "Ready"
-msgstr ""
+msgstr "就绪"
 
 #. module: stock
 #: view:stock.picking:0
@@ -1207,13 +1221,13 @@ msgstr "日历视图"
 #. module: stock
 #: view:stock.picking:0
 msgid "Additional Info"
-msgstr ""
+msgstr "附加信息"
 
 #. module: stock
 #: code:addons/stock/stock.py:1602
 #, python-format
 msgid "Operation forbidden"
-msgstr ""
+msgstr "禁止操作"
 
 #. module: stock
 #: field:stock.location.product,from_date:0
@@ -1240,7 +1254,7 @@ msgstr "生产批次修订"
 #. module: stock
 #: view:stock.picking:0
 msgid "Internal Picking List"
-msgstr ""
+msgstr "内部分拣单列表"
 
 #. module: stock
 #: selection:report.stock.inventory,state:0
@@ -1260,13 +1274,13 @@ msgstr "拆分"
 #. module: stock
 #: view:stock.picking:0
 msgid "Search Stock Picking"
-msgstr ""
+msgstr "搜索分拣单"
 
 #. module: stock
 #: code:addons/stock/product.py:93
 #, python-format
 msgid "Company is not specified in Location"
-msgstr ""
+msgstr "没有指定库位的公司属性"
 
 #. module: stock
 #: view:report.stock.move:0
@@ -1282,7 +1296,7 @@ msgstr "一般IT供应商"
 #. module: stock
 #: report:stock.picking.list:0
 msgid "Picking List:"
-msgstr ""
+msgstr "分拣单列表："
 
 #. module: stock
 #: field:stock.inventory,date:0
@@ -1290,7 +1304,7 @@ msgstr ""
 #: field:stock.production.lot,date:0
 #: field:stock.tracking,date:0
 msgid "Creation Date"
-msgstr ""
+msgstr "创建日期"
 
 #. module: stock
 #: field:report.stock.lines.date,id:0
@@ -1319,7 +1333,7 @@ msgstr "客户库位"
 #: code:addons/stock/wizard/stock_partial_move.py:85
 #, python-format
 msgid "Invalid action !"
-msgstr ""
+msgstr "无效的动作！"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_partial_move.py:139
@@ -1331,12 +1345,12 @@ msgstr ""
 #: model:ir.actions.report.xml,name:stock.report_location_overview
 #: report:lot.stock.overview:0
 msgid "Location Inventory Overview"
-msgstr ""
+msgstr "库位盘点总览"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_replacement
 msgid "Stock Replacement"
-msgstr ""
+msgstr "库存替换"
 
 #. module: stock
 #: view:stock.inventory:0
@@ -1357,24 +1371,24 @@ msgstr "向下追溯"
 #: code:addons/stock/wizard/stock_invoice_onshipping.py:113
 #, python-format
 msgid "No Invoices were created"
-msgstr ""
+msgstr "没有创建发票"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_company
 msgid "OpenERP S.A."
-msgstr ""
+msgstr "OpenERP S.A."
 
 #. module: stock
 #: code:addons/stock/wizard/stock_partial_move.py:140
 #, python-format
 msgid "Receive"
-msgstr ""
+msgstr "收货"
 
 #. module: stock
 #: help:stock.incoterms,active:0
 msgid ""
 "By unchecking the active field, you may hide an INCOTERM without deleting it."
-msgstr ""
+msgstr "如果您不选中“可用”字段，那么将隐藏但不删除此记录。"
 
 #. module: stock
 #: view:stock.move:0
@@ -1399,17 +1413,23 @@ msgid ""
 "* Done: has been processed, can't be modified or cancelled anymore\n"
 "* Cancelled: has been cancelled, can't be confirmed anymore"
 msgstr ""
+"* 草稿：尚未确认且不会被排程\n"
+"* 已确认：等待产品可用库存足够\n"
+"* 可用：仓库已经保留货品，只待确认\n"
+"* 等待中：在自动变为可用状态之前等待其它调拨的进行（比如在“按订单生产”的流程中）\n"
+"* 完成：分拣单已经处理完毕，不再可以修改或取消\n"
+"* 已取消：分拣单已被取消，也不再可以确认"
 
 #. module: stock
 #: help:stock.location,company_id:0
 msgid "Let this field empty if this location is shared between all companies"
-msgstr ""
+msgstr "如果此库位要在所有公司共享，请保持此字段为空"
 
 #. module: stock
 #: code:addons/stock/stock.py:2198
 #, python-format
 msgid "Please provide a positive quantity to scrap!"
-msgstr ""
+msgstr "“消耗”字段请填写一个正数"
 
 #. module: stock
 #: field:stock.location,chained_delay:0
@@ -1420,7 +1440,7 @@ msgstr ""
 #: code:addons/stock/wizard/stock_partial_move.py:85
 #, python-format
 msgid "Cannot deliver products which are already delivered !"
-msgstr ""
+msgstr "不能对产品进行配送，因为它们已经配送过！"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_invoice_onshipping
@@ -1449,7 +1469,7 @@ msgstr "供货商库位"
 #: code:addons/stock/stock.py:2217
 #, python-format
 msgid "were scrapped"
-msgstr ""
+msgstr "已消耗"
 
 #. module: stock
 #: view:stock.move:0
@@ -1460,7 +1480,7 @@ msgstr ""
 #. module: stock
 #: selection:report.stock.move,month:0
 msgid "September"
-msgstr ""
+msgstr "九月"
 
 #. module: stock
 #: help:stock.picking,backorder_id:0
@@ -1472,25 +1492,25 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_inventory
 msgid "Stock Statistics"
-msgstr ""
+msgstr "库存统计"
 
 #. module: stock
 #: field:stock.move.memory.in,currency:0
 #: field:stock.move.memory.out,currency:0
 msgid "Currency"
-msgstr ""
+msgstr "币种"
 
 #. module: stock
 #: field:product.product,track_production:0
 msgid "Track Manufacturing Lots"
-msgstr ""
+msgstr "追踪生产批次"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_inventory_merge.py:44
 #, python-format
 msgid ""
 "Please select multiple physical inventories to merge in the list view."
-msgstr ""
+msgstr "请在列表视图中选择多个待合并的盘点单"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_product_stock_move_open
@@ -1519,7 +1539,7 @@ msgstr "取消可用"
 #. module: stock
 #: help:stock.move,date_expected:0
 msgid "Scheduled date for the processing of this move"
-msgstr ""
+msgstr "计划处理此调拨单的日期"
 
 #. module: stock
 #: field:stock.inventory,move_ids:0
@@ -1529,12 +1549,12 @@ msgstr "已创建存货调拨"
 #. module: stock
 #: model:stock.location,name:stock.stock_location_14
 msgid "Shelf 2"
-msgstr ""
+msgstr "架子 2"
 
 #. module: stock
 #: field:stock.report.tracklots,tracking_id:0
 msgid "Tracking lot"
-msgstr ""
+msgstr "跟踪批次"
 
 #. module: stock
 #: view:stock.picking:0
@@ -1550,12 +1570,12 @@ msgstr "对应库位属性"
 #. module: stock
 #: view:stock.location:0
 msgid "Localization"
-msgstr ""
+msgstr "本地化"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_report_tracklots
 msgid "Stock report by tracking lots"
-msgstr ""
+msgstr "批次跟踪库存报表"
 
 #. module: stock
 #: code:addons/stock/product.py:367
@@ -1568,12 +1588,12 @@ msgstr "已交货数量"
 #: view:stock.inventory.line.split:0
 #: view:stock.move.split:0
 msgid "Split in lots"
-msgstr ""
+msgstr "批次拆分"
 
 #. module: stock
 #: view:stock.move.split:0
 msgid "Production Lot Numbers"
-msgstr ""
+msgstr "生产批次号"
 
 #. module: stock
 #: view:report.stock.inventory:0
@@ -1595,7 +1615,7 @@ msgstr "日期"
 #: view:stock.move:0
 #: view:stock.picking:0
 msgid "Extended Filters..."
-msgstr ""
+msgstr "扩展过滤器..."
 
 #. module: stock
 #: field:stock.warehouse,lot_stock_id:0
@@ -1611,12 +1631,12 @@ msgstr "只允许合并草搞盘存"
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_dashboard_stock
 msgid "Dashboard"
-msgstr ""
+msgstr "仪表盘"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_track
 msgid "Track moves"
-msgstr ""
+msgstr "调拨跟踪"
 
 #. module: stock
 #: field:stock.incoterms,code:0
@@ -1626,13 +1646,13 @@ msgstr "编码"
 #. module: stock
 #: view:stock.inventory.line.split:0
 msgid "Lots Number"
-msgstr ""
+msgstr "批次号"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.open_board_warehouse
 #: model:ir.ui.menu,name:stock.menu_board_warehouse
 msgid "Warehouse Dashboard"
-msgstr ""
+msgstr "仓库仪表盘"
 
 #. module: stock
 #: code:addons/stock/stock.py:510
@@ -1646,13 +1666,13 @@ msgstr "您不能删除批次线!"
 #: view:stock.move.scrap:0
 #: view:stock.picking:0
 msgid "Scrap Products"
-msgstr ""
+msgstr "损耗产品"
 
 #. module: stock
 #: code:addons/stock/stock.py:1135
 #, python-format
 msgid "You cannot remove the picking which is in %s state !"
-msgstr ""
+msgstr "您不能删除状态为 %s 的分拣单！"
 
 #. module: stock
 #: view:stock.inventory.line.split:0
@@ -1722,18 +1742,18 @@ msgstr ""
 #. module: stock
 #: view:stock.change.standard.price:0
 msgid "Cost Price"
-msgstr ""
+msgstr "成本价"
 
 #. module: stock
 #: view:product.product:0
 #: field:product.product,valuation:0
 msgid "Inventory Valuation"
-msgstr ""
+msgstr "库存核算"
 
 #. module: stock
 #: view:stock.picking:0
 msgid "Create Invoice"
-msgstr ""
+msgstr "创建发票"
 
 #. module: stock
 #: view:stock.move:0
@@ -1805,7 +1825,7 @@ msgstr "已接收数量"
 #. module: stock
 #: field:stock.production.lot,ref:0
 msgid "Internal Reference"
-msgstr "内部引用单号"
+msgstr "内部单号"
 
 #. module: stock
 #: help:stock.production.lot,prefix:0
@@ -1819,7 +1839,7 @@ msgstr ""
 #: model:ir.model,name:stock.model_stock_fill_inventory
 #: view:stock.fill.inventory:0
 msgid "Import Inventory"
-msgstr ""
+msgstr "导入盘点信息"
 
 #. module: stock
 #: field:stock.incoterms,name:0
@@ -1869,23 +1889,23 @@ msgstr ""
 #. module: stock
 #: view:report.stock.lines.date:0
 msgid "Stockable"
-msgstr ""
+msgstr "可库存"
 
 #. module: stock
 #: selection:product.product,valuation:0
 msgid "Real Time (automated)"
-msgstr ""
+msgstr "实时（自动进行）"
 
 #. module: stock
 #: help:stock.move,tracking_id:0
 msgid "Logistical shipping unit: pallet, box, pack ..."
-msgstr ""
+msgstr "物流货运单位：货板、箱、包等"
 
 #. module: stock
 #: view:stock.change.product.qty:0
 #: view:stock.change.standard.price:0
 msgid "_Apply"
-msgstr ""
+msgstr "应用(_A)"
 
 #. module: stock
 #: report:lot.stock.overview:0
@@ -1904,7 +1924,7 @@ msgstr "库存库位"
 #: view:report.stock.inventory:0
 #: view:report.stock.move:0
 msgid "Total value"
-msgstr ""
+msgstr "总计"
 
 #. module: stock
 #: help:stock.location,chained_journal_id:0
@@ -1917,18 +1937,18 @@ msgstr ""
 #: view:board.board:0
 #: model:ir.actions.act_window,name:stock.action_incoming_product_board
 msgid "Incoming Product"
-msgstr ""
+msgstr "来货"
 
 #. module: stock
 #: view:stock.move:0
 msgid "Creation"
-msgstr ""
+msgstr "创建时间"
 
 #. module: stock
 #: field:stock.move.memory.in,cost:0
 #: field:stock.move.memory.out,cost:0
 msgid "Cost"
-msgstr ""
+msgstr "成本"
 
 #. module: stock
 #: field:product.category,property_stock_account_input_categ:0
@@ -1941,12 +1961,12 @@ msgstr "入库科目"
 #: model:ir.ui.menu,name:stock.menu_stock_warehouse_mgmt
 #: model:ir.ui.menu,name:stock.menu_warehouse_config
 msgid "Warehouse Management"
-msgstr ""
+msgstr "仓库管理"
 
 #. module: stock
 #: selection:stock.picking,move_type:0
 msgid "Partial Delivery"
-msgstr ""
+msgstr "分批出货"
 
 #. module: stock
 #: selection:stock.location,chained_auto_packing:0
@@ -1957,7 +1977,7 @@ msgstr "自动，不加入步骤"
 #: code:addons/stock/stock.py:2348
 #, python-format
 msgid "Product "
-msgstr ""
+msgstr "产品 "
 
 #. module: stock
 #: view:stock.location.product:0
@@ -1974,7 +1994,7 @@ msgstr ""
 #. module: stock
 #: field:report.stock.lines.date,date:0
 msgid "Latest Inventory Date"
-msgstr ""
+msgstr "最近盘点日期"
 
 #. module: stock
 #: view:report.stock.inventory:0
@@ -1984,7 +2004,7 @@ msgstr ""
 #: view:stock.picking:0
 #: view:stock.production.lot:0
 msgid "Group By..."
-msgstr ""
+msgstr "分组..."
 
 #. module: stock
 #: view:stock.location:0
@@ -1994,25 +2014,25 @@ msgstr "连锁库位"
 #. module: stock
 #: model:stock.location,name:stock.location_inventory
 msgid "Inventory loss"
-msgstr "盘存损失"
+msgstr "盘点盈亏"
 
 #. module: stock
 #: code:addons/stock/stock.py:1314
 #, python-format
 msgid "Document"
-msgstr ""
+msgstr "单据"
 
 #. module: stock
 #: view:stock.picking:0
 msgid "Input Picking List"
-msgstr ""
+msgstr "入库分拣单"
 
 #. module: stock
 #: field:stock.move,product_uom:0
 #: field:stock.move.memory.in,product_uom:0
 #: field:stock.move.memory.out,product_uom:0
 msgid "Unit of Measure"
-msgstr ""
+msgstr "计量单位"
 
 #. module: stock
 #: code:addons/stock/product.py:176
@@ -2036,12 +2056,12 @@ msgstr "跟踪调拨"
 #. module: stock
 #: view:product.product:0
 msgid "Update"
-msgstr ""
+msgstr "更改"
 
 #. module: stock
 #: view:stock.inventory:0
 msgid "Set to Draft"
-msgstr ""
+msgstr "设为草稿"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_journal_form
@@ -2052,13 +2072,13 @@ msgstr ""
 #. module: stock
 #: selection:report.stock.move,type:0
 msgid "Others"
-msgstr ""
+msgstr "其它"
 
 #. module: stock
 #: code:addons/stock/product.py:90
 #, python-format
 msgid "Could not find any difference between standard price and new price!"
-msgstr ""
+msgstr "标准价和新价格没有任何区别！"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_partial_picking
@@ -2069,12 +2089,12 @@ msgstr ""
 #: model:stock.location,name:stock.stock_location_scrapped
 #: field:stock.move,scrapped:0
 msgid "Scrapped"
-msgstr ""
+msgstr "已损耗"
 
 #. module: stock
 #: view:stock.inventory:0
 msgid "Products "
-msgstr ""
+msgstr "产品 "
 
 #. module: stock
 #: field:product.product,track_incoming:0
@@ -2084,18 +2104,18 @@ msgstr "跟踪入库批次"
 #. module: stock
 #: view:board.board:0
 msgid "Warehouse board"
-msgstr ""
+msgstr "仓库仪表盘"
 
 #. module: stock
 #: code:addons/stock/product.py:377
 #, python-format
 msgid "Future Qty"
-msgstr ""
+msgstr "未来数量"
 
 #. module: stock
 #: field:product.category,property_stock_variation:0
 msgid "Stock Variation Account"
-msgstr ""
+msgstr "库存变动科目"
 
 #. module: stock
 #: field:stock.move,note:0
@@ -2136,7 +2156,7 @@ msgstr "产品"
 #. module: stock
 #: view:stock.change.standard.price:0
 msgid "Change Price"
-msgstr ""
+msgstr "更改价格"
 
 #. module: stock
 #: field:stock.picking,move_type:0
@@ -2148,14 +2168,14 @@ msgstr "送货方式"
 #: help:stock.move,location_dest_id:0
 #: help:stock.picking,location_dest_id:0
 msgid "Location where the system will stock the finished products."
-msgstr ""
+msgstr "系统存储成品的库位"
 
 #. module: stock
 #: help:product.category,property_stock_variation:0
 msgid ""
 "When real-time inventory valuation is enabled on a product, this account "
 "will hold the current value of the products."
-msgstr ""
+msgstr "当开启了此产品实时库存核算，那么此科目将记录此产品的当前价值。"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_reception_picking_move
@@ -2175,18 +2195,18 @@ msgstr "库存调拨"
 #. module: stock
 #: view:report.stock.move:0
 msgid "Delay(Days)"
-msgstr ""
+msgstr "延期（日）"
 
 #. module: stock
 #: field:stock.move.memory.in,move_id:0
 #: field:stock.move.memory.out,move_id:0
 msgid "Move"
-msgstr ""
+msgstr "调拨"
 
 #. module: stock
 #: help:stock.picking,min_date:0
 msgid "Expected date for the picking to be processed"
-msgstr ""
+msgstr "处理此分拣单的预计日期"
 
 #. module: stock
 #: code:addons/stock/product.py:373
@@ -2203,7 +2223,7 @@ msgstr "修订记录"
 #. module: stock
 #: view:stock.picking:0
 msgid "This operation will cancel the shipment. Do you want to continue?"
-msgstr ""
+msgstr "操作将取消此送货单。您要继续吗？"
 
 #. module: stock
 #: help:product.product,valuation:0
@@ -2248,13 +2268,13 @@ msgstr ""
 #. module: stock
 #: view:stock.invoice.onshipping:0
 msgid "Create"
-msgstr ""
+msgstr "创建"
 
 #. module: stock
 #: view:stock.move:0
 #: view:stock.picking:0
 msgid "Dates"
-msgstr ""
+msgstr "日期"
 
 #. module: stock
 #: field:stock.move,priority:0
@@ -2264,7 +2284,7 @@ msgstr "优先级"
 #. module: stock
 #: view:stock.move:0
 msgid "Source"
-msgstr ""
+msgstr "来源"
 
 #. module: stock
 #: code:addons/stock/stock.py:2557
@@ -2280,7 +2300,7 @@ msgstr "盘存"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_picking
 msgid "Picking List"
-msgstr ""
+msgstr "分拣单"
 
 #. module: stock
 #: sql_constraint:stock.production.lot:0
@@ -2302,7 +2322,7 @@ msgstr "取消盘存"
 #: field:stock.move.split.lines,name:0
 #: field:stock.move.split.lines.exist,name:0
 msgid "Tracking serial"
-msgstr ""
+msgstr "跟踪序列"
 
 #. module: stock
 #: code:addons/stock/report/report_stock.py:78
@@ -2315,13 +2335,13 @@ msgstr "错误！"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_replacement_result
 msgid "Stock Replacement result"
-msgstr ""
+msgstr "库存替换结构"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_unit_measure_stock
 #: model:ir.ui.menu,name:stock.menu_stock_uom_form_action
 msgid "Units of Measure"
-msgstr ""
+msgstr "计量单位"
 
 #. module: stock
 #: selection:stock.location,chained_location_type:0
@@ -2331,12 +2351,12 @@ msgstr "固定库位"
 #. module: stock
 #: selection:report.stock.move,month:0
 msgid "July"
-msgstr ""
+msgstr "七月"
 
 #. module: stock
 #: view:report.stock.lines.date:0
 msgid "Consumable"
-msgstr ""
+msgstr "消耗品"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_stock_line_date
@@ -2350,7 +2370,7 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.report_product_history
 msgid "Stock Level Forecast"
-msgstr ""
+msgstr "库存登记预报"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_journal
@@ -2377,7 +2397,7 @@ msgstr "Maxtor 供应商"
 #: code:addons/stock/wizard/stock_change_standard_price.py:106
 #, python-format
 msgid "Active ID is not set in Context"
-msgstr ""
+msgstr "上下文里没有设置活动标识"
 
 #. module: stock
 #: view:stock.picking:0
@@ -2415,29 +2435,29 @@ msgstr "查看库存产品"
 #. module: stock
 #: view:stock.picking:0
 msgid "Internal Picking list"
-msgstr ""
+msgstr "内部分拣单列表"
 
 #. module: stock
 #: view:report.stock.move:0
 #: field:report.stock.move,month:0
 msgid "Month"
-msgstr ""
+msgstr "月"
 
 #. module: stock
 #: help:stock.picking,date_done:0
 msgid "Date of Completion"
-msgstr ""
+msgstr "结束日期"
 
 #. module: stock
 #: help:stock.production.lot,name:0
 msgid "Unique production lot, will be displayed as: PREFIX/SERIAL [INT_REF]"
-msgstr ""
+msgstr "唯一的生产批次号，将显示为 前缀/序列号 [INT_REF]"
 
 #. module: stock
 #: help:stock.tracking,active:0
 msgid ""
 "By unchecking the active field, you may hide a pack without deleting it."
-msgstr ""
+msgstr "如果您没有选中“可用”字段，那么将隐藏但不删除此记录。"
 
 #. module: stock
 #: view:stock.inventory.merge:0
@@ -2452,7 +2472,7 @@ msgstr "库存清单"
 #. module: stock
 #: view:report.stock.move:0
 msgid "Todo"
-msgstr ""
+msgstr "待办事项"
 
 #. module: stock
 #: view:report.stock.inventory:0
@@ -2468,13 +2488,13 @@ msgstr ""
 #: field:stock.production.lot.revision,company_id:0
 #: field:stock.warehouse,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "公司"
 
 #. module: stock
 #: view:stock.move:0
 #: view:stock.picking:0
 msgid "Unit Of Measure"
-msgstr ""
+msgstr "计量单位"
 
 #. module: stock
 #: code:addons/stock/product.py:122
@@ -2503,7 +2523,7 @@ msgstr "填写盘存"
 #: constraint:product.template:0
 msgid ""
 "Error: The default UOM and the purchase UOM must be in the same category."
-msgstr ""
+msgstr "错误:默认的计量单位和采购的计量单位必须是处于同一分类下。"
 
 #. module: stock
 #: help:product.category,property_stock_account_input_categ:0
@@ -2532,7 +2552,7 @@ msgstr "批次"
 #. module: stock
 #: view:stock.move.split:0
 msgid "Production Lot Number"
-msgstr ""
+msgstr "生产批次号"
 
 #. module: stock
 #: field:stock.move,product_uos_qty:0
@@ -2544,7 +2564,7 @@ msgstr "数量(销售单位)"
 #, python-format
 msgid ""
 "You are moving %.2f %s products but only %.2f %s available in this lot."
-msgstr ""
+msgstr "您要调拨 %.2f 数量的 %s 产品，但是此批次中只有 %.2f %s"
 
 #. module: stock
 #: view:stock.move:0
@@ -2554,7 +2574,7 @@ msgstr "设为可用"
 #. module: stock
 #: report:stock.picking.list:0
 msgid "Contact Address :"
-msgstr ""
+msgstr "联系地址："
 
 #. module: stock
 #: field:stock.move,backorder_id:0
@@ -2627,12 +2647,12 @@ msgstr "盘点单号"
 #: code:addons/stock/stock.py:1307
 #, python-format
 msgid "Internal picking"
-msgstr ""
+msgstr "内部分拣单"
 
 #. module: stock
 #: view:stock.location.product:0
 msgid "Open Product"
-msgstr ""
+msgstr "打开产品信息"
 
 #. module: stock
 #: field:stock.location.product,to_date:0
@@ -2643,7 +2663,7 @@ msgstr "至"
 #: view:stock.move:0
 #: view:stock.picking:0
 msgid "Process"
-msgstr ""
+msgstr "处理"
 
 #. module: stock
 #: field:stock.production.lot.revision,name:0
@@ -2673,7 +2693,7 @@ msgstr "会计库存属性"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_out
 msgid "Customers Packings"
-msgstr ""
+msgstr "客户包装"
 
 #. module: stock
 #: selection:report.stock.inventory,state:0
@@ -2692,7 +2712,7 @@ msgstr "完成"
 #: model:ir.model,name:stock.model_stock_change_standard_price
 #: view:stock.change.standard.price:0
 msgid "Change Standard Price"
-msgstr ""
+msgstr "更改标准价"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_locations_virtual
@@ -2724,7 +2744,7 @@ msgstr "不紧急"
 #. module: stock
 #: view:stock.move:0
 msgid "To Do"
-msgstr ""
+msgstr "待处理"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_warehouse_form
@@ -2735,7 +2755,7 @@ msgstr "仓库"
 #. module: stock
 #: field:stock.journal,user_id:0
 msgid "Responsible"
-msgstr ""
+msgstr "负责人"
 
 #. module: stock
 #: field:stock.move,returned_price:0
@@ -2747,7 +2767,7 @@ msgstr ""
 #: model:ir.ui.menu,name:stock.menu_action_stock_inventory_report
 #: view:report.stock.inventory:0
 msgid "Inventory Analysis"
-msgstr ""
+msgstr "盘点分析"
 
 #. module: stock
 #: field:stock.invoice.onshipping,journal_id:0
@@ -2791,14 +2811,14 @@ msgstr "产品"
 #: code:addons/stock/wizard/stock_return_picking.py:135
 #, python-format
 msgid "Invoicing"
-msgstr ""
+msgstr "发票"
 
 #. module: stock
 #: code:addons/stock/stock.py:2237
 #: code:addons/stock/stock.py:2297
 #, python-format
 msgid "Please provide Proper Quantity !"
-msgstr ""
+msgstr "请填写一个合适的数量！"
 
 #. module: stock
 #: field:stock.move,product_uos:0
@@ -2813,7 +2833,7 @@ msgstr "高度（Z）"
 #. module: stock
 #: field:stock.ups,weight:0
 msgid "Lot weight"
-msgstr ""
+msgstr "批次重量"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_consume
@@ -2825,7 +2845,7 @@ msgstr ""
 #: code:addons/stock/stock.py:1646
 #, python-format
 msgid "Insufficient Stock in Lot !"
-msgstr ""
+msgstr "批次库存不足！"
 
 #. module: stock
 #: field:stock.location,parent_right:0
@@ -2835,7 +2855,7 @@ msgstr "右父项"
 #. module: stock
 #: field:stock.picking,address_id:0
 msgid "Address"
-msgstr ""
+msgstr "地址"
 
 #. module: stock
 #: report:lot.stock.overview:0
@@ -2857,23 +2877,23 @@ msgstr "供应商"
 #: field:report.stock.inventory,value:0
 #: field:report.stock.move,value:0
 msgid "Total Value"
-msgstr ""
+msgstr "总价"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_product_by_category_stock_form
 msgid "Products by Category"
-msgstr ""
+msgstr "分类的产品"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_product_category_config_stock
 msgid "Products Categories"
-msgstr ""
+msgstr "产品分类"
 
 #. module: stock
 #: field:stock.move.memory.in,wizard_id:0
 #: field:stock.move.memory.out,wizard_id:0
 msgid "Wizard"
-msgstr ""
+msgstr "向导"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_view_stock_location_product
@@ -2884,12 +2904,12 @@ msgstr "产品库位"
 #. module: stock
 #: field:stock.fill.inventory,recursive:0
 msgid "Include children"
-msgstr ""
+msgstr "包括下级"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_components
 msgid "Shelf 1"
-msgstr ""
+msgstr "架子 1"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_picking_tree6
@@ -2910,7 +2930,7 @@ msgstr ""
 #. module: stock
 #: field:stock.tracking,name:0
 msgid "Pack Reference"
-msgstr ""
+msgstr "包装单号"
 
 #. module: stock
 #: view:report.stock.move:0
@@ -2927,17 +2947,17 @@ msgstr "会计分录"
 #. module: stock
 #: report:stock.picking.list:0
 msgid "Total"
-msgstr ""
+msgstr "总计"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_intermediatelocation0
 msgid "Internal Shippings"
-msgstr ""
+msgstr "内部配送"
 
 #. module: stock
 #: field:stock.change.standard.price,enable_stock_in_out_acc:0
 msgid "Enable Related Account"
-msgstr ""
+msgstr "激活相关科目"
 
 #. module: stock
 #: field:stock.location,stock_virtual_value:0
@@ -2960,12 +2980,12 @@ msgstr ""
 #. module: stock
 #: view:stock.move:0
 msgid "Destination"
-msgstr ""
+msgstr "目标货位"
 
 #. module: stock
 #: selection:stock.picking,move_type:0
 msgid "All at once"
-msgstr "所有一起"
+msgstr "全部一次性"
 
 #. module: stock
 #: code:addons/stock/stock.py:1603
@@ -2984,7 +3004,7 @@ msgstr ""
 #. module: stock
 #: view:stock.picking:0
 msgid "To Invoice"
-msgstr ""
+msgstr "开票"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_return_picking.py:120
@@ -3001,22 +3021,22 @@ msgstr "盘存日期"
 #. module: stock
 #: view:report.stock.move:0
 msgid "Total incoming quantity"
-msgstr ""
+msgstr "总收货数量"
 
 #. module: stock
 #: field:report.stock.move,product_qty_out:0
 msgid "Out Qty"
-msgstr ""
+msgstr "发货数量"
 
 #. module: stock
 #: field:stock.production.lot,move_ids:0
 msgid "Moves for this production lot"
-msgstr ""
+msgstr "此生产批次的调拨信息"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_memory_out
 msgid "stock.move.memory.out"
-msgstr ""
+msgstr "stock.move.memory.out"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_fill_inventory.py:115
@@ -3028,7 +3048,7 @@ msgstr "消息！"
 #: view:stock.move:0
 #: view:stock.picking:0
 msgid "Put in current pack"
-msgstr ""
+msgstr "放入当前包装"
 
 #. module: stock
 #: view:stock.inventory:0
@@ -3038,12 +3058,12 @@ msgstr "盘存明细"
 #. module: stock
 #: view:stock.move:0
 msgid "Reason"
-msgstr ""
+msgstr "原因"
 
 #. module: stock
 #: report:stock.picking.list:0
 msgid "Delivery Order:"
-msgstr ""
+msgstr "配送单："
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_production_lot_form
@@ -3109,7 +3129,7 @@ msgstr "错误！"
 msgid ""
 "There is no inventory variation account defined on the product category: "
 "\"%s\" (id: %d)"
-msgstr ""
+msgstr "产品分类“%s”（标识：%d）没有定义库存变动科目！"
 
 #. module: stock
 #: view:stock.inventory.merge:0
@@ -3128,7 +3148,7 @@ msgstr "已取消"
 #. module: stock
 #: view:stock.move:0
 msgid "Picking"
-msgstr ""
+msgstr "领料/提货"
 
 #. module: stock
 #: help:stock.picking,move_type:0
@@ -3175,7 +3195,7 @@ msgstr "警告"
 #: code:addons/stock/stock.py:2557
 #, python-format
 msgid "is done."
-msgstr ""
+msgstr "已完成。"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree
@@ -3208,7 +3228,7 @@ msgstr "确认"
 #. module: stock
 #: help:stock.location,icon:0
 msgid "Icon show in  hierarchical tree view"
-msgstr ""
+msgstr "层次树视图显示的图标"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_view_stock_merge_inventories
@@ -3219,12 +3239,12 @@ msgstr "合并盘存"
 #. module: stock
 #: help:stock.change.product.qty,new_quantity:0
 msgid "This quantity is expressed in the Default UoM of the product."
-msgstr ""
+msgstr "数量使用产品的默认计量单位表示。"
 
 #. module: stock
 #: report:stock.picking.list:0
 msgid "Reception:"
-msgstr ""
+msgstr "收货："
 
 #. module: stock
 #: help:stock.location,scrap_location:0
@@ -3240,7 +3260,7 @@ msgstr "关联的分拣单"
 #. module: stock
 #: view:report.stock.move:0
 msgid "Total outgoing quantity"
-msgstr ""
+msgstr "总出库数量"
 
 #. module: stock
 #: field:stock.picking,backorder_id:0
@@ -3251,7 +3271,7 @@ msgstr ""
 #: help:stock.move.memory.in,cost:0
 #: help:stock.move.memory.out,cost:0
 msgid "Unit Cost for this product line"
-msgstr ""
+msgstr "此产品明细的单位成本"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_category
@@ -3260,7 +3280,7 @@ msgstr ""
 #: view:report.stock.move:0
 #: field:report.stock.move,categ_id:0
 msgid "Product Category"
-msgstr ""
+msgstr "产品分类"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_change_product_qty.py:74
@@ -3299,7 +3319,7 @@ msgstr "配置"
 #: field:stock.inventory.line.split,use_exist:0
 #: field:stock.move.split,use_exist:0
 msgid "Existing Lots"
-msgstr ""
+msgstr "已存在批次"
 
 #. module: stock
 #: field:product.product,location_id:0
@@ -3445,7 +3465,7 @@ msgstr "已开票"
 #. module: stock
 #: field:stock.move,address_id:0
 msgid "Destination Address"
-msgstr ""
+msgstr "目的地址"
 
 #. module: stock
 #: field:stock.picking,max_date:0
@@ -3534,7 +3554,7 @@ msgstr ""
 #. module: stock
 #: help:stock.picking,origin:0
 msgid "Reference of the document that produced this picking."
-msgstr ""
+msgstr "产生此分拣单的原始单据编号。"
 
 #. module: stock
 #: field:stock.fill.inventory,set_stock_zero:0
@@ -3909,3 +3929,883 @@ msgstr ""
 #: help:stock.location,posz:0
 msgid "Optional localization details, for information purpose only"
 msgstr ""
+
+#~ msgid "Status"
+#~ msgstr "状态"
+
+#~ msgid "LIFO"
+#~ msgstr "后进先出"
+
+#~ msgid "Amount"
+#~ msgstr "金额"
+
+#~ msgid "Serial"
+#~ msgstr "序号"
+
+#~ msgid "Tracking Number"
+#~ msgstr "跟踪号"
+
+#~ msgid "Date create"
+#~ msgstr "创建日期"
+
+#~ msgid "Date Created"
+#~ msgstr "创建日期"
+
+#~ msgid "Allocation Method"
+#~ msgstr "分配方法"
+
+#~ msgid "Dest. Address"
+#~ msgstr "目标地址"
+
+#~ msgid "FIFO"
+#~ msgstr "先进先出"
+
+#~ msgid "Create invoices"
+#~ msgstr "创建发票"
+
+#~ msgid "Tracking"
+#~ msgstr "跟踪"
+
+#~ msgid "Stock Management"
+#~ msgstr "库存管理"
+
+#~ msgid "STOCK_MEDIA_FORWARD"
+#~ msgstr "STOCK_MEDIA_FORWARD"
+
+#~ msgid "Revision"
+#~ msgstr "修订版"
+
+#~ msgid "STOCK_SORT_ASCENDING"
+#~ msgstr "STOCK_SORT_ASCENDING"
+
+#~ msgid "STOCK_SAVE"
+#~ msgstr "STOCK_SAVE"
+
+#~ msgid "terp-account"
+#~ msgstr "terp-account"
+
+#, python-format
+#~ msgid "Futur Stock"
+#~ msgstr "预计库存"
+
+#, python-format
+#~ msgid "Futur Productions"
+#~ msgstr "计划生产"
+
+#~ msgid "STOCK_ZOOM_100"
+#~ msgstr "STOCK_ZOOM_100"
+
+#~ msgid "STOCK_CANCEL"
+#~ msgstr "STOCK_CANCEL"
+
+#~ msgid "STOCK_NEW"
+#~ msgstr "STOCK_NEW"
+
+#, python-format
+#~ msgid "Futur Receptions"
+#~ msgstr "预期接收"
+
+#~ msgid "STOCK_QUIT"
+#~ msgstr "STOCK_QUIT"
+
+#~ msgid "terp-hr"
+#~ msgstr "terp-hr"
+
+#~ msgid "terp-purchase"
+#~ msgstr "terp-purchase"
+
+#~ msgid "STOCK_GOTO_TOP"
+#~ msgstr "STOCK_GOTO_TOP"
+
+#~ msgid "STOCK_ABOUT"
+#~ msgstr "STOCK_ABOUT"
+
+#~ msgid "STOCK_DND"
+#~ msgstr "STOCK_DND"
+
+#~ msgid "STOCK_GOTO_FIRST"
+#~ msgstr "STOCK_GOTO_FIRST"
+
+#~ msgid "STOCK_FLOPPY"
+#~ msgstr "STOCK_FLOPPY"
+
+#~ msgid "Move Lines"
+#~ msgstr "调拨明细"
+
+#~ msgid "STOCK_UNDERLINE"
+#~ msgstr "STOCK_UNDERLINE"
+
+#~ msgid "STOCK_PREFERENCES"
+#~ msgstr "STOCK_PREFERENCES"
+
+#~ msgid "STOCK_BOLD"
+#~ msgstr "STOCK_BOLD"
+
+#~ msgid "terp-graph"
+#~ msgstr "terp-graph"
+
+#~ msgid "Track line"
+#~ msgstr "跟踪明细"
+
+#~ msgid "STOCK_MEDIA_REWIND"
+#~ msgstr "STOCK_MEDIA_REWIND"
+
+#~ msgid "Stock Level 1"
+#~ msgstr "库存层1"
+
+#~ msgid "Draft Moves"
+#~ msgstr "调拨草稿"
+
+#~ msgid "Stock Properties"
+#~ msgstr "库存属性"
+
+#~ msgid "Customer Invoice"
+#~ msgstr "客户发票"
+
+#~ msgid "STOCK_CUT"
+#~ msgstr "STOCK_CUT"
+
+#~ msgid "STOCK_ZOOM_FIT"
+#~ msgstr "STOCK_ZOOM_FIT"
+
+#~ msgid "Calendar of Deliveries"
+#~ msgstr "送货日程表"
+
+#~ msgid "Latest Date of Inventory"
+#~ msgstr "最近盘存日期"
+
+#~ msgid "STOCK_SAVE_AS"
+#~ msgstr "STOCK_SAVE_AS"
+
+#~ msgid "STOCK_DIALOG_ERROR"
+#~ msgstr "STOCK_DIALOG_ERROR"
+
+#~ msgid "STOCK_UNDELETE"
+#~ msgstr "STOCK_UNDELETE"
+
+#~ msgid "STOCK_GO_FORWARD"
+#~ msgstr "STOCK_GO_FORWARD"
+
+#~ msgid "STOCK_GOTO_BOTTOM"
+#~ msgstr "STOCK_GOTO_BOTTOM"
+
+#~ msgid "Tracking Lot"
+#~ msgstr "跟踪批次"
+
+#~ msgid "STOCK_INDEX"
+#~ msgstr "STOCK_INDEX"
+
+#~ msgid "STOCK_PASTE"
+#~ msgstr "STOCK_PASTE"
+
+#~ msgid "STOCK_SELECT_FONT"
+#~ msgstr "STOCK_SELECT_FONT"
+
+#~ msgid "STOCK_DIALOG_QUESTION"
+#~ msgstr "STOCK_DIALOG_QUESTION"
+
+#~ msgid "STOCK_EXECUTE"
+#~ msgstr "STOCK_EXECUTE"
+
+#~ msgid "terp-stock"
+#~ msgstr "terp-stock"
+
+#, python-format
+#~ msgid "Futur Deliveries"
+#~ msgstr "计划交货"
+
+#~ msgid "STOCK_MEDIA_RECORD"
+#~ msgstr "STOCK_MEDIA_RECORD"
+
+#~ msgid "terp-report"
+#~ msgstr "terp-report"
+
+#~ msgid "STOCK_FILE"
+#~ msgstr "STOCK_FILE"
+
+#~ msgid "STOCK_GO_DOWN"
+#~ msgstr "STOCK_GO_DOWN"
+
+#~ msgid "STOCK_OK"
+#~ msgstr "STOCK_OK"
+
+#~ msgid "STOCK_EDIT"
+#~ msgstr "STOCK_EDIT"
+
+#~ msgid "STOCK_CONNECT"
+#~ msgstr "STOCK_CONNECT"
+
+#~ msgid "All Stock Moves"
+#~ msgstr "所有库存调拨"
+
+#~ msgid "Finished products"
+#~ msgstr "成品"
+
+#~ msgid "STOCK_UNDO"
+#~ msgstr "STOCK_UNDO"
+
+#~ msgid "STOCK_GO_BACK"
+#~ msgstr "STOCK_GO_BACK"
+
+#~ msgid "STOCK_HELP"
+#~ msgstr "STOCK_HELP"
+
+#, python-format
+#~ msgid "Invoice state"
+#~ msgstr "发票状态"
+
+#~ msgid "terp-administration"
+#~ msgstr "terp-administration"
+
+#~ msgid "STOCK_APPLY"
+#~ msgstr "STOCK_APPLY"
+
+#~ msgid "STOCK_JUSTIFY_FILL"
+#~ msgstr "STOCK_JUSTIFY_FILL"
+
+#~ msgid "terp-crm"
+#~ msgstr "terp-crm"
+
+#, python-format
+#~ msgid "Invoice is not created"
+#~ msgstr "没有创建发票"
+
+#, python-format
+#~ msgid "Please select at least two inventories."
+#~ msgstr "请选择至少2个盘存"
+
+#~ msgid "STOCK_STRIKETHROUGH"
+#~ msgstr "STOCK_STRIKETHROUGH"
+
+#~ msgid "Periodical Inventory"
+#~ msgstr "定期盘存"
+
+#~ msgid "terp-partner"
+#~ msgstr "terp-partner"
+
+#~ msgid "Qty"
+#~ msgstr "数量"
+
+#~ msgid "STOCK_SPELL_CHECK"
+#~ msgstr "STOCK_SPELL_CHECK"
+
+#~ msgid "Draft Periodical Inventories"
+#~ msgstr "定期盘存草稿"
+
+#~ msgid "STOCK_MISSING_IMAGE"
+#~ msgstr "STOCK_MISSING_IMAGE"
+
+#~ msgid "Stock Tracking Lots"
+#~ msgstr "库存跟踪批次"
+
+#~ msgid "STOCK_HARDDISK"
+#~ msgstr "STOCK_HARDDISK"
+
+#~ msgid "STOCK_COPY"
+#~ msgstr "STOCK_COPY"
+
+#, python-format
+#~ msgid "Futur Qty"
+#~ msgstr "计划数量"
+
+#, python-format
+#~ msgid "Invoice is already created."
+#~ msgstr "发票已创建"
+
+#~ msgid "STOCK_CDROM"
+#~ msgstr "STOCK_CDROM"
+
+#~ msgid "STOCK_FIND_AND_REPLACE"
+#~ msgstr "STOCK_FIND_AND_REPLACE"
+
+#~ msgid "STOCK_STOP"
+#~ msgstr "STOCK_STOP"
+
+#~ msgid "STOCK_REFRESH"
+#~ msgstr "STOCK_REFRESH"
+
+#~ msgid "STOCK_CONVERT"
+#~ msgstr "STOCK_CONVERT"
+
+#~ msgid "STOCK_ZOOM_IN"
+#~ msgstr "STOCK_ZOOM_IN"
+
+#~ msgid "STOCK_DIALOG_WARNING"
+#~ msgstr "STOCK_DIALOG_WARNING"
+
+#~ msgid "terp-calendar"
+#~ msgstr "terp-calendar"
+
+#~ msgid "STOCK_ITALIC"
+#~ msgstr "STOCK_ITALIC"
+
+#~ msgid "STOCK_YES"
+#~ msgstr "STOCK_YES"
+
+#~ msgid "Invoice Status"
+#~ msgstr "发票状态"
+
+#~ msgid "Dest. Move"
+#~ msgstr "调拨目的点"
+
+#~ msgid "Future Stock Forecast"
+#~ msgstr "预测未来库存"
+
+#, python-format
+#~ msgid "No production sequence defined"
+#~ msgstr "无生产序列定义"
+
+#~ msgid "STOCK_JUSTIFY_LEFT"
+#~ msgstr "STOCK_JUSTIFY_LEFT"
+
+#~ msgid "Planned Date"
+#~ msgstr "计划日期"
+
+#~ msgid "STOCK_COLOR_PICKER"
+#~ msgstr "STOCK_COLOR_PICKER"
+
+#~ msgid "STOCK_DELETE"
+#~ msgstr "STOCK_DELETE"
+
+#~ msgid "Created Date"
+#~ msgstr "创建日期"
+
+#~ msgid "STOCK_CLEAR"
+#~ msgstr "STOCK_CLEAR"
+
+#~ msgid "STOCK_HOME"
+#~ msgstr "STOCK_HOME"
+
+#~ msgid "STOCK_SORT_DESCENDING"
+#~ msgstr "STOCK_SORT_DESCENDING"
+
+#~ msgid "Tracking Lots"
+#~ msgstr "跟踪批次"
+
+#~ msgid "STOCK_PROPERTIES"
+#~ msgstr "STOCK_PROPERTIES"
+
+#~ msgid "STOCK_GO_UP"
+#~ msgstr "STOCK_GO_UP"
+
+#~ msgid "terp-mrp"
+#~ msgstr "terp-mrp"
+
+#~ msgid "STOCK_MEDIA_STOP"
+#~ msgstr "STOCK_MEDIA_STOP"
+
+#~ msgid "STOCK_DND_MULTIPLE"
+#~ msgstr "STOCK_DND_MULTIPLE"
+
+#~ msgid "STOCK_DIALOG_AUTHENTICATION"
+#~ msgstr "STOCK_DIALOG_AUTHENTICATION"
+
+#~ msgid "STOCK_REMOVE"
+#~ msgstr "STOCK_REMOVE"
+
+#~ msgid "STOCK_ZOOM_OUT"
+#~ msgstr "STOCK_ZOOM_OUT"
+
+#~ msgid "STOCK_NO"
+#~ msgstr "STOCK_NO"
+
+#~ msgid "Nearest"
+#~ msgstr "最近"
+
+#~ msgid "STOCK_PRINT"
+#~ msgstr "STOCK_PRINT"
+
+#~ msgid "STOCK_SELECT_COLOR"
+#~ msgstr "STOCK_SELECT_COLOR"
+
+#~ msgid "STOCK_CLOSE"
+#~ msgstr "STOCK_CLOSE"
+
+#~ msgid "STOCK_REDO"
+#~ msgstr "STOCK_REDO"
+
+#~ msgid "Tiny sprl"
+#~ msgstr "Tiny sprl"
+
+#~ msgid "STOCK_ADD"
+#~ msgstr "STOCK_ADD"
+
+#~ msgid "STOCK_DIALOG_INFO"
+#~ msgstr "STOCK_DIALOG_INFO"
+
+#~ msgid "terp-sale"
+#~ msgstr "terp-sale"
+
+#~ msgid "terp-tools"
+#~ msgstr "terp-tools"
+
+#~ msgid "STOCK_JUMP_TO"
+#~ msgstr "STOCK_JUMP_TO"
+
+#~ msgid "Chained Delay (days)"
+#~ msgstr "连锁延迟(天)"
+
+#~ msgid "STOCK_PRINT_PREVIEW"
+#~ msgstr "STOCK_PRINT_PREVIEW"
+
+#~ msgid "STOCK_FIND"
+#~ msgstr "STOCK_FIND"
+
+#~ msgid "STOCK_MEDIA_PAUSE"
+#~ msgstr "STOCK_MEDIA_PAUSE"
+
+#~ msgid "Track Outging Lots"
+#~ msgstr "跟踪出库批次"
+
+#~ msgid "STOCK_OPEN"
+#~ msgstr "STOCK_OPEN"
+
+#~ msgid "STOCK_MEDIA_PLAY"
+#~ msgstr "STOCK_MEDIA_PLAY"
+
+#~ msgid "STOCK_MEDIA_PREVIOUS"
+#~ msgstr "STOCK_MEDIA_PREVIOUS"
+
+#~ msgid "Moves Tracked"
+#~ msgstr "调拨跟踪"
+
+#~ msgid "STOCK_DISCONNECT"
+#~ msgstr "STOCK_DISCONNECT"
+
+#~ msgid "terp-project"
+#~ msgstr "terp-project"
+
+#~ msgid "STOCK_NETWORK"
+#~ msgstr "STOCK_NETWORK"
+
+#, python-format
+#~ msgid "Please select one and only one inventory !"
+#~ msgstr "请选定唯一的盘存"
+
+#~ msgid "STOCK_UNINDENT"
+#~ msgstr "STOCK_UNINDENT"
+
+#~ msgid "Canceled"
+#~ msgstr "已取消"
+
+#~ msgid "STOCK_JUSTIFY_CENTER"
+#~ msgstr "STOCK_JUSTIFY_CENTER"
+
+#~ msgid "STOCK_GOTO_LAST"
+#~ msgstr "STOCK_GOTO_LAST"
+
+#~ msgid "STOCK_DIRECTORY"
+#~ msgstr "STOCK_DIRECTORY"
+
+#, python-format
+#~ msgid "Futur P&L"
+#~ msgstr "计划益损"
+
+#~ msgid "Track Production Lots"
+#~ msgstr "跟踪生产批次"
+
+#~ msgid "STOCK_REVERT_TO_SAVED"
+#~ msgstr "STOCK_REVERT_TO_SAVED"
+
+#~ msgid "Supplier Invoice"
+#~ msgstr "供应商发票"
+
+#~ msgid "terp-product"
+#~ msgstr "terp-product"
+
+#~ msgid "Close"
+#~ msgstr "关闭"
+
+#~ msgid "STOCK_JUSTIFY_RIGHT"
+#~ msgstr "STOCK_JUSTIFY_RIGHT"
+
+#~ msgid "STOCK_INDENT"
+#~ msgstr "STOCK_INDENT"
+
+#~ msgid "Inventory line"
+#~ msgstr "盘存明细"
+
+#~ msgid "Move State"
+#~ msgstr "调拨状态"
+
+#~ msgid "STOCK_MEDIA_NEXT"
+#~ msgstr "STOCK_MEDIA_NEXT"
+
+#~ msgid "weight"
+#~ msgstr "重量"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr "对象名必须以“x_”开始且不能包含任何特殊字符！"
+
+#~ msgid "Units"
+#~ msgstr "单位"
+
+#~ msgid "Auto-Packing"
+#~ msgstr "自动创建分拣单"
+
+#~ msgid "Max. Planned Date"
+#~ msgstr "最大计划日期"
+
+#~ msgid "Confirmed Packing Waiting Availability"
+#~ msgstr "确认分拣单等待可用"
+
+#~ msgid "Sub Products"
+#~ msgstr "子产品"
+
+#~ msgid "Total :"
+#~ msgstr "合计:"
+
+#~ msgid "Customer Refund"
+#~ msgstr "客户退货"
+
+#~ msgid "Stock location"
+#~ msgstr "库存库位"
+
+#~ msgid "Product Id"
+#~ msgstr "产品ID"
+
+#~ msgid "Tracking/Serial"
+#~ msgstr "跟踪号/序号"
+
+#~ msgid "Set to Zero"
+#~ msgstr "设为0"
+
+#~ msgid "Available Moves"
+#~ msgstr "可调拨"
+
+#~ msgid "Open Products"
+#~ msgstr "待处理产品"
+
+#~ msgid "Supplier Refund"
+#~ msgstr "供应商退货"
+
+#~ msgid "Validate"
+#~ msgstr "确认"
+
+#~ msgid "Move lines"
+#~ msgstr "调拨明细"
+
+#~ msgid "New Periodical Inventory"
+#~ msgstr "新的定期盘存"
+
+#~ msgid "Delivery Orders to Process"
+#~ msgstr "处理送货单"
+
+#~ msgid "Lots by location"
+#~ msgstr "库位批次"
+
+#~ msgid "Future Delivery Orders"
+#~ msgstr "未来的送货单"
+
+#~ msgid "Set Stock to Zero"
+#~ msgstr "设库存为0"
+
+#~ msgid "Workshop"
+#~ msgstr "工厂"
+
+#~ msgid "Location Overview"
+#~ msgstr "库位概述"
+
+#~ msgid "Components"
+#~ msgstr "零部件"
+
+#~ msgid "Stock Locations Structure"
+#~ msgstr "库存库位结构"
+
+#~ msgid ""
+#~ "This account will be used, instead of the default one, to value output stock"
+#~ msgstr "默认作为记录出库值科目"
+
+#~ msgid "Stock by Lots"
+#~ msgstr "库存批次"
+
+#~ msgid ""
+#~ "For the current product (template), this stock location will be used, "
+#~ "instead of the default one, as the source location for stock moves generated "
+#~ "by production orders"
+#~ msgstr "对于当前产品(模板)该库存库位默认作为你生产时库存调拨的源库位."
+
+#~ msgid "Add"
+#~ msgstr "增加"
+
+#~ msgid "Set Stock to 0"
+#~ msgstr "设库存为0"
+
+#~ msgid "Localisation"
+#~ msgstr "本地"
+
+#~ msgid "Do you want to set stocks to zero ?"
+#~ msgstr "你真的设库存为0?"
+
+#~ msgid "Direct Delivery"
+#~ msgstr "直接送货"
+
+#~ msgid ""
+#~ "For the current product (template), this stock location will be used, "
+#~ "instead of the default one, as the source location for stock moves generated "
+#~ "by procurements"
+#~ msgstr "对于当前产品(模板)该库存库位默认作为产品需求的库存调拨源库位."
+
+#~ msgid "Date Order"
+#~ msgstr "订购日期"
+
+#~ msgid "Print Item Labels"
+#~ msgstr "打印产品标签"
+
+#~ msgid "Inventory Account"
+#~ msgstr "盘存科目"
+
+#~ msgid "Set Stocks to Zero"
+#~ msgstr "设库存为0"
+
+#~ msgid "Low Level"
+#~ msgstr "底层"
+
+#~ msgid "Delivery"
+#~ msgstr "送货"
+
+#~ msgid "Locations' Values"
+#~ msgstr "库位值"
+
+#~ msgid "Others info"
+#~ msgstr "其它信息"
+
+#~ msgid "Move History"
+#~ msgstr "库存移动记录"
+
+#~ msgid "Make Parcel"
+#~ msgstr "打包"
+
+#~ msgid "Products Sent"
+#~ msgstr "已发出产品"
+
+#~ msgid "Non Assigned Products:"
+#~ msgstr "未分派的产品"
+
+#~ msgid "Force to use a Production Lot during production order"
+#~ msgstr "生产单指定生产批次"
+
+#~ msgid "Force to use a Production Lot during receptions"
+#~ msgstr "入库时指定批次"
+
+#~ msgid "Track Incomming Lots"
+#~ msgstr "跟踪入库批次"
+
+#~ msgid ""
+#~ "OpenERP Stock Management module can manage multi-warehouses, multi and "
+#~ "structured stock locations.\n"
+#~ "Thanks to the double entry management, the inventory controlling is powerful "
+#~ "and flexible:\n"
+#~ "* Moves history and planning,\n"
+#~ "* Different inventory methods (FIFO, LIFO, ...)\n"
+#~ "* Stock valuation (standard or average price, ...)\n"
+#~ "* Robustness faced with Inventory differences\n"
+#~ "* Automatic reordering rules (stock level, JIT, ...)\n"
+#~ "* Bar code supported\n"
+#~ "* Rapid detection of mistakes through double entry system\n"
+#~ "* Traceability (upstream/downstream, production lots, serial number, ...)\n"
+#~ "    "
+#~ msgstr ""
+#~ "系统库存管理模块能管理多仓库多和结构化仓库库位\n"
+#~ "使用复式记录管理提供灵活和强大库存控制:\n"
+#~ "* 调拨历史和计划\n"
+#~ "* 不同的库存管理方法(FIFO, LIFO, ...)\n"
+#~ "* 存货估计(标准和平均估价)\n"
+#~ "* 自动重开单规则(库存级别,jit)\n"
+#~ "* 存货清单不同的鲁棒性\n"
+#~ "* 条码支持\n"
+#~ "* 通过复式录入系统实现快速检测错误\n"
+#~ "* 跟踪能力(上游,下游,产品批号,序列号)\n"
+#~ "    "
+
+#~ msgid ""
+#~ "Tracking lot is the code that will be put on the logistical unit/pallet"
+#~ msgstr "跟踪批次号是帖在包装或垫板上的代码"
+
+#~ msgid "Fill Inventory for specific location"
+#~ msgstr "填写库存的具体库位"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "在动作定义中使用了无效的模快名。"
+
+#~ msgid "Unreceived Products"
+#~ msgstr "未接收的产品"
+
+#~ msgid "Include all childs for the location"
+#~ msgstr "包括所有该库位的子库位"
+
+#~ msgid "This account will be used to value the output stock"
+#~ msgstr "这科目用于记录出库值"
+
+#~ msgid ""
+#~ "For the current product (template), this stock location will be used, "
+#~ "instead of the default one, as the source location for stock moves generated "
+#~ "when you do an inventory"
+#~ msgstr "对于当前产品(模板), 这库存库位将作为默认值, 库存盘点时作为库存调拨的源库位."
+
+#~ msgid "Location Content (With children)"
+#~ msgstr "库位内容(包括子项)"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "无效的视图结构xml文件!"
+
+#~ msgid "This account will be used to value the input stock"
+#~ msgstr "这科目用于记录入库值"
+
+#~ msgid ""
+#~ "OpenERP Inventory Management module can manage multi-warehouses, multi and "
+#~ "structured stock locations.\n"
+#~ "Thanks to the double entry management, the inventory controlling is powerful "
+#~ "and flexible:\n"
+#~ "* Moves history and planning,\n"
+#~ "* Different inventory methods (FIFO, LIFO, ...)\n"
+#~ "* Stock valuation (standard or average price, ...)\n"
+#~ "* Robustness faced with Inventory differences\n"
+#~ "* Automatic reordering rules (stock level, JIT, ...)\n"
+#~ "* Bar code supported\n"
+#~ "* Rapid detection of mistakes through double entry system\n"
+#~ "* Traceability (upstream/downstream, production lots, serial number, ...)\n"
+#~ "    "
+#~ msgstr ""
+#~ "\"库存管理模块可以管理多仓库, 多样化结构的仓储地点.\\n\"\n"
+#~ "\"感谢复式记帐管理, 存货管理很强大并且灵活:\\n\"\n"
+#~ "\"* 调拨历史和计划\\n\"\n"
+#~ "\"* 不同的库存管理法 (先进先出, 先进后出, ...)\\n\"\n"
+#~ "\"* 库存估价 (标准或平均价格, ...)\\n\"\n"
+#~ "\"* 稳健面临盘存差错\\n\"\n"
+#~ "\"* 自动重新订货规则 (库存水平, JIT, ...)\\n\"\n"
+#~ "\"* 支持条码\\n\"\n"
+#~ "\"* 通过复式记帐系统快速检测错误\\n\"\n"
+#~ "\"* 可追溯性(向上追溯/向下追溯,产品批次,序列号, ...)\\n\"\n"
+#~ "    "
+
+#~ msgid "Force to use a Production Lot during deliveries"
+#~ msgstr "送货时指定批次"
+
+#~ msgid ""
+#~ "This account will be used, instead of the default one, to value input stock"
+#~ msgstr "这科目默认作为记录入库值"
+
+#~ msgid "Confirm (Do Not Process Now)"
+#~ msgstr "确认(现在不处理)"
+
+#~ msgid ""
+#~ "Scheduled date for the movement of the products or real date if the move is "
+#~ "done."
+#~ msgstr "如果调拨完成. 产品调拨的预定日期或实际日期"
+
+#~ msgid ""
+#~ "This is used only if you selected a chained location type.\n"
+#~ "The 'Automatic Move' value will create a stock move after the current one "
+#~ "that will be validated automatically. With 'Manual Operation', the stock "
+#~ "move has to be validated by a worker. With 'Automatic No Step Added', the "
+#~ "location is replaced in the original move."
+#~ msgstr ""
+#~ "如果你只选择链式库位类型.\n"
+#~ "'自动调拨' 将创建一个库存调拨后将自动确认. '手动操作' 库存调拨需要人手确认. '自动不增加'步骤' 库位将取代调拨源库位."
+
+#~ msgid ""
+#~ "This journal will be used for the accounting move generated by stock move"
+#~ msgstr "这业务类型用于库存调拨产生会计凭证."
+
+#~ msgid "Return"
+#~ msgstr "退货"
+
+#~ msgid "Origin Reference"
+#~ msgstr "来源单号"
+
+#~ msgid "Internal Ref"
+#~ msgstr "内部关联单号"
+
+#, python-format
+#~ msgid "Invoice cannot be created from Packing."
+#~ msgstr "不可从分拣单创建发票"
+
+#~ msgid "Packing result"
+#~ msgstr "分拣单结果"
+
+#~ msgid "Packing List:"
+#~ msgstr "分拣单列表："
+
+#~ msgid "Available Packing"
+#~ msgstr "有效分拣单"
+
+#~ msgid "Packing Done"
+#~ msgstr "分拣完成"
+
+#~ msgid "Return packing"
+#~ msgstr "退回分拣单"
+
+#~ msgid "New Reception Packing"
+#~ msgstr "新的进仓单"
+
+#~ msgid "Split move lines in two"
+#~ msgstr "拆分调拨明细"
+
+#~ msgid "Products Received"
+#~ msgstr "接收产品"
+
+#~ msgid "Fill From Unreceived Products"
+#~ msgstr "在未接收的产品里选"
+
+#~ msgid "Incoming Products"
+#~ msgstr "进仓单"
+
+#~ msgid "Outgoing Products"
+#~ msgstr "出仓单"
+
+#~ msgid "Split move line"
+#~ msgstr "拆分调拨明细"
+
+#~ msgid "Split in Two"
+#~ msgstr "拆分"
+
+#~ msgid "Make Picking"
+#~ msgstr "创建分拣单"
+
+#~ msgid "Make packing"
+#~ msgstr "创建分拣单"
+
+#~ msgid "Packing List"
+#~ msgstr "分拣单列表"
+
+#~ msgid "Packing to Process"
+#~ msgstr "分拣单处理"
+
+#~ msgid "The packing has been successfully made !"
+#~ msgstr "这分拣单已完成!"
+
+#~ msgid "Input Packing List"
+#~ msgstr "进仓分拣单"
+
+#~ msgid "New Internal Packing"
+#~ msgstr "新的内部分拣单"
+
+#~ msgid "Partial packing"
+#~ msgstr "部分分拣"
+
+#, python-format
+#~ msgid "to be invoiced"
+#~ msgstr "待开票"
+
+#~ msgid "Not from Packing"
+#~ msgstr "按来自订单产生的发票"
+
+#~ msgid ""
+#~ "This is the list of all delivery orders that must be prepared, according to "
+#~ "your different sales orders and your logistics rules."
+#~ msgstr "这是根据不同的销售订单和物流规则所有准备好的发货单据"
+
+#~ msgid ""
+#~ "When the stock move is created it is in the 'Draft' state.\n"
+#~ " After that it is set to 'Confirmed' state.\n"
+#~ " If stock is available state is set to 'Available'.\n"
+#~ " When the picking is done the state is 'Done'.                               "
+#~ "   \n"
+#~ "The state is 'Waiting' if the move is waiting for another one."
+#~ msgstr ""
+#~ "新建的库存调拨状态是‘草稿’\n"
+#~ "然后将为‘确认’\n"
+#~ "如果库存可用状态将为‘可用’\n"
+#~ "当分拣完成状态将为‘完成’"

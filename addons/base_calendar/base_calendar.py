@@ -321,7 +321,7 @@ class calendar_attendee(osv.osv):
     _columns = {
         'cutype': fields.selection([('individual', 'Individual'), \
                     ('group', 'Group'), ('resource', 'Resource'), \
-                    ('room', 'Room'), ('unknown', '') ], \
+                    ('room', 'Room'), ('unknown', 'Unknown') ], \
                     'Invite Type', help="Specify the type of Invitation"),
         'member': fields.char('Member', size=124,
                     help="Indicate the groups that the attendee belongs to"),
@@ -1473,7 +1473,7 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
             if not real_event_id in new_ids:
                 new_ids.append(real_event_id)
 
-        if vals.get('vtimezone', '').startswith('/freeassociation.sourceforge.net/tzfile/'):
+        if vals.get('vtimezone', '') and vals.get('vtimezone', '').startswith('/freeassociation.sourceforge.net/tzfile/'):
             vals['vtimezone'] = vals['vtimezone'][40:]
 
         updated_vals = self.onchange_dates(cr, uid, new_ids,

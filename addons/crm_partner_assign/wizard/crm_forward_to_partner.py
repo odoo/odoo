@@ -276,6 +276,7 @@ class crm_lead_forward_to_partner(osv.osv_memory):
         defaults.update({
             'subject' : '%s: %s' % (_('Fwd'), lead.name),
             'body' : body,
+            'email_cc' : ''
         })
         return defaults
 

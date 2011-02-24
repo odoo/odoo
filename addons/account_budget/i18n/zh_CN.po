@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-01-19 12:00+0000\n"
-"Last-Translator: Black Jack <onetimespeed@hotmail.com>\n"
+"PO-Revision-Date: 2011-02-03 07:38+0000\n"
+"Last-Translator: Wei \"oldrev\" Li <oldrev@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-25 06:24+0000\n"
+"X-Launchpad-Export-Date: 2011-02-05 05:01+0000\n"
 "X-Generator: Launchpad (build 12177)\n"
 
 #. module: account_budget
@@ -56,7 +56,7 @@ msgstr "确认用户"
 #. module: account_budget
 #: model:ir.actions.act_window,name:account_budget.action_account_budget_crossvered_summary_report
 msgid "Print Summary"
-msgstr ""
+msgstr "打印概览"
 
 #. module: account_budget
 #: field:crossovered.budget.lines,paid_date:0
@@ -135,7 +135,7 @@ msgstr ""
 #. module: account_budget
 #: view:account.budget.crossvered.summary.report:0
 msgid "This wizard is used to print summary of budgets"
-msgstr ""
+msgstr "此向导用于打印预算概览"
 
 #. module: account_budget
 #: report:account.budget:0
@@ -152,7 +152,7 @@ msgstr "说明"
 #. module: account_budget
 #: report:crossovered.budget.report:0
 msgid "Currency"
-msgstr ""
+msgstr "币种"
 
 #. module: account_budget
 #: report:crossovered.budget.report:0
@@ -164,17 +164,17 @@ msgstr "合计:"
 #: field:crossovered.budget,company_id:0
 #: field:crossovered.budget.lines,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "公司"
 
 #. module: account_budget
 #: view:crossovered.budget:0
 msgid "To Approve"
-msgstr ""
+msgstr "待批准"
 
 #. module: account_budget
 #: view:crossovered.budget:0
 msgid "Reset to Draft"
-msgstr ""
+msgstr "重置为草稿"
 
 #. module: account_budget
 #: view:account.budget.post:0
@@ -199,7 +199,7 @@ msgstr "完成"
 #: report:account.budget:0
 #: report:crossovered.budget.report:0
 msgid "Practical Amt"
-msgstr ""
+msgstr "实际金额"
 
 #. module: account_budget
 #: view:account.analytic.account:0
@@ -219,7 +219,7 @@ msgstr "结束日期"
 #: model:ir.model,name:account_budget.model_account_budget_analytic
 #: model:ir.model,name:account_budget.model_account_budget_report
 msgid "Account Budget report for analytic account"
-msgstr ""
+msgstr "分析科目的科目预算报表"
 
 #. module: account_budget
 #: view:account.analytic.account:0
@@ -238,7 +238,7 @@ msgstr "名称"
 #. module: account_budget
 #: model:ir.model,name:account_budget.model_crossovered_budget_lines
 msgid "Budget Line"
-msgstr ""
+msgstr "预算明细"
 
 #. module: account_budget
 #: view:account.analytic.account:0
@@ -272,7 +272,7 @@ msgstr "代码"
 #: view:account.budget.analytic:0
 #: view:account.budget.crossvered.report:0
 msgid "This wizard is used to print budget"
-msgstr ""
+msgstr "此向导用于打印预算"
 
 #. module: account_budget
 #: model:ir.actions.act_window,name:account_budget.act_crossovered_budget_view
@@ -291,7 +291,7 @@ msgstr "预算"
 msgid ""
 "Error! The currency has to be the same as the currency of the selected "
 "company"
-msgstr ""
+msgstr "错误！此币种同选定公司的默认币种相同。"
 
 #. module: account_budget
 #: selection:crossovered.budget,state:0
@@ -301,7 +301,7 @@ msgstr "已取消"
 #. module: account_budget
 #: view:crossovered.budget:0
 msgid "Approve"
-msgstr ""
+msgstr "批准"
 
 #. module: account_budget
 #: field:crossovered.budget,date_from:0
@@ -333,7 +333,7 @@ msgstr ""
 #: report:account.budget:0
 #: report:crossovered.budget.report:0
 msgid "Theoretical Amt"
-msgstr ""
+msgstr "理论金额"
 
 #. module: account_budget
 #: view:account.budget.analytic:0
@@ -395,7 +395,7 @@ msgstr "预算:"
 #: report:account.budget:0
 #: report:crossovered.budget.report:0
 msgid "Planned Amt"
-msgstr ""
+msgstr "预计金额"
 
 #. module: account_budget
 #: view:account.budget.post:0
@@ -434,10 +434,151 @@ msgstr "预算管理"
 #. module: account_budget
 #: constraint:account.analytic.account:0
 msgid "Error! You can not create recursive analytic accounts."
-msgstr ""
+msgstr "错误! 您不能创建递归的辅助核算科目"
 
 #. module: account_budget
 #: report:account.budget:0
 #: report:crossovered.budget.report:0
 msgid "Analysis from"
 msgstr "辅助核算从"
+
+#~ msgid "Amount"
+#~ msgstr "金额"
+
+#~ msgid "Item"
+#~ msgstr "项"
+
+#~ msgid "Fiscal Year"
+#~ msgstr "会计年度"
+
+#~ msgid "% performance"
+#~ msgstr "% 执行%"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr "对象名必须要以X_开头并且不能含有特殊字符!"
+
+#~ msgid "Period"
+#~ msgstr "会计期间"
+
+#~ msgid "Printing date:"
+#~ msgstr "打印日期:"
+
+#~ msgid "Dotations"
+#~ msgstr "给予"
+
+#~ msgid "Performance"
+#~ msgstr "执行"
+
+#~ msgid "From"
+#~ msgstr "从"
+
+#~ msgid "Results"
+#~ msgstr "结果"
+
+#~ msgid ""
+#~ "This module allows accountants to manage analytic and crossovered budgets.\n"
+#~ "\n"
+#~ "Once the Master Budgets and the Budgets defined (in Financial\n"
+#~ "Management/Budgets/), the Project Managers can set the planned amount on "
+#~ "each\n"
+#~ "Analytic Account.\n"
+#~ "\n"
+#~ "The accountant has the possibility to see the total of amount planned for "
+#~ "each\n"
+#~ "Budget and Master Budget in order to ensure the total planned is not\n"
+#~ "greater/lower than what he planned for this Budget/Master Budget. Each list "
+#~ "of\n"
+#~ "record can also be switched to a graphical view of it.\n"
+#~ "\n"
+#~ "Three reports are available:\n"
+#~ "    1. The first is available from a list of Budgets. It gives the "
+#~ "spreading, for these Budgets, of the Analytic Accounts per Master Budgets.\n"
+#~ "\n"
+#~ "    2. The second is a summary of the previous one, it only gives the "
+#~ "spreading, for the selected Budgets, of the Analytic Accounts.\n"
+#~ "\n"
+#~ "    3. The last one is available from the Analytic Chart of Accounts. It "
+#~ "gives the spreading, for the selected Analytic Accounts, of the Master "
+#~ "Budgets per Budgets.\n"
+#~ "\n"
+#~ msgstr ""
+#~ "这模块允许会计管理辅助核算和交叉预算\n"
+#~ "\n"
+#~ "一旦在财务上定义主预算和预算\n"
+#~ "(在财务管理/预算),项目经理可以设置\n"
+#~ "每个辅助核算项目的计划金额.\n"
+#~ "\n"
+#~ "会计有可能看到每个已计划总金额\n"
+#~ "确保总的已计划金额\n"
+#~ "不低于或高于每个列表计划的预算和主要预算.\n"
+#~ "每个记录列表能转为图形显示\n"
+#~ "\n"
+#~ "三个报表都可以:\n"
+#~ "1.首先是可得到预算列表.它提供延伸对这些预算每个主要的预算辅助核算项目.\n"
+#~ "\n"
+#~ "2.其次是前面的摘要它只提供每个预算的主预算选择辅助核算项目的延伸.\n"
+#~ "\n"
+#~ "3.最后一个可用的辅助核算项目表.它提供每个预算的主预算选择的辅助核算项目的延伸.\n"
+#~ "\n"
+
+#~ msgid "Analytic Account :"
+#~ msgstr "辅助核算项目:"
+
+#~ msgid "Period Budget"
+#~ msgstr "会计期间预算"
+
+#~ msgid "Select Options"
+#~ msgstr "选择可选择项"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "无效XML视图结构!"
+
+#~ msgid "Print Summary of Budgets"
+#~ msgstr "打印预算合计"
+
+#~ msgid "Spread amount"
+#~ msgstr "延伸金额"
+
+#~ msgid "Budget Dotation"
+#~ msgstr "预算给予"
+
+#~ msgid "Budget Dotations"
+#~ msgstr "预算给予"
+
+#~ msgid "Budget Item Detail"
+#~ msgstr "预算项详情"
+
+#~ msgid "Total Planned Amount"
+#~ msgstr "计划金额合计"
+
+#~ msgid "Spreading"
+#~ msgstr "延伸"
+
+#~ msgid "Theoretical Amount"
+#~ msgstr "理论金额"
+
+#~ msgid "Spread"
+#~ msgstr "延伸"
+
+#~ msgid "Print Budget"
+#~ msgstr "打印预算"
+
+#~ msgid "Select period"
+#~ msgstr "选择会计期间"
+
+#~ msgid "A/c No."
+#~ msgstr "A/c No."
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "在动作定义使用了无效的模式名称。"
+
+#, python-format
+#~ msgid "Insufficient Data!"
+#~ msgstr "数据不足！"
+
+#~ msgid "Budget Analysis"
+#~ msgstr "预算辅助核算"
+
+#~ msgid "Validate"
+#~ msgstr "审核"

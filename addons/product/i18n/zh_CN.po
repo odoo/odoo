@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2011-01-19 12:00+0000\n"
+"PO-Revision-Date: 2011-02-03 07:52+0000\n"
 "Last-Translator: Wei \"oldrev\" Li <oldrev@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-25 06:55+0000\n"
+"X-Launchpad-Export-Date: 2011-02-05 05:01+0000\n"
 "X-Generator: Launchpad (build 12177)\n"
 
 #. module: product
@@ -136,7 +136,7 @@ msgstr "规则名称"
 #: field:product.product,code:0
 #: field:product.product,default_code:0
 msgid "Reference"
-msgstr "引用"
+msgstr "编号"
 
 #. module: product
 #: constraint:product.category:0
@@ -291,7 +291,7 @@ msgstr "希捷 7200.8 160GB 硬盘"
 #. module: product
 #: field:product.product,ean13:0
 msgid "EAN13"
-msgstr "EAN13"
+msgstr "条形码"
 
 #. module: product
 #: field:product.template,seller_id:0
@@ -600,7 +600,7 @@ msgstr "餐饮支出"
 #: constraint:product.packaging:0
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
-msgstr "错误:无效EAN编码"
+msgstr "错误：无效的(EAN)条码"
 
 #. module: product
 #: field:product.pricelist.item,min_quantity:0
@@ -981,7 +981,7 @@ msgstr "业务伙伴信息"
 #: selection:product.ul,type:0
 #: model:product.uom.categ,name:product.product_uom_categ_unit
 msgid "Unit"
-msgstr "单位"
+msgstr "单件"
 
 #. module: product
 #: view:product.product:0
@@ -1509,7 +1509,7 @@ msgstr "计量单位的转换比率不能为 0！"
 #. module: product
 #: help:product.packaging,ean:0
 msgid "The EAN code of the package unit."
-msgstr "包装的EAN编码"
+msgstr "包装单元的 EAN 条码"
 
 #. module: product
 #: field:product.packaging,weight_ul:0
@@ -2277,3 +2277,361 @@ msgstr "这体积是m3"
 #: field:product.pricelist.item,price_discount:0
 msgid "Price Discount"
 msgstr "价格折扣"
+
+#~ msgid "Childs Categories"
+#~ msgstr "子项分类"
+
+#~ msgid "Rentable product"
+#~ msgstr "可出租产品"
+
+#~ msgid "Price Max. Margin"
+#~ msgstr "最高价"
+
+#~ msgid "Price Min. Margin"
+#~ msgstr "最低价"
+
+#~ msgid "Supplier of Product"
+#~ msgstr "产品供应商"
+
+#~ msgid "Prices Computations"
+#~ msgstr "价格计算"
+
+#~ msgid "Number of Layer"
+#~ msgstr "层数"
+
+#~ msgid "Priority"
+#~ msgstr "优先级"
+
+#~ msgid ""
+#~ "This is the average time between the confirmation of the customer order and "
+#~ "the delivery of the finnished products. It's the time you promise to your "
+#~ "customers."
+#~ msgstr "从确认用户订单到发货给客户的平均时间。也就是您承诺给您的客户的时间。"
+
+#~ msgid "Starting date for validity of this pricelist version."
+#~ msgstr "价该格表版本的生效时间"
+
+#~ msgid "Default UoM"
+#~ msgstr "默认计量单位"
+
+#~ msgid "Create new Product"
+#~ msgstr "创建新产品"
+
+#~ msgid "Partner Product Name"
+#~ msgstr "业务伙伴产品名称"
+
+#~ msgid "You can see the list of supplier for that product."
+#~ msgstr "您可以看见该产品的供应商列表。"
+
+#~ msgid ""
+#~ "Unit of Measure of the same category can be converted between each others."
+#~ msgstr "同一分类下的计量单位可以互相转换。"
+
+#~ msgid "Price list"
+#~ msgstr "价格表"
+
+#~ msgid "Purchase UoM"
+#~ msgstr "采购计量单位"
+
+#~ msgid "Cancel"
+#~ msgstr "取消"
+
+#~ msgid "Partner Product Code"
+#~ msgstr "业务伙伴产品代码"
+
+#~ msgid "Supplier Info"
+#~ msgstr "供应商信息"
+
+#~ msgid "Ending date for validity of this pricelist version."
+#~ msgstr "价格表版本失效时间。"
+
+#~ msgid "You can not have 2 pricelist version that overlaps!"
+#~ msgstr "您不能有2个重叠的价格表版本。"
+
+#~ msgid "KGM"
+#~ msgstr "千克"
+
+#~ msgid "The mode of computation of the price for this rule."
+#~ msgstr "该规则的价格计算模式"
+
+#~ msgid "Customer Price"
+#~ msgstr "客户价格"
+
+#~ msgid "List Price"
+#~ msgstr "标价"
+
+#~ msgid "Configuration"
+#~ msgstr "设置"
+
+#~ msgid "In Production"
+#~ msgstr "生产中"
+
+#~ msgid "Can be sold"
+#~ msgstr "可销售"
+
+#~ msgid "Price type"
+#~ msgstr "价格类型"
+
+#, python-format
+#~ msgid "%d unit"
+#~ msgstr "%d 单位"
+
+#~ msgid "Rate"
+#~ msgstr "比率"
+
+#, python-format
+#~ msgid "%d units"
+#~ msgstr "%d 单位"
+
+#~ msgid "Delivery Delay"
+#~ msgstr "交货延迟"
+
+#~ msgid "Procure Method"
+#~ msgstr "获得方式"
+
+#~ msgid ""
+#~ "Used by companies that manages two unit of measure: invoicing and inventory "
+#~ "management. For example, in food industries, you will manage a stock of ham "
+#~ "but invoice in Kg. Keep empty to use the default UOM."
+#~ msgstr "处理发票和库存管理两个计量单位的公司使用。例如，在食品工业中，您在库存中管理火腿，但发票使用公斤为计量单位。留空以使用默认计量单位。"
+
+#~ msgid ""
+#~ "The cost of the product for accounting stock valuation. It can serves as a "
+#~ "base price for supplier price."
+#~ msgstr "产品成本的会计库存价值.它能作为供应商价格的一个基础价格."
+
+#~ msgid "Product Process"
+#~ msgstr "产品工艺"
+
+#~ msgid "Price List Name:"
+#~ msgstr "价格表名称:"
+
+#~ msgid "Factor"
+#~ msgstr "系数"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "无效XML视图结构!"
+
+#~ msgid "Error: UOS must be in a different category than the UOM"
+#~ msgstr "错误:销售单位必须和计量单位在不同的分类."
+
+#~ msgid "Currency :"
+#~ msgstr "货币:"
+
+#~ msgid "Suppliers of Product"
+#~ msgstr "产品供应商"
+
+#~ msgid "Product Pricelist"
+#~ msgstr "产品价格表"
+
+#~ msgid "Printing Date :"
+#~ msgstr "打印日期:"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr "对象名必须要以X_开头并且不能含有特殊字符!"
+
+#~ msgid "units"
+#~ msgstr "单位"
+
+#~ msgid ""
+#~ "\n"
+#~ "    This is the base module for managing products and pricelists in Open "
+#~ "ERP.\n"
+#~ "\n"
+#~ "    Products support variants, different pricing methods, suppliers\n"
+#~ "    information, make to stock/order, different unit of measures,\n"
+#~ "    packaging and properties.\n"
+#~ "\n"
+#~ "    Pricelists support:\n"
+#~ "    * Multiple-level of discount (by product, category, quantities)\n"
+#~ "    * Compute price based on different criteria:\n"
+#~ "        * Other pricelist,\n"
+#~ "        * Cost price,\n"
+#~ "        * List price,\n"
+#~ "        * Supplier price, ...\n"
+#~ "    Pricelists preferences by product and/or partners.\n"
+#~ "\n"
+#~ "    Print product labels with barcode.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "    这基础模块管理系统的产品和价格表.\n"
+#~ "\n"
+#~ "产品支持系列型号不同的\n"
+#~ "计价方式,供应商信息,按库存/按单生产,不同的单位,\n"
+#~ "包装和属性.\n"
+#~ "\n"
+#~ "价格表支持:\n"
+#~ "- 多层折扣(按产品,分类,数量)\n"
+#~ "- 计算价格根据不同的准则\n"
+#~ "\t- 其它价格表\n"
+#~ "\t- 成本价\n"
+#~ "\t- 标价\n"
+#~ "\t- 供应商价格..\n"
+#~ "价格表参数根据产品或业务伙伴\n"
+#~ "\n"
+#~ "打印产品标签和条码\n"
+#~ "    "
+
+#~ msgid "Prices & Suppliers"
+#~ msgstr "价格&供应商"
+
+#~ msgid "You can see the list of suppliers for that product."
+#~ msgstr "你能看到这产品的供应商"
+
+#~ msgid "The number of layer on a palet or box"
+#~ msgstr "箱子数或垫板的层数"
+
+#~ msgid ""
+#~ "This pricelist will be used, instead of the default one,                     "
+#~ "for sales to the current partner"
+#~ msgstr "修改当前业务伙伴销售价格表的默认值."
+
+#~ msgid ""
+#~ "Gives the different ways to package the same product. This has no impact on "
+#~ "the packing order and is mainly used if you use the EDI module."
+#~ msgstr "给出相同产品的不同包装方式.如果你使用EDI模块这并不影响包装单和使用"
+
+#~ msgid "The total number of products you can put by palet or box."
+#~ msgstr "产品总数你可以输入箱子或垫板"
+
+#~ msgid "Product suppliers, with their product name, price, etc."
+#~ msgstr "产品供应商,产品名称,价格,等."
+
+#~ msgid "The weight of a full of products palet or box."
+#~ msgstr "含垫板或箱子的产品重量"
+
+#~ msgid ""
+#~ "The minimal quantity to purchase for this supplier, expressed in the default "
+#~ "unit of measure."
+#~ msgstr "该供应商的最少采购数量 (默认单位)"
+
+#~ msgid ""
+#~ "Futur stock for this product according to the selected location or all "
+#~ "internal if none have been selected. Computed as: Real Stock - Outgoing + "
+#~ "Incoming."
+#~ msgstr "产品在选定库位的未来库存计算公式: 当前库存 + 接收 - 发出 (或内部库位)"
+
+#~ msgid "Rentable Product"
+#~ msgstr "可出租产品"
+
+#~ msgid ""
+#~ "Determine if the product can be visible in the list of product within a "
+#~ "selection from a sale order line."
+#~ msgstr "在销售订单明细的产品列表中可见"
+
+#~ msgid ""
+#~ "Name of the product for this partner, will be used when printing a request "
+#~ "for quotation. Keep empty to use the internal one."
+#~ msgstr "该产品在业务伙伴那的名称将用在询价上. (留空为使用内部名称)"
+
+#~ msgid ""
+#~ "Unit of Measure of a category can be converted between each others in the "
+#~ "same category."
+#~ msgstr "同一类型的计量单位可以相互转换"
+
+#~ msgid ""
+#~ "Used by companies that manages two unit of measure: invoicing and stock "
+#~ "management. For example, in food industries, you will manage a stock of ham "
+#~ "but invoice in Kg. Keep empty to use the default UOM."
+#~ msgstr ""
+#~ "公司管理使用两个计量单位:发票和库存管理. ( 留空为使用默认计量单位)\r\n"
+#~ "例如:食品公司的火腿仓库用块,发票用公斤为单位."
+
+#~ msgid ""
+#~ "Will change the way procurements are processed. Consumables are stockable "
+#~ "products with infinite stock, or for use when you have no stock management "
+#~ "in the system."
+#~ msgstr ""
+#~ "将改变产品需求处理.\r\n"
+#~ "消耗品是有无限的库存的可库存的产品.或在使用时无需用库存管理系统来管理"
+
+#~ msgid ""
+#~ "Code of the product for this partner, will be used when printing a request "
+#~ "for quotation. Keep empty to use the internal one."
+#~ msgstr "该产品在业务伙伴里所用的代码,它用于向业务伙伴咨询报价.  (留空为使用内部代码)"
+
+#~ msgid ""
+#~ "Coefficient to convert UOM to UOS\n"
+#~ " uom = uos * coeff"
+#~ msgstr ""
+#~ "计量单位到销售单位的转换系数 : \n"
+#~ "计量单位 = 销售单位 * 系数"
+
+#~ msgid ""
+#~ "Default Unit of Measure used for purchase orders. It must in the same "
+#~ "category than the default unit of measure."
+#~ msgstr "采购计量单位必须与默认计量单位类型相同."
+
+#~ msgid ""
+#~ "Average time to produce this product. This is only for the production order "
+#~ "and, if it is a multi-level bill of material, it's only for the level of "
+#~ "this product. Different delays will be summed for all levels and purchase "
+#~ "orders."
+#~ msgstr "产品生产的平均时间.生产单才有的,如果它是一个多层物料清单,它是各层物料和采购订单的延迟合计."
+
+#~ msgid ""
+#~ "The coefficient for the formula:\n"
+#~ "coeff (base unit) = 1 (this unit). Factor = 1 / Rate."
+#~ msgstr ""
+#~ "这单位 = 基础单位 * 系数\n"
+#~ "1 / 比率"
+
+#~ msgid ""
+#~ "The coefficient for the formula:\n"
+#~ "1 (base unit) = coeff (this unit). Rate = 1 / Factor."
+#~ msgstr ""
+#~ "基础单位 = 这单位 * 比率\n"
+#~ "1 / 系数"
+
+#~ msgid ""
+#~ "Set a category of product if this rule only apply to products of a category "
+#~ "and his childs. Keep empty for all products"
+#~ msgstr "如果这规则只适合这产品类型和它的子项,设置产品类型. ( 留空为适合全部)"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "在动作定义中使用了无效的模快名。"
+
+#~ msgid ""
+#~ "The computed quantity will be a multiple of this value. Use 1.0 for products "
+#~ "that can not be split."
+#~ msgstr ""
+#~ "这数量计算将乘于一个数值.\n"
+#~ "产品使用1.0表示不能拆分."
+
+#~ msgid ""
+#~ "This is the average time between the confirmation of the customer order and "
+#~ "the delivery of the finished products. It's the time you promise to your "
+#~ "customers."
+#~ msgstr ""
+#~ "这是确认客户订单和交付的平均时间.\n"
+#~ "是承诺客户的时间."
+
+#~ msgid ""
+#~ "Delay in days between the confirmation of the purchase order and the "
+#~ "reception of the products in your warehouse. Used by the scheduler for "
+#~ "automatic computation of the purchase order planning."
+#~ msgstr ""
+#~ "延迟天数是确认采购订单到仓库接收产品之间的延迟天数.\n"
+#~ "用于制定采购订单计划时调度程序自动计算."
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "模块的认证ID必须唯一"
+
+#~ msgid "The name of the group must be unique !"
+#~ msgstr "群组名称必须唯一"
+
+#~ msgid ""
+#~ "If the active field is set to true, it will allow you to hide the pricelist "
+#~ "without removing it."
+#~ msgstr "如果有效字段设置为真(true),它允许你隐藏价格表而不是删除"
+
+#~ msgid "You can not have two users with the same login !"
+#~ msgstr "两个用户不能使用相同的用户名！"
+
+#~ msgid "Supplier Product UoM."
+#~ msgstr "供应商产品计量单位"
+
+#~ msgid "res.users"
+#~ msgstr "res.users"

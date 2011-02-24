@@ -28,19 +28,13 @@
 ###############################################################################
 
 import re
-import random
-import locale
-
-from base64 import b64encode
-from base64 import b64decode
-from StringIO import StringIO
 
 import cherrypy
 import wikimarkup
 
-from openobject.widgets import JSLink, CSSLink
+from openobject import rpc
+from openobject.widgets import CSSLink
 
-from openerp.utils import rpc
 
 from openerp.widgets import register_widget
 from openerp.widgets.form import Text

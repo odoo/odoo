@@ -191,6 +191,7 @@ class crm_merge_opportunity(osv.osv_memory):
         obj_opportunity = self.browse(cr, uid, ids[0], context=context)
         op_ids = obj_opportunity.opportunity_ids
         self.write(cr, uid, ids, {'opportunity_ids' : [(6,0, [op_ids[0].id])]}, context=context)
+        context['lead_ids'] = [op_ids[0].id]
         return self.merge(cr, uid, op_ids, context)
 
 

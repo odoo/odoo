@@ -1,20 +1,20 @@
 # Spanish (Ecuador) translation for openobject-addons
-# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2011-01-19 12:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2011-02-09 21:06+0000\n"
+"Last-Translator: mariofabian <mcdc1983@gmail.com>\n"
 "Language-Team: Spanish (Ecuador) <es_EC@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-25 07:01+0000\n"
+"X-Launchpad-Export-Date: 2011-02-10 04:35+0000\n"
 "X-Generator: Launchpad (build 12177)\n"
 
 #. module: purchase
@@ -23,12 +23,16 @@ msgid ""
 "The buyer has to approve the RFQ before being sent to the supplier. The RFQ "
 "becomes a confirmed Purchase Order."
 msgstr ""
+"El comprador debe aprobar la solicitud de presupuesto antes de enviar al "
+"proveedor. La solicitud de presupuesto se convertirá en un pedido de compra "
+"confirmado."
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:282
 #, python-format
 msgid "You can not confirm purchase order without Purchase Order Lines."
 msgstr ""
+"No puede confirmar un pedido de compra sin líneas de pedido de compra"
 
 #. module: purchase
 #: field:purchase.order,invoiced:0
@@ -49,11 +53,13 @@ msgid ""
 "You have to select a product UOM in the same category than the purchase UOM "
 "of the product"
 msgstr ""
+"Debe seleccionar una UdM del producto de la misma categoría que la UdM de "
+"compra del producto"
 
 #. module: purchase
 #: help:purchase.report,date:0
 msgid "Date on which this document has been created"
-msgstr ""
+msgstr "Fecha en el que fue creado este documento."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_rfq
@@ -67,6 +73,15 @@ msgid ""
 "supplier invoices: based on the order, based on the receptions or manual "
 "encoding."
 msgstr ""
+"Puede crear una solicitud de cotización cuando se desea comprar productos a "
+"un proveedor, pero la compra no está confirmada todavía. Utilice también "
+"este menú para ver las solicitudes de cotización creadas automáticamente "
+"basado en sus reglas de logística (stock mínimo, objetivo a medio plazo, "
+"etc.) Puede convertir la solicitud de pedido en una orden de compra una vez "
+"que la orden se confirma. Si utiliza la interfaz extendida (de las "
+"preferencias del usuario), puede seleccionar la forma de controlar sus "
+"facturas de proveedores: basado en el orden, basado en las recepciones o "
+"manualmente."
 
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
@@ -76,7 +91,7 @@ msgstr "Desde inventario"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Not Invoiced"
-msgstr ""
+msgstr "No Facturado"
 
 #. module: purchase
 #: field:purchase.order,dest_address_id:0
@@ -101,7 +116,7 @@ msgstr "Proveedor"
 #. module: purchase
 #: view:purchase.order.line_invoice:0
 msgid "Do you want to generate the supplier invoices ?"
-msgstr ""
+msgstr "¿Desea generar las facturas de proveedor?"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_form_action
@@ -110,35 +125,38 @@ msgid ""
 "products, etc. For each purchase order, you can track the products received, "
 "and control the supplier invoices."
 msgstr ""
+"Utilice este menú para buscar sus órdenes de compra por: referencia, "
+"proveedor, producto, etc Para cada orden de compra, usted puede rastrear los "
+"productos recibidos, y el control de las facturas de proveedores."
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:722
 #, python-format
 msgid "The selected supplier only sells this product by %s"
-msgstr ""
+msgstr "El proveedor seleccionado sólo vende este producto por %s"
 
 #. module: purchase
 #: code:addons/purchase/wizard/purchase_line_invoice.py:156
 #, python-format
 msgid "Supplier Invoices"
-msgstr ""
+msgstr "Facturas de Proveedor"
 
 #. module: purchase
 #: sql_constraint:purchase.order:0
 msgid "Order Reference must be unique !"
-msgstr ""
+msgstr "¡La referencia del pedido debe ser única!"
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_packinginvoice0
 #: model:process.transition,name:purchase.process_transition_productrecept0
 msgid "From a Pick list"
-msgstr ""
+msgstr "Desde inventario"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:649
 #, python-format
 msgid "No Pricelist !"
-msgstr ""
+msgstr "¡No tarifa!"
 
 #. module: purchase
 #: field:purchase.order.line,product_qty:0
@@ -150,7 +168,7 @@ msgstr "Cantidad"
 #. module: purchase
 #: view:purchase.order.line_invoice:0
 msgid "Select an Open Sale Order"
-msgstr ""
+msgstr "Seleccione una orden de venta abierta"
 
 #. module: purchase
 #: field:purchase.order,company_id:0
@@ -158,14 +176,14 @@ msgstr ""
 #: view:purchase.report:0
 #: field:purchase.report,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Compañía"
 
 #. module: purchase
 #: view:board.board:0
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_monthly_categ_graph
 #: view:purchase.report:0
 msgid "Monthly Purchase by Category"
-msgstr ""
+msgstr "Compra mensual por categoría"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -186,7 +204,7 @@ msgstr "Tarifa de compra por defecto"
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_current_purchases
 msgid "Current purchases"
-msgstr ""
+msgstr "Compras actuales"
 
 #. module: purchase
 #: help:purchase.order,dest_address_id:0
@@ -225,18 +243,18 @@ msgstr ""
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_partial_picking
 msgid "Partial Picking"
-msgstr ""
+msgstr "Movimientos parciales"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:286
 #, python-format
 msgid "Purchase order '%s' is confirmed."
-msgstr ""
+msgstr "Pedido de compra '%s' está confirmado."
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Approve Purchase"
-msgstr "Aprovar compra"
+msgstr "Aprobar Compra"
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_approvepurchaseorder0
@@ -249,7 +267,7 @@ msgstr "Aprobado"
 #. module: purchase
 #: view:purchase.report:0
 msgid "Reference UOM"
-msgstr ""
+msgstr "Referencia UOM"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -259,12 +277,12 @@ msgstr "Origen"
 #. module: purchase
 #: field:purchase.report,product_uom:0
 msgid "Reference UoM"
-msgstr ""
+msgstr "Referencia UdM"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_line_product_tree
 msgid "Purchases"
-msgstr ""
+msgstr "Compras"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -281,6 +299,8 @@ msgid ""
 "You have to select a pricelist or a supplier in the purchase form !\n"
 "Please set one before choosing a product."
 msgstr ""
+"¡Debe seleccionar una tarifa o un proveedor en el formulario de compra!\n"
+"Indique uno antes de seleccionar un producto."
 
 #. module: purchase
 #: selection:purchase.report,month:0
@@ -1808,3 +1828,204 @@ msgstr ""
 #: model:ir.ui.menu,name:purchase.menu_board_purchase
 msgid "Purchase Dashboard"
 msgstr ""
+
+#~ msgid "Supplier Invoice pre-generated on receptions for control"
+#~ msgstr "Factura de proveedor pre-generada en la recepción para control"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nombre de modelo no válido en la definición de acción."
+
+#~ msgid "Confirmed Purchase"
+#~ msgstr "Compra confirmada"
+
+#~ msgid "Create invoice from product recept"
+#~ msgstr "Crear factura desde recepción producto"
+
+#~ msgid "Purchase Process"
+#~ msgstr "Proceso de compra"
+
+#~ msgid "Invoice from Packing list"
+#~ msgstr "Facturar desde albarán"
+
+#~ msgid "Purchase Orders in Progress"
+#~ msgstr "Pedidos de compra en proceso"
+
+#~ msgid "Purchase Order lines"
+#~ msgstr "Línieas del pedido de compra"
+
+#~ msgid ""
+#~ "From Order: a draft invoice will be pre-generated based on the purchase "
+#~ "order. The accountant will just have to validate this invoice for control.\n"
+#~ "From Picking: a draft invoice will be pre-genearted based on validated "
+#~ "receptions.\n"
+#~ "Manual: no invoice will be pre-generated. The accountant will have to encode "
+#~ "manually."
+#~ msgstr ""
+#~ "Desde pedido: Una factura borrador se pre-generará basada en el pedido de "
+#~ "compra. El contable sólo deberá validar esta factura para control.\n"
+#~ "Desde albarán: Una factura borrador será pre-generará basada en las "
+#~ "recepciones validadas.\n"
+#~ "Manual: Ninguna factura se pre-generará. El contable deberá codificarla "
+#~ "manualmente."
+
+#~ msgid "Invoice based on deliveries"
+#~ msgstr "Facturar desde albaranes"
+
+#~ msgid "Product Receipt"
+#~ msgstr "Recepción producto"
+
+#~ msgid "Confirm Purchase order from Request for quotation without origin"
+#~ msgstr "Confirmar pedido de compra desde solicitud de presupuesto sin origen"
+
+#~ msgid "Planned Date"
+#~ msgstr "Fecha prevista"
+
+#~ msgid "Packing"
+#~ msgstr "Empaquetado/Albarán"
+
+#~ msgid "Merge purchases"
+#~ msgstr "Fusionar compras"
+
+#~ msgid "When controlling invoice from orders"
+#~ msgstr "Cuando se controla factura desde pedidos"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "¡XML inválido para la definición de la vista!"
+
+#~ msgid "Pre-generated supplier invoice to control based on order"
+#~ msgstr "Factura de proveedor pre-generada para control basada en pedido"
+
+#~ msgid "Invoice from Purchase"
+#~ msgstr "Factura desde compra"
+
+#~ msgid "Packing is created for the products reception control."
+#~ msgstr "Albarán es creado para el control de recepción de productos."
+
+#~ msgid "Confirming Purchase"
+#~ msgstr "Confirmación compra"
+
+#~ msgid "Approve Purchase order after Confirming"
+#~ msgstr "Aprobar pedido de compra después de confirmación"
+
+#~ msgid "Encoded manually by the user."
+#~ msgstr "Codificación manual del usuario."
+
+#~ msgid "Purchase orders"
+#~ msgstr "Pedidos de compra"
+
+#~ msgid "Confirm Purchase order from Request for quotation"
+#~ msgstr "Confirmar pedido de compra desde solicitud de presupuesto"
+
+#~ msgid "Confirm Purchase Order"
+#~ msgstr "Confirmar pedido de compra"
+
+#~ msgid "Partner Ref."
+#~ msgstr "Ref. empresa"
+
+#~ msgid "Purchase order is approved by supplier."
+#~ msgstr "Pedido de compra es aprobado por el proveedor."
+
+#~ msgid "Purchase order"
+#~ msgstr "Pedido de compra"
+
+#~ msgid "Request for quotation is proposed by the system."
+#~ msgstr "La solicitud de presupuesto es propuesta por el sistema."
+
+#~ msgid "Packing Invoice"
+#~ msgstr "Facturar paquete"
+
+#~ msgid "Creates invoice from packin list"
+#~ msgstr "Crear factura desde albarán"
+
+#~ msgid "Delivery & Invoices"
+#~ msgstr "Albaranes & Facturas"
+
+#~ msgid "Date"
+#~ msgstr "Fecha"
+
+#~ msgid "After Purchase order , Create invoice."
+#~ msgstr "Después de pedido de compra, crear factura."
+
+#~ msgid "Scheduled date"
+#~ msgstr "Fecha planificada"
+
+#~ msgid "You cannot have 2 pricelist versions that overlap!"
+#~ msgstr "¡No puede tener 2 versiones de tarifa que se solapen!"
+
+#~ msgid "Create Packing list"
+#~ msgstr "Crear albarán"
+
+#~ msgid "When purchase order is approved , it creates its packing list."
+#~ msgstr "Cuando el pedido de compra es aprobado, crea su albarán."
+
+#~ msgid "Order Status"
+#~ msgstr "Estado del pedido"
+
+#~ msgid "Purchases Properties"
+#~ msgstr "Propiedades de compra"
+
+#~ msgid "Order Ref"
+#~ msgstr "Ref. pedido"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
+#~ "especial!"
+
+#~ msgid "New Purchase Order"
+#~ msgstr "Nuevo pedido de compra"
+
+#~ msgid "Out Packing"
+#~ msgstr "Paquete saliente"
+
+#~ msgid "Control invoices on receptions"
+#~ msgstr "Controlar facturas en la recepción"
+
+#~ msgid ""
+#~ "Module for purchase management\n"
+#~ "    Request for quotation, Create Supplier Invoice, Print Order..."
+#~ msgstr ""
+#~ "Módulo para la gestión de compras\n"
+#~ "    Solicitud de presupuesto, crear pedido de compra, crear factura de "
+#~ "proveedor, imprimir pedido de compra..."
+
+#~ msgid "Product recept invoice"
+#~ msgstr "Factura recepción producto"
+
+#~ msgid "Confirming Purchase Order"
+#~ msgstr "Confirmación pedido de compra"
+
+#~ msgid "Purchase order is confirmed by the user."
+#~ msgstr "Pedido de compra es confirmado por el usuario."
+
+#~ msgid "Purchase Invoice"
+#~ msgstr "Factura de compra"
+
+#~ msgid "Request For Quotations"
+#~ msgstr "Solicitud de presupuestos"
+
+#~ msgid "Approved Purchase"
+#~ msgstr "Compra aprobada"
+
+#~ msgid "From Packing list, Create invoice."
+#~ msgstr "Desde albarán, crear factura."
+
+#~ msgid "Approving Purchase Order"
+#~ msgstr "Aprobación pedido de compra"
+
+#~ msgid "After approved purchase order , it comes into the supplier invoice"
+#~ msgstr ""
+#~ "Después del pedido de compra aprobado, se convierte en factura de proveedor"
+
+#~ msgid "Manual in progress"
+#~ msgstr "Manual en progreso"
+
+#~ msgid "Quotation"
+#~ msgstr "Cotización"
+
+#~ msgid "In progress"
+#~ msgstr "En progreso"
+
+#~ msgid "Waiting Schedule"
+#~ msgstr "Esperando Fecha"

@@ -7,14 +7,20 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-01-19 12:00+0000\n"
+"PO-Revision-Date: 2011-01-18 22:08+0000\n"
 "Last-Translator: debaetsr <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-25 06:16+0000\n"
+"X-Launchpad-Export-Date: 2011-01-19 04:42+0000\n"
 "X-Generator: Launchpad (build 12177)\n"
+
+#. module: account
+#: code:addons/account/account.py:1167
+#, python-format
+msgid "Integrity Error !"
+msgstr "Integriteitsfout !"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -4763,12 +4769,6 @@ msgstr "Open cashregister"
 #: view:account.payment.term.line:0
 msgid "Line 1:"
 msgstr "Lijn 1:"
-
-#. module: account
-#: code:addons/account/account.py:1167
-#, python-format
-msgid "Integrity Error !"
-msgstr "Integriteitsfout !"
 
 #. module: account
 #: field:account.tax.template,description:0
@@ -9888,3 +9888,1665 @@ msgid ""
 "The residual amount on a receivable or payable of a journal entry expressed "
 "in its currency (maybe different of the company currency)."
 msgstr ""
+
+#~ msgid "Keep empty to use the period of the validation date."
+#~ msgstr "Laat dit veld leeg wanneer je de huidige datum wilt gebruiken."
+
+#, python-format
+#~ msgid ""
+#~ "No period defined for this date !\n"
+#~ "Please create a fiscal year."
+#~ msgstr ""
+#~ "Geen periode ingesteld voor deze datum !\n"
+#~ "Maak een boekjaar aan."
+
+#~ msgid "Error! You can not create recursive account."
+#~ msgstr "Fout! U kunt geen reeds gemaakte rekening aanmaken."
+
+#, python-format
+#~ msgid ""
+#~ "You can specify year, month and date in the name of the model using the "
+#~ "following labels:\n"
+#~ "\n"
+#~ "%(year)s : To Specify Year \n"
+#~ "%(month)s : To Specify Month \n"
+#~ "%(date)s : Current Date\n"
+#~ "\n"
+#~ "e.g. My model on %(date)s"
+#~ msgstr ""
+#~ "U kunt jaar, maand en datum in de naam van het model verwerken door gebruik "
+#~ "te maken van de volgende labels:\n"
+#~ "\n"
+#~ "%(year)s : Voor het jaar \n"
+#~ "%(month)s : Voor de maand\n"
+#~ "%(date)s : Voor de datum\n"
+#~ "\n"
+#~ "Bijv. Mijn model op %(date)s"
+
+#~ msgid ""
+#~ "If you use payment terms, the due date will be computed automatically at the "
+#~ "generation of accounting entries. If you keep the payment term and the due "
+#~ "date empty, it means direct payment."
+#~ msgstr ""
+#~ "Indien u betalingstermijnen hanteert zal de vervaldatum automatisch worden "
+#~ "berekend bij het aanmaken van de boekhoudmutaties. Wanneer u de "
+#~ "betaaltermijn en de vervaldatum leeg laat zal deze als directe betaling "
+#~ "worden geboekt"
+
+#~ msgid "Unpaid Supplier Invoices"
+#~ msgstr "Onbetaalde inkoopfacturen"
+
+#~ msgid "Entries Encoding"
+#~ msgstr "Boekhouden"
+
+#~ msgid "Confirm statement from draft"
+#~ msgstr "Bevestig afschrift vanuit concept"
+
+#~ msgid "Asset"
+#~ msgstr "Activa"
+
+#~ msgid "Select Message"
+#~ msgstr "Selecteer bericht"
+
+#~ msgid "Unreconciled entries"
+#~ msgstr "Niet afgeletterde boekingen"
+
+#, python-format
+#~ msgid "Account move line \"%s\" is not valid"
+#~ msgstr "Boekingsregel \"%s\" is ongeldig"
+
+#~ msgid "Unreconcile entries"
+#~ msgstr "Maak afletteren ongedaan"
+
+#~ msgid "Confirm draft invoices"
+#~ msgstr "Bevestig concept-facturen"
+
+#~ msgid "Charts of Account"
+#~ msgstr "Grootboekschema"
+
+#~ msgid "Move line select"
+#~ msgstr "Veplaats geselecteerde regel"
+
+#~ msgid "Entry label"
+#~ msgstr "Boekingskenmerk"
+
+#~ msgid "Account Entry Line"
+#~ msgstr "Boekingsregel"
+
+#~ msgid "Aged Trial Balance"
+#~ msgstr "Historische trial balance"
+
+#~ msgid "Recurrent Entries"
+#~ msgstr "Periodieke boekingen"
+
+#~ msgid ""
+#~ "Gives the view used when writing or browsing entries in this journal. The "
+#~ "view tell Open ERP which fields should be visible, required or readonly and "
+#~ "in which order. You can create your own view for a faster encoding in each "
+#~ "journal."
+#~ msgstr ""
+#~ "Geeft de weergave wanneer mutaties in het dagboek worden geschreven of "
+#~ "doorgebladerd. De weergave verteld Open ERP welke velden er zichtbaar, "
+#~ "verplicht of alleen lezen moeten zijn en in welke volgorde. U kunt uw eigen "
+#~ "weergave aanmaken voor een snellere codering in elk dagboek."
+
+#~ msgid "Account Num."
+#~ msgstr "Rekening Num."
+
+#~ msgid "Delta Debit"
+#~ msgstr "Richting debet"
+
+#, python-format
+#~ msgid "No analytic journal !"
+#~ msgstr "Geen kostenplaatsdagboek!"
+
+#~ msgid "Total entries"
+#~ msgstr "Totaal mutaties"
+
+#~ msgid "Payment Reconcilation"
+#~ msgstr "Aflettering betalingen"
+
+#~ msgid "Disc. (%)"
+#~ msgstr "Korting (%)"
+
+#~ msgid ""
+#~ "Would your payment have been carried out after this mail was sent, please "
+#~ "consider the present one as void. Do not hesitate to contact our accounting "
+#~ "departement at +32 81 81 37 00."
+#~ msgstr ""
+#~ "Als de betaling is uitgevoerd terwijl u dit bericht al verzonden is, "
+#~ "beschouw deze dan als niet-verzonden."
+
+#~ msgid "Contra"
+#~ msgstr "Tegenover"
+
+#~ msgid "Unpaid Supplier Refunds"
+#~ msgstr "Niet-betaalde credit inkoopfacturen"
+
+#~ msgid "Confirm statement with/without reconciliation from draft statement"
+#~ msgstr "Bevestig afschrift zonder aflettering van de concept-afschriften"
+
+#~ msgid "Supplier invoice"
+#~ msgstr "Inkoopfactuur"
+
+#~ msgid "Reconcile Paid"
+#~ msgstr "Letter betaling af"
+
+#~ msgid "Printing Date"
+#~ msgstr "Afdruk datum"
+
+#~ msgid "Mvt"
+#~ msgstr "Mvt"
+
+#~ msgid "Fiscal Position Accounts Mapping"
+#~ msgstr "Fiscale toewijzing grootboekrekeningen"
+
+#~ msgid "Contact"
+#~ msgstr "Contact"
+
+#~ msgid "Account Entry Reconcile"
+#~ msgstr "Boekingsregel afletteren"
+
+#~ msgid "Keep empty if the fiscal year belongs to several companies."
+#~ msgstr ""
+#~ "Leeg laten wanneer het boekjaar door meerdere bedrijven wordt gebruikt."
+
+#~ msgid "Journal Voucher"
+#~ msgstr "Dagboekoverzicht"
+
+#~ msgid "account.move.line"
+#~ msgstr "account.move.line"
+
+#~ msgid "Analytic Invoice"
+#~ msgstr "Analitische Factuur"
+
+#~ msgid "Sign for parent"
+#~ msgstr "Kenmerk bovenliggende"
+
+#~ msgid "Can be draft or validated"
+#~ msgstr "Kan concept of gevalideerd zijn"
+
+#~ msgid "Partial Payment"
+#~ msgstr "Deelbetaling"
+
+#~ msgid "Move Lines Created."
+#~ msgstr "Boekingen aangemaakt"
+
+#~ msgid "Status"
+#~ msgstr "Status"
+
+#~ msgid "Partner account"
+#~ msgstr "Partnerrekening"
+
+#~ msgid "Generate entries before:"
+#~ msgstr "Genereer boekingen voor:"
+
+#~ msgid "(Keep empty for all open fiscal years)"
+#~ msgstr "(laat leeg om alle boekjaren mee te nemen)"
+
+#~ msgid "Move Lines"
+#~ msgstr "Verplaats boekingsregels"
+
+#, python-format
+#~ msgid "The opening journal must not have any entry in the new fiscal year !"
+#~ msgstr ""
+#~ "Het openingsdagboek mag geen boekingen in het nieuwe boekjaar hebben!"
+
+#~ msgid "account.config.wizard"
+#~ msgstr "account.config.wizard"
+
+#~ msgid "Account cost and revenue by journal"
+#~ msgstr "Kosten en opbrengsten per dagboek"
+
+#~ msgid "Bank Reconciliation"
+#~ msgstr "Aflettering bank"
+
+#~ msgid "Print Journal"
+#~ msgstr "Dagboekoverzicht"
+
+#~ msgid "Cancel Invoice"
+#~ msgstr "Annuleer factuur"
+
+#~ msgid "Select Chart of Accounts"
+#~ msgstr "Selecteer grootboekschema"
+
+#~ msgid "Printing Date :"
+#~ msgstr "Afdrukdatum :"
+
+#~ msgid "End date"
+#~ msgstr "Einddatum"
+
+#~ msgid "Entries by Statements"
+#~ msgstr "Afschriften boeken (kas, bank & giro)"
+
+#~ msgid "analytic Invoice"
+#~ msgstr "Kostenplaats factuur"
+
+#~ msgid "Grand total"
+#~ msgstr "Totaal"
+
+#~ msgid "Fiscal Position Taxes Mapping"
+#~ msgstr "Toewijzing belastingen"
+
+#~ msgid "New Supplier Invoice"
+#~ msgstr "Nieuwe inkoopfactuur"
+
+#~ msgid "Amount paid"
+#~ msgstr "Betaald bedrag"
+
+#~ msgid "Voucher Nb"
+#~ msgstr "Vouchernr"
+
+#~ msgid "Total write-off"
+#~ msgstr "Totaal afgeboekt"
+
+#~ msgid "New Analytic Account"
+#~ msgstr "Nieuwe kostenplaats"
+
+#~ msgid "Standard entry"
+#~ msgstr "Standard entry"
+
+#~ msgid "Are you sure you want to close the fiscal year ?"
+#~ msgstr "Weet u zeker dat u het boekjaar wilt afsluiten ?"
+
+#~ msgid "Bank Receipt"
+#~ msgstr "Bankafschrift"
+
+#~ msgid "Invoice import"
+#~ msgstr "Factuurimport"
+
+#~ msgid "Ending Balance"
+#~ msgstr "Eindsaldo"
+
+#~ msgid "Continue"
+#~ msgstr "Doorgaan"
+
+#~ msgid "Value"
+#~ msgstr "Waarde"
+
+#~ msgid "Select invoices you want to pay and manages advances"
+#~ msgstr "Selecteer facturen welke u wilt betalen."
+
+#~ msgid "Compute Entry Dates"
+#~ msgstr "Bereken mutatie data"
+
+#~ msgid "Display History"
+#~ msgstr "Geschiedenis weergeven"
+
+#~ msgid "        Start date"
+#~ msgstr "        Begindatum"
+
+#~ msgid "Display accounts "
+#~ msgstr "Rekeningen weergeven "
+
+#~ msgid "Statement reconcile line"
+#~ msgstr "Afschrift verrekeningsregel"
+
+#~ msgid "Close states"
+#~ msgstr "Afsluit statuscodes"
+
+#~ msgid "Crédit"
+#~ msgstr "Credit"
+
+#~ msgid "Income"
+#~ msgstr "Inkomen"
+
+#~ msgid "Invoice Movement"
+#~ msgstr "Invoice Movement"
+
+#~ msgid "Legal Statements"
+#~ msgstr "Officiële overzichten"
+
+#~ msgid "Open for reconciliation"
+#~ msgstr "Open voor aflettering"
+
+#~ msgid "VAT"
+#~ msgstr "BTW"
+
+#~ msgid "Account to reconcile"
+#~ msgstr "Af te letteren grootboekkaart"
+
+#~ msgid "Total quantity"
+#~ msgstr "Totaal bedrag"
+
+#~ msgid "Third party"
+#~ msgstr "Derde partij"
+
+#~ msgid "Costs & Revenues"
+#~ msgstr "Kosten & Opbrengsten"
+
+#~ msgid "Account Number"
+#~ msgstr "Grootboeknummer"
+
+#~ msgid "Skip"
+#~ msgstr "Overslaan"
+
+#~ msgid "Gives the sequence order when displaying a list of account types."
+#~ msgstr ""
+#~ "Geeft de volgorde bij weergave van een lijst grootboekrekeningen soorten"
+
+#~ msgid "Include in base amount"
+#~ msgstr "Meenemen in basisbedrag"
+
+#~ msgid "Delta Credit"
+#~ msgstr "Richting credit"
+
+#~ msgid "Pre-generated invoice from control"
+#~ msgstr "Vooraf gegenereerde factuur vanuit controle"
+
+#~ msgid "Valid Entries"
+#~ msgstr "Geldige boekingen"
+
+#~ msgid "Cost Legder for period"
+#~ msgstr "Kosten grootboek voor periode"
+
+#~ msgid "New Statement"
+#~ msgstr "Nieuw afschrift"
+
+#~ msgid "Reconciliation of entries from invoice(s) and payment(s)"
+#~ msgstr "Afletteren van mutaties van facturen en betalingen"
+
+#~ msgid "Print Central Journal"
+#~ msgstr "Print Central Journal"
+
+#~ msgid "Next"
+#~ msgstr "Volgend"
+
+#~ msgid ""
+#~ "The fiscal position will determine taxes and the accounts used for the the "
+#~ "partner."
+#~ msgstr ""
+#~ "De fiscale positie bepaald de belastingen op verkopen bij de huidige relatie."
+
+#~ msgid "Account Manager"
+#~ msgstr "Accountmanager"
+
+#~ msgid "Start date"
+#~ msgstr "Startdatum"
+
+#~ msgid "x Expenses Credit Notes Journal"
+#~ msgstr "Uitgaven credit nota's dagboek"
+
+#~ msgid "Untaxed amount"
+#~ msgstr "Bedrag voor belastingen"
+
+#~ msgid "Pay invoice"
+#~ msgstr "Betaal factuur"
+
+#~ msgid "Draft Customer Invoices"
+#~ msgstr "Concept verkoopfactuur"
+
+#~ msgid "Sort by:"
+#~ msgstr "Sorteren op:"
+
+#~ msgid "To Be Verified"
+#~ msgstr "Te controleren"
+
+#~ msgid "          Start date"
+#~ msgstr "          Startdatum"
+
+#~ msgid "Analytic Journal Report"
+#~ msgstr "Analytisch dagboek rapport"
+
+#~ msgid "Expense"
+#~ msgstr "Uitgave"
+
+#~ msgid "Options"
+#~ msgstr "Optie's"
+
+#~ msgid "Customer Invoice Process"
+#~ msgstr "Verkoopfactuur proces"
+
+#~ msgid "Validate Account Moves"
+#~ msgstr "Bevestig automatische boekingen"
+
+#~ msgid "Unpaid invoices"
+#~ msgstr "Onbetaalde facturen"
+
+#~ msgid "Payment Reconcile"
+#~ msgstr "Afletteren betaling"
+
+#~ msgid "Statements reconciliation"
+#~ msgstr "Afletteren afschriften"
+
+#~ msgid "Draft Supplier Invoices"
+#~ msgstr "Concept-inkoopfacturen"
+
+#, python-format
+#~ msgid "Configration Error !"
+#~ msgstr "Instellings-fout"
+
+#~ msgid ""
+#~ "Exception made of a mistake of our side, it seems that the following bills "
+#~ "stay unpaid. Please, take appropriate measures in order to carry out this "
+#~ "payment in the next 8 days."
+#~ msgstr ""
+#~ "Uigezonders bij fouten van onze kant, is bij controle is gebleken dat de "
+#~ "volgende facturen nog niet zijn betaald. Wij verzoeken u maatregelen te "
+#~ "nemen om deze betalingen binnen de komende 8 dagen uit te voeren."
+
+#~ msgid "Débit"
+#~ msgstr "Debet"
+
+#~ msgid "x Checks Journal"
+#~ msgstr "x Controleert Journal"
+
+#, python-format
+#~ msgid "Your journal must have a default credit and debit account."
+#~ msgstr "Uw dagboek heeft een standaard credit en debet rekening nodig."
+
+#~ msgid "Create subscription entries"
+#~ msgstr "Maak een verdeelboeking"
+
+#~ msgid "Create a Fiscal Year"
+#~ msgstr "Aanmaken boekjaar"
+
+#~ msgid "Date Invoiced"
+#~ msgstr "Factuurdatum"
+
+#~ msgid "All periods if empty"
+#~ msgstr "Alle perioden indien leeg"
+
+#~ msgid "Liability"
+#~ msgstr "Verantwoordelijkheid"
+
+#~ msgid "Statement Entries"
+#~ msgstr "Afschrift mutaties"
+
+#~ msgid "Automatic reconciliation"
+#~ msgstr "Automatisch afletteren"
+
+#~ msgid "Import Invoice"
+#~ msgstr "Importeer factuur"
+
+#~ msgid "Account No."
+#~ msgstr "Rekeningnr."
+
+#~ msgid "Date End"
+#~ msgstr "Einddatum"
+
+#~ msgid "Entries Encoding by Line"
+#~ msgstr "Boekingen maken op regelniveau"
+
+#~ msgid "Entries Reconcile"
+#~ msgstr "Boekingen afletteren"
+
+#~ msgid "The amount in the currency of the journal"
+#~ msgstr "Het bedrag in de valuta van dit dagboek"
+
+#~ msgid "From analytic accounts, Create invoice."
+#~ msgstr "Van analytische rekeningen, Maak factuur."
+
+#, python-format
+#~ msgid "Already Reconciled"
+#~ msgstr "Reeds afgeletterd"
+
+#~ msgid "Equity"
+#~ msgstr "Vermogen"
+
+#~ msgid "Generic Reports"
+#~ msgstr "Diverse rapporten"
+
+#~ msgid "Account Analytic Lines Analysis"
+#~ msgstr "Kostenplaats analyse"
+
+#~ msgid "Analytic Chart of Accounts"
+#~ msgstr "Kostenplaatsen"
+
+#~ msgid "Select Period and Journal for Validation"
+#~ msgstr "Kies periode en dagboek voor goedkeuring"
+
+#~ msgid "O_k"
+#~ msgstr "O_k"
+
+#~ msgid "_Go"
+#~ msgstr "_Ga naar"
+
+#~ msgid "Partner ID"
+#~ msgstr "Partner ID"
+
+#~ msgid "New Customer Invoice"
+#~ msgstr "Nieuwe verkoopfactuur"
+
+#~ msgid "Analytic account costs and revenues"
+#~ msgstr "Analytische rekening inkomsten en uitgaven"
+
+#~ msgid "Open State"
+#~ msgstr "Open status"
+
+#~ msgid "From statement, create entries"
+#~ msgstr "Van afschrift, mutaties aanmaken"
+
+#~ msgid "1cm 27.7cm 20cm 27.7cm"
+#~ msgstr "1cm 27.7cm 20cm 27.7cm"
+
+#~ msgid "Draft Supplier Refunds"
+#~ msgstr "Concept creditfacturen inkoop"
+
+#~ msgid "Accounting Statement"
+#~ msgstr "Boekings Afschrift"
+
+#, python-format
+#~ msgid "Unable to reconcile entry \"%s\": %.2f"
+#~ msgstr "Aflettern onmogelijk van mutatie \"%s\": %.2f"
+
+#, python-format
+#~ msgid "Please set an analytic journal on this financial journal !"
+#~ msgstr "Stel een analytisch dagboek in voor dit financieële journaal !"
+
+#~ msgid "Reconcilation of entries from payment order."
+#~ msgstr "Afletteren van mutaties van betaalopdracht."
+
+#~ msgid "Analytic Journal -"
+#~ msgstr "Analytisch Journal -"
+
+#~ msgid "Draft Customer Refunds"
+#~ msgstr "Concept creditfacturen verkoop"
+
+#~ msgid ""
+#~ "The maturity date of the generated entries for this model. You can chosse "
+#~ "between the date of the creation action or the the date of the creation of "
+#~ "the entries plus the partner payment terms."
+#~ msgstr ""
+#~ "De verloopdatum van de gegenereerde mutaties voor dit model. U kunt kiezen "
+#~ "tussen de aanmaakdatum of voor de aanmaakdatum plus de betaaltermijn van de "
+#~ "relatie."
+
+#~ msgid "Document"
+#~ msgstr "Document"
+
+#~ msgid "Move name"
+#~ msgstr "Boekingsnaam"
+
+#~ msgid "Cancel selected invoices"
+#~ msgstr "Annuleer de geselecteerde facturen"
+
+#~ msgid "Reconcilate the entries from payment"
+#~ msgstr "Afletteren van de betaalmutaties"
+
+#~ msgid "Proposed invoice to be checked, validated and printed"
+#~ msgstr ""
+#~ "Voorgestelde factuur wordt gecontroleerd, akkoord gegeven en geprint."
+
+#~ msgid "account.move.line.select"
+#~ msgstr "account.move.line.select"
+
+#~ msgid "By Date and Period"
+#~ msgstr "Op datum en periode"
+
+#~ msgid ""
+#~ "The account moves of the invoice have been reconciled with account moves of "
+#~ "the payment(s)."
+#~ msgstr ""
+#~ "Deze checkbox staat aangevinkt als de boekingen van de factuur zijn "
+#~ "afgeletterd met de boekingen van de betalingen."
+
+#~ msgid "Close Fiscal Year with new entries"
+#~ msgstr "Sluit boekjaar met nieuwe boekingen"
+
+#~ msgid "Statement encoding produces payment entries"
+#~ msgstr "Afschrift verwerking maakt betaalingsmutaties aan"
+
+#~ msgid "Financial Management"
+#~ msgstr "Financiële administratie"
+
+#, python-format
+#~ msgid "The account is not defined to be reconcile !"
+#~ msgstr "Deze grootboekkaart is en gedefineerd als af te letteren!"
+
+#~ msgid "Additionnal Information"
+#~ msgstr "Extra Informatie"
+
+#~ msgid " Close states of Fiscal year and periods"
+#~ msgstr " Afsluit statuscodes voor boekjaar en periodes"
+
+#~ msgid "Third Party Ledger"
+#~ msgstr "Relatie administratie"
+
+#~ msgid "Partner Accounts"
+#~ msgstr "Relatie-overzichten"
+
+#~ msgid "Real Entries"
+#~ msgstr "Werkelijke mutaties"
+
+#~ msgid "Import invoice"
+#~ msgstr "Importeer factuur"
+
+#~ msgid "Invoice line"
+#~ msgstr "Factuurregel"
+
+#~ msgid "Force all moves for this account to have this secondary currency."
+#~ msgstr ""
+#~ "Forceer dat alle voor mutaties op deze rekening deze tweede valuta wordt "
+#~ "gebruikt."
+
+#~ msgid ""
+#~ "All draft account entries in this journal and period will be validated. It "
+#~ "means you won't be able to modify their accouting fields."
+#~ msgstr ""
+#~ "Alle concept boekingen in dit dagboek en deze en periode worden gevalideerd. "
+#~ "Dit houdt in dat u de velden van deze boekingen niet meer kunt aanpassen."
+
+#~ msgid "Filter on Periods"
+#~ msgstr "Filteren op periodes"
+
+#~ msgid "Pay and reconcile"
+#~ msgstr "Betaal en letter af"
+
+#~ msgid "Balance brought forward"
+#~ msgstr "Voortgebracht saldo"
+
+#~ msgid "New Supplier Refund"
+#~ msgstr "Nieuwe credit inkoopfactuur"
+
+#~ msgid "Entry Model"
+#~ msgstr "Boekingsmodel"
+
+#~ msgid "Journal code"
+#~ msgstr "Dagboekcode"
+
+#~ msgid "Entry Name"
+#~ msgstr "Mutatienaam"
+
+#~ msgid "Entry encoding"
+#~ msgstr "Boekingscode"
+
+#~ msgid "Credit Note"
+#~ msgstr "Creditfactuur"
+
+#~ msgid "Define Fiscal Years and Select Charts of Account"
+#~ msgstr "Stel boekjaar in en kies een grootboek rekeningschema"
+
+#~ msgid "Write-Off Period"
+#~ msgstr "Afboekingsperiode"
+
+#~ msgid "3 Months"
+#~ msgstr "3 maanden"
+
+#~ msgid "By date"
+#~ msgstr "Op datum"
+
+#~ msgid "Account Configure Wizard "
+#~ msgstr "Administratie configuratie assistent "
+
+#~ msgid "Select Chart"
+#~ msgstr "Kies grootboekrekeningschema"
+
+#, python-format
+#~ msgid "The journal must have centralised counterpart"
+#~ msgstr "Het dagboek dient een vaste tegenboekingsrekening te hebben."
+
+#~ msgid "Payment Entries"
+#~ msgstr "Betalingsboekingen"
+
+#~ msgid ""
+#~ "If no account is specified, the reconciliation will be made using every "
+#~ "accounts that can be reconcilied"
+#~ msgstr ""
+#~ "Als geen rekening is gekozen zal verrekening plaatsvinden op elke rekening "
+#~ "die voor verrekening geschikt is"
+
+#~ msgid "Other"
+#~ msgstr "Overige"
+
+#~ msgid "Movement"
+#~ msgstr "Beweging"
+
+#~ msgid "Encode manually the statement"
+#~ msgstr "Boek het afschrift handmatig"
+
+#~ msgid "Financial Journals"
+#~ msgstr "Dagboeken"
+
+#~ msgid "By Period"
+#~ msgstr "Op periode"
+
+#~ msgid ""
+#~ "Gives the type of the analytic journal. When a document (eg: an invoice) "
+#~ "needs to create analytic entries, Open ERP will look for a matching journal "
+#~ "of the same type."
+#~ msgstr ""
+#~ "Geeft de soort van het analytische dagboek. Als een document (bijv een "
+#~ "factuur) een analytische boeking moet maken zal OpenERP zoeken voor een "
+#~ "bijbehorend dagboek van hetzelfde soort."
+
+#~ msgid "Import from your bank statements"
+#~ msgstr "Importeer bankafschriften"
+
+#~ msgid "Select entries"
+#~ msgstr "Selecteer boekingen"
+
+#~ msgid "Base on"
+#~ msgstr "Gebaseerd op"
+
+#~ msgid "Cash Payment"
+#~ msgstr "Contacte betaling"
+
+#~ msgid "Account Move"
+#~ msgstr "Transactie"
+
+#~ msgid "Taxed Amount"
+#~ msgstr "Belast bedrag"
+
+#~ msgid "Subtotal w/o tax"
+#~ msgstr "Subtotaal"
+
+#~ msgid "Invoice Ref"
+#~ msgstr "Factuur Ref"
+
+#~ msgid "       Include Reconciled Entries"
+#~ msgstr "       Afgeletterde boekingen meenemen"
+
+#~ msgid ""
+#~ "You can check this box to mark the entry line as a litigation with the "
+#~ "associated partner"
+#~ msgstr ""
+#~ "U kunt dit vakje aanvinken om de mutatie als betwiste mutatie te markeren "
+#~ "bij de gekoppelde relatie"
+
+#~ msgid "Date/Period Filter"
+#~ msgstr "Datum/Periode filter"
+
+#~ msgid "Credit Trans."
+#~ msgstr "Credit mutaties"
+
+#~ msgid "The currency of the journal"
+#~ msgstr "De valuta van het dagboek"
+
+#~ msgid "Search Entries"
+#~ msgstr "Zoek boekingen"
+
+#~ msgid "Analytic costs to reinvoice purchases, timesheets, ..."
+#~ msgstr ""
+#~ "Analytische kosten voor herfacturering van inkopen, tijdschema's, ..."
+
+#~ msgid "Name of the fiscal year as displayed in reports."
+#~ msgstr "Naam van het boekjaar zoals het wordt weergegeven in rapporten"
+
+#~ msgid ""
+#~ "This field is used for payable and receivable entries. You can put the limit "
+#~ "date for the payment of this entry line."
+#~ msgstr ""
+#~ "Dit veld wordt gebruikt voor de passiva en activa mutaties. U kunt de "
+#~ "verloopdatum voor de betaling van deze mutatie opgeven."
+
+#~ msgid "Third party (Country)"
+#~ msgstr "Derde partij (Land)"
+
+#~ msgid "Payment date"
+#~ msgstr "Betaaldatum"
+
+#~ msgid "Unpaid Customer Invoices"
+#~ msgstr "Onbetaalde verkoopfacturen"
+
+#~ msgid "Partner name"
+#~ msgstr "Relatie"
+
+#~ msgid "Journal/Payment Mode"
+#~ msgstr "Dagboek/Betaal modus"
+
+#~ msgid "Canceled Invoice"
+#~ msgstr "Geannuleerde factuur"
+
+#~ msgid "Import file from your bank statement"
+#~ msgstr "Importbestand voor uw bankafschriften"
+
+#~ msgid "Bank Payment"
+#~ msgstr "Bankbetaling"
+
+#~ msgid "Manually statement"
+#~ msgstr "Handmatige boeking"
+
+#~ msgid "End of Year Treatments"
+#~ msgstr "Eindejaars handelingen"
+
+#~ msgid "File statement"
+#~ msgstr "Afschrift opslaan"
+
+#~ msgid "Entry Model Line"
+#~ msgstr "Boekingsregel"
+
+#~ msgid "Set starting and ending balance for control"
+#~ msgstr "Geeft het begin en eind saldo voor controle"
+
+#~ msgid "General Ledger -"
+#~ msgstr "Grootboek"
+
+#~ msgid "Quantities"
+#~ msgstr "Aamt"
+
+#~ msgid "Date Start"
+#~ msgstr "Begindatum"
+
+#~ msgid "Number of entries are generated"
+#~ msgstr "Aantal verwerkte boekingen"
+
+#~ msgid "By Date"
+#~ msgstr "Op datum"
+
+#~ msgid "The date of the generated entries"
+#~ msgstr "De datum van de gegenereerde mutaties"
+
+#~ msgid "Modify Invoice"
+#~ msgstr "Factuur bewerken"
+
+#~ msgid "Entries Encoding by Move"
+#~ msgstr "Boekingen maken per journaalpost"
+
+#, python-format
+#~ msgid "You can not deactivate an account that contains account moves."
+#~ msgstr "U kunt een rekening met mutaties niet de-activeren"
+
+#~ msgid "Filter on Partners"
+#~ msgstr "Filteren op"
+
+#~ msgid "Analytic Entries by Journal"
+#~ msgstr "Kostenplaatsboekingen op dagboek"
+
+#~ msgid "Valid entries from invoice"
+#~ msgstr "Geldige boekingen van de factuur"
+
+#~ msgid "Crebit"
+#~ msgstr "Credit"
+
+#~ msgid "Journal name"
+#~ msgstr "Naam dagboek"
+
+#~ msgid "Import invoice from statement"
+#~ msgstr "Importeer factuur vanaf overzicht"
+
+#~ msgid "Import from invoices or payments"
+#~ msgstr "Importeer van facturen of betalingen"
+
+#~ msgid "Reconcile entries"
+#~ msgstr "Handmatig afletteren"
+
+#~ msgid "Journal - Period"
+#~ msgstr "Dagboek-Periode"
+
+#~ msgid "Print Aged Trial Balance"
+#~ msgstr "Druk ouderdomsanalyse af"
+
+#~ msgid "Date payment"
+#~ msgstr "Betaaldatum"
+
+#~ msgid "A/c No."
+#~ msgstr "A/c Nr."
+
+#~ msgid "Account cost and revenue by journal (This Month)"
+#~ msgstr "Kosten en opbrengsten per dagboek (Deze maand)"
+
+#~ msgid "Open for unreconciliation"
+#~ msgstr "Open voor verrekening"
+
+#~ msgid "OK"
+#~ msgstr "OK"
+
+#~ msgid "Control Invoice"
+#~ msgstr "Beheer factuur"
+
+#~ msgid "Account Balance"
+#~ msgstr "Saldilijst"
+
+#~ msgid "Analytic Check"
+#~ msgstr "Kostenplaats controle"
+
+#~ msgid "account.analytic.journal"
+#~ msgstr "account.analytic.journal"
+
+#~ msgid "Select parent account"
+#~ msgstr "Kies bovenliggende rekening"
+
+#~ msgid "Payment amount"
+#~ msgstr "Betaald bedrag"
+
+#~ msgid "All Months"
+#~ msgstr "Alle maanden"
+
+#~ msgid "Link to the automatically generated account moves."
+#~ msgstr "Koppelen aan de automatische gegenereerde mutaties"
+
+#~ msgid "Have a number and entries are generated"
+#~ msgstr "Heeft een nummer en mutaties worden aangemaakt"
+
+#~ msgid "Analytic Check -"
+#~ msgstr "Analytische controle -"
+
+#~ msgid "Group invoice lines"
+#~ msgstr "Groepeer factuurregels"
+
+#~ msgid "Total amount"
+#~ msgstr "Totaalbedrag"
+
+#~ msgid "_Cancel"
+#~ msgstr "Annuleer"
+
+#~ msgid "Select Date-Period"
+#~ msgstr "Kies Datum-Periode"
+
+#~ msgid "Tax Group"
+#~ msgstr "Belastinggroep"
+
+#~ msgid "New Customer Refund"
+#~ msgstr "Nieuwe credit verkoopfactuur"
+
+#~ msgid "Import invoices"
+#~ msgstr "Importeer facturen"
+
+#~ msgid "Subscription Periods"
+#~ msgstr "Perioden waarover verdeeld wordt"
+
+#~ msgid "Write-Off journal"
+#~ msgstr "Afboekingsdagboek"
+
+#~ msgid "Full Payment"
+#~ msgstr "Volledige betaling"
+
+#~ msgid "Journal Purchase"
+#~ msgstr "Inkoopdagboek boeking"
+
+#~ msgid "Cash Receipt"
+#~ msgstr "Kassabon"
+
+#~ msgid "Encode manually statement comes into the draft statement"
+#~ msgstr "Een handmatig ingevoerd afschrift komt in het concept afschrift"
+
+#~ msgid "Accounting entries at statement's confirmation"
+#~ msgstr "Boekingen wanneer het afschrift wordt bevestigd"
+
+#, python-format
+#~ msgid ""
+#~ "Selected Move lines does not have any account move enties in draft state"
+#~ msgstr "Geselecteerde mutaties hebben geen boekingen in de concept status"
+
+#~ msgid "All account entries"
+#~ msgstr "Alle boekingsregels"
+
+#~ msgid "Date Filter"
+#~ msgstr "Datumfilter"
+
+#~ msgid "Choose Journal and Payment Date"
+#~ msgstr "Kies dagboek en betaaldatum"
+
+#~ msgid "Unpaid Customer Refunds"
+#~ msgstr "Onbetaalde creditfacturen verkoop"
+
+#~ msgid "Supplier Invoice Process"
+#~ msgstr "Inkoopfactuur afhandelen"
+
+#~ msgid "Page"
+#~ msgstr "Pagina"
+
+#~ msgid "Receivable and Payable"
+#~ msgstr "Te betalen en te ontvangen"
+
+#~ msgid "Amount reconciled"
+#~ msgstr "Verrekend bedrag"
+
+#~ msgid "Subscription Entries"
+#~ msgstr "Verdeelboekingen"
+
+#, python-format
+#~ msgid "Closing of fiscal year cancelled, please check the box !"
+#~ msgstr "Afsluiten van boekjaar geannuleerd. Vink het vakje aan a.u.b. !"
+
+#~ msgid "PRO-FORMA Customer Invoices"
+#~ msgstr "PRO-FORMA Verkoopfacturen"
+
+#~ msgid "Analytic Journal Definition"
+#~ msgstr "Definiëren kostenplaats dagboeken"
+
+#~ msgid "Skip 'Draft' State for Created Entries"
+#~ msgstr "Direct definitief"
+
+#~ msgid ""
+#~ "This field allow you to choose the accounting journals you want for "
+#~ "filtering the invoices. If you left this field empty, it will search on all "
+#~ "sale, purchase and cash journals."
+#~ msgstr ""
+#~ "Dit veld geeft u de mogelijkheid om dagboeken te kiezen waarmee i de "
+#~ "facturen wil filteren. Indien dit veld leeg wordt gelaten zal het in alle "
+#~ "verkoop, inkoop en kas dagboeken zoeken"
+
+#~ msgid "List of Accounts"
+#~ msgstr "Lijst grootboekrekeningen"
+
+#, python-format
+#~ msgid "Closing of states cancelled, please check the box !"
+#~ msgstr "Sluiten van de statussen geannuleerd, vink het vakje aan a.u.b. !"
+
+#~ msgid "Validate Account Entries"
+#~ msgstr "Boekingen goedkeuren"
+
+#~ msgid "Entries of Open Analytic Journals"
+#~ msgstr "Mutaties op open analytische dagboeken"
+
+#~ msgid "Current Date"
+#~ msgstr "Huidige Datum"
+
+#~ msgid "Journal Sale"
+#~ msgstr "Verkoopdagboek"
+
+#~ msgid "Print VAT Decl."
+#~ msgstr "Druk BTW aangifte af"
+
+#~ msgid "Financial Accounts"
+#~ msgstr "Grootboek"
+
+#~ msgid "Account Configure"
+#~ msgstr "Instellen"
+
+#~ msgid "Print Journal -"
+#~ msgstr "Dagboekoverzicht"
+
+#~ msgid "Models Definition"
+#~ msgstr "Model definities"
+
+#~ msgid "Reconcile Entries."
+#~ msgstr "Letter boekingen af"
+
+#~ msgid "Paid invoice when reconciled."
+#~ msgstr "Na afletteren is factuur betaald"
+
+#~ msgid "General Debit"
+#~ msgstr "Algemeen debet"
+
+#~ msgid "Name of the fiscal year as displayed on screens."
+#~ msgstr "Naam van boekjaar welke wordt laten zien op scherm"
+
+#~ msgid "Statement Process"
+#~ msgstr "Afschrift afhandeling"
+
+#~ msgid "Statement reconcile"
+#~ msgstr "Afschrift verrekening"
+
+#~ msgid ""
+#~ "The optional quantity expressed by this line, eg: number of product sold. "
+#~ "The quantity is not a legal requirement but is very usefull for some reports."
+#~ msgstr ""
+#~ "Het optionele aantal uitgedrukt door deze regel. Bijv. aantal produkten "
+#~ "verkocht. Het aantal is geen juridisch vereist, maar kan erg handig zijn in "
+#~ "sommige rapporten."
+
+#, python-format
+#~ msgid "No Data Available"
+#~ msgstr "Geen gegevens beschikbaar"
+
+#~ msgid ""
+#~ "This account will be used to value incoming stock for the current product "
+#~ "category"
+#~ msgstr ""
+#~ "Deze rekening wordt gebruikt voor ontvangen voorraadwaarde van de huidige "
+#~ "productcategorie"
+
+#~ msgid "Date or Code"
+#~ msgstr "Datum of code"
+
+#~ msgid "Journal d'extourne"
+#~ msgstr "Betalingsdagboek"
+
+#~ msgid "Maximum Quantity"
+#~ msgstr "Maximale hoeveelheid"
+
+#, python-format
+#~ msgid "No records found for your selection!"
+#~ msgstr "Geen records gevonden voor uw keuze!"
+
+#, python-format
+#~ msgid "Can not pay draft/proforma/cancel invoice."
+#~ msgstr ""
+#~ "Het is niet mogelijk een concept/proforma/geannuleerde factuur te betalen"
+
+#~ msgid "Full Account Name"
+#~ msgstr "Volledige naam rekening"
+
+#~ msgid "Account Code"
+#~ msgstr "Rekeningcode"
+
+#~ msgid ""
+#~ "If a default tax is given in the partner it only overrides taxes from "
+#~ "accounts (or products) in the same group."
+#~ msgstr ""
+#~ "Als een standaard-belasting is ingesteld bij de relatie, dan overschrijft "
+#~ "deze alleen belastingen van rekeningen (of producten) in dezelfde groep."
+
+#, python-format
+#~ msgid "You can not validate a non-balanced entry !"
+#~ msgstr "U kunt een niet-gebalanceerde post niet valideren!"
+
+#~ msgid ""
+#~ "Check this box if you don't want new account moves to pass through the "
+#~ "'draft' state and instead goes directly to the 'posted state' without any "
+#~ "manual validation."
+#~ msgstr ""
+#~ "Vink dit aan indien u wilt dat nieuwe posten geen 'concept'-status krijgen, "
+#~ "maar rechtstreeks als 'geboekt' verwerkt moeten worden zonder handmatige "
+#~ "tussenkomst."
+
+#, python-format
+#~ msgid "Date to must be set between %s and %s"
+#~ msgstr "Datum tot moet tussen %s en %s liggen"
+
+#~ msgid "Import Invoices in Statement"
+#~ msgstr "Importeer facturen in bankafschrift"
+
+#, python-format
+#~ msgid "The old fiscal year does not have any entry to reconcile!"
+#~ msgstr "Het oude boekjaar heeft geen enkele af te letteren post meer!"
+
+#, python-format
+#~ msgid "Date not in a defined fiscal year"
+#~ msgstr "Datum valt niet in enig boekjaar."
+
+#~ msgid ""
+#~ "This account will be used instead of the default one to value outgoing stock "
+#~ "for the current product"
+#~ msgstr ""
+#~ "Deze rekening zal worden gebruikt in plaats van de standaard- om de "
+#~ "uitgaande voorraad voor het huidige product te waarderen."
+
+#~ msgid ""
+#~ "This account will be used instead of the default one to value incoming stock "
+#~ "for the current product"
+#~ msgstr ""
+#~ "Deze rekening wordt gebruikt in plaats van de standaard- om de waarde van "
+#~ "inkomende voorraad van het huidige product te waarderen."
+
+#~ msgid "Tax Report"
+#~ msgstr "Belasting-aangifte"
+
+#~ msgid "Print Taxes Report"
+#~ msgstr "Druk belastingrapport af"
+
+#~ msgid ""
+#~ "If a default tax if given in the partner it only override taxes from account "
+#~ "(or product) of the same group."
+#~ msgstr ""
+#~ "Als er een standaard belasting is opgegeven voor deze relatie zal deze "
+#~ "alleen de belastingen van accounts (of producten) in dezelfde groep "
+#~ "overschrijven."
+
+#~ msgid ""
+#~ "Indicate if the tax computation is based on the value computed for the "
+#~ "computation of child taxes or based on the total amount."
+#~ msgstr ""
+#~ "Geef aan of de berekening van de belasting gebaseerd is op het berekende "
+#~ "belastingbedrag van de afzonderlijke onderliggende belastingen, of op basis "
+#~ "van het totaalbedrag."
+
+#~ msgid ""
+#~ "Indicate if the amount of tax must be included in the base amount for the "
+#~ "computation of the next taxes"
+#~ msgstr ""
+#~ "Geef aan of het belastingbedrag moet worden meegenomen in de grondslag voor "
+#~ "de berekeningen van de opvolgende belastingen."
+
+#, python-format
+#~ msgid "No sequence defined in the journal !"
+#~ msgstr "Geen reeks gedefinieerd voor het dagboek !"
+
+#~ msgid "Maintains Invoice sequences with Fiscal Year"
+#~ msgstr "Behoudt de factuurnummering in het boekjaar"
+
+#~ msgid "The sequence used for invoice numbers in this journal."
+#~ msgstr "De gebruikte reeks voor factuurnummering in dit dagboek"
+
+#~ msgid "Parent Analytic Account"
+#~ msgstr "Bovenliggende kostenplaats"
+
+#~ msgid "Analytic Credit"
+#~ msgstr "Analytisch credit"
+
+#~ msgid "General Credit"
+#~ msgstr "Algemeen credit"
+
+#~ msgid "Journal d'ouverture"
+#~ msgstr "Openingsdagboek"
+
+#, python-format
+#~ msgid "No journal for ending writing has been defined for the fiscal year"
+#~ msgstr ""
+#~ "Geen dagboek voor het maken van sluitposten gedefinieerd voor het boekjaar."
+
+#~ msgid "Journal de vente"
+#~ msgstr "Verkoopdagboek"
+
+#~ msgid "Journal de frais"
+#~ msgstr "Onkostendagboek"
+
+#~ msgid "Fiscal Position Template Account Mapping"
+#~ msgstr "Vervangingstabel belastingpositie-sjabloon"
+
+#~ msgid ""
+#~ "The partner bank account to pay\n"
+#~ "Keep empty to use the default"
+#~ msgstr ""
+#~ "De bankrekening van de relatie voor betaling.\n"
+#~ "Laat leeg voor de standaardwaarde."
+
+#~ msgid "Error: BVR reference is required."
+#~ msgstr "Fout: Referentie omzetbelasting is verplicht."
+
+#~ msgid ""
+#~ "This account will be used to value outgoing stock for the current product "
+#~ "category"
+#~ msgstr ""
+#~ "Deze rekening zal gebruikt worden voor het waarderen van uitgaande goederen "
+#~ "voor de huidige productcategorie."
+
+#~ msgid "Fiscal Position Template Tax Mapping"
+#~ msgstr "Vervangingstabel belastingpositie belastingsjabloon"
+
+#~ msgid "J.C. or Move name"
+#~ msgstr "Dagboeknummer of naam boekstuk"
+
+#~ msgid "Invoice Sequence"
+#~ msgstr "Factuurnummering"
+
+#~ msgid ""
+#~ "Financial and accounting module that covers:\n"
+#~ "    General accounting\n"
+#~ "    Cost / Analytic accounting\n"
+#~ "    Third party accounting\n"
+#~ "    Taxes management\n"
+#~ "    Budgets\n"
+#~ "    Customer and Supplier Invoices\n"
+#~ "    Bank statements\n"
+#~ "    "
+#~ msgstr ""
+#~ "Financiële- en boekhoudmodule die het volgende biedt:\n"
+#~ "    Algemene financiën\n"
+#~ "    Kostenplaatsen/Analytisch boekhouden\n"
+#~ "    Boekhouding derden\n"
+#~ "    Belastingbeheer\n"
+#~ "    Budgetteren\n"
+#~ "    Klant- en leverancierfacturen\n"
+#~ "    Bankafschriften\n"
+#~ "    "
+
+#~ msgid "Accounting and financial management"
+#~ msgstr "Boekhouding en financieel beheer"
+
+#~ msgid "Error ! The duration of the Fiscal Year is invalid. "
+#~ msgstr "Fout! De duur van het boekjaar is ongeldig. "
+
+#~ msgid "The sequence gives the display order for a list of journals"
+#~ msgstr "De reeks bepaalt de getoonde sortering voor een lijst van dagboeken"
+
+#~ msgid "Are you sure you want to refund this invoice ?"
+#~ msgstr "Weet u zeker dat u deze factuur wilt crediteren?"
+
+#~ msgid "Analytic Debit"
+#~ msgstr "Analytisch debet"
+
+#~ msgid ""
+#~ "Check this box if you want to print all entries when printing the General "
+#~ "Ledger, otherwise it will only print its balance."
+#~ msgstr ""
+#~ "Vink dit aan om ook de boekingen af te drukken. Standaard wordt alleen "
+#~ "gesaldeerd."
+
+#~ msgid "Error: Invalid Bvr Number (wrong checksum)."
+#~ msgstr "Fout: ongeldig nummer omzetbelasting (verkeerd controlegetal)"
+
+#~ msgid "Partner Ref."
+#~ msgstr "Relatie ref."
+
+#~ msgid "Debit Trans."
+#~ msgstr "Debetboekingen"
+
+#~ msgid "Print General Journal"
+#~ msgstr "Druk grootboekdagboek af"
+
+#~ msgid "Validated accounting entries."
+#~ msgstr "Gevalideerde boekingen"
+
+#~ msgid "Taxes Reports"
+#~ msgstr "Overzicht belastingen"
+
+#~ msgid "Journal de Banque CHF"
+#~ msgstr "Bankdagboek CHF"
+
+#~ msgid "Error! You can not create recursive analytic accounts."
+#~ msgstr "Fout! U kunt geen recursieve kostenplaatsen maken."
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Ongeldige modelnaam in de actie-definitie."
+
+#~ msgid "Message"
+#~ msgstr "Bericht"
+
+#~ msgid "Period from :"
+#~ msgstr "Periode van :"
+
+#~ msgid "Specify The Message for the Overdue Payment Report."
+#~ msgstr "Geeft de boodschap voor het overzicht Te late betalingen"
+
+#~ msgid ""
+#~ "These types are defined according to your country. The type contain more "
+#~ "information about the account and it's specificities."
+#~ msgstr ""
+#~ "Deze soorten worden gedefinieerd conform uw eigen land. Het soort bevat meer "
+#~ "informatie over de rekening en diens bijzonderheden."
+
+#~ msgid "Overdue Payment Report Message"
+#~ msgstr "Bericht overzicht Te late betalingen"
+
+#~ msgid "Overdue Payment Message"
+#~ msgstr "Bericht te late betaling"
+
+#~ msgid "to :"
+#~ msgstr "aan :"
+
+#~ msgid "The Account can either be a base tax code or tax code account."
+#~ msgstr ""
+#~ "De rekening kan hetzij een basis-belastingcode of een belastingcode-rekening "
+#~ "zijn."
+
+#~ msgid ""
+#~ "This type is used to differenciate types with special effects in Open ERP: "
+#~ "view can not have entries, consolidation are accounts that can have children "
+#~ "accounts for multi-company consolidations, payable/receivable are for "
+#~ "partners accounts (for debit/credit computations), closed for deprecated "
+#~ "accounts."
+#~ msgstr ""
+#~ "Deze soort wordt gebruikt om soorten met speciale effecten in OpenERP te "
+#~ "onderscheiden: weergave kan geen boekingen bevatten, consolidatie zijn "
+#~ "rekeningen die subrekeningen kunnen hebben voor multi-bedrijfsconsolidaties, "
+#~ "Te ontvangen/Te betalen zijn voor accounts van relaties (voor debet/credit-"
+#~ "berekeningen), gesloten is voor rekeningen die beter niet gebruikt kunnen "
+#~ "worden."
+
+#~ msgid "Partner Other Ledger"
+#~ msgstr "Relatie ander grootboek"
+
+#~ msgid ""
+#~ "If the Tax account is tax code account, this field will contain the taxed "
+#~ "amount.If the tax account is base tax code,                    this field "
+#~ "will contain the basic amount(without tax)."
+#~ msgstr ""
+#~ "Als de belastingrekening een belastingcode-rekening is, dan zal dit veld het "
+#~ "belastingbedrag bevatten. Als de belastingrekening een basis-belastingcode "
+#~ "is, dan zal het veld de grondslag voor belasting bevatten (zonder belasting)."
+
+#~ msgid "wizard.company.setup"
+#~ msgstr "wizard.company.setup"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Ongeldige XML voor weergave!"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten !"
+
+#~ msgid "My indicators"
+#~ msgstr "Mijn indicatoren"
+
+#~ msgid "Draft invoices"
+#~ msgstr "Concept-facturen"
+
+#~ msgid "Costs to invoice"
+#~ msgstr "Te factureren kosten"
+
+#~ msgid "Accounts to invoice"
+#~ msgstr "Te factureren rekeningen"
+
+#~ msgid "Analytic accounts to close"
+#~ msgstr "Af te sluiten kostenplaatsen"
+
+#~ msgid "Board for accountant"
+#~ msgstr "Dashboard voor accountant"
+
+#~ msgid "Aged receivables"
+#~ msgstr "Te late debiteuren"
+
+#~ msgid "Entries Selection Based on"
+#~ msgstr "Keuze gebaseerd op"
+
+#~ msgid "Notification"
+#~ msgstr "Mededeling"
+
+#~ msgid "Show Debit/Credit Information"
+#~ msgstr "Toon debet-/credit informatie"
+
+#~ msgid "All accounts"
+#~ msgstr "Alle rekeningen"
+
+#~ msgid "Aged income"
+#~ msgstr "Te late inkomsten"
+
+#~ msgid "Financial Period"
+#~ msgstr "Boekingsperiode"
+
+#~ msgid "Select Period(s)"
+#~ msgstr "Kies periode(n)"
+
+#~ msgid "Show Comparision in %"
+#~ msgstr "Toon vergelijking in %"
+
+#~ msgid "Show Report in Landscape Form"
+#~ msgstr "Toon overzicht in liggend formaat"
+
+#~ msgid "You have to select 'Landscape' option. Please Check it."
+#~ msgstr ""
+#~ "U dient de 'Liggend' afdrukstand te kiezen. Controleer dit alstublieft."
+
+#~ msgid ""
+#~ "Account Balance Module is an added functionality to the Financial Management "
+#~ "module.\n"
+#~ "\n"
+#~ "    This module gives you the various options for printing balance sheet.\n"
+#~ "\n"
+#~ "    1. You can compare the balance sheet for different years.\n"
+#~ "\n"
+#~ "    2. You can set the cash or percentage comparison between two years.\n"
+#~ "\n"
+#~ "    3. You can set the referential account for the percentage comparison for "
+#~ "particular years.\n"
+#~ "\n"
+#~ "    4. You can select periods as an actual date or periods as creation "
+#~ "date.\n"
+#~ "\n"
+#~ "    5. You have an option to print the desired report in Landscape format.\n"
+#~ "    "
+#~ msgstr ""
+#~ "Account Balans is een uitbreiding van de Financieel Beheer module.\n"
+#~ "    Deze module geeft u meerder mogelijkheden om een balans af te drukken.\n"
+#~ "    1. U kunt de balans van verschillende boekjaren met elkaar vergelijken\n"
+#~ "    2. U kunt een vergelijking uitdrukken in percentages of bedragen.\n"
+#~ "    3. U kunt referentierekeningen gebruiken voor de vergelijking van "
+#~ "specifieke boekjaren.\n"
+#~ "    4. U kunt perioden kiezen op basis van effectieve datum of op basis van "
+#~ "aanmaakdatum.\n"
+#~ "    5. U krijgt een optie om het gewenste overzicht in liggend formaat af te "
+#~ "drukken.\n"
+#~ "    "
+
+#~ msgid "Account balance-Compare Years"
+#~ msgstr "Rekening saldi-Vergelijk boekjaren"
+
+#~ msgid "Select Reference Account(for  % comparision)"
+#~ msgstr "Kies referentie rekening (voor % vergelijking)"
+
+#~ msgid "Select Fiscal Year(s)(Maximum Three Years)"
+#~ msgstr "Kies boekjaren (max. 3 jaar)"
+
+#~ msgid "Compare Selected Years In Terms Of"
+#~ msgstr "Vergelijk geselecteerde jaren in termen van"
+
+#~ msgid "Don't Compare"
+#~ msgstr "Niet vergelijken"
+
+#~ msgid "Show Accounts"
+#~ msgstr "Toon rekeningen"
+
+#~ msgid "1. You have selected more than 3 years in any case."
+#~ msgstr "1. U hebt meer dan 3 boekjaren geselecteerd"
+
+#~ msgid "Accounting and financial management-Compare Accounts"
+#~ msgstr "Boekhouding en financieel beheer-Vergelijk rekeningen"
+
+#~ msgid "You can select maximum 3 years. Please check again."
+#~ msgstr "U  kunt maximaal 3 boekjaren selecteren. Probeer opnieuw."
+
+#~ msgid ""
+#~ "3. You have selected 'Percentage' option with more than 2 years, but you "
+#~ "have not selected landscape format."
+#~ msgstr ""
+#~ "3. U heeft de 'Percentage' optie gebruikt met meer dan 2 boekjaren, maar u "
+#~ "hebt niet het liggend formaat gekozen."
+
+#~ msgid ""
+#~ "You might have done following mistakes. Please correct them and try again."
+#~ msgstr ""
+#~ "Het kan zijn dat u één van onderstaande vergissingen hebt gemaakt. Corrigeer "
+#~ "deze alstublieft en probeer het dan opnieuw."
+
+#~ msgid "Keep empty for comparision to its parent"
+#~ msgstr "Leeg laten voor vergelijking met de bovenliggende"
+
+#~ msgid ""
+#~ "2. You have not selected 'Percentage' option, but you have selected more "
+#~ "than 2 years."
+#~ msgstr ""
+#~ "2. U heeft de 'Percentage' optie niet gekozen, maar u hebt meer dan 2 "
+#~ "boekjaren geselecteerd."
+
+#~ msgid "Creation Date"
+#~ msgstr "Aanmaakdatum"
+
+#~ msgid "You have to select at least 1 Fiscal Year. Try again."
+#~ msgstr "U dient tenminste 1 boekjaar te selecteren. Probeer opnieuw."
+
+#~ msgid ""
+#~ "You may have selected the compare options with more than 1 year with "
+#~ "credit/debit columns and % option.This can lead contents to be printed out "
+#~ "of the paper.Please try again."
+#~ msgstr ""
+#~ "Misschien heeft u de vergelijk optie gebruikt met meer dan 1 jaar met "
+#~ "credit/debet kolommen en % optie. Dit kan er toe leiden dat er buiten de "
+#~ "marges van het papier wordt afgedrukt. Probeer het opnieuw."
+
+#~ msgid "Customize Report"
+#~ msgstr "Overzicht aanpassen"
+
+#~ msgid "A module that adds new reports based on the account module."
+#~ msgstr "Een module die nieuwe overzichten toevoegt aan de account-module"
+
+#~ msgid "Account Reporting - Reporting"
+#~ msgstr "Financiële overzichten - Overzichten"
+
+#~ msgid "Header"
+#~ msgstr "Koptekst"
+
+#~ msgid "<drawRightString x=\"19.8cm\" y=\"28cm\">"
+#~ msgstr "<drawRightString x=\"19.8cm\" y=\"28cm\">"
+
+#~ msgid "</drawRightString>"
+#~ msgstr "</drawRightString>"
+
+#~ msgid "TITLE COMPANY"
+#~ msgstr "TITEL BEDRIJF"
+
+#~ msgid "logo"
+#~ msgstr "logo"
+
+#~ msgid ""
+#~ "Example: 14 days 2%, 30 days net\n"
+#~ "1. Line 1: percent 0.02 14 days\n"
+#~ "2. Line 2: balance 30 days"
+#~ msgstr ""
+#~ "Voorbeeld: 14 dagen 2%, 30 dagen netto\n"
+#~ "1. Regel 1: percentage 0.02 14 dagen\n"
+#~ "2. Regel 2: balans 30 dagen"
+
+#~ msgid "COL 1"
+#~ msgstr "KOL 1"
+
+#~ msgid "Balance Brought Forward"
+#~ msgstr "Vooruitgeschoven saldo"
+
+#~ msgid "<stroke color=\"darkblue\"/>"
+#~ msgstr "<stroke color=\"darkblue\"/>"
+
+#~ msgid "<drawString x=\"4.6cm\" y=\"28.7cm\">"
+#~ msgstr "<drawString x=\"4.6cm\" y=\"28.7cm\">"
+
+#, python-format
+#~ msgid "UnknownError"
+#~ msgstr "Onbekende fout"
+
+#~ msgid "<fill color=\"darkblue\"/>"
+#~ msgstr "<fill color=\"darkblue\"/>"
+
+#~ msgid "Account Entry Lines"
+#~ msgstr "Boekingsregels"
+
+#~ msgid "</drawString>"
+#~ msgstr "</drawString>"
+
+#~ msgid "COL 2"
+#~ msgstr "KOL 2"
+
+#~ msgid "Fiscal Mapping Template"
+#~ msgstr "Sjabloon fiscale toewijzing"
+
+#~ msgid ""
+#~ "The fiscal mapping will determine taxes and the accounts used for the "
+#~ "partner."
+#~ msgstr ""
+#~ "De fiscale toewijzing bepaalt de gebruikte belastingen en "
+#~ "grootboekrekeningen voor de relatie."
+
+#~ msgid "Accounts Fiscal Mapping"
+#~ msgstr "Fiscale toewijzing grootboekrekeningen"
+
+#~ msgid "Taxes Fiscal Mapping"
+#~ msgstr "Toewijzing belastingen"
+
+#~ msgid "Fiscal Mapping Templates"
+#~ msgstr "Sjablonen fiscale toewijzing"
+
+#~ msgid "Fiscal Mapping Remark :"
+#~ msgstr "Fiscale toewijzing opmerking:"
+
+#~ msgid "Template for Fiscal Mapping"
+#~ msgstr "Sjabloon voor fiscale toewijzing"
+
+#~ msgid "Template Tax Fiscal Mapping"
+#~ msgstr "Sjabloon fiscale toewijzing belasting"
+
+#~ msgid "Fiscal Mappings"
+#~ msgstr "Fiscale toewijzingen"
+
+#~ msgid "asgfas"
+#~ msgstr "asgfas"
+
+#~ msgid "supplier"
+#~ msgstr "leverancier"
+
+#~ msgid "Expenses Credit Notes Journal - (test)"
+#~ msgstr "Uitgaven creditnota dagboek - (test)"
+
+#~ msgid ""
+#~ "Customer Invoices allows you create and manage invoices issued to your "
+#~ "customers. OpenERP generates draft of invoices automatically so that you "
+#~ "only have to confirm them before sending them to your customers."
+#~ msgstr ""
+#~ "Klant facturen laat u facturen aan klanten maken en beheren. OpenERP "
+#~ "genereert automatisch concept facturen dus u hoeft ze alleen te bevestigen "
+#~ "voor ze naar uw klanten te sturen."
+
+#~ msgid "End of Year"
+#~ msgstr "Eind jaar"
+
+#~ msgid ""
+#~ "given a period and a journal, the sum of debit will always be equal to the "
+#~ "sum of credit, so there is no point to display it"
+#~ msgstr ""
+#~ "gegeven een periode en een dagboek is het debettotaal altijd gelijk aan het "
+#~ "credittotaal, dus het heeft geen zin om het af te beelden"
+
+#~ msgid "Ansicht"
+#~ msgstr "Weergave"
