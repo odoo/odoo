@@ -37,6 +37,9 @@
                 </data>
             </field>
         </record>
+
+
+
         <record id="view_crm_opportunity_geo_assign_tree" model="ir.ui.view">
             <field name="name">crm.lead.geo_assign.tree.inherit</field>
             <field name="model">crm.lead</field>
@@ -48,5 +51,21 @@
                  </field>
             </field>
         </record>
+        <record model="ir.ui.view" id="crm_opportunity_partner_filter">
+            <field name="name">crm.opportunity.partner.filter.assigned</field>
+            <field name="model">crm.lead</field>
+             <field name="type">search</field>
+            <field name="inherit_id" ref="crm.view_crm_case_opportunities_filter"/>
+            <field name="arch" type="xml">
+                <filter string="Team" position="after">
+                    <filter string="Referred Partner" icon="terp-personal" domain="[]" context="{'group_by':'partner_assigned_id'}"/>
+                </filter>
+
+                <field name="categ_id" position="after">
+                    <separator orientation="vertical"/>
+                    <field name="partner_assigned_id"/>
+                </field>
+            </field>
+         </record>
     </data>
 </openerp>
