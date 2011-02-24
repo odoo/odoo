@@ -182,6 +182,7 @@ class synchronize_google_contact(osv.osv_memory):
         addresss_obj = self.pool.get('res.partner.address')
         addresses = []
         partner_ids = []
+        contact_ids=[]
         while contact:
             for entry in contact.entry:
                 data = {}
