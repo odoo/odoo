@@ -34,7 +34,6 @@ import glob
 from pprint import pprint as pp
 
 from setuptools import setup, find_packages
-from setuptools.command.install import install
 from distutils.sysconfig import get_python_lib
 
 has_py2exe = False
@@ -152,32 +151,11 @@ def data_files():
 
     return files
 
-f = file('openerp-server','w')
-f.write("""#!/bin/sh
-echo "Error: the content of this file should have been replaced during "
-echo "installation\n"
-exit 1
-""")
-f.close()
-
 def find_package_dirs():
     package_dirs = {'openerp': 'openerp'}
     for mod, path in find_addons():
         package_dirs['openerp.addons.' + mod] = path
     return package_dirs
-
-class openerp_server_install(install):
-    def run(self):
-        # create startup script TODO not correct since the openerp lib was made
-        start_script = "#!/bin/sh\ncd %s\nexec %s ./openerp-server.py $@\n"\
-            % (join(self.install_libbase, "openerp"), sys.executable)
-        # write script
-        f = open('openerp-server', 'w')
-        f.write(start_script)
-        f.close()
-        install.run(self)
-
-
 
 options = {
     "py2exe": {
@@ -197,6 +175,10 @@ options = {
     }
 }
 
+#import pprint
+#def setup(**args):
+#  pprint.pprint(args)
+
 setup(name             = name,
       version          = version,
       description      = description,
@@ -207,32 +189,20 @@ setup(name             = name,
       classifiers      = filter(None, classifiers.split("\n")),
       license          = license,
       data_files       = data_files(),
-      cmdclass         = {
-          'install' : openerp_server_install,
-      },
-      scripts          = ['openerp-server'],
-      packages = [
-          '.'.join(['openerp'] + package.split('.')[1:])
-          for package in find_packages()
-      ],
+      scripts          = ['openerp-server.py'],
+      packages = find_packages(),
       include_package_data = True,
       package_data = {
           '': ['*.yml', '*.xml', '*.po', '*.pot', '*.csv'],
       },
       package_dir      = find_package_dirs(),
-      console = [
-          {
-              "script": "openerp-server.py",
-              "icon_resources": [(1, join("pixmaps","openerp-icon.ico"))]
-          }
-      ],
       options = options,
       install_requires = [
-          'lxml',
+          'lxml==2.1.5', # we require the same version as caldav
           'mako',
           'python-dateutil',
           'psycopg2',
-          'pychart',
+          'pychart',     # if not available from pypi, an alternate site is http://home.gna.org/pychart/
           'pydot',
           'pytz',
           'reportlab',
