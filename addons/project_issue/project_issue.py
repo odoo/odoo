@@ -27,7 +27,6 @@ import binascii
 import time
 import tools
 
-
 class project_issue_version(osv.osv):
     _name = "project.issue.version"
     _order = "name desc"

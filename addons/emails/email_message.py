@@ -85,6 +85,10 @@ class email_message_template(osv.osv_memory):
         'description': fields.text('Description', translate=True),
         'smtp_server_id':fields.many2one('email.smtp_server', 'SMTP Server'),
     }
+    _defaults = {
+        'references': lambda * a: None,
+    }
+
     _sql_constraints = []
 email_message_template()
 
@@ -247,7 +251,7 @@ class email_message(osv.osv):
                                  _("Error sending mail: %s") % e)
 
     def email_send(self, cr, uid, email_from, email_to, subject, body, model=False, email_cc=None, email_bcc=None, reply_to=False, attach=None,
-            message_id=False, openobject_id=False, debug=False, subtype='plain', x_headers={}, priority='3', smtp_server_id=False, context=None):
+            message_id=False, references=False, openobject_id=False, debug=False, subtype='plain', x_headers={}, priority='3', smtp_server_id=False, context=None):
         attachment_obj = self.pool.get('ir.attachment')
         if email_to and type(email_to) != list:
             email_to = [email_to]
@@ -269,6 +273,7 @@ class email_message(osv.osv):
                 'reply_to': reply_to,
                 'res_id': openobject_id,
                 'message_id': message_id,
+                'references': references,
                 'sub_type': subtype or '',
                 'headers': x_headers or False,
                 'priority': priority,
@@ -284,7 +289,7 @@ class email_message(osv.osv):
             for attachment in attach:
                 attachment_data = {
                         'name':  (subject or '') + _(' (Email Attachment)'),
-                        'datas': base64.b64encode(attachment[1]),
+                        'datas': attachment[1],
                         'datas_fname': attachment[0],
                         'description': subject or _('No Description'),
                         'res_model':'email.message',
@@ -327,7 +332,8 @@ class email_message(osv.osv):
                         email_cc=message.email_cc and message.email_cc.split(',') or [],
                         email_bcc=message.email_bcc and message.email_bcc.split(',') or [],
                         reply_to=message.reply_to,
-                        attach=attachments, message_id=message.message_id, openobject_id=message.res_id,
+                        attach=attachments, message_id=message.message_id, references = message.references,
+                        openobject_id=message.res_id,
                         subtype=message.sub_type,
                         x_headers=message.headers and eval(message.headers) or {},
                         priority=message.priority, debug=message.debug,
@@ -337,7 +343,7 @@ class email_message(osv.osv):
                         smtp_user=smtp_server and smtp_server.smtpuname or None,
                         smtp_password=smtp_server and smtp_server.smtppass or None)
                 if res:
-                    self.write(cr, uid, [message.id], {'state':'sent'}, context)
+                    self.write(cr, uid, [message.id], {'state':'sent', 'message_id': res}, context)
                 else:
                     self.write(cr, uid, [message.id], {'state':'exception'}, context)
             except Exception, error:

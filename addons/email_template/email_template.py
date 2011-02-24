@@ -168,6 +168,7 @@ This is useful for CRM leads for example"),
              " body for displaying the info in your mail.",
              store=False),
         'auto_delete': fields.boolean('Auto Delete', help="Permanently delete emails after sending"),
+        'model': fields.related('model_id','model', type='char', size=128, string='Object'),
     }
 
     _sql_constraints = [
@@ -371,8 +372,11 @@ This is useful for CRM leads for example"),
         report_xml_pool = self.pool.get('ir.actions.report.xml')
         template = self.get_email_template(cr, uid, template_id, record_id, context)
         smtp_server_id = context.get('smtp_server_id', False)
-        if not smtp_server_id:
+        if not smtp_server_id and template.smtp_server_id:
             smtp_server_id = template.smtp_server_id.id
+        else:
+            smtp_ids = smtp_pool.search(cr, uid, [('default','=',True)])
+            smtp_server_id = smtp_ids and smtp_ids[0]
         smtp_server = smtp_pool.browse(cr, uid, smtp_server_id, context=context)
         # determine name of sender, either it is specified in email_id
 
@@ -448,15 +452,12 @@ This is useful for CRM leads for example"),
 
 
 
-    def generate_email(self, cr, uid, ids, record_ids,  context=None):
+    def generate_email(self, cr, uid, template_id, record_id,  context=None):
         if context is None:
             context = {}
-        email_ids = []
-        for template in self.browse(cr, uid, ids, context=context):
-            for record_id in record_ids:
-                email_id = self._generate_email(cr, uid, template.id, record_id, context)
-                email_ids.append(email_id)
-        return email_ids
+        email_id = self._generate_email(cr, uid, template_id, record_id, context)
+        return email_id
+
 email_template()
 
 class email_message(osv.osv):
@@ -476,18 +477,20 @@ class email_message(osv.osv):
         return result
 
     def email_send(self, cr, uid, email_from, email_to, subject, body, model=False, email_cc=None, email_bcc=None, reply_to=False, attach=None,
-            message_id=False, openobject_id=False, debug=False, subtype='plain', x_headers={}, priority='3', smtp_server_id=False, context=None):
+            message_id=False, references=False, openobject_id=False, debug=False, subtype='plain', x_headers={}, priority='3', smtp_server_id=False, context=None):
         if context is None:
             context = {}
-        notemplate = context.get('notemplate', False)
+        notemplate = context.get('notemplate', True)
         if (not notemplate) and model and openobject_id:
             template_pool = self.pool.get('email.template')
             template_ids = template_pool.search(cr, uid, [('model','=',model)])
             if template_ids and len(template_ids):
                 template_id = template_ids[0]
-                return template_pool.generate_email(cr, uid, [template_id], openobject_id, context=context)
+                return template_pool.generate_email(cr, uid, template_id, openobject_id, context=context)
+
         return super(email_message, self).email_send(cr, uid, email_from, email_to, subject, body, model=model, email_cc=email_cc, email_bcc=email_bcc, reply_to=reply_to, attach=attach,
-                message_id=message_id, openobject_id=openobject_id, debug=debug, subtype=subtype, x_headers=x_headers, priority=priority, smtp_server_id=smtp_server_id, context=context)
+                message_id=message_id, references=references, openobject_id=openobject_id, debug=debug, subtype=subtype, x_headers=x_headers, priority=priority, smtp_server_id=smtp_server_id, context=context)
+
 email_message()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

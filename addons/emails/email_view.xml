@@ -3,7 +3,7 @@
     <data>
 
         <menuitem name="Configuration" parent="base.menu_tools"
-              id="base.menu_lunch_survey_root" sequence="20" />
+              id="base.menu_lunch_survey_root" sequence="20"/>
 
         <record model="ir.ui.view" id="view_email_message_form">
             <field name="name">email.message.form</field>
@@ -31,10 +31,13 @@
                                 <separator string="Message Details" colspan="4"/>
                                 <field name="model" readonly="1"/>
                                 <group col="3" colspan="2">
-                                    <field name="res_id"  readonly="1"/>
+                                    <field name="res_id" readonly="1"/>
                                     <button name="open_document" string="Open Document" type="object" icon="gtk-jump-to"/>
 	                                <field name="message_id"/>
+	                                <button name="%(action_email_compose_message_wizard)d" string="Reply" type="action" icon="terp-mail-replied"
+	                                context="{'mail':'reply', 'message_id':active_id}"/>
                                 </group>
+                                <field name="references" widget="char" size="4096"/>
                             </group>
                             <separator string="Description" colspan="4"/>
                             <field name="description" nolabel="1" colspan="4"/>

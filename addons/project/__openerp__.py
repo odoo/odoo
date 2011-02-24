@@ -37,7 +37,7 @@ work done on tasks, eso. It is able to render planning, order tasks, eso.
     "update_xml": [
         "security/project_security.xml",
         "wizard/project_task_delegate_view.xml",
-        "wizard/project_task_close_view.xml",
+#        "wizard/project_task_close_view.xml",
         "wizard/project_task_reevaluate_view.xml",
         "security/ir.model.access.csv",
         "project_data.xml",

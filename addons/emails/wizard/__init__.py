@@ -2,7 +2,6 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2009 Sharoon Thomas
 #    Copyright (C) 2010-Today OpenERP SA (<http://www.openerp.com>)
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -19,7 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>
 #
 ##############################################################################
-import email_template_preview
-import email_template_send_wizard
+
 import email_compose_message
 
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
