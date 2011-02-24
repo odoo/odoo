@@ -21,7 +21,10 @@
 
 from osv import fields,osv
 from tools.translate import _
-import gdata.contacts.service
+try:
+    import gdata.contacts.service
+except ImportError:
+    raise osv.except_osv(_('Google Contacts Import Error!'), _('Please install gdata-python-client from http://code.google.com/p/gdata-python-client/downloads/list'))
 
 class google_login(osv.osv_memory):
     _description ='Google Contact'
