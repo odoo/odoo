@@ -143,8 +143,6 @@ class synchronize_google_contact(osv.osv_memory):
         if obj.group_name == 'none':
             return { 'type': 'ir.actions.act_window_close' }
 
-        partner_ids=False
-        addresses=False
         user_obj = self.pool.get('res.users').browse(cr, uid, uid)
 
         gmail_user = user_obj.gmail_user
