@@ -26,7 +26,7 @@ class res_partner_address(osv.osv):
 
     def unlink(self, cr, uid, ids, context=None):
         model_obj = self.pool.get('ir.model.data')
-        model_ids = model_obj.search(cr, uid, [('res_id','in',ids)], context=context)
+        model_ids = model_obj.search(cr, uid, [('res_id','in',ids),('model','=','res.partner.address'),('module','=','sync_google_contact')], context=context)
         model_obj.unlink(cr, uid, model_ids, context=context)
         return super(res_partner_address, self).unlink(cr, uid, ids, context=context)
 
