@@ -42,9 +42,7 @@ if os.name == 'nt':
     import py2exe
     has_py2exe = True
 
-sys.path.append(join(os.path.abspath(os.path.dirname(__file__)), "bin"))
-
-execfile(join('bin', 'release.py'))
+execfile(join('openerp', 'release.py'))
 
 if 'bdist_rpm' in sys.argv:
     version = version.split('-')[0]
@@ -85,7 +83,7 @@ if sys.version_info < (2, 6):
     os.walk = walk_followlinks
 
 def find_addons():
-    for root, _, names in os.walk(join('bin', 'addons'), followlinks=True):
+    for root, _, names in os.walk(join('openerp', 'addons'), followlinks=True):
         if '__openerp__.py' in names or '__terp__.py' in names:
             yield basename(root), root
     #look for extra modules
@@ -111,9 +109,9 @@ def data_files():
     '''Build list of data files to be installed'''
     files = []
     if os.name == 'nt':
-        os.chdir('bin')
+        os.chdir('openerp')
         for (dp, dn, names) in os.walk('addons'):
-            files.append((dp, map(lambda x: join('bin', dp, x), names)))
+            files.append((dp, map(lambda x: join('openerp', dp, x), names)))
         os.chdir('..')
         #for root, _, names in os.walk(join('bin','addons')):
         #    files.append((root, [join(root, name) for name in names]))
@@ -121,7 +119,7 @@ def data_files():
             files.append((root, [join(root, name) for name in names]))
         #for root, _, names in os.walk('pixmaps'):
         #    files.append((root, [join(root, name) for name in names]))
-        files.append(('.', [join('bin', 'import_xml.rng'),]))
+        files.append(('.', [join('openerp', 'import_xml.rng'),]))
     else:
         man_directory = join('share', 'man')
         files.append((join(man_directory, 'man1'), ['man/openerp-server.1']))
@@ -134,9 +132,9 @@ def data_files():
         files.append((join(doc_directory, 'migrate', '3.4.0-4.0.0'),
                       filter(isfile, glob.glob('doc/migrate/3.4.0-4.0.0/*'))))
 
-        openerp_site_packages = join(get_python_lib(prefix=''), 'openerp-server')
+        openerp_site_packages = join(get_python_lib(prefix=''), 'openerp')
 
-        files.append((openerp_site_packages, [join('bin', 'import_xml.rng'),]))
+        files.append((openerp_site_packages, [join('openerp', 'import_xml.rng'),]))
 
         if sys.version_info[0:2] == (2,5):
             files.append((openerp_site_packages, [ join('python25-compat','BaseHTTPServer.py'),
@@ -144,7 +142,7 @@ def data_files():
                                                    join('python25-compat','SocketServer.py')]))
 
         for addonname, add_path in find_addons():
-            addon_path = join(get_python_lib(prefix=''), 'openerp-server','addons', addonname)
+            addon_path = join(get_python_lib(prefix=''), 'openerp','addons', addonname)
             for root, dirs, innerfiles in os.walk(add_path):
                 innerfiles = filter(lambda fil: os.path.splitext(fil)[1] not in ('.pyc', '.pyd', '.pyo'), innerfiles)
                 if innerfiles:
@@ -163,16 +161,16 @@ exit 1
 f.close()
 
 def find_package_dirs():
-    package_dirs = {'openerp-server': 'bin'}
+    package_dirs = {'openerp': 'openerp'}
     for mod, path in find_addons():
-        package_dirs['openerp-server.addons.' + mod] = path
+        package_dirs['openerp.addons.' + mod] = path
     return package_dirs
 
 class openerp_server_install(install):
     def run(self):
-        # create startup script
+        # create startup script TODO not correct since the openerp lib was made
         start_script = "#!/bin/sh\ncd %s\nexec %s ./openerp-server.py $@\n"\
-            % (join(self.install_libbase, "openerp-server"), sys.executable)
+            % (join(self.install_libbase, "openerp"), sys.executable)
         # write script
         f = open('openerp-server', 'w')
         f.write(start_script)
@@ -214,7 +212,7 @@ setup(name             = name,
       },
       scripts          = ['openerp-server'],
       packages = [
-          '.'.join(['openerp-server'] + package.split('.')[1:])
+          '.'.join(['openerp'] + package.split('.')[1:])
           for package in find_packages()
       ],
       include_package_data = True,
@@ -224,7 +222,7 @@ setup(name             = name,
       package_dir      = find_package_dirs(),
       console = [
           {
-              "script": join("bin", "openerp-server.py"),
+              "script": "openerp-server.py",
               "icon_resources": [(1, join("pixmaps","openerp-icon.ico"))]
           }
       ],
