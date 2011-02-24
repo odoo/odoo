@@ -678,13 +678,6 @@ class account_move_line(osv.osv):
     def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
         if context is None:
             context = {}
-        if context and context.get('chart_of_account', False):
-            if context.get('periods', False):
-                args.append(('period_id', 'in', context['periods']))
-            if context.get('state', False) and context['state'] == 'posted':
-                args.append(('state', '=', 'valid'))
-            if context.get('fiscalyear', False):
-                args.append(('period_id.fiscalyear_id', '=', context['fiscalyear']))
         if context and context.get('next_partner_only', False):
             if not context.get('partner_id', False):
                 partner = self.get_next_partner_only(cr, uid, offset, context)
