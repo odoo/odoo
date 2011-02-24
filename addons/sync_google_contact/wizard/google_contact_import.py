@@ -131,7 +131,6 @@ class synchronize_google_contact(osv.osv_memory):
     }
 
     def create_partner(self, cr, uid, data={}, context=None):
-        print "data " , data
         partner_obj = self.pool.get('res.partner')
         name = data.get('name','')
         partner_id = partner_obj.search(cr, uid, [('name','ilike',name)], context=context)
