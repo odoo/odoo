@@ -21,6 +21,9 @@
 
 from osv import fields, osv
 from crm import crm
+from crm import wizard
+
+wizard.email_compose_message.email_model.append('crm.fundraising')
 
 class crm_fundraising(crm.crm_case, osv.osv):
     """ Fund Raising Cases """

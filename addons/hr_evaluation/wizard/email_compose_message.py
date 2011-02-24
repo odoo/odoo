@@ -50,7 +50,7 @@ class email_compose_message(osv.osv_memory):
             return super(email_compose_message, self)._get_records(cr, uid, context=context)
 
     _columns = {
-        'resource_id':fields.selection(_get_records, 'Referred Document'),
+        'res_id':fields.selection(_get_records, 'Referred Document'),
     }
 
     def on_change_referred_doc(self, cr, uid, ids, model, resource_id, context=None):

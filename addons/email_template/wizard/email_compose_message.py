@@ -42,8 +42,6 @@ class email_compose_message(osv.osv_memory):
             model = message_data.model
         elif context.get('email_model',False):
             model =  context.get('email_model')
-        elif context.get('active_model',False):
-            model =  context.get('active_model')
         if model:
             record_ids = email_temp_pool.search(cr, uid, [('model','=',model)])
             return email_temp_pool.name_get(cr, uid, record_ids, context)

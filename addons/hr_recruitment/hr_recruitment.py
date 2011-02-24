@@ -29,6 +29,9 @@ import collections
 import binascii
 import tools
 from tools.translate import _
+from crm import wizard
+
+wizard.email_compose_message.email_model.append('hr.applicant')
 
 AVAILABLE_STATES = [
     ('draft', 'New'),

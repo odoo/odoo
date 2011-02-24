@@ -22,6 +22,9 @@
 from osv import fields, osv
 from crm import crm
 import time
+from crm import wizard
+
+wizard.email_compose_message.email_model.append('crm.claim')
 
 class crm_claim(crm.crm_case, osv.osv):
     """
