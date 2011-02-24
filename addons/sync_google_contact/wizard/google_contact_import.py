@@ -128,6 +128,7 @@ class synchronize_google_contact(osv.osv_memory):
      }
 
     _defaults = {
+        'create_partner': True,
         'group_name': _get_default_group,
     }
 
