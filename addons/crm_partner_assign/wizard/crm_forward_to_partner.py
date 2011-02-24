@@ -44,8 +44,9 @@ class crm_lead_forward_to_partner(osv.osv_memory):
     _defaults = {
         'name' : 'email',
         'history': 'latest',
-        'email_from': lambda self, cr, uid, *a: self.pool.get('res.users')._get_email_from(cr, uid, uid)[uid]
+        'email_from': lambda self, cr, uid, *a: self.pool.get('res.users')._get_email_from(cr, uid, uid)[uid],
     }
+
 
     def get_whole_history(self, cr, uid, ids, context=None):
         """This function gets whole communication history and returns as top posting style
@@ -87,7 +88,7 @@ class crm_lead_forward_to_partner(osv.osv_memory):
         @param uid: the current user’s ID for security checks,
         @param ids: List of Mail’s IDs
         @param user: Changed User id
-        @param partner: Changed Partner id  
+        @param partner: Changed Partner id
         """
         if not user:
             return {'value': {'email_to': False}}
@@ -146,7 +147,7 @@ class crm_lead_forward_to_partner(osv.osv_memory):
         @param uid: the current user’s ID for security checks,
         @param ids: List of Mail’s IDs
         @param user: Changed User id
-        @param partner: Changed Partner id  
+        @param partner: Changed Partner id
         """
         if not partner_id:
             return {'value' : {'email_to' : False, 'address_id': False}}
@@ -155,13 +156,13 @@ class crm_lead_forward_to_partner(osv.osv_memory):
         addr = partner_obj.address_get(cr, uid, [partner_id], ['contact'])
         data = {'address_id': addr['contact']}
         data.update(self.on_change_address(cr, uid, ids, addr['contact'])['value'])
-        
+
         partner = partner_obj.browse(cr, uid, [partner_id])
         user_id = partner and partner[0].user_id or False
         email = user_id and user_id.user_email or ''
         data.update({'email_cc' : email})
         return {
-            'value' : data, 
+            'value' : data,
             'domain' : {'address_id' : partner_id and "[('partner_id', '=', partner_id)]" or "[]"}
             }
 
@@ -207,7 +208,17 @@ class crm_lead_forward_to_partner(osv.osv_memory):
         return {'type': 'ir.actions.act_window_close'}
 
     def get_lead_details(self, cr, uid, lead_id, context=None):
-        body = []
+        body = ["""Hello,
+
+OpenERP Leads are now forwarded to our trusted partners, through the CRM, we hope that they provide you with interesting projects, we know that they have shown keen interest in our software.
+Below is an interesting lead for you. I have notified the lead that you would contact them.
+
+Please let us know about the advancements of this lead or if you are not able to answer to its requests by replying to this email. This way, we can keep track of closed leads or forward them to other partners.
+Don't forget to propose our maintenance at the beginning of your implementation projects, together with your services quotation. The maintenance provides unlimited bugfixing that will avoid you waste time on bugs detected during the implementation. It also provides free migration services for the current stable version at the time of signature; otherwise if we released a new version during your implementation, the customer would not always be able to easily migrate to newer versions.
+
+Kind regards, OpenERP Team
+
+            """, "\n\n"]
         lead_proxy = self.pool.get('crm.lead')
         lead = lead_proxy.browse(cr, uid, lead_id, context=context)
         if not lead.type or lead.type == 'lead' or not lead.partner_address_id:
@@ -237,22 +248,22 @@ class crm_lead_forward_to_partner(osv.osv_memory):
         elif lead.type == 'opportunity':
             pa = lead.partner_address_id
             body = [
-                "Partner: %s" % (lead.partner_id and lead.partner_id.name_get()[0][1]), 
-                "Contact: %s" % (pa.name or ''), 
-                "Title: %s" % (pa.title or ''), 
-                "Function: %s" % (pa.function or ''), 
-                "Street: %s" % (pa.street or ''), 
-                "Street2: %s" % (pa.street2 or ''), 
-                "Zip: %s" % (pa.zip or ''), 
-                "City: %s" % (pa.city or ''), 
-                "Country: %s" % (pa.country_id and pa.country_id.name_get()[0][1] or ''), 
-                "State: %s" % (pa.state_id and pa.state_id.name_get()[0][1] or ''), 
-                "Email: %s" % (pa.email or ''), 
-                "Phone: %s" % (pa.phone or ''), 
-                "Fax: %s" % (pa.fax or ''), 
-                "Mobile: %s" % (pa.mobile or ''), 
-                "Lead Category: %s" % (lead.categ_id and lead.categ_id.name or ''), 
-                "Details: %s" % (lead.description or ''), 
+                "Partner: %s" % (lead.partner_id and lead.partner_id.name_get()[0][1]),
+                "Contact: %s" % (pa.name or ''),
+                "Title: %s" % (pa.title or ''),
+                "Function: %s" % (pa.function or ''),
+                "Street: %s" % (pa.street or ''),
+                "Street2: %s" % (pa.street2 or ''),
+                "Zip: %s" % (pa.zip or ''),
+                "City: %s" % (pa.city or ''),
+                "Country: %s" % (pa.country_id and pa.country_id.name_get()[0][1] or ''),
+                "State: %s" % (pa.state_id and pa.state_id.name_get()[0][1] or ''),
+                "Email: %s" % (pa.email or ''),
+                "Phone: %s" % (pa.phone or ''),
+                "Fax: %s" % (pa.fax or ''),
+                "Mobile: %s" % (pa.mobile or ''),
+                "Lead Category: %s" % (lead.categ_id and lead.categ_id.name or ''),
+                "Details: %s" % (lead.description or ''),
             ]
         return "\n".join(body + ['---'])
 
@@ -264,7 +275,6 @@ class crm_lead_forward_to_partner(osv.osv_memory):
             context = {}
 
         defaults = super(crm_lead_forward_to_partner, self).default_get(cr, uid, fields, context=context)
-
         active_id = context.get('active_id')
         if not active_id:
             return defaults
