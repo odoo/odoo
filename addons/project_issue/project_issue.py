@@ -26,6 +26,9 @@ from tools.translate import _
 import binascii
 import time
 import tools
+from crm import wizard
+
+wizard.email_compose_message.email_model.append('project.issue')
 
 class project_issue_version(osv.osv):
     _name = "project.issue.version"

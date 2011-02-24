@@ -31,7 +31,7 @@ class email_compose_message(osv.osv_memory):
             context = {}
         result = super(email_compose_message, self).default_get(cr, uid, fields, context=context)
 
-        if context.get('active_id',False) and context.get('active_model',False) and context.get('active_model') == 'project.scrum.meeting':
+        if context.get('active_id',False) and context.get('email_model',False) and context.get('email_model') == 'project.scrum.meeting':
 
             meeting_pool = self.pool.get('project.scrum.meeting')
             user_pool = self.pool.get('res.users')
@@ -57,7 +57,7 @@ class email_compose_message(osv.osv_memory):
                 result.update({'description': message})
 
             if 'model' in fields:
-                result.update({'model':context.get('active_model')})
+                result.update({'model':context.get('email_model')})
 
             if 'res_id' in fields:
                 result.update({'res_id':context.get('active_id')})

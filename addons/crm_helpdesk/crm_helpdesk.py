@@ -22,6 +22,9 @@
 from crm import crm
 from osv import fields, osv
 import time
+from crm import wizard
+
+wizard.email_compose_message.email_model.append('crm.helpdesk')
 
 class crm_helpdesk(crm.crm_case, osv.osv):
     """ Helpdesk Cases """

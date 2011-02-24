@@ -23,16 +23,19 @@ from osv import osv
 from osv import fields
 import tools
 
+email_model = [
+        'crm.lead',
+    ]
+
 class email_compose_message(osv.osv_memory):
     _inherit = 'email.compose.message'
 
     def default_get(self, cr, uid, fields, context=None):
         if context is None:
             context = {}
-        model = ['crm.lead', 'crm.claim', 'crm.fundraising', 'crm.helpdesk', 'event.registration', 'hr.applicant', 'project.issue']
         result = super(email_compose_message, self).default_get(cr, uid, fields, context=context)
-        if context.get('active_id',False) and context.get('active_model',False) and context.get('active_model') in model:
-            model_obj = self.pool.get(context.get('active_model'))
+        if context.get('active_id',False) and context.get('email_model',False) and context.get('email_model') in email_model:
+            model_obj = self.pool.get(context.get('email_model'))
             data = model_obj.browse(cr, uid ,context.get('active_id'), context)
             if 'name' in fields:
                 result['name'] = data.name
@@ -47,7 +50,7 @@ class email_compose_message(osv.osv_memory):
                 result['description'] = '\n' + (tools.ustr(data.user_id.signature or ''))
 
             if 'model' in fields:
-                result['model'] = context.get('active_model','')
+                result['model'] = context.get('email_model','')
 
             if 'email_cc' in fields:
                 result['email_cc'] = tools.ustr(data.email_cc or '')

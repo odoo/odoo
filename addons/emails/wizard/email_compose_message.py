@@ -47,10 +47,10 @@ class email_compose_message(osv.osv_memory):
                 result['res_id'] = message_data and message_data.res_id
 
             if 'email_from' in fields:
-                result['email_from'] = message_data and message_data.email_from
+                result['email_from'] = message_data and message_data.email_to
 
             if 'email_to' in fields:
-                result['email_to'] = message_data and message_data.email_to
+                result['email_to'] = message_data and message_data.email_from
 
             if 'email_cc' in fields:
                 result['email_cc'] = message_data and message_data.email_cc
@@ -123,10 +123,6 @@ class email_compose_message(osv.osv_memory):
             record_ids = context.get('record_ids',[])
             if not record_ids:
                 record_ids = model_pool.search(cr, uid, [])
-        elif context.get('active_model',False):
-            model =  context.get('active_model')
-            model_pool =  self.pool.get(model)
-            record_ids = context.get('active_ids',[])
         if model_pool:
             return model_pool.name_get(cr, uid, record_ids, context)
         return []
