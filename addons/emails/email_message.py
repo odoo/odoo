@@ -85,9 +85,6 @@ class email_message_template(osv.osv_memory):
         'description': fields.text('Description', translate=True),
         'smtp_server_id':fields.many2one('email.smtp_server', 'SMTP Server'),
     }
-    _defaults = {
-        'references': lambda * a: None,
-    }
 
     _sql_constraints = []
 email_message_template()
@@ -273,7 +270,7 @@ class email_message(osv.osv):
                 'reply_to': reply_to,
                 'res_id': openobject_id,
                 'message_id': message_id,
-                'references': references,
+                'references': references or '',
                 'sub_type': subtype or '',
                 'headers': x_headers or False,
                 'priority': priority,

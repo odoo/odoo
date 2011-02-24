@@ -85,7 +85,7 @@ class email_compose_message(osv.osv_memory):
                 result['user_id'] = message_data and message_data.user_id and message_data.user_id.id or False
 
             if 'references' in fields:
-                result['references'] = tools.ustr(message_data and message_data.references)
+                result['references'] = message_data and message_data.references and tools.ustr(message_data.references)
 
             if 'sub_type' in fields:
                 result['sub_type'] = message_data and message_data.sub_type
@@ -159,7 +159,7 @@ class email_compose_message(osv.osv_memory):
             references = False
             message_id = False
             if context.get('mail',False) == 'reply' and  mail.message_id:
-                references = mail.references and str(mail.references) != 'False' and mail.references + "," + mail.message_id or mail.message_id
+                references = mail.references and mail.references + "," + mail.message_id or mail.message_id
             else:
                 message_id = mail.message_id
             email_id = email_message_pool.email_send(cr, uid, mail.email_from, mail.email_to, mail.name, mail.description,
