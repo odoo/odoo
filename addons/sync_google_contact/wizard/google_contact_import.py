@@ -170,7 +170,7 @@ class synchronize_google_contact(osv.osv_memory):
                 'domain': "[('id','in', ["+','.join(map(str,ids))+"])]",
                 'view_type': 'form',
                 'view_mode': 'tree,form',
-                'res_model': obj.create_partner and 'res.partner' or 'res.partner.adress',
+                'res_model': obj.create_partner and 'res.partner' or 'res.partner.address',
                 'context': context,
                 'views': [(False, 'tree'),(False, 'form')],
                 'type': 'ir.actions.act_window',
