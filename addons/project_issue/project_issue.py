@@ -45,7 +45,7 @@ class project_issue(crm.crm_case, osv.osv):
     _description = "Project Issue"
     _order = "priority, id desc"
     _inherit = ['mailgate.thread']
-
+    
     def case_open(self, cr, uid, ids, *args):
         """
         @param self: The object pointer
@@ -175,7 +175,7 @@ class project_issue(crm.crm_case, osv.osv):
         'section_id': fields.many2one('crm.case.section', 'Sales Team', \
                         select=True, help='Sales team to which Case belongs to.\
                              Define Responsible user and Email account for mail gateway.'),
-        'user_id': fields.many2one('res.users', 'Responsible'),
+        'user_id': fields.related('project_id', 'user_id', type='many2one', relation='res.users', store=True, select=1, string='Responsible'),
         'partner_id': fields.many2one('res.partner', 'Partner'),
         'partner_address_id': fields.many2one('res.partner.address', 'Partner Contact', \
                                  domain="[('partner_id','=',partner_id)]"),
@@ -200,7 +200,7 @@ class project_issue(crm.crm_case, osv.osv):
         'partner_name': fields.char("Employee's Name", size=64),
         'partner_mobile': fields.char('Mobile', size=32),
         'partner_phone': fields.char('Phone', size=32),
-        'type_id': fields.many2one ('project.task.type', 'Resolution'),
+        'type_id': fields.many2one ('project.task.type', 'Resolution', domain="[('project_ids', '=', project_id)]"),
         'project_id':fields.many2one('project.project', 'Project'),
         'duration': fields.float('Duration'),
         'task_id': fields.many2one('project.task', 'Task', domain="[('project_id','=',project_id)]"),
@@ -208,7 +208,7 @@ class project_issue(crm.crm_case, osv.osv):
                                 method=True, multi='day_open', type="float", store=True),
         'day_close': fields.function(_compute_day, string='Days to Close', \
                                 method=True, multi='day_close', type="float", store=True),
-        'assigned_to': fields.related('task_id', 'user_id', string = 'Assigned to', type="many2one", relation="res.users", store=True, help='This is the current user to whom the related task have been assigned'),
+        'assigned_to': fields.many2one('res.users', 'Assigned to', required=True, select=1),
         'working_hours_open': fields.function(_compute_day, string='Working Hours to Open the Issue', \
                                 method=True, multi='working_days_open', type="float", store=True),
         'working_hours_close': fields.function(_compute_day, string='Working Hours to Close the Issue', \
@@ -241,6 +241,7 @@ class project_issue(crm.crm_case, osv.osv):
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.helpdesk', context=c),
         'priority': crm.AVAILABLE_PRIORITIES[2][0],
         'project_id':_get_project,
+        'assigned_to' : lambda obj, cr, uid, context: uid,
     }
 
     def convert_issue_task(self, cr, uid, ids, context=None):
