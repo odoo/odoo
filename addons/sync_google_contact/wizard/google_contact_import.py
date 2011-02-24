@@ -108,10 +108,11 @@ class synchronize_google_contact(osv.osv_memory):
     def _get_group(self, cr, uid, context=None):
         user_obj = self.pool.get('res.users').browse(cr, uid, uid)
         google=self.pool.get('google.login')
-        gd_client = google.google_login(cr,uid,user_obj.gmail_user,user_obj.gmail_password)
+        gd_client = google.google_login(cr,uid,user_obj.gmail_user,user_obj.gmail_password,type='group')
+        query = gdata.contacts.client.ContactsQuery(feed='/m8/feeds/groups/default/full')
         res = []
         if gd_client:
-            groups = gd_client.GetGroupsFeed()
+            groups = gd_client.GetGroups(q=query)
             for grp in groups.entry:
                 res.append((grp.id.text, grp.title.text))
         res.append(('none','None'))
@@ -149,7 +150,7 @@ class synchronize_google_contact(osv.osv_memory):
         gamil_pwd = user_obj.gmail_password
 
         google = self.pool.get('google.login')
-        gd_client = google.google_login(cr,uid,user_obj.gmail_user,user_obj.gmail_password)
+        gd_client = google.google_login(cr,uid,user_obj.gmail_user,user_obj.gmail_password,type='contact')
 
         if not gmail_user or not gamil_pwd:
             raise osv.except_osv(_('Error'), _("Please specify the user and password !"))

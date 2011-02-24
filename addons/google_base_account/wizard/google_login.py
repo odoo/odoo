@@ -31,16 +31,18 @@ class google_login(osv.osv_memory):
         'password': fields.char('Password', size=64),
     }
 
-    def google_login(self,cr,uid,user,password,context=None):
-        gd_client = gdata.contacts.service.ContactsService()
-        gd_client.email = user
-        gd_client.password = password
-        gd_client.source = 'OpenERP'
-        try:
-            gd_client.ProgrammaticLogin()
+    def google_login(self,cr,uid,user,password,type='',context=None):
+        gd_client=False
+        if type=='group': 
+            gd_client=gdata.contacts.client.ContactsClient(source='OpenERP')
+        if type=='contact' :   
+            gd_client = gdata.contacts.service.ContactsService()
+        try:    
+            gd_client.ClientLogin(user, password,gd_client.source)
         except Exception, e:
-           return False
+            raise osv.except_osv(_('Error'), _(e))            
         return gd_client
+
 
     def default_get(self, cr, uid, fields, context=None):
         res = super(google_login, self).default_get(cr, uid, fields, context=context)
