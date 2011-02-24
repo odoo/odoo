@@ -183,15 +183,15 @@ This is useful for CRM leads for example"),
         data_obj = self.pool.get('ir.model.data')
         for template in self.browse(cr, uid, ids, context=context):
             src_obj = template.model_id.model
-            model_data_id = data_obj._get_id(cr, uid, 'email_template', 'email_template_send_wizard_form')
+            model_data_id = data_obj._get_id(cr, uid, 'emails', 'email_compose_message_wizard_form')
             res_id = data_obj.browse(cr, uid, model_data_id, context=context).res_id
             vals['ref_ir_act_window'] = action_obj.create(cr, uid, {
                  'name': template.name,
                  'type': 'ir.actions.act_window',
-                 'res_model': 'email_template.send.wizard',
+                 'res_model': 'email.compose.message',
                  'src_model': src_obj,
                  'view_type': 'form',
-                 'context': "{'src_model':'%s','template_id':'%d','src_rec_id':active_id,'src_rec_ids':active_ids}" % (src_obj, template.id),
+                 'context': "{'email_model':'%s','template_id':'%d','src_rec_id':active_id,'src_rec_ids':active_ids}" % (src_obj, template.id),
                  'view_mode':'form,tree',
                  'view_id': res_id,
                  'target': 'new',
