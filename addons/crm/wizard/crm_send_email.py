@@ -31,18 +31,6 @@ import re
 
 AVAILABLE_STATES = crm.AVAILABLE_STATES + [('unchanged', 'Unchanged')]
 
-
-class crm_send_new_email_attachment(osv.osv_memory):
-    _name = 'crm.send.mail.attachment'
-
-    _columns = {
-        'binary' : fields.binary('Attachment', required=True),
-        'name' : fields.char('Name', size=128, required=True),
-        'wizard_id' : fields.many2one('crm.send.mail', 'Wizard', required=True),
-    }
-
-crm_send_new_email_attachment()
-
 class crm_send_new_email(osv.osv_memory):
     """ Sends new email for the case"""
     _name = "crm.send.mail"
