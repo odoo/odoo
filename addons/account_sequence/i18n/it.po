@@ -1,0 +1,237 @@
+# Italian translation for openobject-addons
+# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"PO-Revision-Date: 2011-02-15 15:36+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Italian <it@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2011-02-16 05:03+0000\n"
+"X-Generator: Launchpad (build 12351)\n"
+
+#. module: account_sequence
+#: view:account.sequence.installer:0
+#: model:ir.actions.act_window,name:account_sequence.action_account_seq_installer
+msgid "Account Sequence Application Configuration"
+msgstr "Configurazione applicazione sequenza conti"
+
+#. module: account_sequence
+#: constraint:account.move:0
+msgid ""
+"You cannot create entries on different periods/journals in the same move"
+msgstr ""
+"Non si possono creare scritture in giornali differenti con una stessa "
+"registrazione."
+
+#. module: account_sequence
+#: help:account.move,internal_sequence_number:0
+#: help:account.move.line,internal_sequence_number:0
+msgid "Internal Sequence Number"
+msgstr "Numero sequenza interna"
+
+#. module: account_sequence
+#: help:account.sequence.installer,number_next:0
+msgid "Next number of this sequence"
+msgstr "Numero successivo di questa sequenza"
+
+#. module: account_sequence
+#: field:account.sequence.installer,number_next:0
+msgid "Next Number"
+msgstr "Numero Successivo"
+
+#. module: account_sequence
+#: field:account.sequence.installer,number_increment:0
+msgid "Increment Number"
+msgstr ""
+
+#. module: account_sequence
+#: model:ir.module.module,description:account_sequence.module_meta_information
+msgid ""
+"\n"
+"    This module maintains internal sequence number for accounting entries.\n"
+"    "
+msgstr ""
+"\n"
+"    Questo modulo mantiene il numero di sequenza interno per le voci "
+"contabili.\n"
+"    "
+
+#. module: account_sequence
+#: model:ir.module.module,shortdesc:account_sequence.module_meta_information
+msgid "Entries Sequence Numbering"
+msgstr ""
+
+#. module: account_sequence
+#: help:account.sequence.installer,number_increment:0
+msgid "The next number of the sequence will be incremented by this number"
+msgstr ""
+"Il prossimo numero della sequenza verrà incrementato per questo numero"
+
+#. module: account_sequence
+#: view:account.sequence.installer:0
+msgid "Configure Your Account Sequence Application"
+msgstr "Configurare la vostra applicazione sequenza conto"
+
+#. module: account_sequence
+#: field:account.sequence.installer,progress:0
+msgid "Configuration Progress"
+msgstr "Avanzamento configurazione"
+
+#. module: account_sequence
+#: help:account.sequence.installer,suffix:0
+msgid "Suffix value of the record for the sequence"
+msgstr "Valore suffisso del record per la sequenza"
+
+#. module: account_sequence
+#: field:account.sequence.installer,company_id:0
+msgid "Company"
+msgstr "Azienda"
+
+#. module: account_sequence
+#: help:account.journal,internal_sequence_id:0
+msgid ""
+"This sequence will be used to maintain the internal number for the journal "
+"entries related to this journal."
+msgstr ""
+"Questa sequenza verrà utilizzata per mantenere il numero interno per le "
+"registrazioni relative a questo giornale."
+
+#. module: account_sequence
+#: field:account.sequence.installer,padding:0
+msgid "Number padding"
+msgstr ""
+
+#. module: account_sequence
+#: model:ir.model,name:account_sequence.model_account_move_line
+msgid "Journal Items"
+msgstr "Voci Giornale"
+
+#. module: account_sequence
+#: field:account.move,internal_sequence_number:0
+#: field:account.move.line,internal_sequence_number:0
+msgid "Internal Number"
+msgstr "Numero interno"
+
+#. module: account_sequence
+#: constraint:account.move.line:0
+msgid "Company must be same for its related account and period."
+msgstr ""
+"L'azienda deve essere la stessa per il periodo ed il conto ad essa correlato."
+
+#. module: account_sequence
+#: help:account.sequence.installer,padding:0
+msgid ""
+"OpenERP will automatically adds some '0' on the left of the 'Next Number' to "
+"get the required padding size."
+msgstr ""
+"OpenERP aggiungerà automaticamente alcuni \"0\" a sinistra del \"Prossimo "
+"numero\" per avere la \"dimensione\" richiesta."
+
+#. module: account_sequence
+#: field:account.sequence.installer,name:0
+msgid "Name"
+msgstr "Nome"
+
+#. module: account_sequence
+#: constraint:account.move.line:0
+msgid "You can not create move line on closed account."
+msgstr "Non è possibile creare una registrazione su un conto chiuso."
+
+#. module: account_sequence
+#: constraint:account.move:0
+msgid ""
+"You cannot create more than one move per period on centralized journal"
+msgstr ""
+"Non si può creare più di un movimento per periodo su un giornale "
+"centralizzato"
+
+#. module: account_sequence
+#: sql_constraint:account.move.line:0
+msgid "Wrong credit or debit value in accounting entry !"
+msgstr "Valore di credito o debito errato nella registrazione contabile !"
+
+#. module: account_sequence
+#: field:account.journal,internal_sequence_id:0
+msgid "Internal Sequence"
+msgstr "Sequenza interna"
+
+#. module: account_sequence
+#: model:ir.model,name:account_sequence.model_account_sequence_installer
+msgid "account.sequence.installer"
+msgstr "account.sequence.installer"
+
+#. module: account_sequence
+#: view:account.sequence.installer:0
+msgid "Configure"
+msgstr "Configura"
+
+#. module: account_sequence
+#: help:account.sequence.installer,prefix:0
+msgid "Prefix value of the record for the sequence"
+msgstr "Valore prefisso del record per la sequenza"
+
+#. module: account_sequence
+#: model:ir.model,name:account_sequence.model_account_move
+msgid "Account Entry"
+msgstr "Registrazione Contabile"
+
+#. module: account_sequence
+#: field:account.sequence.installer,suffix:0
+msgid "Suffix"
+msgstr "Suffisso"
+
+#. module: account_sequence
+#: field:account.sequence.installer,config_logo:0
+msgid "Image"
+msgstr "Immagine"
+
+#. module: account_sequence
+#: view:account.sequence.installer:0
+msgid "title"
+msgstr "titolo"
+
+#. module: account_sequence
+#: sql_constraint:account.journal:0
+msgid "The name of the journal must be unique per company !"
+msgstr "Il nome del registro deve essere unico per ogni azienda!"
+
+#. module: account_sequence
+#: field:account.sequence.installer,prefix:0
+msgid "Prefix"
+msgstr "Prefisso"
+
+#. module: account_sequence
+#: sql_constraint:account.journal:0
+msgid "The code of the journal must be unique per company !"
+msgstr "Il codice del registro deve essere unico per una stessa azienda!"
+
+#. module: account_sequence
+#: constraint:account.move.line:0
+msgid ""
+"You can not create move line on receivable/payable account without partner"
+msgstr ""
+"Non si possono creare voci in un conto di pagamento o riscossione senza "
+"indicare un partner"
+
+#. module: account_sequence
+#: model:ir.model,name:account_sequence.model_account_journal
+msgid "Journal"
+msgstr "Giornale"
+
+#. module: account_sequence
+#: view:account.sequence.installer:0
+msgid "You can enhance the Account Sequence Application by installing ."
+msgstr ""
+
+#. module: account_sequence
+#: constraint:account.move.line:0
+msgid "You can not create move line on view account."
+msgstr ""
