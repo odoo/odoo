@@ -57,7 +57,6 @@ import time
 #]
 
 LOGGER = netsvc.Logger()
-
 def format_date_tz(date, tz=None):
     if not date:
         return 'n/a'
@@ -166,15 +165,7 @@ class email_message(osv.osv):
                     msg_txt += self.truncate_data(cr, uid, message.description, context=context)
             else:
                 msg_txt = (message.user_id.name or '/') + _(' on ') + format_date_tz(message.date, tz) + ':\n\t'
-                if message.name == _('Opportunity'):
-                    msg_txt += _("Converted to Opportunity")
-                elif message.name == _('Note'):
-                    msg_txt = (message.user_id.name or '/') + _(' added note on ') + format_date_tz(message.date, tz) + ':\n\t'
-                    msg_txt += self.truncate_data(cr, uid, message.description, context=context)
-                elif message.name == _('Stage'):
-                    msg_txt += _("Changed Stage to: ") + message.description
-                else:
-                    msg_txt += _("Changed Status to: ") + message.name
+                msg_txt += message.name
             result[message.id] = msg_txt
         return result
 

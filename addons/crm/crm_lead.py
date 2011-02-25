@@ -246,46 +246,28 @@ class crm_lead(crm_case, osv.osv):
         context.update({'active_ids': ids})
 
         data_obj = self.pool.get('ir.model.data')
-        data_id = data_obj._get_id(cr, uid, 'crm', 'view_crm_lead2opportunity_action')
         value = {}
 
         view_id = False
-        if data_id:
-            view_id = data_obj.browse(cr, uid, data_id, context=context).res_id
 
-        for case in self.browse(cr, uid, ids):
+        for case in self.browse(cr, uid, ids, context=context):
             context.update({'active_id': case.id})
-            if not case.partner_id:
-                data_id = data_obj._get_id(cr, uid, 'crm', 'view_crm_lead2opportunity_partner')
-                view_id1 = False
-                if data_id:
-                    view_id1 = data_obj.browse(cr, uid, data_id, context=context).res_id
-                value = {
-                        'name': _('Create Partner'),
-                        'view_type': 'form',
-                        'view_mode': 'form,tree',
-                        'res_model': 'crm.lead2opportunity.partner',
-                        'view_id': False,
-                        'context': context,
-                        'views': [(view_id1, 'form')],
-                        'type': 'ir.actions.act_window',
-                        'target': 'new',
-                        'nodestroy': True
-                        }
-                break
-            else:
-                value = {
-                        'name': _('Create Opportunity'),
-                        'view_type': 'form',
-                        'view_mode': 'form,tree',
-                        'res_model': 'crm.lead2opportunity.action',
-                        'view_id': False,
-                        'context': context,
-                        'views': [(view_id, 'form')],
-                        'type': 'ir.actions.act_window',
-                        'target': 'new',
-                        'nodestroy': True
-                        }
+            data_id = data_obj._get_id(cr, uid, 'crm', 'view_crm_lead2opportunity_partner')
+            view_id1 = False
+            if data_id:
+                view_id1 = data_obj.browse(cr, uid, data_id, context=context).res_id
+            value = {
+                    'name': _('Create Partner'),
+                    'view_type': 'form',
+                    'view_mode': 'form,tree',
+                    'res_model': 'crm.lead2opportunity.partner',
+                    'view_id': False,
+                    'context': context,
+                    'views': [(view_id1, 'form')],
+                    'type': 'ir.actions.act_window',
+                    'target': 'new',
+                    'nodestroy': True
+            }
         return value
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -294,6 +276,17 @@ class crm_lead(crm_case, osv.osv):
 
         if 'date_closed' in vals:
             return super(crm_lead,self).write(cr, uid, ids, vals, context=context)
+
+        if 'stage_id' in vals and vals['stage_id']:
+            stage_obj = self.pool.get('crm.case.stage').browse(cr, uid, vals['stage_id'], context=context)
+            self.history(cr, uid, ids, _("Changed Stage to: ") + stage_obj.name, details=_("Changed Stage to: ") + stage_obj.name)
+            message=''
+            for case in self.browse(cr, uid, ids, context=context):
+                if case.type == 'lead' or  context.get('stage_type',False)=='lead':
+                    message = _("The stage of lead '%s' has been changed to '%s'.") % (case.name, stage_obj.name)
+                elif case.type == 'opportunity':
+                    message = _("The stage of opportunity '%s' has been changed to '%s'.") % (case.name, stage_obj.name)
+                self.log(cr, uid, case.id, message)
         return super(crm_lead,self).write(cr, uid, ids, vals, context)
 
     def stage_historize(self, cr, uid, ids, stage, context=None):
@@ -310,15 +303,20 @@ class crm_lead(crm_case, osv.osv):
     def stage_next(self, cr, uid, ids, context=None):
         stage = super(crm_lead, self).stage_next(cr, uid, ids, context=context)
         if stage:
-            self.stage_historize(cr, uid, ids, stage, context=context)
+            stage_obj = self.pool.get('crm.case.stage').browse(cr, uid, stage, context=context)
+            if stage_obj.on_change:
+                data = {'probability': stage_obj.probability}
+                self.write(cr, uid, ids, data)
         return stage
 
     def stage_previous(self, cr, uid, ids, context=None):
-        stage = super(crm_lead, self).stage_previous(cr, uid, ids, context)
+        stage = super(crm_lead, self).stage_previous(cr, uid, ids, context=context)
         if stage:
-            self.stage_historize(cr, uid, ids, stage, context=context)
+            stage_obj = self.pool.get('crm.case.stage').browse(cr, uid, stage, context=context)
+            if stage_obj.on_change:
+                data = {'probability': stage_obj.probability}
+                self.write(cr, uid, ids, data)
         return stage
-
 
     def message_new(self, cr, uid, msg, context=None):
         """
@@ -417,12 +415,12 @@ class crm_lead(crm_case, osv.osv):
         if optin:
             return {'value':{'optin':optin,'optout':False}}
         return {}
-        
+
     def on_chnage_optout(self, cr, uid, ids, optout):
         if optout:
             return {'value':{'optout':optout,'optin':False}}
         return {}
-        
+
 crm_lead()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
