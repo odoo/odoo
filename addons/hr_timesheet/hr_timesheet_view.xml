@@ -14,7 +14,7 @@
                     <field name="name"/>
                     <field domain="[('type','=','normal')]" name="account_id"/>
                     <field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" required="1" domain="[('type','=','service')]" invisible="1"/>
-                    <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" sum="Total time"/>
+                    <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" sum="Total time" widget="float_time"/>
                     <field name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" invisible="1"/>
                     <field name="amount" sum="Total cost" invisible="1"/>
                     <field name="general_account_id" invisible="1"/>
@@ -38,7 +38,7 @@
                                 <separator string="Product" colspan="2"/>
                                 <field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" required="1" domain="[('type','=','service')]"/>
                                 <field name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)"/>
-                                <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)"/>
+                                <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" widget="float_time"/>
                             </group>
                             <group colspan="2" col="2">
                                 <separator string="Accounting" colspan="2"/>
