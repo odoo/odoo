@@ -149,22 +149,31 @@ class ir_cron(osv.osv, netsvc.Agent):
         # Reschedule cron processing job asap, but not in the current thread
         self.setAlarm(self._poolJobs, time.time(), dbname, dbname)
 
+    def update_running_cron(self, cr):
+        # Verify whether the server is already started and thus whether we need to commit
+        # immediately our changes and restart the cron agent in order to apply the change
+        # immediately. The commit() is needed because as soon as the cron is (re)started it
+        # will query the database with its own cursor, possibly before the end of the
+        # current transaction.
+        # This commit() is not an issue in most cases, but we must absolutely avoid it
+        # when the server is only starting or loading modules (hence the test on pool._init).
+        if not self.pool._init:
+            cr.commit()
+            self.restart(cr.dbname)
+
     def create(self, cr, uid, vals, context=None):
         res = super(ir_cron, self).create(cr, uid, vals, context=context)
-        cr.commit()
-        self.restart(cr.dbname)
+        self.update_running_cron(cr)
         return res
 
     def write(self, cr, user, ids, vals, context=None):
         res = super(ir_cron, self).write(cr, user, ids, vals, context=context)
-        cr.commit()
-        self.restart(cr.dbname)
+        self.update_running_cron(cr)
         return res
 
     def unlink(self, cr, uid, ids, context=None):
         res = super(ir_cron, self).unlink(cr, uid, ids, context=context)
-        cr.commit()
-        self.restart(cr.dbname)
+        self.update_running_cron(cr)
         return res
 ir_cron()
 
