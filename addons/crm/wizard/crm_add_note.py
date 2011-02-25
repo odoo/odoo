@@ -5,6 +5,16 @@ import base64
 
 AVAILABLE_STATES = crm.AVAILABLE_STATES + [('unchanged', 'Unchanged')]
 
+class crm_send_new_email_attachment(osv.osv_memory):
+    _name = 'crm.send.mail.attachment'
+
+    _columns = {
+        'binary' : fields.binary('Attachment', required=True),
+        'name' : fields.char('Name', size=128, required=True),
+        'wizard_id' : fields.many2one('crm.add.note', 'Wizard', required=True),
+    }
+
+crm_send_new_email_attachment()
 
 class crm_add_note(osv.osv_memory):
     """Adds a new note to the case."""
@@ -14,7 +24,7 @@ class crm_add_note(osv.osv_memory):
     _columns = {
         'body': fields.text('Note Body', required=True),
         'state': fields.selection(AVAILABLE_STATES, string='Set New State To',
-                                  required=True), 
+                                  required=True),
         'attachment_ids' : fields.one2many('crm.send.mail.attachment', 'wizard_id'),
     }
 
