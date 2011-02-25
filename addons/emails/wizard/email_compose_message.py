@@ -31,7 +31,6 @@ class email_compose_message(osv.osv_memory):
     def default_get(self, cr, uid, fields, context=None):
         if context is None:
             context = {}
-
         result = super(email_compose_message, self).default_get(cr, uid, fields, context=context)
         message_pool = self.pool.get('email.message')
         message_id = context.get('message_id', False)
@@ -120,7 +119,7 @@ class email_compose_message(osv.osv_memory):
         elif context.get('email_model',False):
             model =  context.get('email_model')
             model_pool =  self.pool.get(model)
-            record_ids = context.get('record_ids',[])
+            record_ids = context.get('active_ids',[])
             if not record_ids:
                 record_ids = model_pool.search(cr, uid, [])
         if model_pool:
