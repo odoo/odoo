@@ -132,9 +132,9 @@
             <field name="arch" type="xml">
                 <search string="Search Contract">
                    <group col='15' colspan='4'>
-                   <filter string="Current" icon="terp-check" name="current"  domain="['|',('date_end','&gt;=', time.strftime('%%Y-%%m-%%d')),('date_end','=',False)]" help="Contracts in progress"/> 
-                   <filter string="Overpassed" icon="terp-emblem-important" domain="[('date_end','&lt;', time.strftime('%%Y-%%m-%%d'))]" help="Contracts whose end date already passed"/>   
-                   <separator orientation="vertical"/>                  
+                   <filter string="Current" icon="terp-check" name="current"  domain="['|',('date_end','&gt;=', time.strftime('%%Y-%%m-%%d')),('date_end','=',False)]" help="Contracts in progress"/>
+                   <filter string="Overpassed" icon="terp-emblem-important" domain="[('date_end','&lt;', time.strftime('%%Y-%%m-%%d'))]" help="Contracts whose end date already passed"/>
+                   <separator orientation="vertical"/>
                    <field name="name"/>
                    <field name="employee_id"/>
                    <field name="working_hours"/>
@@ -143,11 +143,11 @@
                    </group>
                    <newline/>
                    <group expand="0" string="Group By..." colspan="4" col="20">
-                   <filter string="Employee" icon="terp-personal" domain="[]" context="{'group_by':'employee_id'}"/> 
-                   <separator orientation="vertical"/> 
+                   <filter string="Employee" icon="terp-personal" domain="[]" context="{'group_by':'employee_id'}"/>
+                   <separator orientation="vertical"/>
                    <filter string="Working Schedule" icon="terp-go-week" domain="[]" context="{'group_by':'working_hours'}"/>
                    <filter string="Job" icon="terp-gtk-select-all" domain="[]" context="{'group_by':'job_id'}"/>
-                    <separator orientation="vertical"/> 
+                    <separator orientation="vertical"/>
                     <filter string="Contract Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type_id'}"/>
                    </group>
                </search>
@@ -165,7 +165,7 @@
                     <field name="employee_id" />
                     <field name="job_id"/>
                     <field name="wage"/>
-                    <field name="wage_type_id" widget="selection"/>
+                    <!-- field name="wage_type_id" widget="selection"/-->
                     <field name="type_id" widget="selection"/>
                     </group>
                     <notebook>
@@ -175,10 +175,10 @@
                         <field name="date_start" />
                         <field name="date_end" />
                         <field name="working_hours"/>
-                        <separator colspan="2" string="Trial Period"/> 
+                        <separator colspan="2" string="Trial Period"/>
                         <field name="trial_date_start" />
                         <field name="trial_date_end" />
-                        </group>                 
+                        </group>
                         <group col="2" colspan="2">
                         <separator colspan="2" string="Advantages"/>
                         <field name="advantages_net"/>
@@ -204,10 +204,10 @@
                     <field name="type_id"/>
                     <field name="job_id"/>
                     <!--field name="department_id"/-->
-                    <field name="working_hours"/>                    
+                    <field name="working_hours"/>
                     <field name="date_start"/>
                     <field name="date_end"/>
-                    <field name="wage_type_id" invisible="1"/>
+                    <!--  field name="wage_type_id" invisible="1"/-->
                     <field name="wage" invisible="1"/>
                 </tree>
             </field>
@@ -270,11 +270,11 @@
         <menuitem action="action_hr_contract" id="hr_menu_contract" parent="hr.menu_hr_main" name="Contracts" sequence="4" groups="base.group_hr_manager"/>
 
         <!-- Contracts Button on Employee Form -->
-        <act_window 
+        <act_window
         context="{'search_default_employee_id': [active_id]}"
-        id="act_hr_employee_2_hr_contract" 
-        name="Contracts" 
-        res_model="hr.contract" 
+        id="act_hr_employee_2_hr_contract"
+        name="Contracts"
+        res_model="hr.contract"
         src_model="hr.employee"
         groups="base.group_hr_manager"/>
 

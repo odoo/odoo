@@ -71,11 +71,11 @@ class hr_contract_wage_type(osv.osv):
     _columns = {
         'name': fields.char('Wage Type Name', size=50, required=True, select=True),
         'period_id': fields.many2one('hr.contract.wage.type.period', 'Wage Period', required=True),
-        'type': fields.selection([('gross','Gross'), ('net','Net')], 'Type', required=True),
-        'factor_type': fields.float('Factor for hour cost', digits=(12,4), required=True, help='This field is used by the timesheet system to compute the price of an hour of work wased on the contract of the employee')
+#        'type': fields.selection([('gross','Gross'), ('net','Net')], 'Type', required=True),
+        'factor_type': fields.float('Factor for hour cost', digits=(12,4), required=True, help='This field is used by the timesheet system to compute the price of an hour of work based on the contract of the employee')
     }
     _defaults = {
-        'type': 'gross',
+#        'type': 'gross',
         'factor_type': 1.8
     }
 hr_contract_wage_type()
@@ -103,7 +103,7 @@ class hr_contract(osv.osv):
         'trial_date_start': fields.date('Trial Start Date'),
         'trial_date_end': fields.date('Trial End Date'),
         'working_hours': fields.many2one('resource.calendar','Working Schedule'),
-        'wage_type_id': fields.many2one('hr.contract.wage.type', 'Wage Type', required=True),
+#        'wage_type_id': fields.many2one('hr.contract.wage.type', 'Wage Type', required=True),
         'wage': fields.float('Wage', digits=(16,2), required=True),
         'advantages': fields.text('Advantages'),
         'advantages_net': fields.float('Net Advantages Value', digits=(16,2)),

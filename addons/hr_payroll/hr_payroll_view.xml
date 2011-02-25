@@ -137,7 +137,7 @@
                         <field name="employee_id" select="1"/>
                         <field name="job_id"/>
                         <field name="wage"/>
-                        <field name="wage_type_id" widget="selection"/>
+                        <!--field name="wage_type_id" widget="selection"/-->
                         <field name="type_id" widget="selection"/>
                     </group>
                     <notebook colspan="4">
@@ -368,8 +368,8 @@
                     <field name="register_id" invisible="1"/>
                     <field name="name"/>
                     <field name="date"/>
-                    <field name="grows"/>
-                    <field name="net"/>
+                    <!--field name="grows"/-->
+                    <!--field name="net"/-->
                     <field name="state"/>
                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                 </tree>
@@ -383,7 +383,7 @@
             <field name="arch" type="xml">
                 <form string="Payslip">
                     <group col="6" colspan="4">
-                        <field name="employee_id"/>
+                        <field name="employee_id" on_change="onchange_employee_id(date, employee_id)"/>
                         <field name="name"/>
                         <field name="number" select="1"/>
                         <field name="date"/>
@@ -446,13 +446,16 @@
                                 <field name="basic_before_leaves"/>
                                 <field name="leaves"/>
                                 <field name="basic"/>
-                                <field name="allounce"/>
-                                <field name="deduction"/>
-                                <field name="other_pay"/>
-                                <field name="grows"/>
-                                <field name="net"/>
+                                <!--field name="allounce"/-->
+                                <!--field name="deduction"/-->
+                                <!--field name="other_pay"/-->
+                                <!--field name="grows"/-->
+                                <!--field name="net"/-->
                                 <field name="total_pay"/>
                             </group>
+                        </page>
+                        <page string="Holidays">
+                            <field name="holiday_ids" colspan="4" nolabel="1" editable="bottom"/>
                         </page>
                         <page string="Other Informations">
                             <group col="2" colspan="1">
@@ -839,9 +842,9 @@
                                     <field name="date"/>
                                     <field name="basic"/>
                                     <field name="allounce"/>
-                                    <field name="grows"/>
+                                    <!--field name="grows"/-->
                                     <field name="deduction"/>
-                                    <field name="net"/>
+                                    <!--field name="net"/-->
                                     <field name="state"/>
                                 </tree>
                             </field>
@@ -850,11 +853,11 @@
                                 <field name="allounce"/>
                                 <field name="deduction"/>
                             </group>
-                            <group col="2" colspan="2">
+                            <!-- group col="2" colspan="2">
                                 <separator colspan="4" string="Salary Information"/>
                                 <field name="grows"/>
                                 <field name="net"/>
-                            </group>
+                            </group-->
                         </page>
                     </notebook>
                     <group col="8" colspan="4">
