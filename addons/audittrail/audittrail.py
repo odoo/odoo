@@ -322,7 +322,7 @@ class audittrail_objects_proxy(object_proxy):
             vals = {
                     "method": method,
                     "object_id": model.id,
-                    "user_id": uid,
+                    "user_id": uid_orig,
                     "res_id": resource['id'],
             }
             if 'id' in resource:
@@ -355,7 +355,7 @@ class audittrail_objects_proxy(object_proxy):
                 vals = {
                     "method": method,
                     "object_id": model.id,
-                    "user_id": uid,
+                    "user_id": uid_orig,
                     "res_id": res_id,
 
                 }
@@ -384,7 +384,7 @@ class audittrail_objects_proxy(object_proxy):
                 vals = {
                     "method": method,
                     "object_id": model.id,
-                    "user_id": uid,
+                    "user_id": uid_orig,
                     "res_id": res_id,
 
                 }
@@ -436,7 +436,7 @@ class audittrail_objects_proxy(object_proxy):
                     vals = {
                         "method": method,
                         "object_id": model.id,
-                        "user_id": uid,
+                        "user_id": uid_orig,
                         "res_id": resource_id,
                     }
 
