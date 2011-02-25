@@ -48,9 +48,10 @@ class sale_order_line(osv.osv):
                     res[line.id] = round((line.price_unit*line.product_uos_qty*(100.0-line.discount)/100.0) -(line.product_id.standard_price*line.product_uos_qty), 2)
         return res
 
-    def _get_sale_order(self, cr, uid, ids, context=None):
+    def _get_order_line(self, cr, uid, ids, context=None):
+        obj_sale_order = self.pool.get('sale.order')
         list_order_line = []
-        for line in self.pool.get('sale.order').browse(cr, uid, ids, context=context):
+        for line in obj_sale_order.browse(cr, uid, ids, context=context):
             for i in line.order_line:
                 list_order_line.append(i.id)
         return list_order_line
@@ -58,7 +59,7 @@ class sale_order_line(osv.osv):
     _columns = {
         'margin': fields.function(_product_margin, method=True, string='Margin',
               store = {
-                        'sale.order': (_get_sale_order, None, 6),
+                        'sale.order': (_get_order_line, None, 5),
               }),
         'purchase_price': fields.float('Cost Price', digits=(16,2))
     }
