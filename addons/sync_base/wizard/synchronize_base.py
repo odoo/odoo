@@ -46,7 +46,7 @@ class synchronize_base(osv.osv_memory):
 
     def _get_action(self, cr, uid, tools, context=None):
         if not tools:
-            tools = 'none'
+            raise osv.except_osv(_("Error !"),_("Select App to synchronize with."))
         return self._get_actions_dic(cr, uid, context=context)[tools]
 
     def _get_actions_dic(self, cr, uid, context=None):
