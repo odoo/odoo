@@ -141,13 +141,13 @@ class email_compose_message(osv.osv_memory):
             context = {}
         email_id = self.save_to_mailbox(cr, uid, ids, context=context)
         self.pool.get('email.message').write(cr, uid, email_id, {'folder':'drafts', 'state': 'draft'}, context)
-        return {}
+        return {'type': 'ir.actions.act_window_close'}
 
     def send_mail(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
         email_id = self.save_to_mailbox(cr, uid, ids, context)
-        return {}
+        return {'type': 'ir.actions.act_window_close'}
 
     def save_to_mailbox(self, cr, uid, ids, context=None):
         email_ids = []

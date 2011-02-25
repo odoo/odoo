@@ -170,14 +170,14 @@ class crm_lead_forward_to_partner(osv.osv_memory):
             context = {}
         super(crm_lead_forward_to_partner, self).save_to_drafts(cr, uid, ids, context=context)
         self.action_forward(cr, uid, ids, context)
-        return {}
+        return {'type': 'ir.actions.act_window_close'}
 
     def send_mail(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
         super(crm_lead_forward_to_partner, self).send_mail(cr, uid, ids, context=context)
         self.action_forward(cr, uid, ids, context)
-        return {}
+        return {'type': 'ir.actions.act_window_close'}
 
     def action_forward(self, cr, uid, ids, context=None):
         """

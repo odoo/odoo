@@ -133,13 +133,13 @@ class email_template_send_wizard(osv.osv_memory):
             context = {}
         mailid = self.save_to_mailbox(cr, uid, ids, context=context)
         self.pool.get('email.message').write(cr, uid, mailid, {'folder':'drafts', 'state': 'draft'}, context)
-        return {}
+        return {'type': 'ir.actions.act_window_close'}
 
     def send_mail(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
         mailid = self.save_to_mailbox(cr, uid, ids, context)
-        return {}
+        return {'type': 'ir.actions.act_window_close'}
 
     def get_generated(self, cr, uid, ids=None, context=None):
         if ids is None:
