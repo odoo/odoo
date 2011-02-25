@@ -44,7 +44,7 @@ class email_compose_message(osv.osv_memory):
                 result['email_to'] = data.email_from
 
             if 'email_from' in fields:
-                result['email_from'] = data.user_id and data.user_id.address_id and data.user_id.address_id.email
+                result['email_from'] = data.user_id and data.user_id.address_id and data.user_id.address_id.email or False
 
             if 'description' in fields:
                 result['description'] = '\n' + (tools.ustr(data.user_id.signature or ''))
