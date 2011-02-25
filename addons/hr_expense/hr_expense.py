@@ -134,9 +134,9 @@ class hr_expense_expense(osv.osv):
             wf_service.trg_validate(uid, 'hr.expense.expense', id, 'invoice', cr)
             inv_ids.append(self.browse(cr, uid, id).invoice_id.id)
         return {
-            'name': 'Supplier Invoices',
+            'name': _('Supplier Invoices'),
             'view_type': 'form',
-            'view_mode': 'form',
+            'view_mode': 'form,tree',
             'view_id': [res_id],
             'res_model': 'account.invoice',
             'context': "{'type':'out_invoice', 'journal_type': 'purchase'}",
