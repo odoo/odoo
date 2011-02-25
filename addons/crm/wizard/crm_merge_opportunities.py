@@ -45,7 +45,6 @@ class crm_merge_opportunity(osv.osv_memory):
 
     def get_attachments(self, cr, uid, id, context=None):
         attach_obj = self.pool.get('ir.attachment')
-        result = []
         attach_ids = attach_obj.search(cr, uid, [('res_model' , '=', 'crm.lead'), ('res_id', '=', id)])
         return attach_ids
 
@@ -116,7 +115,7 @@ class crm_merge_opportunity(osv.osv_memory):
             attach_ids = self.get_attachments(cr, uid, opp, context=context)
             self.set_attachements_res_id(cr, uid, first_opportunity.id, attach_ids)
             for history in opp.message_ids:
-                new_history = message_obj.copy(cr, uid, history.id, default={'res_id': opp.id})
+                message_obj.copy(cr, uid, history.id, default={'res_id': opp.id})
 
         #Notification about loss of information
         details = []
@@ -159,8 +158,6 @@ class crm_merge_opportunity(osv.osv_memory):
 
 
         # Get Opportunity views
-        result = models_data._get_id(
-            cr, uid, 'crm', 'view_crm_case_opportunities_filter')
         opportunity_view_form = models_data._get_id(
             cr, uid, 'crm', 'crm_case_form_view_oppor')
         opportunity_view_tree = models_data._get_id(

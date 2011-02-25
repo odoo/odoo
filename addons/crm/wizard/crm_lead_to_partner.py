@@ -184,7 +184,6 @@ class crm_lead2partner(osv.osv_memory):
                 else:
                     if data.partner_id:
                         partner_id = data.partner_id.id
-                        contact_id = partner_obj.address_get(cr, uid, [partner_id])['default']
                 self.assign_partner(cr, uid, lead.id, partner_id)
                 partner_ids.append(partner_id)
         return partner_ids
@@ -212,7 +211,6 @@ class crm_lead2partner(osv.osv_memory):
         mod_obj = self.pool.get('ir.model.data')
         result = mod_obj._get_id(cr, uid, 'base', 'view_res_partner_filter')
         res = mod_obj.read(cr, uid, result, ['res_id'])
-        print partner_ids
         return {'type': 'ir.actions.act_window_close'}
 
 crm_lead2partner()
