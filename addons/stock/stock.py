@@ -492,7 +492,7 @@ class stock_tracking(osv.osv):
     _defaults = {
         'active': 1,
         'name': make_sscc,
-        'date': time.strftime('%Y-%m-%d %H:%M:%S'),
+        'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
     }
 
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
@@ -655,7 +655,7 @@ class stock_picking(osv.osv):
         'move_type': 'direct',
         'type': 'in',
         'invoice_state': 'none',
-        'date': time.strftime('%Y-%m-%d %H:%M:%S'),
+        'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.picking', context=c)
     }
     def action_process(self, cr, uid, ids, context=None):
@@ -1404,7 +1404,7 @@ class stock_production_lot(osv.osv):
         'move_ids': fields.one2many('stock.move', 'prodlot_id', 'Moves for this production lot', readonly=True),
     }
     _defaults = {
-        'date':  time.strftime('%Y-%m-%d %H:%M:%S'),
+        'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'name': lambda x, y, z, c: x.pool.get('ir.sequence').get(y, z, 'stock.lot.serial'),
         'product_id': lambda x, y, z, c: c.get('product_id', False),
     }
@@ -1605,9 +1605,9 @@ class stock_move(osv.osv):
         'priority': '1',
         'product_qty': 1.0,
         'scrapped' :  False,
-        'date': time.strftime('%Y-%m-%d %H:%M:%S'),
+        'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.move', context=c),
-        'date_expected': time.strftime('%Y-%m-%d %H:%M:%S'),
+        'date_expected': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
     }
 
     def write(self, cr, uid, ids, vals, context=None):
