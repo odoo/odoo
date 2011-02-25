@@ -1372,7 +1372,7 @@ class hr_salary_rule(osv.osv):
         'max_range': fields.float('Maximum Range', required=False),
         'contribute_ids':fields.one2many('company.contribution', 'category_id', 'Contributions', required=False),
         'sal_rule_id':fields.many2one('hr.salary.rule', 'Parent Salary Structure', select=True),
-        'child_depend':fields.boolean('Tax on Children'),
+        'child_depend':fields.boolean('Children Rule'),
         'child_ids':fields.one2many('hr.salary.rule', 'sal_rule_id', 'Child Salary Sructure'),
      }
     _defaults = {
