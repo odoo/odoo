@@ -940,6 +940,11 @@
                     <field name="company_contrib"/>
                 </group>
                 <notebook colspan="4">
+                    <page string="Child Rules" groups="base.group_extended">
+                       <separator colspan="4" string="Children definition"/>
+                       <field name="child_depend"/>
+                       <field colspan="4" name="child_ids" nolabel="1"/>
+                    </page>
                     <page string="Function">
                         <field name="line_ids" colspan="4" nolabel="1" attrs="{'readonly':[('amount_type','!=','func')]}">
                             <tree string="Function Arguments" editable="bottom">
