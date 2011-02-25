@@ -97,8 +97,7 @@ class hr_payroll_structure(osv.osv):
         'line_ids':fields.one2many('hr.payslip.line', 'function_id', 'Salary Structure', required=False),
         'company_id':fields.many2one('res.company', 'Company', required=False),
         'note': fields.text('Description'),
-        'struct_id':fields.many2one('hr.payroll.structure', 'Parent Salary Structure', select=True),
-        'child_ids':fields.one2many('hr.payroll.structure', 'struct_id', 'Child Salary Sructure'),
+        'struct_id':fields.many2one('hr.payroll.structure', 'Parent Structure'),
     }
     _defaults = {
         'company_id': lambda self, cr, uid, context: \
@@ -160,10 +159,6 @@ class hr_contract(osv.osv):
             sal_type = contract.wage_type_id.type
 #            function = contract.struct_id.id
             lines = contract.struct_id.rule_ids
-            if contract.struct_id.child_ids:
-                for child in contract.struct_id.child_ids:
-                    for rule in self.pool.get('hr.payroll.structure').browse(cr, uid, [child.id]):
-                        lines = rule.rule_ids
             if not contract.struct_id:
                 res[contract.id] = obj['basic']
                 continue
@@ -220,10 +215,10 @@ class hr_contract(osv.osv):
                     elif line.amount_type == 'func':
                         value = slip_line_pool.execute_function(cr, uid, line.id, amt, context)
                         line.amount = value
-                if line.type == 'allowance':
+                if line.type.name == 'allowance':
                     all_per += percent
                     all_fix += value
-                elif line.type == 'deduction':
+                elif line.type.name == 'deduction':
                     ded_per += percent
                     ded_fix += value
             if sal_type in ('gross', 'net'):
@@ -282,10 +277,6 @@ class hr_contract(osv.osv):
                 vals[rs.id] = record
                 continue
             lines = rs.struct_id.rule_ids
-            if rs.struct_id.child_ids:
-                for child in rs.struct_id.child_ids:
-                    for rule in self.pool.get('hr.payroll.structure').browse(cr, uid, [child.id]):
-                        lines = rule.rule_ids
             for line in lines:
                 amount = 0.0
                 if line.amount_type == 'per':
@@ -298,16 +289,10 @@ class hr_contract(osv.osv):
                 cd = line.category_id.code.lower()
                 obj[cd] = amount
 
-                if line.type == 'allowance':
+                if line.type.name == 'allowance':
                     allow += amount
-                elif line.type == 'deduction':
+                elif line.type.name == 'deduction':
                     deduct += amount
-                elif line.type == 'advance':
-                    others += amount
-                elif line.type == 'loan':
-                    others += amount
-                elif line.type == 'otherpay':
-                    others += amount
             record = {
                 'advantages_gross':round(allow),
                 'advantages_net':round(deduct),
@@ -481,7 +466,7 @@ class payroll_register(osv.osv):
                     'advice_id':pid,
                     'name':slip.employee_id.bank_account_id.acc_number,
                     'employee_id':slip.employee_id.id,
-                    'amount':slip.other_pay + slip.net,
+                    'amount':slip.net,
                     'bysal':slip.net
                 }
                 id = advice_line_pool.create(cr, uid, pline, context=context)
@@ -585,7 +570,7 @@ class payroll_advice_line(osv.osv):
             if sids:
                 slip = slip_pool.browse(cr, uid, sids[0], context=context)
                 vals['name'] = slip.employee_id.identification_id
-                vals['amount'] = slip.net + slip.other_pay
+                vals['amount'] = slip.net 
                 vals['bysal'] = slip.net
         return {
             'value':vals
@@ -661,6 +646,19 @@ class contrib_register_line(osv.osv):
     }
 contrib_register_line()
 
+class salary_head_type(osv.osv):
+    """
+    Salary Head Type
+    """
+
+    _name = 'salary.head.type'
+    _description = 'Salary Head Type'
+    _columns = {
+        'name':fields.char('Type Name', size=64, required=True, readonly=False),
+    }
+    
+salary_head_type()
+
 class payment_category(osv.osv):
     """
     Allowance, Deduction Heads
@@ -673,16 +671,7 @@ class payment_category(osv.osv):
     _columns = {
         'name':fields.char('Category Name', size=64, required=True, readonly=False),
         'code':fields.char('Category Code', size=64, required=True, readonly=False),
-        'type':fields.selection([
-            ('allowance','Allowance'),
-            ('deduction','Deduction'),
-            ('leaves','Leaves'),
-            ('advance','Advance'),
-            ('loan','Loan'),
-            ('installment','Loan Installment'),
-            ('otherpay','Other Payment'),
-            ('otherdeduct','Other Deduction'),
-        ],'Type', select=True, required=True),
+        'type':fields.many2one('salary.head.type', 'Type', required=True),
         'base':fields.text('Based on', required=True, readonly=False, help='This will use to computer the % fields values, in general its on basic, but You can use all heads code field in small letter as a variable name i.e. hra, ma, lta, etc...., also you can use, static varible basic'),
         'condition':fields.char('Condition', size=1024, required=True, readonly=False, help='Applied this head for calculation if condition is true'),
         'sequence': fields.integer('Sequence', required=True, help='Use to arrange calculation sequence'),
@@ -690,7 +679,11 @@ class payment_category(osv.osv):
         'user_id':fields.char('User', size=64, required=False, readonly=False),
         'state':fields.char('Label', size=64, required=False, readonly=False),
         'company_id':fields.many2one('res.company', 'Company', required=False),
-#        'contribute_ids':fields.one2many('company.contribution', 'category_id', 'Contributions', required=False),
+        'active': fields.boolean('Active'),
+        'computation_based':fields.selection([
+            ('rules','List of Rules'),
+            ('exp','Expression'),
+        ],'Computation Based On', select=True, required=True),
     }
     _defaults = {
         'condition': lambda *a: 'True',
@@ -699,6 +692,8 @@ class payment_category(osv.osv):
         'company_id': lambda self, cr, uid, context: \
                 self.pool.get('res.users').browse(cr, uid, uid,
                     context=context).company_id.id,
+        'active': 1,
+        'computation_based':'rules',
     }
 payment_category()
 
@@ -848,20 +843,14 @@ class hr_payslip(osv.osv):
                 cd = line.category_id.code.lower()
                 obj[cd] = amount
                 contrib = 0.0
-                if line.type == 'allowance':
+                if line.type.name == 'allowance':
                     allow += amount
                     others += contrib
                     amount -= contrib
-                elif line.type == 'deduction':
+                elif line.type.name == 'deduction':
                     deduct += amount
                     others -= contrib
                     amount += contrib
-                elif line.type == 'advance':
-                    others += amount
-                elif line.type == 'loan':
-                    others += amount
-                elif line.type == 'otherpay':
-                    others += amount
                 slip_line_obj.write(cr, uid, [line.id], {'total':amount}, context=context)
 
             record = {
@@ -976,10 +965,6 @@ class hr_payslip(osv.osv):
                 'gross':slip.grows,
             }
             rules = slip.contract_id.struct_id.rule_ids
-            if slip.contract_id.struct_id.child_ids:
-                for child in slip.contract_id.struct_id.child_ids:
-                    for rule in self.pool.get('hr.payroll.structure').browse(cr, uid, [child.id]):
-                        rules = rule.rule_ids
             if rules:
                 for rl in rules:
                     if rl.contribute_ids:
@@ -1087,9 +1072,6 @@ class hr_payslip(osv.osv):
             contract = slip.employee_id.contract_id
             sal_type = contract.wage_type_id.type
             function = contract.struct_id.id
-            if contract.struct_id.child_ids:
-                for child in contract.struct_id.child_ids:
-                        function = child.id
             lines = []
             if function:
                 func = func_pool.read(cr, uid, function, ['rule_ids'], context=context)
@@ -1165,10 +1147,10 @@ class hr_payslip(osv.osv):
                     elif line.amount_type == 'func':
                         value = self.pool.get('hr.salary.rule').execute_function(cr, uid, line.id, amt, context)
                         line.amount = value
-                if line.type == 'allowance':
+                if line.type.name == 'allowance':
                     all_per += percent
                     all_fix += value
-                elif line.type == 'deduction':
+                elif line.type.name == 'deduction':
                     ded_per += percent
                     ded_fix += value
 #                vals = {
@@ -1182,7 +1164,7 @@ class hr_payslip(osv.osv):
                 res = {
                     'name':line.name,
                     'code':line.code,
-                    'type':line.type,
+                    'type':line.type.id,
                     'amount_type':line.amount_type,
                     'category_id':line.category_id.id,
                     'sequence':line.sequence,
@@ -1192,8 +1174,11 @@ class hr_payslip(osv.osv):
                     'function_id':False,
                     'base':base
                 }
-                if not((line.amount < line.min_range) or (line.amount > line.max_range)):
-                    slip_line_pool.create(cr, uid, res, context=context)
+                if line.min_range or line.max_range:
+                    if not((line.amount < line.min_range) or (line.amount > line.max_range)):
+                        slip_line_pool.create(cr, uid, res, context=context)
+                else:
+                     slip_line_pool.create(cr, uid, res, context=context)   
             if sal_type in ('gross', 'net'):
                 sal = contract.wage
                 if sal_type == 'net':
@@ -1326,7 +1311,7 @@ class hr_payslip_line(osv.osv):
                 'sequence':category.sequence,
                 'name':category.name,
                 'code':category.code,
-                'type':category.type
+                'type':category.type.id
             })
         return {'value':res}
 
@@ -1345,18 +1330,7 @@ class hr_payslip_line(osv.osv):
         'base':fields.char('Formula', size=1024, required=False, readonly=False),
         'code':fields.char('Code', size=64, required=False, readonly=False),
         'category_id':fields.many2one('hr.allounce.deduction.categoty', 'Category', required=True),
-        'type':fields.selection([
-            ('allowance','Allowance'),
-            ('deduction','Deduction'),
-            ('leaves','Leaves'),
-            ('advance','Advance'),
-            ('loan','Loan'),
-            ('installment','Loan Installment'),
-            ('otherpay','Other Payment'),
-            ('otherdeduct','Other Deduction'),
-        ],'Type', select=True, required=True),
-        #TODO: link type to the category_id instead of define again
-        #'type': fields.related('category_id','type', type='selection', size=64, relation='hr.allounce.deduction.categoty', string='Type', store=True),
+        'type':fields.many2one('salary.head.type', 'Type', required=True),
         'amount_type':fields.selection([
             ('per','Percentage (%)'),
             ('fix','Fixed Amount'),
@@ -1429,7 +1403,7 @@ class hr_payroll_structure(osv.osv):
 
     _inherit = 'hr.payroll.structure'
     _columns = {
-        'rule_ids':fields.many2many('hr.salary.rule', 'structure_salary_rule_rel', 'struct_id', 'rule_id', 'Salary Rules', readonly=False),  
+        'rule_ids':fields.many2many('hr.salary.rule', 'hr_structure_salary_rule_rel', 'struct_id', 'rule_id', 'Salary Rules', readonly=False),  
     }
 
 hr_payroll_structure()
@@ -1485,9 +1459,9 @@ class hr_employee(osv.osv):
                 elif line.amount_type == 'fix':
                     amount = line.amount
 
-                if line.type == 'allowance':
+                if line.type.name == 'allowance':
                     allowance += amount
-                elif line.type == 'deduction':
+                elif line.type.name == 'deduction':
                     deduction += amount
 
             vals[employee.id] = {
@@ -1510,6 +1484,7 @@ class hr_employee(osv.osv):
         'net': fields.function(_calculate_salary, method=True, multi='dc', type='float', string='Net Salary', digits=(14,2)),
         'advantages_net': fields.function(_calculate_salary, method=True, multi='dc', type='float', string='Deductions', digits=(14,2)),
         'advantages_gross': fields.function(_calculate_salary, method=True, multi='dc', type='float', string='Allowances', digits=(14,2)),
+        'emp_sal_rule_ids':fields.many2many('hr.salary.rule', 'hr_emp_salary_rule_rel', 'employee_id', 'rule_id', 'Salary Rules', readonly=False),
     }
 hr_employee()
 
