@@ -2609,6 +2609,8 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                                           , "=", chart_template_id), ('type_tax_use', 'in', ('sale','all'))], order="sequence")
             purchase_tax_ids = self.pool.get('account.tax.template').search(cr, uid, [("chart_template_id"
                                           , "=", chart_template_id), ('type_tax_use', 'in', ('purchase','all'))], order="sequence")
+
+            #  To be fix: If generic chart of account is selected and sale/purchase tax given so here it take [0] first tax of tax templates
             res['value']["sale_tax"] = sale_tax_ids and sale_tax_ids[0] or False
             res['value']["purchase_tax"] = purchase_tax_ids and purchase_tax_ids[0] or False
         return res
@@ -2686,6 +2688,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         obj_tax_code_template = self.pool.get('account.tax.code.template')
         obj_acc_journal_view = self.pool.get('account.journal.view')
         ir_values = self.pool.get('ir.values')
+        obj_product = self.pool.get('product.product')
         # Creating Account
         obj_acc_root = obj_multi.chart_template_id.account_root_id
         tax_code_root_id = obj_multi.chart_template_id.tax_code_root_id.id
@@ -2701,7 +2704,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         children_tax_code_template = obj_tax_code_template.search(cr, uid, [('parent_id','child_of',[tax_code_root_id])], order='id')
         children_tax_code_template.sort()
         for tax_code_template in obj_tax_code_template.browse(cr, uid, children_tax_code_template, context=context):
-            vals={
+            vals = {
                 'name': (tax_code_root_id == tax_code_template.id) and obj_multi.company_id.name or tax_code_template.name,
                 'code': tax_code_template.code,
                 'info': tax_code_template.info,
@@ -2751,7 +2754,6 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 'account_paid_id': tax.account_paid_id and tax.account_paid_id.id or False,
             }
             tax_template_ref[tax.id] = new_tax
-
         #deactivate the parent_store functionnality on account_account for rapidity purpose
         ctx = context and context.copy() or {}
         ctx['defer_parent_store_computation'] = True
@@ -2858,7 +2860,6 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                     else:
                         type = check_type_id
                         seq_padding = None
-
                     vals_bnk = {
                         'name': val.acc_name or '',
                         'currency_id': val.currency_id.id or False,
@@ -3179,6 +3180,14 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                         'position_id': new_fp,
                     }
                     obj_ac_fp.create(cr, uid, vals_acc)
+        if obj_multi.chart_template_id.name == 'Configurable Account Chart Template':
+            tax_val = {}
+            if obj_multi.sale_tax:
+                tax_val.update({'taxes_id': [(6, 0, [tax_template_to_tax[obj_multi.sale_tax.id]])]})
+            if obj_multi.purchase_tax:
+                tax_val.update({'supplier_taxes_id': [(6 ,0, [tax_template_to_tax[obj_multi.purchase_tax.id]])]})
+            product_ids = obj_product.search(cr, uid, [], context=context)
+            obj_product.write(cr, uid, product_ids, tax_val, context=context)
 
         if obj_multi.sale_tax:
             ir_values.set(cr, uid, key='default', key2=False, name="taxes_id", company=obj_multi.company_id.id,

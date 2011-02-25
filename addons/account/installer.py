@@ -123,12 +123,12 @@ class account_installer(osv.osv_memory):
         super(account_installer, self).execute(cr, uid, ids, context=context)
         fy_obj = self.pool.get('account.fiscalyear')
         mod_obj = self.pool.get('ir.model.data')
-        obj_acc = self.pool.get('account.account')
-        obj_tax_code = self.pool.get('account.tax.code')
-        obj_temp_tax_code = self.pool.get('account.tax.code.template')
-        obj_tax = self.pool.get('account.tax')
+        obj_acc_temp = self.pool.get('account.account.template')
+        obj_tax_code_temp = self.pool.get('account.tax.code.template')
+        obj_tax_temp = self.pool.get('account.tax.template')
         obj_product = self.pool.get('product.product')
         ir_values = self.pool.get('ir.values')
+        obj_acc_chart_temp = self.pool.get('account.chart.template')
         record = self.browse(cr, uid, ids, context=context)[0]
         company_id = record.company_id
         for res in self.read(cr, uid, ids, context=context):
@@ -138,126 +138,85 @@ class account_installer(osv.osv_memory):
                 fp.close()
                 s_tax = (res.get('sale_tax', 0.0))/100
                 p_tax = (res.get('purchase_tax', 0.0))/100
-                tax_val = {}
-                default_tax = []
-
                 pur_temp_tax = mod_obj.get_object_reference(cr, uid, 'account', 'tax_code_base_purchases')
                 pur_temp_tax_id = pur_temp_tax and pur_temp_tax[1] or False
 
-                pur_temp_tax_names = obj_temp_tax_code.read(cr, uid, [pur_temp_tax_id], ['name'], context=context)
-                pur_tax_parent_name = pur_temp_tax_names and pur_temp_tax_names[0]['name'] or False
-                pur_taxcode_parent_id = obj_tax_code.search(cr, uid, [('name', 'ilike', pur_tax_parent_name)], context=context)
-                if pur_taxcode_parent_id:
-                    pur_taxcode_parent_id = pur_taxcode_parent_id[0]
-                else:
-                    pur_taxcode_parent_id = False
                 pur_temp_tax_paid = mod_obj.get_object_reference(cr, uid, 'account', 'tax_code_input')
                 pur_temp_tax_paid_id = pur_temp_tax_paid and pur_temp_tax_paid[1] or False
-                pur_temp_tax_paid_names = obj_temp_tax_code.read(cr, uid, [pur_temp_tax_paid_id], ['name'], context=context)
-                pur_tax_paid_parent_name = pur_temp_tax_names and pur_temp_tax_paid_names[0]['name'] or False
-                pur_taxcode_paid_parent_id = obj_tax_code.search(cr, uid, [('name', 'ilike', pur_tax_paid_parent_name)], context=context)
-                if pur_taxcode_paid_parent_id:
-                    pur_taxcode_paid_parent_id = pur_taxcode_paid_parent_id[0]
-                else:
-                    pur_taxcode_paid_parent_id = False
 
                 sale_temp_tax = mod_obj.get_object_reference(cr, uid, 'account', 'tax_code_base_sales')
                 sale_temp_tax_id = sale_temp_tax and sale_temp_tax[1] or False
-                sale_temp_tax_names = obj_temp_tax_code.read(cr, uid, [sale_temp_tax_id], ['name'], context=context)
-                sale_tax_parent_name = sale_temp_tax_names and sale_temp_tax_names[0]['name'] or False
-                sale_taxcode_parent_id = obj_tax_code.search(cr, uid, [('name', 'ilike', sale_tax_parent_name)], context=context)
-                if sale_taxcode_parent_id:
-                    sale_taxcode_parent_id = sale_taxcode_parent_id[0]
-                else:
-                    sale_taxcode_parent_id = False
 
                 sale_temp_tax_paid = mod_obj.get_object_reference(cr, uid, 'account', 'tax_code_output')
                 sale_temp_tax_paid_id = sale_temp_tax_paid and sale_temp_tax_paid[1] or False
-                sale_temp_tax_paid_names = obj_temp_tax_code.read(cr, uid, [sale_temp_tax_paid_id], ['name'], context=context)
-                sale_tax_paid_parent_name = sale_temp_tax_paid_names and sale_temp_tax_paid_names[0]['name'] or False
-                sale_taxcode_paid_parent_id = obj_tax_code.search(cr, uid, [('name', 'ilike', sale_tax_paid_parent_name)], context=context)
-                if sale_taxcode_paid_parent_id:
-                    sale_taxcode_paid_parent_id = sale_taxcode_paid_parent_id[0]
-                else:
-                    sale_taxcode_paid_parent_id = False
 
+                chart_temp_ids = obj_acc_chart_temp.search(cr, uid, [('name','=','Configurable Account Chart Template')], context=context)
+                chart_temp_id = chart_temp_ids and chart_temp_ids[0] or False
                 if s_tax*100 > 0.0:
-                    tax_account_ids = obj_acc.search(cr, uid, [('name', '=', 'Tax Received')], context=context)
+                    tax_account_ids = obj_acc_temp.search(cr, uid, [('name', '=', 'Tax Received')], context=context)
                     sales_tax_account_id = tax_account_ids and tax_account_ids[0] or False
-                    vals_tax_code = {
+                    vals_tax_code_temp = {
                         'name': 'TAX%s%%'%(s_tax*100),
                         'code': 'TAX%s%%'%(s_tax*100),
-                        'company_id': company_id.id,
-                        'sign': 1,
-                        'parent_id': sale_taxcode_parent_id
+                        'parent_id': sale_temp_tax_id
                     }
-                    new_tax_code = obj_tax_code.create(cr, uid, vals_tax_code, context=context)
-
-
-                    vals_paid_tax_code = {
+                    new_tax_code_temp = obj_tax_code_temp.create(cr, uid, vals_tax_code_temp, context=context)
+                    vals_paid_tax_code_temp = {
                         'name': 'TAX Received %s%%'%(s_tax*100),
                         'code': 'TAX Received %s%%'%(s_tax*100),
-                        'company_id': company_id.id,
-                        'sign': 1,
-                        'parent_id': sale_taxcode_paid_parent_id
-                        }
-                    new_paid_tax_code = obj_tax_code.create(cr, uid, vals_paid_tax_code, context=context)
-
-                    sales_tax = obj_tax.create(cr, uid,
-                                           {'name': 'TAX %s%%'%(s_tax*100),
+                        'parent_id': sale_temp_tax_paid_id
+                    }
+                    new_paid_tax_code_temp = obj_tax_code_temp.create(cr, uid, vals_paid_tax_code_temp, context=context)
+                    sales_tax_temp = obj_tax_temp.create(cr, uid, {
+                                            'name': 'TAX %s%%'%(s_tax*100),
                                             'amount': s_tax,
-                                            'base_code_id': new_tax_code,
-                                            'tax_code_id': new_paid_tax_code,
+                                            'base_code_id': new_tax_code_temp,
+                                            'tax_code_id': new_paid_tax_code_temp,
+                                            'ref_base_code_id': new_tax_code_temp,
+                                            'ref_tax_code_id': new_paid_tax_code_temp,
                                             'type_tax_use': 'sale',
+                                            'type': 'percent',
+                                            'sequence': 1,
                                             'account_collected_id': sales_tax_account_id,
-                                            'account_paid_id': sales_tax_account_id
-                                            }, context=context)
-                    default_account_ids = obj_acc.search(cr, uid, [('name', '=', 'Product Sales')], context=context)
+                                            'account_paid_id': sales_tax_account_id,
+                                            'chart_template_id': chart_temp_id,
+                                }, context=context)
+                    default_account_ids = obj_acc_temp.search(cr, uid, [('name', '=', 'Product Sales')], context=context)
                     if default_account_ids:
-                        obj_acc.write(cr, uid, default_account_ids, {'tax_ids': [(6, 0, [sales_tax])]}, context=context)
-                    tax_val.update({'taxes_id': [(6, 0, [sales_tax])]})
-                    default_tax.append(('taxes_id', sales_tax))
+                        obj_acc_temp.write(cr, uid, default_account_ids, {'tax_ids': [(6, 0, [sales_tax_temp])]}, context=context)
                 if p_tax*100 > 0.0:
-                    tax_account_ids = obj_acc.search(cr, uid, [('name', '=', 'Tax Paid')], context=context)
+                    tax_account_ids = obj_acc_temp.search(cr, uid, [('name', '=', 'Tax Paid')], context=context)
                     purchase_tax_account_id = tax_account_ids and tax_account_ids[0] or False
-                    vals_tax_code = {
+                    vals_tax_code_temp = {
                         'name': 'TAX%s%%'%(p_tax*100),
                         'code': 'TAX%s%%'%(p_tax*100),
-                        'company_id': company_id.id,
-                        'sign': 1,
-                        'parent_id': pur_taxcode_parent_id
+                        'parent_id': pur_temp_tax_id
                     }
-                    new_tax_code = obj_tax_code.create(cr, uid, vals_tax_code, context=context)
-                    vals_paid_tax_code = {
+                    new_tax_code_temp = obj_tax_code_temp.create(cr, uid, vals_tax_code_temp, context=context)
+                    vals_paid_tax_code_temp = {
                         'name': 'TAX Paid %s%%'%(p_tax*100),
                         'code': 'TAX Paid %s%%'%(p_tax*100),
-                        'company_id': company_id.id,
-                        'sign': 1,
-                        'parent_id': pur_taxcode_paid_parent_id
+                        'parent_id': pur_temp_tax_paid_id
                     }
-                    new_paid_tax_code = obj_tax_code.create(cr, uid, vals_paid_tax_code, context=context)
-
-                    purchase_tax = obj_tax.create(cr, uid,
-                                            {'name': 'TAX%s%%'%(p_tax*100),
+                    new_paid_tax_code_temp = obj_tax_code_temp.create(cr, uid, vals_paid_tax_code_temp, context=context)
+                    purchase_tax_temp = obj_tax_temp.create(cr, uid, {
+                                             'name': 'TAX%s%%'%(p_tax*100),
                                              'description': 'TAX%s%%'%(p_tax*100),
                                              'amount': p_tax,
-                                             'base_code_id': new_tax_code,
-                                            'tax_code_id': new_paid_tax_code,
-                                            'type_tax_use': 'purchase',
-                                            'account_collected_id': purchase_tax_account_id,
-                                            'account_paid_id': purchase_tax_account_id
-                                             }, context=context)
-                    default_account_ids = obj_acc.search(cr, uid, [('name', '=', 'Expenses')], context=context)
+                                             'base_code_id': new_tax_code_temp,
+                                             'tax_code_id': new_paid_tax_code_temp,
+                                             'ref_base_code_id': new_tax_code_temp,
+                                             'ref_tax_code_id': new_paid_tax_code_temp,
+                                             'type_tax_use': 'purchase',
+                                             'type': 'percent',
+                                             'sequence': 1,
+                                             'account_collected_id': purchase_tax_account_id,
+                                             'account_paid_id': purchase_tax_account_id,
+                                             'chart_template_id': chart_temp_id,
+                                    }, context=context)
+                    default_account_ids = obj_acc_temp.search(cr, uid, [('name', '=', 'Expenses')], context=context)
                     if default_account_ids:
-                        obj_acc.write(cr, uid, default_account_ids, {'tax_ids': [(6, 0, [purchase_tax])]}, context=context)
-                    tax_val.update({'supplier_taxes_id': [(6 ,0, [purchase_tax])]})
-                    default_tax.append(('supplier_taxes_id', purchase_tax))
-                if tax_val:
-                    product_ids = obj_product.search(cr, uid, [], context=context)
-                    for product in obj_product.browse(cr, uid, product_ids, context=context):
-                        obj_product.write(cr, uid, product.id, tax_val, context=context)
-                    for name, value in default_tax:
-                        ir_values.set(cr, uid, key='default', key2=False, name=name, models =[('product.product', False)], value=[value])
+                        obj_acc_temp.write(cr, uid, default_account_ids, {'tax_ids': [(6, 0, [purchase_tax_temp])]}, context=context)
 
             if 'date_start' in res and 'date_stop' in res:
                 f_ids = fy_obj.search(cr, uid, [('date_start', '<=', res['date_start']), ('date_stop', '>=', res['date_stop']), ('company_id', '=', res['company_id'])], context=context)
