@@ -157,7 +157,7 @@ class mailgate_thread(osv.osv):
                     'model' : case._name,
                     'res_id': case.id,
                     'date': email_date or time.strftime('%Y-%m-%d %H:%M:%S'),
-                    'description': details or (hasattr(case, 'description') and case.description or False),
+                    'description': details,
                     'email_to': email,
                     'email_from': email_from or \
                         (hasattr(case, 'user_id') and case.user_id and case.user_id.address_id and \

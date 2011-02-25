@@ -142,16 +142,16 @@
     <para style="terp_default_8">[[ repeatIn(objects,'o') ]]</para>
     <para style="terp_default_8">[[ setLang(o.partner_id.lang) ]]</para>
     <pto_header><!-- Must be after setLang() -->
-	<blockTable colWidths="202.0,87.0,71.0,57.0,42.0,71.0" style="Table7">
-	<tr>
-	    <td> <para style="terp_tblheader_Details">Description</para> </td>
-	    <td> <para style="terp_tblheader_Details_Centre">Taxes</para> </td>
-	    <td> <para style="terp_tblheader_Details_Centre">Quantity</para> </td>
-	    <td> <para style="terp_tblheader_Details_Right">Unit Price </para> </td>
-	    <td> <para style="terp_tblheader_Details_Right">Disc.(%)</para> </td>
-	    <td> <para style="terp_tblheader_Details_Right">Price</para> </td>
-	</tr>
-	</blockTable>
+    <blockTable colWidths="202.0,87.0,71.0,57.0,42.0,71.0" style="Table7">
+    <tr>
+        <td> <para style="terp_tblheader_Details">Description</para> </td>
+        <td> <para style="terp_tblheader_Details_Centre">Taxes</para> </td>
+        <td> <para style="terp_tblheader_Details_Centre">Quantity</para> </td>
+        <td> <para style="terp_tblheader_Details_Right">Unit Price </para> </td>
+        <td> <para style="terp_tblheader_Details_Right">Disc.(%)</para> </td>
+        <td> <para style="terp_tblheader_Details_Right">Price</para> </td>
+    </tr>
+    </blockTable>
     </pto_header>
     <blockTable colWidths="297.0,233.0" style="Table_Partner_Address">
       <tr>
@@ -194,7 +194,7 @@
         <td>
           <para style="terp_tblheader_General_Centre">Invoice Date</para>
         </td>
-	<td>
+    <td>
           <para style="terp_tblheader_General_Centre">Origin</para>
         </td>
         <td>
@@ -210,7 +210,7 @@
         <td>
           <para style="terp_default_Centre_9">[[ formatLang(o.date_invoice,date=True) ]]</para>
         </td>
-	<td>
+    <td>
           <para style="terp_default_Centre_9">[[ o.origin or '' ]]</para>
         </td>
         <td>
