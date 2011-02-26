@@ -64,7 +64,7 @@ class hr_employee(osv.osv):
             method=True,
             domain="[('type', '=', 'liquidity')]",
             view_load=True,
-            help="Select Bank Account from where Salary Expense will be Paid"),
+            help="Select Bank Account from where Salary Expense will be Paid,to be used for payslip verification."),
         'salary_account':fields.property(
             'account.account',
             type='many2one',
@@ -295,6 +295,10 @@ class hr_payslip(osv.osv):
             self.create_voucher(cr, uid, [slip.id], name, move_id)
 
             name = "To %s account" % (slip.employee_id.name)
+            
+            if not slip.employee_id.property_bank_account.id:
+                raise osv.except_osv(_('Warning !'), _('Employee Bank Account is not defined for %s') % slip.employee_id.name)
+            
             ded_rec = {
                 'move_id': move_id,
                 'name': name,
@@ -426,10 +430,10 @@ class hr_payslip(osv.osv):
             partner_id = False
 
             if not slip.employee_id.bank_account_id:
-                raise osv.except_osv(_('Integrity Error !'), _('Please defined bank account for %s !') % (slip.employee_id.name))
+                raise osv.except_osv(_('Integrity Error !'), _('Please define bank account for %s !') % (slip.employee_id.name))
 
             if not slip.employee_id.bank_account_id.partner_id:
-                raise osv.except_osv(_('Integrity Error !'), _('Please defined partner in bank account for %s !') % (slip.employee_id.name))
+                raise osv.except_osv(_('Integrity Error !'), _('Please define partner in bank account for %s !') % (slip.employee_id.name))
 
             partner = slip.employee_id.bank_account_id.partner_id
             partner_id = slip.employee_id.bank_account_id.partner_id.id
@@ -463,7 +467,10 @@ class hr_payslip(osv.osv):
             }
             move_id = move_pool.create(cr, uid, move, context=context)
             self.create_voucher(cr, uid, [slip.id], slip.name, move_id)
-
+            
+            if not slip.employee_id.salary_account.id:
+                raise osv.except_osv(_('Warning !'), _('Please define Salary Account for %s.') % slip.employee_id.name)
+            
             line = {
                 'move_id':move_id,
                 'name': "By Basic Salary / " + slip.employee_id.name,
@@ -477,7 +484,6 @@ class hr_payslip(osv.osv):
                 'analytic_account_id': False,
                 'ref':slip.number
             }
-
             #Setting Analysis Account for Basic Salary
             if slip.employee_id.analytic_account:
                 line['analytic_account_id'] = slip.employee_id.analytic_account.id
@@ -485,6 +491,9 @@ class hr_payslip(osv.osv):
             move_line_id = movel_pool.create(cr, uid, line, context=context)
             line_ids += [move_line_id]
 
+            if not slip.employee_id.employee_account.id:
+                raise osv.except_osv(_('Warning !'), _('Please define Employee Payable Account for %s.') % slip.employee_id.name)
+            
             line = {
                 'move_id':move_id,
                 'name': "To Basic Paysble Salary / " + slip.employee_id.name,
@@ -498,6 +507,7 @@ class hr_payslip(osv.osv):
                 'period_id': period_id,
                 'ref':slip.number
             }
+            
             line_ids += [movel_pool.create(cr, uid, line, context=context)]
 
             for line in slip.line_ids:
