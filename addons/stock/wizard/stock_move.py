@@ -21,6 +21,35 @@
 
 from osv import fields, osv
 
+class stock_move_track(osv.osv_memory):
+    _name = "stock.move.track"
+    _description = "Track moves"
+
+    _columns = {
+        'tracking_prefix': fields.char('Tracking prefix', size=64),
+        'quantity': fields.float("Quantity per lot")
+    }
+
+    _defaults = {
+        'quantity': lambda *x: 1
+    }
+
+    def track_lines(self, cr, uid, ids, context=None):
+        """ To track stock moves lines
+        @param self: The object pointer.
+        @param cr: A database cursor
+        @param uid: ID of the user currently logged in
+        @param ids: An ID or list of IDs if we want more than one
+        @param context: A standard dictionary
+        @return:
+        """
+        datas = self.read(cr, uid, ids)[0]
+        move_obj = self.pool.get('stock.move')
+        move_obj._track_lines(cr, uid, context['active_id'], datas, context=context)
+        return {'type': 'ir.actions.act_window_close'}
+
+stock_move_track()
+
 class stock_move_consume(osv.osv_memory):
     _name = "stock.move.consume"
     _description = "Consume Products"
@@ -69,9 +98,9 @@ class stock_move_consume(osv.osv_memory):
             context = {}
         move_obj = self.pool.get('stock.move')
         move_ids = context['active_ids']
-        for data in self.browse(cr, uid, ids):
+        for data in self.read(cr, uid, ids):
             move_obj.action_consume(cr, uid, move_ids,
-                             data.product_qty, data.location_id.id,
+                             data['product_qty'], data['location_id'],
                              context=context)
         return {'type': 'ir.actions.act_window_close'}
 
@@ -130,9 +159,9 @@ class stock_move_scrap(osv.osv_memory):
             context = {}
         move_obj = self.pool.get('stock.move')
         move_ids = context['active_ids']
-        for data in self.browse(cr, uid, ids):
+        for data in self.read(cr, uid, ids):
             move_obj.action_scrap(cr, uid, move_ids,
-                             data.product_qty, data.location_id.id,
+                             data['product_qty'], data['location_id'],
                              context=context)
         return {'type': 'ir.actions.act_window_close'}
 

@@ -61,13 +61,14 @@ class survey_browse_answer(osv.osv_memory):
         @return : Dictionary value for Open the browse answer wizard.
         """
         if context is None: context = {}
-        sur_response_obj = self.pool.get('survey.response')
-        for record in self.browse(cr, uid, ids,context=context):
-            if record.response_id.id:
-                res_id = record.response_id.id
-            else:
-                res_id = sur_response_obj.search(cr, uid, [('survey_id', '=',record.survey_id)])[0]
-        context.update({'active' : True,'survey_id' : record.survey_id, 'response_id' : [res_id], 'response_no' : 0})
+        record = self.read(cr, uid, ids, [])
+        record = record and record[0] or {} 
+        if record['response_id']:
+            res_id = [(record['response_id'])]
+        else:
+            sur_response_obj = self.pool.get('survey.response')
+            res_id = sur_response_obj.search(cr, uid, [('survey_id', '=',int(record['survey_id']))])
+        context.update({'active' : True,'survey_id' : record['survey_id'], 'response_id' : res_id, 'response_no' : 0})
         search_obj = self.pool.get('ir.ui.view')
         search_id = search_obj.search(cr,uid,[('model','=','survey.question.wiz'),('name','=','Survey Search')])
         return {
