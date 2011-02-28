@@ -167,6 +167,8 @@ def mk_prop_response(self, uri, good_props, bad_props, doc):
     # write href information
     uparts=urlparse.urlparse(uri)
     fileloc=uparts[2]
+    if uparts[3]:
+        fileloc += ';' + uparts[3]
     if isinstance(fileloc, unicode):
         fileloc = fileloc.encode('utf-8')
     href=doc.createElement("D:href")
@@ -246,6 +248,8 @@ def mk_propname_response(self,uri,propnames,doc):
     # write href information
     uparts=urlparse.urlparse(uri)
     fileloc=uparts[2]
+    if uparts[3]:
+        fileloc += ';' + uparts[3]
     if isinstance(fileloc, unicode):
         fileloc = fileloc.encode('utf-8')
     href=doc.createElement("D:href")
@@ -303,6 +307,8 @@ def mk_lock_response(self, uri, props):
     # write href information
     uparts=urlparse.urlparse(uri)
     fileloc=uparts[2]
+    if uparts[3]:
+        fileloc += ';' + uparts[3]
     if isinstance(fileloc, unicode):
         fileloc = fileloc.encode('utf-8')
     davpath = self.parent.get_davpath()

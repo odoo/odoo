@@ -42,8 +42,12 @@ class ir_action_report_xml(osv.osv):
     def _model_search(self, cr, uid, obj, name, args, context=None):
         if not len(args):
             return []
+        assert len(args) == 1 and args[0][1] == '=', 'expression is not what we expect: %r' % args
         model_id= args[0][2]
         if not model_id:
+            # a deviation from standard behavior: when searching model_id = False
+            # we return *all* reports, not just ones with empty model.
+            # One reason is that 'model' is a required field so far
             return []
         model = self.pool.get('ir.model').read(cr, uid, [model_id])[0]['model']
         report_id = self.search(cr, uid, [('model','=',model)])

@@ -6,18 +6,24 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-10 14:48:44+0000\n"
-"PO-Revision-Date: 2010-12-10 15:49+0100\n"
+"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"PO-Revision-Date: 2011-02-15 15:37+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: \n"
+"X-Launchpad-Export-Date: 2011-02-16 05:03+0000\n"
+"X-Generator: Launchpad (build 12351)\n"
 
 #. module: anonymization
 #: model:ir.model,name:anonymization.model_ir_model_fields_anonymize_wizard
 msgid "ir.model.fields.anonymize.wizard"
+msgstr ""
+
+#. module: anonymization
+#: field:ir.model.fields.anonymization,field_name:0
+msgid "Field Name"
 msgstr ""
 
 #. module: anonymization
@@ -53,6 +59,7 @@ msgstr ""
 
 #. module: anonymization
 #: model:ir.actions.act_window,name:anonymization.action_ir_model_fields_anonymization_tree
+#: view:ir.model.fields.anonymization:0
 #: model:ir.ui.menu,name:anonymization.menu_administration_anonymization_fields
 msgid "Anonymized Fields"
 msgstr ""
@@ -63,8 +70,10 @@ msgid "Database anonymization"
 msgstr ""
 
 #. module: anonymization
-#: selection:ir.model.fields.anonymization.history,direction:0
-msgid "clear -> anonymized"
+#: code:addons/anonymization/anonymization.py:55
+#: sql_constraint:ir.model.fields.anonymization:0
+#, python-format
+msgid "You cannot have two records having the same model and the same field"
 msgstr ""
 
 #. module: anonymization
@@ -126,6 +135,11 @@ msgid "Clear"
 msgstr ""
 
 #. module: anonymization
+#: selection:ir.model.fields.anonymization.history,direction:0
+msgid "clear -> anonymized"
+msgstr ""
+
+#. module: anonymization
 #: view:ir.model.fields.anonymize.wizard:0
 #: field:ir.model.fields.anonymize.wizard,summary:0
 msgid "Summary"
@@ -152,6 +166,17 @@ msgstr ""
 #. module: anonymization
 #: selection:ir.model.fields.anonymization.history,state:0
 msgid "Exception occured"
+msgstr ""
+
+#. module: anonymization
+#: selection:ir.model.fields.anonymization,state:0
+#: selection:ir.model.fields.anonymize.wizard,state:0
+msgid "Not Existing"
+msgstr ""
+
+#. module: anonymization
+#: field:ir.model.fields.anonymization,model_name:0
+msgid "Object Name"
 msgstr ""
 
 #. module: anonymization
@@ -198,4 +223,3 @@ msgstr ""
 #: field:ir.model.fields.anonymize.wizard,msg:0
 msgid "Message"
 msgstr ""
-

@@ -286,6 +286,8 @@
                             <field name="attendee_ids" colspan="4"
                                 nolabel="1" widget="one2many" mode="tree,form">
                                 <tree string="Invitation details" editable="top">
+                                    <field name="sent_by_uid" string="From"/>
+                                    <field name="user_id" string="To"/>
                                     <field name="email" />
                                     <field name="role" width="200" select="1" />
                                     <field name="state" />
