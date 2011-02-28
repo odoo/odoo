@@ -26,54 +26,89 @@ from tools.translate import _
 class email_compose_message(osv.osv_memory):
     _inherit = 'email.compose.message'
 
+    def get_value(self, cr, uid, model, resource_id, context=None):
+        if context is None:
+            context = {}
+        result = super(email_compose_message, self).get_value(cr, uid,  model, resource_id, context=context)
+        if model != 'project.task':
+            return result
+        task_pool = self.pool.get('project.task')
+        task_data = task_pool.browse(cr, uid, resource_id, context=context)
+        partner = task_data.partner_id or task_data.project_id.partner_id
+
+        result.update({'email_from': task_data.user_id and task_data.user_id.user_email or False})
+        val = {
+                'name': task_data.name,
+                'user_id': task_data.user_id.name,
+                'task_id': "%d/%d" % (task_data.project_id.id, task_data.id),
+                'date_start': task_data.date_start,
+                'date': task_data.date_end,
+                'state': task_data.state
+        }
+        header = (task_data.project_id.warn_header or '') % val
+        footer = (task_data.project_id.warn_footer or '') % val
+        description = u'%s\n %s\n %s\n\n \n%s' % (header, task_data.description or '', footer, task_data.user_id and task_data.user_id.signature)
+        result.update({'description': description or False})
+        result.update({'email_to':   task_data.project_id.user_id and task_data.project_id.user_id.user_email or False})
+        if partner and len(partner.address) and 'email_to' in fields:
+            result.update({'email_to': result.get('email_to',False) and result.get('email_to') + ',' + partner.address[0].email})
+        result.update({'name':  _("Task '%s' Closed") % task_data.name})
+
+        return result
+
     def default_get(self, cr, uid, fields, context=None):
         if context is None:
             context = {}
         result = super(email_compose_message, self).default_get(cr, uid, fields, context=context)
-        if context.get('active_id',False) and context.get('active_model',False) and context.get('active_model') == 'project.task':
+        if context.get('active_id',False) and context.get('email_model',False) and context.get('email_model') == 'project.task':
             task_pool = self.pool.get('project.task')
             task_data = task_pool.browse(cr, uid, context.get('active_id'), context=context)
-            project = task_data.project_id
-            manager = project.user_id or False
             partner = task_data.partner_id or task_data.project_id.partner_id
 
-            if project.warn_manager and (not manager or manager and not manager.user_email) :
+            if task_data.project_id.warn_manager and (not task_data.project_id.user_id or task_data.project_id.user_id and not task_data.project_id.user_id.user_email) :
                 raise osv.except_osv(_('Error'), _("Please specify the Project Manager or email address of Project Manager."))
-            elif project.warn_customer and (not partner or not len(partner.address) or (partner and len(partner.address) and not partner.address[0].email)):
+            elif task_data.project_id.warn_customer and (not partner or not len(partner.address) or (partner and len(partner.address) and not partner.address[0].email)):
                 raise osv.except_osv(_('Error'), _("Please specify the Customer or email address of Customer."))
-
+            vals = self.get_value(cr, uid, context.get('email_model'), context.get('active_id'), context)
             if 'email_from' in fields:
-                result.update({'email_from': task_data.user_id and task_data.user_id.user_email or False})
+                result.update({'email_from': vals.get('email_from','')})
 
             if 'description' in fields:
-                val = {
-                        'name': task_data.name,
-                        'user_id': task_data.user_id.name,
-                        'task_id': "%d/%d" % (project.id, task_data.id),
-                        'date_start': task_data.date_start,
-                        'date': task_data.date_end,
-                        'state': task_data.state
-                }
-                header = (project.warn_header or '') % val
-                footer = (project.warn_footer or '') % val
-                description = u'%s\n %s\n %s\n\n \n%s' % (header, task_data.description or '', footer, task_data.user_id and task_data.user_id.signature)
-                result.update({'description': description or False})
+                result.update({'description': vals.get('description','')})
 
             if 'email_to' in fields:
-                result.update({'email_to':   manager and manager.user_email or False})
-
-            if partner and len(partner.address) and 'email_to' in fields:
-                result.update({'email_to': result.get('email_to',False) and result.get('email_to') + ',' + partner.address[0].email})
+                result.update({'description': vals.get('description','')})
 
             if 'name' in fields:
-                result.update({'name':  _("Task '%s' Closed") % task_data.name})
+                result.update({'description': vals.get('name','')})
 
             if 'model' in fields:
-                result.update({'model':context.get('active_model')})
+                result.update({'model':context.get('email_model')})
 
             if 'res_id' in fields:
                 result.update({'res_id':context.get('active_id')})
 
+        return result
+
+    def on_change_referred_doc(self, cr, uid, ids, model, resource_id, context=None):
+        if context is None:
+            context = {}
+        if context.get('mail') == 'reply':
+            return {'value':{}}
+        result = super(email_compose_message, self).on_change_referred_doc(cr, uid, ids, model, resource_id, context=context)
+        if not result.get('value'):
+            result.update({'value':{}})
+        if resource_id and model == 'project.task':
+            vals = self.get_value(cr, uid, model, resource_id, context)
+            result.get('value',{}).update({
+                       'email_from': vals.get('email_from',''),
+                       'email_to': vals.get('email_to',''),
+                       'description': vals.get('description',''),
+                       'name': vals.get('name',''),
+                       'email_cc': vals.get('email_cc',''),
+                       'email_bcc': vals.get('email_bcc',''),
+                       'reply_to': vals.get('reply_to',''),
+                    })
         return result
 
 email_compose_message()

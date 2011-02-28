@@ -132,6 +132,9 @@ class email_compose_message(osv.osv_memory):
         'res_id':fields.selection(_get_records, 'Referred Document'),
     }
 
+    def get_value(self, cr, uid, model, resource_id, context=None):
+        return {}
+
     def on_change_referred_doc(self, cr, uid, ids, model, resource_id, context=None):
         return {'value':{}}
 
