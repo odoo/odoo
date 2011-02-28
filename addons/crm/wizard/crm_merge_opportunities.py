@@ -108,6 +108,7 @@ class crm_merge_opportunity(osv.osv_memory):
                 'street' : self._get_first_not_null('street', op_ids),
                 'street2' : self._get_first_not_null('street2', op_ids),
                 'zip' : self._get_first_not_null('zip', op_ids),
+                'state' : 'open'
 
             }
 

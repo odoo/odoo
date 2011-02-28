@@ -60,6 +60,22 @@ class crm_send_new_email(osv.osv_memory):
         'html': fields.boolean('HTML formatting?', help="Select this if you want to send email with HTML formatting."),
     }
 
+    def action_mass_send(self, cr, uid, ids, context=None):
+
+        if not context:
+            context = {}
+
+        context.update({'mail' : 'new'})
+        actives_ids = context.get('active_ids')
+        print "mass_mail", context.get('mass_mail')
+        model = context.get('active_model')
+        case_pool = self.pool.get(model)
+        for id in actives_ids:
+            context.update({'active_id' : id})
+            self.action_send(cr, uid, ids, context=context)
+
+        return {'type': 'ir.actions.act_window_close'}
+
     def action_send(self, cr, uid, ids, context=None):
         """ This sends an email to ALL the addresses of the selected partners.
         """
@@ -74,6 +90,8 @@ class crm_send_new_email(osv.osv_memory):
         model = context.get('active_model')
         case_pool = self.pool.get(model)
         res_id = context and context.get('active_id', False) or False
+
+
 
         for obj in self.browse(cr, uid, ids, context=context):
             attach = [
@@ -110,8 +128,14 @@ class crm_send_new_email(osv.osv_memory):
                 res_id = hist.res_id
                 ref_id = hist.ref_id
                 case = case_pool.browse(cr, uid, res_id, context=context)
+
             emails = re.findall(r'([^ ,<@]+@[^> ,]+)', obj.email_to or '')
+            if context.get('mass_mail'):
+                email_temp = case.email_from and tools.ustr(case.email_from) or ''
+                emails = re.findall(r'([^ ,<@]+@[^> ,]+)', email_temp)
+
             email_cc = re.findall(r'([^ ,<@]+@[^> ,]+)', obj.email_cc or '')
+
             emails = filter(None, emails)
             body = obj.body
 
@@ -183,6 +207,8 @@ class crm_send_new_email(osv.osv_memory):
         for case in mod_obj.browse(cr, uid, res_id, context=context):
             if 'email_to' in fields:
                 res.update({'email_to': case.email_from and tools.ustr(case.email_from) or ''})
+                if context.get('mass_mail'):
+                    res.update({'email_to': ''})
             if 'email_from' in fields:
                 res.update({'email_from': user_mail_from and tools.ustr(user_mail_from) or ''})
             if 'reply_to' in fields:
@@ -190,8 +216,12 @@ class crm_send_new_email(osv.osv_memory):
                     res.update({'reply_to': case.section_id and case.section_id.reply_to or False})
             if 'subject' in fields:
                 res.update({'subject': tools.ustr(context.get('subject', case.name) or '')})
+                if context.get('mass_mail'):
+                    res.update({'subject': ''})
             if 'email_cc' in fields:
                 res.update({'email_cc': tools.ustr(case.email_cc or '')})
+                if context.get('mass_mail'):
+                    res.update({'email_cc': ''})
             if 'body' in fields:
                 res.update({'body': u'\n'+(tools.ustr(case.user_id.signature or ''))})
             if 'state' in fields:

@@ -208,7 +208,7 @@ class crm_lead_forward_to_partner(osv.osv_memory):
         return {'type': 'ir.actions.act_window_close'}
 
     def get_lead_details(self, cr, uid, lead_id, context=None):
-        body = ["""Dear,
+        template = ["""Dear,
 
 Below is possibly an interesting lead for you.
 
@@ -268,12 +268,13 @@ Kind regards, OpenERP Team
                 "Lead Category: %s" % (lead.categ_id and lead.categ_id.name or ''),
                 "Details: %s" % (lead.description or ''),
             ]
-        return "\n".join(body + ['---'])
+        return "\n".join(template + body + ['---'])
 
     def default_get(self, cr, uid, fields, context=None):
         """
         This function gets default values
         """
+
         if context is None:
             context = {}
 
@@ -283,15 +284,61 @@ Kind regards, OpenERP Team
             return defaults
 
         lead_proxy = self.pool.get('crm.lead')
+        partner_obj = self.pool.get('res.partner')
         lead = lead_proxy.browse(cr, uid, active_id, context=context)
+
+        email_cc = ''
+        email = ''
+        if lead.partner_assigned_id:
+            partner = partner_obj.browse(cr, uid, [lead.partner_assigned_id.id])
+            user_id = partner and partner[0].user_id or False
+            email_cc = user_id and user_id.user_email or ''
+
+            addr = partner_obj.address_get(cr, uid, [partner[0].id], ['contact'])
+            email = self.pool.get('res.partner.address').browse(cr, uid, addr['contact']).email
+
+
 
         body = self._get_case_history(cr, uid, defaults.get('history', 'latest'), lead.id, context=context)
         defaults.update({
-            'subject' : '%s: %s' % (_('Fwd'), lead.name),
+            'subject' : '%s: %s - %s' % (_('Fwd'), 'Openerp lead forward', lead.name),
             'body' : body,
+            'email_cc' : email_cc,
+            'email_to' : email,
         })
         return defaults
 
 crm_lead_forward_to_partner()
+
+class crm_lead_mass_forward_to_partner(osv.osv_memory):
+    _name = 'crm.lead.mass.forward.to.partner'
+    _inherit = 'crm.lead.forward.to.partner'
+
+    def action_mass_forward(self, cr, uid, ids, context=None):
+        if not context:
+            context = {}
+
+        active_ids = context.get('active_ids')
+        case_obj = self.pool.get('crm.lead')
+        for case in case_obj.browse(cr, uid, active_ids, context=context):
+            if case.type != "opportunity":
+                continue
+
+            if not case.partner_assigned_id:
+                case_obj.assign_partner(cr,uid, [case.id], context=context)
+                case = case_obj.browse(cr, uid, case.id, context=context)
+
+            if not case.partner_assigned_id:
+                continue
+
+            context.update({'active_id' : case.id})
+            value = self.default_get(cr, uid, ['body', 'email_to', 'email_cc', 'subject', 'history'], context=context)
+            self.write(cr, uid, ids, value, context=context)
+            self.action_forward(cr,uid, ids, context=context)
+
+        return {'type': 'ir.actions.act_window_close'}
+
+
+crm_lead_mass_forward_to_partner()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
