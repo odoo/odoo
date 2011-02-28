@@ -34,9 +34,12 @@ class ir_rule(osv.osv):
     def _domain_force_get(self, cr, uid, ids, field_name, arg, context={}):
         res = {}
         for rule in self.browse(cr, uid, ids, context):
-            eval_user_data = {'user': self.pool.get('res.users').browse(cr, 1, uid),
-                              'time':time}
-            res[rule.id] = eval(rule.domain_force, eval_user_data)
+            if rule.domain_force:
+                eval_user_data = {'user': self.pool.get('res.users').browse(cr, 1, uid),
+                                  'time':time}
+                res[rule.id] = eval(rule.domain_force, eval_user_data)
+            else:
+                res[rule.id] = []
         return res
 
     def _get_value(self, cr, uid, ids, field_name, arg, context={}):
@@ -81,10 +84,15 @@ class ir_rule(osv.osv):
     ]
 
     def domain_create(self, cr, uid, rule_ids):
-        dom = ['&'] * (len(rule_ids)-1)
+        count = 0
+        dom = []
         for rule in self.browse(cr, uid, rule_ids):
-            dom += rule.domain
-        return dom
+            if rule.domain:
+                dom += rule.domain
+                count += 1
+        if count:
+            return ['&'] * (count-1) + dom
+        return []
 
     @tools.cache()
     def _compute_domain(self, cr, uid, model_name, mode="read"):
@@ -110,11 +118,18 @@ class ir_rule(osv.osv):
                     group_rule.setdefault(group.id, []).append(rule.id)
                 if not rule.groups:
                   global_rules.append(rule.id)
-            dom = self.domain_create(cr, uid, global_rules)
-            dom += ['|'] * (len(group_rule)-1)
+            global_domain = self.domain_create(cr, uid, global_rules)
+            count = 0
+            group_domains = []
             for value in group_rule.values():
-                dom += self.domain_create(cr, uid, value)
-            return dom
+                group_domain = self.domain_create(cr, uid, value)
+                if group_domain:
+                    group_domains += group_domain
+                    count += 1
+            if count and global_domain:
+                return ['&'] + global_domain + ['|'] * (count-1) + group_domains
+            if count:
+                return ['|'] * (count-1) + group_domains
         return []
 
     def clear_cache(self, cr, uid):
