@@ -59,16 +59,14 @@ class account_tax_chart(osv.osv_memory):
         id = result and result[1] or False
         result = act_obj.read(cr, uid, [id], context=context)[0]
         if data.period_id:
-            fiscalyear_id = period_obj.read(cr, uid, [data.period_id.id], context=context)[0]['fiscalyear_id'][0]
             result['context'] = str({'period_id': data.period_id.id, \
-                                     'fiscalyear_id': fiscalyear_id, \
+                                     'fiscalyear_id': data.period_id.fiscalyear_id.id, \
                                         'state': data.target_move})
+            period_code = data.period_id.code
+            result['name'] += period_code and (':' + period_code) or ''
         else:
             result['context'] = str({'state': data.target_move})
 
-        if data.period_id:
-            period_code = period_obj.read(cr, uid, [data.period_id.id], context=context)[0]['code']
-            result['name'] += period_code and (':' + period_code) or ''
         return result
 
     _defaults = {

@@ -95,8 +95,6 @@ class account_invoice_refund(osv.osv_memory):
             description = False
             company = res_users_obj.browse(cr, uid, uid, context=context).company_id
             journal_id = form.journal_id.id
-            if isinstance(journal_id, tuple):
-                journal_id = journal_id[0]
             for inv in inv_obj.browse(cr, uid, context.get('active_ids'), context=context):
                 if inv.state in ['draft', 'proforma2', 'cancel']:
                     raise osv.except_osv(_('Error !'), _('Can not %s draft/proforma/cancel invoice.') % (mode))

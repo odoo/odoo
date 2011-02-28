@@ -46,7 +46,7 @@ class lunch_order_confirm(osv.osv_memory):
         data = context and context.get('active_ids', []) or []
         order_ref = self.pool.get('lunch.order')
 
-        for confirm_obj in self.browse(cr, uid, ids):
+        for confirm_obj in self.browse(cr, uid, ids, context=context):
             order_ref.confirm(cr, uid, data, confirm_obj.confirm_cashbox.id, context)
             return {'type': 'ir.actions.act_window_close'}
 

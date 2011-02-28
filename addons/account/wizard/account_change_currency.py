@@ -45,7 +45,7 @@ class account_change_currency(osv.osv_memory):
         obj_currency = self.pool.get('res.currency')
         if context is None:
             context = {}
-        data = self.browse(cr, uid, ids)[0]
+        data = self.browse(cr, uid, ids, context=context)[0]
         new_currency = data.currency_id.id
 
         invoice = obj_inv.browse(cr, uid, context['active_id'], context=context)

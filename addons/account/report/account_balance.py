@@ -71,8 +71,6 @@ class account_balance(report_sxw.rml_parse, common_report_header):
     def lines(self, form, ids=[], done=None):#, level=1):
         def _process_child(accounts, disp_acc, parent):
                 account_rec = [acct for acct in accounts if acct['id']==parent][0]
-                if isinstance(account_rec['parent_id'], tuple):
-                    account_rec['parent_id'] = account_rec['parent_id'][0]
                 currency_obj = self.pool.get('res.currency')
                 acc_id = self.pool.get('account.account').browse(self.cr, self.uid, account_rec['id'])
                 currency = acc_id.currency_id and acc_id.currency_id or acc_id.company_id.currency_id

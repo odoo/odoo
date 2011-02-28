@@ -69,10 +69,10 @@ class account_coda_import(osv.osv_memory):
         if context is None:
             context = {}
 
-        data = self.browse(cr, uid, ids)[0]
+        data = self.browse(cr, uid, ids, context=context)[0]
 
         codafile = data.coda
-        journal_code = journal_obj.browse(cr, uid, data.journal_id.id, context=context).code
+        journal_code = data.journal_id.code
 
         period = account_period_obj.find(cr, uid, context=context)[0]
         def_pay_acc = data.def_payable.id

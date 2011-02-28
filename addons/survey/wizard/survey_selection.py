@@ -122,8 +122,7 @@ class survey_name_wiz(osv.osv_memory):
         search_obj = self.pool.get('ir.ui.view')
         if context is None: context = {}
 
-        sur_id = self.read(cr, uid, ids, ['survey_id'], context=context)[0]
-        survey_id = sur_id['survey_id']
+        survey_id = self.browse(cr, uid, ids, context=context)[0].survey_id.id
         context.update({'survey_id': survey_id, 'sur_name_id': sur_id['id']})
         cr.execute('select count(id) from survey_history where user_id=%s\
                     and survey_id=%s' % (uid,survey_id))
