@@ -215,10 +215,10 @@ class hr_contract(osv.osv):
                     elif line.amount_type == 'func':
                         value = slip_line_pool.execute_function(cr, uid, line.id, amt, context)
                         line.amount = value
-                if line.type.name == 'allowance':
+                if line.type.name == 'allowance': #FIXME: not good. We don't have to compute the gross or net on hr.contract nor hr.employee. We jsut need to define the basic; So the fields gross and net can be removed from view and object.
                     all_per += percent
                     all_fix += value
-                elif line.type.name == 'deduction':
+                elif line.type.name == 'deduction': #FIXME: not good
                     ded_per += percent
                     ded_fix += value
             if sal_type in ('gross', 'net'):
@@ -276,8 +276,7 @@ class hr_contract(osv.osv):
                 }
                 vals[rs.id] = record
                 continue
-            lines = rs.struct_id.rule_ids
-            for line in lines:
+            for line in rs.struct_id.rule_ids:
                 amount = 0.0
                 if line.amount_type == 'per':
                     try:
