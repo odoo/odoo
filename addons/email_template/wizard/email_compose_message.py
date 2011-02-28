@@ -118,7 +118,9 @@ class email_compose_message(osv.osv_memory):
             value = email_temp_previ_pool.on_change_ref(cr, uid, [], resource_id, context)
             vals.update(value.get('value',{}))
             vals.update({'name': value.get('value',{}).get('subject','')})
-
+            vals.update({'attachment_ids' : email_temp_pool.read(cr, uid, template_id, ['attachment_ids'])['attachment_ids']})
+        else:
+            vals.update({'attachment_ids' : []})
         return {'value': vals}
 
 email_compose_message()
