@@ -119,9 +119,6 @@ class synchronize_google_contact(osv.osv_memory):
         res.append(('all','All Groups'))
         return res
 
-    def _get_default_group(self, cr, uid, context=None):
-        return 'all'
-
     _columns = {
         'create_partner': fields.selection([('create_all','Create partner for each contact'),('create_address','Import only address')],'Options'),
         'group_name': fields.selection(_get_group, "Group Name", size=32,help="Choose which group to import, By default it takes all."),
@@ -129,7 +126,7 @@ class synchronize_google_contact(osv.osv_memory):
 
     _defaults = {
         'create_partner': 'create_all',
-        'group_name': _get_default_group,
+        'group_name': 'all',
     }
 
     def create_partner(self, cr, uid, data={}, context=None):

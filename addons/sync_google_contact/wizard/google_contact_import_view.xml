@@ -7,15 +7,18 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Import Google Contacts">
-                    <group colspan="2" col="2">
+                    <group colspan="4" col="4">
                        <field name="group_name" />
                        <separator string="Import Options" colspan="4"/>
                        <field name="create_partner"/>
                     </group>
                     <separator string="" colspan="4"/>
-                    <group colspan="2" col="2">
-                        <button special="cancel" string="Cancel" icon="gtk-cancel"/>
-                        <button name="import_contact" string="Import Contacts" type="object" icon="terp-personal+"/>
+                    <group colspan="4" col="4">
+                        <group colspan="2" col="2"/>
+                        <group colspan="2" col="2">
+                            <button special="cancel" string="_Cancel" icon="gtk-cancel"/>
+                            <button name="import_contact" string="_Import Contacts" type="object" icon="terp-personal+"/>
+                        </group>
                     </group>
                 </form>
             </field>
