@@ -1029,7 +1029,6 @@ class hr_payslip(osv.osv):
         @return: return a result
         """
         result = []
-
         dates = prev_bounds(slip.date)
         sql = '''select id from hr_holidays
                     where date_from >= '%s' and date_to <= '%s'
@@ -1059,7 +1058,7 @@ class hr_payslip(osv.osv):
         sql = '''select id from hr_holidays
                     where date_from >= '%s' and date_to <= '%s'
                     and employee_id = %s
-                    and state = 'validate' ''' % (dates[0], dates[1], employee.id)
+                    ''' % (dates[0], dates[1], employee.id)
         cr.execute(sql)
         res = cr.fetchall()
         if res:
@@ -1322,7 +1321,7 @@ class hr_payslip(osv.osv):
         if old_slip_ids:
             slip_line_pool.unlink(cr, uid, old_slip_ids)
 
-        update = {'value':{'line_ids':[], 'name':'', 'working_days': 0.0, 'holiday_days': 0.0, 'worked_days': 0.0, 'basic_before_leaves': 0.0, 'basic': 0.0}}
+        update = {'value':{'line_ids':[], 'holiday_ids':[], 'name':'', 'working_days': 0.0, 'holiday_days': 0.0, 'worked_days': 0.0, 'basic_before_leaves': 0.0, 'basic': 0.0, 'leaves': 0.0, 'total_pay': 0.0}}
         if not employee_id:
             return update
 
@@ -1568,19 +1567,20 @@ class hr_payslip(osv.osv):
                 res['total'] = total
 #            slip_line_pool.create(cr, uid, res, context=context)
             update['value']['line_ids'].append(res)
-        holiday_pool.write(cr, uid, leave_ids, {'payslip_id': ids and ids[0] or False}, context=context)
+#        holiday_pool.write(cr, uid, leave_ids, {'payslip_id': ids and ids[0] or False}, context=context)
         basic = basic - total
 #            leaves = total
         update['value'].update({
             'basic':basic,
             'basic_before_leaves': round(basic_before_leaves),
             'total_pay': round(basic_before_leaves)+ allounce - (deduction + total),
-            'leaves':total,
-            'holiday_days':leave,
-            'worked_days':working_day - leave,
-            'working_days':working_day,
+            'leaves': total,
+            'holiday_days': leave,
+            'worked_days': working_day - leave,
+            'working_days': working_day,
+            'holiday_ids': leave_ids
         })
-#        self.write(cr, uid, [slip.id], update, context=context)
+#        self.write(cr, uid, uid, update, context=context)
         return update
 
 hr_payslip()
@@ -1603,8 +1603,7 @@ class hr_payslip_line(osv.osv):
     _description = 'Payslip Line'
 
     def onchange_category(self, cr, uid, ids, category_id):
-        res = {
-        }
+        res = {}
         if category_id:
             category = self.pool.get('hr.allounce.deduction.categoty').browse(cr, uid, category_id)
             res.update({
