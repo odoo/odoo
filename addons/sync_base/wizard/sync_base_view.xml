@@ -14,7 +14,7 @@
                         <group colspan="2"/>
                         <group colspan="2">  
                             <button special="cancel" string="_Cancel" icon="gtk-cancel"/>
-                            <button name="action_synchronize" string="_Synchronize" type="object" icon="terp-check"/>
+                            <button name="action_synchronize" string="Import" type="object" icon="terp-stock_effects-object-colorize"/>
                         </group>
                     </group>
                 </form>
@@ -22,7 +22,7 @@
         </record>
 
          <record model="ir.actions.act_window" id="act_google_contact_import_form">
-          <field name="name">Import contacts from remote address book</field>
+          <field name="name">Import contacts from your google account</field>
           <field name="type">ir.actions.act_window</field>
           <field name="res_model">synchronize.base.contact.wizard.import</field>
           <field name="view_type">form</field>
@@ -32,7 +32,7 @@
         </record>
 
 
-        <menuitem name="Import contacts from remote address book" id="menu_sync_contact"
+        <menuitem name="Import contacts from your google account" id="menu_sync_contact"
              parent="base.menu_address_book" action="act_google_contact_import_form"
              sequence="40" />
 
