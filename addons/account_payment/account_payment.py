@@ -94,7 +94,7 @@ class payment_order(osv.osv):
             ], "Preferred date", change_default=True, required=True, states={'done': [('readonly', True)]}, help="Choose an option for the Payment Order:'Fixed' stands for a date specified by you.'Directly' stands for the direct execution.'Due date' stands for the scheduled date of execution."),
         'date_created': fields.date('Creation date', readonly=True),
         'date_done': fields.date('Execution date', readonly=True),
-        'company_id': fields.many2one('res.company', 'Company', required=True),
+        'company_id': fields.related('mode', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),
     }
 
     _defaults = {
@@ -103,7 +103,6 @@ class payment_order(osv.osv):
         'date_prefered': 'due',
         'date_created': lambda *a: time.strftime('%Y-%m-%d'),
         'reference': lambda self,cr,uid,context: self.pool.get('ir.sequence').get(cr, uid, 'payment.order'),
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id
     }
 
     def set_to_draft(self, cr, uid, ids, *args):
@@ -346,7 +345,7 @@ class payment_line(osv.osv):
         'create_date': fields.datetime('Created', readonly=True),
         'state': fields.selection([('normal','Free'), ('structured','Structured')], 'Communication Type', required=True),
         'bank_statement_line_id': fields.many2one('account.bank.statement.line', 'Bank statement line'),
-        'company_id': fields.many2one('res.company', 'Company', required=True),
+        'company_id': fields.related('order_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),
     }
     _defaults = {
         'name': lambda obj, cursor, user, context: obj.pool.get('ir.sequence'
@@ -355,7 +354,6 @@ class payment_line(osv.osv):
         'currency': _get_currency,
         'company_currency': _get_currency,
         'date': _get_date,
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id
     }
     _sql_constraints = [
         ('name_uniq', 'UNIQUE(name)', 'The payment line name must be unique!'),
