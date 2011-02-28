@@ -97,7 +97,7 @@ class hr_payroll_structure(osv.osv):
         'line_ids':fields.one2many('hr.payslip.line', 'function_id', 'Salary Structure', required=False),
         'company_id':fields.many2one('res.company', 'Company', required=False),
         'note': fields.text('Description'),
-        'struct_id':fields.many2one('hr.payroll.structure', 'Parent Structure'),
+        'parent_id':fields.many2one('hr.payroll.structure', 'Parent Structure'),
     }
     _defaults = {
         'company_id': lambda self, cr, uid, context: \
