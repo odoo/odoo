@@ -126,10 +126,6 @@
 	      <field name="type">search</field>
 	      <field name="inherit_id" ref="emails.view_email_message_search"/>
 	      <field name="arch" type="xml">
-			<xpath expr="/search/field[@name='name']" position="before">
-			     <filter string="Emails" name="emails" domain="[('server_id','!=',False)]" icon="terp-mail-message-new"/>
-			     <separator orientation="vertical"/>
-			</xpath>
 			<xpath expr="/search/group/filter[@string='Thread']" position="before">
                 <filter string="Mail Server" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'server_id'}"/>
             </xpath>
