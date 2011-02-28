@@ -36,7 +36,7 @@ class email_compose_message(osv.osv_memory):
         result = super(email_compose_message, self).get_value(cr, uid,  model, resource_id, context=context)
         if model not in email_model:
             return result
-        model_obj = self.pool.get(context.get('email_model'))
+        model_obj = self.pool.get(model)
         data = model_obj.browse(cr, uid , resource_id, context)
         result.update({
                 'name' : data.name,
