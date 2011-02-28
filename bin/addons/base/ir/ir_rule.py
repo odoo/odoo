@@ -24,6 +24,7 @@ from osv import fields,osv
 import time
 import tools
 from tools.safe_eval import safe_eval as eval
+from tools.translate import _
 
 class ir_rule_group(osv.osv):
     _name = 'ir.rule.group'
@@ -114,7 +115,21 @@ class ir_rule(osv.osv):
         'domain_force': fields.char('Force Domain', size=250),
         'domain': fields.function(_domain_force_get, method=True, string='Domain', type='char', size=250)
     }
-
+    
+    def _check_domain_validity(self, cr, uid, ids, context={}):
+        for record in self.browse(cr, uid, ids, context=context):
+            dom = record.domain
+            if dom:
+                try:
+                    rule_domain = self.pool.get(record.rule_group.model_id.model)._where_calc(cr, uid, dom, active_test=False)
+                except Exception:
+                    return False
+        return True
+    
+    _constraints = [
+        (_check_domain_validity, _('The domain contains wrong reference of fields! Kindly double check the domain you provided !'),['domain_force']),
+    ]
+    
     def onchange_all(self, cr, uid, ids, field_id, operator, operand):
         if not (field_id or operator or operand):
             return {}
