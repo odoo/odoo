@@ -167,8 +167,8 @@ class email_server(osv.osv):
         for server in self.browse(cr, uid, ids, context=context):
             count = 0
             user = server.user_id.id or uid
-            try:
-                if server.type == 'imap':
+            if server.type == 'imap':
+                try:
                     imap_server = self.button_confirm_login(cr, uid, [server.id], context=context)
                     imap_server.select()
                     result, data = imap_server.search(None, '(UNSEEN)')
@@ -182,12 +182,17 @@ class email_server(osv.osv):
                         count += 1
                     logger.notifyChannel('imap', netsvc.LOG_INFO, 'fetchmail fetch/process %s email(s) from %s' % (count, server.name))
 
+                except Exception, e:
+                    logger.notifyChannel(server.type, netsvc.LOG_WARNING, '%s' % (tools.ustr(e)))
+
+                finally:
                     imap_server.close()
                     imap_server.logout()
-                elif server.type == 'pop':
+            elif server.type == 'pop':
+                try:
                     pop_server = self.button_confirm_login(cr, uid, [server.id], context=context)
-                    pop_server.list()
                     (numMsgs, totalSize) = pop_server.stat()
+                    pop_server.list()
                     for num in range(1, numMsgs + 1):
                         (header, msges, octets) = pop_server.retr(num)
                         msg = '\n'.join(msges)
@@ -196,14 +201,12 @@ class email_server(osv.osv):
                             action_pool.run(cr, user, [server.action_id.id], {'active_id': res_id, 'active_ids':[res_id]})
 
                         pop_server.dele(num)
-
-                    pop_server.quit()
-
                     logger.notifyChannel('imap', netsvc.LOG_INFO, 'fetchmail fetch %s email(s) from %s' % (numMsgs, server.name))
+                except Exception, e:
+                    logger.notifyChannel(server.type, netsvc.LOG_WARNING, '%s' % (tools.ustr(e)))
 
-            except Exception, e:
-                logger.notifyChannel(server.type, netsvc.LOG_WARNING, '%s' % (tools.ustr(e)))
-
+                finally:
+                    pop_server.quit()
         return True
 
 email_server()
