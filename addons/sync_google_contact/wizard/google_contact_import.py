@@ -30,53 +30,6 @@ try:
 except ImportError:
     raise osv.except_osv(_('Google Contacts Import Error!'), _('Please install gdata-python-client from http://code.google.com/p/gdata-python-client/downloads/list'))
 
-class google_base_import(osv.osv_memory):
-    _inherit = 'synchronize.base.contact.wizard.import'
-
-    def _get_tools_name(self, cr, user, context):
-        """
-        @return the list of value of the selection field
-        should be overwritten by subclasses
-        """
-        names = super(google_base_import, self)._get_tools_name(cr, user, context=context)
-        names.append(('gmail','Gmail address book'))
-        return names
-
-
-    _columns = {
-        'tools':  fields.selection(_get_tools_name, 'App to synchronize with'),
-    }
-
-
-    def _get_actions_dic(self, cr, uid, context=None):
-        """
-            this method should be overwritten in specialize module
-            @return the dictonnaries of action
-        """
-        actions = super(google_base_import, self)._get_actions_dic(cr, uid, context=context)
-
-        data_obj = self.pool.get('ir.model.data')
-        data_id = data_obj._get_id(cr, uid, 'google_base_account', 'view_google_login_form')
-        view_id = False
-        if data_id:
-            view_id = data_obj.browse(cr, uid, data_id, context=context).res_id
-
-        value = {
-            'name': _('Import Contact'),
-            'view_type': 'form',
-            'view_mode': 'form,tree',
-            'res_model': 'google.login.contact',
-            'view_id': False,
-            'context': context,
-            'views': [(view_id, 'form')],
-            'type': 'ir.actions.act_window',
-            'target': 'new',
-        }
-        actions['gmail'] = value
-        return actions
-
-google_base_import()
-
 class google_contact_import(osv.osv_memory):
     _inherit = 'google.login'
     _name = 'google.login.contact'

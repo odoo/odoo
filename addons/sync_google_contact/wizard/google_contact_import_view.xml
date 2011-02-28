@@ -23,5 +23,25 @@
                 </form>
             </field>
         </record>
+        
+        
+        <!-- 
+            Login Action 
+        -->
+        <record model="ir.actions.act_window" id="act_google_login_form">
+          <field name="name">Import contacts from your google account</field>
+          <field name="type">ir.actions.act_window</field>
+          <field name="res_model">google.login.contact</field>
+          <field name="view_type">form</field>
+          <field name="view_mode">form</field>
+          <field name="target">new</field>
+          <field name="view_id" ref="google_base_account.view_google_login_form" />
+        </record>
+
+
+        <menuitem id="menu_sync_contact"
+                  parent="base.menu_address_book" 
+                  action="act_google_login_form"
+                  sequence="40" />
     </data>
 </openerp>

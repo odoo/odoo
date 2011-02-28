@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from osv import fields,osv,orm
+from osv import fields,osv
     
 class res_users(osv.osv):
     _inherit = "res.users"
