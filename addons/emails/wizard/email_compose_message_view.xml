@@ -12,7 +12,8 @@
                         <field name="model" invisible="1"/>
                         <field name="res_id" invisible="context.get('active_model','') != 'ir.ui.menu'"
                             colspan="4" on_change="on_change_referred_doc(model, res_id, context)"/>
-                        <field name="smtp_server_id" widget="selection" colspan="4"/>
+                        <field name="smtp_server_id" widget="selection" colspan="4"
+                            on_change="on_change_smtp_server(smtp_server_id, email_from)"/>
                         <field name="email_from" colspan="4" required="1"/>
                         <field name="email_to" colspan="4" required="1"/>
                         <field name="email_cc" colspan="4"/>
