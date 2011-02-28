@@ -19,21 +19,21 @@
         <field name="name">mrp_production multi-company</field>
         <field name="model_id" search="[('model','=','mrp.production')]" model="ir.model"/>
         <field name="global" eval="True"/>
-        <field name="domain_force">['|','|',('company_id','=',False),('company_id','child_of',[user.company_id.id]),('company_id.child_ids','child_of',[user.company_id.id])]</field>
+        <field name="domain_force">['|',('company_id','child_of',[user.company_id.id]),('company_id','=',False)]</field>
     </record>
 
     <record model="ir.rule" id="mrp_workcenter_rule">
         <field name="name">mrp_workcenter multi-company</field>
         <field name="model_id" search="[('model','=','mrp.workcenter')]" model="ir.model"/>
         <field name="global" eval="True"/>
-        <field name="domain_force">['|','|',('company_id','=',False),('company_id','child_of',[user.company_id.id]),('company_id.child_ids','child_of',[user.company_id.id])]</field>
+        <field name="domain_force">['|',('company_id','child_of',[user.company_id.id]),('company_id','=',False)]</field>
     </record>
 
     <record model="ir.rule" id="mrp_bom_rule">
         <field name="name">mrp_bom multi-company</field>
         <field name="model_id" search="[('model','=','mrp.bom')]" model="ir.model"/>
         <field name="global" eval="True"/>
-        <field name="domain_force">['|','|',('company_id','=',False),('company_id','child_of',[user.company_id.id]),('company_id.child_ids','child_of',[user.company_id.id])]</field>
+        <field name="domain_force">['|',('company_id','child_of',[user.company_id.id]),('company_id','=',False)]</field>
     </record>
 
 </data>
