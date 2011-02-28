@@ -72,7 +72,7 @@
             <field name="model">email.message</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Emails">
+                <tree colors="gray:folder in ('trash')" string="Emails">
                     <field name="date"/>
                     <field name="name"/>
                     <field name="email_from"/>
