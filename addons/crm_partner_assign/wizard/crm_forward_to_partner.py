@@ -208,13 +208,16 @@ class crm_lead_forward_to_partner(osv.osv_memory):
         return {'type': 'ir.actions.act_window_close'}
 
     def get_lead_details(self, cr, uid, lead_id, context=None):
-        body = ["""Hello,
+        body = ["""Dear,
 
-OpenERP Leads are now forwarded to our trusted partners, through the CRM, we hope that they provide you with interesting projects, we know that they have shown keen interest in our software.
-Below is an interesting lead for you. I have notified the lead that you would contact them.
+Below is possibly an interesting lead for you.
 
-Please let us know about the advancements of this lead or if you are not able to answer to its requests by replying to this email. This way, we can keep track of closed leads or forward them to other partners.
-Don't forget to propose our maintenance at the beginning of your implementation projects, together with your services quotation. The maintenance provides unlimited bugfixing that will avoid you waste time on bugs detected during the implementation. It also provides free migration services for the current stable version at the time of signature; otherwise if we released a new version during your implementation, the customer would not always be able to easily migrate to newer versions.
+OpenERP Leads are now forwarded to our trusted partners, through our OpenERP CRM.
+We hope that this one will provide you an interesting project, as they've recently contacted us showing interest in our software.
+
+Please keep your account manager informed about the advancements of this lead or if you are not able to answer to its requests by replying to this email. This way, we can keep track of closed leads or forward them to other partners.
+
+Please don't forget to propose our OpenERP Publisher's Warranty at the beginning of your implementation projects, together with your services quotation. The Warranty will provide unlimited bugfixing that will avoid you waste time on bugs detected during the implementation. It also provides free migration services for the current stable version at the time of signature; otherwise if we released a new version during your implementation, the customer would not always be able to easily migrate to newer versions. Please find all related information via http://www.openerp.com/services/pricing
 
 Kind regards, OpenERP Team
 
