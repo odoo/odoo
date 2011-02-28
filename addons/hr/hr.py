@@ -154,7 +154,7 @@ class hr_employee(osv.osv):
         'work_email': fields.char('Work E-mail', size=240),
         'work_location': fields.char('Office Location', size=32),
         'notes': fields.text('Notes'),
-        'parent_id': fields.related('department_id', 'manager_id', relation='hr.employee', string='Manager', type='many2one', store=True, select=True, readonly=True, help="It is linked with manager of Department"),
+        'parent_id': fields.related('department_id', 'manager_id', relation='hr.employee', string='Manager', type='many2one', store=True, select=True, help="It is linked with manager of Department"),
         'category_ids': fields.many2many('hr.employee.category', 'employee_category_rel','category_id','emp_id','Category'),
         'child_ids': fields.one2many('hr.employee', 'parent_id', 'Subordinates'),
         'resource_id': fields.many2one('resource.resource', 'Resource', ondelete='cascade', required=True),
