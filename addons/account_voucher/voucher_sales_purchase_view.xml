@@ -100,7 +100,8 @@
                         <field name="date" on_change="onchange_date(partner_id, journal_id, amount, currency_id, type, date)"/>
                         <field name="journal_id" domain="[('type','in',['sale','sale_refund'])]" widget="selection" on_change="onchange_journal(journal_id, line_cr_ids, tax_id, partner_id)"/>
                         <field name="number"/>
-                        <field name="name" colspan="4"/>
+                        <field name="name" colspan="2"/>
+                        <field name="company_id" select="1" widget="selection" groups="base.group_multi_company"/>
                         <field name="type" invisible="True"/>
                         <field name="currency_id" invisible="True" nolabel="1"/>
                     </group>
@@ -140,7 +141,6 @@
                         </page>
                         <page string="Journal Items" groups="base.group_extended" attrs="{'invisible': [('state','!=','posted')]}">
                             <group col="6" colspan="4">
-                                <field name="company_id" select="1" widget="selection" groups="base.group_multi_company"/>
                                 <field name="period_id"/>
                                 <field name="audit"/>
                             </group>
@@ -228,6 +228,7 @@
                         <field name="number"/>
                         <field name="name" colspan="2"/>
                         <field name="reference" select="1"/>
+                        <field name="company_id" select="1" widget="selection" groups="base.group_multi_company"/>
                         <field name="account_id" domain="[('type','=','other')]"  invisible="True"/>
                         <field name="type" invisible="True"/>
                         <field name="currency_id" invisible="True" nolabel="1"/>
@@ -260,7 +261,6 @@
                         </page>
                         <page string="Journal Items" groups="base.group_extended" attrs="{'invisible': [('state','!=','posted')]}">
                             <group col="6" colspan="4">
-                                <field name="company_id" select="1" widget="selection" groups="base.group_multi_company"/>
                                 <field name="period_id"/>
                                 <field name="audit"/>
                             </group>
