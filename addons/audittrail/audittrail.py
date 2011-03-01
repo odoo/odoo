@@ -201,7 +201,7 @@ class audittrail_objects_proxy(object_proxy):
         if not context:
             context = {}
         if field_name in('__last_update','id'):
-            return values            
+            return values
         pool = pooler.get_pool(cr.dbname)
         field_pool = pool.get('ir.model.fields')
         model_pool = pool.get('ir.model')
@@ -253,7 +253,7 @@ class audittrail_objects_proxy(object_proxy):
         #start Loop
         for line in lines:
             if line['name'] in('__last_update','id'):
-                continue                
+                continue
             if obj_pool._inherits:
                 inherits_ids = model_pool.search(cr, uid, [('model', '=', obj_pool._inherits.keys()[0])])
                 field_ids = field_pool.search(cr, uid, [('name', '=', line['name']), ('model_id', 'in', (model.id, inherits_ids[0]))])
@@ -301,6 +301,8 @@ class audittrail_objects_proxy(object_proxy):
 
         @return: Returns result as per method of Object proxy
         """
+        uid_orig = uid
+        uid = 1
         res2 = args
         pool = pooler.get_pool(db)
         cr = pooler.get_db(db).cursor()
@@ -314,13 +316,13 @@ class audittrail_objects_proxy(object_proxy):
         model = model_pool.browse(cr, uid, model_id)
 
         if method in ('create'):
-            res_id = fct_src(db, uid, model.model, method, *args)
+            res_id = fct_src(db, uid_orig, model.model, method, *args)
             cr.commit()
             resource = resource_pool.read(cr, uid, res_id, args[0].keys())
             vals = {
                     "method": method,
                     "object_id": model.id,
-                    "user_id": uid,
+                    "user_id": uid_orig,
                     "res_id": resource['id'],
             }
             if 'id' in resource:
@@ -343,7 +345,7 @@ class audittrail_objects_proxy(object_proxy):
         elif method in ('read'):
             res_ids = args[0]
             old_values = {}
-            res = fct_src(db, uid, model.model, method, *args)
+            res = fct_src(db, uid_orig, model.model, method, *args)
             if type(res) == list:
                 for v in res:
                     old_values[v['id']] = v
@@ -353,7 +355,7 @@ class audittrail_objects_proxy(object_proxy):
                 vals = {
                     "method": method,
                     "object_id": model.id,
-                    "user_id": uid,
+                    "user_id": uid_orig,
                     "res_id": res_id,
 
                 }
@@ -382,7 +384,7 @@ class audittrail_objects_proxy(object_proxy):
                 vals = {
                     "method": method,
                     "object_id": model.id,
-                    "user_id": uid,
+                    "user_id": uid_orig,
                     "res_id": res_id,
 
                 }
@@ -399,7 +401,7 @@ class audittrail_objects_proxy(object_proxy):
                     lines.append(line)
 
                 self.create_log_line(cr, uid, log_id, model, lines)
-            res = fct_src(db, uid, model.model, method, *args)
+            res = fct_src(db, uid_orig, model.model, method, *args)
             cr.commit()
             cr.close()
             return res
@@ -423,7 +425,7 @@ class audittrail_objects_proxy(object_proxy):
                         old_values_text[field] = self.get_value_text(cr, uid, field, resource[field], model)
                     old_values[resource_id] = {'text':old_values_text, 'value': old_value}
 
-            res = fct_src(db, uid, model.model, method, *args)
+            res = fct_src(db, uid_orig, model.model, method, *args)
             cr.commit()
 
             if res_ids:
@@ -434,7 +436,7 @@ class audittrail_objects_proxy(object_proxy):
                     vals = {
                         "method": method,
                         "object_id": model.id,
-                        "user_id": uid,
+                        "user_id": uid_orig,
                         "res_id": resource_id,
                     }
 
@@ -469,6 +471,8 @@ class audittrail_objects_proxy(object_proxy):
 
         @return: Returns result as per method of Object proxy
         """
+        uid_orig = uid
+        uid = 1
         pool = pooler.get_pool(db)
         model_pool = pool.get('ir.model')
         rule_pool = pool.get('audittrail.rule')
@@ -486,13 +490,13 @@ class audittrail_objects_proxy(object_proxy):
                 if model_name == 'audittrail.rule':
                     rule = True
             if not rule:
-                return fct_src(db, uid, model, method, *args)
+                return fct_src(db, uid_orig, model, method, *args)
             if not model_id:
-                return fct_src(db, uid, model, method, *args)
+                return fct_src(db, uid_orig, model, method, *args)
 
             rule_ids = rule_pool.search(cr, uid, [('object_id', '=', model_id), ('state', '=', 'subscribed')])
             if not rule_ids:
-                return fct_src(db, uid, model, method, *args)
+                return fct_src(db, uid_orig, model, method, *args)
 
             for thisrule in rule_pool.browse(cr, uid, rule_ids):
                 for user in thisrule.user_id:
@@ -500,13 +504,13 @@ class audittrail_objects_proxy(object_proxy):
                 if not logged_uids or uid in logged_uids:
                     if method in ('read', 'write', 'create', 'unlink'):
                         if getattr(thisrule, 'log_' + method):
-                            return self.log_fct(db, uid, model, method, fct_src, *args)
+                            return self.log_fct(db, uid_orig, model, method, fct_src, *args)
 
                     elif method not in ('default_get','read','fields_view_get','fields_get','search','search_count','name_search','name_get','get','request_get', 'get_sc', 'unlink', 'write', 'create'):
                         if thisrule.log_action:
-                            return self.log_fct(db, uid, model, method, fct_src, *args)
+                            return self.log_fct(db, uid_orig, model, method, fct_src, *args)
 
-                return fct_src(db, uid, model, method, *args)
+                return fct_src(db, uid_orig, model, method, *args)
         try:
             res = my_fct(db, uid, model, method, *args)
             return res
@@ -514,6 +518,9 @@ class audittrail_objects_proxy(object_proxy):
             cr.close()
 
     def exec_workflow(self, db, uid, model, method, *args, **argv):
+        uid_orig = uid
+        uid = 1
+
         pool = pooler.get_pool(db)
         logged_uids = []
         fct_src = super(audittrail_objects_proxy, self).exec_workflow
@@ -529,21 +536,21 @@ class audittrail_objects_proxy(object_proxy):
                 if obj_name == 'audittrail.rule':
                     rule = True
             if not rule:
-                return super(audittrail_objects_proxy, self).exec_workflow(db, uid, model, method, *args, **argv)
+                return super(audittrail_objects_proxy, self).exec_workflow(db, uid_orig, model, method, *args, **argv)
             if not model_ids:
-                return super(audittrail_objects_proxy, self).exec_workflow(db, uid, model, method, *args, **argv)
+                return super(audittrail_objects_proxy, self).exec_workflow(db, uid_orig, model, method, *args, **argv)
 
             rule_ids = rule_pool.search(cr, uid, [('object_id', 'in', model_ids), ('state', '=', 'subscribed')])
             if not rule_ids:
-                return super(audittrail_objects_proxy, self).exec_workflow(db, uid, model, method, *args, **argv)
+                return super(audittrail_objects_proxy, self).exec_workflow(db, uid_orig, model, method, *args, **argv)
 
             for thisrule in rule_pool.browse(cr, uid, rule_ids):
                 for user in thisrule.user_id:
                     logged_uids.append(user.id)
                 if not logged_uids or uid in logged_uids:
                     if thisrule.log_workflow:
-                        return self.log_fct(db, uid, model, method, fct_src, *args)
-                return super(audittrail_objects_proxy, self).exec_workflow(db, uid, model, method, *args, **argv)
+                        return self.log_fct(db, uid_orig, model, method, fct_src, *args)
+                return super(audittrail_objects_proxy, self).exec_workflow(db, uid_orig, model, method, *args, **argv)
 
             return True
         finally:

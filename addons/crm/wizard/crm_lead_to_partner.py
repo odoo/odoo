@@ -212,7 +212,6 @@ class crm_lead2partner(osv.osv_memory):
         mod_obj = self.pool.get('ir.model.data')
         result = mod_obj._get_id(cr, uid, 'base', 'view_res_partner_filter')
         res = mod_obj.read(cr, uid, result, ['res_id'])
-        print partner_ids
         return {'type': 'ir.actions.act_window_close'}
 
 crm_lead2partner()
