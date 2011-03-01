@@ -27,14 +27,6 @@ from tools.translate import _
 class email_compose_message(osv.osv_memory):
     _inherit = 'email.compose.message'
 
-    def default_get(self, cr, uid, fields, context=None):
-        if context is None:
-            context = {}
-        result = super(email_compose_message, self).default_get(cr, uid, fields, context=context)
-        if context.get('email_model',False) and context.get('email_model') == 'hr.evaluation.interview' and 'model' in fields:
-            result['model'] = context.get('email_model','')
-        return result
-
     def _get_records(self, cr, uid, context=None):
         """
         Return Records of particular  Model
@@ -53,22 +45,16 @@ class email_compose_message(osv.osv_memory):
         'res_id':fields.selection(_get_records, 'Referred Document'),
     }
 
-    def on_change_referred_doc(self, cr, uid, ids, model, resource_id, context=None):
+    def get_value(self, cr, uid, model, resource_id, context=None):
         if context is None:
             context = {}
-        if context.get('mail') == 'reply':
-            return {'value':{}}
-        result = super(email_compose_message, self).on_change_referred_doc(cr, uid, ids, model, resource_id, context=context)
-        value = {}
-        if not result.get('value'):
-            result.update({'value':{}})
-
+        result = super(email_compose_message, self).get_value(cr, uid,  model, resource_id, context=context)
         if model == 'hr.evaluation.interview' and resource_id:
             model_pool = self.pool.get(model)
             record_data = model_pool.browse(cr, uid, resource_id, context)
             if record_data.state == "waiting_answer":
                 msg = _("Hello %s, \n\n Kindly post your response for '%s' survey interview. \n\n Thanks,")  %(record_data.user_to_review_id.name, record_data.survey_id.title)
-                result['value'].update({
+                result.update({
                                 'email_from': tools.config.get('email_from',''),
                                 'email_to': record_data.user_to_review_id.work_email or False,
                                 'name': _("Reminder to fill up Survey"),

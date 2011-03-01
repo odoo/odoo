@@ -32,75 +32,68 @@ class email_compose_message(osv.osv_memory):
         if context is None:
             context = {}
         result = super(email_compose_message, self).default_get(cr, uid, fields, context=context)
-        message_pool = self.pool.get('email.message')
-        message_id = context.get('message_id', False)
-        if message_id:
-            message_data = message_pool.browse(cr, uid, int(message_id), context)
-            if 'message_id' in fields:
-                result['message_id'] =  message_data and message_data.message_id
+        vals = {}
+        if context.get('email_model') and context.get('email_res_id'):
+            vals = self.get_value(cr, uid, context.get('email_model'), context.get('email_res_id'), context)
+        elif context.get('message_id', False):
+            vals = self.get_message_data(cr, uid, int(context.get('message_id', False)), context)
+        else:
+            result['model'] = context.get('email_model', False)
 
-            if 'attachment_ids' in fields:
-                result['attachment_ids'] = message_data and message_pool.read(cr, uid, message_id, ['attachment_ids'])['attachment_ids']
+        if not vals:
+            return result
 
-            if 'res_id' in fields:
-                result['res_id'] = message_data and message_data.res_id
+        if 'name' in fields:
+            result.update({'name' : vals.get('name','')})
 
-            if 'email_from' in fields:
-                result['email_from'] = message_data and message_data.email_to
+        if 'email_to' in fields:
+            result.update({'email_to' : vals.get('email_to','')})
 
-            if 'email_to' in fields:
-                result['email_to'] = message_data and message_data.email_from
+        if 'email_from' in fields:
+            result.update({'email_from' : vals.get('email_from','')})
 
-            if 'email_cc' in fields:
-                result['email_cc'] = message_data and message_data.email_cc
+        if 'description' in fields:
+            result.update({'description' : vals.get('description','')})
 
-            if 'email_bcc' in fields:
-                result['email_bcc'] = message_data and message_data.email_bcc
+        if 'model' in fields:
+            result.update({'model' : vals.get('model','')})
 
-            if 'name' in fields:
-                result['name']  = tools.ustr(message_data and message_data.name or '')
-                if context.get('mail','') == 'reply':
-                    result['name'] = "Re :- " + result['name']
+        if 'email_cc' in fields:
+            result.update({'email_cc' : vals.get('email_cc','')})
 
-            if 'description' in fields:
-                description =  message_data and message_data.description and message_data.description or ''
-                if context.get('mail','') == 'reply':
-                    header = '-------- Original Message --------'
-                    sender = 'From: %s'  % tools.ustr(message_data.email_from or '')
-                    email_to = 'To: %s' %  tools.ustr(message_data.email_to or '')
-                    sentdate = 'Date: %s' % message_data.date
-                    desc = '\n > \t %s' % tools.ustr(description.replace('\n', "\n > \t") or '')
-                    result['description'] = '\n'.join([header, sender, email_to, sentdate, desc])
-                else:
-                    result['description'] = description
+        if 'email_bcc' in fields:
+            result.update({'email_bcc' : vals.get('email_bcc','')})
 
-            if 'reply_to' in fields:
-                result['reply_to'] = message_data and message_data.reply_to
+        if 'res_id' in fields:
+            result.update({'res_id' : vals.get('res_id',0)})
 
-            if 'model' in fields:
-                result['model'] = message_data and message_data.model
+        if 'reply_to' in fields:
+            result['reply_to'] = vals.get('reply_to','')
 
-            if 'user_id' in fields:
-                result['user_id'] = message_data and message_data.user_id and message_data.user_id.id or False
+        if 'message_id' in fields:
+            result['message_id'] =  vals.get('message_id','')
 
-            if 'references' in fields:
-                result['references'] = message_data and message_data.references and tools.ustr(message_data.references)
+        if 'attachment_ids' in fields:
+            result['attachment_ids'] = vals.get('attachment_ids',[])
 
-            if 'sub_type' in fields:
-                result['sub_type'] = message_data and message_data.sub_type
+        if 'user_id' in fields:
+            result['user_id'] = vals.get('user_id',False)
 
-            if 'headers' in fields:
-                result['headers'] = message_data and message_data.headers
+        if 'references' in fields:
+            result['references'] = vals.get('references',False)
 
-            if 'priority' in fields:
-                result['priority'] = message_data and message_data.priority
+        if 'sub_type' in fields:
+            result['sub_type'] = vals.get('sub_type',False)
 
-            if 'debug' in fields:
-                result['debug'] = message_data and message_data.debug
+        if 'headers' in fields:
+            result['headers'] = vals.get('headers',False)
 
-        if 'model' in fields and context.get('email_model',False):
-            result['model'] = context.get('email_model')
+        if 'priority' in fields:
+            result['priority'] = vals.get('priority',False)
 
+        if 'debug' in fields:
+            result['debug'] = vals.get('debug',False)
+        
         return result
 
     def _get_records(self, cr, uid, context=None):
@@ -132,11 +125,99 @@ class email_compose_message(osv.osv_memory):
         'res_id':fields.selection(_get_records, 'Referred Document'),
     }
 
-    def get_value(self, cr, uid, model, resource_id, context=None):
+    def get_value(self, cr, uid, model, res_id, context=None):
         return {}
 
+    def get_message_data(self, cr, uid, message_id, context=None):
+        if context is None:
+            context = {}
+        result = {}
+        message_pool = self.pool.get('email.message')
+        if message_id:
+            message_data = message_pool.browse(cr, uid, message_id, context)
+            if 'message_id' in fields:
+                result['message_id'] =  message_data and message_data.message_id or False
+
+            if 'attachment_ids' in fields:
+                result['attachment_ids'] = message_data and message_pool.read(cr, uid, message_id, ['attachment_ids'])['attachment_ids'] or []
+
+            if 'res_id' in fields:
+                result['res_id'] = message_data and message_data.res_id or False
+
+            if 'email_from' in fields:
+                result['email_from'] = message_data and message_data.email_to or False
+
+            if 'email_to' in fields:
+                result['email_to'] = message_data and message_data.email_from or False
+
+            if 'email_cc' in fields:
+                result['email_cc'] = message_data and message_data.email_cc or False
+
+            if 'email_bcc' in fields:
+                result['email_bcc'] = message_data and message_data.email_bcc or False
+
+            if 'name' in fields:
+                result['name']  = tools.ustr(message_data and message_data.name or '')
+                if context.get('mail','') == 'reply':
+                    result['name'] = "Re :- " + result['name']
+
+            if 'description' in fields:
+                description =  message_data and message_data.description and message_data.description or ''
+                if context.get('mail','') == 'reply':
+                    header = '-------- Original Message --------'
+                    sender = 'From: %s'  % tools.ustr(message_data.email_from or '')
+                    email_to = 'To: %s' %  tools.ustr(message_data.email_to or '')
+                    sentdate = 'Date: %s' % message_data.date
+                    desc = '\n > \t %s' % tools.ustr(description.replace('\n', "\n > \t") or '')
+                    result['description'] = '\n'.join([header, sender, email_to, sentdate, desc])
+                else:
+                    result['description'] = description
+
+            if 'reply_to' in fields:
+                result['reply_to'] = message_data and message_data.reply_to or False
+
+            if 'model' in fields:
+                result['model'] = message_data and message_data.model or False
+
+            if 'user_id' in fields:
+                result['user_id'] = message_data and message_data.user_id and message_data.user_id.id or False
+
+            if 'references' in fields:
+                result['references'] = message_data and message_data.references and tools.ustr(message_data.references) or False
+
+            if 'sub_type' in fields:
+                result['sub_type'] = message_data and message_data.sub_type or False
+
+            if 'headers' in fields:
+                result['headers'] = message_data and message_data.headers or False
+
+            if 'priority' in fields:
+                result['priority'] = message_data and message_data.priority or False
+
+            if 'debug' in fields:
+                result['debug'] = message_data and message_data.debug or False
+        
+        return result
+
     def on_change_referred_doc(self, cr, uid, ids, model, resource_id, context=None):
-        return {'value':{}}
+        if context is None:
+            context = {}
+        if context.get('mail') == 'reply':
+            return {'value':{}}
+        result = {}
+        if resource_id and model:
+            vals = self.get_value(cr, uid, model, resource_id, context)
+            if vals:
+                result.update({
+                            'email_from':  vals.get('email_from',''),
+                            'email_to':  vals.get('email_to',''),
+                            'name':  vals.get('name',''),
+                            'description':  vals.get('description',''),
+                            'email_cc':  vals.get('email_cc',''),
+                            'email_bcc':  vals.get('email_bcc',''),
+                            'reply_to':  vals.get('reply_to',''),
+                        })
+        return {'value': result}
 
     def on_change_smtp_server(self, cr, uid, ids, smtp_server_id, email_from, context=None):
         if not email_from and smtp_server_id:
