@@ -35,6 +35,11 @@
     <record id="group_sale_salesman" model="res.groups">
         <field name="name">Sales / User</field>
     </record>
+    
+    <record id="group_sale_salesman" model="res.groups">
+        <field eval="[(3,1)]" name="users"/>
+    </record>
+    
     <!-- Set accesses to menu -->
     <record model="ir.ui.menu" id="base.menu_administration">
         <field name="groups_id" eval="[(6,0, [ref('group_system'), ref('group_erp_manager')])]"/>
