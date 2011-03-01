@@ -496,11 +496,13 @@
             <field name="arch" type="xml">
                 <form string="Salary Heads">
                     <group col="6" colspan="6">
-                        <field name="name" select="1"/>
-                        <field name="code" select="1"/>
-                        <field name="sequence"/>
-                        <field name="type" select="1"/>
-                        <field name="active"/>
+                        <group col="6" colspan="6">
+	                        <field name="name" select="1"/>
+	                        <field name="code" select="1"/>
+	                        <field name="sequence"/>
+	                        <field name="type" select="1"/>
+	                        <field name="dispaly_payslip_report"/>
+                        </group>
                         <group col="2" colspan="4">
                             <separator colspan="4" string="Expression"/>
                             <field name="base" colspan="4" nolabel="1"/>
@@ -508,15 +510,10 @@
                         <group col="2" colspan="2">
                             <separator colspan="4" string="Dynamic Computation"/>
                             <field name="computation_based" select="1"/>
-                            <field name="condition"/>
                         </group>
                     </group>
                     <separator colspan="4" string="Description"/>
-                    <notebook colspan="4">
-                        <page string="Description">
-                            <field name="note" colspan="4" nolabel="1"/>
-                        </page>
-                    </notebook>
+                        <field name="note" colspan="4" nolabel="1"/>
                 </form>
             </field>
         </record>

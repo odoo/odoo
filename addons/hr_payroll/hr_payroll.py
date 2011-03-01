@@ -670,7 +670,7 @@ class payment_category(osv.osv):
     _columns = {
         'name':fields.char('Category Name', size=64, required=True, readonly=False),
         'code':fields.char('Category Code', size=64, required=True, readonly=False),
-        'type':fields.many2one('salary.head.type', 'Type', required=True),
+        'type':fields.many2one('salary.head.type', 'Type', required=True, help="It is used only for the reporting purpose."),
         'base':fields.text('Based on', required=True, readonly=False, help='This will use to computer the % fields values, in general its on basic, but You can use all heads code field in small letter as a variable name i.e. hra, ma, lta, etc...., also you can use, static varible basic'),
         'condition':fields.char('Condition', size=1024, required=True, readonly=False, help='Applied this head for calculation if condition is true'),
         'sequence': fields.integer('Sequence', required=True, help='Use to arrange calculation sequence'),
@@ -678,7 +678,7 @@ class payment_category(osv.osv):
         'user_id':fields.char('User', size=64, required=False, readonly=False),
         'state':fields.char('Label', size=64, required=False, readonly=False),
         'company_id':fields.many2one('res.company', 'Company', required=False),
-        'active': fields.boolean('Active'),
+        'dispaly_payslip_report': fields.boolean('Display on Payslip Report', help="Used for the display of head on Payslip Report."),
         'computation_based':fields.selection([
             ('rules','List of Rules'),
             ('exp','Expression'),
@@ -691,7 +691,7 @@ class payment_category(osv.osv):
         'company_id': lambda self, cr, uid, context: \
                 self.pool.get('res.users').browse(cr, uid, uid,
                     context=context).company_id.id,
-        'active': 1,
+        'dispaly_payslip_report': 1,
         'computation_based':'rules',
     }
 payment_category()
