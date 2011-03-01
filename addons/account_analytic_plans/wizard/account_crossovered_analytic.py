@@ -45,8 +45,7 @@ class account_crossovered_analytic(osv.osv_memory):
         acc_ids = [x[0] for x in res]
 
         data = self.read(cr, uid, ids, [], context=context)[0]
-        if isinstance(data['ref'],tuple):
-            data['ref'] = data['ref'][0]
+        data['ref'] = data['ref'][0]
 
         obj_acc = self.pool.get('account.analytic.account').browse(cr, uid, data['ref'], context=context)
         name = obj_acc.name

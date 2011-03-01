@@ -105,8 +105,7 @@ class project_task_delegate(osv.osv_memory):
         task_id = context.get('active_id', False)
         task_pool = self.pool.get('project.task')
         delegate_data = self.read(cr, uid, ids, context=context)[0]
-        if isinstance(delegate_data['user_id'], tuple):
-            delegate_data['user_id'] = delegate_data['user_id'][0]
+        delegate_data['user_id'] = delegate_data['user_id'][0]
         delegate_data['name'] = tools.ustr(delegate_data['name'])
         task_pool.do_delegate(cr, uid, task_id, delegate_data, context=context)
         return {}
