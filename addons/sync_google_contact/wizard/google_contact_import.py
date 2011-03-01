@@ -118,16 +118,15 @@ class synchronize_google_contact(osv.osv_memory):
             return {'type': 'ir.actions.act_window_close'}
 
         return {
-                'name': _('Partner'),
+                'name': _(obj.create_partner =='create_all' and 'Partner') or _('Contacts'),
                 'domain': "[('id','in', ["+','.join(map(str,ids))+"])]",
                 'view_type': 'form',
                 'view_mode': 'tree,form',
-                'res_model': obj.create_partner and 'res.partner' or 'res.partner.address',
+                'res_model': obj.create_partner =='create_all' and 'res.partner' or 'res.partner.address',
                 'context': context,
                 'views': [(False, 'tree'),(False, 'form')],
                 'type': 'ir.actions.act_window',
         }
-
 
     def create_contact(self, cr, uid, gd_client, contact, option,context=None):
         model_obj = self.pool.get('ir.model.data')
