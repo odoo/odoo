@@ -125,7 +125,7 @@ class account_voucher(osv.osv):
                 result = mod_obj.get_object_reference(cr, uid, 'account_voucher', 'view_vendor_payment_form')
             result = result and result[1] or False
             view_id = result
-        if not view_id and context.get('line_type', False):
+        if not view_id and view_type == 'form' and context.get('line_type', False):
             if context.get('line_type', False) == 'customer':
                 result = mod_obj.get_object_reference(cr, uid, 'account_voucher', 'view_vendor_receipt_form')
             else:
