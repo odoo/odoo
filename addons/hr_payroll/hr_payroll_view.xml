@@ -498,9 +498,9 @@
                     <group col="6" colspan="6">
                         <field name="name" select="1"/>
                         <field name="code" select="1"/>
-                        <field name="active" />
-                        <field name="type" select="1"/>
                         <field name="sequence"/>
+                        <field name="type" select="1"/>
+                        <field name="active"/>
                         <group col="2" colspan="4">
                             <separator colspan="4" string="Expression"/>
                             <field name="base" colspan="4" nolabel="1"/>
@@ -511,6 +511,7 @@
                             <field name="condition"/>
                         </group>
                     </group>
+                    <separator colspan="4" string="Description"/>
                     <notebook colspan="4">
                         <page string="Description">
                             <field name="note" colspan="4" nolabel="1"/>
@@ -571,7 +572,7 @@
         <!-- End Payment Heads -->
 
         <!-- Company Contribution -->
-        <record id="hr_company_contribution_form" model="ir.ui.view">
+      <!--  <record id="hr_company_contribution_form" model="ir.ui.view">
             <field name="name">company.contribution.form</field>
             <field name="model">company.contribution</field>
             <field name="type">form</field>
@@ -663,7 +664,7 @@
             id="menu_hr_company_contribution_tree"
             action="action_hr_company_contribution_tree"
             parent="payroll_configure"
-        />
+        />-->
         <!-- End Company Contribution -->
 
         <record id="view_hr_bank_advice_tree" model="ir.ui.view">
@@ -938,6 +939,8 @@
                 <group col="2" colspan="2">
                     <separator colspan="4" string="Company contribution"/>
                     <field name="company_contrib"/>
+                    <field name="register_id"/>
+                    <field name="company_id"/>
                 </group>
                 <notebook colspan="4">
                     <page string="Child Rules" groups="base.group_extended">
@@ -955,44 +958,6 @@
                                 <field name="amount_type"/>
                                 <field name="value"/>
                             </tree>
-                        </field>
-                    </page>
-                  <page string="Contribution">
-                        <field name="contribute_ids" colspan="4" nolabel="1" >
-                            <form string="Company Contribution">
-                                <group col="6" colspan="6">
-                                    <field name="name" select="1"/>
-                                    <field name="code" select="1"/>
-                                </group>
-                                <group col="2" colspan="2">
-                                    <separator colspan="2" string="Contributions"/>
-                                    <field name="amount_type" attrs="{'required': [('contribute','=',True)]}"/>
-                                    <field name="contribute_per" attrs="{'required': [('contribute','=',True)], 'readonly':[(('amount_type','=','func'))]}"/>
-                                    <field name="register_id" attrs="{'required': [('contribute','=',True)]}"/>
-                                </group>
-                                <group col="2" colspan="2">
-                                    <separator colspan="2" string="Other Information"/>
-                                    <field name="company_id" groups="base.group_multi_company" widget="selection" select="1"/>
-                                    <field name="active" select="1"/>
-                                </group>
-                                <notebook colspan="4">
-                                    <page string="Function" attrs="{'readonly': [('amount_type','!=','func')]}">
-                                        <field name="line_ids" colspan="4" nolabel="1">
-                                            <tree string="Function Arguments" editable="bottom">
-                                                <field name="name"/>
-                                                <field name="sequence"/>
-                                                <field name="from_val"/>
-                                                <field name="to_val"/>
-                                                <field name="amount_type"/>
-                                                <field name="value"/>
-                                            </tree>
-                                        </field>
-                                    </page>
-                                    <page string="Description">
-                                        <field name="note" colspan="4" nolabel="1"/>
-                                    </page>
-                                </notebook>
-                            </form>
                         </field>
                     </page>
                     <page string="Description">

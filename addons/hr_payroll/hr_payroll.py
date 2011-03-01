@@ -696,97 +696,97 @@ class payment_category(osv.osv):
     }
 payment_category()
 
-class company_contribution(osv.osv):
-    """
-    Company contribution
-    Allows to configure company contribution for some taxes
-    """
-
-    _name = 'company.contribution'
-    _description = "Company Contribution"
-    _columns = {
-#        'category_id':fields.many2one('hr.salary.rule', 'Heads', required=False),
-        'name':fields.char('Name', size=256, required=True, readonly=False),
-        'code':fields.char('Code', size=64, required=True, readonly=False),
-        'gratuity':fields.boolean('Use for Gratuity ?', required=False),
-        'line_ids':fields.one2many('company.contribution.line', 'contribution_id', 'Calculations', required=False),
-        'register_id':fields.property(
-            'hr.contibution.register',
-            type='many2one',
-            relation='hr.contibution.register',
-            string="Contribution Register",
-            method=True,
-            view_load=True,
-            help="Contribution register based on company",
-            required=False
-        ),
-        'amount_type':fields.selection([
-            ('fix','Fixed Amount'),
-            ('per','Percentage'),
-            ('func','Function Calculation'),
-        ],'Amount Type', select=True),
-        'contribute_per':fields.float('Contribution', digits=(16, 4), help='Define Company contribution ratio 1.00=100% contribution.'),
-        'company_id':fields.many2one('res.company', 'Company', required=False),
-        'active':fields.boolean('Active', required=False),
-        'note': fields.text('Description'),
-    }
-
-    _defaults = {
-        'amount_type': lambda *a:'fix',
-        'active': lambda *a:True,
-        'company_id': lambda self, cr, uid, context: \
-                self.pool.get('res.users').browse(cr, uid, uid,
-                    context=context).company_id.id,
-    }
-
-    def _execute_function(self, cr, uid, id, value, context=None):
-        """
-        self: pointer to self object
-        cr: cursor to database
-        uid: user id of current executer
-        """
-        line_pool = self.pool.get('company.contribution.line')
-        res = 0
-        ids = line_pool.search(cr, uid, [('category_id','=',id), ('to_val','>=',value),('from_val','<=',value)], context=context)
-        if not ids:
-            ids = line_pool.search(cr, uid, [('category_id','=',id), ('from','<=',value)], context=context)
-        if not ids:
-            res = 0
-        else:
-            res = line_pool.browse(cr, uid, ids, context=context)[0].value
-        return res
-
-    def compute(self, cr, uid, id, value, context=None):
-        contrib = self.browse(cr, uid, id, context=context)
-        if contrib.amount_type == 'fix':
-            return contrib.contribute_per
-        elif contrib.amount_type == 'per':
-            return value * contrib.contribute_per
-        elif contrib.amount_type == 'func':
-            return self._execute_function(cr, uid, id, value, context)
-        return 0.0
-company_contribution()
-
-class company_contribution_line(osv.osv):
-    """
-    Company contribution lines
-    """
-
-    _name = 'company.contribution.line'
-    _description = 'Allowance Deduction Category'
-    _order = 'sequence'
-    _columns = {
-        'contribution_id':fields.many2one('company.contribution', 'Contribution', required=False),
-        'name':fields.char('Name', size=64, required=False, readonly=False),
-        'from_val': fields.float('From', digits=(16, 4)),
-        'to_val': fields.float('To', digits=(16, 4)),
-        'amount_type':fields.selection([
-            ('fix','Fixed Amount'),
-        ],'Amount Type', select=True),
-        'sequence':fields.integer('Sequence'),
-        'value': fields.float('Value', digits=(16, 4)),
-    }
-company_contribution_line()
+#class company_contribution(osv.osv):
+#    """
+#    Company contribution
+#    Allows to configure company contribution for some taxes
+#    """
+#
+#    _name = 'company.contribution'
+#    _description = "Company Contribution"
+#    _columns = {
+##        'category_id':fields.many2one('hr.salary.rule', 'Heads', required=False),
+#        'name':fields.char('Name', size=256, required=True, readonly=False),
+#        'code':fields.char('Code', size=64, required=True, readonly=False),
+#        'gratuity':fields.boolean('Use for Gratuity ?', required=False),
+#        'line_ids':fields.one2many('company.contribution.line', 'contribution_id', 'Calculations', required=False),
+#        'register_id':fields.property(
+#            'hr.contibution.register',
+#            type='many2one',
+#            relation='hr.contibution.register',
+#            string="Contribution Register",
+#            method=True,
+#            view_load=True,
+#            help="Contribution register based on company",
+#            required=False
+#        ),
+#        'amount_type':fields.selection([
+#            ('fix','Fixed Amount'),
+#            ('per','Percentage'),
+#            ('func','Function Calculation'),
+#        ],'Amount Type', select=True),
+#        'contribute_per':fields.float('Contribution', digits=(16, 4), help='Define Company contribution ratio 1.00=100% contribution.'),
+#        'company_id':fields.many2one('res.company', 'Company', required=False),
+#        'active':fields.boolean('Active', required=False),
+#        'note': fields.text('Description'),
+#    }
+#
+#    _defaults = {
+#        'amount_type': lambda *a:'fix',
+#        'active': lambda *a:True,
+#        'company_id': lambda self, cr, uid, context: \
+#                self.pool.get('res.users').browse(cr, uid, uid,
+#                    context=context).company_id.id,
+#    }
+#
+#    def _execute_function(self, cr, uid, id, value, context=None):
+#        """
+#        self: pointer to self object
+#        cr: cursor to database
+#        uid: user id of current executer
+#        """
+#        line_pool = self.pool.get('company.contribution.line')
+#        res = 0
+#        ids = line_pool.search(cr, uid, [('category_id','=',id), ('to_val','>=',value),('from_val','<=',value)], context=context)
+#        if not ids:
+#            ids = line_pool.search(cr, uid, [('category_id','=',id), ('from','<=',value)], context=context)
+#        if not ids:
+#            res = 0
+#        else:
+#            res = line_pool.browse(cr, uid, ids, context=context)[0].value
+#        return res
+#
+#    def compute(self, cr, uid, id, value, context=None):
+#        contrib = self.browse(cr, uid, id, context=context)
+#        if contrib.amount_type == 'fix':
+#            return contrib.contribute_per
+#        elif contrib.amount_type == 'per':
+#            return value * contrib.contribute_per
+#        elif contrib.amount_type == 'func':
+#            return self._execute_function(cr, uid, id, value, context)
+#        return 0.0
+#company_contribution()
+#
+#class company_contribution_line(osv.osv):
+#    """
+#    Company contribution lines
+#    """
+#
+#    _name = 'company.contribution.line'
+#    _description = 'Allowance Deduction Category'
+#    _order = 'sequence'
+#    _columns = {
+#        'contribution_id':fields.many2one('company.contribution', 'Contribution', required=False),
+#        'name':fields.char('Name', size=64, required=False, readonly=False),
+#        'from_val': fields.float('From', digits=(16, 4)),
+#        'to_val': fields.float('To', digits=(16, 4)),
+#        'amount_type':fields.selection([
+#            ('fix','Fixed Amount'),
+#        ],'Amount Type', select=True),
+#        'sequence':fields.integer('Sequence'),
+#        'value': fields.float('Value', digits=(16, 4)),
+#    }
+#company_contribution_line()
 
 class hr_holidays_status(osv.osv):
 
@@ -954,7 +954,7 @@ class hr_payslip(osv.osv):
         return True
 
     def verify_sheet(self, cr, uid, ids, context=None):
-        register_pool = self.pool.get('company.contribution')
+#        register_pool = self.pool.get('company.contribution')
         register_line_pool = self.pool.get('hr.contibution.register.line')
 
         for slip in self.browse(cr, uid, ids, context=context):
@@ -963,25 +963,25 @@ class hr_payslip(osv.osv):
                 'net':slip.net,
                 'gross':slip.grows,
             }
-            rules = slip.contract_id.struct_id.rule_ids
-            if rules:
-                for rl in rules:
-                    if rl.contribute_ids:
-                        base[rl.code.lower()] = rl.amount
-                        for contrib in rl.contribute_ids:
-                            if contrib.register_id:
-                                value = eval(rl.category_id.base, base)
-                                company_contrib = register_pool.compute(cr, uid, contrib.id, value, context)
-                                reg_line = {
-                                    'name':rl.name,
-                                    'register_id': contrib.register_id.id,
-                                    'code':rl.code,
-                                    'employee_id':slip.employee_id.id,
-                                    'emp_deduction':rl.amount,
-                                    'comp_deduction':company_contrib,
-                                    'total':rl.amount + rl.amount
-                                }
-                                register_line_pool.create(cr, uid, reg_line)
+#            rules = slip.contract_id.struct_id.rule_ids
+#            if rules:
+#                for rl in rules:
+#                    if rl.contribute_ids:
+#                        base[rl.code.lower()] = rl.amount
+#                        for contrib in rl.contribute_ids:
+#                            if contrib.register_id:
+#                                value = eval(rl.category_id.base, base)
+#                                company_contrib = register_pool.compute(cr, uid, contrib.id, value, context)
+#                                reg_line = {
+#                                    'name':rl.name,
+#                                    'register_id': contrib.register_id.id,
+#                                    'code':rl.code,
+#                                    'employee_id':slip.employee_id.id,
+#                                    'emp_deduction':rl.amount,
+#                                    'comp_deduction':company_contrib,
+#                                    'total':rl.amount + rl.amount
+#                                }
+#                                register_line_pool.create(cr, uid, reg_line)
 
         self.write(cr, uid, ids, {'state':'confirm'}, context=context)
         return True
@@ -1369,10 +1369,11 @@ class hr_salary_rule(osv.osv):
         'active': fields.boolean('Active'),
         'min_range': fields.float('Minimum Range', required=False),
         'max_range': fields.float('Maximum Range', required=False),
-        'contribute_ids':fields.one2many('company.contribution', 'category_id', 'Contributions', required=False),
         'sal_rule_id':fields.many2one('hr.salary.rule', 'Parent Salary Structure', select=True),
         'child_depend':fields.boolean('Children Rule'),
         'child_ids':fields.one2many('hr.salary.rule', 'sal_rule_id', 'Child Salary Sructure'),
+        'company_id':fields.many2one('res.company', 'Company', required=False),
+        'register_id':fields.many2one('hr.contibution.register', 'Contri Reg', select=True),
      }
     _defaults = {
         'active': 1
@@ -1409,15 +1410,6 @@ class hr_payroll_structure(osv.osv):
     }
 
 hr_payroll_structure()
-
-class company_contribution(osv.osv):
-
-    _inherit = 'company.contribution'
-    _columns = {
-        'category_id':fields.many2one('hr.salary.rule', 'Heads', required=False),  
-    }
-
-company_contribution()
 
 class hr_employee(osv.osv):
     '''
