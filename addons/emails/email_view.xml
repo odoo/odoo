@@ -21,7 +21,7 @@
                         <page string="Details">
                             <group col="2" colspan="2">
                                 <separator string="Email Followers" colspan="4"/>
-                                <field name="email_from" />
+                                <field name="email_from"/>
                                 <field name="email_to"/>
                                 <field name="email_cc"/>
                                 <field name="email_bcc" groups="base.group_extended"/>
@@ -72,7 +72,7 @@
             <field name="model">email.message</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Emails">
+                <tree colors="gray:folder in ('trash')" string="Emails">
                     <field name="date"/>
                     <field name="name"/>
                     <field name="email_from"/>
@@ -101,6 +101,7 @@
                     <separator orientation="vertical"/>
                     <filter icon="terp-call-start" string="Waiting" domain="[('state','=','waiting')]"/>
                     <filter icon="terp-gtk-stop" string="Exception" domain="[('state','=','exception')]"/>
+                    <field name="email_from"/>
                     <field name="name"/>
                     <field name="date"/>
                     <field name="user_id" string="User"/>

@@ -95,7 +95,7 @@ class email_compose_message(osv.osv_memory):
             model =  context.get('email_model')
         if model:
             record_ids = email_temp_pool.search(cr, uid, [('model','=',model)])
-            return email_temp_pool.name_get(cr, uid, record_ids, context)
+            return email_temp_pool.name_get(cr, uid, record_ids, context) + [(False,'')]
         return []
 
     _columns = {
@@ -110,31 +110,17 @@ class email_compose_message(osv.osv_memory):
         email_temp_previ_pool = self.pool.get('email_template.preview')
         result = self.on_change_referred_doc(cr, uid, [],  model, resource_id, context=context)
         vals = result.get('value',{})
-        if template_id:
+        if template_id and resource_id:
             email_temp_pool = self.pool.get('email.template')
             email_temp_data = email_temp_pool.browse(cr, uid, template_id, context)
             vals.update({'smtp_server_id': email_temp_data.smtp_server_id and email_temp_data.smtp_server_id.id or False})
-        if template_id and resource_id:
             context.update({'template_id': template_id})
             value = email_temp_previ_pool.on_change_ref(cr, uid, [], resource_id, context)
-            new_value = value.get('value',{})
-            if vals.get('email_from'):
-                new_value.get('email_from') and new_value.update({'email_from': new_value.get('email_from') + ',' + vals.get('email_from')}) or vals.get('email_from')
-
-            if vals.get('email_to'):
-                new_value.update({'email_to': new_value.get('email_to') + ',' + vals.get('email_to')}) or vals.get('email_to')
-
-            if vals.get('email_cc'):
-                new_value.get('email_cc') and new_value.update({'email_cc': new_value.get('email_cc') + ',' + vals.get('email_cc')}) or vals.get('email_cc')
-
-            if vals.get('email_bcc'):
-                new_value.get('email_bcc') and new_value.update({'email_bcc': new_value.get('email_bcc') + ',' + vals.get('email_bcc')}) or vals.get('email_bcc')
-
-            if vals.get('reply_to'):
-                new_value.get('reply_to') and new_value.update({'reply_to': new_value.get('reply_to') + ',' + vals.get('reply_to')}) or vals.get('reply_to')
-
-            vals.update(new_value)
-            vals.update({'name': new_value.get('subject','')})
+            vals.update(value.get('value',{}))
+            vals.update({'name': value.get('value',{}).get('subject','')})
+            vals.update({'attachment_ids' : email_temp_pool.read(cr, uid, template_id, ['attachment_ids'])['attachment_ids']})
+        else:
+            vals.update({'attachment_ids' : []})
         return {'value': vals}
 
 email_compose_message()

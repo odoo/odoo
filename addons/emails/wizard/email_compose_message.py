@@ -132,8 +132,17 @@ class email_compose_message(osv.osv_memory):
         'res_id':fields.selection(_get_records, 'Referred Document'),
     }
 
+    def get_value(self, cr, uid, model, resource_id, context=None):
+        return {}
+
     def on_change_referred_doc(self, cr, uid, ids, model, resource_id, context=None):
         return {'value':{}}
+
+    def on_change_smtp_server(self, cr, uid, ids, smtp_server_id, email_from, context=None):
+        if not email_from and smtp_server_id:
+            email_smtp_server_pool = self.pool.get("email.smtp_server")
+            email_from = email_smtp_server_pool.browse(cr, uid, smtp_server_id, context).email_id or False
+        return {'value':{'email_from': email_from}}
 
     def save_to_drafts(self, cr, uid, ids, context=None):
         if context is None:
