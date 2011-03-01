@@ -185,7 +185,7 @@
                                 icon="terp-document-new" type="action" />
 	                    <button string="Send New Email"
 	                        name="%(emails.action_email_compose_message_wizard)d"
-	                        context="{'email_model': 'hr.applicant'}"
+	                        context="{'email_model': 'hr.applicant', 'email_res_id': active_id}"
 	                        icon="terp-mail-message-new" type="action"/>
                  </page>
                  <page string="Notes">
