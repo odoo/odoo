@@ -34,8 +34,8 @@
                    ],
     'demo_xml': [],
     'test': [
-             'test/test_sync_google_contact_import_address.yml',
              'test/test_sync_google_contact_import_partner.yml',
+             'test/test_sync_google_contact_import_address.yml',
     ],
     'installable': True,
     'active': False,
