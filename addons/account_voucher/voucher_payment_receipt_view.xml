@@ -161,6 +161,7 @@
                         <field name="date" select="1" on_change="onchange_date(partner_id, journal_id, amount, currency_id, type, date)"/>
                         <field name="reference" select="1" string="Payment Ref"/>
                         <field name="name" colspan="2"/>
+                        <field name="company_id" select="1" widget="selection" groups="base.group_multi_company"/>
                         <field name="account_id"
                             widget="selection"
                             invisible="True"/>
@@ -220,7 +221,6 @@
                         </page>
                         <page string="Journal Items" groups="base.group_extended" attrs="{'invisible': [('state','!=','posted')]}">
                             <group col="6" colspan="4">
-                                <field name="company_id" select="1" widget="selection" groups="base.group_multi_company"/>
                                 <field name="period_id"/>
                                 <field name="audit"/>
                             </group>
@@ -300,6 +300,7 @@
                         <field name="date" select="1" on_change="onchange_date(partner_id, journal_id, amount, currency_id, type, date)"/>
                         <field name="reference" select="1" string="Payment Ref"/>
                         <field name="name" colspan="2"/>
+                        <field name="company_id" select="1" widget="selection" groups="base.group_multi_company"/>
                         <field name="account_id"
                             widget="selection"
                             invisible="True"/>
@@ -359,7 +360,6 @@
                         </page>
                         <page string="Journal Items" groups="base.group_extended" attrs="{'invisible': [('state','!=','posted')]}">
                             <group col="6" colspan="4">
-                                <field name="company_id" select="1" widget="selection" groups="base.group_multi_company"/>
                                 <field name="period_id"/>
                                 <field name="audit"/>
                             </group>
