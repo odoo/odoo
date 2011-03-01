@@ -1908,7 +1908,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Actions">
-                    <filter string="To Do" name="todo" icon="terp-camera_test" domain=" ['|',('state','=','open'),'&amp;',('state','=','skip'),('restart','=','onskip')]" help="Todo State Or (Skip State And Onskip Restart)"/>
+                    <filter string="To Do" name="todo" icon="terp-camera_test" domain=" ['|',('state','=','open'),'&amp;',('state','=','skip'),('restart','=','on_trigger')]" help="Todo State Or (Skip State And ontrigger Restart)"/>
                     <separator orientation="vertical"/>
                     <field name="state"/>
                     <field name="restart"/>
