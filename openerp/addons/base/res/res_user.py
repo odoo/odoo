@@ -571,7 +571,6 @@ class groups2(osv.osv): ##FIXME: Is there a reason to inherit this object ?
         for record in self.read(cr, uid, ids, ['users'], context=context):
             if record['users']:
                 group_users.extend(record['users'])
-
         if group_users:
             user_names = [user.name for user in self.pool.get('res.users').browse(cr, uid, group_users, context=context)]
             if len(user_names) >= 5:
