@@ -118,7 +118,7 @@ class synchronize_google_contact(osv.osv_memory):
             return {'type': 'ir.actions.act_window_close'}
 
         return {
-                'name': _(obj.create_partner =='create_all' and 'Partner') or _('Contacts'),
+                'name': _(obj.create_partner =='create_all' and 'Partners') or _('Contacts'),
                 'domain': "[('id','in', ["+','.join(map(str,ids))+"])]",
                 'view_type': 'form',
                 'view_mode': 'tree,form',
@@ -219,7 +219,7 @@ class synchronize_google_contact(osv.osv_memory):
         if data.get('partner_id') and not addres :
             res['partner_id'] = data.get('partner_id')
         addresss_obj.write(cr,uid,contact_ids,res,context=context)
-        return {}
+        return {'type': 'ir.actions.act_window_close'}
 
 synchronize_google_contact()
 
