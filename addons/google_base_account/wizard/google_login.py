@@ -30,7 +30,7 @@ class google_login(osv.osv_memory):
     _description ='Google Contact'
     _name = 'google.login'
     _columns = {
-        'user': fields.char('User Name', size=64, required=True),
+        'user': fields.char('Username', size=64, required=True),
         'password': fields.char('Password', size=64),
     }
 
@@ -74,7 +74,7 @@ class google_login(osv.osv_memory):
             }
             self.pool.get('res.users').write(cr, uid, uid, res, context=context)
         except :
-            raise osv.except_osv(_('Error'), _("Authication fail check  the user and password !"))
+            raise osv.except_osv(_('Error'), _("Authentication fail check the user and password !"))
 
         return self._get_next_action(cr, uid, context=context)
 

@@ -30,53 +30,6 @@ try:
 except ImportError:
     raise osv.except_osv(_('Google Contacts Import Error!'), _('Please install gdata-python-client from http://code.google.com/p/gdata-python-client/downloads/list'))
 
-class google_base_import(osv.osv_memory):
-    _inherit = 'synchronize.base.contact.wizard.import'
-
-    def _get_tools_name(self, cr, user, context):
-        """
-        @return the list of value of the selection field
-        should be overwritten by subclasses
-        """
-        names = super(google_base_import, self)._get_tools_name(cr, user, context=context)
-        names.append(('gmail','Gmail address book'))
-        return names
-
-
-    _columns = {
-        'tools':  fields.selection(_get_tools_name, 'App to synchronize with'),
-    }
-
-
-    def _get_actions_dic(self, cr, uid, context=None):
-        """
-            this method should be overwritten in specialize module
-            @return the dictonnaries of action
-        """
-        actions = super(google_base_import, self)._get_actions_dic(cr, uid, context=context)
-
-        data_obj = self.pool.get('ir.model.data')
-        data_id = data_obj._get_id(cr, uid, 'google_base_account', 'view_google_login_form')
-        view_id = False
-        if data_id:
-            view_id = data_obj.browse(cr, uid, data_id, context=context).res_id
-
-        value = {
-            'name': _('Import Contact'),
-            'view_type': 'form',
-            'view_mode': 'form,tree',
-            'res_model': 'google.login.contact',
-            'view_id': False,
-            'context': context,
-            'views': [(view_id, 'form')],
-            'type': 'ir.actions.act_window',
-            'target': 'new',
-        }
-        actions['gmail'] = value
-        return actions
-
-google_base_import()
-
 class google_contact_import(osv.osv_memory):
     _inherit = 'google.login'
     _name = 'google.login.contact'
@@ -120,12 +73,12 @@ class synchronize_google_contact(osv.osv_memory):
         return res
 
     _columns = {
-        'create_partner': fields.boolean('Create Partner', help="It will create Partner for given gmail user otherwise only adds contacts in Partner Addresses.")  ,
-        'group_name': fields.selection(_get_group, "Group Name", size=32,help="Choose which group to import, By defult it take all "),
+        'create_partner': fields.selection([('create_all','Create partner for each contact'),('create_address','Import only address')],'Options'),
+        'group_name': fields.selection(_get_group, "Group Name", size=32,help="Choose which group to import, By default it takes all."),
      }
 
     _defaults = {
-        'create_partner': True,
+        'create_partner': 'create_all',
         'group_name': 'all',
     }
 
@@ -138,7 +91,7 @@ class synchronize_google_contact(osv.osv_memory):
         return partner_id, data
 
     def import_contact(self, cr, uid, ids, context=None):
-        obj=self.browse(cr, uid, ids, context=context)[0]
+        obj = self.browse(cr, uid, ids, context=context)[0]
         if obj.group_name == 'none':
             return { 'type': 'ir.actions.act_window_close' }
 
@@ -155,28 +108,27 @@ class synchronize_google_contact(osv.osv_memory):
 
         if obj.group_name not in ['all','none']:
             query = gdata.contacts.service.ContactsQuery()
-            query.group =obj.group_name
+            query.group = obj.group_name
             contact = gd_client.GetContactsFeed(query.ToUri())
         else:
             contact = gd_client.GetContactsFeed()
 
-        ids = self.create_contact( cr, uid, gd_client,contact, partner_id=obj.create_partner,context=context)
+        ids = self.create_contact(cr, uid, gd_client, contact, option=obj.create_partner,context=context)
         if not ids:
             return {'type': 'ir.actions.act_window_close'}
 
         return {
-                'name': _('Partner'),
+                'name': _(obj.create_partner =='create_all' and 'Partner') or _('Contacts'),
                 'domain': "[('id','in', ["+','.join(map(str,ids))+"])]",
                 'view_type': 'form',
                 'view_mode': 'tree,form',
-                'res_model': obj.create_partner and 'res.partner' or 'res.partner.address',
+                'res_model': obj.create_partner =='create_all' and 'res.partner' or 'res.partner.address',
                 'context': context,
                 'views': [(False, 'tree'),(False, 'form')],
                 'type': 'ir.actions.act_window',
         }
 
-
-    def create_contact(self, cr, uid, gd_client,contact, partner_id=False,context=None):
+    def create_contact(self, cr, uid, gd_client, contact, option,context=None):
         model_obj = self.pool.get('ir.model.data')
         addresss_obj = self.pool.get('res.partner.address')
         addresses = []
@@ -227,7 +179,7 @@ class synchronize_google_contact(osv.osv_memory):
                     #create or link to an existing partner only if it's a new contact
                     res_id = addresss_obj.create(cr, uid, data, context=context)
                     data['address_id'] = res_id
-                    if partner_id:
+                    if option == 'create_all':
                         partner_id, data = self.create_partner(cr, uid, data, context=context)
                         partner_ids.append(partner_id[0])
                     addresses.append(res_id)
@@ -237,15 +189,15 @@ class synchronize_google_contact(osv.osv_memory):
             next = contact.GetNextLink()
             contact = next and gd_client.GetContactsFeed(next.href) or None
 
-        if partner_id:
+        if option == 'create_all':
             return partner_ids
         else:
             return addresses
 
-    def update_contact(self, cr, uid, contact_ids, data,context=None):
+    def update_contact(self, cr, uid, contact_ids, data, context=None):
         addresss_obj = self.pool.get('res.partner.address')
-        if context==None:
-            context={}
+        if context == None:
+            context = {}
         res = {}
         addr = addresss_obj.browse(cr,uid,contact_ids)[0]
         name = str((addr.name or addr.partner_id and addr.partner_id.name or '').encode('utf-8'))

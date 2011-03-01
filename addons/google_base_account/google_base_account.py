@@ -19,12 +19,12 @@
 #
 ##############################################################################
 
-from osv import fields,osv,orm
+from osv import fields,osv
     
 class res_users(osv.osv):
     _inherit = "res.users"
     _columns = {
-        'gmail_user': fields.char('User Name', size=64,),
+        'gmail_user': fields.char('Google Account', size=64,),
         'gmail_password': fields.char('Password', size=64),
     }
 res_users()    
