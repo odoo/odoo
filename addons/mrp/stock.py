@@ -95,9 +95,10 @@ class StockMove(osv.osv):
                     'location_id': move.location_dest_id.id,
                     'auto_validate': True,
                     'picking_id': False,
-                    'state': 'waiting'
+                    'state': 'confirmed'
                 })
                 for m in procurement_obj.search(cr, uid, [('move_id','=',move.id)], context):
+                    wf_service.trg_validate(uid, 'procurement.order', m, 'button_confirm', cr)
                     wf_service.trg_validate(uid, 'procurement.order', m, 'button_wait_done', cr)
         return True
     
