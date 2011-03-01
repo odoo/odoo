@@ -116,7 +116,7 @@ class email_server(osv.osv):
         if context is None:
             context = {}
         for server in self.browse(cr, uid, ids, context=context):
-            logger.notifyChannel('imap', netsvc.LOG_INFO, 'fetchmail start checking for new emails on %s' % (server.name))
+            logger.notifyChannel(server.type, netsvc.LOG_INFO, 'fetchmail start checking for new emails on %s' % (server.name))
             context.update({'server_id': server.id, 'server_type': server.type})
             try:
                 if server.type == 'imap':
@@ -180,11 +180,10 @@ class email_server(osv.osv):
 
                             imap_server.store(num, '+FLAGS', '\\Seen')
                         count += 1
-                    logger.notifyChannel('imap', netsvc.LOG_INFO, 'fetchmail fetch/process %s email(s) from %s' % (count, server.name))
+                    logger.notifyChannel(server.type, netsvc.LOG_INFO, 'fetchmail fetch/process %s email(s) from %s' % (count, server.name))
 
                 except Exception, e:
                     logger.notifyChannel(server.type, netsvc.LOG_WARNING, '%s' % (tools.ustr(e)))
-
                 finally:
                     imap_server.close()
                     imap_server.logout()
@@ -201,10 +200,9 @@ class email_server(osv.osv):
                             action_pool.run(cr, user, [server.action_id.id], {'active_id': res_id, 'active_ids':[res_id]})
 
                         pop_server.dele(num)
-                    logger.notifyChannel('imap', netsvc.LOG_INFO, 'fetchmail fetch %s email(s) from %s' % (numMsgs, server.name))
+                    logger.notifyChannel(server.type, netsvc.LOG_INFO, 'fetchmail fetch %s email(s) from %s' % (numMsgs, server.name))
                 except Exception, e:
                     logger.notifyChannel(server.type, netsvc.LOG_WARNING, '%s' % (tools.ustr(e)))
-
                 finally:
                     pop_server.quit()
         return True
