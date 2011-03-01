@@ -814,8 +814,13 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Salary Rules">
+                    <field name="category_id"/>
+                    <field name="sequence" groups="base.group_extended"/>
                     <field name="name"/>
+                    <field name="code"/>
                     <field name="type"/>
+                    <field name="amount_type"/>
+                    <field name="amount"/>
                 </tree>
             </field>
         </record>
