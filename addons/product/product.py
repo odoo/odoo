@@ -557,7 +557,7 @@ class product_product(osv.osv):
         if not args:
             args=[]
         if name:
-            ids = self.search(cr, user, [('default_code',operator,name)]+ args, limit=limit, context=context)
+            ids = self.search(cr, user, [('default_code','=',name)]+ args, limit=limit, context=context)
             if not len(ids):
                 ids = self.search(cr, user, [('ean13','=',name)]+ args, limit=limit, context=context)
             if not len(ids):
@@ -766,12 +766,12 @@ class product_supplierinfo(osv.osv):
         currency_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.currency_id.id
         for supplier in partner_pool.browse(cr, uid, supplier_ids, context=context):
             # Compute price from standard price of product
-            price = product_pool.price_get(cr, uid, [product_id], 'standard_price')[product_id]
+            price = product_pool.price_get(cr, uid, [product_id], 'standard_price', context=context)[product_id]
 
             # Compute price from Purchase pricelist of supplier
             pricelist_id = supplier.property_product_pricelist_purchase.id
             if pricelist_id:
-                price = pricelist_pool.price_get(cr, uid, [pricelist_id], product_id, product_qty).setdefault(pricelist_id, 0)
+                price = pricelist_pool.price_get(cr, uid, [pricelist_id], product_id, product_qty, context=context).setdefault(pricelist_id, 0)
                 price = currency_pool.compute(cr, uid, pricelist_pool.browse(cr, uid, pricelist_id).currency_id.id, currency_id, price)
 
             # Compute price from supplier pricelist which are in Supplier Information

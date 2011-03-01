@@ -22,22 +22,106 @@
 from osv import osv, fields
 from tools.translate import _
 
+import time
 
-class crm_lead2opportunity(osv.osv_memory):
-    _name = 'crm.lead2opportunity'
-    _description = 'Lead To Opportunity'
+class crm_lead2opportunity_partner(osv.osv_memory):
+    _name = 'crm.lead2opportunity.partner'
+    _description = 'Lead To Opportunity Partner'
+    _inherit = 'crm.lead2partner'
 
-    def action_cancel(self, cr, uid, ids, context=None):
+    _columns = {
+        'action': fields.selection([('exist', 'Link to an existing partner'), \
+                                    ('create', 'Create a new partner'), \
+                                    ('nothing', 'Do not link to a partner')], \
+                                    'Action', required=True),
+        'name': fields.selection([('convert', 'Convert to Opportunity'), ('merge', 'Merge with existing Opportunity')],'Select Action', required=True),
+        'opportunity_ids': fields.many2many('crm.lead',  'merge_opportunity_rel', 'merge_id', 'opportunity_id', 'Opportunities', domain=[('type', '=', 'opportunity')]),
+    }
+
+    def default_get(self, cr, uid, fields, context=None):
         """
-        Closes Lead To Opportunity form
+            Default get for name, opportunity_ids
+            if there is an exisitng  partner link to the lead, find all existing opportunity link with this partnet to merge
+            all information together
+        """
+        lead_obj = self.pool.get('crm.lead')
+
+
+        res = super(crm_lead2opportunity_partner, self).default_get(cr, uid, fields, context=context)
+        opportunities = res.get('opportunity_ids') or []
+
+        partner_id = False
+        for lead in lead_obj.browse(cr, uid, opportunities, context=context):
+            partner_id = lead.partner_id and lead.partner_id.id or False
+
+        if not partner_id and res.get('partner_id'):
+            partner_id = res.get('partner_id')
+
+        ids = []
+        if partner_id:
+            ids = lead_obj.search(cr, uid, [('partner_id', '=', partner_id), ('type', '=', 'opportunity')])
+            opportunities += ids
+
+        if 'action' in fields:
+            res.update({'action' : partner_id and 'exist' or 'create'})
+        if 'partner_id' in fields:
+            res.update({'partner_id' : partner_id})
+        if 'name' in fields:
+            res.update({'name' : ids and 'merge' or 'convert'})
+        if 'opportunity_ids' in fields:
+            res.update({'opportunity_ids': opportunities})
+
+
+        return res
+
+    def view_init(self, cr, uid, fields, context=None):
+        """
+        This function checks for precondition before wizard executes
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
-        @param ids: List of Lead to Partner's IDs
+        @param fields: List of fields for default value
         @param context: A standard dictionary for contextual values
 
         """
-        return {'type': 'ir.actions.act_window_close'}
+        if context is None:
+            context = {}
+        lead_obj = self.pool.get('crm.lead')
+
+        for lead in lead_obj.browse(cr, uid, context.get('active_ids', []), context=context):
+            if lead.state in ['done', 'cancel']:
+                raise osv.except_osv(_("Warning !"), _("Closed/Cancelled \
+Leads Could not convert into Opportunity"))
+        return False
+
+    def _convert(self, cr, uid, ids, lead, partner_id, stage_ids, context=None):
+        leads = self.pool.get('crm.lead')
+        address_id = self.pool.get('res.partner.address').search(cr, uid,
+                                                                 [('partner_id', '=', partner_id)],
+                                                                 order='create_date desc',
+                                                                 limit=1)
+        vals = {
+            'planned_revenue': lead.planned_revenue,
+            'probability': lead.probability,
+            'name': lead.name,
+            'partner_id': partner_id,
+            'user_id': (lead.user_id and lead.user_id.id),
+            'type': 'opportunity',
+            'stage_id': stage_ids and stage_ids[0] or False,
+            'date_action': time.strftime('%Y-%m-%d %H:%M:%S'),
+        }
+        if address_id:
+            vals['partner_address_id'] = address_id[0]
+
+        lead.write(vals, context=context)
+        leads.history(cr, uid, [lead], _('Converted to opportunity'), details='Converted to Opportunity', context=context)
+        if lead.partner_id:
+            msg_ids = [ x.id for x in lead.message_ids]
+            self.pool.get('mailgate.message').write(cr, uid, msg_ids, {
+                        'partner_id': lead.partner_id.id
+                    }, context=context)
+            leads.log(cr, uid, lead.id, _("Lead '%s' has been converted to an opportunity.") % lead.name)
+
 
     def action_apply(self, cr, uid, ids, context=None):
         """
@@ -46,7 +130,7 @@ class crm_lead2opportunity(osv.osv_memory):
 
         @return : View dictionary opening the Opportunity form view
         """
-        record_id = context and context.get('active_id') or False
+        record_id = context and context.get('active_ids') or False
         if not record_id:
             return {'type': 'ir.actions.act_window_close'}
 
@@ -69,30 +153,24 @@ class crm_lead2opportunity(osv.osv_memory):
             opportunity_view_tree = models_data.browse(
                 cr, uid, opportunity_view_tree, context=context).res_id
 
-        lead = leads.browse(cr, uid, record_id, context=context)
-        if(lead.section_id):
-            stage_ids = self.pool.get('crm.case.stage').search(cr, uid, [('type','=','opportunity'),('sequence','>=',1), ('section_ids','=', lead.section_id.id)])
-        else:
-            stage_ids = self.pool.get('crm.case.stage').search(cr, uid, [('type','=','opportunity'),('sequence','>=',1)])
-        for this in self.browse(cr, uid, ids, context=context):
-            vals ={
-                'planned_revenue': this.planned_revenue,
-                'probability': this.probability,
-                'name': this.name,
-                'partner_id': this.partner_id.id,
-                'user_id': (this.partner_id.user_id and this.partner_id.user_id.id) or (lead.user_id and lead.user_id.id),
-                'type': 'opportunity',
-                'stage_id': stage_ids and stage_ids[0] or False
-            }
-            lead.write(vals, context=context)
-            leads.history(cr, uid, [lead], _('Opportunity'), details='Converted to Opportunity', context=context)
-            if lead.partner_id:
-                msg_ids = [ x.id for x in lead.message_ids]
-                self.pool.get('mailgate.message').write(cr, uid, msg_ids, {
-                    'partner_id': lead.partner_id.id
-                }, context=context)
-            leads.log(cr, uid, lead.id,
-                _("Lead '%s' has been converted to an opportunity.") % lead.name)
+        for lead in leads.browse(cr, uid, record_id, context=context):
+            if(lead.section_id):
+                stage_ids = self.pool.get('crm.case.stage').search(cr, uid, [('type','=','opportunity'),('sequence','>=',1), ('section_ids','=', lead.section_id.id)])
+            else:
+                stage_ids = self.pool.get('crm.case.stage').search(cr, uid, [('type','=','opportunity'),('sequence','>=',1)])
+
+            data = self.browse(cr, uid, ids[0], context=context)
+            partner_ids = []
+            if data.action == 'create':
+                partner_ids = self._create_partner(cr, uid, ids, context=context)
+
+            partner_id = partner_ids and partner_ids[0] or data.partner_id.id
+            self._convert(cr, uid, ids, lead, partner_id, stage_ids, context=context)
+            if data.name == 'merge':
+                merge_obj = self.pool.get('crm.merge.opportunity')
+                self.write(cr, uid, ids, {'opportunity_ids' : [(6,0, [data.opportunity_ids[0].id])]}, context=context)
+                context.update({'lead_ids' : record_id})
+                return merge_obj.merge(cr, uid, data.opportunity_ids, context=context)
 
         return {
             'name': _('Opportunity'),
@@ -109,220 +187,6 @@ class crm_lead2opportunity(osv.osv_memory):
             'search_view_id': opportunity_view_search
         }
 
-    _columns = {
-        'name' : fields.char('Opportunity', size=64, required=True, select=1),
-        'probability': fields.float('Success Rate (%)'),
-        'planned_revenue': fields.float('Expected Revenue'),
-        'partner_id': fields.many2one('res.partner', 'Partner'),
-    }
-
-    def view_init(self, cr, uid, fields, context=None):
-        """
-        This function checks for precondition before wizard executes
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param fields: List of fields for default value
-        @param context: A standard dictionary for contextual values
-
-        """
-        if context is None:
-            context = {}
-        lead_obj = self.pool.get('crm.lead')
-
-        for lead in lead_obj.browse(cr, uid, context.get('active_ids', []), context=context):
-            if lead.state in ['done', 'cancel']:
-                raise osv.except_osv(_("Warning !"), _("Closed/Cancelled \
-Leads Could not convert into Opportunity"))
-        return False
-
-    def default_get(self, cr, uid, fields, context=None):
-        """
-        This function gets default values
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param fields: List of fields for default value
-        @param context: A standard dictionary for contextual values
-
-        @return : default values of fields.
-        """
-        lead_obj = self.pool.get('crm.lead')
-        data = context and context.get('active_ids', []) or []
-        res = super(crm_lead2opportunity, self).default_get(cr, uid, fields, context=context)
-        for lead in lead_obj.browse(cr, uid, data, context=context):
-            if 'name' in fields:
-                res.update({'name': lead.name})
-            if 'partner_id' in fields:
-                res.update({'partner_id': lead.partner_id.id or False})
-        return res
-
-crm_lead2opportunity()
-
-
-class crm_lead2opportunity_partner(osv.osv_memory):
-    _name = 'crm.lead2opportunity.partner'
-    _description = 'Lead To Opportunity Partner'
-    _inherit = 'crm.lead2partner'
-
-    _columns = {
-        'partner_id': fields.many2one('res.partner', 'Partner'),
-        'action': fields.selection([('exist', 'Link to an existing partner'), ('create', 'Create a new partner'), ('no','Do not create a partner')], 'Action'),
-    }
-
-    def make_partner(self, cr, uid, ids, context=None):
-        """
-        This function Makes partner based on action.
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of Lead to Partner's IDs
-        @param context: A standard dictionary for contextual values
-
-        @return : Dictionary value for created Partner form.
-        """
-        if context is None:
-            context = {}
-
-        partner_ids = self._create_partner(cr, uid, ids, context=context)
-        value = {}
-        data_obj = self.pool.get('ir.model.data')
-        data_id = data_obj._get_id(cr, uid, 'crm', 'view_crm_lead2opportunity_action')
-        view_id = False
-        if data_id:
-            view_id = data_obj.browse(cr, uid, data_id, context=context).res_id
-
-        context.update({'partner_id': partner_ids})
-        value = {
-            'name': _('Create Opportunity'),
-            'view_type': 'form',
-            'view_mode': 'form,tree',
-            'res_model': 'crm.lead2opportunity.action',
-            'view_id': False,
-            'context': context,
-            'views': [(view_id, 'form')],
-            'type': 'ir.actions.act_window',
-            'target': 'new',
-        }
-        return value
-
-    def action_skip(self, cr, uid, ids, context=None):
-        """
-        This skips partner creation
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of Lead to Opportunity IDs
-        @param context: A standard dictionary for contextual values
-
-        @return : Dictionary value for Opportunity form
-        """
-        value = {}
-        if context is None:
-            context = {}
-        data_obj = self.pool.get('ir.model.data')
-        data_id = data_obj._get_id(cr, uid, 'crm', 'view_crm_lead2opportunity_create')
-        view_id = False
-        if data_id:
-            view_id = data_obj.browse(cr, uid, data_id, context=context).res_id
-
-        context.update({'partner_id': False})
-        value = {
-            'name': _('Create Opportunity'),
-            'view_type': 'form',
-            'view_mode': 'form,tree',
-            'res_model': 'crm.lead2opportunity',
-            'view_id': False,
-            'context': context,
-            'views': [(view_id, 'form')],
-            'type': 'ir.actions.act_window',
-            'target': 'new',
-        }
-        return value
-
-
-    def view_init(self, cr, uid, fields, context=None):
-        """
-        This function checks for precondition before wizard executes
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param fields: List of fields for default value
-        @param context: A standard dictionary for contextual values
-
-        """
-        if context is None:
-            context = {}
-        lead_obj = self.pool.get('crm.lead')
-
-        for lead in lead_obj.browse(cr, uid, context.get('active_ids', []), context=context):
-            if lead.state in ['done', 'cancel']:
-                raise osv.except_osv(_("Warning !"), _("Closed/Cancelled \
-Leads Could not convert into Opportunity"))
-        return False
-
 crm_lead2opportunity_partner()
-
-class crm_lead2opportunity_action(osv.osv_memory):
-    '''
-    Merge with Existing Opportunity or Convert to Opportunity
-    '''
-    _name = 'crm.lead2opportunity.action'
-    _description = 'Convert/Merge Opportunity'
-    _columns = {
-        'name': fields.selection([('convert', 'Convert to Opportunity'), ('merge', 'Merge with existing Opportunity')],'Select Action', required=True),
-    }
-    _defaults = {
-        'name': 'convert',
-    }
-    def do_action(self, cr, uid, ids, context=None):
-        """
-        This function opens form according to selected Action
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of Lead to Opportunity IDs
-        @param context: A standard dictionary for contextual values
-        @return : Dictionary value for Opportunity form
-        """
-        value = {}
-        if context is None:
-            context = {}
-        data_obj = self.pool.get('ir.model.data')
-        view_id = False
-        for this in self.browse(cr, uid, ids, context=context):
-            if this.name == 'convert':
-                data_id = data_obj._get_id(cr, uid, 'crm', 'view_crm_lead2opportunity_create')
-                if data_id:
-                    view_id = data_obj.browse(cr, uid, data_id, context=context).res_id
-                value = {
-                        'name': _('Create Opportunity'),
-                        'view_type': 'form',
-                        'view_mode': 'form,tree',
-                        'res_model': 'crm.lead2opportunity',
-                        'view_id': False,
-                        'context': context,
-                        'views': [(view_id, 'form')],
-                        'type': 'ir.actions.act_window',
-                        'target': 'new',
-                    }
-            elif this.name == 'merge':
-                data_id = data_obj._get_id(cr, uid, 'crm', 'merge_opportunity_form')
-                if data_id:
-                    view_id = data_obj.browse(cr, uid, data_id, context=context).res_id
-                value = {
-                        'name': _('Merge with Existing Opportunity'),
-                        'view_type': 'form',
-                        'view_mode': 'form,tree',
-                        'res_model': 'crm.merge.opportunity',
-                        'view_id': False,
-                        'context': context,
-                        'views': [(view_id, 'form')],
-                        'type': 'ir.actions.act_window',
-                        'target': 'new',
-                    }
-        return value
-
-crm_lead2opportunity_action()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

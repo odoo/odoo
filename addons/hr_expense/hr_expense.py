@@ -124,6 +124,28 @@ class hr_expense_expense(osv.osv):
         self.write(cr, uid, ids, {'state':'paid'})
         return True
 
+    def invoice(self, cr, uid, ids, context=None):
+        wf_service = netsvc.LocalService("workflow")
+        mod_obj = self.pool.get('ir.model.data')
+        res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_form')
+        res_id = res and res[1] or False,
+        inv_ids = []
+        for id in ids:
+            wf_service.trg_validate(uid, 'hr.expense.expense', id, 'invoice', cr)
+            inv_ids.append(self.browse(cr, uid, id).invoice_id.id)
+        return {
+            'name': _('Supplier Invoices'),
+            'view_type': 'form',
+            'view_mode': 'form,tree',
+            'view_id': [res_id],
+            'res_model': 'account.invoice',
+            'context': "{'type':'out_invoice', 'journal_type': 'purchase'}",
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'current',
+            'res_id': inv_ids and inv_ids[0] or False,
+        }
+
     def action_invoice_create(self, cr, uid, ids):
         res = False
         invoice_obj = self.pool.get('account.invoice')
@@ -194,8 +216,6 @@ class hr_expense_expense(osv.osv):
                     account_journal.write(cr, uid, [journal.id],{'analytic_journal_id':analytic_journal_ids[0]})
             inv_id = invoice_obj.create(cr, uid, inv, {'type': 'in_invoice'})
             invoice_obj.button_compute(cr, uid, [inv_id], {'type': 'in_invoice'}, set_total=True)
-            wf_service = netsvc.LocalService("workflow")
-            wf_service.trg_validate(uid, 'account.invoice', inv_id, 'invoice_open', cr)
 
             self.write(cr, uid, [exp.id], {'invoice_id': inv_id, 'state': 'invoiced'})
             res = inv_id

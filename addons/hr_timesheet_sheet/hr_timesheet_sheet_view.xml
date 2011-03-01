@@ -96,7 +96,7 @@
                             <field name="state_attendance"/>
                             <field name="total_attendance_day" widget="float_time"/>
                             <field colspan="4" context="{'date':date_current,'user_id':user_id}" domain="[('name','=',date_current)]" name="timesheet_ids" nolabel="1">
-                                <tree editable="top" string="Timesheet">
+                                <tree editable="top" string="Timesheet Lines">
                                     <field invisible="1" name="date"/>
                                     <field domain="[('type','=','normal'), ('state', '&lt;&gt;', 'close')]" name="account_id" on_change="on_change_account_id(account_id)"/>
                                     <field name="name"/>
@@ -109,7 +109,7 @@
                                     <field invisible="1" name="general_account_id"/>
                                     <field invisible="1" name="user_id" required="1"/>
                                 </tree>
-                                <form string="Timesheet">
+                                <form string="Timesheet Lines">
                                     <field name="date"/>
                                     <field domain="[('type','=','normal'), ('state', '&lt;&gt;', 'close')]" name="account_id" on_change="on_change_account_id(account_id)"/>
                                     <field name="name"/>

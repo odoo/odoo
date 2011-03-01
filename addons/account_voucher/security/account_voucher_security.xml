@@ -5,13 +5,13 @@
             <field name="name">Voucher multi-company</field>
             <field model="ir.model" name="model_id" ref="model_account_voucher"/>
             <field eval="True" name="global"/>
-            <field name="domain_force">['|','|',('company_id','=',False),('company_id','child_of',[user.company_id.id]),('company_id.child_ids','child_of',[user.company_id.id])]</field>
+            <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
         </record>
         <record id="voucher_line_comp_rule" model="ir.rule">
             <field name="name">Voucher Line multi-company</field>
             <field model="ir.model" name="model_id" ref="model_account_voucher_line"/>
             <field eval="True" name="global"/>
-            <field name="domain_force">['|','|',('company_id','=',False),('company_id','child_of',[user.company_id.id]),('company_id.child_ids','child_of',[user.company_id.id])]</field>
+            <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
         </record>
     </data>
 </openerp>

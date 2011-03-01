@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-02-20 20:25+0000\n"
-"Last-Translator: Emerson <Unknown>\n"
+"PO-Revision-Date: 2011-02-27 18:05+0000\n"
+"Last-Translator: Ivana Vallada <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-02-21 04:50+0000\n"
+"X-Launchpad-Export-Date: 2011-03-01 04:37+0000\n"
 "X-Generator: Launchpad (build 12351)\n"
 
 #. module: account
@@ -2637,11 +2637,11 @@ msgid ""
 "Note that journal entries that are automatically created by the system are "
 "always skipping that state."
 msgstr ""
-"Marque esta caixa se cocê não quer novos lançamentos de diário passem pelo "
-"estado de \"rascunho\" e ao invés ir diretamente para o estado \"postado\" "
-"sem nenhuma validação manual. \n"
+"Marque esta caixa se você não quer que novos lançamentos de diário passem "
+"pelo estado 'provisório'. Ao invés disso, eles irão diretamente para o "
+"estado 'postado' sem nenhuma validação manual. \n"
 "Note que os lançamentos de diário que são automaticamente criados pelo "
-"sistema estão sempre saindo daquele estado."
+"sistema já pulam o status 'privisório'."
 
 #. module: account
 #: model:ir.actions.server,name:account.ir_actions_server_action_wizard_multi_chart
@@ -3242,8 +3242,8 @@ msgid ""
 "All selected journal entries will be validated and posted. It means you "
 "won't be able to modify their accounting fields anymore."
 msgstr ""
-"Todas entradas do diário vão ser validadas e congeladas. Você então não "
-"poderá mais alterar os campos delas."
+"Todas os lançamentos do diário serão validados e postados. Isto significa "
+"que você não poderá mais alterar seus campos."
 
 #. module: account
 #: code:addons/account/invoice.py:370
@@ -4004,6 +4004,11 @@ msgid ""
 "the system on document validation (invoices, bank statements...) and will be "
 "created in 'Posted' state."
 msgstr ""
+"Todos os novos lançamentos manuais de diário, geralmente, estão com status "
+"'Não postado'. Mas você pode alterar o diário relacionado para pular esta "
+"opção. Neste caso, os lançamentos vão se comportar como lançamentos criados "
+"automaticamente pelo sistema na validação de documentos (faturas, extratos, "
+"...) os quais já são gerados com status 'Postado'."
 
 #. module: account
 #: code:addons/account/account_analytic_line.py:91
@@ -4045,7 +4050,7 @@ msgstr "Descrição da taxa"
 #: code:addons/account/report/common_report_header.py:68
 #, python-format
 msgid "All Posted Entries"
-msgstr "Todos os lançamentos publicados"
+msgstr "Todos os Lançamentos Postados"
 
 #. module: account
 #: code:addons/account/account_bank_statement.py:357
@@ -4557,7 +4562,7 @@ msgstr "Planilha de Balanço (Ativos)"
 #. module: account
 #: report:account.tax.code.entries:0
 msgid "Third Party (Country)"
-msgstr ""
+msgstr "Terceiro (País)"
 
 #. module: account
 #: code:addons/account/account.py:938
@@ -4665,9 +4670,9 @@ msgid ""
 "You should set the journal to allow cancelling entries if you want to do "
 "that."
 msgstr ""
-"Você não pode modificar um lançamento feito neste diário!\n"
+"Você não pode modificar um lançamento postado deste diário!\n"
 "Você deveria ajustar o diário para permitir o cancelamento de lançamentos se "
-"você quiser fazer isso."
+"você quiser fazer isto."
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_template_folder
@@ -7717,6 +7722,9 @@ msgid ""
 "will see the taxes with codes related to your legal statement according to "
 "your country."
 msgstr ""
+"A planilha de taxas é usada para gerar sua declaração periódica de impostos. "
+"Você verá as taxas com códigos relacionados à sua declaração legal de acordo "
+"com o país."
 
 #. module: account
 #: view:account.installer.modules:0
@@ -9413,7 +9421,7 @@ msgstr "Selecione o período"
 #: view:account.move.line:0
 #: report:account.move.voucher:0
 msgid "Posted"
-msgstr "Publicado"
+msgstr "Postado"
 
 #. module: account
 #: report:account.account.balance:0
@@ -10117,7 +10125,7 @@ msgstr "Normalmente 1 ou -1"
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account_template
 msgid "Template Account Fiscal Mapping"
-msgstr ""
+msgstr "Modelo para Mapeamento de Conta Fiscal"
 
 #. module: account
 #: field:account.chart.template,property_account_expense:0

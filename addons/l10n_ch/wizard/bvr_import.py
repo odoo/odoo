@@ -31,16 +31,16 @@ def _reconstruct_invoice_ref(cursor, user, reference, context=None):
     ###
     id_invoice = False
     # On fait d'abord une recherche sur toutes les factures
-    # we now searhc for company
+    # we now search for an invoice
     user_obj = pooler.get_pool(cursor.dbname).get('res.users')
     user_current=user_obj.browse(cursor, user, user)
 
     ##
     cursor.execute("SELECT inv.id,inv.number from account_invoice AS inv where inv.company_id = %s" ,(user_current.company_id.id,))
     result_invoice = cursor.fetchall()
-
+    REF = re.compile('[^0-9]')
     for inv_id,inv_name in result_invoice:
-        inv_name =  re.sub('[^0-9]', '0', str(inv_name))
+        inv_name =  REF.sub('0', str(inv_name))
         if inv_name == reference:
             id_invoice = inv_id
             break
@@ -67,6 +67,8 @@ def _import(self, cursor, user, data, context=None):
     property_obj = self.pool.get('ir.property')
     model_fields_obj = self.pool.get('ir.model.fields')
     attachment_obj = self.pool.get('ir.attachment')
+    statement_obj = self.pool.get('account.bank.statement')
+    property_obj = self.pool.get('ir.property')
     file = data['form']['file']
     statement_id = data['id']
     records = []
@@ -124,14 +126,6 @@ def _import(self, cursor, user, data, context=None):
                 total_cost += record['cost']
                 records.append(record)
 
-#    model_fields_ids = model_fields_obj.search(cursor, user, [
-#        ('name', 'in', ['property_account_receivable', 'property_account_payable']),
-#        ('model', '=', 'res.partner'),
-#        ], context=context)
-#    property_ids = property_obj.search(cursor, user, [
-#        ('fields_id', 'in', model_fields_ids),
-#        ('res_id', '=', False),
-#        ], context=context)
     account_receivable = False
     account_payable = False
     statement = statement_obj.browse(cursor, user, statement_id, context=context)
@@ -156,7 +150,6 @@ def _import(self, cursor, user, data, context=None):
             ], order='date desc', context=context)
         if not line_ids:
             line_ids = _reconstruct_invoice_ref(cursor, user, reference, None)
-
         partner_id = False
         account_id = False
         for line in move_line_obj.browse(cursor, user, line_ids, context=context):
@@ -174,8 +167,8 @@ def _import(self, cursor, user, data, context=None):
 #                    line2reconcile = line.id
                     account_id = line.account_id.id
                     break
-        result = voucher_obj.onchange_partner_id(cursor, user, [], partner_id=partner_id, journal_id=statement.journal_id.id, price=abs(record['amount']), currency_id= statement.currency.id, ttype='payment', context=context)
-        voucher_res = { 'type': 'payment' ,
+        result = voucher_obj.onchange_partner_id(cursor, user, [], partner_id, journal_id=statement.journal_id.id, price=abs(record['amount']), currency_id= statement.currency.id, ttype='receipt', date=statement.date ,context=context)
+        voucher_res = { 'type': 'receipt' ,
 
              'name': values['name'],
              'partner_id': partner_id,
@@ -205,16 +198,32 @@ def _import(self, cursor, user, data, context=None):
                 account_id = account_receivable
             else:
                 account_id = account_payable
-        if not account_id :
+        ##If line not linked to an invoice we create a line not linked to a voucher
+        if not account_id and not line_ids:
+            name = "property_account_receivable"
+            if record['amount'] < 0:
+                name = "property_account_payable"
+            prop = property_obj.search(
+                        cursor, 
+                        user,
+                        [
+                            ('name','=','property_account_receivable'),
+                            ('company_id','=',statement.company_id.id),
+                            ('res_id', '=', False)
+                        ]
+            )
+            if prop:
+                value = property_obj.read(cursor, user, prop[0], ['value_reference']).get('value_reference', False)
+                if value :
+                    account_id = int(value.split(',')[1])
+            else :
+                raise osv.except_osv(_('Error'),
+                    _('The properties account payable account receivable are not set'))
+        if not account_id and line_ids:
             raise osv.except_osv(_('Error'),
-                _('The properties account payable account receivable'))
+                _('The properties account payable account receivable are not set'))
         values['account_id'] = account_id
         values['partner_id'] = partner_id
-
-#            values['reconcile_id'] = statement_reconcile_obj.create(cursor, user, {
-#                'line_ids': [(6, 0, [line2reconcile])],
-#                }, context=context)
-
         statement_line_obj.create(cursor, user, values, context=context)
     attachment_obj.create(cursor, user, {
         'name': 'BVR',
