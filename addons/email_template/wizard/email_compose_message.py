@@ -41,7 +41,7 @@ class email_compose_message(osv.osv_memory):
                 if len(context['src_rec_ids']) > 1: # Multiple Mail: Gets original template values for multiple email change
                     return getattr(template, field)
                 else: # Simple Mail: Gets computed template values
-                    return template_pool.get_template_value(cr, uid, getattr(template, field), template.model, context.get('active_id'), context)
+                    return template_pool.get_template_value(cr, uid, getattr(template, field), template.model, context.get('email_res_id'), context)
 
             if 'template_id' in fields:
                 result['template_id'] = template.id
@@ -56,7 +56,7 @@ class email_compose_message(osv.osv_memory):
                 result['model'] = context.get('email_model')
 
             if 'res_id' in fields:
-                result['res_id'] = context.get('active_id')
+                result['res_id'] = context.get('email_res_id')
 
             if 'email_to' in fields:
                 result['email_to'] = _get_template_value('email_to')

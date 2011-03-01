@@ -38,13 +38,13 @@ class email_compose_message(osv.osv_memory):
             model_obj = self.pool.get(model)
             data = model_obj.browse(cr, uid , resource_id, context)
             result.update({
-                    'name' : data.name,
-                    'email_to' : data.email_from,
+                    'name' : data.name or False,
+                    'email_to' : data.email_from or False,
                     'email_from' : data.user_id and data.user_id.address_id and data.user_id.address_id.email or False,
                     'description' : '\n' + (tools.ustr(data.user_id.signature or '')),
                     'email_cc' : tools.ustr(data.email_cc or ''),
-                    'model': model,
-                    'res_id': resource_id,
+                    'model': model  or False,
+                    'res_id': resource_id  or False,
                 })
             if hasattr(data, 'section_id'):
                 result.update({'reply_to' : data.section_id and data.section_id.reply_to or False})

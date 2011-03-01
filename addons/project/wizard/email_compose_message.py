@@ -51,7 +51,7 @@ class email_compose_message(osv.osv_memory):
             header = (task_data.project_id.warn_header or '') % val
             footer = (task_data.project_id.warn_footer or '') % val
             description = u'%s\n %s\n %s\n\n \n%s' % (header, task_data.description or '', footer, task_data.user_id and task_data.user_id.signature)
-            if partner and len(partner.address) and 'email_to' in fields:
+            if partner and len(partner.address):
                 result.update({'email_to': result.get('email_to',False) and result.get('email_to') + ',' + partner.address[0].email})
             result.update({
                        'description': description or False,

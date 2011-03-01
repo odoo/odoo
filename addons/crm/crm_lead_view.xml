@@ -108,7 +108,7 @@
                         <field name="email_from" widget="email"/>
                         <button string="Send Email"
                             name="%(emails.action_email_compose_message_wizard)d"
-                            context="{'email_model':'crm.lead'}"
+                            context="{'email_model':'crm.lead', 'email_res_id': active_id}"
                             icon="terp-mail-message-new" type="action" colspan="1"/>
                         <newline/>
                         <field name="phone"/>
@@ -227,7 +227,7 @@
                         icon="terp-document-new" type="action" />
                     <button string="Send New Email"
                         name="%(emails.action_email_compose_message_wizard)d"
-                        context="{'email_model':'crm.lead'}"
+                        context="{'email_model':'crm.lead', 'email_res_id': active_id}"
                         icon="terp-mail-message-new" type="action"/>
                  </page>
                 </notebook>
