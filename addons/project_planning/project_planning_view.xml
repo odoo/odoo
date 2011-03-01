@@ -109,7 +109,7 @@
                                                         <button name="do_reopen" states="done,cancelled" string="Reactivate" type="object" icon="gtk-convert"/>
                                                         <button name="do_pending" states="open" string="Pending" type="object" icon="gtk-media-pause"/>
                                                         <button groups="base.group_extended" name="%(project.action_project_task_delegate)d" states="pending,open" string="Delegate" type="action" icon="gtk-sort-descending"/>
-                                                        <button name="%(emails.action_email_compose_message_wizard)d" context="{'email_model':'project.task'}" states="pending,open" string="Done" type="action" icon="gtk-jump-to"/>
+                                                        <button name="%(emails.action_email_compose_message_wizard)d" context="{'email_model':'project.task', 'email_res_id': active_id}" states="pending,open" string="Done" type="action" icon="gtk-jump-to"/>
                                                     </group>
                                                  </page>
                                                 <page groups="base.group_extended" string="Extra Info" attrs="{'readonly':[('state','=','done')]}">

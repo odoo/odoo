@@ -55,15 +55,15 @@ class email_compose_message(osv.osv_memory):
             if record_data.state == "waiting_answer":
                 msg = _("Hello %s, \n\n Kindly post your response for '%s' survey interview. \n\n Thanks,")  %(record_data.user_to_review_id.name, record_data.survey_id.title)
                 result.update({
-                                'email_from': tools.config.get('email_from',''),
-                                'email_to': record_data.user_to_review_id.work_email or False,
-                                'name': _("Reminder to fill up Survey"),
-                                'description': msg,
-                                'res_id': resource_id,
-                                'email_cc': False,
-                                'email_bcc': False,
-                                'reply_to': False,
-                            })
+                        'email_from': tools.config.get('email_from',''),
+                        'email_to': record_data.user_to_review_id.work_email or False,
+                        'name': _("Reminder to fill up Survey"),
+                        'description': msg,
+                        'res_id': resource_id,
+                        'email_cc': False,
+                        'email_bcc': False,
+                        'reply_to': False,
+                    })
         return result
 
 email_compose_message()
