@@ -32,6 +32,32 @@ class email_compose_message(osv.osv_memory):
         if context is None:
             context = {}
         result = super(email_compose_message, self).default_get(cr, uid, fields, context=context)
+        if context.get('email_model') and context.get('active_id'):
+            vals = self.get_value(cr, uid, context.get('email_model'), context.get('active_id'), context)
+            if 'name' in fields and vals:
+                result.update({'name' : vals.get('name','')})
+
+            if 'email_to' in fields and vals:
+                result.update({'email_to' : vals.get('email_to','')})
+
+            if 'email_from' in fields and vals:
+                result.update({'email_from' : vals.get('email_from','')})
+
+            if 'description' in fields and vals:
+                result.update({'description' : vals.get('description','')})
+
+            if 'model' in fields and vals:
+                result.update({'model' : vals.get('model','')})
+
+            if 'email_cc' in fields and vals:
+                result.update({'email_cc' : vals.get('email_cc','')})
+
+            if 'res_id' in fields and vals:
+                result.update({'res_id' : vals.get('res_id',0)})
+
+            if 'reply_to' in fields and vals:
+                result['reply_to'] = vals.get('reply_to','')
+
         message_pool = self.pool.get('email.message')
         message_id = context.get('message_id', False)
         if message_id:
@@ -136,7 +162,24 @@ class email_compose_message(osv.osv_memory):
         return {}
 
     def on_change_referred_doc(self, cr, uid, ids, model, resource_id, context=None):
-        return {'value':{}}
+        if context is None:
+            context = {}
+        if context.get('mail') == 'reply':
+            return {'value':{}}
+        result = {}
+        if resource_id and model:
+            vals = self.get_value(cr, uid, model, resource_id, context)
+            if vals:
+                result.update({
+                            'email_from':  vals.get('email_from',''),
+                            'email_to':  vals.get('email_to',''),
+                            'name':  vals.get('name',''),
+                            'description':  vals.get('description',''),
+                            'email_cc':  vals.get('email_cc',''),
+                            'email_bcc':  vals.get('email_bcc',''),
+                            'reply_to':  vals.get('reply_to',''),
+                        })
+        return {'value': result}
 
     def on_change_smtp_server(self, cr, uid, ids, smtp_server_id, email_from, context=None):
         if not email_from and smtp_server_id:
