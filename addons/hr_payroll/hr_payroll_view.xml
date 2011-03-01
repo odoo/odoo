@@ -252,10 +252,10 @@
                   </group>
                 <group colspan="2">
                     <separator colspan="2" string="Payroll Configurtion"/><newline/>
-                    <field name="type"/><newline/>
+                    <!--<field name="type"/><newline/>
                     <field name="head_id"/><newline/>
-                    <field name="company_id" groups="base.group_multi_company" widget="selection" select="2"/><newline/>
-                    <field name="code" readonly="True"/>
+                    <field name="company_id" groups="base.group_multi_company" widget="selection" select="2"/><newline/>-->
+                    <field name="code" />
                 </group>
             </xpath>
         </field>
@@ -926,7 +926,7 @@
                    <field name="code" select="1"/>
                    <field name="min_range"/>
                    <field name="max_range"/>
-                   <field name="active"/>
+                   <field name="appears_on_payslip"/>
                 </group>
                 <group col="2" colspan="2">
                     <separator colspan="4" string="Calculations"/>
@@ -936,11 +936,9 @@
                     <field name="amount" on_change="onchange_amount(amount, amount_type)" attrs="{'readonly':[('amount_type','=','func')]}"/>
                     <field name="sequence" groups="base.group_extended"/>
                 </group>
-                <group col="2" colspan="2">
-                    <separator colspan="4" string="Company contribution"/>
-                    <field name="company_contrib"/>
-                    <field name="register_id"/>
-                    <field name="company_id"/>
+                <group col="2" colspan="2" attrs="{'invisible':[('amount_type','!=','code')]}">
+                    <separator colspan="2" string="Applicable code (if Amount Type = Python code)"/>
+                    <field name="exp"  nolabel="1" attrs="{'readonly':[('amount_type','!=','code')],'required':[('amount_type','=','code')]}"/>
                 </group>
                 <notebook colspan="4">
                     <page string="Child Rules" groups="base.group_extended">
@@ -948,17 +946,13 @@
                        <field name="child_depend"/>
                        <field colspan="4" name="child_ids" nolabel="1"/>
                     </page>
-                    <page string="Function">
-                        <field name="line_ids" colspan="4" nolabel="1" attrs="{'readonly':[('amount_type','!=','func')]}">
-                            <tree string="Function Arguments" editable="bottom">
-                                <field name="name"/>
-                                <field name="sequence" groups="base.group_extended"/>
-                                <field name="from_val"/>
-                                <field name="to_val"/>
-                                <field name="amount_type"/>
-                                <field name="value"/>
-                            </tree>
-                        </field>
+                    <page string="Company contribution">
+                        <separator colspan="4" string="Company contribution"/>
+                        <group col="2" colspan="2">
+                            <field name="company_id"/>
+	                        <field name="company_contrib"/>
+		                    <field name="register_id" string="Contribution Register"/>
+	                    </group>
                     </page>
                     <page string="Description">
                         <separator colspan="4" string="Description"/>

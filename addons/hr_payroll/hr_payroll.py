@@ -799,8 +799,8 @@ class hr_holidays_status(osv.osv):
             ('halfpaid','Half-Pay Holiday')
             ], string='Payment'),
         'head_id': fields.many2one('hr.allounce.deduction.categoty', 'Payroll Head', domain=[('type','=','deduction')]),
-        'code': fields.related('head_id','code', type='char', relation='hr.allounce.deduction.categoty', string='Code'),
-#        'code':fields.char('Code', size=64, required=False, readonly=False),
+#        'code': fields.related('head_id','code', type='char', relation='hr.allounce.deduction.categoty', string='Code'),
+        'code':fields.char('Code', size=64, required=False, readonly=False),
     }
     _defaults = {
         'type': lambda *args: 'unpaid',
@@ -1333,14 +1333,15 @@ class hr_payslip_line(osv.osv):
         'amount_type':fields.selection([
             ('per','Percentage (%)'),
             ('fix','Fixed Amount'),
-            ('func','Function Value'),
+            ('code','Python Code'),
         ],'Amount Type', select=True, required=True),
         'amount': fields.float('Amount / Percentage', digits=(16, 4)),
         'total': fields.float('Sub Total', readonly=True, digits_compute=dp.get_precision('Account')),
         'company_contrib': fields.float('Company Contribution', readonly=True, digits=(16, 4)),
         'sequence': fields.integer('Sequence'),
         'note':fields.text('Description'),
-        'line_ids':fields.one2many('hr.payslip.line.line', 'slipline_id', 'Calculations', required=False)
+        'line_ids':fields.one2many('hr.payslip.line.line', 'slipline_id', 'Calculations', required=False),
+        'exp':fields.text('Expression'),
     }
     _order = 'sequence'
     _defaults = {
@@ -1366,7 +1367,7 @@ class hr_salary_rule(osv.osv):
     _inherit = 'hr.payslip.line'
     _name = 'hr.salary.rule'
     _columns = {
-        'active': fields.boolean('Active'),
+        'appears_on_payslip': fields.boolean('Appears on Payslip'),
         'min_range': fields.float('Minimum Range', required=False),
         'max_range': fields.float('Maximum Range', required=False),
         'sal_rule_id':fields.many2one('hr.salary.rule', 'Parent Salary Structure', select=True),
@@ -1376,7 +1377,7 @@ class hr_salary_rule(osv.osv):
         'register_id':fields.many2one('hr.contibution.register', 'Contri Reg', select=True),
      }
     _defaults = {
-        'active': 1
+        'appears_on_payslip': 1
      }
 
 hr_salary_rule()
