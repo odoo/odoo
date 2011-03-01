@@ -1,33 +1,34 @@
 -
   In order to test Importing contacts from any google account into OpenERP,
-  I use a gmail account and import the contact details.
--
+  I use a gmail account and import the contact details and store them as Partner addresses.
+- |
   I create a record for the gmail account for which I want to import the contacts.
--
+- 
   !record {model: google.login.contact, id: google_login_contact_id0}:
     user: testmail.openerp
     password: openerptiny
--
+- |
   I login into that account.
 -
   !python {model: google.login.contact}: |
     self.check_login(cr, uid, [ref('google_login_contact_id0')], context)
--
-  Now I select from which group I want to get the contact details and I want to create partner for all contacts.
+- |
+  Now I select from which group I want to get the contact details.
 -
   !record {model: synchronize.google.contact.import, id: synchronize_google_contact_import_id0}:
-    create_partner: create_all
+    create_partner: create_address
     group_name: all
--
-  I import the contacts.
+- |
+  I import the contacts and I also check if the contact already exists in db and updates the address.
 -
   !python {model: synchronize.google.contact.import}: |
     self.import_contact(cr, uid, [ref('synchronize_google_contact_import_id0')], context)
--
-  I check whether the contacts are created or not.
+- |
+  I check whether the Contacts are created in Partner address or not.
 -
   !python {model: ir.model.data}: |
-    addr_ids = self.pool.get('res.partner.address').search(cr, uid, [])
+    addr_obj = self.pool.get('res.partner.address')
+    addr_ids = addr_obj.search(cr, uid, [])
     data_ids = self.search(cr, uid, [('res_id','in',addr_ids),('model','=','res.partner.address'),('module','=','sync_google_contact')])
     assert data_ids, 'Addresses not created !'
     
