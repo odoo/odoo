@@ -242,7 +242,7 @@ class survey_question_wiz(osv.osv_memory):
                                 etree.SubElement(xml_group, 'separator', {'string': tools.ustr(col.title),'colspan': '1'})
                             for row in ans_ids:
                                 etree.SubElement(xml_group, 'label', {'string': to_xml(tools.ustr(row.answer)) +' :-', 'align': '0.0'})
-                                for col in que_col_head.read(cr, uid, que_rec.column_heading_ids):
+                                for col in que_col_head.browse(cr, uid, [head.id for head in  que_rec.column_heading_ids]):
                                     etree.SubElement(xml_group, 'field', {'readonly' :str(readonly), 'name': tools.ustr(que.id) + "_" + tools.ustr(row.id) + "_" + tools.ustr(col.id), 'nolabel':"1"})
                                     fields[tools.ustr(que.id) + "_" + tools.ustr(row.id)  + "_" + tools.ustr(col.id)] = {'type':'boolean', 'string': col.title}
 

@@ -218,12 +218,14 @@ class crm_case(object):
     def stage_change(self, cr, uid, ids, context=None, order='sequence'):
         if context is None:
             context = {}
+
         stage_pool = self.pool.get('crm.case.stage')
         stage_type = context and context.get('stage_type','')
         current_seq = False
         next_stage_id = False
 
         for case in self.browse(cr, uid, ids, context=context):
+
             next_stage = False
             value = {}
             if case.section_id.id :
@@ -281,13 +283,12 @@ class crm_case(object):
         @param part: Partner's id
         @email: Partner's email ID
         """
-        if not part:
-            return {'value': {'partner_address_id': False,
-                            'email_from': False,
-                            'phone': False
-                            }}
-        addr = self.pool.get('res.partner').address_get(cr, uid, [part], ['contact'])
-        data = {'partner_address_id': addr['contact']}
+        data={}
+        if  part:
+            addr = self.pool.get('res.partner').address_get(cr, uid, [part], ['contact'])
+            data = {'partner_address_id': addr['contact']}
+
+        #<<<<<<<<<<= MERGE
         data.update(self.onchange_partner_address_id(cr, uid, ids, addr['contact'])['value'])
         return {'value': data}
 
@@ -567,7 +568,7 @@ class crm_case_stage(osv.osv):
         'on_change': fields.boolean('Change Probability Automatically', \
                          help="Change Probability on next and previous stages."),
         'requirements': fields.text('Requirements'),
-        'type': fields.selection(_get_type_value, 'Type'),
+        'type': fields.selection(_get_type_value, 'Type', required=True),
     }
 
 

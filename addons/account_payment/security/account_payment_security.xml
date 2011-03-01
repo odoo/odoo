@@ -10,7 +10,7 @@
         <field name="name">Payment Mode company rule</field>
         <field model="ir.model" name="model_id" ref="model_payment_mode"/>
         <field eval="True" name="global"/>
-        <field name="domain_force">['|','|',('company_id','=',False),('company_id','child_of',[user.company_id.id]),('company_id.child_ids','child_of',[user.company_id.id])]</field>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
     </record>
 
 </data>
