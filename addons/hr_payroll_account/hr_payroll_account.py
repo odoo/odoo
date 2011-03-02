@@ -64,7 +64,7 @@ class hr_employee(osv.osv):
             method=True,
             domain="[('type', '=', 'liquidity')]",
             view_load=True,
-            help="Select Bank Account from where Salary Expense will be Paid,to be used for payslip verification."),
+            help="Select Bank Account from where Salary Expense will be Paid, to be used for payslip verification."),
         'salary_account':fields.property(
             'account.account',
             type='many2one',
@@ -497,7 +497,7 @@ class hr_payslip(osv.osv):
 
             line = {
                 'move_id':move_id,
-                'name': "To Basic Paysble Salary / " + slip.employee_id.name,
+                'name': "To Basic Payble Salary / " + slip.employee_id.name,
                 'partner_id': partner_id,
                 'date': slip.date,
                 'account_id': slip.employee_id.employee_account.id,
