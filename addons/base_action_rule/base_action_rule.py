@@ -398,7 +398,6 @@ the rule to mark CC(mail to any other person defined in actions)."),
         if hasattr(model_obj, 'remind_user') and action.act_remind_user:
             model_obj.remind_user(cr, uid, [obj.id], context, attach=action.act_remind_attach)
         if hasattr(model_obj, 'remind_partner') and action.act_remind_partner:
-            context.update({'remind_partner': True})
             model_obj.remind_partner(cr, uid, [obj.id], context, attach=action.act_remind_attach)
         if action.act_method:
             getattr(model_obj, 'act_method')(cr, uid, [obj.id], action, context)
