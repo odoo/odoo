@@ -639,18 +639,19 @@ class contrib_register_line(osv.osv):
     }
 contrib_register_line()
 
-class salary_head_type(osv.osv):
+class hr_salary_head_type(osv.osv):
     """
     Salary Head Type
     """
 
-    _name = 'salary.head.type'
+    _name = 'hr.salary.head.type'
     _description = 'Salary Head Type'
     _columns = {
         'name':fields.char('Type Name', size=64, required=True, readonly=False),
+        'code':fields.char('Type Code', size=64, required=True, readonly=False),
     }
     
-salary_head_type()
+hr_salary_head_type()
 
 class payment_category(osv.osv):
     """
@@ -664,7 +665,7 @@ class payment_category(osv.osv):
     _columns = {
         'name':fields.char('Category Name', size=64, required=True, readonly=False),
         'code':fields.char('Category Code', size=64, required=True, readonly=False),
-        'type':fields.many2one('salary.head.type', 'Type', required=True, help="It is used only for the reporting purpose."),
+        'type':fields.many2one('hr.salary.head.type', 'Type', required=True, help="It is used only for the reporting purpose."),
         'base':fields.text('Based on', required=True, readonly=False, help='This will use to computer the % fields values, in general its on basic, but You can use all heads code field in small letter as a variable name i.e. hra, ma, lta, etc...., also you can use, static varible basic'),
         'condition':fields.char('Condition', size=1024, required=True, readonly=False, help='Applied this head for calculation if condition is true'),
         'sequence': fields.integer('Sequence', required=True, help='Use to arrange calculation sequence'),
@@ -1225,7 +1226,7 @@ class hr_payslip_line(osv.osv):
         'base':fields.char('Formula', size=1024, required=False, readonly=False),
         'code':fields.char('Code', size=64, required=False, readonly=False),
         'category_id':fields.many2one('hr.allounce.deduction.categoty', 'Category', required=True),
-        'type':fields.many2one('salary.head.type', 'Type', required=True),
+        'type':fields.many2one('hr.salary.head.type', 'Type', required=True),
         'amount_type':fields.selection([
             ('per','Percentage (%)'),
             ('fix','Fixed Amount'),

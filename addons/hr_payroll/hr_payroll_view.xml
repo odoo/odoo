@@ -855,29 +855,31 @@
         <!-- Salary Head Type -->
         <record id="salary_head_type_tree" model="ir.ui.view">
             <field name="name">salary.head.type.tree</field>
-            <field name="model">salary.head.type</field>
+            <field name="model">hr.salary.head.type</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Salary Head Type">
                     <field name="name"/>
+                    <field name="code"/>
                 </tree>
             </field>
         </record>
         
          <record id="salary_head_type_form" model="ir.ui.view">
             <field name="name">salary.head.type.form</field>
-            <field name="model">salary.head.type</field>
+            <field name="model">hr.salary.head.type</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Salary Head Type">
                     <field name="name"/>
+                    <field name="code"/>
                 </form>
             </field>
         </record>
         
         <record id="action_salary_head_type" model="ir.actions.act_window">
             <field name="name">Salary Head Type</field>
-            <field name="res_model">salary.head.type</field>
+            <field name="res_model">hr.salary.head.type</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="salary_head_type_tree"/>
         </record>
