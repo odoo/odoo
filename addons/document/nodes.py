@@ -23,6 +23,7 @@
 import pooler
 from tools.safe_eval import safe_eval
 
+from tools.misc import ustr
 import errno
 # import os
 import time
@@ -808,7 +809,7 @@ class node_res_dir(node_class):
             return res[0]
         return None
 
-    def _child_get(self, cr, name = None, domain=None):
+    def _child_get(self, cr, name=None, domain=None):
         """ return virtual children of resource, based on the
             foreign object.
 
@@ -868,7 +869,7 @@ class node_res_dir(node_class):
             # Escape the name for characters not supported in filenames
             res_name = res_name.replace('/','_') # any other weird char?
             
-            if name and (res_name != name):
+            if name and (res_name != ustr(name)):
                 # we have matched _ to any character, but we only meant to match
                 # the special ones.
                 # Eg. 'a_c' will find 'abc', 'a/c', 'a_c', may only
@@ -1044,7 +1045,7 @@ class node_res_obj(node_class):
                 if not res_name:
                     continue
                 res_name = res_name.replace('/', '_')
-                if name and (res_name != name):
+                if name and (res_name != ustr(name)):
                     continue
                 # TODO Revise
                 klass = directory.get_node_class(directory, dynamic=True, context=ctx)

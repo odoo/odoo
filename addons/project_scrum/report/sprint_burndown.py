@@ -51,7 +51,7 @@ class report_tasks(report_int):
         for sprint in sprint_pool.browse(cr, uid, ids, context=context):
             task_ids = task_pool.search(cr, uid, [('sprint_id','=',sprint.id)], context=context)
             datas = _burndown.compute_burndown(cr, uid, task_ids, sprint.date_start, sprint.date_stop)
-            max_hour = reduce(lambda x,y: max(y[1],x), datas, 0)
+            max_hour = reduce(lambda x,y: max(y[1],x), datas, 0) or None 
             def _interval_get(*args):
                 result = []
                 for i in range(20):
