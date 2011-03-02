@@ -104,7 +104,7 @@ class hr_contract(osv.osv):
         'trial_date_end': fields.date('Trial End Date'),
         'working_hours': fields.many2one('resource.calendar','Working Schedule'),
 #        'wage_type_id': fields.many2one('hr.contract.wage.type', 'Wage Type', required=True),
-        'wage': fields.float('Wage', digits=(16,2), required=True),
+        'wage': fields.float('Wage', digits=(16,2), required=True, help="Basic Salary of the employee"),
         'advantages': fields.text('Advantages'),
         'advantages_net': fields.float('Net Advantages Value', digits=(16,2)),
         'advantages_gross': fields.float('Gross Advantages Value', digits=(16,2)),
