@@ -484,34 +484,33 @@ class task(osv.osv):
     _order = "sequence,priority, date_start, name, id"
 
     def _check_recursion(self, cr, uid, ids, context=None):
-        return True
-        obj_task = self.browse(cr, uid, ids[0], context=context)
-        parent_ids = [x.id for x in obj_task.parent_ids]
-        children_ids = [x.id for x in obj_task.child_ids]
+        for id in ids:
+            visited_branch = set()
+            visited_node = set()
+            res = self._check_cycle(cr, uid, id, visited_branch, visited_node, context=context)
+            if not res:
+                return False
 
-        #WTF
-        if (obj_task.id in children_ids) or (obj_task.id in parent_ids):
-            print "error in first step"
+        return True
+
+    def _check_cycle(self, cr, uid, id, visited_branch, visited_node, context=None):
+        if id in visited_branch: #Cycle
             return False
 
-        while(ids):
-            print "ids", ids
-            #pourquoi pas self.search(cr, uid, [('parent_ids', 'in', ids)])
-            cr.execute('SELECT DISTINCT task_id '\
-                       'FROM project_task_parent_rel '\
-                       'WHERE parent_id IN %s', (tuple(ids),))
-            child_ids = map(lambda x: x[0], cr.fetchall())
-            c_ids = child_ids
-            if (list(set(parent_ids).intersection(set(c_ids)))) or (obj_task.id in c_ids):
-                print "error in the second step"
+        if id in visited_node: #Already tested don't work one more time for nothing
+            return True
+
+        visited_branch.add(id)
+        visited_node.add(id)
+
+        #visit child using DFS
+        task = self.browse(cr, uid, id, context=context)
+        for child in task.child_ids:
+            res = self._check_cycle(cr, uid, child.id, visited_branch, visited_node, context=context)
+            if not res:
                 return False
-            while c_ids:
-                s_ids = self.search(cr, uid, [('parent_ids', 'in', c_ids)])
-                if (list(set(parent_ids).intersection(set(s_ids)))):
-                    print "error in the third step"
-                    return False
-                c_ids = s_ids
-            ids = child_ids
+
+        visited_branch.remove(id)
         return True
 
     def _check_dates(self, cr, uid, ids, context=None):
