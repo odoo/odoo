@@ -31,7 +31,7 @@ class ir_rule(osv.osv):
     _order = 'name'
     _MODES = ['read', 'write', 'create', 'unlink']
 
-    def _domain_force_get(self, cr, uid, ids, field_name, arg, context={}):
+    def _domain_force_get(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
         for rule in self.browse(cr, uid, ids, context):
             if rule.domain_force:
@@ -42,7 +42,7 @@ class ir_rule(osv.osv):
                 res[rule.id] = []
         return res
 
-    def _get_value(self, cr, uid, ids, field_name, arg, context={}):
+    def _get_value(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
         for rule in self.browse(cr, uid, ids, context):
             if not rule.groups:
@@ -151,7 +151,7 @@ class ir_rule(osv.osv):
         [clear(model, mode) for model in models for mode in self._MODES]
 
 
-    def domain_get(self, cr, uid, model_name, mode='read', context={}):
+    def domain_get(self, cr, uid, model_name, mode='read', context=None):
         dom = self._compute_domain(cr, uid, model_name, mode=mode)
         if dom:
             # _where_calc is called as superuser. This means that rules can
@@ -175,8 +175,6 @@ class ir_rule(osv.osv):
         return res
 
     def write(self, cr, uid, ids, vals, context=None):
-        if not context:
-            context={}
         res = super(ir_rule, self).write(cr, uid, ids, vals, context=context)
         # Restart the cache on the _compute_domain method
         self._compute_domain.clear_cache(cr.dbname)
