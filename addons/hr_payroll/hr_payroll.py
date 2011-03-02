@@ -206,15 +206,9 @@ class hr_contract(osv.osv):
                             percent = 0.0
                     elif line.amount_type == 'fix':
                         value = line.amount
-                    elif line.amount_type == 'func':
-                        value = slip_line_pool.execute_function(cr, uid, line.id, amt, context)
-                        line.amount = value
                 else:
                     if line.amount_type in ('fix', 'per'):
                         value = line.amount
-                    elif line.amount_type == 'func':
-                        value = slip_line_pool.execute_function(cr, uid, line.id, amt, context)
-                        line.amount = value
                 if line.type.name == 'allowance': #FIXME: not good. We don't have to compute the gross or net on hr.contract nor hr.employee. We jsut need to define the basic; So the fields gross and net can be removed from view and object.
                     all_per += percent
                     all_fix += value
@@ -283,7 +277,7 @@ class hr_contract(osv.osv):
                         amount = line.amount * eval(str(line.category_id.base), obj)
                     except Exception, e:
                         raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ') % (e))
-                elif line.amount_type in ('fix', 'func'):
+                elif line.amount_type in ('fix'):
                     amount = line.amount
                 cd = line.category_id.code.lower()
                 obj[cd] = amount
@@ -745,7 +739,7 @@ class hr_payslip(osv.osv):
                         amount = line.amount * eval(str(line.category_id.base), obj)
                     except Exception, e:
                         raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ') % (e))
-                elif line.amount_type in ('fix', 'func'):
+                elif line.amount_type in ('fix'):
                     amount = line.amount
                 cd = line.category_id.code.lower()
                 obj[cd] = amount
@@ -1045,15 +1039,9 @@ class hr_payslip(osv.osv):
                             percent = 0.0
                     elif line.amount_type == 'fix':
                         value = line.amount
-                    elif line.amount_type == 'func':
-                        value = self.pool.get('hr.salary.rule').execute_function(cr, uid, line.id, amt, context)
-                        line.amount = value
                 else:
                     if line.amount_type in ('fix', 'per'):
                         value = line.amount
-                    elif line.amount_type == 'func':
-                        value = self.pool.get('hr.salary.rule').execute_function(cr, uid, line.id, amt, context)
-                        line.amount = value
                 if line.type.name == 'allowance':
                     all_per += percent
                     all_fix += value
@@ -1248,25 +1236,12 @@ class hr_payslip_line(osv.osv):
         'company_contrib': fields.float('Company Contribution', readonly=True, digits=(16, 4)),
         'sequence': fields.integer('Sequence'),
         'note':fields.text('Description'),
-        'line_ids':fields.one2many('hr.payslip.line.line', 'slipline_id', 'Calculations', required=False),
         'exp':fields.text('Expression'),
     }
     _order = 'sequence'
     _defaults = {
         'amount_type': lambda *a: 'per'
     }
-
-    def execute_function(self, cr, uid, id, value, context=None):
-        line_pool = self.pool.get('hr.payslip.line.line')
-        res = 0
-        ids = line_pool.search(cr, uid, [('slipline_id','=',id), ('from_val','<=',value), ('to_val','>=',value)], context=context)
-        if not ids:
-            ids = line_pool.search(cr, uid, [('slipline_id','=',id), ('from_val','<=',value)], context=context)
-        if not ids:
-            return res
-
-        res = line_pool.browse(cr, uid, ids, context=context)[-1].value
-        return res
 
 hr_payslip_line()
 
@@ -1275,7 +1250,7 @@ class hr_salary_rule(osv.osv):
     _inherit = 'hr.payslip.line'
     _name = 'hr.salary.rule'
     _columns = {
-        'appears_on_payslip': fields.boolean('Appears on Payslip', help="Do you want to display rule on payslip?"),
+        'appears_on_payslip': fields.boolean('Appears on Payslip', help="Used for the display of rule on payslip"),
         'min_range': fields.float('Minimum Range', required=False, help="The minimum amount, applied for this rule."),
         'max_range': fields.float('Maximum Range', required=False, help="The maximum amount, applied for this rule."),
         'sal_rule_id':fields.many2one('hr.salary.rule', 'Parent Salary Structure', select=True),
@@ -1289,27 +1264,6 @@ class hr_salary_rule(osv.osv):
      }
 
 hr_salary_rule()
-
-class hr_payslip_line_line(osv.osv):
-    '''
-    Function Line
-    '''
-
-    _name = 'hr.payslip.line.line'
-    _description = 'Function Line'
-    _order = 'sequence'
-    _columns = {
-        'slipline_id':fields.many2one('hr.payslip.line', 'Slip Line', required=False),
-        'name':fields.char('Name', size=64, required=False, readonly=False),
-        'from_val': fields.float('From', digits=(16, 4)),
-        'to_val': fields.float('To', digits=(16, 4)),
-        'amount_type':fields.selection([
-            ('fix','Fixed Amount'),
-        ],'Amount Type', select=True),
-        'sequence':fields.integer('Sequence'),
-        'value': fields.float('Value', digits=(16, 4)),
-    }
-hr_payslip_line_line()
 
 class hr_payroll_structure(osv.osv):
 
@@ -1357,8 +1311,6 @@ class hr_employee(osv.osv):
                 amount = 0.0
                 if line.amount_type == 'per':
                     amount = amt * line.amount
-                elif line.amount_type == 'func':
-                    amount = slip_line_pool.execute_function(cr, uid, line.id, amt, context)
                 elif line.amount_type == 'fix':
                     amount = line.amount
 
