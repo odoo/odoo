@@ -33,6 +33,10 @@
                   'wizard/google_contact_import_view.xml'
                    ],
     'demo_xml': [],
+    'test': [
+             'test/test_sync_google_contact_import_partner.yml',
+             'test/test_sync_google_contact_import_address.yml',
+    ],
     'installable': True,
     'active': False,
     'certificate': '',

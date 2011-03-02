@@ -1,0 +1,36 @@
+-
+  In order to test Importing contacts from any google account into OpenERP,
+  I use a gmail account and import the contact details and create Partners.
+- |
+  I create a record for the gmail account for which I want to import the contacts.
+-
+  !record {model: google.login.contact, id: google_login_contact_id1}:
+    user: testmail.openerp
+    password: openerptiny
+- |
+  I login into that account.
+-
+  !python {model: google.login.contact}: |
+    self.check_login(cr, uid, [ref('google_login_contact_id1')], context)
+- |
+  Now I select from which group I want to get the contact details and I want to create partner for all contacts.
+-
+  !record {model: synchronize.google.contact.import, id: synchronize_google_contact_import_id1}:
+    create_partner: create_all
+    group_name: all
+- |
+  I import the contacts.
+-
+  !python {model: synchronize.google.contact.import}: |
+    self.import_contact(cr, uid, [ref('synchronize_google_contact_import_id1')], context)
+- |
+  I check whether the Partners are created or not.
+-
+  !python {model: ir.model.data}: |
+    addr_obj = self.pool.get('res.partner.address')
+    addr_ids = addr_obj.search(cr, uid, [])
+    data_ids = self.search(cr, uid, [('res_id','in',addr_ids),('model','=','res.partner.address'),('module','=','sync_google_contact')])
+    address_ids = map(lambda x: x.res_id, [child for child in self.browse(cr, uid, data_ids) if child.res_id])
+    partner_ids = map(lambda x: x.partner_id.id, [addr for addr in addr_obj.browse(cr, uid, address_ids) if addr.partner_id])
+    assert partner_ids, 'Partners not created !'
+    
