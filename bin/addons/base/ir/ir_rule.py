@@ -130,6 +130,7 @@ class ir_rule(osv.osv):
                 return ['&'] + global_domain + ['|'] * (count-1) + group_domains
             if count:
                 return ['|'] * (count-1) + group_domains
+            return global_domain
         return []
 
     def clear_cache(self, cr, uid):
@@ -153,7 +154,11 @@ class ir_rule(osv.osv):
     def domain_get(self, cr, uid, model_name, mode='read', context={}):
         dom = self._compute_domain(cr, uid, model_name, mode=mode)
         if dom:
-            query = self.pool.get(model_name)._where_calc(cr, uid, dom, active_test=False)
+            # _where_calc is called as superuser. This means that rules can
+            # involve objects on which the real uid has no acces rights.
+            # This means also there is no implicit restriction (e.g. an object
+            # references another object the user can't see).
+            query = self.pool.get(model_name)._where_calc(cr, 1, dom, active_test=False)
             return query.where_clause, query.where_clause_params, query.tables
         return [], [], ['"'+self.pool.get(model_name)._table+'"']
 
