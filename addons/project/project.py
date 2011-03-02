@@ -205,20 +205,38 @@ class project(osv.osv):
         if context is None:
             context = {}
 
-        proj = self.browse(cr, uid, id, context=context)
         default = default or {}
         context['active_test'] = False
         default['state'] = 'open'
         if not default.get('name', False):
             default['name'] = proj.name + _(' (copy)')
+
         res = super(project, self).copy(cr, uid, id, default, context)
+        return res
+
+
+    def template_copy(self, cr, uid, id, default={}, context=None):
+        task_obj = self.pool.get('project.task')
+        proj = self.browse(cr, uid, id, context=context)
+
+
+        default['tasks'] = [] #avoid to copy all the task automaticly
+        res = self.copy(cr, uid, id, default=default, context=context)
+
+        #copy all the task manually
+        map_task_id = {}
+        for task in proj.tasks:
+            map_task_id[task.id] =  task_obj.copy(cr, uid, task.id, {}, context=context)
+
+        self.write(cr, uid, res, {'tasks':[(6,0, map_task_id.values())]})
+        new_project = self.browse(cr, uid, res, context)
+        task_obj.duplicate_task(cr, uid, map_task_id, context=context)
 
         return res
 
     def duplicate_template(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
-        project_obj = self.pool.get('project.project')
         task_pool = self.pool.get('project.task')
         data_obj = self.pool.get('ir.model.data')
         result = []
@@ -232,7 +250,7 @@ class project(osv.osv):
                 end_date = date(*time.strptime(proj.date,'%Y-%m-%d')[:3])
                 new_date_end = (datetime(*time.strptime(new_date_start,'%Y-%m-%d')[:3])+(end_date-start_date)).strftime('%Y-%m-%d')
             context.update({'copy':True})
-            new_id = project_obj.copy(cr, uid, proj.id, default = {
+            new_id = self.template_copy(cr, uid, proj.id, default = {
                                     'name': proj.name +_(' (copy)'),
                                     'state':'open',
                                     'date_start':new_date_start,
@@ -240,10 +258,10 @@ class project(osv.osv):
                                     'parent_id':parent_id}, context=context)
             result.append(new_id)
             new_project = self.browse(cr, uid, new_id, context)
-            if new_project.tasks:
-                new_ids = [task.id for task in new_project.tasks]
-                old_ids = [task.id for task in proj.tasks]
-                task_pool.duplicate_task(cr, uid, new_ids, old_ids, new_id ,context)
+            #if new_project.tasks:
+                #new_ids = [task.id for task in new_project.tasks]
+                #old_ids = [task.id for task in proj.tasks]
+                #task_pool.duplicate_task(cr, uid, new_ids, old_ids, new_id ,context)
 
             child_ids = self.search(cr, uid, [('parent_id','=', proj.analytic_account_id.id)], context=context)
             parent_id = self.read(cr, uid, new_id, ['analytic_account_id'])['analytic_account_id'][0]
@@ -338,7 +356,7 @@ class task(osv.osv):
 
     def onchange_planned(self, cr, uid, ids, planned = 0.0, effective = 0.0):
         return {'value':{'remaining_hours': planned - effective}}
-    
+
     def onchange_project(self, cr, uid, id, project_id):
         if not project_id:
             return {}
@@ -347,7 +365,7 @@ class task(osv.osv):
         if partner_id:
             return {'value':{'partner_id':partner_id.id}}
         return {}
-    
+
     def _default_project(self, cr, uid, context=None):
         if context is None:
             context = {}
@@ -355,30 +373,32 @@ class task(osv.osv):
             return int(context['project_id'])
         return False
 
-    def duplicate_task(self, cr, uid, new_ids, old_ids, project_id, context=None):
-        project_pool = self.pool.get("project.project")
-        new_proj = project_pool.browse(cr, uid, project_id, context)
-        for new in new_ids:
-            task = self.browse(cr, uid, new, context)   
+    def duplicate_task(self, cr, uid, map_ids, context=None):
+        print "maps ", map_ids
+        for new in map_ids.values():
+            task = self.browse(cr, uid, new, context)
             child_ids = [ ch.id for ch in task.child_ids]
             if task.child_ids:
                 for child in task.child_ids:
-                    if child.id in old_ids:
-                        relate = self.search(cr, uid, [('project_id','=',project_id),('name','=',child.name)])
+                    print 'child', child.id
+                    if child.id in map_ids.keys():
                         child_ids.remove(child.id)
-                        child_ids.extend(relate)
-            self.write(cr, uid, new, {'child_ids':[(6,0,child_ids)]})
-            
+                        child_ids.append(map_ids[child.id])
+
             parent_ids = [ ch.id for ch in task.parent_ids]
             if task.parent_ids:
                 for parent in task.parent_ids:
-                    if parent.id in old_ids:
-                        relate = self.search(cr, uid, [('project_id','=',project_id),('name','=',parent.name)])
+                    print "parent", parent.id
+                    if parent.id in map_ids.keys():
                         parent_ids.remove(parent.id)
-                        parent_ids.extend(relate)
-            self.write(cr, uid, new, {'child_ids':[(6,0,child_ids)]})
+                        parent_ids.append(map_ids[parent.id])
+            print "id", new
+            print "parent", parent_ids
+            print "child", child_ids
+            self.write(cr, uid, new, {'parent_ids':[(6,0,parent_ids)], 'child_ids':[(6,0,child_ids)]})
+
         return True
-    
+
     def copy_data(self, cr, uid, id, default={}, context=None):
         default = default or {}
         default.update({'work_ids':[], 'date_start': False, 'date_end': False, 'date_deadline': False})
@@ -390,7 +410,7 @@ class task(osv.osv):
             default['name'] = self.browse(cr, uid, id, context=context).name or ''
             if not context.get('copy',False):
                  new_name = _("%s (copy)")%default.get('name','')
-                 default.update({'name':new_name})            
+                 default.update({'name':new_name})
         return super(task, self).copy_data(cr, uid, id, default, context)
 
     def _check_dates(self, cr, uid, ids, context=None):
@@ -414,7 +434,7 @@ class task(osv.osv):
         for work in self.pool.get('project.task.work').browse(cr, uid, ids, context=context):
             if work.task_id: result[work.task_id.id] = True
         return result.keys()
-    
+
     _columns = {
         'active': fields.function(_is_template, method=True, store=True, string='Not a Template Task', type='boolean', help="This field is computed automatically and have the same behavior than the boolean 'active' field: if the task is linked to a template or unactivated project, it will be hidden unless specifically asked."),
         'name': fields.char('Task Summary', size=128, required=True),
@@ -478,24 +498,31 @@ class task(osv.osv):
     _order = "sequence,priority, date_start, name, id"
 
     def _check_recursion(self, cr, uid, ids, context=None):
+        return True
         obj_task = self.browse(cr, uid, ids[0], context=context)
         parent_ids = [x.id for x in obj_task.parent_ids]
         children_ids = [x.id for x in obj_task.child_ids]
 
+        #WTF
         if (obj_task.id in children_ids) or (obj_task.id in parent_ids):
+            print "error in first step"
             return False
 
         while(ids):
+            print "ids", ids
+            #pourquoi pas self.search(cr, uid, [('parent_ids', 'in', ids)])
             cr.execute('SELECT DISTINCT task_id '\
                        'FROM project_task_parent_rel '\
                        'WHERE parent_id IN %s', (tuple(ids),))
             child_ids = map(lambda x: x[0], cr.fetchall())
             c_ids = child_ids
             if (list(set(parent_ids).intersection(set(c_ids)))) or (obj_task.id in c_ids):
+                print "error in the second step"
                 return False
-            while len(c_ids):
+            while c_ids:
                 s_ids = self.search(cr, uid, [('parent_ids', 'in', c_ids)])
                 if (list(set(parent_ids).intersection(set(s_ids)))):
+                    print "error in the third step"
                     return False
                 c_ids = s_ids
             ids = child_ids
@@ -508,9 +535,9 @@ class task(osv.osv):
         start = obj_task.date_start or False
         end = obj_task.date_end or False
         if start and end :
-            if start > end:        
+            if start > end:
                 return False
-        return True           
+        return True
 
     _constraints = [
         (_check_recursion, 'Error ! You cannot create recursive tasks.', ['parent_ids']),
