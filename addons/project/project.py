@@ -219,7 +219,6 @@ class project(osv.osv):
         task_obj = self.pool.get('project.task')
         proj = self.browse(cr, uid, id, context=context)
 
-
         default['tasks'] = [] #avoid to copy all the task automaticly
         res = self.copy(cr, uid, id, default=default, context=context)
 
@@ -229,7 +228,6 @@ class project(osv.osv):
             map_task_id[task.id] =  task_obj.copy(cr, uid, task.id, {}, context=context)
 
         self.write(cr, uid, res, {'tasks':[(6,0, map_task_id.values())]})
-        new_project = self.browse(cr, uid, res, context)
         task_obj.duplicate_task(cr, uid, map_task_id, context=context)
 
         return res
@@ -257,11 +255,6 @@ class project(osv.osv):
                                     'date':new_date_end,
                                     'parent_id':parent_id}, context=context)
             result.append(new_id)
-            new_project = self.browse(cr, uid, new_id, context)
-            #if new_project.tasks:
-                #new_ids = [task.id for task in new_project.tasks]
-                #old_ids = [task.id for task in proj.tasks]
-                #task_pool.duplicate_task(cr, uid, new_ids, old_ids, new_id ,context)
 
             child_ids = self.search(cr, uid, [('parent_id','=', proj.analytic_account_id.id)], context=context)
             parent_id = self.read(cr, uid, new_id, ['analytic_account_id'])['analytic_account_id'][0]
@@ -374,13 +367,11 @@ class task(osv.osv):
         return False
 
     def duplicate_task(self, cr, uid, map_ids, context=None):
-        print "maps ", map_ids
         for new in map_ids.values():
             task = self.browse(cr, uid, new, context)
             child_ids = [ ch.id for ch in task.child_ids]
             if task.child_ids:
                 for child in task.child_ids:
-                    print 'child', child.id
                     if child.id in map_ids.keys():
                         child_ids.remove(child.id)
                         child_ids.append(map_ids[child.id])
@@ -388,16 +379,11 @@ class task(osv.osv):
             parent_ids = [ ch.id for ch in task.parent_ids]
             if task.parent_ids:
                 for parent in task.parent_ids:
-                    print "parent", parent.id
                     if parent.id in map_ids.keys():
                         parent_ids.remove(parent.id)
                         parent_ids.append(map_ids[parent.id])
-            print "id", new
-            print "parent", parent_ids
-            print "child", child_ids
-            self.write(cr, uid, new, {'parent_ids':[(6,0,parent_ids)], 'child_ids':[(6,0,child_ids)]})
-
-        return True
+            #FIXME why there is already the copy and the old one
+            self.write(cr, uid, new, {'parent_ids':[(6,0,set(parent_ids))], 'child_ids':[(6,0, set(child_ids))]})
 
     def copy_data(self, cr, uid, id, default={}, context=None):
         default = default or {}
