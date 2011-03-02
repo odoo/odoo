@@ -1275,9 +1275,9 @@ class hr_salary_rule(osv.osv):
     _inherit = 'hr.payslip.line'
     _name = 'hr.salary.rule'
     _columns = {
-        'appears_on_payslip': fields.boolean('Appears on Payslip'),
-        'min_range': fields.float('Minimum Range', required=False),
-        'max_range': fields.float('Maximum Range', required=False),
+        'appears_on_payslip': fields.boolean('Appears on Payslip', help="Do you want to display rule on payslip?"),
+        'min_range': fields.float('Minimum Range', required=False, help="The minimum amount that can be applied for this rule."),
+        'max_range': fields.float('Maximum Range', required=False, help="The maximum amount that can be applied for this rule."),
         'sal_rule_id':fields.many2one('hr.salary.rule', 'Parent Salary Structure', select=True),
         'child_depend':fields.boolean('Children Rule'),
         'child_ids':fields.one2many('hr.salary.rule', 'sal_rule_id', 'Child Salary Sructure'),
