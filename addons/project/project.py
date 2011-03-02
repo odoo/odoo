@@ -219,6 +219,7 @@ class project(osv.osv):
         if context is None:
             context = {}
         project_obj = self.pool.get('project.project')
+        task_pool = self.pool.get('project.task')
         data_obj = self.pool.get('ir.model.data')
         result = []
         for proj in self.browse(cr, uid, ids, context=context):
@@ -238,6 +239,11 @@ class project(osv.osv):
                                     'date':new_date_end,
                                     'parent_id':parent_id}, context=context)
             result.append(new_id)
+            new_project = self.browse(cr, uid, new_id, context)
+            if new_project.tasks:
+                new_ids = [task.id for task in new_project.tasks]
+                old_ids = [task.id for task in proj.tasks]
+                task_pool.duplicate_task(cr, uid, new_ids, old_ids, new_id ,context)
 
             child_ids = self.search(cr, uid, [('parent_id','=', proj.analytic_account_id.id)], context=context)
             parent_id = self.read(cr, uid, new_id, ['analytic_account_id'])['analytic_account_id'][0]
@@ -349,6 +355,30 @@ class task(osv.osv):
             return int(context['project_id'])
         return False
 
+    def duplicate_task(self, cr, uid, new_ids, old_ids, project_id, context=None):
+        project_pool = self.pool.get("project.project")
+        new_proj = project_pool.browse(cr, uid, project_id, context)
+        for new in new_ids:
+            task = self.browse(cr, uid, new, context)   
+            child_ids = [ ch.id for ch in task.child_ids]
+            if task.child_ids:
+                for child in task.child_ids:
+                    if child.id in old_ids:
+                        relate = self.search(cr, uid, [('project_id','=',project_id),('name','=',child.name)])
+                        child_ids.remove(child.id)
+                        child_ids.extend(relate)
+            self.write(cr, uid, new, {'child_ids':[(6,0,child_ids)]})
+            
+            parent_ids = [ ch.id for ch in task.parent_ids]
+            if task.parent_ids:
+                for parent in task.parent_ids:
+                    if parent.id in old_ids:
+                        relate = self.search(cr, uid, [('project_id','=',project_id),('name','=',parent.name)])
+                        parent_ids.remove(parent.id)
+                        parent_ids.extend(relate)
+            self.write(cr, uid, new, {'child_ids':[(6,0,child_ids)]})
+        return True
+    
     def copy_data(self, cr, uid, id, default={}, context=None):
         default = default or {}
         default.update({'work_ids':[], 'date_start': False, 'date_end': False, 'date_deadline': False})
@@ -384,7 +414,7 @@ class task(osv.osv):
         for work in self.pool.get('project.task.work').browse(cr, uid, ids, context=context):
             if work.task_id: result[work.task_id.id] = True
         return result.keys()
-
+    
     _columns = {
         'active': fields.function(_is_template, method=True, store=True, string='Not a Template Task', type='boolean', help="This field is computed automatically and have the same behavior than the boolean 'active' field: if the task is linked to a template or unactivated project, it will be hidden unless specifically asked."),
         'name': fields.char('Task Summary', size=128, required=True),
