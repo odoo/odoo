@@ -94,7 +94,7 @@ class hr_payroll_structure(osv.osv):
     _columns = {
         'name':fields.char('Name', size=256, required=True, readonly=False),
         'code':fields.char('Code', size=64, required=True, readonly=False),
-        'line_ids':fields.one2many('hr.payslip.line', 'function_id', 'Salary Structure', required=False),
+#        'line_ids':fields.one2many('hr.payslip.line', 'function_id', 'Salary Structure', required=False),
         'company_id':fields.many2one('res.company', 'Company', required=False),
         'note': fields.text('Description'),
         'parent_id':fields.many2one('hr.payroll.structure', 'Parent Structure'),
@@ -1078,7 +1078,7 @@ class hr_payslip(osv.osv):
                     'amount':line.amount,
                     'slip_id':slip.id,
                     'employee_id':False,
-                    'function_id':False,
+#                    'function_id':False,
                     'base':base
                 }
                 if line.min_range or line.max_range:
@@ -1120,7 +1120,7 @@ class hr_payslip(osv.osv):
                     'amount':line.amount,
                     'slip_id':slip.id,
                     'employee_id':False,
-                    'function_id':False,
+#                    'function_id':False,
                     'base':base
                 }
                 slip_line_pool.copy(cr, uid, line.id, vals, {})
@@ -1231,7 +1231,7 @@ class hr_payslip_line(osv.osv):
 
     _columns = {
         'slip_id':fields.many2one('hr.payslip', 'Pay Slip', required=False),
-        'function_id':fields.many2one('hr.payroll.structure', 'Function', required=False),
+#        'function_id':fields.many2one('hr.payroll.structure', 'Function', required=False),
         'employee_id':fields.many2one('hr.employee', 'Employee', required=False),
         'name':fields.char('Name', size=256, required=True, readonly=False),
         'base':fields.char('Formula', size=1024, required=False, readonly=False),
