@@ -21,10 +21,9 @@
 ##############################################################################
 import time
 import netsvc
-from datetime import date, datetime, timedelta
+from datetime import date, timedelta
 
 from osv import fields, osv
-from tools import config
 from tools.translate import _
 
 def prev_bounds(cdate=False):
@@ -107,8 +106,6 @@ class payroll_register(osv.osv):
     def compute_sheet(self, cr, uid, ids, context=None):
         emp_pool = self.pool.get('hr.employee')
         slip_pool = self.pool.get('hr.payslip')
-        func_pool = self.pool.get('hr.payroll.structure')
-        slip_line_pool = self.pool.get('hr.payslip.line')
         wf_service = netsvc.LocalService("workflow")
         vals = self.browse(cr, uid, ids, context=context)[0]
         emp_ids = emp_pool.search(cr, uid, [])
