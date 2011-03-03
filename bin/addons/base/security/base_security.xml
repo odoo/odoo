@@ -51,7 +51,9 @@
         <field name="name">res.partner company</field>
         <field name="model_id" ref="model_res_partner"/>
         <field name="global" eval="True"/>
-        <field name="domain_force">['|', ('company_id','child_of',[user.company_id.id]),('company_id','=',False)]</field>
+        <!-- Show partners from ancestors and descendants companies (or company-less), this is usually a better
+             default for multicompany setups. -->
+        <field name="domain_force">['|','|',('company_id.child_ids','child_of',[user.company_id.id]),('company_id','child_of',[user.company_id.id]),('company_id','=',False)]</field>
     </record>
 
     <record model="ir.rule" id="multi_company_default_rule">
