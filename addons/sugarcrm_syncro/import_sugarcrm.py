@@ -40,6 +40,8 @@ class import_sugarcrm(osv.osv):
      }        
 
      def _get_all(self, cr, uid, model, sugar_val, context=None):
+           if not context:
+               context = {}
            models = self.pool.get(model)
            all_model_ids = models.search(cr, uid, [('name', '=', sugar_val)])
            output = [(False, '')]
@@ -50,14 +52,20 @@ class import_sugarcrm(osv.osv):
            return output
 
      def _get_all_states(self, cr, uid, sugar_val, context=None):
+        if not context:
+            context = {}         
         return self._get_all(
             cr, uid, 'res.country.state', sugar_val, context=context)
 
      def _get_all_countries(self, cr, uid, sugar_val, context=None):
+        if not context:
+            context = {}         
         return self._get_all(
             cr, uid, 'res.country', sugar_val, context=context)
 
      def _get_lead_status(self, cr, uid, sugar_val, context=None):
+        if not context:
+            context = {}         
         sugar_stage = ''
         if sugar_val.get('status','') == 'New':
             sugar_stage = 'New'
@@ -74,7 +82,8 @@ class import_sugarcrm(osv.osv):
         return sugar_stage
 
      def _get_opportunity_status(self, cr, uid, sugar_val, context=None):
-         
+        if not context:
+            context = {}         
         sugar_stage = ''
         if sugar_val.get('sales_stage','') == 'Need Analysis':
              sugar_stage = 'New'
@@ -91,6 +100,9 @@ class import_sugarcrm(osv.osv):
         return sugar_stage    
     
      def create_lead(self, cr, uid, sugar_val, country, state, context=None):
+           if not context:
+                context = {}         
+         
            lead_pool = self.pool.get("crm.lead")
            stage_id = ''
            stage = self._get_lead_status(cr, uid, sugar_val, context=None)
@@ -121,7 +133,8 @@ class import_sugarcrm(osv.osv):
            return new_lead_id
 
      def create_opportunity(self, cr, uid, sugar_val, country, state, context=None):
-
+           if not context:
+                context = {}         
            lead_pool = self.pool.get("crm.lead")
            stage_id = ''
            stage_pool = self.pool.get('crm.case.stage')
@@ -142,32 +155,11 @@ class import_sugarcrm(osv.osv):
            new_opportunity_id = lead_pool.create(cr, uid, vals)
            return new_opportunity_id
 
-     def create_contact(self, cr, uid, sugar_val, country, state, context=None):
-           addr_pool = self.pool.get("res.partner.address")
-           partner_pool = self.pool.get("res.partner")
-
-           vals =  {'name': sugar_val.get('first_name','')+' '+ sugar_val.get('last_name',''),
-                            'partner_id': sugar_val.get('account_id'),
-           }
-           new_partner_id = partner_pool.create(cr, uid, vals)
-           addr_vals = {'partner_id': new_partner_id,
-                        'name': sugar_val.get('first_name','')+' '+ sugar_val.get('last_name',''),
-                        'function':sugar_val.get('title',''),
-                        'phone': sugar_val.get('phone_home'),
-                        'mobile': sugar_val.get('phone_mobile'),
-                        'fax': sugar_val.get('phone_fax'),
-                        'street': sugar_val.get('primary_address_street',''),
-                        'zip': sugar_val.get('primary_address_postalcode',''),
-                        'city':sugar_val.get('primary_address_city',''),
-                        'country_id': country and country[0][0] or False,
-                        'state_id': state and state[0][0] or False,
-                        'email': sugar_val.get('email1'),
-           }
-           addr_pool.create(cr, uid, addr_vals)
-           return new_partner_id
-
      def _get_sugar_module_name(self, cr, uid, ids, context=None):
-        
+         
+        if not context:
+             context = {}         
+
         sugar_name = []
 
         for current in self.read(cr, uid, ids):
@@ -184,6 +176,8 @@ class import_sugarcrm(osv.osv):
 
      def _get_module_name(self, cr, uid, ids, context=None):
         
+       if not context:
+            context = {}         
        module_name = []
 
        for current in self.read(cr, uid, ids, ['lead', 'opportunity']):
@@ -194,23 +188,21 @@ class import_sugarcrm(osv.osv):
               module_name.append('crm')
           if current.get('opportunity'):    
               module_name.append('crm')
-              
 
           ids = self.pool.get("ir.module.module").search(cr, uid, [('name', 'in', module_name),('state', '=', 'installed')])
           if not ids:
               for module in module_name:
                   raise osv.except_osv(_('Error !'), _('Please  Install %s Module') % ((module)))
 
-     def get_create_method(self, cr, uid, sugar_name, sugar_val, country, state, context):
-       
+     def get_create_method(self, cr, uid, sugar_name, sugar_val, country, state, context=None):
+        if not context:
+            context = {}         
+
         if sugar_name == "Leads":
             self.create_lead(cr, uid, sugar_val, country, state, context)
         
         elif sugar_name == "Opportunities":
             self.create_opportunity(cr, uid, sugar_val, country, state,context)
-
-        elif sugar_name == "Contacts":
-            self.create_contact(cr, uid, sugar_val, country, state, context)
         return {}    
     
      def import_data(self, cr, uid, ids,context=None):
