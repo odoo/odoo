@@ -13,7 +13,7 @@
 	                <field name="fy_id" domain = "[('state','=','draft')]"/>
 	                <field name="fy2_id" domain = "[('state','=','draft')]"/>
 	                <field name="journal_id"/>
-	                <field name="period_id" domain ="[('fiscalyear_id','=',fy2_id)]" />
+	                <field name="period_id" domain ="[('fiscalyear_id','=',fy2_id),('special','=', True)]" />
 	                <field name="report_name" colspan="4"/>
 	                <separator colspan="4"/>
 	                <group colspan="4" col="6">
