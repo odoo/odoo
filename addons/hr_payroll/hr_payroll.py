@@ -96,12 +96,9 @@ class hr_contract(osv.osv):
     _description = 'Employee Contract'
     _columns = {
         'struct_id': fields.many2one('hr.payroll.structure', 'Salary Structure'),
-        'working_days_per_week': fields.integer('Working Days', help="No of Working days / week for an employee"),
         'basic': fields.float('Basic Salary', digits_compute=dp.get_precision('Account')),
     }
-    _defaults = {
-        'working_days_per_week': 5,
-    }
+
 hr_contract()
 
 class payroll_register(osv.osv):
