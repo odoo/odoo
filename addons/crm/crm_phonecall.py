@@ -110,6 +110,7 @@ class crm_phonecall(crm_case, osv.osv):
         @param ids: List of case Ids
         @param *args: Tuple Value for additional Params
         """
+        res = True
         for phone in self.browse(cr, uid, ids):
             phone_id= phone.id
             data = {'date_closed': time.strftime('%Y-%m-%d %H:%M:%S')}
