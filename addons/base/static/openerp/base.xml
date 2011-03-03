@@ -105,7 +105,7 @@
 </t>
 <t t-name="SearchView">
     <h3><t t-esc="fields_view.arch['@string']"/></h3>
-    <table border="1">
+    <table border="0">
     <tr>
         <t t-call="SearchView.node">
             <t t-set="node" t-value="fields_view.arch"/>
@@ -129,7 +129,7 @@
     -->
     <t t-if="node.tag == 'filter'">
         <t t-if="previous_node_type != 'filter'">
-            &lt;td nowrap="true"&gt;
+            &lt;td nowrap="true" valign="bottom"&gt;
         </t>
             <!-- TODO: buttons are inline elements. should not have whitespaces between them.
              Either implement trim in qweb or use css3 white-space-collapsing (not stable now)
@@ -141,7 +141,11 @@
              Also add a TODO about t-code=""
              
              -->
-            <button type="button" t-att-title="node['@help']"><t t-esc="node['@string']"/></button>
+            <button type="button" t-att-title="node['@help']">
+                <img t-if="node['@icon']" t-att-src="'/base/static/openerp/img/icons/' + node['@icon'] + '.png'" width="16" height="16"/>
+                <br t-if="node['@icon'] and node['@string']"/>
+                <t t-esc="node['@string']"/>
+            </button>
         <t t-if="next_node_type != 'filter'">
             &lt;/td&gt;
         </t>
@@ -153,18 +157,21 @@
         <!-- TODO: check qweb support for cdata -->
         &lt;/tr&gt;
         &lt;/table&gt;
-        &lt;table border="1"&gt;
+        &lt;table border="0"&gt;
         &lt;tr&gt;
     </t>
     <t t-if="node.tag == 'field'">
         <td>
-            <table>
-                <tr><td> <t t-esc="node['@string']"/><t t-esc="node['@name']"/> </td></tr>
-                <tr><td> <input type="text" t-att-name="node['@name']"/> </td></tr>
-            </table>
+            <label style="display: block" t-att-title="node['@help']">
+                <t t-esc="node['@string']"/><t t-esc="node['@name']"/>
+                <span t-if="node['@help']">(?)</span>
+            </label>
+            <div>
+                <input type="text" t-att-name="node['@name']"/>
+            </div>
         </td>
     </t>
-    <t t-if="node.children and node.tag != 'field' and node.tag != 'newline'">
+    <t t-if="node.children and node.tag != 'newline'">
         <t t-foreach="node.children" t-as="node">
             <t t-call="SearchView.node">
                 <t t-set="previous_node_type" t-value="node_all[node_index - 1] ? node_all[node_index - 1].tag : ''"/>
