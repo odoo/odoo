@@ -51,7 +51,6 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <xpath expr="/form/notebook/page[@string='Salary Structure']/field[@name='line_ids']/form/group/field[@name='company_contrib']" position="before">
-                   <field name="analytic_account_id"/>
                    <field name="account_id" required="1"/>
                 </xpath>
             </field>
