@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- vim:fdl=1:
+-->
+<templates id="template" xml:space="preserve">
+<t t-name="interface">
+    <div id="oe_loading" style="display: none;"></div>
+    <div id="oe_login" style="display: none; padding: 6px;"></div>
+    <div id="oe_header" style="padding: 4px; border-bottom: 1px solid #000;">
+        <h2>OpenERP Web Client <span style="font-size:50%; font-weight: normal;"><br/>Codename: from __future__ import openerpweb</span></h2>
+    </div>
+    <div id="oe_menu" style="border-bottom: 1px solid #000;"></div>
+    <div id="oe_main" style="padding-bottom: 6px; border-bottom: 1px solid #000;"></div>
+    <div id="oe_footer" style="text-align: center; font-size: 75%;">
+        Powered by OpenERP.
+    </div>
+    <div id="oe_errors" style="font-size: 90%;">
+    Debug:
+    </div>
+    <div style="position: absolute; right: 0; top: 0;">
+        <button onclick="QWeb.add_template('base.xml'); $('body').css('background-color', '#FFFF9C'); setTimeout(function() { $('body').css('background-color', '#FFF'); }, 500);">Reload QWEB</button>
+    </div>
+</t>
+<t t-name="Loading">
+    Loading...
+</t>
+<t t-name="login">
+    <form>
+        Login: <input type="text" name="login" value="admin"/><br/>
+        Password: <input type="password" name="password" value="a"/><br/>
+        <input type="submit" name="submit" value="Login"/>
+    </form>
+</t>
+<t t-name="Menu.root">
+    <ul class="sf-menu">
+    <t t-foreach="data.children" t-as="menu">
+        <t t-call="Menu.children"/>
+    </t>
+    </ul>
+    <div style="clear: both"></div>
+</t>
+<t t-name="Menu.children">
+    <!-- TODO prefix id with the element_id of the controller -->
+    <li><a href="#" t-attf-id="menu_#{menu.id}"><t t-esc="menu.name"/></a>
+        <t t-if="menu.children.length!=0">
+            <ul>
+                <t t-foreach="menu.children" t-as="menu">
+                    <t t-call="Menu.children"/>
+                </t>
+            </ul>
+        </t>
+    </li>
+</t>
+<t t-name="ListView">
+    <!--
+    <h3><t t-esc="fields_view.arch['@string']"/></h3>
+    -->
+    <div style="text-align:right;">
+        <input type="button" value="First"/>
+        <input type="button" value="&lt;&lt;"/>
+        0 / 0
+        <input type="button" value="&gt;&gt;"/>
+        <input type="button" value="Last"/>
+    </div>
+    <table id="todo_use_unique_id" class="jqGrid"></table>
+</t>
+<t t-name="FormView">
+    <h3><t t-esc="fields_view.arch['@string']"/></h3>
+    <div style="text-align:right;">
+        <input type="button" value="First"/>
+        <input type="button" value="&lt;&lt;"/>
+        0 / 0
+        <input type="button" value="&gt;&gt;"/>
+        <input type="button" value="Last"/>
+    </div>
+    <t t-call="FormView.node">
+        <t t-set="node" t-value="fields_view.arch"/>
+    </t>
+    <div style="text-align:right;">
+        <input type="button" value="Save"/>
+    </div>
+</t>
+<t t-name="FormView.node">
+    <!--
+    tag: <t t-esc="node.tag"/> <t t-esc="node['@name']"/> <br/>
+    <t t-if="node.tag == 'filter'">
+        <input type="button" t-att-value="node['@string']"/>
+        <t t-esc="node['@name']"/>
+        <br/>
+    </t>
+    <t t-if="node.tag == 'separator'">
+        <hr/>
+        <t t-esc="node['@name']"/>
+        <t t-esc="node['@string']"/>
+    </t>
+    -->
+    <t t-if="node.tag == 'field'">
+        <t t-esc="node['@string']"/>
+        <t t-esc="node['@name']"/>
+        <input type="text" t-att-name="node['@name']"/>
+        <br/>
+    </t>
+    <t t-foreach="node.children || []" t-as="node">
+        <t t-call="FormView.node"/>
+    </t>
+</t>
+<t t-name="SearchView">
+    <h3><t t-esc="fields_view.arch['@string']"/></h3>
+    <table border="1">
+    <tr>
+        <t t-call="SearchView.node">
+            <t t-set="node" t-value="fields_view.arch"/>
+            <t t-set="previous_node_type"></t>
+        </t>
+    </tr>
+    </table>
+    <div style="text-align:right;">
+        <input id="search" type="button" value="Search"/>
+        <input type="button" value="Clear"/>
+    </div>
+</t>
+<t t-name="SearchView.node">
+<t t-if="node.tag"> <!-- Should remove this condition once the xml2json removes whitespace -->
+    <!--
+    tag: <t t-esc="node.tag"/>
+    <t t-esc="node['@string']"/>
+    <t t-esc="node['@string']"/>
+        <br/>
+        <t t-esc="node['@name']"/>
+    -->
+    <t t-if="node.tag == 'filter'">
+        <t t-if="previous_node_type != 'filter'">
+            &lt;td nowrap="true"&gt;
+        </t>
+            <!-- TODO: buttons are inline elements. should not have whitespaces between them.
+             Either implement trim in qweb or use css3 white-space-collapsing (not stable now)
+             
+             Yes implement t-trim it was noted in qweb.js as a TODO:
+
+             trim 'left' 'right' 'both' is it needed ?  inner=render_trim(l_inner.join(), t_att)
+
+             Also add a TODO about t-code=""
+             
+             -->
+            <button type="button" t-att-title="node['@help']"><t t-esc="node['@string']"/></button>
+        <t t-if="next_node_type != 'filter'">
+            &lt;/td&gt;
+        </t>
+    </t>
+    <t t-if="node.tag == 'separator'">
+        <!-- nothing in search view ? -->
+    </t>
+    <t t-if="node.tag == 'newline'">
+        <!-- TODO: check qweb support for cdata -->
+        &lt;/tr&gt;
+        &lt;/table&gt;
+        &lt;table border="1"&gt;
+        &lt;tr&gt;
+    </t>
+    <t t-if="node.tag == 'field'">
+        <td>
+            <table>
+                <tr><td> <t t-esc="node['@string']"/><t t-esc="node['@name']"/> </td></tr>
+                <tr><td> <input type="text" t-att-name="node['@name']"/> </td></tr>
+            </table>
+        </td>
+    </t>
+    <t t-if="node.children and node.tag != 'field' and node.tag != 'newline'">
+        <t t-foreach="node.children" t-as="node">
+            <t t-call="SearchView.node">
+                <t t-set="previous_node_type" t-value="node_all[node_index - 1] ? node_all[node_index - 1].tag : ''"/>
+                <t t-set="next_node_type" t-value="node_all[node_index + 1] ? node_all[node_index + 1].tag : ''"/>
+            </t>
+        </t>
+    </t>
+</t>
+</t>
+<t t-name="Action">
+    <!-- TODO prefix id with the element_id of the controller t-attf-id="#{prefix}_localid" -->
+    <div style="text-align:right;">
+        <input id="mode_list" type="button" value="ListView"/>
+        <input id="mode_form" type="button" value="FormView"/>
+    </div>
+    <div id="oe_action_dataset" style="display:none;"></div>
+    <div id="oe_action_search" ></div>
+    <div id="oe_action_list" ></div>
+    <div id="oe_action_form" ></div>
+</t>
+</templates>
