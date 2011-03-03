@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <openerp>
 <data>
+    <!-- Transform into YAML for testing -->
     <record model="res.bank" id="partner_bank">
         <field name="name">Fortis s.a.</field>
         <field name="clearing">123456</field>
@@ -11,7 +12,7 @@
         <field name="acc_number">123456</field>
         <field name="partner_id" ref="base.res_partner_agrolait"/>
         <field name="state">bvrbank</field>
-        <field name="bvr_number">234567</field>
+        <field name="post_number">234567</field>
         <field name="bank" ref="partner_bank"/>
         <field name="iban">CH9100767000S00023455</field>
     </record>
