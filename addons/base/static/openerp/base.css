@@ -1,0 +1,107 @@
+/* TODO: seperate openerp webclient page css from openerp views css */
+body {
+    padding: 0;
+    margin: 0;
+    font-family: helvetica, sans, arial;
+    /* TODO: We must check best practice for font-size */
+}
+
+.oe_box {
+    border: 1px solid #aaf;
+    padding: 2px;
+    margin: 2px;
+}
+
+.#oe_header h2 {
+    margin: 2px 0;
+}
+
+#oe_errors pre {
+    margin: 0;
+}
+
+
+.openerp {
+}
+
+.openerp .loading {
+    display: none;
+    z-index: 1000;
+    position: fixed;
+    top: 0;
+    right: 0;
+    padding: 4px 8px;
+    background: #A61300;
+    color: white;
+    text-align: center;
+}
+
+.openerp .login {
+    display: none;
+    padding: 6px;
+    z-index: 100;
+    width: 34%;
+    position: fixed;
+    top: 0;
+    left: 33%;
+
+}
+.openerp .login_valid {
+    background-color: #8f8;
+}
+.openerp .login_invalid {
+    background-color: #f88;
+}
+
+.openerp h3.title {
+    margin: 2px 0;
+    color: #252424;
+    text-shadow: white 0 1px 0;
+}
+
+.openerp .sf-menu {
+    margin-bottom: 0px;
+}
+/*
+.sf-menu a {
+    padding: 5px 5px;
+}
+*/
+
+/* SearchView */
+
+.openerp .filter_label, .openerp .filter_icon {
+    border: 1px solid #666;
+    border-left-width: 0;
+    background: #F4F2F2;
+}
+.openerp .filter_icon {
+    padding: 1px 2px 0px 2px;
+}
+.openerp .filter_label {
+    font-weight: bold;
+    text-transform: uppercase;
+    text-shadow: #EEE 0 1px 0;
+    color: #4C4C4C;
+    white-space: nowrap;
+    min-height: 40px;
+    min-width: 75px;
+    padding: 2px 4px;
+}
+.openerp .filter_label_group  button:first-child {
+    border-left: 1px solid #666;
+    -webkit-border-top-left-radius: 7px;
+    -webkit-border-bottom-left-radius: 7px;
+    -moz-border-radius-topleft: 7px;
+    -moz-border-radius-bottomleft: 7px;
+    border-top-left-radius: 7px;
+    border-bottom-left-radius: 7px;
+}
+.openerp .filter_label_group button:last-child {
+    -webkit-border-top-right-radius: 7px;
+    -webkit-border-bottom-right-radius: 7px;
+    -moz-border-radius-topright: 7px;
+    -moz-border-radius-bottomright: 7px;
+    border-top-right-radius: 7px;
+    border-bottom-right-radius: 7px;
+}

@@ -3,8 +3,8 @@
 -->
 <templates id="template" xml:space="preserve">
 <t t-name="interface">
-    <div id="oe_loading" style="display: none;"></div>
-    <div id="oe_login" style="display: none; padding: 6px;"></div>
+    <div id="oe_loading" class="loading"></div>
+    <div id="oe_login" class="login"></div>
     <div id="oe_header" style="padding: 4px; border-bottom: 1px solid #000;">
         <h2>OpenERP Web Client <span style="font-size:50%; font-weight: normal;"><br/>Codename: from __future__ import openerpweb</span></h2>
     </div>
@@ -64,7 +64,7 @@
     <table id="todo_use_unique_id" class="jqGrid"></table>
 </t>
 <t t-name="FormView">
-    <h3><t t-esc="fields_view.arch.attrs.string"/></h3>
+    <h3 class="title"><t t-esc="fields_view.arch.attrs.string"/></h3>
     <div style="text-align:right;">
         <input type="button" value="First"/>
         <input type="button" value="&lt;&lt;"/>
@@ -104,8 +104,8 @@
     </t>
 </t>
 <t t-name="SearchView">
-    <h3><t t-esc="fields_view.arch.attrs['string']"/></h3>
-    <table border="0">
+    <h3 class="title"><t t-esc="fields_view.arch.attrs['string']"/></h3>
+    <table border="0" cellspacing="0" cellpadding="0">
     <tr>
         <t t-call="SearchView.node">
             <t t-set="node" t-value="fields_view.arch"/>
@@ -129,7 +129,7 @@
     -->
     <t t-if="node.tag == 'filter'">
         <t t-if="previous_node_type != 'filter'">
-            &lt;td nowrap="true" valign="bottom"&gt;
+            &lt;td nowrap="true" valign="bottom" class="filter_label_group"&gt;
         </t>
             <!-- TODO: buttons are inline elements. should not have whitespaces between them.
              Either implement trim in qweb or use css3 white-space-collapsing (not stable now)
@@ -141,7 +141,7 @@
              Also add a TODO about t-code=""
              
              -->
-            <button type="button" t-att-title="node.attrs.help">
+            <button type="button" t-att-title="node.attrs.help" t-att-class="node.attrs.string ? 'filter_label' : 'filter_icon'">
                 <img t-if="node.attrs.icon" t-att-src="'/base/static/openerp/img/icons/' + node.attrs.icon + '.png'" width="16" height="16"/>
                 <br t-if="node.attrs.icon and node.attrs.string"/>
                 <t t-esc="node.attrs.string"/>
@@ -157,7 +157,7 @@
         <!-- TODO: check qweb support for cdata -->
         &lt;/tr&gt;
         &lt;/table&gt;
-        &lt;table border="0"&gt;
+        &lt;table border="0" cellspacing="0" cellpadding="0"&gt;
         &lt;tr&gt;
     </t>
     <t t-if="node.tag == 'field'">

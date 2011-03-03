@@ -385,14 +385,14 @@ openerp.base.Login =  openerp.base.Controller.extend({
     },
     on_login_invalid: function() {
         var $e = this.$element;
-        $e.removeClass("oe_login_valid");
-        $e.addClass("oe_login_invalid");
+        $e.removeClass("login_valid");
+        $e.addClass("login_invalid");
         $e.show();
     },
     on_login_valid: function() {
         var $e = this.$element;
         $e.removeClass("oe_login_invalid");
-        $e.addClass("oe_login_valid");
+        $e.addClass("login_valid");
         $e.hide();
     },
     on_submit: function(ev) {
