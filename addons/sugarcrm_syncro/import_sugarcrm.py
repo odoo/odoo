@@ -167,9 +167,6 @@ class import_sugarcrm(osv.osv):
               sugar_name.append('Leads')
           if  current.get('opportunity'):
               sugar_name.append('Opportunities')
-          if current.get('lead') and current.get('opportunity'):     
-              sugar_name.append('Leads')
-              sugar_name.append('Opportunities')
                 
         return sugar_name    
     
@@ -216,11 +213,8 @@ class import_sugarcrm(osv.osv):
        PortType,sessionid = sugar.login(context.get('username',''), context.get('password',''))
        for sugar_name in sugar_module:
            sugar_data = sugar.search(PortType,sessionid,sugar_name)
-           sugar_val.append(sugar_data)
            
-       
-       for data in sugar_val:
-           for val in data: 
+           for val in sugar_data: 
                 country = self._get_all_countries(cr, uid, val.get('primary_address_country'), context)
                 state = self._get_all_states(cr, uid, val.get('primary_address_state'), context)
                 self.get_create_method(cr, uid, sugar_name, val, country, state, context)
