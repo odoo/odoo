@@ -596,21 +596,7 @@ class hr_holidays_status(osv.osv):
 
     _inherit = "hr.holidays.status"
     _columns = {
-        'company_id':fields.many2one('res.company', 'Company', required=False),
-        'type':fields.selection([
-            ('paid','Paid Holiday'),
-            ('unpaid','Un-Paid Holiday'),
-            ('halfpaid','Half-Pay Holiday')
-            ], string='Payment'),
-        'head_id': fields.many2one('hr.salary.head', 'Payroll Head', domain=[('type','=','deduction')]),
-#        'code': fields.related('head_id','code', type='char', relation='hr.salary.head', string='Code'),
-        'code':fields.char('Code', size=64, required=False, readonly=False),
-    }
-    _defaults = {
-        'type': lambda *args: 'unpaid',
-        'company_id': lambda self, cr, uid, context: \
-                self.pool.get('res.users').browse(cr, uid, uid,
-                    context=context).company_id.id,
+        'code':fields.char('Code', size=64, required=False, readonly=False, help="It is used to define the code for Leave Type which will then be used in Salary Rules."),
     }
 hr_holidays_status()
 
