@@ -191,7 +191,6 @@ class account_tax_code(osv.osv):
     _name = 'account.tax.code'
     _inherit = "account.tax.code"
     _columns = {
-        ### The case code of the tax code
         'code': fields.char('Case Code', size=512),
     }
 
