@@ -185,8 +185,9 @@ class email_server(osv.osv):
                 except Exception, e:
                     logger.notifyChannel(server.type, netsvc.LOG_WARNING, '%s' % (tools.ustr(e)))
                 finally:
-                    imap_server.close()
-                    imap_server.logout()
+                    if imap_server:
+                        imap_server.close()
+                        imap_server.logout()
             elif server.type == 'pop':
                 try:
                     pop_server = self.button_confirm_login(cr, uid, [server.id], context=context)
@@ -204,7 +205,8 @@ class email_server(osv.osv):
                 except Exception, e:
                     logger.notifyChannel(server.type, netsvc.LOG_WARNING, '%s' % (tools.ustr(e)))
                 finally:
-                    pop_server.quit()
+                    if pop_server:
+                        pop_server.quit()
         return True
 
 email_server()
