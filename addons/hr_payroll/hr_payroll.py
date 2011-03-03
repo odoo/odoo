@@ -432,8 +432,8 @@ class payroll_register(osv.osv):
 
     def final_verify_sheet(self, cr, uid, ids, context=None):
         slip_pool = self.pool.get('hr.payslip')
-        advice_pool = self.pool.get('hr.payroll.advice')
-        advice_line_pool = self.pool.get('hr.payroll.advice.line')
+#        advice_pool = self.pool.get('hr.payroll.advice')
+#        advice_line_pool = self.pool.get('hr.payroll.advice.line')
         sequence_pool = self.pool.get('ir.sequence')
         users_pool = self.pool.get('res.users')
 
@@ -444,25 +444,25 @@ class payroll_register(osv.osv):
                 wf_service.trg_validate(uid, 'hr.payslip', sid, 'final_verify_sheet', cr)
 
         company_name = users_pool.browse(cr, uid, uid, context=context).company_id.name
-        for reg in self.browse(cr, uid, ids, context=context):
-            advice = {
-                'name': 'Payment Advice from %s' % (company_name),
-                'number': sequence_pool.get(cr, uid, 'payment.advice'),
-                'register_id':reg.id
-            }
-            pid = advice_pool.create(cr, uid, advice, context=context)
+#        for reg in self.browse(cr, uid, ids, context=context):
+#            advice = {
+#                'name': 'Payment Advice from %s' % (company_name),
+#                'number': sequence_pool.get(cr, uid, 'payment.advice'),
+#                'register_id':reg.id
+#            }
+#            pid = advice_pool.create(cr, uid, advice, context=context)
 
-            for slip in reg.line_ids:
-                if not slip.employee_id.bank_account_id:
-                    raise osv.except_osv(_('Error !'), _('Please define bank account for the %s employee') % (slip.employee_id.name))
-                pline = {
-                    'advice_id':pid,
-                    'name':slip.employee_id.bank_account_id.acc_number,
-                    'employee_id':slip.employee_id.id,
-                    'amount':slip.net,
-                    'bysal':slip.net
-                }
-                id = advice_line_pool.create(cr, uid, pline, context=context)
+#            for slip in reg.line_ids:
+#                if not slip.employee_id.bank_account_id:
+#                    raise osv.except_osv(_('Error !'), _('Please define bank account for the %s employee') % (slip.employee_id.name))
+#                pline = {
+#                    'advice_id':pid,
+#                    'name':slip.employee_id.bank_account_id.acc_number,
+#                    'employee_id':slip.employee_id.id,
+#                    'amount':slip.net,
+#                    'bysal':slip.net
+#                }
+#                id = advice_line_pool.create(cr, uid, pline, context=context)
 
         self.write(cr, uid, ids, {'state':'confirm'}, context=context)
         return True
@@ -479,96 +479,6 @@ class payroll_register(osv.osv):
         return True
 
 payroll_register()
-
-class payroll_advice(osv.osv):
-    '''
-    Bank Advice Note
-    '''
-
-    _name = 'hr.payroll.advice'
-    _description = 'Bank Advice Note'
-    _columns = {
-        'register_id':fields.many2one('hr.payroll.register', 'Payroll Register', required=False),
-        'name':fields.char('Name', size=2048, required=True, readonly=False),
-        'note': fields.text('Description'),
-        'date': fields.date('Date'),
-        'state':fields.selection([
-            ('draft','Draft Sheet'),
-            ('confirm','Confirm Sheet'),
-            ('cancel','Reject'),
-        ],'State', select=True, readonly=True),
-        'number':fields.char('Number', size=64, required=False, readonly=True),
-        'line_ids':fields.one2many('hr.payroll.advice.line', 'advice_id', 'Employee Salary', required=False),
-        'chaque_nos':fields.char('Chaque Nos', size=256, required=False, readonly=False),
-        'company_id':fields.many2one('res.company', 'Company', required=False),
-        'bank_id': fields.related('register_id','bank_id', type='many2one', relation='res.bank', string='Bank', help="Select the Bank Address from whcih the salary is going to be paid"),
-    }
-    _defaults = {
-        'date': lambda *a: time.strftime('%Y-%m-%d'),
-        'state': lambda *a: 'draft',
-        'company_id': lambda self, cr, uid, context: \
-                self.pool.get('res.users').browse(cr, uid, uid,
-                    context=context).company_id.id,
-    }
-
-    def confirm_sheet(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'state':'confirm'}, context=context)
-        return True
-
-    def set_to_draft(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'state':'draft'}, context=context)
-        return True
-
-    def cancel_sheet(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'state':'cancel'}, context=context)
-        return True
-
-    def onchange_company_id(self, cr, uid, ids, company_id=False, context=None):
-        res = {}
-        if company_id:
-            company = self.pool.get('res.company').browse(cr, uid, company_id, context=context)
-            if company.partner_id.bank_ids:
-                res.update({'bank': company.partner_id.bank_ids[0].bank.name})
-        return {
-            'value':res
-        }
-payroll_advice()
-
-class payroll_advice_line(osv.osv):
-    '''
-    Bank Advice Lines
-    '''
-
-    _name = 'hr.payroll.advice.line'
-    _description = 'Bank Advice Lines'
-    _columns = {
-        'advice_id':fields.many2one('hr.payroll.advice', 'Bank Advice', required=False),
-        'name':fields.char('Bank Account A/C', size=64, required=True, readonly=False),
-        'employee_id':fields.many2one('hr.employee', 'Employee', required=True),
-        'amount': fields.float('Amount', digits=(16, 4)),
-        'bysal': fields.float('By Salary', digits=(16, 4)),
-        'flag':fields.char('D/C', size=8, required=True, readonly=False),
-    }
-    _defaults = {
-        'flag': lambda *a: 'C',
-    }
-
-    def onchange_employee_id(self, cr, uid, ids, ddate, employee_id, context=None):
-        vals = {}
-        slip_pool = self.pool.get('hr.payslip')
-        if employee_id:
-            dates = prev_bounds(ddate)
-            sids = False
-            sids = slip_pool.search(cr, uid, [('paid','=',False),('state','=','confirm'),('date','>=',dates[0]), ('employee_id','=',employee_id), ('date','<=',dates[1])], context=context)
-            if sids:
-                slip = slip_pool.browse(cr, uid, sids[0], context=context)
-                vals['name'] = slip.employee_id.identification_id
-                vals['amount'] = slip.net 
-                vals['bysal'] = slip.net
-        return {
-            'value':vals
-        }
-payroll_advice_line()
 
 class contrib_register(osv.osv):
     '''
