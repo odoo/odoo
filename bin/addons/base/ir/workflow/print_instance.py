@@ -61,7 +61,7 @@ def graph_get(cr, graph, wkf_ids, nested, workitem, processed_subflows):
                     cr.execute('select * from wkf where id=%s', (n['subflow_id'],))
                     wkfinfo = cr.dictfetchone()
                     args['label'] = \
-                        '\"Recursive Subflow: %s\\nOSV: %s%s\"' % \
+                        '\"Subflow: %s\\nOSV: %s\\n(already expanded)%s\"' % \
                         (n['name'], wkfinfo['osv'], workitems)
                     args['color'] = 'green'
                     args['style'] ='filled'
