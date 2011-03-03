@@ -548,7 +548,7 @@ class event_registration(osv.osv):
                 tools.email_send(src, email_to, subject, body, email_cc=email_cc, openobject_id=regestration.id)
                 self.history(cr, uid, [regestration], subject, history = True, \
                         email=email_to, details=body, \
-                        subjec=subject, email_from=src, \
+                        subject=subject, email_from=src, \
                         email_cc=', '.join(email_cc))
 
         return True
