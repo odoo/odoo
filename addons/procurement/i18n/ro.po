@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2011-02-14 21:01+0000\n"
+"PO-Revision-Date: 2011-03-01 14:51+0000\n"
 "Last-Translator: Dorin <dhongu@gmail.com>\n"
 "Language-Team: Romanian <ro@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-02-15 05:39+0000\n"
+"X-Launchpad-Export-Date: 2011-03-02 14:14+0000\n"
 "X-Generator: Launchpad (build 12351)\n"
 
 #. module: procurement
@@ -25,7 +25,7 @@ msgstr ""
 #. module: procurement
 #: model:ir.ui.menu,name:procurement.menu_stock_sched
 msgid "Schedulers"
-msgstr ""
+msgstr "Programare"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_make_procurement
@@ -54,7 +54,7 @@ msgstr ""
 #: code:addons/procurement/procurement.py:288
 #, python-format
 msgid "No supplier defined for this product !"
-msgstr ""
+msgstr "Nu este definit un furnizor pentru acest produs!"
 
 #. module: procurement
 #: field:make.procurement,uom_id:0
@@ -86,7 +86,7 @@ msgstr "Companie"
 #. module: procurement
 #: field:procurement.order,product_uos_qty:0
 msgid "UoS Quantity"
-msgstr ""
+msgstr "Cantitate UMV"
 
 #. module: procurement
 #: view:procurement.order:0
@@ -112,7 +112,7 @@ msgstr ""
 #. module: procurement
 #: field:stock.warehouse.orderpoint,procurement_id:0
 msgid "Latest procurement"
-msgstr ""
+msgstr "Ultima aprovizionare"
 
 #. module: procurement
 #: view:procurement.order:0
@@ -145,7 +145,7 @@ msgstr ""
 #. module: procurement
 #: view:stock.warehouse.orderpoint:0
 msgid "Minimum Stock Rules Search"
-msgstr ""
+msgstr "Caută reguli stoc mimim"
 
 #. module: procurement
 #: help:stock.warehouse.orderpoint,product_min_qty:0
@@ -177,7 +177,7 @@ msgstr "Pregătit"
 #. module: procurement
 #: field:procurement.order.compute.all,automatic:0
 msgid "Automatic orderpoint"
-msgstr ""
+msgstr "Punct comandă automat"
 
 #. module: procurement
 #: field:mrp.property,composition:0
@@ -265,7 +265,7 @@ msgstr "Produs & Amplasament"
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_order_compute
 msgid "Compute Procurement"
-msgstr ""
+msgstr "Calculează aprovizionarea"
 
 #. module: procurement
 #: model:ir.module.module,shortdesc:procurement.module_meta_information
@@ -276,7 +276,7 @@ msgstr "Aprovizionare"
 #. module: procurement
 #: field:res.company,schedule_range:0
 msgid "Scheduler Range Days"
-msgstr ""
+msgstr "Interval zile programare"
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_action
@@ -310,6 +310,7 @@ msgstr "Cantitate"
 #, python-format
 msgid "Not enough stock and no minimum orderpoint rule defined."
 msgstr ""
+"Nu este stoc disponibil și nu este definit un minim de reaprovizionare"
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:137
@@ -364,7 +365,7 @@ msgstr "Comenzi aprovzionare"
 #. module: procurement
 #: view:procurement.order:0
 msgid "To Fix"
-msgstr ""
+msgstr "De fixat"
 
 #. module: procurement
 #: view:procurement.order:0
@@ -385,7 +386,7 @@ msgstr "Proprietate"
 #: model:ir.actions.act_window,name:procurement.act_make_procurement
 #: view:make.procurement:0
 msgid "Procurement Request"
-msgstr ""
+msgstr "Cerere de aprovizionare"
 
 #. module: procurement
 #: view:procurement.orderpoint.compute:0
@@ -395,7 +396,7 @@ msgstr "Calcul stoc"
 #. module: procurement
 #: view:procurement.order:0
 msgid "Late"
-msgstr ""
+msgstr "Târziu"
 
 #. module: procurement
 #: model:process.process,name:procurement.process_process_serviceproductprocess0
@@ -443,6 +444,8 @@ msgid ""
 "Please check the Quantity in Procurement Order(s), it should not be less "
 "than 1!"
 msgstr ""
+"Vă rog să verificați cantitățile din comandă, acestea nu trebuie sa fie mai "
+"mici de 1!"
 
 #. module: procurement
 #: help:stock.warehouse.orderpoint,active:0
@@ -535,17 +538,17 @@ msgstr "Excepție"
 #: code:addons/procurement/schedulers.py:179
 #, python-format
 msgid "Automatic OP: %s"
-msgstr ""
+msgstr "OP automată: %s"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_orderpoint_compute
 msgid "Automatic Order Point"
-msgstr ""
+msgstr "Punct de reaprovizionare"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_stock_warehouse_orderpoint
 msgid "Minimum Inventory Rule"
-msgstr ""
+msgstr "Regulă inventar mimim"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_res_company
@@ -580,7 +583,7 @@ msgstr ""
 #. module: procurement
 #: selection:stock.warehouse.orderpoint,logic:0
 msgid "Order to Max"
-msgstr ""
+msgstr "Comandă la max"
 
 #. module: procurement
 #: field:procurement.order,date_close:0
@@ -635,7 +638,7 @@ msgstr "Informații generale"
 #. module: procurement
 #: view:procurement.order:0
 msgid "Run Procurement"
-msgstr ""
+msgstr "Rulare aprovizionare"
 
 #. module: procurement
 #: selection:procurement.order,state:0
@@ -827,14 +830,14 @@ msgstr "UdV produs"
 #: code:addons/procurement/procurement.py:347
 #, python-format
 msgid "from stock: products assigned."
-msgstr ""
+msgstr "din stoc: produse asignate."
 
 #. module: procurement
 #: model:ir.actions.act_window,name:procurement.action_compute_schedulers
 #: model:ir.ui.menu,name:procurement.menu_stock_proc_schedulers
 #: view:procurement.order.compute.all:0
 msgid "Compute Schedulers"
-msgstr ""
+msgstr "Calcul programare"
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_exceptions
@@ -882,7 +885,7 @@ msgstr ""
 #. module: procurement
 #: view:procurement.order:0
 msgid "Procurement Details"
-msgstr ""
+msgstr "Detalii procurare"
 
 #. module: procurement
 #: code:addons/procurement/schedulers.py:180
