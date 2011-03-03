@@ -168,8 +168,6 @@ class synchronize_google_contact(osv.osv_memory):
                 if contact_ids:
                     addresses.append(contact_ids[0])
                     self.update_contact(cr, uid, contact_ids, data, context=context)
-                    data_ids = model_obj.search(cr, uid, [('res_id','=',contact_ids[0]),('model','=','res.partner.address'),('module','=','sync_google_contact')])
-                    model_obj.write(cr, uid, data_ids, model_data, context=context)
                 if not contact_ids:
                     #create or link to an existing partner only if it's a new contact
                     res_id = addresss_obj.create(cr, uid, data, context=context)
