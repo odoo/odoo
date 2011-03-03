@@ -22,6 +22,14 @@
 from crm import crm
 from osv import fields, osv
 import time
+import binascii
+import tools
+
+CRM_HELPDESK_STATES = (
+    crm.AVAILABLE_STATES[2][0], # Cancelled
+    crm.AVAILABLE_STATES[3][0], # Done
+    crm.AVAILABLE_STATES[4][0], # Pending
+)
 
 class crm_helpdesk(crm.crm_case, osv.osv):
     """ Helpdesk Cases """
@@ -85,6 +93,99 @@ class crm_helpdesk(crm.crm_case, osv.osv):
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.helpdesk', context=c), 
         'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0], 
     }
+
+    def message_new(self, cr, uid, msg, context=None):
+        """
+        Automatically calls when new email message arrives
+
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks
+        """
+        mailgate_pool = self.pool.get('email.server.tools')
+
+        subject = msg.get('subject')
+        body = msg.get('body')
+        msg_from = msg.get('from')
+        priority = msg.get('priority')
+
+        vals = {
+            'name': subject,
+            'email_from': msg_from,
+            'email_cc': msg.get('cc'),
+            'description': body,
+            'user_id': False,
+        }
+        if msg.get('priority', False):
+            vals['priority'] = priority
+
+        res = mailgate_pool.get_partner(cr, uid, msg.get('from') or msg.get_unixfrom())
+        if res:
+            vals.update(res)
+
+        res = self.create(cr, uid, vals, context)
+        attachents = msg.get('attachments', [])
+        for attactment in attachents or []:
+            data_attach = {
+                'name': attactment,
+                'datas':binascii.b2a_base64(str(attachents.get(attactment))),
+                'datas_fname': attactment,
+                'description': 'Mail attachment',
+                'res_model': self._name,
+                'res_id': res,
+            }
+            self.pool.get('ir.attachment').create(cr, uid, data_attach)
+
+        return res
+
+    def message_update(self, cr, uid, ids, vals={}, msg="", default_act='pending', context=None):
+        """
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of update mail’s IDs 
+        """
+        if isinstance(ids, (str, int, long)):
+            ids = [ids]
+
+        if msg.get('priority') in dict(crm.AVAILABLE_PRIORITIES):
+            vals['priority'] = msg.get('priority')
+
+        maps = {
+            'cost':'planned_cost',
+            'revenue': 'planned_revenue',
+            'probability':'probability'
+        }
+        vls = {}
+        for line in msg['body'].split('\n'):
+            line = line.strip()
+            res = tools.misc.command_re.match(line)
+            if res and maps.get(res.group(1).lower()):
+                key = maps.get(res.group(1).lower())
+                vls[key] = res.group(2).lower()
+        vals.update(vls)
+
+        # Unfortunately the API is based on lists
+        # but we want to update the state based on the
+        # previous state, so we have to loop:
+        for case in self.browse(cr, uid, ids, context=context):
+            values = dict(vals)
+            if case.state in CRM_HELPDESK_STATES:
+                values.update(state=crm.AVAILABLE_STATES[1][0]) #re-open
+            res = self.write(cr, uid, [case.id], values, context=context)
+        return res
+
+    def msg_send(self, cr, uid, id, *args, **argv):
+
+        """ Send The Message
+            @param self: The object pointer
+            @param cr: the current row, from the database cursor,
+            @param uid: the current user’s ID for security checks,
+            @param ids: List of email’s IDs
+            @param *args: Return Tuple Value
+            @param **args: Return Dictionary of Keyword Value
+        """
+        return True
 
 crm_helpdesk()
 
