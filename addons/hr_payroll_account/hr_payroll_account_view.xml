@@ -31,16 +31,16 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="view_hr_payslip_line_inherit_form">
-            <field name="name">hr.payslip.line.inherit.form</field>
-            <field name="model">hr.payslip.line</field>
-            <field name="inherit_id" ref="hr_payroll.view_hr_payslip_line_form"/>
+        <record model="ir.ui.view" id="view_hr_employee_grade_inherit_form">
+            <field name="name">hr.employee.grade.inherit.form</field>
+            <field name="model">hr.payroll.structure</field>
+            <field name="inherit_id" ref="hr_payroll.view_hr_employee_grade_form"/>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <field name="company_contrib" position="before">
+                <xpath expr="/form/notebook/page[@string='Salary Structure']/field[@name='line_ids']/form/group/field[@name='company_contrib']" position="before">
                    <field name="analytic_account_id"/>
                    <field name="account_id" required="1"/>
-                </field>
+                </xpath>
             </field>
         </record>
 
@@ -57,7 +57,7 @@
             </field>
         </record>
 
- 
+
          <record id="view_hr_payslip_form_inherit_1" model="ir.ui.view">
             <field name="name">hr.payslip.form.inherit1</field>
             <field name="model">hr.payslip</field>
@@ -166,7 +166,7 @@
                 </field>
             </field>
         </record>
-    
+
         <record id="view_hr_payslip_form_inherit" model="ir.ui.view">
 		    <field name="name">hr.payslip.form</field>
 		    <field name="model">hr.payslip</field>
@@ -204,7 +204,7 @@
 	           </page>
 		    </field>
 		</record>
-		
+
 		<record id="view_hr_payslip_form_inherit1" model="ir.ui.view">
 		    <field name="name">hr.payslip.form</field>
 		    <field name="model">hr.payslip</field>
