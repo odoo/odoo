@@ -9,5 +9,31 @@
             key2="client_action_multi"
             multi="True"
 		    id="act_stock_return_picking"/>
-	</data>
+
+        <record id="stock_return_memory_tree_in" model="ir.ui.view">
+            <field name="name">stock.return.picking.memory.tree</field>
+            <field name="model">stock.return.picking.memory</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree editable="bottom" string="Product Moves">
+                    <field name="product_id" />
+                    <field name="quantity" />
+                    
+                </tree>
+            </field>
+        </record>
+        
+        <record id="stock_return_memory_form_in" model="ir.ui.view">
+            <field name="name">stock.return.picking.memory.from</field>
+            <field name="model">stock.return.picking.memory</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form>
+                    <field name="product_id" />
+                    <field name="quantity" />
+                 </form>
+            </field>
+        </record>   
+        
+    </data>
 </openerp>
