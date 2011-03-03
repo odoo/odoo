@@ -653,43 +653,34 @@ class hr_salary_head_type(osv.osv):
     
 hr_salary_head_type()
 
-class payment_category(osv.osv):
+class hr_salary_head(osv.osv):
     """
-    Allowance, Deduction Heads
-    House Rent Allowance, Medical Allowance, Food Allowance
-    Professional Tax, Advance TDS, Providend Funds, etc
+    Salary Head
     """
 
-    _name = 'hr.allounce.deduction.categoty'
-    _description = 'Allowance Deduction Heads'
+    _name = 'hr.salary.head'
+    _description = 'Salary Head'
     _columns = {
-        'name':fields.char('Category Name', size=64, required=True, readonly=False),
-        'code':fields.char('Category Code', size=64, required=True, readonly=False),
+        'name':fields.char('Salary Head', size=64, required=True, readonly=False),
+        'code':fields.char('Salary Head Code', size=64, required=True, readonly=False),
         'type':fields.many2one('hr.salary.head.type', 'Type', required=True, help="It is used only for the reporting purpose."),
-        'base':fields.text('Based on', required=True, readonly=False, help='This will use to computer the % fields values, in general its on basic, but You can use all heads code field in small letter as a variable name i.e. hra, ma, lta, etc...., also you can use, static varible basic'),
-        'condition':fields.char('Condition', size=1024, required=True, readonly=False, help='Applied this head for calculation if condition is true'),
-        'sequence': fields.integer('Sequence', required=True, help='Use to arrange calculation sequence'),
         'note': fields.text('Description'),
         'user_id':fields.char('User', size=64, required=False, readonly=False),
         'state':fields.char('Label', size=64, required=False, readonly=False),
         'company_id':fields.many2one('res.company', 'Company', required=False),
         'dispaly_payslip_report': fields.boolean('Display on Payslip Report', help="Used for the display of head on Payslip Report."),
-        'computation_based':fields.selection([
-            ('rules','List of Rules'),
-            ('exp','Expression'),
-        ],'Computation Based On', select=True, required=True),
+#        'computation_based':fields.selection([
+#            ('rules','List of Rules'),
+#            ('exp','Expression'),
+#        ],'Computation Based On', select=True, required=True),
     }
     _defaults = {
-        'condition': lambda *a: 'True',
-        'base': lambda *a:'basic',
-        'sequence': lambda *a:5,
         'company_id': lambda self, cr, uid, context: \
                 self.pool.get('res.users').browse(cr, uid, uid,
                     context=context).company_id.id,
         'dispaly_payslip_report': 1,
-        'computation_based':'rules',
     }
-payment_category()
+hr_salary_head()
 
 class hr_holidays_status(osv.osv):
 
@@ -701,8 +692,8 @@ class hr_holidays_status(osv.osv):
             ('unpaid','Un-Paid Holiday'),
             ('halfpaid','Half-Pay Holiday')
             ], string='Payment'),
-        'head_id': fields.many2one('hr.allounce.deduction.categoty', 'Payroll Head', domain=[('type','=','deduction')]),
-#        'code': fields.related('head_id','code', type='char', relation='hr.allounce.deduction.categoty', string='Code'),
+        'head_id': fields.many2one('hr.salary.head', 'Payroll Head', domain=[('type','=','deduction')]),
+#        'code': fields.related('head_id','code', type='char', relation='hr.salary.head', string='Code'),
         'code':fields.char('Code', size=64, required=False, readonly=False),
     }
     _defaults = {
@@ -1202,7 +1193,7 @@ class hr_payslip_line(osv.osv):
         res = {
         }
         if category_id:
-            category = self.pool.get('hr.allounce.deduction.categoty').browse(cr, uid, category_id)
+            category = self.pool.get('hr.salary.head').browse(cr, uid, category_id)
             res.update({
                 'sequence':category.sequence,
                 'name':category.name,
@@ -1225,7 +1216,7 @@ class hr_payslip_line(osv.osv):
         'name':fields.char('Name', size=256, required=True, readonly=False),
         'base':fields.char('Formula', size=1024, required=False, readonly=False),
         'code':fields.char('Code', size=64, required=False, readonly=False),
-        'category_id':fields.many2one('hr.allounce.deduction.categoty', 'Category', required=True),
+        'category_id':fields.many2one('hr.salary.head', 'Category', required=True),
         'type':fields.many2one('hr.salary.head.type', 'Type', required=True),
         'amount_type':fields.selection([
             ('per','Percentage (%)'),
@@ -1237,7 +1228,6 @@ class hr_payslip_line(osv.osv):
         'company_contrib': fields.float('Company Contribution', readonly=True, digits=(16, 4)),
         'sequence': fields.integer('Sequence'),
         'note':fields.text('Description'),
-        'exp':fields.text('Expression'),
     }
     _order = 'sequence'
     _defaults = {
@@ -1252,15 +1242,22 @@ class hr_salary_rule(osv.osv):
     _name = 'hr.salary.rule'
     _columns = {
         'appears_on_payslip': fields.boolean('Appears on Payslip', help="Used for the display of rule on payslip"),
-        'min_range': fields.float('Minimum Range', required=False, help="The minimum amount, applied for this rule."),
-        'max_range': fields.float('Maximum Range', required=False, help="The maximum amount, applied for this rule."),
+        'condition_range_min': fields.float('Minimum Range', required=False, help="The minimum amount, applied for this rule."),
+        'condition_range_max': fields.float('Maximum Range', required=False, help="The maximum amount, applied for this rule."),
         'sal_rule_id':fields.many2one('hr.salary.rule', 'Parent Salary Structure', select=True),
         'child_depend':fields.boolean('Children Rule'),
         'child_ids':fields.one2many('hr.salary.rule', 'sal_rule_id', 'Child Salary Sructure'),
         'company_id':fields.many2one('res.company', 'Company', required=False),
         'register_id':fields.many2one('hr.contibution.register', 'Contri Reg', select=True),
+        'computational_expression':fields.text('Computational Expression', required=True, readonly=False, help='This will use to computer the % fields values, in general its on basic, but You can use all heads code field in small letter as a variable name i.e. hra, ma, lta, etc...., also you can use, static varible basic'),
+        'conditions':fields.char('Condition', size=1024, required=True, readonly=False, help='Applied this head for calculation if condition is true'),
+        'sequence': fields.integer('Sequence', required=True, help='Use to arrange calculation sequence'),
      }
     _defaults = {
+        'conditions': lambda *a: 'True',
+        'computational_expression': lambda *a:'basic',
+        'sequence': lambda *a:5,
+#        'computation_based':'rules',
         'appears_on_payslip': 1
      }
 

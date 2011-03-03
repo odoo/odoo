@@ -68,7 +68,7 @@
         </record>
 
         <!-- Employee Contract -->
-        <record id="hr_contract_firstcontract1" model="hr.contract">
+       <!-- <record id="hr_contract_firstcontract1" model="hr.contract">
             <field name="wage_type_id" ref="hr_contract.hr_contract_monthly_gross"/>
             <field name="name">First Contract</field>
             <field name="type_id" ref="hr_contract.hr_contract_type_emp"/>
@@ -80,9 +80,9 @@
             <field eval="4000.0" name="wage"/>
             <field eval="5" name="working_days_per_week"/>
         </record>
-
+-->
         <!-- Payslip -->
-        <record id="hr_payslip_salaryslipofbonamyforjune0" model="hr.payslip">
+       <!-- <record id="hr_payslip_salaryslipofbonamyforjune0" model="hr.payslip">
             <field name="number">SLIP/001</field>
             <field name="deg_id" ref="hr_payroll.structure_001"/>
             <field name="employee_id" ref="hr_employee_bonamy0"/>
@@ -90,6 +90,6 @@
             <field name="company_id" ref="base.main_company"/>
             <field name="date" eval="time.strftime('%Y-%m')+'-5'"/>
             <field name="name" eval="'Salary Slip of Bonamy for June-'+time.strftime('%Y')"/>
-        </record>
+        </record>-->
     </data>
 </openerp>

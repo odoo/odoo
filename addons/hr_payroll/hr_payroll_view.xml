@@ -465,51 +465,39 @@
         <menuitem action="action_view_hr_payslip_form" id="menu_department_tree" parent="menu_hr_root_payroll"/>
 
         <!-- Payment Heads -->
-        <record id="hr_allounce_deduction_categoty_form" model="ir.ui.view">
-            <field name="name">hr.allounce.deduction.categoty.form</field>
-            <field name="model">hr.allounce.deduction.categoty</field>
+        <record id="hr_salary_head_form" model="ir.ui.view">
+            <field name="name">hr.salary.head.form</field>
+            <field name="model">hr.salary.head</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Salary Heads">
-                    <group col="6" colspan="6">
-                        <group col="6" colspan="6">
-	                        <field name="name" select="1"/>
-	                        <field name="code" select="1"/>
-	                        <field name="sequence"/>
-	                        <field name="type" select="1"/>
-	                        <field name="dispaly_payslip_report"/>
-                        </group>
-                        <group col="2" colspan="2">
-                            <separator colspan="4" string="Dynamic Computation"/>
-                            <field name="computation_based" select="1"/>
-                            <separator colspan="4" string="Expression"/>
-                            <field name="base" colspan="4" nolabel="1"/>
-                        </group>
+                    <group col="3" colspan="6">
+                        <field name="name" select="1"/>
+                        <field name="code" select="1"/>
+                        <field name="type" select="1"/>
+                        <field name="dispaly_payslip_report"/>
                     </group>
                     <separator colspan="4" string="Description"/>
                         <field name="note" colspan="4" nolabel="1"/>
                 </form>
             </field>
         </record>
-        <record id="hr_allounce_deduction_categoty_tree" model="ir.ui.view">
-            <field name="name">hr.allounce.deduction.categoty.tree</field>
-            <field name="model">hr.allounce.deduction.categoty</field>
+        <record id="hr_salary_head_tree" model="ir.ui.view">
+            <field name="name">hr.salary.head.tree</field>
+            <field name="model">hr.salary.head</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Salary Heads">
                     <field name="name"/>
                     <field name="code"/>
                     <field name="type"/>
-                    <field name="base"/>
-                    <field name="condition"/>
-                    <field name="sequence"/>
                 </tree>
             </field>
         </record>
 
-        <record id="view_allounce_deduction_categoty_filter" model="ir.ui.view">
-            <field name="name">hr.allounce.deduction.categoty.select</field>
-            <field name="model">hr.allounce.deduction.categoty</field>
+        <record id="view_hr_salary_head_filter" model="ir.ui.view">
+            <field name="name">hr.salary.head.select</field>
+            <field name="model">hr.salary.head</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Salary Heads">
@@ -521,23 +509,22 @@
                     <field name="type"/>
                     <newline/>
                     <group expand="0" string="Group By..." colspan="4" col="4" groups="base.group_extended">
-                        <filter string="Based" icon="terp-go-month" domain="[]" context="{'group_by':'base'}"/>
                         <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type'}"/>
                     </group>
                </search>
             </field>
         </record>
 
-        <record id="hr_allounce_deduction_tree" model="ir.actions.act_window">
+        <record id="action_hr_salary_head" model="ir.actions.act_window">
             <field name="name">Salary Heads</field>
-            <field name="res_model">hr.allounce.deduction.categoty</field>
+            <field name="res_model">hr.salary.head</field>
             <field name="view_type">form</field>
-            <field name="view_id" ref="hr_allounce_deduction_categoty_tree"/>
-           <field name="search_view_id" ref="view_allounce_deduction_categoty_filter"/>
+            <field name="view_id" ref="hr_salary_head_tree"/>
+           <field name="search_view_id" ref="view_hr_salary_head_filter"/>
         </record>
         <menuitem
-            id="menu_hr_allounce_deduction_tree"
-            action="hr_allounce_deduction_tree"
+            id="menu_hr_salary_head"
+            action="action_hr_salary_head"
             parent="payroll_configure"
         />
         <!-- End Payment Heads -->
@@ -801,24 +788,27 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Salary Rules">
-                <group col="3" colspan="6">
+                <group col="6" colspan="6">
                    <field name="name"/>
                    <field name="code" select="1"/>
-                   <field name="min_range"/>
-                   <field name="max_range"/>
                    <field name="appears_on_payslip"/>
+                   <field name="condition_range_min"/>
+                   <field name="condition_range_max"/>
                 </group>
+                <group col="6" colspan="6">
                 <group col="2" colspan="2">
                     <separator colspan="4" string="Calculations"/>
                     <field name="category_id" on_change="onchange_category(category_id)"/>
                     <field name="type"/>
                     <field name="amount_type"/>
                     <field name="amount" on_change="onchange_amount(amount, amount_type)" attrs="{'readonly':[('amount_type','=','func')]}"/>
-                    <field name="sequence" groups="base.group_extended"/>
+                    <field name="sequence" />
+                    <field name="conditions"/>
                 </group>
-                <group col="2" colspan="2" attrs="{'invisible':[('amount_type','!=','code')]}">
-                    <separator colspan="2" string="Applicable code (if Amount Type = Python code)"/>
-                    <field name="exp"  nolabel="1" attrs="{'readonly':[('amount_type','!=','code')],'required':[('amount_type','=','code')]}"/>
+                <group col="2" colspan="4">
+                    <separator colspan="4" string="Computational Expression"/>
+                    <field name="computational_expression" colspan="4" nolabel="1"/>
+                </group>
                 </group>
                 <notebook colspan="4">
                     <page string="Child Rules" groups="base.group_extended">
