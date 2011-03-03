@@ -64,7 +64,7 @@
     <table id="todo_use_unique_id" class="jqGrid"></table>
 </t>
 <t t-name="FormView">
-    <h3><t t-esc="fields_view.arch['@string']"/></h3>
+    <h3><t t-esc="fields_view.arch.attrs.string"/></h3>
     <div style="text-align:right;">
         <input type="button" value="First"/>
         <input type="button" value="&lt;&lt;"/>
@@ -94,9 +94,9 @@
     </t>
     -->
     <t t-if="node.tag == 'field'">
-        <t t-esc="node['@string']"/>
-        <t t-esc="node['@name']"/>
-        <input type="text" t-att-name="node['@name']"/>
+        <t t-esc="node.attrs.string"/>
+        <t t-esc="node.attrs.name"/>
+        <input type="text" t-att-name="node.attrs.name"/>
         <br/>
     </t>
     <t t-foreach="node.children || []" t-as="node">
@@ -104,7 +104,7 @@
     </t>
 </t>
 <t t-name="SearchView">
-    <h3><t t-esc="fields_view.arch['@string']"/></h3>
+    <h3><t t-esc="fields_view.arch.attrs['string']"/></h3>
     <table border="0">
     <tr>
         <t t-call="SearchView.node">
@@ -141,10 +141,10 @@
              Also add a TODO about t-code=""
              
              -->
-            <button type="button" t-att-title="node['@help']">
-                <img t-if="node['@icon']" t-att-src="'/base/static/openerp/img/icons/' + node['@icon'] + '.png'" width="16" height="16"/>
-                <br t-if="node['@icon'] and node['@string']"/>
-                <t t-esc="node['@string']"/>
+            <button type="button" t-att-title="node.attrs.help">
+                <img t-if="node.attrs.icon" t-att-src="'/base/static/openerp/img/icons/' + node.attrs.icon + '.png'" width="16" height="16"/>
+                <br t-if="node.attrs.icon and node.attrs.string"/>
+                <t t-esc="node.attrs.string"/>
             </button>
         <t t-if="next_node_type != 'filter'">
             &lt;/td&gt;
@@ -161,13 +161,14 @@
         &lt;tr&gt;
     </t>
     <t t-if="node.tag == 'field'">
+        <t t-set="orm" t-value="fields_view.fields[node.attrs.name] || {}"/>
         <td>
-            <label style="display: block" t-att-title="node['@help']">
-                <t t-esc="node['@string']"/><t t-esc="node['@name']"/>
-                <span t-if="node['@help']">(?)</span>
+            <label style="display: block" t-att-title="orm.help || node.attrs.help">
+                <t t-esc="orm.string || node.attrs.string || node.attrs.name"/>
+                <span t-if="orm.help || node.attrs.help">(?)</span>
             </label>
             <div>
-                <input type="text" t-att-name="node['@name']"/>
+                <input type="text" t-att-name="node.attrs.name"/>
             </div>
         </td>
     </t>

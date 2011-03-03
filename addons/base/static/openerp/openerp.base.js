@@ -559,7 +559,7 @@ openerp.base.ListView = openerp.base.Controller.extend({
         var self = this;
         this.fields_view = data.fields_view;
         //this.log(this.fields_view);
-        this.name = ""+this.fields_view.arch["@string"];
+        this.name = "" + this.fields_view.arch.attrs.string;
         this.$element.html(QWeb.render("ListView", {"fields_view": this.fields_view}));
         this.$table = this.$element.find("table");
         this.cols = [];
@@ -570,9 +570,9 @@ openerp.base.ListView = openerp.base.Controller.extend({
         for(var i = 0; i < tree.length; i++)  {
             var col = tree[i];
             if(col.tag == "field") {
-                this.cols.push(col["@name"]);
-                this.colnames.push(col["@name"]);
-                this.colmodel.push({ name: col["@name"], index: col["@name"] });
+                this.cols.push(col.attrs.name);
+                this.colnames.push(col.attrs.name);
+                this.colmodel.push({ name: col.attrs.name, index: col.attrs.name });
             }
         }
         //this.log(this.cols);
@@ -643,7 +643,7 @@ openerp.base.SearchView = openerp.base.Controller.extend({
     },
     on_loaded: function(data) {
         this.fields_view = data.fields_view;
-        //this.log(this.fields_view);
+        this.log(this.fields_view);
         this.input_ids = {};
         this.$element.html(QWeb.render("SearchView", {"fields_view": this.fields_view}));
         this.$element.find("#search").bind('click',this.on_search);
