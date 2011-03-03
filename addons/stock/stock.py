@@ -1312,7 +1312,7 @@ class stock_picking(osv.osv):
             if pick.min_date:
                 msg= _(' for the ')+ datetime.strptime(pick.min_date, '%Y-%m-%d %H:%M:%S').strftime('%m/%d/%Y')
             state_list = {
-                'confirmed': _("is scheduled") + msg +'.',
+                'confirmed': _('is scheduled %s.') % msg,
                 'assigned': _('is ready to process.'),
                 'cancel': _('is cancelled.'),
                 'done': _('is done.'),
@@ -2383,7 +2383,7 @@ class stock_move(osv.osv):
             product_obj = self.pool.get('product.product')
             for new_move in self.browse(cr, uid, res, context=context):
                 for (id, name) in product_obj.name_get(cr, uid, [new_move.product_id.id]):
-                    message = _('Product ') + " '" + name + "' "+ _("is consumed with") + " '" + str(new_move.product_qty) + "' "+ _("quantity.")
+                    message = _("Product  '%s' is consumed with '%s' quantity.") %(name, new_move.product_qty)
                     self.log(cr, uid, new_move.id, message)
         self.action_done(cr, uid, res)
 
@@ -2592,7 +2592,7 @@ class stock_inventory(osv.osv):
                             'product_qty': line.product_qty
                         })
                     move_ids.append(self._inventory_line_hook(cr, uid, line, value))
-            message = _('Inventory') + " '" + inv.name + "' "+ _("is done.")
+            message = _("Inventory '%s' is done.") %(inv.name)
             self.log(cr, uid, inv.id, message)
             self.write(cr, uid, [inv.id], {'state': 'confirm', 'move_ids': [(6, 0, move_ids)]})
         return True
