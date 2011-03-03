@@ -161,32 +161,43 @@
             <field name="arch" type="xml">
                 <form string="Contract">
                     <group colspan="3" col="6">
-                    <field name="name" />
-                    <field name="employee_id" />
-                    <field name="job_id"/>
-                    <field name="wage"/>
-                    <!-- field name="wage_type_id" widget="selection"/-->
-                    <field name="type_id" widget="selection"/>
+                        <field name="name" />
+                        <field name="employee_id" />
+                        <field name="job_id"/>
+                        <field name="wage"/>
+                        <field name="type_id" widget="selection"/>
                     </group>
                     <notebook>
                     <page string="Information">
                         <group col="2" colspan="2">
-                        <separator colspan="2" string="Duration"/>
-                        <field name="date_start" />
-                        <field name="date_end" />
-                        <field name="working_hours"/>
-                        <separator colspan="2" string="Trial Period"/>
-                        <field name="trial_date_start" />
-                        <field name="trial_date_end" />
+                            <separator colspan="2" string="Duration"/>
+                            <field name="date_start" />
+                            <field name="date_end" />
+                            <field name="working_hours"/>
+                            <separator colspan="2" string="Trial Period"/>
+                            <field name="trial_date_start" />
+                            <field name="trial_date_end" />
                         </group>
-                        <group col="2" colspan="2">
-                        <separator colspan="2" string="Advantages"/>
-                        <field name="advantages_net"/>
-                        <field name="advantages_gross"/>
-                        <field name="advantages" nolabel="1" colspan="2"/>
+                            <group col="2" colspan="2">
+                            <separator colspan="2" string="Advantages"/>
+                            <field name="advantages_net"/>
+                            <field name="advantages_gross"/>
+                            <field name="advantages" nolabel="1" colspan="2"/>
                         </group>
                         <separator colspan="4" string="Notes"/>
                         <field colspan="4" name="notes" nolabel="1"/>
+                    </page>
+                    <page string="Work Permit">
+                        <group col="2" colspan="2">
+                            <separator colspan="2" string="Passport"/>
+                            <field name="passport_id" domain="[('employee_id','=',employee_id)]"/>
+                        </group>
+                        <group col="2" colspan="2">
+                            <separator colspan="2" string="Valid for"/>
+                            <field name="visa_no"/>
+                            <field name="permit_no"/>
+                            <field name="visa_expire"/>
+                        </group>
                     </page>
                     </notebook>
                 </form>
@@ -207,7 +218,6 @@
                     <field name="working_hours"/>
                     <field name="date_start"/>
                     <field name="date_end"/>
-                    <!--  field name="wage_type_id" invisible="1"/-->
                     <field name="wage" invisible="1"/>
                 </tree>
             </field>
