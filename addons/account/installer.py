@@ -141,34 +141,34 @@ class account_installer(osv.osv_memory):
                 pur_temp_tax = mod_obj.get_object_reference(cr, uid, 'account', 'tax_code_base_purchases')
                 pur_temp_tax_id = pur_temp_tax and pur_temp_tax[1] or False
 
-                pur_temp_tax_paid = mod_obj.get_object_reference(cr, uid, 'account', 'tax_code_input')
+                pur_temp_tax_paid = mod_obj.get_object_reference(cr, uid, 'account', 'tax_code_output')
                 pur_temp_tax_paid_id = pur_temp_tax_paid and pur_temp_tax_paid[1] or False
 
                 sale_temp_tax = mod_obj.get_object_reference(cr, uid, 'account', 'tax_code_base_sales')
                 sale_temp_tax_id = sale_temp_tax and sale_temp_tax[1] or False
 
-                sale_temp_tax_paid = mod_obj.get_object_reference(cr, uid, 'account', 'tax_code_output')
+                sale_temp_tax_paid = mod_obj.get_object_reference(cr, uid, 'account', 'tax_code_input')
                 sale_temp_tax_paid_id = sale_temp_tax_paid and sale_temp_tax_paid[1] or False
 
                 chart_temp_ids = obj_acc_chart_temp.search(cr, uid, [('name','=','Configurable Account Chart Template')], context=context)
                 chart_temp_id = chart_temp_ids and chart_temp_ids[0] or False
-                if s_tax*100 > 0.0:
+                if s_tax * 100 > 0.0:
                     tax_account_ids = obj_acc_temp.search(cr, uid, [('name', '=', 'Tax Received')], context=context)
                     sales_tax_account_id = tax_account_ids and tax_account_ids[0] or False
                     vals_tax_code_temp = {
-                        'name': 'TAX%s%%'%(s_tax*100),
-                        'code': 'TAX%s%%'%(s_tax*100),
+                        'name': _('TAX %s%%') % (s_tax*100),
+                        'code': _('TAX %s%%') % (s_tax*100),
                         'parent_id': sale_temp_tax_id
                     }
                     new_tax_code_temp = obj_tax_code_temp.create(cr, uid, vals_tax_code_temp, context=context)
                     vals_paid_tax_code_temp = {
-                        'name': 'TAX Received %s%%'%(s_tax*100),
-                        'code': 'TAX Received %s%%'%(s_tax*100),
+                        'name': _('TAX Received %s%%') % (s_tax*100),
+                        'code': _('TAX Received %s%%') % (s_tax*100),
                         'parent_id': sale_temp_tax_paid_id
                     }
                     new_paid_tax_code_temp = obj_tax_code_temp.create(cr, uid, vals_paid_tax_code_temp, context=context)
                     sales_tax_temp = obj_tax_temp.create(cr, uid, {
-                                            'name': 'TAX %s%%'%(s_tax*100),
+                                            'name': _('TAX %s%%') % (s_tax*100),
                                             'amount': s_tax,
                                             'base_code_id': new_tax_code_temp,
                                             'tax_code_id': new_paid_tax_code_temp,
@@ -176,32 +176,29 @@ class account_installer(osv.osv_memory):
                                             'ref_tax_code_id': new_paid_tax_code_temp,
                                             'type_tax_use': 'sale',
                                             'type': 'percent',
-                                            'sequence': 1,
+                                            'sequence': 0,
                                             'account_collected_id': sales_tax_account_id,
                                             'account_paid_id': sales_tax_account_id,
                                             'chart_template_id': chart_temp_id,
                                 }, context=context)
-                    default_account_ids = obj_acc_temp.search(cr, uid, [('name', '=', 'Product Sales')], context=context)
-                    if default_account_ids:
-                        obj_acc_temp.write(cr, uid, default_account_ids, {'tax_ids': [(6, 0, [sales_tax_temp])]}, context=context)
-                if p_tax*100 > 0.0:
+                if p_tax * 100 > 0.0:
                     tax_account_ids = obj_acc_temp.search(cr, uid, [('name', '=', 'Tax Paid')], context=context)
                     purchase_tax_account_id = tax_account_ids and tax_account_ids[0] or False
                     vals_tax_code_temp = {
-                        'name': 'TAX%s%%'%(p_tax*100),
-                        'code': 'TAX%s%%'%(p_tax*100),
+                        'name': _('TAX %s%%') % (p_tax*100),
+                        'code': _('TAX %s%%') % (p_tax*100),
                         'parent_id': pur_temp_tax_id
                     }
                     new_tax_code_temp = obj_tax_code_temp.create(cr, uid, vals_tax_code_temp, context=context)
                     vals_paid_tax_code_temp = {
-                        'name': 'TAX Paid %s%%'%(p_tax*100),
-                        'code': 'TAX Paid %s%%'%(p_tax*100),
+                        'name': _('TAX Paid %s%%') % (p_tax*100),
+                        'code': _('TAX Paid %s%%') % (p_tax*100),
                         'parent_id': pur_temp_tax_paid_id
                     }
                     new_paid_tax_code_temp = obj_tax_code_temp.create(cr, uid, vals_paid_tax_code_temp, context=context)
                     purchase_tax_temp = obj_tax_temp.create(cr, uid, {
-                                             'name': 'TAX%s%%'%(p_tax*100),
-                                             'description': 'TAX%s%%'%(p_tax*100),
+                                             'name': _('TAX %s%%') % (p_tax*100),
+                                             'description': _('TAX %s%%') % (p_tax*100),
                                              'amount': p_tax,
                                              'base_code_id': new_tax_code_temp,
                                              'tax_code_id': new_paid_tax_code_temp,
@@ -209,14 +206,11 @@ class account_installer(osv.osv_memory):
                                              'ref_tax_code_id': new_paid_tax_code_temp,
                                              'type_tax_use': 'purchase',
                                              'type': 'percent',
-                                             'sequence': 1,
+                                             'sequence': 0,
                                              'account_collected_id': purchase_tax_account_id,
                                              'account_paid_id': purchase_tax_account_id,
                                              'chart_template_id': chart_temp_id,
                                     }, context=context)
-                    default_account_ids = obj_acc_temp.search(cr, uid, [('name', '=', 'Expenses')], context=context)
-                    if default_account_ids:
-                        obj_acc_temp.write(cr, uid, default_account_ids, {'tax_ids': [(6, 0, [purchase_tax_temp])]}, context=context)
 
             if 'date_start' in res and 'date_stop' in res:
                 f_ids = fy_obj.search(cr, uid, [('date_start', '<=', res['date_start']), ('date_stop', '>=', res['date_stop']), ('company_id', '=', res['company_id'])], context=context)

@@ -371,7 +371,6 @@
             <field name="name">Sales Credit Note Journal - (test)</field>
             <field name="code">TSCNJ</field>
             <field name="type">sale_refund</field>
-            <field eval="True" name="refund_journal"/>
             <field name="view_id" ref="account_sp_refund_journal_view"/>
             <field name="sequence_id" ref="sequence_refund_sales_journal"/>
             <field model="account.account" name="default_credit_account_id" ref="a_sale"/>
@@ -395,7 +394,6 @@
             <field name="name">Expenses Credit Notes Journal - (test)</field>
             <field name="code">TECNJ</field>
             <field name="type">purchase_refund</field>
-            <field eval="True" name="refund_journal"/>
             <field name="view_id" ref="account_sp_refund_journal_view"/>
             <field name="sequence_id" ref="sequence_refund_purchase_journal"/>
             <field model="account.account" name="default_debit_account_id" ref="a_expense"/>
