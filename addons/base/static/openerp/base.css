@@ -73,7 +73,25 @@ body {
 .openerp .filter_label, .openerp .filter_icon {
     border: 1px solid #666;
     border-left-width: 0;
-    background: #F4F2F2;
+    background: #F0F0F0; /* old browsers */
+    background: -moz-linear-gradient(top, #F0F0F0 0%, #C0C0C0 100%); /* firefox */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#F0F0F0), color-stop(100%,#C0C0C0)); /* webkit */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#F0F0F0', endColorstr='#C0C0C0',GradientType=0 ); /* ie */
+}
+.openerp .filter_label:hover, .openerp .filter_icon:hover {
+    background: #F0F0F0; /* old browsers */
+    background: -moz-linear-gradient(top, #F0F0F0 0%, #A1A7CE 100%); /* firefox */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#F0F0F0), color-stop(100%,#A1A7CE)); /* webkit */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#F0F0F0', endColorstr='#A1A7CE',GradientType=0 ); /* ie */
+}
+.openerp .filter_label:active, .openerp .filter_icon:active {
+    background: #AAAAAA; /* old browsers */
+    background: -moz-linear-gradient(top, #999999 0%, #EEEEEE 100%); /* firefox */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#999999), color-stop(100%,#EEEEEE)); /* webkit */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#999999', endColorstr='#EEEEEE',GradientType=0 ); /* ie */
+}
+.openerp .filter_label.enabled, .openerp .filter_icon.enabled {
+    background: #AAAAAA;
 }
 .openerp .filter_icon {
     padding: 1px 2px 0px 2px;
