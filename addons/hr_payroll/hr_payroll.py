@@ -1144,17 +1144,28 @@ class hr_salary_rule(osv.osv):
         'child_depend':fields.boolean('Children Rule'),
         'child_ids':fields.one2many('hr.salary.rule', 'sal_rule_id', 'Child Salary Sructure'),
         'company_id':fields.many2one('res.company', 'Company', required=False),
-        'register_id':fields.many2one('hr.contibution.register', 'Contri Reg', select=True),
+        'register_id':fields.property(
+            'hr.contibution.register',
+            type='many2one',
+            relation='hr.contibution.register',
+            string="Contribution Register",
+            method=True,
+            view_load=True,
+            help="Contribution register based on company",
+            required=False
+        ),
+        'gratuity':fields.boolean('Use for Gratuity ?', required=False),
         'computational_expression':fields.text('Computational Expression', required=True, readonly=False, help='This will use to computer the % fields values, in general its on basic, but You can use all heads code field in small letter as a variable name i.e. hra, ma, lta, etc...., also you can use, static varible basic'),
         'conditions':fields.char('Condition', size=1024, required=True, readonly=False, help='Applied this head for calculation if condition is true'),
         'sequence': fields.integer('Sequence', required=True, help='Use to arrange calculation sequence'),
+        'active':fields.boolean('Active', required=False),
      }
     _defaults = {
-        'conditions': lambda *a: 'True',
-        'computational_expression': lambda *a:'basic',
-        'sequence': lambda *a:5,
-#        'computation_based':'rules',
-        'appears_on_payslip': 1
+        'conditions': 'True',
+        'computational_expression': 'basic',
+        'sequence': 5,
+        'appears_on_payslip': True,
+        'active': True,
      }
 
 hr_salary_rule()

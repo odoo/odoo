@@ -718,38 +718,40 @@
                 <group col="6" colspan="6">
                    <field name="name"/>
                    <field name="code" select="1"/>
+                   <field name="active"/>
+                   <field name="sequence" />
+                   <field name="company_id"/>
                    <field name="appears_on_payslip"/>
-                   <field name="condition_range_min"/>
-                   <field name="condition_range_max"/>
                 </group>
                 <group col="6" colspan="6">
-                <group col="2" colspan="2">
-                    <separator colspan="4" string="Calculations"/>
-                    <field name="category_id" on_change="onchange_category(category_id)"/>
-                    <field name="type"/>
-                    <field name="amount_type"/>
-                    <field name="amount" on_change="onchange_amount(amount, amount_type)" attrs="{'readonly':[('amount_type','=','func')]}"/>
-                    <field name="sequence" />
-                    <field name="conditions"/>
-                </group>
-                <group col="2" colspan="4">
-                    <separator colspan="4" string="Computational Expression"/>
-                    <field name="computational_expression" colspan="4" nolabel="1"/>
-                </group>
+	                <group col="2" colspan="2">
+	                    <separator colspan="4" string="Calculations"/>
+	                    <field name="category_id" on_change="onchange_category(category_id)"/>
+	                    <field name="type"/>
+	                    <field name="amount_type"/>
+	                    <field name="condition_range_min"/>
+                        <field name="condition_range_max"/>
+	                    <field name="amount" on_change="onchange_amount(amount, amount_type)" attrs="{'readonly':[('amount_type','=','func')]}"/>
+	                   
+	                    <field name="conditions"/>
+	                </group>
+	                <group col="2" colspan="2">
+		                <group col="2" colspan="2">
+		                <separator colspan="4" string="Company contribution"/>
+		                    <field name="register_id"/>
+		                    <field name="company_contrib"/>
+		                </group>
+		                <group col="2" colspan="4">
+                            <separator colspan="4" string="Computational Expression"/>
+                            <field name="computational_expression" colspan="4" nolabel="1"/>
+                        </group>
+	                </group>
                 </group>
                 <notebook colspan="4">
                     <page string="Child Rules" groups="base.group_extended">
                        <separator colspan="4" string="Children definition"/>
                        <field name="child_depend"/>
                        <field colspan="4" name="child_ids" nolabel="1"/>
-                    </page>
-                    <page string="Company contribution">
-                        <separator colspan="4" string="Company contribution"/>
-                        <group col="2" colspan="2">
-                            <field name="company_id"/>
-	                        <field name="company_contrib"/>
-		                    <field name="register_id" string="Contribution Register"/>
-	                    </group>
                     </page>
                     <page string="Description">
                         <separator colspan="4" string="Description"/>
