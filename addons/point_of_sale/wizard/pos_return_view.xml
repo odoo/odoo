@@ -8,6 +8,32 @@
 			<field name="view_mode">form</field>
 			<field name="target">new</field>
 		</record>	
+
+        <record id="pos_return_tree_in" model="ir.ui.view">
+            <field name="name">pos.return.memory</field>
+            <field name="model">pos.return.memory</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree editable="bottom" string="Return Product">
+                    <field name="product_id" />
+                    <field name="quantity" />
+                    <field name="line_id" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id="pos_return_form_in" model="ir.ui.view">
+            <field name="name">pos.return.memory</field>
+            <field name="model">pos.return.memory</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form>
+                    <field name="product_id" />
+                    <field name="quantity" />
+                    <field name="line_id" invisible="1"/>
+                 </form>
+            </field>
+        </record>   
       
 	</data>
 </openerp>	        

@@ -24,9 +24,25 @@ from osv import osv,fields
 from tools.translate import _
 import time
 
+class pos_return_memory(osv.osv_memory):
+    _name = "pos.return.memory"
+    _rec_name = 'product_id'
+    _columns = {
+        'product_id' : fields.many2one('product.product', string="Product", required=True),
+        'quantity' : fields.float("Quantity", required=True),
+        'pos_moves_id' : fields.many2one('pos.return', string="Move"),
+        'line_id': fields.integer('Line Id'),
+    }
+    
+pos_return_memory()
+
+
 class pos_return(osv.osv_memory):
     _name = 'pos.return'
     _description = 'Point of sale return'
+    _columns = {
+        'pos_moves_ids' : fields.one2many('pos.return.memory', 'pos_moves_id', 'Moves'),
+     }
 
     def default_get(self, cr, uid, fields, context=None):
         """
@@ -41,38 +57,22 @@ class pos_return(osv.osv_memory):
              @return: A dictionary which of fields with values.
 
         """
-
         res = super(pos_return, self).default_get(cr, uid, fields, context=context)
         order_obj = self.pool.get('pos.order')
         if context is None:
             context={}
         active_ids = context.get('active_ids')
+        result=[]
+        memory={}
         for order in order_obj.browse(cr, uid, active_ids, context=context):
             for line in order.lines:
-                if 'return%s'%(line.id) in fields:
-                    res['return%s'%(line.id)] = line.qty
-        return res
-
-    def view_init(self, cr, uid, fields_list, context=None):
-        """
-         Creates view dynamically and adding fields at runtime.
-         @param self: The object pointer.
-         @param cr: A database cursor
-         @param uid: ID of the user currently logged in
-         @param context: A standard dictionary
-         @return: New arch of view with new columns.
-        """
-        res = super(pos_return, self).view_init(cr, uid, fields_list, context=context)
-        order_obj=self.pool.get('pos.order')
-        if context is None:
-            context={}
-
-        active_ids=context.get('active_ids')
-        for order in order_obj.browse(cr, uid, active_ids, context=context):
-            for line in order.lines:
-                if 'return%s'%(line.id) not in self._columns:
-                    self._columns['return%s'%(line.id)] = fields.float("Quantity")
-
+                memory = {
+                            'product_id' : line.product_id.id, 
+                            'quantity' : line.qty, 
+                            'line_id':line.id
+                        }
+                result.append(memory)
+            res.update({'pos_moves_ids': result})
         return res
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False,submenu=False):
@@ -99,23 +99,19 @@ class pos_return(osv.osv_memory):
         if active_id:
             _moves_arch_lst="""<?xml version="1.0"?>
                             <form string="Return lines">
-                            <label string="Quantities you enter, match to products that will return to the stock." colspan="4"/>"""
+                            <label string="Quantities you enter, match to products that will return to the stock" colspan="4"/>
+                            <separator colspan="4"/>
+                            <field name="pos_moves_ids" colspan="4" nolabel="1" mode="tree,form" width="550" height="200" ></field>
+                            """
             _line_fields = result['fields']
             order=order_obj.browse(cr, uid, active_id, context=context)
             for line in order.lines:
-                quantity=line.qty
                 _line_fields.update({
-                    'return%s'%(line.id) : {
-                        'string': line.product_id.name,
-                        'type' : 'float',
-                        'required': True,
-                        'default':quantity
-                    },
-                })
+                            'pos_moves_ids': {'relation': 'pos.return.memory', 'type' : 'one2many', 'string' : 'Return Product'}, 
+                            })
                 _moves_arch_lst += """
-                        <field name="return%s"/>
                          <newline/>
-                """%(line.id)
+                """
 
             _moves_arch_lst+="""
                     <newline/>
@@ -145,23 +141,22 @@ class pos_return(osv.osv_memory):
         """
         if context is None:
             context = {}
-        current_rec = self.read(cr, uid, data[0], context=context)
+        current_rec = self.browse(cr, uid, data, context=context)[0]
         order_obj =self.pool.get('pos.order')
         line_obj = self.pool.get('pos.order.line')
         pos_current = order_obj.browse(cr, uid, context.get('active_id'), context=context)
         pos_line_ids = pos_current.lines
         if pos_line_ids:
             for pos_line in pos_line_ids:
-                line_field = "return"+str(pos_line.id)
-                pos_list = current_rec.keys()
                 newline_vals = {}
-                if line_field in pos_list :
-                    less_qty = current_rec.get(line_field)
-                    pos_cur_line = line_obj.browse(cr, uid, pos_line.id, context=context)
-                    qty = pos_cur_line.qty
-                    qty = qty - less_qty
-                    newline_vals.update({'qty':qty})
-                    line_obj.write(cr, uid, pos_line.id, newline_vals, context=context)
+                for record in current_rec.pos_moves_ids:
+                    if pos_line.id == record.line_id:
+                        less_qty = record.quantity
+                        pos_cur_line = line_obj.browse(cr, uid, pos_line.id, context=context)
+                        qty = pos_cur_line.qty
+                        qty = qty - less_qty
+                        newline_vals.update({'qty':qty})
+                        line_obj.write(cr, uid, pos_line.id, newline_vals, context=context)
         return {
             'name': _('Add Product'),
             'view_type': 'form',
@@ -174,6 +169,7 @@ class pos_return(osv.osv_memory):
             'type': 'ir.actions.act_window',
         }
     def create_returns2(self, cr, uid, ids, context=None):
+       
         if context is None:
             context = {}
         active_id = context.get('active_id', False)
@@ -187,7 +183,7 @@ class pos_return(osv.osv_memory):
         wf_service = netsvc.LocalService("workflow")
         #Todo :Need to clean the code
         if active_id:
-            data = self.read(cr, uid, ids)[0]
+            data = self.browse(cr, uid, ids, context=context)[0]
             date_cur = time.strftime('%Y-%m-%d %H:%M:%S')
 
             for order_id in order_obj.browse(cr, uid, [active_id], context=context):
@@ -212,25 +208,26 @@ class pos_return(osv.osv_memory):
                 account_def = property_obj.get(cr, uid, 'property_account_payable', 'res.partner', context=context)
                 amount = 0.0
                 for line in order_id.lines:
-                    if line.id:
-                        try:
-                            qty = data['return%s' %line.id]
-                            amount += qty * line.price_unit
-                        except :
-                            qty = line.qty
-                        stock_move_obj.create(cr, uid, {
-                            'product_qty': qty ,
-                            'product_uos_qty': uom_obj._compute_qty(cr, uid, qty ,line.product_id.uom_id.id),
-                            'picking_id': new_picking,
-                            'product_uom': line.product_id.uom_id.id,
-                            'location_id': location_id,
-                            'product_id': line.product_id.id,
-                            'location_dest_id': stock_dest_id,
-                            'name': '%s (return)' %order_id.name,
-                            'date': date_cur
-                        })
-                        if qty != 0.0:
-                            line_obj.copy(cr, uid, line.id, {'qty': -qty, 'order_id': new_order})
+                    for record in data.pos_moves_ids:
+                        if line.id == record.line_id:
+                            try:
+                                qty = record.quantity
+                                amount += qty * line.price_unit
+                            except :
+                                qty = line.qty
+                            stock_move_obj.create(cr, uid, {
+                                'product_qty': qty ,
+                                'product_uos_qty': uom_obj._compute_qty(cr, uid, qty ,line.product_id.uom_id.id),
+                                'picking_id': new_picking,
+                                'product_uom': line.product_id.uom_id.id,
+                                'location_id': location_id,
+                                'product_id': line.product_id.id,
+                                'location_dest_id': stock_dest_id,
+                                'name': '%s (return)' %order_id.name,
+                                'date': date_cur
+                            })
+                            if qty != 0.0:
+                                line_obj.copy(cr, uid, line.id, {'qty': -qty, 'order_id': new_order})
                 statementl_obj.create(cr, uid, {
                                                 'name': 'Refund %s'%order_id.name,
                                                 'statement_id': order_id.statement_ids[0].statement_id.id,
