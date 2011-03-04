@@ -8,14 +8,19 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-03-03 01:58+0000\n"
-"Last-Translator: Derlis Coronel Cardozo <Unknown>\n"
+"PO-Revision-Date: 2011-03-03 11:06+0000\n"
+"Last-Translator: fadel <Unknown>\n"
 "Language-Team: Spanish (Paraguay) <es_PY@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-03-03 06:01+0000\n"
+"X-Launchpad-Export-Date: 2011-03-04 06:24+0000\n"
 "X-Generator: Launchpad (build 12351)\n"
+
+#. module: account_payment
+#: sql_constraint:account.move.line:0
+msgid "Wrong credit or debit value in accounting entry !"
+msgstr "¡Valor haber o debe erróneo en el asiento contable!"
 
 #. module: account_payment
 #: field:payment.order,date_scheduled:0
@@ -52,6 +57,11 @@ msgid ""
 "* a basic mechanism to easily plug various automated payment.\n"
 "    "
 msgstr ""
+"\n"
+"Este módulo proporciona:\n"
+"* Una forma más eficiente para gestionar el pago de las facturas.\n"
+"* Un mecanismo básico para conectar fácilmente varios pagos automatizados.\n"
+"    "
 
 #. module: account_payment
 #: field:payment.order,line_ids:0
@@ -72,6 +82,9 @@ msgid ""
 " Once the bank is confirmed the state is set to 'Confirmed'.\n"
 " Then the order is paid the state is 'Done'."
 msgstr ""
+"Cuando se hace una orden, el estado es 'Borrador'.\n"
+" Una vez se confirma el banco, el estado es \"Confirmada\".\n"
+" Cuando la orden se paga, el estado es 'Realizada'."
 
 #. module: account_payment
 #: help:account.invoice,amount_to_pay:0
@@ -139,11 +152,6 @@ msgstr ""
 #: view:payment.order:0
 msgid "Amount"
 msgstr "Importe"
-
-#. module: account_payment
-#: sql_constraint:account.move.line:0
-msgid "Wrong credit or debit value in accounting entry !"
-msgstr "¡Valor debiot o credito erróneo en el asiento contable!"
 
 #. module: account_payment
 #: view:payment.order:0
@@ -254,6 +262,9 @@ msgid ""
 "by you.'Directly' stands for the direct execution.'Due date' stands for the "
 "scheduled date of execution."
 msgstr ""
+"Seleccione una opción para la orden de pago: 'Fecha fija' para una fecha "
+"especificada por usted. 'Directamente' para la ejecución directa. 'Fecha "
+"vencimiento' para la fecha programada de ejecución."
 
 #. module: account_payment
 #: code:addons/account_payment/account_move_line.py:110
@@ -434,6 +445,7 @@ msgstr "Total Credito"
 #: help:payment.order,date_scheduled:0
 msgid "Select a date if you have chosen Preferred Date to be fixed."
 msgstr ""
+"Seleccione una fecha si ha seleccionado que la fecha preferida sea fija."
 
 #. module: account_payment
 #: field:payment.order,user_id:0
@@ -583,6 +595,10 @@ msgid ""
 "that should be done, keep track of all payment orders and mention the "
 "invoice reference and the partner the payment should be done for."
 msgstr ""
+"Una órden de pago es una petición de pago que realiza su compañía para pagar "
+"una factura de proveedor o un apunte de crédito de un cliente. Aquí puede "
+"registrar todas las órdenes de pago pendientes y hacer seguimiento de las "
+"órdenes e indicar la referencia de factura y la entidad a la cual pagar."
 
 #. module: account_payment
 #: help:payment.line,amount:0
@@ -659,6 +675,8 @@ msgid ""
 "Used as the message between ordering customer and current company. Depicts "
 "'What do you want to say to the recipient about this order ?'"
 msgstr ""
+"Se utiliza como mensaje entre el cliente que hace el pedido y la compañía "
+"actual. Describe '¿Qué quiere decir al receptor sobre este pedido?'"
 
 #. module: account_payment
 #: field:payment.mode,name:0
