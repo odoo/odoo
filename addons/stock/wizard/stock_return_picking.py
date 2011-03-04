@@ -43,7 +43,7 @@ class stock_return_picking(osv.osv_memory):
     _description = 'Return Picking'
     _columns = {
         'product_return_moves' : fields.one2many('stock.return.picking.memory', 'wizard_id', 'Moves'),
-        'invoice_state': fields.selection([('2binvoiced', 'To be refunded/invoiced'), ('none', 'No invoicing')], 'Invoicing3',required=True),
+        'invoice_state': fields.selection([('2binvoiced', 'To be refunded/invoiced'), ('none', 'No invoicing')], 'Invoicing',required=True),
      }
 
     def default_get(self, cr, uid, fields, context=None):
@@ -108,49 +108,6 @@ class stock_return_picking(osv.osv_memory):
                         valid_lines += 1
             if not valid_lines:
                 raise osv.except_osv(_('Warning !'), _("There are no products to return (only lines in Done state and not fully returned yet can be returned)!"))
-        return res
-
-    def fields_view_get(self, cr, uid, view_id=None, view_type='form',
-                        context=None, toolbar=False, submenu=False):
-        """
-         Changes the view dynamically
-         @param self: The object pointer.
-         @param cr: A database cursor
-         @param uid: ID of the user currently logged in
-         @param context: A standard dictionary
-         @return: New arch of view.
-        """
-        res = super(stock_return_picking, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar,submenu=False)
-        record_id = context and context.get('active_id', False)
-        active_model = context.get('active_model')
-        if  active_model != 'stock.picking':
-            return res
-        if record_id:
-            pick_obj = self.pool.get('stock.picking')
-            pick = pick_obj.browse(cr, uid, record_id)
-            return_history = {}
-            res['fields'].clear()
-            arch_lst=['<?xml version="1.0"?>', '<form string="%s">' % _('Return lines')]
-            for m in pick.move_lines:
-                return_history[m.id] = 0
-                for rec in m.move_history_ids2:
-                    return_history[m.id] += rec.product_qty
-                quantity = m.product_qty
-            arch_lst.append('<field name="product_return_moves" colspan="4" nolabel="1" mode="tree,form" width="550" height="200" ></field>')
-            _moves_fields = res['fields']
-            arch_lst.append('<field name="invoice_state"/>\n<newline/>')
-            res['fields']['invoice_state']={'string':_('Invoicing'), 'type':'selection','required':True, 'selection':[('2binvoiced', _('To be refunded/invoiced')), ('none', _('No invoicing'))]}
-            _moves_fields.update({
-                            'product_return_moves' : {'relation': 'stock.return.picking.memory', 'type' : 'one2many', 'string' : 'Product Moves'}, 
-                            })
-            arch_lst.append('<group col="2" colspan="4">')
-            arch_lst.append('<separator  colspan="2"/>')
-            arch_lst.append('<button icon="gtk-cancel" special="cancel" string="Cancel" />')
-            arch_lst.append('<button name="create_returns" string="Return" colspan="1" type="object" icon="gtk-apply" />')
-            arch_lst.append('</group>')
-            arch_lst.append('</form>')
-            res['arch'] = '\n'.join(arch_lst)
-            res['fields'] = _moves_fields
         return res
 
     def create_returns(self, cr, uid, ids, context=None):
