@@ -1,13 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-	<data>        
-		<record id="action_view_pos_return" model="ir.actions.act_window">
-			<field name="name">Return lines</field>
-			<field name="res_model">pos.return</field>
-			<field name="view_type">form</field>
-			<field name="view_mode">form</field>
-			<field name="target">new</field>
-		</record>	
+    <data>
+        <record id="pos_return_form" model="ir.ui.view">
+            <field name="name">pos.return</field>
+            <field name="model">pos.return</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Return lines">
+                    <label string="Quantities you enter, match to products that will return to the stock" colspan="4"/>
+                    <separator colspan="4"/>
+                    <field name="pos_moves_ids" colspan="4" nolabel="1" mode="tree,form" width="550" height="200" >
+                    </field>
+                    <newline/>
+                    <separator colspan="4"/>
+                    <button icon='gtk-cancel' special="cancel" string="Cancel" />
+                    <button icon='gtk-ok' name= "create_returns" string="Return with Exchange" type="object"/>
+                    <button icon='gtk-ok' name="create_returns2" string="Refund Without Exchange" type="object"/>
+                 </form>
+            </field>
+        </record>
+
+        <record id="action_view_pos_return" model="ir.actions.act_window">
+            <field name="name">Return lines</field>
+            <field name="res_model">pos.return</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>    
 
         <record id="pos_return_tree_in" model="ir.ui.view">
             <field name="name">pos.return.memory</field>
@@ -35,5 +54,5 @@
             </field>
         </record>   
       
-	</data>
-</openerp>	        
+    </data>
+</openerp>            

@@ -75,60 +75,6 @@ class pos_return(osv.osv_memory):
             res.update({'pos_moves_ids': result})
         return res
 
-    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False,submenu=False):
-
-        """
-             Changes the view dynamically
-
-             @param self: The object pointer.
-             @param cr: A database cursor
-             @param uid: ID of the user currently logged in
-             @param context: A standard dictionary
-
-             @return: New arch of view.
-
-        """
-        result = super(pos_return, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar,submenu)
-        if context is None:
-            context={}
-        active_model = context.get('active_model')
-        if not active_model and active_model != 'pos.order':
-            return result
-        order_obj = self.pool.get('pos.order')
-        active_id = context.get('active_id', False)
-        if active_id:
-            _moves_arch_lst="""<?xml version="1.0"?>
-                            <form string="Return lines">
-                            <label string="Quantities you enter, match to products that will return to the stock" colspan="4"/>
-                            <separator colspan="4"/>
-                            <field name="pos_moves_ids" colspan="4" nolabel="1" mode="tree,form" width="550" height="200" ></field>
-                            """
-            _line_fields = result['fields']
-            order=order_obj.browse(cr, uid, active_id, context=context)
-            for line in order.lines:
-                _line_fields.update({
-                            'pos_moves_ids': {'relation': 'pos.return.memory', 'type' : 'one2many', 'string' : 'Return Product'}, 
-                            })
-                _moves_arch_lst += """
-                         <newline/>
-                """
-
-            _moves_arch_lst+="""
-                    <newline/>
-                    <separator colspan="4"/>
-                   <button icon='gtk-cancel' special="cancel"
-                               string="Cancel" />
-                                   <button icon='gtk-ok' name= "create_returns"
-                       string="Return with Exchange" type="object"/>
-                                   <button icon='gtk-ok' name="create_returns2"
-                        string="Refund Without Exchange" type="object"/>
-                </form>"""
-
-            result['arch'] = _moves_arch_lst
-            result['fields'] = _line_fields
-        return result
-
-
     def  create_returns(self, cr, uid, data, context=None):
         """
              @param self: The object pointer.
