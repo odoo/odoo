@@ -120,7 +120,7 @@ class res_config_configurable(osv.osv_memory):
     def start(self, cr, uid, ids, context=None):
         ids2 = self.pool.get('ir.actions.todo').search(cr, uid, [], context=context)
         for todo in self.pool.get('ir.actions.todo').browse(cr, uid, ids2, context=context):
-            if (todo.restart=='always') or (todo.restart=='on_trigger' and (todo.state in ('skip','cancel'))):
+            if (todo.restart=='always'):
                 todo.write({'state':'open'})
         return self.next(cr, uid, ids, context)
 
