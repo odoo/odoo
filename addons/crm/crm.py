@@ -450,57 +450,55 @@ class crm_case(object):
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
-        @param ids: List of Remind user's IDs
+        @param ids: List of case's IDs to remind
         @param context: A standard dictionary for contextual values
         """
         for case in self.browse(cr, uid, ids, context=context):
-            if not case.section_id.reply_to:
-                raise osv.except_osv(_('Error!'), ("Reply To is not specified in the sales team"))
             if not destination and not case.email_from:
                 raise osv.except_osv(_('Error!'), ("Partner Email is not specified in Case"))
             if not case.user_id.user_email:
                raise osv.except_osv(_('Error!'), ("User Email is not specified in Case"))
-            if case.section_id.user_id:
+            
+            if destination and case.section_id.user_id:
                 case_email = case.section_id.user_id.user_email
             else:
                 case_email = case.user_id.user_email
 
-            if case.section_id.reply_to and case_email:
-                src = case_email
-                dest = case.section_id.reply_to
-                body = case.description or ""
-                if case.message_ids:
-                    body = case.message_ids[0].description or ""
-                if not destination:
-                    src = case.email_from
-                    src, dest = dest, src
-                    if body and case.user_id.signature:
-                        if body:
-                            body += '\n\n%s' % (case.user_id.signature)
-                        else:
-                            body = '\n\n%s' % (case.user_id.signature)
+            src = case_email
+            dest = case.user_id
+            body = case.description or ""
+            if case.message_ids:
+                body = case.message_ids[0].description or ""
+            if not destination:
+                src, dest = dest, case.email_from
+                if body and case.user_id.signature:
+                    if body:
+                        body += '\n\n%s' % (case.user_id.signature)
+                    else:
+                        body = '\n\n%s' % (case.user_id.signature)
 
-                body = self.format_body(body)
+            body = self.format_body(body)
 
-                attach_to_send = None
+            attach_to_send = None
 
-                if attach:
-                    attach_ids = self.pool.get('ir.attachment').search(cr, uid, [('res_model', '=', self._name), ('res_id', '=', case.id)])
-                    attach_to_send = self.pool.get('ir.attachment').read(cr, uid, attach_ids, ['datas_fname','datas'])
-                    attach_to_send = map(lambda x: (x['datas_fname'], base64.decodestring(x['datas'])), attach_to_send)
+            if attach:
+                attach_ids = self.pool.get('ir.attachment').search(cr, uid, [('res_model', '=', self._name), ('res_id', '=', case.id)])
+                attach_to_send = self.pool.get('ir.attachment').read(cr, uid, attach_ids, ['datas_fname', 'datas'])
+                attach_to_send = map(lambda x: (x['datas_fname'], base64.decodestring(x['datas'])), attach_to_send)
 
                 # Send an email
-                subject = "Reminder: [%s] %s" % (str(case.id), case.name, )
-                tools.email_send(
-                    src,
-                    [dest],
-                    subject,
-                    body,
-                    reply_to=case.section_id.reply_to,
-                    openobject_id=str(case.id),
-                    attach=attach_to_send
-                )
-                self._history(cr, uid, [case], _('Send'), history=True, subject=subject, email=dest, details=body, email_from=src)
+            subject = "Reminder: [%s] %s" % (str(case.id), case.name,)
+            tools.email_send(
+                src,
+                [dest],
+                subject,
+                body,
+                reply_to=case.section_id.reply_to or '',
+                openobject_id=str(case.id),
+                attach=attach_to_send
+            )
+            self._history(cr, uid, [case], _('Send'), history=True, subject=subject, email=dest, details=body, email_from=src)
+
         return True
 
     def _check(self, cr, uid, ids=False, context=None):
