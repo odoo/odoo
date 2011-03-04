@@ -523,22 +523,26 @@ class hr_payslip(osv.osv):
 #                'net':slip.net,
 #                'gross':slip.grows,
             }
-            for line in slip.line_ids:
-                base[line.code.lower()] = line.total
-                for contrib in line.category_id.contribute_ids:
-                    if contrib.register_id:
-                        value = eval(line.category_id.base, base)
-                        company_contrib = register_pool.compute(cr, uid, contrib.id, value, context)
-                        reg_line = {
-                            'name':line.name,
-                            'register_id': contrib.register_id.id,
-                            'code':line.code,
-                            'employee_id':slip.employee_id.id,
-                            'emp_deduction':line.total,
-                            'comp_deduction':company_contrib,
-                            'total':line.total + line.total
-                        }
-                        register_line_pool.create(cr, uid, reg_line)
+#            rules = slip.contract_id.struct_id.rule_ids
+#            if rules:
+#                for rl in rules:
+#                    if rl.contribute_ids:
+#                        base[rl.code.lower()] = rl.amount
+#                        for contrib in rl.contribute_ids:
+#                            if contrib.register_id:
+#                                value = eval(rl.category_id.base, base)
+#                                company_contrib = register_pool.compute(cr, uid, contrib.id, value, context)
+#                                reg_line = {
+#                                    'name':rl.name,
+#                                    'register_id': contrib.register_id.id,
+#                                    'code':rl.code,
+#                                    'employee_id':slip.employee_id.id,
+#                                    'emp_deduction':rl.amount,
+#                                    'comp_deduction':company_contrib,
+#                                    'total':rl.amount + rl.amount
+#                                }
+#                                register_line_pool.create(cr, uid, reg_line)
+
         self.write(cr, uid, ids, {'state':'confirm'}, context=context)
         return True
 
