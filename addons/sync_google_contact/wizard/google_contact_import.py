@@ -85,9 +85,7 @@ class synchronize_google_contact(osv.osv_memory):
     def create_partner(self, cr, uid, data={}, context=None):
         partner_obj = self.pool.get('res.partner')
         name = data.get('name','')
-        partner_id = partner_obj.search(cr, uid, [('name','ilike',name)], context=context)
-        if not partner_id:
-            partner_id.append(partner_obj.create(cr, uid, {'name': name, 'address' : [(6, 0, [data['address_id']])]}, context=context))
+        partner_id = partner_obj.create(cr, uid, {'name': name, 'address' : [(6, 0, [data['address_id']])]}, context=context)
         return partner_id, data
 
     def import_contact(self, cr, uid, ids, context=None):
@@ -137,22 +135,20 @@ class synchronize_google_contact(osv.osv_memory):
         while contact:
             for entry in contact.entry:
                 data = {}
+                google_id = entry.id.text
                 model_data = {
-                    'name': 'google_contacts_information_%s' %(entry.id.text),
+                    'name': google_id,
                     'model': 'res.partner.address',
                     'module': 'sync_google_contact',
                 }
                 name = tools.ustr(entry.title.text)
                 if name == "None":
                     name = entry.email[0].address
-
-                google_id = entry.id.text
+                
                 emails = ','.join(email.address for email in entry.email)
                 if name and name != 'None':
                     data['name'] = name
 
-                if google_id:
-                    model_data.update({'google_id': google_id})
                 if entry.phone_number:
                     for phone in entry.phone_number:
                         if phone.rel == gdata.contacts.REL_WORK:
@@ -162,7 +158,7 @@ class synchronize_google_contact(osv.osv_memory):
                         if phone.rel == gdata.contacts.PHONE_WORK_FAX:
                             data['fax'] = phone.text
 
-                data_ids = model_obj.search(cr, uid, [('google_id','=',google_id)])
+                data_ids = model_obj.search(cr, uid, [('model','=','res.partner.address'), ('name','=',google_id)])
                 if data_ids:
                     contact_ids = [model_obj.browse(cr, uid, data_ids[0], context=context).res_id]
                 elif emails:
@@ -172,16 +168,13 @@ class synchronize_google_contact(osv.osv_memory):
                 if contact_ids:
                     addresses.append(contact_ids[0])
                     self.update_contact(cr, uid, contact_ids, data, context=context)
-                    data_ids = model_obj.search(cr, uid, [('res_id','=',contact_ids[0]), ('google_id','=','')])
-                    model_data.update({'google_id': google_id})
-                    model_obj.write(cr, uid, data_ids, model_data, context=context)
                 if not contact_ids:
                     #create or link to an existing partner only if it's a new contact
                     res_id = addresss_obj.create(cr, uid, data, context=context)
                     data['address_id'] = res_id
                     if option == 'create_all':
                         partner_id, data = self.create_partner(cr, uid, data, context=context)
-                        partner_ids.append(partner_id[0])
+                        partner_ids.append(partner_id)
                     addresses.append(res_id)
                     model_data.update({'res_id': res_id})
                     model_obj.create(cr, uid, model_data, context=context)

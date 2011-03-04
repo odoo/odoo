@@ -24,19 +24,10 @@ from osv import fields,osv
 class res_users(osv.osv):
     _inherit = "res.users"
     _columns = {
-        'gmail_user': fields.char('Google Account', size=64,),
+        'gmail_user': fields.char('Username', size=64,),
         'gmail_password': fields.char('Password', size=64),
     }
 res_users()    
-
-class ir_model_data(osv.osv):
-    
-    _inherit = "ir.model.data"
-    _columns = {
-        'google_id': fields.char('Google Contact Id', size=128, readonly=True),  
-    }
-
-ir_model_data()
 
 # vim:expandtab:smartindent:toabstop=4:softtabstop=4:shiftwidth=4:
 
