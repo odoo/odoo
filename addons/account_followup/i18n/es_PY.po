@@ -1,17 +1,18 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#    * account_followup
+# Spanish (Paraguay) translation for openobject-addons
+# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-03-03 20:14+0000\n"
-"Last-Translator: NOVOTRADE RENDSZERHÁZ <openerp@novotrade.hu>\n"
-"Language-Team: \n"
+"PO-Revision-Date: 2011-03-03 10:16+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Spanish (Paraguay) <es_PY@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Launchpad-Export-Date: 2011-03-04 04:44+0000\n"
 "X-Generator: Launchpad (build 12351)\n"
@@ -20,12 +21,12 @@ msgstr ""
 #: code:addons/account_followup/wizard/account_followup_print.py:295
 #, python-format
 msgid "Follwoup Summary"
-msgstr "Fizetési emlékeztető összesítő"
+msgstr "Informe de seguimiento"
 
 #. module: account_followup
 #: view:account_followup.followup:0
 msgid "Search Followup"
-msgstr "Fizetési emlékeztető keresése"
+msgstr "Buscar seguimiento"
 
 #. module: account_followup
 #: model:ir.module.module,description:account_followup.module_meta_information
@@ -52,34 +53,33 @@ msgid ""
 "\n"
 msgstr ""
 "\n"
-"    Kifizetetlen számlák miatti levelek automatizálására szolgáló modul, "
-"többszintű emlékeztetéssel.\n"
+"    Módulos para automatizar cartas para facturas no pagadas, con "
+"recordatorios multi-nivel.\n"
 "\n"
+"    Puede definir sus múltiples niveles de recordatorios a través del menú:\n"
+"        Contabilidad/Configuración/Misceláneos/Recordatorios\n"
 "\n"
-"     Az alábbi menüpontban meghatározhatja az emlékeztetők többszörös "
-"szintjét:\n"
-"        Pénzügy-Számvitel/Beállítások/Egyéb/Fizetési emlékeztetők\n"
+"    Una vez definido, puede automatizar la impresión de recordatorios cada "
+"día\n"
+"    simplemente haciendo clic en el menú:\n"
+"        Contabilidad/Procesos periódicos/Facturación/Enviar recordatorios\n"
 "\n"
-"    Miután definiálásra került, a következő menüpontból akár minden nap "
-"automatikusan \n"
-"    nyomtathat emlékeztetőket:\n"
-"        Pénzügy-Számvitel/Időszaki feldolgozás/Számlázás/Fizetési "
-"emlékeztetők küldése\n"
+"    Se generará un PDF con todas las cartas en función de \n"
+"    los diferentes niveles de recordatorios definidos. Puede definir "
+"diferentes reglas\n"
+"    para diferentes empresas. Puede también enviar un correo electrónico al "
+"cliente.\n"
 "\n"
-"    Egy PDF-et állít elő, amely az összes levelet tartalmazza. \n"
-"    Különböző partnerekre különböző politikákat határozhat meg.  \n"
-"    Levelet is küldhet a vevőknek.\n"
-"\n"
-"    Ha az adott partnerre/számlára meg akarja változtatni az emlékeztető "
-"szintjét, az alábbi menüpontnál teheti meg:\n"
-"        Pénzügy-Számvitel/Kimutatások/Általános "
-"kimutatások/Partnerek/Elküldött fizetési emlékeztetők\n"
+"    Tenga en cuenta que si quiere modificar los niveles de recordatorios "
+"para una empresa/apunte contable, lo puede hacer desde el menú:\n"
+"        Contabilidad/Informes/Informes genéricos/Cuentas "
+"empresas/Recordatorios enviados\n"
 "\n"
 
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Group By..."
-msgstr "Csoportosítás"
+msgstr "Agrupar por..."
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:287
@@ -92,14 +92,14 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"Az e-mail sikeresen kiküldésre került a következő partnereknek!\n"
+"Correo enviado a las siguientes empresas correctamente.\n"
 "\n"
 
 #. module: account_followup
 #: view:account_followup.followup:0
 #: field:account_followup.followup,followup_line:0
 msgid "Follow-Up"
-msgstr "Fizetési emlékeztető"
+msgstr "Seguimiento"
 
 #. module: account_followup
 #: field:account_followup.followup,company_id:0
@@ -107,146 +107,146 @@ msgstr "Fizetési emlékeztető"
 #: field:account_followup.stat,company_id:0
 #: field:account_followup.stat.by.partner,company_id:0
 msgid "Company"
-msgstr "Vállalat"
+msgstr "Compañía"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Invoice Date"
-msgstr "Számla kelte"
+msgstr "Fecha de Factura"
 
 #. module: account_followup
 #: field:account.followup.print.all,email_subject:0
 msgid "Email Subject"
-msgstr "E-mail tárgya"
+msgstr "Asunto correo electrónico"
 
 #. module: account_followup
 #: model:ir.actions.act_window,help:account_followup.action_followup_stat
 msgid ""
 "Follow up on the reminders sent over to your partners for unpaid invoices."
 msgstr ""
-"A kifizetetlen számlák miatt a partnereknek elküldött fizetési emlékeztetők "
-"nyomon követése"
+"Seguimiento de los recordatorios enviados a sus clientes por facturas no "
+"pagadas."
 
 #. module: account_followup
 #: view:account.followup.print.all:0
 #: view:account_followup.followup.line:0
 msgid "Legend"
-msgstr "Magyarázat"
+msgstr "Leyenda"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
 msgid "Ok"
-msgstr "Rendben"
+msgstr "Aceptar"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
 msgid "Select Partners to Remind"
-msgstr "Emlékeztetendő partnerek kiválasztása"
+msgstr "Seleccionar empresas a recordar"
 
 #. module: account_followup
 #: constraint:account.move.line:0
 msgid "You can not create move line on closed account."
-msgstr "Nem könyvelhet lezárt számlára."
+msgstr "No puede crear una línea de movimiento en una cuenta cerrada."
 
 #. module: account_followup
 #: field:account.followup.print,date:0
 msgid "Follow-up Sending Date"
-msgstr "Fizetési emlékeztető küldés időpontja"
+msgstr "Fecha envío del seguimiento"
 
 #. module: account_followup
 #: sql_constraint:account.move.line:0
 msgid "Wrong credit or debit value in accounting entry !"
-msgstr "Hibás tartozik vagy követel összeg szerepel a könyvelési tételben!"
+msgstr "¡Valor haber o debe erróneo en el asiento contable!"
 
 #. module: account_followup
 #: selection:account_followup.followup.line,start:0
 msgid "Net Days"
-msgstr "Nettó napok"
+msgstr ""
 
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.action_account_followup_definition_form
 #: model:ir.ui.menu,name:account_followup.account_followup_menu
 msgid "Follow-Ups"
-msgstr "Fizetési emlékeztetők"
+msgstr "Seguimientos"
 
 #. module: account_followup
 #: view:account_followup.stat.by.partner:0
 msgid "Balance > 0"
-msgstr "Egyenleg > 0"
+msgstr "Balance > 0"
 
 #. module: account_followup
 #: view:account.move.line:0
 msgid "Total debit"
-msgstr "Tartozik összesen"
+msgstr "Total Debito"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
 msgid "%(heading)s: Move line header"
-msgstr "%(heading)s: Tételsor fejléc"
+msgstr ""
 
 #. module: account_followup
 #: view:res.company:0
 #: field:res.company,follow_up_msg:0
 msgid "Follow-up Message"
-msgstr "Fizetési emlékeztető üzenet"
+msgstr "Mensaje de seguimiento"
 
 #. module: account_followup
 #: field:account.followup.print,followup_id:0
 msgid "Follow-up"
-msgstr "Fizetési emlékeztető"
+msgstr "Seguimiento"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "VAT:"
-msgstr "ÁFA:"
+msgstr "IVA:"
 
 #. module: account_followup
 #: view:account_followup.stat:0
 #: field:account_followup.stat,partner_id:0
 #: field:account_followup.stat.by.partner,partner_id:0
 msgid "Partner"
-msgstr "Partner"
+msgstr "Empresa"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Date :"
-msgstr "Dátum :"
+msgstr "Fecha :"
 
 #. module: account_followup
 #: field:account.followup.print.all,partner_ids:0
 msgid "Partners"
-msgstr "Partnerek"
+msgstr "Empresas"
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:138
 #, python-format
 msgid "Invoices Reminder"
-msgstr "Fizetési emlékeztető"
+msgstr "Recordatorio facturas"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_followup
 msgid "Account Follow Up"
-msgstr "Fizetési emlékeztető"
+msgstr "Seguimiento contable"
 
 #. module: account_followup
 #: selection:account_followup.followup.line,start:0
 msgid "End of Month"
-msgstr "Hónap vége"
+msgstr "Fin de mes"
 
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Not Litigation"
-msgstr "Nem peresített"
+msgstr "No litigio"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
 msgid "%(user_signature)s: User name"
-msgstr "%(user_signature)s: Felhasználó neve"
+msgstr "%(user_signature)s: Nombre de usuario"
 
 #. module: account_followup
 #: field:account_followup.stat,debit:0
 msgid "Debit"
-msgstr "Tartozik"
+msgstr "Débito"
 
 #. module: account_followup
 #: view:account.followup.print:0
@@ -255,35 +255,39 @@ msgid ""
 "You can send them the default message for unpaid invoices or manually enter "
 "a message should you need to remind them of a specific information."
 msgstr ""
-"Ez a funkció lehetővé teszi fizetési emlékeztetők küldését a partnereknek. "
-"Elküldheti az alapértelmezett üzenetet vagy berögzíthet egy másik szöveget."
+"Esta funcionalidad le permite enviar recordatorios a las empresas con "
+"facturas pendientes. Puede enviarles el mensaje por defecto para facturas no "
+"pagadas o introducir manualmente un mensaje si necesita recordarles alguna "
+"información específica."
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Ref"
-msgstr "Hiv."
+msgstr "Ref"
 
 #. module: account_followup
 #: help:account_followup.followup.line,sequence:0
 msgid "Gives the sequence order when displaying a list of follow-up lines."
-msgstr "Megadja a fizetési emlékeztető sorok listázási sorrendjét."
+msgstr ""
+"Indica el orden de secuencia cuando se muestra una lista de líneas de "
+"seguimiento."
 
 #. module: account_followup
 #: view:account.followup.print.all:0
 #: field:account.followup.print.all,email_body:0
 msgid "Email body"
-msgstr "E-mail szövege"
+msgstr "Texto correo electrónico"
 
 #. module: account_followup
 #: field:account.move.line,followup_line_id:0
 msgid "Follow-up Level"
-msgstr "Fizetési emlékeztető szint"
+msgstr "Nivel seguimiento"
 
 #. module: account_followup
 #: field:account_followup.stat,date_followup:0
 #: field:account_followup.stat.by.partner,date_followup:0
 msgid "Latest followup"
-msgstr "Legutolsó fizetési emlékeztető"
+msgstr "Último seguimiento"
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line2
@@ -309,46 +313,46 @@ msgid ""
 "Best Regards,\n"
 msgstr ""
 "\n"
-"Tisztelt %(partner_name)s!\n"
+"Estimado %(partner_name)s,\n"
 "\n"
-"Sajnálattal állapítottuk meg, hogy az elküldött fizetési emlékeztető "
-"levelünk ellenére továbbra is lejárt tartozásuk áll fenn társaságunkkal "
-"szemben.\n"
+"Estamos preocupados de ver que, a pesar de enviar un recordatorio, los pagos "
+"de su cuenta están ahora muy atrasados.\n"
 "\n"
-"Lényeges, hogy azonnal rendezzék tartozásukat, különben kénytelenek leszünk "
-"megfontolni az Önök felé teljesítendő további termékértékesítéseink vagy "
-"szolgáltatásnyújtásaink leállítását.\n"
-"Kérjük, tegyék meg a megfelelő intézkedéseket a tartozás 8 napon belül "
-"történő kiegyenlítésére.\n"
+"Es esencial que realice el pago de forma inmediata, de lo contrario tendrá "
+"que considerar la suspensión de su cuenta, lo que significa que no seremos "
+"capaces de suministrar productos/servicios a su empresa.\n"
+"Por favor, tome las medidas oportunas para llevar a cabo este pago en los "
+"próximos 8 días.\n"
 "\n"
-"Ha olyan problémájuk van a számlák kifizetésével kapcsolatban, amelynek nem "
-"vagyunk tudatában, kérjük, vegyék fel a kapcsolatot a pénzügyi "
-"részlegünkkel, hogy gyorsan meg tudjuk oldani az ügyet.\n"
+"Si hay un problema con el pago de la(s) factura(s) que desconocemos, no dude "
+"en ponerse en contacto con nuestro departamento de contabilidad de manera "
+"que podamos resolver el asunto lo más rápido posible.\n"
 "\n"
-"A lejárt tartozás részletezése az alábbiakban található.\n"
+"Los detalles de los pagos pendientes se listan a continuación.\n"
 "\n"
-"Üdvözlettel,\n"
+"Saludos cordiales,\n"
 
 #. module: account_followup
 #: field:account.followup.print.all,partner_lang:0
 msgid "Send Email in Partner Language"
-msgstr "E-mail küldése a partner nyelvén"
+msgstr "Enviar correo en el idioma de la empresa"
 
 #. module: account_followup
 #: constraint:account.move.line:0
 msgid ""
 "You can not create move line on receivable/payable account without partner"
-msgstr "Nem könyvelhet a vevő/szállító számlákra partner megadás nélkül"
+msgstr ""
+"No puede crear un movimiento en una cuenta a cobrar/a pagar sin una empresa."
 
 #. module: account_followup
 #: view:account.followup.print.all:0
 msgid "Partner Selection"
-msgstr "Partner kiválasztása"
+msgstr "Selección empresa"
 
 #. module: account_followup
 #: field:account_followup.followup.line,description:0
 msgid "Printed Message"
-msgstr "Kinyomtatott üzenet"
+msgstr "Mensaje impreso"
 
 #. module: account_followup
 #: view:account.followup.print:0
@@ -357,18 +361,18 @@ msgstr "Kinyomtatott üzenet"
 #: model:ir.actions.act_window,name:account_followup.action_account_followup_print_all
 #: model:ir.ui.menu,name:account_followup.account_followup_print_menu
 msgid "Send followups"
-msgstr "Fizetési emlékeztetők küldése"
+msgstr "Enviar seguimientos"
 
 #. module: account_followup
 #: view:account_followup.stat.by.partner:0
 msgid "Partner to Remind"
-msgstr "Emlékeztetendő partner"
+msgstr "Empresa a recordar"
 
 #. module: account_followup
 #: field:account_followup.followup.line,followup_id:0
 #: field:account_followup.stat,followup_id:0
 msgid "Follow Ups"
-msgstr "Fizetési emlékeztetők"
+msgstr "Seguimientos"
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line1
@@ -387,17 +391,17 @@ msgid ""
 "Best Regards,\n"
 msgstr ""
 "\n"
-"Tisztelt %(partner_name)s!\n"
+"Estimado %(partner_name)s,\n"
 "\n"
-"Nyilvántartásaink alapján megállapítottuk, hogy az alábbiakban részletezett "
-"számlák összegét nem egyenlítették ki társaságunk felé. Kérjük, tegyék meg a "
-"megfelelő intézkedéseket a tartozás 8 napon belül történő kifizetésére.\n"
+"Salvo si hubiera un error por parte nuestra, parece que los siguientes "
+"importes están pendientes de pago. Por favor, tome las medidas oportunas "
+"para llevar a cabo este pago en los próximos 8 días.\n"
 "\n"
-"Ha időközben rendezték tartozásukat, kérjük, tekintsék tárgytalannak jelen "
-"levelünket. Probléma esetén, kérjük vegyék fel a kapcsolatot pénzügyi "
-"részlegünkkel.\n"
+"Si el pago hubiera sido realizado después de enviar este correo, por favor "
+"no lo tenga en cuenta. No dude en ponerse en contacto con nuestro "
+"departamento de contabilidad.\n"
 "\n"
-"Üdvözlettel,\n"
+"Saludos cordiales,\n"
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line3
@@ -419,121 +423,120 @@ msgid ""
 "Best Regards,\n"
 msgstr ""
 "\n"
-"Tisztelt %(partner_name)s!\n"
+"Estimado %(partner_name)s,\n"
 "\n"
-"Több fizetési emlékeztető levelünk ellenére sem rendezték tartozásukat "
-"társaságunk felé.\n"
+"A pesar de varios recordatorios, la deuda de su cuenta todavía no está "
+"resuelta.\n"
 "\n"
-"Amennyiben 8 napon belül nem egyenlítik ki a tartozás teljes összegét, "
-"minden további értesítés nélkül megtesszük a szükséges jogi lépéseket a "
-"követelésünk behajtása érdekében.\n"
+"A menos que el pago total se realice en los próximos 8 días, las acciones "
+"legales para el cobro de la deuda se tomarán sin más aviso.\n"
 "\n"
-"Bízunk benne, hogy ez az intézkedés szükségtelennek bizonyul. A lejárt "
-"tartozás részletezése az alábbiakban található.\n"
+"Confiamos en que esta medida será innecesaria. Los detalles de los pagos "
+"pendientes se listan a continuación.\n"
 "\n"
-"Ha bármilyen, az ügyet érintő kérdés felmerülne, kérjük, vegyék fel a "
-"kapcsolatot a pénzügyi részlegünkkel.\n"
+"Para cualquier consulta relativa a este asunto, no dude en ponerse en "
+"contacto con nuestro departamento de contabilidad.\n"
 "\n"
-"Üdvözlettel,\n"
+"Saludos cordiales,\n"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
 msgid "Send Mails"
-msgstr "E-mail-ek küldése"
+msgstr "Enviar emails"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Currency"
-msgstr "Pénznem"
+msgstr "Moneda"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_stat_by_partner
 msgid "Followup Statistics by Partner"
-msgstr "Partnerenkénti fizetési emlékeztető statisztika"
+msgstr "Estadísticas seguimiento por empresa"
 
 #. module: account_followup
 #: model:ir.module.module,shortdesc:account_followup.module_meta_information
 msgid "Accounting follow-ups management"
-msgstr "Fizetési emlékeztető kezelés"
+msgstr "Gestión de los seguimientos/avisos contables"
 
 #. module: account_followup
 #: field:account_followup.stat,blocked:0
 msgid "Blocked"
-msgstr "Zárolt"
+msgstr "Bloqueado"
 
 #. module: account_followup
 #: help:account.followup.print,date:0
 msgid ""
 "This field allow you to select a forecast date to plan your follow-ups"
 msgstr ""
-"Ez a mező lehetővé teszi Önnek, hogy kiválassza a fizetési emlékeztető "
-"küldés tervezett időpontját"
+"Este campo le permite seleccionar una fecha de previsión para planificar sus "
+"seguimientos"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Due"
-msgstr "Esedékes"
+msgstr "Debe"
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:56
 #, python-format
 msgid "Select Partners"
-msgstr "Partnerek kiválasztása"
+msgstr "Seleccionar empresas"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
 msgid "Email Settings"
-msgstr "E-mail beállítások"
+msgstr "Configuración de correo electrónico"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
 msgid "Print Follow Ups"
-msgstr "Fizetési emlékeztetők nyomtatása"
+msgstr "Imprimir seguimientos"
 
 #. module: account_followup
 #: field:account.move.line,followup_date:0
 msgid "Latest Follow-up"
-msgstr "Legutolsó fizetési emlékeztető"
+msgstr "Último seguimiento"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Sub-Total:"
-msgstr "Részösszesen:"
+msgstr "Sub-Total:"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Balance:"
-msgstr "Egyenleg:"
+msgstr ""
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_stat
 msgid "Followup Statistics"
-msgstr "Fizetési emlékeztető statisztika"
+msgstr "Estadísticas de seguimiento"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Paid"
-msgstr "Kiegyenlítve"
+msgstr "Pagado"
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "%(user_signature)s: User Name"
-msgstr "%(user_signature)s: Felhasználó neve"
+msgstr "%(user_signature)s: Nombre del usuario"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_move_line
 msgid "Journal Items"
-msgstr "Könyvelési tételsorok"
+msgstr "Registros del diario"
 
 #. module: account_followup
 #: constraint:account.move.line:0
 msgid "Company must be same for its related account and period."
-msgstr "A kapcsolt számla és az időszak vállalatának ugyanannak kell lennie."
+msgstr "La compañía debe ser la misma para la cuenta y periodo relacionados."
 
 #. module: account_followup
 #: field:account.followup.print.all,email_conf:0
 msgid "Send email confirmation"
-msgstr "Visszaigazolás küldése e-mailben"
+msgstr "Enviar correo electrónico de confirmación"
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:284
@@ -542,146 +545,146 @@ msgid ""
 "All E-mails have been successfully sent to Partners:.\n"
 "\n"
 msgstr ""
-"Minden e-mail sikeresen kiküldésre került a partnereknek.\n"
+"Todos los correos han sido enviados a las empresas correctamente:.\n"
 "\n"
 
 #. module: account_followup
 #: constraint:res.company:0
 msgid "Error! You can not create recursive companies."
-msgstr "Hiba! Ön nem hozhat létre rekurzív vállalatokat."
+msgstr "¡Error! No se pueden crear compañías recursivas."
 
 #. module: account_followup
 #: view:account.followup.print.all:0
 msgid "%(company_name)s: User's Company name"
-msgstr "%(company_name)s: A felhasználó vállalatának neve"
+msgstr "%(company_name): Nombre de la compañía del usuario"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_res_company
 msgid "Companies"
-msgstr "Vállalatok"
+msgstr "Compañías"
 
 #. module: account_followup
 #: view:account_followup.followup:0
 msgid "Followup Lines"
-msgstr "Fizetési emlékeztető sorok"
+msgstr "Líneas de seguimiento"
 
 #. module: account_followup
 #: field:account_followup.stat,credit:0
 msgid "Credit"
-msgstr "Követel"
+msgstr "Crédito"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Maturity Date"
-msgstr "Fizetési határidő"
+msgstr "Fecha vencimiento"
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "%(partner_name)s: Partner Name"
-msgstr "%(partner_name)s: Partner név"
+msgstr "%(partner_name)s: Nombre de empresa"
 
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Follow-Up lines"
-msgstr "Fizetési emlékeztető sorok"
+msgstr "Líneas de seguimiento"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
 msgid "%(company_currency)s: User's Company Currency"
-msgstr "%(company_currency)s: A felhasználó vállalatának pénzneme"
+msgstr "%(company_currency)s: Moneda de la compañía del usuario"
 
 #. module: account_followup
 #: view:account_followup.stat:0
 #: field:account_followup.stat,balance:0
 #: field:account_followup.stat.by.partner,balance:0
 msgid "Balance"
-msgstr "Egyenleg"
+msgstr "Saldo pendiente"
 
 #. module: account_followup
 #: field:account_followup.followup.line,start:0
 msgid "Type of Term"
-msgstr "Fizetési feltétel típusa"
+msgstr "Tipo de plazo"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_print
 #: model:ir.model,name:account_followup.model_account_followup_print_all
 msgid "Print Followup & Send Mail to Customers"
-msgstr "Fizetési emlékeztetők nyomtatása és levelek küldése a vevőknek"
+msgstr "Imprimir seguimiento y enviar correo a clientes"
 
 #. module: account_followup
 #: field:account_followup.stat,date_move_last:0
 #: field:account_followup.stat.by.partner,date_move_last:0
 msgid "Last move"
-msgstr "Utolsó tétel"
+msgstr "Último movimiento"
 
 #. module: account_followup
 #: model:ir.actions.report.xml,name:account_followup.account_followup_followup_report
 msgid "Followup Report"
-msgstr "Fizetési emlékeztető kimutatás"
+msgstr "Informe de seguimientos"
 
 #. module: account_followup
 #: field:account_followup.stat,period_id:0
 msgid "Period"
-msgstr "Időszak"
+msgstr "Período"
 
 #. module: account_followup
 #: view:account.followup.print:0
 #: view:account.followup.print.all:0
 msgid "Cancel"
-msgstr "Mégse"
+msgstr "Cancelar"
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "Follow-Up Lines"
-msgstr "Fizetési emlékeztető sorok"
+msgstr "Líneas de seguimiento"
 
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Litigation"
-msgstr "Peresített"
+msgstr ""
 
 #. module: account_followup
 #: field:account_followup.stat.by.partner,max_followup_id:0
 msgid "Max Follow Up Level"
-msgstr "Maximális fizetési emlékeztető szint"
+msgstr "Nivel superior seguimiento máx."
 
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.act_account_partner_account_move_payable_all
 msgid "Payable Items"
-msgstr "Szállító tételek"
+msgstr "Registros a pagar"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
 msgid "%(followup_amount)s: Total Amount Due"
-msgstr "%(followup_amount)s: Esedékes összeg összesen"
+msgstr "%(followup_amount)s: Total importe debido"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
 #: view:account_followup.followup.line:0
 msgid "%(date)s: Current Date"
-msgstr "%(date)s: Aktuális dátum"
+msgstr "%(date)s: Fecha actual"
 
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Followup Level"
-msgstr "Fizetési emlékeztető szint"
+msgstr "Nivel de seguimiento"
 
 #. module: account_followup
 #: view:account_followup.followup:0
 #: field:account_followup.followup,description:0
 #: report:account_followup.followup.print:0
 msgid "Description"
-msgstr "Megjegyzés"
+msgstr "Descripción"
 
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "This Fiscal year"
-msgstr "Tárgyév"
+msgstr "Este ejercicio fiscal"
 
 #. module: account_followup
 #: view:account.move.line:0
 msgid "Partner entries"
-msgstr "Partner tételek"
+msgstr ""
 
 #. module: account_followup
 #: help:account.followup.print.all,partner_lang:0
@@ -689,42 +692,42 @@ msgid ""
 "Do not change message text, if you want to send email in partner language, "
 "or configure from company"
 msgstr ""
-"Ne változtassa meg az üzenet szövegét, ha a partner nyelvén e-mail-ben "
-"akarja küldeni, vagy a vállalatból akarja beállítani."
+"No cambie el texto del mensaje si quiere enviar correos en el idioma de la "
+"empresa o configurarlo desde la compañía."
 
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.act_account_partner_account_move_all
 msgid "Receivable Items"
-msgstr "Vevő tételek"
+msgstr "Registros a cobrar"
 
 #. module: account_followup
 #: view:account_followup.stat:0
 #: model:ir.actions.act_window,name:account_followup.action_followup_stat
 #: model:ir.ui.menu,name:account_followup.menu_action_followup_stat_follow
 msgid "Follow-ups Sent"
-msgstr "Elküldött fizetési emlékeztetők"
+msgstr "Seguimientos enviados"
 
 #. module: account_followup
 #: field:account_followup.followup,name:0
 #: field:account_followup.followup.line,name:0
 msgid "Name"
-msgstr "Név"
+msgstr "Nombre"
 
 #. module: account_followup
 #: field:account_followup.stat,date_move:0
 #: field:account_followup.stat.by.partner,date_move:0
 msgid "First move"
-msgstr "Első tétel"
+msgstr "Primer movimiento"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Li."
-msgstr "P."
+msgstr "Li."
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Maturity"
-msgstr "Esedékesség"
+msgstr "Vencimiento"
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:286
@@ -733,94 +736,71 @@ msgid ""
 "E-Mail not sent to following Partners, Email not available !\n"
 "\n"
 msgstr ""
-"A következő partnereknek nem került kiküldésre e-mail, mert az e-mail cím "
-"nem érhető el!\n"
+"Correo no enviado a las empresas siguientes, su email no estaba disponible.\n"
 "\n"
 
 #. module: account_followup
 #: view:account.followup.print:0
 msgid "Continue"
-msgstr "Tovább"
+msgstr "Continuar"
 
 #. module: account_followup
 #: field:account_followup.followup.line,delay:0
 msgid "Days of delay"
-msgstr "Késedelmes napok száma"
+msgstr ""
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Document : Customer account statement"
-msgstr "Bizonylat: vevő folyószámla kivonat"
+msgstr "Documento: Estado contable del cliente"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
 #: field:account.followup.print.all,summary:0
 msgid "Summary"
-msgstr "Összegzés"
+msgstr "Resumen"
 
 #. module: account_followup
 #: view:account.move.line:0
 msgid "Total credit"
-msgstr "Követel összesen"
+msgstr "Total Credito"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
 msgid "%(line)s: Ledger Posting lines"
-msgstr "%(line)s: Folyószámla karton sorok"
+msgstr "%(line)s: Líneas incluídas en el libro mayor"
 
 #. module: account_followup
 #: field:account_followup.followup.line,sequence:0
 msgid "Sequence"
-msgstr "Sorszám"
+msgstr "Secuencia"
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "%(company_name)s: User's Company Name"
-msgstr "%(company_name)s: A felhasználó vállalatának neve"
+msgstr "%(company_name)s: Nombre de la compañía del usuario"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Customer Ref :"
-msgstr "Vevő hiv.:"
+msgstr "Ref. cliente :"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
 msgid "%(partner_name)s: Partner name"
-msgstr "%(partner_name)s: Partner név"
+msgstr ""
 
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Latest Followup Date"
-msgstr "Legutolsó fizetési emlékeztető időpontja"
+msgstr "Fecha último seguimiento"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_followup_line
 msgid "Follow-Up Criteria"
-msgstr "Fizetési emlékeztető kritériumok"
+msgstr "Criterios seguimiento"
 
 #. module: account_followup
 #: constraint:account.move.line:0
 msgid "You can not create move line on view account."
-msgstr "Nem könyvelhet gyűjtő típusú számlára."
-
-#~ msgid ""
-#~ "All E-mails have been successfully sent to Partners:.\n"
-#~ "\"\n"
-#~ "\"\n"
-#~ "\"\n"
-#~ "\""
-#~ msgstr "Minden e-mail sikeresen kiküldésre került a partnereknek."
-
-#~ msgid ""
-#~ "E-Mail not sent to following Partners, Email not available !\n"
-#~ "\"\n"
-#~ "\"\n"
-#~ "\"\n"
-#~ "\""
-#~ msgstr ""
-#~ "E-mail a következő partnereknek nem került kiküldésre, mert az e-mail cím "
-#~ "nem érhető el!\n"
-#~ "\"\n"
-#~ "\"\n"
-#~ "\"\n"
-#~ "\""
+msgstr ""
