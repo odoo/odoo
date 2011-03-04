@@ -26,7 +26,7 @@
     'description': """This Module Import SugarCRM "Leads", "Opportunity", "Accounts" and "contacts" Data into OpenERP Module.""",
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
-    'depends': [],
+    'depends': ['crm'],
     'init_xml': [],
     'update_xml': ["wizard/sugarcrm_login_view.xml",
                    "wizard/import_message_view.xml",

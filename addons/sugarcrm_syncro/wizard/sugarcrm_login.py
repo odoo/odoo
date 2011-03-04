@@ -37,7 +37,7 @@ class sugarcrm_login(osv.osv):
         for current in self.browse(cr, uid, ids, context):
             PortType,sessionid = sugar.login(current.username, current.password)
             if sessionid == '-1':
-                raise osv.except_osv(_('Error !'), _('Wrong username and password'))
+                raise osv.except_osv(_('Error !'), _('Authentication error !\nBad Username or Password !'))
 
             obj_model = self.pool.get('ir.model.data')
             model_data_ids = obj_model.search(cr,uid,[('model','=','ir.ui.view'),('name','=','import.sugarcrm.form')])
