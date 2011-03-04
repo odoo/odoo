@@ -57,9 +57,10 @@ class hr_payroll_structure(osv.osv):
     _columns = {
         'name':fields.char('Name', size=256, required=True, readonly=False),
         'code':fields.char('Code', size=64, required=True, readonly=False),
-        'line_ids':fields.one2many('hr.payslip.line', 'function_id', 'Salary Structure', required=False),
+#        'line_ids':fields.one2many('hr.payslip.line', 'function_id', 'Salary Structure', required=False),
         'company_id':fields.many2one('res.company', 'Company', required=False),
         'note': fields.text('Description'),
+        'parent_id':fields.many2one('hr.payroll.structure', 'Parent Structure'),
     }
     _defaults = {
         'company_id': lambda self, cr, uid, context: \
@@ -216,8 +217,8 @@ class payroll_register(osv.osv):
 
     def final_verify_sheet(self, cr, uid, ids, context=None):
         slip_pool = self.pool.get('hr.payslip')
-        advice_pool = self.pool.get('hr.payroll.advice')
-        advice_line_pool = self.pool.get('hr.payroll.advice.line')
+#        advice_pool = self.pool.get('hr.payroll.advice')
+#        advice_line_pool = self.pool.get('hr.payroll.advice.line')
         sequence_pool = self.pool.get('ir.sequence')
         users_pool = self.pool.get('res.users')
 
@@ -228,26 +229,6 @@ class payroll_register(osv.osv):
                 wf_service.trg_validate(uid, 'hr.payslip', sid, 'final_verify_sheet', cr)
 
         company_name = users_pool.browse(cr, uid, uid, context=context).company_id.name
-        for reg in self.browse(cr, uid, ids, context=context):
-            advice = {
-                'name': 'Payment Advice from %s' % (company_name),
-                'number': sequence_pool.get(cr, uid, 'payment.advice'),
-                'register_id':reg.id
-            }
-            pid = advice_pool.create(cr, uid, advice, context=context)
-
-            for slip in reg.line_ids:
-                if not slip.employee_id.bank_account_id:
-                    raise osv.except_osv(_('Error !'), _('Please define bank account for the %s employee') % (slip.employee_id.name))
-                pline = {
-                    'advice_id':pid,
-                    'name':slip.employee_id.bank_account_id.acc_number,
-                    'employee_id':slip.employee_id.id,
-#                    'amount':slip.other_pay + slip.net,  #PSI@ Need to improve
-#                    'bysal':slip.net                     #PSI@ Need to improve
-                }
-                id = advice_line_pool.create(cr, uid, pline, context=context)
-
         self.write(cr, uid, ids, {'state':'confirm'}, context=context)
         return True
 
@@ -263,96 +244,6 @@ class payroll_register(osv.osv):
         return True
 
 payroll_register()
-
-class payroll_advice(osv.osv):
-    '''
-    Bank Advice Note
-    '''
-
-    _name = 'hr.payroll.advice'
-    _description = 'Bank Advice Note'
-    _columns = {
-        'register_id':fields.many2one('hr.payroll.register', 'Payroll Register', required=False),
-        'name':fields.char('Name', size=2048, required=True, readonly=False),
-        'note': fields.text('Description'),
-        'date': fields.date('Date'),
-        'state':fields.selection([
-            ('draft','Draft Sheet'),
-            ('confirm','Confirm Sheet'),
-            ('cancel','Reject'),
-        ],'State', select=True, readonly=True),
-        'number':fields.char('Number', size=64, required=False, readonly=True),
-        'line_ids':fields.one2many('hr.payroll.advice.line', 'advice_id', 'Employee Salary', required=False),
-        'chaque_nos':fields.char('Chaque Nos', size=256, required=False, readonly=False),
-        'company_id':fields.many2one('res.company', 'Company', required=False),
-        'bank_id': fields.related('register_id','bank_id', type='many2one', relation='res.bank', string='Bank', help="Select the Bank Address from whcih the salary is going to be paid"),
-    }
-    _defaults = {
-        'date': lambda *a: time.strftime('%Y-%m-%d'),
-        'state': 'draft',
-        'company_id': lambda self, cr, uid, context: \
-                self.pool.get('res.users').browse(cr, uid, uid,
-                    context=context).company_id.id,
-    }
-
-    def confirm_sheet(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'state':'confirm'}, context=context)
-        return True
-
-    def set_to_draft(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'state':'draft'}, context=context)
-        return True
-
-    def cancel_sheet(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'state':'cancel'}, context=context)
-        return True
-
-    def onchange_company_id(self, cr, uid, ids, company_id=False, context=None):
-        res = {}
-        if company_id:
-            company = self.pool.get('res.company').browse(cr, uid, company_id, context=context)
-            if company.partner_id.bank_ids:
-                res.update({'bank': company.partner_id.bank_ids[0].bank.name})
-        return {
-            'value':res
-        }
-payroll_advice()
-
-class payroll_advice_line(osv.osv):
-    '''
-    Bank Advice Lines
-    '''
-
-    _name = 'hr.payroll.advice.line'
-    _description = 'Bank Advice Lines'
-    _columns = {
-        'advice_id':fields.many2one('hr.payroll.advice', 'Bank Advice', required=False),
-        'name':fields.char('Bank Account A/C', size=64, required=True, readonly=False),
-        'employee_id':fields.many2one('hr.employee', 'Employee', required=True),
-        'amount': fields.float('Amount', digits=(16, 4)),
-        'bysal': fields.float('By Salary', digits=(16, 4)),
-        'flag':fields.char('D/C', size=8, required=True, readonly=False),
-    }
-    _defaults = {
-        'flag': 'C',
-    }
-
-    def onchange_employee_id(self, cr, uid, ids, ddate, employee_id, context=None):
-        vals = {}
-        slip_pool = self.pool.get('hr.payslip')
-        if employee_id:
-            dates = prev_bounds(ddate)
-            sids = False
-            sids = slip_pool.search(cr, uid, [('paid','=',False),('state','=','confirm'),('date','>=',dates[0]), ('employee_id','=',employee_id), ('date','<=',dates[1])], context=context)
-            if sids:
-                slip = slip_pool.browse(cr, uid, sids[0], context=context)
-                vals['name'] = slip.employee_id.identification_id
-#                vals['amount'] = slip.net + slip.other_pay  #PSI@ Need to improve (slip.net should replace by someother value)
-#                vals['bysal'] = slip.net                    #PSI@ Need to improve (slip.net should replace by someother value)
-        return {
-            'value':vals
-        }
-payroll_advice_line()
 
 class contrib_register(osv.osv):
     '''
@@ -423,158 +314,54 @@ class contrib_register_line(osv.osv):
     }
 contrib_register_line()
 
-class payment_category(osv.osv):
+class hr_salary_head_type(osv.osv):
     """
-    Allowance, Deduction Heads
-    House Rent Allowance, Medical Allowance, Food Allowance
-    Professional Tax, Advance TDS, Providend Funds, etc
+    Salary Head Type
     """
 
-    _name = 'hr.allounce.deduction.categoty'
-    _description = 'Allowance Deduction Heads'
+    _name = 'hr.salary.head.type'
+    _description = 'Salary Head Type'
     _columns = {
-        'name':fields.char('Category Name', size=64, required=True, readonly=False),
-        'code':fields.char('Category Code', size=64, required=True, readonly=False),
-        'type':fields.selection([
-            ('allowance','Allowance'),
-            ('deduction','Deduction'),
-            ('leaves','Leaves'),
-            ('advance','Advance'),
-            ('loan','Loan'),
-            ('installment','Loan Installment'),
-            ('otherpay','Other Payment'),
-            ('otherdeduct','Other Deduction'),
-        ],'Type', select=True, required=True),
-        'base':fields.text('Based on', required=True, readonly=False, help='This will use to computer the % fields values, in general its on basic, but You can use all heads code field in small letter as a variable name i.e. hra, ma, lta, etc...., also you can use, static varible basic'),
-        'condition':fields.char('Condition', size=1024, required=True, readonly=False, help='Applied this head for calculation if condition is true'),
-        'sequence': fields.integer('Sequence', required=True, help='Use to arrange calculation sequence'),
+        'name':fields.char('Type Name', size=64, required=True, readonly=False),
+        'code':fields.char('Type Code', size=64, required=True, readonly=False),
+    }
+
+hr_salary_head_type()
+
+class hr_salary_head(osv.osv):
+    """
+    Salary Head
+    """
+
+    _name = 'hr.salary.head'
+    _description = 'Salary Head'
+    _columns = {
+        'name':fields.char('Salary Head', size=64, required=True, readonly=False),
+        'code':fields.char('Salary Head Code', size=64, required=True, readonly=False),
+        'type':fields.many2one('hr.salary.head.type', 'Type', required=True, help="It is used only for the reporting purpose."),
         'note': fields.text('Description'),
         'user_id':fields.char('User', size=64, required=False, readonly=False),
         'state':fields.char('Label', size=64, required=False, readonly=False),
         'company_id':fields.many2one('res.company', 'Company', required=False),
-        'contribute_ids':fields.one2many('company.contribution', 'category_id', 'Contributions', required=False),
+        'dispaly_payslip_report': fields.boolean('Display on Payslip Report', help="Used for the display of head on Payslip Report."),
+#        'computation_based':fields.selection([
+#            ('rules','List of Rules'),
+#            ('exp','Expression'),
+#        ],'Computation Based On', select=True, required=True),
     }
     _defaults = {
-        'condition': lambda *a: 'True',
-        'base': lambda *a:'basic',
-        'sequence': lambda *a:5,
         'company_id': lambda self, cr, uid, context: \
                 self.pool.get('res.users').browse(cr, uid, uid,
                     context=context).company_id.id,
+        'dispaly_payslip_report': 1,
     }
-payment_category()
-
-class company_contribution(osv.osv):
-    """
-    Company contribution
-    Allows to configure company contribution for some taxes
-    """
-
-    _name = 'company.contribution'
-    _description = "Company Contribution"
-    _columns = {
-        'category_id':fields.many2one('hr.allounce.deduction.categoty', 'Heads', required=False),
-        'name':fields.char('Name', size=256, required=True, readonly=False),
-        'code':fields.char('Code', size=64, required=True, readonly=False),
-        'gratuity':fields.boolean('Use for Gratuity ?', required=False),
-        'line_ids':fields.one2many('company.contribution.line', 'contribution_id', 'Calculations', required=False),
-        'register_id':fields.property(
-            'hr.contibution.register',
-            type='many2one',
-            relation='hr.contibution.register',
-            string="Contribution Register",
-            method=True,
-            view_load=True,
-            help="Contribution register based on company",
-            required=False
-        ),
-        'amount_type':fields.selection([
-            ('fix','Fixed Amount'),
-            ('per','Percentage'),
-            ('func','Function Calculation'),
-        ],'Amount Type', select=True),
-        'contribute_per':fields.float('Contribution', digits=(16, 4), help='Define Company contribution ratio 1.00=100% contribution.'),
-        'company_id':fields.many2one('res.company', 'Company', required=False),
-        'active':fields.boolean('Active', required=False),
-        'note': fields.text('Description'),
-    }
-
-    _defaults = {
-        'amount_type': lambda *a:'fix',
-        'active': lambda *a:True,
-        'company_id': lambda self, cr, uid, context: \
-                self.pool.get('res.users').browse(cr, uid, uid,
-                    context=context).company_id.id,
-    }
-
-    def _execute_function(self, cr, uid, id, value, context=None):
-        """
-        self: pointer to self object
-        cr: cursor to database
-        uid: user id of current executer
-        """
-        line_pool = self.pool.get('company.contribution.line')
-        res = 0
-        ids = line_pool.search(cr, uid, [('category_id','=',id), ('to_val','>=',value),('from_val','<=',value)], context=context)
-        if not ids:
-            ids = line_pool.search(cr, uid, [('category_id','=',id), ('from','<=',value)], context=context)
-        if not ids:
-            res = 0
-        else:
-            res = line_pool.browse(cr, uid, ids, context=context)[0].value
-        return res
-
-    def compute(self, cr, uid, id, value, context=None):
-        contrib = self.browse(cr, uid, id, context=context)
-        if contrib.amount_type == 'fix':
-            return contrib.contribute_per
-        elif contrib.amount_type == 'per':
-            return value * contrib.contribute_per
-        elif contrib.amount_type == 'func':
-            return self._execute_function(cr, uid, id, value, context)
-        return 0.0
-company_contribution()
-
-class company_contribution_line(osv.osv):
-    """
-    Company contribution lines
-    """
-
-    _name = 'company.contribution.line'
-    _description = 'Allowance Deduction Category'
-    _order = 'sequence'
-    _columns = {
-        'contribution_id':fields.many2one('company.contribution', 'Contribution', required=False),
-        'name':fields.char('Name', size=64, required=False, readonly=False),
-        'from_val': fields.float('From', digits=(16, 4)),
-        'to_val': fields.float('To', digits=(16, 4)),
-        'amount_type':fields.selection([
-            ('fix','Fixed Amount'),
-        ],'Amount Type', select=True),
-        'sequence':fields.integer('Sequence'),
-        'value': fields.float('Value', digits=(16, 4)),
-    }
-company_contribution_line()
+hr_salary_head()
 
 class hr_holidays_status(osv.osv):
 
     _inherit = "hr.holidays.status"
     _columns = {
-        'company_id':fields.many2one('res.company', 'Company', required=False),
-        'type':fields.selection([
-            ('paid','Paid Holiday'),
-            ('unpaid','Un-Paid Holiday'),
-            ('halfpaid','Half-Pay Holiday')
-            ], string='Payment'),
-        'head_id': fields.many2one('hr.allounce.deduction.categoty', 'Payroll Head', domain=[('type','=','deduction')]),
-        'code': fields.related('head_id','code', type='char', relation='hr.allounce.deduction.categoty', string='Code'),
-#        'code':fields.char('Code', size=64, required=False, readonly=False),
-    }
-    _defaults = {
-        'type': lambda *args: 'unpaid',
-        'company_id': lambda self, cr, uid, context: \
-                self.pool.get('res.users').browse(cr, uid, uid,
-                    context=context).company_id.id,
+        'code':fields.char('Code', size=64, required=False, readonly=False, help="It is used to define the code for Leave Type which will then be used in Salary Rules."),
     }
 hr_holidays_status()
 
@@ -607,25 +394,19 @@ class hr_payslip(osv.osv):
                         amount = line.amount * eval(str(line.category_id.base), obj)
                     except Exception, e:
                         raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ') % (e))
-                elif line.amount_type in ('fix', 'func'):
+                elif line.amount_type in ('fix'):
                     amount = line.amount
                 cd = line.category_id.code.lower()
                 obj[cd] = amount
                 contrib = 0.0
-                if line.type == 'allowance':
+                if line.type.name == 'allowance':
                     allow += amount
                     others += contrib
                     amount -= contrib
-                elif line.type == 'deduction':
+                elif line.type.name == 'deduction':
                     deduct += amount
                     others -= contrib
                     amount += contrib
-                elif line.type == 'advance':
-                    others += amount
-                elif line.type == 'loan':
-                    others += amount
-                elif line.type == 'otherpay':
-                    others += amount
                 slip_line_obj.write(cr, uid, [line.id], {'total':amount}, context=context)
 
             record = {
@@ -733,7 +514,7 @@ class hr_payslip(osv.osv):
         return True
 
     def verify_sheet(self, cr, uid, ids, context=None):
-        register_pool = self.pool.get('company.contribution')
+#        register_pool = self.pool.get('company.contribution')
         register_line_pool = self.pool.get('hr.contibution.register.line')
 
         for slip in self.browse(cr, uid, ids, context=context):
@@ -1399,12 +1180,12 @@ class hr_payslip_line(osv.osv):
     def onchange_category(self, cr, uid, ids, category_id):
         res = {}
         if category_id:
-            category = self.pool.get('hr.allounce.deduction.categoty').browse(cr, uid, category_id)
+            category = self.pool.get('hr.salary.head').browse(cr, uid, category_id)
             res.update({
                 'sequence':category.sequence,
                 'name':category.name,
                 'code':category.code,
-                'type':category.type
+                'type':category.type.id
             })
         return {'value':res}
 
@@ -1417,75 +1198,77 @@ class hr_payslip_line(osv.osv):
 
     _columns = {
         'slip_id':fields.many2one('hr.payslip', 'Pay Slip', required=False),
-        'function_id':fields.many2one('hr.payroll.structure', 'Function', required=False),
+#        'function_id':fields.many2one('hr.payroll.structure', 'Function', required=False),
         'employee_id':fields.many2one('hr.employee', 'Employee', required=False),
         'name':fields.char('Name', size=256, required=True, readonly=False),
         'base':fields.char('Formula', size=1024, required=False, readonly=False),
         'code':fields.char('Code', size=64, required=False, readonly=False),
-        'category_id':fields.many2one('hr.allounce.deduction.categoty', 'Category', required=True),
-        'type':fields.selection([
-            ('allowance','Allowance'),
-            ('deduction','Deduction'),
-            ('leaves','Leaves'),
-            ('advance','Advance'),
-            ('loan','Loan'),
-            ('installment','Loan Installment'),
-            ('otherpay','Other Payment'),
-            ('otherdeduct','Other Deduction'),
-        ],'Type', select=True, required=True),
-        #TODO: link type to the category_id instead of define again
-        #'type': fields.related('category_id','type', type='selection', size=64, relation='hr.allounce.deduction.categoty', string='Type', store=True),
+        'category_id':fields.many2one('hr.salary.head', 'Category', required=True),
+        'type':fields.many2one('hr.salary.head.type', 'Type', required=True),
         'amount_type':fields.selection([
             ('per','Percentage (%)'),
             ('fix','Fixed Amount'),
-            ('func','Function Value'),
+            ('code','Python Code'),
         ],'Amount Type', select=True, required=True),
         'amount': fields.float('Amount / Percentage', digits=(16, 4)),
         'total': fields.float('Sub Total', readonly=True, digits_compute=dp.get_precision('Account')),
         'company_contrib': fields.float('Company Contribution', readonly=True, digits=(16, 4)),
         'sequence': fields.integer('Sequence'),
         'note':fields.text('Description'),
-        'line_ids':fields.one2many('hr.payslip.line.line', 'slipline_id', 'Calculations', required=False)
     }
     _order = 'sequence'
     _defaults = {
         'amount_type': lambda *a: 'per'
     }
 
-    def execute_function(self, cr, uid, id, value, context=None):
-        line_pool = self.pool.get('hr.payslip.line.line')
-        res = 0
-        ids = line_pool.search(cr, uid, [('slipline_id','=',id), ('from_val','<=',value), ('to_val','>=',value)], context=context)
-        if not ids:
-            ids = line_pool.search(cr, uid, [('slipline_id','=',id), ('from_val','<=',value)], context=context)
-        if not ids:
-            return res
-
-        res = line_pool.browse(cr, uid, ids, context=context)[-1].value
-        return res
-
 hr_payslip_line()
 
-class hr_payslip_line_line(osv.osv):
-    '''
-    Function Line
-    '''
+class hr_salary_rule(osv.osv):
 
-    _name = 'hr.payslip.line.line'
-    _description = 'Function Line'
-    _order = 'sequence'
+    _inherit = 'hr.payslip.line'
+    _name = 'hr.salary.rule'
     _columns = {
-        'slipline_id':fields.many2one('hr.payslip.line', 'Slip Line', required=False),
-        'name':fields.char('Name', size=64, required=False, readonly=False),
-        'from_val': fields.float('From', digits=(16, 4)),
-        'to_val': fields.float('To', digits=(16, 4)),
-        'amount_type':fields.selection([
-            ('fix','Fixed Amount'),
-        ],'Amount Type', select=True),
-        'sequence':fields.integer('Sequence'),
-        'value': fields.float('Value', digits=(16, 4)),
+        'appears_on_payslip': fields.boolean('Appears on Payslip', help="Used for the display of rule on payslip"),
+        'condition_range_min': fields.float('Minimum Range', required=False, help="The minimum amount, applied for this rule."),
+        'condition_range_max': fields.float('Maximum Range', required=False, help="The maximum amount, applied for this rule."),
+        'sal_rule_id':fields.many2one('hr.salary.rule', 'Parent Salary Structure', select=True),
+        'child_depend':fields.boolean('Children Rule'),
+        'child_ids':fields.one2many('hr.salary.rule', 'sal_rule_id', 'Child Salary Sructure'),
+        'company_id':fields.many2one('res.company', 'Company', required=False),
+        'register_id':fields.property(
+            'hr.contibution.register',
+            type='many2one',
+            relation='hr.contibution.register',
+            string="Contribution Register",
+            method=True,
+            view_load=True,
+            help="Contribution register based on company",
+            required=False
+        ),
+        'gratuity':fields.boolean('Use for Gratuity ?', required=False),
+        'computational_expression':fields.text('Computational Expression', required=True, readonly=False, help='This will use to computer the % fields values, in general its on basic, but You can use all heads code field in small letter as a variable name i.e. hra, ma, lta, etc...., also you can use, static varible basic'),
+        'conditions':fields.char('Condition', size=1024, required=True, readonly=False, help='Applied this head for calculation if condition is true'),
+        'sequence': fields.integer('Sequence', required=True, help='Use to arrange calculation sequence'),
+        'active':fields.boolean('Active', required=False),
+     }
+    _defaults = {
+        'conditions': 'True',
+        'computational_expression': 'basic',
+        'sequence': 5,
+        'appears_on_payslip': True,
+        'active': True,
+     }
+
+hr_salary_rule()
+
+class hr_payroll_structure(osv.osv):
+
+    _inherit = 'hr.payroll.structure'
+    _columns = {
+        'rule_ids':fields.many2many('hr.salary.rule', 'hr_structure_salary_rule_rel', 'struct_id', 'rule_id', 'Salary Rules', readonly=False),
     }
-hr_payslip_line_line()
+
+hr_payroll_structure()
 
 class hr_employee(osv.osv):
     '''
@@ -1495,13 +1278,13 @@ class hr_employee(osv.osv):
     _inherit = 'hr.employee'
     _description = 'Employee'
 
-
     _columns = {
         'line_ids':fields.one2many('hr.payslip.line', 'employee_id', 'Salary Structure', required=False),
         'slip_ids':fields.one2many('hr.payslip', 'employee_id', 'Payslips', required=False, readonly=True),
         'otherid': fields.char('Other Id', size=64),
 #        'basic': fields.function(_calculate_salary, method=True, multi='dc', type='float', string='Basic Salary', digits=(14,2)),
 #FIXME the function has to make the sum of basic field of all the hr.contract for this employee that have date_start < now() and now() < date_stop or not date_stop
+#        'emp_sal_rule_ids':fields.many2many('hr.salary.rule', 'hr_emp_salary_rule_rel', 'employee_id', 'rule_id', 'Salary Rules', readonly=False),
     }
 hr_employee()
 
