@@ -55,19 +55,20 @@
             <field name="type">tree</field>
             <field name="field_parent">child_complete_ids</field>
             <field name="arch" type="xml">
-                <tree colors="red:(date&lt;current_date);black:(date&gt;=current_date);black:(date==False)" string="Analytic account" toolbar="1">
-                    <field name="name"/>
+                <tree colors="blue:type in ('view');red:(date&lt;current_date);black:(date&gt;=current_date);black:(date==False)" string="Analytic account" toolbar="1">
+                    <field name="name"/>                    
                     <field name="code"/>
                     <field name="quantity"/>
                     <field name="quantity_max"/>
                     <field name="debit"/>
                     <field name="credit"/>
                     <field name="balance"/>
-                    <field name="currency_id" groups="base.group_extended"/>
+                    <field name="currency_id" groups="base.group_extended"/>                    
                     <field name="date" invisible="1"/>
                     <field name="user_id" invisible="1"/>
                     <field name="partner_id" invisible="1"/>
                     <field name="parent_id" invisible="1"/>
+                    <field name="type" invisible="1"/>
                 </tree>
             </field>
         </record>
