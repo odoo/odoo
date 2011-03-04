@@ -287,9 +287,7 @@ class crm_case(object):
         if  part:
             addr = self.pool.get('res.partner').address_get(cr, uid, [part], ['contact'])
             data = {'partner_address_id': addr['contact']}
-
-        #<<<<<<<<<<= MERGE
-        data.update(self.onchange_partner_address_id(cr, uid, ids, addr['contact'])['value'])
+            data.update(self.onchange_partner_address_id(cr, uid, ids, addr['contact'])['value'])
         return {'value': data}
 
     def onchange_partner_address_id(self, cr, uid, ids, add, email=False):

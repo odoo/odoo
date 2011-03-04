@@ -7,19 +7,19 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2010-08-03 03:23+0000\n"
-"Last-Translator: lem0na <nickyk@gmx.net>\n"
+"PO-Revision-Date: 2011-03-01 20:40+0000\n"
+"Last-Translator: Dimitar Markov <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-15 05:07+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-03-02 04:37+0000\n"
+"X-Generator: Launchpad (build 12351)\n"
 
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Order Ref."
-msgstr ""
+msgstr "Отпратка към поръчка"
 
 #. module: delivery
 #: model:product.template,name:delivery.delivery_product_product_template
@@ -29,23 +29,23 @@ msgstr "Доставка по поща"
 #. module: delivery
 #: view:delivery.grid:0
 msgid "Destination"
-msgstr "Назначение"
+msgstr "Местоназначение"
 
 #. module: delivery
 #: field:stock.move,weight_net:0
 msgid "Net weight"
-msgstr ""
+msgstr "Нето тегло"
 
 #. module: delivery
 #: view:stock.picking:0
 msgid "Delivery Order"
-msgstr ""
+msgstr "Порчъка за доставка"
 
 #. module: delivery
 #: code:addons/delivery/delivery.py:141
 #, python-format
 msgid "No price available !"
-msgstr ""
+msgstr "Не е налична цена !"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid_line
@@ -67,7 +67,7 @@ msgstr "Обем"
 #. module: delivery
 #: sql_constraint:sale.order:0
 msgid "Order Reference must be unique !"
-msgstr ""
+msgstr "Означението на поръчката трябва да бъде уникално!"
 
 #. module: delivery
 #: field:delivery.grid,line_ids:0
@@ -77,7 +77,7 @@ msgstr "Ред от матрица"
 #. module: delivery
 #: model:ir.actions.report.xml,name:delivery.report_shipping
 msgid "Delivery order"
-msgstr ""
+msgstr "Поръчка за доставка"
 
 #. module: delivery
 #: view:res.partner:0
@@ -103,7 +103,7 @@ msgstr "Държави"
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Delivery Order :"
-msgstr ""
+msgstr "Поръчка за доставка :"
 
 #. module: delivery
 #: field:delivery.grid.line,variable_factor:0
@@ -132,18 +132,18 @@ msgstr "Фиксирана"
 #: field:res.partner,property_delivery_carrier:0
 #: field:sale.order,carrier_id:0
 msgid "Delivery Method"
-msgstr "Метод на доставка"
+msgstr "Начин на доставка"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_move
 msgid "Stock Move"
-msgstr ""
+msgstr "Движение на наличности"
 
 #. module: delivery
 #: code:addons/delivery/delivery.py:141
 #, python-format
 msgid "No line matched this order in the choosed delivery grids !"
-msgstr ""
+msgstr "Няма ред от таблици за доставка който да съвпада със поръчката !"
 
 #. module: delivery
 #: field:stock.picking,carrier_tracking_ref:0
@@ -153,7 +153,7 @@ msgstr ""
 #. module: delivery
 #: field:stock.picking,weight_net:0
 msgid "Net Weight"
-msgstr ""
+msgstr "Нето тегло"
 
 #. module: delivery
 #: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -167,7 +167,7 @@ msgstr ""
 #: code:addons/delivery/stock.py:98
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "Предупреждение"
 
 #. module: delivery
 #: view:delivery.grid:0
@@ -177,7 +177,7 @@ msgstr "Задание на матрица"
 #. module: delivery
 #: view:delivery.sale.order:0
 msgid "_Cancel"
-msgstr ""
+msgstr "_Отказ"
 
 #. module: delivery
 #: field:delivery.grid.line,operator:0
@@ -187,12 +187,12 @@ msgstr "Оператор"
 #. module: delivery
 #: model:ir.model,name:delivery.model_res_partner
 msgid "Partner"
-msgstr ""
+msgstr "Партньор"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_sale_order
 msgid "Sales Order"
-msgstr ""
+msgstr "Нареждане за продажба"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid
@@ -202,7 +202,7 @@ msgstr "Матрица на доставка"
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Invoiced to"
-msgstr ""
+msgstr "Фактурирано към"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking
@@ -212,7 +212,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_sale_order
 msgid "Make Delievery"
-msgstr ""
+msgstr "Направи доставка"
 
 #. module: delivery
 #: model:ir.module.module,description:delivery.module_meta_information
@@ -250,7 +250,7 @@ msgstr "За пощенски код"
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Order Date"
-msgstr ""
+msgstr "Дата на поръчка"
 
 #. module: delivery
 #: field:delivery.grid,name:0
@@ -260,12 +260,12 @@ msgstr "Име на матрица"
 #. module: delivery
 #: view:stock.move:0
 msgid "Weights"
-msgstr ""
+msgstr "Тегла"
 
 #. module: delivery
 #: field:stock.picking,number_of_packages:0
 msgid "Number of Packages"
-msgstr ""
+msgstr "Брой пакети"
 
 #. module: delivery
 #: selection:delivery.grid.line,type:0
@@ -299,7 +299,7 @@ msgstr ">="
 #: code:addons/delivery/wizard/delivery_sale_order.py:98
 #, python-format
 msgid "Order not in draft state !"
-msgstr ""
+msgstr "Поръчката не в състояние проект !"
 
 #. module: delivery
 #: constraint:res.partner:0
@@ -309,12 +309,12 @@ msgstr "Грешка ! Не може да създадете рекурсивн�
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Lot"
-msgstr ""
+msgstr "Партида"
 
 #. module: delivery
 #: constraint:stock.move:0
 msgid "You try to assign a lot which is not from the same product"
-msgstr ""
+msgstr "Опитвате да свържете партида, която не е от същия продукт"
 
 #. module: delivery
 #: field:delivery.carrier,active:0
@@ -325,7 +325,7 @@ msgstr "Активен"
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Shipping Date"
-msgstr ""
+msgstr "Дата на доставка"
 
 #. module: delivery
 #: field:delivery.carrier,product_id:0
@@ -361,7 +361,7 @@ msgstr "Максимална стойност"
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Quantity"
-msgstr ""
+msgstr "Количество"
 
 #. module: delivery
 #: field:delivery.grid,zip_from:0
@@ -382,12 +382,12 @@ msgstr "Партньор за транспорт"
 #. module: delivery
 #: view:res.partner:0
 msgid "Sales & Purchases"
-msgstr "Продажби и поръчки"
+msgstr "Продажби&Покупки"
 
 #. module: delivery
 #: selection:delivery.grid.line,operator:0
 msgid "<="
-msgstr ""
+msgstr "<="
 
 #. module: delivery
 #: constraint:stock.move:0
@@ -408,7 +408,7 @@ msgstr "Цени за доставка"
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Description"
-msgstr ""
+msgstr "Описание"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_grid_form
@@ -427,7 +427,7 @@ msgstr "Цена"
 #: code:addons/delivery/wizard/delivery_sale_order.py:95
 #, python-format
 msgid "No grid matching for this carrier !"
-msgstr ""
+msgstr "Няма матрица която да отговаря на този транспорт !"
 
 #. module: delivery
 #: model:ir.ui.menu,name:delivery.menu_delivery
@@ -449,7 +449,7 @@ msgstr "="
 #: code:addons/delivery/stock.py:99
 #, python-format
 msgid "The carrier %s (id: %d) has no delivery grid!"
-msgstr ""
+msgstr "Транспорт %s (идентификатор %d) няма таблица на доставки!"
 
 #. module: delivery
 #: field:delivery.grid.line,name:0
@@ -464,17 +464,17 @@ msgstr "Име"
 #: report:sale.shipping:0
 #: field:stock.picking,carrier_id:0
 msgid "Carrier"
-msgstr "Превоз"
+msgstr "Превозвач"
 
 #. module: delivery
 #: view:delivery.sale.order:0
 msgid "_Apply"
-msgstr ""
+msgstr "_Прилагане"
 
 #. module: delivery
 #: field:sale.order,id:0
 msgid "ID"
-msgstr "Идентификатор"
+msgstr "ID"
 
 #. module: delivery
 #: code:addons/delivery/wizard/delivery_sale_order.py:66
@@ -482,6 +482,8 @@ msgstr "Идентификатор"
 #, python-format
 msgid "The order state have to be draft to add delivery lines."
 msgstr ""
+"Състоянието на поръчката трябва да бъде в проект за да може да се добавят "
+"редове за доставка"
 
 #. module: delivery
 #: model:ir.module.module,shortdesc:delivery.module_meta_information

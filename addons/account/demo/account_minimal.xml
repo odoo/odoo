@@ -163,6 +163,14 @@
             <field name="user_type" ref="account_type_asset"/>
         </record>
 
+        <record id="o_income" model="account.account">
+            <field name="code">X11006</field>
+            <field name="name">Opening Income - (test)</field>
+            <field ref="cas" name="parent_id"/>
+            <field name="type">other</field>
+            <field name="user_type" ref="account_type_income"/>
+        </record>
+
         <record model="account.account" id="liabilities_view">
             <field name="name">Liabilities - (test)</field>
             <field name="code">X11</field>
@@ -203,6 +211,14 @@
             <field ref="cli" name="parent_id"/>
             <field name="type">other</field>
             <field name="user_type" ref="account_type_liability"/>
+        </record>
+
+        <record id="o_expense" model="account.account">
+            <field name="code">X1114</field>
+            <field name="name">Opening Expense - (test)</field>
+            <field ref="cli" name="parent_id"/>
+            <field name="type">other</field>
+            <field name="user_type" ref="account_type_expense"/>
         </record>
 
         <!-- Profit and Loss -->
@@ -355,7 +371,6 @@
             <field name="name">Sales Credit Note Journal - (test)</field>
             <field name="code">TSCNJ</field>
             <field name="type">sale_refund</field>
-            <field eval="True" name="refund_journal"/>
             <field name="view_id" ref="account_sp_refund_journal_view"/>
             <field name="sequence_id" ref="sequence_refund_sales_journal"/>
             <field model="account.account" name="default_credit_account_id" ref="a_sale"/>
@@ -379,7 +394,6 @@
             <field name="name">Expenses Credit Notes Journal - (test)</field>
             <field name="code">TECNJ</field>
             <field name="type">purchase_refund</field>
-            <field eval="True" name="refund_journal"/>
             <field name="view_id" ref="account_sp_refund_journal_view"/>
             <field name="sequence_id" ref="sequence_refund_purchase_journal"/>
             <field model="account.account" name="default_debit_account_id" ref="a_expense"/>
@@ -421,7 +435,26 @@
             <field name="analytic_journal_id" ref="sit"/>
             <field name="user_id" ref="base.user_root"/>
         </record>
-
+        <record id="miscellaneous_journal" model="account.journal">
+            <field name="name">Miscellaneous Journal - (test)</field>
+            <field name="code">TMIS</field>
+            <field name="type">general</field>
+            <field name="view_id" ref="account_journal_view"/>
+            <field name="sequence_id" ref="sequence_miscellaneous_journal"/>
+            <field name="analytic_journal_id" ref="sit"/>
+            <field name="user_id" ref="base.user_root"/>
+        </record>
+        <record id="opening_journal" model="account.journal">
+            <field name="name">Opening Entries Journal - (test)</field>
+            <field name="code">TOEJ</field>
+            <field name="type">situation</field>
+            <field name="view_id" ref="account_journal_view"/>
+            <field name="sequence_id" ref="sequence_opening_journal"/>
+            <field model="account.account" name="default_debit_account_id" ref="o_income"/>
+            <field model="account.account" name="default_credit_account_id" ref="o_expense"/>
+            <field eval="True" name="centralisation"/>
+            <field name="user_id" ref="base.user_root"/>
+        </record>
         <!--
         Product income and expense accounts, default parameters
         -->

@@ -93,7 +93,8 @@ class report_pl_account_horizontal(report_sxw.rml_parse, common_report_header):
         ctx['fiscalyear'] = data['form'].get('fiscalyear_id', False)
 
         if data['form']['filter'] == 'filter_period':
-            ctx['periods'] =  data['form'].get('periods', False)
+            ctx['period_from'] = data['form'].get('period_from', False)
+            ctx['period_to'] =  data['form'].get('period_to', False)
         elif data['form']['filter'] == 'filter_date':
             ctx['date_from'] = data['form'].get('date_from', False)
             ctx['date_to'] =  data['form'].get('date_to', False)
