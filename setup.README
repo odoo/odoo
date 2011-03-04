@@ -1,0 +1,27 @@
+Some instructions to use setup.py for a user-install.
+This file should/will be moved on a proper documentation place later.
+
+- Possibly clean any left-over of the previous build.
+  > rm -rf dist openerp_server.egg-info
+
+- Possibly copy the addons in the server if we want them to be packaged
+  together:
+  > rsync -av --delete \
+    --exclude .bzr/ \
+    --exclude .bzrignore \
+    --exclude /__init__.py \
+    --exclude /base \
+    --exclude /base_quality_interrogation.py \
+    <path-to-addons> openerp/addons
+
+- Create the user-local directory where we want the package to be installed:
+   > mkdir -p /home/openerp/openerp-tmp/lib/python2.6/site-packages/
+
+- Use --prefix to specify where the package is installed and include that
+  place in PYTHONPATH:
+  > PYTHONPATH=/home/openerp/openerp-tmp/lib/python2.6/site-packages/ \
+    python setup.py install --prefix=/home/openerp/openerp-tmp
+
+- Run the main script, again specifying the PYTHONPATH:
+  > PYTHONPATH=/home/openerp/openerp-tmp/lib/python2.6/site-packages/ \
+    bin/openerp-server.py

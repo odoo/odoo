@@ -25,159 +25,43 @@
 #   taken from gnomolicious http://www.nongnu.org/gnomolicious/
 #   adapted by Nicolas Évrard <nicoe@altern.org>
 #
+# doc/migrate is not included since about 6.1-dev
+# doc/tests is not included
+# python25-compat/*py should be in the openerp (and imported appropriately)
 
 import sys
 import os
-from os.path import join, isfile, basename
+from os.path import join, isfile
 import glob
 
-from pprint import pprint as pp
-
 from setuptools import setup, find_packages
-from distutils.sysconfig import get_python_lib
 
-has_py2exe = False
+py2exe_keywords = {}
 if os.name == 'nt':
     import py2exe
-    has_py2exe = True
+    py2exe_keywords['console'] = [
+        { "script": join("bin", "openerp-server.py"),
+          "icon_resources": [(1, join("pixmaps","openerp-icon.ico"))],
+        }]
+    py2exe_keywords['options'] = {
+        "py2exe": {
+            "compressed": 1,
+            "optimize": 2,
+            "dist_dir": 'dist',
+            "packages": [
+                "lxml", "lxml.builder", "lxml._elementpath", "lxml.etree",
+                "lxml.objectify", "decimal", "xml", "xml", "xml.dom", "xml.xpath",
+                "encodings", "dateutil", "wizard", "pychart", "PIL", "pyparsing",
+                "pydot", "asyncore","asynchat", "reportlab", "vobject",
+                "HTMLParser", "select", "mako", "poplib",
+                "imaplib", "smtplib", "email", "yaml", "DAV",
+                "uuid",
+            ],
+            "excludes" : ["Tkconstants","Tkinter","tcl"],
+        }
+    }
 
 execfile(join('openerp', 'release.py'))
-
-if 'bdist_rpm' in sys.argv:
-    version = version.split('-')[0]
-
-# get python short version
-py_short_version = '%s.%s' % sys.version_info[:2]
-
-# backports os.walk with followlinks from python 2.6
-def walk_followlinks(top, topdown=True, onerror=None, followlinks=False):
-    from os.path import join, isdir, islink
-    from os import listdir, error
-
-    try:
-        names = listdir(top)
-    except error, err:
-        if onerror is not None:
-            onerror(err)
-        return
-
-    dirs, nondirs = [], []
-    for name in names:
-        if isdir(join(top, name)):
-            dirs.append(name)
-        else:
-            nondirs.append(name)
-
-    if topdown:
-        yield top, dirs, nondirs
-    for name in dirs:
-        path = join(top, name)
-        if followlinks or not islink(path):
-            for x in walk_followlinks(path, topdown, onerror, followlinks):
-                yield x
-    if not topdown:
-        yield top, dirs, nondirs
-
-if sys.version_info < (2, 6):
-    os.walk = walk_followlinks
-
-def find_addons():
-    for root, _, names in os.walk(join('openerp', 'addons'), followlinks=True):
-        if '__openerp__.py' in names or '__terp__.py' in names:
-            yield basename(root), root
-    #look for extra modules
-    try:
-        empath = os.getenv('EXTRA_MODULES_PATH', '../addons/')
-        for mname in open(join(empath, 'server_modules.list')):
-            mname = mname.strip()
-            if not mname:
-                continue
-
-            terp = join(empath, mname, '__openerp__.py')
-            if not os.path.exists(terp):
-                terp = join(empath, mname, '__terp__.py')
-
-            if os.path.exists(terp):
-                yield mname, join(empath, mname)
-            else:
-                print "Module %s specified, but no valid path." % mname
-    except Exception:
-        pass
-
-def data_files():
-    '''Build list of data files to be installed'''
-    files = []
-    if os.name == 'nt':
-        os.chdir('openerp')
-        for (dp, dn, names) in os.walk('addons'):
-            files.append((dp, map(lambda x: join('openerp', dp, x), names)))
-        os.chdir('..')
-        #for root, _, names in os.walk(join('bin','addons')):
-        #    files.append((root, [join(root, name) for name in names]))
-        for root, _, names in os.walk('doc'):
-            files.append((root, [join(root, name) for name in names]))
-        #for root, _, names in os.walk('pixmaps'):
-        #    files.append((root, [join(root, name) for name in names]))
-        files.append(('.', [join('openerp', 'import_xml.rng'),]))
-    else:
-        man_directory = join('share', 'man')
-        files.append((join(man_directory, 'man1'), ['man/openerp-server.1']))
-        files.append((join(man_directory, 'man5'), ['man/openerp_serverrc.5']))
-
-        doc_directory = join('share', 'doc', 'openerp-server-%s' % version)
-        files.append((doc_directory, filter(isfile, glob.glob('doc/*'))))
-        files.append((join(doc_directory, 'migrate', '3.3.0-3.4.0'),
-                      filter(isfile, glob.glob('doc/migrate/3.3.0-3.4.0/*'))))
-        files.append((join(doc_directory, 'migrate', '3.4.0-4.0.0'),
-                      filter(isfile, glob.glob('doc/migrate/3.4.0-4.0.0/*'))))
-
-        openerp_site_packages = join(get_python_lib(prefix=''), 'openerp')
-
-        files.append((openerp_site_packages, [join('openerp', 'import_xml.rng'),]))
-
-        if sys.version_info[0:2] == (2,5):
-            files.append((openerp_site_packages, [ join('python25-compat','BaseHTTPServer.py'),
-                                                   join('python25-compat','SimpleXMLRPCServer.py'),
-                                                   join('python25-compat','SocketServer.py')]))
-
-        for addonname, add_path in find_addons():
-            addon_path = join(get_python_lib(prefix=''), 'openerp','addons', addonname)
-            for root, dirs, innerfiles in os.walk(add_path):
-                innerfiles = filter(lambda fil: os.path.splitext(fil)[1] not in ('.pyc', '.pyd', '.pyo'), innerfiles)
-                if innerfiles:
-                    res = os.path.normpath(join(addon_path, root.replace(join(add_path), '.')))
-                    files.extend(((res, map(lambda fil: join(root, fil),
-                                            innerfiles)),))
-
-    return files
-
-def find_package_dirs():
-    package_dirs = {'openerp': 'openerp'}
-    for mod, path in find_addons():
-        package_dirs['openerp.addons.' + mod] = path
-    return package_dirs
-
-options = {
-    "py2exe": {
-        "compressed": 1,
-        "optimize": 2,
-        "dist_dir": 'dist',
-        "packages": [
-            "lxml", "lxml.builder", "lxml._elementpath", "lxml.etree",
-            "lxml.objectify", "decimal", "xml", "xml", "xml.dom", "xml.xpath",
-            "encodings", "dateutil", "wizard", "pychart", "PIL", "pyparsing",
-            "pydot", "asyncore","asynchat", "reportlab", "vobject",
-            "HTMLParser", "select", "mako", "poplib",
-            "imaplib", "smtplib", "email", "yaml", "DAV",
-            "uuid",
-        ],
-        "excludes" : ["Tkconstants","Tkinter","tcl"],
-    }
-}
-
-#import pprint
-#def setup(**args):
-#  pprint.pprint(args)
 
 setup(name             = name,
       version          = version,
@@ -188,21 +72,26 @@ setup(name             = name,
       author_email     = author_email,
       classifiers      = filter(None, classifiers.split("\n")),
       license          = license,
-      data_files       = data_files(),
+      data_files       = [
+        (join('man', 'man1'), ['man/openerp-server.1']),
+        (join('man', 'man5'), ['man/openerp_serverrc.5']),
+        ('doc', filter(isfile, glob.glob('doc/*'))),
+      ],
       scripts          = ['openerp-server.py'],
       packages = find_packages(),
       include_package_data = True,
       package_data = {
           '': ['*.yml', '*.xml', '*.po', '*.pot', '*.csv'],
       },
-      package_dir      = find_package_dirs(),
-      options = options,
       install_requires = [
-          'lxml==2.1.5', # we require the same version as caldav
+       # We require the same version as caldav for lxml.
+          'lxml==2.1.5',
           'mako',
           'python-dateutil',
           'psycopg2',
-          'pychart',     # if not available from pypi, an alternate site is http://home.gna.org/pychart/
+        # We include pychart in our tree as it is difficult to get it via pypi.
+        # An alternate site is http://home.gna.org/pychart/.
+        # 'pychart',
           'pydot',
           'pytz',
           'reportlab',
@@ -211,8 +100,9 @@ setup(name             = name,
           'pywebdav',
           'feedparser',
       ],
-      extras_require={
+      extras_require = {
           'SSL' : ['pyopenssl'],
-      }
+      },
+      **py2exe_keywords
 )
 
