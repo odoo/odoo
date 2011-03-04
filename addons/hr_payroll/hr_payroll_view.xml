@@ -6,83 +6,6 @@
         <menuitem id="payroll_configure" parent="hr.menu_hr_configuration" name="Payroll"/>
         <menuitem id="menu_hr_payroll_reporting" parent="hr.menu_hr_reporting" name="Payroll" groups="base.group_hr_manager"/>
 
-        <!-- Passport Views    -->
-        <record id="hr_passport_form" model="ir.ui.view">
-            <field name="name">hr.passport.form</field>
-            <field name="model">hr.passport</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Passport">
-                    <group col="6" colspan="4">
-                        <field name="name" select="1" colspan="4"/>
-                        <field name="employee_id" />
-                    </group>
-                    <group col="2" colspan="2">
-                        <separator string="Country &amp; Address" colspan="4"/>
-                        <field name="country_id" select="1"/>
-                        <field name="address_id" select="1"/>
-                    </group>
-                    <group col="2" colspan="2">
-                        <separator string="Valid From" colspan="2"/>
-                        <field name="date_issue" select="1"/>
-                        <field name="date_expire" select="1"/>
-                    </group>
-                    <notebook colspan="4">
-                        <page string="Description">
-                            <separator string="Description" colspan="2"/>
-                            <field name="note" colspan="4" nolabel="1"/>
-                        </page>
-                    </notebook>
-                </form>
-            </field>
-        </record>
-        <record id="hr_passport_tree" model="ir.ui.view">
-            <field name="name">hr.passport.tree</field>
-            <field name="model">hr.passport</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Passport">
-                    <field name="name" />
-                    <field name="employee_id" />
-                    <field name="address_id"/>
-                    <field name="country_id" />
-                    <field name="date_expire"/>
-                    <field name="date_issue" />
-                </tree>
-            </field>
-        </record>
-
-        <record id="view_hr_passport_filter" model="ir.ui.view">
-            <field name="name">hr.passport.select</field>
-            <field name="model">hr.passport</field>
-            <field name="type">search</field>
-            <field name="arch" type="xml">
-                <search string="Search Passport">
-                    <group col="8" colspan="4">
-                        <field name="name"/>
-                        <field name="employee_id"/>
-                        <field name="country_id"/>
-                        <field name="address_id"/>
-                    </group>
-                    <newline/>
-                    <group col="8" colspan="4" expand="0" string="Group By...">
-                        <filter string="Employees" icon="terp-partner" name="employee_id" context="{'group_by':'employee_id'}"/>
-                        <filter string="Country" name="country_id" icon="terp-go-home" context="{'group_by':'country_id'}"/>
-                        <filter string="Expire" name="date_expire" icon="terp-go-month" context="{'group_by':'date_expire'}"/>
-                        <filter string="Issue" name="date_issue" icon="terp-go-month" context="{'group_by':'date_issue'}"/>
-                    </group>
-                </search>
-            </field>
-        </record>
-        <record id="action_hr_passport_tree" model="ir.actions.act_window">
-            <field name="name">All Passports</field>
-            <field name="res_model">hr.passport</field>
-            <field name="view_type">form</field>
-            <field name="view_id" ref="hr_passport_tree"/>
-            <field name="search_view_id" ref="view_hr_passport_filter"/>
-        </record>
-        <!-- End Passport Views -->
-
         <!-- Employee View -->
         <record id="hr_contract.hr_hr_employee_view_form2" model="ir.ui.view">
             <field name="name">hr.hr.employee.view.form2</field>
@@ -115,75 +38,23 @@
             </data>
             </field>
         </record>
-        <record id="view_employee_passport_form" model="ir.ui.view">
-            <field name="name">hr.employee.passport.form</field>
-            <field name="model">hr.employee</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="hr.view_employee_form"/>
-            <field name="arch" type="xml">
-                <field name="passport_id" position="replace">
-                    <field name="passport_id"/>
-                    <field name="otherid"/>
-                </field>
-            </field>
-        </record>
-
         <!-- End Employee View -->
 
         <!-- Contract View -->
-        <record id="hr_contract.hr_contract_view_form" model="ir.ui.view">
-            <field name="name">hr.contract.view.form</field>
+        <record id="hr_contract_form_inherit" model="ir.ui.view">
+            <field name="name">hr.contract.view.form.inherit</field>
             <field name="model">hr.contract</field>
             <field name="type">form</field>
+            <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
             <field name="arch" type="xml">
-                <form string="Contract">
-                    <group colspan="4" col="6">
-                        <field name="name" select="1"/>
-                        <field name="employee_id" select="1"/>
-                        <field name="job_id"/>
-                        <field name="wage"/>
-                        <field name="wage_type_id" widget="selection"/>
-                        <field name="type_id" widget="selection"/>
-                    </group>
-                    <notebook colspan="4">
-                        <page string="Main Data">
-                            <group col="2" colspan="2">
-                                <separator colspan="2" string="Duration"/>
-                                <field name="date_start" select="1"/>
-                                <field name="date_end" select="1"/>
-                                <field name="working_hours"/>
-                                <field name="working_days_per_week" select="1"/>
-                                <separator colspan="2" string="Trial Period"/>
-                                <field name="trial_date_start" />
-                                <field name="trial_date_end" />
-                            </group>
-                            <group col="2" colspan="2">
-                                <separator colspan="2" string="Advantages"/>
-                                <field name="struct_id" select="1"/>
-                                <field name="advantages_gross"/>
-                                <field name="advantages_net"/>
-                                <field name="advantages" nolabel="1" colspan="2"/>
-                            </group>
-                        </page>
-                        <page string="Work Permit">
-                            <group col="2" colspan="2">
-                                <separator colspan="2" string="Passport"/>
-                                <field name="passport_id" domain="[('employee_id','=',employee_id)]"/>
-                            </group>
-                            <group col="2" colspan="2">
-                                <separator colspan="2" string="Valid for"/>
-                                <field name="visa_no" attrs="{'required': [('passport_id','!=',False), ]}"/>
-                                <field name="permit_no" attrs="{'required': [('passport_id','!=',False), ]}"/>
-                                <field name="visa_expire" attrs="{'required': [('passport_id','!=',False), ]}"/>
-                            </group>
-                        </page>
-                    </notebook>
-                    <separator colspan="4" string="Notes"/>
-                    <field colspan="4" name="notes" nolabel="1"/>
-                </form>
+            <data>
+                <xpath expr="/form/notebook/page/group/field[@name='advantages_net']" position="before">
+                    <field name="struct_id" select="1"/>
+                </xpath>
+            </data>
             </field>
         </record>
-        <!--menuitem action="hr_contract.action_hr_contract" id="hr_menu_contract" parent="payroll_configure" name="Contracts" sequence="4"/-->
+
         <!-- End Contract View-->
 
         <!-- Salary structure -->
@@ -322,8 +193,8 @@
                     <field name="register_id" invisible="1"/>
                     <field name="name"/>
                     <field name="date"/>
-                    <field name="grows"/>
-                    <field name="net"/>
+                    <!--field name="grows"/-->
+                    <!--field name="net"/-->
                     <field name="state"/>
                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                 </tree>
@@ -337,9 +208,9 @@
             <field name="arch" type="xml">
                 <form string="Payslip">
                     <group col="6" colspan="4">
-                        <field name="employee_id"/>
+                        <field name="employee_id" on_change="onchange_employee_id(date, employee_id)"/>
                         <field name="name"/>
-                        <field name="number" select="1"/>
+                        <field name="number"/>
                         <field name="date"/>
                     </group>
                     <notebook colspan="4">
@@ -382,7 +253,7 @@
                             </field>
                             <group col="6" colspan="4">
                                 <separator string="Computation Overview" colspan="6"/>
-                                <field name="working_days"/>
+                                <!--<field name="working_days"/>
                                 <field name="holiday_days"/>
                                 <field name="worked_days"/>
                                 <field name="basic_before_leaves"/>
@@ -391,9 +262,12 @@
                                 <field name="allounce"/>
                                 <field name="deduction"/>
                                 <field name="grows"/>
-                                <field name="net"/>
+                                <field name="net"/>-->
                                 <field name="total_pay"/>
                             </group>
+                        </page>
+                        <page string="Holidays">
+                            <field name="holiday_ids" colspan="4" nolabel="1" editable="bottom"/>
                         </page>
                         <page string="Other Informations">
                             <group col="2" colspan="1">
@@ -401,7 +275,7 @@
                                 <field name="paid" readonly="1"/>
                                 <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                                 <field name="register_id" groups="base.group_extended"/>
-                                <field name="deg_id" groups="base.group_extended"/>
+                                <field name="struct_id" groups="base.group_extended"/>
                                 <field name="contract_id" groups="base.group_extended" domain="[('employee_id','=',employee_id)]"/>
                             </group>
                             <newline/>
@@ -412,8 +286,8 @@
                     <group col="10" colspan="4">
                         <field name="state"/>
                         <button string="Cancel" icon="terp-dialog-close" name="cancel_sheet" states="draft,hr_check,confirm"/>
-                        <button string="Compute Sheet" icon="terp-stock_format-scientific" name="compute_sheet" states="new"/>
-                        <button string="Recompute Sheet" icon="terp-stock_format-scientific" name="compute_sheet" type="object" states="draft"/>
+                        <!-- <button string="Compute Sheet" icon="terp-stock_format-scientific" name="compute_sheet" states="new"/>
+                        <button string="Recompute Sheet" icon="terp-stock_format-scientific" name="compute_sheet" type="object" states="draft"/> -->
                         <button string="Verify Sheet" icon="terp-camera_test" name="verify_sheet" states="draft"/>
                         <button string="Approve Sheet" icon="terp-camera_test" name="final_verify_sheet" states="hr_check"/>
                         <button string="Pay Salary" icon="terp-dolar_ok!" name="process_sheet" states="confirm"/>
@@ -561,22 +435,22 @@
                                     <field name="date"/>
                                     <field name="basic"/>
                                     <field name="allounce"/>
-                                    <field name="grows"/>
+                                    <!--field name="grows"/-->
                                     <field name="deduction"/>
-                                    <field name="net"/>
+                                    <!--field name="net"/-->
                                     <field name="state"/>
                                 </tree>
                             </field>
-                            <group col="2" colspan="2">
+                            <!--<group col="2" colspan="2">
                                 <separator colspan="4" string="Allowance / Deduction"/>
                                 <field name="allounce"/>
                                 <field name="deduction"/>
                             </group>
-                            <group col="2" colspan="2">
+                             <group col="2" colspan="2">
                                 <separator colspan="4" string="Salary Information"/>
                                 <field name="grows"/>
                                 <field name="net"/>
-                            </group>
+                            </group-->
                         </page>
                     </notebook>
                     <group col="8" colspan="4">
