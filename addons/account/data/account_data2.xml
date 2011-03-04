@@ -483,6 +483,19 @@
             <field eval="3" name="padding"/>
             <field name="prefix">CSH/%(year)s/</field>
         </record>
+        <record id="sequence_opening_journal" model="ir.sequence">
+            <field name="name">Opening Entries Journal</field>
+            <field name="code">account.journal</field>
+            <field eval="3" name="padding"/>
+            <field name="prefix">OPEJ/%(year)s/</field>
+        </record>
+        <record id="sequence_miscellaneous_journal" model="ir.sequence">
+            <field name="name">Miscellaneous Journal</field>
+            <field name="code">account.journal</field>
+            <field eval="3" name="padding"/>
+            <field name="prefix">MISJ/%(year)s/</field>
+        </record>
+
         <!--
         Account Statement Sequences
         -->
