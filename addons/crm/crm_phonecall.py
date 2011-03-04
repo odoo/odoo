@@ -24,7 +24,7 @@ from osv import fields, osv
 from tools.translate import _
 import crm
 import time
-from datetime import datetime, timedelta
+from datetime import datetime
 
 class crm_phonecall(crm_case, osv.osv):
     """ Phonecall Cases """
@@ -112,13 +112,13 @@ class crm_phonecall(crm_case, osv.osv):
         """
         res = True
         for phone in self.browse(cr, uid, ids):
-            phone_id= phone.id
+            phone_id = phone.id
             data = {'date_closed': time.strftime('%Y-%m-%d %H:%M:%S')}
             if phone.duration <=0:
                 duration = datetime.now() - datetime.strptime(phone.date, '%Y-%m-%d %H:%M:%S')
                 data.update({'duration': duration.seconds/float(60)})
             res = super(crm_phonecall, self).case_close(cr, uid, [phone_id], args)
-            self.write(cr, uid, ids, data)
+            self.write(cr, uid, [phone_id], data)
         return res
 
     def case_reset(self, cr, uid, ids, *args):
