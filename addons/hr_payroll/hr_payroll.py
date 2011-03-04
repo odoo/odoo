@@ -866,6 +866,7 @@ class hr_payslip(osv.osv):
     def onchange_employee_id(self, cr, uid, ids, ddate, employee_id, context=None):
         func_pool = self.pool.get('hr.payroll.structure')
         slip_line_pool = self.pool.get('hr.payslip.line')
+        salary_rule_pool = self.pool.get('hr.salary.rule')
         holiday_pool = self.pool.get('hr.holidays')
         sequence_obj = self.pool.get('ir.sequence')
         empolyee_obj = self.pool.get('hr.employee')
@@ -883,7 +884,7 @@ class hr_payslip(osv.osv):
             return update
 
         if not employee_id and ids:
-            old_slip_ids = slip_line_pool.search(cr, uid, [('slip_id', '=', ids[0])], context=context)
+            old_slip_ids = salary_rule_pool.search(cr, uid, [('slip_id', '=', ids[0])], context=context)
             if old_slip_ids:
                 line_pool.unlink(cr, uid, old_slip_ids)
             return update
@@ -916,10 +917,9 @@ class hr_payslip(osv.osv):
         function = contract.struct_id.id
         lines = []
         if function:
-            func = func_pool.read(cr, uid, function, ['line_ids'], context=context)
-            lines = slip_line_pool.browse(cr, uid, func['line_ids'], context=context)
+            func = func_pool.read(cr, uid, function, ['rule_ids'], context=context)
+            lines = salary_rule_pool.browse(cr, uid, func['rule_ids'], context=context)
         #lines += slip.employee_id.line_ids
-
         ad = []
 #        all_per = 0.0
 #        ded_per = 0.0
@@ -950,7 +950,7 @@ class hr_payslip(osv.osv):
             cd = line.category_id.code.lower()
             calculate = False
             try:
-                exp = line.category_id.condition
+                exp = line.conditions
                 calculate = eval(exp, obj)
             except Exception, e:
                 raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ') % (e))
@@ -962,14 +962,13 @@ class hr_payslip(osv.osv):
             value = 0.0
             base = False
 #                company_contrib = 0.0
-            base = line.category_id.base
+            base = line.computational_expression
 
             try:
                 #Please have a look at the configuration guide.
                 amt = eval(base, obj)
             except Exception, e:
                 raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ') % (e))
-
 #            if sal_type in ('gross', 'net'):
 #                if line.amount_type == 'per':
 #                    percent = line.amount
@@ -1007,15 +1006,15 @@ class hr_payslip(osv.osv):
                 'category_id': line.category_id.id,
                 'name': line.name,
                 'sequence': line.sequence,
-                'type': line.type,
+                'type': line.type.id,
                 'code': line.code,
                 'amount_type': line.amount_type,
-                'amount':line.amount,
+                'amount': line.amount,
                 'total': value,
-                'slip_id':line.id,
-                'employee_id':False,
-                'function_id':False,
-                'base':line.category_id.base
+                'slip_id': line.id,
+                'employee_id': False,
+                'function_id': False,
+                'base': line.base
             }
             update['value']['line_ids'].append(vals)
 #        if sal_type in ('gross', 'net'):
