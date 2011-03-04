@@ -99,12 +99,12 @@ class stock_return_picking(osv.osv_memory):
                 raise osv.except_osv(_('Warning !'), _("You may only return pickings that are Confirmed, Available or Done!"))
             return_history = {}
             valid_lines = 0
-            for m in [line for line in pick.move_lines]:
+            for m  in pick.move_lines:
                 if m.state == 'done':
                     return_history[m.id] = 0
                     for rec in m.move_history_ids2:
                         return_history[m.id] += (rec.product_qty * rec.product_uom.factor)
-                    if m.product_qty * m.product_uom.factor >= return_history[m.id]:
+                    if m.product_qty * m.product_uom.factor > return_history[m.id]:
                         valid_lines += 1
             if not valid_lines:
                 raise osv.except_osv(_('Warning !'), _("There are no products to return (only lines in Done state and not fully returned yet can be returned)!"))
