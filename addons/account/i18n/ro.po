@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-01-20 20:44+0000\n"
-"Last-Translator: Mihai Boiciuc <Unknown>\n"
+"PO-Revision-Date: 2011-03-03 07:58+0000\n"
+"Last-Translator: Dorin <dhongu@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-21 04:40+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-03-04 04:45+0000\n"
+"X-Generator: Launchpad (build 12351)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -48,7 +48,7 @@ msgstr ""
 #. module: account
 #: field:account.installer.modules,account_voucher:0
 msgid "Voucher Management"
-msgstr "Gestionare Voucher-e"
+msgstr "Gestionare Chitanțe"
 
 #. module: account
 #: view:account.account:0
@@ -88,7 +88,7 @@ msgstr "Definiție copii"
 #. module: account
 #: model:ir.model,name:account.model_report_aged_receivable
 msgid "Aged Receivable Till Today"
-msgstr ""
+msgstr "Facturi clienți restante la zi"
 
 #. module: account
 #: field:account.partner.ledger,reconcil:0
@@ -107,7 +107,7 @@ msgstr ""
 #. module: account
 #: model:process.transition,name:account.process_transition_invoiceimport0
 msgid "Import from invoice or payment"
-msgstr ""
+msgstr "Importă din factură dau plată"
 
 #. module: account
 #: model:ir.model,name:account.model_wizard_multi_charts_accounts
@@ -125,6 +125,9 @@ msgid ""
 "If you unreconciliate transactions, you must also verify all the actions "
 "that are linked to those transactions because they will not be disabled"
 msgstr ""
+"Dacă dezactivati relatia intre tranzactii, trebuie să verificaţi de "
+"asemenea, toate acţiunile care sunt legate de aceste operaţiuni, deoarece "
+"acestea nu vor fi dezactivate"
 
 #. module: account
 #: report:account.tax.code.entries:0
@@ -174,6 +177,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the payment "
 "term without removing it."
 msgstr ""
+"În cazul în care câmpul activ este setat FALS, aceasta vă va permite să se "
+"ascundă termenul de plată fără să îl eliminaţi"
 
 #. module: account
 #: code:addons/account/invoice.py:1421
@@ -206,7 +211,7 @@ msgstr "Negativ"
 #: code:addons/account/wizard/account_move_journal.py:95
 #, python-format
 msgid "Journal: %s"
-msgstr ""
+msgstr "Jurnal: %s"
 
 #. module: account
 #: help:account.analytic.journal,type:0
@@ -215,6 +220,9 @@ msgid ""
 "invoice) to create analytic entries, OpenERP will look for a matching "
 "journal of the same type."
 msgstr ""
+"Oferă tipul jurnalului analitic. Atunci când are nevoie de un document (de "
+"exemplu: o factură) pentru a crea o intrare analitica, OpenERP va căuta un "
+"jurnalul potrivit de acelaşi tip."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_tax_template_form
@@ -234,6 +242,8 @@ msgid ""
 "No period defined for this date: %s !\n"
 "Please create a fiscal year."
 msgstr ""
+"Nici o perioadă definită pentru această dată:% s\n"
+"Vă rugam să creați o perioada fiscală."
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_line_reconcile_select
@@ -262,12 +272,12 @@ msgstr ""
 #: code:addons/account/invoice.py:1210
 #, python-format
 msgid "Invoice '%s' is paid partially: %s%s of %s%s (%s%s remaining)"
-msgstr ""
+msgstr "Factura '%s' este platită parțial: %s%s din %s%s (rest %s%s)"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_supplierentriesreconcile0
 msgid "Accounting entries are an input of the reconciliation."
-msgstr ""
+msgstr "Înregistrările contabile sunt un element de reconciliere"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_management_belgian_reports
@@ -283,14 +293,14 @@ msgstr "Nu puteţi adăuga/modifica înregistrări într-un jurnal închis."
 #. module: account
 #: view:account.bank.statement:0
 msgid "Calculated Balance"
-msgstr ""
+msgstr "Sold Calculat"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_use_model_create_entry
 #: model:ir.actions.act_window,name:account.action_view_account_use_model
 #: model:ir.ui.menu,name:account.menu_action_manual_recurring
 msgid "Manual Recurring"
-msgstr ""
+msgstr "Recurență manuală"
 
 #. module: account
 #: view:account.fiscalyear.close.state:0
@@ -1611,7 +1621,7 @@ msgstr "Suma pe an"
 #. module: account
 #: model:ir.actions.report.xml,name:account.report_account_voucher_new
 msgid "Print Voucher"
-msgstr "Tipărire voucher"
+msgstr "Tipărire chitanță"
 
 #. module: account
 #: view:account.change.currency:0
@@ -4022,7 +4032,7 @@ msgstr "Nu există perioadă validă !"
 #. module: account
 #: report:account.tax.code.entries:0
 msgid "Voucher No"
-msgstr "Număr bon"
+msgstr "Număr chitanță"
 
 #. module: account
 #: view:wizard.multi.charts.accounts:0
@@ -5252,7 +5262,7 @@ msgstr "Conturi debitori şi creditori"
 #. module: account
 #: field:account.fiscal.position.account.template,position_id:0
 msgid "Fiscal Mapping"
-msgstr ""
+msgstr "Corespondență fiscală"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_state_open
@@ -9677,7 +9687,7 @@ msgstr "De obicei 1 sau -1."
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account_template
 msgid "Template Account Fiscal Mapping"
-msgstr ""
+msgstr "Șablon corespondență fiscală cont"
 
 #. module: account
 #: field:account.chart.template,property_account_expense:0

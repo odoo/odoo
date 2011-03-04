@@ -34,10 +34,10 @@ from tools import ustr
 one_day = relativedelta(days=1)
 month2name = [0, 'January', 'February', 'March', 'April', 'May', 'Jun', 'July', 'August', 'September', 'October', 'November', 'December']
 
-#def hour2str(h):
-#    hours = int(h)
-#    minutes = int(round((h - hours) * 60, 0))
-#    return '%02dh%02d' % (hours, minutes)
+def hour2str(h):
+    hours = int(h)
+    minutes = int(round((h - hours) * 60, 0))
+    return '%02dh%02d' % (hours, minutes)
 
 def lengthmonth(year, month):
     if month == 2 and ((year % 4 == 0) and ((year % 100 != 0) or (year % 400 == 0))):
@@ -85,12 +85,12 @@ class report_custom(report_rml):
                     for att in attendences:
                         dt = datetime.strptime(att['name'], '%Y-%m-%d %H:%M:%S')
                         if ldt and att['action'] == 'sign_out':
-                            wh += (dt - ldt).seconds/60/60
+                            wh += (float((dt - ldt).seconds)/60/60)
                         else:
                             ldt = dt
                     # Week xml representation
-#                    wh = hour2str(wh)
-                    today_xml = '<day num="%s"><wh>%s</wh></day>' % ((today - month).days+1, round(wh,2))
+                    wh = hour2str(wh)
+                    today_xml = '<day num="%s"><wh>%s</wh></day>' % ((today - month).days+1, (wh))
                     dy=(today - month).days+1
                     days_xml.append(today_xml)
                     today, tomor = tomor, tomor + one_day
