@@ -47,6 +47,13 @@ class report_account_analytic_planning(osv.osv):
         'state': lambda *args: 'open'
     }
     _order = 'date_from desc'
+    
+    def copy(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        default.update({'stat_ids':[],'stat_account_ids':[],'stat_user_ids':[]})
+        return super(report_account_analytic_planning, self).copy(cr, uid, id, default, context=context)
+
 report_account_analytic_planning()
 
 class report_account_analytic_planning_line(osv.osv):
