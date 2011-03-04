@@ -151,7 +151,7 @@ class hr_employee(osv.osv):
         'partner_id': fields.related('address_home_id', 'partner_id', type='many2one', relation='res.partner', readonly=True, help="Partner that is related to the current employee. Accounting transaction will be written on this partner belongs to employee."),
         'bank_account_id':fields.many2one('res.partner.bank', 'Bank Account', domain="[('partner_id','=',partner_id)]", help="Employee bank salary account"),
         'work_phone': fields.char('Work Phone', size=32, readonly=False),
-        'mobile_phone': fields.char('Mobile', size=32, readonly=False),
+        'mobile_phone': fields.char('Work Mobile', size=32, readonly=False),
         'work_email': fields.char('Work E-mail', size=240),
         'work_location': fields.char('Office Location', size=32),
         'notes': fields.text('Notes'),
@@ -168,7 +168,7 @@ class hr_employee(osv.osv):
     def onchange_address_id(self, cr, uid, ids, address, context=None):
         if address:
             address = self.pool.get('res.partner.address').browse(cr, uid, address, context=context)
-            return {'value': {'work_email': address.email, 'work_phone': address.phone}}
+            return {'value': {'work_email': address.email, 'work_phone': address.phone, 'mobile_phone': address.mobile}}
         return {'value': {}}
 
     def onchange_company(self, cr, uid, ids, company, context=None):
@@ -192,7 +192,7 @@ class hr_employee(osv.osv):
     _defaults = {
         'active': 1,
         'photo': _get_photo,
-        'address_id': lambda self,cr,uid,c: self.pool.get('res.partner.address').browse(cr, uid, uid, c).partner_id.id
+        'address_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, uid, c).address_id.id
     }
 
     def _check_recursion(self, cr, uid, ids, context=None):

@@ -2,8 +2,8 @@
 <openerp>
     <data> 
         <record id="ir_header_webkit_bvr_invoice0" model="ir.header_webkit">
-            <field eval="&quot;&quot;&quot;Portrait&quot;&quot;&quot;" name="orientation"/>
-            <field eval="&quot;&quot;&quot;A4&quot;&quot;&quot;" name="format"/>
+            <field name="orientation">Portrait</field>
+            <field name="format">A4</field>
             <field name="html"><![CDATA[<html>
                     <head>
                         <script>
@@ -144,7 +144,7 @@ width:74%;
 .tax {
 width:50%;
 }]]></field>
-    <field eval="&quot;&quot;&quot;BVR header&quot;&quot;&quot;" name="name"/>
+    <field name="name">BVR header</field>
     </record>
         
     <report auto="True" 

@@ -36,7 +36,6 @@ class res_partner_bank(osv.osv):
     _columns = {
         'name': fields.char('Description', size=128, required=True),
         'post_number': fields.char('Post number', size=64),
-        'bvr_number': fields.char('BVR account number', size=11),
         'bvr_adherent_num': fields.char('BVR adherent number', size=11),
         'dta_code': fields.char('DTA code', size=5),
     }
