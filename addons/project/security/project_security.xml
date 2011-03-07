@@ -22,14 +22,14 @@
         <field name="name">Project multi-company</field>
         <field name="model_id" ref="model_project_project"/>
         <field name="global" eval="True"/>
-        <field name="domain_force">['|','|',('company_id','=',False),('company_id','child_of',[user.company_id.id]),('company_id.child_ids','child_of',[user.company_id.id])]</field>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
     </record>
 
     <record model="ir.rule" id="task_comp_rule">
         <field name="name" >Task multi-company</field>
         <field name="model_id" ref="model_project_task"/>
         <field name="global" eval="True"/>
-        <field name="domain_force">['|','|',('company_id','=',False),('company_id','child_of',[user.company_id.id]),('company_id.child_ids','child_of',[user.company_id.id])]</field>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
     </record>
 
     <record model="ir.rule" id="task_visibility_rule">

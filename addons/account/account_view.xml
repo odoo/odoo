@@ -47,6 +47,7 @@
                 <tree colors="blue:state in ('draft');gray:state in ('done') " string="Fiscalyear">
                     <field name="code"/>
                     <field name="name"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -116,6 +117,7 @@
                     <field name="date_start"/>
                     <field name="date_stop"/>
                     <field name="special"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                     <field name="state"/>
                     <button name="action_draft" states="done" string="Set to Draft" type="object" icon="terp-document-new" groups="account.group_account_manager"/>
                     <button name="%(action_account_period_close)d" states="draft" string="Close Period" type="action" icon="terp-camera_test"/>
@@ -570,7 +572,7 @@
                                     <field name="ref"/>
                                     <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
                                     <field name="type" on_change="onchange_type(partner_id, type)"/>
-                                    <field domain="[('journal_id','=',parent.journal_id)]" name="account_id"/>
+                                    <field domain="[('journal_id','=',parent.journal_id), ('company_id', '=', parent.company_id)]" name="account_id"/>
                                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('company_id', '=', parent.company_id), ('type', '&lt;&gt;', 'view')]"/>
                                     <field name="amount"/>
                                 </tree>
@@ -580,7 +582,7 @@
                                     <field name="ref"/>
                                     <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
                                     <field name="type" on_change="onchange_type(partner_id, type)"/>
-                                    <field domain="[('journal_id', '=', parent.journal_id), ('type', '&lt;&gt;', 'view')]" name="account_id"/>
+                                    <field domain="[('journal_id', '=', parent.journal_id), ('type', '&lt;&gt;', 'view'), ('company_id', '=', parent.company_id)]" name="account_id"/>
                                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('company_id', '=', parent.company_id), ('type', '&lt;&gt;', 'view')]"/>
                                     <field name="amount"/>
                                     <field name="sequence" readonly="0"/>
@@ -1011,7 +1013,7 @@
                     <field name="invoice"/>
                     <field name="name"/>
                     <field name="partner_id" on_change="onchange_partner_id(move_id, partner_id, account_id, debit, credit, date, journal_id)"/>
-                    <field name="account_id" domain="[('journal_id','=',journal_id)]"/>
+                    <field name="account_id" domain="[('journal_id','=',journal_id), ('company_id', '=', company_id)]"/>
                     <field name="journal_id"/>
                     <field name="debit" sum="Total debit"/>
                     <field name="credit" sum="Total credit"/>
@@ -1046,7 +1048,7 @@
                         <page string="Information">
                             <group col="2" colspan="2">
                                 <separator colspan="2" string="Amount"/>
-                                <field name="account_id" select="1" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                                <field name="account_id" select="1" domain="[('company_id', '=', company_id), ('type','&lt;&gt;','view'), ('type','&lt;&gt;','consolidation')]"/>
                                 <field name="debit"/>
                                 <field name="credit"/>
                                 <field name="quantity"/>
@@ -1120,7 +1122,7 @@
                             <field name="date"/>
                             <field name="journal_id" readonly="False" select="1"/>
                             <field name="period_id" readonly="False"/>
-                            <field name="account_id" select="1" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                            <field name="account_id" select="1" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation'),('company_id', '=', company_id)]"/>
                             <field name="partner_id" on_change="onchange_partner_id(False,partner_id,account_id,debit,credit,date)"/>
                             <newline/>
                             <field name="debit"/>
@@ -1341,7 +1343,7 @@
                                         <page string="Information">
                                             <group col="2" colspan="2">
                                                 <separator colspan="2" string="Amount"/>
-                                                <field name="account_id" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                                                <field name="account_id" domain="[('company_id', '=', parent.company_id), ('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
                                                 <field name="debit"/>
                                                 <field name="credit"/>
                                                 <field name="quantity"/>
@@ -1403,7 +1405,7 @@
                                     <field name="invoice"/>
                                     <field name="name"/>
                                     <field name="partner_id" on_change="onchange_partner_id(False,partner_id,account_id,debit,credit,parent.date,parent.journal_id)"/>
-                                    <field name="account_id" domain="[('journal_id','=',parent.journal_id)]"/>
+                                    <field name="account_id" domain="[('journal_id','=',parent.journal_id),('company_id', '=', parent.company_id)]"/>
                                     <field name="date_maturity"/>
                                     <field name="debit" sum="Total Debit"/>
                                     <field name="credit" sum="Total Credit"/>
@@ -2150,6 +2152,8 @@
                     <field name="property_account_income_categ" domain="[('id', 'child_of', [account_root_id])]" />
                     <field name="property_account_expense" domain="[('id', 'child_of', [account_root_id])]"/>
                     <field name="property_account_income" domain="[('id', 'child_of', [account_root_id])]"/>
+                    <field name="property_account_income_opening" domain="[('id', 'child_of', [account_root_id])]"/>
+                    <field name="property_account_expense_opening" domain="[('id', 'child_of', [account_root_id])]"/>
                     <field name="property_reserve_and_surplus_account" />
                     </group>
                 </form>
@@ -2572,7 +2576,7 @@ action = self.pool.get('res.config').next(cr, uid, [], context)
                                     <field name="ref"/>
                                     <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
                                     <field name="type" on_change="onchange_type(partner_id, type)"/>
-                                    <field domain="[('journal_id','=',parent.journal_id)]" name="account_id"/>
+                                    <field domain="[('journal_id','=',parent.journal_id), ('company_id', '=', parent.company_id)]" name="account_id"/>
                                     <field name="analytic_account_id" domain="[('company_id', '=', parent.company_id), ('type', '&lt;&gt;', 'view')]" groups="analytic.group_analytic_accounting" />
                                     <field name="amount"/>
                                 </tree>
@@ -2582,7 +2586,7 @@ action = self.pool.get('res.config').next(cr, uid, [], context)
                                     <field name="ref"/>
                                     <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
                                     <field name="type" on_change="onchange_type(partner_id, type)"/>
-                                    <field domain="[('journal_id', '=', parent.journal_id), ('type', '&lt;&gt;', 'view')]" name="account_id"/>
+                                    <field domain="[('journal_id', '=', parent.journal_id), ('type', '&lt;&gt;', 'view'), ('company_id', '=', parent.company_id)]" name="account_id"/>
                                     <field name="analytic_account_id" domain="[('company_id', '=', parent.company_id), ('type', '&lt;&gt;', 'view')]" groups="analytic.group_analytic_accounting" />
                                     <field name="amount"/>
                                     <field name="sequence"/>

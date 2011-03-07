@@ -414,6 +414,8 @@ class openerp_dav_handler(dav_interface):
                                     # relative part, because ul is relative, anyway
                                     uparts=urlparse.urlparse(turi)
                                     turi=uparts[2]
+                                    if uparts[3]:
+                                        turi += ';' + uparts[3]
                                 if turi.startswith(ul):
                                     result.append( turi[len(self.parent.davpath):])
                                 else:
@@ -440,6 +442,8 @@ class openerp_dav_handler(dav_interface):
     def uri2local(self, uri):
         uparts=urlparse.urlparse(uri)
         reluri=uparts[2]
+        if uparts[3]:
+            reluri += ';'+uparts[3]
         if reluri and reluri[-1]=="/":
             reluri=reluri[:-1]
         return reluri
