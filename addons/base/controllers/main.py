@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
-import json, os, sys, traceback
+import glob,json,os,sys,traceback
+
+#import simplejson as json
 
 import openerpweb
 
@@ -64,12 +66,9 @@ class Hello(openerpweb.Controller):
 
 class Connection(openerpweb.Controller):
     _cp_path = "/base/connection"
-
-    def filesofmodulemap(self, module_file_map):
+    def filesofmodulemap(self, ):
         # TODO root should be a global config
-        root = os.path.join(os.path.dirname(__file__),'..','..')
         files=[]
-        for i in mods.split(','):
             for j in cssfiles.get(i,[]):
                 files.append(j)
 
@@ -79,6 +78,7 @@ class Connection(openerpweb.Controller):
         concat: concatenation of file content
         timestamp: max(os.path.getmtime of file_list)
         """
+        root = openerpweb.path_root
         files_content = []
         files_timestamp = 0
         for i in file_list:
@@ -92,7 +92,15 @@ class Connection(openerpweb.Controller):
 
     def css(self, req):
         # TODO http get argument mods is a comma seprated value of modules
-        mods = 'base,base_calendar'
+        mods = 'base,base_hello'
+        files = []
+        for i in mods.split(','):
+            globlist = openerpweb.addons_manifest.get(i,{})
+            for j in globlist:
+                tmp = glob.glob(os.path.join(path_addons,i,j))
+                print tmp
+                files.append(tmp)
+
         # TODO modules should list their css and js in __openerp__
         # TODO cssfiles should be a global registry of files
         cssfiles = {
@@ -128,6 +136,12 @@ class Session(openerpweb.Controller):
             "session_id" : req.session_id,
             "uid": req.session._uid,
         }
+        return res
+
+    def modules(self, req):
+        # TODO return the list of all modules
+        res={}
+        res["modules"] = ["base","base_hello"]
         return res
 
 class Menu(openerpweb.Controller):
