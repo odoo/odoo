@@ -385,41 +385,42 @@ class hr_payslip(osv.osv):
             others = 0.0
             contract = rs.employee_id.contract_id
             obj = {'basic': contract.wage}
-            if contract.struct_id:
-                function = contract.struct_id.id
-                lines = []
-                if function:
-                    func = payroll_struct_obj.read(cr, uid, function, ['rule_ids'], context=context)
-                    lines = salary_rule_pool.browse(cr, uid, func['rule_ids'], context=context)
-                for line in lines:
-                    amount = 0.0
-                    if line.amount_type == 'per':
-                        try:
-                            amount = line.amount * eval(str(line.computational_expression), obj)
-                        except Exception, e:
-                            raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ') % (e))
-                    elif line.amount_type in ('fix'):
-                        amount = line.amount
-                    cd = line.category_id.code.lower()
-                    obj[cd] = amount
-                    contrib = 0.0
-                    if amount < 0:
-                        deduct += amount
-                        others += contrib
-                        amount -= contrib
-                    else:
-                        allow += amount
-                        others -= contrib
-                        amount += contrib
-                    salary_rule_pool.write(cr, uid, [line.id], {'total': amount}, context=context)
-                record = {
-                    'allounce': allow,
-                    'deduction': deduct,
-                    'other_pay': others,
-                    'state': 'draft',
-                    'total_pay': abs(contract.wage + allow + deduct)
-                }
-                res[rs.id] = record
+            if not contract.struct_id:
+                raise osv.except_osv(_('Warning!'), _('Please define Salary Structure on Contract for %s.') % (rs.employee_id.name))
+            function = contract.struct_id.id
+            lines = []
+            if function:
+                func = payroll_struct_obj.read(cr, uid, function, ['rule_ids'], context=context)
+                lines = salary_rule_pool.browse(cr, uid, func['rule_ids'], context=context)
+            for line in lines:
+                amount = 0.0
+                if line.amount_type == 'per':
+                    try:
+                        amount = line.amount * eval(str(line.computational_expression), obj)
+                    except Exception, e:
+                        raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ') % (e))
+                elif line.amount_type in ('fix'):
+                    amount = line.amount
+                cd = line.category_id.code.lower()
+                obj[cd] = amount
+                contrib = 0.0
+                if amount < 0:
+                    deduct += amount
+                    others += contrib
+                    amount -= contrib
+                else:
+                    allow += amount
+                    others -= contrib
+                    amount += contrib
+                salary_rule_pool.write(cr, uid, [line.id], {'total': amount}, context=context)
+            record = {
+                'allounce': allow,
+                'deduction': deduct,
+                'other_pay': others,
+                'state': 'draft',
+                'total_pay': abs(contract.wage + allow + deduct)
+            }
+            res[rs.id] = record
         return res
 
     _columns = {
@@ -1041,8 +1042,8 @@ class hr_payslip(osv.osv):
         paid_leave = 0.0
         h_ids = holiday_pool.browse(cr, uid, leave_ids, context=context)
         for hday in holiday_pool.browse(cr, uid, leave_ids, context=context):
-            if not hday.holiday_status_id.code:
-                raise osv.except_osv(_('Error !'), _('Please check configuration of %s, payroll head is missing') % (hday.holiday_status_id.name))
+#            if not hday.holiday_status_id.code:
+#                raise osv.except_osv(_('Error !'), _('Please check configuration of %s, payroll head is missing') % (hday.holiday_status_id.name))
             slip_lines = hr_all_ded_cate.search(cr, uid, [('code','=',hday.holiday_status_id.code)], context=context)
             head_sequence = 0
             if slip_lines:
