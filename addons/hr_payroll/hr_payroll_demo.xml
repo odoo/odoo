@@ -13,6 +13,7 @@
             <field name="category_id" ref="hr_payroll.HRA"/>
            <!-- <field name="function_id" ref="hr_payroll.structure_001"/>-->
             <field name="name">House Rent Allowance</field>
+            <field name="sequence" eval="5"/>
         </record>
 
         <record id="hr_payslip_line_convanceallowance1" model="hr.salary.rule">
@@ -24,6 +25,7 @@
             <field name="category_id" ref="hr_payroll.CA"/>
             <!--<field name="function_id" ref="hr_payroll.structure_001"/>-->
             <field name="name">Conveyance Allowance</field>
+            <field name="sequence" eval="10"/>
         </record>
 
         <record id="hr_payslip_line_professionaltax1" model="hr.salary.rule">
@@ -35,6 +37,7 @@
             <field name="category_id" ref="hr_payroll.PT"/>
          <!--   <field name="function_id" ref="hr_payroll.structure_001"/>-->
             <field name="name">Professional Tax</field>
+            <field name="sequence" eval="55"/>
         </record>
 
         <record id="hr_payslip_line_providentfund1" model="hr.salary.rule">
@@ -46,6 +49,7 @@
             <field name="category_id" ref="hr_payroll.PF"/>
            <!-- <field name="function_id" ref="hr_payroll.structure_001"/>-->
             <field name="name">Provident Fund</field>
+            <field name="sequence" eval="50"/>
         </record>
         
         <!-- Salary Structure -->
@@ -68,8 +72,7 @@
         </record>
 
         <!-- Employee Contract -->
-       <!-- <record id="hr_contract_firstcontract1" model="hr.contract">
-            <field name="wage_type_id" ref="hr_contract.hr_contract_monthly_gross"/>
+        <record id="hr_contract_firstcontract1" model="hr.contract">
             <field name="name">First Contract</field>
             <field name="type_id" ref="hr_contract.hr_contract_type_emp"/>
             <field name="date_start" eval="time.strftime('%Y-%m')+'-1'"/>
@@ -80,9 +83,9 @@
             <field eval="4000.0" name="wage"/>
             <field eval="5" name="working_days_per_week"/>
         </record>
--->
+
         <!-- Payslip -->
-       <!-- <record id="hr_payslip_salaryslipofbonamyforjune0" model="hr.payslip">
+        <!--<record id="hr_payslip_salaryslipofbonamyforjune0" model="hr.payslip">
             <field name="number">SLIP/001</field>
             <field name="deg_id" ref="hr_payroll.structure_001"/>
             <field name="employee_id" ref="hr_employee_bonamy0"/>

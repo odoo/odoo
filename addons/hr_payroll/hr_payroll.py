@@ -58,9 +58,9 @@ class hr_payroll_structure(osv.osv):
         'name':fields.char('Name', size=256, required=True, readonly=False),
         'code':fields.char('Code', size=64, required=True, readonly=False),
 #        'line_ids':fields.one2many('hr.payslip.line', 'function_id', 'Salary Structure', required=False),
-        'company_id':fields.many2one('res.company', 'Company', required=False),
+        'company_id':fields.many2one('res.company', 'Company', required=True),
         'note': fields.text('Description'),
-        'parent_id':fields.many2one('hr.payroll.structure', 'Parent Structure'),
+        'parent_id':fields.many2one('hr.payroll.structure', 'Parent'),
     }
     _defaults = {
         'company_id': lambda self, cr, uid, context: \
@@ -336,8 +336,8 @@ class hr_salary_head(osv.osv):
     _name = 'hr.salary.head'
     _description = 'Salary Head'
     _columns = {
-        'name':fields.char('Salary Head', size=64, required=True, readonly=False),
-        'code':fields.char('Salary Head Code', size=64, required=True, readonly=False),
+        'name':fields.char('Name', size=64, required=True, readonly=False),
+        'code':fields.char('Code', size=64, required=True, readonly=False),
         'type':fields.many2one('hr.salary.head.type', 'Type', required=True, help="It is used only for the reporting purpose."),
         'note': fields.text('Description'),
         'user_id':fields.char('User', size=64, required=False, readonly=False),
@@ -1186,7 +1186,7 @@ class hr_payslip_line(osv.osv):
         if category_id:
             category = self.pool.get('hr.salary.head').browse(cr, uid, category_id)
             res.update({
-                'sequence':category.sequence,
+#                'sequence':category.sequence,
                 'name':category.name,
                 'code':category.code,
                 'type':category.type.id
@@ -1208,7 +1208,7 @@ class hr_payslip_line(osv.osv):
         'base':fields.char('Formula', size=1024, required=False, readonly=False),
         'code':fields.char('Code', size=64, required=False, readonly=False),
         'category_id':fields.many2one('hr.salary.head', 'Category', required=True),
-        'type':fields.many2one('hr.salary.head.type', 'Type', required=True),
+        'type':fields.many2one('hr.salary.head.type', 'Type', required=True, help="Used for the reporting purpose."),
         'amount_type':fields.selection([
             ('per','Percentage (%)'),
             ('fix','Fixed Amount'),

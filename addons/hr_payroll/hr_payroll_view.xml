@@ -78,11 +78,11 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Employee Function">
-                    <group col="6" colspan="4">
-                        <field name="name" colspan="4" select="1"/>
+                    <group col="6" colspan="6">
+                        <field name="name" select="1"/>
                         <field name="code" select="1"/>
-                        <field name="parent_id"/>
                         <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                        <field name="parent_id"/>
                     </group>
                     <notebook colspan="4">
 	                     <page string="Salary Rules">
@@ -103,6 +103,7 @@
             id="menu_hr_employee_function"
             action="action_view_hr_employee_grade_form"
             parent="payroll_configure"
+            sequence="13"
         />
         <!-- End Salary structure -->
 
@@ -397,6 +398,7 @@
             id="menu_hr_salary_head"
             action="action_hr_salary_head"
             parent="payroll_configure"
+            sequence="11"
         />
         <!-- End Payment Heads -->
 
@@ -537,6 +539,7 @@
             id="menu_action_hr_contibution_register_form"
             action="action_contibution_register_form"
             parent="payroll_configure"
+            sequence="14"
         />
         <record id="hr_contibution_register_line_form" model="ir.ui.view">
             <field name="name">hr.contibution.register.line.form</field>
@@ -594,7 +597,7 @@
                    <field name="code" select="1"/>
                    <field name="active"/>
                    <field name="sequence" />
-                   <field name="company_id"/>
+                   <field name="company_id" widget="selection"/>
                    <field name="appears_on_payslip"/>
                 </group>
                 <group col="6" colspan="6">
@@ -603,11 +606,10 @@
 	                    <field name="category_id" on_change="onchange_category(category_id)"/>
 	                    <field name="type"/>
 	                    <field name="amount_type"/>
+	                    <field name="amount" on_change="onchange_amount(amount, amount_type)" attrs="{'readonly':[('amount_type','=','func')]}"/>
+	                    <field name="conditions"/>
 	                    <field name="condition_range_min"/>
                         <field name="condition_range_max"/>
-	                    <field name="amount" on_change="onchange_amount(amount, amount_type)" attrs="{'readonly':[('amount_type','=','func')]}"/>
-	                   
-	                    <field name="conditions"/>
 	                </group>
 	                <group col="2" colspan="2">
 		                <group col="2" colspan="2">
@@ -643,7 +645,7 @@
         <field name="view_id" ref="hr_salary_rule_tree"/>
     </record>
     
-    <menuitem id="menu_action_hr_salary_rule_form" action="action_salary_rule_form" parent="payroll_configure"/>
+    <menuitem id="menu_action_hr_salary_rule_form" action="action_salary_rule_form" parent="payroll_configure" sequence="12"/>
 
         <!-- Salary Head Type -->
         <record id="salary_head_type_tree" model="ir.ui.view">
@@ -677,7 +679,7 @@
             <field name="view_id" ref="salary_head_type_tree"/>
         </record>
         
-        <menuitem id="menu_action_salary_head_type" action="action_salary_head_type" parent="payroll_configure"/>
+        <menuitem id="menu_action_salary_head_type" action="action_salary_head_type" parent="payroll_configure" sequence="10"/>
         
     </data>
 </openerp>
