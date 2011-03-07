@@ -95,6 +95,7 @@ body {
 }
 .openerp .filter_icon {
     padding: 1px 2px 0px 2px;
+    margin: 0;
 }
 .openerp .filter_label {
     font-weight: bold;
@@ -126,4 +127,18 @@ body {
     -moz-border-radius-bottomright: 7px;
     border-top-right-radius: 7px;
     border-bottom-right-radius: 7px;
+}
+
+/* Inputs */
+.openerp input[type="text"], .openerp input[type="password"], .openerp select, .openerp textarea {
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+    box-sizing: border-box;
+    padding: 2px;
+    border: 1px solid #999;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    background: white;
 }
