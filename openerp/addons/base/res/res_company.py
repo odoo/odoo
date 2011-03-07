@@ -98,7 +98,11 @@ class res_company(osv.osv):
             context = {}
         user_preference = context.get('user_preference', False)
         if user_preference:
-            user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+            # We browse as superuser. Otherwise, the user would be able to
+            # select only the currently visible companies (according to rules,
+            # which are probably to allow to see the child companies) even if
+            # she belongs to some other companies.
+            user = self.pool.get('res.users').browse(cr, 1, uid, context=context)
             cmp_ids = list(set([user.company_id.id] + [cmp.id for cmp in user.company_ids]))
             return cmp_ids
         return super(res_company, self)._search(cr, uid, args, offset=offset, limit=limit, order=order,
