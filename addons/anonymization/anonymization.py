@@ -418,14 +418,9 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
                 elif field_type == 'datetime':
                     anonymized_value = '2011-11-11 11:11:11'
                 elif field_type == 'float':
-                    if record[field_name] > 0:
-                        anonymized_value = 1.0
-                    elif record[field_name] < 0:
-                        anonymized_value = -1.0
-                    else:
-                        anonymized_value = 0.0
+                    anonymized_value = 0.0
                 elif field_type == 'integer':
-                    anonymized_value = 1
+                    anonymized_value = 0
                 elif field_type in ['binary', 'many2many', 'many2one', 'one2many', 'reference']: # cannot anonymize these kind of fields
                     msg = "Cannot anonymize fields of these types: binary, many2many, many2one, one2many, reference"
                     self._raise_after_history_update(cr, uid, history_id, 'Error !', msg)

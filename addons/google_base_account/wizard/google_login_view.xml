@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="view_google_login_form">
+            <field name="name">google.login.form</field>
+            <field name="model">google.login</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Google login" >
+                    <group colspan="4" col="4" width="300">
+                        <field name="user" />
+                        <newline/>
+                        <label string="ex: user@gmail.com" align="1.0" colspan="2"/>
+                        <newline/>
+                        <field name="password" password="True"/>
+                    </group>
+                    <separator string="" colspan="4"/>
+                    <group colspan="4" col="4">
+                        <group colspan="2"/>
+                        <group colspan="2">  
+                            <button special="cancel" string="_Cancel" icon="gtk-cancel"/>
+                            <button name="check_login" string="_Login" type="object" icon="terp-check"/>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+    </data>
+</openerp>
