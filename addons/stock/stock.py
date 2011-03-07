@@ -1250,7 +1250,7 @@ class stock_picking(osv.osv):
                 move_obj.write(cr, uid, [c.id for c in complete], {'picking_id': new_picking})
                 for move in complete:
                     if prodlot_ids.get(move.id):
-                        move_obj.write(cr, uid, move.id, {'prodlot_id': prodlot_ids[move.id]})
+                        move_obj.write(cr, uid, [move.id], {'prodlot_id': prodlot_ids[move.id]})
             for move in too_many:
                 product_qty = move_product_qty[move.id]
                 defaults = {
@@ -1823,7 +1823,7 @@ class stock_move(osv.osv):
                 old_ptype = location_obj.picking_type_get(cr, uid, picking.move_lines[0].location_id, picking.move_lines[0].location_dest_id)
                 if old_ptype != picking.type:
                     old_pick_name = seq_obj.get(cr, uid, 'stock.picking.' + old_ptype)
-                    self.pool.get('stock.picking').write(cr, uid, picking.id, {'name': old_pick_name}, context=context)
+                    self.pool.get('stock.picking').write(cr, uid, [picking.id], {'name': old_pick_name}, context=context)
             else:
                 pickid = False
             for move, (loc, dummy, delay, dummy, company_id, ptype) in todo:
@@ -2467,7 +2467,7 @@ class stock_move(osv.osv):
                     defaults.update(prodlot_id=prodlot_id)
                 new_move = self.copy(cr, uid, move.id, defaults)
                 complete.append(self.browse(cr, uid, new_move))
-            self.write(cr, uid, move.id,
+            self.write(cr, uid, [move.id],
                     {
                         'product_qty' : move.product_qty - product_qty,
                         'product_uos_qty':move.product_qty - product_qty,
@@ -2475,7 +2475,7 @@ class stock_move(osv.osv):
 
 
         for move in too_many:
-            self.write(cr, uid, move.id,
+            self.write(cr, uid, [move.id],
                     {
                         'product_qty': move.product_qty,
                         'product_uos_qty': move.product_qty,
