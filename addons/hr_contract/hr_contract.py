@@ -79,18 +79,18 @@ class hr_contract_wage_type_period(osv.osv):
 hr_contract_wage_type_period()
 
 #Contract wage type (hourly, daily, monthly, ...)
-class hr_contract_wage_type(osv.osv):
-    _name = 'hr.contract.wage.type'
-    _description = 'Wage Type'
-    _columns = {
-        'name': fields.char('Wage Type Name', size=50, required=True, select=True),
-        'period_id': fields.many2one('hr.contract.wage.type.period', 'Wage Period', required=True),
-        'factor_type': fields.float('Factor for hour cost', digits=(12,4), required=True, help='This field is used by the timesheet system to compute the price of an hour of work based on the contract of the employee')
-    }
-    _defaults = {
-        'factor_type': 1.8
-    }
-hr_contract_wage_type()
+#class hr_contract_wage_type(osv.osv):
+#    _name = 'hr.contract.wage.type'
+#    _description = 'Wage Type'
+#    _columns = {
+#        'name': fields.char('Wage Type Name', size=50, required=True, select=True),
+#        'period_id': fields.many2one('hr.contract.wage.type.period', 'Wage Period', required=True),
+#        'factor_type': fields.float('Factor for hour cost', digits=(12,4), required=True, help='This field is used by the timesheet system to compute the price of an hour of work based on the contract of the employee')
+#    }
+#    _defaults = {
+#        'factor_type': 1.8
+#    }
+#hr_contract_wage_type()
 
 
 class hr_contract_type(osv.osv):
