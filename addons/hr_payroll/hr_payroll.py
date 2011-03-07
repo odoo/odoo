@@ -1261,6 +1261,9 @@ class hr_salary_rule(osv.osv):
         'sequence': 5,
         'appears_on_payslip': True,
         'active': True,
+        'company_id': lambda self, cr, uid, context: \
+                self.pool.get('res.users').browse(cr, uid, uid,
+                    context=context).company_id.id,
      }
 
 hr_salary_rule()
