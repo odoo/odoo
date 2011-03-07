@@ -69,8 +69,8 @@ class Connection(openerpweb.Controller):
     def filesofmodulemap(self, ):
         # TODO root should be a global config
         files=[]
-            for j in cssfiles.get(i,[]):
-                files.append(j)
+        for j in cssfiles.get(i,[]):
+            files.append(j)
 
     def fileconcat(self, file_list):
         """ Concatenate file content
