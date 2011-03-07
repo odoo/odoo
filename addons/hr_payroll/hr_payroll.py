@@ -1254,6 +1254,7 @@ class hr_salary_rule(osv.osv):
         'conditions':fields.char('Condition', size=1024, required=True, readonly=False, help='Applied this head for calculation if condition is true'),
         'sequence': fields.integer('Sequence', required=True, help='Use to arrange calculation sequence'),
         'active':fields.boolean('Active', required=False),
+        'python_code': fields.text('Python code'),
      }
     _defaults = {
         'conditions': 'True',

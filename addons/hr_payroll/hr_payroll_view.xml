@@ -600,31 +600,37 @@
                    <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                    <field name="appears_on_payslip"/>
                 </group>
-                <group col="6" colspan="6">
-	                <group col="2" colspan="2">
-	                    <separator colspan="4" string="Calculations"/>
-	                    <field name="category_id" on_change="onchange_category(category_id)"/>
-	                    <field name="type"/>
-	                    <field name="amount_type"/>
-	                    <field name="amount" on_change="onchange_amount(amount, amount_type)" attrs="{'readonly':[('amount_type','=','func')]}"/>
-	                    <field name="conditions"/>
-	                    <field name="condition_range_min"/>
-                        <field name="condition_range_max"/>
-	                </group>
-	                <group col="2" colspan="2">
-		                <group col="2" colspan="2">
-		                <separator colspan="4" string="Company contribution"/>
-		                    <field name="register_id"/>
-		                    <field name="company_contrib"/>
+                <notebook colspan="6">
+                    <page string="General">
+		                <group col="6" colspan="6">
+			                <group col="2" colspan="2">
+			                    <separator colspan="4" string="Calculations"/>
+			                    <field name="category_id" on_change="onchange_category(category_id)"/>
+			                    <field name="type"/>
+			                    <field name="amount_type"/>
+			                    <field name="amount" on_change="onchange_amount(amount, amount_type)" attrs="{'readonly':[('amount_type','=','func')]}"/>
+			                    <field name="conditions"/>
+			                    <field name="condition_range_min"/>
+		                        <field name="condition_range_max"/>
+			                </group>
+			                <group col="2" colspan="2">
+				                <group col="2" colspan="2">
+				                <separator colspan="4" string="Company contribution"/>
+				                    <field name="register_id"/>
+				                    <field name="company_contrib"/>
+				                </group>
+				                <group col="2" colspan="4">
+		                            <separator colspan="4" string="Computational Expression"/>
+		                            <field name="computational_expression" colspan="4" nolabel="1"/>
+		                        </group>
+		                        <group col="2" colspan="2">
+		                            <separator colspan="2" string="Applicable code (if Amount Type = Python code)"/>
+		                            <field name="python_code"  nolabel="1" attrs="{'readonly':[('amount_type','!=','code')],'required':[('amount_type','=','code')]}"/>
+		                        </group>
+		                   </group>
 		                </group>
-		                <group col="2" colspan="4">
-                            <separator colspan="4" string="Computational Expression"/>
-                            <field name="computational_expression" colspan="4" nolabel="1"/>
-                        </group>
-	                </group>
-                </group>
-                <notebook colspan="4">
-                    <page string="Child Rules" groups="base.group_extended">
+                    </page>
+                    <page string="Child Rules">
                        <separator colspan="4" string="Children definition"/>
                        <field name="child_depend"/>
                        <field colspan="4" name="child_ids" nolabel="1"/>
