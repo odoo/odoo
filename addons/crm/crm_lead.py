@@ -410,15 +410,11 @@ class crm_lead(crm_case, osv.osv):
         """
         return True
 
-    def on_chnage_optin(self, cr, uid, ids, optin):
-        if optin:
-            return {'value':{'optin':optin,'optout':False}}
-        return {}
+    def on_change_optin(self, cr, uid, ids, optin):
+        return {'value':{'optin':optin,'optout':False}}
 
-    def on_chnage_optout(self, cr, uid, ids, optout):
-        if optout:
-            return {'value':{'optout':optout,'optin':False}}
-        return {}
+    def on_change_optout(self, cr, uid, ids, optout):
+        return {'value':{'optout':optout,'optin':False}}
 
 crm_lead()
 

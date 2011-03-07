@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2011-02-20 18:55+0000\n"
+"PO-Revision-Date: 2011-03-06 06:43+0000\n"
 "Last-Translator: Dorin <dhongu@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-02-21 04:50+0000\n"
+"X-Launchpad-Export-Date: 2011-03-07 04:49+0000\n"
 "X-Generator: Launchpad (build 12351)\n"
 
 #. module: purchase
@@ -34,7 +34,7 @@ msgstr "Nu puteți confirma comanda de aprovizionare fără linii de comandă."
 #. module: purchase
 #: field:purchase.order,invoiced:0
 msgid "Invoiced & Paid"
-msgstr "Facturat"
+msgstr "Facturat & Plătit"
 
 #. module: purchase
 #: field:purchase.order,location_id:0
@@ -121,6 +121,9 @@ msgid ""
 "products, etc. For each purchase order, you can track the products received, "
 "and control the supplier invoices."
 msgstr ""
+"Folosiți acest meniu pentru a căuta comenzi de aprovizionare după referință, "
+"furnizor, produs, etc. Pentru fiecare comandă de aprovizionare, puteți "
+"urmări produsele recepționate și controla facturile primite de la furnizori."
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:722
@@ -433,7 +436,7 @@ msgstr "Zi"
 #: code:addons/purchase/purchase.py:334
 #, python-format
 msgid "Purchase order '%s' has been set in draft state."
-msgstr ""
+msgstr "Comanda de aprovizionare '%s' a fost setata la starea de ciornă."
 
 #. module: purchase
 #: field:purchase.order.line,account_analytic_id:0
@@ -747,6 +750,11 @@ msgid ""
 "according to your settings. Once you receive a supplier invoice, you can "
 "match it with the draft invoice and validate it."
 msgstr ""
+"Folosiți acest meniu pentru a controla facturile primite de la furnizori. "
+"OpenERP generează facturi ciorne pentru comenzi de aprovizionare sau "
+"recepții, conform setărilor. După primirea facturii de la furnizor, puteți "
+"să verificați dacă se potrivește cu factura  ciornă și să faceți validarea "
+"facturii."
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_draftpurchaseorder0
@@ -757,7 +765,7 @@ msgstr "RFQ"
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_pending_invoice
 msgid "Supplier Invoices to Receive"
-msgstr ""
+msgstr "Facturi primite de la furnizori"
 
 #. module: purchase
 #: help:purchase.installer,purchase_requisition:0
@@ -1376,7 +1384,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_action_picking_tree4
 msgid "Incoming Shipments"
-msgstr ""
+msgstr "Recepții"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_by_user_all
@@ -1758,6 +1766,9 @@ msgid ""
 "order is 'On order'. The invoice can also be generated manually by the "
 "accountant (Invoice control = Manual)."
 msgstr ""
+"Factura este creată automat dacă controlul facturii din comanda de "
+"aprovizionare este ”la comandă”. Factura poate fi deasemenea generată manual "
+"de un contabil (controlul facturi = manual)."
 
 #. module: purchase
 #: model:process.process,name:purchase.process_process_purchaseprocess0
