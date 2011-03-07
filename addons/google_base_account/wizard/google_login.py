@@ -36,10 +36,12 @@ class google_login(osv.osv_memory):
 
     def google_login(self,cr,uid,user,password,type='',context=None):
         gd_client=False
-        if type=='group': 
-            gd_client=gdata.contacts.client.ContactsClient(source='OpenERP')
-        if type=='contact' :   
+        if type == 'group': 
+            gd_client = gdata.contacts.client.ContactsClient(source='OpenERP')
+        if type == 'contact' :   
             gd_client = gdata.contacts.service.ContactsService()
+        if type == 'calendar':
+            gd_client = gdata.calendar.service.CalendarService()
         try:    
             gd_client.ClientLogin(user, password,gd_client.source)
         except Exception, e:
