@@ -63,15 +63,13 @@ class pos_return(osv.osv_memory):
             context={}
         active_ids = context.get('active_ids')
         result=[]
-        memory={}
         for order in order_obj.browse(cr, uid, active_ids, context=context):
             for line in order.lines:
-                memory = {
+                result.append({
                             'product_id' : line.product_id.id, 
                             'quantity' : line.qty, 
                             'line_id':line.id
-                        }
-                result.append(memory)
+                        })
             res.update({'pos_moves_ids': result})
         return res
 
@@ -91,18 +89,11 @@ class pos_return(osv.osv_memory):
         order_obj =self.pool.get('pos.order')
         line_obj = self.pool.get('pos.order.line')
         pos_current = order_obj.browse(cr, uid, context.get('active_id'), context=context)
-        pos_line_ids = pos_current.lines
-        if pos_line_ids:
-            for pos_line in pos_line_ids:
-                newline_vals = {}
-                for record in current_rec.pos_moves_ids:
-                    if pos_line.id == record.line_id:
-                        less_qty = record.quantity
-                        pos_cur_line = line_obj.browse(cr, uid, pos_line.id, context=context)
-                        qty = pos_cur_line.qty
-                        qty = qty - less_qty
-                        newline_vals.update({'qty':qty})
-                        line_obj.write(cr, uid, pos_line.id, newline_vals, context=context)
+        for pos_line in pos_current.lines:
+            for record in current_rec.pos_moves_ids:
+                if pos_line.id == record.line_id:
+                    less_qty = record.quantity
+                    line_obj.write(cr, uid, pos_line.id, {'qty':pos_line.qty - less_qty}, context=context)
         return {
             'name': _('Add Product'),
             'view_type': 'form',
@@ -156,11 +147,8 @@ class pos_return(osv.osv_memory):
                 for line in order_id.lines:
                     for record in data.pos_moves_ids:
                         if line.id == record.line_id:
-                            try:
-                                qty = record.quantity
-                                amount += qty * line.price_unit
-                            except :
-                                qty = line.qty
+                            qty = record.quantity
+                            amount += qty * line.price_unit
                             stock_move_obj.create(cr, uid, {
                                 'product_qty': qty ,
                                 'product_uos_qty': uom_obj._compute_qty(cr, uid, qty ,line.product_id.uom_id.id),
