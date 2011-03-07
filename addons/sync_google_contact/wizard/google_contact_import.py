@@ -61,14 +61,17 @@ class synchronize_google_contact(osv.osv_memory):
     def _get_group(self, cr, uid, context=None):
         user_obj = self.pool.get('res.users').browse(cr, uid, uid)
         google=self.pool.get('google.login')
-        gd_client = google.google_login(cr,uid,user_obj.gmail_user,user_obj.gmail_password,type='group')
+        
+        gd_client = google.google_login(user_obj.gmail_user,user_obj.gmail_password,type='group')
+        if not gd_client:
+            raise osv.except_osv(_('Error'), _("Authentication fail check the user and password !"))
+        
         query = gdata.contacts.client.ContactsQuery(feed='/m8/feeds/groups/default/full')
         res = []
         if gd_client:
             groups = gd_client.GetGroups(q=query)
             for grp in groups.entry:
                 res.append((grp.id.text, grp.title.text))
-        res.append(('none','None'))
         res.append(('all','All Groups'))
         return res
 
@@ -90,21 +93,19 @@ class synchronize_google_contact(osv.osv_memory):
 
     def import_contact(self, cr, uid, ids, context=None):
         obj = self.browse(cr, uid, ids, context=context)[0]
-        if obj.group_name == 'none':
-            return { 'type': 'ir.actions.act_window_close' }
 
         user_obj = self.pool.get('res.users').browse(cr, uid, uid)
 
         gmail_user = user_obj.gmail_user
-        gamil_pwd = user_obj.gmail_password
+        gmail_pwd = user_obj.gmail_password
 
         google = self.pool.get('google.login')
-        gd_client = google.google_login(cr,uid,user_obj.gmail_user,user_obj.gmail_password,type='contact')
+        gd_client = google.google_login(gmail_user, gmail_pwd, type='contact')
 
-        if not gmail_user or not gamil_pwd:
-            raise osv.except_osv(_('Error'), _("Please specify the user and password !"))
+        if not gd_client:
+            raise osv.except_osv(_('Error'), _("Please specify correct user and password !"))
 
-        if obj.group_name not in ['all','none']:
+        if obj.group_name not in ['all']:
             query = gdata.contacts.service.ContactsQuery()
             query.group = obj.group_name
             contact = gd_client.GetContactsFeed(query.ToUri())
@@ -134,40 +135,24 @@ class synchronize_google_contact(osv.osv_memory):
         contact_ids=[]
         while contact:
             for entry in contact.entry:
-                data = {}
-                google_id = entry.id.text
+                data = self._retreive_data(entry)
+                google_id = data.pop('id')
                 model_data = {
-                    'name': google_id,
+                    'name':  google_id,
                     'model': 'res.partner.address',
                     'module': 'sync_google_contact',
                 }
-                name = tools.ustr(entry.title.text)
-                if name == "None":
-                    name = entry.email[0].address
-                
-                emails = ','.join(email.address for email in entry.email)
-                if name and name != 'None':
-                    data['name'] = name
 
-                if entry.phone_number:
-                    for phone in entry.phone_number:
-                        if phone.rel == gdata.contacts.REL_WORK:
-                            data['phone'] = phone.text
-                        if phone.rel == gdata.contacts.PHONE_MOBILE:
-                            data['mobile'] = phone.text
-                        if phone.rel == gdata.contacts.PHONE_WORK_FAX:
-                            data['fax'] = phone.text
-
-                data_ids = model_obj.search(cr, uid, [('model','=','res.partner.address'), ('name','=',google_id)])
+                data_ids = model_obj.search(cr, uid, [('model','=','res.partner.address'), ('name','=', google_id)])
                 if data_ids:
                     contact_ids = [model_obj.browse(cr, uid, data_ids[0], context=context).res_id]
-                elif emails:
-                    data['email'] = emails
-                    contact_ids = addresss_obj.search(cr, uid, [('email','ilike',emails)])
+                elif data['email']:
+                    contact_ids = addresss_obj.search(cr, uid, [('email', 'ilike', data['email'])])
 
                 if contact_ids:
                     addresses.append(contact_ids[0])
                     self.update_contact(cr, uid, contact_ids, data, context=context)
+                    res_id = contact_ids[0]
                 if not contact_ids:
                     #create or link to an existing partner only if it's a new contact
                     res_id = addresss_obj.create(cr, uid, data, context=context)
@@ -176,6 +161,8 @@ class synchronize_google_contact(osv.osv_memory):
                         partner_id, data = self.create_partner(cr, uid, data, context=context)
                         partner_ids.append(partner_id)
                     addresses.append(res_id)
+                        
+                if not data_ids: #link to google_id if it was not the case before            
                     model_data.update({'res_id': res_id})
                     model_obj.create(cr, uid, model_data, context=context)
 
@@ -186,32 +173,46 @@ class synchronize_google_contact(osv.osv_memory):
             return partner_ids
         else:
             return addresses
+        
+    def _retreive_data(self, entry):
+        data = {}
+        data['id'] = entry.id.text
+        name = tools.ustr(entry.title.text)
+        if name == "None":
+            name = entry.email[0].address
+        data['name'] = name
+        emails = ','.join(email.address for email in entry.email)
+        data['email'] = emails
+                    
+
+        if entry.phone_number:
+            for phone in entry.phone_number:
+                if phone.rel == gdata.contacts.REL_WORK:
+                    data['phone'] = phone.text
+                if phone.rel == gdata.contacts.PHONE_MOBILE:
+                    data['mobile'] = phone.text
+                if phone.rel == gdata.contacts.PHONE_WORK_FAX:
+                    data['fax'] = phone.text
+        return data
 
     def update_contact(self, cr, uid, contact_ids, data, context=None):
         addresss_obj = self.pool.get('res.partner.address')
-        if context == None:
-            context = {}
-        res = {}
+        vals = {}
         addr = addresss_obj.browse(cr,uid,contact_ids)[0]
         name = str((addr.name or addr.partner_id and addr.partner_id.name or '').encode('utf-8'))
-        addres=addr.partner_id
-        email = addr.email
-        phone = addr.phone
-        mobile = addr.mobile
-        fax = addr.fax
+
         if not name:
-            res['name']=data.get('name','')
-        if not email:
-            res['email']=data.get('email','')
-        if not mobile:
-            res['mobile']=data.get('mobile','')
-        if not phone:
-            res['phone']=data.get('phone','')
-        if not fax:
-            res['fax']=data.get('fax','')
-        if data.get('partner_id') and not addres :
-            res['partner_id'] = data.get('partner_id')
-        addresss_obj.write(cr,uid,contact_ids,res,context=context)
+            vals['name']=data.get('name','')
+        if not addr.email:
+            vals['email']=data.get('email','')
+        if not addr.mobile:
+            vals['mobile']=data.get('mobile','')
+        if not addr.phone:
+            vals['phone']=data.get('phone','')
+        if not addr.fax:
+            vals['fax']=data.get('fax','')
+            
+        addresss_obj.write(cr,uid,contact_ids,vals,context=context)
         return {'type': 'ir.actions.act_window_close'}
 
 synchronize_google_contact()
