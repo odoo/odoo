@@ -117,8 +117,6 @@ class hr_contract(osv.osv):
         'working_hours': fields.many2one('resource.calendar','Working Schedule'),
         'wage': fields.float('Wage', digits=(16,2), required=True, help="Basic Salary of the employee"),
         'advantages': fields.text('Advantages'),
-        'advantages_net': fields.float('Net Advantages Value', digits=(16,2)),
-        'advantages_gross': fields.float('Gross Advantages Value', digits=(16,2)),
         'notes': fields.text('Notes'),
         'permit_no': fields.char('Work Permit No', size=256, required=False, readonly=False),
         'passport_id': fields.many2one('hr.passport', 'Passport No', required=False),
