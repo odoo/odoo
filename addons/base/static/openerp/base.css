@@ -129,6 +129,33 @@ body {
     border-bottom-right-radius: 7px;
 }
 
+.openerp .searchview_group_string {
+    display: block;
+    color: #7D7979;
+    font-weight: bold;
+    padding: 2px 0 2px 10px;
+    margin-top: 4px;
+    text-decoration: none;
+}
+.openerp .searchview_group_string:hover {
+    background-color: #ccc;
+}
+.openerp .searchview_group.folded .searchview_group_string {
+    background: url("img/ui/group-folded.png") no-repeat scroll 0 50%;
+}
+.openerp .searchview_group.folded .searchview_group_content {
+    display: none;
+}
+.openerp .searchview_group.expanded .searchview_group_string {
+    background: url("img/ui/group-expanded.png") no-repeat scroll 0 50%;
+}
+.openerp .searchview_group.expanded .searchview_group_content {
+    display: block;
+}
+.openerp .searchview_group_content {
+    padding-left: 10px;
+}
+
 /* Inputs */
 .openerp input[type="text"], .openerp input[type="password"], .openerp select, .openerp textarea {
     -moz-box-sizing: border-box;

@@ -154,12 +154,35 @@
             </div>
         </td>
     </t>
-    <t t-if="node.children and node.tag != 'newline'">
-        <t t-foreach="node.children" t-as="node">
-            <t t-call="SearchView.node">
-                <t t-set="previous_node_type" t-value="node_all[node_index - 1] ? node_all[node_index - 1].tag : ''"/>
-                <t t-set="next_node_type" t-value="node_all[node_index + 1] ? node_all[node_index + 1].tag : ''"/>
-            </t>
+    <t t-if="node.tag == 'group'">
+        <!-- if group is called without a <newline/> before, the table should be closed.
+            I think we'll need preprocessing, all those escaped tables are too ugly -->
+        <td>
+            <div t-att-class="'searchview_group ' + (node.attrs.expand == '0' ? 'folded' : 'expanded')">
+                <a class="searchview_group_string" href="#" onclick="$(this).parent().toggleClass('folded expanded')"><t t-esc="node.attrs.string"/></a>
+                <div class="searchview_group_content">
+                    <table border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                        <t t-call="SearchView.recurse"/>
+                    </tr>
+                    </table>
+                </div>
+            </div>
+        </td>
+        &lt;/tr&gt;
+        &lt;/table&gt;
+        &lt;table border="0" cellspacing="0" cellpadding="0"&gt;
+        &lt;tr&gt;
+    </t>
+    <t t-if="node.children and node.tag != 'newline' and node.tag != 'group'">
+        <t t-call="SearchView.recurse"/>
+    </t>
+</t>
+<t t-name="SearchView.recurse" t-trim="inner">
+    <t t-foreach="node.children" t-as="node">
+        <t t-call="SearchView.node">
+            <t t-set="previous_node_type" t-value="node_all[node_index - 1] ? node_all[node_index - 1].tag : ''"/>
+            <t t-set="next_node_type" t-value="node_all[node_index + 1] ? node_all[node_index + 1].tag : ''"/>
         </t>
     </t>
 </t>
