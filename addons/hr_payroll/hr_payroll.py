@@ -385,40 +385,41 @@ class hr_payslip(osv.osv):
             others = 0.0
             contract = rs.employee_id.contract_id
             obj = {'basic': contract.wage}
-            function = contract.struct_id.id
-            lines = []
-            if function:
-                func = payroll_struct_obj.read(cr, uid, function, ['rule_ids'], context=context)
-                lines = salary_rule_pool.browse(cr, uid, func['rule_ids'], context=context)
-            for line in lines:
-                amount = 0.0
-                if line.amount_type == 'per':
-                    try:
-                        amount = line.amount * eval(str(line.computational_expression), obj)
-                    except Exception, e:
-                        raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ') % (e))
-                elif line.amount_type in ('fix'):
-                    amount = line.amount
-                cd = line.category_id.code.lower()
-                obj[cd] = amount
-                contrib = 0.0
-                if amount < 0:
-                    deduct += amount
-                    others += contrib
-                    amount -= contrib
-                else:
-                    allow += amount
-                    others -= contrib
-                    amount += contrib
-                salary_rule_pool.write(cr, uid, [line.id], {'total': amount}, context=context)
-            record = {
-                'allounce': allow,
-                'deduction': deduct,
-                'other_pay': others,
-                'state': 'draft',
-                'total_pay': abs(contract.wage + allow + deduct)
-            }
-            res[rs.id] = record
+            if contract.struct_id:
+                function = contract.struct_id.id
+                lines = []
+                if function:
+                    func = payroll_struct_obj.read(cr, uid, function, ['rule_ids'], context=context)
+                    lines = salary_rule_pool.browse(cr, uid, func['rule_ids'], context=context)
+                for line in lines:
+                    amount = 0.0
+                    if line.amount_type == 'per':
+                        try:
+                            amount = line.amount * eval(str(line.computational_expression), obj)
+                        except Exception, e:
+                            raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ') % (e))
+                    elif line.amount_type in ('fix'):
+                        amount = line.amount
+                    cd = line.category_id.code.lower()
+                    obj[cd] = amount
+                    contrib = 0.0
+                    if amount < 0:
+                        deduct += amount
+                        others += contrib
+                        amount -= contrib
+                    else:
+                        allow += amount
+                        others -= contrib
+                        amount += contrib
+                    salary_rule_pool.write(cr, uid, [line.id], {'total': amount}, context=context)
+                record = {
+                    'allounce': allow,
+                    'deduction': deduct,
+                    'other_pay': others,
+                    'state': 'draft',
+                    'total_pay': abs(contract.wage + allow + deduct)
+                }
+                res[rs.id] = record
         return res
 
     _columns = {
