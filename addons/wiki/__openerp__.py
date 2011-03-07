@@ -28,7 +28,7 @@ The base module to manage documents(wiki)
 
 keep track for the wiki groups, pages, and history
     """,
-    'author': 'OpenERP SA & Axelor',
+    'author': ['OpenERP SA', 'Axelor'],
     'website': 'http://openerp.com',
     'depends': ['knowledge'],
     'web_depends': ['widget_wiki'],
