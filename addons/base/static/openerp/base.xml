@@ -118,29 +118,11 @@
         <input type="button" value="Clear"/>
     </div>
 </t>
-<t t-name="SearchView.node">
-<t t-if="node.tag"> <!-- Should remove this condition once the xml2json removes whitespace -->
-    <!--
-    tag: <t t-esc="node.tag"/>
-    <t t-esc="node['@string']"/>
-    <t t-esc="node['@string']"/>
-        <br/>
-        <t t-esc="node['@name']"/>
-    -->
+<t t-name="SearchView.node" t-trim="inner">
     <t t-if="node.tag == 'filter'">
         <t t-if="previous_node_type != 'filter'">
             &lt;td nowrap="true" valign="bottom" class="filter_label_group"&gt;
         </t>
-            <!-- TODO: buttons are inline elements. should not have whitespaces between them.
-             Either implement trim in qweb or use css3 white-space-collapsing (not stable now)
-             
-             Yes implement t-trim it was noted in qweb.js as a TODO:
-
-             trim 'left' 'right' 'both' is it needed ?  inner=render_trim(l_inner.join(), t_att)
-
-             Also add a TODO about t-code=""
-             
-             -->
             <button type="button" t-att-title="node.attrs.help" t-att-class="node.attrs.string ? 'filter_label' : 'filter_icon'">
                 <img t-if="node.attrs.icon" t-att-src="'/base/static/openerp/img/icons/' + node.attrs.icon + '.png'" width="16" height="16"/>
                 <br t-if="node.attrs.icon and node.attrs.string"/>
@@ -180,7 +162,6 @@
             </t>
         </t>
     </t>
-</t>
 </t>
 <t t-name="Action">
     <!-- TODO prefix id with the element_id of the controller t-attf-id="#{prefix}_localid" -->

@@ -81,16 +81,28 @@ var QWeb={
 	eval_bool:function(e,v){
 		return this.eval_object(e,v)?true:false;
 	},
+	trim : function(v, mode) {
+		if (!v || !mode) return v;
+		if (mode == 'both') {
+			return v.replace(/^\s*|\s*$/g, "");
+		} else if (mode == "left") {
+			return v.replace(/^\s*/, "");
+		} else if (mode == "right") {
+			return v.replace(/\s*$/, "");
+		} else {
+			return v;
+		}
+	},
 	escape_text:function(s){
 		return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
 	},
 	escape_att:function(s){
 		return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")
 	},
-	render_node:function(e,v){
+	render_node : function(e, v, inner_trim) {
 		var r=""
 		if(e.nodeType==3) {
-			r=e.data;
+			r = inner_trim ? this.trim(e.data, inner_trim) : e.data;
 		} else if(e.nodeType==1) {
 			var g_att={};
 			var t_att={};
@@ -115,6 +127,9 @@ var QWeb={
 					g_att[an]=av
 				}
 			}
+			if (inner_trim && !t_att["trim"]) {
+				t_att["trim"] = "inner " + inner_trim;
+			}
 			if (t_render) {
 				r = this[t_render](e, t_att, g_att, v)
 			} else {
@@ -124,9 +139,20 @@ var QWeb={
 		return r;
 	},
 	render_element:function(e,t_att,g_att,v){
-		var inner="",ec=e.childNodes;
+		var inner = "", ec = e.childNodes, trim = t_att["trim"], inner_trim;
+		if (trim) {
+			if (trim.match(/(^|\W)(inner)($|\W)/)) {
+				inner_trim = true;
+				trim = "both";
+			}
+			var tm = trim.match(/(^|\W)(both|left|right)($|\W)/);
+			if (tm) trim = tm[2];
+		}
 		for (var i=0; i<ec.length; i++) {
-			inner+=this.render_node(ec[i],v)
+			inner += inner_trim ? this.trim(this.render_node(ec[i], v, inner_trim ? trim : null), trim) : this.render_node(ec[i], v, inner_trim ? trim : null);
+		}
+		if (trim && !inner_trim) {
+			inner = this.trim(inner, trim);
 		}
 		if(e.tagName==this.prefix) {
 			return inner;
@@ -136,8 +162,7 @@ var QWeb={
 				av=g_att[an]
 				att+=" "+an+'="'+this.escape_att(av)+'"'
 			}
-			r=inner.length ? "<"+e.tagName+att+">"+inner+"</"+e.tagName+">" : "<"+e.tagName+att+"/>"
-			return r
+			return inner.length ? "<" + e.tagName + att + ">" + inner + "</" + e.tagName + ">" : "<" + e.tagName + att + "/>";
 		}
 	},
 	render_att_att:function(e,t_att,g_att,v,ext,av){
