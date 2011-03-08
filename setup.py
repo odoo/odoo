@@ -55,39 +55,28 @@ setup(
     license=license,
     install_requires=[
         "CherryPy >= 3.1.2",
-        "Mako >= 0.2.4",
         "Babel >= 0.9.4",
-        "FormEncode >= 1.2.2",
         "simplejson >= 2.0.9",
         "python-dateutil >= 1.4.1",
-        "pytz >= 2009j"
     ],
     zip_safe=False,
     packages=[
-        'openobject',
-        'openobject.admin',
-        'openobject.admin.i18n',
-        'openobject.controllers',
-        'openobject.i18n',
-        'openobject.test',
-        'openobject.tools',
-        'openobject.widgets'
+        'addons',
+        'addons.base',
+        'addons.base.controllers',
+        'addons.base_calendar',
+        'addons.base_hello',
+        'openerpweb',
     ],
     classifiers=[
-        'Development Status :: 5 - Production/Stable',
+        'Development Status :: 6 - Production/Stable',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
         'Environment :: Web Environment',
         'Topic :: Office/Business :: Financial',
         ],
     scripts=['scripts/openerp-web'],
-    data_files=(find_data_files('addons/openerp')
-              + find_data_files('addons/view_calendar')
-              + find_data_files('addons/view_diagram')
-              + find_data_files('addons/view_graph')
-              + find_data_files('addons/widget_ckeditor')
-              + find_data_files('doc', patterns='')
-              + find_data_files('openobject', patterns=r'.+\.(cfg|css|js|mako|gif|png|jpg|ico)')
+    data_files=(find_data_files('addons')
               + opts.pop('data_files', [])
     ),
     **opts
