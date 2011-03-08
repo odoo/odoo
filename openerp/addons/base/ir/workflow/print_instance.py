@@ -25,7 +25,7 @@ import netsvc
 import report,pooler,tools
 from operator import itemgetter
 
-def graph_get(cr, graph, wkf_ids, nested=False, workitem={}):
+def graph_get(cr, graph, wkf_ids, nested, workitem, processed_subflows):
     import pydot
     cr.execute('select * from wkf_activity where wkf_id in ('+','.join(['%s']*len(wkf_ids))+')', wkf_ids)
     nodes = cr.dictfetchall()
@@ -34,11 +34,12 @@ def graph_get(cr, graph, wkf_ids, nested=False, workitem={}):
     actto = {}
     for n in nodes:
         activities[n['id']] = n
-        if n['subflow_id'] and nested:
+        if n['subflow_id'] and nested and n['subflow_id'] not in processed_subflows:
+            processed_subflows.add(n['subflow_id']) # don't create multiple times the same cluster.
             cr.execute('select * from wkf where id=%s', (n['subflow_id'],))
             wkfinfo = cr.dictfetchone()
-            graph2 = pydot.Cluster('subflow'+str(n['subflow_id']), fontsize='12', label = """\"Subflow: %s\\nOSV: %s\"""" % ( n['name'], wkfinfo['osv']) )
-            (s1,s2) = graph_get(cr, graph2, [n['subflow_id']], nested,workitem)
+            graph2 = pydot.Cluster('subflow'+str(n['subflow_id']), fontsize='12', label = "\"Subflow: %s\\nOSV: %s\"" % ( n['name'], wkfinfo['osv']) )
+            (s1,s2) = graph_get(cr, graph2, [n['subflow_id']], True, workitem, processed_subflows)
             graph.add_subgraph(graph2)
             actfrom[n['id']] = s2
             actto[n['id']] = s1
@@ -48,11 +49,22 @@ def graph_get(cr, graph, wkf_ids, nested=False, workitem={}):
                 args['style']='filled'
                 args['color']='lightgrey'
             args['label']=n['name']
+            workitems = ''
+            if n['id'] in workitem:
+                workitems = '\\nx ' + str(workitem[n['id']])
+                args['label'] += workitems
+                args['color'] = "red"
+                args['style']='filled'
             if n['subflow_id']:
                 args['shape'] = 'box'
-            if n['id'] in workitem:
-                args['label']+='\\nx '+str(workitem[n['id']])
-                args['color'] = "red"
+                if nested and n['subflow_id'] in processed_subflows:
+                    cr.execute('select * from wkf where id=%s', (n['subflow_id'],))
+                    wkfinfo = cr.dictfetchone()
+                    args['label'] = \
+                        '\"Subflow: %s\\nOSV: %s\\n(already expanded)%s\"' % \
+                        (n['name'], wkfinfo['osv'], workitems)
+                    args['color'] = 'green'
+                    args['style'] ='filled'
             graph.add_node(pydot.Node(n['id'], **args))
             actfrom[n['id']] = (n['id'],{})
             actto[n['id']] = (n['id'],{})
@@ -104,7 +116,9 @@ def graph_instance_get(cr, graph, inst_id, nested=False):
         for (subflow_id,) in cr.fetchall():
             workitems.update(workitem_get(subflow_id))
         return workitems
-    graph_get(cr, graph, [x[0] for x in inst], nested, workitem_get(inst_id))
+
+    processed_subflows = set()
+    graph_get(cr, graph, [x[0] for x in inst], nested, workitem_get(inst_id), processed_subflows)
 
 #
 # TODO: pas clean: concurrent !!!
