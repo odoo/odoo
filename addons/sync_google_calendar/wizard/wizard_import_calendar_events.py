@@ -29,6 +29,8 @@ import dateutil
 from dateutil.tz import *
 from dateutil.parser import *
 
+import urllib
+
 try:
     import gdata
     import gdata.calendar.service
@@ -112,9 +114,16 @@ class synchronize_google_calendar_events(osv.osv_memory):
 
         if not gmail_user or not gamil_pwd:
             raise osv.except_osv(_('Error'), _("Please specify the user and password !"))
+        
+        if obj.calendar_name != 'all':
+            events_query = gdata.calendar.service.CalendarEventQuery(user=urllib.unquote(obj.calendar_name.split('/')[~0]))
+            events_query.start_index = 1
+            events_query.max_results = 1000
+            
+            event_feed = gd_client.GetCalendarEventFeed(events_query.ToUri())
+        else:
+            event_feed = gd_client.GetCalendarEventFeed()
 
-        # TODO: Get events from selected calendar only.
-        event_feed = gd_client.GetCalendarEventFeed()
         meeting_ids = []
         for feed in event_feed.entry:
             google_id = feed.id.text
