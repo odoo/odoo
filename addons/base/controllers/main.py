@@ -66,13 +66,18 @@ class Hello(openerpweb.Controller):
 
 class Connection(openerpweb.Controller):
     _cp_path = "/base/connection"
-    def filesofmodulemap(self, ):
-        # TODO root should be a global config
-        files=[]
-        for j in cssfiles.get(i,[]):
-            files.append(j)
 
-    def fileconcat(self, file_list):
+    def manifest_glob(self, modlist, key):
+        files = []
+        for i in mods.split(','):
+            globlist = openerpweb.addons_manifest.get(i,{}).get('css',[])
+            for j in globlist:
+                tmp = glob.glob(os.path.join(path_addons,i,j))
+                files.append(tmp)
+        print modlist, key, files
+        return files
+
+    def concat_files(self, file_list):
         """ Concatenate file content
         return (concat,timestamp)
         concat: concatenation of file content
@@ -90,38 +95,28 @@ class Connection(openerpweb.Controller):
         files_concat = "".join(files_content)
         return files_concat
 
+    def list_modules(self, req):
+        return 
+
+    @openerpweb.jsonrequest
+    def manifest_files(self, req, key, mods):
+        files = self.manifest_glob(mods, key)
+        return {'files': files}
+
     def css(self, req):
         # TODO http get argument mods is a comma seprated value of modules
         mods = 'base,base_hello'
-        files = []
-        for i in mods.split(','):
-            globlist = openerpweb.addons_manifest.get(i,{})
-            for j in globlist:
-                tmp = glob.glob(os.path.join(path_addons,i,j))
-                print tmp
-                files.append(tmp)
-
-        # TODO modules should list their css and js in __openerp__
-        # TODO cssfiles should be a global registry of files
-        cssfiles = {
-            'base': ['base/static/openerp/base.css']
-        }
-        files = filesofmodulemap(mods)
-        (concat, timestamp) = self.fileconcat(files)
+        files = self.manifest_glob(mods.split(','), 'css')
+        (concat, timestamp) = self.concat_files(files)
         # TODO request set the Date of last modif and Etag
         return concat
     css.exposed=1
 
     def js(self, req):
         # TODO http get argument mods is a comma seprated value of modules
-        mods = 'base,base_calendar'
-        # TODO modules should list their css and js in __openerp__
-        # TODO cssfiles should be a global registry of files
-        jsfiles = {
-            'base': ['base/static/openerp/openerp.base.js']
-        }
-        files = filesofmodulemap(mods)
-        (concat, timestamp) = self.fileconcat(files)
+        mods = 'base,base_hello'
+        files = self.manifest_glob(mods.split(','), 'js')
+        (concat, timestamp) = self.concat_files(files)
         # TODO request set the Date of last modif and Etag
         return concat
     js.exposed=1
