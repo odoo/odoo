@@ -21,7 +21,7 @@
 {
     "name" : "Base - Password Encryption",
     "version" : "1.1",
-    "author" : "FS3 & OpenERP SA",
+    "author" : ['OpenERP SA', "FS3"],
     "maintainer" : "OpenERP SA",
     "website" : "http://www.openerp.com",
     "category" : "Generic Modules/Base",

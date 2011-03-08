@@ -24,9 +24,9 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 import pooler
-
 from report.interface import report_rml
 from report.interface import toxml
+import tools
 
 one_week = relativedelta(days=7)
 num2day = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
@@ -38,12 +38,12 @@ class report_custom(report_rml):
 
     def create_xml(self, cr, uid, ids, datas, context=None):
         obj_emp = pooler.get_pool(cr.dbname).get('hr.employee')
-        
+
         start_date = datetime.strptime(datas['form']['init_date'], '%Y-%m-%d')
         end_date = datetime.strptime(datas['form']['end_date'], '%Y-%m-%d')
         first_monday = start_date - relativedelta(days=start_date.date().weekday())
         last_monday = end_date + relativedelta(days=7 - end_date.date().weekday())
-        
+
         if last_monday < first_monday:
             first_monday, last_monday = last_monday, first_monday
 
@@ -58,7 +58,7 @@ class report_custom(report_rml):
               <name>%s</name>
               %%s
             </user>
-            ''' % ustr(toxml(emp['name']))
+            ''' % tools.ustr(toxml(emp['name']))
             while monday != last_monday:
                 #### Work hour calculation
                 sql = '''
@@ -83,7 +83,7 @@ class report_custom(report_rml):
                     for att in attendances:
                         dt = datetime.strptime(att['name'], '%Y-%m-%d %H:%M:%S')
                         if ldt and att['action'] == 'sign_out':
-                            week_wh[ldt.date().weekday()] = week_wh.get(ldt.date().weekday(), 0) + ((dt - ldt).seconds/3600)
+                            week_wh[ldt.date().weekday()] = week_wh.get(ldt.date().weekday(), 0) + (float((dt - ldt).seconds)/3600)
                         else:
                             ldt = dt
 
