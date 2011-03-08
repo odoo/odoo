@@ -69,10 +69,10 @@ class Connection(openerpweb.Controller):
 
     def manifest_glob(self, modlist, key):
         files = []
-        for i in mods.split(','):
+        for i in modlist.split(','):
             globlist = openerpweb.addons_manifest.get(i,{}).get('css',[])
             for j in globlist:
-                tmp = glob.glob(os.path.join(path_addons,i,j))
+                tmp = glob.glob(os.path.join(openerpweb.path_addons,i,j))
                 files.append(tmp)
         print modlist, key, files
         return files
