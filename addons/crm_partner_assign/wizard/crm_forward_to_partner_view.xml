@@ -92,16 +92,15 @@
             </field>
         </record>
 
+        <act_window id="action_crm_send_mass_forward"
+            multi="True"
+            key2="client_action_multi" name="Mass forward to partner"
+            res_model="crm.lead.mass.forward.to.partner" src_model="crm.lead"
+            view_mode="form" target="new" view_type="form"
+            context="{'mass_forward' : True}"
+            view_id="crm_forward_mass_mail_view"
+        />
 
-        <record model="ir.actions.act_window" id="action_crm_send_mass_forward">
-            <field name="name">Mass forward to partner</field>
-            <field name="res_model">crm.lead.mass.forward.to.partner</field>
-            <field name="src_model">crm.lead</field>
-            <field name="view_id" ref="crm_forward_mass_mail_view"/>
-            <field name="target">new</field>
-            <field name="key2">client_action_multi</field>
-            <field name="context">{'mass_forward' : True}</field>
-        </record>
 
 
     </data>

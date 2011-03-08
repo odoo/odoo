@@ -208,7 +208,7 @@ class crm_lead_forward_to_partner(osv.osv_memory):
         return {'type': 'ir.actions.act_window_close'}
 
     def get_lead_details(self, cr, uid, lead_id, context=None):
-        template = ["""Dear,
+        body = ["""Dear,
 
 Below is possibly an interesting lead for you.
 
@@ -250,7 +250,7 @@ Kind regards, OpenERP Team
                     body.append("%s: %s" % (field_definition.string, value or ''))
         elif lead.type == 'opportunity':
             pa = lead.partner_address_id
-            body = [
+            body += [
                 "Partner: %s" % (lead.partner_id and lead.partner_id.name_get()[0][1]),
                 "Contact: %s" % (pa.name or ''),
                 "Title: %s" % (pa.title or ''),
@@ -268,7 +268,7 @@ Kind regards, OpenERP Team
                 "Lead Category: %s" % (lead.categ_id and lead.categ_id.name or ''),
                 "Details: %s" % (lead.description or ''),
             ]
-        return "\n".join(template + body + ['---'])
+        return "\n".join(body + ['---'])
 
     def default_get(self, cr, uid, fields, context=None):
         """
@@ -297,14 +297,12 @@ Kind regards, OpenERP Team
             addr = partner_obj.address_get(cr, uid, [partner[0].id], ['contact'])
             email = self.pool.get('res.partner.address').browse(cr, uid, addr['contact']).email
 
-
-
         body = self._get_case_history(cr, uid, defaults.get('history', 'latest'), lead.id, context=context)
         defaults.update({
             'subject' : '%s: %s - %s' % (_('Fwd'), 'Openerp lead forward', lead.name),
             'body' : body,
             'email_cc' : email_cc,
-            'email_to' : email,
+            'email_to' : email or 'dummy@dummy.ly'
         })
         return defaults
 
@@ -321,9 +319,6 @@ class crm_lead_mass_forward_to_partner(osv.osv_memory):
         active_ids = context.get('active_ids')
         case_obj = self.pool.get('crm.lead')
         for case in case_obj.browse(cr, uid, active_ids, context=context):
-            if case.type != "opportunity":
-                continue
-
             if not case.partner_assigned_id:
                 case_obj.assign_partner(cr,uid, [case.id], context=context)
                 case = case_obj.browse(cr, uid, case.id, context=context)
