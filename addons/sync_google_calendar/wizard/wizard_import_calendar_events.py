@@ -87,7 +87,7 @@ class synchronize_google_calendar_events(osv.osv_memory):
         calendars = gd_client.GetAllCalendarsFeed()
         for cal in calendars.entry:
             res.append((cal.id.text, cal.title.text))
-        res.append(('all','All Calendars'))
+        res.append(('default','Default Calendar'))
         return res
     
     _columns = {
@@ -95,7 +95,7 @@ class synchronize_google_calendar_events(osv.osv_memory):
     }
     
     _defaults = {
-        'calendar_name': 'all',
+        'calendar_name': 'default',
     }
     
     def import_calendar_events(self, cr, uid, ids, context=None):
@@ -115,11 +115,10 @@ class synchronize_google_calendar_events(osv.osv_memory):
         if not gmail_user or not gamil_pwd:
             raise osv.except_osv(_('Error'), _("Please specify the user and password !"))
         
-        if obj.calendar_name != 'all':
+        if obj.calendar_name != 'default':
             events_query = gdata.calendar.service.CalendarEventQuery(user=urllib.unquote(obj.calendar_name.split('/')[~0]))
             events_query.start_index = 1
             events_query.max_results = 1000
-            
             event_feed = gd_client.GetCalendarEventFeed(events_query.ToUri())
         else:
             event_feed = gd_client.GetCalendarEventFeed()
