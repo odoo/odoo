@@ -39,6 +39,7 @@
         </field>
     </record>
     <record model="ir.actions.act_window" id="action_auction_artist">
+        <field name="name">Auction Artist</field>
         <field name="res_model">auction.artists</field>
         <field name="view_type">form</field>
         <field name="view_id" ref="view_auction_artist_tree"/>
@@ -76,12 +77,13 @@
     </record>
 
     <record model="ir.actions.act_window" id="action_auction_object_categories">
+        <field name="name">Auction object Categories</field>
         <field name="res_model">auction.lot.category</field>
         <field name="view_type">form</field>
         <field name="view_id" ref="view_auction_object_categories_tree"/>
     </record>
 
-    <menuitem name="Object Categories" parent="auction_config_menu" action="action_auction_object_categories" 
+    <menuitem name="Object Categories" parent="auction_config_menu" action="action_auction_object_categories"
                 id="menu_auction_object_cat" groups="group_auction_manager"/>
 
    <!--  Auction Management/Auction Dates/New Auction Dates  -->
@@ -759,6 +761,7 @@
     </record>
 
     <record model="ir.actions.act_window" id="action_bid_open">
+        <field name="name">Bid Open</field>
         <field name="res_model">auction.bid</field>
         <field name="view_mode">tree,form</field>
     </record>

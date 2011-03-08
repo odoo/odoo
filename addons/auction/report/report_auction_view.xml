@@ -168,12 +168,14 @@ Objects per Day
 
 
     <record model="ir.actions.act_window" id="action_report_auction_object_date_tree_my">
+        <field name="name">Report Auction object date tree</field>
         <field name="res_model">report.auction.object.date</field>
         <field name="view_type">form</field>
         <field name="view_mode">graph,tree</field>
         <field name="domain">[('user_id','=',uid),('month','=',time.strftime('%Y-%m-01'))]</field>
     </record>
     <record model="ir.actions.act_window" id="action_report_auction_object_date_tree">
+        <field name="name">Report Auction object date</field>
         <field name="res_model">report.auction.object.date</field>
         <field name="view_type">form</field>
         <field name="view_mode">graph,tree</field>
@@ -211,6 +213,7 @@ Auction adjudication
     </record>
 
     <record model="ir.actions.act_window" id="action_report_auction_adjudication_tree">
+        <field name="name">Report Auction Adjudication tree</field>
         <field name="res_model">report.auction.adjudication</field>
         <field name="view_type">form</field>
         <field name="view_mode">graph,tree</field>
