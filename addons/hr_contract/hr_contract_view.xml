@@ -2,6 +2,83 @@
 <openerp>
     <data>
 
+        <!-- Passport Views    -->
+        <record id="hr_passport_form" model="ir.ui.view">
+            <field name="name">hr.passport.form</field>
+            <field name="model">hr.passport</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Passport">
+                    <group col="6" colspan="4">
+                        <field name="name" select="1" colspan="4"/>
+                        <field name="employee_id" />
+                    </group>
+                    <group col="2" colspan="2">
+                        <separator string="Country &amp; Address" colspan="4"/>
+                        <field name="country_id" select="1"/>
+                        <field name="address_id" select="1"/>
+                    </group>
+                    <group col="2" colspan="2">
+                        <separator string="Valid From" colspan="2"/>
+                        <field name="date_issue" select="1"/>
+                        <field name="date_expire" select="1"/>
+                    </group>
+                    <notebook colspan="4">
+                        <page string="Description">
+                            <separator string="Description" colspan="2"/>
+                            <field name="note" colspan="4" nolabel="1"/>
+                        </page>
+                    </notebook>
+                </form>
+            </field>
+        </record>
+        <record id="hr_passport_tree" model="ir.ui.view">
+            <field name="name">hr.passport.tree</field>
+            <field name="model">hr.passport</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Passport">
+                    <field name="name" />
+                    <field name="employee_id" />
+                    <field name="address_id"/>
+                    <field name="country_id" />
+                    <field name="date_expire"/>
+                    <field name="date_issue" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_hr_passport_filter" model="ir.ui.view">
+            <field name="name">hr.passport.select</field>
+            <field name="model">hr.passport</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Passport">
+                    <group col="8" colspan="4">
+                        <field name="name"/>
+                        <field name="employee_id"/>
+                        <field name="country_id"/>
+                        <field name="address_id"/>
+                    </group>
+                    <newline/>
+                    <group col="8" colspan="4" expand="0" string="Group By...">
+                        <filter string="Employees" icon="terp-partner" name="employee_id" context="{'group_by':'employee_id'}"/>
+                        <filter string="Country" name="country_id" icon="terp-go-home" context="{'group_by':'country_id'}"/>
+                        <filter string="Expire" name="date_expire" icon="terp-go-month" context="{'group_by':'date_expire'}"/>
+                        <filter string="Issue" name="date_issue" icon="terp-go-month" context="{'group_by':'date_issue'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        <record id="action_hr_passport_tree" model="ir.actions.act_window">
+            <field name="name">All Passports</field>
+            <field name="res_model">hr.passport</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="hr_passport_tree"/>
+            <field name="search_view_id" ref="view_hr_passport_filter"/>
+        </record>
+        <!-- End Passport Views -->
+
       <!--  <record id="hr_contract_wage_type_view_form" model="ir.ui.view">
             <field name="name">hr.contract.wage.type.view.form</field>
             <field name="model">hr.contract.wage.type</field>
