@@ -5,18 +5,16 @@
 <t t-name="interface">
     <div id="oe_loading" class="loading"></div>
     <div id="oe_login" class="login"></div>
-    <div id="oe_header" style="padding: 4px; border-bottom: 1px solid #000;">
-        <h2>OpenERP Web Client <span style="font-size:50%; font-weight: normal;"><br/>Codename: from __future__ import openerpweb</span></h2>
-    </div>
+    <div id="oe_header" class="header"></div>
     <div id="oe_menu" style="border-bottom: 1px solid #000;"></div>
-    <div id="oe_main" style="padding-bottom: 6px; border-bottom: 1px solid #000;"></div>
-    <div id="oe_footer" style="text-align: center; font-size: 75%;">
+    <div id="oe_main" class="main"></div>
+    <div id="oe_footer" class="footer">
         Powered by OpenERP.
     </div>
-    <div id="oe_errors" style="font-size: 90%;">
-    Debug:
+    <div id="oe_errors">
+        Debug:
     </div>
-    <div style="position: absolute; right: 0; top: 0;">
+    <div style="position: absolute; right: 2px; top: 38px;">
         <button onclick="QWeb.add_template('base.xml'); $('body').css('background-color', '#FFFF9C'); setTimeout(function() { $('body').css('background-color', '#FFF'); }, 500);">Reload QWEB</button>
     </div>
 </t>
@@ -29,6 +27,17 @@
         Password: <input type="password" name="password" value="a"/><br/>
         <input type="submit" name="submit" value="Login"/>
     </form>
+</t>
+<t t-name="Header">
+    <a href="/" class="company_logo_link">
+        <img src="/base/static/openerp/img/logo.png" border="0" class="company_logo"/>
+    </a>
+    <h1 class="header_title">
+        <span class="company">$company</span> - (<span class="database">$database</span>)<br/>
+        <small class="username">$username</small>
+    </h1>
+    <div class="header_corner">
+    </div>
 </t>
 <t t-name="Menu.root">
     <ul class="sf-menu">

@@ -371,7 +371,12 @@ openerp.base.Loading =  openerp.base.Controller.extend({
 });
 
 openerp.base.Header =  openerp.base.Controller.extend({
-// TODO both header and footer
+    init: function(session, element_id) {
+        this._super(session, element_id);
+    },
+    start: function() {
+        this.$element.html(QWeb.render("Header", {}));
+    },
 });
 
 openerp.base.Login =  openerp.base.Controller.extend({
@@ -777,6 +782,8 @@ openerp.base.WebClient = openerp.base.Controller.extend({
 
         this.login = new openerp.base.Login(this.session, "oe_login");
 
+        this.header = new openerp.base.Header(this.session, "oe_header");
+
         // TODO MOVE ALL OF THAT IN on_loggued
         // after pooler udpate of modules
         // Cool no ?
@@ -792,6 +799,7 @@ openerp.base.WebClient = openerp.base.Controller.extend({
     start: function() {
         this.loading.start();
         this.login.start();
+        this.header.start();
         this.menu.start();
         this.action.start();
     },
