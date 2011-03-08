@@ -984,7 +984,11 @@ class hr_payslip(osv.osv):
                 'base': line.computational_expression
             }
             if line.appears_on_payslip:
-                update['value']['line_ids'].append(vals)
+                if line.condition_range_min or line.condition_range_max:
+                    if not((line.amount < line.condition_range_min) or (line.amount > line.condition_range_max)):
+                        update['value']['line_ids'].append(vals)
+                else:
+                    update['value']['line_ids'].append(vals)
         basic = contract.wage
         number = sequence_obj.get(cr, uid, 'salary.slip')
         update['value'].update({
