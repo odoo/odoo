@@ -2,7 +2,7 @@
 
 import os,re,sys,traceback,xmlrpclib
 
-import cherrypy,cherrypy.lib.static
+import cherrypy.lib.static
 
 import simplejson as json
 

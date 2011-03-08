@@ -1,6 +1,5 @@
 import xmlrpclib
 import httplib
-import socket
 
 class TimeoutHTTPConnection(httplib.HTTPConnection):
     def connect(self):

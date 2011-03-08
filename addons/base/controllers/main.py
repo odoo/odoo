@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import glob,json,os,sys,traceback
+import glob,json,os
 
 #import simplejson as json
 
@@ -107,7 +107,7 @@ class Connection(openerpweb.Controller):
         # TODO http get argument mods is a comma seprated value of modules
         mods = 'base,base_hello'
         files = self.manifest_glob(mods.split(','), 'css')
-        (concat, timestamp) = self.concat_files(files)
+        concat = self.concat_files(files)[0]
         # TODO request set the Date of last modif and Etag
         return concat
     css.exposed=1
@@ -116,7 +116,7 @@ class Connection(openerpweb.Controller):
         # TODO http get argument mods is a comma seprated value of modules
         mods = 'base,base_hello'
         files = self.manifest_glob(mods.split(','), 'js')
-        (concat, timestamp) = self.concat_files(files)
+        concat = self.concat_files(files)[0]
         # TODO request set the Date of last modif and Etag
         return concat
     js.exposed=1
