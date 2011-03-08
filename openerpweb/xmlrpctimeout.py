@@ -3,14 +3,14 @@ import httplib
 import socket
 
 class TimeoutHTTPConnection(httplib.HTTPConnection):
-   def connect(self):
-       httplib.HTTPConnection.connect(self)
-       self.sock.settimeout(self.timeout)
+    def connect(self):
+        httplib.HTTPConnection.connect(self)
+        self.sock.settimeout(self.timeout)
 
 class TimeoutHTTP(httplib.HTTP):
-   _connection_class = TimeoutHTTPConnection
-   def set_timeout(self, timeout):
-       self._conn.timeout = timeout
+    _connection_class = TimeoutHTTPConnection
+    def set_timeout(self, timeout):
+        self._conn.timeout = timeout
 
 class TimeoutTransport(xmlrpclib.Transport):
     def __init__(self, timeout=10, *l, **kw):

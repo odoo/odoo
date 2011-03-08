@@ -41,7 +41,7 @@ class Xml2Json:
         for kid in el:
             kids.append(Xml2Json.convert_element(kid))
             if kid.tail and (not skip_whitespaces or kid.tail.strip() != ''):
-                 kids.append(kid.tail)
+                kids.append(kid.tail)
         if len(kids):
             res["children"] = kids
         return res
