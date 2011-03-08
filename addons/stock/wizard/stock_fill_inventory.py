@@ -74,18 +74,23 @@ class stock_fill_inventory(osv.osv_memory):
         if fill_inventory.recursive :
             location_ids = location_obj.search(cr, uid, [('location_id',
                              'child_of', fill_inventory.location_id.id)])
+
             for location in location_ids :
                 res = location_obj._product_get(cr, uid, location)
                 res_location[location] = res
+                data = res_location.keys()
+                data.sort()
         else:
             context.update({'compute_child': False})
             res = location_obj._product_get(cr, uid,
                         fill_inventory.location_id.id, context=context)
             res_location[fill_inventory.location_id.id] = res
+            data = res_location.keys()
+            data.sort()
 
         product_ids = []
         res = {}
-        for location in res_location.keys():
+        for location in data:
             datas = {}
             res[location] = {}
             if fill_inventory.recursive :
