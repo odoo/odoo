@@ -30,18 +30,6 @@
             <field name="target">new</field>
         </record>
 
-        <menuitem
-        name="Apply Scheduled Upgrades"
-        action="action_view_base_module_upgrade"
-        id="menu_view_base_module_upgrade"
-       parent="menu_management"
-       sequence="3"/>
-
-       <act_window id="action_view_base_module_upgrade_window"
-            key2="client_action_multi" name="Apply Scheduled Upgrades"
-            res_model="base.module.upgrade" src_model="ir.module.module"
-            view_mode="form" target="new" view_type="form" />
-
        <record id="view_base_module_upgrade_install" model="ir.ui.view">
             <field name="name">Module Upgrade Install</field>
             <field name="model">base.module.upgrade</field>
