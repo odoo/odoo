@@ -169,7 +169,7 @@ class mailgate_thread(osv.osv):
                     'message_id': message_id,
                     'attachment_ids': [(6, 0, attachments)]
                 }
-                
+
             obj.create(cr, uid, data, context=context)
         return True
 mailgate_thread()
@@ -221,7 +221,7 @@ class mailgate_message(osv.osv):
         action_data = False
         action_pool = self.pool.get('ir.actions.act_window')
         message_pool = self.browse(cr ,uid, ids, context=context)[0]
-        att_ids = [x.id for x in message_pool.attachment_ids] 
+        att_ids = [x.id for x in message_pool.attachment_ids]
         action_ids = action_pool.search(cr, uid, [('res_model', '=', 'ir.attachment')])
         if action_ids:
             action_data = action_pool.read(cr, uid, action_ids[0], context=context)
@@ -247,11 +247,11 @@ class mailgate_message(osv.osv):
         for message in self.browse(cr, uid, ids, context=context):
             msg_txt = ''
             if message.history:
-                msg_txt += (message.email_from or '/') + _(' wrote on ') + format_date_tz(message.date, tz) + ':\n\t'
+                msg_txt += (message.email_from or '/') + _(' wrote on %s:\n\t') % format_date_tz(message.date, tz)
                 if message.description:
                     msg_txt += self.truncate_data(cr, uid, message.description, context=context)
             else:
-                msg_txt = (message.user_id.name or '/') + _(' on ') + format_date_tz(message.date, tz) + ':\n\t'
+                msg_txt = (message.user_id.name or '/') + _(' on %s:\n\t') % format_date_tz(message.date, tz)
                 msg_txt += message.name
             result[message.id] = msg_txt
         return result
