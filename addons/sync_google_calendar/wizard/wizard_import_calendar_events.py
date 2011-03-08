@@ -133,15 +133,16 @@ class synchronize_google_calendar_events(osv.osv_memory):
             }
             vals = {
                 'name': feed.title.text,
-                'description': feed.summary
+                'description': feed.content.text,
             }
             timestring, timestring_end = _get_tinydates(self, feed.when[0].start_time, feed.when[0].end_time)
             vals.update({'date': timestring, 'date_deadline': timestring_end})
             data_ids = model_obj.search(cr, uid, [('model','=','crm.meeting'), ('name','=',google_id)])
             if data_ids:
                 meeting_ids.append(model_obj.browse(cr, uid, data_ids[0], context=context).res_id)
+                meeting_obj.write(cr, uid, meeting_ids, vals, context=context)
             else:
-                res_id = meeting_obj.create(cr, uid, vals)
+                res_id = meeting_obj.create(cr, uid, vals, context=context)
                 meeting_ids.append(res_id)
                 model_data.update({'res_id': res_id})
                 model_obj.create(cr, uid, model_data, context=context)
@@ -153,7 +154,7 @@ class synchronize_google_calendar_events(osv.osv_memory):
             'view_mode': 'tree,form',
             'res_model': 'crm.meeting',
             'context': context,
-            'views': [(False, 'tree'),(False, 'form')],
+            'views': [(False, 'calendar'),(False, 'tree'),(False, 'form')],
             'type': 'ir.actions.act_window',
         }
     
