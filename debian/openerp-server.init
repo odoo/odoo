@@ -17,6 +17,7 @@ DAEMON=/usr/bin/openerp-server
 NAME=openerp-server
 DESC=openerp-server
 CONFIG=/etc/openerp-server.conf
+LOGFILE=/var/log/openerp-server.log
 USER=openerp
 
 test -x ${DAEMON} || exit 0
@@ -30,7 +31,7 @@ case "${1}" in
 		start-stop-daemon --start --quiet --pidfile /var/run/${NAME}.pid \
 			--chuid ${USER} --background --make-pidfile \
 			--exec ${DAEMON} -- --config=$CONFIG \
-			    --logfile=/var/log/openerp-server.log
+			    --logfile=$LOGFILE
 
 		echo "${NAME}."
 		;;
@@ -55,7 +56,7 @@ case "${1}" in
 		start-stop-daemon --start --quiet --pidfile /var/run/${NAME}.pid \
 			--chuid ${USER} --background --make-pidfile \
 			--exec ${DAEMON} -- --config=$CONFIG \
-			    --logfile=/var/log/openerp-server.log
+			    --logfile=$LOGFILE
 
 		echo "${NAME}."
 		;;
