@@ -122,14 +122,14 @@ class purchase_order(osv.osv):
     }
     def wkf_confirm_order(self, cr, uid, ids, context=None):
         res = super(purchase_order, self).wkf_confirm_order(cr, uid, ids, context=context)
-        proc_obj=self.pool.get('procurement.order')
+        proc_obj = self.pool.get('procurement.order')
         for po in self.browse(cr, uid, ids, context=context):
             if po.requisition_id and (po.requisition_id.exclusive=='exclusive'):
                 for order in po.requisition_id.purchase_ids:
                     if order.id<>po.id:
                         proc_ids = proc_obj.search(cr, uid, [('purchase_id', '=', order.id)])
                         if proc_ids and po.state=='confirmed':
-                            proc_obj.wirte(cr,uid,proc_ids,{'purchase_id':po.id})
+                            proc_obj.write(cr,uid,proc_ids,{'purchase_id':po.id})
                         wf_service = netsvc.LocalService("workflow")
                         wf_service.trg_validate(uid, 'purchase.order', order.id, 'purchase_cancel', cr)
                     self.pool.get('purchase.requisition').write(cr, uid, [po.requisition_id.id], {'state':'done','date_end':time.strftime('%Y-%m-%d %H:%M:%S')})
