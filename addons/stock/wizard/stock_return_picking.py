@@ -69,14 +69,15 @@ class stock_return_picking(osv.osv_memory):
                     res.update({'invoice_state': '2binvoiced'})
                 else:
                     res.update({'invoice_state': 'none'})
-                    
+            return_history = self.get_return_history(cr, uid, record_id, context)       
             for line in pick.move_lines:
-                return_id = 'return%s'%(line.id)
-                if return_id in fields:
-                    res[return_id] = line.product_qty
-                result1.append({'product_id': line.product_id.id, 'quantity': line.product_qty,'move_id':line.id})
-                if 'product_return_moves' in fields:
-                    res.update({'product_return_moves': result1})
+                qty = line.product_qty - return_history[line.id]
+                if return_history[line.id] == 0:
+                    result1.append({'product_id': line.product_id.id, 'quantity': line.product_qty,'move_id':line.id})
+                if qty > 0 and return_history[line.id] != 0:
+                    result1.append({'product_id': line.product_id.id, 'quantity': qty,'move_id':line.id})
+            if 'product_return_moves' in fields:
+                res.update({'product_return_moves': result1})
         return res
 
     def view_init(self, cr, uid, fields_list, context=None):
@@ -97,18 +98,34 @@ class stock_return_picking(osv.osv_memory):
             pick = pick_obj.browse(cr, uid, record_id, context=context)
             if pick.state not in ['done','confirmed','assigned']:
                 raise osv.except_osv(_('Warning !'), _("You may only return pickings that are Confirmed, Available or Done!"))
-            return_history = {}
             valid_lines = 0
+            return_history = self.get_return_history(cr, uid, record_id, context)
             for m  in pick.move_lines:
-                if m.state == 'done':
-                    return_history[m.id] = 0
-                    for rec in m.move_history_ids2:
-                        return_history[m.id] += (rec.product_qty * rec.product_uom.factor)
-                    if m.product_qty * m.product_uom.factor > return_history[m.id]:
+                if m.product_qty * m.product_uom.factor > return_history[m.id]:
                         valid_lines += 1
             if not valid_lines:
                 raise osv.except_osv(_('Warning !'), _("There are no products to return (only lines in Done state and not fully returned yet can be returned)!"))
         return res
+    
+    def get_return_history(self, cr, uid, ids, context=None):
+        """ 
+         Get  return_history.
+         @param self: The object pointer.
+         @param cr: A database cursor
+         @param uid: ID of the user currently logged in
+         @param ids: List of ids selected
+         @param context: A standard dictionary
+         @return: A dictionary which of values.
+        """
+        pick_obj = self.pool.get('stock.picking')
+        pick = pick_obj.browse(cr, uid, ids, context=context)
+        return_history = {}
+        for m  in pick.move_lines:
+            if m.state == 'done':
+                return_history[m.id] = 0
+                for rec in m.move_history_ids2:
+                    return_history[m.id] += (rec.product_qty * rec.product_uom.factor)
+        return return_history
 
     def create_returns(self, cr, uid, ids, context=None):
         """ 
