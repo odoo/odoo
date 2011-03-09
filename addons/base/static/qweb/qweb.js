@@ -232,16 +232,16 @@ var QWeb = {
             var size = enu.length;
             if (size) {
                 d[val + "_size"] = size;
-                for (var i = 0; i < size; i++) {
-                    var cur = enu[i];
+                for (var j = 0; j < size; j++) {
+                    var cur = enu[j];
                     d[val_value] = cur;
-                    d[val_index] = i;
-                    d[val_first] = i == 0;
-                    d[val_last] = i + 1 == size;
-                    d[val_parity] = (i % 2 == 1 ? 'odd' : 'even');
+                    d[val_index] = j;
+                    d[val_first] = j == 0;
+                    d[val_last] = j + 1 == size;
+                    d[val_parity] = (j % 2 == 1 ? 'odd' : 'even');
                     if (cur.constructor == Object) {
-                        for (var j in cur) {
-                            d[j] = cur[j];
+                        for (var k in cur) {
+                            d[k] = cur[k];
                         }
                     }
                     d[val] = cur;
