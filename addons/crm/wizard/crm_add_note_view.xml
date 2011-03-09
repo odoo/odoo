@@ -9,28 +9,13 @@
             <field name="model">crm.add.note</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Add Note" col="4">
-                    <separator string="Add Note" colspan="6"/>
-                    <notebook colspan="6">
-                        <page string="Note">
-                            <field name="body" nolabel="1" colspan="4" default_focus="1"/>
-                        </page>
-                        <page string="Attachments">
-                            <field name="attachment_ids" colspan="4" nolabel="1">
-                                <form string="Attachment">
-                                    <field name="binary" filename="name" />
-                                    <field name="name" />
-                                </form>
-                                <tree string="Attachments">
-                                    <field name="name" />
-                                </tree>
-                            </field>
-                        </page>
-                    </notebook>
+                <form string="Add Note">
+                    <separator string="Add Note" colspan="4" />
+                    <field name="body" nolabel="1" colspan="4" default_focus="1"/>
                     <separator string="" colspan="6"/>
                     <group colspan="6" col="4" >
                         <field name="state" />
-                        <button string="_Cancel" icon="gtk-cancel" special="cancel" />
+                        <button string="_Cancel" icon="gtk-close" special="cancel" />
                         <button name="action_add" type="object" string="_Add" icon="gtk-ok" />
                     </group>
                 </form>

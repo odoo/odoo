@@ -790,7 +790,7 @@ class procurement_order(osv.osv):
             if seller_qty:
                 qty = max(qty,seller_qty)
 
-            price = pricelist_obj.price_get(cr, uid, [pricelist_id], procurement.product_id.id, qty, False, {'uom': uom_id})[pricelist_id]
+            price = pricelist_obj.price_get(cr, uid, [pricelist_id], procurement.product_id.id, qty, partner_id, {'uom': uom_id})[pricelist_id]
 
             newdate = datetime.strptime(procurement.date_planned, '%Y-%m-%d %H:%M:%S')
             newdate = (newdate - relativedelta(days=company.po_lead)) - relativedelta(days=seller_delay)
