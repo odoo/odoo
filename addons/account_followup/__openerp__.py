@@ -22,7 +22,7 @@
 {
     'name': 'Accounting follow-ups management',
     'version': '1.0',
-    'category': 'Generic Modules/Accounting',
+    'category': 'Finance',
     'description': """
     Modules to automate letters for unpaid invoices, with multi-level recalls.
 

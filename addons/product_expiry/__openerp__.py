@@ -21,7 +21,7 @@
     "name" : "Products date of expiry",
     "version" : "1.0",
     "author" : "OpenERP SA",
-    "category" : "Enterprise Specific Modules/Food Industries",
+    "category" : "Warehouse",
     "depends" : ["stock"],
     "init_xml" : [],
     "demo_xml" : ["product_expiry_demo.xml"],

@@ -23,7 +23,7 @@
 {
     'name'      : 'report_account_analytic',
     'version'   : '1.1',
-    'category'  : 'Generic Modules/Accounting',
+    'category'  : 'Finance',
     'description': """
 This module is for modifying account analytic view to show
 important data to project manager of services companies.

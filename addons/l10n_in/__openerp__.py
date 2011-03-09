@@ -26,7 +26,7 @@
     Indian Accounting : chart of Account
     """,
     "author": 'OpenERP SA & Axelor',
-    "category": "Localisation/Account Charts",
+    "category": "Finance",
     "depends": [
         "account",
         "account_chart"

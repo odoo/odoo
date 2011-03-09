@@ -25,7 +25,7 @@
     'version': '0.1',
     'category': 'Tools',
     'description': """
-    This module allows your user to easily and efficiently participate in the innovation of the enterprise.
+    This module allows your users to easily and efficiently participate in the innovation of the enterprise.
     It allows everybody to express ideas about different subjects.
     Then, other users can comment on these ideas and vote for particular ideas.
     Each idea has a score based on the different votes.

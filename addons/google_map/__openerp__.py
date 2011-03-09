@@ -23,7 +23,7 @@
 {
     'name': 'Google Map',
     'version': '1.0',
-    'category': 'Generic Modules/Others',
+    'category': 'Tools',
     'description': """The module adds google map field in partner address
 so that we can directly open google map from the
 url widget.""",

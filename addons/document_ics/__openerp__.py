@@ -23,7 +23,7 @@
 {
     'name': 'Support for iCal based on Document Management System',
     'version': '1.0',
-    'category': 'Generic Modules/Others',
+    'category': 'Tools',
     'description': """Allows to synchronise calendars with others applications.""",
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',

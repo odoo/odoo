@@ -23,7 +23,7 @@
     "version" : "1.0",
     "author" : "Savoir-faire Linux",
     "website" : "http://www.savoirfairelinux.com",
-    "category" : "Localisation/Account Charts",
+    "category" : "Finance",
     "description": "This is the module to manage the english and french canadian accounting chart in OpenERP.",
     "depends" : ['base', 'account', 'base_iban', 'base_vat', 'account_chart'],
     "init_xml" : [],

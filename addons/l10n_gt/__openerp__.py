@@ -35,7 +35,7 @@
 {
     'name': 'Guatemala - Plan contable general',
     'version': '3.0',
-    'category': 'Localisation/Account Charts',
+    'category': 'Finance',
     'description': """Agrega una nomenclatura contable para Guatemala. También icluye impuestos y la moneda del Quetzal. -- Adds accounting chart for Guatemala.  It also includes taxes and the Quetzal currency""",
     'author': 'José Rodrigo Fernández Menegazzo',
     'website': 'http://solucionesprisma.com/',

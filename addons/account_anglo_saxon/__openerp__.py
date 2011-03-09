@@ -31,7 +31,7 @@
     when the invoice is created to transfer this amount to the debtor or creditor account.
     Secondly, price differences between actual purchase price and fixed product standard price are booked on a separate account""",
     "depends"   : ["product", "purchase"],
-    "category"  : "Generic Modules/Inventory Control",
+    "category"  : "Warehouse",
     "init_xml"  : [],
     "demo_xml"  : [],
     "update_xml" : ["product_view.xml",],

@@ -25,7 +25,7 @@
     "version" : "1.1",
     "author" : "OpenERP SA",
     "website" : "http://www.openerp.com",
-    "category" : "Generic Modules/Production",
+    "category" : "Manufacturing",
     "depends" : ["procurement", "stock", "resource", "purchase", "product","process"],
     "description": """
     This is the base module to manage the manufacturing process in OpenERP.

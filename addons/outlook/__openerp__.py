@@ -26,8 +26,8 @@
     'author' : 'OpenERP SA',
     'website' : 'http://www.openerp.com/',
     'depends' : ['base', 'mail_gateway'],
-    'category' : 'Generic Modules/Outlook interface',
-    'description': '''
+    'category' : 'Tools',
+    'description': '''Make a link between Outlook and OpenERP
       This module provide the Outlook plug-in. 
 
       Outlook plug-in allows you to select an object that you’d like to add

@@ -23,11 +23,11 @@
     "name" : "Resource",
     "version" : "1.1",
     "author" : "OpenERP SA",
-    "category" : "Generic Modules/Projects & Services",
+    "category" : "Project Management",
     "website" : "http://www.openerp.com",
-    "description": """
+    "description": """Schedule your Resources and keep a Resource Calendar
     Module for resource management
-     A resource represent something that can be scheduled
+     A resource represents something that can be scheduled
      (a developer on a task or a work center on manufacturing orders).
      This module manages a resource calendar associated to every resource.
      It also manages the leaves of every resource.

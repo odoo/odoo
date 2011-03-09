@@ -22,7 +22,7 @@
 {
     'name': 'HR - Recruitement',
     'version': '1.0',
-    'category': 'Generic Modules/Human Resources',
+    'category': 'Human Resources',
     'description': """
 Manages job positions and the recruitement process. It's integrated with the
 survey module to allow you to define interview for different jobs.

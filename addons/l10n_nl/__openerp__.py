@@ -88,7 +88,7 @@
 {
     "name" : "Netherlands - Grootboek en BTW rekeningen",
     "version" : "1.5",
-    "category": "Localisation/Account Charts",
+    "category": "Finance",
     "description": """
 Read changelog in file __terp__.py for version information.   
 Dit is een basismodule om een uitgebreid grootboek- en BTW schema voor Nederlandse bedrijven te installeren in OpenERP versie 5.

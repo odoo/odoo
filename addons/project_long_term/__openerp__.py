@@ -24,7 +24,7 @@
     "version": "1.1",
     "author": "OpenERP SA",
     "website": "http://www.openerp.com",
-    "category": "Generic Modules/Projects & Services",
+    "category": "Project Management",
     "depends": ["resource", "project"],
     "description": """
 Long Term Project management module that tracks planning, scheduling, resources allocation.

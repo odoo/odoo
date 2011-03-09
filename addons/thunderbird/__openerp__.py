@@ -25,8 +25,8 @@
     "author" : "OpenERP SA & Axelor",
     "website" : "http://www.openerp.com/",
     "depends" : ["base","mail_gateway"],
-    "category" : "Generic Modules/Thunderbird interface",
-    "description": """
+    "category" : "Tools",
+    "description": """Make a link between Thunderbird and OpenERP
       This module is required for the thuderbird plug-in to work
       properly.
       The Plugin allows you archive email and its attachments to the selected 

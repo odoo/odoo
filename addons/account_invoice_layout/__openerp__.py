@@ -23,7 +23,7 @@
 {
     'name': 'Invoices Layout Improvement',
     'version': '1.0',
-    'category': 'Generic Modules/Projects & Services',
+    'category': 'Finance',
     'description': """
     This module provides some features to improve the layout of the invoices.
 

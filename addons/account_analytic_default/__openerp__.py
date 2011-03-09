@@ -22,7 +22,7 @@
 {
     'name'      : 'Account Analytic Default',
     'version'   : '1.0',
-    'category'  : 'Generic Modules/Accounting',
+    'category'  : 'Finance',
     'description': """
 Allows to automatically select analytic accounts based on criterions:
 * Product

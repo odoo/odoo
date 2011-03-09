@@ -21,9 +21,9 @@
 {
     'name': 'Base VAT - To check VAT number validity',
     'version': '1.0',
-    'category': 'Generic Modules/Base',
-    'description': """
-    Enable the VAT Number for the partner. Check the validity of that VAT Number.
+    'category': 'Tools',
+    'description': """Check the validity of VAT Numbers.
+    Enable the VAT Number for the partner. 
 
     This module follows the methods stated at http://sima-pc.com/nif.php for
     checking the validity of VAT Number assigned to partners in European countries.
