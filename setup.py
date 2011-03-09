@@ -36,30 +36,78 @@ import glob
 
 from setuptools import setup, find_packages
 
+# Backports os.walk with followlinks from python 2.6.
+# Needed to add all addons files to data_files for Windows packaging.
+def walk_followlinks(top, topdown=True, onerror=None, followlinks=False):
+    from os.path import join, isdir, islink
+    from os import listdir, error
+
+    try:
+        names = listdir(top)
+    except error, err:
+        if onerror is not None:
+            onerror(err)
+        return
+
+    dirs, nondirs = [], []
+    for name in names:
+        if isdir(join(top, name)):
+            dirs.append(name)
+        else:
+            nondirs.append(name)
+
+    if topdown:
+        yield top, dirs, nondirs
+    for name in dirs:
+        path = join(top, name)
+        if followlinks or not islink(path):
+            for x in walk_followlinks(path, topdown, onerror, followlinks):
+                yield x
+    if not topdown:
+        yield top, dirs, nondirs
+
+if sys.version_info < (2, 6):
+    os.walk = walk_followlinks
+
 py2exe_keywords = {}
+py2exe_data_files = []
 if os.name == 'nt':
     import py2exe
     py2exe_keywords['console'] = [
-        { "script": join("bin", "openerp-server.py"),
+        { "script": "openerp-server.py",
           "icon_resources": [(1, join("pixmaps","openerp-icon.ico"))],
         }]
     py2exe_keywords['options'] = {
         "py2exe": {
-            "compressed": 1,
+            "skip_archive": 1,
             "optimize": 2,
             "dist_dir": 'dist',
             "packages": [
                 "lxml", "lxml.builder", "lxml._elementpath", "lxml.etree",
                 "lxml.objectify", "decimal", "xml", "xml", "xml.dom", "xml.xpath",
-                "encodings", "dateutil", "wizard", "pychart", "PIL", "pyparsing",
+                "encodings", "dateutil", "pychart", "PIL", "pyparsing", # Why is wizard listed here?
                 "pydot", "asyncore","asynchat", "reportlab", "vobject",
                 "HTMLParser", "select", "mako", "poplib",
                 "imaplib", "smtplib", "email", "yaml", "DAV",
-                "uuid",
+                "uuid", "openerp",
             ],
             "excludes" : ["Tkconstants","Tkinter","tcl"],
         }
     }
+    # TODO is it still necessary now that we don't use the library.zip file?
+    def data_files():
+        '''For Windows, we consider all the addons as data files.
+           It seems also that package_data below isn't honored by py2exe.'''
+        files = []
+        os.chdir('openerp')
+        for (dp, dn, names) in os.walk('addons'):
+            files.append((join('openerp',dp), map(lambda x: join('openerp', dp, x), names)))
+        os.chdir('..')
+        files.append(('openerp', [join('openerp', 'import_xml.rng'),]))
+        return files
+    py2exe_data_files = data_files()
+
+#sys.path.append(join(os.path.abspath(os.path.dirname(__file__)), "openerp")) # Is it just for wizard, or something else?
 
 execfile(join('openerp', 'release.py'))
 
@@ -76,7 +124,7 @@ setup(name             = name,
         (join('man', 'man1'), ['man/openerp-server.1']),
         (join('man', 'man5'), ['man/openerp_serverrc.5']),
         ('doc', filter(isfile, glob.glob('doc/*'))),
-      ],
+      ] + py2exe_data_files,
       scripts          = ['openerp-server.py'],
       packages = find_packages(),
       include_package_data = True,
