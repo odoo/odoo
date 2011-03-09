@@ -19,7 +19,14 @@
 #
 ##############################################################################
 
-import import_sugarcrm
-import sugar
-import wizard
-import sugarcrm_fields_mapping
+def sugarcrm_fields_mapp(dict_sugar,openerp_obj,openerp_dict):
+    fields=[]
+    data_lst = []
+    for key,val in openerp_dict.get(openerp_obj).items():
+        if key not in fields:
+            fields.append(key)
+            if isinstance(val, list):
+                data_lst.append(dict_sugar.get(val[0],['']) + ' ' + dict_sugar.get(val[1],['']))
+            else:
+                data_lst.append(dict_sugar.get(val,['']))
+    return fields,data_lst
