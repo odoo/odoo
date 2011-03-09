@@ -115,6 +115,7 @@ var QWeb = {
                         n = m[2].substring(1);
                         av = this.eval_str(av, v);
                     }
+                    var f;
                     if (f = this.att[n]) {
                         this[f](e, t_att, g_att, v, m[2], av);
                     } else if (f = this.tag[n]) {
@@ -157,8 +158,7 @@ var QWeb = {
         } else {
             var att = "";
             for (var an in g_att) {
-                av = g_att[an];
-                att += " " + an + '="' + this.escape_att(av) + '"';
+                att += " " + an + '="' + this.escape_att(g_att[an]) + '"';
             }
             return inner.length ? "<" + e.tagName + att + ">" + inner + "</" + e.tagName + ">" : "<" + e.tagName + att + "/>";
         }
@@ -167,7 +167,7 @@ var QWeb = {
         if (ext) {
             g_att[ext.substring(1)] = this.eval_str(av, v);
         } else {
-            o = this.eval_object(av, v);
+            var o = this.eval_object(av, v);
             g_att[o[0]] = o[1];
         }
     },
@@ -219,16 +219,16 @@ var QWeb = {
         var ru = [];
         if (enu) {
             var val = t_att['as'] || expr.replace(/[^a-zA-Z0-9]/g, '_');
-            d = {};
+            var d = {};
             for (var i in v) {
                 d[i] = v[i];
             }
             d[val + "_all"] = enu;
-            val_value = val + "_value";
-            val_index = val + "_index";
-            val_first = val + "_first";
-            val_last = val + "_last";
-            val_parity = val + "_parity";
+            var val_value = val + "_value",
+                val_index = val + "_index",
+                val_first = val + "_first",
+                val_last = val + "_last",
+                val_parity = val + "_parity";
             var size = enu.length;
             if (size) {
                 d[val + "_size"] = size;
@@ -249,7 +249,7 @@ var QWeb = {
                     ru.push(r);
                 }
             } else {
-                index = 0;
+                var index = 0;
                 for (cur in enu) {
                     d[val_value] = cur;
                     d[val_index] = index;
@@ -266,7 +266,7 @@ var QWeb = {
         }
     },
     hash:function() {
-        var l = [];
+        var l = [], m;
         for (var i in this) {
             if (m = i.match(/render_tag_(.*)/)) {
                 this.tag[m[1]] = i;
@@ -345,6 +345,7 @@ var QWeb = {
         }
     },
     render:function(name, v) {
+        var e;
         if (e = this.templates[name]) {
             return this.render_node(e, v);
         } else {
