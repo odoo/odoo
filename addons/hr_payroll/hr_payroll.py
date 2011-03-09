@@ -377,6 +377,8 @@ class hr_payslip(osv.osv):
             allow = 0.0
             deduct = 0.0
             others = 0.0
+            tot_amount = 0.0
+           
             contract = rs.employee_id.contract_id
             obj = {'basic': contract.wage}
             if not contract.struct_id:
@@ -406,10 +408,13 @@ class hr_payslip(osv.osv):
                     allow += amount
                     others -= contrib
                     amount += contrib
+                tot_amount +=  amount
                 salary_rule_pool.write(cr, uid, [line.id], {'total': amount}, context=context)
             record = {
                 'allounce': allow,
                 'deduction': deduct,
+                'gross_amount': rs.basic_amount + allow,
+                'net_amount': rs.basic_amount + tot_amount,
                 'other_pay': others,
                 'state': 'draft',
                 'total_pay': abs(contract.wage + allow + deduct)
