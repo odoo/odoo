@@ -139,7 +139,7 @@ class product_uom(osv.osv):
             context = {}
         if from_unit.category_id.id <> to_unit.category_id.id:
             if context.get('raise-exception', True):
-                raise osv.except_osv(_('Error !'), _('Conversion from Product UoM m to Default UoM PCE is not possible as they both belong to different Category!.'))
+                raise osv.except_osv(_('Error !'), _('Conversion from Product UoM %s to Default UoM %s is not possible as they both belong to different Category!.') % (from_unit.name,to_unit.name,))
             else:
                 return qty
         amount = qty / from_unit.factor
@@ -482,7 +482,7 @@ class product_product(osv.osv):
         'pricelist_id': fields.dummy(string='Pricelist', relation='product.pricelist', type='many2one'),
         'name_template': fields.related('product_tmpl_id', 'name', string="Name", type='char', size=128, store=True),
     }
-    
+
     def unlink(self, cr, uid, ids, context=None):
         unlink_ids = []
         unlink_product_tmpl_ids = []
@@ -715,10 +715,10 @@ class product_supplierinfo(osv.osv):
             result[supplier_info.id]['qty'] = qty
         return result
 
-    def _get_uom_id(self, cr, uid, *args):
-        cr.execute('select id from product_uom order by id limit 1')
-        res = cr.fetchone()
-        return res and res[0] or False
+    def _get_uom_id(self, cr, uid, context=None):
+        if context is None:
+            context = {}
+        return context.get('uom_id', False)
 
     _columns = {
         'name' : fields.many2one('res.partner', 'Supplier', required=True,domain = [('supplier','=',True)], ondelete='cascade', help="Supplier of this product"),

@@ -12,7 +12,7 @@
             groups="group_purchase_manager"
             parent="base.menu_purchase_root" sequence="100"/>
 
-        <menuitem 
+        <menuitem
             id="menu_purchase_config_pricelist" name="Pricelists"
             parent="menu_purchase_config_purchase" sequence="50"/>
 
@@ -29,22 +29,22 @@
             parent="menu_purchase_config_pricelist" sequence="2"
             groups="base.group_extended"/>
 
-        <menuitem 
+        <menuitem
             id="menu_product_in_config_purchase" name="Product"
             parent="menu_purchase_config_purchase" sequence="30"/>
 
         <menuitem
             action="product.product_category_action_form" id="menu_product_category_config_purchase"
             parent="purchase.menu_product_in_config_purchase" sequence="10"/>
-          
-        <menuitem 
+
+        <menuitem
             id="menu_purchase_unit_measure_purchase" name="Units of Measure"
             parent="purchase.menu_product_in_config_purchase"  sequence="20"/>
 
         <menuitem
              action="product.product_uom_categ_form_action" id="menu_purchase_uom_categ_form_action"
              parent="menu_purchase_unit_measure_purchase" sequence="30"/>
-             
+
         <menuitem
               action="product.product_uom_form_action" id="menu_purchase_uom_form_action"
               parent="menu_purchase_unit_measure_purchase" sequence="30"/>
@@ -217,7 +217,6 @@
                         	<separator string="Invoices" colspan="4"/>
                         	<newline/>
                         	<field name="invoice_ids" groups="base.group_extended" nolabel="1" colspan="4" context="{'type':'in_invoice', 'journal_type':'purchase'}"/>
-                        	<field name="invoice_ids" groups="base.group_extended" nolabel="1" colspan="4" context="{'type':'in_invoice', 'journal_type': 'purchase'}"/>
                         </page>
                         <page string="Notes">
                             <field colspan="4" name="notes" nolabel="1"/>

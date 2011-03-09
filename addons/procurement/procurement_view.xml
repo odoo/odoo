@@ -28,6 +28,7 @@
             <field name="name">procurement.order.tree.board</field>
             <field name="model">procurement.order</field>
             <field name="type">tree</field>
+            <field eval="20" name="priority"/>
             <field name="arch" type="xml">
                 <tree string="Procurement Lines" colors="red:date_planned&lt;current_date and state in ('exception');black:state=='running';darkgreen:state=='confirmed';gray:state in ['done','cancel'];blue:state in ('ready')">
                     <field name="date_planned" widget="date"/>
@@ -246,8 +247,8 @@
         <act_window
         context="{'search_default_warehouse_id': active_id, 'default_warehouse_id': active_id}"
         id="act_stock_warehouse_2_stock_warehouse_orderpoint"
-        name="Minimum Stock Rules" 
-        res_model="stock.warehouse.orderpoint" 
+        name="Minimum Stock Rules"
+        res_model="stock.warehouse.orderpoint"
         src_model="stock.warehouse"
         groups="stock.group_stock_user"/>
 
