@@ -1,0 +1,49 @@
+<!doctype html>
+<html>
+<head>
+    <script src="http://code.jquery.com/jquery-1.5.1.js"></script>
+    <link rel="stylesheet" href="http://code.jquery.com/qunit/git/qunit.css" type="text/css" media="screen"/>
+    <script type="text/javascript" src="http://code.jquery.com/qunit/git/qunit.js"></script>
+
+    <script type="text/javascript" src="qweb.js"></script>
+
+    <script>
+        function trim(s) {
+            return s.replace(/(^\s+|\s+$)/g, '');
+        }
+        function render(template, context) {
+            return trim(QWeb.render(template, context));
+        }
+        $(document).ready(function() {
+            module("Basic template 't' tag tests", {
+                setup: function () {
+                    QWeb.add_template('qweb-test.xml');
+                },
+                teardown: function () {
+                    QWeb.templates = [];
+                    QWeb.tag = {};
+                    QWeb.att = {};
+                }
+            });
+
+            test("Basic escaped data output", function () {
+                equals("ok", render('esc-literal', {}), "Render a literal string");
+                equals("ok", render('esc-variable', {ok: 'ok'}), "Render a string variable");
+                equals("&lt;ok&gt;", render('esc-toescape', {ok: '<ok>'}), "Render a string with data to escape");
+            });
+
+        });
+    </script>
+
+</head>
+<body>
+<h1 id="qunit-header">QUnit example</h1>
+
+<h2 id="qunit-banner"></h2>
+
+<div id="qunit-testrunner-toolbar"></div>
+<h2 id="qunit-userAgent"></h2>
+<ol id="qunit-tests"></ol>
+<div id="qunit-fixture">test markup, will be hidden</div>
+</body>
+</html>
