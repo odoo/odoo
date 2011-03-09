@@ -11,7 +11,7 @@
   I login into that account.
 -
   !python {model: google.login.contact}: |
-    self.check_login(cr, uid, [ref('google_login_contact_id0')], context)
+    self.login(cr, uid, [ref('google_login_contact_id0')], context)
 - |
   Now I select from which group I want to get the contact details.
 -
