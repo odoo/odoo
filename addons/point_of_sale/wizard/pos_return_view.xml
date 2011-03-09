@@ -7,14 +7,14 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Return lines">
-                    <label string="Quantities you enter, match to products that will return to the stock" colspan="4"/>
+                    <label string=" Enter the quantities which you want to return." colspan="4"/>
                     <separator colspan="4"/>
                     <field name="pos_moves_ids" colspan="4" nolabel="1" mode="tree,form" width="550" height="200" >
                     </field>
                     <newline/>
                     <separator colspan="4"/>
                     <button icon='gtk-cancel' special="cancel" string="Cancel" />
-                    <button icon='gtk-ok' name= "create_returns" string="Return with Exchange" type="object"/>
+                    <button icon='gtk-ok' name= "create_returns" string="Return With Exchange" type="object"/>
                     <button icon='gtk-ok' name="create_returns2" string="Refund Without Exchange" type="object"/>
                  </form>
             </field>

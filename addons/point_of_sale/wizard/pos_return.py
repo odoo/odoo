@@ -124,14 +124,12 @@ class pos_return(osv.osv_memory):
             date_cur = time.strftime('%Y-%m-%d %H:%M:%S')
 
             for order_id in order_obj.browse(cr, uid, [active_id], context=context):
-                prop_ids = property_obj.search(cr, uid,[('name', '=', 'property_stock_customer')])
-                val = property_obj.browse(cr, uid, prop_ids[0], context=context).value_reference
+                stock_dest_id = property_obj.get(cr, uid, 'property_stock_customer', 'res.partner', context=context).id
                 cr.execute("SELECT s.id FROM stock_location s, stock_warehouse w "
                             "WHERE w.lot_stock_id=s.id AND w.id=%s ", 
                             (order_id.shop_id.warehouse_id.id,))
                 res = cr.fetchone()
                 location_id = res and res[0] or None
-                stock_dest_id = val.id
                 new_picking = picking_obj.copy(cr, uid, order_id.picking_id.id, {'name':'%s (return)' % order_id.name,
                                                                                'move_lines': [],
                                                                                'state':'draft',
@@ -221,15 +219,12 @@ class add_product(osv.osv_memory):
             for order_id in order_obj.browse(cr, uid, [active_id], context=context):
                 prod=data['product_id']
                 qty=data['quantity']
-                prop_ids = property_obj.search(cr, uid, [('name', '=', 'property_stock_customer')])
-                val = property_obj.browse(cr, uid, prop_ids[0]).value_reference
+                stock_dest_id = property_obj.get(cr, uid, 'property_stock_customer', 'res.partner', context=context).id
                 cr.execute("SELECT s.id FROM stock_location s, stock_warehouse w "
                             "WHERE w.lot_stock_id=s.id AND w.id=%s ",
                             (order_id.shop_id.warehouse_id.id,))
                 res=cr.fetchone()
                 location_id=res and res[0] or None
-                stock_dest_id = val.id
-
                 prod_id=prod_obj.browse(cr, uid, prod, context=context)
                 new_picking=picking_obj.create(cr, uid, {
                                 'name':'%s (Added)' %order_id.name,
@@ -288,14 +283,12 @@ class add_product(osv.osv_memory):
         order_obj.add_product(cr, uid, active_ids[0], self_data['product_id'], self_data['quantity'], context=context)
         
         for order_id in order_obj.browse(cr, uid, active_ids, context=context):
-            prop_ids =property_obj.search(cr, uid, [('name', '=', 'property_stock_customer')])
-            val = property_obj.browse(cr, uid, prop_ids[0]).value_reference
+            stock_dest_id = property_obj.get(cr, uid, 'property_stock_customer', 'res.partner', context=context).id
             cr.execute("SELECT s.id FROM stock_location s, stock_warehouse w "
                         " WHERE w.lot_stock_id=s.id AND w.id=%s ",
                         (order_id.shop_id.warehouse_id.id,))
             res=cr.fetchone()
             location_id=res and res[0] or None
-            stock_dest_id = val.id
 
             order_obj.write(cr,uid,[order_id.id],{'type_rec':'Exchange'})
             if order_id.invoice_id:
