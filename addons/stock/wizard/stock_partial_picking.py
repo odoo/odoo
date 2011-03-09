@@ -67,9 +67,8 @@ class stock_partial_picking(osv.osv_memory):
             for m in pick.move_lines:
                 if m.state in ('done', 'cancel'):
                     continue
-                move_memory = self.__create_partial_picking_memory(m, pick_type)
-                if move_memory:
-                    result.append(move_memory)
+                result.append(self.__create_partial_picking_memory(m, pick_type))
+
         if 'product_moves_in' in fields:
             res.update({'product_moves_in': result})
         if 'product_moves_out' in fields:
@@ -125,27 +124,12 @@ class stock_partial_picking(osv.osv_memory):
             'prodlot_id' : picking.prodlot_id.id, 
             'move_id' : picking.id, 
         }
-        
+    
         if pick_type == 'in':
             move_memory.update({
                 'cost' : picking.product_id.standard_price, 
                 'currency' : picking.product_id.company_id and picking.product_id.company_id.currency_id and picking.product_id.company_id.currency_id.id or False, 
             })
-            
-        if pick_type == 'out':
-            type = picking.picking_id.move_type
-            qty_avl =  picking.product_id.qty_available   
-            if type == 'direct' :
-                if qty_avl <= 0.0 and  picking.state != 'assigned':
-                    move_memory = {}
-                if picking.product_qty > qty_avl and qty_avl > 0.0:
-                     move_memory.update({
-                    'quantity' : qty_avl, 
-                    })
-                if picking.state == 'assigned':
-                    move_memory.update({
-                    'quantity' : picking.product_qty, 
-                    })
         return move_memory
 
     def do_partial(self, cr, uid, ids, context=None):
