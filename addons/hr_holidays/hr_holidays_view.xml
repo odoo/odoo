@@ -436,7 +436,7 @@
     <!--  Shortcuts -->
         <act_window name="Holidays"
             domain="[('type','=','remove')]"
-            context="{'search_default_employee_id': [active_id]}"
+            context="{'search_default_employee_id': [active_id], 'default_employee_id': active_id}"
             res_model="hr.holidays"
             src_model="hr.employee"
             view_id ="view_holiday"

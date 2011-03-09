@@ -81,7 +81,7 @@
             id="act_account_acount_move_line_open"
             res_model="account.move.line"
             src_model="account.account"
-            context="{'search_default_account_id': [active_id]}"
+            context="{'search_default_account_id': [active_id], 'default_account_id': active_id}"
             />
 
         <menuitem
@@ -95,7 +95,7 @@
             id="analytic_rule_action_partner"
             res_model="account.analytic.default"
             src_model="res.partner"
-            context="{'search_default_partner_id': [active_id]}"
+            context="{'search_default_partner_id': [active_id], 'default_partner_id': active_id}"
             groups="analytic.group_analytic_accounting"/>
 
         <act_window
@@ -103,7 +103,7 @@
             id="analytic_rule_action_user"
             res_model="account.analytic.default"
             src_model="res.users"
-            context="{'search_default_user_id': [active_id]}"
+            context="{'search_default_user_id': [active_id], 'default_user_id': active_id}"
             groups="analytic.group_analytic_accounting"/>
 
         <act_window
@@ -111,7 +111,7 @@
             res_model="account.analytic.default"
             id="analytic_rule_action_product"
             src_model="product.product"
-            context="{'search_default_product_id': [active_id]}"
+            context="{'search_default_product_id': [active_id], 'default_product_id': active_id}"
             groups="analytic.group_analytic_accounting"/>
 
     </data>
