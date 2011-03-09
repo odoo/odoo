@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2010-10-30 09:55+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"PO-Revision-Date: 2011-03-05 12:22+0000\n"
+"Last-Translator: Stanislav Hanzhin <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-15 05:01+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-03-06 04:49+0000\n"
+"X-Generator: Launchpad (build 12351)\n"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_res_users_2_project_task_opened
@@ -24,13 +24,13 @@ msgstr "Назначенные задания"
 #. module: project
 #: help:project.task.delegate,new_task_description:0
 msgid "Reinclude the description of the task in the task of the user"
-msgstr ""
+msgstr "Включить описание задания в задание пользователя"
 
 #. module: project
 #: code:addons/project/project.py:658
 #, python-format
 msgid "The task '%s' has been delegated to %s."
-msgstr ""
+msgstr "Задание '%s' было назначено  %s"
 
 #. module: project
 #: help:res.company,project_time_mode_id:0
@@ -44,16 +44,17 @@ msgstr ""
 #: constraint:res.users:0
 msgid "The chosen company is not in the allowed companies for this user"
 msgstr ""
+"Выбранная организация отсутствует в списке разрешённых для этого пользователя"
 
 #. module: project
 #: help:project.task.reevaluate,remaining_hours:0
 msgid "Put here the remaining hours required to close the task."
-msgstr ""
+msgstr "Укажите здесь требуемое число часов для завершения задачи."
 
 #. module: project
 #: view:project.task:0
 msgid "Deadlines"
-msgstr ""
+msgstr "Сроки"
 
 #. module: project
 #: code:addons/project/project.py:121
@@ -69,27 +70,27 @@ msgstr "Недопустимая операция!"
 #: code:addons/project/wizard/project_task_delegate.py:67
 #, python-format
 msgid "CHECK: "
-msgstr ""
+msgstr "ПРОВЕРКА: "
 
 #. module: project
 #: field:project.installer,project_issue:0
 msgid "Issues Tracker"
-msgstr ""
+msgstr "Отслеживание инцидентов"
 
 #. module: project
 #: field:project.installer,hr_timesheet_sheet:0
 msgid "Timesheets"
-msgstr ""
+msgstr "Табели"
 
 #. module: project
 #: view:project.task:0
 msgid "Delegations"
-msgstr "Делегированные"
+msgstr "Поручения"
 
 #. module: project
 #: field:project.task.delegate,planned_hours_me:0
 msgid "Hours to Validate"
-msgstr "Проверяемые часы"
+msgstr "Часов на проверку"
 
 #. module: project
 #: field:project.project,progress_rate:0
@@ -104,8 +105,8 @@ msgid ""
 "Total remaining time, can be re-estimated periodically by the assignee of "
 "the task."
 msgstr ""
-"Общее количество оставшегося времени может быть переодически переоценено "
-"тем, кто отвечает за это задание."
+"Общее количество требуемого времени может быть изменено сотрудником, "
+"назначенным на задание."
 
 #. module: project
 #: help:project.project,priority:0
@@ -116,6 +117,7 @@ msgstr ""
 #: constraint:project.project:0
 msgid "Error! project start-date must be lower then project end-date."
 msgstr ""
+"Ошибка! Дата начала проекта должна быть раньше даты окончания проекта"
 
 #. module: project
 #: view:project.task.reevaluate:0
@@ -130,17 +132,17 @@ msgstr "Участники проекта"
 #. module: project
 #: model:process.node,name:project.process_node_taskbydelegate0
 msgid "Task by delegate"
-msgstr "Задание поручено"
+msgstr "Задания по назначенным"
 
 #. module: project
 #: selection:report.project.task.user,month:0
 msgid "March"
-msgstr ""
+msgstr "Март"
 
 #. module: project
 #: view:project.task:0
 msgid "Delegated tasks"
-msgstr "Делегированные задания"
+msgstr "Порученные задания"
 
 #. module: project
 #: field:project.task,child_ids:0
@@ -153,8 +155,8 @@ msgid ""
 "Header added at the beginning of the email for the warning message sent to "
 "the customer when a task is closed."
 msgstr ""
-"Заголовок, добавляемый в начало электронного письма для предупреждения, "
-"отправляемого заказчику при закрытии задачи."
+"Заголовок, добавляемый в начало электронного письма для уведомления, "
+"направляемого заказчику при завершении задачи."
 
 #. module: project
 #: view:project.task:0
@@ -164,7 +166,7 @@ msgstr "Мои задания"
 #. module: project
 #: constraint:project.task:0
 msgid "Error ! You cannot create recursive tasks."
-msgstr ""
+msgstr "Ошибка! Вы не можете создавать рекурсивные задания."
 
 #. module: project
 #: field:project.task,company_id:0
@@ -172,27 +174,27 @@ msgstr ""
 #: view:report.project.task.user:0
 #: field:report.project.task.user,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Организация"
 
 #. module: project
 #: field:project.installer,project_scrum:0
 msgid "SCRUM"
-msgstr ""
+msgstr "SCRUM"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_project_vs_planned_total_hours_graph
 msgid "Projects: Planned Vs Total hours"
-msgstr ""
+msgstr "Проекты: запланировано часов / общее время"
 
 #. module: project
 #: view:project.task.close:0
 msgid "Warn Message"
-msgstr ""
+msgstr "Текст уведомления"
 
 #. module: project
 #: field:project.task.type,name:0
 msgid "Stage Name"
-msgstr ""
+msgstr "Название этапа"
 
 #. module: project
 #: model:process.transition.action,name:project.process_transition_action_openpendingtask0
@@ -203,12 +205,12 @@ msgstr "Поставить в ожидание"
 #: view:report.project.task.user:0
 #: field:report.project.task.user,opening_days:0
 msgid "Days to Open"
-msgstr ""
+msgstr "Дней до открытия"
 
 #. module: project
 #: view:project.task:0
 msgid "Change Stage"
-msgstr ""
+msgstr "Изменить этап"
 
 #. module: project
 #: view:project.project:0
@@ -218,31 +220,31 @@ msgstr "Новый проект на основе шаблона"
 #. module: project
 #: constraint:project.project:0
 msgid "Error! You cannot assign escalation to the same project!"
-msgstr ""
+msgstr "Ошибка! Вы не можете назначить эскалацию на тот же проект!"
 
 #. module: project
 #: selection:project.task,priority:0
 #: selection:report.project.task.user,priority:0
 msgid "Very urgent"
-msgstr "Весьма срочно"
+msgstr "Очень срочно"
 
 #. module: project
 #: help:project.task.delegate,user_id:0
 msgid "User you want to delegate this task to"
-msgstr ""
+msgstr "Пользователь, которому вы хотите поручить это задание"
 
 #. module: project
 #: view:report.project.task.user:0
 #: field:report.project.task.user,day:0
 #: field:task.by.days,day:0
 msgid "Day"
-msgstr ""
+msgstr "День"
 
 #. module: project
 #: code:addons/project/project.py:571
 #, python-format
 msgid "The task '%s' is done"
-msgstr ""
+msgstr "Задание '%s' выполнено"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_close
@@ -264,7 +266,7 @@ msgstr "Задание"
 #. module: project
 #: view:project.project:0
 msgid "Members"
-msgstr ""
+msgstr "Участники"
 
 #. module: project
 #: help:project.task,planned_hours:0
@@ -272,7 +274,7 @@ msgid ""
 "Estimated time to do the task, usually set by the project manager when the "
 "task is in draft state."
 msgstr ""
-"Предположительное время, необходимое для завершения задания. Обычно "
+"Приблизительное время, необходимое для завершения задания. Обычно "
 "устанавливается руководителем проекта, когда задание находится в статусе "
 "\"Черновик\"."
 
@@ -286,22 +288,22 @@ msgstr ""
 #: view:project.task:0
 #: field:project.task,notes:0
 msgid "Notes"
-msgstr "Записи"
+msgstr "Заметки"
 
 #. module: project
 #: view:project.vs.hours:0
 msgid "Project vs remaining hours"
-msgstr ""
+msgstr "Проект по оставщемуся времени"
 
 #. module: project
 #: view:project.project:0
 msgid "Invoice Address"
-msgstr ""
+msgstr "Адрес выставления счёта"
 
 #. module: project
 #: field:report.project.task.user,name:0
 msgid "Task Summary"
-msgstr ""
+msgstr "Описание задачи"
 
 #. module: project
 #: field:project.task,active:0
@@ -805,7 +807,7 @@ msgstr ""
 #: model:process.transition,name:project.process_transition_delegate0
 #: view:project.task:0
 msgid "Delegate"
-msgstr "Делегировать"
+msgstr "Поручить"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_view_template_project
@@ -1251,7 +1253,7 @@ msgstr ""
 #: code:addons/project/wizard/project_task_close.py:111
 #, python-format
 msgid "Error"
-msgstr ""
+msgstr "Ошибка"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_res_users_2_project_project
@@ -1273,6 +1275,7 @@ msgstr ""
 #, python-format
 msgid "Couldn't send mail because your email address is not configured!"
 msgstr ""
+"Невозможно отправить письмо: ваш адрес электронной почты не настроен!"
 
 #. module: project
 #: help:report.project.task.user,opening_days:0
@@ -1362,7 +1365,7 @@ msgstr ""
 #: code:addons/project/project.py:582
 #, python-format
 msgid "Task '%s' set in progress"
-msgstr ""
+msgstr "Задание '%s' в состоянии \"Выполняется\""
 
 #. module: project
 #: view:project.project:0
@@ -1376,6 +1379,10 @@ msgid ""
 "projects. It enables you to connect projects with budgets, planning, cost "
 "and revenue analysis, timesheets on projects, etc."
 msgstr ""
+"Свяжите этот проект с аналитическим счетом, если Вы нуждаетесь в управлении "
+"финансовой деятельностью на проектах. Это позволяет Вам соединить проект с "
+"бюджетами, планированием, стоимостью и анализом дохода, табели на проектах, "
+"и т.д."
 
 #. module: project
 #: view:project.project:0
@@ -1999,6 +2006,10 @@ msgstr ""
 #~ msgid "Internal description of the project."
 #~ msgstr "Внутреннее описание проекта."
 
+#, python-format
+#~ msgid "Operation Done"
+#~ msgstr "Операция выполнена"
+
 #~ msgid "Trigger Invoice"
 #~ msgstr "Триггер счета"
 
@@ -2179,3 +2190,17 @@ msgstr ""
 
 #~ msgid "Months"
 #~ msgstr "Мес"
+
+#~ msgid "Trigger invoices from sale order lines"
+#~ msgstr "Автоматически создавать счета по позициям наряд-заказа"
+
+#~ msgid "Quotation"
+#~ msgstr "Quotation"
+
+#, python-format
+#~ msgid ""
+#~ "A new project has been created !\n"
+#~ "We suggest you to close this one and work on this new project."
+#~ msgstr ""
+#~ "Был создан новый проект!\n"
+#~ "Мы предлагаем вам закрыть это окно и начать работать над новым проектом."

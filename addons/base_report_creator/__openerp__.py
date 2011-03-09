@@ -31,7 +31,7 @@ for and users.
 After installing the module, it adds a menu to define custom report in
 the "Dashboard" menu.
 """,
-    'author': 'OpenERP SA & Axelor',
+    'author': ['OpenERP SA', 'Axelor'],
     'website': '',
     'depends': ['base', 'board'],
     'init_xml': [],

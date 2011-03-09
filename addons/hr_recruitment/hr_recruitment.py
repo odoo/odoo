@@ -437,7 +437,7 @@ class hr_job(osv.osv):
     _inherit = "hr.job"
     _name = "hr.job"
     _columns = {
-        'survey_id': fields.many2one('survey', 'Survey'),
+        'survey_id': fields.many2one('survey', 'Survey', help="Select survey for the current job"),
     }
 hr_job()
 
