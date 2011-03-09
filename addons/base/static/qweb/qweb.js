@@ -81,14 +81,13 @@ var QWeb = {
     },
     trim : function(v, mode) {
         if (!v || !mode) return v;
-        if (mode == 'both') {
-            return v.replace(/^\s*|\s*$/g, "");
-        } else if (mode == "left") {
-            return v.replace(/^\s*/, "");
-        } else if (mode == "right") {
-            return v.replace(/\s*$/, "");
-        } else {
-            return v;
+        switch (mode) {
+            case 'both':
+                return v.replace(/^\s*|\s*$/g, "");
+            case "left":
+                return v.replace(/^\s*/, "");
+            case "right":
+                return v.replace(/\s*$/, "");
         }
     },
     escape_text:function(s) {
