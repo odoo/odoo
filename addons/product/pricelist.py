@@ -245,8 +245,8 @@ class product_pricelist(osv.osv):
                             if sinfo:
                                 qty_in_product_uom = qty
                                 product_default_uom = product_obj.read(cr, uid, [tmpl_id], ['uom_id'])[0]['uom_id'][0]
-                                supplier = supplierinfo_obj.browse(cr, uid, sinfo, context=context)
-                                seller_uom = supplier[0].product_uom and supplier[0].product_uom.id or False
+                                supplier = supplierinfo_obj.browse(cr, uid, sinfo, context=context)[0]
+                                seller_uom = supplier.product_uom and supplier.product_uom.id or False
                                 if seller_uom and product_default_uom and product_default_uom != seller_uom:
                                     uom_price_already_computed = True
                                     qty_in_product_uom = product_uom_obj._compute_qty(cr, uid, product_default_uom, qty, to_uom_id=seller_uom)
