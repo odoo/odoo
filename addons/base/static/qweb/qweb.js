@@ -353,22 +353,6 @@ var QWeb = {
         } else {
             return "template " + name + " not found";
         }
-    },
-    dump:function(o) {
-        var r = "";
-        if (typeof(o) == "object") {
-            for (var i in o) {
-                r += i + " : " + this.dump(s) + "\n";
-            }
-            r = s + "{\n" + r + "}\n";
-        } else {
-            r = s + "";
-        }
-        return r;
-    },
-    debug:function(s) {
-        var r = this.dump(s);
-        $("#debug")[0].append(this.escape_text(r) + "<br/>\n");
     }
 };
 
