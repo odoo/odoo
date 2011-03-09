@@ -1290,6 +1290,20 @@ class account_invoice_line(osv.osv):
         'price_unit': _price_unit_default,
     }
 
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        if context is None:
+            context = {}
+        res = super(account_invoice_line,self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
+        if context.get('type', False):
+            doc = etree.XML(res['arch'])
+            for node in doc.xpath("//field[@name='product_id']"):
+                if context['type'] in ('in_invoice','in_refund'):
+                    node.set('domain', "[('purchase_ok', '=', True)]")
+                else:
+                    node.set('domain', "[('sale_ok', '=', True)]")
+            res['arch'] = etree.tostring(doc)
+        return res
+
     def product_id_change(self, cr, uid, ids, product, uom, qty=0, name='', type='out_invoice', partner_id=False, fposition_id=False, price_unit=False, address_invoice_id=False, currency_id=False, context=None):
         if context is None:
             context = {}
