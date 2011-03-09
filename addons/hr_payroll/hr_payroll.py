@@ -378,7 +378,7 @@ class hr_payslip(osv.osv):
             deduct = 0.0
             others = 0.0
             contract = rs.employee_id.contract_id
-            obj = {'basic_amount': contract.wage}
+            obj = {'basic': contract.wage}
             if not contract.struct_id:
                 raise osv.except_osv(_('Warning!'), _('Please define Salary Structure on Contract for %s.') % (rs.employee_id.name))
             function = contract.struct_id.id
@@ -920,8 +920,7 @@ class hr_payslip(osv.osv):
             lines = salary_rule_pool.browse(cr, uid, func['rule_ids'], context=context)
         ad = []
         total = 0.0
-        obj = {'basic_amount':contract.wage}
-
+        obj = {'basic':contract.wage}
         for line in lines:
             cd = line.code.lower()
             obj[cd] = line.amount or 0.0
@@ -946,7 +945,6 @@ class hr_payslip(osv.osv):
             base = False
 #                company_contrib = 0.0
             base = line.computational_expression
-
             try:
                 #Please have a look at the configuration guide.
                 amt = eval(base, obj)
