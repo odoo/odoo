@@ -147,12 +147,14 @@ class report_custom(report_rml):
                     <col para='yes'>-</col>
                     </row></lines>"""
                 xml += """<lines style='total'> <row>
-                    <col> """ + _('Total Cost of ') + str(number) +' '+ product.uom_id.name + """: </col>
+                    <col> Total Cost of %d %s: </col>
                     <col/>
                     <col f='yes'/>
-                    <col t='yes'>"""+ rml_obj.formatLang(total_strd, digits=purchase_price_digits) +' '+ company_currency.symbol + """</col>
-                    <col t='yes'>"""+ rml_obj.formatLang(total, digits=purchase_price_digits) +' '+ company_currency.symbol + """</col>
-                    </row></lines>'"""
+                    <col t='yes'>%s %s</col>
+                    <col t='yes'>%s %s</col>
+                    </row></lines>'""" %(number, product.uom_id.name, rml_obj.formatLang(total_strd, digits=purchase_price_digits),
+                                       company_currency.symbol, rml_obj.formatLang(total, digits=purchase_price_digits),company_currency.symbol)
+
             else:
                 bom = bom_pool.browse(cr, uid, bom_id, context=context)
                 factor = number * product.uom_id.factor / bom.product_uom.factor
@@ -191,19 +193,22 @@ class report_custom(report_rml):
                     xml += workcenter_header
                     xml += "<lines style='lines'>" + xml_tmp + '</lines>'
                     xml += """<lines style='sub_total'> <row>
-                    <col> """ + _('Work Cost of ') + str(number) +' '+ product.uom_id.name +""": </col>
+                    <col> Work Cost of %d "%s: </col>
                     <col/>
                     <col/>
                     <col/>
-                    <col t='yes'>"""+ rml_obj.formatLang(total2, digits=purchase_price_digits) +' '+ company_currency.symbol +"""</col>
-                    </row></lines>'"""
+                    <col t='yes'>%s %s</col>
+                    </row></lines>'""" %(number, product.uom_id.name, rml_obj.formatLang(total2, digits=purchase_price_digits),
+                                         company_currency.symbol)
+
                 xml += """<lines style='total'> <row>
-                    <col> """ + _('Total Cost of ') + str(number) +' '+ product.uom_id.name + """: </col>
+                    <col> Total Cost of %d %s: </col>
                     <col/>
                     <col t='yes'/>
-                    <col t='yes'>"""+ rml_obj.formatLang(total_strd+total2, digits=purchase_price_digits) +' '+ company_currency.symbol + """</col>
+                    <col t='yes'>%s %s</col>
                     <col t='yes'></col>
-                    </row></lines>'"""
+                    </row></lines>'""" %(number, product.uom_id.name, rml_obj.formatLang(total_strd+total2, digits=purchase_price_digits),
+                                         company_currency.symbol)
 
         xml = '<?xml version="1.0" ?><report>' + config_start + config_stop + xml + '</report>'
 
