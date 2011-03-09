@@ -40,7 +40,7 @@
 var QWeb = {
     templates:{},
     prefix:"t",
-    reg:"",
+    reg:new RegExp(),
     tag:{},
     att:{},
     eval_object:function(e, v) {
