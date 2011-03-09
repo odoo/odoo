@@ -96,7 +96,6 @@ class hr_contract(osv.osv):
     _columns = {
         'struct_id': fields.many2one('hr.payroll.structure', 'Salary Structure'),
         'basic': fields.float('Basic Salary', digits_compute=dp.get_precision('Account')), # i think we can remove this because we have wage field on contract ?
-        #FIXME not needed as we have the resource.calendar?        'working_days_per_week': fields.integer('Working Days', help="No of Working days / week for an employee"),
     }
 
 hr_contract()
@@ -1252,16 +1251,33 @@ class hr_employee(osv.osv):
     Employee
     '''
 
+    def _calculate_basic(self, cr, uid, ids, name, args, context):
+        if not ids: return {}
+        vals = {}
+        current_date = datetime.now().strftime('%Y-%m-%d')
+        for employee in self.browse(cr, uid, ids, context=context):
+            if not employee.contract_id:
+                vals[employee.id] = {'basic': 0.0}
+                continue
+            cr.execute( 'SELECT SUM(wage) '\
+                        'FROM hr_contract '\
+                        'WHERE employee_id = %s '\
+                        'AND date_start < %s '\
+                        'AND (date_end > %s OR date_end is NULL)',
+                         (employee.id, current_date, current_date))
+            result = dict(cr.dictfetchone())
+            vals[employee.id] = {
+                                 'basic': result['sum']
+            }
+        return vals
+
     _inherit = 'hr.employee'
     _description = 'Employee'
 
     _columns = {
         'line_ids':fields.one2many('hr.payslip.line', 'employee_id', 'Salary Structure', required=False),
         'slip_ids':fields.one2many('hr.payslip', 'employee_id', 'Payslips', required=False, readonly=True),
-        'otherid': fields.char('Other Id', size=64),
-#        'basic': fields.function(_calculate_salary, method=True, multi='dc', type='float', string='Basic Salary', digits=(14,2)),
-#FIXME the function has to make the sum of basic field of all the hr.contract for this employee that have date_start < now() and now() < date_stop or not date_stop
-#        'emp_sal_rule_ids':fields.many2many('hr.salary.rule', 'hr_emp_salary_rule_rel', 'employee_id', 'rule_id', 'Salary Rules', readonly=False),
+        'basic': fields.function(_calculate_basic, method=True, multi='dc', type='float', string='Basic Salary', digits_compute=dp.get_precision('Account')),
     }
 hr_employee()
 
