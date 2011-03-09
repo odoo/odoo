@@ -771,6 +771,7 @@ openerp.base.Action =  openerp.base.Controller.extend({
 
 openerp.base.WebClient = openerp.base.Controller.extend({
     init: function(element_id) {
+        var self = this;
         this._super(null, element_id);
 
         QWeb.add_template("base.xml");
@@ -783,6 +784,10 @@ openerp.base.WebClient = openerp.base.Controller.extend({
         this.login = new openerp.base.Login(this.session, "oe_login");
 
         this.header = new openerp.base.Header(this.session, "oe_header");
+
+        this.login.on_login_valid.add(function() {
+            self.$element.find(".on_logged").show();
+        });
 
         // TODO MOVE ALL OF THAT IN on_loggued
         // after pooler udpate of modules
