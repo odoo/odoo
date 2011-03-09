@@ -25,9 +25,26 @@ import time
 from osv import osv,fields
 from tools.translate import _
 
+class stock_return_picking_memory(osv.osv_memory):
+    _name = "stock.return.picking.memory"
+    _rec_name = 'product_id'
+    _columns = {
+        'product_id' : fields.many2one('product.product', string="Product", required=True),
+        'quantity' : fields.float("Quantity", required=True),
+        'wizard_id' : fields.many2one('stock.return.picking', string="Wizard"),
+        'move_id' : fields.many2one('stock.move', "Move"),
+    }
+
+stock_return_picking_memory()
+
+
 class stock_return_picking(osv.osv_memory):
     _name = 'stock.return.picking'
     _description = 'Return Picking'
+    _columns = {
+        'product_return_moves' : fields.one2many('stock.return.picking.memory', 'wizard_id', 'Moves'),
+        'invoice_state': fields.selection([('2binvoiced', 'To be refunded/invoiced'), ('none', 'No invoicing')], 'Invoicing',required=True),
+     }
 
     def default_get(self, cr, uid, fields, context=None):
         """
@@ -39,6 +56,7 @@ class stock_return_picking(osv.osv_memory):
          @param context: A standard dictionary
          @return: A dictionary with default values for all field in ``fields``
         """
+        result1 = []
         if context is None:
             context = {}
         res = super(stock_return_picking, self).default_get(cr, uid, fields, context=context)
@@ -48,13 +66,16 @@ class stock_return_picking(osv.osv_memory):
         if pick:
             if 'invoice_state' in fields:
                 if pick.invoice_state=='invoiced':
-                    res['invoice_state'] = '2binvoiced'
+                    res.update({'invoice_state': '2binvoiced'})
                 else:
-                    res['invoice_state'] = 'none'
+                    res.update({'invoice_state': 'none'})
+            return_history = self.get_return_history(cr, uid, record_id, context)       
             for line in pick.move_lines:
-                return_id = 'return%s'%(line.id)
-                if return_id in fields:
-                    res[return_id] = line.product_qty
+                qty = line.product_qty - return_history[line.id]
+                if qty > 0:
+                    result1.append({'product_id': line.product_id.id, 'quantity': qty,'move_id':line.id})
+            if 'product_return_moves' in fields:
+                res.update({'product_return_moves': result1})
         return res
 
     def view_init(self, cr, uid, fields_list, context=None):
@@ -75,62 +96,34 @@ class stock_return_picking(osv.osv_memory):
             pick = pick_obj.browse(cr, uid, record_id, context=context)
             if pick.state not in ['done','confirmed','assigned']:
                 raise osv.except_osv(_('Warning !'), _("You may only return pickings that are Confirmed, Available or Done!"))
-            return_history = {}
             valid_lines = 0
-            for m in [line for line in pick.move_lines]:
-                if m.state == 'done':
-                    return_history[m.id] = 0
-                    for rec in m.move_history_ids2:
-                        return_history[m.id] += (rec.product_qty * rec.product_uom.factor)
-                    if m.product_qty * m.product_uom.factor >= return_history[m.id]:
+            return_history = self.get_return_history(cr, uid, record_id, context)
+            for m  in pick.move_lines:
+                if m.product_qty * m.product_uom.factor > return_history[m.id]:
                         valid_lines += 1
-                        if 'return%s'%(m.id) not in self._columns:
-                            self._columns['return%s'%(m.id)] = fields.float(string=m.name, required=True)
-                        if 'invoice_state' not in self._columns:
-                            self._columns['invoice_state'] = fields.selection([('2binvoiced', 'To be refunded/invoiced'), ('none', 'No invoicing')], string='Invoicing', required=True)
             if not valid_lines:
                 raise osv.except_osv(_('Warning !'), _("There are no products to return (only lines in Done state and not fully returned yet can be returned)!"))
         return res
-
-    def fields_view_get(self, cr, uid, view_id=None, view_type='form',
-                        context=None, toolbar=False, submenu=False):
-        """
-         Changes the view dynamically
+    
+    def get_return_history(self, cr, uid, pick_id, context=None):
+        """ 
+         Get  return_history.
          @param self: The object pointer.
          @param cr: A database cursor
          @param uid: ID of the user currently logged in
+         @param pick_id: Picking id
          @param context: A standard dictionary
-         @return: New arch of view.
+         @return: A dictionary which of values.
         """
-        res = super(stock_return_picking, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar,submenu=False)
-        record_id = context and context.get('active_id', False)
-        active_model = context.get('active_model')
-        if  active_model != 'stock.picking':
-            return res
-        if record_id:
-            pick_obj = self.pool.get('stock.picking')
-            pick = pick_obj.browse(cr, uid, record_id)
-            return_history = {}
-            res['fields'].clear()
-            arch_lst=['<?xml version="1.0"?>', '<form string="%s">' % _('Return lines'), '<label string="%s" colspan="4"/>' % _('Provide the quantities of the returned products.')]
-            for m in pick.move_lines:
+        pick_obj = self.pool.get('stock.picking')
+        pick = pick_obj.browse(cr, uid, pick_id, context=context)
+        return_history = {}
+        for m  in pick.move_lines:
+            if m.state == 'done':
                 return_history[m.id] = 0
                 for rec in m.move_history_ids2:
-                    return_history[m.id] += rec.product_qty
-                quantity = m.product_qty
-                if m.state=='done' and quantity > return_history[m.id]:
-                    arch_lst.append('<field name="return%s"/>\n<newline/>' % (m.id,))
-                    res['fields']['return%s' % m.id]={'string':m.name, 'type':'float', 'required':True}
-                    res.setdefault('returns', []).append(m.id)
-            arch_lst.append('<field name="invoice_state"/>\n<newline/>')
-            res['fields']['invoice_state']={'string':_('Invoicing'), 'type':'selection','required':True, 'selection':[('2binvoiced', _('To be refunded/invoiced')), ('none', _('No invoicing'))]}
-            arch_lst.append('<group col="2" colspan="4">')
-            arch_lst.append('<button icon="gtk-cancel" special="cancel" string="Cancel" />')
-            arch_lst.append('<button name="create_returns" string="Return" colspan="1" type="object" icon="gtk-apply" />')
-            arch_lst.append('</group>')
-            arch_lst.append('</form>')
-            res['arch'] = '\n'.join(arch_lst)
-        return res
+                    return_history[m.id] += (rec.product_qty * rec.product_uom.factor)
+        return return_history
 
     def create_returns(self, cr, uid, ids, context=None):
         """ 
@@ -148,48 +141,49 @@ class stock_return_picking(osv.osv_memory):
         move_obj = self.pool.get('stock.move')
         pick_obj = self.pool.get('stock.picking')
         uom_obj = self.pool.get('product.uom')
+        data_obj = self.pool.get('stock.return.picking.memory')
         wf_service = netsvc.LocalService("workflow")
-    
         pick = pick_obj.browse(cr, uid, record_id, context=context)
         data = self.read(cr, uid, ids[0])
         new_picking = None
         date_cur = time.strftime('%Y-%m-%d %H:%M:%S')
-
         set_invoice_state_to_none = True
         returned_lines = 0
-        for move in pick.move_lines:
-            if not new_picking:
-                if pick.type=='out':
-                    new_type = 'in'
-                elif pick.type=='in':
-                    new_type = 'out'
-                else:
-                    new_type = 'internal'
-                new_picking = pick_obj.copy(cr, uid, pick.id, {'name':'%s-return' % pick.name,
-                        'move_lines':[], 'state':'draft', 'type':new_type,
-                        'date':date_cur, 'invoice_state':data['invoice_state'],})
+        
+#        Create new picking for returned products
+        if pick.type=='out':
+            new_type = 'in'
+        elif pick.type=='in':
+            new_type = 'out'
+        else:
+            new_type = 'internal'
+        new_picking = pick_obj.copy(cr, uid, pick.id, {'name':'%s-return' % pick.name,
+                'move_lines':[], 'state':'draft', 'type':new_type,
+                'date':date_cur, 'invoice_state':data['invoice_state'],})
+        
+        val_id = data['product_return_moves']
+        for v in val_id:
+            data_get = data_obj.read(cr, uid, v)
+            mov_id = data_get['move_id']
+            new_qty = data_get['quantity']
+            move = move_obj.browse(cr, uid, mov_id, context=context)
             new_location=move.location_dest_id.id
-            if move.state=='done':
-                new_qty = data['return%s' % move.id]
-                returned_qty = move.product_qty
+            returned_qty = move.product_qty
+            for rec in move.move_history_ids2:
+                returned_qty -= rec.product_qty
 
-                for rec in move.move_history_ids2:
-                    returned_qty -= rec.product_qty
-
-                if returned_qty != new_qty:
-                    set_invoice_state_to_none = False
-
-                if new_qty:
-                    returned_lines += 1
-                    new_move=move_obj.copy(cr, uid, move.id, {
-                        'product_qty': new_qty,
-                        'product_uos_qty': uom_obj._compute_qty(cr, uid, move.product_uom.id,
-                            new_qty, move.product_uos.id),
-                        'picking_id':new_picking, 'state':'draft',
-                        'location_id':new_location, 'location_dest_id':move.location_id.id,
-                        'date':date_cur,})
-                    move_obj.write(cr, uid, [move.id], {'move_history_ids2':[(4,new_move)]})
-
+            if returned_qty != new_qty:
+                set_invoice_state_to_none = False
+            if new_qty:
+                returned_lines += 1
+                new_move=move_obj.copy(cr, uid, move.id, {
+                    'product_qty': new_qty,
+                    'product_uos_qty': uom_obj._compute_qty(cr, uid, move.product_uom.id,
+                        new_qty, move.product_uos.id),
+                    'picking_id':new_picking, 'state':'draft',
+                    'location_id':new_location, 'location_dest_id':move.location_id.id,
+                    'date':date_cur,})
+                move_obj.write(cr, uid, [move.id], {'move_history_ids2':[(4,new_move)]})
         if not returned_lines:
             raise osv.except_osv(_('Warning !'), _("Please specify at least one non-zero quantity!"))
 
