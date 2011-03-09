@@ -2947,7 +2947,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             analitical_journal_bank = analitical_bank_ids and analitical_bank_ids[0] or False
 
             vals_journal['name']= vals['name']
-            vals_journal['code']= _('BNK') + str(current_num)
+            vals_journal['code']= _('BNK%s') % str(current_num)
             vals_journal['sequence_id'] = seq_id
             vals_journal['type'] = line.account_type == 'cash' and 'cash' or 'bank'
             vals_journal['company_id'] =  company_id

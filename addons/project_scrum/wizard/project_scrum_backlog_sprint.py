@@ -54,12 +54,12 @@ class backlog_sprint_assign(osv.osv_memory):
                     'planned_hours':backlog.expected_hours,
                     'remaining_hours':backlog.expected_hours,
                 })
-                message = _('Product Backlog') + " '" + backlog.name + "' "+ _("is converted into Task %d."%(task_id,))
+                message = _("Product Backlog '%s' is converted into Task %d.")  %(backlog.name, task_id)
                 self.log(cr, uid, backlog.id, message)
             if data['state_open'] and backlog.state == "draft":
                 backlog_obj.write(cr, uid, backlog.id, {'state':'open'})
             sprint = sprint_obj.browse(cr, uid, data['sprint_id'], context=context)
-            message = _('Product Backlog') + " '" + backlog.name + "' "+ _("is assigned sprint:%s"%(sprint.name))
+            message = _("Product Backlog '%s' is assigned sprint:%s") %(backlog.name, sprint.name)
             self.log(cr, uid, backlog.id, message)
         backlog_obj.write(cr, uid, backlog_ids, {'sprint_id': data['sprint_id']}, context=context)
         return {'type': 'ir.actions.act_window_close'}

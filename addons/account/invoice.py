@@ -994,7 +994,7 @@ class account_invoice(osv.osv):
                 ctx = context.copy()
                 if obj_inv.type in ('out_invoice', 'out_refund'):
                     ctx = self.get_log_context(cr, uid, context=ctx)
-                message = _('Invoice ') + " '" + name + "' "+ _("is validated.")
+                message = _("Invoice  '%s' is validated.") % name
                 self.log(cr, uid, inv_id, message, context=ctx)
         return True
 
