@@ -384,7 +384,7 @@ openerp.base.Login =  openerp.base.Controller.extend({
         this._super(session, element_id);
     },
     start: function() {
-        this.$element.html(QWeb.render("login", {}));
+        this.$element.html(QWeb.render("Login", {}));
         this.on_login_invalid();
         this.$element.find("form").submit(this.on_submit);
     },
@@ -774,7 +774,7 @@ openerp.base.WebClient = openerp.base.Controller.extend({
         this._super(null, element_id);
 
         QWeb.add_template("base.xml");
-        this.$element.html(QWeb.render("interface", {}));
+        this.$element.html(QWeb.render("Interface", {}));
 
         this.session = new openerp.base.Session("oe_errors");
 

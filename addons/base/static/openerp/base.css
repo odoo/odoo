@@ -24,6 +24,7 @@ body {
 .openerp {
 }
 
+/* Loading */
 .openerp .loading {
     display: none;
     z-index: 1000;
@@ -36,6 +37,7 @@ body {
     text-align: center;
 }
 
+/* Login */
 .openerp .login {
     display: none;
     padding: 6px;
@@ -53,6 +55,7 @@ body {
     background-color: #f88;
 }
 
+/* Main */
 .openerp .main {
     padding: 6px;
 }
@@ -63,6 +66,7 @@ body {
     text-shadow: white 0 1px 0;
 }
 
+/* Menu */
 .openerp .sf-menu {
     margin-bottom: 0px;
 }
@@ -115,8 +119,66 @@ body {
 .openerp .header_corner {
     float: right;
 }
+.openerp .header_corner .block {
+    float: left;
+    height: 34px;
+    line-height: 34px;
+    /*background: url(../images/top-sep-a.png) no-repeat;*/
+    border-left: 1px solid #6a6a6a;
+    background: #828282;
+    background: -moz-linear-gradient(top, #828282 0%, #4D4D4D 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#828282), color-stop(100%,#4D4D4D));
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#828282', endColorstr='#4D4D4D',GradientType=0 );
+}
+.openerp .header_corner .block a {
+    display: block;
+    color: white;
+    text-decoration: none;
+    padding: 0 10px;
+}
+.openerp .header_corner .block a:hover {
+    background: #929292;
+    background: -moz-linear-gradient(top, #929292 0%, #4D4D4D 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#929292), color-stop(100%,#4D4D4D));
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#929292', endColorstr='#4D4D4D',GradientType=0 );
+}
+.openerp .header_corner ul.block {
+    /*float: left;*/
+    list-style: none;
+    height: 34px;
+    margin: 0;
+    padding: 0 0 0 2px;
+    /*background: url(../images/top-sep-a.png) no-repeat;*/
+    line-height: 33px;
+    /*font-size: 1em;*/
+    /*text-transform: uppercase;*/
+}
+.openerp .header_corner ul.block li {
+    float: left;
+}
+.openerp .header_corner ul.block li a {
+    padding: 0 5px;
+    position: relative;
+    line-height: 32px;
+}
+.openerp .header_corner ul.block li a img {
+    vertical-align: middle;
+}
+.openerp .header_corner ul.block li a small {
+    position: absolute;
+    right: 0;
+    top: 5px;
+    padding: 1px 4px 2px;
+    background: #333;
+    background: rgba(0, 0, 0, 0.75);
+    border-radius: 7px;
+    -moz-border-radius: 7px;
+    -webkit-border-radius: 7px;
+    line-height: 1em;
+    font-weight: bold;
+}
 
-/* Header */
+/* Footer */
 .openerp .footer {
     text-align: center;
 }
