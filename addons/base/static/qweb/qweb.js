@@ -54,27 +54,27 @@ var QWeb = {
         e = e.replace(/\Wlt\W/g, " < ");
         e = e.replace(/\Wlte\W/g, " <= ");
         if (v[e] != undefined) {
-            return v[e]
+            return v[e];
         } else {
             with (v) return eval(e);
         }
     },
     eval_str:function(e, v) {
-        var r = this.eval_object(e, v)
-        r = (typeof(r) == "undefined" || r == null) ? "" : r.toString()
-        return e == "0" ? v["0"] : r
+        var r = this.eval_object(e, v);
+        r = (typeof(r) == "undefined" || r == null) ? "" : r.toString();
+        return e == "0" ? v["0"] : r;
     },
     eval_format:function(e, v) {
-        var i,m,r,src = e.split(/#/)
-        r = src[0]
+        var i,m,r,src = e.split(/#/);
+        r = src[0];
         for (i = 1; i < src.length; i++) {
             if (m = src[i].match(/^{(.*)}(.*)/)) {
-                r += this.eval_str(m[1], v) + m[2]
+                r += this.eval_str(m[1], v) + m[2];
             } else {
-                r += "#" + src[i]
+                r += "#" + src[i];
             }
         }
-        return r
+        return r;
     },
     eval_bool:function(e, v) {
         return this.eval_object(e, v) ? true : false;
@@ -92,13 +92,13 @@ var QWeb = {
         }
     },
     escape_text:function(s) {
-        return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+        return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
     },
     escape_att:function(s) {
-        return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;")
+        return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
     },
     render_node : function(e, v, inner_trim) {
-        var r = ""
+        var r = "";
         if (e.nodeType == 3) {
             r = inner_trim ? this.trim(e.data, inner_trim) : e.data;
         } else if (e.nodeType == 1) {
@@ -110,28 +110,28 @@ var QWeb = {
                 var an = a[i].name,av = a[i].value;
                 var m,n;
                 if (m = an.match(this.reg)) {
-                    n = m[1]
+                    n = m[1];
                     if (n == "eval") {
-                        n = m[2].substring(1)
-                        av = this.eval_str(av, v)
+                        n = m[2].substring(1);
+                        av = this.eval_str(av, v);
                     }
                     if (f = this.att[n]) {
-                        this[f](e, t_att, g_att, v, m[2], av)
+                        this[f](e, t_att, g_att, v, m[2], av);
                     } else if (f = this.tag[n]) {
-                        t_render = f
+                        t_render = f;
                     }
-                    t_att[n] = av
+                    t_att[n] = av;
                 } else {
-                    g_att[an] = av
+                    g_att[an] = av;
                 }
             }
             if (inner_trim && !t_att["trim"]) {
                 t_att["trim"] = "inner " + inner_trim;
             }
             if (t_render) {
-                r = this[t_render](e, t_att, g_att, v)
+                r = this[t_render](e, t_att, g_att, v);
             } else {
-                r = this.render_element(e, t_att, g_att, v)
+                r = this.render_element(e, t_att, g_att, v);
             }
         }
         return r;
@@ -157,22 +157,22 @@ var QWeb = {
         } else {
             var att = "";
             for (var an in g_att) {
-                av = g_att[an]
-                att += " " + an + '="' + this.escape_att(av) + '"'
+                av = g_att[an];
+                att += " " + an + '="' + this.escape_att(av) + '"';
             }
             return inner.length ? "<" + e.tagName + att + ">" + inner + "</" + e.tagName + ">" : "<" + e.tagName + att + "/>";
         }
     },
     render_att_att:function(e, t_att, g_att, v, ext, av) {
         if (ext) {
-            g_att[ext.substring(1)] = this.eval_str(av, v)
+            g_att[ext.substring(1)] = this.eval_str(av, v);
         } else {
-            o = this.eval_object(av, v)
-            g_att[o[0]] = o[1]
+            o = this.eval_object(av, v);
+            g_att[o[0]] = o[1];
         }
     },
     render_att_attf:function(e, t_att, g_att, v, ext, av) {
-        g_att[ext.substring(1)] = this.eval_format(av, v)
+        g_att[ext.substring(1)] = this.eval_format(av, v);
     },
     render_tag_raw:function(e, t_att, g_att, v) {
         return this.eval_str(t_att["raw"], v);
@@ -187,99 +187,99 @@ var QWeb = {
         return this.escape_text(this.eval_format(t_att["esc"], v));
     },
     render_tag_if:function(e, t_att, g_att, v) {
-        return this.eval_bool(t_att["if"], v) ? this.render_element(e, t_att, g_att, v) : ""
+        return this.eval_bool(t_att["if"], v) ? this.render_element(e, t_att, g_att, v) : "";
     },
     render_tag_set:function(e, t_att, g_att, v) {
-        var ev = t_att["value"]
+        var ev = t_att["value"];
         if (ev && ev.constructor != Function) {
-            v[t_att["set"]] = this.eval_object(ev, v)
+            v[t_att["set"]] = this.eval_object(ev, v);
         } else {
-            v[t_att["set"]] = this.render_element(e, t_att, g_att, v)
+            v[t_att["set"]] = this.render_element(e, t_att, g_att, v);
         }
-        return ""
+        return "";
     },
     render_tag_call:function(e, t_att, g_att, v) {
         var d = v;
         if (!t_att["import"]) {
-            d = {}
+            d = {};
             for (var i in v) {
-                d[i] = v[i]
+                d[i] = v[i];
             }
         }
-        d["0"] = this.render_element(e, t_att, g_att, d)
-        return this.render(t_att["call"], d)
+        d["0"] = this.render_element(e, t_att, g_att, d);
+        return this.render(t_att["call"], d);
     },
     render_tag_js:function(e, t_att, g_att, v) {
-        var r = this.eval_str(this.render_element(e, t_att, g_att, v), v)
-        return t_att["js"] != "quiet" ? r : ""
+        var r = this.eval_str(this.render_element(e, t_att, g_att, v), v);
+        return t_att["js"] != "quiet" ? r : "";
     },
     render_tag_foreach:function(e, t_att, g_att, v) {
-        var expr = t_att["foreach"]
-        var enu = this.eval_object(expr, v)
+        var expr = t_att["foreach"];
+        var enu = this.eval_object(expr, v);
         var ru = [];
         if (enu) {
-            var val = t_att['as'] || expr.replace(/[^a-zA-Z0-9]/g, '_')
-            d = {}
+            var val = t_att['as'] || expr.replace(/[^a-zA-Z0-9]/g, '_');
+            d = {};
             for (var i in v) {
-                d[i] = v[i]
+                d[i] = v[i];
             }
-            d[val + "_all"] = enu
-            val_value = val + "_value"
-            val_index = val + "_index"
-            val_first = val + "_first"
-            val_last = val + "_last"
-            val_parity = val + "_parity"
-            var size = enu.length
+            d[val + "_all"] = enu;
+            val_value = val + "_value";
+            val_index = val + "_index";
+            val_first = val + "_first";
+            val_last = val + "_last";
+            val_parity = val + "_parity";
+            var size = enu.length;
             if (size) {
-                d[val + "_size"] = size
+                d[val + "_size"] = size;
                 for (var i = 0; i < size; i++) {
-                    var cur = enu[i]
-                    d[val_value] = cur
-                    d[val_index] = i
-                    d[val_first] = i == 0
-                    d[val_last] = i + 1 == size
-                    d[val_parity] = (i % 2 == 1 ? 'odd' : 'even')
+                    var cur = enu[i];
+                    d[val_value] = cur;
+                    d[val_index] = i;
+                    d[val_first] = i == 0;
+                    d[val_last] = i + 1 == size;
+                    d[val_parity] = (i % 2 == 1 ? 'odd' : 'even');
                     if (cur.constructor == Object) {
                         for (var j in cur) {
-                            d[j] = cur[j]
+                            d[j] = cur[j];
                         }
                     }
-                    d[val] = cur
+                    d[val] = cur;
                     var r = this.render_element(e, t_att, g_att, d);
-                    ru.push(r)
+                    ru.push(r);
                 }
             } else {
-                index = 0
+                index = 0;
                 for (cur in enu) {
-                    d[val_value] = cur
-                    d[val_index] = index
-                    d[val_first] = index == 0
-                    d[val_parity] = (index % 2 == 1 ? 'odd' : 'even')
-                    d[val] = cur
-                    ru.push(this.render_element(e, t_att, g_att, d))
-                    index += 1
+                    d[val_value] = cur;
+                    d[val_index] = index;
+                    d[val_first] = index == 0;
+                    d[val_parity] = (index % 2 == 1 ? 'odd' : 'even');
+                    d[val] = cur;
+                    ru.push(this.render_element(e, t_att, g_att, d));
+                    index += 1;
                 }
             }
-            return ru.join("")
+            return ru.join("");
         } else {
-            return "qweb: foreach " + expr + " not found."
+            return "qweb: foreach " + expr + " not found.";
         }
     },
     hash:function() {
-        var l = []
+        var l = [];
         for (var i in this) {
             if (m = i.match(/render_tag_(.*)/)) {
-                this.tag[m[1]] = i
-                l.push(m[1])
+                this.tag[m[1]] = i;
+                l.push(m[1]);
             } else if (m = i.match(/render_att_(.*)/)) {
-                this.att[m[1]] = i
-                l.push(m[1])
+                this.att[m[1]] = i;
+                l.push(m[1]);
             }
         }
         l.sort(function(a, b) {
-            return a.length > b.length ? -1 : 1
-        })
-        var s = "^" + this.prefix + "-(eval|" + l.join("|") + "|.*)(.*)$"
+            return a.length > b.length ? -1 : 1;
+        });
+        var s = "^" + this.prefix + "-(eval|" + l.join("|") + "|.*)(.*)$";
         this.reg = new RegExp(s);
     },
     load_xml:function(s) {
@@ -300,7 +300,7 @@ var QWeb = {
             var w = window,r = w.XMLHttpRequest,j;
             if (r)r = new r(); else for (j in{"Msxml2":1,"Microsoft":1})try {
                 r = new ActiveXObject(j + ".XMLHTTP");
-                break
+                break;
             } catch(e) {
             }
             if (r) {
@@ -326,27 +326,27 @@ var QWeb = {
     },
     add_template:function(e) {
         // TODO: keep sources so we can implement reload()
-        this.hash()
+        this.hash();
         if (e.constructor == String) {
-            e = this.load_xml(e)
+            e = this.load_xml(e);
         }
         var ec = [];
         if (e.documentElement) {
-            ec = e.documentElement.childNodes
+            ec = e.documentElement.childNodes;
         } else if (e.childNodes) {
-            ec = e.childNodes
+            ec = e.childNodes;
         }
         for (var i = 0; i < ec.length; i++) {
             var n = ec[i];
             if (n.nodeType == 1) {
-                var name = n.getAttribute(this.prefix + "-name")
+                var name = n.getAttribute(this.prefix + "-name");
                 this.templates[name] = n;
             }
         }
     },
     render:function(name, v) {
         if (e = this.templates[name]) {
-            return this.render_node(e, v)
+            return this.render_node(e, v);
         } else {
             return "template " + name + " not found";
         }
@@ -355,17 +355,17 @@ var QWeb = {
         var r = "";
         if (typeof(o) == "object") {
             for (var i in o) {
-                r += i + " : " + this.dump(s) + "\n"
+                r += i + " : " + this.dump(s) + "\n";
             }
-            r = s + "{\n" + r + "}\n"
+            r = s + "{\n" + r + "}\n";
         } else {
             r = s + "";
         }
         return r;
     },
     debug:function(s) {
-        var r = this.dump(s)
-        $("#debug")[0].append(this.escape_text(r) + "<br/>\n")
+        var r = this.dump(s);
+        $("#debug")[0].append(this.escape_text(r) + "<br/>\n");
     }
-}
+};
 
