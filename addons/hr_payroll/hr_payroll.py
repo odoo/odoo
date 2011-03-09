@@ -182,7 +182,7 @@ class payroll_register(osv.osv):
             else:
                 res = {
                     'employee_id':emp.id,
-                    'basic':0.0,
+                    'basic_amount':0.0,
                     'register_id':ids[0],
                     'name':vals.name,
                     'date':vals.date,
@@ -378,7 +378,7 @@ class hr_payslip(osv.osv):
             deduct = 0.0
             others = 0.0
             contract = rs.employee_id.contract_id
-            obj = {'basic': contract.wage}
+            obj = {'basic_amount': contract.wage}
             if not contract.struct_id:
                 raise osv.except_osv(_('Warning!'), _('Please define Salary Structure on Contract for %s.') % (rs.employee_id.name))
             function = contract.struct_id.id
@@ -433,11 +433,11 @@ class hr_payslip(osv.osv):
             ('done','Paid Salary'),
             ('cancel','Reject'),
         ],'State', select=True, readonly=True),
-#        'basic_before_leaves': fields.float('Basic Salary', readonly=True,  digits_compute=dp.get_precision('Account')),
+        'basic_before_leaves': fields.float('Basic Salary', readonly=True,  digits_compute=dp.get_precision('Account')),
         'leaves': fields.float('Leave Deductions', readonly=True,  digits_compute=dp.get_precision('Account')),
-        'basic': fields.float('Net Basic', readonly=True,  digits_compute=dp.get_precision('Account')),
-#        'grows': fields.function(_calculate, method=True, store=True, multi='dc', string='Gross Salary', digits_compute=dp.get_precision('Account')),
-#        'net': fields.function(_calculate, method=True, store=True, multi='dc', string='Net Salary', digits_compute=dp.get_precision('Account')),
+        'basic_amount':fields.related('contract_id', 'wage', type='float', relation='hr.contract', store=True, string='Basic Amount'),
+        'gross_amount': fields.function(_calculate, method=True, store=True, multi='dc', string='Gross Salary', digits_compute=dp.get_precision('Account')),
+        'net_amount': fields.function(_calculate, method=True, store=True, multi='dc', string='Net Salary', digits_compute=dp.get_precision('Account')),
 #        'allounce': fields.function(_calculate, method=True, store=True, multi='dc', string='Allowance', digits_compute=dp.get_precision('Account')),
 #        'deduction': fields.function(_calculate, method=True, store=True, multi='dc', string='Deduction', digits_compute=dp.get_precision('Account')),
 #        'other_pay': fields.function(_calculate, method=True, store=True, multi='dc', string='Others', digits_compute=dp.get_precision('Account')),
@@ -473,7 +473,7 @@ class hr_payslip(osv.osv):
             'company_id':company_id,
             'period_id': False,
             'basic_before_leaves':0,
-            'basic':0
+            'basic_amount':0
         }
         res_id = super(hr_payslip, self).copy(cr, uid, id, default, context=context)
         return res_id
@@ -515,7 +515,7 @@ class hr_payslip(osv.osv):
 
         for slip in self.browse(cr, uid, ids, context=context):
             base = {
-                'basic':slip.basic,
+                'basic_amount':slip.basic_amount,
 #                'net':slip.net,
 #                'gross':slip.grows,
             }
@@ -879,7 +879,7 @@ class hr_payslip(osv.osv):
         if old_slip_ids:
             slip_line_pool.unlink(cr, uid, old_slip_ids)
 
-        update = {'value':{'line_ids':[], 'holiday_ids':[], 'name':'', 'working_days': 0.0, 'holiday_days': 0.0, 'worked_days': 0.0, 'basic_before_leaves': 0.0, 'basic': 0.0, 'leaves': 0.0, 'total_pay': 0.0}}
+        update = {'value':{'line_ids':[], 'holiday_ids':[], 'name':'', 'working_days': 0.0, 'holiday_days': 0.0, 'worked_days': 0.0, 'basic_before_leaves': 0.0, 'basic_amount': 0.0, 'leaves': 0.0, 'total_pay': 0.0}}
         if not employee_id:
             return update
 
@@ -903,7 +903,7 @@ class hr_payslip(osv.osv):
         contracts = self.get_contract(cr, uid, employee_id, ddate, context)
         if contracts.get('id', False) == False:
             update['value'].update({
-                'basic': round(0.0),
+                'basic_amount': round(0.0),
                 'basic_before_leaves': round(0.0),
                 'name':'Salary Slip of %s for %s' % (employee_id.name, tools.ustr(ttyme.strftime('%B-%Y'))),
 #                'state':'draft',
@@ -920,7 +920,7 @@ class hr_payslip(osv.osv):
             lines = salary_rule_pool.browse(cr, uid, func['rule_ids'], context=context)
         ad = []
         total = 0.0
-        obj = {'basic':contract.wage}
+        obj = {'basic_amount':contract.wage}
 
         for line in lines:
             cd = line.code.lower()
@@ -974,7 +974,7 @@ class hr_payslip(osv.osv):
                 'total': value,
                 'slip_id': line.id,
                 'employee_id': False,
-                'function_id': False,
+#                'function_id': False,
                 'base': line.computational_expression
             }
             if line.appears_on_payslip:
@@ -984,7 +984,7 @@ class hr_payslip(osv.osv):
         update['value'].update({
             'struct_id': function,
             'number': number,
-            'basic': round(basic),
+            'basic_amount': round(basic),
             'basic_before_leaves': round(basic),
             'total_pay': round(basic) + total,
             'name':'Salary Slip of %s for %s' % (employee_id.name, tools.ustr(ttyme.strftime('%B-%Y'))),
@@ -1004,12 +1004,12 @@ class hr_payslip(osv.osv):
                 'amount': line.amount,
                 'slip_id': line.id,
                 'employee_id': False,
-                'function_id': False,
+#                'function_id': False,
                 'base': base
             }
             update['value']['line_ids'].append(vals)
 
-        basic_before_leaves = update['value']['basic']
+        basic_before_leaves = update['value']['basic_amount']
         working_day = 0
         off_days = 0
         dates = prev_bounds(ddate)
@@ -1087,7 +1087,7 @@ class hr_payslip(osv.osv):
 #            leaves = total
         temp_dic = self.pool.get('hr.holidays').read(cr, uid, leave_ids, [], context=context)
         update['value'].update({
-            'basic': basic,
+            'basic_amount': basic,
             'basic_before_leaves': round(basic_before_leaves),
 #            'total_pay': round(basic_before_leaves)+ allounce - (deduction + total),
             'leaves': total,
@@ -1140,9 +1140,9 @@ class hr_payslip_line(osv.osv):
         return {'value':{'amount':amt}}
 
     _columns = {
-        'slip_id':fields.many2one('hr.payslip', 'Pay Slip', required=True),
-#        'function_id':fields.many2one('hr.payroll.structure', 'Function', required=False),
-        'employee_id':fields.many2one('hr.employee', 'Employee', required=False),
+        'slip_id':fields.many2one('hr.payslip', 'Pay Slip', required=False),#FIXME: required = TRUE.We cannot make it to True because while creating salary rule(which is inherited from hr.payslip.line),we cannot have slip_id.
+#        'function_id':fields.many2one('hr.payroll.structure', 'Function', required=False),#FIXME: function?should be struct_id or payroll_structure_id..We have rule_ids(many2many) on hr.payroll.structure,so this field is not required here.
+        'employee_id':fields.many2one('hr.employee', 'Employee', required=False),#FIXME: required = TRUE.We cannot make it to True because while creating salary rule(which is inherited from hr.payslip.line),we cannot have employee_id.
         'name':fields.char('Name', size=256, required=True, readonly=False),
         'base':fields.char('Formula', size=1024, required=False, readonly=False),
         'code':fields.char('Code', size=64, required=False, readonly=False),
