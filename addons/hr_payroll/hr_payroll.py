@@ -869,7 +869,7 @@ class hr_payslip(osv.osv):
         holiday_pool = self.pool.get('hr.holidays')
         sequence_obj = self.pool.get('ir.sequence')
         empolyee_obj = self.pool.get('hr.employee')
-        hr_all_ded_cate = self.pool.get('hr.allounce.deduction.categoty')
+        hr_salary_head = self.pool.get('hr.salary.head')
         resource_attendance_pool = self.pool.get('resource.calendar.attendance')
         if context is None:
             context = {}
@@ -1007,6 +1007,7 @@ class hr_payslip(osv.osv):
             update['value']['line_ids'].append(vals)
 
         basic_before_leaves = update['value']['basic_amount']
+        total_before_leaves = update['value']['total_pay']
         working_day = 0
         off_days = 0
         dates = prev_bounds(ddate)
@@ -1031,69 +1032,59 @@ class hr_payslip(osv.osv):
         leave_ids = self._get_leaves1(cr, uid, ddate, employee_id, context)
         total_leave = 0.0
         paid_leave = 0.0
-        h_ids = holiday_pool.browse(cr, uid, leave_ids, context=context)
         for hday in holiday_pool.browse(cr, uid, leave_ids, context=context):
-#            if not hday.holiday_status_id.code:
-#                raise osv.except_osv(_('Error !'), _('Please check configuration of %s, payroll head is missing') % (hday.holiday_status_id.name))
-            slip_lines = hr_all_ded_cate.search(cr, uid, [('code','=',hday.holiday_status_id.code)], context=context)
+            if not hday.holiday_status_id.code:
+                raise osv.except_osv(_('Error !'), _('Please check configuration of %s, code is missing') % (hday.holiday_status_id.name))
+            slip_lines = salary_rule_pool.search(cr, uid, [('code','=',hday.holiday_status_id.code)], context=context)
             head_sequence = 0
-            if slip_lines:
-                head_sequence = hr_all_ded_cate.read(cr, uid, slip_lines, ['sequence'], context=context)[0]['sequence']
+            if not slip_lines:
+                raise osv.except_osv(_('Error !'), _('Please check configuration of %s, Salary rule is missing') % (hday.holiday_status_id.name))
+            salary_rule = salary_rule_pool.browse(cr, uid, slip_lines, context=context)[0]
             res = {
-                'slip_id': hday.id,
-                'name': hday.holiday_status_id.name + '-%s' % (hday.number_of_days),
-                'code': hday.holiday_status_id.code,
-                'amount_type': 'fix',
-                'category_id': slip_lines and slip_lines[0],
-                'sequence': head_sequence
-#                'category_id': hday.holiday_status_id.head_id.id,
-#                'sequence': hday.holiday_status_id.head_id.sequence
+                'slip_id': salary_rule.id,
+                'name': salary_rule.name + '-%s' % (hday.number_of_days),
+                'code': salary_rule.code,
+                'amount_type': salary_rule.amount_type,
+                'category_id': salary_rule.category_id.id,
+                'sequence': salary_rule.sequence
             }
             days = hday.number_of_days
             if hday.number_of_days < 0:
                 days = hday.number_of_days * -1
             total_leave += days
-#            if hday.holiday_status_id.type == 'paid':
-#                paid_leave += days
-#                continue
-##                    res['name'] = hday.holiday_status_id.name + '-%s' % (days)
-##                    res['amount'] = perday * days
-##                    res['type'] = 'allowance'
-##                    leave += days
-##                    total += perday * days
-#
-#            elif hday.holiday_status_id.type == 'halfpaid':
-#                paid_leave += (days / 2)
-#                res['name'] = hday.holiday_status_id.name + '-%s/2' % (days)
-#                res['amount'] = perday * (days/2)
-#                total += perday * (days/2)
-#                res['total'] = total
-#                leave += days / 2
-#                res['type'] = 'deduction'
-#            else:
-            res['name'] = hday.holiday_status_id.name + '-%s' % (days)
-            res['amount'] = perday * days
-            res['type'] = 'deduction'
+
+            base = line.computational_expression
+            try:
+                #Please have a look at the configuration guide.
+                amt = eval(base, obj)
+            except Exception, e:
+                raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ') % (e))
+            if salary_rule.amount_type == 'per':
+                try:
+                    value = salary_rule.amount * amt * days
+                except Exception, e:
+                    raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ') % (e))
+            elif salary_rule.amount_type == 'fix':
+                value = salary_rule.amount * days
+            res['amount'] = salary_rule.amount
+            res['type'] = salary_rule.type.id
             leave += days
-            total += perday * days
-            res['total'] = total
-#            slip_line_pool.create(cr, uid, res, context=context)
+            total += value
+            res['total'] = value
             update['value']['line_ids'].append(res)
-#        holiday_pool.write(cr, uid, leave_ids, {'payslip_id': ids and ids[0] or False}, context=context)
-        basic = basic - total
+        basic = basic + total
 #            leaves = total
-        temp_dic = self.pool.get('hr.holidays').read(cr, uid, leave_ids, [], context=context)
+        temp_dic = holiday_pool.read(cr, uid, leave_ids, [], context=context)
         update['value'].update({
             'basic_amount': basic,
             'basic_before_leaves': round(basic_before_leaves),
-#            'total_pay': round(basic_before_leaves)+ allounce - (deduction + total),
+            'total_pay': total_before_leaves + total,
             'leaves': total,
             'holiday_days': leave,
             'worked_days': working_day - leave,
             'working_days': working_day,
 #            'holiday_ids': temp_dic
         })
-#        self.write(cr, uid, uid, update, context=context)
         return update
 
 hr_payslip()
