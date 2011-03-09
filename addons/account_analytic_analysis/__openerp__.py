@@ -21,7 +21,7 @@
 
 
 {
-    'name'      : 'report_account_analytic',
+    'name'      : 'Analytic Account View',
     'version'   : '1.1',
     'category'  : 'Finance',
     'description': """

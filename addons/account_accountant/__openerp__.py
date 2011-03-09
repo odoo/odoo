@@ -19,7 +19,7 @@
 #
 ##############################################################################
 {
-    "name" : "Accountant",
+    "name" : "Accountant Access",
     "version" : "1.1",
     "author" : "OpenERP SA",
     "category": 'Finance',

@@ -21,7 +21,7 @@
 
 
 {
-    'name'      : 'Multiple-plans management in Analytic Accounting',
+    'name'      : 'Manage multiple plans in Analytic Accounting',
     'version'   : '1.0',
     'category'  : 'Finance',
     'description': """This module allows to use several analytic plans, according to the general journal,
