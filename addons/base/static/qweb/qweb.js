@@ -209,17 +209,40 @@ var QWeb = {
         var r = this.eval_str(this.render_element(e, t_att, g_att, v), v);
         return t_att["js"] != "quiet" ? r : "";
     },
-    render_tag_foreach:function(e, t_att, g_att, v) {
+    /**
+     * Renders a foreach loop (@t-foreach).
+     *
+     * Adds the following elements to its context, where <code>${name}</code>
+     * is specified via <code>@t-as</code>:
+     * * <code>${name}</code> The current element itself
+     * * <code>${name}_value</code> Same as <code>${name}</code>
+     * * <code>${name}_index</code> The 0-based index of the current element
+     * * <code>${name}_first</code> Whether the current element is the first one
+     * * <code>${name}_parity</code> odd|even (as strings)
+     * * <code>${name}_all</code> The iterated collection itself
+     *
+     * If the collection being iterated is an array, also adds:
+     * * <code>${name}_last</code> Whether the current element is the last one
+     * * All members of the current object
+     *
+     * If the collection being iterated is an object, the value is actually the object's key
+     *
+     * @param e ?
+     * @param t_att attributes of the element being <code>t-foreach</code>'d
+     * @param g_att ?
+     * @param old_context the context in which the foreach is evaluated
+     */
+    render_tag_foreach:function(e, t_att, g_att, old_context) {
         var expr = t_att["foreach"];
-        var enu = this.eval_object(expr, v);
+        var enu = this.eval_object(expr, old_context);
         var ru = [];
         if (enu) {
             var val = t_att['as'] || expr.replace(/[^a-zA-Z0-9]/g, '_');
-            var d = {};
-            for (var i in v) {
-                d[i] = v[i];
+            var context = {};
+            for (var i in old_context) {
+                context[i] = old_context[i];
             }
-            d[val + "_all"] = enu;
+            context[val + "_all"] = enu;
             var val_value = val + "_value",
                 val_index = val + "_index",
                 val_first = val + "_first",
@@ -227,32 +250,32 @@ var QWeb = {
                 val_parity = val + "_parity";
             var size = enu.length;
             if (size) {
-                d[val + "_size"] = size;
+                context[val + "_size"] = size;
                 for (var j = 0; j < size; j++) {
                     var cur = enu[j];
-                    d[val_value] = cur;
-                    d[val_index] = j;
-                    d[val_first] = j == 0;
-                    d[val_last] = j + 1 == size;
-                    d[val_parity] = (j % 2 == 1 ? 'odd' : 'even');
+                    context[val_value] = cur;
+                    context[val_index] = j;
+                    context[val_first] = j == 0;
+                    context[val_last] = j + 1 == size;
+                    context[val_parity] = (j % 2 == 1 ? 'odd' : 'even');
                     if (cur.constructor == Object) {
                         for (var k in cur) {
-                            d[k] = cur[k];
+                            context[k] = cur[k];
                         }
                     }
-                    d[val] = cur;
-                    var r = this.render_element(e, t_att, g_att, d);
+                    context[val] = cur;
+                    var r = this.render_element(e, t_att, g_att, context);
                     ru.push(r);
                 }
             } else {
                 var index = 0;
                 for (cur in enu) {
-                    d[val_value] = cur;
-                    d[val_index] = index;
-                    d[val_first] = index == 0;
-                    d[val_parity] = (index % 2 == 1 ? 'odd' : 'even');
-                    d[val] = cur;
-                    ru.push(this.render_element(e, t_att, g_att, d));
+                    context[val_value] = cur;
+                    context[val_index] = index;
+                    context[val_first] = index == 0;
+                    context[val_parity] = (index % 2 == 1 ? 'odd' : 'even');
+                    context[val] = cur;
+                    ru.push(this.render_element(e, t_att, g_att, context));
                     index += 1;
                 }
             }
