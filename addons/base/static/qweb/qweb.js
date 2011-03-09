@@ -330,11 +330,13 @@ var QWeb = {
         if (e.constructor == String) {
             e = this.load_xml(e);
         }
-        var ec = [];
+        var ec;
         if (e.documentElement) {
             ec = e.documentElement.childNodes;
         } else if (e.childNodes) {
             ec = e.childNodes;
+        } else {
+            ec = [];
         }
         for (var i = 0; i < ec.length; i++) {
             var n = ec[i];
