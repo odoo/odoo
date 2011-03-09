@@ -226,28 +226,6 @@ class hr_department(osv.osv):
         'member_ids': fields.one2many('hr.employee', 'department_id', 'Members', readonly=True),
     }
 
-class hr_passport(osv.osv):
-    """
-    Employee Passport
-    Passport based Contracts for Employees
-    """
-
-    _name = 'hr.passport'
-    _description = 'Passport Detail'
-    _columns = {
-        'employee_id': fields.many2one('hr.employee', 'Employee', required=True),
-        'name': fields.char('Passport No', size=64, required=True, readonly=False),
-        'country_id': fields.many2one('res.country', 'Country of Issue', required=True),
-        'address_id': fields.many2one('res.partner.address', 'Address', required=False),
-        'date_issue': fields.date('Passport Issue Date', required=True),
-        'date_expire': fields.date('Passport Expire Date', required=True),
-        'note': fields.text('Description'),
-    }
-    _sql_constraints = [
-        ('passport_no_uniq', 'unique (employee_id, name)', 'The Passport No must be unique !'),
-    ]
-hr_passport()
-
 hr_department()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

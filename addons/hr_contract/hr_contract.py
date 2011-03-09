@@ -57,12 +57,21 @@ class hr_passport(osv.osv):
     Passport based Contracts for Employees
     """
 
-    _inherit = 'hr.passport'
+    _name = 'hr.passport'
     _description = 'Passport Detail'
     _columns = {
+        'employee_id': fields.many2one('hr.employee', 'Employee', required=True),
+        'name': fields.char('Passport No', size=64, required=True, readonly=False),
+        'country_id': fields.many2one('res.country', 'Country of Issue', required=True),
+        'address_id': fields.many2one('res.partner.address', 'Address', required=False),
+        'date_issue': fields.date('Passport Issue Date', required=True),
+        'date_expire': fields.date('Passport Expire Date', required=True),
+        'note': fields.text('Description'),
         'contracts_ids': fields.one2many('hr.contract', 'passport_id', 'Contracts', required=False, readonly=True),
     }
-
+    _sql_constraints = [
+        ('passport_no_uniq', 'unique (employee_id, name)', 'The Passport No must be unique !'),
+    ]
 hr_passport()
 
 #Contract wage type period name
@@ -79,18 +88,18 @@ class hr_contract_wage_type_period(osv.osv):
 hr_contract_wage_type_period()
 
 #Contract wage type (hourly, daily, monthly, ...)
-class hr_contract_wage_type(osv.osv):
-    _name = 'hr.contract.wage.type'
-    _description = 'Wage Type'
-    _columns = {
-        'name': fields.char('Wage Type Name', size=50, required=True, select=True),
-        'period_id': fields.many2one('hr.contract.wage.type.period', 'Wage Period', required=True),
-        'factor_type': fields.float('Factor for hour cost', digits=(12,4), required=True, help='This field is used by the timesheet system to compute the price of an hour of work based on the contract of the employee')
-    }
-    _defaults = {
-        'factor_type': 1.8
-    }
-hr_contract_wage_type()
+#class hr_contract_wage_type(osv.osv):
+#    _name = 'hr.contract.wage.type'
+#    _description = 'Wage Type'
+#    _columns = {
+#        'name': fields.char('Wage Type Name', size=50, required=True, select=True),
+#        'period_id': fields.many2one('hr.contract.wage.type.period', 'Wage Period', required=True),
+#        'factor_type': fields.float('Factor for hour cost', digits=(12,4), required=True, help='This field is used by the timesheet system to compute the price of an hour of work based on the contract of the employee')
+#    }
+#    _defaults = {
+#        'factor_type': 1.8
+#    }
+#hr_contract_wage_type()
 
 
 class hr_contract_type(osv.osv):
@@ -117,11 +126,9 @@ class hr_contract(osv.osv):
         'working_hours': fields.many2one('resource.calendar','Working Schedule'),
         'wage': fields.float('Wage', digits=(16,2), required=True, help="Basic Salary of the employee"),
         'advantages': fields.text('Advantages'),
-        'advantages_net': fields.float('Net Advantages Value', digits=(16,2)),
-        'advantages_gross': fields.float('Gross Advantages Value', digits=(16,2)),
         'notes': fields.text('Notes'),
         'permit_no': fields.char('Work Permit No', size=256, required=False, readonly=False),
-        'passport_id': fields.many2one('hr.passport', 'Passport No', required=False),
+        'passport_id': fields.many2one('hr.passport', 'Passport', required=False),
         'visa_no': fields.char('Visa No', size=64, required=False, readonly=False),
         'visa_expire': fields.date('Visa Expire Date'),
     }
