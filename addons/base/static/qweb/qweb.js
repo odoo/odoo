@@ -65,9 +65,8 @@ var QWeb = {
         return e == "0" ? v["0"] : r;
     },
     eval_format:function(e, v) {
-        var i,m,r,src = e.split(/#/);
-        r = src[0];
-        for (i = 1; i < src.length; i++) {
+        var m, src = e.split(/#/), r = src[0];
+        for (var i = 1; i < src.length; i++) {
             if (m = src[i].match(/^{(.*)}(.*)/)) {
                 r += this.eval_str(m[1], v) + m[2];
             } else {
@@ -97,19 +96,19 @@ var QWeb = {
         return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
     },
     render_node : function(e, v, inner_trim) {
-        var r = "";
         if (e.nodeType == 3) {
-            r = inner_trim ? this.trim(e.data, inner_trim) : e.data;
-        } else if (e.nodeType == 1) {
+            return inner_trim ? this.trim(e.data, inner_trim) : e.data;
+        }
+        if (e.nodeType == 1) {
             var g_att = {};
             var t_att = {};
             var t_render = null;
             var a = e.attributes;
             for (var i = 0; i < a.length; i++) {
                 var an = a[i].name,av = a[i].value;
-                var m,n;
+                var m;
                 if (m = an.match(this.reg)) {
-                    n = m[1];
+                    var n = m[1];
                     if (n == "eval") {
                         n = m[2].substring(1);
                         av = this.eval_str(av, v);
@@ -129,12 +128,11 @@ var QWeb = {
                 t_att["trim"] = "inner " + inner_trim;
             }
             if (t_render) {
-                r = this[t_render](e, t_att, g_att, v);
-            } else {
-                r = this.render_element(e, t_att, g_att, v);
+                return this[t_render](e, t_att, g_att, v);
             }
+            return this.render_element(e, t_att, g_att, v);
         }
-        return r;
+        return "";
     },
     render_element:function(e, t_att, g_att, v) {
         var inner = "", ec = e.childNodes, trim = t_att["trim"], inner_trim;
@@ -154,13 +152,12 @@ var QWeb = {
         }
         if (e.tagName == this.prefix) {
             return inner;
-        } else {
-            var att = "";
-            for (var an in g_att) {
-                att += " " + an + '="' + this.escape_att(g_att[an]) + '"';
-            }
-            return inner.length ? "<" + e.tagName + att + ">" + inner + "</" + e.tagName + ">" : "<" + e.tagName + att + "/>";
         }
+        var att = "";
+        for (var an in g_att) {
+            att += " " + an + '="' + this.escape_att(g_att[an]) + '"';
+        }
+        return inner.length ? "<" + e.tagName + att + ">" + inner + "</" + e.tagName + ">" : "<" + e.tagName + att + "/>";
     },
     render_att_att:function(e, t_att, g_att, v, ext, av) {
         if (ext) {
@@ -281,6 +278,22 @@ var QWeb = {
         var s = "^" + this.prefix + "-(eval|" + l.join("|") + "|.*)(.*)$";
         this.reg = new RegExp(s);
     },
+    /**
+     * returns the correct XMLHttpRequest instance for the browser, or null if
+     * it was not able to build any XHR instance.
+     *
+     * @returns XMLHttpRequest|MSXML2.XMLHTTP.3.0|null
+     */
+    get_xhr:function () {
+        if (window.XMLHttpRequest) {
+            return new window.XMLHttpRequest();
+        }
+        try {
+            return new ActiveXObject('MSXML2.XMLHTTP.3.0');
+        } catch(e) {
+            return null;
+        }
+    },
     load_xml:function(s) {
         var xml;
         if (s[0] == "<") {
@@ -296,17 +309,12 @@ var QWeb = {
              };
              */
         } else {
-            var w = window,r = w.XMLHttpRequest,j;
-            if (r)r = new r(); else for (j in{"Msxml2":1,"Microsoft":1})try {
-                r = new ActiveXObject(j + ".XMLHTTP");
-                break;
-            } catch(e) {
-            }
-            if (r) {
-                r.open("GET", s, false);
-                r.send(null);
+            var req = this.get_xhr();
+            if (req) {
+                req.open("GET", s, false);
+                req.send(null);
                 //if ie r.setRequestHeader("If-Modified-Since", "Sat, 1 Jan 2000 00:00:00 GMT");
-                xml = r.responseXML;
+                xml = req.responseXML;
                 /*
                  TODO
                  if intsernetexploror
@@ -329,14 +337,9 @@ var QWeb = {
         if (e.constructor == String) {
             e = this.load_xml(e);
         }
-        var ec;
-        if (e.documentElement) {
-            ec = e.documentElement.childNodes;
-        } else if (e.childNodes) {
-            ec = e.childNodes;
-        } else {
-            ec = [];
-        }
+        var ec = e.documentElement ? e.documentElement.childNodes
+               : e.childNodes ? e.childNodes
+               : [];
         for (var i = 0; i < ec.length; i++) {
             var n = ec[i];
             if (n.nodeType == 1) {
@@ -349,9 +352,8 @@ var QWeb = {
         var e;
         if (e = this.templates[name]) {
             return this.render_node(e, v);
-        } else {
-            return "template " + name + " not found";
         }
+        return "template " + name + " not found";
     }
 };
 
