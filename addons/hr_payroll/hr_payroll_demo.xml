@@ -31,7 +31,7 @@
         <record id="hr_payslip_line_professionaltax1" model="hr.salary.rule">
             <field name="amount_type">fix</field>
             <field eval="15" name="sequence"/>
-            <field eval="200.0" name="amount"/>
+            <field eval="-200.0" name="amount"/>
             <field name="code">PT</field>
             <field name="type" ref="DED"/>
             <field name="category_id" ref="hr_payroll.PT"/>
@@ -43,7 +43,7 @@
         <record id="hr_payslip_line_providentfund1" model="hr.salary.rule">
             <field name="amount_type">per</field>
             <field eval="20" name="sequence"/>
-            <field eval="0.125" name="amount"/>
+            <field eval="-0.125" name="amount"/>
             <field name="code">PF</field>
             <field name="type" ref="DED"/>
             <field name="category_id" ref="hr_payroll.PF"/>
@@ -51,16 +51,16 @@
             <field name="name">Provident Fund</field>
             <field name="sequence" eval="50"/>
         </record>
-        
+
         <!-- Salary Structure -->
-        
+
          <record id="structure_001" model="hr.payroll.structure">
             <field name="code">ME</field>
             <field name="name">Marketing Executive</field>
             <field eval="[(6, 0, [ref('hr_payslip_line_houserantallowance1'), ref('hr_payslip_line_convanceallowance1'),ref('hr_payslip_line_professionaltax1'),ref('hr_payslip_line_providentfund1')])]" name="rule_ids"/>
             <field name="company_id" ref="base.main_company"/>
         </record>
-        
+
         <!-- Employee -->
         <record id="hr_employee_bonamy0" model="hr.employee">
             <field eval="0" name="manager"/>
