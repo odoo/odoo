@@ -1297,7 +1297,7 @@ class account_invoice_line(osv.osv):
         if context.get('type', False):
             doc = etree.XML(res['arch'])
             for node in doc.xpath("//field[@name='product_id']"):
-                if context['type'] in ('in_invoice','in_refund'):
+                if context['type'] in ('in_invoice', 'in_refund'):
                     node.set('domain', "[('purchase_ok', '=', True)]")
                 else:
                     node.set('domain', "[('sale_ok', '=', True)]")
