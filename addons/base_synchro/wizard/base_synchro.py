@@ -184,7 +184,7 @@ class base_synchro(osv.osv_memory):
     def data_transform(self, cr, uid, pool_src, pool_dest, object, data, action='u', context=None):
         self.meta.setdefault(pool_src, {})
         if not object in self.meta[pool_src]:
-            self.meta[pool_src][object] = pool_src.get(object).fields_get(cr, uid, context=context)
+            self.meta[pool_src][object] = pool_src.get(object).fields_get(cr, uid, context)
         fields = self.meta[pool_src][object]
 
         for f in fields:
