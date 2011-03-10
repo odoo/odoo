@@ -225,6 +225,48 @@
                 equals(QWeb.render('trim-children-right', {}), ' <foo/><bar/>',
                     "Trims children and right of content");
             });
+
+            module("Foreach", {
+                setup: function () {
+                    QWeb.add_template('qweb-test-foreach.xml');
+                },
+                teardown: function () {
+                    QWeb.templates = [];
+                    QWeb.tag = {};
+                    QWeb.att = {};
+                }
+            });
+            var seq = [4,3,2,1,0];
+            test('Basic foreach repetition', function () {
+                equals(QWeb.render('repetition-text-content', {seq:seq}), '*****',
+                    "Repetition of text content via foreach");
+                equals(QWeb.render('repetition-dom-content', {seq:seq}), '<b/><b/><b/><b/><b/>',
+                    "Repetition of node content via foreach");
+                equals(QWeb.render('repetition-self', {seq:seq}), '<b/><b/><b/><b/><b/>',
+                    "A node with a foreach repeats itself");
+            });
+            test("Foreach scope content", function () {
+                equals(QWeb.render('scope-self', {seq:seq}), '43210',
+                    "each value of the sequence is available via the sequence name");
+                equals(QWeb.render('scope-value', {seq:seq}), '43210',
+                    "each value of the sequence is also via the _value");
+                equals(QWeb.render('scope-index', {seq:seq}), '01234',
+                    "the current 0-based index is available via _index");
+                equals(QWeb.render('scope-first', {seq:seq}), 'true false false false false',
+                    "_first says whether the current item is the first of the sequence");
+                equals(QWeb.render('scope-last', {seq:seq}), 'false false false false true',
+                    "_last says whether the current item is the last of the sequence");
+                equals(QWeb.render('scope-parity', {seq:seq}), 'even odd even odd even',
+                    "the parity (odd/even) of the current row is available via _parity");
+                equals(QWeb.render('scope-size', {seq:seq}), '5 5 5 5 5',
+                    "the total length of the sequence is available through _size");
+            });
+            test('Name aliasing via t-as', function () {
+                equals(QWeb.render('aliasing', {seq:seq}), '43210',
+                    "the inner value can be re-bound via t-as");
+                equals(QWeb.render('loopvars-aliasing', {seq:seq}), 'even odd even odd even',
+                    "inner loop variables should be rebound as well");
+            });
         });
     </script>
 
