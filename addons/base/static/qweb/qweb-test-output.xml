@@ -1,5 +1,5 @@
 <templates>
-    <!-- esc -->
+    <!-- esc, evaluates and returns @t-esc after having xml-escaped it -->
     <t t-name="esc-literal">
         <t t-esc="'ok'"/>
     </t>
@@ -10,7 +10,7 @@
         <t t-esc="ok"/>
     </t>
 
-    <!-- escf -->
+    <!-- escf, same as t-esc, but @t-escf is a format string -->
     <t t-name="escf-noformat-literal">
         <t t-escf="ok"/>
     </t>

@@ -15,9 +15,9 @@
             return trim(QWeb.render(template, context));
         }
         $(document).ready(function() {
-            module("Basic template 't' tag tests", {
+            module("Basic output tests", {
                 setup: function () {
-                    QWeb.add_template('qweb-test.xml');
+                    QWeb.add_template('qweb-test-output.xml');
                 },
                 teardown: function () {
                     QWeb.templates = [];
@@ -26,12 +26,12 @@
                 }
             });
 
-            test("Basic escaped data output", function () {
+            test("Basic escaped output", function () {
                 equals("ok", render('esc-literal', {}), "Render a literal string");
                 equals("ok", render('esc-variable', {ok: 'ok'}), "Render a string variable");
                 equals("&lt;ok&gt;", render('esc-toescape', {ok: '<ok>'}), "Render a string with data to escape");
             });
-            test("Formatted escaped data output", function () {
+            test("Formatted escaped output", function () {
                 equals("ok", render('escf-noformat-literal', {}), "Render a literal string");
                 equals("ok", render('escf-simpleformat-variable', {value: 'ok'}),
                         "Only render an interpolated variable");
@@ -40,7 +40,6 @@
                 equals('[&lt;ok&gt;]', render('escf-format-variable-with-escapes', {value: '<ok>'}),
                         "Render a formatted string with data to escape");
             });
-
         });
     </script>
 
