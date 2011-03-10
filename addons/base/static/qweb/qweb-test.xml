@@ -1,4 +1,5 @@
 <templates>
+    <!-- esc -->
     <t t-name="esc-literal">
         <t t-esc="'ok'"/>
     </t>
@@ -9,8 +10,17 @@
         <t t-esc="ok"/>
     </t>
 
-
+    <!-- escf -->
     <t t-name="escf-noformat-literal">
         <t t-escf="ok"/>
+    </t>
+    <t t-name="escf-simpleformat-variable">
+        <t t-escf="#{value}"/>
+    </t>
+    <t t-name="escf-format-variable">
+        <t t-escf="[#{value}]"/>
+    </t>
+    <t t-name="escf-format-variable-with-escapes">
+        <t t-escf="[#{value}]"/>
     </t>
 </templates>

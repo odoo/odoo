@@ -33,6 +33,12 @@
             });
             test("Formatted escaped data output", function () {
                 equals("ok", render('escf-noformat-literal', {}), "Render a literal string");
+                equals("ok", render('escf-simpleformat-variable', {value: 'ok'}),
+                        "Only render an interpolated variable");
+                equals("[ok]", render('escf-format-variable', {value: 'ok'}),
+                        "Actually formatted variable");
+                equals('[&lt;ok&gt;]', render('escf-format-variable-with-escapes', {value: '<ok>'}),
+                        "Render a formatted string with data to escape");
             });
 
         });
