@@ -218,12 +218,14 @@ class crm_case(object):
     def stage_change(self, cr, uid, ids, context=None, order='sequence'):
         if context is None:
             context = {}
+
         stage_pool = self.pool.get('crm.case.stage')
         stage_type = context and context.get('stage_type','')
         current_seq = False
         next_stage_id = False
 
         for case in self.browse(cr, uid, ids, context=context):
+
             next_stage = False
             value = {}
             if case.section_id.id :
@@ -281,14 +283,11 @@ class crm_case(object):
         @param part: Partner's id
         @email: Partner's email ID
         """
-        if not part:
-            return {'value': {'partner_address_id': False,
-                            'email_from': False,
-                            'phone': False
-                            }}
-        addr = self.pool.get('res.partner').address_get(cr, uid, [part], ['contact'])
-        data = {'partner_address_id': addr['contact']}
-        data.update(self.onchange_partner_address_id(cr, uid, ids, addr['contact'])['value'])
+        data={}
+        if  part:
+            addr = self.pool.get('res.partner').address_get(cr, uid, [part], ['contact'])
+            data = {'partner_address_id': addr['contact']}
+            data.update(self.onchange_partner_address_id(cr, uid, ids, addr['contact'])['value'])
         return {'value': data}
 
     def onchange_partner_address_id(self, cr, uid, ids, add, email=False):
@@ -441,6 +440,7 @@ class crm_case(object):
         @param context: A standard dictionary for contextual values
 
         """
+
         return self.remind_user(cr, uid, ids, context, attach,
                 destination=False)
 
@@ -449,50 +449,55 @@ class crm_case(object):
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
-        @param ids: List of Remind user's IDs
+        @param ids: List of case's IDs to remind
         @param context: A standard dictionary for contextual values
-
         """
         for case in self.browse(cr, uid, ids, context=context):
-            if not case.section_id.reply_to:
-                raise osv.except_osv(_('Error!'), ("Reply To is not specified in the sales team"))
-            if not case.email_from:
+            if not destination and not case.email_from:
                 raise osv.except_osv(_('Error!'), ("Partner Email is not specified in Case"))
-            if case.section_id.reply_to and case.email_from:
-                src = case.email_from
-                dest = case.section_id.reply_to
-                body = case.description or ""
-                if case.message_ids:
-                    body = case.message_ids[0].description or ""
-                if not destination:
-                    src, dest = dest, src
-                    if body and case.user_id.signature:
-                        if body:
-                            body += '\n\n%s' % (case.user_id.signature)
-                        else:
-                            body = '\n\n%s' % (case.user_id.signature)
+            if not case.user_id.user_email:
+               raise osv.except_osv(_('Error!'), ("User Email is not specified in Case"))
+            
+            if destination and case.section_id.user_id:
+                case_email = case.section_id.user_id.user_email
+            else:
+                case_email = case.user_id.user_email
 
-                body = self.format_body(body)
+            src = case_email
+            dest = case.user_id
+            body = case.description or ""
+            if case.message_ids:
+                body = case.message_ids[0].description or ""
+            if not destination:
+                src, dest = dest, case.email_from
+                if body and case.user_id.signature:
+                    if body:
+                        body += '\n\n%s' % (case.user_id.signature)
+                    else:
+                        body = '\n\n%s' % (case.user_id.signature)
 
-                attach_to_send = None
+            body = self.format_body(body)
 
-                if attach:
-                    attach_ids = self.pool.get('ir.attachment').search(cr, uid, [('res_model', '=', self._name), ('res_id', '=', case.id)])
-                    attach_to_send = self.pool.get('ir.attachment').read(cr, uid, attach_ids, ['datas_fname','datas'])
-                    attach_to_send = map(lambda x: (x['datas_fname'], base64.decodestring(x['datas'])), attach_to_send)
+            attach_to_send = None
+
+            if attach:
+                attach_ids = self.pool.get('ir.attachment').search(cr, uid, [('res_model', '=', self._name), ('res_id', '=', case.id)])
+                attach_to_send = self.pool.get('ir.attachment').read(cr, uid, attach_ids, ['datas_fname', 'datas'])
+                attach_to_send = map(lambda x: (x['datas_fname'], base64.decodestring(x['datas'])), attach_to_send)
 
                 # Send an email
-                subject = "Reminder: [%s] %s" % (str(case.id), case.name, )
-                tools.email_send(
-                    src,
-                    [dest],
-                    subject,
-                    body,
-                    reply_to=case.section_id.reply_to,
-                    openobject_id=str(case.id),
-                    attach=attach_to_send
-                )
-                self._history(cr, uid, [case], _('Send'), history=True, subject=subject, email=dest, details=body, email_from=src)
+            subject = "Reminder: [%s] %s" % (str(case.id), case.name,)
+            tools.email_send(
+                src,
+                [dest],
+                subject,
+                body,
+                reply_to=case.section_id.reply_to or '',
+                openobject_id=str(case.id),
+                attach=attach_to_send
+            )
+            self._history(cr, uid, [case], _('Send'), history=True, subject=subject, email=dest, details=body, email_from=src)
+
         return True
 
     def _check(self, cr, uid, ids=False, context=None):

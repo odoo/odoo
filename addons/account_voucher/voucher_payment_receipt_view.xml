@@ -151,16 +151,17 @@
             <field name="arch" type="xml">
                 <form string="Bill Payment">
                     <group col="6" colspan="4">
-                        <field name="partner_id" domain="[('supplier','=',True)]" required="1" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date)" context="{'invoice_currency':currency_id}" string="Supplier"/>
-                        <field name="amount" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date)"/>
+                        <field name="partner_id" domain="[('supplier','=',True)]" required="1" invisible="context.get('line_type', False)" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date)" context="{'invoice_currency':currency_id}" string="Supplier"/>
+                        <field name="amount" invisible="context.get('line_type', False)" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date)"/>
                         <field name="journal_id"
                             domain="[('type','in',['bank', 'cash'])]"
+                            invisible="context.get('line_type', False)"
                             widget="selection" select="1"
                             on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date)"
                             string="Payment Method"/>
-                        <field name="date" select="1" on_change="onchange_date(partner_id, journal_id, amount, currency_id, type, date)"/>
-                        <field name="reference" select="1" string="Payment Ref"/>
-                        <field name="name" colspan="2"/>
+                        <field name="date" select="1" invisible="context.get('line_type', False)" on_change="onchange_date(partner_id, journal_id, amount, currency_id, type, date)"/>
+                        <field name="reference" select="1" invisible="context.get('line_type', False)" string="Payment Ref"/>
+                        <field name="name" colspan="2" invisible="context.get('line_type', False)"/>
                         <field name="account_id"
                             widget="selection"
                             invisible="True"/>
@@ -245,10 +246,10 @@
                     </notebook>
                     <group col="10" colspan="4">
                         <field name="state"/>
-                        <button name="cancel_voucher" string="Cancel" states="draft,proforma"  icon="gtk-cancel"/>
-                        <button name="cancel_voucher" string="Unreconcile" type="object" states="posted" icon="terp-stock_effects-object-colorize" confirm="Are you sure to unreconcile this record ?"/>
-                        <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft" icon="terp-stock_effects-object-colorize"/>
-                        <button name="proforma_voucher" string="Validate" states="draft" icon="gtk-go-forward"/>
+                        <button name="cancel_voucher" string="Cancel" states="draft,proforma"  icon="gtk-cancel" invisible="context.get('line_type', False)"/>
+                        <button name="cancel_voucher" string="Unreconcile" type="object" states="posted" icon="terp-stock_effects-object-colorize" invisible="context.get('line_type', False)" confirm="Are you sure to unreconcile this record ?"/>
+                        <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft" icon="terp-stock_effects-object-colorize" invisible="context.get('line_type', False)"/>
+                        <button name="proforma_voucher" string="Validate" states="draft" icon="gtk-go-forward" invisible="context.get('line_type', False)"/>
                     </group>
                 </form>
             </field>
@@ -288,18 +289,20 @@
             <field name="arch" type="xml">
                 <form string="Customer Payment">
                     <group col="6" colspan="4">
-                        <field name="partner_id" required="1" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date)" string="Customer"/>
+                        <field name="partner_id" required="1" invisible="context.get('line_type', False)" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date)" string="Customer"/>
                         <field name="amount"
+                            invisible="context.get('line_type', False)"
                             string="Paid Amount"
                             on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date)"/>
                         <field name="journal_id"
                             domain="[('type','in',['bank', 'cash'])]"
+                            invisible="context.get('line_type', False)"
                             widget="selection" select="1"
                             on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date)"
                             string="Payment Method"/>
-                        <field name="date" select="1" on_change="onchange_date(partner_id, journal_id, amount, currency_id, type, date)"/>
-                        <field name="reference" select="1" string="Payment Ref"/>
-                        <field name="name" colspan="2"/>
+                        <field name="date" select="1" invisible="context.get('line_type', False)" on_change="onchange_date(partner_id, journal_id, amount, currency_id, type, date)"/>
+                        <field name="reference" select="1" invisible="context.get('line_type', False)" string="Payment Ref"/>
+                        <field name="name" colspan="2" invisible="context.get('line_type', False)"/>
                         <field name="account_id"
                             widget="selection"
                             invisible="True"/>
@@ -384,10 +387,10 @@
                     </notebook>
                     <group col="10" colspan="4">
                         <field name="state"/>
-                        <button name="cancel_voucher" string="Cancel" states="draft,proforma"  icon="gtk-cancel"/>
-                        <button name="cancel_voucher" string="Unreconcile" type="object" states="posted" icon="terp-stock_effects-object-colorize" confirm="Are you sure to unreconcile this record ?"/>
-                        <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft" icon="terp-stock_effects-object-colorize"/>
-                        <button name="proforma_voucher" string="Validate" states="draft" icon="gtk-go-forward"/>
+                        <button name="cancel_voucher" string="Cancel" states="draft,proforma"  icon="gtk-cancel" invisible="context.get('line_type', False)"/>
+                        <button name="cancel_voucher" string="Unreconcile" type="object" states="posted" invisible="context.get('line_type', False)" icon="terp-stock_effects-object-colorize" confirm="Are you sure to unreconcile this record ?"/>
+                        <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft" icon="terp-stock_effects-object-colorize" invisible="context.get('line_type', False)"/>
+                        <button name="proforma_voucher" string="Validate" states="draft" icon="gtk-go-forward" invisible="context.get('line_type', False)"/>
                     </group>
                 </form>
             </field>

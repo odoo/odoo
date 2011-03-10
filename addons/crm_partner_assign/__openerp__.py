@@ -37,6 +37,7 @@ based on geolocalization.
         'crm_lead_view.xml',
         'report/crm_lead_report_view.xml',
     ],
+    'test': ['test/test_crm_partner_assign.yml'],
     'installable': True,
     'active': False,
     'certificate': '00503409558942442061',

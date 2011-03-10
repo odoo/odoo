@@ -1166,14 +1166,14 @@
         </record>
 
         <act_window 
-            context="{'search_default_survey_id': [active_id]}"
+            context="{'search_default_survey_id': [active_id], 'default_survey_id': active_id}"
             id="act_survey_pages"
             name="Pages"
             res_model="survey.page"
             src_model="survey"/>
 
         <act_window 
-            context="{'search_default_survey': active_id}"
+            context="{'search_default_survey': active_id, 'default_survey': active_id}"
             id="act_survey_question"
             name="Questions"
             res_model="survey.question"
@@ -1181,7 +1181,7 @@
 
 
         <act_window 
-            context="{'search_default_page_id': active_id}"
+            context="{'search_default_page_id': active_id, 'default_page_id': active_id}"
             id="act_survey_page_question"
             name="Questions"
             res_model="survey.question"
