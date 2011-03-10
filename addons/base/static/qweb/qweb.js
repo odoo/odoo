@@ -47,12 +47,12 @@ var QWeb = {
         // TODO: Currently this will also replace and, or, ... in strings. Try
         // 'hi boys and girls' != '' and 1 == 1  -- will be replaced to : 'hi boys && girls' != '' && 1 == 1
         // try to find a solution without tokenizing
-        e = e.replace(/\Wand\W/g, " && ");
-        e = e.replace(/\Wor\W/g, " and ");
-        e = e.replace(/\Wgt\W/g, " > ");
-        e = e.replace(/\Wgte\W/g, " >= ");
-        e = e.replace(/\Wlt\W/g, " < ");
-        e = e.replace(/\Wlte\W/g, " <= ");
+        e = e.replace(/\band\b/g, " && ");
+        e = e.replace(/\bor\b/g, " || ");
+        e = e.replace(/\bgt\b/g, " > ");
+        e = e.replace(/\bgte\b/g, " >= ");
+        e = e.replace(/\blt\b/g, " < ");
+        e = e.replace(/\blte\b/g, " <= ");
         if (v[e] != undefined) {
             return v[e];
         } else {
@@ -137,12 +137,12 @@ var QWeb = {
     render_element:function(e, t_att, g_att, v) {
         var inner = "", ec = e.childNodes, trim = t_att["trim"], inner_trim;
         if (trim) {
-            if (trim.match(/(^|\W)(inner)($|\W)/)) {
+            if (/\binner\b/.test(trim)) {
                 inner_trim = true;
                 trim = "both";
             }
-            var tm = trim.match(/(^|\W)(both|left|right)($|\W)/);
-            if (tm) trim = tm[2];
+            var tm = /\b(both|left|right)\b/.exec(trim);
+            if (tm) trim = tm[1];
         }
         for (var i = 0; i < ec.length; i++) {
             inner += inner_trim ? this.trim(this.render_node(ec[i], v, inner_trim ? trim : null), trim) : this.render_node(ec[i], v, inner_trim ? trim : null);
