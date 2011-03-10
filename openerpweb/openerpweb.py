@@ -1,10 +1,9 @@
 #!/usr/bin/python
 
-import os,re,sys,traceback,xmlrpclib
+import os, re, sys, traceback, xmlrpclib
 
 import cherrypy.lib.static
-
-import simplejson as json
+import simplejson
 
 import xmlrpctimeout
 
@@ -91,7 +90,7 @@ class JsonRequest(object):
     def parse(self, request):
         self.cherrypy_request = None
         self.cherrypy_session = None
-        d=json.loads(request)
+        d = simplejson.loads(request)
         self.params = d.get("params",{})
         self.session_id = self.params.pop("session_id", None) or "random.random"
         self.session = session_store.setdefault(self.session_id, OpenERPSession())
@@ -126,7 +125,7 @@ class JsonRequest(object):
         print
         #import pprint
         #pprint.pprint(r)
-        return json.dumps(r)
+        return simplejson.dumps(r)
 
 def jsonrequest(f):
     # check cleaner wrapping:

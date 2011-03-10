@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
+import glob, os
+from xml.etree import ElementTree
 
-import glob,json,os
-
-#import simplejson as json
+import simplejson
 
 import openerpweb
 
-from xml.etree import ElementTree
 
 class Xml2Json:
     # xml2json-direct
@@ -16,7 +15,7 @@ class Xml2Json:
     # URL: http://code.google.com/p/xml2json-direct/
     @staticmethod
     def convert_to_json(s):
-        return json.dumps(Xml2Json.convert_to_structure(s), sort_keys=True, indent=4)
+        return simplejson.dumps(Xml2Json.convert_to_structure(s), sort_keys=True, indent=4)
 
     @staticmethod
     def convert_to_structure(s):
