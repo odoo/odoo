@@ -48,19 +48,9 @@ class sale_order_line(osv.osv):
                     res[line.id] = round((line.price_unit*line.product_uos_qty*(100.0-line.discount)/100.0) -(line.product_id.standard_price*line.product_uos_qty), 2)
         return res
 
-    def _get_order_line(self, cr, uid, ids, context=None):
-        obj_sale_order = self.pool.get('sale.order')
-        list_order_line = []
-        for line in obj_sale_order.browse(cr, uid, ids, context=context):
-            for i in line.order_line:
-                list_order_line.append(i.id)
-        return list_order_line
-
     _columns = {
         'margin': fields.function(_product_margin, method=True, string='Margin',
-              store = {
-                        'sale.order': (_get_order_line, None, 5),
-              }),
+              store = True),
         'purchase_price': fields.float('Cost Price', digits=(16,2))
     }
 
@@ -77,8 +67,14 @@ class sale_order(osv.osv):
                 result[sale.id] += line.margin or 0.0
         return result
 
+    def _get_order(self, cr, uid, ids, context=None):
+        return super(self,sale_order)._get_order(cr, uid, ids, context=context)
+
     _columns = {
-        'margin': fields.function(_product_margin, method=True, string='Margin', store=True, help="It gives profitability by calculating the difference between the Unit Price and Cost Price."),
+        'margin': fields.function(_product_margin, method=True, string='Margin', help="It gives profitability by calculating the difference between the Unit Price and Cost Price.", store={
+                'sale.order.line': (_get_order, ['margin'], 20),
+                'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 20),
+                }),
     }
 
 sale_order()
