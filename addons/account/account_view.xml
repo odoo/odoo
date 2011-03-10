@@ -1498,7 +1498,7 @@
         <act_window
             id="act_account_move_to_account_move_line_open"
             name="Journal Items"
-            context="{'search_default_move_id':[active_id]}"
+            context="{'search_default_move_id':[active_id], 'default_move_id': active_id}"
             res_model="account.move.line"
             src_model="account.move"/>
 
@@ -1540,7 +1540,7 @@
         <act_window
             id="act_account_acount_move_line_open"
             name="Entries"
-            context="{'search_default_account_id':[active_id], 'search_default_unreconciled':0}"
+            context="{'search_default_account_id':[active_id], 'search_default_unreconciled':0, 'default_account_id': active_id}"
             res_model="account.move.line"
             src_model="account.account"/>
 
@@ -1548,7 +1548,7 @@
             id="act_account_acount_move_line_open_unreconciled"
             name="Unreconciled Entries"
             res_model="account.move.line"
-            context="{'search_default_account_id':[active_id], 'search_default_unreconciled':1,}"
+            context="{'search_default_account_id':[active_id], 'search_default_unreconciled':1, 'default_account_id': active_id}"
             src_model="account.account"/>
 
         <act_window domain="[('reconcile_id', '=', active_id)]" id="act_account_acount_move_line_reconcile_open" name="Reconciled entries" res_model="account.move.line" src_model="account.move.reconcile"/>
@@ -1993,20 +1993,20 @@
         <act_window
            id="act_account_journal_2_account_bank_statement"
            name="Bank statements"
-           context="{'search_default_journal_id':active_id,}"
+           context="{'search_default_journal_id': active_id, 'default_journal_id': active_id}"
            res_model="account.bank.statement"
            src_model="account.journal"/>
 
         <act_window
            id="act_account_journal_2_account_move_line"
            name="Journal Items"
-           context="{'search_default_journal_id':active_id,}"
+           context="{'search_default_journal_id':active_id, 'default_journal_id': active_id}"
            res_model="account.move.line"
            src_model="account.journal"/>
 
-        <act_window context="{'search_default_reconcile_id':False, 'search_default_partner_id':[active_id]}" domain="[('account_id.reconcile', '=', True),('account_id.type', 'in', ['receivable', 'payable'])]" id="act_account_partner_account_move_all" name="Receivables &amp; Payables" res_model="account.move.line" src_model="res.partner" groups="base.group_extended"/>
+        <act_window context="{'search_default_reconcile_id':False, 'search_default_partner_id':[active_id], 'default_partner_id': active_id}" domain="[('account_id.reconcile', '=', True),('account_id.type', 'in', ['receivable', 'payable'])]" id="act_account_partner_account_move_all" name="Receivables &amp; Payables" res_model="account.move.line" src_model="res.partner" groups="base.group_extended"/>
 
-        <act_window context="{'search_default_partner_id':[active_id]}" id="act_account_partner_account_move" name="Journal Items" res_model="account.move.line" src_model="res.partner" groups="account.group_account_user"/>
+        <act_window context="{'search_default_partner_id':[active_id], 'default_partner_id': active_id}" id="act_account_partner_account_move" name="Journal Items" res_model="account.move.line" src_model="res.partner" groups="account.group_account_user"/>
 
         <record id="view_account_addtmpl_wizard_form" model="ir.ui.view">
             <field name="name">Create Account</field>
