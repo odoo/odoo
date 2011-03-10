@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-    
         <!-- Opportunities Form View -->
             <record model="ir.ui.view" id="crm_case_form_view_oppor">
                 <field name="name">Opportunities</field>
@@ -19,7 +18,7 @@
                                     domain="[('type','=','opportunity'),('section_ids', '=', section_id)]"/>
                                 <button name="stage_previous"
                                     states="draft,open,pending" type="object"
-                                    icon="gtk-go-back" string="" />
+                                    icon="gtk-go-back" string="" context="{'stage_type': 'opportunity'}"/>
                                 <button name="stage_next" states="draft,open,pending"
                                     type="object" icon="gtk-go-forward" string="" context="{'stage_type': 'opportunity'}"/>
                             </group>
@@ -58,8 +57,15 @@
                                     string="Contact"
                                     on_change="onchange_partner_address_id(partner_address_id, email_from)"
                                     colspan="1" />
-                                <field name="email_from" string="Email" />
-                                <field name="phone"/>
+                                <group col="3" colspan="2">
+                                    <field name="email_from" string="Email" />
+                                    <button string="Send Email"
+                                    name="%(crm.action_crm_send_mail)d"
+                                    context="{'mail':'new', 'model': 'crm.lead'}"
+                                    icon="terp-mail-message-new" type="action" />
+                                </group>
+                                    <field name="phone"/>
+
                             </group>
                             <group col="2" colspan="2">
                                 <separator colspan="2" string="Categorization"/>
@@ -125,8 +131,8 @@
                             </group>
                             <group colspan="2" col="2">
                                 <separator string="Mailings" colspan="2"/>
-                                <field name="optin"/>
-                                <field name="optout"/>
+                                <field name="optin" on_change="on_change_optin(optin)"/>
+                        		<field name="optout" on_change="on_change_optout(optout)"/>
                             </group>
                         </page>
 
@@ -150,22 +156,22 @@
                                         <field name="date"/>
                                         <field name="email_to" size="512"/>
                                         <field name="email_cc" size="512"/>
-                                        <field name="name" colspan="4"/>
+                                        <field name="name" colspan="4" attrs="{'invisible': [('history', '=', True)]}"/>
+                                        <field name="display_text" colspan="4"   attrs="{'invisible': [('history', '=', False)]}"/>
                                         <field name="history" invisible="1"/>
                                     </group>
                                     <notebook colspan="4">
                                         <page string="Details">
-                                            <group attrs="{'invisible': [('history', '!=', True)]}">
-                                                <field name="description" colspan="4" nolabel="1" height="250"/>
+
+                                                <field name="description" colspan="4" nolabel="1"/>
+                                             <group attrs="{'invisible': [('history', '!=', True)]}">
                                                 <button colspan="4"
                                                     string="Reply"
                                                     name="%(crm.action_crm_send_mail)d"
                                                     context="{'mail':'reply', 'model': 'crm.lead', 'include_original' : True}"
                                                     icon="terp-mail-replied" type="action" />
                                             </group>
-                                            <group attrs="{'invisible': [('history', '=', True)]}">
-                                                <field name="display_text" colspan="4" nolabel="1"  height="250"/>
-                                            </group>
+
                                         </page>
                                         <page string="Attachments">
                                             <field name="attachment_ids" colspan="4" readonly="1" nolabel="1"/>
@@ -324,6 +330,7 @@
                             <filter string="Salesman" icon="terp-personal"
                                 domain="[]" context="{'group_by':'user_id'}" />
                             <filter string="Team" help="Sales Team" icon="terp-personal+" domain="[]" context="{'group_by':'section_id'}"/>
+                            <filter string="Customer" help="Partner" icon="terp-personal+" domain="[]" context="{'group_by':'partner_id'}"/>
                             <separator orientation="vertical" />
                             <filter string="Stage" icon="terp-stage" domain="[]"
                                 context="{'group_by':'stage_id'}" />
@@ -363,6 +370,8 @@
                     </graph>
                 </field>
             </record>
+
+
 
 </data>
 </openerp>

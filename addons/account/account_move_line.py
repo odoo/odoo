@@ -1297,7 +1297,7 @@ class account_move_line(osv.osv):
         if vals.get('account_tax_id', False):
             tax_id = tax_obj.browse(cr, uid, vals['account_tax_id'])
             total = vals['debit'] - vals['credit']
-            if journal.refund_journal:
+            if journal.type in ('purchase_refund', 'sale_refund'):
                 base_code = 'ref_base_code_id'
                 tax_code = 'ref_tax_code_id'
                 account_id = 'account_paid_id'
