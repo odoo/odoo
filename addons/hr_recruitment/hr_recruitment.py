@@ -407,14 +407,22 @@ class hr_applicant(crm.crm_case, osv.osv):
         """
         employee_obj = self.pool.get('hr.employee')
         job_obj = self.pool.get('hr.job')
+        partner_obj = self.pool.get('res.partner')
+        address_id = False
         res = super(hr_applicant, self).case_close(cr, uid, ids, *args)
         for (id, name) in self.name_get(cr, uid, ids):
             message = _("Applicant '%s' is being hired.") % name
             self.log(cr, uid, id, message)
 
         applicant = self.browse(cr, uid, ids)[0]
+        if applicant.partner_id:
+            address_id = partner_obj.address_get(cr, uid, [applicant.partner_id.id], ['contact'])['contact']
         if applicant.job_id:
-            emp_id = employee_obj.create(cr,uid,{'name': applicant.name,'job_id': applicant.job_id.id})
+            emp_id = employee_obj.create(cr,uid,{'name': applicant.partner_name or applicant.name,
+                                                 'job_id': applicant.job_id.id,
+                                                 'address_home_id':address_id,
+                                                 'department_id':applicant.department_id.id
+                                                 })
         return res
 
     def case_reset(self, cr, uid, ids, *args):
