@@ -24,7 +24,7 @@
                                 help="My Leaves" />
                         </field>
                         <field name="department_id" widget="selection">
-                            <filter icon="terp-personal+" help="My Department Holidays"
+                            <filter icon="terp-personal+" help="My Department Leaves"
                                 domain="[('department_id.manager_id','=',uid)]" />
                         </field>
                         <field name="holiday_status_id" widget="selection"/>
@@ -250,7 +250,7 @@
 
         <!-- My leave dashboard -->
         <menuitem
-            name="Holidays"
+            name="Leaves"
             parent="hr.menu_hr_root"
             id="menu_open_ask_holidays"
             sequence="5"/>
@@ -413,7 +413,7 @@
             <field name="search_view_id" ref="view_hr_holidays_status_search"/>
         </record>
 
-        <menuitem sequence="3" id="hr.menu_open_view_attendance_reason_config" parent="hr.menu_hr_configuration" name="Holidays"/>
+        <menuitem sequence="3" id="hr.menu_open_view_attendance_reason_config" parent="hr.menu_hr_configuration" name="Leaves"/>
 
         <menuitem name="Leave Type"
             action="open_view_holiday_status"
@@ -434,7 +434,7 @@
         </record>
 
     <!--  Shortcuts -->
-        <act_window name="Holidays"
+        <act_window name="Leaves"
             domain="[('type','=','remove')]"
             context="{'search_default_employee_id': [active_id]}"
             res_model="hr.holidays"
