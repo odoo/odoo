@@ -64,8 +64,6 @@ class email_compose_message(osv.osv_memory):
         vals = {}
         if template_id and context.get('email_model') and context.get('email_res_id'):
             vals = self.get_template_data(cr, uid, context.get('email_res_id'), template_id, context)
-        else:
-            result['model'] = context.get('email_model', False)
 
         if not vals:
             return result
