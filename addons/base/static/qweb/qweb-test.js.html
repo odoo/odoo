@@ -130,6 +130,35 @@
                 equals(render('lower-or-equal-js', {}), 'ok',
                     "Lower or Equal, JS operator");
             });
+
+            module("Attributes manipulation", {
+                setup: function () {
+                    QWeb.add_template('qweb-test-attributes.xml');
+                },
+                teardown: function () {
+                    QWeb.templates = [];
+                    QWeb.tag = {};
+                    QWeb.att = {};
+                }
+            });
+            test('Fixed-name attributes', function () {
+                equals(render('fixed-literal', {}), '<div foo="bar"/>',
+                    "Fixed name and literal attribute value");
+                equals(render('fixed-variable', {value: 'ok'}), '<div foo="ok"/>',
+                    "Fixed name and variable attribute value");
+            });
+            test('Tuple-based attributes', function () {
+                equals(render('tuple-literal', {}), '<div foo="bar"/>',
+                    "Tuple-based literal attributes");
+                equals(render('tuple-variable', {att: ['foo', 'bar']}), '<div foo="bar"/>',
+                    "Tuple-based variable attributes");
+            });
+            test('Fixed name, formatted value attributes', function () {
+                equals(render('format-literal', {}), '<div foo="bar"/>',
+                    "Literal format");
+                equals(render('format-value', {value:'a'}), '<div foo="bar"/>',
+                    "Valued format");
+            });
         });
     </script>
 
