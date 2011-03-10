@@ -54,6 +54,29 @@
                 equals(render('rawf-format-variable-notescaped', {value: '<ok>'}), '[<ok>]',
                         "Render a formatted string with data not escaped");
             });
+
+            module("Context-setting tests", {
+                setup: function () {
+                    QWeb.add_template('qweb-test-set.xml');
+                },
+                teardown: function () {
+                    QWeb.templates = [];
+                    QWeb.tag = {};
+                    QWeb.att = {};
+                }
+            });
+            test("Set literal value", function () {
+                equals(render('set-from-attribute-literal', {}), "ok",
+                        "Set a literal value via @t-value");
+                equals(render('set-from-body-literal', {}), "ok",
+                        "Set a literal value via @t-set body");
+            });
+            test("Set value looked up from context", function () {
+                equals(render('set-from-attribute-lookup', {value: 'ok'}), "ok",
+                        "Set a value looked up in context via @t-value");
+                equals(render('set-from-body-lookup', {value: 'ok'}), 'ok',
+                        "Set a value looked up in context via @t-set body and @t-esc");
+            });
         });
     </script>
 
