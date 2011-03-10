@@ -43,6 +43,10 @@ var QWeb = {
     reg:new RegExp(),
     tag:{},
     att:{},
+    ValueException: function (value, message) {
+        this.value = value;
+        this.message = message;
+    },
     eval_object:function(e, v) {
         // TODO: Currently this will also replace and, or, ... in strings. Try
         // 'hi boys and girls' != '' and 1 == 1  -- will be replaced to : 'hi boys && girls' != '' && 1 == 1
@@ -88,6 +92,8 @@ var QWeb = {
             case "right":
                 return v.replace(/\s*$/, "");
         }
+        throw new QWeb.ValueException(
+            mode, "unknown trimming mode, trim mode must follow the pattern '[inner] (left|right|both)'");
     },
     escape_text:function(s) {
         return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
@@ -139,7 +145,9 @@ var QWeb = {
         if (trim) {
             if (trim.match(/(^|\W)(inner)($|\W)/)) {
                 inner_trim = true;
-                trim = "both";
+                if (trim == 'inner') {
+                    trim = "both";
+                }
             }
             var tm = trim.match(/(^|\W)(both|left|right)($|\W)/);
             if (tm) trim = tm[2];

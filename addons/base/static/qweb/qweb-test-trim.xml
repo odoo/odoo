@@ -1,0 +1,19 @@
+<templates>
+    <t t-name="trim-content-both" t-trim="both">
+        ok
+    </t>
+    <t t-name="trim-content-before" t-trim="left"> ok </t>
+    <t t-name="trim-content-after" t-trim="right"> ok </t>
+    <t t-name="trim-content-unknown" t-trim="stuff"> ok </t>
+
+    <t t-name="trim-children-text" t-trim="inner">o k</t>
+    <t t-name="trim-children-elements" t-trim="inner">
+        <foo/>
+        <bar/>
+    </t>
+    <t t-name="trim-mixed-children" t-trim="inner">
+        [ <foo/> ]
+    </t>
+    <t t-name='trim-children-left' t-trim="left inner"> <foo/> <bar/> </t>
+    <t t-name='trim-children-right' t-trim="right inner"> <foo/> <bar/> </t>
+</templates>

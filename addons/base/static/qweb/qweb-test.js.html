@@ -192,6 +192,39 @@
                 equals(render('in-context-import', {}), 'ok',
                     "Call with t-import (calls in current context)");
             });
+
+            module("Trim", {
+                setup: function () {
+                    QWeb.add_template('qweb-test-trim.xml');
+                },
+                teardown: function () {
+                    QWeb.templates = [];
+                    QWeb.tag = {};
+                    QWeb.att = {};
+                }
+            });
+            test('Trim content', function () {
+                equals(QWeb.render('trim-content-both', {}), 'ok',
+                    "Trims before and after content");
+                equals(QWeb.render('trim-content-before', {}), 'ok ',
+                    "Trims before content");
+                equals(QWeb.render('trim-content-after', {}), ' ok',
+                    "Trims after content");
+                raises(function () {QWeb.render('trim-content-unknown', {});},
+                    "Trims with an unknown mode");
+            });
+            test('Trim content *and* children', function () {
+                equals(QWeb.render('trim-children-text', {}), 'o k',
+                    "Trims text children");
+                equals(QWeb.render('trim-children-elements', {}), '<foo/><bar/>',
+                    "Full trim");
+                equals(QWeb.render('trim-mixed-children', {}), '[<foo/>]',
+                    "Trims mixed content of text and elements");
+                equals(QWeb.render('trim-children-left', {}), '<foo/><bar/> ',
+                    "Trims children and left of content");
+                equals(QWeb.render('trim-children-right', {}), ' <foo/><bar/>',
+                    "Trims children and right of content");
+            });
         });
     </script>
 
