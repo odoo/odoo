@@ -180,7 +180,7 @@ var QWeb = {
         return this.escape_text(this.eval_str(t_att["esc"], v));
     },
     render_tag_escf:function(e, t_att, g_att, v) {
-        return this.escape_text(this.eval_format(t_att["esc"], v));
+        return this.escape_text(this.eval_format(t_att["escf"], v));
     },
     render_tag_if:function(e, t_att, g_att, v) {
         return this.eval_bool(t_att["if"], v) ? this.render_element(e, t_att, g_att, v) : "";

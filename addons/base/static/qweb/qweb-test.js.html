@@ -31,6 +31,9 @@
                 equals("ok", render('esc-variable', {ok: 'ok'}), "Render a string variable");
                 equals("&lt;ok&gt;", render('esc-toescape', {ok: '<ok>'}), "Render a string with data to escape");
             });
+            test("Formatted escaped data output", function () {
+                equals("ok", render('escf-noformat-literal', {}), "Render a literal string");
+            });
 
         });
     </script>
