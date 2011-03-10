@@ -112,6 +112,24 @@
                 equals(render('or-js', {}), 'ok',
                     "Boolean or using JS operator");
             });
+            test('Comparison boolean tests in conditionals', function () {
+                equals(render('greater', {}), 'ok',
+                    "Greater");
+                equals(render('greater-js', {}), 'ok',
+                    "Greater, JS operator");
+                equals(render('lower', {}), 'ok',
+                    "Lower");
+                equals(render('lower-js', {}), 'ok',
+                    "Lower, JS operator");
+                equals(render('greater-or-equal', {}), 'ok',
+                    "Greater or Equal");
+                equals(render('greater-or-equal-js', {}), 'ok',
+                    "Greater or Equal, JS operator");
+                equals(render('lower-or-equal', {}), 'ok',
+                    "Lower or Equal");
+                equals(render('lower-or-equal-js', {}), 'ok',
+                    "Lower or Equal, JS operator");
+            });
         });
     </script>
 
