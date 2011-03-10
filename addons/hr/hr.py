@@ -204,15 +204,8 @@ class hr_employee(osv.osv):
             level -= 1
         return True
 
-#    def _check_department_id(self, cr, uid, ids, context=None):
-#        for emp in self.browse(cr, uid, ids, context=context):
-#            if emp.department_id.manager_id and emp.id == emp.department_id.manager_id.id:
-#                return False
-#        return True
-
     _constraints = [
         (_check_recursion, 'Error ! You cannot create recursive Hierarchy of Employees.', ['parent_id']),
-#        (_check_department_id, 'Error ! You cannot select a department for which the employee is the manager.', ['department_id']),
     ]
 
 hr_employee()
