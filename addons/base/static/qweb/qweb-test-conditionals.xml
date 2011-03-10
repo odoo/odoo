@@ -1,0 +1,33 @@
+<templates>
+    <t t-name="literal-conditional">
+        <t t-if="true">ok</t>
+    </t>
+    <t t-name="boolean-value-conditional">
+        <t t-if="value">ok</t>
+    </t>
+    <t t-name="boolean-value-conditional-false">
+        <t t-if="value">fail</t>
+    </t>
+
+    <t t-name="negify">
+        <t t-if="!false">ok</t>
+    </t>
+    <t t-name="equality">
+        <t t-if="1 == 1">ok</t>
+    </t>
+    <t t-name="difference">
+        <t t-if="1 != 2">ok</t>
+    </t>
+    <t t-name="and">
+        <t t-if="true and true">ok</t>
+    </t>
+    <t t-name="and-js">
+        <t t-if="true &amp;&amp; true">ok</t>
+    </t>
+    <t t-name="or">
+        <t t-if="false or true">ok</t>
+    </t>
+    <t t-name="or-js">
+        <t t-if="false || true">ok</t>
+    </t>
+</templates>

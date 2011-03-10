@@ -77,6 +77,41 @@
                 equals(render('set-from-body-lookup', {value: 'ok'}), 'ok',
                         "Set a value looked up in context via @t-set body and @t-esc");
             });
+
+            module("Conditionals", {
+                setup: function () {
+                    QWeb.add_template('qweb-test-conditionals.xml');
+                },
+                teardown: function () {
+                    QWeb.templates = [];
+                    QWeb.tag = {};
+                    QWeb.att = {};
+                }
+            });
+            test('Basic (single boolean) conditionals', function () {
+                equals(render('literal-conditional', {}), 'ok',
+                    "Test on a literal value");
+                equals(render('boolean-value-conditional', {value: true}), 'ok',
+                    "Test on a truthy variable value");
+                equals(render('boolean-value-conditional-false', {value: false}), '',
+                    "Test on a falsy variable value");
+            });
+            test('Boolean expressions in conditionals', function () {
+                equals(render('negify', {}), 'ok',
+                    "Negative");
+                equals(render('equality', {}), 'ok',
+                    "Equality");
+                equals(render('difference', {}), 'ok',
+                    "Difference");
+                equals(render('and', {}), 'ok',
+                    "Boolean and");
+                equals(render('and-js', {}), 'ok',
+                    "Boolean and via manually escaped JS operator");
+                equals(render('or', {}), 'ok',
+                    "Boolean or");
+                equals(render('or-js', {}), 'ok',
+                    "Boolean or using JS operator");
+            });
         });
     </script>
 

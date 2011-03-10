@@ -48,7 +48,7 @@ var QWeb = {
         // 'hi boys and girls' != '' and 1 == 1  -- will be replaced to : 'hi boys && girls' != '' && 1 == 1
         // try to find a solution without tokenizing
         e = e.replace(/\Wand\W/g, " && ");
-        e = e.replace(/\Wor\W/g, " and ");
+        e = e.replace(/\Wor\W/g, " || ");
         e = e.replace(/\Wgt\W/g, " > ");
         e = e.replace(/\Wgte\W/g, " >= ");
         e = e.replace(/\Wlt\W/g, " < ");
