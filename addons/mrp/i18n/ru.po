@@ -7,20 +7,20 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2011-02-28 17:51+0000\n"
-"Last-Translator: vrsb <Unknown>\n"
+"PO-Revision-Date: 2011-03-09 17:22+0000\n"
+"Last-Translator: Stanislav Hanzhin <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-03-01 06:01+0000\n"
+"X-Launchpad-Export-Date: 2011-03-10 06:23+0000\n"
 "X-Generator: Launchpad (build 12351)\n"
 
 #. module: mrp
 #: field:mrp.production,move_created_ids:0
 #: field:mrp.production,move_created_ids2:0
 msgid "Moves Created"
-msgstr "Перемещение создано"
+msgstr "Перемещения созданы"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_production_action
@@ -31,21 +31,26 @@ msgid ""
 "raw materials (stock decrease) and the production of the finished products "
 "(stock increase) when the order is processed."
 msgstr ""
+"Заказы в производство обычно предлагаются автоматически OpenERP, на основе "
+"ведомости материалов и правил закупок, но Вы можете также создать "
+"производственные заказы вручную. OpenERP будет обрабатывать потребления "
+"сырья (уменьшение запасов) и производство готовой продукции (увеличение "
+"запасов), когда заказ будет обработан."
 
 #. module: mrp
 #: help:mrp.production,location_src_id:0
 msgid "Location where the system will look for components."
-msgstr ""
+msgstr "Место, где система будет искать компоненты."
 
 #. module: mrp
 #: field:mrp.production,workcenter_lines:0
 msgid "Work Centers Utilisation"
-msgstr ""
+msgstr "Использование рабочих центров"
 
 #. module: mrp
 #: view:mrp.routing.workcenter:0
 msgid "Routing Work Centers"
-msgstr ""
+msgstr "Маршрутизация рабочих центров"
 
 #. module: mrp
 #: model:ir.module.module,shortdesc:mrp.module_meta_information
@@ -60,7 +65,7 @@ msgstr "Кол-во циклов"
 #. module: mrp
 #: field:mrp.routing.workcenter,cycle_nbr:0
 msgid "Number of Cycles"
-msgstr ""
+msgstr "Количество циклов"
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_minimumstockprocure0
@@ -68,18 +73,20 @@ msgid ""
 "The 'Minimum stock rule' allows the system to create procurement orders "
 "automatically as soon as the minimum stock is reached."
 msgstr ""
+"\"Правило минимальных запасов\" позволяет системе создавать заказ на закупку "
+"автоматически по достижении минимальных запасов."
 
 #. module: mrp
 #: field:mrp.production,picking_id:0
 #: field:mrp.production.order,picking_id:0
 msgid "Picking list"
-msgstr ""
+msgstr "Комплектовочный лист"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:121
 #, python-format
 msgid "Hourly Cost"
-msgstr ""
+msgstr "Стоимость часа"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:130
@@ -90,7 +97,7 @@ msgstr ""
 #. module: mrp
 #: view:mrp.production:0
 msgid "Scrap Products"
-msgstr ""
+msgstr "Бракованная продукция"
 
 #. module: mrp
 #: view:mrp.production.order:0
