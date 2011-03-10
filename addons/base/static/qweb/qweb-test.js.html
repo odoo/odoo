@@ -27,31 +27,31 @@
             });
 
             test("Basic escaped output", function () {
-                equals("ok", render('esc-literal', {}), "Render a literal string");
-                equals("ok", render('esc-variable', {ok: 'ok'}), "Render a string variable");
-                equals("&lt;ok&gt;", render('esc-toescape', {ok: '<ok>'}), "Render a string with data to escape");
+                equals(render('esc-literal', {}), "ok", "Render a literal string");
+                equals(render('esc-variable', {ok: 'ok'}), "ok", "Render a string variable");
+                equals(render('esc-toescape', {ok: '<ok>'}), "&lt;ok&gt;", "Render a string with data to escape");
             });
             test("Formatted escaped output", function () {
-                equals("ok", render('escf-noformat-literal', {}), "Render a literal string");
-                equals("ok", render('escf-simpleformat-variable', {value: 'ok'}),
+                equals(render('escf-noformat-literal', {}), "ok", "Render a literal string");
+                equals(render('escf-simpleformat-variable', {value: 'ok'}), "ok",
                         "Only render an interpolated variable");
-                equals("[ok]", render('escf-format-variable', {value: 'ok'}),
+                equals(render('escf-format-variable', {value: 'ok'}), "[ok]",
                         "Actually formatted variable");
-                equals('[&lt;ok&gt;]', render('escf-format-variable-with-escapes', {value: '<ok>'}),
+                equals(render('escf-format-variable-with-escapes', {value: '<ok>'}), '[&lt;ok&gt;]',
                         "Render a formatted string with data to escape");
             });
             test("Basic unescaped output", function () {
-                equals("ok", render('raw-literal', {}), "Render a literal string");
-                equals("ok", render('raw-variable', {ok: 'ok'}), "Render a string variable");
-                equals("<ok>", render('raw-notescaped', {ok: '<ok>'}), "Render a string with data not escaped");
+                equals(render('raw-literal', {}), "ok", "Render a literal string");
+                equals(render('raw-variable', {ok: 'ok'}), "ok", "Render a string variable");
+                equals(render('raw-notescaped', {ok: '<ok>'}), "<ok>", "Render a string with data not escaped");
             });
             test("Formatted unescaped output", function () {
-                equals("ok", render('rawf-noformat-literal', {}), "Render a literal string");
-                equals("ok", render('rawf-simpleformat-variable', {value: 'ok'}),
+                equals(render('rawf-noformat-literal', {}), "ok", "Render a literal string");
+                equals(render('rawf-simpleformat-variable', {value: 'ok'}), "ok",
                         "Only render an interpolated variable");
-                equals("[ok]", render('rawf-format-variable', {value: 'ok'}),
+                equals(render('rawf-format-variable', {value: 'ok'}), "[ok]",
                         "Actually formatted variable");
-                equals('[<ok>]', render('rawf-format-variable-notescaped', {value: '<ok>'}),
+                equals(render('rawf-format-variable-notescaped', {value: '<ok>'}), '[<ok>]',
                         "Render a formatted string with data not escaped");
             });
         });
