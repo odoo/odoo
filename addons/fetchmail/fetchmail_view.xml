@@ -102,7 +102,7 @@
         </record>
 
         <menuitem
-            parent="emails.menu_config_email"
+            parent="email.menu_config_email"
             id="menu_action_fetchmail_server_tree"
             action="action_email_server_tree"
             name="Incomming Servers"
@@ -112,7 +112,7 @@
 	      <field name="name">email.message.tree</field>
 	      <field name="model">email.message</field>
 	      <field name="type">tree</field>
-	      <field name="inherit_id" ref="emails.view_email_message_tree"/>
+	      <field name="inherit_id" ref="email.view_email_message_tree"/>
 	      <field name="arch" type="xml">
 	          <field name="user_id" position="after">
 	              <field name="server_id" select="1"/>
@@ -124,7 +124,7 @@
 	      <field name="name">email.message.inherit.search</field>
 	      <field name="model">email.message</field>
 	      <field name="type">search</field>
-	      <field name="inherit_id" ref="emails.view_email_message_search"/>
+	      <field name="inherit_id" ref="email.view_email_message_search"/>
 	      <field name="arch" type="xml">
 			<xpath expr="/search/group/filter[@string='Thread']" position="before">
                 <filter string="Mail Server" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'server_id'}"/>

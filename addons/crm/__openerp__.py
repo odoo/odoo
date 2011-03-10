@@ -56,7 +56,7 @@ Create dashboard for CRM that includes:
         'base',
         'base_action_rule',
         'process',
-        'email_gateway',
+        'email',
         'base_calendar',
         'resource',
         'board'

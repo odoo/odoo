@@ -34,6 +34,7 @@
     'update_xml': [
         "wizard/email_compose_message_view.xml",
         "email_view.xml",
+        "email_gateway_view.xml",
         "res_partner_view.xml",
         'security/ir.model.access.csv',
         'email_data.xml',

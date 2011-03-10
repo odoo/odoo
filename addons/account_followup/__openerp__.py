@@ -43,7 +43,7 @@
 """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
-    'depends': ['account', 'emails'],
+    'depends': ['account', 'email'],
     'init_xml': [],
     'update_xml': [
         'security/ir.model.access.csv',

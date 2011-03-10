@@ -28,7 +28,7 @@
     * Easy Integration with any Module""",
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
-    'depends': ['base','emails'],
+    'depends': ['base','email'],
     'init_xml': [],
     'update_xml': [
         "email_gateway_view.xml",
