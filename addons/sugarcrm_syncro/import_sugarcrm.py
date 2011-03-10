@@ -32,7 +32,6 @@ def import_users(self, cr, uid, context=None):
            } ,
        }
     user_obj = self.pool.get('res.users')
-    ids = self.search(cr, uid, [])
     PortType,sessionid = sugar.login(context.get('username',''), context.get('password',''))
     sugar_data = sugar.search(PortType,sessionid, 'Users')
     for val in sugar_data:
@@ -58,7 +57,6 @@ def get_lead_status(self, cr, uid, sugar_val,context=None):
                'Dead': 'Lost'
             },}  
     stage = stage_dict['status'].get(sugar_val['status'], '')
-    lead_pool = self.pool.get("crm.lead")
     stage_pool = self.pool.get('crm.case.stage')
     stage_ids = stage_pool.search(cr, uid, [("type", '=', 'lead'), ('name', '=', stage)])
     for stage in stage_pool.browse(cr, uid, stage_ids, context):
@@ -78,7 +76,6 @@ def get_opportunity_status(self, cr, uid, sugar_val,context=None):
                'Negotiation/Review': 'Negotiation'
             },}  
     stage = stage_dict['sales_stage'].get(sugar_val['sales_stage'], '')
-    lead_pool = self.pool.get("crm.lead")
     stage_pool = self.pool.get('crm.case.stage')
     stage_ids = stage_pool.search(cr, uid, [("type", '=', 'opportunity'), ('name', '=', stage)])
     for stage in stage_pool.browse(cr, uid, stage_ids, context):
@@ -105,7 +102,6 @@ def import_leads(self, cr, uid, context=None):
                   },
                }
       
-   ids = self.search(cr, uid, [])
    lead_pool = self.pool.get('crm.lead')
    PortType,sessionid = sugar.login(context.get('username',''), context.get('password',''))
    sugar_data = sugar.search(PortType,sessionid, 'Leads')
@@ -129,7 +125,6 @@ def import_opportunities(self, cr, uid, context=None):
           'date_deadline':'date_closed'
           },
       }
-   ids = self.search(cr, uid, [])
    lead_pool = self.pool.get('crm.lead')
    PortType,sessionid = sugar.login(context.get('username',''), context.get('password',''))
    sugar_data = sugar.search(PortType,sessionid, 'Opportunities')
