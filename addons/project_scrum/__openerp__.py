@@ -47,7 +47,7 @@
     * http://controlchaos.com
     """,
     'author': 'OpenERP SA',
-    'depends': ['project', 'process', 'emails'],
+    'depends': ['project', 'process', 'email'],
     'init_xml': [],
     'update_xml': [
         'security/ir.model.access.csv',

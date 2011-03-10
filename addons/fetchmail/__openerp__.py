@@ -24,7 +24,7 @@
 {
     "name" : "Fetchmail Server",
     "version" : "1.0",
-    "depends" : ["base", 'email_gateway'],
+    "depends" : ["base", 'email'],
     "author" : "OpenERP SA",
     "description": """Fetchmail:
     * Fetch email from Pop / IMAP server

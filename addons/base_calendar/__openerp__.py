@@ -22,7 +22,7 @@
 {
     "name" : "Basic Calendar Functionality",
     "version" : "1.0",
-    "depends" : ["base", "emails"],
+    "depends" : ["base", "email"],
     'description': """Full featured calendar system that supports:
     - Calendar of events
     - Alerts (create requests)
