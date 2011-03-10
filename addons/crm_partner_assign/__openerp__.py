@@ -36,6 +36,7 @@ based on geolocalization.
         'wizard/crm_forward_to_partner_view.xml',
         'crm_lead_view.xml',
         'report/crm_lead_report_view.xml',
+        'report/crm_partner_report_view.xml',
     ],
     'test': ['test/test_crm_partner_assign.yml'],
     'installable': True,
