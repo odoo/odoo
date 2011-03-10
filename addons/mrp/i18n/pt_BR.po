@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2011-01-28 23:38+0000\n"
-"Last-Translator: Adriano Prado <adrianojprado@hotmail.com>\n"
+"PO-Revision-Date: 2011-03-07 18:35+0000\n"
+"Last-Translator: Alexsandro Haag <alexsandro.haag@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-30 04:50+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-03-08 04:47+0000\n"
+"X-Generator: Launchpad (build 12351)\n"
 
 #. module: mrp
 #: field:mrp.production,move_created_ids:0
@@ -1207,6 +1207,41 @@ msgid ""
 "    * List of procurement in exception\n"
 "    "
 msgstr ""
+"\n"
+"    Este é o módulo base para gerenciar os processos de manufatura no "
+"OpenERP.\n"
+"\n"
+"    Recursos:\n"
+"    * Fabricar para Estoque / Fabricar para Ordem (por linha)\n"
+"    * Multi-nível de Lista de Materiais (BoMs), sem limite\n"
+"    * Multi-nível de roteamento, sem limite\n"
+"    * Roteamento e centro de trabalho integrados com as contas analíticas\n"
+"    * Programador de cálculos periodicós / Módulo Just In Time\n"
+"    * Múltiplos pontos de venda, Múltiplos centros de armazenagem\n"
+"    * Diferentes políticas de reordenação\n"
+"    * Método de Custo por produto: preço padrão, preço médio\n"
+"    * Análise fácil de problemas e necessidades\n"
+"    * Muito flexível\n"
+"    * Permite explorar a Lista de Materiais na sua estrutura completa\n"
+"        que inclui Lista de Materiais filhas e fantasmas\n"
+"    Suporta completa integração e planificação de bens estocáveis,\n"
+"    consumo de serviços. Serviços são integrados completamente com o resto\n"
+"    do sistema. Por exemplo, você pode configurar um serviço de sub-"
+"contratação\n"
+"    em uma Lista de Materiais (BoM) para automaticamente comprar na ordem de "
+"montagem de sua produção.\n"
+"\n"
+"    Relatórios provido por este módulo:\n"
+"    * Estrutura e Componentes da Lista de Materiais\n"
+"    * Previsão de Carga em centros de trabalho\n"
+"    * Imprimir uma ordem de produção\n"
+"    * Previsão de Estoques\n"
+"    Painéis providos por este módulo::\n"
+"    * Lista das próximas ordnes de produção\n"
+"    * Lista de entregas (a escolher)\n"
+"    * Gráfico de carga de centro de trabalho\n"
+"    * Lista de compras em excessão\n"
+"    "
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_production_action4
@@ -1409,7 +1444,7 @@ msgstr "Dias de segurança para cada operação de produção."
 #: model:process.transition,name:mrp.process_transition_servicemts0
 #: model:process.transition,name:mrp.process_transition_stockmts0
 msgid "Make to Stock"
-msgstr "Fazer Stock"
+msgstr "Avaliar Estoque"
 
 #. module: mrp
 #: selection:mrp.production.order,month:0
@@ -1461,7 +1496,7 @@ msgstr "Fornecedores dos Componentes"
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_installer
 msgid "mrp.installer"
-msgstr ""
+msgstr "mrp.installer"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -1574,7 +1609,7 @@ msgstr "Altera a Quantidade dos Produtos"
 #. module: mrp
 #: model:process.node,note:mrp.process_node_productionorder0
 msgid "Drives the procurement orders for raw material."
-msgstr ""
+msgstr "Dirige as ordens de compra para matéria-prima."
 
 #. module: mrp
 #: view:mrp.production.order:0
@@ -2447,7 +2482,7 @@ msgstr "A forma de aquisição depende do tipo de produto."
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_manufacturing
 msgid "Manufacturing"
-msgstr "Produção"
+msgstr "Manufatura"
 
 #. module: mrp
 #: view:board.board:0

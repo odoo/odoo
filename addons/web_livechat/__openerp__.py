@@ -23,7 +23,7 @@
     'version': '1.1',
     'category': 'Generic Modules/Others',
     'description': "Enable live chat support for whom have a maintenance contract",
-    'author': 'OpenERP s.a.',
+    'author': 'OpenERP SA',
     'website': 'http://openerp.com',
     'depends': ['base'],
     'update_xml': [],
