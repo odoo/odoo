@@ -424,8 +424,8 @@ openerp.base.DataRecord =  openerp.base.Controller.extend({
     },
 });
 
-openerp.base.XmlInput = openerp.base.BasicController.extend({
-// Non Session Controller to manage databases
+openerp.base.XmlInput = openerp.base.Controller.extend({
+// to replace view editor
 })
 
 openerp.base.FormView =  openerp.base.Controller.extend({
@@ -526,8 +526,22 @@ openerp.base.ListView = openerp.base.Controller.extend({
     },
 });
 
-openerp.base.TreeView = openerp.base.BasicController.extend({
-// Non Session Controller to manage databases
+openerp.base.TreeView = openerp.base.Controller.extend({
+})
+
+openerp.base.CalendarView = openerp.base.Controller.extend({
+// Dhtmlx scheduler ?
+})
+
+openerp.base.GanttView = openerp.base.Controller.extend({
+// Dhtmlx gantt ?
+})
+
+openerp.base.DiagramView = openerp.base.Controller.extend({
+// 
+})
+
+openerp.base.GraphView = openerp.base.Controller.extend({
 })
 
 openerp.base.SearchViewInput = openerp.base.Controller.extend({
@@ -602,16 +616,13 @@ openerp.base.SearchView = openerp.base.Controller.extend({
     },
 });
 
-openerp.base.ProcessView = openerp.base.BasicController.extend({
-// Non Session Controller to manage databases
+openerp.base.ProcessView = openerp.base.Controller.extend({
 })
 
-openerp.base.HelpView = openerp.base.BasicController.extend({
-// Non Session Controller to manage databases
+openerp.base.HelpView = openerp.base.Controller.extend({
 })
 
-openerp.base.View = openerp.base.BasicController.extend({
-// Non Session Controller to manage databases
+openerp.base.View = openerp.base.Controller.extend({
 })
 
 openerp.base.Action =  openerp.base.Controller.extend({
@@ -693,16 +704,13 @@ openerp.base.Action =  openerp.base.Controller.extend({
     },
 });
 
-openerp.base.Preferences = openerp.base.BasicController.extend({
-// Non Session Controller to manage databases
+openerp.base.Preferences = openerp.base.Controller.extend({
 })
 
-openerp.base.ImportExport = openerp.base.BasicController.extend({
-// Non Session Controller to manage databases
+openerp.base.ImportExport = openerp.base.Controller.extend({
 })
 
-openerp.base.Homepage = openerp.base.BasicController.extend({
-// Non Session Controller to manage databases
+openerp.base.Homepage = openerp.base.Controller.extend({
 })
 
 openerp.base.WebClient = openerp.base.Controller.extend({
