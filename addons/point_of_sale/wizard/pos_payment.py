@@ -149,6 +149,9 @@ class pos_make_payment(osv.osv_memory):
         order = order_obj.browse(cr, uid, active_id, context=context)
         amount = order.amount_total - order.amount_paid
         data =  self.read(cr, uid, ids, context=context)[0]
+        partner = obj_partner.browse(cr, uid, data['partner_id'], context=context)
+        if not partner.address:
+            raise osv.except_osv(_('Error!'),_("Customer doesn't have an address to make the invoice"))
         if data['is_acc']:
             amount = self.pool.get('product.product').browse(cr, uid, data['product_id'], context=context).list_price
 
