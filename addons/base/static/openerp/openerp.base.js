@@ -83,11 +83,11 @@ var openerp = this.openerp = function() {
 
     // this unique id will be replaced by hostname_databasename by
     // openerp.base.Connection on the first connection
-    o._unique_id = "unique_id_cause_db_name_is_not_yet_known"
-    openerp.pool[o._unique_id] = o;
+    o._session_id = "session" + openerp.sessions.length;
+    openerp.sessions[o._session_id] = o;
 
     o.screen = openerp.screen;
-    o.pool = openerp.pool;
+    o.sessions = openerp.sessions;
     o.base = {};
     openerp.base(o);
 
@@ -96,13 +96,12 @@ var openerp = this.openerp = function() {
 
 // element_ids registry linked to all controllers on the page
 // TODO rename to elements, or keep gtk naming?
-openerp.screen = {};
+this.openerp.screen = {};
 
-// per database openerp like namespace
-// openerp.<module> for module will to
-// openerp.pool.<dbname>.<module> using a closure
-// TODO rename it openerp.connections
-openerp.pool = {};
+// Per session namespace
+// openerp.<module> will map to
+// openerp.sessions.servername_port_dbname_login.<module> using a closure
+this.openerp.sessions = {};
 
 })();
 
@@ -204,37 +203,8 @@ openerp.base.BasicController = Class.extend({
 });
 
 openerp.base.Console =  openerp.base.BasicController.extend({
-});
-
-openerp.base.Database = openerp.base.BasicController.extend({
-// Non Session Controller to manage databases
-})
-
-openerp.base.Connection = openerp.base.BasicController.extend({
-// This store the webclient servername port and the database
-// this correpond to one pool entry
-// TODO on first connection:
-// rename the uniquename in openerp.connnections
-// do the magic of loading all the modules by loading missing module and their
-// javascript using a dom nodes with urls:
-// /base/connection/css?mod=mod1,mod2,mod3
-// /base/connection/js?mod=mod1,mod2,mod3
-// then init them
-// for i in installed_modules:
-//     call openerp._openerp.<i>(openerp)
-})
-
-openerp.base.Session = openerp.base.BasicController.extend({
     init: function(element_id, server, port) {
         this._super(element_id);
-        this.rpc_mode = (server == undefined) ? "ajax" : "jsonp";
-        this.server = (server == undefined) ? location.hostname : server;
-        this.port = (port == undefined) ? location.port : port;
-        this.login = "";
-        this.password = "";
-        this.uid = false;
-        this.session_id = false;
-        this.context = {};
     },
     on_log: function() {
         // TODO this should move to Console and be active only in debug
@@ -248,11 +218,29 @@ openerp.base.Session = openerp.base.BasicController.extend({
             }
         });
     },
-    rpc: function(url, params, success_callback, error_callback) {
-        // TODO keep a this.ajax_count counter to display LOADING
-        var self = this;
+});
 
-        this.on_rpc_request();
+openerp.base.Database = openerp.base.BasicController.extend({
+// Non Session Controller to manage databases
+})
+
+openerp.base.Session = openerp.base.BasicController.extend({
+    init: function(element_id, server, port) {
+        this._super(element_id);
+        this.server = (server == undefined) ? location.hostname : server;
+        this.port = (port == undefined) ? location.port : port;
+        this.rpc_mode = (server == location.hostname) ? "ajax" : "jsonp";
+        this.debug = true;
+        this.db = "";
+        this.login = "";
+        this.password = "";
+        this.uid = false;
+        this.session_id = false;
+        this.module_list = [];
+        this.context = {};
+    },
+    rpc: function(url, params, success_callback, error_callback) {
+        var self = this;
 
         // Construct a JSON-RPC2 request, method is currently unsed
         params.session_id = this.session_id;
@@ -267,9 +255,14 @@ openerp.base.Session = openerp.base.BasicController.extend({
         // Use a default error handler unless defined
         error_callback = typeof(error_callback) != "undefined" ? error_callback : this.on_error;
 
+        // Call using the rpc_mode
+        this.rpc_ajax(url, post, success_callback, error_callback);
+    },
+    rpc_ajax: function(url, post, success_callback, error_callback) {
+        var self = this;
+        this.on_rpc_request();
         $.ajax({
             type: "POST",
-            //async: false,
             url: url,
             dataType: 'json',
             data: post,
@@ -293,11 +286,7 @@ openerp.base.Session = openerp.base.BasicController.extend({
                 var error = {
                     code: 1,
                     message: "XmlHttpRequestError " + errorThrown,
-                    data: {
-                        type: "xhr"+textStatus,
-                        debug: jqXHR.responseText,
-                        objects: [ jqXHR, errorThrown ]
-                    }
+                    data: {type: "xhr"+textStatus, debug: jqXHR.responseText, objects: [jqXHR, errorThrown] }
                 };
                 error_callback(error);
             }
@@ -327,6 +316,30 @@ openerp.base.Session = openerp.base.BasicController.extend({
             self.uid = result.uid;
             if (sucess_callback) sucess_callback();
         });
+    },
+    session_check_modules: function() {
+        // TODO
+        if(!openerp._modules_loaded)
+            this.session_load_modules();
+    },
+    session_load_modules: function() {
+        var self = this;
+        this.rpc('/base/session/list_modules', {}, function(result) {
+            this.module_list = result['modules'];
+            if(self.debug) {
+                // add the module code one by one as <script>
+            } else {
+                // load merged ones
+                // /base/session/css?mod=mod1,mod2,mod3
+                // /base/session/js?mod=mod1,mod2,mod3
+            }
+            // then init them
+            // for i in installed_modules:
+            //     call openerp._openerp.<i>(openerp)
+
+            openerp._modules_loaded = true;
+        });
+        this.uid = false;
     },
     session_logout: function() {
         this.uid = false;
@@ -518,6 +531,10 @@ openerp.base.DataRecord =  openerp.base.Controller.extend({
     },
 });
 
+openerp.base.XmlInput = openerp.base.BasicController.extend({
+// Non Session Controller to manage databases
+})
+
 openerp.base.FormView =  openerp.base.Controller.extend({
     init: function(session, element_id, dataset, view_id) {
         this._super(session, element_id);
@@ -616,6 +633,9 @@ openerp.base.ListView = openerp.base.Controller.extend({
     },
 });
 
+openerp.base.TreeView = openerp.base.BasicController.extend({
+// Non Session Controller to manage databases
+})
 
 openerp.base.SearchViewInput = openerp.base.Controller.extend({
 // TODO not sure should we create a controler for every input ?
@@ -630,7 +650,6 @@ openerp.base.SearchViewInput = openerp.base.Controller.extend({
 // an controller for many2one ?
 
 });
-
 
 openerp.base.SearchView = openerp.base.Controller.extend({
     init: function(session, element_id, dataset, view_id) {
@@ -689,6 +708,18 @@ openerp.base.SearchView = openerp.base.Controller.extend({
     on_clear: function() {
     },
 });
+
+openerp.base.ProcessView = openerp.base.BasicController.extend({
+// Non Session Controller to manage databases
+})
+
+openerp.base.HelpView = openerp.base.BasicController.extend({
+// Non Session Controller to manage databases
+})
+
+openerp.base.View = openerp.base.BasicController.extend({
+// Non Session Controller to manage databases
+})
 
 openerp.base.Action =  openerp.base.Controller.extend({
     init: function(session, element_id) {
@@ -769,6 +800,18 @@ openerp.base.Action =  openerp.base.Controller.extend({
     },
 });
 
+openerp.base.Preferences = openerp.base.BasicController.extend({
+// Non Session Controller to manage databases
+})
+
+openerp.base.ImportExport = openerp.base.BasicController.extend({
+// Non Session Controller to manage databases
+})
+
+openerp.base.Homepage = openerp.base.BasicController.extend({
+// Non Session Controller to manage databases
+})
+
 openerp.base.WebClient = openerp.base.Controller.extend({
     init: function(element_id) {
         var self = this;
@@ -812,6 +855,8 @@ openerp.base.WebClient = openerp.base.Controller.extend({
     },
     on_menu_action: function(action) {
         this.action.do_action(action);
+    },
+    do_about: function() {
     },
 });
 

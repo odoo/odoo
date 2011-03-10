@@ -64,8 +64,23 @@ class Hello(openerpweb.Controller):
     def ajax_hello_error(self,req):
         raise Exception("You suck")
 
-class Connection(openerpweb.Controller):
-    _cp_path = "/base/connection"
+class Session(openerpweb.Controller):
+    _cp_path = "/base/session"
+
+    @openerpweb.jsonrequest
+    def login(self, req, db, login, password):
+        req.session.login('trunk', login, password)
+        res = {
+            "session_id" : req.session_id,
+            "uid": req.session._uid,
+        }
+        return res
+
+    @openerpweb.jsonrequest
+    def modules(self, req):
+        res={}
+        res["modules"] = ["base","base_hello"]
+        return res
 
     def manifest_glob(self, modlist, key):
         files = []
@@ -95,49 +110,27 @@ class Connection(openerpweb.Controller):
         files_concat = "".join(files_content)
         return files_concat
 
-    def list_modules(self, req):
-        return 
+    @openerpweb.jsonrequest
+    def csslist(self, req, mods='base,base_hello'):
+        return {'files': self.manifest_glob(mods.split(','), 'css')}
 
     @openerpweb.jsonrequest
-    def manifest_files(self, req, key, mods):
-        files = self.manifest_glob(mods, key)
-        return {'files': files}
+    def jslist(self, req, mods='base,base_hello'):
+        return {'files': self.manifest_glob(mods.split(','), 'js')}
 
-    def css(self, req):
-        # TODO http get argument mods is a comma seprated value of modules
-        mods = 'base,base_hello'
+    def css(self, req, mods='base,base_hello'):
         files = self.manifest_glob(mods.split(','), 'css')
         concat = self.concat_files(files)[0]
         # TODO request set the Date of last modif and Etag
         return concat
     css.exposed=1
 
-    def js(self, req):
-        # TODO http get argument mods is a comma seprated value of modules
-        mods = 'base,base_hello'
+    def js(self, req, mods='base,base_hello'):
         files = self.manifest_glob(mods.split(','), 'js')
         concat = self.concat_files(files)[0]
         # TODO request set the Date of last modif and Etag
         return concat
     js.exposed=1
-
-class Session(openerpweb.Controller):
-    _cp_path = "/base/session"
-
-    @openerpweb.jsonrequest
-    def login(self, req, db, login, password):
-        req.session.login('trunk', login, password)
-        res = {
-            "session_id" : req.session_id,
-            "uid": req.session._uid,
-        }
-        return res
-
-    def modules(self, req):
-        # TODO return the list of all modules
-        res={}
-        res["modules"] = ["base","base_hello"]
-        return res
 
 class Menu(openerpweb.Controller):
     _cp_path = "/base/menu"
