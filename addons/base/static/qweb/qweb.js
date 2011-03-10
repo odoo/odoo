@@ -76,7 +76,7 @@ var QWeb = {
         return r;
     },
     eval_bool:function(e, v) {
-        return this.eval_object(e, v) ? true : false;
+        return !!this.eval_object(e, v);
     },
     trim : function(v, mode) {
         if (!v || !mode) return v;
