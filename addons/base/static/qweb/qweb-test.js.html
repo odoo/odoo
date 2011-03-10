@@ -159,6 +159,39 @@
                 equals(render('format-value', {value:'a'}), '<div foo="bar"/>',
                     "Valued format");
             });
+
+            module("Template calling (including)", {
+                setup: function () {
+                    QWeb.add_template('qweb-test-call.xml');
+                },
+                teardown: function () {
+                    QWeb.templates = [];
+                    QWeb.tag = {};
+                    QWeb.att = {};
+                }
+            });
+            test('Trivial call invocation', function () {
+                equals(render('basic-caller', {}), 'ok',
+                    "Direct call of a second template");
+            });
+            test('Call invocation with body', function () {
+                equals(render('with-unused-body', {}), 'ok',
+                    "Call of a second template with body unused");
+                equals(render('with-unused-setbody', {}), 'ok',
+                    "Call of a second template with body directives unused");
+            });
+            test('Call invocation with body (used by callee)', function () {
+                equals(render('with-used-body', {}), 'ok',
+                    "Call of a second template with body used");
+            });
+            test('Call invocation with parameters set (in body)', function () {
+                equals(render('with-used-setbody', {}), 'ok',
+                    "Call of a second template with parameters");
+            });
+            test('Call invocation in-context (via import)', function () {
+                equals(render('in-context-import', {}), 'ok',
+                    "Call with t-import (calls in current context)");
+            });
         });
     </script>
 
