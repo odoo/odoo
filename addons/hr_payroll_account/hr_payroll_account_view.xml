@@ -44,6 +44,18 @@
             </field>
         </record>
 
+        <record model="ir.ui.view" id="view_hr_employee_grade_inherit_form">
+            <field name="name">hr.employee.grade.inherit.form</field>
+            <field name="model">hr.payroll.structure</field>
+            <field name="inherit_id" ref="hr_payroll.view_hr_employee_grade_form"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <xpath expr="/form/notebook/page[@string='Salary Structure']/field[@name='line_ids']/form/group/field[@name='company_contrib']" position="before">
+                   <field name="account_id" required="1"/>
+                </xpath>
+            </field>
+        </record>
+
         <record model="ir.ui.view" id="view_hr_payslip_inherit_form">
             <field name="name">hr.payslip.inherit.form</field>
             <field name="model">hr.payslip</field>
