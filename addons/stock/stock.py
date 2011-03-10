@@ -1166,8 +1166,7 @@ class stock_picking(osv.osv):
             for move in pick.move_lines:
                 if move.state in ('done', 'cancel'):
                     continue
-                partial_data = partial_datas.get('move%s'%(move.id), False)
-                assert partial_data, _('Missing partial picking data for move #%s') % (move.id)
+                partial_data = partial_datas.get('move%s'%(move.id), {})
                 product_qty = partial_data.get('product_qty',0.0)
                 move_product_qty[move.id] = product_qty
                 product_uom = partial_data.get('product_uom',False)
@@ -1248,9 +1247,9 @@ class stock_picking(osv.osv):
 
             if new_picking:
                 move_obj.write(cr, uid, [c.id for c in complete], {'picking_id': new_picking})
-                for move in complete:
-                    if prodlot_ids.get(move.id):
-                        move_obj.write(cr, uid, move.id, {'prodlot_id': prodlot_ids[move.id]})
+            for move in complete:
+                if prodlot_ids.get(move.id):
+                    move_obj.write(cr, uid, move.id, {'prodlot_id': prodlot_ids[move.id]})
             for move in too_many:
                 product_qty = move_product_qty[move.id]
                 defaults = {
@@ -1463,7 +1462,7 @@ class stock_move(osv.osv):
     _description = "Stock Move"
     _order = 'date_expected desc, id'
     _log_create = False
-    
+
     def action_partial_move(self, cr, uid, ids, context=None):
         if context is None: context = {}
         partial_id = self.pool.get("stock.partial.move").create(
@@ -1481,7 +1480,7 @@ class stock_move(osv.osv):
             'domain': '[]',
             'context': context
         }
-        
+
 
     def name_get(self, cr, uid, ids, context=None):
         res = []
@@ -1855,11 +1854,6 @@ class stock_move(osv.osv):
         """
         moves = self.browse(cr, uid, ids, context=context)
         self.write(cr, uid, ids, {'state': 'confirmed'})
-        res_obj = self.pool.get('res.company')
-        location_obj = self.pool.get('stock.location')
-        move_obj = self.pool.get('stock.move')
-        wf_service = netsvc.LocalService("workflow")
-
         self.create_chained_picking(cr, uid, moves, context)
         return []
 
@@ -1886,6 +1880,14 @@ class stock_move(osv.osv):
         @return: True
         """
         self.write(cr, uid, ids, {'state': 'confirmed'})
+
+        # fix for bug lp:707031
+        # called write of related picking because changing move availability does
+        # not trigger workflow of picking in order to change the state of picking
+        wf_service = netsvc.LocalService('workflow')
+        for move in self.browse(cr, uid, ids, context):
+            if move.picking_id:
+                wf_service.trg_write(uid, 'stock.picking', move.picking_id.id, cr)
         return True
 
     #
@@ -2136,7 +2138,7 @@ class stock_move(osv.osv):
             prodlot_id = partial_datas and partial_datas.get('move%s_prodlot_id' % (move.id), False)
             if prodlot_id:
                 self.write(cr, uid, [move.id], {'prodlot_id': prodlot_id}, context=context)
-            if move.state not in ('confirmed','done'):
+            if move.state not in ('confirmed','done', 'assigned'):
                 todo.append(move.id)
 
         if todo:

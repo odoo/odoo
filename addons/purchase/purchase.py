@@ -170,7 +170,7 @@ class purchase_order(osv.osv):
         'partner_id':fields.many2one('res.partner', 'Supplier', required=True, states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)],'done':[('readonly',True)]}, change_default=True),
         'partner_address_id':fields.many2one('res.partner.address', 'Address', required=True,
             states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)],'done':[('readonly',True)]},domain="[('partner_id', '=', partner_id)]"),
-        'dest_address_id':fields.many2one('res.partner.address', 'Destination Address',
+        'dest_address_id':fields.many2one('res.partner.address', 'Destination Address', domain="[('partner_id', '!=', False)]",
             states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)],'done':[('readonly',True)]},
             help="Put an address if you want to deliver directly from the supplier to the customer." \
                 "In this case, it will remove the warehouse link and set the customer location."
@@ -665,7 +665,6 @@ class purchase_order_line(osv.osv):
                 'notes': notes or'', 'product_uom' : uom or False}, 'domain':{'product_uom':[]}}
         res = {}
         prod= self.pool.get('product.product').browse(cr, uid, product)
-
         product_uom_pool = self.pool.get('product.uom')
         lang=False
         if partner_id:
@@ -681,6 +680,11 @@ class purchase_order_line(osv.osv):
             date_order = time.strftime('%Y-%m-%d')
         qty = qty or 1.0
         seller_delay = 0
+        if uom:
+            uom1_cat = prod.uom_id.category_id.id
+            uom2_cat = product_uom_pool.browse(cr, uid, uom).category_id.id
+            if uom1_cat != uom2_cat:
+                uom = False
 
         prod_name = self.pool.get('product.product').name_get(cr, uid, [prod.id], context=context)[0][1]
         res = {}
@@ -707,14 +711,13 @@ class purchase_order_line(osv.osv):
             'taxes_id':map(lambda x: x.id, prod.supplier_taxes_id),
             'date_planned': date_planned or dt,'notes': notes or prod.description_purchase,
             'product_qty': qty,
-            'product_uom': uom}})
+            'product_uom': prod.uom_id.id}})
         domain = {}
 
         taxes = self.pool.get('account.tax').browse(cr, uid,map(lambda x: x.id, prod.supplier_taxes_id))
         fpos = fiscal_position and self.pool.get('account.fiscal.position').browse(cr, uid, fiscal_position) or False
         res['value']['taxes_id'] = self.pool.get('account.fiscal.position').map_tax(cr, uid, fpos, taxes)
-
-        res2 = self.pool.get('product.uom').read(cr, uid, [uom], ['category_id'])
+        res2 = self.pool.get('product.uom').read(cr, uid, [prod.uom_id.id], ['category_id'])
         res3 = prod.uom_id.category_id.id
         domain = {'product_uom':[('category_id','=',res2[0]['category_id'][0])]}
         if res2[0]['category_id'][0] != res3:

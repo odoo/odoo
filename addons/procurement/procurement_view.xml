@@ -28,6 +28,7 @@
             <field name="name">procurement.order.tree.board</field>
             <field name="model">procurement.order</field>
             <field name="type">tree</field>
+            <field eval="20" name="priority"/>
             <field name="arch" type="xml">
                 <tree string="Procurement Lines" colors="red:date_planned&lt;current_date and state in ('exception');black:state=='running';darkgreen:state=='confirmed';gray:state in ['done','cancel'];blue:state in ('ready')">
                     <field name="date_planned" widget="date"/>
@@ -244,17 +245,16 @@
         </record>
 
         <act_window
-        context="{'search_default_warehouse_id': active_id}"
+        context="{'search_default_warehouse_id': active_id, 'default_warehouse_id': active_id}"
         id="act_stock_warehouse_2_stock_warehouse_orderpoint"
-        name="Minimum Stock Rules" 
-        res_model="stock.warehouse.orderpoint" 
+        name="Minimum Stock Rules"
+        res_model="stock.warehouse.orderpoint"
         src_model="stock.warehouse"
         groups="stock.group_stock_user"/>
 
         <!-- add product_uom to context to be the default value when adding new orderpoints -->
         <act_window
-            context="{'product_uom': locals().has_key('uom_id') and uom_id,'search_default_product_id': [active_id]}"
-            domain="[('product_id', '=', active_id)]"
+            context="{'product_uom': locals().has_key('uom_id') and uom_id,'search_default_product_id': [active_id], 'default_product_id': active_id}"
             id="act_product_product_2_stock_warehouse_orderpoint"
             name="Minimum Stock Rules"
             res_model="stock.warehouse.orderpoint"
@@ -262,8 +262,7 @@
             groups="stock.group_stock_user"/>
 
         <act_window
-            context="{'product_uom': locals().has_key('uom_id') and uom_id}"
-            domain="[('procurement_id', '=', active_id)]"
+            context="{'product_uom': locals().has_key('uom_id') and uom_id, 'default_procurement_id': active_id}"
             id="act_procurement_2_stock_warehouse_orderpoint"
             name="Minimum Stock Rules"
             res_model="stock.warehouse.orderpoint"

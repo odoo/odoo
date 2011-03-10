@@ -4,6 +4,7 @@
 #Ingenieur fondateur
 #Tranquil IT Systems
 
+from __future__ import with_statement
 from osv import osv, fields
 import pooler
 import tools
