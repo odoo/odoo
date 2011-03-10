@@ -174,7 +174,7 @@ var QWeb = {
         return this.eval_str(t_att["raw"], v);
     },
     render_tag_rawf:function(e, t_att, g_att, v) {
-        return this.eval_format(t_att["raw"], v);
+        return this.eval_format(t_att["rawf"], v);
     },
     render_tag_esc:function(e, t_att, g_att, v) {
         return this.escape_text(this.eval_str(t_att["esc"], v));

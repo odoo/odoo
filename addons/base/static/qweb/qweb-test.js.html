@@ -40,6 +40,20 @@
                 equals('[&lt;ok&gt;]', render('escf-format-variable-with-escapes', {value: '<ok>'}),
                         "Render a formatted string with data to escape");
             });
+            test("Basic unescaped output", function () {
+                equals("ok", render('raw-literal', {}), "Render a literal string");
+                equals("ok", render('raw-variable', {ok: 'ok'}), "Render a string variable");
+                equals("<ok>", render('raw-notescaped', {ok: '<ok>'}), "Render a string with data not escaped");
+            });
+            test("Formatted unescaped output", function () {
+                equals("ok", render('rawf-noformat-literal', {}), "Render a literal string");
+                equals("ok", render('rawf-simpleformat-variable', {value: 'ok'}),
+                        "Only render an interpolated variable");
+                equals("[ok]", render('rawf-format-variable', {value: 'ok'}),
+                        "Actually formatted variable");
+                equals('[<ok>]', render('rawf-format-variable-notescaped', {value: '<ok>'}),
+                        "Render a formatted string with data not escaped");
+            });
         });
     </script>
 
