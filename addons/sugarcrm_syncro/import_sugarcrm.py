@@ -50,7 +50,7 @@ def import_users(self, cr, uid, context=None):
 def import_opportunities(self, cr, uid, context=None):
    if not context:
        context = {} 
-   user_id =  import_users(self, cr, uid, context) 
+   user_id = import_users(self, cr, uid, context) 
    map_opportunity = {'Opportunities':  {'name': 'name',
           'probability': 'probability',
           'planned_revenue': 'amount_usdollar',
@@ -69,13 +69,12 @@ def import_opportunities(self, cr, uid, context=None):
        new_lead_id = lead_pool.create(cr, uid, openerp_val, context)
    return new_lead_id           
         
-def resolve_dependencies(self, cr, uid, dict, dep, key, context=None):
+def resolve_dependencies(self, cr, uid, dict, dep, context=None):
      if not context:
          context = {}
      for dependency in dep:
-       resolve_dependencies(self, cr, uid, dict, dict[dependency]['dependencies'], key, context)
+       resolve_dependencies(self, cr, uid, dict, dict[dependency]['dependencies'], context)
        dict[dependency]['process'](self, cr, uid, context)
-     dict[key]['process'](self, cr, uid, context)
      return True 
 
 MAP_FIELDS = {'Opportunities':  #Object Mapping name
@@ -107,7 +106,9 @@ class import_sugarcrm(osv.osv):
            if not context:
                context = {}
            for key in MAP_FIELDS.keys():
-                resolve_dependencies(self, cr, uid, MAP_FIELDS, MAP_FIELDS[key]['dependencies'], key, context=context)
+                resolve_dependencies(self, cr, uid, MAP_FIELDS, MAP_FIELDS[key]['dependencies'], context=context)
+                if MAP_FIELDS[key]['dependencies']:
+                    MAP_FIELDS[key]['process'](self, cr, uid, context)
            obj_model = self.pool.get('ir.model.data')
            model_data_ids = obj_model.search(cr,uid,[('model','=','ir.ui.view'),('name','=','import.message.form')])
            resource_id = obj_model.read(cr, uid, model_data_ids, fields=['res_id'])
