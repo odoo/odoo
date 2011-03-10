@@ -969,8 +969,7 @@ class hr_payslip(osv.osv):
                 'amount_type': line.amount_type,
                 'amount': line.amount,
                 'total': value,
-                'slip_id': line.id,
-                'employee_id': False,
+                'employee_id': employee_id.id,
 #                'function_id': False,
                 'base': line.computational_expression
             }
@@ -990,21 +989,20 @@ class hr_payslip(osv.osv):
             'company_id': employee_id.company_id.id
         })
 
-        for line in employee_id.line_ids:
-            vals = {
-                'category_id': line.category_id.id,
-                'name': line.name,
-                'sequence': line.sequence,
-                'type': line.type,
-                'code': line.code,
-                'amount_type': line.amount_type,
-                'amount': line.amount,
-                'slip_id': line.id,
-                'employee_id': False,
-#                'function_id': False,
-                'base': base
-            }
-            update['value']['line_ids'].append(vals)
+#        for line in employee_id.line_ids:
+#            vals = {
+#                'category_id': line.category_id.id,
+#                'name': line.name,
+#                'sequence': line.sequence,
+#                'type': line.type.id,
+#                'code': line.code,
+#                'amount_type': line.amount_type,
+#                'amount': line.amount,
+#                'employee_id': employee_id.id,
+##                'function_id': False,
+#                'base': base
+#            }
+#            update['value']['line_ids'].append(vals)
 
         basic_before_leaves = update['value']['basic_amount']
         total_before_leaves = update['value']['total_pay']
@@ -1040,20 +1038,21 @@ class hr_payslip(osv.osv):
             if not slip_lines:
                 raise osv.except_osv(_('Error !'), _('Please check configuration of %s, Salary rule is missing') % (hday.holiday_status_id.name))
             salary_rule = salary_rule_pool.browse(cr, uid, slip_lines, context=context)[0]
+            base = salary_rule.computational_expression
             res = {
-                'slip_id': salary_rule.id,
                 'name': salary_rule.name + '-%s' % (hday.number_of_days),
                 'code': salary_rule.code,
                 'amount_type': salary_rule.amount_type,
                 'category_id': salary_rule.category_id.id,
-                'sequence': salary_rule.sequence
+                'sequence': salary_rule.sequence,
+                'employee_id': employee_id.id,
+                'base': base
             }
             days = hday.number_of_days
             if hday.number_of_days < 0:
                 days = hday.number_of_days * -1
             total_leave += days
 
-            base = line.computational_expression
             try:
                 #Please have a look at the configuration guide.
                 amt = eval(base, obj)
@@ -1074,7 +1073,7 @@ class hr_payslip(osv.osv):
             update['value']['line_ids'].append(res)
         basic = basic + total
 #            leaves = total
-        temp_dic = holiday_pool.read(cr, uid, leave_ids, [], context=context)
+#        temp_dic = holiday_pool.read(cr, uid, leave_ids, [], context=context)
         update['value'].update({
             'basic_amount': basic,
             'basic_before_leaves': round(basic_before_leaves),
@@ -1142,7 +1141,7 @@ class hr_payslip_line(osv.osv):
             ('code','Python Code'),
         ],'Amount Type', select=True, required=True),
         'amount': fields.float('Amount / Percentage', digits=(16, 4)),
-        'total': fields.float('Sub Total', readonly=True, digits_compute=dp.get_precision('Account')),
+        'total': fields.float('Sub Total', digits_compute=dp.get_precision('Account')),
         'company_contrib': fields.float('Company Contribution', readonly=True, digits=(16, 4)),
         'sequence': fields.integer('Sequence'),
         'note':fields.text('Description'),
