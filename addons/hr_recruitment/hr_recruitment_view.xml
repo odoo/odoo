@@ -80,7 +80,7 @@
                         <button string="Phone Call" name="%(action_hr_recruitment_phonecall)d" icon="terp-call-start" type="action" groups="base.group_extended"/>
                         <button name="action_makeMeeting" type="object" string="Meeting" icon="gtk-index"/>
                     <newline/>
-                    <field name="department_id" widget="selection"/>
+                    <field name="department_id" widget="selection" on_change="onchange_department_id(department_id)"/>
                     <group colspan="2" col="4">
                         <field name="stage_id" domain="[('department_id','=',department_id)]"/>
                         <button name="stage_previous" string="" type="object" icon="gtk-go-back"/>
