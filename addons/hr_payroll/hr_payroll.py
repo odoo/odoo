@@ -956,11 +956,24 @@ class hr_payslip(osv.osv):
                 raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ') % (e))
             if line.amount_type == 'per':
                 try:
-                    value = line.amount * amt
+                    if line.condition_range_min or line.condition_range_max:
+                        if ((line.amount < line.condition_range_min) or (line.amount > line.condition_range_max)):
+                            value = value
+                        else:
+                            value = line.amount * amt
+                    else:
+                        value = line.amount * amt
                 except Exception, e:
                     raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ') % (e))
+                
             elif line.amount_type == 'fix':
-                value = line.amount
+                if line.condition_range_min or line.condition_range_max:
+                    if ((line.amount < line.condition_range_min) or (line.amount > line.condition_range_max)):
+                        value = value
+                    else:
+                        value = line.amount
+                else:
+                    value = line.amount
 #            elif line.amount_type == 'code': # Need some clarification so this option remains
 #                value = slip_line_pool.execute_function(cr, uid, line.id, amt, context)
 #                line.amount = value
@@ -980,7 +993,11 @@ class hr_payslip(osv.osv):
                 'base': line.computational_expression
             }
             if line.appears_on_payslip:
-                update['value']['line_ids'].append(vals)
+                if line.condition_range_min or line.condition_range_max:
+                    if not((line.amount < line.condition_range_min) or (line.amount > line.condition_range_max)):
+                        update['value']['line_ids'].append(vals)
+                else:
+                    update['value']['line_ids'].append(vals)
         basic = contract.wage
         number = sequence_obj.get(cr, uid, 'salary.slip')
         update['value'].update({
