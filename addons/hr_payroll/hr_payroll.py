@@ -869,6 +869,15 @@ class hr_payslip(osv.osv):
 #            self.write(cr, uid, [slip.id], update, context=context)
 #        return True
 
+    def _get_parent_structure(self, cr, uid, struct_id, context=None):
+        parent = []
+        for line in self.pool.get('hr.payroll.structure').browse(cr, uid, struct_id):
+            if line.parent_id:
+                parent.append(line.parent_id.id)
+        if parent:
+            parent = self._get_parent_structure(cr, uid, parent, context)
+        return struct_id + parent
+    
     def onchange_employee_id(self, cr, uid, ids, ddate, employee_id, context=None):
         func_pool = self.pool.get('hr.payroll.structure')
         slip_line_pool = self.pool.get('hr.payslip.line')
@@ -923,21 +932,8 @@ class hr_payslip(osv.osv):
 
         sal_structure = []
         function = contract.struct_id.id
-
-        sal_structure.append(function)
-        if contract.struct_id.parent_id:
-            sal_structure.append(contract.struct_id.parent_id.id)
-        for s in sal_structure:
-            sal_struct = func_pool.read(cr, uid, s, ['parent_id'], context=context)
-            if sal_struct['parent_id']:
-                structure_id = sal_struct['parent_id'][0]
-                while(sal_struct['parent_id']):
-                    if structure_id:
-                        sal_struct = func_pool.browse(cr, uid, structure_id, context=context)
-                        for struct_line in [sal_struct]:
-                            structure_id = struct_line.parent_id
-                            if structure_id:
-                                sal_structure.append(structure_id.id)
+        if function:
+            sal_structure = self._get_parent_structure(cr, uid, [function], context=context)
                        
         lines = []
         rules = []
@@ -945,16 +941,15 @@ class hr_payslip(osv.osv):
             for struct in sal_structure:
                 func = func_pool.read(cr, uid, struct, ['rule_ids'], context=context)
                 lines = salary_rule_pool.browse(cr, uid, func['rule_ids'], context=context)
-                for rul in lines:
-                    rules.append(rul)
-               
+                for rl in lines:
+                    rules.append(rl)
+           
         ad = []
         total = 0.0
         obj = {'basic':contract.wage}
         for line in rules:
             cd = line.code.lower()
             obj[cd] = line.amount or 0.0
-
 
         for line in rules:
             if line.category_id.code in ad:
