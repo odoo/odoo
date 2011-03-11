@@ -4,19 +4,14 @@
 
     <!-- Casual leave -->
     <record model="hr.holidays.status" id="holiday_status_cl">
-      <field name="name">Casual Leave</field>
+      <field name="name">Legal Leaves</field>
+      <field name="limit">False</field>
       <field name="color_name">black</field>
-    </record>
-
-    <!-- Legal Holidays -->
-    <record model="hr.holidays.status" id="holiday_status_sl">
-      <field name="name">Legal Holidays</field>
-      <field name="color_name">blue</field>
     </record>
 
     <!-- Sick leave -->
     <record model="hr.holidays.status" id="holiday_status_sl">
-      <field name="name">Sick Leave</field>
+      <field name="name">Sick Leaves</field>
       <field name="limit">True</field>
       <field name="color_name">red</field>
     </record>
