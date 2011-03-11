@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-01-31 18:47+0000\n"
-"Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
+"PO-Revision-Date: 2011-03-10 17:56+0000\n"
+"Last-Translator: Stanislav Hanzhin <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-02-01 05:44+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-03-11 06:00+0000\n"
+"X-Generator: Launchpad (build 12559)\n"
 
 #. module: base
 #: view:ir.filters:0
@@ -28,7 +28,7 @@ msgstr "Домен"
 #. module: base
 #: model:res.country,name:base.sh
 msgid "Saint Helena"
-msgstr "Сент-Хелен"
+msgstr "Остров Святой Елены"
 
 #. module: base
 #: view:ir.actions.report.xml:0
@@ -47,6 +47,9 @@ msgid ""
 "The second argument of the many2many field %s must be a SQL table !You used "
 "%s, which is not a valid SQL table name."
 msgstr ""
+"Значение второго аргумента поля многие-ко-многим %s должно быть таблицей "
+"SQL! Вы использовали значение %s, которое не является допустимым именем SQL "
+"таблицы."
 
 #. module: base
 #: view:ir.values:0
@@ -117,6 +120,8 @@ msgid ""
 "You can not write in this document (%s) ! Be sure your user belongs to one "
 "of these groups: %s."
 msgstr ""
+"Вы не можете записывать в этот  документ (%s) ! Проверьте, что ваш "
+"пользователь состоит в одной из следующих групп: %s."
 
 #. module: base
 #: help:ir.model.fields,domain:0
@@ -806,6 +811,8 @@ msgid ""
 "Language with code \"%s\" is not defined in your system !\n"
 "Define it through the Administration menu."
 msgstr ""
+"Язык с кодом \"%s\" не установлен в вашей системе!\n"
+"Установите его в меню \"Администрирование\"."
 
 #. module: base
 #: model:res.country,name:base.gu
@@ -822,6 +829,7 @@ msgstr "Инф. панель отдела кадров"
 #, python-format
 msgid "Setting empty passwords is not allowed for security reasons!"
 msgstr ""
+"Использование пустых паролей не допускается по соображениям безопасности!"
 
 #. module: base
 #: selection:ir.actions.server,state:0
@@ -1631,7 +1639,7 @@ msgstr ""
 #: code:addons/orm.py:3147
 #, python-format
 msgid "A document was modified since you last viewed it (%s:%d)"
-msgstr ""
+msgstr "Документ был изменен с момента вашего последнего посещения (%s:%d)"
 
 #. module: base
 #: view:workflow:0
@@ -1647,7 +1655,7 @@ msgstr "Для удаления"
 #. module: base
 #: model:ir.model,name:base.model_ir_sequence
 msgid "ir.sequence"
-msgstr "Последовательность"
+msgstr "ir.sequence"
 
 #. module: base
 #: help:ir.actions.server,expression:0
@@ -2458,6 +2466,9 @@ msgid ""
 "loading a new language it becomes available as default interface language "
 "for users and partners."
 msgstr ""
+"Этот мастер поможет вам добавить новый язык интерфейса вашей системы "
+"OpenERP. После загрузки нового языка, его можно будет выбрать языком "
+"интерфейса по-умолчанию для пользователей и контрагентов."
 
 #. module: base
 #: view:ir.model:0
@@ -2806,6 +2817,8 @@ msgstr "Действие триггера"
 #, python-format
 msgid "\"email_from\" needs to be set to send welcome mails to users"
 msgstr ""
+"Поле \"email_from\" должно быть заполнено для отправки приветственных писем "
+"пользователям"
 
 #. module: base
 #: selection:ir.translation,type:0
@@ -3474,7 +3487,7 @@ msgstr "Никарагуа"
 #: code:addons/orm.py:1046
 #, python-format
 msgid "The write method is not implemented on this object !"
-msgstr ""
+msgstr "Для данного объекта не реализован метод 'write'!"
 
 #. module: base
 #: view:res.partner.event:0
@@ -4003,7 +4016,7 @@ msgstr "Французский / Français"
 #: code:addons/orm.py:1049
 #, python-format
 msgid "The create method is not implemented on this object !"
-msgstr ""
+msgstr "Для этого объекта не реализован метод 'create' !"
 
 #. module: base
 #: field:workflow.triggers,workitem_id:0
@@ -4260,6 +4273,8 @@ msgid ""
 "You cannot perform this operation. New Record Creation is not allowed for "
 "this object as this object is for reporting purpose."
 msgstr ""
+"Вы не можете выполнить это действие. Создание новых записей не разрешено для "
+"этого объекта. Это объект для отчетов."
 
 #. module: base
 #: view:base.language.import:0
@@ -4334,7 +4349,7 @@ msgstr "Хотите стереть Id`ы ? "
 #: field:publisher_warranty.contract,name:0
 #: field:publisher_warranty.contract.wizard,name:0
 msgid "Serial Key"
-msgstr ""
+msgstr "Серийный номер"
 
 #. module: base
 #: selection:res.request,priority:0
@@ -4462,7 +4477,7 @@ msgstr "Подпись"
 #: code:addons/fields.py:664
 #, python-format
 msgid "Not Implemented"
-msgstr ""
+msgstr "Не реализовано"
 
 #. module: base
 #: model:ir.model,name:base.model_res_widget_user
@@ -4531,6 +4546,8 @@ msgstr "Контакты"
 msgid ""
 "Unable to delete this document because it is used as a default property"
 msgstr ""
+"Невозможно удалить этот документ, поскольку он использован как свойство по-"
+"умолчанию"
 
 #. module: base
 #: view:res.widget.wizard:0
@@ -4574,6 +4591,8 @@ msgid ""
 "Please use the change password wizard (in User Preferences or User menu) to "
 "change your own password."
 msgstr ""
+"Пожалуйста, используйте Мастер изменения пароля (в настройках пользователя "
+"или в меню пользователя), чтобы изменить свой пароль."
 
 #. module: base
 #: code:addons/orm.py:1350
@@ -5310,7 +5329,7 @@ msgstr "Тайский"
 #: code:addons/orm.py:158
 #, python-format
 msgid "Object %s does not exists"
-msgstr ""
+msgstr "Объект %s не существует"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -5519,7 +5538,7 @@ msgstr "8.  %I:%M:%S %p  ==> 06:25:20 PM"
 #: code:addons/orm.py:1803
 #, python-format
 msgid "The copy method is not implemented on this object !"
-msgstr ""
+msgstr "Для этого объекта не реализован метод 'copy' !"
 
 #. module: base
 #: field:res.log,create_date:0
@@ -5727,7 +5746,7 @@ msgstr ""
 #: code:addons/fields.py:103
 #, python-format
 msgid "Not implemented get_memory method !"
-msgstr ""
+msgstr "Метод 'get_memory' не реализован !"
 
 #. module: base
 #: view:ir.actions.server:0
@@ -6148,7 +6167,7 @@ msgstr "Тип"
 #: code:addons/orm.py:3775
 #, python-format
 msgid "This method does not exist anymore"
-msgstr ""
+msgstr "Данный метод более не существует"
 
 #. module: base
 #: field:res.bank,fax:0
@@ -6417,6 +6436,8 @@ msgid ""
 "You can not read this document (%s) ! Be sure your user belongs to one of "
 "these groups: %s."
 msgstr ""
+"Вы не можете читать этот документ (%s) ! Убедитесь, что ваш пользователь "
+"состоит в одной из этих групп: %s."
 
 #. module: base
 #: view:res.bank:0
@@ -6594,7 +6615,7 @@ msgstr "Или"
 #: model:ir.actions.act_window,name:base.res_log_act_window
 #: model:ir.ui.menu,name:base.menu_res_log_act_window
 msgid "Client Logs"
-msgstr ""
+msgstr "Журнал работы клиента"
 
 #. module: base
 #: model:res.country,name:base.al
@@ -6730,7 +6751,7 @@ msgstr "Остановить все"
 #: code:addons/orm.py:412
 #, python-format
 msgid "The read_group method is not implemented on this object !"
-msgstr ""
+msgstr "Метод read_group не реализован для данного объекта !"
 
 #. module: base
 #: view:ir.model.data:0
@@ -7270,6 +7291,8 @@ msgid ""
 "Changing the type of a column is not yet supported. Please drop it and "
 "create it again!"
 msgstr ""
+"Изменение типа столбца пока не поддерживается. Пожалуйста, удалите его и "
+"создайте заново!"
 
 #. module: base
 #: field:ir.ui.view_sc,user_id:0
@@ -7285,7 +7308,7 @@ msgstr "Внимание !"
 #. module: base
 #: model:res.widget,title:base.google_maps_widget
 msgid "Google Maps"
-msgstr ""
+msgstr "Карты Google"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_base_config
@@ -8386,7 +8409,7 @@ msgstr "Датский/Данск"
 #. module: base
 #: selection:ir.model.fields,select_level:0
 msgid "Advanced Search (deprecated)"
-msgstr ""
+msgstr "Расширенный поиск (устарел)"
 
 #. module: base
 #: model:res.country,name:base.cx
@@ -8807,6 +8830,8 @@ msgid ""
 "Supported file formats: *.csv (Comma-separated values) or *.po (GetText "
 "Portable Objects)"
 msgstr ""
+"Поддерживаемые типы файлов: *.csv (Значения, разделённые запятыми) или *.po "
+"(GetText Portable Objects)"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:487
