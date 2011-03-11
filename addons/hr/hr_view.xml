@@ -333,9 +333,10 @@
                     <field name="name" />
                     <field name="department_id" />
                     <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                    <field name="expected_employees" on_change="on_change_expected_employee(expected_employees,no_of_employee)"/>
+                    <newline/>
+                    <field name="no_of_recruitment" on_change="on_change_expected_employee(no_of_recruitment,no_of_employee)"/>
                     <field name="no_of_employee"/>
-                    <field name="no_of_recruitment"/>
+                    <field name="expected_employees"/>
                     </group>
                     <newline/>
                     <notebook colspan="4">
