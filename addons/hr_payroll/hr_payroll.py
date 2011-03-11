@@ -917,19 +917,40 @@ class hr_payslip(osv.osv):
             return update
 
         contract = employee_id.contract_id
+        sal_structure = []
         function = contract.struct_id.id
+        sal_structure.append(function)
+        if contract.struct_id.parent_id:
+            sal_structure.append(contract.struct_id.parent_id.id)
+        for s in sal_structure:
+            sal_struct = func_pool.read(cr, uid, s, ['parent_id'], context=context)
+            if sal_struct['parent_id']:
+                structure_id = sal_struct['parent_id'][0]
+                while(sal_struct['parent_id']):
+                    if structure_id:
+                        sal_struct = func_pool.browse(cr, uid, structure_id, context=context)
+                        for struct_line in [sal_struct]:
+                            structure_id = struct_line.parent_id
+                            if structure_id:
+                                sal_structure.append(structure_id.id)
+                       
         lines = []
+        rules = []
         if function:
-            func = func_pool.read(cr, uid, function, ['rule_ids'], context=context)
-            lines = salary_rule_pool.browse(cr, uid, func['rule_ids'], context=context)
+            for struct in sal_structure:
+                func = func_pool.read(cr, uid, struct, ['rule_ids'], context=context)
+                lines = salary_rule_pool.browse(cr, uid, func['rule_ids'], context=context)
+                for rul in lines:
+                    rules.append(rul)
+               
         ad = []
         total = 0.0
         obj = {'basic':contract.wage}
-        for line in lines:
+        for line in rules:
             cd = line.code.lower()
             obj[cd] = line.amount or 0.0
 
-        for line in lines:
+        for line in rules:
             if line.category_id.code in ad:
                 continue
             ad.append(line.category_id.code)
@@ -1011,7 +1032,7 @@ class hr_payslip(osv.osv):
             'contract_id': contract.id,
             'company_id': employee_id.company_id.id
         })
-
+        
         for line in employee_id.line_ids:
             vals = {
                 'category_id': line.category_id.id,
