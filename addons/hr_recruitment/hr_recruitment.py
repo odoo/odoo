@@ -414,24 +414,36 @@ class hr_applicant(crm.crm_case, osv.osv):
         @param *args: Give Tuple Value
         """
         employee_obj = self.pool.get('hr.employee')
-        job_obj = self.pool.get('hr.job')
-        partner_obj = self.pool.get('res.partner')
-        address_id = False
         res = super(hr_applicant, self).case_close(cr, uid, ids, *args)
         for (id, name) in self.name_get(cr, uid, ids):
             message = _("Applicant '%s' is being hired.") % name
             self.log(cr, uid, id, message)
+        return res
 
+    def case_close_with_emp(self, cr, uid, ids, *args):
+        """
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of case's Ids
+        @param *args: Give Tuple Value
+        """
+        employee_obj = self.pool.get('hr.employee')
+        partner_obj = self.pool.get('res.partner')
+        address_id = False
         applicant = self.browse(cr, uid, ids)[0]
         if applicant.partner_id:
             address_id = partner_obj.address_get(cr, uid, [applicant.partner_id.id], ['contact'])['contact']
         if applicant.job_id:
+            self.pool.get('hr.job').write(cr, uid, [applicant.job_id.id], {'no_of_recruitment': applicant.job_id.no_of_recruitment - 1})
             emp_id = employee_obj.create(cr,uid,{'name': applicant.partner_name or applicant.name,
                                                  'job_id': applicant.job_id.id,
-                                                 'address_home_id':address_id,
-                                                 'department_id':applicant.department_id.id
+                                                 'address_home_id': address_id,
+                                                 'department_id': applicant.department_id.id
                                                  })
-        return res
+        else:
+            raise osv.except_osv(_('Warning!'),_('You must define Applied Job for Applicant !'))
+        return self.case_close(cr, uid, ids, *args)
 
     def case_reset(self, cr, uid, ids, *args):
         """Resets case as draft

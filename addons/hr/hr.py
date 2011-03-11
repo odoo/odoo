@@ -20,7 +20,7 @@
 ##############################################################################
 
 from osv import fields, osv
-
+import logging
 import addons
 
 class hr_employee_category(osv.osv):
@@ -81,22 +81,20 @@ class hr_job(osv.osv):
     def _no_of_employee(self, cr, uid, ids, name, args, context=None):
         res = {}
         for job in self.browse(cr, uid, ids, context=context):
-            res[job.id] = len(job.employee_ids or [])
-        return res
-
-    def _no_of_recruitement(self, cr, uid, ids, name, args, context=None):
-        res = {}
-        for job in self.browse(cr, uid, ids, context=context):
-            res[job.id] = job.expected_employees - job.no_of_employee
+            nb_employees = len(job.employee_ids or [])
+            res[job.id] = {
+                'no_of_employee': nb_employees,
+                'expected_employees': nb_employees + job.no_of_recruitment,
+            }
         return res
 
     _name = "hr.job"
     _description = "Job Description"
     _columns = {
         'name': fields.char('Job Name', size=128, required=True, select=True),
-        'expected_employees': fields.integer('Expected Employees', help='Required number of Employees in total for that job.'),
-        'no_of_employee': fields.function(_no_of_employee, method=True, string="No of Employee", help='Number of employee with that job.'),
-        'no_of_recruitment': fields.function(_no_of_recruitement, method=True, string='Expected in Recruitment', readonly=True),
+        'expected_employees': fields.function(_no_of_employee, method=True, string='Expected Employees', help='Required number of Employees in total for that job.', multi="no_of_employee"),
+        'no_of_employee': fields.function(_no_of_employee, method=True, string="No of Employee", help='Number of employee with that job.', multi="no_of_employee"),
+        'no_of_recruitment': fields.float('Expected in Recruitment'),
         'employee_ids': fields.one2many('hr.employee', 'job_id', 'Employees'),
         'description': fields.text('Job Description'),
         'requirements': fields.text('Requirements'),
@@ -110,24 +108,23 @@ class hr_job(osv.osv):
         'state': 'open',
     }
 
-    def on_change_expected_employee(self, cr, uid, ids, expected_employee, no_of_employee, context=None):
+    def on_change_expected_employee(self, cr, uid, ids, no_of_recruitment, no_of_employee, context=None):
         if context is None:
             context = {}
-        result = {}
-        if expected_employee:
-            result['no_of_recruitment'] = expected_employee - no_of_employee
-        return {'value': result}
+        return {'value': {'expected_employees': no_of_recruitment + no_of_employee}}
 
     def job_old(self, cr, uid, ids, *args):
-        self.write(cr, uid, ids, {'state': 'old'})
+        self.write(cr, uid, ids, {'state': 'old', 'no_of_recruitment': 0})
         return True
 
     def job_recruitement(self, cr, uid, ids, *args):
-        self.write(cr, uid, ids, {'state': 'recruit'})
+        for job in self.browse(cr, uid, ids):
+            no_of_recruitment = job.no_of_recruitment == 0 and 1 or job.no_of_recruitment
+            self.write(cr, uid, [job.id], {'state': 'recruit', 'no_of_recruitment': no_of_recruitment})
         return True
 
     def job_open(self, cr, uid, ids, *args):
-        self.write(cr, uid, ids, {'state': 'open'})
+        self.write(cr, uid, ids, {'state': 'open', 'no_of_recruitment': 0})
         return True
 
 hr_job()
@@ -154,7 +151,7 @@ class hr_employee(osv.osv):
         'work_email': fields.char('Work E-mail', size=240),
         'work_location': fields.char('Office Location', size=32),
         'notes': fields.text('Notes'),
-        'parent_id': fields.related('department_id', 'manager_id', relation='hr.employee', string='Manager', type='many2one', store=True, select=True, readonly=True, help="It is linked with manager of Department"),
+        'parent_id': fields.many2one('hr.employee', 'Manager'), 
         'category_ids': fields.many2many('hr.employee.category', 'employee_category_rel', 'emp_id', 'category_id', 'Category'),
         'child_ids': fields.one2many('hr.employee', 'parent_id', 'Subordinates'),
         'resource_id': fields.many2one('resource.resource', 'Resource', ondelete='cascade', required=True),
@@ -177,6 +174,13 @@ class hr_employee(osv.osv):
             address = self.pool.get('res.partner').address_get(cr, uid, [company_id.partner_id.id], ['default'])
             address_id = address and address['default'] or False
         return {'value': {'address_id' : address_id}}
+
+    def onchange_department_id(self, cr, uid, ids, department_id, context=None):
+        value = {'parent_id': False}
+        if department_id:
+            department = self.pool.get('hr.department').browse(cr, uid, department_id)
+            value['parent_id'] = department.manager_id.id
+        return {'value': value}
 
     def onchange_user(self, cr, uid, ids, user_id, context=None):
         work_email = False
@@ -204,15 +208,8 @@ class hr_employee(osv.osv):
             level -= 1
         return True
 
-    def _check_department_id(self, cr, uid, ids, context=None):
-        for emp in self.browse(cr, uid, ids, context=context):
-            if emp.department_id.manager_id and emp.id == emp.department_id.manager_id.id:
-                return False
-        return True
-
     _constraints = [
         (_check_recursion, 'Error ! You cannot create recursive Hierarchy of Employees.', ['parent_id']),
-        (_check_department_id, 'Error ! You cannot select a department for which the employee is the manager.', ['department_id']),
     ]
 
 hr_employee()
@@ -226,5 +223,27 @@ class hr_department(osv.osv):
     }
 
 hr_department()
+
+
+class res_users(osv.osv):
+    _name = 'res.users'
+    _inherit = 'res.users'
+
+    def create(self, cr, uid, data, context=None):
+        user_id = super(res_users, self).create(cr, uid, data, context=context)
+        data_obj = self.pool.get('ir.model.data')
+        try:
+            data_id = data_obj._get_id(cr, uid, 'hr', 'ir_ui_view_sc_employee')
+            view_id  = data_obj.browse(cr, uid, data_id, context=context).res_id
+            self.pool.get('ir.ui.view_sc').copy(cr, uid, view_id, default = {
+                                        'user_id': user_id}, context=context)
+        except:
+            # Tolerate a missing shortcut. See product/product.py for similar code.
+            logging.getLogger('orm').debug('Skipped meetings shortcut for user "%s"', data.get('name','<new'))
+            
+        return user_id
+
+res_users()
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
