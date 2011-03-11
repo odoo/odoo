@@ -22,6 +22,7 @@
 import time
 
 from osv import fields, osv
+from tools.translate import _
 import decimal_precision as dp
 
 class account_analytic_account(osv.osv):
@@ -120,6 +121,36 @@ class account_analytic_account(osv.osv):
 
         return result
 
+    def _get_company_currency(self, cr, uid, ids, context=None):
+        company_obj = self.pool.get('res.company')
+        analytic_obj = self.pool.get('account.analytic.account')
+        accounts = []
+        for company in company_obj.browse(cr, uid, ids, context=context):
+            accounts += analytic_obj.search(cr, uid, [('company_id', '=', company.id)])
+        return accounts
+
+    def _set_company_currency(self, cr, uid, ids, name, value, arg, context=None):
+        if type(ids) != type([]):
+            ids=[ids]
+        for account in self.browse(cr, uid, ids, context=context):
+            if not value:
+                cr.execute("""update account_analytic_account set
+                    currency_id=NULL where id=%s""", (account.id, ))
+            elif account.company_id.currency_id.id == value:
+                cr.execute("""update account_analytic_account set
+                    currency_id=%s where id=%s""", (value, account.id, ))
+            else:
+                raise osv.except_osv(_('Error !'), _('The currency has to be the same as the currency of the selected company.'))
+        return True
+
+    def _currency(self, cr, uid, ids, field_name, arg, context=None):
+        result = {}
+        for rec in self.browse(cr, uid, ids, context=context):
+            if not rec.currency_id.id:
+                result[rec.id] = False
+            else:
+                result[rec.id] = rec.company_id.currency_id.id
+        return result
 
     _columns = {
         'name': fields.char('Account Name', size=128, required=True),
@@ -149,7 +180,11 @@ class account_analytic_account(osv.osv):
                                   \n* And finally when all the transactions are over, it can be in \'Close\' state. \
                                   \n* The project can be in either if the states \'Template\' and \'Running\'.\n If it is template then we can make projects based on the template projects. If its in \'Running\' state it is a normal project.\
                                  \n If it is to be reviewed then the state is \'Pending\'.\n When the project is completed the state is set to \'Done\'.'),
-       'currency_id': fields.many2one('res.currency', 'Account currency', required=True),
+       #'currency_id': fields.many2one('res.currency', 'Account currency', required=True),
+        'currency_id': fields.function(_currency, fnct_inv=_set_company_currency, method=True,
+            store = {
+                'res.company': (_get_company_currency, ['currency_id'], 10),
+            }, string='Currency', type='many2one', relation='res.currency'),
     }
 
     def _default_company(self, cr, uid, context=None):
@@ -173,12 +208,12 @@ class account_analytic_account(osv.osv):
         'currency_id': _get_default_currency,
     }
 
-    def check_currency(self, cr, uid, ids, context=None):
-        obj = self.browse(cr, uid, ids[0], context=context)
-        if obj.company_id:
-            if obj.currency_id.id != self.pool.get('res.company').browse(cr, uid, obj.company_id.id, context=context).currency_id.id:
-                return False
-        return True
+#    def check_currency(self, cr, uid, ids, context=None):
+#        obj = self.browse(cr, uid, ids[0], context=context)
+#        if obj.company_id:
+#            if obj.currency_id.id != self.pool.get('res.company').browse(cr, uid, obj.company_id.id, context=context).currency_id.id:
+#                return False
+#        return True
 
     def check_recursion(self, cr, uid, ids, parent=None):
         return super(account_analytic_account, self)._check_recursion(cr, uid, ids, parent=parent)
@@ -186,7 +221,7 @@ class account_analytic_account(osv.osv):
     _order = 'date_start desc,parent_id desc,code'
     _constraints = [
         (check_recursion, 'Error! You can not create recursive analytic accounts.', ['parent_id']),
-        (check_currency, 'Error! The currency has to be the same as the currency of the selected company', ['currency_id', 'company_id']),
+#        (check_currency, 'Error! The currency has to be the same as the currency of the selected company', ['currency_id', 'company_id']),
     ]
 
     def copy(self, cr, uid, id, default=None, context=None):
