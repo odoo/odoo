@@ -121,7 +121,7 @@ class account_analytic_account(osv.osv):
 
         return result
 
-    def _get_company_currency(self, cr, uid, ids, context=None):
+    def _get_analytic_account(self, cr, uid, ids, context=None):
         company_obj = self.pool.get('res.company')
         analytic_obj = self.pool.get('account.analytic.account')
         accounts = []
@@ -140,7 +140,7 @@ class account_analytic_account(osv.osv):
                 cr.execute("""update account_analytic_account set
                     currency_id=%s where id=%s""", (value, account.id, ))
             else:
-                raise osv.except_osv(_('Error !'), _('The currency has to be the same as the currency of the selected company.'))
+                raise osv.except_osv(_('Error !'), _("The currency has to be the same as the currency of the analytic account's company or empty."))
         return True
 
     def _currency(self, cr, uid, ids, field_name, arg, context=None):
@@ -182,7 +182,7 @@ class account_analytic_account(osv.osv):
                                  \n If it is to be reviewed then the state is \'Pending\'.\n When the project is completed the state is set to \'Done\'.'),
         'currency_id': fields.function(_currency, fnct_inv=_set_company_currency, method=True,
             store = {
-                'res.company': (_get_company_currency, ['currency_id'], 10),
+                'res.company': (_get_analytic_account, ['currency_id'], 10),
             }, string='Currency', type='many2one', relation='res.currency'),
     }
 
