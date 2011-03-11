@@ -89,6 +89,13 @@ class hr_job(osv.osv):
         for job in self.browse(cr, uid, ids, context=context):
             res[job.id] = job.expected_employees - job.no_of_employee
         return res
+    
+    def _no_of_expected_employees(self, cr, uid, ids, name, value, arg, context=None):
+        if context is None:
+            context = {}
+        job =self.browse(cr, uid, ids, context=context)
+        result = value + job.no_of_employee
+        return self.write(cr,uid, ids, {'expected_employees': result}, context=context)
 
     _name = "hr.job"
     _description = "Job Description"
@@ -96,7 +103,7 @@ class hr_job(osv.osv):
         'name': fields.char('Job Name', size=128, required=True, select=True),
         'expected_employees': fields.integer('Expected Employees', help='Required number of Employees in total for that job.'),
         'no_of_employee': fields.function(_no_of_employee, method=True, string="No of Employee", help='Number of employee with that job.'),
-        'no_of_recruitment': fields.function(_no_of_recruitement, method=True, string='Expected in Recruitment', readonly=True),
+        'no_of_recruitment': fields.function(_no_of_recruitement,fnct_inv=_no_of_expected_employees, method=True, string='Expected in Recruitment'),
         'employee_ids': fields.one2many('hr.employee', 'job_id', 'Employees'),
         'description': fields.text('Job Description'),
         'requirements': fields.text('Requirements'),
