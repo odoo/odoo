@@ -178,6 +178,13 @@ class hr_employee(osv.osv):
             address_id = address and address['default'] or False
         return {'value': {'address_id' : address_id}}
 
+    def onchange_department_id(self, cr, uid, ids, department_id, context=None):
+        value = {'parent_id': False}
+        if department_id:
+            department = self.pool.get('hr.department').browse(cr, uid, department_id)
+            value['parent_id'] = department.manager_id.id
+        return {'value': value}
+
     def onchange_user(self, cr, uid, ids, user_id, context=None):
         work_email = False
         if user_id:

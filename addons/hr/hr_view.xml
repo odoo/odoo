@@ -28,7 +28,7 @@
                         <field name="company_id" widget="selection" groups="base.group_multi_company,base.group_extended" on_change="onchange_company(company_id)"/>
                         <field name="active" groups="base.group_extended"/>
                         <newline/>
-                        <field name="department_id" widget="selection" />
+                        <field name="department_id" widget="selection" on_change="onchange_department_id(department_id)" />
                         <field name="parent_id" />
                         </group>
                         <group colspan="2" col="1">
