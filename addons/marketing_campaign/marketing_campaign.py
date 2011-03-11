@@ -723,7 +723,7 @@ class marketing_campaign_workitem(osv.osv):
                 # manual states are not processed automatically
                 continue
             while True:
-                domain = [('state', '=', 'todo'), ('date', '!=', False)]
+                domain = [('campaign_id', '=', camp.id), ('state', '=', 'todo'), ('date', '!=', False)]
                 if camp.mode in ('test_realtime', 'active'):
                     domain += [('date','<=', time.strftime('%Y-%m-%d %H:%M:%S'))]
 
