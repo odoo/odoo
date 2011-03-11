@@ -20,7 +20,7 @@
 ##############################################################################
 
 {
-    "name" : "purchase_double_validation",
+    "name" : "Double Validation for Purchase",
     "version" : "1.1",
     "category": 'Generic Modules/Sales & Purchases',
     "depends" : ["base","purchase"],
