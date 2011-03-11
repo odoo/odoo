@@ -240,10 +240,28 @@ class mrp_bom(osv.osv):
                 return False
             level -= 1
         return True
-    _constraints = [
-        (_check_recursion, 'Error ! You can not create recursive BoM.', ['parent_id'])
-    ]
 
+    def _check_product(self, cr, uid, ids, context=None):
+        all_prod = []
+        bom_obj = self.pool.get('mrp.bom')
+        boms = self.browse(cr, uid, ids, context=context)
+        def check_bom(boms):
+            res = True
+            for bom in boms:
+                if bom.product_id.id in all_prod:
+                    res = res and False
+                all_prod.append(bom.product_id.id)
+                lines = bom.bom_lines
+                if lines:
+                    newboms = [a for a in lines if a not in boms]
+                    res = res and check_bom(newboms)
+            return res
+        return check_bom(boms)
+
+    _constraints = [
+        (_check_recursion, 'Error ! You can not create recursive BoM.', ['parent_id']),
+        (_check_product, 'BoM line product should not be same as BoM product.', ['product_id']),
+    ]
 
     def onchange_product_id(self, cr, uid, ids, product_id, name, context=None):
         """ Changes UoM and name if product_id changes.
@@ -672,7 +690,6 @@ class mrp_production(osv.osv):
         stock_mov_obj = self.pool.get('stock.move')
         production = self.browse(cr, uid, production_id, context=context)
 
-        final_product_todo = []
 
         produced_qty = 0
         if production_mode == 'consume_produce':
@@ -714,7 +731,7 @@ class mrp_production(osv.osv):
 
         if production_mode == 'consume_produce':
             # To produce remaining qty of final product
-            vals = {'state':'confirmed'}
+            #vals = {'state':'confirmed'}
             #final_product_todo = [x.id for x in production.move_created_ids]
             #stock_mov_obj.write(cr, uid, final_product_todo, vals)
             #stock_mov_obj.action_confirm(cr, uid, final_product_todo, context)

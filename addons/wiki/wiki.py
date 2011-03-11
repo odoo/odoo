@@ -23,6 +23,7 @@
 from osv import fields, osv
 from tools.translate import _
 import difflib
+import tools
 
 class wiki_wiki(osv.osv):
     """ wiki """
@@ -229,9 +230,9 @@ class wiki_history(osv.osv):
         text2 = history_pool.read(cr, uid, [v2], ['text_area'])[0]['text_area']
         line1 = line2 = ''
         if text1:
-            line1 = text1.splitlines(1)
+            line1 = tools.ustr(text1.splitlines(1))
         if text2:
-            line2 = text2.splitlines(1)
+            line2=tools.ustr(text2.splitlines(1))
         if (not line1 and not line2) or (line1 == line2):
             raise osv.except_osv(_('Warning !'), _('There are no changes in revisions'))
         diff = difflib.HtmlDiff()

@@ -185,6 +185,14 @@ class hr_applicant(crm.crm_case, osv.osv):
             return {'value': result}
         return {'value': {'department_id': False}}
 
+    def onchange_department_id(self, cr, uid, ids, department_id=False, context=None):
+        if not department_id:
+            return {'value': {'stage_id': False}}
+        obj_recru_stage = self.pool.get('hr.recruitment.stage')
+        stage_ids = obj_recru_stage.search(cr, uid, ['|',('department_id','=',department_id),('department_id','=',False)], context=context)
+        stage_id = stage_ids and stage_ids[0] or False
+        return {'value': {'stage_id': stage_id}}
+
     def stage_previous(self, cr, uid, ids, context=None):
         """This function computes previous stage for case from its current stage
              using available stage for that case type
@@ -407,14 +415,23 @@ class hr_applicant(crm.crm_case, osv.osv):
         """
         employee_obj = self.pool.get('hr.employee')
         job_obj = self.pool.get('hr.job')
+        partner_obj = self.pool.get('res.partner')
+        address_id = False
         res = super(hr_applicant, self).case_close(cr, uid, ids, *args)
         for (id, name) in self.name_get(cr, uid, ids):
             message = _("Applicant '%s' is being hired.") % name
             self.log(cr, uid, id, message)
         applicant = self.browse(cr, uid, ids)[0]
-        if not applicant.job_id:
+        if applicant.partner_id:
+            address_id = partner_obj.address_get(cr, uid, [applicant.partner_id.id], ['contact'])['contact']
+        if applicant.job_id:
+            emp_id = employee_obj.create(cr,uid,{'name': applicant.partner_name or applicant.name,
+                                                 'job_id': applicant.job_id.id,
+                                                 'address_home_id':address_id,
+                                                 'department_id':applicant.department_id.id
+                                                 })
+        else:
             raise osv.except_osv(_('Warning!'),_('You must define job Id for Applicant !')) 
-        emp_id = employee_obj.create(cr,uid,{'name': applicant.name,'job_id': applicant.job_id.id})
         return res
 
     def case_close_without_emp(self, cr, uid, ids, *args):
@@ -432,7 +449,6 @@ class hr_applicant(crm.crm_case, osv.osv):
             message = _("Applicant '%s' is being hired.") % name
             self.log(cr, uid, id, message)
         return res
-
 
     def case_reset(self, cr, uid, ids, *args):
         """Resets case as draft
@@ -454,7 +470,7 @@ class hr_job(osv.osv):
     _inherit = "hr.job"
     _name = "hr.job"
     _columns = {
-        'survey_id': fields.many2one('survey', 'Survey'),
+        'survey_id': fields.many2one('survey', 'Survey', help="Select survey for the current job"),
     }
 hr_job()
 

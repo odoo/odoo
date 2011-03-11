@@ -22,7 +22,7 @@
 {
     "name":"Master Procurement Schedule",
     "version":"1.1",
-    "author":"OpenERP SA and Grzegorz Grzelak (Cirrus)",
+    "author":["OpenERP SA",  "Grzegorz Grzelak (Cirrus)"],
     "category":"Custom",
     "depends":["hr","stock","sale"],
     "description": """
