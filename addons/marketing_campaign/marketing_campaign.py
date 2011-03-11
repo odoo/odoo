@@ -453,7 +453,8 @@ class marketing_campaign_activity(osv.osv):
         action_context = dict(context,
                               active_id=workitem.res_id,
                               active_ids=[workitem.res_id],
-                              active_model=workitem.object_id.model)
+                              active_model=workitem.object_id.model,
+                              workitem=workitem)
         res = server_obj.run(cr, uid, [activity.server_action_id.id],
                              context=action_context)
         # server action return False if the action is perfomed
