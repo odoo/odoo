@@ -146,7 +146,7 @@ openerp.base.Session = openerp.base.BasicController.extend({
         var post = { request: JSON.stringify(request) };
 
         // Use a default error handler unless defined
-        error_callback = typeof(error_callback) != "undefined" ? error_callback : this.on_error;
+        error_callback = typeof(error_callback) != "undefined" ? error_callback : this.on_rpc_error;
 
         // Call using the rpc_mode
         this.rpc_ajax(url, post, success_callback, error_callback);
@@ -189,7 +189,7 @@ openerp.base.Session = openerp.base.BasicController.extend({
     },
     on_rpc_response: function() {
     },
-    on_error: function(error) {
+    on_rpc_error: function(error) {
         // TODO this should use the $element with focus and buttonsi displaying OPW etc...
         this.on_log(error, error.message, error.data.type, error.data.debug);
     },
@@ -207,29 +207,48 @@ openerp.base.Session = openerp.base.BasicController.extend({
         this.rpc("/base/session/login", params, function(result) {
             self.session_id = result.session_id;
             self.uid = result.uid;
-            if (sucess_callback) sucess_callback();
+            self.session_check_modules();
+            if (sucess_callback)
+                sucess_callback();
         });
     },
     session_check_modules: function() {
-        // TODO
         if(!openerp._modules_loaded)
             this.session_load_modules();
     },
     session_load_modules: function() {
         var self = this;
-        this.rpc('/base/session/list_modules', {}, function(result) {
+        this.rpc('/base/session/modules', {}, function(result) {
             this.module_list = result['modules'];
             if(self.debug) {
-                // add the module code one by one as <script>
+                self.log(self.module_list);
+                self.rpc('/base/session/jslist', {"mods": this.module_list.join(',')}, function(result) {
+                    var files = result.files;
+                    self.log(files);
+                    // Insert addons javascript in head
+                    for(var i=0; i<files.length; i++) {
+                        // use $.getScript(‘your_3rd_party-script.js’); ? i want to keep lineno !
+                        var s = document.createElement("script");
+                        s.src = files[i];
+                        s.type = "text/javascript";
+                        document.getElementsByTagName("head")[0].appendChild(s);
+                        // at this point the js should be loaded or not ?
+                    }
+                    for(var i=0; i<this.module_list.length; i++) {
+                        var mod = this.module_list[i];
+                        if(mod == "base")
+                            continue;
+                        self.log(mod);
+                        self.log(openerp._openerp[mod]);
+                        // init module mod
+                        openerp._openerp[mod](openerp);
+                    }
+                });
             } else {
                 // load merged ones
                 // /base/session/css?mod=mod1,mod2,mod3
                 // /base/session/js?mod=mod1,mod2,mod3
             }
-            // then init them
-            // for i in installed_modules:
-            //     call openerp._openerp.<i>(openerp)
-
             openerp._modules_loaded = true;
         });
         this.uid = false;

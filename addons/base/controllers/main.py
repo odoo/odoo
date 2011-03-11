@@ -67,29 +67,13 @@ class Hello(openerpweb.Controller):
 class Session(openerpweb.Controller):
     _cp_path = "/base/session"
 
-    @openerpweb.jsonrequest
-    def login(self, req, db, login, password):
-        req.session.login('trunk', login, password)
-        res = {
-            "session_id" : req.session_id,
-            "uid": req.session._uid,
-        }
-        return res
-
-    @openerpweb.jsonrequest
-    def modules(self, req):
-        res={}
-        res["modules"] = ["base","base_hello"]
-        return res
-
     def manifest_glob(self, modlist, key):
         files = []
-        for i in modlist.split(','):
-            globlist = openerpweb.addons_manifest.get(i,{}).get('css',[])
+        for i in modlist:
+            globlist = openerpweb.addons_manifest.get(i, {}).get(key, [])
             for j in globlist:
-                tmp = glob.glob(os.path.join(openerpweb.path_addons,i,j))
-                files.append(tmp)
-        print modlist, key, files
+                for k in glob.glob(os.path.join(openerpweb.path_addons, i, j)):
+                    files.append(k[len(openerpweb.path_addons):])
         return files
 
     def concat_files(self, file_list):
@@ -109,6 +93,21 @@ class Session(openerpweb.Controller):
             files_content = open(fname).read()
         files_concat = "".join(files_content)
         return files_concat
+
+    @openerpweb.jsonrequest
+    def login(self, req, db, login, password):
+        req.session.login('trunk', login, password)
+        res = {
+            "session_id" : req.session_id,
+            "uid": req.session._uid,
+        }
+        return res
+
+    @openerpweb.jsonrequest
+    def modules(self, req):
+        res={}
+        res["modules"] = ["base","base_hello"]
+        return res
 
     @openerpweb.jsonrequest
     def csslist(self, req, mods='base,base_hello'):
