@@ -85,11 +85,11 @@ if os.name == 'nt':
             "packages": [
                 "lxml", "lxml.builder", "lxml._elementpath", "lxml.etree",
                 "lxml.objectify", "decimal", "xml", "xml", "xml.dom", "xml.xpath",
-                "encodings", "dateutil", "pychart", "PIL", "pyparsing", # Why is wizard listed here?
+                "encodings", "dateutil", "pychart", "PIL", "pyparsing",
                 "pydot", "asyncore","asynchat", "reportlab", "vobject",
                 "HTMLParser", "select", "mako", "poplib",
                 "imaplib", "smtplib", "email", "yaml", "DAV",
-                "uuid", "openerp",
+                "uuid", "commands", "openerp",
             ],
             "excludes" : ["Tkconstants","Tkinter","tcl"],
         }
@@ -106,8 +106,6 @@ if os.name == 'nt':
         files.append(('openerp', [join('openerp', 'import_xml.rng'),]))
         return files
     py2exe_data_files = data_files()
-
-#sys.path.append(join(os.path.abspath(os.path.dirname(__file__)), "openerp")) # Is it just for wizard, or something else?
 
 execfile(join('openerp', 'release.py'))
 
@@ -131,15 +129,19 @@ setup(name             = name,
       package_data = {
           '': ['*.yml', '*.xml', '*.po', '*.pot', '*.csv'],
       },
+      dependency_links = ['http://download.gna.org/pychart/'],
       install_requires = [
        # We require the same version as caldav for lxml.
           'lxml==2.1.5',
           'mako',
           'python-dateutil',
           'psycopg2',
-        # We include pychart in our tree as it is difficult to get it via pypi.
-        # An alternate site is http://home.gna.org/pychart/.
-        # 'pychart',
+        # TODO the pychart package we include in openerp corresponds to PyChart 1.37.
+        # It seems there is a single difference, which is a spurious print in generate_docs.py.
+        # It is probably safe to move to PyChart 1.39 (the latest one).
+        # (Let setup.py choose the latest one, and we should check we can remove pychart from
+        # our tree.)
+          'pychart',
           'pydot',
           'pytz',
           'reportlab',
