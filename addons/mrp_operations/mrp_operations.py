@@ -119,11 +119,12 @@ class mrp_production_workcenter_line(osv.osv):
         @return: Nothing
         """
         wf_service = netsvc.LocalService("workflow")
+        prod_obj_pool = self.pool.get('mrp.production')
         oper_obj = self.browse(cr, uid, ids)[0]
         prod_obj = oper_obj.production_id
         if action == 'start':
                if prod_obj.state =='confirmed':
-                   self.pool.get('mrp.production').force_production(cr, uid, [prod_obj.id])
+                   prod_obj_pool.force_production(cr, uid, [prod_obj.id])
                    wf_service.trg_validate(uid, 'mrp.production', prod_obj.id, 'button_produce', cr)
                elif prod_obj.state =='ready':
                    wf_service.trg_validate(uid, 'mrp.production', prod_obj.id, 'button_produce', cr)
@@ -139,6 +140,9 @@ class mrp_production_workcenter_line(osv.osv):
                 if line.state != 'done':
                      flag = False
             if flag:
+                for production in prod_obj_pool.browse(cr, uid, [prod_obj.id], context= None):
+                    if production.move_lines or production.move_created_ids:
+                        prod_obj_pool.action_produce(cr,uid, production.id, production.product_qty, 'consume_produce', context = None)
                 wf_service.trg_validate(uid, 'mrp.production', oper_obj.production_id.id, 'button_produce_done', cr)
         return
 
@@ -244,10 +248,12 @@ class mrp_production(osv.osv):
             wf_service.trg_validate(uid, 'mrp.production.workcenter.line', workcenter_line.id, 'button_start_working', cr)
         return super(mrp_production,self).action_in_production(cr, uid, ids)
     
-    def action_cancel(self, cr, uid, ids):
+    def action_cancel(self, cr, uid, ids, context=None):
         """ Cancels work order if production order is canceled.
         @return: Super method
         """
+        if context is None:
+            context = {}
         obj = self.browse(cr, uid, ids)[0]
         wf_service = netsvc.LocalService("workflow")
         for workcenter_line in obj.workcenter_lines:
