@@ -87,7 +87,7 @@ class synchronize_google_calendar_events(osv.osv_memory):
         calendars = gd_client.GetAllCalendarsFeed()
         for cal in calendars.entry:
             res.append((cal.id.text, cal.title.text))
-        res.append(('default','Default Calendar'))
+        res.append(('all','All Calendars'))
         return res
     
     _columns = {
@@ -95,34 +95,12 @@ class synchronize_google_calendar_events(osv.osv_memory):
     }
     
     _defaults = {
-        'calendar_name': 'default',
+        'calendar_name': 'all',
     }
     
-    def import_calendar_events(self, cr, uid, ids, context=None):
-        obj = self.browse(cr, uid, ids, context=context)[0]
-        if not ids:
-            return { 'type': 'ir.actions.act_window_close' }
-
-        user_obj = self.pool.get('res.users').browse(cr, uid, uid)
+    def get_events(self, cr, uid, event_feed, context=None):
         meeting_obj = self.pool.get('crm.meeting')
         model_obj = self.pool.get('ir.model.data')
-        gmail_user = user_obj.gmail_user
-        gamil_pwd = user_obj.gmail_password
-        
-        google = self.pool.get('google.login')
-        gd_client = google.google_login(cr, uid, gmail_user, gamil_pwd, type='calendar')
-
-        if not gmail_user or not gamil_pwd:
-            raise osv.except_osv(_('Error'), _("Please specify the user and password !"))
-        
-        if obj.calendar_name != 'default':
-            events_query = gdata.calendar.service.CalendarEventQuery(user=urllib.unquote(obj.calendar_name.split('/')[~0]))
-            events_query.start_index = 1
-            events_query.max_results = 1000
-            event_feed = gd_client.GetCalendarEventFeed(events_query.ToUri())
-        else:
-            event_feed = gd_client.GetCalendarEventFeed()
-
         meeting_ids = []
         for feed in event_feed.entry:
             google_id = feed.id.text
@@ -146,6 +124,42 @@ class synchronize_google_calendar_events(osv.osv_memory):
                 meeting_ids.append(res_id)
                 model_data.update({'res_id': res_id})
                 model_obj.create(cr, uid, model_data, context=context)
+        return meeting_ids
+    
+    def import_calendar_events(self, cr, uid, ids, context=None):
+        obj = self.browse(cr, uid, ids, context=context)[0]
+        if not ids:
+            return { 'type': 'ir.actions.act_window_close' }
+
+        user_obj = self.pool.get('res.users').browse(cr, uid, uid)
+        gmail_user = user_obj.gmail_user
+        gamil_pwd = user_obj.gmail_password
+        
+        google = self.pool.get('google.login')
+        gd_client = google.google_login(cr, uid, gmail_user, gamil_pwd, type='calendar')
+
+        if not gmail_user or not gamil_pwd:
+            raise osv.except_osv(_('Error'), _("Please specify the user and password !"))
+        
+        meetings = []
+        if obj.calendar_name != 'all':
+            events_query = gdata.calendar.service.CalendarEventQuery(user=urllib.unquote(obj.calendar_name.split('/')[~0]))
+            events_query.start_index = 1
+            events_query.max_results = 1000
+            event_feed = gd_client.GetCalendarEventFeed(events_query.ToUri())
+            meetings.append(self.get_events(cr, uid, event_feed, context=context))
+        else:
+            calendars = map(lambda x:x[0], [cal for cal in self._get_calendars(cr, uid, context) if cal[0] != 'all'])
+            for cal in calendars:
+                events_query = gdata.calendar.service.CalendarEventQuery(user=urllib.unquote(cal.split('/')[~0]))
+                events_query.start_index = 1
+                events_query.max_results = 1000
+                event_feed = gd_client.GetCalendarEventFeed(events_query.ToUri())
+                meetings.append(self.get_events(cr, uid, event_feed, context=context))
+        
+        meeting_ids = []
+        for meeting in meetings:
+            meeting_ids += meeting
         
         return {
             'name': _('Meetings'),
@@ -157,7 +171,7 @@ class synchronize_google_calendar_events(osv.osv_memory):
             'views': [(False, 'calendar'),(False, 'tree'),(False, 'form')],
             'type': 'ir.actions.act_window',
         }
-    
+        
 synchronize_google_calendar_events()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
