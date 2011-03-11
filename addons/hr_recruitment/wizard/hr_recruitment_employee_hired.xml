@@ -8,15 +8,12 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
             <form string="Create New Employee">
-                <group col="4" colspan="6">
-                    <separator string="Would you like to create an employee ?" colspan="4" />
+                    <label string="Would you like to create an employee ?" colspan="4" />
+                    <separator string="" colspan="4"/>
                     <newline />
-                </group>
-                <group col="3" colspan="4">
                     <button special="cancel"  string="Cancel" icon='gtk-cancel'/>
-                    <button name="case_close_without_emp" string="No" icon='gtk-no' type="object"/>
-                    <button name="case_close" string="Yes" colspan="1" type="object" icon="terp-camera_test"/>
-                </group>
+                    <button name="case_close" string="No" icon='gtk-no' type="object"/>
+                    <button name="case_close_with_emp" string="Yes" colspan="1" type="object" icon="terp-camera_test"/>
             </form>
             </field>
         </record>

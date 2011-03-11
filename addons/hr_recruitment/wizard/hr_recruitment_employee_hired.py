@@ -36,12 +36,10 @@ class hired_employee(osv.osv_memory):
         """
         if context is None:
             context = {}
-
-        hr_app = self.pool.get('hr.applicant')
-        hr_app.case_close(cr, uid,context.get('active_ids',False))
+        self.pool.get('hr.applicant').case_close(cr, uid,context.get('active_ids',[]))
         return {}
 
-    def case_close_without_emp(self, cr, uid,ids, context=None):
+    def case_close_with_emp(self, cr, uid,ids, context=None):
         """
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
@@ -50,10 +48,7 @@ class hired_employee(osv.osv_memory):
         """
         if context is None:
             context = {}
-
-        hr_app = self.pool.get('hr.applicant')
-        hr_app.case_close_without_emp(cr, uid,context.get('active_ids',False))
-
+        self.pool.get('hr.applicant').case_close_with_emp(cr, uid,context.get('active_ids', []))
         return {}
 
 hired_employee()
