@@ -44,6 +44,18 @@
             </field>
         </record>
 
+        <record model="ir.ui.view" id="view_hr_employee_grade_inherit_form">
+            <field name="name">hr.employee.grade.inherit.form</field>
+            <field name="model">hr.payroll.structure</field>
+            <field name="inherit_id" ref="hr_payroll.view_hr_employee_grade_form"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <xpath expr="/form/notebook/page[@string='Salary Structure']/field[@name='line_ids']/form/group/field[@name='company_contrib']" position="before">
+                   <field name="account_id" required="1"/>
+                </xpath>
+            </field>
+        </record>
+
         <record model="ir.ui.view" id="view_hr_payslip_inherit_form">
             <field name="name">hr.payslip.inherit.form</field>
             <field name="model">hr.payslip</field>
@@ -57,7 +69,7 @@
             </field>
         </record>
 
- 
+
          <record id="view_hr_payslip_form_inherit_1" model="ir.ui.view">
             <field name="name">hr.payslip.form.inherit1</field>
             <field name="model">hr.payslip</field>
@@ -166,7 +178,7 @@
                 </field>
             </field>
         </record>
-    
+
         <record id="view_hr_payslip_form_inherit" model="ir.ui.view">
 		    <field name="name">hr.payslip.form</field>
 		    <field name="model">hr.payslip</field>
@@ -204,7 +216,7 @@
 	           </page>
 		    </field>
 		</record>
-		
+
 		<record id="view_hr_payslip_form_inherit1" model="ir.ui.view">
 		    <field name="name">hr.payslip.form</field>
 		    <field name="model">hr.payslip</field>
@@ -221,5 +233,23 @@
 		        </notebook>
 		    </field>
 		</record>
+
+
+        <!-- Adding Account Properties to the Employee form -->
+
+        <record id="hr_employee_payroll_property_form" model="ir.ui.view">
+            <field name="name">hr.employee.payroll.property.form</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr_contract.hr_hr_employee_view_form2"/>
+            <field name="arch" type="xml">
+                <field name="bank_account_id" position="after">
+                    <field name="property_bank_account" string="Employee Bank Account"/>
+                    <field name="salary_account"/>
+                    <field name="employee_account"/>
+                    <field name="analytic_account"/>
+                </field>
+            </field>
+        </record>
+
     </data>
 </openerp>
