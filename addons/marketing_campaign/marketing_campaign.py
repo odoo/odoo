@@ -560,6 +560,8 @@ class marketing_campaign_workitem(osv.osv):
                 continue
 
             proxy = self.pool.get(wi.object_id.model)
+            if not proxy.exists(cr, uid, [wi.res_id]):
+                continue
             ng = proxy.name_get(cr, uid, [wi.res_id], context=context)
             if ng:
                 res[wi.id] = ng[0][1]
