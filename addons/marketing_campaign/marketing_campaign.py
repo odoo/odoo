@@ -21,6 +21,7 @@
 
 import time
 import base64
+import itertools
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from operator import itemgetter
@@ -213,6 +214,7 @@ marketing_campaign()
 class marketing_campaign_segment(osv.osv):
     _name = "marketing.campaign.segment"
     _description = "Campaign Segment"
+    _order = "name"
 
     def _get_next_sync(self, cr, uid, ids, fn, args, context=None):
         # next auto sync date is same for all segments
@@ -352,6 +354,7 @@ marketing_campaign_segment()
 
 class marketing_campaign_activity(osv.osv):
     _name = "marketing.campaign.activity"
+    _order = "name"
     _description = "Campaign Activity"
 
     _action_types = [
@@ -457,7 +460,7 @@ class marketing_campaign_activity(osv.osv):
                               workitem=workitem)
         res = server_obj.run(cr, uid, [activity.server_action_id.id],
                              context=action_context)
-        # server action return False if the action is perfomed
+        # server action return False if the action is performed
         # except client_action, other and python code
         return res == False and True or res
 
@@ -567,8 +570,14 @@ class marketing_campaign_workitem(osv.osv):
         if not len(args):
             return []
 
-        condition = []
-        final_ids = []
+        condition_name = None
+        for domain_item in args:
+            # we only use the first domain criterion and ignore all the rest including operators
+            if isinstance(domain_item, (list,tuple)) and len(domain_item) == 3 and domain_item[0] == 'res_name':
+                condition_name = [None, domain_item[1], domain_item[2]]
+                break
+
+        assert condition_name, "Invalid search domain for marketing_campaign_workitem.res_name. It should use 'res_name'"
 
         cr.execute("""select w.id, w.res_id, m.model  \
                                 from marketing_campaign_workitem w \
@@ -577,15 +586,17 @@ class marketing_campaign_workitem(osv.osv):
                                     left join ir_model m on (m.id=c.object_id)
                                     """)
         res = cr.fetchall()
+        workitem_map = {}
+        matching_workitems = []
         for id, res_id, model in res:
+            workitem_map.setdefault(model,{}).setdefault(res_id,set()).add(id)
+        for model, id_map in workitem_map.iteritems():
             model_pool = self.pool.get(model)
-            for arg in args:
-                if arg[1] == 'ilike':
-                    condition.append((model_pool._rec_name, 'ilike', arg[2]))
-            res_ids = model_pool.search(cr, uid, condition, context=context)
-            if res_id in res_ids:
-                final_ids.append(id)
-        return [('id', 'in', final_ids)]
+            condition_name[0] = model_pool._rec_name
+            condition = [('id', 'in', id_map.keys()), condition_name]
+            for res_id in model_pool.search(cr, uid, condition, context=context):
+                matching_workitems.extend(id_map[res_id])
+        return [('id', 'in', list(set(matching_workitems)))]
 
     _columns = {
         'segment_id': fields.many2one('marketing.campaign.segment', 'Segment', readonly=True),
