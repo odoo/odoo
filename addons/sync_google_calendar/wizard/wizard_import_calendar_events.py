@@ -114,6 +114,7 @@ class synchronize_google_calendar_events(osv.osv_memory):
                 'name': google_id,
                 'model': 'crm.meeting',
                 'module': 'sync_google_calendar',
+                'noupdate': True
             }
             vals = {
                 'name': feed.title.text,
