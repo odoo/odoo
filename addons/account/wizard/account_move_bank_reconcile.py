@@ -41,15 +41,15 @@ class account_move_bank_reconcile(osv.osv_memory):
         """
         if context is None:
             context = {}
-        data = self.browse(cr, uid, ids, context=context)[0]
+        data = self.read(cr, uid, ids, context=context)[0]
         cr.execute('select default_credit_account_id \
-                        from account_journal where id=%s', (data.journal_id.id,))
+                        from account_journal where id=%s', (data['journal_id'],))
         account_id = cr.fetchone()[0]
         if not account_id:
              raise osv.except_osv(_('Error'), _('You have to define \
 the bank account\nin the journal definition for reconciliation.'))
         return {
-            'domain': "[('journal_id','=',%d), ('account_id','=',%d), ('state','<>','draft')]" % (data.journal_id.id, account_id),
+            'domain': "[('journal_id','=',%d), ('account_id','=',%d), ('state','<>','draft')]" % (data['journal_id'], account_id),
             'name': _('Standard Encoding'),
             'view_type': 'form',
             'view_mode': 'tree,form',

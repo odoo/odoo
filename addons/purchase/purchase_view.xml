@@ -12,7 +12,7 @@
             groups="group_purchase_manager"
             parent="base.menu_purchase_root" sequence="100"/>
 
-        <menuitem 
+        <menuitem
             id="menu_purchase_config_pricelist" name="Pricelists"
             parent="menu_purchase_config_purchase" sequence="50"/>
 
@@ -24,27 +24,27 @@
             action="product.product_pricelist_action2" id="menu_product_pricelist_action2_purchase"
             parent="menu_purchase_config_pricelist" sequence="10"/>
 
-        <menuitem
+        <!--<menuitem
             action="product.product_pricelist_type_action" id="menu_purchase_product_pricelist_type"
             parent="menu_purchase_config_pricelist" sequence="2"
-            groups="base.group_extended"/>
+            groups="base.group_extended"/>-->
 
-        <menuitem 
+        <menuitem
             id="menu_product_in_config_purchase" name="Product"
             parent="menu_purchase_config_purchase" sequence="30"/>
 
         <menuitem
             action="product.product_category_action_form" id="menu_product_category_config_purchase"
             parent="purchase.menu_product_in_config_purchase" sequence="10"/>
-          
-        <menuitem 
+
+        <menuitem
             id="menu_purchase_unit_measure_purchase" name="Units of Measure"
             parent="purchase.menu_product_in_config_purchase"  sequence="20"/>
 
         <menuitem
              action="product.product_uom_categ_form_action" id="menu_purchase_uom_categ_form_action"
              parent="menu_purchase_unit_measure_purchase" sequence="30"/>
-             
+
         <menuitem
               action="product.product_uom_form_action" id="menu_purchase_uom_form_action"
               parent="menu_purchase_unit_measure_purchase" sequence="30"/>
@@ -438,7 +438,7 @@
         </record>
 
         <act_window
-            context="{'search_default_partner_id': [active_id]}"
+            context="{'search_default_partner_id': [active_id], 'default_partner_id': active_id}"
             id="act_res_partner_2_purchase_order"
             name="Purchase Orders"
             groups="purchase.group_purchase_user"
@@ -446,7 +446,7 @@
             src_model="res.partner"/>
 
         <act_window
-            context="{'search_default_product_id': [active_id]}"
+            context="{'search_default_product_id': [active_id], 'default_product_id': active_id}"
             id="action_purchase_line_product_tree"
             name="Purchases"
             res_model="purchase.order.line"

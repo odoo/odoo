@@ -42,7 +42,7 @@ class account_partner_balance(osv.osv_memory):
         if context is None:
             context = {}
         data = self.pre_print_report(cr, uid, ids, data, context=context)
-        data['form'].update(self.read(cr, uid, ids, ['display_partner'], context=context)[0])
+        data['form'].update(self.read(cr, uid, ids, ['display_partner'])[0])
         return {
             'type': 'ir.actions.report.xml',
             'report_name': 'account.partner.balance',

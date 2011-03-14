@@ -66,7 +66,7 @@ class report_menu_create(osv.osv_memory):
                 'view_type':'form',
                 'view_mode':view,
                 'context': "{'report_id':%d}" % (board.id,),
-                'res_model': 'base_report_creator.report',
+                'res_model': 'base_report_creator_report.result',
                 'search_view_id': res['res_id']
                 })       
             

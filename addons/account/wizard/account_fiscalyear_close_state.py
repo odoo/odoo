@@ -40,8 +40,8 @@ class account_fiscalyear_close_state(osv.osv_memory):
         @param ids: List of Account fiscalyear close state’s IDs
 
         """
-        for data in  self.browse(cr, uid, ids, context=context):
-            fy_id = data.fy_id.id
+        for data in  self.read(cr, uid, ids, context=context):
+            fy_id = data['fy_id']
 
             cr.execute('UPDATE account_journal_period ' \
                         'SET state = %s ' \

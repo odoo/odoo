@@ -63,13 +63,13 @@ class hr_timesheet_invoice_create(osv.osv_memory):
         if context is None:
             context = {}
         result = mod_obj._get_id(cr, uid, 'account', 'view_account_invoice_filter')
-        data = self.browse(cr, uid, ids, context=context)[0]
+        data = self.read(cr, uid, ids, [], context=context)[0]
 
         account_ids = {}
         for line in self.pool.get('account.analytic.line').browse(cr, uid, context['active_ids'], context=context):
             account_ids[line.account_id.id] = True
 
-        account_ids = account_ids.keys() #data.accounts
+        account_ids = account_ids.keys() #data['accounts']
         for account in analytic_account_obj.browse(cr, uid, account_ids, context=context):
             partner = account.partner_id
             if (not partner) or not (account.pricelist_id):
@@ -121,17 +121,17 @@ class hr_timesheet_invoice_create(osv.osv_memory):
                 factor_name = ''
                 factor = invoice_factor_obj.browse(cr, uid, factor_id, context2)
 
-                if not data.product:
+                if not data['product']:
                     if factor.customer_name:
                         factor_name = product.name+' - '+factor.customer_name
                     else:
                         factor_name = product.name
                 else:
-                    factor_name = product_obj.name_get(cr, uid, [data.product.id], context=context)[0][1]
+                    factor_name = product_obj.name_get(cr, uid, [data['product']], context=context)[0][1]
 
                 if account.pricelist_id:
                     pl = account.pricelist_id.id
-                    price = pro_price_obj.price_get(cr,uid,[pl], data.product.id or product_id, qty or 1.0, account.partner_id.id)[pl]
+                    price = pro_price_obj.price_get(cr,uid,[pl], data['product'] or product_id, qty or 1.0, account.partner_id.id)[pl]
                 else:
                     price = 0.0
 
@@ -145,7 +145,7 @@ class hr_timesheet_invoice_create(osv.osv_memory):
                     'invoice_line_tax_id': [(6,0,tax )],
                     'invoice_id': last_invoice,
                     'name': factor_name,
-                    'product_id': data.product.id or product_id,
+                    'product_id': data['product'] or product_id,
                     'invoice_line_tax_id': [(6,0,tax)],
                     'uos_id': product.uom_id.id,
                     'account_id': account_id,
@@ -162,14 +162,14 @@ class hr_timesheet_invoice_create(osv.osv_memory):
                 for line in line_ids:
                     # set invoice_line_note
                     details = []
-                    if data.date:
+                    if data['date']:
                         details.append(line['date'])
-                    if data.time:
+                    if data['time']:
                         if line['product_uom_id']:
                             details.append("%s %s" % (line['unit_amount'], product_uom_obj.browse(cr, uid, [line['product_uom_id']],context2)[0].name))
                         else:
                             details.append("%s" % (line['unit_amount'], ))
-                    if data.name:
+                    if data['name']:
                         details.append(line['name'])
                     note.append(u' - '.join(map(lambda x: unicode(x) or '',details)))
 

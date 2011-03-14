@@ -152,13 +152,13 @@ class account_move_line_reconcile_writeoff(osv.osv_memory):
         period_obj = self.pool.get('account.period')
         if context is None:
             context = {}
-        data = self.browse(cr, uid, ids,context=context)[0]
-        account_id = data.writeoff_acc_id.id
-        context['date_p'] = data.date_p
-        journal_id = data.journal_id.id
-        context['comment'] = data.comment
-        if data.analytic_id:
-            context['analytic_id'] = data.analytic_id.id
+        data = self.read(cr, uid, ids,context=context)[0]
+        account_id = data['writeoff_acc_id']
+        context['date_p'] = data['date_p']
+        journal_id = data['journal_id']
+        context['comment'] = data['comment']
+        if data['analytic_id']:
+            context['analytic_id'] = data['analytic_id']
         if context['date_p']:
             date = context['date_p']
 

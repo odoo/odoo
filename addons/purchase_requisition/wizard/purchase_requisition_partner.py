@@ -83,6 +83,9 @@ class purchase_requisition_partner(osv.osv_memory):
             list_line=[]
             purchase_order_line={}
             for tender in tender_obj.browse(cr, uid, record_ids, context=context):
+                for supp_record in tender.purchase_ids:
+                    if supp_record.partner_id.id == partner_id and supp_record.state <> 'cancel':
+                         raise osv.except_osv(_('Warning'), _('You have already one %s purchase order for this partner, you must cancel this purchase order to create a new quotation.') % supp_record.state)
                 for line in tender.line_ids:
                     partner_list = sorted([(partner.sequence, partner) for partner in  line.product_id.seller_ids if partner])
                     partner_rec = partner_list and partner_list[0] and partner_list[0][1] or False

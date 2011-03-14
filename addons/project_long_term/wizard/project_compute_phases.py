@@ -45,12 +45,12 @@ class project_compute_phases(osv.osv_memory):
         Compute the phases for scheduling.
         """
         project_pool = self.pool.get('project.project')
-        data = self.browse(cr, uid, ids, context=context)[0]
-        if not data.project_id and data.target_project == 'one':
+        data = self.read(cr, uid, ids, [], context=context)[0]
+        if not data['project_id'] and data['target_project'] == 'one':
             raise osv.except_osv(_('Error!'), _('Please Specify Project to be schedule'))
 
-        if data.project_id:        # If project mentioned find its phases
-            project_ids = [data.project_id.id]
+        if data['project_id']:        # If project mentioned find its phases
+            project_ids = [data['project_id']]
         else:                        # Else take all the draft,open,pending states phases
             project_ids = project_pool.search(cr, uid, [], context=context)
 
@@ -69,7 +69,7 @@ class project_compute_phases(osv.osv_memory):
         id = mod_obj.read(cr, uid, [result], ['res_id'])[0]['res_id']
         result = act_obj.read(cr, uid, [id], context=context)[0]
         result['target'] = 'current'
-        result['context'] = {"search_default_project_id":data.project_id.id or False, "default_project_id":data.project_id.id or False, "search_default_responsible_id":uid, "search_default_current": 1}
+        result['context'] = {"search_default_project_id":data['project_id'], "default_project_id":data['project_id'], "search_default_responsible_id":uid, "search_default_current": 1}
         return result
 
 project_compute_phases()

@@ -65,8 +65,7 @@ class account_bs_report(osv.osv_memory):
     def _print_report(self, cr, uid, ids, data, context=None):
         if context is None:
             context = {}
-        record = self.browse(cr, uid, ids, context=context)[0]
-        data['form'].update({'display_type':record.display_type, 'reserve_account_id':record.reserve_account_id.id})
+        data['form'].update(self.read(cr, uid, ids, ['display_type','reserve_account_id'])[0])
         if not data['form']['reserve_account_id']:
             raise osv.except_osv(_('Warning'),_('Please define the Reserve and Profit/Loss account for current user company !'))
         data = self.pre_print_report(cr, uid, ids, data, context=context)

@@ -42,7 +42,7 @@ class account_pl_report(osv.osv_memory):
         if context is None:
             context = {}
         data = self.pre_print_report(cr, uid, ids, data, context=context)
-        data['form'].update(self.read(cr, uid, ids, ['display_type'], context=context)[0])
+        data['form'].update(self.read(cr, uid, ids, ['display_type'])[0])
         if data['form']['display_type']:
             return {
                 'type': 'ir.actions.report.xml',
