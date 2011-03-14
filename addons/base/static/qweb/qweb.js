@@ -43,6 +43,10 @@ var QWeb = {
     reg:new RegExp(),
     tag:{},
     att:{},
+    ValueException: function (value, message) {
+        this.value = value;
+        this.message = message;
+    },
     eval_object:function(e, v) {
         // TODO: Currently this will also replace and, or, ... in strings. Try
         // 'hi boys and girls' != '' and 1 == 1  -- will be replaced to : 'hi boys && girls' != '' && 1 == 1
@@ -76,7 +80,7 @@ var QWeb = {
         return r;
     },
     eval_bool:function(e, v) {
-        return this.eval_object(e, v) ? true : false;
+        return !!this.eval_object(e, v);
     },
     trim : function(v, mode) {
         if (!v || !mode) return v;
@@ -88,6 +92,8 @@ var QWeb = {
             case "right":
                 return v.replace(/\s*$/, "");
         }
+        throw new QWeb.ValueException(
+            mode, "unknown trimming mode, trim mode must follow the pattern '[inner] (left|right|both)'");
     },
     escape_text:function(s) {
         return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
@@ -139,7 +145,9 @@ var QWeb = {
         if (trim) {
             if (/\binner\b/.test(trim)) {
                 inner_trim = true;
-                trim = "both";
+                if (trim == 'inner') {
+                    trim = "both";
+                }
             }
             var tm = /\b(both|left|right)\b/.exec(trim);
             if (tm) trim = tm[1];
@@ -174,13 +182,13 @@ var QWeb = {
         return this.eval_str(t_att["raw"], v);
     },
     render_tag_rawf:function(e, t_att, g_att, v) {
-        return this.eval_format(t_att["raw"], v);
+        return this.eval_format(t_att["rawf"], v);
     },
     render_tag_esc:function(e, t_att, g_att, v) {
         return this.escape_text(this.eval_str(t_att["esc"], v));
     },
     render_tag_escf:function(e, t_att, g_att, v) {
-        return this.escape_text(this.eval_format(t_att["esc"], v));
+        return this.escape_text(this.eval_format(t_att["escf"], v));
     },
     render_tag_if:function(e, t_att, g_att, v) {
         return this.eval_bool(t_att["if"], v) ? this.render_element(e, t_att, g_att, v) : "";

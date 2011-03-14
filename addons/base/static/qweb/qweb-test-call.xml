@@ -1,0 +1,30 @@
+<templates>
+    <t t-name="basic-callee">ok</t>
+    <t t-name="callee-printsbody"><t t-esc="0"/></t>
+    <t t-name="callee-uses-foo"><t t-esc="foo"/></t>
+    <t t-name="callee-sets-foo"><t t-set="foo" t-value="'ok'"/></t>
+
+    <t t-name="basic-caller">
+        <t t-call="basic-callee"/>
+    </t>
+    <t t-name="with-unused-body">
+        <t t-call="basic-callee">WHEEE</t>
+    </t>
+    <t t-name="with-unused-setbody">
+        <t t-call="basic-callee">
+            <t t-set="qux" t-value="3"/>
+        </t>
+    </t>
+    <t t-name="with-used-body">
+        <t t-call="callee-printsbody">ok</t>
+    </t>
+    <t t-name="with-used-setbody">
+        <t t-call="callee-uses-foo">
+            <t t-set="foo" t-value="'ok'"/>
+        </t>
+    </t>
+    <t t-name="in-context-import">
+        <t t-call="callee-sets-foo" t-import='*'/>
+        <t t-esc="foo"/>
+    </t>
+</templates>

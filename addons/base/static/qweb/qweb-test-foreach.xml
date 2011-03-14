@@ -1,0 +1,40 @@
+<templates>
+    <t t-name="repetition-text-content" t-trim="both">
+        <t t-foreach="seq">*</t>
+    </t>
+    <t t-name="repetition-dom-content" t-trim="both">
+        <t t-foreach="seq"><b/></t>
+    </t>
+    <t t-name="repetition-self" t-trim="both">
+        <b t-foreach="seq"/>
+    </t>
+
+    <t t-name="scope-self" t-trim="both">
+        <t t-foreach="seq"><t t-esc="seq"/></t>
+    </t>
+    <t t-name="scope-value" t-trim="both">
+        <t t-foreach="seq"><t t-esc="seq_value"/></t>
+    </t>
+    <t t-name="scope-index" t-trim="both">
+        <t t-foreach="seq"><t t-esc="seq_index"/></t>
+    </t>
+    <t t-name="scope-first" t-trim="both">
+        <t t-foreach="seq"><t t-esc="seq_first"/> </t>
+    </t>
+    <t t-name="scope-last" t-trim="both">
+        <t t-foreach="seq"><t t-esc="seq_last"/> </t>
+    </t>
+    <t t-name="scope-parity" t-trim="both">
+        <t t-foreach="seq"><t t-esc="seq_parity"/> </t>
+    </t>
+    <t t-name="scope-size" t-trim="both">
+        <t t-foreach="seq"><t t-esc="seq_size"/> </t>
+    </t>
+
+    <t t-name="aliasing" t-trim="both">
+        <t t-foreach="seq" t-as="item"><t t-esc="item"/></t>
+    </t>
+    <t t-name="loopvars-aliasing" t-trim="both">
+        <t t-foreach="seq" t-as="item"><t t-esc="item_parity"/> </t>
+    </t>
+</templates>

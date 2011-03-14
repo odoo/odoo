@@ -1,0 +1,51 @@
+<templates>
+    <!-- esc, evaluates and returns @t-esc after having xml-escaped it -->
+    <t t-name="esc-literal">
+        <t t-esc="'ok'"/>
+    </t>
+    <t t-name="esc-variable">
+        <t t-esc="ok"/>
+    </t>
+    <t t-name="esc-toescape">
+        <t t-esc="ok"/>
+    </t>
+
+    <!-- escf, same as t-esc, but @t-escf is a format string -->
+    <t t-name="escf-noformat-literal">
+        <t t-escf="ok"/>
+    </t>
+    <t t-name="escf-simpleformat-variable">
+        <t t-escf="#{value}"/>
+    </t>
+    <t t-name="escf-format-variable">
+        <t t-escf="[#{value}]"/>
+    </t>
+    <t t-name="escf-format-variable-with-escapes">
+        <t t-escf="[#{value}]"/>
+    </t>
+
+    <!-- raw, evaluates and returns @t-raw directly (no escaping) -->
+    <t t-name="raw-literal">
+        <t t-raw="'ok'"/>
+    </t>
+    <t t-name="raw-variable">
+        <t t-raw="ok"/>
+    </t>
+    <t t-name="raw-notescaped">
+        <t t-raw="ok"/>
+    </t>
+
+    <!-- rawf, same as t-raw, but @t-rawf is a format string -->
+    <t t-name="rawf-noformat-literal">
+        <t t-escf="ok"/>
+    </t>
+    <t t-name="rawf-simpleformat-variable">
+        <t t-escf="#{value}"/>
+    </t>
+    <t t-name="rawf-format-variable">
+        <t t-escf="[#{value}]"/>
+    </t>
+    <t t-name="rawf-format-variable-notescaped">
+        <t t-rawf="[#{value}]"/>
+    </t>
+</templates>
