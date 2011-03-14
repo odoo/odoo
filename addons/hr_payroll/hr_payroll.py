@@ -1280,13 +1280,16 @@ class hr_employee(osv.osv):
     Employee
     '''
 
+    _inherit = 'hr.employee'
+    _description = 'Employee'
+
     def _calculate_basic(self, cr, uid, ids, name, args, context):
         if not ids: return {}
-        vals = {}
+        res = {}
         current_date = datetime.now().strftime('%Y-%m-%d')
         for employee in self.browse(cr, uid, ids, context=context):
-            if not employee.contract_id:
-                vals[employee.id] = {'basic': 0.0}
+            if not employee.contract_ids:
+                res[employee.id] = {'basic': 0.0}
                 continue
             cr.execute( 'SELECT SUM(wage) '\
                         'FROM hr_contract '\
@@ -1295,19 +1298,15 @@ class hr_employee(osv.osv):
                         'AND (date_end > %s OR date_end is NULL)',
                          (employee.id, current_date, current_date))
             result = dict(cr.dictfetchone())
-            vals[employee.id] = {
-                                 'basic': result['sum']
-            }
-        return vals
-
-    _inherit = 'hr.employee'
-    _description = 'Employee'
+            res[employee.id] = {'basic': result['sum']}
+        return res
 
     _columns = {
 #        'line_ids':fields.one2many('hr.payslip.line', 'employee_id', 'Salary Structure', required=False),
         'slip_ids':fields.one2many('hr.payslip', 'employee_id', 'Payslips', required=False, readonly=True),
         'basic': fields.function(_calculate_basic, method=True, multi='dc', type='float', string='Basic Salary', digits_compute=dp.get_precision('Account')),
     }
+
 hr_employee()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
