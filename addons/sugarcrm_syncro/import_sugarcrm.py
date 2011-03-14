@@ -48,21 +48,17 @@ def import_users(surgar_obj, cr, uid, context=None):
             'new_password' : 'pwd_last_changed',
             } ,
         }
+    new_user_id = False
     user_obj = surgar_obj.pool.get('res.users')
     PortType,sessionid = sugar.login(context.get('username',''), context.get('password',''))
     sugar_data = sugar.search(PortType,sessionid, 'Users')
-    #pp.pprint(sugar_data)
     for val in sugar_data:
-        #pp.pprint(val)
         user_ids = user_obj.search(cr, uid, [('login', '=', val.get('user_name'))])
-        print 'ids', user_ids
         if user_ids: #we skip the import of admin but we should save the mapping in ir.model.data
-            #create_mapping(sugar_obj, cr, uid,
+            #create_mapping(surgar_obj, cr, uid
             continue
         fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, 'Users', map_user)
         openerp_val = dict(zip(fields,datas))
-        #print 'openerpval'
-        #pp.pprint(openerp_val)
         openerp_val['context_lang'] = context.get('lang','en_US')
         new_user_id = user_obj.create(cr, uid, openerp_val, context)
     return new_user_id
@@ -108,7 +104,6 @@ def get_opportunity_status(surgar_obj, cr, uid, sugar_val,context=None):
 def import_leads(surgar_obj, cr, uid, context=None):
     if not context:
         context = {}
-    user_id = import_users(surgar_obj, cr, uid, context)
     map_lead = {
             'Leads':{'name': ['first_name','last_name'],
             'contact_name': ['first_name','last_name'],
@@ -124,25 +119,34 @@ def import_leads(surgar_obj, cr, uid, context=None):
             'city':'primary_address_city',
             },
         }
-
+    user_id = False
     lead_pool = surgar_obj.pool.get('crm.lead')
     PortType,sessionid = sugar.login(context.get('username',''), context.get('password',''))
     sugar_data = sugar.search(PortType,sessionid, 'Leads')
+    new_lead_id = False
     for val in sugar_data:
-        pp.pprint(val)
-        fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, 'Leads', map_lead)
-        stage_id = get_lead_status(surgar_obj, cr, uid, val, context)
-        openerp_val = dict(zip(fields,datas))
-        openerp_val['type'] = 'lead'
-        openerp_val['user_id'] = user_id
-        openerp_val['stage_id'] = stage_id
-        new_lead_id = lead_pool.create(cr, uid, openerp_val, context)
+       #Need To FIx for Import user data record from sugarcrm.
+       if val.get('assigned_user_name'):
+           user_ids = surgar_obj.pool.get('res.users').search(cr, uid, [('name', '=', val.get("assigned_user_name"))])
+       if not user_ids:
+           user_ids = surgar_obj.pool.get('res.users').create(cr, uid, {'name': val.get('assigned_user_name'), 'login': val.get("assigned_user_name")})
+       if user_ids:
+           if isinstance(user_ids,list):
+               user_id = user_ids[0]
+           else:
+                user_id=user_ids                  
+       fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, 'Leads', map_lead)
+       stage_id = get_lead_status(surgar_obj, cr, uid, val, context)
+       openerp_val = dict(zip(fields,datas))
+       openerp_val['type'] = 'lead'
+       openerp_val['user_id'] = user_id
+       openerp_val['stage_id'] = stage_id
+       new_lead_id = lead_pool.create(cr, uid, openerp_val, context)
     return new_lead_id
 
 def import_opportunities(surgar_obj, cr, uid, context=None):
     if not context:
         context = {}
-    user_id = import_users(surgar_obj, cr, uid, context)
     map_opportunity = {'Opportunities':  {'name': 'name',
         'probability': 'probability',
         'planned_revenue': 'amount_usdollar',
@@ -150,16 +154,28 @@ def import_opportunities(surgar_obj, cr, uid, context=None):
         },
     }
     lead_pool = surgar_obj.pool.get('crm.lead')
+    new_opportunity_id = False
     PortType,sessionid = sugar.login(context.get('username',''), context.get('password',''))
     sugar_data = sugar.search(PortType,sessionid, 'Opportunities')
+    user_id = False
     for val in sugar_data:
-        fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, 'Opportunities', map_opportunity)
-        stage_id = get_opportunity_status(surgar_obj, cr, uid, val, context)
-        openerp_val = dict(zip(fields,datas))
-        openerp_val['type'] = 'opportunity'
-        openerp_val['user_id'] = user_id
-        openerp_val['stage_id'] = stage_id
-        new_opportunity_id = lead_pool.create(cr, uid, openerp_val, context)
+       #Need To FIx for Import user data record from sugarcrm.
+       if val.get('assigned_user_name'):
+           user_ids = surgar_obj.pool.get('res.users').search(cr, uid, [('name', '=', val.get("assigned_user_name"))])
+       if not user_ids:
+           user_ids = surgar_obj.pool.get('res.users').create(cr, uid, {'name': val.get('assigned_user_name'), 'login': val.get("assigned_user_name")})
+       if user_ids:
+           if isinstance(user_ids,list):
+               user_id = user_ids[0]
+           else:
+                user_id=user_ids           
+       fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, 'Opportunities', map_opportunity)
+       stage_id = get_opportunity_status(sugar_obj, cr, uid, val, context)
+       openerp_val = dict(zip(fields,datas))
+       openerp_val['type'] = 'opportunity'
+       openerp_val['user_id'] = user_id
+       openerp_val['stage_id'] = stage_id
+       new_opportunity_id = lead_pool.create(cr, uid, openerp_val, context)
     return new_opportunity_id
 
 
@@ -176,9 +192,6 @@ MAP_FIELDS = {'Opportunities':  #Object Mapping name
                        'process' : import_leads,
                      },
           }
-
-
-
 
 class import_sugarcrm(osv.osv):
     """Import SugarCRM DATA"""
@@ -220,7 +233,6 @@ class import_sugarcrm(osv.osv):
         keys = self.get_key(cr, uid, ids, context)
         imported = set() #to invoid importing 2 times the sames modules
         for key in keys:
-            print imported
             if not key in imported:
                 self.resolve_dependencies(cr, uid, MAP_FIELDS, MAP_FIELDS[key]['dependencies'], imported, context=context)
                 MAP_FIELDS[key]['process'](self, cr, uid, context)
