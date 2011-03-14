@@ -976,9 +976,10 @@ class hr_payslip(osv.osv):
                         value = line.amount
                 else:
                     value = line.amount
-#            elif line.amount_type == 'code': # Need some clarification so this option remains
-#                value = slip_line_pool.execute_function(cr, uid, line.id, amt, context)
-#                line.amount = value
+            elif line.amount_type=='code':
+                localdict = {'basic':amt}
+                exec line.python_code in localdict
+                value = localdict['result']
             total += value
             vals = {
                 'category_id': line.category_id.id,
@@ -1200,8 +1201,10 @@ class hr_salary_rule(osv.osv):
         'sequence': fields.integer('Sequence', required=True, help='Use to arrange calculation sequence'),
         'active':fields.boolean('Active'),
         'python_code': fields.text('Python code'),
+        'python_compute':fields.text('Python Code'),
      }
     _defaults = {
+        'python_compute': '''# price_unit\n\nresult = basic * 0.10''',
         'conditions': 'True',
         'computational_expression': 'basic',
         'sequence': 5,
