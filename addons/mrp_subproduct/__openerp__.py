@@ -26,6 +26,8 @@
     'category': 'Generic Modules/Production',
     'description': """
 This module allows you to produce several products from one production order.
+=============================================================================
+
 You can configure sub-products in the bill of material.
 Without this module:
     A + B + C -> D
@@ -34,6 +36,7 @@ With this module:
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
+    'images': ['images/bom_subproduct.jpeg'],
     'depends': ['base', 'mrp'],
     'init_xml': [],
     'update_xml': [
