@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-31 04:55+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-03-12 05:00+0000\n"
+"X-Generator: Launchpad (build 12559)\n"
 
 #. module: mrp
 #: field:mrp.production,move_created_ids:0
@@ -32,6 +32,11 @@ msgid ""
 "raw materials (stock decrease) and the production of the finished products "
 "(stock increase) when the order is processed."
 msgstr ""
+"Produksjonsordrer blir vanligvis foreslått av OpenERP basert på "
+"materiallister og anskaffelses regler, men du kan også opprette "
+"produksjonsordrer manuelt. Open ERP vil håndtere forbruket av råmaterialer "
+"(lager reduksjon) og produksjonen av ferdigvaren (lager økning) når ordren "
+"er behandlet."
 
 #. module: mrp
 #: help:mrp.production,location_src_id:0
@@ -69,6 +74,8 @@ msgid ""
 "The 'Minimum stock rule' allows the system to create procurement orders "
 "automatically as soon as the minimum stock is reached."
 msgstr ""
+"'Minimum lager regelen' tillater systemet å opprette anskaffelses ordrer "
+"automatisk så snart minimum lagernivå er nådd."
 
 #. module: mrp
 #: field:mrp.production,picking_id:0
@@ -103,7 +110,7 @@ msgstr "Dag"
 #: model:ir.actions.act_window,name:mrp.mrp_routing_action
 #: model:ir.ui.menu,name:mrp.menu_mrp_routing_action
 msgid "Routings"
-msgstr ""
+msgstr "Rutinger"
 
 #. module: mrp
 #: field:mrp.workcenter,product_id:0
@@ -131,6 +138,8 @@ msgid ""
 "Number of iterations this work center has to do in the specified operation "
 "of the routing."
 msgstr ""
+"Antall gjentakelser arbeidssenteret må gjøre i den spesifiserte operasjonen "
+"på ruten."
 
 #. module: mrp
 #: view:mrp.bom:0
@@ -162,11 +171,15 @@ msgid ""
 "Enhances production orders with readiness states as well as the start date "
 "and end date of execution of the order."
 msgstr ""
+"Forbedrer produksjonsordrene med grad av ferdigstillelse i tillegg til start "
+"dato og slutt dato på utførelse av ordren."
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_purchaseprocure0
 msgid "The system launches automatically a RFQ to the preferred supplier."
 msgstr ""
+"Systemet starter automatisk en forespørsel for tilbud til den foretrukne "
+"leverandøren."
 
 #. module: mrp
 #: view:mrp.production:0
@@ -181,7 +194,7 @@ msgstr "Sett / Pakke"
 #. module: mrp
 #: field:mrp.installer,mrp_subproduct:0
 msgid "MRP Subproducts"
-msgstr ""
+msgstr "MRP Underprodukter"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -202,6 +215,8 @@ msgid ""
 "In case the Supply method of the product is Produce, the system creates a "
 "production order."
 msgstr ""
+"I tilfelle Anskaffelsesmetoden av produktet er Produser, oppretter systemet "
+"en produksjonsordre."
 
 #. module: mrp
 #: view:mrp.production:0
@@ -224,6 +239,8 @@ msgid ""
 "Fill this product to track easily your production costs in the analytic "
 "accounting."
 msgstr ""
+"Fyll dette produktet for enkelt å spore dine prduksjonskostnader i det "
+"analytiske regnskapet."
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_purchaseprocure0
@@ -243,7 +260,7 @@ msgstr "Rapportering"
 #. module: mrp
 #: field:mrp.workcenter,costs_cycle_account_id:0
 msgid "Cycle Account"
-msgstr ""
+msgstr "Syklus Konto"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:121
@@ -259,7 +276,7 @@ msgstr "["
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_procureserviceproduct0
 msgid "Procurement of services"
-msgstr ""
+msgstr "Anskaffelser av tjenester"
 
 #. module: mrp
 #: view:mrp.workcenter:0
@@ -287,6 +304,8 @@ msgid ""
 "The system waits for the products to be available in the stock. These "
 "products are typically procured manually or through a minimum stock rule."
 msgstr ""
+"Systemet venter på at produktene blir tilgjenglig fra lager. Disse "
+"produktene er typisk anskaffet manuelt eller gjennom en minimum lager regel."
 
 #. module: mrp
 #: report:mrp.production.order:0
@@ -306,12 +325,12 @@ msgstr "Planlagte varer"
 #. module: mrp
 #: selection:mrp.bom,type:0
 msgid "Sets / Phantom"
-msgstr ""
+msgstr "Sett / Phantom"
 
 #. module: mrp
 #: help:mrp.bom,position:0
 msgid "Reference to a position in an external plan."
-msgstr ""
+msgstr "Referanse til en posisjon i en ekstern plan."
 
 #. module: mrp
 #: selection:mrp.production.order,month:0
@@ -321,12 +340,12 @@ msgstr "August"
 #. module: mrp
 #: constraint:stock.move:0
 msgid "You try to assign a lot which is not from the same product"
-msgstr ""
+msgstr "Du forsøker å tilegne en lot som ikke er fra det samme produktet"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_order
 msgid "Production Order Report"
-msgstr ""
+msgstr "Produksjonsordre Rapport"
 
 #. module: mrp
 #: selection:mrp.production.order,month:0
@@ -336,7 +355,7 @@ msgstr "Juni"
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_product_produce
 msgid "Product Produce"
-msgstr "Produkt Prosedyre"
+msgstr "Produkt Produser"
 
 #. module: mrp
 #: selection:mrp.production.order,month:0
@@ -347,17 +366,17 @@ msgstr "Oktober"
 #: code:addons/mrp/report/price.py:177
 #, python-format
 msgid "Components Cost of "
-msgstr ""
+msgstr "Komponent kost av "
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_procurestockableproduct0
 msgid "Procurement of stockable Product"
-msgstr ""
+msgstr "Anskaffelse av lagerprodukt"
 
 #. module: mrp
 #: view:mrp.bom:0
 msgid "Default UOM"
-msgstr ""
+msgstr "Std Måleenhet"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:130
@@ -366,17 +385,17 @@ msgstr ""
 #: report:mrp.production.order:0
 #, python-format
 msgid "Quantity"
-msgstr ""
+msgstr "Antall"
 
 #. module: mrp
 #: field:mrp.production.workcenter.line,hour:0
 msgid "Nbr of hours"
-msgstr ""
+msgstr "Ant timer"
 
 #. module: mrp
 #: view:mrp.production:0
 msgid "Confirm Production"
-msgstr ""
+msgstr "Bekreft Produksjon"
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_stockproduct0
@@ -384,6 +403,8 @@ msgid ""
 "The system creates an order (production or purchased) depending on the sold "
 "quantity and the products parameters."
 msgstr ""
+"Systemet oppretter en ordre (produksjon eller innkjøp) avhengig av solgt "
+"antall og produktets parameter."
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_servicemts0
@@ -391,26 +412,28 @@ msgid ""
 "This is used in case of a service without any impact in the system, a "
 "training session for instance."
 msgstr ""
+"Dette er brukt i tilfelle av en tjeneste uten noen påvirkning på systemet, "
+"f.eks. en trenings sessjon."
 
 #. module: mrp
 #: field:mrp.installer,mrp_repair:0
 msgid "Repairs"
-msgstr ""
+msgstr "Reparasjoner"
 
 #. module: mrp
 #: field:mrp.installer,stock_location:0
 msgid "Advanced Routes"
-msgstr ""
+msgstr "Avanserte Ruter"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_view_resource_calendar_search_mrp
 msgid "Working Time"
-msgstr ""
+msgstr "Arbeidstid"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_report_in_out_picking_tree
 msgid "Weekly Stock Value Variation"
-msgstr ""
+msgstr "Ukentlig Lagerverdi Variasjon"
 
 #. module: mrp
 #: help:mrp.installer,mrp_repair:0
@@ -418,18 +441,20 @@ msgid ""
 "Enables warranty and repair management (and their impact on stocks and "
 "invoicing)."
 msgstr ""
+"Muliggjør garanti og reparasjons håndtering (og deres påvirkning av lager og "
+"fakturering)."
 
 #. module: mrp
 #: field:mrp.production,date_planned_date:0
 #: report:mrp.production.order:0
 #: field:mrp.production.order,date_planned:0
 msgid "Scheduled Date"
-msgstr ""
+msgstr "Planlagt Dato"
 
 #. module: mrp
 #: report:mrp.production.order:0
 msgid "Bill Of Material"
-msgstr ""
+msgstr "Materialliste"
 
 #. module: mrp
 #: help:mrp.routing,location_id:0
@@ -438,21 +463,25 @@ msgid ""
 "needed.Set a location if you produce at a fixed location. This can be a "
 "partner location if you subcontract the manufacturing operations."
 msgstr ""
+"Lå stå tomt hvis du produserer på samme lokasjon som det ferdige produktet "
+"treng. Set en lokasjon hvis du produserer på en fast lokasjon. Dette kan "
+"være en partner dersom du benytter underleverandører til produksjons "
+"prosesser."
 
 #. module: mrp
 #: view:board.board:0
 msgid "Stock Value Variation"
-msgstr ""
+msgstr "Lagerverdi Variasjon"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action2
 msgid "Bill of Materials Structure"
-msgstr ""
+msgstr "Materialliste Struktur"
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_serviceproduct0
 msgid "Product type is service"
-msgstr ""
+msgstr "Produkt type er tjeneste"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_property_group_action
@@ -460,21 +489,23 @@ msgid ""
 "Define specific property groups that can be assigned to the properties of "
 "your bill of materials."
 msgstr ""
+"Definerer spesifikke egenskap grupper som kan tildeles egenskapene til "
+"materiallistene"
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_bom0
 msgid "Manufacturing decomposition"
-msgstr ""
+msgstr "Produksjon nedbryting"
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_serviceproduct1
 msgid "For Services."
-msgstr ""
+msgstr "For Tjenester."
 
 #. module: mrp
 #: field:mrp.bom.revision,date:0
 msgid "Modification Date"
-msgstr ""
+msgstr "Dato endret"
 
 #. module: mrp
 #: help:mrp.workcenter,costs_cycle_account_id:0
@@ -483,17 +514,19 @@ msgid ""
 "Complete this only if you want automatic analytic accounting entries on "
 "production orders."
 msgstr ""
+"Gjør denne ferdig kun dersom du ønsker automatisk analytiske regnskaps "
+"oppføringer på produksjonsordrer."
 
 #. module: mrp
 #: field:mrp.production.workcenter.line,cycle:0
 msgid "Nbr of cycles"
-msgstr ""
+msgstr "Ant sykluser"
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_orderrfq0
 #: model:process.node,note:mrp.process_node_rfq0
 msgid "Request for Quotation."
-msgstr ""
+msgstr "Forespør for Tilbud."
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_billofmaterialrouting0
@@ -505,70 +538,70 @@ msgstr ""
 #. module: mrp
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
-msgstr ""
+msgstr "Feil: ugyldig ean kode"
 
 #. module: mrp
 #: view:mrp.routing:0
 #: field:mrp.routing,location_id:0
 msgid "Production Location"
-msgstr ""
+msgstr "Produksjons lokasjon"
 
 #. module: mrp
 #: view:mrp.production:0
 msgid "Change Qty"
-msgstr ""
+msgstr "Endre Ant"
 
 #. module: mrp
 #: view:mrp.production:0
 msgid "Force Reservation"
-msgstr ""
+msgstr "Tving Reservasjon"
 
 #. module: mrp
 #: field:mrp.bom.revision,author_id:0
 msgid "Author"
-msgstr ""
+msgstr "Forfatter"
 
 #. module: mrp
 #: field:report.mrp.inout,value:0
 msgid "Stock value"
-msgstr ""
+msgstr "Lagerverdi"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_product_bom_structure
 msgid "Product BoM Structure"
-msgstr ""
+msgstr "Produkt Materialliste Struktur"
 
 #. module: mrp
 #: view:mrp.production:0
 msgid "Search Production"
-msgstr ""
+msgstr "Søk Produksjon"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:130
 #, python-format
 msgid "Supplier Price per Uom"
-msgstr ""
+msgstr "Leverandør Pris per enhet"
 
 #. module: mrp
 #: selection:mrp.production.order,month:0
 msgid "March"
-msgstr ""
+msgstr "Mars"
 
 #. module: mrp
 #: field:mrp.bom,child_complete_ids:0
 msgid "BoM Hierarchy"
-msgstr ""
+msgstr "Materialliste Hierarki"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.act_mrp_product_produce
 #: view:mrp.product.produce:0
 #: view:mrp.production:0
 msgid "Produce"
-msgstr ""
+msgstr "Produser"
 
 #. module: mrp
 #: help:mrp.workcenter,costs_cycle:0
-msgid "Specify Cost of Work center per cycle."
+msgid "Specify Cost of Work Center per cycle."
 msgstr ""
 
 #. module: mrp
@@ -576,17 +609,17 @@ msgstr ""
 #: view:mrp.production.order:0
 #: selection:mrp.production.order,state:0
 msgid "Picking Exception"
-msgstr ""
+msgstr "Plukking Unntak"
 
 #. module: mrp
 #: field:mrp.bom,bom_lines:0
 msgid "BoM Lines"
-msgstr ""
+msgstr "Materialliste Linjer"
 
 #. module: mrp
 #: field:mrp.workcenter,time_start:0
 msgid "Time before prod."
-msgstr ""
+msgstr "Tid før prod."
 
 #. module: mrp
 #: help:mrp.routing,active:0
@@ -594,11 +627,13 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the routing "
 "without removing it."
 msgstr ""
+"Hvis det aktive feltet settes til falskt, vil det tillate deg å skjule ruten "
+"uten å måtte fjerne den."
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_billofmaterialrouting0
 msgid "Material Routing"
-msgstr ""
+msgstr "Material ruting"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -606,46 +641,46 @@ msgstr ""
 #: report:mrp.production.order:0
 #: field:mrp.production.order,consumed_products:0
 msgid "Consumed Products"
-msgstr ""
+msgstr "Forbrukte Produkter"
 
 #. module: mrp
 #: constraint:mrp.bom:0
 msgid "Error ! You can not create recursive BoM."
-msgstr ""
+msgstr "Feil! Du kan ikke opprette en rekursiv Materialliste."
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_workcenter_load_wizard
 #: model:ir.model,name:mrp.model_mrp_workcenter_load
 #: model:ir.model,name:mrp.model_report_workcenter_load
 msgid "Work Center Load"
-msgstr ""
+msgstr "Arbeidssenter belastning"
 
 #. module: mrp
 #: code:addons/mrp/procurement.py:45
 #, python-format
 msgid "No BoM defined for this product !"
-msgstr ""
+msgstr "Ingen Materialliste er definert for dette produktet !"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_bom_form_action2
 #: model:ir.ui.menu,name:mrp.menu_mrp_bom_form_action2
 msgid "Bill of Material Components"
-msgstr ""
+msgstr "Materialliste komponenter"
 
 #. module: mrp
 #: field:mrp.production.order,nbr:0
 msgid "# of Lines"
-msgstr ""
+msgstr "# Linjer"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_planning
 msgid "Planning"
-msgstr ""
+msgstr "Planlegging"
 
 #. module: mrp
 #: view:mrp.production:0
 msgid "Ready"
-msgstr ""
+msgstr "Klar"
 
 #. module: mrp
 #: help:mrp.production,routing_id:0
@@ -655,16 +690,20 @@ msgid ""
 "operations and to plan future loads on work centers based on production "
 "plannification."
 msgstr ""
+"Listen med operasjoner (listen av arbeidssenter) for å produsere det ferdige "
+"produktet. Ruten er mest brukt til å beregne arbeidssenter kostnader under "
+"operasjoner og for å beregne fremtidige belastninger på arbeidssenter basert "
+"på produksjonsplanleggingen."
 
 #. module: mrp
 #: help:mrp.workcenter,time_cycle:0
 msgid "Time in hours for doing one cycle."
-msgstr ""
+msgstr "Tid i timer for å utføre en syklus."
 
 #. module: mrp
 #: report:bom.structure:0
 msgid "BOM Ref"
-msgstr ""
+msgstr "Materialliste Ref"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -672,12 +711,12 @@ msgstr ""
 #: view:mrp.production.order:0
 #: selection:mrp.production.order,state:0
 msgid "In Production"
-msgstr ""
+msgstr "I Produksjon"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_property
 msgid "Master Bill of Materials"
-msgstr ""
+msgstr "Hoved Materiallister"
 
 #. module: mrp
 #: help:mrp.bom,product_uos:0
@@ -685,35 +724,36 @@ msgid ""
 "Product UOS (Unit of Sale) is the unit of measurement for the invoicing and "
 "promotion of stock."
 msgstr ""
+"Produkt Salgsenhet er måleenheten for fakturering og forøking på lager."
 
 #. module: mrp
 #: view:mrp.product_price:0
 #: view:mrp.workcenter.load:0
 msgid "Print"
-msgstr ""
+msgstr "Skriv ut"
 
 #. module: mrp
 #: view:mrp.bom:0
 #: view:mrp.workcenter:0
 msgid "Type"
-msgstr ""
+msgstr "Type"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:150
 #: code:addons/mrp/report/price.py:201
 #, python-format
 msgid "Total Cost of "
-msgstr ""
+msgstr "Total kostnad på "
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_minimumstockrule0
 msgid "Linked to the 'Minimum stock rule' supplying method."
-msgstr ""
+msgstr "Koblet til 'Minimum lager regel' anskaffelse metoden."
 
 #. module: mrp
 #: selection:mrp.workcenter.load,time_unit:0
 msgid "Per month"
-msgstr ""
+msgstr "Per måned"
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:591
@@ -721,23 +761,23 @@ msgstr ""
 #: code:addons/mrp/wizard/change_production_qty.py:82
 #, python-format
 msgid "Couldn't find bill of material for product"
-msgstr ""
+msgstr "Kunne ikke finne materialliste for produktet"
 
 #. module: mrp
 #: report:bom.structure:0
 msgid "Product Name"
-msgstr ""
+msgstr "Produktnavn"
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:491
 #, python-format
 msgid "Invalid action !"
-msgstr ""
+msgstr "Ugyldig hendelse !"
 
 #. module: mrp
 #: help:mrp.bom,product_efficiency:0
 msgid "A factor of 0.9 means a loss of 10% within the production process."
-msgstr ""
+msgstr "En faktor på 0.9 betyr et tap på 10 % i produksjonsprosessen."
 
 #. module: mrp
 #: view:mrp.installer:0
@@ -745,42 +785,44 @@ msgid ""
 "Add more functionalities to the core Manufacturing Application with the "
 "following addons."
 msgstr ""
+"Legger til funksjonalitet til kjerne Produksjons Programmet med følgende "
+"tillegg."
 
 #. module: mrp
 #: report:mrp.production.order:0
 msgid "Printing date"
-msgstr ""
+msgstr "Utskriftsdato"
 
 #. module: mrp
 #: model:process.node,name:mrp.process_node_orderrfq0
 #: model:process.node,name:mrp.process_node_rfq0
 msgid "RFQ"
-msgstr ""
+msgstr "Forespørsel for Tilbud"
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_producttostockrules0
 msgid "Procurement rule"
-msgstr ""
+msgstr "Anskaffelsesregel"
 
 #. module: mrp
 #: help:mrp.workcenter,costs_hour:0
 msgid "Specify Cost of Work center per hour."
-msgstr ""
+msgstr "Spesifiser Kostnad på arbeidssenter per time."
 
 #. module: mrp
 #: view:mrp.production:0
 msgid "Partial"
-msgstr ""
+msgstr "Delvis"
 
 #. module: mrp
 #: selection:mrp.production.order,month:0
 msgid "September"
-msgstr ""
+msgstr "September"
 
 #. module: mrp
 #: report:mrp.production.order:0
 msgid "WorkCenter"
-msgstr ""
+msgstr "Arbeidssenter"
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_procureserviceproduct0
@@ -794,22 +836,22 @@ msgstr ""
 #: selection:mrp.production,priority:0
 #: selection:mrp.production.order,priority:0
 msgid "Urgent"
-msgstr ""
+msgstr "Haster"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_routing_workcenter
-msgid "Workcenter Usage"
+msgid "Work Center Usage"
 msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production
 msgid "Manufacturing Order"
-msgstr ""
+msgstr "Produksjonsordre"
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_productionprocureproducts0
 msgid "Procurement of raw material"
-msgstr ""
+msgstr "Anskaffelser av råvarer"
 
 #. module: mrp
 #: help:mrp.routing.workcenter,hour_nbr:0
@@ -817,41 +859,43 @@ msgid ""
 "Time in hours for this work center to achieve the operation of the specified "
 "routing."
 msgstr ""
+"Tid i timer for dette arbeidssenteret for å fullføre operasjonene til den "
+"spesifiserte rutingen."
 
 #. module: mrp
 #: view:mrp.production:0
 #: field:mrp.production,cycle_total:0
 msgid "Total Cycles"
-msgstr ""
+msgstr "Totalt Sykluser"
 
 #. module: mrp
 #: selection:mrp.production,state:0
 #: view:mrp.production.order:0
 #: selection:mrp.production.order,state:0
 msgid "Ready to Produce"
-msgstr ""
+msgstr "Klar til å pprodusere"
 
 #. module: mrp
 #: field:mrp.bom.revision,name:0
 msgid "Modification name"
-msgstr ""
+msgstr "Endring navn"
 
 #. module: mrp
 #: view:mrp.bom:0
 #: view:mrp.production:0
 #: field:mrp.production.order,date:0
 msgid "Date"
-msgstr ""
+msgstr "Dato"
 
 #. module: mrp
 #: field:mrp.bom,type:0
 msgid "BoM Type"
-msgstr ""
+msgstr "Materialliste Type"
 
 #. module: mrp
 #: view:mrp.production.order:0
 msgid "Extended Filters..."
-msgstr ""
+msgstr "Utvidede filter..."
 
 #. module: mrp
 #: code:addons/mrp/procurement.py:47
@@ -859,88 +903,90 @@ msgstr ""
 msgid ""
 "Procurement '%s' has an exception: 'No BoM defined for this product !'"
 msgstr ""
+"Anskaffelsen '%s' har et unntak: 'Ingen materialliste er definert for dette "
+"produktet !'"
 
 #. module: mrp
 #: view:mrp.production.order:0
 #: view:mrp.property:0
 msgid "Search"
-msgstr ""
+msgstr "Søk"
 
 #. module: mrp
 #: field:report.workcenter.load,cycle:0
 msgid "Nbr of cycle"
-msgstr ""
+msgstr "Ant Sykluser"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "Firmaer"
 
 #. module: mrp
 #: model:process.node,name:mrp.process_node_minimumstockrule0
 #: model:process.node,name:mrp.process_node_productminimumstockrule0
 msgid "Minimum Stock"
-msgstr ""
+msgstr "Minimum Lager"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menus_dash_mrp
 msgid "Dashboard"
-msgstr ""
+msgstr "Dashbord"
 
 #. module: mrp
 #: view:board.board:0
 msgid "Work Center Future Load"
-msgstr ""
+msgstr "Arbeidssenter Fremtidig belastning"
 
 #. module: mrp
 #: model:process.node,name:mrp.process_node_stockproduct0
 #: model:process.node,name:mrp.process_node_stockproduct1
 #: model:process.process,name:mrp.process_process_stockableproductprocess0
 msgid "Stockable Product"
-msgstr ""
+msgstr "Lagerført Produkt"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:121
 #, python-format
 msgid "Work Center name"
-msgstr ""
+msgstr "Arbeidssenter Navn"
 
 #. module: mrp
 #: field:mrp.routing,code:0
 msgid "Code"
-msgstr ""
+msgstr "Kode"
 
 #. module: mrp
 #: report:mrp.production.order:0
 msgid "No. Of Hours"
-msgstr ""
+msgstr "Ant. Timer"
 
 #. module: mrp
 #: field:mrp.installer,mrp_jit:0
 msgid "Just In Time Scheduling"
-msgstr ""
+msgstr "Akkurat i Tide Planlegging"
 
 #. module: mrp
 #: view:mrp.property:0
 #: view:mrp.property.group:0
 msgid "Property Group"
-msgstr ""
+msgstr "Egenskaps Gruppe"
 
 #. module: mrp
 #: view:mrp.production:0
 msgid "Qty"
-msgstr ""
+msgstr "Ant"
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_production0
 msgid "Manufacturing Plan."
-msgstr ""
+msgstr "Produksjonsplan."
 
 #. module: mrp
 #: view:mrp.routing:0
 #: view:mrp.workcenter:0
 msgid "Inactive"
-msgstr ""
+msgstr "Inaktiv"
 
 #. module: mrp
 #: help:mrp.installer,mrp_subproduct:0
@@ -948,6 +994,8 @@ msgid ""
 "Enables multiple product output from a single production order: without "
 "this, a production order can have only one output product."
 msgstr ""
+"Muliggjør flere produkter fra en enkelt produksjonsordre: uten dette, vil en "
+"produksjonsordre kun ha et utgående produkt."
 
 #. module: mrp
 #: view:change.production.qty:0
@@ -956,18 +1004,18 @@ msgstr ""
 #: view:mrp.production:0
 #: view:mrp.workcenter.load:0
 msgid "Cancel"
-msgstr ""
+msgstr "Avbryt"
 
 #. module: mrp
 #: view:mrp.production:0
 msgid "Split in production lots"
-msgstr ""
+msgstr "Del opp i produksjons lots"
 
 #. module: mrp
 #: help:mrp.workcenter,capacity_per_cycle:0
 msgid ""
-"Number of operations this work center can do in parallel. If this work "
-"center represents a team of 5 workers, the capacity per cycle is 5."
+"Number of operations this Work Center can do in parallel. If this Work "
+"Center represents a team of 5 workers, the capacity per cycle is 5."
 msgstr ""
 
 #. module: mrp
@@ -976,53 +1024,55 @@ msgid ""
 "If the service has a 'Buy' supply method, this creates a RFQ, a "
 "subcontracting demand for instance."
 msgstr ""
+"Hvis tjenesten har en 'Kjøp' anskaffelses metode, oppretter denne en "
+"Forspørsel for Tilbud, som f.eks. en forespørsel fra en underleverandør."
 
 #. module: mrp
 #: field:mrp.production,move_prod_id:0
 msgid "Move product"
-msgstr ""
+msgstr "Forflytt produkt"
 
 #. module: mrp
 #: view:mrp.production:0
 msgid "Late"
-msgstr ""
+msgstr "Sen"
 
 #. module: mrp
 #: model:process.node,name:mrp.process_node_servicemts0
 msgid "Make to stock"
-msgstr ""
+msgstr "Produser til Lager"
 
 #. module: mrp
 #: help:mrp.routing.workcenter,sequence:0
 msgid ""
 "Gives the sequence order when displaying a list of routing work centers."
-msgstr ""
+msgstr "Gir sekvensen for når du viser en liste over ruting arbeidssenter."
 
 #. module: mrp
 #: report:bom.structure:0
 msgid "BOM Name"
-msgstr ""
+msgstr "Materialliste Navn"
 
 #. module: mrp
 #: view:mrp.production:0
 msgid "Start Production"
-msgstr ""
+msgstr "Start Produksjon"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.open_board_manufacturing
 #: model:ir.ui.menu,name:mrp.menu_board_manufacturing
 msgid "Production Dashboard"
-msgstr ""
+msgstr "Produksjon Dashbord"
 
 #. module: mrp
 #: view:mrp.production:0
 msgid "Source Loc."
-msgstr ""
+msgstr "Kilde lok."
 
 #. module: mrp
 #: field:mrp.bom,position:0
 msgid "Internal Reference"
-msgstr ""
+msgstr "Intern Referanse"
 
 #. module: mrp
 #: help:mrp.installer,stock_location:0
@@ -1030,11 +1080,13 @@ msgid ""
 "Manages product routes and paths within and between locations (e.g. "
 "warehouses)."
 msgstr ""
+"Håndterer produkt ruter og veier innenfor og mellom lokasjoner (f.eks. "
+"varelager)."
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_billofmaterial0
 msgid "Product's structure"
-msgstr ""
+msgstr "Produktstruktur"
 
 #. module: mrp
 #: field:mrp.bom,name:0
@@ -1043,12 +1095,12 @@ msgstr ""
 #: field:mrp.routing,name:0
 #: field:mrp.routing.workcenter,name:0
 msgid "Name"
-msgstr ""
+msgstr "Navn"
 
 #. module: mrp
 #: view:mrp.installer:0
 msgid "MRP Application Configuration"
-msgstr ""
+msgstr "MRP Program Konfigurasjon"
 
 #. module: mrp
 #: help:mrp.installer,mrp_jit:0
@@ -1059,21 +1111,26 @@ msgid ""
 "avoids having to wait for the procurement scheduler to run or having to run "
 "the procurement scheduler manually."
 msgstr ""
+"Muliggjør Akkurat i tide beregning av anskaffelsesordrer.\n"
+"\n"
+"Mens det er mer ressurskrevende en standard oppsett, slipper AIT beregningen "
+"ungår å måtte vente på at anskaffelses planleggeren skal kjøre eller "
+"anskaffelses planleggeren kjøres manuelt."
 
 #. module: mrp
 #: field:mrp.product.produce,mode:0
 msgid "Mode"
-msgstr ""
+msgstr "Modus"
 
 #. module: mrp
 #: report:bom.structure:0
 msgid "]"
-msgstr ""
+msgstr "]"
 
 #. module: mrp
 #: field:mrp.workcenter.load,measure_unit:0
 msgid "Amount measuring unit"
-msgstr ""
+msgstr "Mengde Måleenhet"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_production_action_planning
@@ -1085,16 +1142,21 @@ msgid ""
 "materials have been defined, OpenERP is capable of automatically deciding on "
 "the manufacturing route depending on the needs of the company."
 msgstr ""
+"Produksjonsorder beskriver operasjoner som må utføres og råvareforbruket for "
+"hver produksjonsprosess. Du bruker spesifikasjoner(materiallister eller ML) "
+"for å finne ut råvarebehovet og produksjonsordrene som trengs for det "
+"ferdige produktet. Så snart materiallistene er definert, er OpenERP i stand "
+"til å automatisk avgjøre produksjons ruten avhengig av firmaets behov."
 
 #. module: mrp
 #: constraint:mrp.production:0
 msgid "Order quantity cannot be negative or zero !"
-msgstr ""
+msgstr "Ordre antall kan ikke være negativt eller null !"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_production_action3
 msgid "Manufacturing Orders in Progress"
-msgstr ""
+msgstr "Produksjonsordre som pågår"
 
 #. module: mrp
 #: model:ir.module.module,description:mrp.module_meta_information
@@ -1124,7 +1186,7 @@ msgid ""
 "\n"
 "    Reports provided by this module:\n"
 "    * Bill of Material structure and components\n"
-"    * Load forecast on workcenters\n"
+"    * Load forecast on Work Centers\n"
 "    * Print a production order\n"
 "    * Stock forecasts\n"
 "    Dashboard provided by this module::\n"
@@ -1138,7 +1200,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_production_action4
 msgid "Manufacturing Orders Waiting Products"
-msgstr ""
+msgstr "Produksjonsordre Som venter på produkter"
 
 #. module: mrp
 #: view:mrp.bom:0
@@ -1148,47 +1210,47 @@ msgstr ""
 #: view:mrp.routing:0
 #: view:mrp.workcenter:0
 msgid "Group By..."
-msgstr ""
+msgstr "Grupper etter..."
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:121
 #, python-format
 msgid "Cycles Cost"
-msgstr ""
+msgstr "Syklus Kostnad"
 
 #. module: mrp
 #: selection:mrp.workcenter.load,measure_unit:0
 msgid "Amount in cycles"
-msgstr ""
+msgstr "Antall Sykluser"
 
 #. module: mrp
 #: field:mrp.production,location_dest_id:0
 #: view:mrp.production.order:0
 #: field:mrp.production.order,location_dest_id:0
 msgid "Finished Products Location"
-msgstr ""
+msgstr "Ferdig Produkt lokasjon"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_pm_resources_config
 msgid "Resources"
-msgstr ""
+msgstr "Ressurser"
 
 #. module: mrp
 #: field:mrp.workcenter,costs_journal_id:0
 msgid "Analytic Journal"
-msgstr ""
+msgstr "Analytisk Journal"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_workcenter_action
 #: model:ir.ui.menu,name:mrp.menu_view_resource_search_mrp
 #: field:mrp.routing,workcenter_lines:0
 msgid "Work Centers"
-msgstr ""
+msgstr "Arbeidssentre"
 
 #. module: mrp
 #: selection:mrp.workcenter.load,time_unit:0
 msgid "Per week"
-msgstr ""
+msgstr "Per Uke"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_routing_action
@@ -1198,21 +1260,24 @@ msgid ""
 "They are attached to bills of materials that will define the required raw "
 "materials."
 msgstr ""
+"Rutinger tillater deg å opprette og håndtere produksjonsprossessene som skal "
+"følges innenfor dine arbeidssenter for å produsere et produkt. De er koblet "
+"mot materiallister som definerer påkrevd råmaterialer."
 
 #. module: mrp
 #: field:report.workcenter.load,hour:0
 msgid "Nbr of hour"
-msgstr ""
+msgstr "Ant timer"
 
 #. module: mrp
 #: view:mrp.routing:0
 msgid "Work Center Operations"
-msgstr ""
+msgstr "Arbeidssenter Operasjoner"
 
 #. module: mrp
 #: view:mrp.routing:0
 msgid "Notes"
-msgstr ""
+msgstr "Notater"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_bom
@@ -1221,22 +1286,22 @@ msgstr ""
 #: field:mrp.production.order,bom_id:0
 #: model:process.node,name:mrp.process_node_billofmaterial0
 msgid "Bill of Material"
-msgstr ""
+msgstr "Materialliste"
 
 #. module: mrp
 #: view:mrp.workcenter.load:0
 msgid "Select time unit"
-msgstr ""
+msgstr "Velg tidsenhet"
 
 #. module: mrp
 #: view:report.workcenter.load:0
 msgid "Work Center load"
-msgstr ""
+msgstr "Arbeidssenter belastning"
 
 #. module: mrp
 #: help:mrp.production,location_dest_id:0
 msgid "Location where the system will stock the finished products."
-msgstr ""
+msgstr "Lokasjon hvor systemet vil plassere de ferdige produktene."
 
 #. module: mrp
 #: help:mrp.production,picking_id:0
@@ -1244,6 +1309,8 @@ msgid ""
 "This is the internal picking list that brings the finished product to the "
 "production plan"
 msgstr ""
+"Dette er den interne plukklisten som flytter det ferdige produktet til "
+"produksjonsplanen"
 
 #. module: mrp
 #: field:stock.change.standard.price,change_parent_price:0
@@ -1253,7 +1320,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_move
 msgid "Stock Move"
-msgstr ""
+msgstr "Lagerbevegelse"
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_producttostockrules0
@@ -1262,76 +1329,78 @@ msgid ""
 "maxi quantity. It's available in the Inventory management menu and "
 "configured by product."
 msgstr ""
+"Minimum lager regelen er en automatisk anskaffelsesregel basert på min/maks "
+"antall. Den er tilgjenglig i Lagerhåndterings menyen og satt opp per produkt."
 
 #. module: mrp
 #: selection:mrp.workcenter.load,time_unit:0
 msgid "Day by day"
-msgstr ""
+msgstr "Dag for dag"
 
 #. module: mrp
 #: view:mrp.bom:0
 msgid "Revisions"
-msgstr ""
+msgstr "Revisjoner"
 
 #. module: mrp
 #: view:mrp.installer:0
 msgid "Configure Your Manufacturing Resource Planning Application"
-msgstr ""
+msgstr "Konfigurer Ditt Produksjons Ressurs Planleggings Programm"
 
 #. module: mrp
 #: field:mrp.production,priority:0
 #: field:mrp.production.order,priority:0
 msgid "Priority"
-msgstr ""
+msgstr "Prioritet"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_picking
 msgid "Picking List"
-msgstr ""
+msgstr "Plukkliste"
 
 #. module: mrp
 #: view:mrp.production.order:0
 msgid "Month -1"
-msgstr ""
+msgstr "Måned -1"
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:914
 #, python-format
 msgid "Manufacturing order '%s' is scheduled for the %s."
-msgstr ""
+msgstr "Produksjonsordren '%s' er planlagt for %s."
 
 #. module: mrp
 #: report:mrp.production.order:0
 msgid "Production Order N° :"
-msgstr ""
+msgstr "Produksjonsordre nr :"
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:630
 #, python-format
 msgid "Manufacturing order '%s' is ready to produce."
-msgstr ""
+msgstr "Produksjonsordre '%s' er klar for produksjon ."
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_product_line
 msgid "Production Scheduled Product"
-msgstr ""
+msgstr "Produksjon Planlagt produkt"
 
 #. module: mrp
 #: help:res.company,manufacturing_lead:0
 msgid "Security days for each manufacturing operation."
-msgstr ""
+msgstr "Sikkerhetsdager for hver produksjonsoperasjon."
 
 #. module: mrp
 #: model:process.node,name:mrp.process_node_mts0
 #: model:process.transition,name:mrp.process_transition_servicemts0
 #: model:process.transition,name:mrp.process_transition_stockmts0
 msgid "Make to Stock"
-msgstr ""
+msgstr "Produser til Lager"
 
 #. module: mrp
 #: selection:mrp.production.order,month:0
 msgid "July"
-msgstr ""
+msgstr "Juli"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_bom_form_action
@@ -1342,6 +1411,11 @@ msgid ""
 "product needs. You can either create a bill of materials to define specific "
 "production steps or define a single multi-level bill of materials."
 msgstr ""
+"Hoved Materiallister tillater deg å opprette og håndtere listen over "
+"nødvendige råvarer for å produsere et ferdig produkt. OpenERP vil bruke "
+"disse materiallistene for å automatisk foreslå produksjonsordre iht "
+"produktbehov. Du kan enten opprette materiallister for å definere spesifikke "
+"produksjonstrinn eller definere en enkelt fler-nivå materialliste."
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_stockrfq0
@@ -1349,98 +1423,100 @@ msgid ""
 "In case the Supply method of the product is Buy, the system creates a "
 "purchase order."
 msgstr ""
+"I tilfelle hvor Anskaffelsesmetoden for produktet er Kjøp, oppretter "
+"systemet en innkjøpsordre."
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_procurement_order
 msgid "Procurement"
-msgstr ""
+msgstr "Anskaffelse"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_view_mrp_product_price_wizard
 #: view:mrp.product_price:0
 msgid "Product Cost Structure"
-msgstr ""
+msgstr "Produkt kostnad Struktur"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:130
 #, python-format
 msgid "Components suppliers"
-msgstr ""
+msgstr "Komponent leverandører"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_installer
 msgid "mrp.installer"
-msgstr ""
+msgstr "mrp.installer"
 
 #. module: mrp
 #: view:mrp.production:0
 msgid "Production Work Centers"
-msgstr ""
+msgstr "Produksjons Arbeidssenter"
 
 #. module: mrp
 #: view:mrp.production.order:0
 #: field:mrp.production.order,month:0
 msgid "Month"
-msgstr ""
+msgstr "Måned"
 
 #. module: mrp
 #: code:addons/mrp/wizard/change_production_qty.py:62
 #, python-format
 msgid "Active Id is not found"
-msgstr ""
+msgstr "Aktiv Id ikke funnet"
 
 #. module: mrp
 #: view:mrp.workcenter:0
 msgid "Search for mrp workcenter"
-msgstr ""
+msgstr "Søk etter mrp arbeidssenter"
 
 #. module: mrp
 #: view:mrp.bom:0
 msgid "BoM Structure"
-msgstr ""
+msgstr "Materialliste Struktur"
 
 #. module: mrp
 #: field:mrp.production,date_start:0
 #: field:mrp.production.order,date_start:0
 msgid "Start Date"
-msgstr ""
+msgstr "Startdato"
 
 #. module: mrp
 #: field:mrp.workcenter,costs_hour_account_id:0
 msgid "Hour Account"
-msgstr ""
+msgstr "Timekonto"
 
 #. module: mrp
 #: view:mrp.production:0
 msgid "Destination Loc."
-msgstr ""
+msgstr "Destinasjon Lok."
 
 #. module: mrp
 #: field:mrp.production.order,product_id2:0
 msgid "Product Consumed"
-msgstr ""
+msgstr "Produkt Forbrukt"
 
 #. module: mrp
 #: view:mrp.production:0
 msgid "Pending"
-msgstr ""
+msgstr "Ventende"
 
 #. module: mrp
 #: field:mrp.bom,active:0
 #: field:mrp.routing,active:0
 msgid "Active"
-msgstr ""
+msgstr "Aktiv"
 
 #. module: mrp
 #: model:process.node,name:mrp.process_node_procureproducts0
 msgid "Procure Products"
-msgstr ""
+msgstr "Anskaff Produkter"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_report_workcenter_load_tree
 #: view:report.workcenter.load:0
 msgid "Work Center Loads"
-msgstr ""
+msgstr "Arbeidssenter Belastning"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_property_action
@@ -1451,13 +1527,14 @@ msgstr ""
 #: view:procurement.order:0
 #: field:procurement.order,property_ids:0
 msgid "Properties"
-msgstr ""
+msgstr "Egenskaper"
 
 #. module: mrp
 #: help:mrp.production,origin:0
 msgid ""
 "Reference of the document that generated this production order request."
 msgstr ""
+"Referanse til dokumentet som genererte produksjonsordre forespørslen."
 
 #. module: mrp
 #: sql_constraint:mrp.bom:0
@@ -1466,61 +1543,64 @@ msgid ""
 "You should install the mrp_subproduct module if you want to manage extra "
 "products on BoMs !"
 msgstr ""
+"Alle produktantall må være større en 0.\n"
+"Du bør installere modulen mrp:subproduct hvis du vil håndtere ekstra "
+"produkter på Materiallister !"
 
 #. module: mrp
 #: view:mrp.production:0
 msgid "Extra Information"
-msgstr ""
+msgstr "Ekstra informasjon"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_change_production_qty
 msgid "Change Quantity of Products"
-msgstr ""
+msgstr "Endre Antall Produkter"
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_productionorder0
 msgid "Drives the procurement orders for raw material."
-msgstr ""
+msgstr "Styrer anskaffelsesordre for råmaterialer."
 
 #. module: mrp
 #: view:mrp.production.order:0
 msgid "Current"
-msgstr ""
+msgstr "Gjeldende"
 
 #. module: mrp
 #: field:mrp.workcenter,costs_general_account_id:0
 msgid "General Account"
-msgstr ""
+msgstr "Generell Konto"
 
 #. module: mrp
 #: report:mrp.production.order:0
 msgid "SO Number"
-msgstr ""
+msgstr "SO Nummer"
 
 #. module: mrp
 #: selection:mrp.production,state:0
 #: view:mrp.production.order:0
 #: selection:mrp.production.order,state:0
 msgid "Done"
-msgstr ""
+msgstr "Utført"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_change_standard_price
 msgid "Change Standard Price"
-msgstr ""
+msgstr "Endre Standard Pris"
 
 #. module: mrp
 #: field:mrp.production,origin:0
 #: report:mrp.production.order:0
 #: field:mrp.production.order,origin:0
 msgid "Source Document"
-msgstr ""
+msgstr "Kildedokument"
 
 #. module: mrp
 #: selection:mrp.production,priority:0
 #: selection:mrp.production.order,priority:0
 msgid "Not urgent"
-msgstr ""
+msgstr "Haster ikke"
 
 #. module: mrp
 #: help:stock.change.standard.price,change_parent_price:0
@@ -1528,17 +1608,19 @@ msgid ""
 "This will change the price of parent products also according to the BoM "
 "structure specified for the product."
 msgstr ""
+"Dette vil endre pris på overordnede produkter også iht Materialliste "
+"strukturen spesifisert for produktet."
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_production_action2
 msgid "Manufacturing Orders To Start"
-msgstr ""
+msgstr "Produksjonsordre å starte"
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:491
 #, python-format
 msgid "Cannot delete Production Order(s) which are in %s State!"
-msgstr ""
+msgstr "Kan ikke slette Produksjonsordre(r) som er i %s Status!"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_workcenter
@@ -1547,12 +1629,12 @@ msgstr ""
 #: view:mrp.workcenter:0
 #: field:report.workcenter.load,workcenter_id:0
 msgid "Work Center"
-msgstr ""
+msgstr "Arbeidssenter"
 
 #. module: mrp
 #: field:mrp.workcenter,capacity_per_cycle:0
 msgid "Capacity per Cycle"
-msgstr ""
+msgstr "Kapasitet per syklus"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_product_product
@@ -1565,30 +1647,30 @@ msgstr ""
 #: field:mrp.production.order,product_id:0
 #: field:mrp.production.product.line,product_id:0
 msgid "Product"
-msgstr ""
+msgstr "Produkt"
 
 #. module: mrp
 #: view:mrp.production:0
 #: field:mrp.production,hour_total:0
 msgid "Total Hours"
-msgstr ""
+msgstr "Totalt Timer"
 
 #. module: mrp
 #: field:mrp.production,location_src_id:0
 #: field:mrp.production.order,location_src_id:0
 msgid "Raw Materials Location"
-msgstr ""
+msgstr "Råmateriale Lokasjon"
 
 #. module: mrp
 #: view:mrp.product_price:0
 msgid "Print Cost Structure of Product."
-msgstr ""
+msgstr "Skriv ut Kostnadsstruktur til produkt."
 
 #. module: mrp
 #: field:mrp.bom,product_uos:0
 #: field:mrp.production.product.line,product_uos:0
 msgid "Product UOS"
-msgstr ""
+msgstr "Produkt Salgsenhet"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_workcenter_action
@@ -1597,11 +1679,14 @@ msgid ""
 "of one or more persons and/or machines that can be considered as a unit for "
 "capacity and planning forecasting."
 msgstr ""
+"Arbeidssenter tillater deg å opprette og håndtere produksjone enheter "
+"bestående av en eller flere personer og/eller maskiner som kan sees på som "
+"en enhet for kapasitet og planlegging."
 
 #. module: mrp
 #: view:mrp.production:0
 msgid "Consume Products"
-msgstr ""
+msgstr "Forbruk Produkter"
 
 #. module: mrp
 #: field:mrp.bom,product_uom:0
@@ -1609,64 +1694,64 @@ msgstr ""
 #: field:mrp.production.order,product_uom:0
 #: field:mrp.production.product.line,product_uom:0
 msgid "Product UOM"
-msgstr ""
+msgstr "Produkt Enhet"
 
 #. module: mrp
 #: model:process.node,name:mrp.process_node_stock0
 #: model:process.transition,name:mrp.process_transition_servicemto0
 #: model:process.transition,name:mrp.process_transition_stockproduct0
 msgid "Make to Order"
-msgstr ""
+msgstr "Produser til Ordre"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_report_mrp_production_order
 #: model:ir.ui.menu,name:mrp.menu_report_mrp_production_orders_tree
 msgid "Production Analysis"
-msgstr ""
+msgstr "Produktanalyser"
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:345
 #, python-format
 msgid "Copy"
-msgstr ""
+msgstr "Kopier"
 
 #. module: mrp
 #: view:mrp.production.lot.line:0
 msgid "Production Products"
-msgstr ""
+msgstr "Produksjons Produkter"
 
 #. module: mrp
 #: field:mrp.production,date_finished:0
 #: field:mrp.production.order,date_finished:0
 msgid "End Date"
-msgstr ""
+msgstr "Sluttdato"
 
 #. module: mrp
 #: field:mrp.workcenter,resource_id:0
 msgid "Resource"
-msgstr ""
+msgstr "Ressurs"
 
 #. module: mrp
 #: help:mrp.bom,date_start:0
 #: help:mrp.bom,date_stop:0
 msgid "Validity of this BoM or component. Keep empty if it's always valid."
-msgstr ""
+msgstr "Gyldighet på Materiallisten. la stå tom hvis alltid gyldig."
 
 #. module: mrp
 #: field:mrp.production,product_uos:0
 msgid "Product UoS"
-msgstr ""
+msgstr "Produkt Salgsenhet"
 
 #. module: mrp
 #: view:mrp.production.order:0
 msgid "#Line Orders"
-msgstr ""
+msgstr "# Linje Ordrer"
 
 #. module: mrp
 #: selection:mrp.production,priority:0
 #: selection:mrp.production.order,priority:0
 msgid "Very Urgent"
-msgstr ""
+msgstr "Haster Veldig"
 
 #. module: mrp
 #: help:mrp.bom,routing_id:0
@@ -1676,32 +1761,36 @@ msgid ""
 "operations and to plan future loads on work centers based on production "
 "planning."
 msgstr ""
+"Listen over operasjoner (listen over arbeidssenter) for å produsere det "
+"ferdige produktet. Rutingen er mest brukt til å beregne arbeidssenter "
+"kostnad under operasjoner og for å planlegge fremtidig belastning på "
+"arbeidssenter basert på produksjonsplanlegging."
 
 #. module: mrp
 #: view:change.production.qty:0
 msgid "Approve"
-msgstr ""
+msgstr "Godkjenn"
 
 #. module: mrp
 #: view:mrp.property.group:0
 msgid "Properties categories"
-msgstr ""
+msgstr "Egenskaps Kategorier"
 
 #. module: mrp
 #: help:mrp.production.workcenter.line,sequence:0
 msgid "Gives the sequence order when displaying a list of work orders."
-msgstr ""
+msgstr "Gir sekvensen for når du viser en liste over arbeidsordrer."
 
 #. module: mrp
 #: report:mrp.production.order:0
 msgid "Source Location"
-msgstr ""
+msgstr "Kildelokasjon"
 
 #. module: mrp
 #: view:mrp.production:0
 #: view:mrp.production.product.line:0
 msgid "Scheduled Products"
-msgstr ""
+msgstr "Planlagte Produkter"
 
 #. module: mrp
 #: view:mrp.production.lot.line:0
@@ -1715,7 +1804,7 @@ msgstr ""
 #: model:ir.ui.menu,name:mrp.menu_mrp_production_order_action
 #: view:mrp.production:0
 msgid "Manufacturing Orders"
-msgstr ""
+msgstr "Produksjonsordre"
 
 #. module: mrp
 #: help:mrp.product.produce,mode:0
@@ -1726,40 +1815,44 @@ msgid ""
 "the quantity selected and it will finish the production order when total "
 "ordered quantities are produced."
 msgstr ""
+"'Kun Forbruk' modus vil kun forbruke produktene med valgt antall.\n"
+"'Forbruk og produser' modus vil forbruke i tilleg til å produsere produktene "
+"med valgt antall og den vil ferdigstille produksjonsordren når det totalt "
+"bestilte antallet er produsert."
 
 #. module: mrp
 #: view:mrp.production:0
 #: report:mrp.production.order:0
 msgid "Work Orders"
-msgstr ""
+msgstr "Arbeidsordre"
 
 #. module: mrp
 #: field:mrp.workcenter,costs_cycle:0
 msgid "Cost per cycle"
-msgstr ""
+msgstr "Kostnad per syklus"
 
 #. module: mrp
 #: model:process.node,name:mrp.process_node_serviceproduct0
 #: model:process.node,name:mrp.process_node_serviceproduct1
 msgid "Service"
-msgstr ""
+msgstr "Tjeneste"
 
 #. module: mrp
 #: selection:mrp.production,state:0
 #: selection:mrp.production.order,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "Avbrutt"
 
 #. module: mrp
 #: view:mrp.production.order:0
 msgid "BOM"
-msgstr ""
+msgstr "Materialliste"
 
 #. module: mrp
 #: help:mrp.bom,product_uom:0
 msgid ""
 "UoM (Unit of Measure) is the unit of measurement for the inventory control"
-msgstr ""
+msgstr "Måleenhet er måleenheten for lagerkontrollen"
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_bom0
@@ -1768,6 +1861,8 @@ msgid ""
 "are products themselves) can also have their own Bill of Material (multi-"
 "level)."
 msgstr ""
+"Materiallisten er produktet nedbrutt. Komponentene (som selv er produkter) "
+"kan også ha egne materiallister (fler-nivå)."
 
 #. module: mrp
 #: field:mrp.bom,company_id:0
@@ -1778,12 +1873,12 @@ msgstr ""
 #: field:mrp.routing.workcenter,company_id:0
 #: view:mrp.workcenter:0
 msgid "Company"
-msgstr ""
+msgstr "Firma"
 
 #. module: mrp
 #: field:mrp.workcenter,time_cycle:0
 msgid "Time for 1 cycle (hour)"
-msgstr ""
+msgstr "Tid for en syklus(timer)"
 
 #. module: mrp
 #: model:ir.actions.report.xml,name:mrp.report_mrp_production_report
@@ -1792,61 +1887,61 @@ msgstr ""
 #: model:process.node,name:mrp.process_node_production0
 #: model:process.node,name:mrp.process_node_productionorder0
 msgid "Production Order"
-msgstr ""
+msgstr "Produksjonsordre"
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_productminimumstockrule0
 msgid "Automatic procurement rule"
-msgstr ""
+msgstr "Automatisk Anskaffelsesregel"
 
 #. module: mrp
 #: view:mrp.production:0
 msgid "Compute Data"
-msgstr ""
+msgstr "Beregn Data"
 
 #. module: mrp
 #: field:mrp.production,product_uos_qty:0
 msgid "Product UoS Qty"
-msgstr ""
+msgstr "Produkt Salgsenhet Ant"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:130
 #: view:mrp.bom:0
 #, python-format
 msgid "Components"
-msgstr ""
+msgstr "Komponenter"
 
 #. module: mrp
 #: report:bom.structure:0
 #: model:ir.actions.report.xml,name:mrp.report_bom_structure
 msgid "BOM Structure"
-msgstr ""
+msgstr "Materialliste Struktur"
 
 #. module: mrp
 #: field:mrp.bom,date_stop:0
 msgid "Valid Until"
-msgstr ""
+msgstr "Gyldig til"
 
 #. module: mrp
 #: field:mrp.bom,date_start:0
 msgid "Valid From"
-msgstr ""
+msgstr "Gyldig fra"
 
 #. module: mrp
 #: selection:mrp.bom,type:0
 msgid "Normal BoM"
-msgstr ""
+msgstr "Normal Materialliste"
 
 #. module: mrp
 #: field:res.company,manufacturing_lead:0
 msgid "Manufacturing Lead Time"
-msgstr ""
+msgstr "Produksjon Ledetid"
 
 #. module: mrp
 #: field:mrp.bom,product_uos_qty:0
 #: field:mrp.production.product.line,product_uos_qty:0
 msgid "Product UOS Qty"
-msgstr ""
+msgstr "Produkt Salgsenhet Ant"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.action_report_in_out_picking_tree
@@ -1855,21 +1950,23 @@ msgid ""
 "linked to manufacturing activities, receptions of products and delivery "
 "orders."
 msgstr ""
+"Ukentlig Lagerverdi variasjon muliggjør for deg å spore lagerverdi utvikling "
+"koblet til produksjonsaktivitet, mottak av produkter og levering av ordre."
 
 #. module: mrp
 #: view:mrp.product.produce:0
 msgid "Confirm"
-msgstr ""
+msgstr "Bekreft"
 
 #. module: mrp
 #: field:mrp.bom,product_efficiency:0
 msgid "Manufacturing Efficiency"
-msgstr ""
+msgstr "Produksjonseffektivitet"
 
 #. module: mrp
 #: constraint:res.company:0
 msgid "Error! You can not create recursive companies."
-msgstr ""
+msgstr "Feil! Dukan ikke opprette rekursive firmaer."
 
 #. module: mrp
 #: help:mrp.bom,active:0
@@ -2137,8 +2234,8 @@ msgstr ""
 #. module: mrp
 #: help:mrp.routing.workcenter,routing_id:0
 msgid ""
-"Routing indicates all the workcenters used, for how long and/or cycles.If "
-"Routing is indicated then,the third tab of a production order (workcenters) "
+"Routing indicates all the Work Centers used, for how long and/or cycles.If "
+"Routing is indicated then,the third tab of a production order (Work Centers) "
 "will be automatically pre-completed."
 msgstr ""
 
@@ -2167,8 +2264,8 @@ msgstr ""
 #. module: mrp
 #: help:mrp.workcenter,note:0
 msgid ""
-"Description of the work center. Explain here what's a cycle according to "
-"this work center."
+"Description of the Work Center. Explain here what's a cycle according to "
+"this Work Center."
 msgstr ""
 
 #. module: mrp
@@ -2392,3 +2489,88 @@ msgstr ""
 #: field:mrp.production.order,year:0
 msgid "Year"
 msgstr ""
+
+#~ msgid "Specify Cost of Work center per cycle."
+#~ msgstr "Spesifiser Kostnad på Arbeidssenter per syklus."
+
+#~ msgid "Workcenter Usage"
+#~ msgstr "Arbeidssenter Bruk"
+
+#~ msgid ""
+#~ "Number of operations this work center can do in parallel. If this work "
+#~ "center represents a team of 5 workers, the capacity per cycle is 5."
+#~ msgstr ""
+#~ "Antall operasjoner dette arbeidssenteret kan utføre parallelt. Dersom "
+#~ "arbeidssenteret består av 5 arbeidere er kapasiteten per syklus 5."
+
+#~ msgid ""
+#~ "\n"
+#~ "    This is the base module to manage the manufacturing process in OpenERP.\n"
+#~ "\n"
+#~ "    Features:\n"
+#~ "    * Make to Stock / Make to Order (by line)\n"
+#~ "    * Multi-level BoMs, no limit\n"
+#~ "    * Multi-level routing, no limit\n"
+#~ "    * Routing and work center integrated with analytic accounting\n"
+#~ "    * Scheduler computation periodically / Just In Time module\n"
+#~ "    * Multi-pos, multi-warehouse\n"
+#~ "    * Different reordering policies\n"
+#~ "    * Cost method by product: standard price, average price\n"
+#~ "    * Easy analysis of troubles or needs\n"
+#~ "    * Very flexible\n"
+#~ "    * Allows to browse Bill of Materials in complete structure\n"
+#~ "        that include child and phantom BoMs\n"
+#~ "    It supports complete integration and planification of stockable goods,\n"
+#~ "    consumable of services. Services are completely integrated with the "
+#~ "rest\n"
+#~ "    of the software. For instance, you can set up a sub-contracting service\n"
+#~ "    in a BoM to automatically purchase on order the assembly of your "
+#~ "production.\n"
+#~ "\n"
+#~ "    Reports provided by this module:\n"
+#~ "    * Bill of Material structure and components\n"
+#~ "    * Load forecast on workcenters\n"
+#~ "    * Print a production order\n"
+#~ "    * Stock forecasts\n"
+#~ "    Dashboard provided by this module::\n"
+#~ "    * List of next production orders\n"
+#~ "    * List of deliveries (out picking)\n"
+#~ "    * Graph of work center load\n"
+#~ "    * List of procurement in exception\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "    Dette er base modulen for å håndtere produksjonsprossesser i OpenERP.\n"
+#~ "\n"
+#~ "    Funksjoner:\n"
+#~ "    * Produser til lager / Produser til Ordre (per linje)\n"
+#~ "    * flernivå Materiallister. ingen begrensninger\n"
+#~ "    * flernivå ruter, ingen begrensninger\n"
+#~ "    * Ruting og arbeidssenter integrert med analytisk regnskap\n"
+#~ "    * planlegger periodisk beregning  / Akkurat i tide modul\n"
+#~ "    * Fler-pos, fler-lager\n"
+#~ "    * Ulike reordre policyer\n"
+#~ "    * Kostnadsmetode per produkt: standard pris, gjennomsnittspris\n"
+#~ "    * Enkel analyse av problemer eller behov\n"
+#~ "    * Veldig fleksibel\n"
+#~ "    * Tillater å bla gjennom materiallister i komplett struktur\n"
+#~ "        som inkluderer under, og phantom materiallister.\n"
+#~ "    Det støtter komplett integrering og planlegging av lagerførte varer,\n"
+#~ "    Forbruksmateriell av tjenester. Tjenester er koplett integrert med "
+#~ "resten\n"
+#~ "    av programmet. F.eks. kan du sette opp en underleverandør tjeneste\n"
+#~ "    i en materialliste som automatisk kjøper inn på ordre sammenstillingen  "
+#~ "i din produksjon.\n"
+#~ "\n"
+#~ "    Tilgjenglige rapporter i denne modulen:\n"
+#~ "    \n"
+#~ " Materialliste struktur og komponenter\n"
+#~ "    * Fremtidig belastning på arbeidssenter\n"
+#~ "    * Utskrift av produksjonsordre\n"
+#~ "    * Lager prognoser\n"
+#~ "    Dasbord tigjenglig i denne modulen:\n"
+#~ "    * Liste over neste produksjonsordrer\n"
+#~ "    * Liste over leveringer (utgående plukk)\n"
+#~ "    * Graf over arbeidssenter belastning\n"
+#~ "    * Liste over anskaffelser med unntak\n"
+#~ "    "
