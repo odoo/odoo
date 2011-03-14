@@ -26,7 +26,8 @@
     'category': 'Generic Modules/Inventory Control',
     'description': """
 This module supplements the Warehouse application by adding support for per-product location paths, effectively implementing Push and Pull inventory flows.
------------------------------------------------------------------------------------------------------------------------------------------------------------
+===========================================================================================================================================================
+
 Typically this could be used to:
 * Manage product manufacturing chains
 * Manage default locations per product
