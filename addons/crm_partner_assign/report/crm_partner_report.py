@@ -49,7 +49,7 @@ class crm_partner_report_assign(osv.osv):
                 SELECT
                     p.id,
                     p.name,
-                    a.country_id,
+                    (SELECT country_id FROM res_partner_address a WHERE a.partner_id=p.id AND country_id is not null limit 1) as country_id,
                     p.grade_id,
                     p.user_id,
                     p.section_id,
@@ -57,7 +57,7 @@ class crm_partner_report_assign(osv.osv):
                     (SELECT count(id) FROM crm_lead WHERE partner_assigned_id=p.id) AS opp
                 FROM
                     res_partner p
-                    left join res_partner_address a on (p.id=a.partner_id)
+
             )""")
 
 crm_partner_report_assign()

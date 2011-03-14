@@ -26,6 +26,8 @@
                             context="{'group_by':'section_id'}" />
                         <filter string="Grade" name="group_grade" icon="terp-stock_symbol-selection"
                             domain="[]" context="{'group_by':'grade_id'}" />
+                        <filter string="Name" name="" icon="terp-stock_symbol-selection"
+                            domain="[]" context="{'group_by':'name'}" />
                         <separator orientation="vertical" />
                   </group>
                </search>
@@ -54,7 +56,7 @@
        <!-- Leads by user and section Action -->
 
        <record id="action_report_crm_partner_assign" model="ir.actions.act_window">
-            <field name="name">Partner Assignment  Analysis</field>
+            <field name="name">Partnership Analysis</field>
             <field name="res_model">crm.partner.report.assign</field>
             <field name="context">{'search_default_group_country': 1, 'search_default_group_grade': 1, 'group_by_no_leaf':1,'group_by':[]}</field>
             <field name="view_mode">tree</field>
