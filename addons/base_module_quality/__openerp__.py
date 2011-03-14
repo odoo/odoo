@@ -35,7 +35,7 @@ standards, the speed efficiency...
 This module also provides generic framework to define your own quality test.
 For further info, coders may take a look into base_module_quality\README.txt
 
-WARNING: This module can not work as a ZIP file, you must unzip it before
+WARNING: This module cannot work as a ZIP file, you must unzip it before
 using it, otherwise it may crash.
     """,
     'author': 'OpenERP SA',
