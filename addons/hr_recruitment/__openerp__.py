@@ -36,6 +36,7 @@ system to store and search in your CV base.
     'depends': ['hr','survey','crm'],
     'update_xml': [
         'wizard/hr_recruitment_phonecall_view.xml',
+        'wizard/hr_recruitment_employee_hired.xml',
         'wizard/hr_recruitment_create_partner_job_view.xml',
         'hr_recruitment_view.xml',
         'hr_recruitment_menu.xml',
