@@ -28,7 +28,7 @@
                         <field name="company_id" widget="selection" groups="base.group_multi_company,base.group_extended" on_change="onchange_company(company_id)"/>
                         <field name="active" groups="base.group_extended"/>
                         <newline/>
-                        <field name="department_id" widget="selection" />
+                        <field name="department_id" widget="selection" on_change="onchange_department_id(department_id)" />
                         <field name="parent_id" />
                         </group>
                         <group colspan="2" col="1">
@@ -157,6 +157,13 @@
 
         <menuitem action="open_view_employee_list_my" id="menu_open_view_employee_list_my" sequence="3" parent="menu_hr_main"/>
 
+	    <record id="ir_ui_view_sc_employee" model="ir.ui.view_sc">
+	        <field name="name">Employees</field>
+	        <field name="resource">ir.ui.menu</field>
+	        <field name="user_id" ref="base.user_root"/>
+	        <field name="res_id" ref="hr.menu_open_view_employee_list_my"/>
+	    </record>
+
         <!--
         =======================
         Employee marital status
@@ -220,7 +227,7 @@
         </record>
 
         <record id="action2" model="ir.actions.act_window">
-            <field name="name">Employee Hierarchy</field>
+            <field name="name">Subordonate Hierarchy</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">hr.employee</field>
             <field name="domain">[('id','in',active_ids)]</field>
@@ -232,7 +239,7 @@
             <field eval="'action'" name="key"/>
             <field eval="'client_action_multi'" name="key2"/>
             <field eval="['hr.employee']" name="models"/>
-            <field name="name">Employees Hierarchy</field>
+            <field name="name">Subordonate Hierarchy</field>
             <field eval="'ir.actions.act_window,'+str(action2)" name="value"/>
             <field eval="True" name="isobject"/>
             <field eval="True" name="replace"/>
@@ -288,7 +295,7 @@
         </record>
 
         <menuitem action="open_view_categ_form" id="menu_view_employee_category_form"
-            parent="menu_view_employee_category_configuration_form" sequence="1" groups="base.group_extended"/>
+            parent="menu_view_employee_category_configuration_form" sequence="1"/>
 
         <record id="open_view_categ_tree" model="ir.actions.act_window">
             <field name="name">Categories structure</field>
@@ -314,7 +321,7 @@
             <field eval="True" name="object"/>
         </record>
 
-        <menuitem action="open_view_categ_tree" groups="base.group_extended"
+        <menuitem action="open_view_categ_tree" 
             id="menu_view_employee_category_tree" parent="hr.menu_view_employee_category_form"/>
 
         <record id="view_hr_job_form" model="ir.ui.view">
@@ -327,9 +334,10 @@
                     <field name="name" />
                     <field name="department_id" />
                     <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                    <field name="expected_employees" on_change="on_change_expected_employee(expected_employees,no_of_employee)"/>
+                    <newline/>
+                    <field name="no_of_recruitment" on_change="on_change_expected_employee(no_of_recruitment,no_of_employee)"/>
                     <field name="no_of_employee"/>
-                    <field name="no_of_recruitment"/>
+                    <field name="expected_employees"/>
                     </group>
                     <newline/>
                     <notebook colspan="4">

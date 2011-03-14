@@ -31,6 +31,9 @@
       <field name="employee_id" ref="hr.employee1"/>
     </record>
 
+    <workflow action="confirm" model="hr.holidays" ref="hr_holidays_employee1_allocation_cl"/>
+    <workflow action="validate" model="hr.holidays" ref="hr_holidays_employee1_allocation_cl"/>
+
     <workflow action="confirm" model="hr.holidays" ref="hr_holidays_employee1_sl"/>
     <workflow action="validate" model="hr.holidays" ref="hr_holidays_employee1_sl"/>
   </data>
