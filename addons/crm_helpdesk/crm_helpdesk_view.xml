@@ -235,12 +235,11 @@
             <field name="arch" type="xml">
                 <search string="Search Helpdesk">
                     <filter icon="terp-go-today" string="Today"
-                        separator="1"
                         domain="[('date::date','=',time.strftime('%%Y-%%m-%%d'))]"
                         help="Todays's Helpdesk Requests"
                         />
                     <filter icon="terp-go-week"
-                        string="7 Days" separator="1"
+                        string="7 Days" 
                         help="Helpdesk requests during last 7 days"
                         domain="[('date','&lt;', time.strftime('%%Y-%%m-%%d')), ('date','&gt;=',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
                         />

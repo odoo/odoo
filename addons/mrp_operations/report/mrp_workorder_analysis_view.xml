@@ -56,7 +56,6 @@
                                 help="Work orders made during current month"/>
                         <filter icon="terp-go-week"
                                 string="Month -1"
-                                separator="1"
                                 domain="[('month','=',(datetime.date.today() - datetime.timedelta(365/12)).strftime('%%m'))]"
                                 help="Work orders during last month"/>
                       <separator orientation="vertical"/>

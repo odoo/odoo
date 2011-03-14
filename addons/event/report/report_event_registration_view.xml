@@ -62,7 +62,6 @@
                         help="Events with beginning date in last 30 days"/>
                     <filter icon="terp-go-week"
                          string="Last 7 Days"
-                         separator="1"
                          domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
                          help="Events with beginning date in last 7 days"/>
                     <separator orientation="vertical"/>

@@ -244,7 +244,7 @@
                <field name="email_from"/>
                <field name="job_id" widget="selection"/>
                <field name="user_id">
-                    <filter domain="[('user_id','=',False)]" help="Unassigned Recruitments" icon="terp-personal-" separator="1"/>
+                    <filter domain="[('user_id','=',False)]" help="Unassigned Recruitments" icon="terp-personal-" />
                </field>
                <field name="department_id" widget="selection" string="Department" context="{'invisible_department': False}">
                    <filter icon="terp-personal+" context="{'invisible_department': False}"

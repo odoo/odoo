@@ -79,7 +79,6 @@
                             help="Customer Invoices And Refunds"/>
                     <filter icon="terp-personal"
                             string="Supplier"
-                            separator="1"
                             domain="['|', ('type','=','in_invoice'),('type','=','in_refund')]"
                             help="Supplier Invoices And Refunds"/>
                    <separator orientation="vertical"/>
@@ -88,7 +87,6 @@
                             help="Customer And Supplier Invoices"/>
                    <filter icon="terp-dolar_ok!"
                             string="Refund"
-                            separator="1"
                             domain="['|', ('type','=','out_refund'),('type','=','in_refund')]"
                             help="Customer And Supplier Refunds"/>
                    <separator orientation="vertical"/>

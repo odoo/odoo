@@ -57,7 +57,6 @@
 	                    		help="Production performed during current month"/>
 		                <filter icon="terp-go-week"
 	                            string="Month -1"
-	                            separator="1"
 	                            domain="[('date','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
 	                            help="Production during last month"/>
                       <separator orientation="vertical"/>

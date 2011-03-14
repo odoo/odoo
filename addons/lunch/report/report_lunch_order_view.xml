@@ -35,7 +35,6 @@
                         help="Tasks performed in last 30 days"/>
                     <filter icon="terp-go-week"
                          string="    7 Days    "
-                         separator="1"
                          domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
                          help="Tasks during last 7 days"/>
                 </group>

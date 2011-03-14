@@ -22,7 +22,7 @@
         <field name="inherit_id" ref="purchase.view_purchase_order_filter"/>
         <field name="arch" type="xml">
             <xpath expr="/search/group/filter[@string='Not Invoiced']" position="after">
-             <filter icon="terp-gtk-jump-to-rtl" string="Requisition" domain="[('requisition_id','!=',False)]" separator="1" help="Purchase Orders with requisition"/>
+             <filter icon="terp-gtk-jump-to-rtl" string="Requisition" domain="[('requisition_id','!=',False)]"  help="Purchase Orders with requisition"/>
             </xpath>
         </field>
     </record>

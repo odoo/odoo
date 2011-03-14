@@ -37,14 +37,12 @@
                             help="Idea Vote created in current month"/>
                         <filter icon="terp-go-month"
                              string="    Month-1    "
-                             separator="1"
                              domain="[('date','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
                              help="Idea Vote created last month"/>
                          <separator orientation="vertical"/>
                          <filter icon="terp-go-today"
                              string="    Today    "
                              name="today"
-                             separator="1"
                              domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d'))]"
                              help="Idea Vote created by today"/>
                         <separator orientation="vertical"/>

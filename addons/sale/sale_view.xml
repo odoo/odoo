@@ -425,7 +425,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Sales Order">
-                    <filter icon="terp-dolar_ok!" string="To Invoice" domain="[('invoiced','&lt;&gt;', 1),('state','=','done')]" separator="1" help="Sale Order Lines ready to be invoiced"/>
+                    <filter icon="terp-dolar_ok!" string="To Invoice" domain="[('invoiced','&lt;&gt;', 1),('state','=','done')]"  help="Sale Order Lines ready to be invoiced"/>
                     <separator orientation="vertical"/>
                     <field name="order_id"/>
                     <field name="order_partner_id"/>
