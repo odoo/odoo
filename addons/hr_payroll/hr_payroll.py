@@ -411,14 +411,13 @@ class hr_payslip(osv.osv):
         return result
 
     _columns = {
-        'struct_id':fields.many2one('hr.payroll.structure', 'Designation', readonly=True, states={'new': [('readonly', False)], 'draft': [('readonly', False)]}),
-        'register_id':fields.many2one('hr.payroll.register', 'Register', required=False, readonly=True, states={'new': [('readonly', False)]}),
-        'name':fields.char('Name', size=64, required=False, readonly=True, states={'new': [('readonly', False)]}),
-        'number':fields.char('Number', size=64, required=False, readonly=True, states={'new': [('readonly', False)]}),
-        'employee_id':fields.many2one('hr.employee', 'Employee', required=True, readonly=True, states={'new': [('readonly', False)], 'draft': [('readonly', False)]}),
-        'date': fields.date('Date', readonly=True, states={'new': [('readonly', False)]}),
+        'struct_id':fields.many2one('hr.payroll.structure', 'Designation', readonly=True, states={'draft': [('readonly', False)]}),
+        'register_id':fields.many2one('hr.payroll.register', 'Register', required=False, readonly=True, states={'draft': [('readonly', False)]}),
+        'name':fields.char('Name', size=64, required=False, readonly=True, states={'draft': [('readonly', False)]}),
+        'number':fields.char('Number', size=64, required=False, readonly=True, states={'draft': [('readonly', False)]}),
+        'employee_id':fields.many2one('hr.employee', 'Employee', required=True, readonly=True, states={'draft': [('readonly', False)]}),
+        'date': fields.date('Date', readonly=True, states={'draft': [('readonly', False)]}),
         'state':fields.selection([
-            ('new','New Slip'),
             ('draft','Wating for Verification'),
             ('hr_check','Wating for HR Verification'),
             ('accont_check','Wating for Account Verification'),
@@ -436,21 +435,21 @@ class hr_payslip(osv.osv):
 #        'other_pay': fields.function(_calculate, method=True, store=True, multi='dc', string='Others', digits_compute=dp.get_precision('Account')),
         'total_pay': fields.function(_calculate, method=True, store=True, multi='dc', string='Total Payment', digits_compute=dp.get_precision('Account')),
 #        'total_pay': fields.float('Total Payment', readonly=True,  digits_compute=dp.get_precision('Account')),
-        'line_ids':fields.one2many('hr.payslip.line', 'slip_id', 'Payslip Line', required=False, readonly=True, states={'new': [('readonly', False)], 'draft': [('readonly', False)]}),
+        'line_ids':fields.one2many('hr.payslip.line', 'slip_id', 'Payslip Line', required=False, readonly=True, states={'draft': [('readonly', False)]}),
         'company_id':fields.many2one('res.company', 'Company', required=False, readonly=True, states={'draft': [('readonly', False)]}),
         'holiday_days': fields.float('No of Leaves', readonly=True),
         'worked_days': fields.float('Worked Day', readonly=True),
         'working_days': fields.float('Working Days', readonly=True),
-        'paid':fields.boolean('Paid ? ', required=False, readonly=True, states={'new': [('readonly', False)], 'draft': [('readonly', False)]}),
+        'paid':fields.boolean('Paid ? ', required=False, readonly=True, states={'draft': [('readonly', False)]}),
         'note':fields.text('Description'),
-        'contract_id':fields.many2one('hr.contract', 'Contract', required=False, readonly=True, states={'new': [('readonly', False)],'draft': [('readonly', False)]}),
+        'contract_id':fields.many2one('hr.contract', 'Contract', required=False, readonly=True, states={'draft': [('readonly', False)]}),
         'igross': fields.float('Calculaton Field', readonly=True,  digits=(16, 2), help="Calculation field used for internal calculation, do not place this on form"),
         'inet': fields.float('Calculaton Field', readonly=True,  digits=(16, 2), help="Calculation field used for internal calculation, do not place this on form"),
         'holiday_ids': fields.function(_get_holidays, method=True, type='one2many', relation='hr.holidays', string='Holiday Lines', required=False),
     }
     _defaults = {
         'date': lambda *a: time.strftime('%Y-%m-%d'),
-        'state': lambda *a: 'new',
+        'state': 'draft',
         'company_id': lambda self, cr, uid, context: \
                 self.pool.get('res.users').browse(cr, uid, uid,
                     context=context).company_id.id,

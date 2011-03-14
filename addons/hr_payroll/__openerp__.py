@@ -46,7 +46,7 @@
     'update_xml': [
         'security/hr_security.xml',
         'hr_payroll_view.xml',
-#        'hr_payroll_workflow.xml',
+        'hr_payroll_workflow.xml',
         'hr_payroll_sequence.xml',
         'hr_paroll_report.xml',
         'hr_payroll_data.xml',
