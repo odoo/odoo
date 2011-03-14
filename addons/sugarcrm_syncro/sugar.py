@@ -57,8 +57,10 @@ def search(portType, sessionid, module_name=None):
   if se_resp:
       list = se_resp._return._entry_list
       for i in list:
+          print "import d'un user"
           ans_dir = {}
           for j in i._name_value_list:
+              print j._name , j._value
               ans_dir[j._name.encode('utf-8')] = j._value.encode('utf-8')
             #end for
           ans_list.append(ans_dir)
