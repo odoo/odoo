@@ -65,43 +65,39 @@
 // OpenERP initialisation and black magic about the pool
 //---------------------------------------------------------
 
-(function(){
+(function() {
+    if (this.openerp)
+        return;
 
-if(this.openerp)
-    return;
+    // openerp instance constructor
+    var openerp = this.openerp = function() {
+        var new_instance = {
+            // links to the global openerp
+            _openerp: openerp,
+            // Only base will be loaded, the rest will be by loaded by
+            // openerp.base.Connection on the first connection
+            _modules_loaded: false,
+            // this unique id will be replaced by hostname_databasename by
+            // openerp.base.Connection on the first connection
+            _session_id: "session" + openerp.sessions.length,
+            screen: openerp.screen,
+            sessions: openerp.sessions,
+            base: {}
+        };
+        openerp.sessions[new_instance._session_id] = new_instance;
+        openerp.base(new_instance);
 
-var openerp = this.openerp = function() {
-    // create a new pool instance
-    var o = {};
+        return new_instance;
+    };
 
-    // links to the global openerp
-    o._openerp = openerp;
+    // element_ids registry linked to all controllers on the page
+    // TODO rename to elements, or keep gtk naming?
+    this.openerp.screen = {};
 
-    // Only base will be loaded, the rest will be by loaded by
-    // openerp.base.Connection on the first connection
-    o._modules_loaded = false;
-
-    // this unique id will be replaced by hostname_databasename by
-    // openerp.base.Connection on the first connection
-    o._session_id = "session" + openerp.sessions.length;
-    openerp.sessions[o._session_id] = o;
-
-    o.screen = openerp.screen;
-    o.sessions = openerp.sessions;
-    o.base = {};
-    openerp.base(o);
-
-    return o;
-};
-
-// element_ids registry linked to all controllers on the page
-// TODO rename to elements, or keep gtk naming?
-this.openerp.screen = {};
-
-// Per session namespace
-// openerp.<module> will map to
-// openerp.sessions.servername_port_dbname_login.<module> using a closure
-this.openerp.sessions = {};
+    // Per session namespace
+    // openerp.<module> will map to
+    // openerp.sessions.servername_port_dbname_login.<module> using a closure
+    this.openerp.sessions = {};
 
 })();
 
