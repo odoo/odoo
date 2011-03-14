@@ -25,15 +25,14 @@
     'version': '1.0',
     'category': 'Generic Modules/Production',
     'description': """
-     This module adds state, date_start,date_stop in production order operation lines
-     (in the "Work Centers" tab)
+     This module adds state, date_start,date_stop in production order operation lines (in the "Work Centers" tab).
+     =============================================================================================================
+
      State: draft, confirm, done, cancel
      When finishing/confirming,cancelling production orders set all state lines to the according state
      Create menus:
-         Production Management > All Operations
-         Production Management > All Operations > Operations To Do (state="confirm")
-     Which is a view on "Work Centers" lines in production order,
-     editable tree
+         Manufacturing > Manufacturing > Work Orders
+     Which is a view on "Work Centers" lines in production order.
 
     Add buttons in the form view of production order under workcenter tab:
     * start (set state to confirm), set date_start
@@ -51,6 +50,7 @@
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
+    'images': ['images/work_order_analysis.jpeg','images/work_order_planning.jpeg','images/work_order.jpeg'],
     'depends': ['mrp'],
     'init_xml': [],
     'update_xml': [
