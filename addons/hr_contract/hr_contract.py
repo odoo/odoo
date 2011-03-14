@@ -75,6 +75,7 @@ class hr_passport(osv.osv):
 hr_passport()
 
 #Contract wage type period name
+#psi@Fix me: i think we shoul remove this object as we need not the hr.contract.wage.type object
 class hr_contract_wage_type_period(osv.osv):
     _name='hr.contract.wage.type.period'
     _description='Wage Period'

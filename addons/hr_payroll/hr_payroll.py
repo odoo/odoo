@@ -368,60 +368,47 @@ class hr_payslip(osv.osv):
 
     def _calculate(self, cr, uid, ids, field_names, arg, context=None):
         if not ids: return {}
-        slip_line_obj = self.pool.get('hr.payslip.line')
-        payroll_struct_obj = self.pool.get('hr.payroll.structure')
-        salary_rule_pool = self.pool.get('hr.salary.rule')
         res = {}
         for rs in self.browse(cr, uid, ids, context=context):
             allow = 0.0
             deduct = 0.0
             others = 0.0
-            tot_amount = 0.0
-            
-            contract = rs.employee_id.contract_id
-            obj = {'basic': contract.wage}
-            if not contract.struct_id:
-                raise osv.except_osv(_('Warning!'), _('Please define Salary Structure on Contract for %s.') % (rs.employee_id.name))
-            function = contract.struct_id.id
-            lines = []
-            if function:
-                func = payroll_struct_obj.read(cr, uid, function, ['rule_ids'], context=context)
-                lines = salary_rule_pool.browse(cr, uid, func['rule_ids'], context=context)
-            for line in lines:
-                amount = 0.0
-                if line.amount_type == 'per':
-                    try:
-                        amount = line.amount * eval(str(line.computational_expression), obj)
-                    except Exception, e:
-                        raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ') % (e))
-                elif line.amount_type in ('fix'):
-                    amount = line.amount
-                cd = line.category_id.code.lower()
-                obj[cd] = amount
+            for line in rs.line_ids:
                 contrib = 0.0
-                if amount < 0:
-                    deduct += amount
+                if line.total < 0:
+                    deduct += line.total
                     others += contrib
-                    amount -= contrib
+#                    amount -= contrib
                 else:
-                    allow += amount
+                    allow += line.total
                     others -= contrib
-                    amount += contrib
-
-                tot_amount +=  amount
-
-                salary_rule_pool.write(cr, uid, [line.id], {'total': amount}, context=context)
+#                    amount += contrib
             record = {
                 'allounce': allow,
                 'deduction': deduct,
-                'gross_amount': rs.basic_amount + allow,
-                'net_amount': rs.basic_amount + tot_amount,
+                'grows_amount': rs.basic_amount + allow,
+                'net_amount': rs.basic_amount + allow + deduct,
                 'other_pay': others,
                 'state': 'draft',
-                'total_pay': abs(contract.wage + allow + deduct)
+                'total_pay': rs.basic_amount + allow + deduct
             }
             res[rs.id] = record
         return res
+
+    def _get_holidays(self, cr, uid, ids, field_name, arg, context=None):
+        result = {}
+        for record in self.browse(cr, uid, ids, context=context):
+            result[record.id] = []
+            dates = prev_bounds(record.date)
+            sql = '''SELECT id FROM hr_holidays
+                        WHERE date_from >= '%s' AND date_to <= '%s'
+                        AND employee_id = %s
+                        ''' % (dates[0], dates[1], record.employee_id.id)
+            cr.execute(sql)
+            res = cr.fetchall()
+            if res:
+                result[record.id] = [x[0] for x in res]
+        return result
 
     _columns = {
         'struct_id':fields.many2one('hr.payroll.structure', 'Designation', readonly=True, states={'new': [('readonly', False)], 'draft': [('readonly', False)]}),
@@ -459,7 +446,7 @@ class hr_payslip(osv.osv):
         'contract_id':fields.many2one('hr.contract', 'Contract', required=False, readonly=True, states={'new': [('readonly', False)],'draft': [('readonly', False)]}),
         'igross': fields.float('Calculaton Field', readonly=True,  digits=(16, 2), help="Calculation field used for internal calculation, do not place this on form"),
         'inet': fields.float('Calculaton Field', readonly=True,  digits=(16, 2), help="Calculation field used for internal calculation, do not place this on form"),
-        'holiday_ids':fields.one2many('hr.holidays', 'payslip_id', 'Payslip', required=False),
+        'holiday_ids': fields.function(_get_holidays, method=True, type='one2many', relation='hr.holidays', string='Holiday Lines', required=False),
     }
     _defaults = {
         'date': lambda *a: time.strftime('%Y-%m-%d'),
@@ -573,33 +560,31 @@ class hr_payslip(osv.osv):
             '''
         cr.execute(sql_req, (employee.id, date, date))
         contract = cr.dictfetchone()
+        return contract and contract or {}
 
-        contract = contract and contract or {}
-        return contract
-
-    def _get_leaves(self, cr, user, slip, employee, context=None):
-        """
-        Compute leaves for an employee
-
-        @param cr: cursor to database
-        @param user: id of current user
-        @param slip: object of the hr.payroll.slip model
-        @param employee: object of the hr.employee model
-        @param context: context arguments, like lang, time zone
-
-        @return: return a result
-        """
-        result = []
-        dates = prev_bounds(slip.date)
-        sql = '''select id from hr_holidays
-                    where date_from >= '%s' and date_to <= '%s'
-                    and employee_id = %s
-                    and state = 'validate' ''' % (dates[0], dates[1], slip.employee_id.id)
-        cr.execute(sql)
-        res = cr.fetchall()
-        if res:
-            result = [x[0] for x in res]
-        return result
+#    def _get_leaves(self, cr, user, slip, employee, context=None):
+#        """
+#        Compute leaves for an employee
+#
+#        @param cr: cursor to database
+#        @param user: id of current user
+#        @param slip: object of the hr.payroll.slip model
+#        @param employee: object of the hr.employee model
+#        @param context: context arguments, like lang, time zone
+#
+#        @return: return a result
+#        """
+#        result = []
+#        dates = prev_bounds(slip.date)
+#        sql = '''select id from hr_holidays
+#                    where date_from >= '%s' and date_to <= '%s'
+#                    and employee_id = %s
+#                    and state = 'validate' ''' % (dates[0], dates[1], slip.employee_id.id)
+#        cr.execute(sql)
+#        res = cr.fetchall()
+#        if res:
+#            result = [x[0] for x in res]
+#        return result
 
     def _get_leaves1(self, cr, user, ddate, employee, context=None):
         """
@@ -616,10 +601,10 @@ class hr_payslip(osv.osv):
         result = []
 
         dates = prev_bounds(ddate)
-        sql = '''select id from hr_holidays
-                    where date_from >= '%s' and date_to <= '%s'
-                    and employee_id = %s
-                    ''' % (dates[0], dates[1], employee.id)
+        sql = '''SELECT id FROM hr_holidays
+                    WHERE date_from >= '%s' AND date_to <= '%s'
+                    AND employee_id = %s
+                    AND state = 'validate' ''' % (dates[0], dates[1], employee.id)
         cr.execute(sql)
         res = cr.fetchall()
         if res:
@@ -877,7 +862,7 @@ class hr_payslip(osv.osv):
         if parent:
             parent = self._get_parent_structure(cr, uid, parent, context)
         return struct_id + parent
-    
+
     def onchange_employee_id(self, cr, uid, ids, ddate, employee_id, context=None):
         func_pool = self.pool.get('hr.payroll.structure')
         slip_line_pool = self.pool.get('hr.payslip.line')
@@ -934,7 +919,7 @@ class hr_payslip(osv.osv):
         function = contract.struct_id.id
         if function:
             sal_structure = self._get_parent_structure(cr, uid, [function], context=context)
-                       
+
         lines = []
         rules = []
         if function:
@@ -943,7 +928,7 @@ class hr_payslip(osv.osv):
                 lines = salary_rule_pool.browse(cr, uid, func['rule_ids'], context=context)
                 for rl in lines:
                     rules.append(rl)
-           
+
         ad = []
         total = 0.0
         obj = {'basic':contract.wage}
@@ -1096,6 +1081,18 @@ class hr_payslip(osv.osv):
                 'employee_id': employee_id.id,
                 'base': base
             }
+#            test = {
+#                    'name': hday.name,
+#                    'holiday_type': hday.holiday_type,
+#                    'employee_id': hday.employee_id.id,
+#                    'holiday_status_id': hday.holiday_status_id.id,
+#                    'date_from': hday.date_from,
+#                    'date_to': hday.date_to,
+#                    'number_of_days_temp': hday.number_of_days_temp,
+#                    'state': hday.state,
+#                    'number_of_days': hday.number_of_days,
+#                    'type': hday.type
+#            }
             days = hday.number_of_days
             if hday.number_of_days < 0:
                 days = hday.number_of_days * -1
@@ -1118,7 +1115,7 @@ class hr_payslip(osv.osv):
             total += value
             res['total'] = value
             update['value']['line_ids'].append(res)
-
+#            update['value']['holiday_ids'].append(test)
         basic = basic + total
 
 #            leaves = total
