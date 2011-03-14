@@ -20,7 +20,7 @@
 ##############################################################################
 
 from osv import fields, osv
-
+import logging
 import addons
 
 class hr_employee_category(osv.osv):
@@ -154,7 +154,7 @@ class hr_employee(osv.osv):
         'work_email': fields.char('Work E-mail', size=240),
         'work_location': fields.char('Office Location', size=32),
         'notes': fields.text('Notes'),
-        'parent_id': fields.related('department_id', 'manager_id', relation='hr.employee', string='Manager', type='many2one', store=True, select=True, help="It is linked with manager of Department"),
+        'parent_id': fields.many2one('hr.employee', 'Manager'), 
         'category_ids': fields.many2many('hr.employee.category', 'employee_category_rel','category_id','emp_id','Category'),
         'child_ids': fields.one2many('hr.employee', 'parent_id', 'Subordinates'),
         'resource_id': fields.many2one('resource.resource', 'Resource', ondelete='cascade', required=True),
@@ -204,15 +204,8 @@ class hr_employee(osv.osv):
             level -= 1
         return True
 
-#    def _check_department_id(self, cr, uid, ids, context=None):
-#        for emp in self.browse(cr, uid, ids, context=context):
-#            if emp.department_id.manager_id and emp.id == emp.department_id.manager_id.id:
-#                return False
-#        return True
-
     _constraints = [
         (_check_recursion, 'Error ! You cannot create recursive Hierarchy of Employees.', ['parent_id']),
-#        (_check_department_id, 'Error ! You cannot select a department for which the employee is the manager.', ['department_id']),
     ]
 
 hr_employee()
@@ -226,5 +219,27 @@ class hr_department(osv.osv):
     }
 
 hr_department()
+
+
+class res_users(osv.osv):
+    _name = 'res.users'
+    _inherit = 'res.users'
+
+    def create(self, cr, uid, data, context=None):
+        user_id = super(res_users, self).create(cr, uid, data, context=context)
+        data_obj = self.pool.get('ir.model.data')
+        try:
+            data_id = data_obj._get_id(cr, uid, 'hr', 'ir_ui_view_sc_employee')
+            view_id  = data_obj.browse(cr, uid, data_id, context=context).res_id
+            self.pool.get('ir.ui.view_sc').copy(cr, uid, view_id, default = {
+                                        'user_id': user_id}, context=context)
+        except:
+            # Tolerate a missing shortcut. See product/product.py for similar code.
+            logging.getLogger('orm').debug('Skipped meetings shortcut for user "%s"', data.get('name','<new'))
+            
+        return user_id
+
+res_users()
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

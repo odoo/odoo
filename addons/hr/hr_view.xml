@@ -157,6 +157,13 @@
 
         <menuitem action="open_view_employee_list_my" id="menu_open_view_employee_list_my" sequence="3" parent="menu_hr_main"/>
 
+	    <record id="ir_ui_view_sc_employee" model="ir.ui.view_sc">
+	        <field name="name">Employees</field>
+	        <field name="resource">ir.ui.menu</field>
+	        <field name="user_id" ref="base.user_root"/>
+	        <field name="res_id" ref="hr.menu_open_view_employee_list_my"/>
+	    </record>
+
         <!--
         =======================
         Employee marital status
@@ -220,7 +227,7 @@
         </record>
 
         <record id="action2" model="ir.actions.act_window">
-            <field name="name">Employee Hierarchy</field>
+            <field name="name">Subordonate Hierarchy</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">hr.employee</field>
             <field name="domain">[('id','in',active_ids)]</field>
@@ -232,7 +239,7 @@
             <field eval="'action'" name="key"/>
             <field eval="'client_action_multi'" name="key2"/>
             <field eval="['hr.employee']" name="models"/>
-            <field name="name">Employees Hierarchy</field>
+            <field name="name">Subordonate Hierarchy</field>
             <field eval="'ir.actions.act_window,'+str(action2)" name="value"/>
             <field eval="True" name="isobject"/>
             <field eval="True" name="replace"/>
