@@ -19,14 +19,14 @@
 #
 ##############################################################################
 
-def sugarcrm_fields_mapp(dict_sugar,openerp_obj,openerp_dict):
+def sugarcrm_fields_mapp(dict_sugar, openerp_dict):
     fields=[]
     data_lst = []
-    for key,val in openerp_dict.get(openerp_obj).items():
-        if key not in fields:
+    for key,val in openerp_dict.items():
+        if key not in fields and dict_sugar.get(isinstance(val, list) and val[0] or val):
             fields.append(key)
             if isinstance(val, list):
-                data_lst.append(dict_sugar.get(val[0],['']) + ' ' + dict_sugar.get(val[1],['']))
+                data_lst.append(' '.join(map(lambda x : dict_sugar[x], val)))
             else:
-                data_lst.append(dict_sugar.get(val,['']))
+                data_lst.append(dict_sugar.get(val,''))
     return fields,data_lst
