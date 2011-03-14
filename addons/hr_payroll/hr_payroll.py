@@ -21,7 +21,6 @@
 ##############################################################################
 
 import time
-import datetime
 from datetime import date
 from datetime import datetime
 from datetime import timedelta
@@ -893,6 +892,7 @@ class hr_payslip(osv.osv):
 
         #Check for the Holidays
         def get_days(start, end, month, year, calc_day):
+            import datetime
             count = 0
             for day in range(start, end+1):
                 if datetime.date(year, month, day).weekday() == calc_day:
