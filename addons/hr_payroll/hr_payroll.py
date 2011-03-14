@@ -395,6 +395,21 @@ class hr_payslip(osv.osv):
             res[rs.id] = record
         return res
 
+    def _get_holidays(self, cr, uid, ids, field_name, arg, context=None):
+        result = {}
+        for record in self.browse(cr, uid, ids, context=context):
+            result[record.id] = []
+            dates = prev_bounds(record.date)
+            sql = '''SELECT id FROM hr_holidays
+                        WHERE date_from >= '%s' AND date_to <= '%s'
+                        AND employee_id = %s
+                        ''' % (dates[0], dates[1], record.employee_id.id)
+            cr.execute(sql)
+            res = cr.fetchall()
+            if res:
+                result[record.id] = [x[0] for x in res]
+        return result
+
     _columns = {
         'struct_id':fields.many2one('hr.payroll.structure', 'Designation', readonly=True, states={'new': [('readonly', False)], 'draft': [('readonly', False)]}),
         'register_id':fields.many2one('hr.payroll.register', 'Register', required=False, readonly=True, states={'new': [('readonly', False)]}),
@@ -431,8 +446,7 @@ class hr_payslip(osv.osv):
         'contract_id':fields.many2one('hr.contract', 'Contract', required=False, readonly=True, states={'new': [('readonly', False)],'draft': [('readonly', False)]}),
         'igross': fields.float('Calculaton Field', readonly=True,  digits=(16, 2), help="Calculation field used for internal calculation, do not place this on form"),
         'inet': fields.float('Calculaton Field', readonly=True,  digits=(16, 2), help="Calculation field used for internal calculation, do not place this on form"),
-        'holiday_ids':fields.one2many('hr.holidays', 'payslip_id', 'Payslip', required=False),
-#        'holiday_ids': fields.function(_get_holidays, method=True, type='many2many', relation='hr.holidays', string='Holiday Lines', required=False),
+        'holiday_ids': fields.function(_get_holidays, method=True, type='one2many', relation='hr.holidays', string='Holiday Lines', required=False),
     }
     _defaults = {
         'date': lambda *a: time.strftime('%Y-%m-%d'),
@@ -587,10 +601,10 @@ class hr_payslip(osv.osv):
         result = []
 
         dates = prev_bounds(ddate)
-        sql = '''select id from hr_holidays
-                    where date_from >= '%s' and date_to <= '%s'
-                    and employee_id = %s
-                    ''' % (dates[0], dates[1], employee.id)
+        sql = '''SELECT id FROM hr_holidays
+                    WHERE date_from >= '%s' AND date_to <= '%s'
+                    AND employee_id = %s
+                    AND state = 'validate' ''' % (dates[0], dates[1], employee.id)
         cr.execute(sql)
         res = cr.fetchall()
         if res:
