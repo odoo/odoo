@@ -104,8 +104,10 @@ class synchronize_google_calendar_events(osv.osv_memory):
         model_obj = self.pool.get('ir.model.data')
         object_id = self.pool.get('ir.model').search(cr, uid, [('model', '=', 'crm.meeting')])
         meeting_ids = []
-        categ_id = categ_obj.create(cr, uid, {'name': event_feed.title.text, 
-                                            'object_id': object_id and object_id[0] })
+        categ_id = categ_obj.search(cr, uid, [('name','=',event_feed.title.text),('object_id','=',object_id and object_id[0])])
+        if not categ_id:
+            categ_id.append(categ_obj.create(cr, uid, {'name': event_feed.title.text, 
+                                                       'object_id': object_id and object_id[0] }))
         for feed in event_feed.entry:
             google_id = feed.id.text
             model_data = {
@@ -116,14 +118,15 @@ class synchronize_google_calendar_events(osv.osv_memory):
             vals = {
                 'name': feed.title.text,
                 'description': feed.content.text,
-                'categ_id': categ_id
+                'categ_id': categ_id and categ_id[0]
             }
             timestring, timestring_end = _get_tinydates(self, feed.when[0].start_time, feed.when[0].end_time)
             vals.update({'date': timestring, 'date_deadline': timestring_end})
             data_ids = model_obj.search(cr, uid, [('model','=','crm.meeting'), ('name','=',google_id)])
             if data_ids:
-                meeting_ids.append(model_obj.browse(cr, uid, data_ids[0], context=context).res_id)
-                meeting_obj.write(cr, uid, meeting_ids, vals, context=context)
+                res_id = model_obj.browse(cr, uid, data_ids[0], context=context).res_id
+                meeting_ids.append(res_id)
+                meeting_obj.write(cr, uid, [res_id], vals, context=context)
             else:
                 res_id = meeting_obj.create(cr, uid, vals, context=context)
                 meeting_ids.append(res_id)
