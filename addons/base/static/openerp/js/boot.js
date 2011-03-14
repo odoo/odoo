@@ -62,7 +62,7 @@
 })();
 
 //---------------------------------------------------------
-// OpenERP initalisation and black magic about the pool
+// OpenERP initialisation and black magic about the pool
 //---------------------------------------------------------
 
 (function(){
@@ -79,7 +79,7 @@ var openerp = this.openerp = function() {
 
     // Only base will be loaded, the rest will be by loaded by
     // openerp.base.Connection on the first connection
-    o._modules_loaded = false
+    o._modules_loaded = false;
 
     // this unique id will be replaced by hostname_databasename by
     // openerp.base.Connection on the first connection
@@ -92,7 +92,7 @@ var openerp = this.openerp = function() {
     openerp.base(o);
 
     return o;
-}
+};
 
 // element_ids registry linked to all controllers on the page
 // TODO rename to elements, or keep gtk naming?
