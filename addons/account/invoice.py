@@ -1352,6 +1352,8 @@ class account_invoice_line(osv.osv):
         currency = self.pool.get('res.currency').browse(cr, uid, currency_id, context=context)
 
         if company.currency_id.id != currency.id:
+            if type in ('in_invoice', 'in_refund'):
+                res_final['value']['price_unit'] = res.standard_price
             new_price = res_final['value']['price_unit'] * currency.rate
             res_final['value']['price_unit'] = new_price
 
