@@ -960,13 +960,14 @@ class hr_payslip(osv.osv):
                 raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ') % (e))
             if line.amount_type == 'per':
                 try:
+                    value = line.amount * amt
                     if line.condition_range_min or line.condition_range_max:
-                        if ((line.amount < line.condition_range_min) or (line.amount > line.condition_range_max)):
-                            value = value
+                        if ((value < line.condition_range_min) or (value > line.condition_range_max)):
+                            value = 0.0
                         else:
-                            value = line.amount * amt
+                            value = value
                     else:
-                        value = line.amount * amt
+                        value = value
                 except Exception, e:
                     raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ') % (e))
 
@@ -997,7 +998,7 @@ class hr_payslip(osv.osv):
             }
             if line.appears_on_payslip:
                 if line.condition_range_min or line.condition_range_max:
-                    if not ((line.amount < line.condition_range_min) or (line.amount > line.condition_range_max)):
+                    if not ((value < line.condition_range_min) or (value > line.condition_range_max)):
                         update['value']['line_ids'].append(vals)
                 else:
                     update['value']['line_ids'].append(vals)
