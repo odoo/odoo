@@ -7,15 +7,15 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2011-01-19 12:00+0000\n"
+"PO-Revision-Date: 2011-03-12 17:15+0000\n"
 "Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
 "<jesteve@zikzakmedia.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-25 06:37+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-03-13 06:15+0000\n"
+"X-Generator: Launchpad (build 12559)\n"
 
 #. module: document
 #: field:document.directory,parent_id:0
@@ -53,8 +53,8 @@ msgid ""
 "Field to be used as name on resource directories. If empty, the \"name\" "
 "will be used."
 msgstr ""
-"Campo a usar como nombre en directorios. Si está vacío se usará el "
-"\"nombre\"."
+"Campo a usar como nombre de los directorios de recursos. Si está vacío se "
+"usará el campo \"nombre\"."
 
 #. module: document
 #: code:addons/document/document_directory.py:276
@@ -130,7 +130,7 @@ msgid ""
 msgstr ""
 "Expresión Python utilizada para evaluar el campo.\n"
 "Puede utilizar 'dir_id' para el directorio actual, 'res_id', 'res_model' "
-"como referencia la registro actual en carpetas dinámicas"
+"como referencia al registro actual en directorios dinámicos."
 
 #. module: document
 #: view:report.document.user:0
@@ -208,7 +208,7 @@ msgstr "Encontrar todos los recursos"
 #. module: document
 #: selection:document.directory,type:0
 msgid "Folders per resource"
-msgstr "Carpetas por recurso"
+msgstr "Directorios por recurso"
 
 #. module: document
 #: field:document.directory.content,suffix:0
@@ -218,7 +218,7 @@ msgstr "Sufijo"
 #. module: document
 #: field:report.document.user,change_date:0
 msgid "Modified Date"
-msgstr "Fecha modificación"
+msgstr "Fecha de modificación"
 
 #. module: document
 #: view:document.configuration:0
@@ -309,7 +309,7 @@ msgid ""
 "Select an object here and there will be one folder per record of that "
 "resource."
 msgstr ""
-"Seleccione aquí un objeto y habrá una carpeta por cada registro de ese "
+"Seleccione aquí un objeto y habrá un directorio por cada registro de ese "
 "recurso."
 
 #. module: document
@@ -415,7 +415,7 @@ msgstr "Archivos por empresa"
 #: field:document.storage,write_uid:0
 #: field:ir.attachment,write_uid:0
 msgid "Last Modification User"
-msgstr "Usuario que ha efectuado la última modificación"
+msgstr "Usuario de la última modificación"
 
 #. module: document
 #: model:ir.actions.act_window,name:document.act_res_partner_document
@@ -438,7 +438,7 @@ msgstr "Dominio"
 #: field:document.storage,write_date:0
 #: field:ir.attachment,write_date:0
 msgid "Date Modified"
-msgstr "Fecha modificación"
+msgstr "Fecha de modificación"
 
 #. module: document
 #: model:ir.model,name:document.model_report_document_file
@@ -526,8 +526,8 @@ msgstr ""
 msgid ""
 "If not checked, media is currently offline and its contents not available"
 msgstr ""
-"Sino se marca, media está actualmente fuera de línea y su contenido no está "
-"disponible."
+"Si no se marca, el medio de almacenamiento está actualmente fuera de línea y "
+"su contenido no está disponible."
 
 #. module: document
 #: view:document.directory:0
@@ -555,7 +555,7 @@ msgstr "Contenidos"
 #: field:document.storage,create_date:0
 #: field:report.document.user,create_date:0
 msgid "Date Created"
-msgstr "Fecha creación"
+msgstr "Fecha de creación"
 
 #. module: document
 #: help:document.directory.content,include_name:0
@@ -613,7 +613,7 @@ msgid ""
 "Along with Parent Model, this ID attaches this folder to a specific record "
 "of Parent Model."
 msgstr ""
-"Junto con el modelo padre, este ID adjunta esta carpeta a un registro "
+"Junto con el modelo padre, este ID adjunta este directorio a un registro "
 "específico del modelo padre."
 
 #. module: document
@@ -670,7 +670,7 @@ msgid ""
 "record, just like attachments. Don't put a parent directory if you select a "
 "parent model."
 msgstr ""
-"Si pone un objeto aquí, esta plantilla de directorio aparecerá bajo todos "
+"Si aquí introduce un objeto, esta plantilla de directorio aparecerá en todos "
 "estos objetos. Dichos directorios son \"adjuntados\" al modelo o registro, "
 "como adjuntos. No ponga un directorio padre si selecciona un modelo padre."
 
@@ -713,7 +713,8 @@ msgstr "Sistema de gestión integrada de documentos"
 #. module: document
 #: view:document.configuration:0
 msgid "Choose the following Resouces to auto directory configuration."
-msgstr "Escoja los siguientes recursos para autoconfigurar el directorio"
+msgstr ""
+"Seleccione los siguientes recursos para configurar directorios automáticos."
 
 #. module: document
 #: view:ir.attachment:0
@@ -884,7 +885,7 @@ msgstr ""
 #: view:document.directory:0
 msgid "For each entry here, virtual files will appear in this folder."
 msgstr ""
-"Para cada entrada, los archivos virtuales aparecerán en esta carpeta."
+"Para cada entrada, los archivos virtuales aparecerán en este directorio."
 
 #. module: document
 #: model:ir.model,name:document.model_ir_attachment
@@ -948,11 +949,11 @@ msgid ""
 "resources automatically possess sub-directories for each of resource types "
 "defined in the parent directory."
 msgstr ""
-"Cada directorio puede tener el tipo estático o asociarlo a otro recurso. Un "
+"Cada directorio puede ser de tipo estático o ser asociado a otro recurso. Un "
 "directorio estático, como en los sistemas operativos, es el clásico "
 "directorio que puede contener un conjunto de archivos. Los directorios "
 "asociados a recursos del sistema automáticamente poseen subdirectorios para "
-"cada tipo de recurso definido en el directorio padre."
+"cada recurso definido en el directorio padre."
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -985,7 +986,7 @@ msgstr "Campos"
 #. module: document
 #: help:document.storage,readonly:0
 msgid "If set, media is for reading only"
-msgstr "Si está marcado, media sólo es de lectura."
+msgstr "Si está marcado, el medio de almacenamiento sólo es de lectura."
 
 #. module: document
 #: selection:report.document.user,month:0
