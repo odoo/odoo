@@ -467,19 +467,18 @@ class hr_payslip(osv.osv):
             'basic_before_leaves':0,
             'basic_amount':0
         }
-        res_id = super(hr_payslip, self).copy(cr, uid, id, default, context=context)
-        return res_id
-
-    def create_voucher(self, cr, uid, ids, name, voucher, sequence=5):
-        slip_move = self.pool.get('hr.payslip.account.move')
-        for slip in ids:
-            res = {
-                'slip_id':slip,
-                'move_id':voucher,
-                'sequence':sequence,
-                'name':name
-            }
-            slip_move.create(cr, uid, res)
+        return super(hr_payslip, self).copy(cr, uid, id, default, context=context)
+#
+#    def create_voucher(self, cr, uid, ids, name, voucher, sequence=5):
+#        slip_move = self.pool.get('hr.payslip.account.move')
+#        for slip in ids:
+#            res = {
+#                'slip_id':slip,
+#                'move_id':voucher,
+#                'sequence':sequence,
+#                'name':name
+#            }
+#            slip_move.create(cr, uid, res)
 
     def set_to_draft(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state':'draft'}, context=context)
@@ -854,6 +853,8 @@ class hr_payslip(osv.osv):
 #        return True
 
     def _get_parent_structure(self, cr, uid, struct_id, context=None):
+        if not struct_id:
+            return []
         parent = []
         for line in self.pool.get('hr.payroll.structure').browse(cr, uid, struct_id):
             if line.parent_id:
@@ -862,7 +863,7 @@ class hr_payslip(osv.osv):
             parent = self._get_parent_structure(cr, uid, parent, context)
         return struct_id + parent
 
-    def onchange_employee_id(self, cr, uid, ids, ddate, employee_id, context=None):
+    def onchange_employee_id(self, cr, uid, ids, ddate, employee_id=False, context=None):
         func_pool = self.pool.get('hr.payroll.structure')
         slip_line_pool = self.pool.get('hr.payslip.line')
         salary_rule_pool = self.pool.get('hr.salary.rule')
@@ -870,8 +871,8 @@ class hr_payslip(osv.osv):
         sequence_obj = self.pool.get('ir.sequence')
         empolyee_obj = self.pool.get('hr.employee')
         hr_salary_head = self.pool.get('hr.salary.head')
-
         resource_attendance_pool = self.pool.get('resource.calendar.attendance')
+
         if context is None:
             context = {}
 
@@ -883,15 +884,14 @@ class hr_payslip(osv.osv):
         if not employee_id:
             return update
 
-        if not employee_id and ids:
-            old_slip_ids = salary_rule_pool.search(cr, uid, [('slip_id', '=', ids[0])], context=context)
-            if old_slip_ids:
-                line_pool.unlink(cr, uid, old_slip_ids)
-            return update
+#        if not employee_id and ids:
+#            old_slip_ids = salary_rule_pool.search(cr, uid, [('slip_id', '=', ids[0])], context=context)
+#            if old_slip_ids:
+#                line_pool.unlink(cr, uid, old_slip_ids)
+#            return update
 
         #Check for the Holidays
         def get_days(start, end, month, year, calc_day):
-            import datetime
             count = 0
             for day in range(start, end+1):
                 if datetime.date(year, month, day).weekday() == calc_day:
@@ -900,8 +900,8 @@ class hr_payslip(osv.osv):
 
         employee_id = empolyee_obj.browse(cr, uid, employee_id, context=context)
         ttyme = datetime.fromtimestamp(time.mktime(time.strptime(ddate,"%Y-%m-%d")))
-        contracts = self.get_contract(cr, uid, employee_id, ddate, context)
-        if contracts.get('id', False) == False:
+        contracts = self.get_contract(cr, uid, employee_id, ddate, context=context)
+        if not contracts.get('id', False):
             update['value'].update({
                 'basic_amount': round(0.0),
                 'basic_before_leaves': round(0.0),
@@ -928,7 +928,7 @@ class hr_payslip(osv.osv):
 
         ad = []
         total = 0.0
-        obj = {'basic':contract.wage}
+        obj = {'basic': contract.wage}
         for line in rules:
             cd = line.code.lower()
             obj[cd] = line.amount or 0.0
@@ -948,7 +948,6 @@ class hr_payslip(osv.osv):
             if not calculate:
                 continue
 
-            percent = 0.0
             value = 0.0
             base = False
 #                company_contrib = 0.0
@@ -970,7 +969,6 @@ class hr_payslip(osv.osv):
                         value = value
                 except Exception, e:
                     raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ') % (e))
-
             elif line.amount_type == 'fix':
                 if line.condition_range_min or line.condition_range_max:
                     if ((line.amount < line.condition_range_min) or (line.amount > line.condition_range_max)):
@@ -1132,13 +1130,11 @@ class hr_payslip(osv.osv):
 
 hr_payslip()
 
-
-
 class hr_holidays(osv.osv):
 
     _inherit = "hr.holidays"
     _columns = {
-        'payslip_id':fields.many2one('hr.payslip', 'Payslip', required=False),
+        'payslip_id':fields.many2one('hr.payslip', 'Payslip'),
     }
 
 hr_holidays()
@@ -1151,24 +1147,23 @@ class hr_payslip_line(osv.osv):
     _name = 'hr.payslip.line'
     _description = 'Payslip Line'
 
-    def onchange_category(self, cr, uid, ids, category_id):
+    def onchange_category(self, cr, uid, ids, category_id=False):
+        if not category_id:
+            return {}
         res = {}
-        if category_id:
-            category = self.pool.get('hr.salary.head').browse(cr, uid, category_id)
-            res.update({
-#                'sequence':category.sequence,
-                'name':category.name,
-                'code':category.code,
-                'type':category.type.id
-            })
-        return {'value':res}
+        category = self.pool.get('hr.salary.head').browse(cr, uid, category_id)
+        res.update({
+            'name': category.name,
+            'code': category.code,
+            'type': category.type.id
+        })
+        return {'value': res}
 
     def onchange_amount(self, cr, uid, ids, amount, typ):
-        amt = amount
         if typ and typ == 'per':
-            if int(amt) > 0:
-                amt = amt / 100
-        return {'value':{'amount':amt}}
+            if int(amount) > 0:
+                amount = amount / 100
+        return {'value': {'amount': amount}}
 
     _columns = {
         'slip_id':fields.many2one('hr.payslip', 'Pay Slip', required=False),#FIXME: required = TRUE.We cannot make it to True because while creating salary rule(which is inherited from hr.payslip.line),we cannot have slip_id.
@@ -1192,7 +1187,7 @@ class hr_payslip_line(osv.osv):
     }
     _order = 'sequence'
     _defaults = {
-        'amount_type': lambda *a: 'per'
+        'amount_type': 'per'
     }
 
 hr_payslip_line()
@@ -1223,7 +1218,7 @@ class hr_salary_rule(osv.osv):
         'computational_expression':fields.text('Computational Expression', required=True, readonly=False, help='This will use to computer the % fields values, in general its on basic, but You can use all heads code field in small letter as a variable name i.e. hra, ma, lta, etc...., also you can use, static varible basic'),
         'conditions':fields.char('Condition', size=1024, required=True, readonly=False, help='Applied this head for calculation if condition is true'),
         'sequence': fields.integer('Sequence', required=True, help='Use to arrange calculation sequence'),
-        'active':fields.boolean('Active', required=False),
+        'active':fields.boolean('Active'),
         'python_code': fields.text('Python code'),
      }
     _defaults = {
@@ -1270,7 +1265,7 @@ class hr_payroll_structure(osv.osv):
 
     _inherit = 'hr.payroll.structure'
     _columns = {
-        'rule_ids':fields.many2many('hr.salary.rule', 'hr_structure_salary_rule_rel', 'struct_id', 'rule_id', 'Salary Rules', readonly=False),
+        'rule_ids':fields.many2many('hr.salary.rule', 'hr_structure_salary_rule_rel', 'struct_id', 'rule_id', 'Salary Rules'),
     }
 
 hr_payroll_structure()
