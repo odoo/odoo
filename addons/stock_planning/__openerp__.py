@@ -53,7 +53,7 @@ Creating periods is the first step you have to do to use modules features. You c
 Remarks:
 - These periods (officially Stock and Sales Periods) are separated of Financial or other periods in the system.
 - Periods are not assigned to companies (when you use multicompany feature at all). Module suppose that you use the same periods across companies. If you wish to use different periods for different companies define them as you wish (they can overlap). Later on in this text will be indications how to use such periods.
-- When periods are created automatically their start and finish dates are with start hour 00:00:00 and end hour 23:59:00. Fe. when you create daily periods they will have start date 31.01.2010 00:00:00 and end date 31.01.2010 23:59:00. It works only in automatic creation of periods. When you create periods manually you have to take care about hours because you can have incorrect values form sales or stock.
+- When periods are created automatically their start and finish dates are with start hour 00:00:00 and end hour 23:59:00. when you create daily periods they will have start date 31.01.2010 00:00:00 and end date 31.01.2010 23:59:00. It works only in automatic creation of periods. When you create periods manually you have to take care about hours because you can have incorrect values form sales or stock.
 - If you use overlapping periods for the same product, warehouse and company results can be unpredictable.
 - If current date doesn't belong to any period or you have holes between periods results can be unpredictable.
 
@@ -78,7 +78,7 @@ Instead of forecast quantity you can enter amount of forecast sales in field "Pr
 
 All values on the form are expressed in unit of measure selected on form. You can select one of unit of measure from default category or from second category. When you change unit of measure the quanities will be recalculated according to new UoM: editable values (blue fields) immediately, non edited fields after clicking of "Calculate Planning" button.
 
-To find proper value for Sale Forecast you can use "Sales History" table for this product. You have to enter parameters to the top and left of this table and system will count sale quantities according to these parameters. So you can select fe. your department (at the top) then (to the left): last period, period before last and period year ago.
+To find proper value for Sale Forecast you can use "Sales History" table for this product. You have to enter parameters to the top and left of this table and system will count sale quantities according to these parameters. So you can select your department (at the top) then (to the left): last period, period before last and period year ago.
 
 Remarks:
 
