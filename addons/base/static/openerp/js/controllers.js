@@ -16,9 +16,8 @@ openerp.base.callback = function(obj, method) {
     //     position: "first" or "last"
     //     unique: boolean
     // })
-    var args = Array.prototype.slice.call(arguments);
     var callback = function() {
-        var args2 = Array.prototype.slice.call(arguments);
+        var args = Array.prototype.slice.call(arguments);
         var r;
         for(var i = 0; i < callback.callback_chain.length; i++)  {
             var c = callback.callback_chain[i];
@@ -26,7 +25,7 @@ openerp.base.callback = function(obj, method) {
                 // al: obscure but shortening C-style hack, sorry
                 callback.callback_chain.pop(i--);
             }
-            r = c.callback.apply(c.self, c.args.concat(args2));
+            r = c.callback.apply(c.self, c.args.concat(args));
             // TODO special value to stop the chain
             // openerp.base.callback_stop
         }
@@ -34,13 +33,12 @@ openerp.base.callback = function(obj, method) {
     };
     callback.callback_chain = [];
     callback.add = function(f) {
-        var args2 = Array.prototype.slice.call(arguments);
         if(typeof(f) == 'function') {
-            f = { callback: f, args: args2.slice(1) };
+            f = { callback: f, args: Array.prototype.slice.call(arguments, 1) };
         }
         f.self = f.self || null;
         f.args = f.args || [];
-        f.unique = f.unique || false;
+        f.unique = !!f.unique;
         if(f.position == 'last') {
             callback.callback_chain.push(f);
         } else {
@@ -49,14 +47,21 @@ openerp.base.callback = function(obj, method) {
         return callback;
     };
     callback.add_first = function(f) {
-        callback.add.apply(null,arguments);
+        return callback.add.apply(null,arguments);
     };
     callback.add_last = function(f) {
-        var args2 = Array.prototype.slice.call(arguments);
-        callback.add({callback: f, args: args2.slice(1), position: "last"});
+        return callback.add({
+            callback: f,
+            args: Array.prototype.slice.call(arguments, 1),
+            position: "last"
+        });
     };
-    callback.add({ callback: method, self:obj, args:args.slice(2) });
-    return callback;
+
+    return callback.add({
+        callback: method,
+        self:obj,
+        args:Array.prototype.slice.call(arguments, 2)
+    });
 };
 
 openerp.base.BasicController = Class.extend({
