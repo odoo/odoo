@@ -177,6 +177,10 @@ class hr_timesheet_sheet(osv.osv):
         if 'employee_id' in vals:
             if not self.pool.get('hr.employee').browse(cr, uid, vals['employee_id']).user_id:
                 raise osv.except_osv(_('Error !'), _('You cannot create a timesheet for an employee that does not have any user defined !'))
+            if not self.pool.get('hr.employee').browse(cr, uid, vals['employee_id']).product_id:
+                raise osv.except_osv(_('Error !'), _('You cannot create a timesheet for an employee that does not have any product defined !'))
+            if not self.pool.get('hr.employee').browse(cr, uid, vals['employee_id']).journal_id:
+                raise osv.except_osv(_('Error !'), _('You cannot create a timesheet for an employee that does not have any analytic journal defined !'))
         return super(hr_timesheet_sheet, self).create(cr, uid, vals, *args, **argv)
 
     def write(self, cr, uid, ids, vals, *args, **argv):
