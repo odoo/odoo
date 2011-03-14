@@ -284,6 +284,7 @@ class product_pricelist(osv.osv):
                         price = False
 
                 if price:
+                    results['item_id'] = res['id']
                     if 'uom' in context and not uom_price_already_computed:
                         product = products_dict[product_id]
                         uom = product.uos_id or product.uom_id
@@ -299,7 +300,7 @@ class product_pricelist(osv.osv):
     def price_get(self, cr, uid, ids, prod_id, qty, partner=None, context=None):
         res_multi = self.price_get_multi(cr, uid, pricelist_ids=ids, products_by_qty_by_partner=[(prod_id, qty, partner)], context=context)
         res = res_multi[prod_id]
-        res.update({'item_id': {ids[-1]: ids[-1]}})
+        res.update({'item_id': {ids[-1]: res_multi['item_id']}})
         return res
 
     def price_get_old(self, cr, uid, ids, prod_id, qty, partner=None, context=None):
