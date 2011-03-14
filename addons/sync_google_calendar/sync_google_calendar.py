@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from osv import osv
+from osv import osv, fields
 
 class crm_meeting(osv.osv):
     _inherit = "crm.meeting"
@@ -31,5 +31,13 @@ class crm_meeting(osv.osv):
         return super(crm_meeting, self).unlink(cr, uid, ids, context=context)
 
 crm_meeting()
+
+class crm_case_categ(osv.osv):
+    """ Category of Case """
+    _inherit = "crm.case.categ"
+    _columns = {
+        'user_id': fields.many2one('res.users', 'User')
+    }
+crm_case_categ()
 
 # vim:expandtab:smartindent:toabstop=4:softtabstop=4:shiftwidth=4:

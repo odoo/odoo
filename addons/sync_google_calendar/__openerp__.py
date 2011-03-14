@@ -29,7 +29,7 @@
     'website': 'http://www.openerp.com',
     'depends': ['base','google_base_account', 'crm'],
     'init_xml': [],
-    'update_xml': ['wizard/wizard_import_calendar_events_view.xml'],
+    'update_xml': ['wizard/wizard_import_calendar_events_view.xml', 'sync_google_calendar_view.xml'],
     'demo_xml': [],
     'installable': True,
     'active': False,

@@ -104,10 +104,11 @@ class synchronize_google_calendar_events(osv.osv_memory):
         model_obj = self.pool.get('ir.model.data')
         object_id = self.pool.get('ir.model').search(cr, uid, [('model', '=', 'crm.meeting')])
         meeting_ids = []
-        categ_id = categ_obj.search(cr, uid, [('name','=',event_feed.title.text),('object_id','=',object_id and object_id[0])])
+        categ_id = categ_obj.search(cr, uid, [('name','=',event_feed.title.text),('object_id','=',object_id and object_id[0]),('user_id','=',uid)])
         if not categ_id:
             categ_id.append(categ_obj.create(cr, uid, {'name': event_feed.title.text, 
-                                                       'object_id': object_id and object_id[0] }))
+                                                       'object_id': object_id and object_id[0],
+                                                       'user_id': uid }))
         for feed in event_feed.entry:
             google_id = feed.id.text
             model_data = {
