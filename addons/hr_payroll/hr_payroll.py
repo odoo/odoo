@@ -922,12 +922,10 @@ class hr_payslip(osv.osv):
 
         lines = []
         rules = []
-        if function:
-            for struct in sal_structure:
-                func = func_pool.read(cr, uid, struct, ['rule_ids'], context=context)
-                lines = salary_rule_pool.browse(cr, uid, func['rule_ids'], context=context)
-                for rl in lines:
-                    rules.append(rl)
+        for struct in sal_structure:
+            lines = func_pool.browse(cr, uid, struct, context=context).rule_ids
+            for rl in lines:
+                rules.append(rl)
 
         ad = []
         total = 0.0
@@ -1000,7 +998,7 @@ class hr_payslip(osv.osv):
             }
             if line.appears_on_payslip:
                 if line.condition_range_min or line.condition_range_max:
-                    if not((line.amount < line.condition_range_min) or (line.amount > line.condition_range_max)):
+                    if not ((line.amount < line.condition_range_min) or (line.amount > line.condition_range_max)):
                         update['value']['line_ids'].append(vals)
                 else:
                     update['value']['line_ids'].append(vals)
