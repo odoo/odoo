@@ -36,7 +36,7 @@
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
-    'images': ['purchase_order.jpeg', 'purchase_analysis.jpeg', 'request_for_quotation.jpeg'],
+    'images' : ['purchase_order.jpeg', 'purchase_analysis.jpeg', 'request_for_quotation.jpeg'],
     'depends': ['base', 'account', 'stock', 'process', 'procurement'],
     'data': [
         'security/purchase_security.xml',
