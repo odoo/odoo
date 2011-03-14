@@ -25,9 +25,8 @@
     'version': '1.0',
     'category': 'Generic Modules/Inventory Control',
     'description': """
-This module supplements the Warehouse application by adding support for per-product
-location paths, effectively implementing Push and Pull inventory flows.
-
+This module supplements the Warehouse application by adding support for per-product location paths, effectively implementing Push and Pull inventory flows.
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
 Typically this could be used to:
 * Manage product manufacturing chains
 * Manage default locations per product
@@ -38,7 +37,7 @@ Typically this could be used to:
 * Help rental management, by generating automated return moves for rented products
 
 Once this module is installed, an additional tab appear on the product form, where you can add
-Push and Pull flow specifications. The demo data of  CPU1 product for that push/pull :
+Push and Pull flow specifications. The demo data of CPU1 product for that push/pull :
 
 Push flows
 ----------
@@ -55,19 +54,19 @@ processed, or require a manual confirmation, depending on the parameters.
 
 Pull flows
 ----------
-Pull flows are a bit different from Pull flows, in the sense that they are not related to
+Pull flows are a bit different from Push flows, in the sense that they are not related to
 the processing of product moves, but rather to the processing of procurement orders.
 What is being pulled is a need, not directly products.
-A classical example of Push flow is when you have an Outlet company, with a parent Company
+A classical example of Pull flow is when you have an Outlet company, with a parent Company
 that is responsible for the supplies of the Outlet.
 
   [ Customer ] <- A - [ Outlet ]  <- B -  [ Holding ] <~ C ~ [ Supplier ]
 
 When a new procurement order (A, coming from the confirmation of a Sale Order for example) arrives
-in the Outlet, it is converted into another procurement (B, via a Push flow of type 'move')
+in the Outlet, it is converted into another procurement (B, via a Pull flow of type 'move')
 requested from the Holding. When procurement order B is processed by the Holding company, and
 if the product is out of stock, it can be converted into a Purchase Order (C) from the Supplier
-(Push flow of type Purchase). The result is that the procurement order, the need, is pushed
+(Pull flow of type Purchase). The result is that the procurement order, the need, is pushed
 all the way between the Customer and Supplier.
 
 Technically, Pull flows allow to process procurement orders differently, not only depending on
@@ -85,6 +84,7 @@ You can use the demo data as follow:
      - When delivering the customer: Pick List -> Packing -> Delivery Order from Gate A
     """,
     'author': 'OpenERP SA',
+    'images': ['images/pulled_flow.jpeg','images/pushed_flow.jpeg'],
     'depends': ['procurement','stock','sale'],
     'init_xml': [],
     'update_xml': ['stock_location_view.xml', 'security/ir.model.access.csv', 'procurement_pull_workflow.xml'],
