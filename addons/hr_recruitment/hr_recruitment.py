@@ -406,18 +406,13 @@ class hr_applicant(crm.crm_case, osv.osv):
         @param *args: Give Tuple Value
         """
         employee_obj = self.pool.get('hr.employee')
-        job_obj = self.pool.get('hr.job')
         res = super(hr_applicant, self).case_close(cr, uid, ids, *args)
         for (id, name) in self.name_get(cr, uid, ids):
             message = _("Applicant '%s' is being hired.") % name
             self.log(cr, uid, id, message)
-        applicant = self.browse(cr, uid, ids)[0]
-        if not applicant.job_id:
-            raise osv.except_osv(_('Warning!'),_('You must define job Id for Applicant !')) 
-        emp_id = employee_obj.create(cr,uid,{'name': applicant.name,'job_id': applicant.job_id.id})
         return res
 
-    def case_close_without_emp(self, cr, uid, ids, *args):
+    def case_close_with_emp(self, cr, uid, ids, *args):
         """
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
@@ -426,12 +421,14 @@ class hr_applicant(crm.crm_case, osv.osv):
         @param *args: Give Tuple Value
         """
         employee_obj = self.pool.get('hr.employee')
-        job_obj = self.pool.get('hr.job')
-        res = super(hr_applicant, self).case_close(cr, uid, ids, *args)
-        for (id, name) in self.name_get(cr, uid, ids):
-            message = _("Applicant '%s' is being hired.") % name
-            self.log(cr, uid, id, message)
-        return res
+        partner_obj = self.pool.get('res.partner')
+        address_id = False
+        applicant = self.browse(cr, uid, ids)[0]
+            self.pool.get('hr.job').write(cr, uid, [applicant.job_id.id], {'no_of_recruitment': applicant.job_id.no_of_recruitment - 1})
+                                                 'address_home_id': address_id,
+                                                 'department_id': applicant.department_id.id
+            raise osv.except_osv(_('Warning!'),_('You must define Applied Job for Applicant !'))
+        return self.case_close(cr, uid, ids, *args)
 
 
     def case_reset(self, cr, uid, ids, *args):
