@@ -31,11 +31,6 @@
                         </group>
                     </page>
                 </xpath>
-                <!--<xpath expr="/form/notebook/page[@string='Categories']" position="after">
-	                <page string="Salary Rules">
-	                   <field name="emp_sal_rule_ids" nolabel="1" widget="one2many_list"/>
-	                </page>
-                </xpath>-->
             </data>
             </field>
         </record>
@@ -571,7 +566,7 @@
             groups="base.group_hr_manager"/>
 
     <!-- Salary Rules -->
-    
+
     <record id="hr_salary_rule_tree" model="ir.ui.view">
             <field name="name">hr.salary.rule.tree</field>
             <field name="model">hr.salary.rule</field>
@@ -645,14 +640,14 @@
             </form>
         </field>
     </record>
-    
+
     <record id="action_salary_rule_form" model="ir.actions.act_window">
         <field name="name">Salary Rules</field>
         <field name="res_model">hr.salary.rule</field>
         <field name="view_type">form</field>
         <field name="view_id" ref="hr_salary_rule_tree"/>
     </record>
-    
+
     <menuitem id="menu_action_hr_salary_rule_form" action="action_salary_rule_form" parent="payroll_configure" sequence="12"/>
 
         <!-- Salary Head Type -->
@@ -667,7 +662,7 @@
                 </tree>
             </field>
         </record>
-        
+
          <record id="salary_head_type_form" model="ir.ui.view">
             <field name="name">salary.head.type.form</field>
             <field name="model">hr.salary.head.type</field>
@@ -679,16 +674,16 @@
                 </form>
             </field>
         </record>
-        
+
         <record id="action_salary_head_type" model="ir.actions.act_window">
             <field name="name">Salary Head Types</field>
             <field name="res_model">hr.salary.head.type</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="salary_head_type_tree"/>
         </record>
-        
+
         <menuitem id="menu_action_salary_head_type" action="action_salary_head_type" parent="payroll_configure" sequence="10"/>
-        
+
     </data>
 </openerp>
 

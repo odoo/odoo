@@ -1304,7 +1304,7 @@ class hr_employee(osv.osv):
     _description = 'Employee'
 
     _columns = {
-        'line_ids':fields.one2many('hr.payslip.line', 'employee_id', 'Salary Structure', required=False),
+#        'line_ids':fields.one2many('hr.payslip.line', 'employee_id', 'Salary Structure', required=False),
         'slip_ids':fields.one2many('hr.payslip', 'employee_id', 'Payslips', required=False, readonly=True),
         'basic': fields.function(_calculate_basic, method=True, multi='dc', type='float', string='Basic Salary', digits_compute=dp.get_precision('Account')),
     }
