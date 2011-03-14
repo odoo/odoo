@@ -40,7 +40,6 @@ def find_mapped_id(obj, cr, uid, res_model, sugar_id, context):
 
 
 def import_users(sugar_obj, cr, uid, context=None):
-    print "Import Users"
     if not context:
         context = {}
     map_user = {'id' : 'id', 
@@ -105,7 +104,6 @@ def get_opportunity_status(surgar_obj, cr, uid, sugar_val,context=None):
     return stage_id
 
 def import_leads(sugar_obj, cr, uid, context=None):
-    print "Import Lead"
     if not context:
         context = {}
     map_lead = {
@@ -140,7 +138,7 @@ def import_leads(sugar_obj, cr, uid, context=None):
         fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_lead)
         lead_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', context=context)
 
-
+#Need fixes
 def import_opportunities(surgar_obj, cr, uid, context=None):
     if not context:
         context = {}
