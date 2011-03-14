@@ -26,6 +26,7 @@
     'category': 'Generic Modules/Human Resources',
     'description': """
     This module aims to manage employee's expenses.
+    ===============================================
 
     The whole workflow is implemented:
     * Draft expense
@@ -40,6 +41,7 @@
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
+    'images': ['images/hr_expenses_analysis.jpeg', 'images/hr_expenses.jpeg'],
     'depends': ['hr', 'account'],
     'init_xml': [],
     'update_xml': [
