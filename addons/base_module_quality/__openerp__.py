@@ -26,6 +26,7 @@
     'category': 'OpenERP SA Specific Modules/Base module quality',
     'description': """
 The aim of this module is to check the quality of other modules.
+================================================================
 
 It defines a wizard on the list of modules in OpenERP, which allows you to
 evaluate them on different criteria such as: the respect of OpenERP coding
@@ -46,5 +47,6 @@ using it, otherwise it may crash.
     'installable': True,
     'active': False,
     'certificate': '0175119475677',
+    'images': ['images/base_module_quality1.jpeg','images/base_module_quality2.jpeg','images/base_module_quality3.jpeg']
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
