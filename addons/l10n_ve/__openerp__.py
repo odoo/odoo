@@ -25,7 +25,7 @@
 {
     "name" : "Venezuela -Chart of Account",
     "version" : "1.0",
-    "author" : "Tiny & Netquatro",
+    "author" : ['OpenERP SA', "Netquatro"],
     "category" : "Localisation/Account Charts",
     "description": 
 '''
