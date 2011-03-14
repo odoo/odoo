@@ -869,8 +869,6 @@ class hr_payslip(osv.osv):
         holiday_pool = self.pool.get('hr.holidays')
         sequence_obj = self.pool.get('ir.sequence')
         empolyee_obj = self.pool.get('hr.employee')
-        hr_salary_head = self.pool.get('hr.salary.head')
-
         resource_attendance_pool = self.pool.get('resource.calendar.attendance')
         if context is None:
             context = {}
@@ -906,7 +904,6 @@ class hr_payslip(osv.osv):
                 'basic_amount': round(0.0),
                 'basic_before_leaves': round(0.0),
                 'name':'Salary Slip of %s for %s' % (employee_id.name, tools.ustr(ttyme.strftime('%B-%Y'))),
-#                'state':'draft',
                 'contract_id':False,
                 'company_id':employee_id.company_id.id
             })
@@ -992,7 +989,6 @@ class hr_payslip(osv.osv):
                 'amount': line.amount,
                 'total': value,
                 'employee_id': employee_id.id,
-#                'function_id': False,
                 'base': line.computational_expression
             }
             if line.appears_on_payslip:
@@ -1011,7 +1007,6 @@ class hr_payslip(osv.osv):
             'basic_before_leaves': round(basic),
             'total_pay': round(basic) + total,
             'name':'Salary Slip of %s for %s' % (employee_id.name, tools.ustr(ttyme.strftime('%B-%Y'))),
-#            'state':'draft',
             'contract_id': contract.id,
             'company_id': employee_id.company_id.id
         })
@@ -1078,18 +1073,6 @@ class hr_payslip(osv.osv):
                 'employee_id': employee_id.id,
                 'base': base
             }
-#            test = {
-#                    'name': hday.name,
-#                    'holiday_type': hday.holiday_type,
-#                    'employee_id': hday.employee_id.id,
-#                    'holiday_status_id': hday.holiday_status_id.id,
-#                    'date_from': hday.date_from,
-#                    'date_to': hday.date_to,
-#                    'number_of_days_temp': hday.number_of_days_temp,
-#                    'state': hday.state,
-#                    'number_of_days': hday.number_of_days,
-#                    'type': hday.type
-#            }
             days = hday.number_of_days
             if hday.number_of_days < 0:
                 days = hday.number_of_days * -1
@@ -1112,11 +1095,7 @@ class hr_payslip(osv.osv):
             total += value
             res['total'] = value
             update['value']['line_ids'].append(res)
-#            update['value']['holiday_ids'].append(test)
         basic = basic + total
-
-#            leaves = total
-#        temp_dic = holiday_pool.read(cr, uid, leave_ids, [], context=context)
         update['value'].update({
             'basic_amount': basic,
             'basic_before_leaves': round(basic_before_leaves),
@@ -1125,7 +1104,6 @@ class hr_payslip(osv.osv):
             'holiday_days': leave,
             'worked_days': working_day - leave,
             'working_days': working_day,
-#            'holiday_ids': temp_dic
         })
         return update
 
