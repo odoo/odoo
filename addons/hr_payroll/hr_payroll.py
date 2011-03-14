@@ -840,6 +840,15 @@ class hr_payslip(osv.osv):
 #            self.write(cr, uid, [slip.id], update, context=context)
 #        return True
 
+    def _get_parent_structure(self, cr, uid, struct_id, context=None):
+        parent = []
+        for line in self.pool.get('hr.payroll.structure').browse(cr, uid, struct_id):
+            if line.parent_id:
+                parent.append(line.parent_id.id)
+        if parent:
+            parent = self._get_parent_structure(cr, uid, parent, context)
+        return struct_id + parent
+
     def onchange_employee_id(self, cr, uid, ids, ddate, employee_id, context=None):
         func_pool = self.pool.get('hr.payroll.structure')
         slip_line_pool = self.pool.get('hr.payslip.line')
@@ -848,6 +857,7 @@ class hr_payslip(osv.osv):
         sequence_obj = self.pool.get('ir.sequence')
         empolyee_obj = self.pool.get('hr.employee')
         hr_salary_head = self.pool.get('hr.salary.head')
+
         resource_attendance_pool = self.pool.get('resource.calendar.attendance')
         if context is None:
             context = {}
@@ -890,19 +900,29 @@ class hr_payslip(osv.osv):
             return update
 
         contract = employee_id.contract_id
+
+        sal_structure = []
         function = contract.struct_id.id
-        lines = []
         if function:
-            func = func_pool.read(cr, uid, function, ['rule_ids'], context=context)
-            lines = salary_rule_pool.browse(cr, uid, func['rule_ids'], context=context)
+            sal_structure = self._get_parent_structure(cr, uid, [function], context=context)
+
+        lines = []
+        rules = []
+        if function:
+            for struct in sal_structure:
+                func = func_pool.read(cr, uid, struct, ['rule_ids'], context=context)
+                lines = salary_rule_pool.browse(cr, uid, func['rule_ids'], context=context)
+                for rl in lines:
+                    rules.append(rl)
+
         ad = []
         total = 0.0
         obj = {'basic':contract.wage}
-        for line in lines:
+        for line in rules:
             cd = line.code.lower()
             obj[cd] = line.amount or 0.0
 
-        for line in lines:
+        for line in rules:
             if line.category_id.code in ad:
                 continue
             ad.append(line.category_id.code)
@@ -929,11 +949,24 @@ class hr_payslip(osv.osv):
                 raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ') % (e))
             if line.amount_type == 'per':
                 try:
-                    value = line.amount * amt
+                    if line.condition_range_min or line.condition_range_max:
+                        if ((line.amount < line.condition_range_min) or (line.amount > line.condition_range_max)):
+                            value = value
+                        else:
+                            value = line.amount * amt
+                    else:
+                        value = line.amount * amt
                 except Exception, e:
                     raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ') % (e))
+
             elif line.amount_type == 'fix':
-                value = line.amount
+                if line.condition_range_min or line.condition_range_max:
+                    if ((line.amount < line.condition_range_min) or (line.amount > line.condition_range_max)):
+                        value = value
+                    else:
+                        value = line.amount
+                else:
+                    value = line.amount
 #            elif line.amount_type == 'code': # Need some clarification so this option remains
 #                value = slip_line_pool.execute_function(cr, uid, line.id, amt, context)
 #                line.amount = value
@@ -952,7 +985,12 @@ class hr_payslip(osv.osv):
                 'base': line.computational_expression
             }
             if line.appears_on_payslip:
-                update['value']['line_ids'].append(vals)
+                if line.condition_range_min or line.condition_range_max:
+                    if not((line.amount < line.condition_range_min) or (line.amount > line.condition_range_max)):
+                        update['value']['line_ids'].append(vals)
+                else:
+                    update['value']['line_ids'].append(vals)
+
         basic = contract.wage
         number = sequence_obj.get(cr, uid, 'salary.slip')
         update['value'].update({
@@ -984,6 +1022,7 @@ class hr_payslip(osv.osv):
 
         basic_before_leaves = update['value']['basic_amount']
         total_before_leaves = update['value']['total_pay']
+
         working_day = 0
         off_days = 0
         dates = prev_bounds(ddate)
@@ -1008,15 +1047,17 @@ class hr_payslip(osv.osv):
         leave_ids = self._get_leaves1(cr, uid, ddate, employee_id, context)
         total_leave = 0.0
         paid_leave = 0.0
+
         for hday in holiday_pool.browse(cr, uid, leave_ids, context=context):
-            if not hday.holiday_status_id.code:
-                raise osv.except_osv(_('Error !'), _('Please check configuration of %s, code is missing') % (hday.holiday_status_id.name))
-            slip_lines = salary_rule_pool.search(cr, uid, [('code', '=', hday.holiday_status_id.code)], context=context)
+#            if not hday.holiday_status_id.code:
+#                raise osv.except_osv(_('Error !'), _('Please check configuration of %s, code is missing') % (hday.holiday_status_id.name))
+            slip_lines = salary_rule_pool.search(cr, uid, [('code','=',hday.holiday_status_id.code)], context=context)
             head_sequence = 0
             if not slip_lines:
                 raise osv.except_osv(_('Error !'), _('Please check configuration of %s, Salary rule is missing') % (hday.holiday_status_id.name))
             salary_rule = salary_rule_pool.browse(cr, uid, slip_lines, context=context)[0]
             base = salary_rule.computational_expression
+
             res = {
                 'name': salary_rule.name + '-%s' % (hday.number_of_days),
                 'code': salary_rule.code,
@@ -1042,7 +1083,6 @@ class hr_payslip(osv.osv):
             if hday.number_of_days < 0:
                 days = hday.number_of_days * -1
             total_leave += days
-
             try:
                 #Please have a look at the configuration guide.
                 amt = eval(base, obj)
@@ -1063,6 +1103,7 @@ class hr_payslip(osv.osv):
             update['value']['line_ids'].append(res)
 #            update['value']['holiday_ids'].append(test)
         basic = basic + total
+
 #            leaves = total
 #        temp_dic = holiday_pool.read(cr, uid, leave_ids, [], context=context)
         update['value'].update({
