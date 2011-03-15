@@ -362,13 +362,13 @@ class account_invoice(osv.osv):
     def unlink(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
-        invoices = self.read(cr, uid, ids, ['state'], context=context)
+        invoices = self.read(cr, uid, ids, ['state','internal_number'], context=context)
         unlink_ids = []
         for t in invoices:
-            if t['state'] in ('draft', 'cancel'):
+            if t['state'] in ('draft', 'cancel') and t['internal_number']== False:
                 unlink_ids.append(t['id'])
             else:
-                raise osv.except_osv(_('Invalid action !'), _('Cannot delete invoice(s) that are already opened or paid !'))
+                raise osv.except_osv(_('Invalid action !'), _('Cannot delete invoice(s) that are already opened(or been in opened state ever) or paid!'))
         osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
         return True
 
