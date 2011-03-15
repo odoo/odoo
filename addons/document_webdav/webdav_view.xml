@@ -50,7 +50,7 @@
         </record>
 
     <record model="ir.actions.act_window" id="action_dir_props_form">
-        <field name="name">Dir Property</field>
+        <field name="name">DAV properties for folders</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">document.webdav.dir.property</field>
         <field name="view_type">form</field>
@@ -74,7 +74,7 @@
 	    <page string="Dynamic context" position="after">
 		<page string="WebDAV properties">
 		    <label string="These properties will be added to WebDAV requests" colspan="4" />
-		    
+
 		    <field name="dav_prop_ids" nolabel="1" colspan="4">
 			<tree string="Properties">
 			    <field name="namespace"/>
@@ -93,7 +93,7 @@
 	    </page>
 	</field>
     </record>
-    
+
     <!-- File properties -->
     <record model="ir.ui.view" id="view_file_props_form">
         <field name="name">document.webdav.file.property.form</field>
@@ -143,7 +143,7 @@
         </record>
 
     <record model="ir.actions.act_window" id="action_file_props_form">
-        <field name="name">webdev file property</field>
+        <field name="name">DAV properties for documents</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">document.webdav.file.property</field>
         <field name="view_type">form</field>

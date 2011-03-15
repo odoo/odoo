@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <openerp>
 <data>
-    <menuitem name="Auction" id="auction_menu_root" icon="terp-purchase" sequence="26" 
+    <menuitem name="Auction" id="auction_menu_root" icon="terp-purchase" sequence="26"
                 groups="group_auction_manager,group_auction_user"/>
     <menuitem name="Configuration" parent="auction_menu_root" id="auction_config_menu" sequence="7" groups="group_auction_manager"/>
     <menuitem name="Tools Bar Codes" id="auction_outils_menu" parent="auction_menu_root" sequence="5" />
@@ -39,7 +39,7 @@
         </field>
     </record>
     <record model="ir.actions.act_window" id="action_auction_artist">
-        <field name="name">Auction Artist</field>
+        <field name="name">Auction Artists</field>
         <field name="res_model">auction.artists</field>
         <field name="view_type">form</field>
         <field name="view_id" ref="view_auction_artist_tree"/>
