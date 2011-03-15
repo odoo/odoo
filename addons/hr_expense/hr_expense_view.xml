@@ -152,7 +152,7 @@
                    <filter icon="terp-personal+" context="{'invisible_department': False}" domain="[('department_id','=',context.get('department_id',False))]" help="My Department"/>
                     </field>
                       <field name="name"/>
-                      <field name="user_id"  string="User" invisible="True">
+                      <field name="user_id"  string="User">
                       <filter icon="terp-personal+" domain="[('department_id','=',context.get('department_id',False))]"
                             string="Expenses of My Department"/>
                       </field>
