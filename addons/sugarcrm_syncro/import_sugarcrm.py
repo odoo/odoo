@@ -89,7 +89,7 @@ def get_opportunity_status(surgar_obj, cr, uid, sugar_val,context=None):
     if not context:
         context = {}
     stage_id = ''
-    stage_dict = { 'status':
+    stage_dict = { 'sales_stage':
             {#Mapping of sugarcrm stage : openerp opportunity stage Mapping
                'Need Analysis': 'New',
                'Closed Lost': 'Lost',
@@ -98,7 +98,7 @@ def get_opportunity_status(surgar_obj, cr, uid, sugar_val,context=None):
                 'Negotiation/Review': 'Negotiation'
             },
     }
-    stage = stage_dict['status'].get(sugar_val['status'], '')
+    stage = stage_dict['sales_stage'].get(sugar_val['sales_stage'], '')
     stage_pool = surgar_obj.pool.get('crm.case.stage')
     stage_ids = stage_pool.search(cr, uid, [('type', '=', 'opportunity'), ('name', '=', stage)])
     for stage in stage_pool.browse(cr, uid, stage_ids, context):
@@ -154,7 +154,7 @@ def import_opportunities(sugar_obj, cr, uid, context=None):
     }
     lead_obj = sugar_obj.pool.get('crm.lead')
     PortType, sessionid = sugar.login(context.get('username', ''), context.get('password', ''))
-    sugar_data = sugar.search(PortType, sessionid, 'Leads')
+    sugar_data = sugar.search(PortType, sessionid, 'Opportunities')
     for val in sugar_data:
         val['type'] = 'opportunity'
         stage_id = get_opportunity_status(sugar_obj, cr, uid, val, context)
