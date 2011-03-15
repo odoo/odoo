@@ -7,7 +7,7 @@
             <field name="inherit_id" ref="mrp.mrp_bom_form_view"/>
             <field name="type">form</field>
             <field name="arch" type="xml">
-             <notebook>
+             <notebook position="inside">
                  <page string="Sub Products" position="inside">
                      <field colspan="4" name="sub_products" nolabel="1" widget="one2many_list">
                          <tree string="sub products"  editable="top">
