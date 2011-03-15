@@ -44,13 +44,11 @@ class report_tasks(report_int):
         pool = pooler.get_pool(cr.dbname)
         sprint_pool = pool.get('project.scrum.sprint')
         task_pool = pool.get('project.task')
-        x, y = 75, 200
-
-        for sprint in sprint_pool.browse(cr, uid, ids, context=context):
         # For add the report header on the top of the report.
-            tb = text_box.T(loc=(x+60 ,y+170), text="/hL/15/b%s"%(sprint.name), line_style=None)
-            tb.draw()
-            int_to_date = lambda x: '/a60{}' + datetime(time.localtime(x).tm_year, time.localtime(x).tm_mon, time.localtime(x).tm_mday).strftime('%d %m %Y')
+        tb = text_box.T(loc=(320, 500), text="/hL/15/bBurndown Chart", line_style=None)
+        tb.draw()
+        int_to_date = lambda x: '/a60{}' + datetime(time.localtime(x).tm_year, time.localtime(x).tm_mon, time.localtime(x).tm_mday).strftime('%d %m %Y')
+        for sprint in sprint_pool.browse(cr, uid, ids, context=context):
             task_ids = task_pool.search(cr, uid, [('sprint_id','=',sprint.id)], context=context)
             datas = _burndown.compute_burndown(cr, uid, task_ids, sprint.date_start, sprint.date_stop)
             max_hour = reduce(lambda x,y: max(y[1],x), datas, 0) or None 
@@ -64,16 +62,15 @@ class report_tasks(report_int):
                 return result
 
             guideline__data=[(datas[0][0],max_hour), (datas[-1][0],0)]
-            ar = area.T(loc=(x,y), x_grid_style=line_style.gray50_dash1,
+            
+            ar = area.T(x_grid_style=line_style.gray50_dash1,
                 x_axis=axis.X(label="Date", format=int_to_date),
                 y_axis=axis.Y(label="Burndown Chart - Planned Hours"),
                 x_grid_interval=_interval_get,
                 x_range = (datas[0][0],datas[-1][0]),
                 y_range = (0,max_hour),
                 legend = None,
-                size = (200,150))
-            y += 300
-
+                size = (680,450))
             ar.add_plot(line_plot.T(data=guideline__data, line_style=line_style.red))
             ar.add_plot(line_plot.T(data=datas, line_style=line_style.green))
 
@@ -83,8 +80,6 @@ class report_tasks(report_int):
             legend.draw(ar,[entr1,entr2],canv)
 
             ar.draw(canv)
-            tb = text_box.T(loc=(x+40 ,y-100), text="/hL/15/bBurndown Chart", line_style=None)
-            tb.draw() 
         canv.close()
 
         self.obj = _burndown.external_pdf(io.getvalue())
