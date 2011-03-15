@@ -80,7 +80,7 @@ def get_lead_status(surgar_obj, cr, uid, sugar_val,context=None):
         },}
     stage = stage_dict['status'].get(sugar_val['status'], '')
     stage_pool = surgar_obj.pool.get('crm.case.stage')
-    stage_ids = stage_pool.search(cr, uid, [("type", '=', 'lead'), ('name', '=', stage)])
+    stage_ids = stage_pool.search(cr, uid, [('type', '=', 'lead'), ('name', '=', stage)])
     for stage in stage_pool.browse(cr, uid, stage_ids, context):
         stage_id = stage.id
     return stage_id
@@ -89,16 +89,18 @@ def get_opportunity_status(surgar_obj, cr, uid, sugar_val,context=None):
     if not context:
         context = {}
     stage_id = ''
-    stage_dict = { #Mapping of sugarcrm stage : openerp opportunity stage Mapping
+    stage_dict = { 'status':
+            {#Mapping of sugarcrm stage : openerp opportunity stage Mapping
                'Need Analysis': 'New',
                'Closed Lost': 'Lost',
                'Closed Won': 'Won',
                'Value Proposition': 'Proposition',
                 'Negotiation/Review': 'Negotiation'
-            }
-    stage = stage_dict.get(sugar_val['sales_stage'], '')
+            },
+    }
+    stage = stage_dict['status'].get(sugar_val['status'], '')
     stage_pool = surgar_obj.pool.get('crm.case.stage')
-    stage_ids = stage_pool.search(cr, uid, [("type", '=', 'opportunity'), ('name', '=', stage)])
+    stage_ids = stage_pool.search(cr, uid, [('type', '=', 'opportunity'), ('name', '=', stage)])
     for stage in stage_pool.browse(cr, uid, stage_ids, context):
         stage_id = stage.id
     return stage_id
@@ -138,40 +140,27 @@ def import_leads(sugar_obj, cr, uid, context=None):
         fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_lead)
         lead_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', context=context)
 
-#Need fixes
-def import_opportunities(surgar_obj, cr, uid, context=None):
+def import_opportunities(sugar_obj, cr, uid, context=None):
     if not context:
         context = {}
-    map_opportunity = {'Opportunities':  {'name': 'name',
+    map_opportunity = {'id' : 'id',
+        'name': 'name',
         'probability': 'probability',
         'planned_revenue': 'amount_usdollar',
-        'date_deadline':'date_closed'
-        },
+        'date_deadline':'date_closed',
+        'user_id/id' : 'assigned_user_id',
+        'stage_id.id' : 'stage_id.id',
+        'type' : 'type',
     }
-    lead_pool = surgar_obj.pool.get('crm.lead')
-    new_opportunity_id = False
-    PortType,sessionid = sugar.login(context.get('username',''), context.get('password',''))
-    sugar_data = sugar.search(PortType,sessionid, 'Opportunities')
-    user_id = False
+    lead_obj = sugar_obj.pool.get('crm.lead')
+    PortType, sessionid = sugar.login(context.get('username', ''), context.get('password', ''))
+    sugar_data = sugar.search(PortType, sessionid, 'Leads')
     for val in sugar_data:
-       #Need To FIx for Import user data record from sugarcrm.
-       if val.get('assigned_user_name'):
-           user_ids = surgar_obj.pool.get('res.users').search(cr, uid, [('name', '=', val.get("assigned_user_name"))])
-       if not user_ids:
-           user_ids = surgar_obj.pool.get('res.users').create(cr, uid, {'name': val.get('assigned_user_name'), 'login': val.get("assigned_user_name")})
-       if user_ids:
-           if isinstance(user_ids,list):
-               user_id = user_ids[0]
-           else:
-                user_id=user_ids           
-       fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, 'Opportunities', map_opportunity)
-       stage_id = get_opportunity_status(sugar_obj, cr, uid, val, context)
-       openerp_val = dict(zip(fields,datas))
-       openerp_val['type'] = 'opportunity'
-       openerp_val['user_id'] = user_id
-       openerp_val['stage_id'] = stage_id
-       new_opportunity_id = lead_pool.create(cr, uid, openerp_val, context)
-    return new_opportunity_id
+        val['type'] = 'opportunity'
+        stage_id = get_opportunity_status(sugar_obj, cr, uid, val, context)
+        val['stage_id.id'] = stage_id
+        fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_opportunity)
+        lead_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', context=context)
 
 
 
