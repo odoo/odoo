@@ -19,11 +19,12 @@
 #
 ##############################################################################
 {
-    'name': 'Base VAT - To check VAT number validity',
+    'name': 'Base VAT',
     'version': '1.0',
     'category': 'Generic Modules/Base',
     'description': """
-    Enable the VAT Number for the partner. Check the validity of that VAT Number.
+    Enable VAT Number for a partner and check its validity.
+    =======================================================
 
     This module follows the methods stated at http://sima-pc.com/nif.php for
     checking the validity of VAT Number assigned to partners in European countries.
@@ -35,5 +36,6 @@
     'installable': True,
     'active': False,
     'certificate': '0084849360989',
+    'images': ['images/1_partner_vat.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

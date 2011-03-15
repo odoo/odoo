@@ -20,11 +20,14 @@
 ##############################################################################
 
 {
-        "name":"Base Synchro",
+        "name":"Server Object Synchronization",
         "version":"0.1",
         "author":"OpenERP SA",
         "category":"Generic Modules/Base",
-        "description": """Synchronization with all objects.""",
+        "description": """
+        Synchronization with all objects.
+        =================================
+        """,
         "depends":["base"],
         "demo_xml":[],
         "update_xml":[ "wizard/base_synchro_view.xml",
@@ -33,5 +36,6 @@
         "active":False,
         "installable":True,
         "certificate" : "00925429283944551453",
+        'images': ['images/1_servers_synchro.jpeg','images/2_synchronize.jpeg','images/3_objects_synchro.jpeg',],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
