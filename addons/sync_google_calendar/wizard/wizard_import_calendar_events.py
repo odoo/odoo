@@ -28,6 +28,8 @@ import datetime
 import dateutil
 from dateutil.tz import *
 from dateutil.parser import *
+from dateutil import parser
+import re
 
 import urllib
 
@@ -50,6 +52,91 @@ def _get_tinydates(self, stime, etime):
         timestring = datetime.datetime(*stime.timetuple()[:6]).strftime('%Y-%m-%d %H:%M:%S')
         timestring_end = datetime.datetime(*etime.timetuple()[:6]).strftime('%Y-%m-%d %H:%M:%S')
     return (timestring, timestring_end)
+
+def _get_rules(self, datas):
+    new_val = {}
+    if  datas['FREQ'] == 'WEEKLY' and datas.get('BYDAY'):
+        for day in datas['BYDAY'].split(','):
+            new_val[day.lower()] = True
+        datas.pop('BYDAY')
+
+    if datas.get('UNTIL'):
+        until = parser.parse(''.join((re.compile('\d')).findall(datas.get('UNTIL'))))
+        new_val['end_date'] = until.strftime('%Y-%m-%d')
+        new_val['end_type'] = 'end_date'
+        datas.pop('UNTIL')
+
+    if datas.get('COUNT'):
+        new_val['count'] = datas.get('COUNT')
+        new_val['end_type'] = 'count'
+        datas.pop('COUNT')
+        
+    if datas.get('INTERVAL'):
+        new_val['interval'] = datas.get('INTERVAL')
+        datas.pop('INTERVAL') 
+
+    if datas.get('BYMONTHDAY'):
+        new_val['day'] = datas.get('BYMONTHDAY')
+        datas.pop('BYMONTHDAY')
+        new_val['select1'] = 'date'
+
+    if datas.get('BYDAY'):
+        d = datas.get('BYDAY')
+        if '-' in d:
+            new_val['byday'] = d[:2]
+            new_val['week_list'] = d[2:4].upper()
+        else:
+            new_val['byday'] = d[:1]
+            new_val['week_list'] = d[1:3].upper()
+        new_val['select1'] = 'day'
+
+    if datas.get('BYMONTH'):
+        new_val['month_list'] = datas.get('BYMONTH')
+        datas.pop('bymonth')
+    return new_val
+
+def _get_repeat_status(self, str_google):
+    rrule = str_google[str_google.find('FREQ'):str_google.find('\nBEGIN')]
+    status = {}
+    for rule in rrule.split(';'):
+        status[rule.split('=')[0]] = rule.split('=')[-1:] and rule.split('=')[-1:][0] or ''
+    rules = _get_rules(self, status)
+    if status.get('FREQ') == 'WEEKLY':
+        status.update({'rrule_type': 'weekly'})
+        status.pop('FREQ')
+    elif status.get('FREQ') == 'DAILY':
+        status.update({'rrule_type': 'daily'})
+        status.pop('FREQ')
+    elif status.get('FREQ') == 'MONTHLY':
+        status.update({'rrule_type': 'monthly'})
+        status.pop('FREQ')
+    elif status.get('FREQ') == 'YEARLY':
+        status.update({'rrule_type': 'yearly'})
+        status.pop('FREQ')
+    status.update(rules)
+    return status
+
+def _get_repeat_dates(self, x):
+    if x[3].startswith('BY'):
+        zone_time = x[4].split('+')[-1:][0].split(':')[0][:4]
+    else:
+        zone_time = x[3].split('+')[-1:][0].split(':')[0][:4]
+    tz_format = zone_time[:2]+':'+zone_time[2:]
+    repeat_start = x[1].split('\n')[0].split(':')[1]
+    repeat_end = x[2].split('\n')[0].split(':')[1]
+    o = repeat_start.split('T')
+    repeat_start = str(o[0][:4]) + '-' + str(o[0][4:6]) + '-' + str(o[0][6:8])
+    if len(o) == 2:
+        repeat_start += ' ' + str(o[1][:2]) + ':' + str(o[1][2:4]) + ':' + str(o[1][4:6])
+    else:
+        repeat_start += ' ' + '00' + ':' + '00' + ':' + '00'
+    p = repeat_end.split('T')
+    repeat_end = str(p[0][:4]) + '-' + str(p[0][4:6]) + '-' + str(p[0][6:8])
+    if len(p) == 2:
+        repeat_end += ' ' + str(p[1][:2]) + ':' + str(p[1][2:4]) + ':' + str(p[1][4:6])
+    else:
+        repeat_end += ' ' + '00' + ':' + '00' + ':' + '00'
+    return (repeat_start, repeat_end, tz_format)
 
 class google_login(osv.osv_memory):
     _inherit = 'google.login'
@@ -122,7 +209,18 @@ class synchronize_google_calendar_events(osv.osv_memory):
                 'description': feed.content.text,
                 'categ_id': categ_id and categ_id[0]
             }
-            timestring, timestring_end = _get_tinydates(self, feed.when[0].start_time, feed.when[0].end_time)
+            if feed.when:
+                timestring, timestring_end = _get_tinydates(self, feed.when[0].start_time, feed.when[0].end_time)
+            else:
+                x = feed.recurrence.text.split(';')
+                repeat_status = _get_repeat_status(self, feed.recurrence.text)
+                repeat_start, repeat_end, zone_time = _get_repeat_dates(self, x)
+                timestring = time.strftime('%Y-%m-%d %H:%M:%S', time.strptime(repeat_start, "%Y-%m-%d %H:%M:%S"))
+                timestring_end = time.strftime('%Y-%m-%d %H:%M:%S', time.strptime(repeat_end, "%Y-%m-%d %H:%M:%S"))
+                if repeat_status:
+                    repeat_status.update({'recurrency': True})
+                    vals.update(repeat_status)
+
             vals.update({'date': timestring, 'date_deadline': timestring_end})
             data_ids = model_obj.search(cr, uid, [('model','=','crm.meeting'), ('name','=',google_id)])
             if data_ids:
