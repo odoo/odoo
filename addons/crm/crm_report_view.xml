@@ -78,10 +78,10 @@
                                help="Cases by Team and Type for this month" />
                            <separator orientation="vertical"/>
                            <field name="section_id"
-                               select="1" widget="selection" />
-                           <field name="category2_id" select="1"/>
-                        <field name="nbr" select="1"/>
-                        <field name="state" select="1"/>
+                               widget="selection" />
+                           <field name="category2_id"/>
+                        <field name="nbr"/>
+                        <field name="state"/>
                    </group>
                </search>
             </field>
@@ -169,9 +169,9 @@
                                domain="[('month','=',time.localtime()[1])]"
                                help="Cases by Team and Stage for this month" />
                            <separator orientation="vertical"/>
-                        <field name="section_id" select="1" widget="selection"/>
-                        <field name="nbr" select="1"/>
-                        <field name="state" select="1"/>
+                        <field name="section_id" widget="selection"/>
+                        <field name="nbr"/>
+                        <field name="state"/>
                    </group>
                </search>
             </field>
@@ -244,9 +244,9 @@
                                domain="[('month','=',time.localtime()[1])]"
                                help="Cases by Section, Category and Stage for this month" />
                            <separator orientation="vertical"/>
-                        <field name="section_id" select="1" widget="selection"/>
-                        <field name="nbr" select="1"/>
-                        <field name="state" select="1"/>
+                        <field name="section_id" widget="selection"/>
+                        <field name="nbr"/>
+                        <field name="state"/>
 
                    </group>
                </search>
@@ -337,9 +337,9 @@
                                domain="[('month','=',time.localtime()[1])]"
                                help="Cases by User for this month" />
                            <separator orientation="vertical"/>
-                        <field name="section_id" select="1" widget="selection"/>
-                        <field name="nbr" select="1"/>
-                        <field name="state" select="1"/>
+                        <field name="section_id" widget="selection"/>
+                        <field name="nbr"/>
+                        <field name="state"/>
                    </group>
                </search>
             </field>

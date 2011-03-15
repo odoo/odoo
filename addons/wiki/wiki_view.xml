@@ -163,12 +163,12 @@
                 <search string="Wiki">
                     <filter icon="terp-gtk-jump-to-ltr" string="Need Review" domain="[('review','=',True)]"/>
                     <separator orientation="vertical"/>
-                    <field name="name" select="1"/>
-                    <field name="group_id" select="1"/>
-                    <field name="tags" select="1"/>
-                    <field name="section" select="1" groups="base.group_extended"/>
-                    <field name="write_uid" select="1"/>
-                    <field name="write_date" select="1"/>
+                    <field name="name"/>
+                    <field name="group_id"/>
+                    <field name="tags"/>
+                    <field name="section" groups="base.group_extended"/>
+                    <field name="write_uid"/>
+                    <field name="write_date"/>
                     <newline/>
                     <group expand="0" string="Group By..." colspan="8" col="6">
                         <filter icon="terp-folder-blue" string="Wiki Group" domain="[]" context="{'group_by':'group_id'}"/>

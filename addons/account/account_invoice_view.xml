@@ -365,7 +365,7 @@
                         <separator orientation="vertical"/>
                         <field name="number"/>
                         <field name="partner_id"/>
-                        <field name="user_id" select="1" widget="selection" string="Salesman">
+                        <field name="user_id" widget="selection" string="Salesman">
                         <filter domain="[('user_id','=',uid)]" help="My invoices" icon="terp-personal" />
                         </field>
                         <field name="origin"/>
@@ -373,8 +373,8 @@
                     </group>
                     <newline/>
                     <group col="10" colspan="4">
-                        <field name="journal_id" widget="selection" select='1'/>
-                        <field name="period_id" select='1' string="Period"/>
+                        <field name="journal_id" widget="selection"/>
+                        <field name="period_id" string="Period"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">

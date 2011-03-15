@@ -263,9 +263,9 @@
                    <group col='10' colspan='4'>
                         <filter icon="terp-check" string="Current" domain="[('state','in', ('draft', 'open'))]"/>
                         <separator orientation="vertical"/>
-                        <field name="title" select="1"/>
-                        <field name="type" select="1" widget="selection"/>
-                        <field name="responsible_id" select="1">
+                        <field name="title"/>
+                        <field name="type" widget="selection"/>
+                        <field name="responsible_id">
                             <filter string="MY" icon="terp-personal" domain="[('responsible_id','=',uid)]" help="My Survey(s)"/>
                         </field>
                    </group>
@@ -1097,9 +1097,9 @@
                         <filter icon="terp-gtk-media-pause" string="Waiting Answer" domain="[('state','=','waiting_answer')]"/>
                         <filter icon="terp-emblem-important" string="Late" domain="[('date_deadline','&lt;',current_date)]"/>
                         <separator orientation="vertical"/>
-                        <field name="survey_id" widget="selection" select="1"/>
-                        <field name="email" select="1"/>
-                        <field name="user_id" select="1">
+                        <field name="survey_id" widget="selection"/>
+                        <field name="email"/>
+                        <field name="user_id">
                         <filter string="MY" icon="terp-personal" domain="[('user_id','=',uid)]"/>
                         </field>
                     </group>

@@ -49,10 +49,10 @@
             <field name="priority" eval="8"/>
             <field name="arch" type="xml">
                 <search string="Multi Company">
-                    <field name="name" select="1"/>
-                    <field name="company_id" select="1" widget="selection"/>
-                    <field name="company_dest_id" select="1" widget="selection"/>
-                    <field name="object_id" select="1"/>
+                    <field name="name"/>
+                    <field name="company_id" widget="selection"/>
+                    <field name="company_dest_id" widget="selection"/>
+                    <field name="object_id"/>
                 </search>
             </field>
         </record>

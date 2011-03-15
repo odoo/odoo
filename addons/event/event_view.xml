@@ -231,14 +231,14 @@
                         <filter icon="terp-check" string="Current" name="draft" domain="[('state','in',('draft', 'confirm'))]" help="Events in draft or confirmed state"/>
                         <filter icon="terp-camera_test" string="Confirmed" domain="[('state','=','confirm')]" help="Confirmed events"/>
                         <separator orientation="vertical"/>
-                        <field name="name" select="1"/>
+                        <field name="name"/>
                         <field name="user_id" widget="selection">
                         <filter icon="terp-personal"
                               string="My Events"
                                 help="My Events"
                               domain="[('user_id','=',uid)]"/>
                         </field>
-                        <field name="date_begin" select="1"/>
+                        <field name="date_begin"/>
                         <field name="section_id" widget="selection" groups="base.group_extended">
                           <filter icon="terp-personal+"
                                   context="{'invisible_section': False}"
@@ -488,7 +488,7 @@
                                 help="My Registrations"
                               domain="[('user_id','=',uid)]"/>
                         </field>
-                        <field name="state" select="1"/>
+                        <field name="state"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">

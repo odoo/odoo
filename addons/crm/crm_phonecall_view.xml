@@ -274,7 +274,7 @@
                        help="Unassigned Phonecalls" />
                </field>
                <field name="section_id"
-                   select="1" widget="selection" string="Sales Team">
+                   widget="selection" string="Sales Team">
                    <filter icon="terp-personal+" groups="base.group_extended"
                        domain="['|', ('section_id', '=', context.get('section_id')), '|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
                        help="My Sales Team(s)" />

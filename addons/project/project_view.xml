@@ -407,11 +407,11 @@
                         <separator orientation="vertical"/>
                         <filter string="Deadlines" context="{'deadline_visible': False}" domain="[('date_deadline','&lt;&gt;',False)]" help="Show only tasks having a deadline" icon="terp-gnome-cpu-frequency-applet+"/>
                         <separator orientation="vertical"/>
-                        <field name="name" select="1"/>
-                        <field name="project_id" select="1">
+                        <field name="name"/>
+                        <field name="project_id">
                              <filter domain="[('project_id.user_id','=',uid)]" help="My Projects" icon="terp-personal"/>
                         </field>
-                        <field name="user_id" select="1">
+                        <field name="user_id">
                             <filter domain="[('user_id','=',False)]"  help="Unassigned Tasks" icon="terp-personal-" />
                         </field>
                     </group>

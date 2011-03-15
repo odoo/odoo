@@ -163,7 +163,7 @@
                         <filter icon="terp-document-new" string="In Draft" domain="[('state','in',('draft', 'new'))]" help="Unvalidated Timesheets"/>
                         <filter icon="terp-camera_test" string="To Approve" domain="[('state','=','confirm')]" help="Confirmed Timesheets"/>
                         <separator orientation="vertical"/>
-                        <field name="employee_id" select="1"/>
+                        <field name="employee_id"/>
                         <field name="date_from"/>
                         <field name="department_id" widget="selection">
                             <filter icon="terp-personal+"

@@ -81,11 +81,11 @@
                     <separator orientation="vertical"/>
                     <filter icon="terp-go-home" string="Company Accounts" domain="[('company','=','yes')]"/>
                     <separator orientation="vertical"/>
-                    <field name="user" select="1">
+                    <field name="user">
                         <filter icon="terp-personal" help="My Accounts" name="my" domain="[('user','=',uid)]"/>
                     </field>
-                    <field name="name" select="1"/>
-                    <field name="email_id" select="1"/>
+                    <field name="name"/>
+                    <field name="email_id"/>
                </search>
            </field>
         </record>

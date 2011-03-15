@@ -108,9 +108,9 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Partner Contact">
-                <field name="name" select="1"/>
-                <field name="first_name" select="1"/>
-                <field name="partner_id" select="1" string="Partner"/>
+                <field name="name"/>
+                <field name="first_name"/>
+                <field name="partner_id" string="Partner"/>
             </search>
         </field>
     </record>
@@ -339,7 +339,7 @@
         <field name="inherit_id" ref="base.view_res_partner_address_filter"/>
         <field name="arch" type="xml">
             <search string="Search Contact">
-                   <field name="job_ids" select='1'/>
+                   <field name="job_ids"/>
             </search>
         </field>
     </record>

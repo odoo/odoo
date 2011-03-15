@@ -241,10 +241,10 @@
                     <separator orientation="vertical"/>
                     <filter icon="terp-gtk-go-back-rtl" string="Not Invoiced" domain="[('invoice_ids','=', False)]"  help="Purchase orders that include lines not invoiced." groups="base.group_extended"/>
                     <separator orientation="vertical"/>
-                    <field name="name" select="1" string="Reference"/>
-                    <field name="partner_id" select="1"/>
-                    <field name="product_id" select="1"/>
-                    <field name="create_uid" select="1"/>
+                    <field name="name" string="Reference"/>
+                    <field name="partner_id"/>
+                    <field name="product_id"/>
+                    <field name="create_uid"/>
                 </group>
                 <newline/>
                   <group expand="0" string="Group By..." colspan="4" col="10" groups="base.group_extended">

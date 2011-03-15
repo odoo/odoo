@@ -121,11 +121,11 @@
                        domain="[('state','=', 'delegated')]"
                        help="Delegated Invitations" />
                    <separator orientation="vertical"/>
-                   <field name="email" select='1'/>
-                   <field name="user_id" select="1" string="Responsible"/>
+                   <field name="email"/>
+                   <field name="user_id" string="Responsible"/>
                    <separator orientation="vertical"/>
-                   <field name="cutype" string="Invitation type" select="1"/>
-                   <field name="event_date" select="1"/>
+                   <field name="cutype" string="Invitation type"/>
+                   <field name="event_date"/>
                    <newline/>
                     <group expand="0" string="Group By...">
                         <filter string="Responsible" icon="terp-personal" domain="[]"
@@ -457,13 +457,13 @@
                                domain="[('state','=','confirmed')]"
                                help="Confirmed Events" />
                            <separator orientation="vertical"/>
-                           <field name="name" select="1" string="Summary"/>
-                           <field name="location" select="1" string="Location"/>
+                           <field name="name" string="Summary"/>
+                           <field name="location" string="Location"/>
                            <separator orientation="vertical"/>
-                           <field name="user_id" select="1"/>
+                           <field name="user_id"/>
                            <separator orientation="vertical"/>
-                           <field name="show_as" select="1"/>
-                           <field name="class" select="1" string="Privacy"/>
+                           <field name="show_as"/>
+                           <field name="class" string="Privacy"/>
                        </group>
                        <newline/>
                         <group expand="0" string="Group By...">
