@@ -22,8 +22,8 @@
 {
     "name": "Decimal Precision Configuration",
     "description": """
-This module allows to configure the price accuracy you need for different kind
-of usage: accounting, sales, purchases, ...
+Configure the price accuracy you need for different kinds of usage: accounting, sales, purchases, etc.
+======================================================================================================
 
 The decimal precision is configured per company.
 """,
@@ -39,6 +39,7 @@ The decimal precision is configured per company.
     "demo_xml": [],
     "installable": True,
     "certificate" : "001307317809612974621",
+    'images': ['images/1_decimal_accuracy_form.jpeg','images/1_decimal_accuracy_list.jpeg'],
 }
 
 
