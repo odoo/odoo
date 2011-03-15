@@ -31,7 +31,9 @@
     "author" : "OpenERP SA",
     "website": "http://www.openerp.com",
     "category" : "Localisation/Account Charts",
-    "description": """This is the module to manage the accounting chart for France in OpenERP.
+    "description": """
+    This is the module to manage the accounting chart for France in OpenERP.
+    ========================================================================
 
 Credits: Sistheo Zeekom CrysaLEAD
 """,
@@ -53,7 +55,8 @@ Credits: Sistheo Zeekom CrysaLEAD
     "demo_xml" : [],
     "certificate" : "00435321693876313629",
     "active": False,
-    "installable": True
+    "installable": True,
+    'images': ['images/config_chart_l10n_fr.jpeg','images/l10n_fr_chart.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
