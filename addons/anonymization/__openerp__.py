@@ -28,7 +28,7 @@
     'description': """
 This module allows you to anonymize a database.
     """,
-    'author': 'OpenERP sa',
+    'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['base'],
     'init_xml': [],

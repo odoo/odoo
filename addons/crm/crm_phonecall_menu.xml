@@ -8,7 +8,7 @@
         res_model="crm.phonecall"
         src_model="res.partner"
         view_mode="calendar,tree,form"
-        context="{'search_default_partner_id': [active_id], 'default_duration': 1.0}"
+        context="{'search_default_partner_id': [active_id], 'default_duration': 1.0, 'default_partner_id': active_id}"
         groups="base.group_extended"
         />
 

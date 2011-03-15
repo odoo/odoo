@@ -51,11 +51,9 @@ class account_invoice(osv.osv):
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         company_id = context.get('company_id', user.company_id.id)
         type2journal = {'out_invoice': 'sale', 'in_invoice': 'purchase', 'out_refund': 'sale_refund', 'in_refund': 'purchase_refund'}
-        refund_journal = {'out_invoice': False, 'in_invoice': False, 'out_refund': True, 'in_refund': True}
         journal_obj = self.pool.get('account.journal')
         res = journal_obj.search(cr, uid, [('type', '=', type2journal.get(type_inv, 'sale')),
-                                            ('company_id', '=', company_id),
-                                            ('refund_journal', '=', refund_journal.get(type_inv, False))],
+                                            ('company_id', '=', company_id)],
                                                 limit=1)
         return res and res[0] or False
 
@@ -657,7 +655,9 @@ class account_invoice(osv.osv):
     def _convert_ref(self, cr, uid, ref):
         return (ref or '').replace('/','')
 
-    def _get_analytic_lines(self, cr, uid, id):
+    def _get_analytic_lines(self, cr, uid, id, context=None):
+        if context is None:
+            context = {}
         inv = self.browse(cr, uid, id)
         cur_obj = self.pool.get('res.currency')
 
@@ -667,7 +667,7 @@ class account_invoice(osv.osv):
         else:
             sign = -1
 
-        iml = self.pool.get('account.invoice.line').move_line_get(cr, uid, inv.id)
+        iml = self.pool.get('account.invoice.line').move_line_get(cr, uid, inv.id, context=context)
         for il in iml:
             if il['account_analytic_id']:
                 if inv.type in ('in_invoice', 'in_refund'):
@@ -1352,6 +1352,8 @@ class account_invoice_line(osv.osv):
         currency = self.pool.get('res.currency').browse(cr, uid, currency_id, context=context)
 
         if company.currency_id.id != currency.id:
+            if type in ('in_invoice', 'in_refund'):
+                res_final['value']['price_unit'] = res.standard_price
             new_price = res_final['value']['price_unit'] * currency.rate
             res_final['value']['price_unit'] = new_price
 

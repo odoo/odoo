@@ -23,7 +23,7 @@
 {
     "name": "Human Resources: Holidays management",
     "version": "1.5",
-    "author": "OpenERP SA & Axelor",
+    "author": ['OpenERP SA', 'Axelor'],
     "category": "Generic Modules/Human Resources",
     "website": "http://www.openerp.com",
     "description": """Human Resources: Holidays tracking and workflow
@@ -48,8 +48,6 @@
             for example, you maybe will do it for the user 'admin'
             .
 """,
-    'author': 'OpenERP SA & Axelor',
-    'website': 'http://www.openerp.com',
     'depends': ['hr', 'crm', 'process', 'resource'],
     'init_xml': [],
     'update_xml': [
