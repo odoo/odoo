@@ -201,7 +201,7 @@ openerp.base.Session = openerp.base.BasicController.extend({
     session_valid: function() {
         return this.uid;
     },
-    session_login: function(db, login, password, sucess_callback) {
+    session_login: function(db, login, password, success_callback) {
         var self = this;
         this.db = db;
         this.login = login;
@@ -211,8 +211,8 @@ openerp.base.Session = openerp.base.BasicController.extend({
             self.session_id = result.session_id;
             self.uid = result.uid;
             self.session_check_modules();
-            if (sucess_callback)
-                sucess_callback();
+            if (success_callback)
+                success_callback();
         });
     },
     session_check_modules: function() {
