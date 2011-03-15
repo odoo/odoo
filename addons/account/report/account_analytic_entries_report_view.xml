@@ -34,7 +34,7 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Analytic Entries Analysis">
-              <group col="10" colspan="12">
+              <group>
                     <filter icon="terp-go-year" string="  365 Days  "
                             domain="[('day','&lt;=', time.strftime('%%Y-%%m-%%d')),('day','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
                             help="Analytic Entries of last 365 days"/>

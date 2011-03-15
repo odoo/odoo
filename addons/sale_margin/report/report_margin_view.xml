@@ -31,7 +31,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Margin">
-                    <group col="10" colspan="4">
+                    <group>
 						<filter icon="terp-go-year" string="This Year" domain="[('year','=',time.strftime('%%Y'))]" help="All Months Sales by Margin"/>
 						<filter icon="terp-go-month" string="This Month" domain="[('month','=',time.strftime('%%m'))]" help="This Months Sales by Margin"/>
 						<separator orientation="vertical"/>
@@ -53,7 +53,7 @@
                         <field name="categ_id"/>
                     </group>
                     <newline/>
-                    <group expand="1" string="Group By..." colspan="4" col="10">
+                    <group expand="1" string="Group By...">
                         <filter string="Partner" icon="terp-partner" context="{'group_by':'partner_id'}"/>
                         <separator orientation="vertical"/>
 	                    <filter string="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id'}"/>

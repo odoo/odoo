@@ -36,12 +36,12 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Wage Type">
-                   <group col='15' colspan='4'>
+                   <group>
                    <field name="name"/>
                    <field name="type"/>
                    </group>
                    <newline/>
-                   <group expand="0" string="Group By..." colspan="4" col="20">
+                   <group expand="0" string="Group By...">
                    <filter string="Period" icon="terp-go-month" domain="[]" context="{'group_by':'period_id'}"/>
                    </group>
                </search>
@@ -78,7 +78,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Wage Period">
-                   <group col='15' colspan='4'>
+                   <group>
                     <field name="name"/>
                    </group>
                </search>
@@ -131,7 +131,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Contract">
-                   <group col='15' colspan='4'>
+                   <group>
                    <filter string="Current" icon="terp-check" name="current"  domain="['|',('date_end','&gt;=', time.strftime('%%Y-%%m-%%d')),('date_end','=',False)]" help="Contracts in progress"/> 
                    <filter string="Overpassed" icon="terp-emblem-important" domain="[('date_end','&lt;', time.strftime('%%Y-%%m-%%d'))]" help="Contracts whose end date already passed"/>   
                    <separator orientation="vertical"/>                  
@@ -142,7 +142,7 @@
                    <field name="date_end"/>
                    </group>
                    <newline/>
-                   <group expand="0" string="Group By..." colspan="4" col="20">
+                   <group expand="0" string="Group By...">
                    <filter string="Employee" icon="terp-personal" domain="[]" context="{'group_by':'employee_id'}"/> 
                    <separator orientation="vertical"/> 
                    <filter string="Working Schedule" icon="terp-go-week" domain="[]" context="{'group_by':'working_hours'}"/>
@@ -251,7 +251,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Contract Type">
-                   <group col='15' colspan='4'>
+                   <group>
                     <field name="name"/>
                    </group>
                </search>

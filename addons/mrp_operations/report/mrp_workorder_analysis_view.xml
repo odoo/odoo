@@ -46,7 +46,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search">
-                  <group col="16" colspan="6">
+                  <group>
                         <filter icon="terp-go-year" string="Year"
                                 domain="[('year','=',time.strftime('%%Y'))]"
                                 help="Work orders made during current year"/>

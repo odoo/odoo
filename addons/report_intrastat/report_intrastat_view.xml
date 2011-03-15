@@ -97,7 +97,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Intrastat Data">
-                    <group col="10" colspan="4">
+                    <group>
                         <filter string="This Year" icon="terp-go-year" domain="[('name','=',time.localtime()[0])]"/>
                         <filter string="This Month" icon="terp-go-month" domain="[('month','=',time.localtime()[1])]"/>
                         <separator orientation="vertical"/>

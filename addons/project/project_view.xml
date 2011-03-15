@@ -106,7 +106,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Project">
-                   <group col='15' colspan='4'>
+                   <group>
                        <filter icon="terp-check" string="Current" name="Current" domain="[('state', 'in',('open','pending'))]" help="Open and Pending Projects"/>
                        <separator orientation="vertical"/>
                        <filter icon="terp-personal+" string="Member" domain="['|',('user_id', '=', uid),('members', '=', uid)]" help="Projects in which I am a member."/>
@@ -118,7 +118,7 @@
                        <field name="partner_id" string="Partner"/>
                    </group>
                    <newline />
-                    <group expand="0" string="Group By..." colspan="4" col="20" groups="base.group_extended">
+                    <group expand="0" string="Group By..." groups="base.group_extended">
                         <filter string="Manager" name="Manager"  icon="terp-personal" domain = "[]" context="{'group_by':'user_id'}"/>
                         <filter string="Partner" name="Partner" icon="terp-partner" domain = "[]" context="{'group_by':'partner_id'}"/>
                          <separator orientation="vertical"/>
@@ -395,7 +395,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                <search string="Task Edition">
-                    <group col="20" colspan="4">
+                    <group>
                         <filter string="Current" domain="[('state','in',('open','draft'))]"  name="current" help="Draft and In Progress tasks" icon="terp-check"/>
                         <filter string="In Progress" domain="[('state','=','open')]" help="In Progress Tasks" icon="terp-camera_test"/>
                         <filter string="Pending" domain="[('state','=','pending')]" context="{'show_delegated':False}" help="Pending Tasks" icon="terp-gtk-media-pause"/>
@@ -416,7 +416,7 @@
                         </field>
                     </group>
                     <newline/>
-                    <group expand="0" string="Group By..." colspan="4" col="20">
+                    <group expand="0" string="Group By...">
                         <filter string="Users" name="group_user_id" icon="terp-personal" domain="[]"  context="{'group_by':'user_id'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Project" name="group_project_id" icon="terp-folder-violet" domain="[]" context="{'group_by':'project_id'}"/>

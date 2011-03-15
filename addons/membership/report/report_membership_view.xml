@@ -35,7 +35,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Membership">
-                    <group col="8" colspan="4">
+                    <group>
                         <filter string="Last 365 Days" icon="terp-go-year"
                             domain="[('date_from','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date_from','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"/>
                         <filter string="Last 30 Days" icon="terp-go-month" name="month"
@@ -49,7 +49,7 @@
                         <field name="user_id"/>
                     </group>
                     <newline/>
-                    <group expand="1" string="Group By..." colspan="4" col="12">
+                    <group expand="1" string="Group By...">
                         <filter string="Salesman" icon="terp-personal" name="salesman"
                             domain="[]" context="{'group_by':'user_id'}"/>
                         <filter string="Associated Partner" icon="terp-partner" name="associate_member_id"

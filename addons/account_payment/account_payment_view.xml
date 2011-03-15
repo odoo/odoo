@@ -199,7 +199,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Payment Orders">
-                    <group col="8" colspan="4">
+                    <group>
                         <filter string="Draft" domain="[('state','=','draft')]" icon="terp-document-new"/>
                         <filter string="Confirmed" domain="[('state','=','open')]" icon="terp-camera_test"/>
                         <filter string="Done" domain="[('state','=','done')]" icon="terp-dialog-close"/>

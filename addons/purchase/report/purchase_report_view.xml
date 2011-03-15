@@ -53,7 +53,7 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Purchase Orders">
-            <group colspan="10" col="12">
+            <group>
                 <filter icon="terp-go-year" string="  Year  "
                 domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;=',time.strftime('%%Y-01-01'))]"
                 help="Order in current year"/>
@@ -79,7 +79,7 @@
                 <field name="product_id"/>
                 </group>
                 <newline/>
-                <group expand="0" string="Extended Filters..." colspan="10" col="12" groups="base.group_extended">
+                <group expand="0" string="Extended Filters..." groups="base.group_extended">
                     <field name="user_id"/>
                     <field name="validator"/>
                     <separator orientation="vertical"/>
@@ -93,7 +93,7 @@
                     <field name="expected_date"/>
                 </group>
                 <newline/>
-                <group expand="1" string="Group By..." colspan="10" col="12">
+                <group expand="1" string="Group By...">
                     <filter string="Supplier" name="group_partner_id" icon="terp-personal" context="{'group_by':'partner_id'}"/>
                     <filter string="Responsible" name="Responsible" icon="terp-personal" context="{'group_by':'user_id'}"/>
                     <filter string="Validated by" icon="terp-personal" context="{'group_by':'validator'}"/>

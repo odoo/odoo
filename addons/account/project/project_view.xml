@@ -27,7 +27,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Analytic Account">
-                    <group col="8" colspan="4">
+                    <group>
                         <filter icon="terp-gtk-media-pause" string="Pending" domain="[('state','=','pending')]" help="Pending Accounts"/>
                         <filter icon="terp-camera_test" string="Current" domain="[('state','=','open')]" help="Current Accounts"/>
                         <separator orientation="vertical"/>
@@ -201,7 +201,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Analytic Lines">
-                    <group col='6' colspan='4'>
+                    <group>
                         <filter name="sales" string="Sales" domain="[('journal_id.type','=','sale')]" icon="terp-camera_test" help="Analytic Journal Items related to a sale journal."/>
                         <filter name="purchases" string="Purchases" domain="[('journal_id.type','=','purchase')]" icon="terp-purchase" help="Analytic Journal Items related to a purchase journal."/>
                         <filter name="others" string="Others" domain="[('journal_id.type','in',('cash','general','situation'))]" icon="terp-folder-orange"/>
@@ -433,7 +433,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Analytic Entries Stats">
-                    <group col="8" colspan="4">
+                    <group>
                         <filter icon="terp-go-year" string="This Year" domain="[('name','=',time.strftime('%%Y'))]" help="Sale journal in this year"/>
                            <filter icon="terp-go-month" string="This Month" domain="[('month','=',time.strftime('%%m'))]" help="Sale journal in this month"/>
                            <separator orientation="vertical"/>

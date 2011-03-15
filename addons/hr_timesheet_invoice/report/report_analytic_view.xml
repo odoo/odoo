@@ -113,7 +113,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Analytic Lines to Invoice">
-                   <group col="12" colspan="4">
+                   <group>
                         <filter string="This Year" icon="terp-go-year" domain="[('name','=',time.localtime()[0])]"/>
                         <filter string="This Month" icon="terp-go-month" domain="[('month','=',time.localtime()[1])]"/>
                         <separator orientation="vertical"/>

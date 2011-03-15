@@ -53,7 +53,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search">
-                  <group col="16" colspan="8">
+                  <group>
                            <filter string="Year" icon="terp-go-year" help="Current Year"
                         domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')),('create_date','&gt;=',time.strftime('%%Y-01-01'))]"
                         />
@@ -92,7 +92,7 @@
                           <field name="user_id"  widget="selection"/>
                    </group>
                    <newline/>
-                   <group expand="0" string="Extended Filters..." colspan="10" col="12" groups="base.group_extended">
+                   <group expand="0" string="Extended Filters..." groups="base.group_extended">
                        <field name="partner_id"/>
                        <field name="assigned_to" widget="selection"/>
                        <separator orientation="vertical"/>
@@ -109,7 +109,7 @@
                        <field name="date_closed" string="Date Closed"/>
                    </group>
                    <newline/>
-                   <group  expand="1" string="Group By..." colspan="4" col="8">
+                   <group  expand="1" string="Group By...">
                            <filter name="User" string="Responsible" icon="terp-personal"
                         domain="[]" context="{'group_by':'user_id'}" />
                         <filter string="Assigned to" name="Responsible" icon="terp-personal"

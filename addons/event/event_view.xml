@@ -227,7 +227,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Events">
-                    <group col="10" colspan="4">
+                    <group>
                         <filter icon="terp-check" string="Current" name="draft" domain="[('state','in',('draft', 'confirm'))]" help="Events in draft or confirmed state"/>
                         <filter icon="terp-camera_test" string="Confirmed" domain="[('state','=','confirm')]" help="Confirmed events"/>
                         <separator orientation="vertical"/>
@@ -248,7 +248,7 @@
                         </field>
                     </group>
                     <newline/>
-                    <group expand="0" string="Group By..." colspan="4" col="12">
+                    <group expand="0" string="Group By...">
                         <filter string="Responsible"  icon="terp-personal" context="{'group_by': 'user_id'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Event Type" icon="terp-crm"  context="{'group_by':'type'}"/>
@@ -476,7 +476,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Event Registration">
-                    <group col="12" colspan="4">
+                    <group>
                         <filter icon="terp-check" string="Current" name="draft" domain="[('state','in',('draft', 'open'))]" help="Registrations in unconfirmed or confirmed state"/>
                         <filter icon="terp-camera_test" string="Confirmed" domain="[('state','=','open')]" help="Confirmed registrations"/>
                         <separator orientation="vertical"/>

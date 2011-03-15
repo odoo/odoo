@@ -172,7 +172,7 @@
            <field name="type">search</field>
            <field name="arch" type="xml">
                <search string="Templates">
-                    <group col="13" colspan="4">
+                    <group>
                         <field name="name"/>
                         <field name="object_name"/>
                         <field name="def_to"/>
@@ -182,7 +182,7 @@
                         <field name="file_name"/>
                     </group>
                     <newline/>
-                    <group expand="0" string="Group by..." colspan="4" col="10">
+                    <group expand="0" string="Group by...">
                         <filter string="Account" domain="[]" context="{'group_by':'from_account'}" icon="terp-folder-orange"/>
                         <separator orientation="vertical"/>
                         <filter string="Resource" domain="[]" context="{'group_by':'object_name'}" icon="terp-accessories-archiver"/>

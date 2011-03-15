@@ -8,13 +8,13 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Notes">
-                    <group col="10" colspan="4">
+                    <group>
                         <field name="name" string="Subject"/>
                         <field name="type" string="Note Type"/>
                         <field name="date" string="Date"/>
                     </group>
                     <newline/>
-                    <group expand="0" colspan="4" string="Group By...">
+                    <group expand="0" string="Group By...">
                         <filter string="Author" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                     </group>
                 </search>

@@ -170,7 +170,7 @@
            <field name="type">search</field>
            <field name="arch" type="xml">
                <search string="Budget">
-                   <group col="20" colspan="4">
+                   <group>
                        <filter string="Draft" icon="terp-document-new" domain="[('state','=','draft')]" help="Draft Budgets"/>
                        <filter string="To Approve" icon="terp-camera_test" domain="[('state','=','confirm')]" help="To Approve Budgets" />
                        <separator orientation="vertical"/>

@@ -46,7 +46,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Timesheet by user">
-                    <group col="10" colspan="4">
+                    <group>
                       <filter icon="terp-go-year" string="This Year"
                             domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
                             help="Timesheet lines in this year"/>
@@ -69,7 +69,7 @@
                         <field name="product_id"/>
                     </group>
                     <newline/>
-                    <group expand="0" string="Extended Filters..." colspan="10" col="12">
+                    <group expand="0" string="Extended Filters...">
                         <field name="date"/>
                         <separator orientation="vertical"/>
                         <field name="invoice_id" widget="selection"/>
@@ -161,7 +161,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Timesheet by user">
-                    <group col="10" colspan="4">
+                    <group>
                         <separator orientation="vertical"/>
                         <filter icon="terp-go-year" string="This Year" domain="[('name','=',time.strftime('%%Y'))]" help="Timesheet by user in this year"/>
                         <filter icon="terp-go-month" string="This Month" domain="[('month','=',time.strftime('%%m'))]" help="Timesheet by user in this month"/>
@@ -298,7 +298,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Daily timesheet by account">
-                    <group col="10" colspan="4">
+                    <group>
                         <separator orientation="vertical"/>
                         <filter icon="terp-go-year" string="This Year" domain="[('name','=',time.strftime('%%Y'))]" help="Daily Timesheets for this year"/>
                         <filter icon="terp-go-month" string="This Month" domain="[('month','=',time.strftime('%%m'))]" help="Daily Timesheets of this month"/>

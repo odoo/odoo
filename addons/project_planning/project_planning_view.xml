@@ -156,7 +156,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Planning by Account">
-                    <group col="8" colspan="4">
+                    <group>
                         <filter icon="terp-check" string="Current Plannings" domain="[('date_from','&lt;=',time.strftime('%%Y-%%m-%%d')),('date_to','&gt;=',time.strftime('%%Y-%%m-%%d'))]" help="Current Plannings"/>
                         <separator orientation="vertical"/>
                         <field name="name"/>
@@ -274,7 +274,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Planning statistics">
-                    <group col="10" colspan="4">
+                    <group>
                         <field name="planning_id"/>
                         <field name="user_id"/>
                         <field name="account_id" groups="analytic.group_analytic_accounting"/>

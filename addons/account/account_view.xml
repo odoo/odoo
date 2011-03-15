@@ -202,7 +202,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Accounts">
-                    <group col="10" colspan="4">
+                    <group>
                         <filter icon="terp-sale" string="Receivable Accounts" domain="[('type','=','receivable')]"/>
                         <filter icon="terp-purchase" string="Payable Accounts" domain="[('type','=','payable')]"/>
                         <separator orientation="vertical"/>
@@ -482,7 +482,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Bank Statements">
-                    <group col="8" colspan="4">
+                    <group>
                         <filter string="Draft" domain="[('state','=','draft')]" icon="terp-document-new"/>
                         <filter string="Confirmed" domain="[('state','=','confirm')]" icon="terp-camera_test"/>
                         <separator orientation="vertical"/>
@@ -526,7 +526,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Bank Statements">
-                    <group col="8" colspan="4">
+                    <group>
                         <filter string="Draft" domain="[('state','=','draft')]" icon="terp-document-new"/>
                         <filter string="Confirmed" domain="[('state','=','confirm')]" icon="terp-camera_test"/>
                         <separator orientation="vertical"/>
@@ -906,7 +906,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Taxes">
-                    <group col="10" colspan="4">
+                    <group>
                         <field name="name"/>
                         <field name="description"/>
                     </group>
@@ -1174,7 +1174,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Journal Items">
-                    <group col='10' colspan='4'>
+                    <group>
                         <filter icon="terp-document-new" string="Unbalanced" domain="[('state','=','draft')]" help="Unbalanced Journal Items"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-document-new" string="Unposted" domain="[('move_id.state','=','draft')]" help="Unposted Journal Items"/>
@@ -1194,7 +1194,7 @@
                         </field>
                     </group>
                     <newline/>
-                    <group col="10" colspan="4">
+                    <group>
                         <field name="journal_id" widget="selection" context="{'journal_id':self, 'visible_id':self, 'normal_view':False}"/>
                         <field name="period_id" context="{'period_id':self, 'search_default_period_id':self}"/>
                     </group>
@@ -1206,7 +1206,7 @@
                         <field name="balance" string="Debit/Credit"/>
                     </group>
                     <newline/>
-                    <group expand="0" string="Group By..." colspan="12" col="10">
+                    <group expand="0" string="Group By...">
                         <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
@@ -1438,7 +1438,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Move">
-                    <group col='8' colspan='4'>
+                    <group>
                         <filter icon="terp-document-new" string="Unposted" domain="[('state','=','draft')]" help="Unposted Journal Entries"/>
                         <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Journal Entries"/>
                         <separator orientation="vertical"/>
@@ -1450,12 +1450,12 @@
                         <field name="date"/>
                     </group>
                     <newline/>
-                    <group col='8' colspan='4'>
+                    <group>
                         <field name="journal_id" widget="selection"/>
                         <field name="period_id"/>
                     </group>
                     <newline/>
-                    <group expand="0" string="Group By..." colspan="12" col="10">
+                    <group expand="0" string="Group By...">
                         <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
@@ -1837,7 +1837,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Entry Subscription">
-                    <group col="8" colspan="4">
+                    <group>
                         <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Subscription"/>
                         <filter icon="terp-camera_test" string="Running" domain="[('state','=','running')]" help="Running Subscription"/>
                         <separator orientation="vertical"/>
@@ -2283,7 +2283,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Tax Templates">
-                    <group col="10" colspan="4">
+                    <group>
                         <filter icon="terp-sale" string="Sale" domain="[('type_tax_use','=','sale')]" help="Taxes used in Sales"/>
                         <filter icon="terp-purchase" string="Purchase" domain="[('type_tax_use','=','purchase')]" help="Taxes used in Purchases"/>
                         <separator orientation="vertical"/>

@@ -37,7 +37,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Log Analysis">
-                    <group col="20" colspan="8">
+                    <group>
                     <filter icon="terp-go-year" string="  Year  "
                         domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')),('create_date','&gt;=',time.strftime('%%Y-01-01'))]"
                         help="Log created in current year"/>

@@ -69,7 +69,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Cases by Team and Type">
-                   <group col="10" colspan="4">
+                   <group>
                            <filter string="This Year" icon="terp-go-year"
                                domain="[('name','=',time.localtime()[0])]"
                                help="Cases by Team and Type for this year" />
@@ -161,7 +161,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Cases by Team and Stage">
-                   <group col="8" colspan="4">
+                   <group>
                            <filter string="This Year" icon="terp-go-year"
                                domain="[('name','=',time.localtime()[0])]"
                                help="Cases by Team and Stage for this year" />
@@ -236,7 +236,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Cases by Section, Category and Stage">
-                   <group col='8' colspan='4'>
+                   <group>
                            <filter string="This Year" icon="terp-go-year"
                                domain="[('name','=',time.localtime()[0])]"
                                help="Cases by Section, Category and Stage for this year" />
@@ -329,7 +329,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Cases by User">
-                   <group col='12' colspan='4'>
+                   <group>
                            <filter string="This Year" icon="terp-go-year"
                                domain="[('name','=',time.localtime()[0])]"
                                help="Cases by User for this year" />

@@ -39,7 +39,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Cash Statements">
-                    <group col="8" colspan="4">
+                    <group>
                         <filter string="Open" domain="[('state','=','open')]" icon="terp-document-new" name="open"/>
                         <separator orientation="vertical"/>
                         <field name="date"/>
@@ -64,7 +64,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Cash Statements">
-                    <group col="8" colspan="4">
+                    <group>
                         <filter string="Open" domain="[('state','=','open')]" icon="terp-document-new" name="open"/>
                         <filter string="Confirm" domain="[('state','=','confirm')]" icon="terp-camera_test"/>
                         <separator orientation="vertical"/>

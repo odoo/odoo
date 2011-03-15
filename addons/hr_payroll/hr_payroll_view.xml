@@ -58,14 +58,14 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Passport">
-                    <group col="8" colspan="4">
+                    <group>
                         <field name="name"/>
                         <field name="employee_id"/>
                         <field name="country_id"/>
                         <field name="address_id"/>
                     </group>
                     <newline/>
-                    <group col="8" colspan="4" expand="0" string="Group By...">
+                    <group expand="0" string="Group By...">
                         <filter string="Employees" icon="terp-partner" name="employee_id" context="{'group_by':'employee_id'}"/>
                         <filter string="Country" name="country_id" icon="terp-go-home" context="{'group_by':'country_id'}"/>
                         <filter string="Expire" name="date_expire" icon="terp-go-month" context="{'group_by':'date_expire'}"/>
@@ -487,7 +487,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Payslips">
-                    <group col="8" colspan="4">
+                    <group>
                         <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Slip"/>
                         <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Slip"/>
                         <separator orientation="vertical"/>
@@ -499,7 +499,7 @@
                         <field name="date"/>
                     </group>
                     <newline/>
-                    <group col="8" colspan="4" expand="0" string="Group By...">
+                    <group expand="0" string="Group By...">
                         <filter string="Employees" icon="terp-personal" name="employee_id" context="{'group_by':'employee_id'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Register" icon="terp-folder-yellow" name="register_id" context="{'group_by':'register_id'}"/>
@@ -616,7 +616,7 @@
                      <field name="code"/>
                     <field name="type"/>
                     <newline/>
-                    <group expand="0" string="Group By..." colspan="4" col="4" groups="base.group_extended">
+                    <group expand="0" string="Group By..." groups="base.group_extended">
                         <filter string="Based" icon="terp-go-month" domain="[]" context="{'group_by':'base'}"/>
                         <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type'}"/>
                     </group>
@@ -703,7 +703,7 @@
             <field name="type">search</field>
              <field name="arch" type="xml">
                 <search string="Search Company Contribution">
-                    <group col="8" colspan="4">
+                    <group>
                         <filter icon="terp-document-new" string="Fixed Amount" domain="[('amount_type','=','fix')]" help="Draft Slip"/>
                         <filter icon="terp-camera_test" string="Function Calculation" domain="[('amount_type','=','func')]" help="Posted Slip"/>
                         <separator orientation="vertical"/>
@@ -713,7 +713,7 @@
                         <field name="register_id"/>
                     </group>
                     <newline/>
-                    <group col="8" colspan="4" expand="0" string="Group By...">
+                    <group expand="0" string="Group By...">
                         <filter string="Type" icon="terp-stock_symbol-selection" name="amount_type" context="{'group_by':'amount_type'}"/>
                         <filter string="Category" name="category_id" icon="terp-stock_symbol-selection"  context="{'group_by':'category_id'}"/>
                     </group>

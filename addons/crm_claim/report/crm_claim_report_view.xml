@@ -54,7 +54,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search">
-                  <group col="16" colspan="8">
+                  <group>
                        <filter string="  Year  " icon="terp-go-year"
                                domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')),('create_date','&gt;=',time.strftime('%%Y-01-01'))]"
                                help="Claims created in current year"/>

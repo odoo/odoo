@@ -232,7 +232,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Purchase Order">
-                 <group col='10' colspan='4'>
+                 <group>
                     <filter icon="terp-document-new" name="draft" string="Quotations" domain="[('state','=','draft')]"  help="Purchase order which are in draft state"/>
                     <filter icon="terp-camera_test" name="confirmed" string="To Approve" domain="[('state','in',('wait','confirmed'))]"  help="Purchase order to be approved"/>
                     <filter icon="terp-check" name="approved" string="Approved" domain="[('state','in',('approved','done'))]"  help="Approved purchase order"/>
@@ -247,7 +247,7 @@
                     <field name="create_uid"/>
                 </group>
                 <newline/>
-                  <group expand="0" string="Group By..." colspan="4" col="10" groups="base.group_extended">
+                  <group expand="0" string="Group By..." groups="base.group_extended">
                     <filter string="Supplier" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                      <separator orientation="vertical"/>
                     <filter string="Origin" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'origin'}"/>
