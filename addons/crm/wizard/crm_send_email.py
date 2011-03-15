@@ -129,10 +129,11 @@ class crm_send_new_email(osv.osv_memory):
                 ref_id = hist.ref_id
                 case = case_pool.browse(cr, uid, res_id, context=context)
 
-            emails = re.findall(r'([^ ,<@]+@[^> ,]+)', obj.email_to or '')
             if context.get('mass_mail'):
                 email_temp = case.email_from and tools.ustr(case.email_from) or ''
                 emails = re.findall(r'([^ ,<@]+@[^> ,]+)', email_temp)
+            else:
+                emails = re.findall(r'([^ ,<@]+@[^> ,]+)', obj.email_to or '')
 
             email_cc = re.findall(r'([^ ,<@]+@[^> ,]+)', obj.email_cc or '')
 
