@@ -646,6 +646,7 @@
         <field name="res_model">hr.salary.rule</field>
         <field name="view_type">form</field>
         <field name="view_id" ref="hr_salary_rule_tree"/>
+        <field name="domain">[('parent_rule_id','=',False)]</field>
     </record>
 
     <menuitem id="menu_action_hr_salary_rule_form" action="action_salary_rule_form" parent="payroll_configure" sequence="12"/>

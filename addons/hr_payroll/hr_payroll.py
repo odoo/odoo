@@ -852,6 +852,7 @@ class hr_payslip(osv.osv):
 #            self.write(cr, uid, [slip.id], update, context=context)
 #        return True
 
+
     def _get_parent_structure(self, cr, uid, struct_id, context=None):
         if not struct_id:
             return []
@@ -925,8 +926,11 @@ class hr_payslip(osv.osv):
         for struct in sal_structure:
             lines = func_pool.browse(cr, uid, struct, context=context).rule_ids
             for rl in lines:
+                if rl.child_ids:
+                    for r in rl.child_ids:
+                        lines.append(r)
                 rules.append(rl)
-
+        
         ad = []
         total = 0.0
         obj = {'basic': contract.wage}
@@ -951,6 +955,7 @@ class hr_payslip(osv.osv):
 
             value = 0.0
             base = False
+           
 #                company_contrib = 0.0
             base = line.computational_expression
             try:
@@ -960,6 +965,11 @@ class hr_payslip(osv.osv):
                 raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ') % (e))
             if line.amount_type == 'per':
                 try:
+                    if line.parent_rule_id:
+                        for rul in [line.parent_rule_id]:
+#                            if rul.child_depend:
+                            val = rul.amount * amt
+                            amt = val
                     value = line.amount * amt
                     if line.condition_range_min or line.condition_range_max:
                         if ((value < line.condition_range_min) or (value > line.condition_range_max)):
@@ -971,6 +981,10 @@ class hr_payslip(osv.osv):
                 except Exception, e:
                     raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ') % (e))
             elif line.amount_type == 'fix':
+                if line.parent_rule_id:
+                        for rul in [line.parent_rule_id]:
+#                            if rul.child_depend:
+                            value = value
                 if line.condition_range_min or line.condition_range_max:
                     if ((line.amount < line.condition_range_min) or (line.amount > line.condition_range_max)):
                         value = value
@@ -995,13 +1009,13 @@ class hr_payslip(osv.osv):
 #                'function_id': False,
                 'base': line.computational_expression
             }
-            if line.appears_on_payslip:
+            if line.appears_on_payslip and not line.parent_rule_id:
                 if line.condition_range_min or line.condition_range_max:
                     if not ((value < line.condition_range_min) or (value > line.condition_range_max)):
                         update['value']['line_ids'].append(vals)
                 else:
                     update['value']['line_ids'].append(vals)
-
+            
         basic = contract.wage
         number = sequence_obj.get(cr, uid, 'salary.slip')
         update['value'].update({
@@ -1201,9 +1215,9 @@ class hr_salary_rule(osv.osv):
         'appears_on_payslip': fields.boolean('Appears on Payslip', help="Used for the display of rule on payslip"),
         'condition_range_min': fields.float('Minimum Range', required=False, help="The minimum amount, applied for this rule."),
         'condition_range_max': fields.float('Maximum Range', required=False, help="The maximum amount, applied for this rule."),
-        'sal_rule_id':fields.many2one('hr.salary.rule', 'Parent Salary Structure', select=True),
+        'parent_rule_id':fields.many2one('hr.salary.rule', 'Parent Salary Rule', select=True),
         'child_depend':fields.boolean('Children Rule'),
-        'child_ids':fields.one2many('hr.salary.rule', 'sal_rule_id', 'Child Salary Sructure'),
+        'child_ids':fields.one2many('hr.salary.rule', 'parent_rule_id', 'Child Salary Rule'),
         'company_id':fields.many2one('res.company', 'Company', required=False),
         'register_id':fields.property(
             'hr.contibution.register',
