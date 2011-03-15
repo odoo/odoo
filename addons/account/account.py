@@ -247,9 +247,6 @@ class account_account(osv.osv):
         }
         #get all the necessary accounts
         children_and_consolidated = self._get_children_and_consol(cr, uid, ids, context=context)
-        #children_and_consolidated is empty when account has not any child account and try to make that account as inactive
-        if not children_and_consolidated:
-            children_and_consolidated = ids
         #compute for each account the balance/debit/credit from the move lines
         accounts = {}
         res = {}
