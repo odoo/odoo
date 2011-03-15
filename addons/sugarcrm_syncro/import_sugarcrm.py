@@ -39,29 +39,32 @@ def find_mapped_id(obj, cr, uid, res_model, sugar_id, context):
     return model_obj.search(cr, uid, [('model', '=', res_model), ('module', '=', 'sugarcrm_import'), ('name', '=', sugar_id)], context=context)
 
 
-def import_users(surgar_obj, cr, uid, context=None):
+def import_users(sugar_obj, cr, uid, context=None):
     if not context:
         context = {}
-    map_user = {'Users':
-            {'name': ['first_name', 'last_name'],
+    map_user = {'id' : 'id', 
+             'name': ['first_name', 'last_name'],
             'login': 'user_name',
-            'new_password' : 'pwd_last_changed',
-            } ,
-        }
-    new_user_id = False
-    user_obj = surgar_obj.pool.get('res.users')
+            
+            
+            'context_lang' : 'context_lang',
+            'password' : 'password',
+            '.id' : '.id',
+            } 
+    user_obj = sugar_obj.pool.get('res.users')
     PortType,sessionid = sugar.login(context.get('username',''), context.get('password',''))
     sugar_data = sugar.search(PortType,sessionid, 'Users')
     for val in sugar_data:
         user_ids = user_obj.search(cr, uid, [('login', '=', val.get('user_name'))])
-        if user_ids: #we skip the import of admin but we should save the mapping in ir.model.data
-            #create_mapping(surgar_obj, cr, uid
-            continue
-        fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, 'Users', map_user)
-        openerp_val = dict(zip(fields,datas))
-        openerp_val['context_lang'] = context.get('lang','en_US')
-        new_user_id = user_obj.create(cr, uid, openerp_val, context)
-    return new_user_id
+        if user_ids: 
+            val['.id'] = str(user_ids[0])
+        else:
+            val['password'] = 'sugarcrm' #default password for all user
+
+        val['context_lang'] = context.get('lang','en_US')
+        fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_user)
+        #All data has to be imported separatly because they don't have the same field
+        user_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', context=context)
 
 def get_lead_status(surgar_obj, cr, uid, sugar_val,context=None):
     if not context:
@@ -86,29 +89,29 @@ def get_opportunity_status(surgar_obj, cr, uid, sugar_val,context=None):
     if not context:
         context = {}
     stage_id = ''
-    stage_dict = {'sales_stage': #field in the sugarcrm database
-            { #Mapping of sugarcrm stage : openerp opportunity stage Mapping
+    stage_dict = { #Mapping of sugarcrm stage : openerp opportunity stage Mapping
                'Need Analysis': 'New',
                'Closed Lost': 'Lost',
                'Closed Won': 'Won',
                'Value Proposition': 'Proposition',
                 'Negotiation/Review': 'Negotiation'
-            },}
-    stage = stage_dict['sales_stage'].get(sugar_val['sales_stage'], '')
+            }
+    stage = stage_dict.get(sugar_val['sales_stage'], '')
     stage_pool = surgar_obj.pool.get('crm.case.stage')
     stage_ids = stage_pool.search(cr, uid, [("type", '=', 'opportunity'), ('name', '=', stage)])
     for stage in stage_pool.browse(cr, uid, stage_ids, context):
         stage_id = stage.id
     return stage_id
 
-def import_leads(surgar_obj, cr, uid, context=None):
+def import_leads(sugar_obj, cr, uid, context=None):
     if not context:
         context = {}
     map_lead = {
-            'Leads':{'name': ['first_name','last_name'],
-            'contact_name': ['first_name','last_name'],
+            'id' : 'id',
+            'name': ['first_name', 'last_name'],
+            'contact_name': ['first_name', 'last_name'],
             'description': 'description',
-            'partner_name': ['first_name','last_name'],
+            'partner_name': ['first_name', 'last_name'],
             'email_from': 'email1',
             'phone': 'phone_work',
             'mobile': 'phone_mobile',
@@ -117,33 +120,25 @@ def import_leads(surgar_obj, cr, uid, context=None):
             'street': 'primary_address_street',
             'zip': 'primary_address_postalcode',
             'city':'primary_address_city',
-            },
-        }
-    user_id = False
-    lead_pool = surgar_obj.pool.get('crm.lead')
-    PortType,sessionid = sugar.login(context.get('username',''), context.get('password',''))
-    sugar_data = sugar.search(PortType,sessionid, 'Leads')
-    new_lead_id = False
+            'user_id/id' : 'assigned_user_id',
+            
+            
+            'stage_id.id' : 'stage_id.id',
+            'type' : 'type',
+    
+            }
+        
+    lead_obj = sugar_obj.pool.get('crm.lead')
+    PortType, sessionid = sugar.login(context.get('username', ''), context.get('password', ''))
+    sugar_data = sugar.search(PortType, sessionid, 'Leads')
     for val in sugar_data:
-       #Need To FIx for Import user data record from sugarcrm.
-       if val.get('assigned_user_name'):
-           user_ids = surgar_obj.pool.get('res.users').search(cr, uid, [('name', '=', val.get("assigned_user_name"))])
-       if not user_ids:
-           user_ids = surgar_obj.pool.get('res.users').create(cr, uid, {'name': val.get('assigned_user_name'), 'login': val.get("assigned_user_name")})
-       if user_ids:
-           if isinstance(user_ids,list):
-               user_id = user_ids[0]
-           else:
-                user_id=user_ids                  
-       fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, 'Leads', map_lead)
-       stage_id = get_lead_status(surgar_obj, cr, uid, val, context)
-       openerp_val = dict(zip(fields,datas))
-       openerp_val['type'] = 'lead'
-       openerp_val['user_id'] = user_id
-       openerp_val['stage_id'] = stage_id
-       new_lead_id = lead_pool.create(cr, uid, openerp_val, context)
-    return new_lead_id
+        val['type'] = 'lead'
+        stage_id = get_lead_status(sugar_obj, cr, uid, val, context)
+        val['stage_id.id'] = stage_id
+        fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_lead)
+        lead_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', context=context)
 
+#Need fixes
 def import_opportunities(surgar_obj, cr, uid, context=None):
     if not context:
         context = {}
