@@ -1204,7 +1204,7 @@ class hr_salary_rule(osv.osv):
         'python_compute':fields.text('Python Code'),
      }
     _defaults = {
-        'python_compute': '''# price_unit\n\nresult = basic * 0.10''',
+        'python_compute': '''# basic\n\nresult = basic * 0.10''',
         'conditions': 'True',
         'computational_expression': 'basic',
         'sequence': 5,
