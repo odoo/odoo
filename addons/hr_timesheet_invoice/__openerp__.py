@@ -26,10 +26,12 @@
     'category': 'Generic Modules/Accounting',
     'description': """
 Module to generate invoices based on costs (human resources, expenses, ...).
+============================================================================
 You can define price lists in analytic account, make some theoretical revenue
 reports, eso.""",
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
+    'images': ['images/hr_bill_task_work.jpeg','images/hr_type_of_invoicing.jpeg'],
     'depends': ['account', 'hr_timesheet'],
     'data': [
         'security/ir.model.access.csv',
