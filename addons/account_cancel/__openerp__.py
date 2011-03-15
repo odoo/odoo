@@ -28,6 +28,7 @@
     Module adds 'Allow cancelling entries' field on form view of account journal. If set to true it allows user to cancel entries & invoices.
     """,
     'website': 'http://www.openerp.com',
+    "images" : ["images/account_cancel.jpeg"],
     "depends" : ["account"],
     'init_xml': [],
     'update_xml': ['account_cancel_view.xml' ],

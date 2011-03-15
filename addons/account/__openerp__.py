@@ -50,7 +50,7 @@ grouping is maintained through journal) for a particular financial year and for 
 module named account_voucher.
     """,
     'website': 'http://www.openerp.com',
-    'images' : ['images/accounts.jpeg','images/bank_statement.jpeg','images/cash_register.jpeg','images/chart_of_accounts.jpeg','images/customer_invoice.jpeg','images/journal_entries.jpeg','images/payment_order.jpeg','images/supplier_voucher.jpeg'],
+    'images' : ['images/accounts.jpeg','images/bank_statement.jpeg','images/cash_register.jpeg','images/chart_of_accounts.jpeg','images/customer_invoice.jpeg','images/journal_entries.jpeg','images/supplier_voucher.jpeg'],
     'init_xml': [],
     "depends" : ["product", "analytic", "process","board"],
     'update_xml': [

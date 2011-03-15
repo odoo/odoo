@@ -26,9 +26,11 @@
     "category": "Generic Modules/Payment",
     "description": """
 This module provides :
+----------------------
 * a more efficient way to manage invoice payment.
 * a basic mechanism to easily plug various automated payment.
     """,
+    'images': ['images/payment_mode.jpeg','images/payment_order.jpeg'],
     'depends': ['account','account_voucher'],
     'init_xml': [],
     'update_xml': [
