@@ -370,18 +370,18 @@
             <field name="model">report_timesheet.account</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
-                <form string="Timesheet by account">
-                    <group col="10" colspan="4">
+                <search string="Timesheet by account">
+                    <group>
                         <separator orientation="vertical"/>
                         <filter icon="terp-go-year" string="This Year" domain="[('name','=',time.strftime('%%Y'))]"/>
                         <filter icon="terp-go-month" string="This Month" domain="[('month','=',time.strftime('%%m'))]"/>
                         <separator orientation="vertical"/>
-                        <field name="name" select="1"/>
-                        <field name="month" select="1"/>
-                        <field name="account_id" select="1" groups="analytic.group_analytic_accounting"/>
-                        <field name="user_id" select="1"/>
+                        <field name="name"/>
+                        <field name="month"/>
+                        <field name="account_id" groups="analytic.group_analytic_accounting"/>
+                        <field name="user_id"/>
                     </group>
-                </form>
+                </search>
             </field>
         </record>
 
