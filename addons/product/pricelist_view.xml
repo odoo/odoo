@@ -183,13 +183,19 @@
                 </form>
             </field>
         </record>
+        
         <record id="product_price_type_action" model="ir.actions.act_window">
-            <field name="name">Prices Types</field>
+            <field name="name">Price Types</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">product.price.type</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
+        
+        <menuitem
+            action="product_price_type_action" id="menu_product_price_type"
+            parent="product.menu_product_pricelist_main" sequence="4"/>
+            
         <record id="product_pricelist_type_view" model="ir.ui.view">
             <field name="name">product.pricelist.type.form</field>
             <field name="model">product.pricelist.type</field>
