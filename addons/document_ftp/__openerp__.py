@@ -24,7 +24,10 @@
     'name': 'Integrated FTP Server with Document Management System',
     'version': '1.99',
     'category': 'Generic Modules/Others',
-    'description': """This is a support FTP Interface with document management system.
+    'description': """
+    This is a support FTP Interface with document management system.
+    ================================================================
+
     With this module you would not only be able to access documents through OpenERP
     but you would also be able to connect with them through the file system using the
     FTP client.
@@ -46,6 +49,7 @@
     'installable': True,
     'active': False,
     'certificate': '00934787762705016005',
+    'images': ['images/1_configure_ftp.jpeg','images/2_document_browse.jpeg','images/3_document_ftp.jpeg'],
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
