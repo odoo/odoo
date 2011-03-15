@@ -24,6 +24,7 @@ from crm import crm
 import time
 import binascii
 import tools
+from tools.translate import _
 
 CRM_CLAIM_PENDING_STATES = (
     crm.AVAILABLE_STATES[2][0], # Cancelled
@@ -80,6 +81,49 @@ class crm_claim(crm.crm_case, osv.osv):
                                   \nIf the case needs to be reviewed then the state is set to \'Pending\'.'), 
         'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
     }
+    
+    def write(self, cr, uid, ids, vals, context=None):
+        if not context:
+            context = {}
+            
+        if 'stage_id' in vals and vals['stage_id']:
+            type = context and context.get('stage_type', '')
+            stage_obj = self.pool.get('crm.case.stage').browse(cr, uid, vals['stage_id'], context=context)
+            self.history(cr, uid, ids, _("Changed Stage to: ") + stage_obj.name, details=_("Changed Stage to: ") + stage_obj.name)
+            message=''
+            for case in self.browse(cr, uid, ids, context=context):
+                message = _("The stage of lead '%s' has been changed to '%s'.") % (case.name, stage_obj.name)
+                self.log(cr, uid, case.id, message)
+        return super(crm_claim,self).write(cr, uid, ids, vals, context)
+    
+    def stage_historize(self, cr, uid, ids, stage, context=None):
+        stage_obj = self.pool.get('crm.case.stage').browse(cr, uid, stage, context=context)
+        self.history(cr, uid, ids, _('Stage'), details=stage_obj.name)
+        for case in self.browse(cr, uid, ids, context=context):
+            if case.type == 'lead':
+                message = _("The stage of lead '%s' has been changed to '%s'.") % (case.name, stage_obj.name)
+            elif case.type == 'opportunity':
+                message = _("The stage of opportunity '%s' has been changed to '%s'.") % (case.name, stage_obj.name)
+            self.log(cr, uid, case.id, message)
+        return True
+
+    def stage_next(self, cr, uid, ids, context=None):
+        stage = super(crm_claim, self).stage_next(cr, uid, ids, context=context)
+        if stage:
+            stage_obj = self.pool.get('crm.case.stage').browse(cr, uid, stage, context=context)
+            if stage_obj.on_change:
+                data = {'probability': stage_obj.probability}
+                self.write(cr, uid, ids, data)
+        return stage
+
+    def stage_previous(self, cr, uid, ids, context=None):
+        stage = super(crm_claim, self).stage_previous(cr, uid, ids, context=context)
+        if stage:
+            stage_obj = self.pool.get('crm.case.stage').browse(cr, uid, stage, context=context)
+            if stage_obj.on_change:
+                data = {'probability': stage_obj.probability}
+                self.write(cr, uid, ids, data)
+        return stage
     
     def _get_stage_id(self, cr, uid, context=None):
         """Finds type of stage according to object.
