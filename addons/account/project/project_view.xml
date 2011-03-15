@@ -56,19 +56,19 @@
             <field name="field_parent">child_complete_ids</field>
             <field name="arch" type="xml">
                 <tree colors="blue:type in ('view');red:(date&lt;current_date);black:(date&gt;=current_date);black:(date==False)" string="Analytic account" toolbar="1">
-                    <field name="name"/>                    
+                    <field name="name"/>
                     <field name="code"/>
                     <field name="quantity"/>
                     <field name="quantity_max"/>
                     <field name="debit"/>
                     <field name="credit"/>
                     <field name="balance"/>
-                    <field name="currency_id" groups="base.group_extended"/>                    
+                    <field name="currency_id" groups="base.group_extended"/>
                     <field name="date" invisible="1"/>
                     <field name="user_id" invisible="1"/>
                     <field name="partner_id" invisible="1"/>
                     <field name="parent_id" invisible="1"/>
-                    <field name="type" invisible="1"/>
+                    <field name="type"/>
                 </tree>
             </field>
         </record>
@@ -82,7 +82,7 @@
                     <group colspan="4" col="6">
                         <field name="name" select="1" colspan="4"/>
                         <field name="code" select="1"/>
-                        <field name="parent_id" on_change="on_change_parent(parent_id)" groups="base.group_extended"/>
+                        <field name="parent_id" on_change="on_change_parent(parent_id)" groups="base.group_extended" domain="[('type','=','view')]"/>
                         <field name="company_id" on_change="on_change_company(company_id)" select="2" widget="selection" groups="base.group_multi_company" attrs="{'required': [('type','&lt;&gt;','view')]}"/>
                         <field name="type" select="2"/>
                     </group>
@@ -446,7 +446,7 @@
         </record>
 
         <act_window
-            context="{'search_default_account_id': [active_id], 'search_default_user_id': False}"
+            context="{'search_default_account_id': [active_id], 'search_default_user_id': False, 'default_account_id': active_id}"
             id="act_acc_analytic_acc_5_report_hr_timesheet_invoice_journal"
             name="All Analytic Entries"
             res_model="account.analytic.line"

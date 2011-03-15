@@ -144,7 +144,7 @@ class stock_return_picking(osv.osv_memory):
         data_obj = self.pool.get('stock.return.picking.memory')
         wf_service = netsvc.LocalService("workflow")
         pick = pick_obj.browse(cr, uid, record_id, context=context)
-        data = self.read(cr, uid, ids[0])
+        data = self.read(cr, uid, ids[0], context=context)
         new_picking = None
         date_cur = time.strftime('%Y-%m-%d %H:%M:%S')
         set_invoice_state_to_none = True

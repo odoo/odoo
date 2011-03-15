@@ -410,7 +410,7 @@
     <act_window
         id="act_res_partner_jobs" 
         name="Open Jobs"
-        context="{'search_default_address_id': [active_id]}"
+        context="{'search_default_address_id': [active_id], 'default_address_id': active_id}"
         res_model="res.partner.job"
         src_model="res.partner.address"
         />
