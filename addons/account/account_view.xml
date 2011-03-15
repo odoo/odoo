@@ -387,7 +387,7 @@
             <field name="model">account.journal</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
-                <tree string="Search Account Journal">
+                <search string="Search Account Journal">
                     <group>
                     <filter domain="['|', ('type', '=', 'sale'), ('type', '=', 'sale_refund')]" string="Sale" icon="terp-camera_test"/>
                     <filter domain="['|', ('type', '=', 'purchase'), ('type', '=', 'purchase_refund')]" string="Purchase" icon="terp-purchase"/>
@@ -404,7 +404,7 @@
                     <separator orientation="vertical"/>
                     <filter string="Type" context="{'group_by':'type'}" icon="terp-stock_symbol-selection"/>
                     </group>
-                </tree>
+                </search>
             </field>
         </record>
         <record id="view_account_journal_form" model="ir.ui.view">
