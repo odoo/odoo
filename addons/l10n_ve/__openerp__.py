@@ -1,11 +1,11 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2008 Netquatro, C.A. (<http://openerp.netquatro.com>). All Rights Reserved
 #    $Id$
 #    This program is free software: you can redistribute it and/or modify
@@ -27,9 +27,11 @@
     "version" : "1.0",
     "author" : ['OpenERP SA', "Netquatro"],
     "category" : "Localisation/Account Charts",
-    "description": 
+    "description":
 '''
-This is the module to manage the accounting chart for Venezuela in Open ERP.
+This is the module to manage the accounting chart for Venezuela in OpenERP.
+===========================================================================
+
 Este módulo es para manejar un catálogo de cuentas ejemplo para Venezuela.
 ''',
     "depends" : ["account", "base_vat", "account_chart"],
@@ -39,6 +41,7 @@ Este módulo es para manejar un catálogo de cuentas ejemplo para Venezuela.
     "active": False,
     "installable": True,
     "certificate" : "00763145921185574557",
+    'images': ['images/config_chart_l10n_ve.jpeg','images/l10n_ve_chart.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
