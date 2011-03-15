@@ -23,7 +23,12 @@
     "version" : "1.1",
     "author" : "OpenERP SA",
     "category": 'Generic Modules/Accounting',
-    "description": """Financial and accounting module that covers:
+    "description": """
+    Accounting and Financial Management
+    ===================================
+
+    Financial and accounting module that covers:
+    --------------------------------------------
     General accountings
     Cost / Analytic accounting
     Third party accounting
@@ -32,16 +37,20 @@
     Customer and Supplier Invoices
     Bank statements
     Reconciliation process by partner
+
     Creates a dashboard for accountants that includes:
-    * List of uninvoiced quotations
-    * Graph of aged receivables
-    * Graph of aged incomes
+    --------------------------------------------------
+    * List of Customer Invoice to Approve
+    * Company Analysis
+    * Graph of Aged Receivables
+    * Graph of Treasury
 
 The processes like maintaining of general ledger is done through the defined financial Journals (entry move line or
 grouping is maintained through journal) for a particular financial year and for preparation of vouchers there is a
 module named account_voucher.
     """,
     'website': 'http://www.openerp.com',
+    'images' : ['images/accounts.jpeg','images/bank_statement.jpeg','images/cash_register.jpeg','images/chart_of_accounts.jpeg','images/customer_invoice.jpeg','images/journal_entries.jpeg','images/payment_order.jpeg','images/supplier_voucher.jpeg'],
     'init_xml': [],
     "depends" : ["product", "analytic", "process","board"],
     'update_xml': [
@@ -133,7 +142,7 @@ module named account_voucher.
         'test/account_bank_statement.yml',
         'test/account_cash_statement.yml',
         'test/account_report.yml',
-        
+
 
             ],
     'installable': True,
