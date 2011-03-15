@@ -123,10 +123,8 @@
                         <filter icon="gtk-cancel"
                             string="Cancel"
                             domain="[('state','=','cancel')]"/>
-                        <group>
-                            <separator orientation="vertical"/>
-                            <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'crm.fundraising')]"/>
-                        </group>
+                        <separator orientation="vertical"/>
+                        <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'crm.fundraising')]"/>
                     </group>
                     <newline/>
                     <group  expand="1" string="Group By...">
