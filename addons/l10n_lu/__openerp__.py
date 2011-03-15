@@ -25,7 +25,8 @@
     'version': '1.0',
     'category': 'Localisation/Account Charts',
     'description': """
-This module installs:
+    This is the base module to manage the accounting chart for Luxembourg.
+    =====================================================================
 
     *the KLUWER Chart of Accounts,
     *the Tax Code Chart for Luxembourg
@@ -46,5 +47,6 @@ This module installs:
     'installable': True,
     'active': False,
     'certificate': '0078164766621',
+    'images': ['images/config_chart_l10n_lu.jpeg','images/l10n_lu_chart.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
