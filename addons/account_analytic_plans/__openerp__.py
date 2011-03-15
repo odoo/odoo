@@ -56,6 +56,7 @@ of distribution models.
         """,
     'author'    : 'OpenERP SA',
     'website'   : 'http://www.openerp.com',
+    'images'   : ['images/analytic_plan.jpeg'],
     'depends'   : ['account', 'account_analytic_default'],
     'init_xml'  : [],
     'update_xml': [

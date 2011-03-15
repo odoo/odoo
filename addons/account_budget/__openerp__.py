@@ -24,8 +24,9 @@
     'name': 'Budget Management',
     'version': '1.0',
     'category': 'Generic Modules/Accounting',
-    'description': """This module allows accountants to manage analytic and crossovered budgets.
-
+    'description': """
+This module allows accountants to manage analytic and crossovered budgets.
+==========================================================================
 Once the Master Budgets and the Budgets are defined (in Accounting/Budgets/),
 the Project Managers can set the planned amount on each Analytic Account.
 
@@ -44,6 +45,7 @@ Three reports are available:
 """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
+    'images': ['images/budget.jpeg','images/budgetary_position.jpeg'],
     'depends': ['account'],
     'init_xml': [],
     'update_xml': [

@@ -25,6 +25,7 @@
     'category'  : 'Generic Modules/Accounting',
     'description': """
 Allows to automatically select analytic accounts based on criterions:
+=====================================================================
 * Product
 * Partner
 * User
@@ -33,6 +34,7 @@ Allows to automatically select analytic accounts based on criterions:
     """,
     'author'    : 'OpenERP SA',
     'website'   : 'http://www.openerp.com',
+    'images'   : ['images/analytic_defaults.jpeg'],
     'depends'   : ['sale'],
     'init_xml'  : [],
     'update_xml': ['security/ir.model.access.csv', 'account_analytic_default_view.xml'],

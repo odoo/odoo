@@ -21,19 +21,19 @@
 
 
 {
-    'name'      : 'report_account_analytic',
+    'name'      : 'Analysis of Analytic Account ',
     'version'   : '1.1',
     'category'  : 'Generic Modules/Accounting',
     'description': """
-This module is for modifying account analytic view to show
-important data to project manager of services companies.
-Adds menu to show relevant information to each manager..
-
+This module is for modifying account analytic view to show important data to project manager of services companies.
+===================================================================================================================
+Adds menu to show relevant information to each manager.
 You can also view the report of account analytic summary
 user-wise as well as month wise.
 """,
     "author"    : "Camptocamp",
     "website"   : "http://www.camptocamp.com/",
+    "images"   : ["images/bill_tasks_works.jpeg","images/overpassed_accounts.jpeg"],
     "depends"   : ["hr_timesheet_invoice"],
     "init_xml"  : [],
     "update_xml": [

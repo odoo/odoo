@@ -30,6 +30,7 @@
     This module will add this functionality by using a interim account, to store the value of shipped goods and will contra book this interim account
     when the invoice is created to transfer this amount to the debtor or creditor account.
     Secondly, price differences between actual purchase price and fixed product standard price are booked on a separate account""",
+    "images"   : ["images/account_anglo_saxon.jpeg"],
     "depends"   : ["product", "purchase"],
     "category"  : "Generic Modules/Inventory Control",
     "init_xml"  : [],
