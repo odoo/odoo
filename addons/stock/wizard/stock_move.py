@@ -100,9 +100,9 @@ class stock_move_consume(osv.osv_memory):
             context = {}
         move_obj = self.pool.get('stock.move')
         move_ids = context['active_ids']
-        for data in self.read(cr, uid, ids):
+        for data in self.browse(cr, uid, ids, context=context):
             move_obj.action_consume(cr, uid, move_ids,
-                             data['product_qty'], data['location_id'],
+                             data.product_qty, data.location_id.id,
                              context=context)
         return {'type': 'ir.actions.act_window_close'}
 
