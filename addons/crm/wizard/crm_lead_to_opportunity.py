@@ -170,7 +170,7 @@ Leads Could not convert into Opportunity"))
             partner_id = partner_ids and partner_ids[0] or data.partner_id.id
             self._convert(cr, uid, ids, lead, partner_id, stage_ids, context=context)
             #If we convert in mass, don't merge if there is no other opportunity but no warning
-            if data.name == 'merge' and (len(data.opportunity_ids) > 1 or not context.get('mass-convert') ): 
+            if data.name == 'merge' and (len(data.opportunity_ids) > 1 or not context.get('mass_convert') ): 
                 merge_obj = self.pool.get('crm.merge.opportunity')
                 self.write(cr, uid, ids, {'opportunity_ids' : [(6,0, [data.opportunity_ids[0].id])]}, context=context)
                 context.update({'lead_ids' : record_id})
