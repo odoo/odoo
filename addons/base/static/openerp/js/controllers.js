@@ -75,6 +75,7 @@ openerp.base.BasicController = Class.extend({
         for (var name in this) {
             if(typeof(this[name]) == "function") {
                 this[name].debug_name = name;
+                // bind ALL function to this not only on_and _do ?
                 if((/^on_|^do_/).test(name)) {
                     this[name] = openerp.base.callback(this, this[name]);
                 }
@@ -135,6 +136,7 @@ openerp.base.Session = openerp.base.BasicController.extend({
         this.uid = false;
         this.session_id = false;
         this.module_list = [];
+        this.module_loaded = {"base": true};
         this.context = {};
     },
     rpc: function(url, params, success_callback, error_callback) {
@@ -222,39 +224,46 @@ openerp.base.Session = openerp.base.BasicController.extend({
     session_load_modules: function() {
         var self = this;
         this.rpc('/base/session/modules', {}, function(result) {
-            this.module_list = result['modules'];
-            if(self.debug) {
-                self.log(self.module_list);
-                self.rpc('/base/session/jslist', {"mods": this.module_list.join(',')}, function(result) {
-                    var files = result.files;
-                    self.log(files);
-                    // Insert addons javascript in head
-                    for(var i=0; i<files.length; i++) {
-                        // use $.getScript(‘your_3rd_party-script.js’); ? i want to keep lineno !
-                        var s = document.createElement("script");
-                        s.src = files[i];
-                        s.type = "text/javascript";
-                        document.getElementsByTagName("head")[0].appendChild(s);
-                        // at this point the js should be loaded or not ?
-                    }
-                    for(var j=0; j<this.module_list.length; j++) {
-                        var mod = this.module_list[j];
-                        if(mod == "base")
-                            continue;
-                        self.log(mod);
-                        self.log(openerp._openerp[mod]);
-                        // init module mod
-                        openerp._openerp[mod](openerp);
-                    }
-                });
-            } else {
-                // load merged ones
-                // /base/session/css?mod=mod1,mod2,mod3
-                // /base/session/js?mod=mod1,mod2,mod3
-            }
+            self.module_list = result['modules'];
+            self.rpc('/base/session/jslist', {"mods": self.module_list.join(',')}, self.debug ? self.do_session_load_modules_debug : self.do_session_load_modules_prod);
             openerp._modules_loaded = true;
         });
         this.uid = false;
+    },
+    do_session_load_modules_debug: function(result) {
+        var self = this;
+        var files = result.files;
+        // Insert addons javascript in head
+        for(var i=0; i<files.length; i++) {
+            var s = document.createElement("script");
+            s.src = files[i];
+            s.type = "text/javascript";
+            self.log("load script: " + s.src);
+            document.getElementsByTagName("head")[0].appendChild(s);
+        }
+        // at this point the js should be loaded or not ?
+        setTimeout(self.on_session_modules_loaded,100);
+    },
+    do_session_load_modules_prod: function() {
+        // load merged ones
+        // /base/session/css?mod=mod1,mod2,mod3
+        // /base/session/js?mod=mod1,mod2,mod3
+        // use $.getScript(‘your_3rd_party-script.js’); ? i want to keep lineno !
+    },
+    on_session_modules_loaded: function() {
+        var self = this;
+        self.log("init modules");
+        self.log(self.module_list);
+        for(var j=0; j<self.module_list.length; j++) {
+            var mod = self.module_list[j];
+            self.log("init module "+mod);
+            if(self.module_loaded[mod])
+                continue;
+            self.log(openerp._openerp[mod]);
+            openerp[mod] = {};
+            // init module mod
+            openerp._openerp[mod](openerp);
+        }
     },
     session_logout: function() {
         this.uid = false;

@@ -68,6 +68,7 @@
 (function() {
     if (this.openerp)
         return;
+    var session_counter = 0;
 
     // openerp instance constructor
     var openerp = this.openerp = function() {
@@ -79,7 +80,7 @@
             _modules_loaded: false,
             // this unique id will be replaced by hostname_databasename by
             // openerp.base.Connection on the first connection
-            _session_id: "session" + openerp.sessions.length,
+            _session_id: "session" + session_counter++,
             screen: openerp.screen,
             sessions: openerp.sessions,
             base: {}
