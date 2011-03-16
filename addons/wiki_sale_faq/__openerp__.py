@@ -27,6 +27,7 @@
     """,
     'author': 'OpenERP SA',
     'website': 'http://openerp.com',
+    'images': ['images/sale_document.jpeg','images/wiki_pages.jpeg'],
     'depends': ['wiki_faq','document','crm'],
     'init_xml': [
             'wiki_sale_faq_data.xml'
@@ -34,7 +35,7 @@
     'update_xml': [
             'wiki_sale_faq_view.xml'
     ],
-    'demo_xml': [            
+    'demo_xml': [
     ],
     'installable': True,
     'active': False,
