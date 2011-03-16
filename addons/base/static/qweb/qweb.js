@@ -51,6 +51,7 @@ var QWeb = {
         // TODO: Currently this will also replace and, or, ... in strings. Try
         // 'hi boys and girls' != '' and 1 == 1  -- will be replaced to : 'hi boys && girls' != '' && 1 == 1
         // try to find a solution without tokenizing
+        e = '(' + e + ')';
         e = e.replace(/\band\b/g, " && ");
         e = e.replace(/\bor\b/g, " || ");
         e = e.replace(/\bgt\b/g, " > ");
@@ -169,10 +170,22 @@ var QWeb = {
     },
     render_att_att:function(e, t_att, g_att, v, ext, av) {
         if (ext) {
-            g_att[ext.substring(1)] = this.eval_str(av, v);
+            var attv = this.eval_object(av, v);
+            if (attv != null) {
+                g_att[ext.substring(1)] = attv.toString();
+            }
         } else {
             var o = this.eval_object(av, v);
-            g_att[o[0]] = o[1];
+            if (o != null) {
+                // TODO: http://bonsaiden.github.com/JavaScript-Garden/#types.typeof
+                if (o.constructor == Array && o.length > 1 && o[1] != null) {
+                    g_att[o[0]] = new String(o[1]);
+                } else if (o.constructor == Object) {
+                    for (var i in o) {
+                        g_att[i] = new String(o[i]);
+                    }
+                }
+            }
         }
     },
     render_att_attf:function(e, t_att, g_att, v, ext, av) {
