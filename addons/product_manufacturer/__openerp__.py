@@ -25,7 +25,10 @@
     "depends" : ["stock"],
     "init_xml" : [],
     "demo_xml" : [],
-    "description": "A module that add manufacturers and attributes on the product form",
+    "description": """
+    A module that add manufacturers and attributes on the product form.
+    ===================================================================
+    """,
     "update_xml" : [
         "security/ir.model.access.csv",
         "product_manufacturer_view.xml"
@@ -33,5 +36,6 @@
     "active": False,
     "installable": True,
     "certificate" : "00720153953662760781",
+    'images': ['images/products_manufacturer.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
