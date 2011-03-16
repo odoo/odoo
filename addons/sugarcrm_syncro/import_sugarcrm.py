@@ -117,7 +117,6 @@ def import_leads(sugar_obj, cr, uid, context=None):
             'email_from': 'email1',
             'phone': 'phone_work',
             'mobile': 'phone_mobile',
-            'write_date':'date_modified',
             'function':'title',
             'street': 'primary_address_street',
             'zip': 'primary_address_postalcode',
