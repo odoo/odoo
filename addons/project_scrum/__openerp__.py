@@ -25,8 +25,9 @@
     'version': '1.0',
     'category': 'Enterprise Specific Modules/Information Technology',
     'description': """
-    This module implements all concepts defined by the scrum project
-    management methodology for IT companies:
+    This module implements all concepts defined by the scrum project management methodology for IT companies.
+    =========================================================================================================
+
     * Project with sprints, product owner, scrum master
     * Sprints with reviews, daily meetings, feedbacks
     * Product backlog
@@ -47,6 +48,7 @@
     * http://controlchaos.com
     """,
     'author': 'OpenERP SA',
+    'images': ['images/product_backlogs.jpeg', 'images/project_sprints.jpeg', 'images/scrum_dashboard.jpeg', 'images/scrum_meetings.jpeg'],
     'depends': ['project', 'process'],
     'init_xml': [],
     'update_xml': [
