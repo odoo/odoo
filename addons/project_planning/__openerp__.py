@@ -26,6 +26,7 @@
     'category': 'Generic Modules/Human Resources',
     'description': """
 This module helps you to manage your plannings.
+===============================================
 
 This module is based on the analytic accounting and is totally integrated with
 * the timesheets encoding
@@ -38,6 +39,7 @@ At the end of the month, the planning manager can also check if the encoded time
 """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
+    'images': ['images/planning_statistics.jpeg','images/project_planning.jpeg'],
     'depends': [
         'project',
         'hr_timesheet',
