@@ -17,10 +17,6 @@ openerp.base.SearchView = openerp.base.SearchView.extend({
     init:function() {
         this._super.apply(this,arguments);
         this.hello = openerp.base_hello.HelloController();
-
-    },
-    start:function() {
-        this._super.apply(this,arguments);
         this.on_search.add(this.hello.do_hello);
     },
 });

@@ -70,36 +70,45 @@
         return;
     var session_counter = 0;
 
-    // openerp instance constructor
-    var openerp = this.openerp = function() {
-        var new_instance = {
-            // links to the global openerp
-            _openerp: openerp,
-            // Only base will be loaded, the rest will be by loaded by
-            // openerp.base.Connection on the first connection
-            _modules_loaded: false,
-            // this unique id will be replaced by hostname_databasename by
-            // openerp.base.Connection on the first connection
-            _session_id: "session" + session_counter++,
-            screen: openerp.screen,
-            sessions: openerp.sessions,
-            base: {}
-        };
-        openerp.sessions[new_instance._session_id] = new_instance;
-        openerp.base(new_instance);
-
-        return new_instance;
+    var openerp = this.openerp =  {
+        // addons registry
+        addons: {},
+        // element_ids registry linked to all controllers on the page
+        // TODO rename to elements, or keep gtk naming?
+        screen: {},
+        // Per session namespace
+        // openerp.<module> will map to
+        // openerp.sessions.servername_port_dbname_login.<module> using a closure
+        sessions: {},
+        // openerp instance constructor
+        init: function() {
+            var new_instance = {
+                // links to the global openerp
+                _openerp: openerp,
+                // Only base will be loaded, the rest will be by loaded by
+                // openerp.base.Connection on the first connection
+                _modules_loaded: false,
+                // this unique id will be replaced by hostname_databasename by
+                // openerp.base.Connection on the first connection
+                _session_id: "session" + session_counter++,
+                screen: openerp.screen,
+                sessions: openerp.sessions,
+                base: {}
+            };
+            openerp.sessions[new_instance._session_id] = new_instance;
+            openerp.base(new_instance);
+            return new_instance;
+        }
     };
-
-    // element_ids registry linked to all controllers on the page
-    // TODO rename to elements, or keep gtk naming?
-    this.openerp.screen = {};
-
-    // Per session namespace
-    // openerp.<module> will map to
-    // openerp.sessions.servername_port_dbname_login.<module> using a closure
-    this.openerp.sessions = {};
-
 })();
+
+//---------------------------------------------------------
+// OpenERP initialisation and black magic about the pool
+//---------------------------------------------------------
+
+openerp.base = function(instance) {
+    openerp.base$chrome(instance);
+    openerp.base$views(instance);
+};
 
 // vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:

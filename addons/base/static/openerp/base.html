@@ -25,8 +25,9 @@
 
     <!-- openerp.base -->
     <link rel="stylesheet" href="/base/static/openerp/base.css" type="text/css"/>
-    <script src="/base/static/openerp/js/boot.js"></script>
-    <script src="/base/static/openerp/js/controllers.js"></script>
+    <script src="/base/static/openerp/js/base.js"></script>
+    <script src="/base/static/openerp/js/base_chrome.js"></script>
+    <script src="/base/static/openerp/js/base_views.js"></script>
 
 
     <!-- all of the above should be replaced by:
@@ -35,7 +36,7 @@
     -->
     <script type="text/javascript">
     $(function() {
-        var oe = openerp();
+        var oe = openerp.init();
         oe.base.webclient("oe");
     });
     </script>
