@@ -104,6 +104,17 @@ class base_setup_installer(osv.osv_memory):
         
         return {'value':value}
     
+
+    def default_get(self, cr, uid, fields_list, context=None):
+        #Skipping default value as checked for main application, if already installed
+        return super(osv.osv_memory, self).default_get(
+            cr, uid, fields_list, context=context)
+
+    def fields_get(self, cr, uid, fields=None, context=None, write_access=True):
+        #Skipping readonly value for main application, if already installed
+        return super(osv.osv_memory, self).fields_get(
+            cr, uid, fields, context, write_access)
+
     def execute(self, cr, uid, ids, context=None):
         if context is None:
              context = {}
