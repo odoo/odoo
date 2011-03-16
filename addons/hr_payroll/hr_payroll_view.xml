@@ -963,6 +963,7 @@
         <!--  Shortcuts -->
         <act_window name="Payslips"
             domain="[('employee_id', '=', active_id)]"
+            context="{'search_default_employee_id': [active_id], 'default_employee_id': active_id}"
             res_model="hr.payslip"
             src_model="hr.employee"
             view_id ="view_hr_payslip_tree"
