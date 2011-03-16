@@ -29,6 +29,7 @@
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
+    'images': ['images/issue_analysis.jpeg','images/project_issue.jpeg'],
     'depends': [
         'crm',
         'project',

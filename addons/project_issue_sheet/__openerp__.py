@@ -29,6 +29,7 @@
                 """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
+    'images': ['images/project_issue_sheet_worklog.jpeg'],
     'depends': [
         'project_issue',
         'hr_timesheet_sheet',
