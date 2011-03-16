@@ -18,223 +18,231 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from operator import itemgetter
 from osv import fields, osv
 import sugar
-from tools.translate import _
+import sugarcrm_fields_mapping
+import pprint
+pp = pprint.PrettyPrinter(indent=4)
+
+def create_mapping(obj, cr, uid, res_model, open_id, sugar_id, context):
+    model_data = {
+        'name':  sugar_id,
+        'model': res_model,
+        'module': 'sugarcrm_import',
+        'res_id': open_id
+    }
+    model_obj = obj.pool.get('ir.model.data')
+    model_obj.create(cr, uid, model_data, context=context)
+
+def find_mapped_id(obj, cr, uid, res_model, sugar_id, context):
+    model_obj = obj.pool.get('ir.model.data')
+    return model_obj.search(cr, uid, [('model', '=', res_model), ('module', '=', 'sugarcrm_import'), ('name', '=', sugar_id)], context=context)
+
+
+def import_users(sugar_obj, cr, uid, context=None):
+    if not context:
+        context = {}
+    map_user = {'id' : 'id', 
+             'name': ['first_name', 'last_name'],
+            'login': 'user_name',
+            
+            
+            'context_lang' : 'context_lang',
+            'password' : 'password',
+            '.id' : '.id',
+            } 
+    user_obj = sugar_obj.pool.get('res.users')
+    PortType,sessionid = sugar.login(context.get('username',''), context.get('password',''))
+    sugar_data = sugar.search(PortType,sessionid, 'Users')
+    for val in sugar_data:
+        user_ids = user_obj.search(cr, uid, [('login', '=', val.get('user_name'))])
+        if user_ids: 
+            val['.id'] = str(user_ids[0])
+        else:
+            val['password'] = 'sugarcrm' #default password for all user
+
+        val['context_lang'] = context.get('lang','en_US')
+        fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_user)
+        #All data has to be imported separatly because they don't have the same field
+        user_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', context=context)
+
+def get_lead_status(surgar_obj, cr, uid, sugar_val,context=None):
+    if not context:
+        context = {}
+    stage_id = ''
+    stage_dict = {'status': #field in the sugarcrm database
+        { #Mapping of sugarcrm stage : openerp opportunity stage
+            'New' : 'New',
+            'Assigned':'Qualification',
+            'In Progress': 'Proposition',
+            'Recycled': 'Negotiation',
+            'Dead': 'Lost'
+        },}
+    stage = stage_dict['status'].get(sugar_val['status'], '')
+    stage_pool = surgar_obj.pool.get('crm.case.stage')
+    stage_ids = stage_pool.search(cr, uid, [('type', '=', 'lead'), ('name', '=', stage)])
+    for stage in stage_pool.browse(cr, uid, stage_ids, context):
+        stage_id = stage.id
+    return stage_id
+
+def get_opportunity_status(surgar_obj, cr, uid, sugar_val,context=None):
+    if not context:
+        context = {}
+    stage_id = ''
+    stage_dict = { 'sales_stage':
+            {#Mapping of sugarcrm stage : openerp opportunity stage Mapping
+               'Need Analysis': 'New',
+               'Closed Lost': 'Lost',
+               'Closed Won': 'Won',
+               'Value Proposition': 'Proposition',
+                'Negotiation/Review': 'Negotiation'
+            },
+    }
+    stage = stage_dict['sales_stage'].get(sugar_val['sales_stage'], '')
+    stage_pool = surgar_obj.pool.get('crm.case.stage')
+    stage_ids = stage_pool.search(cr, uid, [('type', '=', 'opportunity'), ('name', '=', stage)])
+    for stage in stage_pool.browse(cr, uid, stage_ids, context):
+        stage_id = stage.id
+    return stage_id
+
+def import_leads(sugar_obj, cr, uid, context=None):
+    if not context:
+        context = {}
+    map_lead = {
+            'id' : 'id',
+            'name': ['first_name', 'last_name'],
+            'contact_name': ['first_name', 'last_name'],
+            'description': 'description',
+            'partner_name': ['first_name', 'last_name'],
+            'email_from': 'email1',
+            'phone': 'phone_work',
+            'mobile': 'phone_mobile',
+            'function':'title',
+            'street': 'primary_address_street',
+            'zip': 'primary_address_postalcode',
+            'city':'primary_address_city',
+            'user_id/id' : 'assigned_user_id',
+            
+            
+            'stage_id.id' : 'stage_id.id',
+            'type' : 'type',
+    
+            }
+        
+    lead_obj = sugar_obj.pool.get('crm.lead')
+    PortType, sessionid = sugar.login(context.get('username', ''), context.get('password', ''))
+    sugar_data = sugar.search(PortType, sessionid, 'Leads')
+    for val in sugar_data:
+        val['type'] = 'lead'
+        stage_id = get_lead_status(sugar_obj, cr, uid, val, context)
+        val['stage_id.id'] = stage_id
+        fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_lead)
+        lead_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', context=context)
+
+def import_opportunities(sugar_obj, cr, uid, context=None):
+    if not context:
+        context = {}
+    map_opportunity = {'id' : 'id',
+        'name': 'name',
+        'probability': 'probability',
+        'planned_revenue': 'amount_usdollar',
+        'date_deadline':'date_closed',
+        'user_id/id' : 'assigned_user_id',
+        'stage_id.id' : 'stage_id.id',
+        'type' : 'type',
+    }
+    lead_obj = sugar_obj.pool.get('crm.lead')
+    PortType, sessionid = sugar.login(context.get('username', ''), context.get('password', ''))
+    sugar_data = sugar.search(PortType, sessionid, 'Opportunities')
+    for val in sugar_data:
+        val['type'] = 'opportunity'
+        stage_id = get_opportunity_status(sugar_obj, cr, uid, val, context)
+        val['stage_id.id'] = stage_id
+        fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_opportunity)
+        lead_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', context=context)
+
+
+
+MAP_FIELDS = {'Opportunities':  #Object Mapping name
+                     { 'dependencies' : ['Users'],  #Object to import before this table
+                       'process' : import_opportunities,
+                     },
+                'Users' : {'dependencies' : [],
+                          'process' : import_users,
+                         },
+              'Leads':
+              { 'dependencies' : ['Users'],  #Object to import before this table
+                       'process' : import_leads,
+                     },
+          }
 
 class import_sugarcrm(osv.osv):
-     """Import SugarCRM DATA"""
+    """Import SugarCRM DATA"""
 
-     _name = "import.sugarcrm"
-     _description = __doc__
-     _columns = {
+
+    _name = "import.sugarcrm"
+    _description = __doc__
+    _columns = {
         'lead': fields.boolean('Leads', help="If Leads is checked, SugarCRM Leads data imported in openerp crm-Lead form"),
         'opportunity': fields.boolean('Opportunities', help="If Leads is checked, SugarCRM Leads data imported in openerp crm-Opportunity form"),
-         'username': fields.char('User Name', size=64),
-         'password': fields.char('Password', size=24),
-     }
-     _defaults = {
-        'lead': lambda *a: True,
-        'opportunity': lambda *a: True,
-     }        
-
-     def _get_all(self, cr, uid, model, sugar_val, context=None):
-           if not context:
-               context = {}
-           models = self.pool.get(model)
-           all_model_ids = models.search(cr, uid, [('name', '=', sugar_val)])
-           output = [(False, '')]
-           output = sorted([(o.id, o.name)
-                    for o in models.browse(cr, uid, all_model_ids,
-                                           context=context)],
-                   key=itemgetter(1))
-           return output
-
-     def _get_all_states(self, cr, uid, sugar_val, context=None):
+        'user': fields.boolean('User', help="If Users is checked, SugarCRM Users data imported in openerp crm-Opportunity form"),
+        'username': fields.char('User Name', size=64),
+        'password': fields.char('Password', size=24),
+    }
+    _defaults = {
+       'lead': True,
+       'opportunity': True,
+       'user' : True,
+    }
+    def get_key(self, cr, uid, ids, context=None):
+        """Select Key as For which Module data we want import data."""
         if not context:
-            context = {}         
-        return self._get_all(
-            cr, uid, 'res.country.state', sugar_val, context=context)
+            context = {}
+        key_list = []
+        for current in self.browse(cr, uid, ids, context):
+            if current.lead:
+                key_list.append('Leads')
+            if current.opportunity:
+                key_list.append('Opportunities')
+            if current.user:
+                key_list.append('Users')
 
-     def _get_all_countries(self, cr, uid, sugar_val, context=None):
+        return key_list
+
+    def import_all(self, cr, uid, ids, context=None):
+        """Import all sugarcrm data into openerp module"""
         if not context:
-            context = {}         
-        return self._get_all(
-            cr, uid, 'res.country', sugar_val, context=context)
+            context = {}
+        keys = self.get_key(cr, uid, ids, context)
+        imported = set() #to invoid importing 2 times the sames modules
+        for key in keys:
+            if not key in imported:
+                self.resolve_dependencies(cr, uid, MAP_FIELDS, MAP_FIELDS[key]['dependencies'], imported, context=context)
+                MAP_FIELDS[key]['process'](self, cr, uid, context)
+                imported.add(key)
 
-     def _get_lead_status(self, cr, uid, sugar_val, context=None):
-        if not context:
-            context = {}         
-        sugar_stage = ''
-        if sugar_val.get('status','') == 'New':
-            sugar_stage = 'New'
-        elif sugar_val.get('status','') == 'Assigned':
-            sugar_stage = 'Qualification'
-        elif sugar_val.get('status','') == 'In Progress':
-            sugar_stage = 'Proposition'
-        elif sugar_val.get('status','') == 'Recycled':
-            sugar_stage = 'Negotiation'
-        elif sugar_val.get('status','') == 'Dead':
-            sugar_stage = 'Lost'
-        else:
-            sugar_stage = ''
-        return sugar_stage
 
-     def _get_opportunity_status(self, cr, uid, sugar_val, context=None):
-        if not context:
-            context = {}         
-        sugar_stage = ''
-        if sugar_val.get('sales_stage','') == 'Need Analysis':
-             sugar_stage = 'New'
-        elif sugar_val.get('sales_stage','') == 'Closed Lost':
-             sugar_stage = 'Lost'
-        elif sugar_val.get('sales_stage','') == 'Closed Won':
-             sugar_stage = 'Won'
-        elif sugar_val.get('sales_stage','') == 'Value Proposition':
-             sugar_stage = 'Proposition'
-        elif sugar_val.get('sales_stage','') == 'Negotiation/Review':
-             sugar_stage = 'Negotiation'
-        else:
-             sugar_stage = ''
-        return sugar_stage    
-    
-     def create_lead(self, cr, uid, sugar_val, country, state, context=None):
-           if not context:
-                context = {}         
-         
-           lead_pool = self.pool.get("crm.lead")
-           stage_id = ''
-           stage = self._get_lead_status(cr, uid, sugar_val, context=None)
-           stage_pool = self.pool.get('crm.case.stage')
+        obj_model = self.pool.get('ir.model.data')
+        model_data_ids = obj_model.search(cr,uid,[('model','=','ir.ui.view'),('name','=','import.message.form')])
+        resource_id = obj_model.read(cr, uid, model_data_ids, fields=['res_id'])
+        return {
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'import.message',
+                'views': [(resource_id,'form')],
+                'type': 'ir.actions.act_window',
+                'target': 'new',
+            }
 
-           stage_ids = stage_pool.search(cr, uid, [("type", '=', 'lead'), ('name', '=', stage)])
+    def resolve_dependencies(self, cr, uid, dict, dep, imported, context=None):
+        for dependency in dep:
+            if not dependency in imported:
+                self.resolve_dependencies(cr, uid, dict, dict[dependency]['dependencies'], imported, context=context)
+                dict[dependency]['process'](self, cr, uid, context)
+                imported.add(dependency)
 
-           for stage in stage_pool.browse(cr, uid, stage_ids):
-               stage_id = stage.id     
-           vals = {'name': sugar_val.get('first_name','')+' '+ sugar_val.get('last_name',''),
-                   'contact_name': sugar_val.get('first_name','')+' '+ sugar_val.get('last_name',''),
-                   'user_id':sugar_val.get('created_by',''),
-                   'description': sugar_val.get('description',''),
-                   'partner_name': sugar_val.get('first_name','')+' '+ sugar_val.get('last_name',''),
-                   'email_from': sugar_val.get('email1',''),
-                   'stage_id': stage_id or '',
-                   'phone': sugar_val.get('phone_work',''),
-                   'mobile': sugar_val.get('phone_mobile',''),
-                   'write_date':sugar_val.get('date_modified',''),
-                   'function':sugar_val.get('title',''),
-                   'street': sugar_val.get('primary_address_street',''),
-                   'zip': sugar_val.get('primary_address_postalcode',''),
-                   'city':sugar_val.get('primary_address_city',''),
-                   'country_id': country and country[0][0] or False,
-                   'state_id': state and state[0][0] or False
-           }
-           new_lead_id = lead_pool.create(cr, uid, vals)
-           return new_lead_id
 
-     def create_opportunity(self, cr, uid, sugar_val, country, state, context=None):
-           if not context:
-                context = {}         
-           lead_pool = self.pool.get("crm.lead")
-           stage_id = ''
-           stage_pool = self.pool.get('crm.case.stage')
-           stage = self._get_opportunity_status(cr, uid, sugar_val, context)
-           
-           stage_ids = stage_pool.search(cr, uid, [("type", '=', 'opportunity'), ('name', '=', stage)])           
-           for stage in stage_pool.browse(cr, uid, stage_ids):
-               stage_id = stage.id
-           vals = {'name': sugar_val.get('name',''),
-               'probability': sugar_val.get('probability',''),
-               'user_id': sugar_val.get('created_by', ''),
-               'stage_id': stage_id or '',
-               'type': 'opportunity',
-               'user_id': sugar_val.get('created_by',''),
-               'planned_revenue': sugar_val.get('amount_usdollar'),
-               'write_date':sugar_val.get('date_modified',''),
-           }
-           new_opportunity_id = lead_pool.create(cr, uid, vals)
-           return new_opportunity_id
 
-     def _get_sugar_module_name(self, cr, uid, ids, context=None):
-         
-        if not context:
-             context = {}         
 
-        sugar_name = []
-
-        for current in self.read(cr, uid, ids):
-          if current.get('lead'):   
-              sugar_name.append('Leads')
-          if  current.get('opportunity'):
-              sugar_name.append('Opportunities')
-                
-        return sugar_name    
-    
-
-     def _get_module_name(self, cr, uid, ids, context=None):
-        
-       if not context:
-            context = {}         
-       module_name = []
-
-       for current in self.read(cr, uid, ids, ['lead', 'opportunity']):
-          if not current.get('lead') and not current.get('opportunity'):
-              raise osv.except_osv(_('Error !'), _('Please Select Module')) 
-               
-          if current.get('lead'):   
-              module_name.append('crm')
-          if current.get('opportunity'):    
-              module_name.append('crm')
-
-          ids = self.pool.get("ir.module.module").search(cr, uid, [('name', 'in', module_name),('state', '=', 'installed')])
-          if not ids:
-              for module in module_name:
-                  raise osv.except_osv(_('Error !'), _('Please  Install %s Module') % ((module)))
-
-     def get_create_method(self, cr, uid, sugar_name, sugar_val, country, state, context=None):
-        if not context:
-            context = {}         
-
-        if sugar_name == "Leads":
-            self.create_lead(cr, uid, sugar_val, country, state, context)
-        
-        elif sugar_name == "Opportunities":
-            self.create_opportunity(cr, uid, sugar_val, country, state,context)
-        return {}    
-    
-     def import_data(self, cr, uid, ids,context=None):
-       if not context:
-        context={}
-       sugar_val = []
-              
-       self._get_module_name(cr, uid, ids, context)
-       sugar_module = self._get_sugar_module_name(cr, uid, ids, context=None)
-                 
-       PortType,sessionid = sugar.login(context.get('username',''), context.get('password',''))
-       for sugar_name in sugar_module:
-           sugar_data = sugar.search(PortType,sessionid,sugar_name)
-           
-           for val in sugar_data: 
-                country = self._get_all_countries(cr, uid, val.get('primary_address_country'), context)
-                state = self._get_all_states(cr, uid, val.get('primary_address_state'), context)
-                self.get_create_method(cr, uid, sugar_name, val, country, state, context)
-
-                    
-       obj_model = self.pool.get('ir.model.data')
-       model_data_ids = obj_model.search(cr,uid,[('model','=','ir.ui.view'),('name','=','import.message.form')])
-       resource_id = obj_model.read(cr, uid, model_data_ids, fields=['res_id'])
-       return {
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': 'import.message',
-            'views': [(resource_id,'form')],
-            'type': 'ir.actions.act_window',
-            'target': 'new',
-        }                 
 
 import_sugarcrm()
-
-
-
-
-

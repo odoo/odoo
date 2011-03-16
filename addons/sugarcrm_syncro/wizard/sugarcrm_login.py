@@ -23,17 +23,21 @@ from tools.translate import _
 from sugarcrm_syncro import sugar
 
 class sugarcrm_login(osv.osv):
-     """SugarCRM Login"""
+    """SugarCRM Login"""
 
-     _name = "sugarcrm.login"
-     _description = __doc__
-     _columns = {
-                'username': fields.char('User Name', size=64, required=True),
-                'password': fields.char('Password', size=24,required=True),
-     }
+    _name = "sugarcrm.login"
+    _description = __doc__
+    _columns = {
+        'username': fields.char('User Name', size=64, required=True),
+        'password': fields.char('Password', size=24,required=True),
+    }
+    _defaults = {
+       'username' : 'admin',
+       'password' : 'admin',
+    }
 
-     def open_import(self, cr, uid, ids, context=None):
-         
+    def open_import(self, cr, uid, ids, context=None):
+
         for current in self.browse(cr, uid, ids, context):
             PortType,sessionid = sugar.login(current.username, current.password)
             if sessionid == '-1':
@@ -52,5 +56,5 @@ class sugarcrm_login(osv.osv):
             'target': 'new',
             'context': context
         }
-                    
-sugarcrm_login()     
+
+sugarcrm_login()
