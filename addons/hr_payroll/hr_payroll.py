@@ -165,6 +165,7 @@ class payroll_register(osv.osv):
     def compute_sheet(self, cr, uid, ids, context=None):
         emp_pool = self.pool.get('hr.employee')
         slip_pool = self.pool.get('hr.payslip')
+        slip_line_pool = self.pool.get('hr.payslip.line')
         wf_service = netsvc.LocalService("workflow")
 
         if context is None:
@@ -176,8 +177,6 @@ class payroll_register(osv.osv):
             old_slips = slip_pool.search(cr, uid, [('employee_id','=', emp.id), ('date','=',vals.date)], context=context)
             if old_slips:
                 slip_pool.write(cr, uid, old_slips, {'register_id':ids[0]}, context=context)
-#                for sid in old_slips:
-#                    wf_service.trg_validate(uid, 'hr.payslip', sid, 'compute_sheet', cr)
             else:
                 res = {
                     'employee_id':emp.id,
@@ -187,7 +186,26 @@ class payroll_register(osv.osv):
                     'date':vals.date,
                 }
                 slip_id = slip_pool.create(cr, uid, res, context=context)
-#                wf_service.trg_validate(uid, 'hr.payslip', slip_id, 'compute_sheet', cr)
+                data = slip_pool.onchange_employee_id(cr, uid, [slip_id], vals.date, emp.id, context=context)
+                slip_data = {
+                        'worked_days': data['value'].get('worked_days', 0.0),
+                        'basic_before_leaves': data['value'].get('basic_before_leaves', 0.0),
+                        'name': data['value'].get('name', vals.name),
+                        'holiday_days': data['value'].get('holiday_days', 0.0),
+                        'working_days': data['value'].get('working_days', 0),
+                        'basic_amount': data['value'].get('basic_amount', 0.0),
+                        'leaves': data['value'].get('leaves', 0.0),
+                        'number': data['value'].get('number', ''),
+                        'company_id': data['value'].get('company_id', False),
+                        'struct_id': data['value'].get('struct_id', False),
+                        'total_pay': data['value'].get('total_pay', 0.0),
+                        'contract_id': data['value'].get('contract_id', False),
+                }
+                if data['value']['line_ids']:
+                    for line in data['value']['line_ids']:
+                        line.update({'slip_id': slip_id})
+                        slip_line_pool.create(cr, uid, line, context=context)
+                slip_pool.write(cr, uid, [slip_id], slip_data, context=context)
 
         number = self.pool.get('ir.sequence').get(cr, uid, 'salary.register')
         return self.write(cr, uid, ids, {'state': 'draft', 'number': number}, context=context)
