@@ -54,7 +54,7 @@
         * delivery costs
 
     Dashboard for Sales Manager that includes:
-    -------------------------------------
+    ------------------------------------------
         * Quotations
         * Sales by Month
         * Graph of Sales by Salesman in last 90 days
