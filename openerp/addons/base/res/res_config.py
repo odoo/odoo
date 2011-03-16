@@ -355,6 +355,35 @@ class res_config_installer(osv.osv_memory):
         return (base | hooks_results | additionals) - set(
             map(attrgetter('name'), self._already_installed(cr, uid, context)))
 
+    def default_get(self, cr, uid, fields_list, context=None):
+        ''' If an addon is already installed, check it by default
+        '''
+        defaults = super(res_config_installer, self).default_get(
+            cr, uid, fields_list, context=context)
+
+        return dict(defaults,
+                    **dict.fromkeys(
+                        map(attrgetter('name'),
+                            self._already_installed(cr, uid, context=context)),
+                        True))
+
+    def fields_get(self, cr, uid, fields=None, context=None, write_access=True):
+        """ If an addon is already installed, set it to readonly as
+        res.config.installer doesn't handle uninstallations of already
+        installed addons
+        """
+        fields = super(res_config_installer, self).fields_get(
+            cr, uid, fields, context, write_access)
+
+        for module in self._already_installed(cr, uid, context=context):
+            if module.name not in fields:
+                continue
+            fields[module.name].update(
+                readonly=True,
+                help= ustr(fields[module.name].get('help', '')) +
+                     _('\n\nThis addon is already installed on your system'))
+        return fields
+
     def execute(self, cr, uid, ids, context=None):
         modules = self.pool.get('ir.module.module')
         to_install = list(self.modules_to_install(
