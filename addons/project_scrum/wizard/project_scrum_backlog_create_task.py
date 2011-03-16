@@ -35,6 +35,8 @@ class backlog_create_task(osv.osv_memory):
         ids_task = []
 
         data = self.read(cr, uid, ids, [], context=context)[0]
+        data['user_id'] = data['user_id'][0]
+
         backlogs = backlog_id.browse(cr, uid, context['active_ids'], context=context)
         result = mod_obj._get_id(cr, uid, 'project', 'view_task_search_form')
         id = mod_obj.read(cr, uid, result, ['res_id'])
