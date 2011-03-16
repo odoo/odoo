@@ -48,10 +48,10 @@ class account_followup_print(osv.osv_memory):
 
         if context is None:
             context = {}
-        data = self.read(cr, uid, ids, [], context=context)[0]
+        data = self.browse(cr, uid, ids, context=context)[0]
         model_data_ids = mod_obj.search(cr, uid, [('model','=','ir.ui.view'),('name','=','view_account_followup_print_all')], context=context)
         resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
-        context.update({'followup_id': data['followup_id'], 'date':data['date']})
+        context.update({'followup_id': data.followup_id.id, 'date':data.date})
         return {
             'name': _('Select Partners'),
             'view_type': 'form',
@@ -146,7 +146,7 @@ class account_followup_print_all(osv.osv_memory):
         if context is None:
             context = {}
         if ids:
-            data = self.read(cr, uid, ids, [], context=context)[0]
+            data = self.browse(cr, uid, ids, context=context)[0]
         cr.execute(
             "SELECT l.partner_id, l.followup_line_id,l.date_maturity, l.date, l.id "\
             "FROM account_move_line AS l "\
@@ -162,8 +162,8 @@ class account_followup_print_all(osv.osv_memory):
         move_lines = cr.fetchall()
         old = None
         fups = {}
-        fup_id = 'followup_id' in context and context['followup_id'] or data['followup_id']
-        date = 'date' in context and context['date'] or data['date']
+        fup_id = 'followup_id' in context and context['followup_id'] or data.followup_id.id
+        date = 'date' in context and context['date'] or data.date
 
         current_date = datetime.date(*time.strptime(date,
             '%Y-%m-%d')[:3])
@@ -208,14 +208,15 @@ class account_followup_print_all(osv.osv_memory):
 
         if context is None:
             context = {}
-        data = self.read(cr, uid, ids, [], context=context)[0]
+        data = self.browse(cr, uid, ids, context=context)[0]
+        partner_ids = [partner_id.id for partner_id in data.partner_ids]
         model_data_ids = mod_obj.search(cr, uid, [('model','=','ir.ui.view'),('name','=','view_account_followup_print_all_msg')], context=context)
         resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
-        if data['email_conf']:
+        if data.email_conf:
             msg_sent = ''
             msg_unsent = ''
             data_user = user_obj.browse(cr, uid, uid, context=context)
-            move_lines = line_obj.browse(cr, uid, data['partner_ids'], context=context)
+            move_lines = line_obj.browse(cr, uid, partner_ids, context=context)
             partners = []
             dict_lines = {}
             for line in move_lines:
@@ -235,8 +236,8 @@ class account_followup_print_all(osv.osv_memory):
                             if adr.email:
                                 dest = [adr.email]
                 src = tools.config.options['email_from']
-                if not data['partner_lang']:
-                    body = data['email_body']
+                if not data.partner_lang:
+                    body = data.email_body
                 else:
                     cxt = context.copy()
                     cxt['lang'] = partner.lang
@@ -272,7 +273,7 @@ class account_followup_print_all(osv.osv_memory):
                     'date':time.strftime('%Y-%m-%d'),
                 }
                 body = body%val
-                sub = tools.ustr(data['email_subject'])
+                sub = tools.ustr(data.email_subject)
                 msg = ''
                 if dest:
                     try:

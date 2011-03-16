@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-03-13 20:17+0000\n"
+"PO-Revision-Date: 2011-03-14 19:24+0000\n"
 "Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-03-14 04:46+0000\n"
+"X-Launchpad-Export-Date: 2011-03-15 04:54+0000\n"
 "X-Generator: Launchpad (build 12559)\n"
 
 #. module: account
@@ -2573,6 +2573,10 @@ msgid ""
 "Note that journal entries that are automatically created by the system are "
 "always skipping that state."
 msgstr ""
+"Отметьте, если не хотите, чтобы новые записи в журнале проходили через "
+"состояние 'Черновик', а сразу проводились без утверждения вручную. \n"
+"Автоматически создаваемые системой записи в журнал всегда пропускают это "
+"состояние."
 
 #. module: account
 #: model:ir.actions.server,name:account.ir_actions_server_action_wizard_multi_chart
@@ -3480,6 +3484,8 @@ msgstr "Счета к оплате"
 msgid ""
 "You cannot create entries on different periods/journals in the same move"
 msgstr ""
+"Вы не можете создавать проводки по разным периодам / журналам в одном "
+"действии."
 
 #. module: account
 #: model:process.node,name:account.process_node_supplierpaymentorder0
@@ -7892,7 +7898,7 @@ msgstr "Общая сумма к оплате этому поставщику."
 #: model:process.node,name:account.process_node_analytic0
 #: model:process.node,name:account.process_node_analyticcost0
 msgid "Analytic Costs"
-msgstr ""
+msgstr "Аналитические расходы"
 
 #. module: account
 #: field:account.analytic.journal,name:0
