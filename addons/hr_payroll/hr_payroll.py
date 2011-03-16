@@ -187,25 +187,11 @@ class payroll_register(osv.osv):
                 }
                 slip_id = slip_pool.create(cr, uid, res, context=context)
                 data = slip_pool.onchange_employee_id(cr, uid, [slip_id], vals.date, emp.id, context=context)
-                slip_data = {
-                        'worked_days': data['value'].get('worked_days', 0.0),
-                        'basic_before_leaves': data['value'].get('basic_before_leaves', 0.0),
-                        'name': data['value'].get('name', vals.name),
-                        'holiday_days': data['value'].get('holiday_days', 0.0),
-                        'working_days': data['value'].get('working_days', 0),
-                        'basic_amount': data['value'].get('basic_amount', 0.0),
-                        'leaves': data['value'].get('leaves', 0.0),
-                        'number': data['value'].get('number', ''),
-                        'company_id': data['value'].get('company_id', False),
-                        'struct_id': data['value'].get('struct_id', False),
-                        'total_pay': data['value'].get('total_pay', 0.0),
-                        'contract_id': data['value'].get('contract_id', False),
-                }
-                if data['value']['line_ids']:
-                    for line in data['value']['line_ids']:
-                        line.update({'slip_id': slip_id})
-                        slip_line_pool.create(cr, uid, line, context=context)
-                slip_pool.write(cr, uid, [slip_id], slip_data, context=context)
+                for line in data['value']['line_ids']:
+                    line.update({'slip_id': slip_id})
+                    slip_line_pool.create(cr, uid, line, context=context)
+                data['value'].pop('line_ids')
+                slip_pool.write(cr, uid, [slip_id], data['value'], context=context)
 
         number = self.pool.get('ir.sequence').get(cr, uid, 'salary.register')
         return self.write(cr, uid, ids, {'state': 'draft', 'number': number}, context=context)
