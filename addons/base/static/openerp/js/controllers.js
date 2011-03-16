@@ -16,9 +16,8 @@ openerp.base.callback = function(obj, method) {
     //     position: "first" or "last"
     //     unique: boolean
     // })
-    var args = Array.prototype.slice.call(arguments);
     var callback = function() {
-        var args2 = Array.prototype.slice.call(arguments);
+        var args = Array.prototype.slice.call(arguments);
         var r;
         for(var i = 0; i < callback.callback_chain.length; i++)  {
             var c = callback.callback_chain[i];
@@ -26,7 +25,7 @@ openerp.base.callback = function(obj, method) {
                 // al: obscure but shortening C-style hack, sorry
                 callback.callback_chain.pop(i--);
             }
-            r = c.callback.apply(c.self, c.args.concat(args2));
+            r = c.callback.apply(c.self, c.args.concat(args));
             // TODO special value to stop the chain
             // openerp.base.callback_stop
         }
@@ -34,13 +33,12 @@ openerp.base.callback = function(obj, method) {
     };
     callback.callback_chain = [];
     callback.add = function(f) {
-        var args2 = Array.prototype.slice.call(arguments);
         if(typeof(f) == 'function') {
-            f = { callback: f, args: args2.slice(1) };
+            f = { callback: f, args: Array.prototype.slice.call(arguments, 1) };
         }
         f.self = f.self || null;
         f.args = f.args || [];
-        f.unique = f.unique || false;
+        f.unique = !!f.unique;
         if(f.position == 'last') {
             callback.callback_chain.push(f);
         } else {
@@ -49,15 +47,22 @@ openerp.base.callback = function(obj, method) {
         return callback;
     };
     callback.add_first = function(f) {
-        callback.add.apply(null,arguments);
+        return callback.add.apply(null,arguments);
     };
     callback.add_last = function(f) {
-        var args2 = Array.prototype.slice.call(arguments);
-        callback.add({callback: f, args: args2.slice(1), position: "last"});
+        return callback.add({
+            callback: f,
+            args: Array.prototype.slice.call(arguments, 1),
+            position: "last"
+        });
     };
-    callback.add({ callback: method, self:obj, args:args.slice(2) });
-    return callback;
-}
+
+    return callback.add({
+        callback: method,
+        self:obj,
+        args:Array.prototype.slice.call(arguments, 2)
+    });
+};
 
 openerp.base.BasicController = Class.extend({
     // TODO: init and start semantics are not clearly defined yet
@@ -92,7 +97,7 @@ openerp.base.BasicController = Class.extend({
         console.log(arguments);
     },
     on_ready: function() {
-    },
+    }
 });
 
 openerp.base.Console =  openerp.base.BasicController.extend({
@@ -110,12 +115,12 @@ openerp.base.Console =  openerp.base.BasicController.extend({
                 $('<pre></pre>').text(v.toString()).appendTo(self.$element);
             }
         });
-    },
+    }
 });
 
 openerp.base.Database = openerp.base.BasicController.extend({
 // Non Session Controller to manage databases
-})
+});
 
 openerp.base.Session = openerp.base.BasicController.extend({
     init: function(element_id, server, port) {
@@ -133,15 +138,13 @@ openerp.base.Session = openerp.base.BasicController.extend({
         this.context = {};
     },
     rpc: function(url, params, success_callback, error_callback) {
-        var self = this;
-
-        // Construct a JSON-RPC2 request, method is currently unsed
+        // Construct a JSON-RPC2 request, method is currently unused
         params.session_id = this.session_id;
         params.context = typeof(params.context) != "undefined" ? params.context  : this.context;
         var request = { jsonrpc: "2.0", method: "call", params: params, "id":null };
 
         // This is a violation of the JSON-RPC2 over HTTP protocol
-        // specification but i dont know how to parse the raw POST content from
+        // specification but i don't know how to parse the raw POST content from
         // cherrypy so i use a POST form with one variable named request
         var post = { request: JSON.stringify(request) };
 
@@ -190,7 +193,7 @@ openerp.base.Session = openerp.base.BasicController.extend({
     on_rpc_response: function() {
     },
     on_rpc_error: function(error) {
-        // TODO this should use the $element with focus and buttonsi displaying OPW etc...
+        // TODO this should use the $element with focus and button is displaying OPW etc...
         this.on_log(error, error.message, error.data.type, error.data.debug);
     },
     on_session_invalid: function(contination) {
@@ -198,18 +201,18 @@ openerp.base.Session = openerp.base.BasicController.extend({
     session_valid: function() {
         return this.uid;
     },
-    session_login: function(db, login, password, sucess_callback) {
+    session_login: function(db, login, password, success_callback) {
         var self = this;
         this.db = db;
         this.login = login;
         this.password = password;
-        var params = { db: this.db, login: this.login, password: this.password }
+        var params = { db: this.db, login: this.login, password: this.password };
         this.rpc("/base/session/login", params, function(result) {
             self.session_id = result.session_id;
             self.uid = result.uid;
             self.session_check_modules();
-            if (sucess_callback)
-                sucess_callback();
+            if (success_callback)
+                success_callback();
         });
     },
     session_check_modules: function() {
@@ -234,8 +237,8 @@ openerp.base.Session = openerp.base.BasicController.extend({
                         document.getElementsByTagName("head")[0].appendChild(s);
                         // at this point the js should be loaded or not ?
                     }
-                    for(var i=0; i<this.module_list.length; i++) {
-                        var mod = this.module_list[i];
+                    for(var j=0; j<this.module_list.length; j++) {
+                        var mod = this.module_list[j];
                         if(mod == "base")
                             continue;
                         self.log(mod);
@@ -255,13 +258,13 @@ openerp.base.Session = openerp.base.BasicController.extend({
     },
     session_logout: function() {
         this.uid = false;
-    },
-})
+    }
+});
 
 openerp.base.Controller = openerp.base.BasicController.extend({
     init: function(session, element_id) {
         this._super(element_id);
-        this.session = session
+        this.session = session;
     },
     on_log: function() {
         if(this.session)
@@ -270,8 +273,8 @@ openerp.base.Controller = openerp.base.BasicController.extend({
     rpc: function(url, data, success, error) {
         // TODO: support additional arguments ?
         this.session.rpc(url, data, success, error);
-    },
-})
+    }
+});
 
 openerp.base.Loading =  openerp.base.Controller.extend({
     init: function(session, element_id) {
@@ -279,7 +282,6 @@ openerp.base.Loading =  openerp.base.Controller.extend({
         this.count = 0;
     },
     start: function() {
-        var self =this;
         this.session.on_rpc_request.add_first(this.on_rpc_event, 1);
         this.session.on_rpc_response.add_last(this.on_rpc_event, -1);
     },
@@ -301,7 +303,7 @@ openerp.base.Header =  openerp.base.Controller.extend({
     },
     start: function() {
         this.$element.html(QWeb.render("Header", {}));
-    },
+    }
 });
 
 openerp.base.Login =  openerp.base.Controller.extend({
@@ -331,7 +333,7 @@ openerp.base.Login =  openerp.base.Controller.extend({
         var login = $e.find("form input[name=login]").val();
         var password = $e.find("form input[name=password]").val();
         //$e.hide();
-        // Should hide then call calllback
+        // Should hide then call callback
         this.session.session_login("", login, password, function() {
             if(self.session.session_valid()) {
                 self.on_login_valid();
@@ -342,7 +344,6 @@ openerp.base.Login =  openerp.base.Controller.extend({
         return false;
     },
     do_ask_login: function(continuation) {
-        var self = this;
         this.on_login_invalid();
         this.on_submit.add({
             position: "last",
@@ -351,7 +352,7 @@ openerp.base.Login =  openerp.base.Controller.extend({
                 if(continuation) continuation();
                 return false;
             }});
-    },
+    }
 });
 
 openerp.base.Menu =  openerp.base.Controller.extend({
@@ -367,13 +368,12 @@ openerp.base.Menu =  openerp.base.Controller.extend({
         var $e = this.$element;
         $e.html(QWeb.render("Menu.root", this.data));
         $("ul.sf-menu").superfish({
-            speed: 'fast',
+            speed: 'fast'
         });
         $e.find("a").click(this.on_menu_click);
         this.on_ready();
     },
     on_menu_click: function(ev) {
-        var self = this;
         var menu_id = Number(ev.target.id.split("_").pop());
         this.rpc("/base/menu/action", {"menu_id":menu_id}, this.on_menu_action_loaded);
         return false;
@@ -386,7 +386,7 @@ openerp.base.Menu =  openerp.base.Controller.extend({
         }
     },
     on_action: function(action) {
-    },
+    }
 });
 
 openerp.base.DataSet =  openerp.base.Controller.extend({
@@ -399,7 +399,7 @@ openerp.base.DataSet =  openerp.base.Controller.extend({
         this.domain = [];
         this.context = {};
         this.order = "";
-        this.count;
+        this.count = null;
         this.ids = [];
         this.values = {};
 /*
@@ -420,11 +420,11 @@ openerp.base.DataSet =  openerp.base.Controller.extend({
         this.rpc("/base/dataset/load", {model: this.model, fields: this.fields }, this.on_loaded);
     },
     on_loaded: function(data) {
-        this.ids = data.ids
-        this.values = data.values
+        this.ids = data.ids;
+        this.values = data.values;
     },
     on_reloaded: function(ids) {
-    },
+    }
 });
 
 openerp.base.DataRecord =  openerp.base.Controller.extend({
@@ -440,12 +440,12 @@ openerp.base.DataRecord =  openerp.base.Controller.extend({
     on_change: function() {
     },
     on_reload: function() {
-    },
+    }
 });
 
 openerp.base.XmlInput = openerp.base.Controller.extend({
 // to replace view editor
-})
+});
 
 openerp.base.FormView =  openerp.base.Controller.extend({
     init: function(session, element_id, dataset, view_id) {
@@ -466,7 +466,7 @@ openerp.base.FormView =  openerp.base.Controller.extend({
     on_button: function() {
     },
     on_write: function() {
-    },
+    }
 });
 
 openerp.base.ListView = openerp.base.Controller.extend({
@@ -490,7 +490,6 @@ openerp.base.ListView = openerp.base.Controller.extend({
         this.rpc("/base/listview/load", {"model": this.model, "view_id":this.view_id}, this.on_loaded);
     },
     on_loaded: function(data) {
-        var self = this;
         this.fields_view = data.fields_view;
         //this.log(this.fields_view);
         this.name = "" + this.fields_view.arch.attrs.string;
@@ -542,29 +541,29 @@ openerp.base.ListView = openerp.base.Controller.extend({
             caption: this.name
         }).setGridWidth(this.$element.width());
         $(window).bind('resize', function() { self.$table.setGridWidth(self.$element.width()); }).trigger('resize');
-    },
+    }
 });
 
 openerp.base.TreeView = openerp.base.Controller.extend({
-})
+});
 
 openerp.base.CalendarView = openerp.base.Controller.extend({
 // Dhtmlx scheduler ?
-})
+});
 
 openerp.base.GanttView = openerp.base.Controller.extend({
 // Dhtmlx gantt ?
-})
+});
 
 openerp.base.DiagramView = openerp.base.Controller.extend({
 // 
-})
+});
 
 openerp.base.GraphView = openerp.base.Controller.extend({
-})
+});
 
 openerp.base.SearchViewInput = openerp.base.Controller.extend({
-// TODO not sure should we create a controler for every input ?
+// TODO not sure should we create a controller for every input ?
 
 // of we just keep a simple dict for each input in
 // openerp.base.SearchView#input_ids
@@ -598,7 +597,7 @@ openerp.base.SearchView = openerp.base.Controller.extend({
         this.$element.html(QWeb.render("SearchView", {"fields_view": this.fields_view}));
         this.$element.find("#search").bind('click',this.on_search);
         // TODO bind click event on all button
-        // TODO we dont do many2one yet, but in the future bind a many2one controller on them
+        // TODO we don't do many2one yet, but in the future bind a many2one controller on them
         this.log(this.$element.find("#search"));
     },
     register_input: function(node) {
@@ -608,15 +607,14 @@ openerp.base.SearchView = openerp.base.Controller.extend({
         // generate id
         var id = this.element_id + "_" + this.input_index++;
         // TODO construct a nice object
-        var input = {
+        // save it in our registry
+        this.input_ids[id] = {
             node: node,
             type: "filter",
             domain: "",
             context: "",
-            disabled: false,
+            disabled: false
         };
-        // save it in our registry
-        this.input_ids[id] = input;
 
         return id;
     },
@@ -632,17 +630,17 @@ openerp.base.SearchView = openerp.base.Controller.extend({
         // save the result in this.domain
     },
     on_clear: function() {
-    },
+    }
 });
 
 openerp.base.ProcessView = openerp.base.Controller.extend({
-})
+});
 
 openerp.base.HelpView = openerp.base.Controller.extend({
-})
+});
 
 openerp.base.View = openerp.base.Controller.extend({
-})
+});
 
 openerp.base.Action =  openerp.base.Controller.extend({
     init: function(session, element_id) {
@@ -673,7 +671,7 @@ openerp.base.Action =  openerp.base.Controller.extend({
         $("#oe_action_list").hide();
     },
     do_action: function(action) {
-        // instanciate the right controllers by understanding the action
+        // instantiate the right controllers by understanding the action
         this.action = action;
         this.log(action);
 //        debugger;
@@ -700,9 +698,9 @@ openerp.base.Action =  openerp.base.Controller.extend({
 
         // Locate first form view
         this.listview_id = false;
-        for(var i = 0; i < action.views.length; i++)  {
-            if(action.views[i][1] == "form") {
-                this.formview_id = action.views[i][0];
+        for(var j = 0; j < action.views.length; j++)  {
+            if(action.views[j][1] == "form") {
+                this.formview_id = action.views[j][0];
                 break;
             }
         }
@@ -720,17 +718,17 @@ openerp.base.Action =  openerp.base.Controller.extend({
         // Connect the the dataset load event with the search button of search view
         // THIS IS COOL
         this.searchview.on_search.add_last(this.dataset.do_load);
-    },
+    }
 });
 
 openerp.base.Preferences = openerp.base.Controller.extend({
-})
+});
 
 openerp.base.ImportExport = openerp.base.Controller.extend({
-})
+});
 
 openerp.base.Homepage = openerp.base.Controller.extend({
-})
+});
 
 openerp.base.WebClient = openerp.base.Controller.extend({
     init: function(element_id) {
@@ -752,8 +750,8 @@ openerp.base.WebClient = openerp.base.Controller.extend({
             self.$element.find(".on_logged").show();
         });
 
-        // TODO MOVE ALL OF THAT IN on_loggued
-        // after pooler udpate of modules
+        // TODO MOVE ALL OF THAT IN on_logged
+        // after pooler update of modules
         // Cool no ?
         this.session.on_session_invalid.add(this.login.do_ask_login);
 
@@ -777,7 +775,7 @@ openerp.base.WebClient = openerp.base.Controller.extend({
         this.action.do_action(action);
     },
     do_about: function() {
-    },
+    }
 });
 
 openerp.base.webclient = function(element_id) {
@@ -785,7 +783,7 @@ openerp.base.webclient = function(element_id) {
     var client = new openerp.base.WebClient(element_id);
     client.start();
     return client;
-}
+};
 
 };
 

@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
+import glob, os
+from xml.etree import ElementTree
 
-import glob,json,os
-
-#import simplejson as json
+import simplejson
 
 import openerpweb
 
-from xml.etree import ElementTree
 
 class Xml2Json:
     # xml2json-direct
@@ -16,7 +15,7 @@ class Xml2Json:
     # URL: http://code.google.com/p/xml2json-direct/
     @staticmethod
     def convert_to_json(s):
-        return json.dumps(Xml2Json.convert_to_structure(s), sort_keys=True, indent=4)
+        return simplejson.dumps(Xml2Json.convert_to_structure(s), sort_keys=True, indent=4)
 
     @staticmethod
     def convert_to_structure(s):
@@ -105,9 +104,7 @@ class Session(openerpweb.Controller):
 
     @openerpweb.jsonrequest
     def modules(self, req):
-        res={}
-        res["modules"] = ["base","base_hello"]
-        return res
+        return {"modules": ["base", "base_hello"]}
 
     @openerpweb.jsonrequest
     def csslist(self, req, mods='base,base_hello'):
@@ -148,7 +145,7 @@ class Menu(openerpweb.Controller):
             i['children'] = []
         d = dict([(i["id"],i) for i in menu_items])
         for i in menu_items:
-            if i['parent_id'] == False:
+            if not i['parent_id']:
                 pid = False
             else:
                 pid = i['parent_id'][0]
@@ -157,9 +154,8 @@ class Menu(openerpweb.Controller):
         # sort by sequence a tree using parent_id
         for i in menu_items:
             i['children'].sort(key = lambda x:x["sequence"])
-        res={}
-        res['data']=menu_root
-        return res
+
+        return {'data': menu_root}
 
     @openerpweb.jsonrequest
     def action(self,req,menu_id):
@@ -180,10 +176,7 @@ class DataSet(openerpweb.Controller):
         m = req.session.model(model)
         ids = m.search(domain)
         values = m.read(ids, fields)
-        res = {}
-        res['ids'] = ids
-        res['values'] = values
-        return res
+        return {'ids': ids, 'values': values}
 
 class FormView(openerpweb.Controller):
     _cp_path = "/base/formview"
@@ -217,8 +210,4 @@ class Action(openerpweb.Controller):
 
     @openerpweb.jsonrequest
     def load(self,req,action_id):
-        #m = req.session.model('ir.ui.menu')
-        res={}
-        return res
-
-#
+        return {}
