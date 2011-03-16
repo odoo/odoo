@@ -162,7 +162,7 @@ class pos_make_payment(osv.osv_memory):
             if data['partner_id'] and data['invoice_wanted']:
                 partner = obj_partner.browse(cr, uid, data['partner_id'], context=context)
                 if not partner.address:
-                    raise osv.except_osv(_('Error!'),_("Customer doesn't have an address to make the invoice..."))
+                    raise osv.except_osv(_('Error!'),_("Customer doesn't have an address to make the invoice"))
                 order_obj.action_invoice(cr, uid, [active_id], context=context)
                 order_obj.create_picking(cr, uid, [active_id], context=context)
                 if context.get('return', False):
