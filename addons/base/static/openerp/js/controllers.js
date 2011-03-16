@@ -447,21 +447,253 @@ openerp.base.XmlInput = openerp.base.Controller.extend({
 // to replace view editor
 });
 
+openerp.base.Widget = openerp.base.Controller.extend({
+    init: function(session, element_id, view, node) {
+        var type = view.fields_view.fields[node.attrs.name] || {};
+        this.type = node.attrs.widget || type.type || node.tag;
+        this.name = node.attrs.name;
+        var type = view.fields_view.fields[node.attrs.name] || {};
+        this.type = node.attrs.widget || type.type || node.tag;
+        this.element_id = (node.tag == this.type ? node.tag : node.tag + '_' + this.type) + '_';
+        this.element_id += (this.name ? this.name + (this.is_field_label ? '_label' : '') + '_' : '');
+        this.element_id += Math.round(Math.random() * (new Date()).getTime());
+        this._super(session, this.element_id);
+        this.view = view;
+        this.view.widgets[this.element_id] = this;
+        this.node = node;
+        this.children = node.children;
+        this.colspan = parseInt(node.attrs.colspan || 1);
+        if (node.tag == 'field') {
+            this.view.fields[node.attrs.name] = this;
+            if (node.attrs.nolabel != '1' && this.colspan > 1) {
+                this.colspan--;
+            }
+        }
+        this.field = view.fields_view.fields[node.attrs.name];
+        this.template = "FormView.widget";
+
+        this.invisible = (node.attrs.invisible == '1');
+        this.string = node.attrs.string || (this.field ? this.field.string : undefined);
+        this.help = node.attrs.help || (this.field ? this.field.help : undefined);
+        this.nolabel = (node.attrs.nolabel == '1');
+    },
+    register: function() {
+        this.$element = $('#' + this.element_id);
+        return this;
+    },
+    render: function() {
+        var template = this.template;
+        return QWeb.render(template, { "widget": this });
+    }
+});
+openerp.base.WidgetFrame = openerp.base.Widget.extend({
+    init: function(session, element_id, view, node) {
+        this._super(session, element_id, view, node);
+        this.template = "FormView.frame";
+        this.columns = node.attrs.col || 4;
+        this.x = 0;
+        this.y = 0;
+        this.table = [];
+        this.add_row();
+        for (var i = 0; i < node.children.length; i++) {
+            var n = node.children[i];
+            if (n.tag == "newline") {
+                this.add_row();
+            } else {
+                this.handle_node(n);
+            }
+        }
+        this.set_row_cells_with(this.table[this.table.length - 1]);
+    },
+    add_row: function(){
+        if (this.table.length) {
+            this.set_row_cells_with(this.table[this.table.length - 1]);
+        }
+        var row = [];
+        this.table.push(row);
+        this.x = 0;
+        this.y += 1;
+        return row;
+    },
+    set_row_cells_with: function(row) {
+        for (var i = 0; i < row.length; i++) {
+            var w = row[i];
+            if (w.is_field_label) {
+                w.width = "1%";
+                if (row[i + 1]) {
+                    row[i + 1].width = Math.round((100 / this.columns) * (w.colspan + 1) - 1) + '%';
+                }
+            } else if (w.width === undefined) {
+                w.width = Math.round((100 / this.columns) * w.colspan) + '%';
+            }
+        }
+    },
+    handle_node: function(n) {
+        var type = this.view.fields_view.fields[n.attrs.name] || {};
+        var widget_type = n.attrs.widget || type.type || n.tag;
+        if (openerp.base.widgets[widget_type]) {
+            if (n.tag == 'field' && n.attrs.nolabel != '1') {
+                var label = new openerp.base.widgets['label'](this.session, null, this.view, n);
+                this.add_widget(label);
+            }
+            var widget = new openerp.base.widgets[widget_type](this.session, null, this.view, n);
+            this.add_widget(widget);
+        } else {
+            console.log("Unhandled widget type : " + widget_type, n);
+        }
+    },
+    add_widget: function(w) {
+        if (!w.invisible) {
+            var current_row = this.table[this.table.length - 1];
+            if (current_row.length && (this.x + w.colspan) > this.columns) {
+                current_row = this.add_row();
+            }
+            current_row.push(w);
+            this.x += w.colspan;
+        }
+        return w;
+    }
+});
+openerp.base.WidgetNotebook = openerp.base.Widget.extend({
+    init: function(session, element_id, view, node) {
+        this._super(session, element_id, view, node);
+        this.template = "FormView.notebook";
+        this.pages = [];
+        for (var i = 0; i < node.children.length; i++) {
+            var n = node.children[i];
+            if (n.tag == "page") {
+                var page = new openerp.base.WidgetFrame(this.session, null, this.view, n);
+                this.pages.push(page);
+            }
+        }
+    }
+});
+openerp.base.WidgetSeparator = openerp.base.Widget.extend({
+    init: function(session, element_id, view, node) {
+        this._super(session, element_id, view, node);
+        this.template = "FormView.separator";
+    }
+});
+openerp.base.WidgetLabel = openerp.base.Widget.extend({
+    init: function(session, element_id, view, node) {
+        this.is_field_label = true;
+        this._super(session, element_id, view, node);
+        this.template = "FormView.label";
+        this.colspan = 1;
+    }
+});
+openerp.base.WidgetFieldChar = openerp.base.Widget.extend({
+    init: function(session, element_id, view, node) {
+        this._super(session, element_id, view, node);
+        this.template = "FormView.field.char";
+    }
+});
+openerp.base.WidgetFieldEmail = openerp.base.Widget.extend({
+    init: function(session, element_id, view, node) {
+        this._super(session, element_id, view, node);
+        this.template = "FormView.field.char";
+    }
+});
+openerp.base.WidgetFieldFloat = openerp.base.Widget.extend({
+    init: function(session, element_id, view, node) {
+        this._super(session, element_id, view, node);
+        this.template = "FormView.field.char";
+    }
+});
+openerp.base.WidgetFieldBoolean = openerp.base.Widget.extend({
+    init: function(session, element_id, view, node) {
+        this._super(session, element_id, view, node);
+        this.template = "FormView.field.boolean";
+    }
+});
+openerp.base.WidgetFieldDate = openerp.base.Widget.extend({
+    init: function(session, element_id, view, node) {
+        this._super(session, element_id, view, node);
+        this.template = "FormView.field.date";
+    }
+});
+openerp.base.WidgetFieldDatetime = openerp.base.Widget.extend({
+    init: function(session, element_id, view, node) {
+        this._super(session, element_id, view, node);
+        this.template = "FormView.field.datetime";
+    }
+});
+openerp.base.WidgetFieldText = openerp.base.Widget.extend({
+    init: function(session, element_id, view, node) {
+        this._super(session, element_id, view, node);
+        this.template = "FormView.field.text";
+    }
+});
+openerp.base.WidgetFieldSelection = openerp.base.Widget.extend({
+    init: function(session, element_id, view, node) {
+        this._super(session, element_id, view, node);
+        this.template = "FormView.field.selection";
+    }
+});
+openerp.base.WidgetFieldMany2One = openerp.base.Widget.extend({
+    init: function(session, element_id, view, node) {
+        this._super(session, element_id, view, node);
+        this.template = "FormView.field.many2one";
+    }
+});
+openerp.base.WidgetFieldOne2Many = openerp.base.Widget.extend({
+    init: function(session, element_id, view, node) {
+        this._super(session, element_id, view, node);
+        this.template = "FormView.field.one2many";
+    }
+});
+openerp.base.WidgetFieldReference = openerp.base.Widget.extend({
+    init: function(session, element_id, view, node) {
+        this._super(session, element_id, view, node);
+        this.template = "FormView.field.reference";
+    }
+});
+openerp.base.WidgetButton = openerp.base.Widget.extend({
+    init: function(session, element_id, view, node) {
+        this._super(session, element_id, view, node);
+        this.template = "FormView.button";
+    }
+});
+openerp.base.widgets = {
+    'group' : openerp.base.WidgetFrame,
+    'notebook' : openerp.base.WidgetNotebook,
+    'separator' : openerp.base.WidgetSeparator,
+    'label' : openerp.base.WidgetLabel,
+    'char' : openerp.base.WidgetFieldChar,
+    'email' : openerp.base.WidgetFieldEmail,
+    'date' : openerp.base.WidgetFieldDate,
+    'datetime' : openerp.base.WidgetFieldDatetime,
+    'text' : openerp.base.WidgetFieldText,
+    'selection' : openerp.base.WidgetFieldSelection,
+    'many2one' : openerp.base.WidgetFieldMany2One,
+    'one2many' : openerp.base.WidgetFieldOne2Many,
+    'reference' : openerp.base.WidgetFieldReference,
+    'boolean' : openerp.base.WidgetFieldBoolean,
+    'float' : openerp.base.WidgetFieldFloat,
+    'button' : openerp.base.WidgetButton
+}
+
 openerp.base.FormView =  openerp.base.Controller.extend({
     init: function(session, element_id, dataset, view_id) {
         this._super(session, element_id);
         this.dataset = dataset;
         this.model = dataset.model;
         this.view_id = view_id;
+        this.widgets = {};
+        this.fields = {};
     },
     start: function() {
         //this.log('Starting FormView '+this.model+this.view_id)
-        this.rpc("/base/formview/load", {"model": this.model, "view_id":this.view_id}, this.on_loaded);
+        this.rpc("/base/formview/load", {"model": this.model, "view_id": this.view_id}, this.on_loaded);
     },
     on_loaded: function(data) {
         this.fields_view = data.fields_view;
         //this.log(this.fields_view);
-        this.$element.html(QWeb.render("FormView", {"fields_view": this.fields_view}));
+        var frame = new openerp.base.WidgetFrame(this.session, null, this, this.fields_view.arch);
+        this.$element.html(QWeb.render("FormView", { "frame": frame, "view": this }));
+        for (var i in this.widgets) {
+            this.widgets[i].register();
+        }
     },
     on_button: function() {
     },
