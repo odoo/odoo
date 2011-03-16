@@ -64,7 +64,6 @@ class crm_merge_opportunity(osv.osv_memory):
 
         lead_ids = context and context.pop('lead_ids', []) or []
 
-
         if len(op_ids) <= 1:
             raise osv.except_osv(_('Warning !'),_('Please select more than one opportunities.'))
 
@@ -77,7 +76,7 @@ class crm_merge_opportunity(osv.osv_memory):
         else:
             first_opportunity = opportunities_list[0]
             tail_opportunities = opportunities_list[1:]
-
+            
 
         data = {
                 'partner_id': self._get_first_not_null_id('partner_id', op_ids),  # !!

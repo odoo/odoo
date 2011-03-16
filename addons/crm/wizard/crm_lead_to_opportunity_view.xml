@@ -36,5 +36,42 @@
           </field>
        </record> 
 
+		<record id="view_crm_lead2opportunity_partner_mass" model="ir.ui.view">
+	          <field name="name">crm.lead2opportunity.partner.mass.form</field>
+	          <field name="model">crm.lead2opportunity.partner.mass</field>
+	          <field name="type">form</field>
+	          <field name="arch" type="xml">
+	               <form string="Convert to Opportunity">
+	                   
+	                        <field name="action"/>
+	                        <field name="name" colspan="4"/>
+	                        
+	                        <separator string="Assigned opportunities to" colspan="4" />
+							<field name="section_id" />
+							<group col="4" colspan="4">
+								<separator string="Select Salesman" colspan="4" />
+							</group>
+							<field name="user_ids" nolabel="1" colspan="4">
+								<tree>
+									<field name="name" />
+								</tree>
+							</field>
+	                        <separator string="" colspan="4" />
+	                        <group col="4" colspan="4">
+	                            <button special="cancel" string="Cancel" icon="gtk-cancel"/>
+	                            <button name="mass_convert" string="Convert into Opportunities" type="object" icon="gtk-ok"/>
+	                        </group>
+	                  
+	              </form>
+	          </field>
+	       </record>
+	       
+	      <act_window id="action_crm_send_mass_convert"
+            multi="True"
+            key2="client_action_multi" name="Convert opportunities"
+            res_model="crm.lead2opportunity.partner.mass" src_model="crm.lead"
+            view_mode="form" target="new" view_type="form"
+            context="{'mass_convert' : True}"
+            view_id="view_crm_lead2opportunity_partner_mass"/> 
      </data>
 </openerp>

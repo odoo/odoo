@@ -71,7 +71,7 @@ class crm_lead2partner(osv.osv_memory):
         contact_obj = self.pool.get('res.partner.address')
         partner_id = False
 
-        data = context and context.get('active_ids', []) or []
+        data = list(context and context.get('active_ids', []) or [])
         res = super(crm_lead2partner, self).default_get(cr, uid, fields, context=context)
 
         for lead in lead_obj.browse(cr, uid, data, context=context):
