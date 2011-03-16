@@ -83,13 +83,16 @@ class account_chart(osv.osv_memory):
         result = mod_obj.get_object_reference(cr, uid, 'account', 'action_account_tree')
         id = result and result[1] or False
         result = act_obj.read(cr, uid, [id], context=context)[0]
+        fiscalyear = data.get('fiscalyear', False) and data['fiscalyear'][0] or False
         result['periods'] = []
         if data['period_from'] and data['period_to']:
-            result['periods'] = period_obj.build_ctx_periods(cr, uid, data['period_from'], data['period_to'])
-        result['context'] = str({'fiscalyear': data['fiscalyear'], 'periods': result['periods'], \
+            period_from = data.get('period_from', False) and data['period_from'][0] or False
+            period_to = data.get('period_to', False) and data['period_to'][0] or False
+            result['periods'] = period_obj.build_ctx_periods(cr, uid, period_from, period_to)
+        result['context'] = str({'fiscalyear': fiscalyear, 'periods': result['periods'], \
                                     'state': data['target_move']})
         if data['fiscalyear']:
-            result['name'] += ':' + fy_obj.read(cr, uid, [data['fiscalyear']], context=context)[0]['code']
+            result['name'] += ':' + fy_obj.read(cr, uid, [fiscalyear], context=context)[0]['code']
         return result
 
     _defaults = {
