@@ -179,7 +179,7 @@
     </div>
 </t>
 <t t-name="FormView.label">
-    <label t-att-for="widget.element_id" t-att-title="widget.help" style="display: block; text-align: right;" t-att-ondblclick="'console.log(openerp.screen.oe_main.formview.widgets[\'' + widget.element_id + '\'])'">
+    <label t-att-for="widget.for.element_id" t-att-title="widget.help" style="display: block; text-align: right;" t-att-ondblclick="'console.log(openerp.screen.oe_main.formview.widgets[\'' + widget.element_id + '\'])'">
         <t t-esc="widget.string"/>
         <span t-if="widget.help">?</span>
         :
