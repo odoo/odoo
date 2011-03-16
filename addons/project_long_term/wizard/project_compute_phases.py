@@ -50,7 +50,7 @@ class project_compute_phases(osv.osv_memory):
             raise osv.except_osv(_('Error!'), _('Please Specify Project to be schedule'))
 
         if data['project_id']:        # If project mentioned find its phases
-            project_ids = [data['project_id']]
+            project_ids = [data['project_id'][0]]
         else:                        # Else take all the draft,open,pending states phases
             project_ids = project_pool.search(cr, uid, [], context=context)
 
