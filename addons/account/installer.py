@@ -213,7 +213,7 @@ class account_installer(osv.osv_memory):
                                     }, context=context)
 
             if 'date_start' in res and 'date_stop' in res:
-                f_ids = fy_obj.search(cr, uid, [('date_start', '<=', res['date_start']), ('date_stop', '>=', res['date_stop']), ('company_id', '=', res['company_id'])], context=context)
+                f_ids = fy_obj.search(cr, uid, [('date_start', '<=', res['date_start']), ('date_stop', '>=', res['date_stop']), ('company_id', '=', res['company_id'][0])], context=context)
                 if not f_ids:
                     name = code = res['date_start'][:4]
                     if int(name) != int(res['date_stop'][:4]):
@@ -224,7 +224,7 @@ class account_installer(osv.osv_memory):
                         'code': code,
                         'date_start': res['date_start'],
                         'date_stop': res['date_stop'],
-                        'company_id': res['company_id']
+                        'company_id': res['company_id'][0]
                     }
                     fiscal_id = fy_obj.create(cr, uid, vals, context=context)
                     if res['period'] == 'month':

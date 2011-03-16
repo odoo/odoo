@@ -41,10 +41,10 @@ class backlog_sprint_assign(osv.osv_memory):
         backlog_ids = []
         if context is None:
             context = {}
-        data = self.read(cr, uid, ids, [], context=context)[0]
+        data = self.browse(cr, uid, ids,context=context)[0]
         for backlog in backlog_obj.browse(cr, uid, context['active_ids'], context=context):
             backlog_ids.append(backlog.id)
-            if data['convert_to_task']:
+            if data.convert_to_task:
                 task_id = task.create(cr, uid, {
                     'product_backlog_id': backlog.id,
                     'name': backlog.name,
@@ -56,12 +56,12 @@ class backlog_sprint_assign(osv.osv_memory):
                 })
                 message = _('Product Backlog') + " '" + backlog.name + "' "+ _("is converted into Task %d."%(task_id,))
                 self.log(cr, uid, backlog.id, message)
-            if data['state_open'] and backlog.state == "draft":
+            if data.state_open and backlog.state == "draft":
                 backlog_obj.write(cr, uid, backlog.id, {'state':'open'})
-            sprint = sprint_obj.browse(cr, uid, data['sprint_id'], context=context)
+            sprint = sprint_obj.browse(cr, uid, data.sprint_id.id, context=context)
             message = _('Product Backlog') + " '" + backlog.name + "' "+ _("is assigned sprint:%s"%(sprint.name))
             self.log(cr, uid, backlog.id, message)
-        backlog_obj.write(cr, uid, backlog_ids, {'sprint_id': data['sprint_id']}, context=context)
+        backlog_obj.write(cr, uid, backlog_ids, {'sprint_id': data.sprint_id.id}, context=context)
         return {'type': 'ir.actions.act_window_close'}
 
 backlog_sprint_assign()

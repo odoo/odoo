@@ -68,7 +68,7 @@ class stock_partial_picking(osv.osv_memory):
                 if m.state in ('done', 'cancel'):
                     continue
                 result.append(self.__create_partial_picking_memory(m, pick_type))
-
+                
         if 'product_moves_in' in fields:
             res.update({'product_moves_in': result})
         if 'product_moves_out' in fields:
