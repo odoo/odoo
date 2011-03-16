@@ -40,9 +40,9 @@ class mrp_workorder(osv.osv):
         'total_cycles': fields.float('Total Cycles', readonly=True),
         'delay': fields.float('Delay', readonly=True),
         'production_id': fields.many2one('mrp.production', 'Production', readonly=True),
-        'workcenter_id': fields.many2one('mrp.workcenter', 'Workcenter', readonly=True)
+        'workcenter_id': fields.many2one('mrp.workcenter', 'Work Center', readonly=True)
     }
-    
+
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'mrp_workorder')
         cr.execute("""
@@ -66,7 +66,7 @@ class mrp_workorder(osv.osv):
                 from mrp_production_workcenter_line wl
                     left join mrp_workcenter w on (w.id = wl.workcenter_id)
                     left join mrp_production mp on (mp.id = wl.production_id)
-                group by 
+                group by
                     w.costs_hour, mp.product_id, mp.name, wl.state, wl.date_planned, wl.production_id, wl.workcenter_id
         )""")
 

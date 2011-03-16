@@ -148,7 +148,7 @@ class account_move_journal(osv.osv_memory):
 
         journal_id = self._get_journal(cr, uid, context)
         period_id = self._get_period(cr, uid, context)
-        target_move = self.read(cr, uid, ids, [])[0]['target_move']
+        target_move = self.read(cr, uid, ids, ['target_move'], context=context)[0]['target_move']
 
         name = _("Journal Items")
         if journal_id:
