@@ -92,7 +92,7 @@ class crm_claim(crm.crm_case, osv.osv):
             self.history(cr, uid, ids, _("Changed Stage to: ") + stage_obj.name, details=_("Changed Stage to: ") + stage_obj.name)
             message=''
             for case in self.browse(cr, uid, ids, context=context):
-                message = _("The stage of lead '%s' has been changed to '%s'.") % (case.name, stage_obj.name)
+                message = _("The stage of claim '%s' has been changed to '%s'.") % (case.name, stage_obj.name)
                 self.log(cr, uid, case.id, message)
         return super(crm_claim,self).write(cr, uid, ids, vals, context)
     
@@ -100,10 +100,7 @@ class crm_claim(crm.crm_case, osv.osv):
         stage_obj = self.pool.get('crm.case.stage').browse(cr, uid, stage, context=context)
         self.history(cr, uid, ids, _('Stage'), details=stage_obj.name)
         for case in self.browse(cr, uid, ids, context=context):
-            if case.type == 'lead':
-                message = _("The stage of lead '%s' has been changed to '%s'.") % (case.name, stage_obj.name)
-            elif case.type == 'opportunity':
-                message = _("The stage of opportunity '%s' has been changed to '%s'.") % (case.name, stage_obj.name)
+            message = _("The stage of claim '%s' has been changed to '%s'.") % (case.name, stage_obj.name)
             self.log(cr, uid, case.id, message)
         return True
 
@@ -112,8 +109,7 @@ class crm_claim(crm.crm_case, osv.osv):
         if stage:
             stage_obj = self.pool.get('crm.case.stage').browse(cr, uid, stage, context=context)
             if stage_obj.on_change:
-                data = {'probability': stage_obj.probability}
-                self.write(cr, uid, ids, data)
+                self.write(cr, uid, ids)
         return stage
 
     def stage_previous(self, cr, uid, ids, context=None):
@@ -121,8 +117,7 @@ class crm_claim(crm.crm_case, osv.osv):
         if stage:
             stage_obj = self.pool.get('crm.case.stage').browse(cr, uid, stage, context=context)
             if stage_obj.on_change:
-                data = {'probability': stage_obj.probability}
-                self.write(cr, uid, ids, data)
+                self.write(cr, uid, ids)
         return stage
     
     def _get_stage_id(self, cr, uid, context=None):
