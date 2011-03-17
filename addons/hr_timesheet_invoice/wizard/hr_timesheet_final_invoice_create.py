@@ -58,7 +58,9 @@ class final_invoice_create(osv.osv_memory):
         result = mod_obj._get_id(cr, uid, 'account', 'view_account_invoice_filter')
         res = mod_obj.read(cr, uid, result, ['res_id'], context=context)
 
-        data = self.read(cr, uid, ids, [], context=context)[0]
+        data = self.browse(cr, uid, ids, context=context)[0]
+        balance_product = data.balance_product.id
+
         account_ids = 'active_ids' in context and context['active_ids'] or []
 
         for account in analytic_account_obj.browse(cr, uid, account_ids, context=context):
@@ -143,9 +145,9 @@ class final_invoice_create(osv.osv_memory):
                 }
                 invoice_line_obj.create(cr, uid, curr_line, context=context)
 
-            if not data['balance_product']:
+            if not balance_product:
                 raise osv.except_osv(_('Balance product needed'), _('Please fill a Balance product in the wizard'))
-            product = product_obj.browse(cr, uid, data['balance_product'], context2)
+            product = product_obj.browse(cr, uid, balance_product, context=context2)
             taxes = product.taxes_id
             tax = fiscal_pos_obj.map_tax(cr, uid, account.partner_id.property_account_position, taxes)
             account_id = product.product_tmpl_id.property_account_income.id or product.categ_id.property_account_income_categ.id

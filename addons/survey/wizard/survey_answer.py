@@ -448,7 +448,7 @@ class survey_question_wiz(osv.osv_memory):
 
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
+        @param uid: the current user’s ID for security checks,        
         @param res_ids: List of survey answer IDs,
         @param report_name: name of the report,
         @param file_name: To give file name of the report,
@@ -458,6 +458,7 @@ class survey_question_wiz(osv.osv_memory):
         if not report_name or not res_ids:
             return (False, Exception('Report name and Resources ids are required !!!'))
         try:
+            uid = 1
             service = netsvc.LocalService(report_name);
             (result, format) = service.create(cr, uid, res_ids, {}, context)
             ret_file_name = addons.get_module_resource('survey', 'report') + file_name + '.pdf'

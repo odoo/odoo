@@ -188,7 +188,7 @@
                     <button name="next_type" string="Next" type="object" icon="gtk-go-forward" help="Change to Next Stage"/>
                     <field name="version_id" widget="selection"/>
                     <field name="user_id"/>
-                    <field name="assigned_to"/>
+                    <field name="assigned_to" attrs="{'readonly':[('task_id','=',False)]}"/>
                     <field name="progress" widget="progressbar" attrs="{'invisible':[('task_id','=',False)]}"/>
                     <field name="state"/>
                     <button name="case_cancel" string="Cancel" states="draft,open,pending" type="object" icon="gtk-cancel"/>

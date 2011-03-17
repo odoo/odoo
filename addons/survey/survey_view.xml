@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-            <menuitem name="Surveys" id="menu_surveys" parent="base.menu_tools" sequence="2" groups="base.group_tool_user,base.group_tool_manager,group_survey_user"/>
+            <menuitem name="Surveys" id="menu_surveys" parent="base.menu_tools" sequence="2" groups="base.group_tool_user,base.group_tool_manager,base.group_survey_user"/>
             <menuitem name="Define Surveys" id="menu_define_survey"
                  groups="base.group_tool_manager"
                  parent="menu_surveys" />
-            <menuitem id="menu_answer_surveys" name="Answer Surveys" parent="menu_surveys" groups="base.group_tool_user,base.group_tool_manager,group_survey_user"/>
+            <menuitem id="menu_answer_surveys" name="Answer Surveys" parent="menu_surveys" groups="base.group_tool_user,base.group_tool_manager,base.group_survey_user"/>
             <menuitem name="Reporting" parent="base.menu_tools"
                 id="base.menu_lunch_reporting" sequence="6"/>
             <menuitem name="Surveys" id="menu_reporting" parent="base.menu_lunch_reporting" sequence="2"/>
@@ -1166,14 +1166,14 @@
         </record>
 
         <act_window 
-            context="{'search_default_survey_id': [active_id]}"
+            context="{'search_default_survey_id': [active_id], 'default_survey_id': active_id}"
             id="act_survey_pages"
             name="Pages"
             res_model="survey.page"
             src_model="survey"/>
 
         <act_window 
-            context="{'search_default_survey': active_id}"
+            context="{'search_default_survey': active_id, 'default_survey': active_id}"
             id="act_survey_question"
             name="Questions"
             res_model="survey.question"
@@ -1181,7 +1181,7 @@
 
 
         <act_window 
-            context="{'search_default_page_id': active_id}"
+            context="{'search_default_page_id': active_id, 'default_page_id': active_id}"
             id="act_survey_page_question"
             name="Questions"
             res_model="survey.question"
@@ -1194,7 +1194,7 @@
             src_model="survey.question"/>
 
         <menuitem name="Answer a Survey" id="menu_run_survey_form" sequence="2"
-            action="action_view_survey_name" parent="menu_answer_surveys"            groups="base.group_tool_user,base.group_tool_manager,group_survey_user" icon="STOCK_INDEX"/>
+            action="action_view_survey_name" parent="menu_answer_surveys"            groups="base.group_tool_user,base.group_tool_manager,base.group_survey_user" icon="STOCK_INDEX"/>
 
     </data>
 </openerp>

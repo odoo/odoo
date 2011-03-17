@@ -34,20 +34,20 @@ WARNING_HELP = _('Selecting the "Warning" option will notify user with the messa
 class res_partner(osv.osv):
     _inherit = 'res.partner'
     _columns = {
-        'sale_warn' : fields.selection(WARNING_MESSAGE, 'Sale Order', help=WARNING_HELP),
+        'sale_warn' : fields.selection(WARNING_MESSAGE, 'Sale Order', help=WARNING_HELP, required=True),
         'sale_warn_msg' : fields.text('Message for Sale Order'),
-        'purchase_warn' : fields.selection(WARNING_MESSAGE, 'Purchase Order', help=WARNING_HELP),
+        'purchase_warn' : fields.selection(WARNING_MESSAGE, 'Purchase Order', help=WARNING_HELP, required=True),
         'purchase_warn_msg' : fields.text('Message for Purchase Order'),
-        'picking_warn' : fields.selection(WARNING_MESSAGE, 'Stock Picking', help=WARNING_HELP),
+        'picking_warn' : fields.selection(WARNING_MESSAGE, 'Stock Picking', help=WARNING_HELP, required=True),
         'picking_warn_msg' : fields.text('Message for Stock Picking'),
-        'invoice_warn' : fields.selection(WARNING_MESSAGE, 'Invoice', help=WARNING_HELP),
+        'invoice_warn' : fields.selection(WARNING_MESSAGE, 'Invoice', help=WARNING_HELP, required=True),
         'invoice_warn_msg' : fields.text('Message for Invoice'),
     }
     _defaults = {
-         'sale_warn' : lambda *a: 'no-message',
-         'purchase_warn' : lambda *a: 'no-message',
-         'picking_warn' : lambda *a: 'no-message',
-         'invoice_warn' : lambda *a: 'no-message',
+         'sale_warn' : 'no-message',
+         'purchase_warn' : 'no-message',
+         'picking_warn' : 'no-message',
+         'invoice_warn' : 'no-message',
     }
 
 res_partner()
@@ -179,15 +179,15 @@ stock_picking()
 class product_product(osv.osv):
     _inherit = 'product.product'
     _columns = {
-         'sale_line_warn' : fields.selection(WARNING_MESSAGE,'Sale Order Line', help=WARNING_HELP),
+         'sale_line_warn' : fields.selection(WARNING_MESSAGE,'Sale Order Line', help=WARNING_HELP, required=True),
          'sale_line_warn_msg' : fields.text('Message for Sale Order Line'),
-         'purchase_line_warn' : fields.selection(WARNING_MESSAGE,'Purchase Order Line', help=WARNING_HELP),
+         'purchase_line_warn' : fields.selection(WARNING_MESSAGE,'Purchase Order Line', help=WARNING_HELP, required=True),
          'purchase_line_warn_msg' : fields.text('Message for Purchase Order Line'),
      }
 
     _defaults = {
-         'sale_line_warn' : lambda *a: 'no-message',
-         'purchase_line_warn' : lambda *a: 'no-message',
+         'sale_line_warn' : 'no-message',
+         'purchase_line_warn' : 'no-message',
     }
 
 product_product()

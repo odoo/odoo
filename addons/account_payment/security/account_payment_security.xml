@@ -13,5 +13,19 @@
         <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
     </record>
 
+    <record id="payment_order_comp_rule" model="ir.rule">
+        <field name="name">Payment order multi company rule</field>
+        <field model="ir.model" name="model_id" ref="model_payment_order"/>
+        <field eval="True" name="global"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    </record>
+
+    <record id="payment_line_comp_rule" model="ir.rule">
+        <field name="name">Payment line multi company rule</field>
+        <field model="ir.model" name="model_id" ref="model_payment_line"/>
+        <field eval="True" name="global"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    </record>
+
 </data>
 </openerp>

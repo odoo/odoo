@@ -22,7 +22,7 @@
 {
     "name" : "Thunderbird Interface",
     "version" : "1.0",
-    "author" : "OpenERP SA & Axelor",
+    "author" : ['OpenERP SA', 'Axelor'],
     "website" : "http://www.openerp.com/",
     "depends" : ["base","email"],
     "category" : "Generic Modules/Thunderbird interface",

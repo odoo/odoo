@@ -36,6 +36,7 @@
     ],
     "demo_xml" : [],
     "update_xml" : [
+        'security/calendar_security.xml',
         'security/ir.model.access.csv',
         'wizard/calendar_event_edit_all_view.xml',
         'wizard/base_calendar_invite_attendee_view.xml',

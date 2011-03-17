@@ -1823,7 +1823,7 @@
             src_model="stock.location"/>
 
         <act_window
-            context="{'search_default_done': 1,'search_default_product_id': [active_id]}"
+            context="{'search_default_done': 1,'search_default_product_id': [active_id], 'default_product_id': active_id}"
             id="act_product_stock_move_open"
             name="Stock Moves"
             res_model="stock.move"
@@ -1837,7 +1837,7 @@
             src_model="stock.move"/>
 
         <act_window
-            context="{'search_default_future': 1,'search_default_product_id': [active_id]}"
+            context="{'search_default_future': 1,'search_default_product_id': [active_id], 'default_product_id': active_id}"
             domain="[('state','in',('waiting','confirmed','assigned'))]"
             id="act_product_stock_move_futur_open"
             name="Future Stock Moves"

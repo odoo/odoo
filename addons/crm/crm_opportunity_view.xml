@@ -131,8 +131,8 @@
                             </group>
                             <group colspan="2" col="2">
                                 <separator string="Mailings" colspan="2"/>
-                                <field name="optin"/>
-                                <field name="optout"/>
+                                <field name="optin" on_change="on_change_optin(optin)"/>
+                        		<field name="optout" on_change="on_change_optout(optout)"/>
                             </group>
                         </page>
 

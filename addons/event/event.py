@@ -550,7 +550,7 @@ class event_registration(osv.osv):
                 email_message_obj.email_send(cr, uid, src, email_to, subject, body, model='event.registration', email_cc=email_cc, openobject_id=regestration.id)
                 self.history(cr, uid, [regestration], subject, history = True, \
                         email=email_to, details=body, \
-                        subjec=subject, email_from=src, \
+                        subject=subject, email_from=src, \
                         email_cc=', '.join(email_cc))
 
         return True

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <openerp>
 <data>
-        
+
     <record id="mrp_production_form_inherit_view" model="ir.ui.view">
 	    <field name="name">mrp.production.form.inherit</field>
 	    <field name="model">mrp.production</field>
@@ -22,7 +22,7 @@
 	       </xpath>
 	    </field>
     </record>
-    
+
     <record id="mrp_production_form_inherit_view2" model="ir.ui.view">
         <field name="name">mrp.production.form.inherit2</field>
         <field name="model">mrp.production</field>
@@ -40,7 +40,7 @@
            </xpath>
         </field>
     </record>
-    
+
     <record model="ir.ui.view" id="mrp_production_workcenter_tree_view_inherit">
         <field name="name">mrp.production.workcenter.line.tree</field>
         <field name="model">mrp.production.workcenter.line</field>
@@ -151,9 +151,9 @@
 	                	</group>
                 	<newline/>
                     <group expand="0" string="Group By..." colspan="10" col="8" groups="base.group_extended">
-                        <filter string="Workcenter" icon="terp-go-home" domain="[]" context="{'group_by':'workcenter_id'}"/>
-                        <filter string="Production" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'production_id'}"/>                      
-                        <separator orientation="vertical"/>                   
+                        <filter string="Work Center" icon="terp-go-home" domain="[]" context="{'group_by':'workcenter_id'}"/>
+                        <filter string="Production" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'production_id'}"/>
+                        <separator orientation="vertical"/>
                         <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_planned'}"/>
@@ -228,7 +228,7 @@
             </gantt>
         </field>
     </record>
-    
+
     <record model="ir.actions.act_window" id="mrp_production_wc_resource_planning">
         <field name="name">Work Centers</field>
         <field name="type">ir.actions.act_window</field>

@@ -31,14 +31,13 @@ class account_open_closed_fiscalyear(osv.osv_memory):
     }
 
     def remove_entries(self, cr, uid, ids, context=None):
-        fy_obj = self.pool.get('account.fiscalyear')
         move_obj = self.pool.get('account.move')
 
-        data = self.read(cr, uid, ids, [], context=context)[0]
-        data_fyear = fy_obj.browse(cr, uid, data['fyear_id'], context=context)
-        if not data_fyear.end_journal_period_id:
+        data = self.browse(cr, uid, ids, context=context)[0]
+        period_journal = data.fyear_id.end_journal_period_id or False
+        if not period_journal:
             raise osv.except_osv(_('Error !'), _('No End of year journal defined for the fiscal year'))
-        period_journal = data_fyear.end_journal_period_id
+
         ids_move = move_obj.search(cr, uid, [('journal_id','=',period_journal.journal_id.id),('period_id','=',period_journal.period_id.id)])
         if ids_move:
             cr.execute('delete from account_move where id IN %s', (tuple(ids_move),))
