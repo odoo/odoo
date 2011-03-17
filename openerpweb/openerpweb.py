@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import os, re, sys, traceback, xmlrpclib
+import optparse, os, re, sys, traceback, xmlrpclib
 
 import cherrypy.lib.static
 import simplejson
@@ -226,6 +226,8 @@ class Root(object):
     default.exposed = True
 
 def main(argv):
+    # optparse
+
     config = {
         'server.socket_port': 8002,
         #'server.socket_host': '64.72.221.48',

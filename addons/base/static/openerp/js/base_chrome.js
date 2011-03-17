@@ -336,11 +336,12 @@ openerp.base.Login =  openerp.base.Controller.extend({
     on_submit: function(ev) {
         var self = this;
         var $e = this.$element;
+        var db = $e.find("form input[name=db]").val();
         var login = $e.find("form input[name=login]").val();
         var password = $e.find("form input[name=password]").val();
         //$e.hide();
         // Should hide then call callback
-        this.session.session_login("", login, password, function() {
+        this.session.session_login(db, login, password, function() {
             if(self.session.session_valid()) {
                 self.on_login_valid();
             } else {
