@@ -691,7 +691,7 @@ class stock_picking(osv.osv):
         if res:
             picking_obj = self.browse(cr, uid, res, context=context)
             for move in picking_obj.move_lines:
-                move_obj.write(cr, uid, [move.id], {'tracking_id': False,'prodlot_id':False})
+                move_obj.write(cr, uid, [move.id], {'tracking_id': False,'prodlot_id':False, 'move_history_ids2': [(6, 0, [])], 'move_history_ids': [(6, 0, [])]})
         return res
 
     def onchange_partner_in(self, cr, uid, context=None, partner_id=None):
@@ -1623,6 +1623,7 @@ class stock_move(osv.osv):
         if default is None:
             default = {}
         default = default.copy()
+        default.update({'move_history_ids2': [], 'move_history_ids': []})
         return super(stock_move, self).copy(cr, uid, id, default, context=context)
 
     def _auto_init(self, cursor, context=None):
