@@ -197,7 +197,7 @@ openerp.base.Session = openerp.base.BasicController.extend({
     },
     on_rpc_error: function(error) {
         // TODO this should use the $element with focus and button is displaying OPW etc...
-        this.on_log(error, error.message, error.data.type, error.data.debug);
+        this.on_log(error.message, error.data);
     },
     on_session_invalid: function(contination) {
     },
