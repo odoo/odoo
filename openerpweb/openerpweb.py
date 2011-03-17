@@ -2,6 +2,7 @@
 import functools
 
 import optparse, os, re, sys, traceback, xmlrpclib
+import uuid
 
 import cherrypy
 import cherrypy.lib.static
@@ -84,7 +85,7 @@ class JsonRequest(object):
 
     def parse(self, request):
         self.params = request.get("params",{})
-        self.session_id = self.params.pop("session_id", None) or "random.random"
+        self.session_id = self.params.pop("session_id", None) or uuid.uuid4().hex
         self.session = session_store.setdefault(self.session_id, OpenERPSession())
         self.context = self.params.pop('context', None)
         return self.params
