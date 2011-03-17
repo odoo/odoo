@@ -318,7 +318,7 @@ openerp.base.Login =  openerp.base.Controller.extend({
     },
     start: function() {
         this.$element.html(QWeb.render("Login", {}));
-        this.on_login_invalid();
+        //this.on_login_invalid();
         this.$element.find("form").submit(this.on_submit);
     },
     on_login_invalid: function() {
