@@ -95,7 +95,8 @@ openerp.base.BasicController = Class.extend({
         this.on_log.apply(this,args);
     },
     on_log: function() {
-        console.log(arguments);
+        if(window.console)
+            console.log(arguments);
     },
     on_ready: function() {
     }
