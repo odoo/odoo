@@ -2,7 +2,7 @@
     "name" : "Html View",
     "version" : "1.1",
     "author" : "OpenERP SA",
-    "category" : "Generic Modules/Inventory Control",
+    "category" : "Tools",
     "depends" : ['base'],
     "init_xml" : ['html_view.xml'],
     "demo_xml" : [],

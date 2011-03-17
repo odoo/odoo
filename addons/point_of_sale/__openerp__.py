@@ -23,7 +23,7 @@
 {
     'name': 'Point Of Sale',
     'version': '1.0',
-    'category': 'Generic Modules/Sales & Purchases',
+    'category': 'Sales',
     'description': """
 Main features :
  - Fast encoding of the sale.

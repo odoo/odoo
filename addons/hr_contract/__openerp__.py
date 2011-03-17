@@ -23,7 +23,7 @@
 {
     'name': 'Human Resources Contracts',
     'version': '1.0',
-    'category': 'Generic Modules/Human Resources',
+    'category': 'Human Resources',
     'description': """
     Add all information on the employee form to manage contracts:
     * Marital status,

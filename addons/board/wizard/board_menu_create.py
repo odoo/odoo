@@ -70,10 +70,10 @@ class board_menu_create(osv.osv_memory):
                 })
         obj_menu = self.pool.get('ir.ui.menu')
         #start Loop
-        for data in self.read(cr, uid, ids):
+        for data in self.browse(cr, uid, ids, context=context):
             obj_menu.create(cr, uid, {
-                'name': data.get('menu_name'),
-                'parent_id': data.get('menu_parent_id'),
+                'name': data.menu_name,
+                'parent_id': data.menu_parent_id.id,
                 'icon': 'STOCK_SELECT_COLOR',
                 'action': 'ir.actions.act_window,' + str(action_id)
                 }, context=context)

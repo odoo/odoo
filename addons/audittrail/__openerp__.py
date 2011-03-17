@@ -23,7 +23,7 @@
 {
     'name': 'Audit Trail',
     'version': '1.0',
-    'category': 'Generic Modules/Others',
+    'category': 'Tools',
     'description': """
     This module gives the administrator the rights
     to track every user operation on all the objects

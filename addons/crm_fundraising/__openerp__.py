@@ -23,7 +23,7 @@
 {
     'name': 'CRM Fundraising', 
     'version': '1.0', 
-    'category': 'Generic Modules/CRM & SRM', 
+    'category': 'Sales', 
     'description': """Fundraising""", 
     'author': 'OpenERP SA', 
     'website': 'http://www.openerp.com', 

@@ -23,7 +23,7 @@
 {
     'name': 'Margins in Product',
     'version': '1.0',
-    'category': 'Custom',
+    'category': 'Sales',
     'description': """
 Adds a reporting menu in products that computes sales, purchases, margins
 and other interesting indicators based on invoices. The wizard to launch

@@ -23,7 +23,7 @@
 {
     'name': 'Membership',
     'version': '0.1',
-    'category': 'Generic Modules/Association',
+    'category': 'Tools',
     'description': """
 This module allows you to manage all operations for managing memberships.
 It supports different kind of members:

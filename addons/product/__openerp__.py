@@ -24,7 +24,7 @@
     "name" : "Products & Pricelists",
     "version" : "1.1",
     "author" : "OpenERP SA",
-    "category" : "Generic Modules/Inventory Control",
+    "category" : "Warehouse",
     "depends" : ["base", "process", "decimal_precision"],
     "init_xml" : [],
     "demo_xml" : ["product_demo.xml"],

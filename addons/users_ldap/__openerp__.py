@@ -29,7 +29,7 @@ This module only works with Unix/Linux
 
 
     "website" : "http://www.openerp.com",
-    "category" : "Generic Modules/Others",
+    "category" : "Tools",
     "init_xml" : [
     ],
     "demo_xml" : [

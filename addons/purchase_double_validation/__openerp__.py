@@ -22,7 +22,7 @@
 {
     "name" : "purchase_double_validation",
     "version" : "1.1",
-    "category": 'Generic Modules/Sales & Purchases',
+    "category": 'Purchases',
     "depends" : ["base","purchase"],
     "author" : 'OpenERP SA',
     "description": """

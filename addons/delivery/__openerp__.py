@@ -23,8 +23,8 @@
 {
     'name': 'Carriers and deliveries',
     'version': '1.0',
-    'category': 'Generic Modules/Sales & Purchases',
-    'description': """Allows you to add delivery methods in sale orders and picking.
+    'category': 'Warehouse',
+    'description': """Allows you to add delivery methods in sales orders and picking.
      You can define your own carrier and delivery grids for prices.
      When creating invoices from picking, OpenERP is able to add and compute the shipping line.
 

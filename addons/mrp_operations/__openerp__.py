@@ -23,7 +23,7 @@
 {
     'name': 'Work Center Production start end workflow',
     'version': '1.0',
-    'category': 'Generic Modules/Production',
+    'category': 'Manufacturing',
     'description': """
      This module adds state, date_start,date_stop in production order operation lines
      (in the "Work Centers" tab)
@@ -35,7 +35,7 @@
      Which is a view on "Work Centers" lines in production order,
      editable tree
 
-    Add buttons in the form view of production order under workcenter tab:
+    Add buttons in the form view of production order under Work Center tab:
     * start (set state to confirm), set date_start
     * done (set state to done), set date_stop
     * set to draft (set state to draft)

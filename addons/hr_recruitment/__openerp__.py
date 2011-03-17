@@ -22,7 +22,7 @@
 {
     'name': 'HR - Recruitement',
     'version': '1.0',
-    'category': 'Generic Modules/Human Resources',
+    'category': 'Human Resources',
     'description': """
 Manages job positions and the recruitement process. It's integrated with the
 survey module to allow you to define interview for different jobs.
@@ -36,6 +36,7 @@ system to store and search in your CV base.
     'depends': ['decimal_precision', 'hr', 'survey', 'crm'],
     'update_xml': [
         'wizard/hr_recruitment_phonecall_view.xml',
+        'wizard/hr_recruitment_employee_hired.xml',
         'wizard/hr_recruitment_create_partner_job_view.xml',
         'hr_recruitment_view.xml',
         'hr_recruitment_menu.xml',

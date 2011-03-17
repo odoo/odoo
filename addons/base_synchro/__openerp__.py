@@ -23,7 +23,7 @@
         "name":"Base Synchro",
         "version":"0.1",
         "author":"OpenERP SA",
-        "category":"Generic Modules/Base",
+        "category":"Tools",
         "description": """Synchronization with all objects.""",
         "depends":["base"],
         "demo_xml":[],

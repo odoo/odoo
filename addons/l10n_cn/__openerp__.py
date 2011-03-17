@@ -20,7 +20,7 @@
 {
     "name" : "中国会计科目表",
     "version" : "1.0",
-    "category": "Localisation/Account Charts",
+    "category": "Finance",
     "author" : "openerp-china.org",
     "maintainer":"openerp-china.org",
     "website":"http://openerp-china.org",

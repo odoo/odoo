@@ -23,7 +23,7 @@
 {
     'name': 'Customer & Supplier Relationship Management',
     'version': '1.0',
-    'category': 'Generic Modules/CRM & SRM',
+    'category': 'Sales',
     'description': """
 This modules allows you to track your customers/suppliers claims and flames.
 It is fully integrated with the email gateway so that you can create

@@ -23,7 +23,7 @@
 {
     'name': 'Charts of Accounts',
     'version': '1.1',
-    'category': 'Generic Modules/Accounting',
+    'category': 'Finance',
     'description': """Remove minimal account chart""",
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
