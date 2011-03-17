@@ -21,7 +21,7 @@
 
 
 {
-    'name': 'Google Contact',
+    'name': 'Google Contact Import',
     'version': '1.0',
     'category': 'Generic Modules/Others',
     'description': """The module adds google contact in partner address""",
