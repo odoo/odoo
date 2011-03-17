@@ -223,6 +223,7 @@ openerp.base.FormView =  openerp.base.Controller.extend({
         this.view_id = view_id;
         this.fields_views = {};
         this.widgets = {};
+        this.widgets_counter = 0;
         this.fields = {};
         this.datarecord = {};
     },
@@ -234,7 +235,7 @@ openerp.base.FormView =  openerp.base.Controller.extend({
         this.fields_view = data.fields_view;
         //this.log(this.fields_view);
 
-        var frame = new openerp.base.WidgetFrame(this.session, null, this, this.fields_view.arch);
+        var frame = new openerp.base.WidgetFrame(this, this.fields_view.arch);
 
         this.$element.html(QWeb.render("FormView", { "frame": frame, "view": this }));
         for (var i in this.widgets) {
@@ -259,7 +260,7 @@ openerp.base.FormView =  openerp.base.Controller.extend({
     },
     on_record_loaded: function() {
         for (var f in this.fields) {
-            this.fields[f].update_from_datarecord()
+            this.fields[f].set_value()
         }
     },
 });
@@ -345,31 +346,25 @@ openerp.base.TreeView = openerp.base.Controller.extend({
 openerp.base.Widget = openerp.base.Controller.extend({
     // TODO Change this to init: function(view, node) { and use view.session and a new element_id for the super
     // it means that widgets are special controllers
-    init: function(session, element_id, view, node) {
-        var type = view.fields_view.fields[node.attrs.name] || {};
-        this.type = node.attrs.widget || type.type || node.tag;
-        this.name = node.attrs.name;
-        var type = view.fields_view.fields[node.attrs.name] || {};
-        this.type = node.attrs.widget || type.type || node.tag;
-        this.element_id = (node.tag == this.type ? node.tag : node.tag + '_' + this.type) + '_';
-        this.element_id += (this.name ? this.name + (this.is_field_label ? '_label' : '') + '_' : '');
-        this.element_id += Math.round(Math.random() * (new Date()).getTime());
-        this._super(session, this.element_id);
+    init: function(view, node) {
         this.view = view;
-        this.view.widgets[this.element_id] = this;
         this.node = node;
+        this.type = this.type || node.tag;
+        this.element_name = this.element_name || this.type;
+        this.element_id = [this.view.element_id, this.element_name, this.view.widgets_counter++].join("_");
+
+        this._super(this.view.session, this.element_id);
+
+        this.view.widgets[this.element_id] = this;
         this.children = node.children;
         this.colspan = parseInt(node.attrs.colspan || 1);
-        this.field = view.fields_view.fields[node.attrs.name];
-        this.template = "FormView.widget";
+        this.template = "Widget";
 
+        this.string = this.string || node.attrs.string;
+        this.help = this.help || node.attrs.help;
         this.invisible = (node.attrs.invisible == '1');
-        this.string = node.attrs.string || (this.field ? this.field.string : undefined);
-        this.help = node.attrs.help || (this.field ? this.field.help : undefined);
-        this.nolabel = (node.attrs.nolabel == '1');
     },
     start: function() {
-        console.log("jquery", this.element_id)
         this.$element = $('#' + this.element_id);
     },
     render: function() {
@@ -379,9 +374,9 @@ openerp.base.Widget = openerp.base.Controller.extend({
 });
 
 openerp.base.WidgetFrame = openerp.base.Widget.extend({
-    init: function(session, element_id, view, node) {
-        this._super(session, element_id, view, node);
-        this.template = "FormView.frame";
+    init: function(view, node) {
+        this._super(view, node);
+        this.template = "WidgetFrame";
         this.columns = node.attrs.col || 4;
         this.x = 0;
         this.y = 0;
@@ -424,15 +419,15 @@ openerp.base.WidgetFrame = openerp.base.Widget.extend({
         var type = this.view.fields_view.fields[n.attrs.name] || {};
         var widget_type = n.attrs.widget || type.type || n.tag;
         if (openerp.base.widgets[widget_type]) {
-            var widget = new openerp.base.widgets[widget_type](this.session, null, this.view, n);
+            var widget = new openerp.base.widgets[widget_type](this.view, n);
             if (n.tag == 'field' && n.attrs.nolabel != '1') {
-                var label = new openerp.base.widgets['label'](this.session, null, this.view, n);
+                var label = new openerp.base.widgets['label'](this.view, n);
                 label["for"] = widget;
                 this.add_widget(label);
             }
             this.add_widget(widget);
         } else {
-            console.log("Unhandled widget type : " + widget_type, n);
+            this.log("Unhandled widget type : " + widget_type, n);
         }
     },
     add_widget: function(w) {
@@ -449,14 +444,14 @@ openerp.base.WidgetFrame = openerp.base.Widget.extend({
 });
 
 openerp.base.WidgetNotebook = openerp.base.Widget.extend({
-    init: function(session, element_id, view, node) {
-        this._super(session, element_id, view, node);
-        this.template = "FormView.notebook";
+    init: function(view, node) {
+        this._super(view, node);
+        this.template = "WidgetNotebook";
         this.pages = [];
         for (var i = 0; i < node.children.length; i++) {
             var n = node.children[i];
             if (n.tag == "page") {
-                var page = new openerp.base.WidgetFrame(this.session, null, this.view, n);
+                var page = new openerp.base.WidgetFrame(this.view, n);
                 this.pages.push(page);
             }
         }
@@ -464,53 +459,60 @@ openerp.base.WidgetNotebook = openerp.base.Widget.extend({
 });
 
 openerp.base.WidgetSeparator = openerp.base.Widget.extend({
-    init: function(session, element_id, view, node) {
-        this._super(session, element_id, view, node);
-        this.template = "FormView.separator";
+    init: function(view, node) {
+        this._super(view, node);
+        this.template = "WidgetSeparator";
     }
 });
 
 openerp.base.WidgetLabel = openerp.base.Widget.extend({
-    init: function(session, element_id, view, node) {
+    init: function(view, node) {
         this.is_field_label = true;
-        this._super(session, element_id, view, node);
-        this.template = "FormView.label";
+
+        this._super(view, node);
+
+        this.template = "WidgetLabel";
         this.colspan = 1;
     }
 });
 
 openerp.base.WidgetButton = openerp.base.Widget.extend({
-    init: function(session, element_id, view, node) {
-        this._super(session, element_id, view, node);
-        this.template = "FormView.button";
+    init: function(view, node) {
+        this._super(view, node);
+        this.template = "WidgetButton";
     }
 });
 
 openerp.base.Field = openerp.base.Widget.extend({
-    init: function(session, element_id, view, node) {
-        this._super(session, element_id, view, node);
-        this.view.fields[node.attrs.name] = this;
+    init: function(view, node) {
+        this.name = node.attrs.name;
+        view.fields[this.name] = this;
+        this.type = node.attrs.widget || view.fields_view.fields[node.attrs.name].type;
+        this.element_name = "field_" + this.name + "_" + this.type;
+
+        this._super(view, node);
+
         if (node.attrs.nolabel != '1' && this.colspan > 1) {
             this.colspan--;
         }
         // this.datarecord = this.view.datarecord ??
-    },
-    update_from_datarecord: function() {
-        this.set_value(); // ????
+        this.field = view.fields_view.fields[node.attrs.name];
+        this.string = node.attrs.string || this.field.string;
+        this.help = node.attrs.help || this.field.help;
+        this.nolabel = (node.attrs.nolabel == '1');
     },
     set_value: function() {
     }
 });
 
 openerp.base.FieldChar = openerp.base.Field.extend({
-    init: function(session, element_id, view, node) {
-        this._super(session, element_id, view, node);
-        this.template = "FormView.field.char";
-
+    init: function(view, node) {
+        this._super(view, node);
+        this.template = "FieldChar";
     },
     start: function() {
         this._super.apply(this, arguments);
-        // this.$element.bind('leaving_focus',)
+        // this.$element.bind('change',)  ... blur, focus, ...
     },
     set_value: function() {
         this.$element.val(this.view.datarecord.values[this.name]);
@@ -521,44 +523,44 @@ openerp.base.FieldChar = openerp.base.Field.extend({
 });
 
 openerp.base.FieldEmail = openerp.base.Field.extend({
-    init: function(session, element_id, view, node) {
-        this._super(session, element_id, view, node);
-        this.template = "FormView.field.char";
+    init: function(view, node) {
+        this._super(view, node);
+        this.template = "FieldEmail";
     }
 });
 
 openerp.base.FieldFloat = openerp.base.Field.extend({
-    init: function(session, element_id, view, node) {
-        this._super(session, element_id, view, node);
-        this.template = "FormView.field.char";
+    init: function(view, node) {
+        this._super(view, node);
+        this.template = "FieldChar";
     }
 });
 
 openerp.base.FieldBoolean = openerp.base.Field.extend({
-    init: function(session, element_id, view, node) {
-        this._super(session, element_id, view, node);
-        this.template = "FormView.field.boolean";
+    init: function(view, node) {
+        this._super(view, node);
+        this.template = "FieldBoolean";
     }
 });
 
 openerp.base.FieldDate = openerp.base.Field.extend({
-    init: function(session, element_id, view, node) {
-        this._super(session, element_id, view, node);
-        this.template = "FormView.field.date";
+    init: function(view, node) {
+        this._super(view, node);
+        this.template = "FieldDate";
     }
 });
 
 openerp.base.FieldDatetime = openerp.base.Field.extend({
-    init: function(session, element_id, view, node) {
-        this._super(session, element_id, view, node);
-        this.template = "FormView.field.datetime";
+    init: function(view, node) {
+        this._super(view, node);
+        this.template = "FieldDatetime";
     }
 });
 
 openerp.base.FieldText = openerp.base.Field.extend({
-    init: function(session, element_id, view, node) {
-        this._super(session, element_id, view, node);
-        this.template = "FormView.field.text";
+    init: function(view, node) {
+        this._super(view, node);
+        this.template = "FieldText";
     }
 });
 
@@ -567,37 +569,37 @@ openerp.base.FieldTextXml = openerp.base.Field.extend({
 });
 
 openerp.base.FieldSelection = openerp.base.Field.extend({
-    init: function(session, element_id, view, node) {
-        this._super(session, element_id, view, node);
-        this.template = "FormView.field.selection";
+    init: function(view, node) {
+        this._super(view, node);
+        this.template = "FieldSelection";
     }
 });
 
 openerp.base.FieldMany2One = openerp.base.Field.extend({
-    init: function(session, element_id, view, node) {
-        this._super(session, element_id, view, node);
-        this.template = "FormView.field.many2one";
+    init: function(view, node) {
+        this._super(view, node);
+        this.template = "FieldMany2One";
     }
 });
 
 openerp.base.FieldOne2Many = openerp.base.Field.extend({
-    init: function(session, element_id, view, node) {
-        this._super(session, element_id, view, node);
-        this.template = "FormView.field.one2many";
+    init: function(view, node) {
+        this._super(view, node);
+        this.template = "FieldOne2Many";
     }
 });
 
 openerp.base.FieldMany2Many = openerp.base.Field.extend({
-    init: function(session, element_id, view, node) {
-        this._super(session, element_id, view, node);
-        this.template = "FormView.field.one2many";
+    init: function(view, node) {
+        this._super(view, node);
+        this.template = "FieldMany2Many";
     }
 });
 
 openerp.base.FieldReference = openerp.base.Field.extend({
-    init: function(session, element_id, view, node) {
-        this._super(session, element_id, view, node);
-        this.template = "FormView.field.reference";
+    init: function(view, node) {
+        this._super(view, node);
+        this.template = "FieldReference";
     }
 });
 

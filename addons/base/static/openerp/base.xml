@@ -94,46 +94,6 @@
     </div>
     <table id="todo_use_unique_id" class="jqGrid"></table>
 </t>
-<t t-name="FormViewold">
-    <h3 class="title"><t t-esc="fields_view.arch.attrs.string"/></h3>
-    <div style="text-align:right;">
-        <input type="button" value="First"/>
-        <input type="button" value="&lt;&lt;"/>
-        0 / 0
-        <input type="button" value="&gt;&gt;"/>
-        <input type="button" value="Last"/>
-    </div>
-    <t t-call="FormView.node">
-        <t t-set="node" t-value="fields_view.arch"/>
-    </t>
-    <div style="text-align:right;">
-        <input type="button" value="Save"/>
-    </div>
-</t>
-<t t-name="FormView.node">
-    <!--
-    tag: <t t-esc="node.tag"/> <t t-esc="node['@name']"/> <br/>
-    <t t-if="node.tag == 'filter'">
-        <input type="button" t-att-value="node['@string']"/>
-        <t t-esc="node['@name']"/>
-        <br/>
-    </t>
-    <t t-if="node.tag == 'separator'">
-        <hr/>
-        <t t-esc="node['@name']"/>
-        <t t-esc="node['@string']"/>
-    </t>
-    -->
-    <t t-if="node.tag == 'field'">
-        <t t-esc="node.attrs.string"/>
-        <t t-esc="node.attrs.name"/>
-        <input type="text" t-att-name="node.attrs.name"/>
-        <br/>
-    </t>
-    <t t-foreach="node.children || []" t-as="node">
-        <t t-call="FormView.node"/>
-    </t>
-</t>
 <t t-name="FormView">
     <h3 class="title"><t t-esc="view.fields_view.arch.attrs.string"/></h3>
     <div style="text-align:right;">
@@ -148,11 +108,11 @@
         <input type="button" value="Save"/>
     </div>
 </t>
-<t t-name="FormView.widget">
+<t t-name="Widget">
     Unhandled widget
     <t t-raw="console.log('Unhandled widget', widget)"/>
 </t>
-<t t-name="FormView.frame">
+<t t-name="WidgetFrame">
     <table border="0" width="100%" cellpadding="2" cellspacing="2">
     <tr t-foreach="widget.table" t-as="row">
         <t t-foreach="row" t-as="td">
@@ -166,7 +126,7 @@
     </tr>
     </table>
 </t>
-<t t-name="FormView.notebook">
+<t t-name="WidgetNotebook">
     <t t-foreach="widget.pages" t-as="page">
         <fieldset>
             <legend><t t-esc="page.string"/></legend>
@@ -174,31 +134,31 @@
         </fieldset>
     </t>
 </t>
-<t t-name="FormView.separator">
+<t t-name="WidgetSeparator">
     <div t-att-class="'separator ' + (widget.node.attrs.orientation || 'horizontal')">
         <t t-esc="widget.string"/>
     </div>
 </t>
-<t t-name="FormView.label">
-    <label t-att-for="widget.for.element_id" t-att-title="widget.help" style="display: block; text-align: right;" t-att-ondblclick="'console.log(openerp.screen.oe_main.formview.widgets[\'' + widget.element_id + '\'])'">
-        <t t-esc="widget.string"/>
-        <span t-if="widget.help">?</span>
+<t t-name="WidgetLabel">
+    <label t-att-for="widget.for.element_id" t-att-title="widget.for.help" style="display: block; text-align: right;" t-att-ondblclick="'console.log(openerp.screen.oe_main.formview.widgets[\'' + widget.for.element_id + '\'])'">
+        <t t-esc="widget.for.string"/>
+        <span t-if="widget.for.help">?</span>
         :
     </label>
 </t>
-<t t-name="FormView.field.char">
+<t t-name="FieldChar">
     <input type="text" t-att-name="widget.name" t-att-id="widget.element_id" t-att-class="'field_' + widget.type" style="width: 100%"/>
 </t>
-<t t-name="FormView.field.text">
+<t t-name="FieldText">
     <textarea rows="6" t-att-name="widget.name" t-att-id="widget.element_id" t-att-class="'field_' + widget.type" style="width: 100%;"></textarea>
 </t>
-<t t-name="FormView.field.date">
+<t t-name="FieldDate">
     <input type="text" t-att-name="widget.name" t-att-id="widget.element_id" t-att-class="'field_' + widget.type" style="width: 100%" placeholder="Widget Date"/>
 </t>
-<t t-name="FormView.field.datetime">
+<t t-name="FieldDatetime">
     <input type="text" t-att-name="widget.name" t-att-id="widget.element_id" t-att-class="'field_' + widget.type" style="width: 100%" placeholder="Widget Datetime"/>
 </t>
-<t t-name="FormView.field.selection">
+<t t-name="FieldSelection">
     <select t-att-name="widget.name" t-att-id="widget.element_id" t-att-class="'field_' + widget.type" style="width: 100%">
         <t t-foreach="widget.field.selection" t-as="options">
         <option t-att-value="options[0]">
@@ -207,21 +167,21 @@
         </t>
     </select>
 </t>
-<t t-name="FormView.field.many2one">
+<t t-name="FieldMany2One">
     <input type="text" t-att-name="widget.name" t-att-id="widget.element_id" t-att-class="'field_' + widget.type" style="width: 100%; border: 1px solid red;" placeholder="Many 2 One: Please, enter the ID of the object. Thank you !"/>
 </t>
-<t t-name="FormView.field.one2many">
+<t t-name="FieldOne2Many">
     <div style="background: #ccc; padding: 20px">
         One2Many widget
     </div>
 </t>
-<t t-name="FormView.field.reference">
+<t t-name="FieldReference">
     <input type="text" t-att-name="widget.name" t-att-id="widget.element_id" t-att-class="'field_' + widget.type" style="width: 100%" placeholder="Widget Reference"/>
 </t>
-<t t-name="FormView.field.boolean">
+<t t-name="FieldBoolean">
     <input type="checkbox" t-att-name="widget.name" t-att-id="widget.element_id" t-att-class="'field_' + widget.type"/>
 </t>
-<t t-name="FormView.button">
+<t t-name="WidgetButton">
     <button type="button" t-att-id="widget.element_id" t-att-title="widget.help" style="width: 100%" class="button">
         <img t-if="widget.node.attrs.icon" t-att-src="'/base/static/openerp/img/icons/' + widget.node.attrs.icon + '.png'" width="16" height="16"/>
         <t t-esc="widget.string"/>
