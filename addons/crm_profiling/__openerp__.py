@@ -21,17 +21,16 @@
 
 
 {
-    'name': 'Crm Profiling management - To Perform Segmentation within Partners',
+    'name': 'CRM Profiling Management - To Perform Segmentation within Partners',
     'version': '1.3',
     'category': 'Generic Modules/CRM & SRM',
     'description': """
     This module allows users to perform segmentation within partners.
+    =================================================================
+
     It uses the profiles criteria from the earlier segmentation module and improve it. Thanks to the new concept of questionnaire. You can now regroup questions into a questionnaire and directly use it on a partner.
 
     It also has been merged with the earlier CRM & SRM segmentation tool because they were overlapping.
-
-    The menu items related are in "CRM & SRM\Configuration\Segmentations"
-
 
     * Note: this module is not compatible with the module segmentation, since it's the same which has been renamed.
     """,
@@ -44,5 +43,6 @@
     'installable': True,
     'active': False,
     'certificate': '0033984979005',
+    'images': ['images/profiling_questionnaires.jpeg','images/profiling_questions.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
