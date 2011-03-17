@@ -66,15 +66,14 @@ class project_scrum_backlog_merge(osv.osv_memory):
             context = {}
         #This will check product backlog's project id if different then will accept a new id provided by the user.
         if 'scrum_projects' in context:
-            data = self.read(cr, uid, ids, [])[0]
-            if data['project_id'] == False:
+            data = self.browse(cr, uid, ids, [])[0]
+            if data.project_id.id == False:
                 raise osv.except_osv(_('Warning'),_('Please select any Project.'))
-            new_project_id = data['project_id']
+            new_project_id = data.project_id.id
         else:
             p_id = backlog_obj.read(cr, uid, context['active_id'], ['project_id'])
             new_project_id = p_id['project_id'][0]
         #To merge note and description of backlogs
-
         new_note = ''
         new_description = ''
         for backlogs in backlog_obj.browse(cr, uid, context['active_ids'], context=context):
@@ -93,7 +92,6 @@ class project_scrum_backlog_merge(osv.osv_memory):
             'project_id': new_project_id,
             'expected_hours': round(max(new_exp_hour))
         }, context=context)
-
         #To assing a new product backlog to merged tasks
         task_obj.write(cr, uid, task_lines, {'product_backlog_id': id_b})
         backlog_obj.unlink(cr, uid, context['active_ids'], context=context)
