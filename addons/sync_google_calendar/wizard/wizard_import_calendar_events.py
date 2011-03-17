@@ -170,10 +170,13 @@ class synchronize_google_calendar_events(osv.osv_memory):
         user_obj = self.pool.get('res.users').browse(cr, uid, uid)
         google = self.pool.get('google.login')
         res = []
-        gd_client = google.google_login(cr, uid, user_obj.gmail_user, user_obj.gmail_password, type='calendar')
-        calendars = gd_client.GetAllCalendarsFeed()
-        for cal in calendars.entry:
-            res.append((cal.id.text, cal.title.text))
+        try:
+            gd_client = google.google_login(cr, uid, user_obj.gmail_user, user_obj.gmail_password, type='calendar')
+            calendars = gd_client.GetAllCalendarsFeed()
+            for cal in calendars.entry:
+                res.append((cal.id.text, cal.title.text))
+        except Exception, e:
+            raise osv.except_osv('Error !', e)
         res.append(('all','All Calendars'))
         return res
     
@@ -205,7 +208,7 @@ class synchronize_google_calendar_events(osv.osv_memory):
                 'noupdate': True
             }
             vals = {
-                'name': feed.title.text,
+                'name': feed.title.text or '(No title)',
                 'description': feed.content.text,
                 'categ_id': categ_id and categ_id[0]
             }
