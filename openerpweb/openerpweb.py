@@ -1,4 +1,5 @@
 #!/usr/bin/python
+import functools
 
 import os, re, sys, traceback, xmlrpclib
 
@@ -129,11 +130,11 @@ class JsonRequest(object):
         return simplejson.dumps(r)
 
 def jsonrequest(f):
-    # check cleaner wrapping:
-    # functools.wraps(f)(lambda x: JsonRequest().dispatch(x, f))
-    l=lambda self, request: JsonRequest().dispatch(self, f, request)
-    l.exposed=1
-    return l
+    @cherrypy.expose
+    @functools.wraps(f)
+    def json_handler(self):
+        return JsonRequest().dispatch(self, f, cherrypy.request.body.read())
+    return json_handler
 
 class HttpRequest(object):
     """ Regular GET/POST request
