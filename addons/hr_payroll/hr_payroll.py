@@ -991,8 +991,8 @@ class hr_payslip(osv.osv):
                 else:
                     value = line.amount
             elif line.amount_type=='code':
-                localdict = {'basic':amt}
-                exec line.python_code in localdict
+                localdict = {'basic':amt, 'employee':employee_id, 'contract':contract}
+                exec line.python_compute in localdict
                 value = localdict['result']
             total += value
             vals = {
@@ -1172,16 +1172,17 @@ class hr_payslip_line(osv.osv):
             ('per','Percentage (%)'),
             ('fix','Fixed Amount'),
             ('code','Python Code'),
-        ],'Amount Type', select=True, required=True),
-        'amount': fields.float('Amount / Percentage', digits=(16, 4)),
+        ],'Amount Type', select=True, required=True, help="The computation method for the rule amount."),
+        'amount': fields.float('Amount / Percentage', digits_compute=dp.get_precision('Account'), help="For rule of type percentage, enter % ratio between 0-1."),
         'total': fields.float('Sub Total', digits_compute=dp.get_precision('Account')),
-        'company_contrib': fields.float('Company Contribution', readonly=True, digits=(16, 4)),
+        'company_contrib': fields.float('Company Contribution', readonly=True, digits_compute=dp.get_precision('Account')),
         'sequence': fields.integer('Sequence'),
         'note':fields.text('Description'),
     }
     _order = 'sequence'
     _defaults = {
-        'amount_type': 'per'
+        'amount_type': 'per',
+        'amount': 0.0,
     }
 
 hr_payslip_line()
@@ -1213,11 +1214,10 @@ class hr_salary_rule(osv.osv):
         'conditions':fields.char('Condition', size=1024, required=True, readonly=False, help='Applied this head for calculation if condition is true'),
         'sequence': fields.integer('Sequence', required=True, help='Use to arrange calculation sequence'),
         'active':fields.boolean('Active'),
-        'python_code': fields.text('Python code'),
         'python_compute':fields.text('Python Code'),
      }
     _defaults = {
-        'python_compute': '''# basic\n\nresult = basic * 0.10''',
+        'python_compute': '''# basic\n# employee: hr.employee object or None\n# contract: hr.contract object or None\n\nresult = basic * 0.10''',
         'conditions': 'True',
         'computational_expression': 'basic',
         'sequence': 5,

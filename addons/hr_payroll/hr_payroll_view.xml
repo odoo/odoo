@@ -162,7 +162,7 @@
                         <field name="category_id" on_change="onchange_category(category_id)"/>
                         <field name="type"/>
                         <field name="amount_type"/>
-                        <field name="amount" on_change="onchange_amount(amount, amount_type)" attrs="{'readonly':[('amount_type','=','func')]}"/>
+                        <field name="amount" on_change="onchange_amount(amount, amount_type)" attrs="{'readonly':[('amount_type','=','code')]}"/>
                         <field name="sequence" groups="base.group_extended"/>
                     </group>
                     <group col="2" colspan="2">
@@ -233,7 +233,7 @@
                                         <field name="category_id" on_change="onchange_category(category_id)"/>
                                         <field name="type"/>
                                         <field name="amount_type"/>
-                                        <field name="amount" on_change="onchange_amount(amount, amount_type)" attrs="{'readonly':[('amount_type','=','func')]}"/>
+                                        <field name="amount" on_change="onchange_amount(amount, amount_type)" attrs="{'readonly':[('amount_type','=','code')]}"/>
                                         <field name="sequence" groups="base.group_extended"/>
                                     </group>
                                     <group col="2" colspan="2">
@@ -605,12 +605,10 @@
                                 <field name="category_id" on_change="onchange_category(category_id)"/>
                                 <field name="type"/>
                                 <field name="amount_type"/>
-                                <field name="amount" on_change="onchange_amount(amount, amount_type)" attrs="{'readonly':[('amount_type','=','func')]}"/>
+                                <field name="amount" on_change="onchange_amount(amount, amount_type)" attrs="{'readonly':[('amount_type','=','code')]}"/>
                                 <field name="conditions"/>
                                 <field name="condition_range_min"/>
                                 <field name="condition_range_max"/>
-                                <separator colspan="2" string="Compute Code"/>
-                                <field colspan="2" name="python_compute" nolabel="1" attrs="{'readonly':[('amount_type','!=','code')], 'required':[('amount_type','=','code')]}"/>
                             </group>
                             <group col="2" colspan="2">
                                 <group col="2" colspan="2">
@@ -623,8 +621,8 @@
                                     <field name="computational_expression" colspan="4" nolabel="1"/>
                                 </group>
                                 <group col="2" colspan="2">
-                                    <separator colspan="2" string="Applicable code (if Amount Type = Python code)"/>
-                                    <field name="python_code"  nolabel="1" attrs="{'readonly':[('amount_type','!=','code')],'required':[('amount_type','=','code')]}"/>
+                                    <separator colspan="2" string="Compute Code"/>
+                                    <field colspan="2" name="python_compute" nolabel="1" attrs="{'readonly':[('amount_type','!=','code')], 'required':[('amount_type','=','code')]}"/>
                                 </group>
                            </group>
                         </group>
