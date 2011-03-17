@@ -248,7 +248,6 @@ class crm_lead(crm_case, osv.osv):
         data_obj = self.pool.get('ir.model.data')
         value = {}
 
-        view_id = False
 
         for case in self.browse(cr, uid, ids, context=context):
             context.update({'active_id': case.id})
