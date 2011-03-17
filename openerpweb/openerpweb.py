@@ -114,7 +114,7 @@ class JsonRequest(object):
             result = method(controller, self, **self.parse(request))
         except OpenERPUnboundException:
             error = {
-                'code': -32075,
+                'code': 1,
                 'message': "OpenERP Session Invalid",
                 'data': {
                     'type': 'session_invalid',
@@ -123,7 +123,7 @@ class JsonRequest(object):
             }
         except xmlrpclib.Fault, e:
             error = {
-                'code': -32000,
+                'code': 25,
                 'message': "OpenERP Server Error",
                 'data': {
                     'type': "server_exception",
@@ -134,7 +134,7 @@ class JsonRequest(object):
             }
         except Exception:
             error = {
-                'code': -32050,
+                'code': 50,
                 'message': "OpenERP WebClient Error",
                 'data': {
                     'type': 'client_exception',
