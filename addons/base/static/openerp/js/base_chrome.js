@@ -238,7 +238,6 @@ openerp.base.Session = openerp.base.BasicController.extend({
             var s = document.createElement("script");
             s.src = files[i];
             s.type = "text/javascript";
-            self.log("load script: " + s.src);
             document.getElementsByTagName("head")[0].appendChild(s);
         }
         // at this point the js should be loaded or not ?
@@ -252,8 +251,6 @@ openerp.base.Session = openerp.base.BasicController.extend({
     },
     on_session_modules_loaded: function() {
         var self = this;
-        self.log("init modules");
-        self.log(self.module_list);
         for(var j=0; j<self.module_list.length; j++) {
             var mod = self.module_list[j];
             self.log("init module "+mod);
