@@ -23,6 +23,7 @@
     "name" : "Double Validation for Purchase",
     "version" : "1.1",
     "category": 'Generic Modules/Sales & Purchases',
+    "images" : ["images/purchase_validation.jpeg"],
     "depends" : ["base","purchase"],
     "author" : 'OpenERP SA',
     "description": """
