@@ -23,7 +23,7 @@
     "name":"Master Procurement Schedule",
     "version":"1.1",
     "author":["OpenERP SA",  "Grzegorz Grzelak (Cirrus)"],
-    "category":"Custom",
+    "category":"Warehouse",
     "depends":["hr","stock","sale"],
     "description": """
 This module is based on original OpenERP SA module stock_planning version 1.0 of the same name Master Procurement Schedule.

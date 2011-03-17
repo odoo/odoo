@@ -23,7 +23,7 @@
 {
     'name': 'Human Resources Expenses Tracking',
     'version': '1.0',
-    'category': 'Generic Modules/Human Resources',
+    'category': 'Human Resources',
     'description': """
     This module aims to manage employee's expenses.
 

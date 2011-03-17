@@ -29,7 +29,7 @@
                  "decimal_precision"
                 ],
     "author" : "OpenERP SA",
-    "category": 'Generic Modules/Marketing',
+    "category": 'Sales',
     "description": """
 This module provides leads automation through marketing campaigns (campaigns can in fact be defined on any resource, not just CRM Leads).
          The campaigns are dynamic and multi-channels. The process is as follows:

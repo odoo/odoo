@@ -21,7 +21,7 @@
 {
     "name":"Margins in Sales Order",
     "version":"1.0",
-    "category" : "Generic Modules/Sales & Purchases",
+    "category" : "Sales",
     "description": """ 
     This module adds the 'Margin' on sales order,
     which gives the profitability by calculating the difference between the Unit Price and Cost Price

@@ -23,7 +23,7 @@
 {
     'name': 'Invoice Picking Directly',
     'version': '1.0',
-    'category': 'Generic Modules/Sales & Purchases',
+    'category': 'Warehouse',
     'description': """
         When you send or deliver goods, this module automatically launch
         the invoicing wizard if the delivery is to be invoiced.

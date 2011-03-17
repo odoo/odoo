@@ -25,7 +25,7 @@
     "version" : "0.7 RC",
     "author" : "Openlabs",
     "website" : "http://openerp.com",
-    "category" : "Added functionality",
+    "category" : "Tools",
     "depends" : ['marketing', 'base_tools'],
     "description": """
     Email Template is extraction of Power Email basically just to send the emails.

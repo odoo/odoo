@@ -23,10 +23,10 @@
 {
     'name': 'Event',
     'version': '0.1',
-    'category': 'Generic Modules/Association',
-    'description': """Organization and management of Event.
+    'category': 'Tools',
+    'description': """Organise and manageme your Events.
 
-    This module allow you
+    This module allows you
         * to manage your events and their registrations
         * to use emails to automatically confirm and send acknowledgements for any registration to an event
         * ...

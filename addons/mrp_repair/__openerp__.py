@@ -23,7 +23,7 @@
 {
     'name': 'Products Repairs Module - Manage All products Repairs',
     'version': '1.0',
-    'category': 'Custom',
+    'category': 'Tools',
     'description': """
            The aim is to have a complete module to manage all products repairs. The following topics should be covered by this module:
            * Add/remove products in the reparation

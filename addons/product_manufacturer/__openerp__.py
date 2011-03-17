@@ -21,7 +21,7 @@
     "name" : "Products Attributes & Manufacturers",
     "version" : "1.0",
     "author" : "OpenERP SA",
-    "category" : "Enterprise Specific Modules/Manufacturer Industries",
+    "category" : "Tools",
     "depends" : ["stock"],
     "init_xml" : [],
     "demo_xml" : [],

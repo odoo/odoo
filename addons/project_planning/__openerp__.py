@@ -23,8 +23,8 @@
 {
     'name': 'Planning Management Module',
     'version': '1.0',
-    'category': 'Generic Modules/Human Resources',
-    'description': """
+    'category': 'Project Management',
+    'description': """Keep track of your planning
 This module helps you to manage your plannings.
 
 This module is based on the analytic accounting and is totally integrated with

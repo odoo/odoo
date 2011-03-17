@@ -22,8 +22,8 @@
 {
     'name': 'Dashboard main module',
     'version': '1.0',
-    'category': 'Board/Base',
-    'description': """Base module for all dashboards.""",
+    'category': 'Tools',
+    'description': """Create your own dashboards""",
     'author': 'OpenERP SA',
     'depends': ['base'],
     'update_xml': ['security/board_security.xml','security/ir.model.access.csv', 'wizard/board_menu_create_view.xml', 'board_view.xml','board_administration_view.xml'],

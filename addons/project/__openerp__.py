@@ -25,7 +25,7 @@
     "version": "1.1",
     "author": "OpenERP SA",
     "website": "http://www.openerp.com",
-    "category": "Generic Modules/Projects & Services",
+    "category": "Project Management",
     "depends": ["product", "analytic", "board"],
     "description": """Project management module tracks multi-level projects, tasks,
 work done on tasks, eso. It is able to render planning, order tasks, eso.

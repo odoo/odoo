@@ -27,7 +27,7 @@
                     "base", 
                     "document_webdav",
                 ],
-     'description': """
+     'description': """Easily share your OpenERP calendars with your mobile device
     This module Contains basic functionality for caldav system like:  
   - Webdav server that provides remote access to calendar
   - Synchronisation of calendar using WebDAV
@@ -47,7 +47,7 @@
         CALENDAR_NAME: Name of calendar to access
 """, 
     "author" : "OpenERP SA", 
-    'category': 'Generic Modules/Others', 
+    'category': 'Tools', 
     'website': 'http://www.openerp.com', 
     "init_xml" : ["caldav_data.xml"], 
     "demo_xml" : [], 

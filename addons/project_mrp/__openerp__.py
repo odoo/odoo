@@ -23,7 +23,7 @@
 {
     'name': 'Procurement and Project Management integration',
     'version': '1.0',
-    'category': 'Generic Modules/Projects & Services',
+    'category': 'Project Management',
     'description': """
 This module creates a link between procurement orders
 containing "service" lines and project management tasks.

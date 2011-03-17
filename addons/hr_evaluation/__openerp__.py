@@ -23,7 +23,7 @@
     "name" : "Human Resources Evaluation",
     "version": "0.1",
     "author": "OpenERP SA",
-    "category": "Generic Modules/Human Resources",
+    "category": "Human Resources",
     "website": "http://www.openerp.com",
     "depends": ["hr",'hr_recruitment','survey'],
     "description": """

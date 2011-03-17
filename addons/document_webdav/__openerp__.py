@@ -32,7 +32,7 @@
         "name" : "WebDAV server for Document Management",
         "version" : "2.3",
         "author" : "OpenERP SA",
-        "category" : "Generic Modules/Others",
+        "category" : "Tools",
         "website": "http://www.openerp.com",
         "description": """ With this module, the WebDAV server for the documents is activated.
         You can then use any compatible browser to remotely see the attachments of OpenObject.

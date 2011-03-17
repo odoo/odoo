@@ -41,7 +41,7 @@ Thanks to the double entry management, the inventory controlling is powerful and
     """,
     "website" : "http://www.openerp.com",
     "depends" : ["product", "account"],
-    "category" : "Generic Modules/Inventory Control",
+    "category" : "Warehouse",
     "init_xml" : [],
     "demo_xml" : ["stock_demo.xml"],
     "update_xml" : [

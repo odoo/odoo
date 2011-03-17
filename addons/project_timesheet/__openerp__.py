@@ -22,7 +22,7 @@
 {
     'name': 'Project Timesheet',
     'version': '1.0',
-    'category': 'Generic Modules/Human Resources',
+    'category': 'Project Management',
     'description': """
         This module lets you transfer the entries under tasks defined for Project Management to
         the Timesheet line entries for particular date and particular user  with the effect of creating, editing and deleting either ways.

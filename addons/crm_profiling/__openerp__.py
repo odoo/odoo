@@ -23,7 +23,7 @@
 {
     'name': 'Crm Profiling management - To Perform Segmentation within Partners',
     'version': '1.3',
-    'category': 'Generic Modules/CRM & SRM',
+    'category': 'Sales',
     'description': """
     This module allows users to perform segmentation within partners.
     It uses the profiles criteria from the earlier segmentation module and improve it. Thanks to the new concept of questionnaire. You can now regroup questions into a questionnaire and directly use it on a partner.

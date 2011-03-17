@@ -22,7 +22,7 @@
     "name" : "Accounting and Financial Management",
     "version" : "1.1",
     "author" : "OpenERP SA",
-    "category": 'Generic Modules/Accounting',
+    "category": 'Finance',
     "description": """Financial and accounting module that covers:
     General accountings
     Cost / Analytic accounting

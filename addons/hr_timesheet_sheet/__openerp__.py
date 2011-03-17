@@ -23,7 +23,7 @@
 {
     'name': 'Timesheets',
     'version': '1.0',
-    'category': 'Generic Modules/Human Resources',
+    'category': 'Human Resources',
     'description': """
 This module helps you to easily encode and validate timesheet and attendances
 within the same view. The upper part of the view is for attendances and

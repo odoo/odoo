@@ -25,7 +25,7 @@
     "version": "1.1",
     "author": "OpenERP SA",
     "website": "http://www.openerp.com",
-    "category": "Generic Modules/Projects & Services",
+    "category": "Project Management",
     "depends": ["project", "mail_gateway"],
     "description": """This module is an interface that synchronises mails with OpenERP Project Task.
 

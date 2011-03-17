@@ -41,7 +41,7 @@
                     """,
     "version" : "0.9",
     "depends" : ["base", "account", "report_webkit"],
-    "category": "Reports/Webkit",
+    "category": "Tools",
     "author" : "Camptocamp SA - NBessi",
     "url": "http://www.camptocamp.com/",
     "data": ["report_webkit_html_view.xml",
