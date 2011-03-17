@@ -165,6 +165,7 @@ class payroll_register(osv.osv):
     def compute_sheet(self, cr, uid, ids, context=None):
         emp_pool = self.pool.get('hr.employee')
         slip_pool = self.pool.get('hr.payslip')
+        slip_line_pool = self.pool.get('hr.payslip.line')
         wf_service = netsvc.LocalService("workflow")
 
         if context is None:
@@ -176,8 +177,6 @@ class payroll_register(osv.osv):
             old_slips = slip_pool.search(cr, uid, [('employee_id','=', emp.id), ('date','=',vals.date)], context=context)
             if old_slips:
                 slip_pool.write(cr, uid, old_slips, {'register_id':ids[0]}, context=context)
-#                for sid in old_slips:
-#                    wf_service.trg_validate(uid, 'hr.payslip', sid, 'compute_sheet', cr)
             else:
                 res = {
                     'employee_id':emp.id,
@@ -187,8 +186,12 @@ class payroll_register(osv.osv):
                     'date':vals.date,
                 }
                 slip_id = slip_pool.create(cr, uid, res, context=context)
-#                wf_service.trg_validate(uid, 'hr.payslip', slip_id, 'compute_sheet', cr)
-
+                data = slip_pool.onchange_employee_id(cr, uid, [slip_id], vals.date, emp.id, context=context)
+                for line in data['value']['line_ids']:
+                    line.update({'slip_id': slip_id})
+                    slip_line_pool.create(cr, uid, line, context=context)
+                data['value'].pop('line_ids')
+                slip_pool.write(cr, uid, [slip_id], data['value'], context=context)
         number = self.pool.get('ir.sequence').get(cr, uid, 'salary.register')
         return self.write(cr, uid, ids, {'state': 'draft', 'number': number}, context=context)
 
@@ -852,7 +855,6 @@ class hr_payslip(osv.osv):
 #            self.write(cr, uid, [slip.id], update, context=context)
 #        return True
 
-
     def _get_parent_structure(self, cr, uid, struct_id, context=None):
         if not struct_id:
             return []
@@ -871,7 +873,6 @@ class hr_payslip(osv.osv):
         holiday_pool = self.pool.get('hr.holidays')
         sequence_obj = self.pool.get('ir.sequence')
         empolyee_obj = self.pool.get('hr.employee')
-        hr_salary_head = self.pool.get('hr.salary.head')
         resource_attendance_pool = self.pool.get('resource.calendar.attendance')
 
         if context is None:
@@ -908,7 +909,6 @@ class hr_payslip(osv.osv):
                 'basic_amount': round(0.0),
                 'basic_before_leaves': round(0.0),
                 'name':'Salary Slip of %s for %s' % (employee_id.name, tools.ustr(ttyme.strftime('%B-%Y'))),
-#                'state':'draft',
                 'contract_id':False,
                 'company_id':employee_id.company_id.id
             })
@@ -930,7 +930,6 @@ class hr_payslip(osv.osv):
                     for r in rl.child_ids:
                         lines.append(r)
                 rules.append(rl)
-        
         ad = []
         total = 0.0
         obj = {'basic': contract.wage}
@@ -955,7 +954,6 @@ class hr_payslip(osv.osv):
 
             value = 0.0
             base = False
-           
 #                company_contrib = 0.0
             base = line.computational_expression
             try:
@@ -992,9 +990,10 @@ class hr_payslip(osv.osv):
                         value = line.amount
                 else:
                     value = line.amount
-#            elif line.amount_type == 'code': # Need some clarification so this option remains
-#                value = slip_line_pool.execute_function(cr, uid, line.id, amt, context)
-#                line.amount = value
+            elif line.amount_type=='code':
+                localdict = {'basic':amt}
+                exec line.python_code in localdict
+                value = localdict['result']
             total += value
             vals = {
                 'category_id': line.category_id.id,
@@ -1015,7 +1014,6 @@ class hr_payslip(osv.osv):
                         update['value']['line_ids'].append(vals)
                 else:
                     update['value']['line_ids'].append(vals)
-            
         basic = contract.wage
         number = sequence_obj.get(cr, uid, 'salary.slip')
         update['value'].update({
@@ -1025,7 +1023,6 @@ class hr_payslip(osv.osv):
             'basic_before_leaves': round(basic),
             'total_pay': round(basic) + total,
             'name':'Salary Slip of %s for %s' % (employee_id.name, tools.ustr(ttyme.strftime('%B-%Y'))),
-#            'state':'draft',
             'contract_id': contract.id,
             'company_id': employee_id.company_id.id
         })
@@ -1092,18 +1089,6 @@ class hr_payslip(osv.osv):
                 'employee_id': employee_id.id,
                 'base': base
             }
-#            test = {
-#                    'name': hday.name,
-#                    'holiday_type': hday.holiday_type,
-#                    'employee_id': hday.employee_id.id,
-#                    'holiday_status_id': hday.holiday_status_id.id,
-#                    'date_from': hday.date_from,
-#                    'date_to': hday.date_to,
-#                    'number_of_days_temp': hday.number_of_days_temp,
-#                    'state': hday.state,
-#                    'number_of_days': hday.number_of_days,
-#                    'type': hday.type
-#            }
             days = hday.number_of_days
             if hday.number_of_days < 0:
                 days = hday.number_of_days * -1
@@ -1126,11 +1111,6 @@ class hr_payslip(osv.osv):
             total += value
             res['total'] = value
             update['value']['line_ids'].append(res)
-#            update['value']['holiday_ids'].append(test)
-        basic = basic + total
-
-#            leaves = total
-#        temp_dic = holiday_pool.read(cr, uid, leave_ids, [], context=context)
         update['value'].update({
             'basic_amount': basic,
             'basic_before_leaves': round(basic_before_leaves),
@@ -1139,7 +1119,6 @@ class hr_payslip(osv.osv):
             'holiday_days': leave,
             'worked_days': working_day - leave,
             'working_days': working_day,
-#            'holiday_ids': temp_dic
         })
         return update
 
@@ -1235,8 +1214,10 @@ class hr_salary_rule(osv.osv):
         'sequence': fields.integer('Sequence', required=True, help='Use to arrange calculation sequence'),
         'active':fields.boolean('Active'),
         'python_code': fields.text('Python code'),
+        'python_compute':fields.text('Python Code'),
      }
     _defaults = {
+        'python_compute': '''# basic\n\nresult = basic * 0.10''',
         'conditions': 'True',
         'computational_expression': 'basic',
         'sequence': 5,
