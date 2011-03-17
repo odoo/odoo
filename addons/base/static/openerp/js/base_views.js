@@ -125,15 +125,16 @@ openerp.base.DataRecord =  openerp.base.Controller.extend({
     init: function(session,  model, fields) {
         this._super(session, null);
         this.model = model;
-        this.id = id;
+        this.id = null;
         this.fields = fields;
         this.values = {};
     },
     load: function(id) {
-        this.rpc("/base/datarecord/load", {"model": this.model, "id": this.id, "fields": "todo"}, this.on_loaded);
+        this.id = id;
+        this.rpc("/base/datarecord/load", {"model": this.model, "id": id, "fields": "todo"}, this.on_loaded);
     },
     on_loaded: function(result) {
-        this.values = result.values;
+        this.values = result.value;
     },
     on_change: function() {
     },
@@ -237,7 +238,7 @@ openerp.base.FormView =  openerp.base.Controller.extend({
 
         this.$element.html(QWeb.render("FormView", { "frame": frame, "view": this }));
         for (var i in this.widgets) {
-            this.widgets[i].register();
+            this.widgets[i].start();
         }
         // bind to all wdigets that have onchange ??
 
@@ -246,7 +247,7 @@ openerp.base.FormView =  openerp.base.Controller.extend({
 
         // When a datarecord is loaded display the values in the inputs
         this.datarecord = new openerp.base.DataRecord(this.session, this.model,{});
-        this.datarecord.on_loaded.add(this.on_record_loaded);
+        this.datarecord.on_loaded.add_last(this.on_record_loaded);
 
     },
     do_load_record: function() {
@@ -257,7 +258,9 @@ openerp.base.FormView =  openerp.base.Controller.extend({
         this.datarecord.load(this.dataset.ids[this.dataset_index]);
     },
     on_record_loaded: function() {
-        //for i in  this.fields: f.update_from_datarecord()
+        for (var f in this.fields) {
+            this.fields[f].update_from_datarecord()
+        }
     },
 });
 
@@ -357,12 +360,6 @@ openerp.base.Widget = openerp.base.Controller.extend({
         this.node = node;
         this.children = node.children;
         this.colspan = parseInt(node.attrs.colspan || 1);
-        if (node.tag == 'field') {
-            this.view.fields[node.attrs.name] = this;
-            if (node.attrs.nolabel != '1' && this.colspan > 1) {
-                this.colspan--;
-            }
-        }
         this.field = view.fields_view.fields[node.attrs.name];
         this.template = "FormView.widget";
 
@@ -371,9 +368,9 @@ openerp.base.Widget = openerp.base.Controller.extend({
         this.help = node.attrs.help || (this.field ? this.field.help : undefined);
         this.nolabel = (node.attrs.nolabel == '1');
     },
-    register: function() {
+    start: function() {
+        console.log("jquery", this.element_id)
         this.$element = $('#' + this.element_id);
-        return this;
     },
     render: function() {
         var template = this.template;
@@ -492,7 +489,16 @@ openerp.base.WidgetButton = openerp.base.Widget.extend({
 openerp.base.Field = openerp.base.Widget.extend({
     init: function(session, element_id, view, node) {
         this._super(session, element_id, view, node);
+        this.view.fields[node.attrs.name] = this;
+        if (node.attrs.nolabel != '1' && this.colspan > 1) {
+            this.colspan--;
+        }
         // this.datarecord = this.view.datarecord ??
+    },
+    update_from_datarecord: function() {
+        this.set_value(); // ????
+    },
+    set_value: function() {
     }
 });
 
@@ -503,14 +509,14 @@ openerp.base.FieldChar = openerp.base.Field.extend({
 
     },
     start: function() {
+        this._super.apply(this, arguments);
         // this.$element.bind('leaving_focus',)
     },
     set_value: function() {
-        // this.$element.val(this.view.datarecord.values[this.name])
+        this.$element.val(this.view.datarecord.values[this.name]);
     },
     on_change: function() {
         //this.view.update_field(this.name,value);
-
     },
 });
 
