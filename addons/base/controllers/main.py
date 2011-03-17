@@ -95,11 +95,10 @@ class Session(openerpweb.Controller):
     @openerpweb.jsonrequest
     def login(self, req, db, login, password):
         req.session.login(db, login, password)
-        res = {
+        return {
             "session_id" : req.session_id,
             "uid": req.session._uid,
         }
-        return res
 
     @openerpweb.jsonrequest
     def modules(self, req):
