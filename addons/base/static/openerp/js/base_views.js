@@ -206,81 +206,94 @@ openerp.base.WidgetButton = openerp.base.Widget.extend({
     }
 });
 
-openerp.base.WidgetFieldChar = openerp.base.Widget.extend({
+openerp.base.Field = openerp.base.Widget.extend({
+    init: function(session, element_id, view, node) {
+        this._super(session, element_id, view, node);
+    }
+});
+
+openerp.base.FieldChar = openerp.base.Field.extend({
     init: function(session, element_id, view, node) {
         this._super(session, element_id, view, node);
         this.template = "FormView.field.char";
     }
 });
 
-openerp.base.WidgetFieldEmail = openerp.base.Widget.extend({
+openerp.base.FieldEmail = openerp.base.Field.extend({
     init: function(session, element_id, view, node) {
         this._super(session, element_id, view, node);
         this.template = "FormView.field.char";
     }
 });
 
-openerp.base.WidgetFieldFloat = openerp.base.Widget.extend({
+openerp.base.FieldFloat = openerp.base.Field.extend({
     init: function(session, element_id, view, node) {
         this._super(session, element_id, view, node);
         this.template = "FormView.field.char";
     }
 });
 
-openerp.base.WidgetFieldBoolean = openerp.base.Widget.extend({
+openerp.base.FieldBoolean = openerp.base.Field.extend({
     init: function(session, element_id, view, node) {
         this._super(session, element_id, view, node);
         this.template = "FormView.field.boolean";
     }
 });
 
-openerp.base.WidgetFieldDate = openerp.base.Widget.extend({
+openerp.base.FieldDate = openerp.base.Field.extend({
     init: function(session, element_id, view, node) {
         this._super(session, element_id, view, node);
         this.template = "FormView.field.date";
     }
 });
 
-openerp.base.WidgetFieldDatetime = openerp.base.Widget.extend({
+openerp.base.FieldDatetime = openerp.base.Field.extend({
     init: function(session, element_id, view, node) {
         this._super(session, element_id, view, node);
         this.template = "FormView.field.datetime";
     }
 });
 
-openerp.base.WidgetFieldText = openerp.base.Widget.extend({
+openerp.base.FieldText = openerp.base.Field.extend({
     init: function(session, element_id, view, node) {
         this._super(session, element_id, view, node);
         this.template = "FormView.field.text";
     }
 });
 
-openerp.base.WidgetFieldTextXml = openerp.base.Controller.extend({
+openerp.base.FieldTextXml = openerp.base.Field.extend({
 // to replace view editor
 });
 
-openerp.base.WidgetFieldSelection = openerp.base.Widget.extend({
+openerp.base.FieldSelection = openerp.base.Field.extend({
     init: function(session, element_id, view, node) {
         this._super(session, element_id, view, node);
         this.template = "FormView.field.selection";
     }
 });
 
-openerp.base.WidgetFieldMany2One = openerp.base.Widget.extend({
+openerp.base.FieldMany2One = openerp.base.Field.extend({
     init: function(session, element_id, view, node) {
         this._super(session, element_id, view, node);
         this.template = "FormView.field.many2one";
     }
 });
 
-openerp.base.WidgetFieldOne2Many = openerp.base.Widget.extend({
+openerp.base.FieldOne2Many = openerp.base.Field.extend({
     init: function(session, element_id, view, node) {
         this._super(session, element_id, view, node);
         this.template = "FormView.field.one2many";
     }
 });
 
-openerp.base.WidgetFieldReference = openerp.base.Widget.extend({
+openerp.base.FieldMany2Many = openerp.base.Field.extend({
+    init: function(session, element_id, view, node) {
+        this._super(session, element_id, view, node);
+        this.template = "FormView.field.one2many";
+    }
+});
+
+openerp.base.FieldReference = openerp.base.Field.extend({
     init: function(session, element_id, view, node) {
         this._super(session, element_id, view, node);
         this.template = "FormView.field.reference";
@@ -292,17 +305,17 @@ openerp.base.widgets = {
     'notebook' : openerp.base.WidgetNotebook,
     'separator' : openerp.base.WidgetSeparator,
     'label' : openerp.base.WidgetLabel,
-    'char' : openerp.base.WidgetFieldChar,
-    'email' : openerp.base.WidgetFieldEmail,
-    'date' : openerp.base.WidgetFieldDate,
-    'datetime' : openerp.base.WidgetFieldDatetime,
-    'text' : openerp.base.WidgetFieldText,
-    'selection' : openerp.base.WidgetFieldSelection,
-    'many2one' : openerp.base.WidgetFieldMany2One,
-    'one2many' : openerp.base.WidgetFieldOne2Many,
-    'reference' : openerp.base.WidgetFieldReference,
-    'boolean' : openerp.base.WidgetFieldBoolean,
-    'float' : openerp.base.WidgetFieldFloat,
+    'char' : openerp.base.FieldChar,
+    'email' : openerp.base.FieldEmail,
+    'date' : openerp.base.FieldDate,
+    'datetime' : openerp.base.FieldDatetime,
+    'text' : openerp.base.FieldText,
+    'selection' : openerp.base.FieldSelection,
+    'many2one' : openerp.base.FieldMany2One,
+    'one2many' : openerp.base.FieldOne2Many,
+    'reference' : openerp.base.FieldReference,
+    'boolean' : openerp.base.FieldBoolean,
+    'float' : openerp.base.FieldFloat,
     'button' : openerp.base.WidgetButton
 }
 
