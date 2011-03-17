@@ -143,27 +143,28 @@ openerp.base.Session = openerp.base.BasicController.extend({
         // Construct a JSON-RPC2 request, method is currently unused
         params.session_id = this.session_id;
         params.context = typeof(params.context) != "undefined" ? params.context  : this.context;
-        var request = { jsonrpc: "2.0", method: "call", params: params, "id":null };
-
-        // This is a violation of the JSON-RPC2 over HTTP protocol
-        // specification but i don't know how to parse the raw POST content from
-        // cherrypy so i use a POST form with one variable named request
-        var post = { request: JSON.stringify(request) };
 
         // Use a default error handler unless defined
         error_callback = typeof(error_callback) != "undefined" ? error_callback : this.on_rpc_error;
 
         // Call using the rpc_mode
-        this.rpc_ajax(url, post, success_callback, error_callback);
+        this.rpc_ajax(url, {
+            jsonrpc: "2.0",
+            method: "call",
+            params: params,
+            id:null
+        }, success_callback, error_callback);
     },
-    rpc_ajax: function(url, post, success_callback, error_callback) {
+    rpc_ajax: function(url, payload, success_callback, error_callback) {
         var self = this;
         this.on_rpc_request();
         $.ajax({
             type: "POST",
             url: url,
             dataType: 'json',
-            data: post,
+            contentType: 'application/json',
+            data: JSON.stringify(payload),
+            processData: false,
             success: function(response, textStatus, jqXHR) {
                 self.on_rpc_response();
                 if (response.error) {
@@ -182,7 +183,7 @@ openerp.base.Session = openerp.base.BasicController.extend({
             error: function(jqXHR, textStatus, errorThrown) {
                 self.on_rpc_response();
                 var error = {
-                    code: 1,
+                    code: -32098,
                     message: "XmlHttpRequestError " + errorThrown,
                     data: {type: "xhr"+textStatus, debug: jqXHR.responseText, objects: [jqXHR, errorThrown] }
                 };
@@ -196,7 +197,7 @@ openerp.base.Session = openerp.base.BasicController.extend({
     },
     on_rpc_error: function(error) {
         // TODO this should use the $element with focus and button is displaying OPW etc...
-        this.on_log(error, error.message, error.data.type, error.data.debug);
+        this.on_log(error.message, error.data);
     },
     on_session_invalid: function(contination) {
     },

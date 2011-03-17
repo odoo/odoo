@@ -1,7 +1,9 @@
 #!/usr/bin/python
+import functools
 
 import optparse, os, re, sys, traceback, xmlrpclib
 
+import cherrypy
 import cherrypy.lib.static
 import simplejson
 
@@ -79,60 +81,81 @@ class JsonRequest(object):
     <-- {"jsonrpc": "2.0", "error": {"code": 1, "message": "End user error message.", "data": {"code": "codestring", "debug": "traceback" } }, "id": null}
 
     """
-    def __init__(self):
-        # result may be filled, it's content will be updated by the return
-        # value of the dispatched function if it's a dict
-        self.result = {}
-        self.error_type = ""
-        self.error_message = ""
-        self.error_debug = ""
 
     def parse(self, request):
-        self.cherrypy_request = None
-        self.cherrypy_session = None
-        d = simplejson.loads(request)
-        self.params = d.get("params",{})
+        self.params = request.get("params",{})
         self.session_id = self.params.pop("session_id", None) or "random.random"
         self.session = session_store.setdefault(self.session_id, OpenERPSession())
-        self.context = self.params.pop("context", {})
+        self.context = self.params.pop('context', None)
+        return self.params
 
-    def dispatch(self, controller, f, request):
-        try:
-            print "--> %s.%s %s"%(controller.__class__.__name__,f.__name__,request)
-            self.parse(request)
-            r=f(controller, self, **self.params)
-            if isinstance(r, dict):
-                self.result.update(r)
-        except OpenERPUnboundException,e:
-            self.error_type = "session_invalid"
-            self.error_message = "OpenERP Session Invalid"
-            self.error_debug = traceback.format_exc()
-        except xmlrpclib.Fault, e:
-            tb = "".join(traceback.format_exception("", None, sys.exc_traceback))
-            self.error_type = "server_exception"
-            self.error_message = "OpenERP Server Error: %s"%e.faultCode
-            self.error_debug = "Client %s\nServer %s"%(tb,e.faultString)
-        except Exception,e:
-            self.error_type = "client_exception"
-            self.error_message = "OpenERP WebClient Error: %r"%e
-            self.error_debug = "Client %s"%traceback.format_exc()
-        r = {"jsonrpc": "2.0",  "id": None}
-        if self.error_type:
-            r["error"] = {"code": 1, "message": self.error_message, "data": { "type":self.error_type, "debug": self.error_debug } }
+    def dispatch(self, controller, method, requestf=None, request=None):
+        ''' Calls the method asked for by the JSON-RPC2 request
+
+        :param controller: the instance of the controller which received the request
+        :type controller: type
+        :param method: the method which received the request
+        :type method: callable
+        :param requestf: a file-like object containing an encoded JSON-RPC2 request
+        :type requestf: <read() -> bytes>
+        :param request: an encoded JSON-RPC2 request
+        :type request: bytes
+
+        :returns: a string-encoded JSON-RPC2 reply
+        :rtype: bytes
+        '''
+        if requestf:
+            request = simplejson.load(requestf)
         else:
-            r["result"] = self.result
-        print "<--",r
+            request = simplejson.loads(request)
+        try:
+            print "--> %s.%s %s"%(controller.__class__.__name__,method.__name__,request)
+            error = None
+            result = method(controller, self, **self.parse(request))
+        except OpenERPUnboundException:
+            error = {
+                'code': 100,
+                'message': "OpenERP Session Invalid",
+                'data': {
+                    'type': 'session_invalid',
+                    'debug': traceback.format_exc()
+                }
+            }
+        except xmlrpclib.Fault, e:
+            error = {
+                'code': 200,
+                'message': "OpenERP Server Error",
+                'data': {
+                    'type': 'server_exception',
+                    'fault_code': e.faultCode,
+                    'debug': "Client %s\nServer %s" % ("".join(traceback.format_exception("", None, sys.exc_traceback)), e.faultString)
+                }
+            }
+        except Exception:
+            error = {
+                'code': 300,
+                'message': "OpenERP WebClient Error",
+                'data': {
+                    'type': 'client_exception',
+                    'debug': "Client %s" % traceback.format_exc()
+                }
+            }
+        response = {"jsonrpc": "2.0",  "id": request.get('id')}
+        if error:
+            response["error"] = error
+        else:
+            response["result"] = result
+
+        print "<--",  response
         print
-        #import pprint
-        #pprint.pprint(r)
-        return simplejson.dumps(r)
+        return simplejson.dumps(response)
 
 def jsonrequest(f):
-    # check cleaner wrapping:
-    # functools.wraps(f)(lambda x: JsonRequest().dispatch(x, f))
-    l=lambda self, request: JsonRequest().dispatch(self, f, request)
-    l.exposed=1
-    return l
+    @cherrypy.expose
+    @functools.wraps(f)
+    def json_handler(self):
+        return JsonRequest().dispatch(self, f, requestf=cherrypy.request.body)
+    return json_handler
 
 class HttpRequest(object):
     """ Regular GET/POST request
@@ -234,8 +257,9 @@ def main(argv):
         #'server.thread_pool' = 10,
         'tools.sessions.on': True,
     }
-    cherrypy.config.update(config)
-    cherrypy_root = Root()
-    cherrypy.quickstart(cherrypy_root,'',{'/':{}})
+    cherrypy.tree.mount(Root())
 
-# vim:
+    cherrypy.config.update(config)
+    cherrypy.server.subscribe()
+    cherrypy.engine.start()
+    cherrypy.engine.block()
