@@ -229,7 +229,6 @@ openerp.base.Session = openerp.base.BasicController.extend({
             self.rpc('/base/session/jslist', {"mods": self.module_list.join(',')}, self.debug ? self.do_session_load_modules_debug : self.do_session_load_modules_prod);
             openerp._modules_loaded = true;
         });
-        this.uid = false;
     },
     do_session_load_modules_debug: function(result) {
         var self = this;
