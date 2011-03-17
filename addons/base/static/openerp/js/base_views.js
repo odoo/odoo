@@ -455,6 +455,10 @@ openerp.base.WidgetNotebook = openerp.base.Widget.extend({
                 this.pages.push(page);
             }
         }
+    },
+    start: function() {
+        this._super.apply(this, arguments);
+        this.$element.tabs();
     }
 });
 

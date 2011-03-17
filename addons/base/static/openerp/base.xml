@@ -127,12 +127,20 @@
     </table>
 </t>
 <t t-name="WidgetNotebook">
-    <t t-foreach="widget.pages" t-as="page">
-        <fieldset>
-            <legend><t t-esc="page.string"/></legend>
-            <t t-raw="page.render()"/>
-        </fieldset>
-    </t>
+    <div t-att-id="widget.element_id">
+        <ul>
+            <li t-foreach="widget.pages" t-as="page">
+                <a t-att-href="'#' + widget.element_id + '-' + page_index">
+                    <t t-esc="page.string"/>
+                </a>
+            </li>
+        </ul>
+        <t t-foreach="widget.pages" t-as="page">
+            <div t-att-id="widget.element_id + '-' + page_index">
+                <t t-raw="page.render()"/>
+            </div>
+        </t>
+    </div>
 </t>
 <t t-name="WidgetSeparator">
     <div t-att-class="'separator ' + (widget.node.attrs.orientation || 'horizontal')">
