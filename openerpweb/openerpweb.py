@@ -148,7 +148,11 @@ class JsonRequest(object):
 
         print "<--",  response
         print
-        return simplejson.dumps(response)
+
+        content = simplejson.dumps(response)
+        cherrypy.response.headers['Content-Type'] = 'application/json'
+        cherrypy.response.headers['Content-Length'] = len(content)
+        return content
 
 def jsonrequest(f):
     @cherrypy.expose
