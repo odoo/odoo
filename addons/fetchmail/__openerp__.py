@@ -2,7 +2,7 @@
 #-*- coding:utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution    
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    mga@tinyerp.com
 #
@@ -24,9 +24,9 @@
 {
     "name" : "Fetchmail Server",
     "version" : "1.0",
-    "depends" : ["base", 'mail_gateway'],
+    "depends" : ["base", 'email'],
     "author" : "OpenERP SA",
-    "description": """Fetchmail: 
+    "description": """Fetchmail:
     * Fetch email from Pop / IMAP server
     * Support SSL
     * Integrated with all Modules

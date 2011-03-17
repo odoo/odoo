@@ -394,7 +394,9 @@
                         <field name="date"/>
                         <field name="sprint_id" domain="[('state', '=', 'open')]"/>
                         <field name="user_id"/>
-                        <button name="%(action_project_scrum_email)d"  string="Send Email" type="action" icon="terp-mail-message-new" />
+                        <button name="%(email.action_email_compose_message_wizard)d"
+                                string="Send Email" type="action" icon="terp-mail-message-new"
+                                context="{'email_model': 'project.scrum.meeting', 'email_res_id': active_id}"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Scrum Meeting">

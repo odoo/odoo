@@ -23,7 +23,7 @@
 {
     "name" : "Sharing Tools",
     "version" : "1.3",
-    "depends" : ["base"],
+    "depends" : ["base", "email"],
     "author" : "OpenERP SA",
     "category": 'Generic Modules',
     "description": """
@@ -36,7 +36,7 @@
     combining the appropriate access rights and ir.rules to ensure that the
     shared users only have access to the data that has been shared with them.
 
-    This is extremely useful for collaborative work, knowledge sharing, 
+    This is extremely useful for collaborative work, knowledge sharing,
     synchronization with other companies, etc.
 
     """,

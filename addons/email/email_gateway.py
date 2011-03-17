@@ -42,7 +42,7 @@ class mailgate_thread(osv.osv):
     _description = 'Mailgateway Thread'
 
     _columns = {
-        'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', readonly=True),
+        'message_ids': fields.one2many('email.message', 'res_id', 'Messages', readonly=True),
     }
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -97,8 +97,8 @@ class mailgate_thread(osv.osv):
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
         @param cases: a browse record list
-        @param keyword: Subject of the history item
-        @param history: Value True/False, If True it makes entry in case History otherwise in Case Log
+        @param keyword: Case action keyword e.g.: If case is closed "Close" keyword is used
+        @param history: Value True/False, If True it makes entry as a Emails Messages otherwise Log Messages
         @param email: Email-To / Recipient address
         @param email_from: Email From / Sender address if any
         @param email_cc: Comma-Separated list of Carbon Copy Emails To addresse if any
@@ -123,15 +123,11 @@ class mailgate_thread(osv.osv):
             cases = self.browse(cr, uid, cases, context=context)
 
         att_obj = self.pool.get('ir.attachment')
-        obj = self.pool.get('mailgate.message')
+        obj = self.pool.get('email.message')
 
         for case in cases:
             attachments = []
             for att in attach:
-                att_ids = att_obj.search(cr, uid, [('name','=',att[0]), ('res_id', '=', case.id)])
-                if att_ids:
-                    attachments.append(att_ids[0])
-                else:
                     attachments.append(att_obj.create(cr, uid, {'res_model':case._name,'res_id':case.id, 'name': att[0], 'datas': base64.encodestring(att[1])}))
 
             partner_id = hasattr(case, 'partner_id') and (case.partner_id and case.partner_id.id or False) or False
@@ -145,7 +141,7 @@ class mailgate_thread(osv.osv):
                 'res_id': case.id,
                 'date': time.strftime('%Y-%m-%d %H:%M:%S'),
                 'message_id': message_id,
-                'description': details,
+                'description': details or (hasattr(case, 'description') and case.description or False),
                 'attachment_ids': [(6, 0, attachments)]
             }
 
@@ -161,7 +157,7 @@ class mailgate_thread(osv.osv):
                     'model' : case._name,
                     'res_id': case.id,
                     'date': email_date or time.strftime('%Y-%m-%d %H:%M:%S'),
-                    'description': details or (hasattr(case, 'description') and case.description or False),
+                    'description': details,
                     'email_to': email,
                     'email_from': email_from or \
                         (hasattr(case, 'user_id') and case.user_id and case.user_id.address_id and \
@@ -171,9 +167,9 @@ class mailgate_thread(osv.osv):
                     'partner_id': partner_id,
                     'references': references,
                     'message_id': message_id,
+                    'folder': 'inbox',
                     'attachment_ids': [(6, 0, attachments)]
                 }
-
             obj.create(cr, uid, data, context=context)
         return True
 mailgate_thread()
@@ -183,116 +179,6 @@ def format_date_tz(date, tz=None):
         return 'n/a'
     format = tools.DEFAULT_SERVER_DATETIME_FORMAT
     return tools.server_to_local_timestamp(date, format, format, tz)
-
-class mailgate_message(osv.osv):
-    '''
-    Mailgateway Message
-    '''
-    def open_document(self, cr, uid, ids, context=None):
-        """ To Open Document
-        @param self: The object pointer.
-        @param cr: A database cursor
-        @param uid: ID of the user currently logged in
-        @param ids: the ID of messages
-        @param context: A standard dictionary
-        """
-        action_data = False
-        if ids:
-            message_id = ids[0]
-            mailgate_data = self.browse(cr, uid, message_id, context=context)
-            model = mailgate_data.model
-            res_id = mailgate_data.res_id
-
-            action_pool = self.pool.get('ir.actions.act_window')
-            action_ids = action_pool.search(cr, uid, [('res_model', '=', model)])
-            if action_ids:
-                action_data = action_pool.read(cr, uid, action_ids[0], context=context)
-                action_data.update({
-                    'domain' : "[('id','=',%d)]"%(res_id),
-                    'nodestroy': True,
-                    'context': {}
-                    })
-        return action_data
-
-    def open_attachment(self, cr, uid, ids, context=None):
-        """ To Open attachments
-        @param self: The object pointer.
-        @param cr: A database cursor
-        @param uid: ID of the user currently logged in
-        @param ids: the ID of messages
-        @param context: A standard dictionary
-        """
-        action_data = False
-        action_pool = self.pool.get('ir.actions.act_window')
-        message_pool = self.browse(cr ,uid, ids, context=context)[0]
-        att_ids = [x.id for x in message_pool.attachment_ids]
-        action_ids = action_pool.search(cr, uid, [('res_model', '=', 'ir.attachment')])
-        if action_ids:
-            action_data = action_pool.read(cr, uid, action_ids[0], context=context)
-            action_data.update({
-                'domain': [('id','in',att_ids)],
-                'nodestroy': True
-                })
-        return action_data
-
-    def truncate_data(self, cr, uid, data, context=None):
-        data_list = data and data.split('\n') or []
-        if len(data_list) > 3:
-            res = '\n\t'.join(data_list[:3]) + '...'
-        else:
-            res = '\n\t'.join(data_list)
-        return res
-
-    def _get_display_text(self, cr, uid, ids, name, arg, context=None):
-        if context is None:
-            context = {}
-        tz = context.get('tz')
-        result = {}
-        for message in self.browse(cr, uid, ids, context=context):
-            msg_txt = ''
-            if message.history:
-                msg_txt += (message.email_from or '/') + _(' wrote on ') + format_date_tz(message.date, tz) + ':\n\t'
-                if message.description:
-                    msg_txt += self.truncate_data(cr, uid, message.description, context=context)
-            else:
-                msg_txt = (message.user_id.name or '/') + _(' on ') + format_date_tz(message.date, tz) + ':\n\t'
-                msg_txt += message.name
-            result[message.id] = msg_txt
-        return result
-
-    _name = 'mailgate.message'
-    _description = 'Mailgateway Message'
-    _order = 'date desc'
-    _columns = {
-        'name':fields.text('Subject', readonly=True),
-        'model': fields.char('Object Name', size=128, select=1, readonly=True),
-        'res_id': fields.integer('Resource ID', select=1, readonly=True),
-        'ref_id': fields.char('Reference Id', size=256, readonly=True, help="Message Id in Email Server.", select=True),
-        'date': fields.datetime('Date', readonly=True),
-        'history': fields.boolean('Is History?', readonly=True),
-        'user_id': fields.many2one('res.users', 'User Responsible', readonly=True),
-        'message': fields.text('Description', readonly=True),
-        'email_from': fields.char('From', size=128, help="Email From", readonly=True),
-        'email_to': fields.char('To', help="Email Recipients", size=256, readonly=True),
-        'email_cc': fields.char('Cc', help="Carbon Copy Email Recipients", size=256, readonly=True),
-        'email_bcc': fields.char('Bcc', help='Blind Carbon Copy Email Recipients', size=256, readonly=True),
-        'message_id': fields.char('Message Id', size=1024, readonly=True, help="Message Id on Email.", select=True),
-        'references': fields.text('References', readonly=True, help="References emails."),
-        'description': fields.text('Description', readonly=True),
-        'partner_id': fields.many2one('res.partner', 'Partner', required=False),
-        'attachment_ids': fields.many2many('ir.attachment', 'message_attachment_rel', 'message_id', 'attachment_id', 'Attachments', readonly=True),
-        'display_text': fields.function(_get_display_text, method=True, type='text', size="512", string='Display Text'),
-    }
-
-    def init(self, cr):
-        cr.execute("""SELECT indexname
-                      FROM pg_indexes
-                      WHERE indexname = 'mailgate_message_res_id_model_idx'""")
-        if not cr.fetchone():
-            cr.execute("""CREATE INDEX mailgate_message_res_id_model_idx
-                          ON mailgate_message (model, res_id)""")
-
-mailgate_message()
 
 class mailgate_tool(osv.osv_memory):
 
@@ -321,7 +207,7 @@ class mailgate_tool(osv.osv_memory):
         if isinstance(res_ids, (int, long)):
             res_ids = [res_ids]
 
-        msg_pool = self.pool.get('mailgate.message')
+        msg_pool = self.pool.get('email.message')
         for res_id in res_ids:
             case = self.pool.get(model).browse(cr, uid, res_id, context=context)
             partner_id = hasattr(case, 'partner_id') and (case.partner_id and case.partner_id.id or False) or False
@@ -341,6 +227,7 @@ class mailgate_tool(osv.osv_memory):
                 'references': msg.get('references') or msg.get('in-reply-to'),
                 'res_id': res_id,
                 'user_id': uid,
+                'folder': 'inbox',
                 'attachment_ids': [(6, 0, attach)]
             }
             msg_pool.create(cr, uid, msg_data, context=context)

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+        <record model="ir.ui.view" id="email_compose_message_wizard_form">
+            <field name="name">email.compose.message.form</field>
+            <field name="model">email.compose.message</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Reply Email">
+                    <group col="6" colspan="4">
+                        <field name="model" invisible="1"/>
+                        <field name="res_id" invisible="context.get('active_model','') != 'ir.ui.menu'"
+                            colspan="4" on_change="on_change_referred_doc(model, res_id, context)"/>
+                        <field name="smtp_server_id" widget="selection" colspan="4"
+                            on_change="on_change_smtp_server(smtp_server_id, email_from)"/>
+                        <field name="email_from" colspan="4" required="1"/>
+                        <field name="email_to" colspan="4" required="1"/>
+                        <field name="email_cc" colspan="4"/>
+                        <field name="email_bcc" colspan="4"/>
+                        <field name="reply_to" colspan="4"/>
+                        <field name="name" colspan="4" widget="char" size="512"/>
+                    </group>
+                    <separator string="" colspan="4"/>
+                    <notebook colspan="4">
+                        <page string="Body">
+                            <field name="description" colspan="4" nolabel="1"/>
+                        </page>
+                        <page string="Attachments">
+                            <label string="Add here all attachments of the current document you want to include in the Email." colspan="4"/>
+                            <field name="attachment_ids" colspan="4" nolabel="1"/>
+                        </page>
+                    </notebook>
+                    <group col="4" colspan="4">
+                        <label string="" colspan="1"/>
+                        <button icon="gtk-close" special="cancel" string="Close"/>
+                        <button icon="gtk-apply" name="save_to_drafts" string="Save in Drafts" type="object"/>
+                        <button icon="gtk-ok" name="send_mail" string="Send now" type="object"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_email_compose_message_wizard" model="ir.actions.act_window">
+            <field name="name">Send E-mail</field>
+            <field name="res_model">email.compose.message</field>
+            <field name="src_model">email.compose.message</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+	</data>
+</openerp>

@@ -45,13 +45,13 @@ class project_task_close(osv.osv_memory):
             context = {}
         record_id = context and context.get('active_id', False) or False
         task_pool = self.pool.get('project.task')
-                
+
         res = super(project_task_close, self).default_get(cr, uid, fields, context=context)
         task = task_pool.browse(cr, uid, record_id, context=context)
         project = task.project_id
         manager = project.user_id or False
         partner = task.partner_id or task.project_id.partner_id
-        
+
         if 'description' in fields:
             res.update({'description': task.description or False})
         if 'manager_warn' in fields:
@@ -67,7 +67,8 @@ class project_task_close(osv.osv_memory):
     def send(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
-        
+
+        email_message_obj = self.pool.get('email.message')
         task_pool = self.pool.get('project.task')
         task_id = context.get('active_id', False)
         if not task_id:
@@ -112,7 +113,7 @@ class project_task_close(osv.osv_memory):
                     to_adr.append(data.manager_email)
                 if data.partner_warn and data.partner_email:
                     to_adr.append(data.partner_email)
-                mail_id = tools.email_send(from_adr, to_adr, subject, tools.ustr(body), email_bcc=[from_adr])
+                mail_id = email_message_obj.email_send(cr, uid, from_adr, to_adr, subject, tools.ustr(body), model='project.task.close', email_bcc=[from_adr])
                 if not mail_id:
                     raise osv.except_osv(_('Error'), _("Couldn't send mail! Check the email ids and smtp configuration settings"))
         return {}

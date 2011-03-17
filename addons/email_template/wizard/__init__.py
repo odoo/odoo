@@ -3,7 +3,7 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2009 Sharoon Thomas
-#    Copyright (C) 2010-2010 OpenERP SA (<http://www.openerp.com>)
+#    Copyright (C) 2010-Today OpenERP SA (<http://www.openerp.com>)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -19,5 +19,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>
 #
 ##############################################################################
-
+import email_template_preview
 import email_template_send_wizard
+import email_compose_message
+

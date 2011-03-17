@@ -19,17 +19,29 @@
 #
 ##############################################################################
 
-from osv import fields,osv
-
-class res_partner(osv.osv):
-    """ Inherits partner and adds CRM information in the partner form """
-    _inherit = 'res.partner'
-    _columns = {
-        'emails': fields.one2many('mailgate.message', 'partner_id',\
-                                        'Emails', readonly=True, domain=[('history','=',True)]),
-    }
-
-res_partner()
-
-
+{
+    'name': 'Email System',
+    'version': '1.0',
+    'category': 'Generic Modules/Mail Service',
+    'description': """The generic email system allows to send and receive emails
+    * SMTP Server Configuration
+    * Provide API for Sending Messages
+    * Store all emails releated messages """,
+    'author': 'OpenERP SA',
+    'website': 'http://www.openerp.com',
+    'depends': ['base', 'base_tools'],
+    'init_xml': [],
+    'update_xml': [
+        "wizard/email_compose_message_view.xml",
+        "email_view.xml",
+        "email_gateway_view.xml",
+        "res_partner_view.xml",
+        'security/ir.model.access.csv',
+        'email_data.xml',
+    ],
+    'demo_xml': [],
+    'installable': True,
+    'active': False,
+    'certificate': False,
+}
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

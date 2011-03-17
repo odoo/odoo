@@ -401,10 +401,23 @@
             <field name="act_window_id" ref="action_hr_evaluation_interview_tree"/>
         </record>
 
+
+        <!-- Email Compose message Action-->
+        <record id="action_email_compose_message_menu_wizard" model="ir.actions.act_window">
+            <field name="name">Send E-mail</field>
+            <field name="res_model">email.compose.message</field>
+            <field name="src_model">email.compose.message</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="context">{'email_model':'hr.evaluation.interview'}</field>
+            <field name="target">new</field>
+        </record>
+
         <menuitem name="Interview Requests" parent="menu_eval_hr" id="menu_open_hr_evaluation_interview_requests"
             action="action_hr_evaluation_interview_tree"/>
         <menuitem name="Evaluation Reminders" parent="menu_eval_hr" id="menu_eval_send_mail"
-           action="action_hr_evaluation_send_mail" sequence="45" groups="base.group_hr_manager"/>
+           action="action_email_compose_message_menu_wizard" sequence="45" groups="base.group_hr_manager"/>
 
       <!-- Evaluation Interviews Button on Employee Form -->
       <act_window

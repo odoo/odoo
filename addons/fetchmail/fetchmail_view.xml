@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-    
+
         <record model="ir.ui.view" id="view_email_server_tree">
             <field name="name">email.server.tree</field>
             <field name="model">email.server</field>
@@ -18,7 +18,7 @@
                 </tree>
             </field>
         </record>
-        
+
         <record model="ir.ui.view" id="view_email_server_form">
             <field name="name">email.server.form</field>
             <field name="model">email.server</field>
@@ -68,7 +68,7 @@
                 </form>
             </field>
         </record>
-        
+
         <record model="ir.ui.view" id="view_email_server_search">
             <field name="name">email.server.search</field>
             <field name="model">email.server</field>
@@ -91,9 +91,9 @@
                 </search>
             </field>
         </record>
-        
+
         <record model="ir.actions.act_window" id="action_email_server_tree">
-            <field name="name">Email Servers</field>
+            <field name="name">Incomming Servers</field>
             <field name="res_model">email.server</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -101,58 +101,51 @@
             <field name="search_view_id" ref="view_email_server_search"/>
         </record>
 
-        <menuitem 
-            parent="base.menu_mail_gateway" 
+        <menuitem
+            parent="email.menu_config_email"
             id="menu_action_fetchmail_server_tree"
-            action="action_email_server_tree" 
-            name="Email Servers"
+            action="action_email_server_tree"
+            name="Incomming Servers"
         />
-        
-      <record model="ir.ui.view" id="mailgate_message_tree_view">
-	      <field name="name">mailgate.message.tree</field>
-	      <field name="model">mailgate.message</field>
+
+      <record model="ir.ui.view" id="email_message_tree_view">
+	      <field name="name">email.message.tree</field>
+	      <field name="model">email.message</field>
 	      <field name="type">tree</field>
-	      <field name="inherit_id" ref="mail_gateway.view_mailgate_message_tree"/>
+	      <field name="inherit_id" ref="email.view_email_message_tree"/>
 	      <field name="arch" type="xml">
 	          <field name="user_id" position="after">
 	              <field name="server_id" select="1"/>
-	              <field name="ref_id"/>
 	          </field>
 	      </field>
       </record>
-      
-      <record model="ir.ui.view" id="mailgate_message_search_view">
-	      <field name="name">mailgate.message.inherit.search</field>
-	      <field name="model">mailgate.message</field>
+
+      <record model="ir.ui.view" id="email_message_search_view">
+	      <field name="name">email.message.inherit.search</field>
+	      <field name="model">email.message</field>
 	      <field name="type">search</field>
-	      <field name="inherit_id" ref="mail_gateway.view_mailgate_message_search"/>
+	      <field name="inherit_id" ref="email.view_email_message_search"/>
 	      <field name="arch" type="xml">
-			<xpath expr="/search/field[@name='name']" position="before">
-			     <filter string="Emails" name="emails" domain="[('server_id','!=',False)]" icon="terp-mail-message-new"/>
-			     <separator orientation="vertical"/>
-			</xpath>
 			<xpath expr="/search/group/filter[@string='Thread']" position="before">
                 <filter string="Mail Server" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'server_id'}"/>
             </xpath>
 	      </field>
       </record>
-      
+
       <record id="action_view_mail_message_emails" model="ir.actions.act_window">
             <field name="name">Messages</field>
-            <field name="res_model">mailgate.message</field>
+            <field name="res_model">email.message</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="context">{'search_default_emails': 1}</field>
-            <field name="search_view_id" ref="mailgate_message_search_view"/>
+            <field name="search_view_id" ref="email_message_search_view"/>
       </record>
-        
-      <menuitem id="base.menu_email_gateway_form"
-               parent="base.menu_mail_gateway" action="action_view_mail_message_emails" />
 
-      <act_window 
-            context="{'search_default_server_id': [active_id], 'default_server_id': active_id}"
+      <act_window
+            context="{'server_id': active_id}"
+            domain="[('server_id', '=', active_id)]"
             id="act_server_history" name="Emails"
-            res_model="mailgate.message" src_model="email.server"/>
-            
+            res_model="email.message" src_model="email.server"/>
+
     </data>
 </openerp>

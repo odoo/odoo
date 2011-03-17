@@ -60,7 +60,7 @@ class crm_merge_opportunity(osv.osv_memory):
             @param opp_ids : list of opportunities ids to merge
         """
         opp_obj = self.pool.get('crm.lead')
-        message_obj = self.pool.get('mailgate.message')
+        message_obj = self.pool.get('email.message')
 
         lead_ids = context and context.pop('lead_ids', []) or []
 
@@ -193,7 +193,6 @@ class crm_merge_opportunity(osv.osv_memory):
         self.write(cr, uid, ids, {'opportunity_ids' : [(6,0, [op_ids[0].id])]}, context=context)
         context['lead_ids'] = [op_ids[0].id]
         return self.merge(cr, uid, op_ids, context)
-
 
     _columns = {
         'opportunity_ids' : fields.many2many('crm.lead',  'merge_opportunity_rel', 'merge_id', 'opportunity_id', 'Opportunities', domain=[('type', '=', 'opportunity')]),

@@ -56,7 +56,7 @@ Create dashboard for CRM that includes:
         'base',
         'base_action_rule',
         'process',
-        'mail_gateway',
+        'email',
         'base_calendar',
         'resource',
         'board'
@@ -83,7 +83,7 @@ Create dashboard for CRM that includes:
         'wizard/crm_opportunity_to_phonecall_view.xml',
         'wizard/crm_partner_to_opportunity_view.xml',
 
-        'wizard/crm_send_email_view.xml',
+#        'wizard/crm_send_email_view.xml',
         'wizard/crm_add_note_view.xml',
         'wizard/crm_merge_opportunities_view.xml',
 

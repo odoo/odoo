@@ -117,7 +117,7 @@ Leads Could not convert into Opportunity"))
         leads.history(cr, uid, [lead], _('Converted to opportunity'), details='Converted to Opportunity', context=context)
         if lead.partner_id:
             msg_ids = [ x.id for x in lead.message_ids]
-            self.pool.get('mailgate.message').write(cr, uid, msg_ids, {
+            self.pool.get('email.message').write(cr, uid, msg_ids, {
                         'partner_id': lead.partner_id.id
                     }, context=context)
             leads.log(cr, uid, lead.id, _("Lead '%s' has been converted to an opportunity.") % lead.name)

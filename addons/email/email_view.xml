@@ -1,0 +1,231 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <menuitem name="Configuration" parent="base.menu_tools"
+              id="base.menu_lunch_survey_root" sequence="20"/>
+
+        <record model="ir.ui.view" id="view_email_message_form">
+            <field name="name">email.message.form</field>
+			<field name="model">email.message</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+                <form string="Email message">
+                    <group colspan="4" col="6">
+                       <field name="name" widget="char" size="512"/>
+                       <field name="date"/>
+                       <field name="user_id" string="User"/>
+                       <field name="partner_id" readonly="1" />
+                    </group>
+                    <notebook colspan="4">
+                        <page string="Details">
+                            <group col="2" colspan="2">
+                                <separator string="Email Followers" colspan="4"/>
+                                <field name="email_from"/>
+                                <field name="email_to"/>
+                                <field name="email_cc"/>
+                                <field name="email_bcc" groups="base.group_extended"/>
+                                <field name="reply_to"/>
+                            </group>
+                            <group col="2" colspan="2">
+                                <separator string="Message Details" colspan="4"/>
+                                <field name="model" readonly="1"/>
+                                <group col="3" colspan="2">
+                                    <field name="res_id" readonly="1"/>
+                                    <button name="open_document" string="Open Document" type="object" icon="gtk-jump-to"/>
+	                                <field name="message_id"/>
+	                                <button name="%(action_email_compose_message_wizard)d" string="Reply" type="action" icon="terp-mail-replied"
+	                                context="{'mail':'reply', 'message_id':active_id}"/>
+                                </group>
+                                <field name="references" widget="char" size="4096"/>
+                            </group>
+                            <separator string="Description" colspan="4"/>
+                            <field name="description" nolabel="1" colspan="4"/>
+                            <group col="4" colspan="4" attrs="{'invisible':[('folder','not in',['drafts','outbox'])]}">
+                                <separator string="" colspan="4"/>
+                                <field name="state"/>
+                                <button name="process_queue" string="Send" type="object" icon="gtk-execute" states='draft,waiting,sending'/>
+                                <button name="process_retry" string="Re-Try" type="object" icon="gtk-execute" states='exception'/>
+                            </group>
+                        </page>
+                        <page string="Attachments">
+                            <separator string="Attachments" colspan="4"/>
+                            <field name="attachment_ids" nolabel="1" colspan="4" readonly="1"/>
+                        </page>
+                        <page string="Advanced">
+                            <group col="4" colspan="4">
+                                <field name="smtp_server_id"/>
+	                            <field name="folder"/>
+	                            <field name="sub_type"/>
+	                            <field name="headers"/>
+	                            <field name="priority"/>
+	                            <field name="debug"/>
+	                            <field name="history"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_email_message_tree">
+            <field name="name">email.message.tree</field>
+            <field name="model">email.message</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree colors="gray:folder in ('trash')" string="Emails">
+                    <field name="date"/>
+                    <field name="name"/>
+                    <field name="email_from"/>
+                    <field name="user_id" string="User"/>
+                    <field name="message_id" string="Message" invisible="1"/>
+                    <field name="partner_id" invisible="1"/>
+                    <field name="folder"/>
+                    <field name="state"/>
+                    <button name="open_document" string="Open Document" type="object" icon="gtk-jump-to"/>
+                    <button name="open_attachment" string="Open Attachments" type="object" icon="gtk-jump-to"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_email_message_search">
+            <field name="name">email.message.search</field>
+            <field name="model">email.message</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Email Search">
+                    <filter icon="terp-document-new" string="Draft" domain="[('folder','=','drafts')]"/>
+                    <filter icon="terp-personal" string="Inbox" domain="[('folder','=','inbox')]"/>
+                    <filter icon="terp-check" string="Outbox" domain="[('folder','=','outbox')]"/>
+                    <filter icon="terp-partner" string="Sent Items" domain="[('folder','=','sent')]"/>
+                    <filter icon="terp-mail_delete" string="Trash" domain="[('folder','=','trash')]"/>
+                    <separator orientation="vertical"/>
+                    <filter icon="terp-call-start" string="Waiting" domain="[('state','=','waiting')]"/>
+                    <filter icon="terp-gtk-stop" string="Exception" domain="[('state','=','exception')]"/>
+                    <field name="email_from"/>
+                    <field name="name"/>
+                    <field name="date"/>
+                    <field name="user_id" string="User"/>
+                    <field name="partner_id" string="Partner Name"/>
+                    <newline/>
+                    <group expand="0" string="Group By..." groups="base.group_extended">
+                        <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="User" name="User" icon="terp-personal" context="{'group_by':'user_id'}"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Thread" icon="terp-mail-" domain="[]" context="{'group_by':'message_id'}"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Month" help="Creation Month" icon="terp-go-month" domain="[]" context="{'group_by':'date'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_view_mail_message" model="ir.actions.act_window">
+            <field name="name">Messages</field>
+            <field name="res_model">email.message</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('history', '=', True)]</field>
+            <field name="search_view_id" ref="view_email_message_search"/>
+        </record>
+
+        <act_window domain="[('partner_id', '=', active_id), ('history', '=', True)]"
+            id="act_res_partner_emails" name="Emails"
+            res_model="email.message"
+            src_model="res.partner"
+            view_id="view_email_message_tree"/>
+
+	    <act_window
+	       id="act_res_partner_open_email" name="Attachments"
+	       res_model="ir.attachment"
+	       src_model="email.message"
+	       domain="[('res_id', '=', res_id),('res_model','=',model)]"/>
+
+        <menuitem name="Email" id="menu_email_message_tools"
+            parent="base.menu_tools" />
+
+        <menuitem name="Messages"
+            id="menu_email_message"
+            parent="menu_email_message_tools"
+            action="action_view_mail_message" />
+
+        <record model="ir.ui.view" id="email_smtp_server_form">
+            <field name="name">email.smtp_server.form</field>
+            <field name="model">email.smtp_server</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Smtp Server Configuration">
+                    <group colspan="4">
+                        <field name="name"/>
+                        <field name="default"/>
+                    </group>
+                    <notebook colspan="4">
+                        <page string="Configuration">
+                            <separator string="Server Information" colspan="4"/>
+                            <group colspan="4" col="8">
+                                <field name="smtpserver"/>
+                                <field name="smtpport"/>
+                                <field name="smtpssl"/>
+                                <field name="smtptls"/>
+                             </group>
+
+                            <separator string="User Information" colspan="4"/>
+                            <group col="6" colspan="4">
+                                <field name="email_id"/>
+                                <field name="smtpuname"/>
+                                <field name="smtppass" password="True"/>
+
+                            </group>
+                            <separator string="" colspan="4"/>
+                            <label string="" colspan="2"/>
+                            <button name="test_smtp_connection" type="object" string="Test Connection" icon="gtk-network" colspan="2"/>
+                        </page>
+                    </notebook>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="email_smtp_server_tree">
+            <field name="name">email.smtp_server.tree</field>
+            <field name="model">email.smtp_server</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="SMTP Server">
+                    <field name="name"/>
+                    <field name="email_id"/>
+                    <field name="smtpserver"/>
+                    <field name="default"/>
+                    <button name="test_smtp_connection" type="object" string="Test Connection" icon="gtk-network"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_email_smtp_server_search" model="ir.ui.view">
+            <field name="name">email_smtp.server.search</field>
+            <field name="model">email.smtp_server</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Smtp Server">
+                    <field name="name"/>
+                    <field name="email_id"/>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_email_smtp_server_tree_all">
+            <field name="name">Outgoing Servers</field>
+            <field name="res_model">email.smtp_server</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form,tree</field>
+            <field name="view_id" ref="email_smtp_server_tree" />
+            <field name="context">{'group_by': [], 'search_default_draft': 1, 'search_default_my': 1}</field>
+            <field name="search_view_id" ref="view_email_smtp_server_search"/>
+        </record>
+
+        <menuitem name="Email" id="menu_config_email" parent="base.menu_lunch_survey_root" sequence="20"/>
+
+        <menuitem name="Outgoing Servers" id="menu_email_smtp_server_all" parent="menu_config_email" action="action_email_smtp_server_tree_all"/>
+
+    </data>
+</openerp>
