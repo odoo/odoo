@@ -183,7 +183,7 @@ openerp.base.Session = openerp.base.BasicController.extend({
             error: function(jqXHR, textStatus, errorThrown) {
                 self.on_rpc_response();
                 var error = {
-                    code: 1,
+                    code: -32098,
                     message: "XmlHttpRequestError " + errorThrown,
                     data: {type: "xhr"+textStatus, debug: jqXHR.responseText, objects: [jqXHR, errorThrown] }
                 };
