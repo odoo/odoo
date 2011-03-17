@@ -2,6 +2,7 @@
 
 import os, re, sys, traceback, xmlrpclib
 
+import cherrypy
 import cherrypy.lib.static
 import simplejson
 
@@ -232,8 +233,9 @@ def main(argv):
         #'server.thread_pool' = 10,
         'tools.sessions.on': True,
     }
-    cherrypy.config.update(config)
-    cherrypy_root = Root()
-    cherrypy.quickstart(cherrypy_root,'',{'/':{}})
+    cherrypy.tree.mount(Root())
 
-# vim:
+    cherrypy.config.update(config)
+    cherrypy.server.subscribe()
+    cherrypy.engine.start()
+    cherrypy.engine.block()
