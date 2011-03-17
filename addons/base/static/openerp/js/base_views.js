@@ -59,6 +59,8 @@ openerp.base.DataRecord =  openerp.base.Controller.extend({
 });
 
 openerp.base.Widget = openerp.base.Controller.extend({
+    // TODO Change this to init: function(view, node) { and use view.session and a new element_id for the super
+    // it means that widgets are special controllers
     init: function(session, element_id, view, node) {
         var type = view.fields_view.fields[node.attrs.name] || {};
         this.type = node.attrs.widget || type.type || node.tag;
