@@ -249,7 +249,7 @@ class Root(object):
                         return m(**kw)
 
         else:
-            return '<a href="/base/static/openerp/base.html">/base/static/openerp/base.html</a>'
+            raise cherrypy.HTTPRedirect('/base/static/openerp/base.html', 301)
     default.exposed = True
 
 def main(argv):
