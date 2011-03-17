@@ -26,7 +26,9 @@
     'version': '1.1',
     'category': 'Generic Modules/CRM & SRM',
     'description': """
-    New Features in Meeting:
+    Caldav features in Meeting.
+    ===========================
+
         *  Share meeting with other calendar clients like sunbird
 """,
     'author': 'OpenERP SA',
@@ -42,6 +44,7 @@
     'installable': True,
     'active': False,
     'certificate' : '001088048737252670109',
+    'images': ['images/caldav_browse_step1.jpeg','images/caldav_browse_step2.jpeg'],
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
