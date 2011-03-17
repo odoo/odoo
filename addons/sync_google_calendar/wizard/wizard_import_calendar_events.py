@@ -176,7 +176,7 @@ class synchronize_google_calendar_events(osv.osv_memory):
             for cal in calendars.entry:
                 res.append((cal.id.text, cal.title.text))
         except Exception, e:
-            raise osv.except_osv('Error !', e)
+            raise osv.except_osv('Error !', e.args[0].get('body'))
         res.append(('all','All Calendars'))
         return res
     
