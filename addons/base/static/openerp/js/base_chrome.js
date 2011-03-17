@@ -171,7 +171,7 @@ openerp.base.Session = openerp.base.BasicController.extend({
                     if (response.error.data.type == "session_invalid") {
                         self.uid = false;
                         self.on_session_invalid(function() {
-                            self.rpc(url, params, success_callback, error_callback);
+                            self.rpc(url, payload, success_callback, error_callback);
                         });
                     } else {
                         error_callback(response.error);
@@ -319,7 +319,6 @@ openerp.base.Login =  openerp.base.Controller.extend({
     },
     start: function() {
         this.$element.html(QWeb.render("Login", {}));
-        //this.on_login_invalid();
         this.$element.find("form").submit(this.on_submit);
     },
     on_login_invalid: function() {
@@ -335,6 +334,7 @@ openerp.base.Login =  openerp.base.Controller.extend({
         $e.hide();
     },
     on_submit: function(ev) {
+        ev.preventDefault();
         var self = this;
         var $e = this.$element;
         var db = $e.find("form input[name=db]").val();
@@ -349,7 +349,6 @@ openerp.base.Login =  openerp.base.Controller.extend({
                 self.on_login_invalid();
             }
         });
-        return false;
     },
     do_ask_login: function(continuation) {
         this.on_login_invalid();
