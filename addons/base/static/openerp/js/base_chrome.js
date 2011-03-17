@@ -105,18 +105,6 @@ openerp.base.Console =  openerp.base.BasicController.extend({
     init: function(element_id, server, port) {
         this._super(element_id);
     },
-    on_log: function() {
-        // TODO this should move to Console and be active only in debug
-        // TODO $element should be for error not log
-        var self = this;
-        this._super.apply(this,arguments);
-        $.each(arguments, function(i,v) {
-            if(self.$element) {
-                v = v==null ? "null" : v;
-                $('<pre></pre>').text(v.toString()).appendTo(self.$element);
-            }
-        });
-    }
 });
 
 openerp.base.Database = openerp.base.BasicController.extend({
@@ -138,6 +126,18 @@ openerp.base.Session = openerp.base.BasicController.extend({
         this.module_list = [];
         this.module_loaded = {"base": true};
         this.context = {};
+    },
+    on_log: function() {
+        // TODO this should move to Console and be active only in debug
+        // TODO $element should be for error not log
+        var self = this;
+        this._super.apply(this,arguments);
+        $.each(arguments, function(i,v) {
+            if(self.$element) {
+                v = v==null ? "null" : v;
+                $('<pre></pre>').text(v.toString()).appendTo(self.$element);
+            }
+        });
     },
     rpc: function(url, params, success_callback, error_callback) {
         // Construct a JSON-RPC2 request, method is currently unused
