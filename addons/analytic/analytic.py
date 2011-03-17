@@ -186,7 +186,8 @@ class account_analytic_account(osv.osv):
     def check_recursion(self, cr, uid, ids, parent=None):
         return super(account_analytic_account, self)._check_recursion(cr, uid, ids, parent=parent)
 
-    _order = 'date_start desc,parent_id desc,code'
+    #_order = 'date_start desc,parent_id desc,code'
+    _order = 'name asc'
     _constraints = [
         (check_recursion, 'Error! You can not create recursive analytic accounts.', ['parent_id']),
         (check_currency, 'Error! The currency has to be the same as the currency of the selected company', ['currency_id', 'company_id']),
