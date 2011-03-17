@@ -1105,6 +1105,10 @@ class hr_payslip(osv.osv):
                     raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ') % (e))
             elif salary_rule.amount_type == 'fix':
                 value = salary_rule.amount * days
+            elif salary_rule.amount_type=='code':
+                localdict = {'basic':amt, 'employee':employee_id, 'contract':contract}
+                exec salary_rule.python_compute in localdict
+                value = localdict['result'] * days
             res['amount'] = salary_rule.amount
             res['type'] = salary_rule.type.id
             leave += days
