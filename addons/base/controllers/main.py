@@ -177,6 +177,17 @@ class DataSet(openerpweb.Controller):
         values = m.read(ids, fields)
         return {'ids': ids, 'values': values}
 
+class DataRecord(openerpweb.Controller):
+    _cp_path = "/base/datarecord"
+    @openerpweb.jsonrequest
+    def load(self,req,model,id,fields):
+        m = req.session.model(model)
+        value = {}
+        r = m.read([id])
+        if r:
+            value = r[0]
+        return {'value': value}
+
 class FormView(openerpweb.Controller):
     _cp_path = "/base/formview"
     @openerpweb.jsonrequest

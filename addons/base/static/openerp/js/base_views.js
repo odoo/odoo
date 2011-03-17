@@ -130,10 +130,10 @@ openerp.base.DataRecord =  openerp.base.Controller.extend({
         this.values = {};
     },
     load: function(id) {
-        // READ
+        this.rpc("/base/datarecord/load", {"model": this.model, "id": this.id, "fields": "todo"}, this.on_loaded);
     },
-    on_loaded: function() {
-        // set t this.values = data.rea },
+    on_loaded: function(result) {
+        this.values = result.values;
     },
     on_change: function() {
     },
