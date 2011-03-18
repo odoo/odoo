@@ -171,7 +171,7 @@ openerp.base.Session = openerp.base.BasicController.extend({
                     if (response.error.data.type == "session_invalid") {
                         self.uid = false;
                         self.on_session_invalid(function() {
-                            self.rpc(url, payload, success_callback, error_callback);
+                            self.rpc(url, payload.params, success_callback, error_callback);
                         });
                     } else {
                         error_callback(response.error);
@@ -351,13 +351,11 @@ openerp.base.Login =  openerp.base.Controller.extend({
     },
     do_ask_login: function(continuation) {
         this.on_login_invalid();
-        this.on_submit.add({
+        this.on_login_valid.add({
             position: "last",
             unique: true,
-            callback: function() {
-                if(continuation) continuation();
-                return false;
-            }});
+            callback: continuation
+        });
     }
 });
 
