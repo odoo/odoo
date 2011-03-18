@@ -11,6 +11,12 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
+   getting-started
+   production
+   widgets
+   addons
+   development
+
 Indices and tables
 ==================
 
