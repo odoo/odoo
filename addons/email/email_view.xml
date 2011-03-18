@@ -44,7 +44,7 @@
                             <group col="4" colspan="4" attrs="{'invisible':[('folder','not in',['drafts','outbox'])]}">
                                 <separator string="" colspan="4"/>
                                 <field name="state"/>
-                                <button name="process_queue" string="Send" type="object" icon="gtk-execute" states='draft,waiting,sending'/>
+                                <!--<button name="process_queue" string="Send" type="object" icon="gtk-execute" states='draft,waiting,sending'/>-->
                                 <button name="process_retry" string="Re-Try" type="object" icon="gtk-execute" states='exception'/>
                             </group>
                         </page>

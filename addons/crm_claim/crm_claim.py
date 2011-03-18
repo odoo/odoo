@@ -40,7 +40,7 @@ class crm_claim(crm.crm_case, osv.osv):
     _name = "crm.claim"
     _description = "Claim"
     _order = "priority,date desc"
-    _inherit = ['mailgate.thread']
+    _inherit = ['email.thread']
     _columns = {
         'id': fields.integer('ID', readonly=True),
         'name': fields.char('Claim Subject', size=128, required=True),
@@ -156,7 +156,7 @@ class crm_claim(crm.crm_case, osv.osv):
                 self.write(cr, uid, [ids[i]], {'stage_id' : stage_id})
 
         return res
-    
+
     def message_new(self, cr, uid, msg, context=None):
         """
         Automatically calls when new email message arrives
@@ -165,7 +165,7 @@ class crm_claim(crm.crm_case, osv.osv):
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks
         """
-        mailgate_pool = self.pool.get('email.server.tools')
+        thread_pool = self.pool.get('email.thread')
 
         subject = msg.get('subject')
         body = msg.get('body')
@@ -182,7 +182,7 @@ class crm_claim(crm.crm_case, osv.osv):
         if msg.get('priority', False):
             vals['priority'] = priority
 
-        res = mailgate_pool.get_partner(cr, uid, msg.get('from') or msg.get_unixfrom())
+        res = thread_pool.get_partner(cr, uid, msg.get('from') or msg.get_unixfrom())
         if res:
             vals.update(res)
 
@@ -206,7 +206,7 @@ class crm_claim(crm.crm_case, osv.osv):
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
-        @param ids: List of update mail’s IDs 
+        @param ids: List of update mail’s IDs
         """
         if isinstance(ids, (str, int, long)):
             ids = [ids]

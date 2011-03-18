@@ -31,7 +31,7 @@ class crm_fundraising(crm.crm_case, osv.osv):
     _name = "crm.fundraising"
     _description = "Fund Raising"
     _order = "id desc"
-    _inherit = ['mailgate.thread']
+    _inherit = ['email.thread']
     _columns = {
             'id': fields.integer('ID'),
             'name': fields.char('Name', size=128, required=True),

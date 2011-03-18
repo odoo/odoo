@@ -3,8 +3,8 @@
     <data>
 
         <record model="ir.ui.view" id="view_mailgate_thread_form">
-            <field name="name">mailgate.thread.form</field>
-            <field name="model">mailgate.thread</field>
+            <field name="name">email.thread.form</field>
+            <field name="model">email.thread</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Mailgateway Thread">
@@ -41,8 +41,8 @@
         </record>
 
         <record model="ir.ui.view" id="view_mailgate_thread_tree">
-            <field name="name">mailgate.thread.tree</field>
-            <field name="model">mailgate.thread</field>
+            <field name="name">email.thread.tree</field>
+            <field name="model">email.thread</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Mailgateway Thread">
@@ -54,7 +54,7 @@
          <!--        Emails action-->
         <record model="ir.actions.act_window" id="action_view_mailgate_thread">
             <field name="name">Mailgateway Threads</field>
-            <field name="res_model">mailgate.thread</field>
+            <field name="res_model">email.thread</field>
             <field name="view_mode">tree,form</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="view_mailgate_thread_tree"/>

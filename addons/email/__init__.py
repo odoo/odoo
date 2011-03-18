@@ -21,7 +21,7 @@
 
 import email_smtp_server
 import email_message
-import email_gateway
+import email_thread
 import res_partner
 import wizard
 

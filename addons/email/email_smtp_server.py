@@ -106,7 +106,7 @@ unless it is already specified in the From Email, e.g: John Doe <john@doe.com>",
                         help="Specify the username if your SMTP server requires authentication, "
                         "otherwise leave it empty."),
         'smtppass': fields.char('Password',
-                        size=120, 
+                        size=120,
                         required=False),
         'smtptls':fields.boolean('TLS'),
         'smtpssl':fields.boolean('SSL/TLS'),
@@ -133,7 +133,7 @@ unless it is already specified in the From Email, e.g: John Doe <john@doe.com>",
         default_ids = self.search(cr, uid, [('default','=',True)])
         if len(default_ids) > 1:
             return False
-        
+
         return True
 
     _constraints = [
@@ -145,7 +145,7 @@ unless it is already specified in the From Email, e.g: John Doe <john@doe.com>",
     def name_get(self, cr, uid, ids, context=None):
         return [(a["id"], "%s (%s)" % (a['email_id'], a['name'])) for a in self.read(cr, uid, ids, ['name', 'email_id'], context=context)]
 
-    
+
 
     def test_smtp_connection(self, cr, uid, ids, context=None):
         """
@@ -153,7 +153,7 @@ unless it is already specified in the From Email, e.g: John Doe <john@doe.com>",
         """
         try:
             for smtp_server in self.browse(cr, uid, ids, context=context):
-                smtp = tools.connect_smtp_server(smtp_server.smtpserver, smtp_server.smtpport,  user_name=smtp_server.smtpuname, 
+                smtp = tools.connect_smtp_server(smtp_server.smtpserver, smtp_server.smtpport,  user_name=smtp_server.smtpuname,
                                 user_password=smtp_server.smtppass, ssl=smtp_server.smtpssl, tls=smtp_server.smtptls)
                 try:
                     smtp.quit()

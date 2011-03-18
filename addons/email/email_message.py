@@ -63,10 +63,10 @@ def format_date_tz(date, tz=None):
     format = tools.DEFAULT_SERVER_DATETIME_FORMAT
     return tools.server_to_local_timestamp(date, format, format, tz)
 
-class email_message_template(osv.osv_memory):
-    _name = 'email.message.template'
+class email_message_common(osv.osv_memory):
+    _name = 'email.message.common'
     _columns = {
-        'name':fields.text('Subject', translate=True),
+        'subject':fields.text('Subject', translate=True),
         'model': fields.char('Object Name', size=128, select=1),
         'res_id': fields.integer('Resource ID', select=1),
         'date': fields.datetime('Date'),
@@ -79,20 +79,22 @@ class email_message_template(osv.osv_memory):
         'references': fields.text('References', help="References emails."),
         'reply_to':fields.char('Reply-To', size=250),
         'sub_type': fields.char('Sub Type', size=32),
-        'headers': fields.char('x_headers',size=256),
+        'headers': fields.text('x_headers'),
         'priority':fields.integer('Priority'),
-        'description': fields.text('Description', translate=True),
+        'body': fields.text('Description', translate=True),
+        'body_html': fields.text('HTML', help="Contains HTML version of email"),
         'smtp_server_id':fields.many2one('email.smtp_server', 'SMTP Server'),
     }
+    _rec_name='subject'
 
     _sql_constraints = []
-email_message_template()
+email_message_common()
 
 class email_message(osv.osv):
     '''
     Email Message
     '''
-    _inherit = 'email.message.template'
+    _inherit = 'email.message.common'
     _name = 'email.message'
     _description = 'Email Message'
     _order = 'date desc'
@@ -170,7 +172,6 @@ class email_message(osv.osv):
         return result
 
     _columns = {
-        'message': fields.text('Description'),
         'partner_id': fields.many2one('res.partner', 'Partner'),
         'attachment_ids': fields.many2many('ir.attachment', 'message_attachment_rel', 'message_id', 'attachment_id', 'Attachments'),
         'display_text': fields.function(_get_display_text, method=True, type='text', size="512", string='Display Text'),
@@ -184,12 +185,12 @@ class email_message(osv.osv):
                         ('sent', 'Sent Items'),
                         ], 'Folder'),
         'state':fields.selection([
-                        ('draft', 'Draft'),
-                        ('sending', 'Sending'),
-                        ('waiting', 'Waiting'),
+                        ('outgoing', 'Outgoing'),
                         ('sent', 'Sent'),
+                        ('received', 'Received'),
                         ('exception', 'Exception'),
                         ], 'State', readonly=True),
+        'auto_delete': fields.boolean('Auto Delete', help="Permanently delete emails after sending"),
     }
 
     _defaults = {
@@ -197,21 +198,21 @@ class email_message(osv.osv):
         'folder': lambda * a: 'outbox',
     }
 
-    def unlink(self, cr, uid, ids, context=None):
-        """
-        It just changes the folder of the item to "Trash", if it is no in Trash folder yet,
-        or completely deletes it if it is already in Trash.
-        """
-        to_update = []
-        to_remove = []
-        for mail in self.browse(cr, uid, ids, context=context):
-            if mail.folder == 'trash':
-                to_remove.append(mail.id)
-            else:
-                to_update.append(mail.id)
-        # Changes the folder to trash
-        self.write(cr, uid, to_update, {'folder': 'trash'}, context=context)
-        return super(email_message, self).unlink(cr, uid, to_remove, context=context)
+#    def unlink(self, cr, uid, ids, context=None):
+#        """
+#        It just changes the folder of the item to "Trash", if it is no in Trash folder yet,
+#        or completely deletes it if it is already in Trash.
+#        """
+#        to_update = []
+#        to_remove = []
+#        for mail in self.browse(cr, uid, ids, context=context):
+#            if mail.folder == 'trash':
+#                to_remove.append(mail.id)
+#            else:
+#                to_update.append(mail.id)
+#        # Changes the folder to trash
+#        self.write(cr, uid, to_update, {'folder': 'trash'}, context=context)
+#        return super(email_message, self).unlink(cr, uid, to_remove, context=context)
 
     def init(self, cr):
         cr.execute("""SELECT indexname
@@ -221,22 +222,22 @@ class email_message(osv.osv):
             cr.execute("""CREATE INDEX email_message_res_id_model_idx
                           ON email_message (model, res_id)""")
 
-    def process_queue(self, cr, uid, ids, arg):
-        self.process_email_queue(cr, uid, ids=ids)
-        return True
+#    def process_queue(self, cr, uid, ids, arg):
+#        self.process_email_queue(cr, uid, ids=ids)
+#        return True
 
-    def run_mail_scheduler(self, cursor, user, context=None):
-        """
-        This method is called by OpenERP Scheduler
-        to periodically send emails
-        """
-        try:
-            self.process_email_queue(cursor, user, context=context)
-        except Exception, e:
-            LOGGER.notifyChannel(
-                                 "Email Template",
-                                 netsvc.LOG_ERROR,
-                                 _("Error sending mail: %s") % e)
+#    def run_mail_scheduler(self, cursor, user, context=None):
+#        """
+#        This method is called by OpenERP Scheduler
+#        to periodically send emails
+#        """
+#        try:
+#            self.process_email_queue(cursor, user, context=context)
+#        except Exception, e:
+#            LOGGER.notifyChannel(
+#                                 "Email Template",
+#                                 netsvc.LOG_ERROR,
+#                                 _("Error sending mail: %s") % e)
 
     def email_send(self, cr, uid, email_from, email_to, subject, body, model=False, email_cc=None, email_bcc=None, reply_to=False, attach=None,
             message_id=False, references=False, openobject_id=False, debug=False, subtype='plain', x_headers={}, priority='3', smtp_server_id=False, context=None):
@@ -325,7 +326,7 @@ class email_message(osv.osv):
                         subtype=message.sub_type,
                         x_headers=message.headers and eval(message.headers) or {},
                         priority=message.priority, debug=message.debug,
-                        smtp_server=smtp_server and smtp_server.smtpserver or None,
+                        smtp_server=smtp_server and smtp_server.smtp_host or None,
                         smtp_port=smtp_server and smtp_server.smtpport or None,
                         ssl=smtp_server and smtp_server.smtpssl or False,
                         smtp_user=smtp_server and smtp_server.smtpuname or None,

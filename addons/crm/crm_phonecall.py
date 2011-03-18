@@ -32,7 +32,7 @@ class crm_phonecall(crm_case, osv.osv):
     _name = "crm.phonecall"
     _description = "Phonecall"
     _order = "id desc"
-    _inherit = ['mailgate.thread']
+    _inherit = ['email.thread']
     _columns = {
         # From crm.case
         'id': fields.integer('ID'),

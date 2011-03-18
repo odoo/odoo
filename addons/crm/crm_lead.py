@@ -40,7 +40,7 @@ class crm_lead(crm_case, osv.osv):
     _name = "crm.lead"
     _description = "Lead/Opportunity"
     _order = "date_action, priority, id desc"
-    _inherit = ['mailgate.thread','res.partner.address']
+    _inherit = ['email.thread','res.partner.address']
     def _compute_day(self, cr, uid, ids, fields, args, context=None):
         """
         @param cr: the current row, from the database cursor,
@@ -326,7 +326,7 @@ class crm_lead(crm_case, osv.osv):
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks
         """
-        mailgate_pool = self.pool.get('email.server.tools')
+        thread_pool = self.pool.get('email.thread')
 
         subject = msg.get('subject')
         body = msg.get('body')
@@ -343,7 +343,7 @@ class crm_lead(crm_case, osv.osv):
         if msg.get('priority', False):
             vals['priority'] = priority
 
-        res = mailgate_pool.get_partner(cr, uid, msg.get('from') or msg.get_unixfrom())
+        res = thread_pool.get_partner(cr, uid, msg.get('from') or msg.get_unixfrom())
         if res:
             vals.update(res)
 

@@ -208,7 +208,7 @@ class XMLRpcConn(object):
             if attachments:
             	result = self.MakeAttachment([rec], mail)
             attachment_ids = result.get(model, {}).get(res_id, [])
-            execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'email.server.tools','history',model, res_id, msg, attachment_ids)
+            execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'email.thread','history',model, res_id, msg, attachment_ids)
             new_msg += """- {0} : {1}\n""".format(object_name,str(rec[2]))
             flag = True
 
@@ -298,7 +298,7 @@ class XMLRpcConn(object):
             endCut = message_id.find(">")
             message_id = message_id[startCut:endCut+1]
             email.replace_header('Message-Id',message_id)
-            id = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'email.server.tools','process_email',section, str(email))
+            id = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'email.thread','process_email',section, str(email))
             if id > 0:
             	flag = True
             	return flag

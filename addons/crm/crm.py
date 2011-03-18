@@ -308,7 +308,7 @@ class crm_case(object):
             return {'value': {'phone': address.phone}}
 
     def _history(self, cr, uid, cases, keyword, history=False, subject=None, email=False, details=None, email_from=False, message_id=False, attach=[], context=None):
-        mailgate_pool = self.pool.get('mailgate.thread')
+        mailgate_pool = self.pool.get('email.thread')
         return mailgate_pool.history(cr, uid, cases, keyword, history=history,\
                                        subject=subject, email=email, \
                                        details=details, email_from=email_from,\
@@ -458,7 +458,7 @@ class crm_case(object):
                 raise osv.except_osv(_('Error!'), ("Partner Email is not specified in Case"))
             if not case.user_id.user_email:
                raise osv.except_osv(_('Error!'), ("User Email is not specified in Case"))
-            
+
             if destination and case.section_id.user_id:
                 case_email = case.section_id.user_id.user_email
             else:

@@ -24,8 +24,8 @@ import base64
 import email
 import tools
 import binascii
-class email_server_tools(osv.osv_memory):
-    _inherit = "email.server.tools"
+class email_thread(osv.osv):
+    _inherit = "email.thread"
     def history_message(self, cr, uid, model, res_id, message, context=None):
         #@param message: string of mail which is read from EML File
         attachment_pool = self.pool.get('ir.attachment')
@@ -127,7 +127,7 @@ class email_server_tools(osv.osv_memory):
             msg['body'] = body
             msg['attachments'] = attachments
         return msg
-email_server_tools()
+email_thread()
 
 class thunderbird_partner(osv.osv_memory):
     _name = "thunderbird.partner"
@@ -149,8 +149,8 @@ class thunderbird_partner(osv.osv_memory):
         ref_ids = str(dictcreate.get('ref_ids')).split(';')
         msg = dictcreate.get('message')
         mail = msg
-        msg = self.pool.get('email.server.tools').parse_message(msg)
-        server_tools_pool = self.pool.get('email.server.tools')
+        msg = self.pool.get('email.thread').parse_message(msg)
+        thread_pool = self.pool.get('email.thread')
         message_id = msg.get('message-id', False)
         msg_pool = self.pool.get('email.message')
         msg_ids = []
@@ -191,7 +191,7 @@ class thunderbird_partner(osv.osv_memory):
                 res['datas'] = base64.b64encode(mail)
                 res['res_id'] = res_id
                 obj_attch.create(cr, uid, res)
-            server_tools_pool.history_message(cr, uid, model, res_id, msg_new)
+            thread_pool.history_message(cr, uid, model, res_id, msg_new)
             res_ids.append(res_id)
         return len(res_ids)
 
@@ -199,7 +199,7 @@ class thunderbird_partner(osv.osv_memory):
         dictcreate = dict(vals)
         model = str(dictcreate.get('model'))
         message = dictcreate.get('message')
-        return self.pool.get('email.server.tools').process_email(cr, uid, model, message, attach=True, context=None)
+        return self.pool.get('email.thread').process_email(cr, uid, model, message, attach=True, context=None)
 
     def search_message(self, cr, uid, message, context=None):
         #@param message: string of mail which is read from EML File
@@ -207,7 +207,7 @@ class thunderbird_partner(osv.osv_memory):
         references = []
         dictcreate = dict(message)
         msg = dictcreate.get('message')
-        msg = self.pool.get('email.server.tools').parse_message(msg)
+        msg = self.pool.get('email.thread').parse_message(msg)
         message_id = msg.get('message-id')
         refs =  msg.get('references',False)
         references = False

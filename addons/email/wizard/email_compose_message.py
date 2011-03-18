@@ -25,7 +25,7 @@ import tools
 
 class email_compose_message(osv.osv_memory):
     _name = 'email.compose.message'
-    _inherit = 'email.message.template'
+    _inherit = 'email.message.common'
     _description = 'This is the wizard for Compose E-mail'
 
     def default_get(self, cr, uid, fields, context=None):
@@ -43,8 +43,8 @@ class email_compose_message(osv.osv_memory):
         if not vals:
             return result
 
-        if 'name' in fields:
-            result.update({'name' : vals.get('name','')})
+        if 'subject' in fields:
+            result.update({'subject' : vals.get('name','')})
 
         if 'email_to' in fields:
             result.update({'email_to' : vals.get('email_to','')})
@@ -52,8 +52,8 @@ class email_compose_message(osv.osv_memory):
         if 'email_from' in fields:
             result.update({'email_from' : vals.get('email_from','')})
 
-        if 'description' in fields:
-            result.update({'description' : vals.get('description','')})
+        if 'body' in fields:
+            result.update({'body' : vals.get('description','')})
 
         if 'model' in fields:
             result.update({'model' : vals.get('model','')})
@@ -150,8 +150,8 @@ class email_compose_message(osv.osv_memory):
                 description = '\n'.join([header, sender, email_to, sentdate, desc])
 
             result.update({
-                    'description' : description,
-                    'name' : subject,
+                    'body' : description,
+                    'subject' : subject,
                     'message_id' :  message_data and message_data.message_id or False,
                     'attachment_ids' : message_data and message_pool.read(cr, uid, message_id, ['attachment_ids'])['attachment_ids'] or [],
                     'res_id' : message_data and message_data.res_id or False,
@@ -183,8 +183,8 @@ class email_compose_message(osv.osv_memory):
                 result.update({
                             'email_from':  vals.get('email_from',''),
                             'email_to':  vals.get('email_to',''),
-                            'name':  vals.get('name',''),
-                            'description':  vals.get('description',''),
+                            'subject':  vals.get('name',''),
+                            'body':  vals.get('description',''),
                             'email_cc':  vals.get('email_cc',''),
                             'email_bcc':  vals.get('email_bcc',''),
                             'reply_to':  vals.get('reply_to',''),
@@ -193,8 +193,8 @@ class email_compose_message(osv.osv_memory):
 
     def on_change_smtp_server(self, cr, uid, ids, smtp_server_id, email_from, context=None):
         if not email_from and smtp_server_id:
-            email_smtp_server_pool = self.pool.get("email.smtp_server")
-            email_from = email_smtp_server_pool.browse(cr, uid, smtp_server_id, context).email_id or False
+            mail_server_pool = self.pool.get("email.smtp_server")
+            email_from = mail_server_pool.browse(cr, uid, smtp_server_id, context).email_id or False
         return {'value':{'email_from': email_from}}
 
     def save_to_drafts(self, cr, uid, ids, context=None):

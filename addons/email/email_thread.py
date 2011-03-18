@@ -34,12 +34,12 @@ import xmlrpclib
 
 _logger = logging.getLogger('mailgate')
 
-class mailgate_thread(osv.osv):
+class email_thread(osv.osv):
     '''
-    Mailgateway Thread
+    Email Thread
     '''
-    _name = 'mailgate.thread'
-    _description = 'Mailgateway Thread'
+    _name = 'email.thread'
+    _description = 'Email Thread'
 
     _columns = {
         'message_ids': fields.one2many('email.message', 'res_id', 'Messages', readonly=True),
@@ -71,7 +71,7 @@ class mailgate_thread(osv.osv):
     def message_update(self, cr, uid, ids, vals={}, msg="", default_act='pending', context=None):
         raise Exception, _('Method is not implemented')
 
-    def message_followers(self, cr, uid, ids, context=None):
+    def thread_followers(self, cr, uid, ids, context=None):
         """ Get a list of emails of the people following this thread
         """
         res = {}
@@ -172,18 +172,6 @@ class mailgate_thread(osv.osv):
                 }
             obj.create(cr, uid, data, context=context)
         return True
-mailgate_thread()
-
-def format_date_tz(date, tz=None):
-    if not date:
-        return 'n/a'
-    format = tools.DEFAULT_SERVER_DATETIME_FORMAT
-    return tools.server_to_local_timestamp(date, format, format, tz)
-
-class mailgate_tool(osv.osv_memory):
-
-    _name = 'email.server.tools'
-    _description = "Email Server Tools"
 
     def _decode_header(self, text):
         """Returns unicode() string conversion of the the given encoded smtp header"""
@@ -194,45 +182,6 @@ class mailgate_tool(osv.osv_memory):
     def to_email(self,text):
         return re.findall(r'([^ ,<@]+@[^> ,]+)',text)
 
-    def history(self, cr, uid, model, res_ids, msg, attach, context=None):
-        """This function creates history for mails fetched
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param model: OpenObject Model
-        @param res_ids: Ids of the record of OpenObject model created
-        @param msg: Email details
-        @param attach: Email attachments
-        """
-        if isinstance(res_ids, (int, long)):
-            res_ids = [res_ids]
-
-        msg_pool = self.pool.get('email.message')
-        for res_id in res_ids:
-            case = self.pool.get(model).browse(cr, uid, res_id, context=context)
-            partner_id = hasattr(case, 'partner_id') and (case.partner_id and case.partner_id.id or False) or False
-            if not partner_id and model == 'res.partner':
-                partner_id = res_id
-            msg_data = {
-                'name': msg.get('subject', 'No subject'),
-                'date': msg.get('date'),
-                'description': msg.get('body', msg.get('from')),
-                'history': True,
-                'partner_id': partner_id,
-                'model': model,
-                'email_cc': msg.get('cc'),
-                'email_from': msg.get('from'),
-                'email_to': msg.get('to'),
-                'message_id': msg.get('message-id'),
-                'references': msg.get('references') or msg.get('in-reply-to'),
-                'res_id': res_id,
-                'user_id': uid,
-                'folder': 'inbox',
-                'attachment_ids': [(6, 0, attach)]
-            }
-            msg_pool.create(cr, uid, msg_data, context=context)
-        return True
-
     def email_forward(self, cr, uid, model, res_ids, msg, email_error=False, context=None):
         """Sends an email to all people following the thread
         @param res_id: Id of the record of OpenObject model created from the email message
@@ -242,8 +191,8 @@ class mailgate_tool(osv.osv_memory):
         model_pool = self.pool.get(model)
 
         for res in model_pool.browse(cr, uid, res_ids, context=context):
-            message_followers = model_pool.message_followers(cr, uid, [res.id])[res.id]
-            message_followers_emails = self.to_email(','.join(filter(None, message_followers)))
+            thread_followers = model_pool.thread_followers(cr, uid, [res.id])[res.id]
+            message_followers_emails = self.to_email(','.join(filter(None, thread_followers)))
             message_recipients = self.to_email(','.join(filter(None,
                                                          [self._decode_header(msg['from']),
                                                          self._decode_header(msg['to']),
@@ -486,6 +435,14 @@ class mailgate_tool(osv.osv_memory):
 
         return res
 
-mailgate_tool()
+
+email_thread()
+
+def format_date_tz(date, tz=None):
+    if not date:
+        return 'n/a'
+    format = tools.DEFAULT_SERVER_DATETIME_FORMAT
+    return tools.server_to_local_timestamp(date, format, format, tz)
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
