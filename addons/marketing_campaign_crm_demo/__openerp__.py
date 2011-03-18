@@ -29,8 +29,8 @@
     "author" : "OpenERP SA",
     "category": 'Sales',
     "description": """
-    Demo data for the module marketing_campaign.
-    ============================================
+Demo data for the module marketing_campaign.
+============================================
     """,
     'website': 'http://www.openerp.com',
     'init_xml': [],

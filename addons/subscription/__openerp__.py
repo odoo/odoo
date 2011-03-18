@@ -25,8 +25,8 @@
     'version': '1.0',
     'category': 'Tools',
     'description': """
-    This module allows to create new documents and add subscription on that document.
-    =================================================================================
+This module allows to create new documents and add subscription on that document.
+=================================================================================
     """,
     'author': 'OpenERP SA',
     'depends': ['base_tools'],

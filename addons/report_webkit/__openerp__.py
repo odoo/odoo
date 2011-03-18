@@ -32,8 +32,8 @@
 {
     "name" : "Webkit Report Engine",
     "description" : """
-    This module adds a new Report Engine based on WebKit library (wkhtmltopdf) to support reports designed in HTML + CSS.
-    =====================================================================================================================
+This module adds a new Report Engine based on WebKit library (wkhtmltopdf) to support reports designed in HTML + CSS.
+=====================================================================================================================
 
 The module structure and some code is inspired by the report_openoffice module.
 The module allows:

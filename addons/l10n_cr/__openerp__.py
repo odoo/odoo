@@ -40,8 +40,9 @@
     'website': 'http://clearcorp.co.cr',
     'category': 'Finance',
     'description': """
-    Chart of accounts for Costa Rica.
-    =================================
+Chart of accounts for Costa Rica.
+=================================
+
 Includes:
 * account.type
 * account.account.template

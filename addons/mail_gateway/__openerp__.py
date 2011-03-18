@@ -24,8 +24,8 @@
     'version': '1.0',
     'category': 'Tools',
     'description': """
-    The generic email gateway system allows to send and receive emails.
-    ===================================================================
+The generic email gateway system allows to send and receive emails.
+===================================================================
 
     * History of emails
     * Easy integration with any module""",

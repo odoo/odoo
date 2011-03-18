@@ -28,14 +28,13 @@
     'depends' : ['base', 'mail_gateway'],
     'category' : 'Tools',
     'description': '''
-      This module provides the Outlook Plug-in.
-      =========================================
->>>>>>> MERGE-SOURCE
+This module provides the Outlook Plug-in.
+=========================================
 
-      Outlook plug-in allows you to select an object that you’d like to add
-      to your email and its attachments from MS Outlook. You can select a partner, a task,
-      a project, an analytical account, or any other object and archive selected
-      mail in mailgate.messages with attachments.
+Outlook plug-in allows you to select an object that you’d like to add
+to your email and its attachments from MS Outlook. You can select a partner, a task,
+a project, an analytical account, or any other object and archive selected
+mail in mailgate.messages with attachments.
 
       ''',
     'init_xml' : [],

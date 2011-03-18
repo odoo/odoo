@@ -6,8 +6,8 @@
     "depends": ["base"],
     "category" : "Tools",
     'description': """
-    Common base for tools modules.
-    ==============================
+Common base for tools modules.
+==============================
     """,
     "init_xml": [],
     "update_xml": [

@@ -26,14 +26,14 @@
     "init_xml" : [],
     "demo_xml" : ["product_expiry_demo.xml"],
     "description": '''
-    Track different dates on products and production lots.
-    ======================================================
+Track different dates on products and production lots.
+======================================================
 
 Following dates can be tracked:
- - end of life
- - best before date
- - removal date
- - alert date
+    - end of life
+    - best before date
+    - removal date
+    - alert date
 Used, for example, in food industries.''',
     "update_xml" : ["product_expiry_view.xml"],
     "active": False,

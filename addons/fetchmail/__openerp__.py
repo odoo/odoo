@@ -28,8 +28,8 @@
     "author" : "OpenERP SA",
     "category": 'Tools',
     "description": """
-    Fetch email from POP / IMAP servers.
-    ====================================
+Fetch email from POP / IMAP servers.
+====================================
 
     * Supports SSL
     * Integrated with all modules

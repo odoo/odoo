@@ -22,8 +22,8 @@
     'version': '1.1',
     'category': 'Finance',
     'description': """
-    This is the base module to manage the accounting chart for Ecuador in OpenERP.
-    ==============================================================================
+This is the base module to manage the accounting chart for Ecuador in OpenERP.
+==============================================================================
     """,
     'author': 'OpenERP SA',
     'depends': [

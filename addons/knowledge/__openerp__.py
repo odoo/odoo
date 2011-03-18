@@ -27,8 +27,8 @@
     "author" : "OpenERP SA",
     "category": 'Tools',
     "description": """
-    Installer for knowledge-based tools.
-    ====================================
+Installer for knowledge-based tools.
+====================================
     """,
     'website': 'http://www.openerp.com',
     'init_xml': [],

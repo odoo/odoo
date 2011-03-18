@@ -25,12 +25,14 @@
     'version': '1.0',
     'category': 'Human Resources',
     'description': """
-    Add all information on the employee form to manage contracts.
-    =============================================================
+Add all information on the employee form to manage contracts.
+=============================================================
+
     * Marital status,
     * Security number,
     * Place of birth, birth date, ...
-    You can assign several contracts per employee.
+
+You can assign several contracts per employee.
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',

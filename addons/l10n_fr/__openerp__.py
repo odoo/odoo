@@ -32,8 +32,8 @@
     "website": "http://www.openerp.com",
     "category" : "Finance",
     "description": """
-    This is the module to manage the accounting chart for France in OpenERP.
-    ========================================================================
+This is the module to manage the accounting chart for France in OpenERP.
+========================================================================
 
 Credits: Sistheo Zeekom CrysaLEAD
 """,

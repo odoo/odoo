@@ -27,12 +27,12 @@
     "website": "http://www.cirrus.pl",
     "category" : "Finance",
     "description": """
-     This is the module to manage the accounting chart and taxes for Poland in OpenERP.
-     ==================================================================================
+This is the module to manage the accounting chart and taxes for Poland in OpenERP.
+==================================================================================
 
-     To jest moduł do tworzenia wzorcowego planu kont i podstawowych ustawień do podatków
-     VAT 0%, 7% i 22%. Moduł ustawia też konta do kupna i sprzedaży towarów zakładając,
-     że wszystkie towary są w obrocie hurtowym.
+To jest moduł do tworzenia wzorcowego planu kont i podstawowych ustawień do podatków
+VAT 0%, 7% i 22%. Moduł ustawia też konta do kupna i sprzedaży towarów zakładając,
+że wszystkie towary są w obrocie hurtowym.
     """,
     "depends" : ["account", "base_iban", "base_vat", "account_chart"],
     "demo_xml" : [],

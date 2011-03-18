@@ -24,28 +24,28 @@
     'version': '1.0',
     'category': 'Sales',
     'description': """
-    The sales journal modules allows you to categorise your sales and deliveries (picking lists) between different journals.
-    ========================================================================================================================
+The sales journal modules allows you to categorise your sales and deliveries (picking lists) between different journals.
+========================================================================================================================
 
-    This module is very helpful for bigger companies that
-    works by departments.
+This module is very helpful for bigger companies that
+works by departments.
 
-    You can use journal for different purposes, some examples:
+You can use journal for different purposes, some examples:
     * isolate sales of different departments
     * journals for deliveries by truck or by UPS
 
-    Journals have a responsible and evolves between different status:
+Journals have a responsible and evolves between different status:
     * draft, open, cancel, done.
 
-    Batch operations can be processed on the different journals to
-    confirm all sales at once, to validate or invoice packing, ...
+Batch operations can be processed on the different journals to
+confirm all sales at once, to validate or invoice packing, ...
 
-    It also supports batch invoicing methods that can be configured by
-    partners and sales orders, examples:
+It also supports batch invoicing methods that can be configured by
+partners and sales orders, examples:
     * daily invoicing,
     * monthly invoicing, ...
 
-    Some statistics by journals are provided.
+Some statistics by journals are provided.
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',

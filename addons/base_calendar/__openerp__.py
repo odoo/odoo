@@ -24,10 +24,10 @@
     "version" : "1.0",
     "depends" : ["base"],
     'description': """
-    This is a full-featured calendar system.
-    ========================================
+This is a full-featured calendar system.
+========================================
 
-    It supports:
+It supports:
     - Calendar of events
     - Alerts (create requests)
     - Recurring events

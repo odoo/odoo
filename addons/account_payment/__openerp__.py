@@ -24,7 +24,10 @@
     "version": "1.1",
     "author": "OpenERP SA",
     "category": "Finance",
-    "description": """Prepare Global Proposals for your Supplier Payments
+    "description": """
+Module to manage invoice payment.
+=================================
+
 This module provides :
 ----------------------
 * a more efficient way to manage invoice payment.

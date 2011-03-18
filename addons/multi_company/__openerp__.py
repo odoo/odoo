@@ -25,10 +25,10 @@
     'version': '1.0',
     'category': 'Tools',
     'description': """
-    This module is for managing a multicompany environment.
-    =======================================================
+This module is for managing a multicompany environment.
+=======================================================
 
-    This module is the base module for other multi-company modules.
+This module is the base module for other multi-company modules.
     """,
     'author': 'OpenERP SA,SYLEAM',
     'website': 'http://www.openerp.com/',

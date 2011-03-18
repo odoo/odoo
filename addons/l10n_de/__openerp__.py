@@ -127,8 +127,8 @@
     "website" : "http://www.openbig.org",
     "category" : "Finance",
     "description": """
-    Dieses  Modul beinhaltet einen deutschen Kontenrahmen basierend auf dem SKR03.
-    ==============================================================================
+Dieses  Modul beinhaltet einen deutschen Kontenrahmen basierend auf dem SKR03.
+==============================================================================
     """,
     "depends" : ['base', 'account', 'base_iban', 'base_vat', 'account_chart'],
     "init_xml" : [ ],

@@ -24,8 +24,8 @@
     'version': '1.0',
     'category': 'Tools',
     'description': """
-    Quality Manual Template.
-    ========================
+Quality Manual Template.
+========================
     """,
     'author': 'OpenERP SA',
     'website': 'http://openerp.com',

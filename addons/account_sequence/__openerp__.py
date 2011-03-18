@@ -24,7 +24,8 @@
     'version': '1.1',
     'category': 'Finance',
     'description': """
-    This module maintains internal sequence number for accounting entries.
+This module maintains internal sequence number for accounting entries.
+======================================================================
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',

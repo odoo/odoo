@@ -25,8 +25,8 @@
     'version': '1.0',
     'category': 'Sales',
     'description': """
-    The generic OpenERP Customer Relationship Management.
-    =====================================================
+The generic OpenERP Customer Relationship Management.
+=====================================================
 
 This system enables a group of people to intelligently and efficiently manage
 leads, opportunities, meeting, phonecall etc.

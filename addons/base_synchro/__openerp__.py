@@ -25,8 +25,8 @@
         "author":"OpenERP SA",
         "category":"Tools",
         "description": """
-        Synchronization with all objects.
-        =================================
+Synchronization with all objects.
+=================================
         """,
         "depends":["base"],
         "demo_xml":[],

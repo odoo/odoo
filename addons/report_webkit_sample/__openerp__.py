@@ -32,14 +32,14 @@
 {
     "name" : "Webkit Report Samples",
     "description" : """
-    Samples for Webkit Report Engine (report_webkit module).
-    ========================================================
+Samples for Webkit Report Engine (report_webkit module).
+========================================================
 
-    A sample invoice report is included in this module, as well as a wizard to
-    add Webkit Report entries on any Document in the system.
+A sample invoice report is included in this module, as well as a wizard to
+add Webkit Report entries on any Document in the system.
 
-    You have to create the print buttons by calling the wizard. For more details see:
-        http://files.me.com/nbessi/06n92k.mov
+You have to create the print buttons by calling the wizard. For more details see:
+    http://files.me.com/nbessi/06n92k.mov
                     """,
     "version" : "0.9",
     "depends" : ["base", "account", "report_webkit"],

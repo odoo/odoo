@@ -25,8 +25,8 @@
     'name': 'CRM Fundraising',
     'version': '1.0',
     'description': """
-    Fundraising.
-    ============
+Fundraising.
+============
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',

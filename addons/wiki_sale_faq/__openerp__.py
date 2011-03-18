@@ -20,10 +20,12 @@
 ##############################################################################
 
 {
-    'name': 'Wiki -Sale - FAQ',
+    'name': 'Wiki - Sale-FAQ',
     'version': '1.0',
     'category': 'Tools',
-    'description': """This module provides a wiki FAQ Template
+    'description': """
+This module provides a Wiki Sales FAQ Template.
+===============================================
     """,
     'author': 'OpenERP SA',
     'website': 'http://openerp.com',

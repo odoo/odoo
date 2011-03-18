@@ -25,8 +25,8 @@
     'version': '1.0',
     'category': 'Tools',
     'description': """
-    This module allows you to create any statistic report on several objects.
-    =========================================================================
+This module allows you to create any statistic report on several objects.
+=========================================================================
 
 It's an SQL query builder and browser
 for end-users.

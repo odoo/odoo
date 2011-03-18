@@ -27,14 +27,14 @@
     "depends" : ["base","mail_gateway"],
     "category" : "Tools",
     "description": """
-      This module is required for the Thuderbird Plug-in to work properly.
-      ====================================================================
+This module is required for the Thuderbird Plug-in to work properly.
+====================================================================
 
-      The plugin allows you archive email and its attachments to the selected
-      OpenERP objects. You can select a partner, a task, a project, an analytical
-      account, or any other object and attach the selected mail as a .eml file in
-      the attachment of a selected record. You can create documents for CRM Lead,
-      HR Applicant and Project Issue from selected mails.
+The plugin allows you archive email and its attachments to the selected
+OpenERP objects. You can select a partner, a task, a project, an analytical
+account, or any other object and attach the selected mail as a .eml file in
+the attachment of a selected record. You can create documents for CRM Lead,
+HR Applicant and Project Issue from selected mails.
 
       """,
     "init_xml" : [],

@@ -25,8 +25,8 @@
     'version': '1.0',
     'category': 'Tools',
     'description': """
-    Allows to synchronise calendars with others applications.
-    =========================================================
+Allows to synchronise calendars with others applications.
+=========================================================
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',

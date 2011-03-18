@@ -25,8 +25,8 @@
     'name': 'CRM Helpdesk',
     'version': '1.0',
     'description': """
-    Helpdesk Management.
-    ====================
+Helpdesk Management.
+====================
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',

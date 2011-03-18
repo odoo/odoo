@@ -26,9 +26,10 @@
     "category": "Human Resources",
     "website": "http://www.openerp.com",
     "description": """
-    Module for human resource management.
-    =====================================
-    You can manage:
+Module for human resource management.
+=====================================
+
+You can manage:
     * Employees and hierarchies : You can define your employee with User and display hierarchies
     * HR Departments
     * HR Jobs

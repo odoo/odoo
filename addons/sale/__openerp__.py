@@ -23,43 +23,44 @@
     'name': 'Sales Management',
     'version': '1.0',
     'category': 'Sales',
-    'description': """Manage your Quotations and Sales Orders
-    The base module to manage quotations and sales orders.
-    ======================================================
+    'category': 'Generic Modules/Sales & Purchases',
+    'description': """
+The base module to manage quotations and sales orders.
+======================================================
 
-    Workflow with validation steps:
-    -------------------------------
-        * Quotation -> Sales order -> Invoice
+Workflow with validation steps:
+-------------------------------
+    * Quotation -> Sales order -> Invoice
 
-    Invoicing methods:
-    ------------------
-        * Invoice on order (before or after shipping)
-        * Invoice on delivery
-        * Invoice on timesheets
-        * Advance invoice
+Invoicing methods:
+------------------
+    * Invoice on order (before or after shipping)
+    * Invoice on delivery
+    * Invoice on timesheets
+    * Advance invoice
 
-    Partners preferences:
-    ---------------------
-        * shipping
-        * invoicing
-        * incoterm
+Partners preferences:
+---------------------
+    * shipping
+    * invoicing
+    * incoterm
 
-    Products stocks and prices
-    --------------------------
+Products stocks and prices
+--------------------------
 
-    Delivery methods:
-    -----------------
-        * all at once
-        * multi-parcel
-        * delivery costs
+Delivery methods:
+-----------------
+    * all at once
+    * multi-parcel
+    * delivery costs
 
-    Dashboard for Sales Manager that includes:
-    ------------------------------------------
-        * Quotations
-        * Sales by Month
-        * Graph of Sales by Salesman in last 90 days
-        * Graph of Sales per Customer in last 90 days
-        * Graph of Sales by Product's Category in last 90 days
+Dashboard for Sales Manager that includes:
+------------------------------------------
+    * Quotations
+    * Sales by Month
+    * Graph of Sales by Salesman in last 90 days
+    * Graph of Sales per Customer in last 90 days
+    * Graph of Sales by Product's Category in last 90 days
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',

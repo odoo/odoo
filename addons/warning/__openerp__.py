@@ -25,11 +25,11 @@
     'version': '1.0',
     'category': 'Tools',
     'description': """
-    Module to trigger warnings in OpenERP objects.
-    ==============================================
+Module to trigger warnings in OpenERP objects.
+==============================================
 
-    Warning messages can be displayed for objects like sale order, purchase order,
-    picking and invoice. The message is triggered by the form's onchange event.
+Warning messages can be displayed for objects like sale order, purchase order,
+picking and invoice. The message is triggered by the form's onchange event.
     """,
     'author': 'OpenERP SA',
     'depends': ['base', 'sale', 'purchase'],

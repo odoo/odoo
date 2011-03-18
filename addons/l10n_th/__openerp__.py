@@ -24,8 +24,8 @@
     'version': '1.0',
     'category': 'Finance',
     'description': """
-    Chart of Accounts for Thailand.
-    ===============================
+Chart of Accounts for Thailand.
+===============================
     """,
     'author': 'Almacom',
     'website': 'http://almacom.co.th/',

@@ -25,12 +25,12 @@
     'version': '1.0',
     'category': 'Tools',
     'description': """
-    This module helps to configure the system at the installation of a new database.
-    ================================================================================
+This module helps to configure the system at the installation of a new database.
+================================================================================
 
-    It allows you to choose the type of interface and select from a list of applications to install.
+It allows you to choose the type of interface and select from a list of applications to install.
 
-    It also helps to easily configure your company.
+It also helps to easily configure your company.
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',

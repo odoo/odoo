@@ -26,8 +26,8 @@
     "website": "http://openerp.hellug.gr/",
     "category" : "Finance",
     "description": """
-    This is the base module to manage the accounting chart for Greece.
-    ==================================================================
+This is the base module to manage the accounting chart for Greece.
+==================================================================
     """,
     "depends" : ["base", "account", "base_iban", "base_vat", "account_chart"],
     "init_xml" : [],

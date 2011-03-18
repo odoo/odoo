@@ -25,11 +25,11 @@
     'version': '1.0',
     'category': 'Tools',
     'description': """
-     This module shows the basic processes involved in the selected modules and in the sequence they occur.
-     ======================================================================================================
+This module shows the basic processes involved in the selected modules and in the sequence they occur.
+======================================================================================================
 
-     Note: This applies to the modules containing modulename_process_xml
-     e.g product/process/product_process_xml
+Note: This applies to the modules containing modulename_process_xml
+e.g product/process/product_process_xml
 
     """,
     'author': 'OpenERP SA',
