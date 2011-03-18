@@ -22,7 +22,7 @@
 {
     'name': 'Action Rule',
     'version': '1.0',
-    'category': 'Generic Modules/Others',
+    'category': 'Tools',
     'description': "This module allows to implement action rules for any object.",
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',

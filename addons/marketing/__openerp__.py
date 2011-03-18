@@ -25,7 +25,7 @@
     "version" : "1.1",
     "depends" : ["base"],
     "author" : "OpenERP SA",
-    "category": 'Generic Modules/Marketing',
+    "category": 'Sales',
     "description": "Menu for Marketing",
     'website': 'http://www.openerp.com',
     'init_xml': [],

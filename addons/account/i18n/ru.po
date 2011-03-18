@@ -13,7 +13,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-03-15 04:54+0000\n"
+"X-Launchpad-Export-Date: 2011-03-18 04:53+0000\n"
 "X-Generator: Launchpad (build 12559)\n"
 
 #. module: account
@@ -728,12 +728,6 @@ msgstr "Проверка"
 #: field:account.partner.reconcile.process,today_reconciled:0
 msgid "Partners Reconciled Today"
 msgstr "Партнеры сверенные сегодня"
-
-#. module: account
-#: code:addons/account/account_bank_statement.py:306
-#, python-format
-msgid "The statement balance is incorrect !\n"
-msgstr "Утвержденный баланc некорректен !\\n\n"
 
 #. module: account
 #: selection:account.payment.term.line,value:0
@@ -2642,11 +2636,12 @@ msgid "August"
 msgstr "Август"
 
 #. module: account
-#: code:addons/account/account_bank_statement.py:307
+#: code:addons/account/account_bank_statement.py:306
 #, python-format
 msgid ""
+"The statement balance is incorrect !\n"
 "The expected balance (%.2f) is different than the computed one. (%.2f)"
-msgstr "Ожидаемый баланс (%.2f) отличается от вычисленного. (%.2f)"
+msgstr ""
 
 #. module: account
 #: model:process.transition,note:account.process_transition_paymentreconcile0
@@ -2890,6 +2885,12 @@ msgstr "Счет основа налоговой декларации"
 #: selection:account.entries.report,type:0
 msgid "View"
 msgstr "Вид"
+
+#. module: account
+#: code:addons/account/account.py:2951
+#, python-format
+msgid "BNK%s"
+msgstr ""
 
 #. module: account
 #: code:addons/account/account.py:2906
@@ -4277,12 +4278,6 @@ msgid "Account Balance -"
 msgstr "Баланс по счету -"
 
 #. module: account
-#: code:addons/account/invoice.py:989
-#, python-format
-msgid "Invoice "
-msgstr "Счет "
-
-#. module: account
 #: field:account.automatic.reconcile,date1:0
 msgid "Starting Date"
 msgstr "Дата начала"
@@ -5587,10 +5582,10 @@ msgstr ""
 "\"Сделано\" (т.е. оплачено)."
 
 #. module: account
-#: code:addons/account/invoice.py:989
+#: code:addons/account/invoice.py:997
 #, python-format
-msgid "is validated."
-msgstr "проверен."
+msgid "Invoice  '%s' is validated."
+msgstr ""
 
 #. module: account
 #: view:account.chart.template:0
@@ -10258,6 +10253,11 @@ msgstr ""
 #~ msgid "Analytic Credit"
 #~ msgstr "Аналитический Кредит"
 
+#, python-format
+#~ msgid ""
+#~ "The expected balance (%.2f) is different than the computed one. (%.2f)"
+#~ msgstr "Ожидаемый баланс (%.2f) отличается от вычисленного. (%.2f)"
+
 #~ msgid "Parent Analytic Account"
 #~ msgstr "Основной аналитический счет"
 
@@ -10614,6 +10614,10 @@ msgstr ""
 #~ msgid "Select invoices you want to pay and manages advances"
 #~ msgstr "Выберите счета для оплаты и авансирования"
 
+#, python-format
+#~ msgid "The statement balance is incorrect !\n"
+#~ msgstr "Утвержденный баланc некорректен !\\n\n"
+
 #~ msgid "Journal/Payment Mode"
 #~ msgstr "Журнал/Форма оплаты"
 
@@ -10656,6 +10660,10 @@ msgstr ""
 #~ msgid "End of Year"
 #~ msgstr "Конец года"
 
+#, python-format
+#~ msgid "Invoice "
+#~ msgstr "Счет "
+
 #~ msgid "Error: UOS must be in a different category than the UOM"
 #~ msgstr ""
 #~ "Ошибка: Единицы продажи и единицы измерения должны принадлежать к разным "
@@ -10666,6 +10674,10 @@ msgstr ""
 
 #~ msgid "account.analytic.journal"
 #~ msgstr "account.analytic.journal"
+
+#, python-format
+#~ msgid "is validated."
+#~ msgstr "проверен."
 
 #~ msgid "Accounting Statement"
 #~ msgstr "Бухгалтерская ведомость"

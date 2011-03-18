@@ -21,7 +21,7 @@
 
 {
     "name": "Decimal Precision Configuration",
-    "description": """
+    "description": """Configure your Price Accuracy according to your needs
 This module allows to configure the price accuracy you need for different kind
 of usage: accounting, sales, purchases, ...
 
@@ -30,7 +30,7 @@ The decimal precision is configured per company.
     "author": "OpenERP SA",
     "version": "0.1",
     "depends": ["base"],
-    "category" : "Generic Modules/Others",
+    "category" : "Tools",
     "init_xml": [],
     "update_xml": [
         'decimal_precision_view.xml',

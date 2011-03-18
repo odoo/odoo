@@ -113,7 +113,7 @@ This test checks the speed of the module. Note that at least 5 demo data is need
                 except Exception, e:
                     self.log.warning('Error in read method', exc_info=True)
                     list2 = [obj, _("Error in Read method")]
-                    speed_list = [obj, size, code_base_complexity, code_half_complexity, code_size_complexity, _("Error in Read method") + ": %s " % e]
+                    speed_list = [obj, size, code_base_complexity, code_half_complexity, code_size_complexity, _("Error in Read method: %s") % e]
                 else:
                     if size < 5:
                         speed_list = [obj, size, code_base_complexity, code_half_complexity, code_size_complexity, _("Warning! Not enough demo data")]

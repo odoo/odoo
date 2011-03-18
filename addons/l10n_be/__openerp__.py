@@ -20,7 +20,7 @@
 ##############################################################################
 {   'name': 'Belgium - Plan Comptable Minimum Normalise',
     'version': '1.1',
-    'category': 'Localisation/Account Charts',
+    'category': 'Finance',
     'description': """
     This is the base module to manage the accounting chart for Belgium in OpenERP.
 

@@ -23,8 +23,8 @@
     "name": "Payment Management",
     "version": "1.1",
     "author": "OpenERP SA",
-    "category": "Generic Modules/Payment",
-    "description": """
+    "category": "Finance",
+    "description": """Prepare Global Proposals for your Supplier Payments
 This module provides :
 * a more efficient way to manage invoice payment.
 * a basic mechanism to easily plug various automated payment.

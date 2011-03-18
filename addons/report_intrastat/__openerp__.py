@@ -23,7 +23,7 @@
 {
     'name': 'Intrastat Reporting - Reporting',
     'version': '1.0',
-    'category': 'Generic Modules/Inventory Control',
+    'category': 'Warehouse',
     'description': """
     A module that adds intrastat reports.
     This module gives the details of the goods traded between the countries of European Union """,

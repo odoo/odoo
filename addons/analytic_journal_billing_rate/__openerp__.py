@@ -22,7 +22,7 @@
 {
     'name': 'Analytic Journal Billing Rate, Define the default invoicing rate for a specific journal',
     'version': '1.0',
-    'category': 'Generic Modules/Others',
+    'category': 'Human Resources',
     'description': """
 
     This module allows you to define what is the default invoicing rate for a specific journal on a given account. This is mostly used when a user encodes his timesheet: the values are retrieved and the fields are auto-filled... but the possibility to change these values is still available.

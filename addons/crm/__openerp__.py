@@ -23,8 +23,9 @@
 {
     'name': 'Customer & Supplier Relationship Management',
     'version': '1.0',
-    'category': 'Generic Modules/CRM & SRM',
-    'description': """The generic OpenERP Customer Relationship Management
+    'category': 'Sales',
+    'description': """Manage your Customer & Supplier Relations with OpenERP
+The generic OpenERP Customer Relationship Management
 system enables a group of people to intelligently and efficiently manage
 leads, opportunities, meeting, phonecall etc.
 It manages key tasks such as communication, identification, prioritization,

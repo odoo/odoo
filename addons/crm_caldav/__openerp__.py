@@ -24,8 +24,8 @@
 {
     'name': 'Extended Module to Add CalDav feature on Meeting',
     'version': '1.1',
-    'category': 'Generic Modules/CRM & SRM',
-    'description': """
+    'category': 'Sales',
+    'description': """Easily Share your Meetings with your mobile device or calendar client
     New Features in Meeting:
         *  Share meeting with other calendar clients like sunbird
 """,

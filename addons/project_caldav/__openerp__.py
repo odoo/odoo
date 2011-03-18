@@ -23,7 +23,7 @@
     "name": "CalDAV for task management",
     "version": "1.1",
     "author": "OpenERP SA",
-    "category": "Generic Modules/Others",
+    "category": "Project Management",
     "description": """ Synchronize between Project task and Caldav Vtodo.""",
     "depends": ["project", "caldav", "base_calendar"],
     "init_xml": ["project_caldav_data.xml", 'project_caldav_setup.xml', ],

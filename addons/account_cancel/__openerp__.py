@@ -20,12 +20,12 @@
 ##############################################################################
 
 {
-    "name" : "Account Cancel",
+    "name" : "Cancel Entries",
     "version" : "1.1",
     "author" : "OpenERP SA",
-    "category": 'Generic Modules/Accounting',
-    "description": """
-    Module adds 'Allow cancelling entries' field on form view of account journal. If set to true it allows user to cancel entries & invoices.
+    "category": 'Finance',
+    "description": """Cancel your accounting entries or reset them to draft status
+    This module adds the 'Allow cancelling entries' field to the journal definition. If set to true, the user may cancel entries & invoices. Make sure to comply with the legal requirements of your country.
     """,
     'website': 'http://www.openerp.com',
     "depends" : ["account"],

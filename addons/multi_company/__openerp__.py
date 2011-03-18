@@ -23,7 +23,7 @@
 {
     'name': 'Multi Company',
     'version': '1.0',
-    'category': 'Custom',
+    'category': 'Tools',
     'description': """
     Multicompany module is for managing a multicompany environment.
     This module is the base module for other multicompany modules.

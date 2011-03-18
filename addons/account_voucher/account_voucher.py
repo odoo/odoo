@@ -191,7 +191,7 @@ class account_voucher(osv.osv):
             domain=[('type','=','dr')], context={'default_type':'dr'}, readonly=True, states={'draft':[('readonly',False)]}),
         'period_id': fields.many2one('account.period', 'Period', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'narration':fields.text('Notes', readonly=True, states={'draft':[('readonly',False)]}),
-        'currency_id':fields.many2one('res.currency', 'Currency', readonly=True, states={'draft':[('readonly',False)]}),
+        'currency_id':fields.many2one('res.currency', 'Currency', required=True, readonly=True, states={'draft':[('readonly',False)]}),
 #        'currency_id': fields.related('journal_id','currency', type='many2one', relation='res.currency', string='Currency', store=True, readonly=True, states={'draft':[('readonly',False)]}),
         'company_id': fields.many2one('res.company', 'Company', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'state':fields.selection(
@@ -977,7 +977,8 @@ class account_bank_statement_line(osv.osv):
     def _check_amount(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
             if obj.voucher_id:
-                if not (abs(obj.amount) == obj.voucher_id.amount):
+                diff = abs(obj.amount) - obj.voucher_id.amount
+                if not self.pool.get('res.currency').is_zero(cr, uid, obj.voucher_id.currency_id, diff):
                     return False
         return True
 

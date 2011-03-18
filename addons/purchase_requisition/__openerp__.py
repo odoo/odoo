@@ -21,7 +21,7 @@
     "name" : "Purchase - Purchase Requisition",
     "version" : "0.1",
     "author" : "OpenERP SA",
-    "category" : "Generic Modules/Sales & Purchases",
+    "category" : "Purchases",
     "website" : "http://www.openerp.com",
     "description": """
     This module allows you to manage your Purchase Requisition.

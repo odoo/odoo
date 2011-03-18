@@ -22,7 +22,7 @@
 {
     'name': 'Project Retro planning',
     'version': '0.1',
-    'category': 'Generic Modules/Projects & Services',
+    'category': 'Project Management',
     'description': """
         - If end date of project is changed
           then the deadline date and start date for all the tasks will change accordingly  """,

@@ -22,7 +22,7 @@
 {
     'name': 'Document Management - Wiki - Quality Manual',
     'version': '1.0',
-    'category': 'Generic Modules/Others',
+    'category': 'Tools',
     'description': """Quality Manual Template
     """,
     'author': 'OpenERP SA',

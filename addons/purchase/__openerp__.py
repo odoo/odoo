@@ -23,7 +23,7 @@
 {
     'name': 'Purchase Management',
     'version': '1.1',
-    'category': 'Generic Modules/Sales & Purchases',
+    'category': 'Purchases',
     'description': """
     Purchase module is for generating a purchase order for purchase of goods from a supplier.
     A supplier invoice is created for the particular order placed

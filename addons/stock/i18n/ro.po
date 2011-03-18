@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:16+0000\n"
-"PO-Revision-Date: 2011-03-09 18:39+0000\n"
+"PO-Revision-Date: 2011-03-17 08:11+0000\n"
 "Last-Translator: Dorin <dhongu@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-03-10 04:45+0000\n"
-"X-Generator: Launchpad (build 12351)\n"
+"X-Launchpad-Export-Date: 2011-03-18 04:40+0000\n"
+"X-Generator: Launchpad (build 12559)\n"
 
 #. module: stock
 #: field:product.product,track_outgoing:0
@@ -139,8 +139,8 @@ msgid ""
 "This is the list of all delivery orders that have to be prepared, according "
 "to your different sales orders and your logistics rules."
 msgstr ""
-"Aceasta este lista cu toate comenzile de livrare care trebuie să fie "
-"pregătite, în acord cu diferitele comenzi de vânzare și reguli logistice."
+"Aceasta este lista cu toate livrările care trebuie să fie pregătite, în "
+"acord cu diferite comenzi de vânzare și reguli logistice."
 
 #. module: stock
 #: view:report.stock.move:0
@@ -743,12 +743,6 @@ msgid "Location Address"
 msgstr "Adresă locaţie"
 
 #. module: stock
-#: code:addons/stock/stock.py:2348
-#, python-format
-msgid "is consumed with"
-msgstr "este consumat cu"
-
-#. module: stock
 #: help:stock.move,prodlot_id:0
 msgid "Production lot is used to put a serial number on the production"
 msgstr ""
@@ -869,6 +863,12 @@ msgstr "Urgent"
 #: report:stock.picking.list:0
 msgid "Journal"
 msgstr "Jurnal"
+
+#. module: stock
+#: code:addons/stock/stock.py:1315
+#, python-format
+msgid "is scheduled %s."
+msgstr ""
 
 #. module: stock
 #: help:stock.picking,location_id:0
@@ -1971,12 +1971,6 @@ msgstr "Livrare parţială"
 #: selection:stock.location,chained_auto_packing:0
 msgid "Automatic No Step Added"
 msgstr "Automatic fără adăugare de paşi"
-
-#. module: stock
-#: code:addons/stock/stock.py:2348
-#, python-format
-msgid "Product "
-msgstr "Produs "
 
 #. module: stock
 #: view:stock.location.product:0
@@ -3211,7 +3205,7 @@ msgstr "este gata."
 #: model:ir.ui.menu,name:stock.menu_action_picking_tree
 #: view:stock.picking:0
 msgid "Delivery Orders"
-msgstr "Comenzi livrate"
+msgstr "Livrări"
 
 #. module: stock
 #: help:res.partner,property_stock_customer:0
@@ -3292,10 +3286,10 @@ msgid "Product Category"
 msgstr "Categorie Produs"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_change_product_qty.py:74
+#: code:addons/stock/wizard/stock_change_product_qty.py:88
 #, python-format
-msgid "INV: "
-msgstr "INV: "
+msgid "INV: %s"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.next_id_61
@@ -3598,12 +3592,6 @@ msgid "Unplanned Qty"
 msgstr "Cant neplanificată"
 
 #. module: stock
-#: code:addons/stock/stock.py:1318
-#, python-format
-msgid "is scheduled"
-msgstr "este programat"
-
-#. module: stock
 #: field:stock.location,chained_company_id:0
 msgid "Chained Company"
 msgstr ""
@@ -3744,10 +3732,16 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:2348
+#: code:addons/stock/stock.py:2386
 #, python-format
-msgid "quantity."
-msgstr "cantitate."
+msgid "Product  '%s' is consumed with '%s' quantity."
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/stock.py:2595
+#, python-format
+msgid "Inventory '%s' is done."
+msgstr ""
 
 #. module: stock
 #: constraint:stock.move:0
@@ -3950,3 +3944,23 @@ msgstr ""
 
 #~ msgid "Low Level"
 #~ msgstr "Nivel Tranzactii"
+
+#, python-format
+#~ msgid "Product "
+#~ msgstr "Produs "
+
+#, python-format
+#~ msgid "is consumed with"
+#~ msgstr "este consumat cu"
+
+#, python-format
+#~ msgid "INV: "
+#~ msgstr "INV: "
+
+#, python-format
+#~ msgid "is scheduled"
+#~ msgstr "este programat"
+
+#, python-format
+#~ msgid "quantity."
+#~ msgstr "cantitate."

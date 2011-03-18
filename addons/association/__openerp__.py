@@ -23,7 +23,7 @@
 {
     'name': 'Association profile',
     'version': '0.1',
-    'category': 'Profile',
+    'category': 'General',
     'description': """This module is to create Profile for Associates""",
     'author': 'OpenERP SA',
     'depends': ['membership', 'event'],

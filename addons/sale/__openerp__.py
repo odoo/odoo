@@ -22,8 +22,8 @@
 {
     'name': 'Sales Management',
     'version': '1.0',
-    'category': 'Generic Modules/Sales & Purchases',
-    'description': """
+    'category': 'Sales',
+    'description': """Manage your Quotations and Sales Orders
     The base module to manage quotations and sales orders.
 
     * Workflow with validation steps:

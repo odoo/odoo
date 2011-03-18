@@ -23,7 +23,7 @@
 {
     'name': 'Auction Management',
     'version': '1.0',
-    'category': 'Generic Modules/Auction',
+    'category': 'General',
     'description': """
      This module manages the records of the artists,
      the articles to be put up for auction,the buyers and

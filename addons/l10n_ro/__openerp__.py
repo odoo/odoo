@@ -24,7 +24,7 @@
     "version" : "1.1",
     "author" : "filsys",
     "website": "http://www.filsystem.ro",
-    "category" : "Localisation/Account Charts",
+    "category" : "Finance",
     "depends" : ["account_chart", 'base_vat'],
     "description": "This is the module to manage the accounting chart, VAT structure and Registration Number for Romania in Open ERP.",
     "demo_xml" : [],

@@ -23,7 +23,7 @@
 {
     'name': 'Sales and MRP Management',
     'version': '1.0',
-    'category': 'Generic Modules/Sales & MRP',
+    'category': 'Sales',
     'description': """
     This module provides facility to the user to install mrp and sales modules
     at a time. It is basically used when we want to keep track of production
