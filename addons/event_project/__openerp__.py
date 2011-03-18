@@ -24,10 +24,10 @@
     'version': '0.1',
     'category': 'Generic Modules/Association',
     'description': """
-    Organization and management of events.
-    ======================================
+Organization and management of events.
+======================================
 
-    This module allows you to create retro planning for managing your events.
+This module allows you to create retro planning for managing your events.
 """,
     'author': 'OpenERP SA',
     'images': ['images/event.jpeg'],

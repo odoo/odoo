@@ -25,8 +25,8 @@
     'version': '1.0',
     'category': 'Generic Modules/CRM & SRM',
     'description': """
-    Helpdesk Management.
-    ====================
+Helpdesk Management.
+====================
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',

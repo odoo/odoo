@@ -25,8 +25,8 @@
     "author" : "RelTek Mexico",
     "category" : "Localisation/Account Charts",
     "description": """
-    This is the module to manage the accounting chart for Mexico in OpenERP.
-    ========================================================================
+This is the module to manage the accounting chart for Mexico in OpenERP.
+========================================================================
     """,
     "depends" : ["account", "base_vat", "account_chart"],
     "demo_xml" : [],

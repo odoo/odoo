@@ -25,8 +25,8 @@
     'version': '0.1',
     'category': 'Profile',
     'description': """
-    This module is to configure modules related to an association.
-    ==============================================================
+This module is to configure modules related to an association.
+==============================================================
     """,
     'author': 'OpenERP SA',
     'depends': ['membership', 'event'],

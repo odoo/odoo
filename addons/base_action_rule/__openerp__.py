@@ -24,8 +24,8 @@
     'version': '1.0',
     'category': 'Generic Modules/Others',
     'description': """
-    This module allows to implement action rules for any object.
-    ============================================================
+This module allows to implement action rules for any object.
+============================================================
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',

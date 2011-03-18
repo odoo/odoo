@@ -26,10 +26,10 @@
     "init_xml" : [],
     "demo_xml" : [],
     "description": '''
-    Create a claim from a delivery order.
-    =====================================
+Create a claim from a delivery order.
+=====================================
 
-    Adds a Claim link to the delivery order.
+Adds a Claim link to the delivery order.
 ''',
     "update_xml" : ["claim_delivery_view.xml"],
     "active": False,

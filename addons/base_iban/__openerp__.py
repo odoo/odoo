@@ -23,8 +23,8 @@
     'version': '1.0',
     'category': 'Generic Modules/Base',
     'description': """
-    This module installs the base for IBAN (International Bank Account Number) bank accounts and checks for its validity.
-    =====================================================================================================================
+This module installs the base for IBAN (International Bank Account Number) bank accounts and checks for its validity.
+=====================================================================================================================
 
     """,
     'author': 'OpenERP SA',

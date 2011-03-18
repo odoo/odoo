@@ -25,6 +25,9 @@
     "author": "OpenERP SA",
     "category": "Generic Modules/Payment",
     "description": """
+Module to manage invoice payment.
+=================================
+
 This module provides :
 ----------------------
 * a more efficient way to manage invoice payment.

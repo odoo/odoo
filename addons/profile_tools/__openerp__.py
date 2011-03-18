@@ -27,8 +27,8 @@
     "author" : "OpenERP SA",
     "category" : "Tools",
     "description": """
-    Installer for extra tools like lunch, survey, idea, share, etc.
-    ===============================================================
+Installer for extra tools like lunch, survey, idea, share, etc.
+===============================================================
     """,
     'website': 'http://www.openerp.com',
     'init_xml': [],

@@ -25,8 +25,8 @@
     'version': '1.0',
     'category': 'Localisation/Account Charts',
     'description': """
-    This is the base module to manage the accounting chart for Luxembourg.
-    =====================================================================
+This is the base module to manage the accounting chart for Luxembourg.
+======================================================================
 
     *the KLUWER Chart of Accounts,
     *the Tax Code Chart for Luxembourg

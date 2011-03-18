@@ -27,6 +27,7 @@
     'description': """
 This module helps you to easily encode and validate timesheet and attendances within the same view.
 ===================================================================================================
+
 The upper part of the view is for attendances and track (sign in/sign out) events.
 The lower part is for timesheet.
 

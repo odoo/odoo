@@ -27,10 +27,10 @@
     "author" : "OpenERP SA",
     "category": 'Generic Modules/Marketing',
     "description": """
-    Menu for Marketing.
-    ===================
+Menu for Marketing.
+===================
 
-    Contains the installer for marketing-related modules.
+Contains the installer for marketing-related modules.
     """,
     'website': 'http://www.openerp.com',
     'init_xml': [],

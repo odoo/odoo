@@ -24,9 +24,11 @@
     'name': 'Google Map',
     'version': '1.0',
     'category': 'Generic Modules/Others',
-    'description': """The module adds google map field in partner address
-so that we can directly open google map from the
-url widget.""",
+    'description': """
+The module adds Google Map field in partner address.
+====================================================
+
+Using this you can directly open Google Map from the URL widget.""",
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'images': ['images/google_map.jpeg'],

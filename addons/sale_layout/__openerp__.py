@@ -25,13 +25,13 @@
     "depends" : ["sale", "account_invoice_layout"],
     "author" : "OpenERP SA",
     "description": """
-    This module provides features to improve the layout of the Sales Order.
-    =======================================================================
+This module provides features to improve the layout of the Sales Order.
+=======================================================================
 
-    It gives you the possibility to
-        * order all the lines of a sales order
-        * add titles, comment lines, sub total lines
-        * draw horizontal lines and put page breaks
+It gives you the possibility to
+    * order all the lines of a sales order
+    * add titles, comment lines, sub total lines
+    * draw horizontal lines and put page breaks
 
     """,
     "website" : "http://www.openerp.com",

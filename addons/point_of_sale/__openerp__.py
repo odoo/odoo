@@ -25,8 +25,11 @@
     'version': '1.0',
     'category': 'Generic Modules/Sales & Purchases',
     'description': """
+This module provides a quick and easy sale process.
+===================================================
+
 Main features :
-===============
+---------------
     * Fast encoding of the sale.
     * Allow to choose one payment mode (the quick way) or to split the payment between several payment mode.
     * Computation of the amount of money to return.

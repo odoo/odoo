@@ -26,8 +26,8 @@
     "website" : "http://www.openerp.com",
     "category" : "Generic Modules/Base",
     "description": """
-    This module replaces the cleartext password in the database with a password hash.
-    =================================================================================
+This module replaces the cleartext password in the database with a password hash.
+=================================================================================
 
 It prevents anyone from reading the original password.
 For your existing user base, the removal of the cleartext passwords occurs the first time

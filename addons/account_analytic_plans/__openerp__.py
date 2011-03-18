@@ -24,8 +24,11 @@
     'name'      : 'Multiple-plans management in Analytic Accounting',
     'version'   : '1.0',
     'category'  : 'Generic Modules/Accounting',
-    'description': """This module allows to use several analytic plans, according to the general journal,
-so that multiple analytic lines are created when the invoice or the entries
+    'description': """
+This module allows to use several analytic plans, according to the general journal.
+===================================================================================
+
+Here multiple analytic lines are created when the invoice or the entries
 are confirmed.
 
 For example, you can define the following analytic structure:

@@ -25,18 +25,18 @@
     'version': '1.0',
     'category': 'Generic Modules/Production',
     'description': """
-    This module allows Just In Time computation of procurement orders.
-    ==================================================================
+This module allows Just In Time computation of procurement orders.
+==================================================================
 
-    If you install this module, you will not have to run the regular procurement
-    scheduler anymore (but you still need to run the minimum order point rule
-    scheduler, or for example let it run daily.)
-    All procurement orders will be processed immediately, which could in some
-    cases entail a small performance impact.
+If you install this module, you will not have to run the regular procurement
+scheduler anymore (but you still need to run the minimum order point rule
+scheduler, or for example let it run daily.)
+All procurement orders will be processed immediately, which could in some
+cases entail a small performance impact.
 
-    It may also increase your stock size because products are reserved as soon
-    as possible and the scheduler time range is not taken into account anymore.
-    In that case, you can not use priorities any more on the different picking.
+It may also increase your stock size because products are reserved as soon
+as possible and the scheduler time range is not taken into account anymore.
+In that case, you can not use priorities any more on the different picking.
 
     """,
     'author': 'OpenERP SA',

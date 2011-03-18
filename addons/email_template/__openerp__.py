@@ -28,8 +28,8 @@
     "category" : "Added functionality",
     "depends" : ['marketing', 'base_tools'],
     "description": """
-    Email Template is extraction of Power Email basically just to send emails.
-    ==========================================================================
+Email Template is extraction of Power Email basically just to send emails.
+==========================================================================
     """,
     "init_xml": ['email_template_scheduler_data.xml'],
     "update_xml": [

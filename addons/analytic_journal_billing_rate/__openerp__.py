@@ -24,12 +24,12 @@
     'version': '1.0',
     'category': 'Generic Modules/Others',
     'description': """
-    This module allows you to define what is the default invoicing rate for a specific journal on a given account.
-    ==============================================================================================================
+This module allows you to define what is the default invoicing rate for a specific journal on a given account.
+==============================================================================================================
 
-    This is mostly used when a user encodes his timesheet: the values are retrieved and the fields are auto-filled. But the possibility to change these values is still available.
+This is mostly used when a user encodes his timesheet: the values are retrieved and the fields are auto-filled. But the possibility to change these values is still available.
 
-    Obviously if no data has been recorded for the current account, the default value is given as usual by the account data so that this module is perfectly compatible with older configurations.
+Obviously if no data has been recorded for the current account, the default value is given as usual by the account data so that this module is perfectly compatible with older configurations.
 
     """,
     'author': 'OpenERP SA',

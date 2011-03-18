@@ -25,10 +25,11 @@
     'version': '1.1',
     'category': 'Generic Modules/Sales & Purchases',
     'description': """
-    Purchase module is for generating a purchase order for purchase of goods from a supplier.
-    -----------------------------------------------------------------------------------------
-    A supplier invoice is created for the particular purchase order.
-    Dashboard for purchase management that includes:
+Purchase module is for generating a purchase order for purchase of goods from a supplier.
+=========================================================================================
+
+A supplier invoice is created for the particular purchase order.
+Dashboard for purchase management that includes:
     * Current Purchase Orders
     * Draft Purchase Orders
     * Graph for quantity and amount per month

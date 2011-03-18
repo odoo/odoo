@@ -34,10 +34,8 @@ You can also add ZIP and bank completion with:
  - l10n_ch_zip
  - l10n_ch_bank
 
- Author: Camptocamp SA
- Donors: Hasa Sàrl, Open Net Sàrl and Prisme Solutions Informatique SA
-
-------------------------------------------------------------------------
+Author: Camptocamp SA
+Donors: Hasa Sàrl, Open Net Sàrl and Prisme Solutions Informatique SA
 
 Module incluant la localisation Suisse de TinyERP revu et corrigé par Camptocamp. Cette nouvelle version
 comprend la gestion et l'émissionde BVR, le paiement électronique via DTA (pour les banques, le système postal est en développement)
@@ -53,7 +51,6 @@ Vous pouvez ajouter la completion des banques et des NPA avec with:
  Auteur: Camptocamp SA
  Donateurs: Hasa Sàrl, Open Net Sàrl and Prisme Solutions Informatique SA
 
---------------------------------------------------------------------------
 TODO :
 - Implement bvr import partial reconciliation
 - Replace wizard by osv_memory when possible

@@ -24,7 +24,8 @@
     'version': '1.0',
     'category': 'Generic Modules/Sales & Purchases',
     'description': """
-    The base module to manage analytic distribution and sales orders.
+The base module to manage analytic distribution and sales orders.
+=================================================================
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',

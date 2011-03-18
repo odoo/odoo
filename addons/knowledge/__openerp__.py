@@ -26,8 +26,8 @@
     "depends" : ["base"],
     "author" : "OpenERP SA",
     "description": """
-    Installer for knowledge-based tools.
-    ====================================
+Installer for knowledge-based tools.
+====================================
     """,
     'website': 'http://www.openerp.com',
     'init_xml': [],

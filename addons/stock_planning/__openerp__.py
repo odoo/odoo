@@ -29,6 +29,7 @@
     "description": """
 Purpose of MPS is to allow create a manual procurement (requisition) apart of MRP scheduler (which works automatically on minimum stock rules).
 ===============================================================================================================================================
+
 This module is based on original OpenERP SA module stock_planning version 1.0 of the same name Master Procurement Schedule.
 Terms used in the module:
 - Stock and Sales Period - is the time (between Start Date and End Date) for which you plan Stock and Sales Forecast and make Procurement Planning.

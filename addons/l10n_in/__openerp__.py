@@ -23,8 +23,8 @@
     "name": "Indian Chart of Account",
     "version": "1.0",
     "description": """
-    Indian Accounting : Chart of Account.
-    =====================================
+Indian Accounting : Chart of Account.
+=====================================
     """,
     "author": ['OpenERP SA', 'Axelor'],
     "category": "Localisation/Account Charts",

@@ -7,7 +7,8 @@
     "init_xml" : ['html_view.xml'],
     "demo_xml" : [],
     "description": """
-    This is the test module which shows html tag supports in normal xml form view.
+This is the test module which shows HTML tag support in normal XML form view.
+=============================================================================
     """,
     'update_xml': ['security/ir.model.access.csv','html_view.xml',],
     'installable': True,

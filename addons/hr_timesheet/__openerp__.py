@@ -27,6 +27,7 @@
     'description': """
 This module implements a timesheet system.
 ==========================================
+
 Each employee can encode and track their time spent on the different projects.
 A project is an analytic account and the time spent on a project generates costs on
 the analytic account.

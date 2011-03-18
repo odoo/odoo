@@ -25,8 +25,8 @@
     "author": "OpenERP SA",
     "category": "Generic Modules/Others",
     "description": """
-    Synchronization between Project Task and Caldav Vtodo.
-    ======================================================
+Synchronization between Project Task and Caldav Vtodo.
+======================================================
     """,
     "depends": ["project", "caldav", "base_calendar"],
     "init_xml": ["project_caldav_data.xml", 'project_caldav_setup.xml', ],

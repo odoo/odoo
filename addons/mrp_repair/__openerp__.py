@@ -25,15 +25,15 @@
     'version': '1.0',
     'category': 'Custom',
     'description': """
-           The aim is to have a complete module to manage all products repairs. The following topics should be covered by this module:
-           ===========================================================================================================================
+The aim is to have a complete module to manage all products repairs. The following topics should be covered by this module:
+===========================================================================================================================
 
-           * Add/remove products in the reparation
-           * Impact for stocks
-           * Invoicing (products and/or services)
-           * Warranty concept
-           * Repair quotation report
-           * Notes for the technician and for the final customer
+    * Add/remove products in the reparation
+    * Impact for stocks
+    * Invoicing (products and/or services)
+    * Warranty concept
+    * Repair quotation report
+    * Notes for the technician and for the final customer
 """,
     'author': 'OpenERP SA',
     'images': ['images/repair_order.jpeg'],

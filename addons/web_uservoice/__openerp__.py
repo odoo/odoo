@@ -23,10 +23,10 @@
     'version': '1.0',
     'category': 'Generic Modules/Others',
     'description': """
-    Add Feedback button in header.
-    ==============================
+Add Feedback button in header.
+==============================
 
-    Invite OpenERP user feedback, powered by uservoice.
+Invite OpenERP user feedback, powered by uservoice.
     """,
     'author': 'OpenERP SA',
     'website': 'http://openerp.com',

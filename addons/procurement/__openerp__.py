@@ -28,8 +28,8 @@
     "category" : "Generic Modules/Production",
     "depends" : ["base","process", "product", "stock"],
     "description": """
-    This is the module for computing Procurements.
-    ==============================================
+This is the module for computing Procurements.
+==============================================
     """,
     'init_xml': [],
     'update_xml': [

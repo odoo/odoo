@@ -24,8 +24,9 @@
     'version': '1.0',
     'category': 'Generic Modules/Human Resources',
     'description': """
-    Generic Payroll system.
-    =======================
+Generic Payroll system.
+=======================
+
     * Employee Details
     * Employee Contracts
     * Passport based Contract

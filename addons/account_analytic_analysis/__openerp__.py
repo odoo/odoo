@@ -27,6 +27,7 @@
     'description': """
 This module is for modifying account analytic view to show important data to project manager of services companies.
 ===================================================================================================================
+
 Adds menu to show relevant information to each manager.
 You can also view the report of account analytic summary
 user-wise as well as month wise.

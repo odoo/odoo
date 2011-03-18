@@ -26,6 +26,7 @@
     'description': """
 Allows to automatically select analytic accounts based on criterions:
 =====================================================================
+
 * Product
 * Partner
 * User

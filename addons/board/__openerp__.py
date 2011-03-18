@@ -24,12 +24,12 @@
     'version': '1.0',
     'category': 'Board/Base',
     'description': """
-    Lets the user create a custom dashboard.
-    ========================================
+Lets the user create a custom dashboard.
+========================================
 
-    This module also creates the Administration Dashboard.
+This module also creates the Administration Dashboard.
 
-    The user can also publish notes.
+The user can also publish notes.
     """,
     'author': 'OpenERP SA',
     'depends': ['base'],

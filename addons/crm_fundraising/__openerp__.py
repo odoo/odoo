@@ -25,8 +25,8 @@
     'version': '1.0',
     'category': 'Generic Modules/CRM & SRM',
     'description': """
-    Fundraising.
-    ============
+Fundraising.
+============
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',

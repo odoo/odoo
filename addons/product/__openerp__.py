@@ -29,23 +29,23 @@
     "init_xml" : [],
     "demo_xml" : ["product_demo.xml"],
     "description": """
-    This is the base module for managing products and pricelists in OpenERP.
-    ========================================================================
+This is the base module for managing products and pricelists in OpenERP.
+========================================================================
 
-    Products support variants, different pricing methods, suppliers
-    information, make to stock/order, different unit of measures,
-    packaging and properties.
+Products support variants, different pricing methods, suppliers
+information, make to stock/order, different unit of measures,
+packaging and properties.
 
-    Pricelists support:
+Pricelists support:
     * Multiple-level of discount (by product, category, quantities)
     * Compute price based on different criteria:
         * Other pricelist,
         * Cost price,
         * List price,
         * Supplier price, ...
-    Pricelists preferences by product and/or partners.
+Pricelists preferences by product and/or partners.
 
-    Print product labels with barcode.
+Print product labels with barcode.
     """,
     'update_xml': [
         'security/product_security.xml',

@@ -24,8 +24,8 @@
     'version': '1.0',
     'category': 'Generic Modules/Others',
     'description': """
-    This module provides a Wiki FAQ Template.
-    =========================================
+This module provides a Wiki FAQ Template.
+=========================================
     """,
     'author': 'OpenERP SA',
     'website': 'http://openerp.com',
