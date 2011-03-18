@@ -80,6 +80,17 @@ openerp.base.Action =  openerp.base.Controller.extend({
 });
 
 openerp.base.View = openerp.base.Controller.extend({
+// This controller should be used for one2many also or not ?
+// to replace Action
+});
+
+openerp.base.ActionView = openerp.base.Controller.extend({
+// This controller should be used for one2many also or not ?
+// to replace Action
+});
+
+openerp.base.EmbbededView = openerp.base.Controller.extend({
+// This controller should be used for one2many also or not ?
 // to replace Action
 });
 
@@ -87,9 +98,11 @@ openerp.base.DataSet =  openerp.base.Controller.extend({
     init: function(session, element_id, model) {
         this._super(session, element_id);
         this.model = model;
+        // SHOULD USE THE ONE FROM FIELDS VIEW GET BECAUSE OF SELECTION
+        // Should merge those 2
         this.model_fields = null;
         this.fields = [];
-        // SHOULD USE THE ONE FROM FIELDS VIEW GET BECAUSE OF SELECTION
+
         this.domain = [];
         this.context = {};
         this.order = "";

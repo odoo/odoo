@@ -1,3 +1,29 @@
+Coding style
+------------
+
+Javascript
+    http://javascript.crockford.com/code.html with the following amendements:
+    - Line Length should be 160 (132?), dont split at 80, rationale in 2011 we all use 16/9 screens
+
+    http://google-styleguide.googlecode.com/svn/trunk/javascriptguide.xml ?
+
+Modules Conventions
+-------------------
+
+addons/<modulename>/controllers/ python controller
+addons/<modulename>/controllers/main.py main python controller is there is only one (or should it be <modulename>.py ?)
+addons/<modulename>/static/ static directory (directly served by the web server)
+addons/<modulename>/static/<external_library>/ directory containing an external javascrip library respect the directory structure of upstream is this directory
+addons/<modulename>/static/openerp/ module specfic static files
+addons/<modulename>/static/openerp/js/ module specific javscript files
+addons/<modulename>/static/openerp/css/ module specific css files
+addons/<modulename>/static/openerp/img/ module specific images files
+addons/<modulename>/static/openerp/ other files
+addons/<modulename>/__openerp__.py module manifest referencing js and css files
+
+
+Dependecies
+-----------
 Depends on
 
 install "CherryPy>=3.1.2" "-d cherrypy"
@@ -14,4 +40,3 @@ Probably not anymore on:
 #install "formencode>=1.2.2" "-d formencode"
 #install "pyparsing>=1.5.2" "-f pyparsing.py"
 #install "xlwt>=0.7" "-d xlwt"
-
