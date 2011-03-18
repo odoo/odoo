@@ -20,7 +20,7 @@
 ##############################################################################
 from osv import fields, osv
 from tools.translate import _
-from sugarcrm_syncro import sugar
+from import_sugarcrm import sugar
 
 class sugarcrm_login(osv.osv):
     """SugarCRM Login"""
@@ -30,23 +30,25 @@ class sugarcrm_login(osv.osv):
     _columns = {
         'username': fields.char('User Name', size=64, required=True),
         'password': fields.char('Password', size=24,required=True),
+         'url' : fields.char('SugarCRM Path', size=264, required=True, help="Path for SugarCRM connection should be 'http://localhost/sugarcrm/soap.php' Format."),
     }
     _defaults = {
        'username' : 'admin',
        'password' : 'admin',
+       'url':  "http://localhost/sugarcrm/soap.php"
     }
 
     def open_import(self, cr, uid, ids, context=None):
 
         for current in self.browse(cr, uid, ids, context):
-            PortType,sessionid = sugar.login(current.username, current.password)
+            PortType,sessionid = sugar.login(current.username, current.password, current.url)
             if sessionid == '-1':
                 raise osv.except_osv(_('Error !'), _('Authentication error !\nBad Username or Password !'))
 
             obj_model = self.pool.get('ir.model.data')
             model_data_ids = obj_model.search(cr,uid,[('model','=','ir.ui.view'),('name','=','import.sugarcrm.form')])
             resource_id = obj_model.read(cr, uid, model_data_ids, fields=['res_id'])
-            context.update({'rec_id': ids, 'username': current.username, 'password': current.password})
+            context.update({'rec_id': ids, 'username': current.username, 'password': current.password, 'url': current.url})
         return {
             'view_type': 'form',
             'view_mode': 'form',

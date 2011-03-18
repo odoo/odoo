@@ -52,7 +52,7 @@ def import_users(sugar_obj, cr, uid, context=None):
             '.id' : '.id',
             } 
     user_obj = sugar_obj.pool.get('res.users')
-    PortType,sessionid = sugar.login(context.get('username',''), context.get('password',''))
+    PortType,sessionid = sugar.login(context.get('username',''), context.get('password',''), context.get('url',''))
     sugar_data = sugar.search(PortType,sessionid, 'Users')
     for val in sugar_data:
         user_ids = user_obj.search(cr, uid, [('login', '=', val.get('user_name'))])
@@ -130,7 +130,7 @@ def import_leads(sugar_obj, cr, uid, context=None):
             }
         
     lead_obj = sugar_obj.pool.get('crm.lead')
-    PortType, sessionid = sugar.login(context.get('username', ''), context.get('password', ''))
+    PortType, sessionid = sugar.login(context.get('username', ''), context.get('password', ''), context.get('url',''))
     sugar_data = sugar.search(PortType, sessionid, 'Leads')
     for val in sugar_data:
         val['type'] = 'lead'
@@ -152,7 +152,7 @@ def import_opportunities(sugar_obj, cr, uid, context=None):
         'type' : 'type',
     }
     lead_obj = sugar_obj.pool.get('crm.lead')
-    PortType, sessionid = sugar.login(context.get('username', ''), context.get('password', ''))
+    PortType, sessionid = sugar.login(context.get('username', ''), context.get('password', ''), context.get('url',''))
     sugar_data = sugar.search(PortType, sessionid, 'Opportunities')
     for val in sugar_data:
         val['type'] = 'opportunity'
