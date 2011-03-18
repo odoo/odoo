@@ -36,18 +36,40 @@
             <field name="type">form</field>
             <field name="priority" eval="20"/>
             <field name="arch" type="xml">
-            <form string="Apply Scheduled Upgrades">
-            <separator string="System update completed" colspan="4"/>
-            <label align="0.0" string="The selected modules have been updated / installed !" colspan="4"/>
-            <label align="0.0" string="We suggest to reload the menu tab to see the new menus (Ctrl+T then Ctrl+R)." colspan="4"/>
-             <separator string="" colspan="4"/>
+            <form string="System update message">
+                <separator string="System update completed" colspan="4"/>
+                <label align="0.0" string="Update Processed. Please note that if you were installing a module with dependencies on uninstalled modules, those module have been installed too." colspan="4"/>
+                <label align="0.0" string="You'll find hereunder the list of modifications done in your database." colspan="4"/>
+                <field name="module_info" nolabel="1" colspan="4"/>
+                <label align="0.0" string="We suggest you to reload the menu tab to see the new menus (Ctrl+T then Ctrl+R)." colspan="4"/>
+                <separator string="" colspan="4"/>
                 <newline/>
-                <button special="cancel" string="Cancel" icon="gtk-cancel"/>
-                <button name="config" string="Start configuration" type="object" icon="gtk-ok"/>
+                <label string=""/>
+                <button special="cancel" string="_Ok" icon="gtk-ok"/>
              </form>
             </field>
         </record>
 
+       <record id="view_base_module_upgrade" model="ir.ui.view">
+            <field name="name">Module Upgrade Install</field>
+            <field name="model">base.module.upgrade</field>
+            <field name="type">form</field>
+            <field name="priority" eval="20"/>
+            <field name="arch" type="xml">
+            <form string="System update message">
+                <separator string="System update completed" colspan="4"/>
+                <label align="0.0" string="Update Processed. Please note that if you were installing a module with dependencies on uninstalled modules, those module have been installed too." colspan="4"/>
+                <label align="0.0" string="You'll find hereunder the list of modifications done in your database." colspan="4"/>
+                <label align="0.0" string="We suggest you to reload the menu tab to see the new menus (Ctrl+T then Ctrl+R)." colspan="4"/>
+                <separator string="" colspan="4"/>
+                <newline/>
+                <label string=""/>
+                <button special="cancel" string="_Ok" icon="gtk-ok"/>
+             </form>
+            </field>
+        </record>
+
+        <!-- Check if its really used somewhere or not -->
         <record id="action_view_base_module_upgrade_install" model="ir.actions.act_window">
             <field name="name">Module Upgrade Install</field>
             <field name="type">ir.actions.act_window</field>

@@ -32,39 +32,6 @@ class base_module_upgrade(osv.osv_memory):
         'module_info': fields.text('Modules to update',readonly=True),
     }
 
-    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
-        """ Changes the view dynamically
-         @param self: The object pointer.
-         @param cr: A database cursor
-         @param uid: ID of the user currently logged in
-         @param context: A standard dictionary
-         @return: New arch of view.
-        """
-        res = super(base_module_upgrade, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar,submenu=False)
-        record_id = context and context.get('active_id', False) or False
-        active_model = context.get('active_model')
-        if (not record_id) or (not active_model):
-            return res
-
-        ids = self.get_module_list(cr, uid, context=context)
-        if not ids:
-            res['arch'] = '''<form string="Apply Scheduled Upgrades">
-                                <separator string="System update completed" colspan="4"/>
-                                <label align="0.0" string="The selected modules have been updated / installed !" colspan="4"/>
-                                <label align="0.0" string="We suggest to reload the menu tab to see the new menus (Ctrl+T then Ctrl+R)." colspan="4"/>
-                                 <separator string="" colspan="4"/>
-                                <newline/>
-                                <button special="cancel" string="Close" icon="gtk-cancel"/>
-                                <button name="config" string="Start configuration" type="object" icon="gtk-ok"/>
-                             </form>'''
-
-        return res
-
-    def get_module_list(self, cr, uid, context=None):
-        mod_obj = self.pool.get('ir.module.module')
-        ids = mod_obj.search(cr, uid, [
-            ('state', 'in', ['to upgrade', 'to remove', 'to install'])])
-        return ids
 
     def default_get(self, cr, uid, fields, context=None):
         """
@@ -76,9 +43,15 @@ class base_module_upgrade(osv.osv_memory):
         @param context: A standard dictionary for contextual values
         """
         mod_obj = self.pool.get('ir.module.module')
-        ids = self.get_module_list(cr, uid, context=context)
-        res = mod_obj.read(cr, uid, ids, ['name','state'], context)
-        return {'module_info': '\n'.join(map(lambda x: x['name']+' : '+x['state'], res))}
+        ids = context.get('modules', [])
+        mode = context.get('mode', 'install')
+        mode_string = {
+                'install': 'Installed',
+                'upgrade': 'Upgraded',
+                'uninstall': 'Uninstalled'
+            }
+        res = mod_obj.read(cr, uid, ids, ['name'], context)
+        return {'module_info': '\n'.join(map(lambda x: x['name']+' : '+ mode_string[mode], res))}
 
 
     def config(self, cr, uid, ids, context=None):
