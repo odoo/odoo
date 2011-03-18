@@ -65,7 +65,6 @@ class OpenERPSession(object):
 #----------------------------------------------------------
 # OpenERP Web RequestHandler
 #----------------------------------------------------------
-session_store = {}
 
 class JsonRequest(object):
     """ JSON-RPC2 over HTTP POST using non standard POST encoding.
@@ -86,7 +85,7 @@ class JsonRequest(object):
     def parse(self, request):
         self.params = request.get("params",{})
         self.session_id = self.params.pop("session_id", None) or uuid.uuid4().hex
-        self.session = session_store.setdefault(self.session_id, OpenERPSession())
+        self.session = cherrypy.session.setdefault(self.session_id, OpenERPSession())
         self.context = self.params.pop('context', None)
         return self.params
 
@@ -256,11 +255,18 @@ class Root(object):
 def main(argv):
     # optparse
 
+    SESSIONS_STORAGE_DIRECTORY = '/tmp/cpsessions'
+    if not os.path.exists(SESSIONS_STORAGE_DIRECTORY):
+        # 10#448 == 8#700
+        os.mkdir(SESSIONS_STORAGE_DIRECTORY, 448)
     config = {
         'server.socket_port': 8002,
         #'server.socket_host': '64.72.221.48',
         #'server.thread_pool' = 10,
         'tools.sessions.on': True,
+        'tools.sessions.storage_type': 'file',
+        'tools.sessions.storage_path': SESSIONS_STORAGE_DIRECTORY,
+        'tools.sessions.timeout': 60
     }
     cherrypy.tree.mount(Root())
 
