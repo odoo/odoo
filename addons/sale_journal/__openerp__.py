@@ -24,8 +24,9 @@
     'version': '1.0',
     'category': 'Sales',
     'description': """
-    The sales journal modules allows you to categorise your
-    sales and deliveries (picking lists) between different journals.
+    The sales journal modules allows you to categorise your sales and deliveries (picking lists) between different journals.
+    ========================================================================================================================
+
     This module is very helpful for bigger companies that
     works by departments.
 
@@ -48,6 +49,7 @@
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
+    'images': ['images/invoice_type.jpeg'],
     'depends': ['sale'],
     'init_xml': ['sale_journal_data.xml'],
     'update_xml': [

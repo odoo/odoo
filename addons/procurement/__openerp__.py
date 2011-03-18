@@ -29,6 +29,7 @@
     "depends" : ["base","process", "product", "stock"],
     "description": """
     This is the module for computing Procurements.
+    ==============================================
     """,
     'init_xml': [],
     'update_xml': [
@@ -49,5 +50,6 @@
     'installable': True,
     'active': False,
     'certificate': '00954248826881074509',
+    'images': ['images/compute_schedulers.jpeg','images/config_companies_sched.jpeg', 'images/minimum_stock_rules.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -21,10 +21,12 @@
 {
     "name" : "Sale Order Layout",
     "version" : "1.0",
+    "images" : ["images/sale_layout.jpeg"],
     "depends" : ["sale", "account_invoice_layout"],
     "author" : "OpenERP SA",
     "description": """
     This module provides features to improve the layout of the Sales Order.
+    =======================================================================
 
     It gives you the possibility to
         * order all the lines of a sales order

@@ -25,6 +25,7 @@
     'category': 'Finance',
     'description': """Remind your Customers for Payment
     Modules to automate letters for unpaid invoices, with multi-level recalls.
+    ==========================================================================
 
     You can define your multiple levels of recall through the menu:
         Accounting/Configuration/Miscellaneous/Follow-Ups
@@ -43,6 +44,7 @@
 """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
+    'images': ['images/follow_ups.jpeg','images/send_followups.jpeg'],
     'depends': ['account'],
     'init_xml': [],
     'update_xml': [

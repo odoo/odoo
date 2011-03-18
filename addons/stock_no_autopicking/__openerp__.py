@@ -25,8 +25,8 @@
     'version': '1.0',
     'category': 'Warehouse',
     'description': """
-    This module allows an intermediate picking process to provide raw materials
-    to production orders.
+    This module allows an intermediate picking process to provide raw materials to production orders.
+    -------------------------------------------------------------------------------------------------
 
     One example of usage of this module is to manage production made by your
     suppliers (sub-contracting). To achieve this, set the assembled product
@@ -35,6 +35,7 @@
     """,
     'author': 'OpenERP SA',
     'depends': ['mrp'],
+    'images': ['images/auto_picking.jpeg'],
     'update_xml': ['stock_no_autopicking_view.xml'],
     'demo_xml': [],
     'test': ['test/stock_no_autopicking.yml'],

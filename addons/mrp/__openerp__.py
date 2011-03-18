@@ -26,11 +26,14 @@
     "author" : "OpenERP SA",
     "website" : "http://www.openerp.com",
     "category" : "Manufacturing",
+    "images" : ["images/bill_of_materials.jpeg", "images/manufacturing_order.jpeg", "images/planning_manufacturing_order.jpeg", "images/production_analysis.jpeg", "images/production_dashboard.jpeg","images/routings.jpeg","images/work_centers.jpeg"],
     "depends" : ["procurement", "stock", "resource", "purchase", "product","process"],
     "description": """
     This is the base module to manage the manufacturing process in OpenERP.
+    =======================================================================
 
     Features:
+    ---------
     * Make to Stock / Make to Order (by line)
     * Multi-level BoMs, no limit
     * Multi-level routing, no limit
@@ -41,23 +44,26 @@
     * Cost method by product: standard price, average price
     * Easy analysis of troubles or needs
     * Very flexible
-    * Allows to browse Bill of Materials in complete structure
-        that include child and phantom BoMs
+    * Allows to browse Bill of Materials in complete structure that include child and phantom BoMs
+
     It supports complete integration and planification of stockable goods,
     consumable of services. Services are completely integrated with the rest
     of the software. For instance, you can set up a sub-contracting service
     in a BoM to automatically purchase on order the assembly of your production.
 
     Reports provided by this module:
+    --------------------------------
     * Bill of Material structure and components
     * Load forecast on Work Centers
     * Print a production order
     * Stock forecasts
-    Dashboard provided by this module::
+
+    Dashboard provided by this module:
+    ----------------------------------
     * List of next production orders
-    * List of deliveries (out picking)
+    * List of procurements in exception
     * Graph of work center load
-    * List of procurement in exception
+    * Graph of stock value variation
     """,
     'init_xml': [],
     'update_xml': [

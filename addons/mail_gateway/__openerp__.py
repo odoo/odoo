@@ -23,9 +23,12 @@
     'name': 'Email Gateway System',
     'version': '1.0',
     'category': 'Tools',
-    'description': """The generic email gateway system allows to send and receive emails
-    * History for Emails
-    * Easy Integration with any Module""",
+    'description': """
+    The generic email gateway system allows to send and receive emails.
+    ===================================================================
+
+    * History of emails
+    * Easy integration with any module""",
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['base'],
@@ -40,5 +43,6 @@
     'installable': True,
     'active': False,
     'certificate': '001056784984222247309',
+    'images': ['images/customer_history.jpeg','images/messages_form.jpeg','images/messages_list.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -34,10 +34,13 @@
         "author" : "OpenERP SA",
         "category" : "Tools",
         "website": "http://www.openerp.com",
-        "description": """ With this module, the WebDAV server for the documents is activated.
+        "description": """
+        With this module, the WebDAV server for documents is activated.
+        ===============================================================
+
         You can then use any compatible browser to remotely see the attachments of OpenObject.
 
-        After installation, the webDAV server can be controlled by a [webdav] section in the server's config.
+        After installation, the WebDAV server can be controlled by a [webdav] section in the server's config.
         Server Configuration Parameter:
         [webdav]
         ; enable = True ; Serve webdav over the http(s) servers
@@ -49,20 +52,21 @@
           ; since the messages are routed to the python logging, with
           ; levels "debug" and "debug_rpc" respectively, you can leave
           ; these options on
-          
+
         Also implements IETF RFC 5785 for services discovery on a http server,
         which needs explicit configuration in openerp-server.conf, too.
 """,
         "depends" : ["base", "document"],
         "init_xml" : [],
-        "update_xml" : ['security/ir.model.access.csv', 
+        "update_xml" : ['security/ir.model.access.csv',
                         'webdav_view.xml',
                         'webdav_setup.xml',
                         ],
         "demo_xml" : [],
-        "test": [ #'test/webdav_test1.yml', 
+        "test": [ #'test/webdav_test1.yml',
                 ],
         "active": False,
         "installable": True,
         "certificate" : "001236490750845657973",
+        'images': ['images/dav_properties.jpeg','images/directories_structure_principals.jpeg'],
 }

@@ -24,7 +24,10 @@
     'name': 'Support for iCal based on Document Management System',
     'version': '1.0',
     'category': 'Tools',
-    'description': """Allows to synchronise calendars with others applications.""",
+    'description': """
+    Allows to synchronise calendars with others applications.
+    =========================================================
+    """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['document', 'crm'],
@@ -34,5 +37,6 @@
     'installable': True,
     'active': False,
     'certificate': '0071242387229',
+    'images': ['images/1_config_calendars.jpeg','images/2_doc_type_ics.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

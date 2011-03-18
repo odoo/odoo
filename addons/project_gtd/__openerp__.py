@@ -25,8 +25,10 @@
     'version': '1.0',
     'category': 'Project Management',
     'description': """
-This module implements all concepts defined by the Getting Things Done
-methodology. This world-wide used methodology is used for personal
+This module implements all concepts defined by the Getting Things Done methodology.
+===================================================================================
+
+This world-wide used methodology is used for personal
 time management improvement.
 
 Getting Things Done (commonly abbreviated as GTD) is an action management
@@ -38,6 +40,7 @@ remembering everything that needs to be done, and can concentrate on actually
 performing those tasks.
     """,
     'author': 'OpenERP SA',
+    'images': ['images/project_gtd.jpeg'],
     'depends': ['project'],
     'init_xml': [],
     'update_xml': [

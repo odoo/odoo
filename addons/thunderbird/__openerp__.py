@@ -26,14 +26,15 @@
     "website" : "http://www.openerp.com/",
     "depends" : ["base","mail_gateway"],
     "category" : "Tools",
-    "description": """Make a link between Thunderbird and OpenERP
-      This module is required for the thuderbird plug-in to work
-      properly.
-      The Plugin allows you archive email and its attachments to the selected 
+    "description": """
+      This module is required for the Thuderbird Plug-in to work properly.
+      ====================================================================
+
+      The plugin allows you archive email and its attachments to the selected
       OpenERP objects. You can select a partner, a task, a project, an analytical
-      account,or any other object and attach selected mail as eml file in 
-      attachment of selected record. You can create Documents for crm Lead,
-      HR Applicant and project issue from selected mails.
+      account, or any other object and attach the selected mail as a .eml file in
+      the attachment of a selected record. You can create documents for CRM Lead,
+      HR Applicant and Project Issue from selected mails.
 
       """,
     "init_xml" : [],
@@ -43,4 +44,5 @@
     "active": False,
     "installable": True,
     "certificate" : "00899858104035139949",
+    'images': ['images/config_thunderbird.jpeg','images/config_thunderbird_plugin.jpeg','images/thunderbird_document.jpeg'],
 }

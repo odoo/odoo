@@ -25,7 +25,8 @@
     'version': '1.0',
     'category': 'Human Resources',
     'description': """
-    Add all information on the employee form to manage contracts:
+    Add all information on the employee form to manage contracts.
+    =============================================================
     * Marital status,
     * Security number,
     * Place of birth, birth date, ...
@@ -33,6 +34,7 @@
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
+    'images': ['images/hr_contract.jpeg'],
     'depends': ['hr'],
     'init_xml': ['hr_contract_data.xml'],
     'update_xml': [

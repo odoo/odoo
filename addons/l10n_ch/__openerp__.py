@@ -22,7 +22,9 @@
 {
     "name" : "Switzerland - localization with 2011 taxes",
     "description" : """
-Swiss localisation :
+Swiss localisation.
+===================
+
  - DTA generation for a lot of payment types
  - BVR management (number generation, report, etc..)
  - Import account move from the bank file (like v11 etc..)
@@ -31,7 +33,7 @@ Swiss localisation :
 You can also add ZIP and bank completion with:
  - l10n_ch_zip
  - l10n_ch_bank
- 
+
  Author: Camptocamp SA
  Donors: Hasa Sàrl, Open Net Sàrl and Prisme Solutions Informatique SA
 
@@ -47,7 +49,7 @@ Par ailleurs, conjointement à ce module, nous proposons la complétion NPA:
 Vous pouvez ajouter la completion des banques et des NPA avec with:
  - l10n_ch_zip
  - l10n_ch_bank
- 
+
  Auteur: Camptocamp SA
  Donateurs: Hasa Sàrl, Open Net Sàrl and Prisme Solutions Informatique SA
 
@@ -102,5 +104,6 @@ TODO :
     "active": False,
     "installable": True,
     "certificate" : "001103836064567088989",
+    'images': ['images/config_chart_l10n_ch.jpeg','images/l10n_ch_chart.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

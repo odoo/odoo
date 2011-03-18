@@ -21,14 +21,17 @@
 
 
 {
-    "name" : "marketing_campaign_crm_demo",
+    "name" : "Demo data for Marketing Campaign",
     "version" : "1.0",
     "depends" : ["marketing_campaign",
                  "crm",
                 ],
     "author" : "OpenERP SA",
     "category": 'Sales',
-    "description": """Demo data for the module marketing_campaign.""",
+    "description": """
+    Demo data for the module marketing_campaign.
+    ============================================
+    """,
     'website': 'http://www.openerp.com',
     'init_xml': [],
     'update_xml': [],
@@ -38,5 +41,6 @@
     'installable': True,
     'active': False,
     'certificate' : '001005497972871352957',
+    'images': ['images/campaigns.jpeg','images/email_templates.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

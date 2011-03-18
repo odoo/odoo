@@ -20,11 +20,14 @@
 ##############################################################################
 
 {
-    "name": "CalDAV for task management",
+    "name": "CalDAV for Task Management",
     "version": "1.1",
     "author": "OpenERP SA",
     "category": "Project Management",
-    "description": """ Synchronize between Project task and Caldav Vtodo.""",
+    "description": """
+    Synchronization between Project Task and Caldav Vtodo.
+    ======================================================
+    """,
     "depends": ["project", "caldav", "base_calendar"],
     "init_xml": ["project_caldav_data.xml", 'project_caldav_setup.xml', ],
     "demo_xml": [],
@@ -33,4 +36,5 @@
     "website": "http://www.openerp.com",
     "installable": True,
     "certificate" : "001114200456808204637",
+    'images': ['images/project_tasks_caldav.jpeg'],
 }

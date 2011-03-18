@@ -28,6 +28,7 @@
     This module adds the 'Allow cancelling entries' field to the journal definition. If set to true, the user may cancel entries & invoices. Make sure to comply with the legal requirements of your country.
     """,
     'website': 'http://www.openerp.com',
+    "images" : ["images/account_cancel.jpeg"],
     "depends" : ["account"],
     'init_xml': [],
     'update_xml': ['account_cancel_view.xml' ],

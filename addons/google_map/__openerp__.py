@@ -29,6 +29,7 @@ so that we can directly open google map from the
 url widget.""",
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
+    'images': ['images/google_map.jpeg'],
     'depends': ['base'],
     'init_xml': [],
     'update_xml': ['google_map_wizard.xml', 'google_map_view.xml'],

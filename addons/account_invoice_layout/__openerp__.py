@@ -26,8 +26,10 @@
     'category': 'Finance',
     'description': """Improve the standard invoice layout 
     This module provides some features to improve the layout of the invoices.
+    =========================================================================
 
     It gives you the possibility to
+    --------------------------------
         * order all the lines of an invoice
         * add titles, comment lines, sub total lines
         * draw horizontal lines and put page breaks
@@ -37,6 +39,7 @@
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
+    'images': ['images/notification_messages.jpeg'],
     'depends': ['account'],
     'init_xml': [],
     'update_xml': [

@@ -24,15 +24,18 @@
     'name': 'Integrated Document Management System',
     'version': '2.1',
     'category': 'Tools',
-    'description': """Keep track of all your documents in OpenERP
-    This is a complete document management system:
+    'category': 'Generic Modules/Others',
+    'description': """
+    This is a complete document management system.
+    ==============================================
+
     * User Authentication
-    * Document Indexation :- .pptx and .docx files are not support in windows platform.
+    * Document Indexation :- .pptx and .docx files are not supported in Windows platform.
     * Dashboard for Document that includes:
         * New Files (list)
         * Files by Resource Type (graph)
         * Files by Partner (graph)
-        * Files by Month (graph)
+        * Files Size by Month (graph)
     ATTENTION:
     - When you install this module in a running company that have already PDF files stored into the database,
       you will lose them all.
@@ -59,6 +62,7 @@
     'installable': True,
     'active': False,
     'certificate': '0070515416461',
+    'images': ['images/1_directories.jpeg','images/2_storage_media.jpeg','images/3_directories_structure.jpeg'],
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

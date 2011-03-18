@@ -61,7 +61,10 @@
     'name': 'United Kingdom - minimal',
     'version': '1.1',
     'category': 'Finance',
-    'description': """This is the base module to manage the accounting chart for United Kingdom in OpenERP.""",
+    'description': """
+    This is the base module to manage the accounting chart for United Kingdom in OpenERP.
+    =====================================================================================
+    """,
     'author': 'Seath Solutions Ltd',
     'website': 'http://www.seathsolutions.com',
     'depends': ['base_iban', 'base_vat', 'account_chart'],
@@ -76,5 +79,6 @@
     'installable': True,
     'active': False,
     'certificate': '008956603329629',
+    'images': ['images/config_chart_l10n_uk.jpeg','images/l10n_uk_chart.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

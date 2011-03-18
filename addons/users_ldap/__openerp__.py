@@ -22,6 +22,7 @@
     "name" : "Authenticate users with ldap server",
     "version" : "0.1",
     "depends" : ["base"],
+    "images" : ["images/ldap_configuration.jpeg"],
     "author" : "OpenERP SA",
     "description": """Adds support for authentication by ldap server.
 This module only works with Unix/Linux

@@ -23,7 +23,9 @@
     'name': 'Human Resource Payroll',
     'version': '1.0',
     'category': 'Human Resources',
-    'description': """Generic Payroll system
+    'description': """
+    Generic Payroll system.
+    =======================
     * Employee Details
     * Employee Contracts
     * Passport based Contract
@@ -35,6 +37,7 @@
     """,
     'author':'OpenERP SA',
     'website':'http://www.openerp.com',
+    'images': ['images/hr_employee_payslip.jpeg','images/hr_payment_advice.jpeg','images/hr_payroll_register.jpeg'],
     'depends': [
         'hr',
         'hr_contract',

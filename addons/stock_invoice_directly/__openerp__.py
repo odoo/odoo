@@ -30,6 +30,7 @@
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
+    'images': ['images/create_invoice.jpeg'],
     'depends': ['delivery', 'stock'],
     'init_xml': [],
     'update_xml': [],

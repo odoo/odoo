@@ -30,6 +30,7 @@
     "demo_xml" : ["product_demo.xml"],
     "description": """
     This is the base module for managing products and pricelists in OpenERP.
+    ========================================================================
 
     Products support variants, different pricing methods, suppliers
     information, make to stock/order, different unit of measures,
@@ -62,5 +63,6 @@
     'installable': True,
     'active': False,
     'certificate': '0068861431437',
+    'images': ['images/product_uom.jpeg','images/product_pricelists.jpeg','images/products_categories.jpeg', 'images/products_form.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

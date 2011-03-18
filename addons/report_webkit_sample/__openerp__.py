@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2010 Camptocamp SA (http://www.camptocamp.com) 
+# Copyright (c) 2010 Camptocamp SA (http://www.camptocamp.com)
 # All Right Reserved
 #
 # Author : Nicolas Bessi (Camptocamp)
@@ -31,13 +31,15 @@
 
 {
     "name" : "Webkit Report Samples",
-    "description" : """Samples for Webkit Report Engine (report_webkit module).
+    "description" : """
+    Samples for Webkit Report Engine (report_webkit module).
+    ========================================================
 
     A sample invoice report is included in this module, as well as a wizard to
     add Webkit Report entries on any Document in the system.
-      
+
     You have to create the print buttons by calling the wizard. For more details see:
-        http://files.me.com/nbessi/06n92k.mov 
+        http://files.me.com/nbessi/06n92k.mov
                     """,
     "version" : "0.9",
     "depends" : ["base", "account", "report_webkit"],
@@ -45,9 +47,10 @@
     "author" : "Camptocamp SA - NBessi",
     "url": "http://www.camptocamp.com/",
     "data": ["report_webkit_html_view.xml",
-             
+
                    ],
     "installable" : True,
     "active" : False,
     "certificate" : "00436592682591421981",
+    'images': ['images/webkit_invoice_report.jpeg'],
 }

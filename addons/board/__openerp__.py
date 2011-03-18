@@ -20,10 +20,17 @@
 ##############################################################################
 
 {
-    'name': 'Dashboard main module',
+    'name': 'Dashboard Creator',
     'version': '1.0',
     'category': 'Tools',
-    'description': """Create your own dashboards""",
+    'description': """
+    Lets the user create a custom dashboard.
+    ========================================
+
+    This module also creates the Administration Dashboard.
+
+    The user can also publish notes.
+    """,
     'author': 'OpenERP SA',
     'depends': ['base'],
     'update_xml': ['security/board_security.xml','security/ir.model.access.csv', 'wizard/board_menu_create_view.xml', 'board_view.xml','board_administration_view.xml'],
@@ -31,5 +38,6 @@
     'installable': True,
     'active': False,
     'certificate': '0076912305725',
+    'images': ['images/1_dashboard_definition.jpeg','images/2_publish_note.jpeg','images/3_admin_dashboard.jpeg',],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

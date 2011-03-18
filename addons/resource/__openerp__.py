@@ -25,9 +25,11 @@
     "author" : "OpenERP SA",
     "category" : "Project Management",
     "website" : "http://www.openerp.com",
-    "description": """Schedule your Resources and keep a Resource Calendar
-    Module for resource management
-     A resource represents something that can be scheduled
+    "description": """
+    Module for resource management.
+    ===============================
+
+     A resource represent something that can be scheduled
      (a developer on a task or a work center on manufacturing orders).
      This module manages a resource calendar associated to every resource.
      It also manages the leaves of every resource.
@@ -46,6 +48,7 @@
     'installable': True,
     'active': False,
     'certificate': '00746371192190459469',
+    'images': ['images/resource_leaves_calendar.jpeg','images/resource_leaves_form.jpeg'],
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
