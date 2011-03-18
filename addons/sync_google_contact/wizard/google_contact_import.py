@@ -77,6 +77,8 @@ class synchronize_google_contact(osv.osv_memory):
 
     _columns = {
         'create_partner': fields.selection([('create_all','Create partner for each contact'),('create_address','Import only address')],'Options'),
+        'customer': fields.boolean('Customer'),
+        'supplier': fields.boolean('Supplier'),
         'group_name': fields.selection(_get_group, "Group Name", size=32,help="Choose which group to import, By default it takes all."),
      }
 
@@ -87,9 +89,13 @@ class synchronize_google_contact(osv.osv_memory):
 
     def create_partner(self, cr, uid, data={}, context=None):
         partner_obj = self.pool.get('res.partner')
-        name = data.get('name','')
-        partner_id = partner_obj.create(cr, uid, {'name': name, 'address' : [(6, 0, [data['address_id']])]}, context=context)
-        return partner_id, data
+        partner_id = partner_obj.create(cr, uid, {
+                                                  'name': data.get('name',''), 
+                                                  'address' : [(6, 0, [data['address_id']])],
+                                                  'customer': data.get('customer', False),
+                                                  'supplier': data.get('supplier', False)
+                                        }, context=context)
+        return partner_id
 
     def import_contact(self, cr, uid, ids, context=None):
         obj = self.browse(cr, uid, ids, context=context)[0]
@@ -112,7 +118,7 @@ class synchronize_google_contact(osv.osv_memory):
         else:
             contact = gd_client.GetContactsFeed()
 
-        ids = self.create_contact(cr, uid, gd_client, contact, option=obj.create_partner,context=context)
+        ids = self.create_contact(cr, uid, ids, gd_client, contact, option=obj.create_partner,context=context)
         if not ids:
             return {'type': 'ir.actions.act_window_close'}
 
@@ -127,7 +133,7 @@ class synchronize_google_contact(osv.osv_memory):
                 'type': 'ir.actions.act_window',
         }
 
-    def create_contact(self, cr, uid, gd_client, contact, option,context=None):
+    def create_contact(self, cr, uid, ids, gd_client, contact, option,context=None):
         model_obj = self.pool.get('ir.model.data')
         addresss_obj = self.pool.get('res.partner.address')
         addresses = []
@@ -141,6 +147,7 @@ class synchronize_google_contact(osv.osv_memory):
                     'name':  google_id,
                     'model': 'res.partner.address',
                     'module': 'sync_google_contact',
+                    'noupdate': True
                 }
 
                 data_ids = model_obj.search(cr, uid, [('model','=','res.partner.address'), ('name','=', google_id)])
@@ -158,7 +165,10 @@ class synchronize_google_contact(osv.osv_memory):
                     res_id = addresss_obj.create(cr, uid, data, context=context)
                     data['address_id'] = res_id
                     if option == 'create_all':
-                        partner_id, data = self.create_partner(cr, uid, data, context=context)
+                        obj = self.browse(cr, uid, ids, context=context)[0]
+                        data['customer'] = obj.customer
+                        data['supplier'] = obj.supplier
+                        partner_id = self.create_partner(cr, uid, data, context=context)
                         partner_ids.append(partner_id)
                     addresses.append(res_id)
                         

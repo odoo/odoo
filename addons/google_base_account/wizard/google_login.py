@@ -42,7 +42,7 @@ class google_login(osv.osv_memory):
             gd_client = gdata.contacts.service.ContactsService()
         try:    
             gd_client.ClientLogin(user, password,gd_client.source)
-        except Exception, e:
+        except Exception:
             return False
         return gd_client
 

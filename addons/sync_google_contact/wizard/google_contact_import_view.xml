@@ -11,6 +11,11 @@
                        <field name="group_name" />
                        <separator string="Import Options" colspan="4"/>
                        <field name="create_partner"/>
+                       <newline/>
+                       <group attrs="{'invisible': [('create_partner','!=','create_all')]}" colspan="2" col="4">
+                            <field name="customer"/>
+                            <field name="supplier"/>
+                       </group>
                     </group>
                     <separator string="" colspan="4"/>
                     <group colspan="4" col="4">
