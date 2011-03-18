@@ -30,8 +30,8 @@ class google_login(osv.osv_memory):
     _description ='Google Contact'
     _name = 'google.login'
     _columns = {
-        'user': fields.char('Username', size=64, required=True),
-        'password': fields.char('Password', size=64),
+        'user': fields.char('Google Username', size=64, required=True),
+        'password': fields.char('Google Password', size=64),
     }
 
     def google_login(self, user, password, type='group', context=None):
