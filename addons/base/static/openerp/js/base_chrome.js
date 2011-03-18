@@ -105,7 +105,7 @@ openerp.base.BasicController = Class.extend({
 openerp.base.Console =  openerp.base.BasicController.extend({
     init: function(element_id, server, port) {
         this._super(element_id);
-    },
+    }
 });
 
 openerp.base.Database = openerp.base.BasicController.extend({

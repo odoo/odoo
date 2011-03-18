@@ -273,9 +273,9 @@ openerp.base.FormView =  openerp.base.Controller.extend({
     },
     on_record_loaded: function() {
         for (var f in this.fields) {
-            this.fields[f].set_value()
+            this.fields[f].set_value();
         }
-    },
+    }
 });
 
 openerp.base.ListView = openerp.base.Controller.extend({
@@ -536,7 +536,7 @@ openerp.base.FieldChar = openerp.base.Field.extend({
     },
     on_change: function() {
         //this.view.update_field(this.name,value);
-    },
+    }
 });
 
 openerp.base.FieldEmail = openerp.base.Field.extend({
@@ -637,7 +637,7 @@ openerp.base.widgets = {
     'boolean' : openerp.base.FieldBoolean,
     'float' : openerp.base.FieldFloat,
     'button' : openerp.base.WidgetButton
-}
+};
 
 openerp.base.CalendarView = openerp.base.Controller.extend({
 // Dhtmlx scheduler ?
