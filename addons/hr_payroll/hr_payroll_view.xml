@@ -47,6 +47,9 @@
                 <xpath expr="/form/notebook/page/group/field[@name='advantages']" position="before">
                     <field name="struct_id" select="1"/>
                 </xpath>
+                 <xpath expr="/form/notebook/page/group/field[@name='working_hours']" position="after">
+                    <field name="schedule_pay"/>
+                </xpath>
             </data>
             </field>
         </record>
@@ -596,7 +599,6 @@
                    <field name="sequence" />
                    <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                    <field name="appears_on_payslip"/>
-                   <field name="company_contribution"/>
                 </group>
                 <notebook colspan="6">
                     <page string="General">
@@ -616,10 +618,13 @@
                             <group col="2" colspan="2">
                                 <group col="2" colspan="2">
                                 <separator colspan="4" string="Company contribution"/>
-                                    <field name="amt_type" attrs="{'required':[('company_contribution','=',True)]}"/>
-                                    <field name="contribute_per"/>
-                                    <field name="register_id"/>
-                                    <field name="company_contrib"/>
+                                    <field name="company_contribution"/>
+                                    <group col="2" colspan="2" attrs="{'readonly':[('company_contribution','=',False)]}">
+	                                    <field name="amt_type" />
+	                                    <field name="contribute_per"/>
+	                                    <field name="register_id"/>
+	                                    <field name="company_contrib"/>
+                                    </group>
                                 </group>
                                 <group col="2" colspan="4">
                                     <separator colspan="4" string="Computational Expression"/>

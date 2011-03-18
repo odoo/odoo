@@ -96,6 +96,15 @@ class hr_contract(osv.osv):
     _columns = {
         'struct_id': fields.many2one('hr.payroll.structure', 'Salary Structure'),
         'basic': fields.float('Basic Salary', digits_compute=dp.get_precision('Account')), # i think we can remove this because we have wage field on contract ?
+        'schedule_pay': fields.selection([
+            ('monthly', 'Monthly'),
+            ('quarterly', 'Quarterly'),
+            ('semi-annually', 'Semi-annually'),
+            ('annually', 'Annually'),
+            ('weekly', 'Weekly'),
+            ('bi-weekly', 'Bi-weekly'),
+            ('bi-monthly', 'Bi-monthly'),
+            ], 'Scheduled Pay', select=True),
     }
 
 hr_contract()
