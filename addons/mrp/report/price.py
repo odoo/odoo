@@ -198,7 +198,7 @@ class report_custom(report_rml):
                     <col t='yes'>"""+ rml_obj.formatLang(total2, digits=purchase_price_digits) +' '+ company_currency.symbol +"""</col>
                     </row></lines>'"""
                 xml += """<lines style='total'> <row>
-                    <col> """ + _('Total Cost of %s %s') %s (str(number), product.uom_id.name) + """: </col>
+                    <col> """ + _('Total Cost of %s %s') % (str(number), product.uom_id.name) + """: </col>
                     <col/>
                     <col t='yes'/>
                     <col t='yes'>"""+ rml_obj.formatLang(total_strd+total2, digits=purchase_price_digits) +' '+ company_currency.symbol + """</col>
