@@ -135,9 +135,84 @@ openerp.base.Session = openerp.base.BasicController.extend({
         this.password = "";
         this.uid = false;
         this.session_id = false;
+        this.load_local();
         this.module_list = [];
         this.module_loaded = {"base": true};
         this.context = {};
+    },
+    /**
+     * Reloads uid and session_id from local storage, if they exist
+     */
+    load_local: function () {
+        this.uid = this.get_cookie('uid');
+        this.session_id = this.get_cookie('session_id');
+    },
+    /**
+     * Saves the session id and uid locally
+     */
+    save_local: function () {
+        this.set_local('uid', this.uid);
+        this.set_local('session_id', this.session_id);
+    },
+    // TODO: clear_local
+
+    /**
+     * Retrieves and return the value indexed by the key name from local
+     * storage, if it finds it.
+     * @param name the name of the value to get
+     */
+    get_local: function (name) {
+        if(window.localStorage) {
+            return localStorage.getItem(name);
+        }
+        return this.get_cookie(name);
+    },
+    /**
+     * Sets the value at the key name in local storage.
+     *
+     * The value has to be a String.
+     *
+     * @param name key to set the value at
+     * @param value value to store
+     */
+    set_local: function (name, value) {
+        if(window.localStorage) {
+            localStorage.setItem(name, String(value));
+        }
+        return this.set_cookie(name, value);
+    },
+
+    /**
+     * Fetches a cookie stored by an openerp session
+     *
+     * @param name the cookie's name
+     */
+    get_cookie: function (name) {
+        var nameEQ = this.element_id + '|' + name + '=';
+        var cookies = document.cookie.split(';');
+        for(var i=0; i<cookies.length; ++i) {
+            var cookie = cookies[i].replace(/^\s*/, '');
+            if(cookie.indexOf(nameEQ) === 0) {
+                return decodeURIComponent(cookie.substring(nameEQ.length));
+            }
+        }
+        return null;
+    },
+    /**
+     * Create a new secure cookie with the provided name and value
+     *
+     * @param name the cookie's name
+     * @param value the cookie's value
+     * @param ttl the cookie's time to live, 1 year by default, set to
+     *            -1 to delete
+     */
+    set_cookie: function (name, value, ttl) {
+        ttl = ttl || 24*60*60*365;
+        document.cookie = [
+            this.element_id + '|' + name + '=' + encodeURIComponent(value),
+            'max-age=' + ttl,
+            'expires=' + new Date(new Date().getTime() + ttl*1000).toGMTString()
+        ].join(';');
     },
     rpc: function(url, params, success_callback, error_callback) {
         // Construct a JSON-RPC2 request, method is currently unused
@@ -213,6 +288,7 @@ openerp.base.Session = openerp.base.BasicController.extend({
         this.rpc("/base/session/login", params, function(result) {
             self.session_id = result.session_id;
             self.uid = result.uid;
+            self.save_local();
             self.session_check_modules();
             if (success_callback)
                 success_callback();
