@@ -153,6 +153,7 @@
                     <group col="6" colspan="4">
                         <field name="name" colspan="4" select="1"/>
                         <field name="code" select="1"/>
+                        <field name="active"/>
                         <field name="slip_id" select="1"/>
                         <field name="employee_id"/>
                       <!--  <field name="function_id"/>-->
@@ -227,6 +228,7 @@
                                     <group col="6" colspan="4">
                                         <field name="name" colspan="4" select="1"/>
                                         <field name="code" select="1"/>
+                                        <field name="active" select="1"/>
                                     </group>
                                     <group col="2" colspan="2">
                                         <separator colspan="4" string="Calculations"/>
@@ -408,6 +410,7 @@
                     <field name="name"/>
                     <field name="date"/>
                     <field name="state"/>
+                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                 </tree>
             </field>
         </record>
@@ -422,6 +425,7 @@
                         <field name="number" select="1"/>
                         <field name="bank_id"/>
                         <field name="date" select="1"/>
+                        <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Payslips">
