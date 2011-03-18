@@ -1,6 +1,8 @@
 Deploying OpenERP Web
 =====================
 
+.. After release one, add upgrade instructions if any
+
 In-depth configuration
 ----------------------
 

@@ -16,6 +16,7 @@ Contents:
    widgets
    addons
    development
+   project
 
 Indices and tables
 ==================
