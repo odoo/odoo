@@ -6,7 +6,7 @@
             <field name="model">account.voucher</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state in ('draft');gray:state in ('cancel')" string="Voucher Entries">
+                <tree colors="blue:state in ('draft');gray:state in ('cancel');red:audit" string="Voucher Entries">
                     <field name="date"/>
                     <field name="number"/>
                     <field name="reference"/>
@@ -15,6 +15,7 @@
                     <field name="period_id" groups="base.group_extended" invisible="context.get('visible', True)"/>
                     <field name="type" invisible="context.get('visible', True)"/>
                     <field name="amount" sum="Total Amount"/>
+                    <field name="audit"/>
                     <field name="state"/>
                     <button name="proforma_voucher" string="Post" states="draft" icon="terp-document-new"/>
                 </tree>
@@ -122,7 +123,7 @@
                         <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
                         <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
                         <separator orientation="vertical"/>
-                        <filter icon="terp-gtk-jump-to-ltr" string="To Review" domain="[('state','=','posted')]" groups="base.group_extended" help="To Review"/>
+                        <filter icon="terp-gtk-jump-to-ltr" string="To Review" domain="[('state','=','posted'), ('audit','=',False)]" groups="base.group_extended" help="To Review"/>
                         <separator orientation="vertical"/>
                         <field name="date"/>
                         <field name="number"/>
