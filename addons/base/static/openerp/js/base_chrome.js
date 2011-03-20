@@ -65,7 +65,11 @@ openerp.base.callback = function(obj, method) {
 };
 
 openerp.base.BasicController = Class.extend({
-    // TODO: init and start semantics are not clearly defined yet
+    /**
+     * Controller contructor 
+     * rpc operations, event binding and callback calling should be done in
+     * start() instead of init so that event can be hooked in between.
+     */
     init: function(element_id) {
         this.element_id = element_id;
         this.$element = $('#' + element_id);
@@ -82,6 +86,11 @@ openerp.base.BasicController = Class.extend({
             }
         }
     },
+    /**
+     * Controller start
+     * event binding, rpc and callback calling required to initialize the
+     * object can happen here
+     */
     start: function() {
     },
     stop: function() {
@@ -108,10 +117,6 @@ openerp.base.Console =  openerp.base.BasicController.extend({
     },
 });
 
-openerp.base.Database = openerp.base.BasicController.extend({
-// Non Session Controller to manage databases
-});
-
 openerp.base.Session = openerp.base.BasicController.extend({
     init: function(element_id, server, port) {
         this._super(element_id);
@@ -124,10 +129,12 @@ openerp.base.Session = openerp.base.BasicController.extend({
         this.password = "";
         this.uid = false;
         this.session_id = false;
-        this.load_local();
         this.module_list = [];
         this.module_loaded = {"base": true};
         this.context = {};
+    },
+    start: function() {
+        this.session_restore();
     },
     on_log: function() {
         // TODO this should move to Console and be active only in debug
@@ -140,52 +147,6 @@ openerp.base.Session = openerp.base.BasicController.extend({
                 $('<pre></pre>').text(v.toString()).appendTo(self.$element);
             }
         });
-    },
-    /**
-     * Reloads uid and session_id from local storage, if they exist
-     */
-    load_local: function () {
-        this.uid = this.get_cookie('uid');
-        this.session_id = this.get_cookie('session_id');
-    },
-    /**
-     * Saves the session id and uid locally
-     */
-    save_local: function () {
-        this.set_cookie('uid', this.uid);
-        this.set_cookie('session_id', this.session_id);
-    },
-    // TODO: clear_local
-    /**
-     * Fetches a cookie stored by an openerp session
-     *
-     * @param name the cookie's name
-     */
-    get_cookie: function (name) {
-        var nameEQ = this.element_id + '|' + name + '=';
-        var cookies = document.cookie.split(';');
-        for(var i=0; i<cookies.length; ++i) {
-            var cookie = cookies[i].replace(/^\s*/, '');
-            if(cookie.indexOf(nameEQ) === 0) {
-                return decodeURIComponent(cookie.substring(nameEQ.length));
-            }
-        }
-        return null;
-    },
-    /**
-     * Create a new secure cookie with the provided name and value
-     *
-     * @param name the cookie's name
-     * @param value the cookie's value
-     * @param ttl the cookie's time to live, 1 year by default, set to -1 to delete
-     */
-    set_cookie: function (name, value, ttl) {
-        ttl = ttl || 24*60*60*365;
-        document.cookie = [
-            this.element_id + '|' + name + '=' + encodeURIComponent(value),
-            'max-age=' + ttl,
-            'expires=' + new Date(new Date().getTime() + ttl*1000).toGMTString()
-        ].join(';');
     },
     rpc: function(url, params, success_callback, error_callback) {
         // Construct a JSON-RPC2 request, method is currently unused
@@ -247,9 +208,16 @@ openerp.base.Session = openerp.base.BasicController.extend({
         // TODO this should use the $element with focus and button is displaying OPW etc...
         this.on_log(error.message, error.data.debug);
     },
+    /**
+     * The session is validated either by login or by restoration of a previous session
+     */
+    on_session_valid: function() {
+        if(!openerp._modules_loaded)
+            this.load_modules();
+    },
     on_session_invalid: function(contination) {
     },
-    session_valid: function() {
+    session_is_valid: function() {
         return this.uid;
     },
     session_login: function(db, login, password, success_callback) {
@@ -261,25 +229,76 @@ openerp.base.Session = openerp.base.BasicController.extend({
         this.rpc("/base/session/login", params, function(result) {
             self.session_id = result.session_id;
             self.uid = result.uid;
-            self.save_local();
-            self.session_check_modules();
+            self.session_save();
+            self.on_session_valid();
             if (success_callback)
                 success_callback();
         });
     },
-    session_check_modules: function() {
-        if(!openerp._modules_loaded)
-            this.session_load_modules();
+    session_logout: function() {
+        this.uid = false;
     },
-    session_load_modules: function() {
+    /**
+     * Reloads uid and session_id from local storage, if they exist
+     */
+    session_restore: function () {
+        this.uid = this.get_cookie('uid');
+        this.session_id = this.get_cookie('session_id');
+        // we should do an rpc to confirm that this session_id is valid and if it is retrieve the information about db and login
+        // then call on_session_valid
+        this.on_session_valid();
+    },
+    /**
+     * Saves the session id and uid locally
+     */
+    session_save: function () {
+        this.set_cookie('uid', this.uid);
+        this.set_cookie('session_id', this.session_id);
+    },
+    // TODO: clear_local
+    /**
+     * Fetches a cookie stored by an openerp session
+     *
+     * @param name the cookie's name
+     */
+    get_cookie: function (name) {
+        var nameEQ = this.element_id + '|' + name + '=';
+        var cookies = document.cookie.split(';');
+        for(var i=0; i<cookies.length; ++i) {
+            var cookie = cookies[i].replace(/^\s*/, '');
+            if(cookie.indexOf(nameEQ) === 0) {
+                return decodeURIComponent(cookie.substring(nameEQ.length));
+            }
+        }
+        return null;
+    },
+    /**
+     * Create a new secure cookie with the provided name and value
+     *
+     * @param name the cookie's name
+     * @param value the cookie's value
+     * @param ttl the cookie's time to live, 1 year by default, set to -1 to delete
+     */
+    set_cookie: function (name, value, ttl) {
+        ttl = ttl || 24*60*60*365;
+        document.cookie = [
+            this.element_id + '|' + name + '=' + encodeURIComponent(value),
+            'max-age=' + ttl,
+            'expires=' + new Date(new Date().getTime() + ttl*1000).toGMTString()
+        ].join(';');
+    },
+    /**
+     * Load additional web addons of that instance and init them
+     */
+    load_modules: function() {
         var self = this;
         this.rpc('/base/session/modules', {}, function(result) {
             self.module_list = result['modules'];
-            self.rpc('/base/session/jslist', {"mods": self.module_list.join(',')}, self.debug ? self.do_session_load_modules_debug : self.do_session_load_modules_prod);
+            self.rpc('/base/session/jslist', {"mods": self.module_list.join(',')}, self.debug ? self.do_load_modules_debug : self.do_load_modules_prod);
             openerp._modules_loaded = true;
         });
     },
-    do_session_load_modules_debug: function(result) {
+    do_load_modules_debug: function(result) {
         var self = this;
         var files = result.files;
         // Insert addons javascript in head
@@ -290,15 +309,15 @@ openerp.base.Session = openerp.base.BasicController.extend({
             document.getElementsByTagName("head")[0].appendChild(s);
         }
         // at this point the js should be loaded or not ?
-        setTimeout(self.on_session_modules_loaded,100);
+        setTimeout(self.on_modules_loaded,100);
     },
-    do_session_load_modules_prod: function() {
+    do_load_modules_prod: function() {
         // load merged ones
         // /base/session/css?mod=mod1,mod2,mod3
         // /base/session/js?mod=mod1,mod2,mod3
         // use $.getScript(‘your_3rd_party-script.js’); ? i want to keep lineno !
     },
-    on_session_modules_loaded: function() {
+    on_modules_loaded: function() {
         var self = this;
         for(var j=0; j<self.module_list.length; j++) {
             var mod = self.module_list[j];
@@ -311,9 +330,10 @@ openerp.base.Session = openerp.base.BasicController.extend({
             self.module_loaded[mod] = true;
         }
     },
-    session_logout: function() {
-        this.uid = false;
-    }
+});
+
+openerp.base.Database = openerp.base.BasicController.extend({
+// Non Session Controller to manage databases
 });
 
 openerp.base.Controller = openerp.base.BasicController.extend({
@@ -335,8 +355,6 @@ openerp.base.Loading =  openerp.base.Controller.extend({
     init: function(session, element_id) {
         this._super(session, element_id);
         this.count = 0;
-    },
-    start: function() {
         this.session.on_rpc_request.add_first(this.on_rpc_event, 1);
         this.session.on_rpc_response.add_last(this.on_rpc_event, -1);
     },
@@ -349,15 +367,6 @@ openerp.base.Loading =  openerp.base.Controller.extend({
         } else {
             this.$element.fadeOut();
         }
-    }
-});
-
-openerp.base.Header =  openerp.base.Controller.extend({
-    init: function(session, element_id) {
-        this._super(session, element_id);
-    },
-    start: function() {
-        this.$element.html(QWeb.render("Header", {}));
     }
 });
 
@@ -377,8 +386,8 @@ openerp.base.Login =  openerp.base.Controller.extend({
     },
     on_login_valid: function() {
         this.$element
-            .addClass("login_valid")
             .removeClass("login_invalid")
+            .addClass("login_valid")
             .hide();
     },
     on_submit: function(ev) {
@@ -391,7 +400,7 @@ openerp.base.Login =  openerp.base.Controller.extend({
         //$e.hide();
         // Should hide then call callback
         this.session.session_login(db, login, password, function() {
-            if(self.session.session_valid()) {
+            if(self.session.session_is_valid()) {
                 self.on_login_valid();
             } else {
                 self.on_login_invalid();
@@ -405,6 +414,18 @@ openerp.base.Login =  openerp.base.Controller.extend({
             unique: true,
             callback: continuation
         });
+    }
+});
+
+openerp.base.Header =  openerp.base.Controller.extend({
+    init: function(session, element_id) {
+        this._super(session, element_id);
+    },
+    start: function() {
+        this.do_update();
+    },
+    do_update: function() {
+        this.$element.html(QWeb.render("Header", this));
     }
 });
 
@@ -460,37 +481,26 @@ openerp.base.WebClient = openerp.base.Controller.extend({
         this.$element.html(QWeb.render("Interface", {}));
 
         this.session = new openerp.base.Session("oe_errors");
-
         this.loading = new openerp.base.Loading(this.session, "oe_loading");
-
+        this.header = new openerp.base.Header(this.session, "oe_header");
         this.login = new openerp.base.Login(this.session, "oe_login");
 
-        this.header = new openerp.base.Header(this.session, "oe_header");
-
-        this.login.on_login_valid.add(function() {
-            self.$element.find(".on_logged").show();
-        });
-
-        // TODO MOVE ALL OF THAT IN on_logged
-        // after pooler update of modules
-        // Cool no ?
         this.session.on_session_invalid.add(this.login.do_ask_login);
+        this.session.on_session_valid.add_last(this.header.do_update);
+        this.session.on_session_valid.add_last(this.on_loggued);
 
         this.menu = new openerp.base.Menu(this.session, "oe_menu");
-        this.menu.on_ready.add(this.on_menu_ready);
         this.menu.on_action.add(this.on_menu_action);
-
-        this.action =  new openerp.base.Action(this.session, "oe_main");
-
     },
     start: function() {
-        this.loading.start();
-        this.login.start();
+        this.session.start();
         this.header.start();
+        this.login.start();
         this.menu.start();
-        this.action.start();
     },
-    on_menu_ready: function() {
+    on_loggued: function() {
+        this.action =  new openerp.base.Action(this.session, "oe_main");
+        this.action.start();
     },
     on_menu_action: function(action) {
         this.action.do_action(action);

@@ -197,6 +197,9 @@ var QWeb = {
     render_tag_rawf:function(e, t_att, g_att, v) {
         return this.eval_format(t_att["rawf"], v);
     },
+    /*
+     * Idea: if the name of the tag != t render the tag around the value <a name="a" t-esc="label"/>
+     */
     render_tag_esc:function(e, t_att, g_att, v) {
         return this.escape_text(this.eval_str(t_att["esc"], v));
     },
