@@ -1,7 +1,7 @@
 #!/usr/bin/python
 import functools
 
-import optparse, os, re, sys, traceback, xmlrpclib
+import optparse, os, re, sys, tempfile, traceback, uuid, xmlrpclib
 
 import cherrypy
 import cherrypy.lib.static
@@ -64,7 +64,6 @@ class OpenERPSession(object):
 #----------------------------------------------------------
 # OpenERP Web RequestHandler
 #----------------------------------------------------------
-session_store = {}
 
 class JsonRequest(object):
     """ JSON-RPC2 over HTTP POST using non standard POST encoding.
@@ -84,8 +83,8 @@ class JsonRequest(object):
 
     def parse(self, request):
         self.params = request.get("params",{})
-        self.session_id = self.params.pop("session_id", None) or "random.random"
-        self.session = session_store.setdefault(self.session_id, OpenERPSession())
+        self.session_id = self.params.pop("session_id", None) or uuid.uuid4().hex
+        self.session = cherrypy.session.setdefault(self.session_id, OpenERPSession())
         self.context = self.params.pop('context', None)
         return self.params
 
@@ -148,7 +147,11 @@ class JsonRequest(object):
 
         print "<--",  response
         print
-        return simplejson.dumps(response)
+
+        content = simplejson.dumps(response)
+        cherrypy.response.headers['Content-Type'] = 'application/json'
+        cherrypy.response.headers['Content-Length'] = len(content)
+        return content
 
 def jsonrequest(f):
     @cherrypy.expose
@@ -245,20 +248,31 @@ class Root(object):
                         return m(**kw)
 
         else:
-            return '<a href="/base/static/openerp/base.html">/base/static/openerp/base.html</a>'
+            raise cherrypy.HTTPRedirect('/base/static/openerp/base.html', 301)
     default.exposed = True
 
 def main(argv):
-    # optparse
+    # Parse config
+    op = optparse.OptionParser()
+    op.add_option("-p", "--port", dest="socket_port", help="listening port", metavar="NUMBER", default=8002)
+    op.add_option("-s", "--session-path", dest="storage_path", help="directory used for session storage", metavar="DIR", default=os.path.join(tempfile.gettempdir(),"cpsessions"))
+    (o, args) = op.parse_args(argv[1:])
 
+    # Prepare cherrypy config from options
+    if not os.path.exists(o.storage_path):
+        os.mkdir(o.storage_path, 0700)
     config = {
-        'server.socket_port': 8002,
-        #'server.socket_host': '64.72.221.48',
+        'server.socket_port': int(o.socket_port),
+        'server.socket_host': '0.0.0.0',
         #'server.thread_pool' = 10,
         'tools.sessions.on': True,
+        'tools.sessions.storage_type': 'file',
+        'tools.sessions.storage_path': o.storage_path,
+        'tools.sessions.timeout': 60
     }
-    cherrypy.tree.mount(Root())
 
+    # Setup and run cherrypy
+    cherrypy.tree.mount(Root())
     cherrypy.config.update(config)
     cherrypy.server.subscribe()
     cherrypy.engine.start()
