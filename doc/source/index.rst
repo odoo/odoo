@@ -17,6 +17,7 @@ Contents:
    addons
    development
    project
+   old-version
 
 Indices and tables
 ==================
