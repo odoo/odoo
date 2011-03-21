@@ -421,7 +421,7 @@ class hr_payslip(osv.osv):
             if res:
                 result[record.id] = [x[0] for x in res]
         return result
-    
+
     def _compute(self, cr, uid, id, value, context=None):
         rule_obj = self.pool.get('hr.salary.rule')
         contrib = rule_obj.browse(cr, uid, id, context=context)
@@ -549,7 +549,6 @@ class hr_payslip(osv.osv):
                                 'total': rl.contribute_per + line_tot
                             }
                             register_line_pool.create(cr, uid, reg_line)
-
         self.write(cr, uid, ids, {'state':'confirm'}, context=context)
         return True
 
@@ -995,7 +994,7 @@ class hr_payslip(osv.osv):
                             value = value
                 except Exception, e:
                     raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ') % (e))
-                
+
             elif line.amount_type == 'fix':
                 if line.child_depend == False:
                     if line.parent_rule_id:
@@ -1009,12 +1008,10 @@ class hr_payslip(osv.osv):
                     else:
                         value = line.amount
             elif line.amount_type=='code':
-                localdict = {'basic':amt}
-                exec line.python_code in localdict
+                localdict = {'basic':amt, 'employee':employee_id, 'contract':contract}
+                exec line.python_compute in localdict
                 value = localdict['result']
-
             total += value
-            
             vals = {
                 'category_id': line.category_id.id,
                 'name': line.name,
@@ -1039,7 +1036,7 @@ class hr_payslip(osv.osv):
                             update['value']['line_ids'].append(vals)
                     else:
                         update['value']['line_ids'].append(vals)
-                    
+
         basic = contract.wage
         number = sequence_obj.get(cr, uid, 'salary.slip')
         update['value'].update({
@@ -1131,6 +1128,10 @@ class hr_payslip(osv.osv):
                     raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ') % (e))
             elif salary_rule.amount_type == 'fix':
                 value = salary_rule.amount * days
+            elif salary_rule.amount_type=='code':
+                localdict = {'basic':amt, 'employee':employee_id, 'contract':contract}
+                exec salary_rule.python_compute in localdict
+                value = localdict['result'] * days
             res['amount'] = salary_rule.amount
             res['type'] = salary_rule.type.id
             leave += days
@@ -1146,7 +1147,6 @@ class hr_payslip(osv.osv):
             'worked_days': working_day - leave,
             'working_days': working_day,
         })
-        
         return update
 
 hr_payslip()
@@ -1199,16 +1199,17 @@ class hr_payslip_line(osv.osv):
             ('per','Percentage (%)'),
             ('fix','Fixed Amount'),
             ('code','Python Code'),
-        ],'Amount Type', select=True, required=True),
-        'amount': fields.float('Amount / Percentage', digits=(16, 4)),
+        ],'Amount Type', select=True, required=True, help="The computation method for the rule amount."),
+        'amount': fields.float('Amount / Percentage', digits_compute=dp.get_precision('Account'), help="For rule of type percentage, enter % ratio between 0-1."),
         'total': fields.float('Sub Total', digits_compute=dp.get_precision('Account')),
-        'company_contrib': fields.float('Company Contribution', readonly=True, digits=(16, 4)),
+        'company_contrib': fields.float('Company Contribution', readonly=True, digits_compute=dp.get_precision('Account')),
         'sequence': fields.integer('Sequence'),
         'note':fields.text('Description'),
     }
     _order = 'sequence'
     _defaults = {
-        'amount_type': 'per'
+        'amount_type': 'per',
+        'amount': 0.0,
     }
 
 hr_payslip_line()
@@ -1240,7 +1241,6 @@ class hr_salary_rule(osv.osv):
         'conditions':fields.char('Condition', size=1024, required=True, readonly=False, help='Applied this head for calculation if condition is true'),
         'sequence': fields.integer('Sequence', required=True, help='Use to arrange calculation sequence'),
         'active':fields.boolean('Active'),
-        'python_code': fields.text('Python code'),
         'python_compute':fields.text('Python Code'),
         'display_child_rules': fields.boolean('Display Child Rules', help="Used for the display of Child Rules on payslip"),
         'amt_type':fields.selection([
@@ -1251,7 +1251,7 @@ class hr_salary_rule(osv.osv):
         'company_contribution':fields.boolean('Company Contribution',help="This rule has Company Contributions."),
      }
     _defaults = {
-        'python_compute': '''# basic\n\nresult = basic * 0.10''',
+        'python_compute': '''# basic\n# employee: hr.employee object or None\n# contract: hr.contract object or None\n\nresult = basic * 0.10''',
         'conditions': 'True',
         'computational_expression': 'basic',
         'sequence': 5,

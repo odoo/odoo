@@ -165,7 +165,7 @@
                         <field name="category_id" on_change="onchange_category(category_id)"/>
                         <field name="type"/>
                         <field name="amount_type"/>
-                        <field name="amount" on_change="onchange_amount(amount, amount_type)" attrs="{'readonly':[('amount_type','=','func')]}"/>
+                        <field name="amount" on_change="onchange_amount(amount, amount_type)" attrs="{'readonly':[('amount_type','=','code')]}"/>
                         <field name="sequence" groups="base.group_extended"/>
                     </group>
                     <group col="2" colspan="2">
@@ -236,7 +236,7 @@
                                         <field name="category_id" on_change="onchange_category(category_id)"/>
                                         <field name="type"/>
                                         <field name="amount_type"/>
-                                        <field name="amount" on_change="onchange_amount(amount, amount_type)" attrs="{'readonly':[('amount_type','=','func')]}"/>
+                                        <field name="amount" on_change="onchange_amount(amount, amount_type)" attrs="{'readonly':[('amount_type','=','code')]}"/>
                                         <field name="sequence" groups="base.group_extended"/>
                                     </group>
                                     <group col="2" colspan="2">
@@ -411,6 +411,7 @@
                     <field name="name"/>
                     <field name="date"/>
                     <field name="state"/>
+                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                 </tree>
             </field>
         </record>
@@ -425,6 +426,7 @@
                         <field name="number" select="1"/>
                         <field name="bank_id"/>
                         <field name="date" select="1"/>
+                        <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Payslips">
@@ -608,7 +610,7 @@
                                 <field name="category_id" on_change="onchange_category(category_id)"/>
                                 <field name="type"/>
                                 <field name="amount_type"/>
-                                <field name="amount" on_change="onchange_amount(amount, amount_type)" attrs="{'readonly':[('amount_type','=','func')]}"/>
+                                <field name="amount" on_change="onchange_amount(amount, amount_type)" attrs="{'readonly':[('amount_type','=','code')]}"/>
                                 <field name="conditions"/>
                                 <field name="condition_range_min"/>
                                 <field name="condition_range_max"/>
@@ -620,10 +622,10 @@
                                 <separator colspan="4" string="Company contribution"/>
                                     <field name="company_contribution"/>
                                     <group col="2" colspan="2" attrs="{'readonly':[('company_contribution','=',False)]}">
-	                                    <field name="amt_type" />
-	                                    <field name="contribute_per"/>
-	                                    <field name="register_id"/>
-	                                    <field name="company_contrib"/>
+                                        <field name="amt_type" />
+                                        <field name="contribute_per"/>
+                                        <field name="register_id"/>
+                                        <field name="company_contrib"/>
                                     </group>
                                 </group>
                                 <group col="2" colspan="4">
@@ -631,8 +633,8 @@
                                     <field name="computational_expression" colspan="4" nolabel="1"/>
                                 </group>
                                 <group col="2" colspan="2">
-                                    <separator colspan="2" string="Applicable code (if Amount Type = Python code)"/>
-                                    <field name="python_code"  nolabel="1" attrs="{'readonly':[('amount_type','!=','code')],'required':[('amount_type','=','code')]}"/>
+                                    <separator colspan="2" string="Compute Code"/>
+                                    <field colspan="2" name="python_compute" nolabel="1" attrs="{'readonly':[('amount_type','!=','code')], 'required':[('amount_type','=','code')]}"/>
                                 </group>
                            </group>
                         </group>
