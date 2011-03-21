@@ -265,7 +265,7 @@ class Root(object):
                     if getattr(m, 'exposed', 0):
                         print "Calling", ps, c, meth, m
                         return m(**kw)
-
+            raise cherrypy.NotFound('/' + '/'.join(l))
         else:
             raise cherrypy.HTTPRedirect('/base/static/openerp/base.html', 301)
     default.exposed = True
