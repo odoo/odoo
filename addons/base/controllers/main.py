@@ -118,29 +118,39 @@ class Menu(openerpweb.Controller):
 
     @openerpweb.jsonrequest
     def load(self, req):
-        m = req.session.model('ir.ui.menu')
+        return {'data': self.do_load(req)}
+
+    def do_load(self, req):
+        """ Loads all menu items (all applications and their sub-menus).
+
+        :param req: A request object, with an OpenERP session attribute
+        :type req: < session -> OpenERPSession >
+        :return: the menu root
+        :rtype: dict('children': menu_nodes)
+        """
+        Menus = req.session.model('ir.ui.menu')
         # menus are loaded fully unlike a regular tree view, cause there are
         # less than 512 items
-        menu_ids = m.search([])
-        menu_items = m.read(menu_ids, ['name', 'sequence', 'parent_id'])
+        menu_ids = Menus.search([])
+        menu_items = Menus.read(menu_ids, ['name', 'sequence', 'parent_id'])
         menu_root = {'id': False, 'name': 'root', 'parent_id': [-1, '']}
         menu_items.append(menu_root)
+        
         # make a tree using parent_id
-        for i in menu_items:
-            i['children'] = []
-        d = dict([(i["id"], i) for i in menu_items])
-        for i in menu_items:
-            if not i['parent_id']:
-                pid = False
-            else:
-                pid = i['parent_id'][0]
-            if pid in d:
-                d[pid]['children'].append(i)
-        # sort by sequence a tree using parent_id
-        for i in menu_items:
-            i['children'].sort(key=lambda x:x["sequence"])
+        menu_items_map = dict((menu_item["id"], menu_item) for menu_item in menu_items)
+        for menu_item in menu_items:
+            if not menu_item['parent_id']: continue
+            parent = menu_item['parent_id'][0]
+            if parent in menu_items_map:
+                menu_items_map[parent].setdefault(
+                    'children', []).append(menu_item)
 
-        return {'data': menu_root}
+        # sort by sequence a tree using parent_id
+        for menu_item in menu_items:
+            menu_item.setdefault('children', []).sort(
+                key=lambda x:x["sequence"])
+
+        return menu_root
 
     @openerpweb.jsonrequest
     def action(self, req, menu_id):

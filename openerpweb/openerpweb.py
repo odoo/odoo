@@ -39,13 +39,15 @@ class OpenERPModel(object):
 
 
 class OpenERPSession(object):
-    def __init__(self, server='127.0.0.1', port=8069):
+    def __init__(self, server='127.0.0.1', port=8069,
+                 model_factory=OpenERPModel):
         self._server = server
         self._port = port
         self._db = False
         self._uid = False
         self._login = False
         self._password = False
+        self.model_factory = model_factory
 
     def proxy(self, service):
         s = xmlrpctimeout.TimeoutServerProxy('http://%s:%s/xmlrpc/%s' % (self._server, self._port, service), timeout=5)
@@ -69,7 +71,7 @@ class OpenERPSession(object):
         return r
 
     def model(self, model):
-        return OpenERPModel(self, model)
+        return self.model_factory(self, model)
 
 #----------------------------------------------------------
 # OpenERP Web RequestHandler
