@@ -198,9 +198,7 @@ controllers_path = {}
 class ControllerType(type):
     def __init__(cls, name, bases, attrs):
         super(ControllerType, cls).__init__(name, bases, attrs)
-        # TODO forgive me this hack and find me a clean way to get the absolute name of a class
-        cls.fullname = re.search("'(.+)'",repr(cls)).group(1)
-        controllers_class[cls.fullname] = cls
+        controllers_class["%s.%s" % (cls.__module__, cls.__name__)] = cls
 
 class Controller(object):
     __metaclass__ = ControllerType
