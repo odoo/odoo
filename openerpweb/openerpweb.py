@@ -255,7 +255,7 @@ class Root(object):
             p = os.path.normpath(os.path.join(*l))
             return cherrypy.lib.static.serve_file(os.path.join(path_addons, p))
         elif len(l) > 1:
-            for i in range(1, len(l) + 1):
+            for i in range(len(l), 1, -1):
                 ps = "/" + "/".join(l[0:i])
                 if ps in controllers_path:
                     c = controllers_path[ps]
