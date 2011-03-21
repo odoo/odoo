@@ -114,7 +114,7 @@ Var STARTMENU_FOLDER
 !define MUI_HEADER_TRANSPARENT_TEXT ""
 
 !insertmacro MUI_PAGE_WELCOME
-!insertmacro MUI_PAGE_LICENSE "doc\License.rtf"
+!insertmacro MUI_PAGE_LICENSE ".\LICENSE"
 !define MUI_COMPONENTSPAGE_SMALLDESC
 !insertmacro MUI_PAGE_DIRECTORY
 Page Custom ShowPostgreSQL LeavePostgreSQL
