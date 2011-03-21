@@ -48,21 +48,6 @@ class Xml2Json:
 # OpenERP Web base Controllers
 #----------------------------------------------------------
 
-class Hello(openerpweb.Controller):
-    _cp_path = "/base/hello"
-
-    def index(self):
-        return "hello world"
-
-    @openerpweb.jsonrequest
-    def ajax_hello_world(self, req):
-        return {"welcome": "hello world"}
-
-    @openerpweb.jsonrequest
-    def ajax_hello_error(self, req):
-        raise Exception("You suck")
-
-
 class Session(openerpweb.Controller):
     _cp_path = "/base/session"
 
