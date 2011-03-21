@@ -139,8 +139,10 @@ class Menu(openerpweb.Controller):
         # make a tree using parent_id
         menu_items_map = dict((menu_item["id"], menu_item) for menu_item in menu_items)
         for menu_item in menu_items:
-            if not menu_item['parent_id']: continue
-            parent = menu_item['parent_id'][0]
+            if menu_item['parent_id']:
+                parent = menu_item['parent_id'][0]
+            else:
+                parent = False
             if parent in menu_items_map:
                 menu_items_map[parent].setdefault(
                     'children', []).append(menu_item)

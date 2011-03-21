@@ -39,9 +39,9 @@ class LoadTest(unittest2.TestCase):
     def test_applications_sort(self):
         self.menus_mock.search = mock.Mock(return_value=[1, 2, 3])
         self.menus_mock.read = mock.Mock(return_value=[
-            {'id': 2, 'sequence': 3, 'parent_id': [False, '']},
-            {'id': 3, 'sequence': 2, 'parent_id': [False, '']},
-            {'id': 1, 'sequence': 1, 'parent_id': [False, '']},
+            {'id': 2, 'sequence': 3, 'parent_id': False},
+            {'id': 3, 'sequence': 2, 'parent_id': False},
+            {'id': 1, 'sequence': 1, 'parent_id': False},
         ])
 
         root = self.menu.do_load(self.request)
@@ -53,19 +53,19 @@ class LoadTest(unittest2.TestCase):
             root['children'],
             [{
                 'id': 1, 'sequence': 1,
-                'parent_id': [False, ''], 'children': []
+                'parent_id': False, 'children': []
             }, {
                 'id': 3, 'sequence': 2,
-                'parent_id': [False, ''], 'children': []
+                'parent_id': False, 'children': []
             }, {
                 'id': 2, 'sequence': 3,
-                'parent_id': [False, ''], 'children': []
+                'parent_id': False, 'children': []
             }])
 
     def test_deep(self):
         self.menus_mock.search = mock.Mock(return_value=[1, 2, 3, 4])
         self.menus_mock.read = mock.Mock(return_value=[
-            {'id': 1, 'sequence': 1, 'parent_id': [False, '']},
+            {'id': 1, 'sequence': 1, 'parent_id': False},
             {'id': 2, 'sequence': 2, 'parent_id': [1, '']},
             {'id': 3, 'sequence': 1, 'parent_id': [2, '']},
             {'id': 4, 'sequence': 2, 'parent_id': [2, '']},
@@ -78,7 +78,7 @@ class LoadTest(unittest2.TestCase):
             [{
                  'id': 1,
                  'sequence': 1,
-                 'parent_id': [False, ''],
+                 'parent_id': False,
                  'children': [{
                      'id': 2,
                      'sequence': 2,
