@@ -63,6 +63,7 @@ setup(
         'unittest2',
         'mock',
     ],
+    test_suite = 'unittest2.collector',
     zip_safe=False,
     packages=[
         'addons',
