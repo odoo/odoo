@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,54 +15,57 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
 
 {
-    "name" : "Share Calendar using CalDAV", 
-    "version" : "1.1", 
+    "name" : "Share Calendar using CalDAV",
+    "version" : "1.1",
     "depends" : [
-                    "base", 
+                    "base",
                     "document_webdav",
                 ],
-     'description': """Easily share your OpenERP calendars with your mobile device
-    This module Contains basic functionality for caldav system like:  
+     'description': """
+This module contains basic functionality for Caldav system.
+===========================================================
+
   - Webdav server that provides remote access to calendar
   - Synchronisation of calendar using WebDAV
   - Customize calendar event and todo attribute with any of OpenERP model
   - Provides iCal Import/Export functionality
 
-    To access Calendars using CalDAV clients, point them to:
-        http://HOSTNAME:PORT/webdav/DATABASE_NAME/calendars/users/USERNAME/c
+To access Calendars using CalDAV clients, point them to:
+    http://HOSTNAME:PORT/webdav/DATABASE_NAME/calendars/users/USERNAME/c
 
-    To access OpenERP Calendar using WebCal to remote site use the URL like:
-        http://HOSTNAME:PORT/webdav/DATABASE_NAME/Calendars/CALENDAR_NAME.ics
+To access OpenERP Calendar using WebCal to remote site use the URL like:
+    http://HOSTNAME:PORT/webdav/DATABASE_NAME/Calendars/CALENDAR_NAME.ics
 
-      Where,
+    Where,
         HOSTNAME: Host on which OpenERP server(With webdav) is running
         PORT : Port on which OpenERP server is running (By Default : 8069)
         DATABASE_NAME: Name of database on which OpenERP Calendar is created
         CALENDAR_NAME: Name of calendar to access
 """, 
-    "author" : "OpenERP SA", 
     'category': 'Tools', 
-    'website': 'http://www.openerp.com', 
-    "init_xml" : ["caldav_data.xml"], 
-    "demo_xml" : [], 
+    "author" : "OpenERP SA",
+    'website': 'http://www.openerp.com',
+    "init_xml" : ["caldav_data.xml"],
+    "demo_xml" : [],
     "update_xml" : [
-                    'security/ir.model.access.csv', 
+                    'security/ir.model.access.csv',
                     'wizard/calendar_event_export_view.xml',
                     'wizard/calendar_event_import_view.xml',
                     'wizard/calendar_event_subscribe_view.xml',
                     'wizard/caldav_browse_view.xml',
                     'caldav_view.xml',
                     'caldav_setup.xml'
-                    ], 
-    "installable" : True, 
-    "active" : False, 
+                    ],
+    "installable" : True,
+    "active" : False,
     "certificate" : "00924841426645403741",
+    'images': ['images/calendar_collections.jpeg','images/calendars.jpeg','images/export_ics_file.jpeg'],
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

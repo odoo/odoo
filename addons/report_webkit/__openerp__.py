@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2010 Camptocamp SA (http://www.camptocamp.com) 
+# Copyright (c) 2010 Camptocamp SA (http://www.camptocamp.com)
 # All Right Reserved
 #
 # Author : Nicolas Bessi (Camptocamp)
@@ -31,18 +31,21 @@
 
 {
     "name" : "Webkit Report Engine",
-    "description" : """This module adds a new Report Engine based on WebKit library (wkhtmltopdf) to support reports designed in HTML + CSS.
+    "description" : """
+This module adds a new Report Engine based on WebKit library (wkhtmltopdf) to support reports designed in HTML + CSS.
+=====================================================================================================================
+
 The module structure and some code is inspired by the report_openoffice module.
 The module allows:
     -HTML report definition
-    -Multi header support 
+    -Multi header support
     -Multi logo
     -Multi company support
     -HTML and CSS-3 support (In the limit of the actual WebKIT version)
-    -JavaScript support 
+    -JavaScript support
     -Raw HTML debugger
     -Book printing capabilities
-    -Margins definition 
+    -Margins definition
     -Paper size definition
 and much more
 
@@ -57,7 +60,7 @@ After installing the wkhtmltopdf library on the OpenERP Server machine, you need
 path to the wkthtmltopdf executable file on the Company.
 
 For a sample report see also the webkit_report_sample module, and this video:
-    http://files.me.com/nbessi/06n92k.mov 
+    http://files.me.com/nbessi/06n92k.mov
 
 
 TODO :
@@ -71,7 +74,7 @@ Web client WYSIWYG
     "author" : "Camptocamp SA - NBessi",
     "category": "Tools",
     "url": "http://http://www.camptocamp.com/",
-    "data": [ "security/ir.model.access.csv", 
+    "data": [ "security/ir.model.access.csv",
               "data.xml",
               "wizard/report_webkit_actions_view.xml",
               "company_view.xml",
@@ -81,4 +84,5 @@ Web client WYSIWYG
     "installable" : True,
     "active" : False,
     "certificate" : "001159699313338995949",
+    'images': ['images/companies_webkit.jpeg','images/header_html.jpeg','images/header_img.jpeg'],
 }

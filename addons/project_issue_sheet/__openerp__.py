@@ -25,10 +25,12 @@
     'version': '1.0',
     'category': 'Project Management',
     'description': """
-                    This module adds the Timesheet support for the Issues/Bugs Management in Project
+This module adds the Timesheet support for the Issues/Bugs Management in Project.
+=================================================================================
                 """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
+    'images': ['images/project_issue_sheet_worklog.jpeg'],
     'depends': [
         'project_issue',
         'hr_timesheet_sheet',

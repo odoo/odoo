@@ -25,9 +25,11 @@
     'version': '1.0',
     'category': 'Human Resources',
     'description': """
-This module helps you to easily encode and validate timesheet and attendances
-within the same view. The upper part of the view is for attendances and
-track (sign in/sign out) events. The lower part is for timesheet.
+This module helps you to easily encode and validate timesheet and attendances within the same view.
+===================================================================================================
+
+The upper part of the view is for attendances and track (sign in/sign out) events.
+The lower part is for timesheet.
 
 Other tabs contains statistics views to help you analyse your
 time or the time of your team:
@@ -45,6 +47,7 @@ The validation can be configured in the company:
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
+    'images': ['images/hr_my_timesheet.jpeg','images/hr_timesheet_analysis.jpeg','images/hr_timesheet_sheet_analysis.jpeg','images/hr_timesheets.jpeg'],
     'depends': ['hr_timesheet', 'hr_timesheet_invoice', 'process'],
     'init_xml': [],
     'update_xml': [

@@ -25,18 +25,19 @@
     'version': '1.0',
     'category': 'General',
     'description': """
-     This module manages the records of the artists,
-     the articles to be put up for auction,the buyers and
-     sellers.
+This module manages the records of artists, auction articles, buyers and sellers.
+=================================================================================
 
-     It completely manages an auction such as managing bids,
-     keeping track of the sold articles along with the paid
-     and unpaid objects including delivery of the articles.
-     Dashboards for auction that includes:
-       * My Latest Objects (list)
-       * My Latest Deposits (list)
-       * Objects Statistics (list)
-       * My Objects By Day (list)
+It completely manages an auction such as managing bids,
+keeping track of the sold articles along with the paid
+and unpaid objects including delivery of the articles.
+The dashboard for auction includes:
+    * Latest Objects (list)
+    * Latest Deposits (list)
+    * Objects Statistics (list)
+    * Total Adjudications (graph)
+    * Min/Adj/Max (graph)
+    * Objects By Day (graph)
     """,
     'author': 'OpenERP SA',
     'depends': ['base', 'account', 'hr_attendance'],
@@ -67,5 +68,6 @@
     'installable': True,
     'active': False,
     'certificate': '0039333102717',
+    'images': ['images/auction1.jpeg','images/auction2.jpeg','images/auction3.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

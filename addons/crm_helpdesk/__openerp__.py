@@ -21,29 +21,33 @@
 
 
 {
-    'name': 'CRM Helpdesk', 
-    'version': '1.0', 
     'category': 'Sales', 
-    'description': """Helpdesk Management""", 
-    'author': 'OpenERP SA', 
-    'website': 'http://www.openerp.com', 
-    'depends': ['crm'], 
+    'name': 'CRM Helpdesk',
+    'version': '1.0',
+    'description': """
+Helpdesk Management.
+====================
+    """,
+    'author': 'OpenERP SA',
+    'website': 'http://www.openerp.com',
+    'depends': ['crm'],
     'init_xml': [
-         'crm_helpdesk_data.xml', 
-    ], 
+         'crm_helpdesk_data.xml',
+    ],
     'update_xml': [
-        'crm_helpdesk_view.xml', 
-        'crm_helpdesk_menu.xml', 
-        'security/ir.model.access.csv', 
-        'report/crm_helpdesk_report_view.xml', 
-    ], 
+        'crm_helpdesk_view.xml',
+        'crm_helpdesk_menu.xml',
+        'security/ir.model.access.csv',
+        'report/crm_helpdesk_report_view.xml',
+    ],
     'demo_xml': [
-        'crm_helpdesk_demo.xml', 
-    ], 
-    'test': ['test/test_crm_helpdesk.yml'], 
-    'installable': True, 
-    'active': False, 
+        'crm_helpdesk_demo.xml',
+    ],
+    'test': ['test/test_crm_helpdesk.yml'],
+    'installable': True,
+    'active': False,
     'certificate' : '00830691522781519309',
+    'images': ['images/helpdesk_analysis.jpeg','images/helpdesk_categories.jpeg','images/helpdesk_requests.jpeg'],
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

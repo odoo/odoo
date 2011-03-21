@@ -24,8 +24,11 @@
     'name'      : 'Manage multiple plans in Analytic Accounting',
     'version'   : '1.0',
     'category'  : 'Finance',
-    'description': """This module allows to use several analytic plans, according to the general journal,
-so that multiple analytic lines are created when the invoice or the entries
+    'description': """
+This module allows to use several analytic plans, according to the general journal.
+===================================================================================
+
+Here multiple analytic lines are created when the invoice or the entries
 are confirmed.
 
 For example, you can define the following analytic structure:
@@ -56,6 +59,7 @@ of distribution models.
         """,
     'author'    : 'OpenERP SA',
     'website'   : 'http://www.openerp.com',
+    'images'   : ['images/analytic_plan.jpeg'],
     'depends'   : ['account', 'account_analytic_default'],
     'init_xml'  : [],
     'update_xml': [

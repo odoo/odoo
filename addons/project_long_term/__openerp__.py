@@ -25,17 +25,20 @@
     "author": "OpenERP SA",
     "website": "http://www.openerp.com",
     "category": "Project Management",
+    "images": ["images/project_phase_form.jpeg","images/project_phases.jpeg", "images/resources_allocation.jpeg"],
     "depends": ["resource", "project"],
     "description": """
 Long Term Project management module that tracks planning, scheduling, resources allocation.
-Features.
-    - Manage Big project.
-    - Define various Phases of Project.
-    - Compute Phase Scheduling: Compute start date and end date of the phases which are in draft,open and pending state of the project given.
-      If no project given then all the draft,open and pending state phases will be taken
-    - Compute Task Scheduling: This works same as the scheduler button on project.phase. It takes the project as argument and computes all the open,draft and pending tasks
-    - Schedule Tasks: All the tasks which are in draft,pending and open state are scheduled with taking the phase's start date
+===========================================================================================
 
+Features
+--------
+    * Manage Big project.
+    * Define various Phases of Project.
+    * Compute Phase Scheduling: Compute start date and end date of the phases which are in draft,open and pending state of the project given.
+      If no project given then all the draft,open and pending state phases will be taken.
+    * Compute Task Scheduling: This works same as the scheduler button on project.phase. It takes the project as argument and computes all the open,draft and pending tasks.
+    * Schedule Tasks: All the tasks which are in draft,pending and open state are scheduled with taking the phase's start date
     """,
     "init_xml": [],
     "demo_xml": ["project_long_term_demo.xml"],
@@ -47,7 +50,7 @@ Features.
           'test/project_schedule_consecutive_day.yml',
           'test/project_schedule_without_wroking_hour.yml',
           'test/schedule_phase_tasks.yml',
-          'test/phase_constraint.yml', 
+          'test/phase_constraint.yml',
           'test/test_schedule_tasks_case1.yml',
     ],
     "update_xml": [
