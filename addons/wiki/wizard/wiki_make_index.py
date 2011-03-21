@@ -38,7 +38,10 @@ class wiki_make_index(osv.osv_memory):
         if context is None:
             context = {}
         data = context and context.get('active_ids', []) or []
-
+        
+        if not data:
+            return {'type':  'ir.actions.act_window_close'}
+        
         for index_obj in self.browse(cr, uid, ids, context=context):
             wiki_pool = self.pool.get('wiki.wiki')
             cr.execute("Select id, section from wiki_wiki where id IN %s \
