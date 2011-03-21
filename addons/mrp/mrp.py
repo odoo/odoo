@@ -251,6 +251,10 @@ class mrp_bom(osv.osv):
         @param product_id: Changed product_id
         @return:  Dictionary of changed values
         """
+        if context is None:
+            context = {}
+            context['lang'] = self.pool.get('res.users').browse(cr,uid,uid).context_lang
+            
         if product_id:
             prod = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
             v = {'product_uom': prod.uom_id.id}
