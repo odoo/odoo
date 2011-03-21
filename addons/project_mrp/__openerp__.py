@@ -23,10 +23,10 @@
 {
     'name': 'Procurement and Project Management integration',
     'version': '1.0',
-    'category': 'Generic Modules/Projects & Services',
+    'category': 'Project Management',
     'description': """
-This module creates a link between procurement orders
-containing "service" lines and project management tasks.
+This module creates a link between procurement orders containing "service" lines and project management tasks.
+==============================================================================================================
 
 When installed, this module will automatically create a new task
 for each procurement order line, when the corresponding product
@@ -47,6 +47,7 @@ automatically created via sale orders.
 """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
+    'images': ['images/product.jpeg', 'images/task_from_SO.jpeg'],
     'depends': ['project', 'procurement', 'sale', 'mrp_jit'],
     'init_xml': [],
     'update_xml': ['project_mrp_workflow.xml', 'process/project_mrp_process.xml', 'project_mrp_view.xml'],

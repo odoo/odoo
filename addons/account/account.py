@@ -641,6 +641,7 @@ class account_journal(osv.osv):
         default = default.copy()
         default['code'] = (journal['code'] or '') + '(copy)'
         default['name'] = (journal['name'] or '') + '(copy)'
+        default['sequence_id'] = False
         return super(account_journal, self).copy(cr, uid, id, default, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):

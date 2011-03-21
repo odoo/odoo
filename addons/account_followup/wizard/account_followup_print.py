@@ -285,10 +285,10 @@ class account_followup_print_all(osv.osv_memory):
                     msg += partner.name + '\n'
                     msg_unsent += msg
             if not msg_unsent:
-                summary = _("All E-mails have been successfully sent to Partners:.\n\n") + msg_sent
+                summary = _("All E-mails have been successfully sent to Partners:.\n\n%s") % msg_sent
             else:
-                msg_unsent = _("E-Mail not sent to following Partners, Email not available !\n\n") + msg_unsent
-                msg_sent = msg_sent and _("\n\nE-Mail sent to following Partners successfully. !\n\n") + msg_sent
+                msg_unsent = _("E-Mail not sent to following Partners, Email not available !\n\n%s") % msg_unsent
+                msg_sent = msg_sent and _("\n\nE-Mail sent to following Partners successfully. !\n\n%s") % msg_sent
                 line = '=========================================================================='
                 summary = msg_unsent + line + msg_sent
             context.update({'summary': summary})

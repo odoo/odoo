@@ -23,12 +23,14 @@
 {
     'name': 'Membership',
     'version': '0.1',
-    'category': 'Generic Modules/Association',
+    'category': 'Tools',
     'description': """
 This module allows you to manage all operations for managing memberships.
+=========================================================================
+
 It supports different kind of members:
 * Free member
-* Associated member (ex: a group subscribe for a membership for all
+* Associated member (eg.: a group subscribes to a membership for all
   subsidiaries)
 * Paid members,
 * Special member prices, ...
@@ -51,5 +53,6 @@ invoice and send propositions for membership renewal.
     'installable': True,
     'active': False,
     'certificate': '0042907796381',
+    'images': ['images/members.jpeg','images/membership_list.jpeg', 'images/membership_products.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
