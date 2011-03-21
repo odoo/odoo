@@ -1,5 +1,5 @@
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -14,27 +14,32 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 {
-    "name" : "Products date of expiry",
+    "name" : "Products Expiry Date",
     "version" : "1.0",
     "author" : "OpenERP SA",
     "category" : "Warehouse",
     "depends" : ["stock"],
     "init_xml" : [],
     "demo_xml" : ["product_expiry_demo.xml"],
-    "description": '''Track different dates on products and production lots:
- - end of life
- - best before date
- - removal date
- - alert date
+    "description": '''
+Track different dates on products and production lots.
+======================================================
+
+Following dates can be tracked:
+    - end of life
+    - best before date
+    - removal date
+    - alert date
 Used, for example, in food industries.''',
     "update_xml" : ["product_expiry_view.xml"],
     "active": False,
     "installable": True,
     "certificate": "00421222123914960109",
+    'images': ['images/production_lots_dates.jpeg','images/products_dates.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

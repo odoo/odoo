@@ -1,5 +1,5 @@
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -14,7 +14,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -22,11 +22,14 @@
     "name":"Margins in Sales Order",
     "version":"1.0",
     "category" : "Sales",
-    "description": """ 
-    This module adds the 'Margin' on sales order,
-    which gives the profitability by calculating the difference between the Unit Price and Cost Price
+    "description": """
+This module adds the 'Margin' on sales order.
+=============================================
+
+This gives the profitability by calculating the difference between the Unit Price and Cost Price.
     """,
     "author":"OpenERP SA",
+    "images":["images/sale_margin.jpeg"],
     "depends":["sale"],
     "demo_xml":[],
     'test': ['test/sale_margin.yml'],

@@ -26,7 +26,9 @@
     "depends" : ["base"],
     "author" : "OpenERP SA",
     "category": 'Tools',
-    "description": """Installer for knowledge-based tools
+    "description": """
+Installer for knowledge-based tools.
+====================================
     """,
     'website': 'http://www.openerp.com',
     'init_xml': [],
@@ -40,5 +42,6 @@
     'installable': True,
     'active': False,
     'certificate' : '001278773815843749581',
+    'images': ['images/1_config_knowledge.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

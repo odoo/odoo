@@ -27,13 +27,14 @@
     'website' : 'http://www.openerp.com/',
     'depends' : ['base', 'mail_gateway'],
     'category' : 'Tools',
-    'description': '''Make a link between Outlook and OpenERP
-      This module provide the Outlook plug-in. 
+    'description': '''
+This module provides the Outlook Plug-in.
+=========================================
 
-      Outlook plug-in allows you to select an object that you’d like to add
-      to your email and its attachments from MS Outlook. You can select a partner, a task,
-      a project, an analytical account, or any other object and Archived selected
-      mail in mailgate.messages with attachments.
+Outlook plug-in allows you to select an object that you’d like to add
+to your email and its attachments from MS Outlook. You can select a partner, a task,
+a project, an analytical account, or any other object and archive selected
+mail in mailgate.messages with attachments.
 
       ''',
     'init_xml' : [],
@@ -42,6 +43,7 @@
     'active': False,
     'installable': True,
     'certificate' : '001278773815818292125',
+    'images': ['images/config_outlook.jpeg','images/outlook_config_openerp.jpeg','images/outlook_push.jpeg'],
 
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

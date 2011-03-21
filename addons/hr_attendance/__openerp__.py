@@ -25,11 +25,14 @@
     'version': '1.1',
     'category': 'Human Resources',
     'description': """
-    This module aims to manage employee's attendances.
-    Keeps account of the attendances of the employees on the basis of the
-    actions(Sign in/Sign out) performed by them.
+This module aims to manage employee's attendances.
+==================================================
+
+Keeps account of the attendances of the employees on the basis of the
+actions(Sign in/Sign out) performed by them.
        """,
     'author': 'OpenERP SA',
+    'images': ['images/hr_attendances.jpeg'],
     'depends': ['hr'],
     'update_xml': [
         'security/ir.model.access.csv',

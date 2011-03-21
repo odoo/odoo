@@ -24,7 +24,10 @@
     'name': 'Subscription and recurring operations',
     'version': '1.0',
     'category': 'Tools',
-    'description': """Module allows to create new documents and add subscription on that document.""",
+    'description': """
+This module allows to create new documents and add subscription on that document.
+=================================================================================
+    """,
     'author': 'OpenERP SA',
     'depends': ['base_tools'],
     'init_xml': [],
@@ -33,5 +36,6 @@
     'installable': True,
     'active': False,
     'certificate': '0029454782573',
+    'images': ['images/subscription_document_fields.jpeg','images/subscriptions.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

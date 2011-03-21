@@ -24,7 +24,11 @@
     'name': 'Association profile',
     'version': '0.1',
     'category': 'General',
-    'description': """This module is to create Profile for Associates""",
+    'category': 'Profile',
+    'description': """
+This module is to configure modules related to an association.
+==============================================================
+    """,
     'author': 'OpenERP SA',
     'depends': ['membership', 'event'],
     'update_xml': ['security/ir.model.access.csv', 'profile_association.xml'],
@@ -32,5 +36,6 @@
     'installable': True,
     'active': False,
     'certificate': '0078696047261',
+    'images': ['images/association1.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

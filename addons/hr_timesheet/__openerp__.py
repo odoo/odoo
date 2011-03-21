@@ -25,9 +25,11 @@
     'version': '1.0',
     'category': 'Human Resources',
     'description': """
-This module implements a timesheet system. Each employee can encode and
-track their time spent on the different projects. A project is an
-analytic account and the time spent on a project generates costs on
+This module implements a timesheet system.
+==========================================
+
+Each employee can encode and track their time spent on the different projects.
+A project is an analytic account and the time spent on a project generates costs on
 the analytic account.
 
 Lots of reporting on time and employee tracking are provided.
@@ -37,6 +39,7 @@ to set up a management by affair.
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
+    'images': ['images/hr_timesheet_lines.jpeg'],
     'depends': ['account', 'hr', 'base', 'hr_attendance', 'process'],
     'init_xml': ['hr_timesheet_data.xml'],
     'update_xml': [
