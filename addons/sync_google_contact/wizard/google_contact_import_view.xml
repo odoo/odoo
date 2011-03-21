@@ -6,11 +6,16 @@
             <field name="model">synchronize.base</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Import Google Contacts">
-                    <group colspan="4" col="4">
+                <form string="Import contacts from a google account">
+                    <group colspan="4" col="4" width="430">
                        <field name="group_name" />
                        <separator string="Import Options" colspan="4"/>
                        <field name="create_partner"/>
+                       <newline/>
+                       <group attrs="{'invisible': [('create_partner','!=','create_all')]}" colspan="2" col="4">
+                            <field name="customer"/>
+                            <field name="supplier"/>
+                       </group>
                     </group>
                     <separator string="" colspan="4"/>
                     <group colspan="4" col="4">
@@ -29,7 +34,7 @@
             Login Action 
         -->
         <record model="ir.actions.act_window" id="act_google_login_form">
-          <field name="name">Import contacts from your google account</field>
+          <field name="name">Import Contacts</field>
           <field name="type">ir.actions.act_window</field>
           <field name="res_model">google.login.contact</field>
           <field name="view_type">form</field>
