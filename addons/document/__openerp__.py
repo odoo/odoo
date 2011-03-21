@@ -35,6 +35,7 @@ This is a complete document management system.
         * Files by Resource Type (graph)
         * Files by Partner (graph)
         * Files Size by Month (graph)
+
 ATTENTION:
     - When you install this module in a running company that have already PDF files stored into the database,
       you will lose them all.

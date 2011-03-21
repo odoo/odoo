@@ -36,6 +36,7 @@ For example, you can define the following analytic structure:
       Project 1
           SubProj 1.1
           SubProj 1.2
+
       Project 2
   Salesman
       Eric

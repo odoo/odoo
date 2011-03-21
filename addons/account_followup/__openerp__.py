@@ -30,8 +30,7 @@ Modules to automate letters for unpaid invoices, with multi-level recalls.
 You can define your multiple levels of recall through the menu:
     Accounting/Configuration/Miscellaneous/Follow-Ups
 
-Once it is defined, you can automatically print recalls every day
-through simply clicking on the menu:
+Once it is defined, you can automatically print recalls every day through simply clicking on the menu:
     Accounting/Periodical Processing/Billing/Send followups
 
 It will generate a PDF with all the letters according to the the
