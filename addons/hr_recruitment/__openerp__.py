@@ -20,12 +20,14 @@
 #
 ##############################################################################
 {
-    'name': 'HR - Recruitement',
+    'name': 'HR - Recruitment',
     'version': '1.0',
     'category': 'Human Resources',
     'description': """
-Manages job positions and the recruitement process. It's integrated with the
-survey module to allow you to define interview for different jobs.
+Manages job positions and the recruitment process.
+==================================================
+
+It's integrated with the survey module to allow you to define interview for different jobs.
 
 This module is integrated with the mail gateway to automatically tracks email
 sent to jobs@YOURCOMPANY.com. It's also integrated with the document management
@@ -33,6 +35,7 @@ system to store and search in your CV base.
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
+    'images': ['images/hr_recruitment_analysis.jpeg','images/hr_recruitment_applicants.jpeg'],
     'depends': ['decimal_precision', 'hr', 'survey', 'crm'],
     'update_xml': [
         'wizard/hr_recruitment_phonecall_view.xml',

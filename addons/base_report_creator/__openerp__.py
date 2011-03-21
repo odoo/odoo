@@ -21,15 +21,18 @@
 
 
 {
-    'name': 'Report Creator',
+    'name': 'Statistical Report Creator',
     'version': '1.0',
     'category': 'Tools',
-    'description': """This module allows you to create any statistic
-report on several objects. It's a SQL query builder and browser
-for and users.
+    'description': """
+This module allows you to create any statistic report on several objects.
+=========================================================================
 
-After installing the module, it adds a menu to define custom report in
-the "Dashboard" menu.
+It's an SQL query builder and browser
+for end-users.
+
+After installing the module, it adds a menu to define a custom report in
+the Administration / Customization / Reporting menu.
 """,
     'author': ['OpenERP SA', 'Axelor'],
     'website': '',
@@ -45,5 +48,6 @@ the "Dashboard" menu.
     'installable': True,
     'active': False,
     'certificate': '0031285794149',
+    'images': ['images/base_report_creator1.jpeg','images/base_report_creator2.jpeg','images/base_report_creator3.jpeg',],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

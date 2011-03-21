@@ -211,7 +211,7 @@ class account_voucher(osv.osv):
         'move_id':fields.many2one('account.move', 'Account Entry'),
         'move_ids': fields.related('move_id','line_id', type='one2many', relation='account.move.line', string='Journal Items', readonly=True),
         'partner_id':fields.many2one('res.partner', 'Partner', change_default=1, readonly=True, states={'draft':[('readonly',False)]}),
-        'audit': fields.related('move_id','to_check', type='boolean', relation='account.move', string='Audit Complete ?'),
+        'audit': fields.related('move_id','to_check', type='boolean', help='Check this box if you are unsure of that journal entry and if you want to note it as \'to be reviewed\' by an accounting expert.', relation='account.move', string='To Review'),
         'pay_now':fields.selection([
             ('pay_now','Pay Directly'),
             ('pay_later','Pay Later or Group Funds'),
@@ -777,7 +777,8 @@ class account_voucher(osv.osv):
                 'state': 'posted',
                 'number': name,
             })
-            move_pool.post(cr, uid, [move_id], context={})
+            if inv.journal_id.entry_posted:
+                move_pool.post(cr, uid, [move_id], context={})
             for rec_ids in rec_list_ids:
                 if len(rec_ids) >= 2:
                     move_line_pool.reconcile_partial(cr, uid, rec_ids)

@@ -25,17 +25,12 @@
     'version': '1.0',
     'category': 'Tools',
     'description': """
-    This module implements a configuration system that helps user
-    to configure the system at the installation of a new database.
+This module helps to configure the system at the installation of a new database.
+================================================================================
 
-    It allows you to select between a list of profiles to install:
-    * Minimal profile
-    * Accounting only
-    * Services companies
-    * Manufacturing companies
+It allows you to choose the type of interface and select from a list of applications to install.
 
-    It also asks screens to help easily configure your company, the header and
-    footer, the account chart to install and the language.
+It also helps to easily configure your company.
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
@@ -49,5 +44,6 @@
     'installable': True,
     'active': True,
     'certificate': '0086711085869',
+    'images': ['images/base_setup1.jpeg','images/base_setup2.jpeg','images/base_setup3.jpeg','images/base_setup4.jpeg',],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

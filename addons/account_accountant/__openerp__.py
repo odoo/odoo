@@ -24,8 +24,8 @@
     "author" : "OpenERP SA",
     "category": 'Finance',
     "description": """
-This module gives the admin user the access to all the accounting features like the journal
-items and the chart of accounts.
+This module gives the admin user the access to all the accounting features like the journal items and the chart of accounts.
+============================================================================================================================
     """,
     'website': 'http://www.openerp.com',
     'init_xml': [],

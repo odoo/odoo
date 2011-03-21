@@ -28,7 +28,8 @@
     "category" : "Tools",
     "depends" : ['marketing', 'base_tools'],
     "description": """
-    Email Template is extraction of Power Email basically just to send the emails.
+Email Template is extraction of Power Email basically just to send emails.
+==========================================================================
     """,
     "init_xml": ['email_template_scheduler_data.xml'],
     "update_xml": [
@@ -43,6 +44,7 @@
     "installable": True,
     "active": False,
     "certificate" : "00817073628967384349",
+    'images': ['images/1_email_account.jpeg','images/2_email_template.jpeg','images/3_emails.jpeg'],
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -23,7 +23,9 @@
     'name': 'Document Management - Wiki - Quality Manual',
     'version': '1.0',
     'category': 'Tools',
-    'description': """Quality Manual Template
+    'description': """
+Quality Manual Template.
+========================
     """,
     'author': 'OpenERP SA',
     'website': 'http://openerp.com',
@@ -34,5 +36,6 @@
     'installable': True,
     'active': False,
     'certificate' : '00705749856097740509',
+    'images': ['images/wiki_pages_quality_manual.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
