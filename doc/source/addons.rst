@@ -50,6 +50,8 @@ Structure
 ``tests/``
   The directories in which all tests for the addon are located.
 
+.. _addons-testing:
+
 Testing
 -------
 
