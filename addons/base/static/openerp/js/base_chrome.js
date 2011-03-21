@@ -114,7 +114,7 @@ openerp.base.BasicController = Class.extend({
 openerp.base.Console =  openerp.base.BasicController.extend({
     init: function(element_id, server, port) {
         this._super(element_id);
-    },
+    }
 });
 
 openerp.base.Session = openerp.base.BasicController.extend({

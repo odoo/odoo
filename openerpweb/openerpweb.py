@@ -1,7 +1,12 @@
 #!/usr/bin/python
 import functools
-
-import optparse, os, re, sys, tempfile, traceback, uuid, xmlrpclib
+import optparse
+import os
+import sys
+import tempfile
+import traceback
+import uuid
+import xmlrpclib
 
 import cherrypy
 import cherrypy.lib.static
@@ -15,18 +20,23 @@ import xmlrpctimeout
 class OpenERPUnboundException(Exception):
     pass
 
+
 class OpenERPConnector(object):
     pass
+
 
 class OpenERPAuth(object):
     pass
 
+
 class OpenERPModel(object):
-    def __init__(self,session,model):
+    def __init__(self, session, model):
         self._session = session
         self._model = model
-    def __getattr__(self,name):
-        return lambda *l:self._session.execute(self._model,name,*l)
+
+    def __getattr__(self, name):
+        return lambda *l:self._session.execute(self._model, name, *l)
+
 
 class OpenERPSession(object):
     def __init__(self, server='127.0.0.1', port=8069):
@@ -38,7 +48,7 @@ class OpenERPSession(object):
         self._password = False
 
     def proxy(self, service):
-        s = xmlrpctimeout.TimeoutServerProxy('http://%s:%s/xmlrpc/%s'%(self._server, self._port, service), timeout=5)
+        s = xmlrpctimeout.TimeoutServerProxy('http://%s:%s/xmlrpc/%s' % (self._server, self._port, service), timeout=5)
         return s
 
     def bind(self, db, uid, password):
@@ -52,14 +62,14 @@ class OpenERPSession(object):
         self._login = login
         return uid
 
-    def execute(self,model,func,*l,**d):
+    def execute(self, model, func, *l, **d):
         if not (self._db and self._uid and self._password):
             raise OpenERPUnboundException()
         r = self.proxy('object').execute(self._db, self._uid, self._password, model, func, *l, **d)
         return r
 
-    def model(self,model):
-        return OpenERPModel(self,model)
+    def model(self, model):
+        return OpenERPModel(self, model)
 
 #----------------------------------------------------------
 # OpenERP Web RequestHandler
@@ -82,7 +92,7 @@ class JsonRequest(object):
     """
 
     def parse(self, request):
-        self.params = request.get("params",{})
+        self.params = request.get("params", {})
         self.session_id = self.params.pop("session_id", None) or uuid.uuid4().hex
         self.session = cherrypy.session.setdefault(self.session_id, OpenERPSession())
         self.context = self.params.pop('context', None)
@@ -108,7 +118,7 @@ class JsonRequest(object):
         else:
             request = simplejson.loads(request)
         try:
-            print "--> %s.%s %s"%(controller.__class__.__name__,method.__name__,request)
+            print "--> %s.%s %s" % (controller.__class__.__name__, method.__name__, request)
             error = None
             result = method(controller, self, **self.parse(request))
         except OpenERPUnboundException:
@@ -127,7 +137,8 @@ class JsonRequest(object):
                 'data': {
                     'type': 'server_exception',
                     'fault_code': e.faultCode,
-                    'debug': "Client %s\nServer %s" % ("".join(traceback.format_exception("", None, sys.exc_traceback)), e.faultString)
+                    'debug': "Client %s\nServer %s" % (
+                    "".join(traceback.format_exception("", None, sys.exc_traceback)), e.faultString)
                 }
             }
         except Exception:
@@ -139,13 +150,13 @@ class JsonRequest(object):
                     'debug': "Client %s" % traceback.format_exc()
                 }
             }
-        response = {"jsonrpc": "2.0",  "id": request.get('id')}
+        response = {"jsonrpc": "2.0", "id": request.get('id')}
         if error:
             response["error"] = error
         else:
             response["result"] = result
 
-        print "<--",  response
+        print "<--", response
         print
 
         content = simplejson.dumps(response)
@@ -153,31 +164,36 @@ class JsonRequest(object):
         cherrypy.response.headers['Content-Length'] = len(content)
         return content
 
+
 def jsonrequest(f):
     @cherrypy.expose
     @functools.wraps(f)
     def json_handler(self):
         return JsonRequest().dispatch(self, f, requestf=cherrypy.request.body)
+
     return json_handler
+
 
 class HttpRequest(object):
     """ Regular GET/POST request
     """
+
     def __init__(self):
         # result may be filled, it's content will be updated by the return
         # value of the dispatched function if it's a dict
         self.result = ""
 
     def dispatch(self, controller, f, request):
-        print "GET/POST --> %s.%s %s"%(controller.__class__.__name__,f.__name__,request)
-        r=f(controller, self, request)
+        print "GET/POST --> %s.%s %s" % (controller.__class__.__name__, f.__name__, request)
+        r = f(controller, self, request)
         return r
+
 
 def httprequest(f):
     # check cleaner wrapping:
     # functools.wraps(f)(lambda x: JsonRequest().dispatch(x, f))
-    l=lambda self, request: HttpRequest().dispatch(self, f, request)
-    l.exposed=1
+    l = lambda self, request: HttpRequest().dispatch(self, f, request)
+    l.exposed = 1
     return l
 
 #-----------------------------------------------------------
@@ -185,7 +201,7 @@ def httprequest(f):
 #-----------------------------------------------------------
 
 path_root = os.path.dirname(os.path.dirname(os.path.normpath(__file__)))
-path_addons = os.path.join(path_root,'addons')
+path_addons = os.path.join(path_root, 'addons')
 cherrypy_root = None
 
 # globals might move into a pool if needed
@@ -198,64 +214,68 @@ controllers_path = {}
 class ControllerType(type):
     def __init__(cls, name, bases, attrs):
         super(ControllerType, cls).__init__(name, bases, attrs)
-        # TODO forgive me this hack and find me a clean way to get the absolute name of a class
-        cls.fullname = re.search("'(.+)'",repr(cls)).group(1)
-        controllers_class[cls.fullname] = cls
+        controllers_class["%s.%s" % (cls.__module__, cls.__name__)] = cls
+
 
 class Controller(object):
     __metaclass__ = ControllerType
+
 
 class Root(object):
     def __init__(self):
         self.addons = {}
         self._load_addons()
+
     def _load_addons(self):
         if path_addons not in sys.path:
-            sys.path.insert(0,path_addons)
+            sys.path.insert(0, path_addons)
         for i in os.listdir(path_addons):
             if i not in sys.modules:
-                manifest_path = os.path.join(path_addons,i,'__openerp__.py')
+                manifest_path = os.path.join(path_addons, i, '__openerp__.py')
                 if os.path.isfile(manifest_path):
                     manifest = eval(open(manifest_path).read())
-                    print "Loading",i
+                    print "Loading", i
                     m = __import__(i)
                     addons_module[i] = m
                     addons_manifest[i] = manifest
-        for k,v in controllers_class.items():
+        for k, v in controllers_class.items():
             if k not in controllers_object:
                 o = v()
                 controllers_object[k] = o
-                if hasattr(o,'_cp_path'):
+                if hasattr(o, '_cp_path'):
                     controllers_path[o._cp_path] = o
 
     def default(self, *l, **kw):
         #print "default",l,kw
         # handle static files
-        if len(l) > 2 and l[1]=='static':
+        if len(l) > 2 and l[1] == 'static':
             # sanitize path
             p = os.path.normpath(os.path.join(*l))
-            return cherrypy.lib.static.serve_file(os.path.join(path_addons,p))
+            return cherrypy.lib.static.serve_file(os.path.join(path_addons, p))
         elif len(l) > 1:
-            for i in range(1,len(l)+1):
+            for i in range(1, len(l) + 1):
                 ps = "/" + "/".join(l[0:i])
                 if ps in controllers_path:
                     c = controllers_path[ps]
                     rest = l[i:] or ['index']
                     meth = rest[0]
-                    m = getattr(c,meth)
-                    if getattr(m,'exposed',0):
-                        print "Calling",ps,c,meth,m
+                    m = getattr(c, meth)
+                    if getattr(m, 'exposed', 0):
+                        print "Calling", ps, c, meth, m
                         return m(**kw)
 
         else:
             raise cherrypy.HTTPRedirect('/base/static/openerp/base.html', 301)
     default.exposed = True
 
+
 def main(argv):
     # Parse config
     op = optparse.OptionParser()
     op.add_option("-p", "--port", dest="socket_port", help="listening port", metavar="NUMBER", default=8002)
-    op.add_option("-s", "--session-path", dest="storage_path", help="directory used for session storage", metavar="DIR", default=os.path.join(tempfile.gettempdir(),"cpsessions"))
+    op.add_option("-s", "--session-path", dest="storage_path",
+                  help="directory used for session storage", metavar="DIR",
+                  default=os.path.join(tempfile.gettempdir(), "cpsessions"))
     (o, args) = op.parse_args(argv[1:])
 
     # Prepare cherrypy config from options

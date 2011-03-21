@@ -25,14 +25,14 @@ class Xml2Json:
     @staticmethod
     def convert_element(el, skip_whitespaces=True):
         res = {}
-        if el.tag[0]=="{":
-            ns, name = el.tag.rsplit("}",1) 
+        if el.tag[0] == "{":
+            ns, name = el.tag.rsplit("}", 1)
             res["tag"] = name
             res["namespace"] = ns[1:]
         else:
             res["tag"] = el.tag
         res["attrs"] = {}
-        for k,v in el.items():
+        for k, v in el.items():
             res["attrs"][k] = v
         kids = []
         if el.text and (not skip_whitespaces or el.text.strip() != ''):
@@ -47,20 +47,6 @@ class Xml2Json:
 #----------------------------------------------------------
 # OpenERP Web base Controllers
 #----------------------------------------------------------
-
-class Hello(openerpweb.Controller):
-    _cp_path = "/base/hello"
-
-    def index(self):
-        return "hello world"
-
-    @openerpweb.jsonrequest
-    def ajax_hello_world(self,req):
-        return {"welcome":"hello world"}
-
-    @openerpweb.jsonrequest
-    def ajax_hello_error(self,req):
-        raise Exception("You suck")
 
 class Session(openerpweb.Controller):
     _cp_path = "/base/session"
@@ -84,7 +70,7 @@ class Session(openerpweb.Controller):
         files_content = []
         files_timestamp = 0
         for i in file_list:
-            fname = os.path.join(root,i)
+            fname = os.path.join(root, i)
             ftime = os.path.getmtime(fname)
             if ftime > files_timestamp:
                 files_timestamp = ftime
@@ -96,7 +82,7 @@ class Session(openerpweb.Controller):
     def login(self, req, db, login, password):
         req.session.login(db, login, password)
         return {
-            "session_id" : req.session_id,
+            "session_id": req.session_id,
             "uid": req.session._uid,
         }
 
@@ -117,31 +103,32 @@ class Session(openerpweb.Controller):
         concat = self.concat_files(files)[0]
         # TODO request set the Date of last modif and Etag
         return concat
-    css.exposed=1
+    css.exposed = True
 
     def js(self, req, mods='base,base_hello'):
         files = self.manifest_glob(mods.split(','), 'js')
         concat = self.concat_files(files)[0]
         # TODO request set the Date of last modif and Etag
         return concat
-    js.exposed=1
+    js.exposed = True
+
 
 class Menu(openerpweb.Controller):
     _cp_path = "/base/menu"
 
     @openerpweb.jsonrequest
-    def load(self,req):
+    def load(self, req):
         m = req.session.model('ir.ui.menu')
         # menus are loaded fully unlike a regular tree view, cause there are
         # less than 512 items
         menu_ids = m.search([])
-        menu_items = m.read(menu_ids,['name','sequence','parent_id'])
-        menu_root = {'id':False, 'name':'root', 'parent_id':[-1,'']}
+        menu_items = m.read(menu_ids, ['name', 'sequence', 'parent_id'])
+        menu_root = {'id': False, 'name': 'root', 'parent_id': [-1, '']}
         menu_items.append(menu_root)
         # make a tree using parent_id
         for i in menu_items:
             i['children'] = []
-        d = dict([(i["id"],i) for i in menu_items])
+        d = dict([(i["id"], i) for i in menu_items])
         for i in menu_items:
             if not i['parent_id']:
                 pid = False
@@ -151,35 +138,38 @@ class Menu(openerpweb.Controller):
                 d[pid]['children'].append(i)
         # sort by sequence a tree using parent_id
         for i in menu_items:
-            i['children'].sort(key = lambda x:x["sequence"])
+            i['children'].sort(key=lambda x:x["sequence"])
 
         return {'data': menu_root}
 
     @openerpweb.jsonrequest
-    def action(self,req,menu_id):
+    def action(self, req, menu_id):
         m = req.session.model('ir.values')
         r = m.get('action', 'tree_but_open', [('ir.ui.menu', menu_id)], False, {})
-        res={"action":r}
+        res = {"action": r}
         return res
+
 
 class DataSet(openerpweb.Controller):
     _cp_path = "/base/dataset"
 
     @openerpweb.jsonrequest
-    def fields(self,req,model):
+    def fields(self, req, model):
         return {'fields': req.session.model(model).fields_get(False)}
 
     @openerpweb.jsonrequest
-    def load(self,req,model,domain=[],fields=['id']):
+    def load(self, req, model, domain=[], fields=['id']):
         m = req.session.model(model)
         ids = m.search(domain)
         values = m.read(ids, fields)
         return {'ids': ids, 'values': values}
 
+
 class DataRecord(openerpweb.Controller):
     _cp_path = "/base/datarecord"
+
     @openerpweb.jsonrequest
-    def load(self,req,model,id,fields):
+    def load(self, req, model, id, fields):
         m = req.session.model(model)
         value = {}
         r = m.read([id])
@@ -187,36 +177,43 @@ class DataRecord(openerpweb.Controller):
             value = r[0]
         return {'value': value}
 
+
 class FormView(openerpweb.Controller):
     _cp_path = "/base/formview"
+
     @openerpweb.jsonrequest
-    def load(self,req,model,view_id):
+    def load(self, req, model, view_id):
         m = req.session.model(model)
-        r = m.fields_view_get(view_id,'form')
-        r["arch"]=Xml2Json.convert_to_structure(r["arch"])
-        return {'fields_view':r}
+        r = m.fields_view_get(view_id, 'form')
+        r["arch"] = Xml2Json.convert_to_structure(r["arch"])
+        return {'fields_view': r}
+
 
 class ListView(openerpweb.Controller):
     _cp_path = "/base/listview"
+
     @openerpweb.jsonrequest
-    def load(self,req,model,view_id):
+    def load(self, req, model, view_id):
         m = req.session.model(model)
-        r = m.fields_view_get(view_id,'tree')
-        r["arch"]=Xml2Json.convert_to_structure(r["arch"])
-        return {'fields_view':r}
+        r = m.fields_view_get(view_id, 'tree')
+        r["arch"] = Xml2Json.convert_to_structure(r["arch"])
+        return {'fields_view': r}
+
 
 class SearchView(openerpweb.Controller):
     _cp_path = "/base/searchview"
+
     @openerpweb.jsonrequest
-    def load(self,req,model,view_id):
+    def load(self, req, model, view_id):
         m = req.session.model(model)
-        r = m.fields_view_get(view_id,'search')
-        r["arch"]=Xml2Json.convert_to_structure(r["arch"])
-        return {'fields_view':r}
+        r = m.fields_view_get(view_id, 'search')
+        r["arch"] = Xml2Json.convert_to_structure(r["arch"])
+        return {'fields_view': r}
+
 
 class Action(openerpweb.Controller):
     _cp_path = "/base/action"
 
     @openerpweb.jsonrequest
-    def load(self,req,action_id):
+    def load(self, req, action_id):
         return {}
