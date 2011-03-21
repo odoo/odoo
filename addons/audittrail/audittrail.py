@@ -404,13 +404,16 @@ class audittrail_objects_proxy(object_proxy):
             cr.close()
             return res
         else:
-            res_ids = args[0]
-            old_values = {}
-            fields = []
-            if len(args)>1 and type(args[1]) == dict:
-                fields = args[1].keys()
-            if type(res_ids) in (long, int):
-                res_ids = [res_ids]
+            res_ids = []
+            res = True
+            if args:
+                res_ids = args[0]
+                old_values = {}
+                fields = []
+                if len(args)>1 and type(args[1]) == dict:
+                    fields = args[1].keys()
+                if type(res_ids) in (long, int):
+                    res_ids = [res_ids]
             if res_ids:
                 for resource in resource_pool.read(cr, uid, res_ids):
                     resource_id = resource['id']
