@@ -59,6 +59,10 @@ setup(
         "simplejson >= 2.0.9",
         "python-dateutil >= 1.4.1",
     ],
+    tests_require=[
+        'unittest2',
+        'mock',
+    ],
     zip_safe=False,
     packages=[
         'addons',
