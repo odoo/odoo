@@ -118,27 +118,26 @@ class Menu(openerpweb.Controller):
 
     @openerpweb.jsonrequest
     def load(self, req):
-        m = req.session.model('ir.ui.menu')
+        Menus = req.session.model('ir.ui.menu')
         # menus are loaded fully unlike a regular tree view, cause there are
         # less than 512 items
-        menu_ids = m.search([])
-        menu_items = m.read(menu_ids, ['name', 'sequence', 'parent_id'])
+        menu_ids = Menus.search([])
+        menu_items = Menus.read(menu_ids, ['name', 'sequence', 'parent_id'])
         menu_root = {'id': False, 'name': 'root', 'parent_id': [-1, '']}
         menu_items.append(menu_root)
+        
         # make a tree using parent_id
-        for i in menu_items:
-            i['children'] = []
-        d = dict([(i["id"], i) for i in menu_items])
-        for i in menu_items:
-            if not i['parent_id']:
-                pid = False
-            else:
-                pid = i['parent_id'][0]
-            if pid in d:
-                d[pid]['children'].append(i)
+        menu_items_map = dict((menu_item["id"], menu_item) for menu_item in menu_items)
+        for menu_item in menu_items:
+            if not menu_item['parent_id']: continue
+            parent = menu_item['parent_id'][0]
+            if parent in menu_items_map:
+                menu_items_map[parent].set_default('children', []).append(menu_item)
+
         # sort by sequence a tree using parent_id
-        for i in menu_items:
-            i['children'].sort(key=lambda x:x["sequence"])
+        for menu_item in menu_items:
+            menu_item.set_default('children', []).sort(
+                key=lambda x:x["sequence"])
 
         return {'data': menu_root}
 
