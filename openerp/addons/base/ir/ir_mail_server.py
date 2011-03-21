@@ -24,33 +24,8 @@ from osv import fields
 from tools.translate import _
 import tools
 
-#import time
-#import binascii
-#import email
-#from email.header import decode_header
-#from email.utils import parsedate
-#import base64
-#import re
-#import logging
-#import xmlrpclib
-
-#_logger = logging.getLogger('mailgate')
-
-#import re
 import smtplib
-#import base64
-#from email import Encoders
-#from email.mime.base import MIMEBase
-#from email.mime.multipart import MIMEMultipart
-#from email.mime.text import MIMEText
-#from email.header import decode_header, Header
-#from email.utils import formatdate
-#import netsvc
-#import datetime
-#import tools
-#import logging
-
-#EMAIL_PATTERN = re.compile(r'([^()\[\] ,<:\\>@";]+@[^()\[\] ,<:\\>@";]+)') # See RFC822
+import netsvc
 
 class ir_mail_server(osv.osv):
     """
@@ -65,9 +40,6 @@ class ir_mail_server(osv.osv):
                         help="The Name is used as the Sender name along with the provided From Email, \
 unless it is already specified in the From Email, e.g: John Doe <john@doe.com>",
                         ),
-         'email_id': fields.char('From Email',
-                        size=120, required=True,
-                        help="eg: 'john@doe.com' or 'John Doe <john@doe.com>'"),
         'smtp_host': fields.char('Server',
                         size=120, required=True,
                         help="Enter name of outgoing server, eg: smtp.yourdomain.com"),
@@ -97,15 +69,11 @@ unless it is already specified in the From Email, e.g: John Doe <john@doe.com>",
      }
 
     _sql_constraints = [
-        (
-         'email_uniq',
-         'unique (email_id)',
-         'Another setting already exists with this email ID !')
     ]
 
 
     def name_get(self, cr, uid, ids, context=None):
-        return [(a["id"], "%s (%s)" % (a['email_id'], a['name'])) for a in self.read(cr, uid, ids, ['name', 'email_id'], context=context)]
+        return [(a["id"], "(%s)" % (a['name'])) for a in self.read(cr, uid, ids, ['name'], context=context)]
 
     def test_smtp_connection(self, cr, uid, ids, context=None):
         """
@@ -113,8 +81,8 @@ unless it is already specified in the From Email, e.g: John Doe <john@doe.com>",
         """
         try:
             for smtp_server in self.browse(cr, uid, ids, context=context):
-                smtp = tools.connect_smtp_server(smtp_server.smtpserver, smtp_server.smtpport,  user_name=smtp_server.smtpuname,
-                                user_password=smtp_server.smtppass, ssl=smtp_server.smtpssl, tls=smtp_server.smtptls)
+                smtp = tools.connect_smtp_server(smtp_server.smtp_host, smtp_server.smtp_port,  user_name=smtp_server.smtp_user,
+                                user_password=smtp_server.smtp_pass, ssl=smtp_server.smtp_ssl, tls=smtp_server.smtp_tls)
                 try:
                     smtp.quit()
                 except Exception:
@@ -127,7 +95,6 @@ unless it is already specified in the From Email, e.g: John Doe <john@doe.com>",
                                  )
 
         raise osv.except_osv(_("SMTP Connection: Test Successfully!"), '')
-
 
 ir_mail_server()
 
