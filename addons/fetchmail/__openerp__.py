@@ -26,6 +26,7 @@
     "version" : "1.0",
     "depends" : ["base", 'mail_gateway'],
     "author" : "OpenERP SA",
+    "category": 'Tools',
     "description": """Fetchmail: 
     * Fetch email from Pop / IMAP server
     * Support SSL

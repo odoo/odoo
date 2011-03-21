@@ -29,7 +29,7 @@
     * Voucher Receipt
     * Cheque Register
     """,
-    "category" : "Generic Modules/Accounting",
+    "category" : "Finance",
     "website" : "http://tinyerp.com",
     "depends" : ["account"],
     "init_xml" : [],

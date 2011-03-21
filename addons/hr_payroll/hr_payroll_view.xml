@@ -47,6 +47,9 @@
                 <xpath expr="/form/notebook/page/group/field[@name='advantages']" position="before">
                     <field name="struct_id" select="1"/>
                 </xpath>
+                 <xpath expr="/form/notebook/page/group/field[@name='working_hours']" position="after">
+                    <field name="schedule_pay"/>
+                </xpath>
             </data>
             </field>
         </record>
@@ -153,7 +156,6 @@
                     <group col="6" colspan="4">
                         <field name="name" colspan="4" select="1"/>
                         <field name="code" select="1"/>
-                        <field name="active"/>
                         <field name="slip_id" select="1"/>
                         <field name="employee_id"/>
                       <!--  <field name="function_id"/>-->
@@ -228,7 +230,6 @@
                                     <group col="6" colspan="4">
                                         <field name="name" colspan="4" select="1"/>
                                         <field name="code" select="1"/>
-                                        <field name="active" select="1"/>
                                     </group>
                                     <group col="2" colspan="2">
                                         <separator colspan="4" string="Calculations"/>
@@ -613,12 +614,19 @@
                                 <field name="conditions"/>
                                 <field name="condition_range_min"/>
                                 <field name="condition_range_max"/>
+                                <separator colspan="2" string="Compute Code"/>
+                                <field colspan="2" name="python_compute" nolabel="1" attrs="{'readonly':[('amount_type','!=','code')], 'required':[('amount_type','=','code')]}"/>
                             </group>
                             <group col="2" colspan="2">
                                 <group col="2" colspan="2">
                                 <separator colspan="4" string="Company contribution"/>
-                                    <field name="register_id"/>
-                                    <field name="company_contrib"/>
+                                    <field name="company_contribution"/>
+                                    <group col="2" colspan="2" attrs="{'readonly':[('company_contribution','=',False)]}">
+                                        <field name="amt_type" />
+                                        <field name="contribute_per"/>
+                                        <field name="register_id"/>
+                                        <field name="company_contrib"/>
+                                    </group>
                                 </group>
                                 <group col="2" colspan="4">
                                     <separator colspan="4" string="Computational Expression"/>
@@ -634,6 +642,7 @@
                     <page string="Child Rules">
                        <separator colspan="4" string="Children definition"/>
                        <field name="child_depend"/>
+                       <field name="display_child_rules"/>
                        <field colspan="4" name="child_ids" nolabel="1"/>
                     </page>
                     <page string="Description">

@@ -23,8 +23,9 @@
 {
     'name': 'Integrated Document Management System',
     'version': '2.1',
-    'category': 'Generic Modules/Others',
-    'description': """This is a complete document management system:
+    'category': 'Tools',
+    'description': """Keep track of all your documents in OpenERP
+    This is a complete document management system:
     * User Authentication
     * Document Indexation :- .pptx and .docx files are not support in windows platform.
     * Dashboard for Document that includes:

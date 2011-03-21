@@ -27,7 +27,7 @@
                  "crm",
                 ],
     "author" : "OpenERP SA",
-    "category": 'Generic Modules/Marketing',
+    "category": 'Sales',
     "description": """Demo data for the module marketing_campaign.""",
     'website': 'http://www.openerp.com',
     'init_xml': [],

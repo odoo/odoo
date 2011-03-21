@@ -19,10 +19,10 @@
 #
 ##############################################################################
 {
-    "name" : "Accountant",
+    "name" : "Accountant Access",
     "version" : "1.1",
     "author" : "OpenERP SA",
-    "category": 'Generic Modules/Accounting',
+    "category": 'Finance',
     "description": """
 This module gives the admin user the access to all the accounting features like the journal
 items and the chart of accounts.

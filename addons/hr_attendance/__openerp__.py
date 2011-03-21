@@ -23,7 +23,7 @@
 {
     'name': 'Attendances Of Employees',
     'version': '1.1',
-    'category': 'Generic Modules/Human Resources',
+    'category': 'Human Resources',
     'description': """
     This module aims to manage employee's attendances.
     Keeps account of the attendances of the employees on the basis of the

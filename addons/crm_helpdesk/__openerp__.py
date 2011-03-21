@@ -23,7 +23,7 @@
 {
     'name': 'CRM Helpdesk', 
     'version': '1.0', 
-    'category': 'Generic Modules/CRM & SRM', 
+    'category': 'Sales', 
     'description': """Helpdesk Management""", 
     'author': 'OpenERP SA', 
     'website': 'http://www.openerp.com', 

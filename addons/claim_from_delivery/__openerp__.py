@@ -21,11 +21,11 @@
     "name" : "Claim from delivery",
     "version" : "1.0",
     "author" : "OpenERP SA",
-    "category" : "Generic Modules/Inventory Control",
+    "category" : "Warehouse",
     "depends" : ["base", "crm_claim", "stock"],
     "init_xml" : [],
     "demo_xml" : [],
-    "description": '''Create Claim from delivery order:
+    "description": '''Integrate your Claims Management with your Delivery Orders
 ''',
     "update_xml" : ["claim_delivery_view.xml"],
     "active": False,

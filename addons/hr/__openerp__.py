@@ -23,7 +23,7 @@
     "name": "Human Resources",
     "version": "1.1",
     "author": "OpenERP SA",
-    "category": "Generic Modules/Human Resources",
+    "category": "Human Resources",
     "website": "http://www.openerp.com",
     "description": """
     Module for human resource management. You can manage:

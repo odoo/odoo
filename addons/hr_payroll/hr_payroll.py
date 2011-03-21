@@ -96,6 +96,15 @@ class hr_contract(osv.osv):
     _columns = {
         'struct_id': fields.many2one('hr.payroll.structure', 'Salary Structure'),
         'basic': fields.float('Basic Salary', digits_compute=dp.get_precision('Account')), # i think we can remove this because we have wage field on contract ?
+        'schedule_pay': fields.selection([
+            ('monthly', 'Monthly'),
+            ('quarterly', 'Quarterly'),
+            ('semi-annually', 'Semi-annually'),
+            ('annually', 'Annually'),
+            ('weekly', 'Weekly'),
+            ('bi-weekly', 'Bi-weekly'),
+            ('bi-monthly', 'Bi-monthly'),
+            ], 'Scheduled Pay', select=True),
     }
 
 hr_contract()
@@ -413,6 +422,15 @@ class hr_payslip(osv.osv):
                 result[record.id] = [x[0] for x in res]
         return result
 
+    def _compute(self, cr, uid, id, value, context=None):
+        rule_obj = self.pool.get('hr.salary.rule')
+        contrib = rule_obj.browse(cr, uid, id, context=context)
+        if contrib.amt_type == 'fix':
+            return contrib.contribute_per
+        elif contrib.amt_type == 'per':
+            return value * contrib.contribute_per
+        return 0.0
+
     _columns = {
         'struct_id':fields.many2one('hr.payroll.structure', 'Designation', readonly=True, states={'draft': [('readonly', False)]}),
         'register_id':fields.many2one('hr.payroll.register', 'Register', required=False, readonly=True, states={'draft': [('readonly', False)]}),
@@ -504,35 +522,33 @@ class hr_payslip(osv.osv):
         return True
 
     def verify_sheet(self, cr, uid, ids, context=None):
-#        register_pool = self.pool.get('company.contribution')
         register_line_pool = self.pool.get('hr.contibution.register.line')
-
+        line_tot = 0.0
         for slip in self.browse(cr, uid, ids, context=context):
             base = {
-                'basic_amount':slip.basic_amount,
-#                'net':slip.net,
-#                'gross':slip.grows,
+                'basic':slip.basic_amount,
             }
-#            rules = slip.contract_id.struct_id.rule_ids
-#            if rules:
-#                for rl in rules:
-#                    if rl.contribute_ids:
-#                        base[rl.code.lower()] = rl.amount
-#                        for contrib in rl.contribute_ids:
-#                            if contrib.register_id:
-#                                value = eval(rl.category_id.base, base)
-#                                company_contrib = register_pool.compute(cr, uid, contrib.id, value, context)
-#                                reg_line = {
-#                                    'name':rl.name,
-#                                    'register_id': contrib.register_id.id,
-#                                    'code':rl.code,
-#                                    'employee_id':slip.employee_id.id,
-#                                    'emp_deduction':rl.amount,
-#                                    'comp_deduction':company_contrib,
-#                                    'total':rl.amount + rl.amount
-#                                }
-#                                register_line_pool.create(cr, uid, reg_line)
-
+            rules = slip.contract_id.struct_id.rule_ids
+            if rules:
+                for rl in rules:
+                    if rl.company_contribution:
+                        base[rl.code.lower()] = rl.contribute_per
+                        if rl.register_id:
+                            for sl in slip.line_ids:
+                                if sl.name == rl.name:
+                                    line_tot = sl.total
+                            value = eval(rl.computational_expression, base)
+                            company_contrib = self._compute(cr, uid, rl.id, value, context)
+                            reg_line = {
+                                'name': rl.name,
+                                'register_id': rl.register_id.id,
+                                'code': rl.code,
+                                'employee_id': slip.employee_id.id,
+                                'emp_deduction': line_tot,
+                                'comp_deduction': company_contrib,
+                                'total': rl.contribute_per + line_tot
+                            }
+                            register_line_pool.create(cr, uid, reg_line)
         self.write(cr, uid, ids, {'state':'confirm'}, context=context)
         return True
 
@@ -963,33 +979,34 @@ class hr_payslip(osv.osv):
                 raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ') % (e))
             if line.amount_type == 'per':
                 try:
-                    if line.parent_rule_id:
-                        for rul in [line.parent_rule_id]:
-#                            if rul.child_depend:
-                            val = rul.amount * amt
-                            amt = val
-                    value = line.amount * amt
-                    if line.condition_range_min or line.condition_range_max:
-                        if ((value < line.condition_range_min) or (value > line.condition_range_max)):
-                            value = 0.0
+                    if line.child_depend == False:
+                        if line.parent_rule_id:
+                            for rul in [line.parent_rule_id]:
+                                val = rul.amount * amt
+                                amt = val
+                        value = line.amount * amt
+                        if line.condition_range_min or line.condition_range_max:
+                            if ((value < line.condition_range_min) or (value > line.condition_range_max)):
+                                value = 0.0
+                            else:
+                                value = value
                         else:
                             value = value
-                    else:
-                        value = value
                 except Exception, e:
                     raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ') % (e))
+
             elif line.amount_type == 'fix':
-                if line.parent_rule_id:
+                if line.child_depend == False:
+                    if line.parent_rule_id:
                         for rul in [line.parent_rule_id]:
-#                            if rul.child_depend:
                             value = value
-                if line.condition_range_min or line.condition_range_max:
-                    if ((line.amount < line.condition_range_min) or (line.amount > line.condition_range_max)):
-                        value = value
+                    if line.condition_range_min or line.condition_range_max:
+                        if ((line.amount < line.condition_range_min) or (line.amount > line.condition_range_max)):
+                            value = value
+                        else:
+                            value = line.amount
                     else:
                         value = line.amount
-                else:
-                    value = line.amount
             elif line.amount_type=='code':
                 localdict = {'basic':amt, 'employee':employee_id, 'contract':contract}
                 exec line.python_compute in localdict
@@ -1008,12 +1025,18 @@ class hr_payslip(osv.osv):
 #                'function_id': False,
                 'base': line.computational_expression
             }
-            if line.appears_on_payslip and not line.parent_rule_id:
-                if line.condition_range_min or line.condition_range_max:
-                    if not ((value < line.condition_range_min) or (value > line.condition_range_max)):
-                        update['value']['line_ids'].append(vals)
+            if line.appears_on_payslip:
+                if line.parent_rule_id:
+                    for l in salary_rule_pool.browse(cr, uid, [line.parent_rule_id.id], context=context):
+                        if l.display_child_rules == True:
+                            update['value']['line_ids'].append(vals)
                 else:
-                    update['value']['line_ids'].append(vals)
+                    if line.condition_range_min or line.condition_range_max:
+                        if not ((value < line.condition_range_min) or (value > line.condition_range_max)):
+                            update['value']['line_ids'].append(vals)
+                    else:
+                        update['value']['line_ids'].append(vals)
+
         basic = contract.wage
         number = sequence_obj.get(cr, uid, 'salary.slip')
         update['value'].update({
@@ -1219,6 +1242,13 @@ class hr_salary_rule(osv.osv):
         'sequence': fields.integer('Sequence', required=True, help='Use to arrange calculation sequence'),
         'active':fields.boolean('Active'),
         'python_compute':fields.text('Python Code'),
+        'display_child_rules': fields.boolean('Display Child Rules', help="Used for the display of Child Rules on payslip"),
+        'amt_type':fields.selection([
+            ('per','Percentage (%)'),
+            ('fix','Fixed Amount'),
+        ],'Company Amount Type', select=True),
+        'contribute_per':fields.float('Company Contribution', digits=(16, 4), help='Define Company contribution ratio 1.00=100% contribution.'),
+        'company_contribution':fields.boolean('Company Contribution',help="This rule has Company Contributions."),
      }
     _defaults = {
         'python_compute': '''# basic\n# employee: hr.employee object or None\n# contract: hr.contract object or None\n\nresult = basic * 0.10''',

@@ -38,7 +38,7 @@
     'url': 'http://launchpad.net/openerp-costa-rica',
     'author': 'ClearCorp S.A.',
     'website': 'http://clearcorp.co.cr',
-    'category': 'Localisation/Account Charts',
+    'category': 'Finance',
     'description': """Chart of accounts for Costa Rica
 Includes:
 * account.type

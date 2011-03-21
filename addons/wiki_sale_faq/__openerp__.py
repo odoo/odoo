@@ -22,7 +22,7 @@
 {
     'name': 'Wiki -Sale - FAQ',
     'version': '1.0',
-    'category': 'Generic Modules/Others',
+    'category': 'Tools',
     'description': """This module provides a wiki FAQ Template
     """,
     'author': 'OpenERP SA',

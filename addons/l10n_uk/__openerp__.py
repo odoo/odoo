@@ -60,7 +60,7 @@
 {
     'name': 'United Kingdom - minimal',
     'version': '1.1',
-    'category': 'Localisation/Account Charts',
+    'category': 'Finance',
     'description': """This is the base module to manage the accounting chart for United Kingdom in OpenERP.""",
     'author': 'Seath Solutions Ltd',
     'website': 'http://www.seathsolutions.com',

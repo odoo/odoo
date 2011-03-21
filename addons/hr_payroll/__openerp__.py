@@ -22,7 +22,7 @@
 {
     'name': 'Human Resource Payroll',
     'version': '1.0',
-    'category': 'Generic Modules/Human Resources',
+    'category': 'Human Resources',
     'description': """Generic Payroll system
     * Employee Details
     * Employee Contracts

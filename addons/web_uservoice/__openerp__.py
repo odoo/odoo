@@ -21,7 +21,7 @@
 {
     'name': 'Add uservoice button in header',
     'version': '1.0',
-    'category': 'Generic Modules/Others',
+    'category': 'Tools',
     'description': "",
     'author': 'OpenERP SA',
     'website': 'http://openerp.com',

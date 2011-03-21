@@ -20,10 +20,10 @@
 ##############################################################################
 
 {
-    'name'      : 'Account Analytic Default',
+    'name'      : 'Account Analytic Defaults',
     'version'   : '1.0',
-    'category'  : 'Generic Modules/Accounting',
-    'description': """
+    'category'  : 'Finance',
+    'description': """Set default values for your analytic accounts
 Allows to automatically select analytic accounts based on criterions:
 * Product
 * Partner
