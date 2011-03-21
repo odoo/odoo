@@ -488,7 +488,7 @@ class crm_case(object):
 
                 # Send an email
                 subject = "Reminder: [%s] %s" % (str(case.id), case.name, )
-                email_message_obj.email_send(cr, uid,
+                email_message_obj.schedule_with_attach(cr, uid,
                     src,
                     [dest],
                     subject,

@@ -106,9 +106,6 @@ class project_tasks(osv.osv):
             return len(res) and res[0] or False
         return res
 
-    def msg_send(self, cr, uid, id, *args, **argv):
-        return True
-
     def _history(self, cr, uid, cases, keyword, history=False, subject=None, email=False, details=None, email_from=False, message_id=False, attach=[], context=None):
         mailgate_pool = self.pool.get('email.thread')
         return mailgate_pool.history(cr, uid, cases, keyword, history=history,\

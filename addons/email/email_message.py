@@ -83,7 +83,7 @@ class email_message_common(osv.osv_memory):
         'priority':fields.integer('Priority'),
         'body': fields.text('Description', translate=True),
         'body_html': fields.text('HTML', help="Contains HTML version of email"),
-        'smtp_server_id':fields.many2one('email.smtp_server', 'SMTP Server'),
+        'smtp_server_id':fields.many2one('ir.mail.server', 'SMTP Server'),
     }
     _rec_name='subject'
 
@@ -177,13 +177,6 @@ class email_message(osv.osv):
         'display_text': fields.function(_get_display_text, method=True, type='text', size="512", string='Display Text'),
         'debug':fields.boolean('Debug', readonly=True),
         'history': fields.boolean('History', readonly=True),
-        'folder':fields.selection([
-                        ('drafts', 'Drafts'),
-                        ('inbox', 'Inbox'),
-                        ('outbox', 'Outbox'),
-                        ('trash', 'Trash'),
-                        ('sent', 'Sent Items'),
-                        ], 'Folder'),
         'state':fields.selection([
                         ('outgoing', 'Outgoing'),
                         ('sent', 'Sent'),
@@ -194,25 +187,7 @@ class email_message(osv.osv):
     }
 
     _defaults = {
-        'state': lambda * a: 'draft',
-        'folder': lambda * a: 'outbox',
     }
-
-#    def unlink(self, cr, uid, ids, context=None):
-#        """
-#        It just changes the folder of the item to "Trash", if it is no in Trash folder yet,
-#        or completely deletes it if it is already in Trash.
-#        """
-#        to_update = []
-#        to_remove = []
-#        for mail in self.browse(cr, uid, ids, context=context):
-#            if mail.folder == 'trash':
-#                to_remove.append(mail.id)
-#            else:
-#                to_update.append(mail.id)
-#        # Changes the folder to trash
-#        self.write(cr, uid, to_update, {'folder': 'trash'}, context=context)
-#        return super(email_message, self).unlink(cr, uid, to_remove, context=context)
 
     def init(self, cr):
         cr.execute("""SELECT indexname
@@ -222,25 +197,8 @@ class email_message(osv.osv):
             cr.execute("""CREATE INDEX email_message_res_id_model_idx
                           ON email_message (model, res_id)""")
 
-#    def process_queue(self, cr, uid, ids, arg):
-#        self.process_email_queue(cr, uid, ids=ids)
-#        return True
-
-#    def run_mail_scheduler(self, cursor, user, context=None):
-#        """
-#        This method is called by OpenERP Scheduler
-#        to periodically send emails
-#        """
-#        try:
-#            self.process_email_queue(cursor, user, context=context)
-#        except Exception, e:
-#            LOGGER.notifyChannel(
-#                                 "Email Template",
-#                                 netsvc.LOG_ERROR,
-#                                 _("Error sending mail: %s") % e)
-
-    def email_send(self, cr, uid, email_from, email_to, subject, body, model=False, email_cc=None, email_bcc=None, reply_to=False, attach=None,
-            message_id=False, references=False, openobject_id=False, debug=False, subtype='plain', x_headers={}, priority='3', smtp_server_id=False, context=None):
+    def schedule_with_attach(self, cr, uid, email_from, email_to, subject, body, model=False, email_cc=None, email_bcc=None, reply_to=False, attach=None,
+            message_id=False, references=False, openobject_id=False, debug=False, subtype='plain', x_headers={}, priority='3', smtp_server_id=False, context=None, auto_delete=False):
         attachment_obj = self.pool.get('ir.attachment')
         if email_to and type(email_to) != list:
             email_to = [email_to]
@@ -250,11 +208,11 @@ class email_message(osv.osv):
             email_bcc = [email_bcc]
 
         msg_vals = {
-                'name': subject,
+                'subject': subject,
                 'model': model or '',
                 'date': time.strftime('%Y-%m-%d'),
                 'user_id': uid,
-                'description': body,
+                'body': body,
                 'email_from': email_from,
                 'email_to': email_to and ','.join(email_to) or '',
                 'email_cc': email_cc and ','.join(email_cc) or '',
@@ -267,7 +225,6 @@ class email_message(osv.osv):
                 'headers': x_headers or False,
                 'priority': priority,
                 'debug': debug,
-                'folder': 'outbox',
                 'history': True,
                 'smtp_server_id': smtp_server_id,
                 'state': 'waiting',
@@ -277,10 +234,10 @@ class email_message(osv.osv):
             attachment_ids = []
             for attachment in attach:
                 attachment_data = {
-                        'name':  (subject or '') + _(' (Email Attachment)'),
+                        'subject':  (subject or '') + _(' (Email Attachment)'),
                         'datas': attachment[1],
                         'datas_fname': attachment[0],
-                        'description': subject or _('No Description'),
+                        'body': subject or _('No Description'),
                         'res_model':'email.message',
                         'res_id': email_msg_id,
                     }
@@ -298,13 +255,13 @@ class email_message(osv.osv):
         if context is None:
             context = {}
         attachment_obj = self.pool.get('ir.attachment')
-        smtp_server_obj = self.pool.get('email.smtp_server')
+        smtp_server_obj = self.pool.get('ir.mail.server')
         if not ids:
-            filters = [('folder', '=', 'outbox'), ('state', '=', 'waiting')]
+            filters = [('state', '=', 'outgoing')]
             if 'filters' in context:
                 filters.extend(context['filters'])
             ids = self.search(cr, uid, filters, context=context)
-        self.write(cr, uid, ids, {'state':'sending', 'folder':'sent'}, context)
+        self.write(cr, uid, ids, {'state':'sending'}, context)
         for message in self.browse(cr, uid, ids, context):
             try:
                 attachments = []
@@ -315,22 +272,7 @@ class email_message(osv.osv):
                     smtp_ids = smtp_server_obj.search(cr, uid, [('default','=',True)])
                     if smtp_ids:
                         smtp_server = smtp_server_obj.browse(cr, uid, smtp_ids, context)[0]
-                res = tools.email_send(message.email_from,
-                        message.email_to and message.email_to.split(',') or [],
-                        message.name, message.description,
-                        email_cc=message.email_cc and message.email_cc.split(',') or [],
-                        email_bcc=message.email_bcc and message.email_bcc.split(',') or [],
-                        reply_to=message.reply_to,
-                        attach=attachments, message_id=message.message_id, references = message.references,
-                        openobject_id=message.res_id,
-                        subtype=message.sub_type,
-                        x_headers=message.headers and eval(message.headers) or {},
-                        priority=message.priority, debug=message.debug,
-                        smtp_server=smtp_server and smtp_server.smtp_host or None,
-                        smtp_port=smtp_server and smtp_server.smtpport or None,
-                        ssl=smtp_server and smtp_server.smtpssl or False,
-                        smtp_user=smtp_server and smtp_server.smtpuname or None,
-                        smtp_password=smtp_server and smtp_server.smtppass or None)
+                res = self.send_email(cr, uid, ids, auto_commit=True, context=context)
                 if res:
                     self.write(cr, uid, [message.id], {'state':'sent', 'message_id': res}, context)
                 else:

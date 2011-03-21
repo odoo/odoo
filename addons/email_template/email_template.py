@@ -152,7 +152,15 @@ This is useful for CRM leads for example"),
                 help="Copy and paste the value in the "
                 "location you want to use a system value."),
         'auto_delete': fields.boolean('Auto Delete', help="Permanently delete emails after sending"),
-        'model': fields.related('model_id','model', type='char', size=128, string='Object'),
+        'model': fields.related('model_id','model', type='char', size=128, string='Object', help="Placeholders can be used here."),
+        'email_from': fields.char('From', size=128, help="Email From. Placeholders can be used here."),
+        'email_to': fields.char('To', size=256, help="Email Recipients. Placeholders can be used here."),
+        'email_cc': fields.char('Cc', size=256, help="Carbon Copy Email Recipients. Placeholders can be used here."),
+        'email_bcc': fields.char('Bcc', size=256, help="Blind Carbon Copy Email Recipients. Placeholders can be used here."),
+        'message_id': fields.char('Message Id', size=1024, select=1, help="Message Id on Email. Placeholders can be used here."),
+        'reply_to':fields.char('Reply-To', size=250, help="Placeholders can be used here."),
+        'body': fields.text('Description', translate=True, help="Placeholders can be used here."),
+        'body_html': fields.text('HTML', help="Contains HTML version of email. Placeholders can be used here."),
     }
 
     _sql_constraints = [
@@ -203,10 +211,6 @@ This is useful for CRM leads for example"),
                     self.pool.get('ir.values').unlink(cr, uid, template.ref_ir_value.id, context)
             except:
                 raise osv.except_osv(_("Warning"), _("Deletion of Record failed"))
-
-    def delete_action(self, cr, uid, ids, context=None):
-        self.unlink_action(cr, uid, ids, context=context)
-        return True
 
     def unlink(self, cr, uid, ids, context=None):
         self.unlink_action(cr, uid, ids, context=context)
@@ -344,7 +348,7 @@ This is useful for CRM leads for example"),
         return {'value':result}
 
 
-    def _generate_email(self, cr, uid, template_id, record_id, context=None):
+    def generate_email(self, cr, uid, template_id, record_id, context=None):
         """
         Generates an email from the template for
         record record_id of target object
@@ -378,8 +382,8 @@ This is useful for CRM leads for example"),
             'email_cc': self.get_template_value(cr, uid, template.email_cc, model, record_id, context),
             'email_bcc': self.get_template_value(cr, uid, template.email_bcc, model, record_id, context),
             'reply_to': self.get_template_value(cr, uid, template.reply_to, model, record_id, context),
-            'name': self.get_template_value(cr, uid, template.subject, model, record_id, context),
-            'description': self.get_template_value(cr, uid, template.description, model, record_id, context),
+            'subject': self.get_template_value(cr, uid, template.subject, model, record_id, context),
+            'body': self.get_template_value(cr, uid, template.description, model, record_id, context),
             #'body_html': self.get_template_value(cr, uid, template.body_html, model, record_id, context),
         }
 
@@ -428,18 +432,10 @@ This is useful for CRM leads for example"),
 
         #Send emails
         context.update({'notemplate':True})
-        email_id = email_message_pool.email_send(cr, uid, values.get('email_from'), values.get('email_to'), values.get('name'), values.get('description'),
+        email_id = email_message_pool.schedule_with_attach(cr, uid, values.get('email_from'), values.get('email_to'), values.get('name'), values.get('description'),
                     model=model, email_cc=values.get('email_cc'), email_bcc=values.get('email_bcc'), reply_to=values.get('reply_to'),
                     attach=attachment, message_id=values.get('message_id'), openobject_id=record_id, debug=True, subtype='plain', x_headers={}, priority='3', smtp_server_id=smtp_server.id, context=context)
         email_message_pool.write(cr, uid, email_id, {'template_id': context.get('template_id',template.id)})
-        return email_id
-
-
-
-    def generate_email(self, cr, uid, template_id, record_id,  context=None):
-        if context is None:
-            context = {}
-        email_id = self._generate_email(cr, uid, template_id, record_id, context)
         return email_id
 
 email_template()

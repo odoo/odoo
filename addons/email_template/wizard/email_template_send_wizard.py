@@ -132,7 +132,7 @@ class email_template_send_wizard(osv.osv_memory):
         if context is None:
             context = {}
         mailid = self.save_to_mailbox(cr, uid, ids, context=context)
-        self.pool.get('email.message').write(cr, uid, mailid, {'folder':'drafts', 'state': 'draft'}, context)
+        self.pool.get('email.message').write(cr, uid, mailid, {'state': 'outgoing'}, context)
         return {'type': 'ir.actions.act_window_close'}
 
     def send_mail(self, cr, uid, ids, context=None):
@@ -170,7 +170,7 @@ class email_template_send_wizard(osv.osv_memory):
         email_ids = []
         for template in self.browse(cr, uid, ids, context=context):
             for record_id in context.get('src_rec_ids',[]):
-                email_id = self._generate_email(cr, uid, template.id, record_id, context)
+                email_id = self.generate_email(cr, uid, template.id, record_id, context)
                 email_ids.append(email_id)
         return email_ids
 

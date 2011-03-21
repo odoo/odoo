@@ -86,9 +86,6 @@ class email_thread(osv.osv):
             res[thread.id] = l
         return res
 
-    def msg_send(self, cr, uid, id, *args, **argv):
-        raise Exception, _('Method is not implemented')
-
     def history(self, cr, uid, cases, keyword, history=False, subject=None, email=False, details=None, \
                     email_from=False, message_id=False, references=None, attach=None, email_cc=None, \
                     email_bcc=None, email_date=None, context=None):
@@ -134,14 +131,14 @@ class email_thread(osv.osv):
             if not partner_id and case._name == 'res.partner':
                 partner_id = case.id
             data = {
-                'name': keyword,
+                'subject': keyword,
                 'user_id': uid,
                 'model' : case._name,
                 'partner_id': partner_id,
                 'res_id': case.id,
                 'date': time.strftime('%Y-%m-%d %H:%M:%S'),
                 'message_id': message_id,
-                'description': details or (hasattr(case, 'description') and case.description or False),
+                'body': details or (hasattr(case, 'description') and case.description or False),
                 'attachment_ids': [(6, 0, attachments)]
             }
 
@@ -151,13 +148,13 @@ class email_thread(osv.osv):
                         param = ", ".join(param)
 
                 data = {
-                    'name': subject or _('History'),
+                    'subject': subject or _('History'),
                     'history': True,
                     'user_id': uid,
                     'model' : case._name,
                     'res_id': case.id,
                     'date': email_date or time.strftime('%Y-%m-%d %H:%M:%S'),
-                    'description': details,
+                    'body': details,
                     'email_to': email,
                     'email_from': email_from or \
                         (hasattr(case, 'user_id') and case.user_id and case.user_id.address_id and \
@@ -167,7 +164,6 @@ class email_thread(osv.osv):
                     'partner_id': partner_id,
                     'references': references,
                     'message_id': message_id,
-                    'folder': 'inbox',
                     'attachment_ids': [(6, 0, attachments)]
                 }
             obj.create(cr, uid, data, context=context)
@@ -247,12 +243,12 @@ class email_thread(osv.osv):
                     model_pool.write(cr, uid, [res_id], custom_values, context=context)
             else:
                 data = {
-                    'name': msg.get('subject'),
+                    'subject': msg.get('subject'),
                     'email_from': msg.get('from'),
                     'email_cc': msg.get('cc'),
                     'user_id': False,
-                    'description': msg.get('body'),
-                    'state' : 'draft',
+                    'body': msg.get('body'),
+                    #'state' : 'draft',
                 }
                 data.update(self.get_partner(cr, uid, msg.get('from'), context=context))
                 res_id = model_pool.create(cr, uid, data, context=context)

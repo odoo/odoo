@@ -191,17 +191,12 @@ class email_compose_message(osv.osv_memory):
                         })
         return {'value': result}
 
-    def on_change_smtp_server(self, cr, uid, ids, smtp_server_id, email_from, context=None):
-        if not email_from and smtp_server_id:
-            mail_server_pool = self.pool.get("email.smtp_server")
-            email_from = mail_server_pool.browse(cr, uid, smtp_server_id, context).email_id or False
-        return {'value':{'email_from': email_from}}
 
     def save_to_drafts(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
         email_id = self.save_to_mailbox(cr, uid, ids, context=context)
-        self.pool.get('email.message').write(cr, uid, email_id, {'folder':'drafts', 'state': 'draft'}, context)
+        self.pool.get('email.message').write(cr, uid, email_id, {'state': 'outgoing'}, context)
         return {'type': 'ir.actions.act_window_close'}
 
     def send_mail(self, cr, uid, ids, context=None):
@@ -223,7 +218,7 @@ class email_compose_message(osv.osv_memory):
                 references = mail.references and mail.references + "," + mail.message_id or mail.message_id
             else:
                 message_id = mail.message_id
-            email_id = email_message_pool.email_send(cr, uid, mail.email_from, mail.email_to, mail.name, mail.description,
+            email_id = email_message_pool.schedule_with_attach(cr, uid, mail.email_from, mail.email_to, mail.name, mail.description,
                     model=mail.model, email_cc=mail.email_cc, email_bcc=mail.email_bcc, reply_to=mail.reply_to,
                     attach=attachment, message_id=message_id, references=references, openobject_id=int(mail.res_id), debug=mail.debug,
                     subtype=mail.sub_type, x_headers=mail.headers, priority=mail.priority, smtp_server_id=mail.smtp_server_id and mail.smtp_server_id.id, context=context)
