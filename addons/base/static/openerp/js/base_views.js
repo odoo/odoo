@@ -273,7 +273,7 @@ openerp.base.FormView =  openerp.base.Controller.extend({
     },
     on_record_loaded: function() {
         for (var f in this.fields) {
-            this.fields[f].set_value();
+            this.fields[f].set_value(this.datarecord.values[f]);
         }
     }
 });
@@ -487,21 +487,22 @@ openerp.base.WidgetSeparator = openerp.base.Widget.extend({
     }
 });
 
+openerp.base.WidgetButton = openerp.base.Widget.extend({
+    init: function(view, node) {
+        this._super(view, node);
+        this.template = "WidgetButton";
+    }
+});
+
 openerp.base.WidgetLabel = openerp.base.Widget.extend({
     init: function(view, node) {
         this.is_field_label = true;
+        this.element_name = 'label_' + node.attrs.name;
 
         this._super(view, node);
 
         this.template = "WidgetLabel";
         this.colspan = 1;
-    }
-});
-
-openerp.base.WidgetButton = openerp.base.Widget.extend({
-    init: function(view, node) {
-        this._super(view, node);
-        this.template = "WidgetButton";
     }
 });
 
@@ -511,6 +512,7 @@ openerp.base.Field = openerp.base.Widget.extend({
         view.fields[this.name] = this;
         this.type = node.attrs.widget || view.fields_view.fields[node.attrs.name].type;
         this.element_name = "field_" + this.name + "_" + this.type;
+        this.original_value;
 
         this._super(view, node);
 
@@ -523,7 +525,8 @@ openerp.base.Field = openerp.base.Widget.extend({
         this.help = node.attrs.help || this.field.help;
         this.nolabel = (node.attrs.nolabel == '1');
     },
-    set_value: function() {
+    set_value: function(value) {
+        this.original_value = value;
     }
 });
 
@@ -536,53 +539,35 @@ openerp.base.FieldChar = openerp.base.Field.extend({
         this._super.apply(this, arguments);
         // this.$element.bind('change',)  ... blur, focus, ...
     },
-    set_value: function() {
-        this.$element.val(this.view.datarecord.values[this.name]);
+    set_value: function(value) {
+        this._super.apply(this, arguments);
+        if (value != null && value !== false) {
+            this.$element.find('input').val(this.to_string(value));
+        }
+    },
+    get_value: function() {
+        return this.from_string(this.$element.find('input').val());
+    },
+    to_string: function(value) {
+        return value.toString();
+    },
+    from_string: function(value) {
+        return value.toString();
     },
     on_change: function() {
         //this.view.update_field(this.name,value);
     }
 });
 
-openerp.base.FieldEmail = openerp.base.Field.extend({
-    init: function(view, node) {
-        this._super(view, node);
-        this.template = "FieldEmail";
-    }
+openerp.base.FieldEmail = openerp.base.FieldChar.extend({
 });
 
-openerp.base.FieldUrl = openerp.base.Field.extend({
-    init: function(view, node) {
-        this._super(view, node);
-        this.template = "FieldChar";
-    }
+openerp.base.FieldUrl = openerp.base.FieldChar.extend({
 });
 
-openerp.base.FieldFloat = openerp.base.Field.extend({
-    init: function(view, node) {
-        this._super(view, node);
-        this.template = "FieldChar";
-    }
-});
-
-openerp.base.FieldBoolean = openerp.base.Field.extend({
-    init: function(view, node) {
-        this._super(view, node);
-        this.template = "FieldBoolean";
-    }
-});
-
-openerp.base.FieldDate = openerp.base.Field.extend({
-    init: function(view, node) {
-        this._super(view, node);
-        this.template = "FieldDate";
-    }
-});
-
-openerp.base.FieldDatetime = openerp.base.Field.extend({
-    init: function(view, node) {
-        this._super(view, node);
-        this.template = "FieldDatetime";
+openerp.base.FieldFloat = openerp.base.FieldChar.extend({
+    to_string: function(value) {
+        return value.toFixed(2);
     }
 });
 
@@ -590,6 +575,43 @@ openerp.base.FieldText = openerp.base.Field.extend({
     init: function(view, node) {
         this._super(view, node);
         this.template = "FieldText";
+    },
+    set_value: function(value) {
+        this._super.apply(this, arguments);
+        if (value != null && value !== false) {
+            this.$element.find('textarea').val(value);
+        }
+    },
+    get_value: function() {
+        return this.$element.find('textarea').val();
+    }
+});
+
+openerp.base.FieldBoolean = openerp.base.Field.extend({
+    init: function(view, node) {
+        this._super(view, node);
+        this.template = "FieldBoolean";
+    },
+    set_value: function(value) {
+        this._super.apply(this, arguments);
+        this.$element.find('input')[0].checked = value;
+    },
+    get_value: function() {
+        this.$element.find('input')[0].checked;
+    }
+});
+
+openerp.base.FieldDate = openerp.base.FieldChar.extend({
+    init: function(view, node) {
+        this._super(view, node);
+        this.template = "FieldDate";
+    }
+});
+
+openerp.base.FieldDatetime = openerp.base.FieldChar.extend({
+    init: function(view, node) {
+        this._super(view, node);
+        this.template = "FieldDatetime";
     }
 });
 
@@ -601,6 +623,15 @@ openerp.base.FieldSelection = openerp.base.Field.extend({
     init: function(view, node) {
         this._super(view, node);
         this.template = "FieldSelection";
+    },
+    set_value: function(value) {
+        this._super.apply(this, arguments);
+        if (value != null && value !== false) {
+            this.$element.find('select').val(value);
+        }
+    },
+    get_value: function() {
+        return this.$element.find('select').val();
     }
 });
 
@@ -638,14 +669,16 @@ openerp.base.widgets = {
     'separator' : openerp.base.WidgetSeparator,
     'label' : openerp.base.WidgetLabel,
     'char' : openerp.base.FieldChar,
-    'url' : openerp.base.FieldUrl,
     'email' : openerp.base.FieldEmail,
+    'url' : openerp.base.FieldUrl,
+    'text' : openerp.base.FieldText,
     'date' : openerp.base.FieldDate,
     'datetime' : openerp.base.FieldDatetime,
-    'text' : openerp.base.FieldText,
     'selection' : openerp.base.FieldSelection,
     'many2one' : openerp.base.FieldMany2One,
+    'many2many' : openerp.base.FieldMany2Many,
     'one2many' : openerp.base.FieldOne2Many,
+    'one2many_list' : openerp.base.FieldOne2Many,
     'reference' : openerp.base.FieldReference,
     'boolean' : openerp.base.FieldBoolean,
     'float' : openerp.base.FieldFloat,

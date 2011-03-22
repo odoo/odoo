@@ -162,28 +162,28 @@
             <td t-att-colspan="td.colspan gt 1 ? td.colspan : undefined"
                 t-att-width="td.width ? td.width : undefined"
                 t-att-nowrap="td.is_field_label ? 'true' : undefined"
-                t-att-valign="td.table ? 'top' : undefined">
-                    <t t-raw="td.render()"/>
+                t-att-valign="td.table ? 'top' : undefined"
+                t-att-id="td.element_id"
+            >
+                <t t-raw="td.render()"/>
             </td>
         </t>
     </tr>
     </table>
 </t>
 <t t-name="WidgetNotebook">
-    <div t-att-id="widget.element_id">
-        <ul>
-            <li t-foreach="widget.pages" t-as="page">
-                <a t-att-href="'#' + widget.element_id + '-' + page_index">
-                    <t t-esc="page.string"/>
-                </a>
-            </li>
-        </ul>
-        <t t-foreach="widget.pages" t-as="page">
-            <div t-att-id="widget.element_id + '-' + page_index">
-                <t t-raw="page.render()"/>
-            </div>
-        </t>
-    </div>
+    <ul>
+        <li t-foreach="widget.pages" t-as="page">
+            <a t-att-href="'#' + widget.element_id + '-' + page_index">
+                <t t-esc="page.string"/>
+            </a>
+        </li>
+    </ul>
+    <t t-foreach="widget.pages" t-as="page">
+        <div t-att-id="widget.element_id + '-' + page_index">
+            <t t-raw="page.render()"/>
+        </div>
+    </t>
 </t>
 <t t-name="WidgetSeparator">
     <div t-att-class="'separator ' + (widget.node.attrs.orientation || 'horizontal')">
@@ -191,23 +191,39 @@
     </div>
 </t>
 <t t-name="WidgetLabel">
-    <label t-att-for="widget.for.element_id" t-att-title="widget.for.help" style="display: block; text-align: right;" t-att-ondblclick="'console.log(openerp.screen.oe_main.formview.widgets[\'' + widget.for.element_id + '\'])'">
+    <label t-att-for="widget.for.element_id" t-att-title="widget.for.help" style="display: block; text-align: right;" t-att-ondblclick="'console.log(\'' + widget.for.element_id + '\', openerp.screen.' + widget.for.element_id + ')'">
         <t t-esc="widget.for.string"/>
         <span t-if="widget.for.help">?</span>
         :
     </label>
 </t>
 <t t-name="FieldChar">
-    <input type="text" t-att-name="widget.name" t-att-id="widget.element_id" t-att-class="'field_' + widget.type" style="width: 100%"/>
+    <input type="text"
+        t-att-name="widget.name"
+        t-att-required="widget.node.attrs.required ? 'required' : undefined"
+        t-att-class="'field_' + widget.type" style="width: 100%"
+    />
 </t>
 <t t-name="FieldText">
-    <textarea rows="6" t-att-name="widget.name" t-att-id="widget.element_id" t-att-class="'field_' + widget.type" style="width: 100%;"></textarea>
+    <textarea rows="6" style="width: 100%;"
+        t-att-name="widget.name"
+        t-att-required="widget.node.attrs.required ? 'required' : undefined"
+        t-att-class="'field_' + widget.type"
+    ></textarea>
 </t>
 <t t-name="FieldDate">
-    <input type="text" t-att-name="widget.name" t-att-id="widget.element_id" t-att-class="'field_' + widget.type" style="width: 100%" placeholder="Widget Date"/>
+    <input type="text" style="width: 100%"
+        t-att-name="widget.name"
+        t-att-required="widget.node.attrs.required ? 'required' : undefined"
+        t-att-class="'field_' + widget.type"
+    />
 </t>
 <t t-name="FieldDatetime">
-    <input type="text" t-att-name="widget.name" t-att-id="widget.element_id" t-att-class="'field_' + widget.type" style="width: 100%" placeholder="Widget Datetime"/>
+    <input type="text" style="width: 100%"
+        t-att-name="widget.name"
+        t-att-required="widget.node.attrs.required ? 'required' : undefined"
+        t-att-class="'field_' + widget.type"
+    />
 </t>
 <t t-name="FieldSelection">
     <select t-att-name="widget.name" t-att-id="widget.element_id" t-att-class="'field_' + widget.type" style="width: 100%">
@@ -224,6 +240,11 @@
 <t t-name="FieldOne2Many">
     <div style="background: #ccc; padding: 20px">
         One2Many widget
+    </div>
+</t>
+<t t-name="FieldMany2Many">
+    <div style="background: #ccc; padding: 20px">
+        Many2Many widget
     </div>
 </t>
 <t t-name="FieldReference">

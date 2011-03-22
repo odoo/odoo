@@ -86,6 +86,21 @@ replace ``addons`` by the directory in which your own addon lives.
      and run ``nosetests addons`` instead of the ``unit2`` command,
      the result should be exactly the same.
 
+APIs
+----
+
+Javascript
+++++++++++
+
+.. js:class:: openerp.base.Widget(view, node)
+
+    :param openerp.base.Controller view: The view to which the widget belongs
+    :param Object node: the ``fields_view_get`` descriptor for the widget
+
+.. js:attribute:: openerp.base.Widget.$element
+
+    The widget's root element as jQuery object
+
 * Addons lifecycle (loading, execution, events, ...)
 
   * Python-side
@@ -97,7 +112,6 @@ replace ``addons`` by the directory in which your own addon lives.
 * Extending templates
   .. how do you handle deploying static files via e.g. a separate lighttpd?
 * Python public APIs
-* Javascript public APIs
 * QWeb templates description?
 * OpenERP Web modules (from OpenERP modules)
 
