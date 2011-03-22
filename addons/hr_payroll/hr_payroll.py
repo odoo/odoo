@@ -773,6 +773,7 @@ class hr_payslip(osv.osv):
                 'basic_before_leaves': basic,
                 'total_pay': basic + total,
                 'name': 'Salary Slip of %s for %s' % (slip.employee_id.name, tools.ustr(ttyme.strftime('%B-%Y'))),
+                'state':'draft',
                 'contract_id': contract.id,
                 'company_id': slip.employee_id.company_id.id
             })
