@@ -201,7 +201,7 @@ $(document).ready(function () {
     asyncTest("Data records", function () {
         var dataset = new openerp.base.DataSet({
             rpc: function (url, _params, on_success) {
-                equal('/base/dataset/load', url);
+                equal('/base/dataset/find', url);
                 _.delay(on_success, 0, [
                     {id: 1, sequence: 3, name: "dummy", age: 42},
                     {id: 5, sequence: 7, name: "whee", age: 55}
@@ -241,5 +241,34 @@ $(document).ready(function () {
         });
         domain.pop();
         deepEqual([['foo', '=', 'bar']], dataset._domain);
+    });
+
+    module('active_ids', {
+        setup: function () {
+            openerp = window.openerp.init();
+        }
+    });
+    test('Get pre-set active_ids', 6, function () {
+        var dataset = new openerp.base.DataSet({
+            rpc: function (url, params, on_success) {
+                equal(url, '/base/dataset/get');
+                deepEqual(params.ids, [1, 2, 3]);
+                _.delay(on_success, 0, _.map(
+                    params.ids, function (id) {
+                        return {id: id, sequence: id, name: 'foo'+id};
+                    }
+                ));
+            }
+        });
+        stop(500);
+        dataset.select([1, 2, 3]);
+        dataset.on_active_ids.add(function (data_records) {
+            equal(data_records.length, 3);
+            equal(data_records[0].values.id, 1);
+            equal(data_records[1].values.id, 2);
+            equal(data_records[2].values.id, 3);
+            start();
+        });
+        dataset.active_ids();
     });
 });

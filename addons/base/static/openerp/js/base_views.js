@@ -135,7 +135,7 @@ openerp.base.DataSet =  openerp.base.Controller.extend({
     ids: function (offset, limit) {
         offset = offset || 0;
         limit = limit || null;
-        this.rpc('/base/dataset/load', {
+        this.rpc('/base/dataset/find', {
             model: this._model,
             fields: this._fields,
             domain: this._domain,
@@ -174,18 +174,24 @@ openerp.base.DataSet =  openerp.base.Controller.extend({
      * @param {Object} event.context the context set on the DataSet before DataSet#ids was called
      * @param {Array} event.sort the sorting criteria used to get the ids
      */
-    on_ids: function (records, event) {
-
-    },
+    on_ids: function (records, event) { },
 
     /**
      * Fetch all the currently active records for this DataSet (records selected via DataSet#select)
      *
-     * @param {Number} [offset=0] The index from which selected records should be returned
-     * @param {Number} [limit=-1] The maximum number of records to return
      * @returns itself
      */
-    active_ids: function (offset, limit) {
+    active_ids: function () {
+        this.rpc('/base/dataset/get', {
+            ids: this._active_ids
+        }, _.bind(function (records) {
+            this.on_active_ids(_.map(
+                records, function (record) {
+                    return new openerp.base.DataRecord(
+                        this.session, this._model,
+                        this._fields, record);
+                }, this));
+        }, this));
         return this;
     },
     /**
@@ -194,14 +200,8 @@ openerp.base.DataSet =  openerp.base.Controller.extend({
      * Fires after the DataSet fetched the records matching its internal active ids selection
      *
      * @param {Array} records An array of the DataRecord fetched
-     * @param event The on_active_ids event object
-     * @param {Number} event.offset the offset with which the original DataSet#ids call was performed
-     * @param {Number} event.limit the limit set on the original DataSet#ids call
-     * @param {Array} event.sort the sorting criteria used to get the ids
      */
-    on_active_ids: function (records, event) {
-
-    },
+    on_active_ids: function (records) { },
 
     /**
      * Fetches the current active record for this DataSet
@@ -272,6 +272,7 @@ openerp.base.DataSet =  openerp.base.Controller.extend({
      * @param {Object} [id] the id to activate
      */
     select: function (ids, id) {
+        this._active_ids = ids;
         return this;
     }
 });
