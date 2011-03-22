@@ -3237,12 +3237,12 @@ class orm(orm_template):
             # Step 1. Calling unlink of ir_model_data only for the affected IDS.
             referenced_ids = pool_model_data.search(cr, uid, [('res_id','in',list(sub_ids)),('model','=',self._name)], context=context)
             # Step 2. Marching towards the real deletion of referenced records
-            pool_model_data._unlink(cr, uid, self._name, referenced_ids)
+            pool_model_data.unlink(cr, uid, referenced_ids, context=context)
             
             # For the same reason, removing the record relevant to ir_values
-            ir_value_ids = pool_ir_values.search(cr, uid, [('res_id','in',list(sub_ids)),('model','=',self._name)])
+            ir_value_ids = pool_ir_values.search(cr, uid, [('res_id','in',list(sub_ids)),('model','=',self._name)], context=context)
             if ir_value_ids:
-                pool_ir_values.unlink(cr, uid, ir_value_ids)
+                pool_ir_values.unlink(cr, uid, ir_value_ids, context=context)
             
         for order, object, store_ids, fields in result_store:
             if object != self._name:
