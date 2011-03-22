@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2011-01-19 12:00+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"PO-Revision-Date: 2011-03-21 15:42+0000\n"
+"Last-Translator: jmartin (Zikzakmedia) <jmartin@zikzakmedia.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-25 06:40+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-03-22 06:22+0000\n"
+"X-Generator: Launchpad (build 12559)\n"
 
 #. module: hr
 #: model:process.node,name:hr.process_node_openerpuser0
@@ -25,7 +25,7 @@ msgstr "Usuari OpenERP"
 #: view:hr.job:0
 #: field:hr.job,requirements:0
 msgid "Requirements"
-msgstr ""
+msgstr "Requisits"
 
 #. module: hr
 #: constraint:hr.department:0
@@ -35,7 +35,7 @@ msgstr "Error! No es pot crear departaments recursius."
 #. module: hr
 #: model:process.transition,name:hr.process_transition_contactofemployee0
 msgid "Link the employee to information"
-msgstr ""
+msgstr "Enllaça l'empleat amb informació"
 
 #. module: hr
 #: field:hr.employee,sinid:0
@@ -55,7 +55,7 @@ msgstr "Recursos humans"
 #: view:hr.employee:0
 #: view:hr.job:0
 msgid "Group By..."
-msgstr ""
+msgstr "Agrupa per..."
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.action_hr_job
@@ -66,6 +66,11 @@ msgid ""
 "will be used in the recruitment process to evaluate the applicants for this "
 "job position."
 msgstr ""
+"Els llocs de treball s'utilitzen per definir els càrrecs i els seus "
+"requisits. Podeu controlar el nombre d'empleats que té per lloc i quants "
+"espera tenir en un futur. Així mateix, pot adjuntar una enquesta a una "
+"posició laboral que serà utilitzada en el procés de selecció per avaluar els "
+"candidats a aquest lloc."
 
 #. module: hr
 #: view:hr.employee:0
@@ -79,27 +84,27 @@ msgstr "Departament"
 #. module: hr
 #: help:hr.installer,hr_attendance:0
 msgid "Simplifies the management of employee's attendances."
-msgstr ""
+msgstr "Simplifica la gestió d'assistència dels empleats."
 
 #. module: hr
 #: view:hr.job:0
 msgid "Mark as Old"
-msgstr ""
+msgstr "Marcar como antic"
 
 #. module: hr
 #: view:hr.job:0
 msgid "Jobs"
-msgstr ""
+msgstr "Treballs"
 
 #. module: hr
 #: view:hr.job:0
 msgid "In Recruitment"
-msgstr ""
+msgstr "En selecció"
 
 #. module: hr
 #: view:hr.installer:0
 msgid "title"
-msgstr ""
+msgstr "títol"
 
 #. module: hr
 #: field:hr.department,company_id:0
@@ -112,22 +117,24 @@ msgstr "Companyia"
 #. module: hr
 #: field:hr.job,no_of_recruitment:0
 msgid "Expected in Recruitment"
-msgstr ""
+msgstr "Previsió en selecció"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_config
 msgid "Holidays"
-msgstr ""
+msgstr "Festius"
 
 #. module: hr
 #: help:hr.installer,hr_holidays:0
 msgid "Tracks employee leaves, allocation requests and planning."
 msgstr ""
+"Controla les absències d'empleats, les sol·licituds d'assignació i "
+"planificació."
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_employee_marital_status
 msgid "Employee Marital Status"
-msgstr ""
+msgstr "Estat civil de l'empleat"
 
 #. module: hr
 #: help:hr.employee,partner_id:0
@@ -135,42 +142,46 @@ msgid ""
 "Partner that is related to the current employee. Accounting transaction will "
 "be written on this partner belongs to employee."
 msgstr ""
+"Empresa que està relacionada amb aquest empleat. Les transaccions comptables "
+"s'escriuran a aquesta empresa a la qual pertany l'empleat."
 
 #. module: hr
 #: model:process.transition,name:hr.process_transition_employeeuser0
 msgid "Link a user to an employee"
-msgstr ""
+msgstr "Vincular un usuari a un empleat"
 
 #. module: hr
 #: field:hr.installer,hr_contract:0
 msgid "Employee's Contracts"
-msgstr ""
+msgstr "Contractes de l'empleat"
 
 #. module: hr
 #: help:hr.installer,hr_payroll:0
 msgid "Generic Payroll system."
-msgstr ""
+msgstr "Procés genèric de pagament de nòmines."
 
 #. module: hr
 #: view:hr.employee:0
 msgid "My Departments Employee"
-msgstr ""
+msgstr "Els meus departaments d'empleats"
 
 #. module: hr
 #: model:hr.employee.marital.status,name:hr.hr_employee_marital_status_married
 msgid "Married"
-msgstr ""
+msgstr "Casat/da"
 
 #. module: hr
 #: constraint:hr.employee:0
 msgid ""
 "Error ! You cannot select a department for which the employee is the manager."
 msgstr ""
+"Error! No podeu seleccionar un departament pel qual l'empleat sigui el "
+"director."
 
 #. module: hr
 #: help:hr.employee,passport_id:0
 msgid "Employee Passport Information"
-msgstr ""
+msgstr "Informació del passaport de l'empleat."
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.open_module_tree_department
@@ -179,11 +190,14 @@ msgid ""
 "to employees by departments: expenses and timesheet validation, leaves "
 "management, recruitments, etc."
 msgstr ""
+"L'estructura de departaments de la vostra companyia s'utilitza per gestionar "
+"tots els documents relatius als empleats per departaments: despeses i "
+"validació de temps, gestió d'absències, processos de selecció, etc."
 
 #. module: hr
 #: view:hr.employee:0
 msgid "Position"
-msgstr ""
+msgstr "Posició"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action2
@@ -196,22 +210,24 @@ msgid ""
 "The Related user field on the Employee form allows to link the OpenERP user "
 "(and her rights) to the employee."
 msgstr ""
+"El camp usuari relacionat del formulari de l'empleat permet vincular "
+"l'usuari d'OpenERP (i els seus permisos) a l'empleat."
 
 #. module: hr
 #: view:hr.job:0
 #: selection:hr.job,state:0
 msgid "In Recruitement"
-msgstr ""
+msgstr "En selecció"
 
 #. module: hr
 #: field:hr.employee,identification_id:0
 msgid "Identification No"
-msgstr ""
+msgstr "Nº identificació"
 
 #. module: hr
 #: field:hr.job,no_of_employee:0
 msgid "No of Employee"
-msgstr ""
+msgstr "Nº de empleat"
 
 #. module: hr
 #: selection:hr.employee,gender:0
@@ -223,16 +239,18 @@ msgstr "Dona"
 msgid ""
 "Tracks and helps employees encode and validate timesheets and attendances."
 msgstr ""
+"Controla i ajuda als treballadors a codificar i validar els seus horaris i "
+"assistències."
 
 #. module: hr
 #: field:hr.installer,hr_evaluation:0
 msgid "Periodic Evaluations"
-msgstr ""
+msgstr "Avaluacions periòdiques"
 
 #. module: hr
 #: field:hr.installer,hr_timesheet_sheet:0
 msgid "Timesheets"
-msgstr ""
+msgstr "Fulls de serveis"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_employee_tree
@@ -247,7 +265,7 @@ msgstr "Núm. DNI/passaport"
 #. module: hr
 #: help:hr.job,no_of_employee:0
 msgid "Number of employee with that job."
-msgstr ""
+msgstr "Nombre d'empleats amb aquesta feina."
 
 #. module: hr
 #: field:hr.employee,work_phone:0
@@ -264,7 +282,7 @@ msgstr "Categories filles"
 #: field:hr.job,description:0
 #: model:ir.model,name:hr.model_hr_job
 msgid "Job Description"
-msgstr ""
+msgstr "Descripció de la feina"
 
 #. module: hr
 #: field:hr.employee,work_location:0
@@ -282,12 +300,12 @@ msgstr "Empleat"
 #. module: hr
 #: model:process.node,note:hr.process_node_employeecontact0
 msgid "Other information"
-msgstr ""
+msgstr "Altra informació"
 
 #. module: hr
 #: field:hr.employee,work_email:0
 msgid "Work E-mail"
-msgstr ""
+msgstr "Email de treball"
 
 #. module: hr
 #: field:hr.department,complete_name:0
@@ -298,7 +316,7 @@ msgstr "Nom"
 #. module: hr
 #: field:hr.employee,birthday:0
 msgid "Date of Birth"
-msgstr ""
+msgstr "Data de naixement"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_reporting
@@ -308,19 +326,19 @@ msgstr "Informe"
 #. module: hr
 #: model:ir.model,name:hr.model_ir_actions_act_window
 msgid "ir.actions.act_window"
-msgstr ""
+msgstr "ir.accions.acc_finestra"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_board_hr
 msgid "Human Resources Dashboard"
-msgstr ""
+msgstr "Taulell de recursos humans"
 
 #. module: hr
 #: view:hr.employee:0
 #: field:hr.employee,job_id:0
 #: view:hr.job:0
 msgid "Job"
-msgstr ""
+msgstr "Feina"
 
 #. module: hr
 #: view:hr.department:0
@@ -339,21 +357,23 @@ msgid ""
 "You can enhance the base HR Application by installing few HR-related "
 "functionalities."
 msgstr ""
+"Pot millorar l'aplicació de recursos humans base mitjançant la instal·lació "
+"d'algunes funcionalitats relacionades amb RRHH."
 
 #. module: hr
 #: view:hr.employee:0
 msgid "Categories"
-msgstr ""
+msgstr "Categories"
 
 #. module: hr
 #: field:hr.job,expected_employees:0
 msgid "Expected Employees"
-msgstr ""
+msgstr "Empleats previstos"
 
 #. module: hr
 #: help:hr.employee,sinid:0
 msgid "Social Insurance Number"
-msgstr ""
+msgstr "Número de la mutua laboral."
 
 #. module: hr
 #: model:hr.employee.marital.status,name:hr.hr_employee_marital_status_divorced
@@ -368,7 +388,7 @@ msgstr "Categoria pare"
 #. module: hr
 #: constraint:hr.employee.category:0
 msgid "Error ! You cannot create recursive Categories."
-msgstr ""
+msgstr "Error! No pot crear categories recursives."
 
 #. module: hr
 #: view:hr.department:0
@@ -387,7 +407,7 @@ msgstr "Contacte empleat"
 #. module: hr
 #: view:board.board:0
 msgid "My Board"
-msgstr ""
+msgstr "El meu taulell"
 
 #. module: hr
 #: selection:hr.employee,gender:0
@@ -397,7 +417,7 @@ msgstr "Home"
 #. module: hr
 #: field:hr.installer,progress:0
 msgid "Configuration Progress"
-msgstr ""
+msgstr "Progrés de la configuració"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_categ_form
@@ -414,12 +434,12 @@ msgstr "Categoria d'empleat"
 #. module: hr
 #: field:hr.installer,config_logo:0
 msgid "Image"
-msgstr ""
+msgstr "Imatge"
 
 #. module: hr
 #: model:process.process,name:hr.process_process_employeecontractprocess0
 msgid "Employee Contract"
-msgstr ""
+msgstr "Contracte d'empleat"
 
 #. module: hr
 #: help:hr.installer,hr_evaluation:0
@@ -427,6 +447,8 @@ msgid ""
 "Lets you create and manage the periodic evaluation and performance review of "
 "employees."
 msgstr ""
+"Permet crear i gestionar l'avaluació periòdica i revisió de la productivitat "
+"dels empleats."
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_department
@@ -436,12 +458,12 @@ msgstr "hr.department"
 #. module: hr
 #: help:hr.employee,parent_id:0
 msgid "It is linked with manager of Department"
-msgstr ""
+msgstr "Està vinculat amb el director del departament."
 
 #. module: hr
 #: field:hr.installer,hr_recruitment:0
 msgid "Recruitment Process"
-msgstr ""
+msgstr "Procés de selecció"
 
 #. module: hr
 #: field:hr.employee,category_ids:0
@@ -463,11 +485,22 @@ msgid ""
 "they will be able to enter time through the system. In the note tab, you can "
 "enter text data that should be recorded for a specific employee."
 msgstr ""
+"Aquí podeu gestionar la vostra mà d'obra creant empleats i assignant-los "
+"propietats específiques en el sistema. Mantingueu tota la informació "
+"relacionada amb els empleats i feu un seguiment de qualsevol fet que "
+"necessiti ser registrat. La pestanya amb informació personal us ajudarà a "
+"mantenir les dades sobre la seva identitat. La pestanya Categories us "
+"permetrà assignar categories d'empleats en funció del seu lloc i activitats "
+"dins de la companyia. Una categoria pot ser l'antiguitat dins de la "
+"companyia o departament. La pestanya de Fulls de serveis permet assignar un "
+"full de serveis específic i un diari analític on podran introduir temps en "
+"el sistema. A la pestanya notes podeu introduir informació, en format text "
+"lliure, que ha de ser desat per a un empleat en concret."
 
 #. module: hr
 #: help:hr.employee,bank_account_id:0
 msgid "Employee bank salary account"
-msgstr ""
+msgstr "Comte bancari de salari de l'empleat."
 
 #. module: hr
 #: field:hr.department,note:0
@@ -478,6 +511,8 @@ msgstr "Nota"
 #: constraint:res.users:0
 msgid "The chosen company is not in the allowed companies for this user"
 msgstr ""
+"La companyia seleccionada no està en les companyies permeses per a aquest "
+"usuari"
 
 #. module: hr
 #: view:hr.employee:0
@@ -492,7 +527,7 @@ msgstr "Adreça de treball"
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_board_hr_manager
 msgid "HR Manager Dashboard"
-msgstr ""
+msgstr "Taulell director RRHH"
 
 #. module: hr
 #: view:hr.employee:0
@@ -502,7 +537,7 @@ msgstr "Estat"
 #. module: hr
 #: view:hr.installer:0
 msgid "Configure"
-msgstr ""
+msgstr "Configura"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_categ_tree
@@ -513,12 +548,12 @@ msgstr "Arbre de les categories"
 #. module: hr
 #: field:hr.employee,partner_id:0
 msgid "unknown"
-msgstr ""
+msgstr "desconegut"
 
 #. module: hr
 #: field:hr.installer,hr_holidays:0
 msgid "Holidays / Leaves Management"
-msgstr ""
+msgstr "Gestió de vacances / absències"
 
 #. module: hr
 #: field:hr.employee,ssnid:0
@@ -551,6 +586,13 @@ msgid ""
 "    * HR Jobs\n"
 "    "
 msgstr ""
+"\n"
+"    Mòdul per a la gestió de recursos humans. Podeu gestionar:\n"
+"    * Empleats i jerarquies: Podeu definir el vostre empleat associat a un "
+"usuari i mostrar jerarquies\n"
+"    * Departaments RRHH\n"
+"    * Treballs RRHH\n"
+"    "
 
 #. module: hr
 #: model:process.transition,note:hr.process_transition_contactofemployee0
@@ -558,32 +600,34 @@ msgid ""
 "In the Employee form, there are different kind of information like Contact "
 "information."
 msgstr ""
+"En el formulari de l'empleat, hi ha diferents tipus d'informació com la "
+"informació del contacte."
 
 #. module: hr
 #: help:hr.job,expected_employees:0
 msgid "Required number of Employees in total for that job."
-msgstr ""
+msgstr "Nombre total d'empleats necessaris per a aquest treball."
 
 #. module: hr
 #: selection:hr.job,state:0
 msgid "Old"
-msgstr ""
+msgstr "Antic"
 
 #. module: hr
 #: field:hr.employee.marital.status,description:0
 msgid "Status Description"
-msgstr ""
+msgstr "Descripció de l'estat"
 
 #. module: hr
 #: sql_constraint:res.users:0
 msgid "You can not have two users with the same login !"
-msgstr ""
+msgstr "No podeu tenir dos usuaris amb el mateix identificador d'usuari!"
 
 #. module: hr
 #: view:hr.job:0
 #: field:hr.job,state:0
 msgid "State"
-msgstr ""
+msgstr "Estat"
 
 #. module: hr
 #: field:hr.employee,marital:0
@@ -598,26 +642,27 @@ msgstr "Estat civil"
 #: help:hr.installer,hr_recruitment:0
 msgid "Helps you manage and streamline your recruitment process."
 msgstr ""
+"Us ajuda a gestionar i optimitzar el vostre procés de selecció de personal."
 
 #. module: hr
 #: model:process.node,note:hr.process_node_employee0
 msgid "Employee form and structure"
-msgstr ""
+msgstr "Formulari i estructura de l'empleat"
 
 #. module: hr
 #: field:hr.employee,photo:0
 msgid "Photo"
-msgstr ""
+msgstr "Foto"
 
 #. module: hr
 #: model:ir.model,name:hr.model_res_users
 msgid "res.users"
-msgstr ""
+msgstr "res.usuaris"
 
 #. module: hr
 #: field:hr.installer,hr_payroll_account:0
 msgid "Payroll Accounting"
-msgstr ""
+msgstr "Càlcul de la nòmina"
 
 #. module: hr
 #: view:hr.employee:0
@@ -627,12 +672,12 @@ msgstr "Informació personal"
 #. module: hr
 #: field:hr.employee,passport_id:0
 msgid "Passport No"
-msgstr ""
+msgstr "Nº Pasaporte"
 
 #. module: hr
 #: view:res.users:0
 msgid "Current Activity"
-msgstr ""
+msgstr "Activitat actual"
 
 #. module: hr
 #: help:hr.installer,hr_expense:0
@@ -640,11 +685,14 @@ msgid ""
 "Tracks and manages employee expenses, and can automatically re-invoice "
 "clients if the expenses are project-related."
 msgstr ""
+"Controla i gestiona les despeses dels empleats i pot re-facturar-los als "
+"clients de forma automàtica si les despeses estan relacionades amb un "
+"projecte."
 
 #. module: hr
 #: view:hr.job:0
 msgid "Current"
-msgstr ""
+msgstr "Actual"
 
 #. module: hr
 #: field:hr.department,parent_id:0
@@ -665,44 +713,45 @@ msgstr "Adreça particular"
 #: field:hr.installer,hr_attendance:0
 #: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_new_config
 msgid "Attendances"
-msgstr ""
+msgstr "Assistència"
 
 #. module: hr
 #: view:hr.employee.marital.status:0
 #: view:hr.job:0
 msgid "Description"
-msgstr ""
+msgstr "Descripció"
 
 #. module: hr
 #: help:hr.installer,hr_contract:0
 msgid "Extends employee profiles to help manage their contracts."
 msgstr ""
+"Estén els perfils dels empleats per ajudar a gestionar els seus contractes."
 
 #. module: hr
 #: field:hr.installer,hr_payroll:0
 msgid "Payroll"
-msgstr ""
+msgstr "Nòmina"
 
 #. module: hr
 #: model:hr.employee.marital.status,name:hr.hr_employee_marital_status_single
 msgid "Single"
-msgstr ""
+msgstr "Solter/a"
 
 #. module: hr
 #: field:hr.job,name:0
 msgid "Job Name"
-msgstr ""
+msgstr "Nom del treball"
 
 #. module: hr
 #: view:hr.job:0
 #: selection:hr.job,state:0
 msgid "In Position"
-msgstr ""
+msgstr "Ocupat"
 
 #. module: hr
 #: field:hr.employee,mobile_phone:0
 msgid "Mobile"
-msgstr ""
+msgstr "Mòbil"
 
 #. module: hr
 #: view:hr.department:0
@@ -724,23 +773,23 @@ msgstr "Notes"
 #. module: hr
 #: model:ir.model,name:hr.model_hr_installer
 msgid "hr.installer"
-msgstr ""
+msgstr "hr.instalador"
 
 #. module: hr
 #: view:board.board:0
 msgid "HR Manager Board"
-msgstr ""
+msgstr "Taulell director RRHH"
 
 #. module: hr
 #: field:hr.employee,resource_id:0
 msgid "Resource"
-msgstr ""
+msgstr "Recurs"
 
 #. module: hr
 #: view:hr.installer:0
 #: model:ir.actions.act_window,name:hr.action_hr_installer
 msgid "Human Resources Application Configuration"
-msgstr ""
+msgstr "Configuració de l'aplicació de recursos humans"
 
 #. module: hr
 #: field:hr.employee,gender:0
@@ -761,7 +810,7 @@ msgstr "Empleats"
 #. module: hr
 #: field:hr.employee,bank_account_id:0
 msgid "Bank Account"
-msgstr ""
+msgstr "Compte bancari"
 
 #. module: hr
 #: field:hr.department,name:0
@@ -771,12 +820,12 @@ msgstr "Nom de departament"
 #. module: hr
 #: help:hr.employee,ssnid:0
 msgid "Social Security Number"
-msgstr ""
+msgstr "Número de la Seguritat Social."
 
 #. module: hr
 #: model:process.node,note:hr.process_node_openerpuser0
 msgid "Creation of a OpenERP user"
-msgstr ""
+msgstr "Creació d'un usuari OpenERP"
 
 #. module: hr
 #: field:hr.department,child_ids:0
@@ -787,23 +836,23 @@ msgstr "Departaments fills"
 #: model:ir.actions.act_window,name:hr.action_hr_job
 #: model:ir.ui.menu,name:hr.menu_hr_job
 msgid "Job Positions"
-msgstr ""
+msgstr "Llocs de treball"
 
 #. module: hr
 #: view:hr.employee:0
 #: field:hr.employee,coach_id:0
 msgid "Coach"
-msgstr ""
+msgstr "Monitor"
 
 #. module: hr
 #: view:hr.installer:0
 msgid "Configure Your Human Resources Application"
-msgstr ""
+msgstr "Configureu la vostra aplicació de recursos humans"
 
 #. module: hr
 #: field:hr.installer,hr_expense:0
 msgid "Expenses"
-msgstr ""
+msgstr "Despeses"
 
 #. module: hr
 #: field:hr.department,manager_id:0
@@ -815,12 +864,12 @@ msgstr "Director"
 #. module: hr
 #: model:hr.employee.marital.status,name:hr.hr_employee_marital_status_widower
 msgid "Widower"
-msgstr ""
+msgstr "Vidu/a"
 
 #. module: hr
 #: help:hr.installer,hr_payroll_account:0
 msgid "Generic Payroll system Integrated with Accountings."
-msgstr ""
+msgstr "Sistema genèric de nòmines integrat amb comptabilitat."
 
 #. module: hr
 #: field:hr.employee,child_ids:0

@@ -8,30 +8,30 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2011-02-28 17:41+0000\n"
+"PO-Revision-Date: 2011-03-16 15:08+0000\n"
 "Last-Translator: Stanislav Hanzhin <Unknown>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-03-01 06:01+0000\n"
-"X-Generator: Launchpad (build 12351)\n"
+"X-Launchpad-Export-Date: 2011-03-17 06:12+0000\n"
+"X-Generator: Launchpad (build 12559)\n"
 
 #. module: email_template
 #: help:email_template.account,auto_delete:0
 msgid "Permanently delete emails after sending"
-msgstr ""
+msgstr "Не сохранять сообщения после отправки"
 
 #. module: email_template
 #: view:email_template.account:0
 msgid "Email Account Configuration"
-msgstr "Настройка Email аккаунта"
+msgstr "Настройка учётной записи электронной почты"
 
 #. module: email_template
 #: code:addons/email_template/wizard/email_template_send_wizard.py:195
 #, python-format
 msgid "Emails for multiple items saved in outbox."
-msgstr "Почта для многократной отправки сохранена в исходящих."
+msgstr "Emails for multiple items saved in outbox."
 
 #. module: email_template
 #: code:addons/email_template/wizard/email_template_send_wizard.py:59
@@ -42,11 +42,14 @@ msgid ""
 "Either ask admin to enforce an account for this template or get yourself a "
 "personal email account."
 msgstr ""
+"Для вашей учётной записи не настроена электронная почта. \n"
+"Вы можете попросить администратора привязать учётную запись к этому шаблону "
+"или настроить себе личную учётную запись электронной почты."
 
 #. module: email_template
 #: view:email_template.mailbox:0
 msgid "Personal Emails"
-msgstr ""
+msgstr "Личные сообщения"
 
 #. module: email_template
 #: field:email.template,file_name:0
@@ -61,7 +64,7 @@ msgstr ""
 #. module: email_template
 #: view:email_template.send.wizard:0
 msgid "Send mail Wizard"
-msgstr ""
+msgstr "Мастер отправки почты"
 
 #. module: email_template
 #: selection:email_template.mailbox,mail_type:0
@@ -76,6 +79,10 @@ msgid ""
 "in the box below\n"
 "(Note:If there are no values make sure you have selected the correct model)"
 msgstr ""
+"Выберите поле модели, которое вы хотите использовать.\n"
+"Если это поле отношений, вы сможете выбрать значения далее из списка\n"
+"(Обратите внимание: если там нет значений, проверьте корректность выбора "
+"модели)"
 
 #. module: email_template
 #: field:email_template.preview,body_html:0
@@ -1192,7 +1199,7 @@ msgstr ""
 #. module: email_template
 #: model:ir.model,name:email_template.model_email_template_account
 msgid "email_template.account"
-msgstr ""
+msgstr "email_template.account"
 
 #. module: email_template
 #: field:email_template.preview,rel_model:0
