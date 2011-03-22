@@ -75,7 +75,56 @@ var notEqual;
  * @param {String} [message] message output with the assertion result
  */
 var deepEqual;
-var notDeepEqual, strictEqual, notStrictEqual, raises;
+/**
+ * @function
+ * Recursive inequality assertion.
+ *
+ * Works on primitive types using <code>!==</code> and traversing through
+ * Objects and Arrays as well checking their components
+ *
+ * @param {Object} actual the object to check for correctness (processing result)
+ * @param {Object} expected the object to check against
+ * @param {String} [message] message output with the assertion result
+ */
+var notDeepEqual;
+/**
+ * @function
+ * Strict equality assertion (~assertEqual)
+ *
+ * Passes if both arguments are identical (via <code>===</code>)
+ *
+ * @param {Object} actual the object to check for correctness (processing result)
+ * @param {Object} expected the object to check against
+ * @param {String} [message] message output with the assertion result
+ */
+var strictEqual;
+/**
+ * @function
+ * Strict inequality assertion (~assertNotEqual)
+ *
+ * Passes if both arguments are identical (via <code>!==</code>)
+ *
+ * @param {Object} actual the object to check for correctness (processing result)
+ * @param {Object} expected the object to check against
+ * @param {String} [message] message output with the assertion result
+ */
+var notStrictEqual;
+/**
+ * @function
+ * Passes if the provided block raised an exception.
+ *
+ * The <code>expect</code> argument can be provided to perform further assertion checks on the exception itself:
+ * * If it's a <code>RegExp</code> test the exception against the regexp (message?)
+ * * If it's a constructor, check if the exception is an instance of it
+ * * If it's an other type of function, call it with the exception as first parameter
+ *   - If the function returns true, the assertion validates
+ *   - Otherwise it fails
+ *
+ * @param {Function} block function which should raise an exception when called
+ * @param {Object} [expect] a RegExp, a constructor or a Function
+ * @param {String} [message] message output with the assertion result
+ */
+var raises;
 /**
  * @function
  * Starts running the test runner again from the point where it was
