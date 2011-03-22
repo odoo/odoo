@@ -337,6 +337,7 @@ openerp.base.ListView = openerp.base.Controller.extend({
 //              debugger;
         }
         //this.log(rows);
+        var width = this.$element.width();
         this.$table.jqGrid({
             data: rows,
             datatype: "local",
@@ -348,8 +349,12 @@ openerp.base.ListView = openerp.base.Controller.extend({
             //pager: "#plist47",
             viewrecords: true,
             caption: this.name
-        }).setGridWidth(this.$element.width());
-        $(window).bind('resize', function() { self.$table.setGridWidth(self.$element.width()); }).trigger('resize');
+        }).setGridWidth(width);
+        $(window).bind('resize', function() {
+            self.$element.children().hide();
+            self.$table.setGridWidth(self.$element.width());
+            self.$element.children().show();
+        }).trigger('resize');
     }
 });
 
