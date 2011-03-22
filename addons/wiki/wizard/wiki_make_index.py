@@ -20,6 +20,7 @@
 ##############################################################################
 
 from osv import fields, osv
+from tools.translate import _
 
 class wiki_make_index(osv.osv_memory):
     """ Create Index For Selected Page """
@@ -47,6 +48,8 @@ class wiki_make_index(osv.osv_memory):
             cr.execute("Select id, section from wiki_wiki where id IN %s \
                             order by section ", (tuple(data),))
             lst0 = cr.fetchall()
+            if not lst0[0][1]:
+                raise osv.except_osv(_('Warning !'), _('There is no section in this Page'))
             lst = []
             s_ids = {}
 
