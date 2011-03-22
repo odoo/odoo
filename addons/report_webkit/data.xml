@@ -75,7 +75,7 @@
             <tr>
                 <td>Mail: ${company.partner_id.address and company.partner_id.address[0].email or ''|entity}<br/></td>
             </tr>
-        </table> ${_debug or ''} </body>
+        </table> ${_debug or ''|n} </body>
 </html>]]>
 </field>
             <field eval="55.0" name="margin_top"/>

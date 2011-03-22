@@ -77,7 +77,8 @@ class WebKitParser(report_sxw):
                              _('Please install executable on your system'+
                              ' (sudo apt-get install wkhtmltopdf) or download it from here:'+
                              ' http://code.google.com/p/wkhtmltopdf/downloads/list and set the'+
-                             ' path to the executable on the Company form.')
+                             ' path to the executable on the Company form.'+
+                             'Minimal version is 0.9.9')
                             ) 
         if os.path.isabs(path) :
             if (os.path.exists(path) and os.access(path, os.X_OK)\
@@ -339,7 +340,7 @@ class WebKitParser(report_sxw):
                                             time=time,
                                             helper=helper,
                                             css=css,
-                                            _debug=html,
+                                            _debug=html.decode(),
                                             formatLang=self.formatLang,
                                             setLang=self.setLang,
                                             _=self.translate_call,
