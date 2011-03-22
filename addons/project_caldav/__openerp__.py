@@ -27,6 +27,9 @@
     "description": """
 Synchronization between Project Task and Caldav Vtodo.
 ======================================================
+
+With the Caldav functionality you can get access to scheduling information
+on a remote server.
     """,
     "depends": ["project", "caldav", "base_calendar"],
     "init_xml": ["project_caldav_data.xml", 'project_caldav_setup.xml', ],

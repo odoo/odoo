@@ -27,6 +27,8 @@
     'description': """
 Allows to synchronise calendars with others applications.
 =========================================================
+
+Will allow you to synchronise your OpenERP calendars with your phone, outlook, Sunbird, ical, ...
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',

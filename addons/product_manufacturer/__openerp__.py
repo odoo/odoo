@@ -26,8 +26,14 @@
     "init_xml" : [],
     "demo_xml" : [],
     "description": """
-A module that add manufacturers and attributes on the product form.
-===================================================================
+A module that adds manufacturers and attributes on the product form.
+====================================================================
+
+You can now define the following for a product:
+    * Manufacturer
+    * Manufacturer Product Name
+    * Manufacturer Product Code
+    * Product Attributes
     """,
     "update_xml" : [
         "security/ir.model.access.csv",

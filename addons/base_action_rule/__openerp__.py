@@ -26,6 +26,12 @@
     'description': """
 This module allows to implement action rules for any object.
 ============================================================
+
+Use automated actions to automatically trigger actions for various screens.
+
+Example: a lead created by a specific user may be automatically set to a specific
+sales team, or an opportunity which still has status pending after 14 days might
+trigger an automatic reminder email.
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',

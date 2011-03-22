@@ -30,6 +30,13 @@
     "description": """
 Email Template is extraction of Power Email basically just to send emails.
 ==========================================================================
+
+You can define email accounts(server, port, mail format - HTML/Text/Both)
+and email templates (resource, recipient, subject, body, attachments).
+
+For each email template, you can have OpenERP generate a Wizard Action / Button
+that will be related to the object. So if you choose to do marketing campaigns
+for leads, the action will be added to the right side panel of the Lead form.
     """,
     "init_xml": ['email_template_scheduler_data.xml'],
     "update_xml": [

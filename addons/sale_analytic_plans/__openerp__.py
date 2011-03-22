@@ -26,6 +26,8 @@
     'description': """
 The base module to manage analytic distribution and sales orders.
 =================================================================
+
+Using this module you will be able to link analytic accounts to sales orders.
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',

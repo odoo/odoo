@@ -25,6 +25,8 @@
     'description': """
 Enable live chat support for those who have a maintenance contract.
 ===================================================================
+
+Add "Support" button in header from where you can access OpenERP Support.
     """,
     'author': 'OpenERP SA',
     'website': 'http://openerp.com',
