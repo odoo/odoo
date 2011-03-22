@@ -1878,7 +1878,7 @@ class orm_template(object):
                     defaults[dv] = [(6, 0, defaults[dv])]
                 if (dv in self._columns and self._columns[dv]._type == 'one2many' \
                     or (dv in self._inherit_fields and self._inherit_fields[dv][2]._type == 'one2many')) \
-                        and isinstance(defaults[dv], (list, tuple)) and isinstance(defaults[dv][0], dict):
+                        and isinstance(defaults[dv], (list, tuple)) and defaults[dv] and isinstance(defaults[dv][0], dict):
                     defaults[dv] = [(0, 0, x) for x in defaults[dv]]
             defaults.update(values)
             values = defaults
@@ -3075,7 +3075,7 @@ class orm(orm_template):
                     for group in groups:
                         module = group.split(".")[0]
                         grp = group.split(".")[1]
-                        cr.execute("select count(*) from res_groups_users_rel where gid IN (select res_id from ir_model_data where name=%s and module=%s and model=%s) and uid=%s"  \
+                        cr.execute("select count(*) from res_groups_users_rel where gid IN (select res_id from ir_model_data where name=%s and module=%s and model=%s) and uid=%s",  \
                                    (grp, module, 'res.groups', user))
                         readonly = cr.fetchall()
                         if readonly[0][0] >= 1:
