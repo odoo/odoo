@@ -3227,9 +3227,23 @@ class orm(orm_template):
 
 
         self.check_access_rule(cr, uid, ids, 'unlink', context=context)
+        pool_model_data = self.pool.get('ir.model.data')
+        pool_ir_values = self.pool.get('ir.values')
         for sub_ids in cr.split_for_in_conditions(ids):
             cr.execute('delete from ' + self._table + ' ' \
                        'where id IN %s', (sub_ids,))
+            # Removing the ir_model_data reference if the record being deleted is a record created by xml/csv file.
+            
+            # Step 1. Calling unlink of ir_model_data only for the affected IDS.
+            referenced_ids = pool_model_data.search(cr, uid, [('res_id','in',list(sub_ids)),('model','=',self._name)], context=context)
+            # Step 2. Marching towards the real deletion of referenced records
+            pool_model_data._unlink(cr, uid, self._model,referenced_ids)
+            
+            # For the same reason, removing the record relevant to ir_values
+            ir_value_ids = pool_ir_values.search(cr, uid, [('res_id','in',list(sub_ids)),('model','=',self._name)])
+            if ir_value_ids:
+                pool_ir_values.unlink(cr, uid, ir_value_ids)
+            
         for order, object, store_ids, fields in result_store:
             if object != self._name:
                 obj = self.pool.get(object)
@@ -3237,6 +3251,7 @@ class orm(orm_template):
                 rids = map(lambda x: x[0], cr.fetchall())
                 if rids:
                     obj._store_set_values(cr, uid, rids, fields, context)
+        
         return True
 
     #
