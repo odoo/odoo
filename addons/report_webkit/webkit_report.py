@@ -237,7 +237,7 @@ class WebKitParser(report_sxw):
         if not template and report_xml.report_webkit_data :
             template =  report_xml.report_webkit_data
         if not template :
-            raise except_osv(_('Webkit Report template not found !'), _(''))
+            raise except_osv(_('Error!'), _('Webkit Report template not found !'))
         header = report_xml.webkit_header.html
         footer = report_xml.webkit_header.footer_html
         if not header and report_xml.header:
