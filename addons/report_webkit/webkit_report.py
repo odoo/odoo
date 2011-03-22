@@ -5,6 +5,7 @@
 # All Right Reserved
 #
 # Author : Nicolas Bessi (Camptocamp)
+# Contributor(s) : Florent Xicluna (Wingo SA)
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
