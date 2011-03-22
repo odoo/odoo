@@ -50,13 +50,45 @@ class report_rappel(report_sxw.rml_parse):
         return adr and res_partner_address.read(self.cr, self.uid, [adr]) or [{}]
 
     def _lines_get(self, partner):
-        moveline_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
+        pool = pooler.get_pool(self.cr.dbname)
+        moveline_obj = pool.get('account.move.line')
+        company_obj = pool.get('res.company')
+        obj_currency =  pool.get('res.currency')
         movelines = moveline_obj.search(self.cr, self.uid,
                 [('partner_id', '=', partner.id),
                     ('account_id.type', '=', 'receivable'),
                     ('reconcile_id', '=', False), ('state', '<>', 'draft')])
-        movelines = moveline_obj.read(self.cr, self.uid, movelines)
-        return movelines
+        movelines = moveline_obj.browse(self.cr, self.uid, movelines)
+        base_currency = movelines[0].company_id.currency_id
+        final_res = []
+        line_cur = {base_currency.id: {'line': []}}
+                
+        for line in movelines:
+            if line.currency_id and (not line.currency_id.id in line_cur):
+                line_cur[line.currency_id.id] = {'line': []}
+            line_data = {
+                         'name': line.name + (line.currency_id and line.currency_id.name or ''),
+                         'ref': line.ref,
+                         'date':line.date,
+                         'date_maturity': line.date_maturity,
+                         'amount_currency': line.amount_currency,
+                         'blocked': line.blocked,
+                         'debit': line.debit ,
+                         'credit': line.credit,
+                         }
+            if line.currency_id:
+                rate = obj_currency._get_conversion_rate(self.cr, self.uid, line.company_id.currency_id, line.currency_id)
+                line_data['debit'] = line.debit * rate 
+                line_data['credit'] = line.credit * rate
+                line_data.update({'currency_id':line.currency_id.symbol or line.currency_id.name or ''})
+                line_cur[line.currency_id.id]['line'].append(line_data)
+            else:
+                line_data.update({'currency_id':line.company_id.currency_id.symbol or line.currency_id.name or ''})
+                line_cur[base_currency.id]['line'].append(line_data)
+        for cur in line_cur:
+            final_res.append({'line': line_cur[cur]['line']})
+        return final_res
+
 
     def _get_text(self, partner, followup_id, context=None):
         fp_obj = pooler.get_pool(self.cr.dbname).get('account_followup.followup')
