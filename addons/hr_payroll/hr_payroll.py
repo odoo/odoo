@@ -344,7 +344,7 @@ class hr_salary_head(osv.osv):
         'user_id':fields.char('User', size=64, required=False, readonly=False),
         'state':fields.char('Label', size=64, required=False, readonly=False),
         'company_id':fields.many2one('res.company', 'Company', required=False),
-        'dispaly_payslip_report': fields.boolean('Display on payslip report', help="Used for the display of head on Payslip Report"),
+#        'dispaly_payslip_report': fields.boolean('Display on payslip report', help="Used for the display of head on Payslip Report"),
 #        'computation_based':fields.selection([
 #            ('rules','List of Rules'),
 #            ('exp','Expression'),
@@ -355,7 +355,7 @@ class hr_salary_head(osv.osv):
         'company_id': lambda self, cr, uid, context: \
                 self.pool.get('res.users').browse(cr, uid, uid,
                     context=context).company_id.id,
-        'dispaly_payslip_report': 1,
+#        'dispaly_payslip_report': 1,
     }
 
 hr_salary_head()
@@ -1259,8 +1259,8 @@ class hr_payslip_line(osv.osv):
         'name':fields.char('Name', size=256, required=True, readonly=False),
         'base':fields.char('Formula', size=1024, required=False, readonly=False),
         'code':fields.char('Code', size=64, required=False, readonly=False),
-        'category_id':fields.many2one('hr.salary.head', 'Category', required=True),
-        'type':fields.many2one('hr.salary.head.type', 'Type', required=True, help="Used for the reporting purpose."),
+        'category_id':fields.many2one('hr.salary.head', 'Salary Head', required=True),
+        'type':fields.related('category_id','type', 'Salary Head Type', store=True), #many2one('hr.salary.head.type', 'Type', required=True, help="Used for the reporting purpose."),
         'amount_type':fields.selection([
             ('per','Percentage (%)'),
             ('fix','Fixed Amount'),
@@ -1303,6 +1303,7 @@ class hr_salary_rule(osv.osv):
             required=False
         ),
         'gratuity':fields.boolean('Use for Gratuity ?', required=False),
+        'condition_select': fields.selection([('range', 'Range'), ('python', 'Python Expression')], "Condition based on"),
         'computational_expression':fields.text('Computational Expression', required=True, readonly=False, help='This will use to computer the % fields values, in general its on basic, but You can use all heads code field in small letter as a variable name i.e. hra, ma, lta, etc...., also you can use, static varible basic'),
         'conditions':fields.char('Condition', size=1024, required=True, readonly=False, help='Applied this head for calculation if condition is true'),
         'sequence': fields.integer('Sequence', required=True, help='Use to arrange calculation sequence'),

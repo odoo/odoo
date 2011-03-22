@@ -163,7 +163,7 @@
                     <group col="2" colspan="2">
                         <separator colspan="4" string="Calculations"/>
                         <field name="category_id" on_change="onchange_category(category_id)"/>
-                        <field name="type"/>
+                        <!--<field name="type"/>-->
                         <field name="amount_type"/>
                         <field name="amount" on_change="onchange_amount(amount, amount_type)" attrs="{'readonly':[('amount_type','=','code')]}"/>
                         <field name="sequence" groups="base.group_extended"/>
@@ -346,7 +346,7 @@
                         <field name="name" select="1"/>
                         <field name="code" select="1"/>
                         <field name="type" select="1"/>
-                        <field name="dispaly_payslip_report"/>
+                        <!--<field name="dispaly_payslip_report"/>-->
                     </group>
                     <separator colspan="4" string="Description"/>
                         <field name="note" colspan="4" nolabel="1"/>
@@ -597,6 +597,7 @@
                 <group col="6" colspan="6">
                    <field name="name"/>
                    <field name="code" select="1"/>
+                                <field name="category_id" on_change="onchange_category(category_id)"/>
                    <field name="active"/>
                    <field name="sequence" />
                    <field name="company_id" widget="selection" groups="base.group_multi_company"/>
@@ -605,15 +606,23 @@
                 <notebook colspan="6">
                     <page string="General">
                         <group col="6" colspan="6">
+                                <group col="2" colspan="4">
+                                    <separator colspan="4" string="Computational Expression"/>
+                                    <field name="computational_expression" colspan="4" nolabel="1"/>
+                                </group>
                             <group col="2" colspan="2">
                                 <separator colspan="4" string="Calculations"/>
-                                <field name="category_id" on_change="onchange_category(category_id)"/>
-                                <field name="type"/>
+                                <!--<field name="type"/>-->
+                                <field name="condition_select"/>
+                                <field name="conditions" attrs="{'invisible':[('condition_select','=','range')]}"/>
+                                <field name="condition_range_min" attrs="{'invisible':[('condition_select','=','python')]}" colspan="1"/>
+                                <field name="condition_range_max" attrs="{'invisible':[('condition_select','=','python')]}" colspan="1"/>
                                 <field name="amount_type"/>
-                                <field name="amount" on_change="onchange_amount(amount, amount_type)" attrs="{'readonly':[('amount_type','=','code')]}"/>
-                                <field name="conditions"/>
-                                <field name="condition_range_min"/>
-                                <field name="condition_range_max"/>
+                                <field name="amount" on_change="onchange_amount(amount, amount_type)" attrs="{'invisible':[('amount_type','=','code')]}"/>
+                                <group col="2" colspan="2"  attrs="{'invisible':[('amount_type','&lt;&gt;','code')]}">
+                                    <separator colspan="2" string="Compute Code"/>
+                                    <field colspan="2" name="python_compute" nolabel="1" attrs="{'readonly':[('amount_type','!=','code')], 'required':[('amount_type','=','code')]}"/>
+                                </group>
                             </group>
                             <group col="2" colspan="2">
                                 <group col="2" colspan="2">
@@ -626,21 +635,13 @@
                                         <field name="company_contrib"/>
                                     </group>
                                 </group>
-                                <group col="2" colspan="4">
-                                    <separator colspan="4" string="Computational Expression"/>
-                                    <field name="computational_expression" colspan="4" nolabel="1"/>
-                                </group>
-                                <group col="2" colspan="2">
-                                    <separator colspan="2" string="Compute Code"/>
-                                    <field colspan="2" name="python_compute" nolabel="1" attrs="{'readonly':[('amount_type','!=','code')], 'required':[('amount_type','=','code')]}"/>
-                                </group>
                            </group>
                         </group>
                     </page>
                     <page string="Child Rules">
                        <separator colspan="4" string="Children definition"/>
                        <field name="child_depend"/>
-                       <field name="display_child_rules"/>
+                       <!--<field name="display_child_rules"/>-->
                        <field colspan="4" name="child_ids" nolabel="1"/>
                     </page>
                     <page string="Description">
