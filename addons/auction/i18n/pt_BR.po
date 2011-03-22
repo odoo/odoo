@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-03-15 00:58+0000\n"
+"PO-Revision-Date: 2011-03-22 00:50+0000\n"
 "Last-Translator: Emerson <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-03-16 04:47+0000\n"
+"X-Launchpad-Export-Date: 2011-03-22 04:35+0000\n"
 "X-Generator: Launchpad (build 12559)\n"
 
 #. module: auction
@@ -43,7 +43,7 @@ msgstr "Loja"
 #. module: auction
 #: field:auction.lots,name:0
 msgid "Title"
-msgstr ""
+msgstr "Título"
 
 #. module: auction
 #: field:auction.lots.sms.send,text:0
@@ -55,7 +55,7 @@ msgstr "Mensagem SMS"
 #: view:auction.lots.auction.move:0
 #: view:auction.lots.make.invoice.buyer:0
 msgid " "
-msgstr ""
+msgstr " "
 
 #. module: auction
 #: view:auction.lots.auction.move:0
@@ -81,7 +81,7 @@ msgstr "dos Objetos"
 #. module: auction
 #: view:auction.lots:0
 msgid "Authors"
-msgstr ""
+msgstr "Autores"
 
 #. module: auction
 #: view:auction.bid:0
@@ -128,12 +128,12 @@ msgstr "Valor Faturado"
 #. module: auction
 #: help:auction.lots,name:0
 msgid "Auction object name"
-msgstr ""
+msgstr "Nome do objeto do leilão"
 
 #. module: auction
 #: model:ir.model,name:auction.model_aie_category
 msgid "aie.category"
-msgstr ""
+msgstr "aie.category"
 
 #. module: auction
 #: field:auction.deposit.cost,amount:0
@@ -152,7 +152,7 @@ msgstr "Limite de Depósito"
 #. module: auction
 #: view:auction.deposit:0
 msgid "Reference"
-msgstr ""
+msgstr "Referência"
 
 #. module: auction
 #: help:auction.dates,state:0
@@ -160,6 +160,8 @@ msgid ""
 "When auction starts the state is 'Draft'.\n"
 " At the end of auction, the state becomes 'Closed'."
 msgstr ""
+"Quando o leilão começa, o status é \"Provisório\".\n"
+" No fim do leilão, o status se torna \"Fechado\"."
 
 #. module: auction
 #: field:auction.dates,account_analytic_id:0
@@ -179,7 +181,7 @@ msgstr "Número de lista"
 #. module: auction
 #: report:buyer.list:0
 msgid "Date:"
-msgstr ""
+msgstr "Data:"
 
 #. module: auction
 #: field:auction.deposit.cost,name:0
@@ -204,7 +206,7 @@ msgstr ""
 #. module: auction
 #: selection:report.auction,month:0
 msgid "January"
-msgstr ""
+msgstr "Janeiro"
 
 #. module: auction
 #: help:auction.lot.category,active:0
@@ -221,7 +223,7 @@ msgstr "Ref."
 #. module: auction
 #: field:report.auction,total_price:0
 msgid "Total Price"
-msgstr ""
+msgstr "Preço Total"
 
 #. module: auction
 #: view:auction.lots:0
@@ -236,7 +238,7 @@ msgstr ""
 #. module: auction
 #: help:auction.lots,costs:0
 msgid "Deposit cost"
-msgstr ""
+msgstr "Custo de depósito"
 
 #. module: auction
 #: selection:auction.lots,state:0
@@ -279,7 +281,7 @@ msgstr "Lances"
 #. module: auction
 #: view:auction.lots.buyer_map:0
 msgid "Buyer Map"
-msgstr ""
+msgstr "Mapa do Comprador"
 
 #. module: auction
 #: field:report.object.encoded,obj_ret:0
@@ -294,13 +296,13 @@ msgstr ""
 #. module: auction
 #: help:auction.lots,image:0
 msgid "Object Image"
-msgstr ""
+msgstr "Objeto Imagem"
 
 #. module: auction
 #: code:addons/auction/wizard/auction_lots_buyer_map.py:70
 #, python-format
 msgid "No buyer is set for this lot."
-msgstr ""
+msgstr "Nenhum comprador está definido para este lote."
 
 #. module: auction
 #: code:addons/auction/auction.py:578
@@ -316,7 +318,7 @@ msgstr "Comissões"
 #. module: auction
 #: model:ir.model,name:auction.model_auction_deposit_cost
 msgid "Auction Deposit Cost"
-msgstr ""
+msgstr "Custo de Depósito do Leilão"
 
 #. module: auction
 #: view:auction.deposit:0
@@ -331,7 +333,7 @@ msgstr ""
 #. module: auction
 #: field:auction.lot.category,aie_categ:0
 msgid "Category"
-msgstr ""
+msgstr "Categoria"
 
 #. module: auction
 #: model:ir.actions.act_window,name:auction.action_view_auction_buyer_map
@@ -341,7 +343,7 @@ msgstr "Mapear usuário comprador para Parceiros"
 #. module: auction
 #: view:auction.lots:0
 msgid "Search Auction Lots"
-msgstr ""
+msgstr "Pesquisar Lotes de Leilão"
 
 #. module: auction
 #: field:report.auction,net_revenue:0
@@ -362,7 +364,7 @@ msgstr "Enviar SMS"
 #. module: auction
 #: selection:report.auction,month:0
 msgid "August"
-msgstr ""
+msgstr "Agosto"
 
 #. module: auction
 #: view:auction.lots:0
@@ -375,18 +377,18 @@ msgstr "Vendido"
 #. module: auction
 #: selection:report.auction,month:0
 msgid "June"
-msgstr ""
+msgstr "Junho"
 
 #. module: auction
 #: code:addons/auction/wizard/auction_catalog_flagey_report.py:63
 #, python-format
 msgid "No Lots belong to this Auction Date"
-msgstr ""
+msgstr "Nenhum Lote pertence a esta Data de Leilão"
 
 #. module: auction
 #: selection:report.auction,month:0
 msgid "October"
-msgstr ""
+msgstr "Outubro"
 
 #. module: auction
 #: field:auction.bid_line,name:0
@@ -416,12 +418,12 @@ msgstr ""
 #. module: auction
 #: view:auction.pay.buy:0
 msgid "Line1"
-msgstr ""
+msgstr "Linha1"
 
 #. module: auction
 #: model:ir.model,name:auction.model_auction_lots_make_invoice_buyer
 msgid "Make Invoice for Buyer"
-msgstr ""
+msgstr "Criar Fatura para o Comprador"
 
 #. module: auction
 #: field:auction.lots,gross_revenue:0
@@ -437,7 +439,7 @@ msgstr "Pagar objetos do comprador"
 #. module: auction
 #: help:auction.dates,auction2:0
 msgid "End date of auction"
-msgstr ""
+msgstr "Data final do leilão"
 
 #. module: auction
 #: view:auction.lots.sms.send:0
@@ -458,12 +460,12 @@ msgstr "Vendedores"
 #. module: auction
 #: model:account.tax.code,name:auction.account_tax_code_id4
 msgid "VAT 12%"
-msgstr ""
+msgstr "VAT 12%"
 
 #. module: auction
 #: view:auction.dates:0
 msgid "Buyer Invoices"
-msgstr ""
+msgstr "Faturas do Comprador"
 
 #. module: auction
 #: model:ir.actions.report.xml,name:auction.res_w_buyer
@@ -478,7 +480,7 @@ msgstr "Preço máximo"
 #. module: auction
 #: help:auction.dates,auction1:0
 msgid "Start date of auction"
-msgstr ""
+msgstr "Data inicial do leilão"
 
 #. module: auction
 #: model:ir.model,name:auction.model_auction_lots_auction_move
@@ -493,7 +495,7 @@ msgstr ""
 #. module: auction
 #: view:auction.dates:0
 msgid "Next Auction"
-msgstr ""
+msgstr "Próximo Leilão"
 
 #. module: auction
 #: view:auction.taken:0
@@ -520,12 +522,12 @@ msgstr "Manter até vender"
 #. module: auction
 #: view:auction.dates:0
 msgid "Last Auction Date"
-msgstr ""
+msgstr "Última Data do Leilão"
 
 #. module: auction
 #: model:account.tax,name:auction.tax_seller
 msgid "Seller Costs (12%)"
-msgstr ""
+msgstr "Custos do Vendedor (12%)"
 
 #. module: auction
 #: field:auction.lots,paid_vnd:0
@@ -574,12 +576,12 @@ msgstr "%)"
 #. module: auction
 #: view:auction.lots:0
 msgid "Buyer Information"
-msgstr ""
+msgstr "Informação do Comprador"
 
 #. module: auction
 #: help:auction.lots,gross_revenue:0
 msgid "Buyer Price - Seller Price"
-msgstr ""
+msgstr "Preço do Comprador - Preço do Vendedor"
 
 #. module: auction
 #: field:auction.lots.make.invoice,objects:0
@@ -621,7 +623,7 @@ msgstr ""
 #. module: auction
 #: selection:report.auction,month:0
 msgid "March"
-msgstr ""
+msgstr "Março"
 
 #. module: auction
 #: model:account.tax,name:auction.auction_tax4
@@ -655,7 +657,7 @@ msgstr ""
 #: code:addons/auction/wizard/auction_lots_numerotate.py:129
 #, python-format
 msgid "UserError"
-msgstr ""
+msgstr "Erro de Usuário"
 
 #. module: auction
 #: model:ir.module.module,shortdesc:auction.module_meta_information
@@ -693,13 +695,13 @@ msgstr ""
 #. module: auction
 #: view:auction.catalog.flagey:0
 msgid "Print"
-msgstr ""
+msgstr "Imprimir"
 
 #. module: auction
 #: view:auction.lots:0
 #: view:report.auction:0
 msgid "Type"
-msgstr ""
+msgstr "Tipo"
 
 #. module: auction
 #: help:aie.category,child_ids:0
@@ -753,7 +755,7 @@ msgstr "Mín. Estimado:"
 #. module: auction
 #: selection:report.auction,month:0
 msgid "September"
-msgstr ""
+msgstr "Setembro"
 
 #. module: auction
 #: field:report.auction,net_margin:0
@@ -768,7 +770,7 @@ msgstr "Limite Líquido ?"
 #. module: auction
 #: field:aie.category,child_ids:0
 msgid "unknown"
-msgstr ""
+msgstr "desconhecido"
 
 #. module: auction
 #: report:auction.total.rml:0
@@ -794,7 +796,7 @@ msgstr ""
 #. module: auction
 #: view:report.auction:0
 msgid "Auction Summary"
-msgstr ""
+msgstr "Resumo do Leilão"
 
 #. module: auction
 #: view:auction.lots.make.invoice:0
@@ -818,12 +820,12 @@ msgstr ""
 #: code:addons/auction/wizard/auction_lots_numerotate.py:129
 #, python-format
 msgid "This record does not exist !"
-msgstr ""
+msgstr "Este registro não existe!"
 
 #. module: auction
 #: field:auction.pay.buy,total:0
 msgid "Total Amount"
-msgstr ""
+msgstr "Valor Total"
 
 #. module: auction
 #: help:auction.pay.buy,amount:0
@@ -870,7 +872,7 @@ msgstr "Custos Extras"
 #. module: auction
 #: view:auction.lots.buyer_map:0
 msgid "Map "
-msgstr ""
+msgstr "Mapa "
 
 #. module: auction
 #: field:auction.lots,paid_ach:0
@@ -895,17 +897,17 @@ msgstr "Custos Específicos"
 #. module: auction
 #: report:buyer.list:0
 msgid "To pay ("
-msgstr ""
+msgstr "A pagar ("
 
 #. module: auction
 #: model:account.tax,name:auction.tax_buyer
 msgid "Buyer Costs (20%)"
-msgstr ""
+msgstr "Custos do Comprador (20%)"
 
 #. module: auction
 #: model:ir.ui.menu,name:auction.menu_board_auction
 msgid "Dashboard"
-msgstr ""
+msgstr "Painel"
 
 #. module: auction
 #: view:auction.dates:0
@@ -923,12 +925,12 @@ msgstr ""
 #. module: auction
 #: model:ir.model,name:auction.model_auction_lots_make_invoice
 msgid "Make invoice"
-msgstr ""
+msgstr "Criar fatura"
 
 #. module: auction
 #: selection:report.auction,month:0
 msgid "November"
-msgstr ""
+msgstr "Novembro"
 
 #. module: auction
 #: view:auction.dates:0
@@ -939,7 +941,7 @@ msgstr "Histórico"
 #. module: auction
 #: field:aie.category,code:0
 msgid "Code"
-msgstr ""
+msgstr "Código"
 
 #. module: auction
 #: report:auction.code_bar_lot:0
@@ -964,7 +966,7 @@ msgstr "Cancelar"
 #. module: auction
 #: view:auction.lots:0
 msgid "Buyer's Payment History"
-msgstr ""
+msgstr "Histórico de Pagamento dos Compradores"
 
 #. module: auction
 #: view:auction.artists:0
@@ -985,7 +987,7 @@ msgstr "Pagar"
 #. module: auction
 #: view:auction.lots.make.invoice:0
 msgid "Create Invoices For Seller"
-msgstr ""
+msgstr "Criar Faturas para Vendedores"
 
 #. module: auction
 #: field:report.object.encoded,obj_margin:0
@@ -995,7 +997,7 @@ msgstr "Margem líquida"
 #. module: auction
 #: help:auction.lots,lot_local:0
 msgid "Auction Location"
-msgstr ""
+msgstr "Local do Leilão"
 
 #. module: auction
 #: view:auction.dates:0
@@ -1033,17 +1035,17 @@ msgstr "Faturar objetos do Comprador"
 #. module: auction
 #: view:report.auction:0
 msgid "My Auction"
-msgstr ""
+msgstr "Meu Leilão"
 
 #. module: auction
 #: help:auction.lots,gross_margin:0
 msgid "(Gross Revenue*100.0)/ Object Price"
-msgstr ""
+msgstr "(Receita Bruta * 100.0) / Preço do Objeto"
 
 #. module: auction
 #: field:auction.bid,contact_tel:0
 msgid "Contact Number"
-msgstr ""
+msgstr "Número do Contato"
 
 #. module: auction
 #: view:auction.lots:0
@@ -1147,7 +1149,7 @@ msgstr "Marcar Lotes"
 #. module: auction
 #: model:ir.model,name:auction.model_auction_lots
 msgid "Auction Object"
-msgstr ""
+msgstr "Objeto de Leilão"
 
 #. module: auction
 #: field:auction.lots,obj_num:0
@@ -1187,7 +1189,7 @@ msgstr "Direitos autorais"
 #: view:auction.lots:0
 #: view:report.auction:0
 msgid "Group By..."
-msgstr ""
+msgstr "Agrupar Por..."
 
 #. module: auction
 #: help:auction.dates,journal_id:0
@@ -1221,12 +1223,12 @@ msgstr "Vendedores"
 #. module: auction
 #: help:auction.lots,lot_est2:0
 msgid "Maximum Estimate Price"
-msgstr ""
+msgstr "Máximo Preço Estimado"
 
 #. module: auction
 #: view:auction.lots:0
 msgid "Notes"
-msgstr ""
+msgstr "Notas"
 
 #. module: auction
 #: view:auction.lots.auction.move:0
@@ -1241,7 +1243,7 @@ msgstr "# de itens não vendidos:"
 #. module: auction
 #: view:auction.dates:0
 msgid "Create Invoices"
-msgstr ""
+msgstr "Criar Faturas"
 
 #. module: auction
 #: field:auction.bid,auction_id:0
@@ -1268,7 +1270,7 @@ msgstr "Lista de Lotes - Paisagem"
 #. module: auction
 #: view:auction.artists:0
 msgid "Author/Artist"
-msgstr ""
+msgstr "Autor/Artista"
 
 #. module: auction
 #: field:auction.lots,ach_login:0
@@ -1284,7 +1286,7 @@ msgstr "Prioridade"
 #. module: auction
 #: view:board.board:0
 msgid "Latest objects"
-msgstr ""
+msgstr "Últimos objetos"
 
 #. module: auction
 #: field:auction.lots,lot_local:0
@@ -1294,7 +1296,7 @@ msgstr "Local"
 #. module: auction
 #: view:report.auction:0
 msgid "Month -1"
-msgstr ""
+msgstr "Mês -1"
 
 #. module: auction
 #: help:auction.lots,is_ok:0
@@ -1314,12 +1316,12 @@ msgstr "Total rec. bruta"
 #. module: auction
 #: help:auction.lots,lot_est1:0
 msgid "Minimum Estimate Price"
-msgstr ""
+msgstr "Mínimo Preço Estimado"
 
 #. module: auction
 #: view:auction.deposit:0
 msgid "Deposit Date"
-msgstr ""
+msgstr "Data de Depósito"
 
 #. module: auction
 #: code:addons/auction/wizard/auction_lots_numerotate.py:145
@@ -1330,7 +1332,7 @@ msgstr "Este lote não existe !"
 #. module: auction
 #: selection:report.auction,month:0
 msgid "July"
-msgstr ""
+msgstr "Julho"
 
 #. module: auction
 #: field:auction.bid_line,call:0
@@ -1373,19 +1375,19 @@ msgstr "Método para desistência"
 #. module: auction
 #: view:auction.dates:0
 msgid "Buyer Commissions"
-msgstr ""
+msgstr "Comissões do Comprador"
 
 #. module: auction
 #: model:ir.actions.act_window,name:auction.action_report_auction
 #: model:ir.ui.menu,name:auction.menu_report_auction
 msgid "Auction Analysis"
-msgstr ""
+msgstr "Análise de Leilão"
 
 #. module: auction
 #: code:addons/auction/wizard/auction_pay_buy.py:80
 #, python-format
 msgid "Payment aborted !"
-msgstr ""
+msgstr "Pagamento abortado!"
 
 #. module: auction
 #: field:auction.lot.history,price:0
@@ -1417,7 +1419,7 @@ msgstr "Máx. Estimado"
 #. module: auction
 #: view:auction.lots:0
 msgid "Statistical"
-msgstr ""
+msgstr "Estatístico"
 
 #. module: auction
 #: model:ir.model,name:auction.model_auction_deposit
@@ -1427,17 +1429,17 @@ msgstr ""
 #. module: auction
 #: model:ir.actions.act_window,name:auction.action_report_object_encoded_tree
 msgid "Object statistics"
-msgstr ""
+msgstr "Estatísticas de objeto"
 
 #. module: auction
 #: help:auction.lots,net_margin:0
 msgid "(Net Revenue * 100)/ Object Price"
-msgstr ""
+msgstr "(Receita Líquida * 100) / Preço do Objeto"
 
 #. module: auction
 #: model:ir.model,name:auction.model_auction_lot_history
 msgid "Lot History"
-msgstr ""
+msgstr "Histórico do Lote"
 
 #. module: auction
 #: view:auction.lots.make.invoice:0
@@ -1448,7 +1450,7 @@ msgstr "Criar faturas"
 #. module: auction
 #: model:account.tax.code,name:auction.account_tax_code_id5
 msgid "VAT 5%"
-msgstr ""
+msgstr "VAT 5%"
 
 #. module: auction
 #: field:auction.dates,expo1:0
@@ -1468,7 +1470,7 @@ msgstr "auction.artists"
 #. module: auction
 #: field:report.auction,avg_price:0
 msgid "Avg Price."
-msgstr ""
+msgstr "Preço Médio"
 
 #. module: auction
 #: help:auction.pay.buy,statement_id2:0
@@ -1537,7 +1539,7 @@ msgstr "Fatura do Vendedor"
 #. module: auction
 #: view:board.board:0
 msgid "Objects by day"
-msgstr ""
+msgstr "Objetos por dia"
 
 #. module: auction
 #: help:auction.dates,expo2:0
@@ -1559,7 +1561,7 @@ msgstr ""
 #. module: auction
 #: view:board.board:0
 msgid "Auction manager "
-msgstr ""
+msgstr "Gerente do Leilão "
 
 #. module: auction
 #: code:addons/auction/wizard/auction_lots_invoice.py:68
@@ -1572,7 +1574,7 @@ msgstr ""
 #. module: auction
 #: view:auction.dates:0
 msgid "Invoice"
-msgstr ""
+msgstr "Fatura"
 
 #. module: auction
 #: field:auction.lots,vnd_lim:0
@@ -1587,12 +1589,12 @@ msgstr "Transferência"
 #. module: auction
 #: view:auction.pay.buy:0
 msgid "Line3"
-msgstr ""
+msgstr "Linha3"
 
 #. module: auction
 #: view:auction.pay.buy:0
 msgid "Line2"
-msgstr ""
+msgstr "Linha2"
 
 #. module: auction
 #: help:auction.lots,obj_ret:0
@@ -1627,7 +1629,7 @@ msgstr "Produto"
 #. module: auction
 #: report:buyer.list:0
 msgid ")"
-msgstr ""
+msgstr ")"
 
 #. module: auction
 #: view:auction.lots:0
