@@ -248,7 +248,7 @@ $(document).ready(function () {
             openerp = window.openerp.init();
         }
     });
-    test('Get pre-set active_ids', 6, function () {
+    asyncTest('Get pre-set active_ids', 6, function () {
         var dataset = new openerp.base.DataSet({
             rpc: function (url, params, on_success) {
                 equal(url, '/base/dataset/get');
@@ -260,7 +260,6 @@ $(document).ready(function () {
                 ));
             }
         });
-        stop(500);
         dataset.select([1, 2, 3]);
         dataset.on_active_ids.add(function (data_records) {
             equal(data_records.length, 3);
