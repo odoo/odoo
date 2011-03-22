@@ -94,60 +94,195 @@ openerp.base.EmbbededView = openerp.base.Controller.extend({
 // to replace Action
 });
 
+/**
+ * Management interface between views and the collection of selected OpenERP
+ * records (represents the view's state?)
+ */
 openerp.base.DataSet =  openerp.base.Controller.extend({
-    init: function(session, element_id, model) {
-        this._super(session, element_id);
-        this.model = model;
-        // SHOULD USE THE ONE FROM FIELDS VIEW GET BECAUSE OF SELECTION
-        // Should merge those 2
-        this.model_fields = null;
-        this.fields = [];
+    init: function(session, model) {
+        this._super(session);
+        this._model = model;
 
-        this.domain = [];
-        this.context = {};
-        this.order = "";
-        this.count = null;
-        this.ids = [];
-        this.values = {};
-/*
-    group_by
-        rows record
-            fields of row1 field fieldname
-                { type: value: text: text_format: text_completions type_*: a
-*/
+        this._fields = null;
+
+        this._ids = [];
+        this._active_ids = null;
+        this._active_id_index = 0;
+
+        this._sort = [];
+        this._domain = [];
+        this._context = {};
     },
     start: function() {
-        this.rpc("/base/dataset/fields", {"model":this.model}, this.on_fields);
+        // TODO: fields_view_get fields selection?
+        this.rpc("/base/dataset/fields", {"model":this._model}, this.on_fields);
     },
     on_fields: function(result) {
-        this.model_fields = result.fields;
+        this._fields = result._fields;
         this.on_ready();
     },
-    do_load: function(offset, limit) {
-        this.rpc("/base/dataset/load", {model: this.model, fields: this.fields }, this.on_loaded);
+
+    /**
+     * Fetch all the records selected by this DataSet, based on its domain
+     * and context.
+     *
+     * Fires the on_ids event.
+     *
+     * @param {Number} [offset=0] The index from which selected records should be returned
+     * @param {Number} [limit=null] The maximum number of records to return
+     * @returns itself
+     */
+    ids: function (offset, limit) {
+        offset = offset || 0;
+        limit = limit || null;
+        this.rpc('/base/dataset/load', {
+            model: this._model,
+            fields: this._fields,
+            domain: this._domain,
+            context: this._context,
+            sort: this._sort,
+            offset: offset,
+            limit: limit
+        }, _.bind(function (records) {
+            var data_records = _.map(
+                records, function (record) {
+                    return new openerp.base.DataRecord(
+                        this.session, this._model,
+                        this._fields, record);
+                }, this);
+
+            this.on_ids(data_records, {
+                offset: offset,
+                limit: limit,
+                domain: this._domain,
+                context: this._context,
+                sort: this._sort
+            });
+        }, this));
+        return this;
     },
-    on_loaded: function(data) {
-        this.ids = data.ids;
-        this.values = data.values;
+    /**
+     * @event
+     *
+     * Fires after the DataSet fetched the records matching its internal ids selection
+     * 
+     * @param {Array} records An array of the DataRecord fetched
+     * @param event The on_ids event object
+     * @param {Number} event.offset the offset with which the original DataSet#ids call was performed
+     * @param {Number} event.limit the limit set on the original DataSet#ids call
+     * @param {Array} event.domain the domain set on the DataSet before DataSet#ids was called
+     * @param {Object} event.context the context set on the DataSet before DataSet#ids was called
+     * @param {Array} event.sort the sorting criteria used to get the ids
+     */
+    on_ids: function (records, event) {
+
     },
-    on_reloaded: function(ids) {
+
+    /**
+     * Fetch all the currently active records for this DataSet (records selected via DataSet#select)
+     *
+     * @param {Number} [offset=0] The index from which selected records should be returned
+     * @param {Number} [limit=-1] The maximum number of records to return
+     * @returns itself
+     */
+    active_ids: function (offset, limit) {
+        return this;
+    },
+    /**
+     * @event
+     *
+     * Fires after the DataSet fetched the records matching its internal active ids selection
+     *
+     * @param {Array} records An array of the DataRecord fetched
+     * @param event The on_active_ids event object
+     * @param {Number} event.offset the offset with which the original DataSet#ids call was performed
+     * @param {Number} event.limit the limit set on the original DataSet#ids call
+     * @param {Array} event.sort the sorting criteria used to get the ids
+     */
+    on_active_ids: function (records, event) {
+
+    },
+
+    /**
+     * Fetches the current active record for this DataSet
+     *
+     * @returns itself
+     */
+    active_id: function () {
+        return this;
+    },
+    /**
+     * Fires after the DataSet fetched the record matching the current active record
+     *
+     * @param record the record matching the provided id, or null if there is no record for this id
+     */
+    on_active_id: function (record) {
+
+    },
+
+    /**
+     * Configures the DataSet
+     * 
+     * @param options DataSet options
+     * @param {Array} options.domain the domain to assign to this DataSet for filtering
+     * @param {Object} options.context the context this DataSet should use during its calls
+     * @param {Array} options.sort the sorting criteria for this DataSet
+     * @returns itself
+     */
+    set: function (options) {
+        if (options.domain) {
+            this._domain = _.clone(options.domain);
+        }
+        if (options.context) {
+            this._context = _.clone(options.context);
+        }
+        if (options.sort) {
+            this._sort = _.clone(options.sort);
+        }
+        return this;
+    },
+
+    /**
+     * Activates the previous id in the active sequence. If there is no previous id, wraps around to the last one
+     * @returns itself
+     */
+    prev: function () {
+        return this;
+    },
+    /**
+     * Activates the next id in the active sequence. If there is no next id, wraps around to the first one
+     * @returns itself
+     */
+    next: function () {
+        return this;
+    },
+
+    /**
+     * Sets active_ids and/or active_id by value:
+     *
+     * * If only <code>ids</code> is provided
+     *   - Activates all ids part of the current selection
+     *   - Sets active_id to be the first id of the selection
+     * * If only <code>id</code> is provided, activates this id (for both active_id and active_ids)
+     * * If both <code>id</code> and <code>ids</code> are provided
+     *   - Activates all ids part of the current selection
+     *   - If <code>id</code> is part of the active ids, activates it, otherwise see first option
+     *
+     * @param {Array} [ids] the list of ids to activate
+     * @param {Object} [id] the id to activate
+     */
+    select: function (ids, id) {
+        return this;
     }
 });
 
 openerp.base.DataRecord =  openerp.base.Controller.extend({
-    init: function(session,  model, fields) {
+    init: function(session, model, fields, values) {
         this._super(session, null);
         this.model = model;
-        this.id = null;
+        this.id = values.id || null;
         this.fields = fields;
-        this.values = {};
-    },
-    load: function(id) {
-        this.id = id;
-        this.rpc("/base/datarecord/load", {"model": this.model, "id": id, "fields": "todo"}, this.on_loaded);
-    },
-    on_loaded: function(result) {
-        this.values = result.value;
+        this.values = values;
     },
     on_change: function() {
     },

@@ -167,7 +167,7 @@ class DataSet(openerpweb.Controller):
 
     @openerpweb.jsonrequest
     def fields(self, req, model):
-        return {'fields': req.session.model(model).fields_get(False)}
+        return {'fields': req.session.model(model).fields_get()}
 
     @openerpweb.jsonrequest
     def load(self, req, model, domain=[], fields=['id']):
