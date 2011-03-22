@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-#import email_smtp_server
 import email_message
 import email_thread
 import res_partner

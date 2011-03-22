@@ -218,7 +218,7 @@ class email_compose_message(osv.osv_memory):
                 references = mail.references and mail.references + "," + mail.message_id or mail.message_id
             else:
                 message_id = mail.message_id
-            email_id = email_message_pool.schedule_with_attach(cr, uid, mail.email_from, mail.email_to, mail.name, mail.description,
+            email_id = email_message_pool.schedule_with_attach(cr, uid, mail.email_from, mail.email_to, mail.subject, mail.body,
                     model=mail.model, email_cc=mail.email_cc, email_bcc=mail.email_bcc, reply_to=mail.reply_to,
                     attach=attachment, message_id=message_id, references=references, openobject_id=int(mail.res_id), debug=mail.debug,
                     subtype=mail.sub_type, x_headers=mail.headers, priority=mail.priority, smtp_server_id=mail.smtp_server_id and mail.smtp_server_id.id, context=context)

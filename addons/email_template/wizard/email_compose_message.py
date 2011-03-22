@@ -44,8 +44,8 @@ class email_compose_message(osv.osv_memory):
             result.update({
                     'template_id' : template.id,
                     'smtp_server_id' : template.smtp_server_id.id,
-                    'description' : _get_template_value('description') or False,
-                    'name' : _get_template_value('subject') or False,
+                    'body' : _get_template_value('description') or False,
+                    'subject' : _get_template_value('subject') or False,
                     'attachment_ids' : template_pool.read(cr, uid, template.id, ['attachment_ids'])['attachment_ids'] or [],
                     'res_id' : res_id or False,
                     'email_to' : _get_template_value('email_to') or False,
@@ -92,11 +92,11 @@ class email_compose_message(osv.osv_memory):
         if 'email_bcc' in fields:
             result.update({'email_bcc' : vals.get('email_bcc', False)})
 
-        if 'name' in fields:
-            result.update({'name' : vals.get('name', False)})
+        if 'subject' in fields:
+            result.update({'subject' : vals.get('name', False)})
 
-        if 'description' in fields:
-            result.update({'description' : vals.get('description', False)})
+        if 'body' in fields:
+            result.update({'body' : vals.get('description', False)})
 
         if 'reply_to' in fields:
             result.update({'reply_to' : vals.get('reply_to', False)})

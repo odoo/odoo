@@ -83,7 +83,7 @@ class email_message_common(osv.osv_memory):
         'priority':fields.integer('Priority'),
         'body': fields.text('Description', translate=True),
         'body_html': fields.text('HTML', help="Contains HTML version of email"),
-        'smtp_server_id':fields.many2one('ir.mail.server', 'SMTP Server'),
+        'smtp_server_id':fields.many2one('ir.mail_server', 'SMTP Server'),
     }
     _rec_name='subject'
 
@@ -227,7 +227,7 @@ class email_message(osv.osv):
                 'debug': debug,
                 'history': True,
                 'smtp_server_id': smtp_server_id,
-                'state': 'waiting',
+                'state': 'outgoing',
             }
         email_msg_id = self.create(cr, uid, msg_vals, context)
         if attach:
@@ -247,7 +247,7 @@ class email_message(osv.osv):
         return email_msg_id
 
     def process_retry(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'state':'waiting'}, context)
+        return self.write(cr, uid, ids, {'state':'outgoing'}, context)
 
     def process_email_queue(self, cr, uid, ids=None, context=None):
         if ids is None:
@@ -255,13 +255,13 @@ class email_message(osv.osv):
         if context is None:
             context = {}
         attachment_obj = self.pool.get('ir.attachment')
-        smtp_server_obj = self.pool.get('ir.mail.server')
+        smtp_server_obj = self.pool.get('ir.mail_server')
         if not ids:
             filters = [('state', '=', 'outgoing')]
             if 'filters' in context:
                 filters.extend(context['filters'])
             ids = self.search(cr, uid, filters, context=context)
-        self.write(cr, uid, ids, {'state':'sending'}, context)
+        self.write(cr, uid, ids, {'state':'outgoing'}, context)
         for message in self.browse(cr, uid, ids, context):
             try:
                 attachments = []
@@ -269,7 +269,7 @@ class email_message(osv.osv):
                     attachments.append((attach.datas_fname ,base64.b64decode(attach.datas)))
                 smtp_server = message.smtp_server_id
                 if not smtp_server:
-                    smtp_ids = smtp_server_obj.search(cr, uid, [('default','=',True)])
+                    smtp_ids = smtp_server_obj.search(cr, uid, [])
                     if smtp_ids:
                         smtp_server = smtp_server_obj.browse(cr, uid, smtp_ids, context)[0]
                 res = self.send_email(cr, uid, ids, auto_commit=True, context=context)
@@ -283,6 +283,22 @@ class email_message(osv.osv):
                 self.write(cr, uid, [message.id], {'state':'exception'}, context)
         return ids
 
+    def send_email(self, cr, uid, ids, auto_commit=False, context=None):
+        if context is None:
+            context = {}
+        smtp_server_obj = self.pool.get('ir.mail_server')
+        for message in self.browse(cr, uid, ids, context):
+            try:
+                if message.state in ['outgoing', 'exception']:
+                    msg_id = smtp_server_obj.send_email(cr, uid, message.email_from, message.email_to, message.body, id=message.smtp_server_id, subject=message.subject)
+                else:
+                    raise osv.except_osv(_('Error !'), _('Message is not in outgoing state!'))
+            except Exception, error:
+                logger = netsvc.Logger()
+                logger.notifyChannel("email-template", netsvc.LOG_ERROR, _("Sending of Mail %s failed. Probable Reason:Could not login to server\nError: %s") % (message.id, error))
+                self.write(cr, uid, [message.id], {'state':'exception'}, context)
+                return False
+        return True
 # OLD Code.
 #    def send_all_mail(self, cr, uid, ids=None, context=None):
 #        if ids is None:

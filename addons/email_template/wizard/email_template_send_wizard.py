@@ -91,8 +91,8 @@ class email_template_send_wizard(osv.osv_memory):
         if 'subject' in fields:
             result['subject'] = _get_template_value('subject')
 
-        if 'description' in fields:
-            result['description'] = _get_template_value('description')
+        if 'body' in fields:
+            result['body'] = _get_template_value('description')
 
         #if 'body_html' in fields:
         #    result['body_html'] = _get_template_value('body_html')

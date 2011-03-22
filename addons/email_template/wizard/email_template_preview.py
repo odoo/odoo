@@ -95,11 +95,11 @@ class email_template_preview(osv.osv_memory):
         elif template.track_campaign_item:
             vals['message_id'] = tools.misc.generate_tracking_message_id(res_id)
         vals['subject'] = self.get_template_value(cr, uid, template.subject, model, res_id, context)
-        description = self.get_template_value(cr, uid, template.description, model, res_id, context) or ''
+        description = self.get_template_value(cr, uid, template.body, model, res_id, context) or ''
         if template.user_signature:
             signature = self.pool.get('res.users').browse(cr, uid, uid, context).signature
             description += '\n' + signature
-        vals['description'] = description
+        vals['body'] = description
         vals['report_name'] = self.get_template_value(cr, uid, template.report_name, model, res_id, context)
         return {'value':vals}
 
