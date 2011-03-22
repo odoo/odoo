@@ -255,7 +255,7 @@ class Root(object):
             p = os.path.normpath(os.path.join(*l))
             return cherrypy.lib.static.serve_file(os.path.join(path_addons, p))
         elif len(l) > 1:
-            for i in range(1, len(l) + 1):
+            for i in range(len(l), 1, -1):
                 ps = "/" + "/".join(l[0:i])
                 if ps in controllers_path:
                     c = controllers_path[ps]
@@ -265,7 +265,7 @@ class Root(object):
                     if getattr(m, 'exposed', 0):
                         print "Calling", ps, c, meth, m
                         return m(**kw)
-
+            raise cherrypy.NotFound('/' + '/'.join(l))
         else:
             raise cherrypy.HTTPRedirect('/base/static/openerp/base.html', 301)
     default.exposed = True
