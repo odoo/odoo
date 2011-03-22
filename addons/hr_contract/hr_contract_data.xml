@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data noupdate="1">
-        
+
         <!-- Contract Period Names -->
-        <record id="hr_contract_wage_type_period_daily" model="hr.contract.wage.type.period">
+   <!--      <record id="hr_contract_wage_type_period_daily" model="hr.contract.wage.type.period">
             <field name="name">daily</field>
         </record>
         <record id="hr_contract_wage_type_period_weekly" model="hr.contract.wage.type.period">
@@ -11,8 +11,8 @@
         </record>
         <record id="hr_contract_wage_type_period_monthly" model="hr.contract.wage.type.period">
             <field name="name">monthly</field>
-        </record>
-        
+        </record>  -->
+
         <!-- Contract Wage Types -->
       <!--  <record id="hr_contract_monthly_gross" model="hr.contract.wage.type">
             <field name="name">Monthly Gross Wage</field>
@@ -25,19 +25,19 @@
             <field name="type">net</field>
             <field name="period_id" ref="hr_contract_wage_type_period_monthly"/>
         </record> -->
-        
-        <!-- Contract Types -->               
+
+        <!-- Contract Types -->
         <record id="hr_contract_type_emp" model="hr.contract.type">
             <field name="name">Employee</field>
-        </record> 
-                 
+        </record>
+
         <record id="hr_contract_type_wrkr" model="hr.contract.type">
             <field name="name">Worker</field>
-        </record> 
-         
+        </record>
+
         <record id="hr_contract_type_sub" model="hr.contract.type">
             <field name="name">Subcontractor</field>
-        </record>                        
-        
+        </record>
+
     </data>
 </openerp>
