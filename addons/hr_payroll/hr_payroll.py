@@ -1007,10 +1007,23 @@ class hr_payslip(osv.osv):
                             value = line.amount
                     else:
                         value = line.amount
+                        
             elif line.amount_type=='code':
                 localdict = {'basic':amt, 'employee':employee_id, 'contract':contract}
                 exec line.python_compute in localdict
-                value = localdict['result']
+                val = localdict['result']
+                if line.child_depend == False:
+                    if line.parent_rule_id:
+                        for rul in [line.parent_rule_id]:
+                            value = val
+                    if line.condition_range_min or line.condition_range_max:
+                        if ((line.amount < line.condition_range_min) or (line.amount > line.condition_range_max)):
+                            value = value
+                        else:
+                            value = val
+                    else:
+                        value = val   
+                    
             total += value
             vals = {
                 'category_id': line.category_id.id,
@@ -1049,7 +1062,6 @@ class hr_payslip(osv.osv):
             'contract_id': contract.id,
             'company_id': employee_id.company_id.id
         })
-
 #        for line in employee_id.line_ids:
 #            vals = {
 #                'category_id': line.category_id.id,
@@ -1067,7 +1079,6 @@ class hr_payslip(osv.osv):
 
         basic_before_leaves = update['value']['basic_amount']
         total_before_leaves = update['value']['total_pay']
-
         working_day = 0
         off_days = 0
         dates = prev_bounds(ddate)
@@ -1100,44 +1111,99 @@ class hr_payslip(osv.osv):
             head_sequence = 0
             if not slip_lines:
                 raise osv.except_osv(_('Error !'), _('Please check configuration of %s, Salary rule is missing') % (hday.holiday_status_id.name))
-            salary_rule = salary_rule_pool.browse(cr, uid, slip_lines, context=context)[0]
-            base = salary_rule.computational_expression
+            hd_rule = salary_rule_pool.browse(cr, uid, slip_lines, context=context)[0]
+            leave_rule = []
+            leave_rule.append(hd_rule)
+            if hd_rule.child_ids:
+                leave_rule.append((hd_rule.child_ids[0]))
+            
+            for salary_rule in leave_rule:
+                base = salary_rule.computational_expression
 
-            res = {
-                'name': salary_rule.name + '-%s' % (hday.number_of_days),
-                'code': salary_rule.code,
-                'amount_type': salary_rule.amount_type,
-                'category_id': salary_rule.category_id.id,
-                'sequence': salary_rule.sequence,
-                'employee_id': employee_id.id,
-                'base': base
-            }
-            days = hday.number_of_days
-            if hday.number_of_days < 0:
-                days = hday.number_of_days * -1
-            total_leave += days
-            try:
-                #Please have a look at the configuration guide.
-                amt = eval(base, obj)
-            except Exception, e:
-                raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ') % (e))
-            if salary_rule.amount_type == 'per':
+                res = {
+                    'name': salary_rule.name + '-%s' % (hday.number_of_days),
+                    'code': salary_rule.code,
+                    'amount_type': salary_rule.amount_type,
+                    'category_id': salary_rule.category_id.id,
+                    'sequence': salary_rule.sequence,
+                    'employee_id': employee_id.id,
+                    'base': base
+                }
+                days = hday.number_of_days
+                if hday.number_of_days < 0:
+                    days = hday.number_of_days * -1
+                total_leave += days
                 try:
-                    value = salary_rule.amount * amt * days
+                    #Please have a look at the configuration guide.
+                    amt = eval(base, obj)
                 except Exception, e:
                     raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ') % (e))
-            elif salary_rule.amount_type == 'fix':
-                value = salary_rule.amount * days
-            elif salary_rule.amount_type=='code':
-                localdict = {'basic':amt, 'employee':employee_id, 'contract':contract}
-                exec salary_rule.python_compute in localdict
-                value = localdict['result'] * days
-            res['amount'] = salary_rule.amount
-            res['type'] = salary_rule.type.id
-            leave += days
-            total += value
-            res['total'] = value
-            update['value']['line_ids'].append(res)
+                if salary_rule.amount_type == 'per':
+                    try:
+                        if salary_rule.child_depend == False:
+                            if salary_rule.parent_rule_id:
+                                for rul in [line.parent_rule_id]:
+                                    val = rul.amount * amt
+                                    amt = val
+                            value = salary_rule.amount * amt * days
+                            if salary_rule.condition_range_min or salary_rule.condition_range_max:
+                                if ((value < salary_rule.condition_range_min) or (value > salary_rule.condition_range_max)):
+                                    value = 0.0
+                                else:
+                                    value = value
+                            else:
+                                value = value
+                       
+                    except Exception, e:
+                        raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ') % (e))
+           
+                elif salary_rule.amount_type == 'fix':
+                    if salary_rule.child_depend == False:
+                        if salary_rule.parent_rule_id:
+                            for rul in [salary_rule.parent_rule_id]:
+                                value = salary_rule.amount * days
+                        if salary_rule.condition_range_min or salary_rule.condition_range_max:
+                            if ((salary_rule.amount < salary_rule.condition_range_min) or (salary_rule.amount > salary_rule.condition_range_max)):
+                                value = 0.0
+                            else:
+                                value = salary_rule.amount * days
+                        else:
+                            value = salary_rule.amount * days
+    #                value = salary_rule.amount * days
+    
+                elif salary_rule.amount_type=='code':
+                    localdict = {'basic':amt, 'employee':employee_id, 'contract':contract}
+                    exec salary_rule.python_compute in localdict
+                    val = localdict['result'] * days
+                    if salary_rule.child_depend == False:
+                        if salary_rule.parent_rule_id:
+                            for rul in [salary_rule.parent_rule_id]:
+                                value = val
+                        if salary_rule.condition_range_min or salary_rule.condition_range_max:
+                            if ((salary_rule.amount < salary_rule.condition_range_min) or (salary_rule.amount > salary_rule.condition_range_max)):
+                                value = value
+                            else:
+                                value = val
+                        else:
+                            value = val   
+                
+                res['amount'] = salary_rule.amount
+                res['type'] = salary_rule.type.id
+                leave += days
+                total = value
+                res['total'] = value
+#                update['value']['line_ids'].append(res)
+                if salary_rule.appears_on_payslip:
+                    if salary_rule.parent_rule_id:
+                        for l in salary_rule_pool.browse(cr, uid, [salary_rule.parent_rule_id.id], context=context):
+                            if l.display_child_rules == True:
+                                update['value']['line_ids'].append(res)
+                    else:
+                        if salary_rule.condition_range_min or salary_rule.condition_range_max:
+                            if not ((value < salary_rule.condition_range_min) or (value > salary_rule.condition_range_max)):
+                                update['value']['line_ids'].append(res)
+                        else:
+                            update['value']['line_ids'].append(res)
         update['value'].update({
             'basic_amount': basic,
             'basic_before_leaves': round(basic_before_leaves),
