@@ -1277,7 +1277,7 @@ class hr_employee(osv.osv):
             cr.execute( 'SELECT SUM(wage) '\
                         'FROM hr_contract '\
                         'WHERE employee_id = %s '\
-                        'AND date_start < %s '\
+                        'AND date_start <= %s '\
                         'AND (date_end > %s OR date_end is NULL)',
                          (employee.id, current_date, current_date))
             result = dict(cr.dictfetchone())
