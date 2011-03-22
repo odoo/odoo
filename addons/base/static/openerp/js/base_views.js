@@ -546,6 +546,13 @@ openerp.base.FieldEmail = openerp.base.Field.extend({
     }
 });
 
+openerp.base.FieldUrl = openerp.base.Field.extend({
+    init: function(view, node) {
+        this._super(view, node);
+        this.template = "FieldChar";
+    }
+});
+
 openerp.base.FieldFloat = openerp.base.Field.extend({
     init: function(view, node) {
         this._super(view, node);
@@ -626,6 +633,7 @@ openerp.base.widgets = {
     'separator' : openerp.base.WidgetSeparator,
     'label' : openerp.base.WidgetLabel,
     'char' : openerp.base.FieldChar,
+    'url' : openerp.base.FieldUrl,
     'email' : openerp.base.FieldEmail,
     'date' : openerp.base.FieldDate,
     'datetime' : openerp.base.FieldDatetime,
