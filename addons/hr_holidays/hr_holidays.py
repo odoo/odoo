@@ -214,6 +214,7 @@ class hr_holidays(osv.osv):
         self.write(cr, uid, ids, {
             'state': 'draft',
             'manager_id': False,
+            'manager_id2': False,
         })
         wf_service = netsvc.LocalService("workflow")
         for id in ids:
@@ -232,9 +233,11 @@ class hr_holidays(osv.osv):
         obj_emp = self.pool.get('hr.employee')
         ids2 = obj_emp.search(cr, uid, [('user_id', '=', uid)])
         manager = ids2 and ids2[0] or False
-        self.write(cr, uid, ids, {'state':'validate', 'manager_id2': manager})
+        self.write(cr, uid, ids, {'state':'validate'})
         data_holiday = self.browse(cr, uid, ids)
         for record in data_holiday:
+            if record.holiday_status_id.double_validation:
+                self.write(cr, uid, ids, {'manager_id2': manager})
             if record.holiday_type == 'employee' and record.type == 'remove':
                 meeting_obj = self.pool.get('crm.meeting')
                 vals = {
@@ -281,7 +284,7 @@ class hr_holidays(osv.osv):
         obj_emp = self.pool.get('hr.employee')
         ids2 = obj_emp.search(cr, uid, [('user_id', '=', uid)])
         manager = ids2 and ids2[0] or False
-        self.write(cr, uid, ids, {'state': 'refuse', 'manager_id2': manager})
+        self.write(cr, uid, ids, {'state': 'refuse', 'manager_id': manager})
         self.holidays_cancel(cr, uid, ids)
         return True
 
