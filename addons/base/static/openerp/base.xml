@@ -5,18 +5,41 @@
 <t t-name="Interface">
     <div id="oe_loading" class="loading"></div>
     <div id="oe_login" class="login"></div>
-    <div id="oe_header" class="header"></div>
-    <div id="oe_menu" style="border-bottom: 1px solid #000;"></div>
-    <div id="oe_main" class="main"></div>
-    <div id="oe_footer" class="footer">
-        Powered by OpenERP.
-    </div>
-    <div id="oe_errors">
-        Debug:
-    </div>
     <div style="position: absolute; right: 2px; top: 38px;">
         <button onclick="QWeb.add_template('base.xml'); $('body').css('background-color', '#FFFF9C'); setTimeout(function() { $('body').css('background-color', '#FFF'); }, 500);">Reload QWEB</button>
     </div>
+    <table border="0" cellpadding="0" cellspacing="0" width="100%" height="100%" class="main_table">
+    <tr>
+        <td colspan="2">
+            <div id="oe_header" class="header"></div>
+            <div id="oe_menu" class="menu"></div>
+        </td>
+    </tr>
+    <tr>
+        <td valign="top" id="oe_secondary_menu" class="secondary_menu">
+        </td>
+        <td valign="top" width="100%" height="100%">
+            <div id="oe_main" class="main">
+                <div id="oe_application" class="application"></div>
+                <div id="oe_sidebar"></div>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <div id="oe_footer" class="footer">
+                Powered by OpenERP.
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <div id="oe_errors">
+                Debug:
+            </div>
+        </td>
+    </tr>
+    </table>
 </t>
 <t t-name="Loading">
     Loading...
@@ -61,25 +84,45 @@
 
     </div>
 </t>
-<t t-name="Menu.root">
-    <ul class="sf-menu">
-    <t t-foreach="data.children" t-as="menu">
-        <t t-call="Menu.children"/>
-    </t>
+<t t-name="Menu">
+    <ul>
+        <li t-foreach="data.children" t-as="menu">
+            <a href="#" t-att-data-menu="menu.id">
+                <span><t t-esc="menu.name"/></span>
+            </a>
+        </li>
     </ul>
-    <div style="clear: both"></div>
 </t>
-<t t-name="Menu.children">
-    <!-- TODO prefix id with the element_id of the controller -->
-    <li><a href="#" t-attf-id="menu_#{menu.id}"><t t-esc="menu.name"/></a>
-        <t t-if="menu.children.length!=0">
-            <ul>
-                <t t-foreach="menu.children" t-as="menu">
-                    <t t-call="Menu.children"/>
-                </t>
-            </ul>
+<t t-name="Menu.secondary">
+    <div style="display: none" class="menu_accordion" t-att-data-menu-parent="menu.id">
+        <t t-foreach="menu.children" t-as="menu">
+            <t t-set="header">h3</t>
+            <t t-call="Menu.secondary.children"/>
         </t>
-    </li>
+    </div>
+</t>
+<t t-name="Menu.secondary.children">
+    &lt;<t t-esc="header"/>&gt;
+        <a href="#" t-attf-id="menu_#{menu.id}">
+            <span><t t-esc="menu.name"/></span>
+        </a>
+    &lt;/<t t-esc="header"/>&gt;
+    <div class="menu_content">
+        <t t-foreach="menu.children" t-as="menu">
+            <t t-if="!menu.children.length">
+                <a href="#" class="leaf" t-att-data-menu="menu.id">
+                    <span><t t-esc="menu.name"/></span>
+                </a>
+            </t>
+            <t t-if="menu.children.length">
+                <div class="submenu_accordion">
+                    <t t-call="Menu.secondary.children">
+                        <t t-set="header">h4</t>
+                    </t>
+                </div>
+            </t>
+        </t>
+    </div>
 </t>
 <t t-name="ListView">
     <!--

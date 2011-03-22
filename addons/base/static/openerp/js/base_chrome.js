@@ -430,8 +430,10 @@ openerp.base.Header =  openerp.base.Controller.extend({
 });
 
 openerp.base.Menu =  openerp.base.Controller.extend({
-    init: function(session, element_id, model) {
+    init: function(session, element_id, secondary_menu_id) {
         this._super(session, element_id);
+        this.secondary_menu_id = secondary_menu_id;
+        this.$secondary_menu = $("#" + secondary_menu_id);
         this.menu = false;
     },
     start: function() {
@@ -439,22 +441,63 @@ openerp.base.Menu =  openerp.base.Controller.extend({
     },
     on_loaded: function(data) {
         this.data = data;
-        var $e = this.$element;
-        $e.html(QWeb.render("Menu.root", this.data));
-        $("ul.sf-menu").superfish({
-            speed: 'fast'
+        this.$element.html(QWeb.render("Menu", this.data));
+        for (var i = 0; i < this.data.data.children.length; i++) {
+            var v = { menu : this.data.data.children[i] };
+            this.$secondary_menu.append(QWeb.render("Menu.secondary", v));
+        }
+        this.$secondary_menu.find("div.menu_accordion").accordion({
+            animated : false,
+            autoHeight : false,
+            icons : false
         });
-        $e.find("a").click(this.on_menu_click);
+        this.$secondary_menu.find("div.submenu_accordion").accordion({
+            animated : false,
+            autoHeight : false,
+            active: false,
+            collapsible: true,
+            header: 'h4'
+        });
+
+        this.$element.add(this.$secondary_menu).find("a").click(this.on_menu_click);
         this.on_ready();
     },
-    on_menu_click: function(ev) {
-        var menu_id = Number(ev.target.id.split("_").pop());
-        this.rpc("/base/menu/action", {"menu_id":menu_id}, this.on_menu_action_loaded);
-        return false;
+    on_menu_click: function(ev, id) {
+        var id = id || 0, $menu, $parent, $secondary;
+        if (id) {
+            // We can manually activate a menu with it's id (for hash url mapping)
+            $menu = $('a[data-menu=' + id + ']', this.$element);
+            if (!$menu.length) {
+                $menu = $('a[data-menu=' + id + ']', this.$secondary_menu);
+            }
+        } else {
+            $menu = $(ev.currentTarget);
+            id = parseInt($menu.attr('data-menu'));
+        }
+        if (this.$secondary_menu.has($menu).length) {
+            $secondary = $menu.parents('.menu_accordion');
+            var parent_id = $secondary.attr('data-menu-parent');
+            $parent = $('a[data-menu=' + parent_id + ']', this.$element);
+        } else {
+            $parent = $menu;
+            $secondary = this.$secondary_menu.find('.menu_accordion[data-menu-parent=' + $menu.attr('data-menu') + ']');
+        }
+
+        this.$secondary_menu.find('.menu_accordion').hide();
+        // TODO: ui-accordion : collapse submenus and expand the good one
+        $secondary.show();
+        this.rpc('/base/menu/action', {'menu_id': id}, this.on_menu_action_loaded);
+
+        $('.active', this.$element.add(this.$secondary_menu)).removeClass('active');
+        $parent.addClass('active');
+        $menu.addClass('active');
+        $menu.parent('h4').addClass('active');
+
+        return !$menu.is(".leaf");
     },
     on_menu_action_loaded: function(data) {
         var self = this;
-        if(data.action.length) {
+        if (data.action.length) {
             var action = data.action[0][2];
             self.on_action(action);
         }
@@ -489,7 +532,7 @@ openerp.base.WebClient = openerp.base.Controller.extend({
         this.session.on_session_valid.add_last(this.header.do_update);
         this.session.on_session_valid.add_last(this.on_loggued);
 
-        this.menu = new openerp.base.Menu(this.session, "oe_menu");
+        this.menu = new openerp.base.Menu(this.session, "oe_menu", "oe_secondary_menu");
         this.menu.on_action.add(this.on_menu_action);
     },
     start: function() {
@@ -499,7 +542,7 @@ openerp.base.WebClient = openerp.base.Controller.extend({
         this.menu.start();
     },
     on_loggued: function() {
-        this.action =  new openerp.base.Action(this.session, "oe_main");
+        this.action =  new openerp.base.Action(this.session, "oe_application");
         this.action.start();
     },
     on_menu_action: function(action) {
