@@ -23,11 +23,12 @@
 {
     'name': 'Margins in Product',
     'version': '1.0',
-    'category': 'Custom',
+    'category': 'Sales',
     'description': """
-Adds a reporting menu in products that computes sales, purchases, margins
-and other interesting indicators based on invoices. The wizard to launch
-the report has several options to help you get the data you need.
+Adds a reporting menu in products that computes sales, purchases, margins and other interesting indicators based on invoices.
+=============================================================================================================================
+
+The wizard to launch the report has several options to help you get the data you need.
 """,
     'author': 'OpenERP SA',
     'depends': ['account'],
@@ -40,5 +41,6 @@ the report has several options to help you get the data you need.
     'installable': True,
     'active': False,
     'certificate': '0064392591773',
+    'images': ['images/open_margins.jpeg','images/product_margins_form.jpeg', 'images/product_margins_list.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

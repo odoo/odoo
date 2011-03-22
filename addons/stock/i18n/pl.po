@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-23 04:57+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-03-18 04:40+0000\n"
+"X-Generator: Launchpad (build 12559)\n"
 
 #. module: stock
 #: field:product.product,track_outgoing:0
@@ -758,12 +758,6 @@ msgid "Location Address"
 msgstr "Adres strefy mag."
 
 #. module: stock
-#: code:addons/stock/stock.py:2348
-#, python-format
-msgid "is consumed with"
-msgstr "Jest używany z"
-
-#. module: stock
 #: help:stock.move,prodlot_id:0
 msgid "Production lot is used to put a serial number on the production"
 msgstr ""
@@ -884,6 +878,12 @@ msgstr "Pilne"
 #: report:stock.picking.list:0
 msgid "Journal"
 msgstr "Dziennik"
+
+#. module: stock
+#: code:addons/stock/stock.py:1315
+#, python-format
+msgid "is scheduled %s."
+msgstr ""
 
 #. module: stock
 #: help:stock.picking,location_id:0
@@ -2104,12 +2104,6 @@ msgstr "Dostawa częściowa"
 #: selection:stock.location,chained_auto_packing:0
 msgid "Automatic No Step Added"
 msgstr "Automatycznie i bezpośrednio"
-
-#. module: stock
-#: code:addons/stock/stock.py:2348
-#, python-format
-msgid "Product "
-msgstr "Produkt "
 
 #. module: stock
 #: view:stock.location.product:0
@@ -3483,10 +3477,10 @@ msgid "Product Category"
 msgstr "Kategoria Produktu"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_change_product_qty.py:74
+#: code:addons/stock/wizard/stock_change_product_qty.py:88
 #, python-format
-msgid "INV: "
-msgstr "FAK: "
+msgid "INV: %s"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.next_id_61
@@ -3808,12 +3802,6 @@ msgid "Unplanned Qty"
 msgstr "Ilość bieżąca"
 
 #. module: stock
-#: code:addons/stock/stock.py:1318
-#, python-format
-msgid "is scheduled"
-msgstr "jest zaplanowane"
-
-#. module: stock
 #: field:stock.location,chained_company_id:0
 msgid "Chained Company"
 msgstr "Związana firma"
@@ -3961,10 +3949,16 @@ msgid ""
 msgstr "To określa atrybuty pakowania jak typ, ilość w opakowaniu itp."
 
 #. module: stock
-#: code:addons/stock/stock.py:2348
+#: code:addons/stock/stock.py:2386
 #, python-format
-msgid "quantity."
-msgstr "ilość."
+msgid "Product  '%s' is consumed with '%s' quantity."
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/stock.py:2595
+#, python-format
+msgid "Inventory '%s' is done."
+msgstr ""
 
 #. module: stock
 #: constraint:stock.move:0
@@ -4757,6 +4751,10 @@ msgstr "Nieobowiązkowe szczegóły lokalizacji. Tylko do informacji."
 #~ "Jeśli przesunięcie czeka na inne przesunięcie, to stan jest 'Oczekiwanie'."
 
 #, python-format
+#~ msgid "is consumed with"
+#~ msgstr "Jest używany z"
+
+#, python-format
 #~ msgid "Bad Lot Assignation !"
 #~ msgstr "Złe przypisanie partii !"
 
@@ -4778,6 +4776,10 @@ msgstr "Nieobowiązkowe szczegóły lokalizacji. Tylko do informacji."
 
 #~ msgid "Rules are not supported for osv_memory objects !"
 #~ msgstr "Reguły nie są obsługiwane dla obiektów osv_memory !"
+
+#, python-format
+#~ msgid "Product "
+#~ msgstr "Produkt "
 
 #~ msgid "Unique serial number, will be displayed as: PREFIX/SERIAL [INT_REF]"
 #~ msgstr ""
@@ -4814,8 +4816,16 @@ msgstr "Nieobowiązkowe szczegóły lokalizacji. Tylko do informacji."
 #~ msgid "The name of the group must be unique !"
 #~ msgstr "Nazwa grupy musi być unikalna !"
 
+#, python-format
+#~ msgid "is scheduled"
+#~ msgstr "jest zaplanowane"
+
 #~ msgid "Size of the field can never be less than 1 !"
 #~ msgstr "Rozmiar pola nie może być mniejszy od 1 !"
+
+#, python-format
+#~ msgid "quantity."
+#~ msgstr "ilość."
 
 #~ msgid "Outgoing Deliveries"
 #~ msgstr "Wydania zewnętrzne"
@@ -4878,3 +4888,7 @@ msgstr "Nieobowiązkowe szczegóły lokalizacji. Tylko do informacji."
 #~ msgstr ""
 #~ "To jest lista partii produkcyjnych, które utworzyłeś. Po wybraniu partii "
 #~ "możesz prześledzić przesunięcia wprzód i wstecz dla danej partii."
+
+#, python-format
+#~ msgid "INV: "
+#~ msgstr "FAK: "

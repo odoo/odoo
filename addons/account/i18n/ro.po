@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-03-03 07:58+0000\n"
+"PO-Revision-Date: 2011-03-21 21:06+0000\n"
 "Last-Translator: Dorin <dhongu@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-03-04 04:45+0000\n"
-"X-Generator: Launchpad (build 12351)\n"
+"X-Launchpad-Export-Date: 2011-03-22 04:35+0000\n"
+"X-Generator: Launchpad (build 12559)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -724,12 +724,6 @@ msgstr "Bifează"
 #: field:account.partner.reconcile.process,today_reconciled:0
 msgid "Partners Reconciled Today"
 msgstr ""
-
-#. module: account
-#: code:addons/account/account_bank_statement.py:306
-#, python-format
-msgid "The statement balance is incorrect !\n"
-msgstr "Soldul final este incorect !\n"
 
 #. module: account
 #: selection:account.payment.term.line,value:0
@@ -2214,7 +2208,7 @@ msgstr "Filtre"
 #: selection:report.invoice.created,state:0
 #, python-format
 msgid "Open"
-msgstr "Deschidere"
+msgstr "Deschis"
 
 #. module: account
 #: model:process.node,note:account.process_node_draftinvoices0
@@ -2608,11 +2602,12 @@ msgid "August"
 msgstr "August"
 
 #. module: account
-#: code:addons/account/account_bank_statement.py:307
+#: code:addons/account/account_bank_statement.py:306
 #, python-format
 msgid ""
+"The statement balance is incorrect !\n"
 "The expected balance (%.2f) is different than the computed one. (%.2f)"
-msgstr "The soldul prognozat (%.2f) este diferit de cel calculat. (%.2f)"
+msgstr ""
 
 #. module: account
 #: model:process.transition,note:account.process_transition_paymentreconcile0
@@ -2856,6 +2851,12 @@ msgstr "Baza de conturi pentru declaraţia fiscală"
 #: selection:account.entries.report,type:0
 msgid "View"
 msgstr "Machetă"
+
+#. module: account
+#: code:addons/account/account.py:2951
+#, python-format
+msgid "BNK%s"
+msgstr ""
 
 #. module: account
 #: code:addons/account/account.py:2906
@@ -4236,12 +4237,6 @@ msgid "Account Balance -"
 msgstr "Sold cont -"
 
 #. module: account
-#: code:addons/account/invoice.py:989
-#, python-format
-msgid "Invoice "
-msgstr ""
-
-#. module: account
 #: field:account.automatic.reconcile,date1:0
 msgid "Starting Date"
 msgstr ""
@@ -4290,7 +4285,7 @@ msgstr ""
 #: view:account.invoice.report:0
 #: field:account.invoice.report,user_id:0
 msgid "Salesman"
-msgstr ""
+msgstr "Agent de vânzări"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -4376,7 +4371,7 @@ msgstr "Aplicare taxă"
 #: model:ir.ui.menu,name:account.menu_eaction_account_moves_sale
 #, python-format
 msgid "Journal Items"
-msgstr ""
+msgstr "Poziții jurnal"
 
 #. module: account
 #: selection:account.account.type,report_type:0
@@ -5544,9 +5539,9 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/invoice.py:989
+#: code:addons/account/invoice.py:997
 #, python-format
-msgid "is validated."
+msgid "Invoice  '%s' is validated."
 msgstr ""
 
 #. module: account
@@ -6437,7 +6432,7 @@ msgstr ""
 #: field:account.invoice,origin:0
 #: field:report.invoice.created,origin:0
 msgid "Source Document"
-msgstr ""
+msgstr "Document sursă"
 
 #. module: account
 #: help:account.account.type,sign:0
@@ -7741,7 +7736,7 @@ msgstr "Data scadenţei"
 #: model:ir.ui.menu,name:account.menu_account_supplier
 #: model:ir.ui.menu,name:account.menu_finance_payables
 msgid "Suppliers"
-msgstr ""
+msgstr "Furnizori"
 
 #. module: account
 #: constraint:account.move:0
@@ -8684,7 +8679,7 @@ msgstr ""
 #. module: account
 #: field:account.installer.modules,account_payment:0
 msgid "Suppliers Payment Management"
-msgstr ""
+msgstr "Administrare Plată Furnizori"
 
 #. module: account
 #: field:account.period,name:0
@@ -9670,7 +9665,7 @@ msgstr "Viitor"
 #. module: account
 #: view:account.move.line:0
 msgid "Search Journal Items"
-msgstr ""
+msgstr "Caută poziții jurnal"
 
 #. module: account
 #: help:account.tax,base_sign:0
@@ -9823,6 +9818,10 @@ msgstr ""
 
 #~ msgid "Value"
 #~ msgstr "Valoare"
+
+#, python-format
+#~ msgid "The statement balance is incorrect !\n"
+#~ msgstr "Soldul final este incorect !\n"
 
 #~ msgid "Crédit"
 #~ msgstr "Credit"
@@ -10210,6 +10209,11 @@ msgstr ""
 
 #~ msgid "Invoice import"
 #~ msgstr "Import factură"
+
+#, python-format
+#~ msgid ""
+#~ "The expected balance (%.2f) is different than the computed one. (%.2f)"
+#~ msgstr "The soldul prognozat (%.2f) este diferit de cel calculat. (%.2f)"
 
 #~ msgid "Parent Analytic Account"
 #~ msgstr "Contul analitic părinte"

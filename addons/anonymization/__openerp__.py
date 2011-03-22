@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -22,11 +22,12 @@
 
 
 {
-    'name': 'Database anonymization module',
+    'name': 'Database Anonymization',
     'version': '1.0',
     'category': 'Tools',
     'description': """
 This module allows you to anonymize a database.
+===============================================
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
@@ -44,5 +45,6 @@ This module allows you to anonymize a database.
     'installable': True,
     'active': False,
     'certificate': '00719010980872226045',
+    'images': ['images/anonymization1.jpeg','images/anonymization2.jpeg','images/anonymization3.jpeg'],
 }
 

@@ -23,9 +23,10 @@
 {
     'name': 'Base module quality - To check the quality of other modules' ,
     'version': '1.0',
-    'category': 'OpenERP SA Specific Modules/Base module quality',
+    'category': 'Tools',
     'description': """
 The aim of this module is to check the quality of other modules.
+================================================================
 
 It defines a wizard on the list of modules in OpenERP, which allows you to
 evaluate them on different criteria such as: the respect of OpenERP coding
@@ -34,7 +35,7 @@ standards, the speed efficiency...
 This module also provides generic framework to define your own quality test.
 For further info, coders may take a look into base_module_quality\README.txt
 
-WARNING: This module can not work as a ZIP file, you must unzip it before
+WARNING: This module cannot work as a ZIP file, you must unzip it before
 using it, otherwise it may crash.
     """,
     'author': 'OpenERP SA',
@@ -46,5 +47,6 @@ using it, otherwise it may crash.
     'installable': True,
     'active': False,
     'certificate': '0175119475677',
+    'images': ['images/base_module_quality1.jpeg','images/base_module_quality2.jpeg','images/base_module_quality3.jpeg']
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

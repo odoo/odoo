@@ -1,8 +1,8 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
-#    Copyright (C) 2009 Grzegorz Grzelak grzegorz.grzelak@cirrus.pl 
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2009 Grzegorz Grzelak grzegorz.grzelak@cirrus.pl
 #    All Rights Reserved
 #    $Id$
 #
@@ -25,13 +25,14 @@
     "version" : "1.0",
     "author" : "Grzegorz Grzelak (Cirrus)",
     "website": "http://www.cirrus.pl",
-    "category" : "Localisation/Account Charts",
+    "category" : "Finance",
     "description": """
-     This is the module to manage the accounting chart and taxes for Poland in Open ERP.
-     
-     To jest moduł do tworzenia wzorcowego planu kont i podstawowych ustawień do podatków
-     VAT 0%, 7% i 22%. Moduł ustawia też konta do kupna i sprzedaży towarów zakładając,
-     że wszystkie towary są w obrocie hurtowym.
+This is the module to manage the accounting chart and taxes for Poland in OpenERP.
+==================================================================================
+
+To jest moduł do tworzenia wzorcowego planu kont i podstawowych ustawień do podatków
+VAT 0%, 7% i 22%. Moduł ustawia też konta do kupna i sprzedaży towarów zakładając,
+że wszystkie towary są w obrocie hurtowym.
     """,
     "depends" : ["account", "base_iban", "base_vat", "account_chart"],
     "demo_xml" : [],
@@ -40,6 +41,7 @@
     "active": False,
     "installable": True,
     "certificate" : "00885794372803776829",
+    'images': ['images/config_chart_l10n_pl.jpeg','images/l10n_pl_chart.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

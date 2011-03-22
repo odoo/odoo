@@ -23,25 +23,30 @@
     "name" : "Inventory Management",
     "version" : "1.1",
     "author" : "OpenERP SA",
-    "description" : """OpenERP Inventory Management module can manage multi-warehouses, multi and structured stock locations.
+    "description" : """
+OpenERP Inventory Management module can manage multi-warehouses, multi and structured stock locations.
+======================================================================================================
+
 Thanks to the double entry management, the inventory controlling is powerful and flexible:
-* Moves history and planning,
-* Different inventory methods (FIFO, LIFO, ...)
-* Stock valuation (standard or average price, ...)
-* Robustness faced with Inventory differences
-* Automatic reordering rules (stock level, JIT, ...)
-* Bar code supported
-* Rapid detection of mistakes through double entry system
-* Traceability (upstream/downstream, production lots, serial number, ...)
-* Dashboard for warehouse that includes:
-    * Products to receive in delay (date < = today)
-    * Procurement in exception
-    * Graph : Number of Receive products vs planned (bar graph on week par day)
-    * Graph : Number of Delivery products vs planned (bar graph on week par day)
+    * Moves history and planning,
+    * Different inventory methods (FIFO, LIFO, ...)
+    * Stock valuation (standard or average price, ...)
+    * Robustness faced with Inventory differences
+    * Automatic reordering rules (stock level, JIT, ...)
+    * Bar code supported
+    * Rapid detection of mistakes through double entry system
+    * Traceability (upstream/downstream, production lots, serial number, ...)
+    * Dashboard for warehouse that includes:
+        * Procurement in exception
+        * List of Incoming Products
+        * List of Outgoing Products
+        * Graph : Products to receive in delay (date < = today)
+        * Graph : Products to send in delay (date < = today)
     """,
     "website" : "http://www.openerp.com",
+    "images" : ["images/delivery_orders.jpeg", "images/inventory_analysis.jpeg","images/location.jpeg","images/moves_analysis.jpeg","images/physical_inventories.jpeg","images/warehouse_dashboard.jpeg"],
     "depends" : ["product", "account"],
-    "category" : "Generic Modules/Inventory Control",
+    "category" : "Warehouse",
     "init_xml" : [],
     "demo_xml" : ["stock_demo.xml"],
     "update_xml" : [

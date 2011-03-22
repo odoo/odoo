@@ -23,12 +23,14 @@
 {
     'name': 'Purchase Analytic Distribution Management',
     'version': '1.0',
-    'category': 'Generic Modules/Sales & Purchases',
+    'category': 'Purchases',
     'description': """
-    The base module to manage analytic distribution and purchase orders.
+The base module to manage analytic distribution and purchase orders.
+====================================================================
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
+    'images' : ['images/purchase_analytic_distribution.jpeg'],
     'depends': ['purchase', 'account_analytic_plans'],
     'init_xml': [],
     'update_xml': ['purchase_analytic_plans_view.xml'],

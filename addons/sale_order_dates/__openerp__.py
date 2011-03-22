@@ -23,12 +23,14 @@
 {
     'name': 'Sales Order Dates',
     'version': '1.0',
-    'category': 'Generic Modules/CRM & SRM',
+    'category': 'Sales',
     'description': """
 Add commitment, requested and effective dates on the sales order.
+=================================================================
 """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
+    'images': ["images/sale_order_dates.jpeg"],
     'depends': ["sale"],
     'init_xml': [
     ],
