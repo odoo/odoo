@@ -103,6 +103,11 @@ class base_synchro(osv.osv_memory):
             if object.model_id.model=='crm.case.history':
                 fields = ['email','description','log_id']
             value = pool_src.get(object.model_id.model).read(cr, uid, [id], fields)[0]
+            if 'create_date' in value:
+                del value['create_date']
+            for key ,val in value.iteritems():
+                if type(val)==tuple:
+                    value.update({key:val[0]})
             value = self.data_transform(cr, uid, pool_src, pool_dest, object.model_id.model, value, action, context=context)
             id2 = self.get_id(cr, uid, object.id, id, action, context)
             #
