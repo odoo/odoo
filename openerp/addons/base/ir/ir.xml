@@ -1946,7 +1946,7 @@
 
         <record model="ir.ui.view" id="ir_mail_server_form">
             <field name="name">ir.mail.server.form</field>
-            <field name="model">ir.mail.server</field>
+            <field name="model">ir.mail_server</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Smtp Server Configuration">
@@ -1980,7 +1980,7 @@
 
         <record model="ir.ui.view" id="ir_mail_server_tree">
             <field name="name">ir.mail.server.tree</field>
-            <field name="model">ir.mail.server</field>
+            <field name="model">ir.mail_server</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="SMTP Server">
@@ -1993,7 +1993,7 @@
 
         <record id="view_ir_mail_server_search" model="ir.ui.view">
             <field name="name">ir.mail.server.search</field>
-            <field name="model">ir.mail.server</field>
+            <field name="model">ir.mail_server</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Smtp Server">
@@ -2004,7 +2004,7 @@
 
         <record model="ir.actions.act_window" id="action_ir_mail_server_tree_all">
             <field name="name">Email Accounts</field>
-            <field name="res_model">ir.mail.server</field>
+            <field name="res_model">ir.mail_server</field>
             <field name="view_type">form</field>
             <field name="view_mode">form,tree</field>
             <field name="view_id" ref="ir_mail_server_tree" />
