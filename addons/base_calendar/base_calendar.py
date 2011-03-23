@@ -1090,6 +1090,7 @@ class calendar_event(osv.osv):
             #Remove the events generated from recurrent event
             if not myrule:
                 self.unlink_events(cr, uid, [id], context=context)
+        print 'rrule creation', result
         return result
 
     _columns = {
@@ -1238,9 +1239,12 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         @param base_start_date: Get Start Date
         @param base_until_date: Get End Date
         @param limit: The Number of Results to Return """
+        if not context:
+            context = {}
 
-
+        limit = limit == 0 and 100 or limit
         virtual_id = context and context.get('virtual_id', False) or False
+        print 'context', context
 
         if isinstance(select, (str, int, long)):
             ids = [select]
@@ -1253,8 +1257,12 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
                             m.exdate, m.exrule, m.recurrent_id, m.recurrent_uid from " + self._table + \
                             " m where m.id = ANY(%s)", (ids,) )
 
+            print "ids", ids
             count = 0
             for data in cr.dictfetchall():
+                print 'data', data
+                print 'count', count
+                print 'limit', limit
                 start_date = base_start_date and datetime.strptime(base_start_date[:10]+ ' 00:00:00' , "%Y-%m-%d %H:%M:%S") or False
                 until_date = base_until_date and datetime.strptime(base_until_date[:10]+ ' 23:59:59', "%Y-%m-%d %H:%M:%S") or False
                 print count
@@ -1280,6 +1288,7 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
                                 result.append(idval)
                         recur_dict.append(ex_id)
                 else:
+                    print 'rrule', data['rrule'], data['id']
                     exdate = data['exdate'] and data['exdate'].split(',') or []
                     rrule_str = data['rrule']
                     new_rrule_str = []
@@ -1321,6 +1330,7 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
             ids = list(set(result)-set(recur_dict))
         if isinstance(select, (str, int, long)):
             return ids and ids[0] or False
+        print "return ids", ids
         return ids
 
     def compute_rule_string(self, cr, uid, datas, context=None, *args):
