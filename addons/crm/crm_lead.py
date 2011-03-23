@@ -97,6 +97,15 @@ class crm_lead(crm_case, osv.osv):
                         duration =  len(no_days)
                 res[lead.id][field] = abs(int(duration))
         return res
+    
+    def _get_email_subject(self, cr, uid, ids, fields, args, context=None):
+        res = {}
+        for obj in self.browse(cr, uid, ids, context=context):
+            res[obj.id] = ''
+            for msg in obj.message_ids:
+                if msg.history:
+                    res[obj.id] = msg.name
+        return res
 
     _columns = {
         # Overridden from res.partner.address:
@@ -149,6 +158,7 @@ class crm_lead(crm_case, osv.osv):
                                   \nWhen the case is over, the state is set to \'Done\'.\
                                   \nIf the case needs to be reviewed then the state is set to \'Pending\'.'), 
         'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
+        'subjects': fields.function(_get_email_subject, string='Subject of Email', method=True, type='char', size=64, store=True),
     }
     
 
