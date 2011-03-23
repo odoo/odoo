@@ -344,7 +344,7 @@ class hr_salary_head(osv.osv):
         'user_id':fields.char('User', size=64, required=False, readonly=False),
         'state':fields.char('Label', size=64, required=False, readonly=False),
         'company_id':fields.many2one('res.company', 'Company', required=False),
-#        'dispaly_payslip_report': fields.boolean('Display on payslip report', help="Used for the display of head on Payslip Report"),
+#        'display_payslip_report': fields.boolean('Display on payslip report', help="Used for the display of head on Payslip Report"),
 #        'computation_based':fields.selection([
 #            ('rules','List of Rules'),
 #            ('exp','Expression'),
@@ -355,7 +355,7 @@ class hr_salary_head(osv.osv):
         'company_id': lambda self, cr, uid, context: \
                 self.pool.get('res.users').browse(cr, uid, uid,
                     context=context).company_id.id,
-#        'dispaly_payslip_report': 1,
+#        'display_payslip_report': 1,
     }
 
 hr_salary_head()
@@ -1260,7 +1260,7 @@ class hr_payslip_line(osv.osv):
         'base':fields.char('Formula', size=1024, required=False, readonly=False),
         'code':fields.char('Code', size=64, required=False, readonly=False),
         'category_id':fields.many2one('hr.salary.head', 'Salary Head', required=True),
-        'type':fields.related('category_id','type', 'Salary Head Type', store=True), #many2one('hr.salary.head.type', 'Type', required=True, help="Used for the reporting purpose."),
+        'type':fields.related('category_id','type', relation='hr.salary.head.type', string='Salary Head Type', type='many2one', store=True), #many2one('hr.salary.head.type', 'Type', required=True, help="Used for the reporting purpose."),
         'amount_type':fields.selection([
             ('per','Percentage (%)'),
             ('fix','Fixed Amount'),
