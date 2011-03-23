@@ -21,6 +21,7 @@
 
 from osv import fields, osv
 from tools.translate import _
+import re
 
 class wiki_make_index(osv.osv_memory):
     """ Create Index For Selected Page """
@@ -50,6 +51,14 @@ class wiki_make_index(osv.osv_memory):
             lst0 = cr.fetchall()
             if not lst0[0][1]:
                 raise osv.except_osv(_('Warning !'), _('There is no section in this Page'))
+
+            check = map(lambda x:  x.split('.'), lst0[0][1])
+            
+            if check:
+                for i in check:
+                    match = re.match('[a-zA-Z]', i[0])
+                    if match:
+                        raise osv.except_osv(_('Warning !'), _('The section values must be like 1/1.1/1.3.4'))
             lst = []
             s_ids = {}
 
@@ -81,7 +90,6 @@ class wiki_make_index(osv.osv_memory):
                         current = current[:pos + 1]
                         if pos == len(l) - 1:
                             break
-
                 key = ('.'.join([str(x) for x in l]))
                 id = s_ids[key]
                 val = ('.'.join([str(x) for x in current[:]]), id)
