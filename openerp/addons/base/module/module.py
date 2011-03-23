@@ -286,7 +286,7 @@ class module(osv.osv):
             demo = demo or mdemo
         return demo
 
-    def apply_upgrade(self, cr, uid, ids, mode='install', context=None):
+    def upgrade(self, cr, uid, ids, context=None):
         mod_obj = self.pool.get('ir.module.module')
         ids = mod_obj.search(cr, uid, [('state', 'in', ['to upgrade', 'to remove', 'to install'])])
         unmet_packages = []
@@ -303,11 +303,7 @@ class module(osv.osv):
         _db, pool = pooler.restart_pool(cr.dbname, update_module=True)
         
         data_obj = self.pool.get('ir.model.data')
-        if ids:
-            view_name = 'view_base_module_upgrade_install'
-        else:
-            view_name = 'view_base_module_upgrade'
-        id2 = data_obj._get_id(cr, uid, 'base', view_name)
+        id2 = data_obj._get_id(cr, uid, 'base', 'view_base_module_upgrade_install')
         if id2:
             id2 = data_obj.browse(cr, uid, id2, context=context).res_id
         return {
@@ -319,12 +315,11 @@ class module(osv.osv):
                 'type': 'ir.actions.act_window',
                 'target': 'new',
                 'nodestroy':True,
-                'context': {'modules': ids, 'mode': mode}
             }
 
     def button_install(self, cr, uid, ids, context=None):
         self.state_update(cr, uid, ids, 'to install', ['uninstalled'], context)
-        res = self.apply_upgrade(cr, uid, ids, mode='install', context=context)
+        res = self.upgrade(cr, uid, ids, context=context)
         return res
 
 
@@ -347,7 +342,8 @@ class module(osv.osv):
                 raise orm.except_orm(_('Error'), _('Some installed modules depend on the module you plan to Uninstall :\n %s') % '\n'.join(map(lambda x: '\t%s: %s' % (x[0], x[1]), res)))
 
         self.write(cr, uid, ids, {'state': 'to remove'})
-        return self.apply_upgrade(cr, uid, ids, mode='uninstall', context=context)
+        self.upgrade(cr, uid, ids, context=context)
+        return True
 
     def button_uninstall_cancel(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'installed'})
@@ -372,7 +368,7 @@ class module(osv.osv):
                 if dep.state == 'installed':
                     ids2 = self.search(cr, uid, [('name','=',dep.name)])
                     to_install.extend(ids2)
-        res = self.apply_upgrade(cr, uid, ids, mode='upgrade', context=context)
+        res = self.upgrade(cr, uid, ids, context=context)
         return res
 
     def button_upgrade_cancel(self, cr, uid, ids, context=None):
