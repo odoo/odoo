@@ -2145,7 +2145,7 @@ class stock_move(osv.osv):
         if todo:
             self.action_confirm(cr, uid, todo, context=context)
 
-        self.write(cr, uid, move_ids, {'state': 'done', 'date_planned': time.strftime('%Y-%m-%d %H:%M:%S')}, context=context)
+        self.write(cr, uid, move_ids, {'state': 'done', 'date': time.strftime('%Y-%m-%d %H:%M:%S')}, context=context)
         for id in move_ids:
              wf_service.trg_trigger(uid, 'stock.move', id, cr)
 
