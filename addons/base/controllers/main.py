@@ -172,6 +172,10 @@ class DataSet(openerpweb.Controller):
     @openerpweb.jsonrequest
     def find(self, request, model, fields=False, offset=0, limit=False,
              domain=None, context=None, sort=None):
+        return self.do_find(request, model, fields, offset, limit,
+                     domain, context, sort)
+    def do_find(self, request, model, fields=False, offset=0, limit=False,
+             domain=None, context=None, sort=None):
         Model = request.session.model(model)
         ids = Model.search(domain or [], offset or 0, limit or False,
                            sort or False, context or False)

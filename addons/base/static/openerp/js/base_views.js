@@ -450,7 +450,6 @@ openerp.base.FormView =  openerp.base.Controller.extend({
     },
     on_record_loaded: function(records) {
         this.datarecord = records[0];
-        console.log('record', this.datarecord);
         for (var f in this.fields) {
             this.fields[f].set_value(this.datarecord.values[f]);
         }
