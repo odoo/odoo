@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- menu Administration/Portals -->
+        <menuitem name="Portals" id="portal_menu" parent="base.menu_administration"/>
+
+        <!-- menu Administration/Portals/Portals -->
+        <record id="portal_list_action" model="ir.actions.act_window">
+            <field name="name">Portals</field>
+            <field name="res_model">res.portal</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem name="Portals" id="portal_list_menu" parent="portal_menu"
+            action="portal_list_action"/>
+
+        <!-- portal form view -->
+        <record id="portal_form" model="ir.ui.view">
+            <field name="name">Portal Form</field>
+            <field name="model">res.portal</field>
+            <field name="type">form</field>
+            <field name="priority" eval="16"/>
+            <field name="arch" type="xml">
+                <form string="Portal Form">
+                    <group colspan="4">
+                        <field name="name"/>
+                    </group>
+                    <field name="user_ids" string="Users" nolabel="1" colspan="2"/>
+                    <field name="group_ids" string="Groups" nolabel="1" colspan="2"/>
+                </form>
+            </field>
+        </record>
+    </data>
+</openerp>
