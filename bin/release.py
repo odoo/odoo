@@ -20,7 +20,7 @@
 #
 
 name = 'openerp-server'
-version = '5.0.15'
+version = '5.0.16'
 major_version = '5.0'
 description = 'OpenERP Server'
 long_desc = '''OpenERP is a complete ERP and CRM. The main features are accounting (analytic
@@ -38,7 +38,7 @@ author = 'OpenERP S.A.'
 author_email = 'info@openerp.com'
 support_email = 'support@openerp.com'
 license = 'GPL-3'
-download_url='http://www.openerp.com/download/stable/source/openerp-server-5.0.15.tar.gz'
+download_url='http://www.openerp.com/download/stable/source/openerp-server-5.0.16.tar.gz'
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
