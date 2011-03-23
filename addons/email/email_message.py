@@ -287,12 +287,25 @@ class email_message(osv.osv):
         if context is None:
             context = {}
         smtp_server_obj = self.pool.get('ir.mail_server')
+        attachment_pool = self.pool.get('ir.attachment')
         for message in self.browse(cr, uid, ids, context):
             try:
                 if message.state in ['outgoing', 'exception']:
-                    msg_id = smtp_server_obj.send_email(cr, uid, message.email_from, message.email_to, message.body, id=message.smtp_server_id, subject=message.subject)
+                    result = smtp_server_obj.send_email(cr, uid, message.email_from, message.email_to,
+                                    message.body, id=message.smtp_server_id.id, subject=message.subject)
                 else:
-                    raise osv.except_osv(_('Error !'), _('Message is not in outgoing state!'))
+                    raise osv.except_osv(_('Error !'), _('No messages in outgoing or exception state!'))
+
+                sent_emails = self.search(cr, uid, [('state','=','sent'), ('auto_delete','=',True)], context=context)
+                if sent_emails:
+                    for sent in self.browse(cr, uid, sent_emails, context):
+                        if sent.attachment_ids:
+                            attachment_pool.unlink(cr, uid, [attachment.id for attachment in sent.attachment_ids], context=context)
+                        self.unlink(cr, uid, sent.id, context=context)
+
+                if auto_commit == True:
+                    cr.commit()
+
             except Exception, error:
                 logger = netsvc.Logger()
                 logger.notifyChannel("email-template", netsvc.LOG_ERROR, _("Sending of Mail %s failed. Probable Reason:Could not login to server\nError: %s") % (message.id, error))
