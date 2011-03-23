@@ -208,7 +208,7 @@
             <field name="arch" type="xml">
                 <form string="Payslip">
                     <group col="6" colspan="4">
-                        <field name="employee_id" on_change="onchange_employee_id(date, employee_id)"/>
+                        <field name="employee_id" on_change="onchange_employee_id(date, employee_id, contract_id)"/>
                         <field name="name"/>
                         <field name="number"/>
                         <field name="date"/>

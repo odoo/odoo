@@ -204,7 +204,7 @@ class payroll_register(osv.osv):
                     'date': vals.date,
                 }
                 slip_id = slip_pool.create(cr, uid, res, context=context)
-                data = slip_pool.onchange_employee_id(cr, uid, [slip_id], vals.date, emp.id, context=context)
+                data = slip_pool.onchange_employee_id(cr, uid, [slip_id], vals.date, emp.id, contract_id=False, context=context) # fix me can we pass contract_id ?
                 for line in data['value']['line_ids']:
                     line.update({'slip_id': slip_id})
                     slip_line_pool.create(cr, uid, line, context=context)
@@ -890,7 +890,7 @@ class hr_payslip(osv.osv):
             self.write(cr, uid, [slip.id], update, context=context)
         return True
 
-    def onchange_employee_id(self, cr, uid, ids, ddate, employee_id=False, context=None):
+    def onchange_employee_id(self, cr, uid, ids, ddate, employee_id=False, contract_id=False, context=None):
         func_pool = self.pool.get('hr.payroll.structure')
         slip_line_pool = self.pool.get('hr.payslip.line')
         salary_rule_pool = self.pool.get('hr.salary.rule')
@@ -911,21 +911,24 @@ class hr_payslip(osv.osv):
             return update
 
         employee_id = empolyee_obj.browse(cr, uid, employee_id, context=context)
-        ttyme = datetime.fromtimestamp(time.mktime(time.strptime(ddate,"%Y-%m-%d")))
-        contracts = self.get_contract(cr, uid, employee_id, ddate, context=context)
-        if not contracts.get('id', False):
-            update['value'].update({
-                'basic_amount': 0.0,
-                'basic_before_leaves': 0.0,
-                'name':'Salary Slip of %s for %s' % (employee_id.name, tools.ustr(ttyme.strftime('%B-%Y'))),
-                'contract_id':False,
-                'company_id':employee_id.company_id.id
-            })
-            return update
+        ttyme = datetime.fromtimestamp(time.mktime(time.strptime(ddate, "%Y-%m-%d")))
+        if not contract_id:
+            contracts = self.get_contract(cr, uid, employee_id, ddate, context=context)
+            if not contracts.get('id', False):
+                update['value'].update({
+                    'basic_amount': 0.0,
+                    'basic_before_leaves': 0.0,
+                    'name':'Salary Slip of %s for %s' % (employee_id.name, tools.ustr(ttyme.strftime('%B-%Y'))),
+                    'contract_id':False,
+                    'company_id':employee_id.company_id.id
+                })
+                return update
+            contract = employee_id.contract_id
+        else:
+            contract = self.pool.get('hr.contract').browse(cr, uid, contract_id, context=context)
 
-        contract = employee_id.contract_id
-        sal_structure = []
         function = contract.struct_id.id
+        sal_structure = []
         if function:
             sal_structure = self._get_parent_structure(cr, uid, [function], context=context)
 
