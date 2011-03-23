@@ -44,7 +44,7 @@ Thanks to the double entry management, the inventory controlling is powerful and
         * Graph : Products to send in delay (date < = today)
     """,
     "website" : "http://www.openerp.com",
-    "images" : ["images/delivery_orders.jpeg", "images/inventory_analysis.jpeg","images/location.jpeg","images/moves_analysis.jpeg","images/physical_inventories.jpeg","images/warehouse_dashboard.jpeg"],
+    "images" : ["images/stock_forecast_report.png", "images/delivery_orders.jpeg", "images/inventory_analysis.jpeg","images/location.jpeg","images/moves_analysis.jpeg","images/physical_inventories.jpeg","images/warehouse_dashboard.jpeg"],
     "depends" : ["product", "account"],
     "category" : "Warehouse",
     "init_xml" : [],
