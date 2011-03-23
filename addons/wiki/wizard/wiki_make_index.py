@@ -52,13 +52,10 @@ class wiki_make_index(osv.osv_memory):
             if not lst0[0][1]:
                 raise osv.except_osv(_('Warning !'), _('There is no section in this Page'))
 
-            check = map(lambda x:  x.split('.'), lst0[0][1])
-            
-            if check:
-                for i in check:
-                    match = re.match('[0-9]', i[0])
-                    if not match:
-                        raise osv.except_osv(_('Warning !'), _('The section values must be like 1/1.1/1.3.4'))
+            for i in lst0[0][1]:
+                match = re.match('[0-9\.]', i)
+                if not match:
+                    raise osv.except_osv(_('Warning !'), _('The section values must be like 1/1.1/1.3.4'))
             lst = []
             s_ids = {}
 
