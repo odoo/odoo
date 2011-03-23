@@ -2088,7 +2088,7 @@ class stock_move(osv.osv):
             move_obj = self.pool.get('account.move')
             for j_id, move_lines in account_moves:
                 move_obj.create(cr, uid,
-                        {'name': move.name,
+                        {
                          'journal_id': j_id,
                          'line_id': move_lines,
                          'ref': move.picking_id and move.picking_id.name})
