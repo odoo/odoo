@@ -1068,6 +1068,7 @@ class calendar_event(osv.osv):
         @param context: A standard dictionary for contextual values
         @return: dictionary of rrule value.
         """
+        
         result = {}
         for datas in self.read(cr, uid, ids, context=context):
             event = datas['id']
@@ -1398,11 +1399,12 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
                         continue
                     until_date = arg[2]
         res = super(calendar_event, self).search(cr, uid, args_without_date, \
-                                 offset, limit, order, context, count)
+                                 offset, limit, order, context, count=False)
         print "result normaux", res
         res = self.get_recurrent_ids(cr, uid, res, start_date, until_date, limit, context=context)
         print "result de merde", res
-        return res
+        print 'len', len(res)
+        return count and len(res) or res
 
 
     def get_edit_all(self, cr, uid, id, vals=None):
@@ -1532,12 +1534,16 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         # FIXME This whole id mangling has to go!
         if context is None:
             context = {}
+        
+        print 'read ids', ids
+
 
         if isinstance(ids, (str, int, long)):
             select = [ids]
         else:
             select = ids
         select = map(lambda x: (x, base_calendar_id2real_id(x)), select)
+        print 'selected', select
         result = []
         if fields and 'date' not in fields:
             fields.append('date')
@@ -1548,6 +1554,7 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         for base_calendar_id, real_id in select:
             #REVET: Revision ID: olt@tinyerp.com-20100924131709-cqsd1ut234ni6txn
             res = super(calendar_event, self).read(cr, uid, real_id, fields=fields, context=context, load=load)
+           
             if not res :
                 continue
             ls = base_calendar_id2real_id(base_calendar_id, with_date=res and res.get('duration', 0) or 0)
@@ -1559,6 +1566,8 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
             result.append(res)
         if isinstance(ids, (str, int, long)):
             return result and result[0] or False
+        
+        print 'resultat', result 
         return result
 
     def copy(self, cr, uid, id, default=None, context=None):
