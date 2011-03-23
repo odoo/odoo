@@ -183,7 +183,7 @@ openerp.base.DataSet =  openerp.base.Controller.extend({
      */
     active_ids: function () {
         this.rpc('/base/dataset/get', {
-            ids: this._active_ids
+            ids: this.get_active_ids()
         }, _.bind(function (records) {
             this.on_active_ids(_.map(
                 records, function (record) {
@@ -209,6 +209,15 @@ openerp.base.DataSet =  openerp.base.Controller.extend({
      * @returns itself
      */
     active_id: function () {
+        this.rpc('/base/dataset/get', {
+            ids: [this.get_active_id()]
+        }, _.bind(function (records) {
+            var record = records[0];
+            this.on_active_id(
+                record && new openerp.base.DataRecord(
+                        this.session, this._model,
+                        this._fields, record));
+        }, this));
         return this;
     },
     /**

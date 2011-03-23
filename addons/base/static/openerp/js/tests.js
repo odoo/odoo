@@ -299,23 +299,28 @@ $(document).ready(function () {
         equal(dataset.get_active_id(), 3);
     });
 
-    module('active_ids', {
-        setup: function () {
-            openerp = window.openerp.init();
-        }
-    });
-    asyncTest('Get pre-set active_ids', 6, function () {
-        var dataset = new openerp.base.DataSet({
+    var ResponseAssertSession = function (response_ids) {
+        return {
             rpc: function (url, params, on_success) {
                 equal(url, '/base/dataset/get');
-                deepEqual(params.ids, [1, 2, 3]);
+                deepEqual(params.ids, response_ids);
                 _.delay(on_success, 0, _.map(
                     params.ids, function (id) {
                         return {id: id, sequence: id, name: 'foo'+id};
                     }
                 ));
             }
-        });
+        };
+    };
+
+    module('active_ids', {
+        setup: function () {
+            openerp = window.openerp.init();
+        }
+    });
+    asyncTest('Get pre-set active_ids', 6, function () {
+        var dataset = new openerp.base.DataSet(
+            new ResponseAssertSession([1, 2, 3]));
         dataset.select([1, 2, 3]);
         dataset.on_active_ids.add(function (data_records) {
             equal(data_records.length, 3);
@@ -325,5 +330,22 @@ $(document).ready(function () {
             start();
         });
         dataset.active_ids();
+    });
+
+    module('active_id', {
+        setup: function () {
+            openerp = window.openerp.init();
+        }
+    });
+    test('Get pre-set active_id', 3, function () {
+        var dataset = new openerp.base.DataSet(
+            new ResponseAssertSession([42]));
+        stop(500);
+        dataset.select([1, 2, 3, 42]).activate(42);
+        dataset.on_active_id.add(function (data_record) {
+            equal(data_record.values.id, 42);
+            start();
+        });
+        dataset.active_id();
     });
 });
