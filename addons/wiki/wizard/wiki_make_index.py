@@ -56,7 +56,7 @@ class wiki_make_index(osv.osv_memory):
             
             if check:
                 for i in check:
-                    match = re.match('[a-zA-Z]', i[0])
+                    match = re.match('[a-zA-Z_%-+$*&^#@!]', i[0])
                     if match:
                         raise osv.except_osv(_('Warning !'), _('The section values must be like 1/1.1/1.3.4'))
             lst = []
