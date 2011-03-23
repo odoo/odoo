@@ -77,8 +77,8 @@ class synchronize_google_contact(osv.osv_memory):
 
     _columns = {
         'create_partner': fields.selection([('create_all','Create partner for each contact'),('create_address','Import only address')],'Options'),
-        'customer': fields.boolean('Customer'),
-        'supplier': fields.boolean('Supplier'),
+        'customer': fields.boolean('Customer', help="Check this box to set newly created partner as Customer."),
+        'supplier': fields.boolean('Supplier', help="Check this box to set newly created partner as Supplier."),
         'group_name': fields.selection(_get_group, "Group Name", size=32,help="Choose which group to import, By default it takes all."),
      }
 
