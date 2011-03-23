@@ -20,12 +20,27 @@
 ##############################################################################
 
 from osv import osv, fields
-from tools.translate import _
 
 class portal(osv.osv):
     _name = 'res.portal'
-    _description = _('Portal')
+    _description = 'Portal'
     _columns = {
-        'name': fields.char(_('Name'), size=64, required=True),
+        'name': fields.char(string='Name', size=64, required=True),
+        'user_ids': fields.one2many('res.users', 'portal_id', string='Portal users',
+            help='Gives the set of users associated to this portal'),
+        'group_ids': field.many2many('res.groups', 'portal_group', 'portal_id', 'group_id',
+            string='Groups', help='Users of this portal automatically belong to those groups'),
     }
+
+portal()
+
+class users(osv.osv):
+    _name = 'res.users'
+    _inherit = 'res.users'
+    _columns = {
+        'portal_id': fields.many2one('res.portal', string='Portal',
+            help='If given, the portal defines customized menu and access rules'),
+    }
+
+users()
 
