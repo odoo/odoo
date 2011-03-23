@@ -28,7 +28,7 @@ class portal(osv.osv):
         'name': fields.char(string='Name', size=64, required=True),
         'user_ids': fields.one2many('res.users', 'portal_id', string='Portal users',
             help='Gives the set of users associated to this portal'),
-        'group_ids': field.many2many('res.groups', 'portal_group', 'portal_id', 'group_id',
+        'group_ids': fields.many2many('res.groups', 'portal_group', 'portal_id', 'group_id',
             string='Groups', help='Users of this portal automatically belong to those groups'),
     }
 
