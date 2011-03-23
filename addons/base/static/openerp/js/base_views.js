@@ -247,6 +247,10 @@ openerp.base.DataSet =  openerp.base.Controller.extend({
      * @returns itself
      */
     prev: function () {
+        this._active_id_index -= 1;
+        if (this._active_id_index < 0) {
+            this._active_id_index = this._active_ids.length - 1;
+        }
         return this;
     },
     /**
@@ -254,26 +258,68 @@ openerp.base.DataSet =  openerp.base.Controller.extend({
      * @returns itself
      */
     next: function () {
+        this._active_id_index += 1;
+        if (this._active_id_index >= this._active_ids.length) {
+            this._active_id_index = 0;
+        }
         return this;
     },
 
     /**
-     * Sets active_ids and/or active_id by value:
+     * Sets active_ids by value:
      *
-     * * If only <code>ids</code> is provided
-     *   - Activates all ids part of the current selection
-     *   - Sets active_id to be the first id of the selection
-     * * If only <code>id</code> is provided, activates this id (for both active_id and active_ids)
-     * * If both <code>id</code> and <code>ids</code> are provided
-     *   - Activates all ids part of the current selection
-     *   - If <code>id</code> is part of the active ids, activates it, otherwise see first option
+     * * Activates all ids part of the current selection
+     * * Sets active_id to be the first id of the selection
      *
-     * @param {Array} [ids] the list of ids to activate
-     * @param {Object} [id] the id to activate
+     * @param {Array} ids the list of ids to activate
+     * @returns itself
      */
-    select: function (ids, id) {
+    select: function (ids) {
         this._active_ids = ids;
+        this._active_id_index = 0;
         return this;
+    },
+    /**
+     * Fetches the ids of the currently selected records, if any.
+     */
+    get_active_ids: function () {
+        return this._active_ids;
+    },
+    /**
+     * Sets the current active_id by value
+     *
+     * If there are no active_ids selected, selects the provided id as the sole active_id
+     *
+     * If there are ids selected and the provided id is not in them, raise an error
+     *
+     * @param {Object} id the id to activate
+     * @returns itself
+     */
+    activate: function (id) {
+        if(!this._active_ids) {
+            this._active_ids = [id];
+            this._active_id_index = 0;
+        } else {
+            var index = _.indexOf(this._active_ids, id);
+            if (index == -1) {
+                throw new Error(
+                    "Could not find id " + id +
+                    " in array [" + this._active_ids.join(', ') + "]");
+            }
+            this._active_id_index = index;
+        }
+        return this;
+    },
+    /**
+     * Fetches the id of the current active record, if any.
+     *
+     * @returns record? record id or <code>null</code>
+     */
+    get_active_id: function () {
+        if (!this._active_ids) {
+            return null;
+        }
+        return this._active_ids[this._active_id_index];
     }
 });
 

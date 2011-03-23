@@ -243,6 +243,62 @@ $(document).ready(function () {
         deepEqual([['foo', '=', 'bar']], dataset._domain);
     });
 
+    module('ids_activation', {
+        setup: function () {
+            var openerp = window.openerp.init();
+            dataset = new openerp.base.DataSet();
+        }
+    });
+    test('activate id', function () {
+        dataset.activate(1);
+        deepEqual(dataset.get_active_ids(), [1]);
+        equal(dataset.get_active_id(), 1);
+    });
+    test('set active_ids', function () {
+        dataset.select([1, 2, 3]);
+        deepEqual(dataset.get_active_ids(), [1, 2, 3],
+                "selecting an ids range");
+        equal(dataset.get_active_id(), 1);
+    });
+    test('activate incorrect id', function () {
+        dataset.select([1, 2, 3]);
+        raises(function () { dataset.activate(42); },
+               "Activating an id not present in the selection is an error");
+    });
+    test('reset active id on set active ids', function () {
+        dataset.select([1, 2, 3]).activate(3).select([1, 2, 3]);
+        equal(dataset.get_active_id(), 1,
+              "selecting an ids range resets the active id");
+    });
+
+    module('active_id_iteration', {
+        setup: function () {
+            var openerp = window.openerp.init();
+            dataset = new openerp.base.DataSet();
+            dataset.select([1, 2, 3]);
+        }
+    });
+    test('step forward', function () {
+        dataset.activate(1);
+        dataset.next();
+        equal(dataset.get_active_id(), 2);
+    });
+    test('wraparound forward', function () {
+        dataset.activate(3);
+        dataset.next();
+        equal(dataset.get_active_id(), 1);
+    });
+    test('step back', function () {
+        dataset.activate(3);
+        dataset.prev();
+        equal(dataset.get_active_id(), 2);
+    });
+    test('wraparound back', function () {
+        dataset.activate(1);
+        dataset.prev();
+        equal(dataset.get_active_id(), 3);
+    });
+
     module('active_ids', {
         setup: function () {
             openerp = window.openerp.init();
