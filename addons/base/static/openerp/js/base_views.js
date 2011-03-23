@@ -44,7 +44,7 @@ openerp.base.Action =  openerp.base.Controller.extend({
     },
     do_action_window: function(action) {
         this.formview_id = false;
-        this.dataset = new openerp.base.DataSet(this.session, "oe_action_dataset", action.res_model);
+        this.dataset = new openerp.base.DataSet(this.session, action.res_model);
         this.dataset.start();
 
         // Locate first tree view
@@ -101,7 +101,7 @@ openerp.base.EmbbededView = openerp.base.Controller.extend({
 openerp.base.DataSet =  openerp.base.Controller.extend({
     init: function(session, model) {
         this._super(session);
-        this._model = model;
+        this.model = model;
 
         this._fields = null;
 
@@ -115,7 +115,7 @@ openerp.base.DataSet =  openerp.base.Controller.extend({
     },
     start: function() {
         // TODO: fields_view_get fields selection?
-        this.rpc("/base/dataset/fields", {"model":this._model}, this.on_fields);
+        this.rpc("/base/dataset/fields", {"model":this.model}, this.on_fields);
     },
     on_fields: function(result) {
         this._fields = result._fields;
@@ -132,11 +132,11 @@ openerp.base.DataSet =  openerp.base.Controller.extend({
      * @param {Number} [limit=null] The maximum number of records to return
      * @returns itself
      */
-    ids: function (offset, limit) {
+    fetch: function (offset, limit) {
         offset = offset || 0;
         limit = limit || null;
         this.rpc('/base/dataset/find', {
-            model: this._model,
+            model: this.model,
             fields: this._fields,
             domain: this._domain,
             context: this._context,
@@ -147,11 +147,11 @@ openerp.base.DataSet =  openerp.base.Controller.extend({
             var data_records = _.map(
                 records, function (record) {
                     return new openerp.base.DataRecord(
-                        this.session, this._model,
+                        this.session, this.model,
                         this._fields, record);
                 }, this);
 
-            this.on_ids(data_records, {
+            this.on_fetch(data_records, {
                 offset: offset,
                 limit: limit,
                 domain: this._domain,
@@ -174,7 +174,7 @@ openerp.base.DataSet =  openerp.base.Controller.extend({
      * @param {Object} event.context the context set on the DataSet before DataSet#ids was called
      * @param {Array} event.sort the sorting criteria used to get the ids
      */
-    on_ids: function (records, event) { },
+    on_fetch: function (records, event) { },
 
     /**
      * Fetch all the currently active records for this DataSet (records selected via DataSet#select)
@@ -188,7 +188,7 @@ openerp.base.DataSet =  openerp.base.Controller.extend({
             this.on_active_ids(_.map(
                 records, function (record) {
                     return new openerp.base.DataRecord(
-                        this.session, this._model,
+                        this.session, this.model,
                         this._fields, record);
                 }, this));
         }, this));
@@ -215,7 +215,7 @@ openerp.base.DataSet =  openerp.base.Controller.extend({
             var record = records[0];
             this.on_active_id(
                 record && new openerp.base.DataRecord(
-                        this.session, this._model,
+                        this.session, this.model,
                         this._fields, record));
         }, this));
         return this;
@@ -398,7 +398,7 @@ openerp.base.SearchView = openerp.base.Controller.extend({
         // collect all non disabled domains definitions, AND them
         // evaluate as python expression
         // save the result in this.domain
-        this.dataset.do_load();
+        this.dataset.fetch();
     },
     on_clear: function() {
     }
@@ -422,7 +422,6 @@ openerp.base.FormView =  openerp.base.Controller.extend({
     init: function(session, element_id, dataset, view_id) {
         this._super(session, element_id);
         this.dataset = dataset;
-        this.dataset_index = 0;
         this.model = dataset.model;
         this.view_id = view_id;
         this.fields_views = {};
@@ -447,22 +446,11 @@ openerp.base.FormView =  openerp.base.Controller.extend({
         }
         // bind to all wdigets that have onchange ??
 
-        // When the dataset is loaded load the first record (like gtk)
-        this.dataset.on_loaded.add_last(this.do_load_record);
-
-        // When a datarecord is loaded display the values in the inputs
-        this.datarecord = new openerp.base.DataRecord(this.session, this.model,{});
-        this.datarecord.on_loaded.add_last(this.on_record_loaded);
-
+        this.dataset.on_fetch.add(this.on_record_loaded);
     },
-    do_load_record: function() {
-        // if dataset is empty display the empty datarecord
-        if(this.dataset.ids.length == 0) {
-            this.on_record_loaded();
-        }
-        this.datarecord.load(this.dataset.ids[this.dataset_index]);
-    },
-    on_record_loaded: function() {
+    on_record_loaded: function(records) {
+        this.datarecord = records[0];
+        console.log('record', this.datarecord);
         for (var f in this.fields) {
             this.fields[f].set_value(this.datarecord.values[f]);
         }
@@ -508,20 +496,18 @@ openerp.base.ListView = openerp.base.Controller.extend({
                 this.colmodel.push({ name: col.attrs.name, index: col.attrs.name });
             }
         }
-        //this.log(this.cols);
         this.dataset.fields = this.cols;
-        this.dataset.on_loaded.add_last(this.do_fill_table);
+        this.dataset.on_fetch.add(this.do_fill_table);
     },
-    do_fill_table: function() {
-        //this.log("do_fill_table");
+    do_fill_table: function(records) {
+        this.log("do_fill_table");
         
         var self = this;
         //this.log(this.dataset.data);
         var rows = [];
-        var ids = this.dataset.ids;
-        for(var i = 0; i < ids.length; i++)  {
+        for(var i = 0; i < records.length; i++)  {
             // TODO very strange is sometimes non existing ? even as admin ? example ir.ui.menu
-            var row = this.dataset.values[ids[i]];
+            var row = records[i].values;
             if(row)
                 rows.push(row);
 //            else

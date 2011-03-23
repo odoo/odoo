@@ -158,7 +158,7 @@ $(document).ready(function () {
     asyncTest("Baseline event attributes", 6, function () {
         var dataset = new openerp.base.DataSet(
                 new Session());
-        dataset.on_ids.add(function (records, event) {
+        dataset.on_fetch.add(function (records, event) {
             deepEqual(records, [], 'No records returned');
             equal(event.offset, 0, 'No offset set in call');
             equal(event.limit, null, 'No limit set in call');
@@ -167,17 +167,17 @@ $(document).ready(function () {
             deepEqual(event.sort, [], 'The dataset is not sorted');
             start();
         });
-        dataset.ids();
+        dataset.fetch();
     });
     asyncTest("Offset and limit", 2, function () {
         var dataset = new openerp.base.DataSet(
                 new Session());
-        dataset.on_ids.add(function (records, event) {
+        dataset.on_fetch.add(function (records, event) {
             equal(event.offset, 20);
             equal(event.limit, 42);
             start();
         });
-        dataset.ids(20, 42);
+        dataset.fetch(20, 42);
     });
     asyncTest("Domain and context propagation", 3, function () {
         var dataset = new openerp.base.DataSet(
@@ -185,7 +185,7 @@ $(document).ready(function () {
         var domain_value = [['foo', '=', 'bar']];
         var context_value= {active_id:3, active_ids:42};
         var sort_value = ['foo'];
-        dataset.on_ids.add(function (records, event) {
+        dataset.on_fetch.add(function (records, event) {
             deepEqual(event.domain, domain_value);
             deepEqual(event.context, context_value);
             deepEqual(event.sort, sort_value);
@@ -196,7 +196,7 @@ $(document).ready(function () {
             context: context_value,
             sort: sort_value
         });
-        dataset.ids();
+        dataset.fetch();
     });
     asyncTest("Data records", function () {
         var dataset = new openerp.base.DataSet({
@@ -208,7 +208,7 @@ $(document).ready(function () {
                 ]);
             }
         });
-        dataset.on_ids.add(function (records) {
+        dataset.on_fetch.add(function (records) {
             equal(records.length, 2, "I loaded two virtual records");
             var d1 = records[0],
                 d2 = records[1];
@@ -216,7 +216,7 @@ $(document).ready(function () {
             ok(d2 instanceof openerp.base.DataRecord);
             start();
         });
-        dataset.ids();
+        dataset.fetch();
     });
 
     var dataset;

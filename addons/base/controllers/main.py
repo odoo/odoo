@@ -170,11 +170,15 @@ class DataSet(openerpweb.Controller):
         return {'fields': req.session.model(model).fields_get()}
 
     @openerpweb.jsonrequest
-    def load(self, req, model, domain=[], fields=['id']):
-        m = req.session.model(model)
-        ids = m.search(domain)
-        values = m.read(ids, fields)
-        return {'ids': ids, 'values': values}
+    def find(self, request, model, fields=False, offset=0, limit=False,
+             domain=None, context=None, sort=None):
+        Model = request.session.model(model)
+        ids = Model.search(domain or [], offset or 0, limit or False,
+                           sort or False, context or False)
+        if fields and fields == ['id']:
+            # shortcut read if we only want the ids
+            return map(lambda id: {'id': id}, ids)
+        return Model.read(ids, fields or False)
 
 
 class DataRecord(openerpweb.Controller):
