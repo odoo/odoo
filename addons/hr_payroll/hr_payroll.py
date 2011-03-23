@@ -779,8 +779,7 @@ class hr_payslip(osv.osv):
                 if line.appears_on_payslip:
                     if line.parent_rule_id:
                         for l in salary_rule_pool.browse(cr, uid, [line.parent_rule_id.id], context=context):
-                            if l.display_child_rules == True:
-                                slip_line_pool.create(cr, uid, vals, {})
+                            slip_line_pool.create(cr, uid, vals, {})
                     else:
                         if line.condition_range_min or line.condition_range_max:
                             if not ((value < line.condition_range_min) or (value > line.condition_range_max)):
@@ -1030,16 +1029,11 @@ class hr_payslip(osv.osv):
                 'base': line.computational_expression
             }
             if line.appears_on_payslip:
-                if line.parent_rule_id:
-                    for l in salary_rule_pool.browse(cr, uid, [line.parent_rule_id.id], context=context):
-                        if l.display_child_rules == True:
-                            update['value']['line_ids'].append(vals)
-                else:
-                    if line.condition_range_min or line.condition_range_max:
-                        if not ((value < line.condition_range_min) or (value > line.condition_range_max)):
-                            update['value']['line_ids'].append(vals)
-                    else:
+                if line.condition_range_min or line.condition_range_max:
+                    if not ((value < line.condition_range_min) or (value > line.condition_range_max)):
                         update['value']['line_ids'].append(vals)
+                else:
+                    update['value']['line_ids'].append(vals)
 
         basic = contract.wage
         number = sequence_obj.get(cr, uid, 'salary.slip')
@@ -1160,23 +1154,18 @@ class hr_payslip(osv.osv):
                                 value = val
                         else:
                             value = val
-
                 res['amount'] = salary_rule.amount
                 res['type'] = salary_rule.type.id
                 leave += days
                 total += value
                 res['total'] = value
                 if salary_rule.appears_on_payslip:
-                    if salary_rule.parent_rule_id:
-                        for l in salary_rule_pool.browse(cr, uid, [salary_rule.parent_rule_id.id], context=context):
-                            if l.display_child_rules == True:
-                                update['value']['line_ids'].append(res)
-                    else:
-                        if salary_rule.condition_range_min or salary_rule.condition_range_max:
-                            if not ((value < salary_rule.condition_range_min) or (value > salary_rule.condition_range_max)):
-                                update['value']['line_ids'].append(res)
-                        else:
+                    if salary_rule.condition_range_min or salary_rule.condition_range_max:
+                        if not ((value < salary_rule.condition_range_min) or (value > salary_rule.condition_range_max)):
                             update['value']['line_ids'].append(res)
+                    else:
+                        update['value']['line_ids'].append(res)
+                        
         update['value'].update({
             'basic_amount': basic,
             'basic_before_leaves': round(basic_before_leaves),
