@@ -196,7 +196,7 @@ class DataSet(openerpweb.Controller):
         :param sort: sorting directives
         :type sort: list
         :returns: a list of result records
-        :rtype: []
+        :rtype: list
         """
         Model = request.session.model(model)
         ids = Model.search(domain or [], offset or 0, limit or False,
