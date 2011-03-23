@@ -8,6 +8,15 @@ Contributing to OpenERP Web
 * Style guide and coding conventions (PEP8? More)
 * Test frameworks in JS?
 
+Internal API Doc
+----------------
+
+Python
+++++++
+
+.. autoclass:: base.controllers.main.DataSet
+    :members:
+
 Testing
 -------
 

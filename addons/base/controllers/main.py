@@ -177,7 +177,26 @@ class DataSet(openerpweb.Controller):
     def do_find(self, request, model, fields=False, offset=0, limit=False,
              domain=None, context=None, sort=None):
         """ Performs a search() followed by a read() (if needed) using the
-        provided search criteria, only   
+        provided search criteria
+
+        :param request: a JSON-RPC request object
+        :type request: openerpweb.JsonRequest
+        :param model: the name of the model to search on
+        :type model: str
+        :param fields: a list of the fields to return in the result records
+        :type fields: [str]
+        :param offset: from which index should the results start being returned
+        :type offset: int
+        :param limit: the maximum number of records to return
+        :type limit: int
+        :param domain: the search domain for the query
+        :type domain: list
+        :param context: the context in which the search should be executed
+        :type context: dict
+        :param sort: sorting directives
+        :type sort: list
+        :returns: a list of result records
+        :rtype: []
         """
         Model = request.session.model(model)
         ids = Model.search(domain or [], offset or 0, limit or False,
@@ -204,6 +223,8 @@ class DataSet(openerpweb.Controller):
         :type model: str
         :param ids: a list of identifiers
         :type ids: list
+        :returns: a list of records, in the same order as the list of ids
+        :rtype: list
         """
         Model = request.session.model(model)
         records = Model.read(ids)
