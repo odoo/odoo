@@ -35,3 +35,42 @@ class TestDataSetController(unittest2.TestCase):
             self.dataset.do_find(self.request, 'fake.model', ['id']),
             [{'id': 1}, {'id': 2}, {'id': 3}])
         self.assertFalse(self.read.called)
+
+    def test_get(self):
+        self.read.return_value = [
+            {'id': 1, 'name': 'baz'},
+            {'id': 3, 'name': 'foo'},
+            {'id': 2, 'name': 'bar'}
+        ]
+
+        result = self.dataset.do_get(
+            self.request, 'fake.model', [3, 2, 1])
+        self.read.assert_called_once_with(
+            [3, 2, 1])
+        self.assertFalse(self.search.called)
+
+        self.assertEqual(
+            result,
+            [
+                {'id': 3, 'name': 'foo'},
+                {'id': 2, 'name': 'bar'},
+                {'id': 1, 'name': 'baz'}
+            ]
+        )
+
+    def test_get_missing_result(self):
+        self.read.return_value = [
+            {'id': 1, 'name': 'baz'},
+            {'id': 2, 'name': 'bar'}
+        ]
+
+        result = self.dataset.do_get(
+            self.request, 'fake.model', [3, 2, 1])
+
+        self.assertEqual(
+            result,
+            [
+                {'id': 2, 'name': 'bar'},
+                {'id': 1, 'name': 'baz'}
+            ]
+        )

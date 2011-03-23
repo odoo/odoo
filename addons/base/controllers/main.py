@@ -176,6 +176,9 @@ class DataSet(openerpweb.Controller):
                      domain, context, sort)
     def do_find(self, request, model, fields=False, offset=0, limit=False,
              domain=None, context=None, sort=None):
+        """ Performs a search() followed by a read() (if needed) using the
+        provided search criteria, only   
+        """
         Model = request.session.model(model)
         ids = Model.search(domain or [], offset or 0, limit or False,
                            sort or False, context or False)
@@ -184,6 +187,30 @@ class DataSet(openerpweb.Controller):
             return map(lambda id: {'id': id}, ids)
         return Model.read(ids, fields or False)
 
+    @openerpweb.jsonrequest
+    def get(self, request, model, ids):
+        self.do_get(request, model, ids)
+
+    def do_get(self, request, model, ids):
+        """ Fetches and returns the records of the model ``model`` whose ids
+        are in ``ids``.
+
+        The results are in the same order as the inputs, but elements may be
+        missing (if there is no record left for the id)
+
+        :param request: the JSON-RPC2 request object
+        :type request: openerpweb.JsonRequest
+        :param model: the model to read from
+        :type model: str
+        :param ids: a list of identifiers
+        :type ids: list
+        """
+        Model = request.session.model(model)
+        records = Model.read(ids)
+
+        record_map = dict((record['id'], record) for record in records)
+
+        return [record_map[id] for id in ids if record_map.get(id)]
 
 class DataRecord(openerpweb.Controller):
     _cp_path = "/base/datarecord"
