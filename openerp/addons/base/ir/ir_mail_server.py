@@ -128,8 +128,8 @@ unless it is already specified in the From Email, e.g: John Doe <john@doe.com>",
         """
         try:
             for smtp_server in self.browse(cr, uid, ids, context=context):
-                smtp = self.connect_smtp_server(smtp_server.smtp_host, smtp_server.smtp_port,  user_name=smtp_server.smtp_user,
-                                user_password=smtp_server.smtp_pass, ssl=smtp_server.smtp_ssl, tls=smtp_server.smtp_tls)
+                smtp = self.connect_smtp_server(cr, uid, smtp_server.smtp_host, smtp_server.smtp_port, user_name=smtp_server.smtp_user,
+                                user_password=smtp_server.smtp_pass, ssl=smtp_server.smtp_ssl, tls=smtp_server.smtp_tls, debug=False)
                 try:
                     smtp.quit()
                 except Exception:
@@ -143,7 +143,7 @@ unless it is already specified in the From Email, e.g: John Doe <john@doe.com>",
 
         raise osv.except_osv(_("SMTP Connection: Test Successfully!"), '')
 
-    def connect_smtp_server(server_host, server_port,  user_name=None, user_password=None, ssl=False, tls=False, debug=False):
+    def connect_smtp_server(self, cr, uid, server_host, server_port, user_name=None, user_password=None, ssl=False, tls=False, debug=False):
         """
         Connect SMTP Server and returned the (SMTP) object
         """
@@ -174,7 +174,7 @@ unless it is already specified in the From Email, e.g: John Doe <john@doe.com>",
             raise error
         return smtp_server
 
-    def _email_send(smtp_from, smtp_to_list, message, ssl=False, debug=False,
+    def _email_send(self, cr, uid, smtp_from, smtp_to_list, message, ssl=False, debug=False,
                 smtp_server=None, smtp_port=None, smtp_user=None, smtp_password=None):
         """Low-level method to send directly a Message through the configured smtp server.
             :param smtp_from: RFC-822 envelope FROM (not displayed to recipient)
@@ -185,7 +185,6 @@ unless it is already specified in the From Email, e.g: John Doe <john@doe.com>",
             :return: True if the mail was delivered successfully to the smtp,
                      else False (+ exception logged)
         """
-        print '_email::'
         class WriteToLogger(object):
             def __init__(self):
                 self.logger = loglevels.Logger()
@@ -207,8 +206,10 @@ unless it is already specified in the From Email, e.g: John Doe <john@doe.com>",
                 oldstderr = smtplib.stderr
                 smtplib.stderr = WriteToLogger()
 
-            if not ssl: ssl = config.get('smtp_ssl', False)
-            smtp = self.connect_smtp_server(smtp_server, smtp_port, smtp_user, smtp_password, ssl=ssl, tls=True, debug=debug)
+            if not ssl:
+                ssl = config.get('smtp_ssl', False)
+
+            smtp = self.connect_smtp_server(cr, uid, smtp_server, smtp_port, user_name=smtp_user, user_password=smtp_password, ssl=ssl, tls=True, debug=debug)
             try:
                 smtp.sendmail(smtp_from, smtp_to_list, message.as_string())
             except Exception:
@@ -239,9 +240,16 @@ unless it is already specified in the From Email, e.g: John Doe <john@doe.com>",
             raise ValueError("Sending an email requires either providing a sender "
                              "address or having configured one")
         if not smtp_from: smtp_from = config.get('email_from', False)
-
         smtp_from = ustr(smtp_from).encode('utf-8')
 
+        if id:
+            smtp_server = self.browse(cr, uid, id)
+
+        if not (id and smtp_server):
+            server = self.search(cr, uid, [], order='priority', limit=1)
+            smtp_server = self.browse(cr, uid, server[0])
+
+        if not message: message = u''
         email_body = ustr(message).encode('utf-8')
         email_text = MIMEText(email_body or '',_charset='utf-8')
         msg = MIMEMultipart()
@@ -265,7 +273,9 @@ unless it is already specified in the From Email, e.g: John Doe <john@doe.com>",
             msg.attach(alternative_part)
         else:
             msg.attach(email_text)
-        res = self._email_send(smtp_from, smtp_to_list, msg)
+
+        res = self._email_send(cr, uid, smtp_from, smtp_to_list, msg, smtp_server=smtp_server.smtp_host,
+                               smtp_user=smtp_server.smtp_user, smtp_password=smtp_server.smtp_pass, smtp_port=smtp_server.smtp_port)
         if res:
             return message_id
         return False
