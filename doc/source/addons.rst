@@ -97,9 +97,183 @@ Javascript
     :param openerp.base.Controller view: The view to which the widget belongs
     :param Object node: the ``fields_view_get`` descriptor for the widget
 
-.. js:attribute:: openerp.base.Widget.$element
+    .. js:attribute:: $element
 
-    The widget's root element as jQuery object
+        The widget's root element as jQuery object
+
+.. js:class:: openerp.base.DataSet(session, model)
+
+    :param openerp.base.Session session: the RPC session object
+    :param String model: the model managed by this dataset
+
+    The DataSet is the abstraction for a sequence of records stored in
+    database.
+
+    It provides interfaces for reading records based on search
+    criteria, and for selecting and fetching records based on
+    activated ids.
+
+    .. js:function:: fetch([offset][, limit])
+
+       :param Number offset: the index from which records should start
+                             being returned (section)
+       :param Number limit: the maximum number of records to return
+       :returns: the dataset instance it was called on
+
+       Asynchronously fetches the records selected by the DataSet's
+       domain and context, in the provided sort order if any.
+
+       Only fetches the fields selected by the DataSet.
+
+       On success, triggers :js:func:`on_fetch`
+
+    .. js:function:: on_fetch(records, event)
+
+        :param Array records: an array of
+                             :js:class:`openerp.base.DataRecord`
+                             matching the DataSet's selection
+        :param event: a data holder letting the event handler fetch
+                     meta-informations about the event.
+        :type event: OnFetchEvent
+
+        Fired after :js:func:`fetch` is done fetching the records
+        selected by the DataSet.
+
+    .. js:function:: active_ids
+
+        :returns: the dataset instance it was called on
+
+        Asynchronously fetches the active records for this DataSet.
+
+        On success, triggers :js:func:`on_active_ids`
+
+    .. js:function:: on_active_ids(records)
+
+        :param Array records: an array of
+                              :js:class:`openerp.base.DataRecord`
+                              matching the currently active ids
+
+        Fired after :js:func:`active_ids` fetched the records matching
+        the DataSet's active ids.
+
+    .. js:function:: active_id
+
+        :returns: the dataset instance in was called on
+
+        Asynchronously fetches the current active record.
+
+        On success, triggers :js:func:`on_active_id`
+
+    .. js:function:: on_active_id(record)
+
+        :param Object record: the record fetched by
+                              :js:func:`active_id`, or ``null``
+        :type record: openerp.base.DataRecord
+
+        Fired after :js:func:`active_id` fetched the record matching
+        the dataset's active id
+
+    .. js:function:: set(options)
+
+        :param Object options: the options to set on the dataset
+        :type options: DataSetOptions
+        :returns: the dataset instance it was called on
+
+        Configures the data set by setting various properties on it
+
+    .. js:function:: prev
+
+        :returns: the dataset instance it was called on
+
+        Activates the id preceding the current one in the active ids
+        sequence of the dataset.
+
+        If the current active id is at the start of the sequence,
+        wraps back to the last id of the sequence.
+
+    .. js:function:: next
+
+        :returns: the dataset instance it was called on
+
+        Activates the id following the current one in the active ids
+        sequence.
+
+        If the current active id is the last of the sequence, wraps
+        back to the beginning of the active ids sequence.
+
+    .. js:function:: select(ids)
+
+        :param Array ids: the identifiers to activate on the dataset
+        :returns: the dataset instance it was called on
+
+        Activates all the ids specified in the dataset, resets the
+        current active id to be the first id of the new sequence.
+
+        The internal order will be the same as the ids list provided.
+
+    .. js:function:: get_active_ids
+
+        :returns: the list of current active ids for the dataset
+
+    .. js:function:: activate(id)
+
+        :param Number id: the id to activate
+        :returns: the dataset instance it was called on
+
+        Activates the id provided in the dataset. If no ids are
+        selected, selects the id in the dataset.
+
+        If ids are already selected and the provided id is not in that
+        selection, raises an error.
+
+    .. js:function:: get_active_id
+
+        :returns: the dataset's current active id
+
+.. js:class:: openerp.base.DataRecord(session, model, fields, values)
+
+Ad-hoc objects and structural types
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+These objects are not associated with any specific class, they're
+generally literal objects created on the spot. Names are merely
+convenient ways to refer to them and their properties.
+
+.. js:class:: OnFetchEvent
+
+    .. js:attribute:: context
+
+        The context used for the :js:func:`fetch` call (domain set on
+        the :js:class:`openerp.base.DataSet` when ``fetch`` was
+        called)
+
+    .. js:attribute:: domain
+
+        The domain used for the :js:func:`fetch` call
+
+    .. js:attribute:: limit
+
+        The limit with which the original :js:func:`fetch` call was
+        performed
+
+    .. js:attribute:: offset
+
+        The offset with which the original :js:func:`fetch` call was
+        performed
+
+    .. js:attribute:: sort
+
+       The sorting criteria active on the
+       :js:class:`openerp.base.DataSet` when :js:func:`fetch` was
+       called
+
+.. js:class:: DataSetOptions
+
+    .. js:attribute:: context
+
+    .. js:attribute:: domain
+
+    .. js:attribute:: sort
 
 * Addons lifecycle (loading, execution, events, ...)
 

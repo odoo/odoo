@@ -167,11 +167,11 @@ openerp.base.DataSet =  openerp.base.Controller.extend({
      * Fires after the DataSet fetched the records matching its internal ids selection
      * 
      * @param {Array} records An array of the DataRecord fetched
-     * @param event The on_ids event object
-     * @param {Number} event.offset the offset with which the original DataSet#ids call was performed
-     * @param {Number} event.limit the limit set on the original DataSet#ids call
-     * @param {Array} event.domain the domain set on the DataSet before DataSet#ids was called
-     * @param {Object} event.context the context set on the DataSet before DataSet#ids was called
+     * @param event The on_fetch event object
+     * @param {Number} event.offset the offset with which the original DataSet#fetch call was performed
+     * @param {Number} event.limit the limit set on the original DataSet#fetch call
+     * @param {Array} event.domain the domain set on the DataSet before DataSet#fetch was called
+     * @param {Object} event.context the context set on the DataSet before DataSet#fetch was called
      * @param {Array} event.sort the sorting criteria used to get the ids
      */
     on_fetch: function (records, event) { },
