@@ -1386,6 +1386,7 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         start_date = False
         until_date = False
 
+        print 'context', context
         for arg in args:
             if arg[0] not in ('date', unicode('date'), 'date_deadline', unicode('date_deadline')):
                 args_without_date.append(arg)
@@ -1497,7 +1498,7 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
             # change alarm details
             alarm_obj = self.pool.get('res.alarm')
             alarm_obj.do_alarm_create(cr, uid, new_ids, self._name, 'date', context=context)
-        return res
+        return res or True and False
 
     def browse(self, cr, uid, ids, context=None, list_class=None, fields_process=None):
         """
@@ -1520,6 +1521,24 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
             return res and res[0] or False
 
         return res
+    
+    def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False):
+        if not context:
+            context = {}
+            
+        if 'date' in groupby:
+             raise osv.except_osv(_('Warning !'), _('Group by date not supported, use the calendar view instead'))
+         
+        virtual_id = context.get('virtual_id', False)
+        
+        context.update({'virtual_id': False})
+        res = super(calendar_event, self).read_group(cr, uid, domain, fields, groupby, offset=offset, limit=limit, context=context, orderby=orderby)
+        for re in res:
+            for groupname in groupby:
+                if re.get(groupname + "_count"):
+                    del re[groupname + "_count"]
+            re.get('__context').update({'virtual_id' : virtual_id})
+        return res
 
     def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
         """
@@ -1535,7 +1554,6 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         if context is None:
             context = {}
         
-        print 'read ids', ids
 
 
         if isinstance(ids, (str, int, long)):
@@ -1543,7 +1561,6 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         else:
             select = ids
         select = map(lambda x: (x, base_calendar_id2real_id(x)), select)
-        print 'selected', select
         result = []
         if fields and 'date' not in fields:
             fields.append('date')
@@ -1567,7 +1584,6 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         if isinstance(ids, (str, int, long)):
             return result and result[0] or False
         
-        print 'resultat', result 
         return result
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -1658,6 +1674,8 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
             res = real_id2base_calendar_id(res, vals.get('date', False))
         print "id", res
         return res
+    
+    
 
     def do_tentative(self, cr, uid, ids, context=None, *args):
         """ Makes event invitation as Tentative
