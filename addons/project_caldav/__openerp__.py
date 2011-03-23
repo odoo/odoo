@@ -39,5 +39,5 @@ on a remote server.
     "website": "http://www.openerp.com",
     "installable": True,
     "certificate" : "001114200456808204637",
-    'images': ['images/project_tasks_caldav.jpeg'],
+    'images': ['images/project_tasks_caldav.jpeg','images/project_tasks_caldav_attendees.jpeg','images/project_caldav_calendars.jpeg'],
 }
