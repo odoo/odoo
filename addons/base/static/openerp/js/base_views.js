@@ -604,8 +604,10 @@ openerp.base.search.Filter = openerp.base.search.Input.extend({
     },
     start: function () {
         this._super();
+        var $view_form = this.view.$element.find('form');
         this.$element.click(function () {
             $(this).toggleClass('enabled');
+            $view_form.submit();
         });
     }
 });
