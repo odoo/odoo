@@ -2921,15 +2921,27 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         ref_acc_bank = obj_multi.chart_template_id.bank_account_view_id
 
         current_num = 1
+        valid = True
         for line in obj_multi.bank_accounts_id:
             #create the account_account for this bank journal
             tmp = line.acc_name
             dig = obj_multi.code_digits
             if ref_acc_bank.code:
-                try:
-                    new_code = str(int(ref_acc_bank.code.ljust(dig,'0')) + current_num)
-                except:
-                    new_code = str(ref_acc_bank.code.ljust(dig-len(str(current_num)),'0')) + str(current_num)
+                while valid:
+                    try:
+                        new_code = str(int(ref_acc_bank.code.ljust(dig, '0')) + current_num)
+                        ids = obj_acc.search(cr, uid,[('code', '=', new_code)])
+                        if not ids:
+                            valid = False
+                        else:
+                            current_num += 1
+                    except:
+                        new_code = str(ref_acc_bank.code.ljust(dig-len(str(current_num)), '0')) + str(current_num)
+                        ids = obj_acc.search(cr, uid,[('code', '=', new_code)])
+                        if not ids:
+                            valid = False
+                        else:
+                            current_num += 1
             vals = {
                 'name': tmp,
                 'currency_id': line.currency_id and line.currency_id.id or False,
@@ -2962,6 +2974,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             vals_journal['default_debit_account_id'] = acc_cash_id
             obj_journal.create(cr, uid, vals_journal)
             current_num += 1
+            valid = True
 
         #create the properties
         property_obj = self.pool.get('ir.property')
