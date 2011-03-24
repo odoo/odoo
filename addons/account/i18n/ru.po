@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-03-13 20:17+0000\n"
+"PO-Revision-Date: 2011-03-20 16:41+0000\n"
 "Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-03-14 04:46+0000\n"
+"X-Launchpad-Export-Date: 2011-03-21 04:46+0000\n"
 "X-Generator: Launchpad (build 12559)\n"
 
 #. module: account
@@ -728,12 +728,6 @@ msgstr "Проверка"
 #: field:account.partner.reconcile.process,today_reconciled:0
 msgid "Partners Reconciled Today"
 msgstr "Партнеры сверенные сегодня"
-
-#. module: account
-#: code:addons/account/account_bank_statement.py:306
-#, python-format
-msgid "The statement balance is incorrect !\n"
-msgstr "Утвержденный баланc некорректен !\\n\n"
 
 #. module: account
 #: selection:account.payment.term.line,value:0
@@ -2005,7 +1999,7 @@ msgstr "Январь"
 #. module: account
 #: view:account.journal:0
 msgid "Validations"
-msgstr "Проверки"
+msgstr "Утверждение"
 
 #. module: account
 #: view:account.entries.report:0
@@ -2573,6 +2567,10 @@ msgid ""
 "Note that journal entries that are automatically created by the system are "
 "always skipping that state."
 msgstr ""
+"Отметьте, если не хотите, чтобы новые записи в журнале проходили через "
+"состояние 'Черновик', а сразу проводились без утверждения вручную. \n"
+"Автоматически создаваемые системой записи в журнал всегда пропускают это "
+"состояние."
 
 #. module: account
 #: model:ir.actions.server,name:account.ir_actions_server_action_wizard_multi_chart
@@ -2638,11 +2636,12 @@ msgid "August"
 msgstr "Август"
 
 #. module: account
-#: code:addons/account/account_bank_statement.py:307
+#: code:addons/account/account_bank_statement.py:306
 #, python-format
 msgid ""
+"The statement balance is incorrect !\n"
 "The expected balance (%.2f) is different than the computed one. (%.2f)"
-msgstr "Ожидаемый баланс (%.2f) отличается от вычисленного. (%.2f)"
+msgstr ""
 
 #. module: account
 #: model:process.transition,note:account.process_transition_paymentreconcile0
@@ -2886,6 +2885,12 @@ msgstr "Счет основа налоговой декларации"
 #: selection:account.entries.report,type:0
 msgid "View"
 msgstr "Вид"
+
+#. module: account
+#: code:addons/account/account.py:2951
+#, python-format
+msgid "BNK%s"
+msgstr ""
 
 #. module: account
 #: code:addons/account/account.py:2906
@@ -3393,8 +3398,8 @@ msgid ""
 "You cannot validate a Journal Entry unless all journal items are in same "
 "chart of accounts !"
 msgstr ""
-"Вы не можете утвердить запись в журнале, если не все элементы журнала одном "
-"плане счетов!"
+"Вы не можете утвердить запись в журнале, если не все элементы журнала в "
+"одном плане счетов!"
 
 #. module: account
 #: view:account.tax:0
@@ -3480,6 +3485,8 @@ msgstr "Счета к оплате"
 msgid ""
 "You cannot create entries on different periods/journals in the same move"
 msgstr ""
+"Вы не можете создавать проводки по разным периодам / журналам в одном "
+"действии."
 
 #. module: account
 #: model:process.node,name:account.process_node_supplierpaymentorder0
@@ -3650,7 +3657,7 @@ msgstr "Вывести партнеров"
 #. module: account
 #: view:account.invoice:0
 msgid "Validate"
-msgstr "Проверить"
+msgstr "Утвердить"
 
 #. module: account
 #: sql_constraint:account.model.line:0
@@ -4264,17 +4271,13 @@ msgid ""
 "All draft account entries in this journal and period will be validated. It "
 "means you won't be able to modify their accounting fields anymore."
 msgstr ""
+"Все черновики проводок в этом журнале и периоде будут утверждены. Вы больше "
+"не сможете изменять их бухгалтерские поля."
 
 #. module: account
 #: report:account.account.balance.landscape:0
 msgid "Account Balance -"
 msgstr "Баланс по счету -"
-
-#. module: account
-#: code:addons/account/invoice.py:989
-#, python-format
-msgid "Invoice "
-msgstr "Счет "
 
 #. module: account
 #: field:account.automatic.reconcile,date1:0
@@ -4375,7 +4378,7 @@ msgstr "Для сверки с банком использовать банко�
 #. module: account
 #: model:process.transition,note:account.process_transition_suppliercustomerinvoice0
 msgid "Draft invoices are validated. "
-msgstr "Черновики счетов проверяются. "
+msgstr "Черновики счетов утверждаются. "
 
 #. module: account
 #: view:account.bank.statement:0
@@ -4777,7 +4780,7 @@ msgstr "Запись конца финансового года"
 #: model:process.transition,name:account.process_transition_suppliervalidentries0
 #: model:process.transition,name:account.process_transition_validentries0
 msgid "Validation"
-msgstr "Проверка"
+msgstr "Утверждение"
 
 #. module: account
 #: help:account.invoice,reconciled:0
@@ -5581,10 +5584,10 @@ msgstr ""
 "\"Сделано\" (т.е. оплачено)."
 
 #. module: account
-#: code:addons/account/invoice.py:989
+#: code:addons/account/invoice.py:997
 #, python-format
-msgid "is validated."
-msgstr "проверен."
+msgid "Invoice  '%s' is validated."
+msgstr "Счет  '%s' утвержден."
 
 #. module: account
 #: view:account.chart.template:0
@@ -7892,7 +7895,7 @@ msgstr "Общая сумма к оплате этому поставщику."
 #: model:process.node,name:account.process_node_analytic0
 #: model:process.node,name:account.process_node_analyticcost0
 msgid "Analytic Costs"
-msgstr ""
+msgstr "Аналитические расходы"
 
 #. module: account
 #: field:account.analytic.journal,name:0
@@ -7977,7 +7980,7 @@ msgstr ""
 #. module: account
 #: model:process.transition,note:account.process_transition_validentries0
 msgid "Accountant validates the accounting entries coming from the invoice."
-msgstr "Бухгалтер проверяет проводки созданные по счет-фактуре."
+msgstr "Бухгалтер утверждает проводки созданные по счет-фактуре."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_fiscalyear_form
@@ -8044,7 +8047,7 @@ msgstr "Открытие журнала проводок"
 #. module: account
 #: model:process.transition,note:account.process_transition_customerinvoice0
 msgid "Draft invoices are checked, validated and printed."
-msgstr "Черновики счетов проверены и напечатаны."
+msgstr "Черновики счетов проверены, утверждены и напечатаны."
 
 #. module: account
 #: help:account.chart.template,property_reserve_and_surplus_account:0
@@ -8275,7 +8278,7 @@ msgstr "Всего кредит"
 #. module: account
 #: model:process.transition,note:account.process_transition_suppliervalidentries0
 msgid "Accountant validates the accounting entries coming from the invoice. "
-msgstr "Бухгалтер проверяет проводки созданные по счет-фактуре. "
+msgstr "Бухгалтер утверждает проводки созданные по счет-фактуре. "
 
 #. module: account
 #: code:addons/account/invoice.py:1008
@@ -8785,7 +8788,7 @@ msgstr "Вторичная валюта"
 #. module: account
 #: model:ir.model,name:account.model_validate_account_move
 msgid "Validate Account Move"
-msgstr ""
+msgstr "Утвердить действие по счету"
 
 #. module: account
 #: field:account.account,credit:0
@@ -8968,6 +8971,9 @@ msgid ""
 "and is the process of transferring debit and credit amounts from a journal "
 "of original entry to a ledger book."
 msgstr ""
+"Процесс утверждения записей в журнале так же называется \"разнесением по "
+"счетам\" и это процесс переноса сумм по дебету и и кредиту из  журнала в "
+"главную книгу."
 
 #. module: account
 #: report:account.tax.code.entries:0
@@ -9530,7 +9536,7 @@ msgstr ""
 #: code:addons/account/invoice.py:346
 #, python-format
 msgid "Invoice '%s' is waiting for validation."
-msgstr "Счет '%s' ожидает проверки."
+msgstr "Счет '%s' ожидает утверждения."
 
 #. module: account
 #: selection:account.entries.report,month:0
@@ -9610,7 +9616,7 @@ msgstr "Бухгалтерские документы"
 #. module: account
 #: model:ir.model,name:account.model_validate_account_move_lines
 msgid "Validate Account Move Lines"
-msgstr "Провести действие по счету"
+msgstr "Утвердить действия по счету"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_analytic_cost_ledger_journal
@@ -10252,6 +10258,11 @@ msgstr ""
 #~ msgid "Analytic Credit"
 #~ msgstr "Аналитический Кредит"
 
+#, python-format
+#~ msgid ""
+#~ "The expected balance (%.2f) is different than the computed one. (%.2f)"
+#~ msgstr "Ожидаемый баланс (%.2f) отличается от вычисленного. (%.2f)"
+
 #~ msgid "Parent Analytic Account"
 #~ msgstr "Основной аналитический счет"
 
@@ -10608,6 +10619,10 @@ msgstr ""
 #~ msgid "Select invoices you want to pay and manages advances"
 #~ msgstr "Выберите счета для оплаты и авансирования"
 
+#, python-format
+#~ msgid "The statement balance is incorrect !\n"
+#~ msgstr "Утвержденный баланc некорректен !\\n\n"
+
 #~ msgid "Journal/Payment Mode"
 #~ msgstr "Журнал/Форма оплаты"
 
@@ -10650,6 +10665,10 @@ msgstr ""
 #~ msgid "End of Year"
 #~ msgstr "Конец года"
 
+#, python-format
+#~ msgid "Invoice "
+#~ msgstr "Счет "
+
 #~ msgid "Error: UOS must be in a different category than the UOM"
 #~ msgstr ""
 #~ "Ошибка: Единицы продажи и единицы измерения должны принадлежать к разным "
@@ -10660,6 +10679,10 @@ msgstr ""
 
 #~ msgid "account.analytic.journal"
 #~ msgstr "account.analytic.journal"
+
+#, python-format
+#~ msgid "is validated."
+#~ msgstr "проверен."
 
 #~ msgid "Accounting Statement"
 #~ msgstr "Бухгалтерская ведомость"

@@ -38,8 +38,11 @@
     'url': 'http://launchpad.net/openerp-costa-rica',
     'author': 'ClearCorp S.A.',
     'website': 'http://clearcorp.co.cr',
-    'category': 'Localisation/Account Charts',
-    'description': """Chart of accounts for Costa Rica
+    'category': 'Finance',
+    'description': """
+Chart of accounts for Costa Rica.
+=================================
+
 Includes:
 * account.type
 * account.account.template
@@ -66,6 +69,7 @@ http://translations.launchpad.net/openerp-costa-rica
     'installable': True,
     'active': False,
     'certificate' : '00531476623680631853',
+    'images': ['images/config_chart_l10n_cr.jpeg','images/l10n_cr_chart.jpeg'],
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

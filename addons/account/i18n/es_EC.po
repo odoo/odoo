@@ -16,8 +16,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-19 04:44+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-03-18 04:57+0000\n"
+"X-Generator: Launchpad (build 12559)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -749,12 +749,6 @@ msgstr "Revisar"
 #: field:account.partner.reconcile.process,today_reconciled:0
 msgid "Partners Reconciled Today"
 msgstr "Empresas conciliadas hoy"
-
-#. module: account
-#: code:addons/account/account_bank_statement.py:306
-#, python-format
-msgid "The statement balance is incorrect !\n"
-msgstr "The statement balance is incorrect !\n"
 
 #. module: account
 #: selection:account.payment.term.line,value:0
@@ -2707,12 +2701,12 @@ msgid "August"
 msgstr "Agosto"
 
 #. module: account
-#: code:addons/account/account_bank_statement.py:307
+#: code:addons/account/account_bank_statement.py:306
 #, python-format
 msgid ""
+"The statement balance is incorrect !\n"
 "The expected balance (%.2f) is different than the computed one. (%.2f)"
 msgstr ""
-"The expected balance (%.2f) is different than the computed one. (%.2f)"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_paymentreconcile0
@@ -2965,6 +2959,12 @@ msgstr "La cuenta base de la declaración de impuestos."
 #: selection:account.entries.report,type:0
 msgid "View"
 msgstr "Vista"
+
+#. module: account
+#: code:addons/account/account.py:2951
+#, python-format
+msgid "BNK%s"
+msgstr ""
 
 #. module: account
 #: code:addons/account/account.py:2906
@@ -4401,12 +4401,6 @@ msgid "Account Balance -"
 msgstr "Saldo de cuenta -"
 
 #. module: account
-#: code:addons/account/invoice.py:989
-#, python-format
-msgid "Invoice "
-msgstr "Invoice "
-
-#. module: account
 #: field:account.automatic.reconcile,date1:0
 msgid "Starting Date"
 msgstr "Starting Date"
@@ -5756,10 +5750,10 @@ msgstr ""
 "(i.e. paid) in the system."
 
 #. module: account
-#: code:addons/account/invoice.py:989
+#: code:addons/account/invoice.py:997
 #, python-format
-msgid "is validated."
-msgstr "is validated."
+msgid "Invoice  '%s' is validated."
+msgstr ""
 
 #. module: account
 #: view:account.chart.template:0
@@ -11884,6 +11878,12 @@ msgstr ""
 #~ msgstr ""
 #~ "Cash Register allows you to manage cash entries in your cash journals."
 
+#, python-format
+#~ msgid ""
+#~ "The expected balance (%.2f) is different than the computed one. (%.2f)"
+#~ msgstr ""
+#~ "The expected balance (%.2f) is different than the computed one. (%.2f)"
+
 #~ msgid "Customer Invoices to Validate"
 #~ msgstr "Facturas de Cliente a Validar"
 
@@ -11954,6 +11954,10 @@ msgstr ""
 #~ "If the active field is set to true, it will allow you to hide the payment "
 #~ "term without removing it."
 
+#, python-format
+#~ msgid "Invoice "
+#~ msgstr "Invoice "
+
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Nombre de modelo no válido en la definición de acción."
 
@@ -12010,6 +12014,10 @@ msgstr ""
 #~ "impossible any new entry record. Close a fiscal year when you need to "
 #~ "finalize your end of year results definitive."
 
+#, python-format
+#~ msgid "The statement balance is incorrect !\n"
+#~ msgstr "The statement balance is incorrect !\n"
+
 #~ msgid "TITLE COMPANY"
 #~ msgstr "TITLE COMPANY"
 
@@ -12032,6 +12040,10 @@ msgstr ""
 #~ "of account. Start by encoding the starting and closing balance, then record "
 #~ "all lines of your statement. When you are in the Payment column of the a "
 #~ "line, you can press F1 to open the reconciliation form."
+
+#, python-format
+#~ msgid "is validated."
+#~ msgstr "is validated."
 
 #~ msgid "Treasory Analysis"
 #~ msgstr "Treasory Analysis"

@@ -21,12 +21,14 @@
 
 
 {
-    "name" : "Reporting Tools",
+    "name" : "Reporting Tools Installer",
     "version" : "1.0",
     "depends" : ["base"],
     "author" : "OpenERP SA",
     "category": "Tools",
-    "description": """Installer for reporting tools selection
+    "description": """
+Installer for reporting tools.
+==============================
     """,
     'website': 'http://www.openerp.com',
     'init_xml': [],
@@ -38,5 +40,6 @@
     'installable': True,
     'active': False,
     'certificate' : '00764037194670093149',
+    'images': ['images/config_reporting_tools.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

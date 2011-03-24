@@ -20,29 +20,31 @@
 ##############################################################################
 
 {
-    'name': 'Accounting follow-ups management',
+    'name': 'Reminders',
     'version': '1.0',
-    'category': 'Generic Modules/Accounting',
+    'category': 'Finance',
     'description': """
-    Modules to automate letters for unpaid invoices, with multi-level recalls.
+Modules to automate letters for unpaid invoices, with multi-level recalls.
+==========================================================================
 
-    You can define your multiple levels of recall through the menu:
-        Accounting/Configuration/Miscellaneous/Follow-Ups
+You can define your multiple levels of recall through the menu:
+    Accounting/Configuration/Miscellaneous/Follow-Ups
 
-    Once it is defined, you can automatically print recalls every day
-    through simply clicking on the menu:
-        Accounting/Periodical Processing/Billing/Send followups
+Once it is defined, you can automatically print recalls every day
+through simply clicking on the menu:
+    Accounting/Periodical Processing/Billing/Send followups
 
-    It will generate a PDF with all the letters according to the the
-    different levels of recall defined. You can define different policies
-    for different companies. You can also send mail to the customer.
+It will generate a PDF with all the letters according to the the
+different levels of recall defined. You can define different policies
+for different companies. You can also send mail to the customer.
 
-    Note that if you want to change the followup level for a given partner/account entry, you can do from in the menu:
-        Accounting/Reporting/Generic Reporting/Partner Accounts/Follow-ups Sent
+Note that if you want to check the followup level for a given partner/account entry, you can do from in the menu:
+    Accounting/Reporting/Generic Reporting/Partners/Follow-ups Sent
 
 """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
+    'images': ['images/follow_ups.jpeg','images/send_followups.jpeg'],
     'depends': ['account'],
     'init_xml': [],
     'update_xml': [
