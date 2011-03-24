@@ -412,7 +412,10 @@ openerp.base.SearchView = openerp.base.Controller.extend({
                 }
             }
         }, this);
-        
+        if (filters.length) {
+            row.push(new openerp.base.search.FilterGroup(filters, this));
+        }
+
         return rows;
     },
     /**
