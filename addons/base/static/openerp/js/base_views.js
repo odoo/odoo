@@ -99,7 +99,7 @@ openerp.base.Action =  openerp.base.Controller.extend({
     on_remove: function() {
     },
     on_edit: function() {
-    },
+    }
 });
 
 // Extends view manager
