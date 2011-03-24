@@ -62,7 +62,6 @@ def import_partner_address(sugar_obj, cr, uid, context=None):
     if not context:
         context = {}
     res_country_obj = sugar_obj.pool.get('res.country')
-    str = val.get('primary_address_country')[0:2]
     map_partner_address = {
              'id': 'id',              
              'name': ['first_name', 'last_name'],
@@ -73,17 +72,19 @@ def import_partner_address(sugar_obj, cr, uid, context=None):
             'street': 'primary_address_street',
             'zip': 'primary_address_postalcode',
             'city': 'primary_address_city',
-            'country_id/id': 'country_id/id',
-            'state_id/id': 'state_id/id'
+          #  'country_id/id': 'country_id/id',
+           # 'state_id/id': 'state_id/id'
             }
     address_obj = sugar_obj.pool.get('res.partner.address')
     PortType, sessionid = sugar.login(context.get('username', ''), context.get('password', ''), context.get('url',''))
     sugar_data = sugar.search(PortType, sessionid, 'Contacts')
     for val in sugar_data:
+        str = val.get('primary_address_country')[0:2]
         country = get_all_countries(sugar_obj, cr, uid, val.get('primary_address_country'), context)
         state = get_all_states(sugar_obj,cr, uid, val.get('primary_address_state'), context)
-        val['country_id/id'] =  country and country[0][0] or res_country_obj.create(cr, uid, {'name': val.get('primary_address_country'), 'code': str}),
-        val['state_id/id'] =  state and state[0][0] or False        
+        #Need To Fix
+#        val['country_id/id'] =  country and country[0][0] or res_country_obj.create(cr, uid, {'name': val.get('primary_address_country'), 'code': str}),
+#      #  val['state_id/id'] =  state and state[0][0] or False        
         fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_partner_address)
         address_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', context=context)
         
