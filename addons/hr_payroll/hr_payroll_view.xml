@@ -212,6 +212,9 @@
                         <field name="name"/>
                         <field name="number"/>
                         <field name="date"/>
+                        <field name="contract_id" groups="base.group_extended" domain="[('employee_id','=',employee_id)]" on_change="onchange_employee_id(contract_id)"/>
+                        <field name="struct_id" groups="base.group_extended"/>
+
                     </group>
                     <notebook colspan="4">
                         <page string="Salary Computation">
@@ -275,12 +278,17 @@
                                 <field name="paid" readonly="1"/>
                                 <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                                 <field name="register_id" groups="base.group_extended"/>
-                                <field name="struct_id" groups="base.group_extended"/>
-                                <field name="contract_id" groups="base.group_extended" domain="[('employee_id','=',employee_id)]"/>
                             </group>
                             <newline/>
                             <separator colspan="4" string="Description"/>
                             <field name="note" colspan="4" nolabel="1"/>
+                        </page>
+			       
+                        <page string="Applied Salary Rules">
+                        </page>
+                        <page string="Appears on payslip">
+                        </page>
+                        <page string="Details by salary head">
                         </page>
                     </notebook>
                     <group col="10" colspan="4">

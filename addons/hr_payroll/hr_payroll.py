@@ -1177,6 +1177,17 @@ class hr_payslip(osv.osv):
         })
         return update
 
+    def onchange_contract_id(self, cr, uid, ids, contract_id=False, struct_id=False, context=None):
+        if not contract_id:
+                return {}
+        res = {}
+        contract = self.pool.get('hr.contract').browse(cr,uid, contract_id)
+        res.update({
+            'struct_id':contract.struct_id.id
+        })
+
+        return {'value': res}
+
 hr_payslip()
 
 class hr_holidays(osv.osv):
