@@ -39,6 +39,21 @@
             </field>
         </record>
 
+        <!-- user form view -->
+        <record id="view_users_form" model="ir.ui.view">
+            <field name="name">view_users_form</field>
+            <field name="model">res.users</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="base.view_users_form"/>
+            <field name="arch" type="xml">
+                <page string="User" position="after">
+                    <page string="Portal">
+                        <field name="portal_id" readonly="1"/>
+                    </page>
+                </page>
+            </field>
+        </record>
+
         <!--
             temporary: an attempt to display and edit menu items as a tree view
         -->
