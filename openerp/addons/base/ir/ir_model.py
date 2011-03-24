@@ -451,6 +451,23 @@ class ir_model_access(osv.osv):
         # pass no groups -> no access
         return False
 
+    def group_names_with_access(self, cr, model_name, access_mode):
+        """Returns the names of visible groups which have been granted ``access_mode`` on
+           the model ``model_name``.
+           :rtype: list
+        """
+        assert access_mode in ['read','write','create','unlink'], 'Invalid access mode: %s' % access_mode
+        cr.execute('''SELECT
+                        g.name
+                      FROM
+                        ir_model_access a
+                        JOIN ir_model m ON (a.model_id=m.id)
+                        JOIN res_groups g ON (a.group_id=g.id)
+                      WHERE
+                        m.model=%s AND
+                        a.perm_''' + access_mode, (model_name,))
+        return [x[0] for x in cr.fetchall()]
+
     def check(self, cr, uid, model, mode='read', raise_exception=True, context=None):
         if uid==1:
             # User root have all accesses
@@ -494,16 +511,7 @@ class ir_model_access(osv.osv):
             r = cr.fetchone()[0]
 
         if not r and raise_exception:
-            cr.execute('''select
-                    g.name
-                from
-                    ir_model_access a 
-                    left join ir_model m on (a.model_id=m.id) 
-                    left join res_groups g on (a.group_id=g.id)
-                where
-                    m.model=%s and
-                    a.group_id is not null and perm_''' + mode, (model_name, ))
-            groups = ', '.join(map(lambda x: x[0], cr.fetchall())) or '/'
+            groups = ', '.join(self.group_names_with_access(cr, model_name, mode)) or '/'
             msgs = {
                 'read':   _("You can not read this document (%s) ! Be sure your user belongs to one of these groups: %s."),
                 'write':  _("You can not write in this document (%s) ! Be sure your user belongs to one of these groups: %s."),
