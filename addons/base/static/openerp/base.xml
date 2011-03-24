@@ -302,17 +302,18 @@
     <br t-if="attrs.icon and attrs.string"/>
     <t t-esc="attrs.string"/>
 </button>
-<div t-name="SearchView.filters" class="filter_label_group"
+<span t-name="SearchView.filters" class="filter_label_group"
     ><t t-foreach="filters" t-as="filter"
         ><t t-raw="filter.render(defaults)"/></t
-></div>
+></span>
 <t t-name="SearchView.field">
     <label style="display: block" t-att-title="attrs.help">
         <t t-esc="attrs.string || attrs.name"/>
         <span t-if="attrs.help">(?)</span>
     </label>
-    <div>
+    <div style="white-space: nowrap;">
         <input type="text" t-att-name="attrs.name"/>
+        <t t-if="filters.length" t-raw="filters.render(defaults)"/>
     </div>
 </t>
 <t t-name="SearchView.group">

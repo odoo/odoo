@@ -513,6 +513,11 @@ openerp.base.search.Field = openerp.base.search.Widget.extend({
     init: function (view_section, field, view) {
         this._super(view);
         this.attrs = _.extend({}, field, view_section.attrs);
+        this.filters = new openerp.base.search.FilterGroup(_.map(
+            view_section.children, function (filter_node) {
+                return new openerp.base.search.Filter(
+                    filter_node, view);
+        }), view);
     }
 });
 openerp.base.search.CharField = openerp.base.search.Field.extend({
