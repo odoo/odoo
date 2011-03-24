@@ -23,7 +23,7 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
             this.viewmanager.do_action_window(action);
             this.viewmanager.start();
         }
-    },
+    }
 });
 
 // This will be ViewManager Abstract/Common

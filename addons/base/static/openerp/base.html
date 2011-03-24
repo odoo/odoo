@@ -5,46 +5,31 @@
     <title>OpenERP</title>
     <link rel="shortcut icon" href="/openobject/static/images/favicon.ico" type="image/x-icon"/>
 
-    <script src="/base/static/underscore/underscore.js" type="text/javascript"></script>
-
-    <!-- jquery -->
-    <script src="/base/static/jquery/jquery-1.5.1.js"></script>
-
-    <!-- jquery ui -->
-    <script src="/base/static/jquery.ui/js/jquery-ui-1.8.9.custom.min.js"></script>
     <link rel="stylesheet" type="text/css" media="screen" href="/base/static/jquery.ui/css/smoothness/jquery-ui-1.8.9.custom.css" />
-
-    <!-- jquery.jqGrid
-    -->
     <link rel="stylesheet" type="text/css" media="screen" href="/base/static/jquery.jqGrid/css/ui.jqgrid.css" />
-    <script src="/base/static/jquery.jqGrid/jquery.jqGrid.js" type="text/javascript"></script>
-
-    <!-- jquery.superfish -->
     <link rel="stylesheet" type="text/css" href="/base/static/jquery.superfish/css/superfish.css" media="screen">
-    <script type="text/javascript" src="/base/static/jquery.superfish/js/hoverIntent.js"></script>
-    <script type="text/javascript" src="/base/static/jquery.superfish/js/superfish.js"></script>
-
-    <!-- qweb -->
-    <script src="/base/static/qweb/qweb.js"></script>
-
-    <!-- openerp.base -->
     <link rel="stylesheet" href="/base/static/openerp/base.css" type="text/css"/>
-    <script src="/base/static/openerp/js/base.js"></script>
-    <script src="/base/static/openerp/js/base_chrome.js"></script>
-    <script src="/base/static/openerp/js/base_views.js"></script>
-
-
-    <!-- all of the above should be replaced by:
-    <link rel="stylesheet" type="text/css" media="screen" href="/base/connection/css" />
-    <script type="text/javascript" src="/base/connection/js" ></script>
-    -->
-    <script type="text/javascript">
-    $(function() {
-        var oe = openerp.init();
-        oe.base.webclient("oe");
-    });
+    
+    <script type="text/javascript" src="/base/static/LABjs/LAB.js"></script>
+    <script>
+        $LAB
+        .script('/base/static/openerp/js/base.js')
+        .script('/base/static/qweb/qweb.js')
+        .script('/base/static/underscore/underscore.js')
+        .script('/base/static/jquery/jquery-1.5.1.js')
+        .wait()
+        .script('/base/static/jquery.ui/js/jquery-ui-1.8.9.custom.min.js')
+        .script('/base/static/jquery.jqGrid/jquery.jqGrid.js')
+        .script('/base/static/jquery.superfish/js/hoverIntent.js')
+        .script('/base/static/openerp/js/base_chrome.js')
+        .script('/base/static/openerp/js/base_views.js')
+        .wait()
+        .script('/base/static/jquery.superfish/js/superfish.js')
+        .wait(function() {
+            var oe = openerp.init();
+            oe.base.webclient("oe");
+        });
     </script>
-
 </head>
 <body id="oe" class="openerp">
 </body>

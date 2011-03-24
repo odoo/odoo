@@ -299,17 +299,9 @@ openerp.base.Session = openerp.base.BasicController.extend({
         });
     },
     do_load_modules_debug: function(result) {
-        var self = this;
-        var files = result.files;
-        // Insert addons javascript in head
-        for(var i=0; i<files.length; i++) {
-            var s = document.createElement("script");
-            s.src = files[i];
-            s.type = "text/javascript";
-            document.getElementsByTagName("head")[0].appendChild(s);
-        }
-        // at this point the js should be loaded or not ?
-        setTimeout(self.on_modules_loaded,100);
+        $LAB.setOptions({AlwaysPreserveOrder: true})
+            .script(result.files)
+            .wait(this.on_modules_loaded);
     },
     do_load_modules_prod: function() {
         // load merged ones
@@ -329,7 +321,7 @@ openerp.base.Session = openerp.base.BasicController.extend({
             openerp._openerp[mod](openerp);
             self.module_loaded[mod] = true;
         }
-    },
+    }
 });
 
 openerp.base.Database = openerp.base.BasicController.extend({
