@@ -32,7 +32,7 @@ class Record(YamlTag):
         return '!record {model: %s, id: %s}:' % (str(self.model,), str(self.id,))
     
 class Python(YamlTag):
-    def __init__(self, model, severity=logging.WARNING, name="", **kwargs):
+    def __init__(self, model, severity=logging.ERROR, name="", **kwargs):
         self.model= model
         self.severity = severity
         self.name = name
