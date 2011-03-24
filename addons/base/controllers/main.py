@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import glob, os
 from xml.etree import ElementTree
+from cStringIO import StringIO
 
 import simplejson
 
@@ -248,37 +249,75 @@ class DataRecord(openerpweb.Controller):
         return {'value': value}
 
 
-class FormView(openerpweb.Controller):
+class View(openerpweb.Controller):
+    def fields_view_get(self, session, model, view_id, view_type, transform=True):
+        Model = session.model(model)
+        r = Model.fields_view_get(view_id, view_type)
+        if transform:
+            context = {} # TODO: dict(ctx_sesssion, **ctx_action)
+            xml = self.transform_view(r['arch'], context)
+        else:
+            xml = ElementTree.fromstring(r['arch'])
+        r['arch'] = Xml2Json.convert_element(xml)
+        return r
+    def transform_view(self, view_string, context = {}):
+        parser = ElementTree.iterparse(StringIO(view_string), events=("start", "end"))
+        root = None
+        for event, elem in parser:
+            if event == "start":
+                if root is None:
+                    root = elem
+                elem.attrib['CACA'] = '3'
+                # SEE http://pad.openerp.com/discoveries
+                # If @attrs is normalized in json by server, the eval should be replaced by simplejson.loads
+                attrs = eval(elem.attrib.get('attrs', '{}'))
+                if elem.attrib.has_key('states'):
+                    if not attrs.has_key('invisible'):
+                        attrs['invisible'] = []
+                    # This should be done by the server
+                    attrs['invisible'].append(('state', 'in', elem.attrib['states'].split(',')))
+                    del(elem.attrib['states'])
+                if attrs:
+                    elem.attrib['attrs'] = simplejson.dumps(attrs)
+
+                for a in ['invisible', 'readonly', 'required']:
+                    if elem.attrib.has_key(a):
+                        # In the XML we trust
+                        avalue = bool(eval(elem.attrib.get(a, 'False'), {'context': context}))
+                        if not avalue:
+                            del(elem.attrib[a])
+                        else:
+                            elem.attrib[a] = '1'
+                            if a == 'invisible' and elem.attrib.has_key('attrs'):
+                                del(elem.attrib['attrs'])
+        return root
+
+
+class FormView(View):
     _cp_path = "/base/formview"
 
     @openerpweb.jsonrequest
     def load(self, req, model, view_id):
-        m = req.session.model(model)
-        r = m.fields_view_get(view_id, 'form')
-        r["arch"] = Xml2Json.convert_to_structure(r["arch"])
-        return {'fields_view': r}
+        fields_view = self.fields_view_get(req.session, model, view_id, 'form')
+        return {'fields_view': fields_view}
 
 
-class ListView(openerpweb.Controller):
+class ListView(View):
     _cp_path = "/base/listview"
 
     @openerpweb.jsonrequest
     def load(self, req, model, view_id):
-        m = req.session.model(model)
-        r = m.fields_view_get(view_id, 'tree')
-        r["arch"] = Xml2Json.convert_to_structure(r["arch"])
-        return {'fields_view': r}
+        fields_view = self.fields_view_get(req.session, model, view_id, 'tree')
+        return {'fields_view': fields_view}
 
 
-class SearchView(openerpweb.Controller):
+class SearchView(View):
     _cp_path = "/base/searchview"
 
     @openerpweb.jsonrequest
     def load(self, req, model, view_id):
-        m = req.session.model(model)
-        r = m.fields_view_get(view_id, 'search')
-        r["arch"] = Xml2Json.convert_to_structure(r["arch"])
-        return {'fields_view': r}
+        fields_view = self.fields_view_get(req.session, model, view_id, 'search')
+        return {'fields_view': fields_view}
 
 
 class Action(openerpweb.Controller):
