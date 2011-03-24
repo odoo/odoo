@@ -2690,7 +2690,7 @@ class orm(orm_template):
                                         self._table, k)
                                 except Exception:
                                     msg = "WARNING: unable to set column %s of table %s not null !\n"\
-                                        "Try to re-run: openerp-server.py --update=module\n"\
+                                        "Try to re-run: openerp-server --update=module\n"\
                                         "If it doesn't work, update records and execute manually:\n"\
                                         "ALTER TABLE %s ALTER COLUMN %s SET NOT NULL"
                                     self.__logger.warn(msg, k, self._table, self._table, k)
