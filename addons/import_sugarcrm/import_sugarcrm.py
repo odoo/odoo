@@ -139,6 +139,21 @@ def get_lead_status(surgar_obj, cr, uid, sugar_val,context=None):
         stage_id = stage.id
     return stage_id
 
+def get_lead_state(surgar_obj, cr, uid, sugar_val,context=None):
+    if not context:
+        context = {}
+    state = ''
+    state_dict = {'status': #field in the sugarcrm database
+        { #Mapping of sugarcrm stage : openerp opportunity stage
+            'New' : 'draft',
+            'Assigned':'open',
+            'In Progress': 'open',
+            'Recycled': 'cancel',
+            'Dead': 'done'
+        },}
+    state = state_dict['status'].get(sugar_val['status'], '')
+    return state
+
 def get_opportunity_status(surgar_obj, cr, uid, sugar_val,context=None):
     if not context:
         context = {}
@@ -207,7 +222,28 @@ def get_shipping_address(sugar_obj,cr, uid, val, map_partner_address, context=No
     new_address_id = address_obj.create(cr,uid, dict_val)
     return new_address_id
 
-
+def get_user_address(sugar_obj, cr, uid, val, context=None):
+    address_obj = sugar_obj.pool.get('res.partner.address')
+    
+    map_user_address = {
+    'name': ['first_name', 'last_name'],
+    'city': 'address_city',
+#    'country_id.id': 'id(address_country)',
+#    'state_id.id': 'id(address_state)',
+    'street': 'address_street',
+    'zip': 'address_postalcode',
+    }
+    address_ids = address_obj.search(cr, uid, [('name', '=',val.get('first_name') +''+ val.get('last_name'))])
+    
+    fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_user_address)
+    dict_val = dict(zip(fields,datas))
+    
+    if address_ids:
+        address_obj.write(cr, uid, address_ids, dict_val)
+    else:        
+        new_address_id = address_obj.create(cr,uid, dict_val)
+        return new_address_id
+    
 def get_address(sugar_obj, cr, uid, val, context=None):
     map_partner_address={}
     address_id=[]
@@ -235,7 +271,7 @@ def get_address(sugar_obj, cr, uid, val, context=None):
 def import_partners(sugar_obj, cr, uid, context=None):
     if not context:
         context = {}
-    map_lead = {
+    map_partner = {
                 'id': 'id',
                 'name': 'name',
                 'website': 'website',
@@ -265,8 +301,47 @@ def import_partners(sugar_obj, cr, uid, context=None):
                     val['customer'] = True
                 else:
                     val['supplier'] = True
-                fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_lead)
+                fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_partner)
                 partner_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', context=context)
+
+
+def import_resources(sugar_obj, cr, uid, context=None):
+    if not context:
+        context = {}
+    map_resource = {'id' : 'user_hash',
+                    'name': ['first_name', 'last_name'],
+    }
+    resource_obj = sugar_obj.pool.get('resource.resource')
+    PortType, sessionid = sugar.login(context.get('username', ''), context.get('password', ''), context.get('url',''))
+    sugar_data = sugar.search(PortType, sessionid, 'Employees')
+    for val in sugar_data:
+        fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_resource)
+        resource_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', context=context)
+
+
+def import_employees(sugar_obj, cr, uid, context=None):
+    if not context:
+        context = {}
+    map_employee = {'id' : 'user_hash',
+                    'name': ['first_name', 'last_name'],
+                    'work_phone': 'phone_work',
+                    'mobile_phone':  'phone_mobile',
+                    'user_id/name': ['first_name', 'last_name'], 
+                    #'resource_id/id': 'resource_id/id', 
+                    'address_home_id/.id': 'address_home_id/.id',
+                    'notes': 'description',
+                    #TODO: Creation of Employee create problem.
+                 #   'coach_id/id': 'reports_to_id',
+#                    'job_id': 'job_id'
+    }
+    employee_obj = sugar_obj.pool.get('hr.employee')
+    PortType, sessionid = sugar.login(context.get('username', ''), context.get('password', ''), context.get('url',''))
+    sugar_data = sugar.search(PortType, sessionid, 'Employees')
+    for val in sugar_data:
+        address_id = get_user_address(sugar_obj, cr, uid, val, context)
+        val['address_home_id/.id'] = address_id
+        fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_employee)
+        employee_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', context=context)
 
     
 def import_leads(sugar_obj, cr, uid, context=None):
@@ -277,7 +352,7 @@ def import_leads(sugar_obj, cr, uid, context=None):
             'name': ['first_name', 'last_name'],
             'contact_name': ['first_name', 'last_name'],
             'description': 'description',
-            'partner_name': ['first_name', 'last_name'],
+            'partner_name': 'account_name',
             'email_from': 'email1',
             'phone': 'phone_work',
             'mobile': 'phone_mobile',
@@ -288,6 +363,7 @@ def import_leads(sugar_obj, cr, uid, context=None):
             'user_id/id' : 'assigned_user_id',
             'stage_id.id' : 'stage_id.id',
             'type' : 'type',
+            'state': 'state',
             }
         
     lead_obj = sugar_obj.pool.get('crm.lead')
@@ -297,6 +373,7 @@ def import_leads(sugar_obj, cr, uid, context=None):
         val['type'] = 'lead'
         stage_id = get_lead_status(sugar_obj, cr, uid, val, context)
         val['stage_id.id'] = stage_id
+        val['state'] = get_lead_state(sugar_obj, cr, uid, val,context)
         fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_lead)
         lead_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', context=context)
 
@@ -306,6 +383,9 @@ def import_opportunities(sugar_obj, cr, uid, context=None):
     map_opportunity = {'id' : 'id',
         'name': 'name',
         'probability': 'probability',
+        'partner_id/name': 'account_name',
+        'title_action': 'next_step',
+        'partner_address_id/name': 'account_name',
         'planned_revenue': 'amount_usdollar',
         'date_deadline':'date_closed',
         'user_id/id' : 'assigned_user_id',
@@ -323,11 +403,11 @@ def import_opportunities(sugar_obj, cr, uid, context=None):
         lead_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', context=context)
 
 MAP_FIELDS = {'Opportunities':  #Object Mapping name
-                    {'dependencies' : ['Users'],  #Object to import before this table
+                    {'dependencies' : ['Users', 'Accounts'],  #Object to import before this table
                      'process' : import_opportunities,
                      },
               'Leads':
-                    {'dependencies' : ['Users'],  #Object to import before this table
+                    {'dependencies' : ['Users', 'Accounts', 'Contacts'],  #Object to import before this table
                      'process' : import_leads,
                     },
               'Contacts':
@@ -343,10 +423,14 @@ MAP_FIELDS = {'Opportunities':  #Object Mapping name
                     {'dependencies' : [],
                      'process' : import_users,
                     },
-#              'Users_Addresses': 
-#                    {'dependencies' : [],
-#                     'process' : import_users_addresses,
-#                    },                     
+              'Employees': 
+                    {'dependencies' : ['Resources'],
+                     'process' : import_employees,
+                    },    
+              'Resources': 
+                    {'dependencies' : ['Users'],
+                     'process' : import_resources,
+                    },                                      
           }
 
 class import_sugarcrm(osv.osv):
@@ -361,6 +445,7 @@ class import_sugarcrm(osv.osv):
         'user': fields.boolean('User', help="If Users is checked, SugarCRM Users data imported in openerp crm-Opportunity form"),
         'contact': fields.boolean('Contacts', help="If Contacts is checked, SugarCRM Contacts data imported in openerp partner address form"),
         'account': fields.boolean('Accounts', help="If Accounts is checked, SugarCRM  Accounts data imported in openerp partner form"),
+        'employee': fields.boolean('Employee', help="If Employees is checked, SugarCRM Employees data imported in openerp partner employee form"),
         'username': fields.char('User Name', size=64),
         'password': fields.char('Password', size=24),
     }
@@ -369,7 +454,8 @@ class import_sugarcrm(osv.osv):
        'opportunity': True,
        'user' : True,
        'contact' : True,
-       'account' : True,       
+       'account' : True,
+        'employee' : True,        
     }
     
     def get_key(self, cr, uid, ids, context=None):
@@ -387,7 +473,9 @@ class import_sugarcrm(osv.osv):
             if current.contact:
                 key_list.append('Contacts')
             if current.account:
-                key_list.append('Accounts')     
+                key_list.append('Accounts') 
+            if current.employee:
+                key_list.append('Employees')       
                            
 
         return key_list
