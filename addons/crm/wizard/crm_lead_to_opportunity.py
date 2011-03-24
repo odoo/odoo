@@ -96,7 +96,9 @@ Leads Could not convert into Opportunity"))
 
     def _convert(self, cr, uid, ids, lead, partner_id, stage_ids, context=None):
         leads = self.pool.get('crm.lead')
-        address_id = self.pool.get('res.partner.address').search(cr, uid,
+        address_id = False
+        if partner_id:
+            address_id = self.pool.get('res.partner.address').search(cr, uid,
                                                                  [('partner_id', '=', partner_id)],
                                                                  order='create_date desc',
                                                                  limit=1)
@@ -132,7 +134,7 @@ Leads Could not convert into Opportunity"))
         """
         if not context:
             context = {}
-        
+
         record_id = context and context.get('active_ids') or False
         if not record_id:
             return {'type': 'ir.actions.act_window_close'}
@@ -170,7 +172,7 @@ Leads Could not convert into Opportunity"))
             partner_id = partner_ids and partner_ids[0] or data.partner_id.id
             self._convert(cr, uid, ids, lead, partner_id, stage_ids, context=context)
             #If we convert in mass, don't merge if there is no other opportunity but no warning
-            if data.name == 'merge' and (len(data.opportunity_ids) > 1 or not context.get('mass_convert') ): 
+            if data.name == 'merge' and (len(data.opportunity_ids) > 1 or not context.get('mass_convert') ):
                 merge_obj = self.pool.get('crm.merge.opportunity')
                 self.write(cr, uid, ids, {'opportunity_ids' : [(6,0, [data.opportunity_ids[0].id])]}, context=context)
                 context.update({'lead_ids' : record_id})
@@ -197,49 +199,49 @@ class crm_lead2opportunity_mass_convert(osv.osv_memory):
     _name = 'crm.lead2opportunity.partner.mass'
     _description = 'Mass Lead To Opportunity Partner'
     _inherit = 'crm.lead2opportunity.partner'
-    
-    
+
+
     _columns = {
             'user_ids':  fields.many2many('res.users', 'mass_convert_rel', 'user_id', 'wizard_id', 'Salesmans'),
             'section_id': fields.many2one('crm.case.section', 'Sales Team'),
-              
+
     }
-    
+
     def mass_convert(self, cr, uid, ids, context=None):
         lead_obj = self.pool.get('crm.lead')
         if not context:
             context = {}
-            
+
         active_ids = context.get('active_ids')
         data = self.browse(cr, uid, ids, context=context)[0]
-        
+
         salesteam = data.section_id and data.section_id.id
         if data.user_ids:
             salesmans = map(lambda x : x.id, data.user_ids)
             index = 0
         else:
             salesmans = False
-        
+
         for lead_id in active_ids:
             value = {}
             if salesteam:
-                value['section_id'] = salesteam                
+                value['section_id'] = salesteam
             if salesmans:
                 value['user_id'] = salesmans[index]
                 index += 1
                 index = index < len(salesmans) and index or 0
             if value:
                 lead_obj.write(cr, uid, [lead_id], value, context=context)
-                
+
             context['active_ids'] = [lead_id]
             value = self.default_get(cr, uid, ['partner_id', 'opportunity_ids'], context=context)
             value['opportunity_ids'] = [(6, 0, value['opportunity_ids'])]
             self.write(cr, uid, ids, value, context=context)
-            
+
             self.action_apply(cr, uid, ids, context=context)
-            
-            
-                
+
+
+
         models_data = self.pool.get('ir.model.data')
         result = models_data._get_id(cr, uid, 'crm', 'view_crm_case_opportunities_filter')
         opportunity_view_search = models_data.browse(cr, uid, result, context=context).res_id
@@ -253,6 +255,6 @@ class crm_lead2opportunity_mass_convert(osv.osv_memory):
             'type': 'ir.actions.act_window',
             'search_view_id': opportunity_view_search,
         }
-    
+
 crm_lead2opportunity_mass_convert()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
