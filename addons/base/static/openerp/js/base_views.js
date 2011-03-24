@@ -657,12 +657,20 @@ openerp.base.search.Field = openerp.base.search.Input.extend({
         this.filters.start();
     },
     get_context: function () {
-        if (!this.attrs.context) {
+        var val = this.get_value();
+        // A field needs a value to be "active", and a context to send when
+        // active
+        if (!(val && this.attrs.context)) {
             return;
         }
         return this.attrs.context;
     },
     get_domain: function () {
+        var val = this.get_value();
+        if(!val) {
+            return;
+        }
+
         if (!this.attrs['filter_domain']) {
             return [
                 this.attrs.name,
