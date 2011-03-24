@@ -71,7 +71,10 @@ class synchronize_google_contact(osv.osv_memory):
         if gd_client:
             groups = gd_client.GetGroups(q=query)
             for grp in groups.entry:
-                res.append((grp.id.text, grp.title.text))
+                title = grp.title.text
+                if 'System Group' in grp.title.text:
+                    title = grp.title.text.split(': ')[1]
+                res.append((grp.id.text, title))
         res.append(('all','All Groups'))
         return res
 
