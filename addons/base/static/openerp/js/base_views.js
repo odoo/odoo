@@ -437,6 +437,9 @@ openerp.base.SearchView = openerp.base.Controller.extend({
             case 'boolean':
                 return new openerp.base.search.BooleanField(
                     item, field, this);
+            case 'integer':
+                return new openerp.base.search.IntegerField(
+                    item, field, this);
             case 'float':
                 return new openerp.base.search.FloatField(
                     item, field, this);
@@ -724,6 +727,17 @@ openerp.base.search.BooleanField = openerp.base.search.Field.extend({
             case 'true': return true;
             default: return null;
         }
+    }
+});
+openerp.base.search.IntegerField = openerp.base.search.Field.extend({
+    get_value: function () {
+        var val = parseInt(this.$element.val());
+        var check = Number(this.$element.val());
+        if (isNaN(check) || val !== check) {
+            throw new openerp.base.search.Invalid(
+                this.attrs.name, this.$element.val(), "not a valid integer");
+        }
+        return val;
     }
 });
 openerp.base.search.FloatField = openerp.base.search.Field.extend({
