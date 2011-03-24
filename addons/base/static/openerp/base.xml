@@ -206,9 +206,9 @@
     </div>
 </t>
 <t t-name="WidgetLabel">
-    <label t-att-for="widget.for.element_id" t-att-title="widget.for.help" style="display: block; text-align: right;" t-att-ondblclick="'console.log(\'' + widget.for.element_id + '\', openerp.screen.' + widget.for.element_id + ')'">
-        <t t-esc="widget.for.string"/>
-        <span t-if="widget.for.help">?</span>
+    <label t-att-for="widget['for'].element_id" t-att-title="widget['for'].help" style="display: block; text-align: right;" t-att-ondblclick="'console.log(\'' + widget['for'].element_id + '\', openerp.screen.' + widget['for'].element_id + ')'">
+        <t t-esc="widget['for'].string"/>
+        <span t-if="widget['for'].help">?</span>
         :
     </label>
 </t>
