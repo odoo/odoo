@@ -284,7 +284,7 @@ class hr_holidays(osv.osv):
         obj_emp = self.pool.get('hr.employee')
         ids2 = obj_emp.search(cr, uid, [('user_id', '=', uid)])
         manager = ids2 and ids2[0] or False
-        self.write(cr, uid, ids, {'state': 'refuse', 'manager_id': manager})
+        self.write(cr, uid, ids, {'state': 'refuse'})
         self.holidays_cancel(cr, uid, ids)
         return True
 
