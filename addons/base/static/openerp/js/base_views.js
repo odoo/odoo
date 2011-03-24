@@ -682,6 +682,7 @@ openerp.base.search.Field = openerp.base.search.Input.extend({
     }
 });
 openerp.base.search.CharField = openerp.base.search.Field.extend({
+    default_operator: 'ilike',
     get_value: function () {
         return this.$element.val();
     }
