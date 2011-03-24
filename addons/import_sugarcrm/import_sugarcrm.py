@@ -260,13 +260,13 @@ def import_partners(sugar_obj, cr, uid, context=None):
                 for partner in partner_obj.browse(cr, uid, partner_ids):
                     address_obj.write(cr,uid,res_address.id,{'partner_id':partner.id})
             else:
-                val['address/.id'] = res_address
+                val['address/.id'] = res_address.id
                 if val.get('account_type') in  ('customer', 'prospect', 'other'):
                     val['customer'] = True
                 else:
                     val['supplier'] = True
-                    fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_lead)
-                    partner_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', context=context)
+                fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_lead)
+                partner_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', context=context)
 
     
 def import_leads(sugar_obj, cr, uid, context=None):
