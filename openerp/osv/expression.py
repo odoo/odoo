@@ -23,6 +23,9 @@
 from openerp.tools import flatten, reverse_enumerate
 import fields
 
+NOT_OPERATOR = '!'
+OR_OPERATOR = '|'
+AND_OPERATOR = '&'
 
 class expression(object):
     """
@@ -32,16 +35,42 @@ class expression(object):
     For more info: http://christophe-simonis-at-tiny.blogspot.com/2008/08/new-new-domain-notation.html
     """
 
-    def _is_operator(self, element):
-        return isinstance(element, (str, unicode)) and element in ['&', '|', '!']
+    @classmethod
+    def _is_operator(cls, element):
+        return isinstance(element, (str, unicode)) and element in [AND_OPERATOR, OR_OPERATOR, NOT_OPERATOR]
 
-    def _is_leaf(self, element, internal=False):
+    @classmethod
+    def _is_leaf(cls, element, internal=False):
         OPS = ('=', '!=', '<>', '<=', '<', '>', '>=', '=?', '=like', '=ilike', 'like', 'not like', 'ilike', 'not ilike', 'in', 'not in', 'child_of')
         INTERNAL_OPS = OPS + ('inselect',)
         return (isinstance(element, tuple) or isinstance(element, list)) \
            and len(element) == 3 \
            and (((not internal) and element[1] in OPS) \
                 or (internal and element[1] in INTERNAL_OPS))
+
+    @classmethod
+    def normalize_domain(cls, domain_expr):
+        """Returns a normalized version of ``domain_expr``, where all implicit '&' operators
+           have been made explicit. One property of normalized domain expressions is that they
+           can be easily combined together as if they were single domain components.
+        """
+        assert isinstance(domain_expr, (list, tuple)), "Domain to normalize must have a 'domain' form: a list or tuple of domain components"
+        missing_operators = -1
+        for item in domain_expr:
+            if cls._is_operator(item):
+                if item != NOT_OPERATOR:
+                    missing_operators -= 1
+            else:
+                missing_operators += 1
+        return [AND_OPERATOR] * missing_operators + domain_expr
+
+    def normalize(self):
+        """Make this expression normalized, i.e. change it so that all implicit '&'
+           operator become explicit. If the expression had already been parsed,
+           there is no need to do it again.
+        """
+        self.__exp = expression.normalize_domain(self.__exp)
+        return self
 
     def __execute_recursive_in(self, cr, s, f, w, ids, op, type):
         # todo: merge into parent query as sub-query
@@ -92,8 +121,8 @@ class expression(object):
                 doms = []
                 for o in table.browse(cr, uid, ids, context=context):
                     if doms:
-                        doms.insert(0, '|')
-                    doms += ['&', ('parent_left', '<', o.parent_right), ('parent_left', '>=', o.parent_left)]
+                        doms.insert(0, OR_OPERATOR)
+                    doms += [AND_OPERATOR, ('parent_left', '<', o.parent_right), ('parent_left', '>=', o.parent_left)]
                 if prefix:
                     return [(left, 'in', table.search(cr, uid, doms, context=context))]
                 return doms
@@ -172,7 +201,7 @@ class expression(object):
                     else:
                         # we assume that the expression is valid
                         # we create a dummy leaf for forcing the parsing of the resulting expression
-                        self.__exp[i] = '&'
+                        self.__exp[i] = AND_OPERATOR
                         self.__exp.insert(i + 1, self.__DUMMY_LEAF)
                         for j, se in enumerate(subexp):
                             self.__exp.insert(i + 2 + j, se)
@@ -387,7 +416,6 @@ class expression(object):
                              ]
 
                     self.__exp[i] = ('id', 'inselect', (query1, query2))
-
         return self
 
     def __leaf_to_sql(self, leaf, table):
@@ -491,10 +519,10 @@ class expression(object):
                 params.insert(0, p)
                 stack.append(q)
             else:
-                if e == '!':
+                if e == NOT_OPERATOR:
                     stack.append('(NOT (%s))' % (stack.pop(),))
                 else:
-                    ops = {'&': ' AND ', '|': ' OR '}
+                    ops = {AND_OPERATOR: ' AND ', OR_OPERATOR: ' OR '}
                     q1 = stack.pop()
                     q2 = stack.pop()
                     stack.append('(%s %s %s)' % (q1, ops[e], q2,))

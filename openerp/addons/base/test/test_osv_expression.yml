@@ -110,4 +110,16 @@
         res_ids = self.search(cr, uid, [('company_id.partner_id', 'not in', [])])
         res_ids.sort()
         assert res_ids == all_ids, "Searching against empty set failed, returns %r" % res_ids
+-
+    Verify that normalize_domain() works.
+-
+    !python {model: res.partner}: |
+        from osv.expression import expression
+        norm_domain = domain = ['&',(1,'=',1),('a','=','b')]
+        assert norm_domain == expression.normalize_domain(domain), "Normalized domains should be left untouched"
+        domain = [('x','in',['y','z']),('a.v','=','e'),'|','|',('a','=','b'),'!',('c','>','d'),('e','!=','f'),('g','=','h')]
+        norm_domain = ['&','&','&'] + domain
+        assert norm_domain == expression.normalize_domain(domain), "Non-normalized domains should be properly normalized"
+
+
 

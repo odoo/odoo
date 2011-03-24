@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from osv import fields,osv
+from osv import fields, osv, expression
 import time
 from operator import itemgetter
 from functools import partial
@@ -37,7 +37,7 @@ class ir_rule(osv.osv):
             if rule.domain_force:
                 eval_user_data = {'user': self.pool.get('res.users').browse(cr, 1, uid),
                                   'time':time}
-                res[rule.id] = eval(rule.domain_force, eval_user_data)
+                res[rule.id] = expression.expression.normalize_domain(eval(rule.domain_force, eval_user_data))
             else:
                 res[rule.id] = []
         return res
@@ -91,7 +91,7 @@ class ir_rule(osv.osv):
                 dom += rule.domain
                 count += 1
         if count:
-            return ['&'] * (count-1) + dom
+            return [expression.AND_OPERATOR] * (count-1) + dom
         return []
 
     @tools.cache()
@@ -127,9 +127,9 @@ class ir_rule(osv.osv):
                     group_domains += group_domain
                     count += 1
             if count and global_domain:
-                return ['&'] + global_domain + ['|'] * (count-1) + group_domains
+                return [expression.AND_OPERATOR] + global_domain + [expression.OR_OPERATOR] * (count-1) + group_domains
             if count:
-                return ['|'] * (count-1) + group_domains
+                return [expression.OR_OPERATOR] * (count-1) + group_domains
             return global_domain
         return []
 
