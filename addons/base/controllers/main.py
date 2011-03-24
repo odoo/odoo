@@ -156,8 +156,10 @@ class Menu(openerpweb.Controller):
 
     @openerpweb.jsonrequest
     def action(self, req, menu_id):
+        print "QUERY"
         m = req.session.model('ir.values')
         r = m.get('action', 'tree_but_open', [('ir.ui.menu', menu_id)], False, {})
+        print r
         res = {"action": r}
         return res
 

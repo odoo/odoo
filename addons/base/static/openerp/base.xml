@@ -124,6 +124,21 @@
         </t>
     </div>
 </t>
+<t t-name="ViewManager">
+    <!-- TODO prefix id with the element_id of the controller t-attf-id="#{prefix}_localid" -->
+    <div style="text-align:right;">
+        <!--
+            <input t-foreach="views" t-as="view" t-att-id="" t-att-value="view[1]"/>
+        -->
+        <t t-foreach="views" t-as="view">
+            <input t-attf-id="#{prefix}_button_#{view[1]}" type="button" t-att-value="view[1]"/>
+        </t>
+    </div>
+    <div t-attf-id="#{prefix}_search"></div>
+    <t t-foreach="views" t-as="view">
+        <div t-attf-id="#{prefix}_view_#{view[1]}"></div>
+    </t>
+</t>
 <t t-name="ListView">
     <!--
     <h3><t t-esc="fields_view.arch['@string']"/></h3>
@@ -341,15 +356,5 @@
             <t t-set="next_node_type" t-value="node_all[node_index + 1] ? node_all[node_index + 1].tag : ''"/>
         </t>
     </t>
-</t>
-<t t-name="Action">
-    <!-- TODO prefix id with the element_id of the controller t-attf-id="#{prefix}_localid" -->
-    <div style="text-align:right;">
-        <input id="mode_list" type="button" value="ListView"/>
-        <input id="mode_form" type="button" value="FormView"/>
-    </div>
-    <div id="oe_action_search" ></div>
-    <div id="oe_action_list" ></div>
-    <div id="oe_action_form" ></div>
 </t>
 </templates>

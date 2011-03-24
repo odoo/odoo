@@ -6,12 +6,28 @@ openerp.base$views = function(openerp) {
 
 // process all kind of actions
 openerp.base.ActionManager = openerp.base.Controller.extend({
-// This controller should be used for one2many also or not ?
-// to replace Action
+    init: function(session, element_id) {
+        this._super(session, element_id);
+        this.action = null;
+        this.viewmanager = null;
+    },
+    /**
+     * Process an action
+     * Supported actions: act_window
+     */
+    do_action: function(action) {
+        // instantiate the right controllers by understanding the action
+        this.action = action;
+        if(action.type == "ir.actions.act_window") {
+            this.viewmanager = new openerp.base.ViewManager(this.session,this.element_id);
+            this.viewmanager.do_action_window(action);
+            this.viewmanager.start();
+        }
+    },
 });
 
 // This will be ViewManager Abstract/Common
-openerp.base.Action =  openerp.base.Controller.extend({
+openerp.base.ViewManager =  openerp.base.Controller.extend({
     init: function(session, element_id) {
         this._super(session, element_id);
         this.action = null;
@@ -19,79 +35,56 @@ openerp.base.Action =  openerp.base.Controller.extend({
         this.searchview_id = false;
         this.searchview = null;
         this.search_visible = true;
-
-        // this will be changed into
         // this.views = { "list": { "view_id":1234, "controller": instance} }
-        this.listview_id = false;
-        this.listview = null;
-        this.formview_id = false;
-        this.formview = null;
+        this.views = {};
     },
     start: function() {
-        this.$element.html(QWeb.render("Action", {"prefix":this.element_id}));
-        this.$element.find("#mode_list").bind('click',this.on_mode_list);
-        this.$element.find("#mode_form").bind('click',this.on_mode_form);
-        this.on_mode_list();
     },
-    // this will be changed into on_view_switch(kind_of_view)
-    on_mode_list: function() {
-        $("#oe_action_form").hide();
-        $("#oe_action_search").show();
-        $("#oe_action_list").show();
-    },
-    on_mode_form: function() {
-        $("#oe_action_form").show();
-        $("#oe_action_search").hide();
-        $("#oe_action_list").hide();
-    },
-    // This will move to actionmanager
-    do_action: function(action) {
-        // instantiate the right controllers by understanding the action
-        this.action = action;
-        this.log(action);
-//        debugger;
-        //this.log(action);
-        if(action.type == "ir.actions.act_window") {
-            this.do_action_window(action);
+    on_mode_switch: function(view_type) {
+        for (var i in this.views) { 
+           if(i == view_type) {
+               this.views.i.controller.$element.show();
+           } else {
+               this.views.i.controller.$element.hide();
+           }
         }
     },
-    // this will be renamed setup_view_manager_from_an_actwindow and will setup this.views
     do_action_window: function(action) {
-        // this will move into set_dataset()
+        var self = this;
+        var prefix_id = "#" + this.element_id;
+        this.action = action;
         this.dataset = new openerp.base.DataSet(this.session, action.res_model);
         this.dataset.start();
 
+        this.$element.html(QWeb.render("ViewManager", {"prefix": this.element_id, views: action.views}));
+
         this.searchview_id = false;
-        if(this.listview && action.search_view_id) {
+        if(this.search_visible && action.search_view_id) {
             this.searchview_id = action.search_view_id[0];
+            this.searchview = new openerp.base.SearchView(this.session, this.element_id + "_search", this.dataset, this.searchview_id);
+            this.searchview.start();
         }
-        this.searchview = new openerp.base.SearchView(this.session, "oe_action_search", this.dataset, this.searchview_id);
-        this.searchview.start();
-
-        // Those two will be a foreach kind of view
-
-        // Locate first tree view
-        this.listview_id = false;
         for(var i = 0; i < action.views.length; i++)  {
+            var view_id, controller;
+            view_id = action.views[i][0];
             if(action.views[i][1] == "tree") {
-                this.listview_id = action.views[i][0];
-                break;
+                controller = new openerp.base.ListView(this.session, this.element_id + "_view_tree", this.dataset, view_id);
+                controller.start();
+                this.views.tree = { view_id: view_id, controller: controller };
+                this.$element.find(prefix_id + "_button_tree").bind('click',function(){
+                    this.on_mode_switch("tree");
+                });
+            } else if(action.views[i][1] == "form") {
+                controller = new openerp.base.FormView(this.session, this.element_id + "_view_form", this.dataset, view_id);
+                controller.start();
+                this.views.form = { view_id: view_id, controller: controller };
+                this.$element.find(prefix_id + "_button_form").bind('click',function(){
+                    this.on_mode_switch("form");
+                });
             }
         }
-        this.listview = new openerp.base.ListView(this.session, "oe_action_list", this.dataset, this.listview_id);
-        this.listview.start();
-
-        // Locate first form view
-        this.formview_id = false;
-        for(var j = 0; j < action.views.length; j++)  {
-            if(action.views[j][1] == "form") {
-                this.formview_id = action.views[j][0];
-                break;
-            }
-        }
-        this.formview = new openerp.base.FormView(this.session, "oe_action_form", this.dataset, this.formview_id);
-        this.formview.start();
-
+        // switch to the first one in sequence
+        this.on_mode_switch("tree");
     },
     // create when root, also add to parent when o2m
     on_create: function() {
