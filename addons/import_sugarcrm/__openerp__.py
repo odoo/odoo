@@ -23,7 +23,7 @@
     'name': 'Import SugarCRM Data into OpenERP Module.',
     'version': '1.0',
     'category': 'Generic Modules',
-    'description': """This Module Import SugarCRM "Leads", "Opportunity", "Accounts" and "contacts" Data into OpenERP Module.""",
+    'description': """This Module Import SugarCRM "Leads", "Opportunities", and "Users" Data into OpenERP Module.""",
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['crm'],

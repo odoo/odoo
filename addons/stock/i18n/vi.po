@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-15 05:04+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-03-18 04:41+0000\n"
+"X-Generator: Launchpad (build 12559)\n"
 
 #. module: stock
 #: field:product.product,track_outgoing:0
@@ -727,12 +727,6 @@ msgid "Location Address"
 msgstr "Location Address"
 
 #. module: stock
-#: code:addons/stock/stock.py:2348
-#, python-format
-msgid "is consumed with"
-msgstr ""
-
-#. module: stock
 #: help:stock.move,prodlot_id:0
 msgid "Production lot is used to put a serial number on the production"
 msgstr "Production lot is used to put a serial number on the production"
@@ -851,6 +845,12 @@ msgstr "Urgent"
 #: view:stock.picking:0
 #: report:stock.picking.list:0
 msgid "Journal"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/stock.py:1315
+#, python-format
+msgid "is scheduled %s."
 msgstr ""
 
 #. module: stock
@@ -1956,12 +1956,6 @@ msgstr ""
 #: selection:stock.location,chained_auto_packing:0
 msgid "Automatic No Step Added"
 msgstr "Automatic No Step Added"
-
-#. module: stock
-#: code:addons/stock/stock.py:2348
-#, python-format
-msgid "Product "
-msgstr "Sản phẩm "
 
 #. module: stock
 #: view:stock.location.product:0
@@ -3273,9 +3267,9 @@ msgid "Product Category"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/wizard/stock_change_product_qty.py:74
+#: code:addons/stock/wizard/stock_change_product_qty.py:88
 #, python-format
-msgid "INV: "
+msgid "INV: %s"
 msgstr ""
 
 #. module: stock
@@ -3576,12 +3570,6 @@ msgid "Unplanned Qty"
 msgstr "Unplanned Qty"
 
 #. module: stock
-#: code:addons/stock/stock.py:1318
-#, python-format
-msgid "is scheduled"
-msgstr ""
-
-#. module: stock
 #: field:stock.location,chained_company_id:0
 msgid "Chained Company"
 msgstr ""
@@ -3722,10 +3710,16 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:2348
+#: code:addons/stock/stock.py:2386
 #, python-format
-msgid "quantity."
-msgstr "số lượng"
+msgid "Product  '%s' is consumed with '%s' quantity."
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/stock.py:2595
+#, python-format
+msgid "Inventory '%s' is done."
+msgstr ""
 
 #. module: stock
 #: constraint:stock.move:0
@@ -4893,8 +4887,16 @@ msgstr ""
 #~ msgid "Size of the field can never be less than 1 !"
 #~ msgstr "Độ dài trường dữ liệu không thể nhỏ hơn 1"
 
+#, python-format
+#~ msgid "quantity."
+#~ msgstr "số lượng"
+
 #~ msgid "Serial Number"
 #~ msgstr "Số xê-ri"
 
 #~ msgid "Error! You can not create recursive companies."
 #~ msgstr "Lỗi ! Bạn không thể tạo các công ty đệ quy."
+
+#, python-format
+#~ msgid "Product "
+#~ msgstr "Sản phẩm "

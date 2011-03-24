@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-15 05:22+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-03-18 04:51+0000\n"
+"X-Generator: Launchpad (build 12559)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -723,12 +723,6 @@ msgstr "Шалгах"
 #: field:account.partner.reconcile.process,today_reconciled:0
 msgid "Partners Reconciled Today"
 msgstr "Өнөөдөр төлбөр барагдсан харилцагч"
-
-#. module: account
-#: code:addons/account/account_bank_statement.py:306
-#, python-format
-msgid "The statement balance is incorrect !\n"
-msgstr "Үлдэгдэл тохирохгүй байна !\n"
 
 #. module: account
 #: selection:account.payment.term.line,value:0
@@ -2622,12 +2616,12 @@ msgid "August"
 msgstr "8 сар"
 
 #. module: account
-#: code:addons/account/account_bank_statement.py:307
+#: code:addons/account/account_bank_statement.py:306
 #, python-format
 msgid ""
+"The statement balance is incorrect !\n"
 "The expected balance (%.2f) is different than the computed one. (%.2f)"
 msgstr ""
-"Бодит үлдэгдэл (%.2f) нь тооцоолсон үлдэгдлээс ялгаатай байна. (%.2f)"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_paymentreconcile0
@@ -2875,6 +2869,12 @@ msgstr "Татварын зарлалтын суурь данс."
 #: selection:account.entries.report,type:0
 msgid "View"
 msgstr "Харах"
+
+#. module: account
+#: code:addons/account/account.py:2951
+#, python-format
+msgid "BNK%s"
+msgstr ""
 
 #. module: account
 #: code:addons/account/account.py:2906
@@ -4284,12 +4284,6 @@ msgid "Account Balance -"
 msgstr "Дансны тэнцэл-"
 
 #. module: account
-#: code:addons/account/invoice.py:989
-#, python-format
-msgid "Invoice "
-msgstr "Нэхэмжлэл "
-
-#. module: account
 #: field:account.automatic.reconcile,date1:0
 msgid "Starting Date"
 msgstr "Эхлэх огноо"
@@ -5596,10 +5590,10 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/invoice.py:989
+#: code:addons/account/invoice.py:997
 #, python-format
-msgid "is validated."
-msgstr "батлагдсан."
+msgid "Invoice  '%s' is validated."
+msgstr ""
 
 #. module: account
 #: view:account.chart.template:0
@@ -11185,6 +11179,12 @@ msgstr ""
 #~ msgstr ""
 #~ "Кассын ордер нь танд бэлэн мөнгөний журналд гүйлгээ удирдах боломж олгоно."
 
+#, python-format
+#~ msgid ""
+#~ "The expected balance (%.2f) is different than the computed one. (%.2f)"
+#~ msgstr ""
+#~ "Бодит үлдэгдэл (%.2f) нь тооцоолсон үлдэгдлээс ялгаатай байна. (%.2f)"
+
 #~ msgid ""
 #~ "Supplier Invoices allows you to enter and manage invoices issued by your "
 #~ "suppliers. OpenERP generates draft of supplier invoices automatically so "
@@ -11215,6 +11215,10 @@ msgstr ""
 #~ msgid "Sale Tax"
 #~ msgstr "Борлуулалтын татвар"
 
+#, python-format
+#~ msgid "Invoice "
+#~ msgstr "Нэхэмжлэл "
+
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Үйлдлийн тодорхойлолтод буруу моделийн нэр байна."
 
@@ -11223,6 +11227,10 @@ msgstr ""
 
 #~ msgid "Please select periods."
 #~ msgstr "Мөчлөгөө сонгоно уу."
+
+#, python-format
+#~ msgid "The statement balance is incorrect !\n"
+#~ msgstr "Үлдэгдэл тохирохгүй байна !\n"
 
 #~ msgid ""
 #~ "A bank statement is a summary of all financial transactions occurring over a "
@@ -11235,6 +11243,10 @@ msgstr ""
 #~ "бусад бүх төрлийн санхүүгийн мөнгөн гүйлгээг хураангуйлсан бүртгэл юм. "
 #~ "Эхлээд нээлтийн болон хаалтийн үлдэгдлээ оруулаад бүх гүйлгээнүүдээ шивж "
 #~ "оруулна."
+
+#, python-format
+#~ msgid "is validated."
+#~ msgstr "батлагдсан."
 
 #~ msgid "Treasory Analysis"
 #~ msgstr "Сан хөмрөгийн анализ"

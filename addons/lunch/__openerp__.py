@@ -23,8 +23,10 @@
     "name": "Lunch Module",
     "author": "OpenERP SA",
     "Description": """
-    The lunch module is for keeping record of the order placed and payment of the orders.
-    The products are defined under categories and the payment records are maintained user wise
+    The lunch module is for keeping a record of the order placed and payment of the orders.
+    =======================================================================================
+
+    The products are defined under categories and the payment records are maintained user-wise.
     Every user has a cashbox which keeps track of the amount paid for a particular order.
 
     """,
@@ -52,6 +54,7 @@
     "test": ['test/test_lunch.yml', 'test/lunch_report.yml'],
     "installable": True,
     "certificate" : "001292377792581874189",
+    'images': ['images/cash_moves.jpeg','images/lunch_orders.jpeg','images/products.jpeg'],
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

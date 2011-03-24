@@ -386,9 +386,10 @@ class mrp_bom_revision(osv.osv):
 mrp_bom_revision()
 
 def rounding(f, r):
+    import math
     if not r:
         return f
-    return round(f / r) * r
+    return math.ceil(f / r) * r
 
 class mrp_production(osv.osv):
     """

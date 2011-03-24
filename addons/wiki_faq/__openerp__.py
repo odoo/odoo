@@ -22,8 +22,10 @@
 {
     'name': 'Document Management - Wiki - FAQ',
     'version': '1.0',
-    'category': 'Generic Modules/Others',
-    'description': """This module provides a wiki FAQ Template
+    'category': 'Tools',
+    'description': """
+This module provides a Wiki FAQ Template.
+=========================================
     """,
     'author': 'OpenERP SA',
     'website': 'http://openerp.com',
@@ -34,5 +36,6 @@
     'installable': True,
     'active': False,
     'certificate' : '00475023941677743389',
+    'images': ['images/wiki_groups_internal_faq.jpeg','images/wiki_pages_internal_faq.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -63,8 +63,8 @@ class project_task_delegate(osv.osv_memory):
             if task_name.startswith(_('CHECK: ')):
                 newname = str(task_name).replace(_('CHECK: '), '')
             else:
-                newname = task_name or ''
-            prefix = _('CHECK: ') + newname
+                newname = tools.ustr(task_name or '')
+            prefix = _('CHECK: %s') % newname
             res.update({'prefix': prefix})
         if 'new_task_description' in fields:
             res.update({'new_task_description': task.description})

@@ -23,17 +23,20 @@
     "name" : "Human Resources Evaluation",
     "version": "0.1",
     "author": "OpenERP SA",
-    "category": "Generic Modules/Human Resources",
+    "category": "Human Resources",
     "website": "http://www.openerp.com",
+    "images": ["images/hr_evaluation_analysis.jpeg","images/hr_evaluation.jpeg"],
     "depends": ["hr",'hr_recruitment','survey'],
     "description": """
-          Ability to create employees evaluation.
-          An evaluation can be created by employee for subordinates,
-          juniors as well as his manager.The evaluation is done under a plan
-          in which various surveys can be created and it can be defined which
-          level of employee hierarchy fills what and final review and evaluation
-          is done by the manager.Every evaluation filled by the employees can be viewed
-          in the form of.Implements a dashboard for My Current Evaluations
+Ability to create employees evaluation.
+=======================================
+
+An evaluation can be created by employee for subordinates,
+juniors as well as his manager.The evaluation is done under a plan
+in which various surveys can be created and it can be defined which
+level of employee hierarchy fills what and final review and evaluation
+is done by the manager.Every evaluation filled by the employees can be viewed
+in the form of pdf file. Implements a dashboard for My Current Evaluations
          """,
     "init_xml": [],
     "demo_xml": ["hr_evaluation_demo.xml",

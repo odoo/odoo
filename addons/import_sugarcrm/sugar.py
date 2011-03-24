@@ -29,10 +29,10 @@ import sys;
 
 class LoginError(Exception): pass
 
-def login(username, password):
+def login(username, password, url):
     loc = sugarsoapLocator()
 
-    portType = loc.getsugarsoapPortType()
+    portType = loc.getsugarsoapPortType(url)
     request = loginRequest()
     uauth = ns0.user_auth_Def(request)
     request._user_auth = uauth
