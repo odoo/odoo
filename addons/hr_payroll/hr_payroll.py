@@ -160,7 +160,7 @@ class payroll_register(osv.osv):
             ('done','Paid Salary'),
             ('cancel','Reject'),
         ],'State', select=True, readonly=True),
-        'active':fields.boolean('Active', required=False),
+        'active':fields.boolean('Active', required=False, help="If the active field is set to false, it will allow you to hide the payroll register without removing it."),
         'company_id':fields.many2one('res.company', 'Company', required=False),
 #        'grows': fields.function(_calculate, method=True, store=True, multi='dc', string='Gross Salary', type='float', digits=(16, 4)),
 #        'net': fields.function(_calculate, method=True, store=True, multi='dc', string='Net Salary', digits=(16, 4)),
@@ -1040,10 +1040,10 @@ class hr_payslip(osv.osv):
         update['value'].update({
 #            'struct_id': function,
             'number': number,
-            'basic_amount': round(basic),
-            'basic_before_leaves': round(basic),
-            'total_pay': round(basic) + total,
-            'name':'Salary Slip of %s for %s' % (employee_id.name, tools.ustr(ttyme.strftime('%B-%Y'))),
+            'basic_amount': basic,
+            'basic_before_leaves': basic,
+            'total_pay': basic + total,
+            'name': 'Salary Slip of %s for %s' % (employee_id.name, tools.ustr(ttyme.strftime('%B-%Y'))),
             'contract_id': contract.id,
             'company_id': employee_id.company_id.id
         })
@@ -1168,7 +1168,7 @@ class hr_payslip(osv.osv):
                         
         update['value'].update({
             'basic_amount': basic,
-            'basic_before_leaves': round(basic_before_leaves),
+            'basic_before_leaves': basic_before_leaves,
             'total_pay': total_before_leaves + total,
             'leaves': total,
             'holiday_days': leave,
@@ -1269,7 +1269,7 @@ class hr_salary_rule(osv.osv):
         'computational_expression':fields.text('Computational Expression', required=True, readonly=False, help='This will use to computer the % fields values, in general its on basic, but You can use all heads code field in small letter as a variable name i.e. hra, ma, lta, etc...., also you can use, static varible basic'),
         'conditions':fields.char('Condition', size=1024, required=True, readonly=False, help='Applied this head for calculation if condition is true'),
         'sequence': fields.integer('Sequence', required=True, help='Use to arrange calculation sequence'),
-        'active':fields.boolean('Active'),
+        'active':fields.boolean('Active', help="If the active field is set to false, it will allow you to hide the salary rule without removing it."),
         'python_compute':fields.text('Python Code'),
         'display_child_rules': fields.boolean('Display Child Rules', help="Used for the display of Child Rules on payslip"),
         'amt_type':fields.selection([
@@ -1358,7 +1358,7 @@ class hr_employee(osv.osv):
     _columns = {
 #        'line_ids':fields.one2many('hr.payslip.line', 'employee_id', 'Salary Structure', required=False),
         'slip_ids':fields.one2many('hr.payslip', 'employee_id', 'Payslips', required=False, readonly=True),
-        'basic': fields.function(_calculate_basic, method=True, multi='dc', type='float', string='Basic Salary', digits_compute=dp.get_precision('Account')),
+        'basic': fields.function(_calculate_basic, method=True, multi='dc', type='float', string='Basic Salary', digits_compute=dp.get_precision('Account'), help="Sum of all current contract's wage of employee."),
     }
 
 hr_employee()
