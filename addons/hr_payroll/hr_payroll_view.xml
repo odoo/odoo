@@ -605,7 +605,7 @@
                 <group col="6" colspan="6">
                    <field name="name"/>
                    <field name="code" select="1"/>
-                   <field name="category_id" on_change="onchange_category(category_id)"/>
+                   <field name="category_id"/>
                    <field name="active"/>
                    <field name="sequence" />
                    <field name="company_id" widget="selection" groups="base.group_multi_company"/>
@@ -648,9 +648,9 @@
                     </page>
                     <page string="Child Rules">
                        <separator colspan="4" string="Children definition"/>
-                       <field name="child_depend"/>
-                       <!--<field name="display_child_rules"/>-->
-                       <field colspan="4" name="child_ids" nolabel="1"/>
+                     <!--<field name="child_depend"/>-->
+                     <!--  <field name="display_child_rules"/>-->
+                    <field colspan="4" name="child_ids" nolabel="1"/>
                     </page>
                     <page string="Description">
                         <separator colspan="4" string="Description"/>
