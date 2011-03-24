@@ -689,6 +689,7 @@ class hr_payslip(osv.osv):
 
             contract = slip.employee_id.contract_id
             function = contract.struct_id.id
+            sal_structure = []
             if function:
                 sal_structure = self._get_parent_structure(cr, uid, [function], context=context)
             lines = []
@@ -1165,7 +1166,7 @@ class hr_payslip(osv.osv):
                             update['value']['line_ids'].append(res)
                     else:
                         update['value']['line_ids'].append(res)
-                        
+
         update['value'].update({
             'basic_amount': basic,
             'basic_before_leaves': basic_before_leaves,
