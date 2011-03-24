@@ -666,7 +666,7 @@ openerp.base.search.Field = openerp.base.search.Input.extend({
         if (!this.attrs['filter_domain']) {
             return [
                 this.attrs.name,
-                this.attrs.operator || this.operator,
+                this.attrs.operator || this.default_operator,
                 this.get_value()
             ];
         }
