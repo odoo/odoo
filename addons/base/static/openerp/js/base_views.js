@@ -43,9 +43,9 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
     on_mode_switch: function(view_type) {
         for (var i in this.views) { 
            if(i == view_type) {
-               this.views.i.controller.$element.show();
+               this.views[i].controller.$element.show();
            } else {
-               this.views.i.controller.$element.hide();
+               this.views[i].controller.$element.hide();
            }
         }
     },
@@ -72,14 +72,14 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
                 controller.start();
                 this.views.tree = { view_id: view_id, controller: controller };
                 this.$element.find(prefix_id + "_button_tree").bind('click',function(){
-                    this.on_mode_switch("tree");
+                    self.on_mode_switch("tree");
                 });
             } else if(action.views[i][1] == "form") {
                 controller = new openerp.base.FormView(this.session, this.element_id + "_view_form", this.dataset, view_id);
                 controller.start();
                 this.views.form = { view_id: view_id, controller: controller };
                 this.$element.find(prefix_id + "_button_form").bind('click',function(){
-                    this.on_mode_switch("form");
+                   self.on_mode_switch("form");
                 });
             }
         }
