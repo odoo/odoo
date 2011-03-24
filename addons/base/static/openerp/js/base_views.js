@@ -4,6 +4,13 @@
 
 openerp.base$views = function(openerp) {
 
+// process all kind of actions
+openerp.base.ActionManager = openerp.base.Controller.extend({
+// This controller should be used for one2many also or not ?
+// to replace Action
+});
+
+// This will be ViewManager Abstract/Common
 openerp.base.Action =  openerp.base.Controller.extend({
     init: function(session, element_id) {
         this._super(session, element_id);
@@ -11,6 +18,10 @@ openerp.base.Action =  openerp.base.Controller.extend({
         this.dataset = null;
         this.searchview_id = false;
         this.searchview = null;
+        this.search_visible = true;
+
+        // this will be changed into
+        // this.views = { "list": { "view_id":1234, "controller": instance} }
         this.listview_id = false;
         this.listview = null;
         this.formview_id = false;
@@ -22,6 +33,7 @@ openerp.base.Action =  openerp.base.Controller.extend({
         this.$element.find("#mode_form").bind('click',this.on_mode_form);
         this.on_mode_list();
     },
+    // this will be changed into on_view_switch(kind_of_view)
     on_mode_list: function() {
         $("#oe_action_form").hide();
         $("#oe_action_search").show();
@@ -32,6 +44,7 @@ openerp.base.Action =  openerp.base.Controller.extend({
         $("#oe_action_search").hide();
         $("#oe_action_list").hide();
     },
+    // This will move to actionmanager
     do_action: function(action) {
         // instantiate the right controllers by understanding the action
         this.action = action;
@@ -42,10 +55,20 @@ openerp.base.Action =  openerp.base.Controller.extend({
             this.do_action_window(action);
         }
     },
+    // this will be renamed setup_view_manager_from_an_actwindow and will setup this.views
     do_action_window: function(action) {
-        this.formview_id = false;
+        // this will move into set_dataset()
         this.dataset = new openerp.base.DataSet(this.session, action.res_model);
         this.dataset.start();
+
+        this.searchview_id = false;
+        if(this.listview && action.search_view_id) {
+            this.searchview_id = action.search_view_id[0];
+        }
+        this.searchview = new openerp.base.SearchView(this.session, "oe_action_search", this.dataset, this.searchview_id);
+        this.searchview.start();
+
+        // Those two will be a foreach kind of view
 
         // Locate first tree view
         this.listview_id = false;
@@ -59,7 +82,7 @@ openerp.base.Action =  openerp.base.Controller.extend({
         this.listview.start();
 
         // Locate first form view
-        this.listview_id = false;
+        this.formview_id = false;
         for(var j = 0; j < action.views.length; j++)  {
             if(action.views[j][1] == "form") {
                 this.formview_id = action.views[j][0];
@@ -69,29 +92,22 @@ openerp.base.Action =  openerp.base.Controller.extend({
         this.formview = new openerp.base.FormView(this.session, "oe_action_form", this.dataset, this.formview_id);
         this.formview.start();
 
-        // Take the only possible search view. Is that consistent ?
-        this.searchview_id = false;
-        if(this.listview && action.search_view_id) {
-            this.searchview_id = action.search_view_id[0];
-        }
-        this.searchview = new openerp.base.SearchView(this.session, "oe_action_search", this.dataset, this.searchview_id);
-        this.searchview.start();
-    }
+    },
+    // create when root, also add to parent when o2m
+    on_create: function() {
+    },
+    on_remove: function() {
+    },
+    on_edit: function() {
+    },
 });
 
-openerp.base.View = openerp.base.Controller.extend({
-// This controller should be used for one2many also or not ?
-// to replace Action
+// Extends view manager
+openerp.base.ViewManagerRoot = openerp.base.Controller.extend({
 });
 
-openerp.base.ActionView = openerp.base.Controller.extend({
-// This controller should be used for one2many also or not ?
-// to replace Action
-});
-
-openerp.base.EmbbededView = openerp.base.Controller.extend({
-// This controller should be used for one2many also or not ?
-// to replace Action
+// Extends view manager
+openerp.base.ViewManagerUsedAsAMany2One = openerp.base.Controller.extend({
 });
 
 /**
