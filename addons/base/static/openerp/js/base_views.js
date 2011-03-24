@@ -371,62 +371,165 @@ openerp.base.SearchView = openerp.base.Controller.extend({
         //this.log('Starting SearchView '+this.model+this.view_id)
         this.rpc("/base/searchview/load", {"model": this.model, "view_id":this.view_id}, this.on_loaded);
     },
+    /**
+     * Builds a list of widget rows (each row is an array of widgets)
+     *
+     * @param {Array} items a list of nodes to convert to widgets
+     * @param {Object} fields a mapping of field names to (ORM) field attributes
+     */
+    make_widgets: function (items, fields) {
+        var rows = [],
+            row = [];
+        rows.push(row);
+        var filters = [];
+        _.each(items, function (item) {
+            if (filters.length && item.tag !== 'filter') {
+                row.push(
+                    new openerp.base.search.FilterGroup(
+                        filters, this));
+                filters = [];
+            }
+
+            if (item.tag === 'newline') {
+                row = [];
+                rows.push(row);
+            } else if (item.tag === 'filter') {
+                filters.push(
+                    new openerp.base.search.Filter(
+                        item, this));
+            } else if (item.tag === 'separator') {
+                // a separator is a no-op
+            } else {
+                if (item.tag === 'group') {
+                    // TODO: group and field should be fetched from registries, maybe even filters
+                    row.push(
+                        new openerp.base.search.Group(
+                            item, this, fields));
+                } else if (item.tag === 'field') {
+                    row.push(
+                        this.make_field(
+                            item, fields[item['attrs'].name]));
+                }
+            }
+        }, this);
+        
+        return rows;
+    },
+    /**
+     *
+     */
+    make_field: function (item, field) {
+        // TODO: should fetch from an actual registry
+        // TODO: register fields in self?
+        switch (field.type) {
+            case 'char':
+                return new openerp.base.search.CharField(
+                    item, field, this);
+            case 'float':
+                return new openerp.base.search.FloatField(
+                    item, field, this);
+            case 'datetime':
+                return new openerp.base.search.DateTimeField(
+                    item, field, this);
+            case 'one2many':
+                return new openerp.base.search.OneToManyField(
+                    item, field, this);
+            case 'many2one':
+                return new openerp.base.search.ManyToOneField(
+                    item, field, this);
+            default:
+                console.group('Unknown field type ' + field.type);
+                console.error('View node', item);
+                console.info('View field', field);
+                console.info('In view', this);
+                console.groupEnd();
+        }
+    },
     on_loaded: function(data) {
-        this.fields_view = data.fields_view;
-        this.log(this.fields_view);
-        this.input_ids = {};
-        this.$element.html(QWeb.render("SearchView", {"fields_view": this.fields_view}));
-        this.$element.find("#search").bind('click',this.on_search);
-        // TODO bind click event on all button
-        // TODO we don't do many2one yet, but in the future bind a many2one controller on them
-        this.log(this.$element.find("#search"));
-    },
-    register_input: function(node) {
-        // self should be passed in the qweb dict to do:
-        // <input t-add-id="self.register_input(node)"/>
+        var lines = this.make_widgets(
+            data.fields_view['arch'].children,
+            data.fields_view.fields);
 
-        // generate id
-        var id = this.element_id + "_" + this.input_index++;
-        // TODO construct a nice object
-        // save it in our registry
-        this.input_ids[id] = {
-            node: node,
-            type: "filter",
-            domain: "",
-            context: "",
-            disabled: false
-        };
+        // TODO: get default values
+        var default_values = {};
 
-        return id;
+        var render = QWeb.render("SearchView", {
+            'view': data.fields_view['arch'],
+            'lines': lines,
+            'defaults': default_values
+        });
+        this.$element.html(render);
+        // TODO: setup events
     },
-    on_click: function() {
-        // event catched on a button
-        // flip the disabled flag
-        // adjust the css class
-    },
-    on_search: function() {
-        this.log("on_search");
-        // collect all non disabled domains definitions, AND them
-        // evaluate as python expression
-        // save the result in this.domain
-        this.dataset.fetch();
-    },
-    on_clear: function() {
-    }
+    on_search: function () {}
 });
 
-openerp.base.SearchViewInput = openerp.base.Controller.extend({
-// TODO not sure should we create a controller for every input ?
+openerp.base.search = {};
+openerp.base.search.Widget = openerp.base.Controller.extend({
+    template: null,
+    init: function (view) {
+        this.view = view;
+    },
+    render: function (defaults) {
+        return QWeb.render(
+            this.template, _.extend(this, {
+                defaults: defaults
+        }));
+    }
+    // TODO: rendering
+    // TODO: validation
+});
+openerp.base.search.Filter = openerp.base.search.Widget.extend({
+    template: 'SearchView.filter',
+    // TODO: force rendering
+    init: function (node, view) {
+        this._super(view);
+        this.attrs = node.attrs;
+    }
+});
+openerp.base.search.FilterGroup = openerp.base.search.Widget.extend({
+    template: 'SearchView.filters',
+    init: function (filters, view) {
+        this._super(view);
+        this.filters = filters;
+    }
+});
+openerp.base.search.Group = openerp.base.search.Widget.extend({
+    template: 'SearchView.group',
+    // TODO: contain stuff
+    // TODO: @expand
+    init: function (view_section, view, fields) {
+        this._super(view);
+        this.attrs = view_section.attrs;
+        this.lines = view.make_widgets(
+            view_section.children, fields);
+    }
+});
+openerp.base.search.Field = openerp.base.search.Widget.extend({
+    template: 'SearchView.field',
+    // TODO: set default values
+    // TODO: get context, domain
+    // TODO: holds Filters
+    init: function (view_section, field, view) {
+        this._super(view);
+        this.attrs = _.extend({}, field, view_section.attrs);
+    }
+});
+openerp.base.search.CharField = openerp.base.search.Field.extend({
+    // TODO: .size
+});
+openerp.base.search.FloatField = openerp.base.search.Field.extend({
+    // TODO: .digits (a, b)
+});
+openerp.base.search.DateTimeField = openerp.base.search.Field.extend({
 
-// of we just keep a simple dict for each input in
-// openerp.base.SearchView#input_ids
-// and use if when we get an event depending on the type
-// i think it's less bloated to avoid useless controllers
-
-// but i think for many2one a controller would be nice
-// so simple dict for simple inputs
-// an controller for many2one ?
-
+});
+openerp.base.search.OneToManyField = openerp.base.search.Field.extend({
+    // TODO: .relation, .context, .domain
+});
+openerp.base.search.ManyToOneField = openerp.base.search.Field.extend({
+    // TODO: @widget
+    // TODO: .relation, .selection, .context, .domain
 });
 
 openerp.base.FormView =  openerp.base.Controller.extend({
