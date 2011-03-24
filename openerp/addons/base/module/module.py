@@ -286,7 +286,17 @@ class module(osv.osv):
         return demo
 
     def button_install(self, cr, uid, ids, context=None):
-        return self.state_update(cr, uid, ids, 'to install', ['uninstalled'], context)
+        self.state_update(cr, uid, ids, 'to install', ['uninstalled'], context)
+        return {
+            'name': _('Install'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'base.module.upgrade',
+            'target': 'new',
+            'type': 'ir.actions.act_window',
+            'nodestroy':True,
+        }
+        
 
     def button_install_cancel(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'uninstalled', 'demo':False})
@@ -306,7 +316,15 @@ class module(osv.osv):
             if res:
                 raise orm.except_orm(_('Error'), _('Some installed modules depend on the module you plan to Uninstall :\n %s') % '\n'.join(map(lambda x: '\t%s: %s' % (x[0], x[1]), res)))
         self.write(cr, uid, ids, {'state': 'to remove'})
-        return True
+        return {
+            'name': _('Uninstall'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'base.module.upgrade',
+            'target': 'new',
+            'type': 'ir.actions.act_window',
+            'nodestroy':True,
+        }
 
     def button_uninstall_cancel(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'installed'})
