@@ -204,7 +204,7 @@ class payroll_register(osv.osv):
                     'date': vals.date,
                 }
                 slip_id = slip_pool.create(cr, uid, res, context=context)
-                data = slip_pool.onchange_employee_id(cr, uid, [slip_id], vals.date, emp.id, context=context)
+                data = slip_pool.onchange_employee_id(cr, uid, [slip_id], vals.date, emp.id, contract_id=False, context=context) # fix me can we pass contract_id ?
                 for line in data['value']['line_ids']:
                     line.update({'slip_id': slip_id})
                     slip_line_pool.create(cr, uid, line, context=context)
@@ -474,7 +474,7 @@ class hr_payslip(osv.osv):
         return 0.0
 
     _columns = {
-        'struct_id':fields.many2one('hr.payroll.structure', 'Designation', readonly=True, states={'draft': [('readonly', False)]}),
+        'struct_id':fields.related('contract_id', 'struct_id', type='many2one', relation='hr.payroll.structure', string='Structure', store=True, ),
         'register_id':fields.many2one('hr.payroll.register', 'Register', required=False, readonly=True, states={'draft': [('readonly', False)]}),
         'name':fields.char('Name', size=64, required=False, readonly=True, states={'draft': [('readonly', False)]}),
         'number':fields.char('Number', size=64, required=False, readonly=True, states={'draft': [('readonly', False)]}),
@@ -689,6 +689,7 @@ class hr_payslip(osv.osv):
 
             contract = slip.employee_id.contract_id
             function = contract.struct_id.id
+            sal_structure = []
             if function:
                 sal_structure = self._get_parent_structure(cr, uid, [function], context=context)
             lines = []
@@ -779,8 +780,7 @@ class hr_payslip(osv.osv):
                 if line.appears_on_payslip:
                     if line.parent_rule_id:
                         for l in salary_rule_pool.browse(cr, uid, [line.parent_rule_id.id], context=context):
-                            if l.display_child_rules == True:
-                                slip_line_pool.create(cr, uid, vals, {})
+                            slip_line_pool.create(cr, uid, vals, {})
                     else:
                         if line.condition_range_min or line.condition_range_max:
                             if not ((value < line.condition_range_min) or (value > line.condition_range_max)):
@@ -890,7 +890,7 @@ class hr_payslip(osv.osv):
             self.write(cr, uid, [slip.id], update, context=context)
         return True
 
-    def onchange_employee_id(self, cr, uid, ids, ddate, employee_id=False, context=None):
+    def onchange_employee_id(self, cr, uid, ids, ddate, employee_id=False, contract_id=False, context=None):
         func_pool = self.pool.get('hr.payroll.structure')
         slip_line_pool = self.pool.get('hr.payslip.line')
         salary_rule_pool = self.pool.get('hr.salary.rule')
@@ -911,21 +911,24 @@ class hr_payslip(osv.osv):
             return update
 
         employee_id = empolyee_obj.browse(cr, uid, employee_id, context=context)
-        ttyme = datetime.fromtimestamp(time.mktime(time.strptime(ddate,"%Y-%m-%d")))
-        contracts = self.get_contract(cr, uid, employee_id, ddate, context=context)
-        if not contracts.get('id', False):
-            update['value'].update({
-                'basic_amount': 0.0,
-                'basic_before_leaves': 0.0,
-                'name':'Salary Slip of %s for %s' % (employee_id.name, tools.ustr(ttyme.strftime('%B-%Y'))),
-                'contract_id':False,
-                'company_id':employee_id.company_id.id
-            })
-            return update
+        ttyme = datetime.fromtimestamp(time.mktime(time.strptime(ddate, "%Y-%m-%d")))
+        if not contract_id:
+            contracts = self.get_contract(cr, uid, employee_id, ddate, context=context)
+            if not contracts.get('id', False):
+                update['value'].update({
+                    'basic_amount': 0.0,
+                    'basic_before_leaves': 0.0,
+                    'name':'Salary Slip of %s for %s' % (employee_id.name, tools.ustr(ttyme.strftime('%B-%Y'))),
+                    'contract_id':False,
+                    'company_id':employee_id.company_id.id
+                })
+                return update
+            contract = employee_id.contract_id
+        else:
+            contract = self.pool.get('hr.contract').browse(cr, uid, contract_id, context=context)
 
-        contract = employee_id.contract_id
-        sal_structure = []
         function = contract.struct_id.id
+        sal_structure = []
         if function:
             sal_structure = self._get_parent_structure(cr, uid, [function], context=context)
 
@@ -1027,21 +1030,16 @@ class hr_payslip(osv.osv):
                 'base': line.computational_expression
             }
             if line.appears_on_payslip:
-                if line.parent_rule_id:
-                    for l in salary_rule_pool.browse(cr, uid, [line.parent_rule_id.id], context=context):
-                        if l.display_child_rules == True:
-                            update['value']['line_ids'].append(vals)
-                else:
-                    if line.condition_range_min or line.condition_range_max:
-                        if not ((value < line.condition_range_min) or (value > line.condition_range_max)):
-                            update['value']['line_ids'].append(vals)
-                    else:
+                if line.condition_range_min or line.condition_range_max:
+                    if not ((value < line.condition_range_min) or (value > line.condition_range_max)):
                         update['value']['line_ids'].append(vals)
+                else:
+                    update['value']['line_ids'].append(vals)
 
         basic = contract.wage
         number = sequence_obj.get(cr, uid, 'salary.slip')
         update['value'].update({
-            'struct_id': function,
+#            'struct_id': function,
             'number': number,
             'basic_amount': basic,
             'basic_before_leaves': basic,
@@ -1157,23 +1155,18 @@ class hr_payslip(osv.osv):
                                 value = val
                         else:
                             value = val
-
                 res['amount'] = salary_rule.amount
                 res['type'] = salary_rule.type.id
                 leave += days
                 total += value
                 res['total'] = value
                 if salary_rule.appears_on_payslip:
-                    if salary_rule.parent_rule_id:
-                        for l in salary_rule_pool.browse(cr, uid, [salary_rule.parent_rule_id.id], context=context):
-                            if l.display_child_rules == True:
-                                update['value']['line_ids'].append(res)
-                    else:
-                        if salary_rule.condition_range_min or salary_rule.condition_range_max:
-                            if not ((value < salary_rule.condition_range_min) or (value > salary_rule.condition_range_max)):
-                                update['value']['line_ids'].append(res)
-                        else:
+                    if salary_rule.condition_range_min or salary_rule.condition_range_max:
+                        if not ((value < salary_rule.condition_range_min) or (value > salary_rule.condition_range_max)):
                             update['value']['line_ids'].append(res)
+                    else:
+                        update['value']['line_ids'].append(res)
+
         update['value'].update({
             'basic_amount': basic,
             'basic_before_leaves': basic_before_leaves,
@@ -1184,6 +1177,17 @@ class hr_payslip(osv.osv):
             'working_days': working_day,
         })
         return update
+
+    def onchange_contract_id(self, cr, uid, ids, contract_id=False, struct_id=False, context=None):
+        if not contract_id:
+                return {}
+        res = {}
+        contract = self.pool.get('hr.contract').browse(cr,uid, contract_id)
+        res.update({
+            'struct_id':contract.struct_id.id
+        })
+
+        return {'value': res}
 
 hr_payslip()
 

@@ -208,10 +208,13 @@
             <field name="arch" type="xml">
                 <form string="Payslip">
                     <group col="6" colspan="4">
-                        <field name="employee_id" on_change="onchange_employee_id(date, employee_id)"/>
+                        <field name="employee_id" on_change="onchange_employee_id(date, employee_id, contract_id)"/>
                         <field name="name"/>
                         <field name="number"/>
                         <field name="date"/>
+                        <field name="contract_id" groups="base.group_extended" domain="[('employee_id','=',employee_id)]" on_change="onchange_employee_id(contract_id)"/>
+                        <field name="struct_id" groups="base.group_extended"/>
+
                     </group>
                     <notebook colspan="4">
                         <page string="Salary Computation">
@@ -275,12 +278,17 @@
                                 <field name="paid" readonly="1"/>
                                 <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                                 <field name="register_id" groups="base.group_extended"/>
-                                <field name="struct_id" groups="base.group_extended"/>
-                                <field name="contract_id" groups="base.group_extended" domain="[('employee_id','=',employee_id)]"/>
                             </group>
                             <newline/>
                             <separator colspan="4" string="Description"/>
                             <field name="note" colspan="4" nolabel="1"/>
+                        </page>
+			       
+                        <page string="Applied Salary Rules">
+                        </page>
+                        <page string="Appears on payslip">
+                        </page>
+                        <page string="Details by salary head">
                         </page>
                     </notebook>
                     <group col="10" colspan="4">
@@ -597,7 +605,7 @@
                 <group col="6" colspan="6">
                    <field name="name"/>
                    <field name="code" select="1"/>
-                   <field name="category_id" on_change="onchange_category(category_id)"/>
+                   <field name="category_id"/>
                    <field name="active"/>
                    <field name="sequence" />
                    <field name="company_id" widget="selection" groups="base.group_multi_company"/>
@@ -640,9 +648,9 @@
                     </page>
                     <page string="Child Rules">
                        <separator colspan="4" string="Children definition"/>
-                       <field name="child_depend"/>
-                       <!--<field name="display_child_rules"/>-->
-                       <field colspan="4" name="child_ids" nolabel="1"/>
+                     <!--<field name="child_depend"/>-->
+                     <!--  <field name="display_child_rules"/>-->
+                    <field colspan="4" name="child_ids" nolabel="1"/>
                     </page>
                     <page string="Description">
                         <separator colspan="4" string="Description"/>
