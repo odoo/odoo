@@ -439,11 +439,17 @@ openerp.base.SearchView = openerp.base.Controller.extend({
             case 'datetime':
                 return new openerp.base.search.DateTimeField(
                     item, field, this);
+            case 'date':
+                return new openerp.base.search.DateField(
+                    item, field, this);
             case 'one2many':
                 return new openerp.base.search.OneToManyField(
                     item, field, this);
             case 'many2one':
                 return new openerp.base.search.ManyToOneField(
+                    item, field, this);
+            case 'many2many':
+                return new openerp.base.search.ManyToManyField(
                     item, field, this);
             default:
                 console.group('Unknown field type ' + field.type);
@@ -702,6 +708,11 @@ openerp.base.search.DateTimeField = openerp.base.search.Field.extend({
         return this.$element.val();
     }
 });
+openerp.base.search.DateField = openerp.base.search.Field.extend({
+    get_value: function () {
+        return this.$element.val();
+    }
+});
 openerp.base.search.OneToManyField = openerp.base.search.Field.extend({
     // TODO: .relation, .context, .domain
     get_value: function () {
@@ -711,6 +722,12 @@ openerp.base.search.OneToManyField = openerp.base.search.Field.extend({
 openerp.base.search.ManyToOneField = openerp.base.search.Field.extend({
     // TODO: @widget
     // TODO: .relation, .selection, .context, .domain
+    get_value: function () {
+        return this.$element.val();
+    }
+});
+openerp.base.search.ManyToManyField = openerp.base.search.Field.extend({
+    // TODO: .related_columns (Array), .context, .domain
     get_value: function () {
         return this.$element.val();
     }
