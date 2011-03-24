@@ -26,10 +26,15 @@ class portal(osv.osv):
     _description = 'Portal'
     _columns = {
         'name': fields.char(string='Name', size=64, required=True),
-        'user_ids': fields.one2many('res.users', 'portal_id', string='Portal users',
+        'menu_id': fields.many2one('ir.ui.menu',
+            string='Portal Menu',
+            help="The customized menu of the portal's users"),
+        'user_ids': fields.one2many('res.users', 'portal_id',
+            string='Users',
             help='Gives the set of users associated to this portal'),
-        'group_ids': fields.many2many('res.groups', 'portal_group', 'portal_id', 'group_id',
-            string='Groups', help='Users of this portal automatically belong to those groups'),
+        'group_ids': fields.many2many('res.groups', 'res_portals_groups_rel', 'pid', 'gid',
+            string='Groups',
+            help='Users of this portal automatically belong to those groups'),
     }
 
 portal()

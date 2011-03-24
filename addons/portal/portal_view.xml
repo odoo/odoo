@@ -22,13 +22,47 @@
             <field name="priority" eval="16"/>
             <field name="arch" type="xml">
                 <form string="Portal Form">
-                    <group colspan="4">
-                        <field name="name"/>
-                    </group>
-                    <field name="user_ids" string="Users" nolabel="1" colspan="2"/>
-                    <field name="group_ids" string="Groups" nolabel="1" colspan="2"/>
+                    <field name="name" colspan="4"/>
+                    <field name="menu_id" colspan="2"/>
+                    <separator string="Users and groups" colspan="4"/>
+                    <field name="user_ids" nolabel="1" colspan="2">
+                        <tree string="Users">
+                            <field name="name"/>
+                        </tree>
+                    </field>
+                    <field name="group_ids" nolabel="1" colspan="2">
+                        <tree string="Groups">
+                            <field name="name"/>
+                        </tree>
+                    </field>
                 </form>
             </field>
         </record>
+
+        <!--
+            temporary: an attempt to display and edit menu items as a tree view
+        -->
+        <record id="menu_tree_view" model="ir.ui.view">
+            <field name="name">menu_tree_view</field>
+            <field name="model">ir.ui.menu</field>
+            <field name="type">tree</field>
+            <field name="field_parent">child_id</field>
+            <field name="arch" type="xml">
+                <tree string="Menu Structure">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+        <record id="menu_tree_action" model="ir.actions.act_window">
+            <field name="name">Menu Structure</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ir.ui.menu</field>
+            <field name="domain">[('parent_id','=',False)]</field>
+            <field name="view_type">tree</field>
+            <field name="view_id" ref="menu_tree_view"/>
+        </record>
+        <menuitem name="Menu structure" id="menu_tree_menu" parent="portal_menu"
+            action="menu_tree_action"/>
+
     </data>
 </openerp>
