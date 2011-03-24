@@ -167,15 +167,71 @@ class DataSet(openerpweb.Controller):
 
     @openerpweb.jsonrequest
     def fields(self, req, model):
-        return {'fields': req.session.model(model).fields_get(False)}
+        return {'fields': req.session.model(model).fields_get()}
 
     @openerpweb.jsonrequest
-    def load(self, req, model, domain=[], fields=['id']):
-        m = req.session.model(model)
-        ids = m.search(domain)
-        values = m.read(ids, fields)
-        return {'ids': ids, 'values': values}
+    def find(self, request, model, fields=False, offset=0, limit=False,
+             domain=None, context=None, sort=None):
+        return self.do_find(request, model, fields, offset, limit,
+                     domain, context, sort)
+    def do_find(self, request, model, fields=False, offset=0, limit=False,
+             domain=None, context=None, sort=None):
+        """ Performs a search() followed by a read() (if needed) using the
+        provided search criteria
 
+        :param request: a JSON-RPC request object
+        :type request: openerpweb.JsonRequest
+        :param model: the name of the model to search on
+        :type model: str
+        :param fields: a list of the fields to return in the result records
+        :type fields: [str]
+        :param offset: from which index should the results start being returned
+        :type offset: int
+        :param limit: the maximum number of records to return
+        :type limit: int
+        :param domain: the search domain for the query
+        :type domain: list
+        :param context: the context in which the search should be executed
+        :type context: dict
+        :param sort: sorting directives
+        :type sort: list
+        :returns: a list of result records
+        :rtype: list
+        """
+        Model = request.session.model(model)
+        ids = Model.search(domain or [], offset or 0, limit or False,
+                           sort or False, context or False)
+        if fields and fields == ['id']:
+            # shortcut read if we only want the ids
+            return map(lambda id: {'id': id}, ids)
+        return Model.read(ids, fields or False)
+
+    @openerpweb.jsonrequest
+    def get(self, request, model, ids):
+        self.do_get(request, model, ids)
+
+    def do_get(self, request, model, ids):
+        """ Fetches and returns the records of the model ``model`` whose ids
+        are in ``ids``.
+
+        The results are in the same order as the inputs, but elements may be
+        missing (if there is no record left for the id)
+
+        :param request: the JSON-RPC2 request object
+        :type request: openerpweb.JsonRequest
+        :param model: the model to read from
+        :type model: str
+        :param ids: a list of identifiers
+        :type ids: list
+        :returns: a list of records, in the same order as the list of ids
+        :rtype: list
+        """
+        Model = request.session.model(model)
+        records = Model.read(ids)
+
+        record_map = dict((record['id'], record) for record in records)
+
+        return [record_map[id] for id in ids if record_map.get(id)]
 
 class DataRecord(openerpweb.Controller):
     _cp_path = "/base/datarecord"

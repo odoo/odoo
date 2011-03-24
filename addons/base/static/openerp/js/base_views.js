@@ -44,7 +44,7 @@ openerp.base.Action =  openerp.base.Controller.extend({
     },
     do_action_window: function(action) {
         this.formview_id = false;
-        this.dataset = new openerp.base.DataSet(this.session, "oe_action_dataset", action.res_model);
+        this.dataset = new openerp.base.DataSet(this.session, action.res_model);
         this.dataset.start();
 
         // Locate first tree view
@@ -94,60 +94,253 @@ openerp.base.EmbbededView = openerp.base.Controller.extend({
 // to replace Action
 });
 
+/**
+ * Management interface between views and the collection of selected OpenERP
+ * records (represents the view's state?)
+ */
 openerp.base.DataSet =  openerp.base.Controller.extend({
-    init: function(session, element_id, model) {
-        this._super(session, element_id);
+    init: function(session, model) {
+        this._super(session);
         this.model = model;
-        // SHOULD USE THE ONE FROM FIELDS VIEW GET BECAUSE OF SELECTION
-        // Should merge those 2
-        this.model_fields = null;
-        this.fields = [];
 
-        this.domain = [];
-        this.context = {};
-        this.order = "";
-        this.count = null;
-        this.ids = [];
-        this.values = {};
-/*
-    group_by
-        rows record
-            fields of row1 field fieldname
-                { type: value: text: text_format: text_completions type_*: a
-*/
+        this._fields = null;
+
+        this._ids = [];
+        this._active_ids = null;
+        this._active_id_index = 0;
+
+        this._sort = [];
+        this._domain = [];
+        this._context = {};
     },
     start: function() {
+        // TODO: fields_view_get fields selection?
         this.rpc("/base/dataset/fields", {"model":this.model}, this.on_fields);
     },
     on_fields: function(result) {
-        this.model_fields = result.fields;
+        this._fields = result._fields;
         this.on_ready();
     },
-    do_load: function(offset, limit) {
-        this.rpc("/base/dataset/load", {model: this.model, fields: this.fields }, this.on_loaded);
+
+    /**
+     * Fetch all the records selected by this DataSet, based on its domain
+     * and context.
+     *
+     * Fires the on_ids event.
+     *
+     * @param {Number} [offset=0] The index from which selected records should be returned
+     * @param {Number} [limit=null] The maximum number of records to return
+     * @returns itself
+     */
+    fetch: function (offset, limit) {
+        offset = offset || 0;
+        limit = limit || null;
+        this.rpc('/base/dataset/find', {
+            model: this.model,
+            fields: this._fields,
+            domain: this._domain,
+            context: this._context,
+            sort: this._sort,
+            offset: offset,
+            limit: limit
+        }, _.bind(function (records) {
+            var data_records = _.map(
+                records, function (record) {
+                    return new openerp.base.DataRecord(
+                        this.session, this.model,
+                        this._fields, record);
+                }, this);
+
+            this.on_fetch(data_records, {
+                offset: offset,
+                limit: limit,
+                domain: this._domain,
+                context: this._context,
+                sort: this._sort
+            });
+        }, this));
+        return this;
     },
-    on_loaded: function(data) {
-        this.ids = data.ids;
-        this.values = data.values;
+    /**
+     * @event
+     *
+     * Fires after the DataSet fetched the records matching its internal ids selection
+     * 
+     * @param {Array} records An array of the DataRecord fetched
+     * @param event The on_fetch event object
+     * @param {Number} event.offset the offset with which the original DataSet#fetch call was performed
+     * @param {Number} event.limit the limit set on the original DataSet#fetch call
+     * @param {Array} event.domain the domain set on the DataSet before DataSet#fetch was called
+     * @param {Object} event.context the context set on the DataSet before DataSet#fetch was called
+     * @param {Array} event.sort the sorting criteria used to get the ids
+     */
+    on_fetch: function (records, event) { },
+
+    /**
+     * Fetch all the currently active records for this DataSet (records selected via DataSet#select)
+     *
+     * @returns itself
+     */
+    active_ids: function () {
+        this.rpc('/base/dataset/get', {
+            ids: this.get_active_ids(),
+            model: this.model
+        }, _.bind(function (records) {
+            this.on_active_ids(_.map(
+                records, function (record) {
+                    return new openerp.base.DataRecord(
+                        this.session, this.model,
+                        this._fields, record);
+                }, this));
+        }, this));
+        return this;
     },
-    on_reloaded: function(ids) {
+    /**
+     * @event
+     *
+     * Fires after the DataSet fetched the records matching its internal active ids selection
+     *
+     * @param {Array} records An array of the DataRecord fetched
+     */
+    on_active_ids: function (records) { },
+
+    /**
+     * Fetches the current active record for this DataSet
+     *
+     * @returns itself
+     */
+    active_id: function () {
+        this.rpc('/base/dataset/get', {
+            ids: [this.get_active_id()],
+            model: this.model
+        }, _.bind(function (records) {
+            var record = records[0];
+            this.on_active_id(
+                record && new openerp.base.DataRecord(
+                        this.session, this.model,
+                        this._fields, record));
+        }, this));
+        return this;
+    },
+    /**
+     * Fires after the DataSet fetched the record matching the current active record
+     *
+     * @param record the record matching the provided id, or null if there is no record for this id
+     */
+    on_active_id: function (record) {
+
+    },
+
+    /**
+     * Configures the DataSet
+     * 
+     * @param options DataSet options
+     * @param {Array} options.domain the domain to assign to this DataSet for filtering
+     * @param {Object} options.context the context this DataSet should use during its calls
+     * @param {Array} options.sort the sorting criteria for this DataSet
+     * @returns itself
+     */
+    set: function (options) {
+        if (options.domain) {
+            this._domain = _.clone(options.domain);
+        }
+        if (options.context) {
+            this._context = _.clone(options.context);
+        }
+        if (options.sort) {
+            this._sort = _.clone(options.sort);
+        }
+        return this;
+    },
+
+    /**
+     * Activates the previous id in the active sequence. If there is no previous id, wraps around to the last one
+     * @returns itself
+     */
+    prev: function () {
+        this._active_id_index -= 1;
+        if (this._active_id_index < 0) {
+            this._active_id_index = this._active_ids.length - 1;
+        }
+        return this;
+    },
+    /**
+     * Activates the next id in the active sequence. If there is no next id, wraps around to the first one
+     * @returns itself
+     */
+    next: function () {
+        this._active_id_index += 1;
+        if (this._active_id_index >= this._active_ids.length) {
+            this._active_id_index = 0;
+        }
+        return this;
+    },
+
+    /**
+     * Sets active_ids by value:
+     *
+     * * Activates all ids part of the current selection
+     * * Sets active_id to be the first id of the selection
+     *
+     * @param {Array} ids the list of ids to activate
+     * @returns itself
+     */
+    select: function (ids) {
+        this._active_ids = ids;
+        this._active_id_index = 0;
+        return this;
+    },
+    /**
+     * Fetches the ids of the currently selected records, if any.
+     */
+    get_active_ids: function () {
+        return this._active_ids;
+    },
+    /**
+     * Sets the current active_id by value
+     *
+     * If there are no active_ids selected, selects the provided id as the sole active_id
+     *
+     * If there are ids selected and the provided id is not in them, raise an error
+     *
+     * @param {Object} id the id to activate
+     * @returns itself
+     */
+    activate: function (id) {
+        if(!this._active_ids) {
+            this._active_ids = [id];
+            this._active_id_index = 0;
+        } else {
+            var index = _.indexOf(this._active_ids, id);
+            if (index == -1) {
+                throw new Error(
+                    "Could not find id " + id +
+                    " in array [" + this._active_ids.join(', ') + "]");
+            }
+            this._active_id_index = index;
+        }
+        return this;
+    },
+    /**
+     * Fetches the id of the current active record, if any.
+     *
+     * @returns record? record id or <code>null</code>
+     */
+    get_active_id: function () {
+        if (!this._active_ids) {
+            return null;
+        }
+        return this._active_ids[this._active_id_index];
     }
 });
 
 openerp.base.DataRecord =  openerp.base.Controller.extend({
-    init: function(session,  model, fields) {
+    init: function(session, model, fields, values) {
         this._super(session, null);
         this.model = model;
-        this.id = null;
+        this.id = values.id || null;
         this.fields = fields;
-        this.values = {};
-    },
-    load: function(id) {
-        this.id = id;
-        this.rpc("/base/datarecord/load", {"model": this.model, "id": id, "fields": "todo"}, this.on_loaded);
-    },
-    on_loaded: function(result) {
-        this.values = result.value;
+        this.values = values;
     },
     on_change: function() {
     },
@@ -207,7 +400,7 @@ openerp.base.SearchView = openerp.base.Controller.extend({
         // collect all non disabled domains definitions, AND them
         // evaluate as python expression
         // save the result in this.domain
-        this.dataset.do_load();
+        this.dataset.fetch();
     },
     on_clear: function() {
     }
@@ -231,7 +424,6 @@ openerp.base.FormView =  openerp.base.Controller.extend({
     init: function(session, element_id, dataset, view_id) {
         this._super(session, element_id);
         this.dataset = dataset;
-        this.dataset_index = 0;
         this.model = dataset.model;
         this.view_id = view_id;
         this.fields_views = {};
@@ -256,22 +448,10 @@ openerp.base.FormView =  openerp.base.Controller.extend({
         }
         // bind to all wdigets that have onchange ??
 
-        // When the dataset is loaded load the first record (like gtk)
-        this.dataset.on_loaded.add_last(this.do_load_record);
-
-        // When a datarecord is loaded display the values in the inputs
-        this.datarecord = new openerp.base.DataRecord(this.session, this.model,{});
-        this.datarecord.on_loaded.add_last(this.on_record_loaded);
-
+        this.dataset.on_fetch.add(this.on_record_loaded);
     },
-    do_load_record: function() {
-        // if dataset is empty display the empty datarecord
-        if(this.dataset.ids.length == 0) {
-            this.on_record_loaded();
-        }
-        this.datarecord.load(this.dataset.ids[this.dataset_index]);
-    },
-    on_record_loaded: function() {
+    on_record_loaded: function(records) {
+        this.datarecord = records[0];
         for (var f in this.fields) {
             this.fields[f].set_value(this.datarecord.values[f]);
         }
@@ -317,20 +497,18 @@ openerp.base.ListView = openerp.base.Controller.extend({
                 this.colmodel.push({ name: col.attrs.name, index: col.attrs.name });
             }
         }
-        //this.log(this.cols);
         this.dataset.fields = this.cols;
-        this.dataset.on_loaded.add_last(this.do_fill_table);
+        this.dataset.on_fetch.add(this.do_fill_table);
     },
-    do_fill_table: function() {
-        //this.log("do_fill_table");
+    do_fill_table: function(records) {
+        this.log("do_fill_table");
         
         var self = this;
         //this.log(this.dataset.data);
         var rows = [];
-        var ids = this.dataset.ids;
-        for(var i = 0; i < ids.length; i++)  {
+        for(var i = 0; i < records.length; i++)  {
             // TODO very strange is sometimes non existing ? even as admin ? example ir.ui.menu
-            var row = this.dataset.values[ids[i]];
+            var row = records[i].values;
             if(row)
                 rows.push(row);
 //            else
