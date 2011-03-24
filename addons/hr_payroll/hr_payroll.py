@@ -463,7 +463,7 @@ class hr_payslip(osv.osv):
             if res:
                 result[record.id] = [x[0] for x in res]
         return result
-
+    
     def _compute(self, cr, uid, id, value, context=None):
         rule_obj = self.pool.get('hr.salary.rule')
         contrib = rule_obj.browse(cr, uid, id, context=context)
@@ -977,11 +977,12 @@ class hr_payslip(osv.osv):
                                 val = rul.amount * amt
                                 amt = val
                         value = line.amount * amt
-                        if line.condition_range_min or line.condition_range_max:
-                            if ((value < line.condition_range_min) or (value > line.condition_range_max)):
-                                value = 0.0
-                            else:
-                                value = value
+                        if line.condition_select == 'range':
+                            if line.condition_range_min or line.condition_range_max:
+                                if ((value < line.condition_range_min) or (value > line.condition_range_max)):
+                                    value = 0.0
+                                else:
+                                    value = value
                         else:
                             value = value
                 except Exception, e:
@@ -992,11 +993,12 @@ class hr_payslip(osv.osv):
                     if line.parent_rule_id:
                         for rul in [line.parent_rule_id]:
                             value = value
-                    if line.condition_range_min or line.condition_range_max:
-                        if ((line.amount < line.condition_range_min) or (line.amount > line.condition_range_max)):
-                            value = value
-                        else:
-                            value = line.amount
+                    if line.condition_select == 'range':
+                        if line.condition_range_min or line.condition_range_max:
+                            if ((line.amount < line.condition_range_min) or (line.amount > line.condition_range_max)):
+                                value = value
+                            else:
+                                value = line.amount
                     else:
                         value = line.amount
 
@@ -1008,11 +1010,12 @@ class hr_payslip(osv.osv):
                     if line.parent_rule_id:
                         for rul in [line.parent_rule_id]:
                             value = val
-                    if line.condition_range_min or line.condition_range_max:
-                        if ((line.amount < line.condition_range_min) or (line.amount > line.condition_range_max)):
-                            value = value
-                        else:
-                            value = val
+                    if line.condition_select == 'range':
+                        if line.condition_range_min or line.condition_range_max:
+                            if ((line.amount < line.condition_range_min) or (line.amount > line.condition_range_max)):
+                                value = value
+                            else:
+                                value = val
                     else:
                         value = val
 
@@ -1116,11 +1119,12 @@ class hr_payslip(osv.osv):
                                     val = rul.amount * amt
                                     amt = val
                             value = salary_rule.amount * amt * days
-                            if salary_rule.condition_range_min or salary_rule.condition_range_max:
-                                if ((value < salary_rule.condition_range_min) or (value > salary_rule.condition_range_max)):
-                                    value = 0.0
-                                else:
-                                    value = value
+                            if line.condition_select == 'range':
+                                if salary_rule.condition_range_min or salary_rule.condition_range_max:
+                                    if ((value < salary_rule.condition_range_min) or (value > salary_rule.condition_range_max)):
+                                        value = 0.0
+                                    else:
+                                        value = value
                             else:
                                 value = value
 
@@ -1132,11 +1136,12 @@ class hr_payslip(osv.osv):
                         if salary_rule.parent_rule_id:
                             for rul in [salary_rule.parent_rule_id]:
                                 value = salary_rule.amount * days
-                        if salary_rule.condition_range_min or salary_rule.condition_range_max:
-                            if ((salary_rule.amount < salary_rule.condition_range_min) or (salary_rule.amount > salary_rule.condition_range_max)):
-                                value = 0.0
-                            else:
-                                value = salary_rule.amount * days
+                        if line.condition_select == 'range':
+                            if salary_rule.condition_range_min or salary_rule.condition_range_max:
+                                if ((salary_rule.amount < salary_rule.condition_range_min) or (salary_rule.amount > salary_rule.condition_range_max)):
+                                    value = 0.0
+                                else:
+                                    value = salary_rule.amount * days
                         else:
                             value = salary_rule.amount * days
 
@@ -1148,11 +1153,12 @@ class hr_payslip(osv.osv):
                         if salary_rule.parent_rule_id:
                             for rul in [salary_rule.parent_rule_id]:
                                 value = val
-                        if salary_rule.condition_range_min or salary_rule.condition_range_max:
-                            if ((salary_rule.amount < salary_rule.condition_range_min) or (salary_rule.amount > salary_rule.condition_range_max)):
-                                value = value
-                            else:
-                                value = val
+                        if line.condition_select == 'range':
+                            if salary_rule.condition_range_min or salary_rule.condition_range_max:
+                                if ((salary_rule.amount < salary_rule.condition_range_min) or (salary_rule.amount > salary_rule.condition_range_max)):
+                                    value = value
+                                else:
+                                    value = val
                         else:
                             value = val
                 res['amount'] = salary_rule.amount
