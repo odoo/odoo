@@ -191,6 +191,7 @@ def get_billing_address(sugar_obj,cr, uid, val, map_partner_address, context=Non
     val['type'] = 'invoice'
     country = get_all_countries(sugar_obj,cr, uid, val.get('billing_address_country'), context)
     state = get_all_states(sugar_obj, cr, uid, val.get('billing_address_state'), context)
+    #Need to Fix bcz code create problem.
     val['country_id'] =  country and country[0][0] or res_country_obj.create(cr, uid, {'name': val.get('billing_address_country'), 'code': str}),
     val['state_id'] =  state and state[0][0] or  False,           
     fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_partner_address)
@@ -228,8 +229,8 @@ def get_user_address(sugar_obj, cr, uid, val, context=None):
     map_user_address = {
     'name': ['first_name', 'last_name'],
     'city': 'address_city',
-#    'country_id.id': 'id(address_country)',
-#    'state_id.id': 'id(address_state)',
+    'country_id.id': 'address_country',
+    'state_id.id': 'address_state',
     'street': 'address_street',
     'zip': 'address_postalcode',
     }
@@ -332,14 +333,17 @@ def import_employees(sugar_obj, cr, uid, context=None):
                     'notes': 'description',
                     #TODO: Creation of Employee create problem.
                  #   'coach_id/id': 'reports_to_id',
-#                    'job_id': 'job_id'
+                    'job_id/.id': 'job_id/.id'
     }
     employee_obj = sugar_obj.pool.get('hr.employee')
+    job_obj = sugar_obj.pool.get('hr.job')
     PortType, sessionid = sugar.login(context.get('username', ''), context.get('password', ''), context.get('url',''))
     sugar_data = sugar.search(PortType, sessionid, 'Employees')
     for val in sugar_data:
         address_id = get_user_address(sugar_obj, cr, uid, val, context)
         val['address_home_id/.id'] = address_id
+        new_job_id = job_obj.create(cr, uid, {'name': val.get('title')})
+        val['job_id/.id'] = new_job_id
         fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_employee)
         employee_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', context=context)
 
