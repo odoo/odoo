@@ -9,7 +9,9 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Sugarcrm Login">
-                    <group colspan="4" >
+                    <group colspan="4"  width="500" >
+                    	<separator string="Please Enter Path to Connect with SugarCRM" colspan="4"/>
+                    	<field name="url" colspan="4" widget="url"/>
                          <separator string="Please enter your user name and password." colspan="4"/>
                          <field name="username"/>
                          <newline/>
