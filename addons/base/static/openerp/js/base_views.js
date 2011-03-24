@@ -431,10 +431,17 @@ openerp.base.SearchView = openerp.base.Controller.extend({
         // TODO: register fields in self?
         switch (field.type) {
             case 'char':
+            case 'text':
                 return new openerp.base.search.CharField(
+                    item, field, this);
+            case 'boolean':
+                return new openerp.base.search.BooleanField(
                     item, field, this);
             case 'float':
                 return new openerp.base.search.FloatField(
+                    item, field, this);
+            case 'selection':
+                return new openerp.base.search.SelectionField(
                     item, field, this);
             case 'datetime':
                 return new openerp.base.search.DateTimeField(
@@ -672,14 +679,17 @@ openerp.base.search.Field = openerp.base.search.Input.extend({
         var val = this.get_value();
         // A field needs a value to be "active", and a context to send when
         // active
-        if (!(val && this.attrs.context)) {
+        var has_value = (val !== null && val !== '');
+        if (!(has_value && this.attrs.context)) {
             return;
         }
         return this.attrs.context;
     },
     get_domain: function () {
         var val = this.get_value();
-        if(!val) {
+
+        var has_value = (val !== null && val !== '');
+        if(!has_value) {
             return;
         }
 
@@ -699,6 +709,23 @@ openerp.base.search.CharField = openerp.base.search.Field.extend({
         return this.$element.val();
     }
 });
+openerp.base.search.BooleanField = openerp.base.search.Field.extend({
+    template: 'SearchView.field.selection',
+    init: function () {
+        this._super.apply(this, arguments);
+        this.attrs.selection = [
+            ['true', 'Yes'],
+            ['false', 'No']
+        ];
+    },
+    get_value: function () {
+        switch (this.$element.val()) {
+            case 'false': return false;
+            case 'true': return true;
+            default: return null;
+        }
+    }
+});
 openerp.base.search.FloatField = openerp.base.search.Field.extend({
     get_value: function () {
         var val = Number(this.$element.val());
@@ -707,6 +734,12 @@ openerp.base.search.FloatField = openerp.base.search.Field.extend({
                 this.attrs.name, this.$element.val(), "not a valid number");
         }
         return val;
+    }
+});
+openerp.base.search.SelectionField = openerp.base.search.Field.extend({
+    template: 'SearchView.field.selection',
+    get_value: function () {
+        return this.$element.val();
     }
 });
 openerp.base.search.DateTimeField = openerp.base.search.Field.extend({

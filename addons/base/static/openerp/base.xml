@@ -320,6 +320,24 @@
         <t t-if="filters.length" t-raw="filters.render(defaults)"/>
     </div>
 </t>
+<t t-name="SearchView.field.selection">
+    <label style="display: block" t-att-title="attrs.help"
+           t-att-for="element_id">
+        <t t-esc="attrs.string || attrs.name"/>
+        <span t-if="attrs.help">(?)</span>
+    </label>
+    <div style="white-space: nowrap;">
+        <select t-att-name="attrs.name" t-att-id="element_id">
+            <option/>
+            <t t-foreach="attrs.selection" t-as="option">
+                <option t-att-value="option[0]">
+                    <t t-esc="option[1]"/>
+                </option>
+            </t>
+        </select>
+        <t t-if="filters.length" t-raw="filters.render(defaults)"/>
+    </div>
+</t>
 <t t-name="SearchView.group">
     <div t-att-class="'searchview_group ' + (attrs.expand == '0' ? 'folded' : 'expanded')"
          t-att-id="element_id">
