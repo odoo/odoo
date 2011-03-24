@@ -74,7 +74,7 @@ py2exe_data_files = []
 if os.name == 'nt':
     import py2exe
     py2exe_keywords['console'] = [
-        { "script": "openerp-server.py",
+        { "script": "openerp-server",
           "icon_resources": [(1, join("pixmaps","openerp-icon.ico"))],
         }]
     py2exe_keywords['options'] = {
@@ -123,7 +123,7 @@ setup(name             = name,
         (join('man', 'man5'), ['man/openerp_serverrc.5']),
         ('doc', filter(isfile, glob.glob('doc/*'))),
       ] + py2exe_data_files,
-      scripts          = ['openerp-server.py'],
+      scripts          = ['openerp-server'],
       packages = find_packages(),
       include_package_data = True,
       package_data = {
