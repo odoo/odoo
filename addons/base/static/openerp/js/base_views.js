@@ -597,6 +597,12 @@ openerp.base.search.Group = openerp.base.search.Widget.extend({
             .chain()
             .flatten()
             .each(function (widget) { widget.start(); });
+        var $root = this.$element;
+        $root.find('a.searchview_group_string').click(function (e) {
+            $root.toggleClass('folded expanded');
+            e.stopPropagation();
+            e.preventDefault();
+        });
     }
 });
 openerp.base.search.Input = openerp.base.search.Widget.extend({

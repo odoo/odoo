@@ -323,7 +323,9 @@
 <t t-name="SearchView.group">
     <div t-att-class="'searchview_group ' + (attrs.expand == '0' ? 'folded' : 'expanded')"
          t-att-id="element_id">
-        <a class="searchview_group_string" href="#" onclick="$(this).parent().toggleClass('folded expanded')"><t t-esc="attrs.string"/></a>
+        <a t-if="attrs.string" class="searchview_group_string" href="#">
+            <t t-esc="attrs.string"/>
+        </a>
         <div class="searchview_group_content">
             <t t-call="SearchView.render_lines"/>
         </div>
