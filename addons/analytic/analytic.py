@@ -133,23 +133,18 @@ class account_analytic_account(osv.osv):
         if type(ids) != type([]):
             ids=[ids]
         for account in self.browse(cr, uid, ids, context=context):
-            if not value:
-                cr.execute("""update account_analytic_account set
-                    currency_id=NULL where id=%s""", (account.id, ))
-            elif account.company_id.currency_id.id == value:
-                cr.execute("""update account_analytic_account set
-                    currency_id=%s where id=%s""", (value, account.id, ))
-            else:
-                raise osv.except_osv(_('Error !'), _("The currency has to be the same as the currency of the analytic account's company or empty."))
-        return True
+            if account.company_id:
+                if account.company_id.currency_id.id != value:
+                    raise osv.except_osv(_('Error !'), _("If you set a company, the currency selected has to be the same as it's currency. \nYou can remove the company belonging, and thus change the currency, only on analytic account of type 'view'. This can be really usefull for consolidation purposes of several companies charts with different currencies, for example."))
+        return cr.execute("""update account_analytic_account set currency_id=%s where id=%s""", (value, account.id, ))
 
     def _currency(self, cr, uid, ids, field_name, arg, context=None):
         result = {}
         for rec in self.browse(cr, uid, ids, context=context):
-            if not rec.currency_id.id:
-                result[rec.id] = False
-            else:
+            if rec.company_id:
                 result[rec.id] = rec.company_id.currency_id.id
+            else:
+                result[rec.id] = rec.currency_id.id
         return result
 
     _columns = {
