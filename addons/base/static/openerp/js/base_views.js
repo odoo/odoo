@@ -690,6 +690,13 @@ openerp.base.WidgetLabel = openerp.base.Widget.extend({
 
         this.template = "WidgetLabel";
         this.colspan = 1;
+    },
+    render: function () {
+        if (this['for'] && this.type !== 'label') {
+            return QWeb.render(this.template, {widget: this['for']});
+        }
+        // Actual label widgets should not have a false and have type label
+        return QWeb.render(this.template, {widget: this});
     }
 });
 
