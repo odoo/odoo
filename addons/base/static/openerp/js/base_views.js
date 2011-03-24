@@ -609,6 +609,18 @@ openerp.base.search.Filter = openerp.base.search.Input.extend({
             $(this).toggleClass('enabled');
             $view_form.submit();
         });
+    },
+    get_context: function () {
+        if (!this.$element.hasClass('enabled')) {
+            return;
+        }
+        return this.attrs.context;
+    },
+    get_domain: function () {
+        if (!this.$element.hasClass('enabled')) {
+            return;
+        }
+        return this.attrs.domain;
     }
 });
 openerp.base.search.Field = openerp.base.search.Input.extend({
