@@ -278,12 +278,14 @@
 <t t-name="SearchView">
     <h3 class="title"><t t-esc="view.attrs['string']"/></h3>
 
-    <t t-call="SearchView.render_lines"/>
+    <form>
+        <t t-call="SearchView.render_lines"/>
 
-    <div style="text-align:right;">
-        <input id="search" type="button" value="Search"/>
-        <input type="button" value="Clear"/>
-    </div>
+        <div style="text-align:right;">
+            <input type="submit" value="Search"/>
+            <input type="reset" value="Clear"/>
+        </div>
+    </form>
 </t>
 <t t-name="SearchView.render_lines">
     <table border="0" cellspacing="0" cellpadding="0"
@@ -296,6 +298,7 @@
     </table>
 </t>
 <button t-name="SearchView.filter" type="button"
+        t-att-id="element_id"
         t-att-title="attrs.help"
         t-att-class="attrs.string ? 'filter_label' : 'filter_icon'">
     <img t-if="attrs.icon" t-att-src="'/base/static/openerp/img/icons/' + attrs.icon + '.png'" width="16" height="16"/>
@@ -307,17 +310,19 @@
         ><t t-raw="filter.render(defaults)"/></t
 ></span>
 <t t-name="SearchView.field">
-    <label style="display: block" t-att-title="attrs.help">
+    <label style="display: block" t-att-title="attrs.help"
+           t-att-for="element_id">
         <t t-esc="attrs.string || attrs.name"/>
         <span t-if="attrs.help">(?)</span>
     </label>
     <div style="white-space: nowrap;">
-        <input type="text" t-att-name="attrs.name"/>
+        <input type="text" t-att-name="attrs.name" t-att-id="element_id"/>
         <t t-if="filters.length" t-raw="filters.render(defaults)"/>
     </div>
 </t>
 <t t-name="SearchView.group">
-    <div t-att-class="'searchview_group ' + (attrs.expand == '0' ? 'folded' : 'expanded')">
+    <div t-att-class="'searchview_group ' + (attrs.expand == '0' ? 'folded' : 'expanded')"
+         t-att-id="element_id">
         <a class="searchview_group_string" href="#" onclick="$(this).parent().toggleClass('folded expanded')"><t t-esc="attrs.string"/></a>
         <div class="searchview_group_content">
             <t t-call="SearchView.render_lines"/>

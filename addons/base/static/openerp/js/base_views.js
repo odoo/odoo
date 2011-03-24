@@ -363,9 +363,8 @@ openerp.base.SearchView = openerp.base.Controller.extend({
         this.dataset = dataset;
         this.model = dataset.model;
         this.view_id = view_id;
-        this.input_index = 0;
-        this.input_ids = {};
-        this.domain = [];
+
+        this.inputs = [];
     },
     start: function() {
         //this.log('Starting SearchView '+this.model+this.view_id)
@@ -376,6 +375,7 @@ openerp.base.SearchView = openerp.base.Controller.extend({
      *
      * @param {Array} items a list of nodes to convert to widgets
      * @param {Object} fields a mapping of field names to (ORM) field attributes
+     * @returns Array
      */
     make_widgets: function (items, fields) {
         var rows = [],
@@ -416,7 +416,12 @@ openerp.base.SearchView = openerp.base.Controller.extend({
         return rows;
     },
     /**
+     * Creates a field for the provided field descriptor item (which comes
+     * from fields_view_get)
      *
+     * @param {Object} item fields_view_get node for the field
+     * @param {Object} field fields_get result for the field
+     * @returns openerp.base.search.Field
      */
     make_field: function (item, field) {
         // TODO: should fetch from an actual registry
@@ -443,6 +448,7 @@ openerp.base.SearchView = openerp.base.Controller.extend({
                 console.info('View field', field);
                 console.info('In view', this);
                 console.groupEnd();
+                return null;
         }
     },
     on_loaded: function(data) {
@@ -459,9 +465,36 @@ openerp.base.SearchView = openerp.base.Controller.extend({
             'defaults': default_values
         });
         this.$element.html(render);
-        // TODO: setup events
+
+        this.$element.find('form')
+                .submit(this.on_search)
+                .bind('reset', this.on_reset);
+        setTimeout(function () {
+            // start() all the widgets
+            _(lines).chain().flatten().each(function (widget) {
+                widget.start();
+            });
+        }, 0);
     },
-    on_search: function () {}
+    on_search: function (e) {
+        e.preventDefault();
+        var inputs_ = _(this.inputs);
+
+        var domains = inputs_.chain()
+            .map(function (input) { return input.get_domain(); })
+            .compact()
+            .value();
+        var contexts = inputs_.chain()
+            .map(function (input) { return input.get_context(); })
+            .compact()
+            .value();
+        console.log('domains', domains);
+        console.log('contexts', contexts);
+    },
+    on_reset: function (e) {
+        e.preventDefault();
+        console.log('on_reset');
+    }
 });
 
 openerp.base.search = {};
@@ -470,21 +503,48 @@ openerp.base.search.Widget = openerp.base.Controller.extend({
     init: function (view) {
         this.view = view;
     },
+    /**
+     * Sets and returns a globally unique identifier for the widget.
+     *
+     * If a prefix is appended, the identifier will be appended to it.
+     *
+     * @params sections prefix sections, empty/falsy sections will be removed
+     */
+    make_id: function () {
+        this.element_id = _.uniqueId(
+            ['search'].concat(
+                _.compact(_.toArray(arguments)),
+                ['']).join('_'));
+        return this.element_id;
+    },
+    /**
+     * "Starts" the widgets. Called at the end of the rendering, this allows
+     * widgets to hook themselves to their view sections.
+     *
+     * On widgets, if they kept a reference to a view and have an element_id,
+     * will fetch and set their root element on $element.
+     */
+    start: function () {
+        this._super();
+        if (this.view && this.element_id) {
+            // id is unique, and no getElementById on elements
+            this.$element = $(document.getElementById(
+                this.element_id));
+        }
+    },
+    /**
+     * "Stops" the widgets. Called when the view destroys itself, this
+     * lets the widgets clean up after themselves.
+     */
+    stop: function () {
+        delete this.view;
+        this._super();
+    },
     render: function (defaults) {
         return QWeb.render(
             this.template, _.extend(this, {
                 defaults: defaults
         }));
-    }
-    // TODO: rendering
-    // TODO: validation
-});
-openerp.base.search.Filter = openerp.base.search.Widget.extend({
-    template: 'SearchView.filter',
-    // TODO: force rendering
-    init: function (node, view) {
-        this._super(view);
-        this.attrs = node.attrs;
     }
 });
 openerp.base.search.FilterGroup = openerp.base.search.Widget.extend({
@@ -492,6 +552,13 @@ openerp.base.search.FilterGroup = openerp.base.search.Widget.extend({
     init: function (filters, view) {
         this._super(view);
         this.filters = filters;
+        this.view.inputs.push(this);
+    },
+    start: function () {
+        this._super();
+        _.each(this.filters, function (filter) {
+            filter.start();
+        });
     }
 });
 openerp.base.search.Group = openerp.base.search.Widget.extend({
@@ -503,9 +570,46 @@ openerp.base.search.Group = openerp.base.search.Widget.extend({
         this.attrs = view_section.attrs;
         this.lines = view.make_widgets(
             view_section.children, fields);
+        this.make_id('group');
+    },
+    start: function () {
+        this._super();
+        _(this.lines)
+            .chain()
+            .flatten()
+            .each(function (widget) { widget.start(); });
     }
 });
-openerp.base.search.Field = openerp.base.search.Widget.extend({
+openerp.base.search.Input = openerp.base.search.Widget.extend({
+    init: function (view) {
+        this._super(view);
+        this.view.inputs.push(this);
+    },
+    get_context: function () {
+        throw new Error(
+            "get_context not implemented for widget " + this.attrs.type);
+    },
+    get_domain: function () {
+        throw new Error(
+            "get_domain not implemented for widget " + this.attrs.type);
+    }
+});
+openerp.base.search.Filter = openerp.base.search.Input.extend({
+    template: 'SearchView.filter',
+    // TODO: force rendering
+    init: function (node, view) {
+        this._super(view);
+        this.attrs = node.attrs;
+        this.make_id('filter', this.attrs.name);
+    },
+    start: function () {
+        this._super();
+        this.$element.click(function () {
+            $(this).toggleClass('enabled');
+        });
+    }
+});
+openerp.base.search.Field = openerp.base.search.Input.extend({
     template: 'SearchView.field',
     // TODO: set default values
     // TODO: get context, domain
@@ -518,6 +622,11 @@ openerp.base.search.Field = openerp.base.search.Widget.extend({
                 return new openerp.base.search.Filter(
                     filter_node, view);
         }), view);
+        this.make_id('input', field.type, this.attrs.name);
+    },
+    start: function () {
+        this._super();
+        this.filters.start();
     }
 });
 openerp.base.search.CharField = openerp.base.search.Field.extend({
