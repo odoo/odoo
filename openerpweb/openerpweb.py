@@ -144,6 +144,7 @@ class OpenERPSession(object):
             ctx.update(self.base_eval_context)
         if context:
             ctx.update(context)
+        ctx['context'] = ctx
 
         return eval(context_string, ctx)
 
@@ -195,6 +196,7 @@ class OpenERPSession(object):
             ctx.update(self.base_eval_context)
         if context:
             ctx.update(context)
+        ctx['context'] = ctx
 
         return eval(domain_string, ctx)
 
