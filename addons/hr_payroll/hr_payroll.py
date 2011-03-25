@@ -464,6 +464,66 @@ class hr_payslip(osv.osv):
                 result[record.id] = [x[0] for x in res]
         return result
     
+    def _get_parent_structure(self, cr, uid, struct_id, context=None):
+        if not struct_id:
+            return []
+        parent = []
+        for line in self.pool.get('hr.payroll.structure').browse(cr, uid, struct_id):
+            if line.parent_id:
+                parent.append(line.parent_id.id)
+        if parent:
+            parent = self._get_parent_structure(cr, uid, parent, context)
+        return struct_id + parent
+
+    def _applied_salary_rule(self, cr, uid, ids, field_names, arg=None, context=None):
+        structure_obj = self.pool.get('hr.payroll.structure')
+        result = {}
+        for record in self.browse(cr, uid, ids, context=context):
+            function = record.struct_id.id
+            sal_structure = []
+            lines = []
+            rules = []
+            rule = []
+            if function:
+                sal_structure = self._get_parent_structure(cr, uid, [function], context=context)
+            for struct in sal_structure:
+                lines = structure_obj.browse(cr, uid, struct, context=context).rule_ids
+                for rl in lines:
+                    if rl.child_ids:
+                        for r in rl.child_ids:
+                            lines.append(r)
+                    rules.append(rl)
+                    for r in rules:
+                       if r.id not in rule:
+                           rule.append(r.id)
+                    result[record.id] = rule
+        return result
+   
+    def _appears_on_payslip_rule(self, cr, uid, ids, field_names, arg=None, context=None):
+        struct_obj = self.pool.get('hr.payroll.structure')
+        result = {}
+        for record in self.browse(cr, uid, ids, context=context):
+            structure = record.struct_id.id
+            sal_struct = []
+            lines = []
+            rules = []
+            rule = []
+            if structure:
+                sal_struct = self._get_parent_structure(cr, uid, [structure], context=context)
+            for struct in sal_struct:
+                lines = struct_obj.browse(cr, uid, struct, context=context).rule_ids
+                for rl in lines:
+                    if rl.child_ids:
+                        for r in rl.child_ids:
+                            lines.append(r)
+                    rules.append(rl)
+                    for r in rules:
+                       if r.appears_on_payslip:
+                           if r.id not in rule:
+                               rule.append(r.id)
+                    result[record.id] = rule
+        return result
+    
     def _compute(self, cr, uid, id, value, context=None):
         rule_obj = self.pool.get('hr.salary.rule')
         contrib = rule_obj.browse(cr, uid, id, context=context)
@@ -509,6 +569,9 @@ class hr_payslip(osv.osv):
         'igross': fields.float('Calculaton Field', readonly=True,  digits=(16, 2), help="Calculation field used for internal calculation, do not place this on form"),
         'inet': fields.float('Calculaton Field', readonly=True,  digits=(16, 2), help="Calculation field used for internal calculation, do not place this on form"),
         'holiday_ids': fields.function(_get_holidays, method=True, type='one2many', relation='hr.holidays', string='Holiday Lines', required=False),
+        'applied_salary_rule': fields.function(_applied_salary_rule, method=True, type='one2many', relation='hr.salary.rule', string='Applied Salary Rules', required=False),
+        'appears_on_payslip_rule': fields.function(_appears_on_payslip_rule, method=True, type='one2many', relation='hr.salary.rule', string='Appears on Payslip', required=False),
+#        'details_by_salary_head': fields.function(_get_salary_rules, method=True, type='one2many', relation='hr.salary.rule', string='Details by Salary Head'),
     }
     _defaults = {
         'date': lambda *a: time.strftime('%Y-%m-%d'),
@@ -645,17 +708,6 @@ class hr_payslip(osv.osv):
         if res:
             result = [x[0] for x in res]
         return result
-
-    def _get_parent_structure(self, cr, uid, struct_id, context=None):
-        if not struct_id:
-            return []
-        parent = []
-        for line in self.pool.get('hr.payroll.structure').browse(cr, uid, struct_id):
-            if line.parent_id:
-                parent.append(line.parent_id.id)
-        if parent:
-            parent = self._get_parent_structure(cr, uid, parent, context)
-        return struct_id + parent
 
     def compute_sheet(self, cr, uid, ids, context=None):
         func_pool = self.pool.get('hr.payroll.structure')
