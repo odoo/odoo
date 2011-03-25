@@ -58,7 +58,12 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
         if(this.search_visible && action.search_view_id) {
             this.searchview_id = action.search_view_id[0];
             this.searchview = new openerp.base.SearchView(this.session, this.element_id + "_search", this.dataset, this.searchview_id);
+            this.searchview.on_search.add(this.do_search);
             this.searchview.start();
+
+            if (action['auto_search']) {
+                setTimeout(this.searchview.do_search);
+            }
         }
         for(var i = 0; i < action.views.length; i++)  {
             var view_id, controller;
@@ -88,6 +93,10 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
     on_remove: function() {
     },
     on_edit: function() {
+    },
+    do_search: function (domains, contexts) {
+        console.log('domains', domains);
+        console.log('contexts', contexts);
     }
 });
 
@@ -482,8 +491,8 @@ openerp.base.SearchView = openerp.base.Controller.extend({
         this.$element.html(render);
 
         this.$element.find('form')
-                .submit(this.on_search)
-                .bind('reset', this.on_reset);
+                .submit(this.do_search)
+                .bind('reset', this.do_clear);
         setTimeout(function () {
             // start() all the widgets
             _(lines).chain().flatten().each(function (widget) {
@@ -491,25 +500,40 @@ openerp.base.SearchView = openerp.base.Controller.extend({
             });
         }, 0);
     },
-    on_search: function (e) {
-        e.preventDefault();
-        var inputs_ = _(this.inputs);
+    do_search: function (e) {
+        if (e) { e.preventDefault(); }
+        var inputs_ = _(this.inputs).chain();
 
-        var domains = inputs_.chain().
+        var domains = inputs_.
             map(function (input) { return input.get_domain(); }).
             compact().
             value();
-        var contexts = inputs_.chain()
-            .map(function (input) { return input.get_context(); })
-            .compact()
-            .value();
-        console.log('domains', domains);
-        console.log('contexts', contexts);
+        var contexts = inputs_.
+            map(function (input) { return input.get_context(); }).
+            compact().
+            value();
+        this.on_search(domains, contexts);
     },
-    on_reset: function (e) {
-        e.preventDefault();
-        console.log('on_reset');
-    }
+    /**
+     * Event hook for searches: triggers after the SearchView has collected
+     * all relevant domains and contexts.
+     *
+     * It is provided with an Array of domains and an Array of contexts, which
+     * may or may not be evaluated (each item can be either a valid domain or
+     * context, or a string to evaluate in order in the sequence)
+     *
+     * @param {Array} domains an array of string or literal domains
+     * @param {Array} contexts an array of string or literal contexts
+     */
+    on_search: function (domains, contexts) { },
+    do_clear: function (e) {
+        if (e) { e.preventDefault(); }
+        this.on_clear();
+    },
+    /**
+     * event hook for clearing search
+     */
+    on_clear: function () {  }
 });
 
 openerp.base.search = {};
