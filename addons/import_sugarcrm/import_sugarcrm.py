@@ -328,7 +328,7 @@ def import_employees(sugar_obj, cr, uid, context=None):
                     'work_phone': 'phone_work',
                     'mobile_phone':  'phone_mobile',
                     'user_id/name': ['first_name', 'last_name'], 
-                    #'resource_id/id': 'resource_id/id', 
+                    'resource_id/.id': 'resource_id/.id', 
                     'address_home_id/.id': 'address_home_id/.id',
                     'notes': 'description',
                     #TODO: Creation of Employee create problem.
@@ -342,6 +342,10 @@ def import_employees(sugar_obj, cr, uid, context=None):
     for val in sugar_data:
         address_id = get_user_address(sugar_obj, cr, uid, val, context)
         val['address_home_id/.id'] = address_id
+        model_ids = find_mapped_id(sugar_obj, cr, uid, 'resource.resource', val.get('user_hash')+ '_resource_resource', context)
+        resource_id = sugar_obj.pool.get('ir.model.data').browse(cr, uid, model_ids)
+        if resource_id:
+            val['resource_id/.id'] = resource_id[0].res_id
         new_job_id = job_obj.create(cr, uid, {'name': val.get('title')})
         val['job_id/.id'] = new_job_id
         fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_employee)
