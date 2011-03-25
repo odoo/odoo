@@ -309,6 +309,9 @@ class account_account(osv.osv):
             null_result = dict((fn, 0.0) for fn in field_names)
             for id in ids:
                 res[id] = sums.get(id, null_result)
+        else:
+            for id in ids:
+                res[id] = 0.0
         return res
 
     def _get_company_currency(self, cr, uid, ids, field_name, arg, context=None):
