@@ -1094,6 +1094,7 @@ class account_move_line(osv.osv):
             context['journal_id'] = line.journal_id.id
             context['period_id'] = line.period_id.id
             result = super(account_move_line, self).unlink(cr, uid, [line.id], context=context)
+        move_ids = list(set(move_ids))
         if check:
             move_obj.validate(cr, uid, move_ids, context=context)
         return result
