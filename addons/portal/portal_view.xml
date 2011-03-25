@@ -10,6 +10,11 @@
             <field name="res_model">res.portal</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="help">
+A portal defines customized views and rules for a particular set of users.  A
+user may belong to at most one portal.  A portal is associated to a menu and a
+set of user groups, and those are automatically assigned to the portal's users.
+            </field>
         </record>
         <menuitem name="Portals" id="portal_list_menu" parent="portal_menu"
             action="portal_list_action"/>
@@ -39,7 +44,7 @@
             </field>
         </record>
 
-        <!-- user form view -->
+        <!-- extend user form view -->
         <record id="view_users_form" model="ir.ui.view">
             <field name="name">view_users_form</field>
             <field name="model">res.users</field>
