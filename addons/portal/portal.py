@@ -20,6 +20,7 @@
 ##############################################################################
 
 from osv import osv, fields
+import random
 
 class portal(osv.osv):
     _name = 'res.portal'
@@ -36,6 +37,21 @@ class portal(osv.osv):
             string='Groups',
             help='Users of this portal automatically belong to those groups'),
     }
+    _sql_constraints = [
+        ('unique_name', 'UNIQUE(name)', 'Portals must have different names.')
+    ]
+    
+    def copy(self, cr, uid, id, defaults, context=None):
+        """ override copy() to not copy the portal users """
+        # find an unused name of the form "old_name [N]" for some random N
+        old_name = self.browse(cr, uid, id, context).name
+        new_name = copy_random(old_name)
+        while self.search(cr, uid, [('name', '=', new_name)], limit=1, context=context):
+            new_name = copy_random(old_name)
+        
+        defaults['name'] = new_name
+        defaults['user_ids'] = []
+        return super(portal, self).copy(cr, uid, id, defaults, context)
     
     def create(self, cr, uid, values, context=None):
         """ extend create() to assign the portal menu and groups to users """
@@ -93,4 +109,8 @@ def get_browse_id(obj):
 def get_browse_ids(objs):
     """ return the ids of a list of browse() objects """
     return [(obj and obj.id or default) for obj in objs]
+
+def copy_random(name):
+    """ return "name [N]" for some random integer N """
+    return "%s [%s]" % (name, random.choice(xrange(1000000)))
 
