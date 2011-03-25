@@ -1,6 +1,9 @@
 #!/usr/bin/python
+import datetime
 import functools
 import optparse
+import time
+import dateutil.relativedelta
 import os
 import sys
 import tempfile
@@ -39,6 +42,15 @@ class OpenERPModel(object):
 
 
 class OpenERPSession(object):
+    """
+    An OpenERP RPC session, a given user can own multiple such sessions
+    in a web session.
+
+    .. attribute:: context
+    
+        The session context, a ``dict``. Can be reloaded by calling
+        :meth:`openerpweb.openerpweb.OpenERPSession.get_context`
+    """
     def __init__(self, server='127.0.0.1', port=8069,
                  model_factory=OpenERPModel):
         self._server = server
@@ -48,6 +60,8 @@ class OpenERPSession(object):
         self._login = False
         self._password = False
         self.model_factory = model_factory
+
+        self.context = {}
 
     def proxy(self, service):
         s = xmlrpctimeout.TimeoutServerProxy('http://%s:%s/xmlrpc/%s' % (self._server, self._port, service), timeout=5)
@@ -62,6 +76,9 @@ class OpenERPSession(object):
         uid = self.proxy('common').login(db, login, password)
         self.bind(db, uid, password)
         self._login = login
+
+        if uid: self.get_context()
+
         return uid
 
     def execute(self, model, func, *l, **d):
@@ -71,7 +88,75 @@ class OpenERPSession(object):
         return r
 
     def model(self, model):
+        """ Get an RPC proxy for the object ``model``, bound to this session.
+
+        :param model: an OpenERP model name
+        :type model: str
+        :rtype: :class:`openerpweb.openerpweb.OpenERPModel`
+        """
         return self.model_factory(self, model)
+
+    def get_context(self):
+        """ Re-initializes the current user's session context (based on
+        his preferences) by calling res.users.get_context() with the old
+        context
+
+        :returns: the new context
+        """
+        assert self._uid, "The user needs to be logged-in to initialize his context"
+        self.context = self.model('res.users').context_get(self.context)
+        return self.context
+
+    @property
+    def base_eval_context(self):
+        """ Default evaluation context for the session.
+
+        Used to evaluate contexts and domains.
+        """
+        return dict(
+            uid=self._uid,
+            current_date=datetime.date.today().strftime('%Y-%m-%d'),
+            time=time,
+            datetime=datetime,
+            relativedelta=dateutil.relativedelta.relativedelta,
+            **self.context
+        )
+
+    def eval_context(self, context_string, context=None):
+        """ Evaluates the provided context_string in the context (haha) of
+        the context.
+
+        :param str context_string: a context to evaluate, if not a string,
+                                   will be returned as-is
+        :param dict context: the context to use in the evaluation, if any.
+                             Will be merged with a default context and
+                             the session context.
+        :returns: the evaluated context
+        :rtype: dict
+        """
+        if not isinstance(context_string, basestring):
+            return context_string
+    
+        return eval(context_string, dict(
+            self.base_eval_context,
+            **(context or {})))
+    def eval_domain(self, domain_string, context=None):
+        """ Evaluates the provided domain_string using the provided context
+        (merged with the session's evaluation context)
+
+        :param str domain_string: an OpenERP domain as a string, to evaluate.
+
+                              If not a string, is returned as-is
+        :param dict context: the context to use in the evaluation, if any.
+        :returns: the evaluated domain
+        :rtype: list
+        """
+        if not isinstance(domain_string, basestring):
+            return domain_string
+
+        return eval(domain_string, dict(
+            self.base_eval_context,
+            **(context or {})))
 
 #----------------------------------------------------------
 # OpenERP Web RequestHandler
