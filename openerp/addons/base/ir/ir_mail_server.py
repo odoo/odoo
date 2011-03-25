@@ -102,16 +102,11 @@ unless it is already specified in the From Email, e.g: John Doe <john@doe.com>",
                         required=False),
         'smtp_tls':fields.boolean('TLS'),
         'smtp_ssl':fields.boolean('SSL/TLS'),
-        'priority': fields.integer('Priority', help=""),
+        'priority': fields.integer('Priority', help="If no specific server is requested for a mail then the highest priority one is used"),
     }
 
     _defaults = {
-         'name':lambda self, cursor, user, context:self.pool.get( 'res.users'
-                                                ).read(cursor, user, user, ['name'], context)['name'],
-         'smtp_port': tools.config.get('smtp_port',25),
-         'smtp_host': tools.config.get('smtp_server','localhost'),
-         'smtp_ssl': tools.config.get('smtp_ssl',False),
-         'smtp_tls': True,
+         'smtp_port': 25,
          'priority': 10,
      }
 
@@ -244,7 +239,6 @@ unless it is already specified in the From Email, e.g: John Doe <john@doe.com>",
 
         if id:
             smtp_server = self.browse(cr, uid, id)
-
         if not (id and smtp_server):
             server = self.search(cr, uid, [], order='priority', limit=1)
             smtp_server = self.browse(cr, uid, server[0])
@@ -279,6 +273,18 @@ unless it is already specified in the From Email, e.g: John Doe <john@doe.com>",
         if res:
             return message_id
         return False
+
+    def on_change_ssl(self, cr, uid, ids, smtp_ssl):
+        smtp_port = 0
+        if smtp_ssl:
+            smtp_port = 465
+        return {'value':{'smtp_ssl':smtp_ssl,'smtp_tls':False,'smtp_port':smtp_port}}
+
+    def on_change_tls(self, cr, uid, ids, smtp_tls):
+        smtp_port = 0
+        if smtp_tls:
+            smtp_port = 0
+        return {'value':{'smtp_tls':smtp_tls,'smtp_ssl':False,'smtp_port':smtp_port}}
 
 
 ir_mail_server()

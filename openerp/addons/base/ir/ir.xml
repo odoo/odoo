@@ -1959,8 +1959,8 @@
                             <group colspan="4" col="8">
                                 <field name="smtp_host"/>
                                 <field name="smtp_port"/>
-                                <field name="smtp_ssl"/>
-                                <field name="smtp_tls"/>
+                                <field name="smtp_ssl" on_change="on_change_ssl(smtp_ssl)"/>
+                                <field name="smtp_tls" on_change="on_change_tls(smtp_tls)"/>
                                 <field name="priority"/>
                              </group>
 

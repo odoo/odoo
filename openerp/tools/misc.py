@@ -430,11 +430,10 @@ def generate_tracking_message_id(openobject_id):
 
 def email_send(smtp_from, smtp_to_list, message, ssl=False, debug=False, smtp_server=None, smtp_port=None,
            smtp_user=None, smtp_password=None, cr=None):
-    print 'email tool:'
     if not cr:
         db_name = getattr(threading.currentThread(), 'dbname', None)
         if db_name:
-            cr = pooler.get_db_only(dbname).cursor()
+            cr = pooler.get_db_only(db_name).cursor()
         else:
             raise Exception("No database cursor found!")
     try:
