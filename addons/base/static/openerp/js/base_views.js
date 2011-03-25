@@ -41,12 +41,8 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
     start: function() {
     },
     on_mode_switch: function(view_type) {
-        for (var i in this.views) { 
-           if(i == view_type) {
-               this.views[i].controller.$element.show();
-           } else {
-               this.views[i].controller.$element.hide();
-           }
+        for (var i in this.views) {
+           this.views[i].controller.$element.toggle(i === view_type);
         }
     },
     do_action_window: function(action) {
