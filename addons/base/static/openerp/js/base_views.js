@@ -514,6 +514,9 @@ openerp.base.SearchView = openerp.base.Controller.extend({
             data.fields_view['arch'].children,
             data.fields_view.fields);
 
+        // for extended search view
+        lines.push([new openerp.base.search.ExtendedSearch(this)]);
+        
         var render = QWeb.render("SearchView", {
             'view': data.fields_view['arch'],
             'lines': lines,
@@ -738,6 +741,22 @@ openerp.base.search.Group = openerp.base.search.Widget.extend({
             e.preventDefault();
         });
     }
+});
+openerp.base.search.ExtendedSearch = openerp.base.search.Widget.extend({
+    template: 'SearchView.extended_search',
+    init: function (view) {
+	    this._super(view);
+        this.make_id('extended-search');
+	},
+    start: function () {
+        this._super();
+        var $root = this.$element;
+        $root.find('a.searchview_group_string').click(function (e) {
+            $root.toggleClass('folded expanded');
+            e.stopPropagation();
+            e.preventDefault();
+        });
+	}
 });
 openerp.base.search.Input = openerp.base.search.Widget.extend({
     init: function (view) {
