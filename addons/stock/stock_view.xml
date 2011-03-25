@@ -934,8 +934,7 @@
                                     <field name="location_id"/>
                                     <field name="date"/>
                                     <field name="state"/>
-                                    <button name="%(action_partial_move_server)d" string="Partial" type="action" states="confirmed,assigned" icon="gtk-justify-fill"/>
-                                    <button name="action_done" states="confirmed,assigned" string="Process" type="object" icon="gtk-go-forward"/>
+                                    <button name="%(action_partial_move_server)d" string="Process" type="action" states="confirmed,assigned" icon="gtk-go-forward"/>
                                 </tree>
                                 <form string="Stock Moves">
                                     <group colspan="2" col="4">
@@ -1586,8 +1585,7 @@
                     <field name="date"/>
                     <field name="state"/>
                     <button name="action_assign" states="confirmed" string="Set Available" type="object" icon="gtk-yes"/>
-                    <button name="%(action_partial_move_server)d" string="Partial" type="action" states="confirmed,assigned" icon="gtk-justify-fill"/>
-                    <button name="action_done" states="confirmed,assigned" string="Process" type="object" icon="gtk-go-forward"/>
+                    <button name="%(action_partial_move_server)d" string="Process" type="action" states="confirmed,assigned" icon="gtk-go-forward"/>
                 </tree>
             </field>
         </record>
@@ -1675,8 +1673,7 @@
                         <button name="action_cancel" states="assigned,confirmed" string="_Cancel" type="object" icon="gtk-cancel"/>
                         <button name="action_confirm" states="draft" string="Process Later" type="object" icon="gtk-apply"/>
                         <button name="force_assign" states="confirmed" string="Set Available" type="object" icon="gtk-yes"/>
-                        <button name="%(action_partial_move_server)d" states="assigned" string="Partial" type="action" icon="gtk-justify-fill"/>
-                        <button name="action_done" states="draft,assigned,confirmed" string="Process Now" type="object" icon="gtk-jump-to"/>
+                        <button name="%(action_partial_move_server)d" states="assigned" string="Process" type="action" icon="gtk-go-forward"/>
                     </group>
                 </form>
             </field>
