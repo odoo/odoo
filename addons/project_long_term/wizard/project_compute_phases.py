@@ -69,7 +69,8 @@ class project_compute_phases(osv.osv_memory):
         id = mod_obj.read(cr, uid, [result], ['res_id'])[0]['res_id']
         result = act_obj.read(cr, uid, [id], context=context)[0]
         result['target'] = 'current'
-        result['context'] = {"search_default_project_id":data['project_id'], "default_project_id":data['project_id'], "search_default_responsible_id":uid, "search_default_current": 1}
+        project_id = data.get('project_id') and data.get('project_id')[0] or False
+        result['context'] = {"search_default_project_id":project_id, "default_project_id":project_id, "search_default_responsible_id":uid, "search_default_current": 1}
         return result
 
 project_compute_phases()
