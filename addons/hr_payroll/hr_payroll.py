@@ -595,18 +595,6 @@ class hr_payslip(osv.osv):
         return True
 
     def get_contract(self, cr, uid, employee, date, context=None):
-#        sql_req= '''
-#            SELECT c.id as id, c.wage as wage, struct_id as function
-#            FROM hr_contract c
-#              LEFT JOIN hr_employee emp on (c.employee_id=emp.id)
-#              LEFT JOIN hr_contract_wage_type cwt on (cwt.id = c.wage_type_id)
-#              LEFT JOIN hr_contract_wage_type_period p on (cwt.period_id = p.id)   #PSI@ improve as we need period but wage_type_id field removed
-#            WHERE
-#              (emp.id=%s) AND
-#              (date_start <= %s) AND
-#              (date_end IS NULL OR date_end >= %s)
-#            LIMIT 1
-#            '''
         sql_req= '''
             SELECT c.id as id, c.wage as wage, struct_id as function
             FROM hr_contract c
@@ -615,11 +603,10 @@ class hr_payslip(osv.osv):
               (emp.id=%s) AND
               (date_start <= %s) AND
               (date_end IS NULL OR date_end >= %s)
-            LIMIT 1
             '''
         cr.execute(sql_req, (employee.id, date, date))
-        contract = cr.dictfetchone()
-        return contract and contract or {}
+        contracts = cr.dictfetchall()
+        return contracts and contracts or {}
 
     def _get_leaves(self, cr, user, ddate, employee, context=None):
         """
@@ -897,6 +884,7 @@ class hr_payslip(osv.osv):
         holiday_pool = self.pool.get('hr.holidays')
         sequence_obj = self.pool.get('ir.sequence')
         empolyee_obj = self.pool.get('hr.employee')
+        contract_obj = self.pool.get('hr.contract')
         resource_attendance_pool = self.pool.get('resource.calendar.attendance')
 
         if context is None:
@@ -914,138 +902,149 @@ class hr_payslip(osv.osv):
         ttyme = datetime.fromtimestamp(time.mktime(time.strptime(ddate, "%Y-%m-%d")))
         if not contract_id:
             contracts = self.get_contract(cr, uid, employee_id, ddate, context=context)
-            if not contracts.get('id', False):
-                update['value'].update({
-                    'basic_amount': 0.0,
-                    'basic_before_leaves': 0.0,
-                    'name':'Salary Slip of %s for %s' % (employee_id.name, tools.ustr(ttyme.strftime('%B-%Y'))),
-                    'contract_id':False,
-                    'company_id':employee_id.company_id.id
-                })
-                return update
-            contract = employee_id.contract_id
         else:
-            contract = self.pool.get('hr.contract').browse(cr, uid, contract_id, context=context)
-
-        function = contract.struct_id.id
-        sal_structure = []
-        if function:
-            sal_structure = self._get_parent_structure(cr, uid, [function], context=context)
-
-        lines = []
-        rules = []
-        for struct in sal_structure:
-            lines = func_pool.browse(cr, uid, struct, context=context).rule_ids
-            for rl in lines:
-                if rl.child_ids:
-                    for r in rl.child_ids:
-                        lines.append(r)
-                rules.append(rl)
-        ad = []
-        total = 0.0
-        obj = {'basic': contract.wage}
-        for line in rules:
-            cd = line.code.lower()
-            obj[cd] = line.amount or 0.0
-
-        for line in rules:
-            if line.category_id.code in ad:
+            contracts = [contract_obj.read(cr, uid, contract_id, ['wage', 'struct_id', 'id'], context=context)]
+            update['value'].update({
+                'struct_id': contracts[0].get('struct_id', False),
+                'contract_id': contract_id
+            })
+        if not contracts:
+            update['value'].update({
+                'basic_amount': 0.0,
+                'basic_before_leaves': 0.0,
+                'name':'Salary Slip of %s for %s' % (employee_id.name, tools.ustr(ttyme.strftime('%B-%Y'))),
+                'contract_id': False,
+                'struct_id': False,
+                'company_id':employee_id.company_id.id
+            })
+            return update
+        final_total = 0.0
+        all_basic = 0.0
+        for contract in contracts:
+            if contract.get('id', False) == False:
                 continue
-            ad.append(line.category_id.code)
-            cd = line.category_id.code.lower()
-            calculate = False
-            try:
-                exp = line.conditions
-                calculate = eval(exp, obj)
-            except Exception, e:
-                raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ') % (e))
+            contract_id = contract.get('id')
+            contract_id = self.pool.get('hr.contract').browse(cr, uid, contract_id, context=context)
+            function = contract_id.struct_id.id
+            sal_structure = []
+            if function:
+                sal_structure = self._get_parent_structure(cr, uid, [function], context=context)
+            lines = []
+            rules = []
+            for struct in sal_structure:
+                lines = func_pool.browse(cr, uid, struct, context=context).rule_ids
+                for rl in lines:
+                    if rl.child_ids:
+                        for r in rl.child_ids:
+                            lines.append(r)
+                    rules.append(rl)
+            ad = []
+            total = 0.0
+            obj = {'basic': contract_id.wage}
+            for line in rules:
+                cd = line.code.lower()
+                obj[cd] = line.amount or 0.0
 
-            if not calculate:
-                continue
-
-            value = 0.0
-            base = line.computational_expression
-            try:
-                amt = eval(base, obj)
-            except Exception, e:
-                raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ') % (e))
-            if line.amount_type == 'per':
+            for line in rules:
+                if line.category_id.code in ad:
+                    continue
+                ad.append(line.category_id.code)
+                cd = line.category_id.code.lower()
+                calculate = False
                 try:
-                    if line.child_depend == False:
-                        if line.parent_rule_id:
-                            for rul in [line.parent_rule_id]:
-                                val = rul.amount * amt
-                                amt = val
-                        value = line.amount * amt
-                        if line.condition_range_min or line.condition_range_max:
-                            if ((value < line.condition_range_min) or (value > line.condition_range_max)):
-                                value = 0.0
-                            else:
-                                value = value
-                        else:
-                            value = value
+                    exp = line.conditions
+                    calculate = eval(exp, obj)
                 except Exception, e:
                     raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ') % (e))
 
-            elif line.amount_type == 'fix':
-                if line.child_depend == False:
-                    if line.parent_rule_id:
-                        for rul in [line.parent_rule_id]:
-                            value = value
-                    if line.condition_range_min or line.condition_range_max:
-                        if ((line.amount < line.condition_range_min) or (line.amount > line.condition_range_max)):
-                            value = value
+                if not calculate:
+                    continue
+
+                value = 0.0
+                base = line.computational_expression
+                try:
+                    amt = eval(base, obj)
+                except Exception, e:
+                    raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ') % (e))
+                if line.amount_type == 'per':
+                    try:
+                        if line.child_depend == False:
+                            if line.parent_rule_id:
+                                for rul in [line.parent_rule_id]:
+                                    val = rul.amount * amt
+                                    amt = val
+                            value = line.amount * amt
+                            if line.condition_range_min or line.condition_range_max:
+                                if ((value < line.condition_range_min) or (value > line.condition_range_max)):
+                                    value = 0.0
+                                else:
+                                    value = value
+                            else:
+                                value = value
+                    except Exception, e:
+                        raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ') % (e))
+
+                elif line.amount_type == 'fix':
+                    if line.child_depend == False:
+                        if line.parent_rule_id:
+                            for rul in [line.parent_rule_id]:
+                                value = value
+                        if line.condition_range_min or line.condition_range_max:
+                            if ((line.amount < line.condition_range_min) or (line.amount > line.condition_range_max)):
+                                value = value
+                            else:
+                                value = line.amount
                         else:
                             value = line.amount
-                    else:
-                        value = line.amount
 
-            elif line.amount_type=='code':
-                localdict = {'basic':amt, 'employee':employee_id, 'contract':contract}
-                exec line.python_compute in localdict
-                val = localdict['result']
-                if line.child_depend == False:
-                    if line.parent_rule_id:
-                        for rul in [line.parent_rule_id]:
-                            value = val
-                    if line.condition_range_min or line.condition_range_max:
-                        if ((line.amount < line.condition_range_min) or (line.amount > line.condition_range_max)):
-                            value = value
+                elif line.amount_type=='code':
+                    localdict = {'basic':amt, 'employee':employee_id, 'contract':contract_id}
+                    exec line.python_compute in localdict
+                    val = localdict['result']
+                    if line.child_depend == False:
+                        if line.parent_rule_id:
+                            for rul in [line.parent_rule_id]:
+                                value = val
+                        if line.condition_range_min or line.condition_range_max:
+                            if ((line.amount < line.condition_range_min) or (line.amount > line.condition_range_max)):
+                                value = value
+                            else:
+                                value = val
                         else:
                             value = val
+
+                total += value
+                vals = {
+                    'category_id': line.category_id.id,
+                    'name': line.name,
+                    'sequence': line.sequence,
+                    'type': line.type.id,
+                    'code': line.code,
+                    'amount_type': line.amount_type,
+                    'amount': line.amount,
+                    'total': value,
+                    'employee_id': employee_id.id,
+                    'base': line.computational_expression
+                }
+                if line.appears_on_payslip:
+                    if line.condition_range_min or line.condition_range_max:
+                        if not ((value < line.condition_range_min) or (value > line.condition_range_max)):
+                            update['value']['line_ids'].append(vals)
                     else:
-                        value = val
-
-            total += value
-            vals = {
-                'category_id': line.category_id.id,
-                'name': line.name,
-                'sequence': line.sequence,
-                'type': line.type.id,
-                'code': line.code,
-                'amount_type': line.amount_type,
-                'amount': line.amount,
-                'total': value,
-                'employee_id': employee_id.id,
-                'base': line.computational_expression
-            }
-            if line.appears_on_payslip:
-                if line.condition_range_min or line.condition_range_max:
-                    if not ((value < line.condition_range_min) or (value > line.condition_range_max)):
                         update['value']['line_ids'].append(vals)
-                else:
-                    update['value']['line_ids'].append(vals)
 
-        basic = contract.wage
+            basic = contract_id.wage
+            all_basic += basic
+            final_total += basic + total
         number = sequence_obj.get(cr, uid, 'salary.slip')
         update['value'].update({
 #            'struct_id': function,
             'number': number,
-            'basic_amount': basic,
+            'basic_amount': all_basic,
             'basic_before_leaves': basic,
-            'total_pay': basic + total,
+            'total_pay': final_total,
             'name': 'Salary Slip of %s for %s' % (employee_id.name, tools.ustr(ttyme.strftime('%B-%Y'))),
-            'contract_id': contract.id,
+#            'contract_id': contract_id.id,
             'company_id': employee_id.company_id.id
         })
 
@@ -1069,7 +1068,7 @@ class hr_payslip(osv.osv):
             off_days += get_days(1, dates[1].day, dates[1].month, dates[1].year, days_arr[dy])
         total_off = off_days
         working_day = dates[1].day - total_off
-        perday = working_day and basic / working_day or 0.0
+#        perday = working_day and basic / working_day or 0.0
         total = 0.0
         leave = 0.0
         leave_ids = self._get_leaves(cr, uid, ddate, employee_id, context)
@@ -1141,7 +1140,7 @@ class hr_payslip(osv.osv):
                             value = salary_rule.amount * days
 
                 elif salary_rule.amount_type=='code':
-                    localdict = {'basic':amt, 'employee':employee_id, 'contract':contract}
+                    localdict = {'basic':amt, 'employee':employee_id, 'contract':contract_id}
                     exec salary_rule.python_compute in localdict
                     val = localdict['result'] * days
                     if salary_rule.child_depend == False:
