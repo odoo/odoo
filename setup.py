@@ -193,7 +193,7 @@ options = {
             "pydot", "asyncore","asynchat", "reportlab", "vobject",
             "HTMLParser", "select", "mako", "poplib",
             "imaplib", "smtplib", "email", "yaml", "DAV",
-            "uuid",
+            "uuid", "commands",
         ],
         "excludes" : ["Tkconstants","Tkinter","tcl"],
     }
