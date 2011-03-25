@@ -279,7 +279,6 @@ class View(openerpweb.Controller):
             if event == "start":
                 if root is None:
                     root = elem
-                elem.attrib['CACA'] = '3'
                 # SEE http://pad.openerp.com/discoveries
                 # If @attrs is normalized in json by server, the eval should be replaced by simplejson.loads
                 attrs = eval(elem.attrib.get('attrs', '{}'))

@@ -455,21 +455,22 @@ openerp.base.Menu =  openerp.base.Controller.extend({
         this.on_ready();
     },
     on_menu_click: function(ev, id) {
-        var id = id || 0, $menu, $parent, $secondary;
+        id = id || 0;
+        var $menu, $parent, $secondary;
+
         if (id) {
             // We can manually activate a menu with it's id (for hash url mapping)
-            $menu = $('a[data-menu=' + id + ']', this.$element);
+            $menu = this.$element.find('a[data-menu=' + id + ']');
             if (!$menu.length) {
-                $menu = $('a[data-menu=' + id + ']', this.$secondary_menu);
+                $menu = this.$secondary_menu.find('a[data-menu=' + id + ']');
             }
         } else {
             $menu = $(ev.currentTarget);
-            id = parseInt($menu.attr('data-menu'));
+            id = $menu.data('menu');
         }
         if (this.$secondary_menu.has($menu).length) {
             $secondary = $menu.parents('.menu_accordion');
-            var parent_id = $secondary.attr('data-menu-parent');
-            $parent = $('a[data-menu=' + parent_id + ']', this.$element);
+            $parent = this.$element.find('a[data-menu=' + $secondary.data('menu-parent') + ']');
         } else {
             $parent = $menu;
             $secondary = this.$secondary_menu.find('.menu_accordion[data-menu-parent=' + $menu.attr('data-menu') + ']');
@@ -478,7 +479,11 @@ openerp.base.Menu =  openerp.base.Controller.extend({
         this.$secondary_menu.find('.menu_accordion').hide();
         // TODO: ui-accordion : collapse submenus and expand the good one
         $secondary.show();
-        this.rpc('/base/menu/action', {'menu_id': id}, this.on_menu_action_loaded);
+
+        if (id) {
+            this.rpc('/base/menu/action', {'menu_id': id},
+                    this.on_menu_action_loaded);
+        }
 
         $('.active', this.$element.add(this.$secondary_menu)).removeClass('active');
         $parent.addClass('active');
