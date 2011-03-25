@@ -39,6 +39,9 @@ Italian accounting chart and localization.
     "category" : "Finance",
     'website': 'http://www.openerp-italia.org/',
     'init_xml': [
+        'report.xml',
+        'libroIVA_view.xml',
+        'libroIVA_menu.xml',
         ],
     'update_xml': [
         'data/account.account.type.csv',
@@ -48,9 +51,6 @@ Italian accounting chart and localization.
         'data/account.tax.template.csv',
         'data/account.fiscal.position.template.csv',
         'l10n_chart_it_generic.xml',
-        'report.xml',
-        'libroIVA_view.xml',
-        'libroIVA_menu.xml',
         'security/ir.model.access.csv',
         ],
     'demo_xml': [
