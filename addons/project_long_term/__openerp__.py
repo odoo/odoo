@@ -24,7 +24,7 @@
     "version": "1.1",
     "author": "OpenERP SA",
     "website": "http://www.openerp.com",
-    "category": "Generic Modules/Projects & Services",
+    "category": "Project Management",
     "images": ["images/project_phase_form.jpeg","images/project_phases.jpeg", "images/resources_allocation.jpeg"],
     "depends": ["resource", "project"],
     "description": """

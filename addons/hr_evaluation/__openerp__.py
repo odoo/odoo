@@ -23,7 +23,7 @@
     "name" : "Human Resources Evaluation",
     "version": "0.1",
     "author": "OpenERP SA",
-    "category": "Generic Modules/Human Resources",
+    "category": "Human Resources",
     "website": "http://www.openerp.com",
     "images": ["images/hr_evaluation_analysis.jpeg","images/hr_evaluation.jpeg"],
     "depends": ["hr",'hr_recruitment','survey'],

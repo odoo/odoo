@@ -22,7 +22,7 @@
 {
     'name': 'Human Resource Payroll Accounting',
     'version': '1.0',
-    'category': 'Generic Modules/Human Resources',
+    'category': 'Human Resources',
     'description': """
 Generic Payroll system Integrated with Accountings.
 ===================================================

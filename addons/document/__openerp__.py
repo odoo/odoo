@@ -23,6 +23,7 @@
 {
     'name': 'Integrated Document Management System',
     'version': '2.1',
+    'category': 'Tools',
     'category': 'Generic Modules/Others',
     'description': """
 This is a complete document management system.

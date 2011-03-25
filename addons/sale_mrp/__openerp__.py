@@ -23,7 +23,7 @@
 {
     'name': 'Sales and MRP Management',
     'version': '1.0',
-    'category': 'Generic Modules/Sales & MRP',
+    'category': 'Sales',
     'description': """
 This module provides facility to the user to install mrp and sales modulesat a time.
 ====================================================================================

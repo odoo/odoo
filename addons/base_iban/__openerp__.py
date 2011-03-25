@@ -21,7 +21,7 @@
 {
     'name': 'Create IBAN bank accounts',
     'version': '1.0',
-    'category': 'Generic Modules/Base',
+    'category': 'Finance',
     'description': """
 This module installs the base for IBAN (International Bank Account Number) bank accounts and checks for its validity.
 =====================================================================================================================

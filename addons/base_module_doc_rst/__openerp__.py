@@ -22,7 +22,7 @@
 {
     'name': 'Module Technical Guide in Restructured Text ',
     'version': '1.0',
-    'category': 'Generic Modules/Base',
+    'category': 'Tools',
     'description': """
 This module generates the Technical Guides of selected modules in Restructured Text format (RST).
 =================================================================================================

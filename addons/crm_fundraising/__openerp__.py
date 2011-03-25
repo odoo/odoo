@@ -21,9 +21,9 @@
 
 
 {
+    'category': 'Sales', 
     'name': 'CRM Fundraising',
     'version': '1.0',
-    'category': 'Generic Modules/CRM & SRM',
     'description': """
 Fundraising.
 ============

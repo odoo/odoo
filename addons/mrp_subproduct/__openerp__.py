@@ -23,7 +23,7 @@
 {
     'name': 'MRP Sub Product - To produce several products from one production order',
     'version': '1.0',
-    'category': 'Generic Modules/Production',
+    'category': 'Manufacturing',
     'description': """
 This module allows you to produce several products from one production order.
 =============================================================================

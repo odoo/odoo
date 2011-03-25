@@ -23,7 +23,7 @@
 {
     'name': 'Module Record',
     'version': '1.0',
-    'category': 'Generic Modules/Base',
+    'category': 'Tools',
     'description': """
 This module allows you to create a new module without any development.
 ======================================================================

@@ -23,7 +23,7 @@
 {
     'name': 'Add the Timesheet support for Issue Management in Project Management',
     'version': '1.0',
-    'category': 'Generic Modules/CRM & SRM',
+    'category': 'Project Management',
     'description': """
 This module adds the Timesheet support for the Issues/Bugs Management in Project.
 =================================================================================

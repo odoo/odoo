@@ -125,7 +125,7 @@ class account_voucher(osv.osv):
                 result = mod_obj.get_object_reference(cr, uid, 'account_voucher', 'view_vendor_payment_form')
             result = result and result[1] or False
             view_id = result
-        if not view_id and context.get('line_type', False):
+        if not view_id and view_type == 'form' and context.get('line_type', False):
             if context.get('line_type', False) == 'customer':
                 result = mod_obj.get_object_reference(cr, uid, 'account_voucher', 'view_vendor_receipt_form')
             else:
@@ -191,7 +191,7 @@ class account_voucher(osv.osv):
             domain=[('type','=','dr')], context={'default_type':'dr'}, readonly=True, states={'draft':[('readonly',False)]}),
         'period_id': fields.many2one('account.period', 'Period', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'narration':fields.text('Notes', readonly=True, states={'draft':[('readonly',False)]}),
-        'currency_id':fields.many2one('res.currency', 'Currency', readonly=True, states={'draft':[('readonly',False)]}),
+        'currency_id':fields.many2one('res.currency', 'Currency', required=True, readonly=True, states={'draft':[('readonly',False)]}),
 #        'currency_id': fields.related('journal_id','currency', type='many2one', relation='res.currency', string='Currency', store=True, readonly=True, states={'draft':[('readonly',False)]}),
         'company_id': fields.many2one('res.company', 'Company', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'state':fields.selection(
@@ -211,7 +211,7 @@ class account_voucher(osv.osv):
         'move_id':fields.many2one('account.move', 'Account Entry'),
         'move_ids': fields.related('move_id','line_id', type='one2many', relation='account.move.line', string='Journal Items', readonly=True),
         'partner_id':fields.many2one('res.partner', 'Partner', change_default=1, readonly=True, states={'draft':[('readonly',False)]}),
-        'audit': fields.related('move_id','to_check', type='boolean', relation='account.move', string='Audit Complete ?'),
+        'audit': fields.related('move_id','to_check', type='boolean', help='Check this box if you are unsure of that journal entry and if you want to note it as \'to be reviewed\' by an accounting expert.', relation='account.move', string='To Review'),
         'pay_now':fields.selection([
             ('pay_now','Pay Directly'),
             ('pay_later','Pay Later or Group Funds'),
@@ -777,7 +777,8 @@ class account_voucher(osv.osv):
                 'state': 'posted',
                 'number': name,
             })
-            move_pool.post(cr, uid, [move_id], context={})
+            if inv.journal_id.entry_posted:
+                move_pool.post(cr, uid, [move_id], context={})
             for rec_ids in rec_list_ids:
                 if len(rec_ids) >= 2:
                     move_line_pool.reconcile_partial(cr, uid, rec_ids)
@@ -977,7 +978,8 @@ class account_bank_statement_line(osv.osv):
     def _check_amount(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
             if obj.voucher_id:
-                if not (abs(obj.amount) == obj.voucher_id.amount):
+                diff = abs(obj.amount) - obj.voucher_id.amount
+                if not self.pool.get('res.currency').is_zero(cr, uid, obj.voucher_id.currency_id, diff):
                     return False
         return True
 

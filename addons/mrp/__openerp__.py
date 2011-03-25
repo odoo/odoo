@@ -25,7 +25,7 @@
     "version" : "1.1",
     "author" : "OpenERP SA",
     "website" : "http://www.openerp.com",
-    "category" : "Generic Modules/Production",
+    "category" : "Manufacturing",
     "images" : ["images/bill_of_materials.jpeg", "images/manufacturing_order.jpeg", "images/planning_manufacturing_order.jpeg", "images/production_analysis.jpeg", "images/production_dashboard.jpeg","images/routings.jpeg","images/work_centers.jpeg"],
     "depends" : ["procurement", "stock", "resource", "purchase", "product","process"],
     "description": """
@@ -54,7 +54,7 @@ in a BoM to automatically purchase on order the assembly of your production.
 Reports provided by this module:
 --------------------------------
     * Bill of Material structure and components
-    * Load forecast on workcenters
+    * Load forecast on Work Centers
     * Print a production order
     * Stock forecasts
 

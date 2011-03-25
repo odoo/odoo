@@ -33,13 +33,14 @@ It supports:
     - Recurring events
     - Invitations to people""",
     "author" : "OpenERP SA",
-    'category': 'Generic Modules/Others',
+    'category': 'Tools',
     'website': 'http://www.openerp.com',
     "init_xml" : [
         'base_calendar_data.xml'
     ],
     "demo_xml" : [],
     "update_xml" : [
+        'security/calendar_security.xml',
         'security/ir.model.access.csv',
         'wizard/calendar_event_edit_all_view.xml',
         'wizard/base_calendar_invite_attendee_view.xml',

@@ -25,7 +25,7 @@
     "author" : ['OpenERP SA', 'Axelor'],
     "website" : "http://www.openerp.com/",
     "depends" : ["base","mail_gateway"],
-    "category" : "Generic Modules/Thunderbird interface",
+    "category" : "Tools",
     "description": """
 This module is required for the Thuderbird Plug-in to work properly.
 ====================================================================

@@ -21,7 +21,7 @@
 
 
 {
-    'name': 'Analytic User Function',
+    'name': 'Human Resources',
     'version': '1.0',
     'category': 'Generic Modules/Others',
     'description': """

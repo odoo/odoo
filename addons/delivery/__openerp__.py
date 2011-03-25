@@ -23,7 +23,7 @@
 {
     'name': 'Carriers and Deliveries',
     'version': '1.0',
-    'category': 'Generic Modules/Sales & Purchases',
+    'category': 'Warehouse',
     'description': """
 Allows you to add delivery methods in sale orders and picking.
 ==============================================================

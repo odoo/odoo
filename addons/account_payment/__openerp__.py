@@ -23,7 +23,7 @@
     "name": "Payment Management",
     "version": "1.1",
     "author": "OpenERP SA",
-    "category": "Generic Modules/Payment",
+    "category": "Finance",
     "description": """
 Module to manage invoice payment.
 =================================

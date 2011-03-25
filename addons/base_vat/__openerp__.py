@@ -21,6 +21,7 @@
 {
     'name': 'Base VAT',
     'version': '1.0',
+    'category': 'Tools',
     'category': 'Generic Modules/Base',
     'description': """
 Enable VAT Number for a partner and check its validity.

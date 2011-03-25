@@ -23,7 +23,7 @@
 {
     'name': 'Event',
     'version': '0.1',
-    'category': 'Generic Modules/Association',
+    'category': 'Tools',
     'description': """
 Organization and management of Events.
 ======================================

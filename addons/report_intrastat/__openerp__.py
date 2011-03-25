@@ -23,7 +23,7 @@
 {
     'name': 'Intrastat Reporting',
     'version': '1.0',
-    'category': 'Generic Modules/Inventory Control',
+    'category': 'Warehouse',
     'description': """
 A module that adds intrastat reports.
 =====================================

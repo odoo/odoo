@@ -19,10 +19,10 @@
 #
 ##############################################################################
 {
-    "name" : "Accountant",
+    "name" : "Accountant Access",
     "version" : "1.1",
     "author" : "OpenERP SA",
-    "category": 'Generic Modules/Accounting',
+    "category": 'Finance',
     "description": """
 Accounting Access Rights.
 =========================

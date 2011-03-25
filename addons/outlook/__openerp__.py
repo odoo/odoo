@@ -26,7 +26,7 @@
     'author' : 'OpenERP SA',
     'website' : 'http://www.openerp.com/',
     'depends' : ['base', 'mail_gateway'],
-    'category' : 'Generic Modules/Outlook interface',
+    'category' : 'Tools',
     'description': '''
 This module provides the Outlook Plug-in.
 =========================================

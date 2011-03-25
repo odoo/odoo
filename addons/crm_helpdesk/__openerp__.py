@@ -21,9 +21,9 @@
 
 
 {
+    'category': 'Sales', 
     'name': 'CRM Helpdesk',
     'version': '1.0',
-    'category': 'Generic Modules/CRM & SRM',
     'description': """
 Helpdesk Management.
 ====================

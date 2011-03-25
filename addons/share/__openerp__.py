@@ -25,7 +25,7 @@
     "version" : "1.3",
     "depends" : ["base"],
     "author" : "OpenERP SA",
-    "category": 'Generic Modules',
+    "category": 'Tools',
     "description": """
 This module adds generic sharing tools to your current OpenERP database.
 ========================================================================

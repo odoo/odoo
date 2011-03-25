@@ -35,7 +35,7 @@
 {
     'name': 'Guatemala - Plan contable general',
     'version': '3.0',
-    'category': 'Localisation/Account Charts',
+    'category': 'Finance',
     'description': """
 This is the base module to manage the accounting chart for Guatemala.
 =====================================================================

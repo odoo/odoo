@@ -23,7 +23,7 @@
 {
     'name': 'Purchase Analytic Distribution Management',
     'version': '1.0',
-    'category': 'Generic Modules/Sales & Purchases',
+    'category': 'Purchases',
     'description': """
 The base module to manage analytic distribution and purchase orders.
 ====================================================================

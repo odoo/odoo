@@ -23,7 +23,7 @@
 {
     'name': 'Warehouse Locations Paths',
     'version': '1.0',
-    'category': 'Generic Modules/Inventory Control',
+    'category': 'Warehouse',
     'description': """
 This module supplements the Warehouse application by effectively implementing Push and Pull inventory flows.
 ============================================================================================================

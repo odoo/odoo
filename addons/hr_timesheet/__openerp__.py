@@ -23,7 +23,7 @@
 {
     'name': 'Human Resources (Timesheet encoding)',
     'version': '1.0',
-    'category': 'Generic Modules/Human Resources',
+    'category': 'Human Resources',
     'description': """
 This module implements a timesheet system.
 ==========================================

@@ -23,7 +23,7 @@
 {
     'name': 'Base Contact',
     'version': '1.0',
-    'category': 'Generic Modules/Base',
+    'category': 'Tools',
     'description': """
 This module allows you to manage your contacts entirely.
 ========================================================

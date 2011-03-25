@@ -23,7 +23,7 @@
 {
     'name': 'Base Setup',
     'version': '1.0',
-    'category': 'Generic Modules/Base',
+    'category': 'Tools',
     'description': """
 This module helps to configure the system at the installation of a new database.
 ================================================================================

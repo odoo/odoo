@@ -21,7 +21,7 @@
 {
     'name': 'Receive User Feedback',
     'version': '1.0',
-    'category': 'Generic Modules/Others',
+    'category': 'Tools',
     'description': """
 Add Feedback button in header.
 ==============================

@@ -21,7 +21,7 @@
     "name" : "Purchase - Purchase Requisition",
     "version" : "0.1",
     "author" : "OpenERP SA",
-    "category" : "Generic Modules/Sales & Purchases",
+    "category" : "Purchases",
     "images" : ['images/purchase_requisitions.jpeg'],
     "website" : "http://www.openerp.com",
     "description": """

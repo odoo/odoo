@@ -22,7 +22,7 @@
 {
     'name': 'Email Gateway System',
     'version': '1.0',
-    'category': 'Generic Modules/Mail Service',
+    'category': 'Tools',
     'description': """
 The generic email gateway system allows to send and receive emails.
 ===================================================================

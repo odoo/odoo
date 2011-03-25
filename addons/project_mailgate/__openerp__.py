@@ -25,7 +25,7 @@
     "version": "1.1",
     "author": "OpenERP SA",
     "website": "http://www.openerp.com",
-    "category": "Generic Modules/Projects & Services",
+    "category": "Project Management",
     "images": ["images/project_mailgate_task.jpeg"],
     "depends": ["project", "mail_gateway"],
     "description": """

@@ -24,6 +24,7 @@
 {
     'name': 'Extended Module to Add CalDav feature on Meeting',
     'version': '1.1',
+    'category': 'Sales',
     'category': 'Generic Modules/CRM & SRM',
     'description': """
 Caldav features in Meeting.

@@ -21,7 +21,7 @@
 {
     'name': 'Live Chat Support',
     'version': '1.1',
-    'category': 'Generic Modules/Others',
+    'category': 'Tools',
     'description': """
 Enable live chat support for those who have a maintenance contract.
 ===================================================================

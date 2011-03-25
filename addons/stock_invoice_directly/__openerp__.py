@@ -23,7 +23,7 @@
 {
     'name': 'Invoice Picking Directly',
     'version': '1.0',
-    'category': 'Generic Modules/Sales & Purchases',
+    'category': 'Warehouse',
     'description': """
 Invoice Wizard for Delivery.
 ============================

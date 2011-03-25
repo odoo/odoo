@@ -20,10 +20,10 @@
 ##############################################################################
 
 {
-    "name" : "Account Cancel",
+    "name" : "Cancel Entries",
     "version" : "1.1",
     "author" : "OpenERP SA",
-    "category": 'Generic Modules/Accounting',
+    "category": 'Finance',
     "description": """
 Allows cancelling accounting entries.
 =====================================

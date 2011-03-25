@@ -23,7 +23,7 @@
 {
     'name': 'Sales Order Dates',
     'version': '1.0',
-    'category': 'Generic Modules/CRM & SRM',
+    'category': 'Sales',
     'description': """
 Add additional date information to the sales order.
 ===================================================

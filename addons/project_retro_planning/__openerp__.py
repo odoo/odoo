@@ -22,7 +22,7 @@
 {
     'name': 'Project Retro planning',
     'version': '0.1',
-    'category': 'Generic Modules/Projects & Services',
+    'category': 'Project Management',
     'description': """
 Changes dates according to change in project End Date.
 ======================================================

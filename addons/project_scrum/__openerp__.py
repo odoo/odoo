@@ -23,7 +23,7 @@
 {
     'name': 'Scrum, Agile Development Method',
     'version': '1.0',
-    'category': 'Enterprise Specific Modules/Information Technology',
+    'category': 'Project Management',
     'description': """
 This module implements all concepts defined by the scrum project management methodology for IT companies.
 =========================================================================================================

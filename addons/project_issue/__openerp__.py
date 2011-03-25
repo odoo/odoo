@@ -23,7 +23,7 @@
 {
     'name': 'Issue Management in Project Management',
     'version': '1.0',
-    'category': 'Generic Modules/CRM & SRM',
+    'category': 'Project Management',
     'description': """
 This module provides Issues/Bugs Management in Project.
 =======================================================

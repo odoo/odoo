@@ -23,7 +23,7 @@
 {
     'name': 'MRP JIT',
     'version': '1.0',
-    'category': 'Generic Modules/Production',
+    'category': 'Manufacturing',
     'description': """
 This module allows Just In Time computation of procurement orders.
 ==================================================================

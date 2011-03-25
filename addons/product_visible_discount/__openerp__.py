@@ -21,7 +21,7 @@
     "name": "Visible Discount",
     "version": "1.0",
     "author": "OpenERP SA",
-    "category": "Generic Modules/Sales & Purchases",
+    "category": "Sales",
     "description": """
 This module lets you calculate discounts on Sale Order lines and Invoice lines base on the partner's pricelist.
 ===============================================================================================================

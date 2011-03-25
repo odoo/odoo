@@ -23,7 +23,7 @@
     "name"      : "Account CODA - import bank statements from coda file",
     "version"   : "1.0",
     "author"    : "OpenERP SA",
-    "category"  : "Account CODA",
+    "category"  : "Finance",
     "description": """
 Module provides functionality to import bank statements from coda files.
 ========================================================================

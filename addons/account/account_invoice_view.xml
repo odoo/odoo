@@ -172,7 +172,7 @@
                             <field name="reference" nolabel="1"/>
                             <field name="date_due"/>
                             <field name="check_total" required="2"/>
-                            <field colspan="4" default_get="{'check_total': check_total, 'invoice_line': invoice_line, 'address_invoice_id': address_invoice_id, 'partner_id': partner_id, 'price_type': 'price_type' in dir() and price_type or False}" name="invoice_line" nolabel="1">
+                            <field colspan="4" default_get="{'check_total': check_total, 'invoice_line': invoice_line, 'address_invoice_id': address_invoice_id, 'partner_id': partner_id, 'price_type': 'price_type' in dir() and price_type or False}" name="invoice_line" context="{'type': type}" nolabel="1">
                                 <tree string="Invoice lines">
                                     <field name="product_id" on_change="product_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, parent.fiscal_position, price_unit, parent.address_invoice_id, parent.currency_id, {'company_id': parent.company_id})"/>
                                     <field domain="[('company_id', '=', parent.company_id), ('journal_id', '=', parent.journal_id), ('type', '&lt;&gt;', 'view')]" name="account_id" on_change="onchange_account_id(parent.fiscal_position,account_id)"/>
@@ -280,7 +280,7 @@
                             <field domain="[('company_id', '=', company_id),('type','=', 'receivable')]" name="account_id" groups="account.group_account_user"/>
                             <field name="name"/>
                             <field name="payment_term" widget="selection"/>
-                            <field colspan="4" name="invoice_line" nolabel="1" widget="one2many_list"/>
+                            <field colspan="4" name="invoice_line" nolabel="1" widget="one2many_list" context="{'type': type}"/>
                             <group col="1" colspan="2">
                                 <field name="tax_line" nolabel="1">
                                     <tree editable="bottom" string="Taxes">
@@ -506,12 +506,12 @@
         </record>
         <menuitem action="action_invoice_tree4" id="menu_action_invoice_tree4" parent="menu_finance_payables"/>
 
-        <act_window context="{'search_default_partner_id':[active_id]}" id="act_res_partner_2_account_invoice_opened" name="Invoices" res_model="account.invoice" src_model="res.partner"/>
+        <act_window context="{'search_default_partner_id':[active_id], 'default_partner_id': active_id}" id="act_res_partner_2_account_invoice_opened" name="Invoices" res_model="account.invoice" src_model="res.partner"/>
 
         <act_window
            id="act_account_journal_2_account_invoice_opened"
            name="Unpaid Invoices"
-           context="{'search_default_journal_id':active_id, 'search_default_unpaid':1,}"
+           context="{'search_default_journal_id': [active_id], 'search_default_unpaid':1, 'default_journal_id': active_id}"
            res_model="account.invoice"
            src_model="account.journal"/>
 

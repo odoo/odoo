@@ -23,7 +23,7 @@
     "name" : "Maroc - Plan Comptable Général",
     "version" : "1.0",
     "author" : "kazacube",
-    "category" : "Localisation/Account Charts",
+    "category" : "Finance",
     "description": """
 This is the base module to manage the accounting chart for Maroc.
 =================================================================

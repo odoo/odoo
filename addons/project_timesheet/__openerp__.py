@@ -22,7 +22,7 @@
 {
     'name': 'Project Timesheet',
     'version': '1.0',
-    'category': 'Generic Modules/Human Resources',
+    'category': 'Project Management',
     'description': """
 Synchronization of project task work entries with timesheet entries.
 ====================================================================

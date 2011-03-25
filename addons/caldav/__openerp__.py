@@ -47,9 +47,9 @@ To access OpenERP Calendar using WebCal to remote site use the URL like:
         PORT : Port on which OpenERP server is running (By Default : 8069)
         DATABASE_NAME: Name of database on which OpenERP Calendar is created
         CALENDAR_NAME: Name of calendar to access
-""",
+""", 
+    'category': 'Tools', 
     "author" : "OpenERP SA",
-    'category': 'Generic Modules/Others',
     'website': 'http://www.openerp.com',
     "init_xml" : ["caldav_data.xml"],
     "demo_xml" : [],

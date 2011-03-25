@@ -36,7 +36,7 @@ Piano dei conti italiano di un'impresa generica.
 Italian accounting chart and localization.
     """,
     "license": "AGPL-3",
-    "category" : "Localisation/Account Charts",
+    "category" : "Finance",
     'website': 'http://www.openerp-italia.org/',
     'init_xml': [
         ],

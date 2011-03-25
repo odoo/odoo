@@ -23,7 +23,7 @@
 {
     'name': 'Point Of Sale',
     'version': '1.0',
-    'category': 'Generic Modules/Sales & Purchases',
+    'category': 'Sales',
     'description': """
 This module provides a quick and easy sale process.
 ===================================================

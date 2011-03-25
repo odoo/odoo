@@ -23,7 +23,7 @@
 {
     'name': 'Getting Things Done - Time Management Module',
     'version': '1.0',
-    'category': 'Generic Modules/Projects & Services',
+    'category': 'Project Management',
     'description': """
 This module implements all concepts defined by the Getting Things Done methodology.
 ===================================================================================

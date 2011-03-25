@@ -23,7 +23,7 @@
     "name":"Master Procurement Schedule",
     "version":"1.1",
     "author":["OpenERP SA",  "Grzegorz Grzelak (Cirrus)"],
-    "category":"Custom",
+    "category":"Warehouse",
     "images":["images/master_procurement_schedule.jpeg","images/sales_forecast.jpeg","images/stock_planning_line.jpeg","images/stock_sales_period.jpeg"],
     "depends":["hr","stock","sale"],
     "description": """

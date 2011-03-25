@@ -23,7 +23,7 @@
 {
     'name': 'Statistical Report Creator',
     'version': '1.0',
-    'category': 'Generic Modules/Base',
+    'category': 'Tools',
     'description': """
 This module allows you to create any statistic report on several objects.
 =========================================================================

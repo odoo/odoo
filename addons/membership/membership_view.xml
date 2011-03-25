@@ -162,38 +162,26 @@
             <field name="model">res.partner</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
-                <field name="category_id" position="after">
-          <filter string="Customers" name="customer" icon="terp-personal" domain="[('customer','=',1)]" help="Customer Partners"/>
-                     <filter string="Suppliers" name="supplier" icon="terp-personal" domain="[('supplier','=',1)]" help="Supplier Partners"/>
-          <separator orientation="vertical"/>
-          <filter icon="terp-personal" name="all_non_members" domain="[('membership_state', 'in', ['none','canceled','old','waiting'])]" string="All non Members" help="None/Canceled/Old/Waiting"/>
-          <filter icon="terp-personal" name="all_members" domain="[('membership_state', 'in', ['invoiced','paid','free'])]" string="All Members" help="Invoiced/Paid/Free"/>
-          <separator orientation="vertical"/>
-                   <field name="membership_stop" string="End Membership Date"/>
-                   <field name="membership_start" invisible="1"/>
-                   <newline/>
-               </field>
-            </field>
-        </record>
-
-        <record id="view_res_partner_member_filter2" model="ir.ui.view">
-            <field name="name">res.partner.select2</field>
-            <field name="model">res.partner</field>
-            <field name="inherit_id" ref="view_res_partner_member_filter"/>
-            <field name="type">search</field>
-            <field name="arch" type="xml">
-                <field name="membership_start" position="after">
-                <newline/>
-              <group expand="0" string="Group By..." colspan="10" col="8">
-                <filter string="Salesman" icon="terp-personal" domain="[]" context="{'group_by' : 'user_id'}" />
-                  <filter string="Associate Member" name = "associate" icon="terp-partner" domain="[]" context="{'group_by':'associate_member'}"/>
-                  <separator orientation="vertical"/>
-                    <filter string=" Membership State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'membership_state'}"/>
-                    <separator orientation="vertical"/>
-                  <filter string="Start Date" help="Starting Date Of Membership" icon="terp-go-month" domain="[]" context="{'group_by':'membership_start'}"/>
-                  <filter string="End Date" help="Ending Date Of Membership" icon="terp-go-month" domain="[]" context="{'group_by':'membership_stop'}"/>
-                </group>
-                </field>
+            	<search string="Membership Partners">
+		          	<filter string="Customers" name="customer" icon="terp-personal" domain="[('customer','=',1)]" help="Customer Partners"/>
+		            <filter string="Suppliers" name="supplier" icon="terp-personal" domain="[('supplier','=',1)]" help="Supplier Partners"/>
+	          		<separator orientation="vertical"/>
+		          	<filter icon="terp-personal" name="all_non_members" domain="[('membership_state', 'in', ['none','canceled','old','waiting'])]" string="All non Members" help="None/Canceled/Old/Waiting"/>
+		          	<filter icon="terp-personal" name="all_members" domain="[('membership_state', 'in', ['invoiced','paid','free'])]" string="All Members" help="Invoiced/Paid/Free"/>
+	          		<separator orientation="vertical"/>
+	                <field name="membership_stop" string="End Membership Date"/>
+	                <field name="membership_start" invisible="1"/>
+	                <newline/>
+	                <group expand="0" string="Group By..." colspan="10" col="8">
+	                    <filter string="Salesman" icon="terp-personal" domain="[]" context="{'group_by' : 'user_id'}" />
+	              	    <filter string="Associate Member" name = "associate" icon="terp-partner" domain="[]" context="{'group_by':'associate_member'}"/>
+	              		<separator orientation="vertical"/>
+	                	<filter string=" Membership State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'membership_state'}"/>
+	                	<separator orientation="vertical"/>
+	                	<filter string="Start Date" help="Starting Date Of Membership" icon="terp-go-month" domain="[]" context="{'group_by':'membership_start'}"/>
+	              		<filter string="End Date" help="Ending Date Of Membership" icon="terp-go-month" domain="[]" context="{'group_by':'membership_stop'}"/>
+	            	</group>
+	           </search>
             </field>
         </record>
 

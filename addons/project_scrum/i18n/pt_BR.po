@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2011-01-18 11:17+0000\n"
+"PO-Revision-Date: 2011-03-15 16:12+0000\n"
 "Last-Translator: Emerson <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-19 04:41+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-03-18 04:42+0000\n"
+"X-Generator: Launchpad (build 12559)\n"
 
 #. module: project_scrum
 #: help:project.scrum.email,scrum_master_email:0
@@ -181,7 +181,7 @@ msgstr ""
 #. module: project_scrum
 #: model:ir.model,name:project_scrum.model_project_scrum_email
 msgid "project.scrum.email"
-msgstr ""
+msgstr "project.scrum.email"
 
 #. module: project_scrum
 #: constraint:project.project:0
@@ -230,6 +230,18 @@ msgstr ""
 
 #. module: project_scrum
 #: code:addons/project_scrum/wizard/project_scrum_backlog_sprint.py:57
+#, python-format
+msgid "Product Backlog '%s' is converted into Task %d."
+msgstr ""
+
+#. module: project_scrum
+#: code:addons/project_scrum/wizard/project_scrum_backlog_sprint.py:62
+#, python-format
+msgid "Product Backlog '%s' is assigned sprint:%s"
+msgstr ""
+
+#. module: project_scrum
+#: code:addons/project_scrum/wizard/project_scrum_backlog_sprint.py:57
 #: code:addons/project_scrum/wizard/project_scrum_backlog_sprint.py:62
 #: model:ir.model,name:project_scrum.model_project_scrum_product_backlog
 #: view:project.scrum.product.backlog:0
@@ -260,12 +272,6 @@ msgstr ""
 #: code:addons/project_scrum/wizard/project_scrum_email.py:96
 #, python-format
 msgid "None"
-msgstr ""
-
-#. module: project_scrum
-#: code:addons/project_scrum/project_scrum.py:325
-#, python-format
-msgid "*Blocks encountered:"
 msgstr ""
 
 #. module: project_scrum
@@ -400,12 +406,6 @@ msgid "Daily Scrum"
 msgstr "Scrum Diário"
 
 #. module: project_scrum
-#: code:addons/project_scrum/project_scrum.py:324
-#, python-format
-msgid "for the Sprint"
-msgstr ""
-
-#. module: project_scrum
 #: view:project.scrum.backlog.create.task:0
 msgid "C_onvert"
 msgstr ""
@@ -441,12 +441,6 @@ msgstr ""
 #: model:ir.ui.menu,name:project_scrum.menu_scrum
 msgid "Scrum"
 msgstr "Scrum"
-
-#. module: project_scrum
-#: code:addons/project_scrum/project_scrum.py:324
-#, python-format
-msgid "Hello "
-msgstr ""
 
 #. module: project_scrum
 #: field:project.scrum.meeting,question_today:0
@@ -612,12 +606,6 @@ msgid "The person who is responsible for the product"
 msgstr ""
 
 #. module: project_scrum
-#: code:addons/project_scrum/project_scrum.py:325
-#, python-format
-msgid "*Tasks since yesterday:"
-msgstr ""
-
-#. module: project_scrum
 #: view:project.scrum.meeting:0
 #: view:project.scrum.sprint:0
 msgid "Scrum Sprint"
@@ -755,12 +743,6 @@ msgstr ""
 #: model:ir.actions.act_window,name:project_scrum.action_sprint_backlog_open
 msgid "View sprint backlog"
 msgstr "Ver o backlog do sprint"
-
-#. module: project_scrum
-#: code:addons/project_scrum/project_scrum.py:325
-#, python-format
-msgid "No Blocks"
-msgstr ""
 
 #. module: project_scrum
 #: field:project.scrum.meeting,question_backlog:0
@@ -941,7 +923,24 @@ msgstr "Progresso (0-100)"
 #. module: project_scrum
 #: code:addons/project_scrum/project_scrum.py:324
 #, python-format
-msgid "I am sending you Daily Meeting Details of date"
+msgid ""
+"Hello %s,\n"
+" \n"
+"I am sending you Daily Meeting Details of date %s for the Sprint %s\n"
+msgstr ""
+
+#. module: project_scrum
+#: code:addons/project_scrum/project_scrum.py:325
+#, python-format
+msgid ""
+"\n"
+"*Tasks since yesterday:\n"
+"_______________________%s\n"
+"*Task for Today:\n"
+"_______________________ %s\n"
+"\n"
+"*Blocks encountered:\n"
+"_______________________ %s"
 msgstr ""
 
 #. module: project_scrum
@@ -991,12 +990,6 @@ msgstr ""
 msgid ""
 "This wizard merge backlogs and create one new backlog with draft state (Old "
 "backlogs Will be deleted). And it also merge old tasks from backlogs"
-msgstr ""
-
-#. module: project_scrum
-#: code:addons/project_scrum/project_scrum.py:325
-#, python-format
-msgid "*Task for Today:"
 msgstr ""
 
 #. module: project_scrum

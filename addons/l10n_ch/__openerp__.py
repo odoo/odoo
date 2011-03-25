@@ -62,7 +62,7 @@ TODO :
 """,
     "version" : "6.0",
     "author" : "Camptocamp SA",
-    "category" : "Localization/Account Charts",
+    "category" : "Finance",
     "website": "http://www.camptocamp.com",
 
     "depends" : [

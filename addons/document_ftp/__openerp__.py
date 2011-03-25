@@ -23,7 +23,7 @@
 {
     'name': 'Integrated FTP Server with Document Management System',
     'version': '1.99',
-    'category': 'Generic Modules/Others',
+    'category': 'Tools',
     'description': """
 This is a support FTP Interface with document management system.
 ================================================================

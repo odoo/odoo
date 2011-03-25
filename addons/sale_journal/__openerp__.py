@@ -22,7 +22,7 @@
 {
     'name': 'Managing sales and deliveries by journal',
     'version': '1.0',
-    'category': 'Generic Modules/Sales & Purchases',
+    'category': 'Sales',
     'description': """
 The sales journal modules allows you to categorise your sales and deliveries (picking lists) between different journals.
 ========================================================================================================================

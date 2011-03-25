@@ -24,7 +24,7 @@
     "author" : ['OpenERP SA', "FS3"],
     "maintainer" : "OpenERP SA",
     "website" : "http://www.openerp.com",
-    "category" : "Generic Modules/Base",
+    "category" : "Tools",
     "description": """
 This module replaces the cleartext password in the database with a password hash.
 =================================================================================
