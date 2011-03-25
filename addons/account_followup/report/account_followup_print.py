@@ -80,7 +80,8 @@ class report_rappel(report_sxw.rml_parse):
             line_cur[currency.id]['line'].append(line_data)
 
         for cur in line_cur:
-            final_res.append({'line': line_cur[cur]['line']})
+            if line_cur[cur]['line']:
+                final_res.append({'line': line_cur[cur]['line']})
         return final_res
 
 
