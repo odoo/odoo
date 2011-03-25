@@ -122,25 +122,58 @@ class OpenERPSession(object):
             **self.context
         )
 
-    def eval_context(self, context_string, context=None):
+    def eval_context(self, context_string, context=None, use_base=True):
         """ Evaluates the provided context_string in the context (haha) of
         the context.
 
         :param str context_string: a context to evaluate, if not a string,
                                    will be returned as-is
         :param dict context: the context to use in the evaluation, if any.
-                             Will be merged with a default context and
-                             the session context.
+        :param bool use_base: whether the base eval context (combination
+                              of the default context and the session
+                              context) should be merged to the provided
+                              context (or used alone)
         :returns: the evaluated context
         :rtype: dict
         """
         if not isinstance(context_string, basestring):
             return context_string
-    
-        return eval(context_string, dict(
+
+        ctx = {}
+        if use_base:
+            ctx.update(self.base_eval_context)
+        if context:
+            ctx.update(context)
+
+        return eval(context_string, ctx)
+
+    def eval_contexts(self, contexts, context=None):
+        """ Evaluates a sequence of contexts to build a single final result
+
+        :param list contexts: a list of string or dict contexts
+        :param dict context: a base context, if needed
+        :returns: the final combination of all provided contexts
+        :rtype: dict
+        """
+        # This is the context we use to evaluate stuff
+        current_context = dict(
             self.base_eval_context,
-            **(context or {})))
-    def eval_domain(self, domain_string, context=None):
+            **(context or {}))
+        # this is our result, it should not contain the values
+        # of the base context above
+        final_context = {}
+        for ctx in contexts:
+            # evaluate the current context in the sequence, merge it into
+            # the result
+            final_context.update(
+                self.eval_context(
+                    ctx, current_context, use_base=False))
+            # update the current evaluation context so that future
+            # evaluations can use the results we just gathered
+            current_context.update(final_context)
+        return final_context
+
+    def eval_domain(self, domain_string, context=None, use_base=True):
         """ Evaluates the provided domain_string using the provided context
         (merged with the session's evaluation context)
 
@@ -148,15 +181,45 @@ class OpenERPSession(object):
 
                               If not a string, is returned as-is
         :param dict context: the context to use in the evaluation, if any.
+        :param bool use_base: whether the base eval context (combination
+                              of the default context and the session
+                              context) should be used
         :returns: the evaluated domain
         :rtype: list
         """
         if not isinstance(domain_string, basestring):
             return domain_string
 
-        return eval(domain_string, dict(
+        ctx = {}
+        if use_base:
+            ctx.update(self.base_eval_context)
+        if context:
+            ctx.update(context)
+
+        return eval(domain_string, ctx)
+
+    def eval_domains(self, domains, context=None):
+        """ Evaluates and concatenates the provided domains using the
+        provided context for all of them.
+
+        Returns the final, concatenated result.
+
+        :param list domains: a list of string or list domains
+        :param dict context: the context in which the domains
+                             should be evaluated (if evaluations need
+                             to happen)
+        :returns: the final combination of all domains in the sequence
+        :rtype: list
+        """
+        ctx = dict(
             self.base_eval_context,
-            **(context or {})))
+            **(context or {}))
+
+        final_domain = []
+        for domain in domains:
+            final_domain.extend(
+                self.eval_domain(domain, ctx))
+        return final_domain
 
 #----------------------------------------------------------
 # OpenERP Web RequestHandler

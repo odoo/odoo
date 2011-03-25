@@ -116,8 +116,16 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
     on_edit: function() {
     },
     do_search: function (domains, contexts) {
-        console.log('domains', domains);
-        console.log('contexts', contexts);
+        var self = this;
+        this.rpc('/base/session/eval_domain_and_context', {
+            domains: domains,
+            contexts: contexts
+        }, function (results) {
+            self.dataset.set({
+                context: results.context,
+                domain: results.domain
+            }).fetch(0, self.action.limit);
+        });
     }
 });
 
@@ -881,10 +889,10 @@ openerp.base.FormView =  openerp.base.Controller.extend({
         }
         // bind to all wdigets that have onchange ??
 
-        this.dataset.on_fetch.add(this.on_record_loaded);
+        this.dataset.on_active_id.add(this.on_record_loaded);
     },
-    on_record_loaded: function(records) {
-        this.datarecord = records[0];
+    on_record_loaded: function(record) {
+        this.datarecord = record;
         for (var f in this.fields) {
             this.fields[f].set_value(this.datarecord.values[f]);
         }

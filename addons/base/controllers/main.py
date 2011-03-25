@@ -113,6 +113,14 @@ class Session(openerpweb.Controller):
         return concat
     js.exposed = True
 
+    @openerpweb.jsonrequest
+    def eval_domain_and_context(self, req, contexts, domains):
+        context = req.session.eval_contexts(contexts)
+        domain = req.session.eval_domains(domains, context)
+        return {
+            'context': context,
+            'domain': domain
+        }
 
 class Menu(openerpweb.Controller):
     _cp_path = "/base/menu"
