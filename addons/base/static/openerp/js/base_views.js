@@ -74,15 +74,16 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
         this.searchview_id = false;
         if(this.search_visible && action.search_view_id) {
             this.searchview_id = action.search_view_id[0];
-            this.searchview = new openerp.base.SearchView(
+            var searchview = this.searchview = new openerp.base.SearchView(
                     this.session, this.element_id + "_search",
                     this.dataset, this.searchview_id,
                     this.search_defaults());
-            this.searchview.on_search.add(this.do_search);
-            this.searchview.start();
+            searchview.on_search.add(this.do_search);
+            searchview.start();
 
             if (action['auto_search']) {
-                setTimeout(this.searchview.do_search);
+                searchview.on_loaded.add_last(
+                    searchview.do_search);
             }
         }
         for(var i = 0; i < action.views.length; i++)  {
@@ -512,15 +513,13 @@ openerp.base.SearchView = openerp.base.Controller.extend({
         this.$element.find('form')
                 .submit(this.do_search)
                 .bind('reset', this.do_clear);
-        setTimeout(function () {
-            // start() all the widgets
-            _(lines).chain().flatten().each(function (widget) {
-                widget.start();
-            });
-        }, 0);
+        // start() all the widgets
+        _(lines).chain().flatten().each(function (widget) {
+            widget.start();
+        });
     },
     do_search: function (e) {
-        if (e) { e.preventDefault(); }
+        if (e && e.preventDefault) { e.preventDefault(); }
         var inputs_ = _(this.inputs).chain();
 
         var domains = inputs_.
@@ -546,7 +545,7 @@ openerp.base.SearchView = openerp.base.Controller.extend({
      */
     on_search: function (domains, contexts) { },
     do_clear: function (e) {
-        if (e) { e.preventDefault(); }
+        if (e && e.preventDefault) { e.preventDefault(); }
         this.on_clear();
     },
     /**
