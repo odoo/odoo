@@ -428,23 +428,24 @@ def generate_tracking_message_id(openobject_id):
     """
     return "<%s-openobject-%s@%s>" % (time.time(), openobject_id, socket.gethostname())
 
-def email_send(smtp_from, smtp_to_list, subject, message, ssl=False, debug=False, smtp_server=None, smtp_port=None,
+def email_send(smtp_from, smtp_to_list, message, ssl=False, debug=False, smtp_server=None, smtp_port=None,
            smtp_user=None, smtp_password=None, cr=None):
+    print 'email tool:'
+    if not cr:
+        db_name = getattr(threading.currentThread(), 'dbname', None)
+        if db_name:
+            cr = pooler.get_db_only(dbname).cursor()
+        else:
+            raise Exception("No database cursor found!")
     try:
-        if not cr:
-            db_name = getattr(threading.currentThread(), 'dbname', None)
-            if db_name:
-                cr = pooler.get_db_only(dbname).cursor()
-                server_pool = pooler.get_pool(cr.dbname).get('ir.mail_server')
-                server_pool.send_email(cr, uid, smtp_from, smtp_to_list, message,
-                    ssl=ssl,debug=debug, smtp_server=smtp_server, smtp_port=smtp_port,
-                    smtp_user=smtp_user, smtp_password=smtp_password)
-            else:
-                raise Exception("No database cursor found!")
+        server_pool = pooler.get_pool(cr.dbname).get('ir.mail_server')
+        server_pool.send_email(cr, uid, smtp_from, smtp_to_list, message,
+            ssl=ssl,debug=debug, smtp_server=smtp_server, smtp_port=smtp_port,
+            smtp_user=smtp_user, smtp_password=smtp_password)
     except Exception:
         return False
     finally:
-        if cr: cr.close()
+        cr.close()
     return True
 
 #----------------------------------------------------------
