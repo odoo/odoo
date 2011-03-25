@@ -522,7 +522,7 @@ openerp.base.WebClient = openerp.base.Controller.extend({
 
         this.session.on_session_invalid.add(this.login.do_ask_login);
         this.session.on_session_valid.add_last(this.header.do_update);
-        this.session.on_session_valid.add_last(this.on_loggued);
+        this.session.on_session_valid.add_last(this.on_logged);
 
         this.menu = new openerp.base.Menu(this.session, "oe_menu", "oe_secondary_menu");
         this.menu.on_action.add(this.on_menu_action);
@@ -533,7 +533,7 @@ openerp.base.WebClient = openerp.base.Controller.extend({
         this.login.start();
         this.menu.start();
     },
-    on_loggued: function() {
+    on_logged: function() {
         this.action =  new openerp.base.ActionManager(this.session, "oe_application");
         this.action.start();
     },
