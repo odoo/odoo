@@ -337,7 +337,7 @@
                         t-att-value="option[0]" selected="selected">
                     <t t-esc="option[1]"/>
                 </option>
-                <option t-if="not selected" t-att-value="option[0]">
+                <option t-if="!selected" t-att-value="option[0]">
                     <t t-esc="option[1]"/>
                 </option>
             </t>
