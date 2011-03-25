@@ -35,11 +35,7 @@ class google_login(osv.osv_memory):
     }
 
     def google_login(self, user, password, type='group', context=None):
-        gd_client=False
-        if type=='group': 
-            gd_client=gdata.contacts.client.ContactsClient(source='OpenERP')
-        if type=='contact' :   
-            gd_client = gdata.contacts.service.ContactsService()
+        gd_client = gdata.contacts.service.ContactsService()
         try:    
             gd_client.ClientLogin(user, password,gd_client.source)
         except Exception:
