@@ -52,44 +52,43 @@ class product_product(osv.osv):
             elif invoice_state == 'draft_open_paid':
                 states = ('draft', 'open', 'paid')
 
-            if 'sale_avg_price' in field_names or 'sale_num_invoiced' in field_names or 'turnover' in field_names or 'sale_expected' in field_names:
-                invoice_types = ('out_invoice', 'in_refund')
-            if 'purchase_avg_price' in field_names or 'purchase_num_invoiced' in field_names or 'total_cost' in field_names or 'normal_cost' in field_names:
-                invoice_types = ('in_invoice', 'out_refund')
-            if len(invoice_types):
-                cr.execute("""select
-                    avg(l.price_unit) as avg_unit_price,
+            sqlstr="""select
+                    sum(l.price_unit * l.quantity)/sum(l.quantity) as avg_unit_price,
                     sum(l.quantity) as num_qty,
-                    sum(l.quantity * l.price_unit) as total,
+                    sum(l.quantity * (l.price_subtotal/l.quantity)) as total,
                     sum(l.quantity * product.list_price) as sale_expected,
                     sum(l.quantity * product.standard_price) as normal_cost
                 from account_invoice_line l
                 left join account_invoice i on (l.invoice_id = i.id)
                 left join product_template product on (product.id=l.product_id)
-                where l.product_id = %s and i.state in %s and i.type IN %s and i.date_invoice>=%s and i.date_invoice<=%s
-                """, (val.id, states, invoice_types, date_from, date_to))
-                result = cr.fetchall()[0]
-                if 'sale_avg_price' in field_names or 'sale_num_invoiced' in field_names or 'turnover' in field_names or 'sale_expected' in field_names:
-                    res[val.id]['sale_avg_price'] = result[0] and result[0] or 0.0
-                    res[val.id]['sale_num_invoiced'] = result[1] and result[1] or 0.0
-                    res[val.id]['turnover'] = result[2] and result[2] or 0.0
-                    res[val.id]['sale_expected'] = result[3] and result[3] or 0.0
-                    res[val.id]['sales_gap'] = res[val.id]['sale_expected']-res[val.id]['turnover']
-                if 'purchase_avg_price' in field_names or 'purchase_num_invoiced' in field_names or 'total_cost' in field_names or 'normal_cost' in field_names:
-                    res[val.id]['purchase_avg_price'] = result[0] and result[0] or 0.0
-                    res[val.id]['purchase_num_invoiced'] = result[1] and result[1] or 0.0
-                    res[val.id]['total_cost'] = result[2] and result[2] or 0.0
-                    res[val.id]['normal_cost'] = result[4] and result[4] or 0.0
-                    res[val.id]['purchase_gap'] = res[val.id]['normal_cost']-res[val.id]['total_cost']
+                where l.product_id = %s and i.state in %s and i.type IN %s and (i.date_invoice IS NULL or (i.date_invoice>=%s and i.date_invoice<=%s))
+                """
+            invoice_types = ('out_invoice', 'in_refund')
+            cr.execute(sqlstr, (val.id, states, invoice_types, date_from, date_to))
+            result = cr.fetchall()[0]
+            res[val.id]['sale_avg_price'] = result[0] and result[0] or 0.0
+            res[val.id]['sale_num_invoiced'] = result[1] and result[1] or 0.0
+            res[val.id]['turnover'] = result[2] and result[2] or 0.0
+            res[val.id]['sale_expected'] = result[3] and result[3] or 0.0
+            res[val.id]['sales_gap'] = res[val.id]['sale_expected']-res[val.id]['turnover']
+
+            invoice_types = ('in_invoice', 'out_refund')
+            cr.execute(sqlstr, (val.id, states, invoice_types, date_from, date_to))
+            result = cr.fetchall()[0]
+            res[val.id]['purchase_avg_price'] = result[0] and result[0] or 0.0
+            res[val.id]['purchase_num_invoiced'] = result[1] and result[1] or 0.0
+            res[val.id]['total_cost'] = result[2] and result[2] or 0.0
+            res[val.id]['normal_cost'] = result[4] and result[4] or 0.0
+            res[val.id]['purchase_gap'] = res[val.id]['normal_cost']-res[val.id]['total_cost']
 
             if 'total_margin' in field_names:
-                res[val.id]['total_margin'] = res[val.id].get('turnover', val.turnover) - res[val.id].get('total_cost', val.standard_price)
+                res[val.id]['total_margin'] = res[val.id]['turnover'] - res[val.id]['total_cost']
             if 'expected_margin' in field_names:
-                res[val.id]['expected_margin'] = res[val.id].get('sale_expected',val.sale_expected) - res[val.id].get('normal_cost',val.normal_cost)
+                res[val.id]['expected_margin'] = res[val.id]['sale_expected'] - res[val.id]['normal_cost']
             if 'total_margin_rate' in field_names:
-                res[val.id]['total_margin_rate'] = res[val.id].get('turnover', val.turnover) and res[val.id]['total_margin'] * 100 / res[val.id].get('turnover', val.turnover) or 0.0
+                res[val.id]['total_margin_rate'] = res[val.id]['turnover'] and res[val.id]['total_margin'] * 100 / res[val.id]['turnover'] or 0.0
             if 'expected_margin_rate' in field_names:
-                res[val.id]['expected_margin_rate'] = res[val.id].get('sale_expected',val.sale_expected) and res[val.id]['expected_margin'] * 100 /  res[val.id].get('sale_expected',val.sale_expected) or 0.0
+                res[val.id]['expected_margin_rate'] = res[val.id]['sale_expected'] and res[val.id]['expected_margin'] * 100 / res[val.id]['sale_expected'] or 0.0
         return res
 
     _columns = {
