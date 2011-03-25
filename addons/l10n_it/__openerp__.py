@@ -32,6 +32,8 @@
     "description": """
 Piano dei conti italiano di un'impresa generica.
 ================================================
+
+Italian accounting chart and localization.
     """,
     "license": "AGPL-3",
     "category" : "Finance",

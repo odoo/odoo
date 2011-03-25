@@ -31,6 +31,7 @@ This module creates a link between procurement orders containing "service" lines
 When installed, this module will automatically create a new task
 for each procurement order line, when the corresponding product
 meets the following characteristics:
+
   * Type = Service
   * Procurement method (Order fulfillment) = MTO (make to order)
   * Supply/Procurement method = Produce

@@ -27,8 +27,11 @@
     "depends" : ["base","purchase"],
     "author" : 'OpenERP SA',
     "description": """
-This module modifies the purchase workflow in order to validate purchases that exceeds minimum amount set by configuration wizard.
-==================================================================================================================================
+Double-validation for purchases exceeding minimum amount.
+=========================================================
+
+This module modifies the purchase workflow in order to validate purchases
+that exceeds minimum amount set by configuration wizard.
     """,
     'website': 'http://www.openerp.com',
     'init_xml': [],

@@ -29,6 +29,7 @@ Purchase module is for generating a purchase order for purchase of goods from a 
 =========================================================================================
 
 A supplier invoice is created for the particular purchase order.
+
 Dashboard for purchase management that includes:
     * Current Purchase Orders
     * Draft Purchase Orders
