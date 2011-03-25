@@ -806,6 +806,9 @@ openerp.base.search.BooleanField = openerp.base.search.Field.extend({
 });
 openerp.base.search.IntegerField = openerp.base.search.Field.extend({
     get_value: function () {
+        if (!this.$element.val()) {
+            return null;
+        }
         var val = parseInt(this.$element.val());
         var check = Number(this.$element.val());
         if (isNaN(check) || val !== check) {
@@ -841,24 +844,15 @@ openerp.base.search.DateField = openerp.base.search.Field.extend({
         return this.$element.val();
     }
 });
-openerp.base.search.OneToManyField = openerp.base.search.Field.extend({
+openerp.base.search.OneToManyField = openerp.base.search.IntegerField.extend({
     // TODO: .relation, .context, .domain
-    get_value: function () {
-        return this.$element.val();
-    }
 });
-openerp.base.search.ManyToOneField = openerp.base.search.Field.extend({
+openerp.base.search.ManyToOneField = openerp.base.search.IntegerField.extend({
     // TODO: @widget
     // TODO: .relation, .selection, .context, .domain
-    get_value: function () {
-        return this.$element.val();
-    }
 });
-openerp.base.search.ManyToManyField = openerp.base.search.Field.extend({
+openerp.base.search.ManyToManyField = openerp.base.search.IntegerField.extend({
     // TODO: .related_columns (Array), .context, .domain
-    get_value: function () {
-        return this.$element.val();
-    }
 });
 
 openerp.base.FormView =  openerp.base.Controller.extend({
