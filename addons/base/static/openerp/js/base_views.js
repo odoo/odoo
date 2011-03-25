@@ -45,6 +45,23 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
            this.views[i].controller.$element.toggle(i === view_type);
         }
     },
+    /**
+     * Extract search view defaults from the current action's context.
+     *
+     * These defaults are of the form {search_default_*: value}
+     *
+     * @returns {Object} a clean defaults mapping of {field_name: value}
+     */
+    search_defaults: function () {
+        var defaults = {};
+        _.each(this.action.context, function (value, key) {
+            var match = /^search_default_(.*)$/.exec(key);
+            if (match) {
+                defaults[match[1]] = value;
+            }
+        });
+        return defaults;
+    },
     do_action_window: function(action) {
         var self = this;
         var prefix_id = "#" + this.element_id;
@@ -57,7 +74,10 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
         this.searchview_id = false;
         if(this.search_visible && action.search_view_id) {
             this.searchview_id = action.search_view_id[0];
-            this.searchview = new openerp.base.SearchView(this.session, this.element_id + "_search", this.dataset, this.searchview_id);
+            this.searchview = new openerp.base.SearchView(
+                    this.session, this.element_id + "_search",
+                    this.dataset, this.searchview_id,
+                    this.search_defaults());
             this.searchview.on_search.add(this.do_search);
             this.searchview.start();
 
@@ -363,11 +383,13 @@ openerp.base.DataRecord =  openerp.base.Controller.extend({
 });
 
 openerp.base.SearchView = openerp.base.Controller.extend({
-    init: function(session, element_id, dataset, view_id) {
+    init: function(session, element_id, dataset, view_id, defaults) {
         this._super(session, element_id);
         this.dataset = dataset;
         this.model = dataset.model;
         this.view_id = view_id;
+
+        this.defaults = defaults || {};
 
         this.inputs = [];
     },
@@ -480,13 +502,10 @@ openerp.base.SearchView = openerp.base.Controller.extend({
             data.fields_view['arch'].children,
             data.fields_view.fields);
 
-        // TODO: get default values
-        var default_values = {};
-
         var render = QWeb.render("SearchView", {
             'view': data.fields_view['arch'],
             'lines': lines,
-            'defaults': default_values
+            'defaults': this.defaults
         });
         this.$element.html(render);
 
@@ -655,6 +674,7 @@ openerp.base.search.Filter = openerp.base.search.Input.extend({
     init: function (node, view) {
         this._super(view);
         this.attrs = node.attrs;
+        this.classes = [this.attrs.string ? 'filter_label' : 'filter_icon'];
         this.make_id('filter', this.attrs.name);
     },
     start: function () {
@@ -664,6 +684,18 @@ openerp.base.search.Filter = openerp.base.search.Input.extend({
             $(this).toggleClass('enabled');
             $view_form.submit();
         });
+    },
+    /**
+     * If the filter is present in the defaults (and has a truthy value),
+     * enable the filter.
+     *
+     * @param {Object} defaults the search view's default values
+     */
+    render: function (defaults) {
+        if (this.attrs.name && defaults[this.attrs.name]) {
+            this.classes.push('enabled');
+        }
+        return this._super(defaults);
     },
     get_context: function () {
         if (!this.$element.hasClass('enabled')) {
@@ -740,6 +772,22 @@ openerp.base.search.BooleanField = openerp.base.search.Field.extend({
             ['true', 'Yes'],
             ['false', 'No']
         ];
+    },
+    /**
+     * Search defaults likely to be boolean values (for a boolean field).
+     *
+     * In the HTML, we only get strings, and our strings here are
+     * <code>'true'</code> and <code>'false'</code>, so ensure we get only
+     * those by truth-testing the default value.
+     *
+     * @param {Object} defaults default values for this search view
+     */
+    render: function (defaults) {
+        var name = this.attrs.name;
+        if (name in defaults) {
+            defaults[name] = defaults[name] ? "true" : "false";
+        }
+        return this._super(defaults);
     },
     get_value: function () {
         switch (this.$element.val()) {

@@ -161,7 +161,6 @@ class Menu(openerpweb.Controller):
         actions = Values.get('action', 'tree_but_open', [('ir.ui.menu', menu_id)], False, {})
 
         for _, _, action in actions:
-            print action
             action['context'] = req.session.eval_context(
                 action['context']) or {}
             action['domain'] = req.session.eval_domain(

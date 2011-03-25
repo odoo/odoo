@@ -300,7 +300,7 @@
 <button t-name="SearchView.filter" type="button"
         t-att-id="element_id"
         t-att-title="attrs.help"
-        t-att-class="attrs.string ? 'filter_label' : 'filter_icon'">
+        t-att-class="classes.join(' ')">
     <img t-if="attrs.icon" t-att-src="'/base/static/openerp/img/icons/' + attrs.icon + '.png'" width="16" height="16"/>
     <br t-if="attrs.icon and attrs.string"/>
     <t t-esc="attrs.string"/>
@@ -316,7 +316,9 @@
         <span t-if="attrs.help">(?)</span>
     </label>
     <div style="white-space: nowrap;">
-        <input type="text" t-att-name="attrs.name" t-att-id="element_id"/>
+        <input type="text" t-att-name="attrs.name"
+               t-att-id="element_id"
+               t-att-value="defaults[attrs.name] || ''"/>
         <t t-if="filters.length" t-raw="filters.render(defaults)"/>
     </div>
 </t>
@@ -330,7 +332,12 @@
         <select t-att-name="attrs.name" t-att-id="element_id">
             <option/>
             <t t-foreach="attrs.selection" t-as="option">
-                <option t-att-value="option[0]">
+                <t t-set="selected" t-value="defaults[attrs.name] === option[0]"/>
+                <option t-if="selected"
+                        t-att-value="option[0]" selected="selected">
+                    <t t-esc="option[1]"/>
+                </option>
+                <option t-if="not selected" t-att-value="option[0]">
                     <t t-esc="option[1]"/>
                 </option>
             </t>
