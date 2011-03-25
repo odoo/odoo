@@ -129,7 +129,7 @@
     </para>
     <section>
     
-    <blockTable colWidths="63.0,50.0,46.0,62.0,77.0,77.0,80.0,29.0" style="Table1">
+    <blockTable colWidths="70.0,100.0,89.0,70.0,89.0,29.0" style="Table1">
 	<para style="terp_default_8">[[repeatIn(getLines(o), 'cur_lines') ]]</para>
       <tr>
         <td>
@@ -145,13 +145,7 @@
           <para style="terp_tblheader_Details_Centre">Maturity Date</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">Due</para>
-        </td>
-        <td>
-          <para style="terp_tblheader_Details_Right">Paid</para>
-        </td>
-        <td>
-          <para style="terp_tblheader_Details_Right">Maturity</para>
+          <para style="terp_tblheader_Details_Right">Amount</para>
         </td>
         <td>
           <para style="terp_tblheader_Details_Centre">Li.</para>
@@ -172,20 +166,14 @@
             <para style="terp_default_Centre_9">[[ line['date_maturity'] and formatLang(line['date_maturity'], date=True) ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ formatLang(line['debit']) ]] [[ line['currency_id'] ]]</para>
-          </td>
-          <td>
-            <para style="terp_default_Right_9">[[ formatLang(line['credit']) ]] [[ line['currency_id'] ]] </para>
-          </td>
-          <td>
-            <para style="terp_default_Right_9">[[ (line['date_maturity'] &lt; time.strftime('%Y-%m-%d')) and formatLang(line['debit'] -line['credit']) or formatLang(0.0) ]] [[ line['currency_id'] or '']]</para>
+            <para style="terp_default_Right_9">[[ formatLang(line['balance']) ]] [[ line['currency_id'] ]]</para>
           </td>
           <td>
             <para style="terp_default_Centre_9">[[ line['blocked'] and 'X' or '' ]]</para>
           </td>
         </tr>
       </blockTable>
- <blockTable colWidths="160.0,57.0,80.0,80.0,80.0,28.0" style="Table2">
+ <blockTable colWidths="260.0,70.0,89.0,29.0" style="Table2">
       <tr>
         <td>
           <para style="terp_default_8">
@@ -193,16 +181,10 @@
           </para>
         </td>
         <td>
-          <para style="terp_tblheader_Details">Sub-Total: </para>
+          <para style="terp_tblheader_Details">Total: </para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[formatLang(reduce(lambda x,y: x+y['debit'], cur_lines['line'], 0.00)) ]] [[ line['currency_id'] ]] </para>
-        </td>
-        <td>
-          <para style="terp_default_Right_9">[[formatLang(reduce(lambda x,y: x+y['credit'], cur_lines['line'], 0.00)) ]] [[ line['currency_id'] ]] </para>
-        </td>
-        <td>
-          <para style="terp_default_Right_9">[[ formatLang(reduce(lambda x,y: x+(y['debit'] - y['credit']), filter(lambda x: x['date_maturity'] &lt; time.strftime('%Y-%m-%d'), cur_lines['line']), 0)) ]] [[ line['currency_id'] ]]</para>
+          <para style="terp_default_Right_9">[[formatLang(reduce(lambda x,y: x+y['balance'], cur_lines['line'], 0.00)) ]] [[ line['currency_id'] ]] </para>
         </td>
         <td>
           <para style="terp_default_Right_9">
@@ -211,41 +193,7 @@
         </td>
       </tr>
     </blockTable>
-    <blockTable colWidths="160.0,57.0,80.0,80.0,80.0,28.0" style="Table2">
-      <tr>
-        <td>
-          <para style="terp_default_8">
-            <font color="white"> </font>
-          </para>
-        </td>
-        <td>
-          <para style="terp_tblheader_Details">Balance: </para>
-        </td>
-        <td>
 
-          <para style="terp_tblheader_Details_Centre">[[ formatLang((reduce(lambda x,y: x+(y['debit'] - y['credit']), cur_lines['line'], 0.00))) ]] [[line['currency_id'] ]] </para>
-        </td>
-        <td>
-          <para style="terp_default_8">
-            <font color="white"></font>
-          </para>
-
-        </td>
-        <td>
-          <para style="terp_default_8">
-            <font color="white"> </font>
-          </para>
-
-        </td>
-
-        <td>
-          <para style="terp_default_8">
-            <font color="white"> </font>
-          </para>
-
-        </td>
-      </tr>
-    </blockTable>
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
