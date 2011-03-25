@@ -479,7 +479,11 @@ openerp.base.Menu =  openerp.base.Controller.extend({
         this.$secondary_menu.find('.menu_accordion').hide();
         // TODO: ui-accordion : collapse submenus and expand the good one
         $secondary.show();
-        this.rpc('/base/menu/action', {'menu_id': id}, this.on_menu_action_loaded);
+
+        if (id) {
+            this.rpc('/base/menu/action', {'menu_id': id},
+                    this.on_menu_action_loaded);
+        }
 
         $('.active', this.$element.add(this.$secondary_menu)).removeClass('active');
         $parent.addClass('active');
