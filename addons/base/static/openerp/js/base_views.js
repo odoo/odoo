@@ -401,6 +401,7 @@ openerp.base.SearchView = openerp.base.Controller.extend({
         this.defaults = defaults || {};
 
         this.inputs = [];
+        this.enabled_filters = [];
     },
     start: function() {
         //this.log('Starting SearchView '+this.model+this.view_id)
@@ -559,7 +560,27 @@ openerp.base.SearchView = openerp.base.Controller.extend({
     /**
      * event hook for clearing search
      */
-    on_clear: function () {  }
+    on_clear: function () {  },
+    /**
+     * Called by a filter propagating its state changes
+     *
+     * @param {openerp.base.search.Filter} filter a filter which got toggled
+     * @param {Boolean} default_enabled filter got enabled through the default values, at render time.
+     */
+    do_toggle_filter: function (filter, default_enabled) {
+        if (default_enabled || filter.is_enabled()) {
+            this.enabled_filters.push(filter);
+        } else {
+            this.enabled_filters = _.without(
+                this.enabled_filters, filter);
+        }
+
+        if (!default_enabled) {
+            // selecting a filter after initial loading automatically
+            // triggers refresh
+            this.$element.find('form').submit();
+        }
+    }
 });
 
 openerp.base.search = {};
@@ -686,11 +707,19 @@ openerp.base.search.Filter = openerp.base.search.Input.extend({
     },
     start: function () {
         this._super();
-        var $view_form = this.view.$element.find('form');
+        var self = this;
         this.$element.click(function () {
             $(this).toggleClass('enabled');
-            $view_form.submit();
+            self.view.do_toggle_filter(self);
         });
+    },
+    /**
+     * Returns whether the filter is currently enabled (in use) or not.
+     *
+     * @returns a boolean
+     */
+    is_enabled:function () {
+        return this.$element.hasClass('enabled');
     },
     /**
      * If the filter is present in the defaults (and has a truthy value),
@@ -701,17 +730,18 @@ openerp.base.search.Filter = openerp.base.search.Input.extend({
     render: function (defaults) {
         if (this.attrs.name && defaults[this.attrs.name]) {
             this.classes.push('enabled');
+            this.view.do_toggle_filter(this, true);
         }
         return this._super(defaults);
     },
     get_context: function () {
-        if (!this.$element.hasClass('enabled')) {
+        if (!this.is_enabled()) {
             return;
         }
         return this.attrs.context;
     },
     get_domain: function () {
-        if (!this.$element.hasClass('enabled')) {
+        if (!this.is_enabled()) {
             return;
         }
         return this.attrs.domain;
