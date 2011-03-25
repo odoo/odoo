@@ -120,7 +120,8 @@
                                 <field context="location=location_id,uom=product_uom,to_date=parent.date" name="product_id" on_change="on_change_product_id(location_id,product_id,product_uom,parent.date)"  domain="[('type','&lt;&gt;','service')]"/>
                                 <field name="product_qty"/>
                                 <field name="product_uom"/>
-                                <field name="prod_lot_id" groups="base.group_extended"/>
+                                <field name="tracking" invisible="1"/>
+                                <field name="prod_lot_id" groups="base.group_extended" attrs="{'required':[('tracking','=',True)]}"/>
                                 <button name="%(stock.action_view_stock_inventory_line_split)d"
                                     string="Split inventory lines" groups="base.group_extended"
                                     type="action" icon="terp-stock_effects-object-colorize" states="draft,confirm"/>
@@ -133,7 +134,7 @@
                                 <field name="product_qty"/>
                                 <field name="product_uom"/>
                                 <group colspan="2" col="4">
-                                <field name="prod_lot_id" groups="base.group_extended"/>
+                                <field name="prod_lot_id" groups="base.group_extended" attrs="{'required':[('tracking','=',True)]}"/>
                                     <button name="%(stock.action_view_stock_inventory_line_split)d"
                                         string="Split inventory lines" groups="base.group_extended"
                                         type="action" icon="terp-stock_effects-object-colorize"/>
