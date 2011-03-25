@@ -355,7 +355,7 @@ This is useful for CRM leads for example"),
         """
         if context is None:
             context = {}
-        smtp_pool = self.pool.get('email.smtp_server')
+        smtp_pool = self.pool.get('ir.mail_server')
         email_message_pool = self.pool.get('email.message')
         report_xml_pool = self.pool.get('ir.actions.report.xml')
         template = self.get_email_template(cr, uid, template_id, record_id, context)
@@ -363,7 +363,7 @@ This is useful for CRM leads for example"),
         if not smtp_server_id and template.smtp_server_id:
             smtp_server_id = template.smtp_server_id.id
         else:
-            smtp_ids = smtp_pool.search(cr, uid, [('default','=',True)])
+            smtp_ids = smtp_pool.search(cr, uid, [])
             smtp_server_id = smtp_ids and smtp_ids[0]
         smtp_server = smtp_pool.browse(cr, uid, smtp_server_id, context=context)
         # determine name of sender, either it is specified in email_id
@@ -384,6 +384,7 @@ This is useful for CRM leads for example"),
             'reply_to': self.get_template_value(cr, uid, template.reply_to, model, record_id, context),
             'subject': self.get_template_value(cr, uid, template.subject, model, record_id, context),
             'body': self.get_template_value(cr, uid, template.description, model, record_id, context),
+            'auto_delete': self.get_template_value(cr, uid, template.auto_delete, model, record_id, context),
             #'body_html': self.get_template_value(cr, uid, template.body_html, model, record_id, context),
         }
 
@@ -432,9 +433,10 @@ This is useful for CRM leads for example"),
 
         #Send emails
         context.update({'notemplate':True})
-        email_id = email_message_pool.schedule_with_attach(cr, uid, values.get('email_from'), values.get('email_to'), values.get('name'), values.get('description'),
-                    model=model, email_cc=values.get('email_cc'), email_bcc=values.get('email_bcc'), reply_to=values.get('reply_to'),
-                    attach=attachment, message_id=values.get('message_id'), openobject_id=record_id, debug=True, subtype='plain', x_headers={}, priority='3', smtp_server_id=smtp_server.id, context=context)
+        email_id = email_message_pool.schedule_with_attach(cr, uid, values.get('email_from'), values.get('email_to'), values.get('name'),
+                    values.get('description'), model=model, email_cc=values.get('email_cc'), email_bcc=values.get('email_bcc'),
+                    reply_to=values.get('reply_to'), attach=attachment, message_id=values.get('message_id'), openobject_id=record_id,
+                    debug=True, subtype='plain', x_headers={}, priority='3', smtp_server_id=smtp_server.id, auto_delete=values.get('auto_delete'), context=context)
         email_message_pool.write(cr, uid, email_id, {'template_id': context.get('template_id',template.id)})
         return email_id
 

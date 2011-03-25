@@ -163,11 +163,11 @@ class email_message(osv.osv):
             msg_txt = ''
             if message.history:
                 msg_txt += (message.email_from or '/') + _(' wrote on ') + format_date_tz(message.date, tz) + ':\n\t'
-                if message.description:
-                    msg_txt += self.truncate_data(cr, uid, message.description, context=context)
+                if message.body:
+                    msg_txt += self.truncate_data(cr, uid, message.body, context=context)
             else:
                 msg_txt = (message.user_id.name or '/') + _(' on ') + format_date_tz(message.date, tz) + ':\n\t'
-                msg_txt += message.name
+                msg_txt += message.subject
             result[message.id] = msg_txt
         return result
 
@@ -228,6 +228,7 @@ class email_message(osv.osv):
                 'history': True,
                 'smtp_server_id': smtp_server_id,
                 'state': 'outgoing',
+                'auto_delete': auto_delete
             }
         email_msg_id = self.create(cr, uid, msg_vals, context)
         if attach:

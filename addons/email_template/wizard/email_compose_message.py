@@ -44,7 +44,7 @@ class email_compose_message(osv.osv_memory):
             result.update({
                     'template_id' : template.id,
                     'smtp_server_id' : template.smtp_server_id.id,
-                    'body' : _get_template_value('description') or False,
+                    'body' : _get_template_value('body') or False,
                     'subject' : _get_template_value('subject') or False,
                     'attachment_ids' : template_pool.read(cr, uid, template.id, ['attachment_ids'])['attachment_ids'] or [],
                     'res_id' : res_id or False,
