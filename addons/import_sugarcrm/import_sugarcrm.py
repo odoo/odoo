@@ -197,6 +197,7 @@ def get_billing_address(sugar_obj,cr, uid, val, map_partner_address, context=Non
     fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_partner_address)
     dict_val = dict(zip(fields,datas))
     new_address_id = address_obj.create(cr,uid, dict_val)
+    
     return new_address_id
 
 def get_shipping_address(sugar_obj,cr, uid, val, map_partner_address, context=None):
@@ -251,6 +252,7 @@ def get_address(sugar_obj, cr, uid, val, context=None):
     fields=[]
     datas=[]
     address_obj = sugar_obj.pool.get('res.partner.address')
+    model_obj = sugar_obj.pool.get('ir.model.data')
     address_ids = address_obj.search(cr, uid, [('name', '=',val.get('name')), ('type', 'in', ('invoice', 'delivery')), ('street', '=', val.get('billing_address_street'))])
     if address_ids:
         return address_ids 
@@ -262,9 +264,8 @@ def get_address(sugar_obj, cr, uid, val, context=None):
             'phone': 'phone_office',
             'mobile': 'phone_mobile',
             'fax': 'phone_fax',
-            'type': 'type'
+            'type': 'type',
             }
-        
         address_id.append(get_billing_address(sugar_obj,cr, uid, val, map_partner_address, context))
         address_id.append(get_shipping_address(sugar_obj,cr, uid, val, map_partner_address, context))
         return address_id
@@ -276,7 +277,6 @@ def import_partners(sugar_obj, cr, uid, context=None):
                 'id': 'id',
                 'name': 'name',
                 'website': 'website',
-                'address/.id': 'address/.id',
                 'user_id/id': 'assigned_user_id',
                 'ref': 'sic_code',
                 'comment': ['description', 'employees', 'ownership', 'annual_revenue', 'rating', 'industry', 'ticker_symbol'],
@@ -291,19 +291,17 @@ def import_partners(sugar_obj, cr, uid, context=None):
     
     for val in sugar_data:
         add_id = get_address(sugar_obj, cr, uid, val, context)
-        for res_address in address_obj.browse(cr, uid, add_id):
-            partner_ids = partner_obj.search(cr, uid, [('name', '=', res_address.name)])
-            if partner_ids:
-                for partner in partner_obj.browse(cr, uid, partner_ids):
-                    address_obj.write(cr,uid,res_address.id,{'partner_id':partner.id})
-            else:
-                val['address/.id'] = res_address.id
-                if val.get('account_type') in  ('customer', 'prospect', 'other'):
-                    val['customer'] = True
-                else:
-                    val['supplier'] = True
-                fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_partner)
-                partner_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', context=context)
+        if val.get('account_type') in  ('customer', 'prospect', 'other'):
+            val['customer'] = True
+        else:
+            val['supplier'] = True
+        fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_partner)
+        partner_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', context=context)
+        for a in  address_obj.browse(cr,uid,add_id):
+            data_id=partner_obj.search(cr,uid,[('name','like',a.name),('website','like',val.get('website'))])
+            if data_id:
+                address_obj.write(cr,uid,a.id,{'partner_id':data_id[0]})                
+    return True
 
 
 def import_resources(sugar_obj, cr, uid, context=None):
