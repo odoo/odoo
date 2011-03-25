@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-03-20 13:14+0000\n"
+"PO-Revision-Date: 2011-03-24 15:26+0000\n"
 "Last-Translator: Dimitar Markov <dimitar.markov@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-03-21 06:21+0000\n"
+"X-Launchpad-Export-Date: 2011-03-25 06:13+0000\n"
 "X-Generator: Launchpad (build 12559)\n"
 
 #. module: base
@@ -38,7 +38,7 @@ msgstr "Други настройки"
 #. module: base
 #: selection:ir.property,type:0
 msgid "DateTime"
-msgstr ""
+msgstr "Дата час"
 
 #. module: base
 #: code:addons/fields.py:534
@@ -117,6 +117,8 @@ msgid ""
 "You can not write in this document (%s) ! Be sure your user belongs to one "
 "of these groups: %s."
 msgstr ""
+"Не можете да пишете в този документ (%s)! Уверете се, че принадлежите на "
+"някоя от следните групи: %s."
 
 #. module: base
 #: help:ir.model.fields,domain:0
@@ -260,7 +262,7 @@ msgstr ""
 #. module: base
 #: sql_constraint:res.lang:0
 msgid "The name of the language must be unique !"
-msgstr ""
+msgstr "Името на езика трябва да буде уникално!"
 
 #. module: base
 #: selection:res.request,state:0
@@ -607,12 +609,12 @@ msgstr "Импортиране на език"
 #. module: base
 #: model:ir.model,name:base.model_res_config_users
 msgid "res.config.users"
-msgstr ""
+msgstr "res.config.users"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Albanian / Shqip"
-msgstr ""
+msgstr "Албански / Shqip"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_crm_config_opportunity
@@ -721,7 +723,7 @@ msgstr "Работни дни"
 #. module: base
 #: selection:ir.module.module,license:0
 msgid "Other OSI Approved Licence"
-msgstr ""
+msgstr "Друг OSI одобрен лиценз"
 
 #. module: base
 #: help:res.config.users,context_lang:0
@@ -730,6 +732,7 @@ msgid ""
 "Sets the language for the user's user interface, when UI translations are "
 "available"
 msgstr ""
+"Изберете език за потребителския интерфейс, когато има съответните преводи"
 
 #. module: base
 #: code:addons/orm.py:1043
@@ -808,6 +811,8 @@ msgid ""
 "Language with code \"%s\" is not defined in your system !\n"
 "Define it through the Administration menu."
 msgstr ""
+"Език с код \"%s\" не е дефиниран във вашата система!\n"
+"Дефинирайте го през меню Администрация."
 
 #. module: base
 #: model:res.country,name:base.gu
@@ -823,7 +828,7 @@ msgstr "Табло Човешки ресурси"
 #: code:addons/base/res/res_user.py:507
 #, python-format
 msgid "Setting empty passwords is not allowed for security reasons!"
-msgstr ""
+msgstr "Използване на празни пароли не е разрешено по причини за сигурност!"
 
 #. module: base
 #: selection:ir.actions.server,state:0
@@ -912,6 +917,9 @@ msgid ""
 "Lauchpad's web interface (Rosetta). If you need to perform mass translation, "
 "Launchpad also allows uploading full .po files at once"
 msgstr ""
+"За да подобрите или разширите официалните преводи, вие трябва да използвате "
+"директно Lauchpad's web interface (Rosetta). Ако превеждате големи обеми, "
+"Launchpad също предлага и качване на пълен .po файл наведнъж."
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -959,7 +967,7 @@ msgstr "Маршалови острови"
 #: code:addons/base/ir/ir_model.py:328
 #, python-format
 msgid "Changing the model of a field is forbidden!"
-msgstr ""
+msgstr "Промяна на модела на полете е забранена!"
 
 #. module: base
 #: model:res.country,name:base.ht
@@ -1121,7 +1129,7 @@ msgstr "Вашите преводи ще бъдат препокрити от о
 #. module: base
 #: field:ir.actions.report.xml,report_rml:0
 msgid "Main report file path"
-msgstr ""
+msgstr "Път към файла за Главен отчет"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_action_report_xml
@@ -1309,7 +1317,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:base.res_widget_act_window
 #: model:ir.ui.menu,name:base.menu_res_widget_act_window
 msgid "Homepage Widgets"
-msgstr ""
+msgstr "Притурки на началната страница"
 
 #. module: base
 #: help:ir.actions.server,message:0
@@ -1454,6 +1462,8 @@ msgid ""
 "When using CSV format, please also check that the first line of your file is "
 "one of the following:"
 msgstr ""
+"Когато се използва CSV формат, трябва да се провери първият ред на файла да "
+"има следния вид:"
 
 #. module: base
 #: code:addons/fields.py:114
@@ -1859,7 +1869,7 @@ msgstr "Литва"
 #: model:ir.model,name:base.model_partner_clear_ids
 #: view:partner.clear.ids:0
 msgid "Clear IDs"
-msgstr ""
+msgstr "Изчисти IDs"
 
 #. module: base
 #: help:ir.cron,model:0
@@ -1944,6 +1954,8 @@ msgid ""
 "One of the records you are trying to modify has already been deleted "
 "(Document type: %s)."
 msgstr ""
+"Един от записите, които се опитвате да промените е вече изтрит (Документ "
+"тип: %s)"
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_country
@@ -2029,7 +2041,7 @@ msgstr "Армения"
 #: model:ir.actions.act_window,name:base.ir_property_form
 #: model:ir.ui.menu,name:base.menu_ir_property_form_all
 msgid "Configuration Parameters"
-msgstr ""
+msgstr "Праметри за настройка"
 
 #. module: base
 #: constraint:ir.cron:0
@@ -2287,7 +2299,7 @@ msgstr "Сър"
 #: code:addons/orm.py:1622
 #, python-format
 msgid "There is no view of type '%s' defined for the structure!"
-msgstr ""
+msgstr "Няма изглед от тип  '%s' дефиниран за тази структура!"
 
 #. module: base
 #: field:ir.default,ref_id:0
@@ -2583,6 +2595,8 @@ msgid ""
 "Operation prohibited by access rules, or performed on an already deleted "
 "document (Operation: read, Document type: %s)."
 msgstr ""
+"Операцията е забранена от правила за достъп или изпълнена върху вече изтрит "
+"документ (Operation: read, Document type: %s)."
 
 #. module: base
 #: model:res.country,name:base.nr
@@ -2593,7 +2607,7 @@ msgstr "Науру"
 #: code:addons/base/module/module.py:200
 #, python-format
 msgid "The certificate ID of the module must be unique !"
-msgstr ""
+msgstr "Сертифицираният ID на модула трябва да бъде уникален!"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_property
@@ -2682,6 +2696,7 @@ msgstr "Португалия"
 msgid ""
 "You cannot have multiple records with the same id for the same module !"
 msgstr ""
+"Не можете да имате множество записи с еднакви ID за един и същ модул!"
 
 #. module: base
 #: field:ir.module.module,certificate:0
@@ -2872,7 +2887,7 @@ msgstr "Модул в .zip формат"
 #. module: base
 #: field:ir.ui.view,xml_id:0
 msgid "XML ID"
-msgstr ""
+msgstr "XML ID"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_16
@@ -3623,6 +3638,8 @@ msgid ""
 "The user's timezone, used to perform timezone conversions between the server "
 "and the client."
 msgstr ""
+"Часовата зона на потребителя се използва за да се прави конверсия между "
+"сървър и клиент."
 
 #. module: base
 #: field:ir.module.module,demo:0
@@ -3875,7 +3892,7 @@ msgstr ""
 #. module: base
 #: help:multi_company.default,object_id:0
 msgid "Object affected by this rule"
-msgstr ""
+msgstr "Обекти повлияни от това правило"
 
 #. module: base
 #: report:ir.module.reference.graph:0
@@ -4266,6 +4283,8 @@ msgid ""
 "You cannot perform this operation. New Record Creation is not allowed for "
 "this object as this object is for reporting purpose."
 msgstr ""
+"Тази операция не може да бъде извършена. Не е разрешено създаването на нов "
+"запис за този обект, защото е само с цел спавка."
 
 #. module: base
 #: view:base.language.import:0
@@ -4398,7 +4417,7 @@ msgstr ""
 #. module: base
 #: view:partner.clear.ids:0
 msgid "Clear Ids"
-msgstr ""
+msgstr "Изисти Id-та"
 
 #. module: base
 #: model:res.country,name:base.io
@@ -4720,7 +4739,7 @@ msgstr "res.config.view"
 #: view:res.log:0
 #: field:res.log,read:0
 msgid "Read"
-msgstr ""
+msgstr "Прочитане"
 
 #. module: base
 #: sql_constraint:res.country:0
@@ -4988,17 +5007,19 @@ msgid ""
 "If specified, this action will be opened at logon for this user, in addition "
 "to the standard menu."
 msgstr ""
+"Ако е оказано, това действи ще бъде отворено при вход на този потребител в "
+"добавка на стандартното меню."
 
 #. module: base
 #: view:ir.values:0
 msgid "Client Actions"
-msgstr ""
+msgstr "Действия на клиент"
 
 #. module: base
 #: code:addons/orm.py:1806
 #, python-format
 msgid "The exists method is not implemented on this object !"
-msgstr ""
+msgstr "Съществуващият метод не е вграден в този обект!"
 
 #. module: base
 #: code:addons/base/module/module.py:336
@@ -5407,7 +5428,7 @@ msgstr ""
 #: model:ir.model,name:base.model_base_module_import
 #: model:ir.ui.menu,name:base.menu_view_base_module_import
 msgid "Import Module"
-msgstr ""
+msgstr "Импортиране на модул"
 
 #. module: base
 #: model:res.country,name:base.as
