@@ -1553,7 +1553,7 @@ class stock_move(osv.osv):
 
         # used for colors in tree views:
         'scrapped': fields.related('location_dest_id','scrap_location',type='boolean',relation='stock.location',string='Scrapped', readonly=True),
-        'lot_id': fields.boolean('Track Lots'),
+        'active': fields.boolean('Track Lots'),
     }
     _constraints = [
         (_check_tracking,
@@ -1738,12 +1738,11 @@ class stock_move(osv.osv):
 
         product = self.pool.get('product.product').browse(cr, uid, [prod_id], context=ctx)[0]
         uos_id  = product.uos_id and product.uos_id.id or False
-        track_prod = product.track_production
         result = {
             'product_uom': product.uom_id.id,
             'product_uos': uos_id,
             'product_qty': 1.00,
-            'lot_id': track_prod,
+            'active': product.track_production,
             'product_uos_qty' : self.pool.get('stock.move').onchange_quantity(cr, uid, ids, prod_id, 1.00, product.uom_id.id, uos_id)['value']['product_uos_qty']
         }
         if not ids:
