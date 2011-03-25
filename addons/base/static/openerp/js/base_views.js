@@ -756,11 +756,11 @@ openerp.base.search.Field = openerp.base.search.Input.extend({
         }
 
         if (!this.attrs['filter_domain']) {
-            return [
+            return [[
                 this.attrs.name,
                 this.attrs.operator || this.default_operator,
                 this.get_value()
-            ];
+            ]];
         }
         return this.attrs['filter_domain'];
     }
