@@ -26,7 +26,6 @@ try:
     import gdata
     import gdata.contacts.service
     import gdata.contacts
-    import gdata.contacts.client
 except ImportError:
     raise osv.except_osv(_('Google Contacts Import Error!'), _('Please install gdata-python-client from http://code.google.com/p/gdata-python-client/downloads/list'))
 
@@ -66,15 +65,12 @@ class synchronize_google_contact(osv.osv_memory):
         if not gd_client:
             raise osv.except_osv(_('Error'), _("Authentication fail check the user and password !"))
         
-        query = gdata.contacts.client.ContactsQuery(feed='/m8/feeds/groups/default/full')
         res = []
+        query = gdata.contacts.service.GroupsQuery(feed='/m8/feeds/groups/default/full')
         if gd_client:
-            groups = gd_client.GetGroups(q=query)
+            groups = gd_client.GetFeed(query.ToUri())
             for grp in groups.entry:
-                title = grp.title.text
-                if 'System Group' in grp.title.text:
-                    title = grp.title.text.split(': ')[1]
-                res.append((grp.id.text, title))
+                res.append((grp.id.text, grp.title.text))
         res.append(('all','All Groups'))
         return res
 
