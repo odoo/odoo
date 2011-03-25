@@ -934,25 +934,9 @@ openerp.base.ListView = openerp.base.Controller.extend({
         }
         this.dataset.fields = this.cols;
         this.dataset.on_fetch.add(this.do_fill_table);
-    },
-    do_fill_table: function(records) {
-        this.log("do_fill_table");
         
-        var self = this;
-        //this.log(this.dataset.data);
-        var rows = [];
-        for(var i = 0; i < records.length; i++)  {
-            // TODO very strange is sometimes non existing ? even as admin ? example ir.ui.menu
-            var row = records[i].values;
-            if(row)
-                rows.push(row);
-//            else
-//              debugger;
-        }
-        //this.log(rows);
         var width = this.$element.width();
         this.$table.jqGrid({
-            data: rows,
             datatype: "local",
             height: "100%",
             rowNum: 100,
@@ -963,11 +947,23 @@ openerp.base.ListView = openerp.base.Controller.extend({
             viewrecords: true,
             caption: this.name
         }).setGridWidth(width);
+
+        var self = this;
         $(window).bind('resize', function() {
             self.$element.children().hide();
             self.$table.setGridWidth(self.$element.width());
             self.$element.children().show();
         }).trigger('resize');
+    },
+    do_fill_table: function(records) {
+        this.log("do_fill_table");
+
+        this.$table
+            .clearGridData()
+            .addRowData('id', _.map(records, function (record) {
+                return record.values;
+            }));
+
     }
 });
 
