@@ -51,14 +51,14 @@ RST, using Sphinx's `Python domain`_ [#]_:
   unless a more extensive explanation needs to be given (e.g. the
   specification that the input should be a list of 3-tuple needs to
   use ``:type:`` even though all types involved are built-ins). Any
-  other type should be specified in full with a cross-reference using
-  the ``:type:`` field::
+  other type should be specified in full using the ``:type:`` field::
 
       :param foo: what the purpose of foo is
-      :type foo: :class:`some.addon.Class`
+      :type foo: some.addon.Class
 
-  Likewise, mentions of other methods (including within the same
-  class), modules or types should be cross-referenced.
+  Mentions of other methods (including within the same class), modules
+  or types in descriptions (of anything, including parameters) should
+  be cross-referenced.
 
 * Classes should likewise be documented using their own docstring, and
   should include the documentation of their construction (``__init__``
