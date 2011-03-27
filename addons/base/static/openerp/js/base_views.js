@@ -115,12 +115,14 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
     },
     on_edit: function() {
     },
-    do_search: function (domains, contexts) {
+    do_search: function (domains, contexts, group_contexts) {
         var self = this;
         this.rpc('/base/session/eval_domain_and_context', {
             domains: domains,
-            contexts: contexts
+            contexts: contexts,
+            groupby: group_contexts
         }, function (results) {
+            // TODO: group by
             self.dataset.set({
                 context: results.context,
                 domain: results.domain
@@ -137,11 +139,19 @@ openerp.base.ViewManagerRoot = openerp.base.Controller.extend({
 openerp.base.ViewManagerUsedAsAMany2One = openerp.base.Controller.extend({
 });
 
-/**
- * Management interface between views and the collection of selected OpenERP
- * records (represents the view's state?)
- */
-openerp.base.DataSet =  openerp.base.Controller.extend({
+openerp.base.DataSet =  openerp.base.Controller.extend(
+    /** @lends openerp.base.DataSet# */{
+
+    /**
+     * Management interface between views and the collection of selected OpenERP
+     * records (represents the view's state?)
+     *
+     * @constructs
+     * @extends openerp.base.Controller
+     *
+     * @param {openerp.base.Session} session current OpenERP session
+     * @param {String} model the OpenERP model this dataset will manage
+     */
     init: function(session, model) {
         this._super(session);
         this.model = model;
@@ -205,10 +215,9 @@ openerp.base.DataSet =  openerp.base.Controller.extend({
         return this;
     },
     /**
-     * @event
-     *
      * Fires after the DataSet fetched the records matching its internal ids selection
-     * 
+     *
+     * @event
      * @param {Array} records An array of the DataRecord fetched
      * @param event The on_fetch event object
      * @param {Number} event.offset the offset with which the original DataSet#fetch call was performed
@@ -239,10 +248,9 @@ openerp.base.DataSet =  openerp.base.Controller.extend({
         return this;
     },
     /**
-     * @event
-     *
      * Fires after the DataSet fetched the records matching its internal active ids selection
      *
+     * @event
      * @param {Array} records An array of the DataRecord fetched
      */
     on_active_ids: function (records) { },
@@ -268,6 +276,7 @@ openerp.base.DataSet =  openerp.base.Controller.extend({
     /**
      * Fires after the DataSet fetched the record matching the current active record
      *
+     * @event
      * @param record the record matching the provided id, or null if there is no record for this id
      */
     on_active_id: function (record) {
@@ -391,7 +400,25 @@ openerp.base.DataRecord =  openerp.base.Controller.extend({
     }
 });
 
-openerp.base.SearchView = openerp.base.Controller.extend({
+openerp.base.SearchView = openerp.base.Controller.extend(
+    /** @lends openerp.base.SearchView# */{
+    /**
+     * Manager for the Search view type.
+     *
+     * Handles laying out and rendering the various search widgets, as well
+     * as collecting contexts and domain and broadcasting them to whoever
+     * registered itself on the :js:func:`~openep.base.SearchView.on_search`
+     * event.
+     *
+     * @constructs
+     * @extends openerp.base.Controller
+     * 
+     * @param {openerp.base.Session} session the current OpenERP session
+     * @param {String} element_id the root element where the search view should render itself
+     * @param {openerp.base.DataSet} dataset the dataset with which the search view will work
+     * @param {Number} view_id the id of this view object
+     * @param {Object} defaults default values to set on the various fields of the view
+     */
     init: function(session, element_id, dataset, view_id, defaults) {
         this._super(session, element_id);
         this.dataset = dataset;
@@ -539,7 +566,13 @@ openerp.base.SearchView = openerp.base.Controller.extend({
             map(function (input) { return input.get_context(); }).
             compact().
             value();
-        this.on_search(domains, contexts);
+        // TODO: group_by on field contexts?
+        var group_contexts = _(this.enabled_filters).
+            chain().
+            map(function (filter) { return filter.get_context(); }).
+            compact().
+            value();
+        this.on_search(domains, contexts, group_contexts);
     },
     /**
      * Event hook for searches: triggers after the SearchView has collected
@@ -551,8 +584,9 @@ openerp.base.SearchView = openerp.base.Controller.extend({
      *
      * @param {Array} domains an array of string or literal domains
      * @param {Array} contexts an array of string or literal contexts
+     * @param {Array} group_contexts an ordered array of contexts which may need to be used to resolve grouping
      */
-    on_search: function (domains, contexts) { },
+    on_search: function (domains, contexts, group_contexts) { },
     do_clear: function (e) {
         if (e && e.preventDefault) { e.preventDefault(); }
         this.on_clear();
@@ -583,8 +617,19 @@ openerp.base.SearchView = openerp.base.Controller.extend({
     }
 });
 
+/** @namespace */
 openerp.base.search = {};
-openerp.base.search.Invalid = Class.extend({
+openerp.base.search.Invalid = Class.extend(
+    /** @lends openerp.base.search.Invalid# */{
+    /**
+     * Exception thrown by search widgets when they hold invalid values,
+     * which they can not return when asked.
+     *
+     * @constructs
+     * @param field the name of the field holding an invalid value
+     * @param value the invalid value
+     * @param message validation failure message
+     */
     init: function (field, value, message) {
         this.field = field;
         this.value = value;
@@ -595,8 +640,17 @@ openerp.base.search.Invalid = Class.extend({
                 ': [' + this.value + '] is ' + this.message);
     }
 });
-openerp.base.search.Widget = openerp.base.Controller.extend({
+openerp.base.search.Widget = openerp.base.Controller.extend(
+    /** @lends openerp.base.search.Widget# */{
     template: null,
+    /**
+     * Root class of all search widgets
+     *
+     * @constructs
+     * @extends openerp.base.Controller
+     *
+     * @param view the ancestor view of this widget
+     */
     init: function (view) {
         this.view = view;
     },
@@ -682,7 +736,14 @@ openerp.base.search.Group = openerp.base.search.Widget.extend({
         });
     }
 });
-openerp.base.search.Input = openerp.base.search.Widget.extend({
+openerp.base.search.Input = openerp.base.search.Widget.extend(
+    /** @lends openerp.base.search.Input# */{
+    /**
+     * @constructs
+     * @extends openerp.base.search.Widget
+     *
+     * @param view
+     */
     init: function (view) {
         this._super(view);
         this.view.inputs.push(this);
@@ -747,12 +808,21 @@ openerp.base.search.Filter = openerp.base.search.Input.extend({
         return this.attrs.domain;
     }
 });
-openerp.base.search.Field = openerp.base.search.Input.extend({
+openerp.base.search.Field = openerp.base.search.Input.extend(
+    /** @lends openerp.base.search.Field# */ {
     template: 'SearchView.field',
     default_operator: '=',
     // TODO: set default values
     // TODO: get context, domain
     // TODO: holds Filters
+    /**
+     * @constructs
+     * @extends openerp.base.search.Input
+     *
+     * @param view_section
+     * @param field
+     * @param view
+     */
     init: function (view_section, field, view) {
         this._super(view);
         this.attrs = _.extend({}, field, view_section.attrs);
@@ -795,7 +865,18 @@ openerp.base.search.Field = openerp.base.search.Input.extend({
         return this.attrs['filter_domain'];
     }
 });
-openerp.base.search.CharField = openerp.base.search.Field.extend({
+/**
+ * Implementation of the ``char`` OpenERP field type:
+ *
+ * * Default operator is ``ilike`` rather than ``=``
+ * * The Javascript and the HTML values are identical (strings)
+ * 
+ * @class
+ * @extends openerp.base.search.Field
+ *
+ */
+openerp.base.search.CharField = openerp.base.search.Field.extend(
+    /** @lends openerp.base.search.CharField# */ {
     default_operator: 'ilike',
     get_value: function () {
         return this.$element.val();

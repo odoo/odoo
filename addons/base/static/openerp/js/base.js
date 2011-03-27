@@ -65,6 +65,10 @@
 // OpenERP initialisation and black magic about the pool
 //---------------------------------------------------------
 
+/**
+ * @name openerp
+ * @namespace
+ */
 (function() {
     if (this.openerp)
         return;
@@ -106,6 +110,7 @@
 // OpenERP initialisation and black magic about the pool
 //---------------------------------------------------------
 
+/** @namespace */
 openerp.base = function(instance) {
     openerp.base$chrome(instance);
     openerp.base$views(instance);
