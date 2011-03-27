@@ -332,6 +332,7 @@ openerp.base.DataSet =  openerp.base.Controller.extend(
      * Sets active_ids by value:
      *
      * * Activates all ids part of the current selection
+     *
      * * Sets active_id to be the first id of the selection
      *
      * @param {Array} ids the list of ids to activate
@@ -869,6 +870,7 @@ openerp.base.search.Field = openerp.base.search.Input.extend(
  * Implementation of the ``char`` OpenERP field type:
  *
  * * Default operator is ``ilike`` rather than ``=``
+ *
  * * The Javascript and the HTML values are identical (strings)
  * 
  * @class
