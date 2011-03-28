@@ -56,7 +56,7 @@ class project_issue(crm.crm_case, osv.osv):
         """
 
         res = super(project_issue, self).case_open(cr, uid, ids, *args)
-        self.write(cr, uid, ids, {'date_open': time.strftime('%Y-%m-%d %H:%M:%S')})
+        self.write(cr, uid, ids, {'date_open': time.strftime('%Y-%m-%d %H:%M:%S'), 'assigned_to' : uid})
         for (id, name) in self.name_get(cr, uid, ids):
             message = _("Issue '%s' has been opened.") % name
             self.log(cr, uid, id, message)
@@ -205,14 +205,14 @@ class project_issue(crm.crm_case, osv.osv):
         'duration': fields.float('Duration'),
         'task_id': fields.many2one('project.task', 'Task', domain="[('project_id','=',project_id)]"),
         'day_open': fields.function(_compute_day, string='Days to Open', \
-                                method=True, multi='day_open', type="float", store=True),
+                                method=True, multi='compute_day', type="float", store=True),
         'day_close': fields.function(_compute_day, string='Days to Close', \
-                                method=True, multi='day_close', type="float", store=True),
-        'assigned_to': fields.many2one('res.users', 'Assigned to', required=True, select=1),
+                                method=True, multi='compute_day', type="float", store=True),
+        'assigned_to': fields.many2one('res.users', 'Assigned to', required=False, select=1),
         'working_hours_open': fields.function(_compute_day, string='Working Hours to Open the Issue', \
-                                method=True, multi='working_days_open', type="float", store=True),
+                                method=True, multi='compute_day', type="float", store=True),
         'working_hours_close': fields.function(_compute_day, string='Working Hours to Close the Issue', \
-                                method=True, multi='working_days_close', type="float", store=True),
+                                method=True, multi='compute_day', type="float", store=True),
         'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
         'date_action_last': fields.datetime('Last Action', readonly=1),
         'date_action_next': fields.datetime('Next Action', readonly=1),
@@ -230,18 +230,30 @@ class project_issue(crm.crm_case, osv.osv):
             return user.context_project_id.id
         return False
 
+    def on_change_project(self, cr, uid, ids, project_id, context=None):
+        result = {}
+
+        if project_id:
+            project = self.pool.get('project.project').browse(cr, uid, project_id, context=context)
+            if project.user_id:
+                result['value'] = {'user_id' : project.user_id.id}
+
+        return result
+
+
     _defaults = {
         'active': 1,
-        'user_id': crm.crm_case._get_default_user,
+        #'user_id': crm.crm_case._get_default_user,
         'partner_id': crm.crm_case._get_default_partner,
         'partner_address_id': crm.crm_case._get_default_partner_address,
-        'email_from': crm.crm_case. _get_default_email,
+        'email_from': crm.crm_case._get_default_email,
         'state': 'draft',
-        'section_id': crm.crm_case. _get_section,
+        'section_id': crm.crm_case._get_section,
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.helpdesk', context=c),
         'priority': crm.AVAILABLE_PRIORITIES[2][0],
         'project_id':_get_project,
-        'assigned_to' : lambda obj, cr, uid, context: uid,
+        'categ_id' : lambda *a: False,
+        #'assigned_to' : lambda obj, cr, uid, context: uid,
     }
 
     def convert_issue_task(self, cr, uid, ids, context=None):

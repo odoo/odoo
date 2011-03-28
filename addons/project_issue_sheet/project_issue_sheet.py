@@ -33,12 +33,30 @@ class project_issue(osv.osv):
     def on_change_project(self, cr, uid, ids, project_id, context=None):
         if not project_id:
             return {}
+
+        result = super(project_issue, self).on_change_project(cr, uid, ids, project_id, context=context)
+        
         project = self.pool.get('project.project').browse(cr, uid, project_id, context=context)
+        if 'value' not in result:
+            result['value'] = {}
+
         account = project.analytic_account_id
         if account:
-            return {'value' : {'analytic_account_id' : account.id}}
-        else:
+            result['value']['analytic_account_id'] = account.id
+
+        return result
+
+    def on_change_account_id(self, cr, uid, ids, account_id, context=None):
+        if not account_id:
             return {}
+
+        account = self.pool.get('account.analytic.account').browse(cr, uid, account_id, context=context)
+        result = {}
+
+        if account and account.state == 'pending':
+            result = {'warning' : {'title' : _('Analytic Account'), 'message' : _('The Analytic Account is in pending !')}}
+            
+        return result
 
 project_issue()
 

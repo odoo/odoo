@@ -53,7 +53,7 @@
                 <form string="Issue Tracker Form">
                     <group colspan="4" col="6">
                         <field name="name"/>
-                        <field name="project_id" required="True"/>
+                        <field name="project_id" required="True" on_change="on_change_project(project_id)"/>
                         <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'project.issue')]"/>
                         <field name="user_id" invisible="1" />
                         <field name="assigned_to"/>
