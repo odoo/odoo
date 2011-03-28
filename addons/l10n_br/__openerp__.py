@@ -24,7 +24,9 @@
     'category': 'Finance',
     'description': """
 This is the base module to manage the accounting chart for Brazil in OpenERP.
-==============================================================================
+=============================================================================
+
+Brazilian accounting chart and localization.
     """,
     'author': 'OpenERP Brasil',
     'website': 'http://openerpbrasil.org',

@@ -34,6 +34,7 @@ Following dates can be tracked:
     - best before date
     - removal date
     - alert date
+
 Used, for example, in food industries.''',
     "update_xml" : ["product_expiry_view.xml"],
     "active": False,

@@ -1,0 +1,81 @@
+# Bulgarian translation for openobject-addons
+# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"PO-Revision-Date: 2011-03-27 14:32+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Bulgarian <bg@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2011-03-28 04:36+0000\n"
+"X-Generator: Launchpad (build 12559)\n"
+
+#. module: product_visible_discount
+#: code:addons/product_visible_discount/product_visible_discount.py:147
+#, python-format
+msgid "No Purchase Pricelist Found !"
+msgstr "Не е намерен ценоразпис за покупки!"
+
+#. module: product_visible_discount
+#: code:addons/product_visible_discount/product_visible_discount.py:155
+#, python-format
+msgid "No Sale Pricelist Found "
+msgstr "Не е намерен ценоразпис за продажби! "
+
+#. module: product_visible_discount
+#: model:ir.module.module,description:product_visible_discount.module_meta_information
+msgid ""
+"\n"
+"    This module lets you calculate discounts on Sale Order lines and Invoice "
+"lines base on the partner's pricelist.\n"
+"    To this end, a new check box named \"Visible Discount\" is added to the "
+"pricelist form.\n"
+"    Example:\n"
+"        For the product PC1 and the partner \"Asustek\": if listprice=450, "
+"and the price calculated using Asustek's pricelist is 225\n"
+"        If the check box is checked, we will have on the sale order line: "
+"Unit price=450, Discount=50,00, Net price=225\n"
+"        If the check box is unchecked, we will have on Sale Order and "
+"Invoice lines: Unit price=225, Discount=0,00, Net price=225\n"
+"    "
+msgstr ""
+
+#. module: product_visible_discount
+#: model:ir.module.module,shortdesc:product_visible_discount.module_meta_information
+#: field:product.pricelist,visible_discount:0
+msgid "Visible Discount"
+msgstr "Видима отстъпка"
+
+#. module: product_visible_discount
+#: model:ir.model,name:product_visible_discount.model_account_invoice_line
+msgid "Invoice Line"
+msgstr "Ред от фактура"
+
+#. module: product_visible_discount
+#: code:addons/product_visible_discount/product_visible_discount.py:155
+#, python-format
+msgid "You must first define a pricelist for Customer !"
+msgstr "Трябва да определите ценоразпис за клиенти!"
+
+#. module: product_visible_discount
+#: model:ir.model,name:product_visible_discount.model_product_pricelist
+msgid "Pricelist"
+msgstr "Ценоразпис"
+
+#. module: product_visible_discount
+#: code:addons/product_visible_discount/product_visible_discount.py:147
+#, python-format
+msgid "You must first define a pricelist for Supplier !"
+msgstr "Трябва първо да определите ценоразпис за Доставчици!"
+
+#. module: product_visible_discount
+#: model:ir.model,name:product_visible_discount.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Ред от нареждане за продажба"
