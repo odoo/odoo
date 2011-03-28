@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-03 16:58+0000\n"
-"PO-Revision-Date: 2011-03-14 17:16+0000\n"
+"PO-Revision-Date: 2011-03-24 15:55+0000\n"
 "Last-Translator: Viktor Prokopiev <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-03-15 06:11+0000\n"
+"X-Launchpad-Export-Date: 2011-03-25 06:14+0000\n"
 "X-Generator: Launchpad (build 12559)\n"
 
 #. module: mrp_operations
@@ -45,7 +45,7 @@ msgstr "Заказ в производство не может начаться 
 #: view:mrp.production.workcenter.line:0
 #: view:mrp.workorder:0
 msgid "Group By..."
-msgstr "Объединять по..."
+msgstr "Группировать по ..."
 
 #. module: mrp_operations
 #: model:process.node,note:mrp_operations.process_node_workorder0
@@ -515,12 +515,12 @@ msgstr "Завершить операцию."
 #: code:addons/mrp_operations/mrp_operations.py:450
 #, python-format
 msgid "Operation is not started yet !"
-msgstr ""
+msgstr "Операция еще не началась !"
 
 #. module: mrp_operations
 #: model:process.node,note:mrp_operations.process_node_productionorder0
 msgid "Information from the production order."
-msgstr ""
+msgstr "Информация из производственного заказа."
 
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:450
@@ -529,12 +529,12 @@ msgstr ""
 #: code:addons/mrp_operations/mrp_operations.py:473
 #, python-format
 msgid "Sorry!"
-msgstr ""
+msgstr "Извините!"
 
 #. module: mrp_operations
 #: view:mrp.workorder:0
 msgid "Current"
-msgstr ""
+msgstr "Текущий"
 
 #. module: mrp_operations
 #: field:mrp_operations.operation,code_id:0
@@ -546,7 +546,7 @@ msgstr "Код"
 #: code:addons/mrp_operations/mrp_operations.py:473
 #, python-format
 msgid "Operation is Already Cancelled  !"
-msgstr ""
+msgstr "Операция уже отменена!"
 
 #. module: mrp_operations
 #: model:ir.module.module,shortdesc:mrp_operations.module_meta_information
@@ -556,17 +556,17 @@ msgstr ""
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_code_action
 msgid "Operation Codes"
-msgstr ""
+msgstr "Коды операции"
 
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,qty:0
 msgid "Qty"
-msgstr ""
+msgstr "Кол-во"
 
 #. module: mrp_operations
 #: model:process.node,name:mrp_operations.process_node_doneoperation0
 msgid "Operation Done"
-msgstr ""
+msgstr "Операция выполнена"
 
 #. module: mrp_operations
 #: selection:mrp.production.workcenter.line,production_state:0
@@ -599,17 +599,17 @@ msgstr ""
 #. module: mrp_operations
 #: model:process.node,name:mrp_operations.process_node_startoperation0
 msgid "Start Operation"
-msgstr ""
+msgstr "Начать операцию"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
 msgid "Information"
-msgstr ""
+msgstr "Информация"
 
 #. module: mrp_operations
 #: model:ir.actions.report.xml,name:mrp_operations.report_wc_barcode
 msgid "Work Centers Barcode"
-msgstr ""
+msgstr "Штрих-код рабоч.центра"
 
 #. module: mrp_operations
 #: constraint:stock.move:0
@@ -624,7 +624,7 @@ msgstr ""
 #. module: mrp_operations
 #: field:mrp.workorder,delay:0
 msgid "Delay"
-msgstr ""
+msgstr "Задержка"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
@@ -643,7 +643,7 @@ msgstr ""
 #: field:mrp_operations.operation,workcenter_id:0
 #: model:process.node,name:mrp_operations.process_node_workorder0
 msgid "Work Center"
-msgstr ""
+msgstr "Рабочий центр"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
@@ -653,20 +653,20 @@ msgstr ""
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,date_planned:0
 msgid "Scheduled Date"
-msgstr ""
+msgstr "Запланированная дата"
 
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,product:0
 #: view:mrp.workorder:0
 #: field:mrp.workorder,product_id:0
 msgid "Product"
-msgstr ""
+msgstr "Продукт"
 
 #. module: mrp_operations
 #: view:mrp.workorder:0
 #: field:mrp.workorder,total_hours:0
 msgid "Total Hours"
-msgstr ""
+msgstr "Общее время"
 
 #. module: mrp_operations
 #: help:mrp.production,allow_reorder:0
@@ -683,7 +683,7 @@ msgstr ")"
 #. module: mrp_operations
 #: model:ir.ui.menu,name:mrp_operations.menu_report_mrp_workorders_tree
 msgid "Work Order Analysis"
-msgstr ""
+msgstr "Аналитика нарядов"
 
 #. module: mrp_operations
 #: view:mrp.production:0
@@ -691,12 +691,12 @@ msgstr ""
 #: selection:mrp.production.workcenter.line,state:0
 #: selection:mrp.workorder,state:0
 msgid "Finished"
-msgstr ""
+msgstr "Завершено"
 
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,uom:0
 msgid "UOM"
-msgstr ""
+msgstr "Ед. изм."
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
@@ -706,39 +706,39 @@ msgstr ""
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,delay:0
 msgid "Working Hours"
-msgstr ""
+msgstr "Рабочие часы"
 
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,date_finished:0
 #: field:mrp.production.workcenter.line,date_planned_end:0
 #: field:mrp_operations.operation,date_finished:0
 msgid "End Date"
-msgstr ""
+msgstr "Дата окончания"
 
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
 msgid "February"
-msgstr ""
+msgstr "Февраль"
 
 #. module: mrp_operations
 #: model:process.transition,name:mrp_operations.process_transition_startcanceloperation0
 msgid "Operation cancelled"
-msgstr ""
+msgstr "Действие отменено"
 
 #. module: mrp_operations
 #: model:process.node,note:mrp_operations.process_node_startoperation0
 msgid "Start the operation."
-msgstr ""
+msgstr "Начать операцию."
 
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
 msgid "April"
-msgstr ""
+msgstr "Апрель"
 
 #. module: mrp_operations
 #: model:process.transition,name:mrp_operations.process_transition_startdoneoperation0
 msgid "Operation done"
-msgstr ""
+msgstr "Операция завершена"
 
 #. module: mrp_operations
 #: view:mrp.workorder:0
@@ -755,7 +755,7 @@ msgstr ""
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
 msgid "May"
-msgstr ""
+msgstr "Май"
 
 #. module: mrp_operations
 #: model:process.transition,name:mrp_operations.process_transition_workstartoperation0
@@ -765,25 +765,25 @@ msgstr ""
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,production_state:0
 msgid "Production State"
-msgstr ""
+msgstr "Состояние производства"
 
 #. module: mrp_operations
 #: view:mrp.workorder:0
 #: field:mrp.workorder,year:0
 msgid "Year"
-msgstr ""
+msgstr "Год"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
 msgid "Duration"
-msgstr ""
+msgstr "Продолжительность"
 
 #. module: mrp_operations
 #: constraint:mrp.production:0
 msgid "Order quantity cannot be negative or zero !"
-msgstr ""
+msgstr "Кол-во в заказе не может быть отрицательным или нулевым !"
 
 #. module: mrp_operations
 #: constraint:stock.move:0
 msgid "You try to assign a lot which is not from the same product"
-msgstr ""
+msgstr "Вы пытаетесь назначить партию состоящую из другой продукции"

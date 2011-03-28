@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:16+0000\n"
-"PO-Revision-Date: 2011-01-19 12:00+0000\n"
-"Last-Translator: Boris <boris.t.ivanov@gmail.com>\n"
+"PO-Revision-Date: 2011-03-27 09:04+0000\n"
+"Last-Translator: Vasil Bojilov Bovilov <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-25 07:03+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-03-28 05:25+0000\n"
+"X-Generator: Launchpad (build 12559)\n"
 
 #. module: sale_journal
 #: field:sale_journal.invoice.type,note:0
@@ -24,22 +24,22 @@ msgstr "Бележка"
 #. module: sale_journal
 #: help:res.partner,property_invoice_type:0
 msgid "The type of journal used for sales and picking."
-msgstr ""
+msgstr "Видът на дневника използван за продажби и събиране."
 
 #. module: sale_journal
 #: sql_constraint:sale.order:0
 msgid "Order Reference must be unique !"
-msgstr ""
+msgstr "Препратката на поръчката трябва да бъде уникална!"
 
 #. module: sale_journal
 #: view:res.partner:0
 msgid "Invoicing"
-msgstr ""
+msgstr "Фактуриране"
 
 #. module: sale_journal
 #: view:res.partner:0
 msgid "Sales & Purchases"
-msgstr "Продажби и поръчки"
+msgstr "Продажби и Покупки"
 
 #. module: sale_journal
 #: help:sale_journal.invoice.type,active:0
@@ -47,6 +47,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the invoice "
 "type without removing it."
 msgstr ""
+"Ако активното поле е настроено на неверни, то ще ви позволи да се скрие типа "
+"фактура, без да се маха."
 
 #. module: sale_journal
 #: view:sale_journal.invoice.type:0
@@ -85,6 +87,29 @@ msgid ""
 "    Some statistics by journals are provided.\n"
 "    "
 msgstr ""
+"\n"
+"    Модула за дневник на продажбите дава възможност за категоризиране\n"
+"на продажби и доставки (събиране на списъци) между различни дневници.\n"
+"Този модул е много полезен за големи предприятия, които\n"
+"работят по отдели.\n"
+"\n"
+"Можете да използвате дневника за различни цели, няколко примера:\n"
+"* изолиране на продажбите на различните отдели\n"
+"* дневници за доставки с камион или чрез UPS\n"
+"Дневника е отворен и се развива в различните състояния:\n"
+"* проект, отворен, отказан,  направен.\n"
+"Група операции могат да бъдат преработени в различни дневници\n"
+"потвърдени всички продажби наведнъж, за валидиране или фактура за опаковане, "
+"...\n"
+"\n"
+"Също така подкрепя методи за партидно фактуриране, които могат да се "
+"конфигурират от\n"
+"партньори и поръчки за продажба, примери:\n"
+"* ежедневно фактуриране\n"
+"* месечно фактуриране, ...\n"
+"\n"
+"Някои статистики от дневниците са предвидени.\n"
+"    "
 
 #. module: sale_journal
 #: selection:sale_journal.invoice.type,invoicing_method:0
@@ -99,7 +124,7 @@ msgstr "Групиран"
 #. module: sale_journal
 #: constraint:res.partner:0
 msgid "Error ! You can not create recursive associated members."
-msgstr ""
+msgstr "Грешка ! Не може да създадете рекурсивно свързани членове"
 
 #. module: sale_journal
 #: model:ir.actions.act_window,help:sale_journal.action_definition_journal_invoice_type
@@ -108,6 +133,10 @@ msgid ""
 "can create a specific invoicing journal to group your invoicing according to "
 "your customer's needs: daily, each Wednesday, monthly, etc."
 msgstr ""
+"Видовете фактури се използват за партньори, поръчки за продажба и доставки. "
+"Може да се създаде специален дневник за фактуриране в групата си за "
+"фактуриране в зависимост от нуждите на вашите клиенти: дневна, всяка сряда, "
+"месечни и т.н."
 
 #. module: sale_journal
 #: field:sale_journal.invoice.type,invoicing_method:0
@@ -117,7 +146,7 @@ msgstr "Метод на фактуриране"
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_sale_order
 msgid "Sales Order"
-msgstr ""
+msgstr "Поръчка за продажба"
 
 #. module: sale_journal
 #: field:sale.order,invoice_type_id:0
@@ -135,7 +164,7 @@ msgstr "Активен"
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_res_partner
 msgid "Partner"
-msgstr ""
+msgstr "Партньор"
 
 #. module: sale_journal
 #: model:ir.actions.act_window,name:sale_journal.action_definition_journal_invoice_type
@@ -147,7 +176,7 @@ msgstr "Видове фактури"
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_stock_picking
 msgid "Picking List"
-msgstr ""
+msgstr "Списък за товарене"
 
 #. module: sale_journal
 #: model:ir.module.module,shortdesc:sale_journal.module_meta_information
