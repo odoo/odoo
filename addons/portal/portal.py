@@ -112,6 +112,7 @@ class portal(osv.osv):
         super(portal, self).write(cr, uid, ids, values, context)
         
         # the changes to apply on users
+        user_object = self.pool.get('res.users')
         user_values = {}
         if 'menu_id' in values:
             user_values['menu_id'] = values['menu_id']
@@ -125,7 +126,7 @@ class portal(osv.osv):
                 [(3, g) for g in (old_groups - new_groups)] + \
                 [(4, g) for g in (new_groups - old_groups)]
             user_ids = get_browse_ids(p.user_ids)
-            self.pool.get('res.users').write(cr, uid, user_ids, user_values, context)
+            user_object.write(cr, uid, user_ids, user_values, context)
         
         return True
 
