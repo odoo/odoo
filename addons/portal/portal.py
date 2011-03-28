@@ -139,6 +139,22 @@ class users(osv.osv):
         'portal_id': fields.many2one('res.portal', string='Portal',
             help='If given, the portal defines customized menu and access rules'),
     }
+    
+    def default_get(self, cr, uid, fields, context=None):
+        """ override default values of menu_id and groups_id for portal users """
+        others = {}
+        # How it works: the values of 'menu_id' and 'groups_id' are passed in
+        # context by the portal form view
+        if ('menu_id' in context) and ('menu_id' in fields):
+            fields.remove('menu_id')
+            others['menu_id'] = context['menu_id']
+        if ('groups_id' in context) and ('groups_id' in fields):
+            fields.remove('groups_id')
+            others['groups_id'] = get_many2many(context['groups_id'])
+        # the remaining fields use inherited defaults
+        defs = super(users, self).default_get(cr, uid, fields, context)
+        defs.update(others)
+        return defs
 
 users()
 
@@ -150,6 +166,11 @@ def get_browse_id(obj):
 def get_browse_ids(objs):
     """ return the ids of a list of browse() objects """
     return map(get_browse_id, objs)
+
+def get_many2many(arg):
+    """ get the list of ids from a many2many 'values' field """
+    assert len(arg) == 1 and arg[0][0] == 6             # arg = [(6, _, IDs)]
+    return arg[0][2]
 
 def copy_random(name):
     """ return "name [N]" for some random integer N """

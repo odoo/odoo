@@ -32,7 +32,8 @@ added to (resp. removed from) the portal's users.
                     <field name="name" colspan="4"/>
                     <field name="menu_id" domain="[('usage','=','menu')]" colspan="2"/>
                     <separator string="Users and groups" colspan="4"/>
-                    <field name="user_ids" nolabel="1" colspan="2">
+                    <field name="user_ids" nolabel="1" colspan="2"
+                        context="{'menu_id': menu_id, 'groups_id': group_ids}">
                         <tree string="Users">
                             <field name="name"/>
                         </tree>
