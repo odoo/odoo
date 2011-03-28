@@ -115,12 +115,14 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
     },
     on_edit: function() {
     },
-    do_search: function (domains, contexts) {
+    do_search: function (domains, contexts, groupbys) {
         var self = this;
         this.rpc('/base/session/eval_domain_and_context', {
             domains: domains,
-            contexts: contexts
+            contexts: contexts,
+            group_by_seq: groupbys
         }, function (results) {
+            // TODO: handle non-empty results.group_by with read_group
             self.dataset.set({
                 context: results.context,
                 domain: results.domain
@@ -539,7 +541,15 @@ openerp.base.SearchView = openerp.base.Controller.extend({
             map(function (input) { return input.get_context(); }).
             compact().
             value();
-        this.on_search(domains, contexts);
+
+        // TODO: do we need to handle *fields* with group_by in their context?
+        var groupbys = _(this.enabled_filters)
+                .chain()
+                .map(function (filter) { return filter.get_context();})
+                .compact()
+                .value();
+
+        this.on_search(domains, contexts, groupbys);
     },
     /**
      * Event hook for searches: triggers after the SearchView has collected
@@ -549,10 +559,11 @@ openerp.base.SearchView = openerp.base.Controller.extend({
      * may or may not be evaluated (each item can be either a valid domain or
      * context, or a string to evaluate in order in the sequence)
      *
-     * @param {Array} domains an array of string or literal domains
-     * @param {Array} contexts an array of string or literal contexts
+     * @param {Array} domains an array of literal domains or domain references
+     * @param {Array} contexts an array of literal contexts or context refs
+     * @param {Array} groupbys ordered contexts which may or may not have group_by keys
      */
-    on_search: function (domains, contexts) { },
+    on_search: function (domains, contexts, groupbys) { },
     do_clear: function (e) {
         if (e && e.preventDefault) { e.preventDefault(); }
         this.on_clear();

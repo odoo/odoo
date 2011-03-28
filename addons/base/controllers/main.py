@@ -120,12 +120,55 @@ class Session(openerpweb.Controller):
     js.exposed = True
 
     @openerpweb.jsonrequest
-    def eval_domain_and_context(self, req, contexts, domains):
+    def eval_domain_and_context(self, req, contexts, domains,
+                                group_by_seq=None):
+        """ Evaluates sequences of domains and contexts, composing them into
+        a single context, domain or group_by sequence.
+
+        :param list contexts: list of contexts to merge together. Contexts are
+                              evaluated in sequence, all previous contexts
+                              are part of their own evaluation context
+                              (starting at the session context).
+        :param list domains: list of domains to merge together. Domains are
+                             evaluated in sequence and appended to one another
+                             (implicit AND), their evaluation domain is the
+                             result of merging all contexts.
+        :param list group_by_seq: list of domains (which may be in a different
+                                  order than the ``contexts`` parameter),
+                                  evaluated in sequence, their ``'group_by'``
+                                  key is extracted if they have one.
+        :returns:
+            a 3-dict of:
+
+            context (``dict``)
+                the global context created by merging all of
+                ``contexts``
+
+            domain (``list``)
+                the concatenation of all domains
+
+            group_by (``list``)
+                a list of fields to group by, potentially empty (in which case
+                no group by should be performed)
+        """
         context = req.session.eval_contexts(contexts)
         domain = req.session.eval_domains(domains, context)
+
+        group_by_sequence = []
+        for candidate in (group_by_seq or []):
+            ctx = req.session.eval_context(candidate, context)
+            group_by = ctx.get('group_by')
+            if not group_by:
+                continue
+            elif isinstance(group_by, basestring):
+                group_by_sequence.append(group_by)
+            else:
+                group_by_sequence.extend(group_by)
+
         return {
             'context': context,
-            'domain': domain
+            'domain': domain,
+            'group_by': group_by_sequence
         }
 
 class Menu(openerpweb.Controller):
