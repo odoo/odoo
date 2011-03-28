@@ -14,6 +14,6 @@ if __name__ == "__main__":
     os.chdir(os.path.normpath(os.path.dirname(__file__)))
     os.chdir('..')
     # ... and execute the new executable.
-    os.execv('openerp-server.py', sys.argv)
+    os.execv('openerp-server', sys.argv)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
