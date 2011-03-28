@@ -235,6 +235,7 @@ class email_message(osv.osv):
             attachment_ids = []
             for attachment in attach:
                 attachment_data = {
+                        'name': attachment[0],
                         'subject':  (subject or '') + _(' (Email Attachment)'),
                         'datas': attachment[1],
                         'datas_fname': attachment[0],
@@ -265,9 +266,6 @@ class email_message(osv.osv):
         self.write(cr, uid, ids, {'state':'outgoing'}, context)
         for message in self.browse(cr, uid, ids, context):
             try:
-                attachments = []
-                for attach in message.attachment_ids:
-                    attachments.append((attach.datas_fname ,base64.b64decode(attach.datas)))
                 smtp_server = message.smtp_server_id
                 if not smtp_server:
                     smtp_ids = smtp_server_obj.search(cr, uid, [])
@@ -287,13 +285,14 @@ class email_message(osv.osv):
     def send_email(self, cr, uid, ids, auto_commit=False, context=None):
         if context is None:
             context = {}
+        attachment = []
         smtp_server_obj = self.pool.get('ir.mail_server')
         attachment_pool = self.pool.get('ir.attachment')
         for message in self.browse(cr, uid, ids, context):
             try:
                 if message.state in ['outgoing', 'exception']:
                     result = smtp_server_obj.send_email(cr, uid, message.email_from, message.email_to,
-                                    message.body, id=message.smtp_server_id.id, subject=message.subject)
+                                    message, id=message.smtp_server_id.id or False, subject=message.subject)
                 else:
                     raise osv.except_osv(_('Error !'), _('No messages in outgoing or exception state!'))
 
