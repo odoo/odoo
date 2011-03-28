@@ -286,11 +286,12 @@
                         <page string="Applied Salary Rules">
                             <field name="applied_salary_rule" nolabel="1" />
                         </page>
-                        <page string="Appears on payslip">
+                       <page string="Appears On Payslip">
                             <field name="appears_on_payslip_rule" nolabel="1"/>
                         </page>
-                        <page string="Details by salary head">
-                        </page>
+                       <page string="Details By Salary Head">
+                            <field name="details_by_salary_head" nolabel="1" context="{'group_by': 'category_id'}"/>
+                       </page>
                     </notebook>
                     <group col="10" colspan="4">
                         <field name="state"/>
