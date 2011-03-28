@@ -216,28 +216,24 @@
 <t t-name="FieldChar">
     <input type="text"
         t-att-name="widget.name"
-        t-att-required="widget.node.attrs.required ? 'required' : undefined"
         t-att-class="'field_' + widget.type" style="width: 100%"
     />
 </t>
 <t t-name="FieldText">
     <textarea rows="6" style="width: 100%;"
         t-att-name="widget.name"
-        t-att-required="widget.node.attrs.required ? 'required' : undefined"
         t-att-class="'field_' + widget.type"
     ></textarea>
 </t>
 <t t-name="FieldDate">
     <input type="text" style="width: 100%"
         t-att-name="widget.name"
-        t-att-required="widget.node.attrs.required ? 'required' : undefined"
         t-att-class="'field_' + widget.type"
     />
 </t>
 <t t-name="FieldDatetime">
     <input type="text" style="width: 100%"
         t-att-name="widget.name"
-        t-att-required="widget.node.attrs.required ? 'required' : undefined"
         t-att-class="'field_' + widget.type"
     />
 </t>

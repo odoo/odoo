@@ -464,6 +464,12 @@ openerp.base.FormView =  openerp.base.Controller.extend({
         for (var f in this.fields) {
             this.fields[f].set_value(this.datarecord.values[f]);
         }
+        this.process_widgets_attrs();
+    },
+    process_widgets_attrs: function() {
+        for (var w in this.widgets) {
+            this.widgets[w].process_attrs();
+        }
     }
 });
 
@@ -571,6 +577,77 @@ openerp.base.Widget = openerp.base.Controller.extend({
     },
     start: function() {
         this.$element = $('#' + this.element_id);
+    },
+    process_attrs: function() {
+        if (this.node.attrs.attrs) {
+            var attrs = eval('(' + this.node.attrs.attrs + ')');
+            for (var a in attrs) {
+                this[a] = this.eval_attrs(attrs[a]);
+            }
+            this.attrs_change();
+        }
+    },
+    eval_attrs: function(expr) {
+        var stack = [];
+        for (var i = 0; i < expr.length; i++) {
+            var ex = expr[i];
+            if (ex.length == 1) {
+                stack.push(ex[0]);
+                continue;
+            }
+
+            var field = this.view.fields[ex[0]].value;
+            var op = ex[1];
+            var val = ex[2];
+
+            switch (op.toLowerCase()) {
+                case '=':
+                case '==':
+                    stack.push(field == val);
+                    break;
+                case '!=':
+                case '<>':
+                    stack.push(field != val);
+                    break;
+                case '<':
+                    stack.push(field < val);
+                    break;
+                case '>':
+                    stack.push(field > val);
+                    break;
+                case '<=':
+                    stack.push(field <= val);
+                    break;
+                case '>=':
+                    stack.push(field >= val);
+                    break;
+                case 'in':
+                    stack.push(_.indexOf(val, field) > -1);
+                    break;
+                case 'not in':
+                    stack.push(_.indexOf(val, field) == -1);
+                    break;
+                default:
+                    this.log("Unsupported operator in attrs :", op);
+            }
+        }
+
+        for (var j = stack.length-1; j >- 1; j--) {
+            switch (stack[j]) {
+                case '|':
+                    var result = stack[j + 1] || stack[j + 2];
+                    stack.splice(j, 3, result);
+                    break;
+                case '&':
+                    var result = stack[j + 1] && stack[j + 2];
+                    stack.splice(j, 3, result);
+                    break;
+            }
+        }
+        return _.indexOf(stack, false) == -1;
+    },
+    attrs_change: function() {
+        this.$element.toggle(!this.invisible);
     },
     render: function() {
         var template = this.template;
@@ -702,11 +779,11 @@ openerp.base.WidgetLabel = openerp.base.Widget.extend({
 
 openerp.base.Field = openerp.base.Widget.extend({
     init: function(view, node) {
+        this.value = undefined;
         this.name = node.attrs.name;
         view.fields[this.name] = this;
         this.type = node.attrs.widget || view.fields_view.fields[node.attrs.name].type;
         this.element_name = "field_" + this.name + "_" + this.type;
-        this.original_value;
 
         this._super(view, node);
 
@@ -718,9 +795,18 @@ openerp.base.Field = openerp.base.Widget.extend({
         this.string = node.attrs.string || this.field.string;
         this.help = node.attrs.help || this.field.help;
         this.nolabel = (node.attrs.nolabel == '1');
+        this.readonly = (node.attrs.readonly == '1');
+        this.required = (node.attrs.required == '1');
     },
     set_value: function(value) {
-        this.original_value = value;
+        this.value = value;
+    },
+    attrs_change: function() {
+        this._super.apply(this, arguments);
+        this.$element.find('input, select, textarea').attr({
+            'disabled' : this.readonly,
+            'required' : this.required
+        });
     }
 });
 
