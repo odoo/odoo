@@ -245,21 +245,22 @@ class mailgate_message(osv.osv):
         result = {}
         for message in self.browse(cr, uid, ids, context=context):
             msg_txt = ''
+            msg_name = message.name
             if message.history:
                 msg_txt += (message.email_from or '/') + _(' wrote on ') + format_date_tz(message.date, tz) + ':\n\t'
                 if message.description:
                     msg_txt += self.truncate_data(cr, uid, message.description, context=context)
             else:
                 msg_txt = (message.user_id.name or '/') + _(' on ') + format_date_tz(message.date, tz) + ':\n\t'
-                if message.name == _('Opportunity'):
+                if msg_name == _('Opportunity'):
                     msg_txt += _("Converted to Opportunity")
-                elif message.name == _('Note'):
+                elif msg_name == _('Note'):
                     msg_txt = (message.user_id.name or '/') + _(' added note on ') + format_date_tz(message.date, tz) + ':\n\t'
                     msg_txt += self.truncate_data(cr, uid, message.description, context=context)
-                elif message.name == _('Stage'):
+                elif msg_name == _('Stage'):
                     msg_txt += _("Changed Stage to: ") + message.description
-                else:
-                    msg_txt += _("Changed Status to: ") + message.name
+                elif msg_name:
+                    msg_txt += _("Changed Status to: ") + msg_name
             result[message.id] = msg_txt
         return result
 
