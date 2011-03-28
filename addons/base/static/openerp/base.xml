@@ -345,23 +345,33 @@
         <t t-if="filters.length" t-raw="filters.render(defaults)"/>
     </div>
 </t>
-<t t-name="SearchView.group">
-    <div t-att-class="'searchview_group ' + (attrs.expand == '0' ? 'folded' : 'expanded')"
+<t t-name="SearchView.util.expand">
+	<div t-att-class="'searchview_group ' + (expand == '0' ? 'folded' : 'expanded')"
          t-att-id="element_id">
-        <a t-if="attrs.string" class="searchview_group_string" href="#">
-            <t t-esc="attrs.string"/>
+        <a t-if="label" class="searchview_group_string" href="#">
+            <t t-esc="label"/>
         </a>
         <div class="searchview_group_content">
-            <t t-call="SearchView.render_lines"/>
+            <t t-raw="content"/>
         </div>
     </div>
 </t>
+<t t-name="SearchView.group">
+	<t t-call="SearchView.util.expand">
+		<t t-set="expand" t-value="attrs.expand"/>
+		<t t-set="label" t-value="attrs.string"/>
+		<t t-set="content">
+			<t t-call="SearchView.render_lines"/>
+		</t>
+	</t>
+</t>
 <t t-name="SearchView.extended_search">
-    <div class="searchview_group folded" t-att-id="element_id">
-        <a class="searchview_group_string" href="#">Extended Filters</a>
-        <div class="searchview_group_content">
-            This is the extended search view placeholder.
-        </div>
-    </div>
+	<t t-call="SearchView.util.expand">
+		<t t-set="expand" t-value="false"/>
+		<t t-set="label" t-value="'Extended Filters'"/>
+		<t t-set="content">
+			This is the extended search view placeholder.
+		</t>
+	</t>
 </t>
 </templates>

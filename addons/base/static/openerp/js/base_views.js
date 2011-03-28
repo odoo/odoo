@@ -717,6 +717,13 @@ openerp.base.search.FilterGroup = openerp.base.search.Widget.extend({
         });
     }
 });
+add_expand_listener = function($root) {
+	$root.find('a.searchview_group_string').click(function (e) {
+        $root.toggleClass('folded expanded');
+        e.stopPropagation();
+        e.preventDefault();
+    });
+};
 openerp.base.search.Group = openerp.base.search.Widget.extend({
     template: 'SearchView.group',
     // TODO: contain stuff
@@ -734,12 +741,7 @@ openerp.base.search.Group = openerp.base.search.Widget.extend({
             .chain()
             .flatten()
             .each(function (widget) { widget.start(); });
-        var $root = this.$element;
-        $root.find('a.searchview_group_string').click(function (e) {
-            $root.toggleClass('folded expanded');
-            e.stopPropagation();
-            e.preventDefault();
-        });
+        add_expand_listener(this.$element);
     }
 });
 openerp.base.search.ExtendedSearch = openerp.base.search.Widget.extend({
@@ -751,11 +753,7 @@ openerp.base.search.ExtendedSearch = openerp.base.search.Widget.extend({
     start: function () {
         this._super();
         var $root = this.$element;
-        $root.find('a.searchview_group_string').click(function (e) {
-            $root.toggleClass('folded expanded');
-            e.stopPropagation();
-            e.preventDefault();
-        });
+        add_expand_listener(this.$element);
 	}
 });
 openerp.base.search.Input = openerp.base.search.Widget.extend({
