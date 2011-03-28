@@ -260,35 +260,50 @@ class View(openerpweb.Controller):
             xml = ElementTree.fromstring(r['arch'])
         r['arch'] = Xml2Json.convert_element(xml)
         return r
-    def transform_view(self, view_string, context = {}):
-        parser = ElementTree.iterparse(StringIO(view_string), events=("start", "end"))
+
+    def normalize_attrs(self, elem, context):
+        """ Normalize @attrs, @invisible, @required, @readonly and @states, so
+        the client only has to deal with @attrs.
+
+        See `the discoveries pad <http://pad.openerp.com/discoveries>`_ for
+        the rationale.
+
+        :param elem: the current view node (Python object)
+        :type elem: xml.etree.ElementTree.Element
+        :param dict context: evaluation context
+        """
+        # If @attrs is normalized in json by server, the eval should be replaced by simplejson.loads
+        attrs = eval(elem.attrib.get('attrs', '{}'))
+        if 'states' in elem.attrib:
+            if 'invisible' not in attrs:
+                attrs['invisible'] = []
+                # This should be done by the server
+            attrs['invisible'].append(('state', 'in', elem.attrib['states'].split(',')))
+            del(elem.attrib['states'])
+        if attrs:
+            elem.attrib['attrs'] = simplejson.dumps(attrs)
+        for a in ['invisible', 'readonly', 'required']:
+            if a in elem.attrib:
+                # In the XML we trust
+                avalue = bool(eval(elem.attrib.get(a, 'False'),
+                                   {'context': context or {}}))
+                if not avalue:
+                    del elem.attrib[a]
+                else:
+                    elem.attrib[a] = '1'
+                    if a == 'invisible' and 'attrs' in elem.attrib:
+                        del elem.attrib['attrs']
+
+    def transform_view(self, view_string, context=None):
+        # transform nodes on the fly via iterparse, instead of
+        # doing it statically on the parsing result
+        parser = ElementTree.iterparse(StringIO(view_string), events=("start",))
         root = None
         for event, elem in parser:
             if event == "start":
                 if root is None:
                     root = elem
-                # SEE http://pad.openerp.com/discoveries
-                # If @attrs is normalized in json by server, the eval should be replaced by simplejson.loads
-                attrs = eval(elem.attrib.get('attrs', '{}'))
-                if elem.attrib.has_key('states'):
-                    if not attrs.has_key('invisible'):
-                        attrs['invisible'] = []
-                    # This should be done by the server
-                    attrs['invisible'].append(('state', 'in', elem.attrib['states'].split(',')))
-                    del(elem.attrib['states'])
-                if attrs:
-                    elem.attrib['attrs'] = simplejson.dumps(attrs)
-
-                for a in ['invisible', 'readonly', 'required']:
-                    if elem.attrib.has_key(a):
-                        # In the XML we trust
-                        avalue = bool(eval(elem.attrib.get(a, 'False'), {'context': context}))
-                        if not avalue:
-                            del(elem.attrib[a])
-                        else:
-                            elem.attrib[a] = '1'
-                            if a == 'invisible' and elem.attrib.has_key('attrs'):
-                                del(elem.attrib['attrs'])
+                self.normalize_attrs(elem, context)
         return root
 
 
