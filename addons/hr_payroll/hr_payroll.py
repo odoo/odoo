@@ -702,18 +702,27 @@ class hr_payslip(osv.osv):
         holiday_pool = self.pool.get('hr.holidays')
         sequence_obj = self.pool.get('ir.sequence')
         salary_rule_pool = self.pool.get('hr.salary.rule')
+        contract_obj = self.pool.get('hr.contract')
         resource_attendance_pool = self.pool.get('resource.calendar.attendance')
         if context is None:
             context = {}
         date = self.read(cr, uid, ids, ['date'], context=context)[0]['date']
 
         for slip in self.browse(cr, uid, ids, context=context):
-            old_slip_ids = slip_line_pool.search(cr, uid, [('slip_id','=',slip.id)], context=context)
+            old_slip_ids = slip_line_pool.search(cr, uid, [('slip_id', '=', slip.id)], context=context)
             slip_line_pool.unlink(cr, uid, old_slip_ids, context=context)
-
             update = {}
             ttyme = datetime.fromtimestamp(time.mktime(time.strptime(slip.date, "%Y-%m-%d")))
-            contracts = self.get_contract(cr, uid, slip.employee_id, date, context)
+            contract_id = slip.contract_id.id
+            if not contract_id:
+                update.update({'struct_id': False})
+                contracts = self.get_contract(cr, uid, slip.employee_id, date, context=context)
+            else:
+                contracts = [contract_obj.read(cr, uid, contract_id, ['wage', 'struct_id', 'id'], context=context)]
+                update.update({
+                    'struct_id': contracts[0].get('struct_id', False),
+                    'contract_id': contract_id
+                })
             if not contracts:
                 update.update({
                     'basic_amount': 0.0,
@@ -856,7 +865,7 @@ class hr_payslip(osv.osv):
             dates = prev_bounds(slip.date)
             calendar_id = slip.employee_id.contract_id.working_hours.id
             if not calendar_id:
-                raise osv.except_osv(_('Error !'), _("Please define working schedule on %s's contract") % (employee_id.name))
+                raise osv.except_osv(_('Error !'), _("Please define working schedule on %s's contract") % (slip.employee_id.name))
             week_days = {"0": "mon", "1": "tue", "2": "wed","3": "thu", "4": "fri", "5": "sat", "6": "sun"}
             wk_days = {}
             week_ids = resource_attendance_pool.search(cr, uid, [('calendar_id', '=', calendar_id)], context=context)
@@ -911,7 +920,7 @@ class hr_payslip(osv.osv):
                 elif salary_rule.amount_type == 'fix':
                     value = salary_rule.amount * days
                 elif salary_rule.amount_type=='code':
-                    localdict = {'basic':amt, 'employee':slip.employee_id, 'contract':contract}
+                    localdict = {'basic': amt, 'employee': slip.employee_id, 'contract': contract}
                     exec salary_rule.python_compute in localdict
                     value = localdict['result'] * days
                 res['amount'] = salary_rule.amount
@@ -958,6 +967,7 @@ class hr_payslip(osv.osv):
         employee_id = empolyee_obj.browse(cr, uid, employee_id, context=context)
         ttyme = datetime.fromtimestamp(time.mktime(time.strptime(ddate, "%Y-%m-%d")))
         if not contract_id:
+            update['value'].update({'struct_id': False})
             contracts = self.get_contract(cr, uid, employee_id, ddate, context=context)
         else:
             contracts = [contract_obj.read(cr, uid, contract_id, ['wage', 'struct_id', 'id'], context=context)]
