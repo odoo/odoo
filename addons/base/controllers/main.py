@@ -176,8 +176,10 @@ class Menu(openerpweb.Controller):
 
         for _, _, action in actions:
             # values come from the server, we can just eval them
-            action['context'] = req.session.eval_context(
-                action['context']) or {}
+            if isinstance(action['context'], basestring):
+                action['context'] = eval(
+                    action['context'],
+                    req.session.evaluation_context()) or {}
 
             if isinstance(action['domain'], basestring):
                 action['domain'] = eval(
@@ -265,7 +267,6 @@ class DataRecord(openerpweb.Controller):
             value = r[0]
         return {'value': value}
 
-
 class View(openerpweb.Controller):
     def fields_view_get(self, session, model, view_id, view_type, transform=True):
         Model = session.model(model)
@@ -346,6 +347,15 @@ class View(openerpweb.Controller):
                 # not a literal
                 elem.set('domain',
                     openerpweb.nonliterals.Domain(session, domain))
+        context_string = elem.get('context')
+        if context_string:
+            try:
+                elem.set('context',
+                         openerpweb.ast.literal_eval(context_string))
+            except ValueError:
+                elem.set('context',
+                         openerpweb.nonliterals.Context(
+                             session, context_string))
 
 class FormView(View):
     _cp_path = "/base/formview"

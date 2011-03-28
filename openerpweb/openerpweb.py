@@ -146,36 +146,41 @@ class OpenERPSession(object):
             d.update(context)
         return d
 
-    def eval_context(self, context_string, context=None, use_base=True):
-        """ Evaluates the provided context_string in the context (haha) of
+    def eval_context(self, context_to_eval, context=None):
+        """ Evaluates the provided context_to_eval in the context (haha) of
         the context.
 
-        :param str context_string: a context to evaluate, if not a string,
-                                   will be returned as-is
-        :param dict context: the context to use in the evaluation, if any.
-        :param bool use_base: whether the base eval context (combination
-                              of the default context and the session
-                              context) should be merged to the provided
-                              context (or used alone)
+        :param context_to_eval: a context to evaluate. Must be a dict or a
+                                non-literal context. If it's a dict, will be
+                                returned as-is
+        :type context_to_eval: openerpweb.nonliterals.Context
         :returns: the evaluated context
         :rtype: dict
+
+        :raises: ``TypeError`` if ``context_to_eval`` is neither a dict nor
+                 a Context
         """
-        if not isinstance(context_string, basestring):
-            return context_string
+        if not isinstance(context_to_eval, (dict, nonliterals.Domain)):
+            raise TypeError("Context %r is not a dict or a nonliteral Context",
+                             context_to_eval)
+
+        if isinstance(context_to_eval, dict):
+            return context_to_eval
 
         ctx = {}
-        if use_base:
-            ctx.update(self.base_eval_context)
         if context:
             ctx.update(context)
         ctx['context'] = ctx
 
-        return eval(context_string, ctx)
+        # if the domain was unpacked from JSON, it needs the current
+        # OpenERPSession for its data retrieval
+        context_to_eval.session = self
+        return context_to_eval.evaluate(ctx)
 
     def eval_contexts(self, contexts, context=None):
         """ Evaluates a sequence of contexts to build a single final result
 
-        :param list contexts: a list of string or dict contexts
+        :param list contexts: a list of Context or dict contexts
         :param dict context: a base context, if needed
         :returns: the final combination of all provided contexts
         :rtype: dict
@@ -192,17 +197,17 @@ class OpenERPSession(object):
             # the result
             final_context.update(
                 self.eval_context(
-                    ctx, current_context, use_base=False))
+                    ctx, current_context))
             # update the current evaluation context so that future
             # evaluations can use the results we just gathered
             current_context.update(final_context)
         return final_context
 
     def eval_domain(self, domain, context=None):
-        """ Evaluates the provided domain_string using the provided context
+        """ Evaluates the provided domain using the provided context
         (merged with the session's evaluation context)
 
-        :param domain: an OpenERP domain as a dict or as a
+        :param domain: an OpenERP domain as a list or as a
                        :class:`openerpweb.nonliterals.Domain` instance
 
                        In the second case, it will be evaluated and returned.
@@ -211,10 +216,10 @@ class OpenERPSession(object):
         :returns: the evaluated domain
         :rtype: list
 
-        :raises: ``TypeError`` if ``domain`` is neither a dict nor a Domain
+        :raises: ``TypeError`` if ``domain`` is neither a list nor a Domain
         """
         if not isinstance(domain, (list, nonliterals.Domain)):
-            raise TypeError("Domain %r is not a dict or a nonliteral Domain",
+            raise TypeError("Domain %r is not a list or a nonliteral Domain",
                              domain)
 
         if isinstance(domain, list):
@@ -236,7 +241,7 @@ class OpenERPSession(object):
 
         Returns the final, concatenated result.
 
-        :param list domains: a list of string or list domains
+        :param list domains: a list of Domain or list domains
         :param dict context: the context in which the domains
                              should be evaluated (if evaluations need
                              to happen)

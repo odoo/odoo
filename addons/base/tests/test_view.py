@@ -72,3 +72,46 @@ class ViewTest(unittest2.TestCase):
             openerpweb.nonliterals.Domain(
                 session, key=e.get('domain').key).get_domain_string(),
             domain_string)
+
+    def test_convert_literal_context(self):
+        e = xml.etree.ElementTree.Element(
+            'field', context="{'some_prop':  3}")
+        self.view.parse_domains_and_contexts(e, None)
+
+        self.assertEqual(
+            e.get('context'),
+            {'some_prop': 3})
+
+    def test_convert_complex_domain(self):
+        e = xml.etree.ElementTree.Element(
+            'field',
+            context="{'account_id.type': ['receivable','payable'],"
+                     "'reconcile_id': False,"
+                     "'reconcile_partial_id': False,"
+                     "'state': 'valid'}"
+        )
+        self.view.parse_domains_and_contexts(e, None)
+
+        self.assertEqual(
+            e.get('context'),
+            {'account_id.type': ['receivable', 'payable'],
+             'reconcile_id': False,
+             'reconcile_partial_id': False,
+             'state': 'valid'}
+        )
+
+    def test_retrieve_nonliteral_domain(self):
+        session = mock.Mock(spec=openerpweb.openerpweb.OpenERPSession)
+        session.domains_store = {}
+        context_string = ("{'month': (datetime.date.today() - "
+                         "datetime.timedelta(365/12)).strftime('%%m')}")
+        e = xml.etree.ElementTree.Element(
+            'field', context=context_string)
+
+        self.view.parse_domains_and_contexts(e, session)
+
+        self.assertIsInstance(e.get('context'), openerpweb.nonliterals.Context)
+        self.assertEqual(
+            openerpweb.nonliterals.Context(
+                session, key=e.get('context').key).get_context_string(),
+            context_string)
