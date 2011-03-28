@@ -614,9 +614,9 @@ openerp.base.search.Widget = openerp.base.Controller.extend({
     /**
      * Sets and returns a globally unique identifier for the widget.
      *
-     * If a prefix is appended, the identifier will be appended to it.
+     * If a prefix is specified, the identifier will be appended to it.
      *
-     * @params sections prefix sections, empty/falsy sections will be removed
+     * @params prefix prefix sections, empty/falsy sections will be removed
      */
     make_id: function () {
         this.element_id = _.uniqueId(
