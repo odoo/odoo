@@ -15,6 +15,7 @@ import cherrypy
 import cherrypy.lib.static
 import simplejson
 
+import nonliterals
 import xmlrpctimeout
 
 #----------------------------------------------------------
@@ -50,6 +51,13 @@ class OpenERPSession(object):
     
         The session context, a ``dict``. Can be reloaded by calling
         :meth:`openerpweb.openerpweb.OpenERPSession.get_context`
+
+    .. attribute:: domains_store
+
+        A ``dict`` matching domain keys to evaluable (but non-literal) domains.
+
+        Used to store references to non-literal domains which need to be
+        round-tripped to the client browser.
     """
     def __init__(self, server='127.0.0.1', port=8069,
                  model_factory=OpenERPModel):
@@ -62,6 +70,7 @@ class OpenERPSession(object):
         self.model_factory = model_factory
 
         self.context = {}
+        self.domains_store = {}
 
     def proxy(self, service):
         s = xmlrpctimeout.TimeoutServerProxy('http://%s:%s/xmlrpc/%s' % (self._server, self._port, service), timeout=5)
@@ -113,45 +122,65 @@ class OpenERPSession(object):
 
         Used to evaluate contexts and domains.
         """
-        return dict(
+        base = dict(
             uid=self._uid,
             current_date=datetime.date.today().strftime('%Y-%m-%d'),
             time=time,
             datetime=datetime,
-            relativedelta=dateutil.relativedelta.relativedelta,
-            **self.context
+            relativedelta=dateutil.relativedelta.relativedelta
         )
+        base.update(self.context)
+        return base
 
-    def eval_context(self, context_string, context=None, use_base=True):
-        """ Evaluates the provided context_string in the context (haha) of
-        the context.
+    def evaluation_context(self, context=None):
+        """ Returns the session's evaluation context, augmented with the
+        provided context if any.
 
-        :param str context_string: a context to evaluate, if not a string,
-                                   will be returned as-is
-        :param dict context: the context to use in the evaluation, if any.
-        :param bool use_base: whether the base eval context (combination
-                              of the default context and the session
-                              context) should be merged to the provided
-                              context (or used alone)
-        :returns: the evaluated context
+        :param dict context: to add merge in the session's base eval context
+        :returns: the augmented context
         :rtype: dict
         """
-        if not isinstance(context_string, basestring):
-            return context_string
+        d = {}
+        d.update(self.base_eval_context)
+        if context:
+            d.update(context)
+        return d
+
+    def eval_context(self, context_to_eval, context=None):
+        """ Evaluates the provided context_to_eval in the context (haha) of
+        the context.
+
+        :param context_to_eval: a context to evaluate. Must be a dict or a
+                                non-literal context. If it's a dict, will be
+                                returned as-is
+        :type context_to_eval: openerpweb.nonliterals.Context
+        :returns: the evaluated context
+        :rtype: dict
+
+        :raises: ``TypeError`` if ``context_to_eval`` is neither a dict nor
+                 a Context
+        """
+        if not isinstance(context_to_eval, (dict, nonliterals.Domain)):
+            raise TypeError("Context %r is not a dict or a nonliteral Context",
+                             context_to_eval)
+
+        if isinstance(context_to_eval, dict):
+            return context_to_eval
 
         ctx = {}
-        if use_base:
-            ctx.update(self.base_eval_context)
         if context:
             ctx.update(context)
         ctx['context'] = ctx
 
-        return eval(context_string, ctx)
+        # if the domain was unpacked from JSON, it needs the current
+        # OpenERPSession for its data retrieval
+        context_to_eval.session = self
+        return context_to_eval.evaluate(ctx)
 
     def eval_contexts(self, contexts, context=None):
         """ Evaluates a sequence of contexts to build a single final result
 
-        :param list contexts: a list of string or dict contexts
+        :param list contexts: a list of Context or dict contexts
         :param dict context: a base context, if needed
         :returns: the final combination of all provided contexts
         :rtype: dict
@@ -168,37 +197,43 @@ class OpenERPSession(object):
             # the result
             final_context.update(
                 self.eval_context(
-                    ctx, current_context, use_base=False))
+                    ctx, current_context))
             # update the current evaluation context so that future
             # evaluations can use the results we just gathered
             current_context.update(final_context)
         return final_context
 
-    def eval_domain(self, domain_string, context=None, use_base=True):
-        """ Evaluates the provided domain_string using the provided context
+    def eval_domain(self, domain, context=None):
+        """ Evaluates the provided domain using the provided context
         (merged with the session's evaluation context)
 
-        :param str domain_string: an OpenERP domain as a string, to evaluate.
+        :param domain: an OpenERP domain as a list or as a
+                       :class:`openerpweb.nonliterals.Domain` instance
 
-                              If not a string, is returned as-is
+                       In the second case, it will be evaluated and returned.
+        :type domain: openerpweb.nonliterals.Domain
         :param dict context: the context to use in the evaluation, if any.
-        :param bool use_base: whether the base eval context (combination
-                              of the default context and the session
-                              context) should be used
         :returns: the evaluated domain
         :rtype: list
+
+        :raises: ``TypeError`` if ``domain`` is neither a list nor a Domain
         """
-        if not isinstance(domain_string, basestring):
-            return domain_string
+        if not isinstance(domain, (list, nonliterals.Domain)):
+            raise TypeError("Domain %r is not a list or a nonliteral Domain",
+                             domain)
+
+        if isinstance(domain, list):
+            return domain
 
         ctx = {}
-        if use_base:
-            ctx.update(self.base_eval_context)
         if context:
             ctx.update(context)
         ctx['context'] = ctx
 
-        return eval(domain_string, ctx)
+        # if the domain was unpacked from JSON, it needs the current
+        # OpenERPSession for its data retrieval
+        domain.session = self
+        return domain.evaluate(ctx)
 
     def eval_domains(self, domains, context=None):
         """ Evaluates and concatenates the provided domains using the
@@ -206,21 +241,17 @@ class OpenERPSession(object):
 
         Returns the final, concatenated result.
 
-        :param list domains: a list of string or list domains
+        :param list domains: a list of Domain or list domains
         :param dict context: the context in which the domains
                              should be evaluated (if evaluations need
                              to happen)
         :returns: the final combination of all domains in the sequence
         :rtype: list
         """
-        ctx = dict(
-            self.base_eval_context,
-            **(context or {}))
-
         final_domain = []
         for domain in domains:
             final_domain.extend(
-                self.eval_domain(domain, ctx))
+                self.eval_domain(domain, context))
         return final_domain
 
 #----------------------------------------------------------
@@ -230,8 +261,9 @@ class OpenERPSession(object):
 class JsonRequest(object):
     """ JSON-RPC2 over HTTP POST using non standard POST encoding.
     Difference with the standard:
-       - the json string is passed as a form parameter named "request"
-       - method is currently ignored
+
+    * the json string is passed as a form parameter named "request"
+    * method is currently ignored
 
     Sucessful request:
     --> {"jsonrpc": "2.0", "method": "call", "params": {"session_id": "SID", "context": {}, "arg1": "val1" }, "id": null}
@@ -266,9 +298,11 @@ class JsonRequest(object):
         :rtype: bytes
         '''
         if requestf:
-            request = simplejson.load(requestf)
+            request = simplejson.load(
+                requestf, object_hook=nonliterals.non_literal_decoder)
         else:
-            request = simplejson.loads(request)
+            request = simplejson.loads(
+                request, object_hook=nonliterals.non_literal_decoder)
         try:
             print "--> %s.%s %s" % (controller.__class__.__name__, method.__name__, request)
             error = None
@@ -311,7 +345,8 @@ class JsonRequest(object):
         print "<--", response
         print
 
-        content = simplejson.dumps(response)
+        content = simplejson.dumps(
+            response, cls=nonliterals.NonLiteralEncoder)
         cherrypy.response.headers['Content-Type'] = 'application/json'
         cherrypy.response.headers['Content-Length'] = len(content)
         return content

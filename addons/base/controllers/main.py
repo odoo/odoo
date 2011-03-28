@@ -6,7 +6,12 @@ from cStringIO import StringIO
 import simplejson
 
 import openerpweb
+import openerpweb.ast
+import openerpweb.nonliterals
 
+__all__ = ['Session', 'Menu', 'DataSet', 'DataRecord',
+           'View', 'FormView', 'ListView', 'SearchView',
+           'Action']
 
 class Xml2Json:
     # xml2json-direct
@@ -16,7 +21,8 @@ class Xml2Json:
     # URL: http://code.google.com/p/xml2json-direct/
     @staticmethod
     def convert_to_json(s):
-        return simplejson.dumps(Xml2Json.convert_to_structure(s), sort_keys=True, indent=4)
+        return simplejson.dumps(
+            Xml2Json.convert_to_structure(s), sort_keys=True, indent=4)
 
     @staticmethod
     def convert_to_structure(s):
@@ -169,10 +175,17 @@ class Menu(openerpweb.Controller):
         actions = Values.get('action', 'tree_but_open', [('ir.ui.menu', menu_id)], False, {})
 
         for _, _, action in actions:
-            action['context'] = req.session.eval_context(
-                action['context']) or {}
-            action['domain'] = req.session.eval_domain(
-                action['domain'], action['context']) or []
+            # values come from the server, we can just eval them
+            if isinstance(action['context'], basestring):
+                action['context'] = eval(
+                    action['context'],
+                    req.session.evaluation_context()) or {}
+
+            if isinstance(action['domain'], basestring):
+                action['domain'] = eval(
+                    action['domain'],
+                    req.session.evaluation_context(
+                        action['context'])) or []
 
         return {"action": actions}
 
@@ -196,20 +209,14 @@ class DataSet(openerpweb.Controller):
 
         :param request: a JSON-RPC request object
         :type request: openerpweb.JsonRequest
-        :param model: the name of the model to search on
-        :type model: str
+        :param str model: the name of the model to search on
         :param fields: a list of the fields to return in the result records
         :type fields: [str]
-        :param offset: from which index should the results start being returned
-        :type offset: int
-        :param limit: the maximum number of records to return
-        :type limit: int
-        :param domain: the search domain for the query
-        :type domain: list
-        :param context: the context in which the search should be executed
-        :type context: dict
-        :param sort: sorting directives
-        :type sort: list
+        :param int offset: from which index should the results start being returned
+        :param int limit: the maximum number of records to return
+        :param list domain: the search domain for the query
+        :param dict context: the context in which the search should be executed
+        :param list sort: sorting directives
         :returns: a list of result records
         :rtype: list
         """
@@ -260,14 +267,13 @@ class DataRecord(openerpweb.Controller):
             value = r[0]
         return {'value': value}
 
-
 class View(openerpweb.Controller):
     def fields_view_get(self, session, model, view_id, view_type, transform=True):
         Model = session.model(model)
         r = Model.fields_view_get(view_id, view_type)
         if transform:
             context = {} # TODO: dict(ctx_sesssion, **ctx_action)
-            xml = self.transform_view(r['arch'], context)
+            xml = self.transform_view(r['arch'], session, context)
         else:
             xml = ElementTree.fromstring(r['arch'])
         r['arch'] = Xml2Json.convert_element(xml)
@@ -306,7 +312,7 @@ class View(openerpweb.Controller):
                     if a == 'invisible' and 'attrs' in elem.attrib:
                         del elem.attrib['attrs']
 
-    def transform_view(self, view_string, context=None):
+    def transform_view(self, view_string, session, context=None):
         # transform nodes on the fly via iterparse, instead of
         # doing it statically on the parsing result
         parser = ElementTree.iterparse(StringIO(view_string), events=("start",))
@@ -316,8 +322,40 @@ class View(openerpweb.Controller):
                 if root is None:
                     root = elem
                 self.normalize_attrs(elem, context)
+                self.parse_domains_and_contexts(elem, session)
         return root
 
+    def parse_domains_and_contexts(self, elem, session):
+        """ Converts domains and contexts from the view into Python objects,
+        either literals if they can be parsed by literal_eval or a special
+        placeholder object if the domain or context refers to free variables.
+
+        :param elem: the current node being parsed
+        :type param: xml.etree.ElementTree.Element
+        :param session: OpenERP session object, used to store and retrieve
+                        non-literal objects
+        :type session: openerpweb.openerpweb.OpenERPSession
+        """
+        domain = elem.get('domain')
+        if domain:
+            try:
+                elem.set(
+                    'domain',
+                    openerpweb.ast.literal_eval(
+                        domain))
+            except ValueError:
+                # not a literal
+                elem.set('domain',
+                    openerpweb.nonliterals.Domain(session, domain))
+        context_string = elem.get('context')
+        if context_string:
+            try:
+                elem.set('context',
+                         openerpweb.ast.literal_eval(context_string))
+            except ValueError:
+                elem.set('context',
+                         openerpweb.nonliterals.Context(
+                             session, context_string))
 
 class FormView(View):
     _cp_path = "/base/formview"
