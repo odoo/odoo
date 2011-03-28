@@ -361,7 +361,16 @@ class module(osv.osv):
                     to_install.extend(ids2)
 
         self.button_install(cr, uid, to_install, context=context)
-        return True
+        return {
+            'name': _('Upgrade'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'base.module.upgrade',
+            'target': 'new',
+            'type': 'ir.actions.act_window',
+            'nodestroy':True,
+        }
+#        return True
 
     def button_upgrade_cancel(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'installed'})
