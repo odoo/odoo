@@ -13,7 +13,9 @@
             <field name="help">
 A portal defines customized views and rules for a particular set of users.  A
 user may belong to at most one portal.  A portal is associated to a menu and a
-set of user groups, and those are automatically assigned to the portal's users.
+set of user groups.  When changed, the portal menu is assigned to the portal's
+users.  When groups are added to (resp. removed from) a portal, they are also
+added to (resp. removed from) the portal's users.
             </field>
         </record>
         <menuitem name="Portals" id="portal_list_menu" parent="portal_menu"
