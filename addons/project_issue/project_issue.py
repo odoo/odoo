@@ -43,7 +43,7 @@ project_issue_version()
 class project_issue(crm.crm_case, osv.osv):
     _name = "project.issue"
     _description = "Project Issue"
-    _order = "priority, id desc"
+    _order = "priority, create_date desc"
     _inherit = ['mailgate.thread']
     
     def case_open(self, cr, uid, ids, *args):
