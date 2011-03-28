@@ -515,7 +515,7 @@ openerp.base.SearchView = openerp.base.Controller.extend({
             data.fields_view.fields);
 
         // for extended search view
-        lines.push([new openerp.base.search.ExtendedSearch(this)]);
+        lines.push([new openerp.base.search.ExtendedSearch(this, data.fields_view.fields)]);
         
         var render = QWeb.render("SearchView", {
             'view': data.fields_view['arch'],
@@ -746,14 +746,72 @@ openerp.base.search.Group = openerp.base.search.Widget.extend({
 });
 openerp.base.search.ExtendedSearch = openerp.base.search.Widget.extend({
     template: 'SearchView.extended_search',
-    init: function (view) {
+    init: function (view, fields) {
 	    this._super(view);
         this.make_id('extended-search');
+        this.fields = fields;
+        this.groups_list = [];
+	},
+	add_group: function(group) {
+    	var group = new openerp.base.search.ExtendedSearchGroup(this.view, this.fields);
+		var $root = this.$element;
+		this.groups_list.push(group);
+        var render = group.render({});
+        var groups_div = $root.find('.searchview_extended_groups_list');
+        groups_div.html(groups_div.html() + render);
+        group.start();
 	},
     start: function () {
         this._super();
         var $root = this.$element;
-        add_expand_listener(this.$element);
+        var $this = this;
+        add_expand_listener($root);
+        this.add_group();
+        $root.find('.searchview_extended_add_group').click(function (e) {
+            $this.add_group()
+            e.stopPropagation();
+            e.preventDefault();
+        });
+	}
+});
+openerp.base.search.ExtendedSearchGroup = openerp.base.search.Widget.extend({
+    template: 'SearchView.extended_search.group',
+    init: function (view, fields) {
+	    this._super(view);
+	    this.make_id('extended-search-group');
+	    this.attrs = {fields: fields};
+	    this.propositions_list = [];
+	},
+	add_prop: function() {
+        var $root = this.$element;
+		var prop = new openerp.base.search.ExtendedSearchProposition(this.view, this.fields);
+        this.propositions_list.push(prop);
+        var render = prop.render({});
+        var propositions_div = $root.find('.searchview_extended_propositions_list');
+        propositions_div.html(propositions_div.html() + render);
+        prop.start();
+	},
+    start: function () {
+        this._super();
+        var $root = this.$element;
+        var $this = this;
+        this.add_prop();
+        $root.find('.searchview_extended_add_proposition').click(function (e) {
+        	$this.add_prop();
+            e.stopPropagation();
+            e.preventDefault();
+        });
+	}
+});
+openerp.base.search.ExtendedSearchProposition = openerp.base.search.Widget.extend({
+    template: 'SearchView.extended_search.proposition',
+    init: function (view, fields) {
+	    this._super(view);
+	    this.make_id('extended-search-proposition');
+	    this.attrs = {fields: fields};
+	},
+    start: function () {
+        this._super();
 	}
 });
 openerp.base.search.Input = openerp.base.search.Widget.extend({
