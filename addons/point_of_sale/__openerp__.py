@@ -38,7 +38,7 @@ Main features :
     * Allow to refund former sales.
     """,
     'author': 'OpenERP SA',
-    'images': ['images/cash_registers.jpeg', 'images/pos_analysis.jpeg','images/register_analysis.jpeg','images/sale_order_pos.jpeg'],
+    'images': ['images/cash_registers.jpeg', 'images/pos_analysis.jpeg','images/register_analysis.jpeg','images/sale_order_pos.jpeg','images/product_pos.jpeg'],
     'depends': ['sale', 'delivery'],
     'init_xml': [],
 

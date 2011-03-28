@@ -26,6 +26,9 @@
     'description': """
 This module provides a Wiki Sales FAQ Template.
 ===============================================
+
+It provides demo data, thereby creating a Wiki Group and a Wiki Page
+for Wiki Sale FAQ.
     """,
     'author': 'OpenERP SA',
     'website': 'http://openerp.com',
