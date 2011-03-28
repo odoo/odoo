@@ -278,7 +278,7 @@ class View(openerpweb.Controller):
             if 'invisible' not in attrs:
                 attrs['invisible'] = []
                 # This should be done by the server
-            attrs['invisible'].append(('state', 'in', elem.attrib['states'].split(',')))
+            attrs['invisible'].append(('state', 'not in', elem.attrib['states'].split(',')))
             del(elem.attrib['states'])
         if attrs:
             elem.attrib['attrs'] = simplejson.dumps(attrs)
