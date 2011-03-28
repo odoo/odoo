@@ -6,6 +6,8 @@ from cStringIO import StringIO
 import simplejson
 
 import openerpweb
+import openerpweb.ast
+import openerpweb.nonliterals
 
 __all__ = ['Session', 'Menu', 'DataSet', 'DataRecord',
            'View', 'FormView', 'ListView', 'SearchView',
@@ -264,7 +266,7 @@ class View(openerpweb.Controller):
         r = Model.fields_view_get(view_id, view_type)
         if transform:
             context = {} # TODO: dict(ctx_sesssion, **ctx_action)
-            xml = self.transform_view(r['arch'], context)
+            xml = self.transform_view(r['arch'], session, context)
         else:
             xml = ElementTree.fromstring(r['arch'])
         r['arch'] = Xml2Json.convert_element(xml)
@@ -303,7 +305,7 @@ class View(openerpweb.Controller):
                     if a == 'invisible' and 'attrs' in elem.attrib:
                         del elem.attrib['attrs']
 
-    def transform_view(self, view_string, context=None):
+    def transform_view(self, view_string, session, context=None):
         # transform nodes on the fly via iterparse, instead of
         # doing it statically on the parsing result
         parser = ElementTree.iterparse(StringIO(view_string), events=("start",))
@@ -313,7 +315,31 @@ class View(openerpweb.Controller):
                 if root is None:
                     root = elem
                 self.normalize_attrs(elem, context)
+                self.parse_domains_and_contexts(elem, session)
         return root
+
+    def parse_domains_and_contexts(self, elem, session):
+        """ Converts domains and contexts from the view into Python objects,
+        either literals if they can be parsed by literal_eval or a special
+        placeholder object if the domain or context refers to free variables.
+
+        :param elem: the current node being parsed
+        :type param: xml.etree.ElementTree.Element
+        :param session: OpenERP session object, used to store and retrieve
+                        non-literal objects
+        :type session: openerpweb.openerpweb.OpenERPSession
+        """
+        domain = elem.get('domain')
+        if domain:
+            try:
+                elem.set(
+                    'domain',
+                    openerpweb.ast.literal_eval(
+                        domain))
+            except ValueError:
+                # not a literal
+                elem.set('domain',
+                    openerpweb.nonliterals.Domain(session, domain))
 
 class FormView(View):
     _cp_path = "/base/formview"

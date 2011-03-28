@@ -50,6 +50,13 @@ class OpenERPSession(object):
     
         The session context, a ``dict``. Can be reloaded by calling
         :meth:`openerpweb.openerpweb.OpenERPSession.get_context`
+
+    .. attribute:: domains_store
+
+        A ``dict`` matching domain keys to evaluable (but non-literal) domains.
+
+        Used to store references to non-literal domains which need to be
+        round-tripped to the client browser.
     """
     def __init__(self, server='127.0.0.1', port=8069,
                  model_factory=OpenERPModel):
@@ -62,6 +69,7 @@ class OpenERPSession(object):
         self.model_factory = model_factory
 
         self.context = {}
+        self.domains_store = {}
 
     def proxy(self, service):
         s = xmlrpctimeout.TimeoutServerProxy('http://%s:%s/xmlrpc/%s' % (self._server, self._port, service), timeout=5)
@@ -113,14 +121,29 @@ class OpenERPSession(object):
 
         Used to evaluate contexts and domains.
         """
-        return dict(
+        base = dict(
             uid=self._uid,
             current_date=datetime.date.today().strftime('%Y-%m-%d'),
             time=time,
             datetime=datetime,
-            relativedelta=dateutil.relativedelta.relativedelta,
-            **self.context
+            relativedelta=dateutil.relativedelta.relativedelta
         )
+        base.update(self.context)
+        return base
+
+    def evaluation_context(self, context=None):
+        """ Returns the session's evaluation context, augmented with the
+        provided context if any.
+
+        :param dict context: to add merge in the session's base eval context
+        :returns: the augmented context
+        :rtype: dict
+        """
+        d = {}
+        d.update(self.base_eval_context)
+        if context:
+            d.update(context)
+        return d
 
     def eval_context(self, context_string, context=None, use_base=True):
         """ Evaluates the provided context_string in the context (haha) of
