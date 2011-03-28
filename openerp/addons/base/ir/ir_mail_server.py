@@ -27,6 +27,7 @@ from tools import ustr
 from tools import config
 import netsvc
 
+import base64
 import inspect
 import subprocess
 import logging
@@ -225,6 +226,13 @@ unless it is already specified in the From Email, e.g: John Doe <john@doe.com>",
 
         return True
 
+    def generate_tracking_message_id(self, openobject_id):
+        """Returns a string that can be used in the Message-ID RFC822 header field so we
+           can track the replies related to a given object thanks to the "In-Reply-To" or
+           "References" fields that Mail User Agents will set.
+        """
+        return "<%s-openobject-%s@%s>" % (time.time(), openobject_id, socket.gethostname())
+
     def send_email(self, cr, uid, smtp_from, smtp_to_list, message, id=None, subject=None, ssl=False,
                     debug=False, smtp_server=None, smtp_port=None, smtp_user=None, smtp_password=None):
 
@@ -242,24 +250,44 @@ unless it is already specified in the From Email, e.g: John Doe <john@doe.com>",
         if not (id and smtp_server):
             server = self.search(cr, uid, [], order='priority', limit=1)
             smtp_server = self.browse(cr, uid, server[0])
+        if not id and smtp_server:
+            smtp_server = smtp_server
 
-        if not message: message = u''
-        email_body = ustr(message).encode('utf-8')
+        email_body = ustr(message.body or '').encode('utf-8')
         email_text = MIMEText(email_body or '',_charset='utf-8')
         msg = MIMEMultipart()
 
-#        if not message_id and openobject_id:
-#            message_id = generate_tracking_message_id(openobject_id)
-#        else:
-        message_id = Utils.make_msgid()
+        openobject_id = message.res_id
+        if not message.message_id and openobject_id:
+            message_id = self.generate_tracking_message_id(openobject_id)
+        else:
+            message_id = Utils.make_msgid()
         msg['Message-Id'] = message_id
+
+        if message.references:
+            msg['references'] = message.references
+
         if subject:
             msg['Subject'] = Header(ustr(subject), 'utf-8')
         msg['From'] = smtp_from
-        msg['To'] = COMMASPACE.join(smtp_to_list)
+        msg['To'] = smtp_to_list
+        del msg['Reply-To']
+        if message.reply_to:
+            msg['Reply-To'] = message.reply_to
+        else:
+            msg['Reply-To'] = msg['From']
+        msg['Cc'] = message.email_cc or []
+        msg['Bcc'] = message.email_bcc or []
+        #msg['X-Priority'] = message.priority
         msg['Date'] = formatdate(localtime=True)
 
-        if html2text and subtype == 'html':
+        # Add dynamic X Header
+        if message.headers:
+            x_headers = message.headers
+            for key, value in x_headers.iteritems():
+                msg['%s' % key] = str(value)
+
+        if html2text and message.sub_type == 'html':
             text = html2text(email_body.decode('utf-8')).encode('utf-8')
             alternative_part = MIMEMultipart(_subtype="alternative")
             alternative_part.attach(MIMEText(text, _charset='utf-8', _subtype='plain'))
@@ -268,8 +296,19 @@ unless it is already specified in the From Email, e.g: John Doe <john@doe.com>",
         else:
             msg.attach(email_text)
 
+        attachments = []
+        for attach in message.attachment_ids:
+            attachments.append((attach.datas_fname, base64.b64decode(attach.datas)))
+        if attachments:
+            for (fname,fcontent) in attachments:
+                part = MIMEBase('application', "octet-stream")
+                part.set_payload( fcontent )
+                Encoders.encode_base64(part)
+                part.add_header('Content-Disposition', 'attachment; filename="%s"' % (fname,))
+                msg.attach(part)
+
         res = self._email_send(cr, uid, smtp_from, smtp_to_list, msg, smtp_server=smtp_server.smtp_host,
-                               smtp_user=smtp_server.smtp_user, smtp_password=smtp_server.smtp_pass, smtp_port=smtp_server.smtp_port)
+                               smtp_user=smtp_server.smtp_user, smtp_password=smtp_server.smtp_pass, smtp_port=smtp_server.smtp_port, debug=message.debug)
         if res:
             return message_id
         return False

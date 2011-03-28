@@ -421,13 +421,6 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
 
     return html
 
-def generate_tracking_message_id(openobject_id):
-    """Returns a string that can be used in the Message-ID RFC822 header field so we
-       can track the replies related to a given object thanks to the "In-Reply-To" or
-       "References" fields that Mail User Agents will set.
-    """
-    return "<%s-openobject-%s@%s>" % (time.time(), openobject_id, socket.gethostname())
-
 def email_send(smtp_from, smtp_to_list, message, ssl=False, debug=False, smtp_server=None, smtp_port=None,
            smtp_user=None, smtp_password=None, cr=None):
     if not cr:
