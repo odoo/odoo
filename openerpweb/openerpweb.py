@@ -230,8 +230,9 @@ class OpenERPSession(object):
 class JsonRequest(object):
     """ JSON-RPC2 over HTTP POST using non standard POST encoding.
     Difference with the standard:
-       - the json string is passed as a form parameter named "request"
-       - method is currently ignored
+
+    * the json string is passed as a form parameter named "request"
+    * method is currently ignored
 
     Sucessful request:
     --> {"jsonrpc": "2.0", "method": "call", "params": {"session_id": "SID", "context": {}, "arg1": "val1" }, "id": null}

@@ -7,6 +7,9 @@ import simplejson
 
 import openerpweb
 
+__all__ = ['Session', 'Menu', 'DataSet', 'DataRecord',
+           'View', 'FormView', 'ListView', 'SearchView',
+           'Action']
 
 class Xml2Json:
     # xml2json-direct
@@ -196,20 +199,14 @@ class DataSet(openerpweb.Controller):
 
         :param request: a JSON-RPC request object
         :type request: openerpweb.JsonRequest
-        :param model: the name of the model to search on
-        :type model: str
+        :param str model: the name of the model to search on
         :param fields: a list of the fields to return in the result records
         :type fields: [str]
-        :param offset: from which index should the results start being returned
-        :type offset: int
-        :param limit: the maximum number of records to return
-        :type limit: int
-        :param domain: the search domain for the query
-        :type domain: list
-        :param context: the context in which the search should be executed
-        :type context: dict
-        :param sort: sorting directives
-        :type sort: list
+        :param int offset: from which index should the results start being returned
+        :param int limit: the maximum number of records to return
+        :param list domain: the search domain for the query
+        :param dict context: the context in which the search should be executed
+        :param list sort: sorting directives
         :returns: a list of result records
         :rtype: list
         """
@@ -317,7 +314,6 @@ class View(openerpweb.Controller):
                     root = elem
                 self.normalize_attrs(elem, context)
         return root
-
 
 class FormView(View):
     _cp_path = "/base/formview"

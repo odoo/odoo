@@ -14,8 +14,18 @@ Internal API Doc
 Python
 ++++++
 
-.. autoclass:: base.controllers.main.DataSet
+These classes should be moved to other sections of the doc as needed,
+probably.
+
+.. automodule:: openerpweb.openerpweb
+    :members: JsonRequest
+
+    See also: :class:`~openerpweb.openerpweb.OpenERPSession`,
+    :class:`~openerpweb.openerpweb.OpenERPModel`
+
+.. automodule:: base.controllers.main
     :members:
+    :undoc-members:
 
 Testing
 -------
