@@ -87,6 +87,7 @@
                         <button icon="gtk-go-forward" string="" name="stage_next" type="object"/>
                     </group>
                     <field name="user_id"/>
+                    <field name="survey" invisible="1" />
                     <button name="action_print_survey" string="Interview" type="object" icon="gtk-print" attrs="{'readonly':[('survey','=',False)]}"/>
                     <button name="%(survey.action_view_survey_question_message)d" string="Answer" type="action" icon="gtk-execute" context="{'survey_id': survey, 'response_id': [response], 'response_no':0 ,'active' : response, 'object' : 'hr.applicant', 'cur_id' :active_id}" attrs="{'readonly':[('survey','=',False)]}" groups="base.group_extended"/>
                     <newline/>
