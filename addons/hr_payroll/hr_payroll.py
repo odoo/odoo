@@ -1338,7 +1338,7 @@ class hr_salary_rule(osv.osv):
         ),
         'gratuity':fields.boolean('Use for Gratuity ?', required=False),
         'condition_select': fields.selection([('range', 'Range'), ('python', 'Python Expression')], "Condition based on"),
-        'computational_expression':fields.text('Computational Expression', required=True, readonly=False, help='This will use to computer the % fields values, in general its on basic, but You can use all heads code field in small letter as a variable name i.e. hra, ma, lta, etc...., also you can use, static varible basic'),
+        'computational_expression':fields.char('Computational Expression',size=1024, required=True, readonly=False, help='This will use to computer the % fields values, in general its on basic, but You can use all heads code field in small letter as a variable name i.e. hra, ma, lta, etc...., also you can use, static varible basic'),
         'conditions':fields.char('Condition', size=1024, required=True, readonly=False, help='Applied this rule for calculation if condition is true.You can specify condition like basic > 1000.'),
         'sequence': fields.integer('Sequence', required=True, help='Use to arrange calculation sequence'),
         'active':fields.boolean('Active', help="If the active field is set to false, it will allow you to hide the salary rule without removing it."),
@@ -1350,6 +1350,7 @@ class hr_salary_rule(osv.osv):
         ],'Company Amount Type', select=True),
         'contribute_per':fields.float('Company Contribution', digits=(16, 4), help='Define Company contribution ratio 1.00=100% contribution.'),
         'company_contribution':fields.boolean('Company Contribution',help="This rule has Company Contributions."),
+	'expression_result':fields.char('Expression based on',size=1024, required=True, readonly=False, help='result will be affected to a variable'),
      }
     _defaults = {
         'python_compute': '''# basic\n# employee: hr.employee object or None\n# contract: hr.contract object or None\n\nresult = basic * 0.10''',
