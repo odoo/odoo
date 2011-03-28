@@ -1339,7 +1339,7 @@ class hr_salary_rule(osv.osv):
         'gratuity':fields.boolean('Use for Gratuity ?', required=False),
         'condition_select': fields.selection([('range', 'Range'), ('python', 'Python Expression')], "Condition based on"),
         'computational_expression':fields.text('Computational Expression', required=True, readonly=False, help='This will use to computer the % fields values, in general its on basic, but You can use all heads code field in small letter as a variable name i.e. hra, ma, lta, etc...., also you can use, static varible basic'),
-        'conditions':fields.char('Condition', size=1024, required=True, readonly=False, help='Applied this head for calculation if condition is true'),
+        'conditions':fields.char('Condition', size=1024, required=True, readonly=False, help='Applied this rule for calculation if condition is true.You can specify condition like basic > 1000.'),
         'sequence': fields.integer('Sequence', required=True, help='Use to arrange calculation sequence'),
         'active':fields.boolean('Active', help="If the active field is set to false, it will allow you to hide the salary rule without removing it."),
         'python_compute':fields.text('Python Code'),
@@ -1361,6 +1361,7 @@ class hr_salary_rule(osv.osv):
         'company_id': lambda self, cr, uid, context: \
                 self.pool.get('res.users').browse(cr, uid, uid,
                     context=context).company_id.id,
+        'condition_select': 'python',
      }
 
 #    def _execute_function(self, cr, uid, id, value, context=None):
