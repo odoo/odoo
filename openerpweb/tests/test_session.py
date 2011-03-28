@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import unittest2
+from openerpweb.nonliterals import Domain
 import openerpweb.openerpweb
 
 class TestOpenERPSession(unittest2.TestCase):
@@ -49,3 +50,61 @@ class TestOpenERPSession(unittest2.TestCase):
         self.assertEqual(
             eval('foo + 3', self.session.evaluation_context({'foo': 4})),
             7)
+
+    def test_eval_domain_typeerror(self):
+        self.assertRaises(
+            TypeError, self.session.eval_domain, "foo")
+
+    def test_eval_domain_list(self):
+        self.assertEqual(
+            self.session.eval_domain([]),
+            [])
+
+    def test_eval_nonliteral_domain(self):
+        d = Domain(self.session, "[('foo', 'is', 3)]")
+        self.assertEqual(
+            self.session.eval_domain(d),
+            [('foo', 'is', 3)])
+
+    def test_eval_nonliteral_domain_bykey(self):
+        key = Domain(
+            self.session, "[('foo', 'is', 3)]").key
+
+        d = Domain(None, key=key)
+        self.assertEqual(
+            self.session.eval_domain(d),
+            [('foo', 'is', 3)])
+
+    def test_eval_empty_domains(self):
+        self.assertEqual(
+            self.session.eval_domains([]),
+            [])
+
+    def test_eval_literal_domains(self):
+        domains = [
+            [('a', 'is', 3)],
+            [('b', 'ilike', 'foo')],
+            ['|',
+             ('c', '=', False),
+             ('c', 'in', ['a', 'b', 'c'])]
+        ]
+        self.assertEqual(
+            self.session.eval_domains(domains),
+            [
+                ('a', 'is', 3),
+                ('b', 'ilike', 'foo'),
+                '|',
+                ('c', '=', False),
+                ('c', 'in', ['a', 'b', 'c'])
+            ])
+    def test_eval_nonliteral_domains(self):
+        domains = [
+            Domain(self.session, "[('uid', '=', uid)]"),
+            Domain(self.session,
+                   "['|', ('date', '<', current_date),"
+                        " ('date', '>', current_date)]")]
+        self.assertEqual(
+            self.session.eval_domains(domains),
+            [('uid', '=', -1),
+             '|', ('date', '<', '1945-08-05'), ('date', '>', '1945-08-05')]
+        )

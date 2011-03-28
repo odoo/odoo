@@ -6,12 +6,29 @@ can't be sent there themselves).
 """
 import binascii
 import hashlib
+import simplejson.decoder
+import simplejson.encoder
 
 __all__ = ['Domain']
 
 #: 48 bits should be sufficient to have almost no chance of collision
 #: with a million hashes, according to hg@67081329d49a
 SHORT_HASH_BYTES_SIZE = 6
+
+class NonLiteralEncoder(simplejson.encoder.JSONEncoder):
+    def default(self, object):
+        if isinstance(object, Domain):
+            return {
+                '__ref': 'domain',
+                '__id': object.key
+            }
+        return super(NonLiteralEncoder, self).default(object)
+
+def non_literal_decoder(dct):
+    if '__ref' in dct:
+        if dct['__ref'] == 'domain':
+            return Domain(None, key=dct['__id'])
+    return dct
 
 class Domain(object):
     def __init__(self, session, domain_string=None, key=None):

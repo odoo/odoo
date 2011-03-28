@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 import mock
+import simplejson
 import unittest2
 
 from openerpweb.nonliterals import Domain
+import openerpweb.nonliterals
 import openerpweb.openerpweb
 
 class NonLiteralDomainTest(unittest2.TestCase):
@@ -41,3 +43,14 @@ class NonLiteralDomainTest(unittest2.TestCase):
         result = Domain(self.session, "[('a', '=', foo)]").evaluate({'foo': 3})
         self.assertEqual(
             result, [('a', '=', 3)])
+
+class NonLiteralJSON(unittest2.TestCase):
+    def setUp(self):
+        self.session = mock.Mock(spec=openerpweb.openerpweb.OpenERPSession)
+        self.session.domains_store = {}
+
+    def test_encode(self):
+        d = Domain(self.session, "some arbitrary string")
+        self.assertEqual(
+            simplejson.dumps(d, cls=openerpweb.nonliterals.NonLiteralEncoder),
+            simplejson.dumps({'__ref': 'domain', '__id': d.key}))

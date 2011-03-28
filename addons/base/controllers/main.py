@@ -21,7 +21,8 @@ class Xml2Json:
     # URL: http://code.google.com/p/xml2json-direct/
     @staticmethod
     def convert_to_json(s):
-        return simplejson.dumps(Xml2Json.convert_to_structure(s), sort_keys=True, indent=4)
+        return simplejson.dumps(
+            Xml2Json.convert_to_structure(s), sort_keys=True, indent=4)
 
     @staticmethod
     def convert_to_structure(s):
@@ -174,10 +175,15 @@ class Menu(openerpweb.Controller):
         actions = Values.get('action', 'tree_but_open', [('ir.ui.menu', menu_id)], False, {})
 
         for _, _, action in actions:
+            # values come from the server, we can just eval them
             action['context'] = req.session.eval_context(
                 action['context']) or {}
-            action['domain'] = req.session.eval_domain(
-                action['domain'], action['context']) or []
+
+            if isinstance(action['domain'], basestring):
+                action['domain'] = eval(
+                    action['domain'],
+                    req.session.evaluation_context(
+                        action['context'])) or []
 
         return {"action": actions}
 

@@ -15,6 +15,7 @@ import cherrypy
 import cherrypy.lib.static
 import simplejson
 
+import nonliterals
 import xmlrpctimeout
 
 #----------------------------------------------------------
@@ -197,31 +198,37 @@ class OpenERPSession(object):
             current_context.update(final_context)
         return final_context
 
-    def eval_domain(self, domain_string, context=None, use_base=True):
+    def eval_domain(self, domain, context=None):
         """ Evaluates the provided domain_string using the provided context
         (merged with the session's evaluation context)
 
-        :param str domain_string: an OpenERP domain as a string, to evaluate.
+        :param domain: an OpenERP domain as a dict or as a
+                       :class:`openerpweb.nonliterals.Domain` instance
 
-                              If not a string, is returned as-is
+                       In the second case, it will be evaluated and returned.
+        :type domain: openerpweb.nonliterals.Domain
         :param dict context: the context to use in the evaluation, if any.
-        :param bool use_base: whether the base eval context (combination
-                              of the default context and the session
-                              context) should be used
         :returns: the evaluated domain
         :rtype: list
+
+        :raises: ``TypeError`` if ``domain`` is neither a dict nor a Domain
         """
-        if not isinstance(domain_string, basestring):
-            return domain_string
+        if not isinstance(domain, (list, nonliterals.Domain)):
+            raise TypeError("Domain %r is not a dict or a nonliteral Domain",
+                             domain)
+
+        if isinstance(domain, list):
+            return domain
 
         ctx = {}
-        if use_base:
-            ctx.update(self.base_eval_context)
         if context:
             ctx.update(context)
         ctx['context'] = ctx
 
-        return eval(domain_string, ctx)
+        # if the domain was unpacked from JSON, it needs the current
+        # OpenERPSession for its data retrieval
+        domain.session = self
+        return domain.evaluate(ctx)
 
     def eval_domains(self, domains, context=None):
         """ Evaluates and concatenates the provided domains using the
@@ -236,14 +243,10 @@ class OpenERPSession(object):
         :returns: the final combination of all domains in the sequence
         :rtype: list
         """
-        ctx = dict(
-            self.base_eval_context,
-            **(context or {}))
-
         final_domain = []
         for domain in domains:
             final_domain.extend(
-                self.eval_domain(domain, ctx))
+                self.eval_domain(domain, context))
         return final_domain
 
 #----------------------------------------------------------
@@ -290,9 +293,11 @@ class JsonRequest(object):
         :rtype: bytes
         '''
         if requestf:
-            request = simplejson.load(requestf)
+            request = simplejson.load(
+                requestf, object_hook=nonliterals.non_literal_decoder)
         else:
-            request = simplejson.loads(request)
+            request = simplejson.loads(
+                request, object_hook=nonliterals.non_literal_decoder)
         try:
             print "--> %s.%s %s" % (controller.__class__.__name__, method.__name__, request)
             error = None
@@ -335,7 +340,8 @@ class JsonRequest(object):
         print "<--", response
         print
 
-        content = simplejson.dumps(response)
+        content = simplejson.dumps(
+            response, cls=nonliterals.NonLiteralEncoder)
         cherrypy.response.headers['Content-Type'] = 'application/json'
         cherrypy.response.headers['Content-Length'] = len(content)
         return content
