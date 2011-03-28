@@ -408,7 +408,7 @@ openerp.base.SearchView = openerp.base.Controller.extend(
      *
      * Handles laying out and rendering the various search widgets, as well
      * as collecting contexts and domain and broadcasting them to whoever
-     * registered itself on the :js:func:`~openep.base.SearchView.on_search`
+     * registered itself on the :js:func:`~openerp.base.SearchView.on_search`
      * event.
      *
      * @constructs
@@ -583,6 +583,7 @@ openerp.base.SearchView = openerp.base.Controller.extend(
      * may or may not be evaluated (each item can be either a valid domain or
      * context, or a string to evaluate in order in the sequence)
      *
+     * @event
      * @param {Array} domains an array of string or literal domains
      * @param {Array} contexts an array of string or literal contexts
      * @param {Array} group_contexts an ordered array of contexts which may need to be used to resolve grouping
@@ -594,6 +595,8 @@ openerp.base.SearchView = openerp.base.Controller.extend(
     },
     /**
      * event hook for clearing search
+     *
+     * @event
      */
     on_clear: function () {  },
     /**
