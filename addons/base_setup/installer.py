@@ -119,6 +119,7 @@ class base_setup_installer(osv.osv_memory):
         if context is None:
              context = {}
         modules = self.pool.get('ir.module.module')
+        upgrade_obj = self.pool.get('base.module.upgrade')
         modules_selected = []
         datas = self.read(cr, uid, ids, context=context)[0]
         key = datas.keys()
@@ -138,7 +139,8 @@ class base_setup_installer(osv.osv_memory):
         for i in inst:
             if i.state == 'uninstalled':
                 sect_mod_id = i.id
-                modules.button_install(cr, uid, [sect_mod_id], context=context)
+                modules.state_update(cr, uid, [sect_mod_id], 'to install', ['uninstalled'], context)
+                upgrade_obj.upgrade_module(cr, uid, [sect_mod_id], context=context)
             elif i.state == 'installed':
                 if modules_selected:
                     for instl in modules_selected:
