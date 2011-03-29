@@ -2641,10 +2641,9 @@ class stock_inventory_line(osv.osv):
         @return:  Dictionary of changed values
         """
         if not product:
-            return {}
-        if not uom:
-            prod = self.pool.get('product.product').browse(cr, uid, [product], {'uom': uom})[0]
-            uom = prod.uom_id.id
+            return {'value': {'product_qty': 0.0, 'product_uom': False}}
+        obj_product = self.pool.get('product.product').browse(cr, uid, product)
+        uom = uom or obj_product.uom_id.id
         amount = self.pool.get('stock.location')._product_get(cr, uid, location_id, [product], {'uom': uom, 'to_date': to_date})[product]
         result = {'product_qty': amount, 'product_uom': uom}
         return {'value': result}
