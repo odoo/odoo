@@ -57,6 +57,7 @@ class Domain(object):
                              "and a domain string")
 
         self.session = session
+        self.own = {}
         if domain_string:
             self.key = binascii.hexlify(
                 hashlib.sha256(domain_string).digest()[:SHORT_HASH_BYTES_SIZE])
@@ -79,8 +80,10 @@ class Domain(object):
         context (as well as the session's base context), and returns the
         evaluated result.
         """
-        return eval(self.get_domain_string(),
-            self.session.evaluation_context(context))
+        ctx = self.session.evaluation_context(context)
+        if self.own:
+            ctx.update(self.own)
+        return eval(self.get_domain_string(), ctx)
 
 class Context(object):
     def __init__(self, session, context_string=None, key=None):
@@ -103,10 +106,11 @@ class Context(object):
                              "and a domain string")
 
         self.session = session
+        self.own = {}
         if context_string:
             self.key = binascii.hexlify(
                 hashlib.sha256(context_string).digest()[:SHORT_HASH_BYTES_SIZE])
-            self.session.domains_store[self.key] = context_string
+            self.session.contexts_store[self.key] = context_string
         elif key:
             self.key = key
 
@@ -118,12 +122,15 @@ class Context(object):
                         the first place.
         :type session: openerpweb.openerpweb.OpenERPSession
         """
-        return self.session.domains_store[self.key]
+        return self.session.contexts_store[self.key]
 
     def evaluate(self, context=None):
         """ Forces the evaluation of the linked context, using the provided
         context (as well as the session's base context), and returns the
         evaluated result.
         """
+        ctx = self.session.evaluation_context(context)
+        if self.own:
+            ctx.update(self.own)
         return eval(self.get_context_string(),
-            self.session.evaluation_context(context))
+                    ctx)

@@ -70,6 +70,7 @@ class OpenERPSession(object):
         self.model_factory = model_factory
 
         self.context = {}
+        self.contexts_store = {}
         self.domains_store = {}
 
     def proxy(self, service):
