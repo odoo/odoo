@@ -381,12 +381,13 @@ def import_opportunities(sugar_obj, cr, uid, context=None):
         'type' : 'type',
     }
     lead_obj = sugar_obj.pool.get('crm.lead')
+    partner_obj = sugar_obj.pool.get('res.partner')
     PortType, sessionid = sugar.login(context.get('username', ''), context.get('password', ''), context.get('url',''))
     sugar_data = sugar.search(PortType, sessionid, 'Opportunities')
     for val in sugar_data:
-        partner_xml_id = find_mapped_id(sugar_obj, cr, uid, 'res.partner', val.get('id'), context)
+        partner_xml_id = partner_obj.search(cr, uid, [('name', 'like', val.get('account_name'))])
         if not partner_xml_id:
-            raise osv.except_osv(_('Warning !'), _('Partner %s not Found') % val.get('account_name'))
+            raise osv.except_osv(_('Warning !'), _('Partner %s not Found') % val.get('account_name'))        
         val['type'] = 'opportunity'
         stage_id = get_opportunity_status(sugar_obj, cr, uid, val, context)
         val['stage_id.id'] = stage_id
