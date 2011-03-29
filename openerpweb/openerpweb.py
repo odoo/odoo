@@ -168,9 +168,7 @@ class OpenERPSession(object):
         if isinstance(context_to_eval, dict):
             return context_to_eval
 
-        ctx = {}
-        if context:
-            ctx.update(context)
+        ctx = context or {}
         ctx['context'] = ctx
 
         # if the domain was unpacked from JSON, it needs the current
@@ -226,9 +224,7 @@ class OpenERPSession(object):
         if isinstance(domain, list):
             return domain
 
-        ctx = {}
-        if context:
-            ctx.update(context)
+        ctx = context or {}
         ctx['context'] = ctx
 
         # if the domain was unpacked from JSON, it needs the current
