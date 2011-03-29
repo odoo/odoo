@@ -286,9 +286,7 @@ class module(osv.osv):
         return demo
 
     def button_install(self, cr, uid, ids, context=None):
-        upgrade_obj = self.pool.get('base.module.upgrade')
         self.state_update(cr, uid, ids, 'to install', ['uninstalled'], context)
-        upgrade_obj.upgrade_module(cr, uid, ids, context=context)
         return {
             'name': _('Install'),
             'view_type': 'form',
