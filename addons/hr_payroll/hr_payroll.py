@@ -757,7 +757,7 @@ class hr_payslip(osv.osv):
                 total = 0.0
                 obj = {'basic': contract.wage}
                 for line in rules:
-                    cd = line.code.lower()
+                    cd = line.code
                     obj[cd] = line.amount or 0.0
 
                 for line in rules:
@@ -768,6 +768,7 @@ class hr_payslip(osv.osv):
                     calculate = False
                     try:
                         exp = line.conditions
+                        exec line.conditions in obj
                         calculate = eval(exp, obj)
                     except Exception, e:
                         raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ') % (e))
@@ -1008,9 +1009,20 @@ class hr_payslip(osv.osv):
             total = 0.0
             obj = {'basic': contract_id.wage}
             for line in rules:
-                cd = line.code.lower()
-                obj[cd] = line.amount or 0.0
-
+                cd = line.code
+                base = line.computational_expression
+                amt = eval(base, obj)
+                if line.amount_type == 'per':
+                    al = line.amount * amt
+                    obj[cd] = al
+                elif line.amount_type=='code':
+                    localdict = {'basic':amt, 'employee':employee_id, 'contract':contract}
+                    exec line.python_compute in localdict
+                    val = localdict['result']
+                    obj[cd] = val
+                else:
+                    obj[cd] = line.amount or 0.0
+                   
             for line in rules:
                 if line.category_id.code in ad:
                     continue
@@ -1019,6 +1031,7 @@ class hr_payslip(osv.osv):
                 calculate = False
                 try:
                     exp = line.conditions
+                    exec line.conditions in obj
                     calculate = eval(exp, obj)
                 except Exception, e:
                     raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ') % (e))
@@ -1361,6 +1374,7 @@ class hr_salary_rule(osv.osv):
         'contribute_per':fields.float('Company Contribution', digits=(16, 4), help='Define Company contribution ratio 1.00=100% contribution.'),
         'company_contribution':fields.boolean('Company Contribution',help="This rule has Company Contributions."),
 	    'expression_result':fields.char('Expression based on', size=1024, required=False, readonly=False, help='result will be affected to a variable'),
+
      }
     _defaults = {
         'python_compute': '''# basic\n# employee: hr.employee object or None\n# contract: hr.contract object or None\n\nresult = basic * 0.10''',
