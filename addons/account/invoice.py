@@ -1610,7 +1610,13 @@ class res_partner(osv.osv):
         'invoice_ids': fields.one2many('account.invoice.line', 'partner_id', 'Invoices', readonly=True),
     }
     
-    def copy(self, cr, uid, id, default={}, context={}):
+    def copy(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+            
+        if context is None:
+            context = {}   
+             
         default.update({'invoice_ids' : []})
         return super(res_partner, self).copy(cr, uid, id, default, context)
       
