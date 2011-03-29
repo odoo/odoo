@@ -133,8 +133,14 @@ class hr_contract(osv.osv):
         'visa_no': fields.char('Visa No', size=64, required=False, readonly=False),
         'visa_expire': fields.date('Visa Expire Date'),
     }
+
+    def _get_type(self, cr, uid, context=None):
+        type_ids = self.pool.get('hr.contract.type').search(cr, uid, [('name', '=', 'Employee')])
+        return type_ids and type_ids[0] or False
+
     _defaults = {
         'date_start': lambda *a: time.strftime("%Y-%m-%d"),
+        'type_id': _get_type
     }
 
     def _check_dates(self, cr, uid, ids, context=None):
