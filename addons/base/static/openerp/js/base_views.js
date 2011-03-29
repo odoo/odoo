@@ -603,7 +603,9 @@ openerp.base.SearchView = openerp.base.Controller.extend({
             data.fields_view.fields);
 
         // for extended search view
-        lines.push([new openerp.base.search.ExtendedSearch(null, data.fields_view.fields)]);
+        var ext = new openerp.base.search.ExtendedSearch(null, data.fields_view.fields);
+        lines.push([ext]);
+        this.inputs.push(ext);
         
         var render = QWeb.render("SearchView", {
             'view': data.fields_view['arch'],
@@ -856,14 +858,14 @@ openerp.base.search.ExtendedSearch = openerp.base.BaseWidget.extend({
             e.stopPropagation();
             e.preventDefault();
         });
-        // TODO: remove test
-        this.$element.find('.test_get_domain').click(function (e) {
-        	_this.$element.find('.test_domain').text(JSON.stringify(_this.get_domain()));
-            e.stopPropagation();
-            e.preventDefault();
-        });
+	},
+	get_context: function() {
+		return null;
 	},
 	get_domain: function() {
+		if(this.$element.hasClass("folded")) {
+			return null;
+		}
 		var domain = _.reduce(this.children,
 				function(mem, x) { return mem.concat(x.get_domain());}, []);
 		return domain;
