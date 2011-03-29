@@ -153,9 +153,9 @@ class account_move_line_reconcile_writeoff(osv.osv_memory):
         if context is None:
             context = {}
         data = self.read(cr, uid, ids,context=context)[0]
-        account_id = data['writeoff_acc_id']
+        account_id = data['writeoff_acc_id'][0]
         context['date_p'] = data['date_p']
-        journal_id = data['journal_id']
+        journal_id = data['journal_id'][0]
         context['comment'] = data['comment']
         if data['analytic_id']:
             context['analytic_id'] = data['analytic_id']

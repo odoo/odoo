@@ -26,12 +26,15 @@
     "version" : "1.0",
     "depends" : ["base", 'email'],
     "author" : "OpenERP SA",
-    "description": """Fetchmail:
-    * Fetch email from Pop / IMAP server
-    * Support SSL
-    * Integrated with all Modules
-    * Automatic Email Receive
-    * Email based Records (Add, Update)
+    "category": 'Tools',
+    "description": """
+Fetch email from POP / IMAP servers.
+====================================
+
+    * Supports SSL
+    * Integrated with all modules
+    * Automatically receive email
+    * Email-based record operations (Add, Update)
     """,
     'website': 'http://www.openerp.com',
     'init_xml': [],
@@ -46,4 +49,5 @@
     'installable': True,
     'active': False,
     'certificate' : '00692978332890137453',
+    'images': ['images/1_email_servers.jpeg'],
 }

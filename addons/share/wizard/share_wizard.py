@@ -450,11 +450,11 @@ class share_create(osv.osv_memory):
             for result_line in wizard_data.result_line_ids:
                 email_to = result_line.login
                 subject = _('%s has shared OpenERP %s information with you') % (user.name, wizard_data.action_id.name)
-                body = _("Dear,\n\n") + subject + "\n\n"
+                body = _("Dear,\n\n%s\n\n") % subject
                 body += _("To access it, you can go to the following URL:\n    %s") % result_line.share_url
                 body += "\n\n"
                 if result_line.newly_created:
-                    body += _("You may use the following login and password to get access to this protected area:") + "\n"
+                    body += _("You may use the following login and password to get access to this protected area:\n")
                     body += "%s: %s" % (_("Username"), result_line.login) + "\n"
                     body += "%s: %s" % (_("Password"), result_line.password) + "\n"
                     body += "%s: %s" % (_("Database"), cr.dbname) + "\n"

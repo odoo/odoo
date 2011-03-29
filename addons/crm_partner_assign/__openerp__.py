@@ -21,12 +21,19 @@
 
 
 {
-    'name': 'Partner Geo-Localisation',
+    'name': 'Partner Geo-Localization',
     'version': '1.0',
-    'category': 'Generic Modules/Production',
+    'category': 'Sales',
     'description': """
-This is the module used by OpenERP SA to redirect customers to his partners,
-based on geolocalization.
+This is the module used by OpenERP SA to redirect customers to its partners, based on geolocalization.
+======================================================================================================
+
+You can geolocalize your opportunities by using this module.
+
+Use geolocalization when assigning opportunities to partners.
+Determine the GPS coordinates according to the address of the partner.
+The most appropriate partner can be assigned.
+You can also use the geolocalization without using the GPS coordinates.
     """,
     'author': 'OpenERP SA',
     'depends': ['crm'],
@@ -41,4 +48,5 @@ based on geolocalization.
     'installable': True,
     'active': False,
     'certificate': '00503409558942442061',
+    'images': ['images/partner_geo_localization.jpeg','images/partner_grade.jpeg'],
 }

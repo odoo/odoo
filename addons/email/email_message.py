@@ -160,11 +160,11 @@ class email_message(osv.osv):
         for message in self.browse(cr, uid, ids, context=context):
             msg_txt = ''
             if message.history:
-                msg_txt += (message.email_from or '/') + _(' wrote on ') + format_date_tz(message.date, tz) + ':\n\t'
+                msg_txt += _('%s wrote on %s:\n\t') % (message.email_from or '/', format_date_tz(message.date, tz))
                 if message.description:
                     msg_txt += self.truncate_data(cr, uid, message.description, context=context)
             else:
-                msg_txt = (message.user_id.name or '/') + _(' on ') + format_date_tz(message.date, tz) + ':\n\t'
+                msg_txt = _('%s on %s:\n\t') % (message.user_id.name or '/', format_date_tz(message.date, tz))
                 msg_txt += message.name
             result[message.id] = msg_txt
         return result

@@ -23,10 +23,13 @@
     "name": "Indian Chart of Account",
     "version": "1.0",
     "description": """
-    Indian Accounting : chart of Account
+Indian Accounting : Chart of Account.
+=====================================
+
+Indian accounting chart and localization.
     """,
     "author": ['OpenERP SA', 'Axelor'],
-    "category": "Localisation/Account Charts",
+    "category": "Finance",
     "depends": [
         "account",
         "account_chart"
@@ -39,5 +42,6 @@
     "active": False,
     "installable": True,
     "certificate" : "001308250150600713245",
+    'images': ['images/config_chart_l10n_in.jpeg','images/l10n_in_chart.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

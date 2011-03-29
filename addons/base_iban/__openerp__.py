@@ -21,10 +21,12 @@
 {
     'name': 'Create IBAN bank accounts',
     'version': '1.0',
-    'category': 'Generic Modules/Base',
+    'category': 'Finance',
     'description': """
 This module installs the base for IBAN (International Bank Account Number) bank accounts and checks for its validity.
+=====================================================================================================================
 
+The ability to extract the correctly represented local accounts from IBAN accounts with a single statement.
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
@@ -34,5 +36,6 @@ This module installs the base for IBAN (International Bank Account Number) bank 
     'installable': True,
     'active': False,
     'certificate': '0050014379549',
+    'images': ['images/base_iban1.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

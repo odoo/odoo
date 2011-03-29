@@ -21,7 +21,13 @@
 {
     'name': 'Brazilian Localization',
     'description': 'Brazilian Localization',
-    'category': 'Localisation/Account Charts',
+    'category': 'Finance',
+    'description': """
+This is the base module to manage the accounting chart for Brazil in OpenERP.
+=============================================================================
+
+Brazilian accounting chart and localization.
+    """,
     'author': 'OpenERP Brasil',
     'website': 'http://openerpbrasil.org',
     'version': '0.6',
@@ -36,6 +42,7 @@
     ],
     'installable': True,
     'certificate' : '001280994939126801405',
+    'images': ['images/1_config_chart_l10n_br.jpeg','images/2_l10n_br_chart.jpeg'],
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
