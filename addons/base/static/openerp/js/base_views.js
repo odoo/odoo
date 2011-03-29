@@ -805,7 +805,7 @@ openerp.base.search.FilterGroup = openerp.base.search.Widget.extend({
         });
     }
 });
-add_expand_listener = function($root) {
+openerp.base.search.add_expand_listener = function($root) {
 	$root.find('a.searchview_group_string').click(function (e) {
         $root.toggleClass('folded expanded');
         e.stopPropagation();
@@ -829,7 +829,7 @@ openerp.base.search.Group = openerp.base.search.Widget.extend({
             .chain()
             .flatten()
             .each(function (widget) { widget.start(); });
-        add_expand_listener(this.$element);
+        openerp.base.search.add_expand_listener(this.$element);
     }
 });
 
@@ -839,41 +839,32 @@ openerp.base.search.ExtendedSearch = openerp.base.BaseWidget.extend({
     init: function (parent, fields) {
 	    this._super(parent);
         this.fields = fields;
-        this.groups_list = [];
 	},
 	add_group: function(group) {
     	var group = new openerp.base.search.ExtendedSearchGroup(this, this.fields);
-		var $root = this.$element;
-		this.groups_list.push(group);
         var render = group.render({});
-        var groups_div = $root.find('.searchview_extended_groups_list');
-        groups_div.append(render);
+        this.$element.find('.searchview_extended_groups_list').append(render);
         group.start();
-	},
-	remove: function(group) {
-		this.groups_list = _.without(this.groups_list, group);
-		group.stop();
 	},
     start: function () {
         this._super();
-        var $root = this.$element;
-        var $this = this;
-        add_expand_listener($root);
+        var _this = this;
+        openerp.base.search.add_expand_listener(this.$element);
         this.add_group();
-        $root.find('.searchview_extended_add_group').click(function (e) {
-            $this.add_group();
+        this.$element.find('.searchview_extended_add_group').click(function (e) {
+            _this.add_group();
             e.stopPropagation();
             e.preventDefault();
         });
         // TODO: remove test
-        $root.find('.test_get_domain').click(function (e) {
-        	$root.find('.test_domain').text(JSON.stringify($this.get_domain()));
+        this.$element.find('.test_get_domain').click(function (e) {
+        	_this.$element.find('.test_domain').text(JSON.stringify(_this.get_domain()));
             e.stopPropagation();
             e.preventDefault();
         });
 	},
 	get_domain: function() {
-		var domain = _.reduce(this.groups_list,
+		var domain = _.reduce(this.children,
 				function(mem, x) { return mem.concat(x.get_domain());}, []);
 		return domain;
 	}
@@ -885,40 +876,31 @@ openerp.base.search.ExtendedSearchGroup = openerp.base.BaseWidget.extend({
     init: function (parent, fields) {
 	    this._super(parent);
 	    this.fields = fields;
-	    this.propositions_list = [];
 	},
 	add_prop: function() {
-        var $root = this.$element;
 		var prop = new openerp.base.search.ExtendedSearchProposition(this, this.fields);
-        this.propositions_list.push(prop);
         var render = prop.render({});
-        var propositions_div = $root.find('.searchview_extended_propositions_list');
-        propositions_div.append(render);
+        this.$element.find('.searchview_extended_propositions_list').append(render);
         prop.start();
-	},
-	remove: function(prop) {
-		this.propositions_list = _.without(this.propositions_list, prop);
-		prop.stop();
 	},
     start: function () {
         this._super();
-        var $root = this.$element;
-        var $this = this;
+        var _this = this;
         this.add_prop();
-        $root.find('.searchview_extended_add_proposition').click(function (e) {
-        	$this.add_prop();
+        this.$element.find('.searchview_extended_add_proposition').click(function (e) {
+        	_this.add_prop();
             e.stopPropagation();
             e.preventDefault();
         });
-        var delete_btn = $root.find('.searchview_extended_delete_group');
+        var delete_btn = this.$element.find('.searchview_extended_delete_group');
         delete_btn.click(function (e) {
-        	$this.parent.remove($this);
+        	_this.stop();
             e.stopPropagation();
             e.preventDefault();
         });
 	},
 	get_domain: function() {
-		var props = _(this.propositions_list).chain().map(function(x) {
+		var props = _(this.children).chain().map(function(x) {
 			return x.get_proposition();
 		}).compact().value();
 		var choice = this.$element.find(".searchview_extended_group_choice").val();
@@ -962,15 +944,15 @@ openerp.base.search.ExtendedSearchProposition = openerp.base.BaseWidget.extend({
     start: function () {
         this._super();
 	    this.set_selected(this.fields.length > 0 ? this.fields[0] : null);
-	    var $this = this;
+	    var _this = this;
 	    this.$element.find(".searchview_extended_prop_field").change(function(e) {
-	    	$this.changed();
+	    	_this.changed();
             e.stopPropagation();
             e.preventDefault();
 	    });
 	    var delete_btn = this.$element.find('.searchview_extended_delete_prop');
 	    delete_btn.click(function (e) {
-        	$this.parent.remove($this);
+        	_this.stop();
             e.stopPropagation();
             e.preventDefault();
         });
@@ -982,12 +964,11 @@ openerp.base.search.ExtendedSearchProposition = openerp.base.BaseWidget.extend({
 		}
 	},
 	set_selected: function(selected) {
-		var $root = this.$element;
-		var tmp = $root.find('.searchview_extended_prop_op');
+		var _this = this;
 		if(this.attrs.selected != null) {
 			this.value_component.stop();
 			this.value_component = null;
-			$root.find('.searchview_extended_prop_op').html('');
+			this.$element.find('.searchview_extended_prop_op').html('');
 		}
 		this.attrs.selected = selected;
 		if(selected == null) {
@@ -1000,11 +981,11 @@ openerp.base.search.ExtendedSearchProposition = openerp.base.BaseWidget.extend({
 			option = jQuery('<option/>');
 			option.attr('value', operator.value);
 			option.text(operator.text);
-			option.appendTo($root.find('.searchview_extended_prop_op'));
+			option.appendTo(_this.$element.find('.searchview_extended_prop_op'));
 		});
 		this.value_component = extended_filters_types[type].build_component(this);
 		var render = this.value_component.render({});
-		$root.find('.searchview_extended_prop_value').html(render);
+		this.$element.find('.searchview_extended_prop_value').html(render);
 		this.value_component.start();
 	},
 	get_proposition: function() {
