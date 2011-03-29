@@ -851,7 +851,7 @@ openerp.base.search.ExtendedSearch = openerp.base.BaseWidget.extend({
         group.start();
 	},
 	remove: function(group) {
-		this.groups_list = _.select(this.groups_list, function(x) {return ! x === group});
+		this.groups_list = _.without(this.groups_list, group);
 		group.stop();
 	},
     start: function () {
@@ -897,7 +897,7 @@ openerp.base.search.ExtendedSearchGroup = openerp.base.BaseWidget.extend({
         prop.start();
 	},
 	remove: function(prop) {
-		this.propositions_list = _.reject(this.propositions_list, function(x) {return x === prop});
+		this.propositions_list = _.without(this.propositions_list, prop);
 		prop.stop();
 	},
     start: function () {
@@ -913,7 +913,6 @@ openerp.base.search.ExtendedSearchGroup = openerp.base.BaseWidget.extend({
         var delete_btn = $root.find('.searchview_extended_delete_group');
         delete_btn.click(function (e) {
         	$this.parent.remove($this);
-        	console.log(delete_btn);
             e.stopPropagation();
             e.preventDefault();
         });
@@ -931,7 +930,7 @@ openerp.base.search.ExtendedSearchGroup = openerp.base.BaseWidget.extend({
 	}
 });
 
-extended_filters_types = {
+openerp.base.search.extended_filters_types = {
 	char: {
 		operators: [
 		            {value: "ilike", text: "contains"},
@@ -945,7 +944,7 @@ extended_filters_types = {
 		],
 		build_component: function(parent) {
 			return new openerp.base.search.ExtendedSearchProposition.Char(parent);
-		},
+		}
 	}
 };
 
@@ -963,13 +962,14 @@ openerp.base.search.ExtendedSearchProposition = openerp.base.BaseWidget.extend({
     start: function () {
         this._super();
 	    this.set_selected(this.fields.length > 0 ? this.fields[0] : null);
-	    $this = this;
+	    var $this = this;
 	    this.$element.find(".searchview_extended_prop_field").change(function(e) {
 	    	$this.changed();
             e.stopPropagation();
             e.preventDefault();
 	    });
-	    this.$element.find('.searchview_extended_delete_prop').click(function (e) {
+	    var delete_btn = this.$element.find('.searchview_extended_delete_prop');
+	    delete_btn.click(function (e) {
         	$this.parent.remove($this);
             e.stopPropagation();
             e.preventDefault();
@@ -978,7 +978,7 @@ openerp.base.search.ExtendedSearchProposition = openerp.base.BaseWidget.extend({
 	changed: function() {
 		var nval = this.$element.find(".searchview_extended_prop_field").val();
 		if(this.attrs.selected == null || nval != this.attrs.selected.name) {
-			this.set_selected(_.detect(this.fields, function(x) {return x.name == nval}));
+			this.set_selected(_.detect(this.fields, function(x) {return x.name == nval;}));
 		}
 	},
 	set_selected: function(selected) {
@@ -994,6 +994,7 @@ openerp.base.search.ExtendedSearchProposition = openerp.base.BaseWidget.extend({
 			return;
 		}
 		var type = selected.obj.type;
+		var extended_filters_types = openerp.base.search.extended_filters_types;
 		type = type in extended_filters_types ? type : "char";
 		_.each(extended_filters_types[type].operators, function(operator) {
 			option = jQuery('<option/>');
