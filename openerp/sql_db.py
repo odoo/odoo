@@ -358,14 +358,13 @@ class Connection(object):
         except Exception:
             return False
 
-
-_dsn = ''
-for p in ('host', 'port', 'user', 'password'):
-    cfg = tools.config['db_' + p]
-    if cfg:
-        _dsn += '%s=%s ' % (p, cfg)
-
 def dsn(db_name):
+    _dsn = ''
+    for p in ('host', 'port', 'user', 'password'):
+        cfg = tools.config['db_' + p]
+        if cfg:
+            _dsn += '%s=%s ' % (p, cfg)
+
     return '%sdbname=%s' % (_dsn, db_name)
 
 def dsn_are_equals(first, second):

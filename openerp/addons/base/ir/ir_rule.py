@@ -31,15 +31,18 @@ class ir_rule(osv.osv):
     _order = 'name'
     _MODES = ['read', 'write', 'create', 'unlink']
 
-    def _domain_force_get(self, cr, uid, ids, field_name, arg, context={}):
+    def _domain_force_get(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
         for rule in self.browse(cr, uid, ids, context):
-            eval_user_data = {'user': self.pool.get('res.users').browse(cr, 1, uid),
-                              'time':time}
-            res[rule.id] = eval(rule.domain_force, eval_user_data)
+            if rule.domain_force:
+                eval_user_data = {'user': self.pool.get('res.users').browse(cr, 1, uid),
+                                  'time':time}
+                res[rule.id] = eval(rule.domain_force, eval_user_data)
+            else:
+                res[rule.id] = []
         return res
 
-    def _get_value(self, cr, uid, ids, field_name, arg, context={}):
+    def _get_value(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
         for rule in self.browse(cr, uid, ids, context):
             if not rule.groups:
@@ -81,10 +84,15 @@ class ir_rule(osv.osv):
     ]
 
     def domain_create(self, cr, uid, rule_ids):
-        dom = ['&'] * (len(rule_ids)-1)
+        count = 0
+        dom = []
         for rule in self.browse(cr, uid, rule_ids):
-            dom += rule.domain
-        return dom
+            if rule.domain:
+                dom += rule.domain
+                count += 1
+        if count:
+            return ['&'] * (count-1) + dom
+        return []
 
     @tools.cache()
     def _compute_domain(self, cr, uid, model_name, mode="read"):
@@ -110,11 +118,19 @@ class ir_rule(osv.osv):
                     group_rule.setdefault(group.id, []).append(rule.id)
                 if not rule.groups:
                   global_rules.append(rule.id)
-            dom = self.domain_create(cr, uid, global_rules)
-            dom += ['|'] * (len(group_rule)-1)
+            global_domain = self.domain_create(cr, uid, global_rules)
+            count = 0
+            group_domains = []
             for value in group_rule.values():
-                dom += self.domain_create(cr, uid, value)
-            return dom
+                group_domain = self.domain_create(cr, uid, value)
+                if group_domain:
+                    group_domains += group_domain
+                    count += 1
+            if count and global_domain:
+                return ['&'] + global_domain + ['|'] * (count-1) + group_domains
+            if count:
+                return ['|'] * (count-1) + group_domains
+            return global_domain
         return []
 
     def clear_cache(self, cr, uid):
@@ -135,10 +151,14 @@ class ir_rule(osv.osv):
         [clear(model, mode) for model in models for mode in self._MODES]
 
 
-    def domain_get(self, cr, uid, model_name, mode='read', context={}):
+    def domain_get(self, cr, uid, model_name, mode='read', context=None):
         dom = self._compute_domain(cr, uid, model_name, mode=mode)
         if dom:
-            query = self.pool.get(model_name)._where_calc(cr, uid, dom, active_test=False)
+            # _where_calc is called as superuser. This means that rules can
+            # involve objects on which the real uid has no acces rights.
+            # This means also there is no implicit restriction (e.g. an object
+            # references another object the user can't see).
+            query = self.pool.get(model_name)._where_calc(cr, 1, dom, active_test=False)
             return query.where_clause, query.where_clause_params, query.tables
         return [], [], ['"'+self.pool.get(model_name)._table+'"']
 
@@ -155,8 +175,6 @@ class ir_rule(osv.osv):
         return res
 
     def write(self, cr, uid, ids, vals, context=None):
-        if not context:
-            context={}
         res = super(ir_rule, self).write(cr, uid, ids, vals, context=context)
         # Restart the cache on the _compute_domain method
         self._compute_domain.clear_cache(cr.dbname)
