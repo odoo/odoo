@@ -111,15 +111,15 @@ def import_users(sugar_obj, cr, uid, context=None):
     for val in sugar_data:
         user_ids = user_obj.search(cr, uid, [('login', '=', val.get('user_name'))])
         if user_ids: 
-            return str(user_ids[0])
+            val['.id'] = str(user_ids[0])
         else:
             val['password'] = 'sugarcrm' #default password for all user
-            new_department_id = department_obj.create(cr, uid, {'name': val.get('department')})
-            val['context_department_id'] = new_department_id     
-            val['context_lang'] = context.get('lang','en_US')
-            fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_user)
-            #All data has to be imported separatly because they don't have the same field
-            user_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', context=context)
+        new_department_id = department_obj.create(cr, uid, {'name': val.get('department')})
+        val['context_department_id'] = new_department_id     
+        val['context_lang'] = context.get('lang','en_US')
+        fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_user)
+        #All data has to be imported separatly because they don't have the same field
+        user_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', context=context)
 
 def get_lead_status(surgar_obj, cr, uid, sugar_val,context=None):
     if not context:
