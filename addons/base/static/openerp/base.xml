@@ -163,7 +163,9 @@
     </div>
     <t t-raw="frame.render()"/>
     <div style="text-align:right;">
-        <input type="button" value="Save"/>
+        <button type="button" class="form_save">
+            Save
+        </button>
     </div>
 </t>
 <t t-name="Widget">
@@ -247,7 +249,7 @@
     </select>
 </t>
 <t t-name="FieldMany2One">
-    <input type="text" t-att-name="widget.name" t-att-id="widget.element_id" t-att-class="'field_' + widget.type" style="width: 100%; border: 1px solid red;" placeholder="Many 2 One: Please, enter the ID of the object. Thank you !"/>
+    <input type="text" t-att-name="widget.name" t-att-id="widget.element_id" t-att-class="'field_' + widget.type" style="width: 100%;" placeholder="Many 2 One: Please, enter the ID of the object. Thank you !"/>
 </t>
 <t t-name="FieldOne2Many">
     <div style="background: #ccc; padding: 20px">

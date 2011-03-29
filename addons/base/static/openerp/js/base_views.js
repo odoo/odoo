@@ -1230,22 +1230,24 @@ openerp.base.FormView =  openerp.base.Controller.extend({
         this.widgets_counter = 0;
         this.fields = {};
         this.datarecord = {};
+        this.ready = false;
     },
     start: function() {
         //this.log('Starting FormView '+this.model+this.view_id)
         this.rpc("/base/formview/load", {"model": this.model, "view_id": this.view_id}, this.on_loaded);
     },
     on_loaded: function(data) {
+        var self = this;
         this.fields_view = data.fields_view;
         //this.log(this.fields_view);
 
         var frame = new openerp.base.WidgetFrame(this, this.fields_view.arch);
 
         this.$element.html(QWeb.render("FormView", { "frame": frame, "view": this }));
-        for (var i in this.widgets) {
-            this.widgets[i].start();
-        }
-        // bind to all wdigets that have onchange ??
+        _.each(this.widgets, function(w) {
+            w.start();
+        });
+        this.$element.find('button.form_save').click(this.do_save);
 
         this.dataset.on_active_id.add(this.on_record_loaded);
     },
@@ -1254,12 +1256,49 @@ openerp.base.FormView =  openerp.base.Controller.extend({
         for (var f in this.fields) {
             this.fields[f].set_value(this.datarecord.values[f]);
         }
-        this.process_widgets_attrs();
+        this.on_form_changed();
+        this.ready = true;
     },
-    process_widgets_attrs: function() {
+    on_form_changed: function(widget) {
         for (var w in this.widgets) {
-            this.widgets[w].process_attrs();
+            w = this.widgets[w];
+            w.process_attrs();
+            w.update_dom();
         }
+        if (widget) {
+            // TODO: check if  and trigger
+            // if (onchange for this field) {
+            //      this.ready = false;
+            //      rpc - process.callback ( this.ready = true; )
+            // }
+        }
+    },
+    do_save: function() {
+        if (!this.ready) {
+            return false;
+        }
+        var invalid = false;
+        var values = {};
+        for (var f in this.fields) {
+            f = this.fields[f];
+            if (f.invalid) {
+                invalid = true;
+            } else {
+                values[f.name] = f.value;
+            }
+        }
+        if (invalid) {
+            this.on_invalid();
+        } else {
+            console.log("Save form", values);
+            // TODO: save values via datarecord
+            // rpc - save.callbacl on_saved
+        }
+    },
+    on_invalid: function() {
+    },
+    on_saved: function() {
+        // Check response for exceptions, display error
     }
 });
 
@@ -1348,6 +1387,7 @@ openerp.base.Widget = openerp.base.Controller.extend({
     init: function(view, node) {
         this.view = view;
         this.node = node;
+        this.attrs = eval('(' + (this.node.attrs.attrs || '{}') + ')');
         this.type = this.type || node.tag;
         this.element_name = this.element_name || this.type;
         this.element_id = [this.view.element_id, this.element_name, this.view.widgets_counter++].join("_");
@@ -1367,12 +1407,8 @@ openerp.base.Widget = openerp.base.Controller.extend({
         this.$element = $('#' + this.element_id);
     },
     process_attrs: function() {
-        if (this.node.attrs.attrs) {
-            var attrs = eval('(' + this.node.attrs.attrs + ')');
-            for (var a in attrs) {
-                this[a] = this.eval_attrs(attrs[a]);
-            }
-            this.attrs_change();
+        for (var a in this.attrs) {
+            this[a] = this.eval_attrs(this.attrs[a]);
         }
     },
     eval_attrs: function(expr) {
@@ -1434,7 +1470,7 @@ openerp.base.Widget = openerp.base.Controller.extend({
         }
         return _.indexOf(stack, false) == -1;
     },
-    attrs_change: function() {
+    update_dom: function() {
         this.$element.toggle(!this.invisible);
     },
     render: function() {
@@ -1567,8 +1603,8 @@ openerp.base.WidgetLabel = openerp.base.Widget.extend({
 
 openerp.base.Field = openerp.base.Widget.extend({
     init: function(view, node) {
-        this.value = undefined;
         this.name = node.attrs.name;
+        this.value = undefined;
         view.fields[this.name] = this;
         this.type = node.attrs.widget || view.fields_view.fields[node.attrs.name].type;
         this.element_name = "field_" + this.name + "_" + this.type;
@@ -1585,16 +1621,21 @@ openerp.base.Field = openerp.base.Widget.extend({
         this.nolabel = (node.attrs.nolabel == '1');
         this.readonly = (node.attrs.readonly == '1');
         this.required = (node.attrs.required == '1');
+        this.invalid = false;
     },
     set_value: function(value) {
         this.value = value;
     },
-    attrs_change: function() {
+    get_value: function(value) {
+        return value;
+    },
+    update_dom: function() {
         this._super.apply(this, arguments);
-        this.$element.find('input, select, textarea').attr({
-            'disabled' : this.readonly,
-            'required' : this.required
-        });
+        this.$element.toggleClass('disabled', this.readonly);
+        this.$element.toggleClass('required', this.required);
+    },
+    on_ui_change: function() {
+        this.view.on_form_changed(this);
     }
 });
 
@@ -1605,25 +1646,27 @@ openerp.base.FieldChar = openerp.base.Field.extend({
     },
     start: function() {
         this._super.apply(this, arguments);
-        // this.$element.bind('change',)  ... blur, focus, ...
+        this.$element.find('input').change(this.on_ui_change);
     },
     set_value: function(value) {
         this._super.apply(this, arguments);
         if (value != null && value !== false) {
-            this.$element.find('input').val(this.to_string(value));
+            this.$element.find('input').val(value);
         }
     },
     get_value: function() {
-        return this.from_string(this.$element.find('input').val());
     },
-    to_string: function(value) {
-        return value.toString();
+    update_dom: function() {
+        this._super.apply(this, arguments);
+        this.$element.find('input').attr({
+            'disabled' : this.readonly,
+            'required' : this.required
+        });
     },
-    from_string: function(value) {
-        return value.toString();
-    },
-    on_change: function() {
-        //this.view.update_field(this.name,value);
+    on_ui_change: function() {
+        this.value = this.$element.find('input').val();
+        this.invalid = this.required && this.value == "";
+        this._super.apply(this, arguments);
     }
 });
 
@@ -1633,9 +1676,34 @@ openerp.base.FieldEmail = openerp.base.FieldChar.extend({
 openerp.base.FieldUrl = openerp.base.FieldChar.extend({
 });
 
-openerp.base.FieldFloat = openerp.base.FieldChar.extend({
-    to_string: function(value) {
-        return value.toFixed(2);
+openerp.base.FieldFloat = openerp.base.Field.extend({
+    init: function(view, node) {
+        this._super(view, node);
+        this.template = "FieldChar";
+    },
+    start: function() {
+        this._super.apply(this, arguments);
+        this.$element.find('input').change(this.on_ui_change);
+    },
+    set_value: function(value) {
+        this._super.apply(this, arguments);
+        if (value != null && value !== false) {
+            this.$element.find('input').val(value.toFixed(2));
+        }
+    },
+    get_value: function() {
+    },
+    update_dom: function() {
+        this._super.apply(this, arguments);
+        this.$element.find('input').attr({
+            'disabled' : this.readonly,
+            'required' : this.required
+        });
+    },
+    on_ui_change: function() {
+        this.value = this.$element.find('input').val();
+        this.invalid = this.required && this.value == "";
+        this._super.apply(this, arguments);
     }
 });
 
