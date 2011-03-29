@@ -147,9 +147,9 @@ class graph(object):
         if node not in self.head_nodes:
             self.head_nodes.append(node)
 
-        for edge in rest_edges:
-            if edge[0]==node:
-                self.head_component(edge[1],rest_edges)
+            for edge in rest_edges:
+                if edge[0]==node:
+                    self.head_component(edge[1],rest_edges)
 
 
     def process_ranking(self, node, level=0):
@@ -709,7 +709,7 @@ class graph(object):
         for l in self.levels:
             result += 'PosY: ' + str(l) + '\n'
             for node in self.levels[l]:
-                result += '\tPosX: '+ str(self.result[node]['y']) + '  - Node:' + node + "\n"
+                result += '\tPosX: '+ str(self.result[node]['y']) + '  - Node:' + str(node) + "\n"
         return result
 
 
@@ -772,7 +772,7 @@ if __name__=='__main__':
     for name,node in node_res.items():
 
         draw.arc( (int(node['y']-radius), int(node['x']-radius),int(node['y']+radius), int(node['x']+radius) ), 0, 360, (128,128,128))
-        draw.text( (int(node['y']),  int(node['x'])), name,  (128,128,128))
+        draw.text( (int(node['y']),  int(node['x'])), str(name),  (128,128,128))
 
 
     for t in transitions:
