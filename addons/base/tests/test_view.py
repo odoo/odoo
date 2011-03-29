@@ -82,7 +82,7 @@ class ViewTest(unittest2.TestCase):
             e.get('context'),
             {'some_prop': 3})
 
-    def test_convert_complex_domain(self):
+    def test_convert_complex_context(self):
         e = xml.etree.ElementTree.Element(
             'field',
             context="{'account_id.type': ['receivable','payable'],"
@@ -100,9 +100,9 @@ class ViewTest(unittest2.TestCase):
              'state': 'valid'}
         )
 
-    def test_retrieve_nonliteral_domain(self):
+    def test_retrieve_nonliteral_context(self):
         session = mock.Mock(spec=openerpweb.openerpweb.OpenERPSession)
-        session.domains_store = {}
+        session.contexts_store = {}
         context_string = ("{'month': (datetime.date.today() - "
                          "datetime.timedelta(365/12)).strftime('%%m')}")
         e = xml.etree.ElementTree.Element(
