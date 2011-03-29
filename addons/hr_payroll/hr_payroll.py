@@ -337,10 +337,10 @@ class contrib_register_line(osv.osv):
     _description = 'Contribution Register Line'
 
     def _total(self, cr, uid, ids, field_names, arg, context=None):
-        res={}
+        res = {}
         for line in self.browse(cr, uid, ids, context=context):
             res[line.id] = line.emp_deduction + line.comp_deduction
-            return res
+        return res
 
     _columns = {
         'name':fields.char('Name', size=256, required=True, readonly=False),
@@ -583,10 +583,10 @@ class hr_payslip(osv.osv):
     def copy(self, cr, uid, id, default=None, context=None):
         company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
         default = {
-            'line_ids': False,
-            'move_ids': False,
-            'move_line_ids': False,
-            'move_payment_ids': False,
+            'line_ids': [],
+            'move_ids': [],
+            'move_line_ids': [],
+            'move_payment_ids': [],
             'company_id': company_id,
             'period_id': False,
             'basic_before_leaves': 0,
