@@ -831,14 +831,14 @@ openerp.base.search.ExtendedSearchGroup = openerp.base.search.Widget.extend({
 extended_filters_types = {
 	char: {
 		operators: [
-		            {value: "=", text: "="},
-		            {value: "!=", text: "!="},
-		            {value: "<", text: "<"},
-		            {value: "<=", text: "<="},
-		            {value: ">", text: ">"},
-		            {value: ">=", text: ">="},
-		            {value: "like", text: "contains"},
-		            {value: "not like", text: "does not contain"},
+		            {value: "ilike", text: "contains"},
+		            {value: "not like", text: "doesn't contain"},
+		            {value: "=", text: "is equal to"},
+		            {value: "!=", text: "is not equal to"},
+		            {value: ">", text: "greater than"},
+		            {value: "<", text: "less than"},
+		            {value: ">=", text: "greater or equal than"},
+		            {value: "<=", text: "less or equal than"},
 		],
 		build_component: function(view) {
 			return new openerp.base.search.ExtendedSearchProposition.Char(view);
@@ -1244,6 +1244,94 @@ openerp.base.ListView = openerp.base.Controller.extend({
 });
 
 openerp.base.TreeView = openerp.base.Controller.extend({
+});
+
+/**
+ * Base class for widgets. Handle rendering (based on a QWeb template), identifier
+ * generation, parenting and destruction of the widget.
+ */
+openerp.base.search.BaseWidget = openerp.base.Controller.extend({
+	/**
+	 * The name of the QWeb template that will be used for rendering. Must be redifined
+	 * in subclasses or the render() method can not be used.
+	 * 
+	 * @type string
+	 */
+    template: null,
+    /**
+     * The prefix used to generate an id automatically. Should be redifined in subclasses.
+     * If it is not defined, the make_id() method must be explicitly called.
+     * 
+     * @type string
+     */
+    identifier_prefix: null,
+    /**
+     * Contructor.
+     * 
+     * @params {openerp.base.search.BaseWidget} parent The parent widget.
+     */
+    init: function (parent) {
+		this.children = [];
+        this.parent = parent;
+        if(parent != null) {
+        	parent.children.push(this);
+        }
+        if(this.identifier_prefix != null) {
+        	this.make_id(this.identifier_prefix);
+        }
+    },
+    /**
+     * Sets and returns a globally unique identifier for the widget.
+     *
+     * If a prefix is appended, the identifier will be appended to it.
+     *
+     * @params sections prefix sections, empty/falsy sections will be removed
+     */
+    make_id: function () {
+        this.element_id = _.uniqueId(_.toArray(arguments).join('_'));
+        return this.element_id;
+    },
+    /**
+     * "Starts" the widgets. Called at the end of the rendering, this allows
+     * to get a jQuery object referring to the DOM ($element attribute).
+     */
+    start: function () {
+        this._super();
+        if (this.element_id) {
+            this.$element = $(document.getElementById(
+                this.element_id));
+        }
+    },
+    /**
+     * "Stops" the widgets. Called when the view destroys itself, this
+     * lets the widgets clean up after themselves.
+     */
+    stop: function () {
+    	var tmp_children = this.children;
+    	this.children = [];
+    	_.each(tmp_children, function(x) {
+    		x.stop();
+    	});
+    	if(this.$element != null) {
+    		this.$element.remove();
+    	}
+    	if(this.parent != null) {
+    		var _this = this;
+    		parent.children = _.reject(parent.children, function(x) { return x === _this;});
+            this.parent = null;
+    	}
+        this._super();
+    },
+    /**
+     * Render the widget. This.template must be defined.
+     * The content of the current object is passed as context to the template.
+     * 
+     * @param {object} additional Additional context arguments to pass to the template.
+     */
+    render: function (additional) {
+        return QWeb.render(this.template, _.extend({}, this,
+        		additional != null ? additional : {}));
+    }
 });
 
 openerp.base.Widget = openerp.base.Controller.extend({
