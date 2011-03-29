@@ -165,11 +165,18 @@ Leads Could not convert into Opportunity"))
                 stage_ids = self.pool.get('crm.case.stage').search(cr, uid, [('type','=','opportunity'),('sequence','>=',1)])
 
             data = self.browse(cr, uid, ids[0], context=context)
-            partner_ids = []
-            if data.action == 'create':
-                partner_ids = self._create_partner(cr, uid, ids, context=context)
 
-            partner_id = partner_ids and partner_ids[0] or data.partner_id.id
+
+            if data.action == 'create':
+                partner_ids = []
+                partner_ids = self._create_partner(cr, uid, ids, context=context)
+                partner_id = partner_ids and partner_ids[0]
+            elif data.action == 'exist':
+                partner_id = data.partner_id and data.partner_id.id
+            else:
+                partner_id = False
+
+
             self._convert(cr, uid, ids, lead, partner_id, stage_ids, context=context)
             #If we convert in mass, don't merge if there is no other opportunity but no warning
             if data.name == 'merge' and (len(data.opportunity_ids) > 1 or not context.get('mass_convert') ):
