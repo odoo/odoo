@@ -182,7 +182,9 @@ var QWeb = {
                     g_att[o[0]] = new String(o[1]);
                 } else if (o.constructor == Object) {
                     for (var i in o) {
-                        g_att[i] = new String(o[i]);
+                    	if(o[i]!=null) {
+                    		g_att[i] = new String(o[i]);
+                    	}
                     }
                 }
             }

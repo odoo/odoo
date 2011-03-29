@@ -341,15 +341,67 @@
         <t t-if="filters.length" t-raw="filters.render(defaults)"/>
     </div>
 </t>
-<t t-name="SearchView.group">
-    <div t-att-class="'searchview_group ' + (attrs.expand == '0' ? 'folded' : 'expanded')"
+<t t-name="SearchView.util.expand">
+	<div t-att-class="'searchview_group ' + (expand == '0' ? 'folded' : 'expanded')"
          t-att-id="element_id">
-        <a t-if="attrs.string" class="searchview_group_string" href="#">
-            <t t-esc="attrs.string"/>
+        <a t-if="label" class="searchview_group_string" href="#">
+            <t t-esc="label"/>
         </a>
         <div class="searchview_group_content">
-            <t t-call="SearchView.render_lines"/>
+            <t t-raw="content"/>
         </div>
     </div>
+</t>
+<t t-name="SearchView.group">
+	<t t-call="SearchView.util.expand">
+		<t t-set="expand" t-value="attrs.expand"/>
+		<t t-set="label" t-value="attrs.string"/>
+		<t t-set="content">
+			<t t-call="SearchView.render_lines"/>
+		</t>
+	</t>
+</t>
+<t t-name="SearchView.extended_search">
+	<t t-call="SearchView.util.expand">
+		<t t-set="expand" t-value="false"/>
+		<t t-set="label" t-value="'Extended Filters'"/>
+		<t t-set="content">
+			<div class="searchview_extended_groups_list"></div>
+			<button class="searchview_extended_add_group">Add group of conditions</button>
+		</t>
+	</t>
+</t>
+<t t-name="SearchView.extended_search.group">
+	<div t-att-id="element_id">
+		<select class="searchview_extended_group_choice">
+			<option value="all">All</option>
+			<option value="any">Any</option>
+			<option value="none">None</option>
+		</select>
+		<div class="searchview_extended_propositions_list">
+		</div>
+		<button class="searchview_extended_add_proposition">Add condition</button>
+		<button class="searchview_extended_delete_group">Delete this group</button>
+	</div>
+</t>
+<t t-name="SearchView.extended_search.proposition">
+	<div t-att-id="element_id">
+		<select class="searchview_extended_prop_field">
+			<t t-foreach="attrs.fields" t-as="field">
+				<option t-att="{'selected': field === attrs.selected ? 'selected' : null}"
+						t-att-value="field.name">
+					<t t-esc="field.obj.string"/>
+				</option>
+			</t>
+		</select>
+		<select class="searchview_extended_prop_op">
+		</select>
+		<span class="searchview_extended_prop_value">
+		</span>
+		<button class="searchview_extended_delete_prop">Delete this condition</button>
+	</div>
+</t>
+<t t-name="SearchView.extended_search.proposition.char">
+	<input t-att-id="element_id"></input>
 </t>
 </templates>
