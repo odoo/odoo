@@ -1610,6 +1610,19 @@
             <field name="smtp_host">localhost</field>
             <field eval="25" name="smtp_port"/>
             <field eval="10" name="priority"/>
-	</record>
+	    </record>
+
+        <record id="MUR" model="res.currency">
+            <field name="name">MUR</field>
+            <field name="symbol">Rs</field>
+            <field name="rounding">0.01</field>
+            <field name="accuracy">4</field>
+            <field name="company_id" ref="main_company"/>
+        </record>
+        <record id="rateMUR" model="res.currency.rate">
+            <field name="rate">40.28</field>
+            <field name="currency_id" ref="MUR"/>
+            <field eval="time.strftime('%Y-01-01')" name="name"/>
+        </record>
     </data>
 </openerp>
