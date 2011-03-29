@@ -20,6 +20,7 @@
 ##############################################################################
 
 from osv import osv, fields
+from tools.translate import _
 import random
 
 class portal(osv.osv):
@@ -29,16 +30,16 @@ class portal(osv.osv):
         'name': fields.char(string='Name', size=64, required=True),
         'menu_id': fields.many2one('ir.actions.actions', required=True,
             string='Menu Action',
-            help="What replaces the standard menu for the portal's users"),
+            help=_("What replaces the standard menu for the portal's users")),
         'user_ids': fields.one2many('res.users', 'portal_id',
             string='Users',
-            help='The set of users associated to this portal'),
+            help=_('The set of users associated to this portal')),
         'group_ids': fields.many2many('res.groups', 'res_portals_groups_rel', 'pid', 'gid',
             string='Groups',
-            help='Users of this portal automatically belong to those groups'),
+            help=_('Users of this portal automatically belong to those groups')),
     }
     _sql_constraints = [
-        ('unique_name', 'UNIQUE(name)', 'Portals must have different names.')
+        ('unique_name', 'UNIQUE(name)', _('Portals must have different names.'))
     ]
     
     def copy(self, cr, uid, id, defaults, context=None):
@@ -173,7 +174,7 @@ class users(osv.osv):
     _inherit = 'res.users'
     _columns = {
         'portal_id': fields.many2one('res.portal', string='Portal',
-            help='If given, the portal defines customized menu and access rules'),
+            help=_('If given, the portal defines customized menu and access rules')),
     }
     
     def default_get(self, cr, uid, fields, context=None):
