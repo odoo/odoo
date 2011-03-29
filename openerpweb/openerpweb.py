@@ -1,6 +1,9 @@
 #!/usr/bin/python
+import datetime
 import functools
 import optparse
+import time
+import dateutil.relativedelta
 import os
 import sys
 import tempfile
@@ -12,6 +15,7 @@ import cherrypy
 import cherrypy.lib.static
 import simplejson
 
+import nonliterals
 import xmlrpctimeout
 
 #----------------------------------------------------------
@@ -39,6 +43,22 @@ class OpenERPModel(object):
 
 
 class OpenERPSession(object):
+    """
+    An OpenERP RPC session, a given user can own multiple such sessions
+    in a web session.
+
+    .. attribute:: context
+    
+        The session context, a ``dict``. Can be reloaded by calling
+        :meth:`openerpweb.openerpweb.OpenERPSession.get_context`
+
+    .. attribute:: domains_store
+
+        A ``dict`` matching domain keys to evaluable (but non-literal) domains.
+
+        Used to store references to non-literal domains which need to be
+        round-tripped to the client browser.
+    """
     def __init__(self, server='127.0.0.1', port=8069,
                  model_factory=OpenERPModel):
         self._server = server
@@ -48,6 +68,10 @@ class OpenERPSession(object):
         self._login = False
         self._password = False
         self.model_factory = model_factory
+
+        self.context = {}
+        self.contexts_store = {}
+        self.domains_store = {}
 
     def proxy(self, service):
         s = xmlrpctimeout.TimeoutServerProxy('http://%s:%s/xmlrpc/%s' % (self._server, self._port, service), timeout=5)
@@ -62,6 +86,9 @@ class OpenERPSession(object):
         uid = self.proxy('common').login(db, login, password)
         self.bind(db, uid, password)
         self._login = login
+
+        if uid: self.get_context()
+
         return uid
 
     def execute(self, model, func, *l, **d):
@@ -71,7 +98,158 @@ class OpenERPSession(object):
         return r
 
     def model(self, model):
+        """ Get an RPC proxy for the object ``model``, bound to this session.
+
+        :param model: an OpenERP model name
+        :type model: str
+        :rtype: :class:`openerpweb.openerpweb.OpenERPModel`
+        """
         return self.model_factory(self, model)
+
+    def get_context(self):
+        """ Re-initializes the current user's session context (based on
+        his preferences) by calling res.users.get_context() with the old
+        context
+
+        :returns: the new context
+        """
+        assert self._uid, "The user needs to be logged-in to initialize his context"
+        self.context = self.model('res.users').context_get(self.context)
+        return self.context
+
+    @property
+    def base_eval_context(self):
+        """ Default evaluation context for the session.
+
+        Used to evaluate contexts and domains.
+        """
+        base = dict(
+            uid=self._uid,
+            current_date=datetime.date.today().strftime('%Y-%m-%d'),
+            time=time,
+            datetime=datetime,
+            relativedelta=dateutil.relativedelta.relativedelta
+        )
+        base.update(self.context)
+        return base
+
+    def evaluation_context(self, context=None):
+        """ Returns the session's evaluation context, augmented with the
+        provided context if any.
+
+        :param dict context: to add merge in the session's base eval context
+        :returns: the augmented context
+        :rtype: dict
+        """
+        d = {}
+        d.update(self.base_eval_context)
+        if context:
+            d.update(context)
+        return d
+
+    def eval_context(self, context_to_eval, context=None):
+        """ Evaluates the provided context_to_eval in the context (haha) of
+        the context.
+
+        :param context_to_eval: a context to evaluate. Must be a dict or a
+                                non-literal context. If it's a dict, will be
+                                returned as-is
+        :type context_to_eval: openerpweb.nonliterals.Context
+        :returns: the evaluated context
+        :rtype: dict
+
+        :raises: ``TypeError`` if ``context_to_eval`` is neither a dict nor
+                 a Context
+        """
+        if not isinstance(context_to_eval, (dict, nonliterals.Domain)):
+            raise TypeError("Context %r is not a dict or a nonliteral Context",
+                             context_to_eval)
+
+        if isinstance(context_to_eval, dict):
+            return context_to_eval
+
+        ctx = context or {}
+        ctx['context'] = ctx
+
+        # if the domain was unpacked from JSON, it needs the current
+        # OpenERPSession for its data retrieval
+        context_to_eval.session = self
+        return context_to_eval.evaluate(ctx)
+
+    def eval_contexts(self, contexts, context=None):
+        """ Evaluates a sequence of contexts to build a single final result
+
+        :param list contexts: a list of Context or dict contexts
+        :param dict context: a base context, if needed
+        :returns: the final combination of all provided contexts
+        :rtype: dict
+        """
+        # This is the context we use to evaluate stuff
+        current_context = dict(
+            self.base_eval_context,
+            **(context or {}))
+        # this is our result, it should not contain the values
+        # of the base context above
+        final_context = {}
+        for ctx in contexts:
+            # evaluate the current context in the sequence, merge it into
+            # the result
+            final_context.update(
+                self.eval_context(
+                    ctx, current_context))
+            # update the current evaluation context so that future
+            # evaluations can use the results we just gathered
+            current_context.update(final_context)
+        return final_context
+
+    def eval_domain(self, domain, context=None):
+        """ Evaluates the provided domain using the provided context
+        (merged with the session's evaluation context)
+
+        :param domain: an OpenERP domain as a list or as a
+                       :class:`openerpweb.nonliterals.Domain` instance
+
+                       In the second case, it will be evaluated and returned.
+        :type domain: openerpweb.nonliterals.Domain
+        :param dict context: the context to use in the evaluation, if any.
+        :returns: the evaluated domain
+        :rtype: list
+
+        :raises: ``TypeError`` if ``domain`` is neither a list nor a Domain
+        """
+        if not isinstance(domain, (list, nonliterals.Domain)):
+            raise TypeError("Domain %r is not a list or a nonliteral Domain",
+                             domain)
+
+        if isinstance(domain, list):
+            return domain
+
+        ctx = context or {}
+        ctx['context'] = ctx
+
+        # if the domain was unpacked from JSON, it needs the current
+        # OpenERPSession for its data retrieval
+        domain.session = self
+        return domain.evaluate(ctx)
+
+    def eval_domains(self, domains, context=None):
+        """ Evaluates and concatenates the provided domains using the
+        provided context for all of them.
+
+        Returns the final, concatenated result.
+
+        :param list domains: a list of Domain or list domains
+        :param dict context: the context in which the domains
+                             should be evaluated (if evaluations need
+                             to happen)
+        :returns: the final combination of all domains in the sequence
+        :rtype: list
+        """
+        final_domain = []
+        for domain in domains:
+            final_domain.extend(
+                self.eval_domain(domain, context))
+        return final_domain
 
 #----------------------------------------------------------
 # OpenERP Web RequestHandler
@@ -80,8 +258,9 @@ class OpenERPSession(object):
 class JsonRequest(object):
     """ JSON-RPC2 over HTTP POST using non standard POST encoding.
     Difference with the standard:
-       - the json string is passed as a form parameter named "request"
-       - method is currently ignored
+
+    * the json string is passed as a form parameter named "request"
+    * method is currently ignored
 
     Sucessful request:
     --> {"jsonrpc": "2.0", "method": "call", "params": {"session_id": "SID", "context": {}, "arg1": "val1" }, "id": null}
@@ -116,9 +295,11 @@ class JsonRequest(object):
         :rtype: bytes
         '''
         if requestf:
-            request = simplejson.load(requestf)
+            request = simplejson.load(
+                requestf, object_hook=nonliterals.non_literal_decoder)
         else:
-            request = simplejson.loads(request)
+            request = simplejson.loads(
+                request, object_hook=nonliterals.non_literal_decoder)
         try:
             print "--> %s.%s %s" % (controller.__class__.__name__, method.__name__, request)
             error = None
@@ -161,7 +342,8 @@ class JsonRequest(object):
         print "<--", response
         print
 
-        content = simplejson.dumps(response)
+        content = simplejson.dumps(
+            response, cls=nonliterals.NonLiteralEncoder)
         cherrypy.response.headers['Content-Type'] = 'application/json'
         cherrypy.response.headers['Content-Length'] = len(content)
         return content

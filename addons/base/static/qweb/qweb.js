@@ -400,7 +400,7 @@ var QWeb = {
         if (e = this.templates[name]) {
             return this.render_node(e, v);
         }
-        return "template " + name + " not found";
+        throw new Error("template " + name + " not found");
     }
 };
 

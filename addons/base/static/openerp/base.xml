@@ -272,86 +272,84 @@
     </button>
 </t>
 <t t-name="SearchView">
-    <h3 class="title"><t t-esc="fields_view.arch.attrs['string']"/></h3>
-    <table border="0" cellspacing="0" cellpadding="0">
-    <tr>
-        <t t-call="SearchView.node">
-            <t t-set="node" t-value="fields_view.arch"/>
-            <t t-set="previous_node_type"></t>
-        </t>
-    </tr>
+    <h3 class="title"><t t-esc="view.attrs['string']"/></h3>
+
+    <form>
+        <t t-call="SearchView.render_lines"/>
+
+        <div style="text-align:right;">
+            <input type="submit" value="Search"/>
+            <input type="reset" value="Clear"/>
+        </div>
+    </form>
+</t>
+<t t-name="SearchView.render_lines">
+    <table border="0" cellspacing="0" cellpadding="0"
+           t-foreach="lines" t-as="line">
+        <tr>
+            <td t-foreach="line" t-as="widget">
+                <t t-raw="widget.render(defaults)"/>
+            </td>
+        </tr>
     </table>
-    <div style="text-align:right;">
-        <input id="search" type="button" value="Search"/>
-        <input type="button" value="Clear"/>
+</t>
+<button t-name="SearchView.filter" type="button"
+        t-att-id="element_id"
+        t-att-title="attrs.help"
+        t-att-class="classes.join(' ')">
+    <img t-if="attrs.icon" t-att-src="'/base/static/openerp/img/icons/' + attrs.icon + '.png'" width="16" height="16"/>
+    <br t-if="attrs.icon and attrs.string"/>
+    <t t-esc="attrs.string"/>
+</button>
+<span t-name="SearchView.filters" class="filter_label_group"
+    ><t t-foreach="filters" t-as="filter"
+        ><t t-raw="filter.render(defaults)"/></t
+></span>
+<t t-name="SearchView.field">
+    <label style="display: block" t-att-title="attrs.help"
+           t-att-for="element_id">
+        <t t-esc="attrs.string || attrs.name"/>
+        <span t-if="attrs.help">(?)</span>
+    </label>
+    <div style="white-space: nowrap;">
+        <input type="text" t-att-name="attrs.name"
+               t-att-id="element_id"
+               t-att-value="defaults[attrs.name] || ''"/>
+        <t t-if="filters.length" t-raw="filters.render(defaults)"/>
     </div>
 </t>
-<t t-name="SearchView.node" t-trim="inner">
-    <t t-if="node.tag == 'filter'">
-        <t t-if="previous_node_type != 'filter'">
-            &lt;td nowrap="true" valign="bottom" class="filter_label_group"&gt;
-        </t>
-            <button type="button" t-att-title="node.attrs.help" t-att-class="node.attrs.string ? 'filter_label' : 'filter_icon'">
-                <img t-if="node.attrs.icon" t-att-src="'/base/static/openerp/img/icons/' + node.attrs.icon + '.png'" width="16" height="16"/>
-                <br t-if="node.attrs.icon and node.attrs.string"/>
-                <t t-esc="node.attrs.string"/>
-            </button>
-        <t t-if="next_node_type != 'filter'">
-            &lt;/td&gt;
-        </t>
-    </t>
-    <t t-if="node.tag == 'separator'">
-        <!-- nothing in search view ? -->
-    </t>
-    <t t-if="node.tag == 'newline'">
-        <!-- TODO: check qweb support for cdata -->
-        &lt;/tr&gt;
-        &lt;/table&gt;
-        &lt;table border="0" cellspacing="0" cellpadding="0"&gt;
-        &lt;tr&gt;
-    </t>
-    <t t-if="node.tag == 'field'">
-        <t t-set="orm" t-value="fields_view.fields[node.attrs.name] || {}"/>
-        <td>
-            <label style="display: block" t-att-title="orm.help || node.attrs.help">
-                <t t-esc="orm.string || node.attrs.string || node.attrs.name"/>
-                <span t-if="orm.help || node.attrs.help">(?)</span>
-            </label>
-            <div>
-                <input type="text" t-att-name="node.attrs.name"/>
-            </div>
-        </td>
-    </t>
-    <t t-if="node.tag == 'group'">
-        <!-- if group is called without a <newline/> before, the table should be closed.
-            I think we'll need preprocessing, all those escaped tables are too ugly -->
-        <td>
-            <div t-att-class="'searchview_group ' + (node.attrs.expand == '0' ? 'folded' : 'expanded')">
-                <a class="searchview_group_string" href="#" onclick="$(this).parent().toggleClass('folded expanded')"><t t-esc="node.attrs.string"/></a>
-                <div class="searchview_group_content">
-                    <table border="0" cellspacing="0" cellpadding="0">
-                    <tr>
-                        <t t-call="SearchView.recurse"/>
-                    </tr>
-                    </table>
-                </div>
-            </div>
-        </td>
-        &lt;/tr&gt;
-        &lt;/table&gt;
-        &lt;table border="0" cellspacing="0" cellpadding="0"&gt;
-        &lt;tr&gt;
-    </t>
-    <t t-if="node.children and node.tag != 'newline' and node.tag != 'group'">
-        <t t-call="SearchView.recurse"/>
-    </t>
+<t t-name="SearchView.field.selection">
+    <label style="display: block" t-att-title="attrs.help"
+           t-att-for="element_id">
+        <t t-esc="attrs.string || attrs.name"/>
+        <span t-if="attrs.help">(?)</span>
+    </label>
+    <div style="white-space: nowrap;">
+        <select t-att-name="attrs.name" t-att-id="element_id">
+            <option/>
+            <t t-foreach="attrs.selection" t-as="option">
+                <t t-set="selected" t-value="defaults[attrs.name] === option[0]"/>
+                <option t-if="selected"
+                        t-att-value="option[0]" selected="selected">
+                    <t t-esc="option[1]"/>
+                </option>
+                <option t-if="!selected" t-att-value="option[0]">
+                    <t t-esc="option[1]"/>
+                </option>
+            </t>
+        </select>
+        <t t-if="filters.length" t-raw="filters.render(defaults)"/>
+    </div>
 </t>
-<t t-name="SearchView.recurse" t-trim="inner">
-    <t t-foreach="node.children" t-as="node">
-        <t t-call="SearchView.node">
-            <t t-set="previous_node_type" t-value="node_all[node_index - 1] ? node_all[node_index - 1].tag : ''"/>
-            <t t-set="next_node_type" t-value="node_all[node_index + 1] ? node_all[node_index + 1].tag : ''"/>
-        </t>
-    </t>
+<t t-name="SearchView.group">
+    <div t-att-class="'searchview_group ' + (attrs.expand == '0' ? 'folded' : 'expanded')"
+         t-att-id="element_id">
+        <a t-if="attrs.string" class="searchview_group_string" href="#">
+            <t t-esc="attrs.string"/>
+        </a>
+        <div class="searchview_group_content">
+            <t t-call="SearchView.render_lines"/>
+        </div>
+    </div>
 </t>
 </templates>

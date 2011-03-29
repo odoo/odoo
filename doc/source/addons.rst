@@ -275,6 +275,15 @@ convenient ways to refer to them and their properties.
 
     .. js:attribute:: sort
 
+Python
+++++++
+
+.. autoclass:: openerpweb.openerpweb.OpenERPSession
+    :members:
+
+.. autoclass:: openerpweb.openerpweb.OpenERPModel
+    :members:
+
 * Addons lifecycle (loading, execution, events, ...)
 
   * Python-side
