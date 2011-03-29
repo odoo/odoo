@@ -22,6 +22,7 @@ from osv import fields, osv
 from operator import itemgetter
 import sugar
 import sugarcrm_fields_mapping
+from tools.translate import _
 import pprint
 pp = pprint.PrettyPrinter(indent=4)
 
@@ -90,8 +91,6 @@ def import_partner_address(sugar_obj, cr, uid, context=None):
         val['state_id/.id'] =  state and state[0][0] or False        
         fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_partner_address)
         address_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', context=context)
-        
-
 
 def import_users(sugar_obj, cr, uid, context=None):
     if not context:
@@ -177,56 +176,6 @@ def get_opportunity_status(surgar_obj, cr, uid, sugar_val,context=None):
         stage_id = stage.id
     return stage_id
 
-def get_billing_address(sugar_obj,cr, uid, val, map_partner_address, context=None):
-    fields=[]
-    datas=[]
-    
-    address_obj = sugar_obj.pool.get('res.partner.address')
-    res_country_obj = sugar_obj.pool.get('res.country')
-    str = val.get('billing_address_country')[0:2]
-    map_partner_address.update({
-        'street': 'billing_address_street',
-        'zip': 'billing_address_postalcode',
-        'city': 'billing_address_city',
-        'country_id': 'country_id',
-        'type': 'type'
-            })
-    val['type'] = 'invoice'
-    country = get_all_countries(sugar_obj,cr, uid, val.get('billing_address_country'), context)
-    state = get_all_states(sugar_obj, cr, uid, val.get('billing_address_state'), context)
-    #Need to Fix bcz code create problem.
-    val['country_id'] =  country and country[0][0] or res_country_obj.create(cr, uid, {'name': val.get('billing_address_country'), 'code': str}),
-    val['state_id'] =  state and state[0][0] or  False,           
-    fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_partner_address)
-    dict_val = dict(zip(fields,datas))
-    new_address_id = address_obj.create(cr,uid, dict_val)
-    
-    return new_address_id
-
-def get_shipping_address(sugar_obj,cr, uid, val, map_partner_address, context=None):
-    fields=[]
-    datas=[]
-    str = ''
-    address_obj = sugar_obj.pool.get('res.partner.address')
-    res_country_obj = sugar_obj.pool.get('res.country')
-    str = val.get('shipping_address_country')[0:2]
-    map_partner_address.update({
-        'street': 'shipping_address_street',
-        'zip': 'shipping_address_postalcode',
-        'city': 'shipping_address_city',
-         'country_id': 'country_id',
-         'type': 'type'
-        })
-    val['type'] = 'delivery'
-    country = get_all_countries(sugar_obj, cr, uid, val.get('shipping_address_country'), context)
-    state = get_all_states(sugar_obj, cr, uid, val.get('shipping_address_state'), context)
-    val['country_id'] =  country and country[0][0] or res_country_obj.create(cr, uid, {'name': val.get('shipping_address_country'), 'code': str}),
-    val['state_id'] =  state and state[0][0] or  False,
-    fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_partner_address)
-    dict_val = dict(zip(fields,datas))
-    new_address_id = address_obj.create(cr,uid, dict_val)
-    return new_address_id
-
 def get_user_address(sugar_obj, cr, uid, val, context=None):
     address_obj = sugar_obj.pool.get('res.partner.address')
     
@@ -249,13 +198,40 @@ def get_user_address(sugar_obj, cr, uid, val, context=None):
         new_address_id = address_obj.create(cr,uid, dict_val)
         return new_address_id
     
+def get_address_type(sugar_obj, cr, uid, val, map_partner_address, type, context=None):
+        address_obj = sugar_obj.pool.get('res.partner.address')
+        res_country_obj = sugar_obj.pool.get('res.country')
+        new_address_id = False
+        if type == 'invoice':
+            type_address = 'billing'
+        else:
+            type_address = 'shipping'     
+    
+        map_partner_address.update({
+            'street': type_address + '_address_street',
+            'zip': type_address +'_address_postalcode',
+            'city': type_address +'_address_city',
+             'country_id': 'country_id',
+             'type': 'type',
+            })
+        val['type'] = type
+        str = val.get(type_address +'_address_country')[0:2]
+        country = get_all_countries(sugar_obj, cr, uid, val.get(type_address +'_address_country'), context)
+        state = get_all_states(sugar_obj, cr, uid, val.get(type_address +'_address_state'), context)
+        val['country_id'] =  country and country[0][0] or res_country_obj.create(cr, uid, {'name': val.get(type_address +'_address_country'), 'code': str}),
+        val['state_id'] =  state and state[0][0] or  False,
+        fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_partner_address)
+        #Convert To list into Dictionary(Key, val). value pair.
+        dict_val = dict(zip(fields,datas))
+        new_address_id = address_obj.create(cr,uid, dict_val)
+        return new_address_id
+    
 def get_address(sugar_obj, cr, uid, val, context=None):
     map_partner_address={}
     address_id=[]
     fields=[]
     datas=[]
     address_obj = sugar_obj.pool.get('res.partner.address')
-    model_obj = sugar_obj.pool.get('ir.model.data')
     address_ids = address_obj.search(cr, uid, [('name', '=',val.get('name')), ('type', 'in', ('invoice', 'delivery')), ('street', '=', val.get('billing_address_street'))])
     if address_ids:
         return address_ids 
@@ -269,8 +245,11 @@ def get_address(sugar_obj, cr, uid, val, context=None):
             'fax': 'phone_fax',
             'type': 'type',
             }
-        address_id.append(get_billing_address(sugar_obj,cr, uid, val, map_partner_address, context))
-        address_id.append(get_shipping_address(sugar_obj,cr, uid, val, map_partner_address, context))
+        if val.get('billing_address_street'):
+            address_id.append(get_address_type(sugar_obj, cr, uid, val, map_partner_address, 'invoice', context))
+            
+        if val.get('shipping_address_street'):
+            address_id.append(get_address_type(sugar_obj, cr, uid, val, map_partner_address, 'delivery', context))
         return address_id
 
 def import_partners(sugar_obj, cr, uid, context=None):
@@ -283,8 +262,8 @@ def import_partners(sugar_obj, cr, uid, context=None):
                 'user_id/id': 'assigned_user_id',
                 'ref': 'sic_code',
                 'comment': ['description', 'employees', 'ownership', 'annual_revenue', 'rating', 'industry', 'ticker_symbol'],
-                'customer': False,
-                'supplier': False
+                'customer': 'customer',
+                'supplier': 'supplier', 
                 }
         
     partner_obj = sugar_obj.pool.get('res.partner')
@@ -294,16 +273,16 @@ def import_partners(sugar_obj, cr, uid, context=None):
     
     for val in sugar_data:
         add_id = get_address(sugar_obj, cr, uid, val, context)
-        if val.get('account_type') in  ('customer', 'prospect', 'other'):
-            val['customer'] = True
+        if val.get('account_type') in  ('Customer', 'Prospect', 'Other'):
+            val['customer'] = '1'
         else:
-            val['supplier'] = True
+            val['supplier'] = '1'
         fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_partner)
         partner_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', context=context)
-        for a in  address_obj.browse(cr,uid,add_id):
-            data_id=partner_obj.search(cr,uid,[('name','like',a.name),('website','like',val.get('website'))])
+        for address in  address_obj.browse(cr,uid,add_id):
+            data_id = partner_obj.search(cr,uid,[('name','like',address.name),('website','like',val.get('website'))])
             if data_id:
-                address_obj.write(cr,uid,a.id,{'partner_id':data_id[0]})                
+                address_obj.write(cr,uid,address.id,{'partner_id':data_id[0]})                
     return True
 
 
@@ -405,6 +384,9 @@ def import_opportunities(sugar_obj, cr, uid, context=None):
     PortType, sessionid = sugar.login(context.get('username', ''), context.get('password', ''), context.get('url',''))
     sugar_data = sugar.search(PortType, sessionid, 'Opportunities')
     for val in sugar_data:
+        partner_xml_id = find_mapped_id(sugar_obj, cr, uid, 'res.partner', val.get('id'), context)
+        if not partner_xml_id:
+            raise osv.except_osv(_('Warning !'), _('Partner %s not Found') % val.get('account_name'))
         val['type'] = 'opportunity'
         stage_id = get_opportunity_status(sugar_obj, cr, uid, val, context)
         val['stage_id.id'] = stage_id
@@ -444,8 +426,7 @@ MAP_FIELDS = {'Opportunities':  #Object Mapping name
 
 class import_sugarcrm(osv.osv):
     """Import SugarCRM DATA"""
-
-
+    
     _name = "import.sugarcrm"
     _description = __doc__
     _columns = {
@@ -485,8 +466,6 @@ class import_sugarcrm(osv.osv):
                 key_list.append('Accounts') 
             if current.employee:
                 key_list.append('Employees')       
-                           
-
         return key_list
 
     def import_all(self, cr, uid, ids, context=None):
@@ -500,7 +479,6 @@ class import_sugarcrm(osv.osv):
                 self.resolve_dependencies(cr, uid, MAP_FIELDS, MAP_FIELDS[key]['dependencies'], imported, context=context)
                 MAP_FIELDS[key]['process'](self, cr, uid, context)
                 imported.add(key)
-
 
         obj_model = self.pool.get('ir.model.data')
         model_data_ids = obj_model.search(cr,uid,[('model','=','ir.ui.view'),('name','=','import.message.form')])
