@@ -235,9 +235,10 @@ class hr_holidays(osv.osv):
         manager = ids2 and ids2[0] or False
         self.write(cr, uid, ids, {'state':'validate'})
         data_holiday = self.browse(cr, uid, ids)
+        holiday_ids = set()
         for record in data_holiday:
             if record.holiday_status_id.double_validation:
-                self.write(cr, uid, ids, {'manager_id2': manager})
+                holiday_ids.add(record.id)
             if record.holiday_type == 'employee' and record.type == 'remove':
                 meeting_obj = self.pool.get('crm.meeting')
                 vals = {
@@ -274,6 +275,9 @@ class hr_holidays(osv.osv):
                     wf_service.trg_validate(uid, 'hr.holidays', leave_id, 'confirm', cr)
                     wf_service.trg_validate(uid, 'hr.holidays', leave_id, 'validate', cr)
                     wf_service.trg_validate(uid, 'hr.holidays', leave_id, 'second_validate', cr)
+        holiday_ids = list(holiday_ids)
+        if holiday_ids:
+            self.write(cr, uid, holiday_ids, {'manager_id2': manager})
         return True
 
     def holidays_confirm(self, cr, uid, ids, *args):
