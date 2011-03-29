@@ -470,54 +470,53 @@ class hr_payslip(osv.osv):
             parent = self._get_parent_structure(cr, uid, parent, context)
         return struct_id + parent
 
-    def _applied_salary_rule(self, cr, uid, ids, field_names, arg=None, context=None):
+    def _get_salary_rules(self, cr, uid, ids, field_names, arg=None, context=None):
         structure_obj = self.pool.get('hr.payroll.structure')
-        result = {}
+        contract_obj = self.pool.get('hr.contract')
+        res = {}
+        lines = []
+        rules = []
+        rul = []
+        structure = []
+        sal_structure =[]
         for record in self.browse(cr, uid, ids, context=context):
-            function = record.struct_id.id
-            sal_structure = []
-            lines = []
-            rules = []
-            rule = []
-            if function:
-                sal_structure = self._get_parent_structure(cr, uid, [function], context=context)
-            for struct in sal_structure:
-                lines = structure_obj.browse(cr, uid, struct, context=context).rule_ids
-                for rl in lines:
-                    if rl.child_ids:
-                        for r in rl.child_ids:
-                            lines.append(r)
-                    rules.append(rl)
-                    for r in rules:
-                       if r.id not in rule:
-                           rule.append(r.id)
-                    result[record.id] = rule
-        return result
-
-    def _appears_on_payslip_rule(self, cr, uid, ids, field_names, arg=None, context=None):
-        struct_obj = self.pool.get('hr.payroll.structure')
-        result = {}
-        for record in self.browse(cr, uid, ids, context=context):
-            structure = record.struct_id.id
-            sal_struct = []
-            lines = []
-            rules = []
-            rule = []
-            if structure:
-                sal_struct = self._get_parent_structure(cr, uid, [structure], context=context)
-            for struct in sal_struct:
-                lines = struct_obj.browse(cr, uid, struct, context=context).rule_ids
-                for rl in lines:
-                    if rl.child_ids:
-                        for r in rl.child_ids:
-                            lines.append(r)
-                    rules.append(rl)
-                    for r in rules:
-                       if r.appears_on_payslip:
-                           if r.id not in rule:
-                               rule.append(r.id)
-                    result[record.id] = rule
-        return result
+            if record.struct_id.id:
+                structure.append(record.struct_id.id)
+            elif not record.struct_id:
+                 contracts = self.get_contract(cr, uid, record.employee_id, record.date, context=context)
+                 for ct in contracts:
+                     contract_id = ct.get('id')
+                     contract = contract_obj.browse(cr, uid, contract_id, context=context)
+                     structure.append(contract.struct_id.id)
+            res[record.id] = {}
+            for st in structure:
+                if st:
+                    sal_structure = self._get_parent_structure(cr, uid, [st], context=context)
+                for struct in sal_structure:
+                    lines = structure_obj.browse(cr, uid, struct, context=context).rule_ids
+                    for rl in lines:
+                        if rl.child_ids:
+                            for r in rl.child_ids:
+                                lines.append(r)
+                        rules.append(rl)
+                for fn in field_names:
+                   if fn == 'applied_salary_rule':
+                       for r in rules:
+                           if r.id not in rul:
+                               rul.append(r.id)
+                       res[record.id] = {fn: rul}
+                   elif fn == 'appears_on_payslip_rule':
+                       for r in rules:
+                           if r.appears_on_payslip:
+                               if r.id not in rul:
+                                   rul.append(r.id)
+                       res[record.id] = {fn: rul}
+                   elif fn == 'details_by_salary_head':
+                       for r in rules:
+                           if r.id not in rul:
+                               rul.append(r.id)
+                       res[record.id] = {fn: rul}
+        return res
 
     def _compute(self, cr, uid, id, value, context=None):
         rule_obj = self.pool.get('hr.salary.rule')
@@ -564,9 +563,9 @@ class hr_payslip(osv.osv):
         'igross': fields.float('Calculaton Field', readonly=True,  digits=(16, 2), help="Calculation field used for internal calculation, do not place this on form"),
         'inet': fields.float('Calculaton Field', readonly=True,  digits=(16, 2), help="Calculation field used for internal calculation, do not place this on form"),
         'holiday_ids': fields.function(_get_holidays, method=True, type='one2many', relation='hr.holidays', string='Holiday Lines', required=False),
-        'applied_salary_rule': fields.function(_applied_salary_rule, method=True, type='one2many', relation='hr.salary.rule', string='Applied Salary Rules', required=False),
-        'appears_on_payslip_rule': fields.function(_appears_on_payslip_rule, method=True, type='one2many', relation='hr.salary.rule', string='Appears on Payslip', required=False),
-#        'details_by_salary_head': fields.function(_get_salary_rules, method=True, type='one2many', relation='hr.salary.rule', string='Details by Salary Head'),
+        'applied_salary_rule': fields.function(_get_salary_rules, method=True, type='one2many', relation='hr.salary.rule', string='Applied Salary Rules', multi='applied_salary_rule'),
+        'appears_on_payslip_rule': fields.function(_get_salary_rules, method=True, type='one2many', relation='hr.salary.rule', string='Appears on Payslip', multi='appears_on_payslip_rule'),
+        'details_by_salary_head': fields.function(_get_salary_rules, method=True, type='one2many', relation='hr.salary.rule', string='Details by Salary Head', multi='details_by_salary_head'),
     }
     _defaults = {
         'date': lambda *a: time.strftime('%Y-%m-%d'),
@@ -1340,8 +1339,8 @@ class hr_salary_rule(osv.osv):
         ),
         'gratuity':fields.boolean('Use for Gratuity ?', required=False),
         'condition_select': fields.selection([('range', 'Range'), ('python', 'Python Expression')], "Condition based on"),
-        'computational_expression':fields.text('Computational Expression', required=True, readonly=False, help='This will use to computer the % fields values, in general its on basic, but You can use all heads code field in small letter as a variable name i.e. hra, ma, lta, etc...., also you can use, static varible basic'),
-        'conditions':fields.char('Condition', size=1024, required=True, readonly=False, help='Applied this head for calculation if condition is true'),
+        'computational_expression':fields.char('Computational Expression',size=1024, required=True, readonly=False, help='This will use to computer the % fields values, in general its on basic, but You can use all heads code field in small letter as a variable name i.e. hra, ma, lta, etc...., also you can use, static varible basic'),
+        'conditions':fields.char('Condition', size=1024, required=True, readonly=False, help='Applied this rule for calculation if condition is true.You can specify condition like basic > 1000.'),
         'sequence': fields.integer('Sequence', required=True, help='Use to arrange calculation sequence'),
         'active':fields.boolean('Active', help="If the active field is set to false, it will allow you to hide the salary rule without removing it."),
         'python_compute':fields.text('Python Code'),
@@ -1352,6 +1351,7 @@ class hr_salary_rule(osv.osv):
         ],'Company Amount Type', select=True),
         'contribute_per':fields.float('Company Contribution', digits=(16, 4), help='Define Company contribution ratio 1.00=100% contribution.'),
         'company_contribution':fields.boolean('Company Contribution',help="This rule has Company Contributions."),
+	    'expression_result':fields.char('Expression based on', size=1024, required=False, readonly=False, help='result will be affected to a variable'),
      }
     _defaults = {
         'python_compute': '''# basic\n# employee: hr.employee object or None\n# contract: hr.contract object or None\n\nresult = basic * 0.10''',
@@ -1363,6 +1363,7 @@ class hr_salary_rule(osv.osv):
         'company_id': lambda self, cr, uid, context: \
                 self.pool.get('res.users').browse(cr, uid, uid,
                     context=context).company_id.id,
+        'condition_select': 'python',
      }
 
 #    def _execute_function(self, cr, uid, id, value, context=None):

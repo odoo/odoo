@@ -303,11 +303,12 @@
                         <page string="Applied Salary Rules">
                             <field name="applied_salary_rule" nolabel="1" />
                         </page>
-                        <page string="Appears on payslip">
+                       <page string="Appears On Payslip">
                             <field name="appears_on_payslip_rule" nolabel="1"/>
                         </page>
-                        <page string="Details by salary head">
-                        </page>
+                       <page string="Details By Salary Head">
+                            <field name="details_by_salary_head" nolabel="1" context="{'group_by': 'category_id'}"/>
+                       </page>
                     </notebook>
                     <group col="10" colspan="4">
                         <field name="state"/>
@@ -632,18 +633,17 @@
                 <notebook colspan="6">
                     <page string="General">
                         <group col="6" colspan="6">
-                            <group col="2" colspan="4">
-                                <separator colspan="4" string="Computational Expression"/>
-                                <field name="computational_expression" colspan="4" nolabel="1"/>
-                            </group>
                             <group col="2" colspan="2">
+				
                                 <separator colspan="4" string="Calculations"/>
                                 <!--<field name="type"/>-->
+				<field name="computational_expression"/>
                                 <field name="condition_select"/>
                                 <field name="conditions" attrs="{'invisible':[('condition_select','=','range')]}"/>
                                 <field name="condition_range_min" attrs="{'invisible':[('condition_select','=','python')]}" colspan="1"/>
                                 <field name="condition_range_max" attrs="{'invisible':[('condition_select','=','python')]}" colspan="1"/>
                                 <field name="amount_type"/>
+				<field name="expression_result"/>
                                 <field name="amount" on_change="onchange_amount(amount, amount_type)" attrs="{'invisible':[('amount_type','=','code')]}"/>
                                 <group col="2" colspan="2"  attrs="{'invisible':[('amount_type','&lt;&gt;','code')]}">
                                     <separator colspan="2" string="Compute Code"/>
@@ -655,10 +655,10 @@
                                 <separator colspan="4" string="Company contribution"/>
                                     <field name="company_contribution"/>
                                     <group col="2" colspan="2" attrs="{'readonly':[('company_contribution','=',False)]}">
-                                        <field name="amt_type" />
-                                        <field name="contribute_per"/>
+                                       <!-- <field name="amt_type" />-->
+                                       <!-- <field name="contribute_per"/>-->
                                         <field name="register_id"/>
-                                        <field name="company_contrib"/>
+                                       <!-- <field name="company_contrib"/>-->
                                     </group>
                                 </group>
                            </group>
