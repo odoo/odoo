@@ -18,13 +18,10 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import time
 import datetime
 import dateutil
-from dateutil.tz import *
 from dateutil.parser import *
 from pytz import timezone
-import pytz
 
 try:
     import gdata
@@ -146,10 +143,15 @@ class synchronize_google_contact(osv.osv_memory):
         addresses = []
         partner_ids = []
         contact_ids=[]
+        if 'tz' in context and context['tz']:
+            time_zone = context['tz']
+        else:
+            time_zone = 'Asia/Kolkata'
+        au_tz = timezone(time_zone)
         
         while contact:
             for entry in contact.entry:
-                data = self._retreive_data(entry, context=context)
+                data = self._retreive_data(entry)
                 google_id = data.pop('id')
                 model_data = {
                     'name':  google_id,
@@ -161,15 +163,18 @@ class synchronize_google_contact(osv.osv_memory):
                 data_ids = model_obj.search(cr, uid, [('model','=','res.partner.address'), ('name','=', google_id)])
                 if data_ids:
                     contact_ids = [model_obj.browse(cr, uid, data_ids[0], context=context).res_id]
-                    address = addresss_obj.browse(cr, uid, contact_ids[0], context=context)
-                    if address.last_modification_date > data.get('last_modification_date'):
-                        data['last_modification_date'] = address.last_modification_date
                 elif data['email']:
                     contact_ids = addresss_obj.search(cr, uid, [('email', 'ilike', data['email'])])
 
                 if contact_ids:
                     addresses.append(contact_ids[0])
-                    self.update_contact(cr, uid, contact_ids, data, context=context)
+                    address = addresss_obj.browse(cr, uid, contact_ids[0], context=context)
+                    google_updated = entry.updated.text
+                    utime = dateutil.parser.parse(google_updated)
+                    au_dt = au_tz.normalize(utime.astimezone(au_tz))
+                    updated_dt = datetime.datetime(*au_dt.timetuple()[:6]).strftime('%Y-%m-%d %H:%M:%S')
+                    if address.write_date < updated_dt:
+                        self.update_contact(cr, uid, contact_ids, data, context=context)
                     res_id = contact_ids[0]
                 if not contact_ids:
                     #create or link to an existing partner only if it's a new contact
@@ -195,7 +200,7 @@ class synchronize_google_contact(osv.osv_memory):
         else:
             return addresses
         
-    def _retreive_data(self, entry, context=None):
+    def _retreive_data(self, entry):
         data = {}
         data['id'] = entry.id.text
         name = tools.ustr(entry.title.text)
@@ -205,19 +210,6 @@ class synchronize_google_contact(osv.osv_memory):
         emails = ','.join(email.address for email in entry.email)
         data['email'] = emails
         
-        if 'tz' in context and context['tz']:
-            time_zone = context['tz']
-        else:
-            time_zone = 'Asia/Kolkata'
-        au_tz = timezone(time_zone)
-        
-        if entry.updated:
-            google_updated = entry.updated.text
-            utime = dateutil.parser.parse(google_updated)
-            au_dt = au_tz.normalize(utime.astimezone(au_tz))
-            updated_dt = datetime.datetime(*au_dt.timetuple()[:6]).strftime('%Y-%m-%d %H:%M:%S')
-            data['last_modification_date'] = updated_dt
-
         if entry.phone_number:
             for phone in entry.phone_number:
                 if phone.rel == gdata.contacts.REL_WORK:
@@ -244,7 +236,6 @@ class synchronize_google_contact(osv.osv_memory):
             vals['phone'] = data.get('phone','')
         if not addr.fax:
             vals['fax'] = data.get('fax','')
-        vals['last_modification_date'] = data.get('last_modification_date')
         
         addresss_obj.write(cr, uid, contact_ids, vals, context=context)
         return {'type': 'ir.actions.act_window_close'}

@@ -19,13 +19,13 @@
 #
 ##############################################################################
 
-from osv import fields,osv,orm
+from osv import fields,osv
 
 class res_partner_address(osv.osv):
     _inherit = "res.partner.address"
 
     _columns = {
-        'last_modification_date': fields.datetime('Last Modification Date', readonly=True, help="Last modification date of google contact."),
+        'write_date': fields.datetime('Date Modified', readonly=True, help="Modification date and time of address."),
     }
 
     def unlink(self, cr, uid, ids, context=None):
