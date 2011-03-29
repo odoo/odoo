@@ -675,13 +675,6 @@ msgid "Partners Reconciled Today"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_bank_statement.py:306
-#, python-format
-msgid "The statement balance is incorrect !\n"
-""
-msgstr ""
-
-#. module: account
 #: selection:account.payment.term.line,value:0
 #: selection:account.tax.template,type:0
 msgid "Percent"
@@ -2459,9 +2452,10 @@ msgid "August"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_bank_statement.py:307
+#: code:addons/account/account_bank_statement.py:306
 #, python-format
-msgid "The expected balance (%.2f) is different than the computed one. (%.2f)"
+msgid "The statement balance is incorrect !\n"
+"The expected balance (%.2f) is different than the computed one. (%.2f)"
 msgstr ""
 
 #. module: account
@@ -2679,6 +2673,12 @@ msgstr ""
 #: selection:account.account.template,type:0
 #: selection:account.entries.report,type:0
 msgid "View"
+msgstr ""
+
+#. module: account
+#: code:addons/account/account.py:2951
+#, python-format
+msgid "BNK%s"
 msgstr ""
 
 #. module: account
@@ -3998,12 +3998,6 @@ msgid "Account Balance -"
 msgstr ""
 
 #. module: account
-#: code:addons/account/invoice.py:989
-#, python-format
-msgid "Invoice "
-msgstr ""
-
-#. module: account
 #: field:account.automatic.reconcile,date1:0
 msgid "Starting Date"
 msgstr ""
@@ -5238,9 +5232,9 @@ msgid "As soon as the reconciliation is done, the invoice's state turns to “do
 msgstr ""
 
 #. module: account
-#: code:addons/account/invoice.py:989
+#: code:addons/account/invoice.py:997
 #, python-format
-msgid "is validated."
+msgid "Invoice  '%s' is validated."
 msgstr ""
 
 #. module: account

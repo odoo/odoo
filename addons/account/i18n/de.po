@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-02-15 04:37+0000\n"
-"X-Generator: Launchpad (build 12351)\n"
+"X-Launchpad-Export-Date: 2011-03-18 04:49+0000\n"
+"X-Generator: Launchpad (build 12559)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -756,12 +756,6 @@ msgstr "Schecks"
 #: field:account.partner.reconcile.process,today_reconciled:0
 msgid "Partners Reconciled Today"
 msgstr "Heute ausgeglichene Partner"
-
-#. module: account
-#: code:addons/account/account_bank_statement.py:306
-#, python-format
-msgid "The statement balance is incorrect !\n"
-msgstr "Der Saldo für diesen gebuchten Auszug stimmt nicht überein !\n"
 
 #. module: account
 #: selection:account.payment.term.line,value:0
@@ -2730,11 +2724,12 @@ msgid "August"
 msgstr "August"
 
 #. module: account
-#: code:addons/account/account_bank_statement.py:307
+#: code:addons/account/account_bank_statement.py:306
 #, python-format
 msgid ""
+"The statement balance is incorrect !\n"
 "The expected balance (%.2f) is different than the computed one. (%.2f)"
-msgstr "Der erwartete Wert (%.2f) weicht ab von dem berechneten Wert (%.2f)"
+msgstr ""
 
 #. module: account
 #: model:process.transition,note:account.process_transition_paymentreconcile0
@@ -2989,6 +2984,12 @@ msgstr "Das Basis Konto für die Steuererklärung"
 #: selection:account.entries.report,type:0
 msgid "View"
 msgstr "Ansicht"
+
+#. module: account
+#: code:addons/account/account.py:2951
+#, python-format
+msgid "BNK%s"
+msgstr ""
 
 #. module: account
 #: code:addons/account/account.py:2906
@@ -4442,12 +4443,6 @@ msgid "Account Balance -"
 msgstr "Saldo"
 
 #. module: account
-#: code:addons/account/invoice.py:989
-#, python-format
-msgid "Invoice "
-msgstr "Rechnung "
-
-#. module: account
 #: field:account.automatic.reconcile,date1:0
 msgid "Starting Date"
 msgstr "Start Datum"
@@ -5814,10 +5809,10 @@ msgstr ""
 "zu 'Erledigt' ( d.h. Bezahlt)."
 
 #. module: account
-#: code:addons/account/invoice.py:989
+#: code:addons/account/invoice.py:997
 #, python-format
-msgid "is validated."
-msgstr "wurde geprüft und gebucht."
+msgid "Invoice  '%s' is validated."
+msgstr ""
 
 #. module: account
 #: view:account.chart.template:0
@@ -10560,6 +10555,11 @@ msgstr ""
 #~ msgid "Invoice import"
 #~ msgstr "Importiere Rechnungen"
 
+#, python-format
+#~ msgid ""
+#~ "The expected balance (%.2f) is different than the computed one. (%.2f)"
+#~ msgstr "Der erwartete Wert (%.2f) weicht ab von dem berechneten Wert (%.2f)"
+
 #~ msgid "Ending Balance"
 #~ msgstr "Endsaldo"
 
@@ -11889,6 +11889,10 @@ msgstr ""
 #~ "Bankauszug, etc."
 
 #, python-format
+#~ msgid "The statement balance is incorrect !\n"
+#~ msgstr "Der Saldo für diesen gebuchten Auszug stimmt nicht überein !\n"
+
+#, python-format
 #~ msgid "UnknownError"
 #~ msgstr "UnbekannterFehler"
 
@@ -11951,6 +11955,10 @@ msgstr ""
 #~ "Durch Aktivierung dieser Option, kann die Ansicht dieser Zahlungsbedingung "
 #~ "verhindert werden ohne sie zu löschen."
 
+#, python-format
+#~ msgid "Invoice "
+#~ msgstr "Rechnung "
+
 #~ msgid ""
 #~ "Define your company's fiscal year depending on the period you have chosen to "
 #~ "follow. A fiscal year is a 1 year period over which a company budgets its "
@@ -11995,6 +12003,10 @@ msgstr ""
 #~ msgstr ""
 #~ "Wenn dieses Feld aktiviert ist , kann eine definierte Steuer ausgeblendet "
 #~ "werden, ohne diese vollständig zu entfernen."
+
+#, python-format
+#~ msgid "is validated."
+#~ msgstr "wurde geprüft und gebucht."
 
 #~ msgid ""
 #~ "If the active field is set to true, it will allow you to hide the journal "

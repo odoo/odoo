@@ -22,16 +22,19 @@
 {
     'name': 'Analytic Journal Billing Rate, Define the default invoicing rate for a specific journal',
     'version': '1.0',
-    'category': 'Generic Modules/Others',
+    'category': 'Human Resources',
     'description': """
+This module allows you to define what is the default invoicing rate for a specific journal on a given account.
+==============================================================================================================
 
-    This module allows you to define what is the default invoicing rate for a specific journal on a given account. This is mostly used when a user encodes his timesheet: the values are retrieved and the fields are auto-filled... but the possibility to change these values is still available.
+This is mostly used when a user encodes his timesheet: the values are retrieved and the fields are auto-filled. But the possibility to change these values is still available.
 
-    Obviously if no data has been recorded for the current account, the default value is given as usual by the account data so that this module is perfectly compatible with older configurations.
+Obviously if no data has been recorded for the current account, the default value is given as usual by the account data so that this module is perfectly compatible with older configurations.
 
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
+    'images': ['images/analytic_journal_billing_rate.jpeg'],
     'depends': ['analytic_user_function', 'account', 'hr_timesheet_invoice'],
     'init_xml': [],
     'update_xml': ['analytic_journal_billing_rate_view.xml', 'security/ir.model.access.csv'],

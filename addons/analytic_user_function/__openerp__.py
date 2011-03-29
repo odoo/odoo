@@ -21,18 +21,21 @@
 
 
 {
-    'name': 'Analytic User Function',
+    'name': 'Human Resources',
     'version': '1.0',
     'category': 'Generic Modules/Others',
     'description': """
+This module allows you to define what is the default function of a specific user on a given account.
+====================================================================================================
 
-    This module allows you to define what is the default function of a specific user on a given account. This is mostly used when a user encodes his timesheet: the values are retrieved and the fields are auto-filled... but the possibility to change these values is still available.
+This is mostly used when a user encodes his timesheet: the values are retrieved and the fields are auto-filled. But the possibility to change these values is still available.
 
-    Obviously if no data has been recorded for the current account, the default value is given as usual by the employee data so that this module is perfectly compatible with older configurations.
+Obviously if no data has been recorded for the current account, the default value is given as usual by the employee data so that this module is perfectly compatible with older configurations.
 
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
+    'images': ['images/analytic_user_function.jpeg'],
     'depends': ['hr_timesheet_sheet'],
     'init_xml': [],
     'update_xml': ['analytic_user_function_view.xml', 'security/ir.model.access.csv'],

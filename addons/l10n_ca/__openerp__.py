@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,16 +15,21 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 {
-    "name" : "Canada - English and French Canadian Chart of Accounts",
+    "name" : "Canada - English and French - Canadian Chart of Accounts",
     "version" : "1.0",
     "author" : "Savoir-faire Linux",
     "website" : "http://www.savoirfairelinux.com",
-    "category" : "Localisation/Account Charts",
-    "description": "This is the module to manage the english and french canadian accounting chart in OpenERP.",
+    "category" : "Finance",
+    "description": """
+This is the module to manage the English and French - Canadian accounting chart in OpenERP.
+===========================================================================================
+
+Canadian accounting charts and localizations.
+    """,
     "depends" : ['base', 'account', 'base_iban', 'base_vat', 'account_chart'],
     "init_xml" : [],
     "update_xml" : [
@@ -45,6 +50,7 @@
     "demo_xml" : [],
     "installable" : True,
     "certificate" : '00941680933773696173',
+    'images': ['images/config_chart_l10n_ca.jpeg','images/l10n_ca_chart.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

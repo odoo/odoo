@@ -21,11 +21,13 @@
 
 
 {
-    'name': 'Customer & Supplier Relationship Management',
+    'name': 'Customer & Supplier Claims Management',
     'version': '1.0',
-    'category': 'Generic Modules/CRM & SRM',
+    'category': 'Sales',
     'description': """
-This modules allows you to track your customers/suppliers claims and flames.
+This modules allows you to track your customers/suppliers claims and grievances.
+================================================================================
+
 It is fully integrated with the email gateway so that you can create
 automatically new claims based on incoming emails.
     """,
@@ -44,11 +46,12 @@ automatically new claims based on incoming emails.
     ],
     'demo_xml': [
         'crm_claim_demo.xml',
-    ], 
-    'test': ['test/test_crm_claim.yml'], 
+    ],
+    'test': ['test/test_crm_claim.yml'],
     'installable': True,
     'active': False,
     'certificate' : '00612027414703404749',
+    'images': ['images/claim_categories.jpeg','images/claim_stages.jpeg','images/claims.jpeg'],
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

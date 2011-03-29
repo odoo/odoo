@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -23,9 +23,11 @@
 {
     'name': 'Module Record',
     'version': '1.0',
-    'category': 'Generic Modules/Base',
+    'category': 'Tools',
     'description': """
 This module allows you to create a new module without any development.
+======================================================================
+
 It records all operations on objects during the recording session and
 produce a .ZIP module. So you can create your own module directly from
 the OpenERP client.
@@ -49,5 +51,6 @@ Select datetime criteria of recording and objects to be recorded and Record modu
     'demo_xml': [],
     'installable': True,
     'certificate': '0083134865813',
+    'images': ['images/base_module_record1.jpeg','images/base_module_record2.jpeg','images/base_module_record3.jpeg',]
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

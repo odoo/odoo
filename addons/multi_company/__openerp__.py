@@ -21,12 +21,14 @@
 
 
 {
-    'name': 'Multi Company',
+    'name': 'Multi-Company',
     'version': '1.0',
-    'category': 'Custom',
+    'category': 'Tools',
     'description': """
-    Multicompany module is for managing a multicompany environment.
-    This module is the base module for other multicompany modules.
+This module is for managing a multicompany environment.
+=======================================================
+
+This module is the base module for other multi-company modules.
     """,
     'author': 'OpenERP SA,SYLEAM',
     'website': 'http://www.openerp.com/',
@@ -45,5 +47,6 @@
     'installable': True,
     'active': False,
     'certificate' : '001115526094673097933',
+    'images': ['images/companies.jpeg','images/default_company_per_object_form.jpeg', 'images/default_company_per_object_list.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

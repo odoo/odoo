@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-24 04:54+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-03-18 04:55+0000\n"
+"X-Generator: Launchpad (build 12559)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -737,12 +737,6 @@ msgstr "Çek"
 #: field:account.partner.reconcile.process,today_reconciled:0
 msgid "Partners Reconciled Today"
 msgstr "Partners Reconciled Today"
-
-#. module: account
-#: code:addons/account/account_bank_statement.py:306
-#, python-format
-msgid "The statement balance is incorrect !\n"
-msgstr "The statement balance is incorrect !\n"
 
 #. module: account
 #: selection:account.payment.term.line,value:0
@@ -2654,12 +2648,12 @@ msgid "August"
 msgstr "August"
 
 #. module: account
-#: code:addons/account/account_bank_statement.py:307
+#: code:addons/account/account_bank_statement.py:306
 #, python-format
 msgid ""
+"The statement balance is incorrect !\n"
 "The expected balance (%.2f) is different than the computed one. (%.2f)"
 msgstr ""
-"The expected balance (%.2f) is different than the computed one. (%.2f)"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_paymentreconcile0
@@ -2909,6 +2903,12 @@ msgstr "The account basis of the tax declaration."
 #: selection:account.entries.report,type:0
 msgid "View"
 msgstr "Görünüm"
+
+#. module: account
+#: code:addons/account/account.py:2951
+#, python-format
+msgid "BNK%s"
+msgstr ""
 
 #. module: account
 #: code:addons/account/account.py:2906
@@ -4315,12 +4315,6 @@ msgid "Account Balance -"
 msgstr "Account Balance -"
 
 #. module: account
-#: code:addons/account/invoice.py:989
-#, python-format
-msgid "Invoice "
-msgstr "Invoice "
-
-#. module: account
 #: field:account.automatic.reconcile,date1:0
 msgid "Starting Date"
 msgstr "Starting Date"
@@ -5647,10 +5641,10 @@ msgstr ""
 "(i.e. paid) in the system."
 
 #. module: account
-#: code:addons/account/invoice.py:989
+#: code:addons/account/invoice.py:997
 #, python-format
-msgid "is validated."
-msgstr "is validated."
+msgid "Invoice  '%s' is validated."
+msgstr ""
 
 #. module: account
 #: view:account.chart.template:0
@@ -13952,6 +13946,12 @@ msgstr ""
 #~ "Seçilen dil systemde yüklü ise bu ortağa ait bütün belgeler bu dilde "
 #~ "yazdırılacaktır. Aksi taktirde, İngilizce kullanılır."
 
+#, python-format
+#~ msgid ""
+#~ "The expected balance (%.2f) is different than the computed one. (%.2f)"
+#~ msgstr ""
+#~ "The expected balance (%.2f) is different than the computed one. (%.2f)"
+
 #~ msgid "Base Field"
 #~ msgstr "Taban Alan"
 
@@ -15902,6 +15902,10 @@ msgstr ""
 #~ msgid "No product in this location."
 #~ msgstr "No product in this location."
 
+#, python-format
+#~ msgid "Invoice "
+#~ msgstr "Invoice "
+
 #~ msgid "Field Type"
 #~ msgstr "Alan Türü"
 
@@ -17038,6 +17042,10 @@ msgstr ""
 #~ msgid "Default Company"
 #~ msgstr "Default Company"
 
+#, python-format
+#~ msgid "The statement balance is incorrect !\n"
+#~ msgstr "The statement balance is incorrect !\n"
+
 #~ msgid "ID of the view defined in xml file"
 #~ msgstr "ID of the view defined in xml file"
 
@@ -17366,6 +17374,10 @@ msgstr ""
 
 #~ msgid "ir.actions.todo"
 #~ msgstr "ir.actions.todo"
+
+#, python-format
+#~ msgid "is validated."
+#~ msgstr "is validated."
 
 #~ msgid "Couldn't find previous ir.actions.todo"
 #~ msgstr "Couldn't find previous ir.actions.todo"

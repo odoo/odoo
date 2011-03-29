@@ -21,10 +21,16 @@
 
 
 {
-    'name': 'Module for Warnings form onchange Event',
+    'name': 'Display Warning Messages',
     'version': '1.0',
     'category': 'Tools',
-    'description': """Module for Warnings form onchange Event.""",
+    'description': """
+Module to trigger warnings in OpenERP objects.
+==============================================
+
+Warning messages can be displayed for objects like sale order, purchase order,
+picking and invoice. The message is triggered by the form's onchange event.
+    """,
     'author': 'OpenERP SA',
     'depends': ['base', 'sale', 'purchase'],
     'update_xml': ['warning_view.xml'],
@@ -32,5 +38,6 @@
     'installable': True,
     'active': False,
     'certificate': '0080334018749',
+    'images': ['images/customers_warnings.jpeg','images/sale_order_warning.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -20,11 +20,17 @@
 ##############################################################################
 
 {
-    "name": "CalDAV for task management",
+    "name": "CalDAV for Task Management",
     "version": "1.1",
     "author": "OpenERP SA",
-    "category": "Generic Modules/Others",
-    "description": """ Synchronize between Project task and Caldav Vtodo.""",
+    "category": "Project Management",
+    "description": """
+Synchronization between Project Task and Caldav Vtodo.
+======================================================
+
+With the Caldav functionality you can get access to scheduling information
+on a remote server.
+    """,
     "depends": ["project", "caldav", "base_calendar"],
     "init_xml": ["project_caldav_data.xml", 'project_caldav_setup.xml', ],
     "demo_xml": [],
@@ -33,4 +39,5 @@
     "website": "http://www.openerp.com",
     "installable": True,
     "certificate" : "001114200456808204637",
+    'images': ['images/project_tasks_caldav.jpeg','images/project_tasks_caldav_attendees.jpeg','images/project_caldav_calendars.jpeg'],
 }
