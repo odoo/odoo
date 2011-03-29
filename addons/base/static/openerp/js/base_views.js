@@ -783,10 +783,13 @@ openerp.base.search.Field = openerp.base.search.Input.extend({
         // A field needs a value to be "active", and a context to send when
         // active
         var has_value = (val !== null && val !== '');
-        if (!(has_value && this.attrs.context)) {
+        var context = this.attrs.context;
+        if (!(has_value && context)) {
             return;
         }
-        return this.attrs.context;
+        return _.extend(
+            {}, context,
+            {own_values: {self: val}});
     },
     get_domain: function () {
         var val = this.get_value();
@@ -796,14 +799,17 @@ openerp.base.search.Field = openerp.base.search.Input.extend({
             return;
         }
 
-        if (!this.attrs['filter_domain']) {
+        var domain = this.attrs['filter_domain'];
+        if (!domain) {
             return [[
                 this.attrs.name,
                 this.attrs.operator || this.default_operator,
                 this.get_value()
             ]];
         }
-        return this.attrs['filter_domain'];
+        return _.extend(
+            {}, domain,
+            {own_values: {self: val}});
     }
 });
 openerp.base.search.CharField = openerp.base.search.Field.extend({

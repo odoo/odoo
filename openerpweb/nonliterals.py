@@ -30,11 +30,23 @@ class NonLiteralEncoder(simplejson.encoder.JSONEncoder):
         return super(NonLiteralEncoder, self).default(object)
 
 def non_literal_decoder(dct):
+    """ Decodes JSON dicts into :class:`Domain` and :class:`Context` based on
+    magic attribute tags.
+
+    Also handles private context section for the domain or section via the
+    ``own_values`` dict key.
+    """
     if '__ref' in dct:
         if dct['__ref'] == 'domain':
-            return Domain(None, key=dct['__id'])
+            domain = Domain(None, key=dct['__id'])
+            if 'own_values' in dct:
+                domain.own = dct['own_values']
+            return domain
         elif dct['__ref'] == 'context':
-            return Context(None, key=dct['__id'])
+            context = Context(None, key=dct['__id'])
+            if 'own_values' in dct:
+                context.own = dct['own_values']
+            return context
     return dct
 
 class Domain(object):

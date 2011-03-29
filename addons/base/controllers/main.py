@@ -368,6 +368,28 @@ class View(openerpweb.Controller):
                 self.parse_domains_and_contexts(elem, session)
         return root
 
+    def parse_domain(self, elem, attr_name, session):
+        """ Parses an attribute of the provided name as a domain, transforms it
+        to either a literal domain or a :class:`openerpweb.nonliterals.Domain`
+
+        :param elem: the node being parsed
+        :type param: xml.etree.ElementTree.Element
+        :param str attr_name: the name of the attribute which should be parsed
+        :param session: Current OpenERP session
+        :type session: openerpweb.openerpweb.OpenERPSession
+        """
+        domain = elem.get(attr_name)
+        if domain:
+            try:
+                elem.set(
+                    attr_name,
+                    openerpweb.ast.literal_eval(
+                        domain))
+            except ValueError:
+                # not a literal
+                elem.set(attr_name,
+                         openerpweb.nonliterals.Domain(session, domain))
+
     def parse_domains_and_contexts(self, elem, session):
         """ Converts domains and contexts from the view into Python objects,
         either literals if they can be parsed by literal_eval or a special
@@ -379,17 +401,8 @@ class View(openerpweb.Controller):
                         non-literal objects
         :type session: openerpweb.openerpweb.OpenERPSession
         """
-        domain = elem.get('domain')
-        if domain:
-            try:
-                elem.set(
-                    'domain',
-                    openerpweb.ast.literal_eval(
-                        domain))
-            except ValueError:
-                # not a literal
-                elem.set('domain',
-                    openerpweb.nonliterals.Domain(session, domain))
+        self.parse_domain(elem, 'domain', session)
+        self.parse_domain(elem, 'filter_domain', session)
         context_string = elem.get('context')
         if context_string:
             try:
