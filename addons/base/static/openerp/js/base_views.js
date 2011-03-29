@@ -529,18 +529,46 @@ openerp.base.SearchView = openerp.base.Controller.extend({
             widget.start();
         });
     },
+    /**
+     * Performs the search view collection of widget data.
+     *
+     * If the collection went well (all fields are valid), then triggers
+     * :js:func:`openerp.base.SearchView.on_search`.
+     *
+     * If at least one field failed its validation, triggers
+     * :js:func:`openerp.base.SearchView.on_invalid` instead.
+     *
+     * @param e jQuery event object coming from the "Search" button
+     */
     do_search: function (e) {
         if (e && e.preventDefault) { e.preventDefault(); }
-        var inputs_ = _(this.inputs).chain();
+        var domains = [], contexts = [];
 
-        var domains = inputs_.
-            map(function (input) { return input.get_domain(); }).
-            compact().
-            value();
-        var contexts = inputs_.
-            map(function (input) { return input.get_context(); }).
-            compact().
-            value();
+        var errors = [];
+        _.each(this.inputs, function (input) {
+            try {
+                var domain = input.get_domain();
+                if (domain) {
+                    domains.push(domain);
+                }
+
+                var context = input.get_context();
+                if (context) {
+                    contexts.push(context);
+                }
+            } catch (e) {
+                if (e instanceof openerp.base.search.Invalid) {
+                    errors.push(e);
+                } else {
+                    throw e;
+                }
+            }
+        });
+
+        if (errors.length) {
+            this.on_invalid(errors);
+            return;
+        }
 
         // TODO: do we need to handle *fields* with group_by in their context?
         var groupbys = _(this.enabled_filters)
@@ -552,24 +580,42 @@ openerp.base.SearchView = openerp.base.Controller.extend({
         this.on_search(domains, contexts, groupbys);
     },
     /**
-     * Event hook for searches: triggers after the SearchView has collected
-     * all relevant domains and contexts.
+     * Triggered after the SearchView has collected all relevant domains and
+     * contexts.
      *
      * It is provided with an Array of domains and an Array of contexts, which
      * may or may not be evaluated (each item can be either a valid domain or
      * context, or a string to evaluate in order in the sequence)
      *
+     * It is also passed an array of contexts used for group_by (they are in
+     * the correct order for group_by evaluation, which contexts may not be)
+     *
+     * @event
      * @param {Array} domains an array of literal domains or domain references
      * @param {Array} contexts an array of literal contexts or context refs
      * @param {Array} groupbys ordered contexts which may or may not have group_by keys
      */
     on_search: function (domains, contexts, groupbys) { },
+    /**
+     * Triggered after a validation error in the SearchView fields.
+     *
+     * Error objects have three keys:
+     * * ``field`` is the name of the invalid field
+     * * ``value`` is the invalid value
+     * * ``message`` is the (in)validation message provided by the field
+     *
+     * @event
+     * @param {Array} errors a never-empty array of error objects
+     */
+    on_invalid: function (errors) { },
     do_clear: function (e) {
         if (e && e.preventDefault) { e.preventDefault(); }
         this.on_clear();
     },
     /**
-     * event hook for clearing search
+     * Triggered when the search view gets cleared
+     *
+     * @event
      */
     on_clear: function () {  },
     /**
@@ -859,9 +905,11 @@ openerp.base.search.IntegerField = openerp.base.search.Field.extend({
         var val = parseInt(this.$element.val());
         var check = Number(this.$element.val());
         if (isNaN(check) || val !== check) {
+            this.$element.addClass('error');
             throw new openerp.base.search.Invalid(
                 this.attrs.name, this.$element.val(), "not a valid integer");
         }
+        this.$element.removeClass('error');
         return val;
     }
 });
@@ -869,9 +917,11 @@ openerp.base.search.FloatField = openerp.base.search.Field.extend({
     get_value: function () {
         var val = Number(this.$element.val());
         if (isNaN(val)) {
+            this.$element.addClass('error');
             throw new openerp.base.search.Invalid(
                 this.attrs.name, this.$element.val(), "not a valid number");
         }
+        this.$element.removeClass('error');
         return val;
     }
 });
