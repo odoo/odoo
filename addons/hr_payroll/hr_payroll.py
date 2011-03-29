@@ -485,9 +485,9 @@ class hr_payslip(osv.osv):
             elif not record.struct_id:
                  contracts = self.get_contract(cr, uid, record.employee_id, record.date, context=context)
                  for ct in contracts:
-                     contract_id = ct.get('id')
-                     contract = contract_obj.browse(cr, uid, contract_id, context=context)
-                     structure.append(contract.struct_id.id)
+#                     contract_id = ct.get('id')
+#                     contract = contract_obj.browse(cr, uid, contract_id, context=context)
+                     structure.append(ct.struct_id.id)
             res[record.id] = {}
             for st in structure:
                 if st:
@@ -652,18 +652,22 @@ class hr_payslip(osv.osv):
         return True
 
     def get_contract(self, cr, uid, employee, date, context=None):
-        sql_req= '''
-            SELECT c.id as id, c.wage as wage, struct_id as function
-            FROM hr_contract c
-              LEFT JOIN hr_employee emp on (c.employee_id=emp.id)
-            WHERE
-              (emp.id=%s) AND
-              (date_start <= %s) AND
-              (date_end IS NULL OR date_end >= %s)
-            '''
-        cr.execute(sql_req, (employee.id, date, date))
-        contracts = cr.dictfetchall()
-        return contracts and contracts or {}
+        contract_obj = self.pool.get('hr.contract')
+        contracts = contract_obj.search(cr, uid, [('employee_id', '=', employee.id),('date_start','<=', date),'|',('date_end', '=', False),('date_end','>=', date)], context=context)
+        contract_ids = contract_obj.browse(cr, uid, contracts, context=context)
+#        sql_req= '''
+#            SELECT c.id as id, c.wage as wage, struct_id as function
+#            FROM hr_contract c
+#              LEFT JOIN hr_employee emp on (c.employee_id=emp.id)
+#            WHERE
+#              (emp.id=%s) AND
+#              (date_start <= %s) AND
+#              (date_end IS NULL OR date_end >= %s)
+#            '''
+#        cr.execute(sql_req, (employee.id, date, date))
+#        contracts = cr.dictfetchall()
+        return contract_ids and contract_ids or []
+
 
     def _get_leaves(self, cr, user, ddate, employee, context=None):
         """
@@ -712,11 +716,11 @@ class hr_payslip(osv.osv):
                 update.update({'struct_id': False})
                 contracts = self.get_contract(cr, uid, slip.employee_id, date, context=context)
             else:
-                contracts = [contract_obj.read(cr, uid, contract_id, ['wage', 'struct_id', 'id'], context=context)]
-                update.update({
-                    'struct_id': contracts[0].get('struct_id', False)[0],
-                    'contract_id': contract_id
-                })
+                contracts = [contract_obj.browse(cr, uid, contract_id, context=context)]
+#                update.update({
+#                    'struct_id': contracts[0].get('struct_id', False)[0],
+#                    'contract_id': contract_id
+#                })
             if not contracts:
                 update.update({
                     'basic_amount': 0.0,
@@ -730,10 +734,6 @@ class hr_payslip(osv.osv):
                 self.write(cr, uid, [slip.id], update, context=context)
                 continue
             for contract in contracts:
-                if contract.get('id', False) == False:
-                    continue
-                contract_id = contract.get('id')
-                contract = contract_obj.browse(cr, uid, contract_id, context=context)
                 function = contract.struct_id.id
                 sal_structure = []
                 if function:
@@ -958,12 +958,14 @@ class hr_payslip(osv.osv):
         if not contract_id:
             update['value'].update({'struct_id': False})
             contracts = self.get_contract(cr, uid, employee_id, ddate, context=context)
+#            update['value'].update({
+#            'struct_id': contracts[0].get('function', False),
+#            'contract_id': contracts[0].get('id', False)
+#                })
         else:
-            contracts = [contract_obj.read(cr, uid, contract_id, ['wage', 'struct_id', 'id'], context=context)]
-            update['value'].update({
-                'struct_id': contracts[0].get('struct_id', False),
-                'contract_id': contract_id
-            })
+            contracts = [contract_obj.browse(cr, uid, contract_id, context=context)]
+            update['value'].update({'struct_id': contracts[0].struct_id.id})
+
         if not contracts:
             update['value'].update({
                 'basic_amount': 0.0,
@@ -977,11 +979,7 @@ class hr_payslip(osv.osv):
         final_total = 0.0
         all_basic = 0.0
         for contract in contracts:
-            if contract.get('id', False) == False:
-                continue
-            contract_id = contract.get('id')
-            contract_id = contract_obj.browse(cr, uid, contract_id, context=context)
-            function = contract_id.struct_id.id
+            function = contract.struct_id.id
             sal_structure = []
             if function:
                 sal_structure = self._get_parent_structure(cr, uid, [function], context=context)
@@ -996,7 +994,7 @@ class hr_payslip(osv.osv):
                     rules.append(rl)
             ad = []
             total = 0.0
-            obj = {'basic': contract_id.wage}
+            obj = {'basic': contract.wage}
             for line in rules:
                 cd = line.code.lower()
                 obj[cd] = line.amount or 0.0
@@ -1091,7 +1089,7 @@ class hr_payslip(osv.osv):
                     else:
                         update['value']['line_ids'].append(vals)
 
-                basic = contract_id.wage
+                basic = contract.wage
                 all_basic += basic
                 final_total += basic + total
             number = sequence_obj.get(cr, uid, 'salary.slip')
@@ -1102,7 +1100,7 @@ class hr_payslip(osv.osv):
                 'basic_before_leaves': basic,
                 'total_pay': final_total,
                 'name': 'Salary Slip of %s for %s' % (employee_id.name, tools.ustr(ttyme.strftime('%B-%Y'))),
-    #            'contract_id': contract_id.id,
+    #            'contract_id': contract.id,
                 'company_id': employee_id.company_id.id
             })
 
@@ -1259,6 +1257,18 @@ class hr_holidays(osv.osv):
         'contract_id': fields.many2one('hr.contract', 'Contract', readonly=True, states={'draft':[('readonly',False)]})
     }
 
+    def onchange_employee_id(self, cr, uid, ids, employee_id=False, context=None):
+        if not employee_id:
+            return {}
+        contract_obj = self.pool.get('hr.contract')
+        res = {}
+        contracts = contract_obj.search(cr, uid, [('employee_id', '=', employee_id)], context=context)
+        contract_ids = contract_obj.browse(cr, uid, contracts, context=context)
+        res.update({
+            'contract_id': contract_ids and contract_ids[0].id or False,
+        })
+        return {'value': res}
+
 hr_holidays()
 
 class hr_payslip_line(osv.osv):
@@ -1351,7 +1361,7 @@ class hr_salary_rule(osv.osv):
         ],'Company Amount Type', select=True),
         'contribute_per':fields.float('Company Contribution', digits=(16, 4), help='Define Company contribution ratio 1.00=100% contribution.'),
         'company_contribution':fields.boolean('Company Contribution',help="This rule has Company Contributions."),
-	    'expression_result':fields.char('Expression based on', size=1024, required=False, readonly=False, help='result will be affected to a variable'),
+        'expression_result':fields.char('Expression based on', size=1024, required=False, readonly=False, help='result will be affected to a variable'),
      }
     _defaults = {
         'python_compute': '''# basic\n# employee: hr.employee object or None\n# contract: hr.contract object or None\n\nresult = basic * 0.10''',
