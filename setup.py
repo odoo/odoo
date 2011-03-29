@@ -38,9 +38,14 @@ from setuptools.command.install import install
 from distutils.sysconfig import get_python_lib
 
 has_py2exe = False
+py2exe_keywords = {}
 if os.name == 'nt':
     import py2exe
     has_py2exe = True
+    py2exe_keywords['console'] = [
+        { "script": join("bin", "openerp-server.py"),
+          "icon_resources": [(1, join("pixmaps","openerp-icon.ico"))]
+        }]
 
 sys.path.append(join(os.path.abspath(os.path.dirname(__file__)), "bin"))
 
@@ -222,12 +227,6 @@ setup(name             = name,
           '': ['*.yml', '*.xml', '*.po', '*.pot', '*.csv'],
       },
       package_dir      = find_package_dirs(),
-      console = [
-          {
-              "script": join("bin", "openerp-server.py"),
-              "icon_resources": [(1, join("pixmaps","openerp-icon.ico"))]
-          }
-      ],
       options = options,
       install_requires = [
           'lxml',
@@ -245,6 +244,7 @@ setup(name             = name,
       ],
       extras_require={
           'SSL' : ['pyopenssl'],
-      }
+      },
+      **py2exe_keywords
 )
 
