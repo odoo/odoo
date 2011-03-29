@@ -28,19 +28,12 @@ from tools import config
 import netsvc
 
 import base64
-import inspect
 import subprocess
 import logging
-import os
-import re
 import smtplib
 import socket
 import sys
-import threading
 import time
-import warnings
-import zipfile
-from datetime import datetime
 from email.MIMEText import MIMEText
 from email.MIMEBase import MIMEBase
 from email.MIMEMultipart import MIMEMultipart
@@ -48,12 +41,6 @@ from email.Header import Header
 from email.Utils import formatdate, COMMASPACE
 from email import Utils
 from email import Encoders
-from itertools import islice, izip
-from lxml import etree
-if sys.version_info[:2] < (2, 4):
-    from threadinglocal import local
-else:
-    from threading import local
 try:
     from html2text import html2text
 except ImportError:
@@ -63,17 +50,19 @@ import openerp.loglevels as loglevels
 from tools import config
 from email.generator import Generator
 
-
 # get_encodings, ustr and exception_to_unicode were originally from tools.misc.
 # There are moved to loglevels until we refactor tools.
 from openerp.loglevels import get_encodings, ustr, exception_to_unicode
 
 _logger = logging.getLogger('tools')
 
-# List of etree._Element subclasses that we choose to ignore when parsing XML.
-# We include the *Base ones just in case, currently they seem to be subclasses of the _* ones.
-SKIPPED_ELEMENT_TYPES = (etree._Comment, etree._ProcessingInstruction, etree.CommentBase, etree.PIBase)
-
+priorities = {
+        '1': '1 (Highest)',
+        '2': '2 (High)',
+        '3': '3 (Normal)',
+        '4': '4 (Low)',
+        '5': '5 (Lowest)',
+    }
 
 class ir_mail_server(osv.osv):
     """
@@ -103,7 +92,8 @@ unless it is already specified in the From Email, e.g: John Doe <john@doe.com>",
                         required=False),
         'smtp_tls':fields.boolean('TLS'),
         'smtp_ssl':fields.boolean('SSL/TLS'),
-        'priority': fields.integer('Priority', help="If no specific server is requested for a mail then the highest priority one is used"),
+        'priority': fields.integer('Priority', help="If no specific server is \
+                        requested for a mail then the highest priority one is used"),
     }
 
     _defaults = {
@@ -124,8 +114,10 @@ unless it is already specified in the From Email, e.g: John Doe <john@doe.com>",
         """
         try:
             for smtp_server in self.browse(cr, uid, ids, context=context):
-                smtp = self.connect_smtp_server(cr, uid, smtp_server.smtp_host, smtp_server.smtp_port, user_name=smtp_server.smtp_user,
-                                user_password=smtp_server.smtp_pass, ssl=smtp_server.smtp_ssl, tls=smtp_server.smtp_tls, debug=False)
+                smtp = self.connect_smtp_server(cr, uid, smtp_server.smtp_host,
+                       smtp_server.smtp_port, user_name=smtp_server.smtp_user,
+                       user_password=smtp_server.smtp_pass, ssl=smtp_server.smtp_ssl,
+                       tls=smtp_server.smtp_tls, debug=False)
                 try:
                     smtp.quit()
                 except Exception:
@@ -139,7 +131,8 @@ unless it is already specified in the From Email, e.g: John Doe <john@doe.com>",
 
         raise osv.except_osv(_("SMTP Connection: Test Successfully!"), '')
 
-    def connect_smtp_server(self, cr, uid, server_host, server_port, user_name=None, user_password=None, ssl=False, tls=False, debug=False):
+    def connect_smtp_server(self, cr, uid, server_host, server_port, user_name=None,
+                        user_password=None, ssl=False, tls=False, debug=False):
         """
         Connect SMTP Server and returned the (SMTP) object
         """
@@ -170,8 +163,8 @@ unless it is already specified in the From Email, e.g: John Doe <john@doe.com>",
             raise error
         return smtp_server
 
-    def _email_send(self, cr, uid, smtp_from, smtp_to_list, message, ssl=False, debug=False,
-                smtp_server=None, smtp_port=None, smtp_user=None, smtp_password=None):
+    def _email_send(self, cr, uid, smtp_from, smtp_to_list, message, ssl=False,
+                debug=False, smtp_server=None, smtp_port=None, smtp_user=None, smtp_password=None):
         """Low-level method to send directly a Message through the configured smtp server.
             :param smtp_from: RFC-822 envelope FROM (not displayed to recipient)
             :param smtp_to_list: RFC-822 envelope RCPT_TOs (not displayed to recipient)
@@ -205,7 +198,8 @@ unless it is already specified in the From Email, e.g: John Doe <john@doe.com>",
             if not ssl:
                 ssl = config.get('smtp_ssl', False)
 
-            smtp = self.connect_smtp_server(cr, uid, smtp_server, smtp_port, user_name=smtp_user, user_password=smtp_password, ssl=ssl, tls=True, debug=debug)
+            smtp = self.connect_smtp_server(cr, uid, smtp_server, smtp_port,
+                    user_name=smtp_user, user_password=smtp_password, ssl=ssl, tls=True, debug=debug)
             try:
                 smtp.sendmail(smtp_from, smtp_to_list, message.as_string())
             except Exception:
@@ -233,11 +227,16 @@ unless it is already specified in the From Email, e.g: John Doe <john@doe.com>",
         """
         return "<%s-openobject-%s@%s>" % (time.time(), openobject_id, socket.gethostname())
 
-    def send_email(self, cr, uid, smtp_from, smtp_to_list, message, id=None, subject=None, ssl=False,
-                    debug=False, smtp_server=None, smtp_port=None, smtp_user=None, smtp_password=None):
+    def send_email(self, cr, uid, smtp_from, email_to, subject, body, email_cc=None,
+                email_bcc=None, reply_to=False, attach=None, message_id=None,
+                references=None, openobject_id=False, debug=False, subtype='plain',
+                x_headers=None, priority='3', smtp_server=None, smtp_port=None,
+                ssl=False, smtp_user=None, smtp_password=None, id=None):
 
         """Send an email.
         """
+        if x_headers is None:
+            x_headers = {}
 
         if not (smtp_from or config['email_from']):
             raise ValueError("Sending an email requires either providing a sender "
@@ -246,48 +245,65 @@ unless it is already specified in the From Email, e.g: John Doe <john@doe.com>",
         smtp_from = ustr(smtp_from).encode('utf-8')
 
         if id:
-            smtp_server = self.browse(cr, uid, id)
-        if not (id and smtp_server):
-            server = self.search(cr, uid, [], order='priority', limit=1)
-            smtp_server = self.browse(cr, uid, server[0])
-        if not id and smtp_server:
+            server = self.browse(cr, uid, id)
+            smtp_server = server.smtp_host
+            smtp_user = server.smtp_user
+            smtp_password = server.smtp_pass
+            smtp_port = server.smtp_port
+            ssl = server.smtp_ssl
+        elif not (id and smtp_server):
+            server_ids = self.search(cr, uid, [], order='priority', limit=1)
+            server = self.browse(cr, uid, server_ids[0])
+            smtp_server = server.smtp_host
+            smtp_user = server.smtp_user
+            smtp_password = server.smtp_pass
+            smtp_port = server.smtp_port
+            ssl = server.smtp_ssl
+        elif not id and smtp_server:
             smtp_server = smtp_server
+            smtp_user = smtp_user
+            smtp_password = smtp_password
+            smtp_port = smtp_port
+            ssl = ssl
 
-        email_body = ustr(message.body or '').encode('utf-8')
-        email_text = MIMEText(email_body or '',_charset='utf-8')
+        if not email_cc: email_cc = []
+        if not email_bcc: email_bcc = []
+        if not body: body = u''
+        email_body = ustr(body).encode('utf-8')
+        email_text = MIMEText(email_body or '', _subtype=subtype, _charset='utf-8')
         msg = MIMEMultipart()
 
-        openobject_id = message.res_id
-        if not message.message_id and openobject_id:
+        if not message_id and openobject_id:
             message_id = self.generate_tracking_message_id(openobject_id)
         else:
             message_id = Utils.make_msgid()
+
         msg['Message-Id'] = message_id
-
-        if message.references:
-            msg['references'] = message.references
-
-        if subject:
-            msg['Subject'] = Header(ustr(subject), 'utf-8')
+        if references:
+            msg['references'] = references
+        msg['Subject'] = Header(ustr(subject), 'utf-8')
         msg['From'] = smtp_from
-        msg['To'] = smtp_to_list
+
         del msg['Reply-To']
-        if message.reply_to:
-            msg['Reply-To'] = message.reply_to
+        if reply_to:
+            msg['Reply-To'] = reply_to
         else:
             msg['Reply-To'] = msg['From']
-        msg['Cc'] = message.email_cc or []
-        msg['Bcc'] = message.email_bcc or []
-        #msg['X-Priority'] = message.priority
+
+        msg['To'] = COMMASPACE.join(email_to)
+
+        if email_cc:
+            msg['Cc'] = COMMASPACE.join(email_cc)
+        if email_bcc:
+            msg['Bcc'] = COMMASPACE.join(email_bcc)
+
+        msg['X-Priority'] = priorities.get(priority, '3 (Normal)')
         msg['Date'] = formatdate(localtime=True)
 
         # Add dynamic X Header
-        if message.headers:
-            x_headers = message.headers
-            for key, value in x_headers.iteritems():
-                msg['%s' % key] = str(value)
-
-        if html2text and message.sub_type == 'html':
+        for key, value in x_headers.iteritems():
+            msg['%s' % key] = str(value)
+        if html2text and sub_type == 'html':
             text = html2text(email_body.decode('utf-8')).encode('utf-8')
             alternative_part = MIMEMultipart(_subtype="alternative")
             alternative_part.attach(MIMEText(text, _charset='utf-8', _subtype='plain'))
@@ -296,19 +312,17 @@ unless it is already specified in the From Email, e.g: John Doe <john@doe.com>",
         else:
             msg.attach(email_text)
 
-        attachments = []
-        for attach in message.attachment_ids:
-            attachments.append((attach.datas_fname, base64.b64decode(attach.datas)))
-        if attachments:
-            for (fname,fcontent) in attachments:
+        if attach:
+            for (fname, fcontent) in attach:
                 part = MIMEBase('application', "octet-stream")
                 part.set_payload( fcontent )
                 Encoders.encode_base64(part)
                 part.add_header('Content-Disposition', 'attachment; filename="%s"' % (fname,))
                 msg.attach(part)
 
-        res = self._email_send(cr, uid, smtp_from, smtp_to_list, msg, smtp_server=smtp_server.smtp_host,
-                               smtp_user=smtp_server.smtp_user, smtp_password=smtp_server.smtp_pass, smtp_port=smtp_server.smtp_port, debug=message.debug)
+        res = self._email_send(cr, uid, smtp_from, tools.flatten([email_to, email_cc, email_bcc]),
+                    msg, ssl=ssl, debug=debug, smtp_server=smtp_server, smtp_user=smtp_user,
+                    smtp_password=smtp_password, smtp_port=smtp_port)
         if res:
             return message_id
         return False
@@ -317,13 +331,13 @@ unless it is already specified in the From Email, e.g: John Doe <john@doe.com>",
         smtp_port = 0
         if smtp_ssl:
             smtp_port = 465
-        return {'value':{'smtp_ssl':smtp_ssl,'smtp_tls':False,'smtp_port':smtp_port}}
+        return {'value': {'smtp_ssl':smtp_ssl, 'smtp_tls':False, 'smtp_port':smtp_port}}
 
     def on_change_tls(self, cr, uid, ids, smtp_tls):
         smtp_port = 0
         if smtp_tls:
             smtp_port = 0
-        return {'value':{'smtp_tls':smtp_tls,'smtp_ssl':False,'smtp_port':smtp_port}}
+        return {'value': {'smtp_tls':smtp_tls, 'smtp_ssl':False, 'smtp_port':smtp_port}}
 
 
 ir_mail_server()

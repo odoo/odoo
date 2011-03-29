@@ -347,14 +347,6 @@ res_re = re.compile(r"\[([0-9]+)\]", re.UNICODE)
 command_re = re.compile("^Set-([a-z]+) *: *(.+)$", re.I + re.UNICODE)
 reference_re = re.compile("<.*-openobject-(\\d+)@(.*)>", re.UNICODE)
 
-priorities = {
-        '1': '1 (Highest)',
-        '2': '2 (High)',
-        '3': '3 (Normal)',
-        '4': '4 (Low)',
-        '5': '5 (Lowest)',
-    }
-
 def html2plaintext(html, body_id=None, encoding='utf-8'):
     ## (c) Fry-IT, www.fry-it.com, 2007
     ## <peter@fry-it.com>
@@ -421,7 +413,7 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
 
     return html
 
-def email_send(smtp_from, smtp_to_list, message, ssl=False, debug=False, smtp_server=None, smtp_port=None,
+def email_send(uid, smtp_from, smtp_to_list, message, ssl=False, debug=False, smtp_server=None, smtp_port=None,
            smtp_user=None, smtp_password=None, cr=None):
     if not cr:
         db_name = getattr(threading.currentThread(), 'dbname', None)
