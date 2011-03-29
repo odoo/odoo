@@ -407,13 +407,13 @@ openerp.base.BaseWidget = openerp.base.Controller.extend({
     template: null,
     /**
      * The prefix used to generate an id automatically. Should be redifined in subclasses.
-     * If it is not defined, the make_id() method must be explicitly called.
+     * If it is not defined, a default identifier will be used.
      * 
      * @type string
      */
-    identifier_prefix: null,
+    identifier_prefix: 'generic-identifier',
     /**
-     * Contructor.
+     * Contructor. Also initialize the identifier.
      * 
      * @params {openerp.base.search.BaseWidget} parent The parent widget.
      */
@@ -423,9 +423,7 @@ openerp.base.BaseWidget = openerp.base.Controller.extend({
         if(parent != null) {
         	parent.children.push(this);
         }
-        if(this.identifier_prefix != null) {
-        	this.make_id(this.identifier_prefix);
-        }
+        this.make_id(this.identifier_prefix);
     },
     /**
      * Sets and returns a globally unique identifier for the widget.
@@ -444,10 +442,8 @@ openerp.base.BaseWidget = openerp.base.Controller.extend({
      */
     start: function () {
         this._super();
-        if (this.element_id) {
-            this.$element = $(document.getElementById(
-                this.element_id));
-        }
+        var tmp = document.getElementById(this.element_id)
+        this.$element = tmp != null ? $(tmp) : null;
     },
     /**
      * "Stops" the widgets. Called when the view destroys itself, this
