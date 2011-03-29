@@ -477,40 +477,50 @@ class hr_payslip(osv.osv):
 
     def _get_salary_rules(self, cr, uid, ids, field_names, arg=None, context=None):
         structure_obj = self.pool.get('hr.payroll.structure')
+        contract_obj = self.pool.get('hr.contract')
         res = {}
-        sal_structure = []
         lines = []
         rules = []
         rul = []
+        structure = []
+        sal_structure =[]
         for record in self.browse(cr, uid, ids, context=context):
-            function = record.struct_id.id
+            if record.struct_id.id:
+                structure.append(record.struct_id.id)
+            elif not record.struct_id:
+                 contracts = self.get_contract(cr, uid, record.employee_id, record.date, context=context)
+                 for ct in contracts:
+                     contract_id = ct.get('id')
+                     contract = contract_obj.browse(cr, uid, contract_id, context=context)
+                     structure.append(contract.struct_id.id)
             res[record.id] = {}
-            if function:
-                sal_structure = self._get_parent_structure(cr, uid, [function], context=context)
-            for struct in sal_structure:
-                lines = structure_obj.browse(cr, uid, struct, context=context).rule_ids
-                for rl in lines:
-                    if rl.child_ids:
-                        for r in rl.child_ids:
-                            lines.append(r)
-                    rules.append(rl)
-            for fn in field_names:
-               if fn == 'applied_salary_rule':
-                   for r in rules:
-                       if r.id not in rul:
-                           rul.append(r.id)
-                   res[record.id] = {fn: rul}
-               elif fn == 'appears_on_payslip_rule':
-                   for r in rules:
-                       if r.appears_on_payslip:
+            for st in structure:
+                if st:
+                    sal_structure = self._get_parent_structure(cr, uid, [st], context=context)
+                for struct in sal_structure:
+                    lines = structure_obj.browse(cr, uid, struct, context=context).rule_ids
+                    for rl in lines:
+                        if rl.child_ids:
+                            for r in rl.child_ids:
+                                lines.append(r)
+                        rules.append(rl)
+                for fn in field_names:
+                   if fn == 'applied_salary_rule':
+                       for r in rules:
                            if r.id not in rul:
                                rul.append(r.id)
-                   res[record.id] = {fn: rul}
-               elif fn == 'details_by_salary_head':
-                   for r in rules:
-                       if r.id not in rul:
-                           rul.append(r.id)
-                   res[record.id] = {fn: rul}
+                       res[record.id] = {fn: rul}
+                   elif fn == 'appears_on_payslip_rule':
+                       for r in rules:
+                           if r.appears_on_payslip:
+                               if r.id not in rul:
+                                   rul.append(r.id)
+                       res[record.id] = {fn: rul}
+                   elif fn == 'details_by_salary_head':
+                       for r in rules:
+                           if r.id not in rul:
+                               rul.append(r.id)
+                       res[record.id] = {fn: rul}
         return res
 
     def _compute(self, cr, uid, id, value, context=None):
