@@ -32,22 +32,27 @@ added to (resp. removed from) the portal's users.
             <field name="priority" eval="16"/>
             <field name="arch" type="xml">
                 <form string="Portal Form">
-                    <field name="name" colspan="4"/>
-                    <field name="menu_id" domain="[('usage','=','menu')]" colspan="2"/>
-                    <button name="action_create_menu" type="object"
-                        string="Create Portal Menu"/>
-                    <separator string="Users and groups" colspan="4"/>
-                    <field name="user_ids" nolabel="1" colspan="2"
-                        context="{'menu_id': menu_id, 'groups_id': group_ids}">
-                        <tree string="Users">
-                            <field name="name"/>
-                        </tree>
-                    </field>
-                    <field name="group_ids" nolabel="1" colspan="2">
-                        <tree string="Groups">
-                            <field name="name"/>
-                        </tree>
-                    </field>
+                    <field name="name"/>
+                    <notebook>
+                        <page string="Users and Groups">
+                            <field name="user_ids" nolabel="1" colspan="2"
+                                context="{'menu_id': menu_id, 'groups_id': group_ids}">
+                                <tree string="Users">
+                                    <field name="name"/>
+                                </tree>
+                            </field>
+                            <field name="group_ids" nolabel="1" colspan="2">
+                                <tree string="Groups">
+                                    <field name="name"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Portal Menu">
+                            <field name="menu_id" domain="[('usage','=','menu')]"/>
+                            <button name="action_create_menu" type="object"
+                                string="Create Portal Menu"/>
+                        </page>
+                    </notebook>
                 </form>
             </field>
         </record>
