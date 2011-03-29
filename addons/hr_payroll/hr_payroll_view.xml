@@ -56,6 +56,23 @@
 
         <!-- End Contract View-->
 
+        <!-- Holidays View -->
+        <record id="hr_holidays_form_inherit" model="ir.ui.view">
+            <field name="name">hr.holidays.view.form.inherit</field>
+            <field name="model">hr.holidays</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="hr_holidays.edit_holiday_new"/>
+            <field name="arch" type="xml">
+            <data>
+                <xpath expr="/form/notebook/page/field[@name='number_of_days_temp']" position="after">
+                    <field name="contract_id" select="1" domain="[('employee_id', '=', employee_id)]" attrs="{'invisible':[('holiday_type','=','category')], 'required':[('holiday_type','=','employee')]}"/>
+                </xpath>
+            </data>
+            </field>
+        </record>
+
+        <!-- End Holidays View-->
+
         <!-- Salary structure -->
         <record id="view_hr_employee_grade_tree" model="ir.ui.view">
             <field name="name">hr.payroll.structure.tree</field>
@@ -253,9 +270,9 @@
                                     </notebook>
                                 </form>
                             </field>
-                            <group col="6" colspan="4">
+                            <!-- <group col="6" colspan="4">
                                 <separator string="Computation Overview" colspan="6"/>
-                                <!--<field name="working_days"/>
+                                <field name="working_days"/>
                                 <field name="holiday_days"/>
                                 <field name="worked_days"/>
                                 <field name="basic_before_leaves"/>
@@ -264,9 +281,9 @@
                                 <field name="allounce"/>
                                 <field name="deduction"/>
                                 <field name="grows"/>
-                                <field name="net"/>-->
+                                <field name="net"/>
                                 <field name="total_pay"/>
-                            </group>
+                            </group> -->
                         </page>
                         <page string="Holidays">
                             <field name="holiday_ids" colspan="4" nolabel="1" editable="bottom"/>
