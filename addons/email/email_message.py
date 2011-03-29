@@ -266,11 +266,6 @@ class email_message(osv.osv):
         self.write(cr, uid, ids, {'state':'outgoing'}, context)
         for message in self.browse(cr, uid, ids, context):
             try:
-                smtp_server = message.smtp_server_id
-                if not smtp_server:
-                    smtp_ids = smtp_server_obj.search(cr, uid, [])
-                    if smtp_ids:
-                        smtp_server = smtp_server_obj.browse(cr, uid, smtp_ids, context)[0]
                 res = self.send_email(cr, uid, ids, auto_commit=True, context=context)
                 if res:
                     self.write(cr, uid, [message.id], {'state':'sent', 'message_id': res}, context)
@@ -290,9 +285,32 @@ class email_message(osv.osv):
         attachment_pool = self.pool.get('ir.attachment')
         for message in self.browse(cr, uid, ids, context):
             try:
+                smtp_server = message.smtp_server_id
+                if not smtp_server:
+                    smtp_ids = smtp_server_obj.search(cr, uid, [])
+                    if smtp_ids:
+                        smtp_server = smtp_server_obj.browse(cr, uid, smtp_ids, context)[0]
+                attachments = []
+                for attach in message.attachment_ids:
+                    attachments.append((attach.datas_fname ,base64.b64decode(attach.datas)))
                 if message.state in ['outgoing', 'exception']:
-                    result = smtp_server_obj.send_email(cr, uid, message.email_from, message.email_to,
-                                    message, id=message.smtp_server_id.id or False, subject=message.subject)
+                    print 'call'
+                    res = smtp_server_obj.send_email(cr, uid, message.email_from,
+                        message.email_to and message.email_to.split(',') or [],
+                        message.subject, message.body,
+                        email_cc=message.email_cc and message.email_cc.split(',') or [],
+                        email_bcc=message.email_bcc and message.email_bcc.split(',') or [],
+                        reply_to=message.reply_to,
+                        attach=attachments, message_id=message.message_id, references = message.references,
+                        openobject_id=message.res_id,
+                        subtype=message.sub_type,
+                        x_headers=message.headers and eval(message.headers) or {},
+                        priority=message.priority, debug=message.debug,
+                        smtp_server=smtp_server and smtp_server.smtp_host or None,
+                        smtp_port=smtp_server and smtp_server.smtp_port or None,
+                        ssl=smtp_server and smtp_server.smtp_ssl or False,
+                        smtp_user=smtp_server and smtp_server.smtp_user or None,
+                        smtp_password=smtp_server and smtp_server.smtp_pass or None, id=message.smtp_server_id.id or None)
                 else:
                     raise osv.except_osv(_('Error !'), _('No messages in outgoing or exception state!'))
 
