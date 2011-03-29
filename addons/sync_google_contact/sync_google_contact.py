@@ -24,6 +24,10 @@ from osv import fields,osv,orm
 class res_partner_address(osv.osv):
     _inherit = "res.partner.address"
 
+    _columns = {
+        'last_modification_date': fields.datetime('Last Modification Date', readonly=True, help="Last modification date of google contact."),
+    }
+
     def unlink(self, cr, uid, ids, context=None):
         model_obj = self.pool.get('ir.model.data')
         model_ids = model_obj.search(cr, uid, [('res_id','in',ids),('model','=','res.partner.address'),('module','=','sync_google_contact')], context=context)

@@ -18,16 +18,24 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+import time
+import datetime
+import dateutil
+from dateutil.tz import *
+from dateutil.parser import *
+from pytz import timezone
+import pytz
 
-from osv import fields,osv
-from tools.translate import _
-import tools
 try:
     import gdata
     import gdata.contacts.service
     import gdata.contacts
 except ImportError:
     raise osv.except_osv(_('Google Contacts Import Error!'), _('Please install gdata-python-client from http://code.google.com/p/gdata-python-client/downloads/list'))
+
+from osv import fields,osv
+from tools.translate import _
+import tools
 
 class google_contact_import(osv.osv_memory):
     _inherit = 'google.login'
@@ -138,9 +146,10 @@ class synchronize_google_contact(osv.osv_memory):
         addresses = []
         partner_ids = []
         contact_ids=[]
+        
         while contact:
             for entry in contact.entry:
-                data = self._retreive_data(entry)
+                data = self._retreive_data(entry, context=context)
                 google_id = data.pop('id')
                 model_data = {
                     'name':  google_id,
@@ -152,6 +161,9 @@ class synchronize_google_contact(osv.osv_memory):
                 data_ids = model_obj.search(cr, uid, [('model','=','res.partner.address'), ('name','=', google_id)])
                 if data_ids:
                     contact_ids = [model_obj.browse(cr, uid, data_ids[0], context=context).res_id]
+                    address = addresss_obj.browse(cr, uid, contact_ids[0], context=context)
+                    if address.last_modification_date > data.get('last_modification_date'):
+                        data['last_modification_date'] = address.last_modification_date
                 elif data['email']:
                     contact_ids = addresss_obj.search(cr, uid, [('email', 'ilike', data['email'])])
 
@@ -183,7 +195,7 @@ class synchronize_google_contact(osv.osv_memory):
         else:
             return addresses
         
-    def _retreive_data(self, entry):
+    def _retreive_data(self, entry, context=None):
         data = {}
         data['id'] = entry.id.text
         name = tools.ustr(entry.title.text)
@@ -192,7 +204,19 @@ class synchronize_google_contact(osv.osv_memory):
         data['name'] = name
         emails = ','.join(email.address for email in entry.email)
         data['email'] = emails
-                    
+        
+        if 'tz' in context and context['tz']:
+            time_zone = context['tz']
+        else:
+            time_zone = 'Asia/Kolkata'
+        au_tz = timezone(time_zone)
+        
+        if entry.updated:
+            google_updated = entry.updated.text
+            utime = dateutil.parser.parse(google_updated)
+            au_dt = au_tz.normalize(utime.astimezone(au_tz))
+            updated_dt = datetime.datetime(*au_dt.timetuple()[:6]).strftime('%Y-%m-%d %H:%M:%S')
+            data['last_modification_date'] = updated_dt
 
         if entry.phone_number:
             for phone in entry.phone_number:
@@ -211,17 +235,18 @@ class synchronize_google_contact(osv.osv_memory):
         name = str((addr.name or addr.partner_id and addr.partner_id.name or '').encode('utf-8'))
 
         if not name:
-            vals['name']=data.get('name','')
+            vals['name'] = data.get('name','')
         if not addr.email:
-            vals['email']=data.get('email','')
+            vals['email'] = data.get('email','')
         if not addr.mobile:
-            vals['mobile']=data.get('mobile','')
+            vals['mobile'] = data.get('mobile','')
         if not addr.phone:
-            vals['phone']=data.get('phone','')
+            vals['phone'] = data.get('phone','')
         if not addr.fax:
-            vals['fax']=data.get('fax','')
-            
-        addresss_obj.write(cr,uid,contact_ids,vals,context=context)
+            vals['fax'] = data.get('fax','')
+        vals['last_modification_date'] = data.get('last_modification_date')
+        
+        addresss_obj.write(cr, uid, contact_ids, vals, context=context)
         return {'type': 'ir.actions.act_window_close'}
 
 synchronize_google_contact()

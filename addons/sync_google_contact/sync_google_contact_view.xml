@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <record model="ir.ui.view" id="view_partner_google_form">
+            <field name="name">res.partner.google.form</field>
+            <field name="type">form</field>
+            <field name="model">res.partner.address</field>
+            <field name="inherit_id" ref="base.view_partner_address_form1"/>
+            <field name="arch" type="xml">
+                <field name="email" position="after">
+                    <group colspan="2" col="2">
+                        <separator string="Google Information" colspan="4"/>
+                        <field name="last_modification_date" colspan="4"/>
+                    </group>
+                </field>                    
+            </field>
+        </record>
+    
+    </data>
+</openerp>
