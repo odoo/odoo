@@ -129,6 +129,42 @@ class portal(osv.osv):
             user_object.write(cr, uid, user_ids, user_values, context)
         
         return True
+    
+    def action_create_menu(self, cr, uid, ids, context=None):
+        """ create a menu for this portal """
+        if len(ids) != 1:
+            raise ValueError("portal.action_create_menu() applies to one portal only")
+        portal_name = self.browse(cr, uid, ids[0], context).name
+        
+        # create a menuitem under 'portal.portal_menu_tree'
+        item_data = {
+            'name': portal_name,
+            'parent_id': self._get_res_id(cr, uid, 'portal', 'portal_menu_tree'),
+        }
+        item_id = self.pool.get('ir.ui.menu').create(cr, uid, item_data, context)
+        
+        # create an action to open the menuitems under item_id
+        action_data = {
+            'name': portal_name,
+            'type': 'ir.actions.act_window',
+            'usage': 'menu',
+            'res_model': 'ir.ui.menu',
+            'view_type': 'tree',
+            'view_id': self._get_res_id(cr, uid, 'base', 'view_menu'),
+            'domain': [('parent_id', '=', item_id)],
+        }
+        action_id = self.pool.get('ir.actions.act_window').create(cr, uid, action_data, context)
+        
+        # set the portal menu_id to action_id
+        return self.write(cr, uid, ids, {'menu_id': action_id}, context)
+    
+    def _get_res_id(self, cr, uid, module, xml_id):
+        """ return the resource id associated to the given xml_id """
+        ir_model_data_obj = self.pool.get('ir.model.data')
+        record_id = ir_model_data_obj._get_id(cr, uid, module, xml_id)
+        record_data = ir_model_data_obj.read(cr, uid, [record_id], ['res_id'])
+        assert (len(record_data) == 1) and ('res_id' in record_data[0])
+        return record_data[0]['res_id']
 
 portal()
 
