@@ -393,6 +393,94 @@ openerp.base.DataRecord =  openerp.base.Controller.extend({
     }
 });
 
+/**
+ * Base class for widgets. Handle rendering (based on a QWeb template), identifier
+ * generation, parenting and destruction of the widget.
+ */
+openerp.base.BaseWidget = openerp.base.Controller.extend({
+	/**
+	 * The name of the QWeb template that will be used for rendering. Must be redifined
+	 * in subclasses or the render() method can not be used.
+	 * 
+	 * @type string
+	 */
+    template: null,
+    /**
+     * The prefix used to generate an id automatically. Should be redifined in subclasses.
+     * If it is not defined, the make_id() method must be explicitly called.
+     * 
+     * @type string
+     */
+    identifier_prefix: null,
+    /**
+     * Contructor.
+     * 
+     * @params {openerp.base.search.BaseWidget} parent The parent widget.
+     */
+    init: function (parent) {
+		this.children = [];
+        this.parent = parent;
+        if(parent != null) {
+        	parent.children.push(this);
+        }
+        if(this.identifier_prefix != null) {
+        	this.make_id(this.identifier_prefix);
+        }
+    },
+    /**
+     * Sets and returns a globally unique identifier for the widget.
+     *
+     * If a prefix is appended, the identifier will be appended to it.
+     *
+     * @params sections prefix sections, empty/falsy sections will be removed
+     */
+    make_id: function () {
+        this.element_id = _.uniqueId(_.toArray(arguments).join('_'));
+        return this.element_id;
+    },
+    /**
+     * "Starts" the widgets. Called at the end of the rendering, this allows
+     * to get a jQuery object referring to the DOM ($element attribute).
+     */
+    start: function () {
+        this._super();
+        if (this.element_id) {
+            this.$element = $(document.getElementById(
+                this.element_id));
+        }
+    },
+    /**
+     * "Stops" the widgets. Called when the view destroys itself, this
+     * lets the widgets clean up after themselves.
+     */
+    stop: function () {
+    	var tmp_children = this.children;
+    	this.children = [];
+    	_.each(tmp_children, function(x) {
+    		x.stop();
+    	});
+    	if(this.$element != null) {
+    		this.$element.remove();
+    	}
+    	if(this.parent != null) {
+    		var _this = this;
+    		this.parent.children = _.reject(this.parent.children, function(x) { return x === _this;});
+            this.parent = null;
+    	}
+        this._super();
+    },
+    /**
+     * Render the widget. This.template must be defined.
+     * The content of the current object is passed as context to the template.
+     * 
+     * @param {object} additional Additional context arguments to pass to the template.
+     */
+    render: function (additional) {
+        return QWeb.render(this.template, _.extend({}, this,
+        		additional != null ? additional : {}));
+    }
+});
+
 openerp.base.SearchView = openerp.base.Controller.extend({
     init: function(session, element_id, dataset, view_id, defaults) {
         this._super(session, element_id);
@@ -515,7 +603,7 @@ openerp.base.SearchView = openerp.base.Controller.extend({
             data.fields_view.fields);
 
         // for extended search view
-        lines.push([new openerp.base.search.ExtendedSearch(this, data.fields_view.fields)]);
+        lines.push([new openerp.base.search.ExtendedSearch(null, data.fields_view.fields)]);
         
         var render = QWeb.render("SearchView", {
             'view': data.fields_view['arch'],
@@ -695,7 +783,6 @@ openerp.base.search.Widget = openerp.base.Controller.extend({
      */
     stop: function () {
         delete this.view;
-        this.$element.remove();
         this._super();
     },
     render: function (defaults) {
@@ -745,32 +832,27 @@ openerp.base.search.Group = openerp.base.search.Widget.extend({
         add_expand_listener(this.$element);
     }
 });
-openerp.base.search.ExtendedSearch = openerp.base.search.Widget.extend({
+
+openerp.base.search.ExtendedSearch = openerp.base.BaseWidget.extend({
     template: 'SearchView.extended_search',
-    init: function (view, fields) {
-	    this._super(view);
-        this.make_id('extended-search');
+    identifier_prefix: 'extended-search',
+    init: function (parent, fields) {
+	    this._super(parent);
         this.fields = fields;
         this.groups_list = [];
 	},
 	add_group: function(group) {
-    	var group = new openerp.base.search.ExtendedSearchGroup(this.view, this, this.fields);
+    	var group = new openerp.base.search.ExtendedSearchGroup(this, this.fields);
 		var $root = this.$element;
 		this.groups_list.push(group);
         var render = group.render({});
         var groups_div = $root.find('.searchview_extended_groups_list');
-        groups_div.html(groups_div.html() + render);
+        groups_div.append(render);
         group.start();
 	},
 	remove: function(group) {
 		this.groups_list = _.select(this.groups_list, function(x) {return ! x === group});
 		group.stop();
-	},
-	stop: function() {
-    	_.each(this.groups_list, function(el) {
-    		el.stop();
-    	});
-    	this._super();
 	},
     start: function () {
         this._super();
@@ -783,34 +865,39 @@ openerp.base.search.ExtendedSearch = openerp.base.search.Widget.extend({
             e.stopPropagation();
             e.preventDefault();
         });
+        // TODO: remove test
+        $root.find('.test_get_domain').click(function (e) {
+        	$root.find('.test_domain').text(JSON.stringify($this.get_domain()));
+            e.stopPropagation();
+            e.preventDefault();
+        });
+	},
+	get_domain: function() {
+		var domain = _.reduce(this.groups_list,
+				function(mem, x) { return mem.concat(x.get_domain());}, []);
+		return domain;
 	}
 });
-openerp.base.search.ExtendedSearchGroup = openerp.base.search.Widget.extend({
+
+openerp.base.search.ExtendedSearchGroup = openerp.base.BaseWidget.extend({
     template: 'SearchView.extended_search.group',
-    init: function (view, parent, fields) {
-	    this._super(view);
-	    this.parent = parent;
-	    this.make_id('extended-search-group');
+    identifier_prefix: 'extended-search-group',
+    init: function (parent, fields) {
+	    this._super(parent);
 	    this.fields = fields;
 	    this.propositions_list = [];
 	},
 	add_prop: function() {
         var $root = this.$element;
-		var prop = new openerp.base.search.ExtendedSearchProposition(this.view, this, this.fields);
+		var prop = new openerp.base.search.ExtendedSearchProposition(this, this.fields);
         this.propositions_list.push(prop);
         var render = prop.render({});
         var propositions_div = $root.find('.searchview_extended_propositions_list');
-        propositions_div.html(propositions_div.html() + render);
+        propositions_div.append(render);
         prop.start();
 	},
-	stop: function() {
-    	_.each(this.propositions_list, function(el) {
-    		el.stop();
-    	});
-    	this._super();
-	},
 	remove: function(prop) {
-		this.propositions_list = _.select(this.propositions_list, function(x) {return ! x === prop});
+		this.propositions_list = _.reject(this.propositions_list, function(x) {return x === prop});
 		prop.stop();
 	},
     start: function () {
@@ -823,11 +910,27 @@ openerp.base.search.ExtendedSearchGroup = openerp.base.search.Widget.extend({
             e.stopPropagation();
             e.preventDefault();
         });
-        $root.find('.searchview_extended_delete_group').click(function (e) {
+        var delete_btn = $root.find('.searchview_extended_delete_group');
+        delete_btn.click(function (e) {
         	$this.parent.remove($this);
+        	console.log(delete_btn);
+            e.stopPropagation();
+            e.preventDefault();
         });
+	},
+	get_domain: function() {
+		var props = _(this.propositions_list).chain().map(function(x) {
+			return x.get_proposition();
+		}).compact().value();
+		var choice = this.$element.find(".searchview_extended_group_choice").val();
+		var op = choice == "all" ? "&" : "|";
+		var domain = [].concat(choice == "none" ? ['!'] : [],
+				_.map(_.range(_.max([0,props.length - 1])), function(x) { return op; }),
+				props);
+		return domain;
 	}
 });
+
 extended_filters_types = {
 	char: {
 		operators: [
@@ -840,20 +943,20 @@ extended_filters_types = {
 		            {value: ">=", text: "greater or equal than"},
 		            {value: "<=", text: "less or equal than"},
 		],
-		build_component: function(view) {
-			return new openerp.base.search.ExtendedSearchProposition.Char(view);
+		build_component: function(parent) {
+			return new openerp.base.search.ExtendedSearchProposition.Char(parent);
 		},
 	}
-}
-openerp.base.search.ExtendedSearchProposition = openerp.base.search.Widget.extend({
+};
+
+openerp.base.search.ExtendedSearchProposition = openerp.base.BaseWidget.extend({
     template: 'SearchView.extended_search.proposition',
-    init: function (view, parent, fields) {
-	    this._super(view);
-	    this.parent = parent;
-	    this.make_id('extended-search-proposition');
+    identifier_prefix: 'extended-search-proposition',
+    init: function (parent, fields) {
+	    this._super(parent);
 	    this.fields = _(fields).chain()
-	    	.map(function(key,val) {return {name:val, obj:key};})
-	    	.sortBy(function(x) {return x.name;}).value();
+	    	.map(function(val,key) {return {name:key, obj:val};})
+	    	.sortBy(function(x) {return x.obj.string;}).value();
 	    this.attrs = {_: _, fields: this.fields, selected: null};
 	    this.value_component = null;
 	},
@@ -868,6 +971,8 @@ openerp.base.search.ExtendedSearchProposition = openerp.base.search.Widget.exten
 	    });
 	    this.$element.find('.searchview_extended_delete_prop').click(function (e) {
         	$this.parent.remove($this);
+            e.stopPropagation();
+            e.preventDefault();
         });
 	},
 	changed: function() {
@@ -875,12 +980,6 @@ openerp.base.search.ExtendedSearchProposition = openerp.base.search.Widget.exten
 		if(this.attrs.selected == null || nval != this.attrs.selected.name) {
 			this.set_selected(_.detect(this.fields, function(x) {return x.name == nval}));
 		}
-	},
-	stop: function() {
-    	if(this.value_component != null) {
-    		this.value_component.stop();
-		};
-    	this._super();
 	},
 	set_selected: function(selected) {
 		var $root = this.$element;
@@ -902,22 +1001,31 @@ openerp.base.search.ExtendedSearchProposition = openerp.base.search.Widget.exten
 			option.text(operator.text);
 			option.appendTo($root.find('.searchview_extended_prop_op'));
 		});
-		this.value_component = extended_filters_types[type].build_component(this.view);
+		this.value_component = extended_filters_types[type].build_component(this);
 		var render = this.value_component.render({});
 		$root.find('.searchview_extended_prop_value').html(render);
 		this.value_component.start();
 	},
-});
-openerp.base.search.ExtendedSearchProposition.Char = openerp.base.search.Widget.extend({
-    template: 'SearchView.extended_search.proposition.char',
-    init: function (view) {
-	    this._super(view);
-	    this.make_id('extended-search-proposition-char');
-	},
-    start: function () {
-        this._super();
+	get_proposition: function() {
+		if ( this.attrs.selected == null)
+			return null;
+		var field = this.attrs.selected.name;
+		var op =  this.$element.find('.searchview_extended_prop_op').val();
+		var value = this.value_component.get_value();
+		return [field, op, value];
 	}
 });
+
+openerp.base.search.ExtendedSearchProposition.Char = openerp.base.BaseWidget.extend({
+    template: 'SearchView.extended_search.proposition.char',
+    identifier_prefix: 'extended-search-proposition-char',
+    
+    get_value: function() {
+		var val = this.$element.val();
+		return val;
+	}
+});
+
 openerp.base.search.Input = openerp.base.search.Widget.extend({
     init: function (view) {
         this._super(view);
@@ -1246,93 +1354,7 @@ openerp.base.ListView = openerp.base.Controller.extend({
 openerp.base.TreeView = openerp.base.Controller.extend({
 });
 
-/**
- * Base class for widgets. Handle rendering (based on a QWeb template), identifier
- * generation, parenting and destruction of the widget.
- */
-openerp.base.search.BaseWidget = openerp.base.Controller.extend({
-	/**
-	 * The name of the QWeb template that will be used for rendering. Must be redifined
-	 * in subclasses or the render() method can not be used.
-	 * 
-	 * @type string
-	 */
-    template: null,
-    /**
-     * The prefix used to generate an id automatically. Should be redifined in subclasses.
-     * If it is not defined, the make_id() method must be explicitly called.
-     * 
-     * @type string
-     */
-    identifier_prefix: null,
-    /**
-     * Contructor.
-     * 
-     * @params {openerp.base.search.BaseWidget} parent The parent widget.
-     */
-    init: function (parent) {
-		this.children = [];
-        this.parent = parent;
-        if(parent != null) {
-        	parent.children.push(this);
-        }
-        if(this.identifier_prefix != null) {
-        	this.make_id(this.identifier_prefix);
-        }
-    },
-    /**
-     * Sets and returns a globally unique identifier for the widget.
-     *
-     * If a prefix is appended, the identifier will be appended to it.
-     *
-     * @params sections prefix sections, empty/falsy sections will be removed
-     */
-    make_id: function () {
-        this.element_id = _.uniqueId(_.toArray(arguments).join('_'));
-        return this.element_id;
-    },
-    /**
-     * "Starts" the widgets. Called at the end of the rendering, this allows
-     * to get a jQuery object referring to the DOM ($element attribute).
-     */
-    start: function () {
-        this._super();
-        if (this.element_id) {
-            this.$element = $(document.getElementById(
-                this.element_id));
-        }
-    },
-    /**
-     * "Stops" the widgets. Called when the view destroys itself, this
-     * lets the widgets clean up after themselves.
-     */
-    stop: function () {
-    	var tmp_children = this.children;
-    	this.children = [];
-    	_.each(tmp_children, function(x) {
-    		x.stop();
-    	});
-    	if(this.$element != null) {
-    		this.$element.remove();
-    	}
-    	if(this.parent != null) {
-    		var _this = this;
-    		parent.children = _.reject(parent.children, function(x) { return x === _this;});
-            this.parent = null;
-    	}
-        this._super();
-    },
-    /**
-     * Render the widget. This.template must be defined.
-     * The content of the current object is passed as context to the template.
-     * 
-     * @param {object} additional Additional context arguments to pass to the template.
-     */
-    render: function (additional) {
-        return QWeb.render(this.template, _.extend({}, this,
-        		additional != null ? additional : {}));
-    }
-});
+
 
 openerp.base.Widget = openerp.base.Controller.extend({
     // TODO Change this to init: function(view, node) { and use view.session and a new element_id for the super
