@@ -1611,7 +1611,7 @@ class res_partner(osv.osv):
     }
     
     def copy(self, cr, uid, id, default={}, context={}):
-        default.update({'invoice_ids' : False})
+        default.update({'invoice_ids' : []})
         return super(res_partner, self).copy(cr, uid, id, default, context)
       
 res_partner()
