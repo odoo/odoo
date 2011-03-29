@@ -29,6 +29,9 @@
     "description": """
 Installer for reporting tools.
 ==============================
+
+Makes the Reporting Tools Configuration available from where you can install
+modules like base_report_designer and base_report_creator.
     """,
     'website': 'http://www.openerp.com',
     'init_xml': [],

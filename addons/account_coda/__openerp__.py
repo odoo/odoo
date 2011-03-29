@@ -27,6 +27,8 @@
     "description": """
 Module provides functionality to import bank statements from coda files.
 ========================================================================
+
+Contains a wizard to import coda statements and maintains logs for the same.
     """,
     "images"   : ["images/coda_logs.jpeg","images/import_coda_logs.jpeg"],
     "depends"   : ["account_voucher"],

@@ -28,10 +28,10 @@
 This module allows you to manage your contacts entirely.
 ========================================================
 
-It lets you define
-    *contacts unrelated to a partner,
-    *contacts working at several addresses (possibly for different partners),
-    *contacts with possibly different functions for each of its job's addresses
+It lets you define:
+    * contacts unrelated to a partner,
+    * contacts working at several addresses (possibly for different partners),
+    * contacts with possibly different functions for each of its job's addresses
 
 It also adds new menu items located in
     Purchases / Address Book / Contacts
