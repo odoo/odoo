@@ -21,6 +21,7 @@
 
 from osv import osv, fields
 from tools.translate import _
+import tools
 
 import time
 
@@ -60,7 +61,8 @@ class crm_lead2opportunity_partner(osv.osv_memory):
         ids = []
         if partner_id:
             ids = lead_obj.search(cr, uid, [('partner_id', '=', partner_id), ('type', '=', 'opportunity'), '!', ('state', 'in', ['done', 'cancel'])])
-            opportunities.append(ids[0])
+            if ids:
+                opportunities.append(ids[0])
 
         if 'action' in fields:
             res.update({'action' : partner_id and 'exist' or 'create'})
@@ -124,6 +126,16 @@ Leads Could not convert into Opportunity"))
                     }, context=context)
             leads.log(cr, uid, lead.id, _("Lead '%s' has been converted to an opportunity.") % lead.name)
 
+    def send_mail_to_salesman(self, lead):
+        email_to = lead.user_id and lead.user_id.user_email
+        email_from = lead.section_id and lead.section_id.user_id and lead.section_id.user_id.user_email or email_to
+        partner = lead.partner_id and lead.partner_id.name or lead.partner_name 
+        subject = "lead %s converted into opportunity" % lead.name
+        body = "Info \n Id : %s \n Subject: %s \n Partner: %s \n Description : %s " % (lead.id, lead.name, lead.partner_id.name, lead.description)  
+        try :
+            tools.email_send(email_from, email_to, subject, body)
+        except:
+            pass
 
     def action_apply(self, cr, uid, ids, context=None):
         """
@@ -178,6 +190,7 @@ Leads Could not convert into Opportunity"))
 
 
             self._convert(cr, uid, ids, lead, partner_id, stage_ids, context=context)
+            self.send_mail_to_salesman(lead)
             #If we convert in mass, don't merge if there is no other opportunity but no warning
             if data.name == 'merge' and (len(data.opportunity_ids) > 1 or not context.get('mass_convert') ):
                 merge_obj = self.pool.get('crm.merge.opportunity')
