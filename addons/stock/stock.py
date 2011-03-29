@@ -2582,11 +2582,6 @@ class stock_inventory(osv.osv):
                             'location_id': line.location_id.id,
                             'location_dest_id': location_id,
                         })
-                    if lot_id:
-                        value.update({
-                            'prodlot_id': lot_id,
-                            'product_qty': line.product_qty
-                        })
                     move_ids.append(self._inventory_line_hook(cr, uid, line, value))
             message = _('Inventory') + " '" + inv.name + "' "+ _("is done.")
             self.log(cr, uid, inv.id, message)
