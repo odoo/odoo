@@ -92,9 +92,8 @@ class crm_lead2partner(osv.osv_memory):
             if not partner_ids and lead.partner_name:
                 partner_ids = partner_obj.search(cr, uid, [('name', '=', lead.partner_name)], context=context)
             if not partner_ids:
-                cr.execute("""SELECT p.id from res_partner p
-                            where regexp_replace(lower(p.name), '[^a-z0-9]+', '', 'g') = regexp_replace(%s, '[^a-z0-9]+', '', 'g')""", (lead.name.lower(), ))
-                partner_ids = map(lambda x: x[0], cr.fetchall())
+                partner_ids = partner_obj.search(cr, uid, [('name', '=', lead.name)], context=context)
+                
             partner_id = partner_ids and partner_ids[0] or False
 
             if 'partner_id' in fields:

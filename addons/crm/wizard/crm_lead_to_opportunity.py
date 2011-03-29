@@ -59,8 +59,8 @@ class crm_lead2opportunity_partner(osv.osv_memory):
 
         ids = []
         if partner_id:
-            ids = lead_obj.search(cr, uid, [('partner_id', '=', partner_id), ('type', '=', 'opportunity')])
-            opportunities += ids
+            ids = lead_obj.search(cr, uid, [('partner_id', '=', partner_id), ('type', '=', 'opportunity'), '!', ('state', 'in', ['done', 'cancel'])])
+            opportunities.append(ids[0])
 
         if 'action' in fields:
             res.update({'action' : partner_id and 'exist' or 'create'})
