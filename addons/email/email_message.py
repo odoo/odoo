@@ -294,7 +294,6 @@ class email_message(osv.osv):
                 for attach in message.attachment_ids:
                     attachments.append((attach.datas_fname ,base64.b64decode(attach.datas)))
                 if message.state in ['outgoing', 'exception']:
-                    print 'call'
                     res = smtp_server_obj.send_email(cr, uid, message.email_from,
                         message.email_to and message.email_to.split(',') or [],
                         message.subject, message.body,
