@@ -9,13 +9,19 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Asset category">
-                <field name="name" select="1"/>
-<!--                <field name="code" select="1"/>-->
-                <field name="note" colspan="4"/>
-                <field name="account_asset_id"/>
-                <field name="account_actif_id"/>
+		   <group col="6" colspan="4">
+                <field name="name" select="1" colspan="4"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <newline/>
                 <field name="journal_id"/>
-<!--                <field name="type"/>-->
+                <field name="account_asset_id"/>
+                <field name="account_depreciation_id"/>
+		   </group>
+                <!--<field name="code" select="1"/>-->
+                <separator string="Note"/>
+                <field name="note" colspan="4" nolabel="1"/>
+                <!--<field name="type"/>-->
+
             </form>
         </field>
     </record>
@@ -26,14 +32,13 @@
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Asset category">
-<!--                <field name="code"/>-->
                 <field name="name"/>
-		<separator string="Accounts information" colspan="4"/>
-                <field name="account_asset_id"/>
-                <field name="account_actif_id"/>
+                <!--<field name="code"/>-->
                 <field name="journal_id"/>
-<!--                <field name="type"/>-->
-
+                <field name="account_asset_id"/>
+                <field name="account_depreciation_id"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <!--<field name="type"/>-->
             </tree>
         </field>
     </record>
@@ -49,7 +54,7 @@
         action="action_account_asset_category_form"/>
 
 
-    <record model="ir.ui.view" id="view_account_asset_property_tree">
+<!--    <record model="ir.ui.view" id="view_account_asset_property_tree">
         <field name="name">account.asset.property.tree</field>
         <field name="model">account.asset.property</field>
         <field name="type">tree</field>
@@ -64,7 +69,7 @@
             </tree>
         </field>
     </record>
-
+-->
 
 
     <record model="ir.ui.view" id="view_account_asset_asset_form">
@@ -73,29 +78,25 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Asset">
-		   <group col="6" colspan="4" >
+		   <group col="6" colspan="4">
                     	<field name="name" select="1"/>
 		    	<field name="category_id" select="1"/>
                     	<field name="code" select="1"/>
-		    	<field name="purch_valu" select="1"/>
-                    	<field name="currency" select="1"/>
-		    	<field name="company" select="1" /> 
+		    	<field name="purchase_value" select="1"/>
+                    	<field name="currency_id" select="1"/>
+		    	<field name="company_id" select="1"/> 
 		   </group>
                    <!-- <field name="period_id" select="2"/>-->
-		    
-                    <field name="property_ids" colspan="4" nolabel="1" mode="form,tree">
-		    
-                        <form string="Depreciation methods">
 <!--    	                <field name="name" select="1" colspan="4"/>-->
                         <!--<separator string="Methods" colspan="4"/>-->
 
 
                             <notebook colspan="4">
                             <page string="Depreciation">
-				<separator string="Other information" colspan="4"/>
 				<!--<field name="partner_id" select="2"/>
-	        	        <field name="parent_id" select="2"/>-->
-        	        	<!--<field name="note" colspan="4" nolabel="1"/>-->
+	        	        <field name="parent_id" select="2"/>
+        	        	<field name="note" colspan="4" nolabel="1"/>
+-->
 				<separator string="Accounts information" colspan="4"/>
                                 <field name="account_analytic_id"/>
                                 <field name="journal_analytic_id"/>
@@ -103,7 +104,6 @@
 				<field name="name" select="1" colspan="2"/>-->
                                 <separator string="Depreciation duration" colspan="4"/>
                                 <field name="method"/>
-				<field name="purchasedate"/>
                                 <field name="method_progress_factor"/>
 				<newline/>
 				<field name="prorata" colspan="1"/>
@@ -123,36 +123,30 @@
 			 	                        <field name="method_end"/> -->
     	                        </page>
                             <page string="History">
-                                <field name="entry_asset_ids" colspan="4" nolabel="1" readonly="1"/>
+                                <field name="account_move_line_ids" colspan="4" nolabel="1" readonly="1"/>
 				 <field name="history_ids" colspan="4" nolabel="1" readonly="1"/>
                             </page>
-                            <!--<page string="Change history">
-                                <field name="history_ids" colspan="4" nolabel="1" readonly="1"/>
-                            </page>-->
                             <page string="Depreciation board">
                                 <field name="value_total"/>
                                 <field name="value_residual"/>
-				<!--<field name="test"/>-->
+				<field name="depreciation_line_ids" colspan="4" nolabel="1">
+                                  <tree>
+                                <field name="name"/>
+                                <field name="sequence"/>
+                                <field name="amount"/></tree>
+                                </field>
+                                      
+                                <button type="object" name="compute_depreciation_board" string="Compute"/>
                             </page>
 
 			    <page string="Notes">
+                                <field name="note"/>
 			    </page>	
                             </notebook>
-                                <button name="%(wizard_asset_close)d" states="open" colspan="2" string="Close method" type="action"/>
-                        </form>
-		   
-			
-                    </field>
 	            <field name="state" readonly="1"/>
                     <group colspan="2" col="2">
                         <button name="validate" states="draft" string="Confirm asset" type="object"/>
                     </group>
-               <!-- </page>-->
-		<!--<page string="Entries">
-                    <field name="entry_ids" colspan="4" nolabel="1"/>
-                </page>
-                    -->
-                
             </form>
         </field>
     </record>
@@ -276,7 +270,6 @@
         <field name="res_model">account.asset.asset</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
-        <field name="domain">[('state','=','normal')]</field>
     </record>
     <menuitem
         parent="menu_finance_Assets"
