@@ -22,8 +22,18 @@
 {
     'name': 'Action Rule',
     'version': '1.0',
+    'category': 'Tools',
     'category': 'Generic Modules/Others',
-    'description': "This module allows to implement action rules for any object.",
+    'description': """
+This module allows to implement action rules for any object.
+============================================================
+
+Use automated actions to automatically trigger actions for various screens.
+
+Example: a lead created by a specific user may be automatically set to a specific
+sales team, or an opportunity which still has status pending after 14 days might
+trigger an automatic reminder email.
+    """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['base', 'email'],
@@ -38,5 +48,6 @@
     'installable': True,
     'active': False,
     'certificate' : '001017908446466333429',
+    'images': ['images/base_action_rule1.jpeg','images/base_action_rule2.jpeg','images/base_action_rule3.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

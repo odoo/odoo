@@ -221,7 +221,7 @@ This is useful for CRM leads for example"),
             default = {}
         default = default.copy()
         old = self.read(cr, uid, id, ['name'], context=context)
-        new_name = _("Copy of template ") + old.get('name', 'No Name')
+        new_name = _("Copy of template %s") % old.get('name', 'No Name')
         check = self.search(cr, uid, [('name', '=', new_name)], context=context)
         if check:
             new_name = new_name + '_' + random.choice('abcdefghij') + random.choice('lmnopqrs') + random.choice('tuvwzyz')

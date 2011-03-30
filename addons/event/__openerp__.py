@@ -23,20 +23,19 @@
 {
     'name': 'Event',
     'version': '0.1',
-    'category': 'Generic Modules/Association',
-    'description': """Organization and management of Event.
+    'category': 'Tools',
+    'description': """
+Organization and management of Events.
+======================================
 
-    This module allow you
-        * to manage your events and their registrations
-        * to use emails to automatically confirm and send acknowledgements for any registration to an event
-        * ...
-    A dashboard for associations that includes:
-    * Registration by Events (graph)
-    Note that:
+This module allow you
+    * to manage your events and their registrations
+    * to use emails to automatically confirm and send acknowledgements for any registration to an event
+    * ...
+
+Note that:
     - You can define new types of events in
-                Events / Configuration / Types of Events
-    - You can access predefined reports about number of registration per event or per event category in:
-                Events / Reporting
+        Association / Configuration / Types of Events
 """,
     'author': 'OpenERP SA',
     'depends': ['crm', 'base_contact', 'account', 'marketing', 'email'],
@@ -58,5 +57,6 @@
     'installable': True,
     'active': False,
     'certificate': '0083059161581',
+    'images': ['images/1_event_type_list.jpeg','images/2_events.jpeg','images/3_registrations.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

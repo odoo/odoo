@@ -20,23 +20,24 @@
 ##############################################################################
 {   'name': 'Belgium - Plan Comptable Minimum Normalise',
     'version': '1.1',
-    'category': 'Localisation/Account Charts',
+    'category': 'Finance',
     'description': """
-    This is the base module to manage the accounting chart for Belgium in OpenERP.
+This is the base module to manage the accounting chart for Belgium in OpenERP.
+==============================================================================
 
-    After Installing this module,The Configuration wizard for accounting is launched.
+After installing this module, the Configuration wizard for accounting is launched.
     * We have the account templates which can be helpful to generate Charts of Accounts.
-    * On that particular wizard,You will be asked to pass the name of the company,the chart template to follow,the no. of digits to generate the code for your account and Bank account,currency to create Journals.
-        Thus,the pure copy of Chart Template is generated.
-    * This is the same wizard that runs from Financial Management/Configuration/Financial Accounting/Financial Accounts/Generate Chart of Accounts from a Chart Template.
+    * On that particular wizard, you will be asked to pass the name of the company, the chart template to follow, the no. of digits to generate, the code for your account and bank account, currency to create journals.
 
-    Wizards provided by this module:
+Thus, the pure copy of Chart Template is generated.
+
+Wizards provided by this module:
     * Partner VAT Intra: Enlist the partners with their related VAT and invoiced amounts.Prepares an XML file format.
-                           Path to access : Financial Management/Reporting//Legal Statements/Belgium Statements/Partner VAT Listing
+            Path to access : Accounting/Reporting//Legal Statements/Belgium Statements/Partner VAT Listing
     * Periodical VAT Declaration: Prepares an XML file for Vat Declaration of the Main company of the User currently Logged in.
-                           Path to access : Financial Management/Reporting/Legal Statements/Belgium Statements/Periodical VAT Declaration
+            Path to access : Accounting/Reporting/Legal Statements/Belgium Statements/Periodical VAT Declaration
     * Annual Listing Of VAT-Subjected Customers: Prepares an XML file for Vat Declaration of the Main company of the User currently Logged in.Based on Fiscal year
-                           Path to access : Financial Management/Reporting/Legal Statements/Belgium Statements/Annual Listing Of VAT-Subjected Customers
+            Path to access : Accounting/Reporting/Legal Statements/Belgium Statements/Annual Listing Of VAT-Subjected Customers
 
     """,
     'author': 'OpenERP SA',
@@ -61,5 +62,6 @@
     'demo_xml': [],
     'installable': True,
     'certificate': '0031977724637',
+    'images': ['images/1_config_chart_l10n_be.jpeg','images/2_l10n_be_chart.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

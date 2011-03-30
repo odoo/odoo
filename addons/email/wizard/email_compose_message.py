@@ -135,11 +135,11 @@ class email_compose_message(osv.osv_memory):
         message_pool = self.pool.get('email.message')
         if message_id:
             message_data = message_pool.browse(cr, uid, message_id, context)
-            subject = tools.ustr(message_data and message_data.name or '')
+            subject = tools.ustr(message_data and message_data.subject or '')
             if context.get('mail','') == 'reply':
                 subject = "Re :- " + subject
 
-            description =  message_data and message_data.description and message_data.description or ''
+            description =  message_data and message_data.body  or ''
             message_body = False
             if context.get('mail','') == 'reply':
                 header = '-------- Original Message --------'

@@ -23,9 +23,12 @@
 {
     'name': 'Customer & Supplier Relationship Management',
     'version': '1.0',
-    'category': 'Generic Modules/CRM & SRM',
-    'description': """The generic OpenERP Customer Relationship Management
-system enables a group of people to intelligently and efficiently manage
+    'category': 'Sales',
+    'description': """
+The generic OpenERP Customer Relationship Management.
+=====================================================
+
+This system enables a group of people to intelligently and efficiently manage
 leads, opportunities, meeting, phonecall etc.
 It manages key tasks such as communication, identification, prioritization,
 assignment, resolution and notification.
@@ -42,13 +45,11 @@ place.
 
 The CRM module has a email gateway for the synchronisation interface
 between mails and OpenERP.
-Create dashboard for CRM that includes:
-    * My Leads (list)
-    * Leads by Stage (graph)
-    * My Meetings (list)
-    * Sales Pipeline by Stage (graph)
-    * My Cases (list)
-    * Jobs Tracking (graph)
+
+Creates a dashboard for CRM that includes:
+    * Opportunities by Categories (graph)
+    * Opportunities by Stage (graph)
+    * Planned Revenue by Stage and User (graph)
 """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
@@ -132,5 +133,6 @@ Create dashboard for CRM that includes:
     'installable': True,
     'active': False,
     'certificate': '0079056041421',
+    'images': ['images/sale_crm_crm_dashboard.png', 'images/crm_dashboard.jpeg','images/leads.jpeg','images/meetings.jpeg','images/opportunities.jpeg','images/outbound_calls.jpeg','images/stages.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

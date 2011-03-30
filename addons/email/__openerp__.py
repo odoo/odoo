@@ -22,11 +22,14 @@
 {
     'name': 'Email System',
     'version': '1.0',
-    'category': 'Generic Modules/Mail Service',
-    'description': """The generic email system allows to send and receive emails
+    'category': 'Tools',
+    'description': """
+The generic email system allows to send and receive emails.
+===================================================================
+
     * SMTP Server Configuration
     * Provide API for Sending Messages
-    * Store all emails releated messages """,
+    * Store all emails releated messages""",
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['base', 'base_tools'],
@@ -42,6 +45,7 @@
     'demo_xml': [],
     'installable': True,
     'active': False,
-    'certificate': False,
+    'certificate': '001056784984222247309',
+    'images': ['images/customer_history.jpeg','images/messages_form.jpeg','images/messages_list.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

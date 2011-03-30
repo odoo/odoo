@@ -141,9 +141,8 @@
             <field name="search_view_id" ref="email_message_search_view"/>
       </record>
 
-      <act_window
-            context="{'server_id': active_id}"
-            domain="[('server_id', '=', active_id)]"
+      <act_window 
+            context="{'search_default_server_id': [active_id], 'default_server_id': active_id}"
             id="act_server_history" name="Emails"
             res_model="email.message" src_model="email.server"/>
 

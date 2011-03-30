@@ -23,20 +23,21 @@
 {
     'name': 'Base Contact',
     'version': '1.0',
-    'category': 'Generic Modules/Base',
+    'category': 'Tools',
     'description': """
-        This module allows you to manage your contacts entirely.
+This module allows you to manage your contacts entirely.
+========================================================
 
-    It lets you define
-        *contacts unrelated to a partner,
-        *contacts working at several addresses (possibly for different partners),
-        *contacts with possibly different functions for each of its job's addresses
+It lets you define:
+    * contacts unrelated to a partner,
+    * contacts working at several addresses (possibly for different partners),
+    * contacts with possibly different functions for each of its job's addresses
 
-    It also adds new menu items located in
-        Partners \ Contacts
-        Partners \ Functions
+It also adds new menu items located in
+    Purchases / Address Book / Contacts
+    Sales / Address Book / Contacts
 
-    Pay attention that this module converts the existing addresses into "addresses + contacts". It means that some fields of the addresses will be missing (like the contact name), since these are supposed to be defined in an other object.
+Pay attention that this module converts the existing addresses into "addresses + contacts". It means that some fields of the addresses will be missing (like the contact name), since these are supposed to be defined in an other object.
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
@@ -46,15 +47,16 @@
         'security/base_contact_security.xml',
         'security/ir.model.access.csv',
         'base_contact_view.xml',
-        'base_contact_installer_view.xml', 
+        'base_contact_installer_view.xml',
         'process/base_contact_process.xml'
     ],
-    'demo_xml': ['base_contact_demo.xml'], 
+    'demo_xml': ['base_contact_demo.xml'],
     'test': [
         'test/base_contact00.yml',
     ],
     'installable': True,
     'active': False,
     'certificate': '0031287885469',
+    'images': ['images/base_contact1.jpeg','images/base_contact2.jpeg','images/base_contact3.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

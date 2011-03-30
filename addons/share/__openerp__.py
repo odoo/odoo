@@ -25,19 +25,20 @@
     "version" : "1.3",
     "depends" : ["base", "email"],
     "author" : "OpenERP SA",
-    "category": 'Generic Modules',
+    "category": 'Tools',
     "description": """
+This module adds generic sharing tools to your current OpenERP database.
+========================================================================
 
-    This module adds generic sharing tools to your current OpenERP database,
-    and specifically a 'share' button that is available in the Web client to
-    share any kind of OpenERP data with colleagues, customers, friends, etc.
+It specifically adds a 'share' button that is available in the Web client to
+share any kind of OpenERP data with colleagues, customers, friends, etc.
 
-    The system will work by creating new users and groups on the fly, and by
-    combining the appropriate access rights and ir.rules to ensure that the
-    shared users only have access to the data that has been shared with them.
+The system will work by creating new users and groups on the fly, and by
+combining the appropriate access rights and ir.rules to ensure that the
+shared users only have access to the data that has been shared with them.
 
-    This is extremely useful for collaborative work, knowledge sharing,
-    synchronization with other companies, etc.
+This is extremely useful for collaborative work, knowledge sharing,
+synchronization with other companies, etc.
 
     """,
     'website': 'http://www.openerp.com',
@@ -51,6 +52,7 @@
     'installable': True,
     'web': True,
     'certificate' : '001301246528927038493',
+    'images': ['images/share_wizard.jpeg','images/sharing_wizard_step1.jpeg', 'images/sharing_wizard_step2.jpeg'],
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

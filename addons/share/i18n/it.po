@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-15 05:51+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-03-18 04:58+0000\n"
+"X-Generator: Launchpad (build 12559)\n"
 
 #. module: share
 #: code:addons/share/web/editors.py:15
@@ -29,6 +29,8 @@ msgstr "Condivisione"
 msgid ""
 "This additional data has been automatically added to your current access.\n"
 msgstr ""
+"Questi dati aggiuntivi sono stati automaticamente inserito al vostro accesso "
+"corrente.\n"
 
 #. module: share
 #: view:share.wizard:0
@@ -39,6 +41,8 @@ msgstr "Utenti esterni esistenti"
 #: help:res.groups,share:0
 msgid "Group created to set access rights for sharing data with some users."
 msgstr ""
+"Gruppo creato per impostare diritti di accesso per dati condivisi con alcuni "
+"utenti."
 
 #. module: share
 #: model:ir.module.module,shortdesc:share.module_meta_information
@@ -63,14 +67,14 @@ msgid "Share Access Rules"
 msgstr ""
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:425
+#: code:addons/share/wizard/share_wizard.py:453
 #, python-format
 msgid ""
 "Dear,\n"
 "\n"
-msgstr ""
-"Caro,\n"
+"%s\n"
 "\n"
+msgstr ""
 
 #. module: share
 #: constraint:res.users:0
@@ -92,23 +96,25 @@ msgstr "Prossimo"
 msgid ""
 "The action that opens the screen containing the data you wish to share."
 msgstr ""
+"L'azione che apre la schermata contenente i dati che volete condividere."
 
 #. module: share
 #: code:addons/share/wizard/share_wizard.py:68
 #, python-format
 msgid "Please specify \"share_root_url\" in context"
-msgstr ""
+msgstr "Prego specificare \"sare_root_url\" nel contesto"
 
 #. module: share
 #: view:share.wizard:0
 msgid "Congratulations, you have successfully setup a new shared access!"
 msgstr ""
+"Congratulazioni, avete correttamente configurato un nuovo accesso condiviso!"
 
 #. module: share
 #: code:addons/share/wizard/share_wizard.py:247
 #, python-format
 msgid "(Copy for sharing)"
-msgstr ""
+msgstr "(copia per condivisione)"
 
 #. module: share
 #: field:share.wizard.result.line,newly_created:0
@@ -118,22 +124,20 @@ msgstr ""
 #. module: share
 #: field:share.wizard,share_root_url:0
 msgid "Generic Share Access URL"
-msgstr ""
+msgstr "URL Accesso condiviso generico"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:429
+#: code:addons/share/wizard/share_wizard.py:457
 #, python-format
 msgid ""
 "You may use the following login and password to get access to this protected "
-"area:"
+"area:\n"
 msgstr ""
-"E' necessario utilizzare il seguente login e password per avere accesso a "
-"quest'area protetta:"
 
 #. module: share
 #: view:res.groups:0
 msgid "Regular groups only (no share groups"
-msgstr ""
+msgstr "Solo gruppi regolari (no gruppi condivisi"
 
 #. module: share
 #: selection:share.wizard,access_mode:0
@@ -171,7 +175,7 @@ msgstr "Condividi utente"
 #: code:addons/share/wizard/share_wizard.py:424
 #, python-format
 msgid "%s has shared OpenERP %s information with you"
-msgstr ""
+msgstr "%s ha condiviso l'informazione OpenERP: %s con te"
 
 #. module: share
 #: view:share.wizard:0
@@ -192,6 +196,9 @@ msgid ""
 "this person.\n"
 "You may want to try selecting existing shared users instead."
 msgstr ""
+"Questo nome utente (%s) esiste già, forse i dati sono già stati condivisi "
+"con questa persona.\n"
+"E' possibile altrimenti provare a selezionare utenti esistenti condivisi."
 
 #. module: share
 #: field:share.wizard,new_users:0
@@ -223,7 +230,7 @@ msgstr "Nuovi utenti (email richieste)"
 #: code:addons/share/wizard/share_wizard.py:390
 #, python-format
 msgid "Sharing filter created by user %s (%s) for group %s"
-msgstr ""
+msgstr "Filtro condivisione creato dall'utente %s (%s) per gruppo %s"
 
 #. module: share
 #: view:res.groups:0
@@ -233,7 +240,7 @@ msgstr "Gruppi"
 #. module: share
 #: view:share.wizard:0
 msgid "Select the desired shared access mode:"
-msgstr ""
+msgstr "Selezionare la desiderata modalità di accesso condiviso:"
 
 #. module: share
 #: field:res.groups,share:0
@@ -250,7 +257,7 @@ msgstr "Password"
 #. module: share
 #: view:share.wizard:0
 msgid "Who would you want to share this data with?"
-msgstr ""
+msgstr "Con chi volete condividere questi dati?"
 
 #. module: share
 #: model:ir.module.module,description:share.module_meta_information
@@ -302,11 +309,13 @@ msgid ""
 "Please select the action that opens the screen containing the data you want "
 "to share."
 msgstr ""
+"Prego selezionate l'azione che apre la schermata contenente i dati che "
+"volete condividere."
 
 #. module: share
 #: selection:share.wizard,user_type:0
 msgid "Existing external users"
-msgstr ""
+msgstr "Utenti esterni esistenti"
 
 #. module: share
 #: view:share.wizard:0
@@ -324,6 +333,8 @@ msgstr "Utenti da condividere con"
 #, python-format
 msgid "Indirect sharing filter created by user %s (%s) for group %s"
 msgstr ""
+"Filtro di condivisione indirettamente creato dall'utente %s (%s) per gruppo "
+"%s"
 
 #. module: share
 #: code:addons/share/wizard/share_wizard.py:420
@@ -347,7 +358,7 @@ msgstr ""
 #. module: share
 #: view:share.wizard:0
 msgid "New Users (please provide one e-mail address per line below)"
-msgstr ""
+msgstr "Nuovi utenti (prego fornire un indirizzo email per linea sotto)"
 
 #. module: share
 #: code:addons/share/wizard/share_wizard.py:420
@@ -356,6 +367,8 @@ msgid ""
 "The current user must have an email address configured in User Preferences "
 "to be able to send outgoing emails."
 msgstr ""
+"L'attuale utente deve avere un indirizzo email configurato nelle preferenze "
+"utente per essere in grado di inviare posta in uscita."
 
 #. module: share
 #: view:res.users:0
@@ -365,7 +378,7 @@ msgstr "Solo utenti regolari (no utente condiviso)"
 #. module: share
 #: field:share.wizard.result.line,share_url:0
 msgid "Share URL"
-msgstr ""
+msgstr "Condividi URL"
 
 #. module: share
 #: field:share.wizard,domain:0
@@ -398,6 +411,8 @@ msgid ""
 "To access it, you can go to the following URL:\n"
 "    %s"
 msgstr ""
+"Per accedere potete andare al seguente URL:\n"
+"    %s"
 
 #. module: share
 #: field:share.wizard,action_id:0
@@ -453,7 +468,7 @@ msgstr "Annulla"
 #. module: share
 #: view:share.wizard:0
 msgid "Close"
-msgstr ""
+msgstr "Chiudi"
 
 #. module: share
 #: help:res.users,share:0
@@ -479,3 +494,19 @@ msgstr "Solo lettura"
 #, python-format
 msgid "*usual password*"
 msgstr "*password abituale*"
+
+#, python-format
+#~ msgid ""
+#~ "You may use the following login and password to get access to this protected "
+#~ "area:"
+#~ msgstr ""
+#~ "E' necessario utilizzare il seguente login e password per avere accesso a "
+#~ "quest'area protetta:"
+
+#, python-format
+#~ msgid ""
+#~ "Dear,\n"
+#~ "\n"
+#~ msgstr ""
+#~ "Caro,\n"
+#~ "\n"

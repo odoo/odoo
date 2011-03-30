@@ -26,8 +26,12 @@
     "depends" : ["base"],
     "author" : "OpenERP SA",
     "category" : "Tools",
-    "description": """Installs tools for lunch,survey,subscription and audittrail
-    module
+    "description": """
+Installer for extra tools like lunch, survey, idea, share, etc.
+===============================================================
+
+Makes the Extra Tools Configuration available from where you can install
+modules like share, lunch, pad, idea, survey and subscription.
     """,
     'website': 'http://www.openerp.com',
     'init_xml': [],
@@ -38,5 +42,6 @@
     'installable': True,
     'active': False,
     'certificate' : '00557100228403879621',
+    'images': ['images/config_extra_tools.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

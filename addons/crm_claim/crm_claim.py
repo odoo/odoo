@@ -25,6 +25,7 @@ import time
 from crm import wizard
 import binascii
 import tools
+from tools.translate import _
 
 wizard.email_compose_message.email_model.append('crm.claim')
 CRM_CLAIM_PENDING_STATES = (
@@ -82,6 +83,20 @@ class crm_claim(crm.crm_case, osv.osv):
                                   \nIf the case needs to be reviewed then the state is set to \'Pending\'.'),
         'message_ids': fields.one2many('email.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
     }
+
+    def stage_next(self, cr, uid, ids, context=None):
+        stage = super(crm_claim, self).stage_next(cr, uid, ids, context=context)
+        if stage:
+            stage_obj = self.pool.get('crm.case.stage').browse(cr, uid, stage, context=context)
+            self.history(cr, uid, ids, _("Changed Stage to: ") + stage_obj.name)
+        return stage
+
+    def stage_previous(self, cr, uid, ids, context=None):
+        stage = super(crm_claim, self).stage_previous(cr, uid, ids, context=context)
+        if stage:
+            stage_obj = self.pool.get('crm.case.stage').browse(cr, uid, stage, context=context)
+            self.history(cr, uid, ids, _("Changed Stage to: ") + stage_obj.name)
+        return stage
 
     def _get_stage_id(self, cr, uid, context=None):
         """Finds type of stage according to object.
