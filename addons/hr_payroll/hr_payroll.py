@@ -751,7 +751,18 @@ class hr_payslip(osv.osv):
                 obj = {'basic': contract.wage}
                 for line in rules:
                     cd = line.code
-                    obj[cd] = line.amount or 0.0
+                    base = line.computational_expression
+                    amt = eval(base, obj)
+                    if line.amount_type == 'per':
+                        al = line.amount * amt
+                        obj[cd] = al
+                    elif line.amount_type == 'code':
+                        localdict = {'basic': amt, 'employee': slip.employee_id, 'contract': contract}
+                        exec line.python_compute in localdict
+                        val = localdict['result']
+                        obj[cd] = val
+                    else:
+                        obj[cd] = line.amount or 0.0
 
                 for line in rules:
                     if line.category_id.code in ad:
@@ -777,34 +788,34 @@ class hr_payslip(osv.osv):
                         raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ') % (e))
                     if line.amount_type == 'per':
                         try:
-                            if line.child_depend == False:
-                                if line.parent_rule_id:
-                                    for rul in [line.parent_rule_id]:
-                                        val = rul.amount * amt
-                                        amt = val
-                                value = line.amount * amt
-                                if line.condition_range_min or line.condition_range_max:
-                                    if ((value < line.condition_range_min) or (value > line.condition_range_max)):
-                                        value = 0.0
-                                    else:
-                                        value = value
+#                            if line.child_depend == False:
+                            if line.parent_rule_id:
+                                for rul in [line.parent_rule_id]:
+                                    val = rul.amount * amt
+                                    amt = val
+                            value = line.amount * amt
+                            if line.condition_range_min or line.condition_range_max:
+                                if ((value < line.condition_range_min) or (value > line.condition_range_max)):
+                                    value = 0.0
                                 else:
                                     value = value
+                            else:
+                                value = value
                         except Exception, e:
                             raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ') % (e))
 
                     elif line.amount_type == 'fix':
-                        if line.child_depend == False:
-                            if line.parent_rule_id:
-                                for rul in [line.parent_rule_id]:
-                                    value = value
-                            if line.condition_range_min or line.condition_range_max:
-                                if ((line.amount < line.condition_range_min) or (line.amount > line.condition_range_max)):
-                                    value = value
-                                else:
-                                    value = line.amount
+#                        if line.child_depend == False:
+                        if line.parent_rule_id:
+                            for rul in [line.parent_rule_id]:
+                                value = value
+                        if line.condition_range_min or line.condition_range_max:
+                            if ((line.amount < line.condition_range_min) or (line.amount > line.condition_range_max)):
+                                value = value
                             else:
                                 value = line.amount
+                        else:
+                            value = line.amount
                     elif line.amount_type=='code':
                         localdict = {'basic': amt, 'employee': slip.employee_id, 'contract': contract}
                         exec line.python_compute in localdict
@@ -824,15 +835,11 @@ class hr_payslip(osv.osv):
                         'base': line.computational_expression
                     }
                     if line.appears_on_payslip:
-                        if line.parent_rule_id:
-                            for l in salary_rule_pool.browse(cr, uid, [line.parent_rule_id.id], context=context):
+                        if line.condition_range_min or line.condition_range_max:
+                            if not ((value < line.condition_range_min) or (value > line.condition_range_max)):
                                 slip_line_pool.create(cr, uid, vals, {})
                         else:
-                            if line.condition_range_min or line.condition_range_max:
-                                if not ((value < line.condition_range_min) or (value > line.condition_range_max)):
-                                    slip_line_pool.create(cr, uid, vals, {})
-                            else:
-                                slip_line_pool.create(cr, uid, vals, {})
+                            slip_line_pool.create(cr, uid, vals, {})
 
             basic = contract.wage
             number = sequence_obj.get(cr, uid, 'salary.slip')
@@ -902,22 +909,66 @@ class hr_payslip(osv.osv):
                     raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ') % (e))
                 if salary_rule.amount_type == 'per':
                     try:
+#                        if salary_rule.child_depend == False:
+                        if salary_rule.parent_rule_id:
+                            for rul in [salary_rule.parent_rule_id]:
+                                val = rul.amount * amt
+                                amt = val
                         value = salary_rule.amount * amt * days
+                        if salary_rule.condition_select == 'range':
+                            if salary_rule.condition_range_min or salary_rule.condition_range_max:
+                                if ((value < salary_rule.condition_range_min) or (value > salary_rule.condition_range_max)):
+                                    value = 0.0
+                                else:
+                                    value = value
+                        else:
+                            value = value
                     except Exception, e:
                         raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ') % (e))
+                    
                 elif salary_rule.amount_type == 'fix':
-                    value = salary_rule.amount * days
-                elif salary_rule.amount_type=='code':
+#                    if salary_rule.child_depend == False:
+                    if salary_rule.parent_rule_id:
+                        for rul in [salary_rule.parent_rule_id]:
+                            value = salary_rule.amount * days
+                    elif salary_rule.condition_select == 'range':
+                        if salary_rule.condition_range_min or salary_rule.condition_range_max:
+                            if ((salary_rule.amount < salary_rule.condition_range_min) or (salary_rule.amount > salary_rule.condition_range_max)):
+                                value = 0.0
+                            else:
+                                value = salary_rule.amount * days
+                    else:
+                        value = salary_rule.amount * days
+                
+                elif salary_rule.amount_type == 'code':
                     localdict = {'basic': amt, 'employee': slip.employee_id, 'contract': contract}
                     exec salary_rule.python_compute in localdict
-                    value = localdict['result'] * days
+                    val = localdict['result'] * days
+#                    if salary_rule.child_depend == False:
+                    if salary_rule.parent_rule_id:
+                        for rul in [salary_rule.parent_rule_id]:
+                            value = val
+                    if salary_rule.condition_select == 'range':
+                        if salary_rule.condition_range_min or salary_rule.condition_range_max:
+                            if ((salary_rule.amount < salary_rule.condition_range_min) or (salary_rule.amount > salary_rule.condition_range_max)):
+                                value = value
+                            else:
+                                value = val
+                    else:
+                        value = val
+
                 res['amount'] = salary_rule.amount
                 res['type'] = salary_rule.type.id
                 leave += days
                 total += value
                 res['total'] = value
+                if salary_rule.appears_on_payslip:
+                    if salary_rule.condition_range_min or salary_rule.condition_range_max:
+                        if not ((value < salary_rule.condition_range_min) or (value > salary_rule.condition_range_max)):
+                            slip_line_pool.create(cr, uid, res, context=context)
+                    else:
+                        slip_line_pool.create(cr, uid, res, context=context)
 
-                slip_line_pool.create(cr, uid, res, context=context)
             holiday_pool.write(cr, uid, leave_ids, {'payslip_id': slip.id}, context=context)
             basic = basic - total
             update.update({
@@ -1034,53 +1085,53 @@ class hr_payslip(osv.osv):
                     raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ') % (e))
                 if line.amount_type == 'per':
                     try:
-                        if line.child_depend == False:
-                            if line.parent_rule_id:
-                                for rul in [line.parent_rule_id]:
-                                    val = rul.amount * amt
-                                    amt = val
-                            value = line.amount * amt
-                            if line.condition_select == 'range':
-                                if line.condition_range_min or line.condition_range_max:
-                                    if ((value < line.condition_range_min) or (value > line.condition_range_max)):
-                                        value = 0.0
-                                    else:
-                                        value = value
-                            else:
-                                value = value
+#                        if line.child_depend == False:
+                        if line.parent_rule_id:
+                            for rul in [line.parent_rule_id]:
+                                val = rul.amount * amt
+                                amt = val
+                        value = line.amount * amt
+                        if line.condition_select == 'range':
+                            if line.condition_range_min or line.condition_range_max:
+                                if ((value < line.condition_range_min) or (value > line.condition_range_max)):
+                                    value = 0.0
+                                else:
+                                    value = value
+                        else:
+                            value = value
                     except Exception, e:
                         raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ') % (e))
 
                 elif line.amount_type == 'fix':
-                    if line.child_depend == False:
-                        if line.parent_rule_id:
-                            for rul in [line.parent_rule_id]:
+#                    if line.child_depend == False:
+                    if line.parent_rule_id:
+                        for rul in [line.parent_rule_id]:
+                            value = value
+                    if line.condition_select == 'range':
+                        if line.condition_range_min or line.condition_range_max:
+                            if ((line.amount < line.condition_range_min) or (line.amount > line.condition_range_max)):
                                 value = value
-                        if line.condition_select == 'range':
-                            if line.condition_range_min or line.condition_range_max:
-                                if ((line.amount < line.condition_range_min) or (line.amount > line.condition_range_max)):
-                                    value = value
-                                else:
-                                    value = line.amount
-                        else:
+                            else:
+                                value = line.amount
+                    else:
                             value = line.amount
 
                 elif line.amount_type=='code':
                     localdict = {'basic':amt, 'employee':employee_id, 'contract':contract}
                     exec line.python_compute in localdict
                     val = localdict['result']
-                    if line.child_depend == False:
-                        if line.parent_rule_id:
-                            for rul in [line.parent_rule_id]:
-                                value = val
-                        if line.condition_select == 'range':
-                            if line.condition_range_min or line.condition_range_max:
-                                if ((line.amount < line.condition_range_min) or (line.amount > line.condition_range_max)):
-                                    value = value
-                                else:
-                                    value = val
-                        else:
+#                    if line.child_depend == False:
+                    if line.parent_rule_id:
+                        for rul in [line.parent_rule_id]:
                             value = val
+                    if line.condition_select == 'range':
+                        if line.condition_range_min or line.condition_range_max:
+                            if ((line.amount < line.condition_range_min) or (line.amount > line.condition_range_max)):
+                                value = value
+                            else:
+                                value = val
+                    else:
+                        value = val
                 total += value
                 vals = {
                     'category_id': line.category_id.id,
@@ -1177,54 +1228,53 @@ class hr_payslip(osv.osv):
                     raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ') % (e))
                 if salary_rule.amount_type == 'per':
                     try:
-                        if salary_rule.child_depend == False:
-                            if salary_rule.parent_rule_id:
-                                for rul in [line.parent_rule_id]:
-                                    val = rul.amount * amt
-                                    amt = val
-                            value = salary_rule.amount * amt * days
-                            if line.condition_select == 'range':
-                                if salary_rule.condition_range_min or salary_rule.condition_range_max:
-                                    if ((value < salary_rule.condition_range_min) or (value > salary_rule.condition_range_max)):
-                                        value = 0.0
-                                    else:
-                                        value = value
-                            else:
-                                value = value
-
+#                        if salary_rule.child_depend == False:
+                        if salary_rule.parent_rule_id:
+                            for rul in [salary_rule.parent_rule_id]:
+                                val = rul.amount * amt
+                                amt = val
+                        value = salary_rule.amount * amt * days
+                        if salary_rule.condition_select == 'range':
+                            if salary_rule.condition_range_min or salary_rule.condition_range_max:
+                                if ((value < salary_rule.condition_range_min) or (value > salary_rule.condition_range_max)):
+                                    value = 0.0
+                                else:
+                                    value = value
+                        else:
+                            value = value
                     except Exception, e:
                         raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ') % (e))
 
                 elif salary_rule.amount_type == 'fix':
-                    if salary_rule.child_depend == False:
-                        if salary_rule.parent_rule_id:
-                            for rul in [salary_rule.parent_rule_id]:
-                                value = salary_rule.amount * days
-                        if line.condition_select == 'range':
-                            if salary_rule.condition_range_min or salary_rule.condition_range_max:
-                                if ((salary_rule.amount < salary_rule.condition_range_min) or (salary_rule.amount > salary_rule.condition_range_max)):
-                                    value = 0.0
-                                else:
-                                    value = salary_rule.amount * days
-                        else:
+#                    if salary_rule.child_depend == False:
+                    if salary_rule.parent_rule_id:
+                        for rul in [salary_rule.parent_rule_id]:
                             value = salary_rule.amount * days
+                    if salary_rule.condition_select == 'range':
+                        if salary_rule.condition_range_min or salary_rule.condition_range_max:
+                            if ((salary_rule.amount < salary_rule.condition_range_min) or (salary_rule.amount > salary_rule.condition_range_max)):
+                                value = 0.0
+                            else:
+                                value = salary_rule.amount * days
+                    else:
+                        value = salary_rule.amount * days
 
                 elif salary_rule.amount_type=='code':
                     localdict = {'basic':amt, 'employee':employee_id, 'contract':contract_id}
                     exec salary_rule.python_compute in localdict
                     val = localdict['result'] * days
-                    if salary_rule.child_depend == False:
-                        if salary_rule.parent_rule_id:
-                            for rul in [salary_rule.parent_rule_id]:
-                                value = val
-                        if line.condition_select == 'range':
-                            if salary_rule.condition_range_min or salary_rule.condition_range_max:
-                                if ((salary_rule.amount < salary_rule.condition_range_min) or (salary_rule.amount > salary_rule.condition_range_max)):
-                                    value = value
-                                else:
-                                    value = val
-                        else:
+#                    if salary_rule.child_depend == False:
+                    if salary_rule.parent_rule_id:
+                        for rul in [salary_rule.parent_rule_id]:
                             value = val
+                    if salary_rule.condition_select == 'range':
+                        if salary_rule.condition_range_min or salary_rule.condition_range_max:
+                            if ((salary_rule.amount < salary_rule.condition_range_min) or (salary_rule.amount > salary_rule.condition_range_max)):
+                                value = value
+                            else:
+                                value = val
+                    else:
+                        value = val
                 res['amount'] = salary_rule.amount
                 res['type'] = salary_rule.type.id
                 leave += days
