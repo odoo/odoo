@@ -51,7 +51,8 @@ added to (resp. removed from) the portal's users.
                         <page string="Portal Menu">
                             <field name="menu_action_id"/>
                             <newline/>
-                            <field name="parent_menu_id"/>
+                            <field name="parent_menu_id"
+                                context="{'ir.ui.menu.full_list':True}"/>
                             <button name="create_parent_menu" type="object"
                                 string="Create Parent Menu"/>
                         </page>
@@ -70,6 +71,21 @@ added to (resp. removed from) the portal's users.
                 <page string="User" position="after">
                     <page string="Portal">
                         <field name="portal_id"/>
+                    </page>
+                </page>
+            </field>
+        </record>
+        
+        <!-- extended menu form view -->
+        <record id="menu_form_view" model="ir.ui.view">
+            <field name="name">menu_form_view</field>
+            <field name="model">ir.ui.menu</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="base.edit_menu_access"/>
+            <field name="arch" type="xml">
+                <page string="Groups" position="after">
+                    <page string="Submenus">
+                        <field name="child_id" nolabel="1"/>
                     </page>
                 </page>
             </field>
