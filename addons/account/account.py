@@ -2930,18 +2930,13 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 while valid:
                     try:
                         new_code = str(int(ref_acc_bank.code.ljust(dig, '0')) + current_num)
-                        ids = obj_acc.search(cr, uid, [('code', '=', new_code)])
-                        if not ids:
-                            valid = False
-                        else:
-                            current_num += 1
                     except:
                         new_code = str(ref_acc_bank.code.ljust(dig-len(str(current_num)), '0')) + str(current_num)
-                        ids = obj_acc.search(cr, uid, [('code', '=', new_code)])
-                        if not ids:
-                            valid = False
-                        else:
-                            current_num += 1
+                    ids = obj_acc.search(cr, uid, [('code', '=', new_code)])
+                    if not ids:
+                        valid = False
+                    else:
+                        current_num += 1
             vals = {
                 'name': tmp,
                 'currency_id': line.currency_id and line.currency_id.id or False,
