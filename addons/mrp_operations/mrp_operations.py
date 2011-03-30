@@ -244,10 +244,12 @@ class mrp_production(osv.osv):
             wf_service.trg_validate(uid, 'mrp.production.workcenter.line', workcenter_line.id, 'button_start_working', cr)
         return super(mrp_production,self).action_in_production(cr, uid, ids)
     
-    def action_cancel(self, cr, uid, ids):
+    def action_cancel(self, cr, uid, ids,context=None):
         """ Cancels work order if production order is canceled.
         @return: Super method
         """
+        if context is None:
+            context = {}
         obj = self.browse(cr, uid, ids)[0]
         wf_service = netsvc.LocalService("workflow")
         for workcenter_line in obj.workcenter_lines:
