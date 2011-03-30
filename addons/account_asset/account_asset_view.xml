@@ -10,13 +10,12 @@
         <field name="arch" type="xml">
             <form string="Asset category">
                 <field name="name" select="1"/>
-                <field name="code" select="1"/>
+<!--                <field name="code" select="1"/>-->
                 <field name="note" colspan="4"/>
                 <field name="account_asset_id"/>
                 <field name="account_actif_id"/>
                 <field name="journal_id"/>
-                <field name="type"/>
-
+<!--                <field name="type"/>-->
             </form>
         </field>
     </record>
@@ -27,13 +26,13 @@
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Asset category">
-                <field name="code"/>
+<!--                <field name="code"/>-->
                 <field name="name"/>
 		<separator string="Accounts information" colspan="4"/>
                 <field name="account_asset_id"/>
                 <field name="account_actif_id"/>
                 <field name="journal_id"/>
-                <field name="type"/>
+<!--                <field name="type"/>-->
 
             </tree>
         </field>
@@ -74,13 +73,13 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Asset">
-		   <group col="6" colspan="4">
+		   <group col="6" colspan="4" >
                     	<field name="name" select="1"/>
 		    	<field name="category_id" select="1"/>
                     	<field name="code" select="1"/>
 		    	<field name="purch_valu" select="1"/>
                     	<field name="currency" select="1"/>
-		    	<field name="company" select="1"/> 
+		    	<field name="company" select="1" /> 
 		   </group>
                    <!-- <field name="period_id" select="2"/>-->
 		    
@@ -95,9 +94,8 @@
                             <page string="Depreciation">
 				<separator string="Other information" colspan="4"/>
 				<!--<field name="partner_id" select="2"/>
-	        	        <field name="parent_id" select="2"/>
-        	        	<field name="note" colspan="4" nolabel="1"/>
--->
+	        	        <field name="parent_id" select="2"/>-->
+        	        	<!--<field name="note" colspan="4" nolabel="1"/>-->
 				<separator string="Accounts information" colspan="4"/>
                                 <field name="account_analytic_id"/>
                                 <field name="journal_analytic_id"/>
@@ -105,6 +103,7 @@
 				<field name="name" select="1" colspan="2"/>-->
                                 <separator string="Depreciation duration" colspan="4"/>
                                 <field name="method"/>
+				<field name="purchasedate"/>
                                 <field name="method_progress_factor"/>
 				<newline/>
 				<field name="prorata" colspan="1"/>
@@ -148,7 +147,7 @@
                     <group colspan="2" col="2">
                         <button name="validate" states="draft" string="Confirm asset" type="object"/>
                     </group>
-                </page>
+               <!-- </page>-->
 		<!--<page string="Entries">
                     <field name="entry_ids" colspan="4" nolabel="1"/>
                 </page>

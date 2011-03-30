@@ -80,7 +80,7 @@ class account_asset_asset(osv.osv):
         'code': fields.char('Reference ', size=16, select=1),
 	'purch_valu': fields.float('Purchase value ', required=True, size=16, select=1),
 	'currency': fields.many2one('res.currency','Currency',required=True,size=5,select=1),
-	'company': fields.char('Company',size=16, select=1),
+	'company': fields.many2one('res.company', 'Company', required=True,size=5,select=1), 
         'note': fields.text('Note'),
         'category_id': fields.many2one('account.asset.category', 'Asset category',required=True, change_default=True),
         'localisation': fields.char('Localisation', size=32, select=2),
@@ -96,7 +96,6 @@ class account_asset_asset(osv.osv):
         'property_ids': fields.one2many('account.asset.property', 'asset_id', 'Asset method name', readonly=True, states={'draft':[('readonly',False)]}),
         'value_total': fields.function(_amount_total, method=True, digits=(16,2),string='Total value'),
  	'test': fields.one2many('account.move.line', 'asset_id', 'Entries', readonly=True, states={'draft':[('readonly',False)]}),
-
     }
     _defaults = {
         'code': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'account.asset.code'),
@@ -241,6 +240,7 @@ class account_asset_property(osv.osv):
         'account_analytic_id': fields.many2one('account.analytic.account', 'Analytic account'),
 
         'method': fields.selection([('linear','Linear'),('progressif','Progressive')], 'Computation method', required=True, readonly=True, states={'draft':[('readonly',False)]}),
+	'purchasedate': fields.date('Purchase date', required=True),
         'method_progress_factor': fields.float('Progressif factor', readonly=True, states={'draft':[('readonly',False)]}),
         'method_time': fields.selection([('delay','Delay'),('end','Ending period')], 'Time method', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'method_delay': fields.integer('During', readonly=True, states={'draft':[('readonly',False)]}),
