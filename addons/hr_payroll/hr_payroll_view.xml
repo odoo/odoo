@@ -236,7 +236,7 @@
                         <field name="struct_id" groups="base.group_extended"/>
                     </group>
                     <notebook colspan="4">
-                        <page string="Salary Computation">
+                        <page string="Salary Computation" attrs="{'invisible':[('Salary Computation')]}">
                             <field name="line_ids" colspan="4" nolabel="1">
                                 <tree string="Salary Structure" editable="bottom">
                                     <field name="category_id" on_change="onchange_category(category_id)"/>
@@ -288,9 +288,23 @@
                                 <field name="total_pay"/>
                             </group> -->
                         </page>
-                        <page string="Holidays">
-                            <field name="holiday_ids" colspan="4" nolabel="1" editable="bottom"/>
+
+                        <page string="Applied Salary Rules" attrs="{'invisible':[('Applied Salary Rules')]}">
+                            <field name="applied_salary_rule" nolabel="1" />
                         </page>
+			
+                       <page string="Appears On Payslip">
+                            <field name="appears_on_payslip_rule" nolabel="1"/>
+                        </page>
+
+                        <page string="Holidays">
+                            <field name="holiday_ids" colspan="4" nolabel="1"/>
+                        </page>
+
+                       <page string="Details By Salary Head">
+                            <field name="details_by_salary_head" nolabel="1" context="{'group_by': 'category_id'}"/>
+                       </page>
+
                         <page string="Other Information">
                             <group col="2" colspan="1">
                                 <separator colspan="2" string="Other Information"/>

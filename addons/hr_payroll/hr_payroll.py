@@ -402,7 +402,6 @@ class hr_holidays_status(osv.osv):
     _inherit = "hr.holidays.status"
     _columns = {
         # improve help
-        'code':fields.char('Code', size=16, readonly=False, help="It is used to define the code for Leave Type which will then be used in Salary Rules."),
     }
 
 hr_holidays_status()
