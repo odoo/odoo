@@ -750,7 +750,7 @@ class hr_payslip(osv.osv):
                 total = 0.0
                 obj = {'basic': contract.wage}
                 for line in rules:
-                    cd = line.code.lower()
+                    cd = line.code
                     obj[cd] = line.amount or 0.0
 
                 for line in rules:
@@ -761,6 +761,7 @@ class hr_payslip(osv.osv):
                     calculate = False
                     try:
                         exp = line.conditions
+                        exec line.conditions in obj
                         calculate = eval(exp, obj)
                     except Exception, e:
                         raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ') % (e))
