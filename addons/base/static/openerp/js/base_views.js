@@ -419,10 +419,8 @@ openerp.base.BaseWidget = openerp.base.Controller.extend({
      */
     init: function (parent) {
 		this.children = [];
-        this.parent = parent;
-        if(parent != null) {
-        	parent.children.push(this);
-        }
+        this.parent = null;
+        this.set_parent(parent);
         this.make_id(this.identifier_prefix);
     },
     /**
@@ -443,7 +441,7 @@ openerp.base.BaseWidget = openerp.base.Controller.extend({
     start: function () {
         this._super();
         var tmp = document.getElementById(this.element_id)
-        this.$element = tmp != null ? $(tmp) : null;
+        this.$element = tmp ? $(tmp) : null;
     },
     /**
      * "Stops" the widgets. Called when the view destroys itself, this
@@ -458,12 +456,23 @@ openerp.base.BaseWidget = openerp.base.Controller.extend({
     	if(this.$element != null) {
     		this.$element.remove();
     	}
-    	if(this.parent != null) {
-    		var _this = this;
-    		this.parent.children = _.reject(this.parent.children, function(x) { return x === _this;});
-            this.parent = null;
-    	}
+    	this.set_parent(null);
         this._super();
+    },
+    /**
+     * Set the parent of this component, also unregister the previous parent if there
+     * was one.
+     * 
+     * @param {openerp.base.BaseWidget} parent The new parent.
+     */
+    set_parent: function(parent) {
+    	if(this.parent) {
+    		this.parent.children = _.without(this.parent.children, this);
+    	}
+    	this.parent = parent;
+    	if(this.parent) {
+    		parent.children.push(this);
+    	}
     },
     /**
      * Render the widget. This.template must be defined.
