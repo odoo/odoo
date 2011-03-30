@@ -75,20 +75,5 @@ added to (resp. removed from) the portal's users.
                 </page>
             </field>
         </record>
-        
-        <!-- extended menu form view -->
-        <record id="menu_form_view" model="ir.ui.view">
-            <field name="name">menu_form_view</field>
-            <field name="model">ir.ui.menu</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="base.edit_menu_access"/>
-            <field name="arch" type="xml">
-                <page string="Groups" position="after">
-                    <page string="Submenus">
-                        <field name="child_id" nolabel="1"/>
-                    </page>
-                </page>
-            </field>
-        </record>
     </data>
 </openerp>
