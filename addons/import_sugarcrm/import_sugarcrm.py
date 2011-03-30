@@ -24,6 +24,7 @@ import sugar
 import sugarcrm_fields_mapping
 from tools.translate import _
 import pprint
+import tools
 pp = pprint.PrettyPrinter(indent=4)
 
 def create_mapping(obj, cr, uid, res_model, open_id, sugar_id, context):
@@ -102,7 +103,7 @@ def import_users(sugar_obj, cr, uid, context=None):
             'context_lang' : 'context_lang',
             'password' : 'password',
             '.id' : '.id',
-            'context_department_id': 'department',
+            'context_department_id.id': 'context_department_id.id',
             } 
     user_obj = sugar_obj.pool.get('res.users')
     department_obj = sugar_obj.pool.get('hr.department')
@@ -115,7 +116,7 @@ def import_users(sugar_obj, cr, uid, context=None):
         else:
             val['password'] = 'sugarcrm' #default password for all user
         new_department_id = department_obj.create(cr, uid, {'name': val.get('department')})
-        val['context_department_id'] = new_department_id     
+        val['context_department_id.id'] = new_department_id     
         val['context_lang'] = context.get('lang','en_US')
         fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_user)
         #All data has to be imported separatly because they don't have the same field
@@ -266,7 +267,6 @@ def import_partners(sugar_obj, cr, uid, context=None):
     address_obj = sugar_obj.pool.get('res.partner.address')
     PortType, sessionid = sugar.login(context.get('username', ''), context.get('password', ''), context.get('url',''))
     sugar_data = sugar.search(PortType, sessionid, 'Accounts')
-    
     for val in sugar_data:
         add_id = get_address(sugar_obj, cr, uid, val, context)
         if val.get('account_type') in  ('Customer', 'Prospect', 'Other'):
@@ -327,10 +327,23 @@ def import_employees(sugar_obj, cr, uid, context=None):
         fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_employee)
         employee_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', context=context)
 
+def get_contact_title(sugar_obj, cr, uid, salutation, domain, context=None):
+    if not context:
+        context = {}
+    contact_title_obj = sugar_obj.pool.get('res.partner.title')        
+    title_id = False
+    title_ids = contact_title_obj.search(cr, uid, [('shortcut', '=', salutation), ('domain', '=', domain)])
+    if title_ids:
+         title_id = title_ids[0]
+    elif salutation:
+         title_id = contact_title_obj.create(cr, uid, {'name': salutation, 'shortcut': salutation, 'domain': domain})
+    return title_id
+    
     
 def import_leads(sugar_obj, cr, uid, context=None):
     if not context:
         context = {}
+    title_id = False   
     map_lead = {
             'id' : 'id',
             'name': ['first_name', 'last_name'],
@@ -340,7 +353,7 @@ def import_leads(sugar_obj, cr, uid, context=None):
             'email_from': 'email1',
             'phone': 'phone_work',
             'mobile': 'phone_mobile',
-            'title': 'salutation',
+            'title.id': 'title.id',
             'function':'title',
             'street': 'primary_address_street',
             'street2': 'alt_address_street',
@@ -356,6 +369,8 @@ def import_leads(sugar_obj, cr, uid, context=None):
     PortType, sessionid = sugar.login(context.get('username', ''), context.get('password', ''), context.get('url',''))
     sugar_data = sugar.search(PortType, sessionid, 'Leads')
     for val in sugar_data:
+        title_id = get_contact_title(sugar_obj, cr, uid, val.get('salutation'), 'contact', context)
+        val['title.id'] = title_id
         val['type'] = 'lead'
         stage_id = get_lead_status(sugar_obj, cr, uid, val, context)
         val['stage_id.id'] = stage_id
@@ -378,7 +393,7 @@ def import_opportunities(sugar_obj, cr, uid, context=None):
         'user_id/id' : 'assigned_user_id',
         'stage_id.id' : 'stage_id.id',
         'type' : 'type',
-        'categ_id': 'opportunity_type'
+        'categ_id.id': 'categ_id.id'
     }
     lead_obj = sugar_obj.pool.get('crm.lead')
     partner_obj = sugar_obj.pool.get('res.partner')
@@ -394,7 +409,7 @@ def import_opportunities(sugar_obj, cr, uid, context=None):
             categ_id = categ_ids[0]
         else:
             categ_id = categ_obj.create(cr, uid, {'name': val.get('opportunity_type'), 'object_id.model': 'crm.lead'})     
-        val['categ_id'] = categ_id                    
+        val['categ_id.id'] = categ_id                    
         val['type'] = 'opportunity'
         stage_id = get_opportunity_status(sugar_obj, cr, uid, val, context)
         val['stage_id.id'] = stage_id
