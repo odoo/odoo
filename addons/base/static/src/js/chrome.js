@@ -2,7 +2,7 @@
  * OpenERP base library
  *---------------------------------------------------------*/
 
-openerp.base$chrome = function(openerp) {
+openerp.addons.base.chrome = function(openerp) {
 
 openerp.base.callback = function(obj, method) {
     // openerp.base.callback( obj, methods, [arg1, arg2, ... ] )
