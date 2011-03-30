@@ -46,6 +46,23 @@ if os.name == 'nt':
         { "script": join("bin", "openerp-server.py"),
           "icon_resources": [(1, join("pixmaps","openerp-icon.ico"))]
         }]
+    py2exe_keywords['options'] = {
+        "py2exe": {
+            "compressed": 1,
+            "optimize": 2,
+            "dist_dir": 'dist',
+            "packages": [
+                "lxml", "lxml.builder", "lxml._elementpath", "lxml.etree",
+                "lxml.objectify", "decimal", "xml", "xml", "xml.dom", "xml.xpath",
+                "encodings", "dateutil", "wizard", "pychart", "PIL", "pyparsing",
+                "pydot", "asyncore","asynchat", "reportlab", "vobject",
+                "HTMLParser", "select", "mako", "poplib",
+                "imaplib", "smtplib", "email", "yaml", "DAV",
+                "uuid", "commands",
+            ],
+            "excludes" : ["Tkconstants","Tkinter","tcl"],
+        }
+    }
 
 sys.path.append(join(os.path.abspath(os.path.dirname(__file__)), "bin"))
 
@@ -186,23 +203,6 @@ class openerp_server_install(install):
 
 
 
-options = {
-    "py2exe": {
-        "compressed": 1,
-        "optimize": 2,
-        "dist_dir": 'dist',
-        "packages": [
-            "lxml", "lxml.builder", "lxml._elementpath", "lxml.etree",
-            "lxml.objectify", "decimal", "xml", "xml", "xml.dom", "xml.xpath",
-            "encodings", "dateutil", "wizard", "pychart", "PIL", "pyparsing",
-            "pydot", "asyncore","asynchat", "reportlab", "vobject",
-            "HTMLParser", "select", "mako", "poplib",
-            "imaplib", "smtplib", "email", "yaml", "DAV",
-            "uuid", "commands",
-        ],
-        "excludes" : ["Tkconstants","Tkinter","tcl"],
-    }
-}
 
 setup(name             = name,
       version          = version,
@@ -227,7 +227,6 @@ setup(name             = name,
           '': ['*.yml', '*.xml', '*.po', '*.pot', '*.csv'],
       },
       package_dir      = find_package_dirs(),
-      options = options,
       install_requires = [
           'lxml',
           'mako',
@@ -266,7 +265,7 @@ if has_py2exe:
     zoneinfo_dir = os.path.join(os.path.dirname(pytz.__file__), 'zoneinfo')
     # '..\\Lib\\pytz\\__init__.py' -> '..\\Lib'
     disk_basedir = os.path.dirname(os.path.dirname(pytz.__file__))
-    zipfile_path = os.path.join(complementary_arguments['options']['py2exe']['dist_dir'], 'library.zip')
+    zipfile_path = os.path.join(py2exe_keywords['options']['py2exe']['dist_dir'], 'library.zip')
     z = zipfile.ZipFile(zipfile_path, 'a')
 
     for absdir, directories, filenames in os.walk(zoneinfo_dir):
