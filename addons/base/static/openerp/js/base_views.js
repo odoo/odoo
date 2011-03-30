@@ -143,6 +143,16 @@ openerp.base.ViewManagerUsedAsAMany2One = openerp.base.Controller.extend({
  * Management interface between views and the collection of selected OpenERP
  * records (represents the view's state?)
  */
+openerp.base.DataGroup =  openerp.base.Controller.extend({
+    init: function(session) {
+        this._super(session, null);
+    },
+});
+
+/**
+ * Management interface between views and the collection of selected OpenERP
+ * records (represents the view's state?)
+ */
 openerp.base.DataSet =  openerp.base.Controller.extend({
     init: function(session, model) {
         this._super(session);
