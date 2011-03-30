@@ -54,7 +54,7 @@
 </t>
 <t t-name="Header">
     <a href="/" class="company_logo_link">
-        <img src="/base/static/openerp/img/logo.png" border="0" class="company_logo"/>
+        <img src="/base/static/src/img/logo.png" border="0" class="company_logo"/>
     </a>
     <h1 class="header_title" t-if="session.session_is_valid()">
         <span class="company">$company</span> - (<span class="database">$database</span>)<br/>
@@ -63,19 +63,19 @@
     <div class="header_corner">
         <ul class="block" t-if="session.session_is_valid()">
             <li>
-                <a href="#home" title="Home" class="home"><img src="/base/static/openerp/img/header-home.png" width="16" height="16" border="0"/></a>
+                <a href="#home" title="Home" class="home"><img src="/base/static/src/img/header-home.png" width="16" height="16" border="0"/></a>
             </li>
             <li>
-                <a href="#requests" title="Requests" class="requests"><img src="/base/static/openerp/img/header-requests.png" width="16" height="16" border="0"/><small>1</small></a>
+                <a href="#requests" title="Requests" class="requests"><img src="/base/static/src/img/header-requests.png" width="16" height="16" border="0"/><small>1</small></a>
             </li>
             <li class="preferences">
-                <a href="#preferences" title="Preferences" class="preferences"><img src="/base/static/openerp/img/header-preferences.png" width="16" height="16" border="0"/></a>
+                <a href="#preferences" title="Preferences" class="preferences"><img src="/base/static/src/img/header-preferences.png" width="16" height="16" border="0"/></a>
             </li>
             <li>
-                <a href="#about" title="About" class="about"><img src="/base/static/openerp/img/header-about.png" width="16" height="16" border="0"/></a>
+                <a href="#about" title="About" class="about"><img src="/base/static/src/img/header-about.png" width="16" height="16" border="0"/></a>
             </li>
             <li>
-                <a href="http://doc.openerp.com/v6.0/book?version=$version" title="Help" target="_blank" class="help"><img src="/base/static/openerp/img/header-help.png" width="16" height="16" border="0"/></a>
+                <a href="http://doc.openerp.com/v6.0/book?version=$version" title="Help" target="_blank" class="help"><img src="/base/static/src/img/header-help.png" width="16" height="16" border="0"/></a>
             </li>
         </ul>
         <div class="block">
@@ -269,7 +269,7 @@
 </t>
 <t t-name="WidgetButton">
     <button type="button" t-att-id="widget.element_id" t-att-title="widget.help" style="width: 100%" class="button">
-        <img t-if="widget.node.attrs.icon" t-att-src="'/base/static/openerp/img/icons/' + widget.node.attrs.icon + '.png'" width="16" height="16"/>
+        <img t-if="widget.node.attrs.icon" t-att-src="'/base/static/src/img/icons/' + widget.node.attrs.icon + '.png'" width="16" height="16"/>
         <t t-esc="widget.string"/>
     </button>
 </t>
@@ -299,7 +299,7 @@
         t-att-id="element_id"
         t-att-title="attrs.help"
         t-att-class="classes.join(' ')">
-    <img t-if="attrs.icon" t-att-src="'/base/static/openerp/img/icons/' + attrs.icon + '.png'" width="16" height="16"/>
+    <img t-if="attrs.icon" t-att-src="'/base/static/src/img/icons/' + attrs.icon + '.png'" width="16" height="16"/>
     <br t-if="attrs.icon and attrs.string"/>
     <t t-esc="attrs.string"/>
 </button>
