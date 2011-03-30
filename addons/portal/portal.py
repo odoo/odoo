@@ -173,7 +173,8 @@ class users(osv.osv):
     _name = 'res.users'
     _inherit = 'res.users'
     _columns = {
-        'portal_id': fields.many2one('res.portal', string='Portal',
+        'portal_id': fields.many2one('res.portal', readonly=True,
+            string='Portal',
             help=_('If given, the portal defines customized menu and access rules')),
     }
     
