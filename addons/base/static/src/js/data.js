@@ -1,18 +1,17 @@
 
 openerp.base.data = function(openerp) {
 
-/**
- * Management interface between views and the collection of selected OpenERP
- * records (represents the view's state?)
- */
 openerp.base.DataGroup =  openerp.base.Controller.extend({
+    /**
+     * Management interface between views and the collection of selected OpenERP
+     * records (represents the view's state?)
+     */
     init: function(session) {
         this._super(session, null);
     },
 });
 
-openerp.base.DataSet =  openerp.base.Controller.extend(
-    /** @lends openerp.base.DataSet# */{
+openerp.base.DataSet =  openerp.base.Controller.extend( /** @lends openerp.base.DataSet# */{
 
     /**
      * Management interface between views and the collection of selected
@@ -102,7 +101,8 @@ openerp.base.DataSet =  openerp.base.Controller.extend(
      * @param {Object} event.context the context set on the DataSet before DataSet#fetch was called
      * @param {Array} event.sort the sorting criteria used to get the ids
      */
-    on_fetch: function (records, event) { },
+    on_fetch: function (records, event) { 
+    },
 
     /**
      * Fetch all the currently active records for this DataSet (records selected via DataSet#select)
@@ -125,6 +125,7 @@ openerp.base.DataSet =  openerp.base.Controller.extend(
         }, this));
         return this;
     },
+
     /**
      * Fires after the DataSet fetched the records matching its internal active ids selection
      *
@@ -133,7 +134,8 @@ openerp.base.DataSet =  openerp.base.Controller.extend(
      * @event
      * @param {Array} records An array of the DataRecord fetched
      */
-    on_active_ids: function (records) { },
+    on_active_ids: function (records) { 
+    },
 
     /**
      * Fetches the current active record for this DataSet
@@ -155,6 +157,7 @@ openerp.base.DataSet =  openerp.base.Controller.extend(
         }, this));
         return this;
     },
+
     /**
      * Fires after the DataSet fetched the record matching the current active record
      *
@@ -198,6 +201,7 @@ openerp.base.DataSet =  openerp.base.Controller.extend(
         }
         return this;
     },
+
     /**
      * Activates the next id in the active sequence. If there is no next id, wraps around to the first one
      * @returns itself
@@ -225,12 +229,14 @@ openerp.base.DataSet =  openerp.base.Controller.extend(
         this._active_id_index = 0;
         return this;
     },
+
     /**
      * Fetches the ids of the currently selected records, if any.
      */
     get_active_ids: function () {
         return this._active_ids;
     },
+
     /**
      * Sets the current active_id by value
      *
@@ -256,6 +262,7 @@ openerp.base.DataSet =  openerp.base.Controller.extend(
         }
         return this;
     },
+
     /**
      * Fetches the id of the current active record, if any.
      *
@@ -282,6 +289,7 @@ openerp.base.DataRecord =  openerp.base.Controller.extend({
     on_reload: function() {
     }
 });
+
 };
 
 // vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:

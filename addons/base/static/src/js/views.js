@@ -139,10 +139,6 @@ openerp.base.ViewManagerRoot = openerp.base.Controller.extend({
 openerp.base.ViewManagerUsedAsAMany2One = openerp.base.Controller.extend({
 });
 
-/**
- * Base class for widgets. Handle rendering (based on a QWeb template), identifier
- * generation, parenting and destruction of the widget.
- */
 openerp.base.BaseWidget = openerp.base.Controller.extend({
     /**
      * The name of the QWeb template that will be used for rendering. Must be redifined
@@ -159,6 +155,8 @@ openerp.base.BaseWidget = openerp.base.Controller.extend({
      */
     identifier_prefix: 'generic-identifier',
     /**
+ * Base class for widgets. Handle rendering (based on a QWeb template), identifier
+ * generation, parenting and destruction of the widget.
      * Contructor. Also initialize the identifier.
      * 
      * @params {openerp.base.search.BaseWidget} parent The parent widget.
@@ -227,10 +225,10 @@ openerp.base.BaseWidget = openerp.base.Controller.extend({
      * @param {object} additional Additional context arguments to pass to the template.
      */
     render: function (additional) {
-        return QWeb.render(this.template, _.extend({}, this,
-                additional != null ? additional : {}));
+        return QWeb.render(this.template, _.extend({}, this, additional != null ? additional : {}));
     }
 });
+
 openerp.base.CalendarView = openerp.base.Controller.extend({
 // Dhtmlx scheduler ?
 });
