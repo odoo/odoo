@@ -1429,7 +1429,8 @@ class hr_salary_rule(osv.osv):
         ],'Company Amount Type', select=True),
         'contribute_per':fields.float('Company Contribution', digits=(16, 4), help='Define Company contribution ratio 1.00=100% contribution.'),
         'company_contribution':fields.boolean('Company Contribution',help="This rule has Company Contributions."),
-        'expression_result':fields.char('Expression based on', size=1024, required=False, readonly=False, help='result will be affected to a variable'),
+	'expression_result':fields.char('Expression based on',size=1024, required=True, readonly=False, help='result will be affected to a variable'),
+	'parent_rule_id':fields.many2one('hr.salary.rule', 'Parent Salary Rule', select=True),
      }
     _defaults = {
         'python_compute': '''# basic\n# employee: hr.employee object or None\n# contract: hr.contract object or None\n\nresult = basic * 0.10''',
