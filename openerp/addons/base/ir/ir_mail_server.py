@@ -227,7 +227,7 @@ unless it is already specified in the From Email, e.g: John Doe <john@doe.com>",
         """
         return "<%s-openobject-%s@%s>" % (time.time(), openobject_id, socket.gethostname())
 
-    def send_email(self, cr, uid, smtp_from, email_to, subject, body, email_cc=None,
+    def send_email(self, cr, uid, smtp_from, email_to, message=None, subject=None, body=None, email_cc=None,
                 email_bcc=None, reply_to=False, attach=None, message_id=None,
                 references=None, openobject_id=False, debug=False, subtype='plain',
                 x_headers=None, priority='3', smtp_server=None, smtp_port=None,
@@ -266,66 +266,107 @@ unless it is already specified in the From Email, e.g: John Doe <john@doe.com>",
             smtp_port = smtp_port
             ssl = ssl
 
-        if not email_cc: email_cc = []
-        if not email_bcc: email_bcc = []
-        if not body: body = u''
-        email_body = ustr(body).encode('utf-8')
-        email_text = MIMEText(email_body or '', _subtype=subtype, _charset='utf-8')
-        msg = MIMEMultipart()
+        class WriteToLogger(object):
+            def __init__(self):
+                self.logger = loglevels.Logger()
 
-        if not message_id and openobject_id:
-            message_id = self.generate_tracking_message_id(openobject_id)
-        else:
-            message_id = Utils.make_msgid()
+            def write(self, s):
+                self.logger.notifyChannel('email_send', loglevels.LOG_DEBUG, s)
 
-        msg['Message-Id'] = message_id
-        if references:
-            msg['references'] = references
-        msg['Subject'] = Header(ustr(subject), 'utf-8')
-        msg['From'] = smtp_from
+        #preparing the message
+        if not message:
+            if not email_cc: email_cc = []
+            if not email_bcc: email_bcc = []
+            if not body: body = u''
+            email_body = ustr(body).encode('utf-8')
+            email_text = MIMEText(email_body or '', _subtype=subtype, _charset='utf-8')
+            msg = MIMEMultipart()
 
-        del msg['Reply-To']
-        if reply_to:
-            msg['Reply-To'] = reply_to
-        else:
-            msg['Reply-To'] = msg['From']
+            if not message_id and openobject_id:
+                message_id = self.generate_tracking_message_id(openobject_id)
+            else:
+                message_id = Utils.make_msgid()
 
-        msg['To'] = COMMASPACE.join(email_to)
+            msg['Message-Id'] = message_id
+            if references:
+                msg['references'] = references
+            msg['Subject'] = Header(ustr(subject), 'utf-8')
+            msg['From'] = smtp_from
 
-        if email_cc:
-            msg['Cc'] = COMMASPACE.join(email_cc)
-        if email_bcc:
-            msg['Bcc'] = COMMASPACE.join(email_bcc)
+            del msg['Reply-To']
+            if reply_to:
+                msg['Reply-To'] = reply_to
+            else:
+                msg['Reply-To'] = msg['From']
 
-        msg['X-Priority'] = priorities.get(priority, '3 (Normal)')
-        msg['Date'] = formatdate(localtime=True)
+            msg['To'] = COMMASPACE.join(email_to)
 
-        # Add dynamic X Header
-        for key, value in x_headers.iteritems():
-            msg['%s' % key] = str(value)
-        if html2text and sub_type == 'html':
-            text = html2text(email_body.decode('utf-8')).encode('utf-8')
-            alternative_part = MIMEMultipart(_subtype="alternative")
-            alternative_part.attach(MIMEText(text, _charset='utf-8', _subtype='plain'))
-            alternative_part.attach(email_text)
-            msg.attach(alternative_part)
-        else:
-            msg.attach(email_text)
+            if email_cc:
+                msg['Cc'] = COMMASPACE.join(email_cc)
+            if email_bcc:
+                msg['Bcc'] = COMMASPACE.join(email_bcc)
 
-        if attach:
-            for (fname, fcontent) in attach:
-                part = MIMEBase('application', "octet-stream")
-                part.set_payload( fcontent )
-                Encoders.encode_base64(part)
-                part.add_header('Content-Disposition', 'attachment; filename="%s"' % (fname,))
-                msg.attach(part)
+            msg['X-Priority'] = priorities.get(priority, '3 (Normal)')
+            msg['Date'] = formatdate(localtime=True)
 
-        res = self._email_send(cr, uid, smtp_from, tools.flatten([email_to, email_cc, email_bcc]),
-                    msg, ssl=ssl, debug=debug, smtp_server=smtp_server, smtp_user=smtp_user,
-                    smtp_password=smtp_password, smtp_port=smtp_port)
-        if res:
+            # Add dynamic X Header
+            for key, value in x_headers.iteritems():
+                msg['%s' % key] = str(value)
+            if html2text and sub_type == 'html':
+                text = html2text(email_body.decode('utf-8')).encode('utf-8')
+                alternative_part = MIMEMultipart(_subtype="alternative")
+                alternative_part.attach(MIMEText(text, _charset='utf-8', _subtype='plain'))
+                alternative_part.attach(email_text)
+                msg.attach(alternative_part)
+            else:
+                msg.attach(email_text)
+
+            if attach:
+                for (fname, fcontent) in attach:
+                    part = MIMEBase('application', "octet-stream")
+                    part.set_payload( fcontent )
+                    Encoders.encode_base64(part)
+                    part.add_header('Content-Disposition', 'attachment; filename="%s"' % (fname,))
+                    msg.attach(part)
+            message = msg
+
+        try:
+            smtp_server = smtp_server or config['smtp_server']
+
+            if smtp_server.startswith('maildir:/'):
+                from mailbox import Maildir
+                maildir_path = smtp_server[8:]
+                mdir = Maildir(maildir_path,factory=None, create = True)
+                mdir.add(message.as_string(True))
+                return True
+
+            if debug:
+                oldstderr = smtplib.stderr
+                smtplib.stderr = WriteToLogger()
+
+            if not ssl:
+                ssl = config.get('smtp_ssl', False)
+
+            smtp = self.connect_smtp_server(cr, uid, smtp_server, smtp_port,
+                    user_name=smtp_user, user_password=smtp_password, ssl=ssl, tls=True, debug=debug)
+            try:
+                smtp.sendmail(smtp_from, smtp_to_list, message.as_string())
+            except Exception:
+                _logger.error('could not deliver Email(s)', exc_info=True)
+                return False
+            finally:
+                try:
+                    smtp.quit()
+                except Exception:
+                    # ignored, just a consequence of the previous exception
+                    pass
+
+            if debug:
+                smtplib.stderr = oldstderr
+        except Exception:
+            _logger.error('Error on Send Emails Services', exc_info=True)
+
             return message_id
-        return False
 
     def on_change_ssl(self, cr, uid, ids, smtp_ssl):
         smtp_port = 0

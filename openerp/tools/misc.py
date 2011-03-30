@@ -413,14 +413,16 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
 
     return html
 
-def email_send(uid, smtp_from, smtp_to_list, message, ssl=False, debug=False, smtp_server=None, smtp_port=None,
-           smtp_user=None, smtp_password=None, cr=None):
+def email_send(smtp_from, smtp_to_list, message, ssl=False, debug=False, smtp_server=None, smtp_port=None,
+           smtp_user=None, smtp_password=None, cr=None, uid=None):
     if not cr:
         db_name = getattr(threading.currentThread(), 'dbname', None)
         if db_name:
             cr = pooler.get_db_only(db_name).cursor()
         else:
             raise Exception("No database cursor found!")
+    if not uid:
+        uid = 1
     try:
         server_pool = pooler.get_pool(cr.dbname).get('ir.mail_server')
         server_pool.send_email(cr, uid, smtp_from, smtp_to_list, message,
