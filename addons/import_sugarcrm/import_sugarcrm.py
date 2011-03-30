@@ -285,7 +285,7 @@ def import_partners(sugar_obj, cr, uid, context=None):
 def import_resources(sugar_obj, cr, uid, context=None):
     if not context:
         context = {}
-    map_resource = {'id' : 'user_hash',
+    map_resource = {'id' : 'id',
                     'name': ['first_name', 'last_name'],
     }
     resource_obj = sugar_obj.pool.get('resource.resource')
