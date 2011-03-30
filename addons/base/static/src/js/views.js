@@ -144,12 +144,12 @@ openerp.base.ViewManagerUsedAsAMany2One = openerp.base.Controller.extend({
  * generation, parenting and destruction of the widget.
  */
 openerp.base.BaseWidget = openerp.base.Controller.extend({
-	/**
-	 * The name of the QWeb template that will be used for rendering. Must be redifined
-	 * in subclasses or the render() method can not be used.
-	 * 
-	 * @type string
-	 */
+    /**
+     * The name of the QWeb template that will be used for rendering. Must be redifined
+     * in subclasses or the render() method can not be used.
+     * 
+     * @type string
+     */
     template: null,
     /**
      * The prefix used to generate an id automatically. Should be redifined in subclasses.
@@ -164,7 +164,7 @@ openerp.base.BaseWidget = openerp.base.Controller.extend({
      * @params {openerp.base.search.BaseWidget} parent The parent widget.
      */
     init: function (parent) {
-		this.children = [];
+        this.children = [];
         this.parent = null;
         this.set_parent(parent);
         this.make_id(this.identifier_prefix);
@@ -194,15 +194,15 @@ openerp.base.BaseWidget = openerp.base.Controller.extend({
      * lets the widgets clean up after themselves.
      */
     stop: function () {
-    	var tmp_children = this.children;
-    	this.children = [];
-    	_.each(tmp_children, function(x) {
-    		x.stop();
-    	});
-    	if(this.$element != null) {
-    		this.$element.remove();
-    	}
-    	this.set_parent(null);
+        var tmp_children = this.children;
+        this.children = [];
+        _.each(tmp_children, function(x) {
+            x.stop();
+        });
+        if(this.$element != null) {
+            this.$element.remove();
+        }
+        this.set_parent(null);
         this._super();
     },
     /**
@@ -212,13 +212,13 @@ openerp.base.BaseWidget = openerp.base.Controller.extend({
      * @param {openerp.base.BaseWidget} parent The new parent.
      */
     set_parent: function(parent) {
-    	if(this.parent) {
-    		this.parent.children = _.without(this.parent.children, this);
-    	}
-    	this.parent = parent;
-    	if(this.parent) {
-    		parent.children.push(this);
-    	}
+        if(this.parent) {
+            this.parent.children = _.without(this.parent.children, this);
+        }
+        this.parent = parent;
+        if(this.parent) {
+            parent.children.push(this);
+        }
     },
     /**
      * Render the widget. This.template must be defined.
@@ -228,7 +228,7 @@ openerp.base.BaseWidget = openerp.base.Controller.extend({
      */
     render: function (additional) {
         return QWeb.render(this.template, _.extend({}, this,
-        		additional != null ? additional : {}));
+                additional != null ? additional : {}));
     }
 });
 openerp.base.CalendarView = openerp.base.Controller.extend({
