@@ -2,7 +2,7 @@
  * OpenERP base library
  *---------------------------------------------------------*/
 
-openerp.addons.base.views = function(openerp) {
+openerp.base.views = function(openerp) {
 
 // process all kind of actions
 openerp.base.ActionManager = openerp.base.Controller.extend({

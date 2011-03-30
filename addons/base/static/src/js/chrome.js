@@ -2,7 +2,7 @@
  * OpenERP base library
  *---------------------------------------------------------*/
 
-openerp.addons.base.chrome = function(openerp) {
+openerp.base.chrome = function(openerp) {
 
 openerp.base.callback = function(obj, method) {
     // openerp.base.callback( obj, methods, [arg1, arg2, ... ] )
@@ -517,7 +517,7 @@ openerp.base.WebClient = openerp.base.Controller.extend({
         var self = this;
         this._super(null, element_id);
 
-        QWeb.add_template("base.xml");
+        QWeb.add_template("xml/base.xml");
         this.$element.html(QWeb.render("Interface", {}));
 
         this.session = new openerp.base.Session("oe_errors");

@@ -71,14 +71,12 @@
     var session_counter = 0;
 
     var openerp = this.openerp =  {
-        // addons registry
-        addons: {},
         // element_ids registry linked to all controllers on the page
         // TODO rename to elements, or keep gtk naming?
         screen: {},
         // Per session namespace
         // openerp.<module> will map to
-        // openerp.sessions.servername_port_dbname_login.<module> using a closure
+        // openerp.sessions.sessionname.<module> using a closure
         sessions: {},
         // openerp instance constructor
         init: function() {
@@ -103,12 +101,16 @@
 })();
 
 //---------------------------------------------------------
-// OpenERP initialisation and black magic about the pool
+// OpenERP base module split
 //---------------------------------------------------------
 
 openerp.base = function(instance) {
-    openerp.base$chrome(instance);
-    openerp.base$views(instance);
+    openerp.base.chrome(instance);
+    openerp.base.data(instance);
+    openerp.base.views(instance);
+    openerp.base.search(instance);
+    openerp.base.list(instance);
+    openerp.base.form(instance);
 };
 
 // vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:

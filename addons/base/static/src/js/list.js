@@ -1,5 +1,5 @@
 
-openerp.addons.base.form = function (openerp) {
+openerp.base.list = function (openerp) {
 
 openerp.base.ListView = openerp.base.Controller.extend({
     init: function(session, element_id, dataset, view_id) {

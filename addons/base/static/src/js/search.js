@@ -1,4 +1,4 @@
-openerp.addons.base.views = function(openerp) {
+openerp.base.search = function(openerp) {
 
 openerp.base.SearchView = openerp.base.Controller.extend({
     init: function(session, element_id, dataset, view_id, defaults) {

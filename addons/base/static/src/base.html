@@ -5,27 +5,35 @@
     <title>OpenERP</title>
     <link rel="shortcut icon" href="/base/static/openerp/img/favicon.ico" type="image/x-icon"/>
 
-    <link rel="stylesheet" type="text/css" media="screen" href="/base/static/jquery.ui/css/smoothness/jquery-ui-1.8.9.custom.css" />
-    <link rel="stylesheet" type="text/css" media="screen" href="/base/static/jquery.jqGrid/css/ui.jqgrid.css" />
-    <link rel="stylesheet" type="text/css" href="/base/static/jquery.superfish/css/superfish.css" media="screen">
-    <link rel="stylesheet" href="/base/static/openerp/base.css" type="text/css"/>
+    <link rel="stylesheet" type="text/css" media="screen" href="/base/static/src/jquery.ui/css/smoothness/jquery-ui-1.8.9.custom.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="/base/static/src/jquery.jqGrid/css/ui.jqgrid.css" />
+    <link rel="stylesheet" type="text/css" href="/base/static/src/jquery.superfish/css/superfish.css" media="screen">
+    <link rel="stylesheet" href="/base/static/src/css/base.css" type="text/css"/>
     
-    <script type="text/javascript" src="/base/static/LABjs/LAB.js"></script>
+    <script type="text/javascript" src="/base/static/lib/LABjs/LAB.js"></script>
     <script>
         $LAB
         .setOptions({UsePreloading:false})
-        .script('/base/static/openerp/js/base.js')
-        .script('/base/static/qweb/qweb.js')
-        .script('/base/static/underscore/underscore.js')
-        .script('/base/static/jquery/jquery-1.5.1.js')
+        .script('/base/static/lib/qweb/qweb.js')
+        .script('/base/static/lib/underscore/underscore.js')
+        .script('/base/static/lib/jquery/jquery-1.5.1.js')
         .wait()
         .script('/base/static/jquery.ui/js/jquery-ui-1.8.9.custom.min.js')
+        .wait()
         .script('/base/static/jquery.jqGrid/jquery.jqGrid.js')
         .script('/base/static/jquery.superfish/js/hoverIntent.js')
-        .script('/base/static/openerp/js/base_chrome.js')
-        .script('/base/static/openerp/js/base_views.js')
         .wait()
         .script('/base/static/jquery.superfish/js/superfish.js')
+        .wait()
+        .script('/base/static/src/js/base.js')
+        .wait()
+        .script('/base/static/src/js/chrome.js')
+        .script('/base/static/src/js/data.js')
+        .script('/base/static/src/js/form.js')
+        .script('/base/static/src/js/list.js')
+        .script('/base/static/src/js/search.js')
+        .script('/base/static/src/js/views.js')
+        .wait()
         .wait(function() {
             var oe = openerp.init();
             oe.base.webclient("oe");

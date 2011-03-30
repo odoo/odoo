@@ -1,5 +1,6 @@
 
-openerp.addons.base.data = function(openerp) {
+openerp.base.data = function(openerp) {
+
 /**
  * Management interface between views and the collection of selected OpenERP
  * records (represents the view's state?)

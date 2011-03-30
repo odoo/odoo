@@ -1,12 +1,12 @@
 #!/usr/bin/python
 import datetime
+import dateutil.relativedelta
 import functools
 import optparse
-import time
-import dateutil.relativedelta
 import os
 import sys
 import tempfile
+import time
 import traceback
 import uuid
 import xmlrpclib
@@ -24,14 +24,11 @@ import xmlrpctimeout
 class OpenERPUnboundException(Exception):
     pass
 
-
 class OpenERPConnector(object):
     pass
 
-
 class OpenERPAuth(object):
     pass
-
 
 class OpenERPModel(object):
     def __init__(self, session, model):
@@ -40,7 +37,6 @@ class OpenERPModel(object):
 
     def __getattr__(self, name):
         return lambda *l:self._session.execute(self._model, name, *l)
-
 
 class OpenERPSession(object):
     """
@@ -254,7 +250,6 @@ class OpenERPSession(object):
 #----------------------------------------------------------
 # OpenERP Web RequestHandler
 #----------------------------------------------------------
-
 class JsonRequest(object):
     """ JSON-RPC2 over HTTP POST using non standard POST encoding.
     Difference with the standard:
@@ -348,7 +343,6 @@ class JsonRequest(object):
         cherrypy.response.headers['Content-Length'] = len(content)
         return content
 
-
 def jsonrequest(f):
     @cherrypy.expose
     @functools.wraps(f)
@@ -356,7 +350,6 @@ def jsonrequest(f):
         return JsonRequest().dispatch(self, f, requestf=cherrypy.request.body)
 
     return json_handler
-
 
 class HttpRequest(object):
     """ Regular GET/POST request
@@ -371,7 +364,6 @@ class HttpRequest(object):
         print "GET/POST --> %s.%s %s" % (controller.__class__.__name__, f.__name__, request)
         r = f(controller, self, request)
         return r
-
 
 def httprequest(f):
     # check cleaner wrapping:
@@ -400,10 +392,8 @@ class ControllerType(type):
         super(ControllerType, cls).__init__(name, bases, attrs)
         controllers_class["%s.%s" % (cls.__module__, cls.__name__)] = cls
 
-
 class Controller(object):
     __metaclass__ = ControllerType
-
 
 class Root(object):
     def __init__(self):
@@ -449,9 +439,8 @@ class Root(object):
                         return m(**kw)
             raise cherrypy.NotFound('/' + '/'.join(l))
         else:
-            raise cherrypy.HTTPRedirect('/base/static/openerp/base.html', 301)
+            raise cherrypy.HTTPRedirect('/base/static/src/base.html', 301)
     default.exposed = True
-
 
 def main(argv):
     # Parse config
