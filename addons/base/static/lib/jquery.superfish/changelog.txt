@@ -1,0 +1,74 @@
+Changelog for Superfish - a jQuery menu plugin
+
+v1.2.1:  	altered 2nd July 07. added hide() before animate to make work for jQuery 1.1.3.
+
+v1.2.2:  	altered 2nd August 07. changed over function .find('ul') to .find('>ul') for smoother animations
+			Also deleted the iframe removal lines - not necessary it turns out
+
+v1.2.3:		altered jquery 1.1.3.1 broke keyboard access - had to change quite a few things and set display:none on the
+			.superfish rule in CSS instead of top:-999em
+
+v1.3: 		Pretty much a complete overhaul to make all original features work in 1.1.3.1 and above.
+			.superfish rule reverted back to top:-999em (which is better).
+
+v1.3.1:		altered 'li[ul]' to $('li:has(ul)') to work with jQuery 1.2
+
+v1.3.2: 	added onshow callback option as requested - 'this' keyword refers to revealed ul.
+			fixed bug whereby multiple menus on a page shared options. Now each menu can have separate options.
+			fixed IE6 and IE7 bug whereby under certain circumstances => 3rd tier menus appear instantly with text missing when revisited
+
+v1.3.3: 	altered event attachment selectors for performance increase on menu setup.
+
+v1.3.4: 	fixed pathClass bug as current path was not being restored. Still doesn't if using keyboard nav (will work on that).
+
+v1.4: 		store options objects in array $.superfish.o. Also provide public access to $.superfish.defaults
+			provided backward compat for jQuery versions less than 1.2 via oldJquery option - will use li[ul] or li:has(ul) as needed
+			added more callbacks, also added option to disable hoverIntent usage if that plugin is detected
+
+v1.4.1: 	fixed current path not being restored when using keyboard to tab away from the menu completely
+			optimised code further - now less code
+			removed addself() in favour of backward compatible add(this)
+			also remove new mouseenter/mouseleave events on window.unload (due to paranoia)
+
+v1.4.2:		3rd July 2008. added semi-colon at start of superfish.js file to avert script concatenation errors
+			added pathLevels option to limit the depth of submenus that get restored by pathClass
+			CSS of main example hugely simplified - other example CSS files less-so.
+				- top level menu items are not fixed width
+				- only need to set submenu widths in one place.
+				- various other improvements.
+				- class names used in all CSS files are changed to be less generic
+			released optional Supersubs plugin which dynamically adjusts submenu widths
+			attach everything to jQuery.fn.superfish to clean up jQuery namespace
+			removed the multi-tier-all-horizontal-example as it was never a great idea and doesn't seem to be in use
+			Update documentation text and remove certain caveats which were there to support users of much older versions of Superfish
+			Documentation now show how to apply bgIgrame 2.1 - it's much easier than before
+			Add all links and their focus and blur events to the onunload unbind - paranoid about memory leaks
+
+v1.4.3		5th July 2008. documentation completely redone using Mike Alsup's templates.
+			CSS revised so that all types of menu use superfish.css as a base. Include additional CSS files to acheive alternate styles.
+			class="sf-menu sf-vertical" creates vertical menu, class="sf-menu sf-navbar" creates nav-bar style menu
+
+v1.4.4		7th July 2008. arrows feature added. If option 'autoArrows' is true, auto-appends (spans) to anchors that have a ul submenu sibling,
+			and adds class 'sf-with-ul' to anchor.
+			CSS added to style new arrows, including an 8-bit alpha (NOT INDEXED!) transparent png of arrow - degrades to solid for IE6.
+			Manually add arrow mark-up to docs and disable autoArrows (via defaults option) to maintain decent performance (for docs page)
+			Update docs, including zip download, to suit.
+			Fix CSS bug that had the third tier of the navbar-style menu visible when JS not available.
+			
+v1.4.5		9 July 2008. decreased code weight
+			added drop shadows for capable browsers - added css and 8-bit alpha transparent png image for shadow
+			remove support for jQuery v<1.2
+			remove unload clean-up which was there to solve garbage collection problems in early jQuery versions
+			remove toggling 'visibility' on hide and show which as a fix for an IE bug that is no longer exhibited
+			removed need for getOpts, rewrote getMenu
+			use [].join('') instead of string concatenation for performance increase - probably very slight in this case
+			change selector in 'over' function from '.'+o.hoverClass to 'li.'+o.hoverClass
+
+v1.4.6		added workaround for IE7 shadows. If animation alters opacity then shadow is hidden during the animation and appears after.
+			This required some JS and a line of CSS, so created shortcut references to lighten code further.
+			
+v1.4.7		added back in the visibility toggle that was removed in 1.4.5 as the bug is indeed still exhibited by IE6 & 7
+			tweaked the look of the shadow slightly and use nicer 32bit png as I now find they behave the same as 8bit png with regard to fades in IE7
+			
+v1.4.8		fix over-sight: using 32bit png meant that the shadow image did show in IE6. Rather than go back to 8bit, add code to exclude IE6 from getting shadow class.
+			use new folder structure recommended by Matt from TopicTrack, for easier updates.

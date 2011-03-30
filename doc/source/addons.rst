@@ -37,17 +37,17 @@ Structure
 ``static/``
   The static files directory, may be served via a separate web server.
 
-  The third-party dependencies should be bundled in it (each in their
-  own directory).
+``static/lib/``
+  Third-party libraries used by the addon.
 
-``static/openerp/``
-  Sub-tree for all the addon's own static files.
-
-``static/openerp/{css,js,img}``
+``static/src/{css,js,img,xml}``
   Location for (respectively) the addon's static CSS files, its JS
-  files and its various image resources.
+  files, its various image resources as well as the template files
 
-``tests/``
+``static/test``
+  Javascript tests files
+
+``test/``
   The directories in which all tests for the addon are located.
 
 .. _addons-testing:

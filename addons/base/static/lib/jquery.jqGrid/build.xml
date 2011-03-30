@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<project name="jqGrid" default="build" basedir=".">
+
+    <!-- define the path of compressor in this file -->
+    <property file="build.properties" />
+
+    <target name="init">
+        <mkdir dir="${distdir}" />
+    </target>
+
+    <target name="jqgrid" depends="init">
+        <concat destfile="${distdir}/${target}">
+		<fileset file="js/grid.base.js"/>
+		<fileset file="js/grid.custom.js"/>
+		<fileset file="js/jqModal.js"/>
+		<fileset file="js/jqDnR.js"/>
+		<fileset file="js/JsonXml.js"/>
+		<fileset file="js/jquery.fmatter.js"/>
+		<fileset file="js/grid.common.js"/>
+		<fileset file="js/grid.filter.js"/>
+		<fileset file="js/grid.formedit.js"/>
+		<fileset file="js/grid.inlinedit.js"/>
+		<fileset file="js/grid.celledit.js"/>
+		<fileset file="js/grid.subgrid.js"/>
+		<fileset file="js/grid.treegrid.js"/>
+		<fileset file="js/grid.grouping.js"/>
+		<fileset file="js/grid.import.js"/>
+		<fileset file="js/grid.jqueryui.js"/>
+		<fileset file="js/grid.tbltogrid.js"/>
+        </concat>
+    </target>
+
+    <target name="jqgrid.min" depends="jqgrid">
+        <apply executable="java" parallel="false" verbose="true" failonerror="true" dest="${distdir}">
+            <fileset dir="${distdir}">
+                <include name="${target}" />
+            </fileset>
+            <arg line="-jar" />
+            <arg path="${GoogleCompiler}" />
+            <arg value="--warning_level" />
+            <arg value="QUIET" />
+            <arg value="--js_output_file" />
+            <targetfile />
+            <arg value="--js" />
+            <mapper type="glob" from="${target}" to="${target.min}" />
+        </apply>
+      	<echo message="${target.min} built." />
+    </target>
+
+    <target name="i18n">
+        <mkdir dir="${distdir}/i18n" />
+        <copy todir="${distdir}/i18n" overwrite="true">
+            <fileset dir="${srcdir}/i18n">
+                <include name="grid.locale-*.js" />
+            </fileset>
+        </copy>
+    </target>
+
+    <target name="build" depends="jqgrid, jqgrid.min, i18n"/>
+
+    <target name="clean">
+        <delete dir="${distdir}" />
+    </target>
+
+    <target name="all" depends="clean,build"/>
+
+</project>

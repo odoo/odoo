@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<bindings
+    xmlns="http://www.mozilla.org/xbl"
+    xmlns:xbl="http://www.mozilla.org/xbl"
+    xmlns:xul="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+    <binding id="ellipsis">
+        <content>
+            <xul:window><!-- xul:window tag required for FF2 -->
+                <xul:description crop="end" xbl:inherits="value=xbl:text"><children/></xul:description>
+            </xul:window>
+        </content>
+    </binding>
+</bindings>

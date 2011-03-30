@@ -1,0 +1,43 @@
+Installation
+
+Download the jqGrid package from the www.trirand/blog site section downloads.
+Note the new download manager where you can choose which modules you want to
+include in the download.
+
+In order to use jqGrid 3.5, first a UI theme css file should be loaded.
+Download the desired theme (or build a custom one) from jQueryUI site
+(www.jqueryui.com) and point in your link tag in head section the path to the
+theme css
+
+<link rel="stylesheet" type="text/css" media="screen" href="path_to_ui_css_file/jquery-ui-1.7.1.custom.css" />
+
+where the path_to_ui_css_file is a valid path to the ui theme file
+
+Extract the jqGrid package and copy the ui.jqgrid.css from css directory to
+your webserver directory. It is not necessary that the jqgrid css file is in
+the same directory as those of the jquery ui css.
+
+<link rel="stylesheet" type="text/css" media="screen" href="path_to_jqgrid_css_file/ui.jqgrid.css" />
+
+Starting with this version, jqGrid does not use a loader (which loads the
+needed files one by one), but all the needed code is contained in one file.
+The desired modules can be built using the jqGrid download manager from the
+site pointed above. In order to use this, first a language file should be
+loaded and then the jqgrid file.
+
+Copy the desired language file from js/i18n directory to your web server
+directory where you store the java script files. Every language file is
+named grid.locale-XX.js, where XX is a two-letter code for the language.
+Copy the jquery.jqGid.min.js file to the same or other valid directory in
+your web server
+
+Include both the files in script tags in the head section
+
+<script src="path_to_js_files/grid.locale-en.js" type="text/javascript"></script>
+<script src="path_to_js_files/jquery.jqGrid.min.js" type="text/javascript"></script>
+
+For debugging purposes, I have created a grid.loader.js which does the same
+loading of the files as in previous versions. The location of the file is in
+src directory of the package. In order to use this, the variable pathojsfiles
+should be adjusted to point to the appropriate folder - see 3.4.x docs.
+
