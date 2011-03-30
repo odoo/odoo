@@ -22,7 +22,7 @@
 {
     "name" : "Asset management",
     "version" : "1.0",
-    "depends" : ["account", "account_simulation"],
+    "depends" : ["account"],
     "author" : "Tiny",
     "description": """Financial and accounting asset management.
     Allows to define
