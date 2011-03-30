@@ -36,7 +36,7 @@ added to (resp. removed from) the portal's users.
                     <notebook>
                         <page string="Users and Groups">
                             <field name="user_ids" nolabel="1" colspan="2"
-                                context="{'menu_id': menu_id, 'groups_id': group_ids}">
+                                context="{'menu_id': menu_action_id, 'groups_id': group_ids}">
                                 <tree string="Users">
                                     <field name="name"/>
                                 </tree>
@@ -48,9 +48,12 @@ added to (resp. removed from) the portal's users.
                             </field>
                         </page>
                         <page string="Portal Menu">
-                            <field name="menu_id" domain="[('usage','=','menu')]"/>
-                            <button name="action_create_menu" type="object"
-                                string="Create Portal Menu"/>
+                            <field name="menu_action_id"/>
+                            <group colspan="4">
+                                <field name="parent_menu_id"/>
+                                <button name="create_parent_menu" type="object"
+                                    string="Create Parent Menu"/>
+                            </group>
                         </page>
                     </notebook>
                 </form>

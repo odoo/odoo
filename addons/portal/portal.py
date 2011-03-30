@@ -28,15 +28,18 @@ class portal(osv.osv):
     _description = 'Portal'
     _columns = {
         'name': fields.char(string='Name', size=64, required=True),
-        'menu_id': fields.many2one('ir.actions.actions', required=True,
-            string='Menu Action',
-            help=_("What replaces the standard menu for the portal's users")),
         'user_ids': fields.one2many('res.users', 'portal_id',
             string='Users',
             help=_('The set of users associated to this portal')),
         'group_ids': fields.many2many('res.groups', 'res_portals_groups_rel', 'pid', 'gid',
             string='Groups',
             help=_('Users of this portal automatically belong to those groups')),
+        'menu_action_id': fields.many2one('ir.actions.actions', readonly=True,
+            string='Menu Action',
+            help=_("What replaces the standard menu for the portal's users")),
+        'parent_menu_id': fields.many2one('ir.ui.menu',
+            string='Parent Menu',
+            help=_('The menu action opens the submenus of this menu item')),
     }
     _sql_constraints = [
         ('unique_name', 'UNIQUE(name)', _('Portals must have different names.'))
@@ -52,15 +55,21 @@ class portal(osv.osv):
         
         defaults['name'] = new_name
         defaults['user_ids'] = []
+        defaults['menu_action_id'] = None
         return super(portal, self).copy(cr, uid, id, defaults, context)
     
     def create(self, cr, uid, values, context=None):
         """ extend create() to assign the portal menu and groups to users """
-        # as 'user_ids' is a many2one relation, values['user_ids'] must be a
+        # first create the 'menu_action_id'
+        assert not values.get('menu_action_id')
+        values['menu_action_id'] = self._create_menu_action(cr, uid,
+            values['name'] + ' Menu', values.get('parent_menu_id', False), context)
+        
+        # as 'user_ids' is a one2many relation, values['user_ids'] must be a
         # list of tuples of the form (0, 0, {values})
         for op, _, user_values in values['user_ids']:
             assert op == 0
-            user_values['menu_id'] = values['menu_id']
+            user_values['menu_id'] = values['menu_action_id']
             user_values['groups_id'] = values['group_ids']
         
         return super(portal, self).create(cr, uid, values, context)
@@ -78,9 +87,19 @@ class portal(osv.osv):
                 groups_diff.append(change)      # add or remove group on users
         
         if groups_diff is None:
-            return self._write_compute_diff(cr, uid, ids, values, context)
+            self._write_compute_diff(cr, uid, ids, values, context)
         else:
-            return self._write_diff(cr, uid, ids, values, groups_diff, context)
+            self._write_diff(cr, uid, ids, values, groups_diff, context)
+        
+        # if parent_menu_id has changed, apply the change on menu_action_id
+        if 'parent_menu_id' in values:
+            act_window_obj = self.pool.get('ir.actions.act_window')
+            portals = self.browse(cr, uid, ids, context)
+            menu_action_ids = [p.menu_action_id.id for p in portals]
+            action_values = {'domain': [('parent_id', '=', values['parent_menu_id'])]}
+            act_window_obj.write(cr, uid, menu_action_ids, action_values, context)
+        
+        return True
     
     def _write_diff(self, cr, uid, ids, values, groups_diff, context=None):
         """ perform write() and apply groups_diff on users """
@@ -89,8 +108,8 @@ class portal(osv.osv):
         
         # then apply menu and group changes on their users
         user_values = {}
-        if 'menu_id' in values:
-            user_values['menu_id'] = values['menu_id']
+        if 'menu_action_id' in values:
+            user_values['menu_id'] = values['menu_action_id']
         if groups_diff:
             user_values['groups_id'] = groups_diff
         
@@ -115,8 +134,8 @@ class portal(osv.osv):
         # the changes to apply on users
         user_object = self.pool.get('res.users')
         user_values = {}
-        if 'menu_id' in values:
-            user_values['menu_id'] = values['menu_id']
+        if 'menu_action_id' in values:
+            user_values['menu_id'] = values['menu_action_id']
         
         # compute groups_diff on each portal, and apply them on users
         for p in self.browse(cr, uid, ids, context):
@@ -131,33 +150,35 @@ class portal(osv.osv):
         
         return True
     
-    def action_create_menu(self, cr, uid, ids, context=None):
-        """ create a menu for this portal """
-        if len(ids) != 1:
-            raise ValueError("portal.action_create_menu() applies to one portal only")
-        portal_name = self.browse(cr, uid, ids[0], context).name
-        
-        # create a menuitem under 'portal.portal_menu_tree'
-        item_data = {
-            'name': portal_name,
-            'parent_id': self._res_xml_id(cr, uid, 'portal', 'portal_menu_tree'),
-        }
-        item_id = self.pool.get('ir.ui.menu').create(cr, uid, item_data, context)
-        
-        # create an action to open the menuitems under item_id
+    def _create_menu_action(self, cr, uid, name, parent_menu_id, context=None):
+        # create a menu action that opens the menu items below parent_menu_id
+        actions_obj = self.pool.get('ir.actions.act_window')
         action_data = {
-            'name': portal_name,
+            'name': name,
             'type': 'ir.actions.act_window',
             'usage': 'menu',
             'res_model': 'ir.ui.menu',
             'view_type': 'tree',
             'view_id': self._res_xml_id(cr, uid, 'base', 'view_menu'),
-            'domain': [('parent_id', '=', item_id)],
+            'domain': [('parent_id', '=', parent_menu_id)],
         }
-        action_id = self.pool.get('ir.actions.act_window').create(cr, uid, action_data, context)
+        return actions_obj.create(cr, uid, action_data, context)
+    
+    def create_parent_menu(self, cr, uid, ids, context=None):
+        """ create a parent menu for this portal """
+        if len(ids) != 1:
+            raise ValueError("portal.create_parent_menu() applies to one portal at a time")
+        portal_name = self.browse(cr, uid, ids[0], context).name
         
-        # set the portal menu_id to action_id
-        return self.write(cr, uid, ids, {'menu_id': action_id}, context)
+        # create a menuitem under 'portal.portal_menu_tree'
+        item_data = {
+            'name': portal_name + ' Menu',
+            'parent_id': self._res_xml_id(cr, uid, 'portal', 'portal_menu_tree'),
+        }
+        item_id = self.pool.get('ir.ui.menu').create(cr, uid, item_data, context)
+        
+        # set the parent_menu_id to item_id
+        return self.write(cr, uid, ids, {'parent_menu_id': item_id}, context)
     
     def _res_xml_id(self, cr, uid, module, xml_id):
         """ return the resource id associated to the given xml_id """
