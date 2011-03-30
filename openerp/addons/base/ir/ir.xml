@@ -1436,6 +1436,16 @@
                         <page string="Groups">
                             <field name="groups_id" colspan="4" nolabel="1"/>
                         </page>
+                        <page string="Submenus">
+                            <!-- Note: make sure you have 'ir.ui.menu.full_list'
+                                 in the context to see all submenus! -->
+                            <field name="child_id" nolabel="1">
+                                <tree string="Menu">
+                                    <field name="sequence"/>
+                                    <field icon="icon" name="name" string="Menu"/>
+                                </tree>
+                            </field>
+                        </page>
                     </notebook>
                 </form>
             </field>
