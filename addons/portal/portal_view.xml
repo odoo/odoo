@@ -18,11 +18,12 @@ users.  When groups are added to (resp. removed from) a portal, they are also
 added to (resp. removed from) the portal's users.
             </field>
         </record>
-        <menuitem name="Portals" id="portal_list_menu" parent="portal_menu"
-            action="portal_list_action"/>
+        <menuitem name="Portals" id="portal_list_menu"
+            parent="portal_menu" sequence="1" action="portal_list_action"/>
 
         <!-- menu Administration/Portals/Portal menus -->
-        <menuitem name="Portal Menus" id="portal_menu_tree" parent="portal_menu"/>
+        <menuitem name="Portal Menus" id="portal_menu_tree"
+            parent="portal_menu" sequence="2"/>
 
         <!-- portal form view -->
         <record id="portal_form" model="ir.ui.view">
@@ -49,11 +50,10 @@ added to (resp. removed from) the portal's users.
                         </page>
                         <page string="Portal Menu">
                             <field name="menu_action_id"/>
-                            <group colspan="4">
-                                <field name="parent_menu_id"/>
-                                <button name="create_parent_menu" type="object"
-                                    string="Create Parent Menu"/>
-                            </group>
+                            <newline/>
+                            <field name="parent_menu_id"/>
+                            <button name="create_parent_menu" type="object"
+                                string="Create Parent Menu"/>
                         </page>
                     </notebook>
                 </form>
@@ -74,31 +74,5 @@ added to (resp. removed from) the portal's users.
                 </page>
             </field>
         </record>
-
-        <!--
-            temporary: an attempt to display and edit menu items as a tree view
-        -->
-        <record id="menu_tree_view" model="ir.ui.view">
-            <field name="name">menu_tree_view</field>
-            <field name="model">ir.ui.menu</field>
-            <field name="type">tree</field>
-            <field name="field_parent">child_id</field>
-            <field name="arch" type="xml">
-                <tree string="Menu Structure">
-                    <field name="name"/>
-                </tree>
-            </field>
-        </record>
-        <record id="menu_tree_action" model="ir.actions.act_window">
-            <field name="name">Menu Structure</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">ir.ui.menu</field>
-            <field name="domain">[('parent_id','=',False)]</field>
-            <field name="view_type">tree</field>
-            <field name="view_id" ref="menu_tree_view"/>
-        </record>
-        <menuitem name="Menu structure" id="menu_tree_menu" parent="portal_menu"
-            action="menu_tree_action"/>
-
     </data>
 </openerp>
