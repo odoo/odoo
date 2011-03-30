@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openerp>
     <data>
-    
+
         <!-- Email Template Preview -->
         <record model="ir.ui.view" id="email_template_preview_form">
             <field name="name">email_template.preview.form</field>
@@ -22,7 +22,7 @@
                         <field name="subject" colspan="8"/>
                     </group>
                     <group col="4" colspan="4">
-                        <separator string= "Body(Text)" colspan="2"/>   
+                        <separator string= "Body(Text)" colspan="2"/>
                         <separator string= "Body(Html)" colspan="2"/>
                         <newline/>
                         <field name="body_text" nolabel="1" colspan="2"/>
@@ -33,7 +33,7 @@
                 </form>
             </field>
         </record>
-        
+
         <record id="wizard_email_template_preview" model="ir.actions.act_window">
             <field name="name">Template Preview</field>
             <field name="res_model">email_template.preview</field>
