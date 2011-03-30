@@ -11,11 +11,19 @@ openerp.base.DataGroup =  openerp.base.Controller.extend({
     },
 });
 
-/**
- * Management interface between views and the collection of selected OpenERP
- * records (represents the view's state?)
- */
-openerp.base.DataSet =  openerp.base.Controller.extend({
+openerp.base.DataSet =  openerp.base.Controller.extend(
+    /** @lends openerp.base.DataSet# */{
+
+    /**
+     * Management interface between views and the collection of selected
+     * OpenERP records (represents the view's state?)
+     *
+     * @constructs
+     * @extends openerp.base.Controller
+     *
+     * @param {openerp.base.Session} session current OpenERP session
+     * @param {String} model the OpenERP model this dataset will manage
+     */
     init: function(session, model) {
         this._super(session);
         this.model = model;
@@ -45,11 +53,12 @@ openerp.base.DataSet =  openerp.base.Controller.extend({
      *
      * Fires the on_ids event.
      *
+     * TODO: return deferred
+     *
      * @param {Number} [offset=0] The index from which selected records should be returned
      * @param {Number} [limit=null] The maximum number of records to return
      * @returns itself
      */
-     // ADD CALLBACK
     fetch: function (offset, limit) {
         offset = offset || 0;
         limit = limit || null;
@@ -79,13 +88,12 @@ openerp.base.DataSet =  openerp.base.Controller.extend({
         }, this));
         return this;
     },
-
-
-    /** REMOVE
-     * @event
-     *
+    /**
      * Fires after the DataSet fetched the records matching its internal ids selection
-     * 
+     *
+     * TODO: remove?
+     *
+     * @event
      * @param {Array} records An array of the DataRecord fetched
      * @param event The on_fetch event object
      * @param {Number} event.offset the offset with which the original DataSet#fetch call was performed
@@ -99,9 +107,10 @@ openerp.base.DataSet =  openerp.base.Controller.extend({
     /**
      * Fetch all the currently active records for this DataSet (records selected via DataSet#select)
      *
+     * TODO: add fields, return deferred
+     *
      * @returns itself
      */
-     // ADD fields and callback
     active_ids: function () {
         this.rpc('/base/dataset/get', {
             ids: this.get_active_ids(),
@@ -116,13 +125,12 @@ openerp.base.DataSet =  openerp.base.Controller.extend({
         }, this));
         return this;
     },
-
-
-    /** REMIVE
-     * @event
-     *
+    /**
      * Fires after the DataSet fetched the records matching its internal active ids selection
      *
+     * TODO: remove?
+     *
+     * @event
      * @param {Array} records An array of the DataRecord fetched
      */
     on_active_ids: function (records) { },
@@ -130,9 +138,10 @@ openerp.base.DataSet =  openerp.base.Controller.extend({
     /**
      * Fetches the current active record for this DataSet
      *
+     * TODO: add field, return deferred?
+     *
      * @returns itself
      */
-     // ADD fields and callback
     active_id: function () {
         this.rpc('/base/dataset/get', {
             ids: [this.get_active_id()],
@@ -146,11 +155,10 @@ openerp.base.DataSet =  openerp.base.Controller.extend({
         }, this));
         return this;
     },
-
-
-    /** REMOVE
+    /**
      * Fires after the DataSet fetched the record matching the current active record
      *
+     * @event
      * @param record the record matching the provided id, or null if there is no record for this id
      */
     on_active_id: function (record) {
@@ -159,7 +167,7 @@ openerp.base.DataSet =  openerp.base.Controller.extend({
 
     /**
      * Configures the DataSet
-     * 
+     *
      * @param options DataSet options
      * @param {Array} options.domain the domain to assign to this DataSet for filtering
      * @param {Object} options.context the context this DataSet should use during its calls
@@ -206,6 +214,7 @@ openerp.base.DataSet =  openerp.base.Controller.extend({
      * Sets active_ids by value:
      *
      * * Activates all ids part of the current selection
+     *
      * * Sets active_id to be the first id of the selection
      *
      * @param {Array} ids the list of ids to activate

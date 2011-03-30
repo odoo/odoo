@@ -253,7 +253,17 @@ openerp.base.SearchView = openerp.base.Controller.extend({
 });
 
 openerp.base.search = {};
-openerp.base.search.Invalid = Class.extend({
+openerp.base.search.Invalid = Class.extend(
+    /** @lends openerp.base.search.Invalid# */{
+    /**
+     * Exception thrown by search widgets when they hold invalid values,
+     * which they can not return when asked.
+     *
+     * @constructs
+     * @param field the name of the field holding an invalid value
+     * @param value the invalid value
+     * @param message validation failure message
+     */
     init: function (field, value, message) {
         this.field = field;
         this.value = value;
@@ -264,7 +274,17 @@ openerp.base.search.Invalid = Class.extend({
                 ': [' + this.value + '] is ' + this.message);
     }
 });
-openerp.base.search.Widget = openerp.base.Controller.extend({
+openerp.base.search.Widget = openerp.base.Controller.extend(
+    /** @lends openerp.base.search.Widget# */{
+    template: null,
+    /**
+     * Root class of all search widgets
+     *
+     * @constructs
+     * @extends openerp.base.Controller
+     *
+     * @param view the ancestor view of this widget
+     */
     template: null,
     init: function (view) {
         this.view = view;
@@ -529,7 +549,14 @@ openerp.base.search.ExtendedSearchProposition.Char = openerp.base.BaseWidget.ext
     }
 });
 
-openerp.base.search.Input = openerp.base.search.Widget.extend({
+openerp.base.search.Input = openerp.base.search.Widget.extend(
+    /** @lends openerp.base.search.Input# */{
+    /**
+     * @constructs
+     * @extends openerp.base.search.Widget
+     *
+     * @param view
+     */
     init: function (view) {
         this._super(view);
         this.view.inputs.push(this);
@@ -594,12 +621,21 @@ openerp.base.search.Filter = openerp.base.search.Input.extend({
         return this.attrs.domain;
     }
 });
-openerp.base.search.Field = openerp.base.search.Input.extend({
+openerp.base.search.Field = openerp.base.search.Input.extend(
+    /** @lends openerp.base.search.Field# */ {
     template: 'SearchView.field',
     default_operator: '=',
     // TODO: set default values
     // TODO: get context, domain
     // TODO: holds Filters
+    /**
+     * @constructs
+     * @extends openerp.base.search.Input
+     *
+     * @param view_section
+     * @param field
+     * @param view
+     */
     init: function (view_section, field, view) {
         this._super(view);
         this.attrs = _.extend({}, field, view_section.attrs);
@@ -648,7 +684,18 @@ openerp.base.search.Field = openerp.base.search.Input.extend({
             {own_values: {self: val}});
     }
 });
-openerp.base.search.CharField = openerp.base.search.Field.extend({
+/**
+ * Implementation of the ``char`` OpenERP field type:
+ *
+ * * Default operator is ``ilike`` rather than ``=``
+ *
+ * * The Javascript and the HTML values are identical (strings)
+ *
+ * @class
+ * @extends openerp.base.search.Field
+ */
+openerp.base.search.CharField = openerp.base.search.Field.extend(
+    /** @lends openerp.base.search.CharField# */ {
     default_operator: 'ilike',
     get_value: function () {
         return this.$element.val();

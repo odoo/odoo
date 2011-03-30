@@ -5,17 +5,6 @@
 openerp.base.chrome = function(openerp) {
 
 openerp.base.callback = function(obj, method) {
-    // openerp.base.callback( obj, methods, [arg1, arg2, ... ] )
-    //
-    // The callback object holds a chain that can be altered:
-    // callback.add( handler , [arg1, arg2, ... ] )
-    // callback.add( {
-    //     callback: function
-    //     self: object or null
-    //     args: array
-    //     position: "first" or "last"
-    //     unique: boolean
-    // })
     var callback = function() {
         var args = Array.prototype.slice.call(arguments);
         var r;
@@ -64,11 +53,13 @@ openerp.base.callback = function(obj, method) {
     });
 };
 
-openerp.base.BasicController = Class.extend({
+openerp.base.BasicController = Class.extend(
+    /** @lends openerp.base.BasicController# */{
     /**
-     * Controller contructor 
      * rpc operations, event binding and callback calling should be done in
      * start() instead of init so that event can be hooked in between.
+     *
+     *  @constructs
      */
     init: function(element_id) {
         this.element_id = element_id;
@@ -117,7 +108,15 @@ openerp.base.Console =  openerp.base.BasicController.extend({
     }
 });
 
-openerp.base.Session = openerp.base.BasicController.extend({
+openerp.base.Session = openerp.base.BasicController.extend(
+    /** @lends openerp.base.Session# */{
+    /**
+     * @constructs
+     * @extends openerp.base.BasicController
+     * @param element_id
+     * @param server
+     * @param port
+     */
     init: function(element_id, server, port) {
         this._super(element_id);
         this.server = (server == undefined) ? location.hostname : server;
@@ -259,6 +258,7 @@ openerp.base.Session = openerp.base.BasicController.extend({
     /**
      * Fetches a cookie stored by an openerp session
      *
+     * @private
      * @param name the cookie's name
      */
     get_cookie: function (name) {
@@ -273,8 +273,9 @@ openerp.base.Session = openerp.base.BasicController.extend({
         return null;
     },
     /**
-     * Create a new secure cookie with the provided name and value
+     * Create a new cookie with the provided name and value
      *
+     * @private
      * @param name the cookie's name
      * @param value the cookie's value
      * @param ttl the cookie's time to live, 1 year by default, set to -1 to delete
@@ -328,7 +329,12 @@ openerp.base.Database = openerp.base.BasicController.extend({
 // Non Session Controller to manage databases
 });
 
-openerp.base.Controller = openerp.base.BasicController.extend({
+openerp.base.Controller = openerp.base.BasicController.extend(
+    /** @lends openerp.base.Controller# */{
+    /**
+     * @constructs
+     * @extends openerp.base.BasicController
+     */
     init: function(session, element_id) {
         this._super(element_id);
         this.session = session;

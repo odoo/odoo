@@ -65,6 +65,10 @@
 // OpenERP initialisation and black magic about the pool
 //---------------------------------------------------------
 
+/**
+ * @name openerp
+ * @namespace
+ */
 (function() {
     if (this.openerp)
         return;
@@ -104,6 +108,7 @@
 // OpenERP base module split
 //---------------------------------------------------------
 
+/** @namespace */
 openerp.base = function(instance) {
     openerp.base.chrome(instance);
     openerp.base.data(instance);
