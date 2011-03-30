@@ -285,7 +285,6 @@ openerp.base.search.Widget = openerp.base.Controller.extend(
      *
      * @param view the ancestor view of this widget
      */
-    template: null,
     init: function (view) {
         this.view = view;
     },
