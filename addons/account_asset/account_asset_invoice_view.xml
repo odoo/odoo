@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<openerp>
+<data>
+
+    #---------------------------------------------------------
+    # Fiscal Year
+    #---------------------------------------------------------
+
+    <record model="ir.ui.view" id="view_account_invoice_asset_form">
+        <field name="name">account.invoice.line.form</field>
+        <field name="model">account.invoice.line</field>
+        <field name="inherit_id" ref="account.view_invoice_line_form"/>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <field name="invoice_line_tax_id" position="before">
+                <field name="asset_id" context="name=name"/>
+            </field>
+        </field>
+    </record>
+
+</data>
+</openerp>
