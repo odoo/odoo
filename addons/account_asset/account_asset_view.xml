@@ -74,8 +74,6 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Asset">
-                <notebook>
-                <page string="General info">
 		   <group col="6" colspan="4">
                     	<field name="name" select="1"/>
 		    	<field name="category_id" select="1"/>
@@ -135,7 +133,7 @@
                             <page string="Depreciation board">
                                 <field name="value_total"/>
                                 <field name="value_residual"/>
-				<field name="test"/>
+				<!--<field name="test"/>-->
                             </page>
 
 			    <page string="Notes">
@@ -156,7 +154,6 @@
                 </page>
                     -->
                 
-                </notebook>
             </form>
         </field>
     </record>
