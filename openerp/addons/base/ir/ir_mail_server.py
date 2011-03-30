@@ -163,63 +163,6 @@ unless it is already specified in the From Email, e.g: John Doe <john@doe.com>",
             raise error
         return smtp_server
 
-    def _email_send(self, cr, uid, smtp_from, smtp_to_list, message, ssl=False,
-                debug=False, smtp_server=None, smtp_port=None, smtp_user=None, smtp_password=None):
-        """Low-level method to send directly a Message through the configured smtp server.
-            :param smtp_from: RFC-822 envelope FROM (not displayed to recipient)
-            :param smtp_to_list: RFC-822 envelope RCPT_TOs (not displayed to recipient)
-            :param message: an email.message.Message to send
-            :param debug: True if messages should be output to stderr before being sent,
-                          and smtplib.SMTP put into debug mode.
-            :return: True if the mail was delivered successfully to the smtp,
-                     else False (+ exception logged)
-        """
-        class WriteToLogger(object):
-            def __init__(self):
-                self.logger = loglevels.Logger()
-
-            def write(self, s):
-                self.logger.notifyChannel('email_send', loglevels.LOG_DEBUG, s)
-
-        try:
-            smtp_server = smtp_server or config['smtp_server']
-
-            if smtp_server.startswith('maildir:/'):
-                from mailbox import Maildir
-                maildir_path = smtp_server[8:]
-                mdir = Maildir(maildir_path,factory=None, create = True)
-                mdir.add(message.as_string(True))
-                return True
-
-            if debug:
-                oldstderr = smtplib.stderr
-                smtplib.stderr = WriteToLogger()
-
-            if not ssl:
-                ssl = config.get('smtp_ssl', False)
-
-            smtp = self.connect_smtp_server(cr, uid, smtp_server, smtp_port,
-                    user_name=smtp_user, user_password=smtp_password, ssl=ssl, tls=True, debug=debug)
-            try:
-                smtp.sendmail(smtp_from, smtp_to_list, message.as_string())
-            except Exception:
-                _logger.error('could not deliver Email(s)', exc_info=True)
-                return False
-            finally:
-                try:
-                    smtp.quit()
-                except Exception:
-                    # ignored, just a consequence of the previous exception
-                    pass
-
-            if debug:
-                smtplib.stderr = oldstderr
-        except Exception:
-            _logger.error('Error on Send Emails Services', exc_info=True)
-            return False
-
-        return True
-
     def generate_tracking_message_id(self, openobject_id):
         """Returns a string that can be used in the Message-ID RFC822 header field so we
            can track the replies related to a given object thanks to the "In-Reply-To" or
@@ -350,7 +293,7 @@ unless it is already specified in the From Email, e.g: John Doe <john@doe.com>",
             smtp = self.connect_smtp_server(cr, uid, smtp_server, smtp_port,
                     user_name=smtp_user, user_password=smtp_password, ssl=ssl, tls=True, debug=debug)
             try:
-                smtp.sendmail(smtp_from, smtp_to_list, message.as_string())
+                smtp.sendmail(smtp_from, email_to, message.as_string())
             except Exception:
                 _logger.error('could not deliver Email(s)', exc_info=True)
                 return False
@@ -366,7 +309,7 @@ unless it is already specified in the From Email, e.g: John Doe <john@doe.com>",
         except Exception:
             _logger.error('Error on Send Emails Services', exc_info=True)
 
-            return message_id
+        return message_id
 
     def on_change_ssl(self, cr, uid, ids, smtp_ssl):
         smtp_port = 0

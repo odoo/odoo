@@ -425,7 +425,7 @@ def email_send(smtp_from, smtp_to_list, message, ssl=False, debug=False, smtp_se
         uid = 1
     try:
         server_pool = pooler.get_pool(cr.dbname).get('ir.mail_server')
-        server_pool.send_email(cr, uid, smtp_from, smtp_to_list, message,
+        server_pool.send_email(cr, uid, smtp_from, smtp_to_list, message=message,
             ssl=ssl,debug=debug, smtp_server=smtp_server, smtp_port=smtp_port,
             smtp_user=smtp_user, smtp_password=smtp_password)
     except Exception:
