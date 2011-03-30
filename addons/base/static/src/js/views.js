@@ -4,8 +4,8 @@
 
 openerp.base.views = function(openerp) {
 
-// process all kind of actions
 openerp.base.ActionManager = openerp.base.Controller.extend({
+// process all kind of actions
     init: function(session, element_id) {
         this._super(session, element_id);
         this.action = null;
@@ -26,8 +26,8 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
     }
 });
 
-// This will be ViewManager Abstract/Common
 openerp.base.ViewManager =  openerp.base.Controller.extend({
+// This will be ViewManager Abstract/Common
     init: function(session, element_id) {
         this._super(session, element_id);
         this.action = null;
@@ -131,12 +131,12 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
     }
 });
 
-// Extends view manager
 openerp.base.ViewManagerRoot = openerp.base.Controller.extend({
+// Extends view manager
 });
 
-// Extends view manager
 openerp.base.ViewManagerUsedAsAMany2One = openerp.base.Controller.extend({
+// Extends view manager
 });
 
 openerp.base.BaseWidget = openerp.base.Controller.extend({
