@@ -542,10 +542,12 @@ class orm_template(object):
                                 if not data[fpos]:
                                     dt = ''
                                     for rr in r :
-                                        if isinstance(rr.name, browse_record):
-                                            rr = rr.name
-                                        rr_name = self.pool.get(rr._table_name).name_get(cr, uid, [rr.id], context=context)
-                                        rr_name = rr_name and rr_name[0] and rr_name[0][1] or ''
+                                        rr_name = ''
+                                        if rr.name:
+                                            if isinstance(rr.name, browse_record):
+                                                rr = rr.name
+                                            rr_name = self.pool.get(rr._table_name).name_get(cr, uid, [rr.id], context=context)
+                                            rr_name = rr_name and rr_name[0] and rr_name[0][1] or ''
                                         dt += tools.ustr(rr_name or '') + ','
                                     data[fpos] = dt[:-1]
                                     break
