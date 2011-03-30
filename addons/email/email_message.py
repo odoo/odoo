@@ -296,7 +296,7 @@ class email_message(osv.osv):
                 if message.state in ['outgoing', 'exception']:
                     res = smtp_server_obj.send_email(cr, uid, message.email_from,
                         message.email_to and message.email_to.split(',') or [],
-                        message.subject, message.body,
+                        subject=message.subject, body=message.body,
                         email_cc=message.email_cc and message.email_cc.split(',') or [],
                         email_bcc=message.email_bcc and message.email_bcc.split(',') or [],
                         reply_to=message.reply_to,
