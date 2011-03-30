@@ -26,16 +26,12 @@ class account_asset_category(osv.osv):
     _description = 'Asset category'
     _columns = {
         'name': fields.char('Asset category', size=64, required=True, select=1),
-        'code': fields.char('Reference', size=16, select=1),
+        #'code': fields.char('Reference', size=16, select=1),
         'note': fields.text('Note'),
-	'name': fields.char('Method name', size=64, select=1),
-        'type': fields.selection([('direct','Direct'),('indirect','Indirect')], 'Depr. method type', select=2, required=True),
-        'asset_id': fields.many2one('account.asset.asset', 'Asset', required=True),
+        #'type': fields.selection([('direct','Direct'),('indirect','Indirect')], 'Depr. method type', select=2, required=True),
         'account_asset_id': fields.many2one('account.account', 'Asset account', required=True),
         'account_actif_id': fields.many2one('account.account', 'Depreciation account', required=True),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True),
-
-	
     }
 account_asset_category()
 
