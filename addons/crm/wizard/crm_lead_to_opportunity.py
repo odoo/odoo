@@ -114,8 +114,10 @@ Leads Could not convert into Opportunity"))
             'stage_id': stage_ids and stage_ids[0] or False,
             'date_action': time.strftime('%Y-%m-%d %H:%M:%S'),
         }
-        if address_id:
+        if partner_id and address_id:
             vals['partner_address_id'] = address_id[0]
+        else:
+            vals['partner_address_id'] = False
 
         lead.write(vals, context=context)
         leads.history(cr, uid, [lead], _('Converted to opportunity'), details='Converted to Opportunity', context=context)
@@ -128,6 +130,8 @@ Leads Could not convert into Opportunity"))
 
     def send_mail_to_salesman(self, lead):
         email_to = lead.user_id and lead.user_id.user_email
+        if not email_to:
+            return
         email_from = lead.section_id and lead.section_id.user_id and lead.section_id.user_id.user_email or email_to
         partner = lead.partner_id and lead.partner_id.name or lead.partner_name 
         subject = "lead %s converted into opportunity" % lead.name
@@ -187,7 +191,6 @@ Leads Could not convert into Opportunity"))
                 partner_id = data.partner_id and data.partner_id.id
             else:
                 partner_id = False
-
 
             self._convert(cr, uid, ids, lead, partner_id, stage_ids, context=context)
             self.send_mail_to_salesman(lead)
