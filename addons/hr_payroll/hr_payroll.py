@@ -161,7 +161,7 @@ class payroll_register(osv.osv):
             ('cancel','Reject'),
         ],'State', select=True, readonly=True),
         'active':fields.boolean('Active', required=False, help="If the active field is set to false, it will allow you to hide the payroll register without removing it."),
-        'company_id':fields.many2one('res.company', 'Company', required=False),
+        'company_id':fields.many2one('res.company', 'Company'),
 #        'grows': fields.function(_calculate, method=True, store=True, multi='dc', string='Gross Salary', type='float', digits=(16, 4)),
 #        'net': fields.function(_calculate, method=True, store=True, multi='dc', string='Net Salary', digits=(16, 4)),
 #        'allounce': fields.function(_calculate, method=True, store=True, multi='dc', string='Allowance', digits=(16, 4)),
@@ -190,7 +190,7 @@ class payroll_register(osv.osv):
         for emp in emp_pool.browse(cr, uid, emp_ids, context=context):
             old_slips = slip_pool.search(cr, uid, [('employee_id','=', emp.id), ('date','=',vals.date)], context=context)
             if old_slips:
-                slip_pool.write(cr, uid, old_slips, {'register_id':ids[0]}, context=context)
+                slip_pool.write(cr, uid, old_slips, {'register_id': ids[0]}, context=context)
                 for sid in old_slips:
                     wf_service.trg_validate(uid, 'hr.payslip', sid, 'compute_sheet', cr)
             else:
@@ -205,8 +205,7 @@ class payroll_register(osv.osv):
                 wf_service.trg_validate(uid, 'hr.payslip', slip_id, 'compute_sheet', cr)
 
         number = self.pool.get('ir.sequence').get(cr, uid, 'salary.register')
-        self.write(cr, uid, ids, {'state': 'draft', 'number': number}, context=context)
-        return True
+        return self.write(cr, uid, ids, {'state': 'draft', 'number': number}, context=context)
 
 #    def compute_sheet(self, cr, uid, ids, context=None):
 #        emp_pool = self.pool.get('hr.employee')
@@ -249,35 +248,29 @@ class payroll_register(osv.osv):
 
     def verify_sheet(self, cr, uid, ids, context=None):
         slip_pool = self.pool.get('hr.payslip')
-        for id in ids:
-            sids = slip_pool.search(cr, uid, [('register_id','=',id)], context=context)
-            wf_service = netsvc.LocalService("workflow")
-            for sid in sids:
-                wf_service.trg_validate(uid, 'hr.payslip', sid, 'verify_sheet', cr)
-
+        wf_service = netsvc.LocalService("workflow")
+        sids = slip_pool.search(cr, uid, [('register_id','in', ids)], context=context)
+        for sid in sids:
+            wf_service.trg_validate(uid, 'hr.payslip', sid, 'verify_sheet', cr)
         return self.write(cr, uid, ids, {'state':'hr_check'}, context=context)
 
     def final_verify_sheet(self, cr, uid, ids, context=None):
         slip_pool = self.pool.get('hr.payslip')
         sequence_pool = self.pool.get('ir.sequence')
+        wf_service = netsvc.LocalService("workflow")
         users_pool = self.pool.get('res.users')
-
-        for id in ids:
-            sids = slip_pool.search(cr, uid, [('register_id','=',id), ('state','=','hr_check')], context=context)
-            wf_service = netsvc.LocalService("workflow")
-            for sid in sids:
-                wf_service.trg_validate(uid, 'hr.payslip', sid, 'final_verify_sheet', cr)
-
-        company_name = users_pool.browse(cr, uid, uid, context=context).company_id.name
+        sids = slip_pool.search(cr, uid, [('register_id','in', ids), ('state','=','hr_check')], context=context)
+        for sid in sids:
+            wf_service.trg_validate(uid, 'hr.payslip', sid, 'final_verify_sheet', cr)
+#        company_name = users_pool.browse(cr, uid, uid, context=context).company_id.name
         return self.write(cr, uid, ids, {'state':'confirm'}, context=context)
 
     def process_sheet(self, cr, uid, ids, context=None):
         slip_pool = self.pool.get('hr.payslip')
-        for id in ids:
-            sids = slip_pool.search(cr, uid, [('register_id','=',id), ('state','=','confirm')], context=context)
-            wf_service = netsvc.LocalService("workflow")
-            for sid in sids:
-                wf_service.trg_validate(uid, 'hr.payslip', sid, 'process_sheet', cr)
+        wf_service = netsvc.LocalService("workflow")
+        sids = slip_pool.search(cr, uid, [('register_id','=',id), ('state','=','confirm')], context=context)
+        for sid in sids:
+            wf_service.trg_validate(uid, 'hr.payslip', sid, 'process_sheet', cr)
         return self.write(cr, uid, ids, {'state':'done'}, context=context)
 
 payroll_register()
