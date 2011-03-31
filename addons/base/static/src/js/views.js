@@ -34,6 +34,7 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
         this.searchview = null;
         this.search_visible = true;
         this.active_view = null;
+        this.auto_search = false;
         // this.views = { "list": { "view_id":1234, "controller": instance} }
         this.views = {};
     },
@@ -61,6 +62,10 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
             }
             controller.start();
             this.views[view_type].controller = controller;
+            if (this.auto_search) {
+                this.searchview.on_loaded.add_last(this.searchview.do_search);
+                this.auto_search = false;
+            }
         }
         for (var i in this.views) {
             if (this.views[i].controller) {
@@ -95,19 +100,18 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
         this.$element.html(QWeb.render("ViewManager", {"prefix": this.element_id, views: action.views}));
 
         this.searchview_id = false;
-        if(this.search_visible && action.search_view_id) {
+        if (this.search_visible && action.search_view_id) {
             this.searchview_id = action.search_view_id[0];
             var searchview = this.searchview = new openerp.base.SearchView(
                     this.session, this.element_id + "_search",
                     this.dataset, this.searchview_id,
                     this.search_defaults());
-            searchview.on_search.add(this.do_search);
+            searchview.on_search.add(function() {
+                self.views[self.active_view].controller.do_search.apply(self, arguments);
+            });
             searchview.start();
 
-            if (action['auto_search']) {
-                searchview.on_loaded.add_last(
-                    searchview.do_search);
-            }
+            this.auto_search = action.auto_search;
         }
         this.$element.find('.views_switchers button').click(function() {
             self.on_mode_switch($(this).data('view-type'));
@@ -124,20 +128,6 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
     on_remove: function() {
     },
     on_edit: function() {
-    },
-    do_search: function (domains, contexts, groupbys) {
-        var self = this;
-        this.rpc('/base/session/eval_domain_and_context', {
-            domains: domains,
-            contexts: contexts,
-            group_by_seq: groupbys
-        }, function (results) {
-            // TODO: handle non-empty results.group_by with read_group
-            self.dataset.set({
-                context: results.context,
-                domain: results.domain
-            }).fetch(0, self.action.limit);
-        });
     }
 });
 
