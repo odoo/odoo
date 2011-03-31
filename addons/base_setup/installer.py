@@ -120,7 +120,6 @@ class base_setup_installer(osv.osv_memory):
         if context is None:
              context = {}
         modules = self.pool.get('ir.module.module')
-        upgrade_obj = self.pool.get('base.module.upgrade')
         modules_selected = []
         datas = self.read(cr, uid, ids, context=context)[0]
         key = datas.keys()
