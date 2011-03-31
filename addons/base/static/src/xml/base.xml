@@ -395,14 +395,12 @@
             <t t-foreach="attrs.fields" t-as="field">
                 <option t-att="{'selected': field === attrs.selected ? 'selected' : null}"
                         t-att-value="field.name">
-                    <t t-esc="field.obj.string"/>
+                    <t t-esc="field.string"/>
                 </option>
             </t>
         </select>
-        <select class="searchview_extended_prop_op">
-        </select>
-        <span class="searchview_extended_prop_value">
-        </span>
+        <select class="searchview_extended_prop_op"/>
+        <span class="searchview_extended_prop_value"/>
         <button class="searchview_extended_delete_prop"
                 type="button">Delete this condition</button>
     </div>

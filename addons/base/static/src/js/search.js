@@ -461,14 +461,15 @@ openerp.base.search.ExtendedSearchProposition = openerp.base.BaseWidget.extend({
     init: function (parent, fields) {
         this._super(parent);
         this.fields = _(fields).chain()
-            .map(function(val,key) {return {name:key, obj:val};})
-            .sortBy(function(x) {return x.obj.string;}).value();
+            .map(function(val, key) { return _.extend({}, val, {'name': key}); })
+            .sortBy(function(field) {return field.string;})
+            .value();
         this.attrs = {_: _, fields: this.fields, selected: null};
         this.value_component = null;
     },
     start: function () {
         this._super();
-        this.set_selected(this.fields.length > 0 ? this.fields[0] : null);
+        this.select_field(this.fields.length > 0 ? this.fields[0] : null);
         var _this = this;
         this.$element.find(".searchview_extended_prop_field").change(function() {
             _this.changed();
@@ -481,26 +482,30 @@ openerp.base.search.ExtendedSearchProposition = openerp.base.BaseWidget.extend({
     changed: function() {
         var nval = this.$element.find(".searchview_extended_prop_field").val();
         if(this.attrs.selected == null || nval != this.attrs.selected.name) {
-            this.set_selected(_.detect(this.fields, function(x) {return x.name == nval;}));
+            this.select_field(_.detect(this.fields, function(x) {return x.name == nval;}));
         }
     },
-    set_selected: function(selected) {
+    /**
+     * Selects the provided field object
+     *
+     * @param field a field descriptor object (as returned by fields_get, augmented by the field name)
+     */
+    select_field: function(field) {
         var _this = this;
         if(this.attrs.selected != null) {
             this.value_component.stop();
             this.value_component = null;
             this.$element.find('.searchview_extended_prop_op').html('');
         }
-        this.attrs.selected = selected;
-        if(selected == null) {
+        this.attrs.selected = field;
+        if(field == null) {
             return;
         }
-        var type = selected.obj.type;
+        var type = field.type;
         var extended_filters_types = openerp.base.search.extended_filters_types;
         type = type in extended_filters_types ? type : "char";
         _.each(extended_filters_types[type].operators, function(operator) {
-            var option = jQuery('<option/>')
-                .attr('value', operator.value)
+            var option = jQuery('<option>', {value: operator.value})
                 .text(operator.text)
                 .appendTo(_this.$element.find('.searchview_extended_prop_op'));
         });
