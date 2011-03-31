@@ -393,9 +393,8 @@ openerp.base.search.ExtendedSearch = openerp.base.BaseWidget.extend({
         if(this.$element.hasClass("folded")) {
             return null;
         }
-        var domain = _.reduce(this.children,
-                function(mem, x) { return mem.concat(x.get_domain());}, []);
-        return domain;
+        return _.reduce(this.children,
+            function(mem, x) { return mem.concat(x.get_domain());}, []);
     }
 });
 
@@ -430,10 +429,9 @@ openerp.base.search.ExtendedSearchGroup = openerp.base.BaseWidget.extend({
         }).compact().value();
         var choice = this.$element.find(".searchview_extended_group_choice").val();
         var op = choice == "all" ? "&" : "|";
-        var domain = [].concat(choice == "none" ? ['!'] : [],
-                _.map(_.range(_.max([0,props.length - 1])), function(x) { return op; }),
-                props);
-        return domain;
+        return [].concat(choice == "none" ? ['!'] : [],
+            _.map(_.range(_.max([0,props.length - 1])), function() { return op; }),
+            props);
     }
 });
 
@@ -529,7 +527,7 @@ openerp.base.search.ExtendedSearchProposition.Char = openerp.base.BaseWidget.ext
         {value: ">", text: "greater than"},
         {value: "<", text: "less than"},
         {value: ">=", text: "greater or equal than"},
-        {value: "<=", text: "less or equal than"},
+        {value: "<=", text: "less or equal than"}
     ],
     get_value: function() {
         return this.$element.val();
@@ -544,7 +542,7 @@ openerp.base.search.ExtendedSearchProposition.DateTime = openerp.base.BaseWidget
         {value: ">", text: "greater than"},
         {value: "<", text: "less than"},
         {value: ">=", text: "greater or equal than"},
-        {value: "<=", text: "less or equal than"},
+        {value: "<=", text: "less or equal than"}
     ],
     get_value: function() {
         return this.$element.val();
