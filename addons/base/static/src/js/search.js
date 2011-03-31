@@ -73,47 +73,20 @@ openerp.base.SearchView = openerp.base.Controller.extend({
      * @returns openerp.base.search.Field
      */
     make_field: function (item, field) {
-        // TODO: should fetch from an actual registry
-        // TODO: register fields in self?
-        switch (field.type) {
-            case 'char':
-            case 'text':
-                return new openerp.base.search.CharField(
-                    item, field, this);
-            case 'boolean':
-                return new openerp.base.search.BooleanField(
-                    item, field, this);
-            case 'integer':
-                return new openerp.base.search.IntegerField(
-                    item, field, this);
-            case 'float':
-                return new openerp.base.search.FloatField(
-                    item, field, this);
-            case 'selection':
-                return new openerp.base.search.SelectionField(
-                    item, field, this);
-            case 'datetime':
-                return new openerp.base.search.DateTimeField(
-                    item, field, this);
-            case 'date':
-                return new openerp.base.search.DateField(
-                    item, field, this);
-            case 'one2many':
-                return new openerp.base.search.OneToManyField(
-                    item, field, this);
-            case 'many2one':
-                return new openerp.base.search.ManyToOneField(
-                    item, field, this);
-            case 'many2many':
-                return new openerp.base.search.ManyToManyField(
-                    item, field, this);
-            default:
-                console.group('Unknown field type ' + field.type);
-                console.error('View node', item);
-                console.info('View field', field);
-                console.info('In view', this);
-                console.groupEnd();
-                return null;
+        try {
+            return new (openerp.base.search.fields.get_object(field.type))
+                        (item, field, this);
+        } catch (e) {
+            if (! e instanceof openerp.base.KeyNotFound) {
+                throw e;
+            }
+            // KeyNotFound means unknown field type
+            console.group('Unknown field type ' + field.type);
+            console.error('View node', item);
+            console.info('View field', field);
+            console.info('In view', this);
+            console.groupEnd();
+            return null;
         }
     },
     on_loaded: function(data) {
@@ -252,7 +225,25 @@ openerp.base.SearchView = openerp.base.Controller.extend({
     }
 });
 
+/** @namespace */
 openerp.base.search = {};
+/**
+ * Registry of search fields, called by :js:class:`openerp.base.SearchView` to
+ * find and instantiate its field widgets.
+ */
+openerp.base.search.fields = new openerp.base.Registry({
+    'char': 'openerp.base.search.CharField',
+    'text': 'openerp.base.search.CharField',
+    'boolean': 'openerp.base.search.BooleanField',
+    'integer': 'openerp.base.search.IntegerField',
+    'float': 'openerp.base.search.FloatField',
+    'selection': 'openerp.base.search.SelectionField',
+    'datetime': 'openerp.base.search.DateTimeField',
+    'date': 'openerp.base.search.DateField',
+    'one2many': 'openerp.base.search.OneToManyField',
+    'many2one': 'openerp.base.search.ManyToOneField',
+    'many2many': 'openerp.base.search.ManyToManyField'
+});
 openerp.base.search.Invalid = Class.extend(
     /** @lends openerp.base.search.Invalid# */{
     /**
