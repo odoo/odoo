@@ -138,26 +138,16 @@ class synchronize_google_contact(osv.osv_memory):
                 'type': 'ir.actions.act_window',
         }
 
-    def _get_system_timezone(self):
-        sys_time_zone = False
-        if (os.path.exists("/etc/timezone")):
-            try:
-                f = open("/etc/timezone")
-                sys_time_zone = f.read().strip()
-            except:
-                f.close()
-        return sys_time_zone
-
     def create_contact(self, cr, uid, ids, gd_client, contact, option,context=None):
         model_obj = self.pool.get('ir.model.data')
         addresss_obj = self.pool.get('res.partner.address')
         addresses = []
         partner_ids = []
-        contact_ids=[]
+        contact_ids = []
         if 'tz' in context and context['tz']:
             time_zone = context['tz']
         else:
-            time_zone = self._get_system_timezone()
+            time_zone = tools.get_server_timezone()
         au_tz = timezone(time_zone)
         
         while contact:
