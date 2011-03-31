@@ -106,7 +106,7 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
             }
         }
         // switch to the first one in sequence
-        this.on_mode_switch("tree");
+        this.on_mode_switch(action.views[0][1]);
     },
     // create when root, also add to parent when o2m
     on_create: function() {
