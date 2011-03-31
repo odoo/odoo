@@ -32,8 +32,6 @@ openerp.base.DataSet =  openerp.base.Controller.extend(
         this._super(session);
         this.model = model;
 
-        this._fields = null;
-
         this._ids = [];
         this._active_ids = null;
         this._active_id_index = 0;
@@ -43,12 +41,6 @@ openerp.base.DataSet =  openerp.base.Controller.extend(
         this._context = {};
     },
     start: function() {
-        // TODO: fields_view_get fields selection?
-        this.rpc("/base/dataset/fields", {"model":this.model}, this.on_fields);
-    },
-    on_fields: function(result) {
-        this._fields = result.fields;
-        this.on_ready();
     },
 
     /**
@@ -63,12 +55,11 @@ openerp.base.DataSet =  openerp.base.Controller.extend(
      * @param {Number} [limit=null] The maximum number of records to return
      * @returns itself
      */
-    fetch: function (offset, limit) {
+    fetch: function (fields, offset, limit) {
         offset = offset || 0;
-        limit = limit || null;
         this.rpc('/base/dataset/find', {
             model: this.model,
-            fields: this._fields,
+            fields: fields,
             domain: this._domain,
             context: this._context,
             sort: this._sort,
@@ -77,9 +68,7 @@ openerp.base.DataSet =  openerp.base.Controller.extend(
         }, _.bind(function (records) {
             var data_records = _.map(
                 records, function (record) {
-                    return new openerp.base.DataRecord(
-                        this.session, this.model,
-                        this._fields, record);
+                    return new openerp.base.DataRecord(this.session, this.model, fields, record);
                 }, this);
 
             this.on_fetch(data_records, {
@@ -116,16 +105,14 @@ openerp.base.DataSet =  openerp.base.Controller.extend(
      *
      * @returns itself
      */
-    active_ids: function () {
+    active_ids: function (fields) {
         this.rpc('/base/dataset/get', {
             ids: this.get_active_ids(),
             model: this.model
         }, _.bind(function (records) {
             this.on_active_ids(_.map(
                 records, function (record) {
-                    return new openerp.base.DataRecord(
-                        this.session, this.model,
-                        this._fields, record);
+                    return new openerp.base.DataRecord(this.session, this.model, fields, record);
                 }, this));
         }, this));
         return this;
@@ -149,7 +136,7 @@ openerp.base.DataSet =  openerp.base.Controller.extend(
      *
      * @returns itself
      */
-    active_id: function () {
+    active_id: function (fields) {
         this.rpc('/base/dataset/get', {
             ids: [this.get_active_id()],
             model: this.model
@@ -158,7 +145,7 @@ openerp.base.DataSet =  openerp.base.Controller.extend(
             this.on_active_id(
                 record && new openerp.base.DataRecord(
                         this.session, this.model,
-                        this._fields, record));
+                        fields, record));
         }, this));
         return this;
     },

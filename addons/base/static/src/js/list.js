@@ -8,6 +8,9 @@ openerp.base.ListView = openerp.base.Controller.extend({
         this.model = dataset.model;
         this.view_id = view_id;
         this.name = "";
+        // TODO: default to action.limit
+        // TODO: decide if limit is a property of DataSet and thus global to all views (calendar ?)
+        this.limit = 80;
 
         this.cols = [];
 
@@ -72,6 +75,20 @@ openerp.base.ListView = openerp.base.Controller.extend({
                 return record.values;
             }));
 
+    },
+    do_search: function (domains, contexts, groupbys) {
+        var self = this;
+        this.rpc('/base/session/eval_domain_and_context', {
+            domains: domains,
+            contexts: contexts,
+            group_by_seq: groupbys
+        }, function (results) {
+            // TODO: handle non-empty results.group_by with read_group
+            self.dataset.set({
+                context: results.context,
+                domain: results.domain
+            }).fetch(self.fields_view.fields, 0, self.limit);
+        });
     }
 });
 
