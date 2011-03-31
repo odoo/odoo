@@ -230,8 +230,38 @@ class Menu(openerpweb.Controller):
                     req.session.evaluation_context(
                         action['context'])) or []
 
+            self.fix_view_modes(action)
+
         return {"action": actions}
 
+    def fix_view_modes(self, action):
+        """ For historical reasons, OpenERP has weird dealings in relation to
+        view_mode and the view_type attribute (on window actions):
+
+        * one of the view modes is ``tree``, which stands for both list views
+          and tree views
+        * the choice is made by checking ``view_type``, which is either
+          ``form`` for a list view or ``tree`` for an actual tree view
+
+        This methods simply folds the view_type into view_mode by adding a
+        new view mode ``list`` which is the result of the ``tree`` view_mode
+        in conjunction with the ``form`` view_type.
+
+        TODO: this should go into the doc, some kind of "peculiarities" section
+
+        :param dict action: an action descriptor
+        :returns: nothing, the action is modified in place
+        """
+        if action.pop('view_type') != 'form':
+            return
+
+        action['view_mode'] = ','.join(
+            mode if mode != 'tree' else 'list'
+            for mode in action['view_mode'].split(','))
+        action['views'] = [
+            [id, mode if mode != 'tree' else 'list']
+            for id, mode in action['views']
+        ]
 
 class DataSet(openerpweb.Controller):
     _cp_path = "/base/dataset"

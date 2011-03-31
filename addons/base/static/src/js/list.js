@@ -1,7 +1,7 @@
 
 openerp.base.list = function (openerp) {
 
-openerp.base.views.add('tree', 'openerp.base.ListView');
+openerp.base.views.add('list', 'openerp.base.ListView');
 openerp.base.ListView = openerp.base.Controller.extend({
     init: function(session, element_id, dataset, view_id) {
         this._super(session, element_id);

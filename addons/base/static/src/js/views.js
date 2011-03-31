@@ -250,6 +250,14 @@ openerp.base.GanttView = openerp.base.Controller.extend({
 // Dhtmlx gantt ?
 });
 
+openerp.base.views.add('tree', 'openerp.base.TreeView');
+/**
+ * Genuine tree view (the one displayed as a tree, not the list)
+ */
+openerp.base.TreeView = openerp.base.Controller.extend({
+
+});
+
 openerp.base.DiagramView = openerp.base.Controller.extend({
 // 
 });
