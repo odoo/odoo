@@ -22,6 +22,7 @@
 from datetime import datetime, timedelta, date
 from dateutil import parser
 from dateutil import rrule
+from dateutil.relativedelta import relativedelta
 from osv import fields, osv
 from service import web_services
 from tools.translate import _
@@ -47,21 +48,29 @@ def get_recurrent_dates(rrulestring, exdate, startdate=None, exrule=None):
     def todate(date):
         val = parser.parse(''.join((re.compile('\d')).findall(date)))
         return val
+    
+    limit = 100
 
     if not startdate:
         startdate = datetime.now()
+        
     if not exdate:
         exdate = []
     rset1 = rrule.rrulestr(str(rrulestring), dtstart=startdate, forceset=True)
-
+    i  = 0
     for date in exdate:
+        i += 1
         datetime_obj = todate(date)
         rset1._exdate.append(datetime_obj)
+    
     if exrule:
         rset1.exrule(rrule.rrulestr(str(exrule), dtstart=startdate))
 
-
-    return list(rset1._iter())
+    rset1 = rset1[:limit]
+    #print rset1.count()
+    l =  rset1
+    print "len de liste" ,len(l)
+    return l
 
 def base_calendar_id2real_id(base_calendar_id=None, with_date=False):
     """
@@ -944,7 +953,6 @@ class calendar_event(osv.osv):
                 start = datetime.strptime(start_date, "%Y-%m-%d %H:%M:%S")
                 start_date = datetime.strftime(datetime(start.year, start.month, start.day, 0,0,0), "%Y-%m-%d %H:%M:%S")
                 value['date'] = start_date
-                print start_date
 
 
         start = datetime.strptime(start_date, "%Y-%m-%d %H:%M:%S")
@@ -1091,7 +1099,6 @@ class calendar_event(osv.osv):
             #Remove the events generated from recurrent event
             if not myrule:
                 self.unlink_events(cr, uid, [id], context=context)
-        print 'rrule creation', result
         return result
 
     _columns = {
@@ -1193,17 +1200,14 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
             'user_id': lambda self, cr, uid, ctx: uid,
             'organizer': default_organizer,
             'edit_all' : False,
+            'recurrent_id' : '',
     }
 
     def onchange_edit_all(self, cr, uid, ids, rrule_type,edit_all, context=None):
-        if not context:
-            context = {}
-
-        value = {}
-        if edit_all and rrule_type:
-            for id in ids:
-              base_calendar_id2real_id(id)
-        return value
+        
+        value = {'edit_all' : edit_all}
+        self.write(cr, uid, ids, value, context=context)
+        return {}
 
     def modify_all(self, cr, uid, event_ids, defaults, context=None, *args):
         """
@@ -1243,9 +1247,7 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         if not context:
             context = {}
 
-        limit = limit == 0 and 100 or limit
         virtual_id = context and context.get('virtual_id', False) or False
-        print 'context', context
 
         if isinstance(select, (str, int, long)):
             ids = [select]
@@ -1258,29 +1260,21 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
                             m.exdate, m.exrule, m.recurrent_id, m.recurrent_uid from " + self._table + \
                             " m where m.id = ANY(%s)", (ids,) )
 
-            print "ids", ids
-            count = 0
             for data in cr.dictfetchall():
-                print 'data', data
-                print 'count', count
-                print 'limit', limit
                 start_date = base_start_date and datetime.strptime(base_start_date[:10]+ ' 00:00:00' , "%Y-%m-%d %H:%M:%S") or False
                 until_date = base_until_date and datetime.strptime(base_until_date[:10]+ ' 23:59:59', "%Y-%m-%d %H:%M:%S") or False
-                print count
-                if count > limit:
-                    break
                 event_date = datetime.strptime(data['date'], "%Y-%m-%d %H:%M:%S")
 #                To check: If the start date is replace by event date .. the event date will be changed by that of calendar code
-                start_date = event_date
+                
                 if not data['rrule']:
+                    start_date = event_date
                     if start_date and (event_date < start_date):
                         continue
                     if until_date and (event_date > until_date):
                         continue
                     idval = data['id']
                     if not data['recurrent_id']:
-                        result.append(idval)
-                        count += 1
+                        result.append(idval)                        
                     else:
                         ex_id = real_id2base_calendar_id(data['recurrent_uid'], data['recurrent_id'])
                         ls = base_calendar_id2real_id(ex_id, with_date=data and data.get('duration', 0) or 0)
@@ -1289,7 +1283,6 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
                                 result.append(idval)
                         recur_dict.append(ex_id)
                 else:
-                    print 'rrule', data['rrule'], data['id']
                     exdate = data['exdate'] and data['exdate'].split(',') or []
                     rrule_str = data['rrule']
                     new_rrule_str = []
@@ -1314,6 +1307,7 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
                         new_rrule_str.append(new_rule)
                     new_rrule_str = ';'.join(new_rrule_str)
                     rdates = get_recurrent_dates(str(new_rrule_str), exdate, start_date, data['exrule'])
+                    
                     for r_date in rdates:
                         if start_date and r_date < start_date:
                             continue
@@ -1321,17 +1315,11 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
                             continue
                         idval = real_id2base_calendar_id(data['id'], r_date.strftime("%Y-%m-%d %H:%M:%S"))
                         result.append(idval)
-                        print "count", count
-                        count += 1
-                        if count > limit:
-                            break
 
-        print "result", result
         if result:
             ids = list(set(result)-set(recur_dict))
         if isinstance(select, (str, int, long)):
             return ids and ids[0] or False
-        print "return ids", ids
         return ids
 
     def compute_rule_string(self, cr, uid, datas, context=None, *args):
@@ -1379,16 +1367,31 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
 
         return rrule_string
 
-    def search(self, cr, uid, args, offset=0, limit=100, order=None,
-            context=None, count=False):
 
+    def remove_virtual_id(self, ids):
+        if isinstance(ids, (str, int)):
+            return base_calendar_id2real_id(ids)
+            
+        if isinstance(ids, (list, tuple)):
+            res = []
+            for id in ids:
+                res.append(base_calendar_id2real_id(id))
+            return res
+                
+    def search(self, cr, uid, args, offset=0, limit=0, order=None,
+            context=None, count=False):
+        print "limit begin", limit
+        print "count", count
         args_without_date = []
         start_date = False
         until_date = False
 
-        print 'context', context
         for arg in args:
-            if arg[0] not in ('date', unicode('date'), 'date_deadline', unicode('date_deadline')):
+            if arg[0] == "id":
+                new_id = self.remove_virtual_id(arg[2])
+                new_arg = (arg[0], arg[1], new_id)
+                args_without_date.append(new_arg)
+            elif arg[0] not in ('date', unicode('date'), 'date_deadline', unicode('date_deadline')):
                 args_without_date.append(arg)
             else:
                 if arg[1] in ('>', '>='):
@@ -1399,13 +1402,23 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
                     if until_date:
                         continue
                     until_date = arg[2]
+        
         res = super(calendar_event, self).search(cr, uid, args_without_date, \
-                                 offset, limit, order, context, count=False)
-        print "result normaux", res
+                                 0, 0, order, context, count=False)
         res = self.get_recurrent_ids(cr, uid, res, start_date, until_date, limit, context=context)
-        print "result de merde", res
-        print 'len', len(res)
-        return count and len(res) or res
+        print "limit", limit
+        print "offset", offset
+        print "offset + limit", offset+limit
+        if count:
+            print "len" , len(res)
+            return len(res)
+        elif limit:
+            r = res[offset:offset+limit]
+        else:
+            r = res
+        print "result", r
+        print "longueur", len(r)
+        return r
 
 
     def get_edit_all(self, cr, uid, id, vals=None):
@@ -1423,16 +1436,6 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
 
 
     def write(self, cr, uid, ids, vals, context=None, check=True, update_check=True):
-        """
-        Overrides orm write method.
-        @param self: the object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of crm meeting's ids
-        @param vals: Dictionary of field value.
-        @param context: A standard dictionary for contextual values
-        @return: True
-        """
         if context is None:
             context = {}
         if isinstance(ids, (str, int, long)):
@@ -1448,7 +1451,7 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
             if(self.get_edit_all(cr, uid, event_id, vals=vals)):
                 event_id = real_event_id
 
-
+            #if edit one instance of a reccurrent id
             if len(str(event_id).split('-')) > 1:
                 data = self.read(cr, uid, event_id, ['date', 'date_deadline', \
                                                     'rrule', 'duration', 'exdate'])
@@ -1501,15 +1504,6 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         return res or True and False
 
     def browse(self, cr, uid, ids, context=None, list_class=None, fields_process=None):
-        """
-        Overrides orm browse method.
-        @param self: the object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of crm meeting's ids
-        @param context: A standard dictionary for contextual values
-        @return: the object list.
-        """
         if isinstance(ids, (str, int, long)):
             select = [ids]
         else:
@@ -1534,6 +1528,7 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         context.update({'virtual_id': False})
         res = super(calendar_event, self).read_group(cr, uid, domain, fields, groupby, offset=offset, limit=limit, context=context, orderby=orderby)
         for re in res:
+            #remove the count, since the value is not consistent with the result of the search when expand the group
             for groupname in groupby:
                 if re.get(groupname + "_count"):
                     del re[groupname + "_count"]
@@ -1541,15 +1536,6 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         return res
 
     def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
-        """
-        Overrides orm Read method.Read List of fields for calendar event.
-        @param cr: the current row, from the database cursor,
-        @param user: the current user’s ID for security checks,
-        @param ids: List of calendar event's id.
-        @param fields: List of fields.
-        @param context: A standard dictionary for contextual values
-        @return: List of Dictionary of form [{‘name_of_the_field’: value, ...}, ...]
-        """
         # FIXME This whole id mangling has to go!
         if context is None:
             context = {}
@@ -1568,7 +1554,7 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
             fields.append('duration')
 
 
-        for base_calendar_id, real_id in select:
+        for base_calendar_id, real_id in select:                
             #REVET: Revision ID: olt@tinyerp.com-20100924131709-cqsd1ut234ni6txn
             res = super(calendar_event, self).read(cr, uid, real_id, fields=fields, context=context, load=load)
            
@@ -1587,14 +1573,6 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         return result
 
     def copy(self, cr, uid, id, default=None, context=None):
-        """
-        Duplicate record on specified id.
-        @param self: the object pointer.
-        @param cr: the current row, from the database cursor,
-        @param id: id of record from which we duplicated.
-        @param context: A standard dictionary for contextual values
-        @return: Duplicate record id.
-        """
         if context is None:
             context = {}
         res = super(calendar_event, self).copy(cr, uid, base_calendar_id2real_id(id), default, context)
@@ -1604,14 +1582,6 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         return res
 
     def unlink(self, cr, uid, ids, context=None):
-        """
-        Deletes records specified in ids.
-        @param self: the object pointer.
-        @param cr: the current row, from the database cursor,
-        @param id: List of calendar event's id.
-        @param context: A standard dictionary for contextual values
-        @return: True
-        """
         res = False
         for event_datas in self.read(cr, uid, ids, ['date', 'rrule', 'exdate'], context=context):
             event_id = event_datas['id']
@@ -1639,15 +1609,6 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         return res
 
     def create(self, cr, uid, vals, context=None):
-        """
-        Create new record.
-        @param self: the object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param vals: dictionary of every field value.
-        @param context: A standard dictionary for contextual values
-        @return: new created record id.
-        """
         if context is None:
             context = {}
 
@@ -1663,16 +1624,10 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
             vals.get('allday', False),
             context=context)
         vals.update(updated_vals.get('value', {}))
-
         res = super(calendar_event, self).create(cr, uid, vals, context)
         alarm_obj = self.pool.get('res.alarm')
         alarm_obj.do_alarm_create(cr, uid, [res], self._name, 'date', context=context)
-
-
-
-        if vals.get('rrule_type') != 'none' and virtual_id:
-            res = real_id2base_calendar_id(res, vals.get('date', False))
-        print "id", res
+       
         return res
     
     
