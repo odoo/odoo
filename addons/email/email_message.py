@@ -85,7 +85,7 @@ class email_message_common(osv.osv_memory):
         'body_html': fields.text('HTML', help="Contains HTML version of email"),
         'smtp_server_id':fields.many2one('ir.mail_server', 'SMTP Server'),
     }
-    _rec_name='subject'
+    _rec_name = 'subject'
 
     _sql_constraints = []
 email_message_common()
@@ -256,34 +256,29 @@ class email_message(osv.osv):
             ids = []
         if context is None:
             context = {}
-        attachment_obj = self.pool.get('ir.attachment')
-        smtp_server_obj = self.pool.get('ir.mail_server')
         if not ids:
             filters = [('state', '=', 'outgoing')]
             if 'filters' in context:
                 filters.extend(context['filters'])
             ids = self.search(cr, uid, filters, context=context)
-        self.send_email(cr, uid, [message.id], auto_commit=True, context=context)
-        self.write(cr, uid, ids, {'state':'outgoing'}, context)
-        for message in self.browse(cr, uid, ids, context):
-            try:
-                res = self.send_email(cr, uid, [message.id], auto_commit=True, context=context)
-                if res:
-                    self.write(cr, uid, [message.id], {'state':'sent', 'message_id': res}, context)
-                else:
-                    self.write(cr, uid, [message.id], {'state':'exception'}, context)
-            except Exception, error:
-                logger = netsvc.Logger()
-                logger.notifyChannel("email-template", netsvc.LOG_ERROR, _("Sending of Mail %s failed. Probable Reason:Could not login to server\nError: %s") % (message.id, error))
-                self.write(cr, uid, [message.id], {'state':'exception'}, context)
-        return ids
+        try:
+            res = self.send_email(cr, uid, ids, auto_commit=True, context=context)
+        except Exception, error:
+            logger = netsvc.Logger()
+            msg = _("Sending of Mail failed. Error: %s") % (error)
+            logger.notifyChannel("email", netsvc.LOG_ERROR, msg)
+            return False
+        return res
 
     def send_email(self, cr, uid, ids, auto_commit=False, context=None):
+        """
+        send email message
+        """
         if context is None:
             context = {}
-        attachment = []
         smtp_server_obj = self.pool.get('ir.mail_server')
         attachment_pool = self.pool.get('ir.attachment')
+        self.write(cr, uid, ids, {'state':'outgoing'}, context)
         for message in self.browse(cr, uid, ids, context):
             try:
                 smtp_server = message.smtp_server_id
@@ -293,9 +288,10 @@ class email_message(osv.osv):
                         smtp_server = smtp_server_obj.browse(cr, uid, smtp_ids, context)[0]
                 attachments = []
                 for attach in message.attachment_ids:
-                    attachments.append((attach.datas_fname ,base64.b64decode(attach.datas)))
+                    attachments.append((attach.datas_fname, base64.b64decode(attach.datas)))
                 if message.state in ['outgoing', 'exception']:
-                    msg = smtp_server_obj.pack_message(cr, uid, message.subject, message.body,
+                    msg = smtp_server_obj.pack_message(cr, uid, message.email_from,
+                        message.email_to and message.email_to.split(',') or [], message.subject, message.body,
                         email_cc=message.email_cc and message.email_cc.split(',') or [],
                         email_bcc=message.email_bcc and message.email_bcc.split(',') or [],
                         reply_to=message.reply_to,
@@ -313,18 +309,21 @@ class email_message(osv.osv):
                         smtp_user=smtp_server and smtp_server.smtp_user or None,
                         smtp_password=smtp_server and smtp_server.smtp_pass or None,
                         ssl=smtp_server and smtp_server.smtp_ssl or False,
-                        tsl=smtp_server and smtp_server.smtp_tsl,
+                        tls=smtp_server and smtp_server.smtp_tls,
                         debug=message.debug)
+                    if res:
+                        self.write(cr, uid, [message.id], {'state':'sent', 'message_id': res}, context)
+                    else:
+                        self.write(cr, uid, [message.id], {'state':'exception'}, context)
                 else:
                     raise osv.except_osv(_('Error !'), _('No messages in outgoing or exception state!'))
 
-                #if auto_selete=True then delete that sent messages as well as attachments
-                sent_emails = self.search(cr, uid, [('state','=','sent'), ('auto_delete','=',True)], context=context)
-                if sent_emails:
-                    for sent in self.browse(cr, uid, sent_emails, context):
-                        if sent.attachment_ids:
-                            attachment_pool.unlink(cr, uid, [attachment.id for attachment in sent.attachment_ids], context=context)
-                        self.unlink(cr, uid, sent.id, context=context)
+                #if auto_delete=True then delete that sent messages as well as attachments
+                message_data = self.read(cr, uid, message.id, ['state', 'auto_delete', 'attachment_ids'])
+                if message_data['state'] == 'sent' and message_data['auto_delete'] == True:
+                    self.unlink(cr, uid, [message.id], context=context)
+                    if message_data['attachment_ids']:
+                        attachment_pool.unlink(cr, uid, message_data['attachment_ids'], context=context)
 
                 if auto_commit == True:
                     cr.commit()
@@ -334,7 +333,7 @@ class email_message(osv.osv):
                 logger.notifyChannel("email-template", netsvc.LOG_ERROR, _("Sending of Mail %s failed. Probable Reason:Could not login to server\nError: %s") % (message.id, error))
                 self.write(cr, uid, [message.id], {'state':'exception'}, context)
                 return False
-        return res
+        return True
 # OLD Code.
 #    def send_all_mail(self, cr, uid, ids=None, context=None):
 #        if ids is None:
