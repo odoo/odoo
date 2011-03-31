@@ -1111,6 +1111,8 @@ class sale_order_line(osv.osv):
                 result['product_uos_qty'] = qty
             result['th_weight'] = q * product_obj.weight        # Round the quantity up
 
+        if not uom:
+            uom =product_obj.uom_id and product_obj.uom_id.id
         if not uom2:
             uom2 = product_obj.uom_id
         if (product_obj.type=='product') and (product_obj.virtual_available * uom2.factor < qty * product_obj.uom_id.factor) \
