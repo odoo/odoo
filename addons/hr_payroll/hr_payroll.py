@@ -811,7 +811,7 @@ class hr_payslip(osv.osv):
                                 value = line.amount
                         else:
                             value = line.amount
-                            
+
                     elif line.amount_type == 'code':
                         localdict = {'basic': amt, 'employee': slip.employee_id, 'contract': contract}
                         exec line.python_compute in localdict
@@ -828,7 +828,7 @@ class hr_payslip(osv.osv):
                                     value = val
                         else:
                             value = val
-                            
+
                     total += value
                     vals = {
                         'slip_id': slip.id,
@@ -1348,6 +1348,13 @@ class hr_holidays(osv.osv):
             'contract_id': contract_ids and contract_ids[0].id or False,
         })
         return {'value': res}
+
+    def holidays_confirm(self, cr, uid, ids, *args):
+        leaves = self.browse(cr, uid, ids)
+        for leave in leaves:
+            if not leave.contract_id:
+                raise osv.except_osv(_('Warning !'), _("Please define contract on %s's leave request ! ") % (leave.employee_id.name))
+        return super(hr_holidays, self).holidays_confirm(cr, uid, ids)
 
 hr_holidays()
 
