@@ -64,8 +64,8 @@ class partner_wizard_spam(osv.osv_memory):
     #CHECKME: maybe we should use res.partner/email_send
                     smtp_server_obj = self.pool.get('ir.mail_server')
                     smtp_server_obj.send_email(uid, data.email_from,
-                                     [to], data.subject,
-                                     data.text, subtype=type_,
+                                     [to], subject=data.subject,
+                                     body=data.text, subtype=type_,
                                      cr=cr)
                     nbr += 1
             event_pool.create(cr, uid,

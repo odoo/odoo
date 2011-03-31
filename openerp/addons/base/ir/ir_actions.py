@@ -632,7 +632,7 @@ class actions_server(osv.osv):
                 body = self.merge_message(cr, uid, action.message, action, context)
 
                 smtp_server_obj = self.pool.get('ir.mail_server')
-                if smtp_server_obj.send_email(uid, user, [address], subject, body, debug=False, subtype='html', cr=cr) == True:
+                if smtp_server_obj.send_email(uid, user, [address], subject=subject, body=body, debug=False, subtype='html', cr=cr) == True:
                     logger.info('Email successfully sent to: %s', address)
                 else:
                     logger.warning('Failed to send email to: %s', address)
