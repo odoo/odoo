@@ -145,13 +145,13 @@ class account_voucher(osv.osv):
     def _check_paid(self, cr, uid, ids, name, args, context=None):
         res = {}
         for id in ids:
-            res[id] = self.test_paid(cr, uid, [id])
+            res[id] = self.test_paid(cr, uid, [id], context=context)
         return res
 
-    def test_paid(self, cr, uid, ids):
+    def test_paid(self, cr, uid, ids, context):
         recs = []
         paid = False
-        for voucher in self.browse(cr, uid, ids):
+        for voucher in self.browse(cr, uid, ids, context=context):
             for line in voucher.move_ids:
                 if line.reconcile_id and (line.account_id.user_type.name, 'in', ('receivable', 'payable')):
                     paid = True
