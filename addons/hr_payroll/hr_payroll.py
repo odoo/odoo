@@ -451,8 +451,8 @@ class hr_payslip(osv.osv):
             dates = prev_bounds(record.date)
             sql = '''SELECT id FROM hr_holidays
                         WHERE date_from >= '%s' AND date_to <= '%s'
-                        AND employee_id = %s
-                        ''' % (dates[0], dates[1], record.employee_id.id)
+                        AND employee_id = %s AND contract_id = %s
+                        ''' % (dates[0], dates[1], record.employee_id.id, record.contract_id.id)
             cr.execute(sql)
             res = cr.fetchall()
             if res:
