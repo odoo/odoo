@@ -500,12 +500,12 @@ class hr_payslip(osv.osv):
                                 lines.append(r)
                         rules.append(rl)
                 for fn in field_names:
-                   if fn == 'applied_salary_rule':
-                       for r in rules:
-                           if r.id not in rul:
-                               rul.append(r.id)
-                       res[record.id] = {fn: rul}
-                   elif fn == 'appears_on_payslip_rule':
+#                   if fn == 'applied_salary_rule':
+#                       for r in rules:
+#                           if r.id not in rul:
+#                               rul.append(r.id)
+#                       res[record.id] = {fn: rul}
+                   if fn == 'appears_on_payslip_rule':
                        for r in rules:
                            if r.appears_on_payslip:
                                if r.id not in rul:
@@ -563,7 +563,7 @@ class hr_payslip(osv.osv):
         'igross': fields.float('Calculaton Field', readonly=True,  digits=(16, 2), help="Calculation field used for internal calculation, do not place this on form"),
         'inet': fields.float('Calculaton Field', readonly=True,  digits=(16, 2), help="Calculation field used for internal calculation, do not place this on form"),
         'holiday_ids': fields.function(_get_holidays, method=True, type='one2many', relation='hr.holidays', string='Holiday Lines', required=False),
-        'applied_salary_rule': fields.function(_get_salary_rules, method=True, type='one2many', relation='hr.salary.rule', string='Applied Salary Rules', multi='applied_salary_rule'),
+#        'applied_salary_rule': fields.function(_get_salary_rules, method=True, type='one2many', relation='hr.salary.rule', string='Applied Salary Rules', multi='applied_salary_rule'),
         'appears_on_payslip_rule': fields.function(_get_salary_rules, method=True, type='one2many', relation='hr.salary.rule', string='Appears on Payslip', multi='appears_on_payslip_rule'),
         'details_by_salary_head': fields.function(_get_salary_rules, method=True, type='one2many', relation='hr.salary.rule', string='Details by Salary Head', multi='details_by_salary_head'),
     }

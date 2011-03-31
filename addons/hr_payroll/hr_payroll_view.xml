@@ -289,9 +289,9 @@
                             </group> -->
                         </page>
 
-                        <page string="Applied Salary Rules" attrs="{'invisible':[('Applied Salary Rules')]}">
+                        <!-- <page string="Applied Salary Rules" attrs="{'invisible':[('Applied Salary Rules')]}">
                             <field name="applied_salary_rule" nolabel="1" />
-                        </page>
+                        </page> -->
 
                        <page string="Appears On Payslip">
                             <field name="appears_on_payslip_rule" nolabel="1"/>
@@ -317,15 +317,6 @@
                             <field name="note" colspan="4" nolabel="1"/>
                         </page>
 
-                        <page string="Applied Salary Rules">
-                            <field name="applied_salary_rule" nolabel="1" />
-                        </page>
-                        <page string="Appears On Payslip">
-                            <field name="appears_on_payslip_rule" nolabel="1"/>
-                        </page>
-                        <page string="Details By Salary Head">
-                            <field name="details_by_salary_head" nolabel="1" context="{'group_by': 'category_id'}"/>
-                        </page>
                     </notebook>
                     <group col="10" colspan="4">
                         <field name="state"/>
