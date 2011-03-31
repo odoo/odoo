@@ -71,7 +71,10 @@ openerp.base.KeyNotFound = openerp.base.NotFound.extend(
      * @param {String} key the key which could not be found
      */
     init: function (key) {
-        self.key = key;
+        this.key = key;
+    },
+    toString: function () {
+        return "The key " + this.key + " was not found";
     }
 });
 openerp.base.ObjectNotFound = openerp.base.NotFound.extend(
@@ -85,7 +88,10 @@ openerp.base.ObjectNotFound = openerp.base.NotFound.extend(
      * @param {String} path the invalid object path
      */
     init: function (path) {
-        self.path = path;
+        this.path = path;
+    },
+    toString: function () {
+        return "Could not find any object of path " + this.path;
     }
 });
 openerp.base.Registry = Class.extend(
