@@ -8,7 +8,6 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
 // process all kind of actions
     init: function(session, element_id) {
         this._super(session, element_id);
-        this.action = null;
         this.viewmanager = null;
     },
     /**
@@ -17,7 +16,6 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
      */
     do_action: function(action) {
         // instantiate the right controllers by understanding the action
-        this.action = action;
         if(action.type == "ir.actions.act_window") {
             this.viewmanager = new openerp.base.ViewManager(this.session,this.element_id);
             this.viewmanager.do_action_window(action);
