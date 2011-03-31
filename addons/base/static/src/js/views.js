@@ -184,7 +184,7 @@ openerp.base.BaseWidget = openerp.base.Controller.extend({
      */
     start: function () {
         this._super();
-        var tmp = document.getElementById(this.element_id)
+        var tmp = document.getElementById(this.element_id);
         this.$element = tmp ? $(tmp) : null;
     },
     /**

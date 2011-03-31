@@ -446,7 +446,7 @@ openerp.base.FieldBoolean = openerp.base.Field.extend({
         this.$element.find('input')[0].checked = value;
     },
     get_value: function() {
-        this.$element.find('input')[0].checked;
+        return this.$element.find('input').is(':checked');
     }
 });
 

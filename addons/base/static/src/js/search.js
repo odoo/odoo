@@ -518,10 +518,10 @@ openerp.base.search.ExtendedSearchProposition = openerp.base.BaseWidget.extend({
         var extended_filters_types = openerp.base.search.extended_filters_types;
         type = type in extended_filters_types ? type : "char";
         _.each(extended_filters_types[type].operators, function(operator) {
-            option = jQuery('<option/>');
-            option.attr('value', operator.value);
-            option.text(operator.text);
-            option.appendTo(_this.$element.find('.searchview_extended_prop_op'));
+            var option = jQuery('<option/>')
+                .attr('value', operator.value)
+                .text(operator.text)
+                .appendTo(_this.$element.find('.searchview_extended_prop_op'));
         });
         this.value_component = extended_filters_types[type].build_component(this);
         var render = this.value_component.render({});
@@ -543,8 +543,7 @@ openerp.base.search.ExtendedSearchProposition.Char = openerp.base.BaseWidget.ext
     identifier_prefix: 'extended-search-proposition-char',
     
     get_value: function() {
-        var val = this.$element.val();
-        return val;
+        return this.$element.val();
     }
 });
 

@@ -1,18 +1,23 @@
 
 openerp.base.data = function(openerp) {
 
-openerp.base.DataGroup =  openerp.base.Controller.extend({
+openerp.base.DataGroup =  openerp.base.Controller.extend(
+    /** @lends openep.base.DataGroup# */{
     /**
      * Management interface between views and the collection of selected OpenERP
      * records (represents the view's state?)
+     *
+     * @constructs
+     * @extends openerp.base.Controller
+     * @param {openerp.base.Session} session Current OpenERP session
      */
     init: function(session) {
         this._super(session, null);
-    },
+    }
 });
 
-openerp.base.DataSet =  openerp.base.Controller.extend( /** @lends openerp.base.DataSet# */{
-
+openerp.base.DataSet =  openerp.base.Controller.extend(
+    /** @lends openerp.base.DataSet# */{
     /**
      * Management interface between views and the collection of selected
      * OpenERP records (represents the view's state?)
