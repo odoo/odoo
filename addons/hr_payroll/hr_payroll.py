@@ -1349,12 +1349,12 @@ class hr_holidays(osv.osv):
         })
         return {'value': res}
 
-    def holidays_confirm(self, cr, uid, ids, *args):
-        leaves = self.browse(cr, uid, ids)
-        for leave in leaves:
-            if not leave.contract_id and leave.type == 'remove':
-                raise osv.except_osv(_('Warning !'), _("Please define contract on %s's leave request ! ") % (leave.employee_id.name))
-        return super(hr_holidays, self).holidays_confirm(cr, uid, ids, args)
+#    def holidays_confirm(self, cr, uid, ids, *args):
+#        leaves = self.browse(cr, uid, ids)
+#        for leave in leaves:
+#            if not leave.contract_id and leave.type == 'remove':
+#                raise osv.except_osv(_('Warning !'), _("Please define contract on %s's leave request ! ") % (leave.employee_id.name))
+#        return super(hr_holidays, self).holidays_confirm(cr, uid, ids, args)
 
 hr_holidays()
 
