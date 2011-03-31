@@ -441,7 +441,7 @@ openerp.base.search.extended_filters_types = {
     char: {
         operators: [
                     {value: "ilike", text: "contains"},
-                    {value: "not like", text: "doesn't contain"},
+                    {value: "not ilike", text: "doesn't contain"},
                     {value: "=", text: "is equal to"},
                     {value: "!=", text: "is not equal to"},
                     {value: ">", text: "greater than"},
