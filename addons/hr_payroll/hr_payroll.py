@@ -827,12 +827,14 @@ class hr_payslip(osv.osv):
                         'employee_id': slip.employee_id.id,
                         'base': line.computational_expression
                     }
-                    if line.appears_on_payslip:
-                        if line.condition_range_min or line.condition_range_max:
-                            if not ((value < line.condition_range_min) or (value > line.condition_range_max)):
+                    slip_ids = slip_line_pool.search(cr, uid, [('code', '=', line.code), ('slip_id', '=', slip.id)])
+                    if not slip_ids:
+                        if line.appears_on_payslip:
+                            if line.condition_range_min or line.condition_range_max:
+                                if not ((value < line.condition_range_min) or (value > line.condition_range_max)):
+                                    slip_line_pool.create(cr, uid, vals, {})
+                            else:
                                 slip_line_pool.create(cr, uid, vals, {})
-                        else:
-                            slip_line_pool.create(cr, uid, vals, {})
 
             basic = contract.wage
             number = sequence_obj.get(cr, uid, 'salary.slip')
@@ -1144,13 +1146,14 @@ class hr_payslip(osv.osv):
                     'employee_id': employee_id.id,
                     'base': line.computational_expression
                 }
-                if line.appears_on_payslip:
-                    if line.condition_range_min or line.condition_range_max:
-                        if not ((value < line.condition_range_min) or (value > line.condition_range_max)):
+                if vals not in update['value']['line_ids']:
+                    if line.appears_on_payslip:
+                        if line.condition_range_min or line.condition_range_max:
+                            if not ((value < line.condition_range_min) or (value > line.condition_range_max)):
+                                update['value']['line_ids'].append(vals)
+                        else:
                             update['value']['line_ids'].append(vals)
-                    else:
-                        update['value']['line_ids'].append(vals)
-
+                
                 basic = contract.wage
                 all_basic += basic
                 final_total += basic + total
