@@ -2,7 +2,7 @@
 openerp.base.data = function(openerp) {
 
 openerp.base.DataGroup =  openerp.base.Controller.extend(
-    /** @lends openep.base.DataGroup# */{
+    /** @lends openerp.base.DataGroup# */{
     /**
      * Management interface between views and the collection of selected OpenERP
      * records (represents the view's state?)
