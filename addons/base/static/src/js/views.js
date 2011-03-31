@@ -35,12 +35,14 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
         this.searchview_id = false;
         this.searchview = null;
         this.search_visible = true;
+        this.active_view = null;
         // this.views = { "list": { "view_id":1234, "controller": instance} }
         this.views = {};
     },
     start: function() {
     },
     on_mode_switch: function(view_type) {
+        this.active_view = view_type;
         for (var i in this.views) {
            this.views[i].controller.$element.toggle(i === view_type);
         }
