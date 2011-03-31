@@ -41,8 +41,31 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
     },
     on_mode_switch: function(view_type) {
         this.active_view = view_type;
+        var view = this.views[view_type];
+        if (!view.controller) {
+            // Lazy loading of views
+            var controller;
+            switch (view_type) {
+                case 'tree':
+                    controller = new openerp.base.ListView(this.session, this.element_id + "_view_tree", this.dataset, view.view_id);
+                    break;
+                case 'form':
+                    controller = new openerp.base.FormView(this.session, this.element_id + "_view_form", this.dataset, view.view_id);
+                    break;
+                case 'calendar':
+                    controller = new openerp.base.CalendarView(this.session, this.element_id + "_view_calendar", this.dataset, view.view_id);
+                    break;
+                case 'gantt':
+                    controller = new openerp.base.GanttView(this.session, this.element_id + "_view_gantt", this.dataset, view.view_id);
+                    break;
+            }
+            controller.start();
+            this.views[view_type].controller = controller;
+        }
         for (var i in this.views) {
-           this.views[i].controller.$element.toggle(i === view_type);
+            if (this.views[i].controller) {
+               this.views[i].controller.$element.toggle(i === view_type);
+            }
         }
     },
     /**
@@ -86,25 +109,12 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
                     searchview.do_search);
             }
         }
-        for(var i = 0; i < action.views.length; i++)  {
-            var view_id, controller;
-            view_id = action.views[i][0];
-            if(action.views[i][1] == "tree") {
-                controller = new openerp.base.ListView(this.session, this.element_id + "_view_tree", this.dataset, view_id);
-                controller.start();
-                this.views.tree = { view_id: view_id, controller: controller };
-                this.$element.find(prefix_id + "_button_tree").bind('click',function(){
-                    self.on_mode_switch("tree");
-                });
-            } else if(action.views[i][1] == "form") {
-                controller = new openerp.base.FormView(this.session, this.element_id + "_view_form", this.dataset, view_id);
-                controller.start();
-                this.views.form = { view_id: view_id, controller: controller };
-                this.$element.find(prefix_id + "_button_form").bind('click',function(){
-                   self.on_mode_switch("form");
-                });
-            }
-        }
+        this.$element.find('.views_switchers button').click(function() {
+            self.on_mode_switch($(this).data('view-type'));
+        });
+        _.each(action.views, function(view) {
+            self.views[view[1]] = { view_id: view[0], controller: null };
+        });
         // switch to the first one in sequence
         this.on_mode_switch(action.views[0][1]);
     },
