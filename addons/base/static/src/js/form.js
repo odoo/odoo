@@ -94,6 +94,7 @@ openerp.base.FormView =  openerp.base.Controller.extend({
     }
 });
 
+/** @namespace */
 openerp.base.form = {};
 
 openerp.base.form.Widget = openerp.base.Controller.extend({
@@ -239,15 +240,20 @@ openerp.base.form.WidgetFrame = openerp.base.form.Widget.extend({
     handle_node: function(n) {
         var type = this.view.fields_view.fields[n.attrs.name] || {};
         var widget_type = n.attrs.widget || type.type || n.tag;
-        if (openerp.base.widgets[widget_type]) {
-            var widget = new openerp.base.widgets[widget_type](this.view, n);
+        try {
+            var widget = new (openerp.base.form.widgets.get_object(widget_type))
+                              (this.view, n);
             if (n.tag == 'field' && n.attrs.nolabel != '1') {
-                var label = new openerp.base.widgets['label'](this.view, n);
+                var label = new (openerp.base.form.widgets.get_object('label'))
+                              (this.view, n);
                 label["for"] = widget;
                 this.add_widget(label);
             }
             this.add_widget(widget);
-        } else {
+        } catch (e) {
+            if (!e instanceof openerp.base.KeyNotFound) {
+                throw e;
+            }
             this.log("Unhandled widget type : " + widget_type, n);
         }
     },
@@ -514,27 +520,30 @@ openerp.base.form.FieldReference = openerp.base.form.Field.extend({
     }
 });
 
-openerp.base.widgets = {
-    'group' : openerp.base.form.WidgetFrame,
-    'notebook' : openerp.base.form.WidgetNotebook,
-    'separator' : openerp.base.form.WidgetSeparator,
-    'label' : openerp.base.form.WidgetLabel,
-    'button' : openerp.base.form.WidgetButton,
-    'char' : openerp.base.form.FieldChar,
-    'email' : openerp.base.form.FieldEmail,
-    'url' : openerp.base.form.FieldUrl,
-    'text' : openerp.base.form.FieldText,
-    'date' : openerp.base.form.FieldDate,
-    'datetime' : openerp.base.form.FieldDatetime,
-    'selection' : openerp.base.form.FieldSelection,
-    'many2one' : openerp.base.form.FieldMany2One,
-    'many2many' : openerp.base.form.FieldMany2Many,
-    'one2many' : openerp.base.form.FieldOne2Many,
-    'one2many_list' : openerp.base.form.FieldOne2Many,
-    'reference' : openerp.base.form.FieldReference,
-    'boolean' : openerp.base.form.FieldBoolean,
-    'float' : openerp.base.form.FieldFloat
-};
+/**
+ * Registry of form widgets, called by :js:`openerp.base.FormView`
+ */
+openerp.base.form.widgets = new openerp.base.Registry({
+    'group' : 'openerp.base.form.WidgetFrame',
+    'notebook' : 'openerp.base.form.WidgetNotebook',
+    'separator' : 'openerp.base.form.WidgetSeparator',
+    'label' : 'openerp.base.form.WidgetLabel',
+    'button' : 'openerp.base.form.WidgetButton',
+    'char' : 'openerp.base.form.FieldChar',
+    'email' : 'openerp.base.form.FieldEmail',
+    'url' : 'openerp.base.form.FieldUrl',
+    'text' : 'openerp.base.form.FieldText',
+    'date' : 'openerp.base.form.FieldDate',
+    'datetime' : 'openerp.base.form.FieldDatetime',
+    'selection' : 'openerp.base.form.FieldSelection',
+    'many2one' : 'openerp.base.form.FieldMany2One',
+    'many2many' : 'openerp.base.form.FieldMany2Many',
+    'one2many' : 'openerp.base.form.FieldOne2Many',
+    'one2many_list' : 'openerp.base.form.FieldOne2Many',
+    'reference' : 'openerp.base.form.FieldReference',
+    'boolean' : 'openerp.base.form.FieldBoolean',
+    'float' : 'openerp.base.form.FieldFloat'
+});
 
 };
 
