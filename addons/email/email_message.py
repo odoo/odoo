@@ -263,6 +263,7 @@ class email_message(osv.osv):
             if 'filters' in context:
                 filters.extend(context['filters'])
             ids = self.search(cr, uid, filters, context=context)
+        self.send_email(cr, uid, [message.id], auto_commit=True, context=context)
         self.write(cr, uid, ids, {'state':'outgoing'}, context)
         for message in self.browse(cr, uid, ids, context):
             try:
@@ -294,9 +295,7 @@ class email_message(osv.osv):
                 for attach in message.attachment_ids:
                     attachments.append((attach.datas_fname ,base64.b64decode(attach.datas)))
                 if message.state in ['outgoing', 'exception']:
-                    res = smtp_server_obj.send_email(cr, uid, message.email_from,
-                        message.email_to and message.email_to.split(',') or [],
-                        subject=message.subject, body=message.body,
+                    msg = smtp_server_obj.pack_message(cr, uid, message.subject, message.body,
                         email_cc=message.email_cc and message.email_cc.split(',') or [],
                         email_bcc=message.email_bcc and message.email_bcc.split(',') or [],
                         reply_to=message.reply_to,
@@ -304,12 +303,18 @@ class email_message(osv.osv):
                         openobject_id=message.res_id,
                         subtype=message.sub_type,
                         x_headers=message.headers and eval(message.headers) or {},
-                        priority=message.priority, debug=message.debug,
+                        priority=message.priority)
+                    res = smtp_server_obj.send_email(cr, uid, message.email_from,
+                        message.email_to and message.email_to.split(',') or [],
+                        msg,
+                        mail_server_id = message.smtp_server_id.id or None,
                         smtp_server=smtp_server and smtp_server.smtp_host or None,
                         smtp_port=smtp_server and smtp_server.smtp_port or None,
-                        ssl=smtp_server and smtp_server.smtp_ssl or False,
                         smtp_user=smtp_server and smtp_server.smtp_user or None,
-                        smtp_password=smtp_server and smtp_server.smtp_pass or None, id=message.smtp_server_id.id or None)
+                        smtp_password=smtp_server and smtp_server.smtp_pass or None,
+                        ssl=smtp_server and smtp_server.smtp_ssl or False,
+                        tsl=smtp_server and smtp_server.smtp_tsl,
+                        debug=message.debug)
                 else:
                     raise osv.except_osv(_('Error !'), _('No messages in outgoing or exception state!'))
 
