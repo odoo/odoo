@@ -885,7 +885,7 @@ class hr_payslip(osv.osv):
 #                    raise osv.except_osv(_('Error !'), _('Please check configuration of %s, payroll head is missing') % (hday.holiday_status_id.name))
                 slip_lines = salary_rule_pool.search(cr, uid, [('code', '=', hday.holiday_status_id.code)], context=context)
                 if not slip_lines:
-                    raise osv.except_osv(_('Error !'), _('Please check configuration of %s, Salary rule is missing') % (hday.holiday_status_id.name))
+                    raise osv.except_osv(_('Error !'), _('Salary rule is not defined for %s. Please check the configuration') % (hday.holiday_status_id.name))
                 salary_rule = salary_rule_pool.browse(cr, uid, slip_lines, context=context)[0]
                 base = salary_rule.computational_expression
                 obj = {'basic': hday.contract_id.wage}
@@ -925,7 +925,7 @@ class hr_payslip(osv.osv):
                             value = value
                     except Exception, e:
                         raise osv.except_osv(_('Variable Error !'), _('Variable Error: %s ') % (e))
-                    
+
                 elif salary_rule.amount_type == 'fix':
 #                    if salary_rule.child_depend == False:
                     if salary_rule.parent_rule_id:
@@ -939,7 +939,7 @@ class hr_payslip(osv.osv):
                                 value = salary_rule.amount * days
                     else:
                         value = salary_rule.amount * days
-                
+
                 elif salary_rule.amount_type == 'code':
                     localdict = {'basic': amt, 'employee': slip.employee_id, 'contract': contract}
                     exec salary_rule.python_compute in localdict
@@ -1005,38 +1005,37 @@ class hr_payslip(osv.osv):
             return update
         ttyme = datetime.fromtimestamp(time.mktime(time.strptime(ddate, "%Y-%m-%d")))
 
-        if employee_id and context.get('contract', False) == False:
+        if employee_id and not context.get('contract', False):
             employee_id = empolyee_obj.browse(cr, uid, employee_id, context=context)
             contracts = self.get_contract(cr, uid, employee_id, ddate, context=context)
+            if not contracts:
+                update['value'].update({
+                    'basic_amount': 0.0,
+                    'basic_before_leaves': 0.0,
+                    'name':'Salary Slip of %s for %s' % (employee_id.name, tools.ustr(ttyme.strftime('%B-%Y'))),
+                    'contract_id': False,
+                    'struct_id': False,
+                    'company_id': employee_id.company_id.id
+                })
+                return update
             contracts = [contracts[0]]
             update['value'].update({
                     'struct_id': contracts[0].struct_id.id,
                     'contract_id': contracts[0].id
             })
-        if context.get('contract', False) == True:
+        if context.get('contract', False):
             if contract_id:
                 employee_id = empolyee_obj.browse(cr, uid, employee_id, context=context)
                 contracts = [contract_obj.browse(cr, uid, contract_id, context=context)]
                 update['value'].update({'struct_id': contracts[0].struct_id.id})
-            else:
+            else: # ?
                 employee_id = empolyee_obj.browse(cr, uid, employee_id, context=context)
                 contracts = self.get_contract(cr, uid, employee_id, ddate, context=context)
                 update['value'].update({'contract_id': False, 'struct_id': False})
 
-        if not contracts:
-            update['value'].update({
-                'basic_amount': 0.0,
-                'basic_before_leaves': 0.0,
-                'name':'Salary Slip of %s for %s' % (employee_id.name, tools.ustr(ttyme.strftime('%B-%Y'))),
-                'contract_id': False,
-                'struct_id': False,
-                'company_id': employee_id.company_id.id
-            })
-            return update
         final_total = 0.0
         all_basic = 0.0
         for contract in contracts:
-
             function = contract.struct_id.id
             sal_structure = []
             if function:
@@ -1067,7 +1066,7 @@ class hr_payslip(osv.osv):
                     obj[cd] = val
                 else:
                     obj[cd] = line.amount or 0.0
-                   
+
             for line in rules:
                 if line.category_id.code in ad:
                     continue
@@ -1207,7 +1206,7 @@ class hr_payslip(osv.osv):
             slip_lines = salary_rule_pool.search(cr, uid, [('code','=',hday.holiday_status_id.code)], context=context)
             head_sequence = 0
             if not slip_lines:
-                raise osv.except_osv(_('Error !'), _('Please check configuration of %s, Salary rule is missing') % (hday.holiday_status_id.name))
+                raise osv.except_osv(_('Error !'), _('Salary rule is not defined for %s. Please check the configuration') % (hday.holiday_status_id.name))
             hd_rule = salary_rule_pool.browse(cr, uid, slip_lines, context=context)[0]
             leave_rule = []
             leave_rule.append(hd_rule)
