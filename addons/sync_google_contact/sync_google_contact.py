@@ -19,10 +19,14 @@
 #
 ##############################################################################
 
-from osv import fields,osv,orm
+from osv import fields,osv
 
 class res_partner_address(osv.osv):
     _inherit = "res.partner.address"
+
+    _columns = {
+        'write_date': fields.datetime('Date Modified', readonly=True, help="Modification date and time of address."),
+    }
 
     def unlink(self, cr, uid, ids, context=None):
         model_obj = self.pool.get('ir.model.data')

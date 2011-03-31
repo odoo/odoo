@@ -18,16 +18,22 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+import datetime
+import dateutil
+from dateutil.parser import *
+from pytz import timezone
+import os
 
-from osv import fields,osv
-from tools.translate import _
-import tools
 try:
     import gdata
     import gdata.contacts.service
     import gdata.contacts
 except ImportError:
     raise osv.except_osv(_('Google Contacts Import Error!'), _('Please install gdata-python-client from http://code.google.com/p/gdata-python-client/downloads/list'))
+
+from osv import fields,osv
+from tools.translate import _
+import tools
 
 class google_contact_import(osv.osv_memory):
     _inherit = 'google.login'
@@ -137,7 +143,13 @@ class synchronize_google_contact(osv.osv_memory):
         addresss_obj = self.pool.get('res.partner.address')
         addresses = []
         partner_ids = []
-        contact_ids=[]
+        contact_ids = []
+        if 'tz' in context and context['tz']:
+            time_zone = context['tz']
+        else:
+            time_zone = tools.get_server_timezone()
+        au_tz = timezone(time_zone)
+        
         while contact:
             for entry in contact.entry:
                 data = self._retreive_data(entry)
@@ -157,7 +169,13 @@ class synchronize_google_contact(osv.osv_memory):
 
                 if contact_ids:
                     addresses.append(contact_ids[0])
-                    self.update_contact(cr, uid, contact_ids, data, context=context)
+                    address = addresss_obj.browse(cr, uid, contact_ids[0], context=context)
+                    google_updated = entry.updated.text
+                    utime = dateutil.parser.parse(google_updated)
+                    au_dt = au_tz.normalize(utime.astimezone(au_tz))
+                    updated_dt = datetime.datetime(*au_dt.timetuple()[:6]).strftime('%Y-%m-%d %H:%M:%S')
+                    if address.write_date < updated_dt:
+                        self.update_contact(cr, uid, contact_ids, data, context=context)
                     res_id = contact_ids[0]
                 if not contact_ids:
                     #create or link to an existing partner only if it's a new contact
@@ -192,8 +210,7 @@ class synchronize_google_contact(osv.osv_memory):
         data['name'] = name
         emails = ','.join(email.address for email in entry.email)
         data['email'] = emails
-                    
-
+        
         if entry.phone_number:
             for phone in entry.phone_number:
                 if phone.rel == gdata.contacts.REL_WORK:
@@ -211,17 +228,17 @@ class synchronize_google_contact(osv.osv_memory):
         name = str((addr.name or addr.partner_id and addr.partner_id.name or '').encode('utf-8'))
 
         if not name:
-            vals['name']=data.get('name','')
+            vals['name'] = data.get('name','')
         if not addr.email:
-            vals['email']=data.get('email','')
+            vals['email'] = data.get('email','')
         if not addr.mobile:
-            vals['mobile']=data.get('mobile','')
+            vals['mobile'] = data.get('mobile','')
         if not addr.phone:
-            vals['phone']=data.get('phone','')
+            vals['phone'] = data.get('phone','')
         if not addr.fax:
-            vals['fax']=data.get('fax','')
-            
-        addresss_obj.write(cr,uid,contact_ids,vals,context=context)
+            vals['fax'] = data.get('fax','')
+        
+        addresss_obj.write(cr, uid, contact_ids, vals, context=context)
         return {'type': 'ir.actions.act_window_close'}
 
 synchronize_google_contact()
