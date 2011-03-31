@@ -152,7 +152,9 @@ $(document).ready(function () {
     var openerp;
     module("ids_callback", {
         setup: function () {
-            openerp = window.openerp.init();
+            openerp = window.openerp.init(true);
+            window.openerp.base.chrome(openerp);
+            window.openerp.base.data(openerp);
         }
     });
     asyncTest("Baseline event attributes", 6, function () {
@@ -222,7 +224,9 @@ $(document).ready(function () {
     var dataset;
     module("set", {
         setup: function () {
-            var openerp = window.openerp.init();
+            var openerp = window.openerp.init(true);
+            window.openerp.base.chrome(openerp);
+            window.openerp.base.data(openerp);
             dataset = new openerp.base.DataSet();
         }
     });
@@ -245,7 +249,9 @@ $(document).ready(function () {
 
     module('ids_activation', {
         setup: function () {
-            var openerp = window.openerp.init();
+            var openerp = window.openerp.init(true);
+            window.openerp.base.chrome(openerp);
+            window.openerp.base.data(openerp);
             dataset = new openerp.base.DataSet();
         }
     });
@@ -273,7 +279,9 @@ $(document).ready(function () {
 
     module('active_id_iteration', {
         setup: function () {
-            var openerp = window.openerp.init();
+            var openerp = window.openerp.init(true);
+            window.openerp.base.chrome(openerp);
+            window.openerp.base.data(openerp);
             dataset = new openerp.base.DataSet();
             dataset.select([1, 2, 3]);
         }
@@ -315,7 +323,9 @@ $(document).ready(function () {
 
     module('active_ids', {
         setup: function () {
-            openerp = window.openerp.init();
+            openerp = window.openerp.init(true);
+            window.openerp.base.chrome(openerp);
+            window.openerp.base.data(openerp);
         }
     });
     asyncTest('Get pre-set active_ids', 6, function () {
@@ -334,7 +344,9 @@ $(document).ready(function () {
 
     module('active_id', {
         setup: function () {
-            openerp = window.openerp.init();
+            openerp = window.openerp.init(true);
+            window.openerp.base.chrome(openerp);
+            window.openerp.base.data(openerp);
         }
     });
     test('Get pre-set active_id', 3, function () {

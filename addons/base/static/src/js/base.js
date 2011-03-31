@@ -74,6 +74,7 @@
         return;
     var session_counter = 0;
 
+    /** @lends openerp */
     var openerp = this.openerp =  {
         // element_ids registry linked to all controllers on the page
         // TODO rename to elements, or keep gtk naming?
@@ -82,8 +83,12 @@
         // openerp.<module> will map to
         // openerp.sessions.sessionname.<module> using a closure
         sessions: {},
-        // openerp instance constructor
-        init: function() {
+        /**
+         * OpenERP instance constructor
+         *
+         * @param {Boolean} skip_init if true, skips the built-in initialization
+         */
+        init: function(skip_init) {
             var new_instance = {
                 // links to the global openerp
                 _openerp: openerp,
@@ -98,7 +103,8 @@
                 base: {}
             };
             openerp.sessions[new_instance._session_id] = new_instance;
-            openerp.base(new_instance);
+            if (!skip_init)
+                openerp.base(new_instance);
             return new_instance;
         }
     };
