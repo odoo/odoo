@@ -459,7 +459,7 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
 
     mail_server_pool = pooler.get_pool(cr.dbname).get('ir.mail_server')
     # Pack Message
-    msg = mail_server_pool.pack_message(cr, uid, subject, body, email_cc, email_bcc, reply_to,
+    msg = mail_server_pool.pack_message(cr, uid, email_from, email_to, subject, body, email_cc, email_bcc, reply_to,
                attach, message_id, references, openobject_id, debug, subtype, x_headers, priority)
 
     # Send Email

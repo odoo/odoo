@@ -63,7 +63,7 @@ class partner_wizard_spam(osv.osv_memory):
     #TODO: add some tests to check for invalid email addresses
     #CHECKME: maybe we should use res.partner/email_send
                     smtp_server_pool = self.pool.get('ir.mail_server')
-                    msg = smtp_server_pool.pack_message(cr, uid, data.subject, data.text, subtype=type_)
+                    msg = smtp_server_pool.pack_message(cr, uid, data.email_from, [to], data.subject, data.text, subtype=type_)
                     smtp_server_pool.send_email(cr, uid, data.email_from, [to], msg)
                     nbr += 1
             event_pool.create(cr, uid,

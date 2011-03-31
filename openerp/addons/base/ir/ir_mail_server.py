@@ -124,14 +124,14 @@ class ir_mail_server(osv.osv):
             except Exception, error:
                 raise osv.except_osv(
                                  _("SMTP Connection: Test failed"),
-                                 _("Reason: %s") % error
-            finally:                     )
+                                 _("Reason: %s") % error )
+            finally:
                 try:
                     if smtp:smtp.quit()
                 except Exception:
                     # ignored, just a consequence of the previous exception
                     pass
- 
+
         raise osv.except_osv(_("SMTP Connection: Test Successfully!"), '')
 
     def connect_smtp_server(self, server_host, server_port, user_name=None,
@@ -166,7 +166,7 @@ class ir_mail_server(osv.osv):
             raise error
         return smtp_server
 
-    def pack_message(self, cr, uid, subject, body, email_cc=None, email_bcc=None, reply_to=False,
+    def pack_message(self, cr, uid, email_from, email_to, subject, body, email_cc=None, email_bcc=None, reply_to=False,
                attach=None, message_id=None, references=None, openobject_id=False, debug=False, subtype='plain', x_headers=None, priority='3'):
 
         """
@@ -181,7 +181,7 @@ class ir_mail_server(osv.osv):
         if not body: body = u''
 
         email_body = ustr(body).encode('utf-8')
-        email_text = MIMEText(email_body or '',_subtype=subtype,_charset='utf-8')
+        email_text = MIMEText(email_body or '', _subtype=subtype,_charset='utf-8')
         msg = MIMEMultipart()
 
         if not message_id and openobject_id:
@@ -221,7 +221,7 @@ class ir_mail_server(osv.osv):
             msg.attach(email_text)
 
         if attach:
-            for (fname,fcontent) in attach:
+            for (fname, fcontent) in attach:
                 part = MIMEBase('application', "octet-stream")
                 part.set_payload( fcontent )
                 Encoders.encode_base64(part)
@@ -230,14 +230,14 @@ class ir_mail_server(osv.osv):
         return msg
 
     def send_email(self, cr, uid, smtp_from, smtp_to_list, message,
-           mail_server_id=None, smtp_server=None, smtp_port=None, 
+           mail_server_id=None, smtp_server=None, smtp_port=None,
            smtp_user=None, smtp_password=None, ssl=False, tls=True, debug=False):
 
         """Send an email.
         If the id of a mail server is provided, send using this mail server, ignoring other smtp_* arguments.
         If mail_server_id == None and smtp_server == None, use the default mail server (highest priority).
         If mail_server_id == None and smtp_server is not None, use the provided smtp_* arguments.
-        Return messageID of message if Successfully sent Email otherwise return False      
+        Return messageID of message if Successfully sent Email otherwise return False
         """
         if not (smtp_from or config.get('email_from', False)):
             raise ValueError("Sending an email requires either providing a sender "
@@ -251,7 +251,7 @@ class ir_mail_server(osv.osv):
             mail_server = self.browse(cr, uid, mail_server_id)
         elif not (mail_server_id and smtp_server):
             mail_server_ids = self.search(cr, uid, [], order='priority', limit=1)
-            mail_server = self.browse(cr, uid, server_ids[0])
+            mail_server = self.browse(cr, uid, mail_server_ids[0])
         if mail_server:
             smtp_server = mail_server.smtp_host
             smtp_user = mail_server.smtp_user
@@ -267,16 +267,16 @@ class ir_mail_server(osv.osv):
             def write(self, s):
                 self.logger.notifyChannel('email_send', loglevels.LOG_DEBUG, s)
 
-        
+
         try:
             message_id = message['Message-Id']
             smtp_server = smtp_server or config.get('smtp_server')
 
-            # Add email in Maildir if smtp_server contains maildir.            
+            # Add email in Maildir if smtp_server contains maildir.
             if smtp_server.startswith('maildir:/'):
                 from mailbox import Maildir
                 maildir_path = smtp_server[8:]
-                mdir = Maildir(maildir_path,factory=None, create = True)
+                mdir = Maildir(maildir_path, factory=None, create = True)
                 mdir.add(message.as_string(True))
                 return message_id
 
@@ -286,15 +286,15 @@ class ir_mail_server(osv.osv):
 
             # Open Connection of SMTP Server
             smtp = self.connect_smtp_server(
-                    smtp_server, 
+                    smtp_server,
                     smtp_port or config.get('smtp_port', 25),
-                    user_name=smtp_user or config,get('smtp_user', False), 
-                    user_password=smtp_password or config.get('smtp_password', False), 
-                    ssl=ssl or config.get('smtp_ssl', False), 
+                    user_name=smtp_user or config.get('smtp_user', False),
+                    user_password=smtp_password or config.get('smtp_password', False),
+                    ssl=ssl or config.get('smtp_ssl', False),
                     tls=tls, debug=debug)
             try:
                 # Send Email
-                smtp.sendmail(smtp_from, email_to, message.as_string())
+                smtp.sendmail(smtp_from, smtp_to_list, message.as_string())
             except Exception:
                 _logger.error('could not deliver Email(s)', exc_info=True)
                 return False
