@@ -462,17 +462,18 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
     msg = mail_server_pool.pack_message(cr, uid, subject, body, email_cc, email_bcc, reply_to,
                attach, message_id, references, openobject_id, debug, subtype, x_headers, priority)
 
-    # Send Email    
+    # Send Email
     res = False
     try:
-        res = mail_server_pool.send_email(cr, uid, email_from, flatten([email_to, email_cc, email_bcc]), msg, ssl=ssl, debug=debug,
-                       smtp_server=smtp_server, smtp_port=smtp_port, smtp_user=smtp_user, smtp_password=smtp_password)
+        res = mail_server_pool.send_email(cr, uid, email_from, flatten([email_to, email_cc, email_bcc]), msg,
+                       smtp_server=smtp_server, smtp_port=smtp_port, smtp_user=smtp_user, smtp_password=smtp_password,
+                       ssl=ssl, tls=True, debug=debug)
     except Exception:
         return False
     finally:
         cr.close()
     return res
-        
+
 
 #----------------------------------------------------------
 # SMS
