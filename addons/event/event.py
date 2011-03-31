@@ -282,7 +282,7 @@ class event_registration(osv.osv):
     """Event Registration"""
     _name= 'event.registration'
     _description = __doc__
-    _inherit = 'mailgate.thread'
+    _inherit = 'email.thread'
 
     def _amount_line(self, cr, uid, ids, field_name, arg, context=None):
         cur_obj = self.pool.get('res.currency')
@@ -547,7 +547,7 @@ class event_registration(osv.osv):
                     subject = _('Auto Confirmation: [%s] %s') %(regestration.id, regestration.name)
                     body = regestration.event_id.mail_confirm
             if subject or body:
-                email_message_obj.email_send(cr, uid, src, email_to, subject, body, model='event.registration', email_cc=email_cc, openobject_id=regestration.id)
+                email_message_obj.schedule_with_attach(cr, uid, src, email_to, subject, body, model='event.registration', email_cc=email_cc, openobject_id=regestration.id)
                 self.history(cr, uid, [regestration], subject, history = True, \
                         email=email_to, details=body, \
                         subject=subject, email_from=src, \

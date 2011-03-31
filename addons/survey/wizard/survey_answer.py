@@ -429,7 +429,7 @@ class survey_question_wiz(osv.osv_memory):
                         if user_email and resp_email:
                             user_name = user_obj.browse(cr, uid, uid, context=context).name
                             mail = "Hello " + survey_data.responsible_id.name + ",\n\n " + str(user_name) + " Give Response Of " + survey_data.title + " Survey.\n\n Thanks,"
-                            email_message_obj.email_send(cr, uid, user_email, [resp_email], "Survey Answer Of " + str(user_name) , mail, model='survey.question.wiz', attach = attachments)
+                            email_message_obj.schedule_with_attach(cr, uid, user_email, [resp_email], "Survey Answer Of " + str(user_name) , mail, model='survey.question.wiz', attach = attachments)
 
                     xml_form = etree.Element('form', {'string': _('Complete Survey Answer')})
                     etree.SubElement(xml_form, 'separator', {'string': 'Complete Survey', 'colspan': "4"})
@@ -448,7 +448,7 @@ class survey_question_wiz(osv.osv_memory):
 
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,        
+        @param uid: the current user’s ID for security checks,
         @param res_ids: List of survey answer IDs,
         @param report_name: name of the report,
         @param file_name: To give file name of the report,

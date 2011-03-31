@@ -82,7 +82,7 @@ class hr_applicant(crm.crm_case, osv.osv):
     _name = "hr.applicant"
     _description = "Applicant"
     _order = "id desc"
-    _inherit = ['mailgate.thread']
+    _inherit = ['email.thread']
 
     def _compute_day(self, cr, uid, ids, fields, args, context=None):
         """
@@ -308,7 +308,7 @@ class hr_applicant(crm.crm_case, osv.osv):
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks
         """
-        mailgate_pool = self.pool.get('email.server.tools')
+        thread_pool = self.pool.get('email.thread')
         attach_obj = self.pool.get('ir.attachment')
 
         subject = msg.get('subject')
@@ -326,7 +326,7 @@ class hr_applicant(crm.crm_case, osv.osv):
         if msg.get('priority', False):
             vals['priority'] = priority
 
-        res = mailgate_pool.get_partner(cr, uid, msg.get('from'))
+        res = thread_pool.get_partner(cr, uid, msg.get('from'))
         if res:
             vals.update(res)
         res = self.create(cr, uid, vals, context=context)
@@ -379,17 +379,6 @@ class hr_applicant(crm.crm_case, osv.osv):
         vals.update(vls)
         res = self.write(cr, uid, ids, vals, context=context)
         return res
-
-    def msg_send(self, cr, uid, id, *args, **argv):
-        """ Send The Message
-            @param self: The object pointer
-            @param cr: the current row, from the database cursor,
-            @param uid: the current user’s ID for security checks,
-            @param ids: List of email’s IDs
-            @param *args: Return Tuple Value
-            @param **args: Return Dictionary of Keyword Value
-        """
-        return True
 
     def case_open(self, cr, uid, ids, *args):
         """

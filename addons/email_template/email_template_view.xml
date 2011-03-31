@@ -33,7 +33,7 @@
                                 <field name="subject" colspan="4" required="1"/>
                                 <notebook>
                                     <page string="Body">
-                                        <field name="description" colspan="4" nolabel="1"/>
+                                        <field name="body" colspan="4" nolabel="1"/>
                                     </page>
                                     <!-- <page string="Body (Raw HTML)">
                                         <field name="def_body_html" colspan="4" nolabel="1"/>
@@ -70,7 +70,7 @@
                                     <button name="create_action" string="Create Action" type="object" icon="gtk-execute"  colspan="2" attrs="{'invisible':[('ref_ir_act_window','!=',False), ('ref_ir_value','!=',False)]}"/>
                                     <field name="ref_ir_act_window"/>
                                     <field name="ref_ir_value"/>
-                                    <button name="delete_action" string="Delete Action" type="object" icon="gtk-delete" colspan="2" attrs="{'invisible':[('ref_ir_act_window','=',False), ('ref_ir_value','=',False)]}"/>
+                                    <button name="unlink_action" string="Delete Action" type="object" icon="gtk-delete" colspan="2" attrs="{'invisible':[('ref_ir_act_window','=',False), ('ref_ir_value','=',False)]}"/>
                                 </group>
                                 <group colspan="2" col="2">
                                     <separator string="Advanced Options" colspan="2"/>
@@ -154,20 +154,6 @@
 
         <menuitem name="Templates" id="menu_email_template_all_tools"
             parent="email.menu_email_message_tools" action="action_email_template_tree_all" />
-
-        <!-- Inherit email.message view -->
-
-        <record model="ir.ui.view" id="view_email_message_template_form">
-            <field name="name">email.message.template.form</field>
-            <field name="model">email.message</field>
-            <field name="inherit_id" ref="email.view_email_message_form"/>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-	            <field name="debug" position="after">
-	                <field name="template_id"/>
-                </field>
-            </field>
-        </record>
 
     </data>
 </openerp>

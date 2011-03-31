@@ -46,7 +46,7 @@ class project_issue(crm.crm_case, osv.osv):
     _name = "project.issue"
     _description = "Project Issue"
     _order = "priority, id desc"
-    _inherit = ['mailgate.thread']
+    _inherit = ['email.thread']
 
     def case_open(self, cr, uid, ids, *args):
         """
@@ -374,7 +374,7 @@ class project_issue(crm.crm_case, osv.osv):
         """
         if context is None:
             context = {}
-        mailgate_pool = self.pool.get('email.server.tools')
+        thread_pool = self.pool.get('email.thread')
 
         subject = msg.get('subject') or _('No Title')
         body = msg.get('body')
@@ -391,7 +391,7 @@ class project_issue(crm.crm_case, osv.osv):
         if msg.get('priority', False):
             vals['priority'] = priority
 
-        res = mailgate_pool.get_partner(cr, uid, msg.get('from'))
+        res = thread_pool.get_partner(cr, uid, msg.get('from'))
         if res:
             vals.update(res)
         context.update({'state_to' : 'draft'})
@@ -454,18 +454,6 @@ class project_issue(crm.crm_case, osv.osv):
         vals.update(vls)
         res = self.write(cr, uid, ids, vals)
         return res
-
-    def msg_send(self, cr, uid, id, *args, **argv):
-
-        """ Send The Message
-            @param self: The object pointer
-            @param cr: the current row, from the database cursor,
-            @param uid: the current user’s ID for security checks,
-            @param ids: List of email’s IDs
-            @param *args: Return Tuple Value
-            @param **args: Return Dictionary of Keyword Value
-        """
-        return True
 
     def copy(self, cr, uid, id, default=None, context=None):
         issue = self.read(cr, uid, id, ['name'], context=context)

@@ -41,7 +41,7 @@ class crm_claim(crm.crm_case, osv.osv):
     _name = "crm.claim"
     _description = "Claim"
     _order = "priority,date desc"
-    _inherit = ['mailgate.thread']
+    _inherit = ['email.thread']
     _columns = {
         'id': fields.integer('ID', readonly=True),
         'name': fields.char('Claim Subject', size=128, required=True),
@@ -83,7 +83,7 @@ class crm_claim(crm.crm_case, osv.osv):
                                   \nIf the case needs to be reviewed then the state is set to \'Pending\'.'),
         'message_ids': fields.one2many('email.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
     }
-    
+
     def stage_next(self, cr, uid, ids, context=None):
         stage = super(crm_claim, self).stage_next(cr, uid, ids, context=context)
         if stage:
@@ -97,7 +97,7 @@ class crm_claim(crm.crm_case, osv.osv):
             stage_obj = self.pool.get('crm.case.stage').browse(cr, uid, stage, context=context)
             self.history(cr, uid, ids, _("Changed Stage to: ") + stage_obj.name)
         return stage
-    
+
     def _get_stage_id(self, cr, uid, context=None):
         """Finds type of stage according to object.
         @param self: The object pointer
@@ -171,7 +171,7 @@ class crm_claim(crm.crm_case, osv.osv):
                 self.write(cr, uid, [ids[i]], {'stage_id' : stage_id})
 
         return res
-    
+
     def message_new(self, cr, uid, msg, context=None):
         """
         Automatically calls when new email message arrives
@@ -180,7 +180,7 @@ class crm_claim(crm.crm_case, osv.osv):
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks
         """
-        mailgate_pool = self.pool.get('email.server.tools')
+        thread_pool = self.pool.get('email.thread')
 
         subject = msg.get('subject')
         body = msg.get('body')
@@ -197,7 +197,7 @@ class crm_claim(crm.crm_case, osv.osv):
         if msg.get('priority', False):
             vals['priority'] = priority
 
-        res = mailgate_pool.get_partner(cr, uid, msg.get('from') or msg.get_unixfrom())
+        res = thread_pool.get_partner(cr, uid, msg.get('from') or msg.get_unixfrom())
         if res:
             vals.update(res)
 
@@ -221,7 +221,7 @@ class crm_claim(crm.crm_case, osv.osv):
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
-        @param ids: List of update mail’s IDs 
+        @param ids: List of update mail’s IDs
         """
         if isinstance(ids, (str, int, long)):
             ids = [ids]
@@ -252,18 +252,6 @@ class crm_claim(crm.crm_case, osv.osv):
                 values.update(state=crm.AVAILABLE_STATES[1][0]) #re-open
             res = self.write(cr, uid, [case.id], values, context=context)
         return res
-
-    def msg_send(self, cr, uid, id, *args, **argv):
-
-        """ Send The Message
-            @param self: The object pointer
-            @param cr: the current row, from the database cursor,
-            @param uid: the current user’s ID for security checks,
-            @param ids: List of email’s IDs
-            @param *args: Return Tuple Value
-            @param **args: Return Dictionary of Keyword Value
-        """
-        return True
 
 crm_claim()
 

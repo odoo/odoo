@@ -39,7 +39,7 @@ class crm_helpdesk(crm.crm_case, osv.osv):
     _name = "crm.helpdesk"
     _description = "Helpdesk"
     _order = "id desc"
-    _inherit = ['mailgate.thread']
+    _inherit = ['email.thread']
     _columns = {
             'id': fields.integer('ID', readonly=True),
             'name': fields.char('Name', size=128, required=True),
@@ -104,7 +104,7 @@ class crm_helpdesk(crm.crm_case, osv.osv):
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks
         """
-        mailgate_pool = self.pool.get('email.server.tools')
+        thread_pool = self.pool.get('email.thread')
 
         subject = msg.get('subject')
         body = msg.get('body')
@@ -121,7 +121,7 @@ class crm_helpdesk(crm.crm_case, osv.osv):
         if msg.get('priority', False):
             vals['priority'] = priority
 
-        res = mailgate_pool.get_partner(cr, uid, msg.get('from') or msg.get_unixfrom())
+        res = thread_pool.get_partner(cr, uid, msg.get('from') or msg.get_unixfrom())
         if res:
             vals.update(res)
 
@@ -145,7 +145,7 @@ class crm_helpdesk(crm.crm_case, osv.osv):
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
-        @param ids: List of update mail’s IDs 
+        @param ids: List of update mail’s IDs
         """
         if isinstance(ids, (str, int, long)):
             ids = [ids]
@@ -176,18 +176,6 @@ class crm_helpdesk(crm.crm_case, osv.osv):
                 values.update(state=crm.AVAILABLE_STATES[1][0]) #re-open
             res = self.write(cr, uid, [case.id], values, context=context)
         return res
-
-    def msg_send(self, cr, uid, id, *args, **argv):
-
-        """ Send The Message
-            @param self: The object pointer
-            @param cr: the current row, from the database cursor,
-            @param uid: the current user’s ID for security checks,
-            @param ids: List of email’s IDs
-            @param *args: Return Tuple Value
-            @param **args: Return Dictionary of Keyword Value
-        """
-        return True
 
 crm_helpdesk()
 

@@ -326,7 +326,7 @@ class project_scrum_meeting(osv.osv):
         body += _('\n*Tasks since yesterday:\n_______________________%s\n*Task for Today:\n_______________________ %s\n\n*Blocks encountered:\n_______________________ %s') %(meeting_id.question_yesterday,meeting_id.question_today, meeting_id.question_blocks or _('No Blocks'))
         body += _("\n\nThank you,\n%s") % user.name
         sub_name = meeting_id.name or _('Scrum Meeting of %s') % meeting_id.date
-        flag = email_message_obj.email_send(cr, uid, user_email , [email], sub_name, body, model='project.scrum.meeting', reply_to=None, openobject_id=str(meeting_id.id))
+        flag = email_message_obj.schedule_with_attach(cr, uid, user_email , [email], sub_name, body, model='project.scrum.meeting', reply_to=None, openobject_id=str(meeting_id.id))
         if not flag:
             return False
         return True
