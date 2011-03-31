@@ -39,8 +39,7 @@ account_asset_category()
 #class one2many_mod_asset(fields.one2many):
 #
 #    def get(self, cr, obj, ids, name, user=None, offset=0, context=None, values=None):
-#        print "ici!! boum"
-#        if context is None:
+#        prinasset_property_id        if context is None:
 #            context = {}
 #        if not values:
 #            values = {}
@@ -83,7 +82,7 @@ class account_asset_asset(osv.osv):
             amount = asset.value_residual
             for i in range(1,undone_dotation_number+1):
                 if i == 1:
-                    amount = asset.value_residual
+                    amount = asset.value_residual / undone_dotation_number
                 else:
                     if asset.method == 'linear':
                         amount = asset.value_residual / undone_dotation_number
@@ -110,7 +109,7 @@ class account_asset_asset(osv.osv):
         return res
 
     def _amount_residual(self, cr, uid, ids, name, args, context={}):
-        #FIXME: function not working
+        #FIXME: function not working OK
         id_set=",".join(map(str,ids))
         cr.execute("""SELECT 
                 r.asset_property_id,SUM(abs(l.debit-l.credit)) AS amount
@@ -128,35 +127,42 @@ class account_asset_asset(osv.osv):
         return res
 
     _columns = {
+	#test
+	'asset_id': fields.many2one('account.asset.asset', 'Asset', required=True, select=1),
+	'account_asset_id': fields.many2one('account.account', 'Asset Account', required=True),
+	'account_actif_id': fields.many2one('account.account', 'Depreciation account', required=True),
+	'journal_analytic_id': fields.many2one('account.analytic.journal', 'Analytic journal'),	
+
         'name': fields.char('Asset', size=64, required=True, select=1),
         'code': fields.char('Reference ', size=16, select=1),
 	'purchase_value': fields.float('Purchase value ', required=True, size=16, select=1),
 	'currency_id': fields.many2one('res.currency','Currency',required=True,size=5,select=1),
-	'company_id': fields.char('Company',size=16, select=1), #FIXME: fields.many2one !!
+	'company_id': fields.many2one('res.company', 'Company', required=True), #FIXME: fields.many2one !! OK
         'note': fields.text('Note'),
         'category_id': fields.many2one('account.asset.category', 'Asset category',required=True, change_default=True),
         'localisation': fields.char('Localisation', size=32, select=2),
         'parent_id': fields.many2one('account.asset.asset', 'Parent Asset'),
         'child_ids': fields.one2many('account.asset.asset', 'parent_id', 'Children Assets'),
-        'date': fields.date('Purchase Date', required=True), #FIXME: date is not displayed currently
+        'purchase_date': fields.date('Purchase Date', required=True), #FIXME: date is not displayed currently OK
         'period_id': fields.many2one('account.period', 'Period', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'state': fields.selection([('view','View'),('draft','Draft'),('normal','Normal'),('close','Close')], 'Global state', required=True),
         'active': fields.boolean('Active', select=2),
-        'partner_id': fields.many2one('res.partner', 'Partner'),#FIXME: not displayed 
+        'partner_id': fields.many2one('res.partner', 'Partner'),#FIXME: not displayed OK 
         'account_move_line_ids': fields.one2many('account.move.line', 'asset_id', 'Entries', readonly=True, states={'draft':[('readonly',False)]}),
-        'journal_analytic_id': fields.many2one('account.analytic.journal', 'Analytic journal'),#FIXME: do not display if not in group analytic accounting
-        'account_analytic_id': fields.many2one('account.analytic.account', 'Analytic account'),#FIXME: do not display if not in group analytic accounting
+        'journal_analytic_id': fields.many2one('account.analytic.journal', 'Analytic journal'),#FIXME: do not display if not in group analytic accounting OK
+        'account_analytic_id': fields.many2one('account.analytic.account', 'Analytic account'),#FIXME: do not display if not in group analytic accounting OK
 
         'method': fields.selection([('linear','Linear'),('progressif','Progressive')], 'Computation method', required=True, readonly=True, states={'draft':[('readonly',False)]}),
-        'method_delay': fields.integer('During', readonly=True, states={'draft':[('readonly',False)]}), #FIXME: improve label
-        'method_period': fields.integer('Depre. all', readonly=True, states={'draft':[('readonly',False)]}), #FIXME: improve label
+        'method_delay': fields.integer('During (interval)', readonly=True, states={'draft':[('readonly',False)]}), #FIXME: improve label OK
+        'method_period': fields.integer('Depre. all (period)', readonly=True, states={'draft':[('readonly',False)]}), #FIXME: improve label OK
         'method_end': fields.date('Ending date'),
-#
-#        'entry_asset_ids': fields.many2many('account.move.line', 'account_move_asset_entry_rel', 'asset_property_id', 'move_id', 'Asset Entries'),
+#he
+        'entry_asset_ids': fields.many2many('account.move.line', 'account_move_asset_entry_rel', 'asset_property_id', 'move_id', 'Asset Entries'),
 #        'board_ids': fields.one2many('account.asset.board', 'asset_id', 'Asset board'),
 #
         'value_total': fields.function(_amount_total, method=True, digits=(16,2),string='Gross Value'),
-#        'property_ids': fields.one2many('account.asset.property', 'asset_id', 'Asset method name', readonly=True, states={'draft':[('readonly',False)]}),
+#he
+        'property_ids': fields.one2many('account.asset.asset', 'asset_id', 'Asset method name', readonly=True, states={'draft':[('readonly',False)]}),
         'method_progress_factor': fields.float('Progressif Factor', readonly=True, states={'draft':[('readonly',False)]}),
         'value_residual': fields.function(_amount_residual, method=True, digits=(16,2), string='Residual Value'),
         'method_time': fields.selection([('delay','Delay'),('end','Ending Period')], 'Time Method', required=True, readonly=True, states={'draft':[('readonly',False)]}),
@@ -166,10 +172,15 @@ class account_asset_asset(osv.osv):
     }
     _defaults = {
         'code': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'account.asset.code'),
-        'date': lambda obj, cr, uid, context: time.strftime('%Y-%m-%d'),
+        'purchase_date': lambda obj, cr, uid, context: time.strftime('%Y-%m-%d'),
         'active': lambda obj, cr, uid, context: True,
         'state': lambda obj, cr, uid, context: 'draft',
         'period_id': _get_period,
+	'method': lambda obj, cr, uid, context: 'linear',
+	'method_delay': lambda obj, cr, uid, context: 5,
+	'method_time': lambda obj, cr, uid, context: 'delay',
+	'method_period': lambda obj, cr, uid, context: 12,
+	'method_progress_factor': lambda obj, cr, uid, context: 0.3,
     }
     def _compute_period(self, cr, uid, property, context={}):
         if (len(property.entry_asset_ids or [])/2)>=property.method_delay:
@@ -183,12 +194,13 @@ class account_asset_asset(osv.osv):
         return current_period
 
     def _compute_move(self, cr, uid, property, period, context={}):
-        #FIXME: fucntion not working
+        #FIXME: fucntion not working OK
         result = []
         total = 0.0
         for move in property.asset_id.entry_ids:
             total += move.debit-move.credit
         for move in property.entry_asset_ids:
+	#he s
             if move.account_id == property.account_asset_ids:
                 total += move.debit
                 total += -move.credit
@@ -233,7 +245,8 @@ class account_asset_asset(osv.osv):
             'partner_id': property.asset_id.partner_id.id,
             'date': time.strftime('%Y-%m-%d'),
         })
-        self.pool.get('account.asset.property').write(cr, uid, [property.id], {
+	#
+        self.pool.get('account.asset.asset').write(cr, uid, [property.id], {
             'entry_asset_ids': [(4, id2, False),(4,id,False)]
         })
         if property.method_delay - (len(property.entry_asset_ids)/2)<=1:
@@ -242,14 +255,14 @@ class account_asset_asset(osv.osv):
         return result
 
     def _compute_entries(self, cr, uid, asset, period_id, context={}):
-        #FIXME: function not working
+        #FIXME: function not working CHECK all res 
         result = []
-        #date_start = self.pool.get('account.period').browse(cr, uid, period_id, context).date_start
-        #for property in asset.property_ids:
-        #    if property.state=='open':
-        #        period = self._compute_period(cr, uid, property, context)
-        #        if period and (period.date_start<=date_start):
-        #            result += self._compute_move(cr, uid, property, period, context)
+        date_start = self.pool.get('account.period').browse(cr, uid, period_id, context).date_start
+        for property in asset.property_ids:
+            if property.state=='open':
+                period = self._compute_period(cr, uid, property, context)
+                if period and (period.date_start<=date_start):
+                    result += self._compute_move(cr, uid, property, period, context)
         return result
 account_asset_asset()
 
