@@ -18,7 +18,12 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
     do_action: function(action) {
         // instantiate the right controllers by understanding the action
         this.action = action;
+        // TODO: handle target=new
+        console.log(action);
         if(action.type == "ir.actions.act_window") {
+            if (this.viewmanager) {
+                this.viewmanager.stop();
+            }
             this.viewmanager = new openerp.base.ViewManager(this.session,this.element_id);
             this.viewmanager.do_action_window(action);
             this.viewmanager.start();
