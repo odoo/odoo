@@ -1219,6 +1219,7 @@ class StockMove(osv.osv):
                         'product_qty': line['product_qty'],
                         'product_uos': line['product_uos'],
                         'product_uos_qty': line['product_uos_qty'],
+                        'move_dest_id': move.id,
                         'state': state,
                         'name': line['name'],
                         'move_history_ids': [(6,0,[move.id])],
