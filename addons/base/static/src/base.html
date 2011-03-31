@@ -5,36 +5,29 @@
     <title>OpenERP</title>
     <link rel="shortcut icon" href="/base/static/openerp/img/favicon.ico" type="image/x-icon"/>
 
+    <script type="text/javascript" src="/base/static/lib/LABjs/LAB.js"></script>
+    <script type="text/javascript" src="/base/static/lib/underscore/underscore.js"></script>
+    <script type="text/javascript" src="/base/static/lib/qweb/qweb.js"></script>
+    <script type="text/javascript" src="/base/static/lib/jquery/jquery-1.5.1.js"></script>
+    <script type="text/javascript" src="/base/static/lib/jquery.ui/js/jquery-ui-1.8.9.custom.min.js"></script>
+    <script type="text/javascript" src="/base/static/lib/jquery.jqGrid/jquery.jqGrid.js"></script>
+    <script type="text/javascript" src="/base/static/lib/jquery.superfish/js/hoverIntent.js"></script>
+    <script type="text/javascript" src="/base/static/lib/jquery.superfish/js/superfish.js"></script>
+    <script type="text/javascript" src="/base/static/src/js/base.js"></script>
+    <script type="text/javascript" src="/base/static/src/js/chrome.js"></script>
+    <script type="text/javascript" src="/base/static/src/js/data.js"></script>
+    <script type="text/javascript" src="/base/static/src/js/form.js"></script>
+    <script type="text/javascript" src="/base/static/src/js/list.js"></script>
+    <script type="text/javascript" src="/base/static/src/js/search.js"></script>
+    <script type="text/javascript" src="/base/static/src/js/views.js"></script>
+
     <link rel="stylesheet" type="text/css" media="screen" href="/base/static/lib/jquery.ui/css/smoothness/jquery-ui-1.8.9.custom.css" />
     <link rel="stylesheet" type="text/css" media="screen" href="/base/static/lib/jquery.jqGrid/css/ui.jqgrid.css" />
     <link rel="stylesheet" type="text/css" href="/base/static/lib/jquery.superfish/css/superfish.css" media="screen">
     <link rel="stylesheet" href="/base/static/src/css/base.css" type="text/css"/>
-    
-    <script type="text/javascript" src="/base/static/lib/LABjs/LAB.js"></script>
-    <script>
-        $LAB
-        .setOptions({UsePreloading:false})
-        .script('/base/static/lib/qweb/qweb.js')
-        .script('/base/static/lib/underscore/underscore.js')
-        .script('/base/static/lib/jquery/jquery-1.5.1.js')
-        .wait()
-        .script('/base/static/lib/jquery.ui/js/jquery-ui-1.8.9.custom.min.js')
-        .wait()
-        .script('/base/static/lib/jquery.jqGrid/jquery.jqGrid.js')
-        .script('/base/static/lib/jquery.superfish/js/hoverIntent.js')
-        .wait()
-        .script('/base/static/lib/jquery.superfish/js/superfish.js')
-        .wait()
-        .script('/base/static/src/js/base.js')
-        .wait()
-        .script('/base/static/src/js/chrome.js')
-        .script('/base/static/src/js/data.js')
-        .script('/base/static/src/js/form.js')
-        .script('/base/static/src/js/list.js')
-        .script('/base/static/src/js/search.js')
-        .script('/base/static/src/js/views.js')
-        .wait()
-        .wait(function() {
+
+    <script type="text/javascript">
+        $(function() {
             var oe = openerp.init();
             oe.base.webclient("oe");
         });
