@@ -984,85 +984,6 @@ class calendar_event(osv.osv):
             self.unlink(cr, uid, r_ids, context=context)
         return True
 
-    def _set_rrulestring(self, cr, uid, id, name, value, arg, context=None):
-        """
-        Sets values of fields that defines event recurrence from the value of rrule string
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param id: List of calendar event's ids.
-        @param context: A standard dictionary for contextual values
-        @return: dictionary of rrule value.
-        """
-        if context is None:
-            context = {}
-        cr.execute("UPDATE %s set freq='None',interval=0,count=0,end_date=Null,\
-                    mo=False,tu=False,we=False,th=False,fr=False,sa=False,su=False,\
-                    day=0,select1='date',month_list=Null ,byday=Null where id=%%s" % (self._table), (id,))
-
-        if not value:
-            cr.execute("UPDATE %s set rrule_type='none' where id=%%s" % self._table,(id,))
-            return True
-        val = {}
-        for part in value.split(';'):
-            if part.lower().__contains__('freq') and len(value.split(';')) <=2:
-                rrule_type = part.lower()[5:]
-                break
-            else:
-                rrule_type = 'custom'
-                break
-        ans = value.split(';')
-        for i in ans:
-            val[i.split('=')[0].lower()] = i.split('=')[1].lower()
-        if not val.get('interval'):
-            rrule_type = 'custom'
-        elif int(val.get('interval')) > 1: #If interval is other than 1 rule is custom
-            rrule_type = 'custom'
-
-        qry = "UPDATE \"%s\" set rrule_type=%%s " % self._table
-        qry_args = [ rrule_type, ]
-        new_val = val.copy()
-        for k, v in val.items():
-            if  val['freq'] == 'weekly' and val.get('byday'):
-                for day in val['byday'].split(','):
-                    new_val[day] = True
-                val.pop('byday')
-
-            if val.get('until'):
-                until = parser.parse(''.join((re.compile('\d')).findall(val.get('until'))))
-                new_val['end_date'] = until.strftime('%Y-%m-%d')
-                val.pop('until')
-                new_val.pop('until')
-
-            if val.get('bymonthday'):
-                new_val['day'] = val.get('bymonthday')
-                val.pop('bymonthday')
-                new_val['select1'] = 'date'
-                new_val.pop('bymonthday')
-
-            if val.get('byday'):
-                d = val.get('byday')
-                if '-' in d:
-                    new_val['byday'] = d[:2]
-                    new_val['week_list'] = d[2:4].upper()
-                else:
-                    new_val['byday'] = d[:1]
-                    new_val['week_list'] = d[1:3].upper()
-                new_val['select1'] = 'day'
-
-            if val.get('bymonth'):
-                new_val['month_list'] = val.get('bymonth')
-                val.pop('bymonth')
-                new_val.pop('bymonth')
-
-        for k, v in new_val.items():
-            qry += ", %s=%%s" % k
-            qry_args.append(v)
-
-        qry = qry + " where id=%s"
-        qry_args.append(id)
-        cr.execute(qry, qry_args)
-        return True
-
     def _get_rulestring(self, cr, uid, ids, name, arg, context=None):
         """
         Gets Recurrence rule string according to value type RECUR of iCalendar from the values given.
@@ -1074,27 +995,13 @@ class calendar_event(osv.osv):
         """
         
         result = {}
-        for datas in self.read(cr, uid, ids, context=context):
+        for datas in self.read(cr, uid, ids, ['id','byday','recurrency', 'month_list','end_date', 'freq', 'rrule_type', 'select1', 'interval', 'count', 'end_type', 'mo', 'tu', 'we', 'th', 'fr', 'sa', 'su', 'exrule', 'day', 'week_list' ], context=context):
             event = datas['id']
-            if datas.get('rrule_type'):
-                if datas.get('rrule_type') == 'none':
-                    result[event] = False
-                    cr.execute("UPDATE %s set exrule=Null where id=%%s" % self._table,( event,))
-                if datas.get('rrule_type') :
-                    if datas.get('interval', 0) < 0:
-                        raise osv.except_osv(_('Warning!'), _('Interval can not be Negative'))
-                    if datas.get('count', 0) < 0:
-                        raise osv.except_osv(_('Warning!'), _('Count can not be Negative'))
-                    rrule_custom = self.compute_rule_string(cr, uid, datas, \
-                                                         context=context)
-                    result[event] = rrule_custom
-                else:
-                    result[event] = self.compute_rule_string(cr, uid, {'freq': datas.get('rrule_type').upper(), 'interval': 1}, context=context)
-
-        for id, myrule in result.items():
-            #Remove the events generated from recurrent event
-            if not myrule:
-                self.unlink_events(cr, uid, [id], context=context)
+            if datas.get('interval', 0) < 0:
+                raise osv.except_osv(_('Warning!'), _('Interval can not be Negative'))
+            if datas.get('count', 0) < 0:
+                raise osv.except_osv(_('Warning!'), _('Count can not be Negative'))
+            result[event] = self.compute_rule_string(cr, uid, datas, context=context)
         return result
 
     _columns = {
@@ -1120,11 +1027,7 @@ defines the list of date/time exceptions for a recurring calendar component."),
         'exrule': fields.char('Exception Rule', size=352, help="Defines a \
 rule or repeating pattern of time to exclude from the recurring rule."),
         'rrule': fields.function(_get_rulestring, type='char', size=124, method=True, \
-                                    string='Recurrent Rule', store=True, \
-                                    fnct_inv=_set_rrulestring, help='Defines a\
- rule or repeating pattern for recurring events\n\
-e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
-        FREQ=MONTHLY;INTERVAL=2;COUNT=10;BYDAY=-1SU'),
+                                    string='Recurrent Rule'),
         'rrule_type': fields.selection([('none', ''), ('daily', 'Daily'), \
                             ('weekly', 'Weekly'), ('monthly', 'Monthly'), \
                             ('yearly', 'Yearly'),],
@@ -1187,6 +1090,7 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
     _defaults = {
             'end_type' : 'count',
             'count' : 1,
+            'rrule_type' : 'none',
             'state': 'tentative',
             'class': 'public',
             'show_as': 'busy',
@@ -1246,11 +1150,7 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         result = []
         recur_dict = []
         if ids and virtual_id:
-            cr.execute("select m.id, m.rrule, m.date, m.date_deadline, m.duration, \
-                            m.exdate, m.exrule, m.recurrent_id, m.recurrent_uid from " + self._table + \
-                            " m where m.id = ANY(%s)", (ids,) )
-
-            for data in cr.dictfetchall():
+            for data in super(calendar_event, self).read(cr, uid, ids, context=context):
                 start_date = base_start_date and datetime.strptime(base_start_date[:10]+ ' 00:00:00' , "%Y-%m-%d %H:%M:%S") or False
                 until_date = base_until_date and datetime.strptime(base_until_date[:10]+ ' 23:59:59', "%Y-%m-%d %H:%M:%S") or False
                 event_date = datetime.strptime(data['date'], "%Y-%m-%d %H:%M:%S")
@@ -1328,7 +1228,7 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         monthstring = ''
         yearstring = ''
         freq=datas.get('rrule_type')
-        if  freq == 'none':
+        if freq == 'none':
             return ''
 
         interval_srting = datas.get('interval') and (';INTERVAL=' + str(datas.get('interval'))) or ''
