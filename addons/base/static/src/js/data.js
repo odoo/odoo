@@ -47,7 +47,7 @@ openerp.base.DataSet =  openerp.base.Controller.extend(
         this.rpc("/base/dataset/fields", {"model":this.model}, this.on_fields);
     },
     on_fields: function(result) {
-        this._fields = result._fields;
+        this._fields = result.fields;
         this.on_ready();
     },
 
