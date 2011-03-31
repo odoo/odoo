@@ -49,13 +49,12 @@ def get_recurrent_dates(rrulestring, exdate, startdate=None, exrule=None):
         val = parser.parse(''.join((re.compile('\d')).findall(date)))
         return val
     
-    limit = 100
-
     if not startdate:
         startdate = datetime.now()
         
     if not exdate:
         exdate = []
+    print "rrule str",str(rrulestring)
     rset1 = rrule.rrulestr(str(rrulestring), dtstart=startdate, forceset=True)
     i  = 0
     for date in exdate:
@@ -66,11 +65,8 @@ def get_recurrent_dates(rrulestring, exdate, startdate=None, exrule=None):
     if exrule:
         rset1.exrule(rrule.rrulestr(str(exrule), dtstart=startdate))
 
-    rset1 = rset1[:limit]
-    #print rset1.count()
-    l =  rset1
-    print "len de liste" ,len(l)
-    return l
+    rset1
+    return list(rset1)
 
 def base_calendar_id2real_id(base_calendar_id=None, with_date=False):
     """
@@ -1150,7 +1146,7 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
                                 ('monthly', 'Months'),
                                 ('yearly', 'Years'), ], 'Frequency'),
 
-        'end_type' : fields.selection([('forever', 'Forever'), ('count', 'Fix amout of times'), ('end_date','End date')], 'Way to end reccurency'),
+        'end_type' : fields.selection([('count', 'Fix amout of times'), ('end_date','End date')], 'Way to end reccurency'),
         'interval': fields.integer('Repeat every', help="Repeat every (Days/Week/Month/Year)"),
         'count': fields.integer('Repeat', help="Repeat x times"),
         'mo': fields.boolean('Mon'),
@@ -1189,7 +1185,8 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         return res
 
     _defaults = {
-            'end_type' : 'forever',
+            'end_type' : 'count',
+            'count' : 1,
             'state': 'tentative',
             'class': 'public',
             'show_as': 'busy',
@@ -1200,14 +1197,7 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
             'user_id': lambda self, cr, uid, ctx: uid,
             'organizer': default_organizer,
             'edit_all' : False,
-            'recurrent_id' : '',
     }
-
-    def onchange_edit_all(self, cr, uid, ids, rrule_type,edit_all, context=None):
-        
-        value = {'edit_all' : edit_all}
-        self.write(cr, uid, ids, value, context=context)
-        return {}
 
     def modify_all(self, cr, uid, event_ids, defaults, context=None, *args):
         """
@@ -1265,9 +1255,9 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
                 until_date = base_until_date and datetime.strptime(base_until_date[:10]+ ' 23:59:59', "%Y-%m-%d %H:%M:%S") or False
                 event_date = datetime.strptime(data['date'], "%Y-%m-%d %H:%M:%S")
 #                To check: If the start date is replace by event date .. the event date will be changed by that of calendar code
-                
+                start_date = event_date
                 if not data['rrule']:
-                    start_date = event_date
+                    
                     if start_date and (event_date < start_date):
                         continue
                     if until_date and (event_date > until_date):
@@ -1281,7 +1271,7 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
                         if not isinstance(ls, (str, int, long)) and len(ls) >= 2:
                             if ls[1] == data['recurrent_id']:
                                 result.append(idval)
-                        recur_dict.append(ex_id)
+                        recur_dict.append(ex_id)                      
                 else:
                     exdate = data['exdate'] and data['exdate'].split(',') or []
                     rrule_str = data['rrule']
@@ -1317,7 +1307,7 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
                         result.append(idval)
 
         if result:
-            ids = list(set(result)-set(recur_dict))
+            ids = list(set(result))
         if isinstance(select, (str, int, long)):
             return ids and ids[0] or False
         return ids
@@ -1359,8 +1349,8 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
 
         if datas.get('end_date'):
             datas['end_date'] = ''.join((re.compile('\d')).findall(datas.get('end_date'))) + 'T235959Z'
-        enddate = (datas.get('count') and (';COUNT=' + str(datas.get('count'))) or '') +\
-                             ((datas.get('end_date') and (';UNTIL=' + datas.get('end_date'))) or '')
+        enddate = (datas.get('end_type') == 'count' and (';COUNT=' + str(datas.get('count'))) or '') +\
+                             ((datas.get('end_date') and datas.get('end_type') == 'end_date' and (';UNTIL=' + datas.get('end_date'))) or '')
 
         rrule_string = 'FREQ=' + freq.upper() + weekstring + interval_srting \
                             + enddate + monthstring + yearstring
@@ -1406,19 +1396,12 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         res = super(calendar_event, self).search(cr, uid, args_without_date, \
                                  0, 0, order, context, count=False)
         res = self.get_recurrent_ids(cr, uid, res, start_date, until_date, limit, context=context)
-        print "limit", limit
-        print "offset", offset
-        print "offset + limit", offset+limit
         if count:
-            print "len" , len(res)
             return len(res)
         elif limit:
-            r = res[offset:offset+limit]
+            return res[offset:offset+limit]
         else:
-            r = res
-        print "result", r
-        print "longueur", len(r)
-        return r
+            return res
 
 
     def get_edit_all(self, cr, uid, id, vals=None):
