@@ -413,26 +413,66 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
 
     return html
 
-def email_send(smtp_from, smtp_to_list, message, ssl=False, debug=False, smtp_server=None, smtp_port=None,
-           smtp_user=None, smtp_password=None, cr=None, uid=None):
+def generate_tracking_message_id(openobject_id):
+    """Returns a string that can be used in the Message-ID RFC822 header field so we
+       can track the replies related to a given object thanks to the "In-Reply-To" or
+       "References" fields that Mail User Agents will set.
+    """
+    return "<%s-openobject-%s@%s>" % (time.time(), openobject_id, socket.gethostname())
+
+
+def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=None, reply_to=False,
+               attach=None, message_id=None, references=None, openobject_id=False, debug=False, subtype='plain', x_headers=None, priority='3',
+               smtp_server=None, smtp_port=None, ssl=False, smtp_user=None, smtp_password=None, cr=None, uid=None):
+
+    """Send an email.
+
+    Arguments:
+
+    `email_from`: A string used to fill the `From` header, if falsy,
+                  config['email_from'] is used instead.  Also used for
+                  the `Reply-To` header if `reply_to` is not provided
+
+    `email_to`: a sequence of addresses to send the mail to.
+    """
+
+    # If not cr, get cr from current thread database
     if not cr:
         db_name = getattr(threading.currentThread(), 'dbname', None)
         if db_name:
             cr = pooler.get_db_only(db_name).cursor()
         else:
             raise Exception("No database cursor found!")
+
+    # if not uid, take uid as a root
+    #TOFIX: uid should taken from current thread
     if not uid:
         uid = 1
+
+    if not (email_from or config['email_from']):
+        raise ValueError("Sending an email requires either providing a sender "
+                             "address or having configured one")
+
+    if not email_from: email_from = config.get('email_from', False)
+
+    email_from = ustr(email_from).encode('utf-8')
+
+    mail_server_pool = pooler.get_pool(cr.dbname).get('ir.mail_server')
+    # Pack Message
+    msg = mail_server_pool.pack_message(cr, uid, subject, body, email_cc, email_bcc, reply_to,
+               attach, message_id, references, openobject_id, debug, subtype, x_headers, priority)
+
+    # Send Email    
+    res = False
     try:
-        server_pool = pooler.get_pool(cr.dbname).get('ir.mail_server')
-        server_pool.send_email(cr, uid, smtp_from, smtp_to_list, message=message,
-            ssl=ssl,debug=debug, smtp_server=smtp_server, smtp_port=smtp_port,
-            smtp_user=smtp_user, smtp_password=smtp_password)
+        res = mail_server_pool.send_email(cr, uid, email_from, flatten([email_to, email_cc, email_bcc]), msg, ssl=ssl, debug=debug,
+                       smtp_server=smtp_server, smtp_port=smtp_port, smtp_user=smtp_user, smtp_password=smtp_password)
     except Exception:
         return False
     finally:
         cr.close()
-    return True
+    return res
+        
 
 #----------------------------------------------------------
 # SMS
