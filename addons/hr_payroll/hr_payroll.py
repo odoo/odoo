@@ -809,10 +809,24 @@ class hr_payslip(osv.osv):
                                 value = line.amount
                         else:
                             value = line.amount
-                    elif line.amount_type=='code':
+                            
+                    elif line.amount_type == 'code':
                         localdict = {'basic': amt, 'employee': slip.employee_id, 'contract': contract}
                         exec line.python_compute in localdict
-                        value = localdict['result']
+                        val = localdict['result']
+#                        if line.child_depend == False:
+                        if line.parent_rule_id:
+                            for rul in [line.parent_rule_id]:
+                                value = val
+                        if line.condition_select == 'range':
+                            if line.condition_range_min or line.condition_range_max:
+                                if ((line.amount < line.condition_range_min) or (line.amount > line.condition_range_max)):
+                                    value = value
+                                else:
+                                    value = val
+                        else:
+                            value = val
+                            
                     total += value
                     vals = {
                         'slip_id': slip.id,
