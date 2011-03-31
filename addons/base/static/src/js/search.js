@@ -371,7 +371,7 @@ openerp.base.search.ExtendedSearch = openerp.base.BaseWidget.extend({
         this._super(parent);
         this.fields = fields;
     },
-    add_group: function(group) {
+    add_group: function() {
         var group = new openerp.base.search.ExtendedSearchGroup(this, this.fields);
         var render = group.render({});
         this.$element.find('.searchview_extended_groups_list').append(render);
@@ -382,10 +382,8 @@ openerp.base.search.ExtendedSearch = openerp.base.BaseWidget.extend({
         var _this = this;
         openerp.base.search.add_expand_listener(this.$element);
         this.add_group();
-        this.$element.find('.searchview_extended_add_group').click(function (e) {
+        this.$element.find('.searchview_extended_add_group').click(function () {
             _this.add_group();
-            e.stopPropagation();
-            e.preventDefault();
         });
     },
     get_context: function() {
@@ -418,16 +416,12 @@ openerp.base.search.ExtendedSearchGroup = openerp.base.BaseWidget.extend({
         this._super();
         var _this = this;
         this.add_prop();
-        this.$element.find('.searchview_extended_add_proposition').click(function (e) {
+        this.$element.find('.searchview_extended_add_proposition').click(function () {
             _this.add_prop();
-            e.stopPropagation();
-            e.preventDefault();
         });
         var delete_btn = this.$element.find('.searchview_extended_delete_group');
         delete_btn.click(function (e) {
             _this.stop();
-            e.stopPropagation();
-            e.preventDefault();
         });
     },
     get_domain: function() {
@@ -476,16 +470,12 @@ openerp.base.search.ExtendedSearchProposition = openerp.base.BaseWidget.extend({
         this._super();
         this.set_selected(this.fields.length > 0 ? this.fields[0] : null);
         var _this = this;
-        this.$element.find(".searchview_extended_prop_field").change(function(e) {
+        this.$element.find(".searchview_extended_prop_field").change(function() {
             _this.changed();
-            e.stopPropagation();
-            e.preventDefault();
         });
         var delete_btn = this.$element.find('.searchview_extended_delete_prop');
-        delete_btn.click(function (e) {
+        delete_btn.click(function () {
             _this.stop();
-            e.stopPropagation();
-            e.preventDefault();
         });
     },
     changed: function() {

@@ -368,8 +368,9 @@
         <t t-set="expand" t-value="false"/>
         <t t-set="label" t-value="'Extended Filters'"/>
         <t t-set="content">
-            <div class="searchview_extended_groups_list"></div>
-            <button class="searchview_extended_add_group">Add group of conditions</button>
+            <div class="searchview_extended_groups_list"/>
+            <button class="searchview_extended_add_group"
+                    type="button">Add group of conditions</button>
         </t>
     </t>
 </t>
@@ -382,8 +383,10 @@
         </select>
         <div class="searchview_extended_propositions_list">
         </div>
-        <button class="searchview_extended_add_proposition">Add condition</button>
-        <button class="searchview_extended_delete_group">Delete this group</button>
+        <button class="searchview_extended_add_proposition"
+                type="button">Add condition</button>
+        <button class="searchview_extended_delete_group"
+                type="button">Delete this group</button>
     </div>
 </t>
 <t t-name="SearchView.extended_search.proposition">
@@ -400,10 +403,11 @@
         </select>
         <span class="searchview_extended_prop_value">
         </span>
-        <button class="searchview_extended_delete_prop">Delete this condition</button>
+        <button class="searchview_extended_delete_prop"
+                type="button">Delete this condition</button>
     </div>
 </t>
 <t t-name="SearchView.extended_search.proposition.char">
-    <input t-att-id="element_id"></input>
+    <input t-att-id="element_id"/>
 </t>
 </templates>
