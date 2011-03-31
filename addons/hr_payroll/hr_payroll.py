@@ -1003,19 +1003,25 @@ class hr_payslip(osv.osv):
         if not employee_id:
             update['value'].update({'contract_id': False, 'struct_id': False})
             return update
-
-        employee_id = empolyee_obj.browse(cr, uid, employee_id, context=context)
         ttyme = datetime.fromtimestamp(time.mktime(time.strptime(ddate, "%Y-%m-%d")))
-        if not contract_id:
-            update['value'].update({'struct_id': False})
+
+        if employee_id and context.get('contract', False) == False:
+            employee_id = empolyee_obj.browse(cr, uid, employee_id, context=context)
             contracts = self.get_contract(cr, uid, employee_id, ddate, context=context)
-#            update['value'].update({
-#            'struct_id': contracts[0].get('function', False),
-#            'contract_id': contracts[0].get('id', False)
-#                })
-        else:
-            contracts = [contract_obj.browse(cr, uid, contract_id, context=context)]
-            update['value'].update({'struct_id': contracts[0].struct_id.id})
+            contracts = [contracts[0]]
+            update['value'].update({
+                    'struct_id': contracts[0].struct_id.id,
+                    'contract_id': contracts[0].id
+            })
+        if context.get('contract', False) == True:
+            if contract_id:
+                employee_id = empolyee_obj.browse(cr, uid, employee_id, context=context)
+                contracts = [contract_obj.browse(cr, uid, contract_id, context=context)]
+                update['value'].update({'struct_id': contracts[0].struct_id.id})
+            else:
+                employee_id = empolyee_obj.browse(cr, uid, employee_id, context=context)
+                contracts = self.get_contract(cr, uid, employee_id, ddate, context=context)
+                update['value'].update({'contract_id': False, 'struct_id': False})
 
         if not contracts:
             update['value'].update({
@@ -1030,6 +1036,7 @@ class hr_payslip(osv.osv):
         final_total = 0.0
         all_basic = 0.0
         for contract in contracts:
+
             function = contract.struct_id.id
             sal_structure = []
             if function:
@@ -1298,16 +1305,16 @@ class hr_payslip(osv.osv):
         })
         return update
 
-    def onchange_contract_id(self, cr, uid, ids, contract_id=False, struct_id=False, context=None):
-        if not contract_id:
-                return {}
+    def onchange_contract_id(self, cr, uid, ids, date, employee_id=False, contract_id=False, context=None):
+        if context is None:
+            context = {}
         res = {}
-        contract = self.pool.get('hr.contract').browse(cr,uid, contract_id)
-        res.update({
-            'struct_id':contract.struct_id.id
-        })
-
-        return {'value': res}
+        res = {'value':{'line_ids':[], 'holiday_ids':[], 'name':'', 'working_days': 0.0, 'holiday_days': 0.0, 'worked_days': 0.0, 'basic_before_leaves': 0.0, 'basic_amount': 0.0, 'leaves': 0.0, 'total_pay': 0.0}}
+        context.update({'contract': True})
+        if not contract_id:
+            res['value'].update({'struct_id': False})
+        res = self.onchange_employee_id(cr, uid, ids, ddate=date, employee_id=employee_id, contract_id=contract_id, context=context)
+        return res
 
 hr_payslip()
 

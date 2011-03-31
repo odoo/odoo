@@ -228,11 +228,11 @@
             <field name="arch" type="xml">
                 <form string="Payslip">
                     <group col="6" colspan="4">
-                        <field name="employee_id" context="{'employee': True}" on_change="onchange_employee_id(date, employee_id, contract_id, context)"/>
+                        <field name="employee_id" on_change="onchange_employee_id(date, employee_id, contract_id)"/>
                         <field name="name"/>
                         <field name="number"/>
                         <field name="date"/>
-                        <field name="contract_id" groups="base.group_extended" domain="[('employee_id','=',employee_id)]" on_change="onchange_employee_id(date, employee_id, contract_id)"/>
+                        <field name="contract_id" groups="base.group_extended" domain="[('employee_id','=',employee_id)]" on_change="onchange_contract_id(date, employee_id, contract_id)"/>
                         <field name="struct_id" groups="base.group_extended"/>
                     </group>
                     <notebook colspan="4">
