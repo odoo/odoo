@@ -439,18 +439,13 @@ openerp.base.search.ExtendedSearchGroup = openerp.base.BaseWidget.extend({
 
 openerp.base.search.extended_filters_types = {
     char: {
-        operators: [
-                    {value: "ilike", text: "contains"},
-                    {value: "not ilike", text: "doesn't contain"},
-                    {value: "=", text: "is equal to"},
-                    {value: "!=", text: "is not equal to"},
-                    {value: ">", text: "greater than"},
-                    {value: "<", text: "less than"},
-                    {value: ">=", text: "greater or equal than"},
-                    {value: "<=", text: "less or equal than"},
-        ],
         build_component: function(parent) {
             return new openerp.base.search.ExtendedSearchProposition.Char(parent);
+        }
+    },
+    datetime: {
+        build_component: function (parent) {
+            return new openerp.base.search.ExtendedSearchProposition.DateTime(parent);
         }
     }
 };
@@ -504,14 +499,16 @@ openerp.base.search.ExtendedSearchProposition = openerp.base.BaseWidget.extend({
         var type = field.type;
         var extended_filters_types = openerp.base.search.extended_filters_types;
         type = type in extended_filters_types ? type : "char";
-        _.each(extended_filters_types[type].operators, function(operator) {
+        
+        this.value_component = extended_filters_types[type].build_component(this);
+
+        _.each(this.value_component.operators, function(operator) {
             var option = jQuery('<option>', {value: operator.value})
                 .text(operator.text)
                 .appendTo(_this.$element.find('.searchview_extended_prop_op'));
         });
-        this.value_component = extended_filters_types[type].build_component(this);
-        var render = this.value_component.render({});
-        this.$element.find('.searchview_extended_prop_value').html(render);
+        this.$element.find('.searchview_extended_prop_value').html(
+            this.value_component.render({}));
         this.value_component.start();
     },
     get_proposition: function() {
@@ -527,7 +524,31 @@ openerp.base.search.ExtendedSearchProposition = openerp.base.BaseWidget.extend({
 openerp.base.search.ExtendedSearchProposition.Char = openerp.base.BaseWidget.extend({
     template: 'SearchView.extended_search.proposition.char',
     identifier_prefix: 'extended-search-proposition-char',
-    
+    operators: [
+        {value: "ilike", text: "contains"},
+        {value: "not ilike", text: "doesn't contain"},
+        {value: "=", text: "is equal to"},
+        {value: "!=", text: "is not equal to"},
+        {value: ">", text: "greater than"},
+        {value: "<", text: "less than"},
+        {value: ">=", text: "greater or equal than"},
+        {value: "<=", text: "less or equal than"},
+    ],
+    get_value: function() {
+        return this.$element.val();
+    }
+});
+openerp.base.search.ExtendedSearchProposition.DateTime = openerp.base.BaseWidget.extend({
+    template: 'SearchView.extended_search.proposition.char',
+    identifier_prefix: 'extended-search-proposition-datetime',
+    operators: [
+        {value: "=", text: "is equal to"},
+        {value: "!=", text: "is not equal to"},
+        {value: ">", text: "greater than"},
+        {value: "<", text: "less than"},
+        {value: ">=", text: "greater or equal than"},
+        {value: "<=", text: "less or equal than"},
+    ],
     get_value: function() {
         return this.$element.val();
     }
