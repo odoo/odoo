@@ -22,6 +22,7 @@ import datetime
 import dateutil
 from dateutil.parser import *
 from pytz import timezone
+import os
 
 try:
     import gdata
@@ -137,6 +138,16 @@ class synchronize_google_contact(osv.osv_memory):
                 'type': 'ir.actions.act_window',
         }
 
+    def _get_system_timezone(self):
+        sys_time_zone = False
+        if (os.path.exists("/etc/timezone")):
+            try:
+                f = open("/etc/timezone")
+                sys_time_zone = f.read().strip()
+            except:
+                f.close()
+        return sys_time_zone
+
     def create_contact(self, cr, uid, ids, gd_client, contact, option,context=None):
         model_obj = self.pool.get('ir.model.data')
         addresss_obj = self.pool.get('res.partner.address')
@@ -146,7 +157,7 @@ class synchronize_google_contact(osv.osv_memory):
         if 'tz' in context and context['tz']:
             time_zone = context['tz']
         else:
-            time_zone = 'Asia/Kolkata'
+            time_zone = self._get_system_timezone()
         au_tz = timezone(time_zone)
         
         while contact:
