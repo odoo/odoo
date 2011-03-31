@@ -210,7 +210,7 @@ class email_message(osv.osv):
         msg_vals = {
                 'subject': subject,
                 'model': model or '',
-                'date': time.strftime('%Y-%m-%d'),
+                'date': time.strftime('%Y-%m-%d %H:%M:%S'),
                 'user_id': uid,
                 'body': body,
                 'email_from': email_from,
@@ -266,7 +266,7 @@ class email_message(osv.osv):
         self.write(cr, uid, ids, {'state':'outgoing'}, context)
         for message in self.browse(cr, uid, ids, context):
             try:
-                res = self.send_email(cr, uid, ids, auto_commit=True, context=context)
+                res = self.send_email(cr, uid, [message.id], auto_commit=True, context=context)
                 if res:
                     self.write(cr, uid, [message.id], {'state':'sent', 'message_id': res}, context)
                 else:
@@ -313,6 +313,7 @@ class email_message(osv.osv):
                 else:
                     raise osv.except_osv(_('Error !'), _('No messages in outgoing or exception state!'))
 
+                #if auto_selete=True then delete that sent messages as well as attachments
                 sent_emails = self.search(cr, uid, [('state','=','sent'), ('auto_delete','=',True)], context=context)
                 if sent_emails:
                     for sent in self.browse(cr, uid, sent_emails, context):
@@ -328,7 +329,7 @@ class email_message(osv.osv):
                 logger.notifyChannel("email-template", netsvc.LOG_ERROR, _("Sending of Mail %s failed. Probable Reason:Could not login to server\nError: %s") % (message.id, error))
                 self.write(cr, uid, [message.id], {'state':'exception'}, context)
                 return False
-        return True
+        return res
 # OLD Code.
 #    def send_all_mail(self, cr, uid, ids=None, context=None):
 #        if ids is None:
