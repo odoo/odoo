@@ -27,6 +27,13 @@
     'description': """
 This is the module used by OpenERP SA to redirect customers to its partners, based on geolocalization.
 ======================================================================================================
+
+You can geolocalize your opportunities by using this module.
+
+Use geolocalization when assigning opportunities to partners.
+Determine the GPS coordinates according to the address of the partner.
+The most appropriate partner can be assigned.
+You can also use the geolocalization without using the GPS coordinates.
     """,
     'author': 'OpenERP SA',
     'depends': ['crm'],

@@ -8,6 +8,8 @@
     'description': """
 Common base for tools modules.
 ==============================
+
+Creates menu link for Tools from where tools like survey, lunch, idea, etc. are accessible if installed.
     """,
     "init_xml": [],
     "update_xml": [

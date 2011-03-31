@@ -29,6 +29,9 @@
     "description": """
 Installer for extra tools like lunch, survey, idea, share, etc.
 ===============================================================
+
+Makes the Extra Tools Configuration available from where you can install
+modules like share, lunch, pad, idea, survey and subscription.
     """,
     'website': 'http://www.openerp.com',
     'init_xml': [],

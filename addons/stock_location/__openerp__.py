@@ -25,17 +25,18 @@
     'version': '1.0',
     'category': 'Warehouse',
     'description': """
-This module supplements the Warehouse application by adding support for per-product location paths, effectively implementing Push and Pull inventory flows.
-===========================================================================================================================================================
+This module supplements the Warehouse application by effectively implementing Push and Pull inventory flows.
+============================================================================================================
 
 Typically this could be used to:
-* Manage product manufacturing chains
-* Manage default locations per product
-* Define routes within your warehouse according to business needs, such as:
-   - Quality Control
-   - After Sales Services
-   - Supplier Returns
-* Help rental management, by generating automated return moves for rented products
+    * Manage product manufacturing chains
+    * Manage default locations per product
+    * Define routes within your warehouse according to business needs, such as:
+       - Quality Control
+       - After Sales Services
+       - Supplier Returns
+
+    * Help rental management, by generating automated return moves for rented products
 
 Once this module is installed, an additional tab appear on the product form, where you can add
 Push and Pull flow specifications. The demo data of CPU1 product for that push/pull :

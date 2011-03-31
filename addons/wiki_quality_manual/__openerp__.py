@@ -26,6 +26,9 @@
     'description': """
 Quality Manual Template.
 ========================
+
+It provides demo data, thereby creating a Wiki Group and a Wiki Page
+for Wiki Quality Manual.
     """,
     'author': 'OpenERP SA',
     'website': 'http://openerp.com',
