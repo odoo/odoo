@@ -87,7 +87,7 @@ openerp.base.ListView = openerp.base.Controller.extend({
             self.dataset.set({
                 context: results.context,
                 domain: results.domain
-            }).fetch(0, self.limit);
+            }).fetch(self.fields_view.fields, 0, self.limit);
         });
     }
 });
