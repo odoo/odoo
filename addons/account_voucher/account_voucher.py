@@ -142,6 +142,21 @@ class account_voucher(osv.osv):
             res['arch'] = etree.tostring(doc)
         return res
 
+    def _check_paid(self, cr, uid, ids, name, args, context=None):
+        res = {}
+        for id in ids:
+            res[id] = self.test_paid(cr, uid, [id])
+        return res
+
+    def test_paid(self, cr, uid, ids):
+        recs = []
+        paid = False
+        for voucher in self.browse(cr, uid, ids):
+            for line in voucher.move_ids:
+                if line.reconcile_id and (line.account_id.user_type.name, 'in', ('receivable', 'payable')):
+                    paid = True
+        return paid
+
     def _compute_writeoff_amount(self, cr, uid, line_dr_ids, line_cr_ids, amount):
         debit = credit = 0.0
         for l in line_dr_ids:
@@ -227,6 +242,7 @@ class account_voucher(osv.osv):
         'comment': fields.char('Write-Off Comment', size=64, required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'analytic_id': fields.many2one('account.analytic.account','Write-Off Analytic Account', readonly=True, states={'draft': [('readonly', False)]}),
         'writeoff_amount': fields.function(_get_writeoff_amount, method=True, string='Write-Off Amount', type='float', readonly=True),
+        'paid': fields.function(_check_paid, method=True, string='Paid', type='boolean', help="The Voucher has been totally paid."),
     }
     _defaults = {
         'period_id': _get_period,
