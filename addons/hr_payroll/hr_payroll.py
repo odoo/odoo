@@ -444,8 +444,10 @@ class hr_payslip(osv.osv):
             dates = prev_bounds(record.date)
             sql = '''SELECT id FROM hr_holidays
                         WHERE date_from >= '%s' AND date_to <= '%s'
-                        AND employee_id = %s AND contract_id = %s
-                        ''' % (dates[0], dates[1], record.employee_id.id, record.contract_id.id)
+                        AND employee_id = %s
+                        ''' % (dates[0], dates[1], record.employee_id.id)
+            if record.contract_id:
+                sql += "AND contract_id = %s" % (record.contract_id.id)
             cr.execute(sql)
             res = cr.fetchall()
             if res:
@@ -1167,7 +1169,7 @@ class hr_payslip(osv.osv):
                                 update['value']['line_ids'].append(vals)
                         else:
                             update['value']['line_ids'].append(vals)
-                
+
                 basic = contract.wage
                 all_basic += basic
                 final_total += basic + total
@@ -1439,8 +1441,8 @@ class hr_salary_rule(osv.osv):
         ],'Company Amount Type', select=True),
         'contribute_per':fields.float('Company Contribution', digits=(16, 4), help='Define Company contribution ratio 1.00=100% contribution.'),
         'company_contribution':fields.boolean('Company Contribution',help="This rule has Company Contributions."),
-	'expression_result':fields.char('Expression based on',size=1024, required=False, readonly=False, help='result will be affected to a variable'),
-	'parent_rule_id':fields.many2one('hr.salary.rule', 'Parent Salary Rule', select=True),
+        'expression_result':fields.char('Expression based on',size=1024, required=False, readonly=False, help='result will be affected to a variable'),
+        'parent_rule_id':fields.many2one('hr.salary.rule', 'Parent Salary Rule', select=True),
      }
     _defaults = {
         'python_compute': '''# basic\n# employee: hr.employee object or None\n# contract: hr.contract object or None\n\nresult = basic * 0.10''',
