@@ -437,18 +437,10 @@ openerp.base.search.ExtendedSearchGroup = openerp.base.BaseWidget.extend({
     }
 });
 
-openerp.base.search.extended_filters_types = {
-    char: {
-        build_component: function(parent) {
-            return new openerp.base.search.ExtendedSearchProposition.Char(parent);
-        }
-    },
-    datetime: {
-        build_component: function (parent) {
-            return new openerp.base.search.ExtendedSearchProposition.DateTime(parent);
-        }
-    }
-};
+openerp.base.search.custom_filters = new openerp.base.Registry({
+    'char': 'openerp.base.search.ExtendedSearchProposition.Char',
+    'datetime': 'openerp.base.search.ExtendedSearchProposition.DateTime'
+});
 
 openerp.base.search.ExtendedSearchProposition = openerp.base.BaseWidget.extend({
     template: 'SearchView.extended_search.proposition',
@@ -460,7 +452,7 @@ openerp.base.search.ExtendedSearchProposition = openerp.base.BaseWidget.extend({
             .sortBy(function(field) {return field.string;})
             .value();
         this.attrs = {_: _, fields: this.fields, selected: null};
-        this.value_component = null;
+        this.value = null;
     },
     start: function () {
         this._super();
@@ -488,35 +480,40 @@ openerp.base.search.ExtendedSearchProposition = openerp.base.BaseWidget.extend({
     select_field: function(field) {
         var _this = this;
         if(this.attrs.selected != null) {
-            this.value_component.stop();
-            this.value_component = null;
+            this.value.stop();
+            this.value = null;
             this.$element.find('.searchview_extended_prop_op').html('');
         }
         this.attrs.selected = field;
         if(field == null) {
             return;
         }
-        var type = field.type;
-        var extended_filters_types = openerp.base.search.extended_filters_types;
-        type = type in extended_filters_types ? type : "char";
-        
-        this.value_component = extended_filters_types[type].build_component(this);
 
-        _.each(this.value_component.operators, function(operator) {
+        var Fallback = openerp.base.search.custom_filters.get_object('char');
+        try {
+            this.value = new (openerp.base.search.custom_filters.get_object(field.type))
+                              (this);
+        } catch (e) {
+            if (! e instanceof openerp.base.KeyNotFound) {
+                throw e;
+            }
+            this.value = new Fallback(this);
+        }
+        _.each(this.value.operators, function(operator) {
             var option = jQuery('<option>', {value: operator.value})
                 .text(operator.text)
                 .appendTo(_this.$element.find('.searchview_extended_prop_op'));
         });
         this.$element.find('.searchview_extended_prop_value').html(
-            this.value_component.render({}));
-        this.value_component.start();
+            this.value.render({}));
+        this.value.start();
     },
     get_proposition: function() {
         if ( this.attrs.selected == null)
             return null;
         var field = this.attrs.selected.name;
         var op =  this.$element.find('.searchview_extended_prop_op').val();
-        var value = this.value_component.get_value();
+        var value = this.value.get_value();
         return [field, op, value];
     }
 });
