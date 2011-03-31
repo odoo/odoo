@@ -53,6 +53,103 @@ openerp.base.callback = function(obj, method) {
     });
 };
 
+/**
+ * Base error for lookup failure
+ *
+ * @class
+ */
+openerp.base.NotFound = Class.extend(
+    /** @lends openerp.base.NotFound# */ {
+});
+openerp.base.KeyNotFound = openerp.base.NotFound.extend(
+    /** @lends openerp.base.KeyNotFound# */ {
+    /**
+     * Thrown when a key could not be found in a mapping
+     *
+     * @constructs
+     * @extends openerp.base.NotFound
+     * @param {String} key the key which could not be found
+     */
+    init: function (key) {
+        self.key = key;
+    }
+});
+openerp.base.ObjectNotFound = openerp.base.NotFound.extend(
+    /** @lends openerp.base.ObjectNotFound# */ {
+    /**
+     * Thrown when an object path does not designate a valid class or object
+     * in the openerp hierarchy.
+     *
+     * @constructs
+     * @extends openerp.base.NotFound
+     * @param {String} path the invalid object path
+     */
+    init: function (path) {
+        self.path = path;
+    }
+});
+openerp.base.Registry = Class.extend(
+    /** @lends openerp.base.Registry# */ {
+    /**
+     * Stores a mapping of arbitrary key (strings) to object paths (as strings
+     * as well).
+     *
+     * Resolves those paths at query time in order to always fetch the correct
+     * object, even if those objects have been overloaded/replaced after the
+     * registry was created.
+     *
+     * An object path is simply a dotted name from the openerp root to the
+     * object pointed to (e.g. ``"openerp.base.Session"`` for an OpenERP
+     * session object).
+     *
+     * @constructs
+     * @param {Object} mapping a mapping of keys to object-paths
+     */
+    init: function (mapping) {
+        this.map = mapping || {};
+    },
+    /**
+     * Retrieves the object matching the provided key string.
+     *
+     * @param {String} key the key to fetch the object for
+     * @returns {Class} the stored class, to initialize
+     *
+     * @throws {openerp.base.KeyNotFound} if the object was not in the mapping
+     * @throws {openerp.base.ObjectNotFound} if the object path was invalid
+     */
+    get_object: function (key) {
+        var path_string = this.map[key];
+        if (path_string === undefined) {
+            throw new openerp.base.KeyNotFound(key);
+        }
+
+        var object_match = openerp;
+        var path = path_string.split('.');
+        // ignore first section
+        for(var i=1; i<path.length; ++i) {
+            object_match = object_match[path[i]];
+
+            if (object_match === undefined) {
+                throw new openerp.base.ObjectNotFound(path_string);
+            }
+        }
+        return object_match;
+    },
+    /**
+     * Adds a new key and value to the registry.
+     *
+     * This method can be chained.
+     *
+     * @param {String} key
+     * @param {String} object_path fully qualified dotted object path
+     * @returns {openerp.base.Registry} itself
+     */
+    add: function (key, object_path) {
+        this.map[key] = object_path;
+        return this;
+    }
+});
+
 openerp.base.BasicController = Class.extend(
     /** @lends openerp.base.BasicController# */{
     /**
