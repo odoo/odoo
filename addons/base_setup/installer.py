@@ -19,6 +19,7 @@
 #
 ##############################################################################
 from osv import fields, osv
+import pooler
 
 class base_setup_installer(osv.osv_memory):
     _name = 'base.setup.installer'
@@ -140,7 +141,8 @@ class base_setup_installer(osv.osv_memory):
             if i.state == 'uninstalled':
                 sect_mod_id = i.id
                 modules.state_update(cr, uid, [sect_mod_id], 'to install', ['uninstalled'], context)
-                upgrade_obj.upgrade_module(cr, uid, [sect_mod_id], context=context)
+                cr.commit()
+                new_db, self.pool = pooler.restart_pool(cr.dbname, update_module=True)
             elif i.state == 'installed':
                 if modules_selected:
                     for instl in modules_selected:

@@ -29,6 +29,9 @@
     "description": """
 Installer for knowledge-based tools.
 ====================================
+
+Makes the Knowledge Application Configuration available from where you can install
+document and Wiki based tools.
     """,
     'website': 'http://www.openerp.com',
     'init_xml': [],
