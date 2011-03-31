@@ -48,6 +48,22 @@ def login(username, password, url):
         raise LoginError(response._return._error._description)
     return (portType, response._return._id)
 
+def relation_search(portType, sessionid, module_name=None, module_id=None, related_module=None, query=None, deleted=None):
+  se_req = get_relationshipsRequest()
+  se_req._session = sessionid
+  se_req._module_name = module_name
+  se_req._module_id = module_id
+  se_req._related_module =  related_module 
+  se_resp = portType.get_relationships(se_req)
+  ans_list = []
+  if se_resp:
+      list = se_resp._return.get_element_ids()
+      for i in list:
+          ans_dir = {}
+          ans_list.append(i.get_element_id())
+  return ans_list
+
+
 def search(portType, sessionid, module_name=None):
   se_req = get_entry_listRequest()
   se_req._session = sessionid
