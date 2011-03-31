@@ -292,7 +292,7 @@
                         <page string="Applied Salary Rules" attrs="{'invisible':[('Applied Salary Rules')]}">
                             <field name="applied_salary_rule" nolabel="1" />
                         </page>
-			
+
                        <page string="Appears On Payslip">
                             <field name="appears_on_payslip_rule" nolabel="1"/>
                         </page>
@@ -699,7 +699,7 @@
         </field>
     </record>
 
-    <record id="view_hr_payslip_filter" model="ir.ui.view">
+    <record id="view_hr_rule_filter" model="ir.ui.view">
 	<field name="name">hr.salary.rule.select</field>
 	<field name="model">hr.salary.rule</field>
 	<field name="type">search</field>
@@ -716,7 +716,7 @@
 		</group>
 		</search>
 	</field>
-    </record>	
+    </record>
 
     <record id="action_salary_rule_form" model="ir.actions.act_window">
         <field name="name">Salary Rules</field>
@@ -724,6 +724,7 @@
         <field name="view_type">form</field>
         <field name="view_id" ref="hr_salary_rule_tree"/>
         <field name="domain">[('parent_rule_id','=',False)]</field>
+        <field name="search_view_id" ref="view_hr_rule_filter"/>
     </record>
 
     <menuitem id="menu_action_hr_salary_rule_form" action="action_salary_rule_form" parent="payroll_configure" sequence="12"/>
