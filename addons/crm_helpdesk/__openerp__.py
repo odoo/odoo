@@ -27,6 +27,11 @@
     'description': """
 Helpdesk Management.
 ====================
+
+Like records and processing of claims, Helpdesk and Support are good tools
+to trace your interventions. This menu is more adapted to oral communication,
+which is not necessarily related to a claim. Select a customer, add notes
+and categorize your interventions with a channel and a priority level.
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
