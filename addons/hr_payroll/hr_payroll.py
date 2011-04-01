@@ -1401,7 +1401,7 @@ class hr_payslip_line(osv.osv):
         'amount': fields.float('Amount / Percentage', digits_compute=dp.get_precision('Account'), help="For rule of type percentage, enter % ratio between 0-1."),
         'total': fields.float('Sub Total', digits_compute=dp.get_precision('Account')),
         'company_contrib': fields.float('Company Contribution', readonly=True, digits_compute=dp.get_precision('Account')),
-        'sequence': fields.integer('Sequence'),
+        'sequence': fields.integer('Sequence', required=True, help='Use to arrange calculation sequence'),
         'note':fields.text('Description'),
     }
     _order = 'sequence'
@@ -1438,7 +1438,6 @@ class hr_salary_rule(osv.osv):
         'condition_select': fields.selection([('range', 'Range'), ('python', 'Python Expression')], "Condition based on"),
         'computational_expression':fields.char('Computational Expression',size=1024, required=True, readonly=False, help='This will use to computer the % fields values, in general its on basic, but You can use all heads code field in small letter as a variable name i.e. hra, ma, lta, etc...., also you can use, static varible basic'),
         'conditions':fields.char('Condition', size=1024, required=True, readonly=False, help='Applied this rule for calculation if condition is true.You can specify condition like basic > 1000.'),
-        'sequence': fields.integer('Sequence', required=True, help='Use to arrange calculation sequence'),
         'active':fields.boolean('Active', help="If the active field is set to false, it will allow you to hide the salary rule without removing it."),
         'python_compute':fields.text('Python Code'),
         'display_child_rules': fields.boolean('Display Child Rules', help="Used for the display of Child Rules on payslip"),

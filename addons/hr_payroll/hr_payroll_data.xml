@@ -124,6 +124,24 @@
            <!-- <field name="sequence" eval="80"/>-->
         </record>
         
+        <record id="NET" model="hr.salary.head">
+            <field name="code">TP</field>
+            <field name="type" ref="AL"/>
+            <field name="name">Total Payment</field>
+           <!-- <field name="sequence" eval="80"/>-->
+        </record>
+        
+        <record id="hr_salary_rule_net" model="hr.salary.rule">
+            <field name="amount_type">code</field>
+            <field name="code">NET</field>
+            <field name="type" ref="AL"/>
+            <field name="category_id" ref="NET"/>
+            <field name="name">NET</field>
+            <field name="sequence" eval="500"/>
+            <field name="python_compute">total = basic+allowance+deduction</field>
+        </record>
+        
+        
        <!-- <record id="OTHERD" model="hr.allounce.deduction.categoty">
             <field name="code">OTHERD</field>
             <field name="type">otherdeduct</field>
