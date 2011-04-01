@@ -236,12 +236,18 @@ openerp.base.BaseWidget = openerp.base.Controller.extend({
 
 openerp.base.views.add('calendar', 'openerp.base.CalendarView');
 openerp.base.CalendarView = openerp.base.Controller.extend({
-// Dhtmlx scheduler ?
+    start: function () {
+        this._super();
+        this.$element.append('Calendar view');
+    }
 });
 
 openerp.base.views.add('gantt', 'openerp.base.GanttView');
 openerp.base.GanttView = openerp.base.Controller.extend({
-// Dhtmlx gantt ?
+    start: function () {
+        this._super();
+        this.$element.append('Gantt view');
+    }
 });
 
 openerp.base.views.add('tree', 'openerp.base.TreeView');
@@ -249,15 +255,21 @@ openerp.base.views.add('tree', 'openerp.base.TreeView');
  * Genuine tree view (the one displayed as a tree, not the list)
  */
 openerp.base.TreeView = openerp.base.Controller.extend({
-
+    start: function () {
+        this._super();
+        this.$element.append('Tree view');
+    }
 });
 
 openerp.base.DiagramView = openerp.base.Controller.extend({
-// 
 });
 
 openerp.base.views.add('graph', 'openerp.base.GraphView');
 openerp.base.GraphView = openerp.base.Controller.extend({
+    start: function () {
+        this._super();
+        this.$element.append('Graph view');
+    }
 });
 
 openerp.base.ProcessView = openerp.base.Controller.extend({
