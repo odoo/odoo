@@ -11,11 +11,10 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="help">
-A portal defines customized views and rules for a particular set of users.  A
-user may belong to at most one portal.  A portal is associated to a menu and a
-set of user groups.  When changed, the portal menu is assigned to the portal's
-users.  When groups are added to (resp. removed from) a portal, they are also
-added to (resp. removed from) the portal's users.
+A portal helps defining specific views and rules for a group of users (the
+portal group).  A portal is associated to a menu; when changed, the portal menu
+is assigned to the portal's users.  Groups can be added to or removed from the
+portal's users.
             </field>
         </record>
         <menuitem name="Portals" id="portal_list_menu"
@@ -35,20 +34,14 @@ added to (resp. removed from) the portal's users.
                 <form string="Portal Form">
                     <field name="name"/>
                     <notebook>
-                        <page string="Users and Groups">
-                            <field name="user_ids" nolabel="1" colspan="2"
-                                context="{'menu_id': menu_action_id, 'groups_id': group_ids}">
-                                <tree string="Users">
-                                    <field name="name"/>
-                                </tree>
-                            </field>
-                            <field name="group_ids" nolabel="1" colspan="2">
-                                <tree string="Groups">
-                                    <field name="name"/>
-                                </tree>
-                            </field>
+                        <page string="Users">
+                            <group colspan="4">
+                                <field name="group_id"/>
+                            </group>
+                            <field name="user_ids" nolabel="1" colspan="4"
+                                context="{'menu_id': menu_action_id}"/>
                         </page>
-                        <page string="Portal Menu">
+                        <page string="Menu">
                             <field name="menu_action_id"/>
                             <newline/>
                             <field name="parent_menu_id"
@@ -58,21 +51,6 @@ added to (resp. removed from) the portal's users.
                         </page>
                     </notebook>
                 </form>
-            </field>
-        </record>
-
-        <!-- extended user form view -->
-        <record id="view_users_form" model="ir.ui.view">
-            <field name="name">view_users_form</field>
-            <field name="model">res.users</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="base.view_users_form"/>
-            <field name="arch" type="xml">
-                <page string="User" position="after">
-                    <page string="Portal">
-                        <field name="portal_id"/>
-                    </page>
-                </page>
             </field>
         </record>
     </data>
