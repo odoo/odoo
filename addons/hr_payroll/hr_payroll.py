@@ -519,13 +519,18 @@ class hr_payslip(osv.osv):
                        res[record.id] = {fn: rul}
         return res
 
-    def _compute(self, cr, uid, id, value, context=None):
+    def _compute(self, cr, uid, id, value, employee, contract, context=None):
         rule_obj = self.pool.get('hr.salary.rule')
         contrib = rule_obj.browse(cr, uid, id, context=context)
-        if contrib.amt_type == 'fix':
-            return contrib.contribute_per
-        elif contrib.amt_type == 'per':
-            return value * contrib.contribute_per
+        if contrib.amount_type == 'fix':
+            return contrib.amount
+        elif contrib.amount_type == 'per':
+            return value * contrib.amount
+        elif contrib.amount_type == 'code':
+            localdict = {'basic':value, 'employee':employee, 'contract':contract}
+            exec contrib.python_compute in localdict
+            value = localdict['result']
+            return value 
         return 0.0
 
     _columns = {
@@ -625,6 +630,8 @@ class hr_payslip(osv.osv):
         register_line_pool = self.pool.get('hr.contibution.register.line')
         line_tot = 0.0
         for slip in self.browse(cr, uid, ids, context=context):
+            employee = slip.employee_id
+            contract = slip.contract_id
             base = {
                 'basic':slip.basic_amount,
             }
@@ -632,13 +639,13 @@ class hr_payslip(osv.osv):
             if rules:
                 for rl in rules:
                     if rl.company_contribution:
-                        base[rl.code.lower()] = rl.contribute_per
+                        base[rl.code.lower()] = rl.amount
                         if rl.register_id:
                             for sl in slip.line_ids:
-                                if sl.name == rl.name:
+                                if sl.category_id == rl.category_id:
                                     line_tot = sl.total
                             value = eval(rl.computational_expression, base)
-                            company_contrib = self._compute(cr, uid, rl.id, value, context)
+                            company_contrib = self._compute(cr, uid, rl.id, value, employee, contract, context)
                             reg_line = {
                                 'name': rl.name,
                                 'register_id': rl.register_id.id,
@@ -646,12 +653,12 @@ class hr_payslip(osv.osv):
                                 'employee_id': slip.employee_id.id,
                                 'emp_deduction': line_tot,
                                 'comp_deduction': company_contrib,
-                                'total': rl.contribute_per + line_tot
+                                'total': rl.amount + line_tot
                             }
                             register_line_pool.create(cr, uid, reg_line)
         self.write(cr, uid, ids, {'state':'confirm'}, context=context)
         return True
-
+    
     def get_contract(self, cr, uid, employee, date, context=None):
         contract_obj = self.pool.get('hr.contract')
         contracts = contract_obj.search(cr, uid, [('employee_id', '=', employee.id),('date_start','<=', date),'|',('date_end', '=', False),('date_end','>=', date)], context=context)
@@ -1452,15 +1459,11 @@ class hr_salary_rule(osv.osv):
         'active':fields.boolean('Active', help="If the active field is set to false, it will allow you to hide the salary rule without removing it."),
         'python_compute':fields.text('Python Code'),
         'display_child_rules': fields.boolean('Display Child Rules', help="Used for the display of Child Rules on payslip"),
-        'amt_type':fields.selection([
-            ('per','Percentage (%)'),
-            ('fix','Fixed Amount'),
-        ],'Company Amount Type', select=True),
-        'contribute_per':fields.float('Company Contribution', digits=(16, 4), help='Define Company contribution ratio 1.00=100% contribution.'),
         'company_contribution':fields.boolean('Company Contribution',help="This rule has Company Contributions."),
         'expression_result':fields.char('Expression based on',size=1024, required=False, readonly=False, help='result will be affected to a variable'),
         'parent_rule_id':fields.many2one('hr.salary.rule', 'Parent Salary Rule', select=True),
      }
+
     _defaults = {
         'python_compute': '''# basic\n# employee: hr.employee object or None\n# contract: hr.contract object or None\n\nresult = basic * 0.10''',
         'conditions': 'True',
@@ -1514,7 +1517,7 @@ class hr_payroll_structure(osv.osv):
     _columns = {
         'rule_ids':fields.many2many('hr.salary.rule', 'hr_structure_salary_rule_rel', 'struct_id', 'rule_id', 'Salary Rules'),
     }
-
+    
 hr_payroll_structure()
 
 class hr_employee(osv.osv):
