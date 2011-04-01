@@ -36,6 +36,7 @@ This module adds a new Report Engine based on WebKit library (wkhtmltopdf) to su
 =====================================================================================================================
 
 The module structure and some code is inspired by the report_openoffice module.
+
 The module allows:
     -HTML report definition
     -Multi header support
@@ -47,7 +48,8 @@ The module allows:
     -Book printing capabilities
     -Margins definition
     -Paper size definition
-and much more
+
+... and much more
 
 Multiple headers and logos can be defined per company.
 CSS style, header and footer body are defined per company

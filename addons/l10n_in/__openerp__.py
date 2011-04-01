@@ -25,6 +25,8 @@
     "description": """
 Indian Accounting : Chart of Account.
 =====================================
+
+Indian accounting chart and localization.
     """,
     "author": ['OpenERP SA', 'Axelor'],
     "category": "Finance",

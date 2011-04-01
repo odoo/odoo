@@ -28,6 +28,8 @@
     "description": """
 This is the base module to manage the accounting chart for Greece.
 ==================================================================
+
+Greek accounting chart and localization.
     """,
     "depends" : ["base", "account", "base_iban", "base_vat", "account_chart"],
     "init_xml" : [],

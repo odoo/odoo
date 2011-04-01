@@ -38,7 +38,7 @@ Generic Payroll system.
     """,
     'author':'OpenERP SA',
     'website':'http://www.openerp.com',
-    'images': ['images/hr_employee_payslip.jpeg','images/hr_payment_advice.jpeg','images/hr_payroll_register.jpeg'],
+    'images': ['images/hr_company_contributions.jpeg','images/hr_salary_heads.jpeg','images/hr_salary_structure.jpeg','images/hr_employee_payslip.jpeg','images/hr_payment_advice.jpeg','images/hr_payroll_register.jpeg'],
     'depends': [
         'hr',
         'hr_contract',
