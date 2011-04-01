@@ -36,7 +36,8 @@ portal's users.
                     <notebook>
                         <page string="Users">
                             <group colspan="4">
-                                <field name="group_id"/>
+                                <field name="group_id"
+                                    on_change="onchange_group(group_id)"/>
                             </group>
                             <field name="user_ids" nolabel="1" colspan="4"
                                 context="{'menu_id': menu_action_id}"/>

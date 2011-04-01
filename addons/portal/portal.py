@@ -122,6 +122,16 @@ class portal(osv.osv):
         # set the parent_menu_id to item_id
         return self.write(cr, uid, ids, {'parent_menu_id': item_id}, context)
     
+    def onchange_group(self, cr, uid, ids, group_id, context=None):
+        """ update the users list when the group changes """
+        user_ids = False
+        if group_id:
+            group = self.pool.get('res.groups').browse(cr, uid, group_id, context)
+            user_ids = [u.id for u in group.users]
+        return {
+            'value': {'user_ids': user_ids}
+        }
+    
     def _res_xml_id(self, cr, uid, module, xml_id):
         """ return the resource id associated to the given xml_id """
         data_obj = self.pool.get('ir.model.data')
