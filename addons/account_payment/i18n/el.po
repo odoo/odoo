@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-01-19 12:00+0000\n"
+"PO-Revision-Date: 2011-03-31 17:49+0000\n"
 "Last-Translator: Dimitris Andavoglou <dimitrisand@gmail.com>\n"
 "Language-Team: Greek <el@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-25 06:25+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-04-01 06:04+0000\n"
+"X-Generator: Launchpad (build 12559)\n"
 
 #. module: account_payment
 #: field:payment.order,date_scheduled:0
@@ -52,6 +52,11 @@ msgid ""
 "* a basic mechanism to easily plug various automated payment.\n"
 "    "
 msgstr ""
+"\n"
+"Αυτό το άρθρωμα παρέχει:\n"
+"*έναν αποδοτικότερο τρόπο πληρωμής τιμολογίων.\n"
+"*έναν βασικό μηχανισμό για να προσαρμόσετε διάφορα συστήματα πληρωμω΄ν.\n"
+"    "
 
 #. module: account_payment
 #: field:payment.order,line_ids:0
@@ -120,7 +125,7 @@ msgstr "Ημερομηνία Λήξης"
 #. module: account_payment
 #: constraint:account.move.line:0
 msgid "You can not create move line on closed account."
-msgstr ""
+msgstr "Δεν μπορείς να δημιουργήσεις γραμμή κίνησης σε κλειστό λογαριασμό."
 
 #. module: account_payment
 #: view:account.move.line:0
@@ -147,7 +152,7 @@ msgstr "Ποσό"
 #. module: account_payment
 #: sql_constraint:account.move.line:0
 msgid "Wrong credit or debit value in accounting entry !"
-msgstr ""
+msgstr "Λάθος πιστωτική ή χρεωστική τιμή στην καταχώρηση!"
 
 #. module: account_payment
 #: view:payment.order:0
@@ -173,7 +178,7 @@ msgstr "Αναφορά"
 #. module: account_payment
 #: sql_constraint:payment.line:0
 msgid "The payment line name must be unique!"
-msgstr ""
+msgstr "Η γραμή πληρωμής θα πρέπει να είναι μοναδική"
 
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_order_tree
@@ -309,6 +314,8 @@ msgstr "Αναζήτηση Παραγγελίες Πληρωμής"
 msgid ""
 "You can not create move line on receivable/payable account without partner"
 msgstr ""
+"Δεν μπορείς να δημιουργήσεις γραμμή κίνησης σε εισπρακτέο/πληρωτέο "
+"λογαριασμό χωρίς συνεργάτη"
 
 #. module: account_payment
 #: field:payment.line,create_date:0
@@ -343,7 +350,7 @@ msgstr "Διαχείριση Πληρωμών"
 #. module: account_payment
 #: field:payment.line,bank_statement_line_id:0
 msgid "Bank statement line"
-msgstr ""
+msgstr "Γραμμή Παραστατικού Τράπεζας"
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
@@ -532,7 +539,7 @@ msgstr ""
 #. module: account_payment
 #: report:payment.order:0
 msgid "Invoice Ref"
-msgstr ""
+msgstr "Παρ. Τιμολογίου"
 
 #. module: account_payment
 #: field:payment.line,name:0
@@ -708,7 +715,7 @@ msgstr "Σύνολο"
 #: view:account.payment.make.payment:0
 #: model:ir.actions.act_window,name:account_payment.action_account_payment_make_payment
 msgid "Make Payment"
-msgstr ""
+msgstr "Κάνε Πληρωμή"
 
 #. module: account_payment
 #: field:payment.line,partner_id:0
@@ -729,4 +736,4 @@ msgstr "Λογαριασμός Τραπέζης για την Κατάσταση
 #. module: account_payment
 #: constraint:account.move.line:0
 msgid "You can not create move line on view account."
-msgstr ""
+msgstr "Δεν μπορείς να δημιουργήσεις γραμμή κίνησης σε λογαριασμό όψης."

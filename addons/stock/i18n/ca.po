@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:16+0000\n"
-"PO-Revision-Date: 2011-03-27 21:39+0000\n"
-"Last-Translator: Esther Xaus (Zikzakmedia) <Unknown>\n"
+"PO-Revision-Date: 2011-03-31 21:59+0000\n"
+"Last-Translator: mgaja (GrupoIsep.com) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-03-28 05:25+0000\n"
+"X-Launchpad-Export-Date: 2011-04-01 06:05+0000\n"
 "X-Generator: Launchpad (build 12559)\n"
 
 #. module: stock
@@ -905,6 +905,10 @@ msgid ""
 "needed.Set a location if you produce at a fixed location. This can be a "
 "partner location if you subcontract the manufacturing operations."
 msgstr ""
+"Deixeu-lo buit si produïu a la ubicació en que els productes acabats són "
+"necessaris. Indiqueu una ubicació si produïu en una ubicació fixa. Pot ser "
+"una ubicació d'una altra empresa si subcontracteu les operacions de "
+"fabricació."
 
 #. module: stock
 #: view:res.partner:0
@@ -1019,6 +1023,21 @@ msgid ""
 "%(company_name)s\n"
 "        "
 msgstr ""
+"\n"
+"Data: %(date)s\n"
+"\n"
+"Benvolgut %(partner_name)s,\n"
+"\n"
+"En l'adjunt trobareu un recordatori de totes les factures pendents de "
+"pagament, per un import total a pagar de:\n"
+"\n"
+"%(followup_amount).2f %(company_currency)s\n"
+"\n"
+"Gràcies,\n"
+"--\n"
+"%(user_signature)s\n"
+"%(company_name)s\n"
+"        "
 
 #. module: stock
 #: help:stock.location,usage:0
@@ -1215,7 +1234,7 @@ msgstr ""
 #. module: stock
 #: view:stock.production.lot:0
 msgid "Downstream Traceability"
-msgstr ""
+msgstr "Traçabilitat cap avall"
 
 #. module: stock
 #: help:product.template,property_stock_production:0
@@ -1477,7 +1496,7 @@ msgstr ""
 #: view:stock.picking:0
 #: field:stock.picking,date:0
 msgid "Order Date"
-msgstr ""
+msgstr "Data ordre"
 
 #. module: stock
 #: field:stock.location,location_id:0
@@ -1666,7 +1685,7 @@ msgstr "Propietats de les ubicacions part recíproca"
 #. module: stock
 #: view:stock.location:0
 msgid "Localization"
-msgstr ""
+msgstr "Ubicació"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_report_tracklots
@@ -1711,7 +1730,7 @@ msgstr "Data"
 #: view:stock.move:0
 #: view:stock.picking:0
 msgid "Extended Filters..."
-msgstr ""
+msgstr "Filtres estesos..."
 
 #. module: stock
 #: field:stock.warehouse,lot_stock_id:0
@@ -1783,7 +1802,7 @@ msgstr "Cancel·la"
 #: model:ir.actions.act_window,name:stock.act_stock_return_picking
 #: model:ir.model,name:stock.model_stock_return_picking
 msgid "Return Picking"
-msgstr ""
+msgstr "Retorna albarà"
 
 #. module: stock
 #: view:stock.inventory:0
@@ -1890,6 +1909,10 @@ msgid ""
 "moves. Use this report when you want to analyse the different routes taken "
 "by your products and inventory management performance."
 msgstr ""
+"L'anàlisi de moviments us permet analitzar i verificar fàcilment els "
+"moviments d'estoc de la vostra companyia. Utilitzeu aquest informe quan "
+"vulgueu analitzar les diferents rutes preses pels vostres productes i el "
+"rendiment del vostre inventari."
 
 #. module: stock
 #: field:report.stock.move,day_diff1:0
@@ -2346,12 +2369,12 @@ msgstr "Retard (dies)"
 #: field:stock.move.memory.in,move_id:0
 #: field:stock.move.memory.out,move_id:0
 msgid "Move"
-msgstr ""
+msgstr "Moviment"
 
 #. module: stock
 #: help:stock.picking,min_date:0
 msgid "Expected date for the picking to be processed"
-msgstr ""
+msgstr "Data prevista per processar l'albarà."
 
 #. module: stock
 #: code:addons/stock/product.py:373
@@ -2449,7 +2472,7 @@ msgstr "Prioritat"
 #. module: stock
 #: view:stock.move:0
 msgid "Source"
-msgstr ""
+msgstr "Origen"
 
 #. module: stock
 #: code:addons/stock/stock.py:2557
@@ -2522,7 +2545,7 @@ msgstr "Juliol"
 #. module: stock
 #: view:report.stock.lines.date:0
 msgid "Consumable"
-msgstr ""
+msgstr "Consumible"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_stock_line_date
@@ -2628,6 +2651,7 @@ msgstr "Lot de producció únic, es mostrarà com: PREFIX/SÈRIE [REF_INT]"
 msgid ""
 "By unchecking the active field, you may hide a pack without deleting it."
 msgstr ""
+"Si el camp actiu es desmarca, permet ocultar un paquet sense eliminar-ho."
 
 #. module: stock
 #: view:stock.inventory.merge:0
@@ -2642,7 +2666,7 @@ msgstr "Inventaris"
 #. module: stock
 #: view:report.stock.move:0
 msgid "Todo"
-msgstr ""
+msgstr "Per fer"
 
 #. module: stock
 #: view:report.stock.inventory:0
@@ -2869,6 +2893,9 @@ msgid ""
 "filter all resources of the day for the 'From' date and 23:59:59 for the "
 "'To' date)"
 msgstr ""
+"(Deixeu-ho buit per obrir la situació actual. Poseu HH:MM:SS a 00:00:00 per "
+"filtrar tots els recursos del dia en el camp data 'Des de' i 23:59:59 en el "
+"camp data 'Fins a')"
 
 #. module: stock
 #: view:product.category:0
@@ -3117,7 +3144,7 @@ msgstr ""
 #. module: stock
 #: view:stock.move:0
 msgid "Order"
-msgstr ""
+msgstr "Ordre"
 
 #. module: stock
 #: field:stock.tracking,name:0
@@ -3198,7 +3225,7 @@ msgstr "Produccions futures"
 #. module: stock
 #: view:stock.picking:0
 msgid "To Invoice"
-msgstr ""
+msgstr "Per facturar"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_return_picking.py:120
@@ -3269,6 +3296,12 @@ msgid ""
 "'Available' button to get all the lots you produced, received or delivered "
 "to customers."
 msgstr ""
+"Aquesta és la llista de tots els lots de producció (números de sèrie) que "
+"vau registrar. Quan seleccioneu un lot, podeu obtenir la traçabilitat cap "
+"amunt o cap avall dels productes que componen el lot. Per defecte, la llista "
+"es filtra segons els números de sèrie disponibles en el vostre magatzem, "
+"però podeu desmarcar el botó 'Disponible' per obtenir tots els lots que vau "
+"produir, vau rebre o lliurar als vostres clients."
 
 #. module: stock
 #: field:stock.location,icon:0
@@ -3508,7 +3541,7 @@ msgstr "Informe"
 #: code:addons/stock/stock.py:1316
 #, python-format
 msgid " for the "
-msgstr ""
+msgstr " pel "
 
 #. module: stock
 #: view:stock.split.into:0
@@ -3547,6 +3580,11 @@ msgid ""
 "If cost price is decreased, stock variation account will be creadited and "
 "stock input account will be debited."
 msgstr ""
+"Si el preu de cost s'incrementa, el compte variació d'existències anirà al "
+"deure i el compte de sortida d'estoc anirà a \n"
+"l'haver amb el valor = (diferència de quantitat * quantitat disponible).\n"
+"Si el preu de cost es redueix, el compte variació d'existències anirà a "
+"l'haver i el compte d'entrada d'estoc anirà al deure."
 
 #. module: stock
 #: field:stock.location,chained_journal_id:0
@@ -3602,7 +3640,7 @@ msgstr "Paquet"
 #: view:stock.move:0
 #: view:stock.picking:0
 msgid "Date Expected"
-msgstr ""
+msgstr "Data prevista"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_picking_tree4
@@ -3612,6 +3650,10 @@ msgid ""
 "according to the original purchase order. You can validate the shipment "
 "totally or partially."
 msgstr ""
+"Els albarans d'entrada són la llista de totes les comandes que rebreu del "
+"vostre proveïdor. Un albarà d'entrada conté la llista de productes a rebre "
+"en funció de la comanda de compra original. Podeu validar l'enviament total "
+"o parcialment."
 
 #. module: stock
 #: field:stock.move,auto_validate:0
@@ -3912,7 +3954,7 @@ msgstr "Traçabilitat"
 #. module: stock
 #: view:stock.picking:0
 msgid "To invoice"
-msgstr ""
+msgstr "Per facturar"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_location_form
@@ -4000,6 +4042,8 @@ msgid ""
 "There are no products to return (only lines in Done state and not fully "
 "returned yet can be returned)!"
 msgstr ""
+"No hi ha productes per retornar (només les línies en estat Realitzat i "
+"encara no retornades totalment poden ser retornades)!"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_split
@@ -4027,7 +4071,7 @@ msgstr "Maig"
 #: code:addons/stock/wizard/stock_partial_move.py:133
 #, python-format
 msgid "Deliver"
-msgstr ""
+msgstr "Envia"
 
 #. module: stock
 #: help:product.template,property_stock_account_output:0
@@ -4133,23 +4177,23 @@ msgstr "Sortida"
 #. module: stock
 #: selection:stock.move.split.lines,action:0
 msgid "Keep in one lot"
-msgstr ""
+msgstr "Mantén en un lot"
 
 #. module: stock
 #: view:product.product:0
 msgid "Cost Price:"
-msgstr ""
+msgstr "Preu de cost:"
 
 #. module: stock
 #: help:stock.move,move_dest_id:0
 msgid "Optional: next stock move when chaining them"
-msgstr ""
+msgstr "Opcional: Següent moviment d'estoc quan s'encadenen."
 
 #. module: stock
 #: view:report.stock.move:0
 #: field:report.stock.move,year:0
 msgid "Year"
-msgstr ""
+msgstr "Any"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_locations
@@ -4159,11 +4203,11 @@ msgstr "Ubicacions físiques"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_partial_move
 msgid "Partial Move"
-msgstr ""
+msgstr "Moviment parcial"
 
 #. module: stock
 #: help:stock.location,posx:0
 #: help:stock.location,posy:0
 #: help:stock.location,posz:0
 msgid "Optional localization details, for information purpose only"
-msgstr ""
+msgstr "Detalls d'ubicació opcionals, només per a finalitats d'informació."
