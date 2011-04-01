@@ -8,7 +8,7 @@
             <field name="model">sugarcrm.login</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Sugarcrm Login">
+                <form string="SugarCRM Login">
                     <group colspan="4"  width="500" >
                     	<separator string="Please Enter Path to Connect with SugarCRM" colspan="4"/>
                     	<field name="url" colspan="4" widget="url"/>
@@ -31,7 +31,7 @@
         <!-- Sugarcrm Login Action -->
 
     <record model="ir.actions.act_window" id="action_sugarcrm_login">
-        <field name="name">Sugarcrm Login</field>
+        <field name="name">SugarCRM Login</field>
         <field name="res_model">sugarcrm.login</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
@@ -39,8 +39,8 @@
         <field name="target">new</field>
     </record>
 
-    <menuitem name="Sugarcrm"  id="menu_sugarcrm" parent="base.menu_base_partner"/>
-    <menuitem name="Import Sugarcrm" id="menu_sugarcrm_login" parent="menu_sugarcrm" action="action_sugarcrm_login" icon="STOCK_EXECUTE"/>
+    <menuitem name="SugarCRM"  id="menu_sugarcrm" parent="base.menu_base_partner"/>
+    <menuitem name="Import SugarCRM" id="menu_sugarcrm_login" parent="menu_sugarcrm" action="action_sugarcrm_login" icon="STOCK_EXECUTE"/>
 
     </data>
 </openerp>
