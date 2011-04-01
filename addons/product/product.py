@@ -593,7 +593,7 @@ class product_product(osv.osv):
                 res[product.id] = (res[product.id] * (product.price_margin or 1.0)) + \
                         product.price_extra
             if 'uom' in context:
-                uom = product.uos_id or product.uom_id
+                uom = product.uom_id or product.uos_id
                 res[product.id] = product_uom_obj._compute_price(cr, uid,
                         uom.id, res[product.id], context['uom'])
             # Convert from price_type currency to asked one
