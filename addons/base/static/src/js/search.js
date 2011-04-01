@@ -666,7 +666,9 @@ openerp.base.search.DateField = openerp.base.search.Field.extend(
      */
     start: function () {
         this._super();
-        this.$element.find('input').datepicker();
+        this.$element.find('input').datepicker({
+            dateFormat: 'yy-mm-dd'
+        });
     },
     stop: function () {
         this.$element.find('input').datepicker('destroy');
