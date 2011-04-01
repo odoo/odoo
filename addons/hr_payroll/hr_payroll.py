@@ -374,6 +374,7 @@ class hr_salary_head(osv.osv):
         'user_id':fields.char('User', size=64, required=False, readonly=False),
         'state':fields.char('Label', size=64, required=False, readonly=False),
         'company_id':fields.many2one('res.company', 'Company', required=False),
+        'sequence': fields.integer('Sequence', required=True, help='Use to arrange calculation sequence'),
 #        'display_payslip_report': fields.boolean('Display on payslip report', help="Used for the display of head on Payslip Report"),
 #        'computation_based':fields.selection([
 #            ('rules','List of Rules'),
@@ -494,6 +495,7 @@ class hr_payslip(osv.osv):
                     sal_structure = self._get_parent_structure(cr, uid, [st], context=context)
                 for struct in sal_structure:
                     lines = structure_obj.browse(cr, uid, struct, context=context).rule_ids
+                    # fix me: Search rules using salary head => sequence to display rules on payslip with correct seq with salary head..
                     for rl in lines:
                         if rl.child_ids:
                             for r in rl.child_ids:

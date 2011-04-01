@@ -373,6 +373,7 @@
                         <field name="name" select="1"/>
                         <field name="code" select="1"/>
                         <field name="type" select="1"/>
+                        <field name="sequence" select="1"/>
                         <!--<field name="dispaly_payslip_report"/>-->
                     </group>
                     <separator colspan="4" string="Description"/>
@@ -387,6 +388,7 @@
             <field name="arch" type="xml">
                 <tree string="Salary Heads">
                     <field name="name"/>
+                    <field name="sequence"/>
                     <field name="code"/>
                     <field name="type"/>
                 </tree>
