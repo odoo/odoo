@@ -22,7 +22,7 @@
 
 {
     "name" : "Portal",
-    "version" : "0.1",
+    "version" : "0.2",
     "depends" : ["base"],
     "author" : "OpenERP SA",
     "category": 'Tools',
@@ -40,9 +40,7 @@ module 'share'.
     'demo_xml': [],
     'data': ['portal_view.xml'],
     'installable': True,
-    'web': True,
     'certificate' : '',
-    'images': [],
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
