@@ -1464,6 +1464,11 @@ class hr_salary_rule(osv.osv):
         'condition_select': 'python',
      }
 
+    def onchange_company(self, cr, uid, ids, company_contribution=False, context=None):
+        if company_contribution:
+            return {'value': {'appears_on_payslip': False}}
+        return {'value': {}}
+
 #    def _execute_function(self, cr, uid, id, value, context=None):
 #        """
 #        self: pointer to self object

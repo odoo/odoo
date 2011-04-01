@@ -631,7 +631,7 @@
                    <field name="active"/>
                    <field name="sequence" />
                    <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                   <field name="appears_on_payslip"/>
+                   <field name="appears_on_payslip" attrs="{'readonly':[('company_contribution','=', True)]}" />
                 </group>
                 <notebook colspan="6">
                     <page string="General">
@@ -656,7 +656,7 @@
                             <group col="2" colspan="2">
                                 <group col="2" colspan="2">
                                 <separator colspan="4" string="Company contribution"/>
-                                    <field name="company_contribution"/>
+                                    <field name="company_contribution" on_change="onchange_company(company_contribution)" />
                                     <group col="2" colspan="2" attrs="{'readonly':[('company_contribution','=',False)]}">
                                        <!-- <field name="amt_type" />
                                         <field name="contribute_per"/>-->
