@@ -408,7 +408,7 @@ class View(openerpweb.Controller):
         :param session: Current OpenERP session
         :type session: openerpweb.openerpweb.OpenERPSession
         """
-        domain = elem.get(attr_name)
+        domain = elem.get(attr_name, '').strip()
         if domain:
             try:
                 elem.set(
@@ -433,7 +433,7 @@ class View(openerpweb.Controller):
         """
         self.parse_domain(elem, 'domain', session)
         self.parse_domain(elem, 'filter_domain', session)
-        context_string = elem.get('context')
+        context_string = elem.get('context', '').strip()
         if context_string:
             try:
                 elem.set('context',
