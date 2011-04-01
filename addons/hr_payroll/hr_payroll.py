@@ -712,23 +712,19 @@ class hr_payslip(osv.osv):
         resource_attendance_pool = self.pool.get('resource.calendar.attendance')
         if context is None:
             context = {}
-        date = self.read(cr, uid, ids, ['date'], context=context)[0]['date']
 
         for slip in self.browse(cr, uid, ids, context=context):
             old_slip_ids = slip_line_pool.search(cr, uid, [('slip_id', '=', slip.id)], context=context)
-            slip_line_pool.unlink(cr, uid, old_slip_ids, context=context)
+            if old_slip_ids:
+                slip_line_pool.unlink(cr, uid, old_slip_ids, context=context)
             update = {}
             ttyme = datetime.fromtimestamp(time.mktime(time.strptime(slip.date, "%Y-%m-%d")))
             contract_id = slip.contract_id.id
             if not contract_id:
                 update.update({'struct_id': False})
-                contracts = self.get_contract(cr, uid, slip.employee_id, date, context=context)
+                contracts = self.get_contract(cr, uid, slip.employee_id, slip.date, context=context)
             else:
-                contracts = [contract_obj.browse(cr, uid, contract_id, context=context)]
-#                update.update({
-#                    'struct_id': contracts[0].get('struct_id', False)[0],
-#                    'contract_id': contract_id
-#                })
+                contracts = contract_obj.browse(cr, uid, [contract_id], context=context)
             if not contracts:
                 update.update({
                     'basic_amount': 0.0,
@@ -742,13 +738,10 @@ class hr_payslip(osv.osv):
                 self.write(cr, uid, [slip.id], update, context=context)
                 continue
             for contract in contracts:
-                function = contract.struct_id.id
                 sal_structure = []
                 rules = []
-                if function:
-                    sal_structure = self._get_parent_structure(cr, uid, [function], context=context)
-                    lines = []
-                    rules = [] # correct me already declared
+                if contract.struct_id.id:
+                    sal_structure = self._get_parent_structure(cr, uid, [contract.struct_id.id], context=context)
                 for struct in sal_structure:
                     lines = func_pool.browse(cr, uid, struct, context=context).rule_ids
                     for rl in lines:
@@ -869,20 +862,7 @@ class hr_payslip(osv.osv):
                             else:
                                 slip_line_pool.create(cr, uid, vals, {})
 
-            basic = contract.wage
-            number = sequence_obj.get(cr, uid, 'salary.slip')
-            update.update({
-                'number': number,
-                'basic_amount': basic,
-                'basic_before_leaves': basic,
-                'total_pay': basic + total,
-                'name': 'Salary Slip of %s for %s' % (slip.employee_id.name, tools.ustr(ttyme.strftime('%B-%Y'))),
-                'state':'draft',
-                'company_id': slip.employee_id.company_id.id
-            })
-            self.write(cr, uid, [slip.id], update, context=context)
-
-            for contract in contracts:
+                basic = contract.wage
                 basic_before_leaves = slip.basic_amount
                 working_day = 0
                 off_days = 0
@@ -902,10 +882,10 @@ class hr_payslip(osv.osv):
                     off_days += get_days(1, dates[1].day, dates[1].month, dates[1].year, days_arr[dy])
                 total_off = off_days
                 working_day = dates[1].day - total_off
-                perday = working_day and basic / working_day or 0.0
+#                perday = working_day and basic / working_day or 0.0
                 total = 0.0
                 leave = 0.0
-                leave_ids = self._get_leaves(cr, uid, date, slip.employee_id, contract, context)
+                leave_ids = self._get_leaves(cr, uid, slip.date, slip.employee_id, contract, context)
                 total_leave = 0.0
                 paid_leave = 0.0
                 h_ids = holiday_pool.browse(cr, uid, leave_ids, context=context)
@@ -999,17 +979,22 @@ class hr_payslip(osv.osv):
                             slip_line_pool.create(cr, uid, res, context=context)
 
                 holiday_pool.write(cr, uid, leave_ids, {'payslip_id': slip.id}, context=context)
-            basic = basic - total
+                basic = basic - total
+            number = sequence_obj.get(cr, uid, 'salary.slip')
             update.update({
+                'number': number,
+                'name': 'Salary Slip of %s for %s' % (slip.employee_id.name, tools.ustr(ttyme.strftime('%B-%Y'))),
                 'basic_amount': basic_before_leaves,
                 'basic_before_leaves': basic_before_leaves,
+                'total_pay': basic + total,
                 'leaves': total,
+                'state':'draft',
                 'holiday_days': leave,
                 'worked_days': working_day - leave,
                 'working_days': working_day,
+                'company_id': slip.employee_id.company_id.id
             })
-            self.write(cr, uid, [slip.id], update, context=context)
-        return True
+        return self.write(cr, uid, [slip.id], update, context=context)
 
     def onchange_employee_id(self, cr, uid, ids, ddate, employee_id=False, contract_id=False, context=None):
         func_pool = self.pool.get('hr.payroll.structure')
@@ -1026,7 +1011,7 @@ class hr_payslip(osv.osv):
 
         old_slip_ids = ids and slip_line_pool.search(cr, uid, [('slip_id', '=', ids[0])], context=context) or False
         if old_slip_ids:
-            slip_line_pool.unlink(cr, uid, old_slip_ids)
+            slip_line_pool.unlink(cr, uid, old_slip_ids, context=context)
 
         update = {'value':{'line_ids':[], 'holiday_ids':[], 'name':'', 'working_days': 0.0, 'holiday_days': 0.0, 'worked_days': 0.0, 'basic_before_leaves': 0.0, 'basic_amount': 0.0, 'leaves': 0.0, 'total_pay': 0.0}}
         if not employee_id:
@@ -1065,12 +1050,11 @@ class hr_payslip(osv.osv):
         final_total = 0.0
         all_basic = 0.0
         for contract in contracts:
-            function = contract.struct_id.id
-            sal_structure = []
-            if function:
-                sal_structure = self._get_parent_structure(cr, uid, [function], context=context)
             lines = []
             rules = []
+            sal_structure = []
+            if contract.struct_id.id:
+                sal_structure = self._get_parent_structure(cr, uid, [contract.struct_id.id], context=context)
             for struct in sal_structure:
                 lines = func_pool.browse(cr, uid, struct, context=context).rule_ids
                 for rl in lines:
@@ -1344,7 +1328,6 @@ class hr_payslip(osv.osv):
     def onchange_contract_id(self, cr, uid, ids, date, employee_id=False, contract_id=False, context=None):
         if context is None:
             context = {}
-        res = {}
         res = {'value':{'line_ids':[], 'holiday_ids':[], 'name':'', 'working_days': 0.0, 'holiday_days': 0.0, 'worked_days': 0.0, 'basic_before_leaves': 0.0, 'basic_amount': 0.0, 'leaves': 0.0, 'total_pay': 0.0}}
         context.update({'contract': True})
         if not contract_id:
