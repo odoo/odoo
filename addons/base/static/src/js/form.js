@@ -30,7 +30,7 @@ openerp.base.FormView =  openerp.base.Controller.extend(
     },
     start: function() {
         //this.log('Starting FormView '+this.model+this.view_id)
-        this.rpc("/base/formview/load", {"model": this.model, "view_id": this.view_id}, this.on_loaded);
+        return this.rpc("/base/formview/load", {"model": this.model, "view_id": this.view_id}, this.on_loaded);
     },
     on_loaded: function(data) {
         var self = this;

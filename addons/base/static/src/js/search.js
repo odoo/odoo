@@ -14,7 +14,7 @@ openerp.base.SearchView = openerp.base.Controller.extend({
     },
     start: function() {
         //this.log('Starting SearchView '+this.model+this.view_id)
-        this.rpc("/base/searchview/load", {"model": this.model, "view_id":this.view_id}, this.on_loaded);
+        return this.rpc("/base/searchview/load", {"model": this.model, "view_id":this.view_id}, this.on_loaded);
     },
     show: function () {
         this.$element.show();

@@ -184,8 +184,19 @@ openerp.base.BasicController = Class.extend(
      * Controller start
      * event binding, rpc and callback calling required to initialize the
      * object can happen here
+     *
+     * Returns a promise object letting callers (subclasses and direct callers)
+     * know when this component is done starting
+     *
+     * @returns {jQuery.Deferred}
      */
     start: function() {
+        // returns an already fulfilled promise. Maybe we could return nothing?
+        // $.when can take non-deferred and in that case it simply considers
+        // them all as fulfilled promises.
+        // But in thise case we *have* to ensure callers use $.when and don't
+        // try to call deferred methods on this return value.
+        return $.Deferred().done().promise();
     },
     stop: function() {
     },
@@ -250,6 +261,19 @@ openerp.base.Session = openerp.base.BasicController.extend(
             }
         });
     },
+    /**
+     * Executes an RPC call, registering the provided callbacks.
+     *
+     * Registers a default error callback if none is provided, and handles
+     * setting the correct session id and session context in the parameter
+     * objects
+     *
+     * @param {String} url RPC endpoint
+     * @param {Object} params call parameters
+     * @param {Function} success_callback function to execute on RPC call success
+     * @param {Function} error_callback function to execute on RPC call failure
+     * @returns {jQuery.Deferred} jquery-provided ajax deferred
+     */
     rpc: function(url, params, success_callback, error_callback) {
         // Construct a JSON-RPC2 request, method is currently unused
         params.session_id = this.session_id;
@@ -259,17 +283,22 @@ openerp.base.Session = openerp.base.BasicController.extend(
         error_callback = typeof(error_callback) != "undefined" ? error_callback : this.on_rpc_error;
 
         // Call using the rpc_mode
-        this.rpc_ajax(url, {
+        return this.rpc_ajax(url, {
             jsonrpc: "2.0",
             method: "call",
             params: params,
             id:null
         }, success_callback, error_callback);
     },
+    /**
+     * Raw JSON-RPC call
+     *
+     * @returns {jQuery.Deferred} ajax-based deferred object
+     */
     rpc_ajax: function(url, payload, success_callback, error_callback) {
         var self = this;
         this.on_rpc_request();
-        $.ajax({
+        return $.ajax({
             type: "POST",
             url: url,
             dataType: 'json',
@@ -446,9 +475,18 @@ openerp.base.Controller = openerp.base.BasicController.extend(
         if(this.session)
             this.session.log.apply(this.session,arguments);
     },
+    /**
+     * Performs a JSON-RPC call
+     *
+     * @param {String} url endpoint url
+     * @param {Object} data RPC parameters
+     * @param {Function} success RPC call success callback
+     * @param {Function} error RPC call error callback
+     * @returns {jQuery.Deferred} deferred object for the RPC call
+     */
     rpc: function(url, data, success, error) {
         // TODO: support additional arguments ?
-        this.session.rpc(url, data, success, error);
+        return this.session.rpc(url, data, success, error);
     }
 });
 

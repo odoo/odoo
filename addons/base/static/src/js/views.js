@@ -44,7 +44,14 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
     },
     start: function() {
     },
+    /**
+     * Asks the view manager to switch visualization mode.
+     *
+     * @param {String} view_type type of view to display
+     * @returns {jQuery.Deferred} new view loading promise
+     */
     on_mode_switch: function(view_type) {
+        var view_promise;
         this.active_view = view_type;
         var view = this.views[view_type];
         if (!view.controller) {
@@ -52,7 +59,7 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
             var controller = new (openerp.base.views.get_object(view_type))(
                 this.session, this.element_id + "_view_" + view_type,
                 this.dataset, view.view_id);
-            controller.start();
+            view_promise = controller.start();
             this.views[view_type].controller = controller;
         }
 
@@ -72,6 +79,7 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
                this.views[i].controller.$element.toggle(i === view_type);
             }
         }
+        return view_promise;
     },
     /**
      * Extract search view defaults from the current action's context.
@@ -94,6 +102,7 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
      * Sets up the current viewmanager's search view.
      *
      * @param action the action being executed
+     * @returns {jQuery.Deferred} search view startup deferred
      */
     setup_search_view:function (action) {
         var self = this;
@@ -108,7 +117,7 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
         searchview.on_search.add(function() {
             self.views[self.active_view].controller.do_search.apply(self, arguments);
         });
-        searchview.start();
+        return searchview.start();
     },
     do_action_window: function(action) {
         var self = this;
@@ -118,7 +127,7 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
 
         this.$element.html(QWeb.render("ViewManager", {"prefix": this.element_id, views: action.views}));
 
-        this.setup_search_view(action);
+        var searchview_loaded = this.setup_search_view(action);
 
         this.$element.find('.views-switchers button').click(function() {
             self.on_mode_switch($(this).data('view-type'));
@@ -127,11 +136,13 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
             self.views[view[1]] = { view_id: view[0], controller: null };
         });
 
-        if (action['auto_search']) {
-            this.searchview.on_loaded.add_last(this.searchview.do_search);
-        }
         // switch to the first one in sequence
-        this.on_mode_switch(action.views[0][1]);
+        var inital_view_loaded = this.on_mode_switch(action.views[0][1]);
+
+        if (action['auto_search']) {
+            $.when(searchview_loaded, inital_view_loaded)
+                .then(this.searchview.do_search);
+        }
     },
     // create when root, also add to parent when o2m
     on_create: function() {
