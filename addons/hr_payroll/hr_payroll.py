@@ -523,7 +523,7 @@ class hr_payslip(osv.osv):
         return 0.0
 
     _columns = {
-        'struct_id':fields.related('contract_id', 'struct_id', type='many2one', relation='hr.payroll.structure', string='Structure', store=True, ),
+        'struct_id':fields.related('contract_id', 'struct_id', readonly=True, type='many2one', relation='hr.payroll.structure', string='Structure', store=True, ),
         'register_id':fields.many2one('hr.payroll.register', 'Register', required=False, readonly=True, states={'draft': [('readonly', False)]}),
         'name':fields.char('Name', size=64, required=False, readonly=True, states={'draft': [('readonly', False)]}),
         'number':fields.char('Number', size=64, required=False, readonly=True, states={'draft': [('readonly', False)]}),
