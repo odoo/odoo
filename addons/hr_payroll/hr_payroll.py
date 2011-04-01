@@ -712,7 +712,7 @@ class hr_payslip(osv.osv):
         resource_attendance_pool = self.pool.get('resource.calendar.attendance')
         if context is None:
             context = {}
-
+        
         for slip in self.browse(cr, uid, ids, context=context):
             old_slip_ids = slip_line_pool.search(cr, uid, [('slip_id', '=', slip.id)], context=context)
             if old_slip_ids:
@@ -737,6 +737,8 @@ class hr_payslip(osv.osv):
                 })
                 self.write(cr, uid, [slip.id], update, context=context)
                 continue
+            net_allow = 0.0
+            net_deduct = 0.0
             for contract in contracts:
                 sal_structure = []
                 rules = []
@@ -838,7 +840,10 @@ class hr_payslip(osv.osv):
                                     value = val
                         else:
                             value = val
-
+                    if value < 0:
+                        net_deduct += value
+                    else:
+                        net_allow += value
                     total += value
                     vals = {
                         'slip_id': slip.id,
@@ -965,7 +970,10 @@ class hr_payslip(osv.osv):
                                     value = val
                         else:
                             value = val
-
+                    if value < 0:
+                        net_deduct += value
+                    else:
+                        net_allow += value
                     res['amount'] = salary_rule.amount
                     res['type'] = salary_rule.type.id
                     leave += days
@@ -980,6 +988,26 @@ class hr_payslip(osv.osv):
 
                 holiday_pool.write(cr, uid, leave_ids, {'payslip_id': slip.id}, context=context)
                 basic = basic - total
+                
+            net_id = salary_rule_pool.search(cr, uid, [('code', '=', 'NET')])
+            for line in salary_rule_pool.browse(cr, uid, net_id, context=context):
+                dic = {'basic': amt, 'allowance': net_allow, 'deduction': net_deduct}
+                exec line.python_compute in dic
+                tot = dic['total']
+                vals = {
+                    'slip_id': slip.id,
+                    'category_id': line.category_id.id,
+                    'name': line.name,
+                    'sequence': line.sequence,
+                    'type': line.type.id,
+                    'code': line.code,
+                    'amount_type': line.amount_type,
+                    'amount': line.amount,
+                    'total': tot,
+                    'employee_id': slip.employee_id.id,
+                    'base': line.computational_expression
+                }
+            slip_line_pool.create(cr, uid, vals, context=context)
             number = sequence_obj.get(cr, uid, 'salary.slip')
             update.update({
                 'number': number,
@@ -1049,6 +1077,8 @@ class hr_payslip(osv.osv):
 
         final_total = 0.0
         all_basic = 0.0
+        net_allow = 0.0
+        net_deduct = 0.0
         for contract in contracts:
             lines = []
             rules = []
@@ -1154,6 +1184,10 @@ class hr_payslip(osv.osv):
                                 value = val
                     else:
                         value = val
+                if value < 0:
+                    net_deduct += value
+                else:
+                    net_allow += value
                 total += value
                 vals = {
                     'category_id': line.category_id.id,
@@ -1174,7 +1208,7 @@ class hr_payslip(osv.osv):
                                 update['value']['line_ids'].append(vals)
                         else:
                             update['value']['line_ids'].append(vals)
-
+                            
                 basic = contract.wage
                 all_basic += basic
                 final_total += basic + total
@@ -1298,6 +1332,10 @@ class hr_payslip(osv.osv):
                                     value = val
                         else:
                             value = val
+                    if value < 0:
+                        net_deduct += value
+                    else:
+                        net_allow += value
                     res['amount'] = salary_rule.amount
                     res['type'] = salary_rule.type.id
                     leave += days
@@ -1309,7 +1347,26 @@ class hr_payslip(osv.osv):
                                 update['value']['line_ids'].append(res)
                         else:
                             update['value']['line_ids'].append(res)
-
+       
+        net_id = salary_rule_pool.search(cr, uid, [('code', '=', 'NET')])
+        for line in salary_rule_pool.browse(cr, uid, net_id, context=context):
+            dic = {'basic': amt, 'allowance': net_allow, 'deduction': net_deduct}
+            exec line.python_compute in dic
+            tot = dic['total']
+            vals = {
+                'category_id': line.category_id.id,
+                'name': line.name,
+                'sequence': line.sequence,
+                'type': line.type.id,
+                'code': line.code,
+                'amount_type': line.amount_type,
+                'amount': line.amount,
+                'total': tot,
+                'employee_id': employee_id.id,
+                'base': line.computational_expression
+            }
+            update['value']['line_ids'].append(vals)
+            
         number = sequence_obj.get(cr, uid, 'salary.slip')
         update['value'].update({
             'number': number,
