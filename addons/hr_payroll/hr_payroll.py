@@ -775,8 +775,10 @@ class hr_payslip(osv.osv):
                         obj[cd] = line.amount or 0.0
 
                 for line in rules:
-                    if line.category_id.code in ad:
-                        continue
+                    #Removing below condition because it stop to append child rule in payslip line and does not allow child rule to consider in calculation
+#                    if line.category_id.code in ad:
+#                        continue
+
                     ad.append(line.category_id.code)
                     cd = line.category_id.code.lower()
                     calculate = False
@@ -1095,8 +1097,11 @@ class hr_payslip(osv.osv):
                     obj[cd] = line.amount or 0.0
 
             for line in rules:
-                if line.category_id.code in ad:
-                    continue
+
+                #Removing below condition because it stop to append child rule in payslip line and does not allow child rule to consider in calculation
+#                if line.category_id.code in ad:
+#                    continue
+
                 ad.append(line.category_id.code)
                 cd = line.category_id.code.lower()
                 calculate = False
