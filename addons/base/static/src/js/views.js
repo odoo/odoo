@@ -8,7 +8,6 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
 // process all kind of actions
     init: function(session, element_id) {
         this._super(session, element_id);
-        this.action = null;
         this.viewmanager = null;
     },
     /**
@@ -17,8 +16,6 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
      */
     do_action: function(action) {
         // instantiate the right controllers by understanding the action
-        this.action = action;
-        // TODO: handle target=new
         if(action.type == "ir.actions.act_window") {
             if (this.viewmanager) {
                 this.viewmanager.stop();
@@ -41,16 +38,27 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
         this.action = null;
         this.dataset = null;
         this.searchview = null;
+        this.active_view = null;
         // this.views = { "list": { "view_id":1234, "controller": instance} }
         this.views = {};
     },
     start: function() {
     },
     on_mode_switch: function(view_type) {
-        for (var type in this.views) {
-           this.views[type].controller.$element.toggle(type === view_type);
-            this.$element.find('#' + this.element_id + '_button_' + type)
-                .attr('disabled', type === view_type);
+        this.active_view = view_type;
+        var view = this.views[view_type];
+        if (!view.controller) {
+            // Lazy loading of views
+            var controller = new (openerp.base.views.get_object(view_type))(
+                this.session, this.element_id + "_view_" + view_type,
+                this.dataset, view.view_id);
+            controller.start();
+            this.views[view_type].controller = controller;
+        }
+        for (var i in this.views) {
+            if (this.views[i].controller) {
+               this.views[i].controller.$element.toggle(i === view_type);
+            }
         }
     },
     /**
@@ -76,6 +84,7 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
      * @param action the action being executed
      */
     setup_search_view:function (action) {
+        var self = this;
         if (this.searchview) {
             this.searchview.stop();
         }
@@ -84,17 +93,13 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
                 this.session, this.element_id + "_search",
                 this.dataset, action.search_view_id[0] || false,
                 this.search_defaults());
-        searchview.on_search.add(this.do_search);
+        searchview.on_search.add(function() {
+            self.views[self.active_view].controller.do_search.apply(self, arguments);
+        });
         searchview.start();
-
-        if (action['auto_search']) {
-            searchview.on_loaded.add_last(
-                    searchview.do_search);
-        }
     },
     do_action_window: function(action) {
         var self = this;
-        var prefix_id = "#" + this.element_id;
         this.action = action;
         this.dataset = new openerp.base.DataSet(this.session, action.res_model);
         this.dataset.start();
@@ -103,21 +108,18 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
 
         this.setup_search_view(action);
 
-        _.each(action.views, function (view_descriptor) {
-            var view_id = view_descriptor[0],
-                view_type = view_descriptor[1];
-            var view = new (openerp.base.views.get_object(view_type))(
-                    self.session, self.element_id + '_view_' + view_type,
-                    self.dataset, view_id);
-            view.start();
-            self.views[view_type] = { view_id: view_id, controller: view };
-            self.$element.find(prefix_id + '_button_' + view_type).click(function () {
-                self.on_mode_switch(view_type);
-            });
+        this.$element.find('.views_switchers button').click(function() {
+            self.on_mode_switch($(this).data('view-type'));
+        });
+        _.each(action.views, function(view) {
+            self.views[view[1]] = { view_id: view[0], controller: null };
         });
 
+        if (action['auto_search']) {
+            this.searchview.on_loaded.add_last(this.searchview.do_search);
+        }
         // switch to the first one in sequence
-        this.on_mode_switch(action.view_mode.split(',')[0]);
+        this.on_mode_switch(action.views[0][1]);
     },
     // create when root, also add to parent when o2m
     on_create: function() {
@@ -125,20 +127,6 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
     on_remove: function() {
     },
     on_edit: function() {
-    },
-    do_search: function (domains, contexts, groupbys) {
-        var self = this;
-        this.rpc('/base/session/eval_domain_and_context', {
-            domains: domains,
-            contexts: contexts,
-            group_by_seq: groupbys
-        }, function (results) {
-            // TODO: handle non-empty results.group_by with read_group
-            self.dataset.set({
-                context: results.context,
-                domain: results.domain
-            }).fetch(0, self.action.limit);
-        });
     }
 });
 

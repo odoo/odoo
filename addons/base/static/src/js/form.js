@@ -92,6 +92,8 @@ openerp.base.FormView =  openerp.base.Controller.extend({
     },
     on_saved: function() {
         // Check response for exceptions, display error
+    },
+    do_search: function (domains, contexts, groupbys) {
     }
 });
 
@@ -463,6 +465,10 @@ openerp.base.form.FieldDate = openerp.base.form.FieldChar.extend({
     init: function(view, node) {
         this._super(view, node);
         this.template = "FieldDate";
+    },
+    start: function() {
+        this._super.apply(this, arguments);
+        this.$element.find('input').datepicker();
     }
 });
 

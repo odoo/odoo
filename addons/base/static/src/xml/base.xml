@@ -126,12 +126,11 @@
 </t>
 <t t-name="ViewManager">
     <!-- TODO prefix id with the element_id of the controller t-attf-id="#{prefix}_localid" -->
-    <div style="text-align:right;">
-        <!--
-            <input t-foreach="views" t-as="view" t-att-id="" t-att-value="view[1]"/>
-        -->
+    <div class="views_switchers">
         <t t-foreach="views" t-as="view">
-            <input t-attf-id="#{prefix}_button_#{view[1]}" type="button" t-att-value="view[1]"/>
+            <button type="button" t-att-data-view-type="view[1]">
+                <t t-esc="view[1]"/>
+            </button>
         </t>
     </div>
     <div t-attf-id="#{prefix}_search"/>
