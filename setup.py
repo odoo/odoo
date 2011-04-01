@@ -104,6 +104,21 @@ if os.name == 'nt':
             files.append((join('openerp',dp), map(lambda x: join('openerp', dp, x), names)))
         os.chdir('..')
         files.append(('openerp', [join('openerp', 'import_xml.rng'),]))
+
+        # copy pytz/timzeone
+        # TODO check if we have to also copy dateutil's timezone data.
+        import pytz
+        # Make sure the layout of pytz hasn't changed
+        assert (pytz.__file__.endswith('__init__.pyc') or
+                pytz.__file__.endswith('__init__.py')), pytz.__file__
+        pytz_dir = os.path.dirname(pytz.__file__)
+
+        saved_dir = os.getcwd()
+        os.chdir(pytz_dir)
+        for dp, dn, names in os.walk('zoneinfo'):
+            files.append((join('pytz',dp), map(lambda x: join(pytz_dir, dp, x), names)))
+        os.chdir(saved_dir)
+
         return files
     py2exe_data_files = data_files()
 

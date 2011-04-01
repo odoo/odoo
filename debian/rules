@@ -5,33 +5,6 @@ EXTRA_MODULES_PATH ?= ../addons
 %:
 	dh  ${@}
 
-override_dh_auto_clean:
-	dh_auto_clean
-
-	rm -rf build
-
-override_dh_auto_install:
-	# Adding ALL addons to the server package
-	if [ -d "${EXTRA_MODULES_PATH}" ] ; then \
-	    cd ${EXTRA_MODULES_PATH} ; \
-		echo > server_modules.list ; \
-	        for ADD_DIR in * ; do \
-	            [ -d "$$ADD_DIR" ] && [ -r "$$ADD_DIR"/__openerp__.py ] && echo "$$ADD_DIR" >> server_modules.list ; \
-		done ; \
-	fi
-	NO_CHECK_MODULES=1 python setup.py install --install-layout=deb --no-compile --root=$(CURDIR)/debian/openerp-server
-
-	# Adjusting program location
-	sed -i -e 's|cd .*|cd /usr/share/pyshared/openerp-server|' debian/openerp-server/usr/bin/openerp-server
-
-	# Removing double files
-	rm -rf debian/openerp-server/usr/share/doc/openerp-server-*
-
-override_dh_fixperms:
-	dh_fixperms
-
-	find debian/openerp-server/usr/share/pyshared/openerp-server/addons -type f -print0 | xargs -0 chmod 0644
-
 override_dh_installchangelogs:
 	dh_installchangelogs doc/Changelog
 
