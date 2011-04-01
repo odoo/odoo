@@ -37,8 +37,16 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
         this.search_visible = true;
         // this.views = { "list": { "view_id":1234, "controller": instance} }
         this.views = {};
+        this.sidebar = new openerp.base.Sidebar(null);
     },
     start: function() {
+        this.$element.find('.view-manager-main-sidebar').html(this.sidebar.render());
+        this.sidebar.start();
+    },
+    stop: function() {
+        // should be replaced by automatic destruction implemented in BaseWidget
+        this.sidebar.stop();
+        this._super();
     },
     on_mode_switch: function(view_type) {
         for (var i in this.views) {
@@ -227,6 +235,11 @@ openerp.base.BaseWidget = openerp.base.Controller.extend({
     render: function (additional) {
         return QWeb.render(this.template, _.extend({}, this, additional != null ? additional : {}));
     }
+});
+
+openerp.base.Sidebar = openerp.base.BaseWidget.extend({
+    template: "ViewManager.sidebar"
+    
 });
 
 openerp.base.CalendarView = openerp.base.Controller.extend({
