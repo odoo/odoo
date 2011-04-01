@@ -91,8 +91,7 @@ class crm_lead2partner(osv.osv_memory):
             # Find partner name that matches the name of the lead
             if not partner_ids and lead.partner_name:
                 partner_ids = partner_obj.search(cr, uid, [('name', '=', lead.partner_name)], context=context)
-            if not partner_ids:
-                partner_ids = partner_obj.search(cr, uid, [('name', '=', lead.name)], context=context)
+            
                 
             partner_id = partner_ids and partner_ids[0] or False
 
