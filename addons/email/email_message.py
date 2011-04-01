@@ -243,6 +243,8 @@ class email_message(osv.osv):
                         'res_model':'email.message',
                         'res_id': email_msg_id,
                     }
+                if context.has_key('default_type'):
+                    del context['default_type']
                 attachment_ids.append(attachment_obj.create(cr, uid, attachment_data, context))
             self.write(cr, uid, email_msg_id,
                               { 'attachment_ids': [[6, 0, attachment_ids]] }, context)
