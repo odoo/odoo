@@ -290,11 +290,36 @@
                         </page>
 
                        <page string="Details By Salary Head">
-                            <field name="details_by_salary_head" nolabel="1" context="{'group_by': 'category_id'}"/>
+                            <field name="details_by_salary_head" nolabel="1" context="{'group_by': 'category_id'}">
+            	                <tree string="Salary Rules">
+									<field name="category_id"/>
+									<field name="sequence" groups="base.group_extended"/>
+									<field name="name"/>
+									<field name="code"/>
+									<field name="type"/>
+									<field name="amount_type"/>
+									<field name="amount"/>
+								</tree>
+							</field>	
                        </page>
 
                        <page string="Holidays">
-                            <field name="holiday_ids" colspan="4" nolabel="1" editable="bottom"/>
+                            <field name="holiday_ids" colspan="4" nolabel="1" editable="bottom">
+								<tree colors="red:state in ('refuse');blue:state in ('draft');black:state in ('confirm','validate','validate1')" string="Leaves" >
+								    <field name="employee_id" invisible="1"/>
+								    <field name="department_id" invisible="1"/>
+								    <field name="holiday_status_id"/>
+								    <field name="name"/>
+								    <field name="number_of_days" string="Number of Days" sum='Remaining Days'/>
+								    <field name="manager_id" invisible="1"/>
+								    <field name="user_id" invisible="1"/>
+								    <!--field name="type"/-->
+								    <field name="state"/>
+								    <field name="contract_id"/>
+								    <button string="Approve" name="validate" states="confirm" type="workflow" icon="gtk-apply" groups="base.group_hr_user,base.group_hr_manager"/>
+								    <button string="Approved" name="second_validate" states="validate1" type="workflow" icon="gtk-apply" groups="base.group_hr_user,base.group_hr_manager"/>
+								</tree>                            
+                            </field>
                        </page>
 
                        <page string="Other Information">
