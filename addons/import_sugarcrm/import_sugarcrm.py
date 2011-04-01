@@ -455,7 +455,7 @@ def import_opportunities(sugar_obj, cr, uid, context=None):
     for val in sugar_data:
         partner_xml_id = partner_obj.search(cr, uid, [('name', 'like', val.get('account_name'))])
         if not partner_xml_id:
-            raise osv.except_osv(_('Warning !'), _('Partner %s not Found') % val.get('account_name'))
+            raise osv.except_osv(_('Warning !'), _('Reference Partner %s cannot be created, due to Lower Record Limit in SugarCRM Configuration.') % val.get('account_name'))
         partner_contact_name = get_opportunity_contact(sugar_obj,cr,uid, PortType, sessionid, val, partner_xml_id, context)
         val['partner_address_id/name'] = partner_contact_name         
         categ_ids = categ_obj.search(cr, uid, [('object_id.model','=','crm.lead'), ('name', 'like',val.get('opportunity_type'))])
