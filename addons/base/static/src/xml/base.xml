@@ -319,6 +319,21 @@
         <t t-if="filters.length" t-raw="filters.render(defaults)"/>
     </div>
 </t>
+<t t-name="SearchView.fields.date">
+    <label style="display: block" t-att-title="attrs.help"
+           t-att-for="element_id">
+        <t t-esc="attrs.string || attrs.name"/>
+        <span t-if="attrs.help">(?)</span>
+    </label>
+    <div style="white-space: nowrap;" t-att-id="element_id">
+        <input t-att-name="attrs.name"
+               t-att-value="defaults[attrs.name] || ''"/>
+        to
+        <input t-att-name="attrs.name"
+               t-att-value="defaults[attrs.name] || ''"/>
+        <t t-if="filters.length" t-raw="filters.render(defaults)"/>
+    </div>
+</t>
 <t t-name="SearchView.field.selection">
     <label style="display: block" t-att-title="attrs.help"
            t-att-for="element_id">
