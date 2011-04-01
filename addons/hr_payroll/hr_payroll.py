@@ -1349,8 +1349,7 @@ class hr_payslip(osv.osv):
         context.update({'contract': True})
         if not contract_id:
             res['value'].update({'struct_id': False})
-        res = self.onchange_employee_id(cr, uid, ids, ddate=date, employee_id=employee_id, contract_id=contract_id, context=context)
-        return res
+        return self.onchange_employee_id(cr, uid, ids, ddate=date, employee_id=employee_id, contract_id=contract_id, context=context)
 
 hr_payslip()
 
@@ -1362,13 +1361,15 @@ class hr_holidays(osv.osv):
         'contract_id': fields.many2one('hr.contract', 'Contract', readonly=True, states={'draft':[('readonly',False)]})
     }
 
-    def onchange_employee_id(self, cr, uid, ids, employee_id=False, context=None):
+    def onchange_employee_id(self, cr, uid, ids, employee_id=False, date_from=False, context=None):
         if not employee_id:
             return {}
         contract_obj = self.pool.get('hr.contract')
         res = {}
-        contracts = contract_obj.search(cr, uid, [('employee_id', '=', employee_id)], context=context)
-        contract_ids = contract_obj.browse(cr, uid, contracts, context=context)
+        employee_id = self.pool.get('hr.employee').browse(cr, uid, employee_id, context)
+
+        # fix me: Date_from is not comming in onchange..
+        contract_ids = self.pool.get('hr.payslip').get_contract(cr, uid, employee_id, date_from, context=context)
         res.update({
             'contract_id': contract_ids and contract_ids[0].id or False,
         })

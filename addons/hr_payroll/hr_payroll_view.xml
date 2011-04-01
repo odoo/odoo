@@ -65,7 +65,7 @@
             <field name="arch" type="xml">
             <data>
                 <xpath expr="/form/group/group/field[@name='employee_id']" position="replace">
-                    <field name="employee_id" on_change="onchange_employee_id(employee_id)" attrs="{'required':[('holiday_type','=','employee')], 'invisible':[('holiday_type','=','category')]}"/>
+                    <field name="employee_id" on_change="onchange_employee_id(employee_id, date_from)" attrs="{'required':[('holiday_type','=','employee')], 'invisible':[('holiday_type','=','category')]}"/>
                 </xpath>
                 <xpath expr="/form/notebook/page/field[@name='number_of_days_temp']" position="after">
                     <field name="contract_id" select="1" domain="[('employee_id', '=', employee_id)]" attrs="{'invisible':[('holiday_type','=','category')]}"/>
@@ -300,7 +300,7 @@
 									<field name="amount_type"/>
 									<field name="amount"/>
 								</tree>
-							</field>	
+							</field>
                        </page>
 
                        <page string="Holidays">
@@ -318,7 +318,7 @@
 								    <field name="contract_id"/>
 								    <button string="Approve" name="validate" states="confirm" type="workflow" icon="gtk-apply" groups="base.group_hr_user,base.group_hr_manager"/>
 								    <button string="Approved" name="second_validate" states="validate1" type="workflow" icon="gtk-apply" groups="base.group_hr_user,base.group_hr_manager"/>
-								</tree>                            
+								</tree>
                             </field>
                        </page>
 
