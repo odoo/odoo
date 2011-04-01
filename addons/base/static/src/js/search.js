@@ -16,6 +16,12 @@ openerp.base.SearchView = openerp.base.Controller.extend({
         //this.log('Starting SearchView '+this.model+this.view_id)
         this.rpc("/base/searchview/load", {"model": this.model, "view_id":this.view_id}, this.on_loaded);
     },
+    show: function () {
+        this.$element.show();
+    },
+    hide: function () {
+        this.$element.hide();
+    },
     /**
      * Builds a list of widget rows (each row is an array of widgets)
      *

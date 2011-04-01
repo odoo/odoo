@@ -2,7 +2,20 @@
 openerp.base.form = function (openerp) {
 
 openerp.base.views.add('form', 'openerp.base.FormView');
-openerp.base.FormView =  openerp.base.Controller.extend({
+openerp.base.FormView =  openerp.base.Controller.extend(
+    /** @lends openerp.base.FormView# */{
+    /**
+     * Indicates that this view is not searchable, and thus that no search
+     * view should be displayed (if there is one active).
+     */
+    searchable: false,
+    /**
+     * @constructs
+     * @param {openerp.base.Session} session the current openerp session
+     * @param {String} element_id this view's root element id
+     * @param {openerp.base.DataSet} dataset the dataset this view will work with
+     * @param {String} view_id the identifier of the OpenERP view object
+     */
     init: function(session, element_id, dataset, view_id) {
         this._super(session, element_id);
         this.dataset = dataset;

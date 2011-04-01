@@ -56,6 +56,12 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
             this.views[view_type].controller = controller;
         }
 
+        if (view.controller.searchable === false) {
+            this.searchview.hide();
+        } else {
+            this.searchview.show();
+        }
+
         this.$element
             .find('.views-switchers button').removeAttr('disabled')
             .filter('[data-view-type="' + view_type + '"]')
