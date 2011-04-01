@@ -742,10 +742,11 @@ class hr_payslip(osv.osv):
             for contract in contracts:
                 function = contract.struct_id.id
                 sal_structure = []
+                rules = []
                 if function:
                     sal_structure = self._get_parent_structure(cr, uid, [function], context=context)
                     lines = []
-                    rules = []
+                    rules = [] # correct me already declared
                 for struct in sal_structure:
                     lines = func_pool.browse(cr, uid, struct, context=context).rule_ids
                     for rl in lines:
