@@ -92,7 +92,7 @@ openerp.base.FormView =  openerp.base.Controller.extend({
     on_saved: function() {
         // Check response for exceptions, display error
     },
-    do_search: function (domains, contexts, groupbys) {
+    on_action: function (action) {
     }
 });
 

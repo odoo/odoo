@@ -61,6 +61,7 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
                     break;
             }
             controller.start();
+            // controller.on_action.add(this.on_action); ??
             this.views[view_type].controller = controller;
             if (this.auto_search) {
                 this.searchview.on_loaded.add_last(this.searchview.do_search);
@@ -128,6 +129,11 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
     on_remove: function() {
     },
     on_edit: function() {
+    }
+    /**
+     * Called when one of the view want to execute an action
+     */
+    on_action: function(action) {
     }
 });
 
