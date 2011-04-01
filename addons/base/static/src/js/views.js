@@ -57,9 +57,9 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
         }
 
         this.$element
-            .find('.views-switchers button').attr('disabled', true)
-            .filter('[data-view-type!="' + view_type + '"]')
-                .removeAttr('disabled');
+            .find('.views-switchers button').removeAttr('disabled')
+            .filter('[data-view-type="' + view_type + '"]')
+                .attr('disabled', true);
 
         for (var i in this.views) {
             if (this.views[i].controller) {
