@@ -529,7 +529,7 @@ class hr_payslip(osv.osv):
             localdict = {'basic':value, 'employee':employee, 'contract':contract}
             exec contrib.python_compute in localdict
             value = localdict['result']
-            return value 
+            return value
         return 0.0
 
     _columns = {
@@ -657,7 +657,7 @@ class hr_payslip(osv.osv):
                             register_line_pool.create(cr, uid, reg_line)
         self.write(cr, uid, ids, {'state':'confirm'}, context=context)
         return True
-    
+
     def get_contract(self, cr, uid, employee, date, context=None):
         contract_obj = self.pool.get('hr.contract')
         contracts = contract_obj.search(cr, uid, [('employee_id', '=', employee.id),('date_start','<=', date),'|',('date_end', '=', False),('date_end','>=', date)], context=context)
@@ -1322,7 +1322,7 @@ class hr_payslip(osv.osv):
         update['value'].update({
             'number': number,
             'name': 'Salary Slip of %s for %s' % (employee_id.name, tools.ustr(ttyme.strftime('%B-%Y'))),
-            'basic_amount': basic,
+#            'basic_amount': basic, # no need to pass its related field... but for multi contract we need to check for the possibility ...
             'basic_before_leaves': basic_before_leaves,
             'total_pay': total_before_leaves + total,
             'leaves': total,
@@ -1516,7 +1516,7 @@ class hr_payroll_structure(osv.osv):
     _columns = {
         'rule_ids':fields.many2many('hr.salary.rule', 'hr_structure_salary_rule_rel', 'struct_id', 'rule_id', 'Salary Rules'),
     }
-    
+
 hr_payroll_structure()
 
 class hr_employee(osv.osv):
