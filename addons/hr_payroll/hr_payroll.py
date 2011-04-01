@@ -268,7 +268,7 @@ class payroll_register(osv.osv):
     def process_sheet(self, cr, uid, ids, context=None):
         slip_pool = self.pool.get('hr.payslip')
         wf_service = netsvc.LocalService("workflow")
-        sids = slip_pool.search(cr, uid, [('register_id','=',id), ('state','=','confirm')], context=context)
+        sids = slip_pool.search(cr, uid, [('register_id','in', ids), ('state','=','confirm')], context=context)
         for sid in sids:
             wf_service.trg_validate(uid, 'hr.payslip', sid, 'process_sheet', cr)
         return self.write(cr, uid, ids, {'state':'done'}, context=context)
