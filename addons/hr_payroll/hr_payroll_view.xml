@@ -297,17 +297,17 @@
                             <field name="holiday_ids" colspan="4" nolabel="1" editable="bottom"/>
                        </page>
 
-                        <page string="Other Information">
-                            <group col="2" colspan="1">
-                                <separator colspan="2" string="Other Information"/>
-                                <field name="paid" readonly="1"/>
-                                <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                       <page string="Other Information">
+                            <separator colspan="4" string="Other Information"/>
+                            <group col="5" colspan="2">
                                 <field name="register_id" groups="base.group_extended"/>
+                                <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                                <field name="paid" readonly="1"/>
                             </group>
                             <newline/>
                             <separator colspan="4" string="Description"/>
                             <field name="note" colspan="4" nolabel="1"/>
-                        </page>
+                       </page>
 
                     </notebook>
                     <group col="10" colspan="4">

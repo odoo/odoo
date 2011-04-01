@@ -488,7 +488,6 @@ class hr_payslip(osv.osv):
                 for hday in holiday_pool.browse(cr, uid, leave_ids, context=context):
                     salary_rules = salary_rule_pool.search(cr, uid, [('code', '=', hday.holiday_status_id.code)], context=context)
                     rules +=  salary_rule_pool.browse(cr, uid, salary_rules, context=context)
-
             res[record.id] = {}
             for st in structure:
                 if st:
