@@ -468,21 +468,27 @@ class hr_payslip(osv.osv):
     def _get_salary_rules(self, cr, uid, ids, field_names, arg=None, context=None):
         structure_obj = self.pool.get('hr.payroll.structure')
         contract_obj = self.pool.get('hr.contract')
+        holiday_pool = self.pool.get('hr.holidays')
+        salary_rule_pool = self.pool.get('hr.salary.rule')
         res = {}
         lines = []
         rules = []
         rul = []
         structure = []
         sal_structure =[]
+        contracts = []
         for record in self.browse(cr, uid, ids, context=context):
-            if record.struct_id.id:
-                structure.append(record.struct_id.id)
-            elif not record.struct_id:
-                 contracts = self.get_contract(cr, uid, record.employee_id, record.date, context=context)
-                 for ct in contracts:
-#                     contract_id = ct.get('id')
-#                     contract = contract_obj.browse(cr, uid, contract_id, context=context)
-                     structure.append(ct.struct_id.id)
+            if record.contract_id:
+                contracts.append(record.contract_id)
+            else:
+                contracts = self.get_contract(cr, uid, record.employee_id, record.date, context=context)
+            for ct in contracts:
+                structure.append(ct.struct_id.id)
+                leave_ids = self._get_leaves(cr, uid, record.date, record.employee_id, ct, context)
+                for hday in holiday_pool.browse(cr, uid, leave_ids, context=context):
+                    salary_rules = salary_rule_pool.search(cr, uid, [('code', '=', hday.holiday_status_id.code)], context=context)
+                    rules +=  salary_rule_pool.browse(cr, uid, salary_rules, context=context)
+
             res[record.id] = {}
             for st in structure:
                 if st:
