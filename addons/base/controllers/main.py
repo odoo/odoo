@@ -303,10 +303,10 @@ class DataSet(openerpweb.Controller):
         return Model.read(ids, fields or False)
 
     @openerpweb.jsonrequest
-    def get(self, request, model, ids):
-        self.do_get(request, model, ids)
+    def get(self, request, model, ids, fields=False):
+        return self.do_get(request, model, ids, fields)
 
-    def do_get(self, request, model, ids):
+    def do_get(self, request, model, ids, fields=False):
         """ Fetches and returns the records of the model ``model`` whose ids
         are in ``ids``.
 
@@ -323,7 +323,7 @@ class DataSet(openerpweb.Controller):
         :rtype: list
         """
         Model = request.session.model(model)
-        records = Model.read(ids)
+        records = Model.read(ids, fields)
 
         record_map = dict((record['id'], record) for record in records)
 

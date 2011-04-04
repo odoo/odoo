@@ -45,8 +45,7 @@ openerp.base.ListView = openerp.base.Controller.extend({
             }
         }
         this.dataset.fields = this.cols;
-        this.dataset.on_fetch.add(this.do_fill_table);
-        
+
         var width = this.$element.width();
         this.$table.jqGrid({
             datatype: "local",
@@ -85,10 +84,9 @@ openerp.base.ListView = openerp.base.Controller.extend({
             group_by_seq: groupbys
         }, function (results) {
             // TODO: handle non-empty results.group_by with read_group
-            self.dataset.set({
-                context: results.context,
-                domain: results.domain
-            }).fetch(self.fields_view.fields, 0, self.limit);
+            self.dataset.context = results.context;
+            self.dataset.domain = results.domain;
+            self.dataset.fetch(self.dataset.fields, 0, self.limit, self.do_fill_table);
         });
     }
 });
