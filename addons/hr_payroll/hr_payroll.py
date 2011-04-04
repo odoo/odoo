@@ -117,163 +117,164 @@ class hr_contract(osv.osv):
 
 hr_contract()
 
-class payroll_register(osv.osv):
-    """
-    Payroll Register
-    """
-
-    _name = 'hr.payroll.register'
-    _description = 'Payroll Register'
-
-#    def _calculate(self, cr, uid, ids, field_names, arg, context=None):
-#        res = {}
-#        allounce = 0.0
-#        deduction = 0.0
-#        net = 0.0
-#        grows = 0.0
-#        for register in self.browse(cr, uid, ids, context=context):
-#            for slip in register.line_ids:
-#                allounce += slip.allounce
-#                deduction += slip.deduction
-##                net += slip.net
-##                grows += slip.grows
+#TODO: to check: seems we don't need this object
+#class payroll_register(osv.osv):
+#    """
+#    Payroll Register
+#    """
 #
-#            res[register.id] = {
-#                'allounce':allounce,
-#                'deduction':deduction,
-##                'net':net,
-##                'grows':grows
-#            }
-#        return res
-
-    _columns = {
-        'name':fields.char('Name', size=64, required=True, readonly=False),
-        'date': fields.date('Date', required=True),
-        'number':fields.char('Number', size=64, required=False, readonly=True),
-        'line_ids':fields.one2many('hr.payslip', 'register_id', 'Payslips', required=False),
-        'state':fields.selection([
-            ('new','New Slip'),
-            ('draft','Waiting for Verification'),
-            ('hr_check','Waiting for HR Verification'),
-            ('accont_check','Waiting for Account Verification'),
-            ('confirm','Confirm Sheet'),
-            ('done','Paid Salary'),
-            ('cancel','Reject'),
-        ],'State', select=True, readonly=True),
-        'active':fields.boolean('Active', required=False, help="If the active field is set to false, it will allow you to hide the payroll register without removing it."),
-        'company_id':fields.many2one('res.company', 'Company'),
-#        'grows': fields.function(_calculate, method=True, store=True, multi='dc', string='Gross Salary', type='float', digits=(16, 4)),
-#        'net': fields.function(_calculate, method=True, store=True, multi='dc', string='Net Salary', digits=(16, 4)),
-#        'allounce': fields.function(_calculate, method=True, store=True, multi='dc', string='Allowance', digits=(16, 4)),
-#        'deduction': fields.function(_calculate, method=True, store=True, multi='dc', string='Deduction', digits=(16, 4)),
-        'note': fields.text('Description'),
-        'bank_id':fields.many2one('res.bank', 'Bank', required=False, help="Select the Bank Address from which the salary is going to be paid"),
-    }
-
-    _defaults = {
-        'date': lambda *a: time.strftime('%Y-%m-%d'),
-        'state': 'new',
-        'active': True,
-        'company_id': lambda self, cr, uid, context: \
-                self.pool.get('res.users').browse(cr, uid, uid,
-                    context=context).company_id.id,
-    }
-
-    def compute_sheet(self, cr, uid, ids, context=None):
-        emp_pool = self.pool.get('hr.employee')
-        slip_pool = self.pool.get('hr.payslip')
-        wf_service = netsvc.LocalService("workflow")
-        if context is None:
-            context = {}
-        vals = self.browse(cr, uid, ids[0], context=context)
-        emp_ids = emp_pool.search(cr, uid, [], context=context)
-        for emp in emp_pool.browse(cr, uid, emp_ids, context=context):
-            old_slips = slip_pool.search(cr, uid, [('employee_id','=', emp.id), ('date','=',vals.date)], context=context)
-            if old_slips:
-                slip_pool.write(cr, uid, old_slips, {'register_id': ids[0]}, context=context)
-                for sid in old_slips:
-                    wf_service.trg_validate(uid, 'hr.payslip', sid, 'compute_sheet', cr)
-            else:
-                res = {
-                    'employee_id': emp.id,
-#                    'basic_amount': 0.0,
-                    'register_id': ids[0],
-                    'name': vals.name,
-                    'date': vals.date,
-                }
-                slip_id = slip_pool.create(cr, uid, res, context=context)
-                wf_service.trg_validate(uid, 'hr.payslip', slip_id, 'compute_sheet', cr)
-
-        number = self.pool.get('ir.sequence').get(cr, uid, 'salary.register')
-        return self.write(cr, uid, ids, {'state': 'draft', 'number': number}, context=context)
-
+#    _name = 'hr.payroll.register'
+#    _description = 'Payroll Register'
+#
+##    def _calculate(self, cr, uid, ids, field_names, arg, context=None):
+##        res = {}
+##        allounce = 0.0
+##        deduction = 0.0
+##        net = 0.0
+##        grows = 0.0
+##        for register in self.browse(cr, uid, ids, context=context):
+##            for slip in register.line_ids:
+##                allounce += slip.allounce
+##                deduction += slip.deduction
+###                net += slip.net
+###                grows += slip.grows
+##
+##            res[register.id] = {
+##                'allounce':allounce,
+##                'deduction':deduction,
+###                'net':net,
+###                'grows':grows
+##            }
+##        return res
+#
+#    _columns = {
+#        'name':fields.char('Name', size=64, required=True, readonly=False),
+#        'date': fields.date('Date', required=True),
+#        'number':fields.char('Number', size=64, required=False, readonly=True),
+#        'line_ids':fields.one2many('hr.payslip', 'register_id', 'Payslips', required=False),
+#        'state':fields.selection([
+#            ('new','New Slip'),
+#            ('draft','Waiting for Verification'),
+#            ('hr_check','Waiting for HR Verification'),
+#            ('accont_check','Waiting for Account Verification'),
+#            ('confirm','Confirm Sheet'),
+#            ('done','Paid Salary'),
+#            ('cancel','Reject'),
+#        ],'State', select=True, readonly=True),
+#        'active':fields.boolean('Active', required=False, help="If the active field is set to false, it will allow you to hide the payroll register without removing it."),
+#        'company_id':fields.many2one('res.company', 'Company'),
+##        'grows': fields.function(_calculate, method=True, store=True, multi='dc', string='Gross Salary', type='float', digits=(16, 4)),
+##        'net': fields.function(_calculate, method=True, store=True, multi='dc', string='Net Salary', digits=(16, 4)),
+##        'allounce': fields.function(_calculate, method=True, store=True, multi='dc', string='Allowance', digits=(16, 4)),
+##        'deduction': fields.function(_calculate, method=True, store=True, multi='dc', string='Deduction', digits=(16, 4)),
+#        'note': fields.text('Description'),
+#        'bank_id':fields.many2one('res.bank', 'Bank', required=False, help="Select the Bank Address from which the salary is going to be paid"),
+#    }
+#
+#    _defaults = {
+#        'date': lambda *a: time.strftime('%Y-%m-%d'),
+#        'state': 'new',
+#        'active': True,
+#        'company_id': lambda self, cr, uid, context: \
+#                self.pool.get('res.users').browse(cr, uid, uid,
+#                    context=context).company_id.id,
+#    }
+#
 #    def compute_sheet(self, cr, uid, ids, context=None):
 #        emp_pool = self.pool.get('hr.employee')
 #        slip_pool = self.pool.get('hr.payslip')
-#        slip_line_pool = self.pool.get('hr.payslip.line')
 #        wf_service = netsvc.LocalService("workflow")
-#
 #        if context is None:
 #            context = {}
 #        vals = self.browse(cr, uid, ids[0], context=context)
 #        emp_ids = emp_pool.search(cr, uid, [], context=context)
-#
 #        for emp in emp_pool.browse(cr, uid, emp_ids, context=context):
 #            old_slips = slip_pool.search(cr, uid, [('employee_id','=', emp.id), ('date','=',vals.date)], context=context)
 #            if old_slips:
-#                slip_pool.write(cr, uid, old_slips, {'register_id':ids[0]}, context=context)
+#                slip_pool.write(cr, uid, old_slips, {'register_id': ids[0]}, context=context)
+#                for sid in old_slips:
+#                    wf_service.trg_validate(uid, 'hr.payslip', sid, 'compute_sheet', cr)
 #            else:
 #                res = {
-#                    'employee_id':emp.id,
-#                    'basic_amount':0.0,
-#                    'register_id':ids[0],
-#                    'name':vals.name,
-#                    'date':vals.date,
+#                    'employee_id': emp.id,
+##                    'basic_amount': 0.0,
+#                    'register_id': ids[0],
+#                    'name': vals.name,
+#                    'date': vals.date,
 #                }
 #                slip_id = slip_pool.create(cr, uid, res, context=context)
-#                data = slip_pool.onchange_employee_id(cr, uid, [slip_id], vals.date, emp.id, context=context)
-#                for line in data['value']['line_ids']:
-#                    line.update({'slip_id': slip_id})
-#                    slip_line_pool.create(cr, uid, line, context=context)
-#                data['value'].pop('line_ids')
-#                slip_pool.write(cr, uid, [slip_id], data['value'], context=context)
+#                wf_service.trg_validate(uid, 'hr.payslip', slip_id, 'compute_sheet', cr)
+#
 #        number = self.pool.get('ir.sequence').get(cr, uid, 'salary.register')
 #        return self.write(cr, uid, ids, {'state': 'draft', 'number': number}, context=context)
-
-    def set_to_draft(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'state':'draft'}, context=context)
-
-    def cancel_sheet(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'state':'cancel'}, context=context)
-
-    def verify_sheet(self, cr, uid, ids, context=None):
-        slip_pool = self.pool.get('hr.payslip')
-        wf_service = netsvc.LocalService("workflow")
-        sids = slip_pool.search(cr, uid, [('register_id','in', ids)], context=context)
-        for sid in sids:
-            wf_service.trg_validate(uid, 'hr.payslip', sid, 'verify_sheet', cr)
-        return self.write(cr, uid, ids, {'state':'hr_check'}, context=context)
-
-    def final_verify_sheet(self, cr, uid, ids, context=None):
-        slip_pool = self.pool.get('hr.payslip')
-        sequence_pool = self.pool.get('ir.sequence')
-        wf_service = netsvc.LocalService("workflow")
-        users_pool = self.pool.get('res.users')
-        sids = slip_pool.search(cr, uid, [('register_id','in', ids), ('state','=','hr_check')], context=context)
-        for sid in sids:
-            wf_service.trg_validate(uid, 'hr.payslip', sid, 'final_verify_sheet', cr)
-#        company_name = users_pool.browse(cr, uid, uid, context=context).company_id.name
-        return self.write(cr, uid, ids, {'state':'confirm'}, context=context)
-
-    def process_sheet(self, cr, uid, ids, context=None):
-        slip_pool = self.pool.get('hr.payslip')
-        wf_service = netsvc.LocalService("workflow")
-        sids = slip_pool.search(cr, uid, [('register_id','in', ids), ('state','=','confirm')], context=context)
-        for sid in sids:
-            wf_service.trg_validate(uid, 'hr.payslip', sid, 'process_sheet', cr)
-        return self.write(cr, uid, ids, {'state':'done'}, context=context)
-
-payroll_register()
+#
+##    def compute_sheet(self, cr, uid, ids, context=None):
+##        emp_pool = self.pool.get('hr.employee')
+##        slip_pool = self.pool.get('hr.payslip')
+##        slip_line_pool = self.pool.get('hr.payslip.line')
+##        wf_service = netsvc.LocalService("workflow")
+##
+##        if context is None:
+##            context = {}
+##        vals = self.browse(cr, uid, ids[0], context=context)
+##        emp_ids = emp_pool.search(cr, uid, [], context=context)
+##
+##        for emp in emp_pool.browse(cr, uid, emp_ids, context=context):
+##            old_slips = slip_pool.search(cr, uid, [('employee_id','=', emp.id), ('date','=',vals.date)], context=context)
+##            if old_slips:
+##                slip_pool.write(cr, uid, old_slips, {'register_id':ids[0]}, context=context)
+##            else:
+##                res = {
+##                    'employee_id':emp.id,
+##                    'basic_amount':0.0,
+##                    'register_id':ids[0],
+##                    'name':vals.name,
+##                    'date':vals.date,
+##                }
+##                slip_id = slip_pool.create(cr, uid, res, context=context)
+##                data = slip_pool.onchange_employee_id(cr, uid, [slip_id], vals.date, emp.id, context=context)
+##                for line in data['value']['line_ids']:
+##                    line.update({'slip_id': slip_id})
+##                    slip_line_pool.create(cr, uid, line, context=context)
+##                data['value'].pop('line_ids')
+##                slip_pool.write(cr, uid, [slip_id], data['value'], context=context)
+##        number = self.pool.get('ir.sequence').get(cr, uid, 'salary.register')
+##        return self.write(cr, uid, ids, {'state': 'draft', 'number': number}, context=context)
+#
+#    def set_to_draft(self, cr, uid, ids, context=None):
+#        return self.write(cr, uid, ids, {'state':'draft'}, context=context)
+#
+#    def cancel_sheet(self, cr, uid, ids, context=None):
+#        return self.write(cr, uid, ids, {'state':'cancel'}, context=context)
+#
+#    def verify_sheet(self, cr, uid, ids, context=None):
+#        slip_pool = self.pool.get('hr.payslip')
+#        wf_service = netsvc.LocalService("workflow")
+#        sids = slip_pool.search(cr, uid, [('register_id','in', ids)], context=context)
+#        for sid in sids:
+#            wf_service.trg_validate(uid, 'hr.payslip', sid, 'verify_sheet', cr)
+#        return self.write(cr, uid, ids, {'state':'hr_check'}, context=context)
+#
+#    def final_verify_sheet(self, cr, uid, ids, context=None):
+#        slip_pool = self.pool.get('hr.payslip')
+#        sequence_pool = self.pool.get('ir.sequence')
+#        wf_service = netsvc.LocalService("workflow")
+#        users_pool = self.pool.get('res.users')
+#        sids = slip_pool.search(cr, uid, [('register_id','in', ids), ('state','=','hr_check')], context=context)
+#        for sid in sids:
+#            wf_service.trg_validate(uid, 'hr.payslip', sid, 'final_verify_sheet', cr)
+##        company_name = users_pool.browse(cr, uid, uid, context=context).company_id.name
+#        return self.write(cr, uid, ids, {'state':'confirm'}, context=context)
+#
+#    def process_sheet(self, cr, uid, ids, context=None):
+#        slip_pool = self.pool.get('hr.payslip')
+#        wf_service = netsvc.LocalService("workflow")
+#        sids = slip_pool.search(cr, uid, [('register_id','in', ids), ('state','=','confirm')], context=context)
+#        for sid in sids:
+#            wf_service.trg_validate(uid, 'hr.payslip', sid, 'process_sheet', cr)
+#        return self.write(cr, uid, ids, {'state':'done'}, context=context)
+#
+#payroll_register()
 
 class contrib_register(osv.osv):
     '''
@@ -345,20 +346,6 @@ class contrib_register_line(osv.osv):
     }
 contrib_register_line()
 
-class hr_salary_head_type(osv.osv):
-    """
-    Salary Head Type
-    """
-
-    _name = 'hr.salary.head.type'
-    _description = 'Salary Head Type'
-    _columns = {
-        'name':fields.char('Type Name', size=64, required=True),
-        'code':fields.char('Type Code', size=16, required=True),
-    }
-
-hr_salary_head_type()
-
 class hr_salary_head(osv.osv):
     """
     HR Salary Head
@@ -369,10 +356,10 @@ class hr_salary_head(osv.osv):
     _columns = {
         'name':fields.char('Name', size=64, required=True, readonly=False),
         'code':fields.char('Code', size=64, required=True, readonly=False),
-        'type':fields.many2one('hr.salary.head.type', 'Type', required=True, help="It is used only for the reporting purpose."),
+        'parent_id':fields.many2one('hr.salary.head', 'Parent', help="Linking a salary head to its parent is used only for the reporting purpose."),
         'note': fields.text('Description'),
-        'user_id':fields.char('User', size=64, required=False, readonly=False),
-        'state':fields.char('Label', size=64, required=False, readonly=False),
+#        'user_id':fields.char('User', size=64, required=False, readonly=False),
+#        'state':fields.char('Label', size=64, required=False, readonly=False),
         'company_id':fields.many2one('res.company', 'Company', required=False),
         'sequence': fields.integer('Sequence', required=True, help='Use to arrange calculation sequence'),
 #        'display_payslip_report': fields.boolean('Display on payslip report', help="Used for the display of head on Payslip Report"),
@@ -391,15 +378,16 @@ class hr_salary_head(osv.osv):
 
 hr_salary_head()
 
-class hr_holidays_status(osv.osv):
-
-    _inherit = "hr.holidays.status"
-    _columns = {
-        # improve help
-        'code':fields.char('Code', size=16, readonly=False, help="It is used to define the code for Leave Type which will then be used in Salary Rules."),
-    }
-
-hr_holidays_status()
+#TODO: check me. we shouldn't need to touch the holidays 
+#class hr_holidays_status(osv.osv):
+#
+#    _inherit = "hr.holidays.status"
+#    _columns = {
+#        # improve help
+#        'code':fields.char('Code', size=16, readonly=False, help="It is used to define the code for Leave Type which will then be used in Salary Rules."),
+#    }
+#
+#hr_holidays_status()
 
 class hr_payslip(osv.osv):
     '''
@@ -531,7 +519,7 @@ class hr_payslip(osv.osv):
 
     _columns = {
         'struct_id': fields.related('contract_id', 'struct_id', readonly=True, type='many2one', relation='hr.payroll.structure', string='Structure', store=True),
-        'register_id': fields.many2one('hr.payroll.register', 'Register', required=False, readonly=True, states={'draft': [('readonly', False)]}),
+        #'register_id': fields.many2one('hr.payroll.register', 'Register', required=False, readonly=True, states={'draft': [('readonly', False)]}),
         'name': fields.char('Description', size=64, required=False, readonly=True, states={'draft': [('readonly', False)]}),
         'number': fields.char('Number', size=64, required=False, readonly=True, states={'draft': [('readonly', False)]}),
         'employee_id': fields.many2one('hr.employee', 'Employee', required=True, readonly=True, states={'draft': [('readonly', False)]}),
@@ -563,6 +551,7 @@ class hr_payslip(osv.osv):
         'line_ids': fields.one2many('hr.payslip.line', 'slip_id', 'Payslip Line', required=False, readonly=True, states={'draft': [('readonly', False)]}),
         'company_id': fields.many2one('res.company', 'Company', required=False, readonly=True, states={'draft': [('readonly', False)]}),
         'holiday_days': fields.float('No of Leaves', readonly=True),
+        'input_line_ids': fields.one2many('hr.payslip.input', 'payslip_id', 'Payslip Inputs', required=False, readonly=True, states={'draft': [('readonly', False)]}),
         'worked_days': fields.float('Worked Day', readonly=True),
         'working_days': fields.float('Working Days', readonly=True),
         'paid': fields.boolean('Made Payment Order ? ', required=False, readonly=True, states={'draft': [('readonly', False)]}),
@@ -857,7 +846,7 @@ class hr_payslip(osv.osv):
                         'category_id': line.category_id.id,
                         'name': line.name,
                         'sequence': line.sequence,
-                        'type': line.type.id,
+                        #'type': line.type.id,
                         'code': line.code,
                         'amount_type': line.amount_type,
                         'amount': line.amount,
@@ -982,7 +971,7 @@ class hr_payslip(osv.osv):
                     else:
                         net_allow += value
                     res['amount'] = salary_rule.amount
-                    res['type'] = salary_rule.type.id
+                    #res['type'] = salary_rule.type.id
                     leave += days
                     total += value
                     res['total'] = value
@@ -1006,7 +995,7 @@ class hr_payslip(osv.osv):
                     'category_id': line.category_id.id,
                     'name': line.name,
                     'sequence': line.sequence,
-                    'type': line.type.id,
+                    #'type': line.type.id,
                     'code': line.code,
                     'amount_type': line.amount_type,
                     'amount': line.amount,
@@ -1210,7 +1199,7 @@ class hr_payslip(osv.osv):
                     'category_id': line.category_id.id,
                     'name': line.name,
                     'sequence': line.sequence,
-                    'type': line.type.id,
+                    #'type': line.type.id,
                     'code': line.code,
                     'amount_type': line.amount_type,
                     'amount': line.amount,
@@ -1353,7 +1342,7 @@ class hr_payslip(osv.osv):
                     else:
                         net_allow += value
                     res['amount'] = salary_rule.amount
-                    res['type'] = salary_rule.type.id
+                    #res['type'] = salary_rule.type.id
                     leave += days
                     total += value
                     res['total'] = value
@@ -1373,7 +1362,7 @@ class hr_payslip(osv.osv):
                 'category_id': line.category_id.id,
                 'name': line.name,
                 'sequence': line.sequence,
-                'type': line.type.id,
+                #'type': line.type.id,
                 'code': line.code,
                 'amount_type': line.amount_type,
                 'amount': line.amount,
@@ -1440,6 +1429,28 @@ class hr_holidays(osv.osv):
 
 hr_holidays()
 
+class hr_payslip_input(osv.osv):
+    '''
+    Payslip Input
+    '''
+
+    _name = 'hr.payslip.input'
+    _description = 'Payslip Input'
+    _columns = {
+        'name': fields.char('Description', size=256, required=True), 
+        'payslip_id': fields.many2one('hr.payslip', 'Pay Slip', required=True),
+        'sequence': fields.integer('Sequence', required=True,),
+        'code': fields.char('Code', size=52, required=True, help="The code that can be used in the salary rules"),
+        'number_of_days': fields.float('Number of Days'), #(with sum='total working days of the month')
+        'number_of_hours': fields.float('Number of Hours'),#TODO
+        'contract_id': fields.many2one('hr.contract', 'Contract', required=True, help="The contract for which applied this input"), #TODO(extended view)
+    }
+    _order = 'payslip_id,sequence'
+    _defaults = {
+        'sequence': 10,
+    }
+hr_payslip_input()
+
 class hr_payslip_line(osv.osv):
     '''
     Payslip Line
@@ -1456,7 +1467,7 @@ class hr_payslip_line(osv.osv):
         res.update({
             'name': category.name,
             'code': category.code,
-            'type': category.type.id
+            #'type': category.type.id
         })
         return {'value': res}
 
@@ -1474,7 +1485,7 @@ class hr_payslip_line(osv.osv):
         'base':fields.char('Formula', size=1024, required=False, readonly=False),
         'code':fields.char('Code', size=64, required=False, readonly=False),
         'category_id':fields.many2one('hr.salary.head', 'Salary Head', required=True),
-        'type':fields.related('category_id', 'type', relation='hr.salary.head.type', string='Salary Head Type', type='many2one', store=True), #many2one('hr.salary.head.type', 'Type', required=True, help="Used for the reporting purpose."),
+        #'type':fields.related('category_id', 'type', relation='hr.salary.head.type', string='Salary Head Type', type='many2one', store=True), #many2one('hr.salary.head.type', 'Type', required=True, help="Used for the reporting purpose."),
         'amount_type':fields.selection([
             ('per','Percentage (%)'),
             ('fix','Fixed Amount'),
@@ -1516,10 +1527,10 @@ class hr_salary_rule(osv.osv):
             help="Contribution register based on company",
             required=False
         ),
-        'gratuity':fields.boolean('Use for Gratuity ?', required=False),
-        'condition_select': fields.selection([('range', 'Range'), ('python', 'Python Expression')], "Condition based on"),
+        #'gratuity':fields.boolean('Use for Gratuity ?', required=False),
+        'condition_select': fields.selection([('none', 'Always True'),('range', 'Range'), ('python', 'Python Expression')], "Condition Based on"),
         'computational_expression':fields.char('Computational Expression',size=1024, required=True, readonly=False, help='This will use to computer the % fields values, in general its on basic, but You can use all heads code field in small letter as a variable name i.e. hra, ma, lta, etc...., also you can use, static varible basic'),
-        'conditions':fields.char('Condition', size=1024, required=True, readonly=False, help='Applied this rule for calculation if condition is true.You can specify condition like basic > 1000.'),
+        'conditions':fields.char('Condition', size=1024, required=True, readonly=False, help='Applied this rule for calculation if condition is true. You can specify condition like basic > 1000.'),
         'active':fields.boolean('Active', help="If the active field is set to false, it will allow you to hide the salary rule without removing it."),
         'python_compute':fields.text('Python Code'),
         'display_child_rules': fields.boolean('Display Child Rules', help="Used for the display of Child Rules on payslip"),
@@ -1537,7 +1548,7 @@ class hr_salary_rule(osv.osv):
         'company_id': lambda self, cr, uid, context: \
                 self.pool.get('res.users').browse(cr, uid, uid,
                     context=context).company_id.id,
-        'condition_select': 'python',
+        'condition_select': 'none',
      }
 
     def onchange_company(self, cr, uid, ids, company_contribution=False, context=None):

@@ -161,7 +161,6 @@
                     <field name="sequence" groups="base.group_extended"/>
                     <field name="name"/>
                     <field name="code"/>
-                    <field name="type"/>
                     <field name="amount_type"/>
                     <field name="amount" on_change="onchange_amount(amount, amount_type)"/>
                 </tree>
@@ -210,7 +209,6 @@
                 <tree colors="blue:state in ('confirm','hr_check','accont_check');black:state in ('new');gray:state in('cancel')" string="Payslip">
                     <field name="number"/>
                     <field name="employee_id"/>
-                    <field name="register_id" invisible="1"/>
                     <field name="name"/>
                     <field name="date"/>
                     <!--field name="grows"/-->
@@ -243,7 +241,6 @@
                                     <field name="sequence" groups="base.group_extended"/>
                                     <field name="name"/>
                                     <field name="code"/>
-                                    <field name="type"/>
                                     <field name="amount_type"/>
                                     <field name="amount" on_change="onchange_amount(amount, amount_type)"/>
                                     <field name="total"/>
@@ -256,7 +253,6 @@
                                     <group col="2" colspan="2">
                                         <separator colspan="4" string="Calculations"/>
                                         <field name="category_id" on_change="onchange_category(category_id)"/>
-                                        <field name="type"/>
                                         <field name="amount_type"/>
                                         <field name="amount" on_change="onchange_amount(amount, amount_type)" attrs="{'readonly':[('amount_type','=','code')]}"/>
                                         <field name="sequence" groups="base.group_extended"/>
@@ -296,28 +292,21 @@
                                     <field name="sequence" groups="base.group_extended"/>
                                     <field name="name"/>
                                     <field name="code"/>
-                                    <field name="type"/>
                                     <field name="amount_type"/>
                                     <field name="amount"/>
                                 </tree>
                             </field>
                        </page>
 
-                       <page string="Holidays">
-                            <field name="holiday_ids" colspan="4" nolabel="1" editable="bottom">
-                                <tree colors="red:state in ('refuse');blue:state in ('draft');black:state in ('confirm','validate','validate1')" string="Leaves" >
-                                    <field name="employee_id" invisible="1"/>
-                                    <field name="department_id" invisible="1"/>
-                                    <field name="holiday_status_id"/>
+                       <page string="Inputs">
+                            <field name="input_line_ids" colspan="4" nolabel="1" mode="tree" editable="bottom">
+                                <tree>
                                     <field name="name"/>
-                                    <field name="number_of_days" string="Number of Days" sum='Remaining Days'/>
-                                    <field name="manager_id" invisible="1"/>
-                                    <field name="user_id" invisible="1"/>
-                                    <!--field name="type"/-->
-                                    <field name="state"/>
-                                    <field name="contract_id"/>
-                                    <button string="Approve" name="validate" states="confirm" type="workflow" icon="gtk-apply" groups="base.group_hr_user,base.group_hr_manager"/>
-                                    <button string="Approved" name="second_validate" states="validate1" type="workflow" icon="gtk-apply" groups="base.group_hr_user,base.group_hr_manager"/>
+                                    <field name="code"/>
+                                    <field name="number_of_days" sum="Total Working Days"/>
+                                    <field name="number_of_hours"/>
+                                    <field name="contract_id" groups="base.group_extended"/>
+                                    <field name="sequence" invisible="True"/>
                                 </tree>
                             </field>
                        </page>
@@ -325,7 +314,6 @@
                        <page string="Other Information">
                             <separator colspan="4" string="Other Information"/>
                             <group col="5" colspan="2">
-                                <field name="register_id" groups="base.group_extended"/>
                                 <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                                 <field name="paid" readonly="1"/>
                             </group>
@@ -369,8 +357,6 @@
                     <group col="8" colspan="4" expand="0" string="Group By...">
                         <filter string="Employees" icon="terp-personal" name="employee_id" context="{'group_by':'employee_id'}"/>
                         <separator orientation="vertical"/>
-                        <filter string="Register" icon="terp-folder-yellow" name="register_id" context="{'group_by':'register_id'}"/>
-                        <separator orientation="vertical"/>
                         <filter string="Companies" name="company_id"  icon="terp-go-home" context="{'group_by':'company_id'}"/>
                         <separator orientation="vertical"/>
                         <filter string="States" name="state" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
@@ -397,7 +383,7 @@
                     <group col="3" colspan="6">
                         <field name="name" select="1"/>
                         <field name="code" select="1"/>
-                        <field name="type" select="1"/>
+                        <field name="parent_id" select="1"/>
                         <field name="sequence" select="1"/>
                         <!--<field name="dispaly_payslip_report"/>-->
                     </group>
@@ -415,7 +401,7 @@
                     <field name="name"/>
                     <field name="sequence"/>
                     <field name="code"/>
-                    <field name="type"/>
+                    <field name="parent_id"/>
                 </tree>
             </field>
         </record>
@@ -431,7 +417,6 @@
                     <separator orientation="vertical"/>
                     <field name="name" select="1"/>
                      <field name="code" select="1"/>
-                    <field name="type"/>
                     <newline/>
                     <group expand="0" string="Group By..." colspan="4" col="4" groups="base.group_extended">
                         <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type'}"/>
@@ -455,7 +440,7 @@
         />
         <!-- End Payment Heads -->
 
-        <record id="view_hr_payroll_register_tree" model="ir.ui.view">
+ <!--       <record id="view_hr_payroll_register_tree" model="ir.ui.view">
             <field name="name">hr.payroll.register.tree</field>
             <field name="model">hr.payroll.register</field>
             <field name="type">tree</field>
@@ -491,13 +476,13 @@
                                     <field name="name"/>
                                     <field name="date"/>
                                     <field name="basic_amount"/>
-                                    <!--<field name="allounce"/>-->
+                                    --><!--<field name="allounce"/>-->
                                     <!--field name="grows"/-->
                                    <!-- <field name="deduction"/>-->
                                     <!--field name="net"/-->
-                                    <field name="state"/>
+                                   <!-- <field name="state"/>
                                 </tree>
-                            </field>
+                            </field>-->
                             <!--<group col="2" colspan="2">
                                 <separator colspan="4" string="Allowance / Deduction"/>
                                 <field name="allounce"/>
@@ -508,7 +493,7 @@
                                 <field name="grows"/>
                                 <field name="net"/>
                             </group-->
-                        </page>
+<!--                        </page>
                     </notebook>
                     <group col="8" colspan="4">
                         <field name="state"/>
@@ -533,7 +518,7 @@
             id="hr_menu_payroll_register"
             parent="menu_hr_root_payroll"
         />
-
+-->
         <!--
         Contribution Register
         -->
@@ -636,7 +621,6 @@
                     <field name="sequence" groups="base.group_extended"/>
                     <field name="name"/>
                     <field name="code"/>
-                    <field name="type"/>
                     <field name="amount_type"/>
             <field name="condition_range_min"/>
             <field name="condition_range_max"/>
@@ -655,44 +639,30 @@
                    <field name="name"/>
                    <field name="code" select="1"/>
                    <field name="category_id"/>
-                   <field name="active"/>
                    <field name="sequence" />
-                   <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                   <field name="active"/>
                    <field name="appears_on_payslip" attrs="{'readonly':[('company_contribution','=', True)]}" />
+		   <field name="parent_rule_id"/>
+                   <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                 </group>
                 <notebook colspan="6">
                     <page string="General">
-                        <group col="6" colspan="6">
-                            <group col="2" colspan="2">
-                                <separator colspan="4" string="Calculations"/>
-                                <!--<field name="type"/>-->
-                                <field name="computational_expression"/>
-                                <field name="condition_select"/>
-                                <field name="conditions" attrs="{'invisible':[('condition_select','=','range')]}"/>
-                                <field name="condition_range_min" attrs="{'invisible':[('condition_select','=','python')]}" colspan="1"/>
-                                <field name="condition_range_max" attrs="{'invisible':[('condition_select','=','python')]}" colspan="1"/>
-                                <field name="amount_type"/>
-                <field name="parent_rule_id"/>
-                <field name="expression_result"/>
+                            <group col="4" colspan="6">
+                                <separator colspan="4" string="Conditions"/>
+                                <field name="condition_select"/><newline/>
+                                <field name="conditions" attrs="{'invisible':[('condition_select','&lt;&gt;','python')], 'required': [('condition_select','=','python')]}"/> <newline/>
+                                <field name="computational_expression" string="Range Based on" attrs="{'invisible':[('condition_select','&lt;&gt;','range')]}"/><newline/>
+                                <field name="condition_range_min" colspan="2" attrs="{'invisible':[('condition_select','&lt;&gt;','range')]}"/>
+                                <field name="condition_range_max" colspan="2" attrs="{'invisible':[('condition_select','&lt;&gt;','range')]}"/>
+                                <separator colspan="4" string="Computation"/>
+                                <field name="amount_type"/><newline/>
                                 <field name="amount" on_change="onchange_amount(amount, amount_type)" attrs="{'invisible':[('amount_type','=','code')]}"/>
-                                <group col="2" colspan="2"  attrs="{'invisible':[('amount_type','&lt;&gt;','code')]}">
-                                    <separator colspan="2" string="Compute Code"/>
-                                    <field colspan="2" name="python_compute" nolabel="1" attrs="{'readonly':[('amount_type','!=','code')], 'required':[('amount_type','=','code')]}"/>
-                                </group>
-                            </group>
-                            <group col="2" colspan="2">
-                                <group col="2" colspan="2">
+				<field name="expression_result"  attrs="{'invisible':[('amount_type','&lt;&gt;','per')], 'required': [('amount_type','=','per')]}" string="Percentage Based on"/>
+                                <field colspan="4" name="python_compute" attrs="{'invisible':[('amount_type','&lt;&gt;','code')], 'required':[('amount_type','=','code')]}"/>
                                 <separator colspan="4" string="Company contribution"/>
-                                    <field name="company_contribution" on_change="onchange_company(company_contribution)" />
-                                    <group col="2" colspan="2" attrs="{'readonly':[('company_contribution','=',False)]}">
-                                       <!-- <field name="amt_type" />
-                                        <field name="contribute_per"/>-->
-                                        <field name="register_id"/>
-                                     <!--   <field name="company_contrib"/>-->
-                                    </group>
-                                </group>
-                           </group>
-                        </group>
+                                    <!--<field name="company_contribution" on_change="onchange_company(company_contribution)" />-->
+                                <field name="register_id"/>
+                            </group>
                     </page>
                     <page string="Child Rules">
                        <separator colspan="4" string="Children definition"/>
@@ -740,7 +710,7 @@
     <menuitem id="menu_action_hr_salary_rule_form" action="action_salary_rule_form" parent="payroll_configure" sequence="12"/>
 
         <!-- Salary Head Type -->
-        <record id="salary_head_type_tree" model="ir.ui.view">
+<!--        <record id="salary_head_type_tree" model="ir.ui.view">
             <field name="name">salary.head.type.tree</field>
             <field name="model">hr.salary.head.type</field>
             <field name="type">tree</field>
@@ -772,7 +742,7 @@
         </record>
 
         <menuitem id="menu_action_salary_head_type" action="action_salary_head_type" parent="payroll_configure" sequence="10"/>
-
+-->
     </data>
 </openerp>
 
