@@ -1093,11 +1093,9 @@ class account_move_line(osv.osv):
         move_line_ids = set()
         for line in self.browse(cr, uid, ids, context=context):
             move_ids.add(line.move_id.id)
-            context['journal_id'] = line.journal_id.id
-            context['period_id'] = line.period_id.id
             move_line_ids.add(line.id)
-            for obj in line.analytic_lines:
-                analytic_ids.add(obj.id)
+            for analytic in line.analytic_lines:
+                analytic_ids.add(analytic.id)
 
         analytic_ids = list(analytic_ids)
         move_ids = list(move_ids)
