@@ -106,21 +106,22 @@ class portal(osv.osv):
         }
         return actions_obj.create(cr, uid, action_values, context)
     
-    def create_parent_menu(self, cr, uid, ids, context=None):
-        """ create a parent menu for this portal """
-        if len(ids) != 1:
-            raise ValueError("portal.create_parent_menu() applies to one portal at a time")
-        portal_name = self.browse(cr, uid, ids[0], context).name
+    def do_create_menu(self, cr, uid, ids, context=None):
+        """ create a parent menu for the given portals """
+        menu_obj = self.pool.get('ir.ui.menu')
+        menu_root = self._res_xml_id(cr, uid, 'portal', 'portal_menu')
         
-        # create a menuitem under 'portal.portal_menu_tree'
-        item_values = {
-            'name': portal_name + ' Menu',
-            'parent_id': self._res_xml_id(cr, uid, 'portal', 'portal_menu_tree'),
-        }
-        item_id = self.pool.get('ir.ui.menu').create(cr, uid, item_values, context)
+        for p in self.browse(cr, uid, ids, context):
+            # create a menuitem under 'portal.portal_menu'
+            menu_values = {
+                'name': p.name + ' Menu',
+                'parent_id': menu_root,
+            }
+            menu_id = menu_obj.create(cr, uid, menu_values, context)
+            # set the parent_menu_id to item_id
+            self.write(cr, uid, p.id, {'parent_menu_id': menu_id}, context)
         
-        # set the parent_menu_id to item_id
-        return self.write(cr, uid, ids, {'parent_menu_id': item_id}, context)
+        return True
     
     def onchange_group(self, cr, uid, ids, group_id, context=None):
         """ update the users list when the group changes """

@@ -20,10 +20,6 @@ portal's users.
         <menuitem name="Portals" id="portal_list_menu"
             parent="portal_menu" sequence="1" action="portal_list_action"/>
 
-        <!-- menu Administration/Portals/Portal menus -->
-        <menuitem name="Portal Menus" id="portal_menu_tree"
-            parent="portal_menu" sequence="2"/>
-
         <!-- portal form view -->
         <record id="portal_form" model="ir.ui.view">
             <field name="name">Portal Form</field>
@@ -44,7 +40,7 @@ portal's users.
                             <newline/>
                             <field name="parent_menu_id"
                                 context="{'ir.ui.menu.full_list': True}"/>
-                            <button name="create_parent_menu" type="object"
+                            <button name="do_create_menu" type="object"
                                 string="Create Parent Menu"/>
                         </page>
                     </notebook>
