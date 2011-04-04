@@ -116,10 +116,11 @@ class portal(osv.osv):
             menu_values = {
                 'name': p.name + ' Menu',
                 'parent_id': menu_root,
+                'groups_id': [(6, 0, [p.group_id.id])],
             }
             menu_id = menu_obj.create(cr, uid, menu_values, context)
             # set the parent_menu_id to item_id
-            self.write(cr, uid, p.id, {'parent_menu_id': menu_id}, context)
+            self.write(cr, uid, [p.id], {'parent_menu_id': menu_id}, context)
         
         return True
     
