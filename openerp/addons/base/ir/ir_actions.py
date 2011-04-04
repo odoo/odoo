@@ -162,7 +162,7 @@ class act_window(osv.osv):
 
     def _invalid_model_msg(self, cr, uid, ids, context=None):
         return _('Invalid model name in the action definition.')
-    
+
     _constraints = [
         (_check_model, _invalid_model_msg, ['res_model','src_model'])
     ]
@@ -195,7 +195,7 @@ class act_window(osv.osv):
             if act.search_view_id:
                 search_view_id = act.search_view_id.id
             else:
-                res_view = self.pool.get('ir.ui.view').search(cr, uid, 
+                res_view = self.pool.get('ir.ui.view').search(cr, uid,
                         [('model','=',act.res_model),('type','=','search'),
                         ('inherit_id','=',False)], context=context)
                 if res_view:
@@ -631,7 +631,10 @@ class actions_server(osv.osv):
                 subject = self.merge_message(cr, uid, action.subject, action, context)
                 body = self.merge_message(cr, uid, action.message, action, context)
 
-                if tools.email_send(user, [address], subject, body, debug=False, subtype='html') == True:
+                smtp_server_pool = self.pool.get('ir.mail_server')
+                msg = smtp_server_pool.pack_message(cr, uid, subject, body, subtype='html')
+                res_email = smtp_server_pool.send_email(cr, uid, user, [address], msg, debug=False)
+                if res_email:
                     logger.info('Email successfully sent to: %s', address)
                 else:
                     logger.warning('Failed to send email to: %s', address)

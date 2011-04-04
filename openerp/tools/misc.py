@@ -59,6 +59,7 @@ except ImportError:
 import openerp.loglevels as loglevels
 from config import config
 from lru import LRU
+import openerp.pooler as pooler
 
 # get_encodings, ustr and exception_to_unicode were originally from tools.misc.
 # There are moved to loglevels until we refactor tools.
@@ -346,14 +347,6 @@ res_re = re.compile(r"\[([0-9]+)\]", re.UNICODE)
 command_re = re.compile("^Set-([a-z]+) *: *(.+)$", re.I + re.UNICODE)
 reference_re = re.compile("<.*-openobject-(\\d+)@(.*)>", re.UNICODE)
 
-priorities = {
-        '1': '1 (Highest)',
-        '2': '2 (High)',
-        '3': '3 (Normal)',
-        '4': '4 (Low)',
-        '5': '5 (Lowest)',
-    }
-
 def html2plaintext(html, body_id=None, encoding='utf-8'):
     ## (c) Fry-IT, www.fry-it.com, 2007
     ## <peter@fry-it.com>
@@ -427,96 +420,10 @@ def generate_tracking_message_id(openobject_id):
     """
     return "<%s-openobject-%s@%s>" % (time.time(), openobject_id, socket.gethostname())
 
-def connect_smtp_server(server_host, server_port,  user_name=None, user_password=None, ssl=False, tls=False, debug=False):
-    """
-    Connect SMTP Server and returned the (SMTP) object
-    """
-    smtp_server = None
-    try:
-        if ssl:
-            # In Python 2.6
-            smtp_server = smtplib.SMTP_SSL(server_host, server_port)
-        else:
-            smtp_server = smtplib.SMTP(server_host, server_port)
-
-        smtp_server.set_debuglevel(int(bool(debug)))  # 0 or 1
-
-
-        if tls:
-            smtp_server.ehlo()
-            smtp_server.starttls()
-            smtp_server.ehlo()
-
-        #smtp_server.connect(server_host, server_port)
-
-        if smtp_server.has_extn('AUTH') or user_name or user_password:
-            smtp_server.login(user_name, user_password)
-
-
-    except Exception, error:
-        _logger.error('Could not connect to smtp server : %s' %(error), exc_info=True)
-        raise error
-    return smtp_server
-
-
-def _email_send(smtp_from, smtp_to_list, message, ssl=False, debug=False,
-            smtp_server=None, smtp_port=None, smtp_user=None, smtp_password=None):
-    """Low-level method to send directly a Message through the configured smtp server.
-        :param smtp_from: RFC-822 envelope FROM (not displayed to recipient)
-        :param smtp_to_list: RFC-822 envelope RCPT_TOs (not displayed to recipient)
-        :param message: an email.message.Message to send
-        :param debug: True if messages should be output to stderr before being sent,
-                      and smtplib.SMTP put into debug mode.
-        :return: True if the mail was delivered successfully to the smtp,
-                 else False (+ exception logged)
-    """
-    class WriteToLogger(object):
-        def __init__(self):
-            self.logger = loglevels.Logger()
-
-        def write(self, s):
-            self.logger.notifyChannel('email_send', loglevels.LOG_DEBUG, s)
-
-    try:
-        smtp_server = smtp_server or config['smtp_server']
-
-        if smtp_server.startswith('maildir:/'):
-            from mailbox import Maildir
-            maildir_path = smtp_server[8:]
-            mdir = Maildir(maildir_path,factory=None, create = True)
-            mdir.add(message.as_string(True))
-            return True
-
-        if debug:
-            oldstderr = smtplib.stderr
-            smtplib.stderr = WriteToLogger()
-
-        if not ssl: ssl = config.get('smtp_ssl', False)
-        smtp = connect_smtp_server(smtp_server, smtp_port, smtp_user, smtp_password, ssl=ssl, tls=True, debug=debug)
-        try:
-            smtp.sendmail(smtp_from, smtp_to_list, message.as_string())
-        except Exception:
-            _logger.error('could not deliver Email(s)', exc_info=True)
-            return False
-        finally:
-            try:
-                smtp.quit()
-            except Exception:
-                # ignored, just a consequence of the previous exception
-                pass
-
-        if debug:
-            smtplib.stderr = oldstderr
-    except Exception:
-        _logger.error('Error on Send Emails Services', exc_info=True)
-        return False
-
-    return True
-
 
 def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=None, reply_to=False,
                attach=None, message_id=None, references=None, openobject_id=False, debug=False, subtype='plain', x_headers=None, priority='3',
-               smtp_server=None, smtp_port=None, ssl=False, smtp_user=None, smtp_password=None):
+               smtp_server=None, smtp_port=None, ssl=False, smtp_user=None, smtp_password=None, cr=None, uid=None):
 
     """Send an email.
 
@@ -528,74 +435,44 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
 
     `email_to`: a sequence of addresses to send the mail to.
     """
-    if x_headers is None:
-        x_headers = {}
 
+    # If not cr, get cr from current thread database
+    if not cr:
+        db_name = getattr(threading.currentThread(), 'dbname', None)
+        if db_name:
+            cr = pooler.get_db_only(db_name).cursor()
+        else:
+            raise Exception("No database cursor found!")
+
+    # if not uid, take uid as a root
+    #TOFIX: uid should taken from current thread
+    if not uid:
+        uid = 1
 
     if not (email_from or config['email_from']):
         raise ValueError("Sending an email requires either providing a sender "
-                         "address or having configured one")
+                             "address or having configured one")
 
     if not email_from: email_from = config.get('email_from', False)
+
     email_from = ustr(email_from).encode('utf-8')
 
-    if not email_cc: email_cc = []
-    if not email_bcc: email_bcc = []
-    if not body: body = u''
+    mail_server_pool = pooler.get_pool(cr.dbname).get('ir.mail_server')
+    # Pack Message
+    msg = mail_server_pool.pack_message(cr, uid, subject, body, email_cc, email_bcc, reply_to,
+               attach, message_id, references, openobject_id, debug, subtype, x_headers, priority)
 
-    email_body = ustr(body).encode('utf-8')
-    email_text = MIMEText(email_body or '',_subtype=subtype,_charset='utf-8')
-    msg = MIMEMultipart()
-
-    if not message_id and openobject_id:
-        message_id = generate_tracking_message_id(openobject_id)
-    else:
-        message_id = Utils.make_msgid()
-    if references:
-        msg['references'] = references
-    msg['Message-Id'] = message_id
-    msg['Subject'] = Header(ustr(subject), 'utf-8')
-    msg['From'] = email_from
-    del msg['Reply-To']
-    if reply_to:
-        msg['Reply-To'] = reply_to
-    else:
-        msg['Reply-To'] = msg['From']
-    msg['To'] = COMMASPACE.join(email_to)
-    if email_cc:
-        msg['Cc'] = COMMASPACE.join(email_cc)
-    if email_bcc:
-        msg['Bcc'] = COMMASPACE.join(email_bcc)
-    msg['Date'] = formatdate(localtime=True)
-
-    msg['X-Priority'] = priorities.get(priority, '3 (Normal)')
-
-    # Add dynamic X Header
-    for key, value in x_headers.iteritems():
-        msg['%s' % key] = str(value)
-
-    if html2text and subtype == 'html':
-        text = html2text(email_body.decode('utf-8')).encode('utf-8')
-        alternative_part = MIMEMultipart(_subtype="alternative")
-        alternative_part.attach(MIMEText(text, _charset='utf-8', _subtype='plain'))
-        alternative_part.attach(email_text)
-        msg.attach(alternative_part)
-    else:
-        msg.attach(email_text)
-
-    if attach:
-        for (fname,fcontent) in attach:
-            part = MIMEBase('application', "octet-stream")
-            part.set_payload( fcontent )
-            Encoders.encode_base64(part)
-            part.add_header('Content-Disposition', 'attachment; filename="%s"' % (fname,))
-            msg.attach(part)
-
-    res = _email_send(email_from, flatten([email_to, email_cc, email_bcc]), msg, ssl=ssl, debug=debug,
+    # Send Email    
+    res = False
+    try:
+        res = mail_server_pool.send_email(cr, uid, email_from, flatten([email_to, email_cc, email_bcc]), msg, ssl=ssl, debug=debug,
                        smtp_server=smtp_server, smtp_port=smtp_port, smtp_user=smtp_user, smtp_password=smtp_password)
-    if res:
-        return message_id
-    return False
+    except Exception:
+        return False
+    finally:
+        cr.close()
+    return res
+        
 
 #----------------------------------------------------------
 # SMS
