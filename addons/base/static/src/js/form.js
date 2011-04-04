@@ -43,8 +43,6 @@ openerp.base.FormView =  openerp.base.Controller.extend(
             w.start();
         });
         this.$element.find('button.form_save').click(this.do_save);
-
-        this.dataset.fetch_index(this.fields_view.fields, this.on_record_loaded);
     },
     on_next: function() {
         this.dataset.next();
@@ -121,6 +119,13 @@ openerp.base.FormView =  openerp.base.Controller.extend(
             // TODO: save values via datarecord
             // rpc - save.callbacl on_saved
         }
+    },
+    do_show: function () {
+        this.dataset.fetch_index(this.fields_view.fields, this.on_record_loaded);
+        this.$element.show();
+    },
+    do_hide: function () {
+        this.$element.hide();
     },
     on_invalid: function() {
     },

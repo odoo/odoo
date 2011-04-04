@@ -76,6 +76,13 @@ openerp.base.ListView = openerp.base.Controller.extend({
             }));
 
     },
+    do_show: function () {
+        // TODO: re-trigger search
+        this.$element.show();
+    },
+    do_hide: function () {
+        this.$element.hide();
+    },
     do_search: function (domains, contexts, groupbys) {
         var self = this;
         this.rpc('/base/session/eval_domain_and_context', {
