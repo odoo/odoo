@@ -490,7 +490,6 @@ MAP_FIELDS = {'Opportunities':  #Object Mapping name
                     {'dependencies' : ['Users'],  #Object to import before this table
                      'process' : import_partners,
                     },
-                          
               'Users': 
                     {'dependencies' : [],
                      'process' : import_users,
