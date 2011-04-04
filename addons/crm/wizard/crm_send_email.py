@@ -45,7 +45,7 @@ class crm_send_new_email(osv.osv_memory):
         'body': fields.text('Message Body', required=True),
         'state': fields.selection(AVAILABLE_STATES, string='Set New State To', required=True),
         'attachment_ids' : fields.one2many('crm.send.mail.attachment', 'wizard_id', 'Attachment'),
-        'html': fields.boolean('HTML formatting?', help="Select this if you want to send email with HTML formatting."), 
+        'html': fields.boolean('HTML formatting?', help="Select this if you want to send email with HTML formatting."),
     }
 
     def action_send(self, cr, uid, ids, context=None):
@@ -111,7 +111,7 @@ class crm_send_new_email(osv.osv_memory):
             if obj.html:
                 subtype = 'html'
 
-            flag = email_message_obj.email_send(cr, uid,
+            flag = email_message_obj.schedule_with_attach(cr, uid,
                 email_from,
                 emails,
                 obj.subject,

@@ -308,7 +308,7 @@ class crm_case(object):
             return {'value': {'phone': address.phone}}
 
     def _history(self, cr, uid, cases, keyword, history=False, subject=None, email=False, details=None, email_from=False, message_id=False, attach=[], context=None):
-        mailgate_pool = self.pool.get('mailgate.thread')
+        mailgate_pool = self.pool.get('email.thread')
         return mailgate_pool.history(cr, uid, cases, keyword, history=history,\
                                        subject=subject, email=email, \
                                        details=details, email_from=email_from,\
@@ -458,7 +458,7 @@ class crm_case(object):
                 raise osv.except_osv(_('Error!'), ("Partner Email is not specified in Case"))
             if not case.user_id.user_email:
                raise osv.except_osv(_('Error!'), ("User Email is not specified in Case"))
-            
+
             if destination and case.section_id.user_id:
                 case_email = case.section_id.user_id.user_email
             else:
@@ -487,18 +487,18 @@ class crm_case(object):
                 attach_to_send = map(lambda x: (x['datas_fname'], base64.decodestring(x['datas'])), attach_to_send)
 
                 # Send an email
-            subject = "Reminder: [%s] %s" % (str(case.id), case.name, )
-            email_message_obj.email_send(cr, uid,
-                src,
-                [dest],
-                subject,
-                body,
-                model='crm.case',
-                reply_to=case.section_id.reply_to,
-                openobject_id=str(case.id),
-                attach=attach_to_send
-            )
-            self._history(cr, uid, [case], _('Send'), history=True, subject=subject, email=dest, details=body, email_from=src)
+                subject = "Reminder: [%s] %s" % (str(case.id), case.name, )
+                email_message_obj.schedule_with_attach(cr, uid,
+                    src,
+                    [dest],
+                    subject,
+                    body,
+                    model='crm.case',
+                    reply_to=case.section_id.reply_to,
+                    openobject_id=str(case.id),
+                    attach=attach_to_send
+                )
+                self._history(cr, uid, [case], _('Send'), history=True, subject=subject, email=dest, details=body, email_from=src)
         return True
 
     def _check(self, cr, uid, ids=False, context=None):

@@ -54,7 +54,7 @@ class email_parser(object):
         try:
             # pass message as bytes because we don't know its encoding until we parse its headers
             # and hence can't convert it to utf-8 for transport
-            res_id = self.rpc('email.server.tools', 'process_email', self.model, xmlrpclib.Binary(message), custom_values)
+            res_id = self.rpc('email.thread', 'process_email', self.model, xmlrpclib.Binary(message), custom_values)
         except Exception:
             logger = logging.getLogger('mail-gateway')
             logger.warning('Failed to process incoming email. Source of the failed mail is available at debug level.', exc_info=True)

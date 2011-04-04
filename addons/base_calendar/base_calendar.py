@@ -507,7 +507,7 @@ property or property parameter."),
                 body = html_invitation % body_vals
                 if mail_to and email_from:
                     attach = self.get_ics_file(cr, uid, res_obj, context=context)
-                    email_message_obj.email_send(cr, uid,
+                    email_message_obj.schedule_with_attach(cr, uid,
                         email_from,
                         mail_to,
                         sub,
@@ -893,7 +893,7 @@ From:
                     for att in alarm.attendee_ids:
                         mail_to.append(att.user_id.address_id.email)
                     if mail_to:
-                        email_message_obj.email_send(cr, uid,
+                        email_message_obj.schedule_with_attach(cr, uid,
                             tools.config.get('email_from', False),
                             mail_to,
                             sub,
