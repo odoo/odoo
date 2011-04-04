@@ -33,12 +33,9 @@ portal's users.
             <field name="arch" type="xml">
                 <form string="Portal Form">
                     <field name="name"/>
-                    <notebook>
+                    <field name="group_id" on_change="onchange_group(group_id)"/>
+                    <notebook colspan="4">
                         <page string="Users">
-                            <group colspan="4">
-                                <field name="group_id"
-                                    on_change="onchange_group(group_id)"/>
-                            </group>
                             <field name="user_ids" nolabel="1" colspan="4"
                                 context="{'menu_id': menu_action_id}"/>
                         </page>
@@ -46,7 +43,7 @@ portal's users.
                             <field name="menu_action_id"/>
                             <newline/>
                             <field name="parent_menu_id"
-                                context="{'ir.ui.menu.full_list':True}"/>
+                                context="{'ir.ui.menu.full_list': True}"/>
                             <button name="create_parent_menu" type="object"
                                 string="Create Parent Menu"/>
                         </page>

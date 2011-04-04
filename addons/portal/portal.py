@@ -145,7 +145,7 @@ class users(osv.osv):
     _inherit = 'res.users'
     
     def default_get(self, cr, uid, fields, context=None):
-        """ override default values of menu_id for portal users """
+        """ override default value of menu_id for portal users """
         defs = super(users, self).default_get(cr, uid, fields, context)
         
         # the value of 'menu_id' is passed in context by the portal form view
