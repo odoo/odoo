@@ -24,7 +24,6 @@ import sugar
 import sugarcrm_fields_mapping
 from tools.translate import _
 import pprint
-import tools
 pp = pprint.PrettyPrinter(indent=4)
 
 def create_mapping(obj, cr, uid, res_model, open_id, sugar_id, context):
@@ -36,6 +35,7 @@ def create_mapping(obj, cr, uid, res_model, open_id, sugar_id, context):
     }
     model_obj = obj.pool.get('ir.model.data')
     model_obj.create(cr, uid, model_data, context=context)
+    return True
 
 def find_mapped_id(obj, cr, uid, res_model, sugar_id, context):
     model_obj = obj.pool.get('ir.model.data')
@@ -107,14 +107,14 @@ def import_partner_address(sugar_obj, cr, uid, context=None):
 def get_users_department(sugar_obj, cr, uid, val, context=None):
     if not context:
        context={}
-    department_id = False
+    department_id = False       
     department_obj = sugar_obj.pool.get('hr.department')
     department_ids = department_obj.search(cr, uid, [('name', '=', val)])
     if department_ids:
         department_id = department_ids[0]
     elif val:
         department_id = department_obj.create(cr, uid, {'name': val})
-    return department_id    
+    return department_id 
 
 def import_users(sugar_obj, cr, uid, context=None):
     if not context:
@@ -149,7 +149,7 @@ def import_users(sugar_obj, cr, uid, context=None):
 def get_lead_status(surgar_obj, cr, uid, sugar_val,context=None):
     if not context:
         context = {}
-    stage_id = ''
+    stage_id = False
     stage_dict = {'status': #field in the sugarcrm database
         { #Mapping of sugarcrm stage : openerp opportunity stage
             'New' : 'New',
@@ -222,10 +222,10 @@ def get_user_address(sugar_obj, cr, uid, val, context=None):
     else:        
         new_address_id = address_obj.create(cr,uid, dict_val)
         return new_address_id
-    
+    return True
+
 def get_address_type(sugar_obj, cr, uid, val, map_partner_address, type, context=None):
         address_obj = sugar_obj.pool.get('res.partner.address')
-        res_country_obj = sugar_obj.pool.get('res.country')
         new_address_id = False
         if type == 'invoice':
             type_address = 'billing'
@@ -273,6 +273,7 @@ def get_address(sugar_obj, cr, uid, val, context=None):
         if val.get('shipping_address_street'):
             address_id.append(get_address_type(sugar_obj, cr, uid, val, map_partner_address, 'delivery', context))
         return address_id
+    return True
 
 def import_partners(sugar_obj, cr, uid, context=None):
     if not context:
@@ -361,8 +362,8 @@ def import_employees(sugar_obj, cr, uid, context=None):
 def get_contact_title(sugar_obj, cr, uid, salutation, domain, context=None):
     if not context:
         context = {}
-    contact_title_obj = sugar_obj.pool.get('res.partner.title')        
-    title_id = False
+    contact_title_obj = sugar_obj.pool.get('res.partner.title')
+    title_id = False            
     title_ids = contact_title_obj.search(cr, uid, [('shortcut', '=', salutation), ('domain', '=', domain)])
     if title_ids:
          title_id = title_ids[0]
@@ -415,7 +416,7 @@ def import_leads(sugar_obj, cr, uid, context=None):
 def get_opportunity_contact(sugar_obj,cr,uid, PortType, sessionid, val, partner_xml_id, context=None):
     if not context:
         context={}
-    partner_contact_name = False
+    partner_contact_name = False        
     model_obj = sugar_obj.pool.get('ir.model.data')
     partner_address_obj = sugar_obj.pool.get('res.partner.address')
     sugar_opportunity_contact = sugar.relation_search(PortType, sessionid, 'Opportunities', module_id=val.get('id'), related_module='Contacts', query=None, deleted=None)
@@ -428,7 +429,7 @@ def get_opportunity_contact(sugar_obj,cr,uid, PortType, sessionid, val, partner_
             partner_contact_name = address_id.name
         else:
             partner_contact_name = val.get('account_name')    
-    return partner_contact_name
+    return partner_contact_name 
 
 def import_opportunities(sugar_obj, cr, uid, context=None):
     if not context:
