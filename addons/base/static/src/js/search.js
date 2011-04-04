@@ -391,8 +391,6 @@ openerp.base.search.ExtendedSearch = openerp.base.BaseWidget.extend({
         this.add_group();
         this.$element.find('.searchview_extended_add_group').click(function (e) {
             _this.add_group();
-            e.stopPropagation();
-            e.preventDefault();
         });
     },
     get_context: function() {
@@ -426,14 +424,10 @@ openerp.base.search.ExtendedSearchGroup = openerp.base.BaseWidget.extend({
         this.add_prop();
         this.$element.find('.searchview_extended_add_proposition').click(function (e) {
             _this.add_prop();
-            e.stopPropagation();
-            e.preventDefault();
         });
         var delete_btn = this.$element.find('.searchview_extended_delete_group');
         delete_btn.click(function (e) {
             _this.stop();
-            e.stopPropagation();
-            e.preventDefault();
         });
     },
     get_domain: function() {
@@ -783,8 +777,6 @@ openerp.base.search.ExtendedSearchProposition = openerp.base.BaseWidget.extend({
         var delete_btn = this.$element.find('.searchview_extended_delete_prop');
         delete_btn.click(function (e) {
             _this.stop();
-            e.stopPropagation();
-            e.preventDefault();
         });
     },
     changed: function() {
