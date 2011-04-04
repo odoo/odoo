@@ -48,6 +48,10 @@ openerp.base.FormView =  openerp.base.Controller.extend(
 
 //        this.dataset.on_active_id.add(this.on_record_loaded);
 //        this.dataset.active_id(fields of the form, this.on_record_loaded);
+
+        // sidebar stuff
+        if (this.view_manager.sidebar)
+            this.view_manager.sidebar.load_multi_actions();
     },
     on_next: function() {
 //        this.dataset.next();

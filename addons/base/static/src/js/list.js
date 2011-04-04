@@ -69,12 +69,8 @@ openerp.base.ListView = openerp.base.Controller.extend({
         }).trigger('resize');
         
         // sidebar stuff
-        this.rpc("/base/sidebar/get_actions",
-                {"model": this.model}, function(result) {
-            self.view_manager.sidebar.sections.push({elements:
-                    _.map(result, function(x) {return {text:x[2].name, action:x}; })});
-            self.view_manager.sidebar.refresh();
-        });
+        if (this.view_manager.sidebar)
+            this.view_manager.sidebar.load_multi_actions();
     },
     do_fill_table: function(records) {
         this.log("do_fill_table");

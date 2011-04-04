@@ -20,7 +20,7 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
             if (this.viewmanager) {
                 this.viewmanager.stop();
             }
-            this.viewmanager = new openerp.base.ViewManager(this.session,this.element_id);
+            this.viewmanager = new openerp.base.ViewManager(this.session,this.element_id, false);
             this.viewmanager.do_action_window(action);
             this.viewmanager.start();
         }
@@ -33,7 +33,7 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
 openerp.base.views = new openerp.base.Registry();
 openerp.base.ViewManager =  openerp.base.Controller.extend({
     // This will be ViewManager Abstract/Common
-    init: function(session, element_id) {
+    init: function(session, element_id, desactivate_sidebar) {
         this._super(session, element_id);
         this.action = null;
         this.dataset = null;
@@ -41,15 +41,22 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
         this.active_view = null;
         // this.views = { "list": { "view_id":1234, "controller": instance} }
         this.views = {};
-        this.sidebar = new openerp.base.Sidebar(null);
+        if (desactivate_sidebar)
+            this.sidebar = null;
+        else
+            this.sidebar = new openerp.base.Sidebar(null, this);
     },
     start: function() {
-        this.$element.find('.view-manager-main-sidebar').html(this.sidebar.render());
-        this.sidebar.start();
+        if (this.sidebar) {
+            this.$element.find('.view-manager-main-sidebar').html(this.sidebar.render());
+            this.sidebar.start();
+        }
     },
     stop: function() {
         // should be replaced by automatic destruction implemented in BaseWidget
-        this.sidebar.stop();
+        if (this.sidebar) {
+            this.sidebar.stop();
+        }
         this._super();
     },
     /**
@@ -189,13 +196,14 @@ openerp.base.BaseWidget = openerp.base.Controller.extend({
      */
     identifier_prefix: 'generic-identifier',
     /**
- * Base class for widgets. Handle rendering (based on a QWeb template), identifier
- * generation, parenting and destruction of the widget.
+     * Base class for widgets. Handle rendering (based on a QWeb template), identifier
+     * generation, parenting and destruction of the widget.
      * Contructor. Also initialize the identifier.
      * 
      * @params {openerp.base.search.BaseWidget} parent The parent widget.
      */
-    init: function (parent) {
+    init: function (parent, session) {
+        this._super(session);
         this.children = [];
         this.parent = null;
         this.set_parent(parent);
@@ -265,9 +273,21 @@ openerp.base.BaseWidget = openerp.base.Controller.extend({
 
 openerp.base.Sidebar = openerp.base.BaseWidget.extend({
     template: "ViewManager.sidebar",
-    init: function(parent) {
-        this._super(parent);
+    init: function(parent, view_manager) {
+        this._super(parent, view_manager.session);
+        this.view_manager = view_manager;
         this.sections = [];
+    },
+    load_multi_actions: function() {
+        if (_.detect(this.sections, function(x) {return x.type=="multi_actions";}) != undefined)
+            return;
+        var self = this;
+        this.rpc("/base/sidebar/get_actions",
+                {"model": this.view_manager.dataset.model}, function(result) {
+            self.sections.push({type: "multi_actions", elements:
+            _.map(result, function(x) {return {text:x[2].name, action:x}; })});
+            self.refresh();
+        });
     },
     refresh: function() {
         this.$element.html(QWeb.render("ViewManager.sidebar.internal", this));
