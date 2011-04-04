@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2011-01-18 11:32+0000\n"
-"Last-Translator: Ferdinand-chricar <Unknown>\n"
+"PO-Revision-Date: 2011-04-03 09:21+0000\n"
+"Last-Translator: Ferdinand @ Camptocamp <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-03-12 05:00+0000\n"
+"X-Launchpad-Export-Date: 2011-04-04 04:46+0000\n"
 "X-Generator: Launchpad (build 12559)\n"
 
 #. module: mrp
@@ -606,7 +606,7 @@ msgstr "Produziere"
 #. module: mrp
 #: help:mrp.workcenter,costs_cycle:0
 msgid "Specify Cost of Work Center per cycle."
-msgstr ""
+msgstr "Kosten des Arbeitsplatzes je Zyklus"
 
 #. module: mrp
 #: selection:mrp.production,state:0
@@ -849,7 +849,7 @@ msgstr "Dringend"
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_routing_workcenter
 msgid "Work Center Usage"
-msgstr ""
+msgstr "Arbeitsplatz Auslastung"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production
@@ -1026,6 +1026,8 @@ msgid ""
 "Number of operations this Work Center can do in parallel. If this Work "
 "Center represents a team of 5 workers, the capacity per cycle is 5."
 msgstr ""
+"Anzahl der parallel durchführbaren Arbeitsgäng je Arbeitsplatz. Wenn der "
+"Arbeitsplatz 5 Mitarbeiter darstellt, dann beträgt die Kapazität 5."
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_servicerfq0
@@ -2282,6 +2284,10 @@ msgid ""
 "Routing is indicated then,the third tab of a production order (Work Centers) "
 "will be automatically pre-completed."
 msgstr ""
+"Der Fertigungsablauf bestimmt, wie lange und wieviele Zyklen der jeweiligen "
+"Arbeitsplätze verwendet werden. Wenn ein Fertigungsablauf definiert ist, "
+"wird der entsprechende Reiter eines Produktionsauftrages (Arbeitsplätze) "
+"automatisch vorausgefüllt"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_bom_revision
@@ -2311,6 +2317,8 @@ msgid ""
 "Description of the Work Center. Explain here what's a cycle according to "
 "this Work Center."
 msgstr ""
+"Beschreibung des Arbeitsplatzes. Was ist unter Zyklus dieses Arbetisplatzes "
+"zu verstehen."
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_routing
