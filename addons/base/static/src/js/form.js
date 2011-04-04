@@ -288,22 +288,13 @@ openerp.base.form.WidgetFrame = openerp.base.form.Widget.extend({
     handle_node: function(n) {
         var type = this.view.fields_view.fields[n.attrs.name] || {};
         var widget_type = n.attrs.widget || type.type || n.tag;
-        try {
-            var widget = new (openerp.base.form.widgets.get_object(widget_type))
-                              (this.view, n);
-            if (n.tag == 'field' && n.attrs.nolabel != '1') {
-                var label = new (openerp.base.form.widgets.get_object('label'))
-                              (this.view, n);
-                label["for"] = widget;
-                this.add_widget(label);
-            }
-            this.add_widget(widget);
-        } catch (e) {
-            if (!e instanceof openerp.base.KeyNotFound) {
-                throw e;
-            }
-            this.log("Unhandled widget type : " + widget_type, n);
+        var widget = new (openerp.base.form.widgets.get_object(widget_type)) (this.view, n);
+        if (n.tag == 'field' && n.attrs.nolabel != '1') {
+            var label = new (openerp.base.form.widgets.get_object('label')) (this.view, n);
+            label["for"] = widget;
+            this.add_widget(label);
         }
+        this.add_widget(widget);
     },
     add_widget: function(w) {
         if (!w.invisible) {
