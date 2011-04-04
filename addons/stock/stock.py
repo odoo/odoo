@@ -1248,9 +1248,9 @@ class stock_picking(osv.osv):
 
             if new_picking:
                 move_obj.write(cr, uid, [c.id for c in complete], {'picking_id': new_picking})
-                for move in complete:
-                    if prodlot_ids.get(move.id):
-                        move_obj.write(cr, uid, [move.id], {'prodlot_id': prodlot_ids[move.id]})
+            for move in complete:
+                if prodlot_ids.get(move.id):
+                    move_obj.write(cr, uid, [move.id], {'prodlot_id': prodlot_ids[move.id]})
             for move in too_many:
                 product_qty = move_product_qty[move.id]
                 defaults = {
@@ -1463,7 +1463,7 @@ class stock_move(osv.osv):
     _description = "Stock Move"
     _order = 'date_expected desc, id'
     _log_create = False
-    
+
     def action_partial_move(self, cr, uid, ids, context=None):
         if context is None: context = {}
         partial_id = self.pool.get("stock.partial.move").create(
@@ -1481,7 +1481,7 @@ class stock_move(osv.osv):
             'domain': '[]',
             'context': context
         }
-        
+
 
     def name_get(self, cr, uid, ids, context=None):
         res = []
