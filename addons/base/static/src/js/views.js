@@ -149,7 +149,7 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
     on_remove: function() {
     },
     on_edit: function() {
-    }
+    },
     /**
      * Called when one of the view want to execute an action
      */
