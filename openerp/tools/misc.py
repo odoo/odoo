@@ -449,30 +449,24 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
     if not uid:
         uid = 1
 
-    if not (email_from or config['email_from']):
-        raise ValueError("Sending an email requires either providing a sender "
-                             "address or having configured one")
-
-    if not email_from: email_from = config.get('email_from', False)
-
-    email_from = ustr(email_from).encode('utf-8')
-
     mail_server_pool = pooler.get_pool(cr.dbname).get('ir.mail_server')
-    # Pack Message
-    msg = mail_server_pool.pack_message(cr, uid, subject, body, email_cc, email_bcc, reply_to,
+    
+    # Pack Message into MIME Object
+    msg = mail_server_pool.pack_message(cr, uid, email_from, email_to, subject, body, email_cc, email_bcc, reply_to,
                attach, message_id, references, openobject_id, debug, subtype, x_headers, priority)
 
-    # Send Email    
+    # Send Email
     res = False
     try:
-        res = mail_server_pool.send_email(cr, uid, email_from, flatten([email_to, email_cc, email_bcc]), msg, ssl=ssl, debug=debug,
-                       smtp_server=smtp_server, smtp_port=smtp_port, smtp_user=smtp_user, smtp_password=smtp_password)
+        res = mail_server_pool.send_email(cr, uid, msg,
+                       smtp_server=smtp_server, smtp_port=smtp_port, smtp_user=smtp_user, smtp_password=smtp_password,
+                       ssl=ssl, tls=True, debug=debug)
     except Exception:
         return False
     finally:
         cr.close()
     return res
-        
+
 
 #----------------------------------------------------------
 # SMS
