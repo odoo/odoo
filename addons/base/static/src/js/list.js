@@ -1,6 +1,7 @@
 
 openerp.base.list = function (openerp) {
 
+openerp.base.views.add('list', 'openerp.base.ListView');
 openerp.base.ListView = openerp.base.Controller.extend({
     init: function(session, element_id, dataset, view_id) {
         this._super(session, element_id);
@@ -22,7 +23,7 @@ openerp.base.ListView = openerp.base.Controller.extend({
     },
     start: function() {
         //this.log('Starting ListView '+this.model+this.view_id)
-        this.rpc("/base/listview/load", {"model": this.model, "view_id":this.view_id}, this.on_loaded);
+        return this.rpc("/base/listview/load", {"model": this.model, "view_id":this.view_id}, this.on_loaded);
     },
     on_loaded: function(data) {
         this.fields_view = data.fields_view;
