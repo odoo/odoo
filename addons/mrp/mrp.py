@@ -713,7 +713,7 @@ class mrp_production(osv.osv):
                         if consumed_qty == 0:
                             consumed_qty = production_qty * f.product_qty / production.product_qty
                         if consumed_qty > 0:
-                            stock_mov_obj.action_consume(cr, uid, [raw_product.id], consumed_qty, production.location_src_id.id, context=context)
+                            stock_mov_obj.action_consume(cr, uid, [raw_product.id], consumed_qty, raw_product.location_id.id, context=context)
 
         if production_mode == 'consume_produce':
             # To produce remaining qty of final product
