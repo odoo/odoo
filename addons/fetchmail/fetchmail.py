@@ -146,7 +146,7 @@ class email_server(osv.osv):
                 if context.get('get_server',False):
                     return ret_server
             except Exception, e:
-                logger.notifyChannel(server.type, netsvc.LOG_WARNING, '%s' % (e))
+                logger.notifyChannel(server.type, netsvc.LOG_ERROR, '%s' % (e))
         return True
 
     def button_fetch_mail(self, cr, uid, ids, context=None):
@@ -183,7 +183,7 @@ class email_server(osv.osv):
                     logger.notifyChannel(server.type, netsvc.LOG_INFO, 'fetchmail fetch/process %s email(s) from %s' % (count, server.name))
 
                 except Exception, e:
-                    logger.notifyChannel(server.type, netsvc.LOG_WARNING, '%s' % (tools.ustr(e)))
+                    logger.notifyChannel(server.type, netsvc.LOG_ERROR, '%s' % (tools.ustr(e)))
                 finally:
                     if imap_server:
                         imap_server.close()
@@ -203,7 +203,7 @@ class email_server(osv.osv):
                         pop_server.dele(num)
                     logger.notifyChannel(server.type, netsvc.LOG_INFO, 'fetchmail fetch %s email(s) from %s' % (numMsgs, server.name))
                 except Exception, e:
-                    logger.notifyChannel(server.type, netsvc.LOG_WARNING, '%s' % (tools.ustr(e)))
+                    logger.notifyChannel(server.type, netsvc.LOG_ERROR, '%s' % (tools.ustr(e)))
                 finally:
                     if pop_server:
                         pop_server.quit()

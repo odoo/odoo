@@ -60,7 +60,7 @@
                                 <group col="3" colspan="2">
                                     <field name="email_from" string="Email" />
                                     <button string="Send Email"
-                                        name="%(email.action_email_compose_message_wizard)d"
+                                        name="%(mail.action_email_compose_message_wizard)d"
                                         context="{'email_model': 'crm.lead', 'email_res_id': active_id}"
                                         icon="terp-mail-message-new" type="action"/>
                                 </group>
@@ -145,7 +145,7 @@
                                     <field name="display_text" string="History Information"/>
                                     <field name="history" invisible="1"/>
                                     <button string="Reply"
-                                        name="%(email.action_email_compose_message_wizard)d"
+                                        name="%(mail.action_email_compose_message_wizard)d"
                                         context="{'mail':'reply', 'message_id':active_id}"
                                         icon="terp-mail-replied" type="action"/>
                                 </tree>
@@ -165,7 +165,7 @@
                                              <group attrs="{'invisible': [('history', '!=', True)]}">
                                                 <button colspan="4"
                                                     string="Reply"
-                                                    name="%(email.action_email_compose_message_wizard)d"
+                                                    name="%(mail.action_email_compose_message_wizard)d"
                                                     context="{'mail':'reply', 'message_id':active_id}"
                                                     icon="terp-mail-replied" type="action" />
                                             </group>
@@ -182,7 +182,7 @@
                                 context="{'model': 'crm.lead' }"
                                 icon="terp-document-new" type="action" />
 		                    <button string="Send New Email"
-		                        name="%(email.action_email_compose_message_wizard)d"
+		                        name="%(mail.action_email_compose_message_wizard)d"
 		                        context="{'email_model': 'crm.lead', 'email_res_id': active_id}"
 		                        icon="terp-mail-message-new" type="action"/>
                         </page>

@@ -23,7 +23,7 @@
 {
     "name" : "Sharing Tools",
     "version" : "1.3",
-    "depends" : ["base", "email"],
+    "depends" : ["base", "mail"],
     "author" : "OpenERP SA",
     "category": 'Tools',
     "description": """
