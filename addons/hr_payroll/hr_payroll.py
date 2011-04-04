@@ -745,9 +745,11 @@ class hr_payslip(osv.osv):
                 continue
             net_allow = 0.0
             net_deduct = 0.0
+            all_basic = 0.0
             for contract in contracts:
                 sal_structure = []
                 rules = []
+                all_basic += contract.wage
                 if contract.struct_id.id:
                     sal_structure = self._get_parent_structure(cr, uid, [contract.struct_id.id], context=context)
                 for struct in sal_structure:
@@ -997,7 +999,7 @@ class hr_payslip(osv.osv):
 
             net_id = salary_rule_pool.search(cr, uid, [('code', '=', 'NET')])
             for line in salary_rule_pool.browse(cr, uid, net_id, context=context):
-                dic = {'basic': amt, 'allowance': net_allow, 'deduction': net_deduct}
+                dic = {'basic': all_basic, 'allowance': net_allow, 'deduction': net_deduct}
                 exec line.python_compute in dic
                 tot = dic['total']
                 vals = {
@@ -1089,6 +1091,7 @@ class hr_payslip(osv.osv):
             lines = []
             rules = []
             sal_structure = []
+            all_basic += contract.wage
             if contract.struct_id.id:
                 sal_structure = self._get_parent_structure(cr, uid, [contract.struct_id.id], context=context)
             for struct in sal_structure:
@@ -1216,7 +1219,6 @@ class hr_payslip(osv.osv):
                             update['value']['line_ids'].append(vals)
 
                 basic = contract.wage
-                all_basic += basic
                 final_total += basic + total
 #            number = sequence_obj.get(cr, uid, 'salary.slip')
 #            update['value'].update({
@@ -1356,7 +1358,7 @@ class hr_payslip(osv.osv):
 
         net_id = salary_rule_pool.search(cr, uid, [('code', '=', 'NET')])
         for line in salary_rule_pool.browse(cr, uid, net_id, context=context):
-            dic = {'basic': amt, 'allowance': net_allow, 'deduction': net_deduct}
+            dic = {'basic': all_basic, 'allowance': net_allow, 'deduction': net_deduct}
             exec line.python_compute in dic
             tot = dic['total']
             vals = {
