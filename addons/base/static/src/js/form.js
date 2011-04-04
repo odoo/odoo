@@ -2,8 +2,7 @@
 openerp.base.form = function (openerp) {
 
 openerp.base.views.add('form', 'openerp.base.FormView');
-openerp.base.FormView =  openerp.base.Controller.extend(
-    /** @lends openerp.base.FormView# */{
+openerp.base.FormView =  openerp.base.Controller.extend( /** @lends openerp.base.FormView# */{
     /**
      * Indicates that this view is not searchable, and thus that no search
      * view should be displayed (if there is one active).
@@ -142,8 +141,6 @@ openerp.base.FormView =  openerp.base.Controller.extend(
 openerp.base.form = {};
 
 openerp.base.form.Widget = openerp.base.Controller.extend({
-    // TODO Change this to init: function(view, node) { and use view.session and a new element_id for the super
-    // it means that widgets are special controllers
     init: function(view, node) {
         this.view = view;
         this.node = node;
@@ -551,6 +548,24 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
     init: function(view, node) {
         this._super(view, node);
         this.template = "FieldOne2Many";
+        this.viewmanager = null;
+        this.operations = [];
+        thise.iewq.on
+
+    },
+    set_value: function(value) {
+        this.value = value;
+    },
+    get_value: function(value) {
+        return this.operations;
+    },
+    update_dom: function() {
+        this._super.apply(this, arguments);
+        this.$element.toggleClass('disabled', this.readonly);
+        this.$element.toggleClass('required', this.required);
+    },
+    on_ui_change: function() {
+        this.view.on_form_changed(this);
     }
 });
 

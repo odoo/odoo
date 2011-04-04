@@ -161,11 +161,11 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
     }
 });
 
-openerp.base.ViewManagerRoot = openerp.base.Controller.extend({
+openerp.base.ViewManagerRoot = openerp.base.ViewManager.extend({
 // Extends view manager
 });
 
-openerp.base.ViewManagerUsedAsAMany2One = openerp.base.Controller.extend({
+openerp.base.ViewManagerUsedAsAMany2One = openerp.base.ViewManager.extend({
 // Extends view manager
 });
 
@@ -276,17 +276,14 @@ openerp.base.GanttView = openerp.base.Controller.extend({
 });
 
 openerp.base.views.add('tree', 'openerp.base.TreeView');
+openerp.base.TreeView = openerp.base.Controller.extend({
 /**
  * Genuine tree view (the one displayed as a tree, not the list)
  */
-openerp.base.TreeView = openerp.base.Controller.extend({
     start: function () {
         this._super();
         this.$element.append('Tree view');
     }
-});
-
-openerp.base.DiagramView = openerp.base.Controller.extend({
 });
 
 openerp.base.views.add('graph', 'openerp.base.GraphView');
