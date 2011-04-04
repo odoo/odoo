@@ -1097,7 +1097,6 @@ class hr_payslip(osv.osv):
                     })
                     return update
                 update['value'].update({'contract_id': False, 'struct_id': False})
-
         final_total = 0.0
         all_basic = 0.0
         net_allow = 0.0
@@ -1247,8 +1246,8 @@ class hr_payslip(osv.osv):
 #                'company_id': employee_id.company_id.id
 #            })
 
-            basic_before_leaves = update['value']['basic_amount']
-            total_before_leaves = update['value']['total_pay']
+            basic_before_leaves = all_basic
+            total_before_leaves = final_total
             working_day = 0
             off_days = 0
             dates = prev_bounds(ddate)
