@@ -1049,7 +1049,7 @@ class hr_payslip(osv.osv):
         if old_slip_ids:
             slip_line_pool.unlink(cr, uid, old_slip_ids, context=context)
 
-        update = {'value':{'line_ids':[], 'holiday_ids':[], 'name':'', 'working_days': 0.0, 'holiday_days': 0.0, 'worked_days': 0.0, 'basic_before_leaves': 0.0, 'basic_amount': 0.0, 'leaves': 0.0, 'total_pay': 0.0}}
+        update = {'value':{'line_ids':[], 'holiday_ids':[], 'details_by_salary_head':[], 'name':'', 'working_days': 0.0, 'holiday_days': 0.0, 'worked_days': 0.0, 'basic_before_leaves': 0.0, 'basic_amount': 0.0, 'leaves': 0.0, 'total_pay': 0.0}}
         if not employee_id:
             update['value'].update({'contract_id': False, 'struct_id': False})
             return update
@@ -1393,7 +1393,7 @@ class hr_payslip(osv.osv):
     def onchange_contract_id(self, cr, uid, ids, date, employee_id=False, contract_id=False, context=None):
         if context is None:
             context = {}
-        res = {'value':{'line_ids':[], 'holiday_ids':[], 'name':'', 'working_days': 0.0, 'holiday_days': 0.0, 'worked_days': 0.0, 'basic_before_leaves': 0.0, 'basic_amount': 0.0, 'leaves': 0.0, 'total_pay': 0.0}}
+        res = {'value':{'line_ids':[], 'holiday_ids':[], 'details_by_salary_head':[], 'name':'', 'working_days': 0.0, 'holiday_days': 0.0, 'worked_days': 0.0, 'basic_before_leaves': 0.0, 'basic_amount': 0.0, 'leaves': 0.0, 'total_pay': 0.0}}
         context.update({'contract': True})
         if not contract_id:
             res['value'].update({'struct_id': False})
