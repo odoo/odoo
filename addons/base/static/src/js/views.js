@@ -83,7 +83,7 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
         if(this.search_visible && action.search_view_id) {
             this.searchview_id = action.search_view_id[0];
             var searchview = this.searchview = new openerp.base.SearchView(
-                    this.session, this.element_id + "_search",
+                    this, this.session, this.element_id + "_search",
                     this.dataset, this.searchview_id,
                     this.search_defaults());
             searchview.on_search.add(this.do_search);
@@ -98,14 +98,14 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
             var view_id, controller;
             view_id = action.views[i][0];
             if(action.views[i][1] == "tree") {
-                controller = new openerp.base.ListView(this.session, this.element_id + "_view_tree", this.dataset, view_id);
+                controller = new openerp.base.ListView(this, this.session, this.element_id + "_view_tree", this.dataset, view_id);
                 controller.start();
                 this.views.tree = { view_id: view_id, controller: controller };
                 this.$element.find(prefix_id + "_button_tree").bind('click',function(){
                     self.on_mode_switch("tree");
                 });
             } else if(action.views[i][1] == "form") {
-                controller = new openerp.base.FormView(this.session, this.element_id + "_view_form", this.dataset, view_id);
+                controller = new openerp.base.FormView(this, this.session, this.element_id + "_view_form", this.dataset, view_id);
                 controller.start();
                 this.views.form = { view_id: view_id, controller: controller };
                 this.$element.find(prefix_id + "_button_form").bind('click',function(){
@@ -238,8 +238,28 @@ openerp.base.BaseWidget = openerp.base.Controller.extend({
 });
 
 openerp.base.Sidebar = openerp.base.BaseWidget.extend({
-    template: "ViewManager.sidebar"
-    
+    template: "ViewManager.sidebar",
+    init: function(parent) {
+        this._super(parent);
+        this.sections = [];
+    },
+    refresh: function() {
+        this.$element.html(QWeb.render("ViewManager.sidebar.internal", this));
+        var self = this;
+        this.$element.find("a").click(function(e) {
+            $this = jQuery(this);
+            var i = $this.attr("data-i");
+            var j = $this.attr("data-i");
+            var action = self.sections[i].elements[j];
+            // TODO: do something with the action
+            e.stopPropagation();
+            e.preventDefault();
+        });
+    },
+    start: function() {
+        this._super();
+        this.refresh();
+    }
 });
 
 openerp.base.CalendarView = openerp.base.Controller.extend({

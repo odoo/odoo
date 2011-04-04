@@ -417,8 +417,21 @@
     <input t-att-id="element_id"/>
 </t>
 <t t-name="ViewManager.sidebar">
-    <div t-att-id="element_id">
-    
+    <div t-att-id="element_id" class="sidebar-main-div">
+
     </div>
+</t>
+<t t-name="ViewManager.sidebar.internal">
+    <t t-set="i" t-value="0"/>
+    <t t-foreach="sections" t-as="section">
+    <ul>
+        <t t-set="j" t-value="0"/>
+        <t t-foreach="section.elements" t-as="element">
+            <li><a t-att-data-i="i" t-att-data-j="j" href="#"><t t-esc="element.text"/></a></li>
+            <t t-set="j+1" t-value="0"/>
+        </t>
+    </ul>
+    <t t-set="i" t-value="i+1"/>
+    </t>
 </t>
 </templates>

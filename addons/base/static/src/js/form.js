@@ -2,8 +2,9 @@
 openerp.base.form = function (openerp) {
 
 openerp.base.FormView =  openerp.base.Controller.extend({
-    init: function(session, element_id, dataset, view_id) {
+    init: function(view_manager, session, element_id, dataset, view_id) {
         this._super(session, element_id);
+        this.view_manager;
         this.dataset = dataset;
         this.model = dataset.model;
         this.view_id = view_id;

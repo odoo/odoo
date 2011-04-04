@@ -170,6 +170,24 @@ class Session(openerpweb.Controller):
             'domain': domain,
             'group_by': group_by_sequence
         }
+        
+def load_actions_from_ir_values(req, key, key2, models, meta, context):
+    Values = req.session.model('ir.values')
+    actions = Values.get(key, key2, models, meta, context)
+
+    for _, _, action in actions:
+        # values come from the server, we can just eval them
+        if isinstance(action['context'], basestring):
+            action['context'] = eval(
+                action['context'],
+                req.session.evaluation_context()) or {}
+
+        if isinstance(action['domain'], basestring):
+            action['domain'] = eval(
+                action['domain'],
+                req.session.evaluation_context(
+                    action['context'])) or []
+    return actions
 
 class Menu(openerpweb.Controller):
     _cp_path = "/base/menu"
@@ -214,21 +232,8 @@ class Menu(openerpweb.Controller):
 
     @openerpweb.jsonrequest
     def action(self, req, menu_id):
-        Values = req.session.model('ir.values')
-        actions = Values.get('action', 'tree_but_open', [('ir.ui.menu', menu_id)], False, {})
-
-        for _, _, action in actions:
-            # values come from the server, we can just eval them
-            if isinstance(action['context'], basestring):
-                action['context'] = eval(
-                    action['context'],
-                    req.session.evaluation_context()) or {}
-
-            if isinstance(action['domain'], basestring):
-                action['domain'] = eval(
-                    action['domain'],
-                    req.session.evaluation_context(
-                        action['context'])) or []
+        actions = load_actions_from_ir_values(req,'action', 'tree_but_open',
+                                             [('ir.ui.menu', menu_id)], False, {})
 
         return {"action": actions}
 
@@ -438,6 +443,15 @@ class SearchView(View):
     def load(self, req, model, view_id):
         fields_view = self.fields_view_get(req.session, model, view_id, 'search')
         return {'fields_view': fields_view}
+    
+class SideBar(View):
+    _cp_path = "/base/sidebar"
+    
+    @openerpweb.jsonrequest
+    def get_actions(self, request, model, object_id=0):
+        result = load_actions_from_ir_values(request, "action", "client_action_multi",
+                                             [[model, object_id]], False, {})
+        return result
 
 
 class Action(openerpweb.Controller):
