@@ -31,15 +31,14 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
  * Registry for all the main views
  */
 openerp.base.views = new openerp.base.Registry();
+
 openerp.base.ViewManager =  openerp.base.Controller.extend({
-    // This will be ViewManager Abstract/Common
     init: function(session, element_id) {
         this._super(session, element_id);
         this.action = null;
         this.dataset = null;
         this.searchview = null;
         this.active_view = null;
-        // this.views = { "list": { "view_id":1234, "controller": instance} }
         this.views = {};
     },
     start: function() {
@@ -132,7 +131,7 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
 
         var searchview_loaded = this.setup_search_view(action);
 
-        this.$element.find('.views-switchers button').click(function() {
+        this.$element.find('.oe_vm_switch button').click(function() {
             self.on_mode_switch($(this).data('view-type'));
         });
         _.each(action.views, function(view) {

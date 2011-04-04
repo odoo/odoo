@@ -58,11 +58,9 @@ openerp.base.callback = function(obj, method) {
  *
  * @class
  */
-openerp.base.NotFound = Class.extend(
-    /** @lends openerp.base.NotFound# */ {
+openerp.base.NotFound = Class.extend( /** @lends openerp.base.NotFound# */ {
 });
-openerp.base.KeyNotFound = openerp.base.NotFound.extend(
-    /** @lends openerp.base.KeyNotFound# */ {
+openerp.base.KeyNotFound = openerp.base.NotFound.extend( /** @lends openerp.base.KeyNotFound# */ {
     /**
      * Thrown when a key could not be found in a mapping
      *
@@ -77,8 +75,7 @@ openerp.base.KeyNotFound = openerp.base.NotFound.extend(
         return "The key " + this.key + " was not found";
     }
 });
-openerp.base.ObjectNotFound = openerp.base.NotFound.extend(
-    /** @lends openerp.base.ObjectNotFound# */ {
+openerp.base.ObjectNotFound = openerp.base.NotFound.extend( /** @lends openerp.base.ObjectNotFound# */ {
     /**
      * Thrown when an object path does not designate a valid class or object
      * in the openerp hierarchy.
@@ -94,8 +91,7 @@ openerp.base.ObjectNotFound = openerp.base.NotFound.extend(
         return "Could not find any object of path " + this.path;
     }
 });
-openerp.base.Registry = Class.extend(
-    /** @lends openerp.base.Registry# */ {
+openerp.base.Registry = Class.extend( /** @lends openerp.base.Registry# */ {
     /**
      * Stores a mapping of arbitrary key (strings) to object paths (as strings
      * as well).
@@ -156,8 +152,7 @@ openerp.base.Registry = Class.extend(
     }
 });
 
-openerp.base.BasicController = Class.extend(
-    /** @lends openerp.base.BasicController# */{
+openerp.base.BasicController = Class.extend( /** @lends openerp.base.BasicController# */{
     /**
      * rpc operations, event binding and callback calling should be done in
      * start() instead of init so that event can be hooked in between.
@@ -198,6 +193,8 @@ openerp.base.BasicController = Class.extend(
         // try to call deferred methods on this return value.
         return $.Deferred().done().promise();
     },
+    on_ready: function() {
+    },
     stop: function() {
     },
     log: function() {
@@ -209,25 +206,25 @@ openerp.base.BasicController = Class.extend(
         this.on_log.apply(this,args);
     },
     on_log: function() {
-        if(window.console && (window.openerp.debug || (window.location.search.indexOf('?debug') !== -1)))
-            console.log(arguments);
+        if(true || window.openerp.debug || (window.location.search.indexOf('?debug') !== -1)) {
+            if(window.console) {
+                console.log(arguments);
+            } else {
+                $.each(arguments, function(i,v) {
+                    v = v==null ? "null" : v;
+                    $('<pre></pre>').text(v.toString()).appendTo($('body'));
+                });
+            }
+        }
+
     },
-    on_ready: function() {
-    }
 });
 
-openerp.base.Console =  openerp.base.BasicController.extend({
-    init: function(element_id, server, port) {
-        this._super(element_id);
-    }
-});
-
-openerp.base.Session = openerp.base.BasicController.extend(
-    /** @lends openerp.base.Session# */{
+openerp.base.Session = openerp.base.BasicController.extend( /** @lends openerp.base.Session# */{
     /**
      * @constructs
      * @extends openerp.base.BasicController
-     * @param element_id
+     * @param element_id to use for exception reporting
      * @param server
      * @param port
      */
@@ -248,18 +245,6 @@ openerp.base.Session = openerp.base.BasicController.extend(
     },
     start: function() {
         this.session_restore();
-    },
-    on_log: function() {
-        // TODO this should move to Console and be active only in debug
-        // TODO $element should be for error not log
-        var self = this;
-        this._super.apply(this,arguments);
-        $.each(arguments, function(i,v) {
-            if(self.$element) {
-                v = v==null ? "null" : v;
-                $('<pre></pre>').text(v.toString()).appendTo(self.$element);
-            }
-        });
     },
     /**
      * Executes an RPC call, registering the provided callbacks.
@@ -336,7 +321,6 @@ openerp.base.Session = openerp.base.BasicController.extend(
     on_rpc_response: function() {
     },
     on_rpc_error: function(error) {
-        // TODO this should use the $element with focus and button is displaying OPW etc...
         this.on_log(error.message, error.data.debug);
     },
     /**
@@ -386,7 +370,6 @@ openerp.base.Session = openerp.base.BasicController.extend(
         this.set_cookie('uid', this.uid);
         this.set_cookie('session_id', this.session_id);
     },
-    // TODO: clear_local
     /**
      * Fetches a cookie stored by an openerp session
      *
@@ -446,7 +429,6 @@ openerp.base.Session = openerp.base.BasicController.extend(
         var self = this;
         for(var j=0; j<self.module_list.length; j++) {
             var mod = self.module_list[j];
-            self.log("init module "+mod);
             if(self.module_loaded[mod])
                 continue;
             openerp[mod] = {};
@@ -457,12 +439,7 @@ openerp.base.Session = openerp.base.BasicController.extend(
     }
 });
 
-openerp.base.Database = openerp.base.BasicController.extend({
-// Non Session Controller to manage databases
-});
-
-openerp.base.Controller = openerp.base.BasicController.extend(
-    /** @lends openerp.base.Controller# */{
+openerp.base.Controller = openerp.base.BasicController.extend( /** @lends openerp.base.Controller# */{
     /**
      * @constructs
      * @extends openerp.base.BasicController
@@ -488,6 +465,16 @@ openerp.base.Controller = openerp.base.BasicController.extend(
         // TODO: support additional arguments ?
         return this.session.rpc(url, data, success, error);
     }
+});
+
+openerp.base.CrashManager = openerp.base.Controller.extend({
+// Controller to display exception and stacktrace and eventually report error trought maitenance contract
+// if should hook on Session.on_rpc_error: function(error) {
+// and display OPW etc...
+});
+
+openerp.base.Database = openerp.base.Controller.extend({
+// Non Session Controller to manage databases
 });
 
 openerp.base.Loading =  openerp.base.Controller.extend({

@@ -32,13 +32,6 @@
             </div>
         </td>
     </tr>
-    <tr>
-        <td colspan="2">
-            <div id="oe_errors">
-                Debug:
-            </div>
-        </td>
-    </tr>
     </table>
 </t>
 <t t-name="Loading">
@@ -126,7 +119,7 @@
 </t>
 <t t-name="ViewManager">
     <!-- TODO prefix id with the element_id of the controller t-attf-id="#{prefix}_localid" -->
-    <div class="views-switchers">
+    <div class="oe_vm_switch">
         <t t-foreach="views" t-as="view">
             <button type="button" t-att-data-view-type="view[1]">
                 <t t-esc="view[1]"/>
@@ -152,7 +145,7 @@
     <table id="todo_use_unique_id" class="jqGrid"></table>
 </t>
 <t t-name="FormView">
-    <h3 class="title"><t t-esc="view.fields_view.arch.attrs.string"/></h3>
+    <h2 class="oe_view_title"><t t-esc="view.fields_view.arch.attrs.string"/></h2>
     <div style="text-align:right;">
         <input type="button" value="First"/>
         <button type="button" class="pager_previous">&lt;&lt;</button>
@@ -273,11 +266,9 @@
     </button>
 </t>
 <t t-name="SearchView">
-    <h3 class="title"><t t-esc="view.attrs['string']"/></h3>
-
+    <h2 class="oe_view_title"><t t-esc="view.attrs['string']"/></h2>
     <form>
         <t t-call="SearchView.render_lines"/>
-
         <div style="text-align:right;">
             <input type="submit" value="Search"/>
             <input type="reset" value="Clear"/>

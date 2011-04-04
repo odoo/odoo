@@ -12,7 +12,7 @@ body {
     margin: 2px;
 }
 
-.#oe_header h2 {
+#oe_header h2 {
     margin: 2px 0;
 }
 
@@ -67,16 +67,6 @@ body.openerp {
 .openerp .main_table {
     width: 100%;
     height: 100%;
-}
-/* Main Application */
-.openerp .application {
-    padding: 6px;
-}
-
-.openerp h3.title {
-    margin: 2px 0;
-    color: #252424;
-    text-shadow: white 0 1px 0;
 }
 
 /* Menu */
@@ -305,8 +295,23 @@ body.openerp {
     text-align: center;
 }
 
-/* SearchView */
+/* Main Application */
+.openerp .application {
+    padding: 6px;
+}
 
+.openerp h2.oe_view_title {
+    margin: 2px 0;
+    color: #252424;
+    text-shadow: white 0 1px 0;
+}
+
+/* View Manager */
+.openerp .oe_vm_switch {
+    float: right;
+}
+
+/* SearchView */
 .openerp .filter_label, .openerp .filter_icon {
     border: 1px solid #666;
     border-left-width: 0;
@@ -395,10 +400,6 @@ body.openerp {
     padding-left: 10px;
 }
 
-/* View Manager */
-.openerp .views-switchers {
-    text-align: right;
-}
 
 /* Form */
 .openerp .required.error {
@@ -443,3 +444,4 @@ body.openerp {
 .openerp .ui-widget {
     font-size: 1em;
 }
+
