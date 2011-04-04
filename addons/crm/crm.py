@@ -308,8 +308,8 @@ class crm_case(object):
             return {'value': {'phone': address.phone}}
 
     def _history(self, cr, uid, cases, keyword, history=False, subject=None, email=False, details=None, email_from=False, message_id=False, attach=[], context=None):
-        mailgate_pool = self.pool.get('email.thread')
-        return mailgate_pool.history(cr, uid, cases, keyword, history=history,\
+        thread_pool = self.pool.get('email.thread')
+        return thread_pool.history(cr, uid, cases, keyword, history=history,\
                                        subject=subject, email=email, \
                                        details=details, email_from=email_from,\
                                        message_id=message_id, attach=attach, \
