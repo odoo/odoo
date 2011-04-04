@@ -22,7 +22,7 @@
 {
     "name" : "Basic Calendar Functionality",
     "version" : "1.0",
-    "depends" : ["base", "email"],
+    "depends" : ["base", "mail"],
     'description': """
 This is a full-featured calendar system.
 ========================================

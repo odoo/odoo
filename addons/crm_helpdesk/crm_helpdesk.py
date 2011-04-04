@@ -103,6 +103,7 @@ class crm_helpdesk(crm.crm_case, osv.osv):
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks
+        @param msg: dictionary object to contain email message data
         """
         thread_pool = self.pool.get('email.thread')
 
@@ -121,7 +122,7 @@ class crm_helpdesk(crm.crm_case, osv.osv):
         if msg.get('priority', False):
             vals['priority'] = priority
 
-        res = thread_pool.get_partner(cr, uid, msg.get('from') or msg.get_unixfrom())
+        res = thread_pool.get_partner(cr, uid, msg.get('from', False))
         if res:
             vals.update(res)
 
