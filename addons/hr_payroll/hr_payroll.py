@@ -491,8 +491,7 @@ class hr_payslip(osv.osv):
                     rules +=  salary_rule_pool.browse(cr, uid, salary_rules, context=context)
             res[record.id] = {}
             for st in structure:
-                if st:
-                    sal_structure = self._get_parent_structure(cr, uid, [st], context=context)
+                sal_structure = self._get_parent_structure(cr, uid, [st], context=context)
                 for struct in sal_structure:
                     lines = structure_obj.browse(cr, uid, struct, context=context).rule_ids
                     # fix me: Search rules using salary head => sequence to display rules on payslip with correct seq with salary head..
@@ -535,7 +534,7 @@ class hr_payslip(osv.osv):
         return 0.0
 
     _columns = {
-        'struct_id': fields.related('contract_id', 'struct_id', readonly=True, type='many2one', relation='hr.payroll.structure', string='Structure', store=True, ),
+        'struct_id': fields.related('contract_id', 'struct_id', readonly=True, type='many2one', relation='hr.payroll.structure', string='Structure', store=True),
         'register_id': fields.many2one('hr.payroll.register', 'Register', required=False, readonly=True, states={'draft': [('readonly', False)]}),
         'name': fields.char('Description', size=64, required=False, readonly=True, states={'draft': [('readonly', False)]}),
         'number': fields.char('Number', size=64, required=False, readonly=True, states={'draft': [('readonly', False)]}),
@@ -614,73 +613,79 @@ class hr_payslip(osv.osv):
 #            slip_move.create(cr, uid, res)
 
     def set_to_draft(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'state':'draft'}, context=context)
-        return True
+        return self.write(cr, uid, ids, {'state': 'draft'}, context=context)
 
     def cancel_sheet(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'state':'cancel'}, context=context)
-        return True
+        return self.write(cr, uid, ids, {'state': 'cancel'}, context=context)
 
     def account_check_sheet(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'state':'accont_check'}, context=context)
-        return True
+        return self.write(cr, uid, ids, {'state': 'accont_check'}, context=context)
 
     def hr_check_sheet(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'state':'hr_check'}, context=context)
-        return True
+        return self.write(cr, uid, ids, {'state': 'hr_check'}, context=context)
 
     def process_sheet(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'paid':True, 'state':'done'}, context=context)
-        return True
+        return self.write(cr, uid, ids, {'paid': True, 'state': 'done'}, context=context)
 
     def verify_sheet(self, cr, uid, ids, context=None):
+        holiday_pool = self.pool.get('hr.holidays')
+        salary_rule_pool = self.pool.get('hr.salary.rule')
+        structure_pool = self.pool.get('hr.payroll.structure')
         register_line_pool = self.pool.get('hr.contibution.register.line')
-        line_tot = 0.0
+        contracts = []
+        structures = []
+        rules = []
+        lines = []
+        sal_structures =[]
         for slip in self.browse(cr, uid, ids, context=context):
-            employee = slip.employee_id
-            contract = slip.contract_id
+            if slip.contract_id:
+                contracts.append(slip.contract_id)
+            else:
+                contracts = self.get_contract(cr, uid, slip.employee_id, slip.date, context=context)
+            for contract in contracts:
+                structures.append(contract.struct_id.id)
+                leave_ids = self._get_leaves(cr, uid, slip.date, slip.employee_id, contract, context)
+                for hday in holiday_pool.browse(cr, uid, leave_ids, context=context):
+                    salary_rules = salary_rule_pool.search(cr, uid, [('code', '=', hday.holiday_status_id.code)], context=context)
+                    rules +=  salary_rule_pool.browse(cr, uid, salary_rules, context=context)
+            for structure in structures:
+                sal_structures = self._get_parent_structure(cr, uid, [structure], context=context)
+                for struct in sal_structures:
+                    lines = structure_pool.browse(cr, uid, struct, context=context).rule_ids
+                    for line in lines:
+                        if line.child_ids:
+                            for r in line.child_ids:
+                                lines.append(r)
+                        rules.append(line)
             base = {
-                'basic':slip.basic_amount,
+                'basic': slip.basic_amount,
             }
-            rules = slip.contract_id.struct_id.rule_ids
             if rules:
-                for rl in rules:
-                    if rl.company_contribution:
-                        base[rl.code.lower()] = rl.amount
-                        if rl.register_id:
-                            for sl in slip.line_ids:
-                                if sl.category_id == rl.category_id:
-                                    line_tot = sl.total
-                            value = eval(rl.computational_expression, base)
-                            company_contrib = self._compute(cr, uid, rl.id, value, employee, contract, context)
+                for rule in rules:
+                    if rule.company_contribution:
+                        base[rule.code.lower()] = rule.amount
+                        if rule.register_id:
+                            for slip in slip.line_ids:
+                                if slip.category_id == rule.category_id:
+                                    line_tot = slip.total
+                            value = eval(rule.computational_expression, base)
+                            company_contrib = self._compute(cr, uid, rule.id, value, employee, contract, context)
                             reg_line = {
-                                'name': rl.name,
-                                'register_id': rl.register_id.id,
-                                'code': rl.code,
+                                'name': rule.name,
+                                'register_id': rule.register_id.id,
+                                'code': rule.code,
                                 'employee_id': slip.employee_id.id,
                                 'emp_deduction': line_tot,
                                 'comp_deduction': company_contrib,
-                                'total': rl.amount + line_tot
+                                'total': rule.amount + line_tot
                             }
-                            register_line_pool.create(cr, uid, reg_line)
-        self.write(cr, uid, ids, {'state':'confirm'}, context=context)
-        return True
+                            register_line_pool.create(cr, uid, reg_line, context=context)
+        return self.write(cr, uid, ids, {'state': 'confirm'}, context=context)
 
     def get_contract(self, cr, uid, employee, date, context=None):
         contract_obj = self.pool.get('hr.contract')
         contracts = contract_obj.search(cr, uid, [('employee_id', '=', employee.id),('date_start','<=', date),'|',('date_end', '=', False),('date_end','>=', date)], context=context)
         contract_ids = contract_obj.browse(cr, uid, contracts, context=context)
-#        sql_req= '''
-#            SELECT c.id as id, c.wage as wage, struct_id as function
-#            FROM hr_contract c
-#              LEFT JOIN hr_employee emp on (c.employee_id=emp.id)
-#            WHERE
-#              (emp.id=%s) AND
-#              (date_start <= %s) AND
-#              (date_end IS NULL OR date_end >= %s)
-#            '''
-#        cr.execute(sql_req, (employee.id, date, date))
-#        contracts = cr.dictfetchall()
         return contract_ids and contract_ids or []
 
     def _get_leaves(self, cr, user, ddate, employee, contract, context=None):
