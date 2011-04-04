@@ -21,13 +21,12 @@
 
 from osv import osv, fields
 from tools.translate import _
-import random
 
 class portal(osv.osv):
     _name = 'res.portal'
     _description = 'Portal'
+    _rec_name = 'group_id'
     _columns = {
-        'name': fields.char(string='Name', size=64, required=True),
         'group_id': fields.many2one('res.groups', required=True,
             string='Portal Group',
             help=_('This group defines the users associated to this portal')),
@@ -42,20 +41,17 @@ class portal(osv.osv):
             help=_('The menu action opens the submenus of this menu item')),
     }
     _sql_constraints = [
-        ('unique_name', 'UNIQUE(name)', _('Portals must have different names.'))
+        ('unique_group', 'UNIQUE(group_id)', _('Portals must have distinct groups.'))
     ]
     
-    def copy(self, cr, uid, id, defaults, context=None):
-        """ override copy(): pick a different name and menu_action_id """
-        # find an unused name of the form "name [N]" for some random N
-        old_name = self.browse(cr, uid, id, context).name
-        new_name = copy_random(old_name)
-        while self.search(cr, uid, [('name', '=', new_name)], limit=1, context=context):
-            new_name = copy_random(old_name)
-        
-        defaults['name'] = new_name
-        defaults['menu_action_id'] = None
-        return super(portal, self).copy(cr, uid, id, defaults, context)
+    def copy(self, cr, uid, id, default={}, context=None):
+        """ override copy(): group_id and menu_action_id must be different """
+        # copy the former group_id
+        groups_obj = self.pool.get('res.groups')
+        group_id = self.browse(cr, uid, id, context).group_id.id
+        default['group_id'] = groups_obj.copy(cr, uid, group_id, {}, context)
+        default['menu_action_id'] = None
+        return super(portal, self).copy(cr, uid, id, default, context)
     
     def create(self, cr, uid, values, context=None):
         """ extend create() to assign the portal group and menu to users """
@@ -63,11 +59,12 @@ class portal(osv.osv):
         assert not values.get('menu_action_id')
         values['menu_action_id'] = self._create_menu_action(cr, uid, values, context)
         
-        # set menu action of users
-        user_values = {'menu_id': values['menu_action_id']}
-        # values['user_ids'] should match [(6, 0, IDs)]
-        for id in get_many2many(values['user_ids']):
-            values['user_ids'].append((1, id, user_values))
+        if 'user_ids' in values:
+            # set menu action of users
+            user_values = {'menu_id': values['menu_action_id']}
+            # values['user_ids'] should match [(6, 0, IDs)]
+            for id in get_many2many(values['user_ids']):
+                values['user_ids'].append((1, id, user_values))
         
         return super(portal, self).create(cr, uid, values, context)
     
@@ -94,9 +91,11 @@ class portal(osv.osv):
     
     def _create_menu_action(self, cr, uid, values, context=None):
         # create a menu action that opens the menu items below parent_menu_id
+        groups_obj = self.pool.get('res.groups')
+        group_name = groups_obj.browse(cr, uid, values['group_id'], context).name
         actions_obj = self.pool.get('ir.actions.act_window')
         action_values = {
-            'name': values['name'] + ' Menu',
+            'name': group_name + ' Menu',
             'type': 'ir.actions.act_window',
             'usage': 'menu',
             'res_model': 'ir.ui.menu',
@@ -114,7 +113,7 @@ class portal(osv.osv):
         for p in self.browse(cr, uid, ids, context):
             # create a menuitem under 'portal.portal_menu'
             menu_values = {
-                'name': p.name + ' Menu',
+                'name': p.group_id.name + ' Menu',
                 'parent_id': menu_root,
                 'groups_id': [(6, 0, [p.group_id.id])],
             }
@@ -173,8 +172,4 @@ def get_many2many(arg):
     """ get the list of ids from a many2many 'values' field """
     assert len(arg) == 1 and arg[0][0] == 6             # arg = [(6, _, IDs)]
     return arg[0][2]
-
-def copy_random(name):
-    """ return "name [N]" for some random integer N """
-    return "%s [%s]" % (name, random.choice(xrange(1000000)))
 
