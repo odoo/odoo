@@ -21,12 +21,14 @@
 
 
 {
-    'name': 'Intrastat Reporting - Reporting',
+    'name': 'Intrastat Reporting',
     'version': '1.0',
-    'category': 'Generic Modules/Inventory Control',
+    'category': 'Warehouse',
     'description': """
-    A module that adds intrastat reports.
-    This module gives the details of the goods traded between the countries of European Union """,
+A module that adds intrastat reports.
+=====================================
+
+This module gives the details of the goods traded between the countries of European Union """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['base', 'product', 'stock', 'sale', 'purchase'],
@@ -41,5 +43,6 @@
     'installable': True,
     'active': False,
     'certificate': '0056982189085',
+    'images': ['images/country_intrastat_code.jpeg','images/intrastat_code.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

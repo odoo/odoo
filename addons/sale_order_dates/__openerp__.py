@@ -23,12 +23,19 @@
 {
     'name': 'Sales Order Dates',
     'version': '1.0',
-    'category': 'Generic Modules/CRM & SRM',
+    'category': 'Sales',
     'description': """
-Add commitment, requested and effective dates on the sales order.
+Add additional date information to the sales order.
+===================================================
+
+You can add the following additional dates to a sale order:
+    * Requested Date
+    * Commitment Date
+    * Effective Date
 """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
+    'images': ["images/sale_order_dates.jpeg"],
     'depends': ["sale"],
     'init_xml': [
     ],

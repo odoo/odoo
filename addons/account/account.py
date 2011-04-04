@@ -249,6 +249,7 @@ class account_account(osv.osv):
         children_and_consolidated = self._get_children_and_consol(cr, uid, ids, context=context)
         #compute for each account the balance/debit/credit from the move lines
         accounts = {}
+        res = {}
         if children_and_consolidated:
             aml_query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
 
@@ -305,11 +306,13 @@ class account_account(osv.osv):
                             sums[current.id][fn] += sums[child.id][fn]
                         else:
                             sums[current.id][fn] += currency_obj.compute(cr, uid, child.company_id.currency_id.id, current.company_id.currency_id.id, sums[child.id][fn], context=context)
-            res = {}
             null_result = dict((fn, 0.0) for fn in field_names)
             for id in ids:
                 res[id] = sums.get(id, null_result)
-            return res
+        else:
+            for id in ids:
+                res[id] = 0.0
+        return res
 
     def _get_company_currency(self, cr, uid, ids, field_name, arg, context=None):
         result = {}
@@ -641,6 +644,7 @@ class account_journal(osv.osv):
         default = default.copy()
         default['code'] = (journal['code'] or '') + '(copy)'
         default['name'] = (journal['name'] or '') + '(copy)'
+        default['sequence_id'] = False
         return super(account_journal, self).copy(cr, uid, id, default, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):

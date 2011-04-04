@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-03-07 04:49+0000\n"
-"X-Generator: Launchpad (build 12351)\n"
+"X-Launchpad-Export-Date: 2011-03-18 04:58+0000\n"
+"X-Generator: Launchpad (build 12559)\n"
 
 #. module: share
 #: code:addons/share/web/editors.py:15
@@ -63,14 +63,14 @@ msgid "Share Access Rules"
 msgstr ""
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:425
+#: code:addons/share/wizard/share_wizard.py:453
 #, python-format
 msgid ""
 "Dear,\n"
 "\n"
-msgstr ""
-"Уважаеми,\n"
+"%s\n"
 "\n"
+msgstr ""
 
 #. module: share
 #: constraint:res.users:0
@@ -80,12 +80,12 @@ msgstr "Избраната фирма не е измежду разрешени�
 #. module: share
 #: model:ir.model,name:share.model_res_users
 msgid "res.users"
-msgstr ""
+msgstr "res.users"
 
 #. module: share
 #: view:share.wizard:0
 msgid "Next"
-msgstr ""
+msgstr "Следващ"
 
 #. module: share
 #: help:share.wizard,action_id:0
@@ -121,11 +121,11 @@ msgid "Generic Share Access URL"
 msgstr ""
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:429
+#: code:addons/share/wizard/share_wizard.py:457
 #, python-format
 msgid ""
 "You may use the following login and password to get access to this protected "
-"area:"
+"area:\n"
 msgstr ""
 
 #. module: share
@@ -136,7 +136,7 @@ msgstr ""
 #. module: share
 #: selection:share.wizard,access_mode:0
 msgid "Read & Write"
-msgstr ""
+msgstr "Писане и четене"
 
 #. module: share
 #: view:share.wizard:0
@@ -158,7 +158,7 @@ msgstr ""
 #: field:share.wizard.result.line,login:0
 #, python-format
 msgid "Username"
-msgstr ""
+msgstr "Потребителско Име"
 
 #. module: share
 #: field:res.users,share:0
@@ -174,13 +174,13 @@ msgstr ""
 #. module: share
 #: view:share.wizard:0
 msgid "Finish"
-msgstr ""
+msgstr "Завършване"
 
 #. module: share
 #: field:share.wizard,user_ids:0
 #: field:share.wizard.user,user_id:0
 msgid "Users"
-msgstr ""
+msgstr "Потребители"
 
 #. module: share
 #: code:addons/share/wizard/share_wizard.py:103
@@ -194,12 +194,12 @@ msgstr ""
 #. module: share
 #: field:share.wizard,new_users:0
 msgid "New users"
-msgstr ""
+msgstr "Нови потребители"
 
 #. module: share
 #: model:ir.model,name:share.model_res_groups
 msgid "res.groups"
-msgstr ""
+msgstr "res.groups"
 
 #. module: share
 #: code:addons/share/wizard/share_wizard.py:121
@@ -210,7 +210,7 @@ msgstr ""
 #. module: share
 #: sql_constraint:res.groups:0
 msgid "The name of the group must be unique !"
-msgstr ""
+msgstr "Името на групата трябва да бъде уникално!"
 
 #. module: share
 #: selection:share.wizard,user_type:0
@@ -243,7 +243,7 @@ msgstr ""
 #: field:share.wizard.result.line,password:0
 #, python-format
 msgid "Password"
-msgstr ""
+msgstr "Парола"
 
 #. module: share
 #: view:share.wizard:0
@@ -285,7 +285,7 @@ msgstr ""
 #: code:addons/share/wizard/share_wizard.py:432
 #, python-format
 msgid "Database"
-msgstr ""
+msgstr "База данни"
 
 #. module: share
 #: model:ir.model,name:share.model_share_wizard_user
@@ -308,7 +308,7 @@ msgstr ""
 #: view:share.wizard:0
 #: field:share.wizard,result_line_ids:0
 msgid "Summary"
-msgstr ""
+msgstr "Обобщена информация"
 
 #. module: share
 #: field:share.wizard,user_type:0
@@ -473,3 +473,11 @@ msgstr ""
 #, python-format
 msgid "*usual password*"
 msgstr ""
+
+#, python-format
+#~ msgid ""
+#~ "Dear,\n"
+#~ "\n"
+#~ msgstr ""
+#~ "Уважаеми,\n"
+#~ "\n"

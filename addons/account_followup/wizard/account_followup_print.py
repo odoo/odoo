@@ -115,7 +115,7 @@ class account_followup_print_all(osv.osv_memory):
     _name = 'account.followup.print.all'
     _description = 'Print Followup & Send Mail to Customers'
     _columns = {
-        'partner_ids': fields.many2many('account_followup.stat.by.partner', 'partner_stat_rel', 'osv_memory_id', 'partner_id', 'Partners', required=True, domain="[('account_id.type', '=', 'receivable'), ('account_id.reconcile', '=', True), ('reconcile_id','=', False), ('state', '!=', 'draft'), ('account_id.active', '=' True), ('debit', '>', 0)]"),
+        'partner_ids': fields.many2many('account_followup.stat.by.partner', 'partner_stat_rel', 'osv_memory_id', 'partner_id', 'Partners', required=True, domain="[('account_id.type', '=', 'receivable'), ('account_id.reconcile', '=', True), ('reconcile_id','=', False), ('state', '!=', 'draft'), ('account_id.active', '=', True), ('debit', '>', 0)]"),
         'email_conf': fields.boolean('Send email confirmation'),
         'email_subject': fields.char('Email Subject', size=64),
         'partner_lang': fields.boolean('Send Email in Partner Language', help='Do not change message text, if you want to send email in partner language, or configure from company'),
@@ -285,10 +285,10 @@ class account_followup_print_all(osv.osv_memory):
                     msg += partner.name + '\n'
                     msg_unsent += msg
             if not msg_unsent:
-                summary = _("All E-mails have been successfully sent to Partners:.\n\n") + msg_sent
+                summary = _("All E-mails have been successfully sent to Partners:.\n\n%s") % msg_sent
             else:
-                msg_unsent = _("E-Mail not sent to following Partners, Email not available !\n\n") + msg_unsent
-                msg_sent = msg_sent and _("\n\nE-Mail sent to following Partners successfully. !\n\n") + msg_sent
+                msg_unsent = _("E-Mail not sent to following Partners, Email not available !\n\n%s") % msg_unsent
+                msg_sent = msg_sent and _("\n\nE-Mail sent to following Partners successfully. !\n\n%s") % msg_sent
                 line = '=========================================================================='
                 summary = msg_unsent + line + msg_sent
             context.update({'summary': summary})

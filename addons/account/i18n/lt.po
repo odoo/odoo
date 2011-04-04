@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-15 05:22+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-03-18 04:51+0000\n"
+"X-Generator: Launchpad (build 12559)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -713,12 +713,6 @@ msgstr ""
 #: field:account.partner.reconcile.process,today_reconciled:0
 msgid "Partners Reconciled Today"
 msgstr ""
-
-#. module: account
-#: code:addons/account/account_bank_statement.py:306
-#, python-format
-msgid "The statement balance is incorrect !\n"
-msgstr "Dokumento balansas neteisingas!\n"
 
 #. module: account
 #: selection:account.payment.term.line,value:0
@@ -2588,11 +2582,12 @@ msgid "August"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_bank_statement.py:307
+#: code:addons/account/account_bank_statement.py:306
 #, python-format
 msgid ""
+"The statement balance is incorrect !\n"
 "The expected balance (%.2f) is different than the computed one. (%.2f)"
-msgstr "Tikėtinas balansas (%.2f) skirtingas nuo apskaičiuotojo. (%.2f)"
+msgstr ""
 
 #. module: account
 #: model:process.transition,note:account.process_transition_paymentreconcile0
@@ -2826,6 +2821,12 @@ msgstr "Deklaruojama mokesčių suma"
 #: selection:account.entries.report,type:0
 msgid "View"
 msgstr "Žiūrėti"
+
+#. module: account
+#: code:addons/account/account.py:2951
+#, python-format
+msgid "BNK%s"
+msgstr ""
 
 #. module: account
 #: code:addons/account/account.py:2906
@@ -4206,12 +4207,6 @@ msgid "Account Balance -"
 msgstr "Sąskaitos balansas -"
 
 #. module: account
-#: code:addons/account/invoice.py:989
-#, python-format
-msgid "Invoice "
-msgstr ""
-
-#. module: account
 #: field:account.automatic.reconcile,date1:0
 msgid "Starting Date"
 msgstr ""
@@ -5509,9 +5504,9 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/invoice.py:989
+#: code:addons/account/invoice.py:997
 #, python-format
-msgid "is validated."
+msgid "Invoice  '%s' is validated."
 msgstr ""
 
 #. module: account
@@ -10185,6 +10180,11 @@ msgstr ""
 #~ msgid "Bank Receipt"
 #~ msgstr "Banko pajamos"
 
+#, python-format
+#~ msgid ""
+#~ "The expected balance (%.2f) is different than the computed one. (%.2f)"
+#~ msgstr "Tikėtinas balansas (%.2f) skirtingas nuo apskaičiuotojo. (%.2f)"
+
 #~ msgid "Fiscal Position Template Account Mapping"
 #~ msgstr "Sąskaitų fiskalinės pozicijos nustatymai"
 
@@ -10775,6 +10775,10 @@ msgstr ""
 
 #~ msgid "Untaxed amount"
 #~ msgstr "Suma be mokesčių"
+
+#, python-format
+#~ msgid "The statement balance is incorrect !\n"
+#~ msgstr "Dokumento balansas neteisingas!\n"
 
 #~ msgid "Legal Statements"
 #~ msgstr "Teisiniai dokumentai"

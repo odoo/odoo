@@ -18,19 +18,24 @@
 #
 ##############################################################################
 {
-    "name" : "Claim from delivery",
+    "name" : "Claim from Delivery",
     "version" : "1.0",
     "author" : "OpenERP SA",
-    "category" : "Generic Modules/Inventory Control",
+    "category" : "Warehouse",
     "depends" : ["base", "crm_claim", "stock"],
     "init_xml" : [],
     "demo_xml" : [],
-    "description": '''Create Claim from delivery order:
+    "description": '''
+Create a claim from a delivery order.
+=====================================
+
+Adds a Claim link to the delivery order.
 ''',
     "update_xml" : ["claim_delivery_view.xml"],
     "active": False,
     "installable": True,
     "certificate" : "001101649349223746957",
+    'images': ['images/1_claim_link_delivery_order.jpeg'],
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

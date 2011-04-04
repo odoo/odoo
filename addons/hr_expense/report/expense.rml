@@ -23,6 +23,9 @@
       <lineStyle kind="LINEAFTER" colorName="#e6e6e6" start="2,0" stop="2,-1"/>
       <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="2,0" stop="2,0"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="2,-1" stop="2,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#e6e6e6" start="3,0" stop="3,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="3,0" stop="3,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="3,-1" stop="3,-1"/>
     </blockTableStyle>
     <blockTableStyle id="Table_employee_ref_content">
       <blockAlignment value="LEFT"/>
@@ -37,6 +40,9 @@
       <lineStyle kind="LINEAFTER" colorName="#e6e6e6" start="2,0" stop="2,-1"/>
       <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="2,0" stop="2,0"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="2,-1" stop="2,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#e6e6e6" start="3,0" stop="3,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="3,0" stop="3,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="3,-1" stop="3,-1"/>
     </blockTableStyle>
     <blockTableStyle id="Table_hr_expense_line_header">
       <blockAlignment value="LEFT"/>
@@ -145,7 +151,7 @@
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="174.0,174.0,174.0" style="Table_employee_ref_header">
+    <blockTable colWidths="130.5,130.5,130.5,130.5" style="Table_employee_ref_header">
       <tr>
         <td>
           <para style="terp_tblheader_General_Centre">Employee</para>
@@ -156,9 +162,12 @@
         <td>
           <para style="terp_tblheader_General_Centre">Reference</para>
         </td>
+        <td>
+          <para style="terp_tblheader_General_Centre">Validated By</para>
+        </td>
       </tr>
     </blockTable>
-    <blockTable colWidths="174.0,174.0,174.0" style="Table_employee_ref_content">
+    <blockTable colWidths="130.5,130.5,130.5,130.5" style="Table_employee_ref_content">
       <tr>
         <td>
           <para style="terp_default_Centre_8">[[ o.employee_id.name ]] </para>
@@ -168,6 +177,9 @@
         </td>
         <td>
           <para style="terp_default_Centre_8">[[ o.ref ]]</para>
+        </td>
+        <td>
+          <para style="terp_default_Centre_8">[[ o.user_valid.name ]]</para>
         </td>
       </tr>
     </blockTable>
@@ -272,7 +284,7 @@
     <para style="terp_default_9">
       <font color="white"> </font>
     </para>
-    <para style="terp_default_9">[[ setTag('para','xpre') ]] [[ o.note or '' ]]</para>
+    <para style="terp_default_9">[[ o.note or '' ]]</para>
     <para style="terp_default_9">
       <font color="white"> </font>
     </para>

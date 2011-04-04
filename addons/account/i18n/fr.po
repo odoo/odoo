@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-21 04:39+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-03-18 04:49+0000\n"
+"X-Generator: Launchpad (build 12559)\n"
 
 #. module: account
 #: code:addons/account/account.py:1291
@@ -816,12 +816,6 @@ msgstr "Chèque"
 #: field:account.partner.reconcile.process,today_reconciled:0
 msgid "Partners Reconciled Today"
 msgstr "Partenaires rapprochés aujourd'hui"
-
-#. module: account
-#: code:addons/account/account_bank_statement.py:306
-#, python-format
-msgid "The statement balance is incorrect !\n"
-msgstr "Le solde du relevé est incorrect.\n"
 
 #. module: account
 #: selection:account.payment.term.line,value:0
@@ -2782,11 +2776,12 @@ msgid "August"
 msgstr "Août"
 
 #. module: account
-#: code:addons/account/account_bank_statement.py:307
+#: code:addons/account/account_bank_statement.py:306
 #, python-format
 msgid ""
+"The statement balance is incorrect !\n"
 "The expected balance (%.2f) is different than the computed one. (%.2f)"
-msgstr "Le solde affiché (%.2f) est différent du solde calculé. (%.2f)"
+msgstr ""
 
 #. module: account
 #: model:process.transition,note:account.process_transition_paymentreconcile0
@@ -3031,6 +3026,12 @@ msgstr "La base de compte de la déclaration fiscale."
 #: selection:account.entries.report,type:0
 msgid "View"
 msgstr "Vue"
+
+#. module: account
+#: code:addons/account/account.py:2951
+#, python-format
+msgid "BNK%s"
+msgstr ""
 
 #. module: account
 #: code:addons/account/account.py:2906
@@ -4477,12 +4478,6 @@ msgid "Account Balance -"
 msgstr "Balance"
 
 #. module: account
-#: code:addons/account/invoice.py:989
-#, python-format
-msgid "Invoice "
-msgstr "Facture "
-
-#. module: account
 #: field:account.automatic.reconcile,date1:0
 msgid "Starting Date"
 msgstr "Date de début"
@@ -5830,10 +5825,10 @@ msgstr ""
 "(c'est à dire payée) dans le système."
 
 #. module: account
-#: code:addons/account/invoice.py:989
+#: code:addons/account/invoice.py:997
 #, python-format
-msgid "is validated."
-msgstr "est validé."
+msgid "Invoice  '%s' is validated."
+msgstr ""
 
 #. module: account
 #: view:account.chart.template:0
@@ -11906,12 +11901,20 @@ msgstr ""
 #~ msgid "Error ! You can not create recursive Menu."
 #~ msgstr "Erreur ! Vous ne pouvez pas créer de menu récursif."
 
+#, python-format
+#~ msgid "Invoice "
+#~ msgstr "Facture "
+
 #~ msgid ""
 #~ "This account will be used for invoices instead of the default one to value "
 #~ "expenses for the current product"
 #~ msgstr ""
 #~ "Ce compte sera utilisé pour les factures à la place du compte par défaut "
 #~ "pour valoriser les charges liées au produit actuel"
+
+#, python-format
+#~ msgid "is validated."
+#~ msgstr "est validé."
 
 #~ msgid "Cash Journal - (test)"
 #~ msgstr "Journal de liquidités - (test)"
@@ -11973,6 +11976,15 @@ msgstr ""
 #~ "Un remboursement fournisseur est un avoir émis par votre fournisseur "
 #~ "indiquant qu'il rembourse une partie ou la totalité de la facture qu'il vous "
 #~ "a adressée."
+
+#, python-format
+#~ msgid "The statement balance is incorrect !\n"
+#~ msgstr "Le solde du relevé est incorrect.\n"
+
+#, python-format
+#~ msgid ""
+#~ "The expected balance (%.2f) is different than the computed one. (%.2f)"
+#~ msgstr "Le solde affiché (%.2f) est différent du solde calculé. (%.2f)"
 
 #~ msgid ""
 #~ "Customer Refunds helps you manage the credit notes issued/to be issued for "

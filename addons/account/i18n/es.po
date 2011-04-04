@@ -7,15 +7,15 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-01-18 11:21+0000\n"
+"PO-Revision-Date: 2011-03-27 11:05+0000\n"
 "Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
 "<jesteve@zikzakmedia.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-19 04:44+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-03-28 04:36+0000\n"
+"X-Generator: Launchpad (build 12559)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -395,7 +395,7 @@ msgid ""
 "OpenERP. Journal items are created by OpenERP if you use Bank Statements, "
 "Cash Registers, or Customer/Supplier payments."
 msgstr ""
-"Los contables utilizan esta vista para introducir apuntes masivamente en "
+"Los contables utilizan esta vista para introducir asientos masivamente en "
 "OpenERP. Cuando utiliza los extractos bancarios, registros de caja, o pagos "
 "de cliente/proveedor OpenERP crea automáticamente apuntes contables."
 
@@ -568,7 +568,7 @@ msgstr "Cuenta utilizada en este diario"
 #: help:account.report.general.ledger,chart_account_id:0
 #: help:account.vat.declaration,chart_account_id:0
 msgid "Select Charts of Accounts"
-msgstr "Seleccionar plan contable"
+msgstr "Seleccionar plan contable."
 
 #. module: account
 #: view:product.product:0
@@ -753,12 +753,6 @@ msgstr "Comprobar"
 #: field:account.partner.reconcile.process,today_reconciled:0
 msgid "Partners Reconciled Today"
 msgstr "Empresas conciliadas hoy"
-
-#. module: account
-#: code:addons/account/account_bank_statement.py:306
-#, python-format
-msgid "The statement balance is incorrect !\n"
-msgstr "¡El balance del extracto bancario es incorrecto!\n"
 
 #. module: account
 #: selection:account.payment.term.line,value:0
@@ -1431,9 +1425,9 @@ msgid ""
 "statements, etc."
 msgstr ""
 "Un asiento de diario se compone de varias anotaciones, cada una de las "
-"cuales es una operación bien al debe o bien al haber. OpenERP crea "
-"automáticamente un asiento por cada documento contable: factura, reembolso, "
-"pago a proveedor, extractos de cuenta bancaria, etc"
+"cuales es una operación al debe o al haber. OpenERP crea automáticamente un "
+"asiento por cada documento contable: factura, factura rectificativa (abono), "
+"pago a proveedor, extractos de cuenta bancaria, etc."
 
 #. module: account
 #: view:account.entries.report:0
@@ -1449,7 +1443,7 @@ msgstr "Una tabla temporal utilizada para la vista de tablero"
 #: model:ir.actions.act_window,name:account.action_invoice_tree4
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree4
 msgid "Supplier Refunds"
-msgstr "Facturas rectificativas (abono) de proveedor"
+msgstr "Facturas rectificativas de proveedor"
 
 #. module: account
 #: view:account.payment.term.line:0
@@ -1945,8 +1939,8 @@ msgid ""
 "Check this box if you want to use a different sequence for each created "
 "journal. Otherwise, all will use the same sequence."
 msgstr ""
-"Marque esta caja si desea utilizar una secuencia diferente para cada diario "
-"creado. De lo contrario, todos utilizarán la misma secuencia."
+"Marque esta opción si desea utilizar una secuencia diferente para cada "
+"diario creado. De lo contrario, todos utilizarán la misma secuencia."
 
 #. module: account
 #: help:account.partner.ledger,amount_currency:0
@@ -2117,7 +2111,7 @@ msgid ""
 "accounts."
 msgstr ""
 "Esta clasificación se utiliza para diferenciar tipos con efectos especiales "
-"en OpenERP: vista no puede tener apuntes, consolidación son cuentas que "
+"en OpenERP: vista no puede tener asientos, consolidación son cuentas que "
 "pueden tener cuentas hijas para consolidaciones multi-empresa, "
 "pagable/cobrable son para cuentas de empresas (para los cálculos de crédito "
 "/ débito), cerrado es para cuentas de depreciación."
@@ -2207,7 +2201,7 @@ msgstr "Nº ctdad de productos "
 #. module: account
 #: model:ir.model,name:account.model_product_template
 msgid "Product Template"
-msgstr "Plantilla producto"
+msgstr "Plantilla de producto"
 
 #. module: account
 #: report:account.account.balance:0
@@ -2246,7 +2240,7 @@ msgstr "Ejercicio fiscal"
 #: help:account.report.general.ledger,fiscalyear_id:0
 #: help:account.vat.declaration,fiscalyear_id:0
 msgid "Keep empty for all open fiscal year"
-msgstr "Dejarlo vacío para todos los ejercicios fiscales abiertos"
+msgstr "Dejarlo vacío para todos los ejercicios fiscales abiertos."
 
 #. module: account
 #: model:ir.model,name:account.model_account_move
@@ -2527,8 +2521,7 @@ msgid ""
 "You cannot modify company of this journal as its related record exist in "
 "Entry Lines"
 msgstr ""
-"No puede modificar la compañía de este diario ya que existe un registro "
-"relacionado en las líneas de asiento"
+"No puede modificar la compañía de este diario porqué ya contiene asientos"
 
 #. module: account
 #: report:account.journal.period.print:0
@@ -2651,9 +2644,9 @@ msgid ""
 "Note that journal entries that are automatically created by the system are "
 "always skipping that state."
 msgstr ""
-"Marque esta opción si no desea que los nuevos apuntes pasen por el estado "
-"'Borrador' y por tanto vayan directamente al estado 'Asentado' sin ninguna "
-"validación manual. \n"
+"Marque esta opción si no desea que los nuevos asientos pasen por el estado "
+"'No asentado' y por tanto vayan directamente al estado 'Asentado' sin "
+"ninguna validación manual. \n"
 "Tenga en cuenta que los apuntes creados automáticamente por el sistema "
 "siempre obvian ese estado."
 
@@ -2721,11 +2714,12 @@ msgid "August"
 msgstr "Agosto"
 
 #. module: account
-#: code:addons/account/account_bank_statement.py:307
+#: code:addons/account/account_bank_statement.py:306
 #, python-format
 msgid ""
+"The statement balance is incorrect !\n"
 "The expected balance (%.2f) is different than the computed one. (%.2f)"
-msgstr "El balance previsto (%.2f) es diferente del calculado. (%.2f)"
+msgstr ""
 
 #. module: account
 #: model:process.transition,note:account.process_transition_paymentreconcile0
@@ -2982,6 +2976,12 @@ msgid "View"
 msgstr "Vista"
 
 #. module: account
+#: code:addons/account/account.py:2951
+#, python-format
+msgid "BNK%s"
+msgstr ""
+
+#. module: account
 #: code:addons/account/account.py:2906
 #: code:addons/account/installer.py:296
 #, python-format
@@ -3074,7 +3074,7 @@ msgid ""
 " 'Unreconciled' will copy only the journal items that were unreconciled on "
 "the first day of the new fiscal year."
 msgstr ""
-"Establezca aquí el método que se usará, el asistente genérico, para crear el "
+"Establezca aquí el método que usará el asistente genérico para crear el "
 "asiento de cierre de ejercicio para todas las cuentas de este tipo.\n"
 "\n"
 " 'Ninguno' significa que no se hará nada.\n"
@@ -3130,7 +3130,7 @@ msgstr "Empresas restantes"
 #: view:account.subscription:0
 #: field:account.subscription,lines_id:0
 msgid "Subscription Lines"
-msgstr "Líneas de asientos periódicos"
+msgstr "Apuntes de asientos periódicos"
 
 #. module: account
 #: selection:account.analytic.journal,type:0
@@ -3257,7 +3257,7 @@ msgid ""
 "All selected journal entries will be validated and posted. It means you "
 "won't be able to modify their accounting fields anymore."
 msgstr ""
-"Todos los apuntes seleccionadas serán validados y asentados. Esto significa "
+"Todos los asientos seleccionados serán validados y asentados. Esto significa "
 "que ya no podrá modificar sus campos contables."
 
 #. module: account
@@ -3489,8 +3489,8 @@ msgid ""
 "based on partner payment term!\n"
 "Please define partner on it!"
 msgstr ""
-"La fecha de vencimiento de la línea de asiento generado por la línea del "
-"modelo '%s' del modelo '%s' se basa en el plazo de pago de la empresa.\n"
+"La fecha de vencimiento del apunte generado por la línea del modelo '%s' del "
+"modelo '%s' se basa en el plazo de pago de la empresa.\n"
 "¡Por favor, defina la empresa en él!"
 
 #. module: account
@@ -4016,9 +4016,9 @@ msgid ""
 "the system on document validation (invoices, bank statements...) and will be "
 "created in 'Posted' state."
 msgstr ""
-"Todos los apuntes creadas manualmente están, por lo general, en el estado "
+"Todos los asientos creados manualmente están, por lo general, en el estado "
 "'No asentado', pero puede configurar la opción de omitir ese estado en el "
-"diario correspondiente. En ese caso, se comportan como apuntes creados "
+"diario correspondiente. En ese caso, se comportan como asientos creados "
 "automáticamente por el sistema en la validación de documentos (facturas, "
 "extractos bancarios, ...) y se crearán en estado 'Asentado'."
 
@@ -4061,7 +4061,7 @@ msgstr "Descripción impuesto"
 #: code:addons/account/report/common_report_header.py:68
 #, python-format
 msgid "All Posted Entries"
-msgstr "Todos los apuntes asentados"
+msgstr "Todos los asientos asentados"
 
 #. module: account
 #: code:addons/account/account_bank_statement.py:357
@@ -4311,7 +4311,7 @@ msgstr "Considerar asientos conciliados."
 #: view:validate.account.move:0
 #: view:validate.account.move.lines:0
 msgid "Post Journal Entries"
-msgstr "Asentar apuntes"
+msgstr "Asentar asientos"
 
 #. module: account
 #: selection:account.invoice,state:0
@@ -4420,12 +4420,6 @@ msgstr ""
 #: report:account.account.balance.landscape:0
 msgid "Account Balance -"
 msgstr "Balance cuenta -"
-
-#. module: account
-#: code:addons/account/invoice.py:989
-#, python-format
-msgid "Invoice "
-msgstr "Factura "
 
 #. module: account
 #: field:account.automatic.reconcile,date1:0
@@ -4564,7 +4558,7 @@ msgstr "Aplicación impuesto"
 #: model:ir.ui.menu,name:account.menu_eaction_account_moves_sale
 #, python-format
 msgid "Journal Items"
-msgstr "Registros del diario"
+msgstr "Apuntes contables"
 
 #. module: account
 #: selection:account.account.type,report_type:0
@@ -4684,7 +4678,7 @@ msgid ""
 "You should set the journal to allow cancelling entries if you want to do "
 "that."
 msgstr ""
-"¡No se puede modificar una apunte asentado de este diario!\n"
+"¡No se puede modificar una asiento asentado de este diario!\n"
 "Debe configurar el diario para permitir la cancelación de los asientos si "
 "quiere hacerlo."
 
@@ -4831,7 +4825,7 @@ msgstr "mes"
 #: code:addons/account/account_bank_statement.py:293
 #, python-format
 msgid "Journal Item \"%s\" is not valid"
-msgstr "Registro del diario \"%s\" no es válido"
+msgstr "Apunte \"%s\" no es válido"
 
 #. module: account
 #: view:account.payment.term:0
@@ -5093,7 +5087,7 @@ msgstr "Contabilidad analítica"
 #: selection:account.invoice.report,type:0
 #: selection:report.invoice.created,type:0
 msgid "Customer Refund"
-msgstr "Reembolso del cliente"
+msgstr "Factura rectificativa de cliente"
 
 #. module: account
 #: view:account.account:0
@@ -5355,7 +5349,7 @@ msgstr "Contabilidad. Conciliación automática"
 #: view:account.move:0
 #: view:account.move.line:0
 msgid "Journal Item"
-msgstr "Registro diario"
+msgstr "Apunte contable"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_journal
@@ -5498,7 +5492,7 @@ msgstr "Reintegrar factura"
 #. module: account
 #: field:account.invoice,address_invoice_id:0
 msgid "Invoice Address"
-msgstr "Dirección factura"
+msgstr "Dirección de factura"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_entries_report_all
@@ -5668,7 +5662,7 @@ msgstr "  365 Días  "
 #: model:ir.actions.act_window,name:account.action_invoice_tree3
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree3
 msgid "Customer Refunds"
-msgstr "Facturas rectificativas (abono) de cliente"
+msgstr "Facturas rectificativas de cliente"
 
 #. module: account
 #: view:account.payment.term.line:0
@@ -5742,9 +5736,9 @@ msgid ""
 "line of the expense account. OpenERP will propose to you automatically the "
 "Tax related to this account and the counterpart \"Account Payable\"."
 msgstr ""
-"Esta vista puede ser utilizada por los contables para registrar apuntes "
+"Esta vista puede ser utilizada por los contables para registrar asientos "
 "rápidamente en OpenERP. Si desea registrar una factura de proveedor, "
-"comience registrando la línea de la cuenta de gastos. OpenERP le propondrá "
+"comience registrando el apunte de la cuenta de gastos. OpenERP le propondrá "
 "automáticamente el impuesto asociado a esta cuenta y la \"cuenta a pagar\" "
 "de contrapartida."
 
@@ -5781,10 +5775,10 @@ msgstr ""
 "convierte en \"Realizada\" (es decir, pagada) en el sistema."
 
 #. module: account
-#: code:addons/account/invoice.py:989
+#: code:addons/account/invoice.py:997
 #, python-format
-msgid "is validated."
-msgstr "está validada."
+msgid "Invoice  '%s' is validated."
+msgstr ""
 
 #. module: account
 #: view:account.chart.template:0
@@ -5852,8 +5846,8 @@ msgid ""
 "You cannot modify Company of account as its related record exist in Entry "
 "Lines"
 msgstr ""
-"No puede modificar la compañía de la cuenta ya que existe un registro "
-"relacionado en líneas de asientos"
+"No puede modificar la compañía de la cuenta porqué ya hay apuntes con esta "
+"cuenta"
 
 #. module: account
 #: help:account.fiscalyear.close.state,fy_id:0
@@ -6085,7 +6079,7 @@ msgstr "Liquidez"
 #: model:ir.actions.act_window,name:account.action_account_analytic_journal_open_form
 #: model:ir.ui.menu,name:account.account_analytic_journal_entries
 msgid "Analytic Journal Items"
-msgstr "Registros diario analítico"
+msgstr "Apuntes analíticos"
 
 #. module: account
 #: view:account.fiscalyear.close:0
@@ -6149,7 +6143,7 @@ msgstr "¡Introduzca una fecha inicial!"
 #: selection:account.invoice.report,type:0
 #: selection:report.invoice.created,type:0
 msgid "Supplier Refund"
-msgstr "Factura rectificativa (abono) de proveedor"
+msgstr "Factura rectificativa de proveedor"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_dashboard_acc
@@ -6477,7 +6471,7 @@ msgstr ""
 "factura deben estar conciliados con sus contrapartidas, normalmente pagos. "
 "Con la funcionalidad de reconciliación automática, OpenERP realiza su propia "
 "búsqueda de apuntes a conciliar en una serie de cuentas. Encuentra los "
-"apuntes, para cada tercero, donde las cantidades se correspondan."
+"apuntes, para cada empresa, cuando las cantidades se correspondan."
 
 #. module: account
 #: view:account.move:0
@@ -6515,8 +6509,8 @@ msgstr ""
 msgid ""
 "Selected Entry Lines does not have any account move enties in draft state"
 msgstr ""
-"Las líneas de asiento seleccionadas no tienen ningún movimiento contable en "
-"estado borrador"
+"Los apuntes seleccionados no tienen ningún movimiento contable en estado "
+"borrador"
 
 #. module: account
 #: selection:account.aged.trial.balance,target_move:0
@@ -6816,8 +6810,8 @@ msgid ""
 "This date will be used as the invoice date for Refund Invoice and Period "
 "will be chosen accordingly!"
 msgstr ""
-"¡Esta fecha se utilizará como la fecha de facturación de la factura "
-"rectificativa (abono) y el período será elegido en consecuencia!"
+"Esta fecha se utilizará como la fecha de facturación de la factura "
+"rectificativa (abono) y el período será elegido en consecuencia."
 
 #. module: account
 #: field:account.aged.trial.balance,period_length:0
@@ -6960,8 +6954,7 @@ msgid ""
 "search for account entries, open a journal, then select a record line."
 msgstr ""
 "Puede buscar un asiento contable en concreto a través de información útil. "
-"Para buscar asientos contables, abra un diario, luego seleccione una línea "
-"de registro."
+"Para buscar asientos contables, abra un diario, luego seleccione un apunte."
 
 #. module: account
 #: report:account.invoice:0
@@ -7139,7 +7132,7 @@ msgid ""
 "line of the expense account, OpenERP will propose to you automatically the "
 "Tax related to this account and the counter-part \"Account Payable\"."
 msgstr ""
-"Esta vista es usada por los contables para registrar apuntes masivamente en "
+"Esta vista es usada por los contables para registrar asientos masivamente en "
 "OpenERP. Si quiere registrar una factura de proveedor, comience "
 "introduciendo el apunte de la cuenta de gastos. OpenERP le propondrá "
 "automáticamente el impuesto asociado a esta cuenta, y la \"cuenta a pagar\" "
@@ -7161,7 +7154,7 @@ msgstr ""
 #: field:account.invoice.tax,invoice_id:0
 #: model:ir.model,name:account.model_account_invoice_line
 msgid "Invoice Line"
-msgstr "Línea factura"
+msgstr "Línea de factura"
 
 #. module: account
 #: field:account.balance.report,display_account:0
@@ -7232,7 +7225,7 @@ msgstr ""
 #: view:account.move.line:0
 #: selection:account.move.line,state:0
 msgid "Unbalanced"
-msgstr "No balanceado"
+msgstr "Descuadrado"
 
 #. module: account
 #: selection:account.move.line,centralisation:0
@@ -7371,7 +7364,7 @@ msgstr "Código"
 #. module: account
 #: view:validate.account.move:0
 msgid "Post Journal Entries of a Journal"
-msgstr "Asentar apuntes de un diario"
+msgstr "Asentar asientos de un diario"
 
 #. module: account
 #: view:product.product:0
@@ -8120,8 +8113,7 @@ msgstr "Diario de compras"
 #: view:account.invoice.refund:0
 msgid "Refund Invoice: Creates the refund invoice, ready for editing."
 msgstr ""
-"Factura rectificativa (abono): Crea la factura de abono, preparada para "
-"editarla."
+"Factura rectificativa: Crea la factura de abono, preparada para editarla."
 
 #. module: account
 #: field:account.invoice.line,price_subtotal:0
@@ -8534,8 +8526,8 @@ msgid ""
 "You cannot modify company of this period as its related record exist in "
 "Entry Lines"
 msgstr ""
-"No puede modificar la compañía de este periodo ya que existe un registro "
-"relacionado en las líneas de asiento"
+"No puede modificar la compañía de este periodo porqué ya hay apuntes en este "
+"período."
 
 #. module: account
 #: view:account.move:0
@@ -8618,10 +8610,10 @@ msgid ""
 "in which order. You can create your own view for a faster encoding in each "
 "journal."
 msgstr ""
-"Establece la vista usada cuando se escriben o consultan apuntes en este "
-"diario. La vista le dice a OpenERP qué campos deben ser visibles, requeridos "
-"o de sólo lectura, y en qué orden. Puede crear su propia vista en cada "
-"diario para introducir apuntes más rápido."
+"Establece la vista usada cuando se escriben o consultan asientos en este "
+"diario. La vista le indica a OpenERP qué campos deben ser visibles, "
+"requeridos o de sólo lectura, y en qué orden. Puede crear su propia vista en "
+"cada diario para introducir apuntes más rápido."
 
 #. module: account
 #: field:account.period,date_stop:0
@@ -8729,10 +8721,11 @@ msgid ""
 "partially. You can easily generate refunds and reconcile them directly from "
 "the invoice form."
 msgstr ""
-"Con reembolsos de proveedor puede gestionar las notas de crédito que recibe "
-"de sus proveedores. Un reembolso es un documento que abona una factura total "
-"o parcialmente. Puede fácilmente generar reembolsos y conciliarlos "
-"directamente desde el formulario de factura."
+"Con facturas rectificativas de proveedor puede gestionar las facturas de "
+"abono que recibe de sus proveedores. Una factura rectificativa es un "
+"documento que abona una factura total o parcialmente. Puede fácilmente "
+"generar facturas rectificativas y conciliarlas directamente desde el "
+"formulario de factura."
 
 #. module: account
 #: view:account.account.template:0
@@ -8848,7 +8841,7 @@ msgid ""
 "the income account. OpenERP will propose to you automatically the Tax "
 "related to this account and the counter-part \"Account receivable\"."
 msgstr ""
-"Esta vista es usada por los contables para registrar apuntes masivamente en "
+"Esta vista es usada por los contables para registrar asientos masivamente en "
 "OpenERP. Si quiere registrar una factura de cliente, seleccione el diario y "
 "el periodo en la barra de herramientas de búsqueda. Luego, comience "
 "introduciendo el apunte de la cuenta de ingresos. OpenERP le propondrá "
@@ -9291,8 +9284,8 @@ msgid ""
 "payment term!\n"
 "Please define partner on it!"
 msgstr ""
-"La fecha de vencimiento de la línea de asiento generado por la línea del "
-"modelo '%s' se basa en el plazo de pago de la empresa.\n"
+"La fecha de vencimiento del apunte generado por la línea del modelo '%s' se "
+"basa en el plazo de pago de la empresa.\n"
 "¡Por favor, defina la empresa en él!"
 
 #. module: account
@@ -9421,7 +9414,7 @@ msgid ""
 "and is the process of transferring debit and credit amounts from a journal "
 "of original entry to a ledger book."
 msgstr ""
-"El proceso de validación de apuntes, también llamado 'asentar', transfiere "
+"El proceso de validación de asientos, también llamado 'asentar', transfiere "
 "los importes del debe y haber de la anotación original a un libro mayor."
 
 #. module: account
@@ -9498,7 +9491,7 @@ msgstr "Seleccionar periodo"
 #: view:account.move.line:0
 #: report:account.move.voucher:0
 msgid "Posted"
-msgstr "Fijado"
+msgstr "Asentado"
 
 #. module: account
 #: report:account.account.balance:0
@@ -10051,7 +10044,7 @@ msgstr "Buscar factura"
 #: view:account.invoice.report:0
 #: model:ir.actions.act_window,name:account.action_account_invoice_refund
 msgid "Refund"
-msgstr "Factura rectificativa (abono)"
+msgstr "Factura rectificativa"
 
 #. module: account
 #: field:wizard.multi.charts.accounts,bank_accounts_id:0
@@ -10269,6 +10262,10 @@ msgstr ""
 
 #~ msgid "Keep empty to use the period of the validation date."
 #~ msgstr "Dejarlo vacío para usar el período de la fecha de validación."
+
+#, python-format
+#~ msgid "The statement balance is incorrect !\n"
+#~ msgstr "¡El balance del extracto bancario es incorrecto!\n"
 
 #, python-format
 #~ msgid ""
@@ -10513,6 +10510,11 @@ msgstr ""
 
 #~ msgid "Invoice import"
 #~ msgstr "Importe factura"
+
+#, python-format
+#~ msgid ""
+#~ "The expected balance (%.2f) is different than the computed one. (%.2f)"
+#~ msgstr "El balance previsto (%.2f) es diferente del calculado. (%.2f)"
 
 #~ msgid "Ending Balance"
 #~ msgstr "Saldo final"
@@ -11957,6 +11959,10 @@ msgstr ""
 #~ "Si el campo activo se desmarca, permite ocultar el plazo de pago sin "
 #~ "eliminarlo."
 
+#, python-format
+#~ msgid "Invoice "
+#~ msgstr "Factura "
+
 #~ msgid "Rule must have at least one checked access right !"
 #~ msgstr "¡La regla debe tener por lo menos un derecho de acceso marcado!"
 
@@ -11965,6 +11971,10 @@ msgstr ""
 #~ "without removing it."
 #~ msgstr ""
 #~ "Si el campo activo se desmarca, permite ocultar el impuesto sin eliminarlo."
+
+#, python-format
+#~ msgid "is validated."
+#~ msgstr "está validada."
 
 #~ msgid ""
 #~ "If the active field is set to true, it will allow you to hide the journal "

@@ -22,10 +22,13 @@
 {
     'name': 'Project Retro planning',
     'version': '0.1',
-    'category': 'Generic Modules/Projects & Services',
+    'category': 'Project Management',
     'description': """
-        - If end date of project is changed
-          then the deadline date and start date for all the tasks will change accordingly  """,
+Changes dates according to change in project End Date.
+======================================================
+
+If end date of project is changed then the deadline date and start date for all the tasks will change accordingly.
+    """,
     'author': 'OpenERP SA',
     'depends': ['base', 'project'],
     'init_xml': [],

@@ -258,18 +258,17 @@ class resource_resource(osv.osv):
             leaves = []
             resource_eff = 1.0
             if resource_ids:
-                resource_id = resource_ids[0]    
-                resource = self.browse(cr, uid, resource_id, context=context)
-                resource_eff = resource.time_efficiency
-                resource_cal = resource.calendar_id.id
-                if resource_cal:
-                    leaves = self.compute_vacation(cr, uid, calendar_id, resource.id, resource_cal, context=context)
-                temp = {
-                         'name' : resource.name,
-                         'vacation': tuple(leaves),
-                         'efficiency': resource_eff,
-                      }
-                resource_objs[resource_id] = temp     
+                for resource in self.browse(cr, uid, resource_ids, context=context):
+                    resource_eff = resource.time_efficiency
+                    resource_cal = resource.calendar_id.id
+                    if resource_cal:
+                        leaves = self.compute_vacation(cr, uid, calendar_id, resource.id, resource_cal, context=context)
+                    temp = {
+                             'name' : resource.name,
+                             'vacation': tuple(leaves),
+                             'efficiency': resource_eff,
+                          }
+                    resource_objs[resource.id] = temp     
 #            resource_objs.append(classobj(str(user.name), (Resource,),{
 #                                             '__doc__': user.name,
 #                                             '__name__': user.name,

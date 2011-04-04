@@ -2,7 +2,7 @@
 <openerp>
     <data>
 
-  	  <record id="view_membership_invoice_view" model="ir.ui.view">
+        <record id="view_membership_invoice_view" model="ir.ui.view">
             <field name="name">membership.invoice.view.form</field>
             <field name="model">membership.invoice</field>
             <field name="type">form</field>
@@ -18,14 +18,24 @@
                     </group>
                 </form>
             </field>
-  	  </record>
-       <record id="action_membership_invoice_view" model="ir.actions.act_window">
-           <field name="name">Join Membership</field>
-           <field name="res_model">membership.invoice</field>
-           <field name="view_type">form</field>
-           <field name="view_mode">tree,form</field>
-          <field name="view_id" ref="view_membership_invoice_view"/>
-          <field name="target">new</field>
-       </record>		
+        </record>
+
+        <record id="action_membership_invoice_view" model="ir.actions.act_window">
+            <field name="name">Join Membership</field>
+            <field name="res_model">membership.invoice</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_membership_invoice_view"/>
+            <field name="target">new</field>
+        </record>
+
+        <act_window name="Invoice Membership"
+            res_model="membership.invoice"
+            src_model="res.partner"
+            multi="False"
+            key2="client_action_multi"
+            view_mode="form"
+            id="action_membership_invoice_view"/>
+
     </data>
 </openerp>

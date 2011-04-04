@@ -362,13 +362,13 @@ class account_invoice(osv.osv):
     def unlink(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
-        invoices = self.read(cr, uid, ids, ['state'], context=context)
+        invoices = self.read(cr, uid, ids, ['state','internal_number'], context=context)
         unlink_ids = []
         for t in invoices:
-            if t['state'] in ('draft', 'cancel'):
+            if t['state'] in ('draft', 'cancel') and t['internal_number']== False:
                 unlink_ids.append(t['id'])
             else:
-                raise osv.except_osv(_('Invalid action !'), _('Cannot delete invoice(s) that are already opened or paid !'))
+                raise osv.except_osv(_('Invalid action !'), _('Cannot delete invoice(s) that are already opened(or been in opened state ever) or paid!'))
         osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
         return True
 
@@ -994,7 +994,7 @@ class account_invoice(osv.osv):
                 ctx = context.copy()
                 if obj_inv.type in ('out_invoice', 'out_refund'):
                     ctx = self.get_log_context(cr, uid, context=ctx)
-                message = _('Invoice ') + " '" + name + "' "+ _("is validated.")
+                message = _("Invoice  '%s' is validated.") % name
                 self.log(cr, uid, inv_id, message, context=ctx)
         return True
 
@@ -1289,6 +1289,20 @@ class account_invoice_line(osv.osv):
         'discount': 0.0,
         'price_unit': _price_unit_default,
     }
+
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        if context is None:
+            context = {}
+        res = super(account_invoice_line,self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
+        if context.get('type', False):
+            doc = etree.XML(res['arch'])
+            for node in doc.xpath("//field[@name='product_id']"):
+                if context['type'] in ('in_invoice', 'in_refund'):
+                    node.set('domain', "[('purchase_ok', '=', True)]")
+                else:
+                    node.set('domain', "[('sale_ok', '=', True)]")
+            res['arch'] = etree.tostring(doc)
+        return res
 
     def product_id_change(self, cr, uid, ids, product, uom, qty=0, name='', type='out_invoice', partner_id=False, fposition_id=False, price_unit=False, address_invoice_id=False, currency_id=False, context=None):
         if context is None:
@@ -1595,7 +1609,17 @@ class res_partner(osv.osv):
     _columns = {
         'invoice_ids': fields.one2many('account.invoice.line', 'partner_id', 'Invoices', readonly=True),
     }
-
+    
+    def copy(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+            
+        if context is None:
+            context = {}   
+             
+        default.update({'invoice_ids' : []})
+        return super(res_partner, self).copy(cr, uid, id, default, context)
+      
 res_partner()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

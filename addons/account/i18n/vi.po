@@ -9,13 +9,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
 "PO-Revision-Date: 2011-01-19 21:51+0000\n"
-"Last-Translator: Phong Nguyen <Unknown>\n"
+"Last-Translator: Phong Nguyen-Thanh <Unknown>\n"
 "Language-Team: Vietnamese <vi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-20 04:53+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-03-18 04:55+0000\n"
+"X-Generator: Launchpad (build 12559)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -744,12 +744,6 @@ msgstr "Séc"
 #: field:account.partner.reconcile.process,today_reconciled:0
 msgid "Partners Reconciled Today"
 msgstr "Các đối tác được đối soát hôm nay"
-
-#. module: account
-#: code:addons/account/account_bank_statement.py:306
-#, python-format
-msgid "The statement balance is incorrect !\n"
-msgstr "The statement balance is incorrect !\n"
 
 #. module: account
 #: selection:account.payment.term.line,value:0
@@ -2668,12 +2662,12 @@ msgid "August"
 msgstr "Tháng Tám"
 
 #. module: account
-#: code:addons/account/account_bank_statement.py:307
+#: code:addons/account/account_bank_statement.py:306
 #, python-format
 msgid ""
+"The statement balance is incorrect !\n"
 "The expected balance (%.2f) is different than the computed one. (%.2f)"
 msgstr ""
-"The expected balance (%.2f) is different than the computed one. (%.2f)"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_paymentreconcile0
@@ -2924,6 +2918,12 @@ msgstr "The account basis of the tax declaration."
 #: selection:account.entries.report,type:0
 msgid "View"
 msgstr "View"
+
+#. module: account
+#: code:addons/account/account.py:2951
+#, python-format
+msgid "BNK%s"
+msgstr ""
 
 #. module: account
 #: code:addons/account/account.py:2906
@@ -4339,12 +4339,6 @@ msgid "Account Balance -"
 msgstr "Số dư tài khoản -"
 
 #. module: account
-#: code:addons/account/invoice.py:989
-#, python-format
-msgid "Invoice "
-msgstr "Hóa đơn "
-
-#. module: account
 #: field:account.automatic.reconcile,date1:0
 msgid "Starting Date"
 msgstr "Ngày bắt đầu"
@@ -5676,10 +5670,10 @@ msgstr ""
 "(i.e. paid) in the system."
 
 #. module: account
-#: code:addons/account/invoice.py:989
+#: code:addons/account/invoice.py:997
 #, python-format
-msgid "is validated."
-msgstr "đã được kiểm tra."
+msgid "Invoice  '%s' is validated."
+msgstr ""
 
 #. module: account
 #: view:account.chart.template:0
@@ -10321,6 +10315,12 @@ msgstr ""
 #~ msgid "The certificate ID of the module must be unique !"
 #~ msgstr "Mã chứng nhận của mô đun này phải là duy nhất !"
 
+#, python-format
+#~ msgid ""
+#~ "The expected balance (%.2f) is different than the computed one. (%.2f)"
+#~ msgstr ""
+#~ "The expected balance (%.2f) is different than the computed one. (%.2f)"
+
 #~ msgid "Options"
 #~ msgstr "Options"
 
@@ -10420,6 +10420,10 @@ msgstr ""
 
 #~ msgid "Income"
 #~ msgstr "Income"
+
+#, python-format
+#~ msgid "The statement balance is incorrect !\n"
+#~ msgstr "The statement balance is incorrect !\n"
 
 #~ msgid ""
 #~ "If the active field is set to true, it will allow you to hide the tax "
@@ -10800,6 +10804,10 @@ msgstr ""
 #~ "A supplier refund is a credit note from your supplier indicating that he "
 #~ "refunds part or totality of the invoice sent to you."
 
+#, python-format
+#~ msgid "Invoice "
+#~ msgstr "Hóa đơn "
+
 #~ msgid "Default UoM"
 #~ msgstr "Đơn vị đo mặc định"
 
@@ -10820,3 +10828,7 @@ msgstr ""
 
 #~ msgid "Entry encoding"
 #~ msgstr "Mã hóa bút toán"
+
+#, python-format
+#~ msgid "is validated."
+#~ msgstr "đã được kiểm tra."
