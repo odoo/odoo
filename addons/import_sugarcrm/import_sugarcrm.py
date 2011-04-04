@@ -24,7 +24,6 @@ import sugar
 import sugarcrm_fields_mapping
 from tools.translate import _
 import pprint
-import tools
 pp = pprint.PrettyPrinter(indent=4)
 
 def create_mapping(obj, cr, uid, res_model, open_id, sugar_id, context):
@@ -225,7 +224,6 @@ def get_user_address(sugar_obj, cr, uid, val, context=None):
     
 def get_address_type(sugar_obj, cr, uid, val, map_partner_address, type, context=None):
         address_obj = sugar_obj.pool.get('res.partner.address')
-        res_country_obj = sugar_obj.pool.get('res.country')
         new_address_id = False
         if type == 'invoice':
             type_address = 'billing'
