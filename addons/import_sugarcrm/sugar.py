@@ -23,9 +23,8 @@
 import hashlib
 from sugarsoap_services import *
 from sugarsoap_services_types import *
-from osv import fields, osv
+from osv import osv
 from tools.translate import _
-import sys;
 
 class LoginError(Exception): pass
 
@@ -59,7 +58,6 @@ def relation_search(portType, sessionid, module_name=None, module_id=None, relat
   if se_resp:
       list = se_resp._return.get_element_ids()
       for i in list:
-          ans_dir = {}
           ans_list.append(i.get_element_id())
   return ans_list
 
