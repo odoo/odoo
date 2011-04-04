@@ -326,10 +326,10 @@
         <span t-if="attrs.help">(?)</span>
     </label>
     <div style="white-space: nowrap;" t-att-id="element_id">
-        <input t-att-name="attrs.name" class="field_date"
+        <input t-att-name="attrs.name" type="text" class="field_date"
                t-att-value="defaults[attrs.name] || ''"/>
         to
-        <input t-att-name="attrs.name" class="field_date"
+        <input t-att-name="attrs.name" type="text" class="field_date"
                t-att-value="defaults[attrs.name] || ''"/>
         <t t-if="filters.length" t-raw="filters.render(defaults)"/>
     </div>
