@@ -16,6 +16,7 @@
                        <field name="date"/>
                        <field name="user_id" string="User"/>
                        <field name="partner_id" readonly="1" />
+                       <field name="priority"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Details">
@@ -31,21 +32,20 @@
                                 <separator string="Message Details" colspan="4"/>
                                 <field name="model" readonly="1"/>
                                 <group col="3" colspan="2">
-                                    <field name="res_id" readonly="1"/>
+                                    <field name="res_id" readonly="1" groups="base.group_extended"/>
                                     <button name="open_document" string="Open Document" type="object" icon="gtk-jump-to"/>
-	                                <field name="message_id"/>
-	                                <button name="%(action_email_compose_message_wizard)d" string="Reply" type="action" icon="terp-mail-replied"
-	                                context="{'mail':'reply', 'message_id':active_id}"/>
+	                                <field name="message_id" groups="base.group_extended" colspan="4"/>
                                 </group>
-                                <field name="references" widget="char" size="4096"/>
+                                <field name="references" widget="char" size="4096" groups="base.group_extended"/>
                             </group>
                             <separator string="Description" colspan="4"/>
                             <field name="body" nolabel="1" colspan="4"/>
                             <group col="4" colspan="4">
                                 <separator string="" colspan="4"/>
-                                <field name="state"/>
-                                <button name="process_email_queue" string="Send" type="object" icon="gtk-execute" states='draft,waiting,sending'/>
-                                <button name="process_retry" string="Re-Try" type="object" icon="gtk-execute" states='exception'/>
+                                <field name="state" attrs="{'invisible': [('state', '==', False)]}"/>
+                                <button name="%(action_email_compose_message_wizard)d" string="Reply" type="action" icon="terp-mail-replied"
+	                                context="{'mail':'reply', 'message_id':active_id}" colspan="2"/>
+                                <button name="process_email_queue" string="Force send" type="object" icon="gtk-execute" states='exception' colspan="2"/>
                             </group>
                         </page>
                         <page string="Attachments">
@@ -56,11 +56,11 @@
                             <group col="4" colspan="4">
                                 <field name="smtp_server_id"/>
 	                            <field name="sub_type"/>
-	                            <field name="headers"/>
-	                            <field name="priority"/>
-	                            <field name="debug"/>
+	                            <field name="debug" groups="base.group_extended"/>
 	                            <field name="history"/>
 	                            <field name="auto_delete"/>
+	                            <separator string="xheaders" colspan="4"/>
+	                            <field name="headers" colspan="4" nolabel="1" groups="base.group_extended"/>
                             </group>
                         </page>
                     </notebook>
@@ -129,12 +129,6 @@
             res_model="email.message"
             src_model="res.partner"
             view_id="view_email_message_tree"/>
-
-	    <act_window
-	       id="act_res_partner_open_email" name="Attachments"
-	       res_model="ir.attachment"
-	       src_model="email.message"
-	       domain="[('res_id', '=', res_id),('res_model','=',model)]"/>
 
         <menuitem name="Email" id="menu_email_message_tools"
             parent="base.menu_tools" />

@@ -292,7 +292,7 @@ class email_thread(osv.osv):
             msg['content-type'] = msg_txt.get('Content-Type')
 
         if 'From' in fields:
-            msg['from'] = self._decode_header(msg_txt.get('From'))
+            msg['from'] = self._decode_header(msg_txt.get('From') or msg_txt.get_unixfrom())
 
         if 'Delivered-To' in fields:
             msg['to'] = self._decode_header(msg_txt.get('Delivered-To'))
