@@ -123,17 +123,17 @@ class WebKitParser(report_sxw):
             command.append("--footer-html '%s'"%(foot_file.name))
             
         if webkit_header.margin_top :
-            command.append('--margin-top %s'%(webkit_header.margin_top))
+            command.append('--margin-top %s'%(str(webkit_header.margin_top).replace(',', '.')))
         if webkit_header.margin_bottom :
-            command.append('--margin-bottom %s'%(webkit_header.margin_bottom))
+            command.append('--margin-bottom %s'%(str(webkit_header.margin_bottom).replace(',', '.')))
         if webkit_header.margin_left :
-            command.append('--margin-left %s'%(webkit_header.margin_left))
+            command.append('--margin-left %s'%(str(webkit_header.margin_left).replace(',', '.')))
         if webkit_header.margin_right :
-            command.append('--margin-right %s'%(webkit_header.margin_right))
+            command.append('--margin-right %s'%(str(webkit_header.margin_right).replace(',', '.')))
         if webkit_header.orientation :
-            command.append("--orientation '%s'"%(webkit_header.orientation))
+            command.append("--orientation '%s'"%(str(webkit_header.orientation).replace(',', '.')))
         if webkit_header.format :
-            command.append(" --page-size '%s'"%(webkit_header.format))
+            command.append(" --page-size '%s'"%(str(webkit_header.format).replace(',', '.')))
         count = 0
         for html in html_list :
             html_file = file(os.path.join(tmp_dir, str(time.time()) + str(count) +'.body.html'), 'w')
