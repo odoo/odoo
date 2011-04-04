@@ -47,14 +47,15 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">product.product</field>
             <field name="view_type">form</field>
+            <field name="view_mode">form</field>
             <field name="view_id" ref="product.product_normal_form_view"/>
         </record>
         
          <!--      register configuration wizard -->
         <record id="config_wizard_res_product_installer" model="ir.actions.todo">
             <field name="action_id" ref="product_form_config_action"/>
-            <field name="target">new</field>
-            <field name="restart">on_trigger</field>
+            <field name="target">current</field>
+            <field name="restart">never</field>
         </record>
         
     </data>
