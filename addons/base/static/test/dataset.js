@@ -179,7 +179,9 @@ $(document).ready(function () {
             equal(event.limit, 42);
             start();
         });
-        dataset.fetch(20, 42);
+        dataset.fetch({
+            name : { type : 'char' }
+        }, 20, 42);
     });
     asyncTest("Domain and context propagation", 3, function () {
         var dataset = new openerp.base.DataSet(
