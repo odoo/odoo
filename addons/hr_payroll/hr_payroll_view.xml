@@ -161,8 +161,9 @@
                     <field name="sequence" groups="base.group_extended"/>
                     <field name="name"/>
                     <field name="code"/>
-                    <field name="amount_type"/>
-                    <field name="amount" on_change="onchange_amount(amount, amount_type)"/>
+                    <field name="amount_select"/>
+                    <field name="amount_fix" on_change="onchange_amount(amount_fix, amount_select)"/>
+                    <field name="amount_percentage" on_change="onchange_amount(amount_percentage, amount_select)"/>
                 </tree>
             </field>
         </record>
@@ -183,8 +184,9 @@
                         <separator colspan="4" string="Calculations"/>
                         <field name="category_id" on_change="onchange_category(category_id)"/>
                         <!--<field name="type"/>-->
-                        <field name="amount_type"/>
-                        <field name="amount" on_change="onchange_amount(amount, amount_type)" attrs="{'readonly':[('amount_type','=','code')]}"/>
+                        <field name="amount_select"/>
+                        <field name="amount_fix"  attrs="{'readonly':[('amount_select','&lt;&gt;','fix')]}"/>
+                        <field name="amount_percentage"  attrs="{'readonly':[('amount_select','&lt;&gt;','percentage')]}"/>
                         <field name="sequence" groups="base.group_extended"/>
                     </group>
                     <group col="2" colspan="2">
@@ -241,8 +243,9 @@
                                     <field name="sequence" groups="base.group_extended"/>
                                     <field name="name"/>
                                     <field name="code"/>
-                                    <field name="amount_type"/>
-                                    <field name="amount" on_change="onchange_amount(amount, amount_type)"/>
+                         <!--           <field name="amount_select"/>
+                                    <field name="amount_fix" on_change="onchange_amount(amount_fix, amount_select)"/>
+                                    <field name="amount_percentage" on_change="onchange_amount(amount_percentage, amount_select)"/>-->
                                     <field name="total"/>
                                 </tree>
                                 <form string="Payslip Line">
@@ -253,8 +256,9 @@
                                     <group col="2" colspan="2">
                                         <separator colspan="4" string="Calculations"/>
                                         <field name="category_id" on_change="onchange_category(category_id)"/>
-                                        <field name="amount_type"/>
-                                        <field name="amount" on_change="onchange_amount(amount, amount_type)" attrs="{'readonly':[('amount_type','=','code')]}"/>
+                                        <field name="amount_select"/>
+                                        <field name="amount_fix" on_change="onchange_amount(amount, amount_select)" attrs="{'readonly':[('amount_select','&lt;&gt;','fix')]}"/>
+                                        <field name="amount_percentage" on_change="onchange_amount(amount, amount_select)" attrs="{'readonly':[('amount_select','=','percentage')]}"/>
                                         <field name="sequence" groups="base.group_extended"/>
                                     </group>
                                     <group col="2" colspan="2">
@@ -285,19 +289,18 @@
                             </group> -->
                         </page>
 
-                       <page string="Details By Salary Head">
+<!--                       <page string="Details By Salary Head">
                             <field name="details_by_salary_head" nolabel="1">
                                 <tree string="Salary Rules">
                                     <field name="category_id"/>
                                     <field name="sequence" groups="base.group_extended"/>
                                     <field name="name"/>
                                     <field name="code"/>
-                                    <field name="amount_type"/>
-                                    <field name="amount"/>
+                                    <field name="total"/>
                                 </tree>
                             </field>
                        </page>
-
+-->
                        <page string="Inputs">
                             <field name="input_line_ids" colspan="4" nolabel="1" mode="tree" editable="bottom">
                                 <tree>
@@ -621,7 +624,7 @@
                     <field name="sequence" groups="base.group_extended"/>
                     <field name="name"/>
                     <field name="code"/>
-                    <field name="amount_type"/>
+                    <field name="amount_select"/>
             <field name="condition_range_min"/>
             <field name="condition_range_max"/>
                    <!-- <field name="amount"/>-->
@@ -650,15 +653,16 @@
                             <group col="4" colspan="6">
                                 <separator colspan="4" string="Conditions"/>
                                 <field name="condition_select"/><newline/>
-                                <field name="conditions" attrs="{'invisible':[('condition_select','&lt;&gt;','python')], 'required': [('condition_select','=','python')]}"/> <newline/>
-                                <field name="computational_expression" string="Range Based on" attrs="{'invisible':[('condition_select','&lt;&gt;','range')]}"/><newline/>
-                                <field name="condition_range_min" colspan="2" attrs="{'invisible':[('condition_select','&lt;&gt;','range')]}"/>
-                                <field name="condition_range_max" colspan="2" attrs="{'invisible':[('condition_select','&lt;&gt;','range')]}"/>
+                                <field name="condition_python" attrs="{'invisible':[('condition_select','&lt;&gt;','python')], 'required': [('condition_select','=','python')]}"/> <newline/>
+                                <field name="condition_range" attrs="{'invisible':[('condition_select','&lt;&gt;','range')], 'required':[('condition_select','=','range')]}"/><newline/>
+                                <field name="condition_range_min" colspan="2" attrs="{'invisible':[('condition_select','&lt;&gt;','range')], 'required':[('condition_select','=','range')]}"/>
+                                <field name="condition_range_max" colspan="2" attrs="{'invisible':[('condition_select','&lt;&gt;','range')], 'required':[('condition_select','=','range')]}"/>
                                 <separator colspan="4" string="Computation"/>
-                                <field name="amount_type"/><newline/>
-                                <field name="amount" on_change="onchange_amount(amount, amount_type)" attrs="{'invisible':[('amount_type','=','code')]}"/>
-				<field name="expression_result"  attrs="{'invisible':[('amount_type','&lt;&gt;','per')], 'required': [('amount_type','=','per')]}" string="Percentage Based on"/>
-                                <field colspan="4" name="python_compute" attrs="{'invisible':[('amount_type','&lt;&gt;','code')], 'required':[('amount_type','=','code')]}"/>
+                                <field name="amount_select"/><newline/>
+                                <field name="amount_fix"  attrs="{'invisible':[('amount_select','&lt;&gt;','fix')], 'required':[('amount_select','=','fix')]}"/>
+                                <field colspan="4" name="amount_python_compute" attrs="{'invisible':[('amount_select','&lt;&gt;','code')], 'required':[('amount_select','=','code')]}"/>
+                                <field name="amount_percentage" attrs="{'invisible':[('amount_select','&lt;&gt;','percentage')], 'required':[('amount_select','=','percentage')]}"/>
+				<field name="amount_percentage_base" attrs="{'invisible':[('amount_select','&lt;&gt;','percentage')], 'required': [('amount_select','=','percentage')]}"/>
                                 <separator colspan="4" string="Company contribution"/>
                                     <!--<field name="company_contribution" on_change="onchange_company(company_contribution)" />-->
                                 <field name="register_id"/>
@@ -671,7 +675,7 @@
                     <field colspan="4" name="child_ids" nolabel="1"/>
                     </page>
                     <page string="Description">
-                        <separator colspan="4" string="Description"/>
+                        <!--<separator colspan="4" string="Description"/>-->
                         <field name="note" colspan="4" nolabel="1"/>
                     </page>
                 </notebook>
