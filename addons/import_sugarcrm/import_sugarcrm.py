@@ -102,7 +102,8 @@ def import_partner_address(sugar_obj, cr, uid, context=None):
         val['state_id/.id'] =  state        
         fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_partner_address)
         address_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', noupdate=True, context=context)
-
+    return True
+    
 def get_users_department(sugar_obj, cr, uid, val, context=None):
     if not context:
        context={}
@@ -143,6 +144,7 @@ def import_users(sugar_obj, cr, uid, context=None):
         fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_user)
         #All data has to be imported separatly because they don't have the same field
         user_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', noupdate=True, context=context)
+    return True
 
 def get_lead_status(surgar_obj, cr, uid, sugar_val,context=None):
     if not context:
@@ -316,7 +318,7 @@ def import_resources(sugar_obj, cr, uid, context=None):
     for val in sugar_data:
         fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_resource)
         resource_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', noupdate=True, context=context)
-
+    return True    
 
 def import_employees(sugar_obj, cr, uid, context=None):
     if not context:
@@ -354,6 +356,7 @@ def import_employees(sugar_obj, cr, uid, context=None):
         val['job_id/.id'] = job_id
         fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_employee)
         employee_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', noupdate=True, context=context)
+    return True
 
 def get_contact_title(sugar_obj, cr, uid, salutation, domain, context=None):
     if not context:
@@ -407,7 +410,7 @@ def import_leads(sugar_obj, cr, uid, context=None):
         val['state'] = get_lead_state(sugar_obj, cr, uid, val,context)
         fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_lead)
         lead_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', noupdate=True, context=context)
-
+    return True
 
 def get_opportunity_contact(sugar_obj,cr,uid, PortType, sessionid, val, partner_xml_id, context=None):
     if not context:
@@ -468,6 +471,7 @@ def import_opportunities(sugar_obj, cr, uid, context=None):
         val['stage_id.id'] = stage_id
         fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_opportunity)
         lead_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', noupdate=True, context=context)
+    return True
 
 MAP_FIELDS = {'Opportunities':  #Object Mapping name
                     {'dependencies' : ['Users', 'Accounts'],  #Object to import before this table
@@ -574,6 +578,6 @@ class import_sugarcrm(osv.osv):
                 self.resolve_dependencies(cr, uid, dict, dict[dependency]['dependencies'], imported, context=context)
                 dict[dependency]['process'](self, cr, uid, context)
                 imported.add(dependency)
-
+        return True        
 
 import_sugarcrm()
