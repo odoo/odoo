@@ -686,7 +686,7 @@ class hr_payslip(osv.osv):
         contract_obj = self.pool.get('hr.contract')
         contracts = contract_obj.search(cr, uid, [('employee_id', '=', employee.id),('date_start','<=', date),'|',('date_end', '=', False),('date_end','>=', date)], context=context)
         contract_ids = contract_obj.browse(cr, uid, contracts, context=context)
-        return contract_ids and contract_ids or []
+        return contract_ids or []
 
     def _get_leaves(self, cr, user, ddate, employee, contract, context=None):
         """
@@ -1086,6 +1086,16 @@ class hr_payslip(osv.osv):
             else: # ?
                 employee_id = empolyee_obj.browse(cr, uid, employee_id, context=context)
                 contracts = self.get_contract(cr, uid, employee_id, ddate, context=context)
+                if not contracts:
+                    update['value'].update({
+                        'basic_amount': 0.0,
+                        'basic_before_leaves': 0.0,
+                        'name':'Salary Slip of %s for %s' % (employee_id.name, tools.ustr(ttyme.strftime('%B-%Y'))),
+                        'contract_id': False,
+                        'struct_id': False,
+                        'company_id': employee_id.company_id.id
+                    })
+                    return update
                 update['value'].update({'contract_id': False, 'struct_id': False})
 
         final_total = 0.0
