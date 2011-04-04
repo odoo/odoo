@@ -478,8 +478,6 @@ openerp.base.search.Filter = openerp.base.search.Input.extend({
         this.$element.click(function (e) {
             $(this).toggleClass('enabled');
             self.view.do_toggle_filter(self);
-            e.stopPropagation();
-            e.preventDefault();
         });
     },
     /**
