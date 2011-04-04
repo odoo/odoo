@@ -67,8 +67,8 @@ openerp.base.DataSet =  openerp.base.Controller.extend( /** @lends openerp.base.
             limit: limit
         }, function (records) {
             var r = [];
-            this.offset = offset;
-            this.count = records.length;    // TODO: get real count
+            self.offset = offset;
+            self.count = records.length;    // TODO: get real count
             for (var i=0; i < records.length; i++ ) {
                 self.ids.push(records[i].id);
                 r.push(new openerp.base.DataRecord(self.session, self.model, fields, records[i]));
@@ -90,8 +90,12 @@ openerp.base.DataSet =  openerp.base.Controller.extend( /** @lends openerp.base.
         });
     },
     fetch_index: function (fields, callback) {
-        fields = fields || false;
-        this.fetch_ids([this.ids[this.index]], fields, callback);
+        if (_.isEmpty(this.ids)) {
+            callback([]);
+        } else {
+            fields = fields || false;
+            this.fetch_ids([this.ids[this.index]], fields, callback);
+        }
     },
 
     /**

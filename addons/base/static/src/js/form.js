@@ -41,14 +41,16 @@ openerp.base.FormView =  openerp.base.Controller.extend( /** @lends openerp.base
         _.each(this.widgets, function(w) {
             w.start();
         });
+        this.$element.find('button.pager_previous').click(this.on_previous);
+        this.$element.find('button.pager_next').click(this.on_next);
         this.$element.find('button.form_save').click(this.do_save);
+    },
+    on_previous: function() {
+        this.dataset.previous();
+        this.dataset.fetch_index(this.fields_view.fields, this.on_record_loaded);
     },
     on_next: function() {
         this.dataset.next();
-        this.dataset.fetch_index(this.fields_view.fields, this.on_record_loaded);
-    },
-    on_prev: function() {
-        this.dataset.prev();
         this.dataset.fetch_index(this.fields_view.fields, this.on_record_loaded);
     },
     on_record_loaded: function(record) {
@@ -60,6 +62,7 @@ openerp.base.FormView =  openerp.base.Controller.extend( /** @lends openerp.base
             this.on_form_changed();
             this.ready = true;
         }
+        this.do_update_pager();
     },
     on_form_changed: function(widget) {
         for (var w in this.widgets) {
@@ -125,6 +128,10 @@ openerp.base.FormView =  openerp.base.Controller.extend( /** @lends openerp.base
     },
     do_hide: function () {
         this.$element.hide();
+    },
+    do_update_pager: function() {
+        this.$element.find('span.dataset_index').html(this.dataset.index + 1);
+        this.$element.find('span.dataset_count').html(this.dataset.count);
     },
     on_invalid: function() {
     },

@@ -155,9 +155,9 @@
     <h3 class="title"><t t-esc="view.fields_view.arch.attrs.string"/></h3>
     <div style="text-align:right;">
         <input type="button" value="First"/>
-        <input type="button" value="&lt;&lt;"/>
-        0 / 0
-        <input type="button" value="&gt;&gt;"/>
+        <button type="button" class="pager_previous">&lt;&lt;</button>
+        <span class="dataset_index">0</span> / <span class="dataset_count">0</span>
+        <button type="button" class="pager_next">&gt;&gt;</button>
         <input type="button" value="Last"/>
     </div>
     <t t-raw="frame.render()"/>
