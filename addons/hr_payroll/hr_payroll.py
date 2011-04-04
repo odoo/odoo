@@ -501,22 +501,18 @@ class hr_payslip(osv.osv):
                                 lines.append(r)
                         rules.append(rl)
                 for fn in field_names:
-#                   if fn == 'applied_salary_rule':
-#                       for r in rules:
-#                           if r.id not in rul:
-#                               rul.append(r.id)
-#                       res[record.id] = {fn: rul}
-                   if fn == 'appears_on_payslip_rule':
-                       for r in rules:
-                           if r.appears_on_payslip:
-                               if r.id not in rul:
-                                   rul.append(r.id)
-                       res[record.id] = {fn: rul}
-                   elif fn == 'details_by_salary_head':
+                   if fn == 'details_by_salary_head':
+                       final_rules = []
                        for r in rules:
                            if r.id not in rul:
                                rul.append(r.id)
-                       res[record.id] = {fn: rul}
+                       cr.execute('''SELECT sr.id
+                                   FROM hr_salary_rule as sr, hr_salary_head as sh 
+                                   WHERE sr.category_id = sh.id AND sr.id in %s 
+                                   ORDER BY sh.sequence''',(tuple(rul),))
+                       for x in cr.fetchall():
+                           final_rules.append(x[0])
+                       res[record.id] = {fn: final_rules}
         return res
 
     def _compute(self, cr, uid, id, value, employee, contract, context=None):
@@ -575,8 +571,6 @@ class hr_payslip(osv.osv):
         'igross': fields.float('Calculaton Field', readonly=True,  digits=(16, 2), help="Calculation field used for internal calculation, do not place this on form"),
         'inet': fields.float('Calculaton Field', readonly=True,  digits=(16, 2), help="Calculation field used for internal calculation, do not place this on form"),
         'holiday_ids': fields.function(_get_holidays, method=True, type='one2many', relation='hr.holidays', string='Holiday Lines', required=False),
-#        'applied_salary_rule': fields.function(_get_salary_rules, method=True, type='one2many', relation='hr.salary.rule', string='Applied Salary Rules', multi='applied_salary_rule'),
-        'appears_on_payslip_rule': fields.function(_get_salary_rules, method=True, type='one2many', relation='hr.salary.rule', string='Appears on Payslip', multi='appears_on_payslip_rule'),
         'details_by_salary_head': fields.function(_get_salary_rules, method=True, type='one2many', relation='hr.salary.rule', string='Details by Salary Head', multi='details_by_salary_head'),
     }
     _defaults = {
@@ -1533,7 +1527,6 @@ class hr_salary_rule(osv.osv):
         'expression_result':fields.char('Expression based on',size=1024, required=False, readonly=False, help='result will be affected to a variable'),
         'parent_rule_id':fields.many2one('hr.salary.rule', 'Parent Salary Rule', select=True),
      }
-
     _defaults = {
         'python_compute': '''# basic\n# employee: hr.employee object or None\n# contract: hr.contract object or None\n\nresult = basic * 0.10''',
         'conditions': 'True',
