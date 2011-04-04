@@ -167,7 +167,7 @@ class ir_mail_server(osv.osv):
         return smtp_server
 
     def pack_message(self, cr, uid, email_from, email_to, subject, body, email_cc=None, email_bcc=None, reply_to=False,
-               attach=None, message_id=None, references=None, openobject_id=False, debug=False, subtype='plain', x_headers=None, priority='3'):
+               attach=None, message_id=None, references=None, openobject_id=False, subtype='plain', x_headers=None, priority='3'):
 
         """
         Pack all message attributes into one object.
