@@ -535,23 +535,29 @@ class hr_payslip(osv.osv):
         return 0.0
 
     _columns = {
-        'struct_id':fields.related('contract_id', 'struct_id', readonly=True, type='many2one', relation='hr.payroll.structure', string='Structure', store=True, ),
-        'register_id':fields.many2one('hr.payroll.register', 'Register', required=False, readonly=True, states={'draft': [('readonly', False)]}),
-        'name':fields.char('Name', size=64, required=False, readonly=True, states={'draft': [('readonly', False)]}),
-        'number':fields.char('Number', size=64, required=False, readonly=True, states={'draft': [('readonly', False)]}),
-        'employee_id':fields.many2one('hr.employee', 'Employee', required=True, readonly=True, states={'draft': [('readonly', False)]}),
+        'struct_id': fields.related('contract_id', 'struct_id', readonly=True, type='many2one', relation='hr.payroll.structure', string='Structure', store=True, ),
+        'register_id': fields.many2one('hr.payroll.register', 'Register', required=False, readonly=True, states={'draft': [('readonly', False)]}),
+        'name': fields.char('Description', size=64, required=False, readonly=True, states={'draft': [('readonly', False)]}),
+        'number': fields.char('Number', size=64, required=False, readonly=True, states={'draft': [('readonly', False)]}),
+        'employee_id': fields.many2one('hr.employee', 'Employee', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'date': fields.date('Date', readonly=True, states={'draft': [('readonly', False)]}),
-        'state':fields.selection([
-            ('draft','Waiting For Verification'),
-            ('hr_check','Waiting For HR Verification'),
-            ('accont_check','Waiting For Account Verification'),
-            ('confirm','Confirm Sheet'),
-            ('done','Paid Salary'),
-            ('cancel','Reject'),
-        ],'State', select=True, readonly=True),
+        'state': fields.selection([
+            ('draft', 'Waiting for Verification'),
+            ('hr_check', 'Waiting for HR Verification'),
+            ('accont_check', 'Waiting for Account Verification'),
+            ('confirm', 'Confirm Sheet'),
+            ('done', 'Paid Salary'),
+            ('cancel', 'Reject'),
+        ], 'State', select=True, readonly=True,
+            help=' * When the payslip is created the state is \'Waiting for verification\'.\
+            \n* It is varified by the user and payslip is sent for HR varification, the state is \'Waiting for HR Verification\'. \
+            \n* If HR varify the payslip, it is sent for account verification, the state is \'Waiting for Account Verification\'. \
+            \n* It is confirmed by the accountant and the state set to \'Confirm Sheet\'.\
+            \n* If the salary is paid then state is set to \'Paid Salary\'.\
+            \n* The \'Reject\' state is used when user cancel payslip.'),
         'basic_before_leaves': fields.float('Basic Salary', readonly=True,  digits_compute=dp.get_precision('Account')),
         'leaves': fields.float('Leave Deductions', readonly=True,  digits_compute=dp.get_precision('Account')),
-        'basic_amount':fields.related('contract_id', 'wage', type='float', relation='hr.contract', store=True, string='Basic Amount'),
+        'basic_amount': fields.related('contract_id', 'wage', type='float', relation='hr.contract', store=True, string='Basic Amount'),
         'gross_amount': fields.function(_calculate, method=True, store=True, multi='dc', string='Gross Salary', digits_compute=dp.get_precision('Account')),
         'net_amount': fields.function(_calculate, method=True, store=True, multi='dc', string='Net Salary', digits_compute=dp.get_precision('Account')),
 #        'allounce': fields.function(_calculate, method=True, store=True, multi='dc', string='Allowance', digits_compute=dp.get_precision('Account')),
@@ -559,14 +565,14 @@ class hr_payslip(osv.osv):
 #        'other_pay': fields.function(_calculate, method=True, store=True, multi='dc', string='Others', digits_compute=dp.get_precision('Account')),
         'total_pay': fields.function(_calculate, method=True, store=True, multi='dc', string='Total Payment', digits_compute=dp.get_precision('Account')),
 #        'total_pay': fields.float('Total Payment', readonly=True,  digits_compute=dp.get_precision('Account')),
-        'line_ids':fields.one2many('hr.payslip.line', 'slip_id', 'Payslip Line', required=False, readonly=True, states={'draft': [('readonly', False)]}),
-        'company_id':fields.many2one('res.company', 'Company', required=False, readonly=True, states={'draft': [('readonly', False)]}),
+        'line_ids': fields.one2many('hr.payslip.line', 'slip_id', 'Payslip Line', required=False, readonly=True, states={'draft': [('readonly', False)]}),
+        'company_id': fields.many2one('res.company', 'Company', required=False, readonly=True, states={'draft': [('readonly', False)]}),
         'holiday_days': fields.float('No of Leaves', readonly=True),
         'worked_days': fields.float('Worked Day', readonly=True),
         'working_days': fields.float('Working Days', readonly=True),
-        'paid':fields.boolean('Paid ? ', required=False, readonly=True, states={'draft': [('readonly', False)]}),
-        'note':fields.text('Description'),
-        'contract_id':fields.many2one('hr.contract', 'Contract', required=False, readonly=True, states={'draft': [('readonly', False)]}),
+        'paid': fields.boolean('Made Payment Order ? ', required=False, readonly=True, states={'draft': [('readonly', False)]}),
+        'note': fields.text('Description'),
+        'contract_id': fields.many2one('hr.contract', 'Contract', required=False, readonly=True, states={'draft': [('readonly', False)]}),
         'igross': fields.float('Calculaton Field', readonly=True,  digits=(16, 2), help="Calculation field used for internal calculation, do not place this on form"),
         'inet': fields.float('Calculaton Field', readonly=True,  digits=(16, 2), help="Calculation field used for internal calculation, do not place this on form"),
         'holiday_ids': fields.function(_get_holidays, method=True, type='one2many', relation='hr.holidays', string='Holiday Lines', required=False),
@@ -712,7 +718,7 @@ class hr_payslip(osv.osv):
         resource_attendance_pool = self.pool.get('resource.calendar.attendance')
         if context is None:
             context = {}
-        
+
         for slip in self.browse(cr, uid, ids, context=context):
             old_slip_ids = slip_line_pool.search(cr, uid, [('slip_id', '=', slip.id)], context=context)
             if old_slip_ids:
@@ -988,7 +994,7 @@ class hr_payslip(osv.osv):
 
                 holiday_pool.write(cr, uid, leave_ids, {'payslip_id': slip.id}, context=context)
                 basic = basic - total
-                
+
             net_id = salary_rule_pool.search(cr, uid, [('code', '=', 'NET')])
             for line in salary_rule_pool.browse(cr, uid, net_id, context=context):
                 dic = {'basic': amt, 'allowance': net_allow, 'deduction': net_deduct}
@@ -1208,7 +1214,7 @@ class hr_payslip(osv.osv):
                                 update['value']['line_ids'].append(vals)
                         else:
                             update['value']['line_ids'].append(vals)
-                            
+
                 basic = contract.wage
                 all_basic += basic
                 final_total += basic + total
@@ -1347,7 +1353,7 @@ class hr_payslip(osv.osv):
                                 update['value']['line_ids'].append(res)
                         else:
                             update['value']['line_ids'].append(res)
-       
+
         net_id = salary_rule_pool.search(cr, uid, [('code', '=', 'NET')])
         for line in salary_rule_pool.browse(cr, uid, net_id, context=context):
             dic = {'basic': amt, 'allowance': net_allow, 'deduction': net_deduct}
@@ -1366,7 +1372,7 @@ class hr_payslip(osv.osv):
                 'base': line.computational_expression
             }
             update['value']['line_ids'].append(vals)
-            
+
         number = sequence_obj.get(cr, uid, 'salary.slip')
         update['value'].update({
             'number': number,
