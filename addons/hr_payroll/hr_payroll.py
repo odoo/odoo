@@ -374,11 +374,12 @@ class hr_salary_head(osv.osv):
                 self.pool.get('res.users').browse(cr, uid, uid,
                     context=context).company_id.id,
 #        'display_payslip_report': 1,
+        'sequence': 5
     }
 
 hr_salary_head()
 
-#TODO: check me. we shouldn't need to touch the holidays 
+#TODO: check me. we shouldn't need to touch the holidays
 #class hr_holidays_status(osv.osv):
 #
 #    _inherit = "hr.holidays.status"
@@ -495,8 +496,8 @@ class hr_payslip(osv.osv):
                            if r.id not in rul:
                                rul.append(r.id)
                        cr.execute('''SELECT sr.id
-                                   FROM hr_salary_rule as sr, hr_salary_head as sh 
-                                   WHERE sr.category_id = sh.id AND sr.id in %s 
+                                   FROM hr_salary_rule as sr, hr_salary_head as sh
+                                   WHERE sr.category_id = sh.id AND sr.id in %s
                                    ORDER BY sh.sequence''',(tuple(rul),))
                        for x in cr.fetchall():
                            final_rules.append(x[0])
@@ -1437,7 +1438,7 @@ class hr_payslip_input(osv.osv):
     _name = 'hr.payslip.input'
     _description = 'Payslip Input'
     _columns = {
-        'name': fields.char('Description', size=256, required=True), 
+        'name': fields.char('Description', size=256, required=True),
         'payslip_id': fields.many2one('hr.payslip', 'Pay Slip', required=True),
         'sequence': fields.integer('Sequence', required=True,),
         'code': fields.char('Code', size=52, required=True, help="The code that can be used in the salary rules"),
