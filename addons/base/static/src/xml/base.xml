@@ -128,19 +128,18 @@
     <table class="view-manager-main-table">
     <tr>
     <td class="view-manager-main-content">
-	    <!-- TODO prefix id with the element_id of the controller t-attf-id="#{prefix}_localid" -->
-	    <div style="text-align:right;">
-	        <!--
-	            <input t-foreach="views" t-as="view" t-att-id="" t-att-value="view[1]"/>
-	        -->
-	        <t t-foreach="views" t-as="view">
-	            <input t-attf-id="#{prefix}_button_#{view[1]}" type="button" t-att-value="view[1]"/>
-	        </t>
-	    </div>
-	    <div t-attf-id="#{prefix}_search"></div>
-	    <t t-foreach="views" t-as="view">
-	        <div t-attf-id="#{prefix}_view_#{view[1]}"></div>
-	    </t>
+        <!-- TODO prefix id with the element_id of the controller t-attf-id="#{prefix}_localid" -->
+        <div class="views-switchers">
+            <t t-foreach="views" t-as="view">
+                <button type="button" t-att-data-view-type="view[1]">
+                    <t t-esc="view[1]"/>
+                </button>
+            </t>
+        </div>
+        <div t-attf-id="#{prefix}_search"/>
+        <t t-foreach="views" t-as="view">
+            <div t-attf-id="#{prefix}_view_#{view[1]}"/>
+        </t>
 	</td>
 	<td class="view-manager-main-sidebar">
 	</td>
@@ -324,6 +323,21 @@
     <div style="white-space: nowrap;">
         <input type="text" t-att-name="attrs.name"
                t-att-id="element_id"
+               t-att-value="defaults[attrs.name] || ''"/>
+        <t t-if="filters.length" t-raw="filters.render(defaults)"/>
+    </div>
+</t>
+<t t-name="SearchView.fields.date">
+    <label style="display: block" t-att-title="attrs.help"
+           t-att-for="element_id">
+        <t t-esc="attrs.string || attrs.name"/>
+        <span t-if="attrs.help">(?)</span>
+    </label>
+    <div style="white-space: nowrap;" t-att-id="element_id">
+        <input t-att-name="attrs.name" type="text" class="field_date"
+               t-att-value="defaults[attrs.name] || ''"/>
+        to
+        <input t-att-name="attrs.name" type="text" class="field_date"
                t-att-value="defaults[attrs.name] || ''"/>
         <t t-if="filters.length" t-raw="filters.render(defaults)"/>
     </div>

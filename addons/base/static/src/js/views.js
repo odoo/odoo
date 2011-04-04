@@ -8,7 +8,6 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
 // process all kind of actions
     init: function(session, element_id) {
         this._super(session, element_id);
-        this.action = null;
         this.viewmanager = null;
     },
     /**
@@ -17,8 +16,10 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
      */
     do_action: function(action) {
         // instantiate the right controllers by understanding the action
-        this.action = action;
         if(action.type == "ir.actions.act_window") {
+            if (this.viewmanager) {
+                this.viewmanager.stop();
+            }
             this.viewmanager = new openerp.base.ViewManager(this.session,this.element_id);
             this.viewmanager.do_action_window(action);
             this.viewmanager.start();
@@ -26,15 +27,18 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
     }
 });
 
+/**
+ * Registry for all the main views
+ */
+openerp.base.views = new openerp.base.Registry();
 openerp.base.ViewManager =  openerp.base.Controller.extend({
-// This will be ViewManager Abstract/Common
+    // This will be ViewManager Abstract/Common
     init: function(session, element_id) {
         this._super(session, element_id);
         this.action = null;
         this.dataset = null;
-        this.searchview_id = false;
         this.searchview = null;
-        this.search_visible = true;
+        this.active_view = null;
         // this.views = { "list": { "view_id":1234, "controller": instance} }
         this.views = {};
         this.sidebar = new openerp.base.Sidebar(null);
@@ -48,10 +52,41 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
         this.sidebar.stop();
         this._super();
     },
+    /**
+     * Asks the view manager to switch visualization mode.
+     *
+     * @param {String} view_type type of view to display
+     * @returns {jQuery.Deferred} new view loading promise
+     */
     on_mode_switch: function(view_type) {
-        for (var i in this.views) {
-           this.views[i].controller.$element.toggle(i === view_type);
+        var view_promise;
+        this.active_view = view_type;
+        var view = this.views[view_type];
+        if (!view.controller) {
+            // Lazy loading of views
+            var controller = new (openerp.base.views.get_object(view_type))(
+                this, this.session, this.element_id + "_view_" + view_type, this.dataset, view.view_id);
+            view_promise = controller.start();
+            this.views[view_type].controller = controller;
         }
+
+        if (view.controller.searchable === false) {
+            this.searchview.hide();
+        } else {
+            this.searchview.show();
+        }
+
+        this.$element
+            .find('.views-switchers button').removeAttr('disabled')
+            .filter('[data-view-type="' + view_type + '"]')
+            .attr('disabled', true);
+
+        for (var i in this.views) {
+            if (this.views[i].controller) {
+               this.views[i].controller.$element.toggle(i === view_type);
+            }
+        }
+        return view_promise;
     },
     /**
      * Extract search view defaults from the current action's context.
@@ -70,51 +105,51 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
         });
         return defaults;
     },
+    /**
+     * Sets up the current viewmanager's search view.
+     *
+     * @param action the action being executed
+     * @returns {jQuery.Deferred} search view startup deferred
+     */
+    setup_search_view:function (action) {
+        var self = this;
+        if (this.searchview) {
+            this.searchview.stop();
+        }
+
+        var searchview = this.searchview = new openerp.base.SearchView(
+                this, this.session, this.element_id + "_search",
+                this.dataset, action.search_view_id[0] || false,
+                this.search_defaults());
+        searchview.on_search.add(function() {
+            self.views[self.active_view].controller.do_search.apply(self, arguments);
+        });
+        return searchview.start();
+    },
     do_action_window: function(action) {
         var self = this;
-        var prefix_id = "#" + this.element_id;
         this.action = action;
         this.dataset = new openerp.base.DataSet(this.session, action.res_model);
         this.dataset.start();
 
         this.$element.html(QWeb.render("ViewManager", {"prefix": this.element_id, views: action.views}));
 
-        this.searchview_id = false;
-        if(this.search_visible && action.search_view_id) {
-            this.searchview_id = action.search_view_id[0];
-            var searchview = this.searchview = new openerp.base.SearchView(
-                    this, this.session, this.element_id + "_search",
-                    this.dataset, this.searchview_id,
-                    this.search_defaults());
-            searchview.on_search.add(this.do_search);
-            searchview.start();
+        var searchview_loaded = this.setup_search_view(action);
 
-            if (action['auto_search']) {
-                searchview.on_loaded.add_last(
-                    searchview.do_search);
-            }
-        }
-        for(var i = 0; i < action.views.length; i++)  {
-            var view_id, controller;
-            view_id = action.views[i][0];
-            if(action.views[i][1] == "tree") {
-                controller = new openerp.base.ListView(this, this.session, this.element_id + "_view_tree", this.dataset, view_id);
-                controller.start();
-                this.views.tree = { view_id: view_id, controller: controller };
-                this.$element.find(prefix_id + "_button_tree").bind('click',function(){
-                    self.on_mode_switch("tree");
-                });
-            } else if(action.views[i][1] == "form") {
-                controller = new openerp.base.FormView(this, this.session, this.element_id + "_view_form", this.dataset, view_id);
-                controller.start();
-                this.views.form = { view_id: view_id, controller: controller };
-                this.$element.find(prefix_id + "_button_form").bind('click',function(){
-                   self.on_mode_switch("form");
-                });
-            }
-        }
+        this.$element.find('.views-switchers button').click(function() {
+            self.on_mode_switch($(this).data('view-type'));
+        });
+        _.each(action.views, function(view) {
+            self.views[view[1]] = { view_id: view[0], controller: null };
+        });
+
         // switch to the first one in sequence
-        this.on_mode_switch("tree");
+        var inital_view_loaded = this.on_mode_switch(action.views[0][1]);
+
+        if (action['auto_search']) {
+            $.when(searchview_loaded, inital_view_loaded)
+                .then(this.searchview.do_search);
+        }
     },
     // create when root, also add to parent when o2m
     on_create: function() {
@@ -123,19 +158,10 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
     },
     on_edit: function() {
     },
-    do_search: function (domains, contexts, groupbys) {
-        var self = this;
-        this.rpc('/base/session/eval_domain_and_context', {
-            domains: domains,
-            contexts: contexts,
-            group_by_seq: groupbys
-        }, function (results) {
-            // TODO: handle non-empty results.group_by with read_group
-            self.dataset.set({
-                context: results.context,
-                domain: results.domain
-            }).fetch(0, self.action.limit);
-        });
+    /**
+     * Called when one of the view want to execute an action
+     */
+    on_action: function(action) {
     }
 });
 
@@ -262,19 +288,43 @@ openerp.base.Sidebar = openerp.base.BaseWidget.extend({
     }
 });
 
+openerp.base.views.add('calendar', 'openerp.base.CalendarView');
+
 openerp.base.CalendarView = openerp.base.Controller.extend({
-// Dhtmlx scheduler ?
+    start: function () {
+        this._super();
+        this.$element.append('Calendar view');
+    }
 });
 
+openerp.base.views.add('gantt', 'openerp.base.GanttView');
 openerp.base.GanttView = openerp.base.Controller.extend({
-// Dhtmlx gantt ?
+    start: function () {
+        this._super();
+        this.$element.append('Gantt view');
+    }
+});
+
+openerp.base.views.add('tree', 'openerp.base.TreeView');
+/**
+ * Genuine tree view (the one displayed as a tree, not the list)
+ */
+openerp.base.TreeView = openerp.base.Controller.extend({
+    start: function () {
+        this._super();
+        this.$element.append('Tree view');
+    }
 });
 
 openerp.base.DiagramView = openerp.base.Controller.extend({
-// 
 });
 
+openerp.base.views.add('graph', 'openerp.base.GraphView');
 openerp.base.GraphView = openerp.base.Controller.extend({
+    start: function () {
+        this._super();
+        this.$element.append('Graph view');
+    }
 });
 
 openerp.base.ProcessView = openerp.base.Controller.extend({

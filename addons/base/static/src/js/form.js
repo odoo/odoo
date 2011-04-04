@@ -1,10 +1,24 @@
 
 openerp.base.form = function (openerp) {
 
-openerp.base.FormView =  openerp.base.Controller.extend({
+openerp.base.views.add('form', 'openerp.base.FormView');
+openerp.base.FormView =  openerp.base.Controller.extend(
+    /** @lends openerp.base.FormView# */{
+    /**
+     * Indicates that this view is not searchable, and thus that no search
+     * view should be displayed (if there is one active).
+     */
+    searchable: false,
+    /**
+     * @constructs
+     * @param {openerp.base.Session} session the current openerp session
+     * @param {String} element_id this view's root element id
+     * @param {openerp.base.DataSet} dataset the dataset this view will work with
+     * @param {String} view_id the identifier of the OpenERP view object
+     */
     init: function(view_manager, session, element_id, dataset, view_id) {
         this._super(session, element_id);
-        this.view_manager;
+        this.view_manager = view_manager;
         this.dataset = dataset;
         this.model = dataset.model;
         this.view_id = view_id;
@@ -17,7 +31,7 @@ openerp.base.FormView =  openerp.base.Controller.extend({
     },
     start: function() {
         //this.log('Starting FormView '+this.model+this.view_id)
-        this.rpc("/base/formview/load", {"model": this.model, "view_id": this.view_id}, this.on_loaded);
+        return this.rpc("/base/formview/load", {"model": this.model, "view_id": this.view_id}, this.on_loaded);
     },
     on_loaded: function(data) {
         var self = this;
@@ -92,6 +106,8 @@ openerp.base.FormView =  openerp.base.Controller.extend({
     },
     on_saved: function() {
         // Check response for exceptions, display error
+    },
+    on_action: function (action) {
     }
 });
 
@@ -463,6 +479,10 @@ openerp.base.form.FieldDate = openerp.base.form.FieldChar.extend({
     init: function(view, node) {
         this._super(view, node);
         this.template = "FieldDate";
+    },
+    start: function() {
+        this._super.apply(this, arguments);
+        this.$element.find('input').datepicker();
     }
 });
 

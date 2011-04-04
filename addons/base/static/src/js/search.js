@@ -15,7 +15,13 @@ openerp.base.SearchView = openerp.base.Controller.extend({
     },
     start: function() {
         //this.log('Starting SearchView '+this.model+this.view_id)
-        this.rpc("/base/searchview/load", {"model": this.model, "view_id":this.view_id}, this.on_loaded);
+        return this.rpc("/base/searchview/load", {"model": this.model, "view_id":this.view_id}, this.on_loaded);
+    },
+    show: function () {
+        this.$element.show();
+    },
+    hide: function () {
+        this.$element.hide();
     },
     /**
      * Builds a list of widget rows (each row is an array of widgets)
@@ -442,122 +448,6 @@ openerp.base.search.ExtendedSearchGroup = openerp.base.BaseWidget.extend({
     }
 });
 
-openerp.base.search.custom_filters = new openerp.base.Registry({
-    'char': 'openerp.base.search.ExtendedSearchProposition.Char',
-    'datetime': 'openerp.base.search.ExtendedSearchProposition.DateTime'
-});
-
-openerp.base.search.ExtendedSearchProposition = openerp.base.BaseWidget.extend({
-    template: 'SearchView.extended_search.proposition',
-    identifier_prefix: 'extended-search-proposition',
-    init: function (parent, fields) {
-        this._super(parent);
-        this.fields = _(fields).chain()
-            .map(function(val, key) { return _.extend({}, val, {'name': key}); })
-            .sortBy(function(field) {return field.string;})
-            .value();
-        this.attrs = {_: _, fields: this.fields, selected: null};
-        this.value = null;
-    },
-    start: function () {
-        this._super();
-        this.select_field(this.fields.length > 0 ? this.fields[0] : null);
-        var _this = this;
-        this.$element.find(".searchview_extended_prop_field").change(function() {
-            _this.changed();
-        });
-        var delete_btn = this.$element.find('.searchview_extended_delete_prop');
-        delete_btn.click(function (e) {
-            _this.stop();
-            e.stopPropagation();
-            e.preventDefault();
-        });
-    },
-    changed: function() {
-        var nval = this.$element.find(".searchview_extended_prop_field").val();
-        if(this.attrs.selected == null || nval != this.attrs.selected.name) {
-            this.select_field(_.detect(this.fields, function(x) {return x.name == nval;}));
-        }
-    },
-    /**
-     * Selects the provided field object
-     *
-     * @param field a field descriptor object (as returned by fields_get, augmented by the field name)
-     */
-    select_field: function(field) {
-        var _this = this;
-        if(this.attrs.selected != null) {
-            this.value.stop();
-            this.value = null;
-            this.$element.find('.searchview_extended_prop_op').html('');
-        }
-        this.attrs.selected = field;
-        if(field == null) {
-            return;
-        }
-
-        try {
-            this.value = new (openerp.base.search.custom_filters.get_object(field.type))
-                              (this);
-            _.each(this.value.operators, function(operator) {
-                var option = jQuery('<option>', {value: operator.value})
-                    .text(operator.text)
-                    .appendTo(_this.$element.find('.searchview_extended_prop_op'));
-            });
-            this.$element.find('.searchview_extended_prop_value').html(
-                this.value.render({}));
-            this.value.start();
-        } catch (e) {
-            if (! e instanceof openerp.base.KeyNotFound) {
-                throw e;
-            }
-            this.attrs.selected = null;
-            this.log('Unknow field type ' + e.key);
-        }
-    },
-    get_proposition: function() {
-        if ( this.attrs.selected == null)
-            return null;
-        var field = this.attrs.selected.name;
-        var op =  this.$element.find('.searchview_extended_prop_op').val();
-        var value = this.value.get_value();
-        return [field, op, value];
-    }
-});
-
-openerp.base.search.ExtendedSearchProposition.Char = openerp.base.BaseWidget.extend({
-    template: 'SearchView.extended_search.proposition.char',
-    identifier_prefix: 'extended-search-proposition-char',
-    operators: [
-        {value: "ilike", text: "contains"},
-        {value: "not ilike", text: "doesn't contain"},
-        {value: "=", text: "is equal to"},
-        {value: "!=", text: "is not equal to"},
-        {value: ">", text: "greater than"},
-        {value: "<", text: "less than"},
-        {value: ">=", text: "greater or equal than"},
-        {value: "<=", text: "less or equal than"}
-    ],
-    get_value: function() {
-        return this.$element.val();
-    }
-});
-openerp.base.search.ExtendedSearchProposition.DateTime = openerp.base.BaseWidget.extend({
-    template: 'SearchView.extended_search.proposition.char',
-    identifier_prefix: 'extended-search-proposition-datetime',
-    operators: [
-        {value: "=", text: "is equal to"},
-        {value: "!=", text: "is not equal to"},
-        {value: ">", text: "greater than"},
-        {value: "<", text: "less than"},
-        {value: ">=", text: "greater or equal than"},
-        {value: "<=", text: "less or equal than"}
-    ],
-    get_value: function() {
-        return this.$element.val();
-    }
-});
-
 openerp.base.search.Input = openerp.base.search.Widget.extend(
     /** @lends openerp.base.search.Input# */{
     /**
@@ -779,15 +669,81 @@ openerp.base.search.SelectionField = openerp.base.search.Field.extend({
         return this.$element.val();
     }
 });
-openerp.base.search.DateTimeField = openerp.base.search.Field.extend({
-    get_value: function () {
-        return this.$element.val();
+/**
+ * @class
+ * @extends openerp.base.search.Field
+ */
+openerp.base.search.DateField = openerp.base.search.Field.extend(
+    /** @lends openerp.base.search.DateField# */{
+    template: 'SearchView.fields.date',
+    /**
+     * enables date picker on the HTML widgets
+     */
+    start: function () {
+        this._super();
+        this.$element.find('input').datepicker({
+            dateFormat: 'yy-mm-dd'
+        });
+    },
+    stop: function () {
+        this.$element.find('input').datepicker('destroy');
+    },
+    /**
+     * Returns an object with two optional keys ``from`` and ``to`` providing
+     * the values for resp. the from and to sections of the date widget.
+     *
+     * If a key is absent, then the corresponding field was not filled.
+     *
+     * @returns {Object}
+     */
+    get_values: function () {
+        var values_array = this.$element.find('input').serializeArray();
+
+        var from = values_array[0].value;
+        var to = values_array[1].value;
+
+        var field_values = {};
+        if (from) {
+            field_values.from = from;
+        }
+        if (to) {
+            field_values.to = to;
+        }
+        return field_values;
+    },
+    get_context: function () {
+        var values = this.get_values();
+        if (!this.attrs.context || _.isEmpty(values)) {
+            return null;
+        }
+        return _.extend(
+            {}, this.attrs.context,
+            {own_values: {self: values}});
+    },
+    get_domain: function () {
+        var values = this.get_values();
+        if (_.isEmpty(values)) {
+            return null;
+        }
+        var domain = this.attrs['filter_domain'];
+        if (!domain) {
+            domain = [];
+            if (values.from) {
+                domain.push([this.attrs.name, '>=', values.from]);
+            }
+            if (values.to) {
+                domain.push([this.attrs.name, '<=', values.to]);
+            }
+            return domain;
+        }
+
+        return _.extend(
+                {}, domain,
+                {own_values: {self: values}});
     }
 });
-openerp.base.search.DateField = openerp.base.search.Field.extend({
-    get_value: function () {
-        return this.$element.val();
-    }
+openerp.base.search.DateTimeField = openerp.base.search.DateField.extend({
+    // TODO: time?
 });
 openerp.base.search.OneToManyField = openerp.base.search.IntegerField.extend({
     // TODO: .relation, .context, .domain
@@ -798,6 +754,122 @@ openerp.base.search.ManyToOneField = openerp.base.search.IntegerField.extend({
 });
 openerp.base.search.ManyToManyField = openerp.base.search.IntegerField.extend({
     // TODO: .related_columns (Array), .context, .domain
+});
+
+openerp.base.search.custom_filters = new openerp.base.Registry({
+    'char': 'openerp.base.search.ExtendedSearchProposition.Char',
+    'datetime': 'openerp.base.search.ExtendedSearchProposition.DateTime'
+});
+
+openerp.base.search.ExtendedSearchProposition = openerp.base.BaseWidget.extend({
+    template: 'SearchView.extended_search.proposition',
+    identifier_prefix: 'extended-search-proposition',
+    init: function (parent, fields) {
+        this._super(parent);
+        this.fields = _(fields).chain()
+            .map(function(val, key) { return _.extend({}, val, {'name': key}); })
+            .sortBy(function(field) {return field.string;})
+            .value();
+        this.attrs = {_: _, fields: this.fields, selected: null};
+        this.value = null;
+    },
+    start: function () {
+        this._super();
+        this.select_field(this.fields.length > 0 ? this.fields[0] : null);
+        var _this = this;
+        this.$element.find(".searchview_extended_prop_field").change(function() {
+            _this.changed();
+        });
+        var delete_btn = this.$element.find('.searchview_extended_delete_prop');
+        delete_btn.click(function (e) {
+            _this.stop();
+            e.stopPropagation();
+            e.preventDefault();
+        });
+    },
+    changed: function() {
+        var nval = this.$element.find(".searchview_extended_prop_field").val();
+        if(this.attrs.selected == null || nval != this.attrs.selected.name) {
+            this.select_field(_.detect(this.fields, function(x) {return x.name == nval;}));
+        }
+    },
+    /**
+     * Selects the provided field object
+     *
+     * @param field a field descriptor object (as returned by fields_get, augmented by the field name)
+     */
+    select_field: function(field) {
+        var _this = this;
+        if(this.attrs.selected != null) {
+            this.value.stop();
+            this.value = null;
+            this.$element.find('.searchview_extended_prop_op').html('');
+        }
+        this.attrs.selected = field;
+        if(field == null) {
+            return;
+        }
+
+        try {
+            this.value = new (openerp.base.search.custom_filters.get_object(field.type))
+                              (this);
+            _.each(this.value.operators, function(operator) {
+                var option = jQuery('<option>', {value: operator.value})
+                    .text(operator.text)
+                    .appendTo(_this.$element.find('.searchview_extended_prop_op'));
+            });
+            this.$element.find('.searchview_extended_prop_value').html(
+                this.value.render({}));
+            this.value.start();
+        } catch (e) {
+            if (! e instanceof openerp.base.KeyNotFound) {
+                throw e;
+            }
+            this.attrs.selected = null;
+            this.log('Unknow field type ' + e.key);
+        }
+    },
+    get_proposition: function() {
+        if ( this.attrs.selected == null)
+            return null;
+        var field = this.attrs.selected.name;
+        var op =  this.$element.find('.searchview_extended_prop_op').val();
+        var value = this.value.get_value();
+        return [field, op, value];
+    }
+});
+
+openerp.base.search.ExtendedSearchProposition.Char = openerp.base.BaseWidget.extend({
+    template: 'SearchView.extended_search.proposition.char',
+    identifier_prefix: 'extended-search-proposition-char',
+    operators: [
+        {value: "ilike", text: "contains"},
+        {value: "not ilike", text: "doesn't contain"},
+        {value: "=", text: "is equal to"},
+        {value: "!=", text: "is not equal to"},
+        {value: ">", text: "greater than"},
+        {value: "<", text: "less than"},
+        {value: ">=", text: "greater or equal than"},
+        {value: "<=", text: "less or equal than"}
+    ],
+    get_value: function() {
+        return this.$element.val();
+    }
+});
+openerp.base.search.ExtendedSearchProposition.DateTime = openerp.base.BaseWidget.extend({
+    template: 'SearchView.extended_search.proposition.char',
+    identifier_prefix: 'extended-search-proposition-datetime',
+    operators: [
+        {value: "=", text: "is equal to"},
+        {value: "!=", text: "is not equal to"},
+        {value: ">", text: "greater than"},
+        {value: "<", text: "less than"},
+        {value: ">=", text: "greater or equal than"},
+        {value: "<=", text: "less or equal than"}
+    ],
+    get_value: function() {
+        return this.$element.val();
+    }
 });
 
 };

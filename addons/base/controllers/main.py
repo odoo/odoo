@@ -88,6 +88,7 @@ class Session(openerpweb.Controller):
     @openerpweb.jsonrequest
     def login(self, req, db, login, password):
         req.session.login(db, login, password)
+
         return {
             "session_id": req.session_id,
             "uid": req.session._uid,
@@ -187,7 +188,37 @@ def load_actions_from_ir_values(req, key, key2, models, meta, context):
                 action['domain'],
                 req.session.evaluation_context(
                     action['context'])) or []
+        fix_view_modes(action)
     return actions
+
+def fix_view_modes(action):
+    """ For historical reasons, OpenERP has weird dealings in relation to
+    view_mode and the view_type attribute (on window actions):
+
+    * one of the view modes is ``tree``, which stands for both list views
+      and tree views
+    * the choice is made by checking ``view_type``, which is either
+      ``form`` for a list view or ``tree`` for an actual tree view
+
+    This methods simply folds the view_type into view_mode by adding a
+    new view mode ``list`` which is the result of the ``tree`` view_mode
+    in conjunction with the ``form`` view_type.
+
+    TODO: this should go into the doc, some kind of "peculiarities" section
+
+    :param dict action: an action descriptor
+    :returns: nothing, the action is modified in place
+    """
+    if action.pop('view_type') != 'form':
+        return
+
+    action['view_mode'] = ','.join(
+        mode if mode != 'tree' else 'list'
+        for mode in action['view_mode'].split(','))
+    action['views'] = [
+        [id, mode if mode != 'tree' else 'list']
+        for id, mode in action['views']
+    ]
 
 class Menu(openerpweb.Controller):
     _cp_path = "/base/menu"
@@ -236,7 +267,6 @@ class Menu(openerpweb.Controller):
                                              [('ir.ui.menu', menu_id)], False, {})
 
         return {"action": actions}
-
 
 class DataSet(openerpweb.Controller):
     _cp_path = "/base/dataset"
@@ -383,7 +413,7 @@ class View(openerpweb.Controller):
         :param session: Current OpenERP session
         :type session: openerpweb.openerpweb.OpenERPSession
         """
-        domain = elem.get(attr_name)
+        domain = elem.get(attr_name, '').strip()
         if domain:
             try:
                 elem.set(
@@ -408,7 +438,7 @@ class View(openerpweb.Controller):
         """
         self.parse_domain(elem, 'domain', session)
         self.parse_domain(elem, 'filter_domain', session)
-        context_string = elem.get('context')
+        context_string = elem.get('context', '').strip()
         if context_string:
             try:
                 elem.set('context',

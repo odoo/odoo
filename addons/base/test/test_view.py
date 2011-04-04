@@ -32,7 +32,7 @@ class ViewTest(unittest2.TestCase):
 
     def test_convert_literal_domain(self):
         e = xml.etree.ElementTree.Element(
-            'field', domain="[('somefield', '=', 3)]")
+            'field', domain="  [('somefield', '=', 3)]  ")
         self.view.parse_domains_and_contexts(e, None)
 
         self.assertEqual(
@@ -75,7 +75,7 @@ class ViewTest(unittest2.TestCase):
 
     def test_convert_literal_context(self):
         e = xml.etree.ElementTree.Element(
-            'field', context="{'some_prop':  3}")
+            'field', context="  {'some_prop':  3}  ")
         self.view.parse_domains_and_contexts(e, None)
 
         self.assertEqual(
