@@ -153,7 +153,7 @@ class account_voucher(osv.osv):
         paid = False
         for voucher in self.browse(cr, uid, ids, context=context):
             for line in voucher.move_ids:
-                if line.reconcile_id and (line.account_id.user_type.name, 'in', ('receivable', 'payable')):
+                if (line.account_id.type, 'in', ('receivable', 'payable')) and line.reconcile_id:
                     paid = True
         return paid
 
