@@ -100,28 +100,6 @@ openerp.base.FormView =  openerp.base.Controller.extend( /** @lends openerp.base
             // rpc - save.callbacl on_saved
         }
     },
-    do_search: function() {
-        if (!this.ready) {
-            return false;
-        }
-        var invalid = false;
-        var values = {};
-        for (var f in this.fields) {
-            f = this.fields[f];
-            if (f.invalid) {
-                invalid = true;
-            } else {
-                values[f.name] = f.value;
-            }
-        }
-        if (invalid) {
-            this.on_invalid();
-        } else {
-            console.log("Save form", values);
-            // TODO: save values via datarecord
-            // rpc - save.callbacl on_saved
-        }
-    },
     do_show: function () {
         this.dataset.fetch_index(this.fields_view.fields, this.on_record_loaded);
         this.$element.show();

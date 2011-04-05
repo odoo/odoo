@@ -263,6 +263,12 @@ openerp.base.CalendarView = openerp.base.Controller.extend({
     start: function () {
         this._super();
         this.$element.append('Calendar view');
+    },
+    do_show: function () {
+        this.$element.show();
+    },
+    do_hide: function () {
+        this.$element.hide();
     }
 });
 
@@ -271,6 +277,12 @@ openerp.base.GanttView = openerp.base.Controller.extend({
     start: function () {
         this._super();
         this.$element.append('Gantt view');
+    },
+    do_show: function () {
+        this.$element.show();
+    },
+    do_hide: function () {
+        this.$element.hide();
     }
 });
 
@@ -282,6 +294,12 @@ openerp.base.TreeView = openerp.base.Controller.extend({
     start: function () {
         this._super();
         this.$element.append('Tree view');
+    },
+    do_show: function () {
+        this.$element.show();
+    },
+    do_hide: function () {
+        this.$element.hide();
     }
 });
 
@@ -290,6 +308,12 @@ openerp.base.GraphView = openerp.base.Controller.extend({
     start: function () {
         this._super();
         this.$element.append('Graph view');
+    },
+    do_show: function () {
+        this.$element.show();
+    },
+    do_hide: function () {
+        this.$element.hide();
     }
 });
 
