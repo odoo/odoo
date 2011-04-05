@@ -40,12 +40,16 @@
                             </group>
                             <separator string="Description" colspan="4"/>
                             <field name="body" nolabel="1" colspan="4"/>
-                            <group col="4" colspan="4">
-                                <separator string="" colspan="4"/>
-                                <field name="state" attrs="{'invisible': [('state', '==', False)]}"/>
-                                <button name="%(action_email_compose_message_wizard)d" string="Reply" type="action" icon="terp-mail-replied"
-	                                context="{'mail':'reply', 'message_id':active_id}" colspan="2"/>
-                                <button name="process_email_queue" string="Force send" type="object" icon="gtk-execute" states='exception' colspan="2"/>
+                            <separator string="" colspan="4"/>
+                            <group col="6" colspan="4">
+                                <field name="state" colspan="2"/>
+                                <group col="4" colspan="2">
+                                	<button name="%(action_email_compose_message_wizard)d" string="Reply" type="action" icon="terp-mail-replied"
+	                                context="{'mail':'reply', 'message_id':active_id}" states='received,outgoing,sent,exception,cancel'/>
+	                                <button name="send_email" string="Force Send" type="object" icon="gtk-execute" states='outgoing'/>
+	                                <button name="process_retry" string="Send Again" type="object" icon="gtk-execute" states='exception,cancel'/>
+	                                <button name="do_cancel" string="Cancel" type="object" icon="terp-gtk-stop" states='outgoing'/>
+                                </group>
                             </group>
                         </page>
                         <page string="Attachments">
@@ -73,7 +77,7 @@
             <field name="model">email.message</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Emails">
+            	<tree string="Emails" colors="grey:state in ('sent', 'cancel');blue:state=='outgoing';red:state=='exception';black:state=='received'">
                     <field name="date"/>
                     <field name="subject"/>
                     <field name="email_from"/>
@@ -94,7 +98,8 @@
             <field name="arch" type="xml">
                 <search string="Email Search">
                     <separator orientation="vertical"/>
-                    <filter icon="terp-call-start" string="Waiting" domain="[('state','=','waiting')]"/>
+                    <filter icon="terp-camera_test" string="Received" domain="[('state','=','received')]"/>
+                    <filter icon="terp-call-start" name="outgoing" string="Outgoing" domain="[('state','=','outgoing')]"/>
                     <filter icon="terp-gtk-stop" string="Exception" domain="[('state','=','exception')]"/>
                     <field name="email_from"/>
                     <field name="subject"/>
@@ -121,6 +126,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('history', '=', True)]</field>
+             <field name="context">{'search_default_outgoing':1}</field>
             <field name="search_view_id" ref="view_email_message_search"/>
         </record>
 

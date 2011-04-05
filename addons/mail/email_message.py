@@ -182,6 +182,7 @@ class email_message(osv.osv):
                         ('sent', 'Sent'),
                         ('received', 'Received'),
                         ('exception', 'Exception'),
+                        ('cancel', 'Cancelled'),
                         ], 'State', readonly=True),
         'auto_delete': fields.boolean('Auto Delete', help="Permanently delete emails after sending"),
     }
@@ -335,6 +336,13 @@ class email_message(osv.osv):
                 logger.notifyChannel("email-template", netsvc.LOG_ERROR, _("Sending of Mail %s failed. Probable Reason:Could not login to server\nError: %s") % (message.id, error))
                 self.write(cr, uid, [message.id], {'state':'exception'}, context)
                 return False
+        return True
+
+    def do_cancel(self, cr, uid, ids, context=None):
+        '''
+        Cancel the email to be send
+        '''
+        self.write(cr, uid, ids, {'state':'cancel'}, context)
         return True
 # OLD Code.
 #    def send_all_mail(self, cr, uid, ids=None, context=None):
