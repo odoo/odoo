@@ -31,8 +31,10 @@ portal's users.
                     <field name="group_id" on_change="onchange_group(group_id)"/>
                     <notebook>
                         <page string="Users">
-                            <field name="user_ids" nolabel="1" colspan="4"
+                            <field name="user_ids" nolabel="1" colspan="3"
                                 context="{'menu_id': menu_action_id}"/>
+                            <group name="user_panel" colspan="1"/>
+                            <!-- wizards insert buttons inside the group 'user_panel' -->
                         </page>
                         <page string="Menu">
                             <field name="menu_action_id"/>
