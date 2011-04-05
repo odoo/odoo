@@ -503,8 +503,14 @@ openerp.base.Notification =  openerp.base.Controller.extend({
             speed: 500
         });
     },
-    add: function(title, text) {
-        this.$element.notify("create", {
+    default: function(title, text) {
+        this.$element.notify('create', {
+            title: title,
+            text: text
+        });
+    },
+    alert: function(title, text) {
+        this.$element.notify('create', 'oe_notification_alert', {
             title: title,
             text: text
         });
@@ -690,7 +696,7 @@ openerp.base.WebClient = openerp.base.Controller.extend({
         this.header.start();
         this.login.start();
         this.menu.start();
-        this.notification.add("OpenERP Client", "The openerp client has been initialized.");
+        this.notification.default("OpenERP Client", "The openerp client has been initialized.");
     },
     on_logged: function() {
         this.action =  new openerp.base.ActionManager(this.session, "oe_app");
