@@ -639,6 +639,7 @@ class user_preferences_config(osv.osv_memory):
         if data_ids:
             for w_id in data_ids:
                 usr_obj.write(cr, uid, [w_id], {'context_tz': get_val.context_tz,'context_lang':get_val.context_lang,'view':get_val.view,'menu_tips':get_val.menu_tips})
+        return True
 
 user_preferences_config()
 
