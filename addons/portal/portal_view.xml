@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- menu Administration/Portals -->
+        <menuitem name="Portals" id="portal_menu" parent="base.menu_administration"/>
+
+        <!-- menu Administration/Portals/Portals -->
+        <record id="portal_list_action" model="ir.actions.act_window">
+            <field name="name">Portals</field>
+            <field name="res_model">res.portal</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help">
+A portal helps defining specific views and rules for a group of users (the
+portal group).  A portal is associated to a menu; when changed, the portal menu
+is assigned to the portal's users.  Groups can be added to or removed from the
+portal's users.
+            </field>
+        </record>
+        <menuitem name="Portals" id="portal_list_menu"
+            parent="portal_menu" sequence="1" action="portal_list_action"/>
+
+        <!-- portal form view -->
+        <record id="portal_form" model="ir.ui.view">
+            <field name="name">Portal Form</field>
+            <field name="model">res.portal</field>
+            <field name="type">form</field>
+            <field name="priority" eval="16"/>
+            <field name="arch" type="xml">
+                <form string="Portal Form">
+                    <field name="group_id" on_change="onchange_group(group_id)"/>
+                    <notebook>
+                        <page string="Users">
+                            <field name="user_ids" nolabel="1" colspan="3"
+                                context="{'menu_id': menu_action_id}"/>
+                            <group name="user_panel" colspan="1"/>
+                            <!-- wizards insert buttons inside the group 'user_panel' -->
+                        </page>
+                        <page string="Menu">
+                            <field name="menu_action_id"/>
+                            <newline/>
+                            <field name="parent_menu_id"
+                                context="{'ir.ui.menu.full_list': True}"/>
+                            <button name="do_create_menu" type="object"
+                                string="Create Parent Menu"/>
+                        </page>
+                    </notebook>
+                </form>
+            </field>
+        </record>
+    </data>
+</openerp>

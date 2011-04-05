@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- groups wizard action -->
+        <record id="groups_wizard_action" model="ir.actions.act_window">
+            <field name="name">Add/Remove Groups</field>
+            <field name="res_model">res.portal.groups</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <!-- groups wizard form -->
+        <record id="groups_wizard_form" model="ir.ui.view">
+            <field name="name">Portal Groups Wizard</field>
+            <field name="model">res.portal.groups</field>
+            <field name="type">form</field>
+            <field name="priority" eval="16"/>
+            <field name="arch" type="xml">
+                <form string="Portal Groups Wizard">
+                    <group colspan="4">
+                        <field name="portal_id"/>
+                    </group>
+                    <separator string="Add Groups" colspan="2"/>
+                    <separator string="Remove Groups" colspan="2"/>
+                    <field name="add_group_ids" nolabel="1" colspan="2"/>
+                    <field name="remove_group_ids" nolabel="1" colspan="2"/>
+                    <separator colspan="4"/>
+                    <label colspan="2"/>
+                    <button special="cancel"
+                        string="Cancel" icon="gtk-cancel"/>
+                    <button name="do_apply" type="object"
+                        string="Apply" icon="gtk-apply"/>
+                </form>
+            </field>
+        </record>
+
+        <!-- add a button in the portal form view -->
+        <record id="portal_form_with_groups_wizard" model="ir.ui.view">
+            <field name="name">Portal Form</field>
+            <field name="model">res.portal</field>
+            <field name="inherit_id" ref="portal_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='user_panel']" position="inside">
+                    <button name="%(groups_wizard_action)d" type="action"
+                        string="Add/Remove Groups"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>
