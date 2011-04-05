@@ -572,6 +572,7 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
         this._super.apply(this, arguments);
         this.log("o2m.start");
         this.viewmanager = new openerp.base.ViewManager(this.view.session, this.element_id);
+        this.viewmanager.searchable = false;
         var action = {
             res_model: this.field.relation,
             views: [ [false,"list"], ],
