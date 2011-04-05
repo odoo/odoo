@@ -146,7 +146,7 @@ class WebKitParser(report_sxw):
         command.append(out)
         generate_command = ' '.join(command)
         try:
-            status = subprocess.call(command)
+            status = subprocess.call(command, stderr=subprocess.PIPE) # ignore stderr
             if status :
                 raise except_osv(
                                 _('Webkit raise an error' ), 
