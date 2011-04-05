@@ -52,11 +52,15 @@ class payment_mode(osv.osv):
             WHERE pm.id = %s """, [payment_code])
         return [x[0] for x in cr.fetchall()]
     
-    def onchange_company_id (self,cr,uid,ids,company_id,context=None):
-        vals={}
+    def onchange_company_id (self,cr,uid,ids,company_id=False,context=None):
+        result={}
         if company_id:
-            partner = self.pool.get('res.company').read(cr, uid, [company_id], ['partner_id'])[0]['partner_id']
-        return {'value': {'partner_id': partner}}
+            company = self.pool.get('res.company').browse(cr,uid,company_id)
+            partner = company.partner_id.id
+            result = {'value': 
+                         {'partner_id': partner}
+                      }
+        return result
                 
 
 payment_mode()
