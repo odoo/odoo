@@ -177,11 +177,10 @@ CREATE OR REPLACE view report_stock_inventory AS (
         m.company_id,
         m.state as state, m.prodlot_id as prodlot_id,
         coalesce(sum(-pt.standard_price * m.product_qty)::decimal, 0.0) as value,
-        CASE when pt.uom_id = m.product_uom 
-        THEN
-        coalesce(sum(-m.product_qty)::decimal, 0.0) 
-        ELSE
-        coalesce(sum(-m.product_qty * pu.factor)::decimal, 0.0) END as product_qty
+        case when pt.uom_id = m.product_uom then
+            coalesce(sum(-m.product_qty)::decimal, 0.0) 
+        else
+            coalesce(sum(-m.product_qty * pu.factor)::decimal, 0.0) END as product_qty
     FROM
         stock_move m
             LEFT JOIN stock_picking p ON (m.picking_id=p.id)
@@ -192,7 +191,7 @@ CREATE OR REPLACE view report_stock_inventory AS (
             LEFT JOIN stock_location l ON (m.location_id=l.id)
     GROUP BY
         m.id, m.product_id, m.product_uom, pt.categ_id, m.address_id, m.location_id,  m.location_dest_id,
-        m.prodlot_id, m.date, m.state, l.usage, m.company_id,pt.uom_id
+        m.prodlot_id, m.date, m.state, l.usage, m.company_id, pt.uom_id
 ) UNION ALL (
     SELECT
         -m.id as id, m.date as date,
@@ -201,11 +200,10 @@ CREATE OR REPLACE view report_stock_inventory AS (
         m.company_id,
         m.state as state, m.prodlot_id as prodlot_id,
         coalesce(sum(pt.standard_price * m.product_qty )::decimal, 0.0) as value,
-        CASE when pt.uom_id = m.product_uom 
-        THEN 
-        coalesce(sum(m.product_qty)::decimal, 0.0) 
-        ELSE
-        coalesce(sum(m.product_qty * pu.factor)::decimal, 0.0) END as product_qty
+        case when pt.uom_id = m.product_uom  then 
+            coalesce(sum(m.product_qty)::decimal, 0.0) 
+        else
+            coalesce(sum(m.product_qty * pu.factor)::decimal, 0.0) END as product_qty
     FROM
         stock_move m
             LEFT JOIN stock_picking p ON (m.picking_id=p.id)
@@ -216,7 +214,7 @@ CREATE OR REPLACE view report_stock_inventory AS (
             LEFT JOIN stock_location l ON (m.location_dest_id=l.id)
     GROUP BY
         m.id, m.product_id, m.product_uom, pt.categ_id, m.address_id, m.location_id, m.location_dest_id,
-        m.prodlot_id, m.date, m.state, l.usage, m.company_id,pt.uom_id
+        m.prodlot_id, m.date, m.state, l.usage, m.company_id, pt.uom_id
     )
 );
         """)
