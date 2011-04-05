@@ -315,55 +315,37 @@ class hr_payslip(osv.osv):
                 result[record.id] = [x[0] for x in res]
         return result
 
-    #TODO clean
     def _get_salary_rules(self, cr, uid, ids, field_names, arg=None, context=None):
         structure_obj = self.pool.get('hr.payroll.structure')
         contract_obj = self.pool.get('hr.contract')
-        holiday_pool = self.pool.get('hr.holidays')
-        salary_rule_pool = self.pool.get('hr.salary.rule')
         res = {}
-        lines = []
         rules = []
-        rul = []
-        structure = []
-        sal_structure =[]
         contracts = []
+        structures = []
+        rule_ids = []
+        sorted_salary_heads = []
         for record in self.browse(cr, uid, ids, context=context):
             if record.contract_id:
-                contracts.append(record.contract_id)
+                contracts.append(record.contract_id.id)
             else:
                 contracts = self.get_contract(cr, uid, record.employee_id, record.date, context=context)
-            for ct in contracts:
-                structure.append(ct.struct_id.id)
-                leave_ids = self._get_leaves(cr, uid, record.date, record.employee_id, ct, context)
-                for hday in holiday_pool.browse(cr, uid, leave_ids, context=context):
-                    salary_rules = salary_rule_pool.search(cr, uid, [('code', '=', hday.holiday_status_id.code)], context=context)
-                    rules +=  salary_rule_pool.browse(cr, uid, salary_rules, context=context)
+            for contract in contracts:
+                structures = contract_obj.get_all_structures(cr, uid, [contract], context)
             res[record.id] = {}
-            for st in structure:
-                sal_structure = self._get_parent_structure(cr, uid, [st], context=context)
-                for struct in sal_structure:
-                    lines = structure_obj.browse(cr, uid, struct, context=context).rule_ids
-                    # fix me: Search rules using salary head => sequence to display rules on payslip with correct seq with salary head..
-                    for rl in lines:
-                        if rl.child_ids:
-                            for r in rl.child_ids:
-                                lines.append(r)
-                        rules.append(rl)
-                for fn in field_names:
-                   if fn == 'details_by_salary_head':
-                       final_rules = []
-                       for r in rules:
-                           if r.id not in rul:
-                               rul.append(r.id)
-                       cr.execute('''SELECT sr.id
-                                   FROM hr_salary_rule as sr, hr_salary_head as sh
-                                   WHERE sr.category_id = sh.id AND sr.id in %s
-                                   ORDER BY sh.sequence''',(tuple(rul),))
-                       for x in cr.fetchall():
-                           final_rules.append(x[0])
-                       res[record.id] = {fn: final_rules}
+            for struct in structures:
+                rule_ids = structure_obj.get_all_rules(cr, uid, [struct], context=None)
+                for rl in rule_ids:
+                    if rl[0] not in rules:
+                        rules.append(rl[0])
+            cr.execute('''SELECT sr.id FROM hr_salary_rule as sr, hr_salary_head as sh
+               WHERE sr.category_id = sh.id AND sr.id in %s ORDER BY sh.sequence''',(tuple(rules),))
+            for x in cr.fetchall():
+                sorted_salary_heads.append(x[0])
+            for fn in field_names:
+               if fn == 'details_by_salary_head':
+                   res[record.id] = {fn: sorted_salary_heads}
         return res
+
 
     #TODO clean
     def _compute(self, cr, uid, id, value, employee, contract, context=None):

@@ -5,8 +5,9 @@
         <!-- Salary Rules -->
 
         <record id="hr_payslip_line_houserantallowance1" model="hr.salary.rule">
-            <field name="amount_type">per</field>
-            <field eval="0.4" name="amount"/>
+            <field name="amount_select">percentage</field>
+            <field eval="0.4" name="amount_percentage"/>
+            <field name="amount_percentage_base">result=contract.wage</field>
             <field name="code">HRA</field>
             <field name="type" ref="AL"/>
             <field name="category_id" ref="hr_payroll.HRA"/>
@@ -16,8 +17,8 @@
         </record>
 
         <record id="hr_payslip_line_convanceallowance1" model="hr.salary.rule">
-            <field name="amount_type">fix</field>
-            <field eval="800.0" name="amount"/>
+            <field name="amount_select">fix</field>
+            <field eval="800.0" name="amount_fix"/>
             <field name="code">CA</field>
             <field name="type" ref="AL"/>
             <field name="category_id" ref="hr_payroll.CA"/>
@@ -27,9 +28,9 @@
         </record>
 
         <record id="hr_payslip_line_professionaltax1" model="hr.salary.rule">
-            <field name="amount_type">fix</field>
+            <field name="amount_select">fix</field>
             <field eval="15" name="sequence"/>
-            <field eval="-200.0" name="amount"/>
+            <field eval="-200.0" name="amount_fix"/>
             <field name="code">PT</field>
             <field name="type" ref="DED"/>
             <field name="category_id" ref="hr_payroll.PT"/>
@@ -38,9 +39,10 @@
         </record>
 
         <record id="hr_payslip_line_providentfund1" model="hr.salary.rule">
-            <field name="amount_type">per</field>
+            <field name="amount_select">percentage</field>
             <field eval="20" name="sequence"/>
-            <field eval="-0.125" name="amount"/>
+            <field eval="-0.125" name="amount_percentage"/>
+            <field name="amount_percentage_base">result=contract.wage</field>
             <field name="code">PF</field>
             <field name="type" ref="DED"/>
             <field name="category_id" ref="hr_payroll.PF"/>
