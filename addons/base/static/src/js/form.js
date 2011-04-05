@@ -401,9 +401,8 @@ openerp.base.form.FieldChar = openerp.base.form.Field.extend({
     },
     set_value: function(value) {
         this._super.apply(this, arguments);
-        if (value != null && value !== false) {
-            this.$element.find('input').val(value);
-        }
+        var show_value = (value != null && value !== false) ? value : '';
+        this.$element.find('input').val(show_value);
     },
     get_value: function() {
     },
@@ -438,9 +437,8 @@ openerp.base.form.FieldFloat = openerp.base.form.Field.extend({
     },
     set_value: function(value) {
         this._super.apply(this, arguments);
-        if (value != null && value !== false) {
-            this.$element.find('input').val(value.toFixed(2));
-        }
+        var show_value = (value != null && value !== false) ? value.toFixed(2) : '';
+        this.$element.find('input').val(value);
     },
     get_value: function() {
     },
@@ -465,9 +463,8 @@ openerp.base.form.FieldText = openerp.base.form.Field.extend({
     },
     set_value: function(value) {
         this._super.apply(this, arguments);
-        if (value != null && value !== false) {
-            this.$element.find('textarea').val(value);
-        }
+        var show_value = (value != null && value !== false) ? value : '';
+        this.$element.find('textarea').val(show_value);
     },
     get_value: function() {
         return this.$element.find('textarea').val();
@@ -519,6 +516,8 @@ openerp.base.form.FieldSelection = openerp.base.form.Field.extend({
         this._super.apply(this, arguments);
         if (value != null && value !== false) {
             this.$element.find('select').val(value);
+        } else {
+            this.$element.find('select')[0].selectedIndex = 0;
         }
     },
     get_value: function() {
@@ -530,6 +529,11 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
     init: function(view, node) {
         this._super(view, node);
         this.template = "FieldMany2One";
+    },
+    set_value: function(value) {
+        this._super.apply(this, arguments);
+        var show_value = (value != null && value !== false) ? value[1] : '';
+        this.$element.find('input').val(show_value);
     }
 });
 
