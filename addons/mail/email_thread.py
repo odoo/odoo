@@ -63,7 +63,7 @@ class email_thread(osv.osv):
             'date_closed': False,
             'date_open': False
         })
-        return super(mailgate_thread, self).copy(cr, uid, id, default, context=context)
+        return super(email_thread, self).copy(cr, uid, id, default, context=context)
 
     def message_new(self, cr, uid, msg, context):
         raise Exception, _('Method is not implemented')
@@ -185,6 +185,7 @@ class email_thread(osv.osv):
         @param email_error: Default Email address in case of any Problem
         """
         model_pool = self.pool.get(model)
+        smtp_server_obj = self.pool.get('ir.mail_server')
 
         for res in model_pool.browse(cr, uid, res_ids, context=context):
             thread_followers = model_pool.thread_followers(cr, uid, [res.id])[res.id]
@@ -202,12 +203,15 @@ class email_thread(osv.osv):
                     msg['reply-to'] = res.section_id.reply_to
 
                 smtp_from = self.to_email(msg['from'])
-                if not tools.misc._email_send(smtp_from, message_forward, msg, openobject_id=res.id) and email_error:
+                msg['from'] = smtp_from
+                msg['to'] =  message_forward
+                msg['Message-Id'] = tools.generate_tracking_message_id(res.id)
+                if not smtp_server_obj.send_email(cr, uid, msg) and email_error:
                     subj = msg['subject']
                     del msg['subject'], msg['to'], msg['cc'], msg['bcc']
                     msg['subject'] = '[OpenERP-Forward-Failed] %s' % subj
-                    msg['to'] = email_error
-                    tools.misc._email_send(smtp_from, self.to_email(email_error), msg, openobject_id=res.id)
+                    msg['To'] = email_error
+                    smtp_server_obj.send_email(cr, uid, msg)
 
     def process_email(self, cr, uid, model, message, custom_values=None, attach=True, context=None):
         """This function Processes email and create record for given OpenERP model
