@@ -604,4 +604,42 @@ class res_config_view(osv.osv_memory):
 
 res_config_view()
 
+#       Define default users preferences config wiz
+
+class user_preferences_config(osv.osv_memory):
+    _name = 'user.preferences.config'
+    _inherit = 'res.config'
+    _columns = {
+        'company_id': fields.many2one('res.company', 'Company', required=True,
+            help="Select company for configure by company ."),
+        'context_tz': fields.selection(_tz_get,  'Timezone', size=64,
+            help="The company's timezone, used to perform timezone conversions "
+                 "between the server and the client."),
+        'context_lang': fields.selection(_lang_get, 'Language', required=True,
+            help="Sets the language for the company's user interface, when UI "
+                 "translations are available"),
+        'view': fields.selection([('simple','Simplified'),
+                                  ('extended','Extended')],
+                                 'Interface', required=True ),
+        'menu_tips': fields.boolean('Menu Tips', help="Check out this box if you want to always display tips on each menu action"),
+                                 
+    }
+    _defaults={
+               'company_id':lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
+               'view':lambda self,cr,uid,*args: self.pool.get('res.users').browse(cr, uid, uid).view or 'simple',
+               'context_lang':'en_US',
+    }
+
+    def execute(self, cr, uid, ids, context=None):
+        usr_obj = self.pool.get("res.users")
+        res = self.read(cr, uid, ids, ['company_id', 'context_tz', 'context_lang', 'view', 'menu_tips'], context=context)[0]
+        get_val = self.browse(cr, uid, ids)[0]
+        company_id = get_val.company_id.id
+        data_ids = usr_obj.search(cr,uid,[('company_id','=',get_val.company_id.id)])
+        if data_ids:
+            for w_id in data_ids:
+                usr_obj.write(cr, uid, [w_id], {'context_tz': get_val.context_tz,'context_lang':get_val.context_lang,'view':get_val.view,'menu_tips':get_val.menu_tips})
+
+user_preferences_config()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
