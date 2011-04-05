@@ -31,15 +31,14 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
  * Registry for all the main views
  */
 openerp.base.views = new openerp.base.Registry();
+
 openerp.base.ViewManager =  openerp.base.Controller.extend({
-    // This will be ViewManager Abstract/Common
     init: function(session, element_id, desactivate_sidebar) {
         this._super(session, element_id);
         this.action = null;
         this.dataset = null;
         this.searchview = null;
         this.active_view = null;
-        // this.views = { "list": { "view_id":1234, "controller": instance} }
         this.views = {};
         if (desactivate_sidebar)
             this.sidebar = null;
@@ -90,7 +89,11 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
 
         for (var i in this.views) {
             if (this.views[i].controller) {
-               this.views[i].controller.$element.toggle(i === view_type);
+                if (i === view_type) {
+                    this.views[i].controller.do_show();
+                } else {
+                    this.views[i].controller.do_hide();
+                }
             }
         }
         return view_promise;
@@ -123,15 +126,13 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
         if (this.searchview) {
             this.searchview.stop();
         }
+        var view_id = action.search_view_id ? action.search_view_id[0] || false : false;
 
-        var searchview = this.searchview = new openerp.base.SearchView(
-                this, this.session, this.element_id + "_search",
-                this.dataset, action.search_view_id[0] || false,
-                this.search_defaults());
-        searchview.on_search.add(function() {
+        this.searchview = new openerp.base.SearchView(this, this.session, this.element_id + "_search", this.dataset, view_id, this.search_defaults());
+        this.searchview.on_search.add(function() {
             self.views[self.active_view].controller.do_search.apply(self, arguments);
         });
-        return searchview.start();
+        return this.searchview.start();
     },
     do_action_window: function(action) {
         var self = this;
@@ -143,7 +144,7 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
 
         var searchview_loaded = this.setup_search_view(action);
 
-        this.$element.find('.views-switchers button').click(function() {
+        this.$element.find('.oe_vm_switch button').click(function() {
             self.on_mode_switch($(this).data('view-type'));
         });
         _.each(action.views, function(view) {
@@ -172,11 +173,11 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
     }
 });
 
-openerp.base.ViewManagerRoot = openerp.base.Controller.extend({
+openerp.base.ViewManagerRoot = openerp.base.ViewManager.extend({
 // Extends view manager
 });
 
-openerp.base.ViewManagerUsedAsAMany2One = openerp.base.Controller.extend({
+openerp.base.ViewManagerUsedAsAMany2One = openerp.base.ViewManager.extend({
 // Extends view manager
 });
 
@@ -314,6 +315,12 @@ openerp.base.CalendarView = openerp.base.Controller.extend({
     start: function () {
         this._super();
         this.$element.append('Calendar view');
+    },
+    do_show: function () {
+        this.$element.show();
+    },
+    do_hide: function () {
+        this.$element.hide();
     }
 });
 
@@ -322,21 +329,30 @@ openerp.base.GanttView = openerp.base.Controller.extend({
     start: function () {
         this._super();
         this.$element.append('Gantt view');
+    },
+    do_show: function () {
+        this.$element.show();
+    },
+    do_hide: function () {
+        this.$element.hide();
     }
 });
 
 openerp.base.views.add('tree', 'openerp.base.TreeView');
+openerp.base.TreeView = openerp.base.Controller.extend({
 /**
  * Genuine tree view (the one displayed as a tree, not the list)
  */
-openerp.base.TreeView = openerp.base.Controller.extend({
     start: function () {
         this._super();
         this.$element.append('Tree view');
+    },
+    do_show: function () {
+        this.$element.show();
+    },
+    do_hide: function () {
+        this.$element.hide();
     }
-});
-
-openerp.base.DiagramView = openerp.base.Controller.extend({
 });
 
 openerp.base.views.add('graph', 'openerp.base.GraphView');
@@ -344,6 +360,12 @@ openerp.base.GraphView = openerp.base.Controller.extend({
     start: function () {
         this._super();
         this.$element.append('Graph view');
+    },
+    do_show: function () {
+        this.$element.show();
+    },
+    do_hide: function () {
+        this.$element.hide();
     }
 });
 
