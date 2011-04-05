@@ -492,7 +492,16 @@ openerp.base.form.FieldDate = openerp.base.form.FieldChar.extend({
     },
     start: function() {
         this._super.apply(this, arguments);
-        this.$element.find('input').datepicker();
+        this.$element.find('input').datepicker({
+            dateFormat: 'yy-mm-dd'
+        });
+    },
+    set_value: function(value) {
+        this._super.apply(this, arguments);
+        var show_value = (value != null && value !== false) ? value : '';
+        this.$element.find('input').val(show_value);
+    },
+    get_value: function() {
     }
 });
 
@@ -500,6 +509,20 @@ openerp.base.form.FieldDatetime = openerp.base.form.FieldChar.extend({
     init: function(view, node) {
         this._super(view, node);
         this.template = "FieldDatetime";
+    },
+    start: function() {
+        this._super.apply(this, arguments);
+        this.$element.find('input').datetimepicker({
+            dateFormat: 'yy-mm-dd',
+            timeFormat: 'hh:mm:ss'
+        });
+    },
+    set_value: function(value) {
+        this._super.apply(this, arguments);
+        var show_value = (value != null && value !== false) ? value : '';
+        this.$element.find('input').val(show_value);
+    },
+    get_value: function() {
     }
 });
 
