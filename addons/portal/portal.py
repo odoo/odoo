@@ -68,6 +68,19 @@ class portal(osv.osv):
         
         return super(portal, self).create(cr, uid, values, context)
     
+    def name_get(self, cr, uid, ids, context=None):
+        portals = self.browse(cr, uid, ids, context)
+        return [(p.id, p.group_id.name) for p in portals]
+    
+    def name_search(self, cr, uid, name='', args=None, operator='ilike', context=None, limit=100):
+        # first search for group names that match
+        groups_obj = self.pool.get('res.groups')
+        group_names = groups_obj.name_search(cr, uid, name, args, operator, context, limit)
+        # then search for portals that match the groups found so far
+        domain = [('group_id', 'in', [gn[0] for gn in group_names])]
+        ids = self.search(cr, uid, domain, context=context)
+        return self.name_get(cr, uid, ids, context)
+    
     def write(self, cr, uid, ids, values, context=None):
         """ extend write() to reflect menu and groups changes on users """
         # first apply portal changes
@@ -140,6 +153,8 @@ class portal(osv.osv):
         return data_obj.browse(cr, uid, data_id).res_id
 
 portal()
+
+
 
 class users(osv.osv):
     _name = 'res.users'
