@@ -566,11 +566,22 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
         this.template = "FieldOne2Many";
         this.viewmanager = null;
         this.operations = [];
-        // thise.iewq.on
+
+    },
+    start: function() {
+        this._super.apply(this, arguments);
+        this.log("o2m.start");
+        this.viewmanager = new openerp.base.ViewManager(this.view.session, this.element_id);
+        var action = {
+            res_model: this.field.relation,
+            views: [ [false,"list"], ],
+        };
+        this.viewmanager.do_action_window(action);
 
     },
     set_value: function(value) {
         this.value = value;
+        this.log("o2m.set_value",value);
     },
     get_value: function(value) {
         return this.operations;

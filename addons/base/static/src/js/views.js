@@ -111,15 +111,13 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
         if (this.searchview) {
             this.searchview.stop();
         }
+        var view_id = action.search_view_id ? action.search_view_id[0] || false : false;
 
-        var searchview = this.searchview = new openerp.base.SearchView(
-                this.session, this.element_id + "_search",
-                this.dataset, action.search_view_id[0] || false,
-                this.search_defaults());
-        searchview.on_search.add(function() {
+        this.searchview = new openerp.base.SearchView(this.session, this.element_id + "_search", this.dataset, view_id, this.search_defaults());
+        this.searchview.on_search.add(function() {
             self.views[self.active_view].controller.do_search.apply(self, arguments);
         });
-        return searchview.start();
+        return this.searchview.start();
     },
     do_action_window: function(action) {
         var self = this;

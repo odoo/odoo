@@ -20,7 +20,7 @@
         </td>
         <td valign="top" width="100%" height="100%">
             <div id="oe_main" class="main">
-                <div id="oe_application" class="application"></div>
+                <div id="oe_app" class="application"></div>
                 <div id="oe_sidebar"></div>
             </div>
         </td>
@@ -246,7 +246,7 @@
     <input type="text" t-att-name="widget.name" t-att-id="widget.element_id" t-att-class="'field_' + widget.type" style="width: 100%;"/>
 </t>
 <t t-name="FieldOne2Many">
-    <div style="background: #ccc; padding: 20px">
+    <div t-att-id="widget.element_id">
         One2Many widget
     </div>
 </t>

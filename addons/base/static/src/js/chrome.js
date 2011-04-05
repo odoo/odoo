@@ -673,7 +673,7 @@ openerp.base.WebClient = openerp.base.Controller.extend({
         this.menu.start();
     },
     on_logged: function() {
-        this.action =  new openerp.base.ActionManager(this.session, "oe_application");
+        this.action =  new openerp.base.ActionManager(this.session, "oe_app");
         this.action.start();
     },
     on_menu_action: function(action) {
