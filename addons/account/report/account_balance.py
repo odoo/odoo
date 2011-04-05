@@ -89,10 +89,10 @@ class account_balance(report_sxw.rml_parse, common_report_header):
                 self.sum_debit += account_rec['debit']
                 self.sum_credit += account_rec['credit']
                 if disp_acc == 'bal_movement':
-                    if currency_obj.is_zero(self.cr, self.uid, currency, res['credit']) > 0 or currency_obj.is_zero(self.cr, self.uid, currency, res['debit']) > 0 or currency_obj.is_zero(self.cr, self.uid, currency, res['balance']) != 0:
+                    if (not currency_obj.is_zero(self.cr, self.uid, currency, res['debit'])) or (not currency_obj.is_zero(self.cr, self.uid, currency, res['credit'])) or not (currency_obj.is_zero(self.cr, self.uid, currency, res['balance'])):
                         self.result_acc.append(res)
                 elif disp_acc == 'bal_solde':
-                    if currency_obj.is_zero(self.cr, self.uid, currency, res['debit']) != 0:
+                    if not currency_obj.is_zero(self.cr, self.uid, currency, res['balance']):
                         self.result_acc.append(res)
                 else:
                     self.result_acc.append(res)

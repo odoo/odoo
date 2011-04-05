@@ -143,10 +143,10 @@ class report_balancesheet_horizontal(report_sxw.rml_parse, common_report_header)
                     if typ == 'asset' and account.type <> 'view' and (account.debit <> account.credit):
                         self.result_sum_cr += account.balance
                     if data['form']['display_account'] == 'bal_movement':
-                        if currency_pool.is_zero(self.cr, self.uid, currency, account.credit) > 0 or currency_pool.is_zero(self.cr, self.uid, currency, account.debit) > 0 or currency_pool.is_zero(self.cr, self.uid, currency, account.balance) != 0:
+                        if (not currency_pool.is_zero(self.cr, self.uid, currency, account.credit)) or (not currency_pool.is_zero(self.cr, self.uid, currency, account.debit)) or (not currency_pool.is_zero(self.cr, self.uid, currency, account.balance)):
                             accounts_temp.append(account_dict)
                     elif data['form']['display_account'] == 'bal_solde':
-                        if currency_pool.is_zero(self.cr, self.uid, currency, account.balance) != 0:
+                        if not currency_pool.is_zero(self.cr, self.uid, currency, account.balance):
                             accounts_temp.append(account_dict)
                     else:
                         accounts_temp.append(account_dict)
