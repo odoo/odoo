@@ -409,6 +409,7 @@ openerp.base.form.Field = openerp.base.form.Widget.extend({
     },
     set_value: function(value) {
         this.value = value;
+        this.invalid = false;
     },
     get_value: function() {
         return this.value;
