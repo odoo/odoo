@@ -30,6 +30,7 @@
 ##############################################################################
 
 import commands
+import subprocess
 import os
 import report
 import tempfile
@@ -109,7 +110,7 @@ class WebKitParser(report_sxw):
             head_file.write(header)
             head_file.close()
             file_to_del.append(head_file.name)
-            command.append("--header-html '%s'"%(head_file.name))
+            command.extend(['--header-html', head_file.name])
         if footer :
             foot_file = file(  os.path.join(
                                   tmp_dir,
@@ -120,20 +121,20 @@ class WebKitParser(report_sxw):
             foot_file.write(footer)
             foot_file.close()
             file_to_del.append(foot_file.name)
-            command.append("--footer-html '%s'"%(foot_file.name))
+            command.extend(['--footer-html', foot_file.name])
             
         if webkit_header.margin_top :
-            command.append('--margin-top %s'%(webkit_header.margin_top))
+            command.extend(['--margin-top', str(webkit_header.margin_top).replace(',', '.')])
         if webkit_header.margin_bottom :
-            command.append('--margin-bottom %s'%(webkit_header.margin_bottom))
+            command.extend(['--margin-bottom', str(webkit_header.margin_bottom).replace(',', '.')])
         if webkit_header.margin_left :
-            command.append('--margin-left %s'%(webkit_header.margin_left))
+            command.extend(['--margin-left', str(webkit_header.margin_left).replace(',', '.')])
         if webkit_header.margin_right :
-            command.append('--margin-right %s'%(webkit_header.margin_right))
+            command.extend(['--margin-right', str(webkit_header.margin_right).replace(',', '.')])
         if webkit_header.orientation :
-            command.append("--orientation '%s'"%(webkit_header.orientation))
+            command.extend(['--orientation', str(webkit_header.orientation).replace(',', '.')])
         if webkit_header.format :
-            command.append(" --page-size '%s'"%(webkit_header.format))
+            command.extend(['--page-size', str(webkit_header.format).replace(',', '.')])
         count = 0
         for html in html_list :
             html_file = file(os.path.join(tmp_dir, str(time.time()) + str(count) +'.body.html'), 'w')
@@ -145,17 +146,17 @@ class WebKitParser(report_sxw):
         command.append(out)
         generate_command = ' '.join(command)
         try:
-            status = commands.getstatusoutput(generate_command)
-            if status[0] :
+            status = subprocess.call(command, stderr=subprocess.PIPE) # ignore stderr
+            if status :
                 raise except_osv(
                                 _('Webkit raise an error' ), 
-                                status[1]
+                                status
                             )
         except Exception:
             for f_to_del in file_to_del :
                 os.unlink(f_to_del)
 
-        pdf = file(out).read()
+        pdf = file(out, 'rb').read()
         for f_to_del in file_to_del :
             os.unlink(f_to_del)
 
