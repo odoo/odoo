@@ -57,7 +57,7 @@
         <!-- End Contract View-->
 
         <!-- Holidays View -->
-        <record id="hr_holidays_form_inherit" model="ir.ui.view">
+<!--        <record id="hr_holidays_form_inherit" model="ir.ui.view">
             <field name="name">hr.holidays.view.form.inherit</field>
             <field name="model">hr.holidays</field>
             <field name="type">form</field>
@@ -73,7 +73,7 @@
             </data>
             </field>
         </record>
-
+-->
         <!-- End Holidays View-->
 
         <!-- Salary structure -->
@@ -212,7 +212,8 @@
                     <field name="number"/>
                     <field name="employee_id"/>
                     <field name="name"/>
-                    <field name="date"/>
+                    <field name="date_from"/>
+                    <field name="date_to"/>
                     <!--field name="grows"/-->
                     <!--field name="net"/-->
                     <field name="state"/>
@@ -228,11 +229,12 @@
             <field name="arch" type="xml">
                 <form string="Payslip">
                     <group col="6" colspan="4">
-                        <field name="employee_id" on_change="onchange_employee_id(date, employee_id, contract_id)"/>
+                        <field name="employee_id" on_change="onchange_employee_id(date_from, date_to, employee_id, contract_id)"/>
                         <field name="number"/>
-                        <field name="date"/>
-                        <field name="contract_id" groups="base.group_extended" domain="[('employee_id','=',employee_id)]" on_change="onchange_contract_id(date, employee_id, contract_id)"/>
+                        <field name="date_from"/>
+                        <field name="contract_id" groups="base.group_extended" domain="[('employee_id','=',employee_id)]" on_change="onchange_contract_id(date_from, date_to, employee_id, contract_id)"/>
                         <field name="struct_id" groups="base.group_extended"/>
+                        <field name="date_to"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Salary Computation" >
@@ -273,33 +275,19 @@
                                     </notebook>
                                 </form>
                             </field>
-                            <!-- <group col="6" colspan="4">
-                                <separator string="Computation Overview" colspan="6"/>
-                                <field name="working_days"/>
-                                <field name="holiday_days"/>
-                                <field name="worked_days"/>
-                                <field name="basic_before_leaves"/>
-                                <field name="leaves"/>
-                                <field name="basic"/>
-                                <field name="allounce"/>
-                                <field name="deduction"/>
-                                <field name="grows"/>
-                                <field name="net"/>
-                                <field name="total_pay"/>
-                            </group> -->
                         </page>
-
-                       <page string="Details By Salary Head">
+<!-- TODO: put me back -->
+<!--                       <page string="Details By Salary Head">
                             <field name="details_by_salary_head" nolabel="1">
                                 <tree string="Salary Rules">
                                     <field name="category_id"/>
                                     <field name="sequence" groups="base.group_extended"/>
                                     <field name="name"/>
                                     <field name="code"/>
-                               <!--     <field name="total"/>-->
+                                   <field name="total"/>
                                 </tree>
                             </field>
-                       </page>
+                       </page>-->
 
                        <page string="Inputs">
                             <field name="input_line_ids" colspan="4" nolabel="1" mode="tree" editable="bottom">
@@ -329,8 +317,7 @@
                     <group col="10" colspan="4">
                         <field name="state"/>
                         <button string="Cancel" icon="terp-dialog-close" name="cancel_sheet" states="draft,hr_check,confirm"/>
-                        <!-- <button string="Compute Sheet" icon="terp-stock_format-scientific" name="compute_sheet" states="new"/>-->
-                        <button string="Recompute Sheet" icon="terp-stock_format-scientific" name="compute_sheet" type="object" states="draft"/>
+                        <button string="Compute Sheet" icon="terp-stock_format-scientific" name="compute_sheet" type="object" states="draft"/>
                         <button string="Verify Sheet" icon="terp-camera_test" name="verify_sheet" states="draft"/>
                         <button string="Approve Sheet" icon="terp-camera_test" name="final_verify_sheet" states="hr_check"/>
                         <button string="Pay Salary" icon="terp-dolar_ok!" name="process_sheet" states="confirm"/>
@@ -354,7 +341,7 @@
                         <field name="name"/>
                         <field name="employee_id"/>
                         <field name="number"/>
-                        <field name="date"/>
+                        <field name="date_from"/>
                     </group>
                     <newline/>
                     <group col="8" colspan="4" expand="0" string="Group By...">
