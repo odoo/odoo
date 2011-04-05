@@ -155,7 +155,7 @@ class crm_lead_forward_to_partner(osv.osv_memory):
         addr = partner_obj.address_get(cr, uid, [partner_id], ['contact'])
         data = {'address_id': addr['contact']}
         data.update(self.on_change_address(cr, uid, ids, addr['contact'])['value'])
-        
+
         partner = partner_obj.browse(cr, uid, [partner_id])
         user_id = partner and partner[0].user_id or False
         email = user_id and user_id.user_email or ''
@@ -285,8 +285,8 @@ class crm_lead_forward_to_partner(osv.osv_memory):
 
         body = self._get_case_history(cr, uid, defaults.get('history', 'latest'), lead.id, context=context)
         defaults.update({
-            'name' : '%s: %s' % (_('Fwd'), lead.name),
-            'description' : body,
+            'subject' : '%s: %s' % (_('Fwd'), lead.name),
+            'body' : body,
             'email_cc' : ''
         })
         return defaults
