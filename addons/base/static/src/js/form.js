@@ -101,11 +101,7 @@ openerp.base.FormView =  openerp.base.Controller.extend( /** @lends openerp.base
             this.on_invalid();
         } else {
             this.log("About to save", values)
-            this.rpc('/base/datarecord/save', {
-                model: this.model,
-                id: this.datarecord.id,
-                data: values
-            }, this.on_saved);
+            this.dataset.write(this.datarecord.id, values, this.on_saved);
         }
     },
     do_save_edit: function() {

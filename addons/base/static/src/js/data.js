@@ -93,6 +93,13 @@ openerp.base.DataSet =  openerp.base.Controller.extend( /** @lends openerp.base.
         }
     },
 
+    write: function (id, data, callback) {
+        this.rpc('/base/datarecord/save', {
+            model: this.model,
+            id: id,
+            data: data
+        }, callback);
+    },
     /**
      * Activates the previous id in the active sequence. If there is no previous id, wraps around to the last one
      * @returns itself
