@@ -392,7 +392,7 @@
           <para style="terp_default_Bold_9">Basic Salary</para>
         </td>
         <td>
-          <para style="terp_default_9">[[ formatLang(o.basic_before_leaves, dp='Account') ]] [[ o.company_id.currency_id.symbol ]] </para>
+          <para style="terp_default_9">[[ formatLang(o.contract_id.wage, dp='Account') ]] [[ o.company_id.currency_id.symbol ]] </para>
         </td>
         <td>
           <para style="terp_default_Bold_9">Leaved Deduction</para>
@@ -521,35 +521,7 @@
     <para style="terp_default_space">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="269.0,134.0,135.0" style="Table21">
-      <tr>
-        <td>
-          <para style="terp_tblheader_Details">Other Lines</para>
-        </td>
-        <td>
-          <para style="terp_tblheader_Details_Right">Payments - [[ get_month(o) ]]</para>
-        </td>
-        <td>
-          <para style="terp_tblheader_Details_Right">Deduction -[[ get_month(o) ]]</para>
-        </td>
-      </tr>
-    </blockTable>
-    <section>
-      <para style="terp_default_9">[[repeatIn(get_others(o.line_ids),'ol') ]]</para>
-      <blockTable colWidths="269.0,134.0,135.0" style="Table22">
-        <tr>
-          <td>
-            <para style="terp_default_9">[[ ol.code or '' ]]</para>
-          </td>
-          <td>
-            <para style="terp_default_Right_9">[[ ol.type in ['advance','loan','otherpay'] and formatLang(ol.total, dp='Account') or '' ]] [[ ol.type in ['advance','loan','otherpay'] and o.company_id and o.company_id.currency_id.symbol or '' ]]</para>
-          </td>
-          <td>
-            <para style="terp_default_Right_9">[[ ol.type in ['otherdeduct','installment'] and formatLang(ol.total, dp='Account') or '' ]] [[ ol.type in ['otherdeduct','installment'] and o.company_id and o.company_id.currency_id.symbol or '' ]]</para>
-          </td>
-        </tr>
-      </blockTable>
-    </section>
+   
     <blockTable colWidths="269.0,177.0,93.0" style="Table5">
       <tr>
         <td>
