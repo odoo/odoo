@@ -632,9 +632,7 @@ class user_preferences_config(osv.osv_memory):
 
     def execute(self, cr, uid, ids, context=None):
         usr_obj = self.pool.get("res.users")
-        res = self.read(cr, uid, ids, ['company_id', 'context_tz', 'context_lang', 'view', 'menu_tips'], context=context)[0]
         get_val = self.browse(cr, uid, ids)[0]
-        company_id = get_val.company_id.id
         data_ids = usr_obj.search(cr,uid,[('company_id','=',get_val.company_id.id)])
         if data_ids:
             for w_id in data_ids:
