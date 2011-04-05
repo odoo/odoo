@@ -15,8 +15,9 @@ openerp.base.FormView =  openerp.base.Controller.extend( /** @lends openerp.base
      * @param {openerp.base.DataSet} dataset the dataset this view will work with
      * @param {String} view_id the identifier of the OpenERP view object
      */
-    init: function(session, element_id, dataset, view_id) {
+    init: function(view_manager, session, element_id, dataset, view_id) {
         this._super(session, element_id);
+        this.view_manager = view_manager;
         this.dataset = dataset;
         this.model = dataset.model;
         this.view_id = view_id;
@@ -45,6 +46,10 @@ openerp.base.FormView =  openerp.base.Controller.extend( /** @lends openerp.base
             var action = $(this).data('pager-action');
             self.on_pager_action(action);
         });
+        
+        // sidebar stuff
+        if (this.view_manager.sidebar)
+            this.view_manager.sidebar.load_multi_actions();
     },
     on_record_loaded: function(record) {
         if (record.length) {

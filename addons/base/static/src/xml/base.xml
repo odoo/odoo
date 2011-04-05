@@ -118,6 +118,9 @@
     </div>
 </t>
 <t t-name="ViewManager">
+    <table class="view-manager-main-table">
+    <tr>
+    <td class="view-manager-main-content">
     <!-- TODO prefix id with the element_id of the controller t-attf-id="#{prefix}_localid" -->
     <div class="oe_vm_switch">
         <t t-foreach="views" t-as="view">
@@ -130,6 +133,11 @@
     <t t-foreach="views" t-as="view">
         <div t-attf-id="#{prefix}_view_#{view[1]}"/>
     </t>
+	</td>
+	<td class="view-manager-main-sidebar">
+	</td>
+	</tr>
+    </table>
 </t>
 <t t-name="ListView">
     <!--
@@ -416,5 +424,23 @@
 </t>
 <t t-name="SearchView.extended_search.proposition.char">
     <input t-att-id="element_id"/>
+</t>
+<t t-name="ViewManager.sidebar">
+    <div t-att-id="element_id" class="sidebar-main-div">
+
+    </div>
+</t>
+<t t-name="ViewManager.sidebar.internal">
+    <t t-set="i" t-value="0"/>
+    <t t-foreach="sections" t-as="section">
+    <ul>
+        <t t-set="j" t-value="0"/>
+        <t t-foreach="section.elements" t-as="element">
+            <li><a t-att-data-i="i" t-att-data-j="j" href="#"><t t-esc="element.text"/></a></li>
+            <t t-set="j+1" t-value="0"/>
+        </t>
+    </ul>
+    <t t-set="i" t-value="i+1"/>
+    </t>
 </t>
 </templates>

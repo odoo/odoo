@@ -3,8 +3,9 @@ openerp.base.list = function (openerp) {
 
 openerp.base.views.add('list', 'openerp.base.ListView');
 openerp.base.ListView = openerp.base.Controller.extend({
-    init: function(session, element_id, dataset, view_id) {
+    init: function(view_manager, session, element_id, dataset, view_id) {
         this._super(session, element_id);
+        this.view_manager = view_manager;
         this.dataset = dataset;
         this.model = dataset.model;
         this.view_id = view_id;
@@ -65,6 +66,10 @@ openerp.base.ListView = openerp.base.Controller.extend({
             self.$table.setGridWidth(self.$element.width());
             self.$element.children().show();
         }).trigger('resize');
+        
+        // sidebar stuff
+        if (this.view_manager.sidebar)
+            this.view_manager.sidebar.load_multi_actions();
     },
     do_fill_table: function(records) {
         this.log("do_fill_table");

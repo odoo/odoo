@@ -111,7 +111,7 @@ class ActionMungerTest(unittest2.TestCase):
         }
         changed = action.copy()
         del action['view_type']
-        self.menu.fix_view_modes(changed)
+        base.controllers.main.fix_view_modes(changed)
 
         self.assertEqual(changed, action)
 
@@ -123,7 +123,7 @@ class ActionMungerTest(unittest2.TestCase):
             "view_id": False,
             "view_mode": "tree,form,calendar"
         }
-        self.menu.fix_view_modes(action)
+        base.controllers.main.fix_view_modes(action)
 
         self.assertEqual(action, {
             "views": [[False, "list"], [False, "form"],
@@ -141,7 +141,7 @@ class ActionMungerTest(unittest2.TestCase):
             "view_id": False,
             "view_mode": "tree,form,calendar"
         }
-        self.menu.fix_view_modes(action)
+        base.controllers.main.fix_view_modes(action)
 
         self.assertEqual(action, {
             "views": [[False, "list"], [False, "form"],

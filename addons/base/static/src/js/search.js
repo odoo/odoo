@@ -1,8 +1,9 @@
 openerp.base.search = function(openerp) {
 
 openerp.base.SearchView = openerp.base.Controller.extend({
-    init: function(session, element_id, dataset, view_id, defaults) {
+    init: function(view_manager, session, element_id, dataset, view_id, defaults) {
         this._super(session, element_id);
+        this.view_manager = view_manager;
         this.dataset = dataset;
         this.model = dataset.model;
         this.view_id = view_id;
@@ -388,7 +389,7 @@ openerp.base.search.ExtendedSearch = openerp.base.BaseWidget.extend({
         var _this = this;
         openerp.base.search.add_expand_listener(this.$element);
         this.add_group();
-        this.$element.find('.searchview_extended_add_group').click(function () {
+        this.$element.find('.searchview_extended_add_group').click(function (e) {
             _this.add_group();
         });
     },
@@ -421,7 +422,7 @@ openerp.base.search.ExtendedSearchGroup = openerp.base.BaseWidget.extend({
         this._super();
         var _this = this;
         this.add_prop();
-        this.$element.find('.searchview_extended_add_proposition').click(function () {
+        this.$element.find('.searchview_extended_add_proposition').click(function (e) {
             _this.add_prop();
         });
         var delete_btn = this.$element.find('.searchview_extended_delete_group');
@@ -474,7 +475,7 @@ openerp.base.search.Filter = openerp.base.search.Input.extend({
     start: function () {
         this._super();
         var self = this;
-        this.$element.click(function () {
+        this.$element.click(function (e) {
             $(this).toggleClass('enabled');
             self.view.do_toggle_filter(self);
         });
@@ -772,7 +773,7 @@ openerp.base.search.ExtendedSearchProposition = openerp.base.BaseWidget.extend({
             _this.changed();
         });
         var delete_btn = this.$element.find('.searchview_extended_delete_prop');
-        delete_btn.click(function () {
+        delete_btn.click(function (e) {
             _this.stop();
         });
     },
