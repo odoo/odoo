@@ -32,7 +32,7 @@ from tools.translate import _
 import logging
 import xmlrpclib
 
-_logger = logging.getLogger('mailgate')
+_logger = logging.getLogger('mail')
 
 class email_thread(osv.osv):
     '''
