@@ -25,7 +25,7 @@ openerp.base.FormView =  openerp.base.Controller.extend( /** @lends openerp.base
         this.widgets = {};
         this.widgets_counter = 0;
         this.fields = {};
-        this.datarecord = null;
+        this.datarecord = {};
         this.ready = false;
     },
     start: function() {
@@ -57,13 +57,15 @@ openerp.base.FormView =  openerp.base.Controller.extend( /** @lends openerp.base
         }
     },
     on_record_loaded: function(record) {
-        if (record.length) {
-            this.datarecord = record[0];
+        if (record) {
+            this.datarecord = record;
             for (var f in this.fields) {
-                this.fields[f].set_value(this.datarecord.values[f]);
+                this.fields[f].set_value(this.datarecord[f]);
             }
             this.on_form_changed();
             this.ready = true;
+        } else {
+            this.log("No record received");
         }
         this.do_update_pager();
     },
@@ -86,18 +88,24 @@ openerp.base.FormView =  openerp.base.Controller.extend( /** @lends openerp.base
             return false;
         }
         var invalid = false;
+        var values = {};
         for (var f in this.fields) {
             f = this.fields[f];
             if (f.invalid) {
                 invalid = true;
             } else if (f.touched) {
-                this.datarecord.values[f.name] = f.get_value();
+                values[f.name] = f.get_value();
             }
         }
         if (invalid) {
             this.on_invalid();
         } else {
-            this.datarecord.save(this.on_saved);
+            this.log("About to save", values)
+            this.rpc('/base/datarecord/save', {
+                model: this.model,
+                id: this.datarecord.id,
+                data: values
+            }, this.on_saved);
         }
     },
     do_save_edit: function() {
@@ -144,8 +152,9 @@ openerp.base.FormView =  openerp.base.Controller.extend( /** @lends openerp.base
         console.info("Form invalid");
     },
     on_saved: function(r) {
-        console.log("Responsed from save", r)
-        debugger;
+        if (!r.result) {
+            this.log("Record was not saved");
+        }
         // Check response for exceptions, display error
     },
     do_search: function (domains, contexts, groupbys) {
@@ -384,7 +393,6 @@ openerp.base.form.Field = openerp.base.form.Widget.extend({
         if (node.attrs.nolabel != '1' && this.colspan > 1) {
             this.colspan--;
         }
-        // this.datarecord = this.view.datarecord ??
         this.field = view.fields_view.fields[node.attrs.name];
         this.string = node.attrs.string || this.field.string;
         this.help = node.attrs.help || this.field.help;

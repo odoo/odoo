@@ -202,26 +202,6 @@ $(document).ready(function () {
         });
         dataset.fetch();
     });
-    asyncTest("Data records", function () {
-        var dataset = new openerp.base.DataSet({
-            rpc: function (url, _params, on_success) {
-                equal('/base/dataset/find', url);
-                _.delay(on_success, 0, [
-                    {id: 1, sequence: 3, name: "dummy", age: 42},
-                    {id: 5, sequence: 7, name: "whee", age: 55}
-                ]);
-            }
-        });
-        dataset.on_fetch.add(function (records) {
-            equal(records.length, 2, "I loaded two virtual records");
-            var d1 = records[0],
-                d2 = records[1];
-            ok(d1 instanceof openerp.base.DataRecord);
-            ok(d2 instanceof openerp.base.DataRecord);
-            start();
-        });
-        dataset.fetch();
-    });
 
     var dataset;
     module("set", {

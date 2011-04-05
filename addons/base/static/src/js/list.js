@@ -72,14 +72,9 @@ openerp.base.ListView = openerp.base.Controller.extend({
             this.view_manager.sidebar.load_multi_actions();
     },
     do_fill_table: function(records) {
-        this.log("do_fill_table");
-
         this.$table
             .clearGridData()
-            .addRowData('id', _.map(records, function (record) {
-                return record.values;
-            }));
-
+            .addRowData('id', records);
     },
     do_show: function () {
         // TODO: re-trigger search

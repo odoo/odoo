@@ -66,14 +66,12 @@ openerp.base.DataSet =  openerp.base.Controller.extend( /** @lends openerp.base.
             offset: offset,
             limit: limit
         }, function (records) {
-            var r = [];
             self.offset = offset;
             self.count = records.length;    // TODO: get real count
             for (var i=0; i < records.length; i++ ) {
                 self.ids.push(records[i].id);
-                r.push(new openerp.base.DataRecord(self.session, self.model, fields, records[i]));
             }
-            callback(r);
+            callback(records);
         });
     },
     fetch_ids: function (ids, fields, callback) {
@@ -82,20 +80,16 @@ openerp.base.DataSet =  openerp.base.Controller.extend( /** @lends openerp.base.
             model: this.model,
             ids: ids,
             fields: fields
-        }, function (records) {
-            var r = [];
-            for (var i=0; i < records.length; i++ ) {
-                r.push(new openerp.base.DataRecord(self.session, self.model, fields, records[i]));
-            }
-            callback(r);
-        });
+        }, callback);
     },
     fetch_index: function (fields, callback) {
         if (_.isEmpty(this.ids)) {
             callback([]);
         } else {
             fields = fields || false;
-            this.fetch_ids([this.ids[this.index]], fields, callback);
+            this.fetch_ids([this.ids[this.index]], fields, function(records) {
+                callback(records[0]);
+            });
         }
     },
 
@@ -121,29 +115,6 @@ openerp.base.DataSet =  openerp.base.Controller.extend( /** @lends openerp.base.
             this.index = 0;
         }
         return this;
-    }
-
-});
-
-openerp.base.DataRecord =  openerp.base.Controller.extend({
-    init: function(session, model, fields, values) {
-        this._super(session, null);
-        this.model = model;
-        this.id = values.id || null;
-        this.fields = fields;
-        this.values = values;
-    },
-    on_change: function() {
-    },
-    on_reload: function() {
-    },
-    save: function(callback) {
-        console.log("datarecord", this.values)
-        this.rpc('/base/datarecord/save', {
-            model: this.model,
-            id: this.id,
-            data: this.values
-        }, callback);
     }
 });
 
