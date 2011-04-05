@@ -29,7 +29,6 @@
 #
 ##############################################################################
 
-import commands
 import subprocess
 import os
 import report
