@@ -95,6 +95,10 @@ openerp.base.ListView = openerp.base.Controller.extend({
             self.dataset.domain = results.domain;
             self.dataset.fetch(self.dataset.fields, 0, self.limit, self.do_fill_table);
         });
+    },
+    do_update: function () {
+        var self = this;
+        self.dataset.fetch(self.dataset.fields, 0, self.limit, self.do_fill_table);
     }
 });
 
