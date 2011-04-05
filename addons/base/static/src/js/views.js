@@ -298,7 +298,8 @@ openerp.base.Sidebar = openerp.base.BaseWidget.extend({
             var i = $this.attr("data-i");
             var j = $this.attr("data-i");
             var action = self.sections[i].elements[j];
-            // TODO: do something with the action
+            // I know this doesn't work, one day it will
+            new openerp.base.ActionManager(this.view_manager, null).do_action(action);
             e.stopPropagation();
             e.preventDefault();
         });
