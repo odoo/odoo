@@ -177,9 +177,9 @@ CREATE OR REPLACE view report_stock_inventory AS (
         m.company_id,
         m.state as state, m.prodlot_id as prodlot_id,
         coalesce(sum(-pt.standard_price * m.product_qty)::decimal, 0.0) as value,
-        case when pt.uom_id = m.product_uom then
+        CASE when pt.uom_id = m.product_uom THEN
             coalesce(sum(-m.product_qty)::decimal, 0.0) 
-        else
+        ELSE
             coalesce(sum(-m.product_qty * pu.factor)::decimal, 0.0) END as product_qty
     FROM
         stock_move m
@@ -200,9 +200,9 @@ CREATE OR REPLACE view report_stock_inventory AS (
         m.company_id,
         m.state as state, m.prodlot_id as prodlot_id,
         coalesce(sum(pt.standard_price * m.product_qty )::decimal, 0.0) as value,
-        case when pt.uom_id = m.product_uom  then 
+        CASE when pt.uom_id = m.product_uom  THEN 
             coalesce(sum(m.product_qty)::decimal, 0.0) 
-        else
+        ELSE
             coalesce(sum(m.product_qty * pu.factor)::decimal, 0.0) END as product_qty
     FROM
         stock_move m
