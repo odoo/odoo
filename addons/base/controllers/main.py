@@ -345,6 +345,12 @@ class DataRecord(openerpweb.Controller):
             value = r[0]
         return {'value': value}
 
+    @openerpweb.jsonrequest
+    def save(self, req, model, id, data):
+        m = req.session.model(model)
+        r = m.write([id], data)
+        return {'result': r}
+
 class View(openerpweb.Controller):
     def fields_view_get(self, session, model, view_id, view_type, transform=True):
         Model = session.model(model)

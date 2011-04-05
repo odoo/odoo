@@ -496,6 +496,21 @@ openerp.base.Loading =  openerp.base.Controller.extend({
     }
 });
 
+openerp.base.Notification =  openerp.base.Controller.extend({
+    init: function(session, element_id) {
+        this._super(session, element_id);
+        this.$element.notify({
+            speed: 500
+        });
+    },
+    add: function(title, text) {
+        this.$element.notify("create", {
+            title: title,
+            text: text
+        });
+    }
+});
+
 openerp.base.Login =  openerp.base.Controller.extend({
     init: function(session, element_id) {
         this._super(session, element_id);
@@ -656,6 +671,10 @@ openerp.base.WebClient = openerp.base.Controller.extend({
 
         this.session = new openerp.base.Session("oe_errors");
         this.loading = new openerp.base.Loading(this.session, "oe_loading");
+
+        // Do you autorize this ?
+        openerp.base.Controller.prototype.notification = new openerp.base.Notification(this.session, "oe_notification");
+
         this.header = new openerp.base.Header(this.session, "oe_header");
         this.login = new openerp.base.Login(this.session, "oe_login");
 
@@ -671,6 +690,7 @@ openerp.base.WebClient = openerp.base.Controller.extend({
         this.header.start();
         this.login.start();
         this.menu.start();
+        this.notification.add("OpenERP Client", "The openerp client has been initialized.");
     },
     on_logged: function() {
         this.action =  new openerp.base.ActionManager(this.session, "oe_app");

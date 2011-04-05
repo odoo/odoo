@@ -38,11 +38,21 @@ body.openerp {
     z-index: 1000;
     position: fixed;
     top: 0;
-    right: 0;
-    padding: 4px 8px;
+    right: 50%;
+    padding: 4px 12px;
     background: #A61300;
     color: white;
     text-align: center;
+    border: 1px solid #900;
+    border-top: none;
+    -moz-border-radius-bottomright: 8px;
+    -moz-border-radius-bottomleft: 8px;
+    border-bottom-right-radius: 8px;
+    border-bottom-left-radius: 8px;
+}
+.openerp .oe_notification {
+    z-index: 1001;
+    display: none;
 }
 
 /* Login */
@@ -67,6 +77,7 @@ body.openerp {
 .openerp .main_table {
     width: 100%;
     height: 100%;
+    background: #f0eeee;
 }
 
 /* Menu */
@@ -405,7 +416,14 @@ body.openerp {
 .openerp .required.error {
     border: 1px solid #900;
 }
+.openerp .oe_form_buttons {
+    float: left;
+}
 .openerp .oe_form_pager {
+    float: right;
+}
+
+.openerp .oe_list_pager {
     text-align: right;
 }
 
@@ -423,7 +441,7 @@ body.openerp {
     background: white;
 }
 .openerp input.field_date, .openerp input.field_datetime {
-    background: url('../img/ui/field_calendar.png') no-repeat right center;
+    background: #fff url('../img/ui/field_calendar.png') no-repeat right center;
     background-origin: content-box;
     -moz-background-origin: content;
     -moz-background-origin: content-box;
@@ -439,8 +457,12 @@ body.openerp {
     border-bottom-width: 1px;
     margin: 6px 4px 6px 1px;
 }
-.openerp input[required=required], .openerp select[required=required] {
+.openerp td.required input, .openerp td.required select {
     background-color: #D2D2FF;
+}
+.openerp td.invalid input, .openerp td.invalid select {
+    background-color: #F66;
+    border: 1px solid #D00;
 }
 
 /* jQuery UI override */
@@ -449,11 +471,22 @@ body.openerp {
 }
 
 /* Sidebar */
+.openerp .view-manager-main-table {
+    width:100%;
+}
 .openerp .view-manager-main-sidebar {
     vertical-align: top;
+    width:0;
+    padding:0;
+    margin:0;
 }
 
 .openerp .view-manager-main-sidebar .sidebar-main-div {
+    padding:0;
+    margin:0;
+}
+
+.openerp .view-manager-main-sidebar .sidebar-sub-div {
     border: solid 1px #1F1F1F;
     border-bottom-width: 0;
 }
