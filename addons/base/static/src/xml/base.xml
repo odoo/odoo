@@ -135,12 +135,14 @@
     <!--
     <h3><t t-esc="fields_view.arch['@string']"/></h3>
     -->
-    <div style="text-align:right;">
-        <input type="button" value="First"/>
-        <input type="button" value="&lt;&lt;"/>
-        0 / 0
-        <input type="button" value="&gt;&gt;"/>
-        <input type="button" value="Last"/>
+    <div class="oe_list_pager">
+        <button type="button" data-pager-action="first">First</button>
+        <button type="button" data-pager-action="previous">&lt;&lt;</button>
+
+        <span class="oe_pager_index">0</span> / <span class="oe_pager_count">0</span>
+
+        <button type="button" data-pager-action="next">&gt;&gt;</button>
+        <button type="button" data-pager-action="last">Last</button>
     </div>
     <table id="todo_use_unique_id" class="jqGrid"></table>
 </t>
