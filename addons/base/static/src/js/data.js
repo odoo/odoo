@@ -77,6 +77,7 @@ openerp.base.DataSet =  openerp.base.Controller.extend( /** @lends openerp.base.
         });
     },
     fetch_ids: function (ids, fields, callback) {
+        var self = this;
         this.rpc('/base/dataset/get', {
             model: this.model,
             ids: ids,
@@ -135,6 +136,14 @@ openerp.base.DataRecord =  openerp.base.Controller.extend({
     on_change: function() {
     },
     on_reload: function() {
+    },
+    save: function(callback) {
+        console.log("datarecord", this.values)
+        this.rpc('/base/datarecord/save', {
+            model: this.model,
+            id: this.id,
+            data: this.values
+        }, callback);
     }
 });
 

@@ -406,7 +406,14 @@ body.openerp {
 .openerp .required.error {
     border: 1px solid #900;
 }
-.openerp .oe_form_pager, .openerp .oe_list_pager {
+.openerp .oe_form_buttons {
+    float: left;
+}
+.openerp .oe_form_pager {
+    float: right;
+}
+
+.openerp .oe_list_pager {
     text-align: right;
 }
 
@@ -440,8 +447,12 @@ body.openerp {
     border-bottom-width: 1px;
     margin: 6px 4px 6px 1px;
 }
-.openerp input[required=required], .openerp select[required=required] {
+.openerp td.required input, .openerp td.required select {
     background-color: #D2D2FF;
+}
+.openerp td.invalid input, .openerp td.invalid select {
+    background-color: #F66;
+    border: 1px solid #D00;
 }
 
 /* jQuery UI override */
