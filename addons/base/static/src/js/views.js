@@ -46,27 +46,35 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
     do_action_window: function(action) {
         var self = this;
         this.action = action;
-        this.dataset = new openerp.base.DataSet(this.session, action.res_model);
-        this.dataset.start();
-
-        this.$element.html(QWeb.render("ViewManager", {"prefix": this.element_id, views: action.views}));
-
-        var searchview_loaded = this.setup_search_view(action);
-
-        this.$element.find('.oe_vm_switch button').click(function() {
-            self.on_mode_switch($(this).data('view-type'));
-        });
-        _.each(action.views, function(view) {
-            self.views[view[1]] = { view_id: view[0], controller: null };
-        });
 
         // switch to the first one in sequence
-        var inital_view_loaded = this.on_mode_switch(action.views[0][1]);
+        var inital_view_loaded = this.setup_initial_view(action.res_model,action.views);
+
+        var searchview_loaded = this.setup_search_view(action);
 
         if (action['auto_search']) {
             $.when(searchview_loaded, inital_view_loaded)
                 .then(this.searchview.do_search);
         }
+    },
+    /**
+     * @returns {jQuery.Deferred} initial view loading promise
+     */
+    setup_initial_view: function(model,views) {
+        var self = this;
+        this.dataset = new openerp.base.DataSet(this.session, model);
+        this.dataset.start();
+
+        this.$element.html(QWeb.render("ViewManager", {"prefix": this.element_id, views: views}));
+
+        this.$element.find('.oe_vm_switch button').click(function() {
+            self.on_mode_switch($(this).data('view-type'));
+        });
+        _.each(views, function(view) {
+            self.views[view[1]] = { view_id: view[0], controller: null };
+        });
+
+        return this.on_mode_switch(views[0][1]);
     },
     /**
      * Asks the view manager to switch visualization mode.
@@ -86,10 +94,12 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
             this.views[view_type].controller = controller;
         }
 
-        if (view.controller.searchable === false) {
-            this.searchview.hide();
-        } else {
-            this.searchview.show();
+        if(this.searchview) {
+            if (view.controller.searchable === false) {
+                this.searchview.hide();
+            } else {
+                this.searchview.show();
+            }
         }
 
         this.$element
@@ -144,7 +154,6 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
         });
         return this.searchview.start();
     },
-
     /**
      * Called when one of the view want to execute an action
      */
@@ -155,7 +164,7 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
     on_remove: function() {
     },
     on_edit: function() {
-    },
+    }
 });
 
 openerp.base.ViewManagerRoot = openerp.base.ViewManager.extend({
