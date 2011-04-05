@@ -154,8 +154,10 @@ openerp.base.FormView =  openerp.base.Controller.extend( /** @lends openerp.base
     on_saved: function(r) {
         if (!r.result) {
             this.log("Record was not saved");
+        } else {
+            // Check response for exceptions, display error
+            this.notification.add("Record saved", "The record #" + this.datarecord.id + " has been saved.");
         }
-        // Check response for exceptions, display error
     },
     do_search: function (domains, contexts, groupbys) {
     },

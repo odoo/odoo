@@ -4,6 +4,13 @@
 <templates id="template" xml:space="preserve">
 <t t-name="Interface">
     <div id="oe_loading" class="loading"></div>
+    <div id="oe_notification" class="oe_notification">
+        <div id="oe_notification_default">
+            <a class="ui-notify-cross ui-notify-close" href="#">x</a>
+            <h1>#{title}</h1>
+            <p>#{text}</p>
+        </div>
+    </div>
     <div id="oe_login" class="login"></div>
     <div style="position: absolute; right: 2px; top: 38px;">
         <button onclick="QWeb.add_template('base.xml'); $('body').css('background-color', '#FFFF9C'); setTimeout(function() { $('body').css('background-color', '#FFF'); }, 500);">Reload QWEB</button>
