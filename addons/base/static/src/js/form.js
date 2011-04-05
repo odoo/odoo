@@ -548,7 +548,7 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
         this.template = "FieldOne2Many";
         this.viewmanager = null;
         this.operations = [];
-        thise.iewq.on
+        // thise.iewq.on
 
     },
     set_value: function(value) {
