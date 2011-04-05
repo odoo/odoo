@@ -431,16 +431,22 @@
     </div>
 </t>
 <t t-name="ViewManager.sidebar.internal">
-    <t t-set="i" t-value="0"/>
-    <t t-foreach="sections" t-as="section">
-    <ul>
-        <t t-set="j" t-value="0"/>
-        <t t-foreach="section.elements" t-as="element">
-            <li><a t-att-data-i="i" t-att-data-j="j" href="#"><t t-esc="element.text"/></a></li>
-            <t t-set="j+1" t-value="0"/>
+    <t t-if="sections.length &gt; 0 &amp;&amp; _.detect(sections, function(x) {return x.elements.length &gt; 0;}) != undefined">
+    <div t-att-id="element_id" class="sidebar-sub-div">
+        <t t-set="i" t-value="0"/>
+        <t t-foreach="sections" t-as="section">
+        <t t-if="section.elements.length &gt; 0">
+        <ul>
+            <t t-set="j" t-value="0"/>
+            <t t-foreach="section.elements" t-as="element">
+                <li><a t-att-data-i="i" t-att-data-j="j" href="#"><t t-esc="element.text"/></a></li>
+                <t t-set="j+1" t-value="0"/>
+            </t>
+        </ul>
         </t>
-    </ul>
-    <t t-set="i" t-value="i+1"/>
+        <t t-set="i" t-value="i+1"/>
+        </t>
+    </div>
     </t>
 </t>
 </templates>

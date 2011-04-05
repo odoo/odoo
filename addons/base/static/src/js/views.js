@@ -300,7 +300,7 @@ openerp.base.Sidebar = openerp.base.BaseWidget.extend({
         });
     },
     refresh: function() {
-        this.$element.html(QWeb.render("ViewManager.sidebar.internal", this));
+        this.$element.html(QWeb.render("ViewManager.sidebar.internal", _.extend({_:_}, this)));
         var self = this;
         this.$element.find("a").click(function(e) {
             $this = jQuery(this);
