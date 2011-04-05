@@ -41,17 +41,10 @@ openerp.base.FormView =  openerp.base.Controller.extend( /** @lends openerp.base
         _.each(this.widgets, function(w) {
             w.start();
         });
-        this.$element.find('button.pager_previous').click(this.on_previous);
-        this.$element.find('button.pager_next').click(this.on_next);
-        this.$element.find('button.form_save').click(this.do_save);
-    },
-    on_previous: function() {
-        this.dataset.previous();
-        this.dataset.fetch_index(this.fields_view.fields, this.on_record_loaded);
-    },
-    on_next: function() {
-        this.dataset.next();
-        this.dataset.fetch_index(this.fields_view.fields, this.on_record_loaded);
+        this.$element.find('div.oe_form_pager button[data-pager-action]').click(function() {
+            var action = $(this).data('pager-action');
+            self.on_pager_action(action);
+        });
     },
     on_record_loaded: function(record) {
         if (record.length) {
@@ -108,8 +101,28 @@ openerp.base.FormView =  openerp.base.Controller.extend( /** @lends openerp.base
         this.$element.hide();
     },
     do_update_pager: function() {
-        this.$element.find('span.dataset_index').html(this.dataset.index + 1);
-        this.$element.find('span.dataset_count').html(this.dataset.count);
+        var $pager = this.$element.find('div.oe_form_pager');
+        $pager.find("button[data-pager-action='first'], button[data-pager-action='previous']").attr('disabled', this.dataset.index == 0);
+        $pager.find("button[data-pager-action='next'], button[data-pager-action='last']").attr('disabled', this.dataset.index == this.dataset.ids.length - 1);
+        this.$element.find('span.oe_pager_index').html(this.dataset.index + 1);
+        this.$element.find('span.oe_pager_count').html(this.dataset.count);
+    },
+    on_pager_action: function(action) {
+        switch (action) {
+            case 'first':
+                this.dataset.index = 0;
+                break;
+            case 'previous':
+                this.dataset.previous();
+                break;
+            case 'next':
+                this.dataset.next();
+                break;
+            case 'last':
+                this.dataset.index = this.dataset.ids.length - 1;
+                break;
+        }
+        this.dataset.fetch_index(this.fields_view.fields, this.on_record_loaded);
     },
     on_invalid: function() {
     },
