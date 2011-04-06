@@ -545,18 +545,16 @@
                 <attribute name="string">Configure Sales Order Logistics</attribute>
                   </separator>
                   <xpath expr="//label[@string='description']" position="attributes">
-                    <attribute name="string">Setup your sales workflow and default values.</attribute>
+                    <attribute name="string">Define your invoice method. A services company usually invoices based on sale orders while a retailer usually invoices based on deliveries.</attribute>
                   </xpath>
                 <xpath expr='//separator[@string="vsep"]' position='attributes'>
                       <attribute name='rowspan'>15</attribute>
                       <attribute name='string'></attribute>
                   </xpath>
                 <group string="res_config_contents" position="replace">
-                  <field name="picking_policy" groups="base.group_extended"/>
-                  <newline/>
                   <field name="order_policy"/>
                   <newline/>
-                  <field name="step"/>
+                  <field name="step" groups="base.group_extended"/>
                 </group>
                 <xpath expr='//button[@name="action_skip"]' position='replace'/>
               </data>
