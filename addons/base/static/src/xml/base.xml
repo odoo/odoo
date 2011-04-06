@@ -197,7 +197,7 @@
     <t t-raw="console.log('Unhandled widget', widget)"/>
 </t>
 <t t-name="WidgetFrame">
-    <table border="0" width="100%" cellpadding="2" cellspacing="2">
+    <table border="0" width="100%" cellpadding="2" cellspacing="2" class="oe_frame">
     <tr t-foreach="widget.table" t-as="row">
         <t t-foreach="row" t-as="td">
             <td t-att-colspan="td.colspan gt 1 ? td.colspan : undefined"
@@ -205,6 +205,7 @@
                 t-att-nowrap="td.is_field_label ? 'true' : undefined"
                 t-att-valign="td.table ? 'top' : undefined"
                 t-att-id="td.element_id"
+                t-att-class="'container_' + td.type"
             >
                 <t t-raw="td.render()"/>
             </td>
@@ -294,7 +295,7 @@
 <t t-name="WidgetButton">
     <button type="button" t-att-id="widget.element_id" t-att-title="widget.help" style="width: 100%" class="button">
         <img t-if="widget.node.attrs.icon" t-att-src="'/base/static/src/img/icons/' + widget.node.attrs.icon + '.png'" width="16" height="16"/>
-        <t t-esc="widget.string"/>
+        <span t-if="widget.string"><t t-esc="widget.string"/></span>
     </button>
 </t>
 <t t-name="SearchView">
