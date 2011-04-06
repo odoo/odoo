@@ -394,7 +394,7 @@ This is useful for CRM leads for example"),
 
         elif template['track_campaign_item']:
             # get appropriate message-id
-            values.update({'message_id': smtp_pool.generate_tracking_message_id(record_id)})
+            values.update({'message_id': tools.generate_tracking_message_id(record_id)})
 
         #Use signatures if allowed
         if template.user_signature:
