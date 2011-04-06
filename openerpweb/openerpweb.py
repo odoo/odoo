@@ -268,9 +268,12 @@ class JsonRequest(object):
     """
 
     def parse(self, request):
+        self.request = request
         self.params = request.get("params", {})
+        self.httpsession_id = "cookieid"
+        self.httpsession = cherrypy.session
         self.session_id = self.params.pop("session_id", None) or uuid.uuid4().hex
-        self.session = cherrypy.session.setdefault(self.session_id, OpenERPSession())
+        self.session = self.httpsession.setdefault(self.session_id, OpenERPSession())
         self.context = self.params.pop('context', None)
         return self.params
 
@@ -289,16 +292,16 @@ class JsonRequest(object):
         :returns: a string-encoded JSON-RPC2 reply
         :rtype: bytes
         '''
+        # Read POST content of POST parameter named request
         if requestf:
-            request = simplejson.load(
-                requestf, object_hook=nonliterals.non_literal_decoder)
+            request = simplejson.load(requestf, object_hook=nonliterals.non_literal_decoder)
         else:
-            request = simplejson.loads(
-                request, object_hook=nonliterals.non_literal_decoder)
+            request = simplejson.loads(request, object_hook=nonliterals.non_literal_decoder)
         try:
             print "--> %s.%s %s" % (controller.__class__.__name__, method.__name__, request)
             error = None
-            result = method(controller, self, **self.parse(request))
+            self.parse(request)
+            result = method(controller, self, **self.params)
         except OpenERPUnboundException:
             error = {
                 'code': 100,
@@ -337,8 +340,7 @@ class JsonRequest(object):
         print "<--", response
         print
 
-        content = simplejson.dumps(
-            response, cls=nonliterals.NonLiteralEncoder)
+        content = simplejson.dumps(response, cls=nonliterals.NonLiteralEncoder)
         cherrypy.response.headers['Content-Type'] = 'application/json'
         cherrypy.response.headers['Content-Length'] = len(content)
         return content

@@ -20,8 +20,7 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
             if (this.viewmanager) {
                 this.viewmanager.stop();
             }
-            this.viewmanager = new openerp.base.ViewManager(this.session,this.element_id, false);
-            this.viewmanager.do_action_window(action);
+            this.viewmanager = new openerp.base.ViewManagerAction(this.session,this.element_id, action, false);
             this.viewmanager.start();
         }
     }
@@ -33,63 +32,33 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
 openerp.base.views = new openerp.base.Registry();
 
 openerp.base.ViewManager =  openerp.base.Controller.extend({
-    init: function(session, element_id, desactivate_sidebar) {
+    init: function(session, element_id, model, views) {
         this._super(session, element_id);
-        this.action = null;
-        this.dataset = null;
+        this.model = model;
+        this.dataset = new openerp.base.DataSet(this.session, model);
         this.searchview = null;
         this.active_view = null;
+        this.views_src = views;
         this.views = {};
-        if (desactivate_sidebar)
-            this.sidebar = null;
-        else
-            this.sidebar = new openerp.base.Sidebar(null, this);
-    },
-    start: function() {
-        if (this.sidebar) {
-            this.$element.find('.view-manager-main-sidebar').html(this.sidebar.render());
-            this.sidebar.start();
-        }
-    },
-    stop: function() {
-        // should be replaced by automatic destruction implemented in BaseWidget
-        if (this.sidebar) {
-            this.sidebar.stop();
-        }
-        this._super();
-    },
-    do_action_window: function(action) {
-        var self = this;
-        this.action = action;
 
-        // switch to the first one in sequence
-        var inital_view_loaded = this.setup_initial_view(action.res_model,action.views);
-
-        var searchview_loaded = this.setup_search_view(action);
-
-        if (action['auto_search']) {
-            $.when(searchview_loaded, inital_view_loaded)
-                .then(this.searchview.do_search);
-        }
     },
     /**
      * @returns {jQuery.Deferred} initial view loading promise
      */
-    setup_initial_view: function(model,views) {
+    start: function() {
         var self = this;
-        this.dataset = new openerp.base.DataSet(this.session, model);
         this.dataset.start();
-
-        this.$element.html(QWeb.render("ViewManager", {"prefix": this.element_id, views: views}));
-
+        this.$element.html(QWeb.render("ViewManager", {"prefix": this.element_id, views: this.views_src}));
         this.$element.find('.oe_vm_switch button').click(function() {
             self.on_mode_switch($(this).data('view-type'));
         });
-        _.each(views, function(view) {
+        _.each(this.views_src, function(view) {
             self.views[view[1]] = { view_id: view[0], controller: null };
         });
-
-        return this.on_mode_switch(views[0][1]);
+        // switch to the first one in sequence
+        return this.on_mode_switch(this.views_src[0][1]);
+    },
+    stop: function() {
     },
     /**
      * Asks the view manager to switch visualization mode.
@@ -103,8 +72,8 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
         var view = this.views[view_type];
         if (!view.controller) {
             // Lazy loading of views
-            var controller = new (openerp.base.views.get_object(view_type))(
-                this, this.session, this.element_id + "_view_" + view_type, this.dataset, view.view_id);
+            var controllerclass = openerp.base.views.get_object(view_type);
+            var controller = new controllerclass( this, this.session, this.element_id + "_view_" + view_type, this.dataset, view.view_id);
             view_promise = controller.start();
             this.views[view_type].controller = controller;
         }
@@ -134,21 +103,46 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
         return view_promise;
     },
     /**
-     * Extract search view defaults from the current action's context.
-     *
-     * These defaults are of the form {search_default_*: value}
-     *
-     * @returns {Object} a clean defaults mapping of {field_name: value}
+     * Called when one of the view want to execute an action
      */
-    search_defaults: function () {
-        var defaults = {};
-        _.each(this.action.context, function (value, key) {
-            var match = /^search_default_(.*)$/.exec(key);
-            if (match) {
-                defaults[match[1]] = value;
-            }
-        });
-        return defaults;
+    on_action: function(action) {
+    },
+    on_create: function() {
+    },
+    on_remove: function() {
+    },
+    on_edit: function() {
+    }
+});
+
+openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
+    init: function(session, element_id, action, sidebar) {
+        this._super(session, element_id, action.res_model, action.views);
+        this.action = action;
+        this.sidebar = sidebar;
+        if (sidebar)
+            this.sidebar = new openerp.base.Sidebar(null, this);
+    },
+    start: function() {
+        var self = this;
+        var inital_view_loaded = this._super();
+        if (this.sidebar) {
+            this.$element.find('.view-manager-main-sidebar').html(this.sidebar.render());
+            this.sidebar.start();
+        }
+        var searchview_loaded = this.setup_search_view(this.action);
+
+        if (this.action['auto_search']) {
+            $.when(searchview_loaded, inital_view_loaded)
+                .then(this.searchview.do_search);
+        }
+    },
+    stop: function() {
+        // should be replaced by automatic destruction implemented in BaseWidget
+        if (this.sidebar) {
+            this.sidebar.stop();
+        }
+        this._super();
     },
     /**
      * Sets up the current viewmanager's search view.
@@ -170,24 +164,22 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
         return this.searchview.start();
     },
     /**
-     * Called when one of the view want to execute an action
+     * Extract search view defaults from the current action's context.
+     *
+     * These defaults are of the form {search_default_*: value}
+     *
+     * @returns {Object} a clean defaults mapping of {field_name: value}
      */
-    on_action: function(action) {
+    search_defaults: function () {
+        var defaults = {};
+        _.each(this.action.context, function (value, key) {
+            var match = /^search_default_(.*)$/.exec(key);
+            if (match) {
+                defaults[match[1]] = value;
+            }
+        });
+        return defaults;
     },
-    on_create: function() {
-    },
-    on_remove: function() {
-    },
-    on_edit: function() {
-    }
-});
-
-openerp.base.ViewManagerRoot = openerp.base.ViewManager.extend({
-// Extends view manager
-});
-
-openerp.base.ViewManagerUsedAsAMany2One = openerp.base.ViewManager.extend({
-// Extends view manager
 });
 
 openerp.base.BaseWidget = openerp.base.Controller.extend({
@@ -320,7 +312,6 @@ openerp.base.Sidebar = openerp.base.BaseWidget.extend({
 });
 
 openerp.base.views.add('calendar', 'openerp.base.CalendarView');
-
 openerp.base.CalendarView = openerp.base.Controller.extend({
     start: function () {
         this._super();

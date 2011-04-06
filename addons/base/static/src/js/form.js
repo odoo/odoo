@@ -625,6 +625,14 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
     }
 });
 
+openerp.base.form.FieldOne2ManyDatasSet = openerp.base.DataSet.extend({
+// Extends view manager
+});
+
+openerp.base.form.FieldOne2ManyViewManager = openerp.base.ViewManager.extend({
+// Extends view manager
+});
+
 openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
     init: function(view, node) {
         this._super(view, node);
@@ -636,20 +644,14 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
     start: function() {
         this._super.apply(this, arguments);
         this.log("o2m.start");
-        this.viewmanager = new openerp.base.ViewManager(this.view.session, this.element_id);
-        this.viewmanager.searchable = false;
-        var action = {
-            res_model: this.field.relation,
-            views: [ [false,"list"], ],
-        };
-        this.viewmanager.do_action_window(action);
-
+        var action = { res_model: this.field.relation, views: [ [false,"list"], ], };
+        this.viewmanager = new openerp.base.ViewManagerAction(this.view.session, this.element_id, action);
     },
     set_value: function(value) {
         this.value = value;
         this.log("o2m.set_value",value);
         this.viewmanager.dataset.ids = value;
-        this.viewmanager.views.list.controller.do_update();
+        // this.viewmanager.views.list.controller.do_update();
     },
     get_value: function(value) {
         return this.operations;

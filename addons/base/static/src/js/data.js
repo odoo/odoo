@@ -42,6 +42,25 @@ openerp.base.DataSet =  openerp.base.Controller.extend( /** @lends openerp.base.
     start: function() {
     },
 
+    previous: function () {
+        this.index -= 1;
+        if (this.index < 0) {
+            this.index = this.ids.length - 1;
+        }
+        return this;
+    },
+    next: function () {
+        this.index += 1;
+        if (this.index >= this.ids.length) {
+            this.index = 0;
+        }
+        return this;
+    }
+
+    default_get: function() {
+    },
+    create: function() {
+    },
     /**
      * Fetch all the records selected by this DataSet, based on its domain
      * and context.
@@ -54,6 +73,7 @@ openerp.base.DataSet =  openerp.base.Controller.extend( /** @lends openerp.base.
      * @param {Number} [limit=null] The maximum number of records to return
      * @returns itself
      */
+    // Rename into read() ?
     fetch: function (fields, offset, limit, callback) {
         var self = this;
         offset = offset || 0;
@@ -92,37 +112,22 @@ openerp.base.DataSet =  openerp.base.Controller.extend( /** @lends openerp.base.
             });
         }
     },
-
     write: function (id, data, callback) {
         this.rpc('/base/datarecord/save', {
             model: this.model,
             id: id,
             data: data
+            //context: this.context,
         }, callback);
     },
-    /**
-     * Activates the previous id in the active sequence. If there is no previous id, wraps around to the last one
-     * @returns itself
-     */
-    previous: function () {
-        this.index -= 1;
-        if (this.index < 0) {
-            this.index = this.ids.length - 1;
-        }
-        return this;
+    unlink: function() {
     },
+});
 
-    /**
-     * Activates the next id in the active sequence. If there is no next id, wraps around to the first one
-     * @returns itself
-     */
-    next: function () {
-        this.index += 1;
-        if (this.index >= this.ids.length) {
-            this.index = 0;
-        }
-        return this;
-    }
+openerp.base.DataSetSearch =  openerp.base.DataSet.extend( /** @lends openerp.base.DataSet# */{
+});
+
+openerp.base.DataSetRelational =  openerp.base.DataSet.extend( /** @lends openerp.base.DataSet# */{
 });
 
 };
