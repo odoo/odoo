@@ -233,7 +233,7 @@
     </div>
 </t>
 <t t-name="WidgetLabel">
-    <label t-att-for="widget.element_id" t-att-title="widget.help" style="display: block; text-align: right;"
+    <label t-att-for="widget.element_id + '_field'" t-att-title="widget.help" style="display: block; text-align: right;"
            t-att-ondblclick="'console.log(\'' + widget.element_id + '\', openerp.screen.' + widget.element_id + ')'">
         <t t-esc="widget.string"/>
         <span t-if="widget.help">?</span>
@@ -243,38 +243,50 @@
 <t t-name="FieldChar">
     <input type="text"
         t-att-name="widget.name"
+        t-att-id="widget.element_id + '_field'"
         t-att-class="'field_' + widget.type" style="width: 100%"
     />
 </t>
 <t t-name="FieldText">
     <textarea rows="6" style="width: 100%;"
         t-att-name="widget.name"
+        t-att-id="widget.element_id + '_field'"
         t-att-class="'field_' + widget.type"
     ></textarea>
 </t>
 <t t-name="FieldDate">
     <input type="text" style="width: 100%"
         t-att-name="widget.name"
+        t-att-id="widget.element_id + '_field'"
         t-att-class="'field_' + widget.type"
     />
 </t>
 <t t-name="FieldDatetime">
     <input type="text" style="width: 100%"
         t-att-name="widget.name"
+        t-att-id="widget.element_id + '_field'"
         t-att-class="'field_' + widget.type"
     />
 </t>
 <t t-name="FieldSelection">
-    <select t-att-name="widget.name" t-att-id="widget.element_id" t-att-class="'field_' + widget.type" style="width: 100%">
-        <t t-foreach="widget.field.selection" t-as="options">
-        <option t-att-value="options[0]">
-            <t t-esc="options[1]"/>
-        </option>
-        </t>
+    <select
+        t-att-name="widget.name"
+        t-att-id="widget.element_id + '_field'"
+        t-att-class="'field_' + widget.type"
+        style="width: 100%">
+            <t t-foreach="widget.field.selection" t-as="options">
+                <option t-att-value="options[0]">
+                    <t t-esc="options[1]"/>
+                </option>
+            </t>
     </select>
 </t>
 <t t-name="FieldMany2One">
-    <input type="text" t-att-name="widget.name" t-att-id="widget.element_id" t-att-class="'field_' + widget.type" style="width: 100%;"/>
+    <input type="text"
+        t-att-name="widget.name"
+        t-att-id="widget.element_id + '_field'"
+        t-att-class="'field_' + widget.type"
+        style="width: 100%;"/>
 </t>
 <t t-name="FieldOne2Many">
     <div t-att-id="widget.element_id">
@@ -290,10 +302,16 @@
     <input type="text" t-att-name="widget.name" t-att-id="widget.element_id" t-att-class="'field_' + widget.type" style="width: 100%" placeholder="Widget Reference"/>
 </t>
 <t t-name="FieldBoolean">
-    <input type="checkbox" t-att-name="widget.name" t-att-id="widget.element_id" t-att-class="'field_' + widget.type"/>
+    <input type="checkbox"
+        t-att-name="widget.name"
+        t-att-id="widget.element_id + '_field'"
+        t-att-class="'field_' + widget.type"/>
 </t>
 <t t-name="WidgetButton">
-    <button type="button" t-att-id="widget.element_id" t-att-title="widget.help" style="width: 100%" class="button">
+    <button type="button"
+        t-att-id="widget.element_id + '_button'"
+        t-att-title="widget.help"
+        style="width: 100%" class="button">
         <img t-if="widget.node.attrs.icon" t-att-src="'/base/static/src/img/icons/' + widget.node.attrs.icon + '.png'" width="16" height="16"/>
         <span t-if="widget.string"><t t-esc="widget.string"/></span>
     </button>
