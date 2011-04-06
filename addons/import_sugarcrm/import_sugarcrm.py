@@ -303,6 +303,16 @@ def import_partners(sugar_obj, cr, uid, context=None):
                 address_obj.write(cr,uid,address.id,{'partner_id':data_id[0]})                
     return True
 
+def get_category(sugar_obj, cr, uid, model, name, context=None):
+    categ_id = False
+    categ_obj = sugar_obj.pool.get('crm.case.categ')
+    categ_ids = categ_obj.search(cr, uid, [('object_id.model','=',model), ('name', 'like', name)] )
+    if categ_ids:
+         categ_id = categ_ids[0]
+    else:
+         categ_id = categ_obj.create(cr, uid, {'name': name, 'object_id.model': model})
+    return categ_id     
+
 def get_alarm_id(sugar_obj, cr, uid, val, context=None):
     
     alarm_dict = {'60': '1 minute before',
@@ -347,31 +357,51 @@ def get_task_state(sugar_obj, cr, uid, val, context=None):
         },}
     state = state_dict['status'].get(val, '')
     return state    
-    
+
+def get_account(sugar_obj, cr, uid, val, context=None):
+    if not context:
+        context = {}
+    partner_id = False    
+    partner_address_id = False
+    model_obj = sugar_obj.pool.get('ir.model.data')
+    if val.get('parent_type') == 'Accounts':
+        model_ids = model_obj.search(cr, uid, [('name', '=', val.get('parent_id')), ('model', '=', 'res.partner')])
+        if model_ids:
+            model = model_obj.browse(cr, uid, model_ids)[0]
+            partner_id = model.res_id
+            
+    if val.get('parent_type') == 'Contacts':
+        model_ids = model_obj.search(cr, uid, [('name', '=', val.get('parent_id')), ('model', '=', 'res.partner.address')])
+        for model in model_obj.browse(cr, uid, model_ids):
+            partner_address_id = model.res_id
+    return partner_id, partner_address_id                             
+
 def import_tasks(sugar_obj, cr, uid, context=None):
     if not context:
         context = {}
+    partner_id = False
+    partner_address_id = False        
     map_task = {'id' : 'id',
                 'name': 'name',
                 'date': 'date_entered',
                 'user_id/id': 'assigned_user_id',
                 'categ_id/.id': 'categ_id/.id',
-                'partner_address_id/name': 'contact_name',
+                'partner_id/.id': 'partner_id/.id',
+                'partner_address_id/.id': 'partner_address_id/.id',
                 'state': 'state'
     }
     meeting_obj = sugar_obj.pool.get('crm.meeting')
-    categ_obj = sugar_obj.pool.get('crm.case.categ')
+    model_obj = sugar_obj.pool.get('ir.model.data')
     PortType, sessionid = sugar.login(context.get('username', ''), context.get('password', ''), context.get('url',''))
-    categ_ids = categ_obj.search(cr, uid, [('object_id.model','=','crm.meeting'), ('name', 'like', 'Tasks')])
-    if categ_ids:
-        categ_id = categ_ids[0]
-    else:
-        categ_id = categ_obj.create(cr, uid, {'name': 'Tasks', 'object_id.model': 'crm.meeting'})
+    categ_id = get_category(sugar_obj, cr, uid, 'crm.meeting', 'Tasks')
     sugar_data = sugar.search(PortType, sessionid, 'Tasks')
     for val in sugar_data:
         partner_xml_id = find_mapped_id(sugar_obj, cr, uid, 'res.partner.address', val.get('contact_id'), context)
         if not partner_xml_id:
-            raise osv.except_osv(_('Warning !'), _('Reference Partner %s cannot be created, due to Lower Record Limit in SugarCRM Configuration.') % val.get('contact_name'))
+            raise osv.except_osv(_('Warning !'), _('Reference Contact %s cannot be created, due to Lower Record Limit in SugarCRM Configuration.') % val.get('contact_name'))
+        partner_id, partner_address_id = get_account(sugar_obj, cr, uid, val, context)
+        val['partner_id/.id'] = partner_id
+        val['partner_address_id/.id'] = partner_address_id
         val['categ_id/.id'] = categ_id
         val['state'] = get_task_state(sugar_obj, cr, uid, val.get('status'), context=None)
         fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_task)
@@ -381,6 +411,8 @@ def import_tasks(sugar_obj, cr, uid, context=None):
 def import_meetings(sugar_obj, cr, uid, context=None):
     if not context:
         context = {}
+    partner_id = False
+    partner_address_id = False    
     map_meeting = {'id' : 'id',
                     'name': 'name',
                     'date': 'date_start',
@@ -388,38 +420,69 @@ def import_meetings(sugar_obj, cr, uid, context=None):
                     'location': 'location',
                     'alarm_id/.id': 'alarm_id/.id',
                     'user_id/id': 'assigned_user_id',
+                    'partner_id/.id':'partner_id/.id',
+                    'partner_address_id/.id':'partner_address_id/.id',
                     'state': 'state'
     }
     meeting_obj = sugar_obj.pool.get('crm.meeting')
+    model_obj = sugar_obj.pool.get('ir.model.data')
     PortType, sessionid = sugar.login(context.get('username', ''), context.get('password', ''), context.get('url',''))
     sugar_data = sugar.search(PortType, sessionid, 'Meetings')
     for val in sugar_data:
+        partner_id, partner_address_id = get_account(sugar_obj, cr, uid, val, context)
+        val['partner_id/.id'] = partner_id
+        val['partner_address_id/.id'] = partner_address_id
         val['state'] = get_meeting_state(sugar_obj, cr, uid, val.get('status'),context)
         val['alarm_id/.id'] = get_alarm_id(sugar_obj, cr, uid, val.get('reminder_time'), context)
         fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_meeting)
         meeting_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', noupdate=True, context=context)
     return True    
 
+def get_calls_state(sugar_obj, cr, uid, val,context=None):
+    if not context:
+        context = {}
+    state = False
+    state_dict = {'status': #field in the sugarcrm database
+        { #Mapping of sugarcrm stage : openerp calls stage
+            'Planned' : 'open',
+            'Held':'done',
+            'Not Held': 'pending',
+        },}
+    state = state_dict['status'].get(val, '')
+    return state   
+
 
 def import_calls(sugar_obj, cr, uid, context=None):
     if not context:
         context = {}
+    partner_id = False
+    partner_address_id = False        
     map_calls = {'id' : 'id',
                     'name': 'name',
                     'date': 'date_start',
                     'duration': ['duration_hours', 'duration_minutes'],
                     'user_id/id': 'assigned_user_id',
+                    'partner_id/.id': 'partner_id/.id',
+                    'partner_address_id/.id': 'partner_address_id/.id',
                     'categ_id/.id': 'categ_id/.id',
                    'state': 'state',
     }
     phonecall_obj = sugar_obj.pool.get('crm.phonecall')
+    partner_address_obj = sugar_obj.pool.get('res.partner.address')
+    model_obj = sugar_obj.pool.get('ir.model.data')
     PortType, sessionid = sugar.login(context.get('username', ''), context.get('password', ''), context.get('url',''))
     sugar_data = sugar.search(PortType, sessionid, 'Calls')
     for val in sugar_data:
+        categ_id = get_category(sugar_obj, cr, uid, 'crm.phonecall', val.get('direction'))         
+        val['categ_id/.id'] = categ_id
+        partner_id, partner_address_id = get_account(sugar_obj, cr, uid, val, context)
+        val['partner_id/.id'] = partner_id
+        val['partner_address_id/.id'] = partner_address_id
+        val['state'] =  get_calls_state(sugar_obj, cr, uid, val.get('status'), context)  
         fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_calls)
         phonecall_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', noupdate=True, context=context)
-    return True    
-
+    return True
+    
 def import_resources(sugar_obj, cr, uid, context=None):
     if not context:
         context = {}
@@ -484,6 +547,33 @@ def get_contact_title(sugar_obj, cr, uid, salutation, domain, context=None):
          title_id = contact_title_obj.create(cr, uid, {'name': salutation, 'shortcut': salutation, 'domain': domain})
     return title_id
     
+def import_emails(sugar_obj, cr, uid, context=None):
+    
+    map_emails = {'id': 'id',
+    'name':'name',
+    'date':'date_sent',
+    'email_from': 'from_addr_name',
+    'email_to': 'reply_to_addr',
+    'email_cc': 'cc_addrs_names',
+    'email_bcc': 'bcc_addrs_names',
+    'message_id': 'message_id',
+    'user_id/id': 'assigned_user_id',
+    'description': 'description_html',
+    'res_id': 'res_id',
+    'model': 'model',
+    }
+    mailgate_obj = sugar_obj.pool.get('mailgate.message')
+    model_obj = sugar_obj.pool.get('ir.model.data')
+    PortType, sessionid = sugar.login(context.get('username', ''), context.get('password', ''), context.get('url',''))
+    sugar_data = sugar.search(PortType, sessionid, 'Emails')
+    for val in sugar_data:
+        model_ids = model_obj.search(cr, uid, [('name', 'like', val.get('parent_id'))])
+        for model in model_obj.browse(cr, uid, model_ids):
+            val['res_id'] = model.res_id
+            val['model'] = model.model
+        fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_emails)
+        mailgate_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', noupdate=True, context=context)
+    return True    
     
 def import_leads(sugar_obj, cr, uid, context=None):
     if not context:
@@ -617,13 +707,18 @@ MAP_FIELDS = {'Opportunities':  #Object Mapping name
                      'process' : import_tasks,
                     },  
               'Calls': 
-                    {'dependencies' : ['Users'],
+                    {'dependencies' : ['Users', 'Accounts', 'Contacts'],
                      'process' : import_calls,
                     },                        
               'Employees': 
                     {'dependencies' : ['Resources'],
                      'process' : import_employees,
+                    },
+              'Emails': 
+                    {'dependencies' : ['Users'],
+                     'process' : import_emails,
                     },    
+                        
               'Resources': 
                     {'dependencies' : ['Users'],
                      'process' : import_resources,
@@ -644,6 +739,7 @@ class import_sugarcrm(osv.osv):
         'employee': fields.boolean('Employee', help="If Employees is checked, SugarCRM Employees data imported in openERP employees form"),
         'meeting': fields.boolean('Meetings', help="If Meetings is checked, SugarCRM Meetings data imported in openERP meetings form"),
         'call': fields.boolean('Calls', help="If Calls is checked, SugarCRM Calls data imported in openERP phonecalls form"),
+        'email': fields.boolean('Emails', help="If Emails is checked, SugarCRM Emails data imported in openERP Emails form"),
         'username': fields.char('User Name', size=64),
         'password': fields.char('Password', size=24),
     }
@@ -655,7 +751,8 @@ class import_sugarcrm(osv.osv):
        'account' : True,
         'employee' : True,
         'meeting' : True,
-        'call' : True,        
+        'call' : True,    
+        'email' : True,        
         
     }
     
@@ -680,7 +777,9 @@ class import_sugarcrm(osv.osv):
             if current.meeting:
                 key_list.append('Meetings')
             if current.call:
-                key_list.append('Calls')                                       
+                key_list.append('Calls')
+            if current.email:
+                key_list.append('Emails')                                                       
         return key_list
 
     def import_all(self, cr, uid, ids, context=None):
