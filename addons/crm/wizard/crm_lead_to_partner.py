@@ -85,15 +85,15 @@ class crm_lead2partner(osv.osv_memory):
                                 substring(email from '([^ ,<@]+@[^> ,]+)') in (%s)""" % (','.join(email)))
                 address_ids = map(lambda x: x[0], cr.fetchall())
                 if address_ids:
-                    addresses = contact_obj.browse(cr, uid, address_ids)
-                    partner_ids = addresses and [addresses[0].partner_id.id] or False
-
+                    partner_ids = partner_obj.search(cr, uid, [('address', 'in', address_ids)], context=context)
+                    
             # Find partner name that matches the name of the lead
             if not partner_ids and lead.partner_name:
                 partner_ids = partner_obj.search(cr, uid, [('name', '=', lead.partner_name)], context=context)
-            
                 
             partner_id = partner_ids and partner_ids[0] or False
+            
+            
 
             if 'partner_id' in fields:
                 res.update({'partner_id': partner_id})

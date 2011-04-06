@@ -22,6 +22,7 @@
 from osv import osv, fields
 from tools.translate import _
 import tools
+import re
 
 import time
 
@@ -54,6 +55,8 @@ class crm_lead2opportunity_partner(osv.osv_memory):
         partner_id = False
         for lead in lead_obj.browse(cr, uid, opportunities, context=context):
             partner_id = lead.partner_id and lead.partner_id.id or False
+            email = re.findall(r'([^ ,<@]+@[^> ,]+)', lead.email_from or '')
+            email = map(lambda x: "'" + x + "'", email)
 
         if not partner_id and res.get('partner_id'):
             partner_id = res.get('partner_id')
@@ -61,6 +64,18 @@ class crm_lead2opportunity_partner(osv.osv_memory):
         ids = []
         if partner_id:
             ids = lead_obj.search(cr, uid, [('partner_id', '=', partner_id), ('type', '=', 'opportunity'), '!', ('state', 'in', ['done', 'cancel'])])
+            if ids:
+                opportunities.append(ids[0])
+                
+                
+        if not partner_id:
+            label = False
+            opp_ids = []
+            if email:
+                # Find email of existing opportunity matches the email_from of the lead
+                cr.execute("""select id from crm_lead where type='opportunity' and
+                                substring(email_from from '([^ ,<@]+@[^> ,]+)') in (%s)""" % (','.join(email)))
+                ids = map(lambda x:x[0], cr.fetchall())
             if ids:
                 opportunities.append(ids[0])
 
@@ -84,7 +99,6 @@ class crm_lead2opportunity_partner(osv.osv_memory):
         @param uid: the current user’s ID for security checks,
         @param fields: List of fields for default value
         @param context: A standard dictionary for contextual values
-
         """
         if context is None:
             context = {}
@@ -92,8 +106,7 @@ class crm_lead2opportunity_partner(osv.osv_memory):
 
         for lead in lead_obj.browse(cr, uid, context.get('active_ids', []), context=context):
             if lead.state in ['done', 'cancel']:
-                raise osv.except_osv(_("Warning !"), _("Closed/Cancelled \
-Leads Could not convert into Opportunity"))
+                raise osv.except_osv(_("Warning !"), _("Closed/Cancelled Leads Could not convert into Opportunity"))
         return False
 
     def _convert(self, cr, uid, ids, lead, partner_id, stage_ids, context=None):
