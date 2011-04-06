@@ -44,7 +44,7 @@ class email_compose_message(osv.osv_memory):
             return result
 
         if 'subject' in fields:
-            result.update({'subject' : vals.get('name','')})
+            result.update({'subject' : vals.get('subject','')})
 
         if 'email_to' in fields:
             result.update({'email_to' : vals.get('email_to','')})
@@ -53,7 +53,7 @@ class email_compose_message(osv.osv_memory):
             result.update({'email_from' : vals.get('email_from','')})
 
         if 'body' in fields:
-            result.update({'body' : vals.get('description','')})
+            result.update({'body' : vals.get('body','')})
 
         if 'model' in fields:
             result.update({'model' : vals.get('model','')})
@@ -183,8 +183,8 @@ class email_compose_message(osv.osv_memory):
                 result.update({
                             'email_from':  vals.get('email_from',''),
                             'email_to':  vals.get('email_to',''),
-                            'subject':  vals.get('name',''),
-                            'body':  vals.get('description',''),
+                            'subject':  vals.get('subject',''),
+                            'body':  vals.get('body',''),
                             'email_cc':  vals.get('email_cc',''),
                             'email_bcc':  vals.get('email_bcc',''),
                             'reply_to':  vals.get('reply_to',''),
