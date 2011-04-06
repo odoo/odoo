@@ -116,8 +116,8 @@ openerp.base.DataSet =  openerp.base.Controller.extend( /** @lends openerp.base.
         this.rpc('/base/datarecord/save', {
             model: this.model,
             id: id,
-            data: data
-            //context: this.context,
+            data: data,
+            context: this.context
         }, callback);
     },
     unlink: function() {

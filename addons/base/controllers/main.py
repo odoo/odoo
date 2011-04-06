@@ -346,9 +346,9 @@ class DataRecord(openerpweb.Controller):
         return {'value': value}
 
     @openerpweb.jsonrequest
-    def save(self, req, model, id, data):
+    def save(self, req, model, id, data, context={}):
         m = req.session.model(model)
-        r = m.write([id], data)
+        r = m.write([id], data, context)
         return {'result': r}
 
 class View(openerpweb.Controller):
