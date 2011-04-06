@@ -159,7 +159,7 @@ openerp.base.FormView =  openerp.base.Controller.extend( /** @lends openerp.base
             this.log("Record was not saved");
         } else {
             // Check response for exceptions, display error
-            this.notification.default("Record saved", "The record #" + this.datarecord.id + " has been saved.");
+            this.notification['default']("Record saved", "The record #" + this.datarecord.id + " has been saved.");
         }
     },
     do_search: function (domains, contexts, groupbys) {
