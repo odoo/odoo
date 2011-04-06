@@ -180,6 +180,40 @@
                 </search>
             </field>
         </record>
+        
+             <!--
+    ======================
+    Logo wiz
+    ======================
+    -->
+        
+        <record id="view_res_company_logo" model="ir.ui.view">
+            <field name="name">res.company.logo.form</field>
+            <field name="model">res.company.logo</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Upload Logo">
+                    <separator string="Upload your company logo in JPG or PNG with a format similar to 450*150 pixels" colspan="4"/>
+                    <field colspan="4" height="150" name="logo" widget="image"/>
+                    <separator colspan="4"/>
+                    <group colspan="4" col="6">
+                       <label string="" colspan="2"/>
+                       <button icon="gtk-cancel" special="cancel" string="Cancel"/>
+                       <button icon="gtk-ok" string="Upload" name="execute" type="object"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_res_company_logo" model="ir.actions.act_window">
+            <field name="name">Set Logo</field>
+            <field name="res_model">res.company.logo</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_res_company_logo"/>
+            <field name="target">new</field>
+        </record>
+        
         <!--
     ======================
     Company
@@ -202,6 +236,9 @@
                             <field name="rml_footer1" colspan="4"/>
                             <field name="rml_footer2" colspan="4"/>
                             <field name="currency_id"/>
+                            <button name="createReport" string="Print" type="object" icon="gtk-print"/>
+                            <button name="%(action_res_company_logo)d"
+                    string="Upload your logo" type="action" icon="gtk-ok"/>
                             <separator colspan="4" string="Your Logo - Use a size of about 450x150 pixels."/>
                             <field colspan="4" name="logo" widget="image"/>
                         </page>
