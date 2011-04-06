@@ -62,12 +62,9 @@ class partner_wizard_spam(osv.osv_memory):
                     to = '"%s" <%s>' % (name, adr.email)
     #TODO: add some tests to check for invalid email addresses
     #CHECKME: maybe we should use res.partner/email_send
-                    tools.email_send(data.email_from,
-                                     [to],
-                                     data.subject,
-                                     data.text,
-                                     subtype=type_,
-                                     openobject_id="res.partner-%s"%partner.id)
+                    smtp_server_pool = self.pool.get('ir.mail_server')
+                    msg = smtp_server_pool.pack_message(cr, uid, data.email_from, [to], data.subject, data.text, subtype=type_)
+                    smtp_server_pool.send_email(cr, uid, msg)
                     nbr += 1
             event_pool.create(cr, uid,
                     {'name': 'Email(s) sent through mass mailing',
