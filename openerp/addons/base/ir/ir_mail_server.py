@@ -171,7 +171,7 @@ class ir_mail_server(osv.osv):
 
         """
         Pack all message attributes into one object.
-        Return email.message object after packed all email attribure.
+        Return email.message.Message object after packed all email attribure.
         """
 
         if not (email_from or config.get('email_from', False)):
@@ -241,7 +241,7 @@ class ir_mail_server(osv.osv):
            smtp_user=None, smtp_password=None, ssl=False, tls=True, debug=False):
 
         """Send an email.
-        @message : The Object of 'email.mime.base.MIMEBase' Class
+        @message : The Object of 'email.message.Message' Class
         If the mail_server_id is provided, send using this mail server, ignoring other smtp_* arguments.
         If mail_server_id == None and smtp_server == None, use the default mail server (highest priority).
         If mail_server_id == None and smtp_server is not None, use the provided smtp_* arguments.
