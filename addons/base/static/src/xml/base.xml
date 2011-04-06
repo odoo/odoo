@@ -453,7 +453,7 @@
         <ul>
             <t t-set="j" t-value="0"/>
             <t t-foreach="section.elements" t-as="element">
-                <li><a t-att-data-i="i" t-att-data-j="j" href="#"><t t-esc="element.text"/></a></li>
+                <li><a t-att-data-i="i" t-att-data-j="j" href="#"><t t-esc="element.name"/></a></li>
                 <t t-set="j+1" t-value="0"/>
             </t>
         </ul>

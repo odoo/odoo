@@ -288,16 +288,17 @@ openerp.base.Sidebar = openerp.base.BaseWidget.extend({
         this.view_manager = view_manager;
         this.sections = [];
     },
-    load_multi_actions: function() {
-        if (_.detect(this.sections, function(x) {return x.type=="multi_actions";}) != undefined)
-            return;
+    set_toolbar: function(toolbar) {
+        debugger;
+        this.sections = [];
         var self = this;
-        this.rpc("/base/sidebar/get_actions",
-                {"model": this.view_manager.dataset.model}, function(result) {
-            self.sections.push({type: "multi_actions", elements:
-            _.map(result, function(x) {return {text:x[2].name, action:x}; })});
-            self.refresh();
+        _.each(["print", "action", "relate"], function(type) {
+            if (toolbar[type].length == 0)
+                return;
+            var section = {elements:toolbar[type]};
+            self.sections.push(section);
         });
+        this.refresh();
     },
     refresh: function() {
         this.$element.html(QWeb.render("ViewManager.sidebar.internal", _.extend({_:_}, this)));

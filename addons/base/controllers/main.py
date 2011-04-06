@@ -458,8 +458,8 @@ class FormView(View):
     _cp_path = "/base/formview"
 
     @openerpweb.jsonrequest
-    def load(self, req, model, view_id, sidebar=False):
-        fields_view = self.fields_view_get(req.session, model, view_id, 'form', sidebar)
+    def load(self, req, model, view_id, toolbar=False):
+        fields_view = self.fields_view_get(req.session, model, view_id, 'form', toolbar=toolbar)
         return {'fields_view': fields_view}
 
 
@@ -467,8 +467,8 @@ class ListView(View):
     _cp_path = "/base/listview"
 
     @openerpweb.jsonrequest
-    def load(self, req, model, view_id, sidebar=False):
-        fields_view = self.fields_view_get(req.session, model, view_id, 'tree', sidebar)
+    def load(self, req, model, view_id, toolbar=False):
+        fields_view = self.fields_view_get(req.session, model, view_id, 'tree', toolbar=toolbar)
         return {'fields_view': fields_view}
 
 
@@ -479,16 +479,6 @@ class SearchView(View):
     def load(self, req, model, view_id):
         fields_view = self.fields_view_get(req.session, model, view_id, 'search')
         return {'fields_view': fields_view}
-    
-class SideBar(View):
-    _cp_path = "/base/sidebar"
-    
-    @openerpweb.jsonrequest
-    def get_actions(self, request, model, object_id=0):
-        #probably useless now
-        result = load_actions_from_ir_values(request, "action", "client_action_multi",
-                                             [[model, object_id]], False, {})
-        return result
 
 
 class Action(openerpweb.Controller):

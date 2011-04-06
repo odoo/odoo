@@ -24,7 +24,8 @@ openerp.base.ListView = openerp.base.Controller.extend({
     },
     start: function() {
         //this.log('Starting ListView '+this.model+this.view_id)
-        return this.rpc("/base/listview/load", {"model": this.model, "view_id":this.view_id}, this.on_loaded);
+        return this.rpc("/base/listview/load", {"model": this.model, "view_id":this.view_id,
+            toolbar:!!this.view_manager.sidebar}, this.on_loaded);
     },
     on_loaded: function(data) {
         this.fields_view = data.fields_view;
@@ -68,8 +69,9 @@ openerp.base.ListView = openerp.base.Controller.extend({
         }).trigger('resize');
         
         // sidebar stuff
-        if (this.view_manager.sidebar)
-            this.view_manager.sidebar.load_multi_actions();
+        if (this.view_manager.sidebar) {
+            this.view_manager.sidebar.set_toolbar(data.fields_view.toolbar);
+        }
     },
     do_fill_table: function(records) {
         this.$table
