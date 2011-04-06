@@ -45,7 +45,7 @@ You can assign several contracts per employee.
         ],
     'demo_xml': [],
     'test': [
-             #'test/test_hr_contract.yml'
+             'test/test_hr_contract.yml'
              ],
     'installable': True,
     'active': False,
