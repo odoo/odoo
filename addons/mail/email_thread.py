@@ -63,9 +63,9 @@ class email_thread(osv.osv):
         })
         return super(email_thread, self).copy(cr, uid, id, default, context=context)
 
-    def message_new(self, cr, uid, msg, context):
+    def message_new(self, cr, uid, msg, context=None):
         """
-        Called by process_email() to create a new record 
+        Called by process_email() to create a new record
         corresponding to an incoming message for a new thread.
         @param msg: Dictionary Object to contain email message data
         """
@@ -85,17 +85,6 @@ class email_thread(osv.osv):
             res_id = model_pool.create(cr, uid, data, context=context)
 
         attachments = msg.get('attachments', {})
-        for attachment in attachments:
-            data_attach = {
-                'name': attachment,
-                'datas': binascii.b2a_base64(str(attachments.get(attachment))),
-                'datas_fname': attachment,
-                'description': _('Mail attachment'),
-                'res_model': self._name,
-                'res_id': res_id,
-            }
-            self.pool.get('ir.attachment').create(cr, uid, data_attach)
-
         self.history(cr, uid, [res_id], _('receive'), history=True,
                             subject = msg.get('subject'),
                             email = msg.get('to'),
@@ -110,7 +99,7 @@ class email_thread(osv.osv):
         return res_id
 
     def message_update(self, cr, uid, ids, msg, vals={}, default_act=None, context=None):
-        """ 
+        """
         Called by process_email() to add a new incoming message for an existing thread
         @param msg: Dictionary Object to contain email message data
         """
@@ -123,29 +112,17 @@ class email_thread(osv.osv):
         if hasattr(model_pool, 'message_update'):
             model_pool.message_update(cr, uid, ids, msg, vals=vals, default_act=default_act, context=context)
         attachments = msg.get('attachments', {})
-        for res_id in ids:
-            for attachment in attachments:
-                data_attach = {
-                    'name': attachment,
-                    'datas': binascii.b2a_base64(str(attachments.get(attachment))),
-                    'datas_fname': attachment,
-                    'description': _('Mail attachment'),
-                    'res_model': self._name,
-                    'res_id': res_id,
-                }
-                self.pool.get('ir.attachment').create(cr, uid, data_attach)
-
-            self.history(cr, uid, [res_id], _('receive'), history=True,
-                                subject = msg.get('subject'),
-                                email = msg.get('to'),
-                                details = msg.get('body'),
-                                email_from = msg.get('from'),
-                                email_cc = msg.get('cc'),
-                                message_id = msg.get('message-id'),
-                                references = msg.get('references', False) or msg.get('in-reply-to', False),
-                                attach = attachments.items(),
-                                email_date = msg.get('date'),
-                                context = context)
+        self.history(cr, uid, ids, _('receive'), history=True,
+                            subject = msg.get('subject'),
+                            email = msg.get('to'),
+                            details = msg.get('body'),
+                            email_from = msg.get('from'),
+                            email_cc = msg.get('cc'),
+                            message_id = msg.get('message-id'),
+                            references = msg.get('references', False) or msg.get('in-reply-to', False),
+                            attach = attachments.items(),
+                            email_date = msg.get('date'),
+                            context = context)
         return True
 
     def thread_followers(self, cr, uid, ids, context=None):
@@ -163,23 +140,23 @@ class email_thread(osv.osv):
             res[thread.id] = l
         return res
 
-    def history(self, cr, uid, cases, keyword, history=False, subject=None, email=False, details=None, \
+    def history(self, cr, uid, threads, keyword, history=False, subject=None, email=False, details=None, \
                     email_from=False, message_id=False, references=None, attach=None, email_cc=None, \
                     email_bcc=None, email_date=None, context=None):
         """
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
-        @param cases: a browse record list
-        @param keyword: Case action keyword e.g.: If case is closed "Close" keyword is used
+        @param threads: a browse record list
+        @param keyword: Thread action keyword e.g.: If thread is closed "Close" keyword is used
         @param history: Value True/False, If True it makes entry as a Emails Messages otherwise Log Messages
         @param email: Email-To / Recipient address
         @param email_from: Email From / Sender address if any
         @param email_cc: Comma-Separated list of Carbon Copy Emails To addresse if any
         @param email_bcc: Comma-Separated list of Blind Carbon Copy Emails To addresses if any
         @param email_date: Email Date string if different from now, in server Timezone
-        @param details: Description, Details of case history if any
-        @param atach: Attachment sent in email
+        @param details: Description, Details of thread history if any
+        @param attach: Attachment sent in email
         @param context: A standard dictionary for contextual values"""
         if context is None:
             context = {}
@@ -196,31 +173,39 @@ class email_thread(osv.osv):
             if edate is not None:
                 email_date = time.strftime('%Y-%m-%d %H:%M:%S', edate)
 
-        # The mailgate sends the ids of the cases and not the object list
+        # The script sends the ids of the threads and not the object list
 
-        if all(isinstance(case_id, (int, long)) for case_id in cases):
-            cases = model_pool.browse(cr, uid, cases, context=context)
+        if all(isinstance(thread_id, (int, long)) for thread_id in threads):
+            threads = model_pool.browse(cr, uid, threads, context=context)
 
         att_obj = self.pool.get('ir.attachment')
         obj = self.pool.get('email.message')
 
-        for case in cases:
+        for thread in threads:
             attachments = []
-            for att in attach:
-                    attachments.append(att_obj.create(cr, uid, {'res_model':case._name,'res_id':case.id, 'name': att[0], 'datas': base64.encodestring(att[1])}))
+            for attachment in attach:
+                data_attach = {
+                    'name': attachment[0],
+                    'datas': binascii.b2a_base64(str(attachment[1])),
+                    'datas_fname': attachment[0],
+                    'description': _('Mail attachment'),
+                    'res_model': thread._name,
+                    'res_id': thread.id,
+                }
+                attachments.append(att_obj.create(cr, uid, data_attach))
 
-            partner_id = hasattr(case, 'partner_id') and (case.partner_id and case.partner_id.id or False) or False
-            if not partner_id and case._name == 'res.partner':
-                partner_id = case.id
+            partner_id = hasattr(thread, 'partner_id') and (thread.partner_id and thread.partner_id.id or False) or False
+            if not partner_id and thread._name == 'res.partner':
+                partner_id = thread.id
             data = {
                 'subject': keyword,
                 'user_id': uid,
-                'model' : case._name,
+                'model' : thread._name,
                 'partner_id': partner_id,
-                'res_id': case.id,
+                'res_id': thread.id,
                 'date': time.strftime('%Y-%m-%d %H:%M:%S'),
                 'message_id': message_id,
-                'body': details or (hasattr(case, 'description') and case.description or False),
+                'body': details or (hasattr(thread, 'description') and thread.description or False),
                 'attachment_ids': [(6, 0, attachments)]
             }
 
@@ -233,14 +218,14 @@ class email_thread(osv.osv):
                     'subject': subject or _('History'),
                     'history': True,
                     'user_id': uid,
-                    'model' : case._name,
-                    'res_id': case.id,
+                    'model' : thread._name,
+                    'res_id': thread.id,
                     'date': email_date or time.strftime('%Y-%m-%d %H:%M:%S'),
                     'body': details,
                     'email_to': email,
                     'email_from': email_from or \
-                        (hasattr(case, 'user_id') and case.user_id and case.user_id.address_id and \
-                         case.user_id.address_id.email),
+                        (hasattr(thread, 'user_id') and thread.user_id and thread.user_id.address_id and \
+                         thread.user_id.address_id.email),
                     'email_cc': email_cc,
                     'email_bcc': email_bcc,
                     'partner_id': partner_id,
@@ -251,8 +236,6 @@ class email_thread(osv.osv):
                 }
             obj.create(cr, uid, data, context=context)
         return True
-
-    
 
     def email_forward(self, cr, uid, model, res_ids, msg, email_error=False, context=None):
         """Sends an email to all people following the thread
@@ -357,8 +340,7 @@ class email_thread(osv.osv):
                 if res_id:
                     res_id = int(res_id)
                     if model_pool.exists(cr, uid, res_id):
-                        self.message_update(cr, uid, [res_id], {}, msg, context=context)
-                        
+                        self.message_update(cr, uid, [res_id], msg, {}, context=context)
 
         if not res_id:
             res_id = create_record(msg)
@@ -388,7 +370,6 @@ class email_thread(osv.osv):
             res['partner_id'] = address.partner_id.id
 
         return res
-
 
 email_thread()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
