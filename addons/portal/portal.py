@@ -39,6 +39,9 @@ class portal(osv.osv):
         'parent_menu_id': fields.many2one('ir.ui.menu',
             string='Parent Menu',
             help=_('The menu action opens the submenus of this menu item')),
+        'widget_ids': fields.one2many('res.portal.widget', 'portal_id',
+            string='Widgets',
+            help=_('Widgets assigned to portal users')),
     }
     _sql_constraints = [
         ('unique_group', 'UNIQUE(group_id)', _('Portals must have distinct groups.'))
@@ -66,7 +69,14 @@ class portal(osv.osv):
             for id in get_many2many(values['user_ids']):
                 values['user_ids'].append((1, id, user_values))
         
-        return super(portal, self).create(cr, uid, values, context)
+        # create portal
+        portal_id = super(portal, self).create(cr, uid, values, context)
+        
+        # assign widgets to users
+        if 'user_ids' in values:
+            self._assign_widgets_to_users(cr, uid, portal_id, context)
+        
+        return portal_id
     
     def name_get(self, cr, uid, ids, context=None):
         portals = self.browse(cr, uid, ids, context)
@@ -90,7 +100,7 @@ class portal(osv.osv):
         # if 'menu_action_id' has changed, set menu_id on users
         if 'menu_action_id' in values:
             user_values = {'menu_id': values['menu_action_id']}
-            user_ids = [u.id for p in portals for u in p.user_ids]
+            user_ids = [u.id for p in portals for u in p.user_ids if u.id != 1]
             self.pool.get('res.users').write(cr, uid, user_ids, user_values, context)
         
         # if parent_menu_id has changed, apply the change on menu_action_id
@@ -99,6 +109,10 @@ class portal(osv.osv):
             action_ids = [p.menu_action_id.id for p in portals]
             action_values = {'domain': [('parent_id', '=', values['parent_menu_id'])]}
             act_window_obj.write(cr, uid, action_ids, action_values, context)
+        
+        # assign portal widgets to users, if widgets or users changed
+        if ('user_ids' in values) or ('widget_ids' in values):
+            self._assign_widgets_to_users(cr, uid, ids, context)
         
         return True
     
@@ -135,7 +149,19 @@ class portal(osv.osv):
             self.write(cr, uid, [p.id], {'parent_menu_id': menu_id}, context)
         
         return True
-    
+
+    def _assign_widgets_to_users(self, cr, uid, ids, context=None):
+        """ assign portal widgets to users for the given portal ids """
+        widget_user_obj = self.pool.get('res.widget.user')
+        portals = self.browse(cr, uid, ids, context)
+        for p in portals:
+            for w in p.widget_ids:
+                values = {'sequence': w.sequence, 'widget_id': w.widget_id.id}
+                for u in p.user_ids:
+                    if u.id == 1: continue
+                    values['user_id'] = u.id
+                    widget_user_obj.create(cr, uid, values, context)
+
     def onchange_group(self, cr, uid, ids, group_id, context=None):
         """ update the users list when the group changes """
         user_ids = False
@@ -171,6 +197,36 @@ class users(osv.osv):
         return defs
 
 users()
+
+
+
+class portal_widget(osv.osv):
+    """
+        Similar to res.widget.user (res_widget.py), but with a portal instead.
+        New users in a portal are assigned the portal's widgets.
+    """
+    _name='res.portal.widget'
+    _description = 'Portal Widgets'
+    _order = 'sequence'
+    _columns = {
+        'sequence': fields.integer('Sequence'),
+        'portal_id': fields.many2one('res.portal', select=1,
+            string='Portal'),
+        'widget_id': fields.many2one('res.widget', required=True, ondelete='cascade',
+            string='Widget'),
+    }
+
+    def create(self, cr, uid, values, context=None):
+        domain = [('portal_id', '=', values.get('portal_id')),
+                  ('widget_id', '=', values.get('widget_id'))]
+        existing = self.search(cr, uid, domain, context=context)
+        if existing:
+            res = existing[0]
+        else:
+            res = super(portal_widget, self).create(cr, uid, values, context=context)
+        return res
+
+portal_widget()
 
 
 
