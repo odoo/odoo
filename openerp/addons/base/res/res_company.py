@@ -73,19 +73,14 @@ class res_company_logo(osv.osv_memory):
     _columns = {
         'logo' : fields.binary('Logo'),
     }
-    _defaults={
-    }
 
     def execute(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
+        record_id = context.get('active_id', False) or False
         comp_obj = self.pool.get("res.company")
         get_val = self.browse(cr, uid, ids)[0]
-        comp_val = comp_obj.browse(cr, uid, ids)[0]
-        if comp_val.logo:
-            comp_obj.write(cr, uid, context['active_id'], {'logo': False})
-        if get_val.logo:      
-            comp_obj.write(cr, uid, context['active_id'], {'logo': get_val.logo})
+        comp_obj.write(cr, uid, record_id, {'logo': get_val.logo}, context=context)
         return {'type': 'ir.actions.act_window_close'}
     
 res_company_logo()
