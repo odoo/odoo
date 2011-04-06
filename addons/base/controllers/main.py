@@ -9,8 +9,8 @@ import openerpweb
 import openerpweb.ast
 import openerpweb.nonliterals
 
-__all__ = ['Session', 'Menu', 'DataSet', 'DataRecord',
-           'View', 'FormView', 'ListView', 'SearchView',
+__all__ = ['Session', 'Menu', 'DataSet', 'View',
+           'FormView', 'ListView', 'SearchView',
            'Action']
 
 class Xml2Json:
@@ -309,7 +309,6 @@ class DataSet(openerpweb.Controller):
     @openerpweb.jsonrequest
     def get(self, request, model, ids, fields=False):
         return self.do_get(request, model, ids, fields)
-
     def do_get(self, request, model, ids, fields=False):
         """ Fetches and returns the records of the model ``model`` whose ids
         are in ``ids``.
@@ -332,11 +331,8 @@ class DataSet(openerpweb.Controller):
         record_map = dict((record['id'], record) for record in records)
 
         return [record_map[id] for id in ids if record_map.get(id)]
-
-class DataRecord(openerpweb.Controller):
-    _cp_path = "/base/datarecord"
-
     @openerpweb.jsonrequest
+
     def load(self, req, model, id, fields):
         m = req.session.model(model)
         value = {}
@@ -349,6 +345,12 @@ class DataRecord(openerpweb.Controller):
     def save(self, req, model, id, data, context={}):
         m = req.session.model(model)
         r = m.write([id], data, context)
+        return {'result': r}
+
+    @openerpweb.jsonrequest
+    def call(self, req, model, method, ids, args):
+        m = req.session.model(model)
+        r = getattr(m, method)(ids, *args)
         return {'result': r}
 
 class View(openerpweb.Controller):
