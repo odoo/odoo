@@ -141,7 +141,7 @@ class crm_helpdesk(crm.crm_case, osv.osv):
 
         return res
 
-    def message_update(self, cr, uid, ids, vals={}, msg="", default_act='pending', context=None):
+    def message_update(self, cr, uid, ids, msg, vals={}, default_act='pending', context=None):
         """
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
