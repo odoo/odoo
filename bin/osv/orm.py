@@ -2821,7 +2821,7 @@ class orm(orm_template):
                     'string': field['field_description'],
                     'required': bool(field['required']),
                     'readonly': bool(field['readonly']),
-                    'domain': field['domain'] or None,
+                    'domain': eval(field['domain']) if field['domain'] else None,
                     'size': field['size'],
                     'ondelete': field['on_delete'],
                     'translate': (field['translate']),
