@@ -2,55 +2,57 @@
 <openerp>
     <data>
 
-        <!-- Payroll Structure -->
-        <record id="structure_001" model="hr.payroll.structure">
-            <field name="code">ME</field>
-            <field name="name">Marketing Executive</field>
-            <field name="company_id" ref="base.main_company"/>
-        </record>
+        <!-- Salary Rules -->
 
-        <record id="hr_payslip_line_houserantallowance1" model="hr.payslip.line">
-            <field name="amount_type">per</field>
-            <field eval="5" name="sequence"/>
-            <field eval="0.4" name="amount"/>
+        <record id="hr_payslip_line_houserantallowance1" model="hr.salary.rule">
+            <field name="amount_select">percentage</field>
+            <field eval="40.0" name="amount_percentage"/>
+            <field name="amount_percentage_base">contract.wage</field>
             <field name="code">HRA</field>
-            <field name="type">allowance</field>
+            <field name="type" ref="AL"/>
             <field name="category_id" ref="hr_payroll.HRA"/>
-            <field name="function_id" ref="hr_payroll.structure_001"/>
             <field name="name">House Rent Allowance</field>
+            <field name="sequence" eval="5"/>
         </record>
 
-        <record id="hr_payslip_line_convanceallowance1" model="hr.payslip.line">
-            <field name="amount_type">fix</field>
-            <field eval="10" name="sequence"/>
-            <field eval="800.0" name="amount"/>
+        <record id="hr_payslip_line_convanceallowance1" model="hr.salary.rule">
+            <field name="amount_select">fix</field>
+            <field eval="800.0" name="amount_fix"/>
             <field name="code">CA</field>
-            <field name="type">allowance</field>
+            <field name="type" ref="AL"/>
             <field name="category_id" ref="hr_payroll.CA"/>
-            <field name="function_id" ref="hr_payroll.structure_001"/>
             <field name="name">Conveyance Allowance</field>
+            <field name="sequence" eval="10"/>
         </record>
 
-        <record id="hr_payslip_line_professionaltax1" model="hr.payslip.line">
-            <field name="amount_type">fix</field>
+        <record id="hr_payslip_line_professionaltax1" model="hr.salary.rule">
+            <field name="amount_select">fix</field>
             <field eval="15" name="sequence"/>
-            <field eval="200.0" name="amount"/>
+            <field eval="-200.0" name="amount_fix"/>
             <field name="code">PT</field>
-            <field name="type">deduction</field>
+            <field name="type" ref="DED"/>
             <field name="category_id" ref="hr_payroll.PT"/>
-            <field name="function_id" ref="hr_payroll.structure_001"/>
             <field name="name">Professional Tax</field>
         </record>
 
-        <record id="hr_payslip_line_providentfund1" model="hr.payslip.line">
-            <field name="amount_type">per</field>
+        <record id="hr_payslip_line_providentfund1" model="hr.salary.rule">
+            <field name="amount_select">percentage</field>
             <field eval="20" name="sequence"/>
-            <field eval="0.125" name="amount"/>
+            <field eval="-12.5" name="amount_percentage"/>
+            <field name="amount_percentage_base">contract.wage</field>
             <field name="code">PF</field>
-            <field name="type">deduction</field>
+            <field name="type" ref="DED"/>
             <field name="category_id" ref="hr_payroll.PF"/>
-            <field name="function_id" ref="hr_payroll.structure_001"/>
             <field name="name">Provident Fund</field>
+        </record>
+
+        <!-- Salary Structure -->
+
+         <record id="structure_001" model="hr.payroll.structure">
+            <field name="code">ME</field>
+            <field name="name">Marketing Executive</field>
+            <field eval="[(6, 0, [ref('hr_payslip_line_houserantallowance1'), ref('hr_payslip_line_convanceallowance1'),ref('hr_payslip_line_professionaltax1'),ref('hr_payslip_line_providentfund1')])]" name="rule_ids"/>
+            <field name="company_id" ref="base.main_company"/>
         </record>
 
         <!-- Employee -->
@@ -65,7 +67,6 @@
 
         <!-- Employee Contract -->
         <record id="hr_contract_firstcontract1" model="hr.contract">
-            <field name="wage_type_id" ref="hr_contract.hr_contract_monthly_gross"/>
             <field name="name">First Contract</field>
             <field name="type_id" ref="hr_contract.hr_contract_type_emp"/>
             <field name="date_start" eval="time.strftime('%Y-%m')+'-1'"/>
@@ -77,15 +78,5 @@
             <field eval="5" name="working_days_per_week"/>
         </record>
 
-        <!-- Payslip -->
-        <record id="hr_payslip_salaryslipofbonamyforjune0" model="hr.payslip">
-            <field name="number">SLIP/001</field>
-            <field name="deg_id" ref="hr_payroll.structure_001"/>
-            <field name="employee_id" ref="hr_employee_bonamy0"/>
-            <field name="contract_id" ref="hr_contract_firstcontract1"/>
-            <field name="company_id" ref="base.main_company"/>
-            <field name="date" eval="time.strftime('%Y-%m')+'-5'"/>
-            <field name="name" eval="'Salary Slip of Bonamy for June-'+time.strftime('%Y')"/>
-        </record>
     </data>
 </openerp>

@@ -51,35 +51,28 @@ class hr_employee(osv.osv):
 
 hr_employee()
 
-#Contract wage type period name
-class hr_contract_wage_type_period(osv.osv):
-    _name='hr.contract.wage.type.period'
-    _description='Wage Period'
-    _columns = {
-        'name': fields.char('Period Name', size=50, required=True, select=True),
-        'factor_days': fields.float('Hours in the period', digits=(12,4), required=True, help='This field is used by the timesheet system to compute the price of an hour of work wased on the contract of the employee')
-    }
-    _defaults = {
-        'factor_days': 168.0
-    }
-hr_contract_wage_type_period()
+class hr_passport(osv.osv):
+    """
+    Employee Passport
+    Passport based Contracts for Employees
+    """
 
-#Contract wage type (hourly, daily, monthly, ...)
-class hr_contract_wage_type(osv.osv):
-    _name = 'hr.contract.wage.type'
-    _description = 'Wage Type'
+    _name = 'hr.passport'
+    _description = 'Passport Detail'
     _columns = {
-        'name': fields.char('Wage Type Name', size=50, required=True, select=True),
-        'period_id': fields.many2one('hr.contract.wage.type.period', 'Wage Period', required=True),
-        'type': fields.selection([('gross','Gross'), ('net','Net')], 'Type', required=True),
-        'factor_type': fields.float('Factor for hour cost', digits=(12,4), required=True, help='This field is used by the timesheet system to compute the price of an hour of work wased on the contract of the employee')
+        'employee_id': fields.many2one('hr.employee', 'Employee', required=True),
+        'name': fields.char('Passport No', size=64, required=True, readonly=False),
+        'country_id': fields.many2one('res.country', 'Country of Issue', required=True),
+        'address_id': fields.many2one('res.partner.address', 'Address', required=False),
+        'date_issue': fields.date('Passport Issue Date', required=True),
+        'date_expire': fields.date('Passport Expire Date', required=True),
+        'note': fields.text('Description'),
+        'contracts_ids': fields.one2many('hr.contract', 'passport_id', 'Contracts', required=False, readonly=True),
     }
-    _defaults = {
-        'type': 'gross',
-        'factor_type': 1.8
-    }
-hr_contract_wage_type()
-
+    _sql_constraints = [
+        ('passport_no_uniq', 'unique (employee_id, name)', 'The Passport No must be unique !'),
+    ]
+hr_passport()
 
 class hr_contract_type(osv.osv):
     _name = 'hr.contract.type'
@@ -103,15 +96,22 @@ class hr_contract(osv.osv):
         'trial_date_start': fields.date('Trial Start Date'),
         'trial_date_end': fields.date('Trial End Date'),
         'working_hours': fields.many2one('resource.calendar','Working Schedule'),
-        'wage_type_id': fields.many2one('hr.contract.wage.type', 'Wage Type', required=True),
-        'wage': fields.float('Wage', digits=(16,2), required=True),
+        'wage': fields.float('Wage', digits=(16,2), required=True, help="Basic Salary of the employee"),
         'advantages': fields.text('Advantages'),
-        'advantages_net': fields.float('Net Advantages Value', digits=(16,2)),
-        'advantages_gross': fields.float('Gross Advantages Value', digits=(16,2)),
         'notes': fields.text('Notes'),
+        'permit_no': fields.char('Work Permit No', size=256, required=False, readonly=False),
+        'passport_id': fields.many2one('hr.passport', 'Passport', required=False),
+        'visa_no': fields.char('Visa No', size=64, required=False, readonly=False),
+        'visa_expire': fields.date('Visa Expire Date'),
     }
+
+    def _get_type(self, cr, uid, context=None):
+        type_ids = self.pool.get('hr.contract.type').search(cr, uid, [('name', '=', 'Employee')])
+        return type_ids and type_ids[0] or False
+
     _defaults = {
         'date_start': lambda *a: time.strftime("%Y-%m-%d"),
+        'type_id': _get_type
     }
 
     def _check_dates(self, cr, uid, ids, context=None):
@@ -123,9 +123,6 @@ class hr_contract(osv.osv):
     _constraints = [
         (_check_dates, 'Error! contract start-date must be lower then contract end-date.', ['date_start', 'date_end'])
     ]
-
-
-
 hr_contract()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

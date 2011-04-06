@@ -36,33 +36,21 @@ class payslip_report(report_sxw.rml_parse):
                 'get_earnings': self.get_earnings,
                 'get_deductions':self.get_deductions,
                 'get_leave':self.get_leave,
-                'get_others':self.get_others,
                 })
 
     def convert(self, amount, cur):
         amt_en = amount_to_text_en.amount_to_text(amount, 'en', cur)
         return amt_en
 
-    def get_others(self, obj):
-        payslip_line = self.pool.get('hr.payslip.line')
-        res = []
-        ids = []
-        for id in range(len(obj)):
-            if obj[id].category_id.type in ('advance', 'loan', 'otherpay', 'otherdeduct', 'installment'):
-                ids.append(obj[id].id)
-        if ids:
-            res = payslip_line.browse(self.cr, self.uid, ids)
-        return res
-
     def get_leave(self, obj):
         payslip_line = self.pool.get('hr.payslip.line')
         res = []
-        ids = []
-        for id in range(len(obj)):
-            if obj[id].type == 'leaves':
-                ids.append(obj[id].id)
-        if ids:
-            res = payslip_line.browse(self.cr, self.uid, ids)
+#        ids = []
+#        for id in range(len(obj)):
+#            if obj[id].type == 'leaves':
+#                ids.append(obj[id].id)
+#        if ids:
+#            res = payslip_line.browse(self.cr, self.uid, ids)
         return res
 
     def get_earnings(self, obj):
@@ -70,7 +58,7 @@ class payslip_report(report_sxw.rml_parse):
         res = []
         ids = []
         for id in range(len(obj)):
-            if obj[id].category_id.type == 'allowance' and obj[id].type != 'leaves':
+            if obj[id].category_id.parent_id.name == 'Allowance':
                 ids.append(obj[id].id)
         if ids:
             res = payslip_line.browse(self.cr, self.uid, ids)
@@ -81,7 +69,7 @@ class payslip_report(report_sxw.rml_parse):
         res = []
         ids = []
         for id in range(len(obj)):
-            if obj[id].category_id.type == 'deduction' and obj[id].type != 'leaves':
+            if obj[id].category_id.parent_id.name == 'Deduction':
                 ids.append(obj[id].id)
         if ids:
             res = payslip_line.browse(self.cr, self.uid, ids)
