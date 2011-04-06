@@ -352,9 +352,9 @@ class DataRecord(openerpweb.Controller):
         return {'result': r}
 
 class View(openerpweb.Controller):
-    def fields_view_get(self, session, model, view_id, view_type, transform=True):
+    def fields_view_get(self, session, model, view_id, view_type, transform=True, toolbar=False, submenu=False):
         Model = session.model(model)
-        r = Model.fields_view_get(view_id, view_type)
+        r = Model.fields_view_get(view_id, view_type, {}, toolbar, submenu)
         if transform:
             context = {} # TODO: dict(ctx_sesssion, **ctx_action)
             xml = self.transform_view(r['arch'], session, context)
@@ -458,8 +458,8 @@ class FormView(View):
     _cp_path = "/base/formview"
 
     @openerpweb.jsonrequest
-    def load(self, req, model, view_id):
-        fields_view = self.fields_view_get(req.session, model, view_id, 'form')
+    def load(self, req, model, view_id, sidebar=False):
+        fields_view = self.fields_view_get(req.session, model, view_id, 'form', sidebar)
         return {'fields_view': fields_view}
 
 
@@ -467,8 +467,8 @@ class ListView(View):
     _cp_path = "/base/listview"
 
     @openerpweb.jsonrequest
-    def load(self, req, model, view_id):
-        fields_view = self.fields_view_get(req.session, model, view_id, 'tree')
+    def load(self, req, model, view_id, sidebar=False):
+        fields_view = self.fields_view_get(req.session, model, view_id, 'tree', sidebar)
         return {'fields_view': fields_view}
 
 
@@ -485,6 +485,7 @@ class SideBar(View):
     
     @openerpweb.jsonrequest
     def get_actions(self, request, model, object_id=0):
+        #probably useless now
         result = load_actions_from_ir_values(request, "action", "client_action_multi",
                                              [[model, object_id]], False, {})
         return result
