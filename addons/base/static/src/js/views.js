@@ -32,15 +32,14 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
 openerp.base.views = new openerp.base.Registry();
 
 openerp.base.ViewManager =  openerp.base.Controller.extend({
-    init: function(session, element_id, model, views) {
+    init: function(session, element_id, dataset, views) {
         this._super(session, element_id);
-        this.model = model;
-        this.dataset = new openerp.base.DataSet(this.session, model);
+        this.model = dataset.model;
+        this.dataset = dataset;
         this.searchview = null;
         this.active_view = null;
         this.views_src = views;
         this.views = {};
-
     },
     /**
      * @returns {jQuery.Deferred} initial view loading promise
@@ -103,6 +102,23 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
         return view_promise;
     },
     /**
+     * Sets up the current viewmanager's search view.
+     *
+     * @param view_id the view to use or false for a default one
+     * @returns {jQuery.Deferred} search view startup deferred
+     */
+    setup_search_view: function(view_id, search_defaults) {
+        var self = this;
+        if (this.searchview) {
+            this.searchview.stop();
+        }
+        this.searchview = new openerp.base.SearchView(this, this.session, this.element_id + "_search", this.dataset, view_id, search_defaults);
+        this.searchview.on_search.add(function() {
+            self.views[self.active_view].controller.do_search.apply(self, arguments);
+        });
+        return this.searchview.start();
+    },
+    /**
      * Called when one of the view want to execute an action
      */
     on_action: function(action) {
@@ -117,7 +133,8 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
 
 openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
     init: function(session, element_id, action, sidebar) {
-        this._super(session, element_id, action.res_model, action.views);
+        var dataset = new openerp.base.DataSetSearch(session, action.res_model);
+        this._super(session, element_id, dataset, action.views);
         this.action = action;
         this.sidebar = sidebar;
         if (sidebar)
@@ -126,12 +143,25 @@ openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
     start: function() {
         var self = this;
         var inital_view_loaded = this._super();
+
+        // init sidebar
         if (this.sidebar) {
             this.$element.find('.view-manager-main-sidebar').html(this.sidebar.render());
             this.sidebar.start();
         }
-        var searchview_loaded = this.setup_search_view(this.action);
 
+        // init search view
+        var view_id = this.action.search_view_id ? this.action.search_view_id[0] || false : false;
+        var search_defaults = {};
+        _.each(this.action.context, function (value, key) {
+            var match = /^search_default_(.*)$/.exec(key);
+            if (match) {
+                search_defaults[match[1]] = value;
+            }
+        });
+        var searchview_loaded = this.setup_search_view(view_id,search_defaults);
+
+        // schedule auto_search
         if (this.action['auto_search']) {
             $.when(searchview_loaded, inital_view_loaded)
                 .then(this.searchview.do_search);
@@ -143,42 +173,6 @@ openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
             this.sidebar.stop();
         }
         this._super();
-    },
-    /**
-     * Sets up the current viewmanager's search view.
-     *
-     * @param action the action being executed
-     * @returns {jQuery.Deferred} search view startup deferred
-     */
-    setup_search_view:function (action) {
-        var self = this;
-        if (this.searchview) {
-            this.searchview.stop();
-        }
-        var view_id = action.search_view_id ? action.search_view_id[0] || false : false;
-
-        this.searchview = new openerp.base.SearchView(this, this.session, this.element_id + "_search", this.dataset, view_id, this.search_defaults());
-        this.searchview.on_search.add(function() {
-            self.views[self.active_view].controller.do_search.apply(self, arguments);
-        });
-        return this.searchview.start();
-    },
-    /**
-     * Extract search view defaults from the current action's context.
-     *
-     * These defaults are of the form {search_default_*: value}
-     *
-     * @returns {Object} a clean defaults mapping of {field_name: value}
-     */
-    search_defaults: function () {
-        var defaults = {};
-        _.each(this.action.context, function (value, key) {
-            var match = /^search_default_(.*)$/.exec(key);
-            if (match) {
-                defaults[match[1]] = value;
-            }
-        });
-        return defaults;
     },
 });
 

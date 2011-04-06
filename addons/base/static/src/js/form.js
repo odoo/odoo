@@ -56,6 +56,13 @@ openerp.base.FormView =  openerp.base.Controller.extend( /** @lends openerp.base
             this.view_manager.sidebar.load_multi_actions();
         }
     },
+    do_show: function () {
+        this.dataset.read_index(this.fields_view.fields, this.on_record_loaded);
+        this.$element.show();
+    },
+    do_hide: function () {
+        this.$element.hide();
+    },
     on_record_loaded: function(record) {
         if (record) {
             this.datarecord = record;
@@ -78,6 +85,30 @@ openerp.base.FormView =  openerp.base.Controller.extend( /** @lends openerp.base
         if (widget && widget.node.attrs.on_change) {
             this.do_onchange(widget);
         }
+    },
+    on_pager_action: function(action) {
+        switch (action) {
+            case 'first':
+                this.dataset.index = 0;
+                break;
+            case 'previous':
+                this.dataset.previous();
+                break;
+            case 'next':
+                this.dataset.next();
+                break;
+            case 'last':
+                this.dataset.index = this.dataset.ids.length - 1;
+                break;
+        }
+        this.dataset.read_index(this.fields_view.fields, this.on_record_loaded);
+    },
+    do_update_pager: function() {
+        var $pager = this.$element.find('div.oe_form_pager');
+        $pager.find("button[data-pager-action='first'], button[data-pager-action='previous']").attr('disabled', this.dataset.index == 0);
+        $pager.find("button[data-pager-action='next'], button[data-pager-action='last']").attr('disabled', this.dataset.index == this.dataset.ids.length - 1);
+        this.$element.find('span.oe_pager_index').html(this.dataset.index + 1);
+        this.$element.find('span.oe_pager_count').html(this.dataset.count);
     },
     do_onchange: function(widget) {
         var self = this;
@@ -158,37 +189,6 @@ openerp.base.FormView =  openerp.base.Controller.extend( /** @lends openerp.base
         if (this.do_save()) {
             this.switch_readonly();
         }
-    },
-    do_show: function () {
-        this.dataset.fetch_index(this.fields_view.fields, this.on_record_loaded);
-        this.$element.show();
-    },
-    do_hide: function () {
-        this.$element.hide();
-    },
-    do_update_pager: function() {
-        var $pager = this.$element.find('div.oe_form_pager');
-        $pager.find("button[data-pager-action='first'], button[data-pager-action='previous']").attr('disabled', this.dataset.index == 0);
-        $pager.find("button[data-pager-action='next'], button[data-pager-action='last']").attr('disabled', this.dataset.index == this.dataset.ids.length - 1);
-        this.$element.find('span.oe_pager_index').html(this.dataset.index + 1);
-        this.$element.find('span.oe_pager_count').html(this.dataset.count);
-    },
-    on_pager_action: function(action) {
-        switch (action) {
-            case 'first':
-                this.dataset.index = 0;
-                break;
-            case 'previous':
-                this.dataset.previous();
-                break;
-            case 'next':
-                this.dataset.next();
-                break;
-            case 'last':
-                this.dataset.index = this.dataset.ids.length - 1;
-                break;
-        }
-        this.dataset.fetch_index(this.fields_view.fields, this.on_record_loaded);
     },
     switch_readonly: function() {
     },
@@ -676,32 +676,43 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
 });
 
 openerp.base.form.FieldOne2ManyDatasSet = openerp.base.DataSet.extend({
-// Extends view manager
+    start: function() {
+    },
+    write: function (id, data, callback) {
+        this._super(id, data, callback);
+    },
+    write: function (id, data, callback) {
+        this._super(id, data, callback);
+    },
+    unlink: function() {
+    }
 });
 
 openerp.base.form.FieldOne2ManyViewManager = openerp.base.ViewManager.extend({
-// Extends view manager
+    init: function(session, element_id, dataset, views) {
+        this._super(session, element_id, dataset, views);
+    },
 });
 
 openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
     init: function(view, node) {
         this._super(view, node);
         this.template = "FieldOne2Many";
-        this.viewmanager = null;
         this.operations = [];
-
     },
     start: function() {
         this._super.apply(this, arguments);
         this.log("o2m.start");
-        var action = { res_model: this.field.relation, views: [ [false,"list"], ], };
-        this.viewmanager = new openerp.base.ViewManagerAction(this.view.session, this.element_id, action);
+        var views = [ [false,"list"], ];
+        this.dataset = new openerp.base.form.FieldOne2ManyDatasSet(this.session, this.field.relation);
+        this.viewmanager = new openerp.base.form.FieldOne2ManyViewManager(this.view.session, this.element_id, this.dataset, views);
+        this.viewmanager.start();
     },
     set_value: function(value) {
         this.value = value;
         this.log("o2m.set_value",value);
         this.viewmanager.dataset.ids = value;
-        // this.viewmanager.views.list.controller.do_update();
+        this.viewmanager.views.list.controller.do_update();
     },
     get_value: function(value) {
         return this.operations;

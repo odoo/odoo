@@ -93,12 +93,12 @@ openerp.base.ListView = openerp.base.Controller.extend({
             // TODO: handle non-empty results.group_by with read_group
             self.dataset.context = results.context;
             self.dataset.domain = results.domain;
-            self.dataset.fetch(self.dataset.fields, 0, self.limit, self.do_fill_table);
+            self.dataset.read_slice(self.dataset.fields, 0, self.limit, self.do_fill_table);
         });
     },
     do_update: function () {
         var self = this;
-        self.dataset.fetch(self.dataset.fields, 0, self.limit, self.do_fill_table);
+        self.dataset.read(self.dataset.ids, self.dataset.fields, self.do_fill_table);
     }
 });
 

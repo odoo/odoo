@@ -9,10 +9,7 @@ import openerpweb
 import openerpweb.ast
 import openerpweb.nonliterals
 
-__all__ = ['Session', 'Menu', 'DataSet', 'View',
-           'FormView', 'ListView', 'SearchView',
-           'Action']
-
+# Should move to openerpweb.Xml2Json
 class Xml2Json:
     # xml2json-direct
     # Simple and straightforward XML-to-JSON converter in Python
@@ -276,12 +273,9 @@ class DataSet(openerpweb.Controller):
         return {'fields': req.session.model(model).fields_get()}
 
     @openerpweb.jsonrequest
-    def find(self, request, model, fields=False, offset=0, limit=False,
-             domain=None, context=None, sort=None):
-        return self.do_find(request, model, fields, offset, limit,
-                     domain, context, sort)
-    def do_find(self, request, model, fields=False, offset=0, limit=False,
-             domain=None, context=None, sort=None):
+    def search_read(self, request, model, fields=False, offset=0, limit=False, domain=None, context=None, sort=None):
+        return self.do_search_read(request, model, fields, offset, limit, domain, context, sort)
+    def do_search_read(self, request, model, fields=False, offset=0, limit=False, domain=None, context=None, sort=None):
         """ Performs a search() followed by a read() (if needed) using the
         provided search criteria
 
@@ -464,7 +458,6 @@ class FormView(View):
         fields_view = self.fields_view_get(req.session, model, view_id, 'form')
         return {'fields_view': fields_view}
 
-
 class ListView(View):
     _cp_path = "/base/listview"
 
@@ -472,7 +465,6 @@ class ListView(View):
     def load(self, req, model, view_id):
         fields_view = self.fields_view_get(req.session, model, view_id, 'tree')
         return {'fields_view': fields_view}
-
 
 class SearchView(View):
     _cp_path = "/base/searchview"
@@ -490,7 +482,6 @@ class SideBar(View):
         result = load_actions_from_ir_values(request, "action", "client_action_multi",
                                              [[model, object_id]], False, {})
         return result
-
 
 class Action(openerpweb.Controller):
     _cp_path = "/base/action"
