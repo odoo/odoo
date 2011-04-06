@@ -75,13 +75,63 @@ openerp.base.FormView =  openerp.base.Controller.extend( /** @lends openerp.base
             w.process_attrs();
             w.update_dom();
         }
-        if (widget) {
-            // TODO: check if  and trigger
-            // if (onchange for this field) {
-            //      this.ready = false;
-            //      rpc - process.callback ( this.ready = true; )
-            // }
+        if (widget && widget.node.attrs.on_change) {
+            this.do_onchange(widget);
         }
+    },
+    do_onchange: function(widget) {
+        var self = this;
+        this.ready = false;
+        var onchange = _.trim(widget.node.attrs.on_change);
+        var call = onchange.match(/^\s?(.*?)\((.*?)\)\s?$/);
+        if (call) {
+            var method = call[1], args = [];
+            _.each(call[2].split(','), function(a) {
+                var field = _.trim(a);
+                if (self.fields[field]) {
+                    args.push(self.fields[field].value);
+                } else {
+                    args.push(false);
+                    this.log("warning : on_change can't find field " + field, onchange);
+                }
+            });
+            this.dataset.call(method, [this.datarecord.id], args, this.on_processed_onchange);
+        } else {
+            this.log("Wrong on_change format", on_change);
+        }
+    },
+    on_processed_onchange: function(response) {
+        console.log("onchange result :", response);
+        var result = response.result;
+        if (result.value) {
+            for (var f in result.value) {
+                var field = this.fields[f];
+                if (field) {
+                    var value = result.value[f];
+                    if (field.value != value) {
+                        field.set_value(value);
+                        // TODO: Recursive on_change
+                        // this.on_form_changed(field);
+                    }
+                } else {
+                    this.log("warning : on_processed_onchange can't find field " + field, result);
+                }
+            }
+        }
+        if (result.warning) {
+            $(QWeb.render("DialogWarning", result.warning)).dialog({
+                modal: true,
+                buttons: {
+                    Ok: function() {
+                        $(this).dialog("close");
+                    }
+                }
+            });
+        }
+        if (result.domain) {
+            // Will be removed ?
+        }
+        this.ready = true;
     },
     do_save: function() {
         if (!this.ready) {
@@ -555,7 +605,7 @@ openerp.base.form.FieldBoolean = openerp.base.form.Field.extend({
         var self = this;
         this._super.apply(this, arguments);
         this.$element.find('input').click(function() {
-            if ($(this)[0].checked != this.value) {
+            if ($(this).is(':checked') != self.value) {
                 self.on_ui_change();
             }
         });
