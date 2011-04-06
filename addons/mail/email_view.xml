@@ -12,10 +12,11 @@
 			<field name="arch" type="xml">
                 <form string="Email message">
                     <group colspan="4" col="6">
-                       <field name="name" widget="char" size="512"/>
+                       <field name="subject" widget="char" size="512"/>
                        <field name="date"/>
                        <field name="user_id" string="User"/>
                        <field name="partner_id" readonly="1" />
+                       <field name="priority"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Details">
@@ -31,21 +32,24 @@
                                 <separator string="Message Details" colspan="4"/>
                                 <field name="model" readonly="1"/>
                                 <group col="3" colspan="2">
-                                    <field name="res_id" readonly="1"/>
+                                    <field name="res_id" readonly="1" groups="base.group_extended"/>
                                     <button name="open_document" string="Open Document" type="object" icon="gtk-jump-to"/>
-	                                <field name="message_id"/>
-	                                <button name="%(action_email_compose_message_wizard)d" string="Reply" type="action" icon="terp-mail-replied"
-	                                context="{'mail':'reply', 'message_id':active_id}"/>
+	                                <field name="message_id" groups="base.group_extended" colspan="4"/>
                                 </group>
-                                <field name="references" widget="char" size="4096"/>
+                                <field name="references" widget="char" size="4096" groups="base.group_extended"/>
                             </group>
                             <separator string="Description" colspan="4"/>
-                            <field name="description" nolabel="1" colspan="4"/>
-                            <group col="4" colspan="4" attrs="{'invisible':[('folder','not in',['drafts','outbox'])]}">
-                                <separator string="" colspan="4"/>
-                                <field name="state"/>
-                                <button name="process_queue" string="Send" type="object" icon="gtk-execute" states='draft,waiting,sending'/>
-                                <button name="process_retry" string="Re-Try" type="object" icon="gtk-execute" states='exception'/>
+                            <field name="body" nolabel="1" colspan="4"/>
+                            <separator string="" colspan="4"/>
+                            <group col="6" colspan="4">
+                                <field name="state" colspan="2"/>
+                                <group col="4" colspan="2">
+                                	<button name="%(action_email_compose_message_wizard)d" string="Reply" type="action" icon="terp-mail-replied"
+	                                context="{'mail':'reply', 'message_id':active_id}" states='received,outgoing,sent,exception,cancel'/>
+	                                <button name="send_email" string="Force Send" type="object" icon="gtk-execute" states='outgoing'/>
+	                                <button name="process_retry" string="Send Again" type="object" icon="gtk-execute" states='exception,cancel'/>
+	                                <button name="do_cancel" string="Cancel" type="object" icon="terp-gtk-stop" states='outgoing'/>
+                                </group>
                             </group>
                         </page>
                         <page string="Attachments">
@@ -55,12 +59,12 @@
                         <page string="Advanced">
                             <group col="4" colspan="4">
                                 <field name="smtp_server_id"/>
-	                            <field name="folder"/>
 	                            <field name="sub_type"/>
-	                            <field name="headers"/>
-	                            <field name="priority"/>
-	                            <field name="debug"/>
+	                            <field name="debug" groups="base.group_extended"/>
 	                            <field name="history"/>
+	                            <field name="auto_delete"/>
+	                            <separator string="xheaders" colspan="4"/>
+	                            <field name="headers" colspan="4" nolabel="1" groups="base.group_extended"/>
                             </group>
                         </page>
                     </notebook>
@@ -73,14 +77,13 @@
             <field name="model">email.message</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="gray:folder in ('trash')" string="Emails">
+            	<tree string="Emails" colors="grey:state in ('sent', 'cancel');blue:state=='outgoing';red:state=='exception';black:state=='received'">
                     <field name="date"/>
-                    <field name="name"/>
+                    <field name="subject"/>
                     <field name="email_from"/>
                     <field name="user_id" string="User"/>
                     <field name="message_id" string="Message" invisible="1"/>
                     <field name="partner_id" invisible="1"/>
-                    <field name="folder"/>
                     <field name="state"/>
                     <button name="open_document" string="Open Document" type="object" icon="gtk-jump-to"/>
                     <button name="open_attachment" string="Open Attachments" type="object" icon="gtk-jump-to"/>
@@ -94,16 +97,12 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Email Search">
-                    <filter icon="terp-document-new" string="Draft" domain="[('folder','=','drafts')]"/>
-                    <filter icon="terp-personal" string="Inbox" domain="[('folder','=','inbox')]"/>
-                    <filter icon="terp-check" string="Outbox" domain="[('folder','=','outbox')]"/>
-                    <filter icon="terp-partner" string="Sent Items" domain="[('folder','=','sent')]"/>
-                    <filter icon="terp-mail_delete" string="Trash" domain="[('folder','=','trash')]"/>
                     <separator orientation="vertical"/>
-                    <filter icon="terp-call-start" string="Waiting" domain="[('state','=','waiting')]"/>
+                    <filter icon="terp-camera_test" string="Received" domain="[('state','=','received')]"/>
+                    <filter icon="terp-call-start" name="outgoing" string="Outgoing" domain="[('state','=','outgoing')]"/>
                     <filter icon="terp-gtk-stop" string="Exception" domain="[('state','=','exception')]"/>
                     <field name="email_from"/>
-                    <field name="name"/>
+                    <field name="subject"/>
                     <field name="date"/>
                     <field name="user_id" string="User"/>
                     <field name="partner_id" string="Partner Name"/>
@@ -127,6 +126,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('history', '=', True)]</field>
+             <field name="context">{'search_default_outgoing':1}</field>
             <field name="search_view_id" ref="view_email_message_search"/>
         </record>
 
@@ -136,12 +136,6 @@
             src_model="res.partner"
             view_id="view_email_message_tree"/>
 
-	    <act_window
-	       id="act_res_partner_open_email" name="Attachments"
-	       res_model="ir.attachment"
-	       src_model="email.message"
-	       domain="[('res_id', '=', res_id),('res_model','=',model)]"/>
-
         <menuitem name="Email" id="menu_email_message_tools"
             parent="base.menu_tools" />
 
@@ -150,82 +144,8 @@
             parent="menu_email_message_tools"
             action="action_view_mail_message" />
 
-        <record model="ir.ui.view" id="email_smtp_server_form">
-            <field name="name">email.smtp_server.form</field>
-            <field name="model">email.smtp_server</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Smtp Server Configuration">
-                    <group colspan="4">
-                        <field name="name"/>
-                        <field name="default"/>
-                    </group>
-                    <notebook colspan="4">
-                        <page string="Configuration">
-                            <separator string="Server Information" colspan="4"/>
-                            <group colspan="4" col="8">
-                                <field name="smtpserver"/>
-                                <field name="smtpport"/>
-                                <field name="smtpssl"/>
-                                <field name="smtptls"/>
-                             </group>
-
-                            <separator string="User Information" colspan="4"/>
-                            <group col="6" colspan="4">
-                                <field name="email_id"/>
-                                <field name="smtpuname"/>
-                                <field name="smtppass" password="True"/>
-
-                            </group>
-                            <separator string="" colspan="4"/>
-                            <label string="" colspan="2"/>
-                            <button name="test_smtp_connection" type="object" string="Test Connection" icon="gtk-network" colspan="2"/>
-                        </page>
-                    </notebook>
-                </form>
-            </field>
-        </record>
-
-        <record model="ir.ui.view" id="email_smtp_server_tree">
-            <field name="name">email.smtp_server.tree</field>
-            <field name="model">email.smtp_server</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="SMTP Server">
-                    <field name="name"/>
-                    <field name="email_id"/>
-                    <field name="smtpserver"/>
-                    <field name="default"/>
-                    <button name="test_smtp_connection" type="object" string="Test Connection" icon="gtk-network"/>
-                </tree>
-            </field>
-        </record>
-
-        <record id="view_email_smtp_server_search" model="ir.ui.view">
-            <field name="name">email_smtp.server.search</field>
-            <field name="model">email.smtp_server</field>
-            <field name="type">search</field>
-            <field name="arch" type="xml">
-                <search string="Smtp Server">
-                    <field name="name"/>
-                    <field name="email_id"/>
-                </search>
-            </field>
-        </record>
-
-        <record model="ir.actions.act_window" id="action_email_smtp_server_tree_all">
-            <field name="name">Outgoing Servers</field>
-            <field name="res_model">email.smtp_server</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form,tree</field>
-            <field name="view_id" ref="email_smtp_server_tree" />
-            <field name="context">{'group_by': [], 'search_default_draft': 1, 'search_default_my': 1}</field>
-            <field name="search_view_id" ref="view_email_smtp_server_search"/>
-        </record>
 
         <menuitem name="Email" id="menu_config_email" parent="base.menu_lunch_survey_root" sequence="20"/>
-
-        <menuitem name="Outgoing Servers" id="menu_email_smtp_server_all" parent="menu_config_email" action="action_email_smtp_server_tree_all"/>
 
     </data>
 </openerp>

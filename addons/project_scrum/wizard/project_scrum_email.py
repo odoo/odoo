@@ -101,8 +101,8 @@ class project_scrum_email(osv.osv_memory):
         if data.scrum_master_email == data.product_owner_email:
             data.product_owner_email = False
         if data.scrum_master_email:
-            email_message_obj.email_send(cr, uid, user_email, [data.scrum_master_email], data.subject, body, model='project.scrum.email', reply_to=user_email)
+            email_message_obj.schedule_with_attach(cr, uid, user_email, [data.scrum_master_email], data.subject, body, model='project.scrum.email', reply_to=user_email)
         if data.product_owner_email:
-            email_message_obj.email_send(cr, uid, user_email, [data.product_owner_email], data.subject, body, model='project.scrum.email', reply_to=user_email)
+            email_message_obj.schedule_with_attach(cr, uid, user_email, [data.product_owner_email], data.subject, body, model='project.scrum.email', reply_to=user_email)
         return {'type': 'ir.actions.act_window_close'}
 project_scrum_email()

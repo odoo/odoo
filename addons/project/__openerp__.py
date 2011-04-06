@@ -27,7 +27,7 @@
     "website": "http://www.openerp.com",
     "category": "Project Management",
     "images": ["images/gantt.png", "images/project_dashboard.jpeg","images/project_task_tree.jpeg","images/project_task.jpeg","images/project.jpeg","images/task_analysis.jpeg"],
-    "depends": ["product", "analytic", "board", "email"],
+    "depends": ["product", "analytic", "board", "mail"],
     "description": """
 Project management module tracks multi-level projects, tasks, work done on tasks, eso.
 ======================================================================================

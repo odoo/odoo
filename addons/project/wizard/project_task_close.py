@@ -113,7 +113,7 @@ class project_task_close(osv.osv_memory):
                     to_adr.append(data.manager_email)
                 if data.partner_warn and data.partner_email:
                     to_adr.append(data.partner_email)
-                mail_id = email_message_obj.email_send(cr, uid, from_adr, to_adr, subject, tools.ustr(body), model='project.task.close', email_bcc=[from_adr])
+                mail_id = email_message_obj.schedule_with_attach(cr, uid, from_adr, to_adr, subject, tools.ustr(body), model='project.task.close', email_bcc=[from_adr])
                 if not mail_id:
                     raise osv.except_osv(_('Error'), _("Couldn't send mail! Check the email ids and smtp configuration settings"))
         return {}

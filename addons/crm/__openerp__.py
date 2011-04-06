@@ -57,7 +57,7 @@ Creates a dashboard for CRM that includes:
         'base',
         'base_action_rule',
         'process',
-        'email',
+        'mail',
         'base_calendar',
         'resource',
         'board'

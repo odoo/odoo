@@ -24,7 +24,7 @@
     "version" : "1.0",
     "author" : ['OpenERP SA', 'Axelor'],
     "website" : "http://www.openerp.com/",
-    "depends" : ["base","email"],
+    "depends" : ["base","mail"],
     "category" : "Tools",
     "description": """
 This module is required for the Thuderbird Plug-in to work properly.

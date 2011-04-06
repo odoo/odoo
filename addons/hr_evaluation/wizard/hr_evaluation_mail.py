@@ -35,7 +35,7 @@ class hr_evaluation_reminder(osv.osv_memory):
         current_interview = hr_evaluation_interview_obj.browse(cr, uid, evaluation_data.get('evaluation_id'))
         if current_interview.state == "waiting_answer" and current_interview.user_to_review_id.work_email :
             msg = " Hello %s, \n\n Kindly post your response for '%s' survey interview. \n\n Thanks,"  %(current_interview.user_to_review_id.name, current_interview.survey_id.title)
-            email_message_obj.email_send(cr, uid, tools.config['email_from'], [current_interview.user_to_review_id.work_email],\
+            email_message_obj.schedule_with_attach(cr, uid, tools.config['email_from'], [current_interview.user_to_review_id.work_email],\
                                           'Reminder to fill up Survey', msg, model='hr.evaluation.reminder')
         return {'type': 'ir.actions.act_window_close'}
 

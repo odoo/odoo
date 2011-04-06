@@ -308,8 +308,8 @@ class crm_case(object):
             return {'value': {'phone': address.phone}}
 
     def _history(self, cr, uid, cases, keyword, history=False, subject=None, email=False, details=None, email_from=False, message_id=False, attach=[], context=None):
-        mailgate_pool = self.pool.get('mailgate.thread')
-        return mailgate_pool.history(cr, uid, cases, keyword, history=history,\
+        thread_pool = self.pool.get('email.thread')
+        return thread_pool.history(cr, uid, cases, keyword, history=history,\
                                        subject=subject, email=email, \
                                        details=details, email_from=email_from,\
                                        message_id=message_id, attach=attach, \
@@ -458,7 +458,7 @@ class crm_case(object):
                 raise osv.except_osv(_('Error!'), ("Partner Email is not specified in Case"))
             if not case.user_id.user_email:
                raise osv.except_osv(_('Error!'), ("User Email is not specified in Case"))
-            
+
             if destination and case.section_id.user_id:
                 case_email = case.section_id.user_id.user_email
             else:
@@ -486,9 +486,9 @@ class crm_case(object):
                 attach_to_send = self.pool.get('ir.attachment').read(cr, uid, attach_ids, ['datas_fname', 'datas'])
                 attach_to_send = map(lambda x: (x['datas_fname'], base64.decodestring(x['datas'])), attach_to_send)
 
-                # Send an email
+            # Send an email
             subject = "Reminder: [%s] %s" % (str(case.id), case.name, )
-            email_message_obj.email_send(cr, uid,
+            email_message_obj.schedule_with_attach(cr, uid,
                 src,
                 [dest],
                 subject,
@@ -538,7 +538,7 @@ class crm_case(object):
     def format_mail(self, obj, body):
         return self.pool.get('base.action.rule').format_mail(obj, body)
 
-    def message_followers(self, cr, uid, ids, context=None):
+    def thread_followers(self, cr, uid, ids, context=None):
         """ Get a list of emails of the people following this thread
         """
         res = {}

@@ -49,7 +49,7 @@ More information on the methodology:
     """,
     'author': 'OpenERP SA',
     'images': ['images/product_backlogs.jpeg', 'images/project_sprints.jpeg', 'images/scrum_dashboard.jpeg', 'images/scrum_meetings.jpeg'],
-    'depends': ['project', 'process', 'email'],
+    'depends': ['project', 'process', 'mail'],
     'init_xml': [],
     'update_xml': [
         'security/ir.model.access.csv',

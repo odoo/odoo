@@ -229,7 +229,7 @@ class hr_evaluation(osv.osv):
                         sub = phase.email_subject
                         dest = [child.work_email]
                         if dest:
-                           email_message_obj.email_send(cr, uid, evaluation.employee_id.work_email, dest, sub, body, model='hr_evaluation.evaluation')
+                           email_message_obj.schedule_with_attach(cr, uid, evaluation.employee_id.work_email, dest, sub, body, model='hr_evaluation.evaluation')
 
         self.write(cr, uid, ids, {'state':'wait'}, context=context)
         return True

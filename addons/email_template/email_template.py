@@ -33,7 +33,7 @@ import pooler
 
 class email_template(osv.osv):
     "Templates for sending Email"
-    _inherit = 'email.message.template'
+    _inherit = 'email.message.common'
     _name = "email.template"
     _description = 'Email Templates for Models'
 
@@ -124,13 +124,6 @@ This is useful for CRM leads for example"),
                    'Wizard Button',
                    help="Button in the side bar of the form view of this Resource that will invoke the Window Action",
                    readonly=True),
-        'allowed_groups':fields.many2many(
-                  'res.groups',
-                  'template_group_rel',
-                  'templ_id', 'group_id',
-                  string="Allowed User Groups",
-                  help="Only users from these groups will be"
-                  " allowed to send mails from this Template"),
         'model_object_field':fields.many2one(
                  'ir.model.fields',
                  string="Field",
@@ -138,37 +131,36 @@ This is useful for CRM leads for example"),
                  "\nIf it is a relationship field you will be able to "
                  "choose the nested values in the box below\n(Note:If "
                  "there are no values make sure you have selected the"
-                 " correct model)",
-                 store=False),
+                 " correct model)"),
         'sub_object':fields.many2one(
                  'ir.model',
                  'Sub-model',
                  help='When a relation field is used this field'
-                 ' will show you the type of field you have selected',
-                 store=False),
+                 ' will show you the type of field you have selected'),
         'sub_model_object_field':fields.many2one(
                  'ir.model.fields',
                  'Sub Field',
                  help="When you choose relationship fields "
-                 "this field will specify the sub value you can use.",
-                 store=False),
+                 "this field will specify the sub value you can use."),
         'null_value':fields.char(
                  'Null Value',
                  help="This Value is used if the field is empty",
-                 size=50, store=False),
+                 size=50),
         'copyvalue':fields.char(
                 'Expression',
                 size=100,
                 help="Copy and paste the value in the "
-                "location you want to use a system value.",
-                store=False),
-        'table_html':fields.text(
-             'HTML code',
-             help="Copy this html code to your HTML message"
-             " body for displaying the info in your mail.",
-             store=False),
+                "location you want to use a system value."),
         'auto_delete': fields.boolean('Auto Delete', help="Permanently delete emails after sending"),
-        'model': fields.related('model_id','model', type='char', size=128, string='Object'),
+        'model': fields.related('model_id','model', type='char', size=128, string='Object', help="Placeholders can be used here."),
+        'email_from': fields.char('From', size=128, help="Email From. Placeholders can be used here."),
+        'email_to': fields.char('To', size=256, help="Email Recipients. Placeholders can be used here."),
+        'email_cc': fields.char('Cc', size=256, help="Carbon Copy Email Recipients. Placeholders can be used here."),
+        'email_bcc': fields.char('Bcc', size=256, help="Blind Carbon Copy Email Recipients. Placeholders can be used here."),
+        'message_id': fields.char('Message Id', size=1024, select=1, help="Message Id on Email. Placeholders can be used here."),
+        'reply_to':fields.char('Reply-To', size=250, help="Placeholders can be used here."),
+        'body': fields.text('Description', translate=True, help="Placeholders can be used here."),
+        'body_html': fields.text('HTML', help="Contains HTML version of email. Placeholders can be used here."),
     }
 
     _sql_constraints = [
@@ -219,10 +211,6 @@ This is useful for CRM leads for example"),
                     self.pool.get('ir.values').unlink(cr, uid, template.ref_ir_value.id, context)
             except:
                 raise osv.except_osv(_("Warning"), _("Deletion of Record failed"))
-
-    def delete_action(self, cr, uid, ids, context=None):
-        self.unlink_action(cr, uid, ids, context=context)
-        return True
 
     def unlink(self, cr, uid, ids, context=None):
         self.unlink_action(cr, uid, ids, context=context)
@@ -360,14 +348,14 @@ This is useful for CRM leads for example"),
         return {'value':result}
 
 
-    def _generate_email(self, cr, uid, template_id, record_id, context=None):
+    def generate_email(self, cr, uid, template_id, record_id, context=None):
         """
         Generates an email from the template for
         record record_id of target object
         """
         if context is None:
             context = {}
-        smtp_pool = self.pool.get('email.smtp_server')
+        smtp_pool = self.pool.get('ir.mail_server')
         email_message_pool = self.pool.get('email.message')
         report_xml_pool = self.pool.get('ir.actions.report.xml')
         template = self.get_email_template(cr, uid, template_id, record_id, context)
@@ -375,7 +363,7 @@ This is useful for CRM leads for example"),
         if not smtp_server_id and template.smtp_server_id:
             smtp_server_id = template.smtp_server_id.id
         else:
-            smtp_ids = smtp_pool.search(cr, uid, [('default','=',True)])
+            smtp_ids = smtp_pool.search(cr, uid, [])
             smtp_server_id = smtp_ids and smtp_ids[0]
         smtp_server = smtp_pool.browse(cr, uid, smtp_server_id, context=context)
         # determine name of sender, either it is specified in email_id
@@ -394,8 +382,9 @@ This is useful for CRM leads for example"),
             'email_cc': self.get_template_value(cr, uid, template.email_cc, model, record_id, context),
             'email_bcc': self.get_template_value(cr, uid, template.email_bcc, model, record_id, context),
             'reply_to': self.get_template_value(cr, uid, template.reply_to, model, record_id, context),
-            'name': self.get_template_value(cr, uid, template.subject, model, record_id, context),
-            'description': self.get_template_value(cr, uid, template.description, model, record_id, context),
+            'subject': self.get_template_value(cr, uid, template.subject, model, record_id, context),
+            'body': self.get_template_value(cr, uid, template.description, model, record_id, context),
+            'auto_delete': self.get_template_value(cr, uid, template.auto_delete, model, record_id, context),
             #'body_html': self.get_template_value(cr, uid, template.body_html, model, record_id, context),
         }
 
@@ -405,7 +394,7 @@ This is useful for CRM leads for example"),
 
         elif template['track_campaign_item']:
             # get appropriate message-id
-            values.update({'message_id': tools.misc.generate_tracking_message_id(record_id)})
+            values.update({'message_id': smtp_pool.generate_tracking_message_id(record_id)})
 
         #Use signatures if allowed
         if template.user_signature:
@@ -444,53 +433,14 @@ This is useful for CRM leads for example"),
 
         #Send emails
         context.update({'notemplate':True})
-        email_id = email_message_pool.email_send(cr, uid, values.get('email_from'), values.get('email_to'), values.get('name'), values.get('description'),
-                    model=model, email_cc=values.get('email_cc'), email_bcc=values.get('email_bcc'), reply_to=values.get('reply_to'),
-                    attach=attachment, message_id=values.get('message_id'), openobject_id=record_id, debug=True, subtype='plain', x_headers={}, priority='3', smtp_server_id=smtp_server.id, context=context)
+        email_id = email_message_pool.schedule_with_attach(cr, uid, values.get('email_from'), values.get('email_to'), values.get('name'),
+                    values.get('description'), model=model, email_cc=values.get('email_cc'), email_bcc=values.get('email_bcc'),
+                    reply_to=values.get('reply_to'), attach=attachment, message_id=values.get('message_id'), openobject_id=record_id,
+                    debug=True, subtype='plain', x_headers={}, priority='3', smtp_server_id=smtp_server.id, auto_delete=values.get('auto_delete'), context=context)
         email_message_pool.write(cr, uid, email_id, {'template_id': context.get('template_id',template.id)})
-        return email_id
-
-
-
-    def generate_email(self, cr, uid, template_id, record_id,  context=None):
-        if context is None:
-            context = {}
-        email_id = self._generate_email(cr, uid, template_id, record_id, context)
         return email_id
 
 email_template()
 
-class email_message(osv.osv):
-    _inherit = 'email.message'
-    _columns = {
-        'template_id': fields.many2one('email.template', 'Email-Template', readonly=True),
-        }
-
-    def process_email_queue(self, cr, uid, ids=None, context=None):
-        result = super(email_message, self).process_email_queue(cr, uid, ids, context)
-        attachment_obj = self.pool.get('ir.attachment')
-        for message in self.browse(cr, uid, result, context):
-            if message.template_id and message.template_id.auto_delete:
-                self.unlink(cr, uid, [id], context=context)
-                attachment_ids = [x.id for x in message.attachments_ids]
-                attachment_obj.unlink(cr, uid, attachment_ids, context=context)
-        return result
-
-    def email_send(self, cr, uid, email_from, email_to, subject, body, model=False, email_cc=None, email_bcc=None, reply_to=False, attach=None,
-            message_id=False, references=False, openobject_id=False, debug=False, subtype='plain', x_headers={}, priority='3', smtp_server_id=False, context=None):
-        if context is None:
-            context = {}
-        notemplate = context.get('notemplate', True)
-        if (not notemplate) and model and openobject_id:
-            template_pool = self.pool.get('email.template')
-            template_ids = template_pool.search(cr, uid, [('model','=',model)])
-            if template_ids and len(template_ids):
-                template_id = template_ids[0]
-                return template_pool.generate_email(cr, uid, template_id, openobject_id, context=context)
-
-        return super(email_message, self).email_send(cr, uid, email_from, email_to, subject, body, model=model, email_cc=email_cc, email_bcc=email_bcc, reply_to=reply_to, attach=attach,
-                message_id=message_id, references=references, openobject_id=openobject_id, debug=debug, subtype=subtype, x_headers=x_headers, priority=priority, smtp_server_id=smtp_server_id, context=context)
-
-email_message()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

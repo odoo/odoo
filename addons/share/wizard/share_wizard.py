@@ -462,7 +462,7 @@ class share_create(osv.osv_memory):
                     body += _("This additional data has been automatically added to your current access.\n")
                     body += _("You may use your existing login and password to view it. As a reminder, your login is %s.\n") % result_line.login
 
-                if not email_message_obj.email_send(cr, uid,
+                if not email_message_obj.schedule_with_attach(cr, uid,
                                             user.user_email,
                                             [email_to],
                                             subject,

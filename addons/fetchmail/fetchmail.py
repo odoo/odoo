@@ -82,21 +82,9 @@ class email_server(osv.osv):
                 return False
         return True
 
-    def check_model(self, cr, uid, ids, context = None):
-        if context is None:
-            context = {}
-        current_rec = self.read(cr, uid, ids, context)
-        if current_rec:
-            current_rec = current_rec[0]
-            model_name = self.pool.get('ir.model').browse(cr, uid, current_rec.get('object_id')[0]).model
-            model = self.pool.get(model_name)
-            if hasattr(model, 'message_new'):
-                return True
-        return False
-
     _constraints = [
         (check_duplicate, 'Warning! Can\'t have duplicate server configuration!', ['user', 'password']),
-        (check_model, 'Warning! Record for selected Model can not be created\nPlease choose valid Model', ['object_id'])
+        
     ]
 
     def onchange_server_type(self, cr, uid, ids, server_type=False, ssl=False):
@@ -146,7 +134,7 @@ class email_server(osv.osv):
                 if context.get('get_server',False):
                     return ret_server
             except Exception, e:
-                logger.notifyChannel(server.type, netsvc.LOG_WARNING, '%s' % (e))
+                logger.notifyChannel(server.type, netsvc.LOG_ERROR, '%s' % (e))
         return True
 
     def button_fetch_mail(self, cr, uid, ids, context=None):
@@ -161,7 +149,7 @@ class email_server(osv.osv):
     def fetch_mail(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
-        email_tool = self.pool.get('email.server.tools')
+        thread_pool = self.pool.get('email.thread')
         action_pool = self.pool.get('ir.actions.server')
         context.update({'get_server': True})
         for server in self.browse(cr, uid, ids, context=context):
@@ -174,7 +162,7 @@ class email_server(osv.osv):
                     result, data = imap_server.search(None, '(UNSEEN)')
                     for num in data[0].split():
                         result, data = imap_server.fetch(num, '(RFC822)')
-                        res_id = email_tool.process_email(cr, user, server.object_id.model, data[0][1], attach=server.attach, context=context)
+                        res_id = thread_pool.process_email(cr, user, server.object_id.model, data[0][1], attach=server.attach, context=context)
                         if res_id and server.action_id:
                             action_pool.run(cr, user, [server.action_id.id], {'active_id': res_id, 'active_ids':[res_id]})
 
@@ -183,7 +171,7 @@ class email_server(osv.osv):
                     logger.notifyChannel(server.type, netsvc.LOG_INFO, 'fetchmail fetch/process %s email(s) from %s' % (count, server.name))
 
                 except Exception, e:
-                    logger.notifyChannel(server.type, netsvc.LOG_WARNING, '%s' % (tools.ustr(e)))
+                    logger.notifyChannel(server.type, netsvc.LOG_ERROR, '%s' % (tools.ustr(e)))
                 finally:
                     if imap_server:
                         imap_server.close()
@@ -196,14 +184,14 @@ class email_server(osv.osv):
                     for num in range(1, numMsgs + 1):
                         (header, msges, octets) = pop_server.retr(num)
                         msg = '\n'.join(msges)
-                        res_id = email_tool.process_email(cr, user, server.object_id.model, msg, attach=server.attach, context=context)
+                        res_id = thread_pool.process_email(cr, user, server.object_id.model, msg, attach=server.attach, context=context)
                         if res_id and server.action_id:
                             action_pool.run(cr, user, [server.action_id.id], {'active_id': res_id, 'active_ids':[res_id]})
 
                         pop_server.dele(num)
                     logger.notifyChannel(server.type, netsvc.LOG_INFO, 'fetchmail fetch %s email(s) from %s' % (numMsgs, server.name))
                 except Exception, e:
-                    logger.notifyChannel(server.type, netsvc.LOG_WARNING, '%s' % (tools.ustr(e)))
+                    logger.notifyChannel(server.type, netsvc.LOG_ERROR, '%s' % (tools.ustr(e)))
                 finally:
                     if pop_server:
                         pop_server.quit()

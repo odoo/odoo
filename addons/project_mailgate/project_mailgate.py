@@ -25,7 +25,7 @@ import binascii
 
 class project_tasks(osv.osv):
     _name = "project.task"
-    _inherit = ['mailgate.thread','project.task']
+    _inherit = ['email.thread','project.task']
 
     _columns={
                 'message_ids': fields.one2many('email.message', 'res_id', 'Messages', domain=[('model','=',_name)], readonly=True),
@@ -38,7 +38,7 @@ class project_tasks(osv.osv):
 #        @param cr: the current row, from the database cursor,
 #        @param uid: the current user’s ID for security checks
 #        """
-        mailgate_obj = self.pool.get('email.server.tools')
+        thread_obj = self.pool.get('email.thread')
         subject = msg.get('subject')
         body = msg.get('body')
         msg_from = msg.get('from')
@@ -49,7 +49,7 @@ class project_tasks(osv.osv):
             'description': body,
             'planned_hours' : 0.0,
         }
-        res = mailgate_obj.get_partner(cr, uid, msg_from)
+        res = thread_obj.get_partner(cr, uid, msg_from)
         if res:
             data.update(res)
         res = self.create(cr, uid, data)
@@ -69,8 +69,8 @@ class project_tasks(osv.osv):
         return res
 
     def message_update(self, cr, uid, id, msg, data={}, default_act='pending'):
-        mailgate_obj = self.pool.get('email.server.tools')
-        msg_actions, body_data = mailgate_obj.msg_act_get(msg)
+        thread_obj = self.pool.get('email.thread')
+        msg_actions, body_data = thread_obj.msg_act_get(msg)
         data.update({
             'description': body_data,
         })
@@ -93,7 +93,7 @@ class project_tasks(osv.osv):
         getattr(self,act)(cr, uid, [id])
         return True
 
-    def message_followers(self, cr, uid, ids, context=None):
+    def thread_followers(self, cr, uid, ids, context=None):
         res = []
         if isinstance(ids, (str, int, long)):
             select = [ids]
@@ -106,12 +106,9 @@ class project_tasks(osv.osv):
             return len(res) and res[0] or False
         return res
 
-    def msg_send(self, cr, uid, id, *args, **argv):
-        return True
-
     def _history(self, cr, uid, cases, keyword, history=False, subject=None, email=False, details=None, email_from=False, message_id=False, attach=[], context=None):
-        mailgate_pool = self.pool.get('mailgate.thread')
-        return mailgate_pool.history(cr, uid, cases, keyword, history=history,\
+        thread_pool = self.pool.get('email.thread')
+        return thread_pool.history(cr, uid, cases, keyword, history=history,\
                                        subject=subject, email=email, \
                                        details=details, email_from=email_from,\
                                        message_id=message_id, attach=attach, \

@@ -26,6 +26,10 @@ import tools
 import netsvc
 import base64
 import time
+import logging
+import re
+import email
+from email.header import decode_header
 #import binascii
 #import email
 #from email.header import decode_header
@@ -57,16 +61,18 @@ import time
 #]
 
 LOGGER = netsvc.Logger()
+_logger = logging.getLogger('mail')
+
 def format_date_tz(date, tz=None):
     if not date:
         return 'n/a'
     format = tools.DEFAULT_SERVER_DATETIME_FORMAT
     return tools.server_to_local_timestamp(date, format, format, tz)
 
-class email_message_template(osv.osv_memory):
-    _name = 'email.message.template'
+class email_message_common(osv.osv_memory):
+    _name = 'email.message.common'
     _columns = {
-        'name':fields.text('Subject', translate=True),
+        'subject':fields.text('Subject', translate=True),
         'model': fields.char('Object Name', size=128, select=1),
         'res_id': fields.integer('Resource ID', select=1),
         'date': fields.datetime('Date'),
@@ -79,20 +85,22 @@ class email_message_template(osv.osv_memory):
         'references': fields.text('References', help="References emails."),
         'reply_to':fields.char('Reply-To', size=250),
         'sub_type': fields.char('Sub Type', size=32),
-        'headers': fields.char('x_headers',size=256),
+        'headers': fields.text('x_headers'),
         'priority':fields.integer('Priority'),
-        'description': fields.text('Description', translate=True),
-        'smtp_server_id':fields.many2one('email.smtp_server', 'SMTP Server'),
+        'body': fields.text('Description', translate=True),
+        'body_html': fields.text('HTML', help="Contains HTML version of email"),
+        'smtp_server_id':fields.many2one('ir.mail_server', 'SMTP Server'),
     }
+    _rec_name = 'subject'
 
     _sql_constraints = []
-email_message_template()
+email_message_common()
 
 class email_message(osv.osv):
     '''
     Email Message
     '''
-    _inherit = 'email.message.template'
+    _inherit = 'email.message.common'
     _name = 'email.message'
     _description = 'Email Message'
     _order = 'date desc'
@@ -160,58 +168,33 @@ class email_message(osv.osv):
         for message in self.browse(cr, uid, ids, context=context):
             msg_txt = ''
             if message.history:
-                msg_txt += _('%s wrote on %s:\n\t') % (message.email_from or '/', format_date_tz(message.date, tz))
-                if message.description:
-                    msg_txt += self.truncate_data(cr, uid, message.description, context=context)
+                msg_txt += (message.email_from or '/') + _(' wrote on ') + format_date_tz(message.date, tz) + ':\n\t'
+                if message.body:
+                    msg_txt += self.truncate_data(cr, uid, message.body, context=context)
             else:
-                msg_txt = _('%s on %s:\n\t') % (message.user_id.name or '/', format_date_tz(message.date, tz))
-                msg_txt += message.name
+                msg_txt = (message.user_id.name or '/') + _(' on ') + format_date_tz(message.date, tz) + ':\n\t'
+                msg_txt += message.subject
             result[message.id] = msg_txt
         return result
 
     _columns = {
-        'message': fields.text('Description'),
         'partner_id': fields.many2one('res.partner', 'Partner'),
         'attachment_ids': fields.many2many('ir.attachment', 'message_attachment_rel', 'message_id', 'attachment_id', 'Attachments'),
         'display_text': fields.function(_get_display_text, method=True, type='text', size="512", string='Display Text'),
         'debug':fields.boolean('Debug', readonly=True),
         'history': fields.boolean('History', readonly=True),
-        'folder':fields.selection([
-                        ('drafts', 'Drafts'),
-                        ('inbox', 'Inbox'),
-                        ('outbox', 'Outbox'),
-                        ('trash', 'Trash'),
-                        ('sent', 'Sent Items'),
-                        ], 'Folder'),
         'state':fields.selection([
-                        ('draft', 'Draft'),
-                        ('sending', 'Sending'),
-                        ('waiting', 'Waiting'),
+                        ('outgoing', 'Outgoing'),
                         ('sent', 'Sent'),
+                        ('received', 'Received'),
                         ('exception', 'Exception'),
+                        ('cancel', 'Cancelled'),
                         ], 'State', readonly=True),
+        'auto_delete': fields.boolean('Auto Delete', help="Permanently delete emails after sending"),
     }
 
     _defaults = {
-        'state': lambda * a: 'draft',
-        'folder': lambda * a: 'outbox',
     }
-
-    def unlink(self, cr, uid, ids, context=None):
-        """
-        It just changes the folder of the item to "Trash", if it is no in Trash folder yet,
-        or completely deletes it if it is already in Trash.
-        """
-        to_update = []
-        to_remove = []
-        for mail in self.browse(cr, uid, ids, context=context):
-            if mail.folder == 'trash':
-                to_remove.append(mail.id)
-            else:
-                to_update.append(mail.id)
-        # Changes the folder to trash
-        self.write(cr, uid, to_update, {'folder': 'trash'}, context=context)
-        return super(email_message, self).unlink(cr, uid, to_remove, context=context)
 
     def init(self, cr):
         cr.execute("""SELECT indexname
@@ -221,25 +204,8 @@ class email_message(osv.osv):
             cr.execute("""CREATE INDEX email_message_res_id_model_idx
                           ON email_message (model, res_id)""")
 
-    def process_queue(self, cr, uid, ids, arg):
-        self.process_email_queue(cr, uid, ids=ids)
-        return True
-
-    def run_mail_scheduler(self, cursor, user, context=None):
-        """
-        This method is called by OpenERP Scheduler
-        to periodically send emails
-        """
-        try:
-            self.process_email_queue(cursor, user, context=context)
-        except Exception, e:
-            LOGGER.notifyChannel(
-                                 "Email Template",
-                                 netsvc.LOG_ERROR,
-                                 _("Error sending mail: %s") % e)
-
-    def email_send(self, cr, uid, email_from, email_to, subject, body, model=False, email_cc=None, email_bcc=None, reply_to=False, attach=None,
-            message_id=False, references=False, openobject_id=False, debug=False, subtype='plain', x_headers={}, priority='3', smtp_server_id=False, context=None):
+    def schedule_with_attach(self, cr, uid, email_from, email_to, subject, body, model=False, email_cc=None, email_bcc=None, reply_to=False, attach=None,
+            message_id=False, references=False, openobject_id=False, debug=False, subtype='plain', x_headers={}, priority='3', smtp_server_id=False, context=None, auto_delete=False):
         attachment_obj = self.pool.get('ir.attachment')
         if email_to and type(email_to) != list:
             email_to = [email_to]
@@ -249,11 +215,11 @@ class email_message(osv.osv):
             email_bcc = [email_bcc]
 
         msg_vals = {
-                'name': subject,
+                'subject': subject,
                 'model': model or '',
-                'date': time.strftime('%Y-%m-%d'),
+                'date': time.strftime('%Y-%m-%d %H:%M:%S'),
                 'user_id': uid,
-                'description': body,
+                'body': body,
                 'email_from': email_from,
                 'email_to': email_to and ','.join(email_to) or '',
                 'email_cc': email_cc and ','.join(email_cc) or '',
@@ -266,57 +232,188 @@ class email_message(osv.osv):
                 'headers': x_headers or False,
                 'priority': priority,
                 'debug': debug,
-                'folder': 'outbox',
                 'history': True,
                 'smtp_server_id': smtp_server_id,
-                'state': 'waiting',
+                'state': 'outgoing',
+                'auto_delete': auto_delete
             }
         email_msg_id = self.create(cr, uid, msg_vals, context)
         if attach:
             attachment_ids = []
             for attachment in attach:
                 attachment_data = {
-                        'name':  (subject or '') + _(' (Email Attachment)'),
+                        'name': attachment[0],
+                        'subject':  (subject or '') + _(' (Email Attachment)'),
                         'datas': attachment[1],
                         'datas_fname': attachment[0],
-                        'description': subject or _('No Description'),
+                        'body': subject or _('No Description'),
                         'res_model':'email.message',
                         'res_id': email_msg_id,
                     }
+                if context.has_key('default_type'):
+                    del context['default_type']
                 attachment_ids.append(attachment_obj.create(cr, uid, attachment_data, context))
             self.write(cr, uid, email_msg_id,
                               { 'attachment_ids': [[6, 0, attachment_ids]] }, context)
         return email_msg_id
 
     def process_retry(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'state':'waiting'}, context)
+        return self.write(cr, uid, ids, {'state':'outgoing'}, context)
 
     def process_email_queue(self, cr, uid, ids=None, context=None):
         if ids is None:
             ids = []
         if context is None:
             context = {}
-        attachment_obj = self.pool.get('ir.attachment')
-        smtp_server_obj = self.pool.get('email.smtp_server')
         if not ids:
-            filters = [('folder', '=', 'outbox'), ('state', '=', 'waiting')]
+            filters = [('state', '=', 'outgoing')]
             if 'filters' in context:
                 filters.extend(context['filters'])
             ids = self.search(cr, uid, filters, context=context)
-        self.write(cr, uid, ids, {'state':'sending', 'folder':'sent'}, context)
+        try:
+            res = self.send_email(cr, uid, ids, auto_commit=True, context=context)
+        except Exception, error:
+            logger = netsvc.Logger()
+            msg = _("Sending of Mail failed. Error: %s") % (error)
+            logger.notifyChannel("email", netsvc.LOG_ERROR, msg)
+            return False
+        return res
+
+    def _decode_header(self, text):
+        """Returns unicode() string conversion of the the given encoded smtp header"""
+        if text:
+            text = decode_header(text.replace('\r', ''))
+            return ''.join([tools.ustr(x[0], x[1]) for x in text])
+
+    def to_email(self,text):
+        return re.findall(r'([^ ,<@]+@[^> ,]+)',text)
+
+    def parse_message(self, message):
+        """Return Dictionary Object after parse EML Message String
+        @param message: email.message.Message object or string or unicode object
+        """
+        if isinstance(message, str):
+            msg_txt = email.message_from_string(message)
+
+        # Warning: message_from_string doesn't always work correctly on unicode,
+        # we must use utf-8 strings here :-(
+        if isinstance(message, unicode):
+            message = message.encode('utf-8')
+            msg_txt = email.message_from_string(message)
+
+        msg_txt = message
+        message_id = msg_txt.get('message-id', False)
+        msg = {}
+
+        if not message_id:
+            # Very unusual situation, be we should be fault-tolerant here
+            message_id = time.time()
+            msg_txt['message-id'] = message_id
+            _logger.info('Parsing Message without message-id, generating a random one: %s', message_id)
+
+       
+        fields = msg_txt.keys()
+        msg['id'] = message_id
+        msg['message-id'] = message_id
+
+        if 'Subject' in fields:
+            msg['subject'] = self._decode_header(msg_txt.get('Subject'))
+
+        if 'Content-Type' in fields:
+            msg['content-type'] = msg_txt.get('Content-Type')
+
+        if 'From' in fields:
+            msg['from'] = self._decode_header(msg_txt.get('From') or msg_txt.get_unixfrom())
+
+        if 'Delivered-To' in fields:
+            msg['to'] = self._decode_header(msg_txt.get('Delivered-To'))
+
+        if 'CC' in fields:
+            msg['cc'] = self._decode_header(msg_txt.get('CC'))
+
+        if 'Reply-to' in fields:
+            msg['reply'] = self._decode_header(msg_txt.get('Reply-To'))
+
+        if 'Date' in fields:
+            msg['date'] = self._decode_header(msg_txt.get('Date'))
+
+        if 'Content-Transfer-Encoding' in fields:
+            msg['encoding'] = msg_txt.get('Content-Transfer-Encoding')
+
+        if 'References' in fields:
+            msg['references'] = msg_txt.get('References')
+
+        if 'In-Reply-To' in fields:
+            msg['in-reply-to'] = msg_txt.get('In-Reply-To')
+
+        if 'X-Priority' in fields:
+            msg['priority'] = msg_txt.get('X-Priority', '3 (Normal)').split(' ')[0] #TOFIX:
+
+        if not msg_txt.is_multipart() or 'text/plain' in msg.get('content-type', ''):
+            encoding = msg_txt.get_content_charset()
+            body = msg_txt.get_payload(decode=True)
+            if 'text/html' in msg.get('content-type', ''):
+                body = tools.html2plaintext(body)
+            msg['body'] = tools.ustr(body, encoding)
+
+        attachments = {}
+        has_plain_text = False
+        if msg_txt.is_multipart() or 'multipart/alternative' in msg.get('content-type', ''):
+            body = ""
+            for part in msg_txt.walk():
+                if part.get_content_maintype() == 'multipart':
+                    continue
+
+                encoding = part.get_content_charset()
+                filename = part.get_filename()
+                if part.get_content_maintype()=='text':
+                    content = part.get_payload(decode=True)
+                    if filename:
+                        attachments[filename] = content
+                    elif not has_plain_text:
+                        # main content parts should have 'text' maintype
+                        # and no filename. we ignore the html part if
+                        # there is already a plaintext part without filename,
+                        # because presumably these are alternatives.
+                        content = tools.ustr(content, encoding)
+                        if part.get_content_subtype() == 'html':
+                            body = tools.ustr(tools.html2plaintext(content))
+                        elif part.get_content_subtype() == 'plain':
+                            body = content
+                            has_plain_text = True
+                elif part.get_content_maintype() in ('application', 'image'):
+                    if filename :
+                        attachments[filename] = part.get_payload(decode=True)
+                    else:
+                        res = part.get_payload(decode=True)
+                        body += tools.ustr(res, encoding)
+
+            msg['body'] = body
+            msg['attachments'] = attachments
+        return msg
+
+    def send_email(self, cr, uid, ids, auto_commit=False, context=None):
+        """
+        send email message
+        """
+        if context is None:
+            context = {}
+        smtp_server_obj = self.pool.get('ir.mail_server')
+        attachment_pool = self.pool.get('ir.attachment')
+        self.write(cr, uid, ids, {'state':'outgoing'}, context)
         for message in self.browse(cr, uid, ids, context):
             try:
-                attachments = []
-                for attach in message.attachment_ids:
-                    attachments.append((attach.datas_fname ,base64.b64decode(attach.datas)))
                 smtp_server = message.smtp_server_id
                 if not smtp_server:
-                    smtp_ids = smtp_server_obj.search(cr, uid, [('default','=',True)])
+                    smtp_ids = smtp_server_obj.search(cr, uid, [])
                     if smtp_ids:
                         smtp_server = smtp_server_obj.browse(cr, uid, smtp_ids, context)[0]
-                res = tools.email_send(message.email_from,
-                        message.email_to and message.email_to.split(',') or [],
-                        message.name, message.description,
+                attachments = []
+                for attach in message.attachment_ids:
+                    attachments.append((attach.datas_fname, base64.b64decode(attach.datas)))
+                if message.state in ['outgoing', 'exception']:
+                    msg = smtp_server_obj.pack_message(cr, uid, message.email_from,
+                        message.email_to and message.email_to.split(',') or [], message.subject, message.body,
                         email_cc=message.email_cc and message.email_cc.split(',') or [],
                         email_bcc=message.email_bcc and message.email_bcc.split(',') or [],
                         reply_to=message.reply_to,
@@ -324,22 +421,47 @@ class email_message(osv.osv):
                         openobject_id=message.res_id,
                         subtype=message.sub_type,
                         x_headers=message.headers and eval(message.headers) or {},
-                        priority=message.priority, debug=message.debug,
-                        smtp_server=smtp_server and smtp_server.smtpserver or None,
-                        smtp_port=smtp_server and smtp_server.smtpport or None,
-                        ssl=smtp_server and smtp_server.smtpssl or False,
-                        smtp_user=smtp_server and smtp_server.smtpuname or None,
-                        smtp_password=smtp_server and smtp_server.smtppass or None)
-                if res:
-                    self.write(cr, uid, [message.id], {'state':'sent', 'message_id': res}, context)
+                        priority=message.priority)
+                    res = smtp_server_obj.send_email(cr, uid, 
+                        msg,
+                        mail_server_id = message.smtp_server_id.id or None,
+                        smtp_server=smtp_server and smtp_server.smtp_host or None,
+                        smtp_port=smtp_server and smtp_server.smtp_port or None,
+                        smtp_user=smtp_server and smtp_server.smtp_user or None,
+                        smtp_password=smtp_server and smtp_server.smtp_pass or None,
+                        ssl=smtp_server and smtp_server.smtp_ssl or False,
+                        tls=smtp_server and smtp_server.smtp_tls,
+                        debug=message.debug)
+                    if res:
+                        self.write(cr, uid, [message.id], {'state':'sent', 'message_id': res}, context)
+                    else:
+                        self.write(cr, uid, [message.id], {'state':'exception'}, context)
                 else:
-                    self.write(cr, uid, [message.id], {'state':'exception'}, context)
+                    raise osv.except_osv(_('Error !'), _('No messages in outgoing or exception state!'))
+
+                #if auto_delete=True then delete that sent messages as well as attachments
+                message_data = self.read(cr, uid, message.id, ['state', 'auto_delete', 'attachment_ids'])
+                if message_data['state'] == 'sent' and message_data['auto_delete'] == True:
+                    self.unlink(cr, uid, [message.id], context=context)
+                    if message_data['attachment_ids']:
+                        attachment_pool.unlink(cr, uid, message_data['attachment_ids'], context=context)
+
+                if auto_commit == True:
+                    cr.commit()
+
             except Exception, error:
                 logger = netsvc.Logger()
                 logger.notifyChannel("email-template", netsvc.LOG_ERROR, _("Sending of Mail %s failed. Probable Reason:Could not login to server\nError: %s") % (message.id, error))
                 self.write(cr, uid, [message.id], {'state':'exception'}, context)
-        return ids
+                return False
+        return True
 
+    def do_cancel(self, cr, uid, ids, context=None):
+        '''
+        Cancel the email to be send
+        '''
+        self.write(cr, uid, ids, {'state':'cancel'}, context)
+        return True
 # OLD Code.
 #    def send_all_mail(self, cr, uid, ids=None, context=None):
 #        if ids is None:
