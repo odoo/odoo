@@ -644,7 +644,7 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
     start: function() {
         this._super.apply(this, arguments);
         this.log("o2m.start");
-        var action = { res_model: this.field.relation, views: [ [false,"list"], ], };
+        var action = { res_model: this.field.relation, views: [ [false,"list"] ], };
         this.viewmanager = new openerp.base.ViewManagerAction(this.view.session, this.element_id, action);
     },
     set_value: function(value) {

@@ -9,18 +9,9 @@ openerp.base.ListView = openerp.base.Controller.extend({
         this.dataset = dataset;
         this.model = dataset.model;
         this.view_id = view_id;
-        this.name = "";
-        // TODO: default to action.limit
-        // TODO: decide if limit is a property of DataSet and thus global to all views (calendar ?)
-        this.limit = 80;
 
-        this.cols = [];
-
-        this.$table = null;
-        this.colnames = [];
-        this.colmodel = [];
-
-        this.event_loading = false; // TODO in the future prevent abusive click by masking
+        this.columns = [];
+        this.rows = [];
     },
     start: function() {
         //this.log('Starting ListView '+this.model+this.view_id)
@@ -30,51 +21,26 @@ openerp.base.ListView = openerp.base.Controller.extend({
         this.fields_view = data.fields_view;
         //this.log(this.fields_view);
         this.name = "" + this.fields_view.arch.attrs.string;
-        this.$element.html(QWeb.render("ListView", {"fields_view": this.fields_view}));
-        this.$table = this.$element.find("table");
-        this.cols = [];
-        this.colnames = [];
-        this.colmodel = [];
-        // TODO uss a object for each col, fill it with view and fallback to dataset.model_field
-        var tree = this.fields_view.arch.children;
-        for(var i = 0; i < tree.length; i++)  {
-            var col = tree[i];
-            if(col.tag == "field") {
-                this.cols.push(col.attrs.name);
-                this.colnames.push(col.attrs.name);
-                this.colmodel.push({ name: col.attrs.name, index: col.attrs.name });
-            }
-        }
-        this.dataset.fields = this.cols;
 
-        var width = this.$element.width();
-        this.$table.jqGrid({
-            datatype: "local",
-            height: "100%",
-            rowNum: 100,
-            //rowList: [10,20,30],
-            colNames: this.colnames,
-            colModel: this.colmodel,
-            //pager: "#plist47",
-            viewrecords: true,
-            caption: this.name
-        }).setGridWidth(width);
+        var fields = this.fields_view.fields;
+        this.columns = _(this.fields_view.arch.children).chain()
+            .map(function (field) {
+                var name = field.attrs.name;
+                return _.extend({id: name, tag: field.tag}, field.attrs, fields[name]);
+            }).value();
 
-        var self = this;
-        $(window).bind('resize', function() {
-            self.$element.children().hide();
-            self.$table.setGridWidth(self.$element.width());
-            self.$element.children().show();
-        }).trigger('resize');
-        
+        this.$element.html(QWeb.render("ListView", this));
+
         // sidebar stuff
         if (this.view_manager.sidebar)
             this.view_manager.sidebar.load_multi_actions();
     },
     do_fill_table: function(records) {
-        this.$table
-            .clearGridData()
-            .addRowData('id', records);
+        this.rows = records;
+
+        var table = this.$element.find('table');
+        table.append(QWeb.render("ListView.rows", {
+                columns: this.columns, rows: this.rows}));
     },
     do_show: function () {
         // TODO: re-trigger search

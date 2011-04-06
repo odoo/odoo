@@ -12,6 +12,8 @@ openerp.base.SearchView = openerp.base.Controller.extend({
 
         this.inputs = [];
         this.enabled_filters = [];
+
+        this.has_focus = false;
     },
     start: function() {
         //this.log('Starting SearchView '+this.model+this.view_id)
@@ -47,6 +49,10 @@ openerp.base.SearchView = openerp.base.Controller.extend({
                 row = [];
                 rows.push(row);
             } else if (item.tag === 'filter') {
+                if (!this.has_focus) {
+                    item.attrs.default_focus = '1';
+                    this.has_focus = true;
+                }
                 filters.push(
                     new openerp.base.search.Filter(
                         item, this));
@@ -59,6 +65,10 @@ openerp.base.SearchView = openerp.base.Controller.extend({
                         new openerp.base.search.Group(
                             item, this, fields));
                 } else if (item.tag === 'field') {
+                    if (!this.has_focus) {
+                        item.attrs.default_focus = '1';
+                        this.has_focus = true;
+                    }
                     row.push(
                         this.make_field(
                             item, fields[item['attrs'].name]));

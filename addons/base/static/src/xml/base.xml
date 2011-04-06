@@ -165,8 +165,39 @@
         <button type="button" data-pager-action="next">&gt;&gt;</button>
         <button type="button" data-pager-action="last">Last</button>
     </div>
-    <table id="todo_use_unique_id" class="jqGrid"></table>
+    <table>
+        <tr><t t-call="ListView.header"/></tr>
+    </table>
 </t>
+<t t-name="ListView.header">
+    <t t-foreach="columns" t-as="column">
+        <th t-if="column.invisible !== '1'">
+            <t t-if="column.tag !== 'button'">
+                <t t-esc="column.string"/>
+            </t>
+        </th>
+    </t>
+</t>
+<t t-name="ListView.rows" t-foreach="rows" t-as="row">
+    <t t-call="ListView.row"/>
+</t>
+<tr t-name="ListView.row">
+    <t t-foreach="columns" t-as="column">
+        <!-- TODO: handle attrs -->
+        <td t-if="column.invisible !== '1'" t-att-title="column.help">
+            <t t-set="is_button" t-value="column.tag === 'button'"/>
+            <!-- TODO: get correct widget from form -->
+            <t t-if="!is_button and row[column.id]">
+                <t t-esc="row[column.id]"/>
+            </t>
+            <button type="button" t-att-title="column.help"
+                    t-if="is_button">
+                <img t-att-src="'/base/static/src/img/icons/' + column.icon + '.png'"
+                     t-att-alt="column.string"/>
+            </button>
+        </td>
+    </t>
+</tr>
 <t t-name="FormView">
     <h2 class="oe_view_title"><t t-esc="view.fields_view.arch.attrs.string"/></h2>
     <div class="oe_form_header">
@@ -320,7 +351,8 @@
 <button t-name="SearchView.filter" type="button"
         t-att-id="element_id"
         t-att-title="attrs.help"
-        t-att-class="classes.join(' ')">
+        t-att-class="classes.join(' ')"
+        t-att-autofocus="attrs.default_focus === '1' ? 'autofocus' : undefined">
     <img t-if="attrs.icon" t-att-src="'/base/static/src/img/icons/' + attrs.icon + '.png'" width="16" height="16"/>
     <br t-if="attrs.icon and attrs.string"/>
     <t t-esc="attrs.string"/>
@@ -337,6 +369,7 @@
     </label>
     <div style="white-space: nowrap;">
         <input type="text" t-att-name="attrs.name"
+               t-att-autofocus="attrs.default_focus === '1' ? 'autofocus' : undefined"
                t-att-id="element_id"
                t-att-value="defaults[attrs.name] || ''"/>
         <t t-if="filters.length" t-raw="filters.render(defaults)"/>
@@ -350,7 +383,8 @@
     </label>
     <div style="white-space: nowrap;" t-att-id="element_id">
         <input t-att-name="attrs.name" type="text" class="field_date"
-               t-att-value="defaults[attrs.name] || ''"/>
+               t-att-value="defaults[attrs.name] || ''"
+               t-att-autofocus="attrs.default_focus === '1' ? 'autofocus' : undefined"/>
         to
         <input t-att-name="attrs.name" type="text" class="field_date"
                t-att-value="defaults[attrs.name] || ''"/>
@@ -364,7 +398,8 @@
         <span t-if="attrs.help">(?)</span>
     </label>
     <div style="white-space: nowrap;">
-        <select t-att-name="attrs.name" t-att-id="element_id">
+        <select t-att-name="attrs.name" t-att-id="element_id"
+                t-att-autofocus="attrs.default_focus === '1' || undefined">
             <option/>
             <t t-foreach="attrs.selection" t-as="option">
                 <t t-set="selected" t-value="defaults[attrs.name] === option[0]"/>
