@@ -82,21 +82,9 @@ class email_server(osv.osv):
                 return False
         return True
 
-    def check_model(self, cr, uid, ids, context = None):
-        if context is None:
-            context = {}
-        current_rec = self.read(cr, uid, ids, context)
-        if current_rec:
-            current_rec = current_rec[0]
-            model_name = self.pool.get('ir.model').browse(cr, uid, current_rec.get('object_id')[0]).model
-            model = self.pool.get(model_name)
-            if hasattr(model, 'message_new'):
-                return True
-        return False
-
     _constraints = [
         (check_duplicate, 'Warning! Can\'t have duplicate server configuration!', ['user', 'password']),
-        (check_model, 'Warning! Record for selected Model can not be created\nPlease choose valid Model', ['object_id'])
+        
     ]
 
     def onchange_server_type(self, cr, uid, ids, server_type=False, ssl=False):

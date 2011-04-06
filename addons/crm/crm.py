@@ -538,7 +538,7 @@ class crm_case(object):
     def format_mail(self, obj, body):
         return self.pool.get('base.action.rule').format_mail(obj, body)
 
-    def message_followers(self, cr, uid, ids, context=None):
+    def thread_followers(self, cr, uid, ids, context=None):
         """ Get a list of emails of the people following this thread
         """
         res = {}

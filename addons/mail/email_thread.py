@@ -69,12 +69,23 @@ class email_thread(osv.osv):
         corresponding to an incoming message for a new thread.
         @param msg: Dictionary Object to contain email message data
         """
-        model_pool = self.pool.get(self._name)
-        fields = model_pool.fields_get(cr, uid, context=context)
-        data = model_pool.default_get(cr, uid, fields, context=context)
-        res_id = model_pool.create(cr, uid, data, context=context)
+        if context is None:
+            context = {}
+        model = context.get('thread_model', False)
+        if not model:
+            model = self._name
+        model_pool = self.pool.get(model)
+        if hasattr(model_pool, 'message_new'):
+            res_id = model_pool.message_new(cr, uid, msg, context)
+        else:
+            fields = model_pool.fields_get(cr, uid, context=context)
+            data = model_pool.default_get(cr, uid, fields, context=context)
+            if 'name' in fields and not data.get('name',False):
+                data['name'] = msg.get('from','')
+            res_id = model_pool.create(cr, uid, data, context=context)
 
-        for attachment in msg.get('attachments', []):
+        attachments = msg.get('attachments', {})
+        for attachment in attachments:
             data_attach = {
                 'name': attachment,
                 'datas': binascii.b2a_base64(str(attachments.get(attachment))),
@@ -83,9 +94,9 @@ class email_thread(osv.osv):
                 'res_model': self._name,
                 'res_id': res_id,
             }
-            att_ids.append(self.pool.get('ir.attachment').create(cr, uid, data_attach))
+            self.pool.get('ir.attachment').create(cr, uid, data_attach)
 
-        model_pool.history(cr, uid, res_id, _('receive'), history=True,
+        self.history(cr, uid, [res_id], _('receive'), history=True,
                             subject = msg.get('subject'),
                             email = msg.get('to'),
                             details = msg.get('body'),
@@ -93,19 +104,27 @@ class email_thread(osv.osv):
                             email_cc = msg.get('cc'),
                             message_id = msg.get('message-id'),
                             references = msg.get('references', False) or msg.get('in-reply-to', False),
-                            attach = att_ids.items(),
+                            attach = attachments.items(),
                             email_date = msg.get('date'),
                             context = context)
         return res_id
 
-    def message_update(self, cr, uid, ids, msg, vals={}, default_act='pending', context=None):
+    def message_update(self, cr, uid, ids, msg, vals={}, default_act=None, context=None):
         """ 
         Called by process_email() to add a new incoming message for an existing thread
         @param msg: Dictionary Object to contain email message data
         """
-        model_pool = self.pool.get(self._name)
+        if context is None:
+            context = {}
+        model = context.get('thread_model', False)
+        if not model:
+            model = self._name
+        model_pool = self.pool.get(model)
+        if hasattr(model_pool, 'message_update'):
+            model_pool.message_update(cr, uid, ids, msg, vals=vals, default_act=default_act, context=context)
+        attachments = msg.get('attachments', {})
         for res_id in ids:
-            for attachment in msg.get('attachments', []):
+            for attachment in attachments:
                 data_attach = {
                     'name': attachment,
                     'datas': binascii.b2a_base64(str(attachments.get(attachment))),
@@ -114,9 +133,9 @@ class email_thread(osv.osv):
                     'res_model': self._name,
                     'res_id': res_id,
                 }
-                att_ids.append(self.pool.get('ir.attachment').create(cr, uid, data_attach))
+                self.pool.get('ir.attachment').create(cr, uid, data_attach)
 
-            model_pool.history(cr, uid, res_id, _('receive'), history=True,
+            self.history(cr, uid, [res_id], _('receive'), history=True,
                                 subject = msg.get('subject'),
                                 email = msg.get('to'),
                                 details = msg.get('body'),
@@ -124,7 +143,7 @@ class email_thread(osv.osv):
                                 email_cc = msg.get('cc'),
                                 message_id = msg.get('message-id'),
                                 references = msg.get('references', False) or msg.get('in-reply-to', False),
-                                attach = att_ids.items(),
+                                attach = attachments.items(),
                                 email_date = msg.get('date'),
                                 context = context)
         return True
@@ -167,6 +186,11 @@ class email_thread(osv.osv):
         if attach is None:
             attach = []
 
+        model = context.get('thread_model', False)
+        if not model:
+            model = self._name
+        model_pool = self.pool.get(model)
+
         if email_date:
             edate = parsedate(email_date)
             if edate is not None:
@@ -175,7 +199,7 @@ class email_thread(osv.osv):
         # The mailgate sends the ids of the cases and not the object list
 
         if all(isinstance(case_id, (int, long)) for case_id in cases):
-            cases = self.browse(cr, uid, cases, context=context)
+            cases = model_pool.browse(cr, uid, cases, context=context)
 
         att_obj = self.pool.get('ir.attachment')
         obj = self.pool.get('email.message')
@@ -241,7 +265,9 @@ class email_thread(osv.osv):
         email_message_obj = self.pool.get('email.message')
         _decode_header = email_message_obj._decode_header
         for res in model_pool.browse(cr, uid, res_ids, context=context):
-            thread_followers = model_pool.thread_followers(cr, uid, [res.id])[res.id]
+            if hasattr(model_pool, 'thread_followers'):
+                self.thread_followers = model_pool.thread_followers
+            thread_followers = self.thread_followers(cr, uid, [res.id])[res.id]
             message_followers_emails = email_message_obj.to_email(','.join(filter(None, thread_followers)))
             message_recipients = email_message_obj.to_email(','.join(filter(None,
                                                          [_decode_header(msg['from']),
@@ -255,7 +281,7 @@ class email_thread(osv.osv):
                     del msg['reply-to']
                     msg['reply-to'] = res.section_id.reply_to
 
-                smtp_from = self.to_email(msg['from'])
+                smtp_from = email_message_obj.to_email(msg['from'])
                 msg['from'] = smtp_from
                 msg['to'] =  message_forward
                 msg['message-id'] = tools.generate_tracking_message_id(res.id)
@@ -290,6 +316,9 @@ class email_thread(osv.osv):
             custom_values = {}
 
         model_pool = self.pool.get(model)
+        if self._name != model:
+            context.update({'thread_model':model})
+
         email_message_pool = self.pool.get('email.message')
         res_id = False
 
@@ -304,7 +333,7 @@ class email_thread(osv.osv):
 
         # Create New Record into particular model
         def create_record(msg):
-            new_res_id = model_pool.message_new(cr, uid, msg, context=context)
+            new_res_id = self.message_new(cr, uid, msg, context=context)
             if custom_values:
                 model_pool.write(cr, uid, [res_id], custom_values, context=context)
             return new_res_id
@@ -328,7 +357,7 @@ class email_thread(osv.osv):
                 if res_id:
                     res_id = int(res_id)
                     if model_pool.exists(cr, uid, res_id):
-                        model_pool.message_update(cr, uid, [res_id], {}, msg, context=context)
+                        self.message_update(cr, uid, [res_id], {}, msg, context=context)
                         
 
         if not res_id:
@@ -346,11 +375,12 @@ class email_thread(osv.osv):
         @param from_email: email address based on that function will search for the correct
         """
         address_pool = self.pool.get('res.partner.address')
+        email_message_pool = self.pool.get('email.message')
         res = {
             'partner_address_id': False,
             'partner_id': False
         }
-        from_email = self.to_email(from_email)[0]
+        from_email = email_message_pool.to_email(from_email)[0]
         address_ids = address_pool.search(cr, uid, [('email', 'like', from_email)])
         if address_ids:
             address = address_pool.browse(cr, uid, address_ids[0])
