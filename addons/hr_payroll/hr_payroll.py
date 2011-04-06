@@ -453,16 +453,19 @@ class hr_payslip(osv.osv):
         return result
 
     def compute_sheet(self, cr, uid, ids, context=None):
+        slip_line_pool = self.pool.get('hr.payslip.line')
         for payslip in self.browse(cr, uid, ids, context=context):
             if payslip.contract_id:
                 #set the list of contract for which the rules have to be applied
                 contract_ids = [payslip.contract_id.id]
             else:
                 #if we don't give the contract, then the rules to apply should be for all current contracts of the employee
-                contract_ids = self.get_contract(cr, uid, employee_id, payslip.date_from, payslip.date_to, context=context)
-
+                contract_ids = self.get_contract(cr, uid, payslip.employee_id, payslip.date_from, payslip.date_to, context=context)
             lines = self.pool.get('hr.payslip').get_payslip_lines(cr, uid, contract_ids, payslip.id, context=context)
-            self.write(cr, uid, [payslip.id], {'line_ids': lines}, context=context)
+            for line in lines:
+                line.update({'slip_id': payslip.id})
+                slip_line_pool.create(cr, uid, line, {})
+#            self.write(cr, uid, [payslip.id], {'line_ids': lines}, context=context)
         return True
 #        func_pool = self.pool.get('hr.payroll.structure')
 #        slip_line_pool = self.pool.get('hr.payslip.line')
