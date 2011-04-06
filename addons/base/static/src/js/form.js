@@ -466,7 +466,7 @@ openerp.base.form.FieldFloat = openerp.base.form.FieldChar.extend({
     on_ui_change: function() {
         this._super.apply(this, arguments);
         this.value = this.$element.find('input').val().replace(/,/g, '.');
-        this.invalid = (this.required && this.value == "") || !this.value.match(/^\d(\.\d)?$/) ;
+        this.invalid = (this.required && this.value == "") || !this.value.match(/^\d+(\.\d+)?$/) ;
         this.view.on_form_changed(this);
     }
 });
