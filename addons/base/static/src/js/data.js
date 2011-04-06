@@ -109,11 +109,11 @@ openerp.base.DataSet =  openerp.base.Controller.extend( /** @lends openerp.base.
 });
 
 openerp.base.DataSetStatic =  openerp.base.DataSet.extend({
-    init: function(session, model, ids) {
+    init: function(session, model) {
         this._super(session, model);
         // all local records
-        this.ids = ids;
-        this.count = ids.length;
+        this.ids = [];
+        this.count = 0;
     },
     read_slice: function (fields, offset, limit, callback) {
         this.read_ids(this.ids.slice(offset, offset + limit));

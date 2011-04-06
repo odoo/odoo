@@ -57,7 +57,9 @@ openerp.base.FormView =  openerp.base.Controller.extend( /** @lends openerp.base
         }
     },
     do_show: function () {
-        this.dataset.read_index(this.fields_view.fields, this.on_record_loaded);
+        // this should not append as start return a deferred resolved when fields_view is known
+        if(this.fields_view && this.fields_view.fields)
+            this.dataset.read_index(_.keys(this.fields_view.fields), this.on_record_loaded);
         this.$element.show();
     },
     do_hide: function () {
@@ -101,7 +103,7 @@ openerp.base.FormView =  openerp.base.Controller.extend( /** @lends openerp.base
                 this.dataset.index = this.dataset.ids.length - 1;
                 break;
         }
-        this.dataset.read_index(this.fields_view.fields, this.on_record_loaded);
+        this.dataset.read_index(_.keys(this.fields_view.fields), this.on_record_loaded);
     },
     do_update_pager: function() {
         var $pager = this.$element.find('div.oe_form_pager');
@@ -675,7 +677,7 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
     }
 });
 
-openerp.base.form.FieldOne2ManyDatasSet = openerp.base.DataSet.extend({
+openerp.base.form.FieldOne2ManyDatasSet = openerp.base.DataSetStatic.extend({
     start: function() {
     },
     write: function (id, data, callback) {
@@ -703,7 +705,7 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
     start: function() {
         this._super.apply(this, arguments);
         this.log("o2m.start");
-        var views = [ [false,"list"], ];
+        var views = [ [false,"list"], [false,"form"] ];
         this.dataset = new openerp.base.form.FieldOne2ManyDatasSet(this.session, this.field.relation);
         this.viewmanager = new openerp.base.form.FieldOne2ManyViewManager(this.view.session, this.element_id, this.dataset, views);
         this.viewmanager.start();
