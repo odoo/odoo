@@ -23,10 +23,13 @@ def sugarcrm_fields_mapp(dict_sugar, openerp_dict):
     fields=[]
     data_lst = []
     for key,val in openerp_dict.items():
-        if key not in fields and dict_sugar.get(isinstance(val, list) and val[0] or val):
+        if key not in fields and dict_sugar:
             fields.append(key)
-            if isinstance(val, list):
-                data_lst.append(' '.join(map(lambda x : dict_sugar[x], val)))
+            if isinstance(val, list) and val:
+                if key == 'duration':
+                   data_lst.append('.'.join(map(lambda x : dict_sugar[x], val)))
+                else:
+                    data_lst.append(' '.join(map(lambda x : dict_sugar[x], val)))
             else:
                 data_lst.append(dict_sugar.get(val,''))
     return fields,data_lst

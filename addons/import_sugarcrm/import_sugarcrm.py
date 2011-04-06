@@ -303,6 +303,122 @@ def import_partners(sugar_obj, cr, uid, context=None):
                 address_obj.write(cr,uid,address.id,{'partner_id':data_id[0]})                
     return True
 
+def get_alarm_id(sugar_obj, cr, uid, val, context=None):
+    
+    alarm_dict = {'60': '1 minute before',
+                  '300': '5 minutes before',
+                  '600': '10 minutes before',
+                  '900': '15 minutes before',
+                  '1800':'30 minutes before',
+                  '3600': '1 hour before',
+     }
+    alarm_id = False
+    alarm_obj = sugar_obj.pool.get('res.alarm')
+    if alarm_dict.get(val):
+        alarm_ids = alarm_obj.search(cr, uid, [('name', 'like', alarm_dict.get(val))])
+        for alarm in alarm_obj.browse(cr, uid, alarm_ids, context):
+            alarm_id = alarm.id
+    return alarm_id 
+    
+def get_meeting_state(sugar_obj, cr, uid, val,context=None):
+    if not context:
+        context = {}
+    state = False
+    state_dict = {'status': #field in the sugarcrm database
+        { #Mapping of sugarcrm stage : openerp meeting stage
+            'Planned' : 'draft',
+            'Held':'open',
+            'Not Held': 'draft',
+        },}
+    state = state_dict['status'].get(val, '')
+    return state    
+
+def get_task_state(sugar_obj, cr, uid, val, context=None):
+    if not context:
+        context = {}
+    state = False
+    state_dict = {'status': #field in the sugarcrm database
+        { #Mapping of sugarcrm stage : openerp meeting stage
+            'Completed' : 'done',
+            'Not Started':'draft',
+            'In Progress': 'open',
+            'Pending Input': 'draft',
+            'deferred': 'cancel'
+        },}
+    state = state_dict['status'].get(val, '')
+    return state    
+    
+def import_tasks(sugar_obj, cr, uid, context=None):
+    if not context:
+        context = {}
+    map_task = {'id' : 'id',
+                'name': 'name',
+                'date': 'date_entered',
+                'user_id/id': 'assigned_user_id',
+                'categ_id/.id': 'categ_id/.id',
+                'partner_address_id/name': 'contact_name',
+                'state': 'state'
+    }
+    meeting_obj = sugar_obj.pool.get('crm.meeting')
+    categ_obj = sugar_obj.pool.get('crm.case.categ')
+    PortType, sessionid = sugar.login(context.get('username', ''), context.get('password', ''), context.get('url',''))
+    categ_ids = categ_obj.search(cr, uid, [('object_id.model','=','crm.meeting'), ('name', 'like', 'Tasks')])
+    if categ_ids:
+        categ_id = categ_ids[0]
+    else:
+        categ_id = categ_obj.create(cr, uid, {'name': 'Tasks', 'object_id.model': 'crm.meeting'})
+    sugar_data = sugar.search(PortType, sessionid, 'Tasks')
+    for val in sugar_data:
+        partner_xml_id = find_mapped_id(sugar_obj, cr, uid, 'res.partner.address', val.get('contact_id'), context)
+        if not partner_xml_id:
+            raise osv.except_osv(_('Warning !'), _('Reference Partner %s cannot be created, due to Lower Record Limit in SugarCRM Configuration.') % val.get('contact_name'))
+        val['categ_id/.id'] = categ_id
+        val['state'] = get_task_state(sugar_obj, cr, uid, val.get('status'), context=None)
+        fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_task)
+        meeting_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', noupdate=True, context=context)
+    return True    
+    
+def import_meetings(sugar_obj, cr, uid, context=None):
+    if not context:
+        context = {}
+    map_meeting = {'id' : 'id',
+                    'name': 'name',
+                    'date': 'date_start',
+                    'duration': ['duration_hours', 'duration_minutes'],
+                    'location': 'location',
+                    'alarm_id/.id': 'alarm_id/.id',
+                    'user_id/id': 'assigned_user_id',
+                    'state': 'state'
+    }
+    meeting_obj = sugar_obj.pool.get('crm.meeting')
+    PortType, sessionid = sugar.login(context.get('username', ''), context.get('password', ''), context.get('url',''))
+    sugar_data = sugar.search(PortType, sessionid, 'Meetings')
+    for val in sugar_data:
+        val['state'] = get_meeting_state(sugar_obj, cr, uid, val.get('status'),context)
+        val['alarm_id/.id'] = get_alarm_id(sugar_obj, cr, uid, val.get('reminder_time'), context)
+        fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_meeting)
+        meeting_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', noupdate=True, context=context)
+    return True    
+
+
+def import_calls(sugar_obj, cr, uid, context=None):
+    if not context:
+        context = {}
+    map_calls = {'id' : 'id',
+                    'name': 'name',
+                    'date': 'date_start',
+                    'duration': ['duration_hours', 'duration_minutes'],
+                    'user_id/id': 'assigned_user_id',
+                    'categ_id/.id': 'categ_id/.id',
+                   'state': 'state',
+    }
+    phonecall_obj = sugar_obj.pool.get('crm.phonecall')
+    PortType, sessionid = sugar.login(context.get('username', ''), context.get('password', ''), context.get('url',''))
+    sugar_data = sugar.search(PortType, sessionid, 'Calls')
+    for val in sugar_data:
+        fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_calls)
+        phonecall_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', noupdate=True, context=context)
+    return True    
 
 def import_resources(sugar_obj, cr, uid, context=None):
     if not context:
@@ -492,6 +608,18 @@ MAP_FIELDS = {'Opportunities':  #Object Mapping name
                     {'dependencies' : [],
                      'process' : import_users,
                     },
+              'Meetings': 
+                    {'dependencies' : ['Users', 'Tasks'],
+                     'process' : import_meetings,
+                    },        
+              'Tasks': 
+                    {'dependencies' : ['Users', 'Accounts', 'Contacts'],
+                     'process' : import_tasks,
+                    },  
+              'Calls': 
+                    {'dependencies' : ['Users'],
+                     'process' : import_calls,
+                    },                        
               'Employees': 
                     {'dependencies' : ['Resources'],
                      'process' : import_employees,
@@ -514,6 +642,8 @@ class import_sugarcrm(osv.osv):
         'contact': fields.boolean('Contacts', help="If Contacts are checked, SugarCRM Contacts data imported in openERP partner address form"),
         'account': fields.boolean('Accounts', help="If Accounts are checked, SugarCRM  Accounts data imported in openERP partners form"),
         'employee': fields.boolean('Employee', help="If Employees is checked, SugarCRM Employees data imported in openERP employees form"),
+        'meeting': fields.boolean('Meetings', help="If Meetings is checked, SugarCRM Meetings data imported in openERP meetings form"),
+        'call': fields.boolean('Calls', help="If Calls is checked, SugarCRM Calls data imported in openERP phonecalls form"),
         'username': fields.char('User Name', size=64),
         'password': fields.char('Password', size=24),
     }
@@ -523,7 +653,10 @@ class import_sugarcrm(osv.osv):
        'user' : True,
        'contact' : True,
        'account' : True,
-        'employee' : True,        
+        'employee' : True,
+        'meeting' : True,
+        'call' : True,        
+        
     }
     
     def get_key(self, cr, uid, ids, context=None):
@@ -543,7 +676,11 @@ class import_sugarcrm(osv.osv):
             if current.account:
                 key_list.append('Accounts') 
             if current.employee:
-                key_list.append('Employees')       
+                key_list.append('Employees')  
+            if current.meeting:
+                key_list.append('Meetings')
+            if current.call:
+                key_list.append('Calls')                                       
         return key_list
 
     def import_all(self, cr, uid, ids, context=None):
