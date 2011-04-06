@@ -1949,7 +1949,7 @@
             <field name="model">ir.mail_server</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Smtp Server Configuration">
+                <form string="Outgoing Mail Server">
                     <group colspan="4">
                         <field name="name"/>
                     </group>
@@ -1984,11 +1984,10 @@
             <field name="model">ir.mail_server</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="SMTP Server">
+                <tree string="Outgoing Mail Server">
+                    <field name="priority"/>
                     <field name="name"/>
                     <field name="smtp_host"/>
-                    <field name="priority"/>
-                    <button name="test_smtp_connection" type="object" string="Test Connection" icon="gtk-network"/>
                 </tree>
             </field>
         </record>
@@ -1998,14 +1997,14 @@
             <field name="model">ir.mail_server</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
-                <search string="Smtp Server">
+                <search string="Outgoing Mail Server">
                     <field name="name"/>
                 </search>
             </field>
         </record>
 
         <record model="ir.actions.act_window" id="action_ir_mail_server_tree_all">
-            <field name="name">Email Accounts</field>
+            <field name="name">Outgoing Mail Servers</field>
             <field name="res_model">ir.mail_server</field>
             <field name="view_type">form</field>
             <field name="view_mode">form,tree</field>
@@ -2013,6 +2012,7 @@
             <field name="context">{'group_by': [], 'search_default_draft': 1, 'search_default_my': 1}</field>
             <field name="search_view_id" ref="view_ir_mail_server_search"/>
         </record>
-
+        <menuitem id="next_id_15" name="Parameters" parent="base.menu_config" groups="base.group_extended" />
+        <menuitem id="menu_email_smtp_server_all" parent="base.next_id_15" action="base.action_ir_mail_server_tree_all" sequence="15"/>
     </data>
 </openerp>
