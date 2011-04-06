@@ -610,13 +610,11 @@ class user_preferences_config(osv.osv_memory):
     _name = 'user.preferences.config'
     _inherit = 'res.config'
     _columns = {
-        'company_id': fields.many2one('res.company', 'Company', required=True,
-            help="Select company for configure by company ."),
         'context_tz': fields.selection(_tz_get,  'Timezone', size=64,
-            help="The company's timezone, used to perform timezone conversions "
+            help="Set default for new user's timezone, used to perform timezone conversions "
                  "between the server and the client."),
         'context_lang': fields.selection(_lang_get, 'Language', required=True,
-            help="Sets the language for the company's user interface, when UI "
+            help="Sets default language for the  new user's user interface, when UI "
                  "translations are available"),
         'view': fields.selection([('simple','Simplified'),
                                   ('extended','Extended')],
@@ -625,19 +623,18 @@ class user_preferences_config(osv.osv_memory):
                                  
     }
     _defaults={
-               'company_id':lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
                'view':lambda self,cr,uid,*args: self.pool.get('res.users').browse(cr, uid, uid).view or 'simple',
                'context_lang':'en_US',
     }
 
     def execute(self, cr, uid, ids, context=None):
-        usr_obj = self.pool.get("res.users")
-        get_val = self.browse(cr, uid, ids)[0]
-        data_ids = usr_obj.search(cr,uid,[('company_id','=',get_val.company_id.id)])
-        if data_ids:
-            for w_id in data_ids:
-                usr_obj.write(cr, uid, [w_id], {'context_tz': get_val.context_tz,'context_lang':get_val.context_lang,'view':get_val.view,'menu_tips':get_val.menu_tips})
-        return True
+        for o in self.browse(cr, uid, ids, context=context):
+            ir_values_obj = self.pool.get('ir.values')
+            ir_values_obj.set(cr, uid, 'default', False, 'context_tz', ['res.users'], o.context_tz)
+            ir_values_obj.set(cr, uid, 'default', False, 'context_lang', ['res.users'], o.context_lang)
+            ir_values_obj.set(cr, uid, 'default', False, 'view', ['res.users'], o.view)
+            ir_values_obj.set(cr, uid, 'default', False, 'menu_tips', ['res.users'], o.menu_tips)
+        return {}
 
 user_preferences_config()
 
