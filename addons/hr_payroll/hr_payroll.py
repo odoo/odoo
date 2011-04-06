@@ -417,9 +417,9 @@ class hr_payslip(osv.osv):
         """
         contract_obj = self.pool.get('hr.contract')
         clause = []
-        #a contract is valid if it ends between the given dates 
+        #a contract is valid if it ends between the given dates
         clause_1 = ['&',('date_end', '<=', date_to),('date_end','>=', date_from)]
-        #OR if it starts between the given dates 
+        #OR if it starts between the given dates
         clause_2 = ['&',('date_start', '<=', date_to),('date_start','>=', date_from)]
         #OR if it starts before the date_from and finish after the date_end (or never finish)
         clause_3 = [('date_start','<=', date_from),'|',('date_end', '=', False),('date_end','>=', date)]
@@ -455,6 +455,11 @@ class hr_payslip(osv.osv):
     def compute_sheet(self, cr, uid, ids, context=None):
         slip_line_pool = self.pool.get('hr.payslip.line')
         for payslip in self.browse(cr, uid, ids, context=context):
+            #delete old payslip lines
+            old_slipline_ids = slip_line_pool.search(cr, uid, [('slip_id', '=', payslip.id)], context=context)
+            old_slipline_ids
+            if old_slipline_ids:
+                slip_line_pool.unlink(cr, uid, old_slipline_ids, context=context)
             if payslip.contract_id:
                 #set the list of contract for which the rules have to be applied
                 contract_ids = [payslip.contract_id.id]
@@ -800,10 +805,10 @@ class hr_payslip(osv.osv):
             if not contract.working_hours:
                 #fill only if the contract as a working schedule linked
                 continue
-            
+
             day_from = datetime.strptime(date_from,"%Y-%m-%d")
             day_to = datetime.strptime(date_to,"%Y-%m-%d")
-            nb_of_days = day_to - day_from 
+            nb_of_days = day_to - day_from
             for day in range(1,nb_of_days.days):
                 continue
                 #TODO deal with the multiple types!!!
@@ -817,14 +822,14 @@ class hr_payslip(osv.osv):
     def get_payslip_lines(self, cr, uid, contract_ids, payslip_id, context):
         result = []
         localdict = {}
-        #get the ids of the structures on the contracts and their parent id as well 
+        #get the ids of the structures on the contracts and their parent id as well
         structure_ids = self.pool.get('hr.contract').get_all_structures(cr, uid, contract_ids, context=context)
         #get the rules of the structure and thier children
         rule_ids = self.pool.get('hr.payroll.structure').get_all_rules(cr, uid, structure_ids, context=context)
         #run the rules by sequence
         #import pdb;pdb.set_trace()
         sorted_rule_ids = [id for id, sequence in sorted(rule_ids, key=lambda x:x[1])]
-         
+
         for contract in self.pool.get('hr.contract').browse(cr, uid, contract_ids, context=context):
             for rule in self.pool.get('hr.salary.rule').browse(cr, uid, sorted_rule_ids, context=context):
                 #check if the rule can be applied
@@ -873,11 +878,11 @@ class hr_payslip(osv.osv):
 
         #defaults
         res = {'value':{
-                      'line_ids':[], 
-                      'details_by_salary_head':[], 
+                      'line_ids':[],
+                      'details_by_salary_head':[],
                       'name':'',
                       'contract_id': False,
-                      'struct_id': False, 
+                      'struct_id': False,
                       }
                  }
         if not employee_id:
@@ -922,8 +927,8 @@ class hr_payslip(osv.osv):
         if context is None:
             context = {}
         res = {'value':{
-                 'line_ids': [], 
-                 'name': '', 
+                 'line_ids': [],
+                 'name': '',
                  }
               }
         context.update({'contract': True})
