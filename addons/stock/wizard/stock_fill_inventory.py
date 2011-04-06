@@ -58,61 +58,61 @@ class stock_fill_inventory(osv.osv_memory):
         @return:
         """
         if context is None:
-            context = {}        
+            context = {}
         inventory_line_obj = self.pool.get('stock.inventory.line')
         location_obj = self.pool.get('stock.location')
         product_obj = self.pool.get('product.product')
-        stock_location_obj = self.pool.get('stock.location')
-        if ids and len(ids): 
+        move_obj = self.pool.get('stock.move')
+
+        if ids and len(ids):
             ids = ids[0]
         else:
-             return {'type': 'ir.actions.act_window_close'}    
+             return {'type': 'ir.actions.act_window_close'}
         fill_inventory = self.browse(cr, uid, ids, context=context)
         res = {}
         res_location = {}
         if fill_inventory.recursive :
             location_ids = location_obj.search(cr, uid, [('location_id',
-                             'child_of', fill_inventory.location_id.id)])
-            for location in location_ids :
-                res = location_obj._product_get(cr, uid, location)
-                res_location[location] = res
+                             'child_of', fill_inventory.location_id.id)], order="id")
         else:
-            context.update({'compute_child': False})
-            res = location_obj._product_get(cr, uid,
-                        fill_inventory.location_id.id, context=context)
-            res_location[fill_inventory.location_id.id] = res
-    
-        product_ids = []
-        for location in res_location.keys():
-            res = res_location[location]
-            for product_id in res.keys():
-                prod = product_obj.browse(cr, uid, product_id, context=context)
-                uom = prod.uom_id.id
-                context.update(uom=uom, compute_child=False)
-                amount = stock_location_obj._product_get(cr, uid,
-                         location, [product_id], context=context)[product_id]
-                if(amount):
-                    if fill_inventory.set_stock_zero:
-                        amount = 0                    
-                    line_ids=inventory_line_obj.search(cr, uid,
-                        [('inventory_id', '=', context['active_ids']),
-                         ('location_id', '=', location),
-                         ('product_id', '=', product_id),
-                         ('product_uom', '=', uom),
-                        ('product_qty', '=', amount)])
-                    if not len(line_ids):
-                        inventory_line = {
-                            'inventory_id': context['active_ids'][0],
-                            'location_id': location,
-                            'product_id': product_id,
-                            'product_uom': uom,
-                            'product_qty': amount
-                        }
-                        inventory_line_obj.create(cr, uid, inventory_line)
-                    product_ids.append(product_id)
+            location_ids = [fill_inventory.location_id.id]
 
-        if(len(product_ids) == 0):
+        res = {}
+        flag = False
+        for location in location_ids:
+            datas = {}
+            res[location] = {}
+            move_ids = move_obj.search(cr, uid, [('location_dest_id','=',location),('state','=','done')], context=context)
+
+            for move in move_obj.browse(cr, uid, move_ids, context=context):
+                lot_id = move.prodlot_id.id
+                prod_id = move.product_id.id
+                qty = move.product_qty
+                location_dest_id = move.location_dest_id.id
+                if datas.get((prod_id, lot_id)):
+                    qty = datas[(prod_id, lot_id)]['product_qty'] + qty
+                datas[(prod_id, lot_id)] = {'product_id': prod_id, 'location_id': location_dest_id, 'product_qty': qty, 'product_uom': move.product_id.uom_id.id, 'prod_lot_id': lot_id}
+            if datas:
+                flag = True
+                res[location] = datas
+
+        if not flag:
             raise osv.except_osv(_('Message !'), _('No product in this location.'))
+
+        for i in res.values():
+            if i.values():
+                for mydata in i.values():
+                    mydata.update({'inventory_id': context['active_ids'][0]})
+                    domain = []
+                    if fill_inventory.set_stock_zero:
+                        mydata.update({'product_qty': 0})
+                    for k, v in mydata.items():
+                        domain.append((k, '=', v))
+                    line_ids = inventory_line_obj.search(cr, uid, domain, context=context)
+
+                    if not len(line_ids):
+                        inventory_line_obj.create(cr, uid, mydata, context=context)
+
         return {'type': 'ir.actions.act_window_close'}
 
 stock_fill_inventory()
