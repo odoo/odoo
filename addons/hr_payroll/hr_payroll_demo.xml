@@ -6,8 +6,8 @@
 
         <record id="hr_payslip_line_houserantallowance1" model="hr.salary.rule">
             <field name="amount_select">percentage</field>
-            <field eval="0.4" name="amount_percentage"/>
-            <field name="amount_percentage_base">result=contract.wage</field>
+            <field eval="40.0" name="amount_percentage"/>
+            <field name="amount_percentage_base">contract.wage</field>
             <field name="code">HRA</field>
             <field name="type" ref="AL"/>
             <field name="category_id" ref="hr_payroll.HRA"/>
@@ -41,8 +41,8 @@
         <record id="hr_payslip_line_providentfund1" model="hr.salary.rule">
             <field name="amount_select">percentage</field>
             <field eval="20" name="sequence"/>
-            <field eval="-0.125" name="amount_percentage"/>
-            <field name="amount_percentage_base">result=contract.wage</field>
+            <field eval="-12.5" name="amount_percentage"/>
+            <field name="amount_percentage_base">contract.wage</field>
             <field name="code">PF</field>
             <field name="type" ref="DED"/>
             <field name="category_id" ref="hr_payroll.PF"/>
@@ -82,15 +82,5 @@
             <field eval="5" name="working_days_per_week"/>
         </record>
 
-        <!-- Payslip -->
-        <!--<record id="hr_payslip_salaryslipofbonamyforjune0" model="hr.payslip">
-            <field name="number">SLIP/001</field>
-            <field name="deg_id" ref="hr_payroll.structure_001"/>
-            <field name="employee_id" ref="hr_employee_bonamy0"/>
-            <field name="contract_id" ref="hr_contract_firstcontract1"/>
-            <field name="company_id" ref="base.main_company"/>
-            <field name="date" eval="time.strftime('%Y-%m')+'-5'"/>
-            <field name="name" eval="'Salary Slip of Bonamy for June-'+time.strftime('%Y')"/>
-        </record>-->
     </data>
 </openerp>
