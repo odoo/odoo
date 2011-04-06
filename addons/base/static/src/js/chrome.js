@@ -217,7 +217,7 @@ openerp.base.BasicController = Class.extend( /** @lends openerp.base.BasicContro
             }
         }
 
-    },
+    }
 });
 
 openerp.base.Session = openerp.base.BasicController.extend( /** @lends openerp.base.Session# */{
@@ -503,7 +503,7 @@ openerp.base.Notification =  openerp.base.Controller.extend({
             speed: 500
         });
     },
-    default: function(title, text) {
+    'default': function(title, text) {
         this.$element.notify('create', {
             title: title,
             text: text
@@ -696,7 +696,7 @@ openerp.base.WebClient = openerp.base.Controller.extend({
         this.header.start();
         this.login.start();
         this.menu.start();
-        this.notification.default("OpenERP Client", "The openerp client has been initialized.");
+        this.notification['default']("OpenERP Client", "The openerp client has been initialized.");
     },
     on_logged: function() {
         this.action =  new openerp.base.ActionManager(this.session, "oe_app");

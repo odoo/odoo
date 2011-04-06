@@ -55,7 +55,7 @@ openerp.base.DataSet =  openerp.base.Controller.extend( /** @lends openerp.base.
             this.index = 0;
         }
         return this;
-    }
+    },
 
     default_get: function() {
     },
@@ -121,7 +121,7 @@ openerp.base.DataSet =  openerp.base.Controller.extend( /** @lends openerp.base.
         }, callback);
     },
     unlink: function() {
-    },
+    }
 });
 
 openerp.base.DataSetSearch =  openerp.base.DataSet.extend( /** @lends openerp.base.DataSet# */{
