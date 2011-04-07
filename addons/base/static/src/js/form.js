@@ -139,31 +139,57 @@ openerp.base.FormView =  openerp.base.Controller.extend( /** @lends openerp.base
                         this.log("warning : on_change can't find field " + field, onchange);
                     }
                 });
-                console.info("Calling onchange :", onchange);
-                // TODO: no async for onchange
-                this.dataset.call(method, (this.datarecord.id == null ? [] : [this.datarecord.id]), args, this.on_processed_onchange);
+                console.info("Calling onchange :", onchange, args);
+                var d = $.Deferred();
+                this.dataset.call(method, (this.datarecord.id == null ? [] : [this.datarecord.id]), args, function(response) {
+                    $.when(self.on_processed_onchange(response, onchange)).then(function() {
+                        d.resolve();
+                    });
+                });
+                return d.promise();
             } else {
                 this.log("Wrong on_change format", on_change);
             }
         }
     },
-    on_processed_onchange: function(response) {
-        console.log("onchange result :", response);
-        var result = response.result;
-        if (result.value) {
-            for (var f in result.value) {
-                var field = this.fields[f];
-                if (field) {
-                    var value = result.value[f];
-                    if (field.value != value) {
-                        field.set_value(value);
-                        this.do_onchange(field);
-                    }
-                } else {
-                    this.log("warning : on_processed_onchange can't find field " + field, result);
-                }
+    on_processed_changes: function(results) {
+        console.info("Process onchange :", results);
+        if (!results.length) {
+            return;
+        }
+        var self = this;
+        var result = results.shift(),
+            name = result[0],
+            value = result[1];
+        var field = this.fields[name];
+        if (field) {
+            console.info("Compare " + field.name + " : " + field.value + " == ", value);
+            if (field.value != value) {
+                var d = $.Deferred();
+                console.info("Set " + field.name + " = ", value);
+                field.set_value(value);
+                $.when(this.do_onchange(field)).then(function() {
+                    $.when(self.on_processed_changes(results)).then(function() {
+                        d.resolve();
+                    });
+                });
+                return d.promise();
             }
-            this.on_form_changed();
+        } else {
+            this.log("warning : on_processed_onchange can't find field " + field, result);
+        }
+    },
+    on_processed_onchange: function(response, onchange) {
+        var deferred, result = response.result;
+        console.info("Response onchange :", onchange, result.value);
+        if (result.value) {
+            var results = [];
+            for (var i in result.value) {
+                var tmp = [i, result.value[i]];
+                results.push(tmp);
+            }
+            console.log("Generated results", results);
+            deferred = $.when(this.on_processed_changes(results)).then(this.on_form_changed);
         }
         if (result.warning) {
             $(QWeb.render("DialogWarning", result.warning)).dialog({
@@ -179,6 +205,7 @@ openerp.base.FormView =  openerp.base.Controller.extend( /** @lends openerp.base
             // Will be removed ?
         }
         this.ready = true;
+        return deferred;
     },
     on_button_new: function() {
         var self = this;
