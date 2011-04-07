@@ -434,7 +434,6 @@ def import_tasks(sugar_obj, cr, uid, context=None):
                 'state': 'state'
     }
     meeting_obj = sugar_obj.pool.get('crm.meeting')
-    model_obj = sugar_obj.pool.get('ir.model.data')
     PortType, sessionid = sugar.login(context.get('username', ''), context.get('password', ''), context.get('url',''))
     categ_id = get_category(sugar_obj, cr, uid, 'crm.meeting', 'Tasks')
     sugar_data = sugar.search(PortType, sessionid, 'Tasks')
@@ -468,7 +467,6 @@ def import_meetings(sugar_obj, cr, uid, context=None):
                     'state': 'state'
     }
     meeting_obj = sugar_obj.pool.get('crm.meeting')
-    model_obj = sugar_obj.pool.get('ir.model.data')
     PortType, sessionid = sugar.login(context.get('username', ''), context.get('password', ''), context.get('url',''))
     sugar_data = sugar.search(PortType, sessionid, 'Meetings')
     for val in sugar_data:
@@ -511,8 +509,6 @@ def import_calls(sugar_obj, cr, uid, context=None):
                    'state': 'state',
     }
     phonecall_obj = sugar_obj.pool.get('crm.phonecall')
-    partner_address_obj = sugar_obj.pool.get('res.partner.address')
-    model_obj = sugar_obj.pool.get('ir.model.data')
     PortType, sessionid = sugar.login(context.get('username', ''), context.get('password', ''), context.get('url',''))
     sugar_data = sugar.search(PortType, sessionid, 'Calls')
     for val in sugar_data:
