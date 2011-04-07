@@ -62,6 +62,7 @@ def get_all_states(sugar_obj, cr, uid, sugar_val, country_id, context=None):
     else:
        state_id = res_country_state_obj.create(cr, uid, {'name': sugar_val, 'code': sugar_val, 'country_id': country_id})
     return state_id   
+
 def get_all_countries(sugar_obj, cr, uid, sugar_country_val, context=None):
     """Get Country or Create new country"""
     res_country_obj = sugar_obj.pool.get('res.country')
@@ -358,6 +359,48 @@ def get_task_state(sugar_obj, cr, uid, val, context=None):
     state = state_dict['status'].get(val, '')
     return state    
 
+def get_project_state(sugar_obj, cr, uid, val,context=None):
+    if not context:
+        context = {}
+    state = False
+    state_dict = {'status': #field in the sugarcrm database
+        { #Mapping of sugarcrm staus : openerp Projects state
+            'Draft' : 'draft',
+            'In Review': 'open',
+            'Published': 'close',
+        },}
+    state = state_dict['status'].get(val, '')
+    return state    
+
+def get_project_task_state(sugar_obj, cr, uid, val,context=None):
+    if not context:
+        context = {}
+    state = False
+    state_dict = {'status': #field in the sugarcrm database
+        { #Mapping of sugarcrm status : openerp Porject Tasks state
+             'Not Started': 'draft',
+             'In Progress': 'open',
+             'Completed': 'done',
+            'Pending Input': 'pending',
+            'Deferred': 'cancelled',
+        },}
+    state = state_dict['status'].get(val, '')
+    return state    
+
+def get_project_task_priority(sugar_obj, cr, uid, val,context=None):
+    if not context:
+        context = {}
+    priority = False
+    priority_dict = {'priority': #field in the sugarcrm database
+        { #Mapping of sugarcrm status : openerp Porject Tasks state
+            'High': '0',
+            'Medium': '2',
+            'Low': '3'
+        },}
+    priority = priority_dict['priority'].get(val, '')
+    return priority    
+
+
 def get_account(sugar_obj, cr, uid, val, context=None):
     if not context:
         context = {}
@@ -575,6 +618,52 @@ def import_emails(sugar_obj, cr, uid, context=None):
         mailgate_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', noupdate=True, context=context)
     return True    
     
+def import_projects(sugar_obj, cr, uid, context=None):
+    if not context:
+        context = {}
+    map_project = {'id': 'id',
+        'name': 'name',
+        'date_start': 'estimated_start_date',
+        'date': 'estimated_end_date',
+        'user_id/id': 'assigned_user_id',
+         'state': 'state'   
+    }
+    project_obj = sugar_obj.pool.get('project.project')
+    PortType, sessionid = sugar.login(context.get('username', ''), context.get('password', ''), context.get('url',''))
+    sugar_data = sugar.search(PortType, sessionid, 'Project')
+    for val in sugar_data:
+        val['state'] = get_project_state(sugar_obj, cr, uid, val.get('status'),context)
+        fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_project)
+        project_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', noupdate=True, context=context)
+    return True 
+
+
+def import_project_tasks(sugar_obj, cr, uid, context=None):
+    if not context:
+        context = {}
+    map_project_task = {'id': 'id',
+        'name': 'name',
+        'date_start': 'date_start',
+        'date_end': 'date_finish',
+        'progress': 'progress',
+        'project_id/name': 'project_name',
+        'planned_hours': 'estimated_effort',
+        'total_hours': 'actual_effort',        
+        'priority': 'priority',
+        'description': 'description',
+        'user_id/id': 'assigned_user_id',
+         'state': 'state'   
+    }
+    task_obj = sugar_obj.pool.get('project.task')
+    PortType, sessionid = sugar.login(context.get('username', ''), context.get('password', ''), context.get('url',''))
+    sugar_data = sugar.search(PortType, sessionid, 'ProjectTask')
+    for val in sugar_data:
+        val['state'] = get_project_task_state(sugar_obj, cr, uid, val.get('status'),context)
+        val['priority'] = get_project_task_priority(sugar_obj, cr, uid, val.get('priority'),context)
+        fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_project_task)
+        task_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', noupdate=True, context=context)
+    return True 
+    
 def import_leads(sugar_obj, cr, uid, context=None):
     if not context:
         context = {}
@@ -718,7 +807,14 @@ MAP_FIELDS = {'Opportunities':  #Object Mapping name
                     {'dependencies' : ['Users'],
                      'process' : import_emails,
                     },    
-                        
+              'Projects': 
+                    {'dependencies' : ['Users'],
+                     'process' : import_projects,
+                    },                        
+              'Project Tasks': 
+                    {'dependencies' : ['Users', 'Projects'],
+                     'process' : import_project_tasks,
+                    },                          
               'Resources': 
                     {'dependencies' : ['Users'],
                      'process' : import_resources,
@@ -740,6 +836,8 @@ class import_sugarcrm(osv.osv):
         'meeting': fields.boolean('Meetings', help="If Meetings is checked, SugarCRM Meetings data imported in openERP meetings form"),
         'call': fields.boolean('Calls', help="If Calls is checked, SugarCRM Calls data imported in openERP phonecalls form"),
         'email': fields.boolean('Emails', help="If Emails is checked, SugarCRM Emails data imported in openERP Emails form"),
+        'project': fields.boolean('Projects', help="If Projects is checked, SugarCRM Projects data imported in openERP Projects form"),
+        'project_task': fields.boolean('Project Tasks', help="If Project Tasks is checked, SugarCRM Project Tasks data imported in openERP Project Tasks form"),
         'username': fields.char('User Name', size=64),
         'password': fields.char('Password', size=24),
     }
@@ -752,8 +850,9 @@ class import_sugarcrm(osv.osv):
         'employee' : True,
         'meeting' : True,
         'call' : True,    
-        'email' : True,        
-        
+        'email' : True, 
+        'project' : True,   
+        'project_task': True     
     }
     
     def get_key(self, cr, uid, ids, context=None):
@@ -779,7 +878,11 @@ class import_sugarcrm(osv.osv):
             if current.call:
                 key_list.append('Calls')
             if current.email:
-                key_list.append('Emails')                                                       
+                key_list.append('Emails') 
+            if current.project:
+                key_list.append('Projects')
+            if current.project_task:
+                key_list.append('Project Tasks')                                                                                              
         return key_list
 
     def import_all(self, cr, uid, ids, context=None):
