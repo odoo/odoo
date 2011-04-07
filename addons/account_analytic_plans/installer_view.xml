@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<openerp>
+  <data>
+
+    <record model="ir.actions.act_window" id="account_analytic_plan_form_action_installer">
+        <field name="name">Analytic Plan</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">account.analytic.plan</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="account_analytic_plans.account_analytic_plan_form"/>
+    </record>
+    <record id="account_analytic_plan_installer_todo" model="ir.actions.todo">
+        <field name="action_id" ref="account_analytic_plan_form_action_installer"/>
+        <field name="sequence">3</field>
+        <field name="restart">always</field>
+    </record>
+
+  </data>
+</openerp>
+
+
