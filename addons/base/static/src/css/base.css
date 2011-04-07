@@ -54,6 +54,9 @@ body.openerp {
     z-index: 1001;
     display: none;
 }
+.openerp .oe_notification * {
+    color: white;
+}
 
 /* Login */
 .openerp .login {
@@ -439,6 +442,16 @@ body.openerp {
     -webkit-border-radius: 3px;
     border-radius: 3px;
     background: white;
+}
+.openerp input[type="text"], .openerp input[type="password"], .openerp select, .openerp .button {
+    height: 22px;
+}
+.openerp .button {
+    white-space: nowrap;
+}
+.openerp .button span {
+    position: relative;
+    top: -3px;
 }
 .openerp input.field_date, .openerp input.field_datetime {
     background: #fff url('../img/ui/field_calendar.png') no-repeat right center;

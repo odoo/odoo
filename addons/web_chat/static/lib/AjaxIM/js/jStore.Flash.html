@@ -1,0 +1,19 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+	<head>
+		<title>Flash External Object</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<script type="text/javascript">
+			/**
+			 * This function captures the flash_ready event. We need to relay this
+			 * back to the parent so it knows flash is ready.
+			 */
+			function flash_ready(){
+				parent.flash_ready();
+			}
+		</script>
+	</head>
+	<body>
+		<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" width="1" height="1" id="jStoreFlash"><param name="allowScriptAccess" value="always" /><param name="movie" value="jStore.swf" /><param name="quality" value="high" /><param name="bgcolor" value="#ffcc00" /><embed src="jStore.swf" quality="high" bgcolor="#ffcc00" width="1" height="1" name="jStoreFlash" align="middle" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" /></object>
+	</body>
+</html>

@@ -10,6 +10,12 @@
             <h1>#{title}</h1>
             <p>#{text}</p>
         </div>
+        <div id="oe_notification_alert" class="ui-state-error">
+            <a class="ui-notify-cross ui-notify-close" href="#">x</a>
+            <span style="float:left; margin:2px 5px 0 0;" class="ui-icon ui-icon-alert"></span>
+            <h1>#{title}</h1>
+            <p>#{text}</p>
+        </div>
     </div>
     <div id="oe_login" class="login"></div>
     <div style="position: absolute; right: 2px; top: 38px;">
@@ -191,7 +197,7 @@
     <t t-raw="console.log('Unhandled widget', widget)"/>
 </t>
 <t t-name="WidgetFrame">
-    <table border="0" width="100%" cellpadding="2" cellspacing="2">
+    <table border="0" width="100%" cellpadding="2" cellspacing="2" class="oe_frame">
     <tr t-foreach="widget.table" t-as="row">
         <t t-foreach="row" t-as="td">
             <td t-att-colspan="td.colspan gt 1 ? td.colspan : undefined"
@@ -199,6 +205,7 @@
                 t-att-nowrap="td.is_field_label ? 'true' : undefined"
                 t-att-valign="td.table ? 'top' : undefined"
                 t-att-id="td.element_id"
+                t-att-class="'container_' + td.type"
             >
                 <t t-raw="td.render()"/>
             </td>
@@ -226,7 +233,7 @@
     </div>
 </t>
 <t t-name="WidgetLabel">
-    <label t-att-for="widget.element_id" t-att-title="widget.help" style="display: block; text-align: right;"
+    <label t-att-for="widget.element_id + '_field'" t-att-title="widget.help" style="display: block; text-align: right;"
            t-att-ondblclick="'console.log(\'' + widget.element_id + '\', openerp.screen.' + widget.element_id + ')'">
         <t t-esc="widget.string"/>
         <span t-if="widget.help">?</span>
@@ -236,38 +243,50 @@
 <t t-name="FieldChar">
     <input type="text"
         t-att-name="widget.name"
+        t-att-id="widget.element_id + '_field'"
         t-att-class="'field_' + widget.type" style="width: 100%"
     />
 </t>
 <t t-name="FieldText">
     <textarea rows="6" style="width: 100%;"
         t-att-name="widget.name"
+        t-att-id="widget.element_id + '_field'"
         t-att-class="'field_' + widget.type"
     ></textarea>
 </t>
 <t t-name="FieldDate">
     <input type="text" style="width: 100%"
         t-att-name="widget.name"
+        t-att-id="widget.element_id + '_field'"
         t-att-class="'field_' + widget.type"
     />
 </t>
 <t t-name="FieldDatetime">
     <input type="text" style="width: 100%"
         t-att-name="widget.name"
+        t-att-id="widget.element_id + '_field'"
         t-att-class="'field_' + widget.type"
     />
 </t>
 <t t-name="FieldSelection">
-    <select t-att-name="widget.name" t-att-id="widget.element_id" t-att-class="'field_' + widget.type" style="width: 100%">
-        <t t-foreach="widget.field.selection" t-as="options">
-        <option t-att-value="options[0]">
-            <t t-esc="options[1]"/>
-        </option>
-        </t>
+    <select
+        t-att-name="widget.name"
+        t-att-id="widget.element_id + '_field'"
+        t-att-class="'field_' + widget.type"
+        style="width: 100%">
+            <t t-foreach="widget.field.selection" t-as="options">
+                <option t-att-value="options[0]">
+                    <t t-esc="options[1]"/>
+                </option>
+            </t>
     </select>
 </t>
 <t t-name="FieldMany2One">
-    <input type="text" t-att-name="widget.name" t-att-id="widget.element_id" t-att-class="'field_' + widget.type" style="width: 100%;"/>
+    <input type="text"
+        t-att-name="widget.name"
+        t-att-id="widget.element_id + '_field'"
+        t-att-class="'field_' + widget.type"
+        style="width: 100%;"/>
 </t>
 <t t-name="FieldOne2Many">
     <div t-att-id="widget.element_id">
@@ -283,12 +302,18 @@
     <input type="text" t-att-name="widget.name" t-att-id="widget.element_id" t-att-class="'field_' + widget.type" style="width: 100%" placeholder="Widget Reference"/>
 </t>
 <t t-name="FieldBoolean">
-    <input type="checkbox" t-att-name="widget.name" t-att-id="widget.element_id" t-att-class="'field_' + widget.type"/>
+    <input type="checkbox"
+        t-att-name="widget.name"
+        t-att-id="widget.element_id + '_field'"
+        t-att-class="'field_' + widget.type"/>
 </t>
 <t t-name="WidgetButton">
-    <button type="button" t-att-id="widget.element_id" t-att-title="widget.help" style="width: 100%" class="button">
+    <button type="button"
+        t-att-id="widget.element_id + '_button'"
+        t-att-title="widget.help"
+        style="width: 100%" class="button">
         <img t-if="widget.node.attrs.icon" t-att-src="'/base/static/src/img/icons/' + widget.node.attrs.icon + '.png'" width="16" height="16"/>
-        <t t-esc="widget.string"/>
+        <span t-if="widget.string"><t t-esc="widget.string"/></span>
     </button>
 </t>
 <t t-name="SearchView">
@@ -462,5 +487,13 @@
         </t>
     </div>
     </t>
+</t>
+<t t-name="DialogWarning">
+    <div id="dialog-message" t-att-title="title">
+        <p>
+            <span class="ui-icon ui-icon-circle-check" style="float:left; margin:0 7px 50px 0;"></span>
+            <t t-esc="message"/>
+        </p>
+    </div>
 </t>
 </templates>

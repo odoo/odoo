@@ -1,0 +1,535 @@
+.imjs-default { display: none; }
+
+/* [begin] Chatbox */
+.imjs-chatbox {
+    position: absolute;
+    bottom: 25px;
+    right: -1px;
+    width: 225px;
+    border: 1px solid #cecece;
+    font: 12px/14px Helvetica Neue, Helvetica, Arial, Calibri, Tahoma, Verdana, sans-serif;
+    color: #000;
+    cursor: default;
+    text-shadow: none;
+}
+
+    .imjs-chatbox > div {
+        display: block;
+    }
+
+    /* [begin] Chatbox header */
+    div.imjs-header {
+        display: block;
+        position: relative;
+        width: 215px;
+        height: 12px;
+        padding: 5px;
+        background: #f0efed;
+        border-bottom: 1px solid #999;
+        font-weight: 700;
+        box-shadow: 0 1px 2px #ccc;
+        -moz-box-shadow: 0 1px 2px #ccc;
+        text-shadow: 0 1px 0 #fff;
+        color: #333;
+    }
+
+        div.imjs-header a {
+            position: absolute;
+            text-shadow: none;
+            color: #333;
+            text-decoration: none;
+            line-height: 2em;
+        }
+        
+        div.imjs-header a.imjs-close {
+            top: 6px;
+            right: 5px;
+            height: 0;
+            padding-top: 10px;
+            width: 10px;
+            overflow: hidden;
+            background: url(images/closemin.png) 0 0 no-repeat;
+        }
+        
+        div.imjs-header a.imjs-minimize {
+            position: absolute;
+            top: 0;
+            left: 0;
+            padding-top: 23px;
+            height: 0;
+            width: 207px;
+            overflow: hidden;
+            background: url(images/closemin.png) 100% -10px no-repeat;
+        }
+        
+        div.imjs-header a.imjs-minimize:active {
+            outline: none;
+        }
+    /* [end] Chatbox header */
+    
+    /* [begin] Message log */
+    ul.imjs-msglog {
+        display: block;
+        overflow-y: auto;
+        height: 235px;
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        border-bottom: 1px solid #ddd;
+        background: #fff;
+    }
+
+        li.imjs-date {
+            display: block;
+            padding: 5px 5px 3px 8px;
+            border-top: 1px dotted #afafaf;
+            background-color: #e9e9e9;
+        }
+        
+        li.imjs-error {
+            display: block;
+            padding: 0 5px 3px 8px;
+            border-top: 1px dotted #afafaf;
+            background-color: #ffeded;
+            color: #ff0000;
+        }
+        
+            li.imjs-error span.imjs-msg-time {
+                color: #ff0000;
+            }
+
+        li.imjs-msg-a, li.imjs-msg-b {
+            display: block;
+            padding: 3px 5px 3px 8px;
+            border-top: 1px dotted #bfbfbf;
+        }
+
+            li.imjs-msg-b > span {
+                color: #ff0000;
+                font-weight: 700;
+            }
+
+            li.imjs-msg-a > span {
+                color: #0099ff;
+                font-weight: 700;
+            }
+
+        li.imjs-msg-old {
+            opacity: 0.4;
+        }
+    /* [end] Message log */
+    
+    /* [begin] Message Log Messages */
+    ul.imjs-msglog li ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        font-size: 11px;
+        line-height: 14px;
+    }
+        
+        ul.imjs-msglog li ul span {
+            float: left;
+            margin-right: 5px;
+            color: #bcbcbc;
+        }
+    
+        li.imjs-msg-a ul p, li.imjs-msg-b ul p, li.imjs-date ul p {
+            margin: 0;
+        }
+    /* [end] Message Log Messages */
+    
+    /* [begin] Input */
+    textarea.imjs-input {
+        font: 12px/14px Helvetica Neue, Helvetica, Arial, Calibri, Tahoma, Verdana, sans-serif;
+        height: 16px;
+        padding: 3px;
+        margin: 0;
+        width: 219px;
+        border: solid #aaa;
+        border-width: 1px 0 0 0;
+        overflow: hidden;
+    }
+    /* [end] Input */
+/* [end] Chatbox */
+
+/* [begin] Messenger bar */
+ul#imjs-bar {
+    display: block;
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    width: 95%;
+    background: #f0efed url(images/w.png) top left repeat-x;
+    height: 25px;
+    border: solid #cfceca;
+    border-width: 1px 1px 0 1px;
+    list-style-type: none;
+    padding: 0;
+    margin: 0 0 0 -47.5%;
+    font: 12px/25px Helvetica Neue, Helvetica, Arial, Calibri, Tahoma, Verdana, sans-serif;
+    color: #222;
+}
+    
+    /* [begin] Generic bar item */
+    ul#imjs-bar > li {
+        position: relative;
+        float: right;
+        width: 161px;
+        border-left: 1px solid #cecece;
+        padding: 0 10px;
+        cursor: pointer;
+        text-shadow: 0 1px 0 #fff;
+    }
+        
+        ul#imjs-bar > li:hover {
+            background: #fff;
+        }
+        
+        ul#imjs-bar > li .imjs-tab-text strong {
+            position: relative;
+            color: #00cc00;
+            font-size: 28px;
+            line-height: 19px;
+            top: 6px;
+            margin-right: 5px;
+        }
+        
+        ul#imjs-bar > li.imjs-offline .imjs-tab-text strong {
+            color: #777;
+        }
+        
+        ul#imjs-bar > li.imjs-away .imjs-tab-text strong {
+            color: #df9b00;
+        }
+        
+        ul#imjs-bar > li.imjs-selected {
+            text-shadow: 0 1px 0 #eaeaea;
+            background: #fff;
+            color: #000;
+            margin: -1px 0 0;
+            border: solid #444;
+            border-width: 0 1px 1px 1px;
+            width: 160px;
+            line-height: 23px;
+            height: 25px;
+        }
+            
+            ul#imjs-bar > li.imjs-selected .imjs-tab-text {
+                font-weight: 700;
+            }
+        
+            ul#imjs-bar > li.imjs-selected .imjs-tab-text strong {
+                line-height: 17px;
+            }
+            
+            ul#imjs-bar > li.imjs-selected .imjs-tab-text a {
+                display: block;
+            }
+        
+            ul#imjs-bar > li.imjs-selected > .imjs-chatbox {
+                border-color: #444;
+                border-bottom: 0;
+                padding-bottom: 1px;
+                background-image: url(images/bottom.png);
+                background-position: left bottom;
+                background-repeat: no-repeat;
+            }
+            
+            ul#imjs-bar > li.imjs-selected > #imjs-friends-panel.imjs-chatbox {
+                background-repeat: repeat-x;
+                background-position: -45px bottom;
+            }
+        
+        /* [begin] Generic bar close */
+        ul#imjs-bar > li .imjs-tab-text a {
+            float: right;
+            text-decoration: none;
+            display: none;
+            width: 10px;
+            height: 0;
+            padding-top: 10px;
+            overflow: hidden;
+            margin-top: 7.5px;
+            background: url(images/closemin.png) 0 0 no-repeat;
+        }
+        
+        ul#imjs-bar > li:hover .imjs-tab-text a {
+            display: inline;
+        }
+        /* [end] Generic bar close */
+    /* [end] Generic bar item */
+    
+    /* [begin] Bar scrolling buttons */
+    ul#imjs-bar > li.imjs-scroll {
+        width: 20px;
+        text-align: center;
+        font-size: 9px;
+        font-weight: 700;
+        background-repeat: no-repeat;
+    } 
+    
+        ul#imjs-bar li#imjs-scroll-left {
+            padding: 1px 6px 0 4px;
+            background-image: url(images/sl.png);
+            background-position: 5px center;
+        }
+        
+        ul#imjs-bar li#imjs-scroll-right {
+            padding: 1px 5px 0;
+            background-image: url(images/sr.png);
+            background-position: 20px center;
+        }
+    /* [end] Bar scrolling buttons */
+    
+    /* [begin] Notification icon */
+    span.imjs-notification {
+        display: block;
+        position: absolute;
+        width: 15px;
+        height: 15px;
+        right: -9px;
+        top: -12px;
+        padding: 2px;
+        line-height: 16px;
+        background: #eb2121;
+        color: #fff;
+        text-shadow: none;
+        -moz-border-radius: 3px;
+        -webkit-border-radius: 3px;
+        border-radius: 3px;
+        overflow: hidden;
+        text-align: center;
+    }
+    /* [end] Notification icon */
+    
+    /* [begin] Tooltip */
+    span.imjs-tooltip {
+        display: none;
+        position: absolute;
+        padding-bottom: 5px;
+        margin: 0 0 3px 6px;
+        left: -10000px;
+        background: url(images/tooltip.png) right bottom no-repeat;
+        color: #fff;
+        text-shadow: none;
+        opacity: 0.9;
+    }
+    
+        span.imjs-tooltip p {
+            font: 11px/18px Helvetica Neue, Helvetica, Arial, Calibri, Tahoma, Verdana, sans-serif;
+            margin: 0;
+            padding: 2px 6px;
+            background: #000;
+            max-width: 200px;
+        }
+    /* [end] Tooltip */
+    
+    /* [begin] Friends list button */    
+    ul#imjs-bar > li#imjs-friends.imjs-not-connected, 
+    ul#imjs-bar > li#imjs-friends.not-connected:hover {
+        width: 10px;
+        background-image: url(images/error.png);
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+    
+        ul#imjs-bar > li#imjs-friends.imjs-not-connected span.imjs-tab-text {
+            margin-left: -10000px;
+        }
+
+        li#imjs-friends .imjs-tab-text span {
+            color: #888;
+        }
+        
+            li#imjs-friends .imjs-tab-text span > span {
+                color: #222;
+                font-weight: 700;
+            }
+    /* [end] Friends list button */
+/* [end] Messenger bar */
+
+/* [begin] Friends list */
+div#imjs-friends-panel {
+    background: #fff;
+    width: 200px;
+    right: auto;
+    left: -1px;
+    z-index: 100;
+}
+
+    div#imjs-friends-panel div.imjs-header {
+        width: 190px;
+    }
+       
+        div#imjs-friends-panel a.imjs-minimize {
+            width: 194px;
+        }
+        
+        div#imjs-friends-panel a.imjs-minimize:active {
+            outline: 0;
+        }
+
+ul#imjs-friends-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    font: 12px/25px Helvetica Neue, Helvetica, Arial, Calibri, Tahoma, Verdana, sans-serif;
+    max-height: 300px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+    ul#imjs-friends-list li, ul.imjs-friend-group li {
+        width: 200px;
+        padding: 0;
+        margin: 0;
+        cursor: pointer;
+        list-style-type: none;
+    }
+    
+        span.imjs-friend-group-header {
+            display: block;
+            padding: 0 0 0 5px;
+            width: 195px;
+            font-weight: 700;
+            border-top: 1px solid #aaa;
+            cursor: default;
+        }
+    
+        li.imjs-friend-group ul {
+            margin: 0 0 5px;
+            padding: 0;
+        }
+            
+            li.imjs-friend-group ul li {
+                width: 200px;
+            }
+        
+            li.imjs-friend-group ul li:hover {
+                background: #0055aa;
+                color: #fff;
+            }
+            
+            li.imjs-friend-group ul li > strong {
+                position: relative;
+                color: #00cc00;
+                font-size: 28px;
+                line-height: 19px;
+                top: 6px;
+                margin: 0 5px;
+            }
+            
+            li.imjs-friend-group ul li.imjs-offline > strong {
+                color: #777;
+            }
+            
+            li.imjs-friend-group ul li.imjs-away > strong {
+                color: #df9b00;
+            }
+            
+            li.imjs-friend-group ul li.imjs-selected {
+                background: #686868;
+                color: #eee;
+                font-weight: 700;
+                text-shadow: 0 1px 0 #333;
+            }
+
+div#imjs-friends-panel form, div#imjs-friends-panel form p {
+    margin: 0;
+    padding: 0;
+}
+
+    input#imjs-search-friends {
+        font: 12px/14px Helvetica Neue, Helvetica, Arial, Calibri, Tahoma, Verdana, sans-serif;
+        height: 16px;
+        width: 194px;
+        padding: 6px 3px 3px;
+        margin: 0;
+        border: solid #aaa;
+        border-width: 1px 0 0 0;
+        color: #aaa;
+    }
+/* [end] Friends list */
+
+/* [begin] Login/Registration Forms */
+div#imjs-lr form {
+    background: #F0EFED url(images/w.png) repeat-x;
+    border: 1px solid #cfceca;
+    max-width: 220px;
+    padding: 5px 5px 10px 8px;
+    overflow: auto;
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+}
+
+    div#imjs-lr .error {
+        font: 700 12px/18px Helvetica Neue, Helvetica, Arial, Calibri, Tahoma, Verdana, sans-serif;
+        color: #ff0000;
+    }
+
+    div#imjs-lr form fieldset {
+        border: 0;
+        padding: 0;
+        margin: 0;
+    }
+    
+    div#imjs-lr form h2 {
+        font: 700 20px/24px Helvetica Neue, Helvetica, Arial, Calibri, Tahoma, Verdana, sans-serif;
+        margin: 0;
+        padding: 7px 0 0 2px;
+        color: #555;
+        text-shadow: 0 1px 0px #fff;
+    }
+
+    div#imjs-lr form label {
+        display: block;
+        font: 700 12px/14px Helvetica Neue, Helvetica, Arial, Calibri, Tahoma, Verdana, sans-serif;
+        color: #7B7A79;
+    }
+    
+    div#imjs-lr form input {
+        width: 200px;
+    }
+    
+        div#imjs-lr form input.imjs-lr-error, div#imjs-lr form input.imjs-lr-error:focus {
+            margin: -1px;
+            border: 2px solid #ff1111;
+        }
+    
+    div#imjs-lr form button {
+        float: right;
+        background: #f4f3f1;
+        outline: 0;
+    }
+    
+    div#imjs-lr form input, div#imjs-lr form button {
+        border: 1px solid #ddd;
+        color: #000;
+        padding: 4px 3px;
+        font: 16px/20px Helvetica Neue, Helvetica, Arial, Calibri, Tahoma, Verdana, sans-serif;
+        -moz-border-radius: 2px;
+        -webkit-border-radius: 2px;
+        margin: 0;
+    }
+    
+        div#imjs-lr form p {
+            padding-left: 2px;
+            overflow: visible;
+        }
+        
+        div#imjs-lr form input:focus, div#imjs-lr form button:focus {
+            position: relative;
+            border: 2px solid #999;
+            margin: -1px;
+        }
+    
+    p.imjs-submit {
+        width: 207px;
+        overflow: visible;
+    }
+
+    form#imjs-login {
+        margin-bottom: 10px;
+    }
+/* [end] Login/Registration Forms */

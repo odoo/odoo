@@ -9,10 +9,7 @@ import openerpweb
 import openerpweb.ast
 import openerpweb.nonliterals
 
-__all__ = ['Session', 'Menu', 'DataSet', 'DataRecord',
-           'View', 'FormView', 'ListView', 'SearchView',
-           'Action']
-
+# Should move to openerpweb.Xml2Json
 class Xml2Json:
     # xml2json-direct
     # Simple and straightforward XML-to-JSON converter in Python
@@ -280,12 +277,9 @@ class DataSet(openerpweb.Controller):
         return {'fields': req.session.model(model).fields_get()}
 
     @openerpweb.jsonrequest
-    def find(self, request, model, fields=False, offset=0, limit=False,
-             domain=None, context=None, sort=None):
-        return self.do_find(request, model, fields, offset, limit,
-                     domain, context, sort)
-    def do_find(self, request, model, fields=False, offset=0, limit=False,
-             domain=None, context=None, sort=None):
+    def search_read(self, request, model, fields=False, offset=0, limit=False, domain=None, context=None, sort=None):
+        return self.do_search_read(request, model, fields, offset, limit, domain, context, sort)
+    def do_search_read(self, request, model, fields=False, offset=0, limit=False, domain=None, context=None, sort=None):
         """ Performs a search() followed by a read() (if needed) using the
         provided search criteria
 
@@ -313,7 +307,6 @@ class DataSet(openerpweb.Controller):
     @openerpweb.jsonrequest
     def get(self, request, model, ids, fields=False):
         return self.do_get(request, model, ids, fields)
-
     def do_get(self, request, model, ids, fields=False):
         """ Fetches and returns the records of the model ``model`` whose ids
         are in ``ids``.
@@ -336,11 +329,8 @@ class DataSet(openerpweb.Controller):
         record_map = dict((record['id'], record) for record in records)
 
         return [record_map[id] for id in ids if record_map.get(id)]
-
-class DataRecord(openerpweb.Controller):
-    _cp_path = "/base/datarecord"
-
     @openerpweb.jsonrequest
+
     def load(self, req, model, id, fields):
         m = req.session.model(model)
         value = {}
@@ -350,9 +340,15 @@ class DataRecord(openerpweb.Controller):
         return {'value': value}
 
     @openerpweb.jsonrequest
-    def save(self, req, model, id, data):
+    def save(self, req, model, id, data, context={}):
         m = req.session.model(model)
-        r = m.write([id], data)
+        r = m.write([id], data, context)
+        return {'result': r}
+
+    @openerpweb.jsonrequest
+    def call(self, req, model, method, ids, args):
+        m = req.session.model(model)
+        r = getattr(m, method)(ids, *args)
         return {'result': r}
 
 class View(openerpweb.Controller):
@@ -466,7 +462,6 @@ class FormView(View):
         fields_view = self.fields_view_get(req.session, model, view_id, 'form', toolbar=toolbar)
         return {'fields_view': fields_view}
 
-
 class ListView(View):
     _cp_path = "/base/listview"
 
@@ -475,7 +470,6 @@ class ListView(View):
         fields_view = self.fields_view_get(req.session, model, view_id, 'tree', toolbar=toolbar)
         return {'fields_view': fields_view}
 
-
 class SearchView(View):
     _cp_path = "/base/searchview"
 
@@ -483,7 +477,6 @@ class SearchView(View):
     def load(self, req, model, view_id):
         fields_view = self.fields_view_get(req.session, model, view_id, 'search')
         return {'fields_view': fields_view}
-
 
 class Action(openerpweb.Controller):
     _cp_path = "/base/action"

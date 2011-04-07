@@ -19,6 +19,25 @@ import nonliterals
 import xmlrpctimeout
 import logging
 
+#-----------------------------------------------------------
+# Globals
+#-----------------------------------------------------------
+
+path_root = os.path.dirname(os.path.dirname(os.path.normpath(__file__)))
+path_addons = os.path.join(path_root, 'addons')
+cherrypy_root = None
+
+#-----------------------------------------------------------
+# Per Database Globals (might move into a pool if needed)
+#-----------------------------------------------------------
+
+applicationsession = {}
+addons_module = {}
+addons_manifest = {}
+controllers_class = {}
+controllers_object = {}
+controllers_path = {}
+
 #----------------------------------------------------------
 # OpenERP Client Library
 #----------------------------------------------------------
@@ -269,9 +288,13 @@ class JsonRequest(object):
     """
 
     def parse(self, request):
+        self.request = request
         self.params = request.get("params", {})
+        self.applicationsession = applicationsession
+        self.httpsession_id = "cookieid"
+        self.httpsession = cherrypy.session
         self.session_id = self.params.pop("session_id", None) or uuid.uuid4().hex
-        self.session = cherrypy.session.setdefault(self.session_id, OpenERPSession())
+        self.session = self.httpsession.setdefault(self.session_id, OpenERPSession())
         self.context = self.params.pop('context', None)
         return self.params
 
@@ -290,16 +313,16 @@ class JsonRequest(object):
         :returns: a string-encoded JSON-RPC2 reply
         :rtype: bytes
         '''
+        # Read POST content or POST Form Data named "request"
         if requestf:
-            request = simplejson.load(
-                requestf, object_hook=nonliterals.non_literal_decoder)
+            request = simplejson.load(requestf, object_hook=nonliterals.non_literal_decoder)
         else:
-            request = simplejson.loads(
-                request, object_hook=nonliterals.non_literal_decoder)
+            request = simplejson.loads(request, object_hook=nonliterals.non_literal_decoder)
         try:
             print "--> %s.%s %s" % (controller.__class__.__name__, method.__name__, request)
             error = None
-            result = method(controller, self, **self.parse(request))
+            self.parse(request)
+            result = method(controller, self, **self.params)
         except OpenERPUnboundException:
             error = {
                 'code': 100,
@@ -340,8 +363,7 @@ class JsonRequest(object):
         print "<--", response
         print
 
-        content = simplejson.dumps(
-            response, cls=nonliterals.NonLiteralEncoder)
+        content = simplejson.dumps(response, cls=nonliterals.NonLiteralEncoder)
         cherrypy.response.headers['Content-Type'] = 'application/json'
         cherrypy.response.headers['Content-Length'] = len(content)
         return content
@@ -349,46 +371,37 @@ class JsonRequest(object):
 def jsonrequest(f):
     @cherrypy.expose
     @functools.wraps(f)
-    def json_handler(self):
-        return JsonRequest().dispatch(self, f, requestf=cherrypy.request.body)
+    def json_handler(controller):
+        return JsonRequest().dispatch(controller, f, requestf=cherrypy.request.body)
 
     return json_handler
 
 class HttpRequest(object):
     """ Regular GET/POST request
     """
-
-    def __init__(self):
-        # result may be filled, it's content will be updated by the return
-        # value of the dispatched function if it's a dict
+    def dispatch(self, controller, f, request, **kw):
+        self.request = request
+        self.applicationsession = applicationsession
+        self.httpsession_id = "cookieid"
+        self.httpsession = cherrypy.session
         self.result = ""
-
-    def dispatch(self, controller, f, request):
-        print "GET/POST --> %s.%s %s" % (controller.__class__.__name__, f.__name__, request)
-        r = f(controller, self, request)
+        print "GET/POST --> %s.%s %s %r" % (controller.__class__.__name__, f.__name__, request, kw)
+        r = f(controller, self, **kw)
+        print "<--", r
+        print
         return r
 
 def httprequest(f):
     # check cleaner wrapping:
     # functools.wraps(f)(lambda x: JsonRequest().dispatch(x, f))
-    l = lambda self, request: HttpRequest().dispatch(self, f, request)
-    l.exposed = 1
-    return l
+    def http_handler(self,*l, **kw):
+        return HttpRequest().dispatch(self, f, cherrypy.request, **kw)
+    http_handler.exposed = 1
+    return http_handler
 
 #-----------------------------------------------------------
 # Cherrypy stuff
 #-----------------------------------------------------------
-
-path_root = os.path.dirname(os.path.dirname(os.path.normpath(__file__)))
-path_addons = os.path.join(path_root, 'addons')
-cherrypy_root = None
-
-# globals might move into a pool if needed
-addons_module = {}
-addons_manifest = {}
-controllers_class = {}
-controllers_object = {}
-controllers_path = {}
 
 class ControllerType(type):
     def __init__(cls, name, bases, attrs):

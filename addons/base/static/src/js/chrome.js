@@ -217,7 +217,7 @@ openerp.base.BasicController = Class.extend( /** @lends openerp.base.BasicContro
             }
         }
 
-    },
+    }
 });
 
 openerp.base.Session = openerp.base.BasicController.extend( /** @lends openerp.base.Session# */{
@@ -468,9 +468,24 @@ openerp.base.Controller = openerp.base.BasicController.extend( /** @lends opener
 });
 
 openerp.base.CrashManager = openerp.base.Controller.extend({
-// Controller to display exception and stacktrace and eventually report error trought maitenance contract
-// if should hook on Session.on_rpc_error: function(error) {
-// and display OPW etc...
+    init: function(session, element_id) {
+        this._super(session, element_id);
+        this.session.on_rpc_error.add(this.on_rpc_error);
+    },
+    on_rpc_error: function(error) {
+        var msg = error.message + "\n" + error.data.debug;
+        this.display_error(msg);
+    },
+    display_error: function(message) {
+        $('<pre></pre>').text(message).dialog({
+            modal: true,
+            buttons: {
+                OK: function() {
+                    $(this).dialog("close");
+                }
+            }
+        });
+    }
 });
 
 openerp.base.Database = openerp.base.Controller.extend({
@@ -503,8 +518,14 @@ openerp.base.Notification =  openerp.base.Controller.extend({
             speed: 500
         });
     },
-    add: function(title, text) {
-        this.$element.notify("create", {
+    'default': function(title, text) {
+        this.$element.notify('create', {
+            title: title,
+            text: text
+        });
+    },
+    alert: function(title, text) {
+        this.$element.notify('create', 'oe_notification_alert', {
             title: title,
             text: text
         });
@@ -671,6 +692,7 @@ openerp.base.WebClient = openerp.base.Controller.extend({
 
         this.session = new openerp.base.Session("oe_errors");
         this.loading = new openerp.base.Loading(this.session, "oe_loading");
+        this.crashmanager =  new openerp.base.CrashManager(this.session);
 
         // Do you autorize this ?
         openerp.base.Controller.prototype.notification = new openerp.base.Notification(this.session, "oe_notification");
@@ -690,7 +712,7 @@ openerp.base.WebClient = openerp.base.Controller.extend({
         this.header.start();
         this.login.start();
         this.menu.start();
-        this.notification.add("OpenERP Client", "The openerp client has been initialized.");
+        this.notification['default']("OpenERP Client", "The openerp client has been initialized.");
     },
     on_logged: function() {
         this.action =  new openerp.base.ActionManager(this.session, "oe_app");
