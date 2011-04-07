@@ -69,7 +69,7 @@ class report_rappel(report_sxw.rml_parse):
                 line_cur[line.currency_id.id] = {'line': []}
             currency = line.currency_id or line.company_id.currency_id
             line_data = {
-                         'name': line.name,
+                         'name': line.move_id.name,
                          'ref': line.ref,
                          'date':line.date,
                          'date_maturity': line.date_maturity,
