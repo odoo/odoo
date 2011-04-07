@@ -209,7 +209,7 @@ class partner_vat_list(osv.osv_memory):
             sum_turnover +=Decimal(str(line['turnover']))
             data_clientinfo += '\n<ClientList SequenceNum="'+str(seq)+'">\n\t<CompanyInfo>\n\t\t<VATNum>'+ (line['vat'] or '')[2:] +'</VATNum>\n\t\t<Country>' + tools.ustr(line['country']) +'</Country>\n\t</CompanyInfo>\n\t<Amount>'+ str(int(Decimal(str(line['amount'] * 100)))) +'</Amount>\n\t<TurnOver>'+ str(int(Decimal(str(line['turnover'] * 100)))) +'</TurnOver>\n</ClientList>'
 
-        data_decl ='\n<DeclarantList SequenceNum="1" DeclarantNum="'+ dnum + '" ClientNbr="'+ str(seq) +'" TurnOverSum="'+ str(int(Decimal(str(sum_turnover * 100)))) +'" TaxSum="'+ str(int(Decimal(str(sum_tax * 100)))) +'" />'
+        data_decl ='\n<DeclarantList SequenceNum="1" DeclarantNum="'+ dnum + '" ClientNbr="'+ str(seq) +'" TurnOverSum="'+ str(int(Decimal(str(sum_turnover * 100)))) +'" TaxSum="'+ str(int(Decimal(str(sum_tax * 100)))) +'">'
         data_file += tools.ustr(data_decl) + tools.ustr(data_comp) + tools.ustr(data_period) + tools.ustr(data_clientinfo) + '\n</DeclarantList></VatList>'
         msg = 'Save the File with '".xml"' extension.'
         file_save = base64.encodestring(data_file.encode('utf8'))
