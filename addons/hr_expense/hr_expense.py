@@ -229,6 +229,12 @@ class product_product(osv.osv):
         'hr_expense_ok': fields.boolean('Can Constitute an Expense', help="Determines if the product can be visible in the list of product within a selection from an HR expense sheet line."),
     }
 
+    def on_change_hr_expense_ok(self, cr, uid, id, hr_expense_ok):
+        if not hr_expense_ok:
+            return {}
+        res = {'value' : {'type':'service','procure_method':'make_to_stock','supply_method':'buy','purchase_ok':True,'sale_ok' :False,'categ_id':19 }}
+        return res
+
 product_product()
 
 class hr_expense_line(osv.osv):
