@@ -1,5 +1,6 @@
 <openerp>
   <data>
+  
     <record id="view_base_setup_installer" model="ir.ui.view">
       <field name="name">base.setup.installer.view</field>
       <field name="model">base.setup.installer</field>
@@ -112,6 +113,56 @@
       <field name="action_id" ref="action_migrade_application_installer_modules"/>
       <field name="restart">always</field>
   </record>
+  
+          <!-- Import or create customers configartion view  -->
+
+	 <record id="view_import_create_installer" model="ir.ui.view">
+	     <field name="name">Import or create customers </field>
+	     <field name="model">product.installer</field>
+	     <field name="type">form</field>
+	     <field name="inherit_id" ref="base.res_config_view_base"/>
+	     <field name="arch" type="xml">
+	       <data>
+	         <form position="attributes">
+	           <attribute name="string">Import or create customers </attribute>
+	         </form>
+	         <separator string="title" position="attributes">
+	         <attribute name="string">Import or create customers </attribute>
+	           </separator>
+	         <xpath expr="//label[@string='description']"
+                 position="attributes">
+                <attribute name="string">Create some customers, suppliers and their contacts manually or import a CSV spreadsheet by clicking on the import link</attribute>
+              </xpath>
+	         <xpath expr='//separator[@string="vsep"]' position='attributes'>
+	               <attribute name='rowspan'>15</attribute>
+	               <attribute name='string'></attribute>
+	          </xpath>
+	           
+	           <group string="res_config_contents" position="replace">
+	               <group colspan="4">
+	                   <field colspan="4" name="customers" width="200"/>
+	             </group>
+	         </group>
+	       </data>
+	     </field>
+	 </record>
+	
+	 <record id="action_import_create_installer" model="ir.actions.act_window">
+	     <field name="name">Import or create customers </field>
+	     <field name="type">ir.actions.act_window</field>
+	     <field name="res_model">product.installer</field>
+	     <field name="view_id" ref="view_import_create_installer"/>
+	     <field name="view_type">form</field>
+	     <field name="view_mode">form</field>
+	     <field name="target">new</field>
+	 </record>
+
+    <!--          register configuration wizard -->
+	<record id="config_wizard_res_product_installer" model="ir.actions.todo">
+	    <field name="action_id" ref="action_import_create_installer"/>
+	    <field name="restart">never</field>
+	    <field name="state">skip</field>
+	</record>
        
   </data>
 </openerp>

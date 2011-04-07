@@ -173,4 +173,38 @@ class migrade_application_installer_modules(osv.osv_memory):
 
 migrade_application_installer_modules()
 
+class product_installer(osv.osv_memory):
+    _name = 'product.installer'
+    _inherit = 'res.config'
+    _columns = {
+                'customers': fields.selection([('create','Create'), ('import','Import')], 'Customers', size=32, required=True, help="Import or create customers"),
+
+    }
+    _defaults = {
+                 'customers': 'create',
+    }
+    
+    def execute(self, cr, uid, ids, context=None):
+        if context is None:
+             context = {}
+        data_obj = self.pool.get('ir.model.data')
+        val = self.browse(cr, uid, ids, context=context)[0]
+        if val.customers == 'create':
+            id2 = data_obj._get_id(cr, uid, 'base', 'view_partner_form')
+            if id2:
+                id2 = data_obj.browse(cr, uid, id2, context=context).res_id
+            return {
+                    'view_type': 'form',
+                    'view_mode': 'form',
+                    'res_model': 'res.partner',
+                    'views': [(id2, 'form')],
+                    'type': 'ir.actions.act_window',
+                    'target': 'current',
+                    'nodestroy':False,
+                }
+        if val.customers == 'import':
+            return {'type': 'ir.actions.act_window'}
+
+product_installer()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
