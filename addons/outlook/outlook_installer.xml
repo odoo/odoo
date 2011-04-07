@@ -9,10 +9,10 @@
             <field name="arch" type="xml">
                 <data>
                     <form position="attributes">
-                        <attribute name="string">Outlook Plug-In Configuration</attribute>
+                        <attribute name="string">Load Outlook Plug-In Configuration</attribute>
                     </form>
                     <separator string="title" position="attributes">
-                        <attribute name="string">Outlook Plug-In</attribute>
+                        <attribute name="string">Load Outlook Plug-In</attribute>
                     </separator>
                     <xpath expr="//label[@string='description']" position="attributes">
                         <attribute name="string">This plug-in allows you to link your e-mail to OpenERP's documents. You can attach it to any existing one in OpenERP or create a new one.</attribute>
@@ -49,7 +49,7 @@
         </record>
 
         <record id="action_outlook_installer" model="ir.actions.act_window">
-            <field name="name">Outlook Plug-In Configuration</field>
+            <field name="name">Load Outlook Plug-In Configuration</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">outlook.installer</field>
             <field name="view_id" ref="view_outlook_installer"/>
@@ -64,7 +64,7 @@
         </record>
 
         <record id="action_outlook_wizard" model="ir.actions.act_window">
-            <field name="name">Outlook Plug-In Configuration</field>
+            <field name="name">Load Outlook Plug-In Configuration</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">outlook.installer</field>
             <field name="view_id" ref="view_outlook_installer"/>
@@ -81,7 +81,7 @@
 
         <menuitem id="menu_base_config_plugins_outlook"
                   action="action_outlook_wizard"
-                  name="Outlook Plug-In"
+                  name="Load Outlook Plug-In"
                   parent="base.menu_base_config_plugins"
                   sequence="10" />
     </data>
