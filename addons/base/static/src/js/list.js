@@ -155,10 +155,8 @@ openerp.base.ListView = openerp.base.Controller.extend(
             group_by_seq: groupbys
         }, function (results) {
             // TODO: handle non-empty results.group_by with read_group
-            console.log("listview got search will do read slice",results.domain)
             self.dataset.context = results.context;
             self.dataset.domain = results.domain;
-            console.log("listview got search will do read slice",results.domain)
             self.dataset.read_slice(self.dataset.fields, 0, self.limit, self.do_fill_table);
         });
     },

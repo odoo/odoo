@@ -183,7 +183,6 @@ openerp.base.SearchView = openerp.base.Controller.extend({
                 .compact()
                 .value();
 
-        this.notification['default']("search", "calling on_search");
         this.on_search(domains, contexts, groupbys);
     },
     /**
@@ -203,7 +202,6 @@ openerp.base.SearchView = openerp.base.Controller.extend({
      * @param {Array} groupbys ordered contexts which may or may not have group_by keys
      */
     on_search: function (domains, contexts, groupbys) {
-        this.notification['default']("search", "this doesnt get called ");
     },
     /**
      * Triggered after a validation error in the SearchView fields.
