@@ -16,35 +16,16 @@
     vehicle: 'No'
     vehicle_distance: 12
 
-
--
-  I create a new Contract wage period.
--
-  !record {model: hr.contract.wage.type.period, id: hr_contract_wage_type_period_monthly0}:
-    factor_days: 176.0
-    name: monthly
--
-  I create a new Contract Wage Type.
--
-  !record {model: hr.contract.wage.type, id: hr_contract_wage_type_monthlygrosswage0}:
-    factor_type: 1.9
-    name: Monthly Gross Wage
-    period_id: 'hr_contract_wage_type_period_monthly0'
-    type: gross
-
 -
   I create a new contract for "Mark Johnson".
 -
   !record {model: hr.contract, id: hr_contract_contract0}:
-    advantages_gross: 0.0
     employee_id: 'hr_employee_employee0'
-    advantages_net: 0.0
     date_end: !eval "'%s-05-18' %(datetime.now().year+1)"
     date_start: !eval "'%s-05-18' %(datetime.now().year)"
     trial_date_end: !eval "'%s-03-01' %(datetime.now().year)"
     trial_date_start: !eval "'%s-04-30' %(datetime.now().year)"
     name: contract1
     wage: 1.0
-    wage_type_id: hr_contract_wage_type_monthlygrosswage0
     type_id: hr_contract_type_emp
     working_hours: resource.timesheet_group1

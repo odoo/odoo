@@ -35,7 +35,9 @@ class payslip_report(report_sxw.rml_parse):
                 'get_month': self.get_month,
                 'get_earnings': self.get_earnings,
                 'get_deductions':self.get_deductions,
-                'get_leave':self.get_leave,
+                'get_leave': self.get_leave,
+                'get_payslip_lines': self.get_payslip_lines,
+#                'get_details_by_salary_head': self.get_details_by_salary_head
                 })
 
     def convert(self, amount, cur):
@@ -82,7 +84,19 @@ class payslip_report(report_sxw.rml_parse):
         date = datetime.strptime(obj.date, '%Y-%m-%d')
         res['mname']= date.strftime('%B')+"-"+date.strftime('%Y')
         return res['mname']
+    
+    def get_payslip_lines(self, obj):
+        payslip_line = self.pool.get('hr.payslip.line')
+        res = []
+        ids = []
+        for id in range(len(obj)):
+            if obj[id].appears_on_payslip == True:
+                ids.append(obj[id].id)
+        if ids:
+            res = payslip_line.browse(self.cr, self.uid, ids)
+        return res
 
 report_sxw.report_sxw('report.payslip.pdf', 'hr.payslip', 'hr_payroll/report/payslip.rml', parser=payslip_report)
+report_sxw.report_sxw('report.test.pdf', 'hr.payslip', 'hr_payroll/report/report_payslip.rml', parser=payslip_report)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -136,7 +136,6 @@ class hr_contract(osv.osv):
 
 hr_contract()
 
-#TODO clean this class
 class contrib_register(osv.osv):
     '''
     Contribution Register
@@ -145,29 +144,10 @@ class contrib_register(osv.osv):
     _name = 'hr.contibution.register'
     _description = 'Contribution Register'
 
-#    def _total_contrib(self, cr, uid, ids, field_names, arg, context=None):
-#        line_pool = self.pool.get('hr.contibution.register.line')
-#
-#        res = {}
-#        for cur in self.browse(cr, uid, ids, context=context):
-#            current = line_pool.search(cr, uid, [('register_id','=',cur.id)], context=context)
-#            e_month = 0.0
-#            c_month = 0.0
-#            for i in line_pool.browse(cr, uid, current, context=context):
-#                e_month += i.emp_deduction
-#                c_month += i.comp_deduction
-#            res[cur.id]={
-#                'monthly_total_by_emp':e_month,
-#                'monthly_total_by_comp':c_month,
-#            }
-#        return res
-
     _columns = {
         'company_id':fields.many2one('res.company', 'Company', required=False),
         'name':fields.char('Name', size=256, required=True, readonly=False),
-        'register_line_ids':fields.one2many('hr.contibution.register.line', 'register_id', 'Register Line', readonly=True),
-#        'monthly_total_by_emp': fields.function(_total_contrib, method=True, multi='dc', string='Total By Employee', digits=(16, 4)),
-#        'monthly_total_by_comp': fields.function(_total_contrib, method=True, multi='dc', string='Total By Company', digits=(16, 4)),
+        'register_line_ids':fields.one2many('hr.payslip.line', 'register_id', 'Register Line', readonly=True),
         'note': fields.text('Description'),
     }
     _defaults = {
@@ -177,36 +157,6 @@ class contrib_register(osv.osv):
     }
 
 contrib_register()
-
-#TODO clean this class
-class contrib_register_line(osv.osv):
-    '''
-    Contribution Register Line
-    '''
-
-    _name = 'hr.contibution.register.line'
-    _description = 'Contribution Register Line'
-
-    def _total(self, cr, uid, ids, field_names, arg, context=None):
-        res = {}
-        for line in self.browse(cr, uid, ids, context=context):
-            res[line.id] = line.emp_deduction + line.comp_deduction
-        return res
-
-    _columns = {
-        'name':fields.char('Name', size=256, required=True, readonly=False),
-        'register_id':fields.many2one('hr.contibution.register', 'Register', required=False),
-        'code':fields.char('Code', size=64, required=False, readonly=False),
-        'employee_id':fields.many2one('hr.employee', 'Employee', required=True),
-        'date': fields.date('Date'),
-        'emp_deduction': fields.float('Employee Deduction', digits=(16, 4)),
-        'comp_deduction': fields.float('Company Deduction', digits=(16, 4)),
-        'total': fields.function(_total, method=True, store=True,  string='Total', digits=(16, 4)),
-    }
-    _defaults = {
-        'date': lambda *a: time.strftime('%Y-%m-%d'),
-    }
-contrib_register_line()
 
 class hr_salary_head(osv.osv):
     """
