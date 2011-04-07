@@ -1,9 +1,22 @@
-
 openerp.base.list = function (openerp) {
-
 openerp.base.views.add('list', 'openerp.base.ListView');
-openerp.base.ListView = openerp.base.Controller.extend({
-    init: function(view_manager, session, element_id, dataset, view_id) {
+openerp.base.ListView = openerp.base.Controller.extend(
+    /** @lends openerp.base.ListView# */ {
+    defaults: {
+        // records can be selected one by one
+        'selectable': true
+    },
+    /**
+     * @constructs
+     * @param view_manager
+     * @param session An OpenERP session object
+     * @param element_id the id of the DOM elements this view should link itself to
+     * @param {openerp.base.DataSet} dataset the dataset the view should work with
+     * @param {String} view_id the listview's identifier, if any
+     * @param {Object} options A set of options used to configure the view
+     * @param {Boolean} [options.selectable=true] determines whether view rows are selectable (e.g. via a checkbox)
+     */
+    init: function(view_manager, session, element_id, dataset, view_id, options) {
         this._super(session, element_id);
         this.view_manager = view_manager;
         this.dataset = dataset;
@@ -12,6 +25,8 @@ openerp.base.ListView = openerp.base.Controller.extend({
 
         this.columns = [];
         this.rows = [];
+
+        this.options = _.extend({}, this.defaults, options || {});
     },
     start: function() {
         //this.log('Starting ListView '+this.model+this.view_id)
@@ -31,42 +46,61 @@ openerp.base.ListView = openerp.base.Controller.extend({
 
         this.$element.html(QWeb.render("ListView", this));
         this.$element.find('table').delegate(
+                'th.oe-record-selector', 'click', function (e) {
+                    // A click in the selection cell should not activate the
+                    // linking feature
+                    e.stopImmediatePropagation();
+        });
+        this.$element.find('table').delegate(
                 'tr', 'click', this.on_select_row);
 
         // sidebar stuff
         if (this.view_manager.sidebar)
             this.view_manager.sidebar.load_multi_actions();
     },
+    /**
+     * Fills the table with the provided records after emptying it
+     *
+     * @param {Array} records the records to fill the list view with
+     * @returns {Promise} promise to the end of view rendering (list views are asynchronously filled for improved responsiveness)
+     */
     do_fill_table: function(records) {
         this.rows = records;
-
 
         var $table = this.$element.find('table');
         // remove all data lines
         $table.find('tbody').remove();
 
         // add new content
-        var columns = this.columns;
-        var rows = this.rows;
+        var columns = this.columns,
+            rows = this.rows,
+            options = this.options;
+
         // Paginate by groups of 50 for rendering
-        var PAGE_SIZE = 50;
-        var bodies_count = Math.ceil(this.rows.length / PAGE_SIZE);
-        var body = 0;
-        var $body = $('<tbody>').appendTo($table);
+        var PAGE_SIZE = 50,
+            bodies_count = Math.ceil(this.rows.length / PAGE_SIZE),
+            body = 0,
+            $body = $('<tbody>').appendTo($table);
+
         var render_body = function () {
+            var rendered = $.Deferred();
             setTimeout(function () {
                 $body.append(
                     QWeb.render("ListView.rows", {
                         columns: columns,
-                        rows: rows.slice(body*PAGE_SIZE, (body+1)*PAGE_SIZE)
+                        rows: rows.slice(body*PAGE_SIZE, (body+1)*PAGE_SIZE),
+                        options: options
                 }));
                 ++body;
                 if (body < bodies_count) {
                     render_body();
+                } else {
+                    rendered.resolve();
                 }
             }, 0);
+            return rendered.promise();
         };
-        render_body();
+        return render_body();
     },
     on_select_row: function (event) {
         var $target = $(event.currentTarget);

@@ -166,24 +166,30 @@
         <button type="button" data-pager-action="last">Last</button>
     </div>
     <table>
-        <tr><t t-call="ListView.header"/></tr>
+        <t t-call="ListView.header"/>
     </table>
 </t>
 <t t-name="ListView.header">
     <thead>
-        <t t-foreach="columns" t-as="column">
-            <th t-if="column.invisible !== '1'">
-                <t t-if="column.tag !== 'button'">
-                    <t t-esc="column.string"/>
-                </t>
-            </th>
-        </t>
+        <tr>
+            <th t-if="options.selectable"/>
+            <t t-foreach="columns" t-as="column">
+                <th t-if="column.invisible !== '1'">
+                    <t t-if="column.tag !== 'button'">
+                        <t t-esc="column.string"/>
+                    </t>
+                </th>
+            </t>
+        </tr>
     </thead>
 </t>
 <t t-name="ListView.rows" t-foreach="rows" t-as="row">
     <t t-call="ListView.row"/>
 </t>
 <tr t-name="ListView.row">
+    <th t-if="options.selectable" class="oe-record-selector">
+        <input type="checkbox"/>
+    </th>
     <t t-foreach="columns" t-as="column">
         <!-- TODO: handle attrs -->
         <td t-if="column.invisible !== '1'" t-att-title="column.help">
