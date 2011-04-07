@@ -644,7 +644,7 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
     start: function() {
         this._super.apply(this, arguments);
         this.log("o2m.start");
-        var action = { res_model: this.field.relation, views: [ [false,"list"] ], };
+        var action = { res_model: this.field.relation, views: [ [false,"list"] ] };
         this.viewmanager = new openerp.base.ViewManagerAction(this.view.session, this.element_id, action);
     },
     set_value: function(value) {
@@ -701,7 +701,10 @@ openerp.base.form.widgets = new openerp.base.Registry({
     'one2many_list' : 'openerp.base.form.FieldOne2Many',
     'reference' : 'openerp.base.form.FieldReference',
     'boolean' : 'openerp.base.form.FieldBoolean',
-    'float' : 'openerp.base.form.FieldFloat'
+    'float' : 'openerp.base.form.FieldFloat',
+    'integer': 'openerp.base.form.FieldFloat',
+    'progressbar': 'openerp.base.form.FieldFloat',
+    'float_time': 'openerp.base.form.FieldFloat'
 });
 
 };
