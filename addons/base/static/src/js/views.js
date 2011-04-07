@@ -312,7 +312,6 @@ openerp.base.handle_action = function(session, action) {
             dialog.dialog({
                 title: action.name
             });
-            debugger;
             var viewmanager = new openerp.base.ViewManagerAction(session,element_id, action, false);
             viewmanager.start();
         }
