@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+	<record id="hr_payroll_rules_major" model="hr.salary.head">
+		<field name="name">Salaire Majore</field>
+		<field name="code">MAJ</field>
+		<field name="type">1</field>
+	</record>
+
+        <record id="hr_payroll_rules_onss_head" model="hr.salary.head">
+                <field name="name">Office National Securite Sociale</field>
+                <field name="code">ONSS</field>
+                <field name="type">2</field>
+        </record>
+	
+
+	<record id="hr_payroll_rules_pp_b1" model="hr.salary.head">
+		<field name="name">Precompte Professionnel Bareme I</field>
+		<field name="code">P.P.</field>
+		<field name="type">2</field>
+		<field name="note"> CE BAREME EST APPLICABLE :
+					- LORSQUE LE BENEFICIAIRE DES REVENUS EST UN ISOLE;
+
+					PRECOMPTE PROFESSIONNEL DU SUR :
+						- LES REMUNERATIONS DES TRAVAILLEURS :</field>
+	</record>
+
+	
+	<record id="hr_payroll_rules_pp_b2" model="hr.salary.head">
+		<field name="name">Precompte Professionnel Bareme II</field>
+		<field name="code">P.P.</field>
+		<field name="type">2</field>
+		<field name="note"> CE BAREME EST APPLICABLE LORSQUE LE CONJOINT DU
+					BENEFICIAIRE DES REVENUS N'A PAS DE REVENUS PROFESSIONNELS PROPRES.
+
+					PRECOMPTE PROFESSIONNEL DU SUR :
+						- LES REMUNERATIONS DES TRAVAILLEURS </field>
+	</record>
+
+	
+	<record id="hr_payroll_rules_pp_b3" model="hr.salary.head">
+		<field name="name">Precompte Professionnel Bareme III</field>
+		<field name="code">P.P.</field>
+		<field name="type">2</field>
+		<field name="note">CE BAREME EST APPLICABLE LORSQUE LE BENEFICIAIRE
+					DES REVENUS EST UN NON-RESIDENT QUI N'A PAS MAINTENU
+					UN FOYER D'HABITATION EN BELGIQUE DURANT TOUTE LA PERIODE IMPOSABLE.
+
+					PRECOMPTE PROFESSIONNEL DU SUR :
+						- LES REMUNERATIONS DES TRAVAILLEURS  </field>
+	</record>
+	
+	<record id="hr_payroll_rules_child" model="hr.salary.head">
+		<field name="name">Child Allowance Belgium</field>
+		<field name="code">CH.ALW</field>
+		<field name="type">1</field>
+		<field name="note">Le bénéficiaire des revenus est un isolé OU le conjoint du bénéficiaire des revenus a également des
+					revenus professionnels (barème I/ barème II)
+					
+					A.Lorsque les rémunérations mensuelles brutes ne dépassent pas 7.500 EUR, le précompte professionnel est déterminé suivant le barème I.
+					Les réductions suivantes sont ensuite déduites du précompte professionnel déterminé suivant ce barème :
+					
+						a) Réduction pour enfants à charge</field>
+
+	</record>
+<!-- HR SALAR RULES-->
+	<record id="hr_payroll_rules_maj" model="hr.salary.rule">
+		<field name="category_id" ref="hr_payroll_rules_major"/> 
+                <field name="name">Salaire Majore</field>
+		<field name="code">MAJ</field>
+		<field name="type">1</field>
+		<field name="amount_type">per</field>
+		<field name="amount">108.00</field>
+		<field name="conditions">True</field>
+		<field name="computational_expression"> basic = basic * 1.08 </field>
+	</record>
+	
+        <record id="hr_payroll_rules_onss_rule" model="hr.salary.rule">
+		<field name="category_id" ref="hr_payroll_rules_onss_head"/> 
+                <field name="name">ONSS</field>
+		<field name="code">ONSS</field>
+		<field name="type">2</field>
+		<field eval="40" name="sequence"/>
+		<field name="amount_type">per</field>
+		<field eval="13.07" name="amount"/>
+		<field name="conditions">True</field>
+		<field name="computational_expression"> basic = basic / 1.307</field>
+        </record>
+
+	<record id="hr_payroll_rules_p_p_b1" model="hr.salary.rule">
+		<field name="category_id" ref="hr_payroll_rules_pp_b1"/> 
+                <field name="name">Precompte Professionnel Bareme I</field>
+		<field name="code">P.P</field>
+		<field name="type">2</field>
+		<field name="sequence">50</field>
+		<field name="computational_expression"> basic = basic - amount</field>
+	</record>
+
+	<record id="hr_payroll_rules_p_p_b2" model="hr.salary.rule">
+		<field name="category_id" ref="hr_payroll_rules_pp_b2"/> 
+                <field name="name">Precompte Professionnel Bareme II</field>
+		<field name="code">P.P</field>
+		<field name="type">2</field>
+		<field name="sequence">50</field>
+		<field name="computational_expression"> basic = basic - amount</field>
+	</record>
+	
+	<record id="hr_payroll_rules_p_p_b3" model="hr.salary.rule">
+		<field name="category_id" ref="hr_payroll_rules_pp_b3"/> 
+                <field name="name">Precompte Professionnel Bareme III</field>
+		<field name="code">P.P</field>
+		<field name="type">2</field>
+		<field name="sequence">50</field>
+		<field name="computational_expression"> basic = basic - amount</field>
+	</record>
+
+	<record id="hr_payroll_rules_child_alw" model="hr.salary.rule">
+		<field name="category_id" ref="hr_payroll_rules_child"/>
+		<field name="name">Child Allowance Belgium</field>
+		<field name="code">Ch.A</field>
+		<field name="type">1</field>
+		<field name="amount_type">per</field>
+		<field name="sequence">51</field>
+	</record>
+
+        <record id="hr_payroll_salary_structure_employee" model="hr.payroll.structure">
+            <field name="code">B.E.E</field>
+            <field name="name">Belgian Employee</field>
+	    <field eval="[([ref('hr_payroll_rules_onss_rule')])]" name="rule_ids"/> 	
+        </record>
+
+	
+        <record id="hr_payroll_salary_structure_worker" model="hr.payroll.structure">
+            <field name="code">B.E.W</field>
+            <field name="name">Belgian Worker</field>
+            <field name="rule_ids"/>
+        </record>
+    </data>
+</openerp>
