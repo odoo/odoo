@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="hr_contract_form_inherit" model="ir.ui.view">
+            <field name="name">hr.contract.form.inherit</field>
+            <field name="model">hr.contract</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+            <field name="arch" type="xml">
+            <data>
+		 <xpath expr="/form/notebook/page/group/field[@name='working_hours']" position="after">
+		    <field name="horaire_effectif"/>
+		 </xpath>
+                 <xpath expr="/form/notebook/page/group/field[@name='advantages']" position="before">
+		    <field name="rem_frais_dep"/>
+                    <field name="voiture_soc"/>
+		    <field name="divers_ex_onss"/>
+		    <field name="part_trav"/>
+	  	    <field name="assurance"/>
+		    <field name="avantage"/>
+		    <group colspan="2" col="2">
+			<separator string="Miscellaneous" colspan="2"/>
+			  <field name="suppl_net"/>
+			  <field name="retenus_net"/>
+			  <field name="volontariat_fiscal"/>
+		    </group>	
+                </xpath>
+            </data>
+            </field>
+        </record>
+
+        <record id="hr_contract.hr_hr_employee_view_for" model="ir.ui.view">
+            <field name="name">hr.hr.employee.view.for</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+            <data>
+                <xpath expr="/form/notebook/page/group/field[@name='marital']" position="after">
+			<field name="statut_fiscal" help="Only if Married"/> 
+			<field name="handicap" help="Only if Married"/>
+		</xpath>
+		<xpath expr="/form/notebook/page/group/field[@name='children']" position="after">
+			<field name="handicap_child"/>
+			<field name="number_handicap" attrs="{'invisible':[('handicap_child','!=',True)]}" colspan="1"/>
+		</xpath>
+	    </data>
+            </field>
+        </record>
+    </data>
+</openerp>

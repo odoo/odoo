@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+	<record id="hr_payroll_head_major" model="hr.salary.head">
+		<field name="name">Salaire Majore</field>
+		<field name="code">MAJ</field>
+		<field name="type">1</field>
+	</record>
+
+        <record id="hr_payroll_head_onss" model="hr.salary.head">
+                <field name="name">Office National Securite Sociale</field>
+                <field name="code">ONSS</field>
+                <field name="type">2</field>
+        </record>
+	
+
+	<record id="hr_payroll_head_pp" model="hr.salary.head">
+		<field name="name">Precompte Professionnel Bareme 2011</field>
+		<field name="code">P.P.</field>
+		<field name="type">2</field>
+	</record>
+
+	<record id="hr_payroll_head_imposable" model="hr.salary.head">
+		<field name="name">Montant Imposable</field>
+		<field name="code">IMP</field>
+		<field name="type">2</field>
+	</record>
+	
+	<record id="hr_payroll_head_non_imposable" model="hr.salary.head">
+		<field name="name">Montant Non Imposable</field>
+		<field name="code">N.IMP</field>
+		<field name="type">2</field>
+	</record>
+	
+	<record id="hr_payroll_head_child" model="hr.salary.head">
+		<field name="name">Child Allowance Belgium</field>
+		<field name="code">CH.ALW</field>
+		<field name="type">1</field>
+		<field name="note">Le bénéficiaire des revenus est un isolé OU le conjoint du bénéficiaire des revenus a également des
+					revenus professionnels (barème I/ barème II)
+					
+					A.Lorsque les rémunérations mensuelles brutes ne dépassent pas 7.500 EUR, le précompte professionnel est déterminé suivant le barème I.
+					Les réductions suivantes sont ensuite déduites du précompte professionnel déterminé suivant ce barème :
+					
+						a) Réduction pour enfants à charge</field>
+	</record>
+
+	<record id="hr_payroll_head_company_car" model="hr.salary.head">
+		<field name="name">Company car</field>
+		<field name="code">C.C.</field>
+		<field name="type">2</field>
+	</record>
+
+	<record id="hr_payroll_head_cheque_repas" model="hr.salary.head">
+		<field name="name">Chèque repas</field>
+		<field name="code">C.R.</field>
+		<field name="type">1</field>
+	</record>	
+	
+<!-- HR SALAR RULES-->
+<!--
+	<record id="hr_payroll_rules_maj" model="hr.salary.rule">
+		<field name="category_id" ref="hr_payroll_head_major"/> 
+                <field name="name">Salaire Majore</field>
+		<field name="code">MAJ</field>
+		<field name="type">1</field>
+		<field name="amount_select">percentage</field>
+		<field name="amount_percentage">108.00</field>
+		<field name="condition_select">range</field>
+		<field name="condition_range">contract.wage</field>
+		<field name="amount_percentage_base">contract.wage</field>
+	</record>
+	
+        <record id="hr_payroll_rules_onss_rule" model="hr.salary.rule">
+		<field name="category_id" ref="hr_payroll_head_onss"/> 
+                <field name="name">ONSS</field>
+		<field name="code">ONSS</field>
+		<field name="type">2</field>
+		<field name="sequence">40</field>
+		<field name="amount_select">percentage</field>
+		<field name="amount_percentage">13.07</field>
+		<field name="condition_select">range</field>
+		<field name="condition_range">contract.wage</field>
+		<field name="amount_percentage_base">contract.wage</field>
+        </record>
+-->
+	<record id="hr_payroll_rules_p_p_b1" model="hr.salary.rule">
+		<field name="category_id" ref="hr_payroll_head_pp"/> 
+                <field name="name">Precompte Professionnel Bareme 2011</field>
+		<field name="code">P.P</field>
+		<field name="type">2</field>
+		<field name="sequence">50</field>
+		<field name="amount_select">fix</field>
+		<field name="condition_select">range</field>
+	<!--	<field eval="[(6, 0, [ref('hr_payroll_rules_baremeI'), ref('hr_payroll_rules_baremeII'), ref('hr_payroll_rules_baremeIII')])]" name="child_ids"/>-->
+	</record>
+	
+	<record id="hr_payroll_rules_bareme" model="hr.salary.rule">
+		<field name="category_id" ref="hr_payroll_head_pp"/>
+		<field name="parent_rule_id" ref="hr_payroll_rules_p_p_b1"/>
+		<field name="name">Bareme</field>
+		<field name="code">B.I.</field>
+		<field name="type">2</field>
+		<field name="amount_select">code</field>
+		<field name="sequence">50</field>
+		<field name="condition_select">python</field>
+		<field name="condition_python">employee.marital=='single'</field>
+	</record>
+
+	<record id="hr_payroll_rules_baremeII" model="hr.salary.rule">
+		<field name="category_id" ref="hr_payroll_head_pp"/>
+		<field name="parent_rule_id" ref="hr_payroll_rules_p_p_b1"/>
+		<field name="name">Bareme II</field>
+		<field name="code">B.II</field>
+		<field name="type">2</field>
+		<field name="amount_select">fix</field>
+		<field name="sequence">50</field>
+		<field name="condition_select">python</field>
+		<field name="condition_python">employee.marital=='married'</field>
+	</record>
+	
+	<record id="hr_payroll_rules_baremeIII" model="hr.salary.rule">
+		<field name="category_id" ref="hr_payroll_head_pp"/>
+		<field name="parent_rule_id" ref="hr_payroll_rules_p_p_b1"/>
+		<field name="name">Bareme III</field>
+		<field name="code">B.III</field>
+		<field name="type">2</field>
+		<field name="amount_select">fix</field>
+		<field name="sequence">50</field>
+		<field name="condition_select">python</field>
+	</record>
+
+
+	<record id="hr_payroll_rules_child_alw" model="hr.salary.rule">
+		<field name="category_id" ref="hr_payroll_head_child"/>
+		<field name="name">Child Allowance Belgium</field>
+		<field name="code">Ch.A</field>
+		<field name="type">1</field>
+		<field name="amount_select">fix</field>
+		<field name="sequence">51</field>
+		<field name="condtion_select">range</field>
+		<field name="condition_range">employee.children</field>
+	</record>
+
+	<record id="hr_payroll_rules_company_car" model="hr.salary.rule">
+		<field name="category_id" ref="hr_payroll_head_company_car"/>
+		<field name="name">Company car</field>
+		<field name="code">C.C.</field>
+		<field name="type">2</field>
+		<field name="amount_type">percentage</field>
+		<field name="sequence">60</field>
+		<field name="computational_expression">...</field>
+		<field name="expression_result">...</field>
+	</record>
+	
+	<record id="hr_payroll_rules_cheque_repas" model="hr.salary.rule">
+		<field name="category_id" ref="hr_payroll_head_cheque_repas"/>
+		<field name="name">chèque repas</field>
+		<field name="code">C.R.</field>
+		<field name="type">1</field>
+		<field name="amount_type">fix</field>
+		<field name="sequence">65</field>
+		<field name="computational_expression">...</field>
+		<field name="expression_result">...</field>
+	</record>
+
+        <record id="hr_payroll_salary_structure_employee" model="hr.payroll.structure">
+            <field name="code">C.P.218</field>
+            <field name="name">Belgian Employee</field>
+<!--	    <field eval="[(6, 0, [ref('hr_payroll_rules_onss_rule'),ref('hr_payroll_rules_p_p_b1'),ref('hr_payroll_rules_child_alw')])]" name="rule_ids"/>-->
+        </record>
+
+	
+        <record id="hr_payroll_salary_structure_worker" model="hr.payroll.structure">
+            <field name="code">C.P.219</field>
+            <field name="name">Belgian Worker</field>
+<!--	    <field eval="[(6, 0, [ref('hr_payroll_rules_maj'), ref('hr_payroll_rules_onss_rule'),ref('hr_payroll_rules_p_p_b1'),ref('hr_payroll_rules_child_alw')])]" name="rule_ids"/>-->
+        </record>
+    </data>
+</openerp>
