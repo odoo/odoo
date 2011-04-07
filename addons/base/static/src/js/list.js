@@ -143,6 +143,20 @@ openerp.base.ListView = openerp.base.Controller.extend(
     do_update: function () {
         var self = this;
         self.dataset.fetch(self.dataset.fields, 0, self.limit, self.do_fill_table);
+    },
+    /**
+     * Gets the ids of all currently selected records, if any
+     * @returns a list of ids, empty if no record is selected (or the list view is not selectable
+     */
+    get_selection: function () {
+        if (!this.options.selectable) {
+            return [];
+        }
+        var rows = this.rows;
+        return this.$element.find('th.oe-record-selector input:checked')
+                .closest('tr').map(function () {
+            return rows[$(this).prevAll().length].id;
+        }).get();
     }
 });
 

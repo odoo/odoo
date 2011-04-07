@@ -45,7 +45,6 @@ $(document).ready(function () {
         });
     });
     asyncTest('render no checkbox if selectable=false', 1, function () {
-
         var listview = new openerp.base.ListView(
                 {}, null,
                 'qunit-fixture', {model: null}, false,
@@ -55,6 +54,21 @@ $(document).ready(function () {
 
         listview.do_fill_table([{}, {}, {}]).then(function () {
             equal(listview.$element.find('tbody th').length, 0);
+            start();
+        });
+    });
+    asyncTest('select a bunch of records', 2, function () {
+        var listview = new openerp.base.ListView(
+                {}, null, 'qunit-fixture', {model: null});
+        listview.on_loaded(fvg);
+
+        listview.do_fill_table([{id: 1}, {id: 2}, {id: 3}]).then(function () {
+            listview.$element.find('tbody th input:eq(2)')
+                             .attr('checked', true);
+            deepEqual(listview.get_selection(), [3]);
+            listview.$element.find('tbody th input:eq(1)')
+                             .attr('checked', true);
+            deepEqual(listview.get_selection(), [2, 3]);
             start();
         });
     });
