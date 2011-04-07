@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_hr_timesheet_invoice_wizard" model="ir.ui.view">
+            <field name="name">Employee Invoice Data</field>
+            <field name="model">hr.timesheet.invoice.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Employee Invoice Data">
+                     <field colspan="4" name="emp_ids" nolabel="1" mode="tree,form">
+                                <tree string="Employee Invoice Data"  editable="top">
+                                    <field name="employee_id"/>
+                                    <field name="type"/>
+                                    <field name="timesheet_journal"/>
+                                </tree>
+                      </field>
+                </form>
+            </field>
+        </record>
+
+         <record id="action_hr_timesheet_invoice_wizard" model="ir.actions.act_window">
+            <field name="name">Employee Invoice Data</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hr.timesheet.invoice.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_hr_timesheet_invoice_wizard"/>
+            <field name="target">new</field>
+        </record>
+
+        <record id="hr_timesheet_invoice_todo" model="ir.actions.todo">
+	        <field name="action_id" ref="action_hr_timesheet_invoice_wizard"/>
+	        <field name="sequence">3</field>
+	        <field name="restart">always</field>
+    </record>
+
+    </data>
+</openerp>
