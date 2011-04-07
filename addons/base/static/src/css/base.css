@@ -419,15 +419,11 @@ body.openerp {
 .openerp .required.error {
     border: 1px solid #900;
 }
-.openerp .oe_form_buttons {
+.openerp .oe_form_buttons, .openerp .oe_list_buttons {
     float: left;
 }
-.openerp .oe_form_pager {
+.openerp .oe_form_pager, .openerp .oe_list_pager {
     float: right;
-}
-
-.openerp .oe_list_pager {
-    text-align: right;
 }
 
 /* Inputs */
@@ -442,6 +438,16 @@ body.openerp {
     -webkit-border-radius: 3px;
     border-radius: 3px;
     background: white;
+}
+.openerp input[type="text"], .openerp input[type="password"], .openerp select, .openerp .button {
+    height: 22px;
+}
+.openerp .button {
+    white-space: nowrap;
+}
+.openerp .button span {
+    position: relative;
+    top: -3px;
 }
 .openerp input.field_date, .openerp input.field_datetime {
     background: #fff url('../img/ui/field_calendar.png') no-repeat right center;

@@ -10,6 +10,7 @@ import time
 import traceback
 import uuid
 import xmlrpclib
+import pytz
 
 import cherrypy
 import cherrypy.lib.static
@@ -17,6 +18,25 @@ import simplejson
 
 import nonliterals
 import xmlrpctimeout
+
+#-----------------------------------------------------------
+# Globals
+#-----------------------------------------------------------
+
+path_root = os.path.dirname(os.path.dirname(os.path.normpath(__file__)))
+path_addons = os.path.join(path_root, 'addons')
+cherrypy_root = None
+
+#-----------------------------------------------------------
+# Per Database Globals (might move into a pool if needed)
+#-----------------------------------------------------------
+
+applicationsession = {}
+addons_module = {}
+addons_manifest = {}
+controllers_class = {}
+controllers_object = {}
+controllers_path = {}
 
 #----------------------------------------------------------
 # OpenERP Client Library
@@ -64,10 +84,13 @@ class OpenERPSession(object):
         self._login = False
         self._password = False
         self.model_factory = model_factory
-
+        self._locale = 'en_US'
         self.context = {}
         self.contexts_store = {}
         self.domains_store = {}
+        self._lang = {}
+        self.remote_timezone = 'utc'
+        self.client_timezone = False
 
     def proxy(self, service):
         s = xmlrpctimeout.TimeoutServerProxy('http://%s:%s/xmlrpc/%s' % (self._server, self._port, service), timeout=5)
@@ -82,9 +105,8 @@ class OpenERPSession(object):
         uid = self.proxy('common').login(db, login, password)
         self.bind(db, uid, password)
         self._login = login
-
+        
         if uid: self.get_context()
-
         return uid
 
     def execute(self, model, func, *l, **d):
@@ -111,6 +133,15 @@ class OpenERPSession(object):
         """
         assert self._uid, "The user needs to be logged-in to initialize his context"
         self.context = self.model('res.users').context_get(self.context)
+        
+        self.client_timezone = self.context.get("tz", False)
+        if self.client_timezone:
+            self.remote_timezone = self.execute('common', 'timezone_get')
+            
+        self._locale = self.context.get('lang','en_US')
+        lang_ids = self.execute('res.lang','search', [('code', '=', self._locale)])
+        if lang_ids:
+            self._lang = self.execute('res.lang', 'read',lang_ids[0], [])
         return self.context
 
     @property
@@ -270,6 +301,7 @@ class JsonRequest(object):
     def parse(self, request):
         self.request = request
         self.params = request.get("params", {})
+        self.applicationsession = applicationsession
         self.httpsession_id = "cookieid"
         self.httpsession = cherrypy.session
         self.session_id = self.params.pop("session_id", None) or uuid.uuid4().hex
@@ -292,7 +324,7 @@ class JsonRequest(object):
         :returns: a string-encoded JSON-RPC2 reply
         :rtype: bytes
         '''
-        # Read POST content of POST parameter named request
+        # Read POST content or POST Form Data named "request"
         if requestf:
             request = simplejson.load(requestf, object_hook=nonliterals.non_literal_decoder)
         else:
@@ -348,46 +380,37 @@ class JsonRequest(object):
 def jsonrequest(f):
     @cherrypy.expose
     @functools.wraps(f)
-    def json_handler(self):
-        return JsonRequest().dispatch(self, f, requestf=cherrypy.request.body)
+    def json_handler(controller):
+        return JsonRequest().dispatch(controller, f, requestf=cherrypy.request.body)
 
     return json_handler
 
 class HttpRequest(object):
     """ Regular GET/POST request
     """
-
-    def __init__(self):
-        # result may be filled, it's content will be updated by the return
-        # value of the dispatched function if it's a dict
+    def dispatch(self, controller, f, request, **kw):
+        self.request = request
+        self.applicationsession = applicationsession
+        self.httpsession_id = "cookieid"
+        self.httpsession = cherrypy.session
         self.result = ""
-
-    def dispatch(self, controller, f, request):
-        print "GET/POST --> %s.%s %s" % (controller.__class__.__name__, f.__name__, request)
-        r = f(controller, self, request)
+        print "GET/POST --> %s.%s %s %r" % (controller.__class__.__name__, f.__name__, request, kw)
+        r = f(controller, self, **kw)
+        print "<--", r
+        print
         return r
 
 def httprequest(f):
     # check cleaner wrapping:
     # functools.wraps(f)(lambda x: JsonRequest().dispatch(x, f))
-    l = lambda self, request: HttpRequest().dispatch(self, f, request)
-    l.exposed = 1
-    return l
+    def http_handler(self,*l, **kw):
+        return HttpRequest().dispatch(self, f, cherrypy.request, **kw)
+    http_handler.exposed = 1
+    return http_handler
 
 #-----------------------------------------------------------
 # Cherrypy stuff
 #-----------------------------------------------------------
-
-path_root = os.path.dirname(os.path.dirname(os.path.normpath(__file__)))
-path_addons = os.path.join(path_root, 'addons')
-cherrypy_root = None
-
-# globals might move into a pool if needed
-addons_module = {}
-addons_manifest = {}
-controllers_class = {}
-controllers_object = {}
-controllers_path = {}
 
 class ControllerType(type):
     def __init__(cls, name, bases, attrs):

@@ -29,55 +29,125 @@ openerp.base.DataSet =  openerp.base.Controller.extend( /** @lends openerp.base.
     init: function(session, model) {
         this._super(session);
         this.model = model;
-
-        this.ids = [];
-        this.offset
+        this.context = {};
         this.index = 0;
         this.count = 0;
-
-        this.sort = [];
-        this.domain = [];
-        this.context = {};
     },
     start: function() {
     },
-
     previous: function () {
         this.index -= 1;
         if (this.index < 0) {
-            this.index = this.ids.length - 1;
+            this.index = this.count - 1;
         }
         return this;
     },
     next: function () {
         this.index += 1;
-        if (this.index >= this.ids.length) {
+        if (this.index >= this.count) {
             this.index = 0;
         }
         return this;
     },
-
-    default_get: function() {
-    },
-    create: function() {
+    /**
+     * Read records.
+     */
+    read_ids: function (ids, fields, callback) {
+        var self = this;
+        this.rpc('/base/dataset/get', {
+            model: this.model,
+            ids: ids,
+            fields: fields
+        }, callback);
     },
     /**
-     * Fetch all the records selected by this DataSet, based on its domain
-     * and context.
-     *
-     * Fires the on_ids event.
-     *
-     * TODO: return deferred
+     * Read a slice of the records represented by this DataSet, based on its
+     * domain and context.
      *
      * @param {Number} [offset=0] The index from which selected records should be returned
      * @param {Number} [limit=null] The maximum number of records to return
-     * @returns itself
      */
-    // Rename into read() ?
-    fetch: function (fields, offset, limit, callback) {
+    read_slice: function (fields, offset, limit, callback) {
+    },
+    /**
+     * Read the indexed record.
+     */
+    read_index: function (fields, callback) {
+        if (_.isEmpty(this.ids)) {
+            callback([]);
+        } else {
+            fields = fields || false;
+            this.read_ids([this.ids[this.index]], fields, function(records) {
+                callback(records[0]);
+            });
+        }
+    },
+    default_get: function(fields, callback) {
+        return this.rpc('/base/dataset/default_get', {
+            model: this.model,
+            fields: fields,
+            context: this.context
+        }, callback);
+    },
+    create: function() {
+    },
+    write: function (id, data, callback) {
+        return this.rpc('/base/dataset/save', {
+            model: this.model,
+            id: id,
+            data: data,
+            context: this.context
+        }, callback);
+    },
+    unlink: function() {
+        this.notification['default']("Unlink", ids);
+    },
+    call: function (method, ids, args, callback) {
+        ids = ids || [];
+        args = args || [];
+        return this.rpc('/base/dataset/call', {
+            model: this.model,
+            method: method,
+            ids: ids,
+            args: args
+        }, callback);
+    },
+});
+
+openerp.base.DataSetStatic =  openerp.base.DataSet.extend({
+    init: function(session, model) {
+        this._super(session, model);
+        // all local records
+        this.ids = [];
+        this.count = 0;
+    },
+    read_slice: function (fields, offset, limit, callback) {
+        this.read_ids(this.ids.slice(offset, offset + limit));
+    },
+});
+
+openerp.base.DataSetSearch =  openerp.base.DataSet.extend({
+    init: function(session, model) {
+        this._super(session, model);
+        this.domain = [];
+        this.sort = [];
+        this.offset = 0;
+        // subset records[offset:offset+limit]
+        // is it necessary ?
+        this.ids = [];
+    },
+    read_slice: function (fields, offset, limit, callback) {
         var self = this;
         offset = offset || 0;
-        this.rpc('/base/dataset/find', {
+        // cached search, not sure it's a good idea
+        if(this.offset <= offset) {
+            var start = offset - this.offset;
+            if(this.ids.length - start >= limit) {
+                // TODO: check if this could work do only read if possible
+                // return read_ids(ids.slice(start,start+limit),fields,callback)
+            }
+        }
+        this.rpc('/base/dataset/search_read', {
             model: this.model,
             fields: fields,
             domain: this.domain,
@@ -94,38 +164,6 @@ openerp.base.DataSet =  openerp.base.Controller.extend( /** @lends openerp.base.
             callback(records);
         });
     },
-    fetch_ids: function (ids, fields, callback) {
-        var self = this;
-        this.rpc('/base/dataset/get', {
-            model: this.model,
-            ids: ids,
-            fields: fields
-        }, callback);
-    },
-    fetch_index: function (fields, callback) {
-        if (_.isEmpty(this.ids)) {
-            callback([]);
-        } else {
-            fields = fields || false;
-            this.fetch_ids([this.ids[this.index]], fields, function(records) {
-                callback(records[0]);
-            });
-        }
-    },
-    write: function (id, data, callback) {
-        this.rpc('/base/datarecord/save', {
-            model: this.model,
-            id: id,
-            data: data
-            //context: this.context,
-        }, callback);
-    },
-    unlink: function(ids) {
-        this.notification['default']("Unlink", ids);
-    }
-});
-
-openerp.base.DataSetSearch =  openerp.base.DataSet.extend( /** @lends openerp.base.DataSet# */{
 });
 
 openerp.base.DataSetRelational =  openerp.base.DataSet.extend( /** @lends openerp.base.DataSet# */{

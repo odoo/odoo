@@ -123,6 +123,7 @@ openerp.base.SearchView = openerp.base.Controller.extend({
         });
         this.$element.html(render);
 
+        var f = this.$element.find('form');
         this.$element.find('form')
                 .submit(this.do_search)
                 .bind('reset', this.do_clear);
@@ -144,9 +145,12 @@ openerp.base.SearchView = openerp.base.Controller.extend({
      */
     do_search: function (e) {
         if (e && e.preventDefault) { e.preventDefault(); }
+
+        //debugger;
         var domains = [], contexts = [];
 
         var errors = [];
+
         _.each(this.inputs, function (input) {
             try {
                 var domain = input.get_domain();
@@ -179,6 +183,7 @@ openerp.base.SearchView = openerp.base.Controller.extend({
                 .compact()
                 .value();
 
+        this.notification['default']("search", "calling on_search");
         this.on_search(domains, contexts, groupbys);
     },
     /**
@@ -197,7 +202,9 @@ openerp.base.SearchView = openerp.base.Controller.extend({
      * @param {Array} contexts an array of literal contexts or context refs
      * @param {Array} groupbys ordered contexts which may or may not have group_by keys
      */
-    on_search: function (domains, contexts, groupbys) { },
+    on_search: function (domains, contexts, groupbys) {
+        this.notification['default']("search", "this doesnt get called ");
+    },
     /**
      * Triggered after a validation error in the SearchView fields.
      *
@@ -209,7 +216,9 @@ openerp.base.SearchView = openerp.base.Controller.extend({
      * @event
      * @param {Array} errors a never-empty array of error objects
      */
-    on_invalid: function (errors) { },
+    on_invalid: function (errors) {
+        this.notification['default']("Invalid Search", "triggered from search view");
+    },
     do_clear: function (e) {
         if (e && e.preventDefault) { e.preventDefault(); }
         this.on_clear();

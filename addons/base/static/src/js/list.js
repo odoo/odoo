@@ -83,6 +83,7 @@ openerp.base.ListView = openerp.base.Controller.extend(
      * @returns {Promise} promise to the end of view rendering (list views are asynchronously filled for improved responsiveness)
      */
     do_fill_table: function(records) {
+        console.log("listview do_fill",records)
         this.rows = records;
 
         var $table = this.$element.find('table');
@@ -147,20 +148,23 @@ openerp.base.ListView = openerp.base.Controller.extend(
     },
     do_search: function (domains, contexts, groupbys) {
         var self = this;
+        console.log("listview do_search",domains)
         this.rpc('/base/session/eval_domain_and_context', {
             domains: domains,
             contexts: contexts,
             group_by_seq: groupbys
         }, function (results) {
             // TODO: handle non-empty results.group_by with read_group
+            console.log("listview got search will do read slice",results.domain)
             self.dataset.context = results.context;
             self.dataset.domain = results.domain;
-            self.dataset.fetch(self.dataset.fields, 0, self.limit, self.do_fill_table);
+            console.log("listview got search will do read slice",results.domain)
+            self.dataset.read_slice(self.dataset.fields, 0, self.limit, self.do_fill_table);
         });
     },
     do_update: function () {
         var self = this;
-        self.dataset.fetch(self.dataset.fields, 0, self.limit, self.do_fill_table);
+        self.dataset.read_ids(self.dataset.ids, self.dataset.fields, self.do_fill_table);
     },
     /**
      * Handles the signal to delete a line from the DOM
