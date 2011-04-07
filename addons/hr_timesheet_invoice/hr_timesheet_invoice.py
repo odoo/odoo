@@ -182,7 +182,7 @@ class account_move_line(osv.osv):
     def create_analytic_lines(self, cr, uid, ids, context=None):
         res = super(account_move_line, self).create_analytic_lines(cr, uid, ids,context=context)
         analytic_line_obj = self.pool.get('account.analytic.line')
-        for move_line in self.pool.get('account.move.line').browse(cr, uid, ids, context=context):
+        for move_line in self.browse(cr, uid, ids, context=context):
             for line in move_line.analytic_lines:
                 toinv = line.account_id.to_invoice.id
                 if toinv:
