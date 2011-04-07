@@ -623,8 +623,9 @@ class user_preferences_config(osv.osv_memory):
                                  
     }
     _defaults={
-               'view':lambda self,cr,uid,*args: self.pool.get('res.users').browse(cr, uid, uid).view or 'simple',
-               'context_lang':'en_US',
+               'view' : lambda self,cr,uid,*args: self.pool.get('res.users').browse(cr, uid, uid).view or 'simple',
+               'context_lang' : 'en_US',
+               'menu_tips' : True
     }
 
     def execute(self, cr, uid, ids, context=None):
