@@ -56,7 +56,7 @@ class PollServer(openerpweb.Controller):
                 ]
             }
         """
-        mq = req.applicationsession.getdefault("web_chat",PollServerMessageQueue())
+        mq = req.applicationsession.setdefault("web_chat",PollServerMessageQueue())
         print "chat login",kw
         # r = 'loggued in'
         #u = generate random.randint(0,2**32)
