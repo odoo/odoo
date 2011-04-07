@@ -50,7 +50,15 @@ openerp.base.ListView = openerp.base.Controller.extend(
                 return _.extend({id: name, tag: field.tag}, field.attrs, fields[name]);
             }).value();
 
+        this.visible_columns = _.filter(this.columns, function (column) {
+            return column.invisible !== '1';
+        });
         this.$element.html(QWeb.render("ListView", this));
+
+        // Head hook
+        this.$element.find('#oe-list-delete').click(this.do_delete_selected);
+
+        // Cell events
         this.$element.find('table').delegate(
                 'th.oe-record-selector', 'click', function (e) {
                     // A click in the selection cell should not activate the
@@ -59,6 +67,8 @@ openerp.base.ListView = openerp.base.Controller.extend(
         });
         this.$element.find('table').delegate(
                 'td.oe-record-delete button', 'click', this.do_delete);
+
+        // Global rows handlers
         this.$element.find('table').delegate(
                 'tr', 'click', this.on_select_row);
 
@@ -162,6 +172,15 @@ openerp.base.ListView = openerp.base.Controller.extend(
         e.stopImmediatePropagation();
         this.dataset.unlink(
             [this.rows[$(e.currentTarget).closest('tr').prevAll().length].id]);
+    },
+    /**
+     * Handles deletion of all selected lines
+     */
+    do_delete_selected: function () {
+        var selection = this.get_selection();
+        if (selection.length) {
+            this.dataset.unlink(selection);
+        }
     },
     /**
      * Gets the ids of all currently selected records, if any

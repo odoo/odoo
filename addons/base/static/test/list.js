@@ -103,4 +103,24 @@ $(document).ready(function () {
             start();
         });
     });
+    asyncTest('multiple records deletion', 1, function () {
+        var deleted;
+        var listview = new openerp.base.ListView(
+                {}, null, 'qunit-fixture', {model: null, unlink: function (ids) {
+            deleted = ids;
+        }});
+
+        listview.on_loaded(fvg);
+
+        listview.do_fill_table([{id: 1}, {id: 2}, {id: 3}]).then(function () {
+            listview.$element.find('tbody th input:eq(2)')
+                             .attr('checked', true);
+            listview.$element.find('tbody th input:eq(1)')
+                             .attr('checked', true);
+
+            listview.$element.find('#oe-list-delete').click();
+            deepEqual(deleted, [2, 3]);
+            start();
+        });
+    });
 });

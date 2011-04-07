@@ -171,6 +171,13 @@
 </t>
 <t t-name="ListView.header">
     <thead t-if="options.header">
+        <tr t-if="options.selectable and options.deletable">
+            <th t-att-colspan="visible_columns.length + 2">
+                <button type="button" id="oe-list-delete">
+                    Delete Selected
+                </button>
+            </th>
+        </tr>
         <tr>
             <th t-if="options.selectable"/>
             <t t-foreach="columns" t-as="column">
@@ -180,6 +187,7 @@
                     </t>
                 </th>
             </t>
+            <th t-if="options.deletable"/>
         </tr>
     </thead>
 </t>
