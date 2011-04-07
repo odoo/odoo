@@ -714,6 +714,7 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
         this.value = value;
         this.log("o2m.set_value",value);
         this.viewmanager.dataset.ids = value;
+        this.viewmanager.dataset.ids.count = value.length;
         this.viewmanager.views.list.controller.do_update();
     },
     get_value: function(value) {
