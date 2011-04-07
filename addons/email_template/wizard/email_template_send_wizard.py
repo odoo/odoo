@@ -128,13 +128,6 @@ class email_template_send_wizard(osv.osv_memory):
     #        result['attachment_ids']['domain'] = [('res_model','=',context['src_model']),('res_id','=',context['active_id'])]
     #    return result
 
-    def save_to_drafts(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        mailid = self.save_to_mailbox(cr, uid, ids, context=context)
-        self.pool.get('email.message').write(cr, uid, mailid, {'state': 'outgoing'}, context)
-        return {'type': 'ir.actions.act_window_close'}
-
     def send_mail(self, cr, uid, ids, context=None):
         if context is None:
             context = {}

@@ -171,13 +171,6 @@ class crm_lead_forward_to_partner(osv.osv_memory):
             email = self.pool.get('res.partner.address').browse(cr, uid, address_id).email
         return {'value': {'email_to' : email}}
 
-    def save_to_drafts(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        super(crm_lead_forward_to_partner, self).save_to_drafts(cr, uid, ids, context=context)
-        self.action_forward(cr, uid, ids, context)
-        return {'type': 'ir.actions.act_window_close'}
-
     def send_mail(self, cr, uid, ids, context=None):
         if context is None:
             context = {}

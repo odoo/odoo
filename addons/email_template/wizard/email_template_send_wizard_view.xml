@@ -33,7 +33,7 @@
                                 <field name="attachment_ids" colspan="4" nolabel="1"/>
                             </page>
                         </notebook>
-                        
+
                     </group>
                     <field name="state" invisible="1"/>
                     <group col="4" colspan="4" attrs="{'invisible':[('state','=','single')]}">
@@ -52,12 +52,8 @@
                     </group>
                     <group col="4" colspan="2" attrs="{'invisible':[('state','!=','single')]}">
                         <button icon="gtk-cancel" special="cancel" string="Discard"/>
-                        <button icon="gtk-apply" name="save_to_drafts" string="Save in Drafts" type="object"/>
                         <button icon="gtk-ok" name="send_mail" string="Send now" type="object"/>
                     </group>
-                    
-                    
-                    
                 </form>
             </field>
         </record>

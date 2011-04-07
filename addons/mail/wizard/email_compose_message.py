@@ -192,13 +192,6 @@ class email_compose_message(osv.osv_memory):
         return {'value': result}
 
 
-    def save_to_drafts(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        email_id = self.save_to_mailbox(cr, uid, ids, context=context)
-        self.pool.get('email.message').write(cr, uid, email_id, {'state': 'outgoing'}, context)
-        return {'type': 'ir.actions.act_window_close'}
-
     def send_mail(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
