@@ -1,0 +1,23 @@
+<html>
+<head>
+<script type="text/javascript" src="/web_chat/static/lib/AjaxIM/js/jquery-1.3.2.js"></script>
+<script type="text/javascript" src="/web_chat/static/lib/AjaxIM/js/jquery.jsonp-1.1.0.js"></script>
+<script type="text/javascript" src="/web_chat/static/lib/AjaxIM/js/jquery.jstore-all-min.js"></script>
+<script type="text/javascript" src="/web_chat/static/lib/AjaxIM/js/jquery.md5.js"></script>
+<script type="text/javascript" src="/web_chat/static/lib/AjaxIM/js/im.js"></script>
+</head>
+<body>
+<script>
+var AjaxIM, AjaxIMLoadedFunction;
+$(function() {
+    AjaxIM.init({
+        pollServer: '/web_chat/pollserver',
+        theme: '/web_chat/static/lib/AjaxIM/themes/default',
+        flashStorage: '/web_chat/static/lib/AjaxIM/js/jStore.Flash.html'
+    });
+    AjaxIM.client.login();
+});
+</script>
+</body>
+</html>
+

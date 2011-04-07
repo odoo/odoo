@@ -1,0 +1,132 @@
+<!-- Ajax IM Instant Messenger, Footer Bar -->
+<ul id="imjs-bar">
+    <li id="imjs-friends" class="imjs-not-connected">
+        <span class="imjs-tab-text"><strong>&bull;</strong> Friends <span>(<span>0</span>)</span></span>
+        <div id="imjs-friends-panel" class="imjs-chatbox">
+            <div class="imjs-header">
+                <span>{username}</span>
+                <a href="#" class="imjs-minimize">_</a>
+            </div>
+            <ul id="imjs-friends-list">
+                <li class="imjs-friend-group imjs-default">
+                    <span class="imjs-friend-group-header">{group}</span>
+                    <ul>
+                        <li class="imjs-friend imjs-default"><strong>&bull;</strong> {username}</li>
+                    </ul>
+                </li>
+            </ul>
+            <form>
+                <p><input type="text" id="imjs-search-friends" value="Search" /></p>
+            </form>
+        </div>    
+    </li>
+    <li id="imjs-scroll-right" class="imjs-scroll">{count}</li>
+    <li class="imjs-tab imjs-default">
+        <span class="imjs-tab-text"><strong>&bull;</strong> {label} <a href="#" class="imjs-close">x</a></span>
+        <span class="imjs-notification">{count}</span>
+        <form class="imjs-chatbox">
+            <div>
+                <div class="imjs-header">
+                    <span>{username}</span>
+                    <a href="#" class="imjs-close">x</a>
+                    <a href="#" class="imjs-minimize">_</a>
+                </div>
+                <ul class="imjs-msglog">
+                    <li class="imjs-date">
+                        <ul>
+                            <li>
+                                <span class="imjs-msg-time">hh:MM TT &bull;</span>
+                                <p class="imjs-date-date">ddd, mmmm d, yyyy</p>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="imjs-error">
+                        <ul>
+                            <li>
+                                <span class="imjs-msg-time">hh:MM TT &bull;</span>
+                                <p class="imjs-error-error">ddd, mmmm d, yyyy</p>
+                            </li>
+                        </ul>
+                    </li>
+        
+                    <li class="imjs-msg-a">                    
+                        <span>{username}</span>
+                        <ul class="imjs-msg-a-container">
+                            <li class="imjs-msg-a-msg">
+                                <span class="imjs-msg-time">hh:MM TT &bull;</span>
+                                <p>{message}</p>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="imjs-msg-b">
+                        <span>{username}</span>
+                        <ul class="imjs-msg-b-container">
+                            <li class="imjs-msg-b-msg">
+                                <span class="imjs-msg-time">hh:MM TT &bull;</span>
+                                <p>{message}</p>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <textarea class="imjs-input"></textarea>
+            </div>
+        </form>
+    </li>
+    <li id="imjs-scroll-left" class="imjs-scroll">{count}</li>
+</ul>
+<span class="imjs-tooltip"><p>{tip}</p></span>
+
+<!-- Ajax IM Instant Messenger, Login/Registration Form -->
+<div id="imjs-lr">
+    <form id="imjs-login">
+        <fieldset>
+            <h2>Login</h2>
+            
+            <p class="error"></p>
+            
+            <p>
+                <label for="imjs-login-username">Username</label>
+                <input type="text" name="username" id="imjs-login-username" />
+            </p>
+            
+            <p>
+                <label for="imjs-login-password">Password</label>
+                <input type="password" name="password" id="imjs-login-password" />
+            </p>
+            
+            <p class="imjs-submit">
+                <button id="imjs-login-submit">Sign In</button>
+            </p>
+        </fieldset>
+        
+        <p id="imjs-logged-in">Signed in as <strong>{username}</strong>. <a href="#logout">Sign Out</a>.</p>
+    </form>
+    
+    <form id="imjs-register">
+        <fieldset>
+            <h2>Register</h2>
+            
+            <p class="error"></p>
+            
+            <p>
+                <label for="imjs-register-username">Username</label>
+                <input type="text" name="username" id="imjs-register-username" />
+            </p>
+            
+            <p>
+                <label for="imjs-register-password">Password</label>
+                <input type="password" name="password" id="imjs-register-password" />
+            </p>
+            
+            <p>
+                <label for="imjs-register-cpassword">Confirm Password</label>
+                <input type="password" name="cpassword" id="imjs-register-cpassword" />
+            </p>
+            
+            <p class="imjs-submit">
+                <button id="imjs-register-submit">Register</button>
+            </p>
+        </fieldset>
+    </form>
+</div>
