@@ -93,7 +93,17 @@ class marketing_campaign(osv.osv):
 this campaign to be run"),
         'partner_field_id': fields.many2one('ir.model.fields', 'Partner Field',
                                             domain="[('model_id', '=', object_id), ('ttype', '=', 'many2one'), ('relation', '=', 'res.partner')]",
-                                            help="The generated workitems will be linked to the partner related to the record. If the record is the partner itself leave this field empty."),
+                                            help="The generated workitems will be linked to the partner related to the record. "\
+                                                  "If the record is the partner itself leave this field empty. "\
+                                                  "This is useful for reporting purposes, via the Campaign Analysis or Campaign Follow-up views."),
+        'unique_field_id': fields.many2one('ir.model.fields', 'Unique Field',
+                                            domain="[('model_id', '=', object_id), ('ttype', 'in', ['char','int','many2one','text','selection'])]",
+                                            help='If set, this field will help segments that work in "no duplicates" mode to avoid '\
+                                                 'selecting similar records twice. Similar records are records that have the same value for '\
+                                                 'this unique field. For example by choosing the "email_from" field for CRM Leads you would prevent '\
+                                                 'sending the same campaign to the same email address again. If not set, the "no duplicates" segments '\
+                                                 "will only avoid selecting the same record again if it entered the campaign previously. "\
+                                                 "Only easily comparable fields like textfields, integers, selections or single relationships may be used."),
         'mode': fields.selection([('test', 'Test Directly'),
                                 ('test_realtime', 'Test in Realtime'),
                                 ('manual', 'With Manual Confirmation'),
@@ -209,11 +219,36 @@ Normal - the campaign runs normally and automatically sends all emails and repor
     def copy(self, cr, uid, id, default=None, context=None):
         raise osv.except_osv(_("Operation not supported"), _("Sorry, campaign duplication is not supported at the moment."))
 
+    def _find_duplicate_workitems(self, cr, uid, record, campaign_rec, context=None):
+        """Finds possible duplicates workitems for a record in this campaign, based on a uniqueness
+           field.
+
+           :param record: browse_record to find duplicates workitems for.
+           :param campaign_rec: browse_record of campaign
+        """
+        Workitems = self.pool.get('marketing.campaign.workitem')
+        duplicate_workitem_domain = [('res_id','=', record.id),
+                                     ('campaign_id','=', campaign_rec.id)]
+        unique_field = campaign_rec.unique_field_id
+        if unique_field:
+            unique_value = getattr(record, unique_field.name, None)
+            if unique_value:
+                if unique_field.ttype == 'many2one':
+                    unique_value = unique_value.id
+                similar_res_ids = self.pool.get(campaign_rec.object_id.model).search(cr, uid,
+                                    [(unique_field.name, '=', unique_value)], context=context)
+                if similar_res_ids:
+                    duplicate_workitem_domain = [('res_id','in', similar_res_ids),
+                                                 ('campaign_id','=', campaign_rec.id)]
+        return Workitems.search(cr, uid, duplicate_workitem_domain, context=context)
+
+
 marketing_campaign()
 
 class marketing_campaign_segment(osv.osv):
     _name = "marketing.campaign.segment"
     _description = "Campaign Segment"
+    _order = "name"
 
     def _get_next_sync(self, cr, uid, ids, fn, args, context=None):
         # next auto sync date is same for all segments
@@ -226,13 +261,19 @@ class marketing_campaign_segment(osv.osv):
         'campaign_id': fields.many2one('marketing.campaign', 'Campaign', required=True, select=1, ondelete="cascade"),
         'object_id': fields.related('campaign_id','object_id', type='many2one', relation='ir.model', string='Resource'),
         'ir_filter_id': fields.many2one('ir.filters', 'Filter', ondelete="restrict",
-                            help="Filter to select the matching resource records that belong to this segment. New filters can be created and saved using the advanced search on the list view of the Resource. If no filter is set, all records are selected without filtering. The synchronization mode may also add a criterion to the filter."),
+                            help="Filter to select the matching resource records that belong to this segment. "\
+                                 "New filters can be created and saved using the advanced search on the list view of the Resource. "\
+                                 "If no filter is set, all records are selected without filtering. "\
+                                 "The synchronization mode may also add a criterion to the filter."),
         'sync_last_date': fields.datetime('Last Synchronization', help="Date on which this segment was synchronized last time (automatically or manually)"),
         'sync_mode': fields.selection([('create_date', 'Only records created after last sync'),
                                       ('write_date', 'Only records modified after last sync (no duplicates)'),
                                       ('all', 'All records (no duplicates)')],
                                       'Synchronization mode',
-                                      help="Determines an additional criterion to add to the filter when selecting new records to inject in the campaign."),
+                                      help="Determines an additional criterion to add to the filter when selecting new records to inject in the campaign. "\
+                                           '"No duplicates" prevents selecting records which have already entered the campaign previously.'\
+                                           'If the campaign has a "unique field" set, "no duplicates" will also prevent selecting records which have '\
+                                           'the same value for the unique field as other records that already entered the campaign.'),
         'state': fields.selection([('draft', 'Draft'),
                                    ('running', 'Running'),
                                    ('done', 'Done'),
@@ -301,6 +342,7 @@ class marketing_campaign_segment(osv.osv):
 
     def process_segment(self, cr, uid, segment_ids=None, context=None):
         Workitems = self.pool.get('marketing.campaign.workitem')
+        Campaigns = self.pool.get('marketing.campaign')
         if not segment_ids:
             segment_ids = self.search(cr, uid, [('state', '=', 'running')], context=context)
 
@@ -323,21 +365,20 @@ class marketing_campaign_segment(osv.osv):
             object_ids = model_obj.search(cr, uid, criteria, context=context)
 
             # XXX TODO: rewrite this loop more efficiently without doing 1 search per record!
-            for o_ids in model_obj.browse(cr, uid, object_ids, context=context):
-                # avoid duplicated workitem for the same resource
+            for record in model_obj.browse(cr, uid, object_ids, context=context):
+                # avoid duplicate workitem for the same resource
                 if segment.sync_mode in ('write_date','all'):
-                    wi_ids = Workitems.search(cr, uid, [('res_id','=',o_ids.id),('segment_id','=',segment.id)], context=context)
-                    if wi_ids:
+                    if Campaigns._find_duplicate_workitems(cr, uid, record, segment.campaign_id, context=context):
                         continue
 
                 wi_vals = {
                     'segment_id': segment.id,
                     'date': action_date,
                     'state': 'todo',
-                    'res_id': o_ids.id
+                    'res_id': record.id
                 }
 
-                partner = self.pool.get('marketing.campaign')._get_partner_for(segment.campaign_id, o_ids)
+                partner = self.pool.get('marketing.campaign')._get_partner_for(segment.campaign_id, record)
                 if partner:
                     wi_vals['partner_id'] = partner.id
 
@@ -353,6 +394,7 @@ marketing_campaign_segment()
 
 class marketing_campaign_activity(osv.osv):
     _name = "marketing.campaign.activity"
+    _order = "name"
     _description = "Campaign Activity"
 
     _action_types = [
@@ -454,10 +496,11 @@ class marketing_campaign_activity(osv.osv):
         action_context = dict(context,
                               active_id=workitem.res_id,
                               active_ids=[workitem.res_id],
-                              active_model=workitem.object_id.model)
+                              active_model=workitem.object_id.model,
+                              workitem=workitem)
         res = server_obj.run(cr, uid, [activity.server_action_id.id],
                              context=action_context)
-        # server action return False if the action is perfomed
+        # server action return False if the action is performed
         # except client_action, other and python code
         return res == False and True or res
 
@@ -557,6 +600,8 @@ class marketing_campaign_workitem(osv.osv):
                 continue
 
             proxy = self.pool.get(wi.object_id.model)
+            if not proxy.exists(cr, uid, [wi.res_id]):
+                continue
             ng = proxy.name_get(cr, uid, [wi.res_id], context=context)
             if ng:
                 res[wi.id] = ng[0][1]
@@ -567,8 +612,14 @@ class marketing_campaign_workitem(osv.osv):
         if not len(args):
             return []
 
-        condition = []
-        final_ids = []
+        condition_name = None
+        for domain_item in args:
+            # we only use the first domain criterion and ignore all the rest including operators
+            if isinstance(domain_item, (list,tuple)) and len(domain_item) == 3 and domain_item[0] == 'res_name':
+                condition_name = [None, domain_item[1], domain_item[2]]
+                break
+
+        assert condition_name, "Invalid search domain for marketing_campaign_workitem.res_name. It should use 'res_name'"
 
         cr.execute("""select w.id, w.res_id, m.model  \
                                 from marketing_campaign_workitem w \
@@ -577,15 +628,17 @@ class marketing_campaign_workitem(osv.osv):
                                     left join ir_model m on (m.id=c.object_id)
                                     """)
         res = cr.fetchall()
+        workitem_map = {}
+        matching_workitems = []
         for id, res_id, model in res:
+            workitem_map.setdefault(model,{}).setdefault(res_id,set()).add(id)
+        for model, id_map in workitem_map.iteritems():
             model_pool = self.pool.get(model)
-            for arg in args:
-                if arg[1] == 'ilike':
-                    condition.append((model_pool._rec_name, 'ilike', arg[2]))
-            res_ids = model_pool.search(cr, uid, condition, context=context)
-            if res_id in res_ids:
-                final_ids.append(id)
-        return [('id', 'in', final_ids)]
+            condition_name[0] = model_pool._rec_name
+            condition = [('id', 'in', id_map.keys()), condition_name]
+            for res_id in model_pool.search(cr, uid, condition, context=context):
+                matching_workitems.extend(id_map[res_id])
+        return [('id', 'in', list(set(matching_workitems)))]
 
     _columns = {
         'segment_id': fields.many2one('marketing.campaign.segment', 'Segment', readonly=True),
@@ -723,7 +776,7 @@ class marketing_campaign_workitem(osv.osv):
                 # manual states are not processed automatically
                 continue
             while True:
-                domain = [('state', '=', 'todo'), ('date', '!=', False)]
+                domain = [('campaign_id', '=', camp.id), ('state', '=', 'todo'), ('date', '!=', False)]
                 if camp.mode in ('test_realtime', 'active'):
                     domain += [('date','<=', time.strftime('%Y-%m-%d %H:%M:%S'))]
 

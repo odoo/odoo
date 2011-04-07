@@ -26,6 +26,10 @@ from datetime import datetime, date
 from tools.translate import _
 from osv import fields, osv
 
+class project_project(osv.osv):
+    _name = 'project.project'
+    
+project_project()    
 
 class project_task_type(osv.osv):
     _name = 'project.task.type'
@@ -35,6 +39,7 @@ class project_task_type(osv.osv):
         'name': fields.char('Stage Name', required=True, size=64, translate=True),
         'description': fields.text('Description'),
         'sequence': fields.integer('Sequence'),
+        'project_ids': fields.many2many('project.project', 'project_task_type_rel', 'type_id', 'project_id', 'Projects'),
     }
 
     _defaults = {

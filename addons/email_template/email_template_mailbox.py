@@ -92,6 +92,7 @@ class email_template_mailbox(osv.osv):
                         self.unlink(cr, uid, [id], context=context)
                         # Remove attachments for this mail
                         attachment_pool.unlink(cr, uid, values['attachments_ids'], context=context)
+                        return result
                     else:
                         self.write(cr, uid, id, {'folder':'sent', 'state':'na', 'date_mail':time.strftime("%Y-%m-%d %H:%M:%S")}, context)
                         self.historise(cr, uid, [id], "Email sent successfully", context)
