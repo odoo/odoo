@@ -72,4 +72,35 @@ $(document).ready(function () {
             start();
         });
     });
+    asyncTest('render deletion button if list is deletable', 1, function () {
+        var listview = new openerp.base.ListView(
+                {}, null, 'qunit-fixture', {model: null});
+
+        listview.on_loaded(fvg);
+
+        listview.do_fill_table([{id: 1}, {id: 2}, {id: 3}]).then(function () {
+            equal(
+                listview.$element.find('tbody tr td.oe-record-delete button').length,
+                3);
+            start();
+        });
+    });
+    asyncTest('deletion button should lead on deletion in the dataset',
+              2, function () {
+        var deleted;
+        var listview = new openerp.base.ListView(
+                {}, null, 'qunit-fixture', {model: null, unlink: function (ids) {
+            deleted = ids;
+        }});
+
+        listview.on_loaded(fvg);
+
+        listview.do_fill_table([{id: 1}, {id: 2}, {id: 3}]).then(function () {
+            listview.$element.find('tbody td.oe-record-delete:eq(2) button').click();
+            deepEqual(deleted, [3]);
+            listview.$element.find('tbody td.oe-record-delete:eq(0) button').click();
+            deepEqual(deleted, [1]);
+            start();
+        });
+    });
 });

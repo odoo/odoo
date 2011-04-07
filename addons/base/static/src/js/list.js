@@ -5,6 +5,8 @@ openerp.base.ListView = openerp.base.Controller.extend(
     defaults: {
         // records can be selected one by one
         'selectable': true,
+        // list rows can be deleted
+        'deletable': true,
         // whether the column headers should be displayed
         'header': true
     },
@@ -18,6 +20,7 @@ openerp.base.ListView = openerp.base.Controller.extend(
      * @param {Object} options A set of options used to configure the view
      * @param {Boolean} [options.selectable=true] determines whether view rows are selectable (e.g. via a checkbox)
      * @param {Boolean} [options.header=true] should the list's header be displayed
+     * @param {Boolean} [options.deletable=true] are the list rows deletable
      */
     init: function(view_manager, session, element_id, dataset, view_id, options) {
         this._super(session, element_id);
@@ -54,6 +57,8 @@ openerp.base.ListView = openerp.base.Controller.extend(
                     // linking feature
                     e.stopImmediatePropagation();
         });
+        this.$element.find('table').delegate(
+                'td.oe-record-delete button', 'click', this.do_delete);
         this.$element.find('table').delegate(
                 'tr', 'click', this.on_select_row);
 
@@ -146,6 +151,17 @@ openerp.base.ListView = openerp.base.Controller.extend(
     do_update: function () {
         var self = this;
         self.dataset.fetch(self.dataset.fields, 0, self.limit, self.do_fill_table);
+    },
+    /**
+     * Handles the signal to delete a line from the DOM
+     *
+     * @param e
+     */
+    do_delete: function (e) {
+        // don't link to forms
+        e.stopImmediatePropagation();
+        this.dataset.unlink(
+            [this.rows[$(e.currentTarget).closest('tr').prevAll().length].id]);
     },
     /**
      * Gets the ids of all currently selected records, if any

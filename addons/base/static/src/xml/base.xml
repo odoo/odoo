@@ -205,6 +205,9 @@
             </button>
         </td>
     </t>
+    <td t-if="options.deletable" class='oe-record-delete'>
+        <button type="button" name="delete">♻</button>
+    </td>
 </tr>
 <t t-name="FormView">
     <h2 class="oe_view_title"><t t-esc="view.fields_view.arch.attrs.string"/></h2>
