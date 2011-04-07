@@ -148,4 +148,29 @@ class base_setup_installer(osv.osv_memory):
                         cr.execute("update ir_actions_todo set restart='on_trigger' , state='open' from ir_model_data as data where data.res_id = ir_actions_todo.id and data.model =  'ir.actions.todo' and data.module  like '%"+instl+"%'")
         
         return 
+    
 base_setup_installer()
+
+#Migrate data from another application Conf wiz
+
+class migrade_application_installer_modules(osv.osv_memory):
+    _name = 'migrade.application.installer.modules'
+    _inherit = 'res.config.installer'
+    _columns = {
+        'import_saleforce': fields.boolean('Import Saleforce',
+            help="For Import Saleforce"),
+        'import_sugarcrm': fields.boolean('Import Sugarcrm',
+            help="For Import Sugarcrm"),
+        'sync_google_contact': fields.boolean('Sync Google Contact',
+            help="For Sync Google Contact"),
+        'quickbooks_ippids': fields.boolean('Quickbooks Ippids',
+            help="For Quickbooks Ippids"),
+    }
+    
+    _defaults = {
+        'import_saleforce': True,
+    }
+
+migrade_application_installer_modules()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
