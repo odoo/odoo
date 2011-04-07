@@ -58,9 +58,7 @@ openerp.base.FormView =  openerp.base.Controller.extend( /** @lends openerp.base
         }
     },
     do_show: function () {
-        // this should not append as start return a deferred resolved when fields_view is known
-        if(this.fields_view && this.fields_view.fields)
-            this.dataset.read_index(_.keys(this.fields_view.fields), this.on_record_loaded);
+        this.dataset.read_index(_.keys(this.fields_view.fields), this.on_record_loaded);
         this.$element.show();
     },
     do_hide: function () {

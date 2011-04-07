@@ -93,7 +93,7 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
         for (var i in this.views) {
             if (this.views[i].controller) {
                 if (i === view_type) {
-                    this.views[i].controller.do_show();
+                    $.when(view_promise).then(this.views[i].controller.do_show);
                 } else {
                     this.views[i].controller.do_hide();
                 }
