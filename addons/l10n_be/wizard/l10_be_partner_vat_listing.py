@@ -22,6 +22,8 @@ import time
 import base64
 
 from tools.translate import _
+import tools
+from decimal import Decimal
 from osv import fields, osv
 
 class vat_listing_clients(osv.osv_memory):
@@ -58,8 +60,8 @@ class partner_vat(osv.osv_memory):
         obj_vat_lclient = self.pool.get('vat.listing.clients')
         obj_model_data = self.pool.get('ir.model.data')
         data  = self.read(cursor, user, ids)[0]
-        period = obj_period.search(cursor, user, [('fiscalyear_id', '=', data['fyear'])], context=context)
-        p_id_list = obj_partner.search(cursor, user, [('vat_subjected', '!=', False)], context=context)
+        period = obj_period.search(cursor, user, [('fiscalyear_id', '=', data['fyear'][0])], context=context)
+        p_id_list = obj_partner.search(cursor, user, [('vat_subjected', '!=', False),('customer','=',True)], context=context)
         if not p_id_list:
              raise osv.except_osv(_('Data Insufficient!'), _('No partner has a VAT Number asociated with him.'))
         partners = []
@@ -72,12 +74,12 @@ class partner_vat(osv.osv_memory):
             #(or one of their) default address(es) located in Belgium.
             go_ahead = False
             for ads in obj_partner.address:
-                if ads.type == 'default' and (ads.country_id and ads.country_id.code == 'BE'):
+                if ads.type == 'default' and (ads.country_id and ads.country_id.code == 'BE') and (obj_partner.vat or '').startswith('BE'):
                     go_ahead = True
                     break
             if not go_ahead:
                 continue
-            cursor.execute('select b.code, sum(credit)-sum(debit) from account_move_line l left join account_account a on (l.account_id=a.id) left join account_account_type b on (a.user_type=b.id) where b.code IN %s and l.partner_id=%s and l.period_id IN %s group by b.code',(('produit','tax'),obj_partner.id,tuple(period),))
+            cursor.execute('select b.code, sum(credit)-sum(debit) from account_move_line l left join account_account a on (l.account_id=a.id) left join account_account_type b on (a.user_type=b.id) where b.code IN %s and l.partner_id=%s and l.period_id IN %s group by b.code',(('produit', 'tax', 'income'),obj_partner.id,tuple(period),))
             line_info = cursor.fetchall()
             if not line_info:
                 continue
@@ -87,14 +89,14 @@ class partner_vat(osv.osv_memory):
             #it seems that this listing is only for belgian customers
             record['country'] = 'BE'
 
-            record['amount'] = 0
-            record['turnover'] = 0
+            record['amount'] = Decimal(str(0.0))
+            record['turnover'] = Decimal(str(0.0))
             record['name'] = obj_partner.name
             for item in line_info:
-                if item[0] == 'produit':
-                    record['turnover'] += item[1]
+                if item[0] in ('produit','income'):
+                    record['turnover'] += Decimal(str(item[1]))
                 else:
-                    record['amount'] += item[1]
+                    record['amount'] += Decimal(str(item[1]))
             id_client = obj_vat_lclient.create(cursor, user, record, context=context)
             partners.append(id_client)
             records.append(record)
@@ -155,8 +157,8 @@ class partner_vat_list(osv.osv_memory):
             raise osv.except_osv(_('Data Insufficient'),_('No VAT Number Associated with Main Company!'))
 
         cref = company_vat + seq_controlref
-        dnum = cref + seq_declarantnum
-        obj_year= obj_fyear.browse(cursor, user, context['fyear'], context=context)
+        dnum = cref[2:] + (seq_declarantnum or '')
+        obj_year= obj_fyear.browse(cursor, user, context['fyear'][0], context=context)
         street = zip_city = country = ''
         addr = obj_partner.address_get(cursor, user, [obj_cmpny.partner_id.id], ['invoice'])
         if addr.get('invoice',False):
@@ -173,16 +175,16 @@ class partner_vat_list(osv.osv_memory):
                 country = ads.country_id.code
 
         sender_date = time.strftime('%Y-%m-%d')
-        comp_name = obj_cmpny.name
+#        comp_name = obj_cmpny.name
         data_file = '<?xml version="1.0"?>\n<VatList xmlns="http://www.minfin.fgov.be/VatList" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.minfin.fgov.be/VatList VatList.xml" RecipientId="VAT-ADMIN" SenderId="'+ str(company_vat) + '"'
-        data_file +=' ControlRef="'+ cref + '" MandataireId="'+ context['mand_id'] + '" SenderDate="'+ str(sender_date)+ '"'
+        data_file +=' ControlRef="'+ cref[2:] + '" MandataireId="'+ tools.ustr(context['mand_id']) + '" SenderDate="'+ str(sender_date)+ '"'
         if ['test_xml']:
             data_file += ' Test="0"'
-        data_file += ' VersionTech="1.2">'
-        data_file += '\n<AgentRepr DecNumber="1">\n\t<CompanyInfo>\n\t\t<VATNum>'+str(company_vat)+'</VATNum>\n\t\t<Name>'+ comp_name +'</Name>\n\t\t<Street>'+ street +'</Street>\n\t\t<CityAndZipCode>'+ zip_city +'</CityAndZipCode>'
-        data_file += '\n\t\t<Country>'+ country +'</Country>\n\t</CompanyInfo>\n</AgentRepr>'
-        data_comp = '\n<CompanyInfo>\n\t<VATNum>'+str(company_vat)+'</VATNum>\n\t<Name>'+ comp_name +'</Name>\n\t<Street>'+ street +'</Street>\n\t<CityAndZipCode>'+ zip_city +'</CityAndZipCode>\n\t<Country>'+ country +'</Country>\n</CompanyInfo>'
-        data_period = '\n<Period>'+ obj_year.date_stop[:4] +'</Period>'
+        data_file += ' VersionTech="1.3">'
+        data_file += '\n<AgentRepr DecNumber="1">\n\t<CompanyInfo>\n\t\t<VATNum>'+str(company_vat)+'</VATNum>\n\t\t<Name>'+ tools.ustr(obj_cmpny.name) +'</Name>\n\t\t<Street>'+ tools.ustr(street) +'</Street>\n\t\t<CityAndZipCode>'+ tools.ustr(zip_city) +'</CityAndZipCode>'
+        data_file += '\n\t\t<Country>'+ tools.ustr(country) +'</Country>\n\t</CompanyInfo>\n</AgentRepr>'
+        data_comp = '\n<CompanyInfo>\n\t<VATNum>'+str(company_vat)+'</VATNum>\n\t<Name>'+ tools.ustr(obj_cmpny.name) +'</Name>\n\t<Street>'+ tools.ustr(street) +'</Street>\n\t<CityAndZipCode>'+ tools.ustr(zip_city) +'</CityAndZipCode>\n\t<Country>'+ tools.ustr(country) +'</Country>\n</CompanyInfo>'
+        data_period = '\n<Period>'+ tools.ustr(obj_year.date_stop[:4]) +'</Period>'
         error_message = []
         data = self.read(cursor, user, ids)[0]
         for partner in data['partner_ids']:
@@ -193,22 +195,22 @@ class partner_vat_list(osv.osv_memory):
                 datas.append(client_data)
         seq = 0
         data_clientinfo = ''
-        sum_tax = 0.00
-        sum_turnover = 0.00
+        sum_tax = Decimal(str(0.00))
+        sum_turnover=Decimal(str(0.00))
         if len(error_message):
             return 'Exception : \n' +'-'*50+'\n'+ '\n'.join(error_message)
         for line in datas:
             if not line:
                 continue
-            if line['turnover'] < context['limit_amount']:
+            if Decimal(str(line['turnover'])) < Decimal(str(context['limit_amount'])):
                 continue
             seq += 1
-            sum_tax += line['amount']
-            sum_turnover += line['turnover']
-            data_clientinfo += '\n<ClientList SequenceNum="'+str(seq)+'">\n\t<CompanyInfo>\n\t\t<VATNum>'+line['vat'] +'</VATNum>\n\t\t<Country>' + line['country'] +'</Country>\n\t</CompanyInfo>\n\t<Amount>'+str(int(round(line['amount'] * 100))) +'</Amount>\n\t<TurnOver>'+str(int(round(line['turnover'] * 100))) +'</TurnOver>\n</ClientList>'
+            sum_tax +=Decimal(str(line['amount']))
+            sum_turnover +=Decimal(str(line['turnover']))
+            data_clientinfo += '\n<ClientList SequenceNum="'+str(seq)+'">\n\t<CompanyInfo>\n\t\t<VATNum>'+ (line['vat'] or '')[2:] +'</VATNum>\n\t\t<Country>' + tools.ustr(line['country']) +'</Country>\n\t</CompanyInfo>\n\t<Amount>'+ str(int(Decimal(str(line['amount'] * 100)))) +'</Amount>\n\t<TurnOver>'+ str(int(Decimal(str(line['turnover'] * 100)))) +'</TurnOver>\n</ClientList>'
 
-        data_decl ='\n<DeclarantList SequenceNum="1" DeclarantNum="'+ dnum + '" ClientNbr="'+ str(seq) +'" TurnOverSum="'+ str(int(round(sum_turnover * 100))) +'" TaxSum="'+ str(int(round(sum_tax * 100))) +'" />'
-        data_file += data_decl + data_comp + str(data_period) + data_clientinfo + '\n</VatList>'
+        data_decl ='\n<DeclarantList SequenceNum="1" DeclarantNum="'+ dnum + '" ClientNbr="'+ str(seq) +'" TurnOverSum="'+ str(int(Decimal(str(sum_turnover * 100)))) +'" TaxSum="'+ str(int(Decimal(str(sum_tax * 100)))) +'" />'
+        data_file += tools.ustr(data_decl) + tools.ustr(data_comp) + tools.ustr(data_period) + tools.ustr(data_clientinfo) + '\n</DeclarantList></VatList>'
         msg = 'Save the File with '".xml"' extension.'
         file_save = base64.encodestring(data_file.encode('utf8'))
         self.write(cursor, user, ids, {'file_save':file_save, 'msg':msg, 'name':'vat_list.xml'}, context=context)
