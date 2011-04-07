@@ -93,7 +93,7 @@ class Session(openerpweb.Controller):
 
     @openerpweb.jsonrequest
     def modules(self, req):
-        return {"modules": ["base", "base_hello", "base_calendar"]}
+        return {"modules": ["base", "base_hello", "base_calendar", "base_gantt"]}
 
     @openerpweb.jsonrequest
     def csslist(self, req, mods='base,base_hello'):

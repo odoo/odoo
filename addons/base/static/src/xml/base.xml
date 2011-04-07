@@ -167,6 +167,19 @@
     </div>
     <table id="todo_use_unique_id" class="jqGrid"></table>
 </t>
+<t t-name="GanttView">
+	<h3 class="title"><t t-esc="view.fields_view.arch.attrs.string"/></h3>
+	<table class="gantt-view" width="100%" height="100%" cellspacing="0" cellpadding="0">
+		<tr>
+			<td style="width:85%">
+				<div style="width:100%;height:300px;position:relative" id="GanttDiv"></div>
+			</td>
+			<td valign = "top">
+				<div id="gantt-sidebar"></div>
+			</td>
+		</tr>
+	</table>
+</t>
 <t t-name="FormView">
     <h2 class="oe_view_title"><t t-esc="view.fields_view.arch.attrs.string"/></h2>
     <div class="oe_form_header">
