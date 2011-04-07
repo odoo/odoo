@@ -82,7 +82,12 @@ openerp.base.DataSet =  openerp.base.Controller.extend( /** @lends openerp.base.
             });
         }
     },
-    default_get: function() {
+    default_get: function(fields, callback) {
+        this.rpc('/base/dataset/default_get', {
+            model: this.model,
+            fields: fields,
+            context: this.context
+        }, callback);
     },
     create: function() {
     },
