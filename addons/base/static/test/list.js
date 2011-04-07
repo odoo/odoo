@@ -44,5 +44,18 @@ $(document).ready(function () {
             start();
         });
     });
-    
+    asyncTest('render no checkbox if selectable=false', 1, function () {
+
+        var listview = new openerp.base.ListView(
+                {}, null,
+                'qunit-fixture', {model: null}, false,
+                {selectable: false});
+
+        listview.on_loaded(fvg);
+
+        listview.do_fill_table([{}, {}, {}]).then(function () {
+            equal(listview.$element.find('tbody th').length, 0);
+            start();
+        });
+    });
 });
