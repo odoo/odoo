@@ -459,7 +459,7 @@ class hr_payslip(osv.osv):
             localdict.update({'employee': employee, 'contract': contract})
             for rule in self.pool.get('hr.salary.rule').browse(cr, uid, sorted_rule_ids, context=context):
                 #check if the rule can be applied
-                if self.pool.get('hr.salary.rule').satisfy_condition(cr, uid, rule.id, contract.id, payslip_id, context=context):
+                if self.pool.get('hr.salary.rule').satisfy_condition(cr, uid, rule.id, localdict, context=context):
                     amount = self.pool.get('hr.salary.rule').compute_rule(cr, uid, rule.id, localdict, context=context)
                     #set/overwrite the amount computed for this rule in the localdict
                     localdict['rules'][rule.code] = amount
@@ -646,7 +646,7 @@ result = contract.wage * 0.10''',
 
 # Note: returned value have to be set in the variable 'result'
 
-result = rules['NET'] > heads[NET] * 0.10''',
+result = rules['NET'] > heads['NET'] * 0.10''',
         'condition_range': 'contract.wage',
         'sequence': 5,
         'appears_on_payslip': True,
@@ -676,17 +676,13 @@ result = rules['NET'] > heads[NET] * 0.10''',
             eval(rule.amount_python_compute, localdict, mode='exec', nocopy=True)
             return localdict['result']
 
-    def satisfy_condition(self, cr, uid, rule_id, contract_id, payslip_id, context=None):
+    def satisfy_condition(self, cr, uid, rule_id, localdict, context=None):
         """
         @param rule_id: id of hr.salary.rule to be tested
         @param contract_id: id of hr.contract to be tested
         @return: returns True if the given rule match the condition for the given contract. Return False otherwise.
         """
         rule = self.browse(cr, uid, rule_id, context=context)
-        contract = self.pool.get('hr.contract').browse(cr, uid, contract_id, context=context)
-        employee = contract.employee_id
-        payslip = self.pool.get('hr.payslip').browse(cr, uid, payslip_id, context=context)
-        localdict = {'employee': employee, 'contract': contract, 'payslip': payslip}
 
         if rule.condition_select == 'none':
             return True
