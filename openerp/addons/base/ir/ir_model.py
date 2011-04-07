@@ -303,10 +303,10 @@ class ir_model_fields(osv.osv):
 
         # static table of properties
         model_props = [ # (our-name, fields.prop, set_fn)
-            ('field_description', 'string', lambda a: a),
+            ('field_description', 'string', str),
             ('required', 'required', bool),
             ('readonly', 'readonly', bool),
-            ('domain', '_domain', lambda a: a),
+            ('domain', '_domain', eval),
             ('size', 'size', int),
             ('on_delete', 'ondelete', str),
             ('translate', 'translate', bool),
@@ -608,12 +608,17 @@ class ir_model_data(osv.osv):
         """Returns (model, res_id) corresponding to a given module and xml_id (cached) or raise ValueError if not found"""
         data_id = self._get_id(cr, uid, module, xml_id)
         res = self.read(cr, uid, data_id, ['model', 'res_id'])
+        if not res['res_id']:
+            raise ValueError('No references to %s.%s' % (module, xml_id))
         return (res['model'], res['res_id'])
 
     def get_object(self, cr, uid, module, xml_id, context=None):
         """Returns a browsable record for the given module name and xml_id or raise ValueError if not found"""
         res_model, res_id = self.get_object_reference(cr, uid, module, xml_id)
-        return self.pool.get(res_model).browse(cr, uid, res_id, context=context)
+        result = self.pool.get(res_model).browse(cr, uid, res_id, context=context)
+        if not result.exists():
+            raise ValueError('No record found for unique ID %s.%s. It may have been deleted.' % (module, xml_id))
+        return result
 
     def _update_dummy(self,cr, uid, model, module, xml_id=False, store=True):
         if not xml_id:

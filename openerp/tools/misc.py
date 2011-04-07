@@ -1439,6 +1439,23 @@ def attrgetter(*items):
             return tuple(resolve_attr(obj, attr) for attr in items)
     return g
 
+class unquote(str):
+    """A subclass of str that implements repr() without enclosing quotation marks
+       or escaping, keeping the original string untouched. The name come from Lisp's unquote.
+       One of the uses for this is to preserve or insert bare variable names within dicts during eval()
+       of a dict's repr(). Use with care.
+       Some examples:
+       >>> unquote('active_id')
+       active_id
+       >>> repr(unquote('active_id'))
+       active_id
+       >>> d = {'test': unquote('active_id')}
+       >>> d
+       {'test': active_id}
+       >>> repr(d)
+       "{'test': active_id}"
+    """
+    def __repr__(self):
+        return self
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

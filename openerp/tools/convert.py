@@ -50,6 +50,8 @@ from yaml_import import convert_yaml_import
 # List of etree._Element subclasses that we choose to ignore when parsing XML.
 from misc import SKIPPED_ELEMENT_TYPES
 
+from misc import unquote
+
 # Import of XML records requires the unsafe eval as well,
 # almost everywhere, which is ok because it supposedly comes
 # from trusted data, but at least we make it obvious now.
@@ -439,7 +441,21 @@ form: module.record_id""" % (xml_id,)
         limit = rec.get('limit','').encode('utf-8')
         auto_refresh = rec.get('auto_refresh','').encode('utf-8')
         uid = self.uid
-        active_id = str("active_id") # for further reference in client/bin/tools/__init__.py
+
+        # Act_window's 'domain' and 'context' contain mostly literals
+        # but they can also refer to the variables provided below
+        # in eval_context, so we need to eval() them before storing.
+        # Among the context variables, 'active_id' refers to
+        # the currently selected items in a list view, and only
+        # takes meaning at runtime on the client side. For this
+        # reason it must remain a bare variable in domain and context,
+        # even after eval() at server-side. We use the special 'unquote'
+        # class to achieve this effect: a string which has itself, unquoted,
+        # as representation.
+        active_id = unquote("active_id")
+        active_ids = unquote("active_ids")
+        active_model = unquote("active_model")
+
         def ref(str_id):
             return self.id_get(cr, str_id)
 
@@ -459,6 +475,8 @@ form: module.record_id""" % (xml_id,)
             'auto_refresh': auto_refresh,
             'uid' : uid,
             'active_id': active_id,
+            'active_ids': active_ids,
+            'active_model': active_model,
             'ref' : ref,
         }
         context = self.get_context(data_node, rec, eval_context)
