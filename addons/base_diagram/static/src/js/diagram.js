@@ -97,19 +97,6 @@ openerp.base.DiagramView = openerp.base.Controller.extend({
 		}
 		this.$element.html(QWeb.render("DiagramView", {"fields_view": this.fields_view}));
 		
- 
-//		g.addEdge("strawberry", "cherry");
-//		g.addEdge("strawberry", "apple");
-//		g.addEdge("strawberry", "tomato");
-//		 
-//		g.addEdge("tomato", "apple");
-//		g.addEdge("tomato", "kiwi");
-//		 
-//		g.addEdge("cherry", "apple");
-//		g.addEdge("cherry", "kiwi");
-		 
-		
-		
 		if(this.id) {
 			this.rpc(
 			'/base_diagram/diagram/get_diagram_info',
@@ -138,27 +125,48 @@ openerp.base.DiagramView = openerp.base.Controller.extend({
 	draw_diagram: function(result) {
 		console.log('this>>>',this)
 		var g = new Graph();
-		
+//		var raphel = new 
 		this.in_transition_field = result['in_transition_field'];
 		this.out_transition_field = result['out_transition_field'];
 		var res_nodes = result['nodes'];
 		var res_connectors = result['conn'];
-//		for(nd in res_nodes) {
-//			var res_node = res_nodes[nd];
-//			console.log('nodes',res_node, res_node['shape'])
-//			var state;
-//		}
+		
+		var render = function(r, n) {
+			var set;
+			if (n.node.shape == 'ellipse') {
+				set = r.set().push(
+				r.ellipse(n.node.x - 30, n.node.y - 13, 40, 40).attr({
+					"fill": n.node.color,
+					r: "12px",
+					"stroke-width": n.distance == 0 ? "3px" : "1px"
+				})).push(r.text(n.node.x - 30, n.node.y - 10, (n.label || n.id)));
+			} else  {
+				set = r.set().push(
+                r.rect(n.node.x-30, n.node.y-13, 60, 44).attr({"fill": n.node.color, r : "12px", "stroke-width" : n.distance == 0 ? "3px" : "1px" })).push(
+                r.text(n.point[0], n.point[1] + 10, (n.label || n.id) + "\n(" + (n.distance == undefined ? "Infinity" : n.distance) + ")"));
+				
+			}
+            return set;
+        };
+		
+		for(nd in res_nodes) {
+			var res_node = res_nodes[nd];
+			g.addNode(res_node['name'],
+			{
+				node: res_node,
+				render: render
+			});
+		}
 		
 		for(cr in res_connectors) {
 			var res_connector = res_connectors[cr];
 			g.addEdge(res_connector['source'], res_connector['destination']);
-			
 		}
 		
 		var layouter = new Graph.Layout.Spring(g);
 		layouter.layout();
 		
-		var renderer = new Graph.Renderer.Raphael('dia-canvas', g, 800, 500);
+		var renderer = new Graph.Renderer.Raphael('dia-canvas', g, 800, 800);
 		renderer.draw();
 	},
 	
