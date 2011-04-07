@@ -1611,6 +1611,8 @@ class stock_move(osv.osv):
     }
 
     def write(self, cr, uid, ids, vals, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
         if uid != 1:
             frozen_fields = set(['product_qty', 'product_uom', 'product_uos_qty', 'product_uos', 'location_id', 'location_dest_id', 'product_id'])
             for move in self.browse(cr, uid, ids, context=context):
@@ -2380,12 +2382,8 @@ class stock_move(osv.osv):
                     'state': move.state,
                     'location_id': location_id or move.location_id.id,
                 }
-                if (not move.prodlot_id.id) and (move.product_id.track_production and location_id):
-                    # IF product has checked track for production lot, move lines will be split by 1
-                    res += self.action_split(cr, uid, [move.id], quantity, split_by_qty=1, context=context)
-                else:
-                    current_move = self.copy(cr, uid, move.id, default_val)
-                    res += [current_move]
+                current_move = self.copy(cr, uid, move.id, default_val)
+                res += [current_move]
                 update_val = {}
                 update_val['product_qty'] = quantity_rest
                 update_val['product_uos_qty'] = uos_qty_rest
@@ -2394,16 +2392,13 @@ class stock_move(osv.osv):
             else:
                 quantity_rest = quantity
                 uos_qty_rest =  uos_qty
-                if (not move.prodlot_id.id) and (move.product_id.track_production and location_id):
-                    res += self.action_split(cr, uid, [move.id], quantity_rest, split_by_qty=1, context=context)
-                else:
-                    res += [move.id]
-                    update_val = {
+                res += [move.id]
+                update_val = {
                         'product_qty' : quantity_rest,
                         'product_uos_qty' : uos_qty_rest,
                         'location_id': location_id or move.location_id.id
-                    }
-                    self.write(cr, uid, [move.id], update_val)
+                }
+                self.write(cr, uid, [move.id], update_val)
 
             product_obj = self.pool.get('product.product')
             for new_move in self.browse(cr, uid, res, context=context):
