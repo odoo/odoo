@@ -112,7 +112,7 @@ class WebKitParser(report_sxw):
 
         command.append('--quiet')
         # default to UTF-8 encoding.  Use <meta charset="latin-1"> to override.
-        command.append("--encoding 'utf-8'")
+        command.extend(['--encoding', 'utf-8'])
         if header :
             head_file = file( os.path.join(
                                   tmp_dir,
