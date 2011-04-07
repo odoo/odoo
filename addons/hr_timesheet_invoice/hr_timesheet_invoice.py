@@ -176,5 +176,20 @@ class account_invoice(osv.osv):
 
 account_invoice()
 
+class account_move_line(osv.osv):
+    _inherit = "account.move.line"
+
+    def create_analytic_lines(self, cr, uid, ids, context=None):
+        res = super(account_move_line, self).create_analytic_lines(cr, uid, ids,context=context)
+        analytic_line_obj = self.pool.get('account.analytic.line')
+        for move_line in self.pool.get('account.move.line').browse(cr, uid, ids, context=context):
+            for line in move_line.analytic_lines:
+                toinv = line.account_id.to_invoice.id
+                if toinv:
+                    analytic_line_obj.write(cr, uid, line.id, {'to_invoice': toinv})
+        return res
+
+account_move_line()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
