@@ -47,8 +47,8 @@ class email_compose_message(osv.osv_memory):
             subject = _("Scrum Meeting : %s") %(meeting.date)
             message = _("Hello  , \nI am sending you Scrum Meeting : %s for the Sprint  '%s' of Project '%s'") %(meeting.date, sprint.name, sprint.project_id.name)
             result.update({
-                       'name': subject,
-                       'description': message,
+                       'subject': subject,
+                       'body': message,
                        'model': model,
                        'res_id': resource_id
                     })

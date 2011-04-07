@@ -75,7 +75,7 @@ class crm_lead_forward_to_partner(osv.osv_memory):
         sender = 'From: %s' %(hist.email_from or '')
         to = 'To: %s' % (hist.email_to or '')
         sentdate = 'Date: %s' % (hist.date or '')
-        desc = '\n%s'%(hist.description)
+        desc = '\n%s'%(hist.body)
         original = [header, sender, to, sentdate, desc]
         original = '\n'.join(original)
         return original

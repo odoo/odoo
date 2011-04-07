@@ -57,8 +57,8 @@ class email_compose_message(osv.osv_memory):
                 result.update({
                         'email_from': tools.config.get('email_from',''),
                         'email_to': record_data.user_to_review_id.work_email or False,
-                        'name': _("Reminder to fill up Survey"),
-                        'description': msg,
+                        'subject': _("Reminder to fill up Survey"),
+                        'body': msg,
                         'res_id': resource_id,
                         'email_cc': False,
                         'email_bcc': False,

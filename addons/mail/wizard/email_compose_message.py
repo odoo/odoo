@@ -33,12 +33,14 @@ class email_compose_message(osv.osv_memory):
             context = {}
         result = super(email_compose_message, self).default_get(cr, uid, fields, context=context)
         vals = {}
-        if context.get('email_model') and context.get('email_res_id'):
-            vals = self.get_value(cr, uid, context.get('email_model'), context.get('email_res_id'), context)
-        elif context.get('message_id', False):
-            vals = self.get_message_data(cr, uid, int(context.get('message_id', False)), context)
+        if context.get('active_model') and context.get('active_id') and not context.get('mail')=='reply':
+            vals = self.get_value(cr, uid, context.get('active_model'), context.get('active_id'), context)
+
+        elif context.get('mail')=='reply' and context.get('active_id', False):
+            vals = self.get_message_data(cr, uid, int(context.get('active_id', False)), context)
+
         else:
-            result['model'] = context.get('email_model', False)
+            result['model'] = context.get('active_model', False)
 
         if not vals:
             return result
@@ -213,7 +215,7 @@ class email_compose_message(osv.osv_memory):
                 message_id = mail.message_id
             email_id = email_message_pool.schedule_with_attach(cr, uid, mail.email_from, mail.email_to, mail.subject, mail.body,
                     model=mail.model, email_cc=mail.email_cc, email_bcc=mail.email_bcc, reply_to=mail.reply_to,
-                    attach=attachment, message_id=message_id, references=references, openobject_id=int(mail.res_id), debug=mail.debug,
+                    attach=attachment, message_id=message_id, references=references, openobject_id=int(mail.res_id),
                     subtype=mail.sub_type, x_headers=mail.headers, priority=mail.priority, smtp_server_id=mail.smtp_server_id and mail.smtp_server_id.id, context=context)
             email_ids.append(email_id)
         return email_ids
