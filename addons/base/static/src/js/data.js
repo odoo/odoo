@@ -83,7 +83,7 @@ openerp.base.DataSet =  openerp.base.Controller.extend( /** @lends openerp.base.
         }
     },
     default_get: function(fields, callback) {
-        this.rpc('/base/dataset/default_get', {
+        return this.rpc('/base/dataset/default_get', {
             model: this.model,
             fields: fields,
             context: this.context
@@ -92,7 +92,7 @@ openerp.base.DataSet =  openerp.base.Controller.extend( /** @lends openerp.base.
     create: function() {
     },
     write: function (id, data, callback) {
-        this.rpc('/base/dataset/save', {
+        return this.rpc('/base/dataset/save', {
             model: this.model,
             id: id,
             data: data,
@@ -104,7 +104,7 @@ openerp.base.DataSet =  openerp.base.Controller.extend( /** @lends openerp.base.
     call: function (method, ids, args, callback) {
         ids = ids || [];
         args = args || [];
-        this.rpc('/base/dataset/call', {
+        return this.rpc('/base/dataset/call', {
             model: this.model,
             method: method,
             ids: ids,
