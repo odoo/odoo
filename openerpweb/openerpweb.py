@@ -18,6 +18,25 @@ import simplejson
 import nonliterals
 import xmlrpctimeout
 
+#-----------------------------------------------------------
+# Globals
+#-----------------------------------------------------------
+
+path_root = os.path.dirname(os.path.dirname(os.path.normpath(__file__)))
+path_addons = os.path.join(path_root, 'addons')
+cherrypy_root = None
+
+#-----------------------------------------------------------
+# Per Database Globals (might move into a pool if needed)
+#-----------------------------------------------------------
+
+applicationsession = {}
+addons_module = {}
+addons_manifest = {}
+controllers_class = {}
+controllers_object = {}
+controllers_path = {}
+
 #----------------------------------------------------------
 # OpenERP Client Library
 #----------------------------------------------------------
@@ -270,6 +289,7 @@ class JsonRequest(object):
     def parse(self, request):
         self.request = request
         self.params = request.get("params", {})
+        self.applicationsession = applicationsession
         self.httpsession_id = "cookieid"
         self.httpsession = cherrypy.session
         self.session_id = self.params.pop("session_id", None) or uuid.uuid4().hex
@@ -358,35 +378,27 @@ class HttpRequest(object):
     """
     def dispatch(self, controller, f, request, **kw):
         self.request = request
+        self.applicationsession = applicationsession
         self.httpsession_id = "cookieid"
         self.httpsession = cherrypy.session
         self.result = ""
         print "GET/POST --> %s.%s %s %r" % (controller.__class__.__name__, f.__name__, request, kw)
         r = f(controller, self, **kw)
+        print "<--", r
+        print
         return r
 
 def httprequest(f):
     # check cleaner wrapping:
     # functools.wraps(f)(lambda x: JsonRequest().dispatch(x, f))
     def http_handler(self,*l, **kw):
-        HttpRequest().dispatch(self, f, cherrypy.request, **kw)
+        return HttpRequest().dispatch(self, f, cherrypy.request, **kw)
     http_handler.exposed = 1
     return http_handler
 
 #-----------------------------------------------------------
 # Cherrypy stuff
 #-----------------------------------------------------------
-
-path_root = os.path.dirname(os.path.dirname(os.path.normpath(__file__)))
-path_addons = os.path.join(path_root, 'addons')
-cherrypy_root = None
-
-# globals might move into a pool if needed
-addons_module = {}
-addons_manifest = {}
-controllers_class = {}
-controllers_object = {}
-controllers_path = {}
 
 class ControllerType(type):
     def __init__(cls, name, bases, attrs):
