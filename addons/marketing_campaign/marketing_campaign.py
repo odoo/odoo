@@ -21,6 +21,7 @@
 
 import time
 import base64
+import itertools
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from operator import itemgetter

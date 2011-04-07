@@ -71,7 +71,7 @@ class crm_lead2partner(osv.osv_memory):
         contact_obj = self.pool.get('res.partner.address')
         partner_id = False
 
-        data = context and context.get('active_ids', []) or []
+        data = list(context and context.get('active_ids', []) or [])
         res = super(crm_lead2partner, self).default_get(cr, uid, fields, context=context)
 
         for lead in lead_obj.browse(cr, uid, data, context=context):
@@ -85,17 +85,15 @@ class crm_lead2partner(osv.osv_memory):
                                 substring(email from '([^ ,<@]+@[^> ,]+)') in (%s)""" % (','.join(email)))
                 address_ids = map(lambda x: x[0], cr.fetchall())
                 if address_ids:
-                    addresses = contact_obj.browse(cr, uid, address_ids)
-                    partner_ids = addresses and [addresses[0].partner_id.id] or False
-
+                    partner_ids = partner_obj.search(cr, uid, [('address', 'in', address_ids)], context=context)
+                    
             # Find partner name that matches the name of the lead
             if not partner_ids and lead.partner_name:
                 partner_ids = partner_obj.search(cr, uid, [('name', '=', lead.partner_name)], context=context)
-            if not partner_ids:
-                cr.execute("""SELECT p.id from res_partner p
-                            where regexp_replace(lower(p.name), '[^a-z]*', '', 'g') = regexp_replace(%s, '[^a-z]*', '', 'g')""", (lead.name.lower(), ))
-                partner_ids = map(lambda x: x[0], cr.fetchall())
+                
             partner_id = partner_ids and partner_ids[0] or False
+            
+            
 
             if 'partner_id' in fields:
                 res.update({'partner_id': partner_id})
