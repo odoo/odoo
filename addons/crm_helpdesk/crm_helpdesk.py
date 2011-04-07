@@ -126,20 +126,7 @@ class crm_helpdesk(crm.crm_case, osv.osv):
         if res:
             vals.update(res)
 
-        res = self.create(cr, uid, vals, context)
-        attachents = msg.get('attachments', [])
-        for attactment in attachents or []:
-            data_attach = {
-                'name': attactment,
-                'datas':binascii.b2a_base64(str(attachents.get(attactment))),
-                'datas_fname': attactment,
-                'description': 'Mail attachment',
-                'res_model': self._name,
-                'res_id': res,
-            }
-            self.pool.get('ir.attachment').create(cr, uid, data_attach)
-
-        return res
+        return self.create(cr, uid, vals, context)
 
     def message_update(self, cr, uid, ids, msg, vals={}, default_act='pending', context=None):
         """
