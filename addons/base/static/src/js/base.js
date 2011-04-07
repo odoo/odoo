@@ -122,6 +122,7 @@ openerp.base = function(instance) {
     openerp.base.search(instance);
     openerp.base.list(instance);
     openerp.base.form(instance);
+    openerp.base.calendar(instance);
     openerp.base.gantt(instance);
 };
 
