@@ -30,6 +30,8 @@ openerp.base.ListView = openerp.base.Controller.extend({
             }).value();
 
         this.$element.html(QWeb.render("ListView", this));
+        this.$element.find('table').delegate(
+                'tr', 'click', this.on_select_row);
 
         // sidebar stuff
         if (this.view_manager.sidebar)
@@ -39,8 +41,27 @@ openerp.base.ListView = openerp.base.Controller.extend({
         this.rows = records;
 
         var table = this.$element.find('table');
+        // remove all data lines
+        table.find('tr:first').nextAll().remove();
+        // add new content
         table.append(QWeb.render("ListView.rows", {
                 columns: this.columns, rows: this.rows}));
+    },
+    on_select_row: function (event) {
+        // count number of preceding siblings to line clicked, that's the one
+        // we want (note: line 0 is title row, so remove 1 for actual row
+        // index)
+        var row = this.rows[$(event.currentTarget).prevAll().length - 1];
+
+        var index = _.indexOf(this.dataset.ids, row.id);
+        if (index == undefined || index === -1) {
+            return;
+        }
+        this.dataset.index = index;
+        _.delay(_.bind(function () {
+            this.view_manager.on_mode_switch('form');
+        }, this));
+
     },
     do_show: function () {
         // TODO: re-trigger search
