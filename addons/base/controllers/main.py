@@ -93,7 +93,7 @@ class Session(openerpweb.Controller):
 
     @openerpweb.jsonrequest
     def modules(self, req):
-        return {"modules": ["base", "base_hello", "base_calendar", "base_gantt"]}
+        return {"modules": ["base", "base_hello", "base_calendar", "base_gantt", "base_graph"]}
 
     @openerpweb.jsonrequest
     def csslist(self, req, mods='base,base_hello'):
@@ -168,7 +168,7 @@ class Session(openerpweb.Controller):
             'domain': domain,
             'group_by': group_by_sequence
         }
-        
+
 def load_actions_from_ir_values(req, key, key2, models, meta, context):
     Values = req.session.model('ir.values')
     actions = Values.get(key, key2, models, meta, context)
@@ -239,7 +239,7 @@ class Menu(openerpweb.Controller):
         menu_items = Menus.read(menu_ids, ['name', 'sequence', 'parent_id'])
         menu_root = {'id': False, 'name': 'root', 'parent_id': [-1, '']}
         menu_items.append(menu_root)
-        
+
         # make a tree using parent_id
         menu_items_map = dict((menu_item["id"], menu_item) for menu_item in menu_items)
         for menu_item in menu_items:
@@ -479,10 +479,10 @@ class SearchView(View):
     def load(self, req, model, view_id):
         fields_view = self.fields_view_get(req.session, model, view_id, 'search')
         return {'fields_view': fields_view}
-    
+
 class SideBar(View):
     _cp_path = "/base/sidebar"
-    
+
     @openerpweb.jsonrequest
     def get_actions(self, request, model, object_id=0):
         result = load_actions_from_ir_values(request, "action", "client_action_multi",

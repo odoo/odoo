@@ -20,7 +20,7 @@
     // Copy the properties over onto the new prototype
     for (var name in prop) {
       // Check if we're overwriting an existing function
-      prototype[name] = typeof prop[name] == "function" && 
+      prototype[name] = typeof prop[name] == "function" &&
         typeof _super[name] == "function" && fnTest.test(prop[name]) ?
         (function(name, fn){
           return function() {
@@ -123,6 +123,7 @@ openerp.base = function(instance) {
     openerp.base.list(instance);
     openerp.base.form(instance);
     openerp.base.gantt(instance);
+    openerp.base.graph(instance);
 };
 
 // vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:
