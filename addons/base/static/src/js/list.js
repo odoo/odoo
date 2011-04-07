@@ -4,7 +4,9 @@ openerp.base.ListView = openerp.base.Controller.extend(
     /** @lends openerp.base.ListView# */ {
     defaults: {
         // records can be selected one by one
-        'selectable': true
+        'selectable': true,
+        // whether the column headers should be displayed
+        'header': true
     },
     /**
      * @constructs
@@ -15,6 +17,7 @@ openerp.base.ListView = openerp.base.Controller.extend(
      * @param {String} view_id the listview's identifier, if any
      * @param {Object} options A set of options used to configure the view
      * @param {Boolean} [options.selectable=true] determines whether view rows are selectable (e.g. via a checkbox)
+     * @param {Boolean} [options.header=true] should the list's header be displayed
      */
     init: function(view_manager, session, element_id, dataset, view_id, options) {
         this._super(session, element_id);

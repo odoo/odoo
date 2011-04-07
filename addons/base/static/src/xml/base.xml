@@ -170,7 +170,7 @@
     </table>
 </t>
 <t t-name="ListView.header">
-    <thead>
+    <thead t-if="options.header">
         <tr>
             <th t-if="options.selectable"/>
             <t t-foreach="columns" t-as="column">
