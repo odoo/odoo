@@ -2238,7 +2238,6 @@ class stock_move(osv.osv):
         if quantity <= 0:
             raise osv.except_osv(_('Warning!'), _('Please provide a positive quantity to scrap!'))
         res = []
-        to_done = []
         for move in self.browse(cr, uid, ids, context=context):
             move_qty = move.product_qty
             uos_qty = quantity / move_qty * move.product_uos_qty
@@ -2254,32 +2253,13 @@ class stock_move(osv.osv):
             if move.location_id.usage <> 'internal':
                 default_val.update({'location_id': move.location_dest_id.id})
             new_move = self.copy(cr, uid, move.id, default_val)
-            res.append(new_move)
-            to_done.append(new_move)
 
-            if move.prodlot_id:
-                # Create a new move with the qty of scrapped move without prodlot
-                default_val = {
-                        'product_qty': quantity,
-                        'product_uos_qty': uos_qty,
-                        'tracking_id': move.tracking_id.id,
-                        'prodlot_id': False
-                    }
-                newmove = self.copy(cr, uid, move.id, default_val)
-                res.append(new_move)
-                # Reduce amount of original move by qty of scrapped move
-                if move.product_qty - quantity > 0:
-                    move.write({
-                        'product_qty': move.product_qty - quantity,
-                        'product_uos_qty': move.product_uos_qty - uos_qty,
-                        })
-
-
+            res += [new_move]
             product_obj = self.pool.get('product.product')
             for (id, name) in product_obj.name_get(cr, uid, [move.product_id.id]):
                 self.log(cr, uid, move.id, "%s x %s %s" % (move.product_qty, name, _("were scrapped")))
 
-        self.action_done(cr, uid, to_done, context=context)
+        self.action_done(cr, uid, res)
         return res
 
     def action_split(self, cr, uid, ids, quantity, split_by_qty=1, prefix=False, with_lot=True, context=None):
