@@ -20,7 +20,7 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
             if (this.viewmanager) {
                 this.viewmanager.stop();
             }
-            this.viewmanager = new openerp.base.ViewManager(this.session,this.element_id, false);
+            this.viewmanager = new openerp.base.ViewManager(this.session,this.element_id, true);
             this.viewmanager.do_action_window(action);
             this.viewmanager.start();
         }
@@ -33,17 +33,17 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
 openerp.base.views = new openerp.base.Registry();
 
 openerp.base.ViewManager =  openerp.base.Controller.extend({
-    init: function(session, element_id, desactivate_sidebar) {
+    init: function(session, element_id, has_sidebar) {
         this._super(session, element_id);
         this.action = null;
         this.dataset = null;
         this.searchview = null;
         this.active_view = null;
         this.views = {};
-        if (desactivate_sidebar)
-            this.sidebar = null;
-        else
+        if (has_sidebar)
             this.sidebar = new openerp.base.Sidebar(null, this);
+        else
+            this.sidebar = null;
     },
     start: function() {
         if (this.sidebar) {
@@ -307,8 +307,7 @@ openerp.base.Sidebar = openerp.base.BaseWidget.extend({
             var i = $this.attr("data-i");
             var j = $this.attr("data-i");
             var action = self.sections[i].elements[j];
-            // I know this doesn't work, one day it will
-            new openerp.base.ActionManager(this.view_manager, null).do_action(action);
+            openerp.base.handle_action(self.view_manager.session, action);
             e.stopPropagation();
             e.preventDefault();
         });
@@ -318,6 +317,21 @@ openerp.base.Sidebar = openerp.base.BaseWidget.extend({
         this.refresh();
     }
 });
+
+openerp.base.handle_action = function(session, action) {
+    if(action.type=="ir.actions.act_window") {
+        if(action.target=="new") {
+            var element_id = _.uniqueId("act_window_dialog");
+            var dialog = $('<div id="'+element_id+'"></div>');
+            dialog.dialog({
+                title: action.name
+            });
+            var viewmanager = new openerp.base.ViewManager(session,element_id, false);
+            viewmanager.do_action_window(action);
+            viewmanager.start();
+        }
+    }
+};
 
 openerp.base.views.add('calendar', 'openerp.base.CalendarView');
 

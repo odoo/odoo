@@ -17,6 +17,7 @@ import simplejson
 
 import nonliterals
 import xmlrpctimeout
+import logging
 
 #----------------------------------------------------------
 # OpenERP Client Library
@@ -320,6 +321,8 @@ class JsonRequest(object):
                 }
             }
         except Exception:
+            cherrypy.log("An error occured while handling a json request",
+                         severity=logging.ERROR, traceback=True)
             error = {
                 'code': 300,
                 'message': "OpenERP WebClient Error",
@@ -470,3 +473,4 @@ def main(argv):
     cherrypy.server.subscribe()
     cherrypy.engine.start()
     cherrypy.engine.block()
+

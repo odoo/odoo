@@ -177,19 +177,23 @@ def load_actions_from_ir_values(req, key, key2, models, meta, context):
     actions = Values.get(key, key2, models, meta, context)
 
     for _, _, action in actions:
-        # values come from the server, we can just eval them
-        if isinstance(action['context'], basestring):
-            action['context'] = eval(
-                action['context'],
-                req.session.evaluation_context()) or {}
+        clean_action(action, req.session)
 
-        if isinstance(action['domain'], basestring):
-            action['domain'] = eval(
-                action['domain'],
-                req.session.evaluation_context(
-                    action['context'])) or []
-        fix_view_modes(action)
     return actions
+
+def clean_action(action, session):
+    # values come from the server, we can just eval them
+    if isinstance(action['context'], basestring):
+        action['context'] = eval(
+            action['context'],
+            session.evaluation_context()) or {}
+
+    if isinstance(action['domain'], basestring):
+        action['domain'] = eval(
+            action['domain'],
+            session.evaluation_context(
+                action['context'])) or []
+    fix_view_modes(action)
 
 def fix_view_modes(action):
     """ For historical reasons, OpenERP has weird dealings in relation to
