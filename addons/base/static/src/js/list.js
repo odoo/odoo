@@ -40,12 +40,33 @@ openerp.base.ListView = openerp.base.Controller.extend({
     do_fill_table: function(records) {
         this.rows = records;
 
-        var table = this.$element.find('table');
+
+        var $table = this.$element.find('table');
         // remove all data lines
-        table.find('tr:first').nextAll().remove();
+        $table.find('tbody').remove();
+
         // add new content
-        table.append(QWeb.render("ListView.rows", {
-                columns: this.columns, rows: this.rows}));
+        var columns = this.columns;
+        var rows = this.rows;
+        // Paginate by groups of 50 for rendering
+        var PAGE_SIZE = 50;
+        var bodies_count = Math.ceil(this.rows.length / PAGE_SIZE);
+        var body = 0;
+        var $body = $('<tbody>').appendTo($table);
+        var render_body = function () {
+            setTimeout(function () {
+                $body.append(
+                    QWeb.render("ListView.rows", {
+                        columns: columns,
+                        rows: rows.slice(body*PAGE_SIZE, (body+1)*PAGE_SIZE)
+                }));
+                ++body;
+                if (body < bodies_count) {
+                    render_body();
+                }
+            }, 0);
+        };
+        render_body();
     },
     on_select_row: function (event) {
         // count number of preceding siblings to line clicked, that's the one

@@ -170,13 +170,15 @@
     </table>
 </t>
 <t t-name="ListView.header">
-    <t t-foreach="columns" t-as="column">
-        <th t-if="column.invisible !== '1'">
-            <t t-if="column.tag !== 'button'">
-                <t t-esc="column.string"/>
-            </t>
-        </th>
-    </t>
+    <thead>
+        <t t-foreach="columns" t-as="column">
+            <th t-if="column.invisible !== '1'">
+                <t t-if="column.tag !== 'button'">
+                    <t t-esc="column.string"/>
+                </t>
+            </th>
+        </t>
+    </thead>
 </t>
 <t t-name="ListView.rows" t-foreach="rows" t-as="row">
     <t t-call="ListView.row"/>
