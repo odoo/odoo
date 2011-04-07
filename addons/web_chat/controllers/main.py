@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import sys
+import sys, time
 
 import simplejson
 
@@ -115,6 +115,9 @@ class PollServer(openerpweb.Controller):
         # else
             # return emptylist
         print "chat poll",kw
+        time.sleep(2)
+        # it's http://localhost:8002/web_chat/pollserver/poll?method=long?callback=jsonp1302147330483&_1302147330483=
+        return '%s([{"t":"m","s":"Guest130214008855.5","r":"Guest130214013134.26","m":"fuck"}]);'%kw.get('callback','')
         return None
 
     @openerpweb.jsonrequest
