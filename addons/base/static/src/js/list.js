@@ -69,10 +69,12 @@ openerp.base.ListView = openerp.base.Controller.extend({
         render_body();
     },
     on_select_row: function (event) {
-        // count number of preceding siblings to line clicked, that's the one
-        // we want (note: line 0 is title row, so remove 1 for actual row
-        // index)
-        var row = this.rows[$(event.currentTarget).prevAll().length - 1];
+        var $target = $(event.currentTarget);
+        if (!$target.parent().is('tbody')) {
+            return;
+        }
+        // count number of preceding siblings to line clicked
+        var row = this.rows[$target.prevAll().length];
 
         var index = _.indexOf(this.dataset.ids, row.id);
         if (index == undefined || index === -1) {
