@@ -127,13 +127,13 @@ class email_compose_message(osv.osv_memory):
         'template_id': fields.selection(_get_templates, 'Template'),
     }
 
-    def on_change_template(self, cr, uid, ids, model, resource_id, template_id, context=None):
+    def on_change_template(self, cr, uid, ids, model, template_id, context=None):
         if context is None:
             context = {}
         if context.get('mail') == 'reply':
             return {'value':{}}
-        result = self.on_change_referred_doc(cr, uid, [],  model, resource_id, context=context)
-        vals = result.get('value',{})
+        vals = {}
+        resource_id = context.get('active_id', False)
         if template_id and resource_id:
             vals.update(self.get_template_data(cr, uid, resource_id, template_id, context))
         else:

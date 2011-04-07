@@ -98,33 +98,8 @@ class email_compose_message(osv.osv_memory):
 
         return result
 
-    def _get_records(self, cr, uid, context=None):
-        """
-        Return Records of particular  Model
-        """
-        if context is None:
-            context = {}
-        record_ids = []
-        model_pool = False
-        if context.get('message_id'):
-            message_pool = self.pool.get('email.message')
-            message_data = message_pool.browse(cr, uid, int(context.get('message_id')), context)
-            model_pool =  self.pool.get(message_data.model)
-            record_ids = [message_data.res_id]
-        elif context.get('email_model',False):
-            model =  context.get('email_model')
-            model_pool =  self.pool.get(model)
-            record_ids = context.get('email_res_id') and [context.get('email_res_id')] or []
-            if not record_ids:
-                record_ids = model_pool.search(cr, uid, [])
-        if model_pool:
-            return model_pool.name_get(cr, uid, record_ids, context)
-        return []
-
     _columns = {
         'attachment_ids': fields.many2many('ir.attachment','email_message_send_attachment_rel', 'wizard_id', 'attachment_id', 'Attachments'),
-        'debug':fields.boolean('Debug', readonly=True),
-        'res_id':fields.selection(_get_records, 'Referred Document'),
     }
 
     def get_value(self, cr, uid, model, res_id, context=None):
@@ -172,27 +147,6 @@ class email_compose_message(osv.osv_memory):
                 })
 
         return result
-
-    def on_change_referred_doc(self, cr, uid, ids, model, resource_id, context=None):
-        if context is None:
-            context = {}
-        if context.get('mail') == 'reply':
-            return {'value':{}}
-        result = {}
-        if resource_id and model:
-            vals = self.get_value(cr, uid, model, resource_id, context)
-            if vals:
-                result.update({
-                            'email_from':  vals.get('email_from',''),
-                            'email_to':  vals.get('email_to',''),
-                            'subject':  vals.get('subject',''),
-                            'body':  vals.get('body',''),
-                            'email_cc':  vals.get('email_cc',''),
-                            'email_bcc':  vals.get('email_bcc',''),
-                            'reply_to':  vals.get('reply_to',''),
-                        })
-        return {'value': result}
-
 
     def send_mail(self, cr, uid, ids, context=None):
         if context is None:
