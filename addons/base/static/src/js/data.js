@@ -100,6 +100,7 @@ openerp.base.DataSet =  openerp.base.Controller.extend( /** @lends openerp.base.
         }, callback);
     },
     unlink: function() {
+        this.notification['default']("Unlink", ids);
     },
     call: function (method, ids, args, callback) {
         ids = ids || [];
@@ -163,6 +164,9 @@ openerp.base.DataSetSearch =  openerp.base.DataSet.extend({
             callback(records);
         });
     },
+});
+
+openerp.base.DataSetRelational =  openerp.base.DataSet.extend( /** @lends openerp.base.DataSet# */{
 });
 
 };

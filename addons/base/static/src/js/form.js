@@ -795,7 +795,10 @@ openerp.base.form.widgets = new openerp.base.Registry({
     'one2many_list' : 'openerp.base.form.FieldOne2Many',
     'reference' : 'openerp.base.form.FieldReference',
     'boolean' : 'openerp.base.form.FieldBoolean',
-    'float' : 'openerp.base.form.FieldFloat'
+    'float' : 'openerp.base.form.FieldFloat',
+    'integer': 'openerp.base.form.FieldFloat',
+    'progressbar': 'openerp.base.form.FieldFloat',
+    'float_time': 'openerp.base.form.FieldFloat'
 });
 
 };
