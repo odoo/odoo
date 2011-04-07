@@ -531,7 +531,7 @@ class hr_payslip(osv.osv):
                 contract_ids = [contract_id]
                 #fill the structure with the one on the selected contract
                 contract_record = contract_obj.browse(cr, uid, contract_id, context=context)
-                res['value'].update({'struct_id': contract_record.struct_id.id})
+                res['value'].update({'struct_id': contract_record.struct_id.id, 'contract_id': contract_id})
             else:
                 #if we don't give the contract, then the input to fill should be for all current contracts of the employee
                 contract_ids = self.get_contract(cr, uid, employee_id, date_from, date_to, context=context)
@@ -634,7 +634,7 @@ class hr_salary_rule(osv.osv):
 # Note: returned value have to be set in the variable 'result'
 
 result = contract.wage * 0.10''',
-        'condition_python': 
+        'condition_python':
 '''
 # Available variables:
 #----------------------
