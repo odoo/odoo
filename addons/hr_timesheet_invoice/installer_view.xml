@@ -2,7 +2,7 @@
 <openerp>
     <data>
         <record id="view_hr_timesheet_invoice_wizard" model="ir.ui.view">
-            <field name="name">Employee Invoice Data</field>
+            <field name="name">Define Your Employee's Invoice Data</field>
             <field name="model">hr.timesheet.invoice.wizard</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
@@ -10,7 +10,7 @@
                      <field colspan="4" name="emp_ids" nolabel="1" mode="tree,form">
                                 <tree string="Employee Invoice Data"  editable="top">
                                     <field name="employee_id"/>
-                                    <field name="type"/>
+                                    <field name="product_id"/>
                                     <field name="timesheet_journal"/>
                                 </tree>
                       </field>
@@ -19,7 +19,7 @@
         </record>
 
          <record id="action_hr_timesheet_invoice_wizard" model="ir.actions.act_window">
-            <field name="name">Employee Invoice Data</field>
+            <field name="name">Define Your Employee's Invoice Data</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">hr.timesheet.invoice.wizard</field>
             <field name="view_type">form</field>

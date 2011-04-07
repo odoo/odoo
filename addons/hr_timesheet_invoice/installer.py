@@ -27,7 +27,7 @@ class hr_timesheet_invoice_installer(osv.osv):
     _description = "Employee Invoice Data"
     _columns = {
         'employee_id': fields.many2one('hr.employee', 'Employee', domain="['|',('product_id','=',False),('journal_id','=',False)]" ,required=True),
-        'type': fields.many2one('product.product', 'Product',domain="[('type','=','service')]"),
+        'product_id': fields.many2one('product.product', 'Product', domain="[('type','=','service')]"),
         'timesheet_journal': fields.many2one('account.analytic.journal', 'Analytic Journal',domain="[('type','=','general')]"),
     }
 
