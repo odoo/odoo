@@ -294,10 +294,12 @@ msgid "    Incoming Left: "
 msgstr ""
 
 #. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:715
+#: code:addons/stock_planning/stock_planning.py:719
 #, python-format
-msgid "Pick List "
+msgid "%s Pick List %s (%s,  %s) %s %s \n"
+""
 msgstr ""
+""
 
 #. module: stock_planning
 #: view:stock.planning.createlines:0
@@ -408,7 +410,7 @@ msgstr ""
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:626
 #, python-format
-msgid "Manual planning for "
+msgid "Manual planning for %s"
 msgstr ""
 
 #. module: stock_planning
@@ -442,7 +444,17 @@ msgstr ""
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:636
 #, python-format
-msgid "Procurement created in MPS by user: "
+msgid " Procurement created in MPS by user: %s   Creation Date: %s                                         \n"
+" For period: %s                                         \n"
+" according to state:                                         \n"
+" Warehouse Forecast: %s                                         \n"
+" Initial Stock: %s                                         \n"
+" Planned Out: %s    Planned In: %s                                         \n"
+" Already Out: %s    Already In: %s                                         \n"
+" Confirmed Out: %s    Confirmed In: %s                                         \n"
+" Planned Out Before: %s    Confirmed In Before: %s                                         \n"
+" Expected Out: %s    Incoming Left: %s                                         \n"
+" Stock Simulation: %s    Minimum stock: %s"
 msgstr ""
 
 #. module: stock_planning
@@ -774,6 +786,14 @@ msgstr ""
 #: view:stock.sale.forecast.createlines:0
 msgid "Creates forecast lines for selected warehouse and period."
 msgstr ""
+
+#. module: stock_planning
+#: code:addons/stock_planning/stock_planning.py:656
+#, python-format
+msgid "%s Requisition (%s,  %s) %s %s \n"
+""
+msgstr ""
+""
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:655
@@ -1206,6 +1226,14 @@ msgstr ""
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:627
+#: code:addons/stock_planning/stock_planning.py:673
+#: code:addons/stock_planning/stock_planning.py:697
+#, python-format
+msgid "MPS(%s) %s"
+msgstr ""
+
+#. module: stock_planning
+#: code:addons/stock_planning/stock_planning.py:627
 #: code:addons/stock_planning/stock_planning.py:671
 #: code:addons/stock_planning/stock_planning.py:693
 #, python-format
@@ -1213,9 +1241,18 @@ msgid "MPS("
 msgstr ""
 
 #. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:678
+#: code:addons/stock_planning/stock_planning.py:680
 #, python-format
-msgid "Pick created from MPS by user: "
+msgid "Pick created from MPS by user: %s   Creation Date: %s                                     \n"
+"For period: %s   according to state:                                     \n"
+" Warehouse Forecast: %s                                     \n"
+" Initial Stock: %s                                     \n"
+" Planned Out: %s  Planned In: %s                                     \n"
+" Already Out: %s  Already In: %s                                     \n"
+" Confirmed Out: %s   Confirmed In: %s                                     \n"
+" Planned Out Before: %s   Confirmed In Before: %s                                     \n"
+" Expected Out: %s   Incoming Left: %s                                     \n"
+" Stock Simulation: %s   Minimum stock: %s "
 msgstr ""
 
 #. module: stock_planning

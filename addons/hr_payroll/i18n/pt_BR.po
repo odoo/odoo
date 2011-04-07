@@ -8,17 +8,17 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2011-01-26 01:48+0000\n"
-"Last-Translator: Adriano Prado <adrianojprado@hotmail.com>\n"
+"PO-Revision-Date: 2011-03-20 19:51+0000\n"
+"Last-Translator: Emerson <Unknown>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-27 04:37+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-03-21 04:47+0000\n"
+"X-Generator: Launchpad (build 12559)\n"
 
 #. module: hr_payroll
-#: report:employees.salary:0
+#: rml:employees.salary:0
 msgid "E-mail Address"
 msgstr "Endereço de E-mail"
 
@@ -28,11 +28,8 @@ msgid "Based"
 msgstr "Baseado"
 
 #. module: hr_payroll
-#: field:hr.contract,net:0
-#: field:hr.employee,net:0
 #: field:hr.payroll.register,net:0
 #: field:hr.payslip,net:0
-#: report:salary.structure:0
 msgid "Net Salary"
 msgstr "Salário Liquido"
 
@@ -42,46 +39,43 @@ msgid "Recompute Sheet"
 msgstr "Recalcular Folha"
 
 #. module: hr_payroll
-#: report:employees.salary:0
+#: rml:employees.salary:0
 msgid "Employees Salary Details"
 msgstr "Detalhes Salário do Funcionário"
 
 #. module: hr_payroll
-#: report:employees.salary:0
+#: rml:employees.salary:0
 msgid "Allowances with Basic:"
 msgstr ""
 
 #. module: hr_payroll
-#: report:employees.salary:0
-#: report:salary.structure:0
+#: rml:employees.salary:0
+#: rml:salary.structure:0
 msgid "Department"
 msgstr "Departamento"
 
 #. module: hr_payroll
-#: report:employees.salary:0
+#: rml:employees.salary:0
 msgid "Deductions:"
 msgstr "Deduções:"
 
 #. module: hr_payroll
-#: field:company.contribution,gratuity:0
+#: field:hr.allounce.deduction.categoty,gratuity:0
 msgid "Use for Gratuity ?"
 msgstr ""
 
 #. module: hr_payroll
-#: field:hr.contract,working_days_per_week:0
 #: field:hr.payslip,working_days:0
-#: report:payslip.pdf:0
 msgid "Working Days"
 msgstr "Dias Trabalhados"
 
 #. module: hr_payroll
-#: selection:hr.allounce.deduction.categoty,type:0
 #: selection:hr.payslip.line,type:0
 msgid "Loan"
 msgstr "Empréstimo"
 
 #. module: hr_payroll
-#: report:hr.payroll.register.sheet:0
+#: rml:hr.payroll.register.sheet:0
 msgid "Salary Payment Register"
 msgstr "Registro Pagamento de Salário"
 
@@ -89,7 +83,6 @@ msgstr "Registro Pagamento de Salário"
 #: field:hr.employee,slip_ids:0
 #: view:hr.payroll.register:0
 #: field:hr.payroll.register,line_ids:0
-#: model:ir.actions.act_window,name:hr_payroll.act_hr_employee_payslip_list
 msgid "Payslips"
 msgstr ""
 
@@ -110,19 +103,14 @@ msgid "("
 msgstr "("
 
 #. module: hr_payroll
-#: field:company.contribution,company_id:0
-#: field:hr.allounce.deduction.categoty,company_id:0
-#: field:hr.contibution.register,company_id:0
-#: field:hr.holidays.status,company_id:0
-#: field:hr.payroll.advice,company_id:0
 #: field:hr.payroll.register,company_id:0
-#: field:hr.payroll.structure,company_id:0
 #: field:hr.payslip,company_id:0
+#: wizard_field:payroll.analysis,init,company_id:0
 msgid "Company"
 msgstr "Empresa"
 
 #. module: hr_payroll
-#: report:payroll.advice:0
+#: rml:payroll.advice:0
 msgid "The Manager"
 msgstr "O Gerente"
 
@@ -132,8 +120,7 @@ msgid "Letter Details"
 msgstr ""
 
 #. module: hr_payroll
-#: report:hr.payroll.register.sheet:0
-#: report:payslip.pdf:0
+#: rml:hr.payroll.register.sheet:0
 msgid ","
 msgstr ","
 
@@ -154,7 +141,7 @@ msgstr "Definir como Provisório"
 #: code:addons/hr_payroll/hr_payroll.py:1410
 #, python-format
 msgid "Variable Error: %s "
-msgstr ""
+msgstr "Erro de Variável: %s "
 
 #. module: hr_payroll
 #: view:hr.passport:0
@@ -167,7 +154,8 @@ msgid "Half-Pay Holiday"
 msgstr ""
 
 #. module: hr_payroll
-#: report:hr.payroll.register.sheet:0
+#: selection:hr.allounce.deduction.categoty,type:0
+#: rml:hr.payroll.register.sheet:0
 #: field:hr.payslip,other_pay:0
 msgid "Others"
 msgstr "Outros"
@@ -175,12 +163,12 @@ msgstr "Outros"
 #. module: hr_payroll
 #: field:hr.payslip.line,slip_id:0
 #: model:ir.model,name:hr_payroll.model_hr_payslip
-#: report:payslip.pdf:0
+#: rml:payslip.pdf:0
 msgid "Pay Slip"
 msgstr "Contracheque"
 
 #. module: hr_payroll
-#: report:salary.structure:0
+#: rml:salary.structure:0
 msgid "Contract Detail:"
 msgstr "Detalhes Contrato:"
 
@@ -188,13 +176,13 @@ msgstr "Detalhes Contrato:"
 #: field:hr.payslip,igross:0
 #: field:hr.payslip,inet:0
 msgid "Calculaton Field"
-msgstr ""
+msgstr "Campo de Cálculo"
 
 #. module: hr_payroll
 #: help:hr.payroll.advice,bank_id:0
 #: help:hr.payroll.register,bank_id:0
 msgid "Select the Bank Address from whcih the salary is going to be paid"
-msgstr ""
+msgstr "Selecione o Endereço do Banco para o qual o salário deverá ser pago"
 
 #. module: hr_payroll
 #: view:hr.payroll.advice:0
@@ -210,16 +198,12 @@ msgid "Reject"
 msgstr "Rejeitar"
 
 #. module: hr_payroll
-#: selection:hr.allounce.deduction.categoty,type:0
 #: selection:hr.payslip.line,type:0
 msgid "Leaves"
 msgstr "Folhas"
 
 #. module: hr_payroll
-#: field:hr.contibution.register.line,register_id:0
-#: view:hr.payslip:0
 #: field:hr.payslip,register_id:0
-#: report:payslip.pdf:0
 msgid "Register"
 msgstr "Registro"
 
@@ -232,25 +216,24 @@ msgstr ""
 "gerente."
 
 #. module: hr_payroll
-#: report:payslip.pdf:0
+#: rml:payslip.pdf:0
 msgid "Total Deductions"
 msgstr "Deduções Totais"
 
 #. module: hr_payroll
-#: field:company.contribution.line,value:0
-#: field:hr.payslip.line.line,value:0
+#: field:hr.allounce.deduction.categoty.line,value:0
 msgid "Value"
 msgstr "Valor"
 
 #. module: hr_payroll
-#: report:payroll.advice:0
+#: rml:payroll.advice:0
 msgid "Name of the Employee"
-msgstr ""
+msgstr "Nome do Funcionário"
 
 #. module: hr_payroll
 #: view:hr.contibution.register:0
 msgid "Register Lines"
-msgstr ""
+msgstr "Linhas do Registro"
 
 #. module: hr_payroll
 #: view:hr.payslip:0
@@ -259,8 +242,7 @@ msgstr "Calculo do Salário"
 
 #. module: hr_payroll
 #: field:hr.payroll.advice.line,amount:0
-#: report:payroll.advice:0
-#: report:salary.structure:0
+#: rml:payroll.advice:0
 msgid "Amount"
 msgstr "Valor"
 
@@ -294,7 +276,6 @@ msgid "Employee Deduction"
 msgstr "Dedução do Funcionário"
 
 #. module: hr_payroll
-#: selection:hr.allounce.deduction.categoty,type:0
 #: selection:hr.payslip.line,type:0
 msgid "Other Deduction"
 msgstr "Outra Dedução"
@@ -315,7 +296,7 @@ msgstr "Agrupar Por..."
 #. module: hr_payroll
 #: field:hr.passport,date_expire:0
 msgid "Passport Expire Date"
-msgstr ""
+msgstr "Data de Expiração do Passaporte"
 
 #. module: hr_payroll
 #: selection:hr.holidays.status,type:0
@@ -335,7 +316,7 @@ msgid ""
 msgstr ""
 
 #. module: hr_payroll
-#: report:payslip.pdf:0
+#: rml:payslip.pdf:0
 msgid "Amount (in words) :"
 msgstr "Valor (por extenso) :"
 
@@ -345,8 +326,6 @@ msgid "Payment"
 msgstr "Pagamento"
 
 #. module: hr_payroll
-#: view:hr.payroll.structure:0
-#: view:hr.payslip:0
 #: field:hr.payslip,line_ids:0
 #: view:hr.payslip.line:0
 #: model:ir.model,name:hr_payroll.model_hr_payslip_line
@@ -359,7 +338,6 @@ msgid "Identification No"
 msgstr "No de Identificação"
 
 #. module: hr_payroll
-#: view:hr.allounce.deduction.categoty:0
 #: field:hr.allounce.deduction.categoty,base:0
 msgid "Based on"
 msgstr "Baseado em"
@@ -423,26 +401,20 @@ msgstr "Pagamentos -"
 #. module: hr_payroll
 #: field:hr.contract,visa_no:0
 msgid "Visa No"
-msgstr ""
+msgstr "Núm. do Visto"
 
 #. module: hr_payroll
-#: field:company.contribution.line,from_val:0
-#: report:employees.salary:0
-#: field:hr.payslip.line.line,from_val:0
-#: report:year.salary:0
+#: field:hr.allounce.deduction.categoty.line,from:0
 msgid "From"
 msgstr "A partir de"
 
 #. module: hr_payroll
 #: field:hr.payroll.advice.line,bysal:0
-#: report:payroll.advice:0
 msgid "By Salary"
 msgstr "Por Salário"
 
 #. module: hr_payroll
-#: field:hr.payroll.employees.detail,date_to:0
-#: field:hr.payroll.year.salary,date_to:0
-#: report:salary.structure:0
+#: rml:salary.structure:0
 msgid "End Date"
 msgstr "Data Final"
 
@@ -457,8 +429,8 @@ msgid "Leave Deductions"
 msgstr ""
 
 #. module: hr_payroll
-#: report:hr.payroll.register.sheet:0
-#: report:payroll.advice:0
+#: rml:hr.payroll.register.sheet:0
+#: rml:payroll.advice:0
 msgid "Authorised Signature"
 msgstr "Assinatura Autorizada"
 
@@ -473,11 +445,12 @@ msgid "Contribution Register Line"
 msgstr ""
 
 #. module: hr_payroll
-#: report:salary.structure:0
+#: rml:salary.structure:0
 msgid "Notes:"
 msgstr "Comentários:"
 
 #. module: hr_payroll
+#: field:hr.allounce.deduction.categoty,based_on:0
 #: field:hr.payroll.advice,state:0
 #: field:hr.payroll.register,state:0
 #: field:hr.payslip,state:0
@@ -492,7 +465,7 @@ msgstr ""
 #. module: hr_payroll
 #: report:payslip.pdf:0
 msgid "Other Lines"
-msgstr ""
+msgstr "Outras Linhas"
 
 #. module: hr_payroll
 #: view:company.contribution:0
@@ -510,12 +483,10 @@ msgid "Company Contributions"
 msgstr "Contribuições da Empresa"
 
 #. module: hr_payroll
-#: field:hr.contibution.register.line,employee_id:0
 #: field:hr.passport,employee_id:0
 #: field:hr.payroll.advice.line,employee_id:0
 #: field:hr.payslip,employee_id:0
 #: field:hr.payslip.line,employee_id:0
-#: model:ir.model,name:hr_payroll.model_hr_employee
 msgid "Employee"
 msgstr "Funcionário"
 
@@ -530,11 +501,10 @@ msgid "Bank Advice Lines"
 msgstr ""
 
 #. module: hr_payroll
-#: view:company.contribution:0
-#: view:hr.allounce.deduction.categoty:0
 #: field:hr.allounce.deduction.categoty,type:0
 #: field:hr.payslip.line,type:0
-#: report:salary.structure:0
+#: wizard_field:payroll.analysis,init,type:0
+#: rml:salary.structure:0
 msgid "Type"
 msgstr "Tipo"
 
@@ -544,7 +514,7 @@ msgid "Email"
 msgstr "E-mail"
 
 #. module: hr_payroll
-#: report:hr.payroll.register.sheet:0
+#: rml:hr.payroll.register.sheet:0
 msgid "#"
 msgstr "Nº"
 
@@ -553,13 +523,13 @@ msgstr "Nº"
 #: code:addons/hr_payroll/hr_payroll.py:1225
 #, python-format
 msgid "Error !"
-msgstr "Erro !"
+msgstr "Erro!"
 
 #. module: hr_payroll
 #: view:hr.payroll.register:0
 #: view:hr.payslip:0
 msgid "Verify Sheet"
-msgstr ""
+msgstr "Planilha de Verificação"
 
 #. module: hr_payroll
 #: help:hr.contract,working_days_per_week:0
@@ -578,16 +548,13 @@ msgid "Net Basic"
 msgstr ""
 
 #. module: hr_payroll
-#: field:hr.contract,gross:0
-#: field:hr.employee,gross:0
 #: field:hr.payroll.register,grows:0
 #: field:hr.payslip,grows:0
-#: report:salary.structure:0
 msgid "Gross Salary"
 msgstr ""
 
 #. module: hr_payroll
-#: report:payslip.pdf:0
+#: rml:payslip.pdf:0
 msgid "Total Earnings"
 msgstr ""
 
@@ -598,20 +565,17 @@ msgid "Employee Salary Statement"
 msgstr ""
 
 #. module: hr_payroll
-#: selection:hr.allounce.deduction.categoty,type:0
 #: selection:hr.payslip.line,type:0
 msgid "Other Payment"
 msgstr ""
 
 #. module: hr_payroll
-#: field:hr.employee,advantages_net:0
-#: report:payslip.pdf:0
-#: report:salary.structure:0
+#: rml:payslip.pdf:0
 msgid "Deductions"
 msgstr "Deduções"
 
 #. module: hr_payroll
-#: report:payroll.advice:0
+#: rml:payroll.advice:0
 msgid "C/D"
 msgstr ""
 
@@ -636,19 +600,13 @@ msgid "Total By Employee"
 msgstr ""
 
 #. module: hr_payroll
-#: view:company.contribution:0
-#: selection:company.contribution,amount_type:0
-#: selection:company.contribution.line,amount_type:0
+#: selection:hr.allounce.deduction.categoty.line,amount_type:0
 #: selection:hr.payslip.line,amount_type:0
-#: selection:hr.payslip.line.line,amount_type:0
 msgid "Fixed Amount"
 msgstr ""
 
 #. module: hr_payroll
-#: field:company.contribution.line,to_val:0
-#: report:employees.salary:0
-#: field:hr.payslip.line.line,to_val:0
-#: report:year.salary:0
+#: field:hr.allounce.deduction.categoty.line,to:0
 msgid "To"
 msgstr ""
 
@@ -686,15 +644,15 @@ msgid "Contribution Lines"
 msgstr ""
 
 #. module: hr_payroll
-#: report:hr.payroll.register.sheet:0
+#: rml:hr.payroll.register.sheet:0
+#: rml:payslip.pdf:0
 msgid "For the month of"
 msgstr ""
 
 #. module: hr_payroll
-#: view:hr.allounce.deduction.categoty:0
 #: selection:hr.allounce.deduction.categoty,type:0
 #: field:hr.payroll.register,deduction:0
-#: report:hr.payroll.register.sheet:0
+#: rml:hr.payroll.register.sheet:0
 #: field:hr.payslip,deduction:0
 #: selection:hr.payslip.line,type:0
 msgid "Deduction"
@@ -717,38 +675,40 @@ msgid "Error! contract start-date must be lower then contract end-date."
 msgstr ""
 
 #. module: hr_payroll
-#: selection:hr.allounce.deduction.categoty,type:0
 #: selection:hr.payslip.line,type:0
 msgid "Loan Installment"
 msgstr ""
 
 #. module: hr_payroll
 #: view:hr.payroll.register:0
+#: view:hr.payslip:0
 msgid "Complete HR Checking"
 msgstr ""
 
 #. module: hr_payroll
-#: report:payroll.advice:0
+#: rml:payroll.advice:0
 msgid "Yours Sincerely"
 msgstr ""
 
 #. module: hr_payroll
-#: report:payroll.advice:0
+#: rml:payroll.advice:0
 msgid "SI. No."
 msgstr ""
 
 #. module: hr_payroll
-#: report:payslip.pdf:0
+#: rml:payslip.pdf:0
 msgid "Net Amount"
 msgstr ""
 
 #. module: hr_payroll
-#: report:salary.structure:0
+#: rml:salary.structure:0
 msgid "Salary Structure:"
 msgstr ""
 
 #. module: hr_payroll
 #: model:ir.actions.report.xml,name:hr_payroll.year_employees_detail
+#: model:ir.actions.wizard,name:hr_payroll.wizard_print_employees_detail
+#: model:ir.ui.menu,name:hr_payroll.menu_wizard_print_employees_detail
 msgid "Employees Salary Detail"
 msgstr ""
 
@@ -766,7 +726,7 @@ msgid "Confirm Sheet"
 msgstr ""
 
 #. module: hr_payroll
-#: report:employees.salary:0
+#: rml:employees.salary:0
 msgid "Others:"
 msgstr ""
 
@@ -778,7 +738,6 @@ msgstr ""
 
 #. module: hr_payroll
 #: field:hr.payslip,worked_days:0
-#: report:payslip.pdf:0
 msgid "Worked Day"
 msgstr ""
 
@@ -798,7 +757,7 @@ msgid "Country & Address"
 msgstr ""
 
 #. module: hr_payroll
-#: report:employees.salary:0
+#: rml:employees.salary:0
 msgid "Employee Code"
 msgstr ""
 
@@ -808,17 +767,16 @@ msgid "Basic Salary – Leaves"
 msgstr ""
 
 #. module: hr_payroll
-#: field:company.contribution,amount_type:0
-#: field:company.contribution.line,amount_type:0
+#: field:hr.allounce.deduction.categoty.line,amount_type:0
 #: field:hr.payslip.line,amount_type:0
-#: field:hr.payslip.line.line,amount_type:0
-#: report:salary.structure:0
+#: rml:salary.structure:0
 msgid "Amount Type"
 msgstr ""
 
 #. module: hr_payroll
-#: view:company.contribution:0
+#: field:hr.allounce.deduction.categoty.line,category_id:0
 #: field:hr.payslip.line,category_id:0
+#: rml:salary.structure:0
 msgid "Category"
 msgstr ""
 
@@ -846,7 +804,7 @@ msgid "Draft"
 msgstr ""
 
 #. module: hr_payroll
-#: report:payslip.pdf:0
+#: rml:payslip.pdf:0
 msgid "Earnings"
 msgstr ""
 
@@ -858,6 +816,7 @@ msgstr ""
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_hr_passport_tree
+#: model:ir.ui.menu,name:hr_payroll.menu_action_hr_passport_tree
 msgid "All Passports"
 msgstr ""
 
@@ -868,8 +827,9 @@ msgid "Salary Register"
 msgstr ""
 
 #. module: hr_payroll
-#: report:employees.salary:0
-#: report:hr.payroll.register.sheet:0
+#: rml:employees.salary:0
+#: rml:hr.payroll.register.sheet:0
+#: rml:payslip.pdf:0
 msgid "Employee Name"
 msgstr ""
 
@@ -879,6 +839,7 @@ msgid "Passport Detail"
 msgstr ""
 
 #. module: hr_payroll
+#: selection:hr.allounce.deduction.categoty.line,amount_type:0
 #: selection:hr.payslip.line,amount_type:0
 msgid "Percentage (%)"
 msgstr ""
@@ -893,18 +854,22 @@ msgid "Payroll Register"
 msgstr ""
 
 #. module: hr_payroll
-#: report:hr.payroll.register.sheet:0
-#: report:payroll.advice:0
+#: rml:employees.salary:0
+#: rml:hr.payroll.register.sheet:0
+#: rml:payroll.advice:0
+#: rml:salary.structure:0
+#: rml:year.salary:0
 msgid "For"
 msgstr ""
 
 #. module: hr_payroll
+#: view:hr.employee:0
 #: field:hr.passport,contracts_ids:0
 msgid "Contracts"
 msgstr ""
 
 #. module: hr_payroll
-#: view:hr.payroll.structure:0
+#: view:hr.employee.grade:0
 msgid "Employee Function"
 msgstr ""
 
@@ -929,7 +894,7 @@ msgid "Validation"
 msgstr ""
 
 #. module: hr_payroll
-#: report:employees.salary:0
+#: rml:employees.salary:0
 msgid "Title"
 msgstr ""
 
@@ -945,6 +910,8 @@ msgstr ""
 
 #. module: hr_payroll
 #: view:hr.payroll.advice:0
+#: view:hr.payslip:0
+#: field:hr.payslip,move_payment_ids:0
 msgid "Payment Lines"
 msgstr ""
 
@@ -954,7 +921,6 @@ msgid "Compute Sheet"
 msgstr ""
 
 #. module: hr_payroll
-#: field:company.contribution,active:0
 #: field:hr.payroll.register,active:0
 msgid "Active"
 msgstr ""
@@ -965,7 +931,7 @@ msgid "Applied this head for calculation if condition is true"
 msgstr ""
 
 #. module: hr_payroll
-#: report:year.salary:0
+#: rml:year.salary:0
 msgid "Yearly Salary Details"
 msgstr ""
 
@@ -996,23 +962,22 @@ msgid "Compute"
 msgstr ""
 
 #. module: hr_payroll
-#: report:employees.salary:0
+#: rml:employees.salary:0
 #: field:hr.payslip,deg_id:0
-#: report:payslip.pdf:0
-#: report:salary.structure:0
+#: rml:payslip.pdf:0
+#: rml:salary.structure:0
 msgid "Designation"
 msgstr ""
 
 #. module: hr_payroll
-#: report:hr.payroll.register.sheet:0
+#: rml:hr.payroll.register.sheet:0
 msgid "HR Manager"
 msgstr ""
 
 #. module: hr_payroll
-#: field:hr.contract,basic:0
-#: field:hr.employee,basic:0
+#: selection:hr.allounce.deduction.categoty,based_on:0
 #: field:hr.payslip,basic_before_leaves:0
-#: report:payslip.pdf:0
+#: rml:payslip.pdf:0
 msgid "Basic Salary"
 msgstr ""
 
@@ -1027,7 +992,8 @@ msgid "Salary Information"
 msgstr ""
 
 #. module: hr_payroll
-#: model:ir.model,name:hr_payroll.model_company_contribution_line
+#: model:ir.model,name:hr_payroll.model_hr_allounce_deduction_categoty
+#: model:ir.model,name:hr_payroll.model_hr_allounce_deduction_categoty_line
 msgid "Allowance Deduction Categoty"
 msgstr ""
 
@@ -1037,13 +1003,12 @@ msgid "Companies"
 msgstr ""
 
 #. module: hr_payroll
-#: report:payslip.pdf:0
+#: rml:payslip.pdf:0
 msgid "Authorized Signature"
 msgstr ""
 
 #. module: hr_payroll
-#: field:hr.payslip,contract_id:0
-#: model:ir.model,name:hr_payroll.model_hr_contract
+#: view:hr.employee:0
 msgid "Contract"
 msgstr ""
 
@@ -1053,14 +1018,14 @@ msgid "Draft Sheet"
 msgstr ""
 
 #. module: hr_payroll
-#: selection:hr.payroll.year.salary,salary_on:0
+#: selection:wizard.year.salary,init,salary_on:0
 msgid "Next Month Date"
 msgstr ""
 
 #. module: hr_payroll
-#: field:hr.contibution.register.line,date:0
 #: field:hr.payroll.advice,date:0
 #: field:hr.payroll.register,date:0
+#: rml:hr.payroll.register.sheet:0
 #: field:hr.payslip,date:0
 msgid "Date"
 msgstr ""
@@ -1076,8 +1041,8 @@ msgid "Search Passport"
 msgstr ""
 
 #. module: hr_payroll
-#: report:employees.salary:0
-#: report:salary.structure:0
+#: rml:employees.salary:0
+#: rml:salary.structure:0
 msgid "Phone No."
 msgstr ""
 
@@ -1109,19 +1074,16 @@ msgid "Other No."
 msgstr ""
 
 #. module: hr_payroll
-#: field:company.contribution,code:0
-#: field:hr.contibution.register.line,code:0
 #: field:hr.holidays.status,code:0
-#: field:hr.payroll.structure,code:0
 #: field:hr.payslip.line,code:0
-#: report:payslip.pdf:0
-#: report:salary.structure:0
+#: rml:salary.structure:0
 msgid "Code"
 msgstr ""
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_view_hr_bank_advice_tree
 #: model:ir.ui.menu,name:hr_payroll.hr_menu_payment_advice
+#: rml:payroll.advice:0
 msgid "Payment Advice"
 msgstr ""
 
@@ -1144,28 +1106,24 @@ msgid "Computation Overview"
 msgstr ""
 
 #. module: hr_payroll
-#: field:hr.payroll.year.salary,salary_on:0
+#: wizard_field:wizard.year.salary,init,salary_on:0
 msgid "Salary On"
 msgstr ""
 
 #. module: hr_payroll
 #: field:hr.payroll.advice,number:0
 #: field:hr.payroll.register,number:0
+#: rml:hr.payroll.register.sheet:0
 #: field:hr.payslip,number:0
 msgid "Number"
 msgstr ""
 
 #. module: hr_payroll
-#: field:hr.contract,struct_id:0
+#: view:hr.employee:0
 #: field:hr.employee,line_ids:0
-#: view:hr.payroll.structure:0
-#: field:hr.payroll.structure,line_ids:0
-#: view:hr.payslip:0
-#: view:hr.payslip.line:0
-#: model:ir.actions.act_window,name:hr_payroll.action_view_hr_employee_grade_form
-#: model:ir.actions.report.xml,name:hr_payroll.salary_structure_register
-#: model:ir.model,name:hr_payroll.model_hr_payroll_structure
-#: model:ir.ui.menu,name:hr_payroll.menu_hr_employee_function
+#: view:hr.employee.grade:0
+#: field:hr.employee.grade,line_ids:0
+#: rml:salary.structure:0
 msgid "Salary Structure"
 msgstr ""
 
@@ -1177,6 +1135,9 @@ msgstr ""
 #. module: hr_payroll
 #: view:hr.payroll.register:0
 #: view:hr.payslip:0
+#: wizard_button:payroll.analysis,init,end:0
+#: wizard_button:wizard.employees.detail,init,end:0
+#: wizard_button:wizard.year.salary,init,end:0
 msgid "Cancel"
 msgstr ""
 
@@ -1188,33 +1149,34 @@ msgstr ""
 
 #. module: hr_payroll
 #: field:hr.payslip.line,amount:0
+#: rml:salary.structure:0
 msgid "Amount / Percentage"
 msgstr ""
 
 #. module: hr_payroll
-#: field:hr.employee,advantages_gross:0
-#: report:hr.payroll.register.sheet:0
-#: report:salary.structure:0
+#: rml:hr.payroll.register.sheet:0
 msgid "Allowances"
 msgstr ""
 
 #. module: hr_payroll
-#: selection:hr.payroll.year.salary,salary_on:0
+#: selection:wizard.year.salary,init,salary_on:0
 msgid "Current Month Date"
 msgstr ""
 
 #. module: hr_payroll
-#: report:salary.structure:0
+#: view:hr.employee:0
+#: rml:salary.structure:0
 msgid "Salary"
 msgstr ""
 
 #. module: hr_payroll
-#: field:hr.contract,passport_id:0
 #: field:hr.passport,name:0
 msgid "Passport No"
 msgstr ""
 
 #. module: hr_payroll
+#: field:hr.contract,passport_id:0
+#: field:hr.employee,passport_id:0
 #: view:hr.passport:0
 msgid "Passport"
 msgstr ""
@@ -1225,11 +1187,12 @@ msgid "Total Salary"
 msgstr ""
 
 #. module: hr_payroll
-#: report:payroll.advice:0
+#: rml:payroll.advice:0
 msgid "for period"
 msgstr ""
 
 #. module: hr_payroll
+#: field:hr.expense.expense,category_id:0
 #: field:hr.holidays.status,head_id:0
 msgid "Payroll Head"
 msgstr ""
@@ -1243,7 +1206,7 @@ msgid "Contribution Register"
 msgstr ""
 
 #. module: hr_payroll
-#: report:salary.structure:0
+#: rml:salary.structure:0
 msgid "E-mail"
 msgstr ""
 
@@ -1261,11 +1224,8 @@ msgid "Print Report"
 msgstr ""
 
 #. module: hr_payroll
-#: field:company.contribution,line_ids:0
-#: view:hr.payroll.structure:0
-#: view:hr.payslip:0
-#: view:hr.payslip.line:0
-#: field:hr.payslip.line,line_ids:0
+#: view:hr.allounce.deduction.categoty:0
+#: field:hr.allounce.deduction.categoty,line_ids:0
 msgid "Calculations"
 msgstr ""
 
@@ -1303,11 +1263,7 @@ msgid "Basic Salary without Leave:"
 msgstr ""
 
 #. module: hr_payroll
-#: view:company.contribution:0
-#: view:hr.allounce.deduction.categoty:0
-#: view:hr.payroll.structure:0
-#: view:hr.payslip:0
-#: view:hr.payslip.line:0
+#: field:hr.employee.grade,function_id:0
 #: field:hr.payslip.line,function_id:0
 msgid "Function"
 msgstr ""
@@ -1318,7 +1274,7 @@ msgid "States"
 msgstr ""
 
 #. module: hr_payroll
-#: report:payroll.advice:0
+#: rml:payroll.advice:0
 msgid "Dear Sir/Madam,"
 msgstr ""
 
@@ -1333,29 +1289,12 @@ msgid "Gross Sal."
 msgstr ""
 
 #. module: hr_payroll
-#: view:company.contribution:0
-#: field:company.contribution,note:0
-#: view:hr.allounce.deduction.categoty:0
-#: field:hr.allounce.deduction.categoty,note:0
-#: view:hr.contibution.register:0
-#: field:hr.contibution.register,note:0
-#: view:hr.passport:0
-#: field:hr.passport,note:0
 #: field:hr.payroll.advice,note:0
-#: field:hr.payroll.register,note:0
-#: view:hr.payroll.structure:0
-#: field:hr.payroll.structure,note:0
-#: view:hr.payslip:0
-#: field:hr.payslip,note:0
-#: view:hr.payslip.line:0
-#: field:hr.payslip.line,note:0
 msgid "Description"
 msgstr ""
 
 #. module: hr_payroll
-#: field:hr.payroll.employees.detail,date_from:0
-#: field:hr.payroll.year.salary,date_from:0
-#: report:salary.structure:0
+#: rml:salary.structure:0
 msgid "Start Date"
 msgstr ""
 
@@ -1377,7 +1316,6 @@ msgstr ""
 #. module: hr_payroll
 #: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_reporting
 #: model:ir.ui.menu,name:hr_payroll.menu_hr_root_payroll
-#: model:ir.ui.menu,name:hr_payroll.payroll_configure
 msgid "Payroll"
 msgstr ""
 
@@ -1407,10 +1345,9 @@ msgid "hr.payroll.year.salary"
 msgstr ""
 
 #. module: hr_payroll
-#: report:employees.salary:0
-#: field:hr.passport,address_id:0
-#: report:payslip.pdf:0
-#: report:salary.structure:0
+#: rml:employees.salary:0
+#: rml:payslip.pdf:0
+#: rml:salary.structure:0
 msgid "Address"
 msgstr ""
 
@@ -1425,10 +1362,8 @@ msgid "Number of Leaves"
 msgstr ""
 
 #. module: hr_payroll
-#: report:employees.salary:0
-#: field:hr.payroll.advice,bank_id:0
-#: field:hr.payroll.register,bank_id:0
-#: report:salary.structure:0
+#: rml:employees.salary:0
+#: rml:salary.structure:0
 msgid "Bank"
 msgstr ""
 
@@ -1438,35 +1373,28 @@ msgid "Cancel Sheet"
 msgstr ""
 
 #. module: hr_payroll
-#: selection:hr.allounce.deduction.categoty,type:0
 #: selection:hr.payslip.line,type:0
 msgid "Advance"
 msgstr ""
 
 #. module: hr_payroll
-#: report:salary.structure:0
+#: rml:salary.structure:0
 msgid "Special Allowances and Deductions For Employee:"
 msgstr ""
 
 #. module: hr_payroll
-#: field:company.contribution,name:0
-#: field:company.contribution.line,name:0
-#: field:hr.contibution.register,name:0
-#: field:hr.contibution.register.line,name:0
+#: field:hr.allounce.deduction.categoty.line,name:0
 #: field:hr.payroll.advice,name:0
 #: field:hr.payroll.register,name:0
-#: field:hr.payroll.structure,name:0
 #: field:hr.payslip,name:0
 #: field:hr.payslip.line,name:0
-#: field:hr.payslip.line.line,name:0
-#: report:payslip.pdf:0
-#: report:salary.structure:0
-#: report:year.salary:0
+#: rml:salary.structure:0
+#: rml:year.salary:0
 msgid "Name"
 msgstr ""
 
 #. module: hr_payroll
-#: report:payslip.pdf:0
+#: field:hr.payslip,leaves:0
 msgid "Leaved Deduction"
 msgstr ""
 
@@ -1476,17 +1404,14 @@ msgid "Country"
 msgstr ""
 
 #. module: hr_payroll
-#: view:hr.passport:0
-#: view:hr.payroll.employees.detail:0
-#: field:hr.payroll.employees.detail,employee_ids:0
-#: view:hr.payroll.year.salary:0
-#: field:hr.payroll.year.salary,employee_ids:0
-#: view:hr.payslip:0
+#: wizard_field:wizard.employees.detail,init,employee_ids:0
+#: wizard_field:wizard.year.salary,init,employee_ids:0
 msgid "Employees"
 msgstr ""
 
 #. module: hr_payroll
-#: report:payroll.advice:0
+#: field:hr.employee,property_bank_account:0
+#: rml:payroll.advice:0
 msgid "Bank Account"
 msgstr ""
 
@@ -1538,7 +1463,6 @@ msgid "Passport Issue Date"
 msgstr ""
 
 #. module: hr_payroll
-#: view:hr.allounce.deduction.categoty:0
 #: selection:hr.allounce.deduction.categoty,type:0
 #: field:hr.payroll.register,allounce:0
 #: field:hr.payslip,allounce:0
@@ -1557,7 +1481,7 @@ msgid "Other Id"
 msgstr ""
 
 #. module: hr_payroll
-#: report:payslip.pdf:0
+#: rml:payslip.pdf:0
 msgid "Bank Details"
 msgstr ""
 
@@ -1567,10 +1491,7 @@ msgid "Slip ID"
 msgstr ""
 
 #. module: hr_payroll
-#: field:company.contribution.line,sequence:0
 #: field:hr.allounce.deduction.categoty,sequence:0
-#: field:hr.payslip.line,sequence:0
-#: field:hr.payslip.line.line,sequence:0
 msgid "Sequence"
 msgstr ""
 
@@ -1586,8 +1507,8 @@ msgid "Letter Content"
 msgstr ""
 
 #. module: hr_payroll
-#: view:hr.payroll.employees.detail:0
-#: view:hr.payroll.year.salary:0
+#: wizard_view:wizard.employees.detail,init:0
+#: wizard_view:wizard.year.salary,init:0
 msgid "Year Salary"
 msgstr ""
 
@@ -1607,9 +1528,9 @@ msgid "Search Payslips"
 msgstr ""
 
 #. module: hr_payroll
-#: report:employees.salary:0
-#: field:hr.contibution.register.line,total:0
-#: report:year.salary:0
+#: rml:employees.salary:0
+#: rml:payroll.advice:0
+#: rml:year.salary:0
 msgid "Total"
 msgstr ""
 

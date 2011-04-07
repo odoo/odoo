@@ -14,18 +14,18 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-15 05:23+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-03-18 04:53+0000\n"
+"X-Generator: Launchpad (build 12559)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
 msgid "System payment"
-msgstr ""
+msgstr "Систем плаћања"
 
 #. module: account
 #: view:account.journal:0
 msgid "Other Configuration"
-msgstr ""
+msgstr "Остале конфигурације"
 
 #. module: account
 #: code:addons/account/wizard/account_open_closed_fiscalyear.py:40
@@ -40,6 +40,8 @@ msgid ""
 "You cannot remove/deactivate an account which is set as a property to any "
 "Partner."
 msgstr ""
+"Не можете обрисати/поставити неактивним конто јер је повезан са неким "
+"партнером."
 
 #. module: account
 #: view:account.move.reconcile:0
@@ -57,13 +59,13 @@ msgstr ""
 #: view:account.move:0
 #: view:account.move.line:0
 msgid "Account Statistics"
-msgstr "Knjigovodstvene statistike"
+msgstr "Књиговодствене статистике"
 
 #. module: account
 #: field:account.invoice,residual:0
 #: field:report.invoice.created,residual:0
 msgid "Residual"
-msgstr "Ostatak"
+msgstr "Остатак"
 
 #. module: account
 #: code:addons/account/invoice.py:785
@@ -74,27 +76,27 @@ msgstr ""
 #. module: account
 #: constraint:account.period:0
 msgid "Error ! The duration of the Period(s) is/are invalid. "
-msgstr "Greška! Trajanje razdoblja je pogrešno. "
+msgstr "Грешка! Трајање раздобља је погрешно. "
 
 #. module: account
 #: field:account.analytic.line,currency_id:0
 msgid "Account currency"
-msgstr ""
+msgstr "Валута налога"
 
 #. module: account
 #: view:account.tax:0
 msgid "Children Definition"
-msgstr ""
+msgstr "Дефинисање подређеног члана"
 
 #. module: account
 #: model:ir.model,name:account.model_report_aged_receivable
 msgid "Aged Receivable Till Today"
-msgstr "Zaostala potraživanja do danas"
+msgstr "Заостала потраживања до данас"
 
 #. module: account
 #: field:account.partner.ledger,reconcil:0
 msgid "Include Reconciled Entries"
-msgstr "Uključi zatvorene stavke"
+msgstr "Укључи затворене ставке"
 
 #. module: account
 #: view:account.pl.report:0
@@ -106,17 +108,17 @@ msgstr ""
 #. module: account
 #: model:process.transition,name:account.process_transition_invoiceimport0
 msgid "Import from invoice or payment"
-msgstr ""
+msgstr "Преузимање из рачуна или плаћања"
 
 #. module: account
 #: model:ir.model,name:account.model_wizard_multi_charts_accounts
 msgid "wizard.multi.charts.accounts"
-msgstr "carobnjak.vise.kontnih.naloga"
+msgstr "чаробњак.вишеконтних.налога"
 
 #. module: account
 #: view:account.move:0
 msgid "Total Debit"
-msgstr "Ukupno duguje"
+msgstr "Укупно дугује"
 
 #. module: account
 #: view:account.unreconcile:0
@@ -128,7 +130,7 @@ msgstr ""
 #. module: account
 #: report:account.tax.code.entries:0
 msgid "Accounting Entries-"
-msgstr "Stavke naloga"
+msgstr "Ставке налога"
 
 #. module: account
 #: code:addons/account/account.py:1291
@@ -712,12 +714,6 @@ msgstr ""
 #. module: account
 #: field:account.partner.reconcile.process,today_reconciled:0
 msgid "Partners Reconciled Today"
-msgstr ""
-
-#. module: account
-#: code:addons/account/account_bank_statement.py:306
-#, python-format
-msgid "The statement balance is incorrect !\n"
 msgstr ""
 
 #. module: account
@@ -2590,9 +2586,10 @@ msgid "August"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_bank_statement.py:307
+#: code:addons/account/account_bank_statement.py:306
 #, python-format
 msgid ""
+"The statement balance is incorrect !\n"
 "The expected balance (%.2f) is different than the computed one. (%.2f)"
 msgstr ""
 
@@ -2835,6 +2832,12 @@ msgstr "Porezka osnovica"
 #: selection:account.entries.report,type:0
 msgid "View"
 msgstr "Pregled"
+
+#. module: account
+#: code:addons/account/account.py:2951
+#, python-format
+msgid "BNK%s"
+msgstr ""
 
 #. module: account
 #: code:addons/account/account.py:2906
@@ -4214,12 +4217,6 @@ msgid "Account Balance -"
 msgstr "Saldo konta -"
 
 #. module: account
-#: code:addons/account/invoice.py:989
-#, python-format
-msgid "Invoice "
-msgstr ""
-
-#. module: account
 #: field:account.automatic.reconcile,date1:0
 msgid "Starting Date"
 msgstr ""
@@ -5512,9 +5509,9 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/invoice.py:989
+#: code:addons/account/invoice.py:997
 #, python-format
-msgid "is validated."
+msgid "Invoice  '%s' is validated."
 msgstr ""
 
 #. module: account

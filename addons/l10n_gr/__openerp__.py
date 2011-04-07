@@ -24,19 +24,25 @@
     "version" : "0.2",
     "author" : "P. Christeas, OpenERP SA.",
     "website": "http://openerp.hellug.gr/",
-    "category" : "Localisation/Account Charts",
-    "description": "This is the base module to manage the accounting chart for Greece.",
+    "category" : "Finance",
+    "description": """
+This is the base module to manage the accounting chart for Greece.
+==================================================================
+
+Greek accounting chart and localization.
+    """,
     "depends" : ["base", "account", "base_iban", "base_vat", "account_chart"],
     "init_xml" : [],
     "demo_xml" : [],
     "update_xml" : [ "account_types.xml",
-                    "account_chart.xml", 
+                    "account_chart.xml",
                     "account_full_chart.xml",
                     "account_tax.xml",
                     "account_tax_vat.xml",
                     "l10n_gr_wizard.xml"],
     "installable": True,
     'certificate': '001146244418929008029',
+    'images': ['images/config_chart_l10n_gr.jpeg','images/l10n_gr_chart.jpeg'],
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

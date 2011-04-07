@@ -21,12 +21,15 @@
 
 
 {
-    'name': 'Carriers and deliveries',
+    'name': 'Carriers and Deliveries',
     'version': '1.0',
-    'category': 'Generic Modules/Sales & Purchases',
-    'description': """Allows you to add delivery methods in sale orders and picking.
-     You can define your own carrier and delivery grids for prices.
-     When creating invoices from picking, OpenERP is able to add and compute the shipping line.
+    'category': 'Warehouse',
+    'description': """
+Allows you to add delivery methods in sale orders and picking.
+==============================================================
+
+You can define your own carrier and delivery grids for prices.
+When creating invoices from picking, OpenERP is able to add and compute the shipping line.
 
      """,
     'author': 'OpenERP SA',
@@ -44,5 +47,6 @@
     'installable': True,
     'active': False,
     'certificate': '0033981912253',
+    'images': ['images/1_delivery_method.jpeg','images/2_delivery_pricelist.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

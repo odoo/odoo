@@ -105,7 +105,7 @@ class crm_make_sale(osv.osv_memory):
                 new_id = sale_obj.create(cr, uid, vals)
                 case_obj.write(cr, uid, [case.id], {'ref': 'sale.order,%s' % new_id})
                 new_ids.append(new_id)
-                message = _('Opportunity ') + " '" + case.name + "' "+ _("is converted to Quotation.")
+                message = _("Opportunity  '%s' is converted to Quotation.") % (case.name)
                 self.log(cr, uid, case.id, message)
                 case_obj._history(cr, uid, [case], _("Converted to Sales Quotation(id: %s).") % (new_id))
 

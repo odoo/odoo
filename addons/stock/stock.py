@@ -1311,7 +1311,7 @@ class stock_picking(osv.osv):
             if pick.min_date:
                 msg= _(' for the ')+ datetime.strptime(pick.min_date, '%Y-%m-%d %H:%M:%S').strftime('%m/%d/%Y')
             state_list = {
-                'confirmed': _("is scheduled") + msg +'.',
+                'confirmed': _('is scheduled %s.') % msg,
                 'assigned': _('is ready to process.'),
                 'cancel': _('is cancelled.'),
                 'done': _('is done.'),
@@ -1610,6 +1610,8 @@ class stock_move(osv.osv):
     }
 
     def write(self, cr, uid, ids, vals, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
         if uid != 1:
             frozen_fields = set(['product_qty', 'product_uom', 'product_uos_qty', 'product_uos', 'location_id', 'location_dest_id', 'product_id'])
             for move in self.browse(cr, uid, ids, context=context):
@@ -2088,7 +2090,7 @@ class stock_move(osv.osv):
             move_obj = self.pool.get('account.move')
             for j_id, move_lines in account_moves:
                 move_obj.create(cr, uid,
-                        {'name': move.name,
+                        {
                          'journal_id': j_id,
                          'line_id': move_lines,
                          'ref': move.picking_id and move.picking_id.name})
@@ -2145,7 +2147,7 @@ class stock_move(osv.osv):
         if todo:
             self.action_confirm(cr, uid, todo, context=context)
 
-        self.write(cr, uid, move_ids, {'state': 'done', 'date_planned': time.strftime('%Y-%m-%d %H:%M:%S')}, context=context)
+        self.write(cr, uid, move_ids, {'state': 'done', 'date': time.strftime('%Y-%m-%d %H:%M:%S')}, context=context)
         for id in move_ids:
              wf_service.trg_trigger(uid, 'stock.move', id, cr)
 
@@ -2358,12 +2360,8 @@ class stock_move(osv.osv):
                     'state': move.state,
                     'location_id': location_id or move.location_id.id,
                 }
-                if (not move.prodlot_id.id) and (move.product_id.track_production and location_id):
-                    # IF product has checked track for production lot, move lines will be split by 1
-                    res += self.action_split(cr, uid, [move.id], quantity, split_by_qty=1, context=context)
-                else:
-                    current_move = self.copy(cr, uid, move.id, default_val)
-                    res += [current_move]
+                current_move = self.copy(cr, uid, move.id, default_val)
+                res += [current_move]
                 update_val = {}
                 update_val['product_qty'] = quantity_rest
                 update_val['product_uos_qty'] = uos_qty_rest
@@ -2372,21 +2370,18 @@ class stock_move(osv.osv):
             else:
                 quantity_rest = quantity
                 uos_qty_rest =  uos_qty
-                if (not move.prodlot_id.id) and (move.product_id.track_production and location_id):
-                    res += self.action_split(cr, uid, [move.id], quantity_rest, split_by_qty=1, context=context)
-                else:
-                    res += [move.id]
-                    update_val = {
+                res += [move.id]
+                update_val = {
                         'product_qty' : quantity_rest,
                         'product_uos_qty' : uos_qty_rest,
                         'location_id': location_id or move.location_id.id
-                    }
-                    self.write(cr, uid, [move.id], update_val)
+                }
+                self.write(cr, uid, [move.id], update_val)
 
             product_obj = self.pool.get('product.product')
             for new_move in self.browse(cr, uid, res, context=context):
                 for (id, name) in product_obj.name_get(cr, uid, [new_move.product_id.id]):
-                    message = _('Product ') + " '" + name + "' "+ _("is consumed with") + " '" + str(new_move.product_qty) + "' "+ _("quantity.")
+                    message = _("Product  '%s' is consumed with '%s' quantity.") %(name, new_move.product_qty)
                     self.log(cr, uid, new_move.id, message)
         self.action_done(cr, uid, res)
 
@@ -2589,13 +2584,8 @@ class stock_inventory(osv.osv):
                             'location_id': line.location_id.id,
                             'location_dest_id': location_id,
                         })
-                    if lot_id:
-                        value.update({
-                            'prodlot_id': lot_id,
-                            'product_qty': line.product_qty
-                        })
                     move_ids.append(self._inventory_line_hook(cr, uid, line, value))
-            message = _('Inventory') + " '" + inv.name + "' "+ _("is done.")
+            message = _("Inventory '%s' is done.") %(inv.name)
             self.log(cr, uid, inv.id, message)
             self.write(cr, uid, [inv.id], {'state': 'confirm', 'move_ids': [(6, 0, move_ids)]})
         return True

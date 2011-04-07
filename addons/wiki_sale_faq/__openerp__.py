@@ -20,13 +20,19 @@
 ##############################################################################
 
 {
-    'name': 'Wiki -Sale - FAQ',
+    'name': 'Wiki - Sale-FAQ',
     'version': '1.0',
-    'category': 'Generic Modules/Others',
-    'description': """This module provides a wiki FAQ Template
+    'category': 'Tools',
+    'description': """
+This module provides a Wiki Sales FAQ Template.
+===============================================
+
+It provides demo data, thereby creating a Wiki Group and a Wiki Page
+for Wiki Sale FAQ.
     """,
     'author': 'OpenERP SA',
     'website': 'http://openerp.com',
+    'images': ['images/sale_document.jpeg','images/wiki_pages.jpeg'],
     'depends': ['wiki_faq','document','crm'],
     'init_xml': [
             'wiki_sale_faq_data.xml'
@@ -34,7 +40,7 @@
     'update_xml': [
             'wiki_sale_faq_view.xml'
     ],
-    'demo_xml': [            
+    'demo_xml': [
     ],
     'installable': True,
     'active': False,

@@ -623,8 +623,8 @@ class stock_planning(osv.osv):
             user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
             proc_id = self.pool.get('procurement.order').create(cr, uid, {
                         'company_id' : obj.company_id.id,
-                        'name': _('Manual planning for ') + obj.period_id.name,
-                        'origin': _('MPS(') + str(user.login) +') '+ obj.period_id.name,
+                        'name': _('Manual planning for %s') %(obj.period_id.name),
+                        'origin': _('MPS(%s) %s') %(user.login, obj.period_id.name),
                         'date_planned': obj.period_id.date_start,
                         'product_id': obj.product_id.id,
                         'product_qty': uom_qty,
@@ -633,28 +633,30 @@ class stock_planning(osv.osv):
                         'product_uos': uos,
                         'location_id': obj.procure_to_stock and obj.warehouse_id.lot_stock_id.id or obj.warehouse_id.lot_input_id.id,
                         'procure_method': 'make_to_order',
-                        'note' : _("Procurement created in MPS by user: ") + str(user.login) + _("  Creation Date: ") + \
-                                            time.strftime('%Y-%m-%d %H:%M:%S') + \
-                                        _("\nFor period: ") + obj.period_id.name + _(" according to state:") + \
-                                        _("\n Warehouse Forecast: ") + str(obj.warehouse_forecast) + \
-                                        _("\n Initial Stock: ") + str(obj.stock_start) + \
-                                        _("\n Planned Out: ") + str(obj.planned_outgoing) + _("    Planned In: ") + str(obj.to_procure) + \
-                                        _("\n Already Out: ") + str(obj.already_out) + _("    Already In: ") +  str(obj.already_in) + \
-                                        _("\n Confirmed Out: ") + str(obj.outgoing) + _("    Confirmed In: ") + str(obj.incoming) + \
-                                        _("\n Planned Out Before: ") + str(obj.outgoing_before) + _("    Confirmed In Before: ") + \
-                                                                                            str(obj.incoming_before) + \
-                                        _("\n Expected Out: ") + str(obj.outgoing_left) + _("    Incoming Left: ") + str(obj.incoming_left) + \
-                                        _("\n Stock Simulation: ") +  str(obj.stock_simulation) + _("    Minimum stock: ") + str(obj.minimum_op),
-
+                        'note' : _(' Procurement created in MPS by user: %s   Creation Date: %s \
+                                        \n For period: %s \
+                                        \n according to state: \
+                                        \n Warehouse Forecast: %s \
+                                        \n Initial Stock: %s \
+                                        \n Planned Out: %s    Planned In: %s \
+                                        \n Already Out: %s    Already In: %s \
+                                        \n Confirmed Out: %s    Confirmed In: %s \
+                                        \n Planned Out Before: %s    Confirmed In Before: %s \
+                                        \n Expected Out: %s    Incoming Left: %s \
+                                        \n Stock Simulation: %s    Minimum stock: %s') %(user.login, time.strftime('%Y-%m-%d %H:%M:%S'),
+                                        obj.period_id.name, obj.warehouse_forecast, obj.planned_outgoing, obj.stock_start, obj.to_procure,
+                                        obj.already_out, obj.already_in, obj.outgoing, obj.incoming, obj.outgoing_before, obj.incoming_before,
+                                        obj.outgoing_left, obj.incoming_left, obj.stock_simulation, obj.minimum_op)
                             }, context=context)
             wf_service = netsvc.LocalService("workflow")
             wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_confirm', cr)
             self.calculate_planning(cr, uid, ids, context)
             prev_text = obj.history or ""
             self.write(cr, uid, ids, {
-                    'history': prev_text + _('Requisition (') + str(user.login) + ", " + time.strftime('%Y.%m.%d %H:%M) ') + str(obj.incoming_left) + \
-                    " " + obj.product_uom.name + "\n",
+                    'history': _('%s Requisition (%s,  %s) %s %s \n') % (prev_text, user.login, time.strftime('%Y.%m.%d %H:%M'),
+                    obj.incoming_left, obj.product_uom.name)
                 })
+
         return True
 
     def internal_supply(self, cr, uid, ids, context, *args):
@@ -668,29 +670,31 @@ class stock_planning(osv.osv):
             uom_qty, uom, uos_qty, uos = self._qty_to_standard(cr, uid, obj, context)
             user = self.pool.get('res.users').browse(cr, uid, uid, context)
             picking_id = self.pool.get('stock.picking').create(cr, uid, {
-                            'origin': _('MPS(') + str(user.login) +') '+ obj.period_id.name,
-                            'type': 'internal',
-                            'state': 'auto',
-                            'date': obj.period_id.date_start,
-                            'move_type': 'direct',
-                            'invoice_state':  'none',
-                            'company_id': obj.company_id.id,
-                            'note': _("Pick created from MPS by user: ") + str(user.login) + _("  Creation Date: ") + \
-                                            time.strftime('%Y-%m-%d %H:%M:%S') + \
-                                        _("\nFor period: ") + obj.period_id.name + _(" according to state:") + \
-                                        _("\n Warehouse Forecast: ") + str(obj.warehouse_forecast) + \
-                                        _("\n Initial Stock: ") + str(obj.stock_start) + \
-                                        _("\n Planned Out: ") + str(obj.planned_outgoing) + _("    Planned In: ") + str(obj.to_procure) + \
-                                        _("\n Already Out: ") + str(obj.already_out) + _("    Already In: ") +  str(obj.already_in) + \
-                                        _("\n Confirmed Out: ") + str(obj.outgoing) + _("    Confirmed In: ") + str(obj.incoming) + \
-                                        _("\n Planned Out Before: ") + str(obj.outgoing_before) + _("    Confirmed In Before: ") + \
-                                                                                            str(obj.incoming_before) + \
-                                        _("\n Expected Out: ") + str(obj.outgoing_left) + _("    Incoming Left: ") + str(obj.incoming_left) + \
-                                        _("\n Stock Simulation: ") +  str(obj.stock_simulation) + _("    Minimum stock: ") + str(obj.minimum_op),
+                        'origin': _('MPS(%s) %s') %(user.login, obj.period_id.name),
+                        'type': 'internal',
+                        'state': 'auto',
+                        'date': obj.period_id.date_start,
+                        'move_type': 'direct',
+                        'invoice_state':  'none',
+                        'company_id': obj.company_id.id,
+                        'note': _('Pick created from MPS by user: %s   Creation Date: %s \
+                                    \nFor period: %s   according to state: \
+                                    \n Warehouse Forecast: %s \
+                                    \n Initial Stock: %s \
+                                    \n Planned Out: %s  Planned In: %s \
+                                    \n Already Out: %s  Already In: %s \
+                                    \n Confirmed Out: %s   Confirmed In: %s \
+                                    \n Planned Out Before: %s   Confirmed In Before: %s \
+                                    \n Expected Out: %s   Incoming Left: %s \
+                                    \n Stock Simulation: %s   Minimum stock: %s ')
+                                    % (user.login, time.strftime('%Y-%m-%d %H:%M:%S'), obj.period_id.name, obj.warehouse_forecast,
+                                       obj.stock_start, obj.planned_outgoing, obj.to_procure, obj.already_out, obj.already_in,
+                                       obj.outgoing, obj.incoming, obj.outgoing_before, obj.incoming_before,
+                                       obj.outgoing_left, obj.incoming_left, obj.stock_simulation, obj.minimum_op)
                         })
 
             move_id = self.pool.get('stock.move').create(cr, uid, {
-                        'name': _('MPS(') + str(user.login) +') '+ obj.period_id.name,
+                        'name': _('MPS(%s) %s') %(user.login, obj.period_id.name),
                         'picking_id': picking_id,
                         'product_id': obj.product_id.id,
                         'date': obj.period_id.date_start,
@@ -712,8 +716,8 @@ class stock_planning(osv.osv):
         prev_text = obj.history or ""
         pick_name = self.pool.get('stock.picking').browse(cr, uid, picking_id).name
         self.write(cr, uid, ids, {
-              'history' : prev_text + _('Pick List ')+ pick_name + " (" + str(user.login) + ", " + time.strftime('%Y.%m.%d %H:%M) ') \
-                + str(obj.incoming_left) +" " + obj.product_uom.name + "\n",
+                    'history': _('%s Pick List %s (%s,  %s) %s %s \n') % (prev_text, pick_name, user.login, time.strftime('%Y.%m.%d %H:%M'),
+                    obj.incoming_left, obj.product_uom.name)
                 })
 
         return True

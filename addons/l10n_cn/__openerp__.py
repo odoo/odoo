@@ -20,7 +20,7 @@
 {
     "name" : "中国会计科目表",
     "version" : "1.0",
-    "category": "Localisation/Account Charts",
+    "category": "Finance",
     "author" : "openerp-china.org",
     "maintainer":"openerp-china.org",
     "website":"http://openerp-china.org",
@@ -28,6 +28,7 @@
     "description": """
         添加中文省份数据
         科目类型\会计科目表模板\增值税\辅助核算类别\管理会计凭证簿\财务会计凭证簿
+        ============================================================
     """,
     "depends" : ["base","account"],
     'init_xml': [
@@ -42,6 +43,7 @@
     "active": False,
     "installable": True,
     "certificate": '00925445983542952285',
+    'images': ['images/config_chart_l10n_cn.jpeg','images/l10n_cn_chart.jpeg'],
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

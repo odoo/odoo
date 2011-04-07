@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2011-03-14 18:33+0000\n"
+"PO-Revision-Date: 2011-03-31 18:13+0000\n"
 "Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-03-15 04:54+0000\n"
+"X-Launchpad-Export-Date: 2011-04-01 04:47+0000\n"
 "X-Generator: Launchpad (build 12559)\n"
 
 #. module: crm
@@ -78,7 +78,7 @@ msgstr "Сегодня"
 #. module: crm
 #: view:crm.merge.opportunity:0
 msgid "Select Opportunities"
-msgstr "Выберите сделки"
+msgstr "Выберите предложения"
 
 #. module: crm
 #: view:crm.meeting:0
@@ -127,7 +127,7 @@ msgstr "Код отдела продаж должен быть уникальн�
 #: code:addons/crm/wizard/crm_lead_to_opportunity.py:93
 #, python-format
 msgid "Lead '%s' has been converted to an opportunity."
-msgstr "Кандидат '%s' был преобразован в сделку."
+msgstr "Кандидат '%s' был преобразован в предложение."
 
 #. module: crm
 #: code:addons/crm/crm_lead.py:228
@@ -177,14 +177,15 @@ msgstr "Не создавать партнера"
 #. module: crm
 #: view:crm.lead:0
 msgid "Search Opportunities"
-msgstr "Искать сделки"
+msgstr "Искать предложения"
 
 #. module: crm
 #: code:addons/crm/wizard/crm_merge_opportunities.py:46
 #, python-format
 msgid ""
 "Opportunity must have Partner assigned before merging with other Opportunity."
-msgstr "Сделка должна иметь партнера перед объединением с другой сделкой."
+msgstr ""
+"Предложение должно иметь партнера перед объединением с другим предложением."
 
 #. module: crm
 #: code:addons/crm/wizard/crm_merge_opportunities.py:46
@@ -198,7 +199,7 @@ msgstr "Внимание!"
 #: model:ir.actions.act_window,name:crm.action_report_crm_opportunity
 #: model:ir.ui.menu,name:crm.menu_report_crm_opportunities_tree
 msgid "Opportunities Analysis"
-msgstr "Анализ сделок"
+msgstr "Анализ предложений"
 
 #. module: crm
 #: field:crm.lead,partner_id:0
@@ -260,7 +261,7 @@ msgstr "Отказ"
 #: code:addons/crm/crm_opportunity.py:108
 #, python-format
 msgid "The opportunity '%s' has been marked as lost."
-msgstr "Сделка '%s' была отмечена как проигранная."
+msgstr "Предложение '%s' было отмечено как проигранное."
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.action_report_crm_lead
@@ -310,9 +311,9 @@ msgid ""
 "communication history) will be merged with existing Opportunity of Selected "
 "partner."
 msgstr ""
-"При выборе объединения с существующей сделкой, реквизиты кандидата (вместе с "
-"историей общения) будут объединены с существующей сделкой выбранного "
-"партнера."
+"При выборе объединения с существующим предложением, реквизиты кандидата "
+"(вместе с историей общения) будут объединены с существующим предложением "
+"выбранного партнера."
 
 #. module: crm
 #: selection:crm.meeting,class:0
@@ -394,7 +395,7 @@ msgstr "Кандидат '%s' был открыт"
 #. module: crm
 #: model:process.transition,name:crm.process_transition_opportunitymeeting0
 msgid "Opportunity Meeting"
-msgstr "Встреча по сделке"
+msgstr "Встреча по предложению"
 
 #. module: crm
 #: help:crm.lead.report,delay_close:0
@@ -405,7 +406,7 @@ msgstr "Количество дней, чтобы закрыть вопрос"
 #. module: crm
 #: model:process.node,note:crm.process_node_opportunities0
 msgid "When a real project/opportunity is detected"
-msgstr "При обнаружении реального проекта/сделки"
+msgstr "При обнаружении реального проекта/предложения"
 
 #. module: crm
 #: field:crm.installer,crm_fundraising:0
@@ -416,7 +417,7 @@ msgstr "Фандрайзинг"
 #: view:res.partner:0
 #: field:res.partner,opportunity_ids:0
 msgid "Leads and Opportunities"
-msgstr "Кандидаты и сделки"
+msgstr "Кандидаты и предложения"
 
 #. module: crm
 #: view:crm.send.mail:0
@@ -451,7 +452,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead2opportunity_action
 msgid "Convert/Merge Opportunity"
-msgstr "Преобразовать/Объединить сделку"
+msgstr "Преобразовать/Объединить предложение"
 
 #. module: crm
 #: field:crm.lead,write_date:0
@@ -480,7 +481,7 @@ msgstr "Категория"
 #. module: crm
 #: view:crm.lead.report:0
 msgid "#Opportunities"
-msgstr "#Сделок"
+msgstr "# Предложений"
 
 #. module: crm
 #: model:crm.case.resource.type,name:crm.type_oppor2
@@ -500,7 +501,7 @@ msgstr "Конфиденциальность"
 #. module: crm
 #: view:crm.lead.report:0
 msgid "Opportunity Analysis"
-msgstr "Анализ сделок"
+msgstr "Анализ предложений"
 
 #. module: crm
 #: help:crm.meeting,location:0
@@ -530,7 +531,7 @@ msgstr "Позволяет получать эл. почту с POP/IMAP сер�
 #. module: crm
 #: model:process.transition,note:crm.process_transition_opportunitymeeting0
 msgid "Normal or phone meeting for opportunity"
-msgstr "Обычная встреча или звонок по сделке"
+msgstr "Обычная встреча или звонок по предложению"
 
 #. module: crm
 #: model:process.node,note:crm.process_node_leads0
@@ -549,7 +550,7 @@ msgstr "Самый первый перспективный контакт"
 #: model:ir.actions.act_window,name:crm.crm_partner2opportunity
 #, python-format
 msgid "Create Opportunity"
-msgstr "Создать сделку"
+msgstr "Создать предложение"
 
 #. module: crm
 #: view:crm.installer:0
@@ -832,7 +833,7 @@ msgstr "Панель статистики"
 #: field:crm.phonecall,opportunity_id:0
 #, python-format
 msgid "Opportunity"
-msgstr "Сделка"
+msgstr "Предложение"
 
 #. module: crm
 #: model:crm.case.resource.type,name:crm.type_lead7
@@ -896,7 +897,7 @@ msgstr "Эксклюзивный"
 #: code:addons/crm/crm_opportunity.py:91
 #, python-format
 msgid "The opportunity '%s' has been won."
-msgstr "Сделка  '%s' выиграна."
+msgstr "Предложение  '%s' выиграно."
 
 #. module: crm
 #: help:crm.meeting,alarm_id:0
@@ -972,7 +973,7 @@ msgstr ""
 #. module: crm
 #: view:crm.phonecall2opportunity:0
 msgid "Convert To Opportunity "
-msgstr "Преобразовать в сделку "
+msgstr "Преобразовать в предложение "
 
 #. module: crm
 #: help:crm.case.stage,sequence:0
@@ -986,12 +987,12 @@ msgstr "Дает последовательность при отображен�
 #: model:ir.ui.menu,name:crm.menu_crm_case_opp
 #: model:process.node,name:crm.process_node_opportunities0
 msgid "Opportunities"
-msgstr "Сделки"
+msgstr "Предложения"
 
 #. module: crm
 #: field:crm.segmentation,categ_id:0
 msgid "Partner Category"
-msgstr "Категория партнера"
+msgstr "Категория контрагента"
 
 #. module: crm
 #: view:crm.add.note:0
@@ -1035,7 +1036,7 @@ msgstr "Март"
 #: code:addons/crm/crm_lead.py:230
 #, python-format
 msgid "The opportunity '%s' has been closed."
-msgstr "Сделка '%s'  закрыта."
+msgstr "Предложение '%s'  закрыто."
 
 #. module: crm
 #: field:crm.lead,day_open:0
@@ -1076,7 +1077,8 @@ msgstr "Способ прекращения повторения"
 msgid ""
 "There are no other 'Open' or 'Pending' Opportunities for the partner '%s'."
 msgstr ""
-"Нет других сделок в стадии \"Открыто\" или \"В ожидании\" для партнера '%s'."
+"Нет других предложений в стадии \"Открыто\" или \"В ожидании\" для партнера "
+"'%s'."
 
 #. module: crm
 #: view:crm.lead:0
@@ -1150,7 +1152,7 @@ msgstr ""
 #: code:addons/crm/wizard/crm_phonecall_to_opportunity.py:57
 #, python-format
 msgid "Closed/Cancelled Phone Call Could not convert into Opportunity"
-msgstr "Закрытый/отмененный звонок нельзя преобразовать в сделку"
+msgstr "Закрытый/отмененный звонок нельзя преобразовать в предложение"
 
 #. module: crm
 #: view:crm.segmentation:0
@@ -1397,7 +1399,7 @@ msgstr "Управление техподдержкой"
 #. module: crm
 #: field:crm.partner2opportunity,name:0
 msgid "Opportunity Name"
-msgstr "Название сделки"
+msgstr "Название предложения"
 
 #. module: crm
 #: help:crm.case.section,active:0
@@ -1496,7 +1498,7 @@ msgstr "Идентификатор"
 #. module: crm
 #: model:ir.model,name:crm.model_crm_partner2opportunity
 msgid "Partner To Opportunity"
-msgstr "Партнер в Сделку"
+msgstr "Партнер в Предложение"
 
 #. module: crm
 #: view:crm.meeting:0
@@ -1520,7 +1522,7 @@ msgstr "Расширенные фильтры..."
 #. module: crm
 #: field:crm.phonecall2opportunity,name:0
 msgid "Opportunity Summary"
-msgstr "Кратко о сделке"
+msgstr "Кратко о предложении"
 
 #. module: crm
 #: view:crm.phonecall.report:0
@@ -1530,7 +1532,7 @@ msgstr "Искать"
 #. module: crm
 #: view:board.board:0
 msgid "Opportunities by Categories"
-msgstr "Сделки по категориям"
+msgstr "Предложения по категориям"
 
 #. module: crm
 #: view:crm.meeting:0
@@ -1615,7 +1617,7 @@ msgstr "res.users"
 #. module: crm
 #: model:ir.model,name:crm.model_crm_merge_opportunity
 msgid "Merge two Opportunities"
-msgstr "Объединить две сделки"
+msgstr "Объединить два предложения"
 
 #. module: crm
 #: selection:crm.meeting,end_type:0
@@ -1690,6 +1692,11 @@ msgid ""
 "mainly used by the sales manager in order to do the periodic review with the "
 "teams of the sales pipeline."
 msgstr ""
+"Анализ предложений дает вам мгновенный доступ к такой информации, как "
+"ожидаемый доход, плановая себестоимость, пропущенные сроки или количество "
+"взаимодействий в предложении. Этот отчет в основном используется менеджером "
+"по продажам, с тем чтобы сделать периодический обзор по отделам продаж в "
+"процессе продаж."
 
 #. module: crm
 #: field:crm.case.categ,name:0
@@ -1713,9 +1720,9 @@ msgid ""
 "organise their sales pipeline. Stages will allow them to easily track how a "
 "specific lead or opportunity is positioned in the sales cycle."
 msgstr ""
-"Добавление специальных этапов к кандидатам и сделкам позволяет лучше "
+"Добавление специальных этапов к кандидатам и предложениям позволяет лучше "
 "организовать процесс продаж. Этапы позволяют легче отслеживать нахождение "
-"кандидатов и сделок в процессе продаж."
+"кандидатов и предложений в процессе продаж."
 
 #. module: crm
 #: view:crm.lead.report:0
@@ -1960,7 +1967,7 @@ msgstr "Значение"
 #: view:crm.lead:0
 #: view:crm.lead.report:0
 msgid "Opportunity by Categories"
-msgstr "Сделки по категориям"
+msgstr "Предложения по категориям"
 
 #. module: crm
 #: view:crm.lead:0
@@ -1980,7 +1987,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model,name:crm.model_crm_phonecall2opportunity
 msgid "Phonecall To Opportunity"
-msgstr "Звонок в Сделку"
+msgstr "Звонок в Предложение"
 
 #. module: crm
 #: field:crm.case.section,reply_to:0
@@ -1995,7 +2002,7 @@ msgstr "Выберите этапы для этого отдела продаж"
 #. module: crm
 #: view:board.board:0
 msgid "Opportunities by Stage"
-msgstr "Сделки по этапам"
+msgstr "Предложения по этапам"
 
 #. module: crm
 #: view:crm.meeting:0
@@ -2012,7 +2019,7 @@ msgstr "Перспектива преобразуется в бизнес-пар
 #: view:crm.partner2opportunity:0
 #: model:ir.actions.act_window,name:crm.phonecall2opportunity_act
 msgid "Convert To Opportunity"
-msgstr "Преобразовать в сделку"
+msgstr "Преобразовать в предложение"
 
 #. module: crm
 #: view:crm.phonecall:0
@@ -2038,7 +2045,7 @@ msgstr "Доп. информация"
 #: model:ir.actions.act_window,name:crm.action_merge_opportunities
 #: model:ir.actions.act_window,name:crm.merge_opportunity_act
 msgid "Merge Opportunities"
-msgstr "Объединить сделки"
+msgstr "Объединить предложения"
 
 #. module: crm
 #: model:crm.case.resource.type,name:crm.type_lead5
@@ -2090,7 +2097,7 @@ msgstr "Использовать правила продаж покупок"
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead2opportunity_partner
 msgid "Lead To Opportunity Partner"
-msgstr "Кандидат в партнера сделки"
+msgstr "Кандидат в партнера предложения"
 
 #. module: crm
 #: field:crm.meeting,location:0
@@ -2157,7 +2164,7 @@ msgstr "Google Adwords 2"
 #: help:crm.lead,type:0
 #: help:crm.lead.report,type:0
 msgid "Type is used to separate Leads and Opportunities"
-msgstr "Тип используется для разделения кандидатов и сделок"
+msgstr "Тип используется для разделения кандидатов и предложений"
 
 #. module: crm
 #: view:crm.phonecall2partner:0
@@ -2182,8 +2189,8 @@ msgid ""
 msgstr ""
 "Определение отдела продаж для организации различных продавцов или отделов "
 "продаж в отдельные команды. Каждая команда будет работать со своим списком "
-"сделок, заказов и т.д. Каждый пользователь может установить команду по "
-"умолчанию  в своих настройках. Выводимые сделки и заказы, будут "
+"предложений, заказов и т.д. Каждый пользователь может установить команду по "
+"умолчанию  в своих настройках. Выводимые предложения и заказы, будут "
 "автоматически фильтроваться в соответствии с отделом продаж пользователя."
 
 #. module: crm
@@ -2265,7 +2272,7 @@ msgstr ""
 "Кандидаты позволяют управлять и отслеживать все первоначальные контакты с "
 "предполагаемыми клиентами или партнерами проявившими интерес к вашей "
 "продукции или услугам. Кандидат - обычно первый шаг в процессе продажи. "
-"После оценки, кандидат может быть преобразован в сделку с созданием "
+"После оценки, кандидат может быть преобразован в предложение с созданием "
 "соответствующего партнера для будущего отслеживания связанной с ним "
 "деятельности. Вы можете импортировать базу данных предполагаемых клиентов, "
 "работать с визитными карточками или интегрировать запросы с вашего сайта с "
@@ -2415,7 +2422,13 @@ msgstr "Активен"
 #: code:addons/crm/crm_lead.py:306
 #, python-format
 msgid "The stage of opportunity '%s' has been changed to '%s'."
-msgstr "Этап сделки '%s'  изменен на '%s'."
+msgstr "Этап предложения '%s'  изменен на '%s'."
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:282
+#, python-format
+msgid "Changed Stage to: %s"
+msgstr "Этап изменен на: %s"
 
 #. module: crm
 #: selection:crm.segmentation.line,operator:0
@@ -2585,7 +2598,7 @@ msgstr "Вопрос '%s' отменен."
 #. module: crm
 #: field:crm.installer,sale_crm:0
 msgid "Opportunity to Quotation"
-msgstr "Сделка в Запрос цен"
+msgstr "Предложение в Заказ на продажу"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_send_mail
@@ -2596,7 +2609,7 @@ msgstr "Послать новое эл. письмо"
 #: view:board.board:0
 #: model:ir.actions.act_window,name:crm.act_my_oppor
 msgid "My Open Opportunities"
-msgstr "Мои открытые сделки"
+msgstr "Мои открытые предложения"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.open_board_statistical_dash
@@ -2640,7 +2653,7 @@ msgstr "Тип встречи"
 #: code:addons/crm/wizard/crm_lead_to_opportunity.py:312
 #, python-format
 msgid "Merge with Existing Opportunity"
-msgstr "Объединить с существующей сделкой"
+msgstr "Объединить с существующим предложением"
 
 #. module: crm
 #: help:crm.lead,state:0
@@ -2724,7 +2737,7 @@ msgstr "Указатель"
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead2opportunity
 msgid "Lead To Opportunity"
-msgstr "Кандидат в Сделку"
+msgstr "Кандидат в Предложение"
 
 #. module: crm
 #: model:ir.model,name:crm.model_calendar_attendee
@@ -2757,7 +2770,8 @@ msgid ""
 "The name of the future partner that will be created while converting the "
 "into opportunity"
 msgstr ""
-"Название будущего партнера, который будет создан при преобразовании в сделку"
+"Название будущего партнера, который будет создан при преобразовании в "
+"предложение"
 
 #. module: crm
 #: field:crm.opportunity2phonecall,user_id:0
@@ -2858,15 +2872,16 @@ msgid ""
 "opportunities, convert them into quotations, manage related documents, track "
 "all customer related activities, and much more."
 msgstr ""
-"Со сделками вы можете управлять и отслеживать процесс продаж с помощью "
+"С предложениями вы можете управлять и отслеживать процесс продаж с помощью "
 "создания специфичных для заказчика или предполагаемого клиента документов "
 "для продаж. Может быть сохранена такая информация: ожидаемый доход, этап "
-"сделки, ожидаемая дата закрытия, история общения и многое другое. Сделки "
-"могут быть связаны с почтовым шлюзом: новые сообщения могут создавать "
-"сделки, каждая из них автоматически получает историю общения с клиентом.\n"
+"предложения, ожидаемая дата закрытия, история общения и многое другое. "
+"Предложения могут быть связаны с почтовым шлюзом: новые сообщения могут "
+"создавать предложения, каждое из них автоматически получает историю общения "
+"с клиентом.\n"
 "\n"
 "Вы и ваш отдел будете иметь возможность планировать встречи и телефонные "
-"звонки по сделкам, превращать их в запросы цен, управлять связанными "
+"звонки по предложениям, превращать их в запросы цен, управлять связанными "
 "документами, отслеживать деятельность связанную с заказчиком, и многое "
 "другое."
 
@@ -3014,8 +3029,8 @@ msgid ""
 msgstr ""
 "Создавать специальные категории, которые подходят к деятельности вашей "
 "компании, чтобы лучше классифицировать и анализировать ваших кандидатов и "
-"сделки. Такие категории, могут, например, отражать вашу структуру продукции "
-"или различные типы продаж."
+"предложения. Такие категории, могут, например, отражать вашу структуру "
+"продукции или различные типы продаж."
 
 #. module: crm
 #: help:crm.segmentation,som_interval_decrease:0
@@ -3184,7 +3199,7 @@ msgstr "Запланировать звонок"
 #: code:addons/crm/wizard/crm_lead_to_opportunity.py:258
 #, python-format
 msgid "Closed/Cancelled Leads Could not convert into Opportunity"
-msgstr "Закрытого/отмененного кандидата нельзя преобразовать в сделку"
+msgstr "Закрытого/отмененного кандидата нельзя преобразовать в предложение"
 
 #. module: crm
 #: view:crm.segmentation:0
@@ -3227,7 +3242,7 @@ msgstr "Штат"
 #. module: crm
 #: model:process.transition,note:crm.process_transition_leadopportunity0
 msgid "Creating business opportunities from Leads"
-msgstr "Создание сделок из кандидатов"
+msgstr "Создание предложений из кандидатов"
 
 #. module: crm
 #: help:crm.send.mail,html:0
@@ -3242,7 +3257,7 @@ msgstr "Нужна информация"
 #. module: crm
 #: model:process.transition,name:crm.process_transition_leadopportunity0
 msgid "Prospect Opportunity"
-msgstr "Перспективы сделки"
+msgstr "Перспективы предложения"
 
 #. module: crm
 #: view:crm.installer:0
@@ -3382,7 +3397,7 @@ msgstr "Ожидаемое закрытие"
 #. module: crm
 #: model:ir.model,name:crm.model_crm_opportunity2phonecall
 msgid "Opportunity to Phonecall"
-msgstr "Сделка в звонок"
+msgstr "Предложение в звонок"
 
 #. module: crm
 #: help:crm.case.section,allow_unlink:0
@@ -3578,7 +3593,7 @@ msgstr "Нет ID эл. почты в адресе вашей компании!"
 #. module: crm
 #: view:crm.lead.report:0
 msgid "Opportunities By Stage"
-msgstr "Сделки по этапам"
+msgstr "Предложения по этапам"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_case_categ_phone_create_partner
@@ -3601,7 +3616,7 @@ msgid ""
 "cycle."
 msgstr ""
 "Добавление специальных этапов, которые будут помогать лучше организовывать "
-"процесс продаж. Этапы позволяют легче отслеживать положение сделок в "
+"процесс продаж. Этапы позволяют легче отслеживать положение предложений в "
 "процессе продаж."
 
 #. module: crm
@@ -3665,7 +3680,7 @@ msgstr "Вы не можете иметь двух одинаковых поль
 #: code:addons/crm/wizard/crm_merge_opportunities.py:100
 #, python-format
 msgid "Merged into Opportunity: %s"
-msgstr "Объединено со сделкой: %s"
+msgstr "Объединено с предложением: %s"
 
 #. module: crm
 #: code:addons/crm/crm.py:347
@@ -3775,7 +3790,7 @@ msgstr "Интерес к аксессуарам"
 #: code:addons/crm/crm_lead.py:211
 #, python-format
 msgid "The opportunity '%s' has been opened."
-msgstr "Сделка '%s' была открыта."
+msgstr "Предложение '%s' было открыто."
 
 #. module: crm
 #: field:crm.lead.report,email:0
@@ -3790,7 +3805,7 @@ msgstr "Улица"
 #. module: crm
 #: view:crm.lead.report:0
 msgid "Opportunities by User and Team"
-msgstr "Сделки по пользователям и отделам"
+msgstr "Предложения по пользователям и отделам"
 
 #. module: crm
 #: field:crm.case.section,working_hours:0
@@ -3837,7 +3852,7 @@ msgstr "Страна"
 #: view:crm.phonecall:0
 #: view:res.partner:0
 msgid "Convert to Opportunity"
-msgstr "Преобразовать в сделку"
+msgstr "Преобразовать в предложение"
 
 #. module: crm
 #: selection:crm.meeting,week_list:0
@@ -3864,7 +3879,7 @@ msgstr "Звонки по пользователям и секциям"
 #. module: crm
 #: selection:crm.lead2opportunity.action,name:0
 msgid "Merge with existing Opportunity"
-msgstr "Объединить с существующей сделкой"
+msgstr "Объединить с существующим предложением"
 
 #. module: crm
 #: field:crm.meeting,select1:0
