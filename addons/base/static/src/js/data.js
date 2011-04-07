@@ -120,7 +120,8 @@ openerp.base.DataSet =  openerp.base.Controller.extend( /** @lends openerp.base.
             //context: this.context,
         }, callback);
     },
-    unlink: function() {
+    unlink: function(ids) {
+        this.notification['default']("Unlink", ids);
     }
 });
 

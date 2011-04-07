@@ -500,7 +500,8 @@ openerp.base.Notification =  openerp.base.Controller.extend({
     init: function(session, element_id) {
         this._super(session, element_id);
         this.$element.notify({
-            speed: 500
+            speed: 500,
+            expires: 1500
         });
     },
     'default': function(title, text) {
