@@ -79,16 +79,10 @@ class hr_payroll_structure(osv.osv):
         @param structure_ids: list of structure
         @return: returns a list of tuple (id, sequence) of rules that are maybe to apply
         """
-        def recursive_search_of_rule(rule_ids):
-            children_rules = []
-            for rule in rule_ids:
-                if rule.child_ids:
-                    children_rules += recursive_search_of_rule(rule.child_ids)
-            return [(r.id, r.sequence) for r in rule_ids] + children_rules
 
         all_rules = []
         for struct in self.browse(cr, uid, structure_ids, context=context):
-            all_rules += recursive_search_of_rule(struct.rule_ids)
+            all_rules += self.pool.get('hr.salary.rule')._recursive_search_of_rules(cr, uid, struct.rule_ids, context=context)
         return all_rules
 
     def _get_parent_structure(self, cr, uid, struct_ids, context=None):
@@ -659,6 +653,17 @@ result = rules['NET'] > heads['NET'] * 0.10''',
         'amount_fix': 0.0,
         'amount_percentage': 0.0,
      }
+
+    def _recursive_search_of_rules(self, cr, uid, rule_ids, context=None):
+        """
+        @param rule_ids: list of browse record
+        @return: returns a list of tuple (id, sequence) which are all the children of the passed rule_ids
+        """
+        children_rules = []
+        for rule in rule_ids:
+            if rule.child_ids:
+                children_rules += self._recursive_search_of_rules(cr, uid, rule.child_ids, context=context)
+        return [(r.id, r.sequence) for r in rule_ids] + children_rules
 
     #TODO should add some checks on the type of result (should be float)
     def compute_rule(self, cr, uid, rule_id, localdict, context=None):
