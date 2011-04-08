@@ -56,24 +56,23 @@ class hr_timesheet_invoice_wizard(osv.osv_memory):
             context = {}
         res = super(hr_timesheet_invoice_wizard, self).default_get(cr, uid, fields, context=context)
         emp_obj = self.pool.get('hr.employee')
-        emp_id = emp_obj.search(cr, uid, ['|',('user_id', '=', uid),('product_id','=',False),('journal_id','=','')], context=context)
+        emp_id = emp_obj.search(cr, uid, [('user_id', '=', uid)], context=context)
         result = []
         data = {}
         for emp in emp_obj.browse(cr, uid, emp_id, context=context):
-            data = {'employee_id':emp.id,'product_id':emp.product_id.id,'journal_id':emp.journal_id.id}
+            data = {'employee_id':emp.id, 'product_id':emp.product_id.id, 'journal_id':emp.journal_id.id}
             result.append(data)
             if 'emp_ids' in fields:
                 res.update({'emp_ids': result})
         return res
 
-    def employee_data(self, cr, uid, ids, context=None):
+    def set_employee_data(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
         hr_obj = self.pool.get('hr.employee')
         for emp in self.browse(cr, uid, ids, context=context):
             for emp_data in emp.emp_ids:
-                emp_id = hr_obj.search(cr, uid, [('id', '=', emp_data.employee_id.id)], context=context)
-                hr_obj.write(cr, uid, emp_id, {'name': emp_data.employee_id.name,'product_id':emp_data.product_id.id or False, 'journal_id':emp_data.journal_id.id or ''})
+                hr_obj.write(cr, uid, emp_data.employee_id.id, {'name': emp_data.employee_id.name, 'product_id':emp_data.product_id.id or False, 'journal_id':emp_data.journal_id.id or ''})
         return {'type': 'ir.actions.act_window_close'}
 
 hr_timesheet_invoice_wizard()

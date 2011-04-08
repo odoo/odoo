@@ -49,7 +49,7 @@
         'lunch_view.xml',
         'lunch_report.xml',
         'report/report_lunch_order_view.xml',
-        'installer_view.xml'
+        'lunch_installer_view.xml'
     ],
     "demo_xml": ['lunch_demo.xml'],
     "test": ['test/test_lunch.yml', 'test/lunch_report.yml'],

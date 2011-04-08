@@ -70,7 +70,7 @@ of distribution models.
         'account_analytic_plans_report.xml',
         'wizard/analytic_plan_create_model_view.xml',
         'wizard/account_crossovered_analytic_view.xml',
-        'installer_view.xml'
+        'account_analytic_plans_installer_view.xml'
     ],
     'demo_xml'  : [],
     'test' : ['test/acount_analytic_plans_report.yml'],
