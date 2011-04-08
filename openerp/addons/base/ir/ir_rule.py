@@ -25,19 +25,52 @@ from operator import itemgetter
 from functools import partial
 import tools
 from tools.safe_eval import safe_eval as eval
+from tools.misc import unquote as unquote
 
 class ir_rule(osv.osv):
     _name = 'ir.rule'
     _order = 'name'
     _MODES = ['read', 'write', 'create', 'unlink']
 
+    def _eval_context_for_combinations(self):
+        """Returns a dictionary to use as evaluation context for
+           ir.rule domains, when the goal is to obtain python lists
+           that are easier to parse and combine, but not to
+           actually execute them."""
+        return {'user': unquote('user'),
+                'time': unquote('time')}
+
+    def _eval_context(self, cr, uid):
+        """Returns a dictionary to use as evaluation context for
+           ir.rule domains."""
+        return {'user': self.pool.get('res.users').browse(cr, 1, uid),
+                'time':time}
+
+    def domain_binary_operation(self, cr, uid, str_domain_1, str_domain_2, operator):
+        """Returns the string representation of the binary operation designated by
+          ``operator`` (should be '|' or '&') for the two string domains ``str_domain_1``
+          and ``str_domain_2``  """
+        eval_context = self._eval_context_for_combinations()
+        canonical_domain_1 = expression.expression.normalize_domain(eval(str_domain_1 or '[]', eval_context))
+        canonical_domain_2 = expression.expression.normalize_domain(eval(str_domain_2 or '[]', eval_context))
+        return str([operator] + canonical_domain_1 + canonical_domain_1)
+
+    def domain_conjunction(self, cr, uid, str_domain_1, str_domain_2):
+        """Returns the string representation of the conjunction (AND) of the
+           two string domains ``str_domain_1`` and ``str_domain_2``"""
+        return self.domain_binary_operation(cr, uid, str_domain_1, str_domain_2, expression.AND_OPERATOR)
+
+    def domain_disjunction(self, cr, uid, str_domain_1, str_domain_2):
+        """Returns the string representation of the disjunction (OR) of the
+           two string domains ``str_domain_1`` and ``str_domain_2``"""
+        return self.domain_binary_operation(cr, uid, str_domain_1, str_domain_2, expression.OR_OPERATOR)
+
     def _domain_force_get(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
+        eval_context = self._eval_context(cr, uid)
         for rule in self.browse(cr, uid, ids, context):
             if rule.domain_force:
-                eval_user_data = {'user': self.pool.get('res.users').browse(cr, 1, uid),
-                                  'time':time}
-                res[rule.id] = expression.expression.normalize_domain(eval(rule.domain_force, eval_user_data))
+                res[rule.id] = expression.expression.normalize_domain(eval(rule.domain_force, eval_context))
             else:
                 res[rule.id] = []
         return res
