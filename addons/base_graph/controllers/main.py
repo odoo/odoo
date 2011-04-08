@@ -60,10 +60,6 @@ class GraphView(openerpweb.Controller):
 
     def create_event(self, event_ids, model):
         self.events = model.read(event_ids, self.fields.values())
-#        print "\n self.fields.values()++",self.fields.values()
-#        print "\n self.events++++++++++++++++++++",self.events
-#        result = [{'partner_id': 'China Export', 'amount_total': 3000.0}]
 
-
-        return {'result': result}
+        return {'result': self.events}
 

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------
- * OpenERP base_gantt
+ * OpenERP base_graph
  *---------------------------------------------------------*/
 
 openerp.base.graph = function (openerp) {
@@ -38,7 +38,6 @@ openerp.base.GraphView = openerp.base.Controller.extend({
 		this.fields['partner_id'] = this.fields_view.arch.children[0].attrs.name;
 		this.fields['total'] = this.fields_view.arch.children[1].attrs.name;
 
-		console.log("this.fields",this.fields_view);
 		this.rpc('/base_graph/graphview/get_events',
 				{'model': this.model,
 				'fields': this.fields
@@ -49,18 +48,29 @@ openerp.base.GraphView = openerp.base.Controller.extend({
         this.$element.html(QWeb.render("GraphView", {"view": this, "fields_view": this.fields_view}));
 	},
 	create_graph: function(res) {
-		window.onload = function() {
-	    	var barChart1 = new dhtmlXChart({
-	        view: "bar",
-	        container: "chart1",
-	        value: '#partner_id#',
-	        label: '#amount_total#',
-	        width: 30,
-	        gradient: true,
-	    });
-	    barChart1.parse(res, "json");
-	   }
+		var result = res.result;
+
+	    var barChart1 = new dhtmlXChart({
+	    	view:"bar",
+			container:"chart1",
+	        value:"#amount_total#",
+			color:"#9abe00",
+            width:50,
+            tooltip: "#partner_id#",
+            xAxis:{
+				title:"Partner",
+				template:"#partner_id#"
+			},
+			yAxis:{
+                start:0,
+                end:10000,
+                step:1000,
+				title:"Total"
+			}
+		});
+	    barChart1.parse(result, "json");
 	},
+
 
 });
 

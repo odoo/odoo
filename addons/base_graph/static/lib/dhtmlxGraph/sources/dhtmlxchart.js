@@ -7,7 +7,7 @@
 /* DHX DEPEND FROM FILE 'assert.js'*/
 
 
-if (!window.dhtmlx) 
+if (!window.dhtmlx)
 	dhtmlx={};
 
 //check some rule, show message as error if rule is not correct
@@ -22,7 +22,7 @@ dhtmlx.assert_event = function(obj, evs){
 		obj._event_check = {};
 		obj._event_check_size = {};
 	}
-		
+
 	for (var a in evs){
 		obj._event_check[a.toLowerCase()]=evs[a];
 		var count=-1; for (var t in evs[a]) count++;
@@ -44,13 +44,13 @@ dhtmlx.assert_method_process = function (obj, name, descr, rules, min, skip){
 	var old = obj[name];
 	if (!skip)
 		obj[name] = function(){
-			if (arguments.length !=	rules.length && arguments.length < min) 
+			if (arguments.length !=	rules.length && arguments.length < min)
 				dhtmlx.log("warn","Incorrect count of parameters\n"+obj[name].describe()+"\n\nExpecting "+rules.length+" but have only "+arguments.length);
 			else
 				for (var i=0; i<rules.length; i++)
 					if (!rules[i][3] && !rules[i][2](arguments[i]))
 						dhtmlx.log("warn","Incorrect method call\n"+obj[name].describe()+"\n\nActual value of "+(i+1)+" parameter: {"+(typeof arguments[i])+"} "+arguments[i]);
-			
+
 			return old.apply(this, arguments);
 		};
 	obj[name].describe = function(){	return dhtmlx.assert_method_info(obj, name, descr, rules);	};
@@ -63,17 +63,17 @@ dhtmlx.assert_event_call = function(obj, name, args){
 			dhtmlx.log("warn","Event without parameters :"+name);
 		else if (obj._event_check_size[name] != args.length)
 			dhtmlx.log("warn","Incorrect event call, expected "+obj._event_check_size[name]+" parameter(s), but have "+args.length +" parameter(s), for "+name+" event");
-	}		
+	}
 };
 dhtmlx.assert_event_attach = function(obj, name){
-	if (obj._event_check && !obj._event_check[name]) 
+	if (obj._event_check && !obj._event_check[name])
 			dhtmlx.log("warn","Unknown event name: "+name);
 };
 //register names of properties, which can be used in object's configuration
 dhtmlx.assert_property = function(obj, evs){
 	if (!obj._settings_check)
 		obj._settings_check={};
-	dhtmlx.extend(obj._settings_check, evs);		
+	dhtmlx.extend(obj._settings_check, evs);
 };
 //check all options in collection, against list of allowed properties
 dhtmlx.assert_check = function(data,coll){
@@ -91,7 +91,7 @@ dhtmlx.assert_settings = function(mode,value,coll){
 	if (coll){
 		if (!coll[mode])	//not registered property
 			return dhtmlx.log("warn","Unknown propery: "+mode);
-			
+
 		var descr = "";
 		var error = "";
 		var check = false;
@@ -113,7 +113,7 @@ dhtmlx.assert_settings = function(mode,value,coll){
 	}
 };
 
-dhtmlx.assert_info=function(name, set){ 
+dhtmlx.assert_info=function(name, set){
 	var ruleset = set[name];
 	var descr = "";
 	var expected = [];
@@ -130,7 +130,7 @@ dhtmlx.assert_info=function(name, set){
 
 
 if (dhtmlx.assert_enabled()){
-	
+
 	dhtmlx.assert_rule_color=function(check){
 		if (typeof check != "string") return false;
 		if (check.indexOf("#")!==0) return false;
@@ -140,7 +140,7 @@ if (dhtmlx.assert_enabled()){
 	dhtmlx.assert_rule_color.describe = function(){
 		return "{String} Value must start from # and contain hexadecimal code of color";
 	};
-	
+
 	dhtmlx.assert_rule_template=function(check){
 		if (typeof check == "function") return true;
 		if (typeof check == "string") return true;
@@ -149,7 +149,7 @@ if (dhtmlx.assert_enabled()){
 	dhtmlx.assert_rule_template.describe = function(){
 		return "{Function},{String} Value must be a function which accepts data object and return text string, or a sting with optional template markers";
 	};
-	
+
 	dhtmlx.assert_rule_boolean=function(check){
 		if (typeof check == "boolean") return true;
 		return false;
@@ -157,7 +157,7 @@ if (dhtmlx.assert_enabled()){
 	dhtmlx.assert_rule_boolean.describe = function(){
 		return "{Boolean} true or false";
 	};
-	
+
 	dhtmlx.assert_rule_object=function(check, sub){
 		if (typeof check == "object") return true;
 		return false;
@@ -165,8 +165,8 @@ if (dhtmlx.assert_enabled()){
 	dhtmlx.assert_rule_object.describe = function(){
 		return "{Object} Configuration object";
 	};
-	
-	
+
+
 	dhtmlx.assert_rule_string=function(check){
 		if (typeof check == "string") return true;
 		return false;
@@ -174,22 +174,22 @@ if (dhtmlx.assert_enabled()){
 	dhtmlx.assert_rule_string.describe = function(){
 		return "{String} Plain string";
 	};
-	
-	
+
+
 	dhtmlx.assert_rule_htmlpt=function(check){
 		return !!dhtmlx.toNode(check);
 	};
 	dhtmlx.assert_rule_htmlpt.describe = function(){
 		return "{Object},{String} HTML node or ID of HTML Node";
 	};
-	
+
 	dhtmlx.assert_rule_notdocumented=function(check){
 		return false;
 	};
 	dhtmlx.assert_rule_notdocumented.describe = function(){
 		return "This options wasn't documented";
 	};
-	
+
 	dhtmlx.assert_rule_key=function(obj){
 		var t = function (check){
 			return obj[check];
@@ -202,7 +202,7 @@ if (dhtmlx.assert_enabled()){
 		};
 		return t;
 	};
-	
+
 	dhtmlx.assert_rule_dimension=function(check){
 		if (check*1 == check && !isNaN(check) && check >= 0) return true;
 		return false;
@@ -210,7 +210,7 @@ if (dhtmlx.assert_enabled()){
 	dhtmlx.assert_rule_dimension.describe=function(){
 		return "{Integer} value must be a positive number";
 	};
-	
+
 	dhtmlx.assert_rule_number=function(check){
 		if (typeof check == "number") return true;
 		return false;
@@ -218,7 +218,7 @@ if (dhtmlx.assert_enabled()){
 	dhtmlx.assert_rule_number.describe=function(){
 		return "{Integer} value must be a number";
 	};
-	
+
 	dhtmlx.assert_rule_function=function(check){
 		if (typeof check == "function") return true;
 		return false;
@@ -226,14 +226,14 @@ if (dhtmlx.assert_enabled()){
 	dhtmlx.assert_rule_function.describe=function(){
 		return "{Function} value must be a custom function";
 	};
-	
+
 	dhtmlx.assert_rule_any=function(check){
 		return true;
 	};
 	dhtmlx.assert_rule_any.describe=function(){
 		return "Any value";
 	};
-	
+
 	dhtmlx.assert_rule_mix=function(a,b){
 		var t = function(check){
 			if (a(check)||b(check)) return true;
@@ -265,32 +265,32 @@ dhtmlx.codebase="./";
 dhtmlx.extend = function(target, source){
 	for (var method in source)
 		target[method] = source[method];
-		
+
 	//applying asserts
 	if (dhtmlx.assert_enabled() && source._assert){
 		target._assert();
 		target._assert=null;
 	}
-	
+
 	//if source object has init code - call init against target
-	if (source._init)	
+	if (source._init)
 		target._init();
-				
-	return target;	
+
+	return target;
 };
 //creates function with specified "this" pointer
-dhtmlx.bind=function(functor, object){ 
-	return function(){ return functor.apply(object,arguments); };  
+dhtmlx.bind=function(functor, object){
+	return function(){ return functor.apply(object,arguments); };
 };
 
 //loads module from external js file
 dhtmlx.require=function(module){
 	if (!dhtmlx._modules[module]){
 		dhtmlx.assert(dhtmlx.ajax,"load module is required");
-		
+
 		//load and exec the required module
 		dhtmlx.exec( dhtmlx.ajax().sync().get(dhtmlx.codebase+module).responseText );
-		dhtmlx._modules[module]=true;	
+		dhtmlx._modules[module]=true;
 	}
 };
 dhtmlx._modules = {};	//hash of already loaded modules
@@ -343,12 +343,12 @@ dhtmlx.toNode = function(node){
 	return node;
 };
 //adds extra methods for the array
-dhtmlx.toArray = function(array){ 
+dhtmlx.toArray = function(array){
 	return dhtmlx.extend((array||[]),dhtmlx.PowerArray);
 };
 //resolve function name
-dhtmlx.toFunctor=function(str){ 
-	return (typeof(str)=="string") ? eval(str) : str; 
+dhtmlx.toFunctor=function(str){
+	return (typeof(str)=="string") ? eval(str) : str;
 };
 
 //dom helpers
@@ -358,13 +358,13 @@ dhtmlx._events = {};
 //attach event to the DOM element
 dhtmlx.event=function(node,event,handler,master){
 	node = dhtmlx.toNode(node);
-	
+
 	var id = dhtmlx.uid();
 	dhtmlx._events[id]=[node,event,handler];	//store event info, for detaching
-	
-	if (master) 
-		handler=dhtmlx.bind(handler,master);	
-		
+
+	if (master)
+		handler=dhtmlx.bind(handler,master);
+
 	//use IE's of FF's way of event's attaching
 	if (node.addEventListener)
 		node.addEventListener(event, handler, false);
@@ -376,17 +376,17 @@ dhtmlx.event=function(node,event,handler,master){
 
 //remove previously attached event
 dhtmlx.eventRemove=function(id){
-	
+
 	if (!id) return;
 	dhtmlx.assert(this._events[id],"Removing non-existing event");
-		
+
 	var ev = dhtmlx._events[id];
 	//browser specific event removing
 	if (ev[0].removeEventListener)
 		ev[0].removeEventListener(ev[1],ev[2],false);
 	else if (ev[0].detachEvent)
 		ev[0].detachEvent("on"+ev[1],ev[2]);
-		
+
 	delete this._events[id];	//delete all traces
 };
 
@@ -402,11 +402,11 @@ dhtmlx.log = function(type,message,details){
 			window.console[type](message);
 		else
 			window.console.log(type +": "+message);
-		if (details) 
+		if (details)
 			window.console.log(details);
-	}	
+	}
 };
-//register rendering time from call point 
+//register rendering time from call point
 dhtmlx.log_full_time = function(name){
 	dhtmlx._start_time_log = new Date();
 	dhtmlx.log("Info","Timing start ["+name+"]");
@@ -452,16 +452,16 @@ dhtmlx.EventSystem={
 	//trigger event
 	callEvent:function(type,params){
 		if (this._events._block) return true;
-		
+
 		type = type.toLowerCase();
 		dhtmlx.assert_event_call(this, type, params);
-		
+
 		var event_stack =this._events[type.toLowerCase()];	//all events for provided name
 		var return_value = true;
 
 		if (dhtmlx.debug)	//can slowdown a lot
 			dhtmlx.log("info","["+this.name+"] event:"+type,params);
-		
+
 		if (event_stack)
 			for(var i=0; i<event_stack.length; i++)
 				/*
@@ -470,17 +470,17 @@ dhtmlx.EventSystem={
 					Handlers which are not returning anything - counted as positive
 				*/
 				if (event_stack[i].apply(this,(params||[]))===false) return_value=false;
-				
+
 		if (this._map[type] && !this._map[type].callEvent(type,params))
 			return_value =	false;
-			
+
 		return return_value;
 	},
 	//assign handler for some named event
 	attachEvent:function(type,functor,id){
 		type=type.toLowerCase();
 		dhtmlx.assert_event_attach(this, type);
-		
+
 		id=id||dhtmlx.uid(); //ID can be used for detachEvent
 		functor = dhtmlx.toFunctor(functor);	//functor can be a name of method
 
@@ -489,19 +489,19 @@ dhtmlx.EventSystem={
 		event_stack.push(functor);
 		this._events[type]=event_stack;
 		this._handlers[id]={ f:functor,t:type };
-		
+
 		return id;
 	},
 	//remove event handler
 	detachEvent:function(id){
 		var type=this._handlers[id].t;
 		var functor=this._handlers[id].f;
-		
+
 		//remove from all collections
 		var event_stack=this._events[type];
 		event_stack.remove(functor);
 		delete this._handlers[id];
-	} 
+	}
 };
 
 //array helper
@@ -511,32 +511,32 @@ dhtmlx.PowerArray={
 	removeAt:function(pos,len){
 		if (pos>=0) this.splice(pos,(len||1));
 	},
-	//find element in collection and remove it 
+	//find element in collection and remove it
 	remove:function(value){
 		this.removeAt(this.find(value));
-	},	
+	},
 	//add element to collection at specific position
 	insertAt:function(data,pos){
 		if (!pos && pos!==0) 	//add to the end by default
 			this.push(data);
-		else {	
+		else {
 			var b = this.splice(pos,(this.length-pos));
   			this[pos] = data;
   			this.push.apply(this,b); //reconstruct array without loosing this pointer
   		}
-  	},  	
+  	},
   	//return index of element, -1 if it doesn't exists
-  	find:function(data){ 
-  		for (i=0; i<this.length; i++) 
-  			if (data==this[i]) return i; 	
-  		return -1; 
+  	find:function(data){
+  		for (i=0; i<this.length; i++)
+  			if (data==this[i]) return i;
+  		return -1;
   	},
   	//execute some method for each element of array
   	each:function(functor,master){
 		for (var i=0; i < this.length; i++)
 			functor.call((master||this),this[i]);
 	},
-	//create new array from source, by using results of functor 
+	//create new array from source, by using results of functor
 	map:function(functor,master){
 		for (var i=0; i < this.length; i++)
 			this[i]=functor.call((master||this),this[i]);
@@ -552,7 +552,7 @@ else{
 	dhtmlx._isIE=!!document.all;
 	dhtmlx._isFF=!document.all;
 	dhtmlx._isWebKit=(navigator.userAgent.indexOf("KHTML")!=-1);
-	if (navigator.appVersion.indexOf("MSIE 8.0")!= -1 && document.compatMode != "BackCompat") 
+	if (navigator.appVersion.indexOf("MSIE 8.0")!= -1 && document.compatMode != "BackCompat")
 		dhtmlx._isIE=8;
 }
 
@@ -598,17 +598,17 @@ dhtmlx.html={
 		else
 			rescue.appendChild(node);
 	},
-	//return custom ID from html element 
+	//return custom ID from html element
 	//will check all parents starting from event's target
 	locate:function(e,id){
 		e=e||event;
 		var trg=e.target||e.srcElement;
-	
+
 		while (trg && trg.getAttribute){
 				var test = trg.getAttribute(id);
 				if (test) return test;
 				trg=trg.parentNode;
-		}	
+		}
 		return null;
 	},
 	//returns position of html element on the page
@@ -687,7 +687,7 @@ dhtmlx.ui={};
 
 /*
 	Behavior:Destruction
-	
+
 	@export
 		destructor
 */
@@ -703,11 +703,11 @@ dhtmlx.Destruction = {
 	//simplifies job of GC
 	destructor:function(){
 		this.destructor=function(){}; //destructor can be called only once
-		
+
 		//html collection
 		this._htmlmap  = null;
 		this._htmlrows = null;
-		
+
 		//temp html element, used by toHTML
 		if (this._html)
 			document.body.appendChild(this._html);	//need to attach, for IE's GC
@@ -729,7 +729,7 @@ dhtmlx.event(window,"unload",function(){
 	for (var i=0; i<dhtmlx.destructors.length; i++)
 		dhtmlx.destructors[i].destructor();
 	dhtmlx.destructors = null;
-	
+
 	//detach all known DOM events
 	for (var a in dhtmlx._events){
 		var ev = dhtmlx._events[a];
@@ -767,7 +767,7 @@ dhtmlx.math.toHex = function(number, length){
 
 
 /*DHX:Depend dhtmlx.js*/
-	
+
 dhtmlx.ui.Map = function(key){
 	this.name = "Map";
 	this._id = "map_"+dhtmlx.uid();
@@ -787,7 +787,7 @@ dhtmlx.ui.Map.prototype = {
 	addSector:function(id,alpha0,alpha1,x,y,R,ky){
 		var points = [];
 		points.push(x);
-		points.push(Math.floor(y*ky)); 
+		points.push(Math.floor(y*ky));
 		for(var i = alpha0; i < alpha1; i+=Math.PI/18){
 			points.push(Math.floor(x+R*Math.cos(i)));
 			points.push(Math.floor((y+R*Math.sin(i))*ky));
@@ -795,8 +795,8 @@ dhtmlx.ui.Map.prototype = {
 		points.push(Math.floor(x+R*Math.cos(alpha1)));
 		points.push(Math.floor((y+R*Math.sin(alpha1))*ky));
 		points.push(x);
-		points.push(Math.floor(y*ky)); 
-		
+		points.push(Math.floor(y*ky));
+
 		return this.addPoly(id,points);
 	},
 	render:function(obj){
@@ -805,9 +805,9 @@ dhtmlx.ui.Map.prototype = {
 		obj.appendChild(d);
 		var src = dhtmlx._isIE?"":"src='data:image/gif;base64,R0lGODlhEgASAIAAAP///////yH5BAUUAAEALAAAAAASABIAAAIPjI+py+0Po5y02ouz3pwXADs='";
 		d.innerHTML="<map id='"+this._id+"' name='"+this._id+"'>"+this._map.join("\n")+"</map><img "+src+" class='dhx_map_img' usemap='#"+this._id+"'>";
-		
+
 		obj._htmlmap = d; //for clearing routine
-		
+
 		this._map = [];
 	}
 };
@@ -835,60 +835,60 @@ dhtmlx.chart.line = {
 		var valueFactor;
 		/*maxValue - minValue*/
 		var relValue;
-		
-		
-	    /*necessary to add events and tooltips*/	 
+
+
+	    /*necessary to add events and tooltips*/
 		var map = new dhtmlx.ui.Map(this._id);
 
 		/*scales*/
 		var yax = !!this._settings.yAxis;
 		var xax = !!this._settings.xAxis;
-		
+
 		if(yax&&(typeof this._settings.yAxis.end!="undefied")&&(typeof this._settings.yAxis.start!="undefied")&&this._settings.yAxis.step){
 		    maxValue = parseFloat(this._settings.yAxis.end);
-			minValue = parseFloat(this._settings.yAxis.start);      
+			minValue = parseFloat(this._settings.yAxis.start);
 		}
 		else{
 			maxValue = this.max(this._settings.value);
 		    minValue = this.min(this._settings.value);
 		}
-		
+
 		/*a vertical scale*/
 		this._drawYAxis(ctx,data,width,height,minValue,maxValue);
-		
+
 		/*necessary for automatic scale*/
 		if(yax){
 		    maxValue = parseFloat(this._settings.yAxis.end);
-			minValue = parseFloat(this._settings.yAxis.start);      
+			minValue = parseFloat(this._settings.yAxis.start);
 		}
-		
+
 		var topPadding = parseInt(this._settings.padding.top,10);
 		var leftPadding = parseInt(this._settings.padding.left,10);
 		var bottomPadding = parseInt(this._settings.padding.bottom,10);
 		var rightPadding = parseInt(this._settings.padding.right,10);
-		
+
 		/*available height*/
 		var total_height = height-topPadding-bottomPadding;
-		
-		
+
+
 		/*unit calculation (y_position = value*unit)*/
 		var relativeValues = this._getRelativeValue(minValue,maxValue);
 		relValue = relativeValues[0];
 		valueFactor = relativeValues[1];
 		var unit = total_height/relValue;
-		
+
 		if(!yax){
 			/*defines start value for better representation of small values*/
 			var startValue = (unit>10?unit:10);
 			unit = (total_height-startValue)/relValue;
-		}	
-		
+		}
+
 		/*a space available for a single item*/
-		var cellWidth = Math.round((width - leftPadding - rightPadding)/data.length); 
-		
+		var cellWidth = Math.round((width - leftPadding - rightPadding)/data.length);
+
 		/*the value that defines the map area position*/
 		var areaPos = Math.floor(cellWidth/2);
-		
+
 		/*drawing all items*/
 		if (data.length) {
 		    /*gets the vertical coordinate of an item*/
@@ -902,13 +902,13 @@ dhtmlx.chart.line = {
 				/*a vertical coordinate*/
 				var y = height - Math.floor(unit*v) - bottomPadding;
 				/*the limit of the minimum value is  the minimum visible value*/
-				if(v<0) 
+				if(v<0)
 					y = height - topPadding;
 				/*the limit of the maximum value*/
-				if(value > maxValue) 
+				if(value > maxValue)
 					y = topPadding;
 				/*the limit of the minimum value*/
-				if(value < minValue) 
+				if(value < minValue)
 					y = height - bottomPadding;
 				return y;
 			};
@@ -916,8 +916,8 @@ dhtmlx.chart.line = {
 			var y1 = _graph_point.call(this,data[0]);
 			/*drawing the previous item and the line between to items*/
 			for(var i=1; i <= data.length;i ++){
-				
-				
+
+
 				/*horizontal positions of the previous and current items (0.5 - the fix for line width)*/
 				var x1 = Math.floor(cellWidth*(i-0.5)) - 0.5 + leftPadding;
 				var x2 = Math.floor(cellWidth*(i+0.5)) - 0.5 + leftPadding;
@@ -926,19 +926,19 @@ dhtmlx.chart.line = {
 				this._drawXAxisLabel(x1,data[i-1]);
 				/*draws a vertical line for the horizontal scale*/
 				this._drawXAxisLine(ctx,x1,height-bottomPadding,topPadding);
-				
+
 				/*a line between items*/
 				if (data.length!=i){
 					var y2 = _graph_point.call(this,data[i]);
 					this._drawLine(ctx,x1,y1,x2,y2,this._settings.line.color(data[i-1]),this._settings.line.width);
 				}
-				
+
 				/*draws prevous item*/
 				this._drawGraphicItem(ctx,x1,y1,data[i-1]);
-				
+
 				/*creates map area*/
 				map.addRect(data[i-1].id,[x1-areaPos,y1-areaPos,x1+areaPos,y1+areaPos]);
-				
+
 				y1=y2;
 			}
 			_graph_point = null;
@@ -952,7 +952,7 @@ dhtmlx.chart.line = {
 	*   @param: ctx - canvas object
 	*   @param: x0 - the x position of a circle
 	*   @param: y0 - the y position of a circle
-	*   @param: obj - data object 
+	*   @param: obj - data object
 	*/
 	_drawGraphicItem:function(ctx,x0,y0,obj){
 		var R = parseInt(this._settings.item.radius,10);
@@ -990,47 +990,47 @@ dhtmlx.chart.bar = {
 		var valueFactor;
 		/*maxValue - minValue*/
 		var relValue;
-		
+
 		var map = new dhtmlx.ui.Map(this._id);
-		
+
 		var yax = !!this._settings.yAxis;
 		var xax = !!this._settings.xAxis;
-		
+
 		if(yax&&(typeof this._settings.yAxis.end!="undefied")&&(typeof this._settings.yAxis.start!="undefied")&&this._settings.yAxis.step){
 		    maxValue = parseFloat(this._settings.yAxis.end);
-			minValue = parseFloat(this._settings.yAxis.start);      
+			minValue = parseFloat(this._settings.yAxis.start);
 		}
 		else{
 			maxValue = this.max(this._settings.value);
 		    minValue = this.min(this._settings.value);
 		}
-		
+
 		/*a vertical scale*/
 		this._drawYAxis(ctx,data,x,y,minValue,maxValue);
-		
+
 		/*necessary for automatic scale*/
 		if(yax){
 		    maxValue = parseFloat(this._settings.yAxis.end);
-			minValue = parseFloat(this._settings.yAxis.start);      
+			minValue = parseFloat(this._settings.yAxis.start);
 		}
-		
+
 		var yPadding = parseInt(this._settings.padding.top,10);
 		var xPadding = parseInt(this._settings.padding.left,10);
 		var bottomPadding = parseInt(this._settings.padding.bottom,10);
 		var total_height = y-yPadding-bottomPadding;
-		
+
 		/*unit calculation (bar_height = value*unit)*/
 		var relativeValues = this._getRelativeValue(minValue,maxValue);
 		relValue = relativeValues[0];
 		valueFactor = relativeValues[1];
-		
+
 		var unit = total_height/relValue;
 		if(!yax){
 			/*defines start value for better representation of small values*/
 			var startValue = (unit>10?unit:10);
 			unit = (total_height-startValue)/relValue;
 		}
-		
+
 		/*an available width for one bar*/
 		var cellWidth = Math.floor((x-xPadding-parseInt(this._settings.padding.right,10))/data.length);
 		/*a real bar width */
@@ -1040,10 +1040,10 @@ dhtmlx.chart.bar = {
 		var barOffset = Math.floor((cellWidth - barWidth)/2);
 		/*the radius of rounding in the top part of each bar*/
 		var radius = Math.round(barWidth/5);
-		
+
 		var inner_gradient = false;
 		var gradient = this._settings.gradient;
-		
+
 		if (gradient === true){
 			inner_gradient = true;
 			gradient = false;
@@ -1057,32 +1057,32 @@ dhtmlx.chart.bar = {
 			scaleY = y-bottomPadding;
 			this._drawLine(ctx,0,scaleY+0.5,x,scaleY+0.5,"#000000",1); //hardcoded color!
 		}
-		
+
 		for(var i=0; i < data.length;i ++){
-			
-			
+
+
 			var value =  parseFloat(this._settings.value(data[i]));
 			if(value>maxValue) value = maxValue;
 			value -= minValue;
 			value *= valueFactor;
-			
+
 			/*start point (bottom left)*/
 			var x0 = xPadding + barOffset + i*cellWidth;
 			var y0 = y-bottomPadding;
-			
-			
+
+
 			/*sets a label in the horizontal scale*/
    			this._drawXAxisLabel(x0+Math.floor(barWidth/2),data[i]);
-			
+
 			if(value<0||(this._settings.yAxis&&value===0)){
 				this.renderTextAt(true, true, x0+Math.floor(barWidth/2),y0,this._settings.label(data[i]));
 				continue;
 			}
-			
+
 			/*takes start value into consideration*/
 			if(!yax) value += startValue/unit;
 			var color = gradient||this._settings.color.call(this,data[i]);
-			
+
 			/*drawing the gradient border of a bar*/
 			if(this._settings.border){
 				ctx.beginPath();
@@ -1097,7 +1097,7 @@ dhtmlx.chart.bar = {
 				this._setBarPoints(ctx,x0-1,y0,barWidth+2,radius,unit,value,0);
 				ctx.fill();
 			}
-			
+
 			/*drawing bar body*/
 			ctx.globalAlpha = this._settings.alpha.call(this,data[i]);
 			ctx.fillStyle = (gradient||this._settings.color.call(this,data[i]));
@@ -1106,7 +1106,7 @@ dhtmlx.chart.bar = {
 			if (gradient) ctx.lineTo(x0,0); //fix gradient sphreading
    			ctx.fill();
 			ctx.globalAlpha = 1;
-			
+
 			if (inner_gradient){
 				var i_gradient = ctx.createLinearGradient(0,y0-unit*value+2,0,y0);
 					i_gradient.addColorStop(0,color);
@@ -1117,14 +1117,14 @@ dhtmlx.chart.bar = {
 				var points = this._setBarPoints(ctx,x0+2,y0,barWidth-4,radius,unit,value,1);
 				ctx.fill();
 			}
-			
-			
+
+
 			/*sets a bar label*/
 			this.renderTextAt(true, true, x0+Math.floor(barWidth/2),points[1],this._settings.label(data[i]));
 			/*defines a map area for a bar*/
 			map.addRect(data[i].id,[x0,points[1],points[0],y0]);
 		}
-		
+
 		this._drawXAxis(ctx,data,x,y);
 		map.render(this._obj);
 	},
@@ -1133,7 +1133,7 @@ dhtmlx.chart.bar = {
 	*   @param: ctx - canvas object
 	*   @param: x0 - the x position of start point
 	*   @param: y0 - the y position of start point
-	*   @param: barWidth - bar width 
+	*   @param: barWidth - bar width
 	*   @param: radius - the rounding radius of the top
 	*   @param: unit - the value defines the correspondence between item value and bar height
 	*   @param: value - item value
@@ -1158,7 +1158,7 @@ dhtmlx.chart.bar = {
 			ctx.arc(x2,y1,radius-offset,-Math.PI+angle_corr,-Math.PI/2,false);
    		/*start of right rounding*/
 		var x3 = x0 + barWidth - radius+offset;
-		var y3 = y1 - radius+(radius?offset:0); 
+		var y3 = y1 - radius+(radius?offset:0);
 		ctx.lineTo(x3,y3);
 		/*right rounding*/
 		var y4 = y1;
@@ -1185,12 +1185,12 @@ if (!dhtmlx.chart) dhtmlx.chart = {};
 dhtmlx.chart.pie = {
 	pvt_render_pie:function(ctx,data,x,y){
 		this._renderPie(ctx,data,x,y,1);
-		
-	}, 
+
+	},
 	pvt_render_pie3D:function(ctx,data,x,y){
 		this._renderPie(ctx,data,x,y,this._settings.cant);
 	},
-	
+
 	/**
 	*   renders a pie chart
 	*   @param: ctx - canvas object
@@ -1201,7 +1201,7 @@ dhtmlx.chart.pie = {
 	*/
 	_renderPie:function(ctx,data,x,y,ky){
 		var map = new dhtmlx.ui.Map(this._id);
-		
+
 		var totalValue = 0;
 		var coord = this._getPieParameters(x,y);
 		/*pie radius*/
@@ -1212,13 +1212,13 @@ dhtmlx.chart.pie = {
 		/*real values*/
 		var values = [];
 		var prevSum = 0;
-		
+
 		if(this._settings.legend)
 			this._settings.legend.total_height = this._settings.legend.height*data.length;
 
 		for(var i = 0; i < data.length;i++)
            totalValue += parseFloat(this._settings.value(data[i]));
-		
+
 		for(var i = 0; i < data.length;i++){
 			values[i] = parseFloat(this._settings.value(data[i]));
 			ratios[i] = Math.PI*2*((values[i]+prevSum)/totalValue);
@@ -1230,18 +1230,18 @@ dhtmlx.chart.pie = {
 		/*adds shadow to the 2D pie*/
 		if(ky==1&&this._settings.shadow)
 			this._addShadow(ctx,x0,y0,radius);
-		
+
 		/*changes vertical position of the center according to 3Dpie cant*/
 		y0 = y0/ky;
 		/*the angle defines the 1st edge of the sector*/
 		var alpha0 = -Math.PI/2;
 		/*changes Canvas vertical scale*/
-		ctx.scale(1,ky); 
-		
+		ctx.scale(1,ky);
+
 		for(var i = 0; i < data.length;i++){
 			/*drawing sector*/
 			ctx.lineWidth = 2;
-			ctx.beginPath(); 
+			ctx.beginPath();
 	    	ctx.moveTo(x0,y0);
 			/*the angle defines the 2nd edge of the sector*/
 			alpha1 = -Math.PI/2+ratios[i];
@@ -1270,29 +1270,29 @@ dhtmlx.chart.pie = {
 				ctx.globalAlpha = 1;
 				ctx.fillStyle = color;
 			}
-			
+
 			/*creats map area (needed for events)*/
 			map.addSector(data[i].id,alpha0,alpha1,x0,y0,radius,ky);
-			
+
 			alpha0 = alpha1;
-			
+
 			/*render the details block*/
 			if(this._settings.legend){
-				ctx.scale(1,1/ky); 
+				ctx.scale(1,1/ky);
 				this._drawLegendItem(ctx,data[i],x,y,i);
-				ctx.scale(1,ky); 
+				ctx.scale(1,ky);
 			}
 		}
-		
+
 		map.render(this._obj);
-		
+
 		/*adds radial gradient to a pie*/
 		if (this._settings.gradient){
 			var x1 = (ky!=1?x0+radius/3:x0);
 			var y1 = (ky!=1?y0+radius/3:y0);
-			this._showRadialGradient(ctx,x0,y0,radius,x1,y1);	
+			this._showRadialGradient(ctx,x0,y0,radius,x1,y1);
 		}
-		ctx.scale(1,1/ky); 
+		ctx.scale(1,1/ky);
 	},
 	/**
 	*   draws the element of details block
@@ -1302,14 +1302,14 @@ dhtmlx.chart.pie = {
 	*   @param: y - the height of a container
 	*   @param: i - the index of a data object
 	*/
-	_drawLegendItem:function(ctx,obj,x,y,i){ 
+	_drawLegendItem:function(ctx,obj,x,y,i){
 		var details = this._settings.legend;
-		
+
 		ctx.strokeStyle = ctx.fillStyle;
-		ctx.lineWidth = details.marker.height;  
+		ctx.lineWidth = details.marker.height;
 		ctx.lineCap = details.marker.type;
 		ctx.beginPath();
-		
+
 		/*start of item*/
 		var x0 = 5+ctx.lineWidth/2;
 		var y0 = 5+ctx.lineWidth/2;
@@ -1318,14 +1318,14 @@ dhtmlx.chart.pie = {
 			x0 += this._obj.offsetWidth - details.width;
 		if(details.valign == "bottom"&&(y>details.total_height))
 			y0 += y-details.total_height-ctx.lineWidth/2;
-		/*considers item index*/	
+		/*considers item index*/
 		y0 += i*details.height;
-		
+
 		ctx.moveTo(x0,y0);
 		var x1 = x0+details.marker.width-details.marker.height +1;
-		ctx.lineTo(x1,y0);  
-    	ctx.stroke(); 
-		
+		ctx.lineTo(x1,y0);
+    	ctx.stroke();
+
 		/*item text*/
 		this.renderText(x1+details.marker.width/2+5,y0-details.marker.height/2,details.template(obj));
 	},
@@ -1357,7 +1357,7 @@ dhtmlx.chart.pie = {
 		ctx.lineWidth = 1;
 		/*checks if the lower sector needs being displayed*/
 		if(!((a1<=0 && a2>=0)||(a1>=0 && a2<=Math.PI)||(a1<=Math.PI && a2>=Math.PI))) return;
-		
+
 		if(a1<=0 && a2>=0){
 			a1 = 0;
 			line = false;
@@ -1370,20 +1370,20 @@ dhtmlx.chart.pie = {
 		}
 		/*the height of 3D pie*/
 		var offset = (this._settings.height||Math.floor(R/4))/this._settings.cant;
-		ctx.beginPath(); 
+		ctx.beginPath();
 		ctx.arc(x0,y0,R,a1,a2,false);
 		ctx.lineTo(x0+R*Math.cos(a2),y0+R*Math.sin(a2)+offset);
 		ctx.arc(x0,y0+offset,R,a2,a1,true);
 		ctx.lineTo(x0+R*Math.cos(a1),y0+R*Math.sin(a1));
 		ctx.fill();
-		if(line)		
+		if(line)
 			ctx.stroke();
 	},
 	/**
 	*   draws a serctor arc
 	*/
 	_drawSectorLine:function(ctx,x0,y0,R,a1,a2){
-		ctx.beginPath(); 
+		ctx.beginPath();
 		ctx.arc(x0,y0,R,a1,a2,false);
 		ctx.stroke();
 	},
@@ -1398,10 +1398,10 @@ dhtmlx.chart.pie = {
 		var shadows = ["#676767","#7b7b7b","#a0a0a0","#bcbcbc","#d1d1d1","#d6d6d6"];
 		for(var i = shadows.length-1;i>-1;i--){
 			ctx.beginPath();
-			ctx.fillStyle = shadows[i]; 
-			ctx.arc(x+2,y+2,R+i,0,Math.PI*2,true);  
-			ctx.fill();  
-		} 
+			ctx.fillStyle = shadows[i];
+			ctx.arc(x+2,y+2,R+i,0,Math.PI*2,true);
+			ctx.fill();
+		}
 	},
 	/**
 		*   returns a gray gradient
@@ -1425,7 +1425,7 @@ dhtmlx.chart.pie = {
 	_showRadialGradient:function(ctx,x,y,radius,x0,y0){
 			ctx.globalAlpha = 0.3;
 			ctx.beginPath();
-			var gradient; 
+			var gradient;
 			if(typeof this._settings.gradient!= "function"){
 				gradient = ctx.createRadialGradient(x0,y0,radius/4,x,y,radius);
 				gradient = this._getGrayGradient(gradient);
@@ -1451,23 +1451,23 @@ dhtmlx.chart.pie = {
 	_drawSectorLabel:function(x0,y0,R,alpha1,alpha2,ky,text,in_width){
 		var t = this.renderText(0,0,text,0,1);
 		if (!t) return;
-		
+
 		//get existing width of text
 		var labelWidth = t.scrollWidth;
 		t.style.width = labelWidth+"px";	//adjust text label to fit all text
 		if (labelWidth>x0) labelWidth = x0;	//the text can't be greater than half of view
-		
+
 		//calculate expected correction based on default font metrics
 		var width = 8;
 		if (in_width) width = labelWidth/1.8;
 		var alpha = alpha1+(alpha2-alpha1)/2;
-		
+
 		//calcualteion position and correction
 		R = R-(width-8)/2;
 		var corr_x = - width;
 		var corr_y = -8;
 		var align = "left";
-		
+
 		//for items in right upper sector
 		if(alpha>=Math.PI/2 && alpha<Math.PI){
 			//correction need to be applied because of righ align
@@ -1480,12 +1480,12 @@ dhtmlx.chart.pie = {
 			corr_x = -labelWidth-corr_x+1;
 			align = "right";
 		}
-		
+
 		//calculate position of text
 		//basically get point at center of pie sector
 		var y = (y0+Math.floor(R*Math.sin(alpha)))*ky+corr_y;
 		var x = x0+Math.floor((R+width/2)*Math.cos(alpha))+corr_x;
-		
+
 		//if pie sector starts in left of right part pie, related text
 		//must be placed to the left of to the right of pie as well
 		var left_end = (alpha2 < Math.PI/2+0.01)
@@ -1494,8 +1494,8 @@ dhtmlx.chart.pie = {
 			x = Math.max(x,x0+3);	//right part of pie
 		else if (!left_start && !left_end)
 			x = Math.min(x,x0-labelWidth);	//left part of pie
-	
-		
+
+
 		/*correction for the lower sector of the 3D pie*/
 		if (!in_width && ky<1 && y > y0*ky){
 			y+= (this._settings.height||Math.floor(R/4));
@@ -1523,8 +1523,8 @@ dhtmlx.chart.pie = {
 dhtmlx.Template={
 	_cache:{
 	},
-	empty:function(){	
-		return "";	
+	empty:function(){
+		return "";
 	},
 	setter:function(name, value){
 		return dhtmlx.Template.fromHTML(value);
@@ -1540,13 +1540,13 @@ dhtmlx.Template={
 		if (typeof str == "function") return str;
 		if (this._cache[str])
 			return this._cache[str];
-			
+
 	//supported idioms
 	// {obj} => value
 	// {obj.attr} => named attribute or value of sub-tag in case of xml
 	// {obj.attr?some:other} conditional output
 	// {-obj => sub-template
-		str=(str||"").toString();		
+		str=(str||"").toString();
 		str=str.replace(/[\r\n]+/g,"\\n");
 		str=str.replace(/\{obj\.([^}?]+)\?([^:]*):([^}]*)\}/g,"\"+(obj.$1?\"$2\":\"$3\")+\"");
 		str=str.replace(/\{common\.([^}\(]*)\}/g,"\"+common.$1+\"");
@@ -1567,24 +1567,24 @@ dhtmlx.Type={
 		obj - object to which template will be added
 		data - properties of template
 	*/
-	add:function(obj, data){ 
+	add:function(obj, data){
 		//auto switch to prototype, if name of class was provided
 		if (!obj.types && obj.prototype.types)
 			obj = obj.prototype;
 		//if (typeof data == "string")
 		//	data = { template:data };
-			
+
 		if (dhtmlx.assert_enabled())
 			this.assert_event(data);
-		
+
 		var name = data.name||"default";
-		
+
 		//predefined templates - autoprocessing
 		this._template(data);
 		this._template(data,"edit");
 		this._template(data,"loading");
-		
-		obj.types[name]=dhtmlx.extend(dhtmlx.extend({},(obj.types[name]||this._default)),data);	
+
+		obj.types[name]=dhtmlx.extend(dhtmlx.extend({},(obj.types[name]||this._default)),data);
 		return name;
 	},
 	//default template value - basically empty box with 5px margin
@@ -1599,7 +1599,7 @@ dhtmlx.Type={
 		padding:0
 	},
 	//template creation helper
-	_template:function(obj,name){ 
+	_template:function(obj,name){
 		name = "template"+(name?("_"+name):"");
 		var data = obj[name];
 		//if template is a string - check is it plain string or reference to external content
@@ -1629,9 +1629,9 @@ dhtmlx.Type={
 
 
 /*
-	REnders single item. 
+	REnders single item.
 	Can be used for elements without datastore, or with complex custom rendering logic
-	
+
 	@export
 		render
 */
@@ -1665,7 +1665,7 @@ dhtmlx.SingleRender={
 
 /*
 	UI: Tooltip
-	
+
 	@export
 		show
 		hide
@@ -1678,13 +1678,13 @@ dhtmlx.SingleRender={
 dhtmlx.ui.Tooltip=function(container){
 	this.name = "Tooltip";
 	this.version = "3.0";
-	
+
 	if (dhtmlx.assert_enabled()) this._assert();
 
 	if (typeof container == "string"){
 		container = { template:container };
 	}
-		
+
 	dhtmlx.extend(this, dhtmlx.Settings);
 	dhtmlx.extend(this, dhtmlx.SingleRender);
 	this._parseSettings(container,{
@@ -1692,7 +1692,7 @@ dhtmlx.ui.Tooltip=function(container){
 		dy:0,
 		dx:20
 	});
-	
+
 	//create  container for future tooltip
 	this._dataobj = this._obj = document.createElement("DIV");
 	this._obj.className="dhx_tooltip";
@@ -1779,9 +1779,9 @@ dhtmlx.AutoTooltip = {
 */
 dhtmlx.DataStore = function(){
 	this.name = "DataStore";
-	
+
 	dhtmlx.extend(this, dhtmlx.EventSystem);
-	
+
 	this.setDriver("xml");	//default data source is an XML
 	this.pull = {};						//hash of IDs
 	this.order = dhtmlx.toArray();		//order of IDs
@@ -1800,7 +1800,7 @@ dhtmlx.DataStore.prototype={
 		var info = this.driver.getInfo(data);
 		//get array of records
 		var recs = this.driver.getRecords(data);
-		
+
 		var from = (info._from||0)*1;
 		var j=0;
 		for (var i=0; i<recs.length; i++){
@@ -1808,7 +1808,7 @@ dhtmlx.DataStore.prototype={
 			var temp = this.driver.getDetails(recs[i]);
 			var id = this.id(temp); 	//generate ID for the record
 			if (!this.pull[id]){		//if such ID already exists - update instead of insert
-				this.order[j+from]=id;	
+				this.order[j+from]=id;
 				j++;
 			}
 			this.pull[id]=temp;
@@ -1846,7 +1846,7 @@ dhtmlx.DataStore.prototype={
 			this.callEvent("onStoreUpdated",[null,null,null]);
 	},
 	//converts range IDs to array of all IDs between them
-	getRange:function(from,to){		
+	getRange:function(from,to){
 		if (!arguments.length){
 			//if indexes not provided - return all visible rows
 			from = this.min||0; to = Math.min((this.max||Infinity),(this.dataCount()-1));
@@ -1862,7 +1862,7 @@ dhtmlx.DataStore.prototype={
 	//converts range of indexes to array of all IDs between them
 	getIndexRange:function(from,to){
 		to=Math.min(to,this.dataCount()-1);
-		
+
 		var ret=dhtmlx.toArray(); //result of method is rich-array
 		for (var i=from; i <= to; i++)
 			ret.push(this.get(this.order[i]));
@@ -1883,15 +1883,15 @@ dhtmlx.DataStore.prototype={
 			dhtmlx.error("DataStore::move","Incorrect indexes");
 			return;
 		}
-		
-			
+
+
 		var id = this.idByIndex(sindex);
 		var obj = this.get(id);
-		
+
 		this.order.removeAt(sindex);	//remove at old position
 		//if (sindex>tindex) tindex--;	//correct shift, caused by element removing
 		this.order.insertAt(id,tindex);	//insert at new position
-		
+
 		//repaint signal
 		this.callEvent("onStoreUpdated",[id,obj,"move"]);
 	},
@@ -1899,21 +1899,21 @@ dhtmlx.DataStore.prototype={
 	add:function(obj,index){
 		//generate id for the item
 		var id = this.id(obj);
-		
+
 		//by default item is added to the end of the list
 		var data_size = this.dataCount();
 		if (dhtmlx.isNotDefined(index))
-			index = data_size; 
-		//check to prevent too big indexes			
+			index = data_size;
+		//check to prevent too big indexes
 		if (index > data_size){
 			dhtmlx.log("Warning","DataStore:add","Index of out of bounds");
 			index = Math.min(this.order.length,index);
 		}
-		
-		if (!this.callEvent("onbeforeAdd",[id,index])) return;	
-		
+
+		if (!this.callEvent("onbeforeAdd",[id,index])) return;
+
 		if (this.exists(id)) return dhtmlx.error("Not unique ID");
-		
+
 		this.pull[id]=obj;
 		this.order.insertAt(id,index);
 		if (this._filter_order){	//adding during filtering
@@ -1923,16 +1923,16 @@ dhtmlx.DataStore.prototype={
 			//put at start only if adding to the start and some data exists
 			if (!index && this.order.length)
 				original_index = 0;
-			
+
 			this._filter_order.insertAt(id,original_index);
 		}
-		
+
 		this.callEvent("onafterAdd",[id,index]);
 		//repaint signal
 		this.callEvent("onStoreUpdated",[id,obj,"add"]);
 		return id;
 	},
-	
+
 	//removes element from datastore
 	remove:function(id){
 		//id can be an array of IDs - result of getSelect, for example
@@ -1941,16 +1941,16 @@ dhtmlx.DataStore.prototype={
 				this.remove(id[i]);
 			return;
 		}
-		if (!this.callEvent("onbeforedelete",[id])) return;	
+		if (!this.callEvent("onbeforedelete",[id])) return;
 		if (!this.exists(id)) return dhtmlx.error("Not existing ID",id);
 		var obj = this.get(id);	//save for later event
 		//clear from collections
 		this.order.remove(id);
-		if (this._filter_order) 
+		if (this._filter_order)
 			this._filter_order.remove(id);
-			
+
 		delete this.pull[id];
-		this.callEvent("onafterdelete",[id]);	
+		this.callEvent("onafterdelete",[id]);
 		//repaint signal
 		this.callEvent("onStoreUpdated",[id,obj,"delete"]);
 	},
@@ -1967,16 +1967,16 @@ dhtmlx.DataStore.prototype={
 	idByIndex:function(index){
 		if (index>=this.order.length || index<0)
 			dhtmlx.log("Warning","DataStore::idByIndex Incorrect index");
-			
+
 		return this.order[index];
 	},
 	//converts index to id
 	indexById:function(id){
 		var res = this.order.find(id);	//slower than idByIndex
-		
+
 		if (!res && res!==0)
 			dhtmlx.log("Warning","DataStore::indexById Non-existing ID: "+ id);
-			
+
 		return res;
 	},
 	//returns ID of next element
@@ -1998,53 +1998,53 @@ dhtmlx.DataStore.prototype={
 	/*
 		sort data in collection
 			by - settings of sorting
-		
+
 		or
-		
+
 			by - sorting function
 			dir - "asc" or "desc"
-			
+
 		or
-		
+
 			by - property
 			dir - "asc" or "desc"
 			as - type of sortings
-		
+
 		Sorting function will accept 2 parameters and must return 1,0,-1, based on desired order
 	*/
 	sort:function(by, dir, as){
-		
-		var sort = by;	
+
+		var sort = by;
 		if (typeof by == "function")
 			sort = {as:by, dir:dir};
 		else if (typeof by == "string")
-			sort = {by:by, dir:dir, as:as};		
-		
-		
+			sort = {by:by, dir:dir, as:as};
+
+
 		var parameters = [sort.by, sort.dir, sort.as];
-		if (!this.callEvent("onbeforesort",parameters)) return;	
-		
+		if (!this.callEvent("onbeforesort",parameters)) return;
+
 		var sorter = dhtmlx.sort.create(sort);
 		//get array of IDs
 		var neworder = this.getRange();
 		neworder.sort(sorter);
 		this.order = neworder.map(function(obj){ return this.id(obj); },this);
-		
+
 		//repaint self
 		this.refresh();
-		
+
 		this.callEvent("onaftersort",parameters);
 	},
 	/*
 		Filter datasource
-		
+
 		text - property, by which filter
 		value - filter mask
-		
+
 		or
-		
+
 		text  - filter method
-		
+
 		Filter method will receive data object and must return true or false
 	*/
 	filter:function(text,value){
@@ -2062,8 +2062,8 @@ dhtmlx.DataStore.prototype={
 					return text(obj).toLowerCase().indexOf(value)!=-1;
 				};
 			}
-			
-			value = (value||"").toString().toLowerCase();			
+
+			value = (value||"").toString().toLowerCase();
 			var neworder = dhtmlx.toArray();
 			this.order.each(function(id){
 				if (filter(this.get(id),value))
@@ -2087,7 +2087,7 @@ dhtmlx.DataStore.prototype={
 		map inner methods to some distant object
 	*/
 	provideApi:function(target,eventable){
-		
+
 		if (eventable){
 			this.mapEvent({
 				onbeforesort:	target,
@@ -2095,15 +2095,15 @@ dhtmlx.DataStore.prototype={
 				onbeforeadd:	target,
 				onafteradd:		target,
 				onbeforedelete:	target,
-				onafterdelete:	target	
+				onafterdelete:	target
 			});
 		}
-			
+
 		var list = ["sort","add","remove","exists","idByIndex","indexById","get","set","refresh","dataCount","filter","next","previous","clearAll","first","last"];
 		for (var i=0; i < list.length; i++)
 			target[list[i]]=dhtmlx.methodPush(this,list[i]);
-			
-		if (dhtmlx.assert_enabled())		
+
+		if (dhtmlx.assert_enabled())
 			this.assert_event(target);
 	}
 };
@@ -2171,13 +2171,13 @@ dhtmlx.Group = {
 	_init_group_data_event:function(data,master){
 		data.attachEvent("onClearAll",dhtmlx.bind(function(){
 			this.ungroup(false);
-		},master));		
+		},master));
 	},
 	sum:function(property, data){
 		property = dhtmlx.Template.setter(0,property);
-		
+
 		data = data || this.data;
-		var summ = 0; 
+		var summ = 0;
 		data.each(function(obj){
 			summ+=property(obj)*1;
 		});
@@ -2185,9 +2185,9 @@ dhtmlx.Group = {
 	},
 	min:function(property, data){
 		property = dhtmlx.Template.setter(0,property);
-		
+
 		data = data || this.data;
-		var min = Infinity; 
+		var min = Infinity;
 		data.each(function(obj){
 			if (property(obj)*1 < min) min = property(obj)*1;
 		});
@@ -2195,7 +2195,7 @@ dhtmlx.Group = {
 	},
 	max:function(property, data){
 		property = dhtmlx.Template.setter(0,property);
-		
+
 		data = data || this.data;
 		var max = -Infinity;
 		data.each(function(obj){
@@ -2203,7 +2203,7 @@ dhtmlx.Group = {
 		});
 		return max;
 	},
-	_split_data_by:function(stats){ 
+	_split_data_by:function(stats){
 		var any=function(property, data){
 			property = dhtmlx.Template.setter(0,property);
 			return property(data[0]);
@@ -2211,7 +2211,7 @@ dhtmlx.Group = {
 		var key = dhtmlx.Template.setter(0,stats.by);
 		if (!stats.map[key])
 			stats.map[key] = [key, any];
-			
+
 		var groups = {};
 		var labels = [];
 		this.data.each(function(data){
@@ -2226,14 +2226,14 @@ dhtmlx.Group = {
 			var functor = (stats.map[prop][1]||any);
 			if (typeof functor != "function")
 				functor = this[functor];
-				
+
 			for (var i=0; i < labels.length; i++) {
 				labels[i][prop]=functor.call(this, stats.map[prop][0], groups[labels[i].id]);
 			}
 		}
 //		if (this._settings.sort)
 //			labels.sortBy(stats.sort);
-			
+
 		this._not_grouped_data = this.data;
 		this.data = new dhtmlx.DataStore();
 		this.data.provideApi(this,true);
@@ -2264,7 +2264,7 @@ dhtmlx.Group = {
 	sort_setter:function(name, config){
 		if (typeof config != "object")
 			config = { by:config };
-		
+
 		this._mergeSettings(config,{
 			as:"string",
 			dir:"asc"
@@ -2278,7 +2278,7 @@ dhtmlx.Group = {
 
 
 /*
-	Behavior:KeyEvents - hears keyboard 
+	Behavior:KeyEvents - hears keyboard
 */
 dhtmlx.KeyEvents = {
 	_init:function(){
@@ -2337,10 +2337,10 @@ dhtmlx.MouseEvents={
 	_onMouse:function(e){
 		if (dhtmlx._isIE)	//make a copy of event, will be used in timed call
 			e = document.createEventObject(event);
-			
+
 		if (this._mouse_move_timer)	//clear old event timer
 			window.clearTimeout(this._mouse_move_timer);
-				
+
 		//this event just inform about moving operation, we don't care about details
 		this.callEvent("onMouseMoving",[e]);
 		//set new event timer
@@ -2385,7 +2385,7 @@ dhtmlx.MouseEvents={
 					return hash[css].call(this,e,id,trg);
 			}
 			trg=trg.parentNode;
-		}		
+		}
 		return found;	//returns true if item was located and event was triggered
 	}
 };
@@ -2396,7 +2396,7 @@ dhtmlx.MouseEvents={
 
 /*
 	Behavior:Settings
-	
+
 	@export
 		customize
 		config
@@ -2407,12 +2407,12 @@ dhtmlx.MouseEvents={
 
 dhtmlx.Settings={
 	_init:function(){
-		/* 
+		/*
 			property can be accessed as this.config.some
 			in same time for inner call it have sense to use _settings
 			because it will be minified in final version
 		*/
-		this._settings = this.config=[]; 
+		this._settings = this.config=[];
 		this._settings.sort = null; //mask default method
 	},
 	define:function(property, value){
@@ -2422,7 +2422,7 @@ dhtmlx.Settings={
 	},
 	_define:function(property,value){
 		dhtmlx.assert_settings.call(this,property,value);
-		
+
 		//method with name {prop}_setter will be used as property setter
 		//setter is optional
 		var setter = this[property+"_setter"];
@@ -2441,14 +2441,14 @@ dhtmlx.Settings={
 		var settings = dhtmlx.extend({},initial);
 		//code below will copy all properties over default one
 		if (typeof obj == "object" && !obj.tagName)
-			dhtmlx.extend(settings,obj);	
+			dhtmlx.extend(settings,obj);
 		//call config for each setting
 		this._parseSeetingColl(settings);
 	},
 	_mergeSettings:function(config, defaults){
 		for (var key in defaults)
 			switch(typeof config[key]){
-				case "object": 
+				case "object":
 					config[key] = this._mergeSettings((config[key]||{}), defaults[key]);
 					break;
 				case "undefined":
@@ -2465,14 +2465,14 @@ dhtmlx.Settings={
 			parameter can be a config object, in such case real container will be obj.container
 			or it can be html object or ID of html object
 		*/
-		if (typeof obj == "object" && !obj.tagName) 
+		if (typeof obj == "object" && !obj.tagName)
 			obj=obj.container;
 		this._obj = dhtmlx.toNode(obj);
 		if (!this._obj && fallback)
 			this._obj = fallback(obj);
-			
+
 		dhtmlx.assert(this._obj, "Incorrect html container");
-		
+
 		this._obj.className+=" "+name;
 		this._obj.onselectstart=function(){return false;};	//block selection by default
 		this._dataobj = this._obj;//separate reference for rendering modules
@@ -2482,21 +2482,21 @@ dhtmlx.Settings={
 		//parameter can be a hash of settings
 		if (typeof name == "object")
 			return this.type_setter("type",name);
-		
+
 		dhtmlx.assert(this.types, "RenderStack :: Types are not defined");
 		dhtmlx.assert(this.types[name],"RenderStack :: Inccorect type name",name);
-		//or parameter can be a name of existing template-type	
+		//or parameter can be a name of existing template-type
 		this.type=dhtmlx.extend({},this.types[name]);
 		this.customize();	//init configs
 	},
 	customize:function(obj){
 		//apply new properties
 		if (obj) dhtmlx.extend(this.type,obj);
-		
+
 		//init tempaltes for item start and item end
 		this.type._item_start = dhtmlx.Template.fromHTML(this.template_item_start(this.type));
 		this.type._item_end = this.template_item_end(this.type);
-		
+
 		//repaint self
 		this.render();
 	},
@@ -2536,7 +2536,7 @@ dhtmlx.compat=function(name, obj){
 (function(){
 	if (!window.dhtmlxError){
 		//dhtmlxcommon is not included
-		
+
 		//create fake error tracker for connectors
 		var dummy = function(){};
 		window.dhtmlxError={ catchError:dummy, throwError:dummy };
@@ -2550,7 +2550,7 @@ dhtmlx.compat=function(name, obj){
 		//imitate ajax layer of dhtmlxcommon
 		var loader = {
 			getXMLTopNode:function(name){
-				
+
 			},
 			doXPath:function(path){
 				return dhtmlx.DataDriver.xml.xpath(this.xml,path);
@@ -2563,19 +2563,19 @@ dhtmlx.compat=function(name, obj){
 		dhtmlx.compat.dataProcessor=function(obj){
 			//FIXME
 			//this is pretty ugly solution - we replace whole method , so changes in dataprocessor need to be reflected here
-			
+
 			var sendData = "_sendData";
 			var in_progress = "_in_progress";
 			var tMode = "_tMode";
 			var waitMode = "_waitMode";
-			
+
 			obj[sendData]=function(a1,rowId){
 		    	if (!a1) return; //nothing to send
 		    	if (rowId)
 					this[in_progress][rowId]=(new Date()).valueOf();
-			    
-				if (!this.callEvent("onBeforeDataSending",rowId?[rowId,this.getState(rowId)]:[])) return false;				
-				
+
+				if (!this.callEvent("onBeforeDataSending",rowId?[rowId,this.getState(rowId)]:[])) return false;
+
 				var a2 = this;
 		        var a3=this.serverProcessor;
 				if (this[tMode]!="POST")
@@ -2589,12 +2589,12 @@ dhtmlx.compat=function(name, obj){
 		        		loader.xml = dhtmlx.DataDriver.xml.checkResponse(t,x);
 		        		a2.afterUpdate(a2, null, null, null, loader);
 		    		});
-		
+
 				this[waitMode]++;
 		    };
 		};
 	}
-	
+
 })();
 
 
@@ -2606,7 +2606,7 @@ dhtmlx.compat=function(name, obj){
 
 if (!dhtmlx.attaches)
 	dhtmlx.attaches = {};
-	
+
 dhtmlx.attaches.attachAbstract=function(name, conf){
 	var obj = document.createElement("DIV");
 	obj.id = "CustomObject_"+dhtmlx.uid();
@@ -2615,10 +2615,10 @@ dhtmlx.attaches.attachAbstract=function(name, conf){
 	obj.cmp = "grid";
 	document.body.appendChild(obj);
 	this.attachObject(obj.id);
-	
+
 	conf.container = obj.id;
 	this.grid = new window[name](conf);
-	
+
 	this.gridId = obj.id;
 	this.gridObj = obj;
 	return this.grid;
@@ -2645,9 +2645,9 @@ if (window.dhtmlXDataView)
 /* DHX DEPEND FROM FILE 'load.js'*/
 
 
-/* 
-	ajax operations 
-	
+/*
+	ajax operations
+
 	can be used for direct loading as
 		dhtmlx.ajax(ulr, callback)
 	or
@@ -2667,7 +2667,7 @@ dhtmlx.ajax = function(url,call,master){
 		http_request.get(url,null,call);
 	}
 	if (!this.getXHR) return new dhtmlx.ajax(); //allow to create new instance without direct new declaration
-	
+
 	return this;
 };
 dhtmlx.ajax.prototype={
@@ -2675,7 +2675,7 @@ dhtmlx.ajax.prototype={
 	getXHR:function(){
 		if (dhtmlx._isIE)
 		 return new ActiveXObject("Microsoft.xmlHTTP");
-		else 
+		else
 		 return new XMLHttpRequest();
 	},
 	/*
@@ -2698,18 +2698,18 @@ dhtmlx.ajax.prototype={
 			url=url+(url.indexOf("?")!=-1 ? "&" : "?")+params;
 			params=null;
 		}
-		
+
 		x.open(this.post?"POST":"GET",url,!this._sync);
 		if (this.post)
 		 x.setRequestHeader('Content-type','application/x-www-form-urlencoded');
-		 
+
 		//async mode, define loading callback
 		if (!this._sync){
 		 var self=this;
 		 x.onreadystatechange= function(){
 			if (!x.readyState || x.readyState == 4){
 				dhtmlx.log_full_time("data_loading");	//log rendering time
-				if (call && self) 
+				if (call && self)
 					for (var i=0; i < call.length; i++)	//there can be multiple callbacks
 					 if (call[i])
 						call[i].call((self.master||self),x.responseText,x.responseXML,x);
@@ -2718,7 +2718,7 @@ dhtmlx.ajax.prototype={
 			}
 		 };
 		}
-		
+
 		x.send(params||null);
 		return x; //return XHR, which can be used in case of sync. mode
 	},
@@ -2731,7 +2731,7 @@ dhtmlx.ajax.prototype={
 	post:function(url,params,call){
 		this.post=true;
 		return this.send(url,params,call);
-	}, 
+	},
 	sync:function(){
 		this._sync = true;
 		return this;
@@ -2741,7 +2741,7 @@ dhtmlx.ajax.prototype={
 
 /*
 	Behavior:DataLoader - load data in the component
-	
+
 	@export
 		load
 		parse
@@ -2766,7 +2766,7 @@ dhtmlx.DataLoader={
 				return this._load_count=[from,count];	//save last ignored request
 			else
 				this._load_count=true;
-				
+
 			this.load(url+((url.indexOf("?")==-1)?"?":"&")+"posStart="+from+"&count="+count,function(){
 				//after loading check if we have some ignored requests
 				var temp = this._load_count;
@@ -2818,7 +2818,7 @@ dhtmlx.DataDriver.json={
 	},
 	//get count of data and position at which new data need to be inserted
 	getInfo:function(data){
-		return { 
+		return {
 		 _size:(data.total_count||0),
 		 _from:(data.pos||0)
 		};
@@ -2841,7 +2841,7 @@ dhtmlx.DataDriver.html={
 			t=document.createElement("DIV");
 			t.innerHTML = data;
 		 }
-		 
+
 		 return t.getElementsByTagName(this.tag);
 		}
 		return data;
@@ -2858,7 +2858,7 @@ dhtmlx.DataDriver.html={
 	},
 	//dyn loading is not supported by HTML data source
 	getInfo:function(data){
-		return { 
+		return {
 		 _size:0,
 		 _from:0
 		};
@@ -2882,14 +2882,14 @@ dhtmlx.DataDriver.jsarray={
 	//get hash of properties for single record, in case of array they will have names as "data{index}"
 	getDetails:function(data){
 		var result = {};
-		for (var i=0; i < data.length; i++) 
+		for (var i=0; i < data.length; i++)
 		 result["data"+i]=data[i];
-		 
+
 		return result;
 	},
 	//dyn loading is not supported by js-array data source
 	getInfo:function(data){
-		return { 
+		return {
 		 _size:0,
 		 _from:0
 		};
@@ -2909,14 +2909,14 @@ dhtmlx.DataDriver.csv={
 	getDetails:function(data){
 		data = this.stringToArray(data);
 		var result = {};
-		for (var i=0; i < data.length; i++) 
+		for (var i=0; i < data.length; i++)
 		 result["data"+i]=data[i];
-		 
+
 		return result;
 	},
 	//dyn loading is not supported by csv data source
 	getInfo:function(data){
-		return { 
+		return {
 		 _size:0,
 		 _from:0
 		};
@@ -2963,7 +2963,7 @@ dhtmlx.DataDriver.xml={
 	},
 	//get count of data and position at which new data_loading need to be inserted
 	getInfo:function(data){
-		return { 
+		return {
 		 _size:(data.documentElement.getAttribute("total_count")||0),
 		 _from:(data.documentElement.getAttribute("pos")||0)
 		};
@@ -2977,7 +2977,7 @@ dhtmlx.DataDriver.xml={
 		 var res = [];
 		 var col = xml.evaluate(path, node, null, XPathResult.ANY_TYPE, null);
 		 var temp = col.iterateNext();
-		 while (temp){ 
+		 while (temp){
 			res.push(temp);
 			temp = col.iterateNext();
 		}
@@ -3001,14 +3001,14 @@ dhtmlx.DataDriver.xml={
 			flag=true;
 		 }
 		}
-		
+
 		if (!a.length && !flag)
 		 return this.nodeValue(tag);
 		//each object will have its text content as "value" property
 		z.value = this.nodeValue(tag);
 		return z;
 	},
-	//get value of xml node 
+	//get value of xml node
 	nodeValue:function(node){
 		if (node.firstChild)
 		 return node.firstChild.data;	//FIXME - long text nodes in FF not supported for now
@@ -3018,7 +3018,7 @@ dhtmlx.DataDriver.xml={
 	fromString:function(xmlString){
 		if (window.DOMParser)		// FF, KHTML, Opera
 		 return (new DOMParser()).parseFromString(xmlString,"text/xml");
-		if (window.ActiveXObject){	// IE, utf-8 only 
+		if (window.ActiveXObject){	// IE, utf-8 only
 		 temp=new ActiveXObject("Microsoft.xmlDOM");
 		 temp.loadXML(xmlString);
 		 return temp;
@@ -3026,14 +3026,14 @@ dhtmlx.DataDriver.xml={
 		dhtmlx.error("Load from xml string is not supported");
 	},
 	//check is XML correct and try to reparse it if its invalid
-	checkResponse:function(text,xml){ 
+	checkResponse:function(text,xml){
 		if (xml && ( xml.firstChild && xml.firstChild.tagName != "parsererror") )
 			return xml;
 		//parsing as string resolves incorrect content type
 		//regexp removes whitespaces before xml declaration, which is vital for FF
 		var a=this.from_string(text.responseText.replace(/^[\s]+/,""));
 		if (a) return a;
-		
+
 		dhtmlx.error("xml can't be parsed",text.responseText);
 	}
 };
@@ -3047,7 +3047,7 @@ dhtmlx.DataDriver.xml={
 /*
 	Compatibility hack for loading data from the grid.
 	Provides new type of datasource - dhtmlxgrid
-	
+
 */
 
 /*DHX:Depend load.js*/
@@ -3065,11 +3065,11 @@ dhtmlx.DataDriver.dhtmlxgrid={
 		var result = {};
 		for (var i=0; i < this._grid.getColumnsNum(); i++)
 			result["data"+i]=this._grid[this._grid_getter](data,i);
-      
+
 		return result;
 	},
 	getInfo:function(data){
-		return { 
+		return {
 			_size:0,
 			_from:0
 		};
@@ -3100,7 +3100,7 @@ dhtmlx.Canvas = {
 				dhtmlx.error("Canvas is not supported in the current browser");
 		}
 		return this._canvas;
-	}, 
+	},
 	getCanvas:function(context){
 		return (this._canvas||this._prepareCanvas(this._obj)).getContext(context||"2d");
 	},
@@ -3112,7 +3112,7 @@ dhtmlx.Canvas = {
 	},
 	renderText:function(x,y,text,css,w){
 		if (!text) return; //ignore empty text
-		
+
 		var t = dhtmlx.html.create("DIV",{
 			"class":"dhx_canvas_text"+(css?(" "+css):""),
 			"style":"left:"+x+"px; top:"+y+"px;"
@@ -3126,14 +3126,14 @@ dhtmlx.Canvas = {
 	renderTextAt:function(top, center, x,y,t,c,w){
 		var text=this.renderText.call(this,x,y,t,c,w);
 		if (text){
-			
+
 			if (top){
 				//TODO: Check again, when new version of Chrome will be released
 				//fixes incorrect text sizing in Chrome
 				if (dhtmlx._isWebKit) text.style.fontSize = "13px";
 				text.style.top = y-text.offsetHeight + "px";
 			}
-			
+
 			if (center){
 				text.style.left = parseInt(x-text.offsetWidth/2,10) + "px";
 				//TODO: Check again, when new version of Chrome will be released
@@ -3150,7 +3150,7 @@ dhtmlx.Canvas = {
 			this._obj._htmlmap.parentNode.removeChild(this._obj._htmlmap);
 			this._obj._htmlmap = null;
 		}
-		//FF breaks, when we are using clear canvas and call clearRect without parameters		
+		//FF breaks, when we are using clear canvas and call clearRect without parameters
 		this.getCanvas().clearRect(0,0,this._canvas.offsetWidth, this._canvas.offsetHeight);
 	}
 };
@@ -3186,31 +3186,32 @@ dhtmlx.Canvas = {
 
 
 dhtmlXChart = function(container){
-	this.name = "Chart";	
-	this.version = "3.0";	
-	
+
+	this.name = "Chart";
+	this.version = "3.0";
+
 	if (dhtmlx.assert_enabled()) this._assert();
-	
+
 	dhtmlx.extend(this, dhtmlx.Settings);
-	
+
 	this._parseContainer(container,"dhx_chart");
-	
+
 	dhtmlx.extend(this, dhtmlx.DataLoader);
 	this.data.provideApi(this,true);
-	
+
 	dhtmlx.extend(this, dhtmlx.EventSystem);
 	dhtmlx.extend(this, dhtmlx.MouseEvents);
 	dhtmlx.extend(this, dhtmlx.Destruction);
 	dhtmlx.extend(this, dhtmlx.Canvas);
 	dhtmlx.extend(this, dhtmlx.Group);
 	dhtmlx.extend(this, dhtmlx.AutoTooltip);
-	
+
 	dhtmlx.extend(this, dhtmlx.chart.pie);
 	dhtmlx.extend(this, dhtmlx.chart.bar);
 	dhtmlx.extend(this, dhtmlx.chart.line);
-	
-	
-	
+
+
+
 	this._parseSettings(container,{
 		color:"RAINBOW",
 		alpha:"1",
@@ -3229,9 +3230,9 @@ dhtmlXChart = function(container){
 		border:true,
 		labelOffset: 20
 	});
-	
+
 	this.data.attachEvent("onStoreUpdated",dhtmlx.bind(function(){
-		this.render();  
+		this.render();
 	},this));
 };
 dhtmlXChart.prototype={
@@ -3244,12 +3245,12 @@ dhtmlXChart.prototype={
 	},
 	resize:function(){
 		this._resizeCanvas();
-		this.render();	
+		this.render();
 	},
 	render:function(){
 		if (!this.callEvent("onBeforeRender",[this.data]))
 			return;
-			
+
 		this.clearCanvas();
 		this["pvt_render_"+this._settings.view](
 			this.getCanvas(),
@@ -3258,11 +3259,11 @@ dhtmlXChart.prototype={
 			this._obj.offsetHeight
 		);
 	},
-	
-	value_setter:dhtmlx.Template.obj_setter,	
-	alpha_setter:dhtmlx.Template.obj_setter,	
+
+	value_setter:dhtmlx.Template.obj_setter,
+	alpha_setter:dhtmlx.Template.obj_setter,
 	label_setter:dhtmlx.Template.obj_setter,
-	lineColor_setter:dhtmlx.Template.obj_setter,	
+	lineColor_setter:dhtmlx.Template.obj_setter,
 	pieInnerText_setter:dhtmlx.Template.obj_setter,
 	//available coloring presets
 	colormap:{
@@ -3275,10 +3276,10 @@ dhtmlXChart.prototype={
 	color_setter:function(name, value){
 		return this.colormap[value]||dhtmlx.Template.obj_setter(name, value);
 	},
-	legend_setter:function(name, config){	
+	legend_setter:function(name, config){
 		if(typeof(config)!="object")	//allow to use template string instead of object
 			config={template:config};
-			
+
 		this._mergeSettings(config,{
 			width:150,
 			height:18,
@@ -3291,21 +3292,21 @@ dhtmlXChart.prototype={
 				height:15
 			}
 		});
-		
+
 		config.template = dhtmlx.Template.setter(0,config.template);
 		return config;
 	},
 	item_setter:function(name, config){
 		if(typeof(config)!="object")
 			config={color:config, borderColor:config};
-			
+
 		this._mergeSettings(config,{
 			radius:4,
 			color:"#000000",
 			borderColor:"#000000",
 			borderWidth:2
 		});
-		
+
 		config.color = dhtmlx.Template.setter(0,config.color);
 		config.borderColor = dhtmlx.Template.setter(0,config.borderColor);
 		return config;
@@ -3313,16 +3314,16 @@ dhtmlXChart.prototype={
 	line_setter:function(name, config){
 		if(typeof(config)!="object")
 			config={color:config};
-			
+
 		this._mergeSettings(config,{
 			width:3,
 			color:"#d4d4d4"
 		});
-		
+
 		config.color = dhtmlx.Template.setter(0,config.color);
 		return config;
 	},
-	padding_setter:function(name, config){	
+	padding_setter:function(name, config){
 		if(typeof(config)!="object")
 			config={left:config, right:config, top:config, bottom:config};
 		this._mergeSettings(config,{
@@ -3344,7 +3345,7 @@ dhtmlXChart.prototype={
 			template:"",
 			lines:false
 		});
-		
+
 		if(config.template)
 			config.template = dhtmlx.Template.setter(0,config.template);
 		return config;
@@ -3356,7 +3357,7 @@ dhtmlXChart.prototype={
 			template:"{obj}",
 			lines:true
 		});
-		
+
 		if(config.template)
 			config.template = dhtmlx.Template.setter(0,config.template);
 		return config;
@@ -3364,13 +3365,13 @@ dhtmlXChart.prototype={
 
 	_drawXAxis:function(ctx,data,x,y){
 		if (!this._settings.xAxis) return;
-		
+
 		var x0 = parseInt(this._settings.padding.left,10)-0.5;
 		var y0 = y-this._settings.padding.bottom+0.5;
 		var x1 = x-this._settings.padding.right;
-		
+
 		this._drawLine(ctx,x0,y0,x1,y0,this._settings.xAxis.color,1);
-		
+
 		this.renderTextAt(true, false, x0,y-2,
 			this._settings.xAxis.title,
 			"dhx_axis_title_x",
@@ -3384,16 +3385,16 @@ dhtmlXChart.prototype={
 		var step;
 		var scaleParam= {};
 		if (!this._settings.yAxis) return;
-		
+
 		var x0 = parseInt(this._settings.padding.left,10)-0.5;
 		var y0 = y- parseInt(this._settings.padding.bottom,10);
 		var y1 = parseInt(this._settings.padding.top,10);
-		
+
 		this._drawLine(ctx,x0,y0,x0,y1,this._settings.yAxis.color,1);
-		
+
 		if(this._settings.yAxis.step)
 		     step = parseFloat(this._settings.yAxis.step);
-		
+
 		if(typeof this._settings.yAxis.step =="undefined"||typeof this._settings.yAxis.start=="undefined"||typeof this._settings.yAxis.end =="undefined"){
 			scaleParam = this._calculateScale(start,end);
 			start = scaleParam.start;
@@ -3403,7 +3404,7 @@ dhtmlXChart.prototype={
 			this._settings.yAxis.start = start;
 			this._settings.yAxis.step = step;
 		}
-		
+
 		if(step===0) return;
 		var stepHeight = (y0-y1)*step/(end-start);
 		var c = 0;
@@ -3412,13 +3413,13 @@ dhtmlXChart.prototype={
 			var yi = Math.floor(y0-c*stepHeight)+ 0.5;/*canvas line fix*/
 			if(i!=start &&this._settings.yAxis.lines)
 				this._drawLine(ctx,x0,yi,x-this._settings.padding.right,yi,this._settings.yAxis.color,0.2);
-			
+
 			this.renderText(0,yi-5,
 				this._settings.yAxis.template(i.toString()),
 				"dhx_axis_item_y",
 				parseInt(this._settings.padding.left,10)-5
-			);	
-			
+			);
+
 			c++;
 		}
 
@@ -3435,7 +3436,7 @@ dhtmlXChart.prototype={
 
        if(step>Math.abs(nmin)) start = (nmin<0?-step:0);
 	   else{
-	   	
+
 	      var absNmin = Math.abs(nmin);
 	      var powerStart = Math.floor(this.log10(absNmin));
 		  var nminVal = absNmin/Math.pow(10,powerStart);
@@ -3491,7 +3492,7 @@ dhtmlXChart.prototype={
 		function(pos){ return "#"+dhtmlx.math.toHex(255-pos,2)+"FF00";},
 		function(pos){ return "#00FF"+dhtmlx.math.toHex(pos,2);},
 		function(pos){ return "#00"+dhtmlx.math.toHex(255-pos,2)+"FF";},
-		function(pos){ return "#"+dhtmlx.math.toHex(pos,2)+"00FF";}		
+		function(pos){ return "#"+dhtmlx.math.toHex(pos,2)+"00FF";}
 	]
 };
 
