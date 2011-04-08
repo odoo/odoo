@@ -76,13 +76,13 @@
                 <page string="Accounting">
                     <group col="2" colspan="2">
                         <separator string="Customer Accounting Properties" colspan="2"/>
-                        <field name="property_account_receivable" groups="base.group_extended" />
+                        <field name="property_account_receivable" groups="account.group_account_invoice" />
                         <field name="property_account_position" widget="selection"/>
                         <field name="property_payment_term" widget="selection"/>
                     </group>
                     <group col="2" colspan="2">
                         <separator string="Supplier Accounting Properties" colspan="2"/>
-                        <field name="property_account_payable" groups="base.group_extended"/>
+                        <field name="property_account_payable" groups="account.group_account_invoice"/>
                     </group>
                     <group col="2" colspan="2">
                         <separator string="Customer Credit" colspan="2"/>
@@ -131,7 +131,7 @@
             id="action_analytic_open"
             name="Analytic Accounts"
             res_model="account.analytic.account"
-            context="{'search_default_partner_id':[active_id]}"
+            context="{'search_default_partner_id':[active_id], 'default_partner_id': active_id}"
             src_model="res.partner"
             view_type="form"
             view_mode="tree,form,graph,calendar"

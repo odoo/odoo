@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-02-09 17:14+0000\n"
+"PO-Revision-Date: 2011-03-18 11:11+0000\n"
 "Last-Translator: NOVOTRADE RENDSZERHÁZ <openerp@novotrade.hu>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-02-10 04:35+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-03-19 05:19+0000\n"
+"X-Generator: Launchpad (build 12559)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -746,12 +746,6 @@ msgstr "Csekk"
 #: field:account.partner.reconcile.process,today_reconciled:0
 msgid "Partners Reconciled Today"
 msgstr "Ma párosított partnerek"
-
-#. module: account
-#: code:addons/account/account_bank_statement.py:306
-#, python-format
-msgid "The statement balance is incorrect !\n"
-msgstr "Hibás kivonat egyenleg!\n"
 
 #. module: account
 #: selection:account.payment.term.line,value:0
@@ -1688,7 +1682,7 @@ msgid ""
 msgstr ""
 "Számlatükör megjelenítése üzleti évenként és időszak szerinti szűréssel. A "
 "főkönyvi számlákat faszerkezetben mutatja. A számlára klikkelve megjeleníti "
-"a a számla könyvelési tételeit."
+"a számla könyvelési tételeit."
 
 #. module: account
 #: constraint:account.fiscalyear:0
@@ -1846,7 +1840,7 @@ msgstr "Soronkénti tételek"
 #. module: account
 #: report:account.tax.code.entries:0
 msgid "A/c Code"
-msgstr "Számla száma"
+msgstr "Főkönyvi számla"
 
 #. module: account
 #: field:account.invoice,move_id:0
@@ -2698,11 +2692,14 @@ msgid "August"
 msgstr "Augusztus"
 
 #. module: account
-#: code:addons/account/account_bank_statement.py:307
+#: code:addons/account/account_bank_statement.py:306
 #, python-format
 msgid ""
+"The statement balance is incorrect !\n"
 "The expected balance (%.2f) is different than the computed one. (%.2f)"
-msgstr "A várt egyenleg (%.2f) eltér a számított egyenlegtől (%.2f)."
+msgstr ""
+"A kivonat egyenlege hibás!\n"
+"A várt egyenleg (%.2f) eltér a számított egyenlegtől (%.2f)."
 
 #. module: account
 #: model:process.transition,note:account.process_transition_paymentreconcile0
@@ -2948,6 +2945,12 @@ msgstr "Az adóbevallásban szereplő adóalap."
 #: selection:account.entries.report,type:0
 msgid "View"
 msgstr "Gyűjtő"
+
+#. module: account
+#: code:addons/account/account.py:2951
+#, python-format
+msgid "BNK%s"
+msgstr "BNK%s"
 
 #. module: account
 #: code:addons/account/account.py:2906
@@ -3643,7 +3646,7 @@ msgstr "Leképezés"
 #: field:account.move.reconcile,name:0
 #: field:account.subscription,name:0
 msgid "Name"
-msgstr "Név"
+msgstr "Megnevezés"
 
 #. module: account
 #: model:ir.model,name:account.model_account_aged_trial_balance
@@ -4171,7 +4174,7 @@ msgstr "A rendszer nem talál érvényes időszakot!"
 #. module: account
 #: report:account.tax.code.entries:0
 msgid "Voucher No"
-msgstr "Nyugta száma"
+msgstr "Bizonylat sorszáma"
 
 #. module: account
 #: view:wizard.multi.charts.accounts:0
@@ -4382,12 +4385,6 @@ msgstr ""
 #: report:account.account.balance.landscape:0
 msgid "Account Balance -"
 msgstr "Számla egyenleg -"
-
-#. module: account
-#: code:addons/account/invoice.py:989
-#, python-format
-msgid "Invoice "
-msgstr "Számla "
 
 #. module: account
 #: field:account.automatic.reconcile,date1:0
@@ -4952,8 +4949,8 @@ msgstr "Tranzakció"
 #: help:account.tax.template,tax_code_id:0
 msgid "Use this code for the VAT declaration."
 msgstr ""
-"Az itt megadott kód sorában jelenik meg az adóalap az adókimutatásban és az "
-"adókivonatban, amelyek alapján az ÁFA-bevallás elkészíthető."
+"Az itt megadott kód sorában jelenik meg az adóalap/adó az adókimutatásban és "
+"az adókivonatban, amelyek alapján az ÁFA-bevallás elkészíthető."
 
 #. module: account
 #: view:account.move.line:0
@@ -5186,7 +5183,8 @@ msgstr "Devizaösszeg"
 msgid ""
 "Specified Journal does not have any account move entries in draft state for "
 "this period"
-msgstr "A megadott naplóban nincs tervezet állapotú tétel a kért időszakban"
+msgstr ""
+"A megadott naplóban nincs tervezet állapotú tétel ebben az időszakban."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_view_move_line
@@ -5727,10 +5725,10 @@ msgstr ""
 "rendszerben."
 
 #. module: account
-#: code:addons/account/invoice.py:989
+#: code:addons/account/invoice.py:997
 #, python-format
-msgid "is validated."
-msgstr "jóváhagyásra került."
+msgid "Invoice  '%s' is validated."
+msgstr "'%s' számla jóváhagyásra került."
 
 #. module: account
 #: view:account.chart.template:0
@@ -6410,11 +6408,10 @@ msgid ""
 "reconcile in a series of accounts. It finds entries for each partner where "
 "the amounts correspond."
 msgstr ""
-"Egy vevő/szállító számla akkor minősül rendezettnek, ha az párosításra "
-"került a banki/pénztári kifizetéssel vagy egy jóváíró számlával vagy egy "
-"szállító/vevő számlával. Az automatikus párosítás funkció minden partnerre "
-"megkeresi a párosítható tételeket. Az összegében egyező tételek párosítását "
-"végrehajtja."
+"Egy számla akkor minősül rendezettnek, ha az párosításra került a "
+"banki/pénztári kifizetéssel vagy egy jóváíró számlával. Az automatikus "
+"párosítás funkció minden partnerre megkeresi a párosítható tételeket. Az "
+"összegében egyező tételek párosítását végrehajtja."
 
 #. module: account
 #: view:account.move:0
@@ -7848,7 +7845,7 @@ msgid ""
 "the start and end of the month or quarter."
 msgstr ""
 "Ez a menüpont kinyomtatja a számlákon vagy kifizetéseken alapuló ÁFA-"
-"kimutatást, amely alapján összeállítható az ÁFA-bevallás. Válassza ki a "
+"kimutatást, amelynek alapján az ÁFA-bevallás elkészíthető. Válassza ki a "
 "megfelelő időszakot. Valós idejű adatokat tartalmaz, így bármikor "
 "tájékozódhat a bevallandó ÁFÁ-ról."
 
@@ -10273,6 +10270,10 @@ msgstr ""
 #~ msgid "Amount paid"
 #~ msgstr "Kifizetés összege"
 
+#, python-format
+#~ msgid "The statement balance is incorrect !\n"
+#~ msgstr "Hibás kivonat egyenleg!\n"
+
 #~ msgid "Total quantity"
 #~ msgstr "Mennyiség összesen"
 
@@ -10479,3 +10480,16 @@ msgstr ""
 
 #~ msgid "Entry encoding"
 #~ msgstr "Adatbevitel"
+
+#, python-format
+#~ msgid "Invoice "
+#~ msgstr "Számla "
+
+#, python-format
+#~ msgid "is validated."
+#~ msgstr "jóváhagyásra került."
+
+#, python-format
+#~ msgid ""
+#~ "The expected balance (%.2f) is different than the computed one. (%.2f)"
+#~ msgstr "A várt egyenleg (%.2f) eltér a számított egyenlegtől (%.2f)."

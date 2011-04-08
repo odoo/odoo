@@ -280,7 +280,7 @@
             res_model="event.registration"
             src_model="event.event"
             view_mode="tree,form,calendar,graph"
-            domain="[('event_id','=',active_id)]"
+            context="{'search_default_event_id': [active_id], 'default_event_id': active_id}"
             view_type="form"/>
 
       <act_window
@@ -289,7 +289,7 @@
             res_model="event.registration"
             src_model="res.partner"
             view_mode="tree,form,calendar,graph"
-            context="{'search_default_partner_id': [active_id]}"
+            context="{'search_default_partner_id': [active_id], 'default_partner_id': active_id}"
             view_type="form"/>
 
        <menuitem name="Events" id="menu_event_event" action="action_event_view" parent="base.menu_event_main" />

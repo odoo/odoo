@@ -67,7 +67,7 @@ class purchase_requisition_partner(osv.osv_memory):
             context = {}
         record_ids = context and context.get('active_ids', False)
         if record_ids:
-            data =  self.read(cr, uid, ids)
+            data =  self.browse(cr, uid, ids,context=context)[0]
             company = self.pool.get('res.users').browse(cr, uid, uid, context).company_id
             order_obj = self.pool.get('purchase.order')
             order_line_obj = self.pool.get('purchase.order.line')
@@ -77,14 +77,15 @@ class purchase_requisition_partner(osv.osv_memory):
             prod_obj = self.pool.get('product.product')
             tender_obj = self.pool.get('purchase.requisition')
             acc_pos_obj = self.pool.get('account.fiscal.position')
-            partner_id = data[0]['partner_id']
-
-            supplier_data = partner_obj.browse(cr, uid, partner_id, context=context)
-
+            partner_id = data.partner_id.id
+            supplier_data = data.partner_id
             address_id = partner_obj.address_get(cr, uid, [partner_id], ['delivery'])['delivery']
             list_line=[]
             purchase_order_line={}
             for tender in tender_obj.browse(cr, uid, record_ids, context=context):
+                for supp_record in tender.purchase_ids:
+                    if supp_record.partner_id.id == partner_id and supp_record.state <> 'cancel':
+                         raise osv.except_osv(_('Warning'), _('You have already one %s purchase order for this partner, you must cancel this purchase order to create a new quotation.') % supp_record.state)
                 for line in tender.line_ids:
                     partner_list = sorted([(partner.sequence, partner) for partner in  line.product_id.seller_ids if partner])
                     partner_rec = partner_list and partner_list[0] and partner_list[0][1] or False

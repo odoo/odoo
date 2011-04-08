@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2010-08-03 09:13+0000\n"
-"Last-Translator: Boris <boris.t.ivanov@gmail.com>\n"
+"PO-Revision-Date: 2011-03-02 09:16+0000\n"
+"Last-Translator: Dimitar Markov <dimitar.markov@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-15 05:01+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-03-18 04:37+0000\n"
+"X-Generator: Launchpad (build 12559)\n"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_res_users_2_project_task_opened
@@ -43,7 +43,7 @@ msgstr ""
 #. module: project
 #: constraint:res.users:0
 msgid "The chosen company is not in the allowed companies for this user"
-msgstr ""
+msgstr "Избраната фирма не е измежду разрешените фирми за този потребител"
 
 #. module: project
 #: help:project.task.reevaluate,remaining_hours:0
@@ -53,12 +53,18 @@ msgstr ""
 #. module: project
 #: view:project.task:0
 msgid "Deadlines"
-msgstr ""
+msgstr "Крайни срокове"
 
 #. module: project
 #: code:addons/project/project.py:121
 #, python-format
 msgid "Operation Not Permitted !"
+msgstr "Действието не е разрешено"
+
+#. module: project
+#: code:addons/project/wizard/project_task_delegate.py:67
+#, python-format
+msgid "CHECK: %s"
 msgstr ""
 
 #. module: project
@@ -79,7 +85,7 @@ msgstr ""
 #. module: project
 #: field:project.installer,hr_timesheet_sheet:0
 msgid "Timesheets"
-msgstr ""
+msgstr "Графици"
 
 #. module: project
 #: view:project.task:0
@@ -96,7 +102,7 @@ msgstr "Потвърди часове"
 #: view:report.project.task.user:0
 #: field:report.project.task.user,progress:0
 msgid "Progress"
-msgstr "Прогрес"
+msgstr "Напредък"
 
 #. module: project
 #: help:project.task,remaining_hours:0
@@ -114,16 +120,17 @@ msgstr ""
 #: constraint:project.project:0
 msgid "Error! project start-date must be lower then project end-date."
 msgstr ""
+"Грешка! Начална дата на пректа, трябва да бъде крайния срок на проекта."
 
 #. module: project
 #: view:project.task.reevaluate:0
 msgid "Reevaluation Task"
-msgstr ""
+msgstr "Преоценка на задача"
 
 #. module: project
 #: field:project.project,members:0
 msgid "Project Members"
-msgstr ""
+msgstr "Участници в проекта"
 
 #. module: project
 #: model:process.node,name:project.process_node_taskbydelegate0
@@ -133,7 +140,7 @@ msgstr ""
 #. module: project
 #: selection:report.project.task.user,month:0
 msgid "March"
-msgstr ""
+msgstr "Март"
 
 #. module: project
 #: view:project.task:0
@@ -160,7 +167,7 @@ msgstr "Мои задачи"
 #. module: project
 #: constraint:project.task:0
 msgid "Error ! You cannot create recursive tasks."
-msgstr ""
+msgstr "Грешка! Не можете да създавате рекурсивни задачи."
 
 #. module: project
 #: field:project.task,company_id:0
@@ -178,12 +185,12 @@ msgstr ""
 #. module: project
 #: model:ir.actions.act_window,name:project.action_project_vs_planned_total_hours_graph
 msgid "Projects: Planned Vs Total hours"
-msgstr ""
+msgstr "Проекти: Планирани спрямо Общо часове"
 
 #. module: project
 #: view:project.task.close:0
 msgid "Warn Message"
-msgstr ""
+msgstr "Предупредително съобщение"
 
 #. module: project
 #: field:project.task.type,name:0
@@ -209,7 +216,7 @@ msgstr ""
 #. module: project
 #: view:project.project:0
 msgid "New Project Based on Template"
-msgstr ""
+msgstr "Нов проекта на база Шаблон"
 
 #. module: project
 #: constraint:project.project:0
@@ -225,20 +232,20 @@ msgstr "Много спешно"
 #. module: project
 #: help:project.task.delegate,user_id:0
 msgid "User you want to delegate this task to"
-msgstr ""
+msgstr "Потребител, на който желаете да доверите тази задача"
 
 #. module: project
 #: view:report.project.task.user:0
 #: field:report.project.task.user,day:0
 #: field:task.by.days,day:0
 msgid "Day"
-msgstr ""
+msgstr "Ден"
 
 #. module: project
 #: code:addons/project/project.py:571
 #, python-format
 msgid "The task '%s' is done"
-msgstr ""
+msgstr "Задачата '%s' е завършена"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_close
@@ -289,7 +296,7 @@ msgstr ""
 #. module: project
 #: view:project.project:0
 msgid "Invoice Address"
-msgstr ""
+msgstr "Адрес на фактура"
 
 #. module: project
 #: field:report.project.task.user,name:0
@@ -325,7 +332,7 @@ msgstr ""
 #: selection:report.project.task.user,state:0
 #: selection:task.by.days,state:0
 msgid "Cancelled"
-msgstr "Отменено"
+msgstr "Отказан"
 
 #. module: project
 #: view:board.board:0
@@ -347,7 +354,7 @@ msgstr ""
 #. module: project
 #: model:process.node,name:project.process_node_donetask0
 msgid "Done task"
-msgstr ""
+msgstr "Завършена задача"
 
 #. module: project
 #: help:project.task.delegate,prefix:0
@@ -363,30 +370,30 @@ msgstr ""
 #. module: project
 #: model:process.node,note:project.process_node_donetask0
 msgid "Task is Completed"
-msgstr ""
+msgstr "Задачата е завършена"
 
 #. module: project
 #: field:project.task,date_end:0
 #: field:report.project.task.user,date_end:0
 msgid "Ending Date"
-msgstr ""
+msgstr "Крайна дата"
 
 #. module: project
 #: view:report.project.task.user:0
 msgid "   Month   "
-msgstr ""
+msgstr "   Месец   "
 
 #. module: project
 #: model:process.transition,note:project.process_transition_delegate0
 msgid "Delegates tasks to the other user"
-msgstr ""
+msgstr "Довери задачи на други потребители"
 
 #. module: project
 #: view:project.project:0
 #: view:project.task:0
 #: view:report.project.task.user:0
 msgid "Group By..."
-msgstr ""
+msgstr "Групирай по"
 
 #. module: project
 #: help:project.task,effective_hours:0
@@ -408,7 +415,7 @@ msgstr ""
 #. module: project
 #: model:project.task.type,name:project.project_tt_testing
 msgid "Testing"
-msgstr ""
+msgstr "Пробване…"
 
 #. module: project
 #: help:project.task.delegate,planned_hours:0
@@ -424,7 +431,7 @@ msgstr ""
 #: code:addons/project/project.py:553
 #, python-format
 msgid "Task '%s' closed"
-msgstr ""
+msgstr "Задачата '%s' е приключена"
 
 #. module: project
 #: model:ir.model,name:project.model_account_analytic_account
@@ -440,7 +447,7 @@ msgstr "Направено от"
 #. module: project
 #: view:project.task:0
 msgid "Planning"
-msgstr ""
+msgstr "Планиране"
 
 #. module: project
 #: view:project.task:0
@@ -454,7 +461,7 @@ msgstr "Краен срок"
 #: view:project.task.delegate:0
 #: view:project.task.reevaluate:0
 msgid "_Cancel"
-msgstr ""
+msgstr "_Отказ"
 
 #. module: project
 #: model:ir.model,name:project.model_res_partner
@@ -463,19 +470,19 @@ msgstr ""
 #: view:report.project.task.user:0
 #: field:report.project.task.user,partner_id:0
 msgid "Partner"
-msgstr ""
+msgstr "Партньор"
 
 #. module: project
 #: constraint:account.analytic.account:0
 msgid "Error! You can not create recursive analytic accounts."
-msgstr ""
+msgstr "Грешка! Не можете да създавате рекурсивни аналитични сметки."
 
 #. module: project
 #: code:addons/project/project.py:225
 #: code:addons/project/project.py:246
 #, python-format
 msgid " (copy)"
-msgstr ""
+msgstr " (копие)"
 
 #. module: project
 #: help:project.installer,hr_timesheet_sheet:0
@@ -492,12 +499,12 @@ msgstr ""
 #. module: project
 #: view:project.task:0
 msgid "Previous"
-msgstr ""
+msgstr "Предишен"
 
 #. module: project
 #: view:project.task.reevaluate:0
 msgid "Reevaluate Task"
-msgstr ""
+msgstr "Преоценка на задача"
 
 #. module: project
 #: field:report.project.task.user,user_id:0
@@ -532,17 +539,17 @@ msgstr ""
 #. module: project
 #: model:ir.actions.act_window,name:project.act_my_project
 msgid "My projects"
-msgstr "Мои проекти"
+msgstr "Моите проекти"
 
 #. module: project
 #: constraint:res.company:0
 msgid "Error! You can not create recursive companies."
-msgstr ""
+msgstr "Грешка! НЕ може да създавате рекурсивни компании"
 
 #. module: project
 #: view:project.task:0
 msgid "Next"
-msgstr ""
+msgstr "Следващ"
 
 #. module: project
 #: model:process.transition,note:project.process_transition_draftopentask0
@@ -679,7 +686,7 @@ msgstr ""
 #. module: project
 #: view:report.project.task.user:0
 msgid "My Projects"
-msgstr "Мои проекти"
+msgstr "Моите Проекти"
 
 #. module: project
 #: view:project.task:0
@@ -797,7 +804,7 @@ msgstr "Делегирай"
 #. module: project
 #: model:ir.actions.act_window,name:project.open_view_template_project
 msgid "Templates of Projects"
-msgstr ""
+msgstr "Шаблони на проекти"
 
 #. module: project
 #: model:ir.model,name:project.model_project_project
@@ -834,7 +841,7 @@ msgstr ""
 #: model:ir.module.module,shortdesc:project.module_meta_information
 #: view:res.company:0
 msgid "Project Management"
-msgstr "Проекти"
+msgstr "Управление на проект"
 
 #. module: project
 #: selection:report.project.task.user,month:0
@@ -926,7 +933,7 @@ msgstr "Месец"
 #. module: project
 #: model:ir.actions.act_window,name:project.dblc_proj
 msgid "Project's tasks"
-msgstr "Проектни задачи"
+msgstr "Задачи на проекта"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_type
@@ -1024,7 +1031,7 @@ msgstr ""
 #. module: project
 #: view:project.task:0
 msgid "Project Tasks"
-msgstr ""
+msgstr "Задачи на проекта"
 
 #. module: project
 #: constraint:res.partner:0
@@ -1062,7 +1069,7 @@ msgstr ""
 #: view:project.project:0
 #: field:project.task,manager_id:0
 msgid "Project Manager"
-msgstr ""
+msgstr "Управител на проекта"
 
 #. module: project
 #: view:project.project:0
@@ -1096,7 +1103,7 @@ msgstr ""
 #: view:project.project:0
 #: field:project.project,complete_name:0
 msgid "Project Name"
-msgstr ""
+msgstr "Име на проекта"
 
 #. module: project
 #: help:project.task.delegate,state:0
@@ -1127,7 +1134,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:project.open_board_project
 #: model:ir.ui.menu,name:project.menu_board_project
 msgid "Project Dashboard"
-msgstr ""
+msgstr "Табло на проекта"
 
 #. module: project
 #: view:project.project:0
@@ -1243,7 +1250,7 @@ msgstr ""
 #. module: project
 #: model:ir.actions.act_window,name:project.act_res_users_2_project_project
 msgid "User's projects"
-msgstr "Потребителски задачи"
+msgstr "Потребителски проекти"
 
 #. module: project
 #: field:project.installer,progress:0
@@ -1444,7 +1451,7 @@ msgstr ""
 #. module: project
 #: view:project.project:0
 msgid "Search Project"
-msgstr ""
+msgstr "Търси проект"
 
 #. module: project
 #: help:project.installer,project_gtd:0
@@ -1619,7 +1626,7 @@ msgstr ""
 #. module: project
 #: help:project.task.close,manager_email:0
 msgid "Email Address of Project's Manager"
-msgstr ""
+msgstr "Имейл адрес на мениджъра на  проекта"
 
 #. module: project
 #: view:project.project:0

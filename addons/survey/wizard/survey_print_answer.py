@@ -59,7 +59,7 @@ class survey_print_answer(osv.osv_memory):
             context = {}
         datas = {'ids': context.get('active_ids', [])}
         res = self.read(cr, uid, ids, ['response_ids', 'orientation', 'paper_size',\
-                             'page_number', 'without_pagebreak'], context)
+                             'page_number', 'without_pagebreak'], context=context)
         res = res and res[0] or {}
         datas['form'] = res
         datas['model'] = 'survey.print.answer'

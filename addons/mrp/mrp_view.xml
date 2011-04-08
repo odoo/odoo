@@ -9,7 +9,6 @@
 
         <menuitem id="menu_mrp_manufacturing" name="Manufacturing" parent="base.menu_mrp_root" sequence="1"/>
 
-
         <menuitem name="Master Data"
             id="menu_mrp_bom"
             parent="base.menu_mrp_root"
@@ -406,6 +405,8 @@
                             <field name="date_stop"/>
                             <field name="product_rounding"/>
                             <field name="product_efficiency" groups="base.group_extended"/>
+                            <separator string="Properties" colspan="4"/>
+                            <newline/>
                             <field colspan="4" name="property_ids" nolabel="2" groups="base.group_extended"/>
                         </page>
                     </notebook>

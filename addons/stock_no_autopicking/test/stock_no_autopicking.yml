@@ -2,10 +2,15 @@
   In order to test the module with OpenERP, I will make products with No auto-picking
   to allow an intermediate picking process to provide raw materials to production orders.
 -
-  I create product category for measuring the liquid products. Say Litre.
+   I create UOM category for measuring the fluid products
+-
+  !record {model: product.uom.categ, id: product_uom_categ_fluid}:
+    name: Fluid
+-
+  I create UOM measuring the liquid products. Say Litre.
 -
   !record {model: product.uom, id: product_uom_litre0}:
-    category_id: product.product_uom_categ_kgm
+    category_id: product_uom_categ_fluid
     factor: 1.0
     name: Litre
     rounding: 0.01

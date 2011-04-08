@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2010-12-28 09:18+0000\n"
+"PO-Revision-Date: 2011-03-31 18:17+0000\n"
 "Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-15 05:08+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-04-01 04:47+0000\n"
+"X-Generator: Launchpad (build 12559)\n"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -67,7 +67,7 @@ msgstr "Объем"
 #. module: delivery
 #: sql_constraint:sale.order:0
 msgid "Order Reference must be unique !"
-msgstr ""
+msgstr "Ссылка на заказ должна быть уникальной !"
 
 #. module: delivery
 #: field:delivery.grid,line_ids:0
@@ -87,7 +87,7 @@ msgstr "Свойства доставки"
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_picking_tree4
 msgid "Picking to be invoiced"
-msgstr ""
+msgstr "Счет на комплектование"
 
 #. module: delivery
 #: help:delivery.grid,sequence:0
@@ -118,6 +118,10 @@ msgid ""
 "can define several price lists for one delivery method, per country or a "
 "zone in a specific country defined by a postal code range."
 msgstr ""
+"Прайс лист на доставку позволяет вычислить стоимость и продажную цену "
+"доставки в зависимости от веса продукции и других критериев. Вы можете "
+"задать несколько прайс листов на один способ доставки, по странам или зонам "
+"в конкретной стране, определяемым по диапазонам почтовых индексов ."
 
 #. module: delivery
 #: selection:delivery.grid.line,price_type:0
@@ -187,7 +191,7 @@ msgstr "Оператор"
 #. module: delivery
 #: model:ir.model,name:delivery.model_res_partner
 msgid "Partner"
-msgstr "Партнёр"
+msgstr "Контрагент"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_sale_order
@@ -282,6 +286,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the delivery "
 "carrier without removing it."
 msgstr ""
+"Если поле \"Активно\" имеет значение ложь, то это позволит вам скрыть "
+"перевозчика, не удаляя его."
 
 #. module: delivery
 #: code:addons/delivery/wizard/delivery_sale_order.py:95
@@ -352,6 +358,8 @@ msgstr "Переменная"
 #: help:res.partner,property_delivery_carrier:0
 msgid "This delivery method will be used when invoicing from picking."
 msgstr ""
+"Этот способ доставки будет использоваться при выставление счетов из "
+"комплектований."
 
 #. module: delivery
 #: field:delivery.grid.line,max_value:0
@@ -373,6 +381,8 @@ msgstr "Почтовый индекс отправителя"
 msgid ""
 "Complete this field if you plan to invoice the shipping based on picking."
 msgstr ""
+"Заполните это поле, если вы планируете выставить счет на отгрузку основанный "
+"на комплектовании."
 
 #. module: delivery
 #: field:delivery.carrier,partner_id:0
@@ -403,7 +413,7 @@ msgstr "Создать доставки"
 #: model:ir.actions.act_window,name:delivery.action_delivery_cost
 #: view:sale.order:0
 msgid "Delivery Costs"
-msgstr "Стоимость поставки"
+msgstr "Стоимость доставки"
 
 #. module: delivery
 #: report:sale.shipping:0

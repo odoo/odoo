@@ -39,15 +39,15 @@ class mrp_workcenter(osv.osv):
     _description = 'Work Center'
     _inherits = {'resource.resource':"resource_id"}
     _columns = {
-        'note': fields.text('Description', help="Description of the work center. Explain here what's a cycle according to this work center."),
-        'capacity_per_cycle': fields.float('Capacity per Cycle', help="Number of operations this work center can do in parallel. If this work center represents a team of 5 workers, the capacity per cycle is 5."),
+        'note': fields.text('Description', help="Description of the Work Center. Explain here what's a cycle according to this Work Center."),
+        'capacity_per_cycle': fields.float('Capacity per Cycle', help="Number of operations this Work Center can do in parallel. If this Work Center represents a team of 5 workers, the capacity per cycle is 5."),
         'time_cycle': fields.float('Time for 1 cycle (hour)', help="Time in hours for doing one cycle."),
         'time_start': fields.float('Time before prod.', help="Time in hours for the setup."),
         'time_stop': fields.float('Time after prod.', help="Time in hours for the cleaning."),
-        'costs_hour': fields.float('Cost per hour', help="Specify Cost of Work center per hour."),
+        'costs_hour': fields.float('Cost per hour', help="Specify Cost of Work Center per hour."),
         'costs_hour_account_id': fields.many2one('account.analytic.account', 'Hour Account', domain=[('type','<>','view')],
             help="Complete this only if you want automatic analytic accounting entries on production orders."),
-        'costs_cycle': fields.float('Cost per cycle', help="Specify Cost of Work center per cycle."),
+        'costs_cycle': fields.float('Cost per cycle', help="Specify Cost of Work Center per cycle."),
         'costs_cycle_account_id': fields.many2one('account.analytic.account', 'Cycle Account', domain=[('type','<>','view')],
             help="Complete this only if you want automatic analytic accounting entries on production orders."),
         'costs_journal_id': fields.many2one('account.analytic.journal', 'Analytic Journal'),
@@ -75,7 +75,7 @@ mrp_workcenter()
 
 class mrp_routing(osv.osv):
     """
-    For specifying the routings of workcenters.
+    For specifying the routings of Work Centers.
     """
     _name = 'mrp.routing'
     _description = 'Routing'
@@ -102,20 +102,20 @@ mrp_routing()
 
 class mrp_routing_workcenter(osv.osv):
     """
-    Defines working cycles and hours of a workcenter using routings.
+    Defines working cycles and hours of a Work Center using routings.
     """
     _name = 'mrp.routing.workcenter'
-    _description = 'Workcenter Usage'
+    _description = 'Work Center Usage'
     _columns = {
         'workcenter_id': fields.many2one('mrp.workcenter', 'Work Center', required=True),
         'name': fields.char('Name', size=64, required=True),
-        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of routing work centers."),
+        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of routing Work Centers."),
         'cycle_nbr': fields.float('Number of Cycles', required=True,
             help="Number of iterations this work center has to do in the specified operation of the routing."),
-        'hour_nbr': fields.float('Number of Hours', required=True, help="Time in hours for this work center to achieve the operation of the specified routing."),
+        'hour_nbr': fields.float('Number of Hours', required=True, help="Time in hours for this Work Center to achieve the operation of the specified routing."),
         'routing_id': fields.many2one('mrp.routing', 'Parent Routing', select=True, ondelete='cascade',
-             help="Routing indicates all the workcenters used, for how long and/or cycles." \
-                "If Routing is indicated then,the third tab of a production order (workcenters) will be automatically pre-completed."),
+             help="Routing indicates all the Work Centers used, for how long and/or cycles." \
+                "If Routing is indicated then,the third tab of a production order (Work Centers) will be automatically pre-completed."),
         'note': fields.text('Description'),
         'company_id': fields.related('routing_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),
     }
@@ -240,10 +240,28 @@ class mrp_bom(osv.osv):
                 return False
             level -= 1
         return True
-    _constraints = [
-        (_check_recursion, 'Error ! You can not create recursive BoM.', ['parent_id'])
-    ]
 
+    def _check_product(self, cr, uid, ids, context=None):
+        all_prod = []
+        bom_obj = self.pool.get('mrp.bom')
+        boms = self.browse(cr, uid, ids, context=context)
+        def check_bom(boms):
+            res = True
+            for bom in boms:
+                if bom.product_id.id in all_prod:
+                    res = res and False
+                all_prod.append(bom.product_id.id)
+                lines = bom.bom_lines
+                if lines:
+                    newboms = [a for a in lines if a not in boms]
+                    res = res and check_bom(newboms)
+            return res
+        return check_bom(boms)
+
+    _constraints = [
+        (_check_recursion, 'Error ! You can not create recursive BoM.', ['parent_id']),
+        (_check_product, 'BoM line product should not be same as BoM product.', ['product_id']),
+    ]
 
     def onchange_product_id(self, cr, uid, ids, product_id, name, context=None):
         """ Changes UoM and name if product_id changes.
@@ -281,14 +299,14 @@ class mrp_bom(osv.osv):
         return result
 
     def _bom_explode(self, cr, uid, bom, factor, properties=[], addthis=False, level=0):
-        """ Finds Products and Workcenters for related BoM for manufacturing order.
+        """ Finds Products and Work Centers for related BoM for manufacturing order.
         @param bom: BoM of particular product.
         @param factor: Factor of product UoM.
         @param properties: A List of properties Ids.
         @param addthis: If BoM found then True else False.
         @param level: Depth level to find BoM lines starts from 10.
         @return: result: List of dictionaries containing product details.
-                 result2: List of dictionaries containing workcenter details.
+                 result2: List of dictionaries containing Work Center details.
         """
         factor = factor / (bom.product_efficiency or 1.0)
         factor = rounding(factor, bom.product_rounding)
@@ -368,9 +386,10 @@ class mrp_bom_revision(osv.osv):
 mrp_bom_revision()
 
 def rounding(f, r):
+    import math
     if not r:
         return f
-    return round(f / r) * r
+    return math.ceil(f / r) * r
 
 class mrp_production(osv.osv):
     """
@@ -709,7 +728,7 @@ class mrp_production(osv.osv):
                         if consumed_qty == 0:
                             consumed_qty = production_qty * f.product_qty / production.product_qty
                         if consumed_qty > 0:
-                            stock_mov_obj.action_consume(cr, uid, [raw_product.id], consumed_qty, production.location_src_id.id, context=context)
+                            stock_mov_obj.action_consume(cr, uid, [raw_product.id], consumed_qty, raw_product.location_id.id, context=context)
 
         if production_mode == 'consume_produce':
             # To produce remaining qty of final product

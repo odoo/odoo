@@ -1087,12 +1087,15 @@ class account_move_line(osv.osv):
         move_obj = self.pool.get('account.move')
         self._update_check(cr, uid, ids, context)
         result = False
+        move_ids = set()
         for line in self.browse(cr, uid, ids, context=context):
+            move_ids.add(line.move_id.id)
             context['journal_id'] = line.journal_id.id
             context['period_id'] = line.period_id.id
             result = super(account_move_line, self).unlink(cr, uid, [line.id], context=context)
-            if check:
-                move_obj.validate(cr, uid, [line.move_id.id], context=context)
+        move_ids = list(move_ids)
+        if check and move_ids:
+            move_obj.validate(cr, uid, move_ids, context=context)
         return result
 
     def _check_date(self, cr, uid, vals, context=None, check=True):
@@ -1297,7 +1300,7 @@ class account_move_line(osv.osv):
         if vals.get('account_tax_id', False):
             tax_id = tax_obj.browse(cr, uid, vals['account_tax_id'])
             total = vals['debit'] - vals['credit']
-            if journal.refund_journal:
+            if journal.type in ('purchase_refund', 'sale_refund'):
                 base_code = 'ref_base_code_id'
                 tax_code = 'ref_tax_code_id'
                 account_id = 'account_paid_id'

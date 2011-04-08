@@ -37,21 +37,6 @@
                                 <field name="sale_tax" on_change="on_change_tax(sale_tax)" attrs="{'required':[('charts','=','configurable')]}"/>
                                 <field name="purchase_tax" groups="base.group_extended"/>
                             </group>
-                            <group colspan="4" attrs="{'invisible':[('charts','!=','configurable')]}">
-                                <separator col="4" colspan="4" string="Bank and Cash Accounts"/>
-                                <field colspan="4" mode="tree" height="200" name="bank_accounts_id" nolabel="1" widget="one2many_list">
-                                    <form string="">
-                                        <field name="acc_name"/>
-                                        <field name="account_type"/>
-                                        <field name="currency_id" widget="selection" groups="base.group_extended"/>
-                                    </form>
-                                    <tree editable="bottom" string="Your bank and cash accounts">
-                                        <field name="acc_name"/>
-                                        <field name="account_type"/>
-                                        <field name="currency_id" widget="selection" groups="base.group_extended"/>
-                                    </tree>
-                                </field>
-                            </group>
                         </group>
                     </group>
                 </data>

@@ -13,14 +13,14 @@
         <field name="name">Purchase Order multi-company</field>
         <field name="model_id" ref="model_purchase_order"/>
         <field name="global" eval="True"/>
-        <field name="domain_force">['|','|',('company_id','=',False),('company_id','child_of',[user.company_id.id]),('company_id.child_ids','child_of',[user.company_id.id])]</field>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
     </record>
 
     <record model="ir.rule" id="purchase_order_line_comp_rule">
         <field name="name">Purchase Order Line multi-company</field>
         <field name="model_id" ref="model_purchase_order_line"/>
         <field name="global" eval="True"/>
-        <field name="domain_force">['|','|',('company_id','=',False),('company_id','child_of',[user.company_id.id]),('company_id.child_ids','child_of',[user.company_id.id])]</field>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
     </record>
 
 </data>

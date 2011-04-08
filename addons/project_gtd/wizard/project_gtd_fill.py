@@ -53,7 +53,7 @@ class project_timebox_fill(osv.osv_memory):
         data = self.read(cr, uid, ids, [], context=context)
         if not data[0]['task_ids']:
             return {}
-        self.pool.get('project.task').write(cr, uid, data[0]['task_ids'], {'timebox_id':data[0]['timebox_to_id']})
+        self.pool.get('project.task').write(cr, uid, data[0]['task_ids'], {'timebox_id':data[0]['timebox_to_id'][0]})
         return {'type': 'ir.actions.act_window_close'}
 
 project_timebox_fill()

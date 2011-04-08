@@ -14,7 +14,7 @@
                     <field name="name"/>
                     <field domain="[('type','=','normal')]" name="account_id"/>
                     <field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" required="1" domain="[('type','=','service')]" invisible="1"/>
-                    <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" sum="Total time"/>
+                    <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" sum="Total time" widget="float_time"/>
                     <field name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" invisible="1"/>
                     <field name="amount" sum="Total cost" invisible="1"/>
                     <field name="general_account_id" invisible="1"/>
@@ -38,7 +38,7 @@
                                 <separator string="Product" colspan="2"/>
                                 <field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" required="1" domain="[('type','=','service')]"/>
                                 <field name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)"/>
-                                <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)"/>
+                                <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" widget="float_time"/>
                             </group>
                             <group colspan="2" col="2">
                                 <separator string="Accounting" colspan="2"/>
@@ -73,7 +73,7 @@
                     <group expand="0" string="Group By...">
                         <filter string="Users" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                         <separator orientation="vertical"/>
-                        <filter string="Anlytic account" icon="terp-folder-green" domain="[]" context="{'group_by':'account_id'}"/>
+                        <filter string="Analytic account" icon="terp-folder-green" domain="[]" context="{'group_by':'account_id'}"/>
                         <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Date" icon="terp-go-month" domain="[]" context="{'group_by':'date'}"/>
@@ -84,14 +84,14 @@
         </record>
 
         <record id="act_hr_timesheet_line_evry1_all_form" model="ir.actions.act_window">
-            <field name="name">Working Hours</field>
+            <field name="name">Timesheet Lines</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">hr.analytic.timesheet</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="context">{"search_default_user_id":uid, "search_default_today":1}</field>
             <field name="search_view_id" ref="hr_timesheet_line_search"/>
-            <field name="help">Through Working Hours you can register your working hours by project every day.</field>
+            <field name="help">Through this menu you can register and follow your workings hours by project every day.</field>
         </record>
 
         <menuitem id="menu_hr_working_hours" parent="hr_attendance.menu_hr_time_tracking" action="act_hr_timesheet_line_evry1_all_form"/>

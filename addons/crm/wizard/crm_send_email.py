@@ -56,7 +56,7 @@ class crm_send_new_email(osv.osv_memory):
         'subject': fields.char('Subject', size=512, required=True),
         'body': fields.text('Message Body', required=True),
         'state': fields.selection(AVAILABLE_STATES, string='Set New State To', required=True),
-        'attachment_ids' : fields.one2many('crm.send.mail.attachment', 'wizard_id'),
+        'attachment_ids' : fields.one2many('crm.send.mail.attachment', 'wizard_id', 'Attachment'),
         'html': fields.boolean('HTML formatting?', help="Select this if you want to send email with HTML formatting."), 
     }
 

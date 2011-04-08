@@ -22,13 +22,14 @@
 {
     'name': 'Document Management - Wiki',
     'version': '1.0.1',
-    'category': 'Generic Modules/Others',
+    'category': 'Tools',
     'description': """
-The base module to manage documents(wiki)
+The base module to manage documents(wiki).
+==========================================
 
-keep track for the wiki groups, pages, and history
+Keep track of Wiki groups, pages, and history.
     """,
-    'author': 'OpenERP SA & Axelor',
+    'author': ['OpenERP SA', 'Axelor'],
     'website': 'http://openerp.com',
     'depends': ['knowledge'],
     'web_depends': ['widget_wiki'],
@@ -50,5 +51,6 @@ keep track for the wiki groups, pages, and history
     'active': False,
     'certificate': '0086363630317',
     'web': True,
+    'images': ['images/create_index.jpeg','images/page_history.jpeg','images/wiki_groups.jpeg','images/wiki_pages.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

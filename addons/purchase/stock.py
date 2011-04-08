@@ -35,12 +35,16 @@ class stock_move(osv.osv):
         on the purchase order in case the valuation data was not directly specified during picking
         confirmation.
         """
+        product_uom_obj = self.pool.get('product.uom')
+
         reference_amount, reference_currency_id = super(stock_move, self)._get_reference_accounting_values_for_valuation(cr, uid, move, context=context)
+        default_uom = move.product_id.uom_id.id
+        qty = product_uom_obj._compute_qty(cr, uid, move.product_uom.id, move.product_qty, default_uom)
         if move.product_id.cost_method != 'average' or not move.price_unit:
             # no average price costing or cost not specified during picking validation, we will
             # plug the purchase line values if they are found.
             if move.purchase_line_id and move.picking_id.purchase_id.pricelist_id:
-                reference_amount, reference_currency_id = move.purchase_line_id.price_unit, move.picking_id.purchase_id.pricelist_id.currency_id.id
+                reference_amount, reference_currency_id = move.purchase_line_id.price_unit * qty, move.picking_id.purchase_id.pricelist_id.currency_id.id
         return reference_amount, reference_currency_id
 
 stock_move()

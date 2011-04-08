@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:16+0000\n"
-"PO-Revision-Date: 2011-02-02 07:05+0000\n"
-"Last-Translator: Cristi Harjoi <Unknown>\n"
+"PO-Revision-Date: 2011-03-17 08:17+0000\n"
+"Last-Translator: Dorin <dhongu@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-02-03 04:44+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-03-18 04:58+0000\n"
+"X-Generator: Launchpad (build 12559)\n"
 
 #. module: sale
 #: view:board.board:0
@@ -146,7 +146,7 @@ msgid ""
 "configuration of the sales order, a draft invoice will be generated so that "
 "you just have to confirm it when you want to bill your customer."
 msgstr ""
-"Ordinele de vânzare vă ajută să gestionaţi oferte şi comenzi de la clientii "
+"Comenzile de vânzare vă ajută să gestionaţi oferte şi comenzi de la clientii "
 "dumneavoastră. OpenERP sugerează să începeţi prin crearea unei oferte. Odată "
 "ce este confirmată, oferta va fi convertită într-o Comandă de vânzări. "
 "OpenERP poate manipula mai multe tipuri de produse, astfel încât o comandă "
@@ -252,7 +252,7 @@ msgstr ""
 #. module: sale
 #: view:sale.order:0
 msgid "Recreate Packing"
-msgstr "Recreează ambalarea"
+msgstr "Recreează livrarea"
 
 #. module: sale
 #: field:sale.order.line,discount:0
@@ -512,6 +512,7 @@ msgstr "Adresa de facturare pentru comanda curentă de vânzări."
 #: view:sale.installer:0
 msgid "Enhance your core Sales Application with additional functionalities."
 msgstr ""
+"Îmbunătățește nucleul Aplicație de Vânzări cu funcționalități adiționale."
 
 #. module: sale
 #: field:sale.order,invoiced_rate:0
@@ -607,7 +608,7 @@ msgstr "Vânzări factura deschisă"
 #: model:ir.model,name:sale.model_sale_order_line
 #: field:stock.move,sale_line_id:0
 msgid "Sales Order Line"
-msgstr "Linie ordin de vânzare"
+msgstr "Linie comandă de vânzare"
 
 #. module: sale
 #: view:sale.config.picking_policy:0
@@ -872,8 +873,8 @@ msgid ""
 "The same sales order may have been invoiced in several times (by line for "
 "example)."
 msgstr ""
-"Aceasta este lista de facturi care au fost generate pentru acest ordin de "
-"vânzări. Acelaşi ordin de vânzare poate să fi fost facturat în mai multe "
+"Aceasta este lista de facturi ce au fost generate pentru acestă comandă de "
+"vânzări. Aceeași comandă de vânzare poate să fi fost facturată în mai multe "
 "rânduri (pe linie, de exemplu)."
 
 #. module: sale
@@ -892,7 +893,7 @@ msgstr "Numele şi adresa contactului care a solicitat comandă sau ofertă."
 #, python-format
 msgid "You cannot cancel a sales order line that has already been invoiced !"
 msgstr ""
-"Nu poti anula o linie de comandă de vânzări care a fost deja facturată!"
+"Nu poți anula o linie de comandă de vânzări care a fost deja facturată!"
 
 #. module: sale
 #: view:sale.order:0
@@ -953,7 +954,7 @@ msgstr "Calculează"
 #. module: sale
 #: view:sale.report:0
 msgid "Sales by Partner"
-msgstr "Vânzări dupa Partener"
+msgstr "Vânzări după Partener"
 
 #. module: sale
 #: field:sale.order,partner_order_id:0
@@ -1198,7 +1199,7 @@ msgstr "Eroare !"
 #: code:addons/sale/sale.py:570
 #, python-format
 msgid "Could not cancel sales order !"
-msgstr "Nu se poate anula ordinul de vânzare!"
+msgstr "Nu se poate anula comanda de vânzare!"
 
 #. module: sale
 #: selection:sale.report,month:0
@@ -1313,10 +1314,10 @@ msgid ""
 "is 'Shipping and Manual in Progress'. The invoice is created automatically "
 "if the shipping policy is 'Payment before Delivery'."
 msgstr ""
-"Vânzătorul creează o factură manual, în cazul în care vânzările politica de "
-"livrare ordine de vânzare este 'Livrare şi Manual în curs de desfăşurare'. "
-"Factura este creată  în mod automat în cazul în care politica de livrare "
-"este 'Plata înainte de livrare'."
+"Vânzătorul creează o factură manual, în cazul în care politica de expediere "
+"din comanda de vânzare este 'Livrare şi Facturare manuală'. Factura este "
+"creată  în mod automat în cazul în care politica de expediere este 'Plata "
+"înainte de livrare'."
 
 #. module: sale
 #: help:sale.config.picking_policy,order_policy:0
@@ -1350,7 +1351,7 @@ msgstr "Efectuat"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_installer
 msgid "sale.installer"
-msgstr ""
+msgstr "sale.installer"
 
 #. module: sale
 #: model:process.node,name:sale.process_node_invoice0
@@ -1470,7 +1471,7 @@ msgstr "Data comenzii"
 #. module: sale
 #: field:sale.order.line,product_uos:0
 msgid "Product UoS"
-msgstr ""
+msgstr "UdV produs"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -1707,7 +1708,7 @@ msgstr ""
 #: view:sale.order:0
 #: field:stock.picking,sale_id:0
 msgid "Sales Order"
-msgstr "Ordin de vânzare"
+msgstr "Comandă de vânzare"
 
 #. module: sale
 #: field:sale.order.line,product_uos_qty:0
@@ -1723,7 +1724,7 @@ msgid ""
 "evolves with the availability of parts."
 msgstr ""
 "Formularul Listă Preluare este creat de îndată ce comanda de vânzări este "
-"confirmată, în acelaşi timp cu ordinul de aprovizionare. Ea reprezintă "
+"confirmată, în acelaşi timp cu comanda de aprovizionare. Ea reprezintă "
 "atribuirea de piese/părţi la comandă de vânzări. Este o listă de preluare "
 "prin linie de comandă de vânzări, care evoluează cu disponibilitatea "
 "pieselor/părţilor."
@@ -1806,11 +1807,11 @@ msgid ""
 "1.The state of this sales order line is either \"draft\" or \"cancel\"!\n"
 "2.The Sales Order Line is Invoiced!"
 msgstr ""
-"Factura nu poate fi creată pentru această Linie Comandă de Vânzări din cauza "
-"la unul din următoarele motive:\n"
+"Factura nu poate fi creată pentru această Linie de Comandă de Vânzări din "
+"cauza la unul din următoarele motive:\n"
 "1. Starea aceastei linii comandă de vânzări este fie \"ciornă\" sau "
-"\"anulează\"!\n"
-"2. Linie Comandă de Vânzări  este facturată!"
+"\"anulată\"!\n"
+"2. Linie de Comandă de Vânzări  este facturată!"
 
 #. module: sale
 #: field:sale.order.line,th_weight:0
@@ -1843,8 +1844,8 @@ msgid ""
 "production of products regarding to the rules and to the sales order's "
 "parameters. "
 msgstr ""
-"Un ordin de aprovizionare este creat automat, de îndată ce o comandă de "
-"vânzări este confirmată sau factura este plătită. Ea conduce achizitia si "
+"O comandă de aprovizionare este creată automat, de îndată ce o comandă de "
+"vânzări este confirmată sau factura este plătită. Ea conduce achiziția și "
 "producţia produselor după norme şi la parametrii comenzii de vânzări. "
 
 #. module: sale
@@ -1925,7 +1926,7 @@ msgstr "Valoarea taxei."
 #. module: sale
 #: view:sale.order:0
 msgid "Packings"
-msgstr "Ambalaje"
+msgstr "Pachete"
 
 #. module: sale
 #: field:sale.config.picking_policy,progress:0
@@ -1981,7 +1982,7 @@ msgstr "Factura dvs. a fost creată cu succes!"
 #, python-format
 msgid "You must first cancel all invoices attached to this sales order."
 msgstr ""
-"Trebuie să anulaţi mai întâi toate facturile anexate la aceast ordin de "
+"Trebuie să anulaţi mai întâi toate facturile anexate la această comandă de "
 "vânzare."
 
 #. module: sale
@@ -2002,7 +2003,7 @@ msgstr "Comenzi de vânzare în curs"
 #. module: sale
 #: field:sale.installer,sale_layout:0
 msgid "Sales Order Layout Improvement"
-msgstr "Îmbunătăţirea aspectului Ordinului de vânzare"
+msgstr "Îmbunătăţirea aspectului Comenzii de vânzare"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:63
@@ -2022,7 +2023,7 @@ msgid ""
 "One Procurement order for each sales order line and for each of the "
 "components."
 msgstr ""
-"Un ordin de aprovizionare pentru fiecare linie de comandă de vânzări şi "
+"O comandă de aprovizionare pentru fiecare linie de comandă de vânzări şi "
 "pentru fiecare dintre componente."
 
 #. module: sale
@@ -2044,13 +2045,13 @@ msgstr "Comandă de vânzări confirmată a fi facturată."
 #: code:addons/sale/sale.py:290
 #, python-format
 msgid "Cannot delete Sales Order(s) which are already confirmed !"
-msgstr "Nu se poate şterge Ordinul(e) de vânzare, care are deja confirmare!"
+msgstr "Nu se poate șterge Comanda(e) de vânzare, care are deja confirmare!"
 
 #. module: sale
 #: code:addons/sale/sale.py:316
 #, python-format
 msgid "The sales order '%s' has been set in draft state."
-msgstr "Ordinul de vânzare '%s' a fost stabilit la starea de ciornă."
+msgstr "Comanda de vânzare '%s' a fost stabilită la starea de ciornă."
 
 #. module: sale
 #: selection:sale.order.line,type:0
@@ -2097,10 +2098,10 @@ msgid ""
 "warehouse from which the products will be delivered for each particular "
 "sales."
 msgstr ""
-"Dacă aveţi mai mult de un magazin pentru revanzarea produselor companiei "
-"dumneavoastră, puteţi crea şi gestiona aceasta de aici. Ori de câte ori va "
+"Dacă aveţi mai mult de un magazin pentru revânzarea produselor companiei "
+"dumneavoastră, puteți crea și gestiona aceasta de aici. Ori de câte ori va "
 "înregistra o ofertă nouă sau comandă de vânzări, trebuie să fie asociată "
-"unui magazin. Magazin defineşte, de asemenea, depozitul de la care produsele "
+"unui magazin. Magazin definește, de asemenea, depozitul de la care produsele "
 "vor fi livrate pentru fiecare vânzare."
 
 #. module: sale
@@ -2170,12 +2171,12 @@ msgstr "Paşi pentru a livra o comandă de vânzări"
 #: view:sale.order:0
 #: view:sale.order.line:0
 msgid "Search Sales Order"
-msgstr "Cauta comandă de vânzări"
+msgstr "Caută comandă de vânzări"
 
 #. module: sale
 #: model:process.node,name:sale.process_node_saleorderprocurement0
 msgid "Sales Order Requisition"
-msgstr ""
+msgstr "Necesar comenzi vânzare"
 
 #. module: sale
 #: report:sale.order:0
@@ -2188,6 +2189,8 @@ msgstr "Termen de plată"
 msgid ""
 "Provides some features to improve the layout of the Sales Order reports."
 msgstr ""
+"Oferă câteva facilități de îmbunătățire a aspectului raportului Comenzii de "
+"Vânzare"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_report_all
@@ -2231,8 +2234,20 @@ msgstr "Factură bazată pe livrări"
 #~ msgid "Shop name"
 #~ msgstr "Nume magazin"
 
+#~ msgid "Origin"
+#~ msgstr "Origine"
+
+#~ msgid "Packing"
+#~ msgstr "Împachetare"
+
+#~ msgid "Sales orders"
+#~ msgstr "Comenzi vânzare"
+
 #~ msgid "In progress"
 #~ msgstr "În progres"
+
+#~ msgid "Draft Invoice"
+#~ msgstr "Factură ciornă"
 
 #~ msgid "Sale Order"
 #~ msgstr "Comadă vânzare"
@@ -2240,11 +2255,17 @@ msgstr "Factură bazată pe livrări"
 #~ msgid "Sale Order Line"
 #~ msgstr "Poziţie comandă vânzare"
 
+#~ msgid "Net Price"
+#~ msgstr "Preţ Net"
+
+#~ msgid "All Sales Order"
+#~ msgstr "Toate comenzile de vânzare"
+
+#~ msgid "Outgoing Products"
+#~ msgstr "Produse ieşite"
+
 #~ msgid "Number packages"
 #~ msgstr "Numărul de pachete"
-
-#~ msgid "Payment accounts"
-#~ msgstr "Cont de plata"
 
 #~ msgid "Order Ref"
 #~ msgstr "Ref. Comanda"
@@ -2255,8 +2276,52 @@ msgstr "Factură bazată pe livrări"
 #~ msgid "Invoice from the packings"
 #~ msgstr "Factura din lista de livrare"
 
+#~ msgid "Manual Designation"
+#~ msgstr "Desemnare manuala"
+
+#~ msgid "Invoice after delivery"
+#~ msgstr "Factura dupa livrare"
+
+#~ msgid "Delivery, from the warehouse to the customer."
+#~ msgstr "Livrare - din depozit către client."
+
 #~ msgid "Customer Ref."
 #~ msgstr "Referinţă client"
+
+#~ msgid ""
+#~ "The sale order will automatically create the invoice proposition (draft "
+#~ "invoice). Ordered and delivered quantities may not be the same. You have to "
+#~ "choose if you invoice based on ordered or shipped quantities. If the product "
+#~ "is a service, shipped quantities means hours spent on the associated tasks."
+#~ msgstr ""
+#~ "Comanda va crea automat factura ciorna (draft). Cantitatile livrate pot fi "
+#~ "diferite de cele comandate  . Deasemenea, puteţi alege crearea facturii pe "
+#~ "baza cantităţii comandate sau a celei livrate. Daca produsul este un "
+#~ "serviciu, cantităţile livrate înseamna ore lucrate la sarcini asociate."
+
+#~ msgid "My sales order in progress"
+#~ msgstr "Comenzile mele de vânzare - în curs"
+
+#, python-format
+#~ msgid ""
+#~ "You cannot make an advance on a sale order that is defined as 'Automatic "
+#~ "Invoice after delivery'."
+#~ msgstr ""
+#~ "Nu puteţi factura anticipat o comandă ce a fost predefinită ca ”Facturare "
+#~ "automată - după livrare”"
+
+#~ msgid "My sales order waiting Invoice"
+#~ msgstr "Comenzile mele care aşteaptă facturarea"
+
+#~ msgid ""
+#~ "When you select Shipping Ploicy = 'Automatic Invoice after delivery' , it "
+#~ "will automatic create after delivery."
+#~ msgstr ""
+#~ "Când selectaţi Metoda de livrare = 'Facturare automata - după livrare', "
+#~ "factura va fi creata dupa livrare"
+
+#~ msgid "Sale Order Procurement"
+#~ msgstr "Achiziţie necesară pentru comanda primită"
 
 #, python-format
 #~ msgid "You must first cancel all invoices attached to this sale order."
@@ -2321,6 +2386,13 @@ msgstr "Factură bazată pe livrări"
 #~ msgid "Manual in progress"
 #~ msgstr "Comandă procesată manual - în curs"
 
+#~ msgid ""
+#~ "This Configuration step use to set default picking policy when make sale "
+#~ "order"
+#~ msgstr ""
+#~ "Acest pas în configurare stabileşte valoare implicită pentru ”Metoda de "
+#~ "livrare” pentru atunci când se lansează o comandă."
+
 #~ msgid "Quantity (UOS)"
 #~ msgstr "Cantitate (UOS) (unitate de împachetare)"
 
@@ -2349,10 +2421,33 @@ msgstr "Factură bazată pe livrări"
 #~ msgid "Invoice on Order After Delivery"
 #~ msgstr "Facturare pe baza unei comenzi livrate"
 
+#~ msgid "Recreate Procurement"
+#~ msgstr "Recrează achiziţia"
+
 #~ msgid ""
 #~ "This is the list of picking list that have been generated for this invoice"
 #~ msgstr ""
 #~ "Aceasta este lista cu articole de ridicat generată pentru această factură"
+
+#~ msgid "Automatic Declaration"
+#~ msgstr "Declaraţie automată"
+
+#~ msgid ""
+#~ "Whenever confirm button is clicked, the draft state is moved to manual. that "
+#~ "is, quotation is moved to  sale order."
+#~ msgstr ""
+#~ "De fiecare dată când butonul de confirmare este apăsat, starea de ciornă "
+#~ "este schimbată pe ”manual”. Acest lucru înseamnă că oferta devine comandă "
+#~ "fermă."
+
+#~ msgid "After confirming order, Create the invoice."
+#~ msgstr "După confirmarea comenzii, generaţi factura."
+
+#~ msgid "You invoice has been successfully created !"
+#~ msgstr "Factura dumneavoastră a fost creată cu succes!"
+
+#~ msgid "Procurement is created after confirmation of sale order."
+#~ msgstr "Achiziţia este creată după confirmarea comenzii."
 
 #~ msgid "Purchase Pricelists"
 #~ msgstr "Lista de preţuri aprovizionare"
@@ -2408,3 +2503,9 @@ msgstr "Factură bazată pe livrări"
 
 #~ msgid "Steps To Deliver a Sale Order"
 #~ msgstr "Paşi pentru livrarea unei comenzi de vânzare"
+
+#~ msgid "Procure Method"
+#~ msgstr "Metoda de aprovizionare"
+
+#~ msgid "Payment accounts"
+#~ msgstr "Conturi de plată"

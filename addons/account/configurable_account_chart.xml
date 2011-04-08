@@ -191,6 +191,14 @@
 			            <field name="user_type" ref="conf_account_type_asset"/>
 			        </record>
 
+			        <record id="conf_o_income" model="account.account.template">
+			            <field name="code">1106</field>
+			            <field name="name">Opening Income Account</field>
+			            <field ref="conf_cas" name="parent_id"/>
+			            <field name="type">other</field>
+			            <field name="user_type" ref="conf_account_type_income"/>
+			        </record>
+
 		        <record id="conf_cli" model="account.account.template">
 		            <field name="code">111</field>
 		            <field name="name">Current Liabilities</field>
@@ -225,6 +233,13 @@
 			            <field name="user_type" ref="conf_account_type_liability"/>
 			        </record>
 
+			        <record id="conf_o_expense" model="account.account.template">
+			            <field name="code">1114</field>
+			            <field name="name">Opening Expense Account</field>
+			            <field ref="conf_cli" name="parent_id"/>
+			            <field name="type">other</field>
+			            <field name="user_type" ref="conf_account_type_expense"/>
+			        </record>
 
         <!-- Profit and Loss -->
 
@@ -431,6 +446,8 @@
             <field name="property_account_payable" ref="conf_a_pay"/>
             <field name="property_account_expense_categ" ref="conf_a_expense"/>
             <field name="property_account_income_categ" ref="conf_a_sale"/>
+            <field name="property_account_income_opening" ref="conf_o_income"/>
+            <field name="property_account_expense_opening" ref="conf_o_expense"/>            
             <field name="property_reserve_and_surplus_account" ref="conf_a_reserve_and_surplus"/>
         </record>
 
@@ -594,6 +611,13 @@
 
 		<record id="conf_a_expense" model="account.account.template">
 			<field name="tax_ids" eval="[(6,0,[ref('otaxs')])]"/>
+		</record>
+
+		<record id="action_wizard_multi_chart_todo" model="ir.actions.todo">
+			<field name="name">Generate Chart of Accounts from a Chart Template</field>
+			<field name="action_id" ref="account.action_wizard_multi_chart"/>
+			<field name="state">open</field>
+			<field name="restart">onskip</field>
 		</record>
 
 

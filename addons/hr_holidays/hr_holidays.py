@@ -294,8 +294,8 @@ class hr_holidays(osv.osv):
 
             # If a category that created several holidays, cancel all related
             wf_service = netsvc.LocalService("workflow")
-            for id in record.linked_request_ids or []:
-                wf_service.trg_validate(uid, 'hr.holidays', id, 'cancel', cr)
+            for request in record.linked_request_ids or []:
+                wf_service.trg_validate(uid, 'hr.holidays', request.id, 'cancel', cr)
 
         return True
 

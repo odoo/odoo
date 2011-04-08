@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-01-11 11:16+0000\n"
-"PO-Revision-Date: 2011-01-17 14:31+0000\n"
+"PO-Revision-Date: 2011-02-22 08:17+0000\n"
 "Last-Translator: Pekka Pylvänäinen <Unknown>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-18 04:38+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-03-18 04:39+0000\n"
+"X-Generator: Launchpad (build 12559)\n"
 
 #. module: stock
 #: field:product.product,track_outgoing:0
@@ -466,7 +466,7 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.report_move_labels
 msgid "Item Labels"
-msgstr ""
+msgstr "Nimikkeen tarrat"
 
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_move
@@ -730,12 +730,6 @@ msgid "Location Address"
 msgstr "Paikan osoite"
 
 #. module: stock
-#: code:addons/stock/stock.py:2348
-#, python-format
-msgid "is consumed with"
-msgstr ""
-
-#. module: stock
 #: help:stock.move,prodlot_id:0
 msgid "Production lot is used to put a serial number on the production"
 msgstr "Tuotantoerää käytetään antamaan tuotannolle sarjanumero"
@@ -854,6 +848,12 @@ msgstr "Kiireellinen"
 #: view:stock.picking:0
 #: report:stock.picking.list:0
 msgid "Journal"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/stock.py:1315
+#, python-format
+msgid "is scheduled %s."
 msgstr ""
 
 #. module: stock
@@ -1959,12 +1959,6 @@ msgstr ""
 #: selection:stock.location,chained_auto_packing:0
 msgid "Automatic No Step Added"
 msgstr "Automaattinen ei lisätä porrasta"
-
-#. module: stock
-#: code:addons/stock/stock.py:2348
-#, python-format
-msgid "Product "
-msgstr ""
 
 #. module: stock
 #: view:stock.location.product:0
@@ -3272,9 +3266,9 @@ msgid "Product Category"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/wizard/stock_change_product_qty.py:74
+#: code:addons/stock/wizard/stock_change_product_qty.py:88
 #, python-format
-msgid "INV: "
+msgid "INV: %s"
 msgstr ""
 
 #. module: stock
@@ -3575,12 +3569,6 @@ msgid "Unplanned Qty"
 msgstr "Ei suunniteltu määrä"
 
 #. module: stock
-#: code:addons/stock/stock.py:1318
-#, python-format
-msgid "is scheduled"
-msgstr ""
-
-#. module: stock
 #: field:stock.location,chained_company_id:0
 msgid "Chained Company"
 msgstr ""
@@ -3721,9 +3709,15 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:2348
+#: code:addons/stock/stock.py:2386
 #, python-format
-msgid "quantity."
+msgid "Product  '%s' is consumed with '%s' quantity."
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/stock.py:2595
+#, python-format
+msgid "Inventory '%s' is done."
 msgstr ""
 
 #. module: stock

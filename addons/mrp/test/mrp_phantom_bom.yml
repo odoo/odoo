@@ -2,10 +2,15 @@
   In order to test the mrp phantom bom type in OpenERP, I will create products
   and then I will create Phantom bom structure for those products.
 -
+  I create BOM category fluid for Orange Juice
+-
+  !record {model: product.uom.categ, id: product_uom_categ_fluid}:
+    name: Fluid
+-
   I create the products required to produce some orange juices with Oranges, Sugar and Water.
 -
   !record {model: product.uom, id: product_uom_litre0}:
-    category_id: product.product_uom_categ_kgm
+    category_id: product_uom_categ_fluid
     factor: 1.0
     name: Litre
     rounding: 0.01
@@ -34,7 +39,7 @@
       - delay: 1
         name: base.res_partner_asus
         min_qty: 1.0
-        product_uom: product_uom_litre0
+        product_uom: product.product_uom_kgm
     supply_method: buy
     type: product
     uom_id: product.product_uom_kgm

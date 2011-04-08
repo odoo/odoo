@@ -76,7 +76,7 @@ class account_payment_populate_statement(osv.osv_memory):
                     statement.currency.id, line.amount_currency, context=ctx)
 
             context.update({'move_line_ids': [line.move_line_id.id]})
-            result = voucher_obj.onchange_partner_id(cr, uid, [], partner_id=line.partner_id.id, journal_id=statement.journal_id.id, price=abs(amount), currency_id= statement.currency.id, ttype='payment', context=context)
+            result = voucher_obj.onchange_partner_id(cr, uid, [], partner_id=line.partner_id.id, journal_id=statement.journal_id.id, price=abs(amount), currency_id= statement.currency.id, ttype='payment', date=line.ml_maturity_date, context=context)
 
             if line.move_line_id:
                 voucher_res = {

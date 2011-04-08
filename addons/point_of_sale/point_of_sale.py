@@ -70,6 +70,7 @@ class pos_order(osv.osv):
         return super(pos_order, self).unlink(cr, uid, ids, context=context)
 
     def onchange_partner_pricelist(self, cr, uid, ids, part=False, context=None):
+
         """ Changed price list on_change of partner_id"""
         if not part:
             return {'value': {}}
@@ -422,7 +423,7 @@ class pos_order(osv.osv):
         """Create a picking for each order and validate it."""
         picking_obj = self.pool.get('stock.picking')
         property_obj = self.pool.get("ir.property")
-        move_obj=self.pool.get('stock.move')
+        move_obj = self.pool.get('stock.move')
         pick_name = self.pool.get('ir.sequence').get(cr, uid, 'stock.picking.out')
         orders = self.browse(cr, uid, ids, context=context)
         for order in orders:
@@ -463,7 +464,6 @@ class pos_order(osv.osv):
                     stock_dest_id = val.id
                     if line.qty < 0:
                         location_id, stock_dest_id = stock_dest_id, location_id
-
                     move_obj.create(cr, uid, {
                             'name': '(POS %d)' % (order.id, ),
                             'product_uom': line.product_id.uom_id.id,
@@ -477,6 +477,7 @@ class pos_order(osv.osv):
                             'state': 'waiting',
                             'location_id': location_id,
                             'location_dest_id': stock_dest_id,
+                            'prodlot_id': line.prodlot_id and line.prodlot_id.id or False
                         }, context=context)
 
             wf_service = netsvc.LocalService("workflow")
@@ -647,6 +648,7 @@ class pos_order(osv.osv):
                 'reference': order.name,
                 'partner_id': order.partner_id.id,
                 'comment': order.note or '',
+                'currency_id': order.pricelist_id.currency_id.id, # considering partner's sale pricelist's currency
             }
             inv.update(inv_ref.onchange_partner_id(cr, uid, [], 'out_invoice', order.partner_id.id)['value'])
             if not inv.get('account_id', None):
@@ -1145,6 +1147,7 @@ class pos_order_line(osv.osv):
         'discount': fields.float('Discount (%)', digits=(16, 2)),
         'order_id': fields.many2one('pos.order', 'Order Ref', ondelete='cascade'),
         'create_date': fields.datetime('Creation Date', readonly=True),
+        'prodlot_id': fields.many2one('stock.production.lot', 'Production Lot', help="You can specify Production lot for stock move created when you validate the pos order"),
     }
 
     _defaults = {

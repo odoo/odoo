@@ -44,11 +44,11 @@
                                 <group col="3" colspan="2" attrs="{'invisible': [('trg_date_type', '=', 'none')]}">
                                     <field name="trg_date_range" string="Delay After Trigger Date"/>
                                     <field name="trg_date_range_type" nolabel="1"/>
-	                            </group>
+                                </group>
                             </group>
                             <separator colspan="4" string="Note"/>
                             <label align="0.0" colspan="4" width="900"
-                            	string="The rule uses the AND operator. The model must match all non-empty fields so that the rule executes the action described in the 'Actions' tab." />
+                                string="The rule uses the AND operator. The model must match all non-empty fields so that the rule executes the action described in the 'Actions' tab." />
                         </page>
                         <page string="Actions">
                             <separator colspan="4" string="Fields to Change"/>
@@ -74,7 +74,7 @@
                                 <field colspan="4" name="act_email_cc"/>
                             <separator colspan="4" string="Email Body"/>
                             <field colspan="4" name="act_mail_body" height="250"
-                            	nolabel="1" attrs="{'required':[('act_remind_user','=',True)]}" />
+                                nolabel="1" attrs="{'required':[('act_remind_user','=',True)]}" />
                             <separator colspan="4" string="Special Keywords to Be Used in The Body"/>
                             <label align="0.0" string="%%(object_id)s = Object ID" colspan="2"/>
                             <label align="0.0" string="%%(object_subject)s = Object subject" colspan="2"/>

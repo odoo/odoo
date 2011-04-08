@@ -122,6 +122,7 @@ class product_uom(osv.osv):
 
     _sql_constraints = [
         ('factor_gt_zero', 'CHECK (factor!=0)', 'The conversion ratio for a unit of measure cannot be 0!'),
+        ('factor_category_id_uniq', 'unique (category_id, factor)', 'You can not have more than one UOM with same factor for same UOM category'),
     ]
 
     def _compute_qty(self, cr, uid, from_uom_id, qty, to_uom_id=False):
@@ -139,7 +140,7 @@ class product_uom(osv.osv):
             context = {}
         if from_unit.category_id.id <> to_unit.category_id.id:
             if context.get('raise-exception', True):
-                raise osv.except_osv(_('Error !'), _('Conversion from Product UoM m to Default UoM PCE is not possible as they both belong to different Category!.'))
+                raise osv.except_osv(_('Error !'), _('Conversion from Product UoM %s to Default UoM %s is not possible as they both belong to different Category!.') % (from_unit.name,to_unit.name,))
             else:
                 return qty
         amount = qty / from_unit.factor
@@ -271,7 +272,7 @@ class product_template(osv.osv):
         'rental': fields.boolean('Can be Rent'),
         'categ_id': fields.many2one('product.category','Category', required=True, change_default=True, domain="[('type','=','normal')]" ,help="Select category for the current product"),
         'list_price': fields.float('Sale Price', digits_compute=dp.get_precision('Sale Price'), help="Base price for computing the customer price. Sometimes called the catalog price."),
-        'standard_price': fields.float('Cost Price', required=True, digits_compute=dp.get_precision('Account'), help="Product's cost for accounting stock valuation. It is the base price for the supplier price."),
+        'standard_price': fields.float('Cost Price', required=True, digits_compute=dp.get_precision('Purchase Price'), help="Product's cost for accounting stock valuation. It is the base price for the supplier price."),
         'volume': fields.float('Volume', help="The volume in m3."),
         'weight': fields.float('Gross weight', help="The gross weight in Kg."),
         'weight_net': fields.float('Net weight', help="The net weight in Kg."),
@@ -324,7 +325,6 @@ class product_template(osv.osv):
 
     _defaults = {
         'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'product.template', context=c),
-        'type': lambda *a: 'product',
         'list_price': lambda *a: 1,
         'cost_method': lambda *a: 'standard',
         'supply_method': lambda *a: 'buy',
@@ -482,7 +482,7 @@ class product_product(osv.osv):
         'pricelist_id': fields.dummy(string='Pricelist', relation='product.pricelist', type='many2one'),
         'name_template': fields.related('product_tmpl_id', 'name', string="Name", type='char', size=128, store=True),
     }
-    
+
     def unlink(self, cr, uid, ids, context=None):
         unlink_ids = []
         unlink_product_tmpl_ids = []
@@ -557,7 +557,7 @@ class product_product(osv.osv):
         if not args:
             args=[]
         if name:
-            ids = self.search(cr, user, [('default_code',operator,name)]+ args, limit=limit, context=context)
+            ids = self.search(cr, user, [('default_code','=',name)]+ args, limit=limit, context=context)
             if not len(ids):
                 ids = self.search(cr, user, [('ean13','=',name)]+ args, limit=limit, context=context)
             if not len(ids):
@@ -715,10 +715,10 @@ class product_supplierinfo(osv.osv):
             result[supplier_info.id]['qty'] = qty
         return result
 
-    def _get_uom_id(self, cr, uid, *args):
-        cr.execute('select id from product_uom order by id limit 1')
-        res = cr.fetchone()
-        return res and res[0] or False
+    def _get_uom_id(self, cr, uid, context=None):
+        if context is None:
+            context = {}
+        return context.get('uom_id', False)
 
     _columns = {
         'name' : fields.many2one('res.partner', 'Supplier', required=True,domain = [('supplier','=',True)], ondelete='cascade', help="Supplier of this product"),
@@ -766,12 +766,12 @@ class product_supplierinfo(osv.osv):
         currency_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.currency_id.id
         for supplier in partner_pool.browse(cr, uid, supplier_ids, context=context):
             # Compute price from standard price of product
-            price = product_pool.price_get(cr, uid, [product_id], 'standard_price')[product_id]
+            price = product_pool.price_get(cr, uid, [product_id], 'standard_price', context=context)[product_id]
 
             # Compute price from Purchase pricelist of supplier
             pricelist_id = supplier.property_product_pricelist_purchase.id
             if pricelist_id:
-                price = pricelist_pool.price_get(cr, uid, [pricelist_id], product_id, product_qty).setdefault(pricelist_id, 0)
+                price = pricelist_pool.price_get(cr, uid, [pricelist_id], product_id, product_qty, context=context).setdefault(pricelist_id, 0)
                 price = currency_pool.compute(cr, uid, pricelist_pool.browse(cr, uid, pricelist_id).currency_id.id, currency_id, price)
 
             # Compute price from supplier pricelist which are in Supplier Information

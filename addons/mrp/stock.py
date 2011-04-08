@@ -95,9 +95,10 @@ class StockMove(osv.osv):
                     'location_id': move.location_dest_id.id,
                     'auto_validate': True,
                     'picking_id': False,
-                    'state': 'waiting'
+                    'state': 'confirmed'
                 })
                 for m in procurement_obj.search(cr, uid, [('move_id','=',move.id)], context):
+                    wf_service.trg_validate(uid, 'procurement.order', m, 'button_confirm', cr)
                     wf_service.trg_validate(uid, 'procurement.order', m, 'button_wait_done', cr)
         return True
     
@@ -136,7 +137,6 @@ class StockMove(osv.osv):
         wf_service = netsvc.LocalService("workflow")
         for move in self.browse(cr, uid, ids, context=context):
             new_moves = super(StockMove, self).action_scrap(cr, uid, [move.id], product_qty, location_id, context=context)
-            self.write(cr, uid, [move.id], {'prodlot_id': False, 'tracking_id': False})
             production_ids = production_obj.search(cr, uid, [('move_lines', 'in', [move.id])])
             for prod_id in production_ids:
                 wf_service.trg_validate(uid, 'mrp.production', prod_id, 'button_produce', cr)

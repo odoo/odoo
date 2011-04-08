@@ -51,11 +51,9 @@ class account_invoice(osv.osv):
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         company_id = context.get('company_id', user.company_id.id)
         type2journal = {'out_invoice': 'sale', 'in_invoice': 'purchase', 'out_refund': 'sale_refund', 'in_refund': 'purchase_refund'}
-        refund_journal = {'out_invoice': False, 'in_invoice': False, 'out_refund': True, 'in_refund': True}
         journal_obj = self.pool.get('account.journal')
         res = journal_obj.search(cr, uid, [('type', '=', type2journal.get(type_inv, 'sale')),
-                                            ('company_id', '=', company_id),
-                                            ('refund_journal', '=', refund_journal.get(type_inv, False))],
+                                            ('company_id', '=', company_id)],
                                                 limit=1)
         return res and res[0] or False
 
@@ -364,13 +362,13 @@ class account_invoice(osv.osv):
     def unlink(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
-        invoices = self.read(cr, uid, ids, ['state'], context=context)
+        invoices = self.read(cr, uid, ids, ['state','internal_number'], context=context)
         unlink_ids = []
         for t in invoices:
-            if t['state'] in ('draft', 'cancel'):
+            if t['state'] in ('draft', 'cancel') and t['internal_number']== False:
                 unlink_ids.append(t['id'])
             else:
-                raise osv.except_osv(_('Invalid action !'), _('Cannot delete invoice(s) that are already opened or paid !'))
+                raise osv.except_osv(_('Invalid action !'), _('Cannot delete invoice(s) that are already opened(or been in opened state ever) or paid!'))
         osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
         return True
 
@@ -657,7 +655,9 @@ class account_invoice(osv.osv):
     def _convert_ref(self, cr, uid, ref):
         return (ref or '').replace('/','')
 
-    def _get_analytic_lines(self, cr, uid, id):
+    def _get_analytic_lines(self, cr, uid, id, context=None):
+        if context is None:
+            context = {}
         inv = self.browse(cr, uid, id)
         cur_obj = self.pool.get('res.currency')
 
@@ -667,7 +667,7 @@ class account_invoice(osv.osv):
         else:
             sign = -1
 
-        iml = self.pool.get('account.invoice.line').move_line_get(cr, uid, inv.id)
+        iml = self.pool.get('account.invoice.line').move_line_get(cr, uid, inv.id, context=context)
         for il in iml:
             if il['account_analytic_id']:
                 if inv.type in ('in_invoice', 'in_refund'):
@@ -994,7 +994,7 @@ class account_invoice(osv.osv):
                 ctx = context.copy()
                 if obj_inv.type in ('out_invoice', 'out_refund'):
                     ctx = self.get_log_context(cr, uid, context=ctx)
-                message = _('Invoice ') + " '" + name + "' "+ _("is validated.")
+                message = _("Invoice  '%s' is validated.") % name
                 self.log(cr, uid, inv_id, message, context=ctx)
         return True
 
@@ -1290,6 +1290,20 @@ class account_invoice_line(osv.osv):
         'price_unit': _price_unit_default,
     }
 
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        if context is None:
+            context = {}
+        res = super(account_invoice_line,self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
+        if context.get('type', False):
+            doc = etree.XML(res['arch'])
+            for node in doc.xpath("//field[@name='product_id']"):
+                if context['type'] in ('in_invoice', 'in_refund'):
+                    node.set('domain', "[('purchase_ok', '=', True)]")
+                else:
+                    node.set('domain', "[('sale_ok', '=', True)]")
+            res['arch'] = etree.tostring(doc)
+        return res
+
     def product_id_change(self, cr, uid, ids, product, uom, qty=0, name='', type='out_invoice', partner_id=False, fposition_id=False, price_unit=False, address_invoice_id=False, currency_id=False, context=None):
         if context is None:
             context = {}
@@ -1336,6 +1350,7 @@ class account_invoice_line(osv.osv):
 
         domain = {}
         result['uos_id'] = res.uom_id.id or uom or False
+        result['note'] = res.description
         if result['uos_id']:
             res2 = res.uom_id.category_id.id
             if res2:
@@ -1351,6 +1366,8 @@ class account_invoice_line(osv.osv):
         currency = self.pool.get('res.currency').browse(cr, uid, currency_id, context=context)
 
         if company.currency_id.id != currency.id:
+            if type in ('in_invoice', 'in_refund'):
+                res_final['value']['price_unit'] = res.standard_price
             new_price = res_final['value']['price_unit'] * currency.rate
             res_final['value']['price_unit'] = new_price
 
@@ -1592,7 +1609,17 @@ class res_partner(osv.osv):
     _columns = {
         'invoice_ids': fields.one2many('account.invoice.line', 'partner_id', 'Invoices', readonly=True),
     }
-
+    
+    def copy(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+            
+        if context is None:
+            context = {}   
+             
+        default.update({'invoice_ids' : []})
+        return super(res_partner, self).copy(cr, uid, id, default, context)
+      
 res_partner()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

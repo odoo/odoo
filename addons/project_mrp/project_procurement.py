@@ -37,7 +37,7 @@ class procurement_order(osv.osv):
             self.write(cr, uid, [procurement.id], {'state': 'running'})
             planned_hours = procurement.product_qty
             task_id = self.pool.get('project.task').create(cr, uid, {
-                'name': '%s:%s' % (procurement.origin or '', procurement.name),
+                'name': '%s:%s' % (procurement.origin or '', procurement.product_id.name),
                 'date_deadline': procurement.date_planned,
                 'planned_hours':planned_hours,
                 'remaining_hours': planned_hours,

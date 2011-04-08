@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-02-18 10:04+0000\n"
+"PO-Revision-Date: 2011-02-24 07:59+0000\n"
 "Last-Translator: moelyana <Unknown>\n"
 "Language-Team: Indonesian <id@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-02-19 05:05+0000\n"
-"X-Generator: Launchpad (build 12351)\n"
+"X-Launchpad-Export-Date: 2011-03-18 04:50+0000\n"
+"X-Generator: Launchpad (build 12559)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -76,7 +76,7 @@ msgstr "Harap buat nomor urut untuk jurnal tagihan"
 #. module: account
 #: constraint:account.period:0
 msgid "Error ! The duration of the Period(s) is/are invalid. "
-msgstr "Ada kesalahan! Jangka waktu periode salah "
+msgstr "Maaf! durasi/jangka waktu Periode salah "
 
 #. module: account
 #: field:account.analytic.line,currency_id:0
@@ -332,6 +332,7 @@ msgstr "St."
 #, python-format
 msgid "Invoice line account company does not match with invoice company."
 msgstr ""
+"Baris tagihan dari rekening perusahaan tidak sesuai dengan tagihan perusahaan"
 
 #. module: account
 #: field:account.journal.column,field:0
@@ -427,7 +428,7 @@ msgstr "Situasi Pembukaan/ Penutupan"
 #. module: account
 #: help:account.journal,currency:0
 msgid "The currency used to enter statement"
-msgstr "Mata uang yang digunakan untuk memasukkan pernyataan"
+msgstr "Mata uang yang digunakan untuk masukkan pernyataan"
 
 #. module: account
 #: field:account.open.closed.fiscalyear,fyear_id:0
@@ -751,12 +752,6 @@ msgstr "Centang"
 #: field:account.partner.reconcile.process,today_reconciled:0
 msgid "Partners Reconciled Today"
 msgstr "Hari ini Para Mitra Telah Direkonsiliasi"
-
-#. module: account
-#: code:addons/account/account_bank_statement.py:306
-#, python-format
-msgid "The statement balance is incorrect !\n"
-msgstr "Saldo neraca salah !\n"
 
 #. module: account
 #: selection:account.payment.term.line,value:0
@@ -2644,9 +2639,10 @@ msgid "August"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_bank_statement.py:307
+#: code:addons/account/account_bank_statement.py:306
 #, python-format
 msgid ""
+"The statement balance is incorrect !\n"
 "The expected balance (%.2f) is different than the computed one. (%.2f)"
 msgstr ""
 
@@ -2882,6 +2878,12 @@ msgstr ""
 #: selection:account.entries.report,type:0
 msgid "View"
 msgstr "Tampilan"
+
+#. module: account
+#: code:addons/account/account.py:2951
+#, python-format
+msgid "BNK%s"
+msgstr ""
 
 #. module: account
 #: code:addons/account/account.py:2906
@@ -4265,12 +4267,6 @@ msgid "Account Balance -"
 msgstr ""
 
 #. module: account
-#: code:addons/account/invoice.py:989
-#, python-format
-msgid "Invoice "
-msgstr ""
-
-#. module: account
 #: field:account.automatic.reconcile,date1:0
 msgid "Starting Date"
 msgstr "Tanggal Awal"
@@ -5574,9 +5570,9 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/invoice.py:989
+#: code:addons/account/invoice.py:997
 #, python-format
-msgid "is validated."
+msgid "Invoice  '%s' is validated."
 msgstr ""
 
 #. module: account
@@ -9724,12 +9720,12 @@ msgstr ""
 #. module: account
 #: selection:account.aged.trial.balance,direction_selection:0
 msgid "Future"
-msgstr ""
+msgstr "Masa Depan"
 
 #. module: account
 #: view:account.move.line:0
 msgid "Search Journal Items"
-msgstr ""
+msgstr "Cari Jurnal Produk"
 
 #. module: account
 #: help:account.tax,base_sign:0
@@ -9746,12 +9742,12 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account_template
 msgid "Template Account Fiscal Mapping"
-msgstr ""
+msgstr "Template Akun Pemetaan Fiskal"
 
 #. module: account
 #: field:account.chart.template,property_account_expense:0
 msgid "Expense Account on Product Template"
-msgstr ""
+msgstr "Beban Account pada Template Produk"
 
 #. module: account
 #: field:account.analytic.line,amount_currency:0
@@ -9762,13 +9758,13 @@ msgstr ""
 #: code:addons/account/wizard/account_report_aged_partner_balance.py:55
 #, python-format
 msgid "You must enter a period length that cannot be 0 or below !"
-msgstr ""
+msgstr "Jumlah mata uang"
 
 #. module: account
 #: code:addons/account/account.py:501
 #, python-format
 msgid "You cannot remove an account which has account entries!. "
-msgstr ""
+msgstr "Anda tidak dapat menghapus akun yang akunnya sudah tercatat "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_form
@@ -9788,8 +9784,8 @@ msgid ""
 "The residual amount on a receivable or payable of a journal entry expressed "
 "in its currency (maybe different of the company currency)."
 msgstr ""
-"Jumlah sisa piutang/ hutang dari catatan jurnal dinyatakan dalam mata "
-"uangnya (yang mungkin berbeda dari mata uang perusahaan)."
+"Jumlah residual pada piutang / hutang dari catatan jurnal dinyatakan dalam "
+"mata uang (mungkin berbeda dari mata uang perusahaan)."
 
 #~ msgid "Asset"
 #~ msgstr "Aktiva"
@@ -10174,3 +10170,7 @@ msgstr ""
 
 #~ msgid "Customize Report"
 #~ msgstr "Mengatur Laporan"
+
+#, python-format
+#~ msgid "The statement balance is incorrect !\n"
+#~ msgstr "Saldo neraca salah !\n"

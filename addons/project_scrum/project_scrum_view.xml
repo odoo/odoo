@@ -300,8 +300,10 @@
                             <field colspan="4" name="retrospective" nolabel="1"/>
                         </page>
                     </notebook>
-                    <group col="6" colspan="4">
+                    <group col="8" colspan="4">
                         <field name="state" readonly="1"/>
+                        <button name="%(project_scrum.report_scrum_sprint_burndown_chart)d" 
+                        			string="Burndown Chart" type="action" icon="gtk-print"/>
                         <button type="object" string="Open" name="button_open" states="draft,pending" icon="terp-camera_test"/>
                         <button type="object" string="Pending" name="button_pending" states="open" icon="gtk-media-pause"/>
                         <button type="object" string="Close" name="button_close" states="open,pending" icon="terp-dialog-close"/>
@@ -593,7 +595,7 @@
         </record>
 
         <act_window
-        	context="{'search_default_sprint_id': [active_id]}"
+        	context="{'search_default_sprint_id': [active_id], 'default_sprint_id': active_id}"
             id="act_scrum_sprint_2_product_backlog"
             name="Backlogs"
             res_model="project.scrum.product.backlog"
@@ -602,7 +604,7 @@
             view_type="form"/>
 
         <act_window
-        	context="{'search_default_sprint_id': active_id, 'search_default_user_id': uid, 'search_default_current':1}"
+        	context="{'search_default_sprint_id': active_id, 'search_default_user_id': uid, 'search_default_current':1, 'default_sprint_id': active_id}"
             id="act_scrum_sprint_2_project_task"
             name="Tasks"
             res_model="project.task"

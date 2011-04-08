@@ -39,7 +39,7 @@ class stock_location_product(osv.osv_memory):
          @return: Invoice type
         """
         mod_obj = self.pool.get('ir.model.data')
-        for location_obj in self.read(cr, uid, ids, ['from_date', 'to_date']):
+        for location_obj in self.read(cr, uid, ids, ['from_date', 'to_date'], context=context):
             return {
                 'name': False, 
                 'view_type': 'form', 

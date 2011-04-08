@@ -177,6 +177,10 @@ class hr_timesheet_sheet(osv.osv):
         if 'employee_id' in vals:
             if not self.pool.get('hr.employee').browse(cr, uid, vals['employee_id']).user_id:
                 raise osv.except_osv(_('Error !'), _('You cannot create a timesheet for an employee that does not have any user defined !'))
+            if not self.pool.get('hr.employee').browse(cr, uid, vals['employee_id']).product_id:
+                raise osv.except_osv(_('Error !'), _('You cannot create a timesheet for an employee that does not have any product defined !'))
+            if not self.pool.get('hr.employee').browse(cr, uid, vals['employee_id']).journal_id:
+                raise osv.except_osv(_('Error !'), _('You cannot create a timesheet for an employee that does not have any analytic journal defined !'))
         return super(hr_timesheet_sheet, self).create(cr, uid, vals, *args, **argv)
 
     def write(self, cr, uid, ids, vals, *args, **argv):
@@ -186,6 +190,10 @@ class hr_timesheet_sheet(osv.osv):
                 raise osv.except_osv(_('Error !'), _('You cannot create a timesheet for an employee that does not have any user defined !'))
             if not self._sheet_date(cr, uid, ids, forced_user_id=new_user_id):
                 raise osv.except_osv(_('Error !'), _('You can not have 2 timesheets that overlaps !\nPlease use the menu \'My Current Timesheet\' to avoid this problem.'))
+            if not self.pool.get('hr.employee').browse(cr, uid, vals['employee_id']).product_id:
+                raise osv.except_osv(_('Error !'), _('You cannot create a timesheet for an employee that does not have any product defined !'))
+            if not self.pool.get('hr.employee').browse(cr, uid, vals['employee_id']).journal_id:
+                raise osv.except_osv(_('Error !'), _('You cannot create a timesheet for an employee that does not have any analytic journal defined !'))
         return super(hr_timesheet_sheet, self).write(cr, uid, ids, vals, *args, **argv)
 
     def button_confirm(self, cr, uid, ids, context=None):
@@ -269,7 +277,7 @@ class hr_timesheet_sheet(osv.osv):
                 'draft': [('readonly', False)],
                 'new': [('readonly', False)]}
             ),
-        'attendances_ids' : one2many_mod2('hr.attendance', 'sheet_id', 'Attendances', readonly=True,),
+        'attendances_ids' : one2many_mod2('hr.attendance', 'sheet_id', 'Attendances'),
         'state' : fields.selection([
             ('new', 'New'),
             ('draft','Draft'),

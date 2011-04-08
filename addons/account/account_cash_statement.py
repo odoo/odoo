@@ -32,6 +32,7 @@ class account_cashbox_line(osv.osv):
 
     _name = 'account.cashbox.line'
     _description = 'CashBox Line'
+    _rec_name = 'number'
 
     def _sub_total(self, cr, uid, ids, name, arg, context=None):
 

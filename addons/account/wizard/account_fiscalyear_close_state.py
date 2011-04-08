@@ -41,7 +41,7 @@ class account_fiscalyear_close_state(osv.osv_memory):
 
         """
         for data in  self.read(cr, uid, ids, context=context):
-            fy_id = data['fy_id']
+            fy_id = data['fy_id'][0]
 
             cr.execute('UPDATE account_journal_period ' \
                         'SET state = %s ' \

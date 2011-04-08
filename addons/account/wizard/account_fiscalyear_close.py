@@ -56,22 +56,22 @@ class account_fiscalyear_close(osv.osv_memory):
         obj_acc_account = self.pool.get('account.account')
         obj_acc_journal_period = self.pool.get('account.journal.period')
 
-        data =  self.read(cr, uid, ids, context=context)
+        data = self.browse(cr, uid, ids, context=context)
 
         if context is None:
             context = {}
-        fy_id = data[0]['fy_id']
+        fy_id = data[0].fy_id.id
 
-        cr.execute("SELECT id FROM account_period WHERE date_stop < (SELECT date_start FROM account_fiscalyear WHERE id = %s)", (str(data[0]['fy2_id']),))
+        cr.execute("SELECT id FROM account_period WHERE date_stop < (SELECT date_start FROM account_fiscalyear WHERE id = %s)", (str(data[0].fy2_id.id),))
         fy_period_set = ','.join(map(lambda id: str(id[0]), cr.fetchall()))
         cr.execute("SELECT id FROM account_period WHERE date_start > (SELECT date_stop FROM account_fiscalyear WHERE id = %s)", (str(fy_id),))
         fy2_period_set = ','.join(map(lambda id: str(id[0]), cr.fetchall()))
 
-        period = obj_acc_period.browse(cr, uid, data[0]['period_id'], context=context)
-        new_fyear = obj_acc_fiscalyear.browse(cr, uid, data[0]['fy2_id'], context=context)
-        old_fyear = obj_acc_fiscalyear.browse(cr, uid, data[0]['fy_id'], context=context)
+        period = obj_acc_period.browse(cr, uid, data[0].period_id.id, context=context)
+        new_fyear = obj_acc_fiscalyear.browse(cr, uid, data[0].fy2_id.id, context=context)
+        old_fyear = obj_acc_fiscalyear.browse(cr, uid, fy_id, context=context)
 
-        new_journal = data[0]['journal_id']
+        new_journal = data[0].journal_id.id
         new_journal = obj_acc_journal.browse(cr, uid, new_journal, context=context)
 
         if not new_journal.default_credit_account_id or not new_journal.default_debit_account_id:
@@ -107,7 +107,7 @@ class account_fiscalyear_close(osv.osv_memory):
                     obj_acc_move_line.create(cr, uid, {
                         'debit': account.balance>0 and account.balance,
                         'credit': account.balance<0 and -account.balance,
-                        'name': data[0]['report_name'],
+                        'name': data[0].report_name,
                         'date': period.date_start,
                         'journal_id': new_journal.id,
                         'period_id': period.id,
@@ -204,7 +204,7 @@ class account_fiscalyear_close(osv.osv_memory):
 
         if ids:
             obj_acc_move_line.reconcile(cr, uid, ids, context=context)
-        new_period = data[0]['period_id']
+        new_period = data[0].period_id.id
         ids = obj_acc_journal_period.search(cr, uid, [('journal_id','=',new_journal.id),('period_id','=',new_period)])
         if not ids:
             ids = [obj_acc_journal_period.create(cr, uid, {

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2010 OpenERP s.a. (<http://openerp.com>).
 #
@@ -15,15 +15,20 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 {
-    'name': 'Add uservoice button in header',
+    'name': 'Receive User Feedback',
     'version': '1.0',
-    'category': 'Generic Modules/Others',
-    'description': "",
-    'author': 'OpenERP s.a.',
+    'category': 'Tools',
+    'description': """
+Add Feedback button in header.
+==============================
+
+Invite OpenERP user feedback, powered by uservoice.
+    """,
+    'author': 'OpenERP SA',
     'website': 'http://openerp.com',
     'depends': ['base'],
     'data': [],
@@ -31,4 +36,5 @@
     'active': False,
     'web': True,
     'certificate': '0040452504963885',
+    'images': ['images/submit_an_idea.jpeg','images/web_uservoice_feedback.jpeg'],
 }

@@ -100,7 +100,8 @@ class report_balancesheet_horizontal(report_sxw.rml_parse, common_report_header)
         ctx['fiscalyear'] = data['form'].get('fiscalyear_id', False)
 
         if data['form']['filter'] == 'filter_period':
-            ctx['periods'] = data['form'].get('periods', False)
+            ctx['period_from'] = data['form'].get('period_from', False)
+            ctx['period_to'] =  data['form'].get('period_to', False)
         elif data['form']['filter'] == 'filter_date':
             ctx['date_from'] = data['form'].get('date_from', False)
             ctx['date_to'] =  data['form'].get('date_to', False)
@@ -143,7 +144,7 @@ class report_balancesheet_horizontal(report_sxw.rml_parse, common_report_header)
                     if typ == 'asset' and account.type <> 'view' and (account.debit <> account.credit):
                         self.result_sum_cr += account.balance
                     if data['form']['display_account'] == 'bal_movement':
-                        if not currency_pool.is_zero(self.cr, self.uid, currency, account.credit) > 0 or not currency_pool.is_zero(self.cr, self.uid, currency, account.debit) > 0 or not currency_pool.is_zero(self.cr, self.uid, currency, account.balance):
+                        if not currency_pool.is_zero(self.cr, self.uid, currency, account.credit) or not currency_pool.is_zero(self.cr, self.uid, currency, account.debit) or not currency_pool.is_zero(self.cr, self.uid, currency, account.balance):
                             accounts_temp.append(account_dict)
                     elif data['form']['display_account'] == 'bal_solde':
                         if not currency_pool.is_zero(self.cr, self.uid, currency, account.balance):

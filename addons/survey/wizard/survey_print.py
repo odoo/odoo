@@ -55,10 +55,9 @@ class survey_print(osv.osv_memory):
         @param context: A standard dictionary for contextual values
         @return : Dictionary value for print survey form.
         """
-
-        datas = {'ids' : self.read(cr, uid, ids, [], context)[0]['survey_ids']}
+        datas = {'ids' : self.read(cr, uid, ids, ['survey_ids'], context=context)[0]['survey_ids']}
         res = self.read(cr, uid, ids, ['survey_title', 'orientation', 'paper_size',\
-                             'page_number', 'without_pagebreak'], context)
+                             'page_number', 'without_pagebreak'], context=context)
         res = res and res[0] or {}
         datas['form'] = res
         datas['model'] = 'survey.print'

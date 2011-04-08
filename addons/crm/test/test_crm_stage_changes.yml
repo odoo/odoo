@@ -32,15 +32,14 @@
 -
   I find that this lead can be converted to opportunity. 
 -
-  !record {model: crm.lead2opportunity, id: crm_lead2opportunity0}:
-    name: OpenERP Presentation
-    probability: 60.0
-    planned_revenue: 45000.0
+  !record {model: crm.lead2opportunity.partner, id: crm_lead2opportunity_partner0}:
+    action: 'create'
+    name: 'convert'
 -
   So I convert the lead to opportunity.
 -
-  !python {model: crm.lead2opportunity}: |
-    self.action_apply(cr, uid, [ref('crm_lead2opportunity0')], context={'active_id': ref('crm_lead_openerppresentation0')})
+  !python {model: crm.lead2opportunity.partner}: |
+    self.action_apply(cr, uid, [ref('crm_lead2opportunity_partner0')], context={'active_ids': [ref('crm_lead_openerppresentation0')]})
 -
   I check that lead is now converted to opportunity.
 -

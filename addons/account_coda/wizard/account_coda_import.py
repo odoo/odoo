@@ -69,14 +69,14 @@ class account_coda_import(osv.osv_memory):
         if context is None:
             context = {}
 
-        data = self.read(cr, uid, ids)[0]
+        data = self.browse(cr, uid, ids, context=context)[0]
 
-        codafile = data['coda']
-        journal_code = journal_obj.browse(cr, uid, data['journal_id'], context=context).code
+        codafile = data.coda
+        journal_code = data.journal_id.code
 
         period = account_period_obj.find(cr, uid, context=context)[0]
-        def_pay_acc = data['def_payable']
-        def_rec_acc = data['def_receivable']
+        def_pay_acc = data.def_payable.id
+        def_rec_acc = data.def_receivable.id
 
         err_log = "Errors:\n------\n"
         nb_err=0
@@ -96,7 +96,7 @@ class account_coda_import(osv.osv_memory):
                 bank_statement["bank_statement_line"]={}
                 bank_statement_lines = {}
                 bank_statement['date'] = str2date(line[5:11])
-                bank_statement['journal_id']=data['journal_id']
+                bank_statement['journal_id']=data.journal_id.id
                 period_id = account_period_obj.search(cr, uid, [('date_start', '<=', time.strftime('%Y-%m-%d', time.strptime(bank_statement['date'], "%y/%m/%d"))), ('date_stop', '>=', time.strftime('%Y-%m-%d', time.strptime(bank_statement['date'], "%y/%m/%d")))])
                 bank_statement['period_id'] = period_id and period_id[0] or False
                 bank_statement['state']='draft'
@@ -144,7 +144,7 @@ class account_coda_import(osv.osv_memory):
                     bank_statement["bank_statement_line"]=bank_statement_lines
                 elif line[1] == '2':
                     st_line_name = line[2:6]
-                    bank_statement_lines[st_line_name].update({'account_id': data['awaiting_account']})
+                    bank_statement_lines[st_line_name].update({'account_id': data.awaiting_account.id})
 
                 elif line[1] == '3':
                     # movement data record 3.1
@@ -165,7 +165,7 @@ class account_coda_import(osv.osv_memory):
                     else:
                         nb_err += 1
                         err_log += _('The bank account %s is not defined for the partner %s.\n')%(cntry_number, contry_name)
-                        bank_statement_lines[st_line_name].update({'account_id': data['awaiting_account']})
+                        bank_statement_lines[st_line_name].update({'account_id': data.awaiting_account.id})
 
                     bank_statement["bank_statement_line"]=bank_statement_lines
             elif line[0]=='3':
@@ -296,7 +296,7 @@ class account_coda_import(osv.osv_memory):
             'name': codafile,
             'statement_ids': [(6, 0, bkst_list,)],
             'note': str_log1+str_not+std_log+err_log,
-            'journal_id': data['journal_id'],
+            'journal_id': data.journal_id.id,
             'date': time.strftime("%Y-%m-%d"),
             'user_id': uid,
         })

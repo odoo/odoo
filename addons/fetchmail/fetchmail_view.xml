@@ -150,8 +150,7 @@
                parent="base.menu_mail_gateway" action="action_view_mail_message_emails" />
 
       <act_window 
-            context="{'server_id': active_id}"
-            domain="[('server_id', '=', active_id)]"
+            context="{'search_default_server_id': [active_id], 'default_server_id': active_id}"
             id="act_server_history" name="Emails"
             res_model="mailgate.message" src_model="email.server"/>
             

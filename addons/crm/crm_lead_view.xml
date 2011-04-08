@@ -104,8 +104,11 @@
                         <field name="state_id"/>
                     </group>
                     <group colspan="2" col="3">
-                        <separator string="Communication  History" colspan="4" col="3"/>
-                        <field name="email_from" widget="email"/>
+                        <separator string="Communication" colspan="4" col="3"/>
+                        <field name="email_from" widget="email"/><button string="Send Email"
+                        name="%(crm.action_crm_send_mail)d"
+                        context="{'mail':'new', 'model': 'crm.lead'}"
+                        icon="terp-mail-message-new" type="action" colspan="1"/>
                         <newline/>
                         <field name="phone"/>
                         <newline/>
@@ -114,7 +117,7 @@
                         <field name="mobile"/>
                         <newline/>
                         <separator string="Links" colspan="4" col="3"/>
-                        <field name="partner_id" on_change="onchange_partner_id(partner_id, email_from)" string="Customer"/>
+                        <field name="partner_id" string="Customer"/>
                         <button
                             name="%(action_crm_lead2partner)d"
                             icon="terp-partner" type="action"
@@ -166,8 +169,8 @@
                     </group>
                     <group colspan="2" col="2">
                         <separator string="Mailings" colspan="2" col="2"/>
-                        <field name="optin" on_change="on_chnage_optin(optin)"/>
-                        <field name="optout" on_change="on_chnage_optout(optout)"/>
+                        <field name="optin" on_change="on_change_optin(optin)"/>
+                        <field name="optout" on_change="on_change_optout(optout)"/>
                     </group>
                     <group colspan="2" col="2">
                         <separator string="Statistics" colspan="2" col="2"/>

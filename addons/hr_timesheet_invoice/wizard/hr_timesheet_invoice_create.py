@@ -120,13 +120,13 @@ class hr_timesheet_invoice_create(osv.osv_memory):
                     raise osv.except_osv(_('Error'), _('At least one line has no product !'))
                 factor_name = ''
                 factor = invoice_factor_obj.browse(cr, uid, factor_id, context2)
-
                 if not data['product']:
                     if factor.customer_name:
                         factor_name = product.name+' - '+factor.customer_name
                     else:
                         factor_name = product.name
                 else:
+                    data['product'] = data['product'][0]
                     factor_name = product_obj.name_get(cr, uid, [data['product']], context=context)[0][1]
 
                 if account.pricelist_id:

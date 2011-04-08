@@ -90,7 +90,7 @@ class report_custom(report_rml):
                         pro.append('<pro name="%s" >' % (x['name']))
                     temp = []
                     for q in qty:
-                        price_dict = pool.get('product.pricelist').price_get(cr, uid, [price_list_id], x['id'], q)
+                        price_dict = pool.get('product.pricelist').price_get(cr, uid, [price_list_id], x['id'], q, context=context)
                         if price_dict[price_list_id]:
                             price = price_dict[price_list_id]
                         else:

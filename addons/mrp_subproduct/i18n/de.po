@@ -7,15 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-03 16:58+0000\n"
-"PO-Revision-Date: 2010-12-29 09:34+0000\n"
-"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
-"consulting.net>\n"
+"PO-Revision-Date: 2011-03-08 07:02+0000\n"
+"Last-Translator: Steffi Frank (Bremskerl, DE) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-06 05:27+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-03-09 04:40+0000\n"
+"X-Generator: Launchpad (build 12351)\n"
 
 #. module: mrp_subproduct
 #: field:mrp.subproduct,product_id:0
@@ -29,14 +28,14 @@ msgid ""
 "You should install the mrp_subproduct module if you want to manage extra "
 "products on BoMs !"
 msgstr ""
-"Alle Produktmengen müssen grösser als '0' sein !\n"
-"Sie sollten das mrp_subproduct Modul installieren, wenn Sie Subprodukte über "
-"eine Stückliste definieren wollen."
+"Alle Produktmengen müssen grösser als 0 sein !\n"
+"Sie sollten das Modul mrp_subproduct installieren, wenn Sie Kuppelprodukte "
+"über eine Stückliste definieren wollen."
 
 #. module: mrp_subproduct
 #: view:mrp.bom:0
 msgid "sub products"
-msgstr "Subprodukte"
+msgstr "Kuppelprodukte"
 
 #. module: mrp_subproduct
 #: model:ir.model,name:mrp_subproduct.model_mrp_production
@@ -47,7 +46,9 @@ msgstr "Fertigungsauftrag"
 #: model:ir.module.module,shortdesc:mrp_subproduct.module_meta_information
 msgid ""
 "MRP Sub Product - To produce several products from one production order"
-msgstr "MRP Sub Product - Modul für die Fertigung von Subprodukten"
+msgstr ""
+"MRP Sub Product - Modul um Kuppelprodukte mit einem Fertigungsauftrag zu "
+"fertigen"
 
 #. module: mrp_subproduct
 #: field:mrp.subproduct,product_qty:0
@@ -57,7 +58,7 @@ msgstr "Anzahl"
 #. module: mrp_subproduct
 #: field:mrp.bom,sub_products:0
 msgid "sub_products"
-msgstr "Subprodukte"
+msgstr "Kuppelprodukte"
 
 #. module: mrp_subproduct
 #: field:mrp.subproduct,subproduct_type:0
@@ -83,12 +84,12 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Dieses Modul ermöglicht die Produktion weiterer Subprodukte über einen "
-"Fertigungsauftrag.\n"
-"Sie können Subprodukte in der Stückliste definieren.\n"
-"Ohne diese Anwendung gilt:\n"
+"Dieses Modul ermöglicht die Fertigung mehrerer Produkte mit einem "
+"Fertigungsauftrag (Kuppelprodukte).\n"
+"YSie können Kuppelprodukte in der Stückliste definieren.\n"
+"Ohne dieses Modul:\n"
 "    A + B + C -> D\n"
-"Durch diese Anwendung gilt:\n"
+"Mit diesem Modul:\n"
 "    A + B + C -> D + E\n"
 "    "
 
@@ -120,17 +121,17 @@ msgstr "Variabel"
 #. module: mrp_subproduct
 #: constraint:mrp.production:0
 msgid "Order quantity cannot be negative or zero !"
-msgstr "Bestellmengen können nicht negativ oder '0' sein !"
+msgstr "Auftragsmengen können nicht nagativ oder 0 sein!"
 
 #. module: mrp_subproduct
 #: model:ir.model,name:mrp_subproduct.model_mrp_subproduct
 msgid "Sub Product"
-msgstr "Subprodukt"
+msgstr "Kuppelprodukt"
 
 #. module: mrp_subproduct
 #: selection:mrp.subproduct,subproduct_type:0
 msgid "Fixed"
-msgstr "Fest"
+msgstr "Fixiert"
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Fehlerhafter xml Code für diese Ansicht!"

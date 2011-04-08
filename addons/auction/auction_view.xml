@@ -254,7 +254,7 @@
     </record>
 
     <act_window name="Open lots"
-        domain="[('auction_id', '=', active_id)]"
+        context="{'search_default_auction_id': [active_id], 'default_auction_id': active_id}"
         res_model="auction.lots"
         src_model="auction.dates"
         id="act_auction_lot_line_open"/>
@@ -499,7 +499,7 @@
     <!-- Action for Bids -->
 
     <act_window name="Open Bids"
-        domain="[('lot_id', '=', active_id)]"
+        context="{'search_default_lot_id': [active_id], 'default_lot_id': active_id}"
         res_model="auction.bid_line"
         src_model="auction.lots"
         id="act_auction_lot_open_bid"/>
@@ -769,7 +769,7 @@
     <menuitem name="Reporting" id="auction_report_menu" parent="auction_menu_root" sequence="6" groups="group_auction_manager"/>
 
     <act_window name="Deposit slip"
-        context="{'search_default_partner_id': [active_id]}"
+        context="{'search_default_partner_id': [active_id], 'default_partner_id': active_id}"
         res_model="auction.deposit"
         src_model="res.partner"
         id="act_auction_lot_open_deposit"/>

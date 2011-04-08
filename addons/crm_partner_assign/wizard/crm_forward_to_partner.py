@@ -151,9 +151,15 @@ class crm_lead_forward_to_partner(osv.osv_memory):
         if not partner_id:
             return {'value' : {'email_to' : False, 'address_id': False}}
 
-        addr = self.pool.get('res.partner').address_get(cr, uid, [partner_id], ['contact'])
+        partner_obj = self.pool.get('res.partner')
+        addr = partner_obj.address_get(cr, uid, [partner_id], ['contact'])
         data = {'address_id': addr['contact']}
         data.update(self.on_change_address(cr, uid, ids, addr['contact'])['value'])
+        
+        partner = partner_obj.browse(cr, uid, [partner_id])
+        user_id = partner and partner[0].user_id or False
+        email = user_id and user_id.user_email or ''
+        data.update({'email_cc' : email})
         return {
             'value' : data, 
             'domain' : {'address_id' : partner_id and "[('partner_id', '=', partner_id)]" or "[]"}

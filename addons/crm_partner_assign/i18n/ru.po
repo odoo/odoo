@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2010-11-20 07:57+0000\n"
+"PO-Revision-Date: 2011-03-23 13:46+0000\n"
 "Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-15 05:57+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-03-24 04:50+0000\n"
+"X-Generator: Launchpad (build 12559)\n"
 
 #. module: crm_partner_assign
 #: field:crm.lead.forward.to.partner,name:0
@@ -190,6 +190,8 @@ msgid ""
 "These addresses will receive a copy of this email. To modify the permanent "
 "CC list, edit the global CC field of this case"
 msgstr ""
+"Эти адреса будут получать копию этого письма. Для изменения постоянного "
+"списка рассылки копий измените поле 'Глобальная копия' этого вопроса."
 
 #. module: crm_partner_assign
 #: field:crm.lead.forward.to.partner,email_from:0
@@ -244,7 +246,7 @@ msgstr "Тип"
 #. module: crm_partner_assign
 #: help:crm.lead,partner_assigned_id:0
 msgid "Partner this case has been forwarded/assigned to."
-msgstr ""
+msgstr "Партнер по которому возник этот вопрос."
 
 #. module: crm_partner_assign
 #: selection:crm.lead.report.assign,priority:0
@@ -264,7 +266,7 @@ msgstr "Дата создания"
 #. module: crm_partner_assign
 #: help:crm.lead.forward.to.partner,html:0
 msgid "Select this if you want to send email with HTML formatting."
-msgstr ""
+msgstr "Выберите, если вы хотите посылать эл. письма с HTML форматированием."
 
 #. module: crm_partner_assign
 #: view:crm.lead.report.assign:0
@@ -279,7 +281,7 @@ msgstr "Назначение партнера"
 #. module: crm_partner_assign
 #: help:crm.lead.report.assign,type:0
 msgid "Type is used to separate Leads and Opportunities"
-msgstr "Тип используется для разделения кандидатов и сделок"
+msgstr "Тип используется для разделения кандидатов и предложений"
 
 #. module: crm_partner_assign
 #: selection:crm.lead.report.assign,month:0
@@ -306,7 +308,7 @@ msgstr ""
 #. module: crm_partner_assign
 #: view:crm.lead.report.assign:0
 msgid "Opportunities Assignment Analysis"
-msgstr ""
+msgstr "Анализ распределения предложений"
 
 #. module: crm_partner_assign
 #: view:res.partner:0
@@ -332,7 +334,7 @@ msgstr "Закрыть"
 #: model:ir.actions.act_window,name:crm_partner_assign.action_report_crm_opportunity_assign
 #: model:ir.ui.menu,name:crm_partner_assign.menu_report_crm_opportunities_assign_tree
 msgid "Opp. Assignment Analysis"
-msgstr ""
+msgstr "Анализ распред. сделок"
 
 #. module: crm_partner_assign
 #: help:crm.lead.report.assign,delay_close:0
@@ -395,7 +397,7 @@ msgstr "Категория"
 #. module: crm_partner_assign
 #: view:crm.lead.report.assign:0
 msgid "#Opportunities"
-msgstr "# Сделок"
+msgstr "# Предложений"
 
 #. module: crm_partner_assign
 #: model:ir.module.module,shortdesc:crm_partner_assign.module_meta_information
@@ -405,7 +407,7 @@ msgstr ""
 #. module: crm_partner_assign
 #: constraint:res.partner:0
 msgid "Error ! You can not create recursive associated members."
-msgstr ""
+msgstr "Ошибка! Вы не можете создать рекурсивно связанных участников."
 
 #. module: crm_partner_assign
 #: selection:crm.lead.forward.to.partner,state:0
@@ -429,7 +431,7 @@ msgstr "Закрыто"
 #: view:res.partner:0
 #: field:res.partner,opportunity_assigned_ids:0
 msgid "Assigned Opportunities"
-msgstr "Назначенные сделки"
+msgstr "Назначенные предложения"
 
 #. module: crm_partner_assign
 #: field:crm.lead,date_assign:0
@@ -507,7 +509,7 @@ msgstr ""
 #. module: crm_partner_assign
 #: view:crm.lead.report.assign:0
 msgid "Lead Assign"
-msgstr ""
+msgstr "Кандидат распределен"
 
 #. module: crm_partner_assign
 #: selection:crm.lead.report.assign,month:0
@@ -584,7 +586,7 @@ msgstr "Текущий"
 #. module: crm_partner_assign
 #: field:crm.lead.forward.to.partner,email_to:0
 msgid "To"
-msgstr ""
+msgstr "Кому"
 
 #. module: crm_partner_assign
 #: model:ir.model,name:crm_partner_assign.model_crm_lead_forward_to_partner
@@ -620,7 +622,7 @@ msgstr "Адрес"
 #. module: crm_partner_assign
 #: selection:crm.lead.report.assign,type:0
 msgid "Opportunity"
-msgstr "Сделка"
+msgstr "Предложение"
 
 #. module: crm_partner_assign
 #: field:crm.lead.report.assign,partner_id:0
@@ -646,7 +648,7 @@ msgstr "Страна"
 #. module: crm_partner_assign
 #: view:res.partner:0
 msgid "Convert to Opportunity"
-msgstr "Преобразовать в сделку"
+msgstr "Преобразовать в предложение"
 
 #. module: crm_partner_assign
 #: view:crm.lead:0
@@ -666,12 +668,12 @@ msgstr "crm.lead"
 #. module: crm_partner_assign
 #: model:ir.model,name:crm_partner_assign.model_crm_lead_report_assign
 msgid "CRM Lead Report"
-msgstr ""
+msgstr "Отчет по кандидатам в CRM"
 
 #. module: crm_partner_assign
 #: selection:crm.lead.forward.to.partner,history:0
 msgid "Case Information"
-msgstr ""
+msgstr "Информация о вопросе"
 
 #. module: crm_partner_assign
 #: field:res.partner.grade,sequence:0

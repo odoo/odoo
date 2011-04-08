@@ -114,7 +114,7 @@
                     <filter string="Salesman" name='user' icon="terp-personal" context="{'group_by':'user_id'}"/>
                     <separator orientation="vertical"/>
                     <filter string="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id','set_visible':True,'residual_invisible':True}"/>
-                    <filter string="Category of Product" icon="terp-stock_symbol-selection" context="{'group_by':'categ_id','residual_invisible':True}"/>
+                    <filter string="Category of Product" name="category_product" icon="terp-stock_symbol-selection" context="{'group_by':'categ_id','residual_invisible':True}"/>
                     <separator orientation="vertical"/>
                     <filter string="State" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
                     <filter string="Type" icon="terp-stock_symbol-selection" context="{'group_by':'type'}"/>
@@ -139,7 +139,7 @@
         <field name="res_model">account.invoice.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
-        <field name="context">{'search_default_current':1, 'search_default_partner':1, 'search_default_customer':1, 'search_default_date': time.strftime('%Y-01-01'), 'group_by':[], 'group_by_no_leaf':1,}</field>
+        <field name="context">{'search_default_current':1, 'search_default_category_product':1, 'search_default_customer':1, 'search_default_date': time.strftime('%Y-01-01'), 'group_by':[], 'group_by_no_leaf':1,}</field>
         <field name="search_view_id" ref="view_account_invoice_report_search"/>
         <field name="help">From this report, you can have an overview of the amount invoiced to your customer as well as payment delays. The tool search can also be used to personalise your Invoices reports and so, match this analysis to your needs.</field>
 

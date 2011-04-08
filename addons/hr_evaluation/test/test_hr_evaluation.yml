@@ -107,18 +107,6 @@
     progress: 0.0
     state: draft
 -
-  I create an Interview Request record
-- 
-  !record {model: hr.evaluation.interview, id: hr_evaluation_interview_0}:
-    date_deadline: !eval time.strftime('%Y-%m-%d')
-    evaluation_id: 'hr_evaluation_evaluation_0'
-    survey_id:  hr_evaluation.survey_0
--
-  I check that evaluation is in "Draft" state.
--
-  !assert {model: hr_evaluation.evaluation, id: hr_evaluation_evaluation_0}:
-     - state == 'draft'
--
   I start the evaluation process by click on "Start Evaluation" button.
 -
   !python {model: hr_evaluation.evaluation}: |
@@ -127,8 +115,9 @@
 -
   I close this survey request by giving answer of survey question.
 -
-  !python {model: hr.evaluation.interview}: |
-    self.survey_req_done(cr, uid, [ref('hr_evaluation_interview_0')])
+  !python {model: hr_evaluation.evaluation}: |
+    evaluation = self.browse(cr, uid, ref('hr_evaluation_evaluation_0'))
+    self.pool.get('hr.evaluation.interview').survey_req_done(cr, uid, [r.id for r in evaluation.survey_request_ids])
 -
   I click on "Final Validation" button to finalise evaluation.
 -

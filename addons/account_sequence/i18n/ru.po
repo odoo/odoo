@@ -8,26 +8,28 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-02-21 19:27+0000\n"
+"PO-Revision-Date: 2011-03-14 07:15+0000\n"
 "Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-02-22 04:54+0000\n"
-"X-Generator: Launchpad (build 12351)\n"
+"X-Launchpad-Export-Date: 2011-03-15 04:55+0000\n"
+"X-Generator: Launchpad (build 12559)\n"
 
 #. module: account_sequence
 #: view:account.sequence.installer:0
 #: model:ir.actions.act_window,name:account_sequence.action_account_seq_installer
 msgid "Account Sequence Application Configuration"
-msgstr ""
+msgstr "Настройка нумерации по счету"
 
 #. module: account_sequence
 #: constraint:account.move:0
 msgid ""
 "You cannot create entries on different periods/journals in the same move"
 msgstr ""
+"Вы не можете создавать проводки по разным периодам / журналам в одном "
+"действии."
 
 #. module: account_sequence
 #: help:account.move,internal_sequence_number:0
@@ -74,12 +76,12 @@ msgstr "Следующее число последовательности бу�
 #. module: account_sequence
 #: view:account.sequence.installer:0
 msgid "Configure Your Account Sequence Application"
-msgstr ""
+msgstr "Настройка вашей нумерации по счету"
 
 #. module: account_sequence
 #: field:account.sequence.installer,progress:0
 msgid "Configuration Progress"
-msgstr "Настройка выполняется"
+msgstr "Выполнение настройки"
 
 #. module: account_sequence
 #: help:account.sequence.installer,suffix:0
@@ -89,7 +91,7 @@ msgstr "Суффикс записи для последовательности"
 #. module: account_sequence
 #: field:account.sequence.installer,company_id:0
 msgid "Company"
-msgstr "Компания"
+msgstr "Организация"
 
 #. module: account_sequence
 #: help:account.journal,internal_sequence_id:0
@@ -97,6 +99,8 @@ msgid ""
 "This sequence will be used to maintain the internal number for the journal "
 "entries related to this journal."
 msgstr ""
+"Эта последовательность будет использована для внутренней нумерации записей в "
+"журнал, связанный с этим журналом."
 
 #. module: account_sequence
 #: field:account.sequence.installer,padding:0
@@ -125,6 +129,8 @@ msgid ""
 "OpenERP will automatically adds some '0' on the left of the 'Next Number' to "
 "get the required padding size."
 msgstr ""
+"OpenERP автоматически добавляет несколько '0' слева от 'Следующее число' для "
+" заданного выравнивания."
 
 #. module: account_sequence
 #: field:account.sequence.installer,name:0
@@ -141,6 +147,8 @@ msgstr "Нельзя сделать проводку по закрытому с�
 msgid ""
 "You cannot create more than one move per period on centralized journal"
 msgstr ""
+"Вы не можете создать больше одного действия за период по централизованному "
+"журналу."
 
 #. module: account_sequence
 #: sql_constraint:account.move.line:0
@@ -160,7 +168,7 @@ msgstr "account.sequence.installer"
 #. module: account_sequence
 #: view:account.sequence.installer:0
 msgid "Configure"
-msgstr "Настройка"
+msgstr "Настроить"
 
 #. module: account_sequence
 #: help:account.sequence.installer,prefix:0
@@ -185,7 +193,7 @@ msgstr "Изображение"
 #. module: account_sequence
 #: view:account.sequence.installer:0
 msgid "title"
-msgstr ""
+msgstr "title"
 
 #. module: account_sequence
 #: sql_constraint:account.journal:0
@@ -206,7 +214,7 @@ msgstr "Код журнала должен быть уникальным для 
 #: constraint:account.move.line:0
 msgid ""
 "You can not create move line on receivable/payable account without partner"
-msgstr ""
+msgstr "Нельзя сделать действие по дебетовому/кредитовому счету без партнера"
 
 #. module: account_sequence
 #: model:ir.model,name:account_sequence.model_account_journal

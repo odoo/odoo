@@ -36,7 +36,7 @@ class account_invoice_refund(osv.osv_memory):
        'period': fields.many2one('account.period', 'Force period'),
        'journal_id': fields.many2one('account.journal', 'Refund Journal', help='You can select here the journal to use for the refund invoice that will be created. If you leave that field empty, it will use the same journal as the current invoice.'),
        'description': fields.char('Description', size=128, required=True),
-       'filter_refund': fields.selection([('modify', 'Modify'), ('refund', 'Refund'), ('cancel', 'Cancel')], "Refund Type", required=True, help='Refund invoice base on this type. You can not Modify and Cancel if the invoice is already reconciled'),
+       'filter_refund': fields.selection([('refund', 'Refund'), ('cancel', 'Cancel'),('modify', 'Modify')], "Refund Type", required=True, help='Refund invoice base on this type. You can not Modify and Cancel if the invoice is already reconciled'),
     }
 
     def _get_journal(self, cr, uid, context=None):
@@ -52,7 +52,7 @@ class account_invoice_refund(osv.osv_memory):
     _defaults = {
         'date': lambda *a: time.strftime('%Y-%m-%d'),
         'journal_id': _get_journal,
-        'filter_refund': 'modify',
+        'filter_refund': 'refund',
     }
 
     def fields_view_get(self, cr, uid, view_id=None, view_type=False, context=None, toolbar=False, submenu=False):
@@ -88,29 +88,29 @@ class account_invoice_refund(osv.osv_memory):
         if context is None:
             context = {}
 
-        for form in  self.read(cr, uid, ids, context=context):
+        for form in self.browse(cr, uid, ids, context=context):
             created_inv = []
             date = False
             period = False
             description = False
             company = res_users_obj.browse(cr, uid, uid, context=context).company_id
-            journal_id = form.get('journal_id', False)
+            journal_id = form.journal_id.id
             for inv in inv_obj.browse(cr, uid, context.get('active_ids'), context=context):
                 if inv.state in ['draft', 'proforma2', 'cancel']:
                     raise osv.except_osv(_('Error !'), _('Can not %s draft/proforma/cancel invoice.') % (mode))
                 if inv.reconciled and mode in ('cancel', 'modify'):
                     raise osv.except_osv(_('Error !'), _('Can not %s invoice which is already reconciled, invoice should be unreconciled first. You can only Refund this invoice') % (mode))
-                if form['period']:
-                    period = form['period']
+                if form.period.id:
+                    period = form.period.id
                 else:
                     period = inv.period_id and inv.period_id.id or False
 
                 if not journal_id:
                     journal_id = inv.journal_id.id
 
-                if form['date']:
-                    date = form['date']
-                    if not form['period']:
+                if form.date:
+                    date = form.date
+                    if not form.period.id:
                             cr.execute("select name from ir_model_fields \
                                             where model = 'account.period' \
                                             and name = 'company_id'")
@@ -128,8 +128,8 @@ class account_invoice_refund(osv.osv_memory):
                                 period = res[0]
                 else:
                     date = inv.date_invoice
-                if form['description']:
-                    description = form['description']
+                if form.description:
+                    description = form.description
                 else:
                     description = inv.name
 
@@ -211,7 +211,7 @@ class account_invoice_refund(osv.osv_memory):
             return result
 
     def invoice_refund(self, cr, uid, ids, context=None):
-        data_refund = self.read(cr, uid, ids, [],context=context)[0]['filter_refund']
+        data_refund = self.read(cr, uid, ids, ['filter_refund'],context=context)[0]['filter_refund']
         return self.compute_refund(cr, uid, ids, data_refund, context=context)
 
 

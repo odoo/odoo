@@ -143,15 +143,15 @@ class account_automatic_reconcile(osv.osv_memory):
         obj_model = self.pool.get('ir.model.data')
         if context is None:
             context = {}
-        form = self.read(cr, uid, ids, [])[0]
-        max_amount = form.get('max_amount', False) and form.get('max_amount') or 0.0
-        power = form['power']
-        allow_write_off = form['allow_write_off']
+        form = self.browse(cr, uid, ids, context=context)[0]
+        max_amount = form.max_amount or 0.0
+        power = form.power
+        allow_write_off = form.allow_write_off
         reconciled = unreconciled = 0
-        if not form['account_ids']:
+        if not form.account_ids:
             raise osv.except_osv(_('UserError'), _('You must select accounts to reconcile'))
-        for account_id in form['account_ids']:
-            params = (account_id,)
+        for account_id in form.account_ids:
+            params = (account_id.id,)
             if not allow_write_off:
                 query = """SELECT partner_id FROM account_move_line WHERE account_id=%s AND reconcile_id IS NULL
                 AND state <> 'draft' GROUP BY partner_id
@@ -172,12 +172,12 @@ class account_automatic_reconcile(osv.osv_memory):
                     "AND partner_id=%s " \
                     "AND state <> 'draft' " \
                     "AND reconcile_id IS NULL",
-                    (account_id, partner_id))
+                    (account_id.id, partner_id))
                 line_ids = [id for (id,) in cr.fetchall()]
                 if line_ids:
                     reconciled += len(line_ids)
                     if allow_write_off:
-                        move_line_obj.reconcile(cr, uid, line_ids, 'auto', form['writeoff_acc_id'], form['period_id'], form['journal_id'], context)
+                        move_line_obj.reconcile(cr, uid, line_ids, 'auto', form.writeoff_acc_id.id, form.period_id.id, form.journal_id.id, context)
                     else:
                         move_line_obj.reconcile_partial(cr, uid, line_ids, 'manual', context=context)
 
@@ -191,7 +191,7 @@ class account_automatic_reconcile(osv.osv_memory):
                 "AND partner_id IS NOT NULL " \
                 "GROUP BY partner_id " \
                 "HAVING count(*)>1",
-                (account_id,))
+                (account_id.id,))
             partner_ids = [id for (id,) in cr.fetchall()]
             #filter?
             for partner_id in partner_ids:
@@ -205,7 +205,7 @@ class account_automatic_reconcile(osv.osv_memory):
                     "AND state <> 'draft' " \
                     "AND debit > 0 " \
                     "ORDER BY date_maturity",
-                    (account_id, partner_id))
+                    (account_id.id, partner_id))
                 debits = cr.fetchall()
 
                 # get the list of unreconciled 'credit transactions' for this partner
@@ -218,10 +218,10 @@ class account_automatic_reconcile(osv.osv_memory):
                     "AND state <> 'draft' " \
                     "AND credit > 0 " \
                     "ORDER BY date_maturity",
-                    (account_id, partner_id))
+                    (account_id.id, partner_id))
                 credits = cr.fetchall()
 
-                (rec, unrec) = self.do_reconcile(cr, uid, credits, debits, max_amount, power, form['writeoff_acc_id'], form['period_id'], form['journal_id'], context)
+                (rec, unrec) = self.do_reconcile(cr, uid, credits, debits, max_amount, power, form.writeoff_acc_id.id, form.period_id.id, form.journal_id.id, context)
                 reconciled += rec
                 unreconciled += unrec
 
@@ -234,7 +234,7 @@ class account_automatic_reconcile(osv.osv_memory):
                 "WHERE account_id=%s " \
                 "AND reconcile_id IS NULL " \
                 "AND state <> 'draft' " + partner_filter,
-                (account_id,))
+                (account_id.id,))
             additional_unrec = cr.fetchone()[0]
             unreconciled = unreconciled + additional_unrec
         context.update({'reconciled': reconciled, 'unreconciled': unreconciled})

@@ -41,6 +41,7 @@
                                     <field name="price_unit"/>
                                     <field name="notice"/>
                                     <field name="serial_number"/>
+                                    <field name="prodlot_id" domain="[('product_id','=',product_id)]"/>
                                 </form>
                             </field>
                             <group colspan="4" col="7">
@@ -88,7 +89,7 @@
                             </group>
                             <group colspan="4">
                                 <field name="sale_journal" domain="[('type','=','sale')]" widget="selection" invisible="1"/>
-                                <field name="pricelist_id" domain="[('type','=','sale')]" widget="selection" invisible="1"/>
+                                <field name="pricelist_id" domain="[('type','=','sale')]" widget="selection" invisible="0"/>
                             </group>
                         </page>
                         <page string="Notes" >

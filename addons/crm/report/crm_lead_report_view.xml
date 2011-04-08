@@ -71,6 +71,15 @@
             <field name="arch" type="xml">
                 <search string="Leads Analysis">
                     <group col="20" colspan="8">
+                        <filter icon="terp-personal"
+                            string="Lead"
+                            domain="[('type','=', 'lead')]"
+                            help="Show only lead"/>
+                        <filter icon="terp-personal+"
+                            string="Opportunity"
+                            domain="[('type','=','opportunity')]"
+                            help="Show only opportunity"/>
+                        <separator orientation="vertical" />
                         <filter string="  Year  " icon="terp-go-year"
                             domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')),('create_date','&gt;=',time.strftime('%%Y-01-01'))]"
                             help="Leads/Opportunities created in current year"/>
@@ -133,7 +142,7 @@
                         <filter string="Country" icon="terp-go-home" context="{'group_by':'country_id'}" />
                         <filter string="Company" icon="terp-go-home"
                             domain="[]"
-                            context="{'group_by':'company_id'}" 
+                            context="{'group_by':'company_id'}"
                             groups="base.group_multi_company"/>
                         <separator orientation="vertical" />
                         <filter string="Stage" name="Stage" icon="terp-stage" domain="[]" context="{'group_by':'stage_id'}"/>

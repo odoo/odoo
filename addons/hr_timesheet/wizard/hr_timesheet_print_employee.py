@@ -31,7 +31,7 @@ class analytical_timesheet_employee(osv.osv_memory):
                                   'Month', required=True),
         'year': fields.integer('Year', required=True),
         'employee_id': fields.many2one('hr.employee', 'Employee', required=True)
-    
+
                 }
 
     def _get_user(self, cr, uid, context=None):
@@ -50,6 +50,7 @@ class analytical_timesheet_employee(osv.osv_memory):
 
     def print_report(self, cr, uid, ids, context=None):
         data = self.read(cr, uid, ids, context=context)[0]
+        data['employee_id'] = data['employee_id'][0]
         datas = {
              'ids': [],
              'model': 'hr.employee',

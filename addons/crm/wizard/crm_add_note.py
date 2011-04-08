@@ -37,7 +37,7 @@ class crm_add_note(osv.osv_memory):
             attach = [
                 (x.name, base64.decodestring(x.binary)) for x in obj.attachment_ids
             ]
-            case_pool.history(cr, uid, [case], _("Note"), history=False,
+            case_pool.history(cr, uid, [case], self.pool.get('mailgate.message').truncate_data(cr, uid, obj.body, context=context), history=False,
                               details=obj.body, email_from=user_name, attach=attach)
 
             if obj.state == 'unchanged':

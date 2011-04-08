@@ -25,8 +25,13 @@
     "version" : "1.1",
     "depends" : ["base"],
     "author" : "OpenERP SA",
-    "category": 'Generic Modules/Marketing',
-    "description": "Menu for Marketing",
+    "category": 'Sales',
+    "description": """
+Menu for Marketing.
+===================
+
+Contains the installer for marketing-related modules.
+    """,
     'website': 'http://www.openerp.com',
     'init_xml': [],
     'update_xml': [
@@ -38,5 +43,6 @@
     'installable': True,
     'active': False,
     'certificate' : '00598574977629228189',
+    'images': ['images/config_marketing.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

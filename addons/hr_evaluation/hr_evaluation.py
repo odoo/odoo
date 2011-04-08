@@ -251,6 +251,10 @@ class hr_evaluation(osv.osv):
         self.write(cr, uid, ids,{'state':'cancel'}, context=context)
         return True
 
+    def button_draft(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids,{'state': 'draft'}, context=context)
+        return True
+
     def write(self, cr, uid, ids, vals, context=None):
         if 'date' in vals:
             new_vals = {'date_deadline': vals.get('date')}

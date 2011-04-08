@@ -62,8 +62,8 @@ class payment_order_create(osv.osv_memory):
         payment_obj = self.pool.get('payment.line')
         if context is None:
             context = {}
-        data = self.read(cr, uid, ids, [], context=context)[0]
-        line_ids = data['entries']
+        data = self.browse(cr, uid, ids, context=context)[0]
+        line_ids = [entry.id for entry in data.entries]
         if not line_ids:
             return {'type': 'ir.actions.act_window_close'}
 
@@ -97,8 +97,8 @@ class payment_order_create(osv.osv_memory):
         mod_obj = self.pool.get('ir.model.data')
         if context is None:
             context = {}
-        data = self.read(cr, uid, ids, [], context=context)[0]
-        search_due_date = data['duedate']
+        data = self.browse(cr, uid, ids, context=context)[0]
+        search_due_date = data.duedate
 #        payment = self.pool.get('payment.order').browse(cr, uid, context['active_id'], context=context)
 
         # Search for move line to pay:

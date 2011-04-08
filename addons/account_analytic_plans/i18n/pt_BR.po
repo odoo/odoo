@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-03 16:56+0000\n"
-"PO-Revision-Date: 2011-01-28 19:34+0000\n"
-"Last-Translator: Emerson <Unknown>\n"
+"PO-Revision-Date: 2011-03-07 19:03+0000\n"
+"Last-Translator: Filipe Belmont Sopranzi <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-29 04:56+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-03-08 04:47+0000\n"
+"X-Generator: Launchpad (build 12351)\n"
 
 #. module: account_analytic_plans
 #: view:analytic.plan.create.model:0
@@ -88,7 +88,7 @@ msgstr "Ok"
 #. module: account_analytic_plans
 #: constraint:account.move.line:0
 msgid "You can not create move line on closed account."
-msgstr "Você não pode criar movimentações em uma conta fechada."
+msgstr "Você não pode criar linhas de movimento em uma conta fechada."
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,plan_id:0
@@ -336,6 +336,37 @@ msgid ""
 "of distribution models.\n"
 "        "
 msgstr ""
+"Este módulo permite a utilização de vários planos analíticos, de acordo com "
+"balancete, de modo que várias linhas de análise são criadas quando a nota "
+"fiscal de saída ou as de entrada são confirmadas.\n"
+"\n"
+"Por exemplo, você pode definir a seguinte estrutura analítica:\n"
+"   Projetos\n"
+"      Projeto 1\n"
+"          SubProj 1.1\n"
+"          SubProj 1.2\n"
+"      Projeto 2\n"
+"  Vendedor\n"
+"      Eric\n"
+"      Fabiano\n"
+"\n"
+"Aqui, você tem dois planos: Projetos e Vendedor. Um item de nota fiscal,\n"
+"permite registrar as entradas analíticas em 2 planos: SubProj 1.1 e\n"
+"Fabiano. O valor também pode ser dividido. O seguinte exemplo é para\n"
+"uma nota fiscal que pertence a dois subprojetos atribuídos a um vendedor:\n"
+"\n"
+"Plano1:\n"
+"    SubProjeto 1.1 : 50%\n"
+"    SubProjeto 1.2 : 50%\n"
+"Plano2:\n"
+"    Eric: 100%\n"
+"\n"
+"Assim, quando esta linha da nota fiscal for confirmada, irá gerar 3 linhas "
+"analíticas,\n"
+"para uma conta de entrada.\n"
+"O plano analítico valida o percentual mínimo e máximo no momento da criação\n"
+"de modelos distribuídos.\n"
+"        "
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
@@ -494,7 +525,7 @@ msgstr "Distribuição Analítica"
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_journal
 msgid "Journal"
-msgstr "Livro"
+msgstr "Diário"
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_analytic_plan_create_model
@@ -519,7 +550,7 @@ msgstr "Sequência"
 #. module: account_analytic_plans
 #: sql_constraint:account.journal:0
 msgid "The name of the journal must be unique per company !"
-msgstr "O nome do Livro deve ser único para a Empresa !"
+msgstr "O nome do diário deve ser único por empresa!"
 
 #. module: account_analytic_plans
 #: code:addons/account_analytic_plans/account_analytic_plans.py:214

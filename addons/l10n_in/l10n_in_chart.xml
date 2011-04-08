@@ -155,7 +155,7 @@
             <field name="code">IA_AC01161</field>
             <field name="type">receivable</field>
             <field name="user_type" ref="account_type_asset1"/>
-            <field name="reconcile" eval="False"/>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="IA_AC0116"/>
         </record>
 
@@ -232,11 +232,11 @@
         </record>
 
         <record model="account.account.template" id="IA_AC02131">
-            <field name="name">Sundry Creditors</field>
+            <field name="name">Sundry Creditors Account</field>
             <field name="code">IA_AC02131</field>
             <field name="type">payable</field>
             <field name="user_type" ref="account_type_liability1"/>
-            <field name="reconcile" eval="False"/>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="IA_AC0213"/>
         </record>
 

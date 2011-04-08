@@ -64,7 +64,7 @@ class project_task_delegate(osv.osv_memory):
                 newname = tools.ustr(task_name).replace(_('CHECK: '), '')
             else:
                 newname = tools.ustr(task_name or '')
-            prefix = _('CHECK: ') + newname
+            prefix = _('CHECK: %s') % newname
             res.update({'prefix': prefix})
         if 'new_task_description' in fields:
             res.update({'new_task_description': task.description})
@@ -105,6 +105,7 @@ class project_task_delegate(osv.osv_memory):
         task_id = context.get('active_id', False)
         task_pool = self.pool.get('project.task')
         delegate_data = self.read(cr, uid, ids, context=context)[0]
+        delegate_data['user_id'] = delegate_data['user_id'][0]
         delegate_data['name'] = tools.ustr(delegate_data['name'])
         task_pool.do_delegate(cr, uid, task_id, delegate_data, context=context)
         return {}

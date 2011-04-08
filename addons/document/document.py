@@ -38,9 +38,9 @@ class document_file(osv.osv):
 
     def _attach_parent_id(self, cr, uid, ids=None, context=None):
         """Migrate ir.attachments to the document module.
-        
+
         When the 'document' module is loaded on a db that has had plain attachments,
-        they will need to be attached to some parent folder, and be converted from 
+        they will need to be attached to some parent folder, and be converted from
         base64-in-bytea to raw-in-bytea format.
         This function performs the internal migration, once and forever, for these
         attachments. It cannot be done through the nominal ORM maintenance code,
@@ -50,7 +50,7 @@ class document_file(osv.osv):
         should have had (but would have failed if plain attachments contained null
         values).
         """
-        
+
         parent_id = self.pool.get('document.directory')._get_root_directory(cr,uid)
         if not parent_id:
             logging.getLogger('document').warning("at _attach_parent_id(), still not able to set the parent!")
@@ -64,7 +64,7 @@ class document_file(osv.osv):
                     "WHERE parent_id IS NULL", (parent_id,))
         cr.execute("ALTER TABLE ir_attachment ALTER parent_id SET NOT NULL")
         return True
-        
+
     def _get_filestore(self, cr):
         return os.path.join(DMS_ROOT_PATH, cr.dbname)
 
@@ -167,19 +167,41 @@ class document_file(osv.osv):
 
     def check(self, cr, uid, ids, mode, context=None, values=None):
         """Check access wrt. res_model, relax the rule of ir.attachment parent
-        
+
         With 'document' installed, everybody will have access to attachments of
         any resources they can *read*.
         """
         return super(document_file, self).check(cr, uid, ids, mode='read',
                                             context=context, values=values)
 
+    def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
+        # Grab ids, bypassing 'count'
+        ids = super(document_file, self).search(cr, uid, args, offset=offset,
+                                                limit=limit, order=order,
+                                                context=context, count=False)
+        if not ids:
+            return 0 if count else []
+
+        # Filter out documents that are in directories that the user is not allowed to read.
+        # Must use pure SQL to avoid access rules exceptions (we want to remove the records,
+        # not fail), and the records have been filtered in parent's search() anyway.
+        cr.execute('SELECT id, parent_id from "%s" WHERE id in %%s' % self._table, (tuple(ids),))
+        doc_pairs = cr.fetchall()
+        parent_ids = set(zip(*doc_pairs)[1])
+        visible_parent_ids = self.pool.get('document.directory').search(cr, uid, [('id', 'in', list(parent_ids))])
+        disallowed_parents = parent_ids.difference(visible_parent_ids)
+        for doc_id, parent_id in doc_pairs:
+            if parent_id in disallowed_parents:
+                ids.remove(doc_id)
+        return len(ids) if count else ids
+
+
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:
             default = {}
         if 'name' not in default:
-            name = self.read(cr, uid, [id])[0]['name']
-            default.update({'name': name + " (copy)"})
+            name = self.read(cr, uid, [id], ['name'])[0]['name']
+            default.update({'name': name + " " + _("(copy)")})
         return super(document_file, self).copy(cr, uid, id, default, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):

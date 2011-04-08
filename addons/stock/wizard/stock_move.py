@@ -21,6 +21,8 @@
 
 from osv import fields, osv
 
+import decimal_precision as dp
+
 class stock_move_track(osv.osv_memory):
     _name = "stock.move.track"
     _description = "Track moves"
@@ -98,9 +100,9 @@ class stock_move_consume(osv.osv_memory):
             context = {}
         move_obj = self.pool.get('stock.move')
         move_ids = context['active_ids']
-        for data in self.read(cr, uid, ids):
+        for data in self.browse(cr, uid, ids, context=context):
             move_obj.action_consume(cr, uid, move_ids,
-                             data['product_qty'], data['location_id'],
+                             data.product_qty, data.location_id.id,
                              context=context)
         return {'type': 'ir.actions.act_window_close'}
 
@@ -159,9 +161,9 @@ class stock_move_scrap(osv.osv_memory):
             context = {}
         move_obj = self.pool.get('stock.move')
         move_ids = context['active_ids']
-        for data in self.read(cr, uid, ids):
+        for data in self.browse(cr, uid, ids):
             move_obj.action_scrap(cr, uid, move_ids,
-                             data['product_qty'], data['location_id'],
+                             data.product_qty, data.location_id.id,
                              context=context)
         return {'type': 'ir.actions.act_window_close'}
 
@@ -198,7 +200,7 @@ class split_in_production_lot(osv.osv_memory):
         return res
 
     _columns = {
-        'qty': fields.integer('Quantity'),
+        'qty': fields.float('Quantity', digits_compute=dp.get_precision('Product UoM')),
         'product_id': fields.many2one('product.product', 'Product', required=True, select=True),
         'product_uom': fields.many2one('product.uom', 'UoM'),
         'line_ids': fields.one2many('stock.move.split.lines', 'lot_id', 'Production Lots'),
@@ -297,12 +299,12 @@ class stock_move_split_lines_exist(osv.osv_memory):
     _description = "Exist Split lines"
     _columns = {
         'name': fields.char('Tracking serial', size=64),
-        'quantity': fields.integer('Quantity'),
+        'quantity': fields.float('Quantity', digits_compute=dp.get_precision('Product UoM')),
         'lot_id': fields.many2one('stock.move.split', 'Lot'),
         'prodlot_id': fields.many2one('stock.production.lot', 'Production Lot'),
     }
     _defaults = {
-        'quantity': lambda *x: 1,
+        'quantity': lambda *x: 1.0,
     }
 
 stock_move_split_lines_exist()
@@ -312,13 +314,13 @@ class stock_move_split_lines(osv.osv_memory):
     _description = "Split lines"
     _columns = {
         'name': fields.char('Tracking serial', size=64),
-        'quantity': fields.integer('Quantity'),
+        'quantity': fields.float('Quantity', digits_compute=dp.get_precision('Product UoM')),
         'use_exist' : fields.boolean('Existing Lot'),
         'lot_id': fields.many2one('stock.move.split', 'Lot'),
         'action': fields.selection([('split','Split'),('keepinone','Keep in one lot')],'Action'),
     }
     _defaults = {
-        'quantity': lambda *x: 1,
+        'quantity': lambda *x: 1.0,
         'action' : lambda *x: 'split',
     }
 stock_move_split_lines()

@@ -38,7 +38,9 @@ _ref_vat = {
     'nl': 'NL123456782B90', 'pl': 'PL1234567883',
     'pt': 'PT123456789', 'ro': 'RO1234567897',
     'se': 'SE123456789701', 'si': 'SI12345679',
-    'sk': 'SK0012345675', 'el': 'EL12345670'
+    'sk': 'SK0012345675', 'el': 'EL12345670',
+    'mx': 'MXABC123456T1B'
+
             }
 
 def mult_add(i, j):
@@ -1064,6 +1066,17 @@ class res_partner(osv.osv):
                 return False
         return True
 
+    def check_vat_mx(self, vat):
+        '''
+        Verificar RFC mÃ©xico
+        '''
+        if not 12 <= len(vat) <= 13:
+            return False
+        elif len(vat)==12 and not vat[:3].isalpha() | vat[3:9].isdigit() | vat[-3:].isalnum():
+            return False
+        elif len(vat)==13 and not vat[:4].isalpha() | vat[4:10].isdigit() | vat[-3:].isalnum():
+            return False
+        return True
 res_partner()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

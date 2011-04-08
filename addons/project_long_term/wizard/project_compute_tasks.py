@@ -38,7 +38,7 @@ class project_compute_tasks(osv.osv_memory):
             context = {}
         context['compute_by'] = 'project'
         data = self.read(cr, uid, ids, [])[0]
-        project_id = data['project_id']
+        project_id = data['project_id'][0]
         project_pool.schedule_tasks(cr, uid, [project_id], context=context)
         return self._open_task_list(cr, uid, data, context=context)
 

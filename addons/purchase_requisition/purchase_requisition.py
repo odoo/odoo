@@ -129,7 +129,7 @@ class purchase_order(osv.osv):
                     if order.id<>po.id:
                         proc_ids = proc_obj.search(cr, uid, [('purchase_id', '=', order.id)])
                         if proc_ids and po.state=='confirmed':
-                            proc_obj.wirte(cr,uid,proc_ids,{'purchase_id':po.id})
+                            proc_obj.write(cr, uid, proc_ids, {'purchase_id': po.id})
                         wf_service = netsvc.LocalService("workflow")
                         wf_service.trg_validate(uid, 'purchase.order', order.id, 'purchase_cancel', cr)
                     self.pool.get('purchase.requisition').write(cr, uid, [po.requisition_id.id], {'state':'done','date_end':time.strftime('%Y-%m-%d %H:%M:%S')})

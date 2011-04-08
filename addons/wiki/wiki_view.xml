@@ -246,14 +246,14 @@
         </record>
 
         <act_window 
-            context="{'search_default_wiki_id': [active_id]}"
+            context="{'search_default_wiki_id': [active_id], 'default_wiki_id': active_id}"
             id="act_wiki_wiki_history"
             name="Page History"
             res_model="wiki.wiki.history"
             src_model="wiki.wiki"/>
 
         <act_window
-            context="{'search_default_group_id': [active_id]}"
+            context="{'search_default_group_id': [active_id], 'default_group_id': active_id}"
             id="act_wiki_group_open"
             name="Search Page"
             res_model="wiki.wiki"

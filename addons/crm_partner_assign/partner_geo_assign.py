@@ -26,7 +26,7 @@ import random, time
 from tools.translate import _
 
 def geo_find(addr):
-    try: 
+    try:
         regex = '<coordinates>([+-]?[0-9\.]+),([+-]?[0-9\.]+),([+-]?[0-9\.]+)</coordinates>'
         url = 'http://maps.google.com/maps/geo?q=' + urllib.quote(addr) + '&output=xml&oe=utf8&sensor=false'
         xml = urllib.urlopen(url).read()
@@ -37,7 +37,7 @@ def geo_find(addr):
             return None
         return float(result.group(1)),float(result.group(2))
     except Exception, e:
-        raise osv.except_osv(_('Network error'), 
+        raise osv.except_osv(_('Network error'),
                              _('Could not contact geolocation servers, please make sure you have a working internet connection (%s)') % e)
 
 
@@ -64,7 +64,7 @@ class res_partner(osv.osv):
         'partner_weight': fields.integer('Weight',
             help="Gives the probability to assign a lead to this partner. (0 means no assignation.)"),
         'opportunity_assigned_ids': fields.one2many('crm.lead', 'partner_assigned_id',\
-            'Assigned Opportunities'), 
+            'Assigned Opportunities'),
         'grade_id': fields.many2one('res.partner.grade', 'Partner Grade')
     }
     _defaults = {
@@ -105,7 +105,12 @@ class crm_lead(osv.osv):
         if not partner_assigned_id:
             return {'value':{'date_assign': False}}
         else:
-            return {'value':{'date_assign': time.strftime('%Y-%m-%d')}}
+            partners = self.pool.get('res.partner').browse(cr, uid, [partner_assigned_id], context=context)
+            user_id = partners[0] and partners[0].user_id.id or False
+            return {'value':
+                        {'date_assign': time.strftime('%Y-%m-%d'),
+                         'user_id' : user_id}
+                   }
 
     def assign_partner(self, cr, uid, ids, context=None):
         ok = False
@@ -161,7 +166,7 @@ class crm_lead(osv.osv):
                         ('country', '=', part.country_id.id),
                     ], context=context)
 
-                # 6. sixth way: closest partner whatsoever, just to have at least one result    
+                # 6. sixth way: closest partner whatsoever, just to have at least one result
                 if not part_ids:
                     # warning: point() type takes (longitude, latitude) as parameters in this order!
                     cr.execute("""SELECT id, distance
@@ -183,7 +188,9 @@ class crm_lead(osv.osv):
                 mypartner = random.randint(0,total)
                 for t in toassign:
                     if mypartner<=t[1]:
-                        self.write(cr, uid, [part.id], {'partner_assigned_id': t[0], 'date_assign': time.strftime('%Y-%m-%d')}, context=context)
+                        vals = self.onchange_assign_id(cr,uid, ids, t[0], context=context)['value']
+                        vals.update({'partner_assigned_id': t[0], 'date_assign': time.strftime('%Y-%m-%d')})
+                        self.write(cr, uid, [part.id], vals, context=context)
                         break
             ok = True
         return ok

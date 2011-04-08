@@ -290,7 +290,7 @@ class project_scrum_meeting(osv.osv):
     # TODO: Find the right sprint thanks to users and date
     #
     _defaults = {
-        'date' : time.strftime('%Y-%m-%d'),
+        'date' : lambda *a: time.strftime('%Y-%m-%d'),
     }
 
     def button_send_to_master(self, cr, uid, ids, context=None):
@@ -321,9 +321,9 @@ class project_scrum_meeting(osv.osv):
         meeting_id = self.browse(cr, uid, ids, context=context)[0]
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         user_email = email_from or user.address_id.email  or email_from
-        body = _('Hello ') + meeting_id.sprint_id.scrum_master_id.name + ",\n" + " \n" +_('I am sending you Daily Meeting Details of date')+ ' %s ' % (meeting_id.date)+ _('for the Sprint')+ ' %s\n' % (meeting_id.sprint_id.name)
-        body += "\n"+ _('*Tasks since yesterday:')+ '\n_______________________%s' % (meeting_id.question_yesterday) + '\n' +_("*Task for Today:")+ '\n_______________________ %s\n' % (meeting_id.question_today )+ '\n' +_('*Blocks encountered:') +'\n_______________________ %s' % (meeting_id.question_blocks or _('No Blocks'))
-        body += "\n\n"+_('Thank you')+",\n"+ user.name
+        body = _("Hello %s,\n \nI am sending you Daily Meeting Details of date %s for the Sprint %s\n") %(meeting_id.sprint_id.scrum_master_id.name, meeting_id.date, meeting_id.sprint_id.name)
+        body += _('\n*Tasks since yesterday:\n_______________________%s\n*Task for Today:\n_______________________ %s\n\n*Blocks encountered:\n_______________________ %s') %(meeting_id.question_yesterday,meeting_id.question_today, meeting_id.question_blocks or _('No Blocks'))
+        body += _("\n\nThank you,\n%s") % user.name
         sub_name = meeting_id.name or _('Scrum Meeting of %s') % meeting_id.date
         flag = tools.email_send(user_email , [email], sub_name, body, reply_to=None, openobject_id=str(meeting_id.id))
         if not flag:
