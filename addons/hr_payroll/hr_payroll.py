@@ -438,6 +438,7 @@ class hr_payslip(osv.osv):
 
     def get_payslip_lines(self, cr, uid, contract_ids, payslip_id, context):
         result = []
+        blacklist = []
         payslip = self.pool.get('hr.payslip').browse(cr, uid, payslip_id, context=context)
         localdict = {'rules': {}, 'heads': {}, 'payslip': payslip}
         #get the ids of the structures on the contracts and their parent id as well
@@ -453,7 +454,7 @@ class hr_payslip(osv.osv):
             localdict.update({'employee': employee, 'contract': contract})
             for rule in self.pool.get('hr.salary.rule').browse(cr, uid, sorted_rule_ids, context=context):
                 #check if the rule can be applied
-                if self.pool.get('hr.salary.rule').satisfy_condition(cr, uid, rule.id, localdict, context=context):
+                if self.pool.get('hr.salary.rule').satisfy_condition(cr, uid, rule.id, localdict, context=context) and rule.id not in blacklist:
                     amount = self.pool.get('hr.salary.rule').compute_rule(cr, uid, rule.id, localdict, context=context)
                     #set/overwrite the amount computed for this rule in the localdict
                     localdict['rules'][rule.code] = amount
@@ -480,6 +481,9 @@ class hr_payslip(osv.osv):
                         'employee_id': contract.employee_id.id,
                     }
                     result.append(vals)
+                else:
+                    #blacklist this rule and its children
+                    blacklist += [id for id, seq in self.pool.get('hr.salary.rule')._recursive_search_of_rules(cr, uid, [rule], context=context)]
         return result
 
     def onchange_employee_id(self, cr, uid, ids, date_from, date_to, employee_id=False, contract_id=False, context=None):
