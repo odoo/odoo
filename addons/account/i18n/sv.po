@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-25 04:55+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-03-18 04:54+0000\n"
+"X-Generator: Launchpad (build 12559)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -24,7 +24,7 @@ msgstr "Systembetalning"
 #. module: account
 #: view:account.journal:0
 msgid "Other Configuration"
-msgstr "Övrig Konfiguration"
+msgstr "Övrig konfiguration"
 
 #. module: account
 #: code:addons/account/wizard/account_open_closed_fiscalyear.py:40
@@ -726,12 +726,6 @@ msgstr "Markera"
 #: field:account.partner.reconcile.process,today_reconciled:0
 msgid "Partners Reconciled Today"
 msgstr "Partners Sammanslagna Idag"
-
-#. module: account
-#: code:addons/account/account_bank_statement.py:306
-#, python-format
-msgid "The statement balance is incorrect !\n"
-msgstr "The statement balance is incorrect !\n"
 
 #. module: account
 #: selection:account.payment.term.line,value:0
@@ -2625,12 +2619,12 @@ msgid "August"
 msgstr "Augusti"
 
 #. module: account
-#: code:addons/account/account_bank_statement.py:307
+#: code:addons/account/account_bank_statement.py:306
 #, python-format
 msgid ""
+"The statement balance is incorrect !\n"
 "The expected balance (%.2f) is different than the computed one. (%.2f)"
 msgstr ""
-"The expected balance (%.2f) is different than the computed one. (%.2f)"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_paymentreconcile0
@@ -2873,6 +2867,12 @@ msgstr "The account basis of the tax declaration."
 #: selection:account.entries.report,type:0
 msgid "View"
 msgstr "Visa"
+
+#. module: account
+#: code:addons/account/account.py:2951
+#, python-format
+msgid "BNK%s"
+msgstr ""
 
 #. module: account
 #: code:addons/account/account.py:2906
@@ -3947,7 +3947,7 @@ msgstr "Standardmoms"
 #: code:addons/account/invoice.py:88
 #, python-format
 msgid "Free Reference"
-msgstr "Free Reference"
+msgstr "Meddelande"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_periodical_processing
@@ -4259,12 +4259,6 @@ msgstr ""
 #: report:account.account.balance.landscape:0
 msgid "Account Balance -"
 msgstr "Account Balance -"
-
-#. module: account
-#: code:addons/account/invoice.py:989
-#, python-format
-msgid "Invoice "
-msgstr "Faktura "
 
 #. module: account
 #: field:account.automatic.reconcile,date1:0
@@ -5570,10 +5564,10 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/invoice.py:989
+#: code:addons/account/invoice.py:997
 #, python-format
-msgid "is validated."
-msgstr "har validerats."
+msgid "Invoice  '%s' is validated."
+msgstr ""
 
 #. module: account
 #: view:account.chart.template:0
@@ -10536,6 +10530,12 @@ msgstr ""
 #~ msgid "Fiscal Position Template Account Mapping"
 #~ msgstr "Fiscal Position Template Account Mapping"
 
+#, python-format
+#~ msgid ""
+#~ "The expected balance (%.2f) is different than the computed one. (%.2f)"
+#~ msgstr ""
+#~ "The expected balance (%.2f) is different than the computed one. (%.2f)"
+
 #~ msgid "Third party (Country)"
 #~ msgstr "Tredje part (Land)"
 
@@ -10560,6 +10560,10 @@ msgstr ""
 #~ "Example: 14 days 2%, 30 days net\n"
 #~ "1. Line 1: percent 0.02 14 days\n"
 #~ "2. Line 2: balance 30 days"
+
+#, python-format
+#~ msgid "The statement balance is incorrect !\n"
+#~ msgstr "The statement balance is incorrect !\n"
 
 #~ msgid "TITLE COMPANY"
 #~ msgstr "TITLE COMPANY"
@@ -11134,3 +11138,11 @@ msgstr ""
 
 #~ msgid "End of Year"
 #~ msgstr "Årsavslut"
+
+#, python-format
+#~ msgid "is validated."
+#~ msgstr "har validerats."
+
+#, python-format
+#~ msgid "Invoice "
+#~ msgstr "Faktura "

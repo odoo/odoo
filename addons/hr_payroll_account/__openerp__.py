@@ -22,14 +22,18 @@
 {
     'name': 'Human Resource Payroll Accounting',
     'version': '1.0',
-    'category': 'Generic Modules/Human Resources',
-    'description': """Generic Payroll system Integrated with Accountings
+    'category': 'Human Resources',
+    'description': """
+Generic Payroll system Integrated with Accountings.
+===================================================
+
     * Expense Encoding
     * Payment Encoding
     * Company Contribution Management
     """,
     'author':'OpenERP SA',
     'website':'http://www.openerp.com',
+    'images': ['images/hr_employee_payslip.jpeg'],
     'depends': [
         'hr_payroll',
         'account',
@@ -38,7 +42,7 @@
     'init_xml': [
     ],
     'update_xml': [
-        "security/ir.model.access.csv", 
+        "security/ir.model.access.csv",
         "hr_payroll_account_view.xml",
     ],
     'demo_xml': [

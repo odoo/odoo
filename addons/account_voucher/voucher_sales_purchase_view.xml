@@ -102,7 +102,7 @@
                         <field name="number"/>
                         <field name="name" colspan="4"/>
                         <field name="type" invisible="True"/>
-                        <field name="currency_id" invisible="True" nolabel="1"/>
+                        <field name="currency_id"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Sales Information">
@@ -230,7 +230,7 @@
                         <field name="reference" select="1"/>
                         <field name="account_id" domain="[('type','=','other')]"  invisible="True"/>
                         <field name="type" invisible="True"/>
-                        <field name="currency_id" invisible="True" nolabel="1"/>
+                        <field name="currency_id"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Bill Information">

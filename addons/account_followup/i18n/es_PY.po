@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-03-04 04:44+0000\n"
-"X-Generator: Launchpad (build 12351)\n"
+"X-Launchpad-Export-Date: 2011-03-18 04:47+0000\n"
+"X-Generator: Launchpad (build 12559)\n"
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:295
@@ -82,18 +82,15 @@ msgid "Group By..."
 msgstr "Agrupar por..."
 
 #. module: account_followup
-#: code:addons/account_followup/wizard/account_followup_print.py:287
+#: code:addons/account_followup/wizard/account_followup_print.py:290
 #, python-format
 msgid ""
 "\n"
 "\n"
 "E-Mail sent to following Partners successfully. !\n"
 "\n"
+"%s"
 msgstr ""
-"\n"
-"\n"
-"Correo enviado a las siguientes empresas correctamente.\n"
-"\n"
 
 #. module: account_followup
 #: view:account_followup.followup:0
@@ -161,7 +158,7 @@ msgstr "¡Valor haber o debe erróneo en el asiento contable!"
 #. module: account_followup
 #: selection:account_followup.followup.line,start:0
 msgid "Net Days"
-msgstr ""
+msgstr "Días Neto"
 
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.action_account_followup_definition_form
@@ -182,7 +179,7 @@ msgstr "Total Debito"
 #. module: account_followup
 #: view:account.followup.print.all:0
 msgid "%(heading)s: Move line header"
-msgstr ""
+msgstr "%(heading)s: Mueve cabecera"
 
 #. module: account_followup
 #: view:res.company:0
@@ -506,7 +503,7 @@ msgstr "Sub-Total:"
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Balance:"
-msgstr ""
+msgstr "Saldo pendiente:"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_stat
@@ -539,14 +536,13 @@ msgid "Send email confirmation"
 msgstr "Enviar correo electrónico de confirmación"
 
 #. module: account_followup
-#: code:addons/account_followup/wizard/account_followup_print.py:284
+#: code:addons/account_followup/wizard/account_followup_print.py:287
 #, python-format
 msgid ""
 "All E-mails have been successfully sent to Partners:.\n"
 "\n"
+"%s"
 msgstr ""
-"Todos los correos han sido enviados a las empresas correctamente:.\n"
-"\n"
 
 #. module: account_followup
 #: constraint:res.company:0
@@ -641,7 +637,7 @@ msgstr "Líneas de seguimiento"
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Litigation"
-msgstr ""
+msgstr "Litigio"
 
 #. module: account_followup
 #: field:account_followup.stat.by.partner,max_followup_id:0
@@ -684,7 +680,7 @@ msgstr "Este ejercicio fiscal"
 #. module: account_followup
 #: view:account.move.line:0
 msgid "Partner entries"
-msgstr ""
+msgstr "Asientos de empresa"
 
 #. module: account_followup
 #: help:account.followup.print.all,partner_lang:0
@@ -730,14 +726,13 @@ msgid "Maturity"
 msgstr "Vencimiento"
 
 #. module: account_followup
-#: code:addons/account_followup/wizard/account_followup_print.py:286
+#: code:addons/account_followup/wizard/account_followup_print.py:289
 #, python-format
 msgid ""
 "E-Mail not sent to following Partners, Email not available !\n"
 "\n"
+"%s"
 msgstr ""
-"Correo no enviado a las empresas siguientes, su email no estaba disponible.\n"
-"\n"
 
 #. module: account_followup
 #: view:account.followup.print:0
@@ -747,7 +742,7 @@ msgstr "Continuar"
 #. module: account_followup
 #: field:account_followup.followup.line,delay:0
 msgid "Days of delay"
-msgstr ""
+msgstr "Días de demora"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
@@ -788,7 +783,7 @@ msgstr "Ref. cliente :"
 #. module: account_followup
 #: view:account.followup.print.all:0
 msgid "%(partner_name)s: Partner name"
-msgstr ""
+msgstr "%(partner_name)s: Nombre empresa"
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -803,4 +798,32 @@ msgstr "Criterios seguimiento"
 #. module: account_followup
 #: constraint:account.move.line:0
 msgid "You can not create move line on view account."
-msgstr ""
+msgstr "No puede crear un movimiento en una cuenta de tipo vista."
+
+#, python-format
+#~ msgid ""
+#~ "\n"
+#~ "\n"
+#~ "E-Mail sent to following Partners successfully. !\n"
+#~ "\n"
+#~ msgstr ""
+#~ "\n"
+#~ "\n"
+#~ "Correo enviado a las siguientes empresas correctamente.\n"
+#~ "\n"
+
+#, python-format
+#~ msgid ""
+#~ "All E-mails have been successfully sent to Partners:.\n"
+#~ "\n"
+#~ msgstr ""
+#~ "Todos los correos han sido enviados a las empresas correctamente:.\n"
+#~ "\n"
+
+#, python-format
+#~ msgid ""
+#~ "E-Mail not sent to following Partners, Email not available !\n"
+#~ "\n"
+#~ msgstr ""
+#~ "Correo no enviado a las empresas siguientes, su email no estaba disponible.\n"
+#~ "\n"

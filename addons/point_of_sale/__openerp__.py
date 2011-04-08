@@ -23,18 +23,22 @@
 {
     'name': 'Point Of Sale',
     'version': '1.0',
-    'category': 'Generic Modules/Sales & Purchases',
+    'category': 'Sales',
     'description': """
-Main features :
- - Fast encoding of the sale.
- - Allow to choose one payment mode (the quick way) or to split the payment between several payment mode.
- - Computation of the amount of money to return.
- - Create and confirm picking list automatically.
- - Allow the user to create invoice automatically.
- - Allow to refund former sales.
+This module provides a quick and easy sale process.
+===================================================
 
+Main features :
+---------------
+    * Fast encoding of the sale.
+    * Allow to choose one payment mode (the quick way) or to split the payment between several payment mode.
+    * Computation of the amount of money to return.
+    * Create and confirm picking list automatically.
+    * Allow the user to create invoice automatically.
+    * Allow to refund former sales.
     """,
     'author': 'OpenERP SA',
+    'images': ['images/cash_registers.jpeg', 'images/pos_analysis.jpeg','images/register_analysis.jpeg','images/sale_order_pos.jpeg','images/product_pos.jpeg'],
     'depends': ['sale', 'delivery'],
     'init_xml': [],
 

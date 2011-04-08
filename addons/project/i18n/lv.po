@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-15 05:01+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-03-18 04:38+0000\n"
+"X-Generator: Launchpad (build 12559)\n"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_res_users_2_project_task_opened
@@ -66,6 +66,12 @@ msgid "Operation Not Permitted !"
 msgstr "Darbība nav atļauta!"
 
 #. module: project
+#: code:addons/project/wizard/project_task_delegate.py:67
+#, python-format
+msgid "CHECK: %s"
+msgstr ""
+
+#. module: project
 #: code:addons/project/wizard/project_task_delegate.py:55
 #: code:addons/project/wizard/project_task_delegate.py:56
 #: code:addons/project/wizard/project_task_delegate.py:63
@@ -114,7 +120,7 @@ msgstr ""
 #. module: project
 #: help:project.project,priority:0
 msgid "Gives the sequence order when displaying the list of projects"
-msgstr ""
+msgstr "Nosaka kādā secībā tiks attēloti projekti sarakstā"
 
 #. module: project
 #: constraint:project.project:0
@@ -176,7 +182,7 @@ msgstr "Kļūda! Nedrīkst veidot rekursīvus uzdevumus."
 #: view:report.project.task.user:0
 #: field:report.project.task.user,company_id:0
 msgid "Company"
-msgstr "Kompānija"
+msgstr "Uzņēmums"
 
 #. module: project
 #: field:project.installer,project_scrum:0
@@ -579,6 +585,9 @@ msgid ""
 "boolean 'active' field: if the task is linked to a template or unactivated "
 "project, it will be hidden unless specifically asked."
 msgstr ""
+"Lauks tiek aprēķināts automātiski, tam ir tādas pašas īpasības, kā boolean "
+"'active' laukam: ja uzdevums ir piesaistīts neaktīvam projektam vai veidnim, "
+"tas ir noslēpts, ja nav norādīts pretēji."
 
 #. module: project
 #: help:project.project,progress_rate:0
@@ -746,6 +755,9 @@ msgid ""
 "task, up to the closing of the task or issue. You will use these stages in "
 "order to track the progress in solving a task or an issue."
 msgstr ""
+"Nosaka soļus, kas tiks izpildīti projektā- sākot ar darba uzdevuma vai "
+"notikuma izveidi, līdz tā slēgšanai. Soļi tiek izmantoti, lai sekotu darba "
+"uzdevuma izpildes progresam."
 
 #. module: project
 #: code:addons/project/project.py:622
@@ -774,6 +786,8 @@ msgid ""
 "Various OpenERP applications are available to manage your projects with "
 "different level of control and flexibility."
 msgstr ""
+"OpenERP nodrošina vairākus moduļus, ar ko palīdzību iespējams vadīt "
+"projektus ar nepieciešamo kontroles dziļumu un elastīgumu."
 
 #. module: project
 #: view:project.vs.hours:0
@@ -900,6 +914,16 @@ msgid ""
 "configuration. With the project_mrp module, sales orders can create tasks "
 "automatically when they are confirmed."
 msgstr ""
+"Darba Uzdevums ir darbs, kurš ir jāveic. Katrs lietotājs uzskaita savus "
+"darbus kā Darba Uzdevumus, kuros uzskaita darba izpildes laikā patērētās "
+"stundas. Lietotājs var strādāt ar Darba Uzdevumu individuāli, vai arī "
+"deleģēt tā izpildi citam lietotājam. Ja darbs tiek deleģēts citam "
+"lietotājam, tad tas iegūst statusu \"Gaida\" un automātiski atgūst statusu "
+"\"Progresā\", ja deleģētais darba uzdevums tiek pabeigts. Ja ir uzinstalēts "
+"modulis project_timesheet, iespējams piestādīt klientiem rēķinus, kas ir "
+"bāzēti uz projektu darba uzdevumiem. project_mrp modulis nodrošina "
+"automātisku darba uzdevumu izveidi, ja tiek veikts pasūtījums tirdzniecības "
+"modulī."
 
 #. module: project
 #: selection:report.project.task.user,month:0
@@ -930,6 +954,11 @@ msgid ""
 "         \n"
 " If the task is over, the states is set to 'Done'."
 msgstr ""
+"Jaunizveidots Darba Uzdevums automātiski iegūst statusu \"Melnraksts\".\n"
+"Ja Darba Uzdevums tiek sākts, tas iegūst statusu \"Progresā\".\n"
+"Ja nepieciešams pārskatīt kaut ko Darba Uzdevumā, tas iegūst statusu "
+"\"Gaida\".\n"
+"Ja Darba Uzdevums ir slēgts,  iegūst statusu \"Pabeigts\"."
 
 #. module: project
 #: help:project.task,progress:0
@@ -1254,7 +1283,7 @@ msgstr "Instrumentu panelis"
 msgid ""
 "Error! The currency has to be the same as the currency of the selected "
 "company"
-msgstr ""
+msgstr "Kļūda! Valūtai jāsakrīt ar izvēlētā uzņēmuma valūtu."
 
 #. module: project
 #: code:addons/project/wizard/project_task_close.py:79
@@ -1322,6 +1351,8 @@ msgid ""
 "Project's member. Not used in any computation, just for information purpose, "
 "but a user has to be member of a project to add a the to this project."
 msgstr ""
+"Projekta darbagrupas loceklis. Neietekmē nekādus aprēķinus, tomēr lietotājam "
+"jābūt projekta darba grupā, lai veiktu jebkādas izmaiņas projekta ietvaros."
 
 #. module: project
 #: help:project.task.close,partner_warn:0
@@ -1338,6 +1369,13 @@ msgid ""
 "    * Members list of project\n"
 "    "
 msgstr ""
+"Projektu Vadības modulis nodrošina multi-līmeņu projektu koku, darba "
+"uzdevumu un patērēto darba stundu uzskaiti utt. Ar tā palīdzību iespējams "
+"veikt plānošanu, vadību utt.\n"
+"Rīku panelis projekta darba grupai ietver:\n"
+"    * atvērto Darba Uzdevumu sarakstu,\n"
+"    * Projekta darba grupas locekļu sarakstu.\n"
+"    "
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_res_users_2_project_task_work_month
@@ -1369,6 +1407,9 @@ msgid ""
 "users. You can analyse the quantities of tasks, the hours spent compared to "
 "the planned hours, the average number of days to open or close a task, etc."
 msgstr ""
+"Atskaite nodrošina projektu un lietotāju efektivitātes analīzi. Iespējams "
+"analizēt darbu skaitu, pavadītās stundas atttiecībā pret ieplānotajām, "
+"vidējos darba uzdevumu izpildes termiņu rādītājus."
 
 #. module: project
 #: code:addons/project/project.py:582
@@ -1481,6 +1522,8 @@ msgid ""
 "GTD is a methodology to efficiently organise yourself and your tasks. This "
 "module fully integrates GTD principle with OpenERP's project management."
 msgstr ""
+"GTD ir darbu organizācijas metodika. Modulis pilnībā nodrošina GTD principus "
+"OpenERP projektu vadībā."
 
 #. module: project
 #: model:ir.model,name:project.model_project_vs_hours
@@ -1824,6 +1867,13 @@ msgid ""
 "to invoice the time spent on a project task, you can find project tasks to "
 "be invoiced in the billing section."
 msgstr ""
+"Projekts satur noteiktus Darba Uzdevumus, kuru izpildei nepieciešams "
+"piesaistīt uzņēmuma resursus. Projekta struktūra var būt kokveida ar "
+"apakšprojektiem. Tas rada iespēju definēt lielas projektu struktūras, ar "
+"dažādām progresa fāzēm un termiņiem. Iespējams automātiski filtrēt katram "
+"lietotājam tikai tos Darba Uzdevumus, kas attiecas uz konkrēto lietotāju. Ja "
+"projekts ir atzīmēts, ka par to ir jāpiestāda rēķins, tad tas parādīsies "
+"sekcijā \"Projekti, par kuriem jāpiestāda rēķini\"."
 
 #. module: project
 #: field:project.project,total_hours:0

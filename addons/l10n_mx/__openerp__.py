@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -23,8 +23,13 @@
     "name" : "Mexico - Chart of Account",
     "version" : "1.0",
     "author" : "RelTek Mexico",
-    "category" : "Localisation/Account Charts",
-    "description": "This is the module to manage the accounting chart for Mexico in Open ERP.",
+    "category" : "Finance",
+    "description": """
+This is the module to manage the accounting chart for Mexico in OpenERP.
+========================================================================
+
+Mexican accounting chart and localization.
+    """,
     "depends" : ["account", "base_vat", "account_chart"],
     "demo_xml" : [],
     "update_xml" : ['account_tax_code.xml',"account_chart.xml",
@@ -32,6 +37,7 @@
     "active": False,
     "installable": True,
     "certificate" : "00858539161332598061",
+    'images': ['images/config_chart_l10n_mx.jpeg','images/l10n_mx_chart.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

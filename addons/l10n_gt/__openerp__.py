@@ -35,8 +35,12 @@
 {
     'name': 'Guatemala - Plan contable general',
     'version': '3.0',
-    'category': 'Localisation/Account Charts',
-    'description': """Agrega una nomenclatura contable para Guatemala. También icluye impuestos y la moneda del Quetzal. -- Adds accounting chart for Guatemala.  It also includes taxes and the Quetzal currency""",
+    'category': 'Finance',
+    'description': """
+This is the base module to manage the accounting chart for Guatemala.
+=====================================================================
+
+Agrega una nomenclatura contable para Guatemala. También icluye impuestos y la moneda del Quetzal. -- Adds accounting chart for Guatemala.  It also includes taxes and the Quetzal currency""",
     'author': 'José Rodrigo Fernández Menegazzo',
     'website': 'http://solucionesprisma.com/',
     'depends': ['base', 'account', 'account_chart'],
@@ -50,5 +54,6 @@
     'demo_xml': [],
     'installable': True,
     'certificate': '00815146661827601309',
+    'images': ['images/config_chart_l10n_gt.jpeg','images/l10n_gt_chart.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

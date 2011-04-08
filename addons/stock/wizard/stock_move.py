@@ -161,9 +161,9 @@ class stock_move_scrap(osv.osv_memory):
             context = {}
         move_obj = self.pool.get('stock.move')
         move_ids = context['active_ids']
-        for data in self.read(cr, uid, ids):
+        for data in self.browse(cr, uid, ids):
             move_obj.action_scrap(cr, uid, move_ids,
-                             data['product_qty'], data['location_id'],
+                             data.product_qty, data.location_id.id,
                              context=context)
         return {'type': 'ir.actions.act_window_close'}
 

@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-15 05:54+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-03-18 04:59+0000\n"
+"X-Generator: Launchpad (build 12559)\n"
 
 #. module: stock_planning
 #: code:addons/stock_planning/wizard/stock_planning_createlines.py:73
@@ -64,7 +64,7 @@ msgstr ""
 #: code:addons/stock_planning/stock_planning.py:663
 #, python-format
 msgid "Incoming Left must be greater than 0 !"
-msgstr ""
+msgstr "Gli arrivi rimanenti devono essere maggiori di 0!"
 
 #. module: stock_planning
 #: help:stock.planning,outgoing_before:0
@@ -101,7 +101,7 @@ msgstr " "
 #. module: stock_planning
 #: field:stock.planning,incoming_left:0
 msgid "Incoming Left"
-msgstr ""
+msgstr "Merci in arrivo rimanenti"
 
 #. module: stock_planning
 #: view:stock.planning:0
@@ -340,12 +340,12 @@ msgstr ""
 #: code:addons/stock_planning/stock_planning.py:688
 #, python-format
 msgid "    Incoming Left: "
-msgstr ""
+msgstr "    Arrivi Mancanti: "
 
 #. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:715
+#: code:addons/stock_planning/stock_planning.py:719
 #, python-format
-msgid "Pick List "
+msgid "%s Pick List %s (%s,  %s) %s %s \n"
 msgstr ""
 
 #. module: stock_planning
@@ -437,7 +437,7 @@ msgstr "Ricerca Pianificazione delle Scorte"
 #. module: stock_planning
 #: field:stock.planning,incoming_before:0
 msgid "Incoming Before"
-msgstr ""
+msgstr "Precedentemente in Arrivo"
 
 #. module: stock_planning
 #: field:stock.planning.createlines,product_categ_id:0
@@ -459,8 +459,8 @@ msgstr "Errore !"
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:626
 #, python-format
-msgid "Manual planning for "
-msgstr "Pianificazione Manuale per "
+msgid "Manual planning for %s"
+msgstr ""
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_user_id:0
@@ -496,8 +496,23 @@ msgstr "Calcola Pianificazione"
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:636
 #, python-format
-msgid "Procurement created in MPS by user: "
-msgstr "Approvvigionamenti creati nel MPS dall'utente: "
+msgid ""
+" Procurement created in MPS by user: %s   Creation Date: %s                  "
+"                       \n"
+" For period: %s                                         \n"
+" according to state:                                         \n"
+" Warehouse Forecast: %s                                         \n"
+" Initial Stock: %s                                         \n"
+" Planned Out: %s    Planned In: %s                                         \n"
+" Already Out: %s    Already In: %s                                         \n"
+" Confirmed Out: %s    Confirmed In: %s                                       "
+"  \n"
+" Planned Out Before: %s    Confirmed In Before: %s                           "
+"              \n"
+" Expected Out: %s    Incoming Left: %s                                       "
+"  \n"
+" Stock Simulation: %s    Minimum stock: %s"
+msgstr ""
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:140
@@ -980,6 +995,12 @@ msgstr ""
 "Crea le linee di previsione per i periodi ed i Magazzini selezionati."
 
 #. module: stock_planning
+#: code:addons/stock_planning/stock_planning.py:656
+#, python-format
+msgid "%s Requisition (%s,  %s) %s %s \n"
+msgstr ""
+
+#. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:655
 #, python-format
 msgid "Requisition ("
@@ -1455,6 +1476,14 @@ msgstr "UoM Prodotto"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:627
+#: code:addons/stock_planning/stock_planning.py:673
+#: code:addons/stock_planning/stock_planning.py:697
+#, python-format
+msgid "MPS(%s) %s"
+msgstr ""
+
+#. module: stock_planning
+#: code:addons/stock_planning/stock_planning.py:627
 #: code:addons/stock_planning/stock_planning.py:671
 #: code:addons/stock_planning/stock_planning.py:693
 #, python-format
@@ -1462,10 +1491,22 @@ msgid "MPS("
 msgstr "MPS("
 
 #. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:678
+#: code:addons/stock_planning/stock_planning.py:680
 #, python-format
-msgid "Pick created from MPS by user: "
-msgstr "Scegli tra le MPS create dall'utente: "
+msgid ""
+"Pick created from MPS by user: %s   Creation Date: %s                        "
+"             \n"
+"For period: %s   according to state:                                     \n"
+" Warehouse Forecast: %s                                     \n"
+" Initial Stock: %s                                     \n"
+" Planned Out: %s  Planned In: %s                                     \n"
+" Already Out: %s  Already In: %s                                     \n"
+" Confirmed Out: %s   Confirmed In: %s                                     \n"
+" Planned Out Before: %s   Confirmed In Before: %s                            "
+"         \n"
+" Expected Out: %s   Incoming Left: %s                                     \n"
+" Stock Simulation: %s   Minimum stock: %s "
+msgstr ""
 
 #. module: stock_planning
 #: field:stock.planning,procure_to_stock:0
@@ -1550,3 +1591,19 @@ msgstr ""
 #: field:stock.planning,stock_start:0
 msgid "Initial Stock"
 msgstr "Scorte Iniziali"
+
+#, python-format
+#~ msgid "Manual planning for "
+#~ msgstr "Pianificazione Manuale per "
+
+#, python-format
+#~ msgid "Pick created from MPS by user: "
+#~ msgstr "Scegli tra le MPS create dall'utente: "
+
+#, python-format
+#~ msgid "Procurement created in MPS by user: "
+#~ msgstr "Approvvigionamenti creati nel MPS dall'utente: "
+
+#, python-format
+#~ msgid "Pick List "
+#~ msgstr "Pick List "
