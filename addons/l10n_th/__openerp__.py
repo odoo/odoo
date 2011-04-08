@@ -22,9 +22,12 @@
 {
     'name': 'Thailand - Thai Chart of Accounts',
     'version': '1.0',
-    'category': 'Localisation/Account Charts',
+    'category': 'Finance',
     'description': """
-Chart of accounts for Thailand.
+Chart of Accounts for Thailand.
+===============================
+
+Thai accounting chart and localization.
     """,
     'author': 'Almacom',
     'website': 'http://almacom.co.th/',
@@ -33,4 +36,5 @@ Chart of accounts for Thailand.
     'update_xml': [ 'account_data.xml' ],
     'installable': True,
     'certificate' : '00722263103978957725',
+    'images': ['images/config_chart_l10n_th.jpeg','images/l10n_th_chart.jpeg'],
 }

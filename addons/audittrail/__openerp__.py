@@ -23,14 +23,13 @@
 {
     'name': 'Audit Trail',
     'version': '1.0',
-    'category': 'Generic Modules/Others',
+    'category': 'Tools',
     'description': """
-    This module gives the administrator the rights
-    to track every user operation on all the objects
-    of the system.
+This module lets administrator track every user operation on all the objects of the system.
+===========================================================================================
 
-    Administrator can subscribe rules for read,write and
-    delete on objects and can check logs.
+The administrator can subscribe to rules for read, write and
+delete on objects and can check logs.
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
@@ -46,5 +45,6 @@
     'installable': True,
     'active': False,
     'certificate': '0062572348749',
+    'images': ['images/audittrail1.jpeg','images/audittrail2.jpeg','images/audittrail3.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

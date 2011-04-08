@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-03-07 04:49+0000\n"
-"X-Generator: Launchpad (build 12351)\n"
+"X-Launchpad-Export-Date: 2011-03-18 04:59+0000\n"
+"X-Generator: Launchpad (build 12559)\n"
 
 #. module: stock_planning
 #: code:addons/stock_planning/wizard/stock_planning_createlines.py:73
@@ -113,7 +113,7 @@ msgid "Quantity of all confirmed outgoing moves in calculated Period."
 msgstr ""
 
 #. module: stock_planning
-#: view:stock.planning.period:0
+#: view:stock.period.createlines:0
 msgid "Create Daily Periods"
 msgstr ""
 
@@ -182,7 +182,7 @@ msgid "Current Period Situation"
 msgstr ""
 
 #. module: stock_planning
-#: view:stock.planning.period:0
+#: view:stock.period.createlines:0
 msgid "Create Monthly Periods"
 msgstr ""
 
@@ -297,8 +297,8 @@ msgid "This User Period3"
 msgstr ""
 
 #. module: stock_planning
+#: model:ir.ui.menu,name:stock_planning.menu_stock_planning_main
 #: view:stock.planning:0
-#: view:stock.planning.sale.prevision:0
 msgid "Stock Planning"
 msgstr ""
 
@@ -320,9 +320,9 @@ msgid "    Incoming Left: "
 msgstr ""
 
 #. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:715
+#: code:addons/stock_planning/stock_planning.py:719
 #, python-format
-msgid "Pick List "
+msgid "%s Pick List %s (%s,  %s) %s %s \n"
 msgstr ""
 
 #. module: stock_planning
@@ -348,14 +348,17 @@ msgstr ""
 
 #. module: stock_planning
 #: field:stock.planning,period_id:0
-#: field:stock.planning.sale.prevision,period_id:0
+#: field:stock.planning.createlines,period_id:0
+#: field:stock.sale.forecast,period_id:0
+#: field:stock.sale.forecast.createlines,period_id:0
 msgid "Period"
 msgstr ""
 
 #. module: stock_planning
+#: view:stock.period:0
 #: field:stock.period,state:0
 #: field:stock.planning,state:0
-#: field:stock.planning.sale.prevision,state:0
+#: field:stock.sale.forecast,state:0
 msgid "State"
 msgstr ""
 
@@ -376,6 +379,9 @@ msgstr ""
 
 #. module: stock_planning
 #: field:stock.planning,warehouse_id:0
+#: field:stock.planning.createlines,warehouse_id:0
+#: field:stock.sale.forecast,warehouse_id:0
+#: field:stock.sale.forecast.createlines,warehouse_id:0
 msgid "Warehouse"
 msgstr ""
 
@@ -396,8 +402,7 @@ msgid "Check this box to see the sales for whole company."
 msgstr ""
 
 #. module: stock_planning
-#: field:stock.planning,name:0
-#: field:stock.planning.sale.prevision,name:0
+#: field:stock.sale.forecast,name:0
 msgid "Name"
 msgstr ""
 
@@ -426,12 +431,12 @@ msgstr ""
 #: code:addons/stock_planning/wizard/stock_planning_forecast.py:59
 #, python-format
 msgid "Error !"
-msgstr ""
+msgstr "Error!"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:626
 #, python-format
-msgid "Manual planning for "
+msgid "Manual planning for %s"
 msgstr ""
 
 #. module: stock_planning
@@ -466,11 +471,26 @@ msgstr ""
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:636
 #, python-format
-msgid "Procurement created in MPS by user: "
+msgid ""
+" Procurement created in MPS by user: %s   Creation Date: %s                  "
+"                       \n"
+" For period: %s                                         \n"
+" according to state:                                         \n"
+" Warehouse Forecast: %s                                         \n"
+" Initial Stock: %s                                         \n"
+" Planned Out: %s    Planned In: %s                                         \n"
+" Already Out: %s    Already In: %s                                         \n"
+" Confirmed Out: %s    Confirmed In: %s                                       "
+"  \n"
+" Planned Out Before: %s    Confirmed In Before: %s                           "
+"              \n"
+" Expected Out: %s    Incoming Left: %s                                       "
+"  \n"
+" Stock Simulation: %s    Minimum stock: %s"
 msgstr ""
 
 #. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:0
+#: code:addons/stock_planning/stock_planning.py:140
 #, python-format
 msgid "Invalid action !"
 msgstr ""
@@ -481,7 +501,7 @@ msgid "Stock quantity one day before current period."
 msgstr ""
 
 #. module: stock_planning
-#: view:stock.planning.period:0
+#: view:stock.period.createlines:0
 msgid "Create Weekly Periods"
 msgstr ""
 
@@ -536,13 +556,15 @@ msgid "Per User :"
 msgstr ""
 
 #. module: stock_planning
-#: model:ir.ui.menu,name:stock_planning.menu_stock_prevision
+#: model:ir.ui.menu,name:stock_planning.menu_stock_sale_forecast
+#: model:ir.ui.menu,name:stock_planning.menu_stock_sale_forecast_all
+#: view:stock.sale.forecast:0
 msgid "Sales Forecasts"
 msgstr ""
 
 #. module: stock_planning
 #: field:stock.period,name:0
-#: field:stock.planning.period,name:0
+#: field:stock.period.createlines,name:0
 msgid "Period Name"
 msgstr ""
 
@@ -578,7 +600,7 @@ msgstr ""
 
 #. module: stock_planning
 #: field:stock.period,date_start:0
-#: field:stock.planning.period,date_start:0
+#: field:stock.period.createlines,date_start:0
 msgid "Start Date"
 msgstr ""
 
@@ -604,7 +626,6 @@ msgid ""
 msgstr ""
 
 #. module: stock_planning
-#: view:stock.planning:0
 #: field:stock.planning,planned_outgoing:0
 msgid "Planned Out"
 msgstr ""
@@ -622,7 +643,7 @@ msgstr ""
 #. module: stock_planning
 #: selection:stock.period,state:0
 #: selection:stock.planning,state:0
-#: selection:stock.planning.sale.prevision,state:0
+#: selection:stock.sale.forecast,state:0
 msgid "Draft"
 msgstr ""
 
@@ -927,6 +948,12 @@ msgid "Creates forecast lines for selected warehouse and period."
 msgstr ""
 
 #. module: stock_planning
+#: code:addons/stock_planning/stock_planning.py:656
+#, python-format
+msgid "%s Requisition (%s,  %s) %s %s \n"
+msgstr ""
+
+#. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:655
 #, python-format
 msgid "Requisition ("
@@ -993,8 +1020,7 @@ msgid "General Info"
 msgstr ""
 
 #. module: stock_planning
-#: model:ir.actions.act_window,name:stock_planning.action_view_stock_planning_prevision_form
-#: view:stock.planning.sale.prevision:0
+#: model:ir.actions.act_window,name:stock_planning.action_view_stock_sale_forecast_form
 msgid "Sales Forecast"
 msgstr ""
 
@@ -1075,7 +1101,6 @@ msgid "Product UoM Category"
 msgstr ""
 
 #. module: stock_planning
-#: view:stock.planning:0
 #: field:stock.planning,incoming:0
 msgid "Confirmed In"
 msgstr ""
@@ -1091,7 +1116,7 @@ msgid "Product UoS Category"
 msgstr ""
 
 #. module: stock_planning
-#: field:stock.planning.sale.prevision,product_qty:0
+#: field:stock.sale.forecast,product_qty:0
 msgid "Product Quantity"
 msgstr ""
 
@@ -1111,7 +1136,7 @@ msgid "Done"
 msgstr ""
 
 #. module: stock_planning
-#: field:stock.planning.period,period_ids:0
+#: field:stock.period.createlines,period_ids:0
 msgid "Periods"
 msgstr ""
 
@@ -1128,16 +1153,21 @@ msgid "Cancel"
 msgstr ""
 
 #. module: stock_planning
+#: view:stock.period:0
 #: selection:stock.period,state:0
+#: view:stock.planning.createlines:0
+#: view:stock.sale.forecast.createlines:0
 msgid "Close"
 msgstr ""
 
 #. module: stock_planning
-#: selection:stock.planning.sale.prevision,state:0
+#: view:stock.sale.forecast:0
+#: selection:stock.sale.forecast,state:0
 msgid "Validated"
 msgstr ""
 
 #. module: stock_planning
+#: view:stock.period:0
 #: selection:stock.period,state:0
 msgid "Open"
 msgstr ""
@@ -1312,7 +1342,7 @@ msgstr ""
 
 #. module: stock_planning
 #: field:stock.period,date_stop:0
-#: field:stock.planning.period,date_stop:0
+#: field:stock.period.createlines,date_stop:0
 msgid "End Date"
 msgstr ""
 
@@ -1350,8 +1380,10 @@ msgid "Calculated Period Simulation"
 msgstr ""
 
 #. module: stock_planning
+#: view:stock.planning:0
 #: field:stock.planning,product_id:0
-#: field:stock.planning.sale.prevision,product_id:0
+#: view:stock.sale.forecast:0
+#: field:stock.sale.forecast,product_id:0
 msgid "Product"
 msgstr ""
 
@@ -1365,8 +1397,16 @@ msgid ""
 msgstr ""
 
 #. module: stock_planning
-#: field:stock.planning.sale.prevision,product_uom:0
+#: field:stock.sale.forecast,product_uom:0
 msgid "Product UoM"
+msgstr ""
+
+#. module: stock_planning
+#: code:addons/stock_planning/stock_planning.py:627
+#: code:addons/stock_planning/stock_planning.py:673
+#: code:addons/stock_planning/stock_planning.py:697
+#, python-format
+msgid "MPS(%s) %s"
 msgstr ""
 
 #. module: stock_planning
@@ -1378,9 +1418,21 @@ msgid "MPS("
 msgstr ""
 
 #. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:678
+#: code:addons/stock_planning/stock_planning.py:680
 #, python-format
-msgid "Pick created from MPS by user: "
+msgid ""
+"Pick created from MPS by user: %s   Creation Date: %s                        "
+"             \n"
+"For period: %s   according to state:                                     \n"
+" Warehouse Forecast: %s                                     \n"
+" Initial Stock: %s                                     \n"
+" Planned Out: %s  Planned In: %s                                     \n"
+" Already Out: %s  Already In: %s                                     \n"
+" Confirmed Out: %s   Confirmed In: %s                                     \n"
+" Planned Out Before: %s   Confirmed In Before: %s                            "
+"         \n"
+" Expected Out: %s   Incoming Left: %s                                     \n"
+" Stock Simulation: %s   Minimum stock: %s "
 msgstr ""
 
 #. module: stock_planning
@@ -1406,7 +1458,7 @@ msgid "Calculate Sales History"
 msgstr ""
 
 #. module: stock_planning
-#: field:stock.planning.sale.prevision,product_amt:0
+#: field:stock.sale.forecast,product_amt:0
 msgid "Product Amount"
 msgstr ""
 
@@ -1435,6 +1487,9 @@ msgstr ""
 #. module: stock_planning
 #: model:ir.actions.act_window,name:stock_planning.action_stock_period_form
 #: model:ir.ui.menu,name:stock_planning.menu_stock_period
+#: model:ir.ui.menu,name:stock_planning.menu_stock_period_main
+#: view:stock.period:0
+#: view:stock.period.createlines:0
 msgid "Stock and Sales Periods"
 msgstr ""
 

@@ -24,9 +24,15 @@
     "version": "1.1",
     "author" : "OpenERP SA",
     "website" : "http://www.openerp.com",
-    "category" : "Generic Modules/Projects & Services",
+    "category" : "Finance",
     "depends" : ["base", "decimal_precision"],
-    "description": """Module for defining analytic accounting object.
+    "description": """
+Module for defining analytic accounting object.
+===============================================
+
+In OpenERP, analytic accounts are linked to general accounts but are treated
+totally independently. So you can enter various different analytic operations
+that have no counterpart in the general financial accounts.
     """,
     "init_xml" : [],
     "update_xml": ['security/analytic_security.xml',

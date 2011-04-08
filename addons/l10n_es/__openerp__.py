@@ -26,12 +26,14 @@
     "version" : "3.0",
     "author" : "Spanish Localization Team",
     'website' : 'https://launchpad.net/openerp-spain',
-    "category" : "Localisation/Account Charts",
-    "description": """Spanish Charts of Accounts (PGCE 2008)
+    "category" : "Finance",
+    "description": """
+Spanish Charts of Accounts (PGCE 2008).
+=======================================
 
 * Defines the following chart of account templates:
-        * Spanish General Chart of Accounts 2008.
-        * Spanish General Chart of Accounts 2008 for small and medium companies.
+    * Spanish General Chart of Accounts 2008.
+    * Spanish General Chart of Accounts 2008 for small and medium companies.
 * Defines templates for sale and purchase VAT.
 * Defines tax code templates.
 
@@ -55,4 +57,5 @@ for yearly account reporting (balance, profit & losses).
     "active": False,
     "installable": True,
     "certificate" : "00408828172062583229",
+    'images': ['images/config_chart_l10n_es.jpeg','images/l10n_es_chart.jpeg'],
 }

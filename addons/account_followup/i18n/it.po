@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-24 04:54+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-03-18 04:46+0000\n"
+"X-Generator: Launchpad (build 12559)\n"
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:295
@@ -81,18 +81,15 @@ msgid "Group By..."
 msgstr "Raggruppa per..."
 
 #. module: account_followup
-#: code:addons/account_followup/wizard/account_followup_print.py:287
+#: code:addons/account_followup/wizard/account_followup_print.py:290
 #, python-format
 msgid ""
 "\n"
 "\n"
 "E-Mail sent to following Partners successfully. !\n"
 "\n"
+"%s"
 msgstr ""
-"\n"
-"\n"
-"Email inviata ai seguenti partner correttamente!\n"
-"\n"
 
 #. module: account_followup
 #: view:account_followup.followup:0
@@ -153,12 +150,12 @@ msgstr "Data invio Follow up"
 #. module: account_followup
 #: sql_constraint:account.move.line:0
 msgid "Wrong credit or debit value in accounting entry !"
-msgstr ""
+msgstr "Valore di credito o debito errato nella registrazione contabile!"
 
 #. module: account_followup
 #: selection:account_followup.followup.line,start:0
 msgid "Net Days"
-msgstr ""
+msgstr "Giorni netti"
 
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.action_account_followup_definition_form
@@ -323,7 +320,7 @@ msgstr ""
 #. module: account_followup
 #: view:account.followup.print.all:0
 msgid "Partner Selection"
-msgstr ""
+msgstr "Selezione partner"
 
 #. module: account_followup
 #: field:account_followup.followup.line,description:0
@@ -342,7 +339,7 @@ msgstr "Invia i follow up"
 #. module: account_followup
 #: view:account_followup.stat.by.partner:0
 msgid "Partner to Remind"
-msgstr ""
+msgstr "Partner a cui ricordare"
 
 #. module: account_followup
 #: field:account_followup.followup.line,followup_id:0
@@ -486,14 +483,13 @@ msgid "Send email confirmation"
 msgstr "Conferma email inviata"
 
 #. module: account_followup
-#: code:addons/account_followup/wizard/account_followup_print.py:284
+#: code:addons/account_followup/wizard/account_followup_print.py:287
 #, python-format
 msgid ""
 "All E-mails have been successfully sent to Partners:.\n"
 "\n"
+"%s"
 msgstr ""
-"Tutte le email sono state spedite correttamente ai partner:\n"
-"\n"
 
 #. module: account_followup
 #: constraint:res.company:0
@@ -675,14 +671,13 @@ msgid "Maturity"
 msgstr "Scadenza"
 
 #. module: account_followup
-#: code:addons/account_followup/wizard/account_followup_print.py:286
+#: code:addons/account_followup/wizard/account_followup_print.py:289
 #, python-format
 msgid ""
 "E-Mail not sent to following Partners, Email not available !\n"
 "\n"
+"%s"
 msgstr ""
-"L'email non è stata spedita ai seguenti partner, email non disponibile!\n"
-"\n"
 
 #. module: account_followup
 #: view:account.followup.print:0
@@ -779,3 +774,31 @@ msgstr ""
 
 #~ msgid "The name of the module must be unique !"
 #~ msgstr "Il nome del modulo deve essere unico!"
+
+#, python-format
+#~ msgid ""
+#~ "\n"
+#~ "\n"
+#~ "E-Mail sent to following Partners successfully. !\n"
+#~ "\n"
+#~ msgstr ""
+#~ "\n"
+#~ "\n"
+#~ "Email inviata ai seguenti partner correttamente!\n"
+#~ "\n"
+
+#, python-format
+#~ msgid ""
+#~ "All E-mails have been successfully sent to Partners:.\n"
+#~ "\n"
+#~ msgstr ""
+#~ "Tutte le email sono state spedite correttamente ai partner:\n"
+#~ "\n"
+
+#, python-format
+#~ msgid ""
+#~ "E-Mail not sent to following Partners, Email not available !\n"
+#~ "\n"
+#~ msgstr ""
+#~ "L'email non è stata spedita ai seguenti partner, email non disponibile!\n"
+#~ "\n"

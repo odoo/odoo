@@ -30,12 +30,18 @@
     "depends" : ['base_vat','account_chart','base_iban'],
     "author" : "OpenERP Italian Community",
     "description": """
-    Piano dei conti italiano di un'impresa generica
+Piano dei conti italiano di un'impresa generica.
+================================================
+
+Italian accounting chart and localization.
     """,
     "license": "AGPL-3",
-    "category" : "Localisation/Account Charts",
+    "category" : "Finance",
     'website': 'http://www.openerp-italia.org/',
     'init_xml': [
+        'report.xml',
+        'libroIVA_view.xml',
+        'libroIVA_menu.xml',
         ],
     'update_xml': [
         'data/account.account.type.csv',
@@ -45,9 +51,6 @@
         'data/account.tax.template.csv',
         'data/account.fiscal.position.template.csv',
         'l10n_chart_it_generic.xml',
-        'report.xml',
-        'libroIVA_view.xml',
-        'libroIVA_menu.xml',
         'security/ir.model.access.csv',
         ],
     'demo_xml': [
@@ -55,4 +58,5 @@
     'installable': True,
     'active': False,
     'certificate' : '00926677190009155165',
+    'images': ['images/config_chart_l10n_it.jpeg','images/l10n_it_chart.jpeg'],
 }

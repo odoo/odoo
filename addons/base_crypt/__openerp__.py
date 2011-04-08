@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -24,9 +24,12 @@
     "author" : ['OpenERP SA', "FS3"],
     "maintainer" : "OpenERP SA",
     "website" : "http://www.openerp.com",
-    "category" : "Generic Modules/Base",
-    "description": """This module replaces the cleartext password in the database with a password hash,
-preventing anyone from reading the original password.
+    "category" : "Tools",
+    "description": """
+This module replaces the cleartext password in the database with a password hash.
+=================================================================================
+
+It prevents anyone from reading the original password.
 For your existing user base, the removal of the cleartext passwords occurs the first time
 a user logs into the database, after installing base_crypt.
 After installing this module it won't be possible to recover a forgotten password for your

@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-03-09 04:39+0000\n"
-"X-Generator: Launchpad (build 12351)\n"
+"X-Launchpad-Export-Date: 2011-03-18 04:56+0000\n"
+"X-Generator: Launchpad (build 12559)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -748,12 +748,6 @@ msgstr "Verificar"
 #: field:account.partner.reconcile.process,today_reconciled:0
 msgid "Partners Reconciled Today"
 msgstr "Parceiros Reconciliados Hoje"
-
-#. module: account
-#: code:addons/account/account_bank_statement.py:306
-#, python-format
-msgid "The statement balance is incorrect !\n"
-msgstr "O saldo do demonstrativo está incorreto\n"
 
 #. module: account
 #: selection:account.payment.term.line,value:0
@@ -2707,11 +2701,12 @@ msgid "August"
 msgstr "Agosto"
 
 #. module: account
-#: code:addons/account/account_bank_statement.py:307
+#: code:addons/account/account_bank_statement.py:306
 #, python-format
 msgid ""
+"The statement balance is incorrect !\n"
 "The expected balance (%.2f) is different than the computed one. (%.2f)"
-msgstr "O saldo esperado (%.2f) é diferente do calculado. (%.2f)"
+msgstr ""
 
 #. module: account
 #: model:process.transition,note:account.process_transition_paymentreconcile0
@@ -2964,6 +2959,12 @@ msgstr "A base contábil da declaração de imposto."
 #: selection:account.entries.report,type:0
 msgid "View"
 msgstr "Visualizar"
+
+#. module: account
+#: code:addons/account/account.py:2951
+#, python-format
+msgid "BNK%s"
+msgstr ""
 
 #. module: account
 #: code:addons/account/account.py:2906
@@ -4410,12 +4411,6 @@ msgid "Account Balance -"
 msgstr "Saldo da conta -"
 
 #. module: account
-#: code:addons/account/invoice.py:989
-#, python-format
-msgid "Invoice "
-msgstr "Fatura "
-
-#. module: account
 #: field:account.automatic.reconcile,date1:0
 msgid "Starting Date"
 msgstr "Data Inicial"
@@ -5758,10 +5753,10 @@ msgstr ""
 "'concluído' (pago) no sistema."
 
 #. module: account
-#: code:addons/account/invoice.py:989
+#: code:addons/account/invoice.py:997
 #, python-format
-msgid "is validated."
-msgstr "está validada."
+msgid "Invoice  '%s' is validated."
+msgstr ""
 
 #. module: account
 #: view:account.chart.template:0
@@ -11079,6 +11074,11 @@ msgstr ""
 #~ msgid "Journal de vente"
 #~ msgstr "Diário de vendas"
 
+#, python-format
+#~ msgid ""
+#~ "The expected balance (%.2f) is different than the computed one. (%.2f)"
+#~ msgstr "O saldo esperado (%.2f) é diferente do calculado. (%.2f)"
+
 #~ msgid "Fiscal Position Template Account Mapping"
 #~ msgstr "Mapeamento contábil dos Modelos para Posição Fiscal"
 
@@ -11307,6 +11307,10 @@ msgstr ""
 
 #~ msgid "Parent Analytic Account"
 #~ msgstr "Conta-pai analítica"
+
+#, python-format
+#~ msgid "The statement balance is incorrect !\n"
+#~ msgstr "O saldo do demonstrativo está incorreto\n"
 
 #~ msgid "Balance brought forward"
 #~ msgstr "Saldo transferido de para"
@@ -11709,3 +11713,11 @@ msgstr ""
 
 #~ msgid "Expenses Credit Notes Journal - (test)"
 #~ msgstr "Diário de Notas de Crédito de despesas"
+
+#, python-format
+#~ msgid "Invoice "
+#~ msgstr "Fatura "
+
+#, python-format
+#~ msgid "is validated."
+#~ msgstr "está validada."
