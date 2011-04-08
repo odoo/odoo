@@ -232,13 +232,16 @@
                     </group>
                     <notebook colspan="4">
                         <page string="General Information">
+                        <group colspan="4">
                             <field name="rml_header1" colspan="4"/>
                             <field name="rml_footer1" colspan="4"/>
                             <field name="rml_footer2" colspan="4"/>
-                            <field name="currency_id"/>
+                            <field name="currency_id" colspan="2"/>
+                         </group>
+                            <separator string="" colspan="4"/>
                             <button name="createReport" string="Preview Reports" type="object" icon="gtk-print"/>
                             <button name="%(action_res_company_logo)d"
-                    string="Upload your logo" type="action" icon="gtk-ok"/>
+                    string="Upload/Change Logo" type="action" icon="gtk-open"/>
                         </page>
                         <page string="Header/Footer" groups="base.group_extended">
                             <field colspan="4" name="rml_header" nolabel="1"/>

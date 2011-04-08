@@ -73,6 +73,9 @@ class res_company_logo(osv.osv_memory):
     _columns = {
         'logo' : fields.binary('Logo'),
     }
+    _defaults={
+               'logo':lambda self,cr,uid,c: self.pool.get('res.company').browse(cr, uid, uid,c).logo,
+     }
 
     def execute(self, cr, uid, ids, context=None):
         if context is None:
