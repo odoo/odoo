@@ -276,9 +276,6 @@ class hr_payslip(osv.osv):
         }
         return super(hr_payslip, self).copy(cr, uid, id, default, context=context)
 
-    def set_to_draft(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'state': 'draft'}, context=context)
-
     def cancel_sheet(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'cancel'}, context=context)
 
