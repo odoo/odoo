@@ -7,7 +7,7 @@
             <field name="model">share.wizard</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Share wizard: step 0">
+                <form string="Share wizard: preparation">
                     <separator colspan="4"
                         string="Please select the action that opens the screen containing the data you want to share."/>
                     <field name="action_id" colspan="4"/>
@@ -28,25 +28,41 @@
             <field name="model">share.wizard</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Share wizard: step 1">
+                <form string="Setup shared access">
                     <separator colspan="4" string="Who would you want to share this data with?"/>
                     <field name="user_type"/>
                     <group colspan="4" attrs="{'invisible':[('user_type','!=','existing')]}">
                         <separator colspan="4" string="Existing External Users"/>
-                        <field colspan="4" nolabel="1" name="user_ids" mode="tree"/>
+                        <field colspan="4" nolabel="1" name="user_ids" mode="tree">
+                            <tree string="Existing users">
+                                <field name="login"/>
+                            </tree>
+                        </field>
                     </group>
                     <group colspan="4" attrs="{'invisible':[('user_type','!=','new')]}">
                         <separator colspan="4" string="New Users (please provide one e-mail address per line below)"/>
                         <field colspan="4" nolabel="1" name="new_users"/>
                     </group>
+                    <group colspan="4" attrs="{'invisible':[('user_type','!=','groups')]}">
+                        <separator colspan="4" string="Existing Groups"/>
+                        <field colspan="4" nolabel="1" name="group_ids" mode="tree">
+                            <tree string="Existing groups">
+                                <field name="name"/>
+                            </tree>
+                        </field>
+                    </group>
                     <separator colspan="4" string="Select the desired shared access mode:"/>
                     <group colspan="4">
                         <field name="access_mode"/>
                     </group>
+                    <group colspan="4" attrs="{'invisible':[('has_user_email','!=',False)]}">
+                        <label colspan="4" string="/!\ Sharing via e-mail is disabled because you don't have an email address in your preferences"/>
+                        <field name="has_user_email" invisible="1"/>
+                    </group>
                     <separator colspan="4"/>
                     <group colspan="4">
                         <button special="cancel" string="Cancel" icon='gtk-cancel'/>
-                        <button name="go_step_2" string="Finish" colspan="1" type="object" icon="gtk-go-forward"/>
+                        <button name="go_step_2" string="Confirm" colspan="1" type="object" icon="gtk-go-forward"/>
                     </group>
                 </form>
             </field>
@@ -57,7 +73,7 @@
             <field name="model">share.wizard</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Share wizard: step 2">
+                <form string="Shared access created!">
                     <separator colspan="4" string="Congratulations, you have successfully setup a new shared access!"/>
                     <label colspan="4" string="Here is a summary of the access points you have just created:"/>
                     <field name="result_line_ids" nolabel="1" colspan="4" mode="tree">
@@ -73,10 +89,19 @@
                         </form>
                     </field>
                     <field colspan="4" name="share_root_url"/>
+                    <group colspan="4" attrs="{'invisible':[('has_user_email','!=',False)]}">
+                        <label colspan="4" string="/!\ Sharing via e-mail is disabled because you don't have an email address in your preferences"/>
+                        <field name="has_user_email" invisible="1"/>
+                    </group>
                     <separator colspan="4"/>
                     <group colspan="4">
                         <button special="cancel" string="Close" icon='gtk-ok'/>
-                        <button name="send_emails" string="Send Email Notification(s)" colspan="1" type="object" icon="gtk-go-forward"/>
+                        <button name="send_emails" string="Send Email Notification(s)"
+                                colspan="1" type="object"
+                                icon="gtk-go-forward"
+                                help="Email notifications can only be sent if you don't have an email address in your preferences"
+                                attrs="{'readonly':[('has_user_email','!=',True)]}"
+                                />
                     </group>
                 </form>
             </field>
@@ -115,7 +140,8 @@
         </record>
 
         <!--  temporarily under Low-Level-Actions  -->
-        <menuitem action="action_share_wizard" id="menu_action_share_wizard" parent="base.next_id_4" groups="group_share_user" icon="terp-rating-rated"/>
+        <menuitem action="action_share_wizard" id="menu_action_share_wizard" parent="base.next_id_4"
+                  groups="group_share_user,group_share_user_extended" icon="terp-rating-rated"/>
 
     </data>
 </openerp>

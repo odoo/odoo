@@ -34,11 +34,9 @@ class ShareWizardController(openerp.controllers.SecuredController):
             scheme, netloc, '/openerp/login',
             'db=%(dbname)s&user=%(login)s&password=%(password)s', ''))
 
-        share_wiz_id = rpc.RPCProxy('ir.ui.menu').search(
-            [('name','=', 'Share Wizard')])
         context.update(
-            active_ids=share_wiz_id,
-            active_id=share_wiz_id[0],
+            #active_ids=share_wiz_id,
+            #active_id=share_wiz_id[0],
             _terp_view_name='Share Wizard',
             share_root_url=share_root_url)
         Share = rpc.RPCProxy('share.wizard')
