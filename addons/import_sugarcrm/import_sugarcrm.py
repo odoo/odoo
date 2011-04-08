@@ -417,7 +417,7 @@ def get_account(sugar_obj, cr, uid, val, context=None):
             model = model_obj.browse(cr, uid, model_ids)[0]
             partner_id = model.res_id
             address_ids = address_obj.search(cr, uid, [('partner_id', '=', partner_id)])
-            partner_address_id = address_ids[0]
+            partner_address_id = address_ids and address_ids[0]
             
     if val.get('parent_type') == 'Contacts':
         model_ids = model_obj.search(cr, uid, [('name', '=', val.get('parent_id')), ('model', '=', 'res.partner.address')])
