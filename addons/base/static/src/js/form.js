@@ -51,6 +51,7 @@ openerp.base.FormView =  openerp.base.Controller.extend( /** @lends openerp.base
         this.$element.find('div.oe_form_buttons button.oe_form_button_save').click(this.do_save);
         this.$element.find('div.oe_form_buttons button.oe_form_button_save_edit').click(this.do_save_edit);
         this.$element.find('div.oe_form_buttons button.oe_form_button_cancel').click(this.do_cancel);
+        this.$element.find('div.oe_form_buttons button.oe_form_button_new').click(this.on_button_new);
 
         // sidebar stuff
         if (this.view_manager.sidebar) {
@@ -58,9 +59,7 @@ openerp.base.FormView =  openerp.base.Controller.extend( /** @lends openerp.base
         }
     },
     do_show: function () {
-        // this should not append as start return a deferred resolved when fields_view is known
-        if(this.fields_view && this.fields_view.fields)
-            this.dataset.read_index(_.keys(this.fields_view.fields), this.on_record_loaded);
+        this.dataset.read_index(_.keys(this.fields_view.fields), this.on_record_loaded);
         this.$element.show();
     },
     do_hide: function () {
@@ -72,6 +71,12 @@ openerp.base.FormView =  openerp.base.Controller.extend( /** @lends openerp.base
             for (var f in this.fields) {
                 this.fields[f].set_value(this.datarecord[f]);
             }
+            if (!record.id) {
+                // Second pass in order to trigger the onchanges in case of new record
+                for (var f in record) {
+                    this.fields[f].on_ui_change();
+                }
+            }
             this.on_form_changed();
             this.ready = true;
         } else {
@@ -80,13 +85,14 @@ openerp.base.FormView =  openerp.base.Controller.extend( /** @lends openerp.base
         this.do_update_pager();
     },
     on_form_changed: function(widget) {
-        for (var w in this.widgets) {
-            w = this.widgets[w];
-            w.process_attrs();
-            w.update_dom();
-        }
         if (widget && widget.node.attrs.on_change) {
             this.do_onchange(widget);
+        } else {
+            for (var w in this.widgets) {
+                w = this.widgets[w];
+                w.process_attrs();
+                w.update_dom();
+            }
         }
     },
     on_pager_action: function(action) {
@@ -113,44 +119,61 @@ openerp.base.FormView =  openerp.base.Controller.extend( /** @lends openerp.base
         this.$element.find('span.oe_pager_index').html(this.dataset.index + 1);
         this.$element.find('span.oe_pager_count').html(this.dataset.count);
     },
-    do_onchange: function(widget) {
-        var self = this;
-        this.ready = false;
-        var onchange = _.trim(widget.node.attrs.on_change);
-        var call = onchange.match(/^\s?(.*?)\((.*?)\)\s?$/);
-        if (call) {
-            var method = call[1], args = [];
-            _.each(call[2].split(','), function(a) {
-                var field = _.trim(a);
-                if (self.fields[field]) {
-                    args.push(self.fields[field].value);
-                } else {
-                    args.push(false);
-                    this.log("warning : on_change can't find field " + field, onchange);
-                }
-            });
-            this.dataset.call(method, [this.datarecord.id], args, this.on_processed_onchange);
-        } else {
-            this.log("Wrong on_change format", on_change);
+    do_onchange: function(widget, processed) {
+        processed = processed || [];
+        if (widget.node.attrs.on_change) {
+            var self = this;
+            this.ready = false;
+            var onchange = _.trim(widget.node.attrs.on_change);
+            var call = onchange.match(/^\s?(.*?)\((.*?)\)\s?$/);
+            if (call) {
+                var method = call[1], args = [];
+                _.each(call[2].split(','), function(a) {
+                    var field = _.trim(a);
+                    if (self.fields[field]) {
+                        var value = self.fields[field].value;
+                        args.push(value == null ? false : value);
+                    } else {
+                        args.push(false);
+                        this.log("warning : on_change can't find field " + field, onchange);
+                    }
+                });
+                var ajax = {
+                    url: '/base/dataset/call',
+                    async: false
+                };
+                return this.rpc(ajax, {
+                    model: this.dataset.model,
+                    method: method,
+                    ids: (this.datarecord.id == null ? [] : [this.datarecord.id]),
+                    args: args
+                }, function(response) {
+                    self.on_processed_onchange(response, processed);
+                });
+            } else {
+                this.log("Wrong on_change format", on_change);
+            }
         }
     },
-    on_processed_onchange: function(response) {
-        console.log("onchange result :", response);
+    on_processed_onchange: function(response, processed) {
         var result = response.result;
         if (result.value) {
             for (var f in result.value) {
                 var field = this.fields[f];
                 if (field) {
                     var value = result.value[f];
+                    processed.push(field.name);
                     if (field.value != value) {
                         field.set_value(value);
-                        // TODO: Recursive on_change
-                        // this.on_form_changed(field);
+                        if (_.indexOf(processed, field.name) < 0) {
+                            this.do_onchange(field, processed);
+                        }
                     }
                 } else {
                     this.log("warning : on_processed_onchange can't find field " + field, result);
                 }
             }
+            this.on_form_changed();
         }
         if (result.warning) {
             $(QWeb.render("DialogWarning", result.warning)).dialog({
@@ -166,6 +189,12 @@ openerp.base.FormView =  openerp.base.Controller.extend( /** @lends openerp.base
             // Will be removed ?
         }
         this.ready = true;
+    },
+    on_button_new: function() {
+        var self = this;
+        this.dataset.default_get(_.keys(this.fields), function(result) {
+            self.on_record_loaded(result.result);
+        });
     },
     do_save: function() {
         if (!this.ready) {
@@ -184,7 +213,7 @@ openerp.base.FormView =  openerp.base.Controller.extend( /** @lends openerp.base
         if (invalid) {
             this.on_invalid();
         } else {
-            this.log("About to save", values)
+            this.log("About to save", values);
             this.dataset.write(this.datarecord.id, values, this.on_saved);
         }
     },
@@ -216,8 +245,13 @@ openerp.base.FormView =  openerp.base.Controller.extend( /** @lends openerp.base
         }
     },
     do_search: function (domains, contexts, groupbys) {
+        this.notification['default']("Searching form");
     },
     on_action: function (action) {
+        this.notification['default']('Executing action ' + action);
+    },
+    do_cancel: function () {
+        this.notification['default']("Cancelling form");
     }
 });
 
@@ -463,6 +497,7 @@ openerp.base.form.Field = openerp.base.form.Widget.extend({
     set_value: function(value) {
         this.value = value;
         this.invalid = false;
+        this.update_dom();
     },
     get_value: function() {
         return this.value;
@@ -669,7 +704,7 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
     },
     set_value: function(value) {
         this._super.apply(this, arguments);
-        var show_value = ''
+        var show_value = '';
         if (value != null && value !== false) {
             show_value = value[1];
             this.value = value[0];
@@ -684,17 +719,15 @@ openerp.base.form.FieldOne2ManyDatasSet = openerp.base.DataSetStatic.extend({
     write: function (id, data, callback) {
         this._super(id, data, callback);
     },
-    write: function (id, data, callback) {
-        this._super(id, data, callback);
-    },
     unlink: function() {
+        this.notification['default']('Unlinking o2m ' + this.ids);
     }
 });
 
 openerp.base.form.FieldOne2ManyViewManager = openerp.base.ViewManager.extend({
     init: function(session, element_id, dataset, views) {
         this._super(session, element_id, dataset, views);
-    },
+    }
 });
 
 openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
@@ -711,7 +744,7 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
         this.viewmanager = new openerp.base.form.FieldOne2ManyViewManager(this.view.session, this.element_id, this.dataset, views);
         this.viewmanager.start();
     },
-    set_value: function(value) {
+    set_value_CASSEEEEEEEEEEEEEEEEE: function(value) {
         this.value = value;
         this.log("o2m.set_value",value);
         this.viewmanager.dataset.ids = value;
@@ -766,7 +799,10 @@ openerp.base.form.widgets = new openerp.base.Registry({
     'one2many_list' : 'openerp.base.form.FieldOne2Many',
     'reference' : 'openerp.base.form.FieldReference',
     'boolean' : 'openerp.base.form.FieldBoolean',
-    'float' : 'openerp.base.form.FieldFloat'
+    'float' : 'openerp.base.form.FieldFloat',
+    'integer': 'openerp.base.form.FieldFloat',
+    'progressbar': 'openerp.base.form.FieldFloat',
+    'float_time': 'openerp.base.form.FieldFloat'
 });
 
 };

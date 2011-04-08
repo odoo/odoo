@@ -1,4 +1,4 @@
-// vim:set noet fdm=syntax fdl=0 fdc=3 fdn=2:
+// vim:set et fdm=syntax fdl=0 fdc=3 fdn=2:
 //---------------------------------------------------------
 // QWeb javascript
 //---------------------------------------------------------
@@ -386,9 +386,9 @@ var QWeb = {
         if (e.constructor == String) {
             e = this.load_xml(e);
         }
-        var ec = e.documentElement ? e.documentElement.childNodes
-               : e.childNodes ? e.childNodes
-               : [];
+        
+        var ec = e.documentElement ? e.documentElement.childNodes : ( e.childNodes ? e.childNodes : [] );
+
         for (var i = 0; i < ec.length; i++) {
             var n = ec[i];
             if (n.nodeType == 1) {
@@ -402,7 +402,7 @@ var QWeb = {
         if (e = this.templates[name]) {
             return this.render_node(e, v);
         }
-        throw new Error("template " + name + " not found");
+        return "template " + name + " not found";
     }
 };
 

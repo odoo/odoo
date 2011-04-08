@@ -394,6 +394,12 @@ class DataSet(openerpweb.Controller):
         r = getattr(m, method)(ids, *args)
         return {'result': r}
 
+    @openerpweb.jsonrequest
+    def default_get(self, req, model, fields, context={}):
+        m = req.session.model(model)
+        r = m.default_get(fields, context)
+        return {'result': r}
+
 class View(openerpweb.Controller):
     def fields_view_get(self, session, model, view_id, view_type, transform=True, toolbar=False, submenu=False):
         Model = session.model(model)

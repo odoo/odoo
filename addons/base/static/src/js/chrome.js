@@ -283,7 +283,13 @@ openerp.base.Session = openerp.base.BasicController.extend( /** @lends openerp.b
     rpc_ajax: function(url, payload, success_callback, error_callback) {
         var self = this;
         this.on_rpc_request();
-        return $.ajax({
+        // url can be an $.ajax option object
+        if (_.isString(url)) {
+            url = {
+                url: url
+            }
+        }
+        var ajax = _.extend({
             type: "POST",
             url: url,
             dataType: 'json',
@@ -314,7 +320,8 @@ openerp.base.Session = openerp.base.BasicController.extend( /** @lends openerp.b
                 };
                 error_callback(error);
             }
-        });
+        }, url);
+        return $.ajax(ajax);
     },
     on_rpc_request: function() {
     },
@@ -515,7 +522,8 @@ openerp.base.Notification =  openerp.base.Controller.extend({
     init: function(session, element_id) {
         this._super(session, element_id);
         this.$element.notify({
-            speed: 500
+            speed: 500,
+            expires: 1500
         });
     },
     'default': function(title, text) {
