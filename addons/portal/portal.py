@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2011 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2011 OpenERP S.A (<http://www.openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -74,8 +74,8 @@ class portal(osv.osv):
         
         # assign widgets to users
         if 'user_ids' in values:
-            self._assign_widgets_to_users(cr, uid, portal_id, context)
-        
+            self._assign_widgets_to_users(cr, uid, [portal_id], context)
+
         return portal_id
     
     def name_get(self, cr, uid, ids, context=None):
