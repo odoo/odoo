@@ -11,8 +11,10 @@
             <field name="wkf_id" ref="wkf"/>
             <field name="name">draft</field>
             <field name="flow_start">True</field>
+            <field name="kind">function</field>
+            <field name="action">write({'state': 'draft'})</field>
             <field name="split_mode">OR</field>
-            <field name="kind">dummy</field>
+
         </record>
 
         <record id="act_hr_check" model="workflow.activity">
@@ -89,7 +91,7 @@
         <record id="t12" model="workflow.transition">
             <field name="act_from" ref="act_cancel"/>
             <field name="act_to" ref="act_draft"/>
-            <field name="signal">set_to_draft</field>
+            <field name="signal">draft</field>
         </record>
     </data>
 </openerp>

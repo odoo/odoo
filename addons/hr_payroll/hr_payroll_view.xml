@@ -85,7 +85,15 @@
                     </group>
                     <notebook colspan="4">
                          <page string="Salary Rules">
-                           <field colspan="4" name="rule_ids" nolabel="1" />
+                           <field colspan="4" name="rule_ids" nolabel="1" domain="[('parent_rule_id','=',False)]">
+                             <tree>
+                                <field name="name"/>
+                                <field name="code"/>
+                                <field name="category_id"/>
+                                <field name="sequence" groups="base.group_extended" invisible="1"/>
+                                <field name="register_id"/>
+                             </tree>
+                          </field>
                          </page>
                     </notebook>
                 </form>
@@ -270,7 +278,7 @@
                         <button string="Verify Sheet" icon="terp-camera_test" name="verify_sheet" states="draft"/>
                         <button string="Approve Sheet" icon="terp-camera_test" name="final_verify_sheet" states="hr_check"/>
                         <button string="Pay Salary" icon="terp-dolar_ok!" name="process_sheet" states="confirm"/>
-                        <button string="Set to Draft" icon="terp-stock_effects-object-colorize" name="set_to_draft" states="cancel"/>
+                        <button string="Set to Draft" icon="terp-stock_effects-object-colorize" name="draft" states="cancel"/>
                     </group>
                 </form>
             </field>
@@ -457,13 +465,11 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Salary Rules">
-                    <field name="category_id"/>
-                    <field name="sequence" groups="base.group_extended"/>
                     <field name="name"/>
                     <field name="code"/>
-                    <field name="amount_select"/>
-                    <field name="condition_range_min"/>
-                    <field name="condition_range_max"/>
+                    <field name="category_id"/>
+                    <field name="sequence" groups="base.group_extended" invisible="1"/>
+                    <field name="register_id"/>
                 </tree>
             </field>
         </record>
