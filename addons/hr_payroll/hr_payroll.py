@@ -454,9 +454,15 @@ class hr_payslip(osv.osv):
         #import pdb;pdb.set_trace()
         sorted_rule_ids = [id for id, sequence in sorted(rule_ids, key=lambda x:x[1])]
 
+        input_line_ids = [input.id for input in payslip.input_line_ids]
+        input_line_ids = self.pool.get('hr.payslip.input').read(cr, uid, input_line_ids)
+        worked_days = {}
+        for input_line in input_line_ids:
+            worked_days[input_line['code']] = input_line
+
         for contract in self.pool.get('hr.contract').browse(cr, uid, contract_ids, context=context):
             employee = contract.employee_id
-            localdict.update({'employee': employee, 'contract': contract})
+            localdict.update({'employee': employee, 'contract': contract, 'worked_days': worked_days})
             for rule in self.pool.get('hr.salary.rule').browse(cr, uid, sorted_rule_ids, context=context):
                 #check if the rule can be applied
                 if self.pool.get('hr.salary.rule').satisfy_condition(cr, uid, rule.id, localdict, context=context):
@@ -630,6 +636,7 @@ class hr_salary_rule(osv.osv):
 # contract: hr.contract object
 # rules: dictionary containing the previsouly computed rules. Keys are the rule codes.
 # heads: dictionary containing the computed heads (sum of amount of all rules belonging to that head). Keys are the head codes.
+# worked_days: dictionary containing the computed worked days
 
 # Note: returned value have to be set in the variable 'result'
 
@@ -643,6 +650,7 @@ result = contract.wage * 0.10''',
 # contract: hr.contract object
 # rules: dictionary containing the previsouly computed rules. Keys are the rule codes.
 # heads: dictionary containing the computed heads (sum of amount of all rules belonging to that head). Keys are the head codes.
+# worked_days: dictionary containing the computed worked days
 
 # Note: returned value have to be set in the variable 'result'
 
@@ -671,10 +679,16 @@ result = rules['NET'] > heads['NET'] * 0.10''',
         if rule.amount_select == 'fix':
             return rule.amount_fix
         elif rule.amount_select == 'percentage':
-            return rule.amount_percentage * eval(rule.amount_percentage_base, localdict) / 100
+            try:
+                return rule.amount_percentage * eval(rule.amount_percentage_base, localdict) / 100
+            except:
+                raise osv.except_osv(_('Error'), _('Wrong percentage defined for salary rule %s (%s)')% (rule.name, rule.code))
         else:
-            eval(rule.amount_python_compute, localdict, mode='exec', nocopy=True)
-            return localdict['result']
+            try:
+                eval(rule.amount_python_compute, localdict, mode='exec', nocopy=True)
+                return localdict['result']
+            except:
+                raise osv.except_osv(_('Error'), _('Wrong python code defined for salary rule %s (%s) ')% (rule.name, rule.code))
 
     def satisfy_condition(self, cr, uid, rule_id, localdict, context=None):
         """
@@ -690,8 +704,12 @@ result = rules['NET'] > heads['NET'] * 0.10''',
             result = eval(rule.condition_range, localdict)
             return rule.condition_range_min <=  result and result <= rule.condition_range_max or False
         else: #python code
-            eval(rule.condition_python, localdict, mode='exec', nocopy=True)
-            return 'result' in localdict and localdict['result'] or False
+            try:
+                eval(rule.condition_python, localdict, mode='exec', nocopy=True)
+                return 'result' in localdict and localdict['result'] or False
+            except:
+                raise osv.except_osv(_('Error'), _('Wrong python expression defined for salary rule %s (%s)')% (rule.name, rule.code))
+
 hr_salary_rule()
 
 class hr_payslip_line(osv.osv):
