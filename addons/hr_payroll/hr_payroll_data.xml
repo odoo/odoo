@@ -172,7 +172,7 @@
             <field name="category_id" ref="hr_payroll.GROSS"/>
             <field name="condition_select">none</field>
             <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = heads['BASIC'] + heads['ALW']</field>
+            <field name="amount_python_compute">result = heads['BASIC'] + ('ALW' in heads and heads['ALW'] or 0.0)</field>
         </record>
 
         <record id="hr_rule_net" model="hr.salary.rule">
@@ -182,7 +182,7 @@
             <field name="category_id" ref="hr_payroll.NET"/>
             <field name="condition_select">none</field>
             <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = heads['BASIC'] + heads['ALW'] - heads['DED']</field>
+            <field name="amount_python_compute">result = heads['BASIC'] + ('ALW' in heads and heads['ALW'] or 0.0) - ('DED' in heads and heads['DED'] or 0.0)</field>
         </record>
 
 
