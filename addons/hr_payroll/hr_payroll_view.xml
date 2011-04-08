@@ -263,6 +263,7 @@
                        </page>
 
                     </notebook>
+                    <field name='credit_note' />
                     <group col="10" colspan="4">
                         <field name="state"/>
                         <button string="Cancel" icon="terp-dialog-close" name="cancel_sheet" states="draft,hr_check,confirm"/>
@@ -271,6 +272,7 @@
                         <button string="Approve Sheet" icon="terp-camera_test" name="final_verify_sheet" states="hr_check"/>
                         <button string="Pay Salary" icon="terp-dolar_ok!" name="process_sheet" states="confirm"/>
                         <button string="Set to Draft" icon="terp-stock_effects-object-colorize" name="set_to_draft" states="cancel"/>
+                        <button string="Refund" icon="gtk-execute" name="refund_sheet" states="done" type='object'/>
                     </group>
                 </form>
             </field>
