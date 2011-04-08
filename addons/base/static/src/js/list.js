@@ -89,7 +89,7 @@ openerp.base.ListView = openerp.base.Controller.extend(
 
         var $table = this.$element.find('table');
         // remove all data lines
-        $table.find('tbody').remove();
+        var $old_body = $table.find('tbody');
 
         // add new content
         var columns = this.columns,
@@ -102,8 +102,8 @@ openerp.base.ListView = openerp.base.Controller.extend(
             body = 0,
             $body = $('<tbody>').appendTo($table);
 
+        var rendered = $.Deferred();
         var render_body = function () {
-            var rendered = $.Deferred();
             setTimeout(function () {
                 $body.append(
                     QWeb.render("ListView.rows", {
@@ -118,9 +118,12 @@ openerp.base.ListView = openerp.base.Controller.extend(
                     rendered.resolve();
                 }
             }, 0);
-            return rendered.promise();
         };
-        return render_body();
+        render_body();
+
+        return rendered.promise().then(function () {
+            $old_body.remove();
+        });
     },
     on_select_row: function (event) {
         var $target = $(event.currentTarget);
