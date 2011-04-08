@@ -27,8 +27,8 @@ class crm_meeting(osv.osv):
 
     def unlink(self, cr, uid, ids, context=None):
         model_obj = self.pool.get('ir.model.data')
-        ids = map(lambda x: base_calendar.base_calendar_id2real_id(x), ids)
-        model_ids = model_obj.search(cr, uid, [('res_id','in',ids),('model','=','crm.meeting'),('module','=','sync_google_calendar')], context=context)
+        unlink_ids = map(lambda x: base_calendar.base_calendar_id2real_id(x), ids)
+        model_ids = model_obj.search(cr, uid, [('res_id','in',unlink_ids),('model','=','crm.meeting'),('module','=','sync_google_calendar')], context=context)
         model_obj.unlink(cr, uid, model_ids, context=context)
         return super(crm_meeting, self).unlink(cr, uid, ids, context=context)
 
