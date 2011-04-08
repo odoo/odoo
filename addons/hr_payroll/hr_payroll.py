@@ -467,6 +467,7 @@ class hr_payslip(osv.osv):
                     #sum the amount for its salary head
                     localdict = _sum_salary_head(localdict, rule.category_id, amount)
                     vals = {
+                        'salary_rule_id': rule.id,
                         'name': rule.name,
                         'code': rule.code,
                         'category_id': rule.category_id.id,
@@ -736,6 +737,7 @@ class hr_payslip_line(osv.osv):
 
     _columns = {
         'slip_id':fields.many2one('hr.payslip', 'Pay Slip', required=True),
+        'salary_rule_id':fields.many2one('hr.salary.rule', 'Rule', required=True),
         'employee_id':fields.many2one('hr.employee', 'Employee', required=True),
         'total': fields.float('Amount', digits_compute=dp.get_precision('Account')),
         'company_contrib': fields.float('Company Contribution', readonly=True, digits_compute=dp.get_precision('Account')),
