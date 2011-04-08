@@ -20,14 +20,17 @@
 ##############################################################################
 
 from osv import osv, fields
-
+import base
+from base_calendar import base_calendar
 class crm_meeting(osv.osv):
     _inherit = "crm.meeting"
 
     def unlink(self, cr, uid, ids, context=None):
         model_obj = self.pool.get('ir.model.data')
-        model_ids = model_obj.search(cr, uid, [('res_id','in',ids),('model','=','crm.meeting'),('module','=','sync_google_calendar')], context=context)
-        model_obj.unlink(cr, uid, model_ids, context=context)
+        for meeting_id in ids:
+            id=base_calendar.base_calendar_id2real_id(meeting_id)
+            model_ids = model_obj.search(cr, uid, [('res_id','in',[id]),('model','=','crm.meeting'),('module','=','sync_google_calendar')], context=context)
+            model_obj.unlink(cr, uid, model_ids, context=context)
         return super(crm_meeting, self).unlink(cr, uid, ids, context=context)
 
 crm_meeting()
