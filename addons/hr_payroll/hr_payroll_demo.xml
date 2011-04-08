@@ -9,8 +9,7 @@
             <field eval="40.0" name="amount_percentage"/>
             <field name="amount_percentage_base">contract.wage</field>
             <field name="code">HRA</field>
-            <field name="type" ref="AL"/>
-            <field name="category_id" ref="hr_payroll.HRA"/>
+            <field name="category_id" ref="hr_payroll.ALW"/>
             <field name="name">House Rent Allowance</field>
             <field name="sequence" eval="5"/>
         </record>
@@ -19,8 +18,7 @@
             <field name="amount_select">fix</field>
             <field eval="800.0" name="amount_fix"/>
             <field name="code">CA</field>
-            <field name="type" ref="AL"/>
-            <field name="category_id" ref="hr_payroll.CA"/>
+            <field name="category_id" ref="hr_payroll.ALW"/>
             <field name="name">Conveyance Allowance</field>
             <field name="sequence" eval="10"/>
         </record>
@@ -30,8 +28,7 @@
             <field eval="15" name="sequence"/>
             <field eval="-200.0" name="amount_fix"/>
             <field name="code">PT</field>
-            <field name="type" ref="DED"/>
-            <field name="category_id" ref="hr_payroll.PT"/>
+            <field name="category_id" ref="hr_payroll.DED"/>
             <field name="name">Professional Tax</field>
         </record>
 
@@ -41,8 +38,7 @@
             <field eval="-12.5" name="amount_percentage"/>
             <field name="amount_percentage_base">contract.wage</field>
             <field name="code">PF</field>
-            <field name="type" ref="DED"/>
-            <field name="category_id" ref="hr_payroll.PF"/>
+            <field name="category_id" ref="hr_payroll.DED"/>
             <field name="name">Provident Fund</field>
         </record>
 
