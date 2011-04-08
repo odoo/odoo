@@ -33,7 +33,7 @@ class portal_menu(osv.osv):
         # if the current user belongs to a portal, we have to
         # rewrite any search on the top menus to be under the
         # portal's root menu:
-        if not context.get('ir.ui.menu.full_list') and \
+        if not context.get('ir.ui.menu.full_list') and uid != 1 and \
                             args and len(args) == 1 and \
                             len(args[0]) == 3 and \
                             (args[0][0] == 'parent_id' \

@@ -22,35 +22,44 @@
 from osv import osv
 
 UID_ROOT = 1
-SHARED_DOCS_MENU = "Shared Documents"
+SHARED_DOCS_MENU = "Documents"
+SHARED_DOCS_CHILD_MENU = "Shared Documents"
 
 class share_wizard_portal(osv.osv_memory):
     """Inherited share wizard to automatically create appropriate
        menus in the selected portal upon sharing with a portal group."""
     _inherit = "share.wizard"
 
+    def _create_or_get_submenu_named(self, cr, uid, parent_menu_id, menu_name, context=None):
+        if not parent_menu_id:
+            return
+        Menus = self.pool.get('ir.ui.menu')
+        parent_menu = Menus.browse(cr, uid, parent_menu_id) # No context
+        menu_id = None
+        max_seq = 10
+        for child_menu in parent_menu.child_id:
+            max_seq = max(max_seq, child_menu.sequence)
+            if child_menu.name == menu_name:
+                menu_id = child_menu.id
+                break
+        if not menu_id:
+            # not found, create it
+            menu_id = Menus.create(cr, UID_ROOT,
+                                    {'name': menu_name,
+                                     'parent_id': parent_menu.id,
+                                     'sequence': max_seq + 10, # at the bottom
+                                    })
+        return menu_id
+
     def _sharing_root_menu_id(self, cr, uid, portal, context=None):
         """Create or retrieve root ID of sharing menu in portal menu
 
            :param portal: browse_record of portal, constructed with a context WITHOUT language
         """
-        if not portal.parent_menu_id:
-            # no specific parent menu, cannot create the sharing menu at all.
-            return
-        # look for an existing SHARED_DOCS_MENU
-        sharing_root_menu_id = None
-        for child_menu in portal.parent_menu_id.child_id:
-            if child_menu.name == SHARED_DOCS_MENU:
-                sharing_root_menu_id = child_menu.id
-                break
-        if not sharing_root_menu_id:
-            # not found, create it
-            sharing_root_menu_id = self.pool.get('ir.ui.menu').create(cr, UID_ROOT,
-                                            {'name': SHARED_DOCS_MENU,
-                                             'parent_id': portal.parent_menu_id.id,
-                                             'sequence': 999, # at the bottom
-                                            })
-        return sharing_root_menu
+        parent_menu_id = self._create_or_get_submenu_named(cr, uid, portal.parent_menu_id.id, SHARED_DOCS_MENU, context=context)
+        if parent_menu_id:
+            child_menu_id = self._create_or_get_submenu_named(cr, uid, parent_menu_id, SHARED_DOCS_CHILD_MENU, context=context)
+            return child_menu_id
 
     def _create_shared_data_menu(self, cr, uid, wizard_data, portal, context=None):
         """Create sharing menus in portal menu according to share wizard options.
