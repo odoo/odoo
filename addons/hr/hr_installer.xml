@@ -52,7 +52,7 @@
     <record id="hr_installer_todo" model="ir.actions.todo">
       <field name="action_id" ref="action_hr_installer"/>
       <field name="sequence">3</field>
-            <field name="restart">always</field>
+            <field name="restart">on_trigger</field>
     </record>
 
          <record model="ir.actions.act_window" id="view_employee_form_installer">

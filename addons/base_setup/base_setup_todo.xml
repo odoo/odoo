@@ -67,7 +67,8 @@
     <record id="base_setup_company_todo" model="ir.actions.todo">
         <field name="action_id" ref="action_base_setup_company"/>
         <field name="sequence">1</field>
-        <field name="restart">onskip</field>
+        <field name="restart">never</field>
+        <field name="state">skip</field>
     </record>
   </data>
 </openerp>
