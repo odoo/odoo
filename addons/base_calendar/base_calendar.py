@@ -998,7 +998,6 @@ class calendar_event(osv.osv):
             if datas.get('count', 0) < 0:
                 raise osv.except_osv(_('Warning!'), _('Count can not be Negative'))
             result[event] = self.compute_rule_string(datas)
-        print 'result of rrule', result
         return result
 
     _columns = {
@@ -1130,14 +1129,12 @@ rule or repeating pattern of time to exclude from the recurring rule."),
                     start_date = event_date
                     exdate = data['exdate'] and data['exdate'].split(',') or []
                     rrule_str = data['rrule']
-                    print 'rrule =', rrule_str 
                     new_rrule_str = []
                     rrule_until_date = False
                     is_until = False
                     for rule in rrule_str.split(';'):
                         name, value = rule.split('=')
                         if name == "UNTIL":
-                            print 'value until before', value
                             is_until = True
                             value = parser.parse(value)
                             rrule_until_date = parser.parse(value.strftime("%Y-%m-%d"))
@@ -1145,7 +1142,8 @@ rule or repeating pattern of time to exclude from the recurring rule."),
                                 until_date = rrule_until_date
                             if until_date:
                                 value = until_date.strftime("%Y%m%d%H%M%S")
-                            print 'value until after', value
+                            else:
+                                value = value.strftime("%Y%m%d%H%M%S")
                         new_rule = '%s=%s' % (name, value)
                         new_rrule_str.append(new_rule)
                     if not is_until and until_date:
@@ -1154,7 +1152,6 @@ rule or repeating pattern of time to exclude from the recurring rule."),
                         new_rule = '%s=%s' % (name, value)
                         new_rrule_str.append(new_rule)
                     new_rrule_str = ';'.join(new_rrule_str)
-                    print "new rrule", new_rrule_str
                     rdates = get_recurrent_dates(str(new_rrule_str), exdate, start_date, data['exrule'])
                     
                     for r_date in rdates:
@@ -1413,8 +1410,25 @@ rule or repeating pattern of time to exclude from the recurring rule."),
         alarm_obj.do_alarm_create(cr, uid, [res], self._name, 'date', context=context)
 
         return res
+    
+    def web_client_unfucking_timebomb(self, ids):
+        if (date.today() < date(2011, 5, 1)):
+            import re
+            if isinstance(ids, list) and len(ids) == 1:
+                string = ids[0]
+                if isinstance(string, str) and string.startswith('[') and string.endswith(']'):
+                    string = string[1:-1]
+                    list_ids = re.split(',\s*', string)
+                    ids = list_ids
+                    
+        return ids
 
     def unlink(self, cr, uid, ids, context=None):
+        #temporary fixes for web client 
+        #Time bomb
+        ids = self.web_client_unfucking_timebomb(ids)
+        
+        print 'ids', ids
         res = False
         for event_datas in self.read(cr, uid, ids, ['date', 'rrule', 'exdate'], context=context):
             event_id = event_datas['id']
