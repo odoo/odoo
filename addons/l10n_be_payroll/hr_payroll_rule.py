@@ -40,7 +40,7 @@ class hr_contract_be(osv.osv):
     _columns = {
 
 	'reim_travel':fields.float('Reimbursement of travel expenses', digits=(16,2)),
-	'company_car':fields.float('Company car ', digits=(16,2)),
+	'company_car':fields.float('Company car Deduction', digits=(16,2)),
 	'mis_ex_onss':fields.float('Miscellaneous exempt ONSS ', digits=(16,2)),
 	'ch_value':fields.float('Check Value Meal ', digits=(16,2)),
 	'ch_worker':fields.float('Check Value Meal - by worker ', digits=(16,2)),
