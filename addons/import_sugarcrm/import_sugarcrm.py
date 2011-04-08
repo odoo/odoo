@@ -407,16 +407,24 @@ def get_account(sugar_obj, cr, uid, val, context=None):
     partner_id = False    
     partner_address_id = False
     model_obj = sugar_obj.pool.get('ir.model.data')
+    address_obj = sugar_obj.pool.get('res.partner.address')
+    partner_obj = sugar_obj.pool.get('res.partner')
     if val.get('parent_type') == 'Accounts':
         model_ids = model_obj.search(cr, uid, [('name', '=', val.get('parent_id')), ('model', '=', 'res.partner')])
         if model_ids:
             model = model_obj.browse(cr, uid, model_ids)[0]
             partner_id = model.res_id
+            address_ids = address_obj.search(cr, uid, [('partner_id', '=', partner_id)])
+            partner_address_id = address_ids[0]
             
     if val.get('parent_type') == 'Contacts':
         model_ids = model_obj.search(cr, uid, [('name', '=', val.get('parent_id')), ('model', '=', 'res.partner.address')])
         for model in model_obj.browse(cr, uid, model_ids):
             partner_address_id = model.res_id
+            address_id = address_obj.browse(cr, uid, partner_address_id)
+            if address_id.partner_id:
+                partner_id = address_id.partner_id
+            
     return partner_id, partner_address_id                             
 
 def import_tasks(sugar_obj, cr, uid, context=None):
@@ -492,7 +500,6 @@ def get_calls_state(sugar_obj, cr, uid, val,context=None):
     state = state_dict['status'].get(val, '')
     return state   
 
-
 def import_calls(sugar_obj, cr, uid, context=None):
     if not context:
         context = {}
@@ -536,6 +543,18 @@ def import_resources(sugar_obj, cr, uid, context=None):
         resource_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', noupdate=True, context=context)
     return True    
 
+def get_job_id(sugar_obj, cr, uid, val, context=None):
+    if not context:
+        context={}
+    job_id = False    
+    job_obj = sugar_obj.pool.get('hr.job')        
+    job_ids = job_obj.search(cr, uid, [('name', '=', val)])
+    if job_ids:
+        job_id = job_ids[0]
+    else:
+        job_id = job_obj.create(cr, uid, {'name': val})
+    return job_id
+    
 def import_employees(sugar_obj, cr, uid, context=None):
     if not context:
         context = {}
@@ -553,7 +572,6 @@ def import_employees(sugar_obj, cr, uid, context=None):
                     'job_id/.id': 'job_id/.id'
     }
     employee_obj = sugar_obj.pool.get('hr.employee')
-    job_obj = sugar_obj.pool.get('hr.job')
     PortType, sessionid = sugar.login(context.get('username', ''), context.get('password', ''), context.get('url',''))
     sugar_data = sugar.search(PortType, sessionid, 'Employees')
     for val in sugar_data:
@@ -563,13 +581,7 @@ def import_employees(sugar_obj, cr, uid, context=None):
         resource_id = sugar_obj.pool.get('ir.model.data').browse(cr, uid, model_ids)
         if resource_id:
             val['resource_id/.id'] = resource_id[0].res_id
-            
-        job_ids = job_obj.search(cr, uid, [('name', '=', val.get('title'))])
-        if job_ids:
-            job_id = job_ids[0]
-        else:
-            job_id = job_obj.create(cr, uid, {'name': val.get('title')})
-        val['job_id/.id'] = job_id
+        val['job_id/.id'] = get_job_id(sugar_obj, cr, uid, val.get('title'), context)
         fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_employee)
         employee_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', noupdate=True, context=context)
     return True
@@ -587,7 +599,9 @@ def get_contact_title(sugar_obj, cr, uid, salutation, domain, context=None):
     return title_id
     
 def import_emails(sugar_obj, cr, uid, context=None):
-    
+    if not context:
+        context=None
+         
     map_emails = {'id': 'id',
     'name':'name',
     'date':'date_sent',
@@ -643,8 +657,8 @@ def import_project_tasks(sugar_obj, cr, uid, context=None):
         'date_end': 'date_finish',
         'progress': 'progress',
         'project_id/name': 'project_name',
-        'planned_hours': 'estimated_effort',
-        'total_hours': 'actual_effort',        
+        'planned_hours': 'planned_hours',
+        'total_hours': 'total_hours',        
         'priority': 'priority',
         'description': 'description',
         'user_id/id': 'assigned_user_id',
@@ -737,7 +751,6 @@ def import_opportunities(sugar_obj, cr, uid, context=None):
         'type' : 'type',
         'categ_id.id': 'categ_id.id'
     }
-    
     lead_obj = sugar_obj.pool.get('crm.lead')
     partner_obj = sugar_obj.pool.get('res.partner')
     categ_obj = sugar_obj.pool.get('crm.case.categ')
@@ -748,13 +761,8 @@ def import_opportunities(sugar_obj, cr, uid, context=None):
         if not partner_xml_id:
             raise osv.except_osv(_('Warning !'), _('Reference Partner %s cannot be created, due to Lower Record Limit in SugarCRM Configuration.') % val.get('account_name'))
         partner_contact_name = get_opportunity_contact(sugar_obj,cr,uid, PortType, sessionid, val, partner_xml_id, context)
-        val['partner_address_id/name'] = partner_contact_name         
-        categ_ids = categ_obj.search(cr, uid, [('object_id.model','=','crm.lead'), ('name', 'like',val.get('opportunity_type'))])
-        if categ_ids:
-            categ_id = categ_ids[0]
-        else:
-            categ_id = categ_obj.create(cr, uid, {'name': val.get('opportunity_type'), 'object_id.model': 'crm.lead'})
-        val['categ_id.id'] = categ_id                    
+        val['partner_address_id/name'] = partner_contact_name
+        val['categ_id.id'] = get_category(sugar_obj, cr, uid, 'crm.lead', val.get('opportunity_type'))                    
         val['type'] = 'opportunity'
         stage_id = get_opportunity_status(sugar_obj, cr, uid, val, context)
         val['stage_id.id'] = stage_id
