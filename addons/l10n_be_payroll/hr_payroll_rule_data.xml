@@ -137,7 +137,7 @@
 		<field name="amount_select">fix</field>
 		<field name="sequence">50</field>
 		<field name="condition_select">python</field>
-		<field name="condition_python">result = employee.marital.name=='single'</field>
+		<field name="condition_python">result = employee.marital=='single'</field>
 		<field name="appears_on_payslip">False</field>
 	</record>
 
@@ -149,7 +149,7 @@
 		<field name="amount_select">fix</field>
 		<field name="sequence">50</field>
 		<field name="condition_select">python</field>
-		<field name="condition_python">result = employee.marital.name=='married'</field>
+		<field name="condition_python">result = employee.marital=='married'</field>
 		<field name="appears_on_payslip">False</field>
 	</record>
 	
@@ -161,7 +161,7 @@
 		<field name="amount_select">fix</field>
 		<field name="sequence">50</field>
 		<field name="condition_select">python</field>
-		<field name="condition_python">result = employee.marital.name=='divorced'</field>
+		<field name="condition_python">result = employee.marital=='divorced'</field>
 		<field name="appears_on_payslip">False</field>
 	</record>
 
