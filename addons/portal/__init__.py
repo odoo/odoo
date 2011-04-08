@@ -21,3 +21,4 @@
 
 import portal
 import wizard
+import ir_ui_menu
