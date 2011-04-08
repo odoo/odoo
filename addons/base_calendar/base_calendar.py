@@ -998,6 +998,7 @@ class calendar_event(osv.osv):
             if datas.get('count', 0) < 0:
                 raise osv.except_osv(_('Warning!'), _('Count can not be Negative'))
             result[event] = self.compute_rule_string(datas)
+        print 'result of rrule', result
         return result
 
     _columns = {
@@ -1129,12 +1130,14 @@ rule or repeating pattern of time to exclude from the recurring rule."),
                     start_date = event_date
                     exdate = data['exdate'] and data['exdate'].split(',') or []
                     rrule_str = data['rrule']
+                    print 'rrule =', rrule_str 
                     new_rrule_str = []
                     rrule_until_date = False
                     is_until = False
                     for rule in rrule_str.split(';'):
                         name, value = rule.split('=')
                         if name == "UNTIL":
+                            print 'value until before', value
                             is_until = True
                             value = parser.parse(value)
                             rrule_until_date = parser.parse(value.strftime("%Y-%m-%d"))
@@ -1142,6 +1145,7 @@ rule or repeating pattern of time to exclude from the recurring rule."),
                                 until_date = rrule_until_date
                             if until_date:
                                 value = until_date.strftime("%Y%m%d%H%M%S")
+                            print 'value until after', value
                         new_rule = '%s=%s' % (name, value)
                         new_rrule_str.append(new_rule)
                     if not is_until and until_date:
@@ -1150,6 +1154,7 @@ rule or repeating pattern of time to exclude from the recurring rule."),
                         new_rule = '%s=%s' % (name, value)
                         new_rrule_str.append(new_rule)
                     new_rrule_str = ';'.join(new_rrule_str)
+                    print "new rrule", new_rrule_str
                     rdates = get_recurrent_dates(str(new_rrule_str), exdate, start_date, data['exrule'])
                     
                     for r_date in rdates:
@@ -1194,11 +1199,11 @@ rule or repeating pattern of time to exclude from the recurring rule."),
         
         def get_end_date(datas):
             if datas.get('end_date'):
-                datas['end_date'] = ''.join((re.compile('\d')).findall(datas.get('end_date'))) + 'T235959Z'
+                datas['end_date_new'] = ''.join((re.compile('\d')).findall(datas.get('end_date'))) + 'T235959Z'
             
             return (datas.get('end_type') == 'count' and (';COUNT=' + str(datas.get('count'))) or '') +\
-                             ((datas.get('end_date') and datas.get('end_type') == 'end_date' and (';UNTIL=' + datas.get('end_date'))) or '')
-                      
+                             ((datas.get('end_date_new') and datas.get('end_type') == 'end_date' and (';UNTIL=' + datas.get('end_date_new'))) or '')
+       
         freq=datas.get('rrule_type')
         if freq == 'none':
             return ''
@@ -1218,8 +1223,6 @@ rule or repeating pattern of time to exclude from the recurring rule."),
                 
     def search(self, cr, uid, args, offset=0, limit=0, order=None,
             context=None, count=False):
-        print "limit begin", limit
-        print "count", count
         args_without_date = []
         start_date = False
         until_date = False
@@ -1277,7 +1280,6 @@ rule or repeating pattern of time to exclude from the recurring rule."),
         res = False
         for event_id in select:
             real_event_id = base_calendar_id2real_id(event_id)
-
 
             if(self.get_edit_all(cr, uid, event_id, vals=vals)):
                 event_id = real_event_id
