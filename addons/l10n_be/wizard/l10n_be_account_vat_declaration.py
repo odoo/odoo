@@ -71,13 +71,13 @@ class l10n_be_vat_declaration(osv.osv_memory):
         tax_code_ids = obj_tax_code.search(cr, uid, [], context=context)
         ctx = context.copy()
         data  = self.read(cr, uid, ids)[0]
-        ctx['period_id'] = data['period_id'] #added context here
+        ctx['period_id'] = data['period_id'][0] #added context here
         tax_info = obj_tax_code.read(cr, uid, tax_code_ids, ['code','sum_period'], context=ctx)
 
         address = post_code = city = country_code = ''
         city, post_code, address, country_code = self.pool.get('res.company')._get_default_ad(obj_company.partner_id.address)
 
-        account_period = obj_acc_period.browse(cr, uid, data['period_id'], context=context)
+        account_period = obj_acc_period.browse(cr, uid, data['period_id'][0], context=context)
 
         send_ref = str(obj_company.partner_id.id) + str(account_period.date_start[5:7]) + str(account_period.date_stop[:4])
         data_of_file = '<?xml version="1.0"?>\n<VATSENDING xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="MultiDeclarationTVA-NoSignature-16.xml">'

@@ -1553,7 +1553,6 @@ class stock_move(osv.osv):
 
         # used for colors in tree views:
         'scrapped': fields.related('location_dest_id','scrap_location',type='boolean',relation='stock.location',string='Scrapped', readonly=True),
-        'tracking': fields.boolean('Track Lots'),
     }
     _constraints = [
         (_check_tracking,
@@ -1744,7 +1743,6 @@ class stock_move(osv.osv):
             'product_uom': product.uom_id.id,
             'product_uos': uos_id,
             'product_qty': 1.00,
-            'tracking': product.track_production,
             'product_uos_qty' : self.pool.get('stock.move').onchange_quantity(cr, uid, ids, prod_id, 1.00, product.uom_id.id, uos_id)['value']['product_uos_qty']
         }
         if not ids:
@@ -2240,7 +2238,6 @@ class stock_move(osv.osv):
         if quantity <= 0:
             raise osv.except_osv(_('Warning!'), _('Please provide a positive quantity to scrap!'))
         res = []
-        to_done = []
         for move in self.browse(cr, uid, ids, context=context):
             move_qty = move.product_qty
             uos_qty = quantity / move_qty * move.product_uos_qty
@@ -2256,32 +2253,13 @@ class stock_move(osv.osv):
             if move.location_id.usage <> 'internal':
                 default_val.update({'location_id': move.location_dest_id.id})
             new_move = self.copy(cr, uid, move.id, default_val)
-            res.append(new_move)
-            to_done.append(new_move)
 
-            if move.prodlot_id:
-                # Create a new move with the qty of scrapped move without prodlot
-                default_val = {
-                        'product_qty': quantity,
-                        'product_uos_qty': uos_qty,
-                        'tracking_id': move.tracking_id.id,
-                        'prodlot_id': False
-                    }
-                newmove = self.copy(cr, uid, move.id, default_val)
-                res.append(new_move)
-                # Reduce amount of original move by qty of scrapped move
-                if move.product_qty - quantity > 0:
-                    move.write({
-                        'product_qty': move.product_qty - quantity,
-                        'product_uos_qty': move.product_uos_qty - uos_qty,
-                        })
-
-
+            res += [new_move]
             product_obj = self.pool.get('product.product')
             for (id, name) in product_obj.name_get(cr, uid, [move.product_id.id]):
                 self.log(cr, uid, move.id, "%s x %s %s" % (move.product_qty, name, _("were scrapped")))
 
-        self.action_done(cr, uid, to_done, context=context)
+        self.action_done(cr, uid, res)
         return res
 
     def action_split(self, cr, uid, ids, quantity, split_by_qty=1, prefix=False, with_lot=True, context=None):
@@ -2655,7 +2633,6 @@ class stock_inventory_line(osv.osv):
         'company_id': fields.related('inventory_id','company_id',type='many2one',relation='res.company',string='Company',store=True, select=True, readonly=True),
         'prod_lot_id': fields.many2one('stock.production.lot', 'Production Lot', domain="[('product_id','=',product_id)]"),
         'state': fields.related('inventory_id','state',type='char',string='State',readonly=True),
-        'tracking': fields.boolean('Track Lots'),
     }
 
     def on_change_product_id(self, cr, uid, ids, location_id, product, uom=False, to_date=False):
@@ -2671,7 +2648,7 @@ class stock_inventory_line(osv.osv):
             prod = self.pool.get('product.product').browse(cr, uid, [product], {'uom': uom})[0]
             uom = prod.uom_id.id
         amount = self.pool.get('stock.location')._product_get(cr, uid, location_id, [product], {'uom': uom, 'to_date': to_date})[product]
-        result = {'product_qty': amount, 'product_uom': uom, 'tracking':prod.track_production}
+        result = {'product_qty': amount, 'product_uom': uom}
         return {'value': result}
 
 stock_inventory_line()
