@@ -300,8 +300,10 @@
                             <field colspan="4" name="retrospective" nolabel="1"/>
                         </page>
                     </notebook>
-                    <group col="6" colspan="4">
+                    <group col="8" colspan="4">
                         <field name="state" readonly="1"/>
+                        <button name="%(project_scrum.report_scrum_sprint_burndown_chart)d" 
+                        			string="Burndown Chart" type="action" icon="gtk-print"/>
                         <button type="object" string="Open" name="button_open" states="draft,pending" icon="terp-camera_test"/>
                         <button type="object" string="Pending" name="button_pending" states="open" icon="gtk-media-pause"/>
                         <button type="object" string="Close" name="button_close" states="open,pending" icon="terp-dialog-close"/>

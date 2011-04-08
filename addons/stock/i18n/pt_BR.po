@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-02-10 04:34+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-03-18 04:41+0000\n"
+"X-Generator: Launchpad (build 12559)\n"
 
 #. module: stock
 #: field:product.product,track_outgoing:0
@@ -768,12 +768,6 @@ msgid "Location Address"
 msgstr "Endereço de Localização"
 
 #. module: stock
-#: code:addons/stock/stock.py:2348
-#, python-format
-msgid "is consumed with"
-msgstr "foi consumido em"
-
-#. module: stock
 #: help:stock.move,prodlot_id:0
 msgid "Production lot is used to put a serial number on the production"
 msgstr "Lote de produção é usado para pôr um número de série na produção"
@@ -893,6 +887,12 @@ msgstr "Urgente"
 #: report:stock.picking.list:0
 msgid "Journal"
 msgstr "Diário"
+
+#. module: stock
+#: code:addons/stock/stock.py:1315
+#, python-format
+msgid "is scheduled %s."
+msgstr ""
 
 #. module: stock
 #: help:stock.picking,location_id:0
@@ -2093,12 +2093,6 @@ msgstr "Entrega Parcial"
 #: selection:stock.location,chained_auto_packing:0
 msgid "Automatic No Step Added"
 msgstr "Automático sem Passo Adicional"
-
-#. module: stock
-#: code:addons/stock/stock.py:2348
-#, python-format
-msgid "Product "
-msgstr "Produto "
 
 #. module: stock
 #: view:stock.location.product:0
@@ -3442,10 +3436,10 @@ msgid "Product Category"
 msgstr "Categoria de Produto"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_change_product_qty.py:74
+#: code:addons/stock/wizard/stock_change_product_qty.py:88
 #, python-format
-msgid "INV: "
-msgstr "INV: "
+msgid "INV: %s"
+msgstr ""
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.next_id_61
@@ -3760,12 +3754,6 @@ msgid "Unplanned Qty"
 msgstr "Quantidade não planejada"
 
 #. module: stock
-#: code:addons/stock/stock.py:1318
-#, python-format
-msgid "is scheduled"
-msgstr "está agendado"
-
-#. module: stock
 #: field:stock.location,chained_company_id:0
 msgid "Chained Company"
 msgstr "Empresa Encadeada"
@@ -3911,10 +3899,16 @@ msgstr ""
 "Especifica atributos da embalagem como tipo, quantidade de embalagens, etc."
 
 #. module: stock
-#: code:addons/stock/stock.py:2348
+#: code:addons/stock/stock.py:2386
 #, python-format
-msgid "quantity."
-msgstr "quantidade."
+msgid "Product  '%s' is consumed with '%s' quantity."
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/stock.py:2595
+#, python-format
+msgid "Inventory '%s' is done."
+msgstr ""
 
 #. module: stock
 #: constraint:stock.move:0
@@ -4524,3 +4518,23 @@ msgstr "Detalhes opcionais do local, apenas em caráter informativo"
 #~ msgstr ""
 #~ "Este diário será usado para os movimentos contábeis gerados pela "
 #~ "movimentação de estoque"
+
+#, python-format
+#~ msgid "Product "
+#~ msgstr "Produto "
+
+#, python-format
+#~ msgid "INV: "
+#~ msgstr "INV: "
+
+#, python-format
+#~ msgid "is scheduled"
+#~ msgstr "está agendado"
+
+#, python-format
+#~ msgid "quantity."
+#~ msgstr "quantidade."
+
+#, python-format
+#~ msgid "is consumed with"
+#~ msgstr "foi consumido em"

@@ -23,16 +23,20 @@
     "name": "Human Resources",
     "version": "1.1",
     "author": "OpenERP SA",
-    "category": "Generic Modules/Human Resources",
+    "category": "Human Resources",
     "website": "http://www.openerp.com",
     "description": """
-    Module for human resource management. You can manage:
+Module for human resource management.
+=====================================
+
+You can manage:
     * Employees and hierarchies : You can define your employee with User and display hierarchies
     * HR Departments
     * HR Jobs
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
+    'images': ['images/hr_department.jpeg', 'images/hr_employee.jpeg','images/hr_job_position.jpeg'],
     'depends': ['resource', 'board'],
     'init_xml': [],
     'update_xml': [

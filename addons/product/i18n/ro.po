@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2011-03-09 17:56+0000\n"
+"PO-Revision-Date: 2011-04-07 04:14+0000\n"
 "Last-Translator: Dorin <dhongu@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-03-10 04:46+0000\n"
-"X-Generator: Launchpad (build 12351)\n"
+"X-Launchpad-Export-Date: 2011-04-08 04:45+0000\n"
+"X-Generator: Launchpad (build 12735)\n"
 
 #. module: product
 #: model:product.template,name:product.product_product_ram512_product_template
@@ -97,11 +97,13 @@ msgid ""
 "Error: The default UOM and the Supplier Product UOM must be in the same "
 "category."
 msgstr ""
+"Eroare: Unitatea de măsură implictă și unitate de măsură de aprovizionare "
+"trebuie să fie din aceeași categorie."
 
 #. module: product
 #: field:product.template,seller_qty:0
 msgid "Supplier Quantity"
-msgstr ""
+msgstr "Cantitate furnizor"
 
 #. module: product
 #: selection:product.template,mes_type:0
@@ -123,7 +125,7 @@ msgstr "Atenţie !"
 #: field:product.product,pricelist_id:0
 #: view:product.supplierinfo:0
 msgid "Pricelist"
-msgstr "Lista de preturi"
+msgstr "Listă de prețuri"
 
 #. module: product
 #: view:product.product:0
@@ -203,7 +205,7 @@ msgstr "HDD la cerere"
 #. module: product
 #: field:product.price_list,price_list:0
 msgid "PriceList"
-msgstr "Lista de prețuri"
+msgstr "Listă de prețuri"
 
 #. module: product
 #: view:product.template:0
@@ -223,7 +225,7 @@ msgstr "Diverse"
 #. module: product
 #: model:product.template,name:product.product_product_worker0_product_template
 msgid "Worker"
-msgstr ""
+msgstr "Lucrător"
 
 #. module: product
 #: help:product.template,sale_ok:0
@@ -231,11 +233,13 @@ msgid ""
 "Determines if the product can be visible in the list of product within a "
 "selection from a sale order line."
 msgstr ""
+"Determină dacă produsul poate fi vizibil în lista de produse la selecția din "
+"pozițiile comenzilor de vânzare."
 
 #. module: product
 #: model:product.pricelist.version,name:product.ver0
 msgid "Default Public Pricelist Version"
-msgstr ""
+msgstr "Versiune listă de prețuri publică implicită"
 
 #. module: product
 #: selection:product.template,cost_method:0
@@ -257,7 +261,7 @@ msgstr "Tip de produs"
 #. module: product
 #: view:product.uom:0
 msgid "  e.g: 1 * (this unit) = ratio * (reference unit)"
-msgstr ""
+msgstr "  : 1 * (această unitate) = rația * (unitatea de referință)"
 
 #. module: product
 #: code:addons/product/product.py:378
@@ -286,6 +290,9 @@ msgid ""
 "supplying. 'Make to Order': When needed, purchase or produce for the "
 "procurement request."
 msgstr ""
+"\"Produce pe stoc\": Atunci când este necesar, să ia din stoc sau să aștepte "
+"până la re-alimentare. \"Produce la comandă\": Atunci când este necesar, să "
+"cumpere sau să producă pentru cererea de aprovizionare."
 
 #. module: product
 #: model:process.node,note:product.process_node_supplier0
@@ -344,7 +351,7 @@ msgstr "Cantitate-1"
 #. module: product
 #: help:product.packaging,ul_qty:0
 msgid "The number of packages by layer"
-msgstr ""
+msgstr "Număr de pachete pe strat"
 
 #. module: product
 #: field:product.packaging,qty:0
@@ -361,7 +368,7 @@ msgstr "Stare"
 #. module: product
 #: help:product.template,categ_id:0
 msgid "Select category for the current product"
-msgstr ""
+msgstr "Selectare categorie pentru produsul curent"
 
 #. module: product
 #: field:product.product,outgoing_qty:0
@@ -420,7 +427,7 @@ msgstr ""
 #. module: product
 #: view:product.pricelist:0
 msgid "Products Price Search"
-msgstr ""
+msgstr "Căutare preț produs"
 
 #. module: product
 #: view:product.product:0
@@ -728,6 +735,8 @@ msgid ""
 "This price will be considered as a price for the supplier UoM if any or the "
 "default Unit of Measure of the product otherwise"
 msgstr ""
+"Acest preţ va fi considerat ca preț în UM  de aprovizionare dacă există sau "
+"implicit UM a produsului altfel"
 
 #. module: product
 #: model:product.category,name:product.product_category_accessories
@@ -843,7 +852,7 @@ msgstr ""
 #. module: product
 #: view:product.uom:0
 msgid "Ratio & Precision"
-msgstr ""
+msgstr "Rația & Precizia"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_gram
@@ -887,7 +896,7 @@ msgstr "Categorii produs"
 #. module: product
 #: view:product.uom:0
 msgid "  e.g: 1 * (reference unit) = ratio * (this unit)"
-msgstr ""
+msgstr "  e.g: 1* (unitatea de referință) = rația * (acestă unitate)"
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_uom_form_action
@@ -913,6 +922,8 @@ msgid ""
 "Product's cost for accounting stock valuation. It is the base price for the "
 "supplier price."
 msgstr ""
+"Costul produsului pentru evaluările contabile. Este prețul de bază pentru "
+"aprovizionare."
 
 #. module: product
 #: view:product.price.type:0
@@ -1036,7 +1047,7 @@ msgstr ""
 #. module: product
 #: selection:product.uom,uom_type:0
 msgid "Bigger than the reference UoM"
-msgstr ""
+msgstr "Mai mare față de UM de referință"
 
 #. module: product
 #: model:ir.module.module,shortdesc:product.module_meta_information
@@ -1638,7 +1649,7 @@ msgstr "Produce la comanda"
 #. module: product
 #: help:product.packaging,qty:0
 msgid "The total number of products you can put by pallet or box."
-msgstr ""
+msgstr "Numărul total de produse care pot fi puse în palet sau boxă."
 
 #. module: product
 #: field:product.product,variants:0
@@ -1879,7 +1890,7 @@ msgstr "Categorie Produs"
 #. module: product
 #: report:product.pricelist:0
 msgid "Price List Name"
-msgstr ""
+msgstr "Nume listă de prețuri"
 
 #. module: product
 #: field:product.supplierinfo,delay:0
@@ -2275,6 +2286,8 @@ msgid ""
 "Coefficient to convert UOM to UOS\n"
 " uos = uom * coeff"
 msgstr ""
+"Coeficient de conversie din UM la UM de vânzare\n"
+" umv = um * coef"
 
 #. module: product
 #: help:product.template,volume:0

@@ -3934,12 +3934,14 @@
         </record>
 <!-- De gegevens voor de BTW (gegevens voor omzetbedragen staan verderop) -->
         <record id="btw_totaal" model="account.tax.code.template">
+            <field name="code">B</field>
             <field name="name">Gegevens omzetbelasting (BTW)</field>
             <field name="parent_id" ref="btw_code_chart_root"/>
         </record>
 <!-- 1 Leveringen en/of diensten binnenland -->
         <record id="btw_code_binnenland" model="account.tax.code.template">
-            <field name="name">1 Leveringen en/of diensten binnenland (BTW)</field>
+            <field name="code">1</field>
+            <field name="name">Leveringen en/of diensten binnenland (BTW)</field>
             <field name="parent_id" ref="btw_totaal"/>
         </record>
         <record id="btw_code_1a" model="account.tax.code.template">
@@ -3969,7 +3971,8 @@
         </record>
 <!-- 2. Verleggingsregeling -->
         <record id="btw_code_verlegging" model="account.tax.code.template">
-            <field name="name">2 Verleggingsregelingen: BTW naar u verlegd (BTW)</field>
+            <field name="code">2</field>
+            <field name="name">Verleggingsregelingen: BTW naar u verlegd (BTW)</field>
             <field name="parent_id" ref="btw_totaal"/>
         </record>
         <record id="btw_code_2a" model="account.tax.code.template">
@@ -3982,7 +3985,8 @@
 	 
 <!-- 4. Leveringen vanuit het buitenland -->
         <record id="btw_code_vanuit_buitenland" model="account.tax.code.template">
-            <field name="name">4 Leveringen vanuit het buitenland (BTW)</field>
+            <field name="code">4</field>
+            <field name="name">Leveringen vanuit het buitenland (BTW)</field>
             <field name="parent_id" ref="btw_totaal"/>
         </record>
         <record id="btw_code_4a" model="account.tax.code.template">
@@ -3997,7 +4001,8 @@
         </record>
 <!-- 5. Voorbelasting, kleineondernemersregeling, schatting en eindtotaal -->
         <record id="btw_code_voorbelasting" model="account.tax.code.template">
-            <field name="name">5 Voorbelasting, kleineondernemersregeling, schatting en eindtotaal (BTW)</field>
+            <field name="code">5</field>
+            <field name="name">Voorbelasting, kleineondernemersregeling, schatting en eindtotaal (BTW)</field>
             <field name="parent_id" ref="btw_totaal"/>
         </record>
         <record id="btw_code_5a" model="account.tax.code.template">
@@ -4039,12 +4044,14 @@
         
 <!-- De gegevens over de omzet -->
         <record id="omz_totaal" model="account.tax.code.template">
+            <field name="code">A</field>
             <field name="name">Gegevens omzetbedragen</field>
             <field name="parent_id" ref="btw_code_chart_root"/>
         </record>
 <!-- 1 Leveringen en/of diensten binnenland -->
         <record id="omz_code_binnenland" model="account.tax.code.template">
-            <field name="name">1 Leveringen en/of diensten binnenland (omzet)</field>
+            <field name="code">1</field>
+            <field name="name">Leveringen en/of diensten binnenland (omzet)</field>
             <field name="parent_id" ref="omz_totaal"/>
         </record>
         <record id="omz_code_1a" model="account.tax.code.template">
@@ -4074,7 +4081,8 @@
         </record>
 <!-- 2. Verleggingsregeling -->
         <record id="omz_code_verlegging" model="account.tax.code.template">
-            <field name="name">2 Verleggingsregelingen: BTW naar u verlegd (omzet)</field>
+            <field name="code">2</field>
+            <field name="name">Verleggingsregelingen: BTW naar u verlegd (omzet)</field>
             <field name="parent_id" ref="omz_totaal"/>
         </record>
         <record id="omz_code_2a" model="account.tax.code.template">
@@ -4084,7 +4092,8 @@
         </record>
 <!-- 3. Leveringen naar het buitenland -->
         <record id="omz_code_naar_buitenland" model="account.tax.code.template">
-            <field name="name">3 Leveringen naar het buitenland (omzet)</field>
+            <field name="code">3</field>
+            <field name="name">Leveringen naar het buitenland (omzet)</field>
             <field name="parent_id" ref="omz_totaal"/>
         </record>
         <record id="omz_code_3a" model="account.tax.code.template">
@@ -4104,7 +4113,8 @@
         </record>
 <!-- 4. Leveringen vanuit het buitenland -->
         <record id="omz_code_vanuit_buitenland" model="account.tax.code.template">
-            <field name="name">4 Leveringen vanuit het buitenland (omzet)</field>
+            <field name="code">4</field>
+            <field name="name">Leveringen vanuit het buitenland (omzet)</field>
             <field name="parent_id" ref="omz_totaal"/>
         </record>
         <record id="omz_code_4a" model="account.tax.code.template">

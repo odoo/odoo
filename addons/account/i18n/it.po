@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-02-01 17:57+0000\n"
-"Last-Translator: Vincenzo Marino <Unknown>\n"
+"PO-Revision-Date: 2011-04-05 12:13+0000\n"
+"Last-Translator: Nicola Riolini - Micronaet <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-02-02 04:40+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-04-06 04:39+0000\n"
+"X-Generator: Launchpad (build 12559)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -419,7 +419,7 @@ msgstr "Data di creazione"
 #. module: account
 #: selection:account.journal,type:0
 msgid "Purchase Refund"
-msgstr "Rimborso acuisti"
+msgstr "Rimborso acquisti"
 
 #. module: account
 #: selection:account.journal,type:0
@@ -754,12 +754,6 @@ msgid "Partners Reconciled Today"
 msgstr "Partner con riconliliazione effettuata oggi."
 
 #. module: account
-#: code:addons/account/account_bank_statement.py:306
-#, python-format
-msgid "The statement balance is incorrect !\n"
-msgstr "Il bilancio della registrazione non è corretto!\n"
-
-#. module: account
 #: selection:account.payment.term.line,value:0
 #: selection:account.tax.template,type:0
 msgid "Percent"
@@ -1085,7 +1079,7 @@ msgstr "In contestazione"
 #: model:ir.actions.act_window,name:account.action_view_bank_statement_tree
 #: model:ir.ui.menu,name:account.journal_cash_move_lines
 msgid "Cash Registers"
-msgstr "Registratori di Cassa"
+msgstr "Movimenti Registratore di Cassa"
 
 #. module: account
 #: selection:account.account.type,report_type:0
@@ -1421,7 +1415,7 @@ msgstr "Salta lo stato 'bozza' per registrazioni manuali"
 #: view:account.invoice.report:0
 #: field:account.invoice.report,price_total:0
 msgid "Total Without Tax"
-msgstr "Totale senza impste"
+msgstr "Totale senza imposte"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_move_journal_line
@@ -2710,11 +2704,12 @@ msgid "August"
 msgstr "Agosto"
 
 #. module: account
-#: code:addons/account/account_bank_statement.py:307
+#: code:addons/account/account_bank_statement.py:306
 #, python-format
 msgid ""
+"The statement balance is incorrect !\n"
 "The expected balance (%.2f) is different than the computed one. (%.2f)"
-msgstr "Il saldo calcolato (%.2f) è diverso da quello inserito. (%.2f)"
+msgstr ""
 
 #. module: account
 #: model:process.transition,note:account.process_transition_paymentreconcile0
@@ -2966,6 +2961,12 @@ msgstr "Il conto si basa sulla denuncia della tassa"
 #: selection:account.entries.report,type:0
 msgid "View"
 msgstr "Vista"
+
+#. module: account
+#: code:addons/account/account.py:2951
+#, python-format
+msgid "BNK%s"
+msgstr ""
 
 #. module: account
 #: code:addons/account/account.py:2906
@@ -3715,7 +3716,7 @@ msgstr ""
 #. module: account
 #: view:account.analytic.line:0
 msgid "General Accounting"
-msgstr "Contabilita' generale"
+msgstr "Contabilità generale"
 
 #. module: account
 #: report:account.overdue:0
@@ -4403,12 +4404,6 @@ msgid "Account Balance -"
 msgstr "Bilancio"
 
 #. module: account
-#: code:addons/account/invoice.py:989
-#, python-format
-msgid "Invoice "
-msgstr "Fattura "
-
-#. module: account
 #: field:account.automatic.reconcile,date1:0
 msgid "Starting Date"
 msgstr "Data di inizio"
@@ -4839,7 +4834,7 @@ msgstr "Bilancio"
 #. module: account
 #: model:ir.ui.menu,name:account.final_accounting_reports
 msgid "Accounting Reports"
-msgstr "Reports di contabilita'"
+msgstr "Reports di contabilità"
 
 #. module: account
 #: field:account.move,line_id:0
@@ -4946,7 +4941,7 @@ msgstr "Periodo non trovato !"
 #. module: account
 #: field:account.journal,update_posted:0
 msgid "Allow Cancelling Entries"
-msgstr "Conferma cancellazione voci"
+msgstr "Consenti cancellazione registrazioni"
 
 #. module: account
 #: field:account.tax.code,sign:0
@@ -5667,8 +5662,8 @@ msgid ""
 "Selected Invoice(s) cannot be confirmed as they are not in 'Draft' or 'Pro-"
 "Forma' state!"
 msgstr ""
-"Le fatture scelte non possono essere confermate, essendo nello stato 'Draft' "
-"o 'Pro-forma'"
+"Le fatture scelte non possono essere confermate, non essendo nello stato "
+"'Draft' o 'Pro-forma'!"
 
 #. module: account
 #: report:account.invoice:0
@@ -5745,10 +5740,10 @@ msgstr ""
 "nel sistema viene mutato in \"eseguito\" (e.s. pagata)."
 
 #. module: account
-#: code:addons/account/invoice.py:989
+#: code:addons/account/invoice.py:997
 #, python-format
-msgid "is validated."
-msgstr "è convalidato."
+msgid "Invoice  '%s' is validated."
+msgstr ""
 
 #. module: account
 #: view:account.chart.template:0
@@ -6922,7 +6917,7 @@ msgstr "Data fine"
 #. module: account
 #: field:wizard.multi.charts.accounts,purchase_tax:0
 msgid "Default Purchase Tax"
-msgstr "Imposta di default per gli acuisti"
+msgstr "Imposta di default per gli acquisti"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -7625,7 +7620,7 @@ msgstr ""
 #: view:account.installer.modules:0
 msgid "Add extra Accounting functionalities to the ones already installed."
 msgstr ""
-"Aggiunge ulteriori funzionalita' alla contabilita', oltre a quelle gia' "
+"Aggiunge ulteriori funzionalità alla contabilità, oltre a quelle già "
 "installate"
 
 #. module: account
@@ -10969,6 +10964,14 @@ msgstr ""
 #~ msgid "Error ! You can not create recursive Menu."
 #~ msgstr "Errore! Non è possibile creare un menù ricorsivo."
 
+#, python-format
+#~ msgid "Invoice "
+#~ msgstr "Fattura "
+
+#, python-format
+#~ msgid "is validated."
+#~ msgstr "è convalidato."
+
 #~ msgid ""
 #~ "A journal entry consists of several journal items, each of which is either a "
 #~ "debit or a credit. OpenERP creates automatically one journal entry per "
@@ -11000,6 +11003,10 @@ msgstr ""
 #~ "emesse. OpenERP genera in modo automatico le fatture in stato di bozza, in "
 #~ "modo che basti confermarle per poterle spedire al cliente."
 
+#, python-format
+#~ msgid "The statement balance is incorrect !\n"
+#~ msgstr "Il bilancio della registrazione non è corretto!\n"
+
 #~ msgid ""
 #~ "Exception made of a mistake of our side, it seems that the following bills "
 #~ "stay unpaid. Please, take appropriate measures in order to carry out this "
@@ -11017,6 +11024,11 @@ msgstr ""
 #~ msgstr ""
 #~ "Il rimborso da un fornitore consiste in una nota di credito che indica che "
 #~ "rimborsa in tutto od in parte una fattura che ha inviato."
+
+#, python-format
+#~ msgid ""
+#~ "The expected balance (%.2f) is different than the computed one. (%.2f)"
+#~ msgstr "Il saldo calcolato (%.2f) è diverso da quello inserito. (%.2f)"
 
 #~ msgid ""
 #~ "A supplier refund is a credit note from your supplier indicating that he "

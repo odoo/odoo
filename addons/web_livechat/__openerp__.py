@@ -21,8 +21,13 @@
 {
     'name': 'Live Chat Support',
     'version': '1.1',
-    'category': 'Generic Modules/Others',
-    'description': "Enable live chat support for whom have a maintenance contract",
+    'category': 'Tools',
+    'description': """
+Enable live chat support for those who have a maintenance contract.
+===================================================================
+
+Add "Support" button in header from where you can access OpenERP Support.
+    """,
     'author': 'OpenERP SA',
     'website': 'http://openerp.com',
     'depends': ['base'],
@@ -31,4 +36,5 @@
     'active': True,
     'web': True,
     'certificate': '0013762192410413',
+    'images': ['images/web_livechat_support.jpeg'],
 }

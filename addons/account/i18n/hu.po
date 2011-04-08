@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-03-03 14:39+0000\n"
+"PO-Revision-Date: 2011-03-18 11:11+0000\n"
 "Last-Translator: NOVOTRADE RENDSZERHÁZ <openerp@novotrade.hu>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-03-04 04:44+0000\n"
-"X-Generator: Launchpad (build 12351)\n"
+"X-Launchpad-Export-Date: 2011-03-19 05:19+0000\n"
+"X-Generator: Launchpad (build 12559)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -746,12 +746,6 @@ msgstr "Csekk"
 #: field:account.partner.reconcile.process,today_reconciled:0
 msgid "Partners Reconciled Today"
 msgstr "Ma párosított partnerek"
-
-#. module: account
-#: code:addons/account/account_bank_statement.py:306
-#, python-format
-msgid "The statement balance is incorrect !\n"
-msgstr "Hibás kivonat egyenleg!\n"
 
 #. module: account
 #: selection:account.payment.term.line,value:0
@@ -2698,11 +2692,14 @@ msgid "August"
 msgstr "Augusztus"
 
 #. module: account
-#: code:addons/account/account_bank_statement.py:307
+#: code:addons/account/account_bank_statement.py:306
 #, python-format
 msgid ""
+"The statement balance is incorrect !\n"
 "The expected balance (%.2f) is different than the computed one. (%.2f)"
-msgstr "A várt egyenleg (%.2f) eltér a számított egyenlegtől (%.2f)."
+msgstr ""
+"A kivonat egyenlege hibás!\n"
+"A várt egyenleg (%.2f) eltér a számított egyenlegtől (%.2f)."
 
 #. module: account
 #: model:process.transition,note:account.process_transition_paymentreconcile0
@@ -2948,6 +2945,12 @@ msgstr "Az adóbevallásban szereplő adóalap."
 #: selection:account.entries.report,type:0
 msgid "View"
 msgstr "Gyűjtő"
+
+#. module: account
+#: code:addons/account/account.py:2951
+#, python-format
+msgid "BNK%s"
+msgstr "BNK%s"
 
 #. module: account
 #: code:addons/account/account.py:2906
@@ -4384,12 +4387,6 @@ msgid "Account Balance -"
 msgstr "Számla egyenleg -"
 
 #. module: account
-#: code:addons/account/invoice.py:989
-#, python-format
-msgid "Invoice "
-msgstr "Számla "
-
-#. module: account
 #: field:account.automatic.reconcile,date1:0
 msgid "Starting Date"
 msgstr "Kezdő dátum"
@@ -5728,10 +5725,10 @@ msgstr ""
 "rendszerben."
 
 #. module: account
-#: code:addons/account/invoice.py:989
+#: code:addons/account/invoice.py:997
 #, python-format
-msgid "is validated."
-msgstr "jóváhagyásra került."
+msgid "Invoice  '%s' is validated."
+msgstr "'%s' számla jóváhagyásra került."
 
 #. module: account
 #: view:account.chart.template:0
@@ -10273,6 +10270,10 @@ msgstr ""
 #~ msgid "Amount paid"
 #~ msgstr "Kifizetés összege"
 
+#, python-format
+#~ msgid "The statement balance is incorrect !\n"
+#~ msgstr "Hibás kivonat egyenleg!\n"
+
 #~ msgid "Total quantity"
 #~ msgstr "Mennyiség összesen"
 
@@ -10479,3 +10480,16 @@ msgstr ""
 
 #~ msgid "Entry encoding"
 #~ msgstr "Adatbevitel"
+
+#, python-format
+#~ msgid "Invoice "
+#~ msgstr "Számla "
+
+#, python-format
+#~ msgid "is validated."
+#~ msgstr "jóváhagyásra került."
+
+#, python-format
+#~ msgid ""
+#~ "The expected balance (%.2f) is different than the computed one. (%.2f)"
+#~ msgstr "A várt egyenleg (%.2f) eltér a számított egyenlegtől (%.2f)."

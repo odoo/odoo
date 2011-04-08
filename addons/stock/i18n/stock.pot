@@ -686,12 +686,6 @@ msgid "Location Address"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:2348
-#, python-format
-msgid "is consumed with"
-msgstr ""
-
-#. module: stock
 #: help:stock.move,prodlot_id:0
 msgid "Production lot is used to put a serial number on the production"
 msgstr ""
@@ -810,6 +804,12 @@ msgstr ""
 #: view:stock.picking:0
 #: report:stock.picking.list:0
 msgid "Journal"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/stock.py:1315
+#, python-format
+msgid "is scheduled %s."
 msgstr ""
 
 #. module: stock
@@ -1846,12 +1846,6 @@ msgstr ""
 #. module: stock
 #: selection:stock.location,chained_auto_packing:0
 msgid "Automatic No Step Added"
-msgstr ""
-
-#. module: stock
-#: code:addons/stock/stock.py:2348
-#, python-format
-msgid "Product "
 msgstr ""
 
 #. module: stock
@@ -3081,9 +3075,9 @@ msgid "Product Category"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/wizard/stock_change_product_qty.py:74
+#: code:addons/stock/wizard/stock_change_product_qty.py:88
 #, python-format
-msgid "INV: "
+msgid "INV: %s"
 msgstr ""
 
 #. module: stock
@@ -3368,12 +3362,6 @@ msgid "Unplanned Qty"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:1318
-#, python-format
-msgid "is scheduled"
-msgstr ""
-
-#. module: stock
 #: field:stock.location,chained_company_id:0
 msgid "Chained Company"
 msgstr ""
@@ -3506,9 +3494,15 @@ msgid "It specifies attributes of packaging like type, quantity of packaging,etc
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:2348
+#: code:addons/stock/stock.py:2386
 #, python-format
-msgid "quantity."
+msgid "Product  '%s' is consumed with '%s' quantity."
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/stock.py:2595
+#, python-format
+msgid "Inventory '%s' is done."
 msgstr ""
 
 #. module: stock

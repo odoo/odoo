@@ -22,9 +22,11 @@
 {
     'name': 'Module Technical Guide in Restructured Text ',
     'version': '1.0',
-    'category': 'Generic Modules/Base',
+    'category': 'Tools',
     'description': """
-    * This module generates the Technical Guides of selected modules in Restructured Text format (RST)
+This module generates the Technical Guides of selected modules in Restructured Text format (RST).
+=================================================================================================
+
     * It uses the Sphinx (http://sphinx.pocoo.org) implementation of RST
     * It creates a tarball (.tgz file suffix) containing an index file and one file per module
     * Generates Relationship Graph
@@ -37,5 +39,6 @@
     'demo_xml': [],
     'installable': True,
     'certificate': '001288481437217734509',
+    'images': ['images/base_module_doc_rst1.jpeg'],
 }
 

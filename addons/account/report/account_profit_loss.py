@@ -114,7 +114,7 @@ class report_pl_account_horizontal(report_sxw.rml_parse, common_report_header):
                     if typ == 'income' and account.type <> 'view' and (account.debit <> account.credit):
                         self.result_sum_cr += abs(account.debit - account.credit)
                     if data['form']['display_account'] == 'bal_movement':
-                        if not currency_pool.is_zero(self.cr, self.uid, currency, account.credit) > 0 or not currency_pool.is_zero(self.cr, self.uid, currency, account.debit) > 0 or not currency_pool.is_zero(self.cr, self.uid, currency, account.balance):
+                        if not currency_pool.is_zero(self.cr, self.uid, currency, account.credit) or not currency_pool.is_zero(self.cr, self.uid, currency, account.debit) or not currency_pool.is_zero(self.cr, self.uid, currency, account.balance):
                             accounts_temp.append(account)
                     elif data['form']['display_account'] == 'bal_solde':
                         if not currency_pool.is_zero(self.cr, self.uid, currency, account.balance):
