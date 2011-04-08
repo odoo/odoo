@@ -298,6 +298,7 @@ class hr_payslip(osv.osv):
         return self.write(cr, uid, ids, {'paid': True, 'state': 'done'}, context=context)
 
     def refund_sheet(self, cr, uid, ids, context=None):
+        mod_obj = self.pool.get('ir.model.data')
         wf_service = netsvc.LocalService("workflow")
         for id in ids:
             id_copy = self.copy(cr, uid, id, {'credit_note': True}, context=context)
@@ -305,7 +306,24 @@ class hr_payslip(osv.osv):
             wf_service.trg_validate(uid, 'hr.payslip', id_copy, 'verify_sheet', cr)
             wf_service.trg_validate(uid, 'hr.payslip', id_copy, 'final_verify_sheet', cr)
             wf_service.trg_validate(uid, 'hr.payslip', id_copy, 'process_sheet', cr)
-        return True
+
+        form_id = mod_obj.get_object_reference(cr, uid, 'hr_payroll', 'view_hr_payslip_form')
+        form_res = form_id and form_id[1] or False
+        tree_id = mod_obj.get_object_reference(cr, uid, 'hr_payroll', 'view_hr_payslip_tree')
+        tree_res = tree_id and tree_id[1] or False
+        return {
+            'name':_("Refund Payslip"),
+            'view_mode': 'tree, form',
+            'view_id': False,
+            'view_type': 'form',
+            'res_model': 'hr.payslip',
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'current',
+            'domain': "[('id', 'in', %s)]" % [id_copy],
+            'views': [(tree_res, 'tree'), (form_res, 'form')],
+            'context': {}
+        }
 
     def verify_sheet(self, cr, uid, ids, context=None):
          #TODO clean me: this function should create the register lines accordingly to the rules computed (run the compute_sheet first)
