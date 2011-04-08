@@ -39,16 +39,16 @@ class hr_contract_be(osv.osv):
     _description = 'Add for belgium users'
     _columns = {
 
-	'rem_frais_dep':fields.float('Reimbursement of travel expenses', digits=(16,2)),
-	'voiture_soc':fields.float('Company car ', digits=(16,2)),
-	'divers_ex_onss':fields.float('Miscellaneous exempt ONSS ', digits=(16,2)),
-	'valeur_cheque':fields.float('Check Value Meal ', digits=(16,2)),
-	'part_trav':fields.float('Check Value Meal - by worker ', digits=(16,2)),
-	'assurance':fields.float('Insurance Group - by worker ', digits=(16,2)),
-	'avantage':fields.float('Benefits of various nature ', digits=(16,2)),
+	'reim_travel':fields.float('Reimbursement of travel expenses', digits=(16,2)),
+	'company_car':fields.float('Company car ', digits=(16,2)),
+	'mis_ex_onss':fields.float('Miscellaneous exempt ONSS ', digits=(16,2)),
+	'ch_value':fields.float('Check Value Meal ', digits=(16,2)),
+	'ch_worker':fields.float('Check Value Meal - by worker ', digits=(16,2)),
+	'insurance':fields.float('Insurance Group - by worker ', digits=(16,2)),
+	'advantage':fields.float('Benefits of various nature ', digits=(16,2)),
 	'suppl_net':fields.float('Net supplements', digits=(16,2)),
-	'retenus_net':fields.float('Net retained ', digits=(16,2)),
-	'volontariat_fiscal':fields.float('Voluntary tax ', digits=(16,2)),
+	'retained_net':fields.float('Net retained ', digits=(16,2)),
+	'vol_tax':fields.float('Voluntary tax ', digits=(16,2)),
 	'horaire_effectif': fields.many2one('resource.calendar','Actual Work', help="Hours of work means the actual working time elapsing between the beginning and end of the workday, regardless of where it runs, excluding the stop work devoted to meals, breaks and, more generally, any interruptions between 2 sequences of work that are not actually worked since the employee can go freely about his personal affairs"),
 
     }

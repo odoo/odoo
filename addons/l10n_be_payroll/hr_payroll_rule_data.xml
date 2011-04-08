@@ -50,10 +50,65 @@
 		<field name="code">C.C.</field>
 		<field name="type">2</field>
 	</record>
+		
+	<record id="hr_payroll_head_reim_travel" model="hr.salary.head">
+		<field name="name">Reimbursement of travel expenses</field>
+		<field name="code">Tr.E</field>
+		<field name="type">1</field>
+	</record>	
 
-	<record id="hr_payroll_head_cheque_repas" model="hr.salary.head">
-		<field name="name">Chèque repas</field>
-		<field name="code">C.R.</field>
+	<record id="hr_payroll_head_mis_ex_onss" model="hr.salary.head">
+		<field name="name">Miscellaneous exempt ONSS</field>
+		<field name="code">M.ONSS</field>
+		<field name="type">1</field>
+	</record>	
+
+
+	<record id="hr_payroll_head_ch_value" model="hr.salary.head">
+		<field name="name">Check Value Meal</field>
+		<field name="code">Ch.M</field>
+		<field name="type">1</field>
+	</record>	
+
+	
+	<record id="hr_payroll_head_ch_worker" model="hr.salary.head">
+		<field name="name">Check Value Meal - by worker</field>
+		<field name="code">Ch.wkr</field>
+		<field name="type">1</field>
+	</record>
+
+		
+	<record id="hr_payroll_head_insurance" model="hr.salary.head">
+		<field name="name">Insurance Group - by worker</field>
+		<field name="code">Ins</field>
+		<field name="type">1</field>
+	</record>
+
+		
+	<record id="hr_payroll_head_advantage" model="hr.salary.head">
+		<field name="name">Benefits of various nature</field>
+		<field name="code">Ben</field>
+		<field name="type">1</field>
+	</record>
+
+		
+	<record id="hr_payroll_head_suppl_net" model="hr.salary.head">
+		<field name="name">Net supplements</field>
+		<field name="code">Net.S</field>
+		<field name="type">1</field>
+	</record>	
+
+	
+	<record id="hr_payroll_head_retained_net" model="hr.salary.head">
+		<field name="name">Net retained</field>
+		<field name="code">Net.R</field>
+		<field name="type">1</field>
+	</record>	
+
+	
+	<record id="hr_payroll_head_vol_tax" model="hr.salary.head">
+		<field name="name">Voluntary tax</field>
+		<field name="code">V.Tax</field>
 		<field name="type">1</field>
 	</record>	
 	
@@ -98,36 +153,37 @@
 	<record id="hr_payroll_rules_bareme" model="hr.salary.rule">
 		<field name="category_id" ref="hr_payroll_head_pp"/>
 		<field name="parent_rule_id" ref="hr_payroll_rules_p_p_b1"/>
-		<field name="name">Bareme</field>
+		<field name="name">Precompte Professionnel</field>
 		<field name="code">B.I.</field>
 		<field name="type">2</field>
 		<field name="amount_select">code</field>
 		<field name="sequence">50</field>
 		<field name="condition_select">python</field>
-		<field name="condition_python">employee.marital=='single'</field>
+		<field name="condition_python">result = employee.marital.name=='single'</field>
 	</record>
 
 	<record id="hr_payroll_rules_baremeII" model="hr.salary.rule">
 		<field name="category_id" ref="hr_payroll_head_pp"/>
 		<field name="parent_rule_id" ref="hr_payroll_rules_p_p_b1"/>
-		<field name="name">Bareme II</field>
+		<field name="name">Precompte Professionnel</field>
 		<field name="code">B.II</field>
 		<field name="type">2</field>
 		<field name="amount_select">fix</field>
 		<field name="sequence">50</field>
 		<field name="condition_select">python</field>
-		<field name="condition_python">employee.marital=='married'</field>
+		<field name="condition_python">result = employee.marital.name=='married'</field>
 	</record>
 	
 	<record id="hr_payroll_rules_baremeIII" model="hr.salary.rule">
 		<field name="category_id" ref="hr_payroll_head_pp"/>
 		<field name="parent_rule_id" ref="hr_payroll_rules_p_p_b1"/>
-		<field name="name">Bareme III</field>
+		<field name="name">Precompte Professionnel</field>
 		<field name="code">B.III</field>
 		<field name="type">2</field>
 		<field name="amount_select">fix</field>
 		<field name="sequence">50</field>
 		<field name="condition_select">python</field>
+		<field name="condition_python">result = employee.marital.name=='divorced'</field>
 	</record>
 
 
@@ -147,22 +203,133 @@
 		<field name="name">Company car</field>
 		<field name="code">C.C.</field>
 		<field name="type">2</field>
-		<field name="amount_type">percentage</field>
+		<field name="amount_select">fix</field>
 		<field name="sequence">60</field>
-		<field name="computational_expression">...</field>
-		<field name="expression_result">...</field>
+		<field name="condition_select">none</field>
+		<field name="amount_select">code</field>
+		<field name="amount_python_compute">result = contract.company_car</field>
 	</record>
 	
-	<record id="hr_payroll_rules_cheque_repas" model="hr.salary.rule">
-		<field name="category_id" ref="hr_payroll_head_cheque_repas"/>
-		<field name="name">chèque repas</field>
-		<field name="code">C.R.</field>
+	<record id="hr_payroll_rules_ch_value" model="hr.salary.rule">
+		<field name="category_id" ref="hr_payroll_head_ch_value"/>
+		<field name="name">Check Value Meal</field>
+		<field name="code">Ch.M.</field>
 		<field name="type">1</field>
-		<field name="amount_type">fix</field>
+		<field name="amount_select">fix</field>
 		<field name="sequence">65</field>
-		<field name="computational_expression">...</field>
-		<field name="expression_result">...</field>
+		<field name="condition_select">none</field>
+		<field name="amount_select">code</field>
+		<field name="amount_python_compute">result = contract.ch_value</field>
 	</record>
+
+	
+	<record id="hr_payroll_rules_reim_travel" model="hr.salary.rule">
+		<field name="category_id" ref="hr_payroll_head_reim_travel"/>
+		<field name="name">Reimbursement of travel expenses</field>
+		<field name="code">Tr.E</field>
+		<field name="type">1</field>
+		<field name="amount_select">fix</field>
+		<field name="sequence">65</field>
+		<field name="condition_select">none</field>
+		<field name="amount_select">code</field>
+		<field name="amount_python_compute">result = contract.reim_travel</field>
+	</record>
+
+
+	
+	<record id="hr_payroll_rules_mis_ex_onss" model="hr.salary.rule">
+		<field name="category_id" ref="hr_payroll_head_mis_ex_onss"/>
+		<field name="name">Miscellaneous exempt ONSS</field>
+		<field name="code">M.ONSS</field>
+		<field name="type">1</field>
+		<field name="amount_select">fix</field>
+		<field name="sequence">65</field>
+		<field name="condition_select">none</field>
+		<field name="amount_select">code</field>
+		<field name="amount_python_compute">result = contract.mis_ex_onss</field>
+	</record>
+
+	
+	<record id="hr_payroll_rules_ch_worker" model="hr.salary.rule">
+		<field name="category_id" ref="hr_payroll_head_ch_worker"/>
+		<field name="name">Check Value Meal - by worker</field>
+		<field name="code">Ch.wkr</field>
+		<field name="type">1</field>
+		<field name="amount_select">fix</field>
+		<field name="sequence">65</field>
+		<field name="condition_select">none</field>
+		<field name="amount_select">code</field>
+		<field name="amount_python_compute">result = contract.ch_worker</field>
+	</record>
+
+	
+	<record id="hr_payroll_rules_insurance" model="hr.salary.rule">
+		<field name="category_id" ref="hr_payroll_head_insurance"/>
+		<field name="name">Insurance</field>
+		<field name="code">Ins</field>
+		<field name="type">2</field>
+		<field name="amount_select">fix</field>
+		<field name="sequence">65</field>
+		<field name="condition_select">none</field>
+		<field name="amount_select">code</field>
+		<field name="amount_python_compute">result = contract.insurance</field>
+	</record>
+
+	
+	<record id="hr_payroll_rules_advantage" model="hr.salary.rule">
+		<field name="category_id" ref="hr_payroll_head_advantage"/>
+		<field name="name">Benefits of various nature</field>
+		<field name="code">Ben</field>
+		<field name="type">1</field>
+		<field name="amount_select">fix</field>
+		<field name="sequence">65</field>
+		<field name="condition_select">none</field>
+		<field name="amount_select">code</field>
+		<field name="amount_python_compute">result = contract.advantage</field>
+	</record>
+
+	
+	<record id="hr_payroll_rules_suppl_net" model="hr.salary.rule">
+		<field name="category_id" ref="hr_payroll_head_suppl_net"/>
+		<field name="name">Net Supplement</field>
+		<field name="code">Net.S</field>
+		<field name="type">1</field>
+		<field name="amount_select">fix</field>
+		<field name="sequence">65</field>
+		<field name="condition_select">none</field>
+		<field name="amount_select">code</field>
+		<field name="amount_python_compute">result = contract.suppl_net</field>
+	</record>
+	
+
+	
+	<record id="hr_payroll_rules_retained_net" model="hr.salary.rule">
+		<field name="category_id" ref="hr_payroll_head_retained_net"/>
+		<field name="name">Net retained</field>
+		<field name="code">Net.R</field>
+		<field name="type">1</field>
+		<field name="amount_select">fix</field>
+		<field name="sequence">65</field>
+		<field name="condition_select">none</field>
+		<field name="amount_select">code</field>
+		<field name="amount_python_compute">result = contract.retained_net</field>
+	</record>
+
+	
+	<record id="hr_payroll_rules_vol_tax" model="hr.salary.rule">
+		<field name="category_id" ref="hr_payroll_head_vol_tax"/>
+		<field name="name">Volontary Tax</field>
+		<field name="code">V.Tax</field>
+		<field name="type">2</field>
+		<field name="amount_select">fix</field>
+		<field name="sequence">65</field>
+		<field name="condition_select">none</field>
+		<field name="amount_select">code</field>
+		<field name="amount_python_compute">result = contract.vol_tax</field>
+	</record>
+
+
+
 
         <record id="hr_payroll_salary_structure_employee" model="hr.payroll.structure">
             <field name="code">C.P.218</field>
