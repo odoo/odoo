@@ -125,6 +125,7 @@
 		<field name="sequence">50</field>
 		<field name="amount_select">fix</field>
 		<field name="condition_select">none</field>
+		<field name="appears_on_payslip">False</field>
 	<!--	<field eval="[(6, 0, [ref('hr_payroll_rules_baremeI'), ref('hr_payroll_rules_baremeII'), ref('hr_payroll_rules_baremeIII')])]" name="child_ids"/>-->
 	</record>
 	
@@ -137,6 +138,7 @@
 		<field name="sequence">50</field>
 		<field name="condition_select">python</field>
 		<field name="condition_python">result = employee.marital.name=='single'</field>
+		<field name="appears_on_payslip">False</field>
 	</record>
 
 	<record id="hr_payroll_rules_baremeII" model="hr.salary.rule">
@@ -148,6 +150,7 @@
 		<field name="sequence">50</field>
 		<field name="condition_select">python</field>
 		<field name="condition_python">result = employee.marital.name=='married'</field>
+		<field name="appears_on_payslip">False</field>
 	</record>
 	
 	<record id="hr_payroll_rules_baremeIII" model="hr.salary.rule">
@@ -159,6 +162,7 @@
 		<field name="sequence">50</field>
 		<field name="condition_select">python</field>
 		<field name="condition_python">result = employee.marital.name=='divorced'</field>
+		<field name="appears_on_payslip">False</field>
 	</record>
 
 
