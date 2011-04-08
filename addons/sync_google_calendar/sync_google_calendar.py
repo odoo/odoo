@@ -20,6 +20,7 @@
 ##############################################################################
 
 from osv import osv, fields
+from base_calendar import base_calendar
 
 class crm_meeting(osv.osv):
     _inherit = "crm.meeting"
