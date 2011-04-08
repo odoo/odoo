@@ -22,35 +22,60 @@
 from osv import fields, osv
 from tools.translate import _
 
-class hr_timesheet_invoice_installer(osv.osv):
+class hr_timesheet_invoice_installer(osv.osv_memory):
     _name = "hr.timesheet.invoice.installer"
     _description = "Employee Invoice Data"
     _columns = {
         'employee_id': fields.many2one('hr.employee', 'Employee', domain="['|',('product_id','=',False),('journal_id','=',False)]" ,required=True),
         'product_id': fields.many2one('product.product', 'Product', domain="[('type','=','service')]"),
-        'timesheet_journal': fields.many2one('account.analytic.journal', 'Analytic Journal',domain="[('type','=','general')]"),
+        'journal_id': fields.many2one('account.analytic.journal', 'Analytic Journal',domain="[('type','=','general')]"),
+        'wizard_id': fields.many2one('hr.timesheet.invoice.wizard','Employee', required=True),
     }
 
-    def _get_user(self, cr, uid, context=None):
-
-        emp_obj = self.pool.get('hr.employee')
-        emp_id = emp_obj.search(cr, uid, ['|',('user_id', '=', uid),('product_id','=',False),('journal_id','=',False)], context=context)
-        if not emp_id:
-            raise osv.except_osv(_("Warning"), _("No employee defined for this user"))
-        return emp_id and emp_id[0] or False
-
-    _defaults = {
-        'employee_id': _get_user
-    }
 
 hr_timesheet_invoice_installer()
 
-class hr_timesheet_invoice_wizard(osv.osv):
+class hr_timesheet_invoice_wizard(osv.osv_memory):
     _name = "hr.timesheet.invoice.wizard"
     _description = "Timesheet Invoice"
     _columns = {
-        'emp_ids':fields.one2many('hr.timesheet.invoice.installer', 'timesheet_journal', 'Employee details'),
+        'emp_ids':fields.one2many('hr.timesheet.invoice.installer', 'wizard_id', 'Wizard Reference'),
     }
+
+    def default_get(self, cr, uid, fields, context=None):
+        """
+         To get default values for the object.
+         @param self: The object pointer.
+         @param cr: A database cursor
+         @param uid: ID of the user currently logged in
+         @param fields: List of fields for which we want default values
+         @param context: A standard dictionary
+         @return: A dictionary with default values for all field in ``fields``
+        """
+        if context is None:
+            context = {}
+        res = super(hr_timesheet_invoice_wizard, self).default_get(cr, uid, fields, context=context)
+        emp_obj = self.pool.get('hr.employee')
+        emp_id = emp_obj.search(cr, uid, ['|',('user_id', '=', uid),('product_id','=',False),('journal_id','=','')], context=context)
+        result = []
+        data = {}
+        for emp in emp_obj.browse(cr, uid, emp_id, context=context):
+            data = {'employee_id':emp.id,'product_id':emp.product_id.id,'journal_id':emp.journal_id.id}
+            result.append(data)
+            if 'emp_ids' in fields:
+                res.update({'emp_ids': result})
+        return res
+
+    def employee_data(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        hr_obj = self.pool.get('hr.employee')
+        data = {}
+        for emp in self.browse(cr, uid, ids, context=context):
+            for emp_data in emp.emp_ids:
+                emp_id = hr_obj.search(cr, uid, [('id', '=', emp_data.employee_id.id)], context=context)
+                hr_obj.write(cr, uid, emp_id, {'name': emp_data.employee_id.name,'product_id':emp_data.product_id.id or False, 'journal_id':emp_data.journal_id.id or ''})
+        return {'type': 'ir.actions.act_window_close'}
 
 hr_timesheet_invoice_wizard()
 

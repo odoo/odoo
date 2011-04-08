@@ -11,9 +11,18 @@
                                 <tree string="Employee Invoice Data"  editable="top">
                                     <field name="employee_id"/>
                                     <field name="product_id"/>
-                                    <field name="timesheet_journal"/>
+                                    <field name="journal_id"/>
                                 </tree>
+                                <form string="Employee Invoice Data">
+                                    <field name="employee_id"/>
+                                    <field name="product_id"/>
+                                    <field name="journal_id"/>
+                                </form>
                       </field>
+                    <separator string="" colspan="4" />
+                    <label string="" colspan="2" />
+                    <button special="cancel" string="Cancel" icon="gtk-cancel" />
+                    <button name="employee_data" string="OK" type="object" icon="gtk-ok"/>
                 </form>
             </field>
         </record>
