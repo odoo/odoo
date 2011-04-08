@@ -65,7 +65,7 @@ def _get_rules(self, datas):
         new_val['end_date'] = until.strftime('%Y-%m-%d')
         new_val['end_type'] = 'end_date'
         datas.pop('UNTIL')
-    
+        
     if datas.get('COUNT'):
         new_val['count'] = datas.get('COUNT')
         new_val['end_type'] = 'count'
@@ -73,7 +73,8 @@ def _get_rules(self, datas):
         
     if datas.get('INTERVAL'):
         new_val['interval'] = datas.get('INTERVAL')
-        datas.pop('INTERVAL') 
+    else:
+        new_val['interval'] = 1
 
     if datas.get('BYMONTHDAY'):
         new_val['day'] = datas.get('BYMONTHDAY')
@@ -117,10 +118,13 @@ def _get_repeat_status(self, str_google):
     return status
 
 def _get_repeat_dates(self, x):
-    if x[3].startswith('BY'):
-        zone_time = x[4].split('+')[-1:][0].split(':')[0][:4]
+    if len(x) > 4:
+        if x[3].startswith('BY'):
+            zone_time = x[4].split('+')[-1:][0].split(':')[0][:4]
+        else:
+            zone_time = x[3].split('+')[-1:][0].split(':')[0][:4]
     else:
-        zone_time = x[3].split('+')[-1:][0].split(':')[0][:4]
+        zone_time = x[2].split('+')[-1:][0].split(':')[0][:4]
     tz_format = zone_time[:2]+':'+zone_time[2:]
     repeat_start = x[1].split('\n')[0].split(':')[1]
     repeat_end = x[2].split('\n')[0].split(':')[1]
