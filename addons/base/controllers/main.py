@@ -9,6 +9,8 @@ import openerpweb
 import openerpweb.ast
 import openerpweb.nonliterals
 
+import cherrypy
+
 # Should move to openerpweb.Xml2Json
 class Xml2Json:
     # xml2json-direct
@@ -168,6 +170,47 @@ class Session(openerpweb.Controller):
             'domain': domain,
             'group_by': group_by_sequence
         }
+
+    @openerpweb.jsonrequest
+    def save_session_action(self, req, the_action):
+        """
+        This method store an action object in the session object and returns an integer
+        identifying that action. The method get_session_action() can be used to get
+        back the action.
+        
+        :param the_action: The action to save in the session.
+        :type the_action: anything
+        :return: A key identifying the saved action.
+        :rtype: integer
+        """
+        saved_actions = cherrypy.session.get('saved_actions')
+        if not saved_actions:
+            saved_actions = {"next":0, "actions":{}}
+            cherrypy.session['saved_actions'] = saved_actions
+        # we don't allow more than 10 stored actions
+        if len(saved_actions["actions"]) >= 10:
+            del saved_actions["actions"][min(saved_actions["actions"].keys())]
+        key = saved_actions["next"]
+        saved_actions["actions"][key] = the_action
+        saved_actions["next"] = key + 1
+        return key
+
+    @openerpweb.jsonrequest
+    def get_session_action(self, req, key):
+        """
+        Gets back a previously saved action. This method can return None if the action
+        was saved since too much time (this case should be handled in a smart way).
+        
+        :param key: The key given by save_session_action()
+        :type key: integer
+        :return: The saved action or None.
+        :rtype: anything
+        """
+        saved_actions = cherrypy.session.get('saved_actions')
+        if not saved_actions:
+            return None
+        return saved_actions["actions"].get(key)
+        
         
 def load_actions_from_ir_values(req, key, key2, models, meta, context):
     Values = req.session.model('ir.values')

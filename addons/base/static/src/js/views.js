@@ -159,10 +159,13 @@ openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
                 search_defaults[match[1]] = value;
             }
         });
-        var searchview_loaded = this.setup_search_view(view_id,search_defaults);
+        var searchview_loaded = null;
+        if (view_id) {
+            searchview_loaded = this.setup_search_view(view_id,search_defaults);
+        }
 
         // schedule auto_search
-        if (this.action['auto_search']) {
+        if (searchview_loaded != null && this.action['auto_search']) {
             $.when(searchview_loaded, inital_view_loaded)
                 .then(this.searchview.do_search);
         }
@@ -291,9 +294,10 @@ openerp.base.Sidebar = openerp.base.BaseWidget.extend({
         this.$element.find("a").click(function(e) {
             $this = jQuery(this);
             var i = $this.attr("data-i");
-            var j = $this.attr("data-i");
+            var j = $this.attr("data-j");
             var action = self.sections[i].elements[j];
-            openerp.base.handle_action(self.view_manager.session, action);
+            (new openerp.base.ExternalActionManager(self.view_manager.session, null))
+                .handle_action(action);
             e.stopPropagation();
             e.preventDefault();
         });
@@ -304,19 +308,31 @@ openerp.base.Sidebar = openerp.base.BaseWidget.extend({
     }
 });
 
-openerp.base.handle_action = function(session, action) {
-    if(action.type=="ir.actions.act_window") {
-        if(action.target=="new") {
-            var element_id = _.uniqueId("act_window_dialog");
-            var dialog = $('<div id="'+element_id+'"></div>');
-            dialog.dialog({
-                title: action.name
-            });
-            var viewmanager = new openerp.base.ViewManagerAction(session,element_id, action, false);
-            viewmanager.start();
+openerp.base.ExternalActionManager = openerp.base.Controller.extend({
+    handle_action: function(action) {
+        if(action.type=="ir.actions.act_window") {
+            if(action.target=="new") {
+                var element_id = _.uniqueId("act_window_dialog");
+                var dialog = $('<div id="'+element_id+'"></div>');
+                dialog.dialog({
+                    title: action.name
+                });
+                var viewmanager = new openerp.base.ViewManagerAction(this.session
+                        ,element_id, action, false);
+                viewmanager.start();
+            } else if (action.target == "current") {
+                this.rpc("/base/session/save_session_action", {the_action:action}, function(key) {
+                    debugger;
+                    var url = window.location.href;
+                    //window.open();
+                });
+            }
         }
+        // TODO: show an error like "not implemented" here
+        // since we don't currently have any way to handle errors do you have any better idea
+        // than using todos?
     }
-};
+});
 
 openerp.base.views.add('calendar', 'openerp.base.CalendarView');
 openerp.base.CalendarView = openerp.base.Controller.extend({
