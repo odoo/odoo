@@ -1429,7 +1429,7 @@ rule or repeating pattern of time to exclude from the recurring rule."),
         ids = self.web_client_unfucking_timebomb(ids)
         if not isinstance(ids, list):
             ids = [ids]
-        print 'ids', ids
+            
         res = False
         for id in ids:
             event_datas = self.read(cr, uid, [id], ['date', 'rrule', 'exdate'], context=context)[0]
@@ -1442,7 +1442,6 @@ rule or repeating pattern of time to exclude from the recurring rule."),
             if isinstance(event_id, (int, long)):
                 res = super(calendar_event, self).unlink(cr, uid, event_id, context=context)
                 self.pool.get('res.alarm').do_alarm_unlink(cr, uid, [event_id], self._name)
-                print 'unlink real id'
                 self.unlink_events(cr, uid, [event_id], context=context)
             else:
                 str_event, date_new = event_id.split('-')
@@ -1453,9 +1452,7 @@ rule or repeating pattern of time to exclude from the recurring rule."),
                                  time.strptime(date_new, "%Y%m%d%H%M%S"))
                     exdate = (event_datas['exdate'] and (event_datas['exdate'] + ',')  or '') + date_new
                     res = self.write(cr, uid, [event_id], {'exdate': exdate})
-                    print 'exdate', exdate
                 else:
-                    print "unlink"
                     res = super(calendar_event, self).unlink(cr, uid, [event_id], context=context)
                     self.pool.get('res.alarm').do_alarm_unlink(cr, uid, [event_id], self._name)
                     self.unlink_events(cr, uid, [event_id], context=context)
