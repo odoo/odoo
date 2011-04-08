@@ -26,7 +26,6 @@ from crm import wizard
 import binascii
 import tools
 
-wizard.email_compose_message.email_model.append('crm.helpdesk')
 CRM_HELPDESK_STATES = (
     crm.AVAILABLE_STATES[2][0], # Cancelled
     crm.AVAILABLE_STATES[3][0], # Done
