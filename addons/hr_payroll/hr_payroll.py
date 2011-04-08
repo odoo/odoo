@@ -434,6 +434,12 @@ class hr_payslip(osv.osv):
         return res
 
     def get_payslip_lines(self, cr, uid, contract_ids, payslip_id, context):
+        def _sum_salary_head(localdict, head, amount):
+            if head.parent_id:
+                localdict = _sum_salary_head(localdict, head.parent_id, amount)
+            localdict['heads'][head.code] = head.code in localdict['heads'] and localdict['heads'][head.code] + amount or amount
+            return localdict
+
         result = []
         blacklist = []
         payslip = self.pool.get('hr.payslip').browse(cr, uid, payslip_id, context=context)
@@ -452,13 +458,14 @@ class hr_payslip(osv.osv):
             employee = contract.employee_id
             localdict.update({'employee': employee, 'contract': contract})
             for rule in self.pool.get('hr.salary.rule').browse(cr, uid, sorted_rule_ids, context=context):
+                localdict['result'] = None
                 #check if the rule can be applied
                 if self.pool.get('hr.salary.rule').satisfy_condition(cr, uid, rule.id, localdict, context=context) and rule.id not in blacklist:
                     amount = self.pool.get('hr.salary.rule').compute_rule(cr, uid, rule.id, localdict, context=context)
                     #set/overwrite the amount computed for this rule in the localdict
                     localdict['rules'][rule.code] = amount
                     #sum the amount for its salary head
-                    localdict['heads'][rule.category_id.code] = rule.category_id.code in localdict['heads'] and localdict['heads'][rule.category_id.code] + amount or amount
+                    localdict = _sum_salary_head(localdict, rule.category_id, amount)
                     vals = {
                         'name': rule.name,
                         'code': rule.code,
