@@ -2,7 +2,7 @@
 import sys, time
 
 import simplejson
-
+import random
 import openerpweb
 
 #----------------------------------------------------------
@@ -17,13 +17,17 @@ class PollServerMessageQueue(object):
         # should contains: {
         #   'user1234' : { s:1, m:"status message", timestamp: last_contact_timestamp }
         # }
-    def userlist():
-        # return user list
-        pass
+    def userlist(self, req):
+        userlist = [
+                    {"u": "Guest130205108745.47", "s": {"s": 1, "m": ""}, "g": "Users"},
+                    {"u": "Guest130209838956.76", "s": {"s": 1, "m": ""}, "g": "Users"},
+                ]
+
+        return userlist
 
     def write(self, m_type,  m_sender, m_recipent, m_message, m_group):
         # appends messages to l
-        # when status message uupdate users
+        # when status message update users
         pass
     def read(self, recpient, timestamp):
         # return matching message
@@ -38,6 +42,7 @@ class PollServer(openerpweb.Controller):
 
     @openerpweb.httprequest
     def login(self, req, **kw):
+                
         """
         --> POST http://ajaxim.com/wp-content/plugins/im/ajaxim.php/login
             Form Data
@@ -56,21 +61,26 @@ class PollServer(openerpweb.Controller):
                 ]
             }
         """
-        mq = req.applicationsession.setdefault("web_chat",PollServerMessageQueue())
-        print "chat login",kw
-        # r = 'loggued in'
+        mq = req.applicationsession.setdefault("web_chat", PollServerMessageQueue())
+        
+        #r = 'loggued in'
         #u = generate random.randint(0,2**32)
         #s = cherrypy cookie id
         #f = mq.userlist()
-        return  """
+        
+#        username = 'Guest'+ str(random.randint(0, 2**32))
+#        
+#        if not req.applicationsession.get('users'):
+#            req.applicationsession['users'] = [{'u': username, 's':{'s':1, 'm':''}, 'g':'Users'}]
+#        else:
+#            req.applicationsession['users'].append({'u': username, 's':{'s':1, 'm':''}, 'g':'Users'})
+        
+        return """
             {
                 "r":"logged in",
                 "u":"Guest130213866190.85",
                 "s":"f9e1811536f19ad5b9e00376f9ff1532",
-                "f":[
-                    {"u":"Guest130205108745.47","s":{"s":1,"m":""},"g":"Users"},
-                    {"u":"Guest130209838956.76","s":{"s":1,"m":""},"g":"Users"},
-                ]
+                "f":""" + str(mq.userlist(req)) + """
             }
         """
 
@@ -98,7 +108,7 @@ class PollServer(openerpweb.Controller):
             jsonp1302140441577([{"t":"s","s":"Guest130214038974.31","r":"","m":"0:"}]);
 
             receive message:
-            jsonp1302140191599([{"t":"m","s":"Guest130214008855.5","r":"Guest130214013134.26","m":"fuck"}]);
+            jsonp1302140191599([{"t":"m","s":"Guest130214008855.5","r":"Guest130214013134.26","m":"xxxxxx"}]);
 
             ('t' => $msg->type, 's' => $msg->from, 'r' => $msg->to, 'm' => $msg->message )
             mag type s or m
@@ -114,10 +124,10 @@ class PollServer(openerpweb.Controller):
                 # sleep 2
         # else
             # return emptylist
-        print "chat poll",kw
+            
         time.sleep(2)
         # it's http://localhost:8002/web_chat/pollserver/poll?method=long?callback=jsonp1302147330483&_1302147330483=
-        return '%s([{"t":"m","s":"Guest130214008855.5","r":"Guest130214013134.26","m":"fuck"}]);'%kw.get('callback','')
+        return '%s([{"t":"m","s":"Guest130214008855.5","r":"Guest130214013134.26","m":"xxxxxx"}]);'%kw.get('callback','')
         return None
 
     @openerpweb.jsonrequest
