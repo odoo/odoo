@@ -411,7 +411,6 @@ def get_account(sugar_obj, cr, uid, val, context=None):
     partner_address_id = False
     model_obj = sugar_obj.pool.get('ir.model.data')
     address_obj = sugar_obj.pool.get('res.partner.address')
-    partner_obj = sugar_obj.pool.get('res.partner')
     if val.get('parent_type') == 'Accounts':
         model_ids = model_obj.search(cr, uid, [('name', '=', val.get('parent_id')), ('model', '=', 'res.partner')])
         if model_ids:
@@ -561,7 +560,6 @@ def get_job_id(sugar_obj, cr, uid, val, context=None):
 def import_employees(sugar_obj, cr, uid, context=None):
     if not context:
         context = {}
-    job_id = False    
     map_employee = {'id' : 'user_hash',
                     'resource_id/.id': 'resource_id/.id',
                     'name': ['first_name', 'last_name'],
@@ -739,7 +737,6 @@ def get_opportunity_contact(sugar_obj,cr,uid, PortType, sessionid, val, partner_
 def import_opportunities(sugar_obj, cr, uid, context=None):
     if not context:
         context = {}
-    categ_id = False    
     partner_contact_name = False
     map_opportunity = {'id' : 'id',
         'name': 'name',
@@ -756,7 +753,6 @@ def import_opportunities(sugar_obj, cr, uid, context=None):
     }
     lead_obj = sugar_obj.pool.get('crm.lead')
     partner_obj = sugar_obj.pool.get('res.partner')
-    categ_obj = sugar_obj.pool.get('crm.case.categ')
     PortType, sessionid = sugar.login(context.get('username', ''), context.get('password', ''), context.get('url',''))
     sugar_data = sugar.search(PortType, sessionid, 'Opportunities')
     for val in sugar_data:
