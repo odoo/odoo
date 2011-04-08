@@ -35,8 +35,9 @@ openerp.base.GraphView = openerp.base.Controller.extend({
 		var self = this;
 		this.name = this.fields_view.name || this.fields_view.arch.attrs.string;
 		this.view_id = this.fields_view.view_id;
-		this.fields['partner_id'] = this.fields_view.arch.children[0].attrs.name;
+		this.fields['id'] = this.fields_view.arch.children[0].attrs.name;
 		this.fields['total'] = this.fields_view.arch.children[1].attrs.name;
+		this.graph_type = this.fields_view.arch.attrs.type;
 
 		this.rpc('/base_graph/graphview/get_events',
 				{'model': this.model,
@@ -48,27 +49,23 @@ openerp.base.GraphView = openerp.base.Controller.extend({
         this.$element.html(QWeb.render("GraphView", {"view": this, "fields_view": this.fields_view}));
 	},
 	create_graph: function(res) {
-		var result = res.result;
-
-	    var barChart1 = new dhtmlXChart({
-	    	view:"bar",
-			container:"chart1",
-	        value:"#amount_total#",
-			color:"#9abe00",
-            width:50,
-            tooltip: "#partner_id#",
-            xAxis:{
-				title:"Partner",
-				template:"#partner_id#"
-			},
-			yAxis:{
-                start:0,
-                end:10000,
-                step:1000,
-				title:"Total"
-			}
-		});
-	    barChart1.parse(result, "json");
+		if (this.graph_type == "bar"){
+		    var barChart1 = new dhtmlXChart({
+		    	view:"bar",
+				container:"chart1",
+		        value:"#"+this.fields['total']+"#",
+				color:"#9abe00",
+	            width:40,
+	            tooltip: "#"+this.fields['id']+"#",
+	            xAxis:{
+					template:"#"+this.fields['id']+"#"
+				},
+				yAxis:{
+					title: "Total"
+				}
+			});
+		    barChart1.parse(res, "json");
+		}
 	},
 
 

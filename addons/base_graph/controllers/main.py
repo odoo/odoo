@@ -61,5 +61,10 @@ class GraphView(openerpweb.Controller):
     def create_event(self, event_ids, model):
         self.events = model.read(event_ids, self.fields.values())
 
-        return {'result': self.events}
+        result = []
+        for i, evt in enumerate(self.events):
+            self.events[i].pop('id')
+            result.append(evt)
+
+        return result
 
