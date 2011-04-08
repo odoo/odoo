@@ -46,7 +46,6 @@ def generate_random_pass():
     random.shuffle(pass_chars)
     return ''.join(pass_chars[0:10])
 
-
 class share_create(osv.osv_memory):
     __logger = logging.getLogger('share.wizard')
     _name = 'share.wizard'
@@ -181,7 +180,6 @@ class share_create(osv.osv_memory):
         menu_obj._cache[key] = True
         return action_id
 
-
     def _cleanup_action_context(self, context_str, user_id):
         """Returns a dict representing the context_str evaluated (literal_eval) as
            a dict where items that are not useful for shared actions
@@ -207,21 +205,24 @@ class share_create(osv.osv_memory):
                 result = context_str
         return result
 
+    def _shared_action_def(self, cr, uid, wizard_data, context=None):
+         return {
+            'name': (_('%s (Shared)') % wizard_data.action_id.name)[:64],
+            'domain': wizard_data.domain,
+            'context': self._cleanup_action_context(wizard_data.action_id.context, uid),
+            'res_model': wizard_data.action_id.res_model,
+            'view_mode': wizard_data.action_id.view_mode,
+            'view_type': wizard_data.action_id.view_type,
+            'search_view_id': wizard_data.action_id.search_view_id.id,
+        }
+
     def _setup_action_and_shortcut(self, cr, uid, wizard_data, user_ids, new_users, context=None):
         """Create a shortcut to reach the shared data, as well as the corresponding action, for
            each user in ``user_ids``, and assign it as their home action."""
         user_obj = self.pool.get('res.users')
         menu_action_id = user_obj._get_menu(cr, uid, context=context)
         for user_id in user_ids:
-            values = {
-                'name': (_('%s (Shared)') % wizard_data.action_id.name)[:64],
-                'domain': wizard_data.domain,
-                'context': self._cleanup_action_context(wizard_data.action_id.context, user_id),
-                'res_model': wizard_data.action_id.res_model,
-                'view_mode': wizard_data.action_id.view_mode,
-                'view_type': wizard_data.action_id.view_type,
-                'search_view_id': wizard_data.action_id.search_view_id.id,
-            }
+            values = self._shared_action_def(cr, uid, wizard_data, context=None)
             action_id = self._create_shortcut(cr, user_id, values)
             if new_users:
                 user_obj.write(cr, UID_ROOT, [user_id], {'action_id': action_id})

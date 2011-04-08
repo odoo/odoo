@@ -19,31 +19,5 @@
 #
 ##############################################################################
 
-
-{
-    "name" : "Portal",
-    "version" : "0.3",
-    "depends" : ["base", "share"],
-    "author" : "OpenERP SA",
-    "category": 'Tools',
-    "description": """
-This module defines 'portals' to customize the access to your OpenERP database
-for external users.
-
-A portal defines customized user menu and access rights for a group of users
-(the ones associated to that portal).  It also associates user groups to the
-portal users (adding a group in the portal automatically adds it to the portal
-users, etc).  That feature is very handy when used in combination with the
-module 'share'.
-    """,
-    'website': 'http://www.openerp.com',
-    'data': ['security/portal_security.xml',
-             'security/ir.model.access.csv',
-             'portal_view.xml',
-             'wizard_view.xml',
-            ],
-    'installable': True,
-    'certificate' : '',
-}
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+import share_wizard
+import groups_wizard
