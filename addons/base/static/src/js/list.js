@@ -83,7 +83,6 @@ openerp.base.ListView = openerp.base.Controller.extend(
      * @returns {Promise} promise to the end of view rendering (list views are asynchronously filled for improved responsiveness)
      */
     do_fill_table: function(records) {
-        console.log("listview do_fill",records)
         this.rows = records;
 
         var $table = this.$element.find('table');
@@ -148,7 +147,6 @@ openerp.base.ListView = openerp.base.Controller.extend(
     },
     do_search: function (domains, contexts, groupbys) {
         var self = this;
-        console.log("listview do_search",domains)
         this.rpc('/base/session/eval_domain_and_context', {
             domains: domains,
             contexts: contexts,

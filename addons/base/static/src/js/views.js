@@ -141,7 +141,6 @@ openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
             this.sidebar = new openerp.base.Sidebar(null, this);
     },
     start: function() {
-        var self = this;
         var inital_view_loaded = this._super();
 
         // init sidebar
@@ -173,29 +172,30 @@ openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
             this.sidebar.stop();
         }
         this._super();
-    },
+    }
 });
 
 openerp.base.BaseWidget = openerp.base.Controller.extend({
     /**
-     * The name of the QWeb template that will be used for rendering. Must be redifined
-     * in subclasses or the render() method can not be used.
+     * The name of the QWeb template that will be used for rendering. Must be
+     * redefined in subclasses or the render() method can not be used.
      * 
      * @type string
      */
     template: null,
     /**
-     * The prefix used to generate an id automatically. Should be redifined in subclasses.
-     * If it is not defined, a default identifier will be used.
+     * The prefix used to generate an id automatically. Should be redefined in
+     * subclasses. If it is not defined, a default identifier will be used.
      * 
      * @type string
      */
     identifier_prefix: 'generic-identifier',
     /**
-     * Base class for widgets. Handle rendering (based on a QWeb template), identifier
-     * generation, parenting and destruction of the widget.
-     * Contructor. Also initialize the identifier.
-     * 
+     * Base class for widgets. Handle rendering (based on a QWeb template),
+     * identifier generation, parenting and destruction of the widget.
+     * Also initialize the identifier.
+     *
+     * @constructs
      * @params {openerp.base.search.BaseWidget} parent The parent widget.
      */
     init: function (parent, session) {
@@ -242,8 +242,8 @@ openerp.base.BaseWidget = openerp.base.Controller.extend({
         this._super();
     },
     /**
-     * Set the parent of this component, also unregister the previous parent if there
-     * was one.
+     * Set the parent of this component, also un-register the previous parent
+     * if there was one.
      * 
      * @param {openerp.base.BaseWidget} parent The new parent.
      */
@@ -289,7 +289,7 @@ openerp.base.Sidebar = openerp.base.BaseWidget.extend({
         this.$element.html(QWeb.render("ViewManager.sidebar.internal", _.extend({_:_}, this)));
         var self = this;
         this.$element.find("a").click(function(e) {
-            $this = jQuery(this);
+            var $this = jQuery(this);
             var i = $this.attr("data-i");
             var j = $this.attr("data-i");
             var action = self.sections[i].elements[j];
