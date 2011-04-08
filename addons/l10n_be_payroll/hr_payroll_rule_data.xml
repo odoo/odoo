@@ -4,38 +4,33 @@
 	<record id="hr_payroll_head_major" model="hr.salary.head">
 		<field name="name">Salaire Majore</field>
 		<field name="code">MAJ</field>
-		<field name="type">1</field>
 	</record>
 
         <record id="hr_payroll_head_onss" model="hr.salary.head">
                 <field name="name">Office National Securite Sociale</field>
                 <field name="code">ONSS</field>
-                <field name="type">2</field>
+                <field name="parent_id" ref="hr_payroll.ALW"/>
         </record>
 	
 
 	<record id="hr_payroll_head_pp" model="hr.salary.head">
 		<field name="name">Precompte Professionnel Bareme 2011</field>
 		<field name="code">P.P.</field>
-		<field name="type">2</field>
 	</record>
 
 	<record id="hr_payroll_head_imposable" model="hr.salary.head">
 		<field name="name">Montant Imposable</field>
 		<field name="code">IMP</field>
-		<field name="type">2</field>
 	</record>
 	
 	<record id="hr_payroll_head_non_imposable" model="hr.salary.head">
 		<field name="name">Montant Non Imposable</field>
 		<field name="code">N.IMP</field>
-		<field name="type">2</field>
 	</record>
 	
 	<record id="hr_payroll_head_child" model="hr.salary.head">
 		<field name="name">Child Allowance Belgium</field>
 		<field name="code">CH.ALW</field>
-		<field name="type">1</field>
 		<field name="note">Le bénéficiaire des revenus est un isolé OU le conjoint du bénéficiaire des revenus a également des
 					revenus professionnels (barème I/ barème II)
 					
@@ -45,71 +40,55 @@
 						a) Réduction pour enfants à charge</field>
 	</record>
 
-	<record id="hr_payroll_head_company_car" model="hr.salary.head">
-		<field name="name">Company car</field>
-		<field name="code">C.C.</field>
-		<field name="type">2</field>
-	</record>
 		
 	<record id="hr_payroll_head_reim_travel" model="hr.salary.head">
 		<field name="name">Reimbursement of travel expenses</field>
 		<field name="code">Tr.E</field>
-		<field name="type">1</field>
 	</record>	
 
 	<record id="hr_payroll_head_mis_ex_onss" model="hr.salary.head">
 		<field name="name">Miscellaneous exempt ONSS</field>
 		<field name="code">M.ONSS</field>
-		<field name="type">1</field>
 	</record>	
 
 
 	<record id="hr_payroll_head_ch_value" model="hr.salary.head">
 		<field name="name">Check Value Meal</field>
 		<field name="code">Ch.M</field>
-		<field name="type">1</field>
 	</record>	
 
 	
 	<record id="hr_payroll_head_ch_worker" model="hr.salary.head">
 		<field name="name">Check Value Meal - by worker</field>
 		<field name="code">Ch.wkr</field>
-		<field name="type">1</field>
 	</record>
 
-		
 	<record id="hr_payroll_head_insurance" model="hr.salary.head">
 		<field name="name">Insurance Group - by worker</field>
 		<field name="code">Ins</field>
-		<field name="type">1</field>
 	</record>
-
 		
 	<record id="hr_payroll_head_advantage" model="hr.salary.head">
 		<field name="name">Benefits of various nature</field>
 		<field name="code">Ben</field>
-		<field name="type">1</field>
 	</record>
 
 		
 	<record id="hr_payroll_head_suppl_net" model="hr.salary.head">
 		<field name="name">Net supplements</field>
 		<field name="code">Net.S</field>
-		<field name="type">1</field>
 	</record>	
 
 	
 	<record id="hr_payroll_head_retained_net" model="hr.salary.head">
 		<field name="name">Net retained</field>
 		<field name="code">Net.R</field>
-		<field name="type">1</field>
 	</record>	
 
 	
 	<record id="hr_payroll_head_vol_tax" model="hr.salary.head">
 		<field name="name">Voluntary tax</field>
 		<field name="code">V.Tax</field>
-		<field name="type">1</field>
 	</record>	
 	
 <!-- HR SALAR RULES-->
@@ -143,10 +122,9 @@
 		<field name="category_id" ref="hr_payroll_head_pp"/> 
                 <field name="name">Precompte Professionnel Bareme 2011</field>
 		<field name="code">P.P</field>
-		<field name="type">2</field>
 		<field name="sequence">50</field>
 		<field name="amount_select">fix</field>
-		<field name="condition_select">range</field>
+		<field name="condition_select">none</field>
 	<!--	<field eval="[(6, 0, [ref('hr_payroll_rules_baremeI'), ref('hr_payroll_rules_baremeII'), ref('hr_payroll_rules_baremeIII')])]" name="child_ids"/>-->
 	</record>
 	
@@ -155,8 +133,7 @@
 		<field name="parent_rule_id" ref="hr_payroll_rules_p_p_b1"/>
 		<field name="name">Precompte Professionnel</field>
 		<field name="code">B.I.</field>
-		<field name="type">2</field>
-		<field name="amount_select">code</field>
+		<field name="amount_select">fix</field>
 		<field name="sequence">50</field>
 		<field name="condition_select">python</field>
 		<field name="condition_python">result = employee.marital.name=='single'</field>
@@ -167,7 +144,6 @@
 		<field name="parent_rule_id" ref="hr_payroll_rules_p_p_b1"/>
 		<field name="name">Precompte Professionnel</field>
 		<field name="code">B.II</field>
-		<field name="type">2</field>
 		<field name="amount_select">fix</field>
 		<field name="sequence">50</field>
 		<field name="condition_select">python</field>
@@ -179,7 +155,6 @@
 		<field name="parent_rule_id" ref="hr_payroll_rules_p_p_b1"/>
 		<field name="name">Precompte Professionnel</field>
 		<field name="code">B.III</field>
-		<field name="type">2</field>
 		<field name="amount_select">fix</field>
 		<field name="sequence">50</field>
 		<field name="condition_select">python</field>
@@ -191,30 +166,38 @@
 		<field name="category_id" ref="hr_payroll_head_child"/>
 		<field name="name">Child Allowance Belgium</field>
 		<field name="code">Ch.A</field>
-		<field name="type">1</field>
 		<field name="amount_select">fix</field>
 		<field name="sequence">51</field>
 		<field name="condtion_select">range</field>
 		<field name="condition_range">employee.children</field>
 	</record>
 
-	<record id="hr_payroll_rules_company_car" model="hr.salary.rule">
-		<field name="category_id" ref="hr_payroll_head_company_car"/>
+	<record id="hr_payroll_rules_company_car_1" model="hr.salary.rule">
+		<field name="category_id" ref="hr_payroll.ALW"/>
 		<field name="name">Company car</field>
-		<field name="code">C.C.</field>
-		<field name="type">2</field>
-		<field name="amount_select">fix</field>
-		<field name="sequence">60</field>
-		<field name="condition_select">none</field>
+		<field name="code">car 1</field>
+		<field name="sequence">15</field>
+		<field name="condition_select">python</field>
+		<field name="condition_python">result = bool(contract.company_car)</field>
 		<field name="amount_select">code</field>
 		<field name="amount_python_compute">result = contract.company_car</field>
+	</record>
+
+	<record id="hr_payroll_rules_company_car_2" model="hr.salary.rule">
+		<field name="category_id" ref="hr_payroll.DED"/>
+		<field name="name">Retenue Company car</field>
+		<field name="code">car 2</field>
+		<field name="sequence">60</field>
+		<field name="condition_select">python</field>
+		<field name="condition_python">result = contract.company_car</field>
+		<field name="amount_select">code</field>
+		<field name="amount_python_compute">result = -contract.company_car</field>
 	</record>
 	
 	<record id="hr_payroll_rules_ch_value" model="hr.salary.rule">
 		<field name="category_id" ref="hr_payroll_head_ch_value"/>
 		<field name="name">Check Value Meal</field>
 		<field name="code">Ch.M.</field>
-		<field name="type">1</field>
 		<field name="amount_select">fix</field>
 		<field name="sequence">65</field>
 		<field name="condition_select">none</field>
