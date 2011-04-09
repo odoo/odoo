@@ -20,7 +20,7 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
             if (this.viewmanager) {
                 this.viewmanager.stop();
             }
-            this.viewmanager = new openerp.base.ViewManagerAction(this.session,this.element_id, action, false);
+            this.viewmanager = new openerp.base.ViewManagerAction(this.session,this.element_id, action, true);
             this.viewmanager.start();
         }
     }
@@ -141,7 +141,6 @@ openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
             this.sidebar = new openerp.base.Sidebar(null, this);
     },
     start: function() {
-        var self = this;
         var inital_view_loaded = this._super();
 
         // init sidebar
@@ -159,10 +158,13 @@ openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
                 search_defaults[match[1]] = value;
             }
         });
-        var searchview_loaded = this.setup_search_view(view_id,search_defaults);
+        var searchview_loaded = null;
+        if (view_id) {
+            searchview_loaded = this.setup_search_view(view_id,search_defaults);
+        }
 
         // schedule auto_search
-        if (this.action['auto_search']) {
+        if (searchview_loaded != null && this.action['auto_search']) {
             $.when(searchview_loaded, inital_view_loaded)
                 .then(this.searchview.do_search);
         }
@@ -173,29 +175,30 @@ openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
             this.sidebar.stop();
         }
         this._super();
-    },
+    }
 });
 
 openerp.base.BaseWidget = openerp.base.Controller.extend({
     /**
-     * The name of the QWeb template that will be used for rendering. Must be redifined
-     * in subclasses or the render() method can not be used.
+     * The name of the QWeb template that will be used for rendering. Must be
+     * redefined in subclasses or the render() method can not be used.
      * 
      * @type string
      */
     template: null,
     /**
-     * The prefix used to generate an id automatically. Should be redifined in subclasses.
-     * If it is not defined, a default identifier will be used.
+     * The prefix used to generate an id automatically. Should be redefined in
+     * subclasses. If it is not defined, a default identifier will be used.
      * 
      * @type string
      */
     identifier_prefix: 'generic-identifier',
     /**
-     * Base class for widgets. Handle rendering (based on a QWeb template), identifier
-     * generation, parenting and destruction of the widget.
-     * Contructor. Also initialize the identifier.
-     * 
+     * Base class for widgets. Handle rendering (based on a QWeb template),
+     * identifier generation, parenting and destruction of the widget.
+     * Also initialize the identifier.
+     *
+     * @constructs
      * @params {openerp.base.search.BaseWidget} parent The parent widget.
      */
     init: function (parent, session) {
@@ -242,8 +245,8 @@ openerp.base.BaseWidget = openerp.base.Controller.extend({
         this._super();
     },
     /**
-     * Set the parent of this component, also unregister the previous parent if there
-     * was one.
+     * Set the parent of this component, also un-register the previous parent
+     * if there was one.
      * 
      * @param {openerp.base.BaseWidget} parent The new parent.
      */
@@ -274,27 +277,26 @@ openerp.base.Sidebar = openerp.base.BaseWidget.extend({
         this.view_manager = view_manager;
         this.sections = [];
     },
-    load_multi_actions: function() {
-        if (_.detect(this.sections, function(x) {return x.type=="multi_actions";}) != undefined)
-            return;
+    set_toolbar: function(toolbar) {
+        this.sections = [];
         var self = this;
-        this.rpc("/base/sidebar/get_actions",
-                {"model": this.view_manager.dataset.model}, function(result) {
-            self.sections.push({type: "multi_actions", elements:
-            _.map(result, function(x) {return {text:x[2].name, action:x}; })});
-            self.refresh();
+        _.each(["print", "action", "relate"], function(type) {
+            if (toolbar[type].length == 0)
+                return;
+            var section = {elements:toolbar[type]};
+            self.sections.push(section);
         });
+        this.refresh();
     },
     refresh: function() {
         this.$element.html(QWeb.render("ViewManager.sidebar.internal", _.extend({_:_}, this)));
         var self = this;
         this.$element.find("a").click(function(e) {
-            $this = jQuery(this);
+            var $this = jQuery(this);
             var i = $this.attr("data-i");
-            var j = $this.attr("data-i");
+            var j = $this.attr("data-j");
             var action = self.sections[i].elements[j];
-            // I know this doesn't work, one day it will
-            new openerp.base.ActionManager(this.view_manager, null).do_action(action);
+            (new openerp.base.ExternalActionManager(self.view_manager.session, null)) .handle_action(action);
             e.stopPropagation();
             e.preventDefault();
         });
@@ -302,6 +304,30 @@ openerp.base.Sidebar = openerp.base.BaseWidget.extend({
     start: function() {
         this._super();
         this.refresh();
+    }
+});
+
+openerp.base.ExternalActionManager = openerp.base.Controller.extend({
+    handle_action: function(action) {
+        if(action.type=="ir.actions.act_window") {
+            if(action.target=="new") {
+                var element_id = _.uniqueId("act_window_dialog");
+                var dialog = $('<div id="'+element_id+'"></div>');
+                dialog.dialog({
+                    title: action.name
+                });
+                var viewmanager = new openerp.base.ViewManagerAction(this.session ,element_id, action, false);
+                viewmanager.start();
+            } else if (action.target == "current") {
+                this.rpc("/base/session/save_session_action", {the_action:action}, function(key) {
+                    var url = window.location.href;
+                    //window.open();
+                });
+            }
+        }
+        // TODO: show an error like "not implemented" here
+        // since we don't currently have any way to handle errors do you have any better idea
+        // than using todos?
     }
 });
 

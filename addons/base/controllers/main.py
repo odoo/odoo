@@ -9,6 +9,8 @@ import openerpweb
 import openerpweb.ast
 import openerpweb.nonliterals
 
+import cherrypy
+
 # Should move to openerpweb.Xml2Json
 class Xml2Json:
     # xml2json-direct
@@ -168,25 +170,70 @@ class Session(openerpweb.Controller):
             'domain': domain,
             'group_by': group_by_sequence
         }
+
+    @openerpweb.jsonrequest
+    def save_session_action(self, req, the_action):
+        """
+        This method store an action object in the session object and returns an integer
+        identifying that action. The method get_session_action() can be used to get
+        back the action.
+        
+        :param the_action: The action to save in the session.
+        :type the_action: anything
+        :return: A key identifying the saved action.
+        :rtype: integer
+        """
+        saved_actions = cherrypy.session.get('saved_actions')
+        if not saved_actions:
+            saved_actions = {"next":0, "actions":{}}
+            cherrypy.session['saved_actions'] = saved_actions
+        # we don't allow more than 10 stored actions
+        if len(saved_actions["actions"]) >= 10:
+            del saved_actions["actions"][min(saved_actions["actions"].keys())]
+        key = saved_actions["next"]
+        saved_actions["actions"][key] = the_action
+        saved_actions["next"] = key + 1
+        return key
+
+    @openerpweb.jsonrequest
+    def get_session_action(self, req, key):
+        """
+        Gets back a previously saved action. This method can return None if the action
+        was saved since too much time (this case should be handled in a smart way).
+        
+        :param key: The key given by save_session_action()
+        :type key: integer
+        :return: The saved action or None.
+        :rtype: anything
+        """
+        saved_actions = cherrypy.session.get('saved_actions')
+        if not saved_actions:
+            return None
+        return saved_actions["actions"].get(key)
+        
         
 def load_actions_from_ir_values(req, key, key2, models, meta, context):
     Values = req.session.model('ir.values')
     actions = Values.get(key, key2, models, meta, context)
 
     for _, _, action in actions:
-        # values come from the server, we can just eval them
-        if isinstance(action['context'], basestring):
-            action['context'] = eval(
-                action['context'],
-                req.session.evaluation_context()) or {}
+        clean_action(action, req.session)
 
-        if isinstance(action['domain'], basestring):
-            action['domain'] = eval(
-                action['domain'],
-                req.session.evaluation_context(
-                    action['context'])) or []
-        fix_view_modes(action)
     return actions
+
+def clean_action(action, session):
+    # values come from the server, we can just eval them
+    if isinstance(action['context'], basestring):
+        action['context'] = eval(
+            action['context'],
+            session.evaluation_context()) or {}
+
+    if isinstance(action['domain'], basestring):
+        action['domain'] = eval(
+            action['domain'],
+            session.evaluation_context(
+                action['context'])) or []
+    fix_view_modes(action)
 
 def fix_view_modes(action):
     """ For historical reasons, OpenERP has weird dealings in relation to
@@ -354,9 +401,9 @@ class DataSet(openerpweb.Controller):
         return {'result': r}
 
 class View(openerpweb.Controller):
-    def fields_view_get(self, session, model, view_id, view_type, transform=True):
+    def fields_view_get(self, session, model, view_id, view_type, transform=True, toolbar=False, submenu=False):
         Model = session.model(model)
-        r = Model.fields_view_get(view_id, view_type)
+        r = Model.fields_view_get(view_id, view_type, {}, toolbar, submenu)
         if transform:
             context = {} # TODO: dict(ctx_sesssion, **ctx_action)
             xml = self.transform_view(r['arch'], session, context)
@@ -460,16 +507,16 @@ class FormView(View):
     _cp_path = "/base/formview"
 
     @openerpweb.jsonrequest
-    def load(self, req, model, view_id):
-        fields_view = self.fields_view_get(req.session, model, view_id, 'form')
+    def load(self, req, model, view_id, toolbar=False):
+        fields_view = self.fields_view_get(req.session, model, view_id, 'form', toolbar=toolbar)
         return {'fields_view': fields_view}
 
 class ListView(View):
     _cp_path = "/base/listview"
 
     @openerpweb.jsonrequest
-    def load(self, req, model, view_id):
-        fields_view = self.fields_view_get(req.session, model, view_id, 'tree')
+    def load(self, req, model, view_id, toolbar=False):
+        fields_view = self.fields_view_get(req.session, model, view_id, 'tree', toolbar=toolbar)
         return {'fields_view': fields_view}
 
 class SearchView(View):
@@ -479,15 +526,6 @@ class SearchView(View):
     def load(self, req, model, view_id):
         fields_view = self.fields_view_get(req.session, model, view_id, 'search')
         return {'fields_view': fields_view}
-    
-class SideBar(View):
-    _cp_path = "/base/sidebar"
-    
-    @openerpweb.jsonrequest
-    def get_actions(self, request, model, object_id=0):
-        result = load_actions_from_ir_values(request, "action", "client_action_multi",
-                                             [[model, object_id]], False, {})
-        return result
 
 class Action(openerpweb.Controller):
     _cp_path = "/base/action"

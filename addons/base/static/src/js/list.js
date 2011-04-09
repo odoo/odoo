@@ -36,7 +36,8 @@ openerp.base.ListView = openerp.base.Controller.extend(
     },
     start: function() {
         //this.log('Starting ListView '+this.model+this.view_id)
-        return this.rpc("/base/listview/load", {"model": this.model, "view_id":this.view_id}, this.on_loaded);
+        return this.rpc("/base/listview/load", {"model": this.model, "view_id":this.view_id,
+            toolbar:!!this.view_manager.sidebar}, this.on_loaded);
     },
     on_loaded: function(data) {
         this.fields_view = data.fields_view;
@@ -73,8 +74,9 @@ openerp.base.ListView = openerp.base.Controller.extend(
                 'tr', 'click', this.on_select_row);
 
         // sidebar stuff
-        if (this.view_manager.sidebar)
-            this.view_manager.sidebar.load_multi_actions();
+        if (this.view_manager.sidebar) {
+            this.view_manager.sidebar.set_toolbar(data.fields_view.toolbar);
+        }
     },
     /**
      * Fills the table with the provided records after emptying it
@@ -83,7 +85,6 @@ openerp.base.ListView = openerp.base.Controller.extend(
      * @returns {Promise} promise to the end of view rendering (list views are asynchronously filled for improved responsiveness)
      */
     do_fill_table: function(records) {
-        console.log("listview do_fill",records)
         this.rows = records;
 
         var $table = this.$element.find('table');
@@ -148,7 +149,6 @@ openerp.base.ListView = openerp.base.Controller.extend(
     },
     do_search: function (domains, contexts, groupbys) {
         var self = this;
-        console.log("listview do_search",domains)
         this.rpc('/base/session/eval_domain_and_context', {
             domains: domains,
             contexts: contexts,

@@ -30,7 +30,8 @@ openerp.base.FormView =  openerp.base.Controller.extend( /** @lends openerp.base
     },
     start: function() {
         //this.log('Starting FormView '+this.model+this.view_id)
-        return this.rpc("/base/formview/load", {"model": this.model, "view_id": this.view_id}, this.on_loaded);
+        return this.rpc("/base/formview/load", {"model": this.model, "view_id": this.view_id,
+            toolbar:!!this.view_manager.sidebar}, this.on_loaded);
     },
     on_loaded: function(data) {
         var self = this;
@@ -54,7 +55,7 @@ openerp.base.FormView =  openerp.base.Controller.extend( /** @lends openerp.base
 
         // sidebar stuff
         if (this.view_manager.sidebar) {
-            this.view_manager.sidebar.load_multi_actions();
+            this.view_manager.sidebar.set_toolbar(data.fields_view.toolbar);
         }
     },
     do_show: function () {
@@ -140,7 +141,7 @@ openerp.base.FormView =  openerp.base.Controller.extend( /** @lends openerp.base
                 var ajax = {
                     url: '/base/dataset/call',
                     async: false
-                }
+                };
                 return this.rpc(ajax, {
                     model: this.dataset.model,
                     method: method,
@@ -212,7 +213,7 @@ openerp.base.FormView =  openerp.base.Controller.extend( /** @lends openerp.base
         if (invalid) {
             this.on_invalid();
         } else {
-            this.log("About to save", values)
+            this.log("About to save", values);
             this.dataset.write(this.datarecord.id, values, this.on_saved);
         }
     },
@@ -244,8 +245,13 @@ openerp.base.FormView =  openerp.base.Controller.extend( /** @lends openerp.base
         }
     },
     do_search: function (domains, contexts, groupbys) {
+        this.notification['default']("Searching form");
     },
     on_action: function (action) {
+        this.notification['default']('Executing action ' + action);
+    },
+    do_cancel: function () {
+        this.notification['default']("Cancelling form");
     }
 });
 
@@ -698,7 +704,7 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
     },
     set_value: function(value) {
         this._super.apply(this, arguments);
-        var show_value = ''
+        var show_value = '';
         if (value != null && value !== false) {
             show_value = value[1];
             this.value = value[0];
@@ -713,17 +719,15 @@ openerp.base.form.FieldOne2ManyDatasSet = openerp.base.DataSetStatic.extend({
     write: function (id, data, callback) {
         this._super(id, data, callback);
     },
-    write: function (id, data, callback) {
-        this._super(id, data, callback);
-    },
     unlink: function() {
+        this.notification['default']('Unlinking o2m ' + this.ids);
     }
 });
 
 openerp.base.form.FieldOne2ManyViewManager = openerp.base.ViewManager.extend({
     init: function(session, element_id, dataset, views) {
         this._super(session, element_id, dataset, views);
-    },
+    }
 });
 
 openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({

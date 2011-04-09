@@ -99,7 +99,7 @@ openerp.base.DataSet =  openerp.base.Controller.extend( /** @lends openerp.base.
             context: this.context
         }, callback);
     },
-    unlink: function() {
+    unlink: function(ids) {
         this.notification['default']("Unlink", ids);
     },
     call: function (method, ids, args, callback) {
@@ -111,7 +111,7 @@ openerp.base.DataSet =  openerp.base.Controller.extend( /** @lends openerp.base.
             ids: ids,
             args: args
         }, callback);
-    },
+    }
 });
 
 openerp.base.DataSetStatic =  openerp.base.DataSet.extend({
@@ -123,7 +123,7 @@ openerp.base.DataSetStatic =  openerp.base.DataSet.extend({
     },
     read_slice: function (fields, offset, limit, callback) {
         this.read_ids(this.ids.slice(offset, offset + limit));
-    },
+    }
 });
 
 openerp.base.DataSetSearch =  openerp.base.DataSet.extend({
@@ -163,7 +163,7 @@ openerp.base.DataSetSearch =  openerp.base.DataSet.extend({
             }
             callback(records);
         });
-    },
+    }
 });
 
 openerp.base.DataSetRelational =  openerp.base.DataSet.extend( /** @lends openerp.base.DataSet# */{
