@@ -484,30 +484,17 @@ openerp.base.Session = openerp.base.BasicController.extend( /** @lends openerp.b
     }
 });
 
+// A controller takes an already existing element
+// new()
+// start()
 openerp.base.Controller = openerp.base.BasicController.extend( /** @lends openerp.base.Controller# */{
     /**
      * Controller manifest used to declare standard controller attributes
      */
     controller_manifest: {
-        register: [ "FormView.widget.char" ],
+        register: null,
         template: "",
-        elementpost: false,
-    },
-    /**
-     * @constructs
-     * @extends openerp.base.BasicController
-     */
-    init: function(parent_or_session, element_id) {
-        this._super(element_id);
-        // TODO migrate for backward compat
-        if(parent_or_session) {
-            if(parent_or_session.session) {
-                this.parent = parent_or_session;
-            } else {
-                this.session = parent_or_session;
-            }
-
-        }
+        element_post_prefix: false,
     },
     /**
      * Controller registry, 
@@ -517,8 +504,69 @@ openerp.base.Controller = openerp.base.BasicController.extend( /** @lends opener
     /**
      * Add a new child controller
      */
-    controller_add: function(key,element_id) {
-        var obj = "";
+    controller_get: function(key) {
+        return this.controller_registry[key];
+        // OR should contrustct it ? setting parent correctly ?
+        // function construct(constructor, args) {
+        //     function F() {
+        //         return constructor.apply(this, args);
+        //     }
+        //     F.prototype = constructor.prototype;
+        //     return new F();
+        // }
+        // var obj = this.controller_registry[key];
+        // if(obj) {
+        //     return construct(obj, Array.prototype.slice.call(arguments, 1));
+        // }
+    },
+    controller_new: function(key) {
+        var self;
+        // OR should contrustct it ? setting parent correctly ?
+        function construct(constructor, args) {
+            function F() {
+                return constructor.apply(this, args);
+            }
+            F.prototype = constructor.prototype;
+            return new F();
+        }
+        var obj = this.controller_registry[key];
+        if(obj) {
+            // TODO Prepend parent
+            return construct(obj, Array.prototype.slice.call(arguments, 1));
+        }
+    },
+    /**
+     * @constructs
+     * @extends openerp.base.BasicController
+     */
+    init: function(parent_or_session, element_id) {
+        this._super(element_id);
+        this.controller_parent = null;
+        this.controller_children = [];
+        if(parent_or_session) {
+            if(parent_or_session.session) {
+                this.parent = parent_or_session;
+                this.session = this.parent.session;
+                if(this.parent.children) {
+                    this.parent.children.push(this);
+                }
+            } else {
+                // TODO remove Backward compatilbility
+                this.session = parent_or_session;
+            }
+        }
+        // Apply manifest options
+        if(this.controller_manifest) {
+            var register = this.controller_manifest.register;
+            // TODO accept a simple string
+            if(register) {
+                for(var i=0; i<register.length; i++) {
+                    this.controller_registry[register[i]] = this;
+                }
+            }
+            // TODO if post prefix
+            //this.element_id = _.uniqueId(_.toArray(arguments).join('_'));
+        };
     },
     /**
      * Performs a JSON-RPC call
@@ -532,6 +580,105 @@ openerp.base.Controller = openerp.base.BasicController.extend( /** @lends opener
     rpc: function(url, data, success, error) {
         // TODO: support additional arguments ?
         return this.session.rpc(url, data, success, error);
+    }
+});
+
+// A widget is a controller that doesnt take an element_id
+// it render its own html that you should insert into the dom
+// and bind it a start()
+//
+// new()
+// render() and insert it place it where you want
+// start()
+openerp.base.BaseWidget = openerp.base.Controller.extend({
+    /**
+     * The name of the QWeb template that will be used for rendering. Must be
+     * redefined in subclasses or the render() method can not be used.
+     * 
+     * @type string
+     */
+    template: null,
+    /**
+     * The prefix used to generate an id automatically. Should be redefined in
+     * subclasses. If it is not defined, a default identifier will be used.
+     * 
+     * @type string
+     */
+    identifier_prefix: 'generic-identifier',
+    /**
+     * Base class for widgets. Handle rendering (based on a QWeb template),
+     * identifier generation, parenting and destruction of the widget.
+     * Also initialize the identifier.
+     *
+     * @constructs
+     * @params {openerp.base.search.BaseWidget} parent The parent widget.
+     */
+    init: function (parent, session) {
+        this._super(session);
+        this.children = [];
+        this.parent = null;
+        this.set_parent(parent);
+        this.make_id(this.identifier_prefix);
+    },
+    /**
+     * Sets and returns a globally unique identifier for the widget.
+     *
+     * If a prefix is appended, the identifier will be appended to it.
+     *
+     * @params sections prefix sections, empty/falsy sections will be removed
+     */
+    make_id: function () {
+        this.element_id = _.uniqueId(_.toArray(arguments).join('_'));
+        return this.element_id;
+    },
+    /**
+     * "Starts" the widgets. Called at the end of the rendering, this allows
+     * to get a jQuery object referring to the DOM ($element attribute).
+     */
+    start: function () {
+        this._super();
+        var tmp = document.getElementById(this.element_id);
+        this.$element = tmp ? $(tmp) : null;
+    },
+    /**
+     * "Stops" the widgets. Called when the view destroys itself, this
+     * lets the widgets clean up after themselves.
+     */
+    stop: function () {
+        var tmp_children = this.children;
+        this.children = [];
+        _.each(tmp_children, function(x) {
+            x.stop();
+        });
+        if(this.$element != null) {
+            this.$element.remove();
+        }
+        this.set_parent(null);
+        this._super();
+    },
+    /**
+     * Set the parent of this component, also un-register the previous parent
+     * if there was one.
+     * 
+     * @param {openerp.base.BaseWidget} parent The new parent.
+     */
+    set_parent: function(parent) {
+        if(this.parent) {
+            this.parent.children = _.without(this.parent.children, this);
+        }
+        this.parent = parent;
+        if(this.parent) {
+            parent.children.push(this);
+        }
+    },
+    /**
+     * Render the widget. This.template must be defined.
+     * The content of the current object is passed as context to the template.
+     * 
+     * @param {object} additional Additional context arguments to pass to the template.
+     */
+    render: function (additional) {
+        return QWeb.render(this.template, _.extend({}, this, additional != null ? additional : {}));
     }
 });
 
@@ -557,6 +704,9 @@ openerp.base.CrashManager = openerp.base.Controller.extend({
 });
 
 openerp.base.Loading =  openerp.base.Controller.extend({
+    controller_manifest: {
+        register: ["Loading"],
+    },
     init: function(session, element_id) {
         this._super(session, element_id);
         this.count = 0;
