@@ -566,10 +566,36 @@ class ListView(View):
         rows = DataSet().do_search_read(request, model,
                                         offset=offset, limit=limit,
                                         domain=domain)
-        # rows pipe
-        #   process_attrs
-        #   process_colors
-        return rows
+        eval_context = request.session.evaluation_context(
+            request.context)
+        return [
+            {'data': row,
+             'attrs': self.process_attrs(view, row, eval_context),
+             'color': self.process_colors(view, row, eval_context)}
+            for row in rows
+        ]
+
+    def process_attrs(self, view, row, context):
+        pass
+
+    def process_colors(self, view, row, context):
+        colors = view['arch']['attrs'].get('colors')
+
+        if not colors:
+            return None
+
+        color = [
+            pair.split(':')[0]
+            for pair in colors.split(';')
+            if eval(pair.split(':')[1], dict(context, **row))
+        ]
+
+        if not color:
+            return None
+        elif len(color) == 1:
+            return color[0]
+        return 'maroon'
+
 
 class SearchView(View):
     _cp_path = "/base/searchview"

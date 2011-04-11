@@ -205,3 +205,36 @@ class ListViewTest(unittest2.TestCase):
 
         self.assertEqual(view['arch']['attrs']['editable'],
                          'bottom')
+
+    def test_color_nocolor(self):
+        self.assertEqual(
+            self.view.process_colors(
+                {'arch': {'attrs': {}, 'children': []}}, {}, {}),
+            None)
+    def test_color_literal(self):
+        self.assertEqual(
+            self.view.process_colors(
+                {'arch': {'attrs': {'colors': 'black:1'}}, 'children': []},
+                {}, {}),
+            'black')
+    def test_color_miss(self):
+        self.assertEqual(
+            self.view.process_colors(
+                {'arch': {'attrs': {'colors': "grey:state in ('cancelled','done');blue:state in ('pending')"}},
+                 'children': []
+                }, {'state': 'open'}, {}),
+            None)
+    def test_color_compute(self):
+        self.assertEqual(
+            self.view.process_colors(
+                {'arch': {'attrs': {'colors': "grey:state in ('cancelled','done');blue:state in ('pending')"}},
+                 'children': []
+                }, {'state': 'done'}, {}),
+            'grey')
+    def test_color_multiple(self):
+        self.assertEqual(
+            self.view.process_colors(
+                {'arch': {'attrs': {'colors': "grey:state in ('cancelled','done');blue:state in ('done')"}},
+                 'children': []
+                }, {'state': 'done'}, {}),
+            'maroon')

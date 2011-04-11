@@ -197,9 +197,14 @@
     </thead>
 </t>
 <t t-name="ListView.rows" t-foreach="rows" t-as="row">
-    <t t-call="ListView.row"/>
+    <t t-call="ListView.row">
+        <t t-set="style" t-value="null"/>
+        <t-if test="row.color">
+            <t t-set="style" t-value="'color: ' + row.color"/>
+        </t-if>
+    </t>
 </t>
-<tr t-name="ListView.row">
+<tr t-name="ListView.row" t-att-style="style">
     <th t-if="options.selectable" class="oe-record-selector">
         <input type="checkbox"/>
     </th>
@@ -208,8 +213,8 @@
         <td t-if="column.invisible !== '1'" t-att-title="column.help">
             <t t-set="is_button" t-value="column.tag === 'button'"/>
             <!-- TODO: get correct widget from form -->
-            <t t-if="!is_button and row[column.id]">
-                <t t-esc="row[column.id]"/>
+            <t t-if="!is_button and row['data'][column.id]">
+                <t t-esc="row['data'][column.id]"/>
             </t>
             <button type="button" t-att-title="column.help"
                     t-if="is_button">
