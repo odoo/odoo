@@ -305,8 +305,28 @@ body.openerp {
 }
 
 /* Footer */
-.openerp .footer {
+.openerp div.oe_footer {
+    background: none repeat scroll 0 0 #CCCCCC;
+    overflow: hidden;
+    padding: 5px 0;
+    position: relative;
+    -moz-box-shadow: inset 0px 3px 5px rgba(0, 0, 0, 0.4);
+    -webkit-box-shadow: inset 0px 3px 5px rgba(0, 0, 0, 0.4);
+    box-shadow: inset 0px 3px 5px rgba(0, 0, 0, 0.4);
+}
+.openerp div.oe_footer p.oe_footer_powered {
+    left: 50%;
+    margin: 0;
+    padding: 0 15px;
+    color: #666666;
+    font-weight: bold;
+    font-size: 0.8em;
+    font-family: Ubuntu, Helvetica, sans-serif;
     text-align: center;
+}
+.openerp div.oe_footer p.oe_footer_powered a {
+    text-decoration: none;
+    color: #666666;
 }
 
 /* Main Application */
@@ -426,6 +446,22 @@ body.openerp {
     float: right;
 }
 
+.openerp label.oe_form_label_help {
+    cursor: help;
+}
+.openerp label.oe_form_label, .openerp label.oe_form_label_help {
+    display: block;
+    text-align: right;
+}
+.openerp label.oe_form_label_help span {
+    font-size: 80%;
+    color: darkgreen;
+    vertical-align:top;
+    position: relative;
+    top: -4px;
+    padding: 0 2px;
+}
+
 /* Inputs */
 .openerp input[type="text"], .openerp input[type="password"], .openerp select, .openerp textarea {
     -moz-box-sizing: border-box;
@@ -438,6 +474,7 @@ body.openerp {
     -webkit-border-radius: 3px;
     border-radius: 3px;
     background: white;
+    min-width: 90px;
 }
 .openerp input[type="text"], .openerp input[type="password"], .openerp select, .openerp .button {
     height: 22px;
