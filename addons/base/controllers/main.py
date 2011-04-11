@@ -424,19 +424,16 @@ class View(openerpweb.Controller):
         :param dict context: evaluation context
         """
         # If @attrs is normalized in json by server, the eval should be replaced by simplejson.loads
-        attrs = eval(elem.attrib.get('attrs', '{}'))
+        attrs = openerpweb.ast.literal_eval(elem.get('attrs', '{}'))
         if 'states' in elem.attrib:
-            if 'invisible' not in attrs:
-                attrs['invisible'] = []
-                # This should be done by the server
-            attrs['invisible'].append(('state', 'not in', elem.attrib['states'].split(',')))
-            del(elem.attrib['states'])
+            attrs.setdefault('invisible', [])\
+                .append(('state', 'not in', elem.attrib.pop('states').split(',')))
         if attrs:
-            elem.attrib['attrs'] = simplejson.dumps(attrs)
+            elem.set('attrs', simplejson.dumps(attrs))
         for a in ['invisible', 'readonly', 'required']:
             if a in elem.attrib:
                 # In the XML we trust
-                avalue = bool(eval(elem.attrib.get(a, 'False'),
+                avalue = bool(eval(elem.get(a, 'False'),
                                    {'context': context or {}}))
                 if not avalue:
                     del elem.attrib[a]
