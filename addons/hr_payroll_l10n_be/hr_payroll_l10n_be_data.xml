@@ -179,26 +179,38 @@
 		<field name="condition_range">employee.children</field>
 	</record>
 
+	<record id="hr_payroll_rules_company_car_parent" model="hr.salary.rule">
+		<field name="category_id" ref="hr_payroll_head_company_car"/>
+		<field name="name">Company Car</field>
+		<field name="code">car</field>
+		<field name="amount_select">fix</field>
+		<field name="sequence">15</field>
+		<field name="condtion_select">none</field>
+		<field name="appears_on_payslip">False</field>
+	</record>
+
 	<record id="hr_payroll_rules_parent_company_car" model="hr.salary.rule">
 		<field name="category_id" ref="hr_payroll_head_company_car"/>
 		<field name="name">Company car</field>
+                <field name="parent_rule_id" ref="hr_payroll_rules_company_car_parent"/>
 		<field name="code">car 1</field>
 		<field name="sequence">15</field>
 		<field name="condition_select">python</field>
-		<field name="condition_python">result = bool(contract.company_car)</field>
+		<field name="condition_python">result = bool(contract.company_car_wkr)</field>
 		<field name="amount_select">code</field>
-		<field name="amount_python_compute">result = contract.company_car</field>
+		<field name="amount_python_compute">result = contract.company_car_wkr</field>
 	</record>
 
 	<record id="hr_payroll_rules_company_car_2" model="hr.salary.rule">
 		<field name="category_id" ref="hr_payroll.DED"/>
 		<field name="name">Retenue Company car</field>
+                <field name="parent_rule_id" ref="hr_payroll_rules_company_car_parent"/>
 		<field name="code">car 2</field>
-		<field name="sequence">60</field>
+		<field name="sequence">160</field>
 		<field name="condition_select">python</field>
-		<field name="condition_python">result = contract.company_car</field>
+		<field name="condition_python">result = contract.company_car_wkr</field>
 		<field name="amount_select">code</field>
-		<field name="amount_python_compute">result = -contract.company_car</field>
+		<field name="amount_python_compute">result = -contract.company_car_wkr</field>
 	</record>
 
 <!--	<record id="hr_payroll_rules_emp_company_car" model="hr.salary.rule">
@@ -365,7 +377,7 @@
         <record id="hr_payroll_salary_structure_employee" model="hr.payroll.structure">
             <field name="code">C.P.218</field>
             <field name="name">Belgian Employee</field>
-	    <field eval="[(6, 0, [ref('hr_payroll_rules_onss_rule'),ref('hr_payroll_rules_p_p_b1'),ref('hr_payroll_rules_child_alw')])]" name="rule_ids"/>
+	    <field eval="[(6, 0, [ref('hr_payroll_rules_company_car_parent'),ref('hr_payroll_rules_onss_rule'),ref('hr_payroll_rules_p_p_b1'),ref('hr_payroll_rules_child_alw')])]" name="rule_ids"/>
 	    <field name="company_id" ref="base.main_company"/>	
 	    <field name="parent_id" ref="hr_payroll.structure_base"/>
         </record>
