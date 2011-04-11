@@ -153,10 +153,8 @@
                 <field name="name">Check Value Meal</field>
                 <field name="code">Ch.M.</field>
                 <field name="amount_select">fix</field>
-                <field name="sequence">65</field>
+                <field name="sequence">165</field>
                 <field name="condition_select">none</field>
-                <field name="amount_select">code</field>
-                <field name="amount_python_compute">result = contract.ch_value</field>
 		<field name="appears_on_payslip" eval="False"/>
 	</record>
 	
@@ -166,7 +164,7 @@
 		<field name="name">Check Value Meal, Company Part</field>
 		<field name="code">Ch.M.</field>
 		<field name="amount_select">fix</field>
-		<field name="sequence">65</field>
+		<field name="sequence">165</field>
 		<field name="amount_select">code</field>
 		<field name="amount_python_compute">result = -contract.ch_value</field>
 		<field name="condition_select">python</field>
