@@ -228,8 +228,9 @@ openerp.base.ExternalActionManager = openerp.base.Controller.extend({
                 viewmanager.start();
             } else if (action.target == "current") {
                 this.rpc("/base/session/save_session_action", {the_action:action}, function(key) {
-                    var url = window.location.href;
-                    //window.open();
+                    var url = window.location.protocol + "//" + window.location.host +
+                            window.location.pathname + "?" + jQuery.param({s_action:""+key});
+                    window.open(url);
                 });
             }
         }
