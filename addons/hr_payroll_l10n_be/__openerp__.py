@@ -46,9 +46,6 @@ Belgian Payroll system.
 	 'hr_payroll_l10n_be_view.xml',
 	 'hr_payroll_l10n_be_data.xml',
 	 'data/hr.salary.rule.csv',
-	 'hr_payroll_l10n_be_view.xml',
-	 'hr_payroll_l10n_be_data.xml',
-	 'data/hr.salary.rule.csv',
     ],
     'installable': True
 }
