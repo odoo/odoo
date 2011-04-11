@@ -815,14 +815,14 @@ class ir_actions_todo(osv.osv):
         'sequence': fields.integer('Sequence'),
         'state': fields.selection(TODO_STATES, string='State', required=True),
         'name':fields.char('Name', size=64),
-        'restart': fields.selection([('on_trigger','On Trigger'),('always','Always'),('never','Never')],'Restart',required=True),
+        'type': fields.selection([('special','Special'),('normal','Normal'),('normal_recurring','Normal Recurring')],'Type',required=True),
         'groups_id':fields.many2many('res.groups', 'res_groups_action_rel', 'uid', 'gid', 'Groups'),
         'note':fields.text('Text', translate=True),
     }
     _defaults={
         'state': 'open',
         'sequence': 10,
-        'restart': 'on_trigger',
+        'type': 'special',
     }
     _order="sequence,name,id"
 

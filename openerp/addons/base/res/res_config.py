@@ -66,6 +66,7 @@ class res_config_configurable(osv.osv_memory):
     def _next_action(self, cr, uid, context=None):
         todos = self.pool.get('ir.actions.todo')
         self.__logger.info('getting next %s', todos)
+        # Don't forget to change the domain in search view, if this condition is changed
         active_todos = todos.search(cr, uid, [('state','=','open')],
                                     limit=1)
         if active_todos:
@@ -120,7 +121,7 @@ class res_config_configurable(osv.osv_memory):
     def start(self, cr, uid, ids, context=None):
         ids2 = self.pool.get('ir.actions.todo').search(cr, uid, [], context=context)
         for todo in self.pool.get('ir.actions.todo').browse(cr, uid, ids2, context=context):
-            if (todo.restart=='always'):
+            if (todo.type=='normal_recurring'):
                 todo.write({'state':'open'})
         return self.next(cr, uid, ids, context)
 

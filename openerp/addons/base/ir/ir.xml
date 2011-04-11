@@ -1868,7 +1868,7 @@
                 <tree editable="bottom" string="Config Wizard Steps">
                     <field name="sequence"/>
                     <field name="action_id"/>
-                    <field name="restart"/>
+                    <field name="type"/>
                     <field name="state" readonly="1"/>
                     <button name="action_launch" states="open" string="Launch" type="object" icon="gtk-execute" help="Launch Configuration Wizard"/>
                     <button name="action_open" states="cancel,skip,done"
@@ -1886,7 +1886,7 @@
                 <form editable="bottom" string="Config Wizard Steps">
                     <group colspan="4" col="6">
                         <field name="action_id"/>
-                        <field name="restart"/>
+                        <field name="type"/>
                         <field name="sequence"/>
                     </group>
                     <separator string="Groups" colspan="4"/>
@@ -1908,10 +1908,10 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Actions">
-                    <filter string="To Do" name="todo" icon="terp-camera_test" domain=" ['|',('state','=','open'),'&amp;',('state','=','skip'),('restart','=','on_trigger')]" help="Todo State Or (Skip State And ontrigger Restart)"/>
+                    <filter string="To Do" name="todo" icon="terp-camera_test" domain=" [('state','=','open')]" help="Wizards to be Launched"/>
                     <separator orientation="vertical"/>
                     <field name="state"/>
-                    <field name="restart"/>
+                    <field name="type"/>
                 </search>
             </field>
         </record>
@@ -1925,7 +1925,7 @@
         </record>
         <menuitem id="next_id_11" name="Configuration Wizards" parent="base.menu_config" sequence="1"/>
 
-        <menuitem action="act_ir_actions_todo_form" id="menu_ir_actions_todo_form"
+        <menuitem action="act_ir_actions_ do_form" id="menu_ir_actions_todo_form"
                 parent="next_id_11" groups="base.group_extended" sequence="20"/>
 
 
