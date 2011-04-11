@@ -283,10 +283,10 @@ openerp.base.form.Widget = openerp.base.Controller.extend({
     },
     process_attrs: function() {
         for (var a in this.attrs) {
-            this[a] = this.eval_attrs(this.attrs[a]);
+            this[a] = this.compute_domain(this.attrs[a]);
         }
     },
-    eval_attrs: function(expr) {
+    compute_domain: function(expr) {
         var stack = [];
         for (var i = 0; i < expr.length; i++) {
             var ex = expr[i];
