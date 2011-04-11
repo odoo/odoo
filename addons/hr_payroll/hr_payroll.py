@@ -68,10 +68,12 @@ class hr_payroll_structure(osv.osv):
 
         @return: returns a id of newly created record
         """
-        default = {
+        if not default:
+            default = {}
+        default.update({
             'code': self.browse(cr, uid, id, context=context).code + "(copy)",
             'company_id': self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
-        }
+        })
         return super(hr_payroll_structure, self).copy(cr, uid, id, default, context=context)
 
     def get_all_rules(self, cr, uid, structure_ids, context=None):
@@ -244,6 +246,7 @@ class hr_payslip(osv.osv):
         'paid': fields.boolean('Made Payment Order ? ', required=False, readonly=True, states={'draft': [('readonly', False)]}),
         'note': fields.text('Description'),
         'contract_id': fields.many2one('hr.contract', 'Contract', required=False, readonly=True, states={'draft': [('readonly', False)]}),
+        'credit_note': fields.boolean('Credit Note', help="It indicates that the payslip has been refunded", readonly=True),
        #TODO put me back
        # 'details_by_salary_head': fields.function(_get_salary_rules, method=True, type='one2many', relation='hr.salary.rule', string='Details by Salary Head', multi='details_by_salary_head'),
     }
@@ -251,14 +254,17 @@ class hr_payslip(osv.osv):
         'date_from': lambda *a: time.strftime('%Y-%m-01'),
         'date_to': lambda *a: str(datetime.now() + relativedelta.relativedelta(months=+1, day=1, days=-1))[:10],
         'state': 'draft',
+        'credit_note': False,
         'company_id': lambda self, cr, uid, context: \
                 self.pool.get('res.users').browse(cr, uid, uid,
                     context=context).company_id.id,
     }
 
     def copy(self, cr, uid, id, default=None, context=None):
+        if not default:
+            default = {}
         company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
-        default = {
+        default.update({
             'line_ids': [],
             'move_ids': [],
             'move_line_ids': [],
@@ -267,7 +273,7 @@ class hr_payslip(osv.osv):
             'period_id': False,
             'basic_before_leaves': 0.0,
             'basic_amount': 0.0
-        }
+        })
         return super(hr_payslip, self).copy(cr, uid, id, default, context=context)
 
     def cancel_sheet(self, cr, uid, ids, context=None):
@@ -281,6 +287,34 @@ class hr_payslip(osv.osv):
 
     def process_sheet(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'paid': True, 'state': 'done'}, context=context)
+
+    def refund_sheet(self, cr, uid, ids, context=None):
+        mod_obj = self.pool.get('ir.model.data')
+        wf_service = netsvc.LocalService("workflow")
+        for id in ids:
+            id_copy = self.copy(cr, uid, id, {'credit_note': True}, context=context)
+            self.compute_sheet(cr, uid, [id_copy], context=context)
+            wf_service.trg_validate(uid, 'hr.payslip', id_copy, 'verify_sheet', cr)
+            wf_service.trg_validate(uid, 'hr.payslip', id_copy, 'final_verify_sheet', cr)
+            wf_service.trg_validate(uid, 'hr.payslip', id_copy, 'process_sheet', cr)
+
+        form_id = mod_obj.get_object_reference(cr, uid, 'hr_payroll', 'view_hr_payslip_form')
+        form_res = form_id and form_id[1] or False
+        tree_id = mod_obj.get_object_reference(cr, uid, 'hr_payroll', 'view_hr_payslip_tree')
+        tree_res = tree_id and tree_id[1] or False
+        return {
+            'name':_("Refund Payslip"),
+            'view_mode': 'tree, form',
+            'view_id': False,
+            'view_type': 'form',
+            'res_model': 'hr.payslip',
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'current',
+            'domain': "[('id', 'in', %s)]" % [id_copy],
+            'views': [(tree_res, 'tree'), (form_res, 'form')],
+            'context': {}
+        }
 
     def verify_sheet(self, cr, uid, ids, context=None):
          #TODO clean me: this function should create the register lines accordingly to the rules computed (run the compute_sheet first)
