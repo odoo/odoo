@@ -370,7 +370,7 @@
             <field name="name">Belgian Employee</field>
 <!--	    <field eval="[(6, 0, [ref('hr_payroll_rules_onss_rule'),ref('hr_payroll_rules_p_p_b1'),ref('hr_payroll_rules_child_alw')])]" name="rule_ids"/>-->
 	    <field name="company_id" ref="base.main_company"/>	
-	    <field eval="[(6, 0, [ref('structure_base')])]" name="rule_ids"/>
+	    <field name="parent_id" ref="hr_payroll.structure_base"/>
         </record>
 
 	
@@ -379,7 +379,7 @@
             <field name="name">Belgian Worker</field>
 <!--	    <field eval="[(6, 0, [ref('hr_payroll_rules_maj'), ref('hr_payroll_rules_onss_rule'),ref('hr_payroll_rules_p_p_b1'),ref('hr_payroll_rules_child_alw')])]" name="rule_ids"/>-->
 	    <field name="company_id" ref="base.main_company"/>
-	    <field eval="[(6, 0, [ref('structure_base')])" name="rule_ids"/>
+	    <field name="parent_id" ref="hr_payroll.structure_base"/>
         </record>
     </data>
 </openerp>
