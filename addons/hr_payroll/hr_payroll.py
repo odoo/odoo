@@ -246,7 +246,7 @@ class hr_payslip(osv.osv):
         'paid': fields.boolean('Made Payment Order ? ', required=False, readonly=True, states={'draft': [('readonly', False)]}),
         'note': fields.text('Description'),
         'contract_id': fields.many2one('hr.contract', 'Contract', required=False, readonly=True, states={'draft': [('readonly', False)]}),
-        'credit_note': fields.boolean('Credit Note', help="It indicates that the payslip has been refunded", readonly=True),
+        'credit_note': fields.boolean('Credit Note', help="Indicates this payslip has a refund of another"),
        #TODO put me back
        # 'details_by_salary_head': fields.function(_get_salary_rules, method=True, type='one2many', relation='hr.salary.rule', string='Details by Salary Head', multi='details_by_salary_head'),
     }

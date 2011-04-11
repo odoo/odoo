@@ -196,6 +196,7 @@
                         <field name="struct_id" groups="base.group_extended" attrs="{'required':[('contract_id','&lt;&gt;',False)]}"/>
                         <field name="date_to"/>
                         <field name="name" colspan="4"/>
+                        <field name="credit_note" readonly="1"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Salary Computation" >
@@ -273,7 +274,6 @@
                        </page>
 
                     </notebook>
-                    <field name='credit_note' />
                     <group col="10" colspan="4">
                         <field name="state"/>
                         <button string="Cancel" icon="terp-dialog-close" name="cancel_sheet" states="draft,hr_check,confirm"/>
@@ -282,7 +282,7 @@
                         <button string="Approve Sheet" icon="terp-camera_test" name="final_verify_sheet" states="hr_check"/>
                         <button string="Pay Salary" icon="terp-dolar_ok!" name="process_sheet" states="confirm"/>
                         <button string="Set to Draft" icon="terp-stock_effects-object-colorize" name="draft" states="cancel"/>
-                        <button string="Refund" icon="gtk-execute" name="refund_sheet" states="done" type='object'/>
+                        <button string="Refund" icon="gtk-execute" name="refund_sheet" states="confirm,done" type='object'/>
                     </group>
                 </form>
             </field>
