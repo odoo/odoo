@@ -41,7 +41,24 @@
             <field name="category_id" ref="hr_payroll.DED"/>
             <field name="name">Provident Fund</field>
         </record>
-
+        
+        <record id="hr_salary_rule_ca_paolino" model="hr.salary.rule">
+            <field name="amount_select">fix</field>
+            <field eval="600.0" name="amount_fix"/>
+            <field name="code">CAP</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="name">Conveyance Allowance For Paolino</field>
+            <field name="sequence" eval="15"/>
+        </record>
+        
+        <record id="hr_salary_rule_meal_voucher" model="hr.salary.rule">
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = worked_days['WORK100']['number_of_days'] * 1</field>
+            <field name="code">MA</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="name">Meal Voucher</field>
+            <field name="sequence" eval="170"/>
+         </record>
         <!-- Salary Structure -->
 
          <record id="structure_001" model="hr.payroll.structure">
@@ -50,6 +67,14 @@
             <field eval="[(6, 0, [ref('hr_payslip_line_houserantallowance1'), ref('hr_payslip_line_convanceallowance1'),ref('hr_payslip_line_professionaltax1'),ref('hr_payslip_line_providentfund1')])]" name="rule_ids"/>
             <field name="company_id" ref="base.main_company"/>
             <field name="parent_id" ref="structure_base"/>
+        </record>
+        
+        <record id="structure_002" model="hr.payroll.structure">
+            <field name="code">MEQP</field>
+            <field name="name">Marketing Executive for Quentin Paolino</field>
+            <field eval="[(6, 0, [ref('hr_salary_rule_ca_paolino'),(hr_salary_rule_meal_voucher)])]" name="rule_ids"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="parent_id" ref="structure_001"/>
         </record>
 
         <!-- Employee -->
@@ -73,6 +98,19 @@
             <field name="notes">This is a First Contract</field>
             <field eval="4000.0" name="wage"/>
             <field eval="5" name="working_days_per_week"/>
+        </record>
+        
+        <record id="hr_contract_quentin_paolino" model="hr.contract">
+            <field name="name">Contract For Quentin Paolino</field>
+            <field name="type_id" ref="hr_contract.hr_contract_type_emp"/>
+            <field name="date_start" eval="time.strftime('%Y-%m')+'-1'"/>
+            <field name="date_end" eval="time.strftime('%Y')+'-12-31'"/>
+            <field name="struct_id" ref="hr_payroll.structure_002"/>
+            <field name="employee_id" ref="hr.employee2"/>
+            <field name="notes">This is Quentin Paolino's contract</field>
+            <field eval="5000.0" name="wage"/>
+            <field eval="5" name="working_days_per_week"/>
+            <field name="working_hours" ref="resource.timesheet_group1"/>
         </record>
 
     </data>
