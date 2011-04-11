@@ -911,7 +911,6 @@ openerp.base.WebClient = openerp.base.Controller.extend({
         this.action.start();
         
         // if using saved actions, load the action and give it to action manager
-        debugger;
         var parameters = jQuery.deparam(jQuery.param.querystring());
         if(parameters["s_action"] != undefined) {
             var key = parseInt(parameters["s_action"]);

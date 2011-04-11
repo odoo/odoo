@@ -311,7 +311,7 @@ body.openerp {
 
 /* Main Application */
 .openerp .application {
-    padding: 6px;
+    padding: 0px;
 }
 
 .openerp h2.oe_view_title {
@@ -481,8 +481,19 @@ body.openerp {
 
 /* Sidebar */
 .openerp .view-manager-main-table {
+    margin: 0;
     width:100%;
+    border-collapse:collapse;
 }
+
+.openerp .view-manager-main-table tbody {
+    vertical-align: top;
+}
+
+.openerp .view-manager-main-content {
+    padding: 6px;
+}
+
 .openerp .view-manager-main-sidebar {
     vertical-align: top;
     width:0;
@@ -493,6 +504,11 @@ body.openerp {
 .openerp .view-manager-main-sidebar .sidebar-main-div {
     padding:0;
     margin:0;
+    width:180px;
+    border-color: #1F1F1F;
+    border-style: solid;
+    border-width: 1px;
+    height:100%;
 }
 
 .openerp .view-manager-main-sidebar .sidebar-sub-div {
@@ -504,7 +520,6 @@ body.openerp {
     list-style-type: none;
     margin: 0;
     padding: 0;
-    width: 120px;
     border-bottom: solid 1px #1F1F1F;
 }
 
