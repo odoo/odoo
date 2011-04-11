@@ -25,7 +25,7 @@
 
         <record id="hr_payslip_line_professionaltax1" model="hr.salary.rule">
             <field name="amount_select">fix</field>
-            <field eval="15" name="sequence"/>
+            <field eval="150" name="sequence"/>
             <field eval="-200.0" name="amount_fix"/>
             <field name="code">PT</field>
             <field name="category_id" ref="hr_payroll.DED"/>
@@ -34,7 +34,7 @@
 
         <record id="hr_payslip_line_providentfund1" model="hr.salary.rule">
             <field name="amount_select">percentage</field>
-            <field eval="20" name="sequence"/>
+            <field eval="120" name="sequence"/>
             <field eval="-12.5" name="amount_percentage"/>
             <field name="amount_percentage_base">contract.wage</field>
             <field name="code">PF</field>
