@@ -2175,6 +2175,7 @@ class orm(orm_template):
                 if fget[groupby]['type'] in ('date', 'datetime'):
                     flist = "to_char(%s,'yyyy-mm') as %s " % (qualified_groupby_field, groupby)
                     groupby = "to_char(%s,'yyyy-mm')" % (qualified_groupby_field)
+                    qualified_groupby_field = groupby
                 else:
                     flist = qualified_groupby_field
             else:
