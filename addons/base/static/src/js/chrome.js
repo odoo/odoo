@@ -245,12 +245,7 @@ openerp.base.Notification =  openerp.base.BasicController.extend({
             text: text
         });
     },
-    // TODO remove to avoid default as attribute
-    'default': function(title, text) {
-        this.notify(title,text);
-    },
-    // TODO change into warn to avoid alert
-    alert: function(title, text) {
+    warn: function(title, text) {
         this.$element.notify('create', 'oe_notification_alert', {
             title: title,
             text: text
@@ -907,7 +902,7 @@ openerp.base.WebClient = openerp.base.Controller.extend({
         this.header.start();
         this.login.start();
         this.menu.start();
-        this.notification['default']("OpenERP Client", "The openerp client has been initialized.");
+        this.notification.notify("OpenERP Client", "The openerp client has been initialized.");
     },
     on_logged: function() {
         this.action =  new openerp.base.ActionManager(this.session, "oe_app");
