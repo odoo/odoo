@@ -373,18 +373,16 @@
         <record id="hr_payroll_salary_structure_employee" model="hr.payroll.structure">
             <field name="code">C.P.218</field>
             <field name="name">Belgian Employee</field>
-	    <field name="parent_id">structure_base</field>
 	    <field name="company_id" ref="base.main_company"/>	
-<!--	    <field eval="[(6, 0, [ref('hr_payroll_rules_onss_rule'),ref('hr_payroll_rules_p_p_b1'),ref('hr_payroll_rules_child_alw')])]" name="rule_ids"/>-->
+	    <field eval="[(6, 0, [ref('structure_base')])]" name="rule_ids"/>
         </record>
 
 	
         <record id="hr_payroll_salary_structure_worker" model="hr.payroll.structure">
             <field name="code">C.P.219</field>
             <field name="name">Belgian Worker</field>
-	    <field name="parent_id">structure_base</field>
 	    <field name="company_id" ref="base.main_company"/>
-<!--	    <field eval="[(6, 0, [ref('hr_payroll_rules_maj'), ref('hr_payroll_rules_onss_rule'),ref('hr_payroll_rules_p_p_b1'),ref('hr_payroll_rules_child_alw')])]" name="rule_ids"/>-->
+	    <field eval="[(6, 0, [ref('structure_base')])" name="rule_ids"/>
         </record>
     </data>
 </openerp>
