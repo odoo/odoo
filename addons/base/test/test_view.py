@@ -2,33 +2,16 @@ import xml.etree.ElementTree
 import mock
 
 import unittest2
+import simplejson
 
 import base.controllers.main
 import openerpweb.nonliterals
 import openerpweb.openerpweb
 
 #noinspection PyCompatibility
-class ViewTest(unittest2.TestCase):
+class DomainsAndContextsTest(unittest2.TestCase):
     def setUp(self):
         self.view = base.controllers.main.View()
-    def test_identity(self):
-        base_view = """
-            <form string="Title">
-                <group>
-                    <field name="some_field"/>
-                    <field name="some_other_field"/>
-                </group>
-                <field name="stuff"/>
-            </form>
-        """
-
-        pristine = xml.etree.ElementTree.fromstring(base_view)
-        transformed = self.view.transform_view(base_view, None)
-
-        self.assertEqual(
-             xml.etree.ElementTree.tostring(transformed),
-             xml.etree.ElementTree.tostring(pristine)
-        )
 
     def test_convert_literal_domain(self):
         e = xml.etree.ElementTree.Element(
@@ -115,3 +98,35 @@ class ViewTest(unittest2.TestCase):
             openerpweb.nonliterals.Context(
                 session, key=e.get('context').key).get_context_string(),
             context_string)
+
+class AttrsNormalizationTest(unittest2.TestCase):
+    def setUp(self):
+        self.view = base.controllers.main.View()
+
+    def test_identity(self):
+        base_view = """
+            <form string="Title">
+                <group>
+                    <field name="some_field"/>
+                    <field name="some_other_field"/>
+                </group>
+                <field name="stuff"/>
+            </form>
+        """
+
+        pristine = xml.etree.ElementTree.fromstring(base_view)
+        transformed = self.view.transform_view(base_view, None)
+
+        self.assertEqual(
+             xml.etree.ElementTree.tostring(transformed),
+             xml.etree.ElementTree.tostring(pristine)
+        )
+    def test_transform_states(self):
+        element = xml.etree.ElementTree.Element(
+            'field', states="open,closed")
+        self.view.normalize_attrs(element, {})
+
+        self.assertIsNone(element.get('states'))
+        self.assertEqual(
+            simplejson.loads(element.get('attrs')),
+            {'invisible': [['state', 'not in', ['open', 'closed']]]})
