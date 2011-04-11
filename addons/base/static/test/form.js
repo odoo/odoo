@@ -43,4 +43,14 @@ $(document).ready(function () {
         ok(openerp.base.form.compute_domain(domain, _.extend(
             {}, base, {'member_ids': {value: 3}})));
     });
+    test("compute_domain not", function () {
+        var fields = {
+            'a': {value: 5},
+            'group_method': {value: 'line'}
+        };
+        ok(openerp.base.form.compute_domain(
+            ['!', ['a', '=', 3]], fields));
+        ok(openerp.base.form.compute_domain(
+            ['!', ['group_method','=','count']], fields));
+    });
 });

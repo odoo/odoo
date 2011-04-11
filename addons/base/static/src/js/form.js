@@ -260,11 +260,23 @@ openerp.base.form = {};
 
 openerp.base.form.compute_domain = function(expr, fields) {
     var stack = [];
-    for (var i = 0; i < expr.length; i++) {
+    for (var i = expr.length - 1; i >= 0; i--) {
         var ex = expr[i];
         if (ex.length == 1) {
-            stack.push(ex[0]);
-            continue;
+            var top = stack.pop();
+            switch (ex[0]) {
+                case '|':
+                    stack.push(stack.pop() || top);
+                    continue;
+                case '&':
+                    stack.push(stack.pop() && top);
+                    continue;
+                case '!':
+                    stack.push(!top);
+                    continue;
+                default:
+                    throw new Error('Unknown domain operator ' + ex[0]);
+            }
         }
 
         var field = fields[ex[0]].value;
@@ -300,19 +312,6 @@ openerp.base.form.compute_domain = function(expr, fields) {
                 break;
             default:
                 this.log("Unsupported operator in attrs :", op);
-        }
-    }
-
-    for (var j = stack.length-1; j >- 1; j--) {
-        switch (stack[j]) {
-            case '|':
-                var result = stack[j + 1] || stack[j + 2];
-                stack.splice(j, 3, result);
-                break;
-            case '&':
-                var result = stack[j + 1] && stack[j + 2];
-                stack.splice(j, 3, result);
-                break;
         }
     }
     return _.indexOf(stack, false) == -1;
