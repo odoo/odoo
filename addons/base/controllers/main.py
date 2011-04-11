@@ -334,18 +334,17 @@ class DataSet(openerpweb.Controller):
         :param int offset: from which index should the results start being returned
         :param int limit: the maximum number of records to return
         :param list domain: the search domain for the query
-        :param dict context: the context in which the search should be executed
         :param list sort: sorting directives
         :returns: a list of result records
         :rtype: list
         """
         Model = request.session.model(model)
         ids = Model.search(domain or [], offset or 0, limit or False,
-                           sort or False, context or False)
+                           sort or False, request.context)
         if fields and fields == ['id']:
             # shortcut read if we only want the ids
             return map(lambda id: {'id': id}, ids)
-        return Model.read(ids, fields or False)
+        return Model.read(ids, fields or False, request.context)
 
     @openerpweb.jsonrequest
     def get(self, request, model, ids, fields=False):

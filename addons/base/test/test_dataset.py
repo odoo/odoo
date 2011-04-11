@@ -15,13 +15,14 @@ class TestDataSetController(unittest2.TestCase):
         self.read.return_value = []
 
         self.assertFalse(self.dataset.do_search_read(self.request, 'fake.model'))
-        self.read.assert_called_once_with([], False)
+        self.read.assert_called_once_with([], False, self.request.context)
 
     def test_regular_find(self):
         self.search.return_value = [1, 2, 3]
 
         self.dataset.do_search_read(self.request, 'fake.model')
-        self.read.assert_called_once_with([1, 2, 3], False)
+        self.read.assert_called_once_with([1, 2, 3], False,
+                                          self.request.context)
 
     def test_ids_shortcut(self):
         self.search.return_value = [1, 2, 3]
