@@ -13,7 +13,8 @@
 		 </xpath>
                  <xpath expr="/form/notebook/page/group/field[@name='advantages']" position="before">
 		    <field name="reim_travel"/>
-                    <field name="company_car"/>
+                    <field name="company_car_emp"/>
+		    <field name="company_car_wkr"/>
 		    <field name="mis_ex_onss"/>
 		    <field name="ch_value"/>
 		    <field name="ch_worker"/>
@@ -30,20 +31,34 @@
             </field>
         </record>
 
-        <record id="hr_contract.hr_hr_employee_view_for" model="ir.ui.view">
+	<record id="view_employee_passport_form" model="ir.ui.view">
+            <field name="name">hr.employee.passport.form</field>
+            <field name="model">hr.employee</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                <field name="marital" position="replace">
+                    <field name="marital" required="True"/>
+                   
+                </field>
+            </field>
+        </record>
+
+        <record id="hr_contract_hr_hr_employee_view_for" model="ir.ui.view">
             <field name="name">hr.hr.employee.view.for</field>
             <field name="model">hr.employee</field>
             <field name="inherit_id" ref="hr.view_employee_form"/>
-            <field name="arch" type="xml">
+	    <field name="sequence">20</field>
+            <field name="arch" type="xml">	
             <data>
                 <xpath expr="/form/notebook/page/group/field[@name='marital']" position="after">
-			<field name="statut_fiscal" help="Only if Married"/> 
-			<field name="handicap" help="Only if Married"/>
+			<field name="statut_fiscal" attrs="{'invisible':[('marital','!=','married')]}" colspan="1" help="Only if Married"/> 
+			<field name="handicap" attrs="{'invisible':[('marital','!=','married')]}" colspan="1" help="Only if Married"/>
 		</xpath>
-		<xpath expr="/form/notebook/page/group/field[@name='children']" position="after">
+<!--		<xpath expr="/form/notebook/page/group/field[@name='children']" position="after">
 			<field name="handicap_child"/>
 			<field name="number_handicap" attrs="{'invisible':[('handicap_child','!=',True)]}" colspan="1"/>
-		</xpath>
+		</xpath>-->
 	    </data>
             </field>
         </record>
