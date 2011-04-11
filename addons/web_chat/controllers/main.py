@@ -132,13 +132,16 @@ class PollServer(openerpweb.Controller):
 
         """
         
-        for i in range(60):
+        msg = []
+        
+        for i in range(5):
             received_msg = mq.read('Guest1', i);
             if received_msg:
                 msg = self._pollParseMessages(received_msg)
-                time.sleep(2)
+                time.sleep(1)
             else:
-                time.sleep(2)
+                msg = []
+                time.sleep(1)
             
         # for i in range(60):
             #r = mq.read(username,timestamp)
@@ -148,12 +151,14 @@ class PollServer(openerpweb.Controller):
                 # sleep 2
         # else
             # return emptylist
-            
-#        print "==============poll receive...", kw.get('callback')
+
+        msg = '[{"t":"m","s":"Guest130214008855.5","r":"Guest130214013134.26","m":"xxxxxx"}]'
+
 #        # it's http://localhost:8002/web_chat/pollserver/poll?method=long?callback=jsonp1302147330483&_1302147330483=
-        return '%s([{"t":"m","s":"Guest130214008855.5","r":"Guest130214013134.26","m":"xxxxxx"}]);'%kw.get('callback','')
         
-    @openerpweb.jsonrequest
+        return '%s'%kw.get('callback', '') + '(' + msg + ');'
+        
+    @openerpweb.httprequest
     def send(self, req, **kw):
         print "========= send ========", kw
         
