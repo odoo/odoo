@@ -262,7 +262,7 @@ class share_create(osv.osv_memory):
                         parent_model_browse = model_obj.browse(cr, UID_ROOT,
                                                                model_obj.search(cr, UID_ROOT, [('model','=',parent)]))[0]
                         if relation_field and (field._fields_id in parent_model._columns or \
-                                               field._fields_id in parent_model_inherit_fields):
+                                               field._fields_id in parent_model._inherit_fields):
                             local_rel_fields.append((relation_field, parent_model_browse))
                         else:
                             # TODO: can we setup a proper rule to restrict inherited models
