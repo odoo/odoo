@@ -1,32 +1,28 @@
 $(document).ready(function () {
-    var widget;
+    var openerp;
     module("form.widget", {
         setup: function () {
-            var openerp = window.openerp.init(true);
+            openerp = window.openerp.init(true);
             window.openerp.base.chrome(openerp);
             // views loader stuff
             window.openerp.base.data(openerp);
             window.openerp.base.views(openerp);
             window.openerp.base.form(openerp);
-            widget = new openerp.base.form.Widget({
-                'widgets': {},
-                'fields': {}
-            }, {
-                'attrs': {}
-            });
         }
     });
     test("compute_domain", function () {
-        widget.view.fields = {
+        var fields = {
             'a': {value: 3},
             'group_method': {value: 'line'},
             'select1': {value: 'day'},
             'rrule_type': {value: 'monthly'}
         };
-        ok(widget.compute_domain([['a', '=', 3]]));
-        ok(widget.compute_domain([['group_method','!=','count']]));
-        ok(widget.compute_domain([['select1','=','day'],
-                                  ['rrule_type','=','monthly']]));
+        ok(openerp.base.form.compute_domain(
+            [['a', '=', 3]], fields));
+        ok(openerp.base.form.compute_domain(
+            [['group_method','!=','count']], fields));
+        ok(openerp.base.form.compute_domain(
+            [['select1','=','day'], ['rrule_type','=','monthly']], fields));
     });
     test("compute_domain or", function () {
         var base = {
@@ -39,16 +35,12 @@ $(document).ready(function () {
                       '|', ['user_id','=',3],
                            ['member_ids', 'in', [3]]];
 
-        widget.view.fields = _.extend(
-            {}, base, {'section_id': {value: 42}});
-        ok(widget.compute_domain(domain));
+        ok(openerp.base.form.compute_domain(domain, _.extend(
+            {}, base, {'section_id': {value: 42}})));
+        ok(openerp.base.form.compute_domain(domain, _.extend(
+            {}, base, {'user_id': {value: 3}})));
 
-        widget.view.fields =  _.extend(
-            {}, base, {'user_id': {value: 3}});
-        ok(widget.compute_domain(domain));
-
-        widget.view.fields =  _.extend(
-            {}, base, {'member_ids': {value: 3}});
-        ok(widget.compute_domain(domain));
+        ok(openerp.base.form.compute_domain(domain, _.extend(
+            {}, base, {'member_ids': {value: 3}})));
     });
 });
