@@ -264,7 +264,7 @@ class product_pricelist(osv.osv):
                                     product_obj.price_get(cr, uid, [product_id],
                                         price_type.field,context=context)[product_id], round=False, context=context)
 
-                        if price:
+                        if price is not False:
                             price_limit = price
 
                             price = price * (1.0+(res['price_discount'] or 0.0))
