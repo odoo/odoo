@@ -1,5 +1,6 @@
 <openerp>
   <data>
+  
     <record id="view_base_setup_installer" model="ir.ui.view">
       <field name="name">base.setup.installer.view</field>
       <field name="model">base.setup.installer</field>
@@ -63,5 +64,105 @@
         <field name="sequence">2</field>
         <field name="restart">always</field>
     </record>
+    
+<!--     Migrate data from another application Conf Wiz-->
+
+    <record id="view_migrade_application_installer_modules" model="ir.ui.view">
+        <field name="name">migrade.application.installer.modules.form</field>
+        <field name="model">migrade.application.installer.modules</field>
+        <field name="type">form</field>
+        <field name="inherit_id" ref="base.res_config_installer"/>
+        <field name="arch" type="xml">
+            <data>
+                <form position="attributes">
+                    <attribute name="string">Migrate data from another application</attribute>
+                </form>
+                <separator string="title" position="attributes">
+                     <attribute name="string">Migrate data from another application</attribute>
+                </separator>
+                <xpath expr="//label[@string='description']" position="attributes">
+                    <attribute name="string">Import data from other applications. Following the selected application, you can import more or less type of data matching to OpenERP objects. Choose the application and then the data you want to import in OpenERP</attribute>
+                </xpath>
+                <xpath expr="//button[@string='Install Modules']" position="attributes">
+                    <attribute name="string">Configure</attribute>
+                </xpath>
+                <xpath expr='//separator[@string="vsep"]' position='attributes'>
+                    <attribute name='string'></attribute>
+                </xpath>
+                <group colspan="8">
+                    <field name="import_saleforce"/>
+                    <field name="import_sugarcrm"/>
+                    <field name="sync_google_contact"/>
+                    <field name="quickbooks_ippids"/>
+                </group>
+            </data>
+        </field>
+    </record>
+    
+    <record id="action_migrade_application_installer_modules" model="ir.actions.act_window">
+	     <field name="name">Migrate data from another application</field>
+	     <field name="type">ir.actions.act_window</field>
+	     <field name="res_model">migrade.application.installer.modules</field>
+	     <field name="view_id" ref="view_migrade_application_installer_modules"/>
+	     <field name="view_type">form</field>
+	     <field name="view_mode">form</field>
+	     <field name="target">new</field>
+   </record>
+ 
+   <record id="migrade_application_installer_modules_todo" model="ir.actions.todo">
+      <field name="action_id" ref="action_migrade_application_installer_modules"/>
+      <field name="restart">always</field>
+  </record>
+  
+          <!-- Import or create customers configartion view  -->
+
+	 <record id="view_import_create_installer" model="ir.ui.view">
+	     <field name="name">Import or create customers </field>
+	     <field name="model">product.installer</field>
+	     <field name="type">form</field>
+	     <field name="inherit_id" ref="base.res_config_view_base"/>
+	     <field name="arch" type="xml">
+	       <data>
+	         <form position="attributes">
+	           <attribute name="string">Import or create customers </attribute>
+	         </form>
+	         <separator string="title" position="attributes">
+	         <attribute name="string">Import or create customers </attribute>
+	           </separator>
+	         <xpath expr="//label[@string='description']"
+                 position="attributes">
+                <attribute name="string">Create some customers, suppliers and their contacts manually or import a CSV spreadsheet by clicking on the import link</attribute>
+              </xpath>
+	         <xpath expr='//separator[@string="vsep"]' position='attributes'>
+	               <attribute name='rowspan'>15</attribute>
+	               <attribute name='string'></attribute>
+	          </xpath>
+	           
+	           <group string="res_config_contents" position="replace">
+	               <group colspan="4">
+	                   <field colspan="4" name="customers" width="200"/>
+	             </group>
+	         </group>
+	       </data>
+	     </field>
+	 </record>
+	
+	 <record id="action_import_create_installer" model="ir.actions.act_window">
+	     <field name="name">Import or create customers </field>
+	     <field name="type">ir.actions.act_window</field>
+	     <field name="res_model">product.installer</field>
+	     <field name="view_id" ref="view_import_create_installer"/>
+	     <field name="view_type">form</field>
+	     <field name="view_mode">form</field>
+	     <field name="target">new</field>
+	 </record>
+
+    <!--          register configuration wizard -->
+	<record id="config_wizard_res_product_installer" model="ir.actions.todo">
+	    <field name="action_id" ref="action_import_create_installer"/>
+	    <field name="restart">never</field>
+	    <field name="state">skip</field>
+	</record>
+       
   </data>
 </openerp>

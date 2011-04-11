@@ -654,7 +654,8 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
-                  <field name="active" position="after">
+                  <field name="company_id" position="after">
+                  <separator string="Point of Sale" colspan="2"/>
                       <field name="income_pdt"/>
                       <field name="expense_pdt"/>
                       <field name="am_out"/>

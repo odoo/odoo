@@ -1177,14 +1177,10 @@ class sale_config_picking_policy(osv.osv_memory):
 
     _columns = {
         'name': fields.char('Name', size=64),
-        'picking_policy': fields.selection([
-            ('direct', 'Direct Delivery'),
-            ('one', 'All at Once')
-        ], 'Picking Default Policy', required=True, help="The Shipping Policy is used to configure per order if you want to deliver as soon as possible when one product is available or you wait that all products are available.."),
         'order_policy': fields.selection([
             ('manual', 'Invoice Based on Sales Orders'),
             ('picking', 'Invoice Based on Deliveries'),
-        ], 'Shipping Default Policy', required=True,
+        ], 'Invoice Method', required=True,
            help="You can generate invoices based on sales orders or based on shippings."),
         'step': fields.selection([
             ('one', 'Delivery Order Only'),
@@ -1196,7 +1192,6 @@ class sale_config_picking_policy(osv.osv_memory):
            "in one or two operations by the worker.")
     }
     _defaults = {
-        'picking_policy': 'direct',
         'order_policy': 'manual',
         'step': 'one'
     }
@@ -1204,7 +1199,6 @@ class sale_config_picking_policy(osv.osv_memory):
     def execute(self, cr, uid, ids, context=None):
         for o in self.browse(cr, uid, ids, context=context):
             ir_values_obj = self.pool.get('ir.values')
-            ir_values_obj.set(cr, uid, 'default', False, 'picking_policy', ['sale.order'], o.picking_policy)
             ir_values_obj.set(cr, uid, 'default', False, 'order_policy', ['sale.order'], o.order_policy)
             if o.step == 'two':
                 md = self.pool.get('ir.model.data')
