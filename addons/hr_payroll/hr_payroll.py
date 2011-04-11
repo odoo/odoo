@@ -51,10 +51,17 @@ class hr_payroll_structure(osv.osv):
         'note': fields.text('Description'),
         'parent_id':fields.many2one('hr.payroll.structure', 'Parent'),
     }
+
+    def _get_parent(self, cr, uid, context=None):
+        data_id = self.pool.get('ir.model.data').search(cr, uid, [('model', '=', 'hr.payroll.structure'), ('name', '=', 'structure_base')])
+        res = self.pool.get('ir.model.data').browse(cr, uid, data_id[0], context=context).res_id
+        return res or False
+
     _defaults = {
         'company_id': lambda self, cr, uid, context: \
                 self.pool.get('res.users').browse(cr, uid, uid,
                     context=context).company_id.id,
+        'parent_id': _get_parent,
     }
 
     def copy(self, cr, uid, id, default=None, context=None):
