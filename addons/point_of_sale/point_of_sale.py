@@ -114,10 +114,18 @@ class pos_order(osv.osv):
             if date_p:
                 res[order.id] = date_p
                 return res
-            cr.execute(" SELECT MAX(l.date) "
-                        " FROM account_move_line l, account_move m, account_invoice i, account_move_reconcile r, pos_order o "
-                        " WHERE i.move_id = m.id AND l.move_id = m.id AND l.reconcile_id = r.id AND o.id = %s AND o.invoice_id = i.id",
-                        (order.id,))
+            if order.invoice_id:
+                cr.execute(" SELECT MAX(l.date) "
+                            " FROM account_move_line l, account_move m, account_invoice i, account_move_reconcile r, pos_order o "
+                            " WHERE i.move_id = m.id AND l.move_id = m.id AND l.reconcile_id = r.id AND o.id = %s AND o.invoice_id = i.id",
+                            (order.id,))
+            else:
+                cr.execute("SELECT MAX(l.date) from account_move_line l "
+                            "left join account_bank_statement abs on (l.statement_id=abs.id)"
+                            "left join account_bank_statement_line absl on (absl.statement_id=abs.id) "
+                            "left join pos_order p on (p.id=absl.pos_statement_id) "
+                            "left join account_account a on (a.id=absl.account_id) "
+                            "where p.id=%s and l.reconcile_id is not NULL and a.reconcile=True", (order.id,))
             val = cr.fetchone()
             val = val and val[0] or None
             if val:
