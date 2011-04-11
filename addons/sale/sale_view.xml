@@ -521,7 +521,7 @@
         <act_window
         context="{'search_default_product_id': [active_id], 'default_product_id': active_id}"
         id="action_order_line_product_tree"
-        name="Product sales"
+        name="Sales order line"
         res_model="sale.order.line"
         src_model="product.product"
         groups="base.group_sale_salesman"/>
@@ -545,18 +545,16 @@
                 <attribute name="string">Configure Sales Order Logistics</attribute>
                   </separator>
                   <xpath expr="//label[@string='description']" position="attributes">
-                    <attribute name="string">Setup your sales workflow and default values.</attribute>
+                    <attribute name="string">Define your invoice method. A services company usually invoices based on sale orders while a retailer usually invoices based on deliveries.</attribute>
                   </xpath>
                 <xpath expr='//separator[@string="vsep"]' position='attributes'>
                       <attribute name='rowspan'>15</attribute>
                       <attribute name='string'></attribute>
                   </xpath>
                 <group string="res_config_contents" position="replace">
-                  <field name="picking_policy" groups="base.group_extended"/>
-                  <newline/>
                   <field name="order_policy"/>
                   <newline/>
-                  <field name="step"/>
+                  <field name="step" groups="base.group_extended"/>
                 </group>
                 <xpath expr='//button[@name="action_skip"]' position='replace'/>
               </data>
@@ -576,7 +574,7 @@
         <!-- register configuration wizard -->
         <record id="config_wizard_step_sale_picking_policy" model="ir.actions.todo">
             <field name="action_id" ref="action_config_picking_policy"/>
-            <field name="restart">always</field>
+            <field name="type">normal_recurring</field>
             <field name="groups_id" eval="[(6,0,[ref('base.group_extended')])]"/>
         </record>
 

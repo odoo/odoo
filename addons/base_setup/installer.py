@@ -145,7 +145,62 @@ class base_setup_installer(osv.osv_memory):
             elif i.state == 'installed':
                 if modules_selected:
                     for instl in modules_selected:
-                        cr.execute("update ir_actions_todo set restart='on_trigger' , state='open' from ir_model_data as data where data.res_id = ir_actions_todo.id and data.model =  'ir.actions.todo' and data.module  like '%"+instl+"%'")
+                        cr.execute("update ir_actions_todo set state='open' from ir_model_data as data where data.res_id = ir_actions_todo.id and data.model =  'ir.actions.todo' and data.module  like '%"+instl+"%'")
         
         return 
+    
 base_setup_installer()
+
+#Migrate data from another application Conf wiz
+
+class migrade_application_installer_modules(osv.osv_memory):
+    _name = 'migrade.application.installer.modules'
+    _inherit = 'res.config.installer'
+    _columns = {
+        'import_saleforce': fields.boolean('Import Saleforce',
+            help="For Import Saleforce"),
+        'import_sugarcrm': fields.boolean('Import Sugarcrm',
+            help="For Import Sugarcrm"),
+        'sync_google_contact': fields.boolean('Sync Google Contact',
+            help="For Sync Google Contact"),
+        'quickbooks_ippids': fields.boolean('Quickbooks Ippids',
+            help="For Quickbooks Ippids"),
+    }
+    
+migrade_application_installer_modules()
+
+class product_installer(osv.osv_memory):
+    _name = 'product.installer'
+    _inherit = 'res.config'
+    _columns = {
+                'customers': fields.selection([('create','Create'), ('import','Import')], 'Customers', size=32, required=True, help="Import or create customers"),
+
+    }
+    _defaults = {
+                 'customers': 'create',
+    }
+    
+    def execute(self, cr, uid, ids, context=None):
+        if context is None:
+             context = {}
+        data_obj = self.pool.get('ir.model.data')
+        val = self.browse(cr, uid, ids, context=context)[0]
+        if val.customers == 'create':
+            id2 = data_obj._get_id(cr, uid, 'base', 'view_partner_form')
+            if id2:
+                id2 = data_obj.browse(cr, uid, id2, context=context).res_id
+            return {
+                    'view_type': 'form',
+                    'view_mode': 'form',
+                    'res_model': 'res.partner',
+                    'views': [(id2, 'form')],
+                    'type': 'ir.actions.act_window',
+                    'target': 'current',
+                    'nodestroy':False,
+                }
+        if val.customers == 'import':
+            return {'type': 'ir.actions.act_window'}
+
+product_installer()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -9,10 +9,10 @@
       <field name="arch" type="xml">
           <data>
               <form position="attributes">
-                  <attribute name="string">Thunderbird Plug-In Configuration</attribute>
+                  <attribute name="string">Load Thunderbird Plug-In</attribute>
               </form>
               <separator string="title" position="attributes">
-                   <attribute name="string">Thunderbird Plug-In</attribute>
+                   <attribute name="string">Load Thunderbird Plug-In</attribute>
               </separator>
               <xpath expr="//label[@string='description']" position="attributes">
                   <attribute name="string">This plug-in allows you to link your e-mail to OpenERP's documents. You can attach it to any existing one in OpenERP or create a new one.</attribute>
@@ -50,7 +50,7 @@
     </record>
 
     <record id="action_thunderbird_installer" model="ir.actions.act_window">
-      <field name="name">Thunderbird Plug-In Configuration</field>
+      <field name="name">Load Thunderbird Plug-In</field>
       <field name="type">ir.actions.act_window</field>
       <field name="res_model">thunderbird.installer</field>
       <field name="view_id" ref="view_thunderbird_installer"/>
@@ -61,13 +61,13 @@
 
     <record id="thunderbird_installer_todo" model="ir.actions.todo">
         <field name="action_id" ref="action_thunderbird_installer"/>
-        <field name="restart">always</field>
+        <field name="type">normal_recurring</field>
         <field name="sequence">3</field>
     </record>
 
 
     <record id="action_thunderbird_wizard" model="ir.actions.act_window">
-      <field name="name">Thunderbird Plug-In Configuration</field>
+      <field name="name">Load Thunderbird Plug-In</field>
       <field name="type">ir.actions.act_window</field>
       <field name="res_model">thunderbird.installer</field>
       <field name="view_id" ref="view_thunderbird_installer"/>
@@ -78,7 +78,7 @@
     </record>
 
 	<menuitem id="base.menu_base_config_plugins" name="Plugins" parent="base.menu_base_config" sequence="10" />
-	<menuitem id="menu_base_config_plugins_thunderbird" action="action_thunderbird_wizard" name="Thunderbird Plug-In" parent="base.menu_base_config_plugins" sequence="10" />
+	<menuitem id="menu_base_config_plugins_thunderbird" action="action_thunderbird_wizard" name="Load Thunderbird Plug-In" parent="base.menu_base_config_plugins" sequence="10" />
 
   </data>
 </openerp>
