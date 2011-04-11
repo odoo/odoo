@@ -133,10 +133,10 @@ class PollServer(openerpweb.Controller):
         """
         
         for i in range(60):
-            received_msg = mq.read('Guest2', i);
+            received_msg = mq.read('Guest1', i);
             if received_msg:
                 msg = self._pollParseMessages(received_msg)
-                print "============ msg...", msg
+                time.sleep(2)
             else:
                 time.sleep(2)
             
@@ -149,12 +149,11 @@ class PollServer(openerpweb.Controller):
         # else
             # return emptylist
             
-        
-        # it's http://localhost:8002/web_chat/pollserver/poll?method=long?callback=jsonp1302147330483&_1302147330483=
+#        print "==============poll receive...", kw.get('callback')
+#        # it's http://localhost:8002/web_chat/pollserver/poll?method=long?callback=jsonp1302147330483&_1302147330483=
         return '%s([{"t":"m","s":"Guest130214008855.5","r":"Guest130214013134.26","m":"xxxxxx"}]);'%kw.get('callback','')
-        return None
         
-    @openerpweb.httprequest
+    @openerpweb.jsonrequest
     def send(self, req, **kw):
         print "========= send ========", kw
         
@@ -187,9 +186,10 @@ class PollServer(openerpweb.Controller):
             return dict(r='error', e='no_recipient')
         
         if message:
-            mq.write(m_type="text",  m_from=req.applicationsession['current_user'], m_to=to, m_message=message, m_group="Users")
-        
-        return {'r': 'sent'}
+            mq.write(m_type="m",  m_from=req.applicationsession['current_user'], m_to=to, m_message=message, m_group="Users")        
+            return {'r': 'sent'}
+        else:
+            return {'r': 'error', 'e': 'send error'}
 
     @openerpweb.httprequest
     def status(self, req, **kw):
@@ -215,9 +215,7 @@ class PollServer(openerpweb.Controller):
     
     def _pollParseMessages(self, messages):
         msg_arr = []
-        print "=========== messages...", messages
         for msg in messages:
-            print "=========== msg..", msg
             msg_arr.append({'t': msg['type'], 's': msg['from'], 'r': msg['to'], 'm': msg['message']})
         return msg_arr
     
