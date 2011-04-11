@@ -464,9 +464,9 @@ def get_attendee_id(sugar_obj, cr, uid, PortType, sessionid, module_name, module
     model_obj = sugar_obj.pool.get('ir.model.data')
     att_obj = sugar_obj.pool.get('calendar.attendee')
     meeting_obj = sugar_obj.pool.get('crm.meeting')
-    user_xml_ids, user_email_ids = sugar.user_get_attendee_list(PortType, sessionid, module_name, module_id)
-    for user_xml_id in user_xml_ids: 
-        user_model_ids = find_mapped_id(sugar_obj, cr, uid, 'res.users', user_xml_id, context)
+    user_dict = sugar.user_get_attendee_list(PortType, sessionid, module_name, module_id)
+    for user in user_dict: 
+        user_model_ids = find_mapped_id(sugar_obj, cr, uid, 'res.users', user.get('id'), context)
         user_resource_id = model_obj.browse(cr, uid, user_model_ids)        
         if user_resource_id:
             user_id = user_resource_id[0].res_id 
@@ -474,7 +474,7 @@ def get_attendee_id(sugar_obj, cr, uid, PortType, sessionid, module_name, module
             if attend_ids:
                  attendees = attend_ids[0]
             else:      
-                attendees = att_obj.create(cr, uid, {'user_id': user_id, 'email': user_email_ids[0]})
+                attendees = att_obj.create(cr, uid, {'user_id': user_id, 'email': user.get('email1')})
             meeting_model_ids = find_mapped_id(sugar_obj, cr, uid, 'crm.meeting', module_id, context)
             meeting_xml_id = model_obj.browse(cr, uid, meeting_model_ids)
             if meeting_xml_id:

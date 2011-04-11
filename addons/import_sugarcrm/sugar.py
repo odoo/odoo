@@ -71,16 +71,14 @@ def user_get_attendee_list(portType, sessionid, module_name=None, module_id=None
   list = se_resp.get_element_return()
   arch = base64.decodestring(list.Result)
   eview = False
-  attende_id = []
-  attende_email_id = []
   eview = etree.XML(arch)
+  attendee_list = []
   for child in eview:
+      attendee_dict = {}
       for ch in child.getchildren():
-           if ch.tag == 'id':
-               attende_id.append(ch.text)
-           if ch.tag == 'email1':
-               attende_email_id.append(ch.text)
-  return attende_id,attende_email_id             
+           attendee_dict[ch.tag] = ch.text
+      attendee_list.append(attendee_dict)
+  return attendee_list             
           
 
 def search(portType, sessionid, module_name=None):
