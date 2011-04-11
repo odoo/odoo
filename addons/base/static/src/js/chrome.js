@@ -473,8 +473,10 @@ openerp.base.Session = openerp.base.BasicController.extend( /** @lends openerp.b
                 continue;
             openerp[mod] = {};
             // init module mod
-            openerp._openerp[mod](openerp);
-            self.module_loaded[mod] = true;
+            if(openerp._openerp[mod] != undefined) {
+                openerp._openerp[mod](openerp);
+                self.module_loaded[mod] = true;
+            }
         }
     }
 });
@@ -907,6 +909,17 @@ openerp.base.WebClient = openerp.base.Controller.extend({
     on_logged: function() {
         this.action =  new openerp.base.ActionManager(this.session, "oe_app");
         this.action.start();
+        
+        // if using saved actions, load the action and give it to action manager
+        debugger;
+        var parameters = jQuery.deparam(jQuery.param.querystring());
+        if(parameters["s_action"] != undefined) {
+            var key = parseInt(parameters["s_action"]);
+            var self = this;
+            this.rpc("/base/session/get_session_action", {key:key}, function(action) {
+                self.action.do_action(action);
+            });
+        }
     },
     on_menu_action: function(action) {
         this.action.do_action(action);
