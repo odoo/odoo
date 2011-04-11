@@ -141,7 +141,7 @@
 		<field name="sequence">120</field>
 		<field name="condition_select">python</field>
 		<field name="appears_on_payslip" eval="False"/>
-		<field name="condition_python">result = "employee.marital=='single' OR employee.marital=='married' AND statut_fiscal=='with income'"</field>
+		<field name="condition_python">result = (employee.marital=='single') or (employee.marital=='married' and statut_fiscal=='with income')</field>
 	</record>
 
 	<record id="hr_payroll_rules_baremeII" model="hr.salary.rule">
@@ -153,7 +153,7 @@
 		<field name="sequence">120</field>
 		<field name="condition_select">python</field>
 		<field name="appears_on_payslip" eval="False"/>
-		<field name="condition_python">result = "employee.marital=='married' AND statut_fiscal=='without income'"</field>
+		<field name="condition_python">result = (employee.marital=='married' and statut_fiscal=='without income')</field>
 	</record>
 	
 	<record id="hr_payroll_rules_baremeIII" model="hr.salary.rule">
