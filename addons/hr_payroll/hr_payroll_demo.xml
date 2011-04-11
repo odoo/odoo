@@ -49,6 +49,7 @@
             <field name="name">Marketing Executive</field>
             <field eval="[(6, 0, [ref('hr_payslip_line_houserantallowance1'), ref('hr_payslip_line_convanceallowance1'),ref('hr_payslip_line_professionaltax1'),ref('hr_payslip_line_providentfund1')])]" name="rule_ids"/>
             <field name="company_id" ref="base.main_company"/>
+            <field name="parent_id" ref="structure_base"/>
         </record>
 
         <!-- Employee -->
