@@ -85,7 +85,7 @@ openerp.base.FormView =  openerp.base.Controller.extend( /** @lends openerp.base
         } else {
             this.log("No record received");
         }
-        this.do_update_pager();
+        this.do_update_pager(record.id == null);
     },
     on_form_changed: function(widget) {
         if (widget && widget.node.attrs.on_change) {
@@ -115,11 +115,10 @@ openerp.base.FormView =  openerp.base.Controller.extend( /** @lends openerp.base
         }
         this.dataset.read_index(_.keys(this.fields_view.fields), this.on_record_loaded);
     },
-    do_update_pager: function() {
+    do_update_pager: function(hide_index) {
         var $pager = this.$element.find('div.oe_form_pager');
-        $pager.find("button[data-pager-action='first'], button[data-pager-action='previous']").attr('disabled', this.dataset.index == 0);
-        $pager.find("button[data-pager-action='next'], button[data-pager-action='last']").attr('disabled', this.dataset.index == this.dataset.ids.length - 1);
-        this.$element.find('span.oe_pager_index').html(this.dataset.index + 1);
+        var index = hide_index ? '-' : this.dataset.index + 1;
+        this.$element.find('span.oe_pager_index').html(index);
         this.$element.find('span.oe_pager_count').html(this.dataset.count);
     },
     do_onchange: function(widget, processed) {
@@ -222,6 +221,10 @@ openerp.base.FormView =  openerp.base.Controller.extend( /** @lends openerp.base
             if (!this.datarecord.id) {
                 this.dataset.create(values, function() {
                     self.datarecord.id = arguments[0].result;
+                    self.dataset.ids.push(self.datarecord.id);
+                    self.dataset.index = self.dataset.ids.length - 1;
+                    self.dataset.count++;
+                    self.do_update_pager();
                     self.on_saved.apply(self, arguments);
                 });
             } else {
