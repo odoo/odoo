@@ -458,18 +458,18 @@ def import_tasks(sugar_obj, cr, uid, context=None):
         meeting_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', noupdate=True, context=context)
     return True    
     
-def get_attendee_id(PortType, sessionid, module_name=None, module_id=None, val, context=None):
+def get_attendee_id(PortType, sessionid, module_name, module_id, context=None):
     if not context:
         context = {}
     model_obj = sugar_obj.pool.get('ir.model.data')
     att_obj = sugar_obj.pool.get('calendar.attendee')
-    user_xml_id, user_email_id = sugar.user_get_attendee_list(PortType, sessionid, module_name='Meetings', module_id=val.get('id'))
+    user_xml_id, user_email_id = sugar.user_get_attendee_list(PortType, sessionid, module_name, module_id)
     user_model_ids = find_mapped_id(sugar_obj, cr, uid, 'res.users', user_xml_id, context)
     user_resource_id = model_obj.browse(cr, uid, user_model_ids)        
     if user_resource_id:
         user_id = user_resource_id[0].res_id 
         attendees = att_obj.create(cr, uid, {'user_id': user_id, 'email': user_email_id})
-        meeting_model_ids = find_mapped_id(sugar_obj, cr, uid, 'crm.meeting', val.get('id'), context)
+        meeting_model_ids = find_mapped_id(sugar_obj, cr, uid, 'crm.meeting', module_id, context)
         meeting_xml_id = sugar_obj.pool.get('ir.model.data').browse(cr, uid, meeting_model_ids)
         if meeting_xml_id:
             meeting_obj.write(cr, uid, [meeting_xml_id[0].res_id], {'attendee_ids': [(4, attendees)]})       
@@ -502,7 +502,7 @@ def import_meetings(sugar_obj, cr, uid, context=None):
         val['alarm_id/.id'] = get_alarm_id(sugar_obj, cr, uid, val.get('reminder_time'), context)
         fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_meeting)
         meeting_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', noupdate=True, context=context)
-        get_attendee_id(portType, sessionid, module_name=None, module_id=None, val, context)
+        get_attendee_id(portType, sessionid, 'Meetings', val.get('id'), context)
     return True    
 
 def get_calls_state(sugar_obj, cr, uid, val,context=None):
