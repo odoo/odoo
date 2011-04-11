@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import glob, os
+import pprint
 from xml.etree import ElementTree
 from cStringIO import StringIO
 
@@ -521,6 +522,54 @@ class ListView(View):
     def load(self, req, model, view_id, toolbar=False):
         fields_view = self.fields_view_get(req, model, view_id, 'tree', toolbar=toolbar)
         return {'fields_view': fields_view}
+
+    def fields_view_get(self, request, model, view_id, view_type="tree",
+                        transform=True, toolbar=False, submenu=False):
+        """ Sets @editable on the view's arch if it isn't already set and
+        ``set_editable`` is present in the request context
+        """
+        view = super(ListView, self).fields_view_get(
+            request, model, view_id, view_type, transform, toolbar, submenu)
+
+        view_attributes = view['arch']['attrs']
+        if request.context.get('set_editable')\
+                and 'editable' not in view_attributes:
+            view_attributes['editable'] = 'bottom'
+        return view
+
+    @openerpweb.jsonrequest
+    def fill(self, request, model, id, domain,
+             offset=0, limit=False):
+        return self.do_fill(request, model, id, domain, offset, limit)
+
+    def do_fill(self, request, model, id, domain,
+                offset=0, limit=False):
+        """ Returns all information needed to fill a table:
+
+        * view with processed ``editable`` flag
+        * fields (columns) with processed ``invisible`` flag
+        * rows with processed ``attrs`` and ``colors``
+
+        .. note:: context is passed through ``request`` parameter
+
+        :param request: OpenERP request
+        :type request: openerpweb.openerpweb.JsonRequest
+        :type str model: OpenERP model for this list view
+        :type int id: view_id, or False if none provided
+        :param list domain: the search domain to search for
+        :param int offset: search offset, for pagination
+        :param int limit: search limit, for pagination
+        :returns: hell if I have any idea yet
+        """
+        view = self.fields_view_get(request, model, id)
+
+        rows = DataSet().do_search_read(request, model,
+                                        offset=offset, limit=limit,
+                                        domain=domain)
+        # rows pipe
+        #   process_attrs
+        #   process_colors
+        return rows
 
 class SearchView(View):
     _cp_path = "/base/searchview"

@@ -160,7 +160,16 @@ openerp.base.ListView = openerp.base.Controller.extend(
             // TODO: handle non-empty results.group_by with read_group
             self.dataset.context = results.context;
             self.dataset.domain = results.domain;
-            self.dataset.read_slice(self.dataset.fields, 0, self.limit, self.do_fill_table);
+            // TODO: need to do 5 billion tons of pre-processing, bypass
+            // DataSet for now
+            //self.dataset.read_slice(self.dataset.fields, 0, self.limit,
+            // self.do_fill_table);
+            self.rpc('/base/listview/fill', {
+                'model': self.dataset.model,
+                'id': self.view_id,
+                'context': results.context,
+                'domain': results.domain
+            }, self.do_fill_table);
         });
     },
     do_update: function () {

@@ -178,3 +178,30 @@ class AttrsNormalizationTest(unittest2.TestCase):
             field_attrs(parsed_view, 'date_deadline')['invisible'])
         self.assertTrue(field_attrs(parsed_view, 'type_id')['invisible'])
 
+class ListViewTest(unittest2.TestCase):
+    def setUp(self):
+        self.view = base.controllers.main.ListView()
+        self.request = mock.Mock()
+        self.request.context = {'set_editable': True}
+    def test_no_editable_editable_context(self):
+        self.request.session.model('fake').fields_view_get.return_value = \
+            {'arch': '<tree><field name="foo"/></tree>'}
+        view = self.view.fields_view_get(self.request, 'fake', False)
+
+        self.assertEqual(view['arch']['attrs']['editable'],
+                         'bottom')
+    def test_editable_top_editable_context(self):
+        self.request.session.model('fake').fields_view_get.return_value = \
+            {'arch': '<tree editable="top"><field name="foo"/></tree>'}
+        view = self.view.fields_view_get(self.request, 'fake', False)
+
+        self.assertEqual(view['arch']['attrs']['editable'],
+                         'top')
+
+    def test_editable_bottom_editable_context(self):
+        self.request.session.model('fake').fields_view_get.return_value = \
+            {'arch': '<tree editable="bottom"><field name="foo"/></tree>'}
+        view = self.view.fields_view_get(self.request, 'fake', False)
+
+        self.assertEqual(view['arch']['attrs']['editable'],
+                         'bottom')
