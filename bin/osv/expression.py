@@ -135,7 +135,7 @@ class expression(object):
                 if left == 'id' and operator == 'child_of':
                     dom = _rec_get(right, working_table)
                     self.__exp = self.__exp[:i] + dom + self.__exp[i+1:]
-                elif left != 'id':
+                elif left not in ['id', 'write_uid', 'write_date', 'create_uid', 'create_date']:
                     raise ValueError('Bad Domain Evaluation! %r' % (e,))
                 continue
 
