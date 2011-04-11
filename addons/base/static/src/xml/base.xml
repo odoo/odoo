@@ -530,6 +530,7 @@
         <t t-set="i" t-value="0"/>
         <t t-foreach="sections" t-as="section">
         <t t-if="section.elements.length &gt; 0">
+        <h2><t t-esc="section.label"/></h2>
         <ul>
             <t t-set="j" t-value="0"/>
             <t t-foreach="section.elements" t-as="element">

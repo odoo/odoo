@@ -484,6 +484,7 @@ body.openerp {
     margin: 0;
     width:100%;
     border-collapse:collapse;
+    height:100%;
 }
 
 .openerp .view-manager-main-table tbody {
@@ -495,35 +496,59 @@ body.openerp {
 }
 
 .openerp .view-manager-main-sidebar {
-    vertical-align: top;
     width:0;
     padding:0;
     margin:0;
 }
 
-.openerp .view-manager-main-sidebar .sidebar-main-div {
+.openerp .sidebar-main-div {
     padding:0;
     margin:0;
     width:180px;
-    border-color: #1F1F1F;
-    border-style: solid;
-    border-width: 1px;
+    border-left-color: #D2CFCF;
+    border-left-style: solid;
+    border-left-width: 1px;
     height:100%;
+    font-family: Ubuntu, Helvetica, sans-serif;
+    font-size: 0.9em;
 }
 
-.openerp .view-manager-main-sidebar .sidebar-sub-div {
-    border: solid 1px #1F1F1F;
-    border-bottom-width: 0;
+.openerp .sidebar-main-div a {
+    color: #555;
+    text-decoration: none;
+}
+
+.openerp .sidebar-main-div a:hover {
+    color: black;
+}
+
+.openerp .view-manager-main-sidebar h2 {
+    margin:0;
+    font-family: Ubuntu, Helvetica, sans-serif;
+    font-size: 1.15em;
+    color: #8E8E8E;
+    text-shadow: white 0px 1px 0px;
+    padding-left: 10px;
+    padding-right: 21px;
+    height: 21px;
+    background: url(../img/sideheader-a-bg.png) repeat-x;
+    border-color: #D2CFCF;
+    border-style: solid;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+    border-left-width: 0;
+    border-right-width: 0;
 }
 
 .openerp .view-manager-main-sidebar ul {
     list-style-type: none;
     margin: 0;
     padding: 0;
-    border-bottom: solid 1px #1F1F1F;
+    display: block;
 }
 
 .openerp .view-manager-main-sidebar li {
-    padding: 3px;
+    display: block;
+    padding: 3px 3px 3px 10px;
 }
 

@@ -188,10 +188,10 @@ openerp.base.Sidebar = openerp.base.BaseWidget.extend({
     set_toolbar: function(toolbar) {
         this.sections = [];
         var self = this;
-        _.each(["print", "action", "relate"], function(type) {
-            if (toolbar[type].length == 0)
+        _.each([["print", "Reports"], ["action", "Actions"], ["relate", "Links"]], function(type) {
+            if (toolbar[type[0]].length == 0)
                 return;
-            var section = {elements:toolbar[type]};
+            var section = {elements:toolbar[type[0]], label:type[1]};
             self.sections.push(section);
         });
         this.refresh();
