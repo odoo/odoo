@@ -403,16 +403,20 @@ class DataSet(openerpweb.Controller):
         return {'result': r}
 
 class View(openerpweb.Controller):
-    def fields_view_get(self, session, model, view_id, view_type, transform=True, toolbar=False, submenu=False):
-        Model = session.model(model)
-        r = Model.fields_view_get(view_id, view_type, {}, toolbar, submenu)
+    def fields_view_get(self, request, model, view_id, view_type,
+                        transform=True, toolbar=False, submenu=False):
+        Model = request.session.model(model)
+        fvg = Model.fields_view_get(view_id, view_type, request.context,
+                                    toolbar, submenu)
         if transform:
-            context = {} # TODO: dict(ctx_sesssion, **ctx_action)
-            xml = self.transform_view(r['arch'], session, context)
+            evaluation_context = request.session.evaluation_context(
+                request.context or {})
+            xml = self.transform_view(
+                fvg['arch'], request.session, evaluation_context)
         else:
-            xml = ElementTree.fromstring(r['arch'])
-        r['arch'] = Xml2Json.convert_element(xml)
-        return r
+            xml = ElementTree.fromstring(fvg['arch'])
+        fvg['arch'] = Xml2Json.convert_element(xml)
+        return fvg
 
     def normalize_attrs(self, elem, context):
         """ Normalize @attrs, @invisible, @required, @readonly and @states, so
@@ -507,7 +511,7 @@ class FormView(View):
 
     @openerpweb.jsonrequest
     def load(self, req, model, view_id, toolbar=False):
-        fields_view = self.fields_view_get(req.session, model, view_id, 'form', toolbar=toolbar)
+        fields_view = self.fields_view_get(req, model, view_id, 'form', toolbar=toolbar)
         return {'fields_view': fields_view}
 
 class ListView(View):
@@ -515,7 +519,7 @@ class ListView(View):
 
     @openerpweb.jsonrequest
     def load(self, req, model, view_id, toolbar=False):
-        fields_view = self.fields_view_get(req.session, model, view_id, 'tree', toolbar=toolbar)
+        fields_view = self.fields_view_get(req, model, view_id, 'tree', toolbar=toolbar)
         return {'fields_view': fields_view}
 
 class SearchView(View):
@@ -523,7 +527,7 @@ class SearchView(View):
 
     @openerpweb.jsonrequest
     def load(self, req, model, view_id):
-        fields_view = self.fields_view_get(req.session, model, view_id, 'search')
+        fields_view = self.fields_view_get(req, model, view_id, 'search')
         return {'fields_view': fields_view}
 
 class Action(openerpweb.Controller):

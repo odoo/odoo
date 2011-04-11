@@ -1,3 +1,4 @@
+import copy
 import xml.etree.ElementTree
 import mock
 
@@ -7,6 +8,11 @@ import simplejson
 import base.controllers.main
 import openerpweb.nonliterals
 import openerpweb.openerpweb
+
+def field_attrs(fields_view_get, fieldname):
+    (field,) =  filter(lambda f: f['attrs'].get('name') == fieldname,
+                       fields_view_get['arch']['children'])
+    return field['attrs']
 
 #noinspection PyCompatibility
 class DomainsAndContextsTest(unittest2.TestCase):
@@ -130,3 +136,45 @@ class AttrsNormalizationTest(unittest2.TestCase):
         self.assertEqual(
             simplejson.loads(element.get('attrs')),
             {'invisible': [['state', 'not in', ['open', 'closed']]]})
+
+    def test_transform_invisible(self):
+        element = xml.etree.ElementTree.Element(
+            'field', invisible="context.get('invisible_country', False)")
+
+        empty_context = copy.deepcopy(element)
+        self.view.normalize_attrs(empty_context, {})
+        self.assertEqual(empty_context.get('invisible'), None)
+
+        full_context = copy.deepcopy(element)
+        self.view.normalize_attrs(full_context, {'invisible_country': True})
+        self.assertEqual(full_context.get('invisible'), '1')
+
+    def test_transform_invisible_list_column(self):
+        req = mock.Mock()
+        req.context =  {'set_editable':True, 'set_visible':True,
+                        'gtd_visible':True, 'user_invisible':True}
+        req.session.evaluation_context = \
+            openerpweb.openerpweb.OpenERPSession().evaluation_context
+        req.session.model('project.task').fields_view_get.return_value = {
+            'arch': '''
+            <tree colors="grey:state in ('cancelled','done');blue:state == 'pending';red:date_deadline and (date_deadline&lt;current_date) and (state in ('draft','pending','open'))" string="Tasks">
+                <field name="sequence" invisible="not context.get('seq_visible', False)"/>
+                <field name="user_id" invisible="context.get('user_invisible', False)"/>
+                <field name="delegated_user_id" invisible="context.get('show_delegated', True)"/>
+                <field name="total_hours" invisible="1"/>
+                <field name="date_deadline" invisible="context.get('deadline_visible',True)"/>
+                <field name="type_id" invisible="context.get('set_visible',False)"/>
+            </tree>
+        '''}
+        parsed_view = base.controllers.main.View().fields_view_get(
+            req, 'project.task', 42, 'tree')
+
+        self.assertTrue(field_attrs(parsed_view, 'sequence')['invisible'])
+        self.assertTrue(field_attrs(parsed_view, 'user_id')['invisible'])
+        self.assertTrue(
+            field_attrs(parsed_view, 'delegated_user_id')['invisible'])
+        self.assertTrue(field_attrs(parsed_view, 'total_hours')['invisible'])
+        self.assertTrue(
+            field_attrs(parsed_view, 'date_deadline')['invisible'])
+        self.assertTrue(field_attrs(parsed_view, 'type_id')['invisible'])
+
