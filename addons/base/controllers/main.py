@@ -570,13 +570,9 @@ class ListView(View):
             request.context)
         return [
             {'data': row,
-             'attrs': self.process_attrs(view, row, eval_context),
              'color': self.process_colors(view, row, eval_context)}
             for row in rows
         ]
-
-    def process_attrs(self, view, row, context):
-        pass
 
     def process_colors(self, view, row, context):
         colors = view['arch']['attrs'].get('colors')
