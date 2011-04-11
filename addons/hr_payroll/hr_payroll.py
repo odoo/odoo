@@ -185,20 +185,6 @@ class hr_payslip(osv.osv):
     _name = 'hr.payslip'
     _description = 'Pay Slip'
 
-    def move_line_id_payment_gets(self, cr, uid, ids, *args):
-        res = {}
-        if not ids: return res
-        cr.execute('SELECT i.id, l.id '\
-                   'FROM account_move_line l '\
-                   'LEFT JOIN account_invoice i ON (i.move_id=l.move_id) '\
-                   'WHERE i.id IN %s '\
-                   'AND l.account_id=i.account_id',
-                   (tuple(ids),))
-        for r in cr.fetchall():
-            res.setdefault(r[0], [])
-            res[r[0]].append( r[1] )
-        return res
-
     def _get_lines_salary_head(self, cr, uid, ids, field_names, arg=None, context=None):
         result = {}
         if not ids: return result
