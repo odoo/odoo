@@ -25,7 +25,8 @@ from sugarsoap_services import *
 from sugarsoap_services_types import *
 from osv import osv
 from tools.translate import _
-
+import base64
+from lxml import etree
 class LoginError(Exception): pass
 
 def login(username, password, url):
@@ -61,6 +62,26 @@ def relation_search(portType, sessionid, module_name=None, module_id=None, relat
           ans_list.append(i.get_element_id())
   return ans_list
 
+def user_get_attendee_list(portType, sessionid, module_name=None, module_id=None):
+  se_req = get_attendee_listRequest()
+  se_req._session = sessionid
+  se_req._module_name = module_name
+  se_req._id = module_id
+  se_resp = portType.get_attendee_list(se_req)
+  list = se_resp.get_element_return()
+  arch = base64.decodestring(list.Result)
+  eview = False
+  attende_id = False
+  attende_email_id = False
+  eview = etree.XML(arch)
+  for child in eview:
+      for ch in child.getchildren():
+           if ch.tag == 'id':
+               attende_id = ch.text
+           if ch.tag == 'email1':
+                attende_email_id = ch.text   
+  return attende_id, attende_email_id            
+          
 
 def search(portType, sessionid, module_name=None):
   se_req = get_entry_listRequest()
