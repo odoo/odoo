@@ -145,7 +145,7 @@ class base_setup_installer(osv.osv_memory):
             elif i.state == 'installed':
                 if modules_selected:
                     for instl in modules_selected:
-                        cr.execute("update ir_actions_todo set restart='on_trigger' , state='open' from ir_model_data as data where data.res_id = ir_actions_todo.id and data.model =  'ir.actions.todo' and data.module  like '%"+instl+"%'")
+                        cr.execute("update ir_actions_todo set state='open' from ir_model_data as data where data.res_id = ir_actions_todo.id and data.model =  'ir.actions.todo' and data.module  like '%"+instl+"%'")
         
         return 
     

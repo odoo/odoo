@@ -61,7 +61,7 @@
     <record id="crm_installer_todo" model="ir.actions.todo">
         <field name="action_id" ref="action_crm_installer"/>
         <field name="sequence">3</field>
-        <field name="restart">on_trigger</field>
+        <field name="type">special</field>
         <field eval="[(6,0,[ref('base.group_extended')])]" name="groups_id"/>
     </record>
   </data>
