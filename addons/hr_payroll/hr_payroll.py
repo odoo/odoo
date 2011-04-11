@@ -268,7 +268,6 @@ class hr_payslip(osv.osv):
             'line_ids': [],
             'move_ids': [],
             'move_line_ids': [],
-            'move_payment_ids': [],
             'company_id': company_id,
             'period_id': False,
             'basic_before_leaves': 0.0,
