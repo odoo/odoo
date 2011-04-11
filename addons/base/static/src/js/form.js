@@ -49,10 +49,10 @@ openerp.base.FormView =  openerp.base.Controller.extend( /** @lends openerp.base
             self.on_pager_action(action);
         });
 
-        this.$element.find('div.oe_form_buttons button.oe_form_button_save').click(this.do_save);
-        this.$element.find('div.oe_form_buttons button.oe_form_button_save_edit').click(this.do_save_edit);
-        this.$element.find('div.oe_form_buttons button.oe_form_button_cancel').click(this.do_cancel);
-        this.$element.find('div.oe_form_buttons button.oe_form_button_new').click(this.on_button_new);
+        this.$element.find('#' + this.element_id + '_header button.oe_form_button_save').click(this.do_save);
+        this.$element.find('#' + this.element_id + '_header button.oe_form_button_save_edit').click(this.do_save_edit);
+        this.$element.find('#' + this.element_id + '_header button.oe_form_button_cancel').click(this.do_cancel);
+        this.$element.find('#' + this.element_id + '_header button.oe_form_button_new').click(this.on_button_new);
 
         // sidebar stuff
         if (this.view_manager.sidebar) {
@@ -116,10 +116,10 @@ openerp.base.FormView =  openerp.base.Controller.extend( /** @lends openerp.base
         this.dataset.read_index(_.keys(this.fields_view.fields), this.on_record_loaded);
     },
     do_update_pager: function(hide_index) {
-        var $pager = this.$element.find('div.oe_form_pager');
+        var $pager = this.$element.find('#' + this.element_id + '_header div.oe_form_pager').eq(0);
         var index = hide_index ? '-' : this.dataset.index + 1;
-        this.$element.find('span.oe_pager_index').html(index);
-        this.$element.find('span.oe_pager_count').html(this.dataset.count);
+        $pager.find('span.oe_pager_index').html(index);
+        $pager.find('span.oe_pager_count').html(this.dataset.count);
     },
     do_onchange: function(widget, processed) {
         processed = processed || [];
