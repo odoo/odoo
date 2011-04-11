@@ -77,7 +77,7 @@
     <record id="crm_case_section_installer_todo" model="ir.actions.todo">
         <field name="action_id" ref="crm_case_section_view_form_installer"/>
         <field name="sequence">10</field>
-        <field name="restart">always</field>
+        <field name="type">normal_recurring</field>
     </record>
 
     <record model="ir.actions.act_window" id="crm_case_stage_form_installer">
@@ -92,7 +92,7 @@
     <record id="crm_case_stage_installer_todo" model="ir.actions.todo">
         <field name="action_id" ref="crm_case_stage_form_installer"/>
         <field name="sequence">10</field>
-        <field name="restart">always</field>
+        <field name="type">normal_recurring</field>
     </record>
 
   </data>
