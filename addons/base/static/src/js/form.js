@@ -234,24 +234,24 @@ openerp.base.FormView =  openerp.base.Controller.extend( /** @lends openerp.base
             }
         });
         msg += "</ul>";
-        this.notification.alert("The following fields are invalid :", msg);
+        this.notification.warn("The following fields are invalid :", msg);
     },
     on_saved: function(r) {
         if (!r.result) {
             this.log("Record was not saved");
         } else {
             // Check response for exceptions, display error
-            this.notification['default']("Record saved", "The record #" + this.datarecord.id + " has been saved.");
+            this.notification.notify("Record saved", "The record #" + this.datarecord.id + " has been saved.");
         }
     },
     do_search: function (domains, contexts, groupbys) {
-        this.notification['default']("Searching form");
+        this.notification.notify("Searching form");
     },
     on_action: function (action) {
-        this.notification['default']('Executing action ' + action);
+        this.notification.notify('Executing action ' + action);
     },
     do_cancel: function () {
-        this.notification['default']("Cancelling form");
+        this.notification.notify("Cancelling form");
     }
 });
 
@@ -720,7 +720,7 @@ openerp.base.form.FieldOne2ManyDatasSet = openerp.base.DataSetStatic.extend({
         this._super(id, data, callback);
     },
     unlink: function() {
-        this.notification['default']('Unlinking o2m ' + this.ids);
+        this.notification.notify('Unlinking o2m ' + this.ids);
     }
 });
 

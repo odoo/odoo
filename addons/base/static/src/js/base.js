@@ -76,6 +76,10 @@
 
     /** @lends openerp */
     var openerp = this.openerp =  {
+        /**
+         * Debug flag turns on logging
+         */
+        debug: true,
         // element_ids registry linked to all controllers on the page
         // TODO rename to elements, or keep gtk naming?
         screen: {},

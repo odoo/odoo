@@ -100,7 +100,7 @@ openerp.base.DataSet =  openerp.base.Controller.extend( /** @lends openerp.base.
         }, callback);
     },
     unlink: function(ids) {
-        this.notification['default']("Unlink", ids);
+        this.notification.notify("Unlink", ids);
     },
     call: function (method, ids, args, callback) {
         ids = ids || [];
