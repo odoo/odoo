@@ -142,6 +142,7 @@ class stock_partial_picking(osv.osv_memory):
         @return: A dictionary which of fields with values.
         """
         pick_obj = self.pool.get('stock.picking')
+        uom_obj = self.pool.get('product.uom')
         
         picking_ids = context.get('active_ids', False)
         partial = self.browse(cr, uid, ids[0], context=context)
@@ -152,10 +153,14 @@ class stock_partial_picking(osv.osv_memory):
         for pick in pick_obj.browse(cr, uid, picking_ids, context=context):
             picking_type = self.get_picking_type(cr, uid, pick, context=context)
             moves_list = picking_type == 'in' and partial.product_moves_in or partial.product_moves_out
-
+            picking_qty = 0.0
+            partial_qty = 0.0
+            for get_qty in pick.move_lines:
+                picking_qty += get_qty.product_qty
             for move in moves_list:
+                partial_qty += uom_obj._compute_qty(cr, uid, move.product_uom.id, move.quantity, move.product_id.uom_id.id)
                 if move.product_uom.category_id.id <> move.product_id.uom_id.category_id.id:
-                    raise osv.except_osv(_('Error !'), _('Product UoM category %s must be same with  Product Default UoM Category %s!.') % (move.product_uom.category_id.name,move.product_id.uom_id.category_id.name,))
+                    raise osv.except_osv(_('Error !'), _('You are selected product uom category %s not same with  picking product uom Category %s!.') % (move.product_uom.category_id.name,move.product_id.uom_id.category_id.name,))
                 partial_datas['move%s' % (move.move_id.id)] = {
                     'product_id': move.id, 
                     'product_qty': move.quantity, 
@@ -167,6 +172,8 @@ class stock_partial_picking(osv.osv_memory):
                                                     'product_price' : move.cost, 
                                                     'product_currency': move.currency.id, 
                                                     })
+        if picking_qty < partial_qty:
+            raise osv.except_osv(_('Error !'), _('You cannot select Quantity %s  more then Picking Quantity %s.') % (partial_qty, picking_qty,))
         pick_obj.do_partial(cr, uid, picking_ids, partial_datas, context=context)
         return {'type': 'ir.actions.act_window_close'}
 

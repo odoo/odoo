@@ -1162,6 +1162,7 @@ class stock_picking(osv.osv):
             complete, too_many, too_few = [], [], []
             move_product_qty = {}
             prodlot_ids = {}
+            product_uoms = {}
             product_avail = {}
             for move in pick.move_lines:
                 if move.state in ('done', 'cancel'):
@@ -1174,6 +1175,7 @@ class stock_picking(osv.osv):
                 product_currency = partial_data.get('product_currency',False)
                 prodlot_id = partial_data.get('prodlot_id')
                 prodlot_ids[move.id] = prodlot_id
+                product_uoms[move.id] = product_uom
                 if move.product_qty == product_qty:
                     complete.append(move)
                 elif move.product_qty > product_qty:
@@ -1232,7 +1234,7 @@ class stock_picking(osv.osv):
                             'state': 'assigned',
                             'move_dest_id': False,
                             'price_unit': move.price_unit,
-                            'product_uom':product_uom,
+                            'product_uom':product_uoms[move.id],
                     }
                     prodlot_id = prodlot_ids[move.id]
                     if prodlot_id:
@@ -1248,7 +1250,7 @@ class stock_picking(osv.osv):
             if new_picking:
                 move_obj.write(cr, uid, [c.id for c in complete], {'picking_id': new_picking})
             for move in complete:
-                defaults = {'product_uom': product_uom}
+                defaults = {'product_uom': product_uoms[move.id]}
                 if prodlot_ids.get(move.id):
                     defaults.update({'prodlot_id': prodlot_ids[move.id]})
                 move_obj.write(cr, uid, move.id, defaults)
@@ -1257,7 +1259,7 @@ class stock_picking(osv.osv):
                 defaults = {
                     'product_qty' : product_qty,
                     'product_uos_qty': product_qty, #TODO: put correct uos_qty
-                    'product_uom': product_uom
+                    'product_uom': product_uoms[move.id]
                 }
                 prodlot_id = prodlot_ids.get(move.id)
                 if prodlot_ids.get(move.id):

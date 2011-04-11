@@ -25,6 +25,17 @@ import time
 
 
 class stock_partial_move_memory_out(osv.osv_memory):
+
+    def _tracking(self, cursor, user, ids, name, arg, context=None):
+        res = {}
+        for tracklot in self.browse(cursor, user, ids, context=context):
+            tracking = False
+            if (tracklot.move_id.picking_id.type == 'in' and tracklot.product_id.track_incoming == True) or \
+                (tracklot.move_id.picking_id.type == 'out' and tracklot.product_id.track_outgoing == True):
+                tracking = True
+            res[tracklot.id] = tracking
+        return res
+    
     _name = "stock.move.memory.out"
     _rec_name = 'product_id'
     _columns = {
@@ -36,7 +47,7 @@ class stock_partial_move_memory_out(osv.osv_memory):
         'wizard_id' : fields.many2one('stock.partial.move', string="Wizard"),
         'cost' : fields.float("Cost", help="Unit Cost for this product line"),
         'currency' : fields.many2one('res.currency', string="Currency", help="Currency in which Unit cost is expressed"),
-        'tracking': fields.related('product_id', 'track_production', type='boolean', relation='product.product', string='Tracking'),
+        'tracking': fields.function(_tracking, method=True, string='Tracking', type='boolean'), 
     }
     
 class stock_partial_move_memory_in(osv.osv_memory):
