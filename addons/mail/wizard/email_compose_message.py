@@ -151,8 +151,44 @@ class email_compose_message(osv.osv_memory):
     def send_mail(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
+
+        record = self.browse(cr, uid, ids[0], context=context)
+        if context.get('mass_mail') and context['active_ids'] and context.get('template_id'):
+            email_message_pool = self.pool.get('email.message')
+            email_temp_pool = self.pool.get('email.template')
+            for res_id in context['active_ids']:
+                subject = email_temp_pool.get_template_value(cr, uid, record.subject, context['active_model'], res_id)
+                body = email_temp_pool.get_template_value(cr, uid, record.body, context['active_model'], res_id)
+                email_to = email_temp_pool.get_template_value(cr, uid, record.email_to, context['active_model'], res_id)
+                email_from = email_temp_pool.get_template_value(cr, uid, record.email_from, context['active_model'], res_id)
+                email_cc = email_temp_pool.get_template_value(cr, uid, record.email_cc, context['active_model'], res_id)
+                reply_to = email_temp_pool.get_template_value(cr, uid, record.reply_to, context['active_model'], res_id)
+
+                email_id = email_message_pool.schedule_with_attach(cr, uid, email_from,
+                           email_to, subject or False, body or False, context['active_model'], email_cc or False, openobject_id=int(res_id),
+                           context=context)
+            return {'type': 'ir.actions.act_window_close'}
+
+        if context.get('mass_mail') and context.get('active_ids') and not context.get('template_id'):
+            self.do_mass_mail(cr, uid, context['active_ids'], record.subject or False, record.body or False, context=context)
+            return {'type': 'ir.actions.act_window_close'}
+
         email_id = self.save_to_mailbox(cr, uid, ids, context)
         return {'type': 'ir.actions.act_window_close'}
+
+    def do_mass_mail(self, cr, uid, ids, subject, body, context=None):
+        if context is None:
+            context = {}
+
+        if context.get('active_model'):
+            email_message_pool = self.pool.get('email.message')
+            model_pool = self.pool.get(context['active_model'])
+            for data in model_pool.browse(cr, uid, ids, context=context):
+                email_id = email_message_pool.schedule_with_attach(cr, uid,
+                    data.user_id and data.user_id.address_id and data.user_id.address_id.email or False,
+                    data.email_from or False, subject, body, model=context['active_model'],
+                    email_cc=tools.ustr(data.email_cc or ''), openobject_id=int(data.id), context=context)
+        return True
 
     def save_to_mailbox(self, cr, uid, ids, context=None):
         email_ids = []
