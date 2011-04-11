@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8" ?>
+﻿﻿<?xml version="1.0" encoding="UTF-8" ?>
  <openerp> 
 <data noupdate="0">
  <record id="account_type_dettes" model="account.account.type">
@@ -1803,13 +1803,29 @@
 	#
 	-->
 
-	<record model="res.currency" id="CFA">
-		<field name="name">CFA</field>
-		<field name="code">CFA</field>
-		 <field name="rate">1.0</field>
+      <record id="base.CFA" model="res.currency">
+      	<!-- There are in fact 2 CFA currencies:
+                  - XAF for the Central African CFA franc
+                  - XOF for the West African CFA franc
+                As they are interchangeable, we probably only need one.
+                XOF appears to have "CFA" as symbol, while "XAF" is "FCFA",
+                so let's pick XOF as the ISO Code, to have a code-symbol match.
+                We can keep CFA as XML ID to show that we only have one currency,
+                there is no possible conflict, as no other currency currently
+                has CFA as ISO Code.
+                See http://en.wikipedia.org/wiki/CFA_franc
+                    http://en.wikipedia.org/wiki/ISO_4217
+            -->
+		<field name="name">XOF</field>
+		<field name="symbol">CFA</field>
 		<field name="rounding">1</field>
 		<field name="accuracy">4</field>
 	</record>
+	<record id="base.rateCFA" model="res.currency.rate">
+           <field name="rate">655.957</field>
+           <field name="currency_id" ref="base.CFA"/>
+           <field eval="time.strftime('%Y-01-01')" name="name"/>
+       </record>
        	<!--
 	#
 	# SYSCOHADA : Définition des taux de TVA SYSCOHADA
