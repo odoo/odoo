@@ -154,6 +154,8 @@ class stock_partial_picking(osv.osv_memory):
             moves_list = picking_type == 'in' and partial.product_moves_in or partial.product_moves_out
 
             for move in moves_list:
+                if move.product_uom.category_id.id <> move.product_id.uom_id.category_id.id:
+                    raise osv.except_osv(_('Error !'), _('Product UoM category %s must be same with  Product Default UoM Category %s!.') % (move.product_uom.category_id.name,move.product_id.uom_id.category_id.name,))
                 partial_datas['move%s' % (move.move_id.id)] = {
                     'product_id': move.id, 
                     'product_qty': move.quantity, 

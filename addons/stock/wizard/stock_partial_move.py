@@ -28,7 +28,7 @@ class stock_partial_move_memory_out(osv.osv_memory):
     _name = "stock.move.memory.out"
     _rec_name = 'product_id'
     _columns = {
-        'product_id' : fields.many2one('product.product', string="Product", required=True),
+        'product_id' : fields.many2one('product.product', string="Product", required=True, readonly=True),
         'quantity' : fields.float("Quantity", required=True),
         'product_uom': fields.many2one('product.uom', 'Unit of Measure', required=True),
         'prodlot_id' : fields.many2one('stock.production.lot', 'Production Lot'),
@@ -36,6 +36,7 @@ class stock_partial_move_memory_out(osv.osv_memory):
         'wizard_id' : fields.many2one('stock.partial.move', string="Wizard"),
         'cost' : fields.float("Cost", help="Unit Cost for this product line"),
         'currency' : fields.many2one('res.currency', string="Currency", help="Currency in which Unit cost is expressed"),
+        'tracking': fields.related('product_id', 'track_production', type='boolean', relation='product.product', string='Tracking'),
     }
     
 class stock_partial_move_memory_in(osv.osv_memory):

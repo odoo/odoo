@@ -30,7 +30,8 @@
                     <field name="product_id" />
                     <field name="quantity" />
                     <field name="product_uom" />
-                    <field name="prodlot_id" domain="[('product_id', '=', product_id)]" groups="base.group_extended" />
+                    <field name="prodlot_id" domain="[('product_id', '=', product_id)]" attrs="{'required':[('tracking','=',True)]}" groups="base.group_extended" />
+                    <field name="tracking" invisible="1"/>
                     <field name="cost" />
                     <field name="currency" />
                 </tree>
@@ -46,7 +47,8 @@
                     <field name="product_id" />
                     <field name="quantity" />
                     <field name="product_uom" />
-                    <field name="prodlot_id" domain="[('product_id', '=', product_id)]" groups="base.group_extended" />
+                    <field name="prodlot_id" domain="[('product_id', '=', product_id)]" attrs="{'required':[('tracking','=',True)]}" groups="base.group_extended" />
+                    <field name="tracking" invisible="1"/>
                     <field name="cost" />
                     <field name="currency" />
                  </form>
@@ -62,7 +64,8 @@
                     <field name="product_id" />
                     <field name="quantity" />
                     <field name="product_uom" />
-                    <field name="prodlot_id" domain="[('product_id', '=', product_id)]"  groups="base.group_extended" />
+                    <field name="prodlot_id" domain="[('product_id', '=', product_id)]" attrs="{'required':[('tracking','=',True)]}" groups="base.group_extended" />
+                    <field name="tracking" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -76,7 +79,8 @@
                     <field name="product_id" />
                     <field name="quantity" />
                     <field name="product_uom" />
-                    <field name="prodlot_id" domain="[('product_id', '=', product_id)]" groups="base.group_extended" />
+                    <field name="prodlot_id" domain="[('product_id', '=', product_id)]" attrs="{'required':[('tracking','=',True)]}" groups="base.group_extended" />
+                    <field name="tracking" invisible="1"/>
                 </form>
             </field>
         </record>  
