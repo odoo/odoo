@@ -67,6 +67,7 @@ class PollServer(openerpweb.Controller):
             }
         """
         mq = req.applicationsession.setdefault("web_chat", PollServerMessageQueue())
+        mq.messages = []
         
         #r = 'logged in'
         #u = generate random.randint(0,2**32)
@@ -106,9 +107,9 @@ class PollServer(openerpweb.Controller):
     def poll(self, req, **kw):
         
         mq = req.applicationsession.setdefault("web_chat", PollServerMessageQueue())
-        print "================ poll ======= ", kw
-        # Long Polling
-        method = kw.get('method')
+        
+        # Method: Long Poll
+        
         """
         --> GET http://im.ajaxim.com/poll?callback=jsonp1302138663582&_1302138663582=
         <-- 200 OK
@@ -132,7 +133,7 @@ class PollServer(openerpweb.Controller):
 
         """
         
-        msg = []
+        msg = '[]'
         
         for i in range(5):
             received_msg = mq.read('Guest1', i);
@@ -140,27 +141,14 @@ class PollServer(openerpweb.Controller):
                 msg = self._pollParseMessages(received_msg)
                 time.sleep(1)
             else:
-                msg = []
+                msg = '[]'
                 time.sleep(1)
-            
-        # for i in range(60):
-            #r = mq.read(username,timestamp)
-            # if messages
-                # return r
-            # if no message sleep 2s and retry
-                # sleep 2
-        # else
-            # return emptylist
 
-        msg = '[{"t":"m","s":"Guest130214008855.5","r":"Guest130214013134.26","m":"xxxxxx"}]'
-
-#        # it's http://localhost:8002/web_chat/pollserver/poll?method=long?callback=jsonp1302147330483&_1302147330483=
-        
-        return '%s'%kw.get('callback', '') + '(' + msg + ');'
+        # it's http://localhost:8002/web_chat/pollserver/poll?callback=jsonp1302147330483&_1302147330483=
+        return '%s'%kw.get('callback', '') + '(' + str(msg) + ');'
         
     @openerpweb.httprequest
     def send(self, req, **kw):
-        print "========= send ========", kw
         
         to = kw.get('to')
         message = kw.get('message')
@@ -192,7 +180,7 @@ class PollServer(openerpweb.Controller):
         
         if message:
             mq.write(m_type="m",  m_from=req.applicationsession['current_user'], m_to=to, m_message=message, m_group="Users")        
-            return {'r': 'sent'}
+            return '%s'%kw.get('callback', '') + '(' + simplejson.dumps({'r': 'sent'}) + ')'
         else:
             return {'r': 'error', 'e': 'send error'}
 
@@ -221,7 +209,8 @@ class PollServer(openerpweb.Controller):
     def _pollParseMessages(self, messages):
         msg_arr = []
         for msg in messages:
-            msg_arr.append({'t': msg['type'], 's': msg['from'], 'r': msg['to'], 'm': msg['message']})
+            msg_arr.append({"t": str(msg['type']), "s": str(msg['from']), "r": str(msg['to']), "m": str(msg['message'])})
+            
         return msg_arr
     
     def _sanitize(self, message):

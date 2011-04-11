@@ -105,7 +105,7 @@
                 login: this.settings.pollServer + '/login',
                 logout: this.settings.pollServer + '/logout',
                 register: this.settings.pollServer + '/register',
-                poll: this.settings.pollServer + '/poll?method=' + this.settings.pollType,
+                poll: this.settings.pollServer + '/poll',
                 send: this.settings.pollServer + '/send',
                 status: this.settings.pollServer + '/status',
                 resume: this.settings.pollServer + '/resume'
@@ -116,7 +116,7 @@
                 queryStrRx = new RegExp('[?](.+)$'),
                 subdomainRx = new RegExp('((http[s]?:)?//)?(.+?)[.]' + window.location.host, 'i');
             $.each(this.actions, function(name, action) {
-                if(name == 'poll') {
+                if(name == 'poll' || name == 'send') {
                     if(self.settings.pollType != 'comet')
                         action += (queryStrRx.test(action[1]) ? '&' : '?') + 'callback=?';
                         
