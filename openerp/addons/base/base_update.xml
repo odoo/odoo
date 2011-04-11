@@ -180,6 +180,40 @@
                 </search>
             </field>
         </record>
+        
+             <!--
+    ======================
+    Logo wiz
+    ======================
+    -->
+        
+        <record id="view_res_company_logo" model="ir.ui.view">
+            <field name="name">res.company.logo.form</field>
+            <field name="model">res.company.logo</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Upload Logo">
+                    <separator string="Upload your company logo in JPG or PNG with a format similar to 450*150 pixels" colspan="4"/>
+                    <field colspan="4" height="150" name="logo" widget="image" nolabel="1"/>
+                    <separator colspan="4"/>
+                    <group colspan="4" col="6">
+                       <label string="" colspan="2"/>
+                       <button icon="gtk-cancel" special="cancel" string="Cancel"/>
+                       <button icon="gtk-ok" string="Upload" name="execute" type="object"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_res_company_logo" model="ir.actions.act_window">
+            <field name="name">Set Logo</field>
+            <field name="res_model">res.company.logo</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_res_company_logo"/>
+            <field name="target">new</field>
+        </record>
+        
         <!--
     ======================
     Company
@@ -198,12 +232,16 @@
                     </group>
                     <notebook colspan="4">
                         <page string="General Information">
+                        <group colspan="4">
                             <field name="rml_header1" colspan="4"/>
                             <field name="rml_footer1" colspan="4"/>
                             <field name="rml_footer2" colspan="4"/>
-                            <field name="currency_id"/>
-                            <separator colspan="4" string="Your Logo - Use a size of about 450x150 pixels."/>
-                            <field colspan="4" name="logo" widget="image"/>
+                            <field name="currency_id" colspan="2"/>
+                         </group>
+                            <separator string="" colspan="4"/>
+                            <button name="createReport" string="Preview Reports" type="object" icon="gtk-print"/>
+                            <button name="%(action_res_company_logo)d"
+                    string="Upload/Change Logo" type="action" icon="gtk-open"/>
                         </page>
                         <page string="Header/Footer" groups="base.group_extended">
                             <field colspan="4" name="rml_header" nolabel="1"/>
@@ -304,6 +342,27 @@
             <field name="view_id" ref="view_users_configuration_form"/>
             <field name="target">new</field>
         </record>
+        
+      <!--     Config Wiz     Give access to others users-->
+        
+        <record id="action_config_access_other_user" model="ir.actions.act_window">
+            <field name="name">Give access to others users</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.users</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_users_form"/>
+        </record>
+        
+        <!--   register configuration wizard -->
+
+        <record id="config_wizard_action_config_user_form" model="ir.actions.todo">
+            <field name="action_id" ref="action_config_access_other_user"/>
+            <field name="restart">never</field>
+            <field name="target">current</field>
+            <field name="sequence">1000</field>
+            <field name="state">skip</field>
+        </record>
 
         <record id="view_confirm_simple_view_form" model="ir.ui.view">
             <field name="name">Configure Your Interface</field>
@@ -358,5 +417,58 @@
             <field name="sequence">1</field>
             <field name="state">skip</field>
         </record>
+        
+<!--        Define default users preferences-->
+
+       <record id="view_user_preferences_config_form" model="ir.ui.view">
+            <field name="name">Define default users preferences</field>
+            <field name="model">user.preferences.config</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="res_config_view_base"/>
+            <field name="arch" type="xml">
+              <data>
+                <form position="attributes">
+                  <attribute name="string">Define default users preferences</attribute>
+                </form>
+              <xpath expr='//separator[@string="title"]' position='attributes'>
+                    <attribute name='string'>Define default users preferences</attribute>
+              </xpath>
+              <xpath expr="//label[@string='description']"
+                 position="attributes">
+                <attribute name="string">Specify default values. These data are just default values, each user is free to change his own preferences.</attribute>
+              </xpath>
+              <xpath expr='//separator[@string="vsep"]' position='attributes'>
+                    <attribute name='string'></attribute>
+                    <attribute name='rowspan'>12</attribute>
+              </xpath>
+               <group string="res_config_contents" position="replace">
+                      <group colspan="4">
+                          <field colspan="4" name="context_tz" />
+                          <field colspan="4" name="context_lang" />
+                          <field colspan="4" name="view" />
+                          <field colspan="4" name="menu_tips" />
+                    </group>
+                </group>
+              </data>
+            </field>
+        </record>
+
+        <record id="action_user_preferences_config_form" model="ir.actions.act_window">
+            <field name="name">Define default users preferences</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">user.preferences.config</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="view_user_preferences_config_form"/>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <!--   Register configuration wizard -->
+        
+        <record id="config_action_user_preferences_config_form" model="ir.actions.todo">
+            <field name="action_id" ref="action_user_preferences_config_form"/>
+            <field name="restart">on_trigger</field>
+        </record>
+        
     </data>
 </openerp>

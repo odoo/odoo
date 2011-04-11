@@ -68,6 +68,25 @@ class multi_company_default(osv.osv):
 
 multi_company_default()
 
+class res_company_logo(osv.osv_memory):
+    _name = 'res.company.logo'
+    _columns = {
+        'logo' : fields.binary('Logo'),
+    }
+    _defaults={
+               'logo':lambda self,cr,uid,c: self.pool.get('res.company').browse(cr, uid, uid,c).logo,
+     }
+
+    def execute(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        record_id = context.get('active_id', False) or False
+        comp_obj = self.pool.get("res.company")
+        get_val = self.browse(cr, uid, ids)[0]
+        comp_obj.write(cr, uid, record_id, {'logo': get_val.logo}, context=context)
+        return {'type': 'ir.actions.act_window_close'}
+    
+res_company_logo()
 
 class res_company(osv.osv):
     _name = "res.company"
@@ -138,6 +157,26 @@ class res_company(osv.osv):
             return []
         ids =  self.search(cr, uid, [('parent_id','child_of',[company])])
         return ids
+    
+#  For Report
+
+    def createReport(cr, uid, report, ids, name=False):
+        files = []
+        for id in ids:
+            try:
+                service = netsvc.LocalService(report)
+                (result, format) = service.create(cr, uid, [id], {}, {})
+                if not name:
+                    report_file = '/tmp/reports'+ str(id) + '.pdf'
+                else:
+                    report_file = name
+                fp = open(report_file,'wb+')
+                fp.write(result);
+                fp.close();
+                files += [report_file]    
+            except Exception,e:
+                continue        
+        return files
 
     def _get_partner_hierarchy(self, cr, uid, company_id, context={}):
         if company_id:
