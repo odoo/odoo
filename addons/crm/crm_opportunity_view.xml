@@ -132,7 +132,7 @@
                             <group colspan="2" col="2">
                                 <separator string="Mailings" colspan="2"/>
                                 <field name="optin" on_change="on_change_optin(optin)"/>
-                        		<field name="optout" on_change="on_change_optout(optout)"/>
+                                <field name="optout" on_change="on_change_optout(optout)"/>
                             </group>
                         </page>
 
@@ -310,7 +310,7 @@
                                 domain="[]"
                                 help="Show Sales Team"/>
                         </field>
-                        <field name="subjects" groups="base.group_extended"/>
+
                         <newline/>
                         <group  expand="0" string="Extended Filters..." groups="base.group_extended">
                               <field name="stage_id" widget="selection" domain="[('type', '=', 'opportunity')]"/>
@@ -326,6 +326,7 @@
                               <newline/>
                               <field name="create_date" string="Creation Date"/>
                               <field name="date_closed"/>
+                              <field name="subjects"/>
                         </group>
                         <newline/>
                         <group expand="0" string="Group By..." colspan="16">
