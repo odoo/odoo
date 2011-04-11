@@ -335,7 +335,7 @@
                         domain="[('user_id','=', False)]"
                         help="Unassigned Leads" />
                 </field>
-                <field name="subjects"/>
+                <field name="subjects" groups="base.group_extended"/>
                 <field name="section_id" widget="selection"
                     context="{'invisible_section': False}">
                     <filter icon="terp-personal+" groups="base.group_extended"

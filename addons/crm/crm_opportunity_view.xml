@@ -310,7 +310,7 @@
                                 domain="[]"
                                 help="Show Sales Team"/>
                         </field>
-                        <field name="subjects"/>
+                        <field name="subjects" groups="base.group_extended"/>
                         <newline/>
                         <group  expand="0" string="Extended Filters..." groups="base.group_extended">
                               <field name="stage_id" widget="selection" domain="[('type', '=', 'opportunity')]"/>
