@@ -363,6 +363,9 @@ class DataSet(openerpweb.Controller):
         :type model: str
         :param ids: a list of identifiers
         :type ids: list
+        :param fields: a list of fields to fetch, ``False`` or empty to fetch
+                       all fields in the model
+        :type fields: list | False
         :returns: a list of records, in the same order as the list of ids
         :rtype: list
         """
