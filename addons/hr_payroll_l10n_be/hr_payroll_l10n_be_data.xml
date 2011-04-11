@@ -121,7 +121,7 @@
 		<field name="amount_select">fix</field>
 		<field name="sequence">15</field>
 		<field name="condtion_select">none</field>
-		<field name="appears_on_payslip">False</field>
+		<field name="appears_on_payslip" eval="False"/>
 	</record>
 
 	<record id="hr_payroll_rules_parent_company_car" model="hr.salary.rule">
@@ -152,12 +152,12 @@
 		<field name="category_id" ref="hr_payroll.ALW"/>
                 <field name="name">Check Value Meal</field>
                 <field name="code">Ch.M.</field>
-                <field name="type">1</field>
                 <field name="amount_select">fix</field>
                 <field name="sequence">65</field>
                 <field name="condition_select">none</field>
                 <field name="amount_select">code</field>
                 <field name="amount_python_compute">result = contract.ch_value</field>
+		<field name="appears_on_payslip" eval="False"/>
 	</record>
 	
 	<record id="hr_payroll_rules_ch_value" model="hr.salary.rule">
@@ -171,7 +171,7 @@
 		<field name="amount_python_compute">result = -contract.ch_value</field>
 		<field name="condition_select">python</field>
 		<field name="condition_python">result = bool(contract.ch_value)</field>
-		<field name="appears_on_payslip">False</field>
+		<field name="appears_on_payslip" eval="False"/>
 	</record>
 
 	<record id="hr_payroll_rules_ch_worker" model="hr.salary.rule">
