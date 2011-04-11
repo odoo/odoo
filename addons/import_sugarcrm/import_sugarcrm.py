@@ -211,7 +211,7 @@ def get_user_address(sugar_obj, cr, uid, val, context=None):
     'street': 'address_street',
     'zip': 'address_postalcode',
     }
-    address_ids = address_obj.search(cr, uid, [('name', '=',val.get('first_name') +''+ val.get('last_name'))])
+    address_ids = address_obj.search(cr, uid, [('name', 'like', val.get('first_name') +' '+ val.get('last_name'))])
     country_id = get_all_countries(sugar_obj, cr, uid, val.get('address_country'), context)
     state_id = get_all_states(sugar_obj, cr, uid, val.get('address_state'), country_id, context)
     val['country_id'] =  country_id
@@ -851,17 +851,17 @@ class import_sugarcrm(osv.osv):
     _name = "import.sugarcrm"
     _description = __doc__
     _columns = {
-        'lead': fields.boolean('Leads', help="If Leads are checked, SugarCRM Leads data imported in openERP crm-Lead form"),
-        'opportunity': fields.boolean('Opportunities', help="If Opportunities are checked, SugarCRM opportunities data imported in openERP crm-Opportunity form"),
-        'user': fields.boolean('User', help="If Users  are checked, SugarCRM Users data imported in openERP Users form"),
-        'contact': fields.boolean('Contacts', help="If Contacts are checked, SugarCRM Contacts data imported in openERP partner address form"),
-        'account': fields.boolean('Accounts', help="If Accounts are checked, SugarCRM  Accounts data imported in openERP partners form"),
-        'employee': fields.boolean('Employee', help="If Employees is checked, SugarCRM Employees data imported in openERP employees form"),
-        'meeting': fields.boolean('Meetings', help="If Meetings is checked, SugarCRM Meetings data imported in openERP meetings form"),
-        'call': fields.boolean('Calls', help="If Calls is checked, SugarCRM Calls data imported in openERP phonecalls form"),
-        'email': fields.boolean('Emails', help="If Emails is checked, SugarCRM Emails data imported in openERP Emails form"),
-        'project': fields.boolean('Projects', help="If Projects is checked, SugarCRM Projects data imported in openERP Projects form"),
-        'project_task': fields.boolean('Project Tasks', help="If Project Tasks is checked, SugarCRM Project Tasks data imported in openERP Project Tasks form"),
+        'lead': fields.boolean('Leads', help="If Leads are checked, SugarCRM Leads data imported in OpenERP crm-Lead form"),
+        'opportunity': fields.boolean('Opportunities', help="If Opportunities are checked, SugarCRM opportunities data imported in OpenERP crm-Opportunity form"),
+        'user': fields.boolean('User', help="If Users  are checked, SugarCRM Users data imported in OpenERP Users form"),
+        'contact': fields.boolean('Contacts', help="If Contacts are checked, SugarCRM Contacts data imported in OpenERP partner address form"),
+        'account': fields.boolean('Accounts', help="If Accounts are checked, SugarCRM  Accounts data imported in OpenERP partners form"),
+        'employee': fields.boolean('Employee', help="If Employees is checked, SugarCRM Employees data imported in OpenERP employees form"),
+        'meeting': fields.boolean('Meetings', help="If Meetings is checked, SugarCRM Meetings data imported in OpenERP meetings form"),
+        'call': fields.boolean('Calls', help="If Calls is checked, SugarCRM Calls data imported in OpenERP phonecalls form"),
+        'email': fields.boolean('Emails', help="If Emails is checked, SugarCRM Emails data imported in OpenERP Emails form"),
+        'project': fields.boolean('Projects', help="If Projects is checked, SugarCRM Projects data imported in OpenERP Projects form"),
+        'project_task': fields.boolean('Project Tasks', help="If Project Tasks is checked, SugarCRM Project Tasks data imported in OpenERP Project Tasks form"),
         'username': fields.char('User Name', size=64),
         'password': fields.char('Password', size=24),
     }
