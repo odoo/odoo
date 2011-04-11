@@ -63,6 +63,10 @@ class GraphView(openerpweb.Controller):
 
         result = []
         for i, evt in enumerate(self.events):
+            key = evt[self.fields.values()[1]]
+            if isinstance(key, list):
+                evt[self.fields.values()[1]] = key = key[-1]
+
             self.events[i].pop('id')
             result.append(evt)
 
