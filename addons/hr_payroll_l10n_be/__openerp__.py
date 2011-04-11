@@ -19,19 +19,35 @@
 #
 ##############################################################################
 {
-    'name': 'hr_payroll_salary_rule',
+    'name': 'hr_payroll_l10n_be',
     'category': 'payroll',
     'init_xml':[],
     'author': 'AOS',
     'depends': ['hr_payroll','hr_contract'],
     'version': '1.0',
+    'description': """
+Belgian Payroll system.
+=======================
+
+    * Employee Details
+    * Employee Contracts
+    * Passport based Contract
+    * Allowances / Deductions
+    * Allow to configure Basic / Grows / Net Salary
+    * Employee Payslip
+    * Monthly Payroll Register
+    * Integrated with Holiday Management
+    * Salary Maj, ONSS, Precompte Professionnel, Child Allowance, ...
+    """,
+
     'active': False,
     'demo_xml': [],
     'update_xml':[
-#	 'res.users.csv',
-#	 'security/hr.salary.rule.csv',
 	 'hr_payroll_rule_view.xml',
 	 'hr_payroll_rule_data.xml',
+	 'data/hr.salary.rule.csv',
+	 'hr_payroll_l10n_be_view.xml',
+	 'hr_payroll_l10n_be_data.xml',
 	 'data/hr.salary.rule.csv',
     ],
     'installable': True

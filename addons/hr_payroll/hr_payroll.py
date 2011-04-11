@@ -68,10 +68,12 @@ class hr_payroll_structure(osv.osv):
 
         @return: returns a id of newly created record
         """
-        default = {
+        if not default:
+            default = {}
+        default.update({
             'code': self.browse(cr, uid, id, context=context).code + "(copy)",
             'company_id': self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
-        }
+        })
         return super(hr_payroll_structure, self).copy(cr, uid, id, default, context=context)
 
     def get_all_rules(self, cr, uid, structure_ids, context=None):
@@ -79,16 +81,10 @@ class hr_payroll_structure(osv.osv):
         @param structure_ids: list of structure
         @return: returns a list of tuple (id, sequence) of rules that are maybe to apply
         """
-        def recursive_search_of_rule(rule_ids):
-            children_rules = []
-            for rule in rule_ids:
-                if rule.child_ids:
-                    children_rules += recursive_search_of_rule(rule.child_ids)
-            return [(r.id, r.sequence) for r in rule_ids] + children_rules
 
         all_rules = []
         for struct in self.browse(cr, uid, structure_ids, context=context):
-            all_rules += recursive_search_of_rule(struct.rule_ids)
+            all_rules += self.pool.get('hr.salary.rule')._recursive_search_of_rules(cr, uid, struct.rule_ids, context=context)
         return all_rules
 
     def _get_parent_structure(self, cr, uid, struct_ids, context=None):
@@ -113,7 +109,7 @@ class hr_contract(osv.osv):
     _inherit = 'hr.contract'
     _description = 'Employee Contract'
     _columns = {
-        'struct_id': fields.many2one('hr.payroll.structure', 'Salary Structure'),
+        'struct_id': fields.many2one('hr.payroll.structure', 'Salary Structure', required=True),
         'schedule_pay': fields.selection([
             ('monthly', 'Monthly'),
             ('quarterly', 'Quarterly'),
@@ -250,6 +246,7 @@ class hr_payslip(osv.osv):
         'paid': fields.boolean('Made Payment Order ? ', required=False, readonly=True, states={'draft': [('readonly', False)]}),
         'note': fields.text('Description'),
         'contract_id': fields.many2one('hr.contract', 'Contract', required=False, readonly=True, states={'draft': [('readonly', False)]}),
+        'credit_note': fields.boolean('Credit Note', help="Indicates this payslip has a refund of another"),
        #TODO put me back
        # 'details_by_salary_head': fields.function(_get_salary_rules, method=True, type='one2many', relation='hr.salary.rule', string='Details by Salary Head', multi='details_by_salary_head'),
     }
@@ -257,27 +254,26 @@ class hr_payslip(osv.osv):
         'date_from': lambda *a: time.strftime('%Y-%m-01'),
         'date_to': lambda *a: str(datetime.now() + relativedelta.relativedelta(months=+1, day=1, days=-1))[:10],
         'state': 'draft',
+        'credit_note': False,
         'company_id': lambda self, cr, uid, context: \
                 self.pool.get('res.users').browse(cr, uid, uid,
                     context=context).company_id.id,
     }
 
     def copy(self, cr, uid, id, default=None, context=None):
+        if not default:
+            default = {}
         company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
-        default = {
+        default.update({
             'line_ids': [],
             'move_ids': [],
             'move_line_ids': [],
-            'move_payment_ids': [],
             'company_id': company_id,
             'period_id': False,
             'basic_before_leaves': 0.0,
             'basic_amount': 0.0
-        }
+        })
         return super(hr_payslip, self).copy(cr, uid, id, default, context=context)
-
-    def set_to_draft(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'state': 'draft'}, context=context)
 
     def cancel_sheet(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'cancel'}, context=context)
@@ -290,6 +286,34 @@ class hr_payslip(osv.osv):
 
     def process_sheet(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'paid': True, 'state': 'done'}, context=context)
+
+    def refund_sheet(self, cr, uid, ids, context=None):
+        mod_obj = self.pool.get('ir.model.data')
+        wf_service = netsvc.LocalService("workflow")
+        for id in ids:
+            id_copy = self.copy(cr, uid, id, {'credit_note': True}, context=context)
+            self.compute_sheet(cr, uid, [id_copy], context=context)
+            wf_service.trg_validate(uid, 'hr.payslip', id_copy, 'verify_sheet', cr)
+            wf_service.trg_validate(uid, 'hr.payslip', id_copy, 'final_verify_sheet', cr)
+            wf_service.trg_validate(uid, 'hr.payslip', id_copy, 'process_sheet', cr)
+
+        form_id = mod_obj.get_object_reference(cr, uid, 'hr_payroll', 'view_hr_payslip_form')
+        form_res = form_id and form_id[1] or False
+        tree_id = mod_obj.get_object_reference(cr, uid, 'hr_payroll', 'view_hr_payslip_tree')
+        tree_res = tree_id and tree_id[1] or False
+        return {
+            'name':_("Refund Payslip"),
+            'view_mode': 'tree, form',
+            'view_id': False,
+            'view_type': 'form',
+            'res_model': 'hr.payslip',
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'current',
+            'domain': "[('id', 'in', %s)]" % [id_copy],
+            'views': [(tree_res, 'tree'), (form_res, 'form')],
+            'context': {}
+        }
 
     def verify_sheet(self, cr, uid, ids, context=None):
          #TODO clean me: this function should create the register lines accordingly to the rules computed (run the compute_sheet first)
@@ -443,29 +467,40 @@ class hr_payslip(osv.osv):
         return res
 
     def get_payslip_lines(self, cr, uid, contract_ids, payslip_id, context):
+        def _sum_salary_head(localdict, head, amount):
+            if head.parent_id:
+                localdict = _sum_salary_head(localdict, head.parent_id, amount)
+            localdict['heads'][head.code] = head.code in localdict['heads'] and localdict['heads'][head.code] + amount or amount
+            return localdict
+
         result = []
+        blacklist = []
         payslip = self.pool.get('hr.payslip').browse(cr, uid, payslip_id, context=context)
-        localdict = {'rules': {}, 'heads': {}, 'payslip': payslip}
+        worked_days = {}
+        for input_line in payslip.input_line_ids:
+            worked_days[input_line.code] = input_line
+        localdict = {'rules': {}, 'heads': {}, 'payslip': payslip, 'worked_days': worked_days}
         #get the ids of the structures on the contracts and their parent id as well
         structure_ids = self.pool.get('hr.contract').get_all_structures(cr, uid, contract_ids, context=context)
         #get the rules of the structure and thier children
         rule_ids = self.pool.get('hr.payroll.structure').get_all_rules(cr, uid, structure_ids, context=context)
         #run the rules by sequence
-        #import pdb;pdb.set_trace()
         sorted_rule_ids = [id for id, sequence in sorted(rule_ids, key=lambda x:x[1])]
 
         for contract in self.pool.get('hr.contract').browse(cr, uid, contract_ids, context=context):
             employee = contract.employee_id
             localdict.update({'employee': employee, 'contract': contract})
             for rule in self.pool.get('hr.salary.rule').browse(cr, uid, sorted_rule_ids, context=context):
+                localdict['result'] = None
                 #check if the rule can be applied
-                if self.pool.get('hr.salary.rule').satisfy_condition(cr, uid, rule.id, localdict, context=context):
+                if self.pool.get('hr.salary.rule').satisfy_condition(cr, uid, rule.id, localdict, context=context) and rule.id not in blacklist:
                     amount = self.pool.get('hr.salary.rule').compute_rule(cr, uid, rule.id, localdict, context=context)
                     #set/overwrite the amount computed for this rule in the localdict
                     localdict['rules'][rule.code] = amount
                     #sum the amount for its salary head
-                    localdict['heads'][rule.category_id.code] = rule.category_id.code in localdict['heads'] and localdict['heads'][rule.category_id.code] + amount or amount
+                    localdict = _sum_salary_head(localdict, rule.category_id, amount)
                     vals = {
+                        'salary_rule_id': rule.id,
                         'name': rule.name,
                         'code': rule.code,
                         'category_id': rule.category_id.id,
@@ -486,6 +521,9 @@ class hr_payslip(osv.osv):
                         'employee_id': contract.employee_id.id,
                     }
                     result.append(vals)
+                else:
+                    #blacklist this rule and its children
+                    blacklist += [id for id, seq in self.pool.get('hr.salary.rule')._recursive_search_of_rules(cr, uid, [rule], context=context)]
         return result
 
     def onchange_employee_id(self, cr, uid, ids, date_from, date_to, employee_id=False, contract_id=False, context=None):
@@ -630,6 +668,7 @@ class hr_salary_rule(osv.osv):
 # contract: hr.contract object
 # rules: dictionary containing the previsouly computed rules. Keys are the rule codes.
 # heads: dictionary containing the computed heads (sum of amount of all rules belonging to that head). Keys are the head codes.
+# worked_days: dictionary containing the computed worked days. Keys are the worked days codes.
 
 # Note: returned value have to be set in the variable 'result'
 
@@ -643,6 +682,7 @@ result = contract.wage * 0.10''',
 # contract: hr.contract object
 # rules: dictionary containing the previsouly computed rules. Keys are the rule codes.
 # heads: dictionary containing the computed heads (sum of amount of all rules belonging to that head). Keys are the head codes.
+# worked_days: dictionary containing the computed worked days. Keys are the worked days codes.
 
 # Note: returned value have to be set in the variable 'result'
 
@@ -660,6 +700,17 @@ result = rules['NET'] > heads['NET'] * 0.10''',
         'amount_percentage': 0.0,
      }
 
+    def _recursive_search_of_rules(self, cr, uid, rule_ids, context=None):
+        """
+        @param rule_ids: list of browse record
+        @return: returns a list of tuple (id, sequence) which are all the children of the passed rule_ids
+        """
+        children_rules = []
+        for rule in rule_ids:
+            if rule.child_ids:
+                children_rules += self._recursive_search_of_rules(cr, uid, rule.child_ids, context=context)
+        return [(r.id, r.sequence) for r in rule_ids] + children_rules
+
     #TODO should add some checks on the type of result (should be float)
     def compute_rule(self, cr, uid, rule_id, localdict, context=None):
         """
@@ -671,10 +722,16 @@ result = rules['NET'] > heads['NET'] * 0.10''',
         if rule.amount_select == 'fix':
             return rule.amount_fix
         elif rule.amount_select == 'percentage':
-            return rule.amount_percentage * eval(rule.amount_percentage_base, localdict) / 100
+            try:
+                return rule.amount_percentage * eval(rule.amount_percentage_base, localdict) / 100
+            except:
+                raise osv.except_osv(_('Error'), _('Wrong percentage base defined for salary rule %s (%s)')% (rule.name, rule.code))
         else:
-            eval(rule.amount_python_compute, localdict, mode='exec', nocopy=True)
-            return localdict['result']
+            try:
+                eval(rule.amount_python_compute, localdict, mode='exec', nocopy=True)
+                return localdict['result']
+            except:
+                raise osv.except_osv(_('Error'), _('Wrong python code defined for salary rule %s (%s) ')% (rule.name, rule.code))
 
     def satisfy_condition(self, cr, uid, rule_id, localdict, context=None):
         """
@@ -687,11 +744,18 @@ result = rules['NET'] > heads['NET'] * 0.10''',
         if rule.condition_select == 'none':
             return True
         elif rule.condition_select == 'range':
-            result = eval(rule.condition_range, localdict)
-            return rule.condition_range_min <=  result and result <= rule.condition_range_max or False
+            try:
+                result = eval(rule.condition_range, localdict)
+                return rule.condition_range_min <=  result and result <= rule.condition_range_max or False
+            except:
+                raise osv.except_osv(_('Error'), _('Wrong range condition defined for salary rule %s (%s)')% (rule.name, rule.code))
         else: #python code
-            eval(rule.condition_python, localdict, mode='exec', nocopy=True)
-            return 'result' in localdict and localdict['result'] or False
+            try:
+                eval(rule.condition_python, localdict, mode='exec', nocopy=True)
+                return 'result' in localdict and localdict['result'] or False
+            except:
+                raise osv.except_osv(_('Error'), _('Wrong python condition defined for salary rule %s (%s)')% (rule.name, rule.code))
+
 hr_salary_rule()
 
 class hr_payslip_line(osv.osv):
@@ -706,6 +770,7 @@ class hr_payslip_line(osv.osv):
 
     _columns = {
         'slip_id':fields.many2one('hr.payslip', 'Pay Slip', required=True),
+        'salary_rule_id':fields.many2one('hr.salary.rule', 'Rule', required=True),
         'employee_id':fields.many2one('hr.employee', 'Employee', required=True),
         'total': fields.float('Amount', digits_compute=dp.get_precision('Account')),
         'company_contrib': fields.float('Company Contribution', readonly=True, digits_compute=dp.get_precision('Account')),

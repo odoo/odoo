@@ -41,6 +41,11 @@
 						a) Réduction pour enfants à charge</field>
 	</record>
 
+	<record id="hr_payroll_head_company_car" model="hr.salary.head">
+		<field name="name">Company car</field>
+		<field name="code">C.C.</field>
+                <field name="parent_id" ref="hr_payroll.ALW"/>
+	</record>
 		
 	<record id="hr_payroll_head_reim_travel" model="hr.salary.head">
 		<field name="name">Reimbursement of travel expenses</field>
@@ -123,7 +128,7 @@
 		<field name="category_id" ref="hr_payroll_head_pp"/> 
                 <field name="name">Precompte Professionnel Bareme 2011</field>
 		<field name="code">P.P</field>
-		<field name="sequence">50</field>
+		<field name="sequence">120</field>
 		<field name="amount_select">fix</field>
 		<field name="condition_select">none</field>
 		<field name="appears_on_payslip" eval="False"/>
@@ -136,10 +141,10 @@
 		<field name="name">Precompte Professionnel</field>
 		<field name="code">B.I.</field>
 		<field name="amount_select">fix</field>
-		<field name="sequence">50</field>
+		<field name="sequence">120</field>
 		<field name="condition_select">python</field>
-		<field name="condition_python">result = employee.marital=='single'</field>
 		<field name="appears_on_payslip" eval="False"/>
+		<field name="condition_python">result = "employee.marital=='single' OR employee.marital=='married' AND statut_fiscal=='with income'"</field>
 	</record>
 
 	<record id="hr_payroll_rules_baremeII" model="hr.salary.rule">
@@ -148,10 +153,10 @@
 		<field name="name">Precompte Professionnel</field>
 		<field name="code">B.II</field>
 		<field name="amount_select">fix</field>
-		<field name="sequence">50</field>
+		<field name="sequence">120</field>
 		<field name="condition_select">python</field>
-		<field name="condition_python">result = employee.marital=='married'</field>
 		<field name="appears_on_payslip" eval="False"/>
+		<field name="condition_python">result = "employee.marital=='married' AND statut_fiscal=='without income'"</field>
 	</record>
 	
 	<record id="hr_payroll_rules_baremeIII" model="hr.salary.rule">
@@ -160,7 +165,7 @@
 		<field name="name">Precompte Professionnel</field>
 		<field name="code">B.III</field>
 		<field name="amount_select">fix</field>
-		<field name="sequence">50</field>
+		<field name="sequence">120</field>
 		<field name="condition_select">python</field>
 		<field name="condition_python">result = employee.marital=='divorced'</field>
 		<field name="appears_on_payslip" eval="False"/>
@@ -172,13 +177,13 @@
 		<field name="name">Child Allowance Belgium</field>
 		<field name="code">Ch.A</field>
 		<field name="amount_select">fix</field>
-		<field name="sequence">51</field>
+		<field name="sequence">60</field>
 		<field name="condtion_select">range</field>
 		<field name="condition_range">employee.children</field>
 	</record>
 
-	<record id="hr_payroll_rules_company_car_1" model="hr.salary.rule">
-		<field name="category_id" ref="hr_payroll.ALW"/>
+	<record id="hr_payroll_rules_parent_company_car" model="hr.salary.rule">
+		<field name="category_id" ref="hr_payroll_head_company_car"/>
 		<field name="name">Company car</field>
 		<field name="code">car 1</field>
 		<field name="sequence">15</field>
@@ -198,9 +203,49 @@
 		<field name="amount_select">code</field>
 		<field name="amount_python_compute">result = -contract.company_car</field>
 	</record>
+
+<!--	<record id="hr_payroll_rules_emp_company_car" model="hr.salary.rule">
+                <field name="category_id" ref="hr_payroll_head_company_car"/>
+		<field name="parent_rule_id" ref="hr_payroll_rules_parent_company_car"/>
+                <field name="name">Company car by Employee</field>
+                <field name="code">C.C.</field>
+                <field name="type">2</field>
+                <field name="amount_select">fix</field>
+                <field name="sequence">60</field>
+                <field name="condition_select">none</field>
+                <field name="amount_select">code</field>
+                <field name="amount_python_compute">result = contract.company_car_emp</field>
+        </record>
+
+
+	<record id="hr_payroll_rules_wrk_company_car" model="hr.salary.rule">
+                <field name="category_id" ref="hr_payroll_head_company_car"/>
+		<field name="parent_rule_id" ref="hr_payroll_rules_parent_company_car"/>
+                <field name="name">Company car by Worker</field>
+                <field name="code">C.C.</field>
+                <field name="type">2</field>
+                <field name="amount_select">fix</field>
+                <field name="sequence">60</field>
+                <field name="condition_select">none</field>
+                <field name="amount_select">code</field>
+                <field name="amount_python_compute">result = contract.company_car_wkr</field>
+        </record>
+-->
+	<record id="hr_payroll_rules_parent_ch" model="hr.salary.rule">
+		<field name="category_id" ref="hr_payroll_head_ch_value"/>
+                <field name="name">Check Value Meal</field>
+                <field name="code">Ch.M.</field>
+                <field name="type">1</field>
+                <field name="amount_select">fix</field>
+                <field name="sequence">65</field>
+                <field name="condition_select">none</field>
+                <field name="amount_select">code</field>
+                <field name="amount_python_compute">result = contract.ch_value</field>
+	</record>
 	
 	<record id="hr_payroll_rules_ch_value" model="hr.salary.rule">
 		<field name="category_id" ref="hr_payroll_head_ch_value"/>
+		<field name="parent_rule_id" ref="hr_payroll_rules_parent_ch"/>
 		<field name="name">Check Value Meal</field>
 		<field name="code">Ch.M.</field>
 		<field name="amount_select">fix</field>
@@ -241,6 +286,7 @@
 	<record id="hr_payroll_rules_ch_worker" model="hr.salary.rule">
 		<field name="category_id" ref="hr_payroll_head_ch_worker"/>
 		<field name="name">Check Value Meal - by worker</field>
+		<field name="parent_id" ref="hr_payroll_rules_parent_ch"/>
 		<field name="code">Ch.wkr</field>
 		<field name="type">1</field>
 		<field name="amount_select">fix</field>
@@ -323,6 +369,8 @@
             <field name="code">C.P.218</field>
             <field name="name">Belgian Employee</field>
 <!--	    <field eval="[(6, 0, [ref('hr_payroll_rules_onss_rule'),ref('hr_payroll_rules_p_p_b1'),ref('hr_payroll_rules_child_alw')])]" name="rule_ids"/>-->
+	    <field name="company_id" ref="base.main_company"/>	
+	    <field eval="[(6, 0, [ref('structure_base')])]" name="rule_ids"/>
         </record>
 
 	
@@ -330,6 +378,8 @@
             <field name="code">C.P.219</field>
             <field name="name">Belgian Worker</field>
 <!--	    <field eval="[(6, 0, [ref('hr_payroll_rules_maj'), ref('hr_payroll_rules_onss_rule'),ref('hr_payroll_rules_p_p_b1'),ref('hr_payroll_rules_child_alw')])]" name="rule_ids"/>-->
+	    <field name="company_id" ref="base.main_company"/>
+	    <field eval="[(6, 0, [ref('structure_base')])" name="rule_ids"/>
         </record>
     </data>
 </openerp>
