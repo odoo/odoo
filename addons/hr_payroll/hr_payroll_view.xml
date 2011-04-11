@@ -237,7 +237,7 @@
                         </page>
 <!-- TODO: put me back -->
 	                    <page string="Details By Salary Head">
-                            <field name="details_by_salary_head" context="{'group_by':'category_id'}" nolabel="1">
+                            <field name="details_by_salary_head" context="{'group_by':'category_id'}" domain="[('appears_on_payslip', '=', True)]" nolabel="1">
                                 <tree string="Payslip Lines">
                                     <field name="category_id"/>
                                     <field name="sequence" groups="base.group_extended"/>
