@@ -113,7 +113,7 @@ openerp.base.FormView =  openerp.base.Controller.extend( /** @lends openerp.base
                 this.dataset.index = this.dataset.ids.length - 1;
                 break;
         }
-        this.dataset.read_index(_.keys(this.fields_view.fields), this.on_record_loaded);
+        this.reload();
     },
     do_update_pager: function(hide_index) {
         var $pager = this.$element.find('#' + this.element_id + '_header div.oe_form_pager').eq(0);
@@ -198,7 +198,7 @@ openerp.base.FormView =  openerp.base.Controller.extend( /** @lends openerp.base
             self.on_record_loaded(result.result);
         });
     },
-    do_save: function() {
+    do_save: function(success) {
         var self = this;
         if (!this.ready) {
             return false;
@@ -216,20 +216,19 @@ openerp.base.FormView =  openerp.base.Controller.extend( /** @lends openerp.base
         }
         if (invalid) {
             this.on_invalid();
+            return false;
         } else {
             this.log("About to save", values);
             if (!this.datarecord.id) {
-                this.dataset.create(values, function() {
-                    self.datarecord.id = arguments[0].result;
-                    self.dataset.ids.push(self.datarecord.id);
-                    self.dataset.index = self.dataset.ids.length - 1;
-                    self.dataset.count++;
-                    self.do_update_pager();
-                    self.on_saved.apply(self, arguments);
+                this.dataset.create(values, function(r) {
+                    self.on_created(r, success);
                 });
             } else {
-                this.dataset.write(this.datarecord.id, values, this.on_saved);
+                this.dataset.write(this.datarecord.id, values, function(r) {
+                    self.on_saved(r, success);
+                });
             }
+            return true;
         }
     },
     do_save_edit: function() {
@@ -250,12 +249,29 @@ openerp.base.FormView =  openerp.base.Controller.extend( /** @lends openerp.base
         msg += "</ul>";
         this.notification.warn("The following fields are invalid :", msg);
     },
-    on_saved: function(r) {
+    on_saved: function(r, success) {
         if (!r.result) {
-            this.log("Record was not saved");
+            this.notification.warn("Record not saved", "Problem while saving record.");
         } else {
-            // Check response for exceptions, display error
             this.notification.notify("Record saved", "The record #" + this.datarecord.id + " has been saved.");
+            if (success) {
+                success(r);
+            }
+        }
+    },
+    on_created: function(r, success) {
+        if (!r.result) {
+            this.notification.warn("Record not created", "Problem while creating record.");
+        } else {
+            this.datarecord.id = arguments[0].result;
+            this.dataset.ids.push(this.datarecord.id);
+            this.dataset.index = this.dataset.ids.length - 1;
+            this.dataset.count++;
+            this.do_update_pager();
+            this.notification.notify("Record created", "The record has been created with id #" + this.datarecord.id);
+            if (success) {
+                success(r);
+            }
         }
     },
     do_search: function (domains, contexts, groupbys) {
@@ -266,6 +282,15 @@ openerp.base.FormView =  openerp.base.Controller.extend( /** @lends openerp.base
     },
     do_cancel: function () {
         this.notification.notify("Cancelling form");
+    },
+    reload: function() {
+        if (this.datarecord.id) {
+            this.dataset.read_index(_.keys(this.fields_view.fields), this.on_record_loaded);
+        } else {
+            this.dataset.default_get(_.keys(this.fields), function(result) {
+                self.on_record_loaded(result.result);
+            });
+        }
     }
 });
 
@@ -464,6 +489,61 @@ openerp.base.form.WidgetButton = openerp.base.form.Widget.extend({
     init: function(view, node) {
         this._super(view, node);
         this.template = "WidgetButton";
+    },
+    start: function() {
+        this._super.apply(this, arguments);
+        this.$element.click(this.on_click);
+    },
+    on_click: function(saved) {
+        var self = this;
+        if (saved !== true) {
+            this.view.do_save(function() {
+                self.on_click(true);
+            });
+        } else {
+            if (this.node.attrs.confirm) {
+                var dialog = $('<div>' + this.node.attrs.confirm + '</div>').dialog({
+                    title: 'Confirm',
+                    modal: true,
+                    buttons: {
+                        Ok: function() {
+                            self.on_confirmed();
+                            $(this).dialog("close");
+                        },
+                        Cancel: function() {
+                            $(this).dialog("close");
+                        }
+                    }
+                });
+            } else {
+                this.on_confirmed();
+            }
+        }
+    },
+    on_confirmed: function() {
+        var attrs = this.node.attrs;
+        if (attrs.special) {
+            return this.log("Should close the popup");
+        } else {
+            var type = attrs.type || 'workflow';
+            var context = _.extend({}, this.view.dataset.context, attrs.context || {});
+            switch(type) {
+                case 'object':
+                    return this.view.dataset.call(attrs.name, [this.view.datarecord.id], [context], this.on_button_object);
+                    break;
+                default:
+                    this.log(_.sprintf("Unsupported button type : %s", type));
+            }
+        }
+    },
+    on_button_object: function(r) {
+        if (r.result === false) {
+            this.log("Button object returns false");
+        } else if (r.result.constructor == Object) {
+            console.log("TODO: send action to action manager", r.result);
+        } else {
+            this.view.reload();
+        }
     }
 });
 
