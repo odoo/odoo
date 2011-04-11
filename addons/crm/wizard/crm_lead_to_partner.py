@@ -73,7 +73,6 @@ class crm_lead2partner(osv.osv_memory):
 
         data = list(context and context.get('active_ids', []) or [])
         res = super(crm_lead2partner, self).default_get(cr, uid, fields, context=context)
-
         for lead in lead_obj.browse(cr, uid, data, context=context):
             partner_ids = []
             # Find partner address matches the email_from of the lead

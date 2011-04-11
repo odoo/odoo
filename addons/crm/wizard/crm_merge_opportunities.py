@@ -61,7 +61,11 @@ class crm_merge_opportunity(osv.osv_memory):
 
 
     def find_oldest(self, cr, uid, op_ids, context=None):
+        if not context:
+            context = {}
         ids = [op_id.id for op_id in op_ids]
+        if context.get('convert'):
+            ids = list(set(ids) - set(context.get('lead_ids', False)) )
         lead_obj = self.pool.get('crm.lead')
         op_id = lead_obj.search(cr, uid, [('id', 'in', ids)], order='create_date' , context=context)
         opps = lead_obj.browse(cr, uid, [op_id[0]], context=context)
@@ -74,7 +78,7 @@ class crm_merge_opportunity(osv.osv_memory):
         opp_obj = self.pool.get('crm.lead')
         message_obj = self.pool.get('mailgate.message')
 
-        lead_ids = context and context.pop('lead_ids', []) or []
+        lead_ids = context and context.get('lead_ids', []) or []
 
         if len(op_ids) <= 1:
             raise osv.except_osv(_('Warning !'),_('Please select more than one opportunities.'))

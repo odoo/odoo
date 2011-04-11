@@ -48,11 +48,10 @@ class crm_lead2opportunity_partner(osv.osv_memory):
         """
         lead_obj = self.pool.get('crm.lead')
 
-
         res = super(crm_lead2opportunity_partner, self).default_get(cr, uid, fields, context=context)
         opportunities = res.get('opportunity_ids') or []
-
         partner_id = False
+        email = False
         for lead in lead_obj.browse(cr, uid, opportunities, context=context):
             partner_id = lead.partner_id and lead.partner_id.id or False
             email = re.findall(r'([^ ,<@]+@[^> ,]+)', lead.email_from or '')
@@ -150,7 +149,7 @@ class crm_lead2opportunity_partner(osv.osv_memory):
         subject = "lead %s converted into opportunity" % lead.name
         body = "Info \n Id : %s \n Subject: %s \n Partner: %s \n Description : %s " % (lead.id, lead.name, lead.partner_id.name, lead.description)  
         try :
-            tools.email_send(email_from, email_to, subject, body)
+            tools.email_send(email_from, [email_to], subject, body)
         except:
             pass
 
@@ -211,7 +210,7 @@ class crm_lead2opportunity_partner(osv.osv_memory):
             if data.name == 'merge' and (len(data.opportunity_ids) > 1 or not context.get('mass_convert') ):
                 merge_obj = self.pool.get('crm.merge.opportunity')
                 self.write(cr, uid, ids, {'opportunity_ids' : [(6,0, [data.opportunity_ids[0].id])]}, context=context)
-                context.update({'lead_ids' : record_id})
+                context.update({'lead_ids' : record_id, "convert" : True})
                 return merge_obj.merge(cr, uid, data.opportunity_ids, context=context)
 
         return {
