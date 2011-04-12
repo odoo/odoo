@@ -8,9 +8,9 @@ class FormEditor(openobject.templating.TemplateEditor):
     def insert_share_button(self, output):
         # Insert the share button on the form title H1 line, at the very end,
         # but only if the user is a member of the sharing group 
-        share_opener_insertion = output.index(
-                '</h1>',
-                output.index(self.MAIN_FORM_BODY)) - 1
+        share_opener_insertion = output.index('% endif', output.index(
+                '/view_diagram/process',
+                output.index(self.MAIN_FORM_BODY))) - 1
         return output[:share_opener_insertion] + '''
     <%
         if 'has_share' not in cp.session:
