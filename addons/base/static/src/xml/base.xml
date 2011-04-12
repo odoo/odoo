@@ -62,7 +62,7 @@
 <t t-name="Header">
     <a href="/" class="company_logo_link">
         <img t-att-src="typeof kitten == 'undefined' ? '/base/static/src/img/logo.png' :
-            'http://placekitten.com/180/46'" border="0" class="company_logo"/>
+            'http://placekitten.com/g/179/46'" border="0" class="company_logo"/>
     </a>
     <h1 class="header_title" t-if="session.session_is_valid()">
         <span class="company">$company</span> - (<span class="database">$database</span>)<br/>
@@ -385,7 +385,7 @@
     </form>
 </t>
 <t t-name="SearchView.render_lines">
-    <table border="0" cellspacing="0" cellpadding="0"
+    <table class="oe-searchview-render-line" border="0" cellspacing="0" cellpadding="0"
            t-foreach="lines" t-as="line">
         <tr>
             <td t-foreach="line" t-as="widget">
@@ -484,7 +484,7 @@
 <t t-name="SearchView.extended_search">
     <t t-call="SearchView.util.expand">
         <t t-set="expand" t-value="false"/>
-        <t t-set="label" t-value="'Extended Filters'"/>
+        <t t-set="label" t-value="'Custom Filters'"/>
         <t t-set="content">
             <div class="searchview_extended_groups_list"/>
             <button class="searchview_extended_add_group"
@@ -493,18 +493,17 @@
     </t>
 </t>
 <t t-name="SearchView.extended_search.group">
-    <div t-att-id="element_id">
+    <div t-att-id="element_id" class="searchview_extended_group">
         <select class="searchview_extended_group_choice">
-            <option value="all">All</option>
-            <option value="any">Any</option>
-            <option value="none">None</option>
+            <option value="all">All the following conditions must match</option>
+            <option value="any">Any of the following conditions must match</option>
+            <option value="none">None of the following conditions must match</option>
         </select>
+        <button class="searchview_extended_delete_group"
+                type="button">Delete this group of conditions</button>
         <div class="searchview_extended_propositions_list">
         </div>
-        <button class="searchview_extended_add_proposition"
-                type="button">Add condition</button>
-        <button class="searchview_extended_delete_group"
-                type="button">Delete this group</button>
+        <button class="searchview_extended_add_proposition" type="button">Add condition</button>
     </div>
 </t>
 <t t-name="SearchView.extended_search.proposition">

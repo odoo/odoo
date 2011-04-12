@@ -817,24 +817,27 @@ openerp.base.search.ExtendedSearchProposition = openerp.base.BaseWidget.extend({
             return;
         }
 
+        var type = field.type;
         try {
-            this.value = new (openerp.base.search.custom_filters.get_object(field.type))
-                              (this);
-            _.each(this.value.operators, function(operator) {
-                var option = jQuery('<option>', {value: operator.value})
-                    .text(operator.text)
-                    .appendTo(_this.$element.find('.searchview_extended_prop_op'));
-            });
-            this.$element.find('.searchview_extended_prop_value').html(
-                this.value.render({}));
-            this.value.start();
+            openerp.base.search.custom_filters.get_object(type);
         } catch (e) {
             if (! e instanceof openerp.base.KeyNotFound) {
                 throw e;
             }
-            this.attrs.selected = null;
+            var type = "char";
             this.log('Unknow field type ' + e.key);
         }
+        this.value = new (openerp.base.search.custom_filters.get_object(type))
+                          (this);
+        _.each(this.value.operators, function(operator) {
+            var option = jQuery('<option>', {value: operator.value})
+                .text(operator.text)
+                .appendTo(_this.$element.find('.searchview_extended_prop_op'));
+        });
+        this.$element.find('.searchview_extended_prop_value').html(
+            this.value.render({}));
+        this.value.start();
+        
     },
     get_proposition: function() {
         if ( this.attrs.selected == null)
