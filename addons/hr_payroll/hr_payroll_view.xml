@@ -122,6 +122,7 @@
             <field name="arch" type="xml">
                 <tree string="Salary Structure" editable="bottom">
                     <field name="category_id"/>
+                    <field name="employee_id" invisible="1"/>
                     <field name="sequence" groups="base.group_extended"/>
                     <field name="name"/>
                     <field name="code"/>
@@ -164,6 +165,31 @@
                 </form>
             </field>
         </record>
+
+        <record id="view_hr_payslip_line_filter" model="ir.ui.view">
+            <field name="name">hr.payslip.line.select</field>
+            <field name="model">hr.payslip.line</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Payslip Lines">
+                    <group col="8" colspan="4">
+                    	<field name="name"/>
+                    	<field name="code"/>
+                        <field name="slip_id"/>
+                        <field name="amount_select"/>
+                    </group>
+                    <newline/>
+                    <group col="8" colspan="4" expand="0" string="Group By...">
+                        <filter string="Salary Head" icon="terp-camera_test" name="category_id" context="{'group_by':'category_id'}"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Amount Type" name="amount_select" icon="terp-stock_symbol-selection" context="{'group_by':'amount_select'}"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Employees" name="employee_id" icon="terp-personal" context="{'group_by':'employee_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
 
         <record id="view_hr_payslip_tree" model="ir.ui.view">
             <field name="name">hr.payslip.tree</field>
@@ -553,6 +579,8 @@
     </record>
 
     <menuitem id="menu_action_hr_salary_rule_form" action="action_salary_rule_form" parent="payroll_configure" sequence="12"/>
+
+    <act_window domain="[('slip_id', '=', active_id)]" id="act_payslip_lines" name="Payslip Lines" res_model="hr.payslip.line" src_model="hr.payslip"/>
 
     </data>
 </openerp>
