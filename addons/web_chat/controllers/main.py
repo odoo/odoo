@@ -136,15 +136,15 @@ class PollServer(openerpweb.Controller):
         msg = '[]'
         
         for i in range(5):
-            received_msg = mq.read('Guest1', i);
+            received_msg = mq.read('Guest1', i)
             if received_msg:
                 msg = self._pollParseMessages(received_msg)
-                time.sleep(1)
+                mq.messages = []
+                return '%s'%kw.get('callback', '') + '(' + str(msg) + ');'
             else:
                 msg = '[]'
-                time.sleep(1)
-
-        return '%s'%kw.get('callback', '') + '(' + str(msg) + ');'
+                time.sleep(2)
+                return '%s'%kw.get('callback', '') + '(' + str(msg) + ');'
         
     @openerpweb.httprequest
     def send(self, req, **kw):
