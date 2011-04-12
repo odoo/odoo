@@ -144,7 +144,6 @@ class PollServer(openerpweb.Controller):
                 msg = '[]'
                 time.sleep(1)
 
-        # it's http://localhost:8002/web_chat/pollserver/poll?callback=jsonp1302147330483&_1302147330483=
         return '%s'%kw.get('callback', '') + '(' + str(msg) + ');'
         
     @openerpweb.httprequest
@@ -210,7 +209,7 @@ class PollServer(openerpweb.Controller):
         msg_arr = []
         for msg in messages:
             msg_arr.append({"t": str(msg['type']), "s": str(msg['from']), "r": str(msg['to']), "m": str(msg['message'])})
-            
+        
         return msg_arr
     
     def _sanitize(self, message):
