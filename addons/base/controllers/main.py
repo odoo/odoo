@@ -569,7 +569,8 @@ class ListView(View):
         eval_context = request.session.evaluation_context(
             request.context)
         return [
-            {'data': row,
+            {'data': dict((key, {'value': value})
+                          for key, value in row.iteritems()),
              'color': self.process_colors(view, row, eval_context)}
             for row in rows
         ]

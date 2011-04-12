@@ -45,10 +45,26 @@ openerp.base.ListView = openerp.base.Controller.extend(
         this.name = "" + this.fields_view.arch.attrs.string;
 
         var fields = this.fields_view.fields;
+        var domain_computer = openerp.base.form.compute_domain;
         this.columns = _(this.fields_view.arch.children).chain()
             .map(function (field) {
                 var name = field.attrs.name;
-                return _.extend({id: name, tag: field.tag}, field.attrs, fields[name]);
+                var column = _.extend({id: name, tag: field.tag},
+                                      field.attrs, fields[name]);
+                // attrs computer
+                if (column.attrs) {
+                    var attrs = eval('(' + column.attrs + ')');
+                    column.attrs_for = function (fields) {
+                        var result = {};
+                        for (var attr in attrs) {
+                            result[attr] = domain_computer(attrs[attr], fields);
+                        }
+                        return result;
+                    };
+                } else {
+                    column.attrs_for = function () { return {}; };
+                }
+                return column;
             }).value();
 
         this.visible_columns = _.filter(this.columns, function (column) {
@@ -86,6 +102,9 @@ openerp.base.ListView = openerp.base.Controller.extend(
      */
     do_fill_table: function(records) {
         this.rows = records;
+        this.dataset.ids = _(records).chain().map(function (record) {
+            return record.data.id.value;
+        }).value();
 
         var $table = this.$element.find('table');
         // remove all data lines
@@ -133,7 +152,7 @@ openerp.base.ListView = openerp.base.Controller.extend(
         // count number of preceding siblings to line clicked
         var row = this.rows[$target.prevAll().length];
 
-        var index = _.indexOf(this.dataset.ids, row.id);
+        var index = _.indexOf(this.dataset.ids, row.data.id.value);
         if (index == undefined || index === -1) {
             return;
         }
