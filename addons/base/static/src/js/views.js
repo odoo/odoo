@@ -9,6 +9,7 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
     init: function(session, element_id) {
         this._super(session, element_id);
         this.viewmanager = null;
+        this.dialog_stack = []
         // Temporary linking view_manager to session.
         // Will use controller_parent to find it when implementation will be done.
         session.action_manager = this;
@@ -19,12 +20,35 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
      */
     do_action: function(action) {
         // instantiate the right controllers by understanding the action
-        if(action.type == "ir.actions.act_window") {
-            if (this.viewmanager) {
-                this.viewmanager.stop();
-            }
-            this.viewmanager = new openerp.base.ViewManagerAction(this.session,this.element_id, action, true);
-            this.viewmanager.start();
+        switch (action.type) {
+            case 'ir.actions.act_window':
+                if (action.target == 'new') {
+                    var element_id = _.uniqueId("act_window_dialog");
+                    var dialog = $('<div id="'+element_id+'"></div>');
+                    dialog.dialog({
+                        title: action.name,
+                        modal: true,
+                        width: '50%',
+                        height: 'auto'
+                    });
+                    var viewmanager = new openerp.base.ViewManagerAction(this.session ,element_id, action, false);
+                    viewmanager.start();
+                    this.dialog_stack.push(viewmanager);
+                } else if (action.target == "current") {
+                    if (this.viewmanager) {
+                        this.viewmanager.stop();
+                    }
+                    this.viewmanager = new openerp.base.ViewManagerAction(this.session,this.element_id, action, true);
+                    this.viewmanager.start();
+                }
+                break;
+            case 'ir.actions.act_window_close':
+                var dialog = this.dialog_stack.pop();
+                dialog.$element.dialog('destroy');
+                dialog.stop();
+                break;
+            default:
+                console.log(_.sprintf("Action manager can't handle action of type %s", action.type), action);
         }
     }
 });

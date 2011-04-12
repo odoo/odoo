@@ -532,7 +532,9 @@ openerp.base.form.WidgetButton = openerp.base.form.Widget.extend({
     on_confirmed: function() {
         var attrs = this.node.attrs;
         if (attrs.special) {
-            return this.log("Should close the popup");
+            this.on_button_object({
+                result : { type: 'ir.actions.act_window_close' }
+            });
         } else {
             var type = attrs.type || 'workflow';
             var context = _.extend({}, this.view.dataset.context, attrs.context || {});
