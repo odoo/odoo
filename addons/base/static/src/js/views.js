@@ -199,6 +199,11 @@ openerp.base.Sidebar = openerp.base.BaseWidget.extend({
     refresh: function() {
         this.$element.html(QWeb.render("ViewManager.sidebar.internal", _.extend({_:_}, this)));
         var self = this;
+        this.$element.find(".toggle-sidebar").click(function(e) {
+            self.$element.toggleClass('open-sidebar closed-sidebar');
+            e.stopPropagation();
+            e.preventDefault();
+        });
         this.$element.find("a").click(function(e) {
             var $this = jQuery(this);
             var i = $this.attr("data-i");

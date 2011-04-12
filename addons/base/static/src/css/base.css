@@ -559,6 +559,10 @@ body.openerp {
 }
 
 .openerp .sidebar-main-div {
+    height:100%;
+}
+
+.openerp .sidebar-sub-div {
     padding:0;
     margin:0;
     width:180px;
@@ -568,6 +572,14 @@ body.openerp {
     height:100%;
     font-family: Ubuntu, Helvetica, sans-serif;
     font-size: 0.9em;
+}
+
+.openerp .closed-sidebar .sidebar-sub-div {
+    width:22px;
+}
+
+.openerp .closed-sidebar .sidebar-displaying-div {
+    display:none;
 }
 
 .openerp .sidebar-main-div a {
@@ -607,5 +619,21 @@ body.openerp {
 .openerp .view-manager-main-sidebar li {
     display: block;
     padding: 3px 3px 3px 10px;
+}
+
+.openerp .toggle-sidebar {
+    border-color: #D2CFCF;
+    border-style: solid;
+    border-width: 1px;
+    display: block;
+    background: url(../img/toggle-a-bg.png);
+    width: 21px;
+    height: 21px;
+    position: absolute;
+    z-index: 10;
+}
+.openerp .open-sidebar .toggle-sidebar {
+    margin-left: 158px;
+    background-position: 21px 0;
 }
 
