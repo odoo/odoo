@@ -6,7 +6,6 @@
             <field name="model">hr.contract</field>
             <field name="type">form</field>
             <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
-            <field name="sequence">20</field>
             <field name="arch" type="xml">
             <data>
 		 <xpath expr="/form/notebook/page/group/field[@name='working_hours']" position="after">
@@ -34,6 +33,9 @@
 			   <field name="company_car_wkr"/>
 		    </group>
                  </xpath>
+                <xpath expr="/form//group/field[@name='type_id']" position="after">
+                    <field name="struct_id" select="1"/>
+                </xpath>
             </data>
             </field>
         </record>
@@ -50,6 +52,17 @@
                 </field>
             </field>
         </record>
+
+	<record id="view_contract_salary_structure" model="ir.ui.view">
+		<field name="name">hr.contract.struc</field>
+		<field name="model">hr.contract</field>
+		<field name="inherit_id" ref="hr_payroll.hr_contract_form_inherit"/>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<field name="struct_id" position="replace">		
+			</field>
+		</field>
+	</record>
 
         <record id="hr_contract_hr_hr_employee_view_for" model="ir.ui.view">
             <field name="name">hr.hr.employee.view.for</field>
