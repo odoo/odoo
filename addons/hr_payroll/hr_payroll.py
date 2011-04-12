@@ -147,7 +147,7 @@ class contrib_register(osv.osv):
     Contribution Register
     '''
 
-    _name = 'hr.contibution.register'
+    _name = 'hr.contribution.register'
     _description = 'Contribution Register'
 
     _columns = {
@@ -479,7 +479,8 @@ class hr_payslip(osv.osv):
             localdict['heads'][head.code] = head.code in localdict['heads'] and localdict['heads'][head.code] + amount or amount
             return localdict
 
-        result = []
+        #we keep a dict with the result because a value can be overwritten by another rule with the same code
+        result_dict = {}
         blacklist = []
         payslip = self.pool.get('hr.payslip').browse(cr, uid, payslip_id, context=context)
         worked_days = {}
@@ -497,16 +498,22 @@ class hr_payslip(osv.osv):
             employee = contract.employee_id
             localdict.update({'employee': employee, 'contract': contract})
             for rule in self.pool.get('hr.salary.rule').browse(cr, uid, sorted_rule_ids, context=context):
+                key = rule.code + '-' + str(contract.id)
                 localdict['result'] = None
                 #check if the rule can be applied
                 if self.pool.get('hr.salary.rule').satisfy_condition(cr, uid, rule.id, localdict, context=context) and rule.id not in blacklist:
+                    #compute the amount of the rule
                     amount = self.pool.get('hr.salary.rule').compute_rule(cr, uid, rule.id, localdict, context=context)
+                    #check if there is already a rule computed with that code
+                    previous_amount = rule.code in localdict['rules'] and localdict['rules'][rule.code] or 0.0
                     #set/overwrite the amount computed for this rule in the localdict
                     localdict['rules'][rule.code] = amount
                     #sum the amount for its salary head
-                    localdict = _sum_salary_head(localdict, rule.category_id, amount)
-                    vals = {
+                    localdict = _sum_salary_head(localdict, rule.category_id, amount - previous_amount)
+                    #create/overwrite the rule in the temporary results
+                    result_dict[key] = {
                         'salary_rule_id': rule.id,
+                        'contract_id': contract.id,
                         'name': rule.name,
                         'code': rule.code,
                         'category_id': rule.category_id.id,
@@ -526,11 +533,10 @@ class hr_payslip(osv.osv):
                         'total': amount,
                         'employee_id': contract.employee_id.id,
                     }
-                    result.append(vals)
                 else:
                     #blacklist this rule and its children
                     blacklist += [id for id, seq in self.pool.get('hr.salary.rule')._recursive_search_of_rules(cr, uid, [rule], context=context)]
-
+        result = [value for code, value in result_dict.items()]
         return result
 
     def onchange_employee_id(self, cr, uid, ids, date_from, date_to, employee_id=False, contract_id=False, context=None):
@@ -655,9 +661,9 @@ class hr_salary_rule(osv.osv):
         'amount_percentage_base':fields.char('Percentage based on',size=1024, required=False, readonly=False, help='result will be affected to a variable'), #old name = expressiont
         'child_ids':fields.one2many('hr.salary.rule', 'parent_rule_id', 'Child Salary Rule'),
         'register_id':fields.property(
-            'hr.contibution.register',
+            'hr.contribution.register',
             type='many2one',
-            relation='hr.contibution.register',
+            relation='hr.contribution.register',
             string="Contribution Register",
             method=True,
             view_load=True,
@@ -773,12 +779,13 @@ class hr_payslip_line(osv.osv):
     _name = 'hr.payslip.line'
     _inherit = 'hr.salary.rule'
     _description = 'Payslip Line'
-    _order = 'sequence'
+    _order = 'contract_id, sequence'
 
     _columns = {
         'slip_id':fields.many2one('hr.payslip', 'Pay Slip', required=True),
         'salary_rule_id':fields.many2one('hr.salary.rule', 'Rule', required=True),
         'employee_id':fields.many2one('hr.employee', 'Employee', required=True),
+        'contract_id':fields.many2one('hr.contract', 'Contract', required=True),
         'total': fields.float('Amount', digits_compute=dp.get_precision('Account')),
         'company_contrib': fields.float('Company Contribution', readonly=True, digits_compute=dp.get_precision('Account')),
     }

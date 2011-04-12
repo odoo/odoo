@@ -71,6 +71,21 @@
             </field>
         </record>
 
+        <record id="view_hr_payroll_structure_filter" model="ir.ui.view">
+            <field name="name">hr.payroll.structure.select</field>
+            <field name="model">hr.payroll.structure</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Payroll Structures">
+                    <group col="8" colspan="4">
+                        <field name="name"/>
+                        <field name="code"/>
+                    </group>
+                    <newline/>
+                </search>
+            </field>
+        </record>
+
         <record id="view_hr_employee_grade_form" model="ir.ui.view">
             <field name="name">hr.payroll.structure.form</field>
             <field name="model">hr.payroll.structure</field>
@@ -226,7 +241,7 @@
                     </group>
                     <notebook colspan="4">
                         <page string="Salary Computation" >
-                            <field name="line_ids" colspan="4" nolabel="1" domain="[('appears_on_payslip','&lt;&gt;',False)]">
+                            <field name="line_ids" colspan="4" nolabel="1">
                                 <tree string="Salary Structure" editable="bottom">
                                     <field name="name"/>
                                     <field name="code"/>
@@ -267,7 +282,6 @@
                             <field name="details_by_salary_head" context="{'group_by':'category_id'}" domain="[('appears_on_payslip', '=', True)]" nolabel="1">
                                 <tree string="Payslip Lines">
                                     <field name="category_id"/>
-                                    <field name="sequence" groups="base.group_extended"/>
                                     <field name="name"/>
                                     <field name="code"/>
                                     <field name="total"/>
@@ -388,15 +402,8 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Salary Heads">
-                    <filter icon="terp-document-new" string="Allowance" domain="[('type','=','allowance')]"/>
-                    <filter icon="terp-check" string="Deduction" domain="[('type','=','deduction')]"/>
-                    <separator orientation="vertical"/>
                     <field name="name" select="1"/>
                      <field name="code" select="1"/>
-                    <newline/>
-                    <group expand="0" string="Group By..." colspan="4" col="4" groups="base.group_extended">
-                        <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type'}"/>
-                    </group>
                </search>
             </field>
         </record>
@@ -419,9 +426,9 @@
         <!--
         Contribution Register
         -->
-        <record id="hr_contibution_register_tree" model="ir.ui.view">
-            <field name="name">hr.contibution.register.tree</field>
-            <field name="model">hr.contibution.register</field>
+        <record id="hr_contribution_register_tree" model="ir.ui.view">
+            <field name="name">hr.contribution.register.tree</field>
+            <field name="model">hr.contribution.register</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Contribution Registers">
@@ -430,9 +437,20 @@
                 </tree>
             </field>
         </record>
-        <record id="hr_contibution_register_form" model="ir.ui.view">
-            <field name="name">hr.contibution.register.form</field>
-            <field name="model">hr.contibution.register</field>
+        <record id="hr_contribution_register_filter" model="ir.ui.view">
+            <field name="name">hr.contribution.register.search</field>
+            <field name="model">hr.contribution.register</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Contribution Registers">
+                    <field name="name"/>
+                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                </search>
+            </field>
+        </record>
+        <record id="hr_contribution_register_form" model="ir.ui.view">
+            <field name="name">hr.contribution.register.form</field>
+            <field name="model">hr.contribution.register</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Contribution">
@@ -447,15 +465,15 @@
                 </form>
             </field>
         </record>
-        <record id="action_contibution_register_form" model="ir.actions.act_window">
+        <record id="action_contribution_register_form" model="ir.actions.act_window">
             <field name="name">Contribution Registers</field>
-            <field name="res_model">hr.contibution.register</field>
+            <field name="res_model">hr.contribution.register</field>
             <field name="view_type">form</field>
-            <field name="view_id" ref="hr_contibution_register_tree"/>
+            <field name="view_id" ref="hr_contribution_register_tree"/>
         </record>
         <menuitem
-            id="menu_action_hr_contibution_register_form"
-            action="action_contibution_register_form"
+            id="menu_action_hr_contribution_register_form"
+            action="action_contribution_register_form"
             parent="payroll_configure"
             sequence="14"
         />
@@ -558,12 +576,13 @@
         <search string="Search Salary Rule">
         <group col="8" colspan="4">
             <field name="name"/>
+            <field name="code" select="1"/>
+            <field name="category_id"/>
             <field name="condition_range_min"/>
         </group>
         <newline/>
-
         <group col="8" colspan="4" expand="0" string="Group By...">
-            <filter string="Name" icon="terp-folder-yellow" name="name" context="{'group_by':'name'}"/>
+            <filter string="Head" icon="terp-folder-yellow" name="head" context="{'group_by':'category_id'}"/>
         </group>
         </search>
     </field>
