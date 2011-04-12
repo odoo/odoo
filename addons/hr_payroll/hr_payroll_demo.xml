@@ -41,7 +41,7 @@
             <field name="category_id" ref="hr_payroll.DED"/>
             <field name="name">Provident Fund</field>
         </record>
-        
+
         <record id="hr_salary_rule_ca_paolino" model="hr.salary.rule">
             <field name="amount_select">fix</field>
             <field eval="600.0" name="amount_fix"/>
@@ -50,14 +50,14 @@
             <field name="name">Conveyance Allowance For Paolino</field>
             <field name="sequence" eval="15"/>
         </record>
-        
+
         <record id="hr_salary_rule_meal_voucher" model="hr.salary.rule">
             <field name="amount_select">code</field>
             <field name="amount_python_compute">result = worked_days['WORK100']['number_of_days'] * 1</field>
             <field name="code">MA</field>
             <field name="category_id" ref="hr_payroll.ALW"/>
             <field name="name">Meal Voucher</field>
-            <field name="sequence" eval="170"/>
+            <field name="sequence" eval="16"/>
          </record>
         <!-- Salary Structure -->
 
@@ -68,7 +68,7 @@
             <field name="company_id" ref="base.main_company"/>
             <field name="parent_id" ref="structure_base"/>
         </record>
-        
+
         <record id="structure_002" model="hr.payroll.structure">
             <field name="code">MEQP</field>
             <field name="name">Marketing Executive for Quentin Paolino</field>
@@ -99,7 +99,7 @@
             <field eval="4000.0" name="wage"/>
             <field eval="5" name="working_days_per_week"/>
         </record>
-        
+
         <record id="hr_contract_quentin_paolino" model="hr.contract">
             <field name="name">Contract For Quentin Paolino</field>
             <field name="type_id" ref="hr_contract.hr_contract_type_emp"/>

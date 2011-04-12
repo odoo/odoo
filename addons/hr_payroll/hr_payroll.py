@@ -51,10 +51,20 @@ class hr_payroll_structure(osv.osv):
         'note': fields.text('Description'),
         'parent_id':fields.many2one('hr.payroll.structure', 'Parent'),
     }
+
+    def _get_parent(self, cr, uid, context=None):
+        obj_model = self.pool.get('ir.model.data')
+        res = False
+        data_id = obj_model.search(cr, uid, [('model', '=', 'hr.payroll.structure'), ('name', '=', 'structure_base')])
+        if data_id:
+            res = obj_model.browse(cr, uid, data_id[0], context=context).res_id
+        return res
+
     _defaults = {
         'company_id': lambda self, cr, uid, context: \
                 self.pool.get('res.users').browse(cr, uid, uid,
                     context=context).company_id.id,
+        'parent_id': _get_parent,
     }
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -187,37 +197,18 @@ class hr_payslip(osv.osv):
     _name = 'hr.payslip'
     _description = 'Pay Slip'
 
-#TODO unused for now, cause the field is commented but we want to put it back
-#    def _get_salary_rules(self, cr, uid, ids, field_names, arg=None, context=None):
-#        structure_obj = self.pool.get('hr.payroll.structure')
-#        contract_obj = self.pool.get('hr.contract')
-#        res = {}
-#        rules = []
-#        contracts = []
-#        structures = []
-#        rule_ids = []
-#        sorted_salary_heads = []
-#        for record in self.browse(cr, uid, ids, context=context):
-#            if record.contract_id:
-#                contracts.append(record.contract_id.id)
-#            else:
-#                contracts = self.get_contract(cr, uid, record.employee_id, record.date, context=context)
-#            for contract in contracts:
-#                structures = contract_obj.get_all_structures(cr, uid, [contract], context)
-#            res[record.id] = {}
-#            for struct in structures:
-#                rule_ids = structure_obj.get_all_rules(cr, uid, [struct], context=None)
-#                for rl in rule_ids:
-#                    if rl[0] not in rules:
-#                        rules.append(rl[0])
-#            cr.execute('''SELECT sr.id FROM hr_salary_rule as sr, hr_salary_head as sh
-#               WHERE sr.category_id = sh.id AND sr.id in %s ORDER BY sh.sequence''',(tuple(rules),))
-#            for x in cr.fetchall():
-#                sorted_salary_heads.append(x[0])
-#            for fn in field_names:
-#               if fn == 'details_by_salary_head':
-#                   res[record.id] = {fn: sorted_salary_heads}
-#        return res
+    def _get_lines_salary_head(self, cr, uid, ids, field_names, arg=None, context=None):
+        result = {}
+        if not ids: return result
+        cr.execute('''SELECT pl.slip_id, pl.id FROM hr_payslip_line AS pl \
+                    LEFT JOIN hr_salary_head AS sh on (pl.category_id = sh.id) \
+                    WHERE pl.slip_id in %s \
+                    GROUP BY pl.slip_id, sh.sequence, pl.sequence, pl.id ORDER BY sh.sequence, pl.sequence''',(tuple(ids),))
+        res = cr.fetchall()
+        for r in res:
+            result.setdefault(r[0], [])
+            result[r[0]].append(r[1])
+        return result
 
     _columns = {
         'struct_id': fields.many2one('hr.payroll.structure', 'Structure', help='Defines the rules that have to be applied to this payslip, accordingly to the contract chosen. If you let empty the field contract, this field isn\'t mandatory anymore and thus the rules applied will be all the rules set on the structure of all contracts of the employee valid for the chosen period'),
@@ -246,9 +237,8 @@ class hr_payslip(osv.osv):
         'paid': fields.boolean('Made Payment Order ? ', required=False, readonly=True, states={'draft': [('readonly', False)]}),
         'note': fields.text('Description'),
         'contract_id': fields.many2one('hr.contract', 'Contract', required=False, readonly=True, states={'draft': [('readonly', False)]}),
+        'details_by_salary_head': fields.function(_get_lines_salary_head, method=True, type='one2many', relation='hr.payslip.line', string='Details by Salary Head'),
         'credit_note': fields.boolean('Credit Note', help="Indicates this payslip has a refund of another"),
-       #TODO put me back
-       # 'details_by_salary_head': fields.function(_get_salary_rules, method=True, type='one2many', relation='hr.salary.rule', string='Details by Salary Head', multi='details_by_salary_head'),
     }
     _defaults = {
         'date_from': lambda *a: time.strftime('%Y-%m-01'),
@@ -524,6 +514,7 @@ class hr_payslip(osv.osv):
                 else:
                     #blacklist this rule and its children
                     blacklist += [id for id, seq in self.pool.get('hr.salary.rule')._recursive_search_of_rules(cr, uid, [rule], context=context)]
+
         return result
 
     def onchange_employee_id(self, cr, uid, ids, date_from, date_to, employee_id=False, contract_id=False, context=None):
