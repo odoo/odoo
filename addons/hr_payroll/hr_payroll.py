@@ -53,9 +53,12 @@ class hr_payroll_structure(osv.osv):
     }
 
     def _get_parent(self, cr, uid, context=None):
-        data_id = self.pool.get('ir.model.data').search(cr, uid, [('model', '=', 'hr.payroll.structure'), ('name', '=', 'structure_base')])
-        res = self.pool.get('ir.model.data').browse(cr, uid, data_id[0], context=context).res_id
-        return res or False
+        obj_model = self.pool.get('ir.model.data')
+        res = False
+        data_id = obj_model.search(cr, uid, [('model', '=', 'hr.payroll.structure'), ('name', '=', 'structure_base')])
+        if data_id:
+            res = obj_model.browse(cr, uid, data_id[0], context=context).res_id
+        return res
 
     _defaults = {
         'company_id': lambda self, cr, uid, context: \
