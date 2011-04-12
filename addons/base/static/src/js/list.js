@@ -116,9 +116,16 @@ openerp.base.ListView = openerp.base.Controller.extend(
     do_fill_table: function(records) {
         var $table = this.$element.find('table');
         this.rows = records;
+
+        // Keep current selected record, if it's still in our new search
+        var current_record_id = this.dataset.ids[this.dataset.index];
         this.dataset.ids = _(records).chain().map(function (record) {
             return record.data.id.value;
         }).value();
+        this.dataset.index = _.indexOf(this.dataset.ids, current_record_id);
+        if (this.dataset.index === -1) {
+            this.dataset.index = 0;
+        }
 
         // TODO: offset, length, count
         var results = this.rows.length;
@@ -195,15 +202,34 @@ openerp.base.ListView = openerp.base.Controller.extend(
             this.switch_to_record(index);
         },
     do_show: function () {
-        // TODO: re-trigger search
         this.$element.show();
+        if (this.hidden) {
+            this.do_reload();
+            this.hidden = false;
+        }
     },
     do_hide: function () {
         this.$element.hide();
+        this.hidden = true;
+    },
+    /**
+     * Reloads the search view based on the current settings (dataset & al)
+     */
+    do_reload: function () {
+        // TODO: need to do 5 billion tons of pre-processing, bypass
+        // DataSet for now
+        //self.dataset.read_slice(self.dataset.fields, 0, self.limit,
+        // self.do_fill_table);
+        return this.rpc('/base/listview/fill', {
+            'model': this.dataset.model,
+            'id': this.view_id,
+            'context': this.dataset.context,
+            'domain': this.dataset.domain
+        }, this.do_fill_table);
     },
     do_search: function (domains, contexts, groupbys) {
         var self = this;
-        this.rpc('/base/session/eval_domain_and_context', {
+        return this.rpc('/base/session/eval_domain_and_context', {
             domains: domains,
             contexts: contexts,
             group_by_seq: groupbys
@@ -211,16 +237,7 @@ openerp.base.ListView = openerp.base.Controller.extend(
             // TODO: handle non-empty results.group_by with read_group
             self.dataset.context = results.context;
             self.dataset.domain = results.domain;
-            // TODO: need to do 5 billion tons of pre-processing, bypass
-            // DataSet for now
-            //self.dataset.read_slice(self.dataset.fields, 0, self.limit,
-            // self.do_fill_table);
-            self.rpc('/base/listview/fill', {
-                'model': self.dataset.model,
-                'id': self.view_id,
-                'context': results.context,
-                'domain': results.domain
-            }, self.do_fill_table);
+            return self.do_reload();
         });
     },
     do_update: function () {
