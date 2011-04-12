@@ -43,6 +43,7 @@ openerp.base.ListView = openerp.base.Controller.extend(
             toolbar:!!this.view_manager.sidebar}, this.on_loaded);
     },
     on_loaded: function(data) {
+        var self = this;
         this.fields_view = data.fields_view;
         //this.log(this.fields_view);
         this.name = "" + this.fields_view.arch.attrs.string;
@@ -95,6 +96,22 @@ openerp.base.ListView = openerp.base.Controller.extend(
                 // linking feature
                 e.stopImmediatePropagation();
         });
+        $table.delegate(
+            'td.oe-field-cell button', 'click', function (e) {
+                var $cell = $(e.currentTarget).closest('td');
+                var col_index = $cell.prevAll('td').length;
+                var field = self.visible_columns[col_index];
+                var action = field.name;
+
+                var $row = $cell.parent('tr');
+                var row = self.rows[$row.prevAll().length];
+
+                var context = _.extend(
+                        {}, self.dataset.context, field.context || {});
+                self.dataset.call(action, [row.data.id.value], [context],
+                                  self.do_reload);
+                e.stopImmediatePropagation();
+            });
         $table.delegate(
                 'td.oe-record-delete button', 'click', this.do_delete);
 
