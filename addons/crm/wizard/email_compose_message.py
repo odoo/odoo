@@ -38,10 +38,10 @@ class email_compose_message(osv.osv_memory):
             model_obj = self.pool.get(model)
             data = model_obj.browse(cr, uid , resource_id, context)
             result.update({
-                    'name' : data.name or False,
+                    'subject' : data.name or False,
                     'email_to' : data.email_from or False,
                     'email_from' : data.user_id and data.user_id.address_id and data.user_id.address_id.email or False,
-                    'description' : '\n' + (tools.ustr(data.user_id.signature or '')),
+                    'body' : '\n' + (tools.ustr(data.user_id.signature or '')),
                     'email_cc' : tools.ustr(data.email_cc or ''),
                     'model': model  or False,
                     'res_id': resource_id  or False,

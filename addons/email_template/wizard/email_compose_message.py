@@ -62,8 +62,8 @@ class email_compose_message(osv.osv_memory):
         result = super(email_compose_message, self).default_get(cr, uid, fields, context=context)
         template_id = context.get('template_id', False)
         vals = {}
-        if template_id and context.get('email_model') and context.get('email_res_id'):
-            vals = self.get_template_data(cr, uid, context.get('email_res_id'), template_id, context)
+        if template_id and context.get('active_model') and context.get('active_id'):
+            vals = self.get_template_data(cr, uid, context.get('active_id'), template_id, context)
 
         if not vals:
             return result
@@ -116,8 +116,8 @@ class email_compose_message(osv.osv_memory):
             message_pool = self.pool.get('email.message')
             message_data = message_pool.browse(cr, uid, int(context.get('message_id')), context)
             model = message_data.model
-        elif context.get('email_model',False):
-            model =  context.get('email_model')
+        elif context.get('active_model',False):
+            model =  context.get('active_model')
         if model:
             record_ids = email_temp_pool.search(cr, uid, [('model','=',model)])
             return email_temp_pool.name_get(cr, uid, record_ids, context) + [(False,'')]
@@ -127,13 +127,13 @@ class email_compose_message(osv.osv_memory):
         'template_id': fields.selection(_get_templates, 'Template'),
     }
 
-    def on_change_template(self, cr, uid, ids, model, resource_id, template_id, context=None):
+    def on_change_template(self, cr, uid, ids, model, template_id, context=None):
         if context is None:
             context = {}
         if context.get('mail') == 'reply':
             return {'value':{}}
-        result = self.on_change_referred_doc(cr, uid, [],  model, resource_id, context=context)
-        vals = result.get('value',{})
+        vals = {}
+        resource_id = context.get('active_id', False)
         if template_id and resource_id:
             vals.update(self.get_template_data(cr, uid, resource_id, template_id, context))
         else:

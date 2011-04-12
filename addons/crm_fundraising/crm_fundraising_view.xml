@@ -178,13 +178,13 @@
                                         <field name="date"/>
                                         <field name="email_to" widget="char" size="512"/>
                                         <field name="email_cc" widget="char" size="512"/>
-                                        <field name="name" colspan="4" widget="char" size="512"/>
+                                        <field name="subject" colspan="4" widget="char" size="512"/>
                                         <field name="history" invisible="1"/>
                                     </group>
                                     <notebook colspan="4">
                                         <page string="Details">
                                             <group attrs="{'invisible': [('history', '!=', True)]}">
-                                                <field name="description" colspan="4" nolabel="1" height="250"/>
+                                                <field name="body" colspan="4" nolabel="1" height="250"/>
 		                                        <button colspan="4" string="Reply"
 		                                            name="%(mail.action_email_compose_message_wizard)d"
 		                                            context="{'mail':'reply', 'message_id':active_id}"

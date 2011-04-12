@@ -21,7 +21,8 @@
 
 from osv import osv
 from osv import fields
-from tools.translate import _
+import tools
+
 
 class email_compose_message(osv.osv_memory):
     _inherit = 'email.compose.message'
@@ -30,28 +31,18 @@ class email_compose_message(osv.osv_memory):
         if context is None:
             context = {}
         result = super(email_compose_message, self).get_value(cr, uid,  model, resource_id, context=context)
-        if model == 'project.scrum.meeting' and resource_id:
-            meeting_pool = self.pool.get('project.scrum.meeting')
-            user_pool = self.pool.get('res.users')
-            meeting = meeting_pool.browse(cr, uid, resource_id, context=context)
-
-            sprint = meeting.sprint_id
-            user_data = user_pool.browse(cr, uid, uid, context=context)
-            result.update({'email_from': user_data.address_id and user_data.address_id.email or False})
-
-            if sprint.scrum_master_id and sprint.scrum_master_id.user_email:
-                result.update({'email_to': sprint.scrum_master_id.user_email})
-            if sprint.product_owner_id and sprint.product_owner_id.user_email:
-                result.update({'email_to': result.get('email_to',False) and result.get('email_to') + ',' +  sprint.product_owner_id.user_email or sprint.product_owner_id.user_email})
-
-            subject = _("Scrum Meeting : %s") %(meeting.date)
-            message = _("Hello  , \nI am sending you Scrum Meeting : %s for the Sprint  '%s' of Project '%s'") %(meeting.date, sprint.name, sprint.project_id.name)
+        if model == 'hr.applicant' and resource_id:
+            model_obj = self.pool.get(model)
+            data = model_obj.browse(cr, uid , resource_id, context)
             result.update({
-                       'subject': subject,
-                       'body': message,
-                       'model': model,
-                       'res_id': resource_id
-                    })
+                    'subject' : data.name or False,
+                    'email_to' : data.email_from or False,
+                    'email_from' : data.user_id and data.user_id.address_id and data.user_id.address_id.email or False,
+                    'body' : '\n' + (tools.ustr(data.user_id.signature or '')),
+                    'email_cc' : tools.ustr(data.email_cc or ''),
+                    'model': model  or False,
+                    'res_id': resource_id  or False,
+                })
         return result
 
 email_compose_message()

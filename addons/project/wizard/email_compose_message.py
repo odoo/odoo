@@ -54,9 +54,9 @@ class email_compose_message(osv.osv_memory):
             if partner and len(partner.address):
                 result.update({'email_to': result.get('email_to',False) and result.get('email_to') + ',' + partner.address[0].email})
             result.update({
-                       'description': description or False,
+                       'body': description or False,
                        'email_to':   task_data.project_id.user_id and task_data.project_id.user_id.user_email or False,
-                       'name':  _("Task '%s' Closed") % task_data.name,
+                       'subject':  _("Task '%s' Closed") % task_data.name,
                        'model': model,
                        'res_id': resource_id,
                     })
