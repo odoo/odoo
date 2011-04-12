@@ -418,57 +418,5 @@
             <field name="state">skip</field>
         </record>
         
-<!--        Define default users preferences-->
-
-       <record id="view_user_preferences_config_form" model="ir.ui.view">
-            <field name="name">Define default users preferences</field>
-            <field name="model">user.preferences.config</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="res_config_view_base"/>
-            <field name="arch" type="xml">
-              <data>
-                <form position="attributes">
-                  <attribute name="string">Define default users preferences</attribute>
-                </form>
-              <xpath expr='//separator[@string="title"]' position='attributes'>
-                    <attribute name='string'>Define default users preferences</attribute>
-              </xpath>
-              <xpath expr="//label[@string='description']"
-                 position="attributes">
-                <attribute name="string">Specify default values. These data are just default values, each user is free to change his own preferences.</attribute>
-              </xpath>
-              <xpath expr='//separator[@string="vsep"]' position='attributes'>
-                    <attribute name='string'></attribute>
-                    <attribute name='rowspan'>12</attribute>
-              </xpath>
-               <group string="res_config_contents" position="replace">
-                      <group colspan="4">
-                          <field colspan="4" name="context_tz" />
-                          <field colspan="4" name="context_lang" />
-                          <field colspan="4" name="view" />
-                          <field colspan="4" name="menu_tips" />
-                    </group>
-                </group>
-              </data>
-            </field>
-        </record>
-
-        <record id="action_user_preferences_config_form" model="ir.actions.act_window">
-            <field name="name">Define default users preferences</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">user.preferences.config</field>
-            <field name="view_type">form</field>
-            <field name="view_id" ref="view_user_preferences_config_form"/>
-            <field name="view_mode">form</field>
-            <field name="target">new</field>
-        </record>
-
-        <!--   Register configuration wizard -->
-        
-        <record id="config_action_user_preferences_config_form" model="ir.actions.todo">
-            <field name="action_id" ref="action_user_preferences_config_form"/>
-            <field name="type">normal</field>
-        </record>
-        
     </data>
 </openerp>
