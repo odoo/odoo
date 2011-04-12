@@ -110,12 +110,18 @@ openerp.base.ListView = openerp.base.Controller.extend(
      * @returns {Promise} promise to the end of view rendering (list views are asynchronously filled for improved responsiveness)
      */
     do_fill_table: function(records) {
+        var $table = this.$element.find('table');
         this.rows = records;
         this.dataset.ids = _(records).chain().map(function (record) {
             return record.data.id.value;
         }).value();
 
-        var $table = this.$element.find('table');
+        // TODO: offset, length, count
+        var results = this.rows.length;
+        $table.find('.oe-pager-last').text(results);
+        $table.find('.oe-pager-total').text(results);
+
+
         // remove all data lines
         var $old_body = $table.find('tbody');
 
