@@ -89,7 +89,12 @@ openerp.base.DataSet =  openerp.base.Controller.extend( /** @lends openerp.base.
             context: this.context
         }, callback);
     },
-    create: function() {
+    create: function(data, callback) {
+        return this.rpc('/base/dataset/create', {
+            model: this.model,
+            data: data,
+            context: this.context
+        }, callback);
     },
     write: function (id, data, callback) {
         return this.rpc('/base/dataset/save', {
@@ -100,7 +105,7 @@ openerp.base.DataSet =  openerp.base.Controller.extend( /** @lends openerp.base.
         }, callback);
     },
     unlink: function(ids) {
-        this.notification['default']("Unlink", ids);
+        this.notification.notify("Unlink", ids);
     },
     call: function (method, ids, args, callback) {
         ids = ids || [];

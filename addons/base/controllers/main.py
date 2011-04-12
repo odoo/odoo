@@ -386,6 +386,12 @@ class DataSet(openerpweb.Controller):
         return {'value': value}
 
     @openerpweb.jsonrequest
+    def create(self, req, model, data, context={}):
+        m = req.session.model(model)
+        r = m.create(data, context)
+        return {'result': r}
+
+    @openerpweb.jsonrequest
     def save(self, req, model, id, data, context={}):
         m = req.session.model(model)
         r = m.write([id], data, context)

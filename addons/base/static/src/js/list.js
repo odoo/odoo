@@ -245,8 +245,8 @@ openerp.base.ListView = openerp.base.Controller.extend(
      * The default implementation is to switch to a new record on the form view
      */
     do_add_record: function () {
-        this.notification['default']('Add', "New record");
-        // this.switch_to_record(null);
+        this.notification.notify('Add', "New record");
+        this.switch_to_record(null);
     },
     /**
      * Handles deletion of all selected lines

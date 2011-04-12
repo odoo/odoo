@@ -172,7 +172,10 @@ body.openerp {
     padding: 0 0 2px;
     border: none;
     background: none;
-    padding-left: 20px;
+    padding-left: 10px;
+}
+.openerp .secondary_menu h3 span, .openerp .secondary_menu h4 span {
+    left: 0 !important;
 }
 .openerp .secondary_menu a {
     display: block;
@@ -200,6 +203,9 @@ body.openerp {
     color: #3f3d3d;
     text-shadow: #fff 0 1px 0;
     border: none !important;
+}
+.openerp div.submenu_accordion div.menu_content a span {
+    padding-left: 20px;
 }
 
 /* Header */
@@ -305,16 +311,39 @@ body.openerp {
 }
 
 /* Footer */
-.openerp .footer {
+.openerp div.oe_footer {
+    background: none repeat scroll 0 0 #CCCCCC;
+    overflow: hidden;
+    padding: 5px 0;
+    position: relative;
+    -moz-box-shadow: inset 0px 3px 5px rgba(0, 0, 0, 0.4);
+    -webkit-box-shadow: inset 0px 3px 5px rgba(0, 0, 0, 0.4);
+    box-shadow: inset 0px 3px 5px rgba(0, 0, 0, 0.4);
+}
+.openerp div.oe_footer p.oe_footer_powered {
+    left: 50%;
+    margin: 0;
+    padding: 0 15px;
+    color: #666666;
+    font-weight: bold;
+    font-size: 0.8em;
+    font-family: Ubuntu, Helvetica, sans-serif;
     text-align: center;
+}
+.openerp div.oe_footer p.oe_footer_powered a {
+    text-decoration: none;
+    color: #666666;
 }
 
 /* Main Application */
 .openerp .application {
-    padding: 6px;
+    padding: 0px;
 }
 
 .openerp h2.oe_view_title {
+    font-size: 175%;
+    font-weight: normal;
+    font-family: Ubuntu, Helvetica, sans-serif;
     margin: 2px 0;
     color: #252424;
     text-shadow: white 0 1px 0;
@@ -479,8 +508,37 @@ body.openerp {
     border-bottom-right-radius: 7px;
 }
 
+/* Notebook */
+.openerp .oe_form_notebook {
+    padding: 0px;
+    background: none;
+    border-width: 0px;
+}
+.openerp .oe_form_notebook ul.ui-tabs-nav {
+    padding-left: 0px;
+    background: transparent;
+    border-width: 0px 0px 1px 0px;
+    border-radius: 0px;
+    -moz-border-radius: 0px;
+    -webkit-border-radius: 0px;
+    line-height: 0.5em;
+}
+.openerp .oe_form_notebook ul.ui-tabs-nav li {
+    font-weight: bold;
+}
+.openerp .oe_form_notebook .ui-tabs-panel {
+    background: #f9f9f9;
+    border-width: 0px 1px 1px 1px;
+}
+.openerp .oe_form_notebook .ui-tabs-selected {
+    background: #f9f9f9;
+}
 
 /* Form */
+.openerp table.oe_frame td {
+    color: #4c4c4c;
+    font-weight: 80%;
+}
 .openerp .required.error {
     border: 1px solid #900;
 }
@@ -489,6 +547,22 @@ body.openerp {
 }
 .openerp .oe_form_pager, .openerp .oe_list_pager {
     float: right;
+}
+
+.openerp label.oe_form_label_help {
+    cursor: help;
+}
+.openerp label.oe_form_label, .openerp label.oe_form_label_help {
+    display: block;
+    text-align: right;
+}
+.openerp label.oe_form_label_help span {
+    font-size: 80%;
+    color: darkgreen;
+    vertical-align:top;
+    position: relative;
+    top: -4px;
+    padding: 0 2px;
 }
 
 /* Inputs */
@@ -503,11 +577,14 @@ body.openerp {
     -webkit-border-radius: 3px;
     border-radius: 3px;
     background: white;
+    min-width: 90px;
+    color: #1f1f1f;
 }
 .openerp input[type="text"], .openerp input[type="password"], .openerp select, .openerp .button {
     height: 22px;
 }
 .openerp .button {
+    color: #4c4c4c;
     white-space: nowrap;
 }
 .openerp .button span {
@@ -543,37 +620,119 @@ body.openerp {
 .openerp .ui-widget {
     font-size: 1em;
 }
+.openerp .oe_form_field_progressbar .ui-progressbar {
+    height: 22px;
+    font-size: 10px;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+    box-sizing: border-box;
+    border: 1px solid #999;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    background: white;
+    min-width: 90px;
+}
 
 /* Sidebar */
 .openerp .view-manager-main-table {
+    margin: 0;
     width:100%;
+    border-collapse:collapse;
+    height:100%;
 }
-.openerp .view-manager-main-sidebar {
+
+.openerp .view-manager-main-table tbody {
     vertical-align: top;
+}
+
+.openerp .view-manager-main-content {
+    padding: 6px;
+}
+
+.openerp .view-manager-main-sidebar {
     width:0;
     padding:0;
     margin:0;
 }
 
-.openerp .view-manager-main-sidebar .sidebar-main-div {
-    padding:0;
-    margin:0;
+.openerp .sidebar-main-div {
+    height:100%;
 }
 
-.openerp .view-manager-main-sidebar .sidebar-sub-div {
-    border: solid 1px #1F1F1F;
-    border-bottom-width: 0;
+.openerp .sidebar-sub-div {
+    padding:0;
+    margin:0;
+    width:180px;
+    border-left-color: #D2CFCF;
+    border-left-style: solid;
+    border-left-width: 1px;
+    height:100%;
+    font-family: Ubuntu, Helvetica, sans-serif;
+    font-size: 0.9em;
+}
+
+.openerp .closed-sidebar .sidebar-sub-div {
+    width:22px;
+}
+
+.openerp .closed-sidebar .sidebar-displaying-div {
+    display:none;
+}
+
+.openerp .sidebar-main-div a {
+    color: #555;
+    text-decoration: none;
+}
+
+.openerp .sidebar-main-div a:hover {
+    color: black;
+}
+
+.openerp .view-manager-main-sidebar h2 {
+    margin:0;
+    font-family: Ubuntu, Helvetica, sans-serif;
+    font-size: 1.15em;
+    color: #8E8E8E;
+    text-shadow: white 0px 1px 0px;
+    padding-left: 10px;
+    padding-right: 21px;
+    height: 21px;
+    background: url(../img/sideheader-a-bg.png) repeat-x;
+    border-color: #D2CFCF;
+    border-style: solid;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+    border-left-width: 0;
+    border-right-width: 0;
 }
 
 .openerp .view-manager-main-sidebar ul {
     list-style-type: none;
     margin: 0;
     padding: 0;
-    width: 120px;
-    border-bottom: solid 1px #1F1F1F;
+    display: block;
 }
 
 .openerp .view-manager-main-sidebar li {
-    padding: 3px;
+    display: block;
+    padding: 3px 3px 3px 10px;
+}
+
+.openerp .toggle-sidebar {
+    border-color: #D2CFCF;
+    border-style: solid;
+    border-width: 1px;
+    display: block;
+    background: url(../img/toggle-a-bg.png);
+    width: 21px;
+    height: 21px;
+    position: absolute;
+    z-index: 10;
+}
+.openerp .open-sidebar .toggle-sidebar {
+    margin-left: 158px;
+    background-position: 21px 0;
 }
 

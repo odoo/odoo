@@ -245,12 +245,7 @@ openerp.base.Notification =  openerp.base.BasicController.extend({
             text: text
         });
     },
-    // TODO remove to avoid default as attribute
-    'default': function(title, text) {
-        this.notify(title,text);
-    },
-    // TODO change into warn to avoid alert
-    alert: function(title, text) {
+    warn: function(title, text) {
         this.$element.notify('create', 'oe_notification_alert', {
             title: title,
             text: text
@@ -478,8 +473,10 @@ openerp.base.Session = openerp.base.BasicController.extend( /** @lends openerp.b
                 continue;
             openerp[mod] = {};
             // init module mod
-            openerp._openerp[mod](openerp);
-            self.module_loaded[mod] = true;
+            if(openerp._openerp[mod] != undefined) {
+                openerp._openerp[mod](openerp);
+                self.module_loaded[mod] = true;
+            }
         }
     }
 });
@@ -783,6 +780,10 @@ openerp.base.Header =  openerp.base.Controller.extend({
         this.do_update();
     },
     do_update: function() {
+        if(jQuery.param != undefined &&
+                jQuery.deparam(jQuery.param.querystring()).kitten != undefined) {
+            this.kitten = 1;
+        }
         this.$element.html(QWeb.render("Header", this));
     }
 });
@@ -907,11 +908,21 @@ openerp.base.WebClient = openerp.base.Controller.extend({
         this.header.start();
         this.login.start();
         this.menu.start();
-        this.notification['default']("OpenERP Client", "The openerp client has been initialized.");
+        this.notification.notify("OpenERP Client", "The openerp client has been initialized.");
     },
     on_logged: function() {
         this.action =  new openerp.base.ActionManager(this.session, "oe_app");
         this.action.start();
+        
+        // if using saved actions, load the action and give it to action manager
+        var parameters = jQuery.deparam(jQuery.param.querystring());
+        if(parameters["s_action"] != undefined) {
+            var key = parseInt(parameters["s_action"]);
+            var self = this;
+            this.rpc("/base/session/get_session_action", {key:key}, function(action) {
+                self.action.do_action(action);
+            });
+        }
     },
     on_menu_action: function(action) {
         this.action.do_action(action);

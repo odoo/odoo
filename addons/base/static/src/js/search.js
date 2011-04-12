@@ -215,7 +215,7 @@ openerp.base.SearchView = openerp.base.Controller.extend({
      * @param {Array} errors a never-empty array of error objects
      */
     on_invalid: function (errors) {
-        this.notification['default']("Invalid Search", "triggered from search view");
+        this.notification.notify("Invalid Search", "triggered from search view");
     },
     do_clear: function (e) {
         if (e && e.preventDefault) { e.preventDefault(); }

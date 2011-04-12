@@ -229,10 +229,10 @@ openerp.base.Sidebar = openerp.base.BaseWidget.extend({
     set_toolbar: function(toolbar) {
         this.sections = [];
         var self = this;
-        _.each(["print", "action", "relate"], function(type) {
-            if (toolbar[type].length == 0)
+        _.each([["print", "Reports"], ["action", "Actions"], ["relate", "Links"]], function(type) {
+            if (toolbar[type[0]].length == 0)
                 return;
-            var section = {elements:toolbar[type]};
+            var section = {elements:toolbar[type[0]], label:type[1]};
             self.sections.push(section);
         });
         this.refresh();
@@ -240,6 +240,11 @@ openerp.base.Sidebar = openerp.base.BaseWidget.extend({
     refresh: function() {
         this.$element.html(QWeb.render("ViewManager.sidebar.internal", _.extend({_:_}, this)));
         var self = this;
+        this.$element.find(".toggle-sidebar").click(function(e) {
+            self.$element.toggleClass('open-sidebar closed-sidebar');
+            e.stopPropagation();
+            e.preventDefault();
+        });
         this.$element.find("a").click(function(e) {
             var $this = jQuery(this);
             var i = $this.attr("data-i");
@@ -269,8 +274,9 @@ openerp.base.ExternalActionManager = openerp.base.Controller.extend({
                 viewmanager.start();
             } else if (action.target == "current") {
                 this.rpc("/base/session/save_session_action", {the_action:action}, function(key) {
-                    var url = window.location.href;
-                    //window.open();
+                    var url = window.location.protocol + "//" + window.location.host +
+                            window.location.pathname + "?" + jQuery.param({s_action:""+key});
+                    window.open(url);
                 });
             }
         }
