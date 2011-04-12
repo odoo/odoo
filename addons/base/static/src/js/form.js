@@ -28,6 +28,7 @@ openerp.base.FormView =  openerp.base.Controller.extend( /** @lends openerp.base
         this.datarecord = {};
         this.ready = false;
         this.show_invalid = true;
+        this.touched = false;
     },
     start: function() {
         //this.log('Starting FormView '+this.model+this.view_id)
@@ -78,15 +79,19 @@ openerp.base.FormView =  openerp.base.Controller.extend( /** @lends openerp.base
         this.$element.hide();
     },
     on_record_loaded: function(record) {
+        this.touched = false;
         if (record) {
             this.datarecord = record;
             for (var f in this.fields) {
-                this.fields[f].set_value(this.datarecord[f] || false);
-                this.fields[f].validate();
+                var field = this.fields[f];
+                field.set_value(this.datarecord[f] || false);
+                field.validate();
+                field.touched = false;
             }
             if (!record.id) {
+                // New record: Second pass in order to trigger the onchanges
+                this.touched = true;
                 this.show_invalid = false;
-                // Second pass in order to trigger the onchanges in case of new record
                 for (var f in record) {
                     this.on_form_changed(this.fields[f]);
                 }
@@ -127,7 +132,7 @@ openerp.base.FormView =  openerp.base.Controller.extend( /** @lends openerp.base
         this.reload();
     },
     do_update_pager: function(hide_index) {
-        var $pager = this.$element.find('#' + this.element_id + '_header div.oe_form_pager').eq(0);
+        var $pager = this.$element.find('#' + this.element_id + '_header div.oe_form_pager');
         var index = hide_index ? '-' : this.dataset.index + 1;
         $pager.find('span.oe_pager_index').html(index);
         $pager.find('span.oe_pager_count').html(this.dataset.count);
@@ -505,7 +510,7 @@ openerp.base.form.WidgetButton = openerp.base.form.Widget.extend({
     },
     on_click: function(saved) {
         var self = this;
-        if (saved !== true) {
+        if (!this.node.attrs.special && this.view.touched && saved !== true) {
             this.view.do_save(function() {
                 self.on_click(true);
             });
@@ -620,7 +625,7 @@ openerp.base.form.Field = openerp.base.form.Widget.extend({
         }
     },
     on_ui_change: function() {
-        this.touched = true;
+        this.touched = this.view.touched = true;
         this.set_value_from_ui();
         this.validate();
         this.view.on_form_changed(this);

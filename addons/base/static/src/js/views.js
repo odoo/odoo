@@ -19,6 +19,7 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
      * Supported actions: act_window
      */
     do_action: function(action) {
+        var self = this;
         // instantiate the right controllers by understanding the action
         switch (action.type) {
             case 'ir.actions.act_window':
@@ -30,6 +31,9 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
                         modal: true,
                         width: '50%',
                         height: 'auto'
+                    }).bind('dialogclose', function(event) {
+                        // When dialog is closed with ESC key or close manually, branch to act_window_close logic
+                        self.do_action({ type: 'ir.actions.act_window_close' });
                     });
                     var viewmanager = new openerp.base.ViewManagerAction(this.session ,element_id, action, false);
                     viewmanager.start();
