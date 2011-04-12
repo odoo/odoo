@@ -576,6 +576,8 @@ def get_attachment(sugar_obj, cr, uid, val, model, File, context=None):
     if not context:
         context = {}
     attachment_obj = sugar_obj.pool.get('ir.attachment')
+    model_obj = sugar_obj.pool.get('ir.model.data')
+    mailgate_obj = sugar_obj.pool.get('mailgate.message')
     model_ids = find_mapped_id(sugar_obj, cr, uid, model, val.get('id'), context)
     new_attachment_id = attachment_obj.create(cr, uid, {'name': val.get('name'), 'datas': File, 'res_id': val['res_id'],'res_model': val['model']})
     message_model_ids = find_mapped_id(sugar_obj, cr, uid, model, val.get('id'), context)
@@ -597,7 +599,6 @@ def import_history(sugar_obj, cr, uid, xml_id, model, context=None):
     }
     mailgate_obj = sugar_obj.pool.get('mailgate.message')
     model_obj =  sugar_obj.pool.get('ir.model.data')
-   
     PortType, sessionid = sugar.login(context.get('username', ''), context.get('password', ''), context.get('url',''))
     sugar_data = sugar.search(PortType, sessionid, 'Notes')
     for val in sugar_data:
