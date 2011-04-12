@@ -166,7 +166,9 @@ var QWeb = {
         for (var an in g_att) {
             att += " " + an + '="' + this.escape_att(g_att[an]) + '"';
         }
-        return inner.length ? "<" + e.tagName + att + ">" + inner + "</" + e.tagName + ">" : "<" + e.tagName + att + "/>";
+        // Some IE versions have problems with closed tags
+        var opentag = !!t_att['opentag'] && this.eval_bool(t_att["opentag"], v);
+        return inner.length || opentag ? "<" + e.tagName + att + ">" + inner + "</" + e.tagName + ">" : "<" + e.tagName + att + "/>";
     },
     render_att_att:function(e, t_att, g_att, v, ext, av) {
         if (ext) {
