@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_hr_timesheet_invoice_wizard" model="ir.ui.view">
+            <field name="name">Define Your Employee's Invoice Data</field>
+            <field name="model">hr.timesheet.invoice.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Employee Invoice Data">
+                     <field colspan="4" name="emp_ids" nolabel="1" mode="tree,form">
+                                <tree string="Employee Invoice Data"  editable="top">
+                                    <field name="employee_id"/>
+                                    <field name="product_id"/>
+                                    <field name="journal_id"/>
+                                </tree>
+                                <form string="Employee Invoice Data">
+                                    <field name="employee_id"/>
+                                    <field name="product_id"/>
+                                    <field name="journal_id"/>
+                                </form>
+                      </field>
+                    <separator string="" colspan="4" />
+                    <label string="" colspan="2" />
+                    <button special="cancel" string="Cancel" icon="gtk-cancel" />
+                    <button name="set_employee_data" string="OK" type="object" icon="gtk-ok"/>
+                </form>
+            </field>
+        </record>
+
+         <record id="action_hr_timesheet_invoice_wizard" model="ir.actions.act_window">
+            <field name="name">Define Your Employee's Invoice Data</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hr.timesheet.invoice.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_hr_timesheet_invoice_wizard"/>
+            <field name="target">new</field>
+        </record>
+
+        <record id="hr_timesheet_invoice_todo" model="ir.actions.todo">
+	        <field name="action_id" ref="action_hr_timesheet_invoice_wizard"/>
+	        <field name="sequence">3</field>
+	        <field name="restart">never</field>
+    </record>
+
+    </data>
+</openerp>

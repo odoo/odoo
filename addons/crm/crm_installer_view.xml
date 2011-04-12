@@ -64,5 +64,36 @@
         <field name="restart">on_trigger</field>
         <field eval="[(6,0,[ref('base.group_extended')])]" name="groups_id"/>
     </record>
+
+    <record model="ir.actions.act_window" id="crm_case_section_view_form_installer">
+        <field name="name">Create sales team</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">crm.case.section</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="crm.crm_case_section_view_form"/>
+    </record>
+
+    <record id="crm_case_section_installer_todo" model="ir.actions.todo">
+        <field name="action_id" ref="crm_case_section_view_form_installer"/>
+        <field name="sequence">10</field>
+        <field name="restart">always</field>
+    </record>
+
+    <record model="ir.actions.act_window" id="crm_case_stage_form_installer">
+        <field name="name">Review Sales Stages</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">crm.case.stage</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="crm.crm_case_stage_form"/>
+    </record>
+
+    <record id="crm_case_stage_installer_todo" model="ir.actions.todo">
+        <field name="action_id" ref="crm_case_stage_form_installer"/>
+        <field name="sequence">10</field>
+        <field name="restart">always</field>
+    </record>
+
   </data>
 </openerp>
