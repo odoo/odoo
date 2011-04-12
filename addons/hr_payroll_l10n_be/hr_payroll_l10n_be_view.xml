@@ -48,7 +48,6 @@
             <field name="arch" type="xml">
                 <field name="marital" position="replace">
                     <field name="marital" required="True"/>
-                   
                 </field>
             </field>
         </record>
@@ -72,7 +71,7 @@
             <field name="arch" type="xml">	
             <data>
                 <xpath expr="/form/notebook/page/group/field[@name='marital']" position="after">
-			<field name="statut_fiscal" attrs="{'invisible':[('marital','!=','married')]}" colspan="1" help="if spouse has professionnel income or not"/> 
+			<field name="statut_fiscal" attrs="{'invisible':[('marital','!=','married')],'required':[('marital','=','married')]}" colspan="1" help="if spouse has professionnel income or not"/> 
 			<field name="handicap" attrs="{'invisible':[('marital','!=','married')]}" colspan="1" help="if spouse is declared as disabled"/>
 		</xpath>
 		<xpath expr="/form/notebook/page/group/field[@name='children']" position="after">
