@@ -56,7 +56,7 @@ class hr_timesheet_invoice_wizard(osv.osv_memory):
             context = {}
         res = super(hr_timesheet_invoice_wizard, self).default_get(cr, uid, fields, context=context)
         emp_obj = self.pool.get('hr.employee')
-        emp_id = emp_obj.search(cr, uid, [('user_id', '=', uid)], context=context)
+        emp_id = emp_obj.search(cr, uid, [], context=context)
         result = []
         data = {}
         for emp in emp_obj.browse(cr, uid, emp_id, context=context):
