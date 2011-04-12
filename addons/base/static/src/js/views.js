@@ -168,8 +168,6 @@ openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
             this.sidebar.start();
         }
 
-        // init search view
-        var view_id = this.action.search_view_id ? this.action.search_view_id[0] || false : false;
         var search_defaults = {};
         _.each(this.action.context, function (value, key) {
             var match = /^search_default_(.*)$/.exec(key);
@@ -177,10 +175,12 @@ openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
                 search_defaults[match[1]] = value;
             }
         });
-        var searchview_loaded = null;
-        if (view_id) {
-            searchview_loaded = this.setup_search_view(view_id,search_defaults);
-        }
+
+        // init search view
+        var searchview_id = this.action.search_view_id && this.action.search_view_id[0];
+
+        var searchview_loaded = this.setup_search_view(
+                searchview_id || false, search_defaults);
 
         // schedule auto_search
         if (searchview_loaded != null && this.action['auto_search']) {
