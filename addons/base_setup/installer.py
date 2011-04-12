@@ -20,6 +20,7 @@
 ##############################################################################
 from osv import fields, osv
 import pooler
+import pytz
 
 class base_setup_installer(osv.osv_memory):
     _name = 'base.setup.installer'
@@ -206,5 +207,51 @@ class product_installer(osv.osv_memory):
             return {'type': 'ir.actions.act_window'}
 
 product_installer()
+
+
+#       Define default users preferences config wiz
+
+def _lang_get(self, cr, uid, context=None):
+    obj = self.pool.get('res.lang')
+    ids = obj.search(cr, uid, [('translatable','=',True)])
+    res = obj.read(cr, uid, ids, ['code', 'name'], context=context)
+    res = [(r['code'], r['name']) for r in res]
+    return res
+
+def _tz_get(self,cr,uid, context=None):
+    return [(x, x) for x in pytz.all_timezones]
+
+class user_preferences_config(osv.osv_memory):
+    _name = 'user.preferences.config'
+    _inherit = 'res.config'
+    _columns = {
+        'context_tz': fields.selection(_tz_get,  'Timezone', size=64,
+            help="Set default for new user's timezone, used to perform timezone conversions "
+                 "between the server and the client."),
+        'context_lang': fields.selection(_lang_get, 'Language', required=True,
+            help="Sets default language for the  new user's user interface, when UI "
+                 "translations are available"),
+        'view': fields.selection([('simple','Simplified'),
+                                  ('extended','Extended')],
+                                 'Interface', required=True ),
+        'menu_tips': fields.boolean('Menu Tips', help="Check out this box if you want to always display tips on each menu action"),
+                                 
+    }
+    _defaults={
+               'view' : lambda self,cr,uid,*args: self.pool.get('res.users').browse(cr, uid, uid).view or 'simple',
+               'context_lang' : 'en_US',
+               'menu_tips' : True
+    }
+
+    def execute(self, cr, uid, ids, context=None):
+        for o in self.browse(cr, uid, ids, context=context):
+            ir_values_obj = self.pool.get('ir.values')
+            ir_values_obj.set(cr, uid, 'default', False, 'context_tz', ['res.users'], o.context_tz)
+            ir_values_obj.set(cr, uid, 'default', False, 'context_lang', ['res.users'], o.context_lang)
+            ir_values_obj.set(cr, uid, 'default', False, 'view', ['res.users'], o.view)
+            ir_values_obj.set(cr, uid, 'default', False, 'menu_tips', ['res.users'], o.menu_tips)
+        return {}
+
+user_preferences_config()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
