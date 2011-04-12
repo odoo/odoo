@@ -242,7 +242,7 @@ openerp.base.ListView = openerp.base.Controller.extend(
     },
     do_update: function () {
         var self = this;
-        self.dataset.read_ids(self.dataset.ids, self.dataset.fields, self.do_fill_table);
+        //self.dataset.read_ids(self.dataset.ids, self.dataset.fields, self.do_fill_table);
     },
     /**
      * Handles the signal to delete a line from the DOM
