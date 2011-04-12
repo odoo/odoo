@@ -435,12 +435,12 @@ openerp.base.form.WidgetFrame = openerp.base.form.Widget.extend({
             }
         }
     },
-    handle_node: function(n) {
-        var type = this.view.fields_view.fields[n.attrs.name] || {};
-        var widget_type = n.attrs.widget || type.type || n.tag;
-        var widget = new (openerp.base.form.widgets.get_object(widget_type)) (this.view, n);
-        if (n.tag == 'field' && n.attrs.nolabel != '1') {
-            var label = new (openerp.base.form.widgets.get_object('label')) (this.view, n);
+    handle_node: function(node) {
+        var type = this.view.fields_view.fields[node.attrs.name] || {};
+        var widget_type = node.attrs.widget || type.type || node.tag;
+        var widget = new (openerp.base.form.widgets.get_object(widget_type)) (this.view, node);
+        if (node.tag == 'field' && node.attrs.nolabel != '1') {
+            var label = new (openerp.base.form.widgets.get_object('label')) (this.view, node);
             label["for"] = widget;
             this.add_widget(label);
         }
@@ -579,12 +579,13 @@ openerp.base.form.Field = openerp.base.form.Widget.extend({
         if (node.attrs.nolabel != '1' && this.colspan > 1) {
             this.colspan--;
         }
-        this.field = view.fields_view.fields[node.attrs.name];
+        this.field = view.fields_view.fields[node.attrs.name] || {};
         this.string = node.attrs.string || this.field.string;
         this.help = node.attrs.help || this.field.help;
-        this.nolabel = (node.attrs.nolabel == '1');
-        this.readonly = (node.attrs.readonly == '1');
-        this.required = (node.attrs.required == '1');
+        this.invisible = (this.invisible || this.field.invisible == '1');
+        this.nolabel = (this.field.nolabel || node.attrs.nolabel) == '1';
+        this.readonly = (this.field.readonly || node.attrs.readonly) == '1';
+        this.required = (this.field.required || node.attrs.required) == '1';
         this.invalid = false;
         this.touched = false;
     },
