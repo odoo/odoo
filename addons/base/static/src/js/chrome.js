@@ -916,8 +916,8 @@ openerp.base.WebClient = openerp.base.Controller.extend({
         this.notification.notify("OpenERP Client", "The openerp client has been initialized.");
     },
     on_logged: function() {
-        this.action =  new openerp.base.ActionManager(this.session, "oe_app");
-        this.action.start();
+        this.action_manager =  new openerp.base.ActionManager(this.session, "oe_app");
+        this.action_manager.start();
         
         // if using saved actions, load the action and give it to action manager
         var parameters = jQuery.deparam(jQuery.param.querystring());
@@ -925,12 +925,12 @@ openerp.base.WebClient = openerp.base.Controller.extend({
             var key = parseInt(parameters["s_action"]);
             var self = this;
             this.rpc("/base/session/get_session_action", {key:key}, function(action) {
-                self.action.do_action(action);
+                self.action_manager.do_action(action);
             });
         }
     },
     on_menu_action: function(action) {
-        this.action.do_action(action);
+        this.action_manager.do_action(action);
     },
     do_about: function() {
     }

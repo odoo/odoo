@@ -9,6 +9,9 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
     init: function(session, element_id) {
         this._super(session, element_id);
         this.viewmanager = null;
+        // Temporary linking view_manager to session.
+        // Will use controller_parent to find it when implementation will be done.
+        session.view_manager = this;
     },
     /**
      * Process an action
