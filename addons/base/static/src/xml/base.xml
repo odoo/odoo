@@ -210,7 +210,8 @@
     </th>
     <t t-foreach="columns" t-as="column">
         <t t-set="attrs" t-value="column.attrs_for(row.data)"/>
-        <td t-if="column.invisible !== '1'" t-att-title="column.help">
+        <td t-if="column.invisible !== '1'" t-att-title="column.help"
+            class="oe-field-cell">
             <t t-if="!attrs.invisible">
                 <t t-set="is_button" t-value="column.tag === 'button'"/>
                 <!-- TODO: get correct widget from form -->
