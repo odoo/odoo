@@ -549,7 +549,7 @@ openerp.base.form.WidgetButton = openerp.base.form.Widget.extend({
         if (r.result === false) {
             this.log("Button object returns false");
         } else if (r.result.constructor == Object) {
-            console.log("TODO: send action to action manager", r.result);
+            this.session.action_manager.do_action(r.result);
         } else {
             this.view.reload();
         }
