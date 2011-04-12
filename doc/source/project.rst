@@ -212,6 +212,8 @@ OpenERP Web over time
 Release process
 +++++++++++++++
 
+OpenSUSE packaging: http://blog.lowkster.com/2011/04/packaging-python-packages-in-opensuse.html
+
 Roadmap
 +++++++
 
