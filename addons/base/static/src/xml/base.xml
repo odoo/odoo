@@ -152,38 +152,29 @@
 	</tr>
     </table>
 </t>
-<t t-name="ListView">
-    <!--
-    <h3><t t-esc="fields_view.arch['@string']"/></h3>
-    -->
-    <div class="oe_list_header">
-        <div class="oe_list_buttons">
-            <!--<button type="button" class="oe_list_button_new">New</button>-->
-        </div>
-        <div class="oe_list_pager">
-            <button type="button" data-pager-action="first">First</button>
-            <button type="button" data-pager-action="previous">&lt;&lt;</button>
-
-            <span class="oe_pager_index">0</span> / <span class="oe_pager_count">0</span>
-
-            <button type="button" data-pager-action="next">&gt;&gt;</button>
-            <button type="button" data-pager-action="last">Last</button>
-        </div>
-    </div>
-    <table>
-        <t t-call="ListView.header"/>
-    </table>
-</t>
-<t t-name="ListView.header">
-    <thead t-if="options.header" class="ui-widget-header">
+<table t-name="ListView">
+    <thead class="ui-widget-header">
         <tr t-if="options.selectable and options.deletable">
-            <th t-att-colspan="visible_columns.length + 2">
+            <th t-att-colspan="Math.floor((visible_columns.length + 2) / 2)"
+                class="oe-actions">
                 <button type="button" id="oe-list-delete">
-                    Delete Selected
+                    Delete
                 </button>
             </th>
+            <th t-att-colspan="Math.ceil((visible_columns.length + 2) / 2)"
+                class="oe-list-pager">
+                <button type="button" data-pager-action="first">First</button>
+                <button type="button" data-pager-action="previous"
+                        >&lt;&lt;</button>
+
+                <span class="oe-pager-index">1</span>
+                / <span class="oe-pager-count">1</span>
+
+                <button type="button" data-pager-action="next">&gt;&gt;</button>
+                <button type="button" data-pager-action="last">Last</button>
+            </th>
         </tr>
-        <tr>
+        <tr t-if="options.header">
             <th t-if="options.selectable"/>
             <t t-foreach="columns" t-as="column">
                 <th t-if="column.invisible !== '1'">
@@ -195,7 +186,7 @@
             <th t-if="options.deletable"/>
         </tr>
     </thead>
-</t>
+</table>
 <t t-name="ListView.rows" t-foreach="rows" t-as="row">
     <t t-call="ListView.row">
         <t t-set="style" t-value="null"/>
