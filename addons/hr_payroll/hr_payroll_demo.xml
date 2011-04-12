@@ -72,7 +72,7 @@
         <record id="structure_002" model="hr.payroll.structure">
             <field name="code">MEQP</field>
             <field name="name">Marketing Executive for Quentin Paolino</field>
-            <field eval="[(6, 0, [ref('hr_salary_rule_ca_paolino'),(hr_salary_rule_meal_voucher)])]" name="rule_ids"/>
+            <field eval="[(6, 0, [ref('hr_salary_rule_ca_paolino'), ref('hr_salary_rule_meal_voucher')])]" name="rule_ids"/>
             <field name="company_id" ref="base.main_company"/>
             <field name="parent_id" ref="structure_001"/>
         </record>
