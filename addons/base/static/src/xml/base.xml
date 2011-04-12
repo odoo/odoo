@@ -175,7 +175,7 @@
     </table>
 </t>
 <t t-name="ListView.header">
-    <thead t-if="options.header">
+    <thead t-if="options.header" class="ui-widget-header">
         <tr t-if="options.selectable and options.deletable">
             <th t-att-colspan="visible_columns.length + 2">
                 <button type="button" id="oe-list-delete">

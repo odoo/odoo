@@ -35,7 +35,7 @@ openerp.base.ListView = openerp.base.Controller.extend(
         this.options = _.extend({}, this.defaults, options || {});
     },
     start: function() {
-        //this.log('Starting ListView '+this.model+this.view_id)
+        this.$element.addClass('oe-listview');
         return this.rpc("/base/listview/load", {"model": this.model, "view_id":this.view_id,
             toolbar:!!this.view_manager.sidebar}, this.on_loaded);
     },
@@ -119,7 +119,7 @@ openerp.base.ListView = openerp.base.Controller.extend(
         var PAGE_SIZE = 50,
             bodies_count = Math.ceil(this.rows.length / PAGE_SIZE),
             body = 0,
-            $body = $('<tbody>').appendTo($table);
+            $body = $('<tbody class="ui-widget-content">').appendTo($table);
 
         var rendered = $.Deferred();
         var render_body = function () {
