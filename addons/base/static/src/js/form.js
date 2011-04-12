@@ -60,8 +60,19 @@ openerp.base.FormView =  openerp.base.Controller.extend( /** @lends openerp.base
         }
     },
     do_show: function () {
-        this.dataset.read_index(_.keys(this.fields_view.fields), this.on_record_loaded);
-        this.$element.show();
+        var self = this;
+        this.do_update_pager.add({
+            unique: true,
+            callback: function() {
+                self.$element.show();
+            }
+        });
+        if (this.dataset.index === null) {
+            // null index means we should start a new record
+            this.on_button_new();
+        } else {
+            this.dataset.read_index(_.keys(this.fields_view.fields), this.on_record_loaded);
+        }
     },
     do_hide: function () {
         this.$element.hide();
@@ -287,9 +298,7 @@ openerp.base.FormView =  openerp.base.Controller.extend( /** @lends openerp.base
         if (this.datarecord.id) {
             this.dataset.read_index(_.keys(this.fields_view.fields), this.on_record_loaded);
         } else {
-            this.dataset.default_get(_.keys(this.fields), function(result) {
-                self.on_record_loaded(result.result);
-            });
+            this.on_button_new();
         }
     }
 });
