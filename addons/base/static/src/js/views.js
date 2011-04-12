@@ -113,8 +113,9 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
             this.searchview.stop();
         }
         this.searchview = new openerp.base.SearchView(this, this.session, this.element_id + "_search", this.dataset, view_id, search_defaults);
-        this.searchview.on_search.add(function() {
-            self.views[self.active_view].controller.do_search.apply(self, arguments);
+        this.searchview.on_search.add(function(domains, contexts, groupbys) {
+            self.views[self.active_view].controller.do_search.call(
+                self, domains.concat(self.domains()), contexts, groupbys);
         });
         return this.searchview.start();
     },
@@ -128,6 +129,15 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
     on_remove: function() {
     },
     on_edit: function() {
+    },
+    /**
+     * Domains added on searches by the view manager, to override in subsequent
+     * view manager in order to add new pieces of domains to searches
+     *
+     * @returns an empty list
+     */
+    domains: function () {
+        return [];
     }
 });
 
@@ -175,6 +185,14 @@ openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
             this.sidebar.stop();
         }
         this._super();
+    },
+    /**
+     * adds action domain to the search domains
+     *
+     * @returns the action's domain
+     */
+    domains: function () {
+        return [this.action.domain];
     }
 });
 
