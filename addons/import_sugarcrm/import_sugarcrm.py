@@ -124,7 +124,6 @@ def import_users(sugar_obj, cr, uid, context=None):
     map_user = {'id' : 'id', 
              'name': ['first_name', 'last_name'],
             'login': 'user_name',
-            
             'context_lang' : 'context_lang',
             'password' : 'password',
             '.id' : '.id',
@@ -430,8 +429,6 @@ def get_account(sugar_obj, cr, uid, val, context=None):
 def import_tasks(sugar_obj, cr, uid, context=None):
     if not context:
         context = {}
-    partner_id = False
-    partner_address_id = False        
     map_task = {'id' : 'id',
                 'name': 'name',
                 'date': 'date_entered',
@@ -484,8 +481,6 @@ def get_attendee_id(sugar_obj, cr, uid, PortType, sessionid, module_name, module
 def import_meetings(sugar_obj, cr, uid, context=None):
     if not context:
         context = {}
-    partner_id = False
-    partner_address_id = False    
     map_meeting = {'id' : 'id',
                     'name': 'name',
                     'date': 'date_start',
@@ -527,8 +522,6 @@ def get_calls_state(sugar_obj, cr, uid, val,context=None):
 def import_calls(sugar_obj, cr, uid, context=None):
     if not context:
         context = {}
-    partner_id = False
-    partner_address_id = False        
     map_calls = {'id' : 'id',
                     'name': 'name',
                     'date': 'date_start',
@@ -579,6 +572,45 @@ def get_job_id(sugar_obj, cr, uid, val, context=None):
         job_id = job_obj.create(cr, uid, {'name': val})
     return job_id
     
+def get_attachment(sugar_obj, cr, uid, val, model, File, context=None):
+    if not context:
+        context = {}
+    attachment_obj = sugar_obj.pool.get('ir.attachment')
+    model_ids = find_mapped_id(sugar_obj, cr, uid, model, val.get('id'), context)
+    new_attachment_id = attachment_obj.create(cr, uid, {'name': val.get('name'), 'datas': File, 'res_id': val['res_id'],'res_model': val['model']})
+    message_model_ids = find_mapped_id(sugar_obj, cr, uid, model, val.get('id'), context)
+    message_xml_id = model_obj.browse(cr, uid, message_model_ids)
+    if message_xml_id:
+         mailgate_obj.write(cr, uid, [message_xml_id[0].res_id], {'attachment_ids': [(4, new_attachment_id)]})             
+    return True    
+    
+def import_history(sugar_obj, cr, uid, xml_id, model, context=None):
+    if not context:
+        context = {}
+    map_attachment = {'id' : 'id',
+                      'name':'name',
+                      'date':'date_entered',
+                      'user_id/id': 'assigned_user_id',
+                      'description': 'description_html',
+                      'res_id': 'res_id',
+                      'model': 'model',
+    }
+    mailgate_obj = sugar_obj.pool.get('mailgate.message')
+    model_obj =  sugar_obj.pool.get('ir.model.data')
+   
+    PortType, sessionid = sugar.login(context.get('username', ''), context.get('password', ''), context.get('url',''))
+    sugar_data = sugar.search(PortType, sessionid, 'Notes')
+    for val in sugar_data:
+         File = sugar.attachment_search(PortType, sessionid, 'Notes', val.get('id'))
+         model_ids = model_obj.search(cr, uid, [('name', 'like', xml_id)])
+         for model in model_obj.browse(cr, uid, model_ids):
+            val['res_id'] = model.res_id
+            val['model'] = model.model
+         fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_attachment)            
+         mailgate_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', noupdate=True, context=context)
+         get_attachment(sugar_obj, cr, uid, val, 'mailgate.message', File, context)
+    return True       
+    
 def import_employees(sugar_obj, cr, uid, context=None):
     if not context:
         context = {}
@@ -624,7 +656,6 @@ def get_contact_title(sugar_obj, cr, uid, salutation, domain, context=None):
 def import_emails(sugar_obj, cr, uid, context=None):
     if not context:
         context=None
-         
     map_emails = {'id': 'id',
     'name':'name',
     'date':'date_sent',
@@ -700,7 +731,6 @@ def import_project_tasks(sugar_obj, cr, uid, context=None):
 def import_leads(sugar_obj, cr, uid, context=None):
     if not context:
         context = {}
-    title_id = False   
     map_lead = {
             'id' : 'id',
             'name': ['first_name', 'last_name'],
@@ -736,6 +766,7 @@ def import_leads(sugar_obj, cr, uid, context=None):
         val['state'] = get_lead_state(sugar_obj, cr, uid, val,context)
         fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_lead)
         lead_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', noupdate=True, context=context)
+        import_history(sugar_obj, cr, uid, val.get('id'), 'crm.lead', context)
     return True
 
 def get_opportunity_contact(sugar_obj,cr,uid, PortType, sessionid, val, partner_xml_id, context=None):
@@ -759,7 +790,6 @@ def get_opportunity_contact(sugar_obj,cr,uid, PortType, sessionid, val, partner_
 def import_opportunities(sugar_obj, cr, uid, context=None):
     if not context:
         context = {}
-    partner_contact_name = False
     map_opportunity = {'id' : 'id',
         'name': 'name',
         'probability': 'probability',
@@ -789,6 +819,7 @@ def import_opportunities(sugar_obj, cr, uid, context=None):
         val['stage_id.id'] = stage_id
         fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_opportunity)
         lead_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', noupdate=True, context=context)
+        import_history(sugar_obj, cr, uid, val.get('id'), 'crm.lead', context)
     return True
 
 MAP_FIELDS = {'Opportunities':  #Object Mapping name
@@ -906,7 +937,7 @@ class import_sugarcrm(osv.osv):
             if current.project:
                 key_list.append('Projects')
             if current.project_task:
-                key_list.append('Project Tasks')                                                                                              
+                key_list.append('Project Tasks')
         return key_list
 
     def import_all(self, cr, uid, ids, context=None):

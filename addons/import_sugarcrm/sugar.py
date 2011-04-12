@@ -62,6 +62,16 @@ def relation_search(portType, sessionid, module_name=None, module_id=None, relat
           ans_list.append(i.get_element_id())
   return ans_list
 
+def attachment_search(portType, sessionid, module_name, module_id=None):
+  se_req = get_note_attachmentRequest()
+  se_req._session = sessionid
+  se_req._id = module_id
+  se_req._module_name = module_name
+  se_resp = portType.get_note_attachment(se_req)
+  file = False
+  file = se_resp._return._note_attachment.File
+  return file
+
 def user_get_attendee_list(portType, sessionid, module_name=None, module_id=None):
   se_req = get_attendee_listRequest()
   se_req._session = sessionid
