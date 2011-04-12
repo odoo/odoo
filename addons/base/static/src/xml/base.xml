@@ -60,7 +60,8 @@
 </t>
 <t t-name="Header">
     <a href="/" class="company_logo_link">
-        <img src="/base/static/src/img/logo.png" border="0" class="company_logo"/>
+        <img t-att-src="typeof kitten == 'undefined' ? '/base/static/src/img/logo.png' :
+            'http://placekitten.com/180/46'" border="0" class="company_logo"/>
     </a>
     <h1 class="header_title" t-if="session.session_is_valid()">
         <span class="company">$company</span> - (<span class="database">$database</span>)<br/>

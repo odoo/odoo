@@ -780,6 +780,10 @@ openerp.base.Header =  openerp.base.Controller.extend({
         this.do_update();
     },
     do_update: function() {
+        if(jQuery.param != undefined &&
+                jQuery.deparam(jQuery.param.querystring()).kitten != undefined) {
+            this.kitten = 1;
+        }
         this.$element.html(QWeb.render("Header", this));
     }
 });
