@@ -73,20 +73,29 @@ openerp.base.ListView = openerp.base.Controller.extend(
         this.$element.html(QWeb.render("ListView", this));
 
         // Head hook
-        this.$element.find('#oe-list-delete').click(this.do_delete_selected);
+        this.$element.find('#oe-list-delete')
+                .hide()
+                .click(this.do_delete_selected);
 
+        var $table = this.$element.find('table');
         // Cell events
-        this.$element.find('table').delegate(
-                'th.oe-record-selector', 'click', function (e) {
-                    // A click in the selection cell should not activate the
-                    // linking feature
-                    e.stopImmediatePropagation();
+        $table.delegate(
+            'th.oe-record-selector', 'click', function (e) {
+                // TODO: ~linear performances, would a simple counter work?
+                if ($table.find('th.oe-record-selector input:checked').length) {
+                    $table.find('#oe-list-delete').show();
+                } else {
+                    $table.find('#oe-list-delete').hide();
+                }
+                // A click in the selection cell should not activate the
+                // linking feature
+                e.stopImmediatePropagation();
         });
-        this.$element.find('table').delegate(
+        $table.delegate(
                 'td.oe-record-delete button', 'click', this.do_delete);
 
         // Global rows handlers
-        this.$element.find('table').delegate(
+        $table.delegate(
                 'tr', 'click', this.on_select_row);
 
         // sidebar stuff
