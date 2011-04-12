@@ -201,6 +201,9 @@ openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
      * @returns the action's domain
      */
     domains: function () {
+        if (!this.action.domain) {
+            return [];
+        }
         return [this.action.domain];
     },
     /**
@@ -209,6 +212,9 @@ openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
      * @returns the action's context
      */
     contexts: function () {
+        if (!this.action.context) {
+            return [];
+        }
         return [this.action.context];
     }
 });
