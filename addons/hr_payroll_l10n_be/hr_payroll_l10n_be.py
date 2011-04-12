@@ -60,10 +60,10 @@ class hr_employee_be(osv.osv):
     _inherit = 'hr.employee'
     _description = 'same as before'
     _columns = {
-	'statut_fiscal':fields.selection([('without income','Without Income'),('with income','With Income')], 'Statut Fiscal'),
-	'handicap':fields.boolean('Handicap'),
-        'handicap_child':fields.boolean('Handicap Children'),
+	'statut_fiscal':fields.selection([('without income','Without Income'),('with income','With Income')], 'Tax status for spouse'),
+	'handicap':fields.boolean('Disabled'),
+        'handicap_child':fields.boolean('Disabled Children'),
 	'resident':fields.boolean('Residente'),
-	'number_handicap':fields.integer('Number of Handicap'),
+	'number_handicap':fields.integer('Number of disabled children'),
     }
 hr_employee_be()
