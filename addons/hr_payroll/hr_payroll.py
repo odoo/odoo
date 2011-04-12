@@ -189,6 +189,21 @@ class hr_salary_head(osv.osv):
 
 hr_salary_head()
 
+class one2many_mod2(fields.one2many):
+
+    def get(self, cr, obj, ids, name, user=None, offset=0, context=None, values=None):
+        if context is None:
+            context = {}
+        if not values:
+            values = {}
+        res = {}
+        for id in ids:
+            res[id] = []
+        ids2 = obj.pool.get(self._obj).search(cr, user, [(self._fields_id,'in',ids), ('appears_on_payslip', '=', True)], limit=self._limit)
+        for r in obj.pool.get(self._obj)._read_flat(cr, user, ids2, [self._fields_id], context=context, load='_classic_write'):
+            res[r[self._fields_id]].append( r['id'] )
+        return res
+
 class hr_payslip(osv.osv):
     '''
     Pay Slip
@@ -231,7 +246,8 @@ class hr_payslip(osv.osv):
             \n* It is confirmed by the accountant and the state set to \'Confirm Sheet\'.\
             \n* If the salary is paid then state is set to \'Paid Salary\'.\
             \n* The \'Reject\' state is used when user cancel payslip.'),
-        'line_ids': fields.one2many('hr.payslip.line', 'slip_id', 'Payslip Line', required=False, readonly=True, states={'draft': [('readonly', False)]}),
+#        'line_ids': fields.one2many('hr.payslip.line', 'slip_id', 'Payslip Line', required=False, readonly=True, states={'draft': [('readonly', False)]}),
+        'line_ids': one2many_mod2('hr.payslip.line', 'slip_id', 'Payslip Line',readonly=True, states={'draft':[('readonly',False)]}),
         'company_id': fields.many2one('res.company', 'Company', required=False, readonly=True, states={'draft': [('readonly', False)]}),
         'input_line_ids': fields.one2many('hr.payslip.input', 'payslip_id', 'Payslip Inputs', required=False, readonly=True, states={'draft': [('readonly', False)]}),
         'paid': fields.boolean('Made Payment Order ? ', required=False, readonly=True, states={'draft': [('readonly', False)]}),
