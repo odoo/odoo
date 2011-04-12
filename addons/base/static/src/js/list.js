@@ -8,7 +8,9 @@ openerp.base.ListView = openerp.base.Controller.extend(
         // list rows can be deleted
         'deletable': true,
         // whether the column headers should be displayed
-        'header': true
+        'header': true,
+        // display addition button, with that label
+        'addable': "New"
     },
     /**
      * @constructs
@@ -21,6 +23,7 @@ openerp.base.ListView = openerp.base.Controller.extend(
      * @param {Boolean} [options.selectable=true] determines whether view rows are selectable (e.g. via a checkbox)
      * @param {Boolean} [options.header=true] should the list's header be displayed
      * @param {Boolean} [options.deletable=true] are the list rows deletable
+     * @param {null|String} [options.addable="New"] should the new-record button be displayed, and what should its label be. Use ``null`` to hide the button.
      */
     init: function(view_manager, session, element_id, dataset, view_id, options) {
         this._super(session, element_id);
@@ -73,6 +76,7 @@ openerp.base.ListView = openerp.base.Controller.extend(
         this.$element.html(QWeb.render("ListView", this));
 
         // Head hook
+        this.$element.find('#oe-list-add').click(this.do_add_record);
         this.$element.find('#oe-list-delete')
                 .hide()
                 .click(this.do_delete_selected);
@@ -159,6 +163,23 @@ openerp.base.ListView = openerp.base.Controller.extend(
             $old_body.remove();
         });
     },
+    /**
+     * Asks the view manager to switch to a different view, using the provided
+     * record index (within the current dataset).
+     *
+     * If the index is null, ``switch_to_record`` asks for the creation of a
+     * new record.
+     *
+     * @param {Number|null} index the record index (in the current dataset) to switch to
+     * @param {String} [view="form"] the view to switch to
+     */
+    switch_to_record:function (index, view) {
+        view = view || 'form';
+        this.dataset.index = index;
+        _.delay(_.bind(function () {
+            this.view_manager.on_mode_switch(view);
+        }, this));
+    },
     on_select_row: function (event) {
         var $target = $(event.currentTarget);
         if (!$target.parent().is('tbody')) {
@@ -171,12 +192,8 @@ openerp.base.ListView = openerp.base.Controller.extend(
         if (index == undefined || index === -1) {
             return;
         }
-        this.dataset.index = index;
-        _.delay(_.bind(function () {
-            this.view_manager.on_mode_switch('form');
-        }, this));
-
-    },
+            this.switch_to_record(index);
+        },
     do_show: function () {
         // TODO: re-trigger search
         this.$element.show();
@@ -220,6 +237,16 @@ openerp.base.ListView = openerp.base.Controller.extend(
         e.stopImmediatePropagation();
         this.dataset.unlink(
             [this.rows[$(e.currentTarget).closest('tr').prevAll().length].data.id.value]);
+    },
+    /**
+     * Handles signal for the addition of a new record (can be a creation,
+     * can be the addition from a remote source, ...)
+     *
+     * The default implementation is to switch to a new record on the form view
+     */
+    do_add_record: function () {
+        this.notification['default']('Add', "New record");
+        // this.switch_to_record(null);
     },
     /**
      * Handles deletion of all selected lines
