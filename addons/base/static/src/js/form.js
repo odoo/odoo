@@ -765,6 +765,20 @@ openerp.base.form.FieldBoolean = openerp.base.form.Field.extend({
     }
 });
 
+openerp.base.form.FieldProgressBar = openerp.base.form.Field.extend({
+    init: function(view, node) {
+        this._super(view, node);
+        this.template = "FieldProgressBar";
+    },
+    start: function() {
+        this._super.apply(this, arguments);
+        this.$element.find('div').progressbar({
+            value: this.value,
+            disabled: this.readonly
+        });
+    }
+});
+
 openerp.base.form.FieldTextXml = openerp.base.form.Field.extend({
 // to replace view editor
 });
@@ -904,7 +918,7 @@ openerp.base.form.widgets = new openerp.base.Registry({
     'boolean' : 'openerp.base.form.FieldBoolean',
     'float' : 'openerp.base.form.FieldFloat',
     'integer': 'openerp.base.form.FieldFloat',
-    'progressbar': 'openerp.base.form.FieldFloat',
+    'progressbar': 'openerp.base.form.FieldProgressBar',
     'float_time': 'openerp.base.form.FieldFloat'
 });
 
