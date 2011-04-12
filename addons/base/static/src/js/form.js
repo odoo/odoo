@@ -907,6 +907,7 @@ openerp.base.form.widgets = new openerp.base.Registry({
     'email' : 'openerp.base.form.FieldEmail',
     'url' : 'openerp.base.form.FieldUrl',
     'text' : 'openerp.base.form.FieldText',
+    'text_wiki' : 'openerp.base.form.FieldText',
     'date' : 'openerp.base.form.FieldDate',
     'datetime' : 'openerp.base.form.FieldDatetime',
     'selection' : 'openerp.base.form.FieldSelection',
