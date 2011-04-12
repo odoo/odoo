@@ -204,7 +204,7 @@ openerp.base.ListView = openerp.base.Controller.extend(
         // don't link to forms
         e.stopImmediatePropagation();
         this.dataset.unlink(
-            [this.rows[$(e.currentTarget).closest('tr').prevAll().length].id]);
+            [this.rows[$(e.currentTarget).closest('tr').prevAll().length].data.id.value]);
     },
     /**
      * Handles deletion of all selected lines
@@ -226,7 +226,7 @@ openerp.base.ListView = openerp.base.Controller.extend(
         var rows = this.rows;
         return this.$element.find('th.oe-record-selector input:checked')
                 .closest('tr').map(function () {
-            return rows[$(this).prevAll().length].id;
+            return rows[$(this).prevAll().length].data.id.value;
         }).get();
     }
 });
