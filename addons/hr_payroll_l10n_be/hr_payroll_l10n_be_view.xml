@@ -5,6 +5,7 @@
             <field name="name">hr.contract.form.inherit</field>
             <field name="model">hr.contract</field>
             <field name="type">form</field>
+	    <field name="priority">20</field>
             <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
             <field name="arch" type="xml">
             <data>
@@ -58,8 +59,8 @@
 		<field name="inherit_id" ref="hr_payroll.hr_contract_form_inherit"/>
 		<field name="type">form</field>
 		<field name="arch" type="xml">
-			<field name="struct_id" position="replace">		
-			</field>
+		     <field name="struct_id" position="replace">		
+		     </field>
 		</field>
 	</record>
 
