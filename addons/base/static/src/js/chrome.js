@@ -884,7 +884,12 @@ openerp.base.WebClient = openerp.base.Controller.extend({
         this._super(null, element_id);
 
         QWeb.add_template("xml/base.xml");
-        this.$element.html(QWeb.render("Interface", {}));
+        var params = {};
+        if(jQuery.param != undefined &&
+                jQuery.deparam(jQuery.param.querystring()).kitten != undefined) {
+            params = {kitten:1};
+        }
+        this.$element.html(QWeb.render("Interface", params));
 
         this.session = new openerp.base.Session("oe_errors");
         this.loading = new openerp.base.Loading(this.session, "oe_loading");
