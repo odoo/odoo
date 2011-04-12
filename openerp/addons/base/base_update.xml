@@ -342,27 +342,6 @@
             <field name="view_id" ref="view_users_configuration_form"/>
             <field name="target">new</field>
         </record>
-        
-      <!--     Config Wiz     Give access to others users-->
-        
-        <record id="action_config_access_other_user" model="ir.actions.act_window">
-            <field name="name">Give access to others users</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">res.users</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="view_users_form"/>
-        </record>
-        
-        <!--   register configuration wizard -->
-
-        <record id="config_wizard_action_config_user_form" model="ir.actions.todo">
-            <field name="action_id" ref="action_config_access_other_user"/>
-            <field name="type">normal</field>
-            <field name="target">current</field>
-            <field name="sequence">1000</field>
-            <field name="state">cancel</field>
-        </record>
 
         <record id="view_confirm_simple_view_form" model="ir.ui.view">
             <field name="name">Configure Your Interface</field>
