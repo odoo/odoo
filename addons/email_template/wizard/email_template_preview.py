@@ -90,10 +90,6 @@ class email_template_preview(osv.osv_memory):
         vals['email_cc'] = self.get_template_value(cr, uid, template.email_cc, model, res_id, context)
         vals['email_bcc'] = self.get_template_value(cr, uid, template.email_bcc, model, res_id, context)
         vals['reply_to'] = self.get_template_value(cr, uid, template.reply_to, model, res_id, context)
-        if template.message_id:
-            vals['message_id'] = self.get_template_value(cr, uid, message_id, model, res_id, context)
-        elif template.track_campaign_item:
-            vals['message_id'] = tools.generate_tracking_message_id(res_id)
         vals['subject'] = self.get_template_value(cr, uid, template.subject, model, res_id, context)
         description = self.get_template_value(cr, uid, template.body, model, res_id, context) or ''
         if template.user_signature:

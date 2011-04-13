@@ -26,7 +26,7 @@
                                 <separator string="Options" colspan="2"/>
                                 <field name="lang" colspan="4" />
                                 <field name="user_signature" colspan="4" />
-                                <field name="track_campaign_item" colspan="4"/>
+                                <field name="auto_delete"/>
                             </group>
                             <group col="2" colspan="2">
                                 <separator colspan="2" string="Email Content"/>
@@ -71,11 +71,6 @@
                                     <field name="ref_ir_act_window"/>
                                     <field name="ref_ir_value"/>
                                     <button name="unlink_action" string="Delete Action" type="object" icon="gtk-delete" colspan="2" attrs="{'invisible':[('ref_ir_act_window','=',False), ('ref_ir_value','=',False)]}"/>
-                                </group>
-                                <group colspan="2" col="2">
-                                    <separator string="Advanced Options" colspan="2"/>
-                                    <field name="message_id"/>
-                                    <field name="auto_delete"/>
                                 </group>
                             </group>
                             <group colspan="2" col="2">

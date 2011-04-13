@@ -22,6 +22,7 @@
 from osv import osv
 from osv import fields
 import tools
+from tools.translate import _
 
 class email_compose_message(osv.osv_memory):
     _name = 'email.compose.message'
@@ -127,6 +128,10 @@ class email_compose_message(osv.osv_memory):
         'template_id': fields.selection(_get_templates, 'Template'),
     }
 
+    def get_template_value(self, cr, uid, message, model, resource_id, context=None):
+        template_pool = self.pool.get('email.template')
+        return template_pool.get_template_value(cr, uid, message, model, resource_id, context)
+
     def on_change_template(self, cr, uid, ids, model, template_id, context=None):
         if context is None:
             context = {}
@@ -138,6 +143,15 @@ class email_compose_message(osv.osv_memory):
             vals.update(self.get_template_data(cr, uid, resource_id, template_id, context))
         else:
             vals.update({'attachment_ids' : []})
+
+        email_temp_pool = self.pool.get('email.template')
+        template_data = email_temp_pool.browse(cr, uid, template_id, context=context)
+        vals.update({'auto_delete': template_data.auto_delete})
+        if context.get('active_model') and context.get('active_id') and template_data.user_signature:
+            model_pool = self.pool.get(context['active_model'])
+            user = model_pool.browse(cr, uid, context['active_id'], context=context).user_id
+            signature = user and user.signature or ''
+            vals['body'] = vals['body'] + '\n' + signature
         return {'value': vals}
 
 email_compose_message()

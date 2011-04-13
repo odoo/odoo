@@ -100,6 +100,8 @@ class email_compose_message(osv.osv_memory):
 
     _columns = {
         'attachment_ids': fields.many2many('ir.attachment','email_message_send_attachment_rel', 'wizard_id', 'attachment_id', 'Attachments'),
+        'auto_delete': fields.boolean('Auto Delete', help="Permanently delete emails after sending"),
+        'filter_id': fiels
     }
 
     def get_value(self, cr, uid, model, res_id, context=None):
@@ -130,7 +132,7 @@ class email_compose_message(osv.osv_memory):
                     'body' : description,
                     'subject' : subject,
                     'message_id' :  message_data and message_data.message_id or False,
-                    'attachment_ids' : message_data and message_pool.read(cr, uid, message_id, ['attachment_ids'])['attachment_ids'] or [],
+                    'attachment_ids' : [],
                     'res_id' : message_data and message_data.res_id or False,
                     'email_from' : message_data and message_data.email_to or False,
                     'email_to' : message_data and message_data.email_from or False,
@@ -153,62 +155,60 @@ class email_compose_message(osv.osv_memory):
             context = {}
 
         record = self.browse(cr, uid, ids[0], context=context)
-        if context.get('mass_mail') and context['active_ids'] and context.get('template_id'):
-            email_message_pool = self.pool.get('email.message')
-            email_temp_pool = self.pool.get('email.template')
-            for res_id in context['active_ids']:
-                subject = email_temp_pool.get_template_value(cr, uid, record.subject, context['active_model'], res_id)
-                body = email_temp_pool.get_template_value(cr, uid, record.body, context['active_model'], res_id)
-                email_to = email_temp_pool.get_template_value(cr, uid, record.email_to, context['active_model'], res_id)
-                email_from = email_temp_pool.get_template_value(cr, uid, record.email_from, context['active_model'], res_id)
-                email_cc = email_temp_pool.get_template_value(cr, uid, record.email_cc, context['active_model'], res_id)
-                reply_to = email_temp_pool.get_template_value(cr, uid, record.reply_to, context['active_model'], res_id)
-
-                email_id = email_message_pool.schedule_with_attach(cr, uid, email_from,
-                           email_to, subject or False, body or False, context['active_model'], email_cc or False, openobject_id=int(res_id),
-                           context=context)
-            return {'type': 'ir.actions.act_window_close'}
-
-        if context.get('mass_mail') and context.get('active_ids') and not context.get('template_id'):
-            self.do_mass_mail(cr, uid, context['active_ids'], record.subject or False, record.body or False, context=context)
-            return {'type': 'ir.actions.act_window_close'}
-
-        email_id = self.save_to_mailbox(cr, uid, ids, context)
-        return {'type': 'ir.actions.act_window_close'}
-
-    def do_mass_mail(self, cr, uid, ids, subject, body, context=None):
-        if context is None:
-            context = {}
-
-        if context.get('active_model'):
-            email_message_pool = self.pool.get('email.message')
-            model_pool = self.pool.get(context['active_model'])
-            for data in model_pool.browse(cr, uid, ids, context=context):
-                email_id = email_message_pool.schedule_with_attach(cr, uid,
-                    data.user_id and data.user_id.address_id and data.user_id.address_id.email or False,
-                    data.email_from or False, subject, body, model=context['active_model'],
-                    email_cc=tools.ustr(data.email_cc or ''), openobject_id=int(data.id), context=context)
-        return True
-
-    def save_to_mailbox(self, cr, uid, ids, context=None):
-        email_ids = []
-        email_message_pool = self.pool.get('email.message')
+        email_message_pool = self.pool.get('email.message') 
         attachment = []
+        email_ids = []
         for mail in self.browse(cr, uid, ids, context=context):
             for attach in mail.attachment_ids:
                 attachment.append((attach.datas_fname, attach.datas))
             references = False
             message_id = False
+
+            # Reply Email
             if context.get('mail',False) == 'reply' and  mail.message_id:
                 references = mail.references and mail.references + "," + mail.message_id or mail.message_id
             else:
                 message_id = mail.message_id
-            email_id = email_message_pool.schedule_with_attach(cr, uid, mail.email_from, mail.email_to, mail.subject, mail.body,
+            
+            # Mass mailing
+            if context.get('mass_mail', False):
+                if context['active_ids'] and context['active_model']:
+                    active_ids = context['active_ids']
+                    active_model = context['active_model']
+
+                else:
+                    active_model = record.model.model
+                    active_ids = active_model_pool.search(cr, uid, record.filter_id.domain, record.filter_id.context)
+                
+                for active_id in active_ids:
+                    subject = self.get_template_value(cr, uid, mail.subject, active_model, active_id)
+                    body = self.get_template_value(cr, uid, mail.body, active_model, active_id)
+                    email_to = self.get_template_value(cr, uid, mail.email_to, active_model, active_id)
+                    email_from = self.get_template_value(cr, uid, mail.email_from, active_model, active_id)
+                    email_cc = self.get_template_value(cr, uid, mail.email_cc, active_model, active_id)
+                    reply_to = self.get_template_value(cr, uid, mail.reply_to, active_model, active_id)
+
+                    email_id = email_message_pool.schedule_with_attach(cr, uid, mail.email_from, mail.email_to, mail.subject, mail.body,
+                        model=mail.model, email_cc=mail.email_cc, email_bcc=mail.email_bcc, reply_to=mail.reply_to,
+                        attach=attachment, message_id=message_id, references=references, openobject_id=int(mail.res_id),
+                        subtype=mail.sub_type, x_headers=mail.headers, priority=mail.priority, smtp_server_id=mail.smtp_server_id and mail.smtp_server_id.id,
+                        auto_delete=mail.auto_delete or False, context=context)
+                    email_ids.append(email_id)
+
+            else:
+                email_id = email_message_pool.schedule_with_attach(cr, uid, mail.email_from, mail.email_to, mail.subject, mail.body,
                     model=mail.model, email_cc=mail.email_cc, email_bcc=mail.email_bcc, reply_to=mail.reply_to,
                     attach=attachment, message_id=message_id, references=references, openobject_id=int(mail.res_id),
-                    subtype=mail.sub_type, x_headers=mail.headers, priority=mail.priority, smtp_server_id=mail.smtp_server_id and mail.smtp_server_id.id, context=context)
-            email_ids.append(email_id)
+                    subtype=mail.sub_type, x_headers=mail.headers, priority=mail.priority, smtp_server_id=mail.smtp_server_id and mail.smtp_server_id.id,
+                    auto_delete=mail.auto_delete or False, context=context)
+                email_ids.append(email_id)
         return email_ids
+        #return {'type': 'ir.actions.act_window_close'}
+
+    
+    def get_template_value(self, cr, uid, message, model, resource_id, context=None):
+        return message
+        
 
 email_compose_message()
 
