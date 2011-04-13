@@ -110,6 +110,23 @@ initializing the addon.
         });
     }
 
+Utility behaviors
+-----------------
+
+JavaScript
+++++++++++
+
+* All javascript objects inheriting from
+  :js:class:`openerp.base.BasicConroller` will have all methods
+  starting with ``on_`` or ``do_`` bound to their ``this``. This means
+  they don't have to be manually bound (via ``_.bind`` or ``$.proxy``)
+  in order to be useable as bound event handlers (event handlers
+  keeping their object as ``this`` rather than taking whatever
+  ``this`` object they were called with).
+
+  Beware that this is only valid for methods starting with ``do_`` and
+  ``on_``, any other method will have to be bound manually.
+
 .. _addons-testing:
 
 Testing
