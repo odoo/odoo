@@ -224,7 +224,7 @@ class crm_merge_opportunity(osv.osv_memory):
         This function gets default values
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
+        @param uid: the current users ID for security checks,
         @param fields: List of fields for default value
         @param context: A standard dictionary for contextual values
 
