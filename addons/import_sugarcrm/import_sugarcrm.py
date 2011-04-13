@@ -733,6 +733,24 @@ def import_emails(sugar_obj, cr, uid, context=None):
         mailgate_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', noupdate=True, context=context)
     return True    
     
+def get_project_account(sugar_obj,cr,uid, PortType, sessionid, val, context=None):
+    if not context:
+        context={}
+    partner_id = False
+    partner_invoice_id = False        
+    model_obj = sugar_obj.pool.get('ir.model.data')
+    partner_obj = sugar_obj.pool.get('res.partner')
+    partner_address_obj = sugar_obj.pool.get('res.partner.address')
+    sugar_project_account = sugar.relation_search(PortType, sessionid, 'Project', module_id=val.get('id'), related_module='Accounts', query=None, deleted=None)
+    for account_id in sugar_project_account:
+        model_ids = find_mapped_id(sugar_obj, cr, uid, 'res.partner', account_id, context)
+        if model_ids:
+            model_id = model_obj.browse(cr, uid, model_ids)[0].res_id
+            partner_id = partner_obj.browse(cr, uid, model_id).id
+            address_ids = partner_address_obj.search(cr, uid, [('partner_id', '=', partner_id),('type', '=', 'invoice')])
+            partner_invoice_id = address_ids[0] 
+    return partner_id, partner_invoice_id      
+    
 def import_projects(sugar_obj, cr, uid, context=None):
     if not context:
         context = {}
@@ -741,12 +759,17 @@ def import_projects(sugar_obj, cr, uid, context=None):
         'date_start': 'estimated_start_date',
         'date': 'estimated_end_date',
         'user_id/id': 'assigned_user_id',
+        'partner_id/.id': 'partner_id/.id',
+        'contact_id/.id': 'contact_id/.id', 
          'state': 'state'   
     }
     project_obj = sugar_obj.pool.get('project.project')
     PortType, sessionid = sugar.login(context.get('username', ''), context.get('password', ''), context.get('url',''))
     sugar_data = sugar.search(PortType, sessionid, 'Project')
     for val in sugar_data:
+        partner_id, partner_invoice_id = get_project_account(sugar_obj,cr,uid, PortType, sessionid, val, context) 
+        val['partner_id/.id'] = partner_id
+        val['contact_id/.id'] = partner_invoice_id 
         val['state'] = get_project_state(sugar_obj, cr, uid, val.get('status'),context)
         fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_project)
         project_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', noupdate=True, context=context)
@@ -919,7 +942,7 @@ MAP_FIELDS = {'Opportunities':  #Object Mapping name
                      'process' : import_emails,
                     },    
               'Projects': 
-                    {'dependencies' : ['Users'],
+                    {'dependencies' : ['Users', 'Accounts', 'Contacts'],
                      'process' : import_projects,
                     },                        
               'Project Tasks': 
