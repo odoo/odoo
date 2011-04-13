@@ -236,6 +236,33 @@
           <field name="sequence">1000</field>
           <field name="state">cancel</field>
       </record>
+      
+      <!--      Inherit company Form -->
+
+      <record id="view_inherit_res_company_logo" model="ir.ui.view">
+          <field name="name">Upload Logo11</field>
+          <field name="model">res.company</field>
+          <field name="type">form</field>
+          <field name="inherit_id" ref="base.view_company_form" />
+          <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//page[@string='General Information']" position="replace">
+                    <page string="General Information">
+	                    <group colspan="4">
+                            <field name="rml_header1" colspan="4"/>
+                            <field name="rml_footer1" colspan="4"/>
+                            <field name="rml_footer2" colspan="4"/>
+                            <field name="currency_id" colspan="2"/>
+	                     </group>
+	                     <separator string="" colspan="4"/>
+	                     <button name="createReport" string="Preview Reports" type="object" icon="gtk-print"/>
+	                     <button name="%(action_res_company_logo)d"
+                        string="Upload/Change Logo" type="action" icon="gtk-open"/>
+                    </page>
+                    </xpath>
+                </data>
+          </field>
+      </record>
        
   </data>
 </openerp>

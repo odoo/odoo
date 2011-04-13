@@ -19,32 +19,31 @@
 #
 ##############################################################################
 
+from osv import fields, osv
+import os
+import tools
+from tools.translate import _
 
-{
-    'name': 'Base Setup',
-    'version': '1.0',
-    'category': 'Tools',
-    'description': """
-This module helps to configure the system at the installation of a new database.
-================================================================================
 
-It allows you to choose the type of interface and select from a list of applications to install.
+class res_company_logo(osv.osv_memory):
+    _name = 'res.company.logo'
+    _columns = {
+        'logo' : fields.binary('Logo'),
+    }
+    _defaults={
+               'logo':lambda self,cr,uid,c: self.pool.get('res.company').browse(cr, uid, uid,c).logo,
+     }
 
-It also helps to easily configure your company.
-    """,
-    'author': 'OpenERP SA',
-    'website': 'http://www.openerp.com',
-    'depends': ['base'],
-    'init_xml': ['base_setup_data.xml'],
-    'update_xml': ['security/ir.model.access.csv',
-                   'wizard/res_company_logo_view.xml',
-                   'base_setup_installer.xml',
-                   'base_setup_todo.xml',
-                   ],
-    'demo_xml': ['base_setup_demo.xml'],
-    'installable': True,
-    'active': True,
-    'certificate': '0086711085869',
-    'images': ['images/base_setup1.jpeg','images/base_setup2.jpeg','images/base_setup3.jpeg','images/base_setup4.jpeg',],
-}
+    def execute(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        record_id = context.get('active_id', False) or False
+        comp_obj = self.pool.get("res.company")
+        get_val = self.browse(cr, uid, ids)[0]
+        comp_obj.write(cr, uid, record_id, {'logo': get_val.logo}, context=context)
+        return {'type': 'ir.actions.act_window_close'}
+    
+res_company_logo()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+
