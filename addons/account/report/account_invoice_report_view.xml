@@ -27,10 +27,10 @@
                 <field name="partner_bank_id" invisible="1"/>
                 <field name="date_due" invisible="1"/>
                 <field name="account_id" invisible="1"/>
+                <field name="account_line_id" invisible="1"/>
                 <field name="nbr" sum="# of Lines"/>
                 <field name="product_qty" sum="Qty"/>
                 <!-- <field name="reconciled"  sum="# Reconciled"/> -->
-                <field name="price_average" sum="Average Price"/>
                 <field name="price_total" sum="Total Without Tax"/>
                 <field name="price_total_tax" sum="Total With Tax"/>
                 <field name="residual"  sum="Total Residual" invisible="context.get('residual_invisible',False)"/>
@@ -103,6 +103,7 @@
                     <separator orientation="vertical"/>
                     <field name="journal_id" widget="selection"/>
                     <field name="account_id"/>
+                    <field name="account_line_id"/>
                     <separator orientation="vertical"/>
                     <field name="date_due"/>
                     <separator orientation="vertical" groups="base.group_multi_company"/>
@@ -120,6 +121,7 @@
                     <filter string="Type" icon="terp-stock_symbol-selection" context="{'group_by':'type'}"/>
                     <separator orientation="vertical"/>
                     <filter string="Journal" icon="terp-folder-orange" context="{'group_by':'journal_id'}"/>
+                    <filter string="Account Line" icon="terp-folder-orange" context="{'group_by':'account_line_id'}"/>
                     <separator orientation="vertical"/>
                     <filter string="Due Date" icon="terp-go-today" context="{'group_by':'date_due'}"/>
                     <filter string="Period" icon="terp-go-month" context="{'group_by':'period_id'}"/>
