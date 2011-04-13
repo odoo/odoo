@@ -46,7 +46,7 @@ Generic Payroll system Integrated with Accountings.
         "hr_payroll_account_view.xml",
     ],
     'demo_xml': [
-        'hr_payroll_demo.xml'
+#        'hr_payroll_demo.xml'
     ],
     'installable': True,
     'active': False,

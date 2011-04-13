@@ -2,22 +2,6 @@
 <openerp>
     <data>
 
-
-        <record model="ir.ui.view" id="view_holiday_status_inherit_form1">
-            <field name="name">hr.holidays.status.inherit1</field>
-            <field name="model">hr.holidays.status</field>
-            <field name="inherit_id" ref="hr_payroll.view_holiday_status_form1"/>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <field name="code" position="after">
-                   <field name="analytic_account_id"/>
-				   <newline/>
-                   <field name="account_id"/>
-				   <newline/>
-                </field>
-            </field>
-        </record>
-
         <record model="ir.ui.view" id="view_hr_payslip_line_inherit_tree">
             <field name="name">hr.payslip.line.inherit.tree</field>
             <field name="model">hr.payslip.line</field>
@@ -44,7 +28,7 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="view_hr_employee_grade_inherit_form">
+       <!-- <record model="ir.ui.view" id="view_hr_employee_grade_inherit_form">
             <field name="name">hr.employee.grade.inherit.form</field>
             <field name="model">hr.payroll.structure</field>
             <field name="inherit_id" ref="hr_payroll.view_hr_employee_grade_form"/>
@@ -54,7 +38,7 @@
                    <field name="account_id" required="1"/>
                 </xpath>
             </field>
-        </record>
+        </record>-->
 
         <record model="ir.ui.view" id="view_hr_payslip_inherit_form">
             <field name="name">hr.payslip.inherit.form</field>
@@ -62,7 +46,7 @@
             <field name="inherit_id" ref="hr_payroll.view_hr_payslip_form"/>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <field name="date" position="before">
+                <field name="date_to" position="after">
                     <field name="journal_id" required="1"/>
                     <field name="bank_journal_id" domain="[('type','=','cash')]" required="1"/>
                 </field>
@@ -87,51 +71,13 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="view_hr_bank_advice_inherit_form">
-            <field name="name">hr.payroll.advice.inherit.form</field>
-            <field name="model">hr.payroll.advice</field>
-            <field name="inherit_id" ref="hr_payroll.view_hr_bank_advice_form"/>
-            <field name="type">form</field>
+        <record model="ir.ui.view" id="hr_contibution_register_inherit_tree">
+            <field name="name">hr.contribution.register.inherit.tree</field>
+            <field name="model">hr.contribution.register</field>
+            <field name="inherit_id" ref="hr_payroll.hr_contribution_register_tree"/>
+            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <field name="name" position="after">
-                    <field name="account_id" required="1"/>
-                </field>
-            </field>
-        </record>
-
-        <record model="ir.ui.view" id="view_hr_payroll_register_inherit_tree">
-            <field name="name">hr.payroll.register.inherit.tree</field>
-            <field name="model">hr.payroll.register</field>
-            <field name="inherit_id" ref="hr_payroll.view_hr_payroll_register_tree"/>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <field name="state" position="before">
-                    <field name="journal_id" required="1"/>
-                    <field name="bank_journal_id" required="1"/>
-                </field>
-            </field>
-        </record>
-
-        <record model="ir.ui.view" id="view_hr_payroll_register_inherit_form">
-            <field name="name">hr.payroll.register.inherit.form</field>
-            <field name="model">hr.payroll.register</field>
-            <field name="inherit_id" ref="hr_payroll.view_hr_payroll_register_form"/>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <field name="number" position="after">
-                    <field name="journal_id" required="1"/>
-                    <field name="bank_journal_id" required="1"/>
-                </field>
-            </field>
-        </record>
-
-        <record model="ir.ui.view" id="hr_contibution_register_inherit_tree">
-            <field name="name">hr.contibution.register.inherit.tree</field>
-            <field name="model">hr.contibution.register</field>
-            <field name="inherit_id" ref="hr_payroll.hr_contibution_register_tree"/>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <field name="monthly_total_by_comp" position="after">
                     <field name="yearly_total_by_emp"/>
                     <field name="yearly_total_by_comp"/>
                 </field>
@@ -139,45 +85,35 @@
         </record>
 
         <record model="ir.ui.view" id="hr_contibution_register_inherit_form">
-            <field name="name">hr.contibution.register.inherit.form</field>
-            <field name="model">hr.contibution.register</field>
-            <field name="inherit_id" ref="hr_payroll.hr_contibution_register_form"/>
+            <field name="name">hr.contribution.register.inherit.form</field>
+            <field name="model">hr.contribution.register</field>
+            <field name="inherit_id" ref="hr_payroll.hr_contribution_register_form"/>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <field name="name" position="after">
-                    <field name="account_id" required="1"/>
-                    <field name="analytic_account_id"/>
-                </field>
+             <xpath expr="/form/notebook" position="before">
+                <newline/>
+                <field name="account_id" required="1"/>
+                <field name="analytic_account_id"/>
+             </xpath>
             </field>
         </record>
 
-        <record model="ir.ui.view" id="hr_contibution_register_inherit1_form">
-            <field name="name">hr.contibution.register.inherit1.form</field>
-            <field name="model">hr.contibution.register</field>
-            <field name="inherit_id" ref="hr_payroll.hr_contibution_register_form"/>
+      <!--  <record model="ir.ui.view" id="hr_contibution_register_inherit1_form">
+            <field name="name">hr.contribution.register.inherit1.form</field>
+            <field name="model">hr.contribution.register</field>
+            <field name="inherit_id" ref="hr_payroll.hr_contribution_register_form"/>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <group name="Month" position="after">
+              <xpath expr="/form/notebook" position="before">
                     <group col="2" colspan="2">
+                    <newline/>
                         <separator colspan="4" string="Year"/>
                         <field name="yearly_total_by_emp"/>
                         <field name="yearly_total_by_comp"/>
                     </group>
-                </group>
+               </xpath>
             </field>
-        </record>
-
-        <record model="ir.ui.view" id="hr_contibution_register_line_inherit_form">
-            <field name="name">hr.contibution.register.line.form.inherit</field>
-            <field name="model">hr.contibution.register.line</field>
-            <field name="inherit_id" ref="hr_payroll.hr_contibution_register_line_form"/>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <field name="employee_id" position="after">
-                   <field name="period_id"/>
-                </field>
-            </field>
-        </record>
+        </record>-->
 
         <record id="view_hr_payslip_form_inherit" model="ir.ui.view">
 		    <field name="name">hr.payslip.form</field>
@@ -185,7 +121,7 @@
 		    <field name="type">form</field>
 		    <field name="inherit_id" ref="hr_payroll.view_hr_payslip_form"/>
 		    <field name="arch" type="xml">
-		      <page string="Other Informations" position="replace">
+		      <xpath expr="/form/notebook/page[@string='Other Information']" position="replace">
 	            <page string="Accounting Details">
 	                <group col="4" colspan="3">
 	                    <separator colspan="4" string="Accounting Informations"/>
@@ -203,18 +139,18 @@
 	                    </field>
 	                </group>
 	                <group col="2" colspan="1">
-	                    <separator colspan="2" string="Other Informations"/>
-	                    <field name="paid" readonly="1"/>
-	                    <field name="company_id"/>
-	                    <field name="register_id"/>
-	                    <field name="deg_id"/>
-	                    <field name="contract_id" domain="[('employee_id','=',employee_id)]"/>
+	                    <separator colspan="4" string="Other Information"/>
+                        <group col="5" colspan="2">
+                            <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                            <newline/>
+                            <field name="paid" readonly="1"/>
+                        </group>
 	                </group>
-	                <separator colspan="4" string="Description"/>
-	                <field name="note" colspan="4" nolabel="1"/>
+	               <separator colspan="4" string="Notes"/>
+                   <field name="note" colspan="4" nolabel="1"/>
 	            </page>
-	           </page>
-		    </field>
+              </xpath>
+	        </field>
 		</record>
 
 		<record id="view_hr_payslip_form_inherit1" model="ir.ui.view">
@@ -248,6 +184,40 @@
                     <field name="employee_account"/>
                     <field name="analytic_account"/>
                 </field>
+            </field>
+        </record>
+
+    <!-- Adding Account fields to the Salary Rules -->
+    
+        <record id="hr_salary_rule_form_inherit" model="ir.ui.view">
+            <field name="name">hr.salary.rule.form.inherit</field>
+            <field name="model">hr.salary.rule</field>
+            <field name="inherit_id" ref="hr_payroll.hr_salary_rule_form"/>
+            <field name="arch" type="xml">
+              <xpath expr="/form/notebook/page[@string='Child Rules']" position="after">
+                    <page string="Accounting">
+	                    <field name="account_debit" />
+	                    <field name="account_credit"/>
+	                    <field name="analytic_account_id"/>
+	                    <field name="account_tax_id"/>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+    <!-- Contract View -->
+    
+        <record id="hr_contract_form_inherit" model="ir.ui.view">
+            <field name="name">hr.contract.view.form.inherit</field>
+            <field name="model">hr.contract</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+            <field name="arch" type="xml">
+	            <xpath expr="/form/notebook/page/group/field[@name='advantages']" position="after">
+	               <separator colspan="4" string="Accounting"/>
+	                <field name="analytic_account_id"/>
+	                <field name="journal_id"/>
+	            </xpath>
             </field>
         </record>
 
