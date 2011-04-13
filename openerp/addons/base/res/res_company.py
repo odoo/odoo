@@ -68,26 +68,6 @@ class multi_company_default(osv.osv):
 
 multi_company_default()
 
-class res_company_logo(osv.osv_memory):
-    _name = 'res.company.logo'
-    _columns = {
-        'logo' : fields.binary('Logo'),
-    }
-    _defaults={
-               'logo':lambda self,cr,uid,c: self.pool.get('res.company').browse(cr, uid, uid,c).logo,
-     }
-
-    def execute(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        record_id = context.get('active_id', False) or False
-        comp_obj = self.pool.get("res.company")
-        get_val = self.browse(cr, uid, ids)[0]
-        comp_obj.write(cr, uid, record_id, {'logo': get_val.logo}, context=context)
-        return {'type': 'ir.actions.act_window_close'}
-    
-res_company_logo()
-
 class res_company(osv.osv):
     _name = "res.company"
     _description = 'Companies'
