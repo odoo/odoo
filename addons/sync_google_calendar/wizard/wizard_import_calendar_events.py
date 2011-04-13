@@ -29,8 +29,8 @@ import dateutil
 from dateutil.tz import *
 from dateutil.parser import *
 from dateutil import parser
+from pytz import timezone
 import re
-
 import urllib
 
 try:
@@ -203,6 +203,12 @@ class synchronize_google_calendar_events(osv.osv_memory):
             categ_id.append(categ_obj.create(cr, uid, {'name': event_feed.title.text, 
                                                        'object_id': object_id and object_id[0],
                                                        'user_id': uid }))
+        if 'tz' in context and context['tz']:
+            time_zone = context['tz']
+        else:
+            time_zone = tools.get_server_timezone()
+        au_tz = timezone(time_zone)
+        
         for feed in event_feed.entry:
             google_id = feed.id.text
             model_data = {
@@ -232,8 +238,14 @@ class synchronize_google_calendar_events(osv.osv_memory):
             data_ids = model_obj.search(cr, uid, [('model','=','crm.meeting'), ('name','=',google_id)])
             if data_ids:
                 res_id = model_obj.browse(cr, uid, data_ids[0], context=context).res_id
-                meeting_ids.append(res_id)
-                meeting_obj.write(cr, uid, [res_id], vals, context=context)
+                meeting = meeting_obj.browse(cr, uid, res_id, context=context)
+                google_updated = feed.updated.text
+                utime = dateutil.parser.parse(google_updated)
+                au_dt = au_tz.normalize(utime.astimezone(au_tz))
+                updated_dt = datetime.datetime(*au_dt.timetuple()[:6]).strftime('%Y-%m-%d %H:%M:%S')
+                if meeting.write_date < updated_dt:
+                    meeting_ids.append(res_id)
+                    meeting_obj.write(cr, uid, [res_id], vals, context=context)
             else:
                 res_id = meeting_obj.create(cr, uid, vals, context=context)
                 meeting_ids.append(res_id)
