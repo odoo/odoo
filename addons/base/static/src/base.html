@@ -38,6 +38,11 @@
     <script type="text/javascript" src="/base_calendar/static/lib/dhtmlxScheduler/codebase/dhtmlxscheduler.js"></script>
     <script type="text/javascript" src="/base_calendar/static/src/js/calendar.js"></script>
 
+<script type="text/javascript" src="/web_chat/static/lib/AjaxIM/js/jquery.jsonp-1.1.0.js"></script>
+<script type="text/javascript" src="/web_chat/static/lib/AjaxIM/js/jquery.jstore-all-min.js"></script>
+<script type="text/javascript" src="/web_chat/static/lib/AjaxIM/js/jquery.md5.js"></script>
+<script type="text/javascript" src="/web_chat/static/lib/AjaxIM/js/im.js"></script>
+
     <link rel="stylesheet" type="text/css" media="screen" href="/base/static/lib/jquery.ui/css/smoothness/jquery-ui-1.8.9.custom.css" />
     <link rel="stylesheet" type="text/css" media="screen" href="/base/static/lib/jquery.ui.notify/css/ui.notify.css" />
     <link rel="stylesheet" type="text/css" href="/base/static/lib/jquery.superfish/css/superfish.css" media="screen">
@@ -53,7 +58,21 @@
             oe.base.webclient("oe");
         });
     </script>
+
+    <script>
+    var AjaxIM, AjaxIMLoadedFunction;
+    $(function() {
+       AjaxIM.init({
+           pollServer: '/web_chat/pollserver',
+           theme: '/web_chat/static/lib/AjaxIM/themes/default',
+           flashStorage: '/web_chat/static/lib/AjaxIM/js/jStore.Flash.html'
+       });
+       AjaxIM.client.login();
+    });
+    </script>
 </head>
 <body id="oe" class="openerp">
 </body>
 </html>
+
+

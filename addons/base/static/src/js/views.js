@@ -19,6 +19,7 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
      * Supported actions: act_window
      */
     do_action: function(action) {
+        this.log(action);
         var self = this;
         // instantiate the right controllers by understanding the action
         switch (action.type) {
