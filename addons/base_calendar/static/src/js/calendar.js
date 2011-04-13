@@ -4,8 +4,8 @@
 
 openerp.base_calendar = function(openerp) {
 QWeb.add_template('/base_calendar/static/src/xml/base_calendar.xml');
-openerp.base.views.add('calendar', 'openerp.base.CalendarView');
-openerp.base.CalendarView = openerp.base.Controller.extend({
+openerp.base.views.add('calendar', 'openerp.base_calendar.CalendarView');
+openerp.base_calendar.CalendarView = openerp.base.Controller.extend({
 // Dhtmlx scheduler ?
 	init: function(view_manager, session, element_id, dataset, view_id){
 		this._super(session, element_id);
