@@ -778,16 +778,19 @@ def get_opportunity_contact(sugar_obj,cr,uid, PortType, sessionid, val, partner_
     partner_address_obj = sugar_obj.pool.get('res.partner.address')
     model_account_ids = model_obj.search(cr, uid, [('res_id', '=', partner_xml_id[0]), ('model', '=', 'res.partner'), ('module', '=', 'sugarcrm_import')])
     model_xml_id = model_obj.browse(cr, uid, model_account_ids)[0].name 
-    sugar_account_contact = sugar.relation_search(PortType, sessionid, 'Accounts', module_id=model_xml_id, related_module='Contacts', query=None, deleted=None)
-    for contact in sugar_account_contact:
-        model_ids = find_mapped_id(sugar_obj, cr, uid, 'res.partner.address', contact, context)
-        if model_ids:
-            model_id = model_obj.browse(cr, uid, model_ids)[0].res_id
-            address_id = partner_address_obj.browse(cr, uid, model_id)
-            partner_address_obj.write(cr, uid, [address_id.id], {'partner_id': partner_xml_id[0]})
-            partner_contact_name = address_id.name
-        else:
-            partner_contact_name = val.get('account_name')    
+    sugar_account_contact = set(sugar.relation_search(PortType, sessionid, 'Accounts', module_id=model_xml_id, related_module='Contacts', query=None, deleted=None))
+    sugar_opportunities_contact = set(sugar.relation_search(PortType, sessionid, 'Opportunities', module_id=val.get('id'), related_module='Contacts', query=None, deleted=None))
+    sugar_contact = list(sugar_account_contact.intersection(sugar_opportunities_contact))
+    if sugar_contact: 
+        for contact in sugar_contact:
+            model_ids = find_mapped_id(sugar_obj, cr, uid, 'res.partner.address', contact, context)
+            if model_ids:
+                model_id = model_obj.browse(cr, uid, model_ids)[0].res_id
+                address_id = partner_address_obj.browse(cr, uid, model_id)
+                partner_address_obj.write(cr, uid, [address_id.id], {'partner_id': partner_xml_id[0]})
+                partner_contact_name = address_id.name
+            else:
+                partner_contact_name = val.get('account_name')    
     return partner_contact_name 
 
 def import_opportunities(sugar_obj, cr, uid, context=None):
@@ -826,7 +829,7 @@ def import_opportunities(sugar_obj, cr, uid, context=None):
     return True
 
 MAP_FIELDS = {'Opportunities':  #Object Mapping name
-                    {'dependencies' : ['Users', 'Accounts'],  #Object to import before this table
+                    {'dependencies' : ['Users', 'Accounts', 'Contacts'],  #Object to import before this table
                      'process' : import_opportunities,
                      },
               'Leads':
@@ -872,7 +875,7 @@ MAP_FIELDS = {'Opportunities':  #Object Mapping name
               'Project Tasks': 
                     {'dependencies' : ['Users', 'Projects'],
                      'process' : import_project_tasks,
-                    },                          
+                    },
               'Resources': 
                     {'dependencies' : ['Users'],
                      'process' : import_resources,
