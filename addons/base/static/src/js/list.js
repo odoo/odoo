@@ -145,8 +145,6 @@ openerp.base.ListView = openerp.base.Controller.extend(
         }
         
         this.dataset.count = this.dataset.ids.length;
-
-        // TODO: offset, length
         var results = this.rows.length;
         $table.find('.oe-pager-last').text(results);
         $table.find('.oe-pager-total').text(results);
@@ -239,6 +237,8 @@ openerp.base.ListView = openerp.base.Controller.extend(
         // DataSet for now
         //self.dataset.read_slice(self.dataset.fields, 0, self.limit,
         // self.do_fill_table);
+        this.dataset.offset = 0;
+        this.dataset.limit = false;
         return this.rpc('/base/listview/fill', {
             'model': this.dataset.model,
             'id': this.view_id,

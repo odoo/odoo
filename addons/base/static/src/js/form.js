@@ -62,11 +62,8 @@ openerp.base.FormView =  openerp.base.Controller.extend( /** @lends openerp.base
     },
     do_show: function () {
         var self = this;
-        this.do_update_pager.add({
-            unique: true,
-            callback: function() {
-                self.$element.show();
-            }
+        this.do_update_pager.add(function() {
+            self.$element.show();
         });
         if (this.dataset.index === null) {
             // null index means we should start a new record
