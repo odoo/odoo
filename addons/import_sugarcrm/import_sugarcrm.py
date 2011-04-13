@@ -560,6 +560,56 @@ def import_resources(sugar_obj, cr, uid, context=None):
         resource_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', noupdate=True, context=context)
     return True    
 
+def get_bug_priority(sugar_obj, cr, uid, val,context=None):
+    if not context:
+        context = {}
+    priority = False
+    priority_dict = {'priority': #field in the sugarcrm database
+        { #Mapping of sugarcrm priority : openerp bugs priority
+            'Urgent': '1',
+            'High': '2',
+            'Medium': '3',
+            'Low': '4'
+        },}
+    priority = priority_dict['priority'].get(val, '')
+    return priority    
+
+def get_bug_state(sugar_obj, cr, uid, val,context=None):
+    if not context:
+        context = {}
+    state_id = False
+    state_dict = {'status': #field in the sugarcrm database
+        { #Mapping of sugarcrm status : openerp Bugs state
+            'New' : 'draft',
+            'Assigned':'open',
+            'Closed': 'done',
+            'Pending': 'pending',
+            'Rejected': 'cancel',
+        },}
+    state = state_dict['status'].get(val, '')
+    return state
+
+def import_bug(sugar_obj, cr, uid, context=None):
+    if not context:
+        context = {}
+    map_resource = {'id' : 'id',
+                    'name': 'name',
+                    'categ_id.id': 'categ_id.id',
+                    'priority':'priority',
+                    'description': 'description',
+                    'state': 'state'
+    }
+    issue_obj = sugar_obj.pool.get('project.issue')
+    PortType, sessionid = sugar.login(context.get('username', ''), context.get('password', ''), context.get('url',''))
+    sugar_data = sugar.search(PortType, sessionid, 'Bugs')
+    for val in sugar_data:
+        val['categ_id.id'] = get_category(sugar_obj, cr, uid, 'project.issue', val.get('type'))
+        val['priority'] = get_bug_priority(sugar_obj, cr, uid, val.get('priority'),context)
+        val['state'] = get_bug_state(sugar_obj, cr, uid, val.get('status'),context)
+        fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_resource)
+        issue_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', noupdate=True, context=context)
+    return True    
+
 def get_job_id(sugar_obj, cr, uid, val, context=None):
     if not context:
         context={}
@@ -876,6 +926,10 @@ MAP_FIELDS = {'Opportunities':  #Object Mapping name
                     {'dependencies' : ['Users', 'Projects'],
                      'process' : import_project_tasks,
                     },
+              'Bugs': 
+                    {'dependencies' : ['Users', 'Projects', 'Project Tasks'],
+                     'process' : import_bug,
+                    },                                                 
               'Resources': 
                     {'dependencies' : ['Users'],
                      'process' : import_resources,
@@ -899,6 +953,7 @@ class import_sugarcrm(osv.osv):
         'email': fields.boolean('Emails', help="If Emails is checked, SugarCRM Emails data imported in OpenERP Emails form"),
         'project': fields.boolean('Projects', help="If Projects is checked, SugarCRM Projects data imported in OpenERP Projects form"),
         'project_task': fields.boolean('Project Tasks', help="If Project Tasks is checked, SugarCRM Project Tasks data imported in OpenERP Project Tasks form"),
+        'bug': fields.boolean('Bugs', help="If Bugs is checked, SugarCRM Bugs data imported in OpenERP Project Issues form"),
         'username': fields.char('User Name', size=64),
         'password': fields.char('Password', size=24),
     }
@@ -913,7 +968,8 @@ class import_sugarcrm(osv.osv):
         'call' : True,    
         'email' : True, 
         'project' : True,   
-        'project_task': True     
+        'project_task': True,     
+        'bug': True
     }
     
     def get_key(self, cr, uid, ids, context=None):
@@ -944,6 +1000,8 @@ class import_sugarcrm(osv.osv):
                 key_list.append('Projects')
             if current.project_task:
                 key_list.append('Project Tasks')
+            if current.bug:
+                key_list.append('Bugs')                
         return key_list
 
     def import_all(self, cr, uid, ids, context=None):
