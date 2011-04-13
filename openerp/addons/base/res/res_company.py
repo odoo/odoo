@@ -25,12 +25,13 @@ import os
 import tools
 from tools.translate import _
 from tools.safe_eval import safe_eval as eval
-
+from lxml import etree
 
 import pooler
 import netsvc
 from report.interface import report_rml
 from tools import to_xml
+from report import report_sxw
 
 class multi_company_default(osv.osv):
     """
@@ -282,58 +283,27 @@ class res_company(osv.osv):
         (osv.osv._check_recursion, 'Error! You can not create recursive companies.', ['parent_id'])
     ]
 
-    def createReport(self, cr, uid, report, ids, name=False):
-        files = []
-        from report import report_sxw
-        myreport = report_sxw.report_sxw('report.my.test', 'base','','')
-        user_obj = pooler.get_pool(cr.dbname).get('res.users')
-        user_name = user_obj.browse(cr, uid, [uid])[0]
-        company = user_obj.browse(cr,uid,[uid])[0].company_id
-
-        for id in ids:
-            header_xml = """<document filename="Preview Report.pdf">
-            <template pageSize="(595.0,842.0)" title="Preview Report" author="OpenERP S.A.(sales@openerp.com)" allowSplitting="20">
-                    <pageTemplate>
-                    <frame id="first" x1="1.3cm" y1="28.1cm" width="18.4cm" height="26.5cm"/>
-                    <pageGraphics>
-                     <setFont name="DejaVu Sans" size="8"/>
-                      <image x="1.3cm" y="28cm" height="40.0" >"""+ to_xml(company.logo or removeParentNode('image')) +"""</image>
-                     <drawString x="16.3cm" y="28.3cm">"""+ to_xml(company.rml_header1) +"""</drawString>
-                    <fill color="black"/>
-                    <stroke color="black"/>
-                    <lines>1.3cm 28.1cm 20cm 28.1cm</lines>
-                    <drawString x="1.3cm" y="27.0cm">"""+ to_xml(company.name) +"""</drawString>
-                    <drawString x="1.3cm" y="27.5cm">"""+ to_xml(company.partner_id.name) +"""</drawString>
-                    <drawString x="1.3cm" y="26.6cm">"""+ to_xml(company.partner_id.address and company.partner_id.address[0].street or '') +"""</drawString>
-                    <drawString x="1.3cm" y="26.2cm">"""+ to_xml(company.partner_id.address and company.partner_id.address[0].zip or '') + """</drawString>
-                    <drawString x="2.2cm" y="26.2cm">"""+ to_xml(company.partner_id.address and company.partner_id.address[0].city or '') + """</drawString>
-                    <drawString x="4.1cm" y="26.2cm">"""+ to_xml("-") + """</drawString>
-                    <drawString x="4.4cm" y="26.2cm">"""+ to_xml(company.partner_id.address and company.partner_id.address[0].country_id and company.partner_id.address[0].country_id.name  or '') + """</drawString>
-                    <drawString x="1.3cm" y="25.8cm">Phone:</drawString>
-                    <drawString x="4.8cm" y="25.8cm">"""+ to_xml(company.partner_id.address and company.partner_id.address[0].phone or '' ) + """</drawString>
-                    <drawString x="1.3cm" y="25.4cm">Mail:</drawString>
-                    <drawString x="4.8cm" y="25.4cm">"""+ to_xml( company.partner_id.address and company.partner_id.address[0].email or ''  ) + """</drawString>
-                    <fill color="black"/>
-                    <lines>1.3cm 25.2cm 7.8cm 25.2cm</lines>
-                    <fill color="black"/>
-                    <lines>1.3cm 2.0cm 20cm 2.0cm</lines>
-                    <drawCentredString x="10.5cm" y="1.4cm">"""+ to_xml(company.rml_footer1)+""" </drawCentredString>
-                    <drawCentredString x="10.5cm" y="1.0cm">"""+ to_xml(company.rml_footer2)+"""</drawCentredString>
-                    <drawString x="7.9cm" y="0.5cm">Contact :</drawString>
-                    <drawCentredString x="10.6cm" y="0.5cm">"""+ to_xml(user_name.name)+"""</drawCentredString>
-                    <drawCentredString x="12.0cm" y="0.5cm">"""+ to_xml("-")+"""</drawCentredString>
-                    <drawCentredString x="12.8cm" y="0.5cm">Page: <pageNumber/></drawCentredString>
-                    </pageGraphics>
-                    </pageTemplate>
-              </template>
-              </document>
-              """
-            report_type = 'pdf'
-            pdf = myreport.create_pdf(header_xml)
-            fp = open('/home/ksa/Desktop/test.pdf','wb+')
-            fp.write(pdf);
-            fp.close();
-        return True
+    def createReport(self, cr, uid, ids, context=None):
+        company = self.browse(cr, uid, ids)[0]
+        rml = etree.XML(company.rml_header)
+        rml = rml.getchildren()[0]
+        header_xml = """<document filename="Preview Report.pdf">
+        <template pageSize="(595.0,842.0)" title="Preview Report" author="OpenERP S.A.(sales@openerp.com)" allowSplitting="20">""" + etree.tostring(rml) +  """
+          </template>
+          </document>
+          """
+        tmppath= '/tmp/previews.rml'
+        fp = open(tmppath, 'wb+')
+        fp.write(header_xml)
+        fp.close()
+        if not netsvc.Service._services.get('report.comapany.report'):
+            myreport = report_sxw.report_sxw('report.comapany.report', 'res.company', tmppath,  header=False)
+        return {
+                'type': 'ir.actions.report.xml',
+                'report_name': 'comapany.report',
+                'datas': {'ids': ids, 'model': 'res.company'},
+                'nodestroy': True
+            }
 
 res_company()
 
