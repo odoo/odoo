@@ -8,7 +8,9 @@ openerp.base.ListView = openerp.base.Controller.extend(
         // list rows can be deleted
         'deletable': true,
         // whether the column headers should be displayed
-        'header': true
+        'header': true,
+        // display addition button, with that label
+        'addable': "New"
     },
     /**
      * @constructs
@@ -21,6 +23,7 @@ openerp.base.ListView = openerp.base.Controller.extend(
      * @param {Boolean} [options.selectable=true] determines whether view rows are selectable (e.g. via a checkbox)
      * @param {Boolean} [options.header=true] should the list's header be displayed
      * @param {Boolean} [options.deletable=true] are the list rows deletable
+     * @param {null|String} [options.addable="New"] should the new-record button be displayed, and what should its label be. Use ``null`` to hide the button.
      */
     init: function(view_manager, session, element_id, dataset, view_id, options) {
         this._super(session, element_id);
@@ -35,20 +38,37 @@ openerp.base.ListView = openerp.base.Controller.extend(
         this.options = _.extend({}, this.defaults, options || {});
     },
     start: function() {
-        //this.log('Starting ListView '+this.model+this.view_id)
+        this.$element.addClass('oe-listview');
         return this.rpc("/base/listview/load", {"model": this.model, "view_id":this.view_id,
             toolbar:!!this.view_manager.sidebar}, this.on_loaded);
     },
     on_loaded: function(data) {
+        var self = this;
         this.fields_view = data.fields_view;
         //this.log(this.fields_view);
         this.name = "" + this.fields_view.arch.attrs.string;
 
         var fields = this.fields_view.fields;
+        var domain_computer = openerp.base.form.compute_domain;
         this.columns = _(this.fields_view.arch.children).chain()
             .map(function (field) {
                 var name = field.attrs.name;
-                return _.extend({id: name, tag: field.tag}, field.attrs, fields[name]);
+                var column = _.extend({id: name, tag: field.tag},
+                                      field.attrs, fields[name]);
+                // attrs computer
+                if (column.attrs) {
+                    var attrs = eval('(' + column.attrs + ')');
+                    column.attrs_for = function (fields) {
+                        var result = {};
+                        for (var attr in attrs) {
+                            result[attr] = domain_computer(attrs[attr], fields);
+                        }
+                        return result;
+                    };
+                } else {
+                    column.attrs_for = function () { return {}; };
+                }
+                return column;
             }).value();
 
         this.visible_columns = _.filter(this.columns, function (column) {
@@ -57,20 +77,46 @@ openerp.base.ListView = openerp.base.Controller.extend(
         this.$element.html(QWeb.render("ListView", this));
 
         // Head hook
-        this.$element.find('#oe-list-delete').click(this.do_delete_selected);
+        this.$element.find('#oe-list-add').click(this.do_add_record);
+        this.$element.find('#oe-list-delete')
+                .hide()
+                .click(this.do_delete_selected);
 
+        var $table = this.$element.find('table');
         // Cell events
-        this.$element.find('table').delegate(
-                'th.oe-record-selector', 'click', function (e) {
-                    // A click in the selection cell should not activate the
-                    // linking feature
-                    e.stopImmediatePropagation();
+        $table.delegate(
+            'th.oe-record-selector', 'click', function (e) {
+                // TODO: ~linear performances, would a simple counter work?
+                if ($table.find('th.oe-record-selector input:checked').length) {
+                    $table.find('#oe-list-delete').show();
+                } else {
+                    $table.find('#oe-list-delete').hide();
+                }
+                // A click in the selection cell should not activate the
+                // linking feature
+                e.stopImmediatePropagation();
         });
-        this.$element.find('table').delegate(
+        $table.delegate(
+            'td.oe-field-cell button', 'click', function (e) {
+                var $cell = $(e.currentTarget).closest('td');
+                var col_index = $cell.prevAll('td').length;
+                var field = self.visible_columns[col_index];
+                var action = field.name;
+
+                var $row = $cell.parent('tr');
+                var row = self.rows[$row.prevAll().length];
+
+                var context = _.extend(
+                        {}, self.dataset.context, field.context || {});
+                self.dataset.call(action, [row.data.id.value], [context],
+                                  self.do_reload);
+                e.stopImmediatePropagation();
+            });
+        $table.delegate(
                 'td.oe-record-delete button', 'click', this.do_delete);
 
         // Global rows handlers
-        this.$element.find('table').delegate(
+        $table.delegate(
                 'tr', 'click', this.on_select_row);
 
         // sidebar stuff
@@ -85,11 +131,27 @@ openerp.base.ListView = openerp.base.Controller.extend(
      * @returns {Promise} promise to the end of view rendering (list views are asynchronously filled for improved responsiveness)
      */
     do_fill_table: function(records) {
+        var $table = this.$element.find('table');
         this.rows = records;
 
-        var $table = this.$element.find('table');
+        // Keep current selected record, if it's still in our new search
+        var current_record_id = this.dataset.ids[this.dataset.index];
+        this.dataset.ids = _(records).chain().map(function (record) {
+            return record.data.id.value;
+        }).value();
+        this.dataset.index = _.indexOf(this.dataset.ids, current_record_id);
+        if (this.dataset.index === -1) {
+            this.dataset.index = 0;
+        }
+
+        // TODO: offset, length, count
+        var results = this.rows.length;
+        $table.find('.oe-pager-last').text(results);
+        $table.find('.oe-pager-total').text(results);
+
+
         // remove all data lines
-        $table.find('tbody').remove();
+        var $old_body = $table.find('tbody');
 
         // add new content
         var columns = this.columns,
@@ -100,10 +162,10 @@ openerp.base.ListView = openerp.base.Controller.extend(
         var PAGE_SIZE = 50,
             bodies_count = Math.ceil(this.rows.length / PAGE_SIZE),
             body = 0,
-            $body = $('<tbody>').appendTo($table);
+            $body = $('<tbody class="ui-widget-content">').appendTo($table);
 
+        var rendered = $.Deferred();
         var render_body = function () {
-            var rendered = $.Deferred();
             setTimeout(function () {
                 $body.append(
                     QWeb.render("ListView.rows", {
@@ -118,9 +180,29 @@ openerp.base.ListView = openerp.base.Controller.extend(
                     rendered.resolve();
                 }
             }, 0);
-            return rendered.promise();
         };
-        return render_body();
+        render_body();
+
+        return rendered.promise().then(function () {
+            $old_body.remove();
+        });
+    },
+    /**
+     * Asks the view manager to switch to a different view, using the provided
+     * record index (within the current dataset).
+     *
+     * If the index is null, ``switch_to_record`` asks for the creation of a
+     * new record.
+     *
+     * @param {Number|null} index the record index (in the current dataset) to switch to
+     * @param {String} [view="form"] the view to switch to
+     */
+    switch_to_record:function (index, view) {
+        view = view || 'form';
+        this.dataset.index = index;
+        _.delay(_.bind(function () {
+            this.view_manager.on_mode_switch(view);
+        }, this));
     },
     on_select_row: function (event) {
         var $target = $(event.currentTarget);
@@ -130,26 +212,41 @@ openerp.base.ListView = openerp.base.Controller.extend(
         // count number of preceding siblings to line clicked
         var row = this.rows[$target.prevAll().length];
 
-        var index = _.indexOf(this.dataset.ids, row.id);
+        var index = _.indexOf(this.dataset.ids, row.data.id.value);
         if (index == undefined || index === -1) {
             return;
         }
-        this.dataset.index = index;
-        _.delay(_.bind(function () {
-            this.view_manager.on_mode_switch('form');
-        }, this));
-
-    },
+            this.switch_to_record(index);
+        },
     do_show: function () {
-        // TODO: re-trigger search
         this.$element.show();
+        if (this.hidden) {
+            this.do_reload();
+            this.hidden = false;
+        }
     },
     do_hide: function () {
         this.$element.hide();
+        this.hidden = true;
+    },
+    /**
+     * Reloads the search view based on the current settings (dataset & al)
+     */
+    do_reload: function () {
+        // TODO: need to do 5 billion tons of pre-processing, bypass
+        // DataSet for now
+        //self.dataset.read_slice(self.dataset.fields, 0, self.limit,
+        // self.do_fill_table);
+        return this.rpc('/base/listview/fill', {
+            'model': this.dataset.model,
+            'id': this.view_id,
+            'context': this.dataset.context,
+            'domain': this.dataset.domain
+        }, this.do_fill_table);
     },
     do_search: function (domains, contexts, groupbys) {
         var self = this;
-        this.rpc('/base/session/eval_domain_and_context', {
+        return this.rpc('/base/session/eval_domain_and_context', {
             domains: domains,
             contexts: contexts,
             group_by_seq: groupbys
@@ -157,12 +254,12 @@ openerp.base.ListView = openerp.base.Controller.extend(
             // TODO: handle non-empty results.group_by with read_group
             self.dataset.context = results.context;
             self.dataset.domain = results.domain;
-            self.dataset.read_slice(self.dataset.fields, 0, self.limit, self.do_fill_table);
+            return self.do_reload();
         });
     },
     do_update: function () {
         var self = this;
-        self.dataset.read_ids(self.dataset.ids, self.dataset.fields, self.do_fill_table);
+        //self.dataset.read_ids(self.dataset.ids, self.dataset.fields, self.do_fill_table);
     },
     /**
      * Handles the signal to delete a line from the DOM
@@ -173,7 +270,17 @@ openerp.base.ListView = openerp.base.Controller.extend(
         // don't link to forms
         e.stopImmediatePropagation();
         this.dataset.unlink(
-            [this.rows[$(e.currentTarget).closest('tr').prevAll().length].id]);
+            [this.rows[$(e.currentTarget).closest('tr').prevAll().length].data.id.value]);
+    },
+    /**
+     * Handles signal for the addition of a new record (can be a creation,
+     * can be the addition from a remote source, ...)
+     *
+     * The default implementation is to switch to a new record on the form view
+     */
+    do_add_record: function () {
+        this.notification.notify('Add', "New record");
+        this.switch_to_record(null);
     },
     /**
      * Handles deletion of all selected lines
@@ -195,7 +302,7 @@ openerp.base.ListView = openerp.base.Controller.extend(
         var rows = this.rows;
         return this.$element.find('th.oe-record-selector input:checked')
                 .closest('tr').map(function () {
-            return rows[$(this).prevAll().length].id;
+            return rows[$(this).prevAll().length].data.id.value;
         }).get();
     }
 });

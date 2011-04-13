@@ -443,6 +443,7 @@ body.openerp {
     padding-left: 10px;
 }
 
+
 .openerp .oe-searchview-render-line {
     width:100%;
 }
@@ -461,6 +462,75 @@ body.openerp {
 .openerp .searchview_extended_delete_group, .openerp .searchview_extended_delete_prop {
     background: url(../img/icons/gtk-remove.png) repeat-y;
     padding-left: 18px;
+}
+/* List */
+.openerp .oe-listview table {
+    clear: right;
+    width: 100%;
+    border-spacing: 0;
+    border: 1px solid silver;
+}
+
+.openerp .oe-listview tr.odd {
+    background-color: #f3f3f3;
+}
+.openerp .oe-listview tbody tr:hover {
+    background-color: #ecebf2;
+}
+.openerp .oe-listview tbody tr:hover {
+    background-color: #eae9f0;
+}
+
+.openerp .oe-listview td,
+.openerp .oe-listview th {
+    vertical-align: middle;
+}
+
+.openerp .oe-listview .oe-field-cell button {
+    padding: 0;
+    border: none;
+    background: none;
+}
+.openerp .oe-listview .oe-field-cell button:active {
+    opacity: 0.5;
+}
+
+.openerp .oe-listview th.oe-actions {
+    text-align: left;
+}
+.openerp .oe-listview th.oe-list-pager {
+    text-align: right;
+}
+
+/** list rounded corners
+
+    rounded corners are a pain on tables: need to round not only table, but
+    also on the first and last children of the first and last row
+ */
+.openerp .oe-listview table {
+    -webkit-border-radius: 7px;
+    -moz-border-radius: 7px;
+    border-radius: 7px;
+}
+.openerp .oe-listview table thead tr:first-child th:first-child {
+    -webkit-border-top-left-radius: 7px;
+    -moz-border-radius-topleft: 7px;
+    border-top-left-radius: 7px;
+}
+.openerp .oe-listview table thead tr:first-child th:last-child {
+    -webkit-border-top-right-radius: 7px;
+    -moz-border-radius-topright: 7px;
+    border-top-right-radius: 7px;
+}
+.openerp .oe-listview table tbody tr:last-child th:first-child {
+    -webkit-border-bottom-left-radius: 7px;
+    -moz-border-radius-bottomleft: 7px;
+    border-bottom-left-radius: 7px;
+}
+.openerp .oe-listview table tbody tr:last-child td:last-child {
+    -webkit-border-bottom-right-radius: 7px;
+    -moz-border-radius-bottomright: 7px;
+    border-bottom-right-radius: 7px;
 }
 
 /* Notebook */
@@ -488,7 +558,6 @@ body.openerp {
 .openerp .oe_form_notebook .ui-tabs-selected {
     background: #f9f9f9;
 }
-
 
 /* Form */
 .openerp table.oe_frame td {

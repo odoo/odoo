@@ -311,6 +311,64 @@ openerp.base.FormView =  openerp.base.Controller.extend( /** @lends openerp.base
 /** @namespace */
 openerp.base.form = {};
 
+openerp.base.form.compute_domain = function(expr, fields) {
+    var stack = [];
+    for (var i = expr.length - 1; i >= 0; i--) {
+        var ex = expr[i];
+        if (ex.length == 1) {
+            var top = stack.pop();
+            switch (ex[0]) {
+                case '|':
+                    stack.push(stack.pop() || top);
+                    continue;
+                case '&':
+                    stack.push(stack.pop() && top);
+                    continue;
+                case '!':
+                    stack.push(!top);
+                    continue;
+                default:
+                    throw new Error('Unknown domain operator ' + ex[0]);
+            }
+        }
+
+        var field = fields[ex[0]].value;
+        var op = ex[1];
+        var val = ex[2];
+
+        switch (op.toLowerCase()) {
+            case '=':
+            case '==':
+                stack.push(field == val);
+                break;
+            case '!=':
+            case '<>':
+                stack.push(field != val);
+                break;
+            case '<':
+                stack.push(field < val);
+                break;
+            case '>':
+                stack.push(field > val);
+                break;
+            case '<=':
+                stack.push(field <= val);
+                break;
+            case '>=':
+                stack.push(field >= val);
+                break;
+            case 'in':
+                stack.push(_.indexOf(val, field) > -1);
+                break;
+            case 'not in':
+                stack.push(_.indexOf(val, field) == -1);
+                break;
+            default:
+                this.log("Unsupported operator in attrs :", op);
+        }
+    }
+    return _.indexOf(stack, false) == -1;
+},
 openerp.base.form.Widget = openerp.base.Controller.extend({
     init: function(view, node) {
         this.view = view;
@@ -335,68 +393,10 @@ openerp.base.form.Widget = openerp.base.Controller.extend({
         this.$element = $('#' + this.element_id);
     },
     process_attrs: function() {
+        var compute_domain = openerp.base.form.compute_domain;
         for (var a in this.attrs) {
-            this[a] = this.eval_attrs(this.attrs[a]);
+            this[a] = compute_domain(this.attrs[a], this.view.fields);
         }
-    },
-    eval_attrs: function(expr) {
-        var stack = [];
-        for (var i = 0; i < expr.length; i++) {
-            var ex = expr[i];
-            if (ex.length == 1) {
-                stack.push(ex[0]);
-                continue;
-            }
-
-            var field = this.view.fields[ex[0]].value;
-            var op = ex[1];
-            var val = ex[2];
-
-            switch (op.toLowerCase()) {
-                case '=':
-                case '==':
-                    stack.push(field == val);
-                    break;
-                case '!=':
-                case '<>':
-                    stack.push(field != val);
-                    break;
-                case '<':
-                    stack.push(field < val);
-                    break;
-                case '>':
-                    stack.push(field > val);
-                    break;
-                case '<=':
-                    stack.push(field <= val);
-                    break;
-                case '>=':
-                    stack.push(field >= val);
-                    break;
-                case 'in':
-                    stack.push(_.indexOf(val, field) > -1);
-                    break;
-                case 'not in':
-                    stack.push(_.indexOf(val, field) == -1);
-                    break;
-                default:
-                    this.log("Unsupported operator in attrs :", op);
-            }
-        }
-
-        for (var j = stack.length-1; j >- 1; j--) {
-            switch (stack[j]) {
-                case '|':
-                    var result = stack[j + 1] || stack[j + 2];
-                    stack.splice(j, 3, result);
-                    break;
-                case '&':
-                    var result = stack[j + 1] && stack[j + 2];
-                    stack.splice(j, 3, result);
-                    break;
-            }
-        }
-        return _.indexOf(stack, false) == -1;
     },
     update_dom: function() {
         this.$element.toggle(!this.invisible);

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import glob, os
+import pprint
 from xml.etree import ElementTree
 from cStringIO import StringIO
 
@@ -334,18 +335,17 @@ class DataSet(openerpweb.Controller):
         :param int offset: from which index should the results start being returned
         :param int limit: the maximum number of records to return
         :param list domain: the search domain for the query
-        :param dict context: the context in which the search should be executed
         :param list sort: sorting directives
         :returns: a list of result records
         :rtype: list
         """
         Model = request.session.model(model)
         ids = Model.search(domain or [], offset or 0, limit or False,
-                           sort or False, context or False)
+                           sort or False, request.context)
         if fields and fields == ['id']:
             # shortcut read if we only want the ids
             return map(lambda id: {'id': id}, ids)
-        return Model.read(ids, fields or False)
+        return Model.read(ids, fields or False, request.context)
 
     @openerpweb.jsonrequest
     def get(self, request, model, ids, fields=False):
@@ -363,6 +363,9 @@ class DataSet(openerpweb.Controller):
         :type model: str
         :param ids: a list of identifiers
         :type ids: list
+        :param fields: a list of fields to fetch, ``False`` or empty to fetch
+                       all fields in the model
+        :type fields: list | False
         :returns: a list of records, in the same order as the list of ids
         :rtype: list
         """
@@ -407,16 +410,20 @@ class DataSet(openerpweb.Controller):
         return {'result': r}
 
 class View(openerpweb.Controller):
-    def fields_view_get(self, session, model, view_id, view_type, transform=True, toolbar=False, submenu=False):
-        Model = session.model(model)
-        r = Model.fields_view_get(view_id, view_type, {}, toolbar, submenu)
+    def fields_view_get(self, request, model, view_id, view_type,
+                        transform=True, toolbar=False, submenu=False):
+        Model = request.session.model(model)
+        fvg = Model.fields_view_get(view_id, view_type, request.context,
+                                    toolbar, submenu)
         if transform:
-            context = {} # TODO: dict(ctx_sesssion, **ctx_action)
-            xml = self.transform_view(r['arch'], session, context)
+            evaluation_context = request.session.evaluation_context(
+                request.context or {})
+            xml = self.transform_view(
+                fvg['arch'], request.session, evaluation_context)
         else:
-            xml = ElementTree.fromstring(r['arch'])
-        r['arch'] = Xml2Json.convert_element(xml)
-        return r
+            xml = ElementTree.fromstring(fvg['arch'])
+        fvg['arch'] = Xml2Json.convert_element(xml)
+        return fvg
 
     def normalize_attrs(self, elem, context):
         """ Normalize @attrs, @invisible, @required, @readonly and @states, so
@@ -430,19 +437,16 @@ class View(openerpweb.Controller):
         :param dict context: evaluation context
         """
         # If @attrs is normalized in json by server, the eval should be replaced by simplejson.loads
-        attrs = eval(elem.attrib.get('attrs', '{}'))
+        attrs = openerpweb.ast.literal_eval(elem.get('attrs', '{}'))
         if 'states' in elem.attrib:
-            if 'invisible' not in attrs:
-                attrs['invisible'] = []
-                # This should be done by the server
-            attrs['invisible'].append(('state', 'not in', elem.attrib['states'].split(',')))
-            del(elem.attrib['states'])
+            attrs.setdefault('invisible', [])\
+                .append(('state', 'not in', elem.attrib.pop('states').split(',')))
         if attrs:
-            elem.attrib['attrs'] = simplejson.dumps(attrs)
+            elem.set('attrs', simplejson.dumps(attrs))
         for a in ['invisible', 'readonly', 'required']:
             if a in elem.attrib:
                 # In the XML we trust
-                avalue = bool(eval(elem.attrib.get(a, 'False'),
+                avalue = bool(eval(elem.get(a, 'False'),
                                    {'context': context or {}}))
                 if not avalue:
                     del elem.attrib[a]
@@ -514,7 +518,7 @@ class FormView(View):
 
     @openerpweb.jsonrequest
     def load(self, req, model, view_id, toolbar=False):
-        fields_view = self.fields_view_get(req.session, model, view_id, 'form', toolbar=toolbar)
+        fields_view = self.fields_view_get(req, model, view_id, 'form', toolbar=toolbar)
         return {'fields_view': fields_view}
 
 class ListView(View):
@@ -522,15 +526,86 @@ class ListView(View):
 
     @openerpweb.jsonrequest
     def load(self, req, model, view_id, toolbar=False):
-        fields_view = self.fields_view_get(req.session, model, view_id, 'tree', toolbar=toolbar)
+        fields_view = self.fields_view_get(req, model, view_id, 'tree', toolbar=toolbar)
         return {'fields_view': fields_view}
+
+    def fields_view_get(self, request, model, view_id, view_type="tree",
+                        transform=True, toolbar=False, submenu=False):
+        """ Sets @editable on the view's arch if it isn't already set and
+        ``set_editable`` is present in the request context
+        """
+        view = super(ListView, self).fields_view_get(
+            request, model, view_id, view_type, transform, toolbar, submenu)
+
+        view_attributes = view['arch']['attrs']
+        if request.context.get('set_editable')\
+                and 'editable' not in view_attributes:
+            view_attributes['editable'] = 'bottom'
+        return view
+
+    @openerpweb.jsonrequest
+    def fill(self, request, model, id, domain,
+             offset=0, limit=False):
+        return self.do_fill(request, model, id, domain, offset, limit)
+
+    def do_fill(self, request, model, id, domain,
+                offset=0, limit=False):
+        """ Returns all information needed to fill a table:
+
+        * view with processed ``editable`` flag
+        * fields (columns) with processed ``invisible`` flag
+        * rows with processed ``attrs`` and ``colors``
+
+        .. note:: context is passed through ``request`` parameter
+
+        :param request: OpenERP request
+        :type request: openerpweb.openerpweb.JsonRequest
+        :type str model: OpenERP model for this list view
+        :type int id: view_id, or False if none provided
+        :param list domain: the search domain to search for
+        :param int offset: search offset, for pagination
+        :param int limit: search limit, for pagination
+        :returns: hell if I have any idea yet
+        """
+        view = self.fields_view_get(request, model, id)
+
+        rows = DataSet().do_search_read(request, model,
+                                        offset=offset, limit=limit,
+                                        domain=domain)
+        eval_context = request.session.evaluation_context(
+            request.context)
+        return [
+            {'data': dict((key, {'value': value})
+                          for key, value in row.iteritems()),
+             'color': self.process_colors(view, row, eval_context)}
+            for row in rows
+        ]
+
+    def process_colors(self, view, row, context):
+        colors = view['arch']['attrs'].get('colors')
+
+        if not colors:
+            return None
+
+        color = [
+            pair.split(':')[0]
+            for pair in colors.split(';')
+            if eval(pair.split(':')[1], dict(context, **row))
+        ]
+
+        if not color:
+            return None
+        elif len(color) == 1:
+            return color[0]
+        return 'maroon'
+
 
 class SearchView(View):
     _cp_path = "/base/searchview"
 
     @openerpweb.jsonrequest
     def load(self, req, model, view_id):
-        fields_view = self.fields_view_get(req.session, model, view_id, 'search')
+        fields_view = self.fields_view_get(req, model, view_id, 'search')
         return {'fields_view': fields_view}
 
 class Action(openerpweb.Controller):

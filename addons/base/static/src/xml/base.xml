@@ -154,38 +154,37 @@
 	</tr>
     </table>
 </t>
-<t t-name="ListView">
-    <!--
-    <h3><t t-esc="fields_view.arch['@string']"/></h3>
-    -->
-    <div class="oe_list_header">
-        <div class="oe_list_buttons">
-            <!--<button type="button" class="oe_list_button_new">New</button>-->
-        </div>
-        <div class="oe_list_pager">
-            <button type="button" data-pager-action="first">First</button>
-            <button type="button" data-pager-action="previous">&lt;&lt;</button>
-
-            <span class="oe_pager_index">0</span> / <span class="oe_pager_count">0</span>
-
-            <button type="button" data-pager-action="next">&gt;&gt;</button>
-            <button type="button" data-pager-action="last">Last</button>
-        </div>
-    </div>
-    <table>
-        <t t-call="ListView.header"/>
-    </table>
-</t>
-<t t-name="ListView.header">
-    <thead t-if="options.header">
-        <tr t-if="options.selectable and options.deletable">
-            <th t-att-colspan="visible_columns.length + 2">
-                <button type="button" id="oe-list-delete">
-                    Delete Selected
+<table t-name="ListView">
+    <t t-set="columns_count" t-value="visible_columns.length + (options.selectable ? 1 : 0) + (options.deletable ? 1 : 0)"/>
+    <t t-set="actions_span" t-value="Math.floor((options.deletable or options.addable) ? columns_count/2 : 0)"/>
+    <thead class="ui-widget-header">
+        <tr t-if="options.selectable">
+            <th t-if="actions_span" t-att-colspan="actions_span"
+                class="oe-actions">
+                <button type="button" id="oe-list-add"
+                        t-if="options.addable">
+                    <t t-esc="options.addable"/>
+                </button>
+                <button type="button" id="oe-list-delete"
+                        t-if="options.deletable">
+                    Delete
                 </button>
             </th>
+            <th t-att-colspan="columns_count - actions_span"
+                class="oe-list-pager">
+                <button type="button" data-pager-action="first">First</button>
+                <button type="button" data-pager-action="previous"
+                        >&lt;&lt;</button>
+
+                <span class="oe-pager-first">1</span>
+                to <span class="oe-pager-last">1</span>
+                of <span class="oe-pager-total">1</span>
+
+                <button type="button" data-pager-action="next">&gt;&gt;</button>
+                <button type="button" data-pager-action="last">Last</button>
+            </th>
         </tr>
-        <tr>
+        <tr t-if="options.header">
             <th t-if="options.selectable"/>
             <t t-foreach="columns" t-as="column">
                 <th t-if="column.invisible !== '1'">
@@ -197,27 +196,36 @@
             <th t-if="options.deletable"/>
         </tr>
     </thead>
-</t>
+</table>
 <t t-name="ListView.rows" t-foreach="rows" t-as="row">
-    <t t-call="ListView.row"/>
+    <t t-call="ListView.row">
+        <t t-set="style" t-value="null"/>
+        <t-if test="row.color">
+            <t t-set="style" t-value="'color: ' + row.color"/>
+        </t-if>
+    </t>
 </t>
-<tr t-name="ListView.row">
+<tr t-name="ListView.row" t-att-style="style"
+    t-att-class="row_parity">
     <th t-if="options.selectable" class="oe-record-selector">
         <input type="checkbox"/>
     </th>
     <t t-foreach="columns" t-as="column">
-        <!-- TODO: handle attrs -->
-        <td t-if="column.invisible !== '1'" t-att-title="column.help">
-            <t t-set="is_button" t-value="column.tag === 'button'"/>
-            <!-- TODO: get correct widget from form -->
-            <t t-if="!is_button and row[column.id]">
-                <t t-esc="row[column.id]"/>
+        <t t-set="attrs" t-value="column.attrs_for(row.data)"/>
+        <td t-if="column.invisible !== '1'" t-att-title="column.help"
+            class="oe-field-cell">
+            <t t-if="!attrs.invisible">
+                <t t-set="is_button" t-value="column.tag === 'button'"/>
+                <!-- TODO: get correct widget from form -->
+                <t t-if="!is_button and row['data'][column.id].value">
+                    <t t-esc="row['data'][column.id].value"/>
+                </t>
+                <button type="button" t-att-title="column.help"
+                        t-if="is_button">
+                    <img t-att-src="'/base/static/src/img/icons/' + column.icon + '.png'"
+                         t-att-alt="column.string"/>
+                </button>
             </t>
-            <button type="button" t-att-title="column.help"
-                    t-if="is_button">
-                <img t-att-src="'/base/static/src/img/icons/' + column.icon + '.png'"
-                     t-att-alt="column.string"/>
-            </button>
         </td>
     </t>
     <td t-if="options.deletable" class='oe-record-delete'>

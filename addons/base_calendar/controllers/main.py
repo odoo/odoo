@@ -57,7 +57,7 @@ class CalendarView(View):
     
     @openerpweb.jsonrequest
     def load(self, req, model, view_id):
-        fields_view = self.fields_view_get(req.session, model, view_id, 'calendar')
+        fields_view = self.fields_view_get(req, model, view_id, 'calendar')
         return {'fields_view':fields_view}
     
     def convert(self, event):
@@ -354,4 +354,3 @@ class CalendarView(View):
         title = title.strip()
         description = ', '.join(description).strip()
         return {'id': event['id'], 'start_date': str(DT.datetime(*starts[:6])), 'end_date': str(DT.datetime(*ends[:6])), 'text': title, 'title': description, 'color': self.colors[event[self.color_field]][-1]}
-        

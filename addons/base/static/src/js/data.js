@@ -108,6 +108,8 @@ openerp.base.DataSet =  openerp.base.Controller.extend( /** @lends openerp.base.
         this.notification.notify("Unlink", ids);
     },
     call: function (method, ids, args, callback) {
+        this.notification.notify(
+            "Calling", this.model + '#' + method + '(' + ids + ')');
         ids = ids || [];
         args = args || [];
         return this.rpc('/base/dataset/call', {

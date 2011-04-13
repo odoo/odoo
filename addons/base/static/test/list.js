@@ -24,7 +24,9 @@ $(document).ready(function () {
             openerp = window.openerp.init(true);
             window.openerp.base.chrome(openerp);
             // views loader stuff
+            window.openerp.base.data(openerp);
             window.openerp.base.views(openerp);
+            window.openerp.base.form(openerp);
             window.openerp.base.list(openerp);
         }
     });
@@ -36,7 +38,11 @@ $(document).ready(function () {
 
         listview.on_loaded(fvg);
 
-        listview.do_fill_table([{}, {}, {}]).then(function () {
+        listview.do_fill_table([
+                {data: {id: {value: null}}},
+                {data: {id: {value: null}}},
+                {data: {id: {value: null}}}
+        ]).then(function () {
             ok(are(listview.$element.find('tbody th'),
                    '.oe-record-selector'));
             ok(are(listview.$element.find('tbody th input'),
@@ -52,7 +58,11 @@ $(document).ready(function () {
 
         listview.on_loaded(fvg);
 
-        listview.do_fill_table([{}, {}, {}]).then(function () {
+        listview.do_fill_table([
+                {data: {id: {value: null}}},
+                {data: {id: {value: null}}},
+                {data: {id: {value: null}}}
+        ]).then(function () {
             equal(listview.$element.find('tbody th').length, 0);
             start();
         });
@@ -62,7 +72,11 @@ $(document).ready(function () {
                 {}, null, 'qunit-fixture', {model: null});
         listview.on_loaded(fvg);
 
-        listview.do_fill_table([{id: 1}, {id: 2}, {id: 3}]).then(function () {
+        listview.do_fill_table([
+                {data: {id: {value: 1}}},
+                {data: {id: {value: 2}}},
+                {data: {id: {value: 3}}}
+        ]).then(function () {
             listview.$element.find('tbody th input:eq(2)')
                              .attr('checked', true);
             deepEqual(listview.get_selection(), [3]);
@@ -78,7 +92,11 @@ $(document).ready(function () {
 
         listview.on_loaded(fvg);
 
-        listview.do_fill_table([{id: 1}, {id: 2}, {id: 3}]).then(function () {
+        listview.do_fill_table([
+                {data: {id: {value: null}}},
+                {data: {id: {value: null}}},
+                {data: {id: {value: null}}}
+        ]).then(function () {
             equal(
                 listview.$element.find('tbody tr td.oe-record-delete button').length,
                 3);
@@ -95,7 +113,11 @@ $(document).ready(function () {
 
         listview.on_loaded(fvg);
 
-        listview.do_fill_table([{id: 1}, {id: 2}, {id: 3}]).then(function () {
+        listview.do_fill_table([
+                {data: {id: {value: 1}}},
+                {data: {id: {value: 2}}},
+                {data: {id: {value: 3}}}
+        ]).then(function () {
             listview.$element.find('tbody td.oe-record-delete:eq(2) button').click();
             deepEqual(deleted, [3]);
             listview.$element.find('tbody td.oe-record-delete:eq(0) button').click();
@@ -112,7 +134,11 @@ $(document).ready(function () {
 
         listview.on_loaded(fvg);
 
-        listview.do_fill_table([{id: 1}, {id: 2}, {id: 3}]).then(function () {
+        listview.do_fill_table([
+                {data: {id: {value: 1}}},
+                {data: {id: {value: 2}}},
+                {data: {id: {value: 3}}}
+        ]).then(function () {
             listview.$element.find('tbody th input:eq(2)')
                              .attr('checked', true);
             listview.$element.find('tbody th input:eq(1)')

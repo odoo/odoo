@@ -144,8 +144,10 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
             this.searchview.stop();
         }
         this.searchview = new openerp.base.SearchView(this, this.session, this.element_id + "_search", this.dataset, view_id, search_defaults);
-        this.searchview.on_search.add(function() {
-            self.views[self.active_view].controller.do_search.apply(self, arguments);
+        this.searchview.on_search.add(function(domains, contexts, groupbys) {
+            self.views[self.active_view].controller.do_search.call(
+                self, domains.concat(self.domains()),
+                      contexts.concat(self.contexts()), groupbys);
         });
         return this.searchview.start();
     },
@@ -159,6 +161,23 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
     on_remove: function() {
     },
     on_edit: function() {
+    },
+    /**
+     * Domains added on searches by the view manager, to override in subsequent
+     * view manager in order to add new pieces of domains to searches
+     *
+     * @returns an empty list
+     */
+    domains: function () {
+        return [];
+    },
+    /**
+     * Contexts added on searches by the view manager.
+     *
+     * @returns an empty list
+     */
+    contexts: function () {
+        return [];
     }
 });
 
@@ -180,8 +199,6 @@ openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
             this.sidebar.start();
         }
 
-        // init search view
-        var view_id = this.action.search_view_id ? this.action.search_view_id[0] || false : false;
         var search_defaults = {};
         _.each(this.action.context, function (value, key) {
             var match = /^search_default_(.*)$/.exec(key);
@@ -189,10 +206,12 @@ openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
                 search_defaults[match[1]] = value;
             }
         });
-        var searchview_loaded = null;
-        if (view_id) {
-            searchview_loaded = this.setup_search_view(view_id,search_defaults);
-        }
+
+        // init search view
+        var searchview_id = this.action.search_view_id && this.action.search_view_id[0];
+
+        var searchview_loaded = this.setup_search_view(
+                searchview_id || false, search_defaults);
 
         // schedule auto_search
         if (searchview_loaded != null && this.action['auto_search']) {
@@ -206,6 +225,28 @@ openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
             this.sidebar.stop();
         }
         this._super();
+    },
+    /**
+     * adds action domain to the search domains
+     *
+     * @returns the action's domain
+     */
+    domains: function () {
+        if (!this.action.domain) {
+            return [];
+        }
+        return [this.action.domain];
+    },
+    /**
+     * adds action context to the search contexts
+     *
+     * @returns the action's context
+     */
+    contexts: function () {
+        if (!this.action.context) {
+            return [];
+        }
+        return [this.action.context];
     }
 });
 
