@@ -27,6 +27,11 @@
             <field name="code">NET</field>
         </record>
         
+        <record id="COMP" model="hr.salary.head">
+            <field name="name">Company Contribution</field>
+            <field name="code">COMP</field>
+        </record>
+        
  <!--       <record id="HRA" model="hr.salary.head">
             <field name="code">HRA</field>
             <field name="parent_id" ref="AL"/>
@@ -182,7 +187,7 @@
             <field name="category_id" ref="hr_payroll.NET"/>
             <field name="condition_select">none</field>
             <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = heads['BASIC'] + ('ALW' in heads and heads['ALW'] or 0.0) - ('DED' in heads and heads['DED'] or 0.0)</field>
+            <field name="amount_python_compute">result = heads['BASIC'] + ('ALW' in heads and heads['ALW'] or 0.0) + ('DED' in heads and heads['DED'] or 0.0)</field>
         </record>
 
 

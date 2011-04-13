@@ -51,10 +51,20 @@ class hr_payroll_structure(osv.osv):
         'note': fields.text('Description'),
         'parent_id':fields.many2one('hr.payroll.structure', 'Parent'),
     }
+
+    def _get_parent(self, cr, uid, context=None):
+        obj_model = self.pool.get('ir.model.data')
+        res = False
+        data_id = obj_model.search(cr, uid, [('model', '=', 'hr.payroll.structure'), ('name', '=', 'structure_base')])
+        if data_id:
+            res = obj_model.browse(cr, uid, data_id[0], context=context).res_id
+        return res
+
     _defaults = {
         'company_id': lambda self, cr, uid, context: \
                 self.pool.get('res.users').browse(cr, uid, uid,
                     context=context).company_id.id,
+        'parent_id': _get_parent,
     }
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -68,10 +78,12 @@ class hr_payroll_structure(osv.osv):
 
         @return: returns a id of newly created record
         """
-        default = {
+        if not default:
+            default = {}
+        default.update({
             'code': self.browse(cr, uid, id, context=context).code + "(copy)",
             'company_id': self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
-        }
+        })
         return super(hr_payroll_structure, self).copy(cr, uid, id, default, context=context)
 
     def get_all_rules(self, cr, uid, structure_ids, context=None):
@@ -135,7 +147,7 @@ class contrib_register(osv.osv):
     Contribution Register
     '''
 
-    _name = 'hr.contibution.register'
+    _name = 'hr.contribution.register'
     _description = 'Contribution Register'
 
     _columns = {
@@ -177,6 +189,21 @@ class hr_salary_head(osv.osv):
 
 hr_salary_head()
 
+class one2many_mod2(fields.one2many):
+
+    def get(self, cr, obj, ids, name, user=None, offset=0, context=None, values=None):
+        if context is None:
+            context = {}
+        if not values:
+            values = {}
+        res = {}
+        for id in ids:
+            res[id] = []
+        ids2 = obj.pool.get(self._obj).search(cr, user, [(self._fields_id,'in',ids), ('appears_on_payslip', '=', True)], limit=self._limit)
+        for r in obj.pool.get(self._obj)._read_flat(cr, user, ids2, [self._fields_id], context=context, load='_classic_write'):
+            res[r[self._fields_id]].append( r['id'] )
+        return res
+
 class hr_payslip(osv.osv):
     '''
     Pay Slip
@@ -185,37 +212,18 @@ class hr_payslip(osv.osv):
     _name = 'hr.payslip'
     _description = 'Pay Slip'
 
-#TODO unused for now, cause the field is commented but we want to put it back
-#    def _get_salary_rules(self, cr, uid, ids, field_names, arg=None, context=None):
-#        structure_obj = self.pool.get('hr.payroll.structure')
-#        contract_obj = self.pool.get('hr.contract')
-#        res = {}
-#        rules = []
-#        contracts = []
-#        structures = []
-#        rule_ids = []
-#        sorted_salary_heads = []
-#        for record in self.browse(cr, uid, ids, context=context):
-#            if record.contract_id:
-#                contracts.append(record.contract_id.id)
-#            else:
-#                contracts = self.get_contract(cr, uid, record.employee_id, record.date, context=context)
-#            for contract in contracts:
-#                structures = contract_obj.get_all_structures(cr, uid, [contract], context)
-#            res[record.id] = {}
-#            for struct in structures:
-#                rule_ids = structure_obj.get_all_rules(cr, uid, [struct], context=None)
-#                for rl in rule_ids:
-#                    if rl[0] not in rules:
-#                        rules.append(rl[0])
-#            cr.execute('''SELECT sr.id FROM hr_salary_rule as sr, hr_salary_head as sh
-#               WHERE sr.category_id = sh.id AND sr.id in %s ORDER BY sh.sequence''',(tuple(rules),))
-#            for x in cr.fetchall():
-#                sorted_salary_heads.append(x[0])
-#            for fn in field_names:
-#               if fn == 'details_by_salary_head':
-#                   res[record.id] = {fn: sorted_salary_heads}
-#        return res
+    def _get_lines_salary_head(self, cr, uid, ids, field_names, arg=None, context=None):
+        result = {}
+        if not ids: return result
+        cr.execute('''SELECT pl.slip_id, pl.id FROM hr_payslip_line AS pl \
+                    LEFT JOIN hr_salary_head AS sh on (pl.category_id = sh.id) \
+                    WHERE pl.slip_id in %s \
+                    GROUP BY pl.slip_id, sh.sequence, pl.sequence, pl.id ORDER BY sh.sequence, pl.sequence''',(tuple(ids),))
+        res = cr.fetchall()
+        for r in res:
+            result.setdefault(r[0], [])
+            result[r[0]].append(r[1])
+        return result
 
     _columns = {
         'struct_id': fields.many2one('hr.payroll.structure', 'Structure', help='Defines the rules that have to be applied to this payslip, accordingly to the contract chosen. If you let empty the field contract, this field isn\'t mandatory anymore and thus the rules applied will be all the rules set on the structure of all contracts of the employee valid for the chosen period'),
@@ -238,36 +246,39 @@ class hr_payslip(osv.osv):
             \n* It is confirmed by the accountant and the state set to \'Confirm Sheet\'.\
             \n* If the salary is paid then state is set to \'Paid Salary\'.\
             \n* The \'Reject\' state is used when user cancel payslip.'),
-        'line_ids': fields.one2many('hr.payslip.line', 'slip_id', 'Payslip Line', required=False, readonly=True, states={'draft': [('readonly', False)]}),
+#        'line_ids': fields.one2many('hr.payslip.line', 'slip_id', 'Payslip Line', required=False, readonly=True, states={'draft': [('readonly', False)]}),
+        'line_ids': one2many_mod2('hr.payslip.line', 'slip_id', 'Payslip Line',readonly=True, states={'draft':[('readonly',False)]}),
         'company_id': fields.many2one('res.company', 'Company', required=False, readonly=True, states={'draft': [('readonly', False)]}),
         'input_line_ids': fields.one2many('hr.payslip.input', 'payslip_id', 'Payslip Inputs', required=False, readonly=True, states={'draft': [('readonly', False)]}),
         'paid': fields.boolean('Made Payment Order ? ', required=False, readonly=True, states={'draft': [('readonly', False)]}),
         'note': fields.text('Description'),
         'contract_id': fields.many2one('hr.contract', 'Contract', required=False, readonly=True, states={'draft': [('readonly', False)]}),
-       #TODO put me back
-       # 'details_by_salary_head': fields.function(_get_salary_rules, method=True, type='one2many', relation='hr.salary.rule', string='Details by Salary Head', multi='details_by_salary_head'),
+        'details_by_salary_head': fields.function(_get_lines_salary_head, method=True, type='one2many', relation='hr.payslip.line', string='Details by Salary Head'),
+        'credit_note': fields.boolean('Credit Note', help="Indicates this payslip has a refund of another"),
     }
     _defaults = {
         'date_from': lambda *a: time.strftime('%Y-%m-01'),
         'date_to': lambda *a: str(datetime.now() + relativedelta.relativedelta(months=+1, day=1, days=-1))[:10],
         'state': 'draft',
+        'credit_note': False,
         'company_id': lambda self, cr, uid, context: \
                 self.pool.get('res.users').browse(cr, uid, uid,
                     context=context).company_id.id,
     }
 
     def copy(self, cr, uid, id, default=None, context=None):
+        if not default:
+            default = {}
         company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
-        default = {
+        default.update({
             'line_ids': [],
             'move_ids': [],
             'move_line_ids': [],
-            'move_payment_ids': [],
             'company_id': company_id,
             'period_id': False,
             'basic_before_leaves': 0.0,
             'basic_amount': 0.0
-        }
+        })
         return super(hr_payslip, self).copy(cr, uid, id, default, context=context)
 
     def cancel_sheet(self, cr, uid, ids, context=None):
@@ -281,6 +292,34 @@ class hr_payslip(osv.osv):
 
     def process_sheet(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'paid': True, 'state': 'done'}, context=context)
+
+    def refund_sheet(self, cr, uid, ids, context=None):
+        mod_obj = self.pool.get('ir.model.data')
+        wf_service = netsvc.LocalService("workflow")
+        for id in ids:
+            id_copy = self.copy(cr, uid, id, {'credit_note': True}, context=context)
+            self.compute_sheet(cr, uid, [id_copy], context=context)
+            wf_service.trg_validate(uid, 'hr.payslip', id_copy, 'verify_sheet', cr)
+            wf_service.trg_validate(uid, 'hr.payslip', id_copy, 'final_verify_sheet', cr)
+            wf_service.trg_validate(uid, 'hr.payslip', id_copy, 'process_sheet', cr)
+
+        form_id = mod_obj.get_object_reference(cr, uid, 'hr_payroll', 'view_hr_payslip_form')
+        form_res = form_id and form_id[1] or False
+        tree_id = mod_obj.get_object_reference(cr, uid, 'hr_payroll', 'view_hr_payslip_tree')
+        tree_res = tree_id and tree_id[1] or False
+        return {
+            'name':_("Refund Payslip"),
+            'view_mode': 'tree, form',
+            'view_id': False,
+            'view_type': 'form',
+            'res_model': 'hr.payslip',
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'current',
+            'domain': "[('id', 'in', %s)]" % [id_copy],
+            'views': [(tree_res, 'tree'), (form_res, 'form')],
+            'context': {}
+        }
 
     def verify_sheet(self, cr, uid, ids, context=None):
          #TODO clean me: this function should create the register lines accordingly to the rules computed (run the compute_sheet first)
@@ -440,7 +479,8 @@ class hr_payslip(osv.osv):
             localdict['heads'][head.code] = head.code in localdict['heads'] and localdict['heads'][head.code] + amount or amount
             return localdict
 
-        result = []
+        #we keep a dict with the result because a value can be overwritten by another rule with the same code
+        result_dict = {}
         blacklist = []
         payslip = self.pool.get('hr.payslip').browse(cr, uid, payslip_id, context=context)
         worked_days = {}
@@ -458,16 +498,22 @@ class hr_payslip(osv.osv):
             employee = contract.employee_id
             localdict.update({'employee': employee, 'contract': contract})
             for rule in self.pool.get('hr.salary.rule').browse(cr, uid, sorted_rule_ids, context=context):
+                key = rule.code + '-' + str(contract.id)
                 localdict['result'] = None
                 #check if the rule can be applied
                 if self.pool.get('hr.salary.rule').satisfy_condition(cr, uid, rule.id, localdict, context=context) and rule.id not in blacklist:
+                    #compute the amount of the rule
                     amount = self.pool.get('hr.salary.rule').compute_rule(cr, uid, rule.id, localdict, context=context)
+                    #check if there is already a rule computed with that code
+                    previous_amount = rule.code in localdict['rules'] and localdict['rules'][rule.code] or 0.0
                     #set/overwrite the amount computed for this rule in the localdict
                     localdict['rules'][rule.code] = amount
                     #sum the amount for its salary head
-                    localdict = _sum_salary_head(localdict, rule.category_id, amount)
-                    vals = {
+                    localdict = _sum_salary_head(localdict, rule.category_id, amount - previous_amount)
+                    #create/overwrite the rule in the temporary results
+                    result_dict[key] = {
                         'salary_rule_id': rule.id,
+                        'contract_id': contract.id,
                         'name': rule.name,
                         'code': rule.code,
                         'category_id': rule.category_id.id,
@@ -487,10 +533,10 @@ class hr_payslip(osv.osv):
                         'total': amount,
                         'employee_id': contract.employee_id.id,
                     }
-                    result.append(vals)
                 else:
                     #blacklist this rule and its children
                     blacklist += [id for id, seq in self.pool.get('hr.salary.rule')._recursive_search_of_rules(cr, uid, [rule], context=context)]
+        result = [value for code, value in result_dict.items()]
         return result
 
     def onchange_employee_id(self, cr, uid, ids, date_from, date_to, employee_id=False, contract_id=False, context=None):
@@ -615,9 +661,9 @@ class hr_salary_rule(osv.osv):
         'amount_percentage_base':fields.char('Percentage based on',size=1024, required=False, readonly=False, help='result will be affected to a variable'), #old name = expressiont
         'child_ids':fields.one2many('hr.salary.rule', 'parent_rule_id', 'Child Salary Rule'),
         'register_id':fields.property(
-            'hr.contibution.register',
+            'hr.contribution.register',
             type='many2one',
-            relation='hr.contibution.register',
+            relation='hr.contribution.register',
             string="Contribution Register",
             method=True,
             view_load=True,
@@ -733,12 +779,13 @@ class hr_payslip_line(osv.osv):
     _name = 'hr.payslip.line'
     _inherit = 'hr.salary.rule'
     _description = 'Payslip Line'
-    _order = 'sequence'
+    _order = 'contract_id, sequence'
 
     _columns = {
         'slip_id':fields.many2one('hr.payslip', 'Pay Slip', required=True),
         'salary_rule_id':fields.many2one('hr.salary.rule', 'Rule', required=True),
         'employee_id':fields.many2one('hr.employee', 'Employee', required=True),
+        'contract_id':fields.many2one('hr.contract', 'Contract', required=True),
         'total': fields.float('Amount', digits_compute=dp.get_precision('Account')),
         'company_contrib': fields.float('Company Contribution', readonly=True, digits_compute=dp.get_precision('Account')),
     }
