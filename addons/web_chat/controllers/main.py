@@ -87,14 +87,11 @@ class PollServer(openerpweb.Controller):
         # Temporary Guest1 is my current user
         req.applicationsession['current_user'] = 'Guest1'
         
-        return """
-            {
-                "r":"logged in",
-                "u":'Guest1',
-                "s":"f9e1811536f19ad5b9e00376f9ff1532",
-                "f":""" + str(mq.userlist(req)) + """
-            }
-        """
+        
+        return simplejson.dumps({'r': 'logged in', 'u': 'Guest1', 's': 'f9e1811536f19ad5b9e00376f9ff1532', 
+                                 'f': [{'u': 'Guest1', 's':{'s':1, 'm':'111'}, 'g':'Users'},
+                                       {'u': 'Guest2', 's':{'s':1, 'm':'222'}, 'g':'Users'},
+                                       {'u': 'Guest3', 's':{'s':1, 'm':'333'}, 'g':'Users'}]})
 
     @openerpweb.httprequest
     def logout(self, req):
