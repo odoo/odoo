@@ -1,7 +1,7 @@
 {
     "name": "Base calendar",
     "version": "2.0",
-    "depends": [],
+    "depends": ['base'],
     "js": [
         'static/lib/dhtmlxScheduler/codebase/dhtmlxscheduler.js',
         'static/src/js/calendar.js'

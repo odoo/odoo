@@ -457,7 +457,6 @@ openerp.base.Session = openerp.base.BasicController.extend( /** @lends openerp.b
         });
     },
     do_load_css: function (result) {
-        console.log('loading CSS files');
         _.each(result.files, function (file) {
             $('head').append($('<link>', {
                 'href': file,
