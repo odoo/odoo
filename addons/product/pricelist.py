@@ -155,6 +155,7 @@ class product_pricelist(osv.osv):
 
         currency_obj = self.pool.get('res.currency')
         product_obj = self.pool.get('product.product')
+        product_template_obj = self.pool.get('product.template')
         product_category_obj = self.pool.get('product.category')
         product_uom_obj = self.pool.get('product.uom')
         supplierinfo_obj = self.pool.get('product.supplierinfo')
@@ -244,8 +245,9 @@ class product_pricelist(osv.osv):
                             price = 0.0
                             if sinfo:
                                 qty_in_product_uom = qty
-                                product_default_uom = product_obj.read(cr, uid, [tmpl_id], ['uom_id'])[0]['uom_id'][0]
-                                seller_uom = supplierinfo_obj.read(cr, uid, sinfo, ['product_uom'])[0]['product_uom'][0]
+                                product_default_uom = product_template_obj.read(cr, uid, [tmpl_id], ['uom_id'])[0]['uom_id'][0]
+                                supplier = supplierinfo_obj.browse(cr, uid, sinfo, context=context)[0]
+                                seller_uom = supplier.product_uom and supplier.product_uom.id or False
                                 if seller_uom and product_default_uom and product_default_uom != seller_uom:
                                     uom_price_already_computed = True
                                     qty_in_product_uom = product_uom_obj._compute_qty(cr, uid, product_default_uom, qty, to_uom_id=seller_uom)
