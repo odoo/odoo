@@ -1,8 +1,11 @@
 {
-    "name": "Hello",
+    "name": "Base calendar",
     "version": "2.0",
     "depends": [],
-    "js": ["static/*/js/*.js"],
-    "css": [],
-    'active': False
+    "js": [
+        'static/lib/dhtmlxScheduler/codebase/dhtmlxscheduler.js',
+        'static/src/js/calendar.js'
+    ],
+    "css": ['static/lib/dhtmlxScheduler/codebase/dhtmlxscheduler.css'],
+    'active': True
 }

@@ -2,8 +2,8 @@
  * OpenERP base_calendar
  *---------------------------------------------------------*/
 
-openerp.base.calendar = function(openerp) {
-	
+openerp.base_calendar = function(openerp) {
+QWeb.add_template('/base_calendar/static/src/xml/base_calendar.xml');
 openerp.base.views.add('calendar', 'openerp.base.CalendarView');
 openerp.base.CalendarView = openerp.base.Controller.extend({
 // Dhtmlx scheduler ?
@@ -201,7 +201,7 @@ openerp.base.CalendarView = openerp.base.Controller.extend({
 	
     do_hide: function () {
         this.$element.hide();
-    },
+    }
 });
 
 //openerp.base.Action = openerp.base.Action.extend({

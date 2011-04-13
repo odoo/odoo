@@ -450,8 +450,20 @@ openerp.base.Session = openerp.base.BasicController.extend( /** @lends openerp.b
         var self = this;
         this.rpc('/base/session/modules', {}, function(result) {
             self.module_list = result['modules'];
-            self.rpc('/base/session/jslist', {"mods": self.module_list.join(',')}, self.debug ? self.do_load_modules_debug : self.do_load_modules_prod);
+            var modules = self.module_list.join(',');
+            self.rpc('/base/session/csslist', {mods: modules}, self.do_load_css);
+            self.rpc('/base/session/jslist', {"mods": modules}, self.debug ? self.do_load_modules_debug : self.do_load_modules_prod);
             openerp._modules_loaded = true;
+        });
+    },
+    do_load_css: function (result) {
+        console.log('loading CSS files');
+        _.each(result.files, function (file) {
+            $('head').append($('<link>', {
+                'href': file,
+                'rel': 'stylesheet',
+                'type': 'text/css'
+            }));
         });
     },
     do_load_modules_debug: function(result) {
@@ -466,16 +478,15 @@ openerp.base.Session = openerp.base.BasicController.extend( /** @lends openerp.b
         // use $.getScript(‘your_3rd_party-script.js’); ? i want to keep lineno !
     },
     on_modules_loaded: function() {
-        var self = this;
-        for(var j=0; j<self.module_list.length; j++) {
-            var mod = self.module_list[j];
-            if(self.module_loaded[mod])
+        for(var j=0; j<this.module_list.length; j++) {
+            var mod = this.module_list[j];
+            if(this.module_loaded[mod])
                 continue;
             openerp[mod] = {};
             // init module mod
             if(openerp._openerp[mod] != undefined) {
                 openerp._openerp[mod](openerp);
-                self.module_loaded[mod] = true;
+                this.module_loaded[mod] = true;
             }
         }
     }
