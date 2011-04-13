@@ -140,11 +140,13 @@ openerp.base.ListView = openerp.base.Controller.extend(
             return record.data.id.value;
         }).value();
         this.dataset.index = _.indexOf(this.dataset.ids, current_record_id);
-        if (this.dataset.index === -1) {
+        if (this.dataset.index < 0) {
             this.dataset.index = 0;
         }
+        
+        this.dataset.count = this.dataset.ids.length;
 
-        // TODO: offset, length, count
+        // TODO: offset, length
         var results = this.rows.length;
         $table.find('.oe-pager-last').text(results);
         $table.find('.oe-pager-total').text(results);
