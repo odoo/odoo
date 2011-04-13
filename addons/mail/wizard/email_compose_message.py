@@ -100,6 +100,7 @@ class email_compose_message(osv.osv_memory):
 
     _columns = {
         'attachment_ids': fields.many2many('ir.attachment','email_message_send_attachment_rel', 'wizard_id', 'attachment_id', 'Attachments'),
+        'auto_delete': fields.boolean('Auto Delete', help="Permanently delete emails after sending"),
     }
 
     def get_value(self, cr, uid, model, res_id, context=None):
@@ -130,7 +131,7 @@ class email_compose_message(osv.osv_memory):
                     'body' : description,
                     'subject' : subject,
                     'message_id' :  message_data and message_data.message_id or False,
-                    'attachment_ids' : message_data and message_pool.read(cr, uid, message_id, ['attachment_ids'])['attachment_ids'] or [],
+                    'attachment_ids' : [],
                     'res_id' : message_data and message_data.res_id or False,
                     'email_from' : message_data and message_data.email_to or False,
                     'email_to' : message_data and message_data.email_from or False,

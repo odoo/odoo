@@ -72,7 +72,7 @@ def format_date_tz(date, tz=None):
 class email_message_common(osv.osv_memory):
     _name = 'email.message.common'
     _columns = {
-        'subject':fields.text('Subject', translate=True),
+        'subject':fields.text('Subject'),
         'model': fields.char('Object Name', size=128, select=1),
         'res_id': fields.integer('Resource ID', select=1),
         'date': fields.datetime('Date'),
@@ -87,7 +87,7 @@ class email_message_common(osv.osv_memory):
         'sub_type': fields.char('Sub Type', size=32),
         'headers': fields.text('x_headers'),
         'priority':fields.integer('Priority'),
-        'body': fields.text('Description', translate=True),
+        'body': fields.text('Description'),
         'body_html': fields.text('HTML', help="Contains HTML version of email"),
         'smtp_server_id':fields.many2one('ir.mail_server', 'SMTP Server'),
     }
@@ -311,7 +311,7 @@ class email_message(osv.osv):
             msg_txt['message-id'] = message_id
             _logger.info('Parsing Message without message-id, generating a random one: %s', message_id)
 
-       
+
         fields = msg_txt.keys()
         msg['id'] = message_id
         msg['message-id'] = message_id
@@ -422,7 +422,7 @@ class email_message(osv.osv):
                         subtype=message.sub_type,
                         x_headers=message.headers and eval(message.headers) or {},
                         priority=message.priority)
-                    res = smtp_server_obj.send_email(cr, uid, 
+                    res = smtp_server_obj.send_email(cr, uid,
                         msg,
                         mail_server_id = message.smtp_server_id.id or None,
                         smtp_server=smtp_server and smtp_server.smtp_host or None,

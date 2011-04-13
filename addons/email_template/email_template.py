@@ -65,19 +65,17 @@ class email_template(osv.osv):
             mod_name = self.pool.get('ir.model').browse(cr, uid, model_id, context).model
         return {'value':{'model':mod_name}}
 
+    def _lang_get(self, cr, uid, context={}):
+        obj = self.pool.get('res.lang')
+        ids = obj.search(cr, uid, [], context=context)
+        res = obj.read(cr, uid, ids, ['code', 'name'], context)
+        return [(r['code'], r['name']) for r in res] + [('','')]
+
     _columns = {
         'name': fields.char('Name', size=250),
         'model_id':fields.many2one('ir.model', 'Resource'),
         'model': fields.related('model_id', 'model', string='Model', type="char", size=128, store=True, readonly=True),
-        'track_campaign_item':fields.boolean('Resource Tracking',
-                                help="Enable this is you wish to include a special \
-tracking marker in outgoing emails so you can identify replies and link \
-them back to the corresponding resource record. \
-This is useful for CRM leads for example"),
-        'lang':fields.char(
-                   'Language',
-                   size=250,
-                   help="The default language for the email."
+        'lang': fields.selection(_lang_get, 'Language', size=5, help="The default language for the email."
                    " Placeholders can be used here. "
                    "eg. ${object.partner_id.lang}"),
         'subject':fields.char(
@@ -157,7 +155,6 @@ This is useful for CRM leads for example"),
         'email_to': fields.char('To', size=256, help="Email Recipients. Placeholders can be used here."),
         'email_cc': fields.char('Cc', size=256, help="Carbon Copy Email Recipients. Placeholders can be used here."),
         'email_bcc': fields.char('Bcc', size=256, help="Blind Carbon Copy Email Recipients. Placeholders can be used here."),
-        'message_id': fields.char('Message Id', size=1024, select=1, help="Message Id on Email. Placeholders can be used here."),
         'reply_to':fields.char('Reply-To', size=250, help="Placeholders can be used here."),
         'body': fields.text('Description', translate=True, help="Placeholders can be used here."),
         'body_html': fields.text('HTML', help="Contains HTML version of email. Placeholders can be used here."),
@@ -183,7 +180,7 @@ This is useful for CRM leads for example"),
                  'res_model': 'email.compose.message',
                  'src_model': src_obj,
                  'view_type': 'form',
-                 'context': "{'email_model':'%s', 'email_res_id': active_id,'template_id':'%d','src_rec_id':active_id,'src_rec_ids':active_ids}" % (src_obj, template.id),
+                 'context': "{'template_id':'%d','src_rec_id':active_id,'src_rec_ids':active_ids}" % (template.id),
                  'view_mode':'form,tree',
                  'view_id': res_id,
                  'target': 'new',
@@ -387,14 +384,6 @@ This is useful for CRM leads for example"),
             'auto_delete': self.get_template_value(cr, uid, template.auto_delete, model, record_id, context),
             #'body_html': self.get_template_value(cr, uid, template.body_html, model, record_id, context),
         }
-
-        if template.message_id:
-            # use provided message_id with placeholders
-            values.update({'message_id': self.get_template_value(cr, uid, template.message_id, model, record_id, context)})
-
-        elif template['track_campaign_item']:
-            # get appropriate message-id
-            values.update({'message_id': tools.generate_tracking_message_id(record_id)})
 
         #Use signatures if allowed
         if template.user_signature:

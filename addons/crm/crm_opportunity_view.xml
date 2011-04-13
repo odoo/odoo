@@ -61,7 +61,6 @@
                                     <field name="email_from" string="Email" />
                                     <button string="Send Email"
                                         name="%(mail.action_email_compose_message_wizard)d"
-                                        context="{'email_model': 'crm.lead', 'email_res_id': active_id}"
                                         icon="terp-mail-message-new" type="action"/>
                                 </group>
                                 <field name="phone"/>
@@ -183,7 +182,6 @@
                                 icon="terp-document-new" type="action" />
 		                    <button string="Send New Email"
 		                        name="%(mail.action_email_compose_message_wizard)d"
-		                        context="{'email_model': 'crm.lead', 'email_res_id': active_id}"
 		                        icon="terp-mail-message-new" type="action"/>
                         </page>
                         <page string="Extra Info" groups="base.group_extended">

@@ -40,7 +40,7 @@ class email_compose_message(osv.osv_memory):
             result.update({
                     'subject' : data.name or False,
                     'email_to' : data.email_from or False,
-                    'email_from' : data.user_id and data.user_id.address_id and data.user_id.address_id.email or False,
+                    'email_from' : data.user_id and data.user_id.address_id and data.user_id.address_id.email or tools.config.get('email_from', False),
                     'body' : '\n' + (tools.ustr(data.user_id.signature or '')),
                     'email_cc' : tools.ustr(data.email_cc or ''),
                     'model': model  or False,

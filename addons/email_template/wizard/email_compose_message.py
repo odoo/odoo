@@ -22,6 +22,7 @@
 from osv import osv
 from osv import fields
 import tools
+from tools.translate import _
 
 class email_compose_message(osv.osv_memory):
     _name = 'email.compose.message'
@@ -40,7 +41,7 @@ class email_compose_message(osv.osv_memory):
                 if len(context.get('src_rec_ids',[])) > 1: # Multiple Mail: Gets original template values for multiple email change
                     return getattr(template, field)
                 else: # Simple Mail: Gets computed template values
-                    return template_pool.get_template_value(cr, uid, getattr(template, field), template.model, context.get('email_res_id'), context)
+                    return template_pool.get_template_value(cr, uid, getattr(template, field), template.model, context.get('active_id'), context)
             result.update({
                     'template_id' : template.id,
                     'smtp_server_id' : template.smtp_server_id.id,
@@ -138,6 +139,12 @@ class email_compose_message(osv.osv_memory):
             vals.update(self.get_template_data(cr, uid, resource_id, template_id, context))
         else:
             vals.update({'attachment_ids' : []})
+        email_temp_pool = self.pool.get('email.template')
+        if context.get('active_model') and context.get('active_id') and email_temp_pool.browse(cr, uid, template_id, context=context).user_signature:
+            model_pool = self.pool.get(context['active_model'])
+            user = model_pool.browse(cr, uid, context['active_id'], context=context).user_id
+            signature = user and user.signature
+            vals['body'] = _('%s\n%s') %(vals['body'], signature or '')
         return {'value': vals}
 
 email_compose_message()

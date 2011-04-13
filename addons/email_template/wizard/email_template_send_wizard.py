@@ -58,12 +58,6 @@ class email_template_send_wizard(osv.osv_memory):
         if 'smtp_server_id' in fields:
             result['smtp_server_id'] = template.smtp_server_id.id
 
-        if 'message_id' in fields:
-            result['message_id'] = template.message_id
-
-        if 'track_campaign_item' in fields:
-            result['track_campaign_item'] = template.track_campaign_item
-
         if 'attachment_ids' in fields:
             result['attachment_ids'] = template_pool.read(cr, uid, template.id, ['attachment_ids'])['attachment_ids']
 
