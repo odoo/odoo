@@ -776,8 +776,10 @@ def get_opportunity_contact(sugar_obj,cr,uid, PortType, sessionid, val, partner_
     partner_contact_name = False        
     model_obj = sugar_obj.pool.get('ir.model.data')
     partner_address_obj = sugar_obj.pool.get('res.partner.address')
-    sugar_opportunity_contact = sugar.relation_search(PortType, sessionid, 'Opportunities', module_id=val.get('id'), related_module='Contacts', query=None, deleted=None)
-    for contact in sugar_opportunity_contact:
+    model_account_ids = model_obj.search(cr, uid, [('res_id', '=', partner_xml_id[0]), ('model', '=', 'res.partner'), ('module', '=', 'sugarcrm_import')])
+    model_xml_id = model_obj.browse(cr, uid, model_account_ids)[0].name 
+    sugar_account_contact = sugar.relation_search(PortType, sessionid, 'Accounts', module_id=model_xml_id, related_module='Contacts', query=None, deleted=None)
+    for contact in sugar_account_contact:
         model_ids = find_mapped_id(sugar_obj, cr, uid, 'res.partner.address', contact, context)
         if model_ids:
             model_id = model_obj.browse(cr, uid, model_ids)[0].res_id
