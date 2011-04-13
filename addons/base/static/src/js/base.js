@@ -128,6 +128,7 @@ openerp.base = function(instance) {
     openerp.base.form(instance);
     openerp.base.calendar(instance);
     openerp.base.gantt(instance);
+	openerp.base.diagram(instance);
 };
 
 // vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:

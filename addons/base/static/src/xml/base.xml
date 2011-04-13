@@ -205,8 +205,7 @@
         </t-if>
     </t>
 </t>
-<tr t-name="ListView.row" t-att-style="style"
-    t-att-class="row_parity">
+<tr t-name="ListView.row" t-att-style="style" t-att-class="row_parity">
     <th t-if="options.selectable" class="oe-record-selector">
         <input type="checkbox"/>
     </th>
@@ -232,6 +231,10 @@
         <button type="button" name="delete">♻</button>
     </td>
 </tr>
+<t t-name="DiagramView">
+	<h2 class="oe_view_title"><t t-esc="fields_view.arch.attrs.string"/></h2>
+	<div id="dia-canvas" style="overflow: auto;"></div>
+</t>
 <t t-name="FormView">
     <h2 class="oe_view_title"><t t-esc="view.fields_view.arch.attrs.string"/></h2>
     <div class="oe_form_header" t-att-id="view.element_id + '_header'">
