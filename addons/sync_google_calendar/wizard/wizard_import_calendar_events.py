@@ -65,7 +65,7 @@ def _get_rules(self, datas):
         new_val['end_date'] = until.strftime('%Y-%m-%d')
         new_val['end_type'] = 'end_date'
         datas.pop('UNTIL')
-
+        
     if datas.get('COUNT'):
         new_val['count'] = datas.get('COUNT')
         new_val['end_type'] = 'count'
@@ -73,7 +73,6 @@ def _get_rules(self, datas):
         
     if datas.get('INTERVAL'):
         new_val['interval'] = datas.get('INTERVAL')
-        datas.pop('INTERVAL')
     else:
         new_val['interval'] = 1
 
@@ -279,7 +278,6 @@ class synchronize_google_calendar_events(osv.osv_memory):
         
         return {
             'name': _('Meetings'),
-            'domain': "[('id','in', ["+','.join(map(str,meeting_ids))+"])]",
             'view_type': 'form',
             'view_mode': 'tree,form',
             'res_model': 'crm.meeting',

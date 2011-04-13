@@ -25,10 +25,17 @@ class crm_meeting(osv.osv):
     _inherit = "crm.meeting"
 
     def unlink(self, cr, uid, ids, context=None):
+        ids = self.web_client_unfucking_timebomb(ids)
+        res = super(crm_meeting, self).unlink(cr, uid, ids, context=context)
+        ids_real = self.remove_virtual_id(ids)
+        
         model_obj = self.pool.get('ir.model.data')
-        model_ids = model_obj.search(cr, uid, [('res_id','in',ids),('model','=','crm.meeting'),('module','=','sync_google_calendar')], context=context)
+        remain_ids = self.search(cr, uid, [('id','in',ids_real)])
+        ids_to_remove = list(set(ids_real) - set(remain_ids))
+        
+        model_ids = model_obj.search(cr, uid, [('res_id','in',ids_to_remove),('model','=','crm.meeting'),('module','=','sync_google_calendar')], context=context)
         model_obj.unlink(cr, uid, model_ids, context=context)
-        return super(crm_meeting, self).unlink(cr, uid, ids, context=context)
+        return res
 
 crm_meeting()
 
