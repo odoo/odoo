@@ -75,8 +75,12 @@ class google_login(osv.osv_memory):
                    'gmail_password': password
             }
             self.pool.get('res.users').write(cr, uid, uid, res, context=context)
-        except :
-            raise osv.except_osv(_('Error'), _("Authentication fail check the user and password !"))
+        except Exception, e:
+            if len(e.args) > 1:
+                msg = e.args[1] 
+            else:
+                msg = e.args[0]
+            raise osv.except_osv(_('Error'), _("%s" %msg))
 
         return self._get_next_action(cr, uid, context=context)
 
