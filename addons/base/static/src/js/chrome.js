@@ -491,7 +491,7 @@ openerp.base.Controller = openerp.base.BasicController.extend( /** @lends opener
     controller_manifest: {
         register: null,
         template: "",
-        element_post_prefix: false,
+        element_post_prefix: false
     },
     /**
      * Controller registry, 
@@ -702,7 +702,7 @@ openerp.base.CrashManager = openerp.base.Controller.extend({
 
 openerp.base.Loading =  openerp.base.Controller.extend({
     controller_manifest: {
-        register: ["Loading"],
+        register: ["Loading"]
     },
     init: function(session, element_id) {
         this._super(session, element_id);

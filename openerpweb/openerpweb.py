@@ -436,10 +436,11 @@ class Root(object):
                 manifest_path = os.path.join(path_addons, i, '__openerp__.py')
                 if os.path.isfile(manifest_path):
                     manifest = eval(open(manifest_path).read())
-                    print "Loading", i
-                    m = __import__(i)
-                    addons_module[i] = m
-                    addons_manifest[i] = manifest
+                    if manifest.get('active', True):
+                        print "Loading", i
+                        m = __import__(i)
+                        addons_module[i] = m
+                        addons_manifest[i] = manifest
         for k, v in controllers_class.items():
             if k not in controllers_object:
                 o = v()

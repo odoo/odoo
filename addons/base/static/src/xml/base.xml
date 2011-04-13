@@ -231,10 +231,6 @@
         <button type="button" name="delete">♻</button>
     </td>
 </tr>
-<t t-name="DiagramView">
-	<h2 class="oe_view_title"><t t-esc="fields_view.arch.attrs.string"/></h2>
-	<div id="dia-canvas" style="overflow: auto;"></div>
-</t>
 <t t-name="FormView">
     <h2 class="oe_view_title"><t t-esc="view.fields_view.arch.attrs.string"/></h2>
     <div class="oe_form_header" t-att-id="view.element_id + '_header'">
@@ -573,49 +569,5 @@
             <t t-esc="message"/>
         </p>
     </div>
-</t>
-<t t-name="CalendarView">
-	<h3 class="title"><t t-esc="view.fields_view.arch.attrs.string"/></h3>
-	<table class="calendar-view" width="100%" height="100%" cellspacing="0" cellpadding="0">
-		<tr>
-			<td>
-				<div style="height: 1000px;width: 100%;">
-					<div id="calendar-sidebar">
-					</div>
-				</div>
-			</td>
-			<td style="width:85%;" align="left">
-				<div id="openerp_scheduler" class="dhx_cal_container" style="height: 1000px;width: 100%;">
-					<div class="dhx_cal_navline">
-						<div class="dhx_cal_prev_button"></div>
-						<div class="dhx_cal_next_button"></div>
-						<div class="dhx_cal_today_button"></div>
-						<div class="dhx_cal_date"></div>
-						<div class="dhx_minical_icon" id="dhx_minical_icon"></div>
-						<div class="dhx_cal_tab" name="day_tab" style="right:204px;"></div>
-						<div class="dhx_cal_tab" name="week_tab" style="right:140px;"></div>
-						<div class="dhx_cal_tab" name="month_tab" style="right:76px;"></div>
-					</div>
-					<div class="dhx_cal_header">
-					</div>
-					<div class="dhx_cal_data">
-					</div>		
-				</div>
-			</td>
-		</tr>
-	</table>
-</t>
-<t t-name="GanttView">
-	<h3 class="title"><t t-esc="view.fields_view.arch.attrs.string"/></h3>
-	<table class="gantt-view" width="100%" height="100%" cellspacing="0" cellpadding="0">
-		<tr>
-			<td style="width:85%">
-				<div style="width:100%;height:300px;position:relative" id="GanttDiv"></div>
-			</td>
-			<td valign = "top">
-				<div id="gantt-sidebar"></div>
-			</td>
-		</tr>
-	</table>
 </t>
 </templates>

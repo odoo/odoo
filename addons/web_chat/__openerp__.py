@@ -4,5 +4,5 @@
     "depends": [],
     "js": ["static/src/web_chat.js"],
     "css": [],
-    'active': True,
+    'active': False,
 }

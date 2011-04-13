@@ -23,32 +23,10 @@
     <script type="text/javascript" src="/base/static/src/js/list.js"></script>
     <script type="text/javascript" src="/base/static/src/js/search.js"></script>
     <script type="text/javascript" src="/base/static/src/js/views.js"></script>
-	
-	<script type="text/javascript" src="/base_diagram/static/src/js/diagram.js"></script>
-	<script type="text/javascript" src="/base_diagram/static/lib/js/raphael-min.js"></script>
-	<script type="text/javascript" src="/base_diagram/static/lib/js/dracula_graffle.js"></script>
-	<script type="text/javascript" src="/base_diagram/static/lib/js/dracula_graph.js"></script>
-	
-
-    <script type="text/javascript" src="/base_gantt/static/lib/dhtmlxGantt/codebase/dhtmlxcommon.js"></script>
-
-    <script type="text/javascript" src="/base_gantt/static/lib/dhtmlxGantt/codebase/dhtmlxgantt.js"></script>
-    <script type="text/javascript" src="/base_gantt/static/src/gantt.js"></script>
-
-    <script type="text/javascript" src="/base_calendar/static/lib/dhtmlxScheduler/codebase/dhtmlxscheduler.js"></script>
-    <script type="text/javascript" src="/base_calendar/static/src/js/calendar.js"></script>
-
-	<script type="text/javascript" src="/web_chat/static/lib/AjaxIM/js/jquery.jsonp-1.1.0.js"></script>
-	<script type="text/javascript" src="/web_chat/static/lib/AjaxIM/js/jquery.jstore-all-min.js"></script>
-	<script type="text/javascript" src="/web_chat/static/lib/AjaxIM/js/jquery.md5.js"></script>
-	<script type="text/javascript" src="/web_chat/static/lib/AjaxIM/js/im.js"></script>
 
     <link rel="stylesheet" type="text/css" media="screen" href="/base/static/lib/jquery.ui/css/smoothness/jquery-ui-1.8.9.custom.css" />
     <link rel="stylesheet" type="text/css" media="screen" href="/base/static/lib/jquery.ui.notify/css/ui.notify.css" />
     <link rel="stylesheet" type="text/css" href="/base/static/lib/jquery.superfish/css/superfish.css" media="screen">
-
-    <link rel="stylesheet" type="text/css" media="screen" href="/base_gantt/static/lib/dhtmlxGantt/codebase/dhtmlxgantt.css" />
-    <link rel="stylesheet" type="text/css" media="screen" href="/base_calendar/static/lib/dhtmlxScheduler/codebase/dhtmlxscheduler.css">
 
     <link rel="stylesheet" href="/base/static/src/css/base.css" type="text/css"/>
 
@@ -57,18 +35,6 @@
             var oe = openerp.init();
             oe.base.webclient("oe");
         });
-    </script>
-
-    <script>
-    var AjaxIM, AjaxIMLoadedFunction;
-    $(function() {
-       AjaxIM.init({
-           pollServer: '/web_chat/pollserver',
-           theme: '/web_chat/static/lib/AjaxIM/themes/default',
-           flashStorage: '/web_chat/static/lib/AjaxIM/js/jStore.Flash.html'
-       });
-       AjaxIM.client.login();
-    });
     </script>
 </head>
 <body id="oe" class="openerp">

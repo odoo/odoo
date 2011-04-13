@@ -4,4 +4,5 @@
     "depends": [],
     "js": ["static/*/js/*.js"],
     "css": [],
+    'active': False
 }
