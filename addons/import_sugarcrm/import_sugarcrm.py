@@ -577,7 +577,7 @@ def get_bug_priority(sugar_obj, cr, uid, val,context=None):
 def get_bug_state(sugar_obj, cr, uid, val,context=None):
     if not context:
         context = {}
-    state_id = False
+    state = False
     state_dict = {'status': #field in the sugarcrm database
         { #Mapping of sugarcrm status : openerp Bugs state
             'New' : 'draft',
@@ -628,7 +628,6 @@ def get_attachment(sugar_obj, cr, uid, val, model, File, context=None):
     attachment_obj = sugar_obj.pool.get('ir.attachment')
     model_obj = sugar_obj.pool.get('ir.model.data')
     mailgate_obj = sugar_obj.pool.get('mailgate.message')
-    model_ids = find_mapped_id(sugar_obj, cr, uid, model, val.get('id'), context)
     new_attachment_id = attachment_obj.create(cr, uid, {'name': val.get('name'), 'datas': File, 'res_id': val['res_id'],'res_model': val['model']})
     message_model_ids = find_mapped_id(sugar_obj, cr, uid, model, val.get('id'), context)
     message_xml_id = model_obj.browse(cr, uid, message_model_ids)
