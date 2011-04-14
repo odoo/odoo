@@ -179,7 +179,7 @@
                                 <field name="count" attrs="{'invisible' : [('end_type', '!=', 'count')] }"/>
                                 <label string=" " colspan="2" />
                                 <newline />
-                                <field name="end_date" attrs="{'invisible' : [('end_type', '!=', 'end_date')] }"/>
+                                <field name="end_date" attrs="{'invisible' : [('end_type', '!=', 'end_date')], 'required': [('end_type', '=', 'end_date')]}"/>
                                 <newline />
                            
                       
