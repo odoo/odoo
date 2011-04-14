@@ -44,12 +44,10 @@ class email_compose_message(osv.osv_memory):
             else:
                 return self.get_template_value(cr, uid, getattr(template, field), template.model, resource_id, context=context)
 
-        body = _get_template_value('body') or False
-        if context.get('active_model') and resource_id and template.user_signature:
-            model_pool = self.pool.get(context['active_model'])
-            user = model_pool.browse(cr, uid, resource_id, context=context).user_id
-            signature = user and user.signature or ''
-            body = body + '\n' + signature
+        body = _get_template_value('body')
+        if template.user_signature:
+            signature = self.pool.get('res.users').browse(cr, uid, uid, context).signature
+            body += '\n' + signature
 
         result.update({
                 'template_id' : template.id,
