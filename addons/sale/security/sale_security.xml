@@ -8,6 +8,11 @@
     <record id="base.group_sale_salesman" model="res.groups">
         <field name="name">Sales / User</field>
     </record>
+
+    <record id="base.user_root" model="res.users">
+        <field name="groups_id" eval="[(4, ref('base.group_sale_salesman'))]"/>
+    </record>    
+    
     <record id="base.group_sale_salesman_all_leads" model="res.groups">
         <field name="name">Sales / User - See All Leads</field>
     </record>
