@@ -7,9 +7,10 @@
             <field name="model">email.compose.message</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Reply Email">
+                <form string="Compose Email">
                     <group col="6" colspan="4">
-                        <field name="model" invisible="1"/>
+                        <field name="model" invisible="context.get('active_model',False)"/>
+                        <field name='filter_id' invisible="context.get('active_model',False)"/>
                         <field name="smtp_server_id" widget="selection" colspan="4" invisible="1"/>
                         <field name="email_from" colspan="4" required="1"/>
                         <field name="email_to" colspan="4" required="1"/>
@@ -39,7 +40,7 @@
         </record>
 
         <record id="action_email_compose_message_wizard" model="ir.actions.act_window">
-            <field name="name">Send E-mail</field>
+            <field name="name">Compose E-mail</field>
             <field name="res_model">email.compose.message</field>
             <field name="src_model">email.compose.message</field>
             <field name="type">ir.actions.act_window</field>
