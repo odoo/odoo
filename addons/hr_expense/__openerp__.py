@@ -46,6 +46,7 @@ re-invoice your customer's expenses if your work by project.
     'init_xml': [],
     'update_xml': [
         'security/ir.model.access.csv',
+        'hr_expense_data.xml',
         'hr_expense_sequence.xml',
         'hr_expense_workflow.xml',
         'hr_expense_view.xml',
@@ -56,7 +57,6 @@ re-invoice your customer's expenses if your work by project.
         'board_hr_expense_view.xml',
         'board_hr_expense_manager_view.xml',
         'hr_expense_installer_view.xml',
-        'hr_expense_data.xml'
     ],
     'demo_xml': [
         'hr_expense_demo.xml',
