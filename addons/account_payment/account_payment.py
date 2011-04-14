@@ -328,7 +328,7 @@ class payment_line(osv.osv):
             required=True, help='Payment amount in the partner currency'),
         'currency': fields.many2one('res.currency','Partner Currency', required=True),
         'company_currency': fields.many2one('res.currency', 'Company Currency', readonly=True),
-        'bank_id': fields.many2one('res.partner.bank', 'Destination Bank account'),
+        'bank_id': fields.many2one('res.partner.bank', 'Destination Bank Account'),
         'order_id': fields.many2one('payment.order', 'Order', required=True,
             ondelete='cascade', select=True),
         'partner_id': fields.many2one('res.partner', string="Partner", required=True, help='The Ordering Customer'),
