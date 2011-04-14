@@ -56,14 +56,12 @@ class hr_timesheet_invoice_wizard(osv.osv_memory):
             context = {}
         res = super(hr_timesheet_invoice_wizard, self).default_get(cr, uid, fields, context=context)
         emp_obj = self.pool.get('hr.employee')
-        emp_id = emp_obj.search(cr, uid, [], context=context)
+        emp_ids = emp_obj.search(cr, uid, ['|', ('product_id', '=', False), ('journal_id', '=', False)], context=context)
         result = []
-        data = {}
-        for emp in emp_obj.browse(cr, uid, emp_id, context=context):
-            data = {'employee_id':emp.id, 'product_id':emp.product_id.id, 'journal_id':emp.journal_id.id}
-            result.append(data)
-            if 'emp_ids' in fields:
-                res.update({'emp_ids': result})
+        for emp in emp_obj.browse(cr, uid, emp_ids, context=context):
+            result.append({'employee_id': emp.id, 'product_id': emp.product_id.id, 'journal_id': emp.journal_id.id})
+        if 'emp_ids' in fields:
+            res.update({'emp_ids': result})
         return res
 
     def set_employee_data(self, cr, uid, ids, context=None):
