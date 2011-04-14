@@ -26,7 +26,8 @@ class project_task(osv.osv):
     _name = "project.task"
     _inherit = "project.task"
     _columns = {
-        'procurement_id': fields.many2one('procurement.order', 'Procurement', ondelete='set null')
+        'procurement_id': fields.many2one('procurement.order', 'Procurement', ondelete='set null'),
+        'sale_id': fields.many2one('sale.order','Sale Order')
     }
 
     def _validate_subflows(self, cr, uid, ids):
@@ -44,7 +45,8 @@ class project_task(osv.osv):
         res = super(project_task, self).do_cancel(cr, uid, ids, *args, **kwargs)
         self._validate_subflows(cr, uid, ids)
         return res
-
+   
+    
 project_task()
 
 class product_product(osv.osv):
@@ -53,6 +55,7 @@ class product_product(osv.osv):
         'project_id': fields.many2one('project.project', 'Project', ondelete='set null',)
     }
 product_product()
+
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
