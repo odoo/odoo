@@ -95,7 +95,7 @@ reaction:
 
   * Return a value that evaluates as false (generally ``null``). This
     value indicates the input does not contain any value and will not
-    take part in the research.
+    affect the results of the search.
 
   * Raise :js:class:`openerp.base.search.Invalid` to indicate that it
     holds a value but this value can not be used in the search
