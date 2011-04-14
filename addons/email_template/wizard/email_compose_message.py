@@ -35,6 +35,7 @@ class email_compose_message(osv.osv_memory):
         template_pool = self.pool.get('email.template')
         if template_id:
             template = template_pool.get_email_template(cr, uid, template_id=template_id, context=context)
+
             def _get_template_value(field):
                 if not template:
                     return False
@@ -42,10 +43,18 @@ class email_compose_message(osv.osv_memory):
                     return getattr(template, field)
                 else: # Simple Mail: Gets computed template values
                     return template_pool.get_template_value(cr, uid, getattr(template, field), template.model, context.get('active_id'), context)
+
+            body = _get_template_value('body') or False
+            if context.get('active_model') and context.get('active_id') and template.user_signature:
+                model_pool = self.pool.get(context['active_model'])
+                user = model_pool.browse(cr, uid, context['active_id'], context=context).user_id
+                signature = user and user.signature or ''
+                body = body + '\n' + signature
+
             result.update({
                     'template_id' : template.id,
                     'smtp_server_id' : template.smtp_server_id.id,
-                    'body' : _get_template_value('body') or False,
+                    'body' : body,
                     'subject' : _get_template_value('subject') or False,
                     'attachment_ids' : template_pool.read(cr, uid, template.id, ['attachment_ids'])['attachment_ids'] or [],
                     'res_id' : res_id or False,
@@ -54,6 +63,7 @@ class email_compose_message(osv.osv_memory):
                     'email_bcc' : _get_template_value('email_bcc') or False,
                     'reply_to' : _get_template_value('reply_to') or False,
                     'model' : template.model or False,
+                    'auto_delete': template.auto_delete
                 })
         return result
 
@@ -128,26 +138,16 @@ class email_compose_message(osv.osv_memory):
         'template_id': fields.selection(_get_templates, 'Template'),
     }
 
-    def on_change_template(self, cr, uid, ids, model, template_id, context=None):
+    def on_change_template(self, cr, uid, ids, template_id, context=None):
         if context is None:
             context = {}
-        if context.get('mail') == 'reply':
-            return {'value':{}}
         vals = {}
         resource_id = context.get('active_id', False)
         if template_id and resource_id:
-            vals.update(self.get_template_data(cr, uid, resource_id, template_id, context))
+            vals.update(self.get_template_data(cr, uid, resource_id, template_id, context=context))
         else:
             vals.update({'attachment_ids' : []})
 
-        email_temp_pool = self.pool.get('email.template')
-        template_data = email_temp_pool.browse(cr, uid, template_id, context=context)
-        vals.update({'auto_delete': template_data.auto_delete})
-        if context.get('active_model') and context.get('active_id') and template_data.user_signature:
-            model_pool = self.pool.get(context['active_model'])
-            user = model_pool.browse(cr, uid, context['active_id'], context=context).user_id
-            signature = user and user.signature or ''
-            vals['body'] = vals['body'] + '\n' + signature
         return {'value': vals}
 
 email_compose_message()
