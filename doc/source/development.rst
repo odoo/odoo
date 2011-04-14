@@ -211,7 +211,7 @@ called in this order:
   Gives the widget the opportunity to unbind its events, remove itself
   from the DOM and perform any other cleanup task it may have.
 
-  Event if the widget does not do anything itself, it is responsible
+  Even if the widget does not do anything itself, it is responsible
   for shutting down its children.
 
 An abstract type is available and can be inherited from, to simplify
@@ -252,7 +252,7 @@ abstract types, used to implement input widgets:
     :js:func:`~openerp.base.search.Widget.make_id`.
 
   * It sets up a basic (overridable)
-    :js:attr:`~opererp.base.search.Field.template` attribute, combined
+    :js:attr:`~openerp.base.search.Field.template` attribute, combined
     with the previous tasks, this makes subclasses of
     :js:class:`~openerp.base.search.Field` render themselves "for
     free".
