@@ -9,20 +9,22 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Import SugarCRM">
-                    <group colspan="4" width="400" col="3">
+                    <group colspan="4" width="500">
                          <separator string="Select SugarCRM Module Name" colspan="4"/>
-                         <field name="lead" />
-                         <field name="opportunity" />
-                         <field name="user" />
-                         <field name= "contact" />
-                         <field name= "account" />
-                         <field name= "employee" />
-                         <field name= "meeting" />
-                         <field name= "call" />
-                         <field name= "email" />
-                         <field name= "project" />
-                         <field name= "project_task" />
-                         <field name= "bug" />
+                         <group colspan="4" col="6">
+                         	<field name="lead" />
+                         	<field name="opportunity" />
+                         	<field name= "meeting" />
+                         	<field name= "call" />
+	                         <field name= "account" />
+	                         <field name= "contact" />
+	                         <field name="user" />
+	                         <field name= "employee" />
+	                         <field name= "email" />
+	                         <field name= "project" />
+	                         <field name= "project_task" />
+	                         <field name= "bug" string="Project Issue"/>
+                         </group>
                          <field name="username" invisible="1"/>
                          <field name="password" invisible="1"/>
                     </group>

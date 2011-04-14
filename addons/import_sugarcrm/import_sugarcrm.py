@@ -90,17 +90,18 @@ def import_partner_address(sugar_obj, cr, uid, context=None):
             'street': 'primary_address_street',
             'zip': 'primary_address_postalcode',
             'city': 'primary_address_city',
-            'country_id/.id': 'country_id/.id',
-            'state_id/.id': 'state_id/id'
+            'country_id.id': 'country_id.id',
+            'state_id.id': 'state_id.id'
             }
     address_obj = sugar_obj.pool.get('res.partner.address')
     PortType, sessionid = sugar.login(context.get('username', ''), context.get('password', ''), context.get('url',''))
     sugar_data = sugar.search(PortType, sessionid, 'Contacts')
     for val in sugar_data:
-        country_id = get_all_countries(sugar_obj, cr, uid, val.get('primary_address_country'), context)
-        state = get_all_states(sugar_obj,cr, uid, val.get('primary_address_state'), country_id, context)
-        val['country_id/.id'] =  country_id
-        val['state_id/.id'] =  state        
+        if val.get('primary_address_country'):
+            country_id = get_all_countries(sugar_obj, cr, uid, val.get('primary_address_country'), context)
+            state = get_all_states(sugar_obj,cr, uid, val.get('primary_address_state'), country_id, context)
+            val['country_id.id'] =  country_id
+            val['state_id.id'] =  state        
         fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_partner_address)
         address_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', noupdate=True, context=context)
     return True
@@ -211,10 +212,11 @@ def get_user_address(sugar_obj, cr, uid, val, context=None):
     'zip': 'address_postalcode',
     }
     address_ids = address_obj.search(cr, uid, [('name', 'like', val.get('first_name') +' '+ val.get('last_name'))])
-    country_id = get_all_countries(sugar_obj, cr, uid, val.get('address_country'), context)
-    state_id = get_all_states(sugar_obj, cr, uid, val.get('address_state'), country_id, context)
-    val['country_id'] =  country_id
-    val['state_id'] =  state_id
+    if val.get('address_country'):
+        country_id = get_all_countries(sugar_obj, cr, uid, val.get('address_country'), context)
+        state_id = get_all_states(sugar_obj, cr, uid, val.get('address_state'), country_id, context)
+        val['country_id'] =  country_id
+        val['state_id'] =  state_id
     fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_user_address)
     dict_val = dict(zip(fields,datas))
     if address_ids:
@@ -240,10 +242,11 @@ def get_address_type(sugar_obj, cr, uid, val, map_partner_address, type, context
              'type': 'type',
             })
         val['type'] = type
-        country_id = get_all_countries(sugar_obj, cr, uid, val.get(type_address +'_address_country'), context)
-        state = get_all_states(sugar_obj, cr, uid, val.get(type_address +'_address_state'), country_id, context)
-        val['country_id'] =  country_id
-        val['state_id'] =  state
+        if val.get(type_address +'_address_country'):
+            country_id = get_all_countries(sugar_obj, cr, uid, val.get(type_address +'_address_country'), context)
+            state = get_all_states(sugar_obj, cr, uid, val.get(type_address +'_address_state'), country_id, context)
+            val['country_id'] =  country_id
+            val['state_id'] =  state
         fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_partner_address)
         #Convert To list into Dictionary(Key, val). value pair.
         dict_val = dict(zip(fields,datas))
@@ -705,7 +708,7 @@ def get_contact_title(sugar_obj, cr, uid, salutation, domain, context=None):
     
 def import_emails(sugar_obj, cr, uid, context=None):
     if not context:
-        context=None
+        context= {}
     map_emails = {'id': 'id',
     'name':'name',
     'date':'date_sent',
@@ -839,7 +842,6 @@ def import_leads(sugar_obj, cr, uid, context=None):
         val['state'] = get_lead_state(sugar_obj, cr, uid, val,context)
         fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_lead)
         lead_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', noupdate=True, context=context)
-        import_history(sugar_obj, cr, uid, val.get('id'), 'crm.lead', context)
     return True
 
 def get_opportunity_contact(sugar_obj,cr,uid, PortType, sessionid, val, partner_xml_id, context=None):
@@ -897,7 +899,6 @@ def import_opportunities(sugar_obj, cr, uid, context=None):
         val['stage_id.id'] = stage_id
         fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_opportunity)
         lead_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', noupdate=True, context=context)
-        import_history(sugar_obj, cr, uid, val.get('id'), 'crm.lead', context)
     return True
 
 MAP_FIELDS = {'Opportunities':  #Object Mapping name
