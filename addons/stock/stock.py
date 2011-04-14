@@ -1213,6 +1213,8 @@ class stock_picking(osv.osv):
 
 
             for move in too_few:
+                if move.product_qty < partial_qty[move.id]:
+                    raise osv.except_osv(_('Error !'), _('You cannot select Quantity %s  more then Picking Quantity %s.') % (partial_qty[move.id],move.product_qty,))
                 product_qty = move_product_qty[move.id]
                 if not new_picking:
                     new_picking = self.copy(cr, uid, pick.id,
@@ -1235,7 +1237,6 @@ class stock_picking(osv.osv):
                     if prodlot_id:
                         defaults.update(prodlot_id=prodlot_id)
                     move_obj.copy(cr, uid, move.id, defaults)
-
                 move_obj.write(cr, uid, [move.id],
                         {
                             'product_qty' : move.product_qty - partial_qty[move.id],
