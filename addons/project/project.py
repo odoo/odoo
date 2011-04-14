@@ -328,7 +328,6 @@ class task(osv.osv):
 
     # Compute: effective_hours, total_hours, progress
     def _hours_get(self, cr, uid, ids, field_names, args, context=None):
-
         res = {}
         cr.execute("SELECT task_id, COALESCE(SUM(hours),0) FROM project_task_work WHERE task_id IN %s GROUP BY task_id",(tuple(ids),))
         hours = dict(cr.fetchall())
@@ -340,7 +339,6 @@ class task(osv.osv):
                 res[task.id]['progress'] = round(min(100.0 * hours.get(task.id, 0.0) / res[task.id]['total_hours'], 99.99),2)
             if task.state in ('done','cancelled'):
                 res[task.id]['progress'] = 100.0
-        
         return res
 
 
