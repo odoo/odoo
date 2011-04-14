@@ -119,6 +119,8 @@ class stock_picking(osv.osv):
         invoice_obj = self.pool.get('account.invoice')
         picking_obj = self.pool.get('stock.picking')
         invoice_line_obj = self.pool.get('account.invoice.line')
+        fiscal_position_obj = self.pool.get('account.fiscal.position')
+        order_line_obj = self.pool.get('sale.order.line')
 
         result = super(stock_picking, self).action_invoice_create(cursor, user,
                 ids, journal_id=journal_id, group=group, type=type,
@@ -144,6 +146,8 @@ class stock_picking(osv.osv):
                 invoice_obj.write(cursor, user, [invoice_created.id], {'name': inv_name}, context=context)
             for sale_line in sale_lines:
                 if sale_line.product_id.type == 'service' and sale_line.invoiced == False:
+                    if not type:
+                        type = context.get('inv_type', False)
                     if group:
                         name = picking.name + '-' + sale_line.name
                     else:
@@ -168,7 +172,7 @@ class stock_picking(osv.osv):
                     account_analytic_id = self._get_account_analytic_invoice(cursor,
                             user, picking, sale_line)
 
-                    account_id = self.pool.get('account.fiscal.position').map_account(cursor, user, picking.sale_id.partner_id.property_account_position, account_id)
+                    account_id = fiscal_position_obj.map_account(cursor, user, picking.sale_id.partner_id.property_account_position, account_id)
                     invoice = invoices[result[picking.id]]
                     invoice_line_id = invoice_line_obj.create(cursor, user, {
                         'name': name,
@@ -183,7 +187,7 @@ class stock_picking(osv.osv):
                         'account_analytic_id': account_analytic_id,
                         'notes':sale_line.notes
                     }, context=context)
-                    self.pool.get('sale.order.line').write(cursor, user, [sale_line.id], {'invoiced': True,
+                    order_line_obj.write(cursor, user, [sale_line.id], {'invoiced': True,
                         'invoice_lines': [(6, 0, [invoice_line_id])],
                     })
         return result
