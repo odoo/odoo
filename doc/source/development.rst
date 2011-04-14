@@ -137,7 +137,7 @@ Life cycle
 
 The search view has a pretty simple and linear life cycle, in three main steps:
 
-:js:class:`init <openerp.base.SearchView>`
+:js:class:`~openerp.base.SearchView.init`
 
   Nothing interesting happens here
 
@@ -232,7 +232,8 @@ abstract types, used to implement input widgets:
   <views-search-registration>`.
 
   If inherited from, descendant classes should not call its
-  implementations of ``get_context`` and ``get_domain``.
+  implementations of :js:func:`~openerp.base.search.Input.get_context`
+  and :js:func:`~openerp.base.search.Input.get_domain`.
 
 * :js:class:`openerp.base.search.Field` is used to implement more
   "field" widgets (which allow the user to input potentially complex
