@@ -1617,5 +1617,30 @@
             <field name="currency_id" ref="MUR"/>
             <field eval="time.strftime('%Y-01-01')" name="name"/>
         </record>
+
+        <record id="CFA" model="res.currency">
+            <!-- There are in fact 2 CFA currencies:
+                  - XAF for the Central African CFA franc
+                  - XOF for the West African CFA franc
+                As they are interchangeable, we probably only need one.
+                XOF appears to have "CFA" as symbol, while "XAF" is "FCFA",
+                so let's pick XOF as the ISO Code, to have a code-symbol match.
+                We can keep CFA as XML ID to show that we only have one currency,
+                there is no possible conflict, as no other currency currently
+                has CFA as ISO Code.
+                See http://en.wikipedia.org/wiki/CFA_franc
+                    http://en.wikipedia.org/wiki/ISO_4217
+            -->
+            <field name="name">XOF</field>
+            <field name="symbol">CFA</field>
+            <field name="rounding">1</field>
+            <field name="accuracy">4</field>
+            <field name="company_id" ref="main_company"/>
+        </record>
+        <record id="rateCFA" model="res.currency.rate">
+           <field name="rate">655.957</field>
+           <field name="currency_id" ref="CFA"/>
+           <field eval="time.strftime('%Y-01-01')" name="name"/>
+       </record>
     </data>
 </openerp>
