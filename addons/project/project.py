@@ -118,9 +118,11 @@ class project(osv.osv):
         return result.keys()
 
     def unlink(self, cr, uid, ids, *args, **kwargs):
+        analytic_obj = self.pool.get('account.analytic.account')
         for proj in self.browse(cr, uid, ids):
             if proj.tasks:
                 raise osv.except_osv(_('Operation Not Permitted !'), _('You can not delete a project with tasks. I suggest you to deactivate it.'))
+            analytic_obj.unlink(cr, uid, [proj.analytic_account_id.id])
         return super(project, self).unlink(cr, uid, ids, *args, **kwargs)
 
     _columns = {
