@@ -117,8 +117,8 @@ on its own, but its implementations of ``get_context`` and
 ``get_domain`` simply raise errors and *must* be overridden.
 
 One last action is for filters, as an activation order has to be kept
-on them for some controls (establish the correct grouping sequence for
-instance).
+on them for some controls (to establish the correct grouping sequence,
+for instance).
 
 To that end, filters can call
 :js:func:`openerp.base.Search.do_toggle_filter`, providing themselves
