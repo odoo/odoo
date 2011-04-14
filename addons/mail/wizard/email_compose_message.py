@@ -170,8 +170,6 @@ class email_compose_message(osv.osv_memory):
             else:
                 message_id = mail.message_id
 
-            context.update({'mass_mail': True})
-            print 'mail contx::', context
             # Mass mailing
             if context.get('mass_mail', False):
                 if context['active_ids'] and context['active_model']:

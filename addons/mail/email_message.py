@@ -111,7 +111,7 @@ class email_message(osv.osv):
         checks email_to, email_cc, email_bcc
         '''
         for message in self.browse(cr, uid, ids, context=context):
-            if not (message.email_to or message.email_cc or message.email_bcc):
+            if not (message.email_to or message.email_cc or message.email_bcc) and message.history:
                 return False
         return True
 
