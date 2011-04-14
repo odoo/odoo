@@ -71,7 +71,7 @@ An important concept in the search view is that of input. It is both
 an informal protocol and an abstract type that can be inherited from.
 
 Inputs are widgets which can contain user data (a char widget for
-instance, or a selection box). They are able of action and of
+instance, or a selection box). They are capable of action and of
 reaction:
 
 .. _views-search-registration:
@@ -93,9 +93,9 @@ reaction:
   * Return a context (an object), this is the "normal" response if the
     input holds a value.
 
-  * Return a falsy value (generally ``null``). This value indicates
-    the input does not contain any value and will not take part in the
-    research.
+  * Return a value that evaluates as false (generally ``null``). This
+    value indicates the input does not contain any value and will not
+    take part in the research.
 
   * Raise :js:class:`openerp.base.search.Invalid` to indicate that it
     holds a value but this value can not be used in the search
