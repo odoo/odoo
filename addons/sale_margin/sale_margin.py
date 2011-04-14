@@ -82,10 +82,11 @@ class stock_picking(osv.osv):
     def action_invoice_create(self, cr, uid, ids, journal_id=False,
             group=False, type='out_invoice', context=None):
         # need to carify with new requirement
-        invoice_ids = []
+        invoice_ids = []            
+        if context is None:
+            context = {}
         picking_obj = self.pool.get('stock.picking')
-        res = super(stock_picking, self).action_invoice_create(cr, uid, ids, journal_id=False,
-            group=False, type='out_invoice', context=None)
+        res = super(stock_picking, self).action_invoice_create(cr, uid, ids, journal_id=journal_id,group=group, type=type, context=context)        
         invoice_ids = res.values()
         picking_obj.write(cr, uid, ids, {'invoice_ids': [[6, 0, invoice_ids]]})
         return res
