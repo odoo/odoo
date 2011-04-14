@@ -7,21 +7,21 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2010-08-03 08:49+0000\n"
-"Last-Translator: Mantavya Gajjar (Open ERP) <Unknown>\n"
+"PO-Revision-Date: 2011-04-06 06:17+0000\n"
+"Last-Translator: Stanislav Hanzhin <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-15 05:16+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-04-07 04:37+0000\n"
+"X-Generator: Launchpad (build 12735)\n"
 
 #. module: process
 #: model:ir.model,name:process.model_process_node
 #: view:process.node:0
 #: view:process.process:0
 msgid "Process Node"
-msgstr ""
+msgstr "Узел процесса"
 
 #. module: process
 #: help:process.process,active:0
@@ -29,6 +29,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the process "
 "without removing it."
 msgstr ""
+"Если активное поле имеет значение \"Ложь\", это позволит скрыть процесс не "
+"удаляя его."
 
 #. module: process
 #: field:process.node,menu_id:0
@@ -44,7 +46,7 @@ msgstr "Кнопки"
 #: view:process.node:0
 #: view:process.process:0
 msgid "Group By..."
-msgstr ""
+msgstr "Группировать по ..."
 
 #. module: process
 #: selection:process.node,kind:0
@@ -54,7 +56,7 @@ msgstr "Состояние"
 #. module: process
 #: view:process.node:0
 msgid "Kind Of Node"
-msgstr ""
+msgstr "Тип узла"
 
 #. module: process
 #: field:process.node,help_url:0
@@ -67,7 +69,7 @@ msgstr "Адрес справки"
 #: view:process.node:0
 #: view:process.process:0
 msgid "Process Nodes"
-msgstr ""
+msgstr "Узлы процесса"
 
 #. module: process
 #: view:process.process:0
@@ -80,12 +82,12 @@ msgstr "Узлы"
 #: field:process.node,condition_ids:0
 #: view:process.process:0
 msgid "Conditions"
-msgstr ""
+msgstr "Условия"
 
 #. module: process
 #: view:process.transition:0
 msgid "Search Process Transition"
-msgstr ""
+msgstr "Найти переход процесса"
 
 #. module: process
 #: field:process.condition,node_id:0
@@ -95,7 +97,7 @@ msgstr "Узел"
 #. module: process
 #: selection:process.transition.action,state:0
 msgid "Workflow Trigger"
-msgstr ""
+msgstr "Триггер рабочего процесса"
 
 #. module: process
 #: field:process.transition,note:0
@@ -119,13 +121,13 @@ msgstr "Объект"
 #. module: process
 #: field:process.transition,source_node_id:0
 msgid "Source Node"
-msgstr ""
+msgstr "Исходный узел"
 
 #. module: process
 #: view:process.transition:0
 #: field:process.transition,transition_ids:0
 msgid "Workflow Transitions"
-msgstr ""
+msgstr "Переходы рабочего процесса"
 
 #. module: process
 #: field:process.transition.action,action:0
@@ -136,7 +138,7 @@ msgstr "Идентификатор действия"
 #: model:ir.model,name:process.model_process_transition
 #: view:process.transition:0
 msgid "Process Transition"
-msgstr ""
+msgstr "Переход процесса"
 
 #. module: process
 #: model:ir.model,name:process.model_process_condition
@@ -152,7 +154,7 @@ msgstr "Заглушка"
 #: model:ir.actions.act_window,name:process.action_process_form
 #: model:ir.ui.menu,name:process.menu_process_form
 msgid "Processes"
-msgstr ""
+msgstr "Процессы"
 
 #. module: process
 #: field:process.condition,name:0
@@ -166,7 +168,7 @@ msgstr "Название"
 #. module: process
 #: field:process.node,transition_in:0
 msgid "Starting Transitions"
-msgstr ""
+msgstr "Начало переходов"
 
 #. module: process
 #: view:process.node:0
@@ -185,7 +187,7 @@ msgstr "Переход"
 #. module: process
 #: view:process.process:0
 msgid "Search Process"
-msgstr ""
+msgstr "Искать процесс"
 
 #. module: process
 #: selection:process.node,kind:0
@@ -201,7 +203,7 @@ msgstr "Активен"
 #. module: process
 #: view:process.transition:0
 msgid "Associated Groups"
-msgstr ""
+msgstr "Связанные группы"
 
 #. module: process
 #: field:process.node,model_states:0
@@ -216,7 +218,7 @@ msgstr "Действие"
 #. module: process
 #: field:process.node,flow_start:0
 msgid "Starting Flow"
-msgstr ""
+msgstr "Запуск потока"
 
 #. module: process
 #: model:ir.module.module,description:process.module_meta_information
@@ -240,13 +242,13 @@ msgstr "Выражение"
 #. module: process
 #: field:process.transition,group_ids:0
 msgid "Required Groups"
-msgstr ""
+msgstr "Требуемые группы"
 
 #. module: process
 #: view:process.node:0
 #: view:process.process:0
 msgid "Incoming Transitions"
-msgstr ""
+msgstr "Входящие переходы"
 
 #. module: process
 #: field:process.transition.action,state:0
@@ -256,7 +258,7 @@ msgstr "Тип"
 #. module: process
 #: field:process.node,transition_out:0
 msgid "Ending Transitions"
-msgstr ""
+msgstr "Завершаются переходы"
 
 #. module: process
 #: model:ir.model,name:process.model_process_process
@@ -274,13 +276,13 @@ msgstr ""
 #: view:process.node:0
 #: view:process.process:0
 msgid "Other Conditions"
-msgstr ""
+msgstr "Другие условия"
 
 #. module: process
 #: model:ir.module.module,shortdesc:process.module_meta_information
 #: model:ir.ui.menu,name:process.menu_process
 msgid "Enterprise Process"
-msgstr ""
+msgstr "Процесс предприятия"
 
 #. module: process
 #: view:process.transition:0
@@ -291,23 +293,23 @@ msgstr "Действия"
 #: view:process.node:0
 #: view:process.process:0
 msgid "Properties"
-msgstr ""
+msgstr "Свойства"
 
 #. module: process
 #: model:ir.actions.act_window,name:process.action_process_transition_form
 #: model:ir.ui.menu,name:process.menu_process_transition_form
 msgid "Process Transitions"
-msgstr ""
+msgstr "Выполнить переходы"
 
 #. module: process
 #: field:process.transition,target_node_id:0
 msgid "Target Node"
-msgstr ""
+msgstr "Целевой узел"
 
 #. module: process
 #: field:process.node,kind:0
 msgid "Kind of Node"
-msgstr ""
+msgstr "Вид узла"
 
 #. module: process
 #: view:process.node:0
