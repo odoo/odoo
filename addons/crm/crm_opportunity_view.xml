@@ -136,6 +136,26 @@
                             </group>
                         </page>
 
+						<page string="Extra Info" groups="base.group_extended">
+                            <group col="2" colspan="2">
+                                <separator string="Dates" colspan="2"/>
+                                <field name="create_date"/>
+                                <field name="write_date"/>
+                                <field name="date_closed"/>
+                                <field name="date_open"/>
+                            </group>
+                            <group col="2" colspan="2">
+                                <separator string="Misc" colspan="2"/>
+                                <field name="active"/>
+                                <field name="day_open"/>
+                                <field name="day_close"/>
+                                <field name="referred"/>
+                            </group>
+                            <separator colspan="4" string="References"/>
+                            <field name="ref"/>
+                            <field name="ref2"/>
+                        </page>
+
                         <page string="Communication &amp; History" groups="base.group_extended">
                             <group colspan="4">
                                 <field colspan="4" name="email_cc" string="Global CC" widget="char" size="512"/>
@@ -188,25 +208,7 @@
                                 context="{'mail':'new', 'model': 'crm.lead'}"
                                 icon="terp-mail-message-new" type="action" />
                         </page>
-                        <page string="Extra Info" groups="base.group_extended">
-                            <group col="2" colspan="2">
-                                <separator string="Dates" colspan="2"/>
-                                <field name="create_date"/>
-                                <field name="write_date"/>
-                                <field name="date_closed"/>
-                                <field name="date_open"/>
-                            </group>
-                            <group col="2" colspan="2">
-                                <separator string="Misc" colspan="2"/>
-                                <field name="active"/>
-                                <field name="day_open"/>
-                                <field name="day_close"/>
-                                <field name="referred"/>
-                            </group>
-                            <separator colspan="4" string="References"/>
-                            <field name="ref"/>
-                            <field name="ref2"/>
-                        </page>
+
                         </notebook>
                     </form>
                 </field>
