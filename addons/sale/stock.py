@@ -116,6 +116,8 @@ class stock_picking(osv.osv):
 
     def action_invoice_create(self, cursor, user, ids, journal_id=False,
             group=False, type='out_invoice', context=None):
+        if context is None:
+            context = {}
         invoice_obj = self.pool.get('account.invoice')
         picking_obj = self.pool.get('stock.picking')
         invoice_line_obj = self.pool.get('account.invoice.line')
