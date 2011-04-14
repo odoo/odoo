@@ -532,7 +532,7 @@
         <!-- configartion view -->
 
         <record id="view_config_picking_policy" model="ir.ui.view">
-            <field name="name">Configure Picking Policy for Sales Order </field>
+            <field name="name">Setup your sales flow</field>
             <field name="model">sale.config.picking_policy</field>
             <field name="type">form</field>
             <field name="inherit_id" ref="base.res_config_view_base"/>
@@ -562,7 +562,7 @@
         </record>
 
         <record id="action_config_picking_policy" model="ir.actions.act_window">
-            <field name="name">Configure Picking Policy for Sales Order</field>
+            <field name="name">Setup your sales flow</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sale.config.picking_policy</field>
             <field name="view_id" ref="view_config_picking_policy"/>
