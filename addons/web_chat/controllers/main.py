@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import sys, time
+import cherrypy
 
 import simplejson
 import random
@@ -102,11 +103,6 @@ class PollServer(openerpweb.Controller):
 
     @openerpweb.httprequest
     def poll(self, req, **kw):
-        
-        mq = req.applicationsession.setdefault("web_chat", PollServerMessageQueue())
-        
-        # Method: Long Poll
-        
         """
         --> GET http://im.ajaxim.com/poll?callback=jsonp1302138663582&_1302138663582=
         <-- 200 OK
@@ -129,8 +125,14 @@ class PollServer(openerpweb.Controller):
             echo '<script type="text/javascript">parent.AjaxIM.incoming('. json_encode($this->_pollParseMessages($messages)) .  ');</script>'
 
         """
+        mq = req.applicationsession.setdefault("web_chat", PollServerMessageQueue())
+        
+        # Method: Long Poll
+
         
         msg = '[]'
+
+        cherrypy.response.headers['content-type'] = 'application/javascript';
         
         for i in range(5):
             received_msg = mq.read('Guest1', i)
@@ -145,12 +147,6 @@ class PollServer(openerpweb.Controller):
         
     @openerpweb.httprequest
     def send(self, req, **kw):
-        
-        to = kw.get('to')
-        message = kw.get('message')
-        
-        mq = req.applicationsession.setdefault("web_chat", PollServerMessageQueue())
-        
         """
         --> GET http://im.ajaxim.com/send?callback=jsonp1302139980022&to=Guest130205108745.47&message=test&_1302139980022=
             callback: jsonp1302139980022
@@ -168,6 +164,12 @@ class PollServer(openerpweb.Controller):
 
         """
         
+        to = kw.get('to')
+        message = kw.get('message')
+        
+        mq = req.applicationsession.setdefault("web_chat", PollServerMessageQueue())
+
+        
         if not req.applicationsession['current_user']:
             return dict(r='error', e='no session found')
         
@@ -182,8 +184,6 @@ class PollServer(openerpweb.Controller):
 
     @openerpweb.httprequest
     def status(self, req, **kw):
-        mq = req.applicationsession.setdefault("web_chat", PollServerMessageQueue())
-        
         """
         --> GET status call
            const Offline = 0;
@@ -198,6 +198,8 @@ class PollServer(openerpweb.Controller):
             return array('r' => 'error', 'e' => 'no session found');
             return array('r' => 'error', 'e' => 'status error');
         """
+        mq = req.applicationsession.setdefault("web_chat", PollServerMessageQueue())
+
         print "======== chat status ========",kw
         # mq.write()
         return {"action": ""}
