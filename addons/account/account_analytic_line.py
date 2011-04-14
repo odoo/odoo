@@ -28,6 +28,20 @@ from tools.translate import _
 class account_analytic_line(osv.osv):
     _inherit = 'account.analytic.line'
     _description = 'Analytic Line'
+
+    def _get_amount(self, cr, uid, ids, name, args, context=None):
+        res = {}
+        if not ids:
+            return res
+        for id in ids:
+            res.setdefault(id, 0.0)
+        for line in self.browse(cr, uid, ids, context=context):
+            from_currency_id = line.company_id.currency_id.id
+            to_currency_id = line.currency_id.id
+            from_amount = line.amount
+            res[line.id] = self.pool.get('res.currency').compute(cr, uid, from_currency_id, to_currency_id, from_amount, round=True, context=context)
+        return res
+
     _columns = {
         'product_uom_id': fields.many2one('product.uom', 'UoM'),
         'product_id': fields.many2one('product.product', 'Product'),
@@ -37,7 +51,7 @@ class account_analytic_line(osv.osv):
         'code': fields.char('Code', size=8),
         'ref': fields.char('Ref.', size=64),
         'currency_id': fields.related('move_id', 'currency_id', type='many2one', relation='res.currency', string='Account currency', store=True, help="The related account currency if not equal to the company one.", readonly=True),
-        'amount_currency': fields.related('move_id', 'amount_currency', type='float', string='Amount currency', store=True, help="The amount expressed in the related account currency if not equal to the company one.", readonly=True),
+        'amount_currency': fields.function(_get_amount, string="Amount Currency", type="float", method=True, store=True, help="The amount expressed in the related account currency if not equal to the company one.", readonly=True),
     }
 
     _defaults = {
