@@ -47,6 +47,29 @@ class one2many_mod2(fields.one2many):
             res[r[self._fields_id]].append( r['id'] )
         return res
 
+class account_analytic_line(osv.osv):
+    _inherit = 'account.analytic.line'
+    _description = 'Analytic Line'
+
+    def _get_amount(self, cr, uid, ids, name, args, context=None):
+        res = {}
+        if not ids:
+            return res
+        for id in ids:
+            res.setdefault(id, 0.0)
+        for line in self.browse(cr, uid, ids, context=context):
+            from_currency_id = line.company_id.currency_id.id
+            to_currency_id = line.currency_id.id
+            from_amount = line.amount
+            res[line.id] = self.pool.get('res.currency').compute(cr, uid, from_currency_id, to_currency_id, from_amount, round=True, context=context)
+        return res
+
+    _columns = {
+        'amount_currency': fields.function(_get_amount, string="Amount Currency", type="float", method=True, store=True, help="The amount expressed in the related account currency if not equal to the company one.", readonly=True),
+    }
+
+account_analytic_line()
+
 class account_analytic_plan(osv.osv):
     _name = "account.analytic.plan"
     _description = "Analytic Plan"
