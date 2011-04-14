@@ -58,13 +58,17 @@ class Xml2Json:
 class Session(openerpweb.Controller):
     _cp_path = "/base/session"
 
-    def manifest_glob(self, modlist, key):
+    def manifest_glob(self, addons, key):
         files = []
-        for i in modlist:
-            globlist = openerpweb.addons_manifest.get(i, {}).get(key, [])
-            for j in globlist:
-                for k in glob.glob(os.path.join(openerpweb.path_addons, i, j)):
-                    files.append(k[len(openerpweb.path_addons):])
+        for addon in addons:
+            globlist = openerpweb.addons_manifest.get(addon, {}).get(key, [])
+
+            files.extend([
+                resource_path[len(openerpweb.path_addons):]
+                for pattern in globlist
+                for resource_path in glob.glob(os.path.join(
+                    openerpweb.path_addons, addon, pattern))
+            ])
         return files
 
     def concat_files(self, file_list):
@@ -96,14 +100,16 @@ class Session(openerpweb.Controller):
 
     @openerpweb.jsonrequest
     def modules(self, req):
-        return {"modules": ["base", "base_hello", "base_calendar", "base_gantt"]}
+        return {"modules": [name
+            for name, manifest in openerpweb.addons_manifest.iteritems()
+            if manifest.get('active', True)]}
 
     @openerpweb.jsonrequest
-    def csslist(self, req, mods='base,base_hello'):
+    def csslist(self, req, mods='base'):
         return {'files': self.manifest_glob(mods.split(','), 'css')}
 
     @openerpweb.jsonrequest
-    def jslist(self, req, mods='base,base_hello'):
+    def jslist(self, req, mods='base'):
         return {'files': self.manifest_glob(mods.split(','), 'js')}
 
     def css(self, req, mods='base,base_hello'):

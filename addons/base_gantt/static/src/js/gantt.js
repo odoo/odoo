@@ -2,9 +2,10 @@
  * OpenERP base_gantt
  *---------------------------------------------------------*/
 
-openerp.base.gantt = function (openerp) {
-openerp.base.views.add('gantt', 'openerp.base.GanttView');
-openerp.base.GanttView = openerp.base.Controller.extend({
+openerp.base_gantt = function (openerp) {
+QWeb.add_template('/base_gantt/static/src/xml/base_gantt.xml');
+openerp.base.views.add('gantt', 'openerp.base_gantt.GanttView');
+openerp.base_gantt.GanttView = openerp.base.Controller.extend({
 
     init: function(view_manager, session, element_id, dataset, view_id) {
         this._super(session, element_id);
@@ -216,7 +217,7 @@ openerp.base.GanttView = openerp.base.Controller.extend({
                 },
                 function(result) {
                 })
-    },
+    }
 
 });
 

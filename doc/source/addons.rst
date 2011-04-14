@@ -1,6 +1,10 @@
 Developing OpenERP Web Addons
 =============================
 
+An OpenERP Web addon is simply a Python package with an openerp
+descriptor (a ``__openerp__.py`` file) which follows a few structural
+and namespacing rules.
+
 Structure
 ---------
 
@@ -49,6 +53,79 @@ Structure
 
 ``test/``
   The directories in which all tests for the addon are located.
+
+Some of these are guidelines (and not enforced by code), but it's
+suggested that these be followed. Code which does not fit into these
+categories can go wherever deemed suitable.
+
+Namespacing
+-----------
+
+Python
+++++++
+
+Because addons are also Python packages, they're inherently namespaced
+and nothing special needs to be done on that front.
+
+JavaScript
+++++++++++
+
+The JavaScript side of an addon has to live in the namespace
+``openerp.$addon_name``. For instance, everything created by the addon
+``base`` lives in ``openerp.base``.
+
+The root namespace of the addon is a function which takes a single
+parameter ``openerp``, which is an OpenERP client instance. Objects
+(as well as functions, registry instances, etc...) should be added on
+the correct namespace on that object.
+
+The root function will be called by the OpenERP Web client when
+initializing the addon.
+
+.. code-block:: javascript
+
+    // root namespace of the openerp.example addon
+    /** @namespace */
+    openerp.example = function (openerp) {
+        // basic initialization code (e.g. templates loading)
+        openerp.example.SomeClass = Class.extend(
+            /** @lends openerp.example.SomeClass# */{
+            /**
+             * Description for SomeClass's constructor here
+             *
+             * @constructs
+             */
+            init: function () {
+                // SomeClass initialization code
+            }
+            // rest of SomeClass
+        });
+
+        // access an object in an other addon namespace to replace it
+        openerp.base.SearchView = openerp.base.SearchView.extend({
+            init: function () {
+                this._super.apply(this, arguments);
+                console.log('Search view initialized');
+            }
+        });
+    }
+
+Utility behaviors
+-----------------
+
+JavaScript
+++++++++++
+
+* All javascript objects inheriting from
+  :js:class:`openerp.base.BasicConroller` will have all methods
+  starting with ``on_`` or ``do_`` bound to their ``this``. This means
+  they don't have to be manually bound (via ``_.bind`` or ``$.proxy``)
+  in order to be useable as bound event handlers (event handlers
+  keeping their object as ``this`` rather than taking whatever
+  ``this`` object they were called with).
+
+  Beware that this is only valid for methods starting with ``do_`` and
+  ``on_``, any other method will have to be bound manually.
 
 .. _addons-testing:
 
