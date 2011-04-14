@@ -55,7 +55,7 @@ Events
   Event triggered after a user asked for a search. The search view
   fires this event after collecting all input data (contexts, domains
   and group_by contexts). Note that the search view does *not* merge
-  those (or therwise evaluate them), they are returned as provided by
+  those (or otherwise evaluate them), they are returned as provided by
   the various inputs within the view.
 
 ``on_clear``
@@ -104,7 +104,7 @@ reaction:
     the search process.
 
     :js:class:`~openerp.base.search.Invalid` takes three mandatory
-    arguments: an indentifier (a name for instance), the invalid value
+    arguments: an identifier (a name for instance), the invalid value,
     and a validation message indicating the issue.
 
 ``get_domain``
