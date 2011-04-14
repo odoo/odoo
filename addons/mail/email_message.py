@@ -94,6 +94,7 @@ class email_message_common(osv.osv_memory):
     _rec_name = 'subject'
 
     _sql_constraints = []
+
 email_message_common()
 
 class email_message(osv.osv):
@@ -104,6 +105,19 @@ class email_message(osv.osv):
     _name = 'email.message'
     _description = 'Email Message'
     _order = 'date desc'
+
+    def _check_email_recipients(self, cr, uid, ids, context=None):
+        '''
+        checks email_to, email_cc, email_bcc
+        '''
+        for message in self.browse(cr, uid, ids, context=context):
+            if not (message.email_to or message.email_cc or message.email_bcc):
+                return False
+        return True
+
+    _constraints = [
+        (_check_email_recipients, 'No recipients were specified. Please enter a recipient!', ['email_to', 'email_cc', 'email_bcc']),
+    ]
 
     def open_document(self, cr, uid, ids, context=None):
         """ To Open Document
