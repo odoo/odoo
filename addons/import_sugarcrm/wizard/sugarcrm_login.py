@@ -30,7 +30,7 @@ class sugarcrm_login(osv.osv):
     _columns = {
         'username': fields.char('User Name', size=64, required=True),
         'password': fields.char('Password', size=24,required=True),
-         'url' : fields.char('SugarCRM Path', size=264, required=True, help="Path for SugarCRM connection should be 'http://localhost/sugarcrm/soap.php' Format."),
+         'url' : fields.char('Service', size=264, required=True, help="Path for SugarCRM connection should be 'http://localhost/sugarcrm/soap.php' Format."),
     }
     _defaults = {
        'username' : 'admin',

@@ -638,7 +638,7 @@ def get_attachment(sugar_obj, cr, uid, val, model, File, context=None):
          mailgate_obj.write(cr, uid, [message_xml_id[0].res_id], {'attachment_ids': [(4, new_attachment_id)]})             
     return True    
     
-def import_history(sugar_obj, cr, uid, xml_id, model, context=None):
+def import_history(sugar_obj, cr, uid, context=None):
     if not context:
         context = {}
     map_attachment = {'id' : 'id',
@@ -655,7 +655,7 @@ def import_history(sugar_obj, cr, uid, xml_id, model, context=None):
     sugar_data = sugar.search(PortType, sessionid, 'Notes')
     for val in sugar_data:
          File = sugar.attachment_search(PortType, sessionid, 'Notes', val.get('id'))
-         model_ids = model_obj.search(cr, uid, [('name', 'like', xml_id)])
+         model_ids = model_obj.search(cr, uid, [('name', 'like', val.get('parent_id'))])
          for model in model_obj.browse(cr, uid, model_ids):
             val['res_id'] = model.res_id
             val['model'] = model.model
@@ -952,7 +952,11 @@ MAP_FIELDS = {'Opportunities':  #Object Mapping name
               'Bugs': 
                     {'dependencies' : ['Users', 'Projects', 'Project Tasks'],
                      'process' : import_bug,
-                    },                                                 
+                    },   
+              'Notes': 
+                    {'dependencies' : ['Users', 'Projects', 'Project Tasks', 'Accounts', 'Contacts', 'Leads', 'Opportunities', 'Meetings', 'Calls'],
+                     'process' : import_history,
+                    },                    
               'Resources': 
                     {'dependencies' : ['Users'],
                      'process' : import_resources,
@@ -977,6 +981,7 @@ class import_sugarcrm(osv.osv):
         'project': fields.boolean('Projects', help="If Projects is checked, SugarCRM Projects data imported in OpenERP Projects form"),
         'project_task': fields.boolean('Project Tasks', help="If Project Tasks is checked, SugarCRM Project Tasks data imported in OpenERP Project Tasks form"),
         'bug': fields.boolean('Bugs', help="If Bugs is checked, SugarCRM Bugs data imported in OpenERP Project Issues form"),
+        'attachment': fields.boolean('Attachments', help="If Attachments is checked, SugarCRM Notes data imported in OpenERP's Related module's History with attachment"),
         'username': fields.char('User Name', size=64),
         'password': fields.char('Password', size=24),
     }
@@ -992,7 +997,7 @@ class import_sugarcrm(osv.osv):
         'email' : True, 
         'project' : True,   
         'project_task': True,     
-        'bug': True
+        'bug': True,
     }
     
     def get_key(self, cr, uid, ids, context=None):
@@ -1024,7 +1029,9 @@ class import_sugarcrm(osv.osv):
             if current.project_task:
                 key_list.append('Project Tasks')
             if current.bug:
-                key_list.append('Bugs')                
+                key_list.append('Bugs')
+            if current.attachment:
+                key_list.append('Notes')                                    
         return key_list
 
     def import_all(self, cr, uid, ids, context=None):
