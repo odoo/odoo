@@ -159,11 +159,11 @@ class stock_partial_picking(osv.osv_memory):
                 if move_uom.category_id.id != process_uom.category_id.id:
                     raise osv.except_osv(_('Warning'), _('You can not process %s %s as it\'s category is different than category of %s of this move!') % (move.quantity, process_uom.name, move_uom.name))
                 if move_uom.factor < process_uom.factor:
-                    raise osv.except_osv(_('Warning'), _('You can not process in UOM"%s" which is smaller than UOM "%s" of the current move.') % (process_uom.name, move_uom.name))
+                    raise osv.except_osv(_('Warning'), _('You can not process in UOM "%s" which is smaller than UOM "%s" of the current move.') % (process_uom.name, move_uom.name))
 
                 toprocess = uom_obj._compute_qty(cr, uid, move.product_uom.id, move.quantity, move.move_id.product_uom.id)
                 if toprocess > move.move_id.product_qty:
-                    raise osv.except_osv(_('Warning'), _('You can not process "%s %s" as the qty is more than "%s %s" of respective move.') % (toprocess, process_uom.name, move.move_id.product_qty, move_uom.name))
+                    raise osv.except_osv(_('Warning'), _('You can not process "%s %s" as the qty is more than "%s %s" of respective move.') % (move.quantity, process_uom.name, move.move_id.product_qty, move_uom.name))
                 partial_datas['move%s' % (move.move_id.id)] = {
                     'product_id': move.id, 
                     'product_qty': move.quantity, 
