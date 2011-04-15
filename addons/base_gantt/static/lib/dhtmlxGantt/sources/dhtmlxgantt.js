@@ -348,7 +348,7 @@ GanttProject.prototype.create = function()
  *  @type: public
  *  @topic: 0
  */
-function GanttChart()
+function GanttChart(day_length)
 {
     this.Error = new GanttError();
     this.dhtmlXMLSenderObject = new dhtmlXMLSenderObject(this);
@@ -356,7 +356,7 @@ function GanttChart()
     //settings
     this.heightTaskItem = 12;
     this.dayInPixels = 24;
-    this.hoursInDay = 8;
+    this.hoursInDay = day_length;
     this._showTreePanel = true;
     this._showTooltip = true;
     this.isShowDescTask = false;
