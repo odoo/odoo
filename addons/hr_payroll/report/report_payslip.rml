@@ -370,17 +370,17 @@
           <td>
             <para style="P19">
               <font face="Helvetica">[[ h['code'] ]]</font>
-              <font face="Helvetica">[[ h['total'] and ( setTag('para','para',{'style':'terp_default_8'}))]]</font>
+              <font face="Helvetica">[[ h.get('total', False) and ( setTag('para','para',{'style':'terp_default_8'})) or removeParentNode('font') ]]</font>
             </para>
           </td>
           <td>
-            <para style="P20"><font face="Helvetica" color="white">[[ '..'*h['level'] ]]</font>[[ h['salary_head'] ]]<font face="Helvetica">[[ h['total'] and ( setTag('para','para',{'style':'terp_default_9'}))]]</font></para>
+            <para style="P20"><font face="Helvetica" color="white">[[ '..'*h['level'] ]]</font>[[ h['salary_head'] ]]<font face="Helvetica">[[ h.get('total', False) and ( setTag('para','para',{'style':'terp_default_9'})) or removeParentNode('font') ]]</font></para>
           </td>
           <td>
-            <para style="P24">[[ h['name'] ]]<font face="Helvetica">[[ h['total'] and ( setTag('para','para',{'style':'terp_default_8'}))]]</font></para>
+            <para style="P24">[[ h['name'] ]]<font face="Helvetica">[[ h.get('total', False) and ( setTag('para','para',{'style':'terp_default_8'})) or removeParentNode('font') ]]</font></para>
           </td>
           <td>
-            <para style="P22">[[ h['total'] ]] </para>
+            <para style="P22">[[ h['total'] ]]</para>
           </td>
         </tr>
       </blockTable>
