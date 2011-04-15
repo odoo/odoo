@@ -591,21 +591,37 @@ def get_bug_state(sugar_obj, cr, uid, val,context=None):
         },}
     state = state_dict['status'].get(val, '')
     return state
+    
+def get_issue_related_project(sugar_obj,cr,uid, PortType, sessionid, val, context=None):
+    if not context:
+        context={}
+    project_id = False        
+    model_obj = sugar_obj.pool.get('ir.model.data')
+    project_obj = sugar_obj.pool.get('project.project')
+    sugar_bug_project = sugar.relation_search(PortType, sessionid, 'Bugs', module_id=val.get('id'), related_module='Project', query=None, deleted=None)
+    for project_id in sugar_bug_project:
+        model_ids = find_mapped_id(sugar_obj, cr, uid, 'project.project', project_id, context)
+        if model_ids:
+            model_id = model_obj.browse(cr, uid, model_ids)[0].res_id
+            project_id = project_obj.browse(cr, uid, model_id).id
+    return project_id     
 
 def import_bug(sugar_obj, cr, uid, context=None):
     if not context:
         context = {}
     map_resource = {'id' : 'id',
                     'name': 'name',
+                    'project_id/.id':'project_id/.id',
                     'categ_id.id': 'categ_id.id',
                     'priority':'priority',
                     'description': 'description',
-                    'state': 'state'
+                    'state': 'state',
     }
     issue_obj = sugar_obj.pool.get('project.issue')
     PortType, sessionid = sugar.login(context.get('username', ''), context.get('password', ''), context.get('url',''))
     sugar_data = sugar.search(PortType, sessionid, 'Bugs')
     for val in sugar_data:
+        val['project_id/.id'] = get_issue_related_project(sugar_obj,cr,uid, PortType, sessionid, val, context)
         val['categ_id.id'] = get_category(sugar_obj, cr, uid, 'project.issue', val.get('type'))
         val['priority'] = get_bug_priority(sugar_obj, cr, uid, val.get('priority'),context)
         val['state'] = get_bug_state(sugar_obj, cr, uid, val.get('status'),context)

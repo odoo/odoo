@@ -27,6 +27,7 @@ from osv import osv
 from tools.translate import _
 import base64
 from lxml import etree
+import tools
 class LoginError(Exception): pass
 
 def login(username, password, url):
@@ -86,10 +87,9 @@ def user_get_attendee_list(portType, sessionid, module_name=None, module_id=None
   for child in eview:
       attendee_dict = {}
       for ch in child.getchildren():
-           attendee_dict[ch.tag] = ch.text
+           attendee_dict[ch.tag] = tools.ustr(ch.text)
       attendee_list.append(attendee_dict)
-  return attendee_list             
-          
+  return attendee_list         
 
 def search(portType, sessionid, module_name=None):
   se_req = get_entry_listRequest()
@@ -102,7 +102,7 @@ def search(portType, sessionid, module_name=None):
       for i in list:
           ans_dir = {}
           for j in i._name_value_list:
-              ans_dir[j._name.encode('utf-8')] = j._value.encode('utf-8')
+              ans_dir[tools.ustr(j._name)] = tools.ustr(j._value)
             #end for
           ans_list.append(ans_dir)
     #end for
