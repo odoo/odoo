@@ -228,6 +228,7 @@
                         <field name="stage_id"/>
                         <field name="channel_id" invisible="1"/>
                         <field name="type_id" invisible="1"/>
+                        <field name="subjects" invisible="1"/>
                         <button name="stage_previous" string="Previous Stage"
                             states="open,pending" type="object" icon="gtk-go-back" />
                         <button name="stage_next" string="Next Stage"
@@ -307,6 +308,7 @@
                                 domain="[]"
                                 help="Show Sales Team"/>
                         </field>
+                        <field name="subjects"/>
                         <newline/>
                         <group  expand="0" string="Extended Filters..." groups="base.group_extended">
                               <field name="stage_id" widget="selection" domain="[('type', '=', 'opportunity')]"/>

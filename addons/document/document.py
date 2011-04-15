@@ -279,10 +279,22 @@ class document_file(osv.osv):
         else:
             if vals.get('file_size'):
                 del vals['file_size']
-        if not self._check_duplication(cr, uid, vals):
-            raise osv.except_osv(_('ValidateError'), _('File name must be unique!'))
-        result = super(document_file, self).create(cr, uid, vals, context)
-        cr.commit() # ?
+        result = self._check_duplication(cr, uid, vals)
+        if not result:
+            domain = [
+                ('res_id', '=', vals['res_id']),
+                ('res_model', '=', vals['res_model']),
+                ('datas_fname', '=', vals['datas_fname']),
+            ]
+            attach_ids = self.search(cr, uid, domain, context=context)
+            super(document_file, self).write(cr, uid, attach_ids, 
+                                             {'datas' : vals['datas']},
+                                             context=context)
+            result = attach_ids[0]
+        else:
+            #raise osv.except_osv(_('ValidateError'), _('File name must be unique!'))
+            result = super(document_file, self).create(cr, uid, vals, context)
+            cr.commit() # ?
         return result
 
     def __get_partner_id(self, cr, uid, res_model, res_id, context=None):

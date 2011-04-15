@@ -98,6 +98,27 @@ class crm_lead(crm_case, osv.osv):
                 res[lead.id][field] = abs(int(duration))
         return res
 
+    def _history_search(self, cr, uid, obj, name, args, context=None):
+        res = []
+        msg_obj = self.pool.get('mailgate.message')
+        message_ids = msg_obj.search(cr, uid, [('history','=',True), ('name', args[0][1], args[0][2])], context=context)
+        lead_ids = self.search(cr, uid, [('message_ids', 'in', message_ids)], context=context)
+
+        if lead_ids:
+            return [('id', 'in', lead_ids)]
+        else:
+            return [('id', '=', '0')]
+
+    def _get_email_subject(self, cr, uid, ids, fields, args, context=None):
+        res = {}
+        for obj in self.browse(cr, uid, ids, context=context):
+            res[obj.id] = ''
+            for msg in obj.message_ids:
+                if msg.history:
+                    res[obj.id] = msg.name
+                    break
+        return res
+
     _columns = {
         # Overridden from res.partner.address:
         'partner_id': fields.many2one('res.partner', 'Partner', ondelete='set null',
@@ -288,17 +309,6 @@ class crm_lead(crm_case, osv.osv):
                     message = _("The stage of opportunity '%s' has been changed to '%s'.") % (case.name, stage_obj.name)
                 self.log(cr, uid, case.id, message)
         return super(crm_lead,self).write(cr, uid, ids, vals, context)
-
-    def stage_historize(self, cr, uid, ids, stage, context=None):
-        stage_obj = self.pool.get('crm.case.stage').browse(cr, uid, stage, context=context)
-        self.history(cr, uid, ids, _('Stage'), details=stage_obj.name)
-        for case in self.browse(cr, uid, ids, context=context):
-            if case.type == 'lead':
-                message = _("The stage of lead '%s' has been changed to '%s'.") % (case.name, stage_obj.name)
-            elif case.type == 'opportunity':
-                message = _("The stage of opportunity '%s' has been changed to '%s'.") % (case.name, stage_obj.name)
-            self.log(cr, uid, case.id, message)
-        return True
 
     def stage_next(self, cr, uid, ids, context=None):
         stage = super(crm_lead, self).stage_next(cr, uid, ids, context=context)

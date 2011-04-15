@@ -105,6 +105,7 @@ class project_issue_report(osv.osv):
                     (SELECT count(id) FROM email_message WHERE model='project.issue' AND res_id=c.id) AS email
                 FROM
                     project_issue c
+                WHERE c.categ_id IN (select id from crm_case_categ where object_id in (select id from ir_model where model = 'project.issue'))
             )""")
 
 project_issue_report()

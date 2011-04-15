@@ -184,7 +184,7 @@
                        <field colspan="4" name="email_cc" widget="char" size="512"/>
                    </group>
                     <field name="message_ids" colspan="4" nolabel="1" mode="tree,form">
-                        <tree string="Communication history">
+                        <tree string="History">
                             <field name="display_text" string="History Information"/>
                             <field name="history" invisible="1"/>
                             <button
@@ -255,6 +255,7 @@
                 <field name="type_id" invisible="1"/>
                 <field name="referred" invisible="1"/>
                 <field name="channel_id" invisible="1"/>
+                <field name="subjects" invisible="1"/>
 
                 <field name="stage_id"/>
                 <button name="stage_previous" string="Previous Stage"
@@ -335,6 +336,7 @@
                         domain="[('user_id','=', False)]"
                         help="Unassigned Leads" />
                 </field>
+                <field name="subjects"/>
                 <field name="section_id" widget="selection"
                     context="{'invisible_section': False}">
                     <filter icon="terp-personal+" groups="base.group_extended"
