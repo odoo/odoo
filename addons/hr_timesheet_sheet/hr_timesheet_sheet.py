@@ -484,14 +484,13 @@ class hr_timesheet_line(osv.osv):
     def _check_sheet_state(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
-        line = self.browse(cr, uid, ids, context=context)
-        for timesheet in line:
-            if timesheet.sheet_id and timesheet.sheet_id.state not in ('draft', 'new'):
+        for timesheet_line in self.browse(cr, uid, ids, context=context):
+            if timesheet_line.sheet_id and timesheet_line.sheet_id.state not in ('draft', 'new'):
                 return False
         return True
 
     _constraints = [
-        (_check_sheet_state, 'You can not modify an entry in a confirmed timesheet !.', ['state']),
+        (_check_sheet_state, 'You can not modify an entry in a Confirmed/Done timesheet !.', ['state']),
     ]
 
     def create(self, cr, uid, vals, *args, **kwargs):
