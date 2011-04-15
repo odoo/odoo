@@ -1207,13 +1207,15 @@ class sale_config_picking_policy(osv.osv_memory):
         stock_location_obj = self.pool.get('stock.location')
         location_id = ir_model_data_obj.get_object_reference(cr, uid, 'stock', 'stock_location_output')
         location_id = location_id and location_id[1] or False
+        chaining_type = False
         for o in self.browse(cr, uid, ids, context=context):
             ir_values_obj.set(cr, uid, 'default', False, 'picking_policy', ['sale.order'], o.picking_policy)
             ir_values_obj.set(cr, uid, 'default', False, 'order_policy', ['sale.order'], o.order_policy)
             if o.step == 'one':
-                stock_location_obj.write(cr, uid, [location_id], {'chained_auto_packing': 'transparent'})
-            if o.step == 'two':
-                stock_location_obj.write(cr, uid, [location_id], {'chained_auto_packing': 'manual'})
+                chaining_type = 'transparent'
+            else:
+                chaining_type = 'manual'
+            stock_location_obj.write(cr, uid, [location_id], {'chained_auto_packing': chaining_type})
 
 sale_config_picking_policy()
 
