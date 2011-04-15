@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+        <record model="ir.ui.view" id="email_compose_message_wizard_inherit_form">
+            <field name="name">email.compose.message.form</field>
+            <field name="model">email.compose.message</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="mail.email_compose_message_wizard_form"/>
+            <field name="arch" type="xml">
+	            <field name="res_id" position="replace">
+	                <field name="template_id" colspan="4"
+	                    on_change="on_change_template(model, res_id, template_id, context)"/>
+	                <field name="res_id"
+                        invisible="context.get('active_model','') != 'ir.ui.menu'"
+                        colspan="4" on_change="on_change_template(model, res_id, template_id, context)"/>
+	            </field>
+            </field>
+        </record>
+	</data>
+</openerp>

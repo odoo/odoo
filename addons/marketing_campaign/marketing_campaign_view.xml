@@ -267,7 +267,7 @@
                     <field name="type"/>
                     <group colspan='2' col='1'>
                         <field name="email_template_id" attrs="{'required':[('type','=','email')], 'invisible':[('type','!=','email')]}"
-                               context="{'default_object_name':object_id}" />
+                               context="{'default_model_id':object_id}" />
                         <group attrs="{'invisible':[('type','!=','report')]}" >
                             <field name="report_id" attrs="{'required':[('type','=','report')]}" context="{'object_id':object_id}"/>
                             <field name="report_directory_id" attrs="{'required':[('type','=','report')]}" />

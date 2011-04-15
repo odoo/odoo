@@ -105,10 +105,11 @@
                     </group>
                     <group colspan="2" col="3">
                         <separator string="Communication" colspan="4" col="3"/>
-                        <field name="email_from" widget="email"/><button string="Send Email"
-                        name="%(crm.action_crm_send_mail)d"
-                        context="{'mail':'new', 'model': 'crm.lead'}"
-                        icon="terp-mail-message-new" type="action" colspan="1"/>
+                        <field name="email_from" widget="email"/>
+                        <button string="Send Email"
+                            name="%(mail.action_email_compose_message_wizard)d"
+                            context="{'email_model':'crm.lead', 'email_res_id': active_id}"
+                            icon="terp-mail-message-new" type="action" colspan="1"/>
                         <newline/>
                         <field name="phone"/>
                         <newline/>
@@ -188,46 +189,46 @@
                             <field name="history" invisible="1"/>
                             <button
                                 string="Reply" attrs="{'invisible': [('history', '!=', True)]}"
-                                name="%(crm.action_crm_send_mail)d"
-                                context="{'mail':'reply', 'model': 'crm.lead', 'include_original' : True}"
+                                name="%(mail.action_email_compose_message_wizard)d"
+                                context="{'mail':'reply', 'message_id':active_id}"
                                 icon="terp-mail-replied" type="action" />
                         </tree>
-                            <form string="History">
-                                <group col="4" colspan="4">
-                                    <field name="email_from"/>
-                                    <field name="date"/>
-                                    <field name="email_to" size="512"/>
-                                    <field name="email_cc" size="512"/>
-                                    <field name="name" colspan="4" widget="char" attrs="{'invisible': [('history', '=', False)]}" size="512"/>
-                                    <field name="display_text" colspan="4"   attrs="{'invisible': [('history', '=', True)]}"/>
-                                    <field name="history" invisible="1"/>
-                                </group>
-                                <notebook colspan="4">
-                                    <page string="Details">
-                                        <field name="description" colspan="4" nolabel="1"/>
-                                        <group attrs="{'invisible': [('history', '!=', True)]}">
-                                            <button colspan="4"
-                                                    string="Reply"
-                                                    name="%(crm.action_crm_send_mail)d"
-                                                    context="{'mail':'reply', 'model': 'crm.lead', 'include_original' : True}"
-                                                    icon="terp-mail-replied" type="action" />
-                                            </group>
-
-                                    </page>
-                                    <page string="Attachments">
-                                        <field name="attachment_ids" colspan="4" readonly="1" nolabel="1"/>
-                                    </page>
-                                    </notebook>
-                                </form>
+                        <form string="Communication history">
+                            <group col="4" colspan="4">
+                                <field name="email_from"/>
+                                <field name="date"/>
+                                <field name="email_to" widget="char" size="512"/>
+                                <field name="email_cc" widget="char" size="512"/>
+                                <field name="subject" colspan="4" widget="char" size="512"/>
+                                <field name="history" invisible="1"/>
+                            </group>
+                            <notebook colspan="4">
+                                <page string="Details">
+                                    <group attrs="{'invisible': [('history', '!=', True)]}">
+                                        <field name="body" colspan="4" nolabel="1" height="250"/>
+                                        <button colspan="4" string="Reply"
+                                            name="%(mail.action_email_compose_message_wizard)d"
+                                            context="{'mail':'reply', 'message_id':active_id}"
+                                            icon="terp-mail-replied" type="action"/>
+                                    </group>
+                                    <group attrs="{'invisible': [('history', '=', True)]}">
+                                        <field name="display_text" colspan="4" nolabel="1"  height="250"/>
+                                    </group>
+                                </page>
+                                <page string="Attachments">
+                                    <field name="attachment_ids" colspan="4" readonly="1" nolabel="1"/>
+                                </page>
+                            </notebook>
+                        </form>
                     </field>
                     <button string="Add Internal Note"
                         name="%(crm.action_crm_add_note)d"
                         context="{'model': 'crm.lead' }"
                         icon="terp-document-new" type="action" />
                     <button string="Send New Email"
-                        name="%(crm.action_crm_send_mail)d"
-                        context="{'mail':'new', 'model': 'crm.lead'}"
-                        icon="terp-mail-message-new" type="action" />
+                        name="%(mail.action_email_compose_message_wizard)d"
+                        context="{'email_model':'crm.lead', 'email_res_id': active_id}"
+                        icon="terp-mail-message-new" type="action"/>
                  </page>
                 </notebook>
             </form>

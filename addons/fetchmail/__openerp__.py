@@ -24,7 +24,7 @@
 {
     "name" : "Fetchmail Server",
     "version" : "1.0",
-    "depends" : ["base", 'mail_gateway'],
+    "depends" : ["base", 'mail'],
     "author" : "OpenERP SA",
     "category": 'Tools',
     "description": """

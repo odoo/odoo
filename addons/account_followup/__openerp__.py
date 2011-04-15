@@ -44,7 +44,7 @@ Note that if you want to check the followup level for a given partner/account en
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'images': ['images/follow_ups.jpeg','images/send_followups.jpeg'],
-    'depends': ['account'],
+    'depends': ['account', 'mail'],
     'init_xml': [],
     'update_xml': [
         'security/ir.model.access.csv',

@@ -102,6 +102,7 @@ class survey_send_invitation(osv.osv_memory):
         partner_ids = record['partner_ids']
         user_ref= self.pool.get('res.users')
         survey_ref= self.pool.get('survey')
+        email_message_obj = self.pool.get('email.message')
 
         model_data_obj = self.pool.get('ir.model.data')
         group_id = model_data_obj._get_id(cr, uid, 'base', 'group_survey_user')
@@ -151,8 +152,8 @@ class survey_send_invitation(osv.osv_memory):
                     mail = record['mail']%{'login':addr.email, 'passwd':user.password, \
                                                 'name' : addr.name}
                     if record['send_mail_existing']:
-                        tools.email_send(record['mail_from'], [addr.email] , \
-                                         record['mail_subject_existing'] , mail)
+                        email_message_obj.schedule_with_attach(cr, uid, record['mail_from'], [addr.email] , \
+                                         record['mail_subject_existing'] , mail, model='survey.send.invitation')
                         existing+= "- %s (Login: %s,  Password: %s)\n" % (user.name, addr.email, \
                                                                           user.password)
                     continue
@@ -162,8 +163,8 @@ class survey_send_invitation(osv.osv_memory):
                         mail = record['mail']%{'login': user_email.login, \
                                                         'passwd': user_email.password, 'name': addr.name}
                         if record['send_mail_existing']:
-                            tools.email_send(record['mail_from'], [addr.email],\
-                                                  record['mail_subject_existing'], mail)
+                            email_message_obj.schedule_with_attach(cr, uid, record['mail_from'], [addr.email],\
+                                                  record['mail_subject_existing'], mail, model='survey.send.invitation')
                             res_user+= "- %s (Login: %s,  Password: %s)\n" % \
                                  (user_email.name, user_email.login, user_email.password)
                     continue
@@ -171,8 +172,8 @@ class survey_send_invitation(osv.osv_memory):
                 out+= addr.email + ',' + passwd + '\n'
                 mail= record['mail'] % {'login' : addr.email, 'passwd' : passwd, 'name' : addr.name}
                 if record['send_mail']:
-                    ans = tools.email_send(record['mail_from'], [addr.email], \
-                                           record['mail_subject'], mail,attach = attachments)
+                    ans = email_message_obj.schedule_with_attach(cr, uid, record['mail_from'], [addr.email], \
+                                           record['mail_subject'], mail, model='survey.send.invitation', attach = attachments)
 
                     if ans:
                         res_data = {'name': addr.name or 'Unknown',

@@ -56,7 +56,7 @@ class crm_helpdesk_report(osv.osv):
         'date_deadline': fields.date('Deadline', select=True),
         'priority': fields.selection([('5', 'Lowest'), ('4', 'Low'), \
                     ('3', 'Normal'), ('2', 'High'), ('1', 'Highest')], 'Priority'),
-        'canal_id': fields.many2one('res.partner.canal', 'Channel'), 
+        'canal_id': fields.many2one('res.partner.canal', 'Channel'),
         'categ_id': fields.many2one('crm.case.categ', 'Category', \
                             domain="[('section_id','=',section_id),\
                             ('object_id.model', '=', 'crm.helpdesk')]"),
@@ -97,7 +97,7 @@ class crm_helpdesk_report(osv.osv):
                     c.planned_cost,
                     count(*) as nbr,
                     extract('epoch' from (c.date_closed-c.create_date))/(3600*24) as  delay_close,
-                    (SELECT count(id) FROM mailgate_message WHERE model='crm.helpdesk' AND res_id=c.id AND history=True) AS email,
+                    (SELECT count(id) FROM email_message WHERE model='crm.helpdesk' AND res_id=c.id AND history=True) AS email,
                     abs(avg(extract('epoch' from (c.date_deadline - c.date_closed)))/(3600*24)) as delay_expected
                 from
                     crm_helpdesk c

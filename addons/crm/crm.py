@@ -308,8 +308,8 @@ class crm_case(object):
             return {'value': {'phone': address.phone}}
 
     def _history(self, cr, uid, cases, keyword, history=False, subject=None, email=False, details=None, email_from=False, message_id=False, attach=[], context=None):
-        mailgate_pool = self.pool.get('mailgate.thread')
-        return mailgate_pool.history(cr, uid, cases, keyword, history=history,\
+        thread_pool = self.pool.get('email.thread')
+        return thread_pool.history(cr, uid, cases, keyword, history=history,\
                                        subject=subject, email=email, \
                                        details=details, email_from=email_from,\
                                        message_id=message_id, attach=attach, \
@@ -452,12 +452,13 @@ class crm_case(object):
         @param ids: List of case's IDs to remind
         @param context: A standard dictionary for contextual values
         """
+        email_message_obj = self.pool.get('email.message')
         for case in self.browse(cr, uid, ids, context=context):
             if not destination and not case.email_from:
                 raise osv.except_osv(_('Error!'), ("Partner Email is not specified in Case"))
             if not case.user_id.user_email:
                raise osv.except_osv(_('Error!'), ("User Email is not specified in Case"))
-            
+
             if destination and case.section_id.user_id:
                 case_email = case.section_id.user_id.user_email
             else:
@@ -485,19 +486,19 @@ class crm_case(object):
                 attach_to_send = self.pool.get('ir.attachment').read(cr, uid, attach_ids, ['datas_fname', 'datas'])
                 attach_to_send = map(lambda x: (x['datas_fname'], base64.decodestring(x['datas'])), attach_to_send)
 
-                # Send an email
-            subject = "Reminder: [%s] %s" % (str(case.id), case.name,)
-            tools.email_send(
+            # Send an email
+            subject = "Reminder: [%s] %s" % (str(case.id), case.name, )
+            email_message_obj.schedule_with_attach(cr, uid,
                 src,
                 [dest],
                 subject,
                 body,
-                reply_to=case.section_id.reply_to or '',
+                model='crm.case',
+                reply_to=case.section_id.reply_to,
                 openobject_id=str(case.id),
                 attach=attach_to_send
             )
             self._history(cr, uid, [case], _('Send'), history=True, subject=subject, email=dest, details=body, email_from=src)
-
         return True
 
     def _check(self, cr, uid, ids=False, context=None):
@@ -537,7 +538,7 @@ class crm_case(object):
     def format_mail(self, obj, body):
         return self.pool.get('base.action.rule').format_mail(obj, body)
 
-    def message_followers(self, cr, uid, ids, context=None):
+    def thread_followers(self, cr, uid, ids, context=None):
         """ Get a list of emails of the people following this thread
         """
         res = {}

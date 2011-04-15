@@ -178,14 +178,14 @@ class XMLRpcConn(object):
             model = rec[0]
             res_id = rec[1]
             #Check if mailgate installed
-            object_id = execute ( conn,'execute',self._dbname,int(self._uid),self._pwd,'ir.model','search',[('model','=','mailgate.message')])
+            object_id = execute ( conn,'execute',self._dbname,int(self._uid),self._pwd,'ir.model','search',[('model','=','email.message')])
             if not object_id:
             	win32ui.MessageBox("Mailgate is not installed on your configured database '%s' !!\n\nPlease install it to archive the mail."%(self._dbname),"Mailgate not installed",win32con.MB_ICONERROR)
             	return
             object_ids = execute ( conn,'execute',self._dbname,int(self._uid),self._pwd,'ir.model','search',[('model','=',model)])
             object_name  = execute( conn,'execute',self._dbname,int(self._uid),self._pwd,'ir.model','read',object_ids,['name'])[0]['name']
             #Reading the Object ir.model Name
-            ext_ids = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'mailgate.message','search',[('message_id','=',message_id),('model','=',model),('res_id','=',res_id)])
+            ext_ids = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'email.message','search',[('message_id','=',message_id),('model','=',model),('res_id','=',res_id)])
             if ext_ids:
             	name = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,model,'read',res_id,['name'])['name']
             	ext_msg += """This mail is already archived to {0} '{1}'.\n""".format(object_name,name)
@@ -208,7 +208,7 @@ class XMLRpcConn(object):
             if attachments:
             	result = self.MakeAttachment([rec], mail)
             attachment_ids = result.get(model, {}).get(res_id, [])
-            execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'email.server.tools','history',model, res_id, msg, attachment_ids)
+            execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'email.thread','history',model, res_id, msg, attachment_ids)
             new_msg += """- {0} : {1}\n""".format(object_name,str(rec[2]))
             flag = True
 
@@ -298,7 +298,7 @@ class XMLRpcConn(object):
             endCut = message_id.find(">")
             message_id = message_id[startCut:endCut+1]
             email.replace_header('Message-Id',message_id)
-            id = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'email.server.tools','process_email',section, str(email))
+            id = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'email.thread','process_email',section, str(email))
             if id > 0:
             	flag = True
             	return flag
@@ -456,17 +456,17 @@ class XMLRpcConn(object):
         import win32ui
     	conn = xmlrpclib.ServerProxy(self._uri+ '/xmlrpc/object')
     	res_vals = []
-    	mail_id = execute( conn, 'execute', self._dbname, int(self._uid), self._pwd, 'mailgate.message', 'search', [('message_id','=',message_id)])
+    	mail_id = execute( conn, 'execute', self._dbname, int(self._uid), self._pwd, 'email.message', 'search', [('message_id','=',message_id)])
         ref_mail_id = None
     	if not mail_id:
-            ref_mail_id = execute( conn, 'execute', self._dbname, int(self._uid), self._pwd, 'mailgate.message', 'search', [('references','=',message_id)])
+            ref_mail_id = execute( conn, 'execute', self._dbname, int(self._uid), self._pwd, 'email.message', 'search', [('references','=',message_id)])
             if ref_mail_id:
-                address = execute( conn, 'execute', self._dbname, int(self._uid), self._pwd, 'mailgate.message','read',ref_mail_id[0],['model','res_id'])
+                address = execute( conn, 'execute', self._dbname, int(self._uid), self._pwd, 'email.message','read',ref_mail_id[0],['model','res_id'])
                 for key, vals in address.items():
                     res_vals.append([key,vals])
                 return res_vals
             return None
-    	address = execute( conn, 'execute', self._dbname, int(self._uid), self._pwd, 'mailgate.message','read',mail_id[0],['model','res_id'])
+    	address = execute( conn, 'execute', self._dbname, int(self._uid), self._pwd, 'email.message','read',mail_id[0],['model','res_id'])
     	for key, vals in address.items():
     		res_vals.append([key,vals])
     	return res_vals

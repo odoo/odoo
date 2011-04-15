@@ -24,12 +24,13 @@ import base64
 import email
 import tools
 import binascii
-class email_server_tools(osv.osv_memory):
-    _inherit = "email.server.tools"
+class email_thread(osv.osv):
+    _inherit = "email.thread"
     def history_message(self, cr, uid, model, res_id, message, context=None):
         #@param message: string of mail which is read from EML File
         attachment_pool = self.pool.get('ir.attachment')
-        msg = self.parse_message(message)
+        email_message_pool = self.pool.get('email.message')
+        msg = email_message_pool.parse_message(message)
         attachments = msg.get('attachments', [])
         att_ids = []
         for attachment in attachments:
@@ -43,91 +44,7 @@ class email_server_tools(osv.osv_memory):
             }
             att_ids.append(attachment_pool.create(cr, uid, data_attach))
         return self.history(cr, uid, model, res_id, msg, att_ids)
-
-    def parse_message(self, message):
-        #TOCHECK: put this function in mailgateway module
-        if isinstance(message, unicode):
-            message = message.encode('utf-8')
-        msg_txt = email.message_from_string(message)
-        message_id = msg_txt.get('message-id', False)
-        msg = {}
-        fields = msg_txt.keys()
-        msg['id'] = message_id
-        msg['message-id'] = message_id
-        if 'Subject' in fields:
-            msg['subject'] = self._decode_header(msg_txt.get('Subject'))
-
-        if 'Content-Type' in fields:
-            msg['content-type'] = msg_txt.get('Content-Type')
-
-        if 'From' in fields:
-            msg['from'] = self._decode_header(msg_txt.get('From'))
-
-        if 'Delivered-To' in fields:
-            msg['to'] = self._decode_header(msg_txt.get('Delivered-To'))
-
-        if 'CC' in fields:
-            msg['cc'] = self._decode_header(msg_txt.get('CC'))
-
-        if 'Reply-to' in fields:
-            msg['reply'] = self._decode_header(msg_txt.get('Reply-To'))
-
-        if 'Date' in fields:
-            msg['date'] = self._decode_header(msg_txt.get('Date'))
-
-        if 'Content-Transfer-Encoding' in fields:
-            msg['encoding'] = msg_txt.get('Content-Transfer-Encoding')
-
-        if 'References' in fields:
-            msg['references'] = msg_txt.get('References')
-
-        if 'In-Reply-To' in fields:
-            msg['in-reply-to'] = msg_txt.get('In-Reply-To')
-
-        if 'X-Priority' in fields:
-            msg['priority'] = msg_txt.get('X-Priority', '3 (Normal)').split(' ')[0]
-
-        if not msg_txt.is_multipart() or 'text/plain' in msg.get('Content-Type', ''):
-            encoding = msg_txt.get_content_charset()
-            body = msg_txt.get_payload(decode=True)
-            msg['body'] = tools.ustr(body, encoding)
-
-        attachments = {}
-        has_plain_text = False
-        if msg_txt.is_multipart() or 'multipart/alternative' in msg.get('content-type', ''):
-            body = ""
-            for part in msg_txt.walk():
-                if part.get_content_maintype() == 'multipart':
-                    continue
-
-                encoding = part.get_content_charset()
-                filename = part.get_filename()
-                if part.get_content_maintype()=='text':
-                    content = part.get_payload(decode=True)
-                    if filename:
-                        attachments[filename] = content
-                    elif not has_plain_text:
-                        # main content parts should have 'text' maintype
-                        # and no filename. we ignore the html part if
-                        # there is already a plaintext part without filename,
-                        # because presumably these are alternatives.
-                        content = tools.ustr(content, encoding)
-                        if part.get_content_subtype() == 'html':
-                            body = tools.ustr(tools.html2plaintext(content))
-                        elif part.get_content_subtype() == 'plain':
-                            body = content
-                            has_plain_text = True
-                elif part.get_content_maintype() in ('application', 'image'):
-                    if filename :
-                        attachments[filename] = part.get_payload(decode=True)
-                    else:
-                        res = part.get_payload(decode=True)
-                        body += tools.ustr(res, encoding)
-
-            msg['body'] = body
-            msg['attachments'] = attachments
-        return msg
-email_server_tools()
+email_thread()
 
 class thunderbird_partner(osv.osv_memory):
     _name = "thunderbird.partner"
@@ -149,10 +66,10 @@ class thunderbird_partner(osv.osv_memory):
         ref_ids = str(dictcreate.get('ref_ids')).split(';')
         msg = dictcreate.get('message')
         mail = msg
-        msg = self.pool.get('email.server.tools').parse_message(msg)
-        server_tools_pool = self.pool.get('email.server.tools')
+        msg = self.pool.get('email.message').parse_message(msg)
+        thread_pool = self.pool.get('email.thread')
         message_id = msg.get('message-id', False)
-        msg_pool = self.pool.get('mailgate.message')
+        msg_pool = self.pool.get('email.message')
         msg_ids = []
         res = {}
         res_ids = []
@@ -191,7 +108,7 @@ class thunderbird_partner(osv.osv_memory):
                 res['datas'] = base64.b64encode(mail)
                 res['res_id'] = res_id
                 obj_attch.create(cr, uid, res)
-            server_tools_pool.history_message(cr, uid, model, res_id, msg_new)
+            thread_pool.history_message(cr, uid, model, res_id, msg_new)
             res_ids.append(res_id)
         return len(res_ids)
 
@@ -199,7 +116,7 @@ class thunderbird_partner(osv.osv_memory):
         dictcreate = dict(vals)
         model = str(dictcreate.get('model'))
         message = dictcreate.get('message')
-        return self.pool.get('email.server.tools').process_email(cr, uid, model, message, attach=True, context=None)
+        return self.pool.get('email.thread').process_email(cr, uid, model, message, attach=True, context=None)
 
     def search_message(self, cr, uid, message, context=None):
         #@param message: string of mail which is read from EML File
@@ -207,13 +124,13 @@ class thunderbird_partner(osv.osv_memory):
         references = []
         dictcreate = dict(message)
         msg = dictcreate.get('message')
-        msg = self.pool.get('email.server.tools').parse_message(msg)
+        msg = self.pool.get('email.message').parse_message(msg)
         message_id = msg.get('message-id')
         refs =  msg.get('references',False)
         references = False
         if refs:
             references = refs.split()
-        msg_pool = self.pool.get('mailgate.message')
+        msg_pool = self.pool.get('email.message')
         model = ''
         res_id = 0
         if message_id:

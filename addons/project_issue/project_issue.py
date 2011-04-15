@@ -26,7 +26,9 @@ from tools.translate import _
 import binascii
 import time
 import tools
+from crm import wizard
 
+wizard.email_compose_message.email_model.append('project.issue')
 
 class project_issue_version(osv.osv):
     _name = "project.issue.version"
@@ -43,9 +45,9 @@ project_issue_version()
 class project_issue(crm.crm_case, osv.osv):
     _name = "project.issue"
     _description = "Project Issue"
-    _order = "priority, create_date desc"
-    _inherit = ['mailgate.thread']
-    
+    _order = "priority, id desc"
+    _inherit = ['email.thread']
+
     def case_open(self, cr, uid, ids, *args):
         """
         @param self: The object pointer
@@ -144,7 +146,7 @@ class project_issue(crm.crm_case, osv.osv):
         issues = []
         issue_pool = self.pool.get('project.issue')
         for task in self.pool.get('project.task').browse(cr, uid, ids, context=context):
-            issues += issue_pool.search(cr, uid, [('task_id','=',task.id)])            
+            issues += issue_pool.search(cr, uid, [('task_id','=',task.id)])
         return issues
 
     def _get_issue_work(self, cr, uid, ids, context=None):
@@ -162,8 +164,8 @@ class project_issue(crm.crm_case, osv.osv):
             progress = 0.0
             if issue.task_id:
                 progress = task_pool._hours_get(cr, uid, [issue.task_id.id], field_names, args, context=context)[issue.task_id.id]['progress']
-            res[issue.id] = {'progress' : progress}     
-        return res        
+            res[issue.id] = {'progress' : progress}
+        return res
 
     _columns = {
         'id': fields.integer('ID'),
@@ -212,8 +214,13 @@ class project_issue(crm.crm_case, osv.osv):
         'working_hours_open': fields.function(_compute_day, string='Working Hours to Open the Issue', \
                                 method=True, multi='compute_day', type="float", store=True),
         'working_hours_close': fields.function(_compute_day, string='Working Hours to Close the Issue', \
+<<<<<<< TREE
                                 method=True, multi='compute_day', type="float", store=True),
         'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
+=======
+                                method=True, multi='working_days_close', type="float", store=True),
+        'message_ids': fields.one2many('email.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
+>>>>>>> MERGE-SOURCE
         'date_action_last': fields.datetime('Last Action', readonly=1),
         'date_action_next': fields.datetime('Next Action', readonly=1),
         'progress': fields.function(_hours_get, method=True, string='Progress (%)', multi='hours', group_operator="avg", help="Computed as: Time Spent / Total Time.",
@@ -383,9 +390,9 @@ class project_issue(crm.crm_case, osv.osv):
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks
         """
-        if context is None: 
+        if context is None:
             context = {}
-        mailgate_pool = self.pool.get('email.server.tools')
+        thread_pool = self.pool.get('email.thread')
 
         subject = msg.get('subject') or _('No Title')
         body = msg.get('body')
@@ -402,28 +409,15 @@ class project_issue(crm.crm_case, osv.osv):
         if msg.get('priority', False):
             vals['priority'] = priority
 
-        res = mailgate_pool.get_partner(cr, uid, msg.get('from'))
+        res = thread_pool.get_partner(cr, uid, msg.get('from'))
         if res:
             vals.update(res)
         context.update({'state_to' : 'draft'})
         res = self.create(cr, uid, vals, context=context)
         self.convert_to_bug(cr, uid, [res], context=context)
-
-        attachents = msg.get('attachments', [])
-        for attactment in attachents or []:
-            data_attach = {
-                'name': attactment,
-                'datas': binascii.b2a_base64(str(attachents.get(attactment))),
-                'datas_fname': attactment,
-                'description': 'Mail attachment',
-                'res_model': self._name,
-                'res_id': res,
-            }
-            self.pool.get('ir.attachment').create(cr, uid, data_attach)
-
         return res
 
-    def message_update(self, cr, uid, ids, vals=None, msg="", default_act='pending', context=None):
+    def message_update(self, cr, uid, ids, msg, vals=None, default_act='pending', context=None):
         """
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
@@ -465,18 +459,6 @@ class project_issue(crm.crm_case, osv.osv):
         vals.update(vls)
         res = self.write(cr, uid, ids, vals)
         return res
-
-    def msg_send(self, cr, uid, id, *args, **argv):
-
-        """ Send The Message
-            @param self: The object pointer
-            @param cr: the current row, from the database cursor,
-            @param uid: the current user’s ID for security checks,
-            @param ids: List of email’s IDs
-            @param *args: Return Tuple Value
-            @param **args: Return Dictionary of Keyword Value
-        """
-        return True
 
     def copy(self, cr, uid, id, default=None, context=None):
         issue = self.read(cr, uid, id, ['name'], context=context)

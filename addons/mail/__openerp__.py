@@ -20,24 +20,27 @@
 ##############################################################################
 
 {
-    'name': 'Email Gateway System',
+    'name': 'Email System',
     'version': '1.0',
     'category': 'Tools',
     'description': """
-The generic email gateway system allows to send and receive emails.
+The generic email system allows to send and receive emails.
 ===================================================================
 
-    * History of emails
-    * Easy integration with any module""",
+    * SMTP Server Configuration
+    * Provide API for Sending Messages
+    * Store all emails releated messages""",
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
-    'depends': ['base'],
+    'depends': ['base', 'base_tools'],
     'init_xml': [],
     'update_xml': [
-        "mail_gateway_view.xml",
+        "wizard/email_compose_message_view.xml",
+        "email_view.xml",
+        "email_thread_view.xml",
         "res_partner_view.xml",
-        'security/ir.model.access.csv'
-
+        'security/ir.model.access.csv',
+        'email_data.xml',
     ],
     'demo_xml': [],
     'installable': True,

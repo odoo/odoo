@@ -411,7 +411,7 @@ property or property parameter."),
         cal = vobject.iCalendar()
         event = cal.add('vevent')
         if not event_obj.date_deadline or not event_obj.date:
-              raise osv.except_osv(_('Warning !'),_("Couldn't Invite because date is not specified!"))     
+              raise osv.except_osv(_('Warning !'),_("Couldn't Invite because date is not specified!"))
         event.add('created').value = ics_datetime(time.strftime('%Y-%m-%d %H:%M:%S'))
         event.add('dtstart').value = ics_datetime(event_obj.date)
         event.add('dtend').value = ics_datetime(event_obj.date_deadline)
@@ -456,7 +456,7 @@ property or property parameter."),
             trigger.value = delta
             # Compute other details
             valarm.add('DESCRIPTION').value = alarm_data['name'] or 'OpenERP'
-                
+
         for attendee in event_obj.attendee_ids:
             attendee_add = event.add('attendee')
             attendee_add.params['CUTYPE'] = [str(attendee.cutype)]
@@ -480,6 +480,7 @@ property or property parameter."),
             context = {}
 
         company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.name
+        email_message_obj = self.pool.get('email.message')
         for att in self.browse(cr, uid, ids, context=context):
             sign = att.sent_by_uid and att.sent_by_uid.signature or ''
             sign = '<br>'.join(sign and sign.split('\n') or [])
@@ -506,11 +507,12 @@ property or property parameter."),
                 body = html_invitation % body_vals
                 if mail_to and email_from:
                     attach = self.get_ics_file(cr, uid, res_obj, context=context)
-                    tools.email_send(
+                    email_message_obj.schedule_with_attach(cr, uid,
                         email_from,
                         mail_to,
                         sub,
                         body,
+                        model='calendar.attendee',
                         attach=attach and [('invitation.ics', attach)] or None,
                         subtype='html',
                         reply_to=email_from
@@ -674,7 +676,7 @@ true, it will allow you to hide the event alarm information without removing it.
                     new_res_alarm = alarm_ids[0]
                 cr.execute('UPDATE %s ' % model_obj._table + \
                             ' SET base_calendar_alarm_id=%s, alarm_id=%s ' \
-                            ' WHERE id=%s', 
+                            ' WHERE id=%s',
                             (cal_alarm.id, new_res_alarm, data.id))
 
             self.do_alarm_unlink(cr, uid, [data.id], model)
@@ -809,6 +811,7 @@ class calendar_alarm(osv.osv):
         return True # XXX FIXME REMOVE THIS AFTER FIXING get_recurrent_dates!!
         if context is None:
             context = {}
+        email_message_obj = self.pool.get('email.message')
         current_datetime = datetime.now()
         request_obj = self.pool.get('res.request')
         alarm_ids = self.search(cr, uid, [('state', '!=', 'done')], context=context)
@@ -890,11 +893,12 @@ From:
                     for att in alarm.attendee_ids:
                         mail_to.append(att.user_id.address_id.email)
                     if mail_to:
-                        tools.email_send(
+                        email_message_obj.schedule_with_attach(cr, uid,
                             tools.config.get('email_from', False),
                             mail_to,
                             sub,
-                            body
+                            body,
+                            model='calendar.alarm'
                         )
             if next_trigger_date:
                 update_vals.update({'trigger_date': next_trigger_date})
@@ -966,7 +970,7 @@ class calendar_event(osv.osv):
             value['date_deadline'] = end.strftime("%Y-%m-%d %H:%M:%S")
         elif end_date and duration and not allday:
             # we have both, keep them synchronized:
-            # set duration based on end_date (arbitrary decision: this avoid 
+            # set duration based on end_date (arbitrary decision: this avoid
             # getting dates like 06:31:48 instead of 06:32:00)
             end = datetime.strptime(end_date, "%Y-%m-%d %H:%M:%S")
             diff = end - start
@@ -1130,7 +1134,7 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         FREQ=MONTHLY;INTERVAL=2;COUNT=10;BYDAY=-1SU'),
         'rrule_type': fields.selection([('none', ''), ('daily', 'Daily'), \
                             ('weekly', 'Weekly'), ('monthly', 'Monthly'), \
-                            ('yearly', 'Yearly'),], 
+                            ('yearly', 'Yearly'),],
                             'Recurrency', states={'done': [('readonly', True)]},
                             help="Let the event automatically repeat at that interval"),
         'alarm_id': fields.many2one('res.alarm', 'Alarm', states={'done': [('readonly', True)]},
@@ -1148,7 +1152,7 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
                                 ('weekly', 'Weeks'),
                                 ('monthly', 'Months'),
                                 ('yearly', 'Years'), ], 'Frequency'),
-          
+
         'end_type' : fields.selection([('forever', 'Forever'), ('count', 'Fix amout of times'), ('end_date','End date')], 'Way to end reccurency'),
         'interval': fields.integer('Repeat every', help="Repeat every (Days/Week/Month/Year)"),
         'count': fields.integer('Repeat', help="Repeat x times"),
@@ -1159,7 +1163,7 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         'fr': fields.boolean('Fri'),
         'sa': fields.boolean('Sat'),
         'su': fields.boolean('Sun'),
-        'select1': fields.selection([('date', 'Date of month'), 
+        'select1': fields.selection([('date', 'Date of month'),
                                     ('day', 'Day of month')], 'Option'),
         'day': fields.integer('Date of month'),
         'week_list': fields.selection([('MO', 'Monday'), ('TU', 'Tuesday'), \
@@ -1176,8 +1180,8 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         'allday': fields.boolean('All Day', states={'done': [('readonly', True)]}),
         'active': fields.boolean('Active', help="If the active field is set to \
          true, it will allow you to hide the event alarm information without removing it."),
-        'recurrency': fields.boolean('Recurrent', help="Recurrent Meeting"),                                    
-        'edit_all': fields.boolean('Edit All', help="Edit all Occurrences  of recurrent Meeting."),        
+        'recurrency': fields.boolean('Recurrent', help="Recurrent Meeting"),
+        'edit_all': fields.boolean('Edit All', help="Edit all Occurrences  of recurrent Meeting."),
     }
     def default_organizer(self, cr, uid, context=None):
         user_pool = self.pool.get('res.users')
@@ -1204,12 +1208,12 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
     def onchange_edit_all(self, cr, uid, ids, rrule_type,edit_all, context=None):
         if not context:
             context = {}
-    
+
         value = {}
         if edit_all and rrule_type:
             for id in ids:
               base_calendar_id2real_id(id)
-        return value              
+        return value
 
     def modify_all(self, cr, uid, event_ids, defaults, context=None, *args):
         """
@@ -1342,7 +1346,7 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         freq=datas.get('rrule_type')
         if  freq == 'none':
             return ''
-            
+
         interval_srting = datas.get('interval') and (';INTERVAL=' + str(datas.get('interval'))) or ''
 
         if freq == 'weekly':
@@ -1358,7 +1362,7 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
             elif datas.get('select1')=='date':
                 monthstring = ';BYMONTHDAY=' + str(datas.get('day'))
 
-       
+
         if datas.get('end_date'):
             datas['end_date'] = ''.join((re.compile('\d')).findall(datas.get('end_date'))) + 'T235959Z'
         enddate = (datas.get('count') and (';COUNT=' + str(datas.get('count'))) or '') +\
@@ -1403,7 +1407,7 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
 
         res = self.get_recurrent_ids(cr, uid, res, start_date, until_date, limit)
         return res
-    
+
 
     def get_edit_all(self, cr, uid, id, vals=None):
         """
@@ -1414,10 +1418,10 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         if(vals and 'edit_all' in vals): #we jsut check edit_all
             return vals['edit_all']
         else: #it's a recurrent event and edit_all is already check
-            return meeting['recurrency'] and meeting['edit_all'] 
+            return meeting['recurrency'] and meeting['edit_all']
 
 
-        
+
 
     def write(self, cr, uid, ids, vals, context=None, check=True, update_check=True):
         """
@@ -1440,12 +1444,12 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         res = False
         for event_id in select:
             real_event_id = base_calendar_id2real_id(event_id)
-            
+
 
             if(self.get_edit_all(cr, uid, event_id, vals=vals)):
                 event_id = real_event_id
-            
-            
+
+
             if len(str(event_id).split('-')) > 1:
                 data = self.read(cr, uid, event_id, ['date', 'date_deadline', \
                                                     'rrule', 'duration', 'exdate'])
@@ -1459,15 +1463,15 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
                         'edit_all': False,
                         'recurrency' : False,
                         })
-                    
+
                     new_id = self.copy(cr, uid, real_event_id, default=data, context=context)
-                    
+
                     date_new = event_id.split('-')[1]
                     date_new = time.strftime("%Y%m%dT%H%M%S", \
                                  time.strptime(date_new, "%Y%m%d%H%M%S"))
                     exdate = (data['exdate'] and (data['exdate'] + ',')  or '') + date_new
                     res = self.write(cr, uid, [real_event_id], {'exdate': exdate})
-                    
+
                     context.update({'active_id': new_id, 'active_ids': [new_id]})
                     continue
             if not real_event_id in new_ids:
@@ -1590,10 +1594,10 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         res = False
         for event_datas in self.read(cr, uid, ids, ['date', 'rrule', 'exdate'], context=context):
             event_id = event_datas['id']
-            
+
             if self.get_edit_all(cr, uid, event_id, vals=None):
                 event_id = base_calendar_id2real_id(event_id)
-            
+
             if isinstance(event_id, (int, long)):
                 res = super(calendar_event, self).unlink(cr, uid, event_id, context=context)
                 self.pool.get('res.alarm').do_alarm_unlink(cr, uid, [event_id], self._name)
@@ -1711,7 +1715,7 @@ class calendar_todo(osv.osv):
         @param args: list of tuples of form [(‘name_of_the_field’, ‘operator’, value), ...].
         @param context: A standard dictionary for contextual values
         """
-        
+
         assert name == 'date'
         return self.write(cr, uid, id, { 'date_start': value }, context=context)
 
@@ -1743,9 +1747,9 @@ class ir_attachment(osv.osv):
         for arg in args:
             args1.append(map(lambda x:str(x).split('-')[0], arg))
         return super(ir_attachment, self).search_count(cr, user, args1, context)
-        
-        
-    
+
+
+
     def create(self, cr, uid, vals, context=None):
         if context:
             id = context.get('default_res_id', False)

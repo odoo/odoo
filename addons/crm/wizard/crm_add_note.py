@@ -5,6 +5,16 @@ import base64
 
 AVAILABLE_STATES = crm.AVAILABLE_STATES + [('unchanged', 'Unchanged')]
 
+class crm_add_note_email_attachment(osv.osv_memory):
+    _name = 'crm.add.note.email.attachment'
+
+    _columns = {
+        'binary' : fields.binary('Attachment', required=True),
+        'name' : fields.char('Name', size=128, required=True),
+        'wizard_id' : fields.many2one('crm.add.note', 'Wizard', required=True),
+    }
+
+crm_add_note_email_attachment()
 
 class crm_add_note(osv.osv_memory):
     """Adds a new note to the case."""
@@ -14,8 +24,8 @@ class crm_add_note(osv.osv_memory):
     _columns = {
         'body': fields.text('Note Body', required=True),
         'state': fields.selection(AVAILABLE_STATES, string='Set New State To',
-                                  required=True), 
-        'attachment_ids' : fields.one2many('crm.send.mail.attachment', 'wizard_id'),
+                                  required=True),
+        'attachment_ids' : fields.one2many('crm.add.note.email.attachment', 'wizard_id'),
     }
 
     def action_add(self, cr, uid, ids, context=None):
@@ -37,7 +47,7 @@ class crm_add_note(osv.osv_memory):
             attach = [
                 (x.name, base64.decodestring(x.binary)) for x in obj.attachment_ids
             ]
-            case_pool.history(cr, uid, [case], self.pool.get('mailgate.message').truncate_data(cr, uid, obj.body, context=context), history=False,
+            case_pool.history(cr, uid, [case], self.pool.get('email.message').truncate_data(cr, uid, obj.body, context=context), history=False,
                               details=obj.body, email_from=user_name, attach=attach)
 
             if obj.state == 'unchanged':

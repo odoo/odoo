@@ -62,7 +62,7 @@ class email_server(osv.osv):
         'object_id': fields.many2one('ir.model', "Model", required=True, help="OpenObject Model. Generates a record of this model.\nSelect Object with message_new attrbutes."),
         'priority': fields.integer('Server Priority', readonly=True, states={'draft':[('readonly', False)]}, help="Priority between 0 to 10, select define the order of Processing"),
         'user_id':fields.many2one('res.users', 'User', required=False),
-        'message_ids': fields.one2many('mailgate.message', 'server_id', 'Messages', readonly=True),
+        'message_ids': fields.one2many('email.message', 'server_id', 'Messages', readonly=True),
     }
     _defaults = {
         'state': lambda *a: "draft",
@@ -82,21 +82,9 @@ class email_server(osv.osv):
                 return False
         return True
 
-    def check_model(self, cr, uid, ids, context = None):
-        if context is None:
-            context = {}
-        current_rec = self.read(cr, uid, ids, context)
-        if current_rec:
-            current_rec = current_rec[0]
-            model_name = self.pool.get('ir.model').browse(cr, uid, current_rec.get('object_id')[0]).model
-            model = self.pool.get(model_name)
-            if hasattr(model, 'message_new'):
-                return True
-        return False
-
     _constraints = [
         (check_duplicate, 'Warning! Can\'t have duplicate server configuration!', ['user', 'password']),
-        (check_model, 'Warning! Record for selected Model can not be created\nPlease choose valid Model', ['object_id'])
+        
     ]
 
     def onchange_server_type(self, cr, uid, ids, server_type=False, ssl=False):
@@ -111,13 +99,13 @@ class email_server(osv.osv):
     def set_draft(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids , {'state':'draft'})
         return True
-    
+
     def button_confirm_login(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
         for server in self.browse(cr, uid, ids, context=context):
-            logger.notifyChannel('imap', netsvc.LOG_INFO, 'fetchmail start checking for new emails on %s' % (server.name))
-            context.update({'server_id': server.id, 'server_type': server.type})
+            logger.notifyChannel(server.type, netsvc.LOG_INFO, 'fetchmail start checking for new emails on %s' % (server.name))
+            context.update({'server_id': server.id})
             try:
                 if server.type == 'imap':
                     imap_server = None
@@ -128,7 +116,7 @@ class email_server(osv.osv):
 
                     imap_server.login(server.user, server.password)
                     ret_server = imap_server
-                    
+
                 elif server.type == 'pop':
                     pop_server = None
                     if server.is_ssl:
@@ -141,12 +129,12 @@ class email_server(osv.osv):
                     pop_server.user(server.user)
                     pop_server.pass_(server.password)
                     ret_server = pop_server
-                    
+
                 self.write(cr, uid, [server.id], {'state':'done'})
                 if context.get('get_server',False):
                     return ret_server
             except Exception, e:
-                logger.notifyChannel(server.type, netsvc.LOG_WARNING, '%s' % (e))
+                logger.notifyChannel(server.type, netsvc.LOG_ERROR, '%s' % (e))
         return True
 
     def button_fetch_mail(self, cr, uid, ids, context=None):
@@ -161,90 +149,82 @@ class email_server(osv.osv):
     def fetch_mail(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
-        email_tool = self.pool.get('email.server.tools')
+        thread_pool = self.pool.get('email.thread')
         action_pool = self.pool.get('ir.actions.server')
         context.update({'get_server': True})
         for server in self.browse(cr, uid, ids, context=context):
             count = 0
             user = server.user_id.id or uid
-            try:
-                if server.type == 'imap':
+            if server.type == 'imap':
+                try:
                     imap_server = self.button_confirm_login(cr, uid, [server.id], context=context)
                     imap_server.select()
                     result, data = imap_server.search(None, '(UNSEEN)')
                     for num in data[0].split():
                         result, data = imap_server.fetch(num, '(RFC822)')
-                        res_id = email_tool.process_email(cr, user, server.object_id.model, data[0][1], attach=server.attach, context=context)
+                        res_id = thread_pool.process_email(cr, user, server.object_id.model, data[0][1], attach=server.attach, context=context)
                         if res_id and server.action_id:
                             action_pool.run(cr, user, [server.action_id.id], {'active_id': res_id, 'active_ids':[res_id]})
 
                             imap_server.store(num, '+FLAGS', '\\Seen')
                         count += 1
-                    logger.notifyChannel('imap', netsvc.LOG_INFO, 'fetchmail fetch/process %s email(s) from %s' % (count, server.name))
+                    logger.notifyChannel(server.type, netsvc.LOG_INFO, 'fetchmail fetch/process %s email(s) from %s' % (count, server.name))
 
-                    imap_server.close()
-                    imap_server.logout()
-                elif server.type == 'pop':
+                except Exception, e:
+                    logger.notifyChannel(server.type, netsvc.LOG_ERROR, '%s' % (tools.ustr(e)))
+                finally:
+                    if imap_server:
+                        imap_server.close()
+                        imap_server.logout()
+            elif server.type == 'pop':
+                try:
                     pop_server = self.button_confirm_login(cr, uid, [server.id], context=context)
-                    pop_server.list()
                     (numMsgs, totalSize) = pop_server.stat()
+                    pop_server.list()
                     for num in range(1, numMsgs + 1):
                         (header, msges, octets) = pop_server.retr(num)
                         msg = '\n'.join(msges)
-                        res_id = email_tool.process_email(cr, user, server.object_id.model, msg, attach=server.attach, context=context)
+                        res_id = thread_pool.process_email(cr, user, server.object_id.model, msg, attach=server.attach, context=context)
                         if res_id and server.action_id:
                             action_pool.run(cr, user, [server.action_id.id], {'active_id': res_id, 'active_ids':[res_id]})
 
                         pop_server.dele(num)
-
-                    pop_server.quit()
-
-                    logger.notifyChannel('imap', netsvc.LOG_INFO, 'fetchmail fetch %s email(s) from %s' % (numMsgs, server.name))
-
-            except Exception, e:
-                logger.notifyChannel(server.type, netsvc.LOG_WARNING, '%s' % (tools.ustr(e)))
-
+                    logger.notifyChannel(server.type, netsvc.LOG_INFO, 'fetchmail fetch %s email(s) from %s' % (numMsgs, server.name))
+                except Exception, e:
+                    logger.notifyChannel(server.type, netsvc.LOG_ERROR, '%s' % (tools.ustr(e)))
+                finally:
+                    if pop_server:
+                        pop_server.quit()
         return True
 
 email_server()
 
-class mailgate_message(osv.osv):
+class email_message(osv.osv):
 
-    _inherit = "mailgate.message"
+    _inherit = "email.message"
 
     _columns = {
         'server_id': fields.many2one('email.server', "Mail Server", readonly=True, select=True),
-        'server_type':fields.selection([
-            ('pop', 'POP Server'),
-            ('imap', 'IMAP Server'),
-        ], 'Server Type', select=True, readonly=True),
     }
-    _order = 'id desc'
 
     def create(self, cr, uid, values, context=None):
         if context is None:
             context={}
         server_id = context.get('server_id',False)
-        server_type = context.get('server_type',False)
         if server_id:
             values['server_id'] = server_id
-        if server_type:
-            values['server_type'] = server_type
-        res = super(mailgate_message,self).create(cr, uid, values, context=context)
+        res = super(email_message,self).create(cr, uid, values, context=context)
         return res
 
     def write(self, cr, uid, ids, values, context=None):
         if context is None:
             context={}
         server_id = context.get('server_id',False)
-        server_type = context.get('server_type',False)
         if server_id:
             values['server_id'] = server_id
-        if server_type:
-            values['server_type'] = server_type
-        res = super(mailgate_message,self).write(cr, uid, ids, values, context=context)
+        res = super(email_message,self).write(cr, uid, ids, values, context=context)
         return res
 
-mailgate_message()
+email_message()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

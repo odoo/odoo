@@ -1,43 +1,43 @@
 -
   In order to test Forward Partner functionality, I create an opportunity and forward it to partner.
-- 
+-
   I assign an email address to Administrator.
-- 
+-
   !record {model: res.users, id: base.user_root}:
     user_email: admin@openerp.com
-- 
+-
   I create some partner grades.
 -
   I create a grade 'First'.
-- 
+-
   !record {model: res.partner.grade, id: res_partner_grade_first0}:
     name: First
     sequence: 1
-- 
+-
   I create another grade 'Second'.
-- 
+-
   !record {model: res.partner.grade, id: res_partner_grade_second0}:
     name: Second
     sequence: 2
-- 
+-
   I create one more grade 'Third'.
-- 
+-
   !record {model: res.partner.grade, id: res_partner_grade_third0}:
     name: Third
     sequence: 3
-- 
+-
   I assign grade 'First' to the partner 'Axelor'.
-- 
+-
   !record {model: res.partner, id: base.res_partner_desertic_hispafuentes}:
     grade_id: res_partner_grade_first0
 -
   I assgin a reply-to email address to Sales Team.
-- 
+-
   !record {model: crm.case.section, id: crm.section_sales_department}:
     reply_to: sales_openerp@openerp.com
-- 
+-
   I create an opportunity 'Questionnaire on OpenERP'.
-- 
+-
   !record {model: crm.lead, id: crm_lead_questionnaireonopenerp0}:
     categ_id: crm.categ_oppor7
     section_id: crm.section_sales_department
@@ -62,7 +62,7 @@
   !python {model: crm.lead.forward.to.partner}: |
     import tools
     vals = {
-       'name': 'email',
+       'subject': 'email',
        'email_to': 'info@axelor.com',
        'email_from': 'Administrator <admin@openerp.com>',
        'reply_to': 'sales_openerp@openerp.com'
@@ -70,4 +70,4 @@
     ids = self.create(cr, uid, vals, context={'active_id': ref('crm_lead_questionnaireonopenerp0'), 'active_model': 'crm.lead'})
     assert tools.config.get('smtp_user', False), 'SMTP not configured !'
     self.action_forward(cr, uid, [ids], context={'active_id': ref('crm_lead_questionnaireonopenerp0'), 'active_model': 'crm.lead'})
-    
+

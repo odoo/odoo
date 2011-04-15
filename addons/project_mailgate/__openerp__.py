@@ -27,7 +27,7 @@
     "website": "http://www.openerp.com",
     "category": "Project Management",
     "images": ["images/project_mailgate_task.jpeg"],
-    "depends": ["project", "mail_gateway"],
+    "depends": ["project", "mail"],
     "description": """
 This module is an interface that synchronises mails with OpenERP Project Task.
 ==============================================================================

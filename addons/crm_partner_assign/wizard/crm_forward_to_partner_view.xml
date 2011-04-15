@@ -1,41 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openerp>
     <data>
+
+
         <record model="ir.ui.view" id="crm_lead_forward_to_partner_form">
             <field name="name">crm_lead_forward_to_partner</field>
             <field name="model">crm.lead.forward.to.partner</field>
             <field name="type">form</field>
-            <field name="inherit_id" ref="crm.crm_send_new_mail_view"/>
             <field name="arch" type="xml">
-                <field name="email_from" position="before">
+                <form string="Send Mail">
                     <separator string="Forward to Partner" colspan="4" />
                     <group col="4" colspan="6">
                         <field name="history" colspan="2" on_change="on_change_history(history, context)"/>
-                        <field name="name" colspan="2" />
-                        <group col="2" colspan="2" attrs="{ 'invisible' : [('name','!=','user')]}">
+                        <field name="send_to" colspan="2" />
+                        <group col="2" colspan="2" attrs="{ 'invisible' : [('send_to','!=','user')]}">
                             <field name="user_id"
-                                attrs="{ 'required' : [('name','=','user')]}"
+                                attrs="{ 'required' : [('send_to','=','user')]}"
                                 on_change="on_change_email(user_id)" />
                         </group>
-                        <group col="4" colspan="4" attrs="{'invisible' : [('name','!=','partner')]}">
-                            <field name="partner_id" attrs="{'required' : [('name','=','partner')]}" on_change="on_change_partner(partner_id)" colspan="2" />
+                        <group col="4" colspan="4" attrs="{'invisible' : [('send_to','!=','partner')]}">
+                            <field name="partner_id" attrs="{'required' : [('send_to','=','partner')]}" on_change="on_change_partner(partner_id)" colspan="2" />
                             <field name="address_id" string="Contact" on_change="on_change_address(address_id)" colspan="2" />
                         </group>
                     </group>
                     <separator string="" colspan="4" />
-                </field>
-            </field>
-        </record>
-
-        <record model="ir.ui.view" id="crm_lead_forward_to_partner_form1">
-            <field name="name">crm_lead_forward_to_partner1</field>
-            <field name="model">crm.lead.forward.to.partner</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="crm.crm_send_new_mail_view"/>
-            <field name="arch" type="xml">
-                <button name="action_send" position="replace">
-                    <button name="action_forward" string="Forward" icon="gtk-go-forward" type="object" />
-                </button>
+                    <group col="6" colspan="4">
+                        <field name="smtp_server_id" widget="selection" colspan="4"/>
+                        <field name="email_from" colspan="4" required="1"/>
+                        <field name="email_to" colspan="4" required="1"/>
+                        <field name="email_cc" colspan="4"/>
+                        <field name="email_bcc" colspan="4"/>
+                        <field name="reply_to" colspan="4"/>
+                        <field name="name" colspan="4" widget="char" size="512"/>
+                    </group>
+                    <separator string="" colspan="4"/>
+                    <notebook colspan="4">
+                        <page string="Body">
+                            <field name="description" colspan="4" nolabel="1"/>
+                        </page>
+                        <page string="Attachments">
+                            <label string="Add here all attachments of the current document you want to include in the Email." colspan="4"/>
+                            <field name="attachment_ids" colspan="4" nolabel="1"/>
+                        </page>
+                    </notebook>
+                    <group col="4" colspan="4">
+                        <label string="" colspan="1"/>
+                        <button icon="gtk-close" special="cancel" string="Close"/>
+                        <button icon="gtk-apply" name="save_to_drafts" string="Save in Drafts" type="object"/>
+                        <button icon="gtk-ok" name="send_mail" string="Send now" type="object"/>
+                    </group>
+                </form>
             </field>
         </record>
 

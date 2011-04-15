@@ -26,7 +26,7 @@
     "author" : "Openlabs",
     "website" : "http://openerp.com",
     "category" : "Tools",
-    "depends" : ['marketing', 'base_tools'],
+    "depends" : ['mail'],
     "description": """
 Email Template is extraction of Power Email basically just to send emails.
 ==========================================================================
@@ -38,14 +38,12 @@ For each email template, you can have OpenERP generate a Wizard Action / Button
 that will be related to the object. So if you choose to do marketing campaigns
 for leads, the action will be added to the right side panel of the Lead form.
     """,
-    "init_xml": ['email_template_scheduler_data.xml'],
+    "init_xml": [],
     "update_xml": [
-        'security/email_template_security.xml',
-        'email_template_workflow.xml',
-        'email_template_account_view.xml',
+        'wizard/email_template_preview_view.xml',
         'email_template_view.xml',
-        'email_template_mailbox_view.xml',
         'wizard/email_template_send_wizard_view.xml',
+        'wizard/email_compose_message_view.xml',
         'security/ir.model.access.csv'
     ],
     "installable": True,
