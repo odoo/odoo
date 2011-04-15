@@ -710,7 +710,7 @@ class sale_order(osv.osv):
                         'note': line.notes,
                         'company_id': order.company_id.id,
                     })
-
+                    
                 if line.product_id:
                     proc_id = self.pool.get('procurement.order').create(cr, uid, {
                         'name': line.name,
@@ -1202,14 +1202,16 @@ class sale_config_picking_policy(osv.osv_memory):
     }
 
     def execute(self, cr, uid, ids, context=None):
+        ir_values_obj = self.pool.get('ir.values')
+        ir_model_data_obj = self.pool.get('ir.model.data')
+        location_id = ir_model_data_obj.get_object_reference(cr, uid, 'stock', 'stock_location_output')
+        location_id = location_id and location_id[1] or False
         for o in self.browse(cr, uid, ids, context=context):
-            ir_values_obj = self.pool.get('ir.values')
             ir_values_obj.set(cr, uid, 'default', False, 'picking_policy', ['sale.order'], o.picking_policy)
             ir_values_obj.set(cr, uid, 'default', False, 'order_policy', ['sale.order'], o.order_policy)
+            if o.step == 'one':
+                self.pool.get('stock.location').write(cr, uid, [location_id], {'chained_auto_packing': 'transparent'})
             if o.step == 'two':
-                md = self.pool.get('ir.model.data')
-                location_id = md.get_object_reference(cr, uid, 'stock', 'stock_location_output')
-                location_id = location_id and location_id[1] or False
                 self.pool.get('stock.location').write(cr, uid, [location_id], {'chained_auto_packing': 'manual'})
 
 sale_config_picking_policy()
