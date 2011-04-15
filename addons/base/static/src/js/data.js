@@ -83,34 +83,42 @@ openerp.base.DataSet =  openerp.base.Controller.extend( /** @lends openerp.base.
         }
     },
     default_get: function(fields, callback) {
-        this.rpc('/base/dataset/default_get', {
+        return this.rpc('/base/dataset/default_get', {
             model: this.model,
             fields: fields,
             context: this.context
         }, callback);
     },
-    create: function() {
+    create: function(data, callback) {
+        return this.rpc('/base/dataset/create', {
+            model: this.model,
+            data: data,
+            context: this.context
+        }, callback);
     },
     write: function (id, data, callback) {
-        this.rpc('/base/dataset/save', {
+        return this.rpc('/base/dataset/save', {
             model: this.model,
             id: id,
             data: data,
             context: this.context
         }, callback);
     },
-    unlink: function() {
+    unlink: function(ids) {
+        this.notification.notify("Unlink", ids);
     },
     call: function (method, ids, args, callback) {
+        this.notification.notify(
+            "Calling", this.model + '#' + method + '(' + ids + ')');
         ids = ids || [];
         args = args || [];
-        this.rpc('/base/dataset/call', {
+        return this.rpc('/base/dataset/call', {
             model: this.model,
             method: method,
             ids: ids,
             args: args
         }, callback);
-    },
+    }
 });
 
 openerp.base.DataSetStatic =  openerp.base.DataSet.extend({
@@ -122,7 +130,7 @@ openerp.base.DataSetStatic =  openerp.base.DataSet.extend({
     },
     read_slice: function (fields, offset, limit, callback) {
         this.read_ids(this.ids.slice(offset, offset + limit));
-    },
+    }
 });
 
 openerp.base.DataSetSearch =  openerp.base.DataSet.extend({
@@ -162,7 +170,10 @@ openerp.base.DataSetSearch =  openerp.base.DataSet.extend({
             }
             callback(records);
         });
-    },
+    }
+});
+
+openerp.base.DataSetRelational =  openerp.base.DataSet.extend( /** @lends openerp.base.DataSet# */{
 });
 
 };

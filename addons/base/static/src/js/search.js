@@ -12,6 +12,8 @@ openerp.base.SearchView = openerp.base.Controller.extend({
 
         this.inputs = [];
         this.enabled_filters = [];
+
+        this.has_focus = false;
     },
     start: function() {
         //this.log('Starting SearchView '+this.model+this.view_id)
@@ -47,6 +49,10 @@ openerp.base.SearchView = openerp.base.Controller.extend({
                 row = [];
                 rows.push(row);
             } else if (item.tag === 'filter') {
+                if (!this.has_focus) {
+                    item.attrs.default_focus = '1';
+                    this.has_focus = true;
+                }
                 filters.push(
                     new openerp.base.search.Filter(
                         item, this));
@@ -59,6 +65,10 @@ openerp.base.SearchView = openerp.base.Controller.extend({
                         new openerp.base.search.Group(
                             item, this, fields));
                 } else if (item.tag === 'field') {
+                    if (!this.has_focus) {
+                        item.attrs.default_focus = '1';
+                        this.has_focus = true;
+                    }
                     row.push(
                         this.make_field(
                             item, fields[item['attrs'].name]));
@@ -113,6 +123,7 @@ openerp.base.SearchView = openerp.base.Controller.extend({
         });
         this.$element.html(render);
 
+        var f = this.$element.find('form');
         this.$element.find('form')
                 .submit(this.do_search)
                 .bind('reset', this.do_clear);
@@ -134,9 +145,12 @@ openerp.base.SearchView = openerp.base.Controller.extend({
      */
     do_search: function (e) {
         if (e && e.preventDefault) { e.preventDefault(); }
+
+        //debugger;
         var domains = [], contexts = [];
 
         var errors = [];
+
         _.each(this.inputs, function (input) {
             try {
                 var domain = input.get_domain();
@@ -187,7 +201,8 @@ openerp.base.SearchView = openerp.base.Controller.extend({
      * @param {Array} contexts an array of literal contexts or context refs
      * @param {Array} groupbys ordered contexts which may or may not have group_by keys
      */
-    on_search: function (domains, contexts, groupbys) { },
+    on_search: function (domains, contexts, groupbys) {
+    },
     /**
      * Triggered after a validation error in the SearchView fields.
      *
@@ -199,7 +214,9 @@ openerp.base.SearchView = openerp.base.Controller.extend({
      * @event
      * @param {Array} errors a never-empty array of error objects
      */
-    on_invalid: function (errors) { },
+    on_invalid: function (errors) {
+        this.notification.notify("Invalid Search", "triggered from search view");
+    },
     do_clear: function (e) {
         if (e && e.preventDefault) { e.preventDefault(); }
         this.on_clear();
@@ -800,24 +817,27 @@ openerp.base.search.ExtendedSearchProposition = openerp.base.BaseWidget.extend({
             return;
         }
 
+        var type = field.type;
         try {
-            this.value = new (openerp.base.search.custom_filters.get_object(field.type))
-                              (this);
-            _.each(this.value.operators, function(operator) {
-                var option = jQuery('<option>', {value: operator.value})
-                    .text(operator.text)
-                    .appendTo(_this.$element.find('.searchview_extended_prop_op'));
-            });
-            this.$element.find('.searchview_extended_prop_value').html(
-                this.value.render({}));
-            this.value.start();
+            openerp.base.search.custom_filters.get_object(type);
         } catch (e) {
             if (! e instanceof openerp.base.KeyNotFound) {
                 throw e;
             }
-            this.attrs.selected = null;
+            var type = "char";
             this.log('Unknow field type ' + e.key);
         }
+        this.value = new (openerp.base.search.custom_filters.get_object(type))
+                          (this);
+        _.each(this.value.operators, function(operator) {
+            var option = jQuery('<option>', {value: operator.value})
+                .text(operator.text)
+                .appendTo(_this.$element.find('.searchview_extended_prop_op'));
+        });
+        this.$element.find('.searchview_extended_prop_value').html(
+            this.value.render({}));
+        this.value.start();
+        
     },
     get_proposition: function() {
         if ( this.attrs.selected == null)

@@ -1,0 +1,317 @@
+.dhx_expand_icon {
+	position:absolute; top:0px; right:0px; 
+	background-image:url(../codebase/imgs/colapce-expand-icon.gif);
+	width:18px; height:18px;
+	cursor:pointer;
+	background-position:0px 18px;
+	z-index:16;
+}
+.dhx_agenda_area{
+	width:100%;
+	height:100%;
+	overflow-y:auto;
+	background-image:url(../codebase/imgs/databg.png);
+}
+.dhx_agenda_line{
+	height:21px;
+	clear:both;
+	overflow:hidden;
+}
+.dhx_agenda_line div{
+	float:left; 
+	width:188px;
+	border-right:1px dotted #8894A3;
+	text-align:center;
+	line-height:21px;
+	overflow:hidden;
+}
+.dhx_agenda_area .dhx_agenda_line div{
+	border-right:0px dotted #8894A3;	
+}
+.dhx_v_border{
+	position:absolute; left:186px; top:0px;
+	border-right:1px dotted #8894A3;
+	width:1px;
+	height:100%;
+}
+.dhx_agenda_line .dhx_event_icon{
+	width:20px;
+	border-width:0px;
+	background:url(../codebase/imgs/icon.png) no-repeat;
+	background-position: 5px 4px;
+	cursor:pointer;
+}
+.dhx_agenda_line span{
+	padding-left:5px;
+	line-height:21px;
+}
+
+
+.dhx_year_body{
+  border-left:1px dotted #586A7E;
+}
+.dhx_year_week{
+  height:20px;
+  position:relative;
+}
+.dhx_scale_bar_last{
+  border-right:1px dotted #586A7E;      
+}   
+.dhx_year_month{
+  height:18px;
+  padding-top:3px;
+  border:1px dotted #586A7E;
+  text-align:center;
+  vertical-align:middle;
+}
+.dhx_year_body .dhx_before .dhx_month_head, .dhx_year_body .dhx_after .dhx_month_head, .dhx_year_body .dhx_before .dhx_month_head a, .dhx_year_body .dhx_after .dhx_month_head a{
+  color:#E2E3E6 !important;
+}
+.dhx_year_body .dhx_month_body{
+  height:0px;
+  overflow:hidden;
+}
+.dhx_month_head.dhx_year_event{
+  background-color:#FFE763;
+}
+.dhx_year_body .dhx_before .dhx_month_head, .dhx_year_body .dhx_after .dhx_month_head{
+	cursor: default;
+}
+.dhx_tooltip{
+  border:1px solid #BBBBBB;
+  background-image:url(../codebase/imgs/databg.png);
+  position:absolute;
+  z-index:9998;
+  width:300px; 
+  height:auto;
+  font-family:Tahoma;
+  font-size:8pt;
+  overflow:hidden;
+}
+
+.dhx_tooltip_line{
+	line-height:20px;
+	height:20px;
+	overflow:hidden;
+}
+
+.dhx_tooltip_line .dhx_event_icon{
+	width:20px; height:20px;
+	padding-right:10px;
+	float:left;
+	border-width:0px;
+	position:relative;
+	background:url(../codebase/imgs/icon.png) no-repeat;
+	background-position: 5px 4px;
+	cursor:pointer;
+}
+
+.dhx_tooltip_date{
+	float:left;
+	width:auto;
+	padding-left:5px;
+	text-align:center;
+}
+
+.dhx_text_disabled{
+	color:#887A2E;
+	font-family:Tahoma;
+	font-size:8pt;
+}
+
+.dhx_mini_calendar{
+	-moz-box-shadow:5px 5px 5px #888;	/*Doesn't work in IE*/
+	-khtml-box-shadow: 5px 5px 5px #888;
+}
+
+.dhx_mini_calendar .dhx_month_head{
+	cursor:pointer;
+}
+.dhx_mini_calendar .dhx_calendar_click{
+	background-color: #C2D5FC;
+}
+.dhx_cal_navline div.dhx_minical_icon{
+	width:18px;
+	height:18px;
+	left:190px;
+	top:1px;
+	cursor:pointer;
+	background-image:url(../imgs/calendar.gif);
+}
+
+
+
+.dhx_matrix_cell, .dhx_matrix_scell{
+	overflow:hidden;
+	text-align:center;
+	vertical-align:middle;
+	border-bottom:1px dotted #8894A3;
+	border-right:1px dotted #8894A3;	
+}
+.dhx_matrix_cell{
+	background-color:white;
+}
+.dhx_matrix_cell div, .dhx_matrix_scell div{ 
+	overflow:hidden;
+	text-align:center;
+	width:100%;
+    height:auto; 
+}
+
+.dhx_cal_lsection .dhx_readonly{
+	font-size:9pt;
+	font-size:8pt;
+	padding:2px;
+	color:#887A2E;
+}
+
+/* Tree view */
+.dhx_matrix_scell.folder, .dhx_data_table.folder .dhx_matrix_cell{
+	background-color: #969394;
+	cursor: pointer;
+}
+.dhx_matrix_scell .dhx_scell_level0{
+	padding-left: 5px;
+}
+.dhx_matrix_scell .dhx_scell_level1{
+	padding-left: 20px;
+}
+.dhx_matrix_scell .dhx_scell_level2{
+	padding-left: 35px;
+}
+
+.dhx_matrix_scell.folder{
+	font-weight: bold;
+	text-align: left;
+}
+
+.dhx_matrix_scell.folder .dhx_scell_expand{
+	float: left;
+	width: 10px;
+	padding-right:3px;
+}
+.dhx_matrix_scell.folder .dhx_scell_name{
+	float: left;
+	width: auto;
+}
+.dhx_matrix_scell.item .dhx_scell_name{
+	padding-left:15px;
+	text-align: left;
+}
+.dhx_section_timeline, .dhx_section_timeline2{
+	overflow: hidden;
+	padding: 2px 0 2px 10px;
+}
+.dhx_section_timeline select, .dhx_section_timeline2 select{
+	width: 552px;
+}
+/* Tree view end*/
+
+/* Map view */
+.dhx_map_area{
+	width:100%;
+	height:100%;
+	overflow-y: auto;
+	overflow-x: hidden;
+	background-image:url(../codebase/imgs/databg.png);
+}
+.dhx_map_line .dhx_event_icon{
+	width:20px;
+	border-width:0px;
+	background:url(../codebase/imgs/icon.png) no-repeat;
+	background-position: 5px 4px;
+	cursor:pointer;
+}
+.dhx_map_line{
+	height:21px;
+	clear:both;
+	overflow:hidden;
+}
+.dhx_map {
+	position:absolute;
+}
+.dhx_map_line div{
+	float:left; 
+	border-right:1px dotted #8894A3;
+	text-align:center;
+	line-height:21px;
+	overflow:hidden;
+}
+.dhx_map_line .headline_description{
+	float:left; 
+
+	border-right:1px dotted #8894A3;
+	text-align:center;
+	line-height:21px;
+	overflow:hidden;
+}
+.dhx_map_line .dhx_map_description{
+	float:left; 
+	border-right: 0px dotted #8894A3;
+	text-align:center;
+	line-height:21px;
+	overflow:hidden;
+}
+.dhx_map_line .line_description{
+	float:left; 
+	border-right:1px dotted #8894A3;
+	text-align:left;
+	padding-left:5px;
+	line-height:21px;
+	overflow:hidden;
+}
+.dhx_map_line.highlight{
+	background-color: #C4C5CC;
+}
+.dhx_map_area .dhx_map_line div{
+	border-right:0px dotted #8894A3;	 
+}
+/* Map view end */
+
+/* dhtmlXTooltip start */
+.dhtmlXTooltip.tooltip{
+	-moz-box-shadow:3px 3px 3px #888888;
+	-khtml-box-shadow:3px 3px 3px #888888;
+	
+	background-color:white;
+	border-left:1px dotted #887A2E;
+	border-top:1px dotted #887A2E;
+	color:#887A2E;
+	cursor:default;
+	padding:10px;
+	position:absolute;
+	z-index:500;
+}
+/* dhtmlXTooltip end */
+
+/* Lightbox checkbox section */
+.dhx_cal_checkbox label {
+	padding-left: 5px;
+}
+/* Lightbox checkbox section end */
+
+
+/* Lightbox radiobuttons section */
+.dhx_cal_light .radio {
+	padding: 2px 0px 2px 10px;
+}
+.dhx_cal_light .radio input,  .dhx_cal_light .radio label{
+	line-height: 15px;
+}
+.dhx_cal_light .radio input {
+	vertical-align: middle;
+	margin: 0px;
+	padding: 0px;
+}
+.dhx_cal_light .radio label {
+	vertical-align: middle;
+	padding-right: 10px;
+}
+/* Lightbox radiobuttons section end */
+
+
+/* Lightbox dhtmlx combo section */
+.dhx_cal_light .combo {
+	padding: 4px;
+}
+/* Lightbox dhtmlx combo section end */

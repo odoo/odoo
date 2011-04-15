@@ -76,6 +76,10 @@
 
     /** @lends openerp */
     var openerp = this.openerp =  {
+        /**
+         * Debug flag turns on logging
+         */
+        debug: true,
         // element_ids registry linked to all controllers on the page
         // TODO rename to elements, or keep gtk naming?
         screen: {},
@@ -122,8 +126,6 @@ openerp.base = function(instance) {
     openerp.base.search(instance);
     openerp.base.list(instance);
     openerp.base.form(instance);
-    openerp.base.gantt(instance);
-    openerp.base.graph(instance);
 };
 
 // vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:

@@ -10,6 +10,7 @@ import time
 import traceback
 import uuid
 import xmlrpclib
+import pytz
 
 import cherrypy
 import cherrypy.lib.static
@@ -17,6 +18,7 @@ import simplejson
 
 import nonliterals
 import xmlrpctimeout
+import logging
 
 #-----------------------------------------------------------
 # Globals
@@ -83,10 +85,13 @@ class OpenERPSession(object):
         self._login = False
         self._password = False
         self.model_factory = model_factory
-
+        self._locale = 'en_US'
         self.context = {}
         self.contexts_store = {}
         self.domains_store = {}
+        self._lang = {}
+        self.remote_timezone = 'utc'
+        self.client_timezone = False
 
     def proxy(self, service):
         s = xmlrpctimeout.TimeoutServerProxy('http://%s:%s/xmlrpc/%s' % (self._server, self._port, service), timeout=5)
@@ -101,9 +106,8 @@ class OpenERPSession(object):
         uid = self.proxy('common').login(db, login, password)
         self.bind(db, uid, password)
         self._login = login
-
+        
         if uid: self.get_context()
-
         return uid
 
     def execute(self, model, func, *l, **d):
@@ -130,6 +134,15 @@ class OpenERPSession(object):
         """
         assert self._uid, "The user needs to be logged-in to initialize his context"
         self.context = self.model('res.users').context_get(self.context)
+        
+        self.client_timezone = self.context.get("tz", False)
+        if self.client_timezone:
+            self.remote_timezone = self.execute('common', 'timezone_get')
+            
+        self._locale = self.context.get('lang','en_US')
+        lang_ids = self.execute('res.lang','search', [('code', '=', self._locale)])
+        if lang_ids:
+            self._lang = self.execute('res.lang', 'read',lang_ids[0], [])
         return self.context
 
     @property
@@ -183,7 +196,7 @@ class OpenERPSession(object):
         if isinstance(context_to_eval, dict):
             return context_to_eval
 
-        ctx = context or {}
+        ctx = dict(context or {})
         ctx['context'] = ctx
 
         # if the domain was unpacked from JSON, it needs the current
@@ -239,7 +252,7 @@ class OpenERPSession(object):
         if isinstance(domain, list):
             return domain
 
-        ctx = context or {}
+        ctx = dict(context or {})
         ctx['context'] = ctx
 
         # if the domain was unpacked from JSON, it needs the current
@@ -343,6 +356,8 @@ class JsonRequest(object):
                 }
             }
         except Exception:
+            cherrypy.log("An error occured while handling a json request",
+                         severity=logging.ERROR, traceback=True)
             error = {
                 'code': 300,
                 'message': "OpenERP WebClient Error",
@@ -483,3 +498,4 @@ def main(argv):
     cherrypy.server.subscribe()
     cherrypy.engine.start()
     cherrypy.engine.block()
+
