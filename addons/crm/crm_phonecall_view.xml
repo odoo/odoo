@@ -127,14 +127,14 @@
         </field>
     </record>
 
-    <!--Inbound Phonecalls Tree View -->
+    <!--Logged Phonecalls Tree View -->
 
     <record model="ir.ui.view" id="crm_case_inbound_phone_tree_view">
-        <field name="name">CRM - Inbound Phone Calls Tree</field>
+        <field name="name">CRM - Logged Phone Calls Tree</field>
         <field name="model">crm.phonecall</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Phone Calls" colors="grey:state in ('cancel','done');blue:state in ('pending',)" editable="top">
+            <tree string="Phone Calls" editable="top">
                 <field name="date"/>
                 <field name="name"/>
                 <field name="partner_id"
@@ -155,11 +155,10 @@
                     type="action"  />
                 <button string="Convert to Opportunity"
                     name="%(phonecall2opportunity_act)d"
-                    states="draft,open,pending"
                     icon="gtk-index"
                     type="action" attrs="{'invisible':[('opportunity_id','!=',False)]}" />
                 <button string="Meeting"
-                    states="draft,open,pending" icon="gtk-redo"
+                     icon="gtk-redo"
                      name="action_make_meeting" type="object" />
             </tree>
         </field>
