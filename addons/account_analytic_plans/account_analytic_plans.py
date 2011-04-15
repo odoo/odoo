@@ -53,11 +53,11 @@ class account_analytic_line(osv.osv):
 
     def _get_amount(self, cr, uid, ids, name, args, context=None):
         res = {}
+        currency_obj = self.pool.get('res.currency')
         if not ids:
             return res
         for id in ids:
             res.setdefault(id, 0.0)
-        currency_obj = self.pool.get('res.currency')
         for line in self.browse(cr, uid, ids, context=context):
             from_currency_id = line.company_id.currency_id.id
             to_currency_id = line.currency_id.id
