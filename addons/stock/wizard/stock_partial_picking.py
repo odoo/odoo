@@ -156,6 +156,8 @@ class stock_partial_picking(osv.osv_memory):
             for move in moves_list:
                 move_uom = move.move_id.product_uom
                 process_uom = move.product_uom
+                if move.quantity <= 0:
+                    raise osv.except_osv(_('Warning!'), _('Please provide Proper Quantity !'))
                 if move_uom.category_id.id != process_uom.category_id.id:
                     raise osv.except_osv(_('Warning'), _('You can not process %s %s as it\'s category is different than category of %s of this move!') % (move.quantity, process_uom.name, move_uom.name))
                 if move_uom.factor < process_uom.factor:
