@@ -175,8 +175,6 @@ class stock_partial_picking(osv.osv_memory):
                                                     'product_price' : move.cost, 
                                                     'product_currency': move.currency.id, 
                                                     })
-                if picking_qty < partial_qty:
-                    raise osv.except_osv(_('Error !'), _('You cannot select Quantity %s  more then Picking Quantity %s.') % (partial_qty, picking_qty,))
         pick_obj.do_partial(cr, uid, picking_ids, partial_datas, context=context)
         return {'type': 'ir.actions.act_window_close'}
 
