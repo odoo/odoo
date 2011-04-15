@@ -38,8 +38,16 @@
                                 </group>
                                 <field name="references" widget="char" size="4096" groups="base.group_extended"/>
                             </group>
-                            <separator string="Description" colspan="4"/>
-                            <field name="body" nolabel="1" colspan="4"/>
+
+                            <notebook colspan="4">
+		                        <page string="Body (Text)" >
+		                            <field name="body" colspan="4" widget="text" nolabel="1" attrs="{'invisible':[('sub_type','=','html')]}"/>
+		                        </page>
+		                        <page string="Body (HTML)"  >
+		                            <field name="body_html" widget="text_html" nolabel="1" colspan="4" attrs="{'invisible':[('sub_type','=','plain')]}"/>
+		                        </page>
+		                    </notebook>
+
                             <separator string="" colspan="4"/>
                             <group col="6" colspan="4">
                                 <field name="state" colspan="2"/>
@@ -63,8 +71,8 @@
 	                            <field name="debug" groups="base.group_extended"/>
 	                            <field name="history"/>
 	                            <field name="auto_delete"/>
-	                            <separator string="xheaders" colspan="4"/>
-	                            <field name="headers" colspan="4" nolabel="1" groups="base.group_extended"/>
+	                            <separator string="x-headers" colspan="4"/>
+	                            <field name="headers" colspan="4" nolabel="1" groups="base.group_extended" height="350"/>
                             </group>
                         </page>
                     </notebook>

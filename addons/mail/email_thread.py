@@ -95,6 +95,10 @@ class email_thread(osv.osv):
                             references = msg.get('references', False) or msg.get('in-reply-to', False),
                             attach = attachments.items(),
                             email_date = msg.get('date'),
+                            body_html= msg.get('body_html', False),
+                            sub_type = msg.get('sub_type', False),
+                            headers = msg.get('headers', False),
+                            reply = msg.get('reply', False),
                             context = context)
         return res_id
 
@@ -142,7 +146,7 @@ class email_thread(osv.osv):
 
     def history(self, cr, uid, threads, keyword, history=False, subject=None, email=False, details=None, \
                     email_from=False, message_id=False, references=None, attach=None, email_cc=None, \
-                    email_bcc=None, email_date=None, context=None):
+                    email_bcc=None, email_date=None, body_html=None, sub_type=None, headers=None, reply=None, context=None):
         """
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
@@ -233,6 +237,10 @@ class email_thread(osv.osv):
                     'message_id': message_id,
                     'attachment_ids': [(6, 0, attachments)],
                     'state' : 'received',
+                    'body_html': body_html,
+                    'sub_type': sub_type,
+                    'headers': headers,
+                    'reply_to': reply
                 }
             obj.create(cr, uid, data, context=context)
         return True

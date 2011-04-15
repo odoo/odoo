@@ -52,13 +52,14 @@ from email.header import decode_header
 #import datetime
 #import tools
 #import logging
-#email_content_types = [
-#    'multipart/mixed',
-#    'multipart/alternative',
-#    'multipart/related',
-#    'text/plain',
-#    'text/html'
-#]
+
+email_content_types = [
+    ('mixed', 'multipart/mixed'),
+    ('alternative', 'multipart/alternative'),
+    ('plain', 'text/plain'),
+    ('html', 'text/html')
+]
+
 
 LOGGER = netsvc.Logger()
 _logger = logging.getLogger('mail')
@@ -84,11 +85,11 @@ class email_message_common(osv.osv_memory):
         'message_id': fields.char('Message Id', size=1024, help="Message Id on Email.", select=1),
         'references': fields.text('References', help="References emails."),
         'reply_to':fields.char('Reply-To', size=250),
-        'sub_type': fields.char('Sub Type', size=32),
+        'sub_type': fields.selection(email_content_types, 'Sub Type'),
         'headers': fields.text('x_headers'),
         'priority':fields.integer('Priority'),
         'body': fields.text('Description', translate=True),
-        'body_html': fields.text('HTML', help="Contains HTML version of email"),
+        'body_html': fields.text('HTML', translate=True, help="Contains HTML version of email"),
         'smtp_server_id':fields.many2one('ir.mail_server', 'SMTP Server'),
     }
     _rec_name = 'subject'
@@ -311,7 +312,7 @@ class email_message(osv.osv):
             msg_txt['message-id'] = message_id
             _logger.info('Parsing Message without message-id, generating a random one: %s', message_id)
 
-       
+
         fields = msg_txt.keys()
         msg['id'] = message_id
         msg['message-id'] = message_id
@@ -331,7 +332,7 @@ class email_message(osv.osv):
         if 'CC' in fields:
             msg['cc'] = self._decode_header(msg_txt.get('CC'))
 
-        if 'Reply-to' in fields:
+        if 'Reply-To' in fields:
             msg['reply'] = self._decode_header(msg_txt.get('Reply-To'))
 
         if 'Date' in fields:
@@ -349,17 +350,29 @@ class email_message(osv.osv):
         if 'X-Priority' in fields:
             msg['priority'] = msg_txt.get('X-Priority', '3 (Normal)').split(' ')[0] #TOFIX:
 
+        msg['headers'] = {}
+        for item in msg_txt.items():
+            if item[0].startswith('X-'):
+                msg['headers'].update({item[0]: item[1]})
         if not msg_txt.is_multipart() or 'text/plain' in msg.get('content-type', ''):
             encoding = msg_txt.get_content_charset()
             body = msg_txt.get_payload(decode=True)
             if 'text/html' in msg.get('content-type', ''):
+                msg['body_html'] =  body
+                msg['sub_type'] = 'html'
                 body = tools.html2plaintext(body)
+            else:
+                msg['sub_type'] = 'plain'
             msg['body'] = tools.ustr(body, encoding)
 
         attachments = {}
         has_plain_text = False
         if msg_txt.is_multipart() or 'multipart/alternative' in msg.get('content-type', ''):
             body = ""
+            if 'multipart/alternative' in msg.get('content-type', ''):
+                msg['sub_type'] = 'alternative'
+            else:
+                msg['sub_type'] = 'mixed'
             for part in msg_txt.walk():
                 if part.get_content_maintype() == 'multipart':
                     continue
@@ -377,10 +390,11 @@ class email_message(osv.osv):
                         # because presumably these are alternatives.
                         content = tools.ustr(content, encoding)
                         if part.get_content_subtype() == 'html':
+                            msg['body_html'] = content
                             body = tools.ustr(tools.html2plaintext(content))
                         elif part.get_content_subtype() == 'plain':
                             body = content
-                            has_plain_text = True
+                            #has_plain_text = True
                 elif part.get_content_maintype() in ('application', 'image'):
                     if filename :
                         attachments[filename] = part.get_payload(decode=True)
@@ -422,7 +436,7 @@ class email_message(osv.osv):
                         subtype=message.sub_type,
                         x_headers=message.headers and eval(message.headers) or {},
                         priority=message.priority)
-                    res = smtp_server_obj.send_email(cr, uid, 
+                    res = smtp_server_obj.send_email(cr, uid,
                         msg,
                         mail_server_id = message.smtp_server_id.id or None,
                         smtp_server=smtp_server and smtp_server.smtp_host or None,
