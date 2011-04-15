@@ -284,7 +284,16 @@ class res_company(osv.osv):
     ]
 
     def createReport(self, cr, uid, ids, context=None):
-        company = self.browse(cr, uid, ids)[0]
+        company = self.browse(cr, uid, ids, context=context)[0]
+#        partner, address, country, phone, email = company.partner_id.name, company.partner_id.address and company.partner_id.address[0].street or  '',\
+#                    company.partner_id.address and company.partner_id.address[0].country_id and company.partner_id.address[0].country_id.name  or '',\
+#                    company.partner_id.address and company.partner_id.address[0].phone or '',\
+#                    company.partner_id.address and company.partner_id.address[0].email or '',
+        class company_parser(report_sxw.rml_parse):
+            def __init__(self, cr, uid, name, context):
+                super(company_parser, self).__init__(cr, uid, name, context=context)
+                self.setCompany(company)
+
         rml = etree.XML(company.rml_header)
         rml = rml.getchildren()[0]
         header_xml = """<document filename="Preview Report.pdf">
@@ -296,17 +305,17 @@ class res_company(osv.osv):
         fp = open(tmppath, 'wb+')
         fp.write(header_xml)
         fp.close()
-        if not netsvc.Service._services.get('report.comapany.report'):
-            myreport = report_sxw.report_sxw('report.comapany.report', 'res.company', tmppath,  header=False)
+        if netsvc.Service._services.get('report.company.report'):
+            netsvc.Service._services.pop('report.company.report')
+        myreport = report_sxw.report_sxw('report.company.report', 'res.company', tmppath, parser=company_parser)
         return {
                 'type': 'ir.actions.report.xml',
-                'report_name': 'comapany.report',
+                'report_name': 'company.report',
                 'datas': {'ids': ids, 'model': 'res.company'},
                 'nodestroy': True
             }
 
 res_company()
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
