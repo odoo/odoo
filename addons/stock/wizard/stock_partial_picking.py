@@ -154,14 +154,16 @@ class stock_partial_picking(osv.osv_memory):
             picking_type = self.get_picking_type(cr, uid, pick, context=context)
             moves_list = picking_type == 'in' and partial.product_moves_in or partial.product_moves_out
             for move in moves_list:
-                picking_qty = 0.0
-                partial_qty = 0.0
-                if move.product_uom.category_id.id <> move.product_id.uom_id.category_id.id:
-                    raise osv.except_osv(_('Error !'), _('You have selected product uom category %s not same with  picking product uom Category %s!.') % (move.product_uom.category_id.name,move.product_id.uom_id.category_id.name,))
-                for originalmove in pick.move_lines:
-                    if originalmove.product_id.id == move.product_id.id:
-                        picking_qty += uom_obj._compute_qty(cr, uid, originalmove.product_uom.id, originalmove.product_qty, originalmove.product_id.uom_id.id)
-                partial_qty += uom_obj._compute_qty(cr, uid, move.product_uom.id, move.quantity, move.product_id.uom_id.id)
+                move_uom = move.move_id.product_uom
+                process_uom = move.product_uom
+                if move_uom.category_id.id != process_uom.category_id.id:
+                    raise osv.except_osv(_('Warning'), _('You can not process %s %s as it\'s category is different than category of %s of this move!') % (move.quantity, process_uom.name, move_uom.name))
+                if move_uom.factor < process_uom.factor:
+                    raise osv.except_osv(_('Warning'), _('You can not process in UOM"%s" which is smaller than UOM "%s" of the current move.') % (process_uom.name, move_uom.name))
+
+                toprocess = uom_obj._compute_qty(cr, uid, move.product_uom.id, move.quantity, move.move_id.product_uom.id)
+                if toprocess > move.move_id.product_qty:
+                    raise osv.except_osv(_('Warning'), _('You can not process "%s %s" as the qty is more than "%s %s" of respective move.') % (toprocess, process_uom.name, move.move_id.product_qty, move_uom.name))
                 partial_datas['move%s' % (move.move_id.id)] = {
                     'product_id': move.id, 
                     'product_qty': move.quantity, 
