@@ -493,20 +493,9 @@ class hr_timesheet_line(osv.osv):
         (_check_sheet_state, 'You can not modify an entry in a Confirmed/Done timesheet !.', ['state']),
     ]
 
-    def create(self, cr, uid, vals, *args, **kwargs):
-        if vals.get('sheet_id', False):
-            ts = self.pool.get('hr_timesheet_sheet.sheet').browse(cr, uid, vals['sheet_id'])
-            if not ts.state in ('draft', 'new'):
-                raise osv.except_osv(_('Error !'), _('You can not modify an entry in a confirmed timesheet !'))
-        return super(hr_timesheet_line,self).create(cr, uid, vals, *args, **kwargs)
-
     def unlink(self, cr, uid, ids, *args, **kwargs):
         self._check(cr, uid, ids)
         return super(hr_timesheet_line,self).unlink(cr, uid, ids,*args, **kwargs)
-
-    def write(self, cr, uid, ids, *args, **kwargs):
-        self._check(cr, uid, ids)
-        return super(hr_timesheet_line,self).write(cr, uid, ids,*args, **kwargs)
 
     def _check(self, cr, uid, ids):
         for att in self.browse(cr, uid, ids):
