@@ -57,11 +57,12 @@ class account_analytic_line(osv.osv):
             return res
         for id in ids:
             res.setdefault(id, 0.0)
+        currency_obj = self.pool.get('res.currency')
         for line in self.browse(cr, uid, ids, context=context):
             from_currency_id = line.company_id.currency_id.id
             to_currency_id = line.currency_id.id
             from_amount = line.amount
-            res[line.id] = self.pool.get('res.currency').compute(cr, uid, from_currency_id, to_currency_id, from_amount, round=True, context=context)
+            res[line.id] = currency_obj.compute(cr, uid, from_currency_id, to_currency_id, from_amount, round=True, context=context)
         return res
 
     _columns = {
