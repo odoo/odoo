@@ -26,6 +26,10 @@ import tools
 import netsvc
 import base64
 import time
+import logging
+import re
+import email
+from email.header import decode_header
 #import binascii
 #import email
 #from email.header import decode_header
@@ -57,6 +61,8 @@ import time
 #]
 
 LOGGER = netsvc.Logger()
+_logger = logging.getLogger('mail')
+
 def format_date_tz(date, tz=None):
     if not date:
         return 'n/a'
@@ -182,6 +188,7 @@ class email_message(osv.osv):
                         ('sent', 'Sent'),
                         ('received', 'Received'),
                         ('exception', 'Exception'),
+                        ('cancel', 'Cancelled'),
                         ], 'State', readonly=True),
         'auto_delete': fields.boolean('Auto Delete', help="Permanently delete emails after sending"),
     }
@@ -272,6 +279,119 @@ class email_message(osv.osv):
             return False
         return res
 
+    def _decode_header(self, text):
+        """Returns unicode() string conversion of the the given encoded smtp header"""
+        if text:
+            text = decode_header(text.replace('\r', ''))
+            return ''.join([tools.ustr(x[0], x[1]) for x in text])
+
+    def to_email(self,text):
+        return re.findall(r'([^ ,<@]+@[^> ,]+)',text)
+
+    def parse_message(self, message):
+        """Return Dictionary Object after parse EML Message String
+        @param message: email.message.Message object or string or unicode object
+        """
+        if isinstance(message, str):
+            msg_txt = email.message_from_string(message)
+
+        # Warning: message_from_string doesn't always work correctly on unicode,
+        # we must use utf-8 strings here :-(
+        if isinstance(message, unicode):
+            message = message.encode('utf-8')
+            msg_txt = email.message_from_string(message)
+
+        msg_txt = message
+        message_id = msg_txt.get('message-id', False)
+        msg = {}
+
+        if not message_id:
+            # Very unusual situation, be we should be fault-tolerant here
+            message_id = time.time()
+            msg_txt['message-id'] = message_id
+            _logger.info('Parsing Message without message-id, generating a random one: %s', message_id)
+
+       
+        fields = msg_txt.keys()
+        msg['id'] = message_id
+        msg['message-id'] = message_id
+
+        if 'Subject' in fields:
+            msg['subject'] = self._decode_header(msg_txt.get('Subject'))
+
+        if 'Content-Type' in fields:
+            msg['content-type'] = msg_txt.get('Content-Type')
+
+        if 'From' in fields:
+            msg['from'] = self._decode_header(msg_txt.get('From') or msg_txt.get_unixfrom())
+
+        if 'Delivered-To' in fields:
+            msg['to'] = self._decode_header(msg_txt.get('Delivered-To'))
+
+        if 'CC' in fields:
+            msg['cc'] = self._decode_header(msg_txt.get('CC'))
+
+        if 'Reply-to' in fields:
+            msg['reply'] = self._decode_header(msg_txt.get('Reply-To'))
+
+        if 'Date' in fields:
+            msg['date'] = self._decode_header(msg_txt.get('Date'))
+
+        if 'Content-Transfer-Encoding' in fields:
+            msg['encoding'] = msg_txt.get('Content-Transfer-Encoding')
+
+        if 'References' in fields:
+            msg['references'] = msg_txt.get('References')
+
+        if 'In-Reply-To' in fields:
+            msg['in-reply-to'] = msg_txt.get('In-Reply-To')
+
+        if 'X-Priority' in fields:
+            msg['priority'] = msg_txt.get('X-Priority', '3 (Normal)').split(' ')[0] #TOFIX:
+
+        if not msg_txt.is_multipart() or 'text/plain' in msg.get('content-type', ''):
+            encoding = msg_txt.get_content_charset()
+            body = msg_txt.get_payload(decode=True)
+            if 'text/html' in msg.get('content-type', ''):
+                body = tools.html2plaintext(body)
+            msg['body'] = tools.ustr(body, encoding)
+
+        attachments = {}
+        has_plain_text = False
+        if msg_txt.is_multipart() or 'multipart/alternative' in msg.get('content-type', ''):
+            body = ""
+            for part in msg_txt.walk():
+                if part.get_content_maintype() == 'multipart':
+                    continue
+
+                encoding = part.get_content_charset()
+                filename = part.get_filename()
+                if part.get_content_maintype()=='text':
+                    content = part.get_payload(decode=True)
+                    if filename:
+                        attachments[filename] = content
+                    elif not has_plain_text:
+                        # main content parts should have 'text' maintype
+                        # and no filename. we ignore the html part if
+                        # there is already a plaintext part without filename,
+                        # because presumably these are alternatives.
+                        content = tools.ustr(content, encoding)
+                        if part.get_content_subtype() == 'html':
+                            body = tools.ustr(tools.html2plaintext(content))
+                        elif part.get_content_subtype() == 'plain':
+                            body = content
+                            has_plain_text = True
+                elif part.get_content_maintype() in ('application', 'image'):
+                    if filename :
+                        attachments[filename] = part.get_payload(decode=True)
+                    else:
+                        res = part.get_payload(decode=True)
+                        body += tools.ustr(res, encoding)
+
+            msg['body'] = body
+            msg['attachments'] = attachments
+        return msg
+
     def send_email(self, cr, uid, ids, auto_commit=False, context=None):
         """
         send email message
@@ -302,8 +422,7 @@ class email_message(osv.osv):
                         subtype=message.sub_type,
                         x_headers=message.headers and eval(message.headers) or {},
                         priority=message.priority)
-                    res = smtp_server_obj.send_email(cr, uid, message.email_from,
-                        message.email_to and message.email_to.split(',') or [],
+                    res = smtp_server_obj.send_email(cr, uid, 
                         msg,
                         mail_server_id = message.smtp_server_id.id or None,
                         smtp_server=smtp_server and smtp_server.smtp_host or None,
@@ -335,6 +454,13 @@ class email_message(osv.osv):
                 logger.notifyChannel("email-template", netsvc.LOG_ERROR, _("Sending of Mail %s failed. Probable Reason:Could not login to server\nError: %s") % (message.id, error))
                 self.write(cr, uid, [message.id], {'state':'exception'}, context)
                 return False
+        return True
+
+    def do_cancel(self, cr, uid, ids, context=None):
+        '''
+        Cancel the email to be send
+        '''
+        self.write(cr, uid, ids, {'state':'cancel'}, context)
         return True
 # OLD Code.
 #    def send_all_mail(self, cr, uid, ids=None, context=None):

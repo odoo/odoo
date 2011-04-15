@@ -52,21 +52,7 @@ class project_tasks(osv.osv):
         res = thread_obj.get_partner(cr, uid, msg_from)
         if res:
             data.update(res)
-        res = self.create(cr, uid, data)
-
-        attachments = msg.get('attachments', [])
-        for attachment in attachments or []:
-            data_attach = {
-                'name': attachment,
-                'datas':binascii.b2a_base64(str(attachments.get(attachment))),
-                'datas_fname': attachment,
-                'description': 'Mail attachment',
-                'res_model': self._name,
-                'res_id': res,
-            }
-            self.pool.get('ir.attachment').create(cr, uid, data_attach)
-
-        return res
+        return self.create(cr, uid, data)
 
     def message_update(self, cr, uid, id, msg, data={}, default_act='pending'):
         thread_obj = self.pool.get('email.thread')

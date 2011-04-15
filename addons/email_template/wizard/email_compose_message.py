@@ -96,7 +96,7 @@ class email_compose_message(osv.osv_memory):
             result.update({'subject' : vals.get('name', False)})
 
         if 'body' in fields:
-            result.update({'body' : vals.get('description', False)})
+            result.update({'body' : vals.get('body', False)})
 
         if 'reply_to' in fields:
             result.update({'reply_to' : vals.get('reply_to', False)})

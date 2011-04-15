@@ -202,22 +202,9 @@ class crm_claim(crm.crm_case, osv.osv):
         if res:
             vals.update(res)
 
-        res = self.create(cr, uid, vals, context)
-        attachents = msg.get('attachments', [])
-        for attactment in attachents or []:
-            data_attach = {
-                'name': attactment,
-                'datas':binascii.b2a_base64(str(attachents.get(attactment))),
-                'datas_fname': attactment,
-                'description': 'Mail attachment',
-                'res_model': self._name,
-                'res_id': res,
-            }
-            self.pool.get('ir.attachment').create(cr, uid, data_attach)
+        return self.create(cr, uid, vals, context)
 
-        return res
-
-    def message_update(self, cr, uid, ids, vals={}, msg="", default_act='pending', context=None):
+    def message_update(self, cr, uid, ids, msg, vals={}, default_act='pending', context=None):
         """
         @param self: The object pointer
         @param cr: the current row, from the database cursor,

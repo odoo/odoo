@@ -309,8 +309,6 @@ class hr_applicant(crm.crm_case, osv.osv):
         @param uid: the current user’s ID for security checks
         """
         thread_pool = self.pool.get('email.thread')
-        attach_obj = self.pool.get('ir.attachment')
-
         subject = msg.get('subject')
         body = msg.get('body')
         msg_from = msg.get('from')
@@ -329,23 +327,9 @@ class hr_applicant(crm.crm_case, osv.osv):
         res = thread_pool.get_partner(cr, uid, msg.get('from'))
         if res:
             vals.update(res)
-        res = self.create(cr, uid, vals, context=context)
+        return self.create(cr, uid, vals, context=context)
 
-        attachents = msg.get('attachments', [])
-        for attactment in attachents or []:
-            data_attach = {
-                'name': attactment,
-                'datas':binascii.b2a_base64(str(attachents.get(attactment))),
-                'datas_fname': attactment,
-                'description': 'Mail attachment',
-                'res_model': self._name,
-                'res_id': res,
-            }
-            attach_obj.create(cr, uid, data_attach, context=context)
-
-        return res
-
-    def message_update(self, cr, uid, ids, vals={}, msg="", default_act='pending', context=None):
+    def message_update(self, cr, uid, ids, msg, vals={}, default_act='pending', context=None):
         """
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
