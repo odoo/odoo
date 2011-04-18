@@ -25,7 +25,9 @@ from sugarsoap_services import *
 from sugarsoap_services_types import *
 from osv import osv
 from tools.translate import _
-
+import base64
+from lxml import etree
+import tools
 class LoginError(Exception): pass
 
 def login(username, password, url):
@@ -61,6 +63,33 @@ def relation_search(portType, sessionid, module_name=None, module_id=None, relat
           ans_list.append(i.get_element_id())
   return ans_list
 
+def attachment_search(portType, sessionid, module_name, module_id=None):
+  se_req = get_note_attachmentRequest()
+  se_req._session = sessionid
+  se_req._id = module_id
+  se_req._module_name = module_name
+  se_resp = portType.get_note_attachment(se_req)
+  file = False
+  file = se_resp._return._note_attachment.File
+  return file
+
+def user_get_attendee_list(portType, sessionid, module_name=None, module_id=None):
+  se_req = get_attendee_listRequest()
+  se_req._session = sessionid
+  se_req._module_name = module_name
+  se_req._id = module_id
+  se_resp = portType.get_attendee_list(se_req)
+  list = se_resp.get_element_return()
+  arch = base64.decodestring(list.Result)
+  eview = False
+  eview = etree.XML(arch)
+  attendee_list = []
+  for child in eview:
+      attendee_dict = {}
+      for ch in child.getchildren():
+           attendee_dict[ch.tag] = tools.ustr(ch.text)
+      attendee_list.append(attendee_dict)
+  return attendee_list         
 
 def search(portType, sessionid, module_name=None):
   se_req = get_entry_listRequest()
@@ -73,7 +102,7 @@ def search(portType, sessionid, module_name=None):
       for i in list:
           ans_dir = {}
           for j in i._name_value_list:
-              ans_dir[j._name.encode('utf-8')] = j._value.encode('utf-8')
+              ans_dir[tools.ustr(j._name)] = tools.ustr(j._value)
             #end for
           ans_list.append(ans_dir)
     #end for
