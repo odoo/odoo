@@ -214,13 +214,8 @@ class project_issue(crm.crm_case, osv.osv):
         'working_hours_open': fields.function(_compute_day, string='Working Hours to Open the Issue', \
                                 method=True, multi='compute_day', type="float", store=True),
         'working_hours_close': fields.function(_compute_day, string='Working Hours to Close the Issue', \
-<<<<<<< TREE
-                                method=True, multi='compute_day', type="float", store=True),
-        'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
-=======
                                 method=True, multi='working_days_close', type="float", store=True),
         'message_ids': fields.one2many('email.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
->>>>>>> MERGE-SOURCE
         'date_action_last': fields.datetime('Last Action', readonly=1),
         'date_action_next': fields.datetime('Next Action', readonly=1),
         'progress': fields.function(_hours_get, method=True, string='Progress (%)', multi='hours', group_operator="avg", help="Computed as: Time Spent / Total Time.",
