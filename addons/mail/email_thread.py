@@ -126,6 +126,10 @@ class email_thread(osv.osv):
                             references = msg.get('references', False) or msg.get('in-reply-to', False),
                             attach = attachments.items(),
                             email_date = msg.get('date'),
+                            body_html= msg.get('body_html', False),
+                            sub_type = msg.get('sub_type', False),
+                            headers = msg.get('headers', False),
+                            reply = msg.get('reply', False),
                             context = context)
         return True
 
