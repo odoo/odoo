@@ -2,31 +2,55 @@
 <openerp>
     <data>
 
-        <record id="hr_payroll.hr_payslip_line_houserantallowance1" model="hr.payslip.line">
-            <field name="account_id" ref="account.a_salary_expense"/>
+        <record id="hr_payroll.hr_payslip_line_houserantallowance1" model="hr.salary.rule">
+            <field name="account_debit" ref="account.a_salary_expense"/>
         </record>
 
-        <record id="hr_payroll.hr_payslip_line_convanceallowance1" model="hr.payslip.line">
-            <field name="account_id" ref="account.a_salary_expense"/>
+        <record id="hr_payroll.hr_payslip_line_convanceallowance1" model="hr.salary.rule">
+            <field name="account_debit" ref="account.a_salary_expense"/>
         </record>
 
-        <record id="hr_payroll.hr_payslip_line_professionaltax1" model="hr.payslip.line">
-            <field name="account_id" ref="account.a_salary_expense"/>
+        <record id="hr_payroll.hr_payslip_line_professionaltax1" model="hr.salary.rule">
+            <field name="account_debit" ref="account.a_salary_expense"/>
         </record>
 
-        <record id="hr_payroll.hr_payslip_line_providentfund1" model="hr.payslip.line">
-            <field name="account_id" ref="account.a_salary_expense"/>
+        <record id="hr_payroll.hr_payslip_line_providentfund1" model="hr.salary.rule">
+            <field name="account_debit" ref="account.a_salary_expense"/>
+        </record>
+        
+         <record id="hr_payroll.hr_salary_rule_meal_voucher" model="hr.salary.rule">
+            <field name="account_debit" ref="account.a_salary_expense"/>
+        </record>
+        
+        <record id="hr_payroll.hr_salary_rule_ca_paolino" model="hr.salary.rule">
+            <field name="account_debit" ref="account.a_salary_expense"/>
+        </record>
+        
+        <record id="hr_payroll.hr_rule_basic" model="hr.salary.rule">
+            <field name="account_debit" ref="account.a_salary_expense"/>
+        </record>
+        
+        <record id="hr_payroll.hr_rule_taxable" model="hr.salary.rule">
+            <field name="account_debit" ref="account.a_salary_expense"/>
+        </record>
+        
+        <record id="hr_payroll.hr_rule_net" model="hr.salary.rule">
+            <field name="account_debit" ref="account.a_salary_expense"/>
+        </record>
+        
+        <record id="hr_payroll.hr_payslip_line_houserantallowance1" model="hr.salary.rule">
+            <field name="account_debit" ref="account.a_salary_expense"/>
         </record>
 
         <!-- Payslip -->
-        <record id="hr_payroll.hr_payslip_salaryslipofbonamyforjune0" model="hr.payslip">
+       <!-- <record id="hr_payroll.hr_payslip_salaryslipofbonamyforjune0" model="hr.payslip">
             <field name="journal_id" ref="account.expenses_journal"/>
             <field name="bank_journal_id" ref="account.bank_journal"/>
-        </record>
+        </record>-->
 
         <!-- Assigned Default Account in Different Demo Employees -->
 
-        <!--record id="hr.employee" model="hr.employee">
+        <record id="hr.employee" model="hr.employee">
             <field name="property_bank_account" ref="account.bnk"/>
             <field name="salary_account" ref="account.a_salary_expense"/>
             <field name="employee_account" ref="account.a_expense"/>
@@ -54,7 +78,7 @@
             <field name="property_bank_account" ref="account.bnk"/>
             <field name="salary_account" ref="account.a_salary_expense"/>
             <field name="employee_account" ref="account.a_expense"/>
-        </record-->
+        </record>
 
         <record id="bnk" model="account.account">
             <field name="code">X110041</field>

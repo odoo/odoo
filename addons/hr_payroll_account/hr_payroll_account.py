@@ -234,7 +234,7 @@ class hr_payslip(osv.osv):
                 if value['salary_rule_id'] == rule.id:
                     value['account_id'] = rule.account_debit.id,
         return result
-
+    
     def create_voucher(self, cr, uid, ids, name, voucher, sequence=5):
         slip_move = self.pool.get('hr.payslip.account.move')
         for slip in ids:
@@ -281,18 +281,22 @@ class hr_payslip(osv.osv):
 
             partner = slip.employee_id.bank_account_id.partner_id
             partner_id = partner.id
-
+            
+            for line in slip.line_ids:
+                if line.category_id.name == 'Net':
+                    amt = line.total
+                    
             fiscal_year_ids = fiscalyear_pool.search(cr, uid, [], context=context)
             if not fiscal_year_ids:
                 raise osv.except_osv(_('Warning !'), _('Please define fiscal year for perticular contract'))
             fiscal_year_objs = fiscalyear_pool.read(cr, uid, fiscal_year_ids, ['date_start','date_stop'], context=context)
             year_exist = False
             for fiscal_year in fiscal_year_objs:
-                if ((fiscal_year['date_start'] <= slip.date) and (fiscal_year['date_stop'] >= slip.date)):
+                if ((fiscal_year['date_start'] <= slip.date_from) and (fiscal_year['date_stop'] >= slip.date_to)):
                     year_exist = True
             if not year_exist:
                 raise osv.except_osv(_('Warning !'), _('Fiscal Year is not defined for slip date %s') % slip.date)
-            search_periods = period_pool.search(cr, uid, [('date_start','<=',slip.date),('date_stop','>=',slip.date)], context=context)
+            search_periods = period_pool.search(cr, uid, [('date_start','<=',slip.date_from),('date_stop','>=',slip.date_to)], context=context)
             if not search_periods:
                 raise osv.except_osv(_('Warning !'), _('Period is not defined for slip date %s') % slip.date)
             period_id = search_periods[0]
@@ -300,7 +304,7 @@ class hr_payslip(osv.osv):
             move = {
                 'journal_id': slip.bank_journal_id.id,
                 'period_id': period_id,
-                'date': slip.date,
+                'date': slip.date_from,
                 'type':'bank_pay_voucher',
                 'ref':slip.number,
                 'narration': name
@@ -316,10 +320,10 @@ class hr_payslip(osv.osv):
             ded_rec = {
                 'move_id': move_id,
                 'name': name,
-                'date': slip.date,
+                'date': slip.date_from,
                 'account_id': slip.employee_id.property_bank_account.id,
                 'debit': 0.0,
-                'credit': slip.total_pay,
+                'credit': amt,
                 'journal_id': slip.journal_id.id,
                 'period_id': period_id,
                 'ref': slip.number
@@ -330,9 +334,9 @@ class hr_payslip(osv.osv):
                 'move_id': move_id,
                 'name': name,
                 'partner_id': partner_id,
-                'date': slip.date,
+                'date': slip.date_from,
                 'account_id': partner.property_account_payable.id,
-                'debit': slip.total_pay,
+                'debit': amt,
                 'credit': 0.0,
                 'journal_id': slip.journal_id.id,
                 'period_id': period_id,
@@ -340,69 +344,69 @@ class hr_payslip(osv.osv):
             }
             line_ids += [movel_pool.create(cr, uid, cre_rec, context=context)]
 
-            other_pay = slip.other_pay
+#            other_pay = slip.other_pay
             #Process all Reambuse Entries
-            for line in slip.line_ids:
-                if line.type == 'otherpay' and line.expanse_id.invoice_id:
-                    if not line.expanse_id.invoice_id.move_id:
-                        raise osv.except_osv(_('Warning !'), _('Please Confirm all Expense Invoice appear for Reimbursement'))
-                    invids = [line.expanse_id.invoice_id.id]
-                    amount = line.total
-                    acc_id = slip.bank_journal_id.default_credit_account_id and slip.bank_journal_id.default_credit_account_id.id
-                    period_id = slip.period_id.id
-                    journal_id = slip.bank_journal_id.id
-                    name = '[%s]-%s' % (slip.number, line.name)
-                    invoice_pool.pay_and_reconcile(cr, uid, invids, amount, acc_id, period_id, journal_id, False, period_id, False, context, name)
-                    other_pay -= amount
-                    #TODO: link this account entries to the Payment Lines also Expense Entries to Account Lines
-                    l_ids = movel_pool.search(cr, uid, [('name','=',name)], context=context)
-                    line_ids += l_ids
-
-                    l_ids = movel_pool.search(cr, uid, [('invoice','=',line.expanse_id.invoice_id.id)], context=context)
-                    exp_ids += l_ids
+#            for line in slip.line_ids:
+#                if line.type == 'otherpay' and line.expanse_id.invoice_id:
+#                    if not line.expanse_id.invoice_id.move_id:
+#                        raise osv.except_osv(_('Warning !'), _('Please Confirm all Expense Invoice appear for Reimbursement'))
+#                    invids = [line.expanse_id.invoice_id.id]
+#                    amount = line.total
+#                    acc_id = slip.bank_journal_id.default_credit_account_id and slip.bank_journal_id.default_credit_account_id.id
+#                    period_id = slip.period_id.id
+#                    journal_id = slip.bank_journal_id.id
+#                    name = '[%s]-%s' % (slip.number, line.name)
+#                    invoice_pool.pay_and_reconcile(cr, uid, invids, amount, acc_id, period_id, journal_id, False, period_id, False, context, name)
+#                    other_pay -= amount
+#                    #TODO: link this account entries to the Payment Lines also Expense Entries to Account Lines
+#                    l_ids = movel_pool.search(cr, uid, [('name','=',name)], context=context)
+#                    line_ids += l_ids
+#
+#                    l_ids = movel_pool.search(cr, uid, [('invoice','=',line.expanse_id.invoice_id.id)], context=context)
+#                    exp_ids += l_ids
 
             #Process for Other payment if any
-            other_move_id = False
-            if slip.other_pay > 0:
-                narration = 'Payment of Other Payeble amounts to %s' % (slip.employee_id.name)
-                move = {
-                    'journal_id': slip.bank_journal_id.id,
-                    'period_id': period_id,
-                    'date': slip.date,
-                    'type':'bank_pay_voucher',
-                    'ref':slip.number,
-                    'narration': narration
-                }
-                other_move_id = move_pool.create(cr, uid, move, context=context)
-                self.create_voucher(cr, uid, [slip.id], narration, move_id)
-
-                name = "To %s account" % (slip.employee_id.name)
-                ded_rec = {
-                    'move_id':other_move_id,
-                    'name':name,
-                    'date':slip.date,
-                    'account_id':slip.employee_id.property_bank_account.id,
-                    'debit': 0.0,
-                    'credit': other_pay,
-                    'journal_id':slip.journal_id.id,
-                    'period_id':period_id,
-                    'ref':slip.number
-                }
-                line_ids += [movel_pool.create(cr, uid, ded_rec, context=context)]
-                name = "By %s account" % (slip.employee_id.property_bank_account.name)
-                cre_rec = {
-                    'move_id':other_move_id,
-                    'name':name,
-                    'partner_id':partner_id,
-                    'date':slip.date,
-                    'account_id':partner.property_account_payable.id,
-                    'debit': other_pay,
-                    'credit':0.0,
-                    'journal_id':slip.journal_id.id,
-                    'period_id':period_id,
-                    'ref':slip.number
-                }
-                line_ids += [movel_pool.create(cr, uid, cre_rec, context=context)]
+#            other_move_id = False
+#            if slip.other_pay > 0:
+#                narration = 'Payment of Other Payeble amounts to %s' % (slip.employee_id.name)
+#                move = {
+#                    'journal_id': slip.bank_journal_id.id,
+#                    'period_id': period_id,
+#                    'date': slip.date_from,
+#                    'type':'bank_pay_voucher',
+#                    'ref':slip.number,
+#                    'narration': narration
+#                }
+#                other_move_id = move_pool.create(cr, uid, move, context=context)
+#                self.create_voucher(cr, uid, [slip.id], narration, move_id)
+#
+#                name = "To %s account" % (slip.employee_id.name)
+#                ded_rec = {
+#                    'move_id':other_move_id,
+#                    'name':name,
+#                    'date':slip.date_from,
+#                    'account_id':slip.employee_id.property_bank_account.id,
+#                    'debit': 0.0,
+#                    'credit': other_pay,
+#                    'journal_id':slip.journal_id.id,
+#                    'period_id':period_id,
+#                    'ref':slip.number
+#                }
+#                line_ids += [movel_pool.create(cr, uid, ded_rec, context=context)]
+#                name = "By %s account" % (slip.employee_id.property_bank_account.name)
+#                cre_rec = {
+#                    'move_id':other_move_id,
+#                    'name':name,
+#                    'partner_id':partner_id,
+#                    'date':slip.date_from,
+#                    'account_id':partner.property_account_payable.id,
+#                    'debit': other_pay,
+#                    'credit':0.0,
+#                    'journal_id':slip.journal_id.id,
+#                    'period_id':period_id,
+#                    'ref':slip.number
+#                }
+#                line_ids += [movel_pool.create(cr, uid, cre_rec, context=context)]
 
             rec = {
                 'state':'done',
@@ -501,7 +505,6 @@ class hr_payslip(osv.osv):
                 'analytic_account_id': False,
                 'ref':slip.number
             }
-
             #Setting Analysis Account for Basic Salary
             if slip.employee_id.analytic_account:
                 line['analytic_account_id'] = slip.employee_id.analytic_account.id
@@ -528,6 +531,8 @@ class hr_payslip(osv.osv):
             line_ids += [movel_pool.create(cr, uid, line, context=context)]
 
             for line in slip.line_ids:
+                if line.name == 'Net' or line.name == 'Gross' or line.name == 'Basic':
+                    continue
                 name = "[%s] - %s / %s" % (line.code, line.name, slip.employee_id.name)
                 amount = line.total
 
@@ -576,6 +581,7 @@ class hr_payslip(osv.osv):
                 elif line.category_id.name  == 'Deduction':
                     if not partner.property_account_receivable:
                         raise osv.except_osv(_('Integrity Error !'), _('Please Configure Partners Receivable Account!!'))
+                    amount =  -(amount)
                     rec['credit'] = amount
                     total_deduct += amount
                     ded_rec = {
@@ -596,7 +602,6 @@ class hr_payslip(osv.osv):
                 # if self._debug:
                 #    for contrib in line.category_id.contribute_ids:
                 #       _log.debug("%s %s %s %s %s",  contrib.name, contrub.code, contrub.amount_type, contrib.contribute_per, line.total)
-
             adj_move_id = False
             if total_deduct > 0:
                 move = {
@@ -662,7 +667,6 @@ class hr_payslip(osv.osv):
                         'account_id':acc
                     }
                     payslip_pool.create(cr, uid, exp_res, context=context)
-
             self.write(cr, uid, [slip.id], rec, context=context)
         return True
 
