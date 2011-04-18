@@ -115,9 +115,6 @@ class email_compose_message(osv.osv_memory):
         if message_id:
             message_data = message_pool.browse(cr, uid, message_id, context)
             subject = tools.ustr(message_data and message_data.subject or '')
-            if context.get('mail','') == 'reply':
-                subject = "Re :- " + subject
-
             description =  message_data and message_data.body  or ''
             message_body = False
             if context.get('mail','') == 'reply':
@@ -127,6 +124,8 @@ class email_compose_message(osv.osv_memory):
                 sentdate = 'Date: %s' % message_data.date
                 desc = '\n > \t %s' % tools.ustr(description.replace('\n', "\n > \t") or '')
                 description = '\n'.join([header, sender, email_to, sentdate, desc])
+                if not subject.startswith('Re: '):
+                    subject = "Re: " + subject
 
             result.update({
                     'body' : description,
