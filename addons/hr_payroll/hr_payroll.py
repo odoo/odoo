@@ -400,8 +400,8 @@ class hr_payslip(osv.osv):
     def compute_sheet(self, cr, uid, ids, context=None):
         slip_line_pool = self.pool.get('hr.payslip.line')
         sequence_obj = self.pool.get('ir.sequence')
-        number = sequence_obj.get(cr, uid, 'salary.slip')
         for payslip in self.browse(cr, uid, ids, context=context):
+            number = sequence_obj.get(cr, uid, 'salary.slip')
             #delete old payslip lines
             old_slipline_ids = slip_line_pool.search(cr, uid, [('slip_id', '=', payslip.id)], context=context)
             old_slipline_ids
