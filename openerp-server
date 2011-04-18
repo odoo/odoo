@@ -41,9 +41,9 @@ import threading
 import traceback
 import time
 
-import openerp.release as release
-__author__ = release.author
-__version__ = release.version
+import openerp
+__author__ = openerp.release.author
+__version__ = openerp.release.version
 
 if os.name == 'posix':
     import pwd
@@ -54,27 +54,26 @@ if os.name == 'posix':
         sys.exit(1)
 
 #-----------------------------------------------------------------------
-# import the tools module so that the commandline parameters are parsed
+# parse the command line
 #-----------------------------------------------------------------------
-import openerp.tools as tools
-tools.config.parse_config(sys.argv[1:])
+openerp.tools.config.parse_config(sys.argv[1:])
+config = openerp.tools.config
 
 #----------------------------------------------------------
 # get logger
 #----------------------------------------------------------
-import openerp.netsvc as netsvc
-netsvc.init_logger()
+openerp.netsvc.init_logger()
 logger = logging.getLogger('server')
 
-logger.info("OpenERP version - %s", release.version)
-for name, value in [('addons_path', tools.config['addons_path']),
-                    ('database hostname', tools.config['db_host'] or 'localhost'),
-                    ('database port', tools.config['db_port'] or '5432'),
-                    ('database user', tools.config['db_user'])]:
+logger.info("OpenERP version - %s", __version__)
+for name, value in [('addons_path', config['addons_path']),
+                    ('database hostname', config['db_host'] or 'localhost'),
+                    ('database port', config['db_port'] or '5432'),
+                    ('database user', config['db_user'])]:
     logger.info("%s - %s", name, value)
 
 # Don't allow if the connection to PostgreSQL done by postgres user
-if tools.config['db_user'] == 'postgres':
+if config['db_user'] == 'postgres':
     logger.error("Connecting to the database as 'postgres' user is forbidden, as it present major security issues. Shutting down.")
     sys.exit(1)
 
@@ -83,34 +82,28 @@ if tools.config['db_user'] == 'postgres':
 #----------------------------------------------------------
 logger.info('initialising distributed objects services')
 
-#---------------------------------------------------------------
-# connect to the database and initialize it with base if needed
-#---------------------------------------------------------------
-import openerp.pooler as pooler
-
 #----------------------------------------------------------
 # Load and update databases if requested
 #----------------------------------------------------------
 
-import openerp.service.http_server as http_server
-import openerp.service.netrpc_server as netrpc_server
-
-if not ( tools.config["stop_after_init"] or \
-    tools.config["translate_in"] or \
-    tools.config["translate_out"] ):
+if not ( config["stop_after_init"] or \
+    config["translate_in"] or \
+    config["translate_out"] ):
+    http_server = openerp.service.http_server
+    netrpc_server = openerp.service.netrpc_server
     http_server.init_servers()
     http_server.init_xmlrpc()
     http_server.init_static_http()
     netrpc_server.init_servers()
 
-if tools.config['db_name']:
-    for dbname in tools.config['db_name'].split(','):
-        db,pool = pooler.get_db_and_pool(dbname, update_module=tools.config['init'] or tools.config['update'], pooljobs=False)
+if config['db_name']:
+    for dbname in config['db_name'].split(','):
+        db, pool = openerp.pooler.get_db_and_pool(dbname, update_module=config['init'] or config['update'], pooljobs=False)
         cr = db.cursor()
 
-        if tools.config["test_file"]:
-            logger.info('loading test file %s', tools.config["test_file"])
-            tools.convert_yaml_import(cr, 'base', file(tools.config["test_file"]), {}, 'test', True)
+        if config["test_file"]:
+            logger.info('loading test file %s', config["test_file"])
+            openerp.tools.convert_yaml_import(cr, 'base', file(config["test_file"]), {}, 'test', True)
             cr.rollback()
 
         pool.get('ir.cron')._poolJobs(db.dbname)
@@ -120,33 +113,33 @@ if tools.config['db_name']:
 #----------------------------------------------------------
 # translation stuff
 #----------------------------------------------------------
-if tools.config["translate_out"]:
-    if tools.config["language"]:
-        msg = "language %s" % (tools.config["language"],)
+if config["translate_out"]:
+    if config["language"]:
+        msg = "language %s" % (config["language"],)
     else:
         msg = "new language"
-    logger.info('writing translation file for %s to %s', msg, tools.config["translate_out"])
+    logger.info('writing translation file for %s to %s', msg, config["translate_out"])
 
-    fileformat = os.path.splitext(tools.config["translate_out"])[-1][1:].lower()
-    buf = file(tools.config["translate_out"], "w")
-    dbname = tools.config['db_name']
-    cr = pooler.get_db(dbname).cursor()
-    tools.trans_export(tools.config["language"], tools.config["translate_modules"] or ["all"], buf, fileformat, cr)
+    fileformat = os.path.splitext(config["translate_out"])[-1][1:].lower()
+    buf = file(config["translate_out"], "w")
+    dbname = config['db_name']
+    cr = openerp.pooler.get_db(dbname).cursor()
+    openerp.tools.trans_export(config["language"], config["translate_modules"] or ["all"], buf, fileformat, cr)
     cr.close()
     buf.close()
 
     logger.info('translation file written successfully')
     sys.exit(0)
 
-if tools.config["translate_in"]:
-    context = {'overwrite': tools.config["overwrite_existing_translations"]}
-    dbname = tools.config['db_name']
-    cr = pooler.get_db(dbname).cursor()
-    tools.trans_load(cr,
-                     tools.config["translate_in"], 
-                     tools.config["language"],
+if config["translate_in"]:
+    context = {'overwrite': config["overwrite_existing_translations"]}
+    dbname = config['db_name']
+    cr = openerp.pooler.get_db(dbname).cursor()
+    openerp.tools.trans_load(cr,
+                     config["translate_in"], 
+                     config["language"],
                      context=context)
-    tools.trans_update_res_ids(cr)
+    openerp.tools.trans_update_res_ids(cr)
     cr.commit()
     cr.close()
     sys.exit(0)
@@ -154,7 +147,7 @@ if tools.config["translate_in"]:
 #----------------------------------------------------------------------------------
 # if we don't want the server to continue to run after initialization, we quit here
 #----------------------------------------------------------------------------------
-if tools.config["stop_after_init"]:
+if config["stop_after_init"]:
     sys.exit(0)
 
 #----------------------------------------------------------
@@ -201,10 +194,10 @@ if os.name == 'posix':
     signal.signal(signal.SIGQUIT, dumpstacks)
 
 def quit():
-    netsvc.Agent.quit()
-    netsvc.Server.quitAll()
-    if tools.config['pidfile']:
-        os.unlink(tools.config['pidfile'])
+    openerp.netsvc.Agent.quit()
+    openerp.netsvc.Server.quitAll()
+    if config['pidfile']:
+        os.unlink(config['pidfile'])
     logger = logging.getLogger('shutdown')
     logger.info("Initiating OpenERP Server shutdown")
     logger.info("Hit CTRL-C again or send a second signal to immediately terminate the server...")
@@ -222,13 +215,13 @@ def quit():
                 time.sleep(0.05)
     sys.exit(0)
 
-if tools.config['pidfile']:
-    fd = open(tools.config['pidfile'], 'w')
+if config['pidfile']:
+    fd = open(config['pidfile'], 'w')
     pidtext = "%d" % (os.getpid())
     fd.write(pidtext)
     fd.close()
 
-netsvc.Server.startAll()
+openerp.netsvc.Server.startAll()
 
 logger.info('OpenERP server is running, waiting for connections...')
 
