@@ -39,6 +39,7 @@ import signal
 import sys
 import threading
 import traceback
+import time
 
 import openerp.release as release
 __author__ = release.author
@@ -77,8 +78,6 @@ if tools.config['db_user'] == 'postgres':
     logger.error("Connecting to the database as 'postgres' user is forbidden, as it present major security issues. Shutting down.")
     sys.exit(1)
 
-import time
-
 #----------------------------------------------------------
 # init net service
 #----------------------------------------------------------
@@ -90,34 +89,19 @@ logger.info('initialising distributed objects services')
 import openerp.pooler as pooler
 
 #----------------------------------------------------------
-# import basic modules
-#----------------------------------------------------------
-import openerp.osv as osv
-import openerp.workflow as workflow
-import openerp.report as report
-import openerp.service as service
-
-#----------------------------------------------------------
-# import addons
-#----------------------------------------------------------
-
-import openerp.addons as addons
-
-#----------------------------------------------------------
 # Load and update databases if requested
 #----------------------------------------------------------
 
-import openerp.service.http_server as service_http_server
+import openerp.service.http_server as http_server
+import openerp.service.netrpc_server as netrpc_server
 
 if not ( tools.config["stop_after_init"] or \
     tools.config["translate_in"] or \
     tools.config["translate_out"] ):
-    service_http_server.init_servers()
-    service_http_server.init_xmlrpc()
-    service_http_server.init_static_http()
-
-    import openerp.service.netrpc_server as service_netrpc_server
-    service_netrpc_server.init_servers()
+    http_server.init_servers()
+    http_server.init_xmlrpc()
+    http_server.init_static_http()
+    netrpc_server.init_servers()
 
 if tools.config['db_name']:
     for dbname in tools.config['db_name'].split(','):
@@ -137,8 +121,6 @@ if tools.config['db_name']:
 # translation stuff
 #----------------------------------------------------------
 if tools.config["translate_out"]:
-    import csv
-
     if tools.config["language"]:
         msg = "language %s" % (tools.config["language"],)
     else:
@@ -175,7 +157,6 @@ if tools.config["translate_in"]:
 if tools.config["stop_after_init"]:
     sys.exit(0)
 
-
 #----------------------------------------------------------
 # Launch Servers
 #----------------------------------------------------------
@@ -186,15 +167,16 @@ SIGNALS = dict(
     [(getattr(signal, sign), sign) for sign in LST_SIGNALS]
 )
 
-netsvc.quit_signals_received = 0
+quit_signals_received = 0
 
 def handler(signum, frame):
     """
     :param signum: the signal number
     :param frame: the interrupted stack frame or None
     """
-    netsvc.quit_signals_received += 1
-    if netsvc.quit_signals_received > 1:
+    global quit_signals_received
+    quit_signals_received += 1
+    if quit_signals_received > 1:
         sys.stderr.write("Forced shutdown.\n")
         os._exit(0)
 
@@ -250,7 +232,7 @@ netsvc.Server.startAll()
 
 logger.info('OpenERP server is running, waiting for connections...')
 
-while netsvc.quit_signals_received == 0:
+while quit_signals_received == 0:
     time.sleep(60)
 
 quit()
