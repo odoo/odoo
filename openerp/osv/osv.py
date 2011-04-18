@@ -34,7 +34,6 @@ from openerp.tools.translate import translate
 
 module_list = []
 module_class_list = {}
-class_pool = {}
 
 class except_osv(Exception):
     def __init__(self, name, value, exc_type='warning'):
@@ -266,7 +265,6 @@ class osv_base(object):
         if not hasattr(cls, '_module'):
             cls._module = module
         module_class_list.setdefault(cls._module, []).append(cls)
-        class_pool[cls._name] = cls
         if module not in module_list:
             module_list.append(cls._module)
         return None
