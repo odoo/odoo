@@ -45,7 +45,7 @@ class stock_partial_move_memory_out(osv.osv_memory):
         'prodlot_id' : fields.many2one('stock.production.lot', 'Production Lot'),
         'move_id' : fields.many2one('stock.move', "Move"),
         'wizard_id' : fields.many2one('stock.partial.move', string="Wizard"),
-        'cost' : fields.float("Cost", help="Unit Cost for this product line"),
+        'cost' : fields.float("Cost", help="Unit Cost for this product line per Unit of Measure"),
         'currency' : fields.many2one('res.currency', string="Currency", help="Currency in which Unit cost is expressed"),
         'tracking': fields.function(_tracking, method=True, string='Tracking', type='boolean'), 
     }
