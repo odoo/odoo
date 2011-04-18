@@ -2108,11 +2108,11 @@ class stock_move(osv.osv):
 
         todo = []
         for move in self.browse(cr, uid, ids, context=context):
-            #print 'DONE MOVE', move.id, move.product_id.name, move.move_dest_id.id, move.state, move.move_dest_id and move.move_dest_id.state
             if move.state=="draft":
                 todo.append(move.id)
         if todo:
             self.action_confirm(cr, uid, todo, context=context)
+            todo = []
 
         for move in self.browse(cr, uid, ids, context=context):
             if move.state in ['done','cancel']:
@@ -2135,10 +2135,13 @@ class stock_move(osv.osv):
             prodlot_id = partial_datas and partial_datas.get('move%s_prodlot_id' % (move.id), False)
             if prodlot_id:
                 self.write(cr, uid, [move.id], {'prodlot_id': prodlot_id}, context=context)
-            if move.state not in ('confirmed','done'):
-                self.action_confirm(cr, uid, move_ids, context=context)
+            if move.state not in ('confirmed','done','assigned'):
+                todo.append(move.id)
 
-        self.write(cr, uid, move_ids, {'state': 'done', 'date_planned': time.strftime('%Y-%m-%d %H:%M:%S')}, context=context)
+        if todo:
+            self.action_confirm(cr, uid, todo, context=context)
+
+        self.write(cr, uid, move_ids, {'state': 'done', 'date': time.strftime('%Y-%m-%d %H:%M:%S')}, context=context)
         for id in move_ids:
              wf_service.trg_trigger(uid, 'stock.move', id, cr)
 
