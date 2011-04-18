@@ -217,6 +217,7 @@ class hr_holidays(osv.osv):
         })
         wf_service = netsvc.LocalService("workflow")
         for id in ids:
+            wf_service.trg_delete(uid, 'hr.holidays', id, cr)
             wf_service.trg_create(uid, 'hr.holidays', id, cr)
         return True
 
