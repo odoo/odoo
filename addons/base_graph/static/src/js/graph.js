@@ -66,70 +66,77 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
         
         this.$element.html(QWeb.render("GraphView", {"fields_view": this.fields_view, "chart": this.chart}));
         
-        console.log('fields view >>>>>>',this.fields_view)
-        
         for(res in result) {
             for(fld in result[res]) {
-                if(typeof result[res][fld] == 'object') {
-                    result[res][fld] = result[res][fld][result[res][fld].length - 1]
+                if (fld != 'state') {
+                    if (typeof result[res][fld] == 'object') {
+                        result[res][fld] = result[res][fld][result[res][fld].length - 1];
+                    }
+                    
                 }
             }
         }
         if(this.chart == 'bar') {
-            var xAxis = {};
-            var yAxis = {};
-            
-            if (this.orientation && this.orientation == 'horizontal') {
-                this.chart = "barH";
-                xAxis:{template:"#"+this.operator_field+"#"};
-			    yAxis:{title: this.chart_info_fields[0]};
-            } else {
-                xAxis:{template:"#"+this.chart_info_fields[0]+"#"};
-			    yAxis:{title: this.operator_field};
-            }
-            return this.schedule_bar(result, xAxis, yAxis, "barchart")
+            return this.schedule_bar(result, "barchart")
         } else if(this.chart == "pie") {
             return this.schedule_pie(result, "piechart");
         }
         
     },
     
-    
-    schedule_bar: function(result, xAxis, yAxis, container) {
-        var chart = new dhtmlXChart({
-            view: this.chart,
-            container: container,
-            value: "#"+this.operator_field+"#",
-            color:"#d2ed7e",
-            width:30,
-            gradient:"3d",
-            tooltip: "#"+this.chart_info_fields[0]+"#",
-            xAxis: xAxis,
-			yAxis: yAxis,
-            legend: {
+    schedule_bar: function(result, container) {
+        var self = this;
+        this.chart = this.orientation == 'horizontal'? 'barH' : this.chart || 'bar';
+        
+        var bar_chart = new dhtmlxchartChart({
+           view: this.chart,
+           container: container,
+           gradient: "3d",
+           border: false,
+           value: "#"+this.operator_field+"#",
+           label: self.orientation == 'horizontal' ? '#'+this.operator_field+'#' : "#"+this.chart_info_fields[0]+'#',
+           width: 30,
+           tooltip: self.orientation == 'horizontal' ? "#"+this.chart_info_fields[0]+'#': "#"+this.operator_field+"#",
+           origin:0,
+           legend: {
                 align:"right",
 			    valign:"top",
 			    marker:{
 				    type:"round",
 				    width:12
 			        },
-                template:"#"+this.chart_info_fields[0]+"#"
+                template: self.fields[this.operator_field]['string']
             }
         });
-        if(this.group_field) {
-//            var map_fld = this.chart_info_fields[0];
-//            chart.group({
-//               by: "#"+this.group_field+"#",
-//               map:{
-//					map_fld :["#"+this.operator_field+"#", "sum"]
-//				} 
-//            });
+        
+        if(this.chart == 'barH') {
+            bar_chart.define("xAxis",{
+                title: this.fields[this.operator_field]['string'],
+                lines: true
+            });
+            
+            bar_chart.define("yAxis",{
+                template: "#"+this.chart_info_fields[0]+'#',
+                title:  this.fields[this.chart_info_fields[0]]['string'],
+                lines: true
+            });
+        } else {
+            bar_chart.define("xAxis",{
+                template:"#"+this.chart_info_fields[0]+"#",
+                title: this.fields[this.chart_info_fields[0]]['string'],
+                lines: true
+            });
+            
+            bar_chart.define("yAxis",{
+                title: this.fields[this.operator_field]['string'],
+	            lines: true,
+            });
         }
-        chart.parse(result, "json");
+        bar_chart.parse(result,"json");
     },
     
     schedule_pie: function(result, container) {
-        var chart =  new dhtmlXChart({
+        var chart =  new dhtmlxchartChart({
     		view:"pie",
     		container:container,
     		value:"#"+this.operator_field+"#",
@@ -151,109 +158,21 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
     	chart.parse(result,"json");
     },
     
-	create_graph: function(res) {
-		//if (this.graph_type == "bar"){
-	    var barChart = new dhtmlXChart({
-	    	view:"bar",
-			container:"barchart",
-	        value:"#"+this.fields['total']+"#",
-			color:"#9abe00",
-            width:40,
-            tooltip: "#"+this.fields['id']+"#",
-            xAxis:{
-				template:"#"+this.fields['id']+"#"
-			},
-			yAxis:{
-				title: "Total"
-			}
-		});
-	    barChart.parse(res, "json");
-		//}
-		var pieChart = new dhtmlXChart({
-	    	view: "pie",
-	        container: "piechart",
-	        value: "#"+this.fields['total']+"#",
-	        label: "#"+this.fields['id']+"#",
-	        pieInnerText: "<b>#"+this.fields['total']+"#</b>",
-	        gradient: true,
-        	radius: 90,
-        	x: 280,
-        	y: 150
-		});
-	    pieChart.parse(res, "json");
-
-	    /*static data for stackedbar chart*/
-	    var data = [{
-		    total: "2.0",
-		    total1: "0.0",
-		    stage: "Lost"
-		}, {
-		    total: "1.0",
-		    total1: "2.0",
-		    stage: "Negotiation"
-		}, {
-		    total: "4.0",
-		    total1: "2.0",
-		    stage: "New"
-		}, {
-		    total: "3.0",
-		    total1: "0.0",
-		    stage: "Proposition"
-		}, {
-		    total: "1.0",
-		    total1: "1.0",
-		    stage: "Qualification"
-		}, {
-		    total: "1.0",
-		    total1: "0.0",
-		    stage: "Won"
-		}];
-
-	    var stackedChart = new dhtmlXChart({
-		    view: "stackedBar",
-	        container: "stackedchart",
-	        value: "#total#",
-	        label: "#total#",
-	        width: 60,
-	        tooltip: {
-	            template: "#total#"
-	        },
-	        xAxis: {
-	            template: "#stage#"
-	        },
-	        yAxis: {
-	            title: "User"
-	        },
-	        gradient: "3d",
-	        color: "#66cc33",
-	        legend: {
-	            values: [{
-			                text: "Administrator",
-			                color: "#66cc33"
-			            }, {
-			                text: "Demo User",
-			                color: "#ff9933"
-			            }],
-			            valign: "top",
-			            align: "right",
-			            width: 120,
-			            layout: "y",
-			            marker: {
-			                width: 15,
-			                type: "round"
-			            }
-			        }
-		});
-	    stackedChart.addSeries({
-	        value: "#total1#",
-	        color: "#ff9933",
-	        label: "#total1#",
-	        tooltip: {
-	            template: "#total1#"
-	        }
-	    });
-		stackedChart.parse(data, "json");
-	},
+    do_search: function(domains, contexts, groupbys) {
+        var self = this;
+        this.rpc('/base/session/eval_domain_and_context', {
+            domains: domains,
+            contexts: contexts,
+            group_by_seq: groupbys
+        }, function (results) {
+            // TODO: handle non-empty results.group_by with read_group
+            self.dataset.context = self.context = results.context;
+            self.dataset.domain = self.domain = results.domain;
+            self.dataset.read_slice(self.fields, 0, self.limit,function(result){
+                self.schedule_chart(result)
+            });
+        });
+    },
 
 
 });
