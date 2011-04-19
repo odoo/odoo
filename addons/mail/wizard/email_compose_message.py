@@ -29,6 +29,13 @@ class email_compose_message(osv.osv_memory):
     _description = 'This is the wizard for Compose E-mail'
 
     def default_get(self, cr, uid, fields, context=None):
+        """
+        Returns default values for fields
+        @param fields: list of fields, for which default values are required to be read
+        @param context: context arguments, like lang, time zone
+
+        @return: Returns a dictionary that contains default values for fields
+        """
         if context is None:
             context = {}
         result = super(email_compose_message, self).default_get(cr, uid, fields, context=context)
@@ -108,6 +115,10 @@ class email_compose_message(osv.osv_memory):
         return {}
 
     def get_message_data(self, cr, uid, message_id, context=None):
+        '''
+        Called by default_get() to get message detail
+        @param message_id: Id of the email message
+        '''
         if context is None:
             context = {}
         result = {}
@@ -116,7 +127,6 @@ class email_compose_message(osv.osv_memory):
             message_data = message_pool.browse(cr, uid, message_id, context)
             subject = tools.ustr(message_data and message_data.subject or '')
             description =  message_data and message_data.body  or ''
-            message_body = False
             if context.get('mail','') == 'reply':
                 header = '-------- Original Message --------'
                 sender = 'From: %s'  % tools.ustr(message_data.email_from or '')
@@ -150,6 +160,9 @@ class email_compose_message(osv.osv_memory):
         return result
 
     def send_mail(self, cr, uid, ids, context=None):
+        '''
+        Sends the email
+        '''
         if context is None:
             context = {}
 
@@ -209,7 +222,6 @@ class email_compose_message(osv.osv_memory):
 
     def get_template_value(self, cr, uid, message, model, resource_id, context=None):
         return message
-
 
 email_compose_message()
 

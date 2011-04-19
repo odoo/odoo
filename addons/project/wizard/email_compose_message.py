@@ -27,6 +27,13 @@ class email_compose_message(osv.osv_memory):
     _inherit = 'email.compose.message'
 
     def get_value(self, cr, uid, model, resource_id, context=None):
+        '''
+        To get values of the resource_id for the model
+        @param model: Object
+        @param resource_id: id of a record for which values to be read
+
+        @return: Returns a dictionary
+        '''
         if context is None:
             context = {}
         result = super(email_compose_message, self).get_value(cr, uid,  model, resource_id, context=context)

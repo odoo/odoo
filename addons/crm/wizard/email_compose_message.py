@@ -31,6 +31,13 @@ class email_compose_message(osv.osv_memory):
     _inherit = 'email.compose.message'
 
     def get_value(self, cr, uid, model, resource_id, context=None):
+        '''
+        To get values of the resource_id for the model
+        @param model: Object
+        @param resource_id: id of a record for which values to be read
+
+        @return: Returns a dictionary
+        '''
         if context is None:
             context = {}
         result = super(email_compose_message, self).get_value(cr, uid,  model, resource_id, context=context)
@@ -43,8 +50,8 @@ class email_compose_message(osv.osv_memory):
                     'email_from' : data.user_id and data.user_id.address_id and data.user_id.address_id.email or tools.config.get('email_from', False),
                     'body' : '\n' + (tools.ustr(data.user_id.signature or '')),
                     'email_cc' : tools.ustr(data.email_cc or ''),
-                    'model': model  or False,
-                    'res_id': resource_id  or False,
+                    'model': model,
+                    'res_id': resource_id,
                 })
             if hasattr(data, 'section_id'):
                 result.update({'reply_to' : data.section_id and data.section_id.reply_to or False})
