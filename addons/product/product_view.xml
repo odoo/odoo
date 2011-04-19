@@ -29,6 +29,7 @@
                        <filter string='Default UOM' icon="terp-mrp" domain="[]" context="{'group_by' : 'uom_id'}" />
                        <separator orientation="vertical"/>
                        <filter string='Type' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'type'}" />
+                       <filter string='Company' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'company_id'}" groups="base.group_multi_company" />
                    </group>
 
                 </search>
@@ -54,6 +55,7 @@
                     <field name="price" invisible="not context.get('pricelist',False)"/>
                     <field name="standard_price"/>
                     <field name="state" groups="base.group_extended"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>
         </record>
