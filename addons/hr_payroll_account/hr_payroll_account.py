@@ -238,16 +238,24 @@ class hr_payslip(osv.osv):
             debit_account = jou.default_debit_account_id.id
         for rule in rule_obj.browse(cr, uid, sorted_rule_ids, context=context):
             if not rule.account_debit.id:
-                vals_account['account_debit'] = debit_account
+                rule_obj.write(cr, uid, [rule.id], {'account_debit': debit_account})
             if not rule.account_credit.id:
-                vals_account['account_credit'] = credit_account
-            rule_obj.write(cr, uid, [rule.id], vals_account)
+                rule_obj.write(cr, uid, [rule.id], {'account_credit': credit_account})
             for value in result:
                 if value['salary_rule_id'] == rule.id:
-                    if not rule.account_debit.id:
-                        value['account_id'] = debit_account
+                    if rule.category_id.name == 'Deduction':
+                        if not rule.account_debit.id:
+                            value['account_id'] = debit_account
+                        else:
+                            value['account_id'] = rule.account_debit.id
+                    elif rule.category_id.name == 'Allowance':
+                        if not rule.account_credit.id:
+                            value['account_id'] = credit_account
+                        else:
+                            value['account_id'] = rule.account_credit.id
                     else:
-                        value['account_id'] = rule.account_debit.id
+                        emp_account_id = [record.employee_id.employee_account.id for record in self.browse(cr, uid, [payslip_id], context=context)]
+                        value['account_id'] = emp_account_id[0]
         return result
     
     def create_voucher(self, cr, uid, ids, name, voucher, sequence=5):
