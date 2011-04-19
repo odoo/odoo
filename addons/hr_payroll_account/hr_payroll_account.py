@@ -222,17 +222,32 @@ class hr_payslip(osv.osv):
     }
     
     def get_payslip_lines(self, cr, uid, contract_ids, payslip_id, context):
+        journal_obj = self.pool.get('account.journal')
+        rule_obj = self.pool.get('hr.salary.rule')
+        contract_obj = self.pool.get('hr.contract')
+        structure_obj = self.pool.get('hr.payroll.structure')
+        vals_account = {}
         result = super(hr_payslip, self).get_payslip_lines(cr, uid, contract_ids, payslip_id, context)
-        structure_ids = self.pool.get('hr.contract').get_all_structures(cr, uid, contract_ids, context=context)
+        structure_ids = contract_obj.get_all_structures(cr, uid, contract_ids, context=context)
         #get the rules of the structure and thier children
-        rule_ids = self.pool.get('hr.payroll.structure').get_all_rules(cr, uid, structure_ids, context=context)
-        #run the rules by sequence
+        rule_ids = structure_obj.get_all_rules(cr, uid, structure_ids, context=context)
         sorted_rule_ids = [id for id, sequence in sorted(rule_ids, key=lambda x:x[1])]
-
-        for rule in self.pool.get('hr.salary.rule').browse(cr, uid, sorted_rule_ids, context=context):
+        journal_id = [record.journal_id.id for record in self.browse(cr, uid, [payslip_id], context=context)]
+        for jou in journal_obj.browse(cr ,uid, journal_id, context=context):
+            credit_account = jou.default_credit_account_id.id
+            debit_account = jou.default_debit_account_id.id
+        for rule in rule_obj.browse(cr, uid, sorted_rule_ids, context=context):
+            if not rule.account_debit.id:
+                vals_account['account_debit'] = debit_account
+            if not rule.account_credit.id:
+                vals_account['account_credit'] = credit_account
+            rule_obj.write(cr, uid, [rule.id], vals_account)
             for value in result:
                 if value['salary_rule_id'] == rule.id:
-                    value['account_id'] = rule.account_debit.id,
+                    if not rule.account_debit.id:
+                        value['account_id'] = debit_account
+                    else:
+                        value['account_id'] = rule.account_debit.id
         return result
     
     def create_voucher(self, cr, uid, ids, name, voucher, sequence=5):
