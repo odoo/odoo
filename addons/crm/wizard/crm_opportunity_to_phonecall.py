@@ -33,9 +33,10 @@ class crm_opportunity2phonecall(osv.osv_memory):
         'user_id' : fields.many2one('res.users', "Assign To"),
         'date': fields.datetime('Date' , required=True),
         'section_id': fields.many2one('crm.case.section', 'Sales Team'),
-        'categ_id': fields.many2one('crm.case.categ', 'Category', required=True, \
+        'categ_id': fields.many2one('crm.case.categ', 'Category',  \
                         domain="['|',('section_id','=',False),('section_id','=',section_id),\
-                        ('object_id.model', '=', 'crm.phonecall')]"), 
+                        ('object_id.model', '=', 'crm.phonecall')]"),
+        'action': fields.selection([('schedule','Schedule a call'), ('log','Log a call')], 'Action', required=True), 
     }
 
     def default_get(self, cr, uid, fields, context=None):
@@ -58,6 +59,7 @@ class crm_opportunity2phonecall(osv.osv_memory):
 
         record_ids = context and context.get('active_ids', []) or []
         res = super(crm_opportunity2phonecall, self).default_get(cr, uid, fields, context=context)
+        res.update({'action': 'schedule'})
         for opp in opp_obj.browse(cr, uid, record_ids, context=context):
             if 'name' in fields:
                 res.update({'name': opp.name})
@@ -112,7 +114,7 @@ class crm_opportunity2phonecall(osv.osv_memory):
 
         for this in self.browse(cr, uid, ids, context=context):
             for opp in opp_obj.browse(cr, uid, record_ids, context=context):
-                new_case = phonecall_obj.create(cr, uid, {
+                vals = {
                         'name' : opp.name,
                         'case_id' : opp.id ,
                         'user_id' : this.user_id and this.user_id.id or False,
@@ -126,9 +128,12 @@ class crm_opportunity2phonecall(osv.osv_memory):
                         'partner_mobile' : opp.partner_address_id and opp.partner_address_id.mobile or False,
                         'priority': opp.priority,
                         'opportunity_id': opp.id
-                }, context=context)
-
-                phonecall_obj.case_open(cr, uid, [new_case])
+                }
+                new_case = phonecall_obj.create(cr, uid, vals, context=context)
+                if this.action == 'schedule':
+                    phonecall_obj.case_open(cr, uid, [new_case])
+                elif this.action == 'log':
+                    phonecall_obj.case_close(cr, uid, [new_case])
 
             value = {
                 'name': _('Phone Call'),
