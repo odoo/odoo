@@ -94,9 +94,9 @@ class pos_box_out(osv.osv_memory):
                 val = (res_obj.browse(cr, uid, uid).company_id.max_diff or 0.0) + am
                 raise osv.except_osv(_('Error !'), _('The maximum value you can still withdraw is exceeded. \n Remaining value is equal to %d ')%(val))
 
-            acc_id = product_obj.browse(cr, uid, data['product_id'], context=context).property_account_income
+            acc_id = productp_obj.browse(cr, uid, data['product_id'], context=context).property_account_income
             if not acc_id:
-                raise osv.except_osv(_('Error !'), _('please check that account is set to %s')%(product_obj.browse(cr, uid, data['product_id'], context=context).name))
+                raise osv.except_osv(_('Error !'), _('please check that account is set to %s')%(productp_obj.browse(cr, uid, data['product_id'], context=context).name))
             if not statement_id:
                 raise osv.except_osv(_('Error !'), _('You have to open at least one cashbox'))
             if statement_id:
@@ -119,7 +119,7 @@ class pos_box_out(osv.osv_memory):
             if productp_obj.browse(cr, uid, data['product_id'], context=context).am_out:
                 vals['am_out'] = True
             vals['ref'] = data['ref'] or ''
-            vals['name'] = "%s: %s " % (product_obj.browse(cr, uid, data['product_id'], context=context).name, data['name'].decode('utf8'))
+            vals['name'] = "%s: %s " % (productp_obj.browse(cr, uid, data['product_id'], context=context).name, data['name'].decode('utf8'))
             address_u = res_obj.browse(cr, uid, uid, context=context).address_id
             if address_u:
                 vals['partner_id'] = address_u.partner_id and address_u.partner_id.id or None
