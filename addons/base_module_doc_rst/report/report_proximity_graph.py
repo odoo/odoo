@@ -48,7 +48,7 @@ class report_graph(report.interface.report_int):
                     if id:
                         get_dpend_module(id[0].id)
         get_dpend_module(module_id)
-        graph = pydot.Dot(graph_type='digraph',fontsize='10', label="\\nProximity Graph. \\n\\nGray Color:Official Modules, Red  Color:Extra Addons Modules, Blue Color:Community Modules, Purple Color:Unknow Modules"
+        graph = pydot.Dot(graph_type='digraph',fontsize='10', label="\\nProximity Graph. \\n\\nGray Color-Official Modules, Red  Color-Extra Addons Modules, Blue Color-Community Modules, Purple Color-Unknow Modules"
                                      , center='1')
         for node in nodes:
             if node[1] == "official":
