@@ -75,7 +75,6 @@ class multi_company_default(osv.osv):
 
 multi_company_default()
 
-
 class res_company(osv.osv):
     _name = "res.company"
     _description = 'Companies'
@@ -145,6 +144,26 @@ class res_company(osv.osv):
             return []
         ids =  self.search(cr, uid, [('parent_id','child_of',[company])])
         return ids
+    
+#  For Report
+
+    def createReport(cr, uid, report, ids, name=False):
+        files = []
+        for id in ids:
+            try:
+                service = netsvc.LocalService(report)
+                (result, format) = service.create(cr, uid, [id], {}, {})
+                if not name:
+                    report_file = '/tmp/reports'+ str(id) + '.pdf'
+                else:
+                    report_file = name
+                fp = open(report_file,'wb+')
+                fp.write(result);
+                fp.close();
+                files += [report_file]    
+            except Exception,e:
+                continue        
+        return files
 
     def _get_partner_hierarchy(self, cr, uid, company_id, context={}):
         if company_id:

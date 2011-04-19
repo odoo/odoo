@@ -180,6 +180,7 @@
                 </search>
             </field>
         </record>
+
         <!--
     ======================
     Company
@@ -201,10 +202,7 @@
                             <field name="rml_header1" colspan="4"/>
                             <field name="rml_footer1" colspan="4"/>
                             <field name="rml_footer2" colspan="4"/>
-                            <field name="currency_id"/>
-                            <button name="createReport" string="Preview Report" type="object" icon="gtk-print"/>
-                            <separator colspan="4" string="Your Logo - Use a size of about 450x150 pixels."/>
-                            <field colspan="4" name="logo" widget="image"/>
+                            <field name="currency_id" colspan="2"/>
                         </page>
                         <page string="Header/Footer" groups="base.group_extended">
                             <field colspan="4" name="rml_header" nolabel="1"/>
@@ -350,14 +348,15 @@
         <record id="config_wizard_step_user" model="ir.actions.todo">
             <field name="action_id" ref="action_config_user_form"/>
             <field name="sequence">10</field>
-            <field name="restart">never</field>
+            <field name="type">normal</field>
             <field name="state">done</field>
         </record>
         <record id="config_wizard_simple_view" model="ir.actions.todo">
             <field name="action_id" ref="action_config_simple_view_form"/>
-            <field name="restart">on_trigger</field>
+            <field name="type">special</field>
             <field name="sequence">1</field>
             <field name="state">skip</field>
         </record>
+
     </data>
 </openerp>

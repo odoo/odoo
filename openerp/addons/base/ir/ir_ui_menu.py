@@ -243,11 +243,10 @@ class ir_ui_menu(osv.osv):
                 'web_icon_data': False,
                 'web_icon_hover_data': False,
             }
-            if not menu.parent_id:
-                if menu.web_icon_hover:
-                    res[menu.id]['web_icon_hover_data'] = self.read_image(menu.web_icon_hover)
-                if menu.web_icon:
-                    res[menu.id]['web_icon_data'] = self.read_image(menu.web_icon)
+            if menu.web_icon_hover:
+                res[menu.id]['web_icon_hover_data'] = self.read_image(menu.web_icon_hover)
+            if menu.web_icon:
+                res[menu.id]['web_icon_data'] = self.read_image(menu.web_icon)
         return res
 
     _columns = {

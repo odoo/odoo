@@ -27,7 +27,7 @@ class base_module_configuration(osv.osv_memory):
     _name = "base.module.configuration"
 
     def start(self, cr, uid, ids, context=None):
-        todo_ids = self.pool.get('ir.actions.todo').search(cr, uid, ['|', '|', ('restart','=','always'), ('state', '=', 'open'), '&', ('state', '=', 'skip'), ('restart', '=', 'on_trigger')])
+        todo_ids = self.pool.get('ir.actions.todo').search(cr, uid, ['|', '|', ('type','=','normal_recurring'), ('state', '=', 'open'), '&', ('state', '=', 'skip'), ('type', '=', 'special')])
         if not todo_ids:
             # When there is no wizard todo it will display message
             data_obj = self.pool.get('ir.model.data')
