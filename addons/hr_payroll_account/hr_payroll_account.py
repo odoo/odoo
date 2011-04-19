@@ -676,20 +676,20 @@ class hr_payslip(osv.osv):
 
 #            dates = prev_bounds(slip.date)
             exp_ids = exp_pool.search(cr, uid, [('date_valid','>=',slip.date_from), ('date_valid','<=',slip.date_to), ('state','=','invoiced')], context=context)
-            if exp_ids:
-                acc = property_pool.get(cr, uid, 'property_account_expense_categ', 'product.category')
-                for exp in exp_pool.browse(cr, uid, exp_ids, context=context):
-                    exp_res = {
-                        'name':exp.name,
-                        'amount_type':'fix',
-                        'type':'otherpay',
-                        'category_id':exp.category_id.id,
-                        'amount':exp.amount,
-                        'slip_id':slip.id,
-                        'expanse_id':exp.id,
-                        'account_id':acc
-                    }
-                    payslip_pool.create(cr, uid, exp_res, context=context)
+#            if exp_ids:
+#                acc = property_pool.get(cr, uid, 'property_account_expense_categ', 'product.category')
+#                for exp in exp_pool.browse(cr, uid, exp_ids, context=context):
+#                    exp_res = {
+#                        'name':exp.name,
+#                        'amount_type':'fix',
+#                        'type':'otherpay',
+#                        'category_id':exp.category_id.id,
+#                        'amount':exp.amount,
+#                        'slip_id':slip.id,
+#                        'expanse_id':exp.id,
+#                        'account_id':acc
+#                    }
+#                    payslip_pool.create(cr, uid, exp_res, context=context)
             self.write(cr, uid, [slip.id], rec, context=context)
         return True
 
