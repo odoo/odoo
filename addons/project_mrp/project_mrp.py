@@ -55,4 +55,68 @@ class product_product(osv.osv):
     }
 product_product()
 
+class sale_order(osv.osv):
+    _inherit ='sale.order'
+       
+    def _picked_rate(self, cr, uid, ids, name, arg, context=None):
+        if not ids:
+            return {}
+        temp = {}
+        for id in ids:
+            temp[id] = {}
+            temp[id]['number_of_done'] = 0
+            temp[id]['number_of_others'] = 0
+            temp[id]['percentage'] = 0.0
+            temp[id]['number_of_stockable'] = 0.0
+            temp[id]['number_of_planned'] = 0.0
+            temp[id]['time_spent'] = 0.0
+            
+        res = super(sale_order, self)._picked_rate(cr, uid, ids, name, arg, context=context)
+        cr.execute('''select so.id as sale_id, t.planned_hours as planned_hours, t.state as task_state ,
+                    t.id as task_id, sum(ptw.hours) as task_hours
+                    from project_task as t
+                    left join sale_order as so on so.id = t.sale_id  
+                    left join project_task_work as ptw on t.id = ptw.task_id
+                    where so.id in %s group by so.id,t.planned_hours,t.state,t.id ''',(tuple(ids),))
+        sale_task_result = cr.dictfetchall()
+        cr.execute('''select so.id as sale_id, count(t.id) as total, sum(t.planned_hours) as total_hours
+                    from project_task as t
+                    left join sale_order as so on so.id = t.sale_id  
+                    where so.id in %s group by so.id ''',(tuple(ids),))
+        task_result = cr.dictfetchall()
+        if not sale_task_result:
+            return res
+        for task_item in task_result:
+            temp[task_item['sale_id']]['total_no_task'] = 0
+            
+        for item in sale_task_result:
+            temp[item['sale_id']]['number_of_planned'] = task_item['total_hours']
+            temp[task_item['sale_id']]['total_no_task']= task_item['total']
+            if (not item['task_hours'] and item['task_state'] == 'done') or (item['task_hours'] and item['task_state'] == 'done'):  # If Task hours not given and task completed
+                temp[item['sale_id']]['number_of_done'] += 1
+            elif item['task_hours'] and not item['task_state'] in 'done': # If task work in the task
+                temp[item['sale_id']]['time_spent'] += item['task_hours']
+            else: # To calculate the other record 
+                temp[item['sale_id']]['number_of_others'] += 1
+            temp[item['sale_id']]['percentage'] = float(temp[item['sale_id']]['time_spent']) / temp[item['sale_id']]['number_of_planned'] * 100
+        temp[item['sale_id']]['percentage'] += (float(temp[item['sale_id']]['number_of_done']) / temp[item['sale_id']]['number_of_planned']) * 100
+    
+        for sale in self.browse(cr,uid,ids,context=None):
+            # Non service type products are calculated here 
+            temp[item['sale_id']]['number_of_stockable'] = len(sale.order_line) - temp[task_item['sale_id']]['total_no_task']
+            # condition for the percent calculation
+            if temp[item['sale_id']]['percentage'] == 100 and res[sale.id] == 100:
+                continue
+            elif temp[item['sale_id']]['number_of_stockable'] == 0:
+                res[sale.id] = (temp[sale.id]['percentage'])
+            else:    
+                res[sale.id] = (res[sale.id] + temp[sale.id]['percentage']) / (temp[item['sale_id']]['number_of_stockable'] + temp[task_item['sale_id']]['total_no_task'])
+        return res
+     
+    _columns = {
+                'picked_rate': fields.function(_picked_rate, method=True, string='Picked', type='float'),
+               }
+  
+sale_order()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
