@@ -31,7 +31,7 @@
                 <field name="partner_contact"/>
                 <field name="partner_phone"/>
                 <field name="user_id"/>
-                <field name="categ_id" string="Type"/>
+                <field name="categ_id"/>
                 <field name="create_date" invisible="1"/>
                 <button string="Convert to Opportunity"
                     name="%(phonecall2opportunity_act)d"
@@ -98,8 +98,7 @@
                 <group col="2" colspan="2">
                     <separator colspan="2" string="Categorization" />
                     <field name="categ_id" widget="selection"
-                        domain="[('object_id.model', '=', 'crm.phonecall')]"
-                        string="Type" />
+                        domain="[('object_id.model', '=', 'crm.phonecall')]"/>
                     <field name="priority"/>
                     <field name="opportunity_id"/>
                 </group>
@@ -145,8 +144,7 @@
                 <field name="partner_phone"/>
                 <field name="user_id"/>
                 <field name="categ_id" widget="selection"
-                    domain="[('object_id.model', '=', 'crm.phonecall')]"
-                    string="Type" />
+                    domain="[('object_id.model', '=', 'crm.phonecall')]"/>
                 <field name="state" invisible="1"/>
                 <field name="create_date" invisible="1"/>
                 <button string="Schedule Other Call"
