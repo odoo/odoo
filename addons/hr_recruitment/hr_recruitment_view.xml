@@ -97,15 +97,15 @@
                     <page string="Job Info">
                         <group col="3" colspan="2">
                             <separator colspan="3" string="Contact"/>
-                            <field name="partner_id" on_change="onchange_partner_id(partner_id, email_from)" />
+                            <field name="partner_id" on_change="onchange_partner_id(partner_id, email_from)" attrs="{'readonly':[('state','not in','done')]}"/>
                             <button string="Create Partner"
                                     name="%(action_hr_recruitment_partner_create)d"
-                                    icon="gtk-index" type="action" attrs="{'readonly':[('partner_id','!=',False)]}" groups="base.group_partner_manager"/>
+                                    icon="gtk-index" type="action" attrs="{'readonly':['!',('partner_id','!=',False),('state','not in','done')]}" groups="base.group_partner_manager"/>
                             <newline/>
-                            <field name="partner_address_id" on_change="onchange_partner_address_id(partner_address_id, email_from)" colspan="3"/>
-                            <field name="email_from" colspan="3"/>
-                            <field name="partner_phone" colspan="3"/>
-                            <field name="partner_mobile" colspan="3"/>
+                            <field name="partner_address_id" on_change="onchange_partner_address_id(partner_address_id, email_from)" colspan="3" attrs="{'readonly':[('state','not in','done')]}"/>
+                            <field name="email_from" colspan="3" attrs="{'readonly':[('state','not in','done')]}"/>
+                            <field name="partner_phone" colspan="3" attrs="{'readonly':[('state','not in','done')]}"/>
+                            <field name="partner_mobile" colspan="3" attrs="{'readonly':[('state','not in','done')]}"/>
                         </group>
                         <group col="2" colspan="2">
                             <separator colspan="2" string="Contract Data"/>
