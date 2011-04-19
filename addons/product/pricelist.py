@@ -265,6 +265,9 @@ class product_pricelist(osv.osv):
                                     price_type.currency_id.id, res['currency_id'],
                                     product_obj.price_get(cr, uid, [product_id],
                                         price_type.field,context=context)[product_id], round=False, context=context)
+                        
+                            if 'uom' in context:
+                                uom_price_already_computed = True
 
                         if price is not False:
                             price_limit = price
