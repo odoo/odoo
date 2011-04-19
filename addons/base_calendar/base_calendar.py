@@ -54,6 +54,7 @@ def get_recurrent_dates(rrulestring, exdate, startdate=None, exrule=None):
         
     if not exdate:
         exdate = []
+        
     rset1 = rrule.rrulestr(str(rrulestring), dtstart=startdate, forceset=True)
     for date in exdate:
         datetime_obj = todate(date)
@@ -1137,7 +1138,7 @@ rule or repeating pattern of time to exclude from the recurring rule."),
                         if name == "UNTIL":
                             is_until = True
                             value = parser.parse(value)
-                            rrule_until_date = parser.parse(value.strftime("%Y-%m-%d"))
+                            rrule_until_date = parser.parse(value.strftime("%Y-%m-%d %H:%M:%S"))
                             if until_date and until_date >= rrule_until_date:
                                 until_date = rrule_until_date
                             if until_date:
@@ -1433,7 +1434,6 @@ rule or repeating pattern of time to exclude from the recurring rule."),
         res = False
         for id in ids:
             event_datas = self.read(cr, uid, [id], ['date', 'rrule', 'exdate'], context=context)[0]
-            print event_datas
             event_id = event_datas['id']
 
             if self.get_edit_all(cr, uid, event_id, vals=None):

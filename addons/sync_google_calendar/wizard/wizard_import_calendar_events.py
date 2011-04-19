@@ -289,13 +289,7 @@ class synchronize_google_calendar_events(osv.osv_memory):
             meeting_ids += meeting
         
         return {
-            'name': _('Meetings'),
-            'view_type': 'form',
-            'view_mode': 'tree,form',
-            'res_model': 'crm.meeting',
-            'context': context,
-            'views': [(False, 'calendar'),(False, 'tree'),(False, 'form')],
-            'type': 'ir.actions.act_window',
+            'type': 'ir.actions.act_window_close',
         }
         
 synchronize_google_calendar_events()
