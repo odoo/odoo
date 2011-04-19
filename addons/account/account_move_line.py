@@ -93,6 +93,10 @@ class account_move_line(osv.osv):
         else:
             query = obj+".state <> 'draft' AND "+obj+".period_id IN (SELECT id FROM account_period WHERE fiscalyear_id IN (%s)) %s %s" % (fiscalyear_clause, where_move_state, where_move_lines_by_date)
 
+        if initial_bal and not context.get('periods', False) and not where_move_lines_by_date:
+            #we didn't pass any filter in the context, and the initial balance can't be computed using only the fiscalyear otherwise entries will be summed twice
+            #so we have to invalidate this query
+            query += " AND 1=2"
         if context.get('journal_ids', False):
             query += ' AND '+obj+'.journal_id IN (%s)' % ','.join(map(str, context['journal_ids']))
 
