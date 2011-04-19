@@ -112,7 +112,7 @@ class res_partner(osv.osv):
     _columns = {
         'name': fields.char('Name', size=128, required=True, select=True),
         'date': fields.date('Date', select=1),
-        'title': fields.many2one('res.partner.title','Partner Form'),
+        'title': fields.many2one('res.partner.title','Partner Firm'),
         'parent_id': fields.many2one('res.partner','Parent Partner'),
         'child_ids': fields.one2many('res.partner', 'parent_id', 'Partner Ref.'),
         'ref': fields.char('Reference', size=64, select=1),
@@ -120,7 +120,7 @@ class res_partner(osv.osv):
         'user_id': fields.many2one('res.users', 'Salesman', help='The internal user that is in charge of communicating with this partner if any.'),
         'vat': fields.char('VAT',size=32 ,help="Value Added Tax number. Check the box if the partner is subjected to the VAT. Used by the VAT legal statement."),
         'bank_ids': fields.one2many('res.partner.bank', 'partner_id', 'Banks'),
-        'website': fields.char('Website',size=64, help="Website of Partner"),
+        'website': fields.char('Website',size=64, help="Website of Partner."),
         'comment': fields.text('Notes'),
         'address': fields.one2many('res.partner.address', 'partner_id', 'Contacts'),
         'category_id': fields.many2many('res.partner.category', 'res_partner_category_rel', 'partner_id', 'category_id', 'Categories'),
