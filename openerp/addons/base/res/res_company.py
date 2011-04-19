@@ -144,7 +144,7 @@ class res_company(osv.osv):
             return []
         ids =  self.search(cr, uid, [('parent_id','child_of',[company])])
         return ids
-    
+
 #  For Report
 
     def createReport(cr, uid, report, ids, name=False):
@@ -160,9 +160,9 @@ class res_company(osv.osv):
                 fp = open(report_file,'wb+')
                 fp.write(result);
                 fp.close();
-                files += [report_file]    
+                files += [report_file]
             except Exception,e:
-                continue        
+                continue
         return files
 
     def _get_partner_hierarchy(self, cr, uid, company_id, context={}):
@@ -319,7 +319,7 @@ class res_company(osv.osv):
           </template>
           </document>
           """
-        tempfilename= os.tempnam()
+        tempfilename= '/tmp/previews.rml'
         fp = open(tempfilename, 'wb+')
         fp.write(header_xml)
         fp.close()
