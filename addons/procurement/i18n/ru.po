@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2011-01-19 12:00+0000\n"
+"PO-Revision-Date: 2011-04-18 18:58+0000\n"
 "Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-25 06:54+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-04-19 06:21+0000\n"
+"X-Generator: Launchpad (build 12758)\n"
 
 #. module: procurement
 #: view:make.procurement:0
@@ -426,6 +426,9 @@ msgid ""
 "    This is the module for computing Procurements.\n"
 "    "
 msgstr ""
+"\n"
+"    Это модуль для расчета снабжения.\n"
+"    "
 
 #. module: procurement
 #: field:stock.warehouse.orderpoint,procurement_draft_ids:0
@@ -879,6 +882,16 @@ msgid ""
 "others require manual intervention (those are identified by a specific error "
 "message)."
 msgstr ""
+"Заказы на снабжение представляют собой необходимость определенного "
+"количества ТМЦ, в данный момент времени, в данном месте. Заказ на продажу "
+"это типичный источник для заказа на снабжение (но это различные документы). "
+"В зависимости от требуемых условий снабжения и свойств ТМЦ алгоритм "
+"снабжения будет резервировать ТМЦ на складе, заказывать ТМЦ у поставщика, "
+"передавать заказ на производство и т.д. Исключительная ситуация при "
+"снабжении случается когда системе не удается найти способ выполнить "
+"снабжение. Некоторые исключительные ситуации могут разрешиться сами собой "
+"автоматически, другие требуют вмешательства (определяется по конкретному "
+"сообщению об ошибке)."
 
 #. module: procurement
 #: field:procurement.order,product_uom:0
@@ -897,6 +910,8 @@ msgid ""
 "procurements. All procurements that are not between today and today+range "
 "are skipped for future computation."
 msgstr ""
+"Это временные рамки анализа планировщика снабжения. Все снабжение, которое "
+"за рамками сегодня и сегодня+диапазон откладывается до будущих расчетов."
 
 #. module: procurement
 #: selection:procurement.order,priority:0
