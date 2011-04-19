@@ -206,6 +206,8 @@ class email_message(osv.osv):
 
     def schedule_with_attach(self, cr, uid, email_from, email_to, subject, body, model=False, email_cc=None, email_bcc=None, reply_to=False, attach=None,
             message_id=False, references=False, openobject_id=False, debug=False, subtype='plain', x_headers={}, priority='3', smtp_server_id=False, context=None, auto_delete=False):
+        if context is None:
+            context = {}
         attachment_obj = self.pool.get('ir.attachment')
         if email_to and type(email_to) != list:
             email_to = [email_to]
