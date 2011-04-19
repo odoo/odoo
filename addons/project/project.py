@@ -406,12 +406,6 @@ class task(osv.osv):
                  default.update({'name':new_name})
         return super(task, self).copy_data(cr, uid, id, default, context)
 
-    def _check_dates(self, cr, uid, ids, context=None):
-        task = self.read(cr, uid, ids[0], ['date_start', 'date_end'])
-        if task['date_start'] and task['date_end']:
-             if task['date_start'] > task['date_end']:
-                 return False
-        return True
 
     def _is_template(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
