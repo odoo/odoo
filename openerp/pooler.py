@@ -33,7 +33,7 @@ def get_db_and_pool(db_name, force_demo=False, status=None, update_module=False,
     if db_name in pool_dic:
         pool = pool_dic[db_name]
     else:
-        import openerp.addons as addons
+        import openerp.modules
         import openerp.osv.osv as osv_osv
         pool = osv_osv.osv_pool()
 
@@ -43,7 +43,7 @@ def get_db_and_pool(db_name, force_demo=False, status=None, update_module=False,
         # an exception is raised.
         pool_dic[db_name] = pool
         try:
-            addons.load_modules(db, force_demo, status, update_module)
+            openerp.modules.load_modules(db, force_demo, status, update_module)
         except Exception:
             del pool_dic[db_name]
             raise

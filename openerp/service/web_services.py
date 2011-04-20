@@ -28,7 +28,7 @@ import time
 import sys
 import platform
 from openerp.tools.translate import _
-import openerp.addons as addons
+import openerp.modules
 import openerp.ir
 import openerp.netsvc as netsvc
 import openerp.pooler as pooler
@@ -139,7 +139,7 @@ class db(netsvc.ExportService):
 
     def exp_get_progress(self, id):
         if self.actions[id]['thread'].isAlive():
-#           return addons.init_progress[db_name]
+#           return openerp.modules.init_progress[db_name]
             return (min(self.actions[id].get('progress', 0),0.95), [])
         else:
             clean = self.actions[id]['clean']
@@ -449,7 +449,7 @@ GNU Public Licence.
             if not rc.id:
                 raise tm.RemoteContractException('This contract does not exist or is not active')
 
-            return rc.get_available_updates(rc.id, addons.get_modules_with_version())
+            return rc.get_available_updates(rc.id, openerp.modules.get_modules_with_version())
 
         except tm.RemoteContractException, e:
             self.abortResponse(1, 'Migration Error', 'warning', str(e))
@@ -467,7 +467,7 @@ GNU Public Licence.
 
             l.notifyChannel('migration', netsvc.LOG_INFO, 'starting migration with contract %s' % (rc.name,))
 
-            zips = rc.retrieve_updates(rc.id, addons.get_modules_with_version())
+            zips = rc.retrieve_updates(rc.id, openerp.modules.get_modules_with_version())
 
             from shutil import rmtree, copytree, copy
 
@@ -479,7 +479,7 @@ GNU Public Licence.
 
             for module in zips:
                 l.notifyChannel('migration', netsvc.LOG_INFO, 'upgrade module %s' % (module,))
-                mp = addons.get_module_path(module)
+                mp = openerp.modules.get_module_path(module)
                 if mp:
                     if os.path.isdir(mp):
                         copytree(mp, os.path.join(backup_directory, module))

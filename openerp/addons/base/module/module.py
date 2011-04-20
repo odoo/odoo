@@ -30,7 +30,7 @@ import urllib
 import zipfile
 import zipimport
 
-import addons
+import openerp.modules as addons
 import pooler
 import release
 import tools

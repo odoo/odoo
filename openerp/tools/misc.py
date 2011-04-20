@@ -71,7 +71,7 @@ SKIPPED_ELEMENT_TYPES = (etree._Comment, etree._ProcessingInstruction, etree.Com
 
 # initialize a database with base/base.sql
 def init_db(cr):
-    import openerp.addons as addons
+    import openerp.modules as addons
     f = addons.get_module_resource('base', 'base.sql')
     base_sql_file = file_open(f)
     try:
@@ -204,7 +204,7 @@ def file_open(name, mode="r", subdir='addons', pathinfo=False):
 
     @return: fileobject if pathinfo is False else (fileobject, filepath)
     """
-    import openerp.addons as addons
+    import openerp.modules as addons
     adps = addons.ad_paths
     rtp = os.path.normcase(os.path.abspath(config['root_path']))
 
