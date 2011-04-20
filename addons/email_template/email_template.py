@@ -395,17 +395,17 @@ class email_template(osv.osv):
             data = {}
             data['model'] = template.model
 
-        # Ensure report is rendered using template's language
-        ctx = context.copy()
-        if template.lang:
-            ctx['lang'] = self.get_template_value(cr, uid, template.lang, template.model, record_id, context)
-        service = netsvc.LocalService(reportname)
-        (result, format) = service.create(cr, uid, [record_id], data, ctx)
-        result = base64.b64encode(result)
-        if not report_name:
-            report_name = reportname
-        report_name = report_name + "." + format
-        attachment[report_name] = result
+            # Ensure report is rendered using template's language
+            ctx = context.copy()
+            if template.lang:
+                ctx['lang'] = self.get_template_value(cr, uid, template.lang, template.model, record_id, context)
+            service = netsvc.LocalService(reportname)
+            (result, format) = service.create(cr, uid, [record_id], data, ctx)
+            result = base64.b64encode(result)
+            if not report_name:
+                report_name = reportname
+            report_name = report_name + "." + format
+            attachment[report_name] = result
 
         # Add document attachments
         for attach in template.attachment_ids:
