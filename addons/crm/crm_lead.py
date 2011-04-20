@@ -350,7 +350,7 @@ class crm_lead(crm_case, osv.osv):
 
         res_id = self.create(cr, uid, vals, context)
 
-        attachments = msg.get('attachments', [])
+        attachments = msg.get('attachments', {})
         self.history(cr, uid, [res_id], _('receive'), history=True,
                             subject = msg.get('subject'),
                             email = msg.get('to'),

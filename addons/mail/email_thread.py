@@ -156,7 +156,7 @@ class email_thread(osv.osv):
         if context is None:
             context = {}
         if attach is None:
-            attach = []
+            attach = {}
 
         model = context.get('thread_model', False)
         if not model:
@@ -178,17 +178,16 @@ class email_thread(osv.osv):
 
         for thread in threads:
             attachments = []
-            if attach:
-                for fname, fcontent in attach.items():
-                    data_attach = {
-                        'name': fname,
-                        'datas': binascii.b2a_base64(str(fcontent)),
-                        'datas_fname': fname,
-                        'description': _('Mail attachment'),
-                        'res_model': thread._name,
-                        'res_id': thread.id,
-                    }
-                    attachments.append(att_obj.create(cr, uid, data_attach))
+            for fname, fcontent in attach.items():
+                data_attach = {
+                    'name': fname,
+                    'datas': binascii.b2a_base64(str(fcontent)),
+                    'datas_fname': fname,
+                    'description': _('Mail attachment'),
+                    'res_model': thread._name,
+                    'res_id': thread.id,
+                }
+                attachments.append(att_obj.create(cr, uid, data_attach))
 
             partner_id = hasattr(thread, 'partner_id') and (thread.partner_id and thread.partner_id.id or False) or False
             if not partner_id and thread._name == 'res.partner':
@@ -313,8 +312,8 @@ class email_thread(osv.osv):
         def create_record(msg):
             if hasattr(model_pool, 'message_new'):
                 new_res_id = model_pool.message_new(cr, uid, msg, context=context)
-            if custom_values:
-                model_pool.write(cr, uid, [res_id], custom_values, context=context)
+                if custom_values:
+                    model_pool.write(cr, uid, [new_res_id], custom_values, context=context)
             return new_res_id
 
         res_id = False
