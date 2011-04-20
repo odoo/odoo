@@ -1258,7 +1258,7 @@ class account_invoice_line(osv.osv):
                     t = t - (p * l[2].get('quantity'))
                     taxes = l[2].get('invoice_line_tax_id')
                     if len(taxes[0]) >= 3 and taxes[0][2]:
-                        taxes = tax_obj.browse(cr, uid, taxes[0][2])
+                        taxes = tax_obj.browse(cr, uid, list(taxes[0][2]))
                         for tax in tax_obj.compute_all(cr, uid, taxes, p,l[2].get('quantity'), context.get('address_invoice_id', False), l[2].get('product_id', False), context.get('partner_id', False))['taxes']:
                             t = t - tax['amount']
             return t
