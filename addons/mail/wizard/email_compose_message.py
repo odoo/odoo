@@ -208,7 +208,6 @@ class email_compose_message(osv.osv_memory):
                         subtype=mail.sub_type, x_headers=mail.headers, priority=mail.priority, smtp_server_id=mail.smtp_server_id and mail.smtp_server_id.id,
                         auto_delete=mail.auto_delete or False, context=context)
                     email_ids.append(email_id)
-                return {'type': 'ir.actions.act_window_close'}
 
             else:
                 email_id = email_message_pool.schedule_with_attach(cr, uid, mail.email_from, mail.email_to, mail.subject, mail.body,
