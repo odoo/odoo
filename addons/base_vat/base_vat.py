@@ -23,6 +23,8 @@ import string
 
 from osv import osv, fields
 from tools.translate import _
+import re
+import datetime
 
 _ref_vat = {
     'be': 'BE0477472701', 'at': 'ATU12345675',
@@ -1066,36 +1068,26 @@ class res_partner(osv.osv):
                 return False
         return True
 
+    __check_vat_mx_re = re.compile(r"(?P<primeras>[A-Z&ñÑ]{3,4})" \
+                                    r"[ \-_]?" \
+                                    r"(?P<ano>[0-9]{2})(?P<mes>[01][1-9])(?P<dia>[0-3][0-9])" \
+                                    r"[ \-_]?" \
+                                    r"(?P<code>[A-Z0-9&ñÑ\xd1\xf1]{3})$")
+    
     def check_vat_mx(vat):
-        '''
+        ''' Mexican VAT verification
+        
         Verificar RFC México
         '''
-        #[IMP] base_vat: check_vat_mx by moylop260@hotmail.com, tested with 242,665 real RFC's
-        import time
-        import re
-        map_initials = "[A-Z|&]"*4
-        map_date = "[0-9][0-9][0-1][1-9][0-3][0-9]"
-        map_code = "[A-Z|&|0-9]"*3
-        mapping = map_initials + map_date + map_code
-        
-        vat = vat.upper().replace('ñ', 'Ñ').replace('\xd1', 'Ñ').replace('\xf1', 'Ñ')#upper ascii
-        vat = vat.replace('Ñ', 'X')#Replace ascii valid char, these is problems with match in regexp
-        vat = vat.replace(' ', '').replace('-', '')#Replace some char valid, but no required
-        if len(vat)==12:
-            vat = "X" + vat#Add a valid char, for pass validation with case with cad of len = 12
-        if len(vat) <> 13:
-            return False
-        regex = re.compile(mapping)
-        if not regex.match(vat):
+        m = self.__check_vat_mx_re.match(vat)
+        if not m:
             #No valid format
             return False
-        date_match = re.search(map_date, vat)
-        date_format = '%y%m%d'
         try:
-            time.strptime(date_match.group(), date_format)
-        except:
-            #Valid format, but date wrong
+            datetime.date(int(m.group('ano')), int(m.group('mes')), int(m.group('dia')))
+        except ValueError:
             return False
+        
         #Valid format and valid date
         return True
         
