@@ -221,6 +221,13 @@ class hr_payslip(osv.osv):
         'period_id': fields.many2one('account.period', 'Force Period', domain=[('state','<>','done')], help="Keep empty to use the period of the validation(Payslip) date."),
         'account_move_ids': fields.many2many('account.move', 'payslip_move_rel', 'slip_id', 'move_id', 'Accounting Entries', readonly=True),
     }
+    
+    def onchange_contract_id(self, cr, uid, ids, date_from, date_to, employee_id=False, contract_id=False, context=None):
+        contract_obj = self.pool.get('hr.contract')
+        res = super(hr_payslip, self).onchange_contract_id(cr, uid, ids, date_from=date_from, date_to=date_to, employee_id=employee_id, contract_id=contract_id, context=context)
+        journal_id = contract_obj.browse(cr, uid, contract_id, context=context).journal_id.id
+        res['value'].update({'journal_id': journal_id})
+        return res
 
     def get_payslip_lines(self, cr, uid, contract_ids, payslip_id, context):
         journal_obj = self.pool.get('account.journal')
