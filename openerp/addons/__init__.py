@@ -166,7 +166,13 @@ class Node(Singleton):
 
 
 def get_module_path(module, downloaded=False):
-    """Return the path of the given module."""
+    """Return the path of the given module.
+
+    Search the addons paths and return the first path where the given
+    module is found. If downloaded is True, return the default addons
+    path if nothing else is found.
+
+    """
     initialize_sys_path()
     for adp in ad_paths:
         if os.path.exists(opj(adp, module)) or os.path.exists(opj(adp, '%s.zip' % module)):

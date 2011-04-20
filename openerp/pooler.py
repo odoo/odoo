@@ -22,6 +22,7 @@
 pool_dic = {}
 
 def get_db_and_pool(db_name, force_demo=False, status=None, update_module=False, pooljobs=True):
+    """Return a database connection and an initialized osv_pool."""
     if not status:
         status={}
 
@@ -33,8 +34,12 @@ def get_db_and_pool(db_name, force_demo=False, status=None, update_module=False,
         import openerp.addons as addons
         import openerp.osv.osv as osv_osv
         pool = osv_osv.osv_pool()
-        pool_dic[db_name] = pool
 
+        # Initializing an osv_pool will call general code which will in turn
+        # call get_db_and_pool (this function) to obtain the osv_pool begin
+        # initialized. Make it available in the pool_dic then remove it if
+        # an exception is raised.
+        pool_dic[db_name] = pool
         try:
             addons.load_modules(db, force_demo, status, update_module)
         except Exception:
@@ -55,12 +60,14 @@ def get_db_and_pool(db_name, force_demo=False, status=None, update_module=False,
 
 
 def restart_pool(db_name, force_demo=False, status=None, update_module=False):
+    """Delete an existing osv_pool and return a database connection and a newly initialized osv_pool."""
     if db_name in pool_dic:
         del pool_dic[db_name]
     return get_db_and_pool(db_name, force_demo, status, update_module=update_module)
 
 
 def get_db_only(db_name):
+    """Return a database connection."""
     # ATTENTION:
     # do not put this import outside this function
     # sql_db must not be loaded before the logger is initialized.
@@ -72,10 +79,12 @@ def get_db_only(db_name):
 
 
 def get_db(db_name):
+    """Return a database connection. The corresponding osv_pool is initialize."""
     return get_db_and_pool(db_name)[0]
 
 
 def get_pool(db_name, force_demo=False, status=None, update_module=False):
+    """Return an osv_pool."""
     pool = get_db_and_pool(db_name, force_demo, status, update_module)[1]
     return pool
 
