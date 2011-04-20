@@ -9,10 +9,10 @@
             <field name="model">crm.opportunity2phonecall</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Register a PhoneCall">
-                    <separator string="Register a PhoneCall" colspan="4"/>
+                <form string="Register a call">
+                    <separator string="Register a call" colspan="4"/>
                     <field name="action"/>
-                    <separator string="PhoneCall Details" colspan="4"/>
+                    <separator string="Call Details" colspan="4"/>
                     <field name="name"/>
                     <field name="date" string="Planned Date"/>
                     <newline/>
@@ -23,7 +23,7 @@
                     <group colspan="4">
                         <label string ="" colspan="2"/>
                         <button name="action_cancel" string="_Cancel" icon="gtk-cancel" special="cancel" />
-                        <button name="action_apply" type="object" string="_Schedule Call" icon="gtk-ok" />
+                        <button name="action_apply" type="object" string="Register call" icon="gtk-ok" />
                     </group>
                 </form>
             </field>

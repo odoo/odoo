@@ -54,7 +54,7 @@ class crm_phonecall(crm_case, osv.osv):
                                     ('open', 'Todo'), 
                                     ('cancel', 'Cancelled'), 
                                     ('done', 'Held'), 
-                                    ('pending', 'Not Held'),
+                                    ('pending', 'Pending'),
                                 ], 'State', size=16, readonly=True, 
                                   help='The state is set to \'Draft\', when a case is created.\
                                   \nIf the case is in progress the state is set to \'Open\'.\
@@ -79,7 +79,7 @@ class crm_phonecall(crm_case, osv.osv):
                          the canall which is this opportunity source."), 
         'date_closed': fields.datetime('Closed', readonly=True), 
         'date': fields.datetime('Date'), 
-        'opportunity_id': fields.many2one ('crm.lead', 'Opportunity'), 
+        'opportunity_id': fields.many2one ('crm.lead', 'Lead/Opportunity'), 
         'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
     }
 

@@ -28,7 +28,7 @@ AVAILABLE_STATES = [
     ('open','Todo'),
     ('cancel', 'Cancelled'),
     ('done', 'Held'),
-    ('pending','Not Held')
+    ('pending','Pending')
 ]
 
 

@@ -9,8 +9,8 @@
             <field name="model">crm.phonecall2phonecall</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Register Other Call">
-                        <separator string="Register a PhoneCall" colspan="4"/>
+                <form string="Register a call">
+                        <separator string="Register a call" colspan="4"/>
                         <field name="action"/>
                         <separator string="Call Details" colspan="4"/>
                         <field name="name"/>
@@ -22,7 +22,7 @@
                         <group colspan="4" col="3" >
                             <label string=" " />
                             <button name="action_cancel" string="_Cancel" icon="gtk-cancel" special="cancel" />
-                            <button name="action_apply" type="object" string="_Schedule" icon="gtk-ok" />
+                            <button name="action_apply" type="object" string="Register call" icon="gtk-ok" />
                         </group>
                 </form>
             </field>
