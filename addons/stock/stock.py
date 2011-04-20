@@ -2125,6 +2125,8 @@ class stock_move(osv.osv):
                 self.write(cr, uid, [move.id], {'move_history_ids': [(4, move.move_dest_id.id)]})
                 #cr.execute('insert into stock_move_history_ids (parent_id,child_id) values (%s,%s)', (move.id, move.move_dest_id.id))
                 if move.move_dest_id.state in ('waiting', 'confirmed'):
+                    if move.prodlot_id.id:
+                        self.write(cr, uid, [move.move_dest_id.id], {'prodlot_id':move.prodlot_id.id})
                     self.force_assign(cr, uid, [move.move_dest_id.id], context=context)
                     if move.move_dest_id.picking_id:
                         wf_service.trg_write(uid, 'stock.picking', move.move_dest_id.picking_id.id, cr)
