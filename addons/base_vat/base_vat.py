@@ -39,7 +39,7 @@ _ref_vat = {
     'pt': 'PT123456789', 'ro': 'RO1234567897',
     'se': 'SE123456789701', 'si': 'SI12345679',
     'sk': 'SK0012345675', 'el': 'EL12345670',
-    'mx': 'MXABC123456T1B'
+    'mx': 'MXABCD831230T1B',
 
             }
 
@@ -1066,17 +1066,39 @@ class res_partner(osv.osv):
                 return False
         return True
 
-    def check_vat_mx(self, vat):
+    def check_vat_mx(vat):
         '''
-        Verificar RFC mÃ©xico
+        Verificar RFC México
         '''
-        if not 12 <= len(vat) <= 13:
+        #[IMP] base_vat: check_vat_mx by moylop260@hotmail.com, tested with 242,665 real RFC's
+        import time
+        import re
+        map_initials = "[A-Z|&]"*4
+        map_date = "[0-9][0-9][0-1][1-9][0-3][0-9]"
+        map_code = "[A-Z|&|0-9]"*3
+        mapping = map_initials + map_date + map_code
+        
+        vat = vat.upper().replace('ñ', 'Ñ').replace('\xd1', 'Ñ').replace('\xf1', 'Ñ')#upper ascii
+        vat = vat.replace('Ñ', 'X')#Replace ascii valid char, these is problems with match in regexp
+        vat = vat.replace(' ', '').replace('-', '')#Replace some char valid, but no required
+        if len(vat)==12:
+            vat = "X" + vat#Add a valid char, for pass validation with case with cad of len = 12
+        if len(vat) <> 13:
             return False
-        elif len(vat)==12 and not vat[:3].isalpha() | vat[3:9].isdigit() | vat[-3:].isalnum():
+        regex = re.compile(mapping)
+        if not regex.match(vat):
+            #No valid format
             return False
-        elif len(vat)==13 and not vat[:4].isalpha() | vat[4:10].isdigit() | vat[-3:].isalnum():
+        date_match = re.search(map_date, vat)
+        date_format = '%y%m%d'
+        try:
+            time.strptime(date_match.group(), date_format)
+        except:
+            #Valid format, but date wrong
             return False
+        #Valid format and valid date
         return True
+        
 res_partner()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
