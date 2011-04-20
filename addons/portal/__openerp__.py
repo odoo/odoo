@@ -38,7 +38,7 @@ module 'share'.
     """,
     'website': 'http://www.openerp.com',
     'demo_xml': [],
-    'data': ['portal_view.xml', 'wizard_view.xml'],
+    'data': ['portal_view.xml'],
     'installable': True,
     'certificate' : '',
 }

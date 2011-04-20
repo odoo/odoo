@@ -23,16 +23,18 @@ from osv import osv, fields
 from tools.translate import _
 
 class portal(osv.osv):
+    """
+        A portal is a group of users with specific menu, widgets, and typically
+        restricted access rights.
+    """
     _name = 'res.portal'
     _description = 'Portal'
-    _rec_name = 'group_id'
+    _inherits = {'res.groups': 'group_id'}
+    
     _columns = {
-        'group_id': fields.many2one('res.groups', required=True,
-            string='Portal Group',
-            help=_('This group defines the users associated to this portal')),
-        'user_ids': fields.related('group_id', 'users',
-            type='many2many', relation='res.users', store=False,
-            string='Portal Users'),
+        'group_id': fields.many2one('res.groups', required=True, ondelete='cascade',
+            string='Group',
+            help=_('The group extended by this portal')),
         'menu_action_id': fields.many2one('ir.actions.actions', readonly=True,
             string='Menu Action',
             help=_("What replaces the standard menu for the portal's users")),
@@ -43,86 +45,56 @@ class portal(osv.osv):
             string='Widgets',
             help=_('Widgets assigned to portal users')),
     }
-    _sql_constraints = [
-        ('unique_group', 'UNIQUE(group_id)', _('Portals must have distinct groups.'))
-    ]
     
-    def copy(self, cr, uid, id, default={}, context=None):
-        """ override copy(): group_id and menu_action_id must be different """
-        # copy the former group_id
-        groups_obj = self.pool.get('res.groups')
-        group_id = self.browse(cr, uid, id, context).group_id.id
-        default['group_id'] = groups_obj.copy(cr, uid, group_id, {}, context)
-        default['menu_action_id'] = None
-        return super(portal, self).copy(cr, uid, id, default, context)
+    def copy(self, cr, uid, id, values={}, context=None):
+        """ override copy(): menu_action_id must be different """
+        values['menu_action_id'] = None
+        return super(portal, self).copy(cr, uid, id, values, context)
     
     def create(self, cr, uid, values, context=None):
-        """ extend create() to assign the portal group and menu to users """
+        """ extend create() to assign the portal menu to users """
+        if context is None:
+            context = {}
+        
         # first create the 'menu_action_id'
         assert not values.get('menu_action_id')
         values['menu_action_id'] = self._create_menu_action(cr, uid, values, context)
         
-        if 'user_ids' in values:
-            # set menu action of users
-            user_values = {'menu_id': values['menu_action_id']}
-            # values['user_ids'] should match [(6, 0, IDs)]
-            for id in get_many2many(values['user_ids']):
-                values['user_ids'].append((1, id, user_values))
-        
-        # create portal
+        # create portal (admin should not be included)
+        context['noadmin'] = True
         portal_id = super(portal, self).create(cr, uid, values, context)
         
-        # assign widgets to users
-        if 'user_ids' in values:
-            self._assign_widgets_to_users(cr, uid, portal_id, context)
+        # assign menu action and widgets to users
+        self._assign_menu_to_users(cr, uid, [portal_id], context)
+        self._assign_widgets_to_users(cr, uid, [portal_id], context)
         
         return portal_id
-    
-    def name_get(self, cr, uid, ids, context=None):
-        portals = self.browse(cr, uid, ids, context)
-        return [(p.id, p.group_id.name) for p in portals]
-    
-    def name_search(self, cr, uid, name='', args=None, operator='ilike', context=None, limit=100):
-        # first search for group names that match
-        groups_obj = self.pool.get('res.groups')
-        group_names = groups_obj.name_search(cr, uid, name, args, operator, context, limit)
-        # then search for portals that match the groups found so far
-        domain = [('group_id', 'in', [gn[0] for gn in group_names])]
-        ids = self.search(cr, uid, domain, context=context)
-        return self.name_get(cr, uid, ids, context)
     
     def write(self, cr, uid, ids, values, context=None):
         """ extend write() to reflect menu and groups changes on users """
         # first apply portal changes
         super(portal, self).write(cr, uid, ids, values, context)
-        portals = self.browse(cr, uid, ids, context)
         
-        # if 'menu_action_id' has changed, set menu_id on users
-        if 'menu_action_id' in values:
-            user_values = {'menu_id': values['menu_action_id']}
-            user_ids = [u.id for p in portals for u in p.user_ids if u.id != 1]
-            self.pool.get('res.users').write(cr, uid, user_ids, user_values, context)
+        # assign menu action and widgets to users
+        self._assign_menu_to_users(cr, uid, ids, context)
+        self._assign_widgets_to_users(cr, uid, ids, context)
         
         # if parent_menu_id has changed, apply the change on menu_action_id
         if 'parent_menu_id' in values:
             act_window_obj = self.pool.get('ir.actions.act_window')
+            portals = self.browse(cr, uid, ids, context)
             action_ids = [p.menu_action_id.id for p in portals]
             action_values = {'domain': [('parent_id', '=', values['parent_menu_id'])]}
             act_window_obj.write(cr, uid, action_ids, action_values, context)
-        
-        # assign portal widgets to users, if widgets or users changed
-        if ('user_ids' in values) or ('widget_ids' in values):
-            self._assign_widgets_to_users(cr, uid, ids, context)
         
         return True
     
     def _create_menu_action(self, cr, uid, values, context=None):
         # create a menu action that opens the menu items below parent_menu_id
         groups_obj = self.pool.get('res.groups')
-        group_name = groups_obj.browse(cr, uid, values['group_id'], context).name
         actions_obj = self.pool.get('ir.actions.act_window')
         action_values = {
-            'name': group_name + ' Menu',
+            'name': values['name'] + ' Menu',
             'type': 'ir.actions.act_window',
             'usage': 'menu',
             'res_model': 'ir.ui.menu',
@@ -150,11 +122,17 @@ class portal(osv.osv):
         
         return True
 
+    def _assign_menu_to_users(self, cr, uid, ids, context=None):
+        """ assign portal menu action to users for the given portal ids """
+        user_obj = self.pool.get('res.users')
+        for p in self.browse(cr, uid, ids, context):
+            user_values = {'menu_id': p.menu_action_id.id}
+            user_obj.write(cr, uid, [u.id for u in p.users], user_values, context)
+
     def _assign_widgets_to_users(self, cr, uid, ids, context=None):
         """ assign portal widgets to users for the given portal ids """
         widget_user_obj = self.pool.get('res.widget.user')
-        portals = self.browse(cr, uid, ids, context)
-        for p in portals:
+        for p in self.browse(cr, uid, ids, context):
             for w in p.widget_ids:
                 values = {'sequence': w.sequence, 'widget_id': w.widget_id.id}
                 for u in p.user_ids:
@@ -162,16 +140,6 @@ class portal(osv.osv):
                     values['user_id'] = u.id
                     widget_user_obj.create(cr, uid, values, context)
 
-    def onchange_group(self, cr, uid, ids, group_id, context=None):
-        """ update the users list when the group changes """
-        user_ids = False
-        if group_id:
-            group = self.pool.get('res.groups').browse(cr, uid, group_id, context)
-            user_ids = [u.id for u in group.users]
-        return {
-            'value': {'user_ids': user_ids}
-        }
-    
     def _res_xml_id(self, cr, uid, module, xml_id):
         """ return the resource id associated to the given xml_id """
         data_obj = self.pool.get('ir.model.data')
@@ -179,24 +147,6 @@ class portal(osv.osv):
         return data_obj.browse(cr, uid, data_id).res_id
 
 portal()
-
-
-
-class users(osv.osv):
-    _name = 'res.users'
-    _inherit = 'res.users'
-    
-    def default_get(self, cr, uid, fields, context=None):
-        """ override default value of menu_id for portal users """
-        defs = super(users, self).default_get(cr, uid, fields, context)
-        
-        # the value of 'menu_id' is passed in context by the portal form view
-        if ('menu_id' in context) and ('menu_id' in fields):
-            defs['menu_id'] = context['menu_id']
-        
-        return defs
-
-users()
 
 
 
@@ -229,18 +179,4 @@ class portal_widget(osv.osv):
 portal_widget()
 
 
-
-# utils
-def get_browse_id(obj):
-    """ return the id of a browse() object, or None """
-    return (obj and obj.id or None)
-
-def get_browse_ids(objs):
-    """ return the ids of a list of browse() objects """
-    return map(get_browse_id, objs)
-
-def get_many2many(arg):
-    """ get the list of ids from a many2many 'values' field """
-    assert len(arg) == 1 and arg[0][0] == 6             # arg = [(6, _, IDs)]
-    return arg[0][2]
 
