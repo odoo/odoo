@@ -53,7 +53,7 @@ class crm_phonecall(crm_case, osv.osv):
                                     ('draft', 'Draft'), 
                                     ('open', 'Todo'), 
                                     ('cancel', 'Cancelled'), 
-                                    ('done', 'Done'), 
+                                    ('done', 'Held'), 
                                     ('pending', 'Pending'),
                                 ], 'State', size=16, readonly=True, 
                                   help='The state is set to \'Draft\', when a case is created.\
@@ -79,14 +79,19 @@ class crm_phonecall(crm_case, osv.osv):
                          the canall which is this opportunity source."), 
         'date_closed': fields.datetime('Closed', readonly=True), 
         'date': fields.datetime('Date'), 
-        'opportunity_id': fields.many2one ('crm.lead', 'Opportunity'), 
+        'opportunity_id': fields.many2one ('crm.lead', 'Lead/Opportunity'), 
         'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
     }
+
+    def _get_default_state(self, cr, uid, context=None):
+        if context and context.get('default_state', False):
+            return context.get('default_state')
+        return 'open'
 
     _defaults = {
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'), 
         'priority': crm.AVAILABLE_PRIORITIES[2][0], 
-        'state':  'open', 
+        'state':  _get_default_state, 
         'user_id': lambda self,cr,uid,ctx: uid,
         'active': 1, 
     }

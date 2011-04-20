@@ -61,15 +61,15 @@
         parent="base.menu_base_partner" sequence="4" />
 
     <record model="ir.actions.act_window" id="crm_case_categ_phone_incoming0">
-        <field name="name">Inbound</field>
+        <field name="name">Log a call</field>
         <field name="res_model">crm.phonecall</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,calendar</field>
-        <field name="view_id" ref="crm_case_phone_tree_view"/>
-        <field name="domain" eval="'[(\'categ_id\',\'=\','+str(ref('categ_phone1'))+')]'"/>
-        <field name="context" eval="'{\'search_default_section_id\':section_id, \'default_state\':\'open\', \'search_default_current\':1,\'search_default_today\':1, \'default_categ_id\': ' + str(ref('categ_phone1')) +'}'"/>
+        <field name="view_id" ref="crm_case_inbound_phone_tree_view"/>
+        <field name="domain">[('state','=','done')]</field>
+        <field name="context" eval="'{\'search_default_section_id\':section_id, \'default_state\':\'done\', \'search_default_today\':1}'"/>
         <field name="search_view_id" ref="crm.view_crm_case_phonecalls_filter"/>
-        <field name="help">The Inbound Calls tool allows you to log your inbound calls on the fly. Each call you get will appear on the partner form to trace every contact you have with a partner. From the phone call form, you can trigger a request for another call, a meeting or an opportunity.</field>
+        <field name="help">This tool allows you to log your inbound calls on the fly. Each call you get will appear on the partner form to trace every contact you have with a partner. From the phone call form, you can trigger a request for another call, a meeting or an opportunity.</field>
 
     </record>
 
@@ -90,24 +90,24 @@
     <record model="ir.actions.act_window.view" id="action_crm_tag_form_phone_incoming0">
         <field name="sequence" eval="3"/>
         <field name="view_mode">form</field>
-        <field name="view_id" ref="crm_case_inbound_phone_form_view"/>
+        <field name="view_id" ref="crm_case_phone_form_view"/>
         <field name="act_window_id" ref="crm_case_categ_phone_incoming0"/>
     </record>
 
-    <menuitem name="Inbound" id="menu_crm_case_phone_inbound"
+    <menuitem name="Log a call" id="menu_crm_case_phone_inbound"
         parent="crm.menu_crm_case_phone"
         action="crm_case_categ_phone_incoming0" />
 
     <record model="ir.actions.act_window" id="crm_case_categ_phone_outgoing0">
-        <field name="name">Outbound</field>
+        <field name="name">Schedule a call</field>
         <field name="res_model">crm.phonecall</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,calendar</field>
         <field name="view_id" ref="crm_case_phone_tree_view"/>
-        <field name="domain" eval="'[(\'categ_id\',\'=\','+str(ref('categ_phone2'))+')]'"/>
-        <field name="context" eval="'{\'search_default_section_id\':section_id, \'default_state\':\'open\', \'search_default_current\':1, \'default_categ_id\': ' + str(ref('categ_phone2')) +'}'"/>
+        <field name="domain">[('state','!=','done')]</field>
+        <field name="context" eval="'{\'search_default_section_id\':section_id, \'default_state\':\'open\', \'search_default_current\':1,\'search_default_today\':1}'"/>
         <field name="search_view_id" ref="crm.view_crm_case_phonecalls_filter"/>
-        <field name="help">Outbound Calls list all the calls to be done by your sales team. A salesman can record the information about the call in the form view. This information will be stored in the partner form to trace every contact you have with a customer. You can also import a .CSV file with a list of calls to be done by your sales team.</field>
+        <field name="help">Schedule a call lists all the calls to be done by your sales team. A salesman can record the information about the call in the form view. This information will be stored in the partner form to trace every contact you have with a customer. You can also import a .CSV file with a list of calls to be done by your sales team.</field>
     </record>
 
     <record model="ir.actions.act_window.view" id="action_crm_tag_tree_phone_outgoing0">
@@ -131,7 +131,7 @@
         <field name="act_window_id" ref="crm_case_categ_phone_outgoing0"/>
     </record>
 
-    <menuitem name="Outbound" id="menu_crm_case_phone_outbound"
+    <menuitem name="Schedule a call" id="menu_crm_case_phone_outbound"
         parent="crm.menu_crm_case_phone"
         action="crm_case_categ_phone_outgoing0" />
 
