@@ -45,8 +45,7 @@ class email_template(osv.osv):
         "Return Template Object"
         if context is None:
             context = {}
-        if not template_id:
-            template_id = context.get('template_id', False)
+        
         if not template_id:
             return False
 
@@ -172,7 +171,7 @@ class email_template(osv.osv):
                  'res_model': 'email.compose.message',
                  'src_model': src_obj,
                  'view_type': 'form',
-                 'context': "{'template_id':'%d','src_rec_id':active_id,'src_rec_ids':active_ids}" % (template.id),
+                 'context': "{'mass_mail':True}",
                  'view_mode':'form,tree',
                  'view_id': res_id,
                  'target': 'new',
@@ -206,15 +205,11 @@ class email_template(osv.osv):
         return super(email_template, self).unlink(cr, uid, ids, context=context)
 
     def copy(self, cr, uid, id, default=None, context=None):
+        template = self.browse(cr, uid, id, context=context)
         if default is None:
             default = {}
         default = default.copy()
-        old = self.read(cr, uid, id, ['name'], context=context)
-        new_name = _("Copy of template %s") % old.get('name', 'No Name')
-        check = self.search(cr, uid, [('name', '=', new_name)], context=context)
-        if check:
-            new_name = new_name + '_' + random.choice('abcdefghij') + random.choice('lmnopqrs') + random.choice('tuvwzyz')
-        default.update({'name':new_name})
+        default['name'] = template.name or '' + '(copy)'
         return super(email_template, self).copy(cr, uid, id, default, context)
 
     def build_expression(self, field_name, sub_field_name, null_value):
@@ -360,6 +355,7 @@ class email_template(osv.osv):
         }
         if not template_id:
             return values
+
         report_xml_pool = self.pool.get('ir.actions.report.xml')
         template = self.get_email_template(cr, uid, template_id, record_id, context)
         def _get_template_value(field):
@@ -368,11 +364,13 @@ class email_template(osv.osv):
             else:
                 return self.get_template_value(cr, uid, getattr(template, field), template.model, record_id, context=context)
 
-        #Use signatures if allowed
         body = _get_template_value('body')
+
+        #Use signatures if allowed
         if template.user_signature:
             signature = self.pool.get('res.users').browse(cr, uid, uid, context).signature
             body += '\n' + signature
+
         values = {
             'smtp_server_id' : template.smtp_server_id.id,
             'body' : body,

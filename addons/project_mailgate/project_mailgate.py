@@ -120,7 +120,7 @@ class project_tasks(osv.osv):
             return len(res) and res[0] or False
         return res
 
-    def _history(self, cr, uid, cases, keyword, history=False, subject=None, email=False, details=None, email_from=False, message_id=False, attach=[], context=None):
+    def _history(self, cr, uid, cases, keyword, history=False, subject=None, email=False, details=None, email_from=False, message_id=False, attach=None, context=None):
         thread_pool = self.pool.get('email.thread')
         return thread_pool.history(cr, uid, cases, keyword, history=history,\
                                        subject=subject, email=email, \
