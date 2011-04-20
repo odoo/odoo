@@ -52,7 +52,22 @@ class project_tasks(osv.osv):
         res = thread_obj.get_partner(cr, uid, msg_from)
         if res:
             data.update(res)
-        return self.create(cr, uid, data)
+        res_id = self.create(cr, uid, vals, context)
+
+        attachments = msg.get('attachments', [])
+        self.history(cr, uid, [res_id], _('receive'), history=True,
+                            subject = msg.get('subject'),
+                            email = msg.get('to'),
+                            details = msg.get('body'),
+                            email_from = msg.get('from'),
+                            email_cc = msg.get('cc'),
+                            message_id = msg.get('message-id'),
+                            references = msg.get('references', False) or msg.get('in-reply-to', False),
+                            attach = attachments,
+                            email_date = msg.get('date'),
+                            context = context)
+
+        return res_id
 
     def message_update(self, cr, uid, id, msg, data={}, default_act='pending'):
         thread_obj = self.pool.get('email.thread')

@@ -75,14 +75,11 @@ class email_thread(osv.osv):
         if not model:
             model = self._name
         model_pool = self.pool.get(model)
-        if hasattr(model_pool, 'message_new'):
-            res_id = model_pool.message_new(cr, uid, msg, context)
-        else:
-            fields = model_pool.fields_get(cr, uid, context=context)
-            data = model_pool.default_get(cr, uid, fields, context=context)
-            if 'name' in fields and not data.get('name',False):
-                data['name'] = msg.get('from','')
-            res_id = model_pool.create(cr, uid, data, context=context)
+        fields = model_pool.fields_get(cr, uid, context=context)
+        data = model_pool.default_get(cr, uid, fields, context=context)
+        if 'name' in fields and not data.get('name',False):
+            data['name'] = msg.get('from','')
+        res_id = model_pool.create(cr, uid, data, context=context)
 
         attachments = msg.get('attachments', {})
         self.history(cr, uid, [res_id], _('receive'), history=True,
@@ -109,8 +106,6 @@ class email_thread(osv.osv):
         if not model:
             model = self._name
         model_pool = self.pool.get(model)
-        if hasattr(model_pool, 'message_update'):
-            model_pool.message_update(cr, uid, ids, msg, vals=vals, default_act=default_act, context=context)
         attachments = msg.get('attachments', {})
         self.history(cr, uid, ids, _('receive'), history=True,
                             subject = msg.get('subject'),
@@ -183,16 +178,17 @@ class email_thread(osv.osv):
 
         for thread in threads:
             attachments = []
-            for attachment in attach:
-                data_attach = {
-                    'name': attachment[0],
-                    'datas': binascii.b2a_base64(str(attachment[1])),
-                    'datas_fname': attachment[0],
-                    'description': _('Mail attachment'),
-                    'res_model': thread._name,
-                    'res_id': thread.id,
-                }
-                attachments.append(att_obj.create(cr, uid, data_attach))
+            if attach:
+                for fname, fcontent in attach.items():
+                    data_attach = {
+                        'name': fname,
+                        'datas': binascii.b2a_base64(str(fcontent)),
+                        'datas_fname': fname,
+                        'description': _('Mail attachment'),
+                        'res_model': thread._name,
+                        'res_id': thread.id,
+                    }
+                    attachments.append(att_obj.create(cr, uid, data_attach))
 
             partner_id = hasattr(thread, 'partner_id') and (thread.partner_id and thread.partner_id.id or False) or False
             if not partner_id and thread._name == 'res.partner':
@@ -305,7 +301,6 @@ class email_thread(osv.osv):
         email_message_pool = self.pool.get('email.message')
         res_id = False
 
-
         # Parse Message
         # Warning: message_from_string doesn't always work correctly on unicode,
         # we must use utf-8 strings here :-(
@@ -316,7 +311,8 @@ class email_thread(osv.osv):
 
         # Create New Record into particular model
         def create_record(msg):
-            new_res_id = self.message_new(cr, uid, msg, context=context)
+            if hasattr(model_pool, 'message_new'):
+                new_res_id = model_pool.message_new(cr, uid, msg, context=context)
             if custom_values:
                 model_pool.write(cr, uid, [res_id], custom_values, context=context)
             return new_res_id
@@ -340,7 +336,8 @@ class email_thread(osv.osv):
                 if res_id:
                     res_id = int(res_id)
                     if model_pool.exists(cr, uid, res_id):
-                        self.message_update(cr, uid, [res_id], msg, {}, context=context)
+                        if hasattr(model_pool, 'message_new'):
+                            model_pool.message_update(cr, uid, [res_id], msg, {}, context=context)
 
         if not res_id:
             res_id = create_record(msg)

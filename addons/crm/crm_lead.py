@@ -348,7 +348,22 @@ class crm_lead(crm_case, osv.osv):
         if res:
             vals.update(res)
 
-        return self.create(cr, uid, vals, context)
+        res_id = self.create(cr, uid, vals, context)
+
+        attachments = msg.get('attachments', [])
+        self.history(cr, uid, [res_id], _('receive'), history=True,
+                            subject = msg.get('subject'),
+                            email = msg.get('to'),
+                            details = msg.get('body'),
+                            email_from = msg.get('from'),
+                            email_cc = msg.get('cc'),
+                            message_id = msg.get('message-id'),
+                            references = msg.get('references', False) or msg.get('in-reply-to', False),
+                            attach = attachments,
+                            email_date = msg.get('date'),
+                            context = context)
+
+        return res_id
 
     def message_update(self, cr, uid, ids, msg, vals={}, default_act='pending', context=None):
         """

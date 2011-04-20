@@ -395,9 +395,23 @@ class project_issue(crm.crm_case, osv.osv):
         if res:
             vals.update(res)
         context.update({'state_to' : 'draft'})
-        res = self.create(cr, uid, vals, context=context)
-        self.convert_to_bug(cr, uid, [res], context=context)
-        return res
+
+        res_id = self.create(cr, uid, vals, context)
+
+        attachments = msg.get('attachments', [])
+        self.history(cr, uid, [res_id], _('receive'), history=True,
+                            subject = msg.get('subject'),
+                            email = msg.get('to'),
+                            details = msg.get('body'),
+                            email_from = msg.get('from'),
+                            email_cc = msg.get('cc'),
+                            message_id = msg.get('message-id'),
+                            references = msg.get('references', False) or msg.get('in-reply-to', False),
+                            attach = attachments,
+                            email_date = msg.get('date'),
+                            context = context)
+        self.convert_to_bug(cr, uid, [res_id], context=context)
+        return res_id
 
     def message_update(self, cr, uid, ids, msg, vals=None, default_act='pending', context=None):
         """
