@@ -481,20 +481,21 @@ class hr_timesheet_line(osv.osv):
         'date': _get_default_date,
     }
 
-    def create(self, cr, uid, vals, *args, **kwargs):
-        if vals.get('sheet_id', False):
-            ts = self.pool.get('hr_timesheet_sheet.sheet').browse(cr, uid, vals['sheet_id'])
-            if not ts.state in ('draft', 'new'):
-                raise osv.except_osv(_('Error !'), _('You can not modify an entry in a confirmed timesheet !'))
-        return super(hr_timesheet_line,self).create(cr, uid, vals, *args, **kwargs)
+    def _check_sheet_state(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        for timesheet_line in self.browse(cr, uid, ids, context=context):
+            if timesheet_line.sheet_id and timesheet_line.sheet_id.state not in ('draft', 'new'):
+                return False
+        return True
+
+    _constraints = [
+        (_check_sheet_state, 'You can not modify an entry in a Confirmed/Done timesheet !.', ['state']),
+    ]
 
     def unlink(self, cr, uid, ids, *args, **kwargs):
         self._check(cr, uid, ids)
         return super(hr_timesheet_line,self).unlink(cr, uid, ids,*args, **kwargs)
-
-    def write(self, cr, uid, ids, *args, **kwargs):
-        self._check(cr, uid, ids)
-        return super(hr_timesheet_line,self).write(cr, uid, ids,*args, **kwargs)
 
     def _check(self, cr, uid, ids):
         for att in self.browse(cr, uid, ids):
