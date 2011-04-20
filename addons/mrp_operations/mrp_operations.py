@@ -235,7 +235,6 @@ class mrp_production(osv.osv):
         """ Finishes work order if production order is done.
         @return: Super method
         """
-        work_obj = self.pool.get('mrp.production.workcenter.line')
         obj = self.browse(cr, uid, ids)[0]
         wf_service = netsvc.LocalService("workflow")
         for workcenter_line in obj.workcenter_lines:
