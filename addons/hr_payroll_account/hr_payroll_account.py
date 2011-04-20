@@ -221,7 +221,7 @@ class hr_payslip(osv.osv):
         'period_id': fields.many2one('account.period', 'Force Period', domain=[('state','<>','done')], help="Keep empty to use the period of the validation(Payslip) date."),
         'account_move_ids': fields.many2many('account.move', 'payslip_move_rel', 'slip_id', 'move_id', 'Accounting Entries', readonly=True),
     }
-    
+
     def get_payslip_lines(self, cr, uid, contract_ids, payslip_id, context):
         journal_obj = self.pool.get('account.journal')
         rule_obj = self.pool.get('hr.salary.rule')
@@ -233,10 +233,9 @@ class hr_payslip(osv.osv):
         #get the rules of the structure and thier children
         rule_ids = structure_obj.get_all_rules(cr, uid, structure_ids, context=context)
         sorted_rule_ids = [id for id, sequence in sorted(rule_ids, key=lambda x:x[1])]
-        journal_id = [record.journal_id.id for record in self.browse(cr, uid, [payslip_id], context=context)]
-        for jou in journal_obj.browse(cr ,uid, journal_id, context=context):
-            credit_account = jou.default_credit_account_id.id
-            debit_account = jou.default_debit_account_id.id
+        journal = self.browse(cr, uid, payslip_id, context=context).journal_id.id
+        credit_account = journal.default_credit_account_id and journal.default_credit_account_id.id or False
+        debit_account = journal.default_debit_account_id and journal.default_debit_account_id.id or False
         for rule in rule_obj.browse(cr, uid, sorted_rule_ids, context=context):
             if not rule.account_debit.id:
                 rule_obj.write(cr, uid, [rule.id], {'account_debit': debit_account})
@@ -260,7 +259,7 @@ class hr_payslip(osv.osv):
                     if rule.analytic_account_id:
                         value['analytic_account_id'] = rule.analytic_account_id.id
         return result
-    
+
     def create_voucher(self, cr, uid, ids, name, voucher, sequence=5):
         slip_move = self.pool.get('hr.payslip.account.move')
         for slip in ids:
@@ -307,11 +306,11 @@ class hr_payslip(osv.osv):
 
             partner = slip.employee_id.bank_account_id.partner_id
             partner_id = partner.id
-            
+
             for line in slip.line_ids:
                 if line.category_id.name == 'Net':
                     amt = line.total
-                    
+
             fiscal_year_ids = fiscalyear_pool.search(cr, uid, [], context=context)
             if not fiscal_year_ids:
                 raise osv.except_osv(_('Warning !'), _('Please define fiscal year for perticular contract'))
@@ -736,7 +735,7 @@ class account_move_link_slip(osv.osv):
 account_move_link_slip()
 
 class hr_contract(osv.osv):
-  
+
     _inherit = 'hr.contract'
     _description = 'Employee Contract'
     _columns = {
