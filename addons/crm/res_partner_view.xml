@@ -54,19 +54,19 @@
                         <tree string="Phone Calls" colors="gray:state in ('draft', 'cancel','done','pending')">
                             <field name="date" string="Date"/>
                             <field name="name" string="Call Summary"/>
-                            <field name="categ_id" string="Type" widget="selection"/>
+                            <field name="categ_id" widget="selection"/>
                             <field name="user_id"/>
                             <field name="state"/>
                             <button name="case_cancel" string="Cancel" states="draft,open,pending" type="object" icon="gtk-cancel"/>
-                            <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward"/>
+                            <button name="case_open" string="Todo" states="draft,pending" type="object" icon="gtk-go-forward"/>
                             <button name="case_close" string="Held" states="open,draft,pending" type="object" icon="gtk-jump-to"/>
                             <button name="case_pending" string="Not Held" states="open" type="object" icon="gtk-media-pause"/>
                         </tree>
             <form string="Phone Call">
                  <group colspan="6" col="7">
                     <field name="name" required="1"/>
-                    <field name="partner_phone"   attrs="{'required': [('categ_id.name', '=', 'Outbound')]}"/>
-                    <field name="duration" widget="float_time" required="1"/>
+                    <field name="partner_phone"/>
+                    <field name="duration" widget="float_time"/>
                     <button string="Schedule a Meeting" name="action_make_meeting" icon="gtk-redo" type="object"/>
 
                     <field name="date" required="1"/>
@@ -75,7 +75,7 @@
                     <button string="Convert to Opportunity"
                         name="%(phonecall2opportunity_act)d"
                         icon="gtk-index" type="action"
-                        attrs="{'invisible':[('opportunity_id','!=',False)]}" />
+                        attrs="{'invisible':['|', ('opportunity_id','!=',False), ('state','=','done')]}" />
                     <label colspan="6"  string=""/>
                     <button string="Schedule Other Call"
                      icon="terp-call-start"
@@ -103,8 +103,7 @@
                 <group col="2" colspan="2">
                     <separator colspan="2" string="Categorization" />
                     <field name="categ_id" widget="selection"
-                        domain="[('object_id.model', '=', 'crm.phonecall')]"
-                        string="Type" />
+                        domain="[('object_id.model', '=', 'crm.phonecall')]"/>
                     <field name="priority"/>
                     <field name="opportunity_id"/>
                 </group>
@@ -116,7 +115,7 @@
                     <button name="case_cancel" string="Cancel"
                         states="draft,open,pending" type="object"
                         icon="gtk-cancel" />
-                    <button name="case_open" string="Open"
+                    <button name="case_open" string="Todo"
                         states="draft,pending" type="object"
                         icon="gtk-go-forward" />
                     <button name="case_pending" string="Not Held"
@@ -125,7 +124,7 @@
                         states="open,draft,pending" type="object"
                         icon="gtk-jump-to" />
                     <button name="case_reset" string="Reset to Draft"
-                        states="done,cancel" type="object"
+                        states="cancel" type="object"
                         icon="gtk-convert" />
                 </group>
             </form>
