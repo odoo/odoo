@@ -118,6 +118,7 @@ class mrp_production_workcenter_line(osv.osv):
         @param action: Action to perform.
         @return: Nothing
         """
+        work_obj = self.pool.get('mrp.production.workcenter.line')
         wf_service = netsvc.LocalService("workflow")
         prod_obj_pool = self.pool.get('mrp.production')
         oper_obj = self.browse(cr, uid, ids)[0]
@@ -138,7 +139,9 @@ class mrp_production_workcenter_line(osv.osv):
             flag = True
             for line in obj:
                 if line.state != 'done':
-                     flag = False
+                    if line.state == 'draft':
+                        wf_service.trg_validate(uid, 'mrp.production.workcenter.line', line.id, 'button_start_working', cr)
+                    flag = False
             if flag:
                 for production in prod_obj_pool.browse(cr, uid, [prod_obj.id], context= None):
                     if production.move_lines or production.move_created_ids:
@@ -237,8 +240,6 @@ class mrp_production(osv.osv):
         wf_service = netsvc.LocalService("workflow")
         for workcenter_line in obj.workcenter_lines:
             wf_service.trg_validate(uid, 'mrp.production.workcenter.line', workcenter_line.id, 'button_done', cr)
-            if workcenter_line.state == 'draft':
-                work_obj.write(cr, uid, workcenter_line.id, {'state': 'done'})
         return super(mrp_production,self).action_production_end(cr, uid, ids)
 
     def action_in_production(self, cr, uid, ids):
