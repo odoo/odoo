@@ -27,17 +27,17 @@ from osv import fields, osv
 from tools import config
 from tools.translate import _
 
-def prev_bounds(cdate=False):
-    when = date.fromtimestamp(time.mktime(time.strptime(cdate,"%Y-%m-%d")))
-    this_first = date(when.year, when.month, 1)
-    month = when.month + 1
-    year = when.year
-    if month > 12:
-        month = 1
-        year += 1
-    next_month = date(year, month, 1)
-    prev_end = next_month - timedelta(days=1)
-    return this_first, prev_end
+#def prev_bounds(cdate=False):
+#    when = date.fromtimestamp(time.mktime(time.strptime(cdate,"%Y-%m-%d")))
+#    this_first = date(when.year, when.month, 1)
+#    month = when.month + 1
+#    year = when.year
+#    if month > 12:
+#        month = 1
+#        year += 1
+#    next_month = date(year, month, 1)
+#    prev_end = next_month - timedelta(days=1)
+#    return this_first, prev_end
 
 class hr_payroll_structure(osv.osv):
     _inherit = 'hr.payroll.structure'
