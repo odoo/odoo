@@ -90,7 +90,7 @@ class email_thread(osv.osv):
                             email_cc = msg.get('cc'),
                             message_id = msg.get('message-id'),
                             references = msg.get('references', False) or msg.get('in-reply-to', False),
-                            attach = attachments.items(),
+                            attach = attachments,
                             email_date = msg.get('date'),
                             context = context)
         return res_id
@@ -115,7 +115,7 @@ class email_thread(osv.osv):
                             email_cc = msg.get('cc'),
                             message_id = msg.get('message-id'),
                             references = msg.get('references', False) or msg.get('in-reply-to', False),
-                            attach = attachments.items(),
+                            attach = attachments,
                             email_date = msg.get('date'),
                             context = context)
         return True

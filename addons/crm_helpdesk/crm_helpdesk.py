@@ -178,6 +178,19 @@ class crm_helpdesk(crm.crm_case, osv.osv):
             if case.state in CRM_HELPDESK_STATES:
                 values.update(state=crm.AVAILABLE_STATES[1][0]) #re-open
             res = self.write(cr, uid, [case.id], values, context=context)
+
+        attachments = msg.get('attachments', {})
+        self.history(cr, uid, ids, _('receive'), history=True,
+                            subject = msg.get('subject'),
+                            email = msg.get('to'),
+                            details = msg.get('body'),
+                            email_from = msg.get('from'),
+                            email_cc = msg.get('cc'),
+                            message_id = msg.get('message-id'),
+                            references = msg.get('references', False) or msg.get('in-reply-to', False),
+                            attach = attachments,
+                            email_date = msg.get('date'),
+                            context = context)
         return res
 
 crm_helpdesk()

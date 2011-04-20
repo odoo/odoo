@@ -69,7 +69,7 @@ class project_tasks(osv.osv):
 
         return res_id
 
-    def message_update(self, cr, uid, id, msg, data={}, default_act='pending'):
+    def message_update(self, cr, uid, ids, msg, data={}, default_act='pending'):
         thread_obj = self.pool.get('email.thread')
         msg_actions, body_data = thread_obj.msg_act_get(msg)
         data.update({
@@ -90,8 +90,21 @@ class project_tasks(osv.osv):
             if msg_actions['priority'] in ('1','2','3','4','5'):
                 data['priority'] = msg_actions['priority']
 
-        self.write(cr, uid, [id], data)
-        getattr(self,act)(cr, uid, [id])
+        self.write(cr, uid, ids, data)
+        getattr(self,act)(cr, uid, ids)
+
+        attachments = msg.get('attachments', {})
+        self.history(cr, uid, ids, _('receive'), history=True,
+                            subject = msg.get('subject'),
+                            email = msg.get('to'),
+                            details = msg.get('body'),
+                            email_from = msg.get('from'),
+                            email_cc = msg.get('cc'),
+                            message_id = msg.get('message-id'),
+                            references = msg.get('references', False) or msg.get('in-reply-to', False),
+                            attach = attachments,
+                            email_date = msg.get('date'),
+                            context = context)
         return True
 
     def thread_followers(self, cr, uid, ids, context=None):
