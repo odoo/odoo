@@ -90,25 +90,6 @@ class portal(osv.osv):
         
         return True
     
-    def create_menu_action(self, cr, uid, id, context=None):
-        """ create, if necessary, a menu action that opens the menu items below
-            parent_menu_id """
-        p = self.browse(cr, uid, id, context)
-        if not p.menu_action_id:
-            actions_obj = self.pool.get('ir.actions.act_window')
-            parent_id = p.parent_menu_id.id if p.parent_menu_id else False
-            action_values = {
-                'name': p.name + ' Menu',
-                'type': 'ir.actions.act_window',
-                'usage': 'menu',
-                'res_model': 'ir.ui.menu',
-                'view_type': 'tree',
-                'view_id': self._res_xml_id(cr, uid, 'base', 'view_menu'),
-                'domain': [('parent_id', '=', parent_id)],
-            }
-            action_id = actions_obj.create(cr, uid, action_values, context)
-            self.write(cr, uid, [id], {'menu_action_id': action_id}, context)
-    
     def do_create_menu(self, cr, uid, ids, context=None):
         """ create a parent menu for the given portals """
         menu_obj = self.pool.get('ir.ui.menu')
@@ -177,6 +158,25 @@ class portal_override_menu(osv.osv):
             self.create_menu_action(cr, uid, id, context)
         else:
             self.write(cr, uid, [id], {'menu_action_id': False}, context)
+    
+    def create_menu_action(self, cr, uid, id, context=None):
+        """ create, if necessary, a menu action that opens the menu items below
+            parent_menu_id """
+        p = self.browse(cr, uid, id, context)
+        if not p.menu_action_id:
+            actions_obj = self.pool.get('ir.actions.act_window')
+            parent_id = p.parent_menu_id.id if p.parent_menu_id else False
+            action_values = {
+                'name': p.name + ' Menu',
+                'type': 'ir.actions.act_window',
+                'usage': 'menu',
+                'res_model': 'ir.ui.menu',
+                'view_type': 'tree',
+                'view_id': self._res_xml_id(cr, uid, 'base', 'view_menu'),
+                'domain': [('parent_id', '=', parent_id)],
+            }
+            action_id = actions_obj.create(cr, uid, action_values, context)
+            self.write(cr, uid, [id], {'menu_action_id': action_id}, context)
     
     _columns = {
         'override_menu': fields.function(
