@@ -54,7 +54,6 @@ psycopg2.extensions.register_type(psycopg2.extensions.new_type((700, 701, 1700,)
 
 import tools
 from tools.func import wraps, frame_codeinfo
-from netsvc import Agent
 from datetime import datetime as mdt
 from datetime import timedelta
 import threading
@@ -382,8 +381,8 @@ def db_connect(db_name):
     return Connection(_Pool, db_name)
 
 def close_db(db_name):
+    """ You might want to call openerp.netsvc.Agent.cancel(db_name) along this function."""
     _Pool.close_all(dsn(db_name))
-    Agent.cancel(db_name)
     tools.cache.clean_caches_for_db(db_name)
     ct = currentThread()
     if hasattr(ct, 'dbname'):

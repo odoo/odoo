@@ -27,6 +27,7 @@ import itertools
 import locale
 import os
 import openerp.pooler as pooler
+import openerp.sql_db as sql_db
 import re
 import logging
 import tarfile
@@ -160,7 +161,7 @@ class GettextAlias(object):
         # find current DB based on thread/worker db name (see netsvc)
         db_name = getattr(threading.currentThread(), 'dbname', None)
         if db_name:
-            return pooler.get_db_only(db_name)
+            return sql_db.db_connect(db_name)
 
     def _get_cr(self, frame):
         is_new_cr = False

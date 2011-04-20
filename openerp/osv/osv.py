@@ -26,6 +26,7 @@
 import orm
 import openerp.netsvc as netsvc
 import openerp.pooler as pooler
+import openerp.sql_db as sql_db
 import copy
 import logging
 from psycopg2 import IntegrityError, errorcodes
@@ -91,7 +92,7 @@ class object_proxy(netsvc.Service):
                                 ids = args[3]
                             else:
                                 ids = []
-                        cr = pooler.get_db_only(dbname).cursor()
+                        cr = sql_db.db_connect(db_name).cursor()
                         return src(obj, cr, uid, ids, context=(ctx or {}))
                     except Exception:
                         pass
@@ -102,7 +103,7 @@ class object_proxy(netsvc.Service):
                                  # be returned, it is the best we have.
 
                 try:
-                    cr = pooler.get_db_only(dbname).cursor()
+                    cr = sql_db.db_connect(db_name).cursor()
                     res = translate(cr, name=False, source_type=ttype,
                                     lang=lang, source=src)
                     if res:

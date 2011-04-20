@@ -19,6 +19,8 @@
 #
 ##############################################################################
 
+import sql_db
+
 pool_dic = {}
 
 def get_db_and_pool(db_name, force_demo=False, status=None, update_module=False, pooljobs=True):
@@ -26,7 +28,7 @@ def get_db_and_pool(db_name, force_demo=False, status=None, update_module=False,
     if not status:
         status={}
 
-    db = get_db_only(db_name)
+    db = sql_db.db_connect(db_name)
 
     if db_name in pool_dic:
         pool = pool_dic[db_name]
@@ -64,18 +66,6 @@ def restart_pool(db_name, force_demo=False, status=None, update_module=False):
     if db_name in pool_dic:
         del pool_dic[db_name]
     return get_db_and_pool(db_name, force_demo, status, update_module=update_module)
-
-
-def get_db_only(db_name):
-    """Return a database connection."""
-    # ATTENTION:
-    # do not put this import outside this function
-    # sql_db must not be loaded before the logger is initialized.
-    # sql_db import psycopg2.tool which create a default logger if there is not.
-    # this resulting of having the logs outputed twice...
-    import openerp.sql_db as sql_db
-    db = sql_db.db_connect(db_name)
-    return db
 
 
 def get_db(db_name):
