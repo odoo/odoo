@@ -67,6 +67,8 @@ class budget_report(report_sxw.rml_parse):
 
             context = {'wizard_date_from': d_from, 'wizard_date_to': d_to}
             for i in range(0, len(an_ids)):
+                if not an_ids[i][0]:
+                    continue
                 analytic_name = acc_analytic_obj.browse(self.cr, self.uid, [an_ids[i][0]])
                 res={
                     'b_id': '-1',

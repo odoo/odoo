@@ -199,6 +199,13 @@ class crm_case(object):
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         return user.context_section_id.id or False
 
+    def unlink(self, cr, uid, ids, context={}):
+        for case in self.browse(cr, uid, ids, context):
+            if (not case.section_id.allow_unlink) and (case.state <> 'draft'):
+                raise osv.except_osv(_('Warning !'),
+                    _('You can not delete this case. You should better cancel it.'))
+        return super(crm_case, self).unlink(cr, uid, ids, context)
+
     def _find_next_stage(self, cr, uid, stage_list, index, current_seq, stage_pool, context=None):
         if index + 1 == len(stage_list):
             return False

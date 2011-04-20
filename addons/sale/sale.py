@@ -1180,12 +1180,14 @@ class sale_config_picking_policy(osv.osv_memory):
         'picking_policy': fields.selection([
             ('direct', 'Direct Delivery'),
             ('one', 'All at Once')
-        ], 'Picking Default Policy', required=True, help="The Shipping Policy is used to configure per order if you want to deliver as soon as possible when one product is available or you wait that all products are available.."),
+        ], 'Picking Default Policy', required=True, help="If you are sure that you have enough stock to send complete order at once please select 'All at Once'. If you want to send the order in the partial shipments please select 'Direct Delivery'..."),
         'order_policy': fields.selection([
             ('manual', 'Invoice Based on Sales Orders'),
             ('picking', 'Invoice Based on Deliveries'),
         ], 'Shipping Default Policy', required=True,
-           help="You can generate invoices based on sales orders or based on shippings."),
+           help="""The Shipping Policy is used to synchronise invoice and delivery operations.
+        - The "Invoice Based on Sales Orders" choice will create the picking order directly and wait for the user to manually click on the 'Invoice' button to generate the draft invoice.  
+        - The "Invoice Based on Deliveries" choice is used to create an invoice during the picking process."""),
         'step': fields.selection([
             ('one', 'Delivery Order Only'),
             ('two', 'Picking List & Delivery Order')
