@@ -219,6 +219,7 @@ class hr_payslip(osv.osv):
         'move_line_ids':fields.many2many('account.move.line', 'payslip_lines_rel', 'slip_id', 'line_id', 'Accounting Lines', readonly=True),
         'move_payment_ids':fields.many2many('account.move.line', 'payslip_payment_rel', 'slip_id', 'payment_id', 'Payment Lines', readonly=True),
         'period_id': fields.many2one('account.period', 'Force Period', domain=[('state','<>','done')], help="Keep empty to use the period of the validation(Payslip) date."),
+        'account_move_ids': fields.many2many('account.move', 'payslip_move_rel', 'slip_id', 'move_id', 'Accounting Entries', readonly=True),
     }
     
     def get_payslip_lines(self, cr, uid, contract_ids, payslip_id, context):
@@ -436,7 +437,8 @@ class hr_payslip(osv.osv):
             rec = {
                 'state':'done',
                 'move_payment_ids':[(6, 0, line_ids)],
-                'paid':True
+                'paid':True,
+                'account_move_ids': [(4, move_id)],
             }
             self.write(cr, uid, [slip.id], rec, context=context)
             for exp_id in exp_ids:
@@ -472,6 +474,7 @@ class hr_payslip(osv.osv):
             total_deduct = 0.0
 
             line_ids = []
+            move_ids = []
             partner = False
             partner_id = False
 
@@ -512,6 +515,7 @@ class hr_payslip(osv.osv):
                 'narration': slip.name
             }
             move_id = move_pool.create(cr, uid, move, context=context)
+            move_ids += [move_id]
             self.create_voucher(cr, uid, [slip.id], slip.name, move_id)
 
             if not slip.employee_id.salary_account.id:
@@ -554,7 +558,6 @@ class hr_payslip(osv.osv):
                 'ref':slip.number
             }
             line_ids += [movel_pool.create(cr, uid, line, context=context)]
-
             for line in slip.line_ids:
                 if line.name == 'Net' or line.name == 'Gross' or line.name == 'Basic':
                     continue
@@ -637,6 +640,7 @@ class hr_payslip(osv.osv):
                     'narration': 'Adjustment: %s' % (slip.name)
                 }
                 adj_move_id = move_pool.create(cr, uid, move, context=context)
+                move_ids += [adj_move_id]
                 name = "Adjustment Entry - %s" % (slip.employee_id.name)
                 self.create_voucher(cr, uid, [slip.id], name, adj_move_id)
 
@@ -672,6 +676,7 @@ class hr_payslip(osv.osv):
             rec = {
                 'state':'confirm',
                 'move_line_ids':[(6, 0,line_ids)],
+                'account_move_ids':[(6, 0, move_ids)]
             }
             if not slip.period_id:
                 rec['period_id'] = period_id
