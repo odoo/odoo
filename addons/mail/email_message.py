@@ -208,6 +208,8 @@ class email_message(osv.osv):
             message_id=False, references=False, openobject_id=False, debug=False, subtype='plain', x_headers={}, priority='3', smtp_server_id=False, context=None, auto_delete=False):
         if context is None:
             context = {}
+        if attach is None:
+            attach = {}
         attachment_obj = self.pool.get('ir.attachment')
         if email_to and type(email_to) != list:
             email_to = [email_to]
@@ -240,21 +242,20 @@ class email_message(osv.osv):
                 'auto_delete': auto_delete
             }
         email_msg_id = self.create(cr, uid, msg_vals, context)
-        if attach:
-            attachment_ids = []
-            for attachment in attach:
-                attachment_data = {
-                        'name': attachment[0],
-                        'subject':  (subject or '') + _(' (Email Attachment)'),
-                        'datas': attachment[1],
-                        'datas_fname': attachment[0],
-                        'body': subject or _('No Description'),
-                        'res_model':'email.message',
-                        'res_id': email_msg_id,
-                    }
-                if context.has_key('default_type'):
-                    del context['default_type']
-                attachment_ids.append(attachment_obj.create(cr, uid, attachment_data, context))
+        attachment_ids = []
+        for fname, fcontent in attach.items():
+            attachment_data = {
+                    'name': fname,
+                    'subject':  (subject or '') + _(' (Email Attachment)'),
+                    'datas': fcontent,
+                    'datas_fname': fname,
+                    'body': subject or _('No Description'),
+                    'res_model':'email.message',
+                    'res_id': email_msg_id,
+                }
+            if context.has_key('default_type'):
+                del context['default_type']
+            attachment_ids.append(attachment_obj.create(cr, uid, attachment_data, context))
             self.write(cr, uid, email_msg_id,
                               { 'attachment_ids': [[6, 0, attachment_ids]] }, context)
         return email_msg_id
