@@ -251,7 +251,7 @@ class hr_timesheet_sheet(osv.osv):
         if context is None:
             context = {}
         if not sheet.date_current == time.strftime('%Y-%m-%d'):
-            raise osv.except_osv(_('Error !'), _('You can not sign in from an other date than today'))
+            raise osv.except_osv(_('Error !'), _('You cannot sign in/sign out from an other date than today'))
         emp_id = sheet.employee_id.id
         context['sheet_id']=ids[0]
         emp_obj.attendance_action_change(cr, uid, [emp_id], type=typ, context=context,)
