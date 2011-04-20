@@ -46,8 +46,9 @@ class email_template_preview(osv.osv_memory):
         template = template_pool.browse(cr, uid, int(template_id), context=context)
         template_object = template.model_id
         model =  self.pool.get(template_object.model)
-        record_ids = model.search(cr, uid, [], 0, 20, 'id', context=context)
+        record_ids = model.search(cr, uid, [], 0, 10, 'id', context=context)
         default_id = context.get('default_res_id')
+
         if default_id and default_id not in record_ids:
             record_ids.insert(0, default_id)
 

@@ -23,44 +23,11 @@ from osv import osv
 from osv import fields
 import tools
 from tools.translate import _
+import binascii
 
 class email_compose_message(osv.osv_memory):
     _name = 'email.compose.message'
     _inherit = 'email.compose.message'
-
-    def get_template_data(self, cr, uid, template_id, context=None):
-        result = {}
-        if not template_id: 
-            return result
-        if context is None:
-            context = {}
-
-        template_pool = self.pool.get('email.template')
-        resource_id = context.get('active_id')
-        template = template_pool.get_email_template(cr, uid, template_id=template_id, context=context)
-
-        def _get_template_value(field):
-            if context.get('mass_mail',False): # Multiple Mail: Gets original template values for multiple email change
-                return getattr(template, field)
-            else
-                return self.get_template_value(cr, uid, getattr(template, field), template.model, resource_id, context=context)
-
-
-        result.update({
-                'template_id' : template.id,
-                'smtp_server_id' : template.smtp_server_id.id,
-                'body' : _get_template_value('body') or False,
-                'subject' : _get_template_value('subject') or False,
-                'attachment_ids' : template_pool.read(cr, uid, template.id, ['attachment_ids'])['attachment_ids'] or [],
-                'res_id' : resource_id or False,
-                'email_to' : _get_template_value('email_to') or False,
-                'email_cc' : _get_template_value('email_cc') or False,
-                'email_bcc' : _get_template_value('email_bcc') or False,
-                'reply_to' : _get_template_value('reply_to') or False,
-                'model' : template.model or False,
-            })
-        return result
-
 
     def _get_templates(self, cr, uid, context=None):
         """
@@ -90,13 +57,27 @@ class email_compose_message(osv.osv_memory):
         template_pool = self.pool.get('email.template')
         return template_pool.get_template_value(cr, uid, message, model, resource_id, context)
 
-    def on_change_template(self, cr, uid, template_id, context=None):
+    def on_change_template(self, cr, uid, ids, template_id, context=None):
         if context is None:
             context = {}
-        
-        resource_id = context.get('active_id', False)
-        
-        return self.get_template_data(cr, uid, resource_id, template_id, context)
+        att_ids = []
+        res_id = context.get('active_id', False)
+        values = self.pool.get('email.template').generate_email(cr, uid, template_id, res_id, context=context)
+        if values['attachment']:
+            attachment = values['attachment']
+            attachment_obj = self.pool.get('ir.attachment')
+            for fname, fcontent in attachment.items():
+                data_attach = {
+                    'name': fname,
+                    'datas': binascii.b2a_base64(str(fcontent)),
+                    'datas_fname': fname,
+                    'description': _('Mail attachment'),
+                    'res_model' : self._name,
+                    'res_id' : ids and ids[0] or False
+                }
+                att_ids.append(attachment_obj.create(cr, uid, data_attach))
+            values['attachment_ids'] = att_ids
+        return {'value': values}
 
 email_compose_message()
 

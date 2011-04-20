@@ -29,6 +29,13 @@ class email_compose_message(osv.osv_memory):
     _description = 'This is the wizard for Compose E-mail'
 
     def default_get(self, cr, uid, fields, context=None):
+        """
+        Returns default values for fields
+        @param fields: list of fields, for which default values are required to be read
+        @param context: context arguments, like lang, time zone
+
+        @return: Returns a dictionary that contains default values for fields
+        """
         if context is None:
             context = {}
         result = super(email_compose_message, self).default_get(cr, uid, fields, context=context)
@@ -101,13 +108,17 @@ class email_compose_message(osv.osv_memory):
     _columns = {
         'attachment_ids': fields.many2many('ir.attachment','email_message_send_attachment_rel', 'wizard_id', 'attachment_id', 'Attachments'),
         'auto_delete': fields.boolean('Auto Delete', help="Permanently delete emails after sending"),
-        'filter_id': fiels
+        'filter_id': fields.many2one('ir.filters', 'Filters'),
     }
 
     def get_value(self, cr, uid, model, res_id, context=None):
         return {}
 
     def get_message_data(self, cr, uid, message_id, context=None):
+        '''
+        Called by default_get() to get message detail
+        @param message_id: Id of the email message
+        '''
         if context is None:
             context = {}
         result = {}
@@ -115,11 +126,7 @@ class email_compose_message(osv.osv_memory):
         if message_id:
             message_data = message_pool.browse(cr, uid, message_id, context)
             subject = tools.ustr(message_data and message_data.subject or '')
-            if context.get('mail','') == 'reply':
-                subject = "Re :- " + subject
-
             description =  message_data and message_data.body  or ''
-            message_body = False
             if context.get('mail','') == 'reply':
                 header = '-------- Original Message --------'
                 sender = 'From: %s'  % tools.ustr(message_data.email_from or '')
@@ -127,6 +134,8 @@ class email_compose_message(osv.osv_memory):
                 sentdate = 'Date: %s' % message_data.date
                 desc = '\n > \t %s' % tools.ustr(description.replace('\n', "\n > \t") or '')
                 description = '\n'.join([header, sender, email_to, sentdate, desc])
+                if not subject.startswith('Re: '):
+                    subject = "Re: " + subject
 
             result.update({
                     'body' : description,
@@ -151,14 +160,17 @@ class email_compose_message(osv.osv_memory):
         return result
 
     def send_mail(self, cr, uid, ids, context=None):
+        '''
+        Sends the email
+        '''
         if context is None:
             context = {}
 
-        record = self.browse(cr, uid, ids[0], context=context)
-        email_message_pool = self.pool.get('email.message') 
+        email_message_pool = self.pool.get('email.message')
         attachment = []
         email_ids = []
         for mail in self.browse(cr, uid, ids, context=context):
+
             for attach in mail.attachment_ids:
                 attachment.append((attach.datas_fname, attach.datas))
             references = False
@@ -169,7 +181,7 @@ class email_compose_message(osv.osv_memory):
                 references = mail.references and mail.references + "," + mail.message_id or mail.message_id
             else:
                 message_id = mail.message_id
-            
+
             # Mass mailing
             if context.get('mass_mail', False):
                 if context['active_ids'] and context['active_model']:
@@ -177,19 +189,21 @@ class email_compose_message(osv.osv_memory):
                     active_model = context['active_model']
 
                 else:
-                    active_model = record.model.model
-                    active_ids = active_model_pool.search(cr, uid, record.filter_id.domain, record.filter_id.context)
-                
+                    active_model = mail.model
+                    active_model_pool = self.pool.get(active_model)
+                    active_ids = active_model_pool.search(cr, uid, eval(mail.filter_id.domain), context=eval(mail.filter_id.context))
+
                 for active_id in active_ids:
                     subject = self.get_template_value(cr, uid, mail.subject, active_model, active_id)
                     body = self.get_template_value(cr, uid, mail.body, active_model, active_id)
                     email_to = self.get_template_value(cr, uid, mail.email_to, active_model, active_id)
                     email_from = self.get_template_value(cr, uid, mail.email_from, active_model, active_id)
                     email_cc = self.get_template_value(cr, uid, mail.email_cc, active_model, active_id)
+                    email_bcc = self.get_template_value(cr, uid, mail.email_bcc, active_model, active_id)
                     reply_to = self.get_template_value(cr, uid, mail.reply_to, active_model, active_id)
 
-                    email_id = email_message_pool.schedule_with_attach(cr, uid, mail.email_from, mail.email_to, mail.subject, mail.body,
-                        model=mail.model, email_cc=mail.email_cc, email_bcc=mail.email_bcc, reply_to=mail.reply_to,
+                    email_id = email_message_pool.schedule_with_attach(cr, uid, email_from, email_to, subject, body,
+                        model=mail.model, email_cc=email_cc, email_bcc=email_bcc, reply_to=reply_to,
                         attach=attachment, message_id=message_id, references=references, openobject_id=int(mail.res_id),
                         subtype=mail.sub_type, x_headers=mail.headers, priority=mail.priority, smtp_server_id=mail.smtp_server_id and mail.smtp_server_id.id,
                         auto_delete=mail.auto_delete or False, context=context)
@@ -200,15 +214,13 @@ class email_compose_message(osv.osv_memory):
                     model=mail.model, email_cc=mail.email_cc, email_bcc=mail.email_bcc, reply_to=mail.reply_to,
                     attach=attachment, message_id=message_id, references=references, openobject_id=int(mail.res_id),
                     subtype=mail.sub_type, x_headers=mail.headers, priority=mail.priority, smtp_server_id=mail.smtp_server_id and mail.smtp_server_id.id,
-                    auto_delete=mail.auto_delete or False, context=context)
+                    auto_delete=mail.auto_delete, context=context)
                 email_ids.append(email_id)
-        return email_ids
-        #return {'type': 'ir.actions.act_window_close'}
+        return {'type': 'ir.actions.act_window_close'}
 
-    
+
     def get_template_value(self, cr, uid, message, model, resource_id, context=None):
         return message
-        
 
 email_compose_message()
 

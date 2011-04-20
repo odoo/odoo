@@ -84,14 +84,6 @@ class email_template(osv.osv):
                   help="The subject of email."
                   " Placeholders can be used here.",
                   translate=True),
-#        'description':fields.text(
-#                    'Standard Body (Text)',
-#                    help="The text version of the mail",
-#                    translate=True),
-#        'body_html':fields.text(
-#                    'Body (Text-Web Client Only)',
-#                    help="The text version of the mail",
-#                    translate=True),
         'user_signature':fields.boolean(
                   'Signature',
                   help="the signature from the User details"
@@ -352,49 +344,50 @@ class email_template(osv.osv):
         """
         if context is None:
             context = {}
-        smtp_pool = self.pool.get('ir.mail_server')
-        email_message_pool = self.pool.get('email.message')
+        values = {
+                  'subject': False,
+                  'body': False,
+                  'email_to': False,
+                  'email_cc': False,
+                  'email_bcc': False,
+                  'reply_to': False,
+                  'auto_delete': False,
+                  'model': False,
+                  'res_id': False,
+                  'smtp_server_id': False,
+                  'attachment': False,
+                  'attachment_ids': False,
+        }
+        if not template_id:
+            return values
         report_xml_pool = self.pool.get('ir.actions.report.xml')
         template = self.get_email_template(cr, uid, template_id, record_id, context)
-        smtp_server_id = context.get('smtp_server_id', False)
-        if not smtp_server_id and template.smtp_server_id:
-            smtp_server_id = template.smtp_server_id.id
-        else:
-            smtp_ids = smtp_pool.search(cr, uid, [])
-            smtp_server_id = smtp_ids and smtp_ids[0]
-        smtp_server = smtp_pool.browse(cr, uid, smtp_server_id, context=context)
-        # determine name of sender, either it is specified in email_id
+        def _get_template_value(field):
+            if context.get('mass_mail',False): # Mass Mail: Gets original template values for multiple email change
+                return getattr(template, field)
+            else:
+                return self.get_template_value(cr, uid, getattr(template, field), template.model, record_id, context=context)
 
-        email_id = smtp_server.email_id.strip()
-        email_from = re.findall(r'([^ ,<@]+@[^> ,]+)', email_id)[0]
-        if email_from != email_id:
-            email_from = smtp_server.email_id
-        else:
-            email_from = tools.ustr(smtp_server.name) + "<" + tools.ustr(email_id) + ">"
-
-        model = template.model_id.model
+        #Use signatures if allowed
+        body = _get_template_value('body')
+        if template.user_signature:
+            signature = self.pool.get('res.users').browse(cr, uid, uid, context).signature
+            body += '\n' + signature
         values = {
-            'email_from': email_from,
-            'email_to': self.get_template_value(cr, uid, template.email_to, model, record_id, context),
-            'email_cc': self.get_template_value(cr, uid, template.email_cc, model, record_id, context),
-            'email_bcc': self.get_template_value(cr, uid, template.email_bcc, model, record_id, context),
-            'reply_to': self.get_template_value(cr, uid, template.reply_to, model, record_id, context),
-            'subject': self.get_template_value(cr, uid, template.subject, model, record_id, context),
-            'body': self.get_template_value(cr, uid, template.description, model, record_id, context),
-            'auto_delete': self.get_template_value(cr, uid, template.auto_delete, model, record_id, context),
+            'smtp_server_id' : template.smtp_server_id.id,
+            'body' : body,
+            'email_to' : _get_template_value('email_to') or False,
+            'email_cc' : _get_template_value('email_cc') or False,
+            'email_bcc' : _get_template_value('email_bcc') or False,
+            'reply_to' : _get_template_value('reply_to') or False,
+            'subject' : _get_template_value('subject') or False,
+            'auto_delete': template.auto_delete,
+            'model' : template.model or False,
+            'res_id' : record_id or False,
             #'body_html': self.get_template_value(cr, uid, template.body_html, model, record_id, context),
         }
 
-        #Use signatures if allowed
-        if template.user_signature:
-            sign = self.pool.get('res.users').read(cr, uid, uid, ['signature'], context)['signature']
-            if values['description']:
-                values['description'] += '\n\n' + sign
-            #if values['body_html']:
-            #    values['body_html'] += sign
-
-        attachment = []
-
+        attachment = {}
         # Add report as a Document
         if template.report_template:
             report_name = template.report_name
@@ -412,22 +405,14 @@ class email_template(osv.osv):
             if not report_name:
                 report_name = reportname
             report_name = report_name + "." + format
-            attachment.append((report_name, result))
-
+            attachment[report_name] = result
 
         # Add document attachments
         for attach in template.attachment_ids:
             #attach = attahcment_obj.browse(cr, uid, attachment_id, context)
-            attachment.append((attach.datas_fname, attach.datas))
-
-        #Send emails
-        context.update({'notemplate':True})
-        email_id = email_message_pool.schedule_with_attach(cr, uid, values.get('email_from'), values.get('email_to'), values.get('name'),
-                    values.get('description'), model=model, email_cc=values.get('email_cc'), email_bcc=values.get('email_bcc'),
-                    reply_to=values.get('reply_to'), attach=attachment, message_id=values.get('message_id'), openobject_id=record_id,
-                    debug=True, subtype='plain', x_headers={}, priority='3', smtp_server_id=smtp_server.id, auto_delete=values.get('auto_delete'), context=context)
-        email_message_pool.write(cr, uid, email_id, {'template_id': context.get('template_id',template.id)})
-        return email_id
+            attachment[attach.datas_fname] = attach.datas
+        values['attachment'] = attachment
+        return values
 
 email_template()
 
