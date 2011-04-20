@@ -98,7 +98,7 @@ class purchase_order(osv.osv):
             tot = 0.0
             for invoice in purchase.invoice_ids:
                 if invoice.state not in ('draft','cancel'):
-                    tot += invoice.amount_untaxed
+                    tot += (invoice.amount_untaxed - invoice.residual)
             if purchase.amount_untaxed:
                 res[purchase.id] = tot * 100.0 / purchase.amount_untaxed
             else:
