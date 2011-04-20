@@ -149,30 +149,18 @@
 	               <separator colspan="4" string="Notes"/>
                    <field name="note" colspan="4" nolabel="1"/>
 	            </page>
+	      		<page string="Account Lines">
+		       		<field name="move_line_ids" colspan="4" nolabel="1"/>
+		        </page>
+		        <page string="Accounting Entries">
+                	<field name="account_move_ids" colspan="4" nolabel="1"/>
+                </page>
+		        <page string="Payment Lines">
+	        		<field name="move_payment_ids" colspan="4" nolabel="1"/>
+	        	</page>
               </xpath>
 	        </field>
 		</record>
-
-		<record id="view_hr_payslip_form_inherit1" model="ir.ui.view">
-		    <field name="name">hr.payslip.form</field>
-		    <field name="model">hr.payslip</field>
-		    <field name="type">form</field>
-		    <field name="inherit_id" ref="view_hr_payslip_form_inherit"/>
-		    <field name="arch" type="xml">
-		        <notebook position="inside">
-		            <page string="Account Lines">
-		                <field name="move_line_ids" colspan="4" nolabel="1"/>
-		            </page>
-		            <page string="Payment Lines">
-		                <field name="move_payment_ids" colspan="4" nolabel="1"/>
-		            </page>
-	                <page string="Accounting Entries">
-                        <field name="account_move_ids" colspan="4" nolabel="1"/>
-                    </page>
-		        </notebook>
-		    </field>
-		</record>
-
 
         <!-- Adding Account Properties to the Employee form -->
 
@@ -191,7 +179,7 @@
         </record>
 
     <!-- Adding Account fields to the Salary Rules -->
-    
+
         <record id="hr_salary_rule_form_inherit" model="ir.ui.view">
             <field name="name">hr.salary.rule.form.inherit</field>
             <field name="model">hr.salary.rule</field>
@@ -209,7 +197,7 @@
         </record>
 
     <!-- Contract View -->
-    
+
         <record id="hr_contract_form_inherit" model="ir.ui.view">
             <field name="name">hr.contract.view.form.inherit</field>
             <field name="model">hr.contract</field>
