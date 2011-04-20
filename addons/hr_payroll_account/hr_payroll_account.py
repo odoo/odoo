@@ -256,6 +256,8 @@ class hr_payslip(osv.osv):
                     else:
                         emp_account_id = [record.employee_id.employee_account.id for record in self.browse(cr, uid, [payslip_id], context=context)]
                         value['account_id'] = emp_account_id[0]
+                    if rule.analytic_account_id:
+                        value['analytic_account_id'] = rule.analytic_account_id.id
         return result
     
     def create_voucher(self, cr, uid, ids, name, voucher, sequence=5):
