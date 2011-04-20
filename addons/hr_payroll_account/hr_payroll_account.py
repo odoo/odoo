@@ -282,10 +282,8 @@ class hr_payslip(osv.osv):
                     if line.move_id.state == 'posted':
                         move_pool.button_cancel(cr, uid [line.move_id.id], context)
                     move_pool.unlink(cr, uid, [line.move_id.id], context=context)
-
         slip_move.unlink(cr, uid, move_ids, context=context)
-        self.write(cr, uid, ids, {'state':'cancel'}, context=context)
-        return True
+        return self.write(cr, uid, ids, {'state':'cancel'}, context=context)
 
     def process_sheet(self, cr, uid, ids, context=None):
         move_pool = self.pool.get('account.move')
@@ -446,12 +444,10 @@ class hr_payslip(osv.osv):
         return True
 
     def account_check_sheet(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'state':'accont_check'}, context=context)
-        return True
+        return self.write(cr, uid, ids, {'state':'accont_check'}, context=context)
 
     def hr_check_sheet(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'state':'hr_check'}, context=context)
-        return True
+        return self.write(cr, uid, ids, {'state':'hr_check'}, context=context)
 
     def verify_sheet(self, cr, uid, ids, context=None):
         move_pool = self.pool.get('account.move')
