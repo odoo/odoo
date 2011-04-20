@@ -21,6 +21,8 @@
                    <newline/>
                    <group expand="0" string="Extended Filters..." groups="base.group_extended">
                        <field name="pricelist_id" widget="selection" context="{'pricelist': self}" />
+                       <separator orientation="vertical" groups="base.group_multi_company" />
+                       <field name="company_id" widget="selection" groups="base.group_multi_company" />
                    </group>
                    <newline/>
                    <group  expand='0' string='Group by...' groups="base.group_extended">
@@ -29,6 +31,7 @@
                        <filter string='Default UOM' icon="terp-mrp" domain="[]" context="{'group_by' : 'uom_id'}" />
                        <separator orientation="vertical"/>
                        <filter string='Type' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'type'}" />
+                       <separator orientation="vertical" groups="base.group_multi_company"/>
                        <filter string='Company' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'company_id'}" groups="base.group_multi_company" />
                    </group>
 
@@ -55,7 +58,7 @@
                     <field name="price" invisible="not context.get('pricelist',False)"/>
                     <field name="standard_price"/>
                     <field name="state" groups="base.group_extended"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="company_id" groups="base.group_multi_company" invisible="1"/>
                 </tree>
             </field>
         </record>
