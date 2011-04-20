@@ -84,6 +84,7 @@ class sale_order(osv.osv):
                     left join sale_order as so on so.id = t.sale_id  
                     where so.id in %s group by so.id ''',(tuple(ids),))
         task_result = cr.dictfetchall()
+        
         if not sale_task_result:
             return res
         for task_item in task_result:
@@ -92,25 +93,30 @@ class sale_order(osv.osv):
         for item in sale_task_result:
             temp[item['sale_id']]['number_of_planned'] = task_item['total_hours']
             temp[task_item['sale_id']]['total_no_task']= task_item['total']
+
             if (not item['task_hours'] and item['task_state'] == 'done') or (item['task_hours'] and item['task_state'] == 'done'):  # If Task hours not given and task completed
                 temp[item['sale_id']]['number_of_done'] += 1
             elif item['task_hours'] and not item['task_state'] in 'done': # If task work in the task
                 temp[item['sale_id']]['time_spent'] += item['task_hours']
-            else: # To calculate the other record 
+            else: # To calculate the not done task 
                 temp[item['sale_id']]['number_of_others'] += 1
-            temp[item['sale_id']]['percentage'] = float(temp[item['sale_id']]['time_spent']) / temp[item['sale_id']]['number_of_planned'] * 100
-        temp[item['sale_id']]['percentage'] += (float(temp[item['sale_id']]['number_of_done']) / temp[item['sale_id']]['number_of_planned']) * 100
-    
+            temp[item['sale_id']]['percentage'] = round(min(float(temp[item['sale_id']]['time_spent']) / temp[item['sale_id']]['number_of_planned'] * 100,100),2)
+        temp[item['sale_id']]['percentage'] += temp[item['sale_id']]['total_no_task'] and (float(temp[item['sale_id']]['number_of_done']) / temp[item['sale_id']]['total_no_task']) * 100
+       
         for sale in self.browse(cr,uid,ids,context=None):
             # Non service type products are calculated here 
             temp[item['sale_id']]['number_of_stockable'] = len(sale.order_line) - temp[task_item['sale_id']]['total_no_task']
+            if temp[item['sale_id']]['number_of_stockable'] < 0:
+                temp[item['sale_id']]['number_of_stockable'] = 0
             # condition for the percent calculation
             if temp[item['sale_id']]['percentage'] == 100 and res[sale.id] == 100:
                 continue
             elif temp[item['sale_id']]['number_of_stockable'] == 0:
                 res[sale.id] = (temp[sale.id]['percentage'])
             else:    
-                res[sale.id] = (res[sale.id] + temp[sale.id]['percentage']) / (temp[item['sale_id']]['number_of_stockable'] + temp[task_item['sale_id']]['total_no_task'])
+                res[sale.id] = round((res[sale.id] + temp[sale.id]['percentage']) / (temp[item['sale_id']]['number_of_stockable'] + temp[task_item['sale_id']]['total_no_task']),2)
+                if res[sale.id] > 100:
+                    res[sale.id] = 100
         return res
      
     _columns = {
