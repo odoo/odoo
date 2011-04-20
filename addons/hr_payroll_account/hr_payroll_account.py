@@ -240,7 +240,7 @@ class hr_payslip(osv.osv):
         #get the rules of the structure and thier children
         rule_ids = structure_obj.get_all_rules(cr, uid, structure_ids, context=context)
         sorted_rule_ids = [id for id, sequence in sorted(rule_ids, key=lambda x:x[1])]
-        journal = self.browse(cr, uid, payslip_id, context=context).journal_id.id
+        journal = self.browse(cr, uid, payslip_id, context=context).journal_id
         credit_account = journal.default_credit_account_id and journal.default_credit_account_id.id or False
         debit_account = journal.default_debit_account_id and journal.default_debit_account_id.id or False
         for rule in rule_obj.browse(cr, uid, sorted_rule_ids, context=context):
@@ -261,8 +261,8 @@ class hr_payslip(osv.osv):
                         else:
                             value['account_id'] = rule.account_credit.id
                     else:
-                        emp_account_id = [record.employee_id.employee_account.id for record in self.browse(cr, uid, [payslip_id], context=context)]
-                        value['account_id'] = emp_account_id[0]
+                        emp_account_id = self.browse(cr, uid, payslip_id, context=context).employee_id.employee_account.id
+                        value['account_id'] = emp_account_id
                     if rule.analytic_account_id:
                         value['analytic_account_id'] = rule.analytic_account_id.id
         return result
