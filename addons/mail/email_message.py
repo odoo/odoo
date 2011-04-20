@@ -313,7 +313,7 @@ class email_message(osv.osv):
             msg_txt['message-id'] = message_id
             _logger.info('Parsing Message without message-id, generating a random one: %s', message_id)
 
-       
+
         fields = msg_txt.keys()
         msg['id'] = message_id
         msg['message-id'] = message_id
@@ -424,7 +424,7 @@ class email_message(osv.osv):
                         subtype=message.sub_type,
                         x_headers=message.headers and eval(message.headers) or {},
                         priority=message.priority)
-                    res = smtp_server_obj.send_email(cr, uid, 
+                    res = smtp_server_obj.send_email(cr, uid,
                         msg,
                         mail_server_id = message.smtp_server_id.id or None,
                         smtp_server=smtp_server and smtp_server.smtp_host or None,

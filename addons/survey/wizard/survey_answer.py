@@ -402,7 +402,7 @@ class survey_question_wiz(osv.osv_memory):
                         response_id = surv_name_wiz.read(cr, uid, context.get('sur_name_id',False))['response']
                         context.update({'response_id':response_id})
                         report = self.create_report(cr, uid, [int(survey_id)], 'report.survey.browse.response', survey_data.title,context)
-                        attachments = []
+                        attachments = {}
                         file = open(addons.get_module_resource('survey', 'report') + survey_data.title + ".pdf")
                         file_data = ""
                         while 1:
@@ -411,7 +411,7 @@ class survey_question_wiz(osv.osv_memory):
                             if not line:
                                 break
 
-                        attachments.append((survey_data.title + ".pdf",file_data))
+                        attachments[survey_data.title + ".pdf"] = file_data
                         file.close()
                         os.remove(addons.get_module_resource('survey', 'report') + survey_data.title + ".pdf")
                         user_email = False
