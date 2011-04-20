@@ -513,7 +513,7 @@ property or property parameter."),
                         sub,
                         body,
                         model='calendar.attendee',
-                        attach=attach and [('invitation.ics', attach)] or None,
+                        attach=attach and {'invitation.ics': attach} or None,
                         subtype='html',
                         reply_to=email_from
                     )

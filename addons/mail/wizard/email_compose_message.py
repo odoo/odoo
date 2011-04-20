@@ -167,12 +167,12 @@ class email_compose_message(osv.osv_memory):
             context = {}
 
         email_message_pool = self.pool.get('email.message')
-        attachment = []
+        attachment = {}
         email_ids = []
         for mail in self.browse(cr, uid, ids, context=context):
 
             for attach in mail.attachment_ids:
-                attachment.append((attach.datas_fname, attach.datas))
+                attachment[attach.datas_fname] = attach.datas
             references = False
             message_id = False
 

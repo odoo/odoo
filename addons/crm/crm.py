@@ -479,12 +479,12 @@ class crm_case(object):
 
             body = self.format_body(body)
 
-            attach_to_send = None
+            attach_to_send = {}
 
             if attach:
                 attach_ids = self.pool.get('ir.attachment').search(cr, uid, [('res_model', '=', self._name), ('res_id', '=', case.id)])
                 attach_to_send = self.pool.get('ir.attachment').read(cr, uid, attach_ids, ['datas_fname', 'datas'])
-                attach_to_send = map(lambda x: (x['datas_fname'], base64.decodestring(x['datas'])), attach_to_send)
+                attach_to_send = dict(map(lambda x: (x['datas_fname'], base64.decodestring(x['datas'])), attach_to_send))
 
             # Send an email
             subject = "Reminder: [%s] %s" % (str(case.id), case.name, )
