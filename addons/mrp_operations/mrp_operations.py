@@ -118,7 +118,6 @@ class mrp_production_workcenter_line(osv.osv):
         @param action: Action to perform.
         @return: Nothing
         """
-        work_obj = self.pool.get('mrp.production.workcenter.line')
         wf_service = netsvc.LocalService("workflow")
         prod_obj_pool = self.pool.get('mrp.production')
         oper_obj = self.browse(cr, uid, ids)[0]
@@ -139,7 +138,7 @@ class mrp_production_workcenter_line(osv.osv):
             flag = True
             for line in obj:
                 if line.state != 'done':
-                    flag = False
+                     flag = False
             if flag:
                 for production in prod_obj_pool.browse(cr, uid, [prod_obj.id], context= None):
                     if production.move_lines or production.move_created_ids:
