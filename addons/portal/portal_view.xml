@@ -42,13 +42,12 @@ the portal's users.
             <field name="arch" type="xml">
                 <page string="Users" position="before">
                     <page string="Portal">
-                        <group colspan="2" col="2">
-                            <separator string="Portal Menu" colspan="2"/>
-                            <group colspan="2" col="2">
-                                <field name="menu_action_id"/>
-                                <field name="parent_menu_id"
-                                    context="{'ir.ui.menu.full_list': True}"/>
-                            </group>
+                        <group colspan="2" col="4">
+                            <separator string="Portal Menu" colspan="4"/>
+                            <field name="menu_action_id"/>
+                            <field name="override_menu"/>
+                            <field name="parent_menu_id"
+                                context="{'ir.ui.menu.full_list': True}"/>
                             <button name="do_create_menu" type="object"
                                 string="Create Parent Menu"/>
                         </group>
