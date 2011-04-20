@@ -232,10 +232,13 @@ class mrp_production(osv.osv):
         """ Finishes work order if production order is done.
         @return: Super method
         """
+        work_obj = self.pool.get('mrp.production.workcenter.line')
         obj = self.browse(cr, uid, ids)[0]
         wf_service = netsvc.LocalService("workflow")
         for workcenter_line in obj.workcenter_lines:
             wf_service.trg_validate(uid, 'mrp.production.workcenter.line', workcenter_line.id, 'button_done', cr)
+            if workcenter_line.state == 'draft':
+                work_obj.write(cr, uid, workcenter_line.id, {'state': 'done'})
         return super(mrp_production,self).action_production_end(cr, uid, ids)
 
     def action_in_production(self, cr, uid, ids):
@@ -243,9 +246,12 @@ class mrp_production(osv.osv):
         @return: True
         """
         obj = self.browse(cr, uid, ids)[0]
+        workcenter_pool = self.pool.get('mrp.production.workcenter.line')
         wf_service = netsvc.LocalService("workflow")
-        for workcenter_line in obj.workcenter_lines:
-            wf_service.trg_validate(uid, 'mrp.production.workcenter.line', workcenter_line.id, 'button_start_working', cr)
+        for prod in self.browse(cr, uid, ids):
+            workorder_ids = workcenter_pool.search(cr, uid, [('production_id', '=', prod.id)], limit=1)
+            for wo_id in workorder_ids:
+                wf_service.trg_validate(uid, 'mrp.production.workcenter.line', wo_id, 'button_start_working', cr)
         return super(mrp_production,self).action_in_production(cr, uid, ids)
     
     def action_cancel(self, cr, uid, ids, context=None):
