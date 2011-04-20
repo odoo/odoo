@@ -1277,6 +1277,10 @@ class orm_template(object):
                 trans = self.pool.get('ir.translation')._get_source(cr, user, self._name, 'view', context['lang'], node.get('sum'))
                 if trans:
                     node.set('sum', trans)
+            if node.get('help'):
+                trans = self.pool.get('ir.translation')._get_source(cr, user, self._name, 'view', context['lang'], node.get('help'))
+                if trans:
+                    node.set('help', trans)
 
         for f in node:
             if children or (node.tag == 'field' and f.tag in ('filter','separator')):
