@@ -68,6 +68,8 @@ class crm_merge_opportunity(osv.osv_memory):
             ids = list(set(ids) - set(context.get('lead_ids', False)) )
         lead_obj = self.pool.get('crm.lead')
         op_id = lead_obj.search(cr, uid, [('id', 'in', ids)], order='create_date' , context=context)
+        if not op_id:
+            return False
         opps = lead_obj.browse(cr, uid, [op_id[0]], context=context)
         return opps[0]
 

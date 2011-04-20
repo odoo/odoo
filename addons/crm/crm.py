@@ -454,9 +454,9 @@ class crm_case(object):
         """
         for case in self.browse(cr, uid, ids, context=context):
             if not destination and not case.email_from:
-                raise osv.except_osv(_('Error!'), ("Partner Email is not specified in Case"))
+                return False
             if not case.user_id.user_email:
-               raise osv.except_osv(_('Error!'), ("User Email is not specified in Case"))
+                return False
             
             if destination and case.section_id.user_id:
                 case_email = case.section_id.user_id.user_email
