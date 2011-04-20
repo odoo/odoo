@@ -79,8 +79,9 @@
                 <form string="Payment Mode">
                     <field name="name" select="1"/>
                     <field name="journal" select="1"/>
-                    <field name="bank_id"/>
-                    <field name="company_id" select="1" widget='selection' groups="base.group_multi_company"/>
+                    <field name="bank_id" domain="[('partner_id','=',partner_id)]"  />
+                    <field name="company_id" select="1" widget='selection' groups="base.group_multi_company" on_change="onchange_company_id(company_id)"/>
+                    <field name="partner_id" select="1" widget='selection' invisible="1"/>
                 </form>
             </field>
         </record>
