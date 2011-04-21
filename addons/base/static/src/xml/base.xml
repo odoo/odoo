@@ -214,7 +214,8 @@
                 <t t-set="is_button" t-value="column.tag === 'button'"/>
                 <!-- TODO: get correct widget from form -->
                 <t t-if="!is_button and row['data'][column.id].value">
-                    <t t-esc="row['data'][column.id].value"/>
+                    <t t-set="value" t-value="row['data'][column.id].value"/>
+                    <t t-esc="value instanceof Array ? value[1] : value"/>
                 </t>
                 <button type="button" t-att-title="column.help"
                         t-if="is_button">
