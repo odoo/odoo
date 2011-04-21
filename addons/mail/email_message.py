@@ -182,7 +182,7 @@ class email_message(osv.osv):
         for message in self.browse(cr, uid, ids, context=context):
             msg_txt = ''
             if message.history:
-                msg_txt += (message.email_from or '/') + _(' wrote on ') + format_date_tz(message.date, tz) + ':\n\t'
+                msg_txt += _('%s wrote on %s: \n Subject: %s \n\t') % (message.email_from or '/', format_date_tz(message.date, tz), message.subject)
                 if message.body:
                     msg_txt += self.truncate_data(cr, uid, message.body, context=context)
             else:

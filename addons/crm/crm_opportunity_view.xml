@@ -154,8 +154,9 @@
                                         <field name="date"/>
                                         <field name="email_to" size="512"/>
                                         <field name="email_cc" size="512"/>
-                                        <field name="subject" colspan="4" attrs="{'invisible': [('history', '=', True)]}"/>
-                                        <field name="display_text" colspan="4"   attrs="{'invisible': [('history', '=', False)]}"/>
+
+                                        <field name="subject" colspan="4" widget="char" attrs="{'invisible': [('history', '=', False)]}" size="512"/>
+                                        <field name="display_text" colspan="4"   attrs="{'invisible': [('history', '=', True)]}"/>
                                         <field name="history" invisible="1"/>
                                     </group>
                                     <notebook colspan="4">
@@ -165,7 +166,7 @@
                                                 <button colspan="4"
                                                     string="Reply"
                                                     name="%(mail.action_email_compose_message_wizard)d"
-                                                    context="{'mail':'reply', 'message_id':active_id}"
+                                                    context="{'mail':'reply'}"
                                                     icon="terp-mail-replied" type="action" />
                                             </group>
 
@@ -226,6 +227,7 @@
                         <field name="stage_id"/>
                         <field name="channel_id" invisible="1"/>
                         <field name="type_id" invisible="1"/>
+                        <field name="subjects" invisible="1"/>
                         <button name="stage_previous" string="Previous Stage"
                             states="open,pending" type="object" icon="gtk-go-back" />
                         <button name="stage_next" string="Next Stage"
@@ -305,6 +307,7 @@
                                 domain="[]"
                                 help="Show Sales Team"/>
                         </field>
+                        <field name="subjects"/>
                         <newline/>
                         <group  expand="0" string="Extended Filters..." groups="base.group_extended">
                               <field name="stage_id" widget="selection" domain="[('type', '=', 'opportunity')]"/>

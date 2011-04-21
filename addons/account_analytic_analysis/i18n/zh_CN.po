@@ -7,26 +7,26 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2010-12-20 08:39+0000\n"
-"Last-Translator: Wei \"oldrev\" Li <oldrev@gmail.com>\n"
+"PO-Revision-Date: 2011-04-12 18:24+0000\n"
+"Last-Translator: Black Jack <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-15 05:32+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-04-13 04:39+0000\n"
+"X-Generator: Launchpad (build 12735)\n"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,hours_qtt_invoiced:0
 msgid ""
 "Number of hours that can be invoiced plus those that already have been "
 "invoiced."
-msgstr "小时数能加在已开的发票上"
+msgstr "小时数能开票,加到已开的发票上."
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_ca:0
 msgid "Computed using the formula: Max Invoice Price - Invoiced Amount."
-msgstr "计算公式为:最高发票价格 -  已开票金额"
+msgstr "计算公式为:最大发票价格 -  已开票金额"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_hours:0
@@ -56,6 +56,10 @@ msgid ""
 "You can also view the report of account analytic summary\n"
 "user-wise as well as month wise.\n"
 msgstr ""
+"\n"
+"此模块在分析会计视图为公司的项目经理显示重要的数据,增加菜单为管理者显示有关信息。\n"
+"\n"
+"你可以查看会计分析报表如：用户- wise 或月度-wise\n"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_invoice_date:0
@@ -75,7 +79,7 @@ msgstr "实际利润(%)"
 #. module: account_analytic_analysis
 #: field:account.analytic.account,ca_theorical:0
 msgid "Theoretical Revenue"
-msgstr ""
+msgstr "理论收入"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_worked_invoiced_date:0
@@ -87,12 +91,12 @@ msgstr "如果发票来自费用, 这是最近工作日期或已开票的费用"
 #. module: account_analytic_analysis
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_invoicing
 msgid "Billing"
-msgstr ""
+msgstr "收费"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_worked_date:0
 msgid "Date of Last Cost/Work"
-msgstr "费用或工作的最近日期"
+msgstr "最近日期的工作成本"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,total_cost:0
@@ -104,17 +108,17 @@ msgstr "总成本"
 msgid ""
 "Number of hours you spent on the analytic account (from timesheet). It "
 "computes on all journal of type 'general'."
-msgstr "在辅助核算项目你花费的小时数(根据时间表). 它在所有类型为普通的记录集合里计算."
+msgstr "在分析会计中你花费的小时数(根据时间表). 它在计算所有类型为'普通的'凭证簿."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,remaining_hours:0
 msgid "Remaining Hours"
-msgstr "剩余的小时数"
+msgstr "剩余小时数"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,theorical_margin:0
 msgid "Theoretical Margin"
-msgstr ""
+msgstr "理论的差额"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_theorical:0
@@ -122,7 +126,7 @@ msgid ""
 "Based on the costs you had on the project, what would have been the revenue "
 "if all these costs have been invoiced at the normal sale price provided by "
 "the pricelist."
-msgstr "如果所有这些成本开发票按普通销售价目表.你项目的成本,将按这计算收入."
+msgstr "如果所有成本按正常的销售价格开票那这项目的成本基于未来的收入."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,user_ids:0
