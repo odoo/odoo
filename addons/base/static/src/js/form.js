@@ -457,16 +457,14 @@ openerp.base.form.WidgetFrame = openerp.base.form.Widget.extend({
         }
         this.add_widget(widget);
     },
-    add_widget: function(w) {
-        if (!w.invisible) {
-            var current_row = this.table[this.table.length - 1];
-            if (current_row.length && (this.x + w.colspan) > this.columns) {
-                current_row = this.add_row();
-            }
-            current_row.push(w);
-            this.x += w.colspan;
+    add_widget: function(widget) {
+        var current_row = this.table[this.table.length - 1];
+        if (current_row.length && (this.x + widget.colspan) > this.columns) {
+            current_row = this.add_row();
         }
-        return w;
+        current_row.push(widget);
+        this.x += widget.colspan;
+        return widget;
     }
 });
 
