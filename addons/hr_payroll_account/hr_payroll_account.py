@@ -80,7 +80,7 @@ class hr_employee(osv.osv):
             relation='account.account',
             string="Employee Account",
             method=True,
-            domain="[('type', '=', 'other')]",
+            domain="[('type', '=', 'payable')]",
             view_load=True,
             help="Employee Payable Account"),
         'analytic_account':fields.property(

@@ -50,7 +50,7 @@
 
         <!-- Assigned Default Account in Different Demo Employees -->
 
-        <record id="hr.employee" model="hr.employee">
+       <!-- <record id="hr.employee" model="hr.employee">
             <field name="property_bank_account" ref="account.bnk"/>
             <field name="salary_account" ref="account.a_salary_expense"/>
             <field name="employee_account" ref="account.a_expense"/>
@@ -78,7 +78,7 @@
             <field name="property_bank_account" ref="account.bnk"/>
             <field name="salary_account" ref="account.a_salary_expense"/>
             <field name="employee_account" ref="account.a_expense"/>
-        </record>
+        </record>-->
 
         <record id="bnk" model="account.account">
             <field name="code">X110041</field>
@@ -96,12 +96,13 @@
             <field name="user_type" ref="account.account_type_expense"/>
         </record>
 
-        <record id="a_expense" model="account.account">
-            <field name="code">X21102</field>
-            <field name="name">Expenses</field>
-            <field ref="account.ovr" name="parent_id"/>
-            <field name="type">other</field>
-            <field name="user_type" ref="account.account_type_expense"/>
+        <record id="a_creditors" model="account.account">
+            <field name="code">X11111</field>
+            <field name="name">Employee Payable Account</field>
+            <field ref="account.cli" name="parent_id"/>
+            <field name="type">payable</field>
+            <field eval="True" name="reconcile"/>
+            <field name="user_type" ref="account.account_type_payable"/>
         </record>
 
         <!-- Properties -->
@@ -122,7 +123,7 @@
         <record forcecreate="True" id="employee_account" model="ir.property">
             <field name="name">employee_account</field>
             <field name="fields_id" search="[('model','=','hr.employee'),('name','=','employee_account')]"/>
-            <field eval="'account.account,'+str(a_expense)" name="value"/>
+            <field eval="'account.account,'+str(a_creditors)" name="value"/>
             <field name="company_id" ref="base.main_company"/>
         </record>
 
