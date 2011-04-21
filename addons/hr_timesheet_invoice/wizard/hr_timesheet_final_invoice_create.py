@@ -95,11 +95,6 @@ class final_invoice_create(osv.osv_memory):
 
             context2 = context.copy()
             context2['lang'] = partner.lang
-            cr.execute("SELECT product_id, to_invoice, sum(unit_amount) " \
-                    "FROM account_analytic_line as line " \
-                    "WHERE account_id = %s " \
-                        "AND to_invoice IS NOT NULL " \
-                    "GROUP BY product_id, to_invoice", (account.id,))
 
             cr.execute("""SELECT
                     line.product_id,
