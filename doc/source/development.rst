@@ -55,7 +55,7 @@ Events
   Event triggered after a user asked for a search. The search view
   fires this event after collecting all input data (contexts, domains
   and group_by contexts). Note that the search view does *not* merge
-  those (or therwise evaluate them), they are returned as provided by
+  those (or otherwise evaluate them), they are returned as provided by
   the various inputs within the view.
 
 ``on_clear``
@@ -71,7 +71,7 @@ An important concept in the search view is that of input. It is both
 an informal protocol and an abstract type that can be inherited from.
 
 Inputs are widgets which can contain user data (a char widget for
-instance, or a selection box). They are able of action and of
+instance, or a selection box). They are capable of action and of
 reaction:
 
 .. _views-search-registration:
@@ -93,9 +93,9 @@ reaction:
   * Return a context (an object), this is the "normal" response if the
     input holds a value.
 
-  * Return a falsy value (generally ``null``). This value indicates
-    the input does not contain any value and will not take part in the
-    research.
+  * Return a value that evaluates as false (generally ``null``). This
+    value indicates the input does not contain any value and will not
+    affect the results of the search.
 
   * Raise :js:class:`openerp.base.search.Invalid` to indicate that it
     holds a value but this value can not be used in the search
@@ -104,7 +104,7 @@ reaction:
     the search process.
 
     :js:class:`~openerp.base.search.Invalid` takes three mandatory
-    arguments: an indentifier (a name for instance), the invalid value
+    arguments: an identifier (a name for instance), the invalid value,
     and a validation message indicating the issue.
 
 ``get_domain``
@@ -114,11 +114,11 @@ reaction:
 
 The :js:class:`openerp.base.search.Input` type implements registration
 on its own, but its implementations of ``get_context`` and
-``get_domain`` simply raise errors and *have* to be overridden.
+``get_domain`` simply raise errors and *must* be overridden.
 
 One last action is for filters, as an activation order has to be kept
-on them for some controls (establish the correct grouping sequence for
-instance).
+on them for some controls (to establish the correct grouping sequence,
+for instance).
 
 To that end, filters can call
 :js:func:`openerp.base.Search.do_toggle_filter`, providing themselves
@@ -137,7 +137,7 @@ Life cycle
 
 The search view has a pretty simple and linear life cycle, in three main steps:
 
-:js:class:`init <openerp.base.SearchView>`
+:js:class:`~openerp.base.SearchView.init`
 
   Nothing interesting happens here
 
@@ -211,7 +211,7 @@ called in this order:
   Gives the widget the opportunity to unbind its events, remove itself
   from the DOM and perform any other cleanup task it may have.
 
-  Event if the widget does not do anything itself, it is responsible
+  Even if the widget does not do anything itself, it is responsible
   for shutting down its children.
 
 An abstract type is available and can be inherited from, to simplify
@@ -232,7 +232,8 @@ abstract types, used to implement input widgets:
   <views-search-registration>`.
 
   If inherited from, descendant classes should not call its
-  implementations of ``get_context`` and ``get_domain``.
+  implementations of :js:func:`~openerp.base.search.Input.get_context`
+  and :js:func:`~openerp.base.search.Input.get_domain`.
 
 * :js:class:`openerp.base.search.Field` is used to implement more
   "field" widgets (which allow the user to input potentially complex
@@ -251,7 +252,7 @@ abstract types, used to implement input widgets:
     :js:func:`~openerp.base.search.Widget.make_id`.
 
   * It sets up a basic (overridable)
-    :js:attr:`~opererp.base.search.Field.template` attribute, combined
+    :js:attr:`~openerp.base.search.Field.template` attribute, combined
     with the previous tasks, this makes subclasses of
     :js:class:`~openerp.base.search.Field` render themselves "for
     free".

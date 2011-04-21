@@ -289,13 +289,34 @@ class JsonRequest(object):
     * the json string is passed as a form parameter named "request"
     * method is currently ignored
 
-    Sucessful request:
-    --> {"jsonrpc": "2.0", "method": "call", "params": {"session_id": "SID", "context": {}, "arg1": "val1" }, "id": null}
-    <-- {"jsonrpc": "2.0", "result": { "res1": "val1" }, "id": null}
+    Sucessful request::
 
-    Request producing a error:
-    --> {"jsonrpc": "2.0", "method": "call", "params": {"session_id": "SID", "context": {}, "arg1": "val1" }, "id": null}
-    <-- {"jsonrpc": "2.0", "error": {"code": 1, "message": "End user error message.", "data": {"code": "codestring", "debug": "traceback" } }, "id": null}
+      --> {"jsonrpc": "2.0",
+           "method": "call",
+           "params": {"session_id": "SID",
+                      "context": {},
+                      "arg1": "val1" },
+           "id": null}
+
+      <-- {"jsonrpc": "2.0",
+           "result": { "res1": "val1" },
+           "id": null}
+
+    Request producing a error::
+
+      --> {"jsonrpc": "2.0",
+           "method": "call",
+           "params": {"session_id": "SID",
+                      "context": {},
+                      "arg1": "val1" },
+           "id": null}
+
+      <-- {"jsonrpc": "2.0",
+           "error": {"code": 1,
+                     "message": "End user error message.",
+                     "data": {"code": "codestring",
+                              "debug": "traceback" } },
+           "id": null}
 
     """
 
