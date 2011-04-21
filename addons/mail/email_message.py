@@ -309,6 +309,7 @@ class email_message(osv.osv):
         """Return Dictionary Object after parse EML Message String
         @param message: email.message.Message object or string or unicode object
         """
+        msg_txt = message
         if isinstance(message, str):
             msg_txt = email.message_from_string(message)
 
@@ -318,7 +319,6 @@ class email_message(osv.osv):
             message = message.encode('utf-8')
             msg_txt = email.message_from_string(message)
 
-        msg_txt = message
         message_id = msg_txt.get('message-id', False)
         msg = {}
 

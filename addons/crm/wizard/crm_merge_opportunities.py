@@ -171,7 +171,7 @@ class crm_merge_opportunity(osv.osv_memory):
         subject = subject[0] + ", ".join(subject[1:])
         details = "\n\n".join(details)
 
-        opp_obj._history(cr, uid, [first_opportunity], subject, details=details)
+        opp_obj.history(cr, uid, [first_opportunity], subject, details=details)
         #data.update({'message_ids' : [(6, 0 ,self._concat_o2m('message_ids', op_ids))]})
         opp_obj.write(cr, uid, [first_opportunity.id], data)
         unlink_ids = map(lambda x: x.id, tail_opportunities)

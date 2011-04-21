@@ -120,30 +120,22 @@ class project_tasks(osv.osv):
             return len(res) and res[0] or False
         return res
 
-    def _history(self, cr, uid, cases, keyword, history=False, subject=None, email=False, details=None, email_from=False, message_id=False, attach=None, context=None):
-        thread_pool = self.pool.get('email.thread')
-        return thread_pool.history(cr, uid, cases, keyword, history=history,\
-                                       subject=subject, email=email, \
-                                       details=details, email_from=email_from,\
-                                       message_id=message_id, attach=attach, \
-                                       context=context)
-
     def do_draft(self, cr, uid, ids, *args, **kwargs):
         res = super(project_tasks, self).do_draft(cr, uid, ids, *args, **kwargs)
         tasks = self.browse(cr, uid, ids)
-        self._history(cr, uid, tasks, _('Draft'))
+        self.history(cr, uid, tasks, _('Draft'))
         return res
 
     def do_open(self, cr, uid, ids, *args, **kwargs):
         res = super(project_tasks, self).do_open(cr, uid, ids, *args, **kwargs)
         tasks = self.browse(cr, uid, ids)
-        self._history(cr, uid, tasks, _('Open'))
+        self.history(cr, uid, tasks, _('Open'))
         return res
 
     def do_pending(self, cr, uid, ids, *args, **kwargs):
         res = super(project_tasks, self).do_pending(cr, uid, ids, *args, **kwargs)
         tasks = self.browse(cr, uid, ids)
-        self._history(cr, uid, tasks, _('Pending'))
+        self.history(cr, uid, tasks, _('Pending'))
         return res
 
     def do_close(self, cr, uid, ids, *args, **kwargs):
@@ -151,13 +143,13 @@ class project_tasks(osv.osv):
         tasks = self.browse(cr, uid, ids)
         for task in tasks:
             if task.state == 'done':
-                self._history(cr, uid, tasks, _('Done'))
+                self.history(cr, uid, tasks, _('Done'))
         return res
 
     def do_cancel(self, cr, uid, ids, *args, **kwargs):
         res = super(project_tasks, self).do_cancel(cr, uid, ids, *args, **kwargs)
         tasks = self.browse(cr, uid, ids)
-        self._history(cr, uid, tasks, _('Cancel'))
+        self.history(cr, uid, tasks, _('Cancel'))
         return res
 
 project_tasks()

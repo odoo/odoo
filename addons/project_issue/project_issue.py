@@ -372,7 +372,7 @@ class project_issue(crm.crm_case, osv.osv):
             else:
                 raise osv.except_osv(_('Warning !'), _('You cannot escalate this issue.\nThe relevant Project has not configured the Escalation Project!'))
             self.write(cr, uid, [case.id], data)
-        self._history(cr, uid, cases, _('Escalate'))
+        self.history(cr, uid, cases, _('Escalate'))
         return True
 
     def message_new(self, cr, uid, msg, context=None):

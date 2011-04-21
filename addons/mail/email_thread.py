@@ -158,10 +158,7 @@ class email_thread(osv.osv):
         if attach is None:
             attach = {}
 
-        model = context.get('thread_model', False)
-        if not model:
-            model = self._name
-        model_pool = self.pool.get(model)
+
 
         if email_date:
             edate = parsedate(email_date)
@@ -171,6 +168,10 @@ class email_thread(osv.osv):
         # The script sends the ids of the threads and not the object list
 
         if all(isinstance(thread_id, (int, long)) for thread_id in threads):
+            model = context.get('thread_model', False)
+            if not model:
+                model = self._name
+            model_pool = self.pool.get(model)
             threads = model_pool.browse(cr, uid, threads, context=context)
 
         att_obj = self.pool.get('ir.attachment')

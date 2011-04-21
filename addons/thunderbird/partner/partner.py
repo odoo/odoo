@@ -23,28 +23,6 @@ from osv import osv
 import base64
 import email
 import tools
-import binascii
-class email_thread(osv.osv):
-    _inherit = "email.thread"
-    def history_message(self, cr, uid, model, res_id, message, context=None):
-        #@param message: string of mail which is read from EML File
-        attachment_pool = self.pool.get('ir.attachment')
-        email_message_pool = self.pool.get('email.message')
-        msg = email_message_pool.parse_message(message)
-        attachments = msg.get('attachments', [])
-        att_ids = []
-        for attachment in attachments:
-            data_attach = {
-                'name': attachment,
-                'datas': binascii.b2a_base64(str(attachments.get(attachment))),
-                'datas_fname': attachment,
-                'description': 'Mail attachment From Thunderbird msg_id: %s' %(msg.get('message_id', '')),
-                'res_model': model,
-                'res_id': res_id,
-            }
-            att_ids.append(attachment_pool.create(cr, uid, data_attach))
-        return self.history(cr, uid, model, res_id, msg, att_ids)
-email_thread()
 
 class thunderbird_partner(osv.osv_memory):
     _name = "thunderbird.partner"
@@ -67,6 +45,7 @@ class thunderbird_partner(osv.osv_memory):
         msg = dictcreate.get('message')
         mail = msg
         msg = self.pool.get('email.message').parse_message(msg)
+        subject = msg.get('Subject', False)
         thread_pool = self.pool.get('email.thread')
         message_id = msg.get('message-id', False)
         msg_pool = self.pool.get('email.message')
@@ -75,7 +54,6 @@ class thunderbird_partner(osv.osv_memory):
         res_ids = []
         obj_list= ['crm.lead','project.issue','hr.applicant','res.partner']
         for ref_id in ref_ids:
-            msg_new = dictcreate.get('message')
             ref = ref_id.split(',')
             model = ref[0]
             res_id = int(ref[1])
@@ -108,7 +86,17 @@ class thunderbird_partner(osv.osv_memory):
                 res['datas'] = base64.b64encode(mail)
                 res['res_id'] = res_id
                 obj_attch.create(cr, uid, res)
-            thread_pool.history_message(cr, uid, model, res_id, msg_new)
+            threads = self.pool.get(model).browse(cr, uid, res_id)
+            thread_pool.history(cr, uid, [threads], _('receive'), history=True,
+                            subject = msg.get('subject'),
+                            email = msg.get('to'),
+                            details = msg.get('body'),
+                            email_from = msg.get('from'),
+                            email_cc = msg.get('cc'),
+                            message_id = msg.get('message-id'),
+                            references = msg.get('references', False) or msg.get('in-reply-to', False),
+                            attach = msg.get('attachments', {}),
+                            email_date = msg.get('date'))
             res_ids.append(res_id)
         return len(res_ids)
 
