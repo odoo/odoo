@@ -621,5 +621,12 @@ class Action(openerpweb.Controller):
     _cp_path = "/base/action"
 
     @openerpweb.jsonrequest
-    def load(self, req, action_id):
-        return {}
+    def load(self, req, action_id, context={}):
+        Actions = req.session.model('ir.actions.actions')
+        value = False
+        action_type = Actions.read([action_id], ['type'], context)
+        if action_type:
+            action = req.session.model(action_type[0]['type']).read([action_id], False, context)
+            if action:
+                value = action[0]
+        return {'value': value}
