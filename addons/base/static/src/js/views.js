@@ -18,8 +18,17 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
      * Process an action
      * Supported actions: act_window
      */
+    do_action_id: function(action_id) {
+        var self = this;
+        this.rpc('/base/action/load', { action_id: action_id }, function(result) {
+            if (result instanceof Object) {
+                self.do_action(result.value);
+            } else {
+                this.log("Could not load action with id ", action_id);
+            }
+        });
+    },
     do_action: function(action) {
-        this.log(action);
         var self = this;
         // instantiate the right controllers by understanding the action
         switch (action.type) {
@@ -36,14 +45,14 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
                         // When dialog is closed with ESC key or close manually, branch to act_window_close logic
                         self.do_action({ type: 'ir.actions.act_window_close' });
                     });
-                    var viewmanager = new openerp.base.ViewManagerAction(this.session ,element_id, action, false);
+                    var viewmanager = new openerp.base.ViewManagerAction(this.session, element_id, action, false);
                     viewmanager.start();
                     this.dialog_stack.push(viewmanager);
-                } else if (action.target == "current") {
+                } else {
                     if (this.viewmanager) {
                         this.viewmanager.stop();
                     }
-                    this.viewmanager = new openerp.base.ViewManagerAction(this.session,this.element_id, action, true);
+                    this.viewmanager = new openerp.base.ViewManagerAction(this.session, this.element_id, action, true);
                     this.viewmanager.start();
                 }
                 break;

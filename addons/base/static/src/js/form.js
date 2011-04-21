@@ -541,9 +541,10 @@ openerp.base.form.WidgetButton = openerp.base.form.Widget.extend({
             switch(type) {
                 case 'object':
                     return this.view.dataset.call(attrs.name, [this.view.datarecord.id], [context], this.on_button_object);
-                    break;
+                case 'action':
+                    return this.session.action_manager.do_action_id(parseInt(this.node.attrs.name));
                 default:
-                    this.log(_.sprintf("Unsupported button type : %s", type));
+                    this.log(_.sprintf("Unsupported button type : %s", type), this.node);
             }
         }
     },
