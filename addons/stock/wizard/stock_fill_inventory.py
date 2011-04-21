@@ -43,7 +43,7 @@ class stock_fill_inventory(osv.osv_memory):
             context = {}
         super(stock_fill_inventory, self).view_init(cr, uid, fields_list, context=context)
         
-        if len(context['active_ids']) > 1:
+        if len(context.get('active_ids',[])) > 1:
             raise osv.except_osv(_('Error!'), _('You cannot perform this operation on more than one Stock Inventories.'))
         
         if context.get('active_id', False):
