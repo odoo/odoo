@@ -912,7 +912,7 @@ def import_opportunities(sugar_obj, cr, uid, context=None):
     return True
 
 MAP_FIELDS = {'Opportunities':  #Object Mapping name
-                    {'dependencies' : ['Users', 'Accounts', 'Contacts'],  #Object to import before this table
+                    {'dependencies' : ['Users', 'Accounts', 'Contacts', 'Leads'],  #Object to import before this table
                      'process' : import_opportunities,
                      },
               'Leads':
@@ -979,8 +979,7 @@ class import_sugarcrm(osv.osv):
     _name = "import.sugarcrm"
     _description = __doc__
     _columns = {
-        'lead': fields.boolean('Leads', help="If Leads are checked, SugarCRM Leads data imported in OpenERP crm-Lead form"),
-        'opportunity': fields.boolean('Opportunities', help="If Opportunities are checked, SugarCRM opportunities data imported in OpenERP crm-Opportunity form"),
+        'opportunity': fields.boolean('Lead and Opportunities', help="If Opportunities are checked, SugarCRM opportunities data imported in OpenERP crm-Opportunity form"),
         'user': fields.boolean('User', help="If Users  are checked, SugarCRM Users data imported in OpenERP Users form"),
         'contact': fields.boolean('Contacts', help="If Contacts are checked, SugarCRM Contacts data imported in OpenERP partner address form"),
         'account': fields.boolean('Accounts', help="If Accounts are checked, SugarCRM  Accounts data imported in OpenERP partners form"),
@@ -996,7 +995,6 @@ class import_sugarcrm(osv.osv):
         'password': fields.char('Password', size=24),
     }
     _defaults = { #to be set to true, but easier for debugging
-       'lead': False,
        'opportunity': False,
        'user' : False,
        'contact' : False,
@@ -1016,8 +1014,6 @@ class import_sugarcrm(osv.osv):
             context = {}
         key_list = []
         for current in self.browse(cr, uid, ids, context):
-            if current.lead:
-                key_list.append('Leads')
             if current.opportunity:
                 key_list.append('Opportunities')
             if current.user:
