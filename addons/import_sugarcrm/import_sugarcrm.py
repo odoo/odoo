@@ -654,7 +654,7 @@ def import_history(sugar_obj, cr, uid, context=None):
                       'name':'name',
                       'date':'date_entered',
                       'user_id/id': 'assigned_user_id',
-                      'description': 'description_html',
+                      'description': ['description', 'description_html'],
                       'res_id': 'res_id',
                       'model': 'model',
                       'partner_id.id' : 'partner_id.id',
@@ -728,7 +728,7 @@ def import_emails(sugar_obj, cr, uid, context=None):
     'email_bcc': 'bcc_addrs_names',
     'message_id': 'message_id',
     'user_id/id': 'assigned_user_id',
-    'description': 'description_html',
+    'description': ['description', 'description_html'],
     'res_id': 'res_id',
     'model': 'model',
     }
@@ -979,8 +979,8 @@ class import_sugarcrm(osv.osv):
     _name = "import.sugarcrm"
     _description = __doc__
     _columns = {
-        'opportunity': fields.boolean('Lead and Opportunities', help="If Opportunities are checked, SugarCRM opportunities data imported in OpenERP crm-Opportunity form"),
-        'user': fields.boolean('User', help="If Users  are checked, SugarCRM Users data imported in OpenERP Users form"),
+        'opportunity': fields.boolean('Leads and Opportunities', help="If Opportunities are checked, SugarCRM opportunities data imported in OpenERP crm-Opportunity form"),
+        'user': fields.boolean('Users', help="If Users  are checked, SugarCRM Users data imported in OpenERP Users form"),
         'contact': fields.boolean('Contacts', help="If Contacts are checked, SugarCRM Contacts data imported in OpenERP partner address form"),
         'account': fields.boolean('Accounts', help="If Accounts are checked, SugarCRM  Accounts data imported in OpenERP partners form"),
         'employee': fields.boolean('Employee', help="If Employees is checked, SugarCRM Employees data imported in OpenERP employees form"),
