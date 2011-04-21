@@ -22,6 +22,7 @@
 from osv import osv
 from osv import fields
 import tools
+from tools.safe_eval import safe_eval as eval
 
 class email_compose_message(osv.osv_memory):
     _name = 'email.compose.message'
@@ -52,57 +53,8 @@ class email_compose_message(osv.osv_memory):
         if not vals:
             return result
 
-        if 'subject' in fields:
-            result.update({'subject' : vals.get('subject','')})
-
-        if 'email_to' in fields:
-            result.update({'email_to' : vals.get('email_to','')})
-
-        if 'email_from' in fields:
-            result.update({'email_from' : vals.get('email_from','')})
-
-        if 'body' in fields:
-            result.update({'body' : vals.get('body','')})
-
-        if 'model' in fields:
-            result.update({'model' : vals.get('model','')})
-
-        if 'email_cc' in fields:
-            result.update({'email_cc' : vals.get('email_cc','')})
-
-        if 'email_bcc' in fields:
-            result.update({'email_bcc' : vals.get('email_bcc','')})
-
-        if 'res_id' in fields:
-            result.update({'res_id' : vals.get('res_id',0)})
-
-        if 'reply_to' in fields:
-            result['reply_to'] = vals.get('reply_to','')
-
-        if 'message_id' in fields:
-            result['message_id'] =  vals.get('message_id','')
-
-        if 'attachment_ids' in fields:
-            result['attachment_ids'] = vals.get('attachment_ids',[])
-
-        if 'user_id' in fields:
-            result['user_id'] = vals.get('user_id',False)
-
-        if 'references' in fields:
-            result['references'] = vals.get('references',False)
-
-        if 'sub_type' in fields:
-            result['sub_type'] = vals.get('sub_type',False)
-
-        if 'headers' in fields:
-            result['headers'] = vals.get('headers',False)
-
-        if 'priority' in fields:
-            result['priority'] = vals.get('priority',False)
-
-        if 'debug' in fields:
-            result['debug'] = vals.get('debug',False)
-
+        for field in fields:
+            result.update({field : vals.get(field, False)})
         return result
 
     _columns = {
@@ -170,7 +122,6 @@ class email_compose_message(osv.osv_memory):
         attachment = {}
         email_ids = []
         for mail in self.browse(cr, uid, ids, context=context):
-
             for attach in mail.attachment_ids:
                 attachment[attach.datas_fname] = attach.datas
             references = False
