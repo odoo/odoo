@@ -18,16 +18,6 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
      * Process an action
      * Supported actions: act_window
      */
-    do_action_id: function(action_id) {
-        var self = this;
-        this.rpc('/base/action/load', { action_id: action_id }, function(result) {
-            if (result instanceof Object) {
-                self.do_action(result.value);
-            } else {
-                this.log("Could not load action with id ", action_id);
-            }
-        });
-    },
     do_action: function(action) {
         var self = this;
         // instantiate the right controllers by understanding the action
@@ -193,7 +183,6 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
 
 openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
     init: function(session, element_id, action, sidebar) {
-        console.log("init view manager action", action)
         var dataset = new openerp.base.DataSetSearch(session, action.res_model);
         this._super(session, element_id, dataset, action.views);
         this.action = action;

@@ -634,4 +634,4 @@ class Action(openerpweb.Controller):
             action = req.session.model(action_type[0]['type']).read([action_id], False, context)
             if action:
                 value = action[0]
-        return {'value': value}
+        return {'result': value}

@@ -532,7 +532,7 @@ openerp.base.form.WidgetButton = openerp.base.form.Widget.extend({
     on_confirmed: function() {
         var attrs = this.node.attrs;
         if (attrs.special) {
-            this.on_button_object({
+            this.on_button_action({
                 result : { type: 'ir.actions.act_window_close' }
             });
         } else {
@@ -540,20 +540,20 @@ openerp.base.form.WidgetButton = openerp.base.form.Widget.extend({
             var context = _.extend({}, this.view.dataset.context, attrs.context || {});
             switch(type) {
                 case 'object':
-                    return this.view.dataset.call(attrs.name, [this.view.datarecord.id], [context], this.on_button_object);
+                    return this.view.dataset.call(attrs.name, [this.view.datarecord.id], [context], this.on_button_action);
                 case 'action':
-                    return this.session.action_manager.do_action_id(parseInt(this.node.attrs.name));
+                    return this.rpc('/base/action/load', { action_id: parseInt(attrs.name) }, this.on_button_action);
                 default:
-                    this.log(_.sprintf("Unsupported button type : %s", type), this.node);
+                    return this.view.dataset.exec_workflow(this.view.datarecord.id, attrs.name, this.on_button_action);
             }
         }
     },
-    on_button_object: function(r) {
-        if (r.result === false) {
-            this.log("Button object returns false");
-        } else if (r.result.constructor == Object) {
+    on_button_action: function(r) {
+        console.log("Got reesonse button", r)
+        if (r.result && r.result.constructor == Object) {
             this.session.action_manager.do_action(r.result);
         } else {
+            this.log("Button returned", r.result);
             this.view.reload();
         }
     }
