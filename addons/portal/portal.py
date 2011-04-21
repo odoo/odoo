@@ -42,7 +42,7 @@ class portal(osv.osv):
         'menu_action_id': fields.many2one('ir.actions.actions', readonly=True,
             string='Menu Action',
             help=_("If set, replaces the standard menu for the portal's users")),
-        'parent_menu_id': fields.many2one('ir.ui.menu',
+        'parent_menu_id': fields.many2one('ir.ui.menu', ondelete='restrict',
             string='Parent Menu',
             help=_('The menu action opens the submenus of this menu item')),
         'widget_ids': fields.one2many('res.portal.widget', 'portal_id',
