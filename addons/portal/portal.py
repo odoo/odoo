@@ -190,7 +190,8 @@ class portal_override_menu(osv.osv):
     _columns = {
         'override_menu': fields.function(
             _get_override_menu, fnct_inv=_set_override_menu,
-            type='boolean', method=True, string='Override Users Menu Action'),
+            type='boolean', method=True, string='Override Users Menu Action',
+            help=_('Enable this option to create the Menu Action')),
     }
 
 portal_override_menu()
