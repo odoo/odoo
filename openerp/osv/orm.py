@@ -1616,7 +1616,7 @@ class orm_template(object):
                     _rec_name = self._columns.keys()[0]
                 xml = '<?xml version="1.0" encoding="utf-8"?>' \
                        '<tree string="%s"><field name="%s"/></tree>' \
-                       % (self._description, self._rec_name)
+                       % (self._description, _rec_name)
 
             elif view_type == 'calendar':
                 xml = self.__get_default_calendar_view()
