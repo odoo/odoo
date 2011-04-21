@@ -10,7 +10,12 @@ openerp.base.ListView = openerp.base.Controller.extend(
         // whether the column headers should be displayed
         'header': true,
         // display addition button, with that label
-        'addable': "New"
+        'addable': "New",
+        // whether the list view can be sorted, note that once a view has been
+        // sorted it can not be reordered anymore
+        'sortable': true,
+        // whether the view rows can be reordered (via vertical drag & drop)
+        'reorderable': true
     },
     /**
      * Core class for list-type displays.
@@ -33,6 +38,8 @@ openerp.base.ListView = openerp.base.Controller.extend(
      * @param {Boolean} [options.header=true] should the list's header be displayed
      * @param {Boolean} [options.deletable=true] are the list rows deletable
      * @param {null|String} [options.addable="New"] should the new-record button be displayed, and what should its label be. Use ``null`` to hide the button.
+     * @param {Boolean} [options.sortable=true] is it possible to sort the table by clicking on column headers
+     * @param {Boolean} [options.reorderable=true] is it possible to reorder list rows
      */
     init: function(view_manager, session, element_id, dataset, view_id, options) {
         this._super(session, element_id);
@@ -374,6 +381,8 @@ openerp.base.ListView = openerp.base.Controller.extend(
             return rows[$(this).prevAll().length].data.id.value;
         }).get();
     }
+    // TODO: implement sort (click on column headers), if sorted, the list can not be reordered anymore
+    // TODO: implement reorder (drag and drop rows)
 });
 
 openerp.base.TreeView = openerp.base.Controller.extend({
