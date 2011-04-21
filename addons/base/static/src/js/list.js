@@ -108,8 +108,9 @@ openerp.base.ListView = openerp.base.Controller.extend(
 
                 var context = _.extend(
                         {}, self.dataset.context, field.context || {});
-                self.dataset.call(action, [row.data.id.value], [context],
-                                  self.do_reload);
+                self.notification.notify(
+                    '[Dummy] Execute action', self.dataset.model + '#' + action + "([" + row.data.id.value + '])');
+                // TODO: implement actions correctly once the corresponding manager has been extracted (and filled)
                 e.stopImmediatePropagation();
             });
         $table.delegate(
