@@ -26,30 +26,19 @@ from tools.translate import _
 import pprint
 pp = pprint.PrettyPrinter(indent=4)
 
-def create_mapping(obj, cr, uid, res_model, open_id, sugar_id, context):
-    model_data = {
-        'name':  sugar_id,
-        'model': res_model,
-        'module': 'sugarcrm_import',
-        'res_id': open_id
-    }
-    model_obj = obj.pool.get('ir.model.data')
-    model_obj.create(cr, uid, model_data, context=context)
-    return True
 
 def find_mapped_id(obj, cr, uid, res_model, sugar_id, context):
     model_obj = obj.pool.get('ir.model.data')
     return model_obj.search(cr, uid, [('model', '=', res_model), ('module', '=', 'sugarcrm_import'), ('name', '=', sugar_id)], context=context)
 
 def get_all(sugar_obj, cr, uid, model, sugar_val, context=None):
-       models = sugar_obj.pool.get(model)
-       model_code = sugar_val[0:2]
-       all_model_ids = models.search(cr, uid, [('name', '=', sugar_val)]) or models.search(cr, uid, [('code', '=', model_code.upper())]) 
-       output = sorted([(o.id, o.name)
-                for o in models.browse(cr, uid, all_model_ids,
-                                       context=context)],
-               key=itemgetter(1))
-       return output
+    models = sugar_obj.pool.get(model)
+    model_code = sugar_val[0:2]
+    all_model_ids = models.search(cr, uid, [('name', '=', sugar_val)]) or models.search(cr, uid, [('code', '=', model_code.upper())]) 
+    output = sorted([(o.id, o.name)
+                     for o in models.browse(cr, uid, all_model_ids, context=context)],
+                    key=itemgetter(1))
+    return output
 
 def get_all_states(sugar_obj, cr, uid, sugar_val, country_id, context=None):
     """Get states or create new state"""
@@ -61,7 +50,7 @@ def get_all_states(sugar_obj, cr, uid, sugar_val, country_id, context=None):
     if state:
         state_id = state and state[0][0]
     else:
-       state_id = res_country_state_obj.create(cr, uid, {'name': sugar_val, 'code': sugar_val, 'country_id': country_id})
+        state_id = res_country_state_obj.create(cr, uid, {'name': sugar_val, 'code': sugar_val, 'country_id': country_id})
     return state_id   
 
 def get_all_countries(sugar_obj, cr, uid, sugar_country_val, context=None):
@@ -106,30 +95,33 @@ def import_partner_address(sugar_obj, cr, uid, context=None):
         address_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', noupdate=True, context=context)
     return True
     
-def get_users_department(sugar_obj, cr, uid, val, context=None):
-    if not context:
-       context={}
-    department_id = False       
-    department_obj = sugar_obj.pool.get('hr.department')
-    department_ids = department_obj.search(cr, uid, [('name', '=', val)])
-    if department_ids:
-        department_id = department_ids[0]
-    elif val:
-        department_id = department_obj.create(cr, uid, {'name': val})
-    return department_id 
+
 
 def import_users(sugar_obj, cr, uid, context=None):
+    map_user = {
+        'id' : 'id', 
+        'name': ['first_name', 'last_name'],
+        'login': 'user_name',
+        'context_lang' : 'context_lang',
+        'password' : 'password',
+        '.id' : '.id',
+        'context_department_id.id': 'context_department_id.id',
+    } 
+    
+    def get_users_department(sugar_obj, cr, uid, val, context=None):
+        department_id = False       
+        department_obj = sugar_obj.pool.get('hr.department')
+        department_ids = department_obj.search(cr, uid, [('name', '=', val)])
+        if department_ids:
+            department_id = department_ids[0]
+        elif val:
+            department_id = department_obj.create(cr, uid, {'name': val})
+        return department_id 
+    
     if not context:
         context = {}
     department_id = False        
-    map_user = {'id' : 'id', 
-             'name': ['first_name', 'last_name'],
-            'login': 'user_name',
-            'context_lang' : 'context_lang',
-            'password' : 'password',
-            '.id' : '.id',
-            'context_department_id.id': 'context_department_id.id',
-            } 
+    
     user_obj = sugar_obj.pool.get('res.users')
     PortType,sessionid = sugar.login(context.get('username',''), context.get('password',''), context.get('url',''))
     sugar_data = sugar.search(PortType,sessionid, 'Users')
@@ -287,7 +279,7 @@ def import_partners(sugar_obj, cr, uid, context=None):
                 'website': 'website',
                 'user_id/id': 'assigned_user_id',
                 'ref': 'sic_code',
-                'comment': ['description', 'employees', 'ownership', 'annual_revenue', 'rating', 'industry', 'ticker_symbol'],
+                'comment': ['__prettyprint__', 'description', 'employees', 'ownership', 'annual_revenue', 'rating', 'industry', 'ticker_symbol'],
                 'customer': 'customer',
                 'supplier': 'supplier', 
                 }
@@ -297,10 +289,8 @@ def import_partners(sugar_obj, cr, uid, context=None):
     sugar_data = sugar.search(PortType, sessionid, 'Accounts')
     for val in sugar_data:
         add_id = get_address(sugar_obj, cr, uid, val, context)
-        if val.get('account_type') in  ('Customer', 'Prospect', 'Other'):
-            val['customer'] = '1'
-        else:
-            val['supplier'] = '1'
+        val['customer'] = '1'
+        val['supplier'] = '0'
         fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_partner)
         partner_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', noupdate=True, context=context)
         for address in  address_obj.browse(cr,uid,add_id):
@@ -314,9 +304,9 @@ def get_category(sugar_obj, cr, uid, model, name, context=None):
     categ_obj = sugar_obj.pool.get('crm.case.categ')
     categ_ids = categ_obj.search(cr, uid, [('object_id.model','=',model), ('name', 'like', name)] )
     if categ_ids:
-         categ_id = categ_ids[0]
+        categ_id = categ_ids[0]
     else:
-         categ_id = categ_obj.create(cr, uid, {'name': name, 'object_id.model': model})
+        categ_id = categ_obj.create(cr, uid, {'name': name, 'object_id.model': model})
     return categ_id     
 
 def get_alarm_id(sugar_obj, cr, uid, val, context=None):
@@ -930,7 +920,7 @@ MAP_FIELDS = {'Opportunities':  #Object Mapping name
                      'process' : import_partner_address,
                     },
               'Accounts':
-                    {'dependencies' : ['Users'],  #Object to import before this table
+                    {'dependencies' : ['Users', 'Contacts'],  #Object to import before this table
                      'process' : import_partners,
                     },
               'Users': 
@@ -946,7 +936,7 @@ MAP_FIELDS = {'Opportunities':  #Object Mapping name
                      'process' : import_tasks,
                     },  
               'Calls': 
-                    {'dependencies' : ['Users', 'Accounts', 'Contacts'],
+                    {'dependencies' : ['Users', 'Accounts', 'Contacts', 'Leads'],
                      'process' : import_calls,
                     },                        
               'Employees': 

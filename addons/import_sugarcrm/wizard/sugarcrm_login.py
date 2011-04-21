@@ -33,8 +33,8 @@ class sugarcrm_login(osv.osv):
          'url' : fields.char('Service', size=264, required=True, help="Connection with Sugarcrm Using Soap Protocol Services and For that Path should be 'http://localhost/sugarcrm/soap.php' Format."),
     }
     _defaults = {
-       'username' : 'admin',
-       'password' : 'admin',
+       'username' : 'tfr',
+       'password' : 'a',
        'url':  "http://localhost/sugarcrm/soap.php"
     }
 
