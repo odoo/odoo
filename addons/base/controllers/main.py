@@ -410,6 +410,11 @@ class DataSet(openerpweb.Controller):
         return {'result': r}
 
     @openerpweb.jsonrequest
+    def exec_workflow(self, req, model, id, signal):
+        r = req.session.exec_workflow(model, id, signal)
+        return {'result': r}
+
+    @openerpweb.jsonrequest
     def default_get(self, req, model, fields, context={}):
         m = req.session.model(model)
         r = m.default_get(fields, context)

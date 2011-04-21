@@ -116,6 +116,12 @@ class OpenERPSession(object):
         r = self.proxy('object').execute(self._db, self._uid, self._password, model, func, *l, **d)
         return r
 
+    def exec_workflow(self, model, id, signal):
+        if not (self._db and self._uid and self._password):
+            raise OpenERPUnboundException()
+        r = self.proxy('object').exec_workflow(self._db, self._uid, self._password, model, signal, id)
+        return r
+
     def model(self, model):
         """ Get an RPC proxy for the object ``model``, bound to this session.
 
