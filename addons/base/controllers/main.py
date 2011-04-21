@@ -573,19 +573,22 @@ class ListView(View):
         :param int limit: search limit, for pagination
         :returns: hell if I have any idea yet
         """
-        view = self.fields_view_get(request, model, id)
+        view = self.fields_view_get(request, model, id, toolbar=True)
 
         rows = DataSet().do_search_read(request, model,
                                         offset=offset, limit=limit,
                                         domain=domain)
         eval_context = request.session.evaluation_context(
             request.context)
-        return [
-            {'data': dict((key, {'value': value})
-                          for key, value in row.iteritems()),
-             'color': self.process_colors(view, row, eval_context)}
-            for row in rows
-        ]
+        return {
+            'view': view,
+            'records': [
+                {'data': dict((key, {'value': value})
+                              for key, value in row.iteritems()),
+                 'color': self.process_colors(view, row, eval_context)}
+                for row in rows
+            ]
+        }
 
     def process_colors(self, view, row, context):
         colors = view['arch']['attrs'].get('colors')

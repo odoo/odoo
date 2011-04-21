@@ -34,15 +34,15 @@ $(document).ready(function () {
     asyncTest('render selection checkboxes', 2, function () {
         var listview = new openerp.base.ListView(
                 {}, null,
-                'qunit-fixture', {model: null});
+                'qunit-fixture', {model: null, ids: [null, null, null], index: 0});
 
         listview.on_loaded(fvg);
 
-        listview.do_fill_table([
+        listview.do_fill_table({records: [
                 {data: {id: {value: null}}},
                 {data: {id: {value: null}}},
                 {data: {id: {value: null}}}
-        ]).then(function () {
+        ]}).then(function () {
             ok(are(listview.$element.find('tbody th'),
                    '.oe-record-selector'));
             ok(are(listview.$element.find('tbody th input'),
@@ -53,30 +53,30 @@ $(document).ready(function () {
     asyncTest('render no checkbox if selectable=false', 1, function () {
         var listview = new openerp.base.ListView(
                 {}, null,
-                'qunit-fixture', {model: null}, false,
+                'qunit-fixture', {model: null, ids: [null, null, null], index: 0}, false,
                 {selectable: false});
 
         listview.on_loaded(fvg);
 
-        listview.do_fill_table([
+        listview.do_fill_table({records: [
                 {data: {id: {value: null}}},
                 {data: {id: {value: null}}},
                 {data: {id: {value: null}}}
-        ]).then(function () {
+        ]}).then(function () {
             equal(listview.$element.find('tbody th').length, 0);
             start();
         });
     });
     asyncTest('select a bunch of records', 2, function () {
         var listview = new openerp.base.ListView(
-                {}, null, 'qunit-fixture', {model: null});
+                {}, null, 'qunit-fixture', {model: null, ids: [1, 2, 3], index: 0});
         listview.on_loaded(fvg);
 
-        listview.do_fill_table([
+        listview.do_fill_table({records: [
                 {data: {id: {value: 1}}},
                 {data: {id: {value: 2}}},
                 {data: {id: {value: 3}}}
-        ]).then(function () {
+        ]}).then(function () {
             listview.$element.find('tbody th input:eq(2)')
                              .attr('checked', true);
             deepEqual(listview.get_selection(), [3]);
@@ -88,15 +88,15 @@ $(document).ready(function () {
     });
     asyncTest('render deletion button if list is deletable', 1, function () {
         var listview = new openerp.base.ListView(
-                {}, null, 'qunit-fixture', {model: null});
+                {}, null, 'qunit-fixture', {model: null, ids: [null, null, null], index: 0});
 
         listview.on_loaded(fvg);
 
-        listview.do_fill_table([
+        listview.do_fill_table({records: [
                 {data: {id: {value: null}}},
                 {data: {id: {value: null}}},
                 {data: {id: {value: null}}}
-        ]).then(function () {
+        ]}).then(function () {
             equal(
                 listview.$element.find('tbody tr td.oe-record-delete button').length,
                 3);
@@ -109,15 +109,15 @@ $(document).ready(function () {
         var listview = new openerp.base.ListView(
                 {}, null, 'qunit-fixture', {model: null, unlink: function (ids) {
             deleted = ids;
-        }});
+        }, ids: [1, 2, 3], index: 0});
 
         listview.on_loaded(fvg);
 
-        listview.do_fill_table([
+        listview.do_fill_table({records: [
                 {data: {id: {value: 1}}},
                 {data: {id: {value: 2}}},
                 {data: {id: {value: 3}}}
-        ]).then(function () {
+        ]}).then(function () {
             listview.$element.find('tbody td.oe-record-delete:eq(2) button').click();
             deepEqual(deleted, [3]);
             listview.$element.find('tbody td.oe-record-delete:eq(0) button').click();
@@ -130,15 +130,15 @@ $(document).ready(function () {
         var listview = new openerp.base.ListView(
                 {}, null, 'qunit-fixture', {model: null, unlink: function (ids) {
             deleted = ids;
-        }});
+        }, ids: [1, 2, 3], index: 0});
 
         listview.on_loaded(fvg);
 
-        listview.do_fill_table([
+        listview.do_fill_table({records: [
                 {data: {id: {value: 1}}},
                 {data: {id: {value: 2}}},
                 {data: {id: {value: 3}}}
-        ]).then(function () {
+        ]}).then(function () {
             listview.$element.find('tbody th input:eq(2)')
                              .attr('checked', true);
             listview.$element.find('tbody th input:eq(1)')

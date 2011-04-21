@@ -177,10 +177,13 @@ openerp.base.ListView = openerp.base.Controller.extend(
      *
      * TODO: should also re-load the table itself, as e.g. columns may have changed
      *
-     * @param {Array} records the records to fill the list view with
+     * @param {Object} result filling result
+     * @param {Array} [result.view] the new view (wrapped fields_view_get result)
+     * @param {Array} result.records records the records to fill the list view with
      * @returns {Promise} promise to the end of view rendering (list views are asynchronously filled for improved responsiveness)
      */
-    do_fill_table: function(records) {
+    do_fill_table: function(result) {
+        var records = result.records;
         var $table = this.$element.find('table');
         this.rows = records;
 
