@@ -93,7 +93,7 @@ class final_invoice_create(osv.osv_memory):
             last_invoice = invoice_obj.create(cr, uid, curr_invoice, context=context)
             invoices.append(last_invoice)
 
-            context2=context.copy()
+            context2 = context.copy()
             context2['lang'] = partner.lang
             cr.execute("SELECT product_id, to_invoice, sum(unit_amount) " \
                     "FROM account_analytic_line as line " \
