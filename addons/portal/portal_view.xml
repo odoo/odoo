@@ -42,24 +42,22 @@ the portal's users.
             <field name="arch" type="xml">
                 <page string="Users" position="before">
                     <page string="Portal">
-                        <group colspan="2" col="4">
-                            <separator string="Portal Menu" colspan="4"/>
-                            <field name="menu_action_id"/>
-                            <field name="override_menu"/>
-                            <field name="parent_menu_id"
-                                context="{'ir.ui.menu.full_list': True}"/>
-                            <button name="do_create_menu" type="object"
-                                string="Create Parent Menu"/>
-                        </group>
-                        <group colspan="2" col="2">
-                            <separator string="Portal Widgets" colspan="2"/>
-                            <field name="widget_ids" nolabel="1" rowspan="7">
-                                <tree string="Widgets" editable="bottom">
-                                    <field name="sequence"/>
-                                    <field name="widget_id"/>
-                                </tree>
-                            </field>
-                        </group>
+                        <separator string="Portal Menu" colspan="4"/>
+                        <field name="menu_action_id"/>
+                        <field name="override_menu"/>
+                        <field name="parent_menu_id"
+                            context="{'ir.ui.menu.full_list': True}"/>
+                        <button name="do_create_menu" type="object"
+                            string="Create Parent Menu"/>
+                        <separator string="Other Groups assigned to Users" colspan="2"/>
+                        <separator string="Widgets assigned to Users" colspan="2"/>
+                        <field name="other_group_ids" nolabel="1" colspan="2" rowspan="7"/>
+                        <field name="widget_ids" nolabel="1" colspan="2" rowspan="7">
+                            <tree string="Widgets" editable="bottom">
+                                <field name="sequence"/>
+                                <field name="widget_id"/>
+                            </tree>
+                        </field>
                     </page>
                 </page>
             </field>

@@ -35,6 +35,10 @@ class portal(osv.osv):
         'group_id': fields.many2one('res.groups', required=True, ondelete='cascade',
             string='Group',
             help=_('The group extended by this portal')),
+        'other_group_ids': fields.many2many('res.groups',
+            'portal_group_rel', 'portal_id', 'group_id',
+            string='Other User Groups',
+            help=_("Those groups are assigned to the portal's users")),
         'menu_action_id': fields.many2one('ir.actions.actions', readonly=True,
             string='Menu Action',
             help=_("If set, replaces the standard menu for the portal's users")),
@@ -61,23 +65,23 @@ class portal(osv.osv):
         portal_id = super(portal, self).create(cr, uid, values, context)
         
         # assign menu action and widgets to users
-        if values.get('users') or values.get('menu_action_id'):
-            self._assign_menu_to_users(cr, uid, [portal_id], context)
+        if values.get('users') or values.get('other_group_ids') or values.get('menu_action_id'):
+            self._assign_menu_and_groups(cr, uid, [portal_id], context)
         if values.get('users') or values.get('widget_ids'):
-            self._assign_widgets_to_users(cr, uid, [portal_id], context)
+            self._assign_widgets(cr, uid, [portal_id], context)
         
         return portal_id
     
     def write(self, cr, uid, ids, values, context=None):
-        """ extend write() to reflect menu and groups changes on users """
+        """ extend write() to reflect changes on users """
         # first apply portal changes
         super(portal, self).write(cr, uid, ids, values, context)
         
         # assign menu action and widgets to users
-        if values.get('users') or values.get('menu_action_id'):
-            self._assign_menu_to_users(cr, uid, ids, context)
+        if values.get('users') or values.get('other_group_ids') or values.get('menu_action_id'):
+            self._assign_menu_and_groups(cr, uid, ids, context)
         if values.get('users') or values.get('widget_ids'):
-            self._assign_widgets_to_users(cr, uid, ids, context)
+            self._assign_widgets(cr, uid, ids, context)
         
         # if parent_menu_id has changed, apply the change on menu_action_id
         if 'parent_menu_id' in values:
@@ -108,16 +112,21 @@ class portal(osv.osv):
         
         return True
 
-    def _assign_menu_to_users(self, cr, uid, ids, context=None):
-        """ assign portal menu action to users for the given portal ids """
+    def _assign_menu_and_groups(self, cr, uid, ids, context=None):
+        """ assign portal menu and other groups to users of portals (ids) """
         user_obj = self.pool.get('res.users')
         for p in self.browse(cr, uid, ids, context):
+            # user groups = portal group + other groups
+            group_ids = [p.group_id.id] + [g.id for g in p.other_group_ids]
+            user_values = {'groups_id': [(6, 0, group_ids)]}
+            # user menu action = portal menu action if set in portal
             if p.menu_action_id:
-                user_values = {'menu_id': p.menu_action_id.id}
-                user_obj.write(cr, uid, [u.id for u in p.users], user_values, context)
+                user_values['menu_id'] = p.menu_action_id.id
+            user_ids = [u.id for u in p.users]
+            user_obj.write(cr, uid, user_ids, user_values, context)
 
-    def _assign_widgets_to_users(self, cr, uid, ids, context=None):
-        """ assign portal widgets to users for the given portal ids """
+    def _assign_widgets(self, cr, uid, ids, context=None):
+        """ assign portal widgets to users of portals (ids) """
         widget_user_obj = self.pool.get('res.widget.user')
         for p in self.browse(cr, uid, ids, context):
             for w in p.widget_ids:
