@@ -374,9 +374,12 @@ def dsn_are_equals(first, second):
     return key(first) == key(second)
 
 
-_Pool = ConnectionPool(int(tools.config['db_maxconn']))
+_Pool = None
 
 def db_connect(db_name):
+    global _Pool
+    if _Pool is None:
+        _Pool = ConnectionPool(int(tools.config['db_maxconn']))
     currentThread().dbname = db_name
     return Connection(_Pool, db_name)
 
