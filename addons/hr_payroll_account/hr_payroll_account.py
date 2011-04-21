@@ -222,6 +222,13 @@ class hr_payslip(osv.osv):
         'account_move_ids': fields.many2many('account.move', 'payslip_move_rel', 'slip_id', 'move_id', 'Accounting Entries', readonly=True),
     }
     
+    def onchange_contract_id(self, cr, uid, ids, date_from, date_to, employee_id=False, contract_id=False, context=None):
+        contract_obj = self.pool.get('hr.contract')
+        res = super(hr_payslip, self).onchange_contract_id(cr, uid, ids, date_from=date_from, date_to=date_to, employee_id=employee_id, contract_id=contract_id, context=context)
+        journal_id = contract_obj.browse(cr, uid, contract_id, context=context).journal_id.id
+        res['value'].update({'journal_id': journal_id})
+        return res
+
     def get_payslip_lines(self, cr, uid, contract_ids, payslip_id, context):
         journal_obj = self.pool.get('account.journal')
         rule_obj = self.pool.get('hr.salary.rule')
@@ -233,10 +240,9 @@ class hr_payslip(osv.osv):
         #get the rules of the structure and thier children
         rule_ids = structure_obj.get_all_rules(cr, uid, structure_ids, context=context)
         sorted_rule_ids = [id for id, sequence in sorted(rule_ids, key=lambda x:x[1])]
-        journal_id = [record.journal_id.id for record in self.browse(cr, uid, [payslip_id], context=context)]
-        for jou in journal_obj.browse(cr ,uid, journal_id, context=context):
-            credit_account = jou.default_credit_account_id.id
-            debit_account = jou.default_debit_account_id.id
+        journal = self.browse(cr, uid, payslip_id, context=context).journal_id
+        credit_account = journal.default_credit_account_id and journal.default_credit_account_id.id or False
+        debit_account = journal.default_debit_account_id and journal.default_debit_account_id.id or False
         for rule in rule_obj.browse(cr, uid, sorted_rule_ids, context=context):
             if not rule.account_debit.id:
                 rule_obj.write(cr, uid, [rule.id], {'account_debit': debit_account})
@@ -255,12 +261,12 @@ class hr_payslip(osv.osv):
                         else:
                             value['account_id'] = rule.account_credit.id
                     else:
-                        emp_account_id = [record.employee_id.employee_account.id for record in self.browse(cr, uid, [payslip_id], context=context)]
-                        value['account_id'] = emp_account_id[0]
+                        emp_account_id = self.browse(cr, uid, payslip_id, context=context).employee_id.employee_account.id
+                        value['account_id'] = emp_account_id
                     if rule.analytic_account_id:
                         value['analytic_account_id'] = rule.analytic_account_id.id
         return result
-    
+
     def create_voucher(self, cr, uid, ids, name, voucher, sequence=5):
         slip_move = self.pool.get('hr.payslip.account.move')
         for slip in ids:
@@ -283,10 +289,8 @@ class hr_payslip(osv.osv):
                     if line.move_id.state == 'posted':
                         move_pool.button_cancel(cr, uid [line.move_id.id], context)
                     move_pool.unlink(cr, uid, [line.move_id.id], context=context)
-
         slip_move.unlink(cr, uid, move_ids, context=context)
-        self.write(cr, uid, ids, {'state':'cancel'}, context=context)
-        return True
+        return self.write(cr, uid, ids, {'state':'cancel'}, context=context)
 
     def process_sheet(self, cr, uid, ids, context=None):
         move_pool = self.pool.get('account.move')
@@ -307,11 +311,11 @@ class hr_payslip(osv.osv):
 
             partner = slip.employee_id.bank_account_id.partner_id
             partner_id = partner.id
-            
+
             for line in slip.line_ids:
                 if line.category_id.name == 'Net':
                     amt = line.total
-                    
+
             fiscal_year_ids = fiscalyear_pool.search(cr, uid, [], context=context)
             if not fiscal_year_ids:
                 raise osv.except_osv(_('Warning !'), _('Please define fiscal year for perticular contract'))
@@ -447,12 +451,10 @@ class hr_payslip(osv.osv):
         return True
 
     def account_check_sheet(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'state':'accont_check'}, context=context)
-        return True
+        return self.write(cr, uid, ids, {'state':'accont_check'}, context=context)
 
     def hr_check_sheet(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'state':'hr_check'}, context=context)
-        return True
+        return self.write(cr, uid, ids, {'state':'hr_check'}, context=context)
 
     def verify_sheet(self, cr, uid, ids, context=None):
         move_pool = self.pool.get('account.move')
@@ -736,7 +738,7 @@ class account_move_link_slip(osv.osv):
 account_move_link_slip()
 
 class hr_contract(osv.osv):
-  
+
     _inherit = 'hr.contract'
     _description = 'Employee Contract'
     _columns = {
