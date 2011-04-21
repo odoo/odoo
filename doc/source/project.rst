@@ -65,7 +65,7 @@ RST, using Sphinx's `Python domain`_ [#]_:
   and ``__new__``), using the `info fields`_  as well.
 
 * Attributes (class and instance) should be documented in their
-  class's docstring via the ``.. attribute::`` directiveg, following
+  class's docstring via the ``.. attribute::`` directive, following
   the class's own documentation.
 
 * The relation between modules and module-level attributes is similar:
