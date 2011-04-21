@@ -13,6 +13,15 @@ openerp.base.ListView = openerp.base.Controller.extend(
         'addable': "New"
     },
     /**
+     * Core class for list-type displays.
+     *
+     * As a view, needs a number of view-related parameters to be correctly
+     * instantiated, provides options and overridable methods for behavioral
+     * customization.
+     *
+     * See constructor parameters and method documentations for information on
+     * the default behaviors and possible options for the list view.
+     *
      * @constructs
      * @param view_manager
      * @param session An OpenERP session object
@@ -37,11 +46,42 @@ openerp.base.ListView = openerp.base.Controller.extend(
 
         this.options = _.extend({}, this.defaults, options || {});
     },
+    /**
+     * View startup method, the default behavior is to set the ``oe-listview``
+     * class on its root element and to perform an RPC load call.
+     *
+     * @returns {$.Deferred} loading promise
+     */
     start: function() {
         this.$element.addClass('oe-listview');
-        return this.rpc("/base/listview/load", {"model": this.model, "view_id":this.view_id,
-            toolbar:!!this.view_manager.sidebar}, this.on_loaded);
+        return this.rpc("/base/listview/load", {
+            model: this.model,
+            view_id: this.view_id,
+            toolbar: !!this.view_manager.sidebar
+        }, this.on_loaded);
     },
+    /**
+     * Called after loading the list view's description, sets up such things
+     * as the view table's columns, renders the table itself and hooks up the
+     * various table-level and row-level DOM events (action buttons, deletion
+     * buttons, selection of records, [New] button, selection of a given
+     * record, ...)
+     *
+     * Sets up the following:
+     *
+     * * Processes arch and fields to generate a complete field descriptor for each field
+     * * Create the table itself and allocate visible columns
+     * * Hook in the top-level (header) [New|Add] and [Delete] button
+     * * Sets up showing/hiding the top-level [Delete] button based on records being selected or not
+     * * Sets up event handlers for action buttons and per-row deletion button
+     * * Hooks global callback for clicking on a row
+     * * Sets up its sidebar, if any
+     *
+     * @param {Object} data wrapped fields_view_get result
+     * @param {Object} data.fields_view fields_view_get result (processed)
+     * @param {Object} data.fields_view.fields mapping of fields for the current model
+     * @param {Object} data.fields_view.arch current list view descriptor
+     */
     on_loaded: function(data) {
         var self = this;
         this.fields_view = data.fields_view;
@@ -128,6 +168,8 @@ openerp.base.ListView = openerp.base.Controller.extend(
     /**
      * Fills the table with the provided records after emptying it
      *
+     * TODO: should also re-load the table itself, as e.g. columns may have changed
+     *
      * @param {Array} records the records to fill the list view with
      * @returns {Promise} promise to the end of view rendering (list views are asynchronously filled for improved responsiveness)
      */
@@ -189,14 +231,19 @@ openerp.base.ListView = openerp.base.Controller.extend(
         });
     },
     /**
-     * Asks the view manager to switch to a different view, using the provided
-     * record index (within the current dataset).
+     * Used to handle a click on a table row, if no other handler caught the
+     * event.
+     *
+     * The default implementation asks the list view's view manager to switch
+     * to a different view (by calling
+     * :js:func:`~openerp.base.ViewManager.on_mode_switch`), using the
+     * provided record index (within the current list view's dataset).
      *
      * If the index is null, ``switch_to_record`` asks for the creation of a
      * new record.
      *
      * @param {Number|null} index the record index (in the current dataset) to switch to
-     * @param {String} [view="form"] the view to switch to
+     * @param {String} [view="form"] the view type to switch to
      */
     switch_to_record:function (index, view) {
         view = view || 'form';
@@ -205,6 +252,16 @@ openerp.base.ListView = openerp.base.Controller.extend(
             this.view_manager.on_mode_switch(view);
         }, this));
     },
+    /**
+     * Base handler for clicking on a row, discovers the index of the record
+     * corresponding to the clicked row in the list view's dataset.
+     *
+     * Should not be overridden, use
+     * :js:func:`~openerp.base.ListView.switch_to_record` to customize the
+     * behavior of the list view when clicking on a row instead.
+     *
+     * @param {Object} event jQuery DOM event object
+     */
     on_select_row: function (event) {
         var $target = $(event.currentTarget);
         if (!$target.parent().is('tbody')) {
@@ -217,8 +274,8 @@ openerp.base.ListView = openerp.base.Controller.extend(
         if (index == undefined || index === -1) {
             return;
         }
-            this.switch_to_record(index);
-        },
+        this.switch_to_record(index);
+    },
     do_show: function () {
         this.$element.show();
         if (this.hidden) {
@@ -247,6 +304,15 @@ openerp.base.ListView = openerp.base.Controller.extend(
             'domain': this.dataset.domain
         }, this.do_fill_table);
     },
+    /**
+     * Event handler for a search, asks for the computation/folding of domains
+     * and contexts (and group-by), then reloads the view's content.
+     *
+     * @param {Array} domains a sequence of literal and non-literal domains
+     * @param {Array} contexts a sequence of literal and non-literal contexts
+     * @param {Array} groupbys a sequence of literal and non-literal group-by contexts
+     * @returns {$.Deferred} fold request evaluation promise
+     */
     do_search: function (domains, contexts, groupbys) {
         var self = this;
         return this.rpc('/base/session/eval_domain_and_context', {
@@ -267,7 +333,7 @@ openerp.base.ListView = openerp.base.Controller.extend(
     /**
      * Handles the signal to delete a line from the DOM
      *
-     * @param e
+     * @param e jQuery event object
      */
     do_delete: function (e) {
         // don't link to forms
@@ -296,7 +362,7 @@ openerp.base.ListView = openerp.base.Controller.extend(
     },
     /**
      * Gets the ids of all currently selected records, if any
-     * @returns a list of ids, empty if no record is selected (or the list view is not selectable
+     * @returns {Array} empty if no record is selected (or the list view is not selectable)
      */
     get_selection: function () {
         if (!this.options.selectable) {
