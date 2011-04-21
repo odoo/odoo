@@ -8,7 +8,7 @@
             <field name="inherit_id" ref="hr_payroll.view_hr_payslip_line_tree"/>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <field name="amount" position="after">
+                <field name="category_id" position="after">
                    <field name="analytic_account_id"/>
                    <field name="account_id" required="1"/>
                 </field>
