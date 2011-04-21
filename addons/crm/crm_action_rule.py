@@ -125,7 +125,7 @@ this if you want the rule to send an email to the partner."),
 
         # Put state change by rule in communication history
         if hasattr(obj, 'state') and action.act_state:
-            model_obj._history(cr, uid, [obj], _(action.act_state))
+            model_obj.history(cr, uid, [obj], _(action.act_state))
 
         model_obj.write(cr, uid, [obj.id], write, context)
         emails = []
