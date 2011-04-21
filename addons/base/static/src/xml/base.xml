@@ -18,9 +18,6 @@
         </div>
     </div>
     <div id="oe_login" class="login"></div>
-    <div style="position: absolute; right: 2px; top: 38px;">
-        <button onclick="QWeb.add_template('base.xml'); $('body').css('background-color', '#FFFF9C'); setTimeout(function() { $('body').css('background-color', '#FFF'); }, 500);">Reload QWEB</button>
-    </div>
     <table border="0" cellpadding="0" cellspacing="0" width="100%" height="100%"
         t-att-class="'main_table' + (typeof kitten == 'undefined' ? '' : ' kitten-mode-activated')">
     <tr>
@@ -297,7 +294,7 @@
            t-att-ondblclick="'console.log(\'' + widget.element_id + '\', openerp.screen.' + widget.element_id + ')'">
         <t t-esc="widget.string"/>
         <span t-if="widget.help">?</span>
-        <t t-if="widget.string">:</t>
+        <t t-if="widget.string and widget.node.tag != 'label'">:</t>
     </label>
 </t>
 <t t-name="FieldChar">
