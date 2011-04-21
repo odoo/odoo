@@ -44,9 +44,9 @@ class crm_add_note(osv.osv_memory):
             case = case_list[0]
             user_obj = self.pool.get('res.users')
             user_name = user_obj.browse(cr, uid, [uid], context=context)[0].name
-            attach = [
+            attach = dict(
                 (x.name, base64.decodestring(x.binary)) for x in obj.attachment_ids
-            ]
+            )
             case_pool.history(cr, uid, [case], self.pool.get('email.message').truncate_data(cr, uid, obj.body, context=context), history=False,
                               details=obj.body, email_from=user_name, attach=attach)
 
