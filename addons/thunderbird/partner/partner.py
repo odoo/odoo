@@ -87,13 +87,16 @@ class thunderbird_partner(osv.osv_memory):
                 res['res_id'] = res_id
                 obj_attch.create(cr, uid, res)
             threads = self.pool.get(model).browse(cr, uid, res_id)
-            thread_pool.history(cr, uid, [threads], subject,
-                            email=msg.get('to', False),
-                            details=msg.get('body', False),
-                            email_from=msg.get('from', False),
-                            message_id= msg.get('message-id', False),
-                            attach= msg.get('attachments', {}),
-                            email_date= msg.get('date', False))
+            thread_pool.history(cr, uid, [threads], _('receive'), history=True,
+                            subject = msg.get('subject'),
+                            email = msg.get('to'),
+                            details = msg.get('body'),
+                            email_from = msg.get('from'),
+                            email_cc = msg.get('cc'),
+                            message_id = msg.get('message-id'),
+                            references = msg.get('references', False) or msg.get('in-reply-to', False),
+                            attach = msg.get('attachments', {}),
+                            email_date = msg.get('date'))
             res_ids.append(res_id)
         return len(res_ids)
 
