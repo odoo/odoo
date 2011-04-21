@@ -150,6 +150,8 @@ if config["translate_in"]:
 if config["stop_after_init"]:
     sys.exit(0)
 
+openerp.netsvc.start_agent()
+
 #----------------------------------------------------------
 # Launch Servers
 #----------------------------------------------------------

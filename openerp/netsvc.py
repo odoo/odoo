@@ -277,12 +277,13 @@ class Agent(object):
                 time.sleep(1)
             time.sleep(60)
 
-agent_runner = threading.Thread(target=Agent.runner, name="netsvc.Agent.runner")
-# the agent runner is a typical daemon thread, that will never quit and must be
-# terminated when the main process exits - with no consequence (the processing
-# threads it spawns are not marked daemon)
-agent_runner.setDaemon(True)
-agent_runner.start()
+def start_agent():
+    agent_runner = threading.Thread(target=Agent.runner, name="netsvc.Agent.runner")
+    # the agent runner is a typical daemon thread, that will never quit and must be
+    # terminated when the main process exits - with no consequence (the processing
+    # threads it spawns are not marked daemon)
+    agent_runner.setDaemon(True)
+    agent_runner.start()
 
 import traceback
 
