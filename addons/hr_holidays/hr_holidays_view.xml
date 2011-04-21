@@ -361,12 +361,6 @@
                     </group>
                     <notebook colspan="4">
                       <page string="Details">
-                          <group colspan="2" col="2">
-                              <separator string="Leave Status" colspan="2"/>
-                              <field name="max_leaves"/>
-                              <field name="leaves_taken"/>
-                              <field name="remaining_leaves"/>
-                          </group>                          
                           <group colspan="2" col="2" name="selection">
                               <separator string="Validation" colspan="2"/>
                               <field name="double_validation"/>
@@ -396,7 +390,19 @@
                 </tree>
             </field>
         </record>
-
+        <record model="ir.ui.view" id="view_holiday_leave_type_tree">
+            <field name="name">hr.holidays.status.leave.type.tree</field>
+            <field name="model">hr.holidays.status</field>
+            <field name="type">tree</field>
+            <field name="sequence" eval="40"/>
+            <field name="arch" type="xml">
+                <tree string="Leave Type">
+                    <field name="name"/>
+                    <field name="limit" />
+                </tree>
+            </field>
+        </record>
+        
         <record id="view_hr_holidays_status_search" model="ir.ui.view">
             <field name="name">hr.holidays.status.search</field>
             <field name="model">hr.holidays.status</field>
@@ -408,19 +414,19 @@
                 </search>
             </field>
         </record>
-
+        
         <record id="open_view_holiday_status" model="ir.actions.act_window">
             <field name="name">Leave Type</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">hr.holidays.status</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="view_id" eval="view_holiday_status_tree"/>
+            <field name="view_id" eval="view_holiday_leave_type_tree"/>
             <field name="search_view_id" ref="view_hr_holidays_status_search"/>
         </record>
-
+        
         <menuitem sequence="3" id="hr.menu_open_view_attendance_reason_config" parent="hr.menu_hr_configuration" name="Leaves"/>
-
+        
         <menuitem name="Leave Type"
             action="open_view_holiday_status"
             id="menu_open_view_holiday_status"
