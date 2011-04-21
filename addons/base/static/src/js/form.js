@@ -911,6 +911,7 @@ openerp.base.form.FieldReference = openerp.base.form.Field.extend({
  * Registry of form widgets, called by :js:`openerp.base.FormView`
  */
 openerp.base.form.widgets = new openerp.base.Registry({
+    'hpaned': 'openerp.base.form.Hpaned',
     'group' : 'openerp.base.form.WidgetFrame',
     'notebook' : 'openerp.base.form.WidgetNotebook',
     'separator' : 'openerp.base.form.WidgetSeparator',
