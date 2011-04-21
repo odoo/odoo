@@ -49,6 +49,7 @@
                 <field name="date_to" position="after">
                     <field name="journal_id" required="1"/>
                     <field name="bank_journal_id" domain="[('type','=','cash')]" required="1"/>
+                    <field name="period_id" />
                 </field>
             </field>
         </record>
@@ -152,12 +153,12 @@
 	      		<page string="Account Lines">
 		       		<field name="move_line_ids" colspan="4" nolabel="1"/>
 		        </page>
-		        <page string="Accounting Entries">
-                	<field name="account_move_ids" colspan="4" nolabel="1"/>
-                </page>
 		        <page string="Payment Lines">
 	        		<field name="move_payment_ids" colspan="4" nolabel="1"/>
 	        	</page>
+		        <page string="Accounting Entries">
+                	<field name="account_move_ids" colspan="4" nolabel="1"/>
+                </page>
               </xpath>
 	        </field>
 		</record>

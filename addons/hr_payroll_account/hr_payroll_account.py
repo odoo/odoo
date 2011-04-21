@@ -213,15 +213,15 @@ class hr_payslip(osv.osv):
     _description = 'Pay Slip'
 
     _columns = {
-        'journal_id': fields.many2one('account.journal', 'Expense Journal'),
-        'bank_journal_id': fields.many2one('account.journal', 'Bank Journal'),
+        'journal_id': fields.many2one('account.journal', 'Expense Journal',states={'draft': [('readonly', False)]}, readonly=True),
+        'bank_journal_id': fields.many2one('account.journal', 'Bank Journal', states={'draft': [('readonly', False)]}, readonly=True),
         'move_ids':fields.one2many('hr.payslip.account.move', 'slip_id', 'Accounting vouchers'),
         'move_line_ids':fields.many2many('account.move.line', 'payslip_lines_rel', 'slip_id', 'line_id', 'Accounting Lines', readonly=True),
         'move_payment_ids':fields.many2many('account.move.line', 'payslip_payment_rel', 'slip_id', 'payment_id', 'Payment Lines', readonly=True),
-        'period_id': fields.many2one('account.period', 'Force Period', domain=[('state','<>','done')], help="Keep empty to use the period of the validation(Payslip) date."),
+        'period_id': fields.many2one('account.period', 'Force Period',states={'draft': [('readonly', False)]}, readonly=True, domain=[('state','<>','done')], help="Keep empty to use the period of the validation(Payslip) date."),
         'account_move_ids': fields.many2many('account.move', 'payslip_move_rel', 'slip_id', 'move_id', 'Accounting Entries', readonly=True),
     }
-    
+
     def onchange_contract_id(self, cr, uid, ids, date_from, date_to, employee_id=False, contract_id=False, context=None):
         contract_obj = self.pool.get('hr.contract')
         res = super(hr_payslip, self).onchange_contract_id(cr, uid, ids, date_from=date_from, date_to=date_to, employee_id=employee_id, contract_id=contract_id, context=context)
