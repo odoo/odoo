@@ -73,6 +73,10 @@ class user_wizard(osv.osv_memory):
         
         return defs
 
+    def onchange_email(self, cr, uid, ids, email):
+        """ assign email on login """
+        return {'value': {'login': email}}
+
 user_wizard()
 
 

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- User Wizard on res.partner.address -->
+        <act_window id="portal_user_wizard_action"
+            name="Create Portal User"
+            src_model="res.partner.address"
+            res_model="res.portal.user_wizard"
+            view_type="form" view_mode="form"
+            key2="client_action_multi" target="new"/>
+
+        <!-- user_wizard view -->
+        <record id="portal_user_wizard_view" model="ir.ui.view">
+            <field name="name">Create Portal User</field>
+            <field name="model">res.portal.user_wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Create Portal User">
+                    <group colspan="2" col="2">
+                        <field name="name"/>
+                        <field name="login"/>
+                        <field name="email" widget="email"
+                            on_change="onchange_email(email)"/>
+                        <field name="lang"/>
+                        <field name="address_id"/>
+                    </group>
+                    <group colspan="2" col="2">
+                        <field name="portal_id"/>
+                    </group>
+                    <label colspan="2"/>
+                    <button string="Cancel" special="cancel" icon="gtk-cancel"/>
+                    <button string="Create User" name="proceed" type="object" icon="gtk-ok"/>
+                </form>
+            </field>
+        </record>
+    </data>
+</openerp>
