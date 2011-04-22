@@ -325,7 +325,7 @@ the rule to mark CC(mail to any other person defined in actions)."),
             @param context: A standard dictionary for contextual values """
         if context is None:
             context = {}
-        ok = True 
+        ok = True
         if action.filter_id:
             if action.model_id.model == action.filter_id.model_id:
                 context.update(eval(action.filter_id.context))
@@ -445,19 +445,13 @@ the rule to mark CC(mail to any other person defined in actions)."),
             context = {}
 
         context.update({'action': True})
-        if not scrit:
-            scrit = []
 
         for action in self.browse(cr, uid, ids, context=context):
-            model_obj = self.pool.get(action.model_id.model)
             for obj in objects:
-                ok = self.do_check(cr, uid, action, obj, context=context)
-                if not ok:
-                    continue
+                if self.do_check(cr, uid, action, obj, context=context):
+                    model_obj = self.pool.get(action.model_id.model)
+                    self.do_action(cr, uid, action, model_obj, obj, context=context)
 
-                if ok:
-                    self.do_action(cr, uid, action, model_obj, obj, context)
-                    break
         context.update({'action': False})
         return True
 
@@ -480,7 +474,7 @@ the rule to mark CC(mail to any other person defined in actions)."),
         return True
 
     _constraints = [
-        (_check_mail, 'Error: The mail is not well formated', ['act_mail_body']), 
+        (_check_mail, 'Error: The mail is not well formatted', ['act_mail_body']),
     ]
 
 base_action_rule()
