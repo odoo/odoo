@@ -86,7 +86,7 @@ if __name__ == '__main__':
     custom_values = {}
     try:
         custom_values = dict(eval(options.custom_values))
-    except:
+    except Exception:
         pass
 
     parser.parse(msg_txt, custom_values)
