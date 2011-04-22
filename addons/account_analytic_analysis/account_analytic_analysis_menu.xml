@@ -33,7 +33,8 @@
                         <filter icon="terp-camera_test" string="Open" domain="[('state','=','open')]" help="Open Accounts"/>
                         <filter icon="terp-gtk-media-pause" string="Pending" domain="[('state','=','pending')]" help="Pending Accounts"/>
                         <separator orientation="vertical"/>
-                        <filter icon="terp-go-today" string="Overdue Accounts" domain="[('is_overdue_quantity', '=', True)]" help="Analytic Accounts with a quantity overdu" />
+                        <filter icon="terp-go-today" string="To Renew" domain="['|', '&amp;', ('date', '!=', False), ('date', '&lt;', time.strftime('%%Y-%%m-%%d')), ('is_overdue_quantity', '=', True)]"
+                            help="The contracts to be renewed because the deadline is passed or the working hours are higher than the allocated hours" />
                         <filter icon="terp-go-month"
                              string=" +1 Month"
                              domain="[('date','&lt;=', (datetime.date.today() + relativedelta(months=1)).strftime('%%Y-%%m-%%d')),('date','>=', time.strftime('%%Y-%%m-%%d'))]"
@@ -47,7 +48,7 @@
                             <filter string="Has No Partner" name="has_no_partner" domain="[('partner_id', '=', False)]" icon="terp-partner" />
                         </field>
                         <field name="user_id">
-                            <filter string="My Entries" domain="[('user_id','=',uid)]" icon="terp-personal"/>
+                            <filter string="My Accounts" domain="[('user_id','=',uid)]" icon="terp-personal" name="my_accounts" />
                             <filter string="No Account Manager" domain="[('user_id', '=', False)]" icon="terp-personal-" />
                         </field>
 
@@ -73,8 +74,9 @@
             <field name="res_model">account.analytic.account</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,graph</field>
-            <field name="context">{'search_default_has_partner' : 1, 'search_default_current' : 1}</field>
+            <field name="context">{'search_default_has_partner' : 1, 'search_default_my_accounts' : 1, 'search_default_current' : 1}</field>
             <field name="search_view_id" ref="view_account_analytic_account_overdue_search"/>
+            <field name="help">You will find here the contracts to be renewed because the deadline is passed or the working hours are higher than the allocated hours. OpenERP automatically sets these analytic accounts to the pending state, in order to raise a warning during the timesheets recording. Salesmen should review all pending accounts and reopen or close the according to the negotiation with the customer.</field>
         </record>
 
         <menuitem action="action_account_analytic_overdue" id="menu_action_account_analytic_overdue" sequence="50" parent="sale.menu_invoiced" groups="base.group_extended"/>
