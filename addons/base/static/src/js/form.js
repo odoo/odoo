@@ -896,6 +896,22 @@ openerp.base.form.FieldMany2Many = openerp.base.form.Field.extend({
     init: function(view, node) {
         this._super(view, node);
         this.template = "FieldMany2Many";
+        this.list_id = _.uniqueId("many2many");
+    },
+    start: function() {
+        debugger;
+        this._super.apply(this, arguments);
+        this.dataset = new openerp.base.DataSetSearch(this.session, this.field.relation);
+        this.list_view = new openerp.base.ListView(undefined, this.view.session,
+                this.list_id, this.dataset, false, undefined);
+        this.list_view.start();
+    },
+    set_value: function(value) {
+        if (value != false) {
+            this.dataset.ids = value;
+            this.dataset.count = value.length;
+            this.list_view.do_update();
+        }
     }
 });
 
