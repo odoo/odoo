@@ -40,6 +40,7 @@ class portal(osv.osv):
             string='Other User Groups',
             help=_("Those groups are assigned to the portal's users")),
         'menu_action_id': fields.many2one('ir.actions.actions', readonly=True,
+            # ISSUE: 'ondelete' constraints do not seem effective on this field...
             string='Menu Action',
             help=_("If set, replaces the standard menu for the portal's users")),
         'parent_menu_id': fields.many2one('ir.ui.menu', ondelete='restrict',
