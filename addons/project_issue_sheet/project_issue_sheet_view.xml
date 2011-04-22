@@ -18,11 +18,11 @@
                 </xpath>
                 <notebook colspan="4">
                     <page string="Worklogs">
-                        <field name="timesheet_ids" colspan="4" nolabel="1" context="{'default_user_id' : assigned_to, 'default_account_id' : analytic_account_id}">
-                            <tree editable="top" string="Timesheet">
+                        <field name="timesheet_ids" colspan="4" nolabel="1" context="{'default_user_id' : user_id, 'default_account_id' : analytic_account_id}">
+                            <tree editable="top" string="Timesheets">
                                 <field name="name"/>
                                 <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" widget="float_time"/>
-                                <field name="account_id" invisible="0" domain="[('partner_id', '=', parent.partner_id)]" on_change="on_change_account_id(account_id)"/>
+                                <field name="account_id" invisible="0" domain="[('partner_id', '=', parent.partner_id)]" />
                                 <field name="date"/>
                                 <field name="user_id"/>
                                 <field invisible="1" name="journal_id"/>
