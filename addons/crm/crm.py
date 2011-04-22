@@ -466,6 +466,11 @@ class crm_case(object):
             src = case_email
             dest = case.user_id
             body = case.description or ""
+            for message in case.message_ids:
+                if message.name not in AVAILABLE_STATES.values():
+                    body = message.description
+                    break
+
             if case.message_ids:
                 body = case.message_ids[0].description or ""
             if not destination:
@@ -486,7 +491,7 @@ class crm_case(object):
                 attach_to_send = map(lambda x: (x['datas_fname'], base64.decodestring(x['datas'])), attach_to_send)
 
                 # Send an email
-            subject = "Reminder: [%s] %s" % (str(case.id), case.name,)
+            subject = "[%s] %s" % (str(case.id), case.name,)
             tools.email_send(
                 src,
                 [dest],
