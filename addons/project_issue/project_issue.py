@@ -56,7 +56,7 @@ class project_issue(crm.crm_case, osv.osv):
         """
 
         res = super(project_issue, self).case_open(cr, uid, ids, *args)
-        self.write(cr, uid, ids, {'date_open': time.strftime('%Y-%m-%d %H:%M:%S'), 'assigned_to' : uid})
+        self.write(cr, uid, ids, {'date_open': time.strftime('%Y-%m-%d %H:%M:%S'), 'user_id' : uid})
         for (id, name) in self.name_get(cr, uid, ids):
             message = _("Issue '%s' has been opened.") % name
             self.log(cr, uid, id, message)
@@ -90,32 +90,32 @@ class project_issue(crm.crm_case, osv.osv):
 
         res = {}
         for issue in self.browse(cr, uid, ids, context=context):
+            res[issue.id] = {}
             for field in fields:
-                res[issue.id] = {}
                 duration = 0
                 ans = False
                 hours = 0
 
+                date_create = datetime.strptime(issue.create_date, "%Y-%m-%d %H:%M:%S")
                 if field in ['working_hours_open','day_open']:
                     if issue.date_open:
-                        date_create = datetime.strptime(issue.create_date, "%Y-%m-%d %H:%M:%S")
                         date_open = datetime.strptime(issue.date_open, "%Y-%m-%d %H:%M:%S")
                         ans = date_open - date_create
                         date_until = issue.date_open
                         #Calculating no. of working hours to open the issue
                         hours = cal_obj.interval_hours_get(cr, uid, issue.project_id.resource_calendar_id.id,
-                                 datetime.strptime(issue.create_date, '%Y-%m-%d %H:%M:%S'),
-                                 datetime.strptime(issue.date_open, '%Y-%m-%d %H:%M:%S'))
+                                                           date_create,
+                                                           date_open)
                 elif field in ['working_hours_close','day_close']:
                     if issue.date_closed:
-                        date_create = datetime.strptime(issue.create_date, "%Y-%m-%d %H:%M:%S")
                         date_close = datetime.strptime(issue.date_closed, "%Y-%m-%d %H:%M:%S")
                         date_until = issue.date_closed
                         ans = date_close - date_create
                         #Calculating no. of working hours to close the issue
                         hours = cal_obj.interval_hours_get(cr, uid, issue.project_id.resource_calendar_id.id,
-                                datetime.strptime(issue.create_date, '%Y-%m-%d %H:%M:%S'),
-                                datetime.strptime(issue.date_closed, '%Y-%m-%d %H:%M:%S'))
+                                                           date_create,
+                                                           date_close)
+
                 if ans:
                     resource_id = False
                     if issue.user_id:
@@ -125,7 +125,11 @@ class project_issue(crm.crm_case, osv.osv):
                     duration = float(ans.days)
                     if issue.project_id and issue.project_id.resource_calendar_id:
                         duration = float(ans.days) * 24
-                        new_dates = cal_obj.interval_min_get(cr, uid, issue.project_id.resource_calendar_id.id, datetime.strptime(issue.create_date, '%Y-%m-%d %H:%M:%S'), duration, resource=resource_id)
+
+                        new_dates = cal_obj.interval_min_get(cr, uid,
+                                                             issue.project_id.resource_calendar_id.id,
+                                                             date_create,
+                                                             duration, resource=resource_id)
                         no_days = []
                         date_until = datetime.strptime(date_until, '%Y-%m-%d %H:%M:%S')
                         for in_time, out_time in new_dates:
@@ -134,10 +138,12 @@ class project_issue(crm.crm_case, osv.osv):
                             if out_time > date_until:
                                 break
                         duration = len(no_days)
+
                 if field in ['working_hours_open','working_hours_close']:
                     res[issue.id][field] = hours
                 else:
                     res[issue.id][field] = abs(float(duration))
+
         return res
 
     def _get_issue_task(self, cr, uid, ids, context=None):
@@ -175,7 +181,7 @@ class project_issue(crm.crm_case, osv.osv):
         'section_id': fields.many2one('crm.case.section', 'Sales Team', \
                         select=True, help='Sales team to which Case belongs to.\
                              Define Responsible user and Email account for mail gateway.'),
-        'user_id': fields.related('project_id', 'user_id', type='many2one', relation='res.users', store=True, select=1, string='Responsible'),
+        'user_id' : fields.many2one('res.users', select=1, string='Responsible'),
         'partner_id': fields.many2one('res.partner', 'Partner'),
         'partner_address_id': fields.many2one('res.partner.address', 'Partner Contact', \
                                  domain="[('partner_id','=',partner_id)]"),
@@ -282,7 +288,7 @@ class project_issue(crm.crm_case, osv.osv):
                 'date': bug.date,
                 'project_id': bug.project_id.id,
                 'priority': bug.priority,
-                'user_id': bug.assigned_to.id,
+                'user_id': bug.user_id.id,
                 'planned_hours': 0.0,
             })
 
@@ -362,13 +368,10 @@ class project_issue(crm.crm_case, osv.osv):
         """
         cases = self.browse(cr, uid, ids)
         for case in cases:
-            data = {}
+            data = {'state' : 'draft'}
             if case.project_id.project_escalation_id:
                 data['project_id'] = case.project_id.project_escalation_id.id
-                if case.project_id.project_escalation_id.user_id:
-                    data['user_id'] = case.project_id.project_escalation_id.user_id.id
-                if case.task_id:
-                    self.pool.get('project.task').write(cr, uid, [case.task_id.id], {'project_id': data['project_id'], 'user_id': False})
+                data['user_id'] = case.project_id.project_escalation_id.user_id and case.project_id.project_escalation_id.user_id.id or False
             else:
                 raise osv.except_osv(_('Warning !'), _('You cannot escalate this issue.\nThe relevant Project has not configured the Escalation Project!'))
             self.write(cr, uid, [case.id], data)
@@ -486,6 +489,14 @@ class project_issue(crm.crm_case, osv.osv):
         default['name'] = issue['name'] + _(' (copy)')
         return super(project_issue, self).copy(cr, uid, id, default=default,
                 context=context)
+
+    #def set_reply_to(self, cr, uid, oid, values, context=None):
+    #    default_value = False
+
+    #    if oid:
+    #        this = self.browse(cr, uid, oid, context=context)[0]
+    #        if this.section_id:
+    #            values['reply_to'] = this.section_id.email or default_value
 
 project_issue()
 
