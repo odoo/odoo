@@ -107,9 +107,7 @@ this if you want the rule to send an email to the partner."),
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
         @param context: A standard dictionary for contextual values """
-        res = super(base_action_rule, self).do_action(cr, uid, action, model_obj, obj, context=context)
         write = {}
-        
         if hasattr(action, 'act_section_id') and action.act_section_id:
             obj.section_id = action.act_section_id
             write['section_id'] = action.act_section_id.id
@@ -127,6 +125,7 @@ this if you want the rule to send an email to the partner."),
             model_obj._history(cr, uid, [obj], _(action.act_state))
 
         model_obj.write(cr, uid, [obj.id], write, context)
+        super(base_action_rule, self).do_action(cr, uid, action, model_obj, obj, context=context)
         emails = []
 
         if hasattr(obj, 'email_from') and action.act_mail_to_partner:
