@@ -67,17 +67,22 @@ sql_counter = 0
 
 class Cursor(object):
     IN_MAX = 1000 # decent limit on size of IN queries - guideline = Oracle limit
-    __logger = logging.getLogger('db.cursor')
+    __logger = None
 
     def check(f):
         @wraps(f)
         def wrapper(self, *args, **kwargs):
             if self.__closed:
-                raise psycopg2.OperationalError('Unable to use the cursor after having closed it')
+                msg = 'Unable to use a closed cursor.'
+                if self.__closer:
+                    msg += ' It was closed at %s, line %s' % self.__closer
+                raise psycopg2.OperationalError(msg)
             return f(self, *args, **kwargs)
         return wrapper
 
     def __init__(self, pool, dbname, serialized=False):
+        if self.__class__.__logger is None:
+            self.__class__.__logger = logging.getLogger('db.cursor')
         self.sql_from_log = {}
         self.sql_into_log = {}
 
@@ -99,6 +104,7 @@ class Cursor(object):
             self.__caller = frame_codeinfo(currentframe(),2)
         else:
             self.__caller = False
+        self.__closer = False
 
     def __del__(self):
         if not self.__closed:
@@ -197,6 +203,8 @@ class Cursor(object):
         if not self._obj:
             return
 
+        if self.sql_log:
+            self.__closer = frame_codeinfo(currentframe(),3)
         self.print_log()
 
         if not self._serialized:
