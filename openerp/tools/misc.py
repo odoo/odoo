@@ -717,7 +717,28 @@ def is_hashable(h):
     except TypeError:
         return False
 
-class cache(object):
+class dummy_cache(object):
+    """ Cache decorator replacement to actually do no caching.
+
+    This can be useful to benchmark and/or track memory leak.
+
+    """
+
+    def __init__(self, timeout=None, skiparg=2, multi=None, size=8192):
+        pass
+
+    def clear(self, dbname, *args, **kwargs):
+        pass
+
+    @classmethod
+    def clean_caches_for_db(cls, dbname):
+        pass
+
+    def __call__(self, fn):
+        fn.clear_cache = self.clear
+        return fn
+
+class real_cache(object):
     """
     Use it as a decorator of the function you plan to cache
     Timeout: 0 = no timeout, otherwise in seconds
@@ -841,6 +862,9 @@ class cache(object):
 
         cached_result.clear_cache = self.clear
         return cached_result
+
+# TODO make it an option
+cache = real_cache
 
 def to_xml(s):
     return s.replace('&','&amp;').replace('<','&lt;').replace('>','&gt;')
