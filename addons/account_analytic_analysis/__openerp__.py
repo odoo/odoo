@@ -41,6 +41,7 @@ user-wise as well as month wise.
                     "security/ir.model.access.csv",
                     "account_analytic_analysis_view.xml",
                     "account_analytic_analysis_menu.xml",
+                    "account_analytic_analysis_cron.xml",
                     ],
     'demo_xml'  : [],
     'installable': True,

@@ -374,7 +374,25 @@ class account_analytic_account(osv.osv):
             res[id] = round(res.get(id, 0.0),2)
         return res
 
-    _columns ={
+    def _is_overdue_quantity(self, cr, uid, ids, fieldnames, args, context=None):
+        result = dict.fromkeys(ids, 0)
+
+        for record in self.browse(cr, uid, ids, context=context):
+            result[record.id] = int(record.quantity >= record.quantity_max)
+
+        return result
+
+    def _get_analytic_account(self, cr, uid, ids, context=None):
+        result = set()
+        for line in self.pool.get('account.analytic.line').browse(cr, uid, ids, context=context):
+            result.add(line.account_id.id)
+        return list(result)
+
+    _columns = {
+        'is_overdue_quantity' : fields.function(_is_overdue_quantity, method=True, type='boolean', string='Overdue Quantity',
+                                                store={
+                                                    'account.analytic.line' : (_get_analytic_account, None, 20),
+                                                }),
         'ca_invoiced': fields.function(_ca_invoiced_calc, method=True, type='float', string='Invoiced Amount',
             help="Total customer invoiced amount for this account.",
             digits_compute=dp.get_precision('Account')),
