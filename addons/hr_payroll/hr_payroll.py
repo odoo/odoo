@@ -204,6 +204,15 @@ class one2many_mod2(fields.one2many):
             res[r[self._fields_id]].append( r['id'] )
         return res
 
+class hr_payslip_groups(osv.osv):
+
+    _name = 'hr.payslip.groups'
+    _columns = {
+        'name':fields.char('Name', size=256, required=True),
+        'slip_ids':fields.one2many('hr.payslip', 'payslip_group_id', 'Payslips', required=False, readonly=True),
+    }
+hr_payslip_groups()
+
 class hr_payslip(osv.osv):
     '''
     Pay Slip
@@ -215,13 +224,14 @@ class hr_payslip(osv.osv):
     def _get_lines_salary_head(self, cr, uid, ids, field_names, arg=None, context=None):
         result = {}
         if not ids: return result
+        for id in ids:
+            result.setdefault(id, [])
         cr.execute('''SELECT pl.slip_id, pl.id FROM hr_payslip_line AS pl \
                     LEFT JOIN hr_salary_head AS sh on (pl.category_id = sh.id) \
                     WHERE pl.slip_id in %s \
                     GROUP BY pl.slip_id, sh.sequence, pl.sequence, pl.id ORDER BY sh.sequence, pl.sequence''',(tuple(ids),))
         res = cr.fetchall()
         for r in res:
-            result.setdefault(r[0], [])
             result[r[0]].append(r[1])
         return result
 
@@ -255,6 +265,7 @@ class hr_payslip(osv.osv):
         'contract_id': fields.many2one('hr.contract', 'Contract', required=False, readonly=True, states={'draft': [('readonly', False)]}),
         'details_by_salary_head': fields.function(_get_lines_salary_head, method=True, type='one2many', relation='hr.payslip.line', string='Details by Salary Head'),
         'credit_note': fields.boolean('Credit Note', help="Indicates this payslip has a refund of another"),
+        'payslip_group_id': fields.many2one('hr.payslip.groups', 'Group', readonly=True, states={'draft': [('readonly', False)]}),
     }
     _defaults = {
         'date_from': lambda *a: time.strftime('%Y-%m-01'),

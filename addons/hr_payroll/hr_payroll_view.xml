@@ -188,8 +188,8 @@
             <field name="arch" type="xml">
                 <search string="Search Payslip Lines">
                     <group col="8" colspan="4">
-                    	<field name="name"/>
-                    	<field name="code"/>
+                        <field name="name"/>
+                        <field name="code"/>
                         <field name="slip_id"/>
                         <field name="amount_select"/>
                     </group>
@@ -211,7 +211,7 @@
             <field name="model">hr.payslip</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state in ('confirm','hr_check','accont_check');black:state in ('new');gray:state in('cancel')" string="Payslip">
+                <tree colors="blue:state in ('confirm','hr_check','accont_check');black:state in ('new');gray:state in('cancel')" string="Payslips">
                     <field name="number"/>
                     <field name="employee_id"/>
                     <field name="name"/>
@@ -278,7 +278,7 @@
                             </field>
                         </page>
 <!-- TODO: put me back -->
-	                    <page string="Details By Salary Head">
+                       <page string="Details By Salary Head">
                             <field name="details_by_salary_head" context="{'group_by':'category_id'}" domain="[('appears_on_payslip', '=', True)]" nolabel="1">
                                 <tree string="Payslip Lines">
                                     <field name="category_id"/>
@@ -549,14 +549,14 @@
                                 <field name="amount_select"/><newline/>
                                 <field name="amount_fix"  attrs="{'invisible':[('amount_select','&lt;&gt;','fix')], 'required':[('amount_select','=','fix')]}"/>
                                 <field colspan="4" name="amount_python_compute" attrs="{'invisible':[('amount_select','&lt;&gt;','code')], 'required':[('amount_select','=','code')]}"/>
-				<field name="amount_percentage_base" attrs="{'invisible':[('amount_select','&lt;&gt;','percentage')], 'required': [('amount_select','=','percentage')]}"/>
+                                <field name="amount_percentage_base" attrs="{'invisible':[('amount_select','&lt;&gt;','percentage')], 'required': [('amount_select','=','percentage')]}"/>
                                 <field name="amount_percentage" attrs="{'invisible':[('amount_select','&lt;&gt;','percentage')], 'required':[('amount_select','=','percentage')]}"/>
                                 <separator colspan="4" string="Company contribution"/>
                                 <field name="register_id"/>
                             </group>
                     </page>
                     <page string="Child Rules">
-		       <field name="parent_rule_id"/>
+                       <field name="parent_rule_id"/>
                        <separator colspan="4" string="Children definition"/>
                        <field colspan="4" name="child_ids" nolabel="1"/>
                     </page>
@@ -601,6 +601,38 @@
 
     <act_window domain="[('slip_id', '=', active_id)]" id="act_payslip_lines" name="Payslip Lines" res_model="hr.payslip.line" src_model="hr.payslip"/>
 
+    <record id="hr_payslip_category_tree" model="ir.ui.view">
+        <field name="name">hr.payslip.category.tree</field>
+        <field name="model">hr.payslip.groups</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Payslip Groups">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="hr_payslip_category_form" model="ir.ui.view">
+        <field name="name">hr.payslip.category.form</field>
+        <field name="model">hr.payslip.groups</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Payslip by Category">
+                <group colspan="4">
+                    <field name="name"/>
+                </group>
+                <field name="slip_ids" colspan="4" nolabel="1"/>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_hr_payslip_category_tree" model="ir.actions.act_window">
+        <field name="name">Payslips by Category</field>
+        <field name="res_model">hr.payslip.groups</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="hr_payslip_category_tree"/>
+    </record>
+    <menuitem action="action_hr_payslip_category_tree" id="menu_hr_payslip_category" parent="menu_hr_root_payroll"/>
     </data>
 </openerp>
 

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_hr_payslip_by_category" model="ir.ui.view">
+            <field name="name">hr_payroll_payslip_category</field>
+            <field name="model">hr.payroll.payslip.groups</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Employee Category">
+                    <group colspan="4" >
+                        <separator string="Select Employee Category" colspan="4"/>
+                        <field name="employee_category"/>
+                    </group>
+                    <separator string="" colspan="4" />
+                    <group colspan="4" col="6">
+                        <label string ="" colspan="2"/>
+                        <button icon="gtk-cancel" special="cancel" string="Cancel"/>
+                        <button  icon="terp-gtk-go-back-rtl" string="Generate Payslip" name="compute_sheet" type="object"/>
+                    </group>
+               </form>
+            </field>
+        </record>
+
+        <record id="action_hr_payslip_by_category" model="ir.actions.act_window">
+            <field name="name">Generate Payslips by Category</field>
+            <field name="res_model">hr.payroll.payslip.groups</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_hr_payslip_by_category"/>
+            <field name="target">new</field>
+        </record>
+
+        <record id="action_idea_post_vote_values" model="ir.values">
+            <field name="model_id" ref="model_hr_payslip_groups" />
+            <field name="object" eval="1" />
+            <field name="name">Generate Payslips by Category</field>
+            <field name="key2">client_action_multi</field>
+            <field name="value" eval="'ir.actions.act_window,' + str(ref('action_hr_payslip_by_category'))"/>
+            <field name="key">action</field>
+            <field name="model">hr.payslip.groups</field>
+        </record>
+
+    </data>
+</openerp>
