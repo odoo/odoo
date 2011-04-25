@@ -250,30 +250,13 @@
                                     <field name="total"/>
                                 </tree>
                                 <form string="Payslip Line">
-                                    <group col="6" colspan="4">
-                                        <field name="name" colspan="4" select="1"/>
-                                        <field name="code" select="1"/>
-                                        <field name="appears_on_payslip"/>
-                                        <field name="salary_rule_id"/>
+                                    <group>
+	                                    <field name="name" select="1"/>
+	                                    <field name="code" select="1"/>
+	                                    <field name="category_id"/>
+	                                    <field name="sequence" groups="base.group_extended"/>
+	                                    <field name="total"/>
                                     </group>
-                                    <group col="2" colspan="2">
-                                        <separator colspan="4" string="Calculations"/>
-                                        <field name="category_id"/>
-                                        <field name="amount_select"/>
-                                        <field name="amount_fix" attrs="{'readonly':[('amount_select','&lt;&gt;','fix')]}"/>
-                                        <field name="amount_percentage" attrs="{'readonly':[('amount_select','=','percentage')]}"/>
-                                        <field name="sequence" groups="base.group_extended"/>
-                                    </group>
-                                    <group col="2" colspan="2">
-                                        <separator colspan="4" string="Company contribution"/>
-                                        <field name="company_contrib"/>
-                                    </group>
-                                    <notebook colspan="4">
-                                        <page string="Description">
-                                            <separator colspan="4" string="Description"/>
-                                            <field name="note" colspan="4" nolabel="1"/>
-                                        </page>
-                                    </notebook>
                                 </form>
                             </field>
                         </page>
@@ -291,7 +274,7 @@
 
                        <page string="Worked Days">
                             <field name="input_line_ids" colspan="4" nolabel="1" mode="tree">
-                                <tree editable="bottom">
+                                <tree string="Worked Days" editable="bottom">
                                     <field name="name"/>
                                     <field name="code"/>
                                     <field name="number_of_days" sum="Total Working Days"/>
