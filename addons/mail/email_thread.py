@@ -148,9 +148,11 @@ class email_thread(osv.osv):
             res[thread.id] = l
         return res
 
-    def history(self, cr, uid, threads, keyword, history=False, subject=None, email=False, details=None, \
-                    email_from=False, message_id=False, references=None, attach=None, email_cc=None, \
-                    email_bcc=None, email_date=None, body_html=None, sub_type=None, headers=None, reply=None, context=None):
+    def history(self, cr, uid, threads, keyword, history=False, subject=None, \
+                details=None, email=False, email_from=False, email_cc=None, \
+                email_bcc=None, reply=None, email_date=None, message_id=False, \
+                references=None, attach=None, body_html=None, sub_type=None, \
+                headers=None, priority=None, context=None):
         """
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
