@@ -66,7 +66,7 @@ class hr_analytic_timesheet(osv.osv):
                 return False
 
 
-    def on_change_account_id(self, cr, uid, ids, account_id, user_id=False, unit_amount=0):
+    def on_change_account_id(self, cr, uid, ids, account_id, user_id=False, unit_amount=0.0):
         res = {}
         if not (account_id):
             #avoid a useless call to super
@@ -98,11 +98,11 @@ class hr_analytic_timesheet(osv.osv):
                                 'for this product: "%s" (id:%d)') % \
                                 (r.product_id.name, r.product_id.id,))
             # Compute based on pricetype
-            amount_unit = self.on_change_unit_amount(cr, uid, ids,
-                r.product_id.id, unit_amount, False, r.product_id.uom_id.id)['value']['amount']
-
-            amount = unit_amount *  amount_unit
-            res ['value']['amount']= - round(amount, 2)
+            if unit_amount:
+                amount_unit = self.on_change_unit_amount(cr, uid, ids,
+                            r.product_id.id, unit_amount, False, r.product_id.uom_id.id)['value']['amount']
+                amount = unit_amount *  amount_unit
+                res ['value']['amount']= - round(amount, 2)
             res ['value']['general_account_id']= a
         return res
 
