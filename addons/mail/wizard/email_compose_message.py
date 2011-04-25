@@ -171,7 +171,11 @@ class email_compose_message(osv.osv_memory):
 
 
     def get_template_value(self, cr, uid, message, model, resource_id, context=None):
-        return message
+        locals_for_emails = {
+            'user' : self.pool.get('res.users').browse(cr, uid, uid, context=context),
+            'object' : self.pool.get(model).browse(cr, uid, resource_id),
+        }
+        return message and eval(message, {}, locals_for_emails)
 
 email_compose_message()
 
