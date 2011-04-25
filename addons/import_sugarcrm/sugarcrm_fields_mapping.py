@@ -29,12 +29,12 @@ def sugarcrm_fields_mapp(dict_sugar, openerp_dict):
                 #Allow to print a bit more pretty way long list of data in the same field
                 if len(val) >= 1 and val[0] == "__prettyprint__":
                     val = val[1:]
-                    data_lst.append('\n\n'.join(map(lambda x : x + ": " + dict_sugar[x], val)))
+                    data_lst.append('\n\n'.join(map(lambda x : x + ": " + dict_sugar.get(x,''), val)))
                 else:
                     if key == 'duration':
-                        data_lst.append('.'.join(map(lambda x : dict_sugar[x], val)))
+                        data_lst.append('.'.join(map(lambda x : dict_sugar.get(x,''), val)))
                     else:
-                        data_lst.append(' '.join(map(lambda x : dict_sugar[x], val)))
+                        data_lst.append(' '.join(map(lambda x : dict_sugar.get(x,''), val)))
             else:
                 data_lst.append(dict_sugar.get(val,''))
     return fields,data_lst

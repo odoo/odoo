@@ -306,7 +306,9 @@ def get_category(sugar_obj, cr, uid, model, name, context=None):
     if categ_ids:
         categ_id = categ_ids[0]
     else:
-        categ_id = categ_obj.create(cr, uid, {'name': name, 'object_id.model': model})
+        model_ids = sugar_obj.pool.get('ir.model').search(cr, uid, [('model', '=', model)], context=context)
+        model = model_ids and model_ids[0] or False
+        categ_id = categ_obj.create(cr, uid, {'name': name, 'object_id': model})
     return categ_id     
 
 def get_alarm_id(sugar_obj, cr, uid, val, context=None):
@@ -487,7 +489,7 @@ def import_tasks(sugar_obj, cr, uid, context=None):
     map_task = {'id' : 'id',
                 'name': 'name',
                 'date': 'date_start',
-                'date_deadline': 'date_due',
+                'date_deadline' : 'date_due',
                 'user_id/id': 'assigned_user_id',
                 'categ_id/.id': 'categ_id/.id',
                 'partner_id/.id': 'partner_id/.id',
@@ -590,6 +592,7 @@ def import_calls(sugar_obj, cr, uid, context=None):
                    'partner_phone': 'partner_phone',
                    'partner_mobile': 'partner_mobile',
                    'opportunity_id/id': 'opportunity_id/id',
+
     }
     phonecall_obj = sugar_obj.pool.get('crm.phonecall')
     PortType, sessionid = sugar.login(context.get('username', ''), context.get('password', ''), context.get('url',''))
@@ -726,7 +729,7 @@ def get_attachment(sugar_obj, cr, uid, val, model, File, context=None):
     message_model_ids = find_mapped_id(sugar_obj, cr, uid, model, val.get('id'), context)
     message_xml_id = model_obj.browse(cr, uid, message_model_ids)
     if message_xml_id:
-         mailgate_obj.write(cr, uid, [message_xml_id[0].res_id], {'attachment_ids': [(4, new_attachment_id)]})             
+        mailgate_obj.write(cr, uid, [message_xml_id[0].res_id], {'attachment_ids': [(4, new_attachment_id)]})             
     return True    
     
 def import_history(sugar_obj, cr, uid, context=None):
@@ -736,23 +739,24 @@ def import_history(sugar_obj, cr, uid, context=None):
                       'name':'name',
                       'date':'date_entered',
                       'user_id/id': 'assigned_user_id',
-                      'description': 'description_html',
+                      'description': ['description', 'description_html'],
                       'res_id': 'res_id',
                       'model': 'model',
+                      'partner_id.id' : 'partner_id.id',
     }
     mailgate_obj = sugar_obj.pool.get('mailgate.message')
     model_obj =  sugar_obj.pool.get('ir.model.data')
     PortType, sessionid = sugar.login(context.get('username', ''), context.get('password', ''), context.get('url',''))
     sugar_data = sugar.search(PortType, sessionid, 'Notes')
     for val in sugar_data:
-         File = sugar.attachment_search(PortType, sessionid, 'Notes', val.get('id'))
-         model_ids = model_obj.search(cr, uid, [('name', 'like', val.get('parent_id'))])
-         for model in model_obj.browse(cr, uid, model_ids):
+        File = sugar.attachment_search(PortType, sessionid, 'Notes', val.get('id'))
+        model_ids = model_obj.search(cr, uid, [('name', 'like', val.get('parent_id'))])
+        for model in model_obj.browse(cr, uid, model_ids):
             val['res_id'] = model.res_id
             val['model'] = model.model
-         fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_attachment)            
-         mailgate_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', noupdate=True, context=context)
-         get_attachment(sugar_obj, cr, uid, val, 'mailgate.message', File, context)
+        fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_attachment)   
+        mailgate_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', noupdate=True, context=context)
+        get_attachment(sugar_obj, cr, uid, val, 'mailgate.message', File, context)
     return True       
     
 def import_employees(sugar_obj, cr, uid, context=None):
@@ -809,7 +813,7 @@ def import_emails(sugar_obj, cr, uid, context=None):
     'email_bcc': 'bcc_addrs_names',
     'message_id': 'message_id',
     'user_id/id': 'assigned_user_id',
-    'description': 'description_html',
+    'description': ['description', 'description_html'],
     'res_id': 'res_id',
     'model': 'model',
     }
@@ -1000,7 +1004,7 @@ def import_opportunities(sugar_obj, cr, uid, context=None):
     return True
 
 MAP_FIELDS = {'Opportunities':  #Object Mapping name
-                    {'dependencies' : ['Users', 'Accounts', 'Contacts'],  #Object to import before this table
+                    {'dependencies' : ['Users', 'Accounts', 'Contacts', 'Leads'],  #Object to import before this table
                      'process' : import_opportunities,
                      },
               'Leads':
@@ -1071,9 +1075,8 @@ class import_sugarcrm(osv.osv):
     _name = "import.sugarcrm"
     _description = __doc__
     _columns = {
-        'lead': fields.boolean('Leads', help="If Leads are checked, SugarCRM Leads data imported in OpenERP crm-Lead form"),
-        'opportunity': fields.boolean('Opportunities', help="If Opportunities are checked, SugarCRM opportunities data imported in OpenERP crm-Opportunity form"),
-        'user': fields.boolean('User', help="If Users  are checked, SugarCRM Users data imported in OpenERP Users form"),
+        'opportunity': fields.boolean('Leads and Opportunities', help="If Opportunities are checked, SugarCRM opportunities data imported in OpenERP crm-Opportunity form"),
+        'user': fields.boolean('Users', help="If Users  are checked, SugarCRM Users data imported in OpenERP Users form"),
         'contact': fields.boolean('Contacts', help="If Contacts are checked, SugarCRM Contacts data imported in OpenERP partner address form"),
         'account': fields.boolean('Accounts', help="If Accounts are checked, SugarCRM  Accounts data imported in OpenERP partners form"),
         'employee': fields.boolean('Employee', help="If Employees is checked, SugarCRM Employees data imported in OpenERP employees form"),
@@ -1112,8 +1115,6 @@ class import_sugarcrm(osv.osv):
             context = {}
         key_list = []
         for current in self.browse(cr, uid, ids, context):
-            if current.lead:
-                key_list.append('Leads')
             if current.opportunity:
                 key_list.append('Opportunities')
             if current.user:
