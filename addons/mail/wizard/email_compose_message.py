@@ -23,6 +23,7 @@ from osv import osv
 from osv import fields
 import tools
 from tools.safe_eval import safe_eval as eval
+import re
 
 class email_compose_message(osv.osv_memory):
     _name = 'email.compose.message'
@@ -171,11 +172,22 @@ class email_compose_message(osv.osv_memory):
 
 
     def get_template_value(self, cr, uid, message, model, resource_id, context=None):
-        locals_for_emails = {
-            'user' : self.pool.get('res.users').browse(cr, uid, uid, context=context),
-            'object' : self.pool.get(model).browse(cr, uid, resource_id),
-        }
-        return message and eval(message, {}, locals_for_emails)
+        if context is None:
+            context = {}
+        def merge(match):
+            exp = str(match.group()[2:-2]).strip()
+            result = eval(exp,
+                          {
+                            'user' : self.pool.get('res.users').browse(cr, uid, uid, context=context),
+                            'context': dict(context), # copy context to prevent side-effects of eval
+                            'object' : self.pool.get(model).browse(cr, uid, resource_id),
+                          })
+            if result in (None, False):
+                return str("--------")
+            return tools.ustr(result)
+
+        com = re.compile('(\[\[.+?\]\])')
+        return message and com.sub(merge, message)
 
 email_compose_message()
 
