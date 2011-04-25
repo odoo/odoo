@@ -500,6 +500,7 @@ class hr_payslip(osv.osv):
             for rule in self.pool.get('hr.salary.rule').browse(cr, uid, sorted_rule_ids, context=context):
                 key = rule.code + '-' + str(contract.id)
                 localdict['result'] = None
+                localdict.update({'quantity': rule.quantity or None})
                 #check if the rule can be applied
                 if self.pool.get('hr.salary.rule').satisfy_condition(cr, uid, rule.id, localdict, context=context) and rule.id not in blacklist:
                     #compute the amount of the rule
@@ -532,10 +533,12 @@ class hr_payslip(osv.osv):
                         'register_id': rule.register_id.id,
                         'total': amount,
                         'employee_id': contract.employee_id.id,
+                        'quantity': rule.quantity,
                     }
                 else:
                     #blacklist this rule and its children
                     blacklist += [id for id, seq in self.pool.get('hr.salary.rule')._recursive_search_of_rules(cr, uid, [rule], context=context)]
+
         result = [value for code, value in result_dict.items()]
         return result
 
@@ -640,6 +643,7 @@ class hr_salary_rule(osv.osv):
         'name':fields.char('Name', size=256, required=True, readonly=False),
         'code':fields.char('Code', size=64, required=True),
         'sequence': fields.integer('Sequence', required=True, help='Use to arrange calculation sequence'),
+        'quantity': fields.char('Quantity', size=256),
         'category_id':fields.many2one('hr.salary.head', 'Salary Head', required=True),
         'active':fields.boolean('Active', help="If the active field is set to false, it will allow you to hide the salary rule without removing it."),
         'appears_on_payslip': fields.boolean('Appears on Payslip', help="Used for the display of rule on payslip"),
@@ -711,6 +715,7 @@ result = rules['NET'] > heads['NET'] * 0.10''',
         'amount_select': 'fix',
         'amount_fix': 0.0,
         'amount_percentage': 0.0,
+        'quantity': 1,
      }
 
     def _recursive_search_of_rules(self, cr, uid, rule_ids, context=None):
@@ -733,10 +738,14 @@ result = rules['NET'] > heads['NET'] * 0.10''',
         """
         rule = self.browse(cr, uid, rule_id, context=context)
         if rule.amount_select == 'fix':
-            return rule.amount_fix
+            try:
+                return rule.amount_fix * eval(rule.quantity, localdict)
+            except:
+                raise osv.except_osv(_('Error'), _('Wrong quantity defined for salary rule %s (%s)')% (rule.name, rule.code))
         elif rule.amount_select == 'percentage':
             try:
-                return rule.amount_percentage * eval(rule.amount_percentage_base, localdict) / 100
+                amount = rule.amount_percentage * eval(rule.amount_percentage_base, localdict) / 100
+                return amount * eval(rule.quantity, localdict)
             except:
                 raise osv.except_osv(_('Error'), _('Wrong percentage base defined for salary rule %s (%s)')% (rule.name, rule.code))
         else:

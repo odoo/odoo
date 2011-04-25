@@ -12,6 +12,7 @@
             <field name="category_id" ref="hr_payroll.ALW"/>
             <field name="name">House Rent Allowance</field>
             <field name="sequence" eval="5"/>
+            <field name="quantity">1</field>
         </record>
 
         <record id="hr_payslip_line_convanceallowance1" model="hr.salary.rule">
@@ -21,6 +22,7 @@
             <field name="category_id" ref="hr_payroll.ALW"/>
             <field name="name">Conveyance Allowance</field>
             <field name="sequence" eval="10"/>
+             <field name="quantity">1</field>
         </record>
 
         <record id="hr_payslip_line_professionaltax1" model="hr.salary.rule">
@@ -30,6 +32,7 @@
             <field name="code">PT</field>
             <field name="category_id" ref="hr_payroll.DED"/>
             <field name="name">Professional Tax</field>
+            <field name="quantity">1</field>
         </record>
 
         <record id="hr_payslip_line_providentfund1" model="hr.salary.rule">
@@ -40,6 +43,7 @@
             <field name="code">PF</field>
             <field name="category_id" ref="hr_payroll.DED"/>
             <field name="name">Provident Fund</field>
+            <field name="quantity">1</field>
         </record>
 
         <record id="hr_salary_rule_ca_paolino" model="hr.salary.rule">
@@ -49,11 +53,13 @@
             <field name="category_id" ref="hr_payroll.ALW"/>
             <field name="name">Conveyance Allowance For Paolino</field>
             <field name="sequence" eval="15"/>
+            <field name="quantity">1</field>
         </record>
 
         <record id="hr_salary_rule_meal_voucher" model="hr.salary.rule">
-            <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = worked_days['WORK100']['number_of_days'] * 1</field>
+            <field name="amount_select">fix</field>
+            <field eval="1" name="amount_fix"/>
+            <field name="quantity">worked_days['WORK100']['number_of_days']</field>
             <field name="code">MA</field>
             <field name="category_id" ref="hr_payroll.ALW"/>
             <field name="name">Meal Voucher</field>
