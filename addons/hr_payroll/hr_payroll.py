@@ -746,7 +746,7 @@ result = rules['NET'] > heads['NET'] * 0.10''',
                 amount = rule.amount_percentage * eval(rule.amount_percentage_base, localdict) / 100
                 return amount * eval(rule.quantity, localdict)
             except:
-                raise osv.except_osv(_('Error'), _('Wrong percentage base defined for salary rule %s (%s)')% (rule.name, rule.code))
+                raise osv.except_osv(_('Error'), _('Wrong percentage base/quantity defined for salary rule %s (%s)')% (rule.name, rule.code))
         else:
             try:
                 eval(rule.amount_python_compute, localdict, mode='exec', nocopy=True)
