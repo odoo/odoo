@@ -1085,24 +1085,15 @@ class account_move_line(osv.osv):
         if context is None:
             context = {}
         move_obj = self.pool.get('account.move')
-        analytic_obj = self.pool.get('account.analytic.line')
         self._update_check(cr, uid, ids, context)
         result = False
         move_ids = set()
-        analytic_ids = set()
-        move_line_ids = set()
         for line in self.browse(cr, uid, ids, context=context):
             move_ids.add(line.move_id.id)
-            move_line_ids.add(line.id)
-            for analytic in line.analytic_lines:
-                analytic_ids.add(analytic.id)
-
-        analytic_ids = list(analytic_ids)
+            context['journal_id'] = line.journal_id.id
+            context['period_id'] = line.period_id.id
+            result = super(account_move_line, self).unlink(cr, uid, [line.id], context=context)
         move_ids = list(move_ids)
-
-        if analytic_ids:
-            analytic_obj.unlink(cr,uid, analytic_ids, context=context)
-        result = super(account_move_line, self).unlink(cr, uid, list(move_line_ids), context=context)
         if check and move_ids:
             move_obj.validate(cr, uid, move_ids, context=context)
         return result
