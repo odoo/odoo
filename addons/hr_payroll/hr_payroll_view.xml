@@ -135,7 +135,7 @@
             <field name="model">hr.payslip.line</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Salary Structure" editable="bottom">
+                <tree string="Salary Structure" editable="bottom" colors="blue:total == 0">
                     <field name="category_id"/>
                     <field name="employee_id" invisible="1"/>
                     <field name="sequence" groups="base.group_extended"/>
@@ -242,7 +242,7 @@
                     <notebook colspan="4">
                         <page string="Salary Computation" >
                             <field name="line_ids" colspan="4" nolabel="1">
-                                <tree string="Salary Structure" editable="bottom">
+                                <tree string="Salary Structure" editable="bottom" colors="blue:total == 0">
                                     <field name="name"/>
                                     <field name="code"/>
                                     <field name="category_id"/>
