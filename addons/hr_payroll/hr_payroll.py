@@ -500,7 +500,6 @@ class hr_payslip(osv.osv):
             for rule in self.pool.get('hr.salary.rule').browse(cr, uid, sorted_rule_ids, context=context):
                 key = rule.code + '-' + str(contract.id)
                 localdict['result'] = None
-                localdict.update({'quantity': rule.quantity or None})
                 #check if the rule can be applied
                 if self.pool.get('hr.salary.rule').satisfy_condition(cr, uid, rule.id, localdict, context=context) and rule.id not in blacklist:
                     #compute the amount of the rule
@@ -643,7 +642,7 @@ class hr_salary_rule(osv.osv):
         'name':fields.char('Name', size=256, required=True, readonly=False),
         'code':fields.char('Code', size=64, required=True),
         'sequence': fields.integer('Sequence', required=True, help='Use to arrange calculation sequence'),
-        'quantity': fields.char('Quantity', size=256),
+        'quantity': fields.char('Quantity', size=256, help="It is used in computation for percentage and fixed amount.For e.g. A rule for Meal Voucher having fixed amount of 1€ can have its quantity defined in expression like worked_days['WORK100']['number_of_days']."),
         'category_id':fields.many2one('hr.salary.head', 'Salary Head', required=True),
         'active':fields.boolean('Active', help="If the active field is set to false, it will allow you to hide the salary rule without removing it."),
         'appears_on_payslip': fields.boolean('Appears on Payslip', help="Used for the display of rule on payslip"),
@@ -715,7 +714,7 @@ result = rules['NET'] > heads['NET'] * 0.10''',
         'amount_select': 'fix',
         'amount_fix': 0.0,
         'amount_percentage': 0.0,
-        'quantity': 1,
+        'quantity': '1',
      }
 
     def _recursive_search_of_rules(self, cr, uid, rule_ids, context=None):
