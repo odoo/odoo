@@ -641,7 +641,20 @@ def get_bug_priority(sugar_obj, cr, uid, val,context=None):
             'Low': '4'
         },}
     priority = priority_dict['priority'].get(val, '')
-    return priority    
+    return priority  
+
+def get_claim_priority(sugar_obj, cr, uid, val,context=None):
+    if not context:
+        context = {}
+    priority = False
+    priority_dict = {'priority': #field in the sugarcrm database
+        { #Mapping of sugarcrm priority : openerp claims priority
+            'High': '2',
+            'Medium': '3',
+            'Low': '4'
+        },}
+    priority = priority_dict['priority'].get(val, '')
+    return priority   
 
 def get_bug_state(sugar_obj, cr, uid, val,context=None):
     if not context:
@@ -654,6 +667,22 @@ def get_bug_state(sugar_obj, cr, uid, val,context=None):
             'Closed': 'done',
             'Pending': 'pending',
             'Rejected': 'cancel',
+        },}
+    state = state_dict['status'].get(val, '')
+    return state
+
+def get_claim_state(sugar_obj, cr, uid, val,context=None):
+    if not context:
+        context = {}
+    state = False
+    state_dict = {'status': #field in the sugarcrm database
+        { #Mapping of sugarcrm status : openerp claim state
+            'New' : 'draft',
+            'Assigned':'open',
+            'Closed': 'done',
+            'Pending Input': 'pending',
+            'Rejected': 'cancel',
+            'Duplicate': 'draft',
         },}
     state = state_dict['status'].get(val, '')
     return state
@@ -671,6 +700,57 @@ def get_issue_related_project(sugar_obj,cr,uid, PortType, sessionid, val, contex
             model_id = model_obj.browse(cr, uid, model_ids)[0].res_id
             project_id = project_obj.browse(cr, uid, model_id).id
     return project_id     
+
+def get_acc_contact_claim(sugar_obj, cr, uid, val, context=None):
+    if not context:
+        context = {}
+    partner_id = False    
+    partner_address_id = False
+    partner_phone = False
+    partner_email = False
+    model_obj = sugar_obj.pool.get('ir.model.data')
+    address_obj = sugar_obj.pool.get('res.partner.address')
+    model_ids = model_obj.search(cr, uid, [('name', '=', val.get('account_id')), ('model', '=', 'res.partner')])
+    if model_ids:
+        model = model_obj.browse(cr, uid, model_ids)[0]
+        partner_id = model.res_id
+        address_ids = address_obj.search(cr, uid, [('partner_id', '=', partner_id)])
+        if address_ids:
+            address_id = address_obj.browse(cr, uid, address_ids[0])
+            partner_address_id = address_id.id
+            partner_phone = address_id.phone
+            partner_mobile = address_id.email
+    return partner_id, partner_address_id, partner_phone,partner_email
+
+def import_claims(sugar_obj, cr, uid, context=None):
+    if not context:
+        context = {}
+    map_claim = {'id' : 'id',
+                    'name': 'name',
+                    'date': 'date_entered',
+                    'user_id/id': 'assigned_user_id',
+                    'priority':'priority',
+                    'partner_id/.id': 'partner_id/.id',
+                    'partner_address_id/.id': 'partner_address_id/.id',
+                    'partner_phone': 'partner_phone',
+                    'partner_mobile': 'partner_email',                    
+                    'description': 'description',
+                    'state': 'state',
+    }
+    claim_obj = sugar_obj.pool.get('crm.claim')
+    PortType, sessionid = sugar.login(context.get('username', ''), context.get('password', ''), context.get('url',''))
+    sugar_data = sugar.search(PortType, sessionid, 'Cases')
+    for val in sugar_data:
+        partner_id, partner_address_id, partner_phone,partner_email = get_acc_contact_claim(sugar_obj, cr, uid, val, context)
+        val['partner_id/.id'] = partner_id
+        val['partner_address_id/.id'] = partner_address_id
+        val['partner_phone'] = partner_phone
+        val['email_from'] = partner_email
+        val['priority'] = get_claim_priority(sugar_obj, cr, uid, val.get('priority'),context)
+        val['state'] = get_claim_state(sugar_obj, cr, uid, val.get('status'),context)
+        fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_claim)
+        claim_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', noupdate=True, context=context)
+    return True    
 
 def import_bug(sugar_obj, cr, uid, context=None):
     if not context:
@@ -1038,7 +1118,11 @@ MAP_FIELDS = {'Opportunities':  #Object Mapping name
               'Calls': 
                     {'dependencies' : ['Users', 'Accounts', 'Contacts', 'Leads'],
                      'process' : import_calls,
-                    },                        
+                    }, 
+              'Claims': 
+                    {'dependencies' : ['Users', 'Accounts', 'Contacts', 'Leads'],
+                     'process' : import_claims,
+                    },
               'Employees': 
                     {'dependencies' : ['Resources'],
                      'process' : import_employees,
@@ -1082,6 +1166,7 @@ class import_sugarcrm(osv.osv):
         'employee': fields.boolean('Employee', help="If Employees is checked, SugarCRM Employees data imported in OpenERP employees form"),
         'meeting': fields.boolean('Meetings', help="If Meetings is checked, SugarCRM Meetings data imported in OpenERP meetings form"),
         'call': fields.boolean('Calls', help="If Calls is checked, SugarCRM Calls data imported in OpenERP phonecalls form"),
+        'claim': fields.boolean('Claims', help="If Claims is checked, SugarCRM Claims data imported in OpenERP Claims form"),
         'email': fields.boolean('Emails', help="If Emails is checked, SugarCRM Emails data imported in OpenERP Emails form"),
         'project': fields.boolean('Projects', help="If Projects is checked, SugarCRM Projects data imported in OpenERP Projects form"),
         'project_task': fields.boolean('Project Tasks', help="If Project Tasks is checked, SugarCRM Project Tasks data imported in OpenERP Project Tasks form"),
@@ -1092,8 +1177,7 @@ class import_sugarcrm(osv.osv):
         'username': fields.char('User Name', size=64),
         'password': fields.char('Password', size=24),
     }
-    _defaults = {
-       'lead': True,
+    _defaults = {#to be set to true, but easier for debugging
        'opportunity': True,
        'user' : True,
        'contact' : True,
@@ -1101,7 +1185,8 @@ class import_sugarcrm(osv.osv):
         'employee' : True,
         'meeting' : True,
         'task' : True,
-        'call' : True,    
+        'call' : True,
+        'claim' : True,    
         'email' : True, 
         'project' : True,   
         'project_task': True,     
@@ -1131,6 +1216,8 @@ class import_sugarcrm(osv.osv):
                 key_list.append('Tasks')
             if current.call:
                 key_list.append('Calls')
+            if current.claim:
+                key_list.append('Claims')                
             if current.email:
                 key_list.append('Emails') 
             if current.project:
