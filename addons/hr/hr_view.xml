@@ -4,7 +4,8 @@
 
         <menuitem id="menu_hr_root" icon="terp-hr" name="Human Resources" sequence="15"
             web_icon="images/hr.png"
-            web_icon_hover="images/hr-hover.png"/>
+            web_icon_hover="images/hr-hover.png"
+            groups="base.group_hr_manager,base.group_hr_user,base.group_user"/>
         <menuitem id="menu_hr_main" parent="menu_hr_root" name="Human Resources" sequence="0"/>
         <menuitem id="menu_hr_configuration" name="Configuration" parent="hr.menu_hr_root" groups="base.group_hr_manager" sequence="50"/>
         <menuitem id="menu_hr_management" name="Human Resources" parent="hr.menu_hr_configuration" sequence="1"/>
@@ -320,7 +321,7 @@
             <field eval="True" name="object"/>
         </record>
 
-        <menuitem action="open_view_categ_tree" 
+        <menuitem action="open_view_categ_tree"
             id="menu_view_employee_category_tree" parent="hr.menu_view_employee_category_form"/>
 
         <record id="view_hr_job_form" model="ir.ui.view">
