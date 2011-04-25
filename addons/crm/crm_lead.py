@@ -98,6 +98,27 @@ class crm_lead(crm_case, osv.osv):
                 res[lead.id][field] = abs(int(duration))
         return res
 
+    def _history_search(self, cr, uid, obj, name, args, context=None):
+        res = []
+        msg_obj = self.pool.get('email.message')
+        message_ids = msg_obj.search(cr, uid, [('history','=',True), ('subject', args[0][1], args[0][2])], context=context)
+        lead_ids = self.search(cr, uid, [('message_ids', 'in', message_ids)], context=context)
+
+        if lead_ids:
+            return [('id', 'in', lead_ids)]
+        else:
+            return [('id', '=', '0')]
+
+    def _get_email_subject(self, cr, uid, ids, fields, args, context=None):
+        res = {}
+        for obj in self.browse(cr, uid, ids, context=context):
+            res[obj.id] = ''
+            for msg in obj.message_ids:
+                if msg.history:
+                    res[obj.id] = msg.subject
+                    break
+        return res
+
     _columns = {
         # Overridden from res.partner.address:
         'partner_id': fields.many2one('res.partner', 'Partner', ondelete='set null',
@@ -149,6 +170,7 @@ class crm_lead(crm_case, osv.osv):
                                   \nWhen the case is over, the state is set to \'Done\'.\
                                   \nIf the case needs to be reviewed then the state is set to \'Pending\'.'),
         'message_ids': fields.one2many('email.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
+        'subjects': fields.function(_get_email_subject, fnct_search=_history_search, string='Subject of Email', method=True, type='char', size=64),
     }
 
 
@@ -289,17 +311,6 @@ class crm_lead(crm_case, osv.osv):
                 self.log(cr, uid, case.id, message)
         return super(crm_lead,self).write(cr, uid, ids, vals, context)
 
-    def stage_historize(self, cr, uid, ids, stage, context=None):
-        stage_obj = self.pool.get('crm.case.stage').browse(cr, uid, stage, context=context)
-        self.history(cr, uid, ids, _('Stage'), details=stage_obj.name)
-        for case in self.browse(cr, uid, ids, context=context):
-            if case.type == 'lead':
-                message = _("The stage of lead '%s' has been changed to '%s'.") % (case.name, stage_obj.name)
-            elif case.type == 'opportunity':
-                message = _("The stage of opportunity '%s' has been changed to '%s'.") % (case.name, stage_obj.name)
-            self.log(cr, uid, case.id, message)
-        return True
-
     def stage_next(self, cr, uid, ids, context=None):
         stage = super(crm_lead, self).stage_next(cr, uid, ids, context=context)
         if stage:
@@ -348,7 +359,22 @@ class crm_lead(crm_case, osv.osv):
         if res:
             vals.update(res)
 
-        return self.create(cr, uid, vals, context)
+        res_id = self.create(cr, uid, vals, context)
+
+        attachments = msg.get('attachments', {})
+        self.history(cr, uid, [res_id], _('receive'), history=True,
+                            subject = msg.get('subject'),
+                            email = msg.get('to'),
+                            details = msg.get('body'),
+                            email_from = msg.get('from'),
+                            email_cc = msg.get('cc'),
+                            message_id = msg.get('message-id'),
+                            references = msg.get('references', False) or msg.get('in-reply-to', False),
+                            attach = attachments,
+                            email_date = msg.get('date'),
+                            context = context)
+
+        return res_id
 
     def message_update(self, cr, uid, ids, msg, vals={}, default_act='pending', context=None):
         """
@@ -385,6 +411,19 @@ class crm_lead(crm_case, osv.osv):
             if case.state in CRM_LEAD_PENDING_STATES:
                 values.update(state=crm.AVAILABLE_STATES[1][0]) #re-open
             res = self.write(cr, uid, [case.id], values, context=context)
+
+        attachments = msg.get('attachments', {})
+        self.history(cr, uid, ids, _('receive'), history=True,
+                            subject = msg.get('subject'),
+                            email = msg.get('to'),
+                            details = msg.get('body'),
+                            email_from = msg.get('from'),
+                            email_cc = msg.get('cc'),
+                            message_id = msg.get('message-id'),
+                            references = msg.get('references', False) or msg.get('in-reply-to', False),
+                            attach = attachments,
+                            email_date = msg.get('date'),
+                            context = context)
         return res
 
     def on_change_optin(self, cr, uid, ids, optin):

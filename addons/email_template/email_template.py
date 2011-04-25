@@ -45,8 +45,7 @@ class email_template(osv.osv):
         "Return Template Object"
         if context is None:
             context = {}
-        if not template_id:
-            template_id = context.get('template_id', False)
+        
         if not template_id:
             return False
 
@@ -65,19 +64,17 @@ class email_template(osv.osv):
             mod_name = self.pool.get('ir.model').browse(cr, uid, model_id, context).model
         return {'value':{'model':mod_name}}
 
+    def _lang_get(self, cr, uid, context={}):
+        obj = self.pool.get('res.lang')
+        ids = obj.search(cr, uid, [], context=context)
+        res = obj.read(cr, uid, ids, ['code', 'name'], context)
+        return [(r['code'], r['name']) for r in res] + [('','')]
+
     _columns = {
         'name': fields.char('Name', size=250),
         'model_id':fields.many2one('ir.model', 'Resource'),
         'model': fields.related('model_id', 'model', string='Model', type="char", size=128, store=True, readonly=True),
-        'track_campaign_item':fields.boolean('Resource Tracking',
-                                help="Enable this is you wish to include a special \
-tracking marker in outgoing emails so you can identify replies and link \
-them back to the corresponding resource record. \
-This is useful for CRM leads for example"),
-        'lang':fields.char(
-                   'Language',
-                   size=250,
-                   help="The default language for the email."
+        'lang': fields.selection(_lang_get, 'Language', size=5, help="The default language for the email."
                    " Placeholders can be used here. "
                    "eg. ${object.partner_id.lang}"),
         'subject':fields.char(
@@ -86,14 +83,6 @@ This is useful for CRM leads for example"),
                   help="The subject of email."
                   " Placeholders can be used here.",
                   translate=True),
-#        'description':fields.text(
-#                    'Standard Body (Text)',
-#                    help="The text version of the mail",
-#                    translate=True),
-#        'body_html':fields.text(
-#                    'Body (Text-Web Client Only)',
-#                    help="The text version of the mail",
-#                    translate=True),
         'user_signature':fields.boolean(
                   'Signature',
                   help="the signature from the User details"
@@ -157,7 +146,6 @@ This is useful for CRM leads for example"),
         'email_to': fields.char('To', size=256, help="Email Recipients. Placeholders can be used here."),
         'email_cc': fields.char('Cc', size=256, help="Carbon Copy Email Recipients. Placeholders can be used here."),
         'email_bcc': fields.char('Bcc', size=256, help="Blind Carbon Copy Email Recipients. Placeholders can be used here."),
-        'message_id': fields.char('Message Id', size=1024, select=1, help="Message Id on Email. Placeholders can be used here."),
         'reply_to':fields.char('Reply-To', size=250, help="Placeholders can be used here."),
         'body': fields.text('Description', translate=True, help="Placeholders can be used here."),
         'body_html': fields.text('HTML', help="Contains HTML version of email. Placeholders can be used here."),
@@ -183,7 +171,7 @@ This is useful for CRM leads for example"),
                  'res_model': 'email.compose.message',
                  'src_model': src_obj,
                  'view_type': 'form',
-                 'context': "{'email_model':'%s', 'email_res_id': active_id,'template_id':'%d','src_rec_id':active_id,'src_rec_ids':active_ids}" % (src_obj, template.id),
+                 'context': "{'mass_mail':True}",
                  'view_mode':'form,tree',
                  'view_id': res_id,
                  'target': 'new',
@@ -217,15 +205,11 @@ This is useful for CRM leads for example"),
         return super(email_template, self).unlink(cr, uid, ids, context=context)
 
     def copy(self, cr, uid, id, default=None, context=None):
+        template = self.browse(cr, uid, id, context=context)
         if default is None:
             default = {}
         default = default.copy()
-        old = self.read(cr, uid, id, ['name'], context=context)
-        new_name = _("Copy of template %s") % old.get('name', 'No Name')
-        check = self.search(cr, uid, [('name', '=', new_name)], context=context)
-        if check:
-            new_name = new_name + '_' + random.choice('abcdefghij') + random.choice('lmnopqrs') + random.choice('tuvwzyz')
-        default.update({'name':new_name})
+        default['name'] = template.name or '' + '(copy)'
         return super(email_template, self).copy(cr, uid, id, default, context)
 
     def build_expression(self, field_name, sub_field_name, null_value):
@@ -355,57 +339,53 @@ This is useful for CRM leads for example"),
         """
         if context is None:
             context = {}
-        smtp_pool = self.pool.get('ir.mail_server')
-        email_message_pool = self.pool.get('email.message')
+        values = {
+                  'subject': False,
+                  'body': False,
+                  'email_to': False,
+                  'email_cc': False,
+                  'email_bcc': False,
+                  'reply_to': False,
+                  'auto_delete': False,
+                  'model': False,
+                  'res_id': False,
+                  'smtp_server_id': False,
+                  'attachment': False,
+                  'attachment_ids': False,
+        }
+        if not template_id:
+            return values
+
         report_xml_pool = self.pool.get('ir.actions.report.xml')
         template = self.get_email_template(cr, uid, template_id, record_id, context)
-        smtp_server_id = context.get('smtp_server_id', False)
-        if not smtp_server_id and template.smtp_server_id:
-            smtp_server_id = template.smtp_server_id.id
-        else:
-            smtp_ids = smtp_pool.search(cr, uid, [])
-            smtp_server_id = smtp_ids and smtp_ids[0]
-        smtp_server = smtp_pool.browse(cr, uid, smtp_server_id, context=context)
-        # determine name of sender, either it is specified in email_id
+        def _get_template_value(field):
+            if context.get('mass_mail',False): # Mass Mail: Gets original template values for multiple email change
+                return getattr(template, field)
+            else:
+                return self.get_template_value(cr, uid, getattr(template, field), template.model, record_id, context=context)
 
-        email_id = smtp_server.email_id.strip()
-        email_from = re.findall(r'([^ ,<@]+@[^> ,]+)', email_id)[0]
-        if email_from != email_id:
-            email_from = smtp_server.email_id
-        else:
-            email_from = tools.ustr(smtp_server.name) + "<" + tools.ustr(email_id) + ">"
-
-        model = template.model_id.model
-        values = {
-            'email_from': email_from,
-            'email_to': self.get_template_value(cr, uid, template.email_to, model, record_id, context),
-            'email_cc': self.get_template_value(cr, uid, template.email_cc, model, record_id, context),
-            'email_bcc': self.get_template_value(cr, uid, template.email_bcc, model, record_id, context),
-            'reply_to': self.get_template_value(cr, uid, template.reply_to, model, record_id, context),
-            'subject': self.get_template_value(cr, uid, template.subject, model, record_id, context),
-            'body': self.get_template_value(cr, uid, template.description, model, record_id, context),
-            'auto_delete': self.get_template_value(cr, uid, template.auto_delete, model, record_id, context),
-            #'body_html': self.get_template_value(cr, uid, template.body_html, model, record_id, context),
-        }
-
-        if template.message_id:
-            # use provided message_id with placeholders
-            values.update({'message_id': self.get_template_value(cr, uid, template.message_id, model, record_id, context)})
-
-        elif template['track_campaign_item']:
-            # get appropriate message-id
-            values.update({'message_id': tools.generate_tracking_message_id(record_id)})
+        body = _get_template_value('body')
 
         #Use signatures if allowed
         if template.user_signature:
-            sign = self.pool.get('res.users').read(cr, uid, uid, ['signature'], context)['signature']
-            if values['description']:
-                values['description'] += '\n\n' + sign
-            #if values['body_html']:
-            #    values['body_html'] += sign
+            signature = self.pool.get('res.users').browse(cr, uid, uid, context).signature
+            body += '\n' + signature
 
-        attachment = []
+        values = {
+            'smtp_server_id' : template.smtp_server_id.id,
+            'body' : body,
+            'email_to' : _get_template_value('email_to') or False,
+            'email_cc' : _get_template_value('email_cc') or False,
+            'email_bcc' : _get_template_value('email_bcc') or False,
+            'reply_to' : _get_template_value('reply_to') or False,
+            'subject' : _get_template_value('subject') or False,
+            'auto_delete': template.auto_delete,
+            'model' : template.model or False,
+            'res_id' : record_id or False,
+            #'body_html': self.get_template_value(cr, uid, template.body_html, model, record_id, context),
+        }
 
+        attachment = {}
         # Add report as a Document
         if template.report_template:
             report_name = template.report_name
@@ -423,22 +403,14 @@ This is useful for CRM leads for example"),
             if not report_name:
                 report_name = reportname
             report_name = report_name + "." + format
-            attachment.append((report_name, result))
-
+            attachment[report_name] = result
 
         # Add document attachments
         for attach in template.attachment_ids:
             #attach = attahcment_obj.browse(cr, uid, attachment_id, context)
-            attachment.append((attach.datas_fname, attach.datas))
-
-        #Send emails
-        context.update({'notemplate':True})
-        email_id = email_message_pool.schedule_with_attach(cr, uid, values.get('email_from'), values.get('email_to'), values.get('name'),
-                    values.get('description'), model=model, email_cc=values.get('email_cc'), email_bcc=values.get('email_bcc'),
-                    reply_to=values.get('reply_to'), attach=attachment, message_id=values.get('message_id'), openobject_id=record_id,
-                    debug=True, subtype='plain', x_headers={}, priority='3', smtp_server_id=smtp_server.id, auto_delete=values.get('auto_delete'), context=context)
-        email_message_pool.write(cr, uid, email_id, {'template_id': context.get('template_id',template.id)})
-        return email_id
+            attachment[attach.datas_fname] = attach.datas
+        values['attachment'] = attachment
+        return values
 
 email_template()
 

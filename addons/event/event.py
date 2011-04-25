@@ -27,7 +27,6 @@ from tools.translate import _
 import decimal_precision as dp
 from crm import wizard
 
-wizard.email_compose_message.email_model.append('event.registration')
 
 class event_type(osv.osv):
     """ Event Type """
@@ -548,10 +547,6 @@ class event_registration(osv.osv):
                     body = regestration.event_id.mail_confirm
             if subject or body:
                 email_message_obj.schedule_with_attach(cr, uid, src, email_to, subject, body, model='event.registration', email_cc=email_cc, openobject_id=regestration.id)
-                self.history(cr, uid, [regestration], subject, history = True, \
-                        email=email_to, details=body, \
-                        subject=subject, email_from=src, \
-                        email_cc=', '.join(email_cc))
 
         return True
 

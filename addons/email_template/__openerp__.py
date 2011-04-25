@@ -42,7 +42,6 @@ for leads, the action will be added to the right side panel of the Lead form.
     "update_xml": [
         'wizard/email_template_preview_view.xml',
         'email_template_view.xml',
-        'wizard/email_template_send_wizard_view.xml',
         'wizard/email_compose_message_view.xml',
         'security/ir.model.access.csv'
     ],
