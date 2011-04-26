@@ -89,8 +89,9 @@ class email_compose_message(osv.osv_memory):
         model_pool = self.pool.get('ir.model')
         for record in self.browse(cr, uid, ids, context=context):
             model = model_pool.search(cr, uid, [('model','=', record.model)])[0]
+            model_name = model_pool.browse(cr, uid, model, context=context).name
             values = {
-                'name': record.model,
+                'name': model_name,
                 'email_from': record.email_from or False,
                 'subject': record.subject or False,
                 'body': record.body or False,
