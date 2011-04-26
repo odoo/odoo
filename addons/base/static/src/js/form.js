@@ -902,32 +902,46 @@ openerp.base.form.FieldMany2Many = openerp.base.form.Field.extend({
         this._super.apply(this, arguments);
         this.dataset = new openerp.base.DataSetMany2Many(this.session, this.field.relation);
         this.list_view = new openerp.base.form.Many2ManyListView(undefined, this.view.session,
-                this.list_id, this.dataset, false, {'selected': false, 'addable': null, 'deletable': false});
+                this.list_id, this.dataset, false, {'selected': false, 'addable': 'Add'});
+        var self = this;
+        this.list_view.do_delete.add_last(function() {
+            self.on_ui_change();
+        });
         this.list_view.start();
     },
     set_value: function(value) {
         if (value != false) {
-            // this is not correct behavior, need to change once list view can work with
-            // static datasets
-            this.dataset.domain = [["id","in",value]];
-            /*this.dataset.ids = value;
-            this.dataset.count = value.length;*/
+            this.dataset.ids = value;
+            this.dataset.count = value.length;
             this.list_view.do_reload();
         }
+    },
+    get_value: function() {
+        return [[6,false,this.dataset.ids]];
     }
 });
 
 openerp.base.form.Many2ManyListView = openerp.base.ListView.extend({
     do_delete: function (e) {
-        /*
         e.stopImmediatePropagation();
         var ids = [this.rows[$(e.currentTarget).closest('tr').prevAll().length].data.id.value];
         this.dataset.ids = _.without.apply(null, [this.dataset.ids].concat(ids));
         this.dataset.count = this.dataset.ids.length;
         // there may be a faster way
         this.do_reload();
-        */
-    }
+    },
+    do_reload: function () {
+        /* Dear xmo, according to your comments, this method's implementation in list view seems
+         * to be a little bit bullshit.
+         * I assume the list view will be changed later, so I hope it will support static datasets.
+         */
+        return this.rpc('/base/listview/fill', {
+            'model': this.dataset.model,
+            'id': this.view_id,
+            'domain': [["id", "in", this.dataset.ids]],
+            'context': this.dataset.context
+        }, this.do_fill_table);
+    },
 });
 
 openerp.base.form.FieldReference = openerp.base.form.Field.extend({
