@@ -899,7 +899,6 @@ openerp.base.form.FieldMany2Many = openerp.base.form.Field.extend({
         this.list_id = _.uniqueId("many2many");
     },
     start: function() {
-        debugger;
         this._super.apply(this, arguments);
         this.dataset = new openerp.base.DataSetSearch(this.session, this.field.relation);
         this.list_view = new openerp.base.ListView(undefined, this.view.session,
