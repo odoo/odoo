@@ -378,7 +378,10 @@ class account_analytic_account(osv.osv):
         result = dict.fromkeys(ids, 0)
 
         for record in self.browse(cr, uid, ids, context=context):
-            result[record.id] = int(record.quantity >= record.quantity_max)
+            if record.quantity == 0.0 and record.quantity_max == 0.0:
+                result[record.id] = 0
+            else:
+                result[record.id] = int(record.quantity >= record.quantity_max)
 
         return result
 
