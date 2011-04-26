@@ -152,10 +152,6 @@ class email_template(osv.osv):
         'body_html': fields.text('HTML', help="Contains HTML version of email. Placeholders can be used here."),
     }
 
-    _sql_constraints = [
-        ('name', 'unique (name)','The template name must be unique !')
-    ]
-
     def create_action(self, cr, uid, ids, context=None):
         vals = {}
         if context is None:
