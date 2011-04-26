@@ -79,6 +79,34 @@ class email_compose_message(osv.osv_memory):
             values['attachment_ids'] = att_ids
         return {'value': values}
 
+    def save_as_template(self, cr, uid, ids, context=None):
+        '''
+        create a new template record
+        '''
+        if context is None:
+            context = {}
+        template_pool = self.pool.get('email.template')
+        model_pool = self.pool.get('ir.model')
+        for record in self.browse(cr, uid, ids, context=context):
+            model = model_pool.search(cr, uid, [('model','=', record.model)])[0]
+            model_name = model_pool.browse(cr, uid, model, context=context).name
+            values = {
+                'name': model_name,
+                'email_from': record.email_from or False,
+                'subject': record.subject or False,
+                'body': record.body or False,
+                'email_to': record.email_to or False,
+                'email_cc': record.email_cc or False,
+                'email_bcc': record.email_bcc or False,
+                'reply_to': record.reply_to or False,
+                'auto_delete': record.auto_delete,
+                'model_id': model or False,
+                'smtp_server_id': record.smtp_server_id.id or False,
+                'attachment_ids': [(6, 0, [att.id for att in record.attachment_ids])]
+            }
+            template_pool.create(cr, uid, values, context=context)
+        return True
+
 email_compose_message()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

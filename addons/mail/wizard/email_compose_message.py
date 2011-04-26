@@ -175,7 +175,7 @@ class email_compose_message(osv.osv_memory):
         if context is None:
             context = {}
         def merge(match):
-            exp = str(match.group()[2:-2]).strip()
+            exp = str(match.group()[2:-1]).strip()
             result = eval(exp,
                           {
                             'user' : self.pool.get('res.users').browse(cr, uid, uid, context=context),
@@ -186,7 +186,7 @@ class email_compose_message(osv.osv_memory):
                 return str("--------")
             return tools.ustr(result)
 
-        com = re.compile('(\[\[.+?\]\])')
+        com = re.compile('(\$\{.+?\})')
         return message and com.sub(merge, message)
 
 email_compose_message()

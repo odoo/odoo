@@ -8,10 +8,15 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="mail.email_compose_message_wizard_form"/>
             <field name="arch" type="xml">
-	            <field name="model" position="after">
-	                <field name="template_id" colspan="4"
+	            <data>
+		            <xpath expr="//field[@name='model']" position="after">
+		                <field name="template_id" colspan="4"
 	                    on_change="on_change_template(template_id, context)"/>
-	            </field>
+		            </xpath>
+		            <xpath expr="//button[@string='Close']" position="after">
+		                <button icon="gtk-new" type="object" name="save_as_template" string="Save As Template"/>
+		            </xpath>
+	            </data>
             </field>
         </record>
 	</data>
