@@ -904,9 +904,7 @@ openerp.base.form.FieldMany2Many = openerp.base.form.Field.extend({
         this.list_view = new openerp.base.form.Many2ManyListView(undefined, this.view.session,
                 this.list_id, this.dataset, false, {'selected': false, 'addable': 'Add'});
         var self = this;
-        this.list_view.do_delete.add_last(function() {
-            self.on_ui_change();
-        });
+        this.list_view.m2m_field = this;
         this.list_view.start();
     },
     set_value: function(value) {
@@ -929,6 +927,8 @@ openerp.base.form.Many2ManyListView = openerp.base.ListView.extend({
         this.dataset.count = this.dataset.ids.length;
         // there may be a faster way
         this.do_reload();
+        
+        this.m2m_field.on_ui_change();
     },
     do_reload: function () {
         /* Dear xmo, according to your comments, this method's implementation in list view seems
@@ -942,6 +942,54 @@ openerp.base.form.Many2ManyListView = openerp.base.ListView.extend({
             'context': this.dataset.context
         }, this.do_fill_table);
     },
+    do_add_record: function () {
+        // TODO: need to open a popup with search view
+    },
+    on_select_row: function(event) {
+        var $target = $(event.currentTarget);
+        var row = this.rows[$target.prevAll().length];
+        var id = row.data.id.value;
+        if(! id) {
+            return;
+        }
+        var action_manager = this.m2m_field.view.session.action_manager;
+        action_manager.do_action({
+            "res_model": this.dataset.model,
+            "views":[[false,"form"]],
+            "res_id": id,
+            "type":"ir.actions.act_window",
+            "view_type":"form",
+            "view_mode":"form",
+            "target":"new"
+        });
+        /*action_manager.do_action({
+            "groups_id":[],
+            "domain":"[]",
+            "help":false,
+            "res_model":"partner.sms.send",
+            "search_view_id":false,
+            "id":75,
+            "src_model":"res.partner",
+            "views":[[false,"form"]],
+            "menus":false,
+            "display_menu_tip":true,
+            "usage":"",
+            "type":"ir.actions.act_window",
+            "string":"SMS Send",
+            "view_type":"form",
+            "view_id":false,
+            "auto_refresh":0,
+            "view_mode":"form",
+            "view_ids":[],
+            "target":"new",
+            "multi":false,
+            "name":"SMS Send",
+            "auto_search":true,
+            "filter":false,
+            "limit":0,
+            "context":"{}"
+        });*/
+    }
 });
 
 openerp.base.form.FieldReference = openerp.base.form.Field.extend({
