@@ -1296,7 +1296,7 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
                         if name == "UNTIL":
                             is_until = True
                             value = parser.parse(value)
-                            rrule_until_date = parser.parse(value.strftime("%Y-%m-%d"))
+                            rrule_until_date = parser.parse(value.strftime("%Y-%m-%d %H:%M:%S"))
                             if until_date and until_date >= rrule_until_date:
                                 until_date = rrule_until_date
                             if until_date:

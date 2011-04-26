@@ -329,6 +329,13 @@ class crm_lead(crm_case, osv.osv):
                 self.write(cr, uid, ids, data)
         return stage
 
+    def unlink(self, cr, uid, ids, context=None):
+        for lead in self.browse(cr, uid, ids, context):
+            if (not lead.section_id.allow_unlink) and (lead.state <> 'draft'):
+                raise osv.except_osv(_('Warning !'),
+                    _('You can not delete this lead. You should better cancel it.'))
+        return super(crm_lead, self).unlink(cr, uid, ids, context)
+
     def message_new(self, cr, uid, msg, context=None):
         """
         Automatically calls when new email message arrives
