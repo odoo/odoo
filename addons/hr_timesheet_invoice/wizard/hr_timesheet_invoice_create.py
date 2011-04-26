@@ -47,6 +47,21 @@ class hr_timesheet_invoice_create(osv.osv_memory):
          'name': lambda *args: 1
     }
 
+    def view_init(self, cr, uid, fields, context=None):
+        """
+        This function checks for precondition before wizard executes
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param fields: List of fields for default value
+        @param context: A standard dictionary for contextual values
+        """
+        analytic_obj = self.pool.get('account.analytic.line')
+        data = context and context.get('active_ids', [])
+        for analytic in analytic_obj.browse(cr, uid, data, context=context):
+            if analytic.invoice_id:
+                     raise osv.except_osv(_('Warning !'), _("Invoice is already linked to some of the analytic line(s)!"))
+
     def do_create(self, cr, uid, ids, context=None):
         mod_obj = self.pool.get('ir.model.data')
         analytic_account_obj = self.pool.get('account.analytic.account')

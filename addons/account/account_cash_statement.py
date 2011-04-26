@@ -320,6 +320,7 @@ class account_cash_statement(osv.osv):
         """ Changes statement state to Running.
         @return: True
         """
+        obj_seq = self.pool.get('ir.sequence')
         if context is None:
             context = {}
         statement_pool = self.pool.get('account.bank.statement')
@@ -329,15 +330,18 @@ class account_cash_statement(osv.osv):
                 raise osv.except_osv(_('Error !'), (_('User %s does not have rights to access %s journal !') % (statement.user_id.name, statement.journal_id.name)))
 
             if statement.name and statement.name == '/':
-                number = self.pool.get('ir.sequence').get(cr, uid, 'account.cash.statement')
+                if statement.journal_id.sequence_id:
+                    c = {'fiscalyear_id': statement.period_id.fiscalyear_id.id}
+                    st_number = obj_seq.get_id(cr, uid, statement.journal_id.sequence_id.id, context=c)
+                else:
+                    st_number = obj_seq.get(cr, uid, 'account.cash.statement')
                 vals.update({
-                    'name': number
+                    'name': st_number
                 })
 
             vals.update({
                 'date': time.strftime("%Y-%m-%d %H:%M:%S"),
                 'state': 'open',
-
             })
             self.write(cr, uid, [statement.id], vals, context=context)
         return True
