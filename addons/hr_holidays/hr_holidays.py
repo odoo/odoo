@@ -167,6 +167,8 @@ class hr_holidays(osv.osv):
                 result['value'] = {
                     'employee_id': ids_employee[0]
                 }
+        else:
+            result['value'] = {'employee_id': False}
         return result
 
     # TODO: can be improved using resource calendar method
