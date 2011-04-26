@@ -110,6 +110,7 @@ class payslip_report(report_sxw.rml_parse):
         res = []
         result = {}
         ids = []
+      
         for id in range(len(obj)):
             ids.append(obj[id].id)
         if ids:
@@ -124,13 +125,17 @@ class payslip_report(report_sxw.rml_parse):
             for key, value in result.iteritems():
                 heads = salary_head.browse(self.cr, self.uid, [key])
                 parents = self.get_recursive_parent(heads)
+                head_total = 0
+                for line in payslip_line.browse(self.cr, self.uid, value):
+                    head_total += line.total
                 level = 0
                 for parent in parents:
                     res.append({
                                 'salary_head': parent.name,
                                 'name': parent.name,
                                 'code': parent.code,
-                                'level': level
+                                'level': level,
+                                'total': head_total,
                     })
                     level += 1
                 lines = payslip_line.browse(self.cr, self.uid, value)

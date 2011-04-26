@@ -178,6 +178,7 @@
     <paraStyle name="P22" rightIndent="0.0" leftIndent="0.0" fontName="Helvetica" fontSize="8.0" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="P23" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="RIGHT"/>
     <paraStyle name="P24" rightIndent="0.0" leftIndent="0.0" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P25" rightIndent="0.0" leftIndent="0.0" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="Standard" fontName="Helvetica"/>
     <paraStyle name="Heading" fontName="Helvetica" fontSize="14.0" leading="17" spaceBefore="12.0" spaceAfter="6.0"/>
     <paraStyle name="Text body" fontName="Helvetica" spaceBefore="0.0" spaceAfter="6.0"/>
@@ -193,6 +194,7 @@
     <paraStyle name="terp_default_9" rightIndent="0.0" leftIndent="0.0" fontName="Helvetica" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_Bold_8" rightIndent="0.0" leftIndent="0.0" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_Bold_9" rightIndent="0.0" leftIndent="0.0" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_10" rightIndent="0.0" leftIndent="0.0" fontName="Helvetica" fontSize="8.0" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="Table Contents" fontName="Helvetica"/>
     <paraStyle name="terp_tblheader_Details" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_tblheader_Details_Right" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
@@ -229,7 +231,7 @@
           <para style="P19">Designation </para>
         </td>
         <td>
-          <para style="P6">[[ o.employee_id.contract_id and o.employee_id.contract_id.job_id.name or '' ]]</para>
+          <para style="P6">[[ o.employee_id.job_id.name or '' ]]</para>
         </td>
       </tr>
     </blockTable>
@@ -266,7 +268,7 @@
     <blockTable colWidths="63.0,205.0,89.0,181.0" style="Table5">
       <tr>
         <td>
-          <para style="P19">Slip ID</para>
+          <para style="P19">Reference</para>
         </td>
         <td>
           <para style="P6">[[ o.number or '' ]]</para>
@@ -275,7 +277,7 @@
           <para style="P19">Bank Details</para>
         </td>
         <td>
-          <para style="P6">[[ o.employee_id.otherid or '' ]]</para>
+          <para style="P6">[[ o.employee_id.bank_account_id.acc_number or '' ]]</para>
         </td>
       </tr>
     </blockTable>
@@ -370,17 +372,17 @@
           <td>
             <para style="P19">
               <font face="Helvetica">[[ h['code'] ]]</font>
-              <font face="Helvetica">[[ h.get('total', False) and ( setTag('para','para',{'style':'terp_default_8'})) or removeParentNode('font') ]]</font>
+              <font face="Helvetica">[[ h['level']!=0 and ( setTag('para','para',{'style':'terp_default_8'})) or removeParentNode('font') ]]</font>
             </para>
           </td>
           <td>
-            <para style="P20"><font face="Helvetica" color="white">[[ '..'*h['level'] ]]</font>[[ h['salary_head'] ]]<font face="Helvetica">[[ h.get('total', False) and ( setTag('para','para',{'style':'terp_default_9'})) or removeParentNode('font') ]]</font></para>
+            <para style="P20"><font face="Helvetica" color="white">[[ '..'*h['level'] ]]</font>[[ h['salary_head'] ]]<font face="Helvetica">[[ h['level']!=0 and ( setTag('para','para',{'style':'terp_default_9'})) or removeParentNode('font') ]]</font></para>
           </td>
           <td>
-            <para style="P24">[[ h['name'] ]]<font face="Helvetica">[[ h.get('total', False) and ( setTag('para','para',{'style':'terp_default_8'})) or removeParentNode('font') ]]</font></para>
+            <para style="P24">[[ h['name'] ]]<font face="Helvetica">[[ h['level']!=0 and ( setTag('para','para',{'style':'terp_default_8'})) or removeParentNode('font') ]]</font></para>
           </td>
           <td>
-            <para style="P22">[[ h['total'] ]]</para>
+            <para style="P25">[[ h['total'] ]]<font face="Helvetica">[[ h['level']!=0 and ( setTag('para','para',{'style':'terp_default_10'})) or removeParentNode('font') ]]</font></para>
           </td>
         </tr>
       </blockTable>
