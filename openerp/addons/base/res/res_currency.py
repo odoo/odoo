@@ -49,12 +49,12 @@ class res_currency(osv.osv):
     _columns = {
         # Note: 'code' column was removed as of v6.0, the 'name' should now hold the ISO code.
         'name': fields.char('Currency', size=32, required=True, help="Currency Code (ISO 4217)"),
-        'symbol': fields.char('Symbol', size=3, help="Currency sign, to be used when printing amounts"),
+        'symbol': fields.char('Symbol', size=3, help="Currency sign, to be used when printing amounts."),
         'rate': fields.function(_current_rate, method=True, string='Current Rate', digits=(12,6),
-            help='The rate of the currency to the currency of rate 1'),
+            help='The rate of the currency to the currency of rate 1.'),
         'rate_ids': fields.one2many('res.currency.rate', 'currency_id', 'Rates'),
         'accuracy': fields.integer('Computational Accuracy'),
-        'rounding': fields.float('Rounding factor', digits=(12,6)),
+        'rounding': fields.float('Rounding Factor', digits=(12,6)),
         'active': fields.boolean('Active'),
         'company_id':fields.many2one('res.company', 'Company'),
         'date': fields.date('Date'),
