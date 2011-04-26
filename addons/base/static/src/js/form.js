@@ -942,7 +942,8 @@ openerp.base.form.Many2ManyListView = openerp.base.ListView.extend({
             'context': this.dataset.context
         }, this.do_fill_table);
     },
-    do_add_record: function () {
+    do_add_record: function (e) {
+        e.stopImmediatePropagation();
         // TODO: need to open a popup with search view
     },
     on_select_row: function(event) {
