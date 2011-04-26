@@ -20,6 +20,7 @@
 ##############################################################################
 
 from osv import osv, fields
+from tools.misc import email_re
 from tools.translate import _
 from base.res.res_user import _lang_get
 
@@ -37,9 +38,6 @@ class user_wizard(osv.osv_memory):
         'name': fields.char(size=64, required=True,
             string='User Name',
             help="The new user's real name"),
-        'login': fields.char(size=64, required=True,
-            string='Login',
-            help="Used to log into the system"),
         'email': fields.char(size=64, required=True,
             string='E-mail',
             help="A welcome e-mail will be sent to the new user, "
@@ -54,6 +52,10 @@ class user_wizard(osv.osv_memory):
             help="The Portal that the new user must belong to"),
     }
     
+    _constraints = [
+        (lambda self,*args: self._check_email(*args), 'Invalid email address', ['email']),
+    ]
+
     def default_get(self, cr, uid, fields, context=None):
         """ define the default name, login, email, address_id from the active
             res.partner.address record """
@@ -65,7 +67,6 @@ class user_wizard(osv.osv_memory):
             address_obj = self.pool.get('res.partner.address')
             address = address_obj.browse(cr, uid, context['active_id'], context)
             defs['name'] = address.name
-            defs['login'] = address.email
             defs['email'] = address.email
             defs['address_id'] = address.id
             if address.partner_id and address.partner_id.lang:
@@ -73,9 +74,11 @@ class user_wizard(osv.osv_memory):
         
         return defs
 
-    def onchange_email(self, cr, uid, ids, email):
-        """ assign email on login """
-        return {'value': {'login': email}}
+    def _check_email(self, cr, uid, ids):
+        """ check syntax of email address """
+        for wizard in self.browse(cr, uid, ids):
+            if not email_re.match(wizard.email): return False
+        return True
 
 user_wizard()
 
