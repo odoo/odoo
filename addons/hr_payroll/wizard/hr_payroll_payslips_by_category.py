@@ -20,39 +20,43 @@
 ##############################################################################
 
 from osv import fields, osv
-import netsvc
+from tools.translate import _
 
-class hr_payroll_payslip_groups(osv.osv_memory):
+class hr_payslip_category(osv.osv_memory):
 
-    _name ='hr.payroll.payslip.groups'
+    _name ='hr.payslip.category'
     _columns = {
-            'employee_category': fields.many2one('hr.employee.category', 'Employee Category', required=True),
+            'category_id': fields.many2one('hr.employee.category', 'Employee Category', required=True),
     }
 
     def compute_sheet(self, cr, uid, ids, context=None):
         emp_pool = self.pool.get('hr.employee')
         slip_pool = self.pool.get('hr.payslip')
-        wf_service = netsvc.LocalService("workflow")
         if context is None:
             context = {}
         data = self.read(cr, uid, ids, context=context)[0]
-        cr.execute('SELECT DISTINCT emp_id FROM employee_category_rel WHERE category_id = %s', (data['employee_category'][0], ))
-        emp_ids = filter(None, map(lambda x:x[0], cr.fetchall()))
+        cr.execute('SELECT DISTINCT emp_id FROM employee_category_rel WHERE category_id = %s', (data['category_id'][0], ))
+        emp_ids = [x[0] for x in cr.fetchall()]
+        if not emp_ids:
+            raise osv.except_osv(_("Warning !"), _("No employee(s) found for '%s' category!") % (data['category_id'][1]))
+        slip_ids = []
         for emp in emp_pool.browse(cr, uid, emp_ids, context=context):
-            old_slips = slip_pool.search(cr, uid, [('employee_id','=', emp.id)], context=context)
+            old_slips = slip_pool.search(cr, uid, [('employee_id', '=', emp.id),('state', '=', 'draft')], context=context)
             if old_slips:
-                slip_pool.write(cr, uid, old_slips, {'payslip_group_id': context.get('active_id', False)}, context=context)
-                for sid in old_slips:
-                    wf_service.trg_validate(uid, 'hr.payslip', sid, 'compute_sheet', cr)
+                for id in context.get('active_ids'):
+                    slip_pool.write(cr, uid, old_slips, {'payslip_group_id': id}, context=context)
+                    slip_ids.extend(old_slips)
             else:
-                res = {
-                    'employee_id': emp.id,
-                    'payslip_group_id': context.get('active_id', False),
-                }
-                slip_id = slip_pool.create(cr, uid, res, context=context)
-                wf_service.trg_validate(uid, 'hr.payslip', slip_id, 'compute_sheet', cr)
+                for id in context.get('active_ids'):
+                    res = {
+                        'employee_id': emp.id,
+                        'payslip_group_id': id,
+                    }
+                    slip_id = slip_pool.create(cr, uid, res, context=context)
+                    slip_ids.append(slip_id)
+        slip_pool.compute_sheet(cr, uid, slip_ids, context=context)
         return {'type': 'ir.actions.act_window_close'}
 
-hr_payroll_payslip_groups()
+hr_payslip_category()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

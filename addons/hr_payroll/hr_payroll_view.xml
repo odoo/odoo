@@ -601,12 +601,23 @@
 
     <act_window domain="[('slip_id', '=', active_id)]" id="act_payslip_lines" name="Payslip Lines" res_model="hr.payslip.line" src_model="hr.payslip"/>
 
+    <record id="hr_payslip_category_filter" model="ir.ui.view">
+        <field name="name">hr.payslip.category.search</field>
+        <field name="model">hr.payslip.groups</field>
+        <field name="type">search</field>
+        <field name="arch" type="xml">
+            <search string="Search Payslips Group">
+                <field name="name"/>
+            </search>
+        </field>
+    </record>
+
     <record id="hr_payslip_category_tree" model="ir.ui.view">
         <field name="name">hr.payslip.category.tree</field>
         <field name="model">hr.payslip.groups</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Payslip Groups">
+            <tree string="Payslips Group">
                 <field name="name"/>
             </tree>
         </field>
@@ -617,7 +628,7 @@
         <field name="model">hr.payslip.groups</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="Payslip by Category">
+            <form string="Payslips Group">
                 <group colspan="4">
                     <field name="name"/>
                 </group>
@@ -627,10 +638,11 @@
     </record>
 
     <record id="action_hr_payslip_category_tree" model="ir.actions.act_window">
-        <field name="name">Payslips by Category</field>
+        <field name="name">Payslip Groups</field>
         <field name="res_model">hr.payslip.groups</field>
         <field name="view_type">form</field>
         <field name="view_id" ref="hr_payslip_category_tree"/>
+        <field name="search_view_id" ref="hr_payslip_category_filter"/>
     </record>
     <menuitem action="action_hr_payslip_category_tree" id="menu_hr_payslip_category" parent="menu_hr_root_payroll"/>
     </data>

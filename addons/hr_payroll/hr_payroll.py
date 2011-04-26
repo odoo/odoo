@@ -265,7 +265,7 @@ class hr_payslip(osv.osv):
         'contract_id': fields.many2one('hr.contract', 'Contract', required=False, readonly=True, states={'draft': [('readonly', False)]}),
         'details_by_salary_head': fields.function(_get_lines_salary_head, method=True, type='one2many', relation='hr.payslip.line', string='Details by Salary Head'),
         'credit_note': fields.boolean('Credit Note', help="Indicates this payslip has a refund of another"),
-        'payslip_group_id': fields.many2one('hr.payslip.groups', 'Group', readonly=True, states={'draft': [('readonly', False)]}),
+        'payslip_group_id': fields.many2one('hr.payslip.groups', 'Payslip Group', readonly=True, states={'draft': [('readonly', False)]}),
     }
     _defaults = {
         'date_from': lambda *a: time.strftime('%Y-%m-01'),
