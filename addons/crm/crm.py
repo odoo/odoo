@@ -464,15 +464,14 @@ class crm_case(object):
                 case_email = case.user_id.user_email
 
             src = case_email
-            dest = case.user_id
+            dest = case.user_id.user_email
             body = case.description or ""
+
             for message in case.message_ids:
-                if message.name not in AVAILABLE_STATES.values():
+                if message.name not in ['Draft', 'Open', 'Cancel', 'Closed', 'Pending']:
                     body = message.description
                     break
 
-            if case.message_ids:
-                body = case.message_ids[0].description or ""
             if not destination:
                 src, dest = dest, case.email_from
                 if body and case.user_id.signature:
