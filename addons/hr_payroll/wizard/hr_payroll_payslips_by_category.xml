@@ -9,7 +9,9 @@
             <field name="arch" type="xml">
                 <form string="Employee Category">
                     <group colspan="4" >
-                        <separator string="This wizard will generate payslips based on employee(s) category" colspan="4"/>
+                        <separator string="Payslips by employee category" colspan="4"/>
+                        <label colspan="4" nolabel="1" string="This wizard will generate payslips for all employee(s), who belogs to selected category" />
+                        <newline/>
                         <field name="category_id"/>
                     </group>
                     <separator string="" colspan="4" />

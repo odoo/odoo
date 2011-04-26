@@ -25,13 +25,15 @@ from tools.translate import _
 class hr_payslip_category(osv.osv_memory):
 
     _name ='hr.payslip.category'
+    _description = 'Generate payslips for all employees within given category'
     _columns = {
-            'category_id': fields.many2one('hr.employee.category', 'Employee Category', required=True),
+        'category_id': fields.many2one('hr.employee.category', 'Employee Category', required=True),
     }
 
     def compute_sheet(self, cr, uid, ids, context=None):
         emp_pool = self.pool.get('hr.employee')
         slip_pool = self.pool.get('hr.payslip')
+        slip_ids = []
         if context is None:
             context = {}
         data = self.read(cr, uid, ids, context=context)[0]
@@ -39,21 +41,12 @@ class hr_payslip_category(osv.osv_memory):
         emp_ids = [x[0] for x in cr.fetchall()]
         if not emp_ids:
             raise osv.except_osv(_("Warning !"), _("No employee(s) found for '%s' category!") % (data['category_id'][1]))
-        slip_ids = []
         for emp in emp_pool.browse(cr, uid, emp_ids, context=context):
-            old_slips = slip_pool.search(cr, uid, [('employee_id', '=', emp.id),('state', '=', 'draft')], context=context)
-            if old_slips:
-                for id in context.get('active_ids'):
-                    slip_pool.write(cr, uid, old_slips, {'payslip_group_id': id}, context=context)
-                    slip_ids.extend(old_slips)
-            else:
-                for id in context.get('active_ids'):
-                    res = {
-                        'employee_id': emp.id,
-                        'payslip_group_id': id,
-                    }
-                    slip_id = slip_pool.create(cr, uid, res, context=context)
-                    slip_ids.append(slip_id)
+            res = {
+                'employee_id': emp.id,
+                'payslip_group_id': context.get('active_id', False),
+            }
+            slip_ids.append(slip_pool.create(cr, uid, res, context=context))
         slip_pool.compute_sheet(cr, uid, slip_ids, context=context)
         return {'type': 'ir.actions.act_window_close'}
 
