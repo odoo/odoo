@@ -111,7 +111,7 @@ def import_partner_address(sugar_obj, cr, uid, context=None):
             state = get_all_states(sugar_obj,cr, uid, val.get('primary_address_state'), country_id, context)
             val['country_id.id'] =  country_id
             val['state_id.id'] =  state        
-        fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_partner_address)
+        fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_partner_address, context)
         address_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', noupdate=True, context=context)
     return True
     
@@ -154,7 +154,7 @@ def import_users(sugar_obj, cr, uid, context=None):
         department_id = get_users_department(sugar_obj, cr, uid, val.get('department'), context=context)
         val['context_department_id.id'] = department_id     
         val['context_lang'] = context.get('lang','en_US')
-        fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_user)
+        fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_user, context)
         #All data has to be imported separatly because they don't have the same field
         user_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', noupdate=True, context=context)
     return True
@@ -229,7 +229,7 @@ def get_user_address(sugar_obj, cr, uid, val, context=None):
         state_id = get_all_states(sugar_obj, cr, uid, val.get('address_state'), country_id, context)
         val['country_id'] =  country_id
         val['state_id'] =  state_id
-    fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_user_address)
+    fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_user_address, context)
     dict_val = dict(zip(fields,datas))
     if address_ids:
         address_obj.write(cr, uid, address_ids, dict_val)
@@ -259,7 +259,7 @@ def get_address_type(sugar_obj, cr, uid, val, map_partner_address, type, context
             state = get_all_states(sugar_obj, cr, uid, val.get(type_address +'_address_state'), country_id, context)
             val['country_id'] =  country_id
             val['state_id'] =  state
-        fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_partner_address)
+        fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_partner_address, context)
         #Convert To list into Dictionary(Key, val). value pair.
         dict_val = dict(zip(fields,datas))
         new_address_id = address_obj.create(cr,uid, dict_val)
@@ -311,7 +311,7 @@ def import_partners(sugar_obj, cr, uid, context=None):
         add_id = get_address(sugar_obj, cr, uid, val, context)
         val['customer'] = '1'
         val['supplier'] = '0'
-        fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_partner)
+        fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_partner, context)
         partner_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', noupdate=True, context=context)
         for address in  address_obj.browse(cr,uid,add_id):
             data_id = partner_obj.search(cr,uid,[('name','like',address.name),('website','like',val.get('website'))])
@@ -488,7 +488,7 @@ def import_documents(sugar_obj, cr, uid, context=None):
         context = {}
     map_document = {'id' : 'id', 
              'name': 'document_name',
-            'active_date': 'create_date',
+            'active_date': ['__datetime__', 'create_date'],
            'description': 'description',
            'datas': 'datas',
            'datas_fname': 'datas_fname',
@@ -500,7 +500,7 @@ def import_documents(sugar_obj, cr, uid, context=None):
         File = sugar.attachment_search(PortType, sessionid, 'DocumentRevisions', val.get('document_revision_id'))
         val['datas'] = File
         val['datas_fname'] = val.get('document_name')
-        fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_document)
+        fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_document, context)
         attach_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', noupdate=True, context=context)
     return True
 
@@ -509,8 +509,8 @@ def import_tasks(sugar_obj, cr, uid, context=None):
         context = {}
     map_task = {'id' : 'id',
                 'name': 'name',
-                'date': 'date_start',
-                'date_deadline' : 'date_due',
+                'date': ['__datetime__', 'date_start'],
+                'date_deadline' : ['__datetime__', 'date_due'],
                 'user_id/id': 'assigned_user_id',
                 'categ_id/.id': 'categ_id/.id',
                 'partner_id/.id': 'partner_id/.id',
@@ -529,8 +529,8 @@ def import_tasks(sugar_obj, cr, uid, context=None):
         val['partner_id/.id'] = partner_id
         val['partner_address_id/.id'] = partner_address_id
         val['categ_id/.id'] = categ_id
-        val['state'] = get_task_state(sugar_obj, cr, uid, val.get('status'), context=None)
-        fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_task)
+        val['state'] = get_task_state(sugar_obj, cr, uid, val.get('status'), context)
+        fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_task, context)
         meeting_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', noupdate=True, context=context)
     return True    
     
@@ -562,7 +562,7 @@ def import_meetings(sugar_obj, cr, uid, context=None):
         context = {}
     map_meeting = {'id' : 'id',
                     'name': 'name',
-                    'date': 'date_start',
+                    'date': ['__datetime__', 'date_start'],
                     'duration': ['duration_hours', 'duration_minutes'],
                     'location': 'location',
                     'alarm_id/.id': 'alarm_id/.id',
@@ -580,7 +580,7 @@ def import_meetings(sugar_obj, cr, uid, context=None):
         val['partner_address_id/.id'] = partner_address_id
         val['state'] = get_meeting_state(sugar_obj, cr, uid, val.get('status'),context)
         val['alarm_id/.id'] = get_alarm_id(sugar_obj, cr, uid, val.get('reminder_time'), context)
-        fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_meeting)
+        fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_meeting, context)
         meeting_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', noupdate=True, context=context)
         get_attendee_id(sugar_obj, cr, uid, PortType, sessionid, 'Meetings', val.get('id'), context)
     return True    
@@ -603,7 +603,7 @@ def import_calls(sugar_obj, cr, uid, context=None):
         context = {}
     map_calls = {'id' : 'id',
                     'name': 'name',
-                    'date': 'date_start',
+                    'date': ['__datetime__', 'date_start'],
                     'duration': ['duration_hours', 'duration_minutes'],
                     'user_id/id': 'assigned_user_id',
                     'partner_id/.id': 'partner_id/.id',
@@ -632,7 +632,7 @@ def import_calls(sugar_obj, cr, uid, context=None):
         val['partner_phone'] = partner_phone
         val['partner_mobile'] = partner_mobile
         val['state'] =  get_calls_state(sugar_obj, cr, uid, val.get('status'), context)  
-        fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_calls)
+        fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_calls, context)
         phonecall_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', noupdate=True, context=context)
     return True
     
@@ -646,7 +646,7 @@ def import_resources(sugar_obj, cr, uid, context=None):
     PortType, sessionid = sugar.login(context.get('username', ''), context.get('password', ''), context.get('url',''))
     sugar_data = sugar.search(PortType, sessionid, 'Employees')
     for val in sugar_data:
-        fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_resource)
+        fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_resource, context)
         resource_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', noupdate=True, context=context)
     return True    
 
@@ -735,7 +735,7 @@ def import_claims(sugar_obj, cr, uid, context=None):
         context = {}
     map_claim = {'id' : 'id',
                     'name': 'name',
-                    'date': 'date_entered',
+                    'date': ['__datetime__', 'date_entered'],
                     'user_id/id': 'assigned_user_id',
                     'priority':'priority',
                     'partner_id/.id': 'partner_id/.id',
@@ -756,7 +756,7 @@ def import_claims(sugar_obj, cr, uid, context=None):
         val['email_from'] = partner_email
         val['priority'] = get_claim_priority(sugar_obj, cr, uid, val.get('priority'),context)
         val['state'] = get_claim_state(sugar_obj, cr, uid, val.get('status'),context)
-        fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_claim)
+        fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_claim, context)
         claim_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', noupdate=True, context=context)
     return True    
 
@@ -785,7 +785,7 @@ def import_bug(sugar_obj, cr, uid, context=None):
         val['categ_id.id'] = get_category(sugar_obj, cr, uid, 'project.issue', val.get('type'))
         val['priority'] = get_bug_priority(sugar_obj, cr, uid, val.get('priority'),context)
         val['state'] = get_bug_state(sugar_obj, cr, uid, val.get('status'),context)
-        fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_resource)
+        fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_resource, context)
         issue_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', noupdate=True, context=context)
     return True    
 
@@ -831,7 +831,7 @@ def import_history(sugar_obj, cr, uid, context=None):
         context = {}
     map_attachment = {'id' : 'id',
                       'name':'name',
-                      'date':'date_entered',
+                      'date': ['__datetime__', 'date_entered'],
                       'user_id/id': 'assigned_user_id',
                       'description': ['__prettyprint__','description', 'description_html'],
                       'res_id': 'res_id',
@@ -849,7 +849,7 @@ def import_history(sugar_obj, cr, uid, context=None):
             model = model_obj.browse(cr, uid, model_ids)[0]
             val['res_id'] = model.res_id
             val['model'] = model.model
-        fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_attachment)   
+        fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_attachment, context)   
         mailgate_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', noupdate=True, context=context)
         get_attachment(sugar_obj, cr, uid, val, 'mailgate.message', File, context)
     return True       
@@ -880,7 +880,7 @@ def import_employees(sugar_obj, cr, uid, context=None):
         if resource_id:
             val['resource_id/.id'] = resource_id[0].res_id
         val['job_id/.id'] = get_job_id(sugar_obj, cr, uid, val.get('title'), context)
-        fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_employee)
+        fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_employee, context)
         employee_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', noupdate=True, context=context)
     return True
 
@@ -901,7 +901,7 @@ def import_emails(sugar_obj, cr, uid, context=None):
         context= {}
     map_emails = {'id': 'id',
     'name':'name',
-    'date':'date_sent',
+    'date':['__datetime__', 'date_sent'],
     'email_from': 'from_addr_name',
     'email_to': 'reply_to_addr',
     'email_cc': 'cc_addrs_names',
@@ -921,7 +921,7 @@ def import_emails(sugar_obj, cr, uid, context=None):
         for model in model_obj.browse(cr, uid, model_ids):
             val['res_id'] = model.res_id
             val['model'] = model.model
-        fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_emails)
+        fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_emails, context)
         mailgate_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', noupdate=True, context=context)
     return True    
     
@@ -948,8 +948,8 @@ def import_projects(sugar_obj, cr, uid, context=None):
         context = {}
     map_project = {'id': 'id',
         'name': 'name',
-        'date_start': 'estimated_start_date',
-        'date': 'estimated_end_date',
+        'date_start': ['__datetime__', 'estimated_start_date'],
+        'date': ['__datetime__', 'estimated_end_date'],
         'user_id/id': 'assigned_user_id',
         'partner_id/.id': 'partner_id/.id',
         'contact_id/.id': 'contact_id/.id', 
@@ -963,7 +963,7 @@ def import_projects(sugar_obj, cr, uid, context=None):
         val['partner_id/.id'] = partner_id
         val['contact_id/.id'] = partner_invoice_id 
         val['state'] = get_project_state(sugar_obj, cr, uid, val.get('status'),context)
-        fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_project)
+        fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_project, context)
         project_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', noupdate=True, context=context)
     return True 
 
@@ -973,8 +973,8 @@ def import_project_tasks(sugar_obj, cr, uid, context=None):
         context = {}
     map_project_task = {'id': 'id',
         'name': 'name',
-        'date_start': 'date_start',
-        'date_end': 'date_finish',
+        'date_start': ['__datetime__', 'date_start'],
+        'date_end': ['__datetime__', 'date_finish'],
         'progress': 'progress',
         'project_id/name': 'project_name',
         'planned_hours': 'planned_hours',
@@ -990,7 +990,7 @@ def import_project_tasks(sugar_obj, cr, uid, context=None):
     for val in sugar_data:
         val['state'] = get_project_task_state(sugar_obj, cr, uid, val.get('status'),context)
         val['priority'] = get_project_task_priority(sugar_obj, cr, uid, val.get('priority'),context)
-        fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_project_task)
+        fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_project_task, context)
         task_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', noupdate=True, context=context)
     return True 
     
@@ -1037,7 +1037,7 @@ def import_leads(sugar_obj, cr, uid, context=None):
         stage_id = get_lead_status(sugar_obj, cr, uid, val, context)
         val['stage_id.id'] = stage_id
         val['state'] = get_lead_state(sugar_obj, cr, uid, val,context)
-        fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_lead)
+        fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_lead, context)
         lead_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', noupdate=True, context=context)
     return True
 
@@ -1076,7 +1076,7 @@ def import_opportunities(sugar_obj, cr, uid, context=None):
         'title_action': 'next_step',
         'partner_address_id/name': 'partner_address_id/name',
         'planned_revenue': 'amount',
-        'date_deadline':'date_closed',
+        'date_deadline': ['__datetime__', 'date_closed'],
         'user_id/id' : 'assigned_user_id',
         'stage_id.id' : 'stage_id.id',
         'type' : 'type',
@@ -1098,7 +1098,7 @@ def import_opportunities(sugar_obj, cr, uid, context=None):
         val['type'] = 'opportunity'
         stage_id = get_opportunity_status(sugar_obj, cr, uid, val, context)
         val['stage_id.id'] = stage_id
-        fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_opportunity)
+        fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_opportunity, context)
         lead_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', noupdate=True, context=context)
     return True
 
