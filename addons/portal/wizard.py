@@ -19,10 +19,29 @@
 #
 ##############################################################################
 
+import logging
+import random
+
 from osv import osv, fields
-from tools.misc import email_re
+from tools.misc import email_re, email_send
 from tools.translate import _
+
 from base.res.res_user import _lang_get
+
+
+
+ROOT_UID = 1
+
+# character sets for passwords, excluding 0, O, o, 1, I, l
+_PASSU = 'ABCDEFGHIJKLMNPQRSTUVWXYZ'
+_PASSL = 'abcdefghijkmnpqrstuvwxyz'
+_PASSD = '23456789'
+
+def random_password():
+    # get 3 uppercase letters, 3 lowercase letters, 2 digits, and shuffle them
+    chars = map(random.choice, [_PASSU] * 3 + [_PASSL] * 3 + [_PASSD] * 2)
+    random.shuffle(chars)
+    return ''.join(chars)
 
 
 
@@ -54,6 +73,7 @@ class user_wizard(osv.osv_memory):
     
     _constraints = [
         (lambda self,*args: self._check_email(*args), 'Invalid email address', ['email']),
+        (lambda self,*args: self._check_exist(*args), 'User login already exists', ['email']),
     ]
 
     def default_get(self, cr, uid, fields, context=None):
@@ -79,6 +99,65 @@ class user_wizard(osv.osv_memory):
         for wizard in self.browse(cr, uid, ids):
             if not email_re.match(wizard.email): return False
         return True
+
+    def _check_exist(self, cr, uid, ids):
+        """ check whether login (email) already in use """
+        user_obj = self.pool.get('res.users')
+        for wizard in self.browse(cr, uid, ids):
+            condition = [('login', '=', wizard.email)]
+            if user_obj.search(cr, ROOT_UID, condition): return False
+        return True
+
+    def do_create(self, cr, uid, ids, context=None):
+        """ create a new user in the portal, and notify them by email """
+        # we copy the context to change the language for translating emails
+        context0 = context or {}
+        context = context0.copy()
+        
+        user = self.pool.get('res.users').browse(cr, ROOT_UID, uid, context0)
+        if not user.user_email:
+            raise osv.except_osv(_('Email required'),
+                _('You must have an email address in your User Preferences'
+                  ' to send emails.'))
+        
+        portal_obj = self.pool.get('res.portal')
+        for wizard in self.browse(cr, uid, ids, context):
+            # add a new user in wizard.portal_id
+            user_values = {
+                'name': wizard.name,
+                'login': wizard.email,
+                'password': random_password(),
+                'user_email': wizard.email,
+                'address_id': wizard.address_id.id,
+                'context_lang': wizard.lang,
+            }
+            values = {'users': [(0, 0, user_values)]}
+            portal_obj.write(cr, ROOT_UID, [wizard.portal_id.id], values, context0)
+            
+            # send email to new user (translated in language of new user)
+            context['lang'] = user_values['context_lang']
+            user_values['dbname'] = cr.dbname
+            user_values['url'] = "(missing url)"
+            
+            email_to = user_values['user_email']
+            subject = _("Your OpenERP account at %s") % user.company_id.name
+            body = _(
+                "Dear %(name)s,\n\n"
+                "You have been created an OpenERP account at %(url)s.\n\n"
+                "Your login account data is:\n"
+                "Database: %(dbname)s\n"
+                "User:     %(login)s\n"
+                "Password: %(password)s\n\n"
+                "--\n"
+                "OpenERP - Open Source Business Applications\n"
+                "http://www.openerp.com\n"
+                ) % user_values
+            res = email_send(user.user_email, [email_to], subject, body)
+            if not res:
+                logging.getLogger('res.portal.user_wizard').warning(
+                    'Failed to send email from %s to %s', user.user_email, email_to)
+
+        return {}
 
 user_wizard()
 
