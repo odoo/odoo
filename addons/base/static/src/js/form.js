@@ -900,17 +900,33 @@ openerp.base.form.FieldMany2Many = openerp.base.form.Field.extend({
     },
     start: function() {
         this._super.apply(this, arguments);
-        this.dataset = new openerp.base.DataSetSearch(this.session, this.field.relation);
-        this.list_view = new openerp.base.ListView(undefined, this.view.session,
-                this.list_id, this.dataset, false, undefined);
+        this.dataset = new openerp.base.DataSetMany2Many(this.session, this.field.relation);
+        this.list_view = new openerp.base.form.Many2ManyListView(undefined, this.view.session,
+                this.list_id, this.dataset, false, {'selected': false, 'addable': null, 'deletable': false});
         this.list_view.start();
     },
     set_value: function(value) {
         if (value != false) {
-            this.dataset.ids = value;
-            this.dataset.count = value.length;
-            this.list_view.do_update();
+            // this is not correct behavior, need to change once list view can work with
+            // static datasets
+            this.dataset.domain = [["id","in",value]];
+            /*this.dataset.ids = value;
+            this.dataset.count = value.length;*/
+            this.list_view.do_reload();
         }
+    }
+});
+
+openerp.base.form.Many2ManyListView = openerp.base.ListView.extend({
+    do_delete: function (e) {
+        /*
+        e.stopImmediatePropagation();
+        var ids = [this.rows[$(e.currentTarget).closest('tr').prevAll().length].data.id.value];
+        this.dataset.ids = _.without.apply(null, [this.dataset.ids].concat(ids));
+        this.dataset.count = this.dataset.ids.length;
+        // there may be a faster way
+        this.do_reload();
+        */
     }
 });
 
