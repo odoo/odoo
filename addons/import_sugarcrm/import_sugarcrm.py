@@ -98,7 +98,7 @@ def import_partner_address(sugar_obj, cr, uid, context=None):
             'city': 'primary_address_city',
             'country_id.id': 'country_id.id',
             'state_id.id': 'state_id.id',
-            'email': 'email1',
+            'email': 'email',
             'type': 'type'
             }
     address_obj = sugar_obj.pool.get('res.partner.address')
@@ -106,6 +106,8 @@ def import_partner_address(sugar_obj, cr, uid, context=None):
     sugar_data = sugar.search(PortType, sessionid, 'Contacts')
     for val in sugar_data:
         val['type'] = 'contact'
+        contact_emails = sugar.contact_emails_search(PortType, context.get('username', ''), context.get('password', ''), email_address=val.get('email1'))
+        val['email'] = (','.join(map(lambda x : x, contact_emails)))
         if val.get('primary_address_country'):
             country_id = get_all_countries(sugar_obj, cr, uid, val.get('primary_address_country'), context)
             state = get_all_states(sugar_obj,cr, uid, val.get('primary_address_state'), country_id, context)
@@ -488,7 +490,6 @@ def import_documents(sugar_obj, cr, uid, context=None):
         context = {}
     map_document = {'id' : 'id', 
              'name': 'document_name',
-            'active_date': ['__datetime__', 'create_date'],
            'description': 'description',
            'datas': 'datas',
            'datas_fname': 'datas_fname',
@@ -497,9 +498,9 @@ def import_documents(sugar_obj, cr, uid, context=None):
     PortType,sessionid = sugar.login(context.get('username',''), context.get('password',''), context.get('url',''))
     sugar_data = sugar.search(PortType,sessionid, 'Documents')
     for val in sugar_data:
-        File = sugar.attachment_search(PortType, sessionid, 'DocumentRevisions', val.get('document_revision_id'))
-        val['datas'] = File
-        val['datas_fname'] = val.get('document_name')
+        file, filename = sugar.attachment_search(PortType, sessionid, 'DocumentRevisions', val.get('document_revision_id'))
+        val['datas'] = file
+        val['datas_fname'] = filename
         fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_document, context)
         attach_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', noupdate=True, context=context)
     return True
@@ -825,7 +826,10 @@ def get_attachment(sugar_obj, cr, uid, val, model, File, context=None):
     message_model_ids = find_mapped_id(sugar_obj, cr, uid, model, val.get('id'), context)
     message_xml_id = model_obj.browse(cr, uid, message_model_ids)
     if message_xml_id:
-        mailgate_obj.write(cr, uid, [message_xml_id[0].res_id], {'attachment_ids': [(4, new_attachment_id)]})             
+        if val.get('model') == 'res.partner':
+            mailgate_obj.write(cr, uid, [message_xml_id[0].res_id], {'attachment_ids': [(4, new_attachment_id)], 'partner_id': val.get('res_id', False)})
+        else:    
+            mailgate_obj.write(cr, uid, [message_xml_id[0].res_id], {'attachment_ids': [(4, new_attachment_id)]})                         
     return True    
     
 def import_history(sugar_obj, cr, uid, context=None):
@@ -846,7 +850,7 @@ def import_history(sugar_obj, cr, uid, context=None):
     sugar_data = sugar.search(PortType, sessionid, 'Notes')
     for val in sugar_data:
         val['id'] = 'Notes_' + val.get('id') 
-        File = sugar.attachment_search(PortType, sessionid, 'Notes', val.get('id'))
+        File, Filename = sugar.attachment_search(PortType, sessionid, 'Notes', val.get('id'))
         model_ids = model_obj.search(cr, uid, [('name', 'like', val.get('parent_id')),('model','=', OPENERP_FIEDS_MAPS[val.get('parent_type')])])
         if model_ids:
             model = model_obj.browse(cr, uid, model_ids)[0]
@@ -915,6 +919,7 @@ def import_emails(sugar_obj, cr, uid, context=None):
     'description': ['__prettyprint__', 'description', 'description_html'],
     'res_id': 'res_id',
     'model': 'model',
+    'partner_id/.id': 'partner_id/.id'
     }
     mailgate_obj = sugar_obj.pool.get('mailgate.message')
     model_obj = sugar_obj.pool.get('ir.model.data')
@@ -924,8 +929,11 @@ def import_emails(sugar_obj, cr, uid, context=None):
         val['id'] = 'Emails_' + val.get('id') 
         model_ids = model_obj.search(cr, uid, [('name', 'like', val.get('parent_id'))])
         for model in model_obj.browse(cr, uid, model_ids):
+            if model.model == 'res.partner':
+                val['partner_id/.id'] = model.res_id
             val['res_id'] = model.res_id
             val['model'] = model.model
+            
         fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_emails, context)
         mailgate_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', noupdate=True, context=context)
     return True    
@@ -1008,7 +1016,7 @@ def import_leads(sugar_obj, cr, uid, context=None):
             'id' : 'id',
             'name': ['first_name', 'last_name'],
             'contact_name': ['first_name', 'last_name'],
-            'description': ['__prettyprint__', 'description', 'refered_by', 'lead_source', 'lead_source_description', 'website', 'status_description', 'lead_source_description', 'do_not_call'],
+            'description': ['__prettyprint__', 'description', 'refered_by', 'lead_source', 'lead_source_description', 'website', 'email2', 'status_description', 'lead_source_description', 'do_not_call'],
             'partner_name': 'account_name',
             'email_from': 'email1',
             'phone': 'phone_work',
@@ -1033,7 +1041,7 @@ def import_leads(sugar_obj, cr, uid, context=None):
     PortType, sessionid = sugar.login(context.get('username', ''), context.get('password', ''), context.get('url',''))
     sugar_data = sugar.search(PortType, sessionid, 'Leads')
     for val in sugar_data:
-        val['id'] = 'Leads_' + val.get('id') 
+        val['id'] = 'Leads_' + val.get('id')
         if val.get('do_not_call') == '0':
             val['optout'] = '1'
         if val.get('opportunity_id'):
@@ -1134,7 +1142,7 @@ MAP_FIELDS = {'Opportunities':  #Object Mapping name
               'Documents': 
                     {'dependencies' : ['Users'],
                      'process' : import_documents,
-                    },                      
+                    },
               'Meetings': 
                     {'dependencies' : ['Users', 'Tasks'],
                      'process' : import_meetings,
