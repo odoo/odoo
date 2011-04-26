@@ -20,7 +20,8 @@
 ##############################################################################
 import tools
 import pytz
-from datetime import datetime
+import time
+from datetime import datetime, timedelta, date
 from dateutil import parser
 import dateutil
 
@@ -38,17 +39,19 @@ def sugarcrm_fields_mapp(dict_sugar, openerp_dict, context=None):
         if key not in fields and dict_sugar:
             fields.append(key)
             if isinstance(val, list) and val:
-                
                 #Allow to print a bit more pretty way long list of data in the same field
                 if len(val) >= 1 and val[0] == "__prettyprint__":
                     val = val[1:]
                     data_lst.append('\n\n'.join(map(lambda x : x + ": " + dict_sugar.get(x,''), val)))
                 elif val[0] == '__datetime__':
                     val = val[1]
-                    convert_date = datetime.strptime(dict_sugar.get(val), '%Y-%m-%d %H:%M:%S')
-                    edate = convert_date.replace(tzinfo=dateutil.tz.gettz('UTC'))
-                    au_dt = au_tz.normalize(edate.astimezone(au_tz))
-                    updated_dt = datetime(*au_dt.timetuple()[:6]).strftime('%Y-%m-%d %H:%M:%S')
+                    if len(dict_sugar.get(val))<=10:
+                        updated_dt = date.fromtimestamp(time.mktime(time.strptime(dict_sugar.get(val), '%Y-%m-%d')))
+                    else:
+                        convert_date = datetime.strptime(dict_sugar.get(val), '%Y-%m-%d %H:%M:%S')
+                        edate = convert_date.replace(tzinfo=dateutil.tz.gettz('UTC'))
+                        au_dt = au_tz.normalize(edate.astimezone(au_tz))
+                        updated_dt = datetime(*au_dt.timetuple()[:6]).strftime('%Y-%m-%d %H:%M:%S')
                     data_lst.append(updated_dt)
                 else:
                     if key == 'duration':
