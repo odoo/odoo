@@ -274,10 +274,10 @@
           <para style="P6">[[ o.number or '' ]]</para>
         </td>
         <td>
-          <para style="P19">Bank Details</para>
+          <para style="P19">Bank Account</para>
         </td>
         <td>
-          <para style="P6">[[ o.employee_id.bank_account_id.acc_number or '' ]]</para>
+          <para style="P6">[[o.employee_id.bank_account_id and o.employee_id.bank_account_id.acc_number or '' ]]</para>
         </td>
       </tr>
     </blockTable>
