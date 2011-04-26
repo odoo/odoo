@@ -79,7 +79,7 @@ class email_compose_message(osv.osv_memory):
             values['attachment_ids'] = att_ids
         return {'value': values}
 
-    def save_as_new_template(self, cr, uid, ids, context=None):
+    def save_as_template(self, cr, uid, ids, context=None):
         '''
         create a new template record
         '''
@@ -88,7 +88,7 @@ class email_compose_message(osv.osv_memory):
         template_pool = self.pool.get('email.template')
         model_pool = self.pool.get('ir.model')
         for record in self.browse(cr, uid, ids, context=context):
-            model = model_pool.search(cr, uid, [('name','=', record.model)])[0]
+            model = model_pool.search(cr, uid, [('model','=', record.model)])[0]
             values = {
                 'name': record.model,
                 'email_from': record.email_from or False,
