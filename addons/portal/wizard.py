@@ -61,12 +61,12 @@ class wizard(osv.osv_memory):
         'user_ids': fields.one2many('res.portal.wizard.user', 'wizard_id',
             string='Users'),
     }
+    _defaults = {
+        'user_ids': (lambda self, *args: self._default_user_ids(*args))
+    }
 
-    def default_get(self, cr, uid, fields, context=None):
-        """ determine user configs from the active records """
-        # get existing defaults
-        defs = super(wizard, self).default_get(cr, uid, fields, context)
-        
+    def _default_user_ids(self, cr, uid, context):
+        """ determine default user_ids from the active records """
         # determine relevant res.partner.address(es) depending on context
         addresses = []
         if context.get('active_model') == 'res.partner.address':
@@ -84,19 +84,15 @@ class wizard(osv.osv_memory):
                     addresses.append(good[0] if good else p.address[0])
         
         # create user configs based on these addresses
-        defs['user_ids'] = []
-        for address in addresses:
-            user_data = {
-                'name': address.name,
-                'email': address.email,
-                'lang': address.partner_id and address.partner_id.lang,
-                'address_id': address.id,
-            }
-            defs['user_ids'].append(user_data)
-        
-        return defs
+        user_data = lambda address: {
+                        'name': address.name,
+                        'email': address.email,
+                        'lang': address.partner_id and address.partner_id.lang,
+                        'address_id': address.id,
+                    }
+        return map(user_data, addresses)
 
-    def do_create(self, cr, uid, ids, context=None):
+    def action_create(self, cr, uid, ids, context=None):
         """ create new users in portal(s), and notify them by email """
         # we copy the context to change the language for translating emails
         context0 = context or {}
