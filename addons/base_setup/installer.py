@@ -120,35 +120,27 @@ class base_setup_installer(osv.osv_memory):
     def execute(self, cr, uid, ids, context=None):
         if context is None:
              context = {}
-        modules = self.pool.get('ir.module.module')
+        module_pool = self.pool.get('ir.module.module')
         modules_selected = []
         datas = self.read(cr, uid, ids, context=context)[0]
-        key = datas.keys()
-        key.remove("id")
-        key.remove("progress")
-        name_list = []
-        for mod in key:
+        for mod in datas.keys():
+            if mod in ('id', 'progress'):
+                continue
             if datas[mod] == 1:
                 modules_selected.append(mod)
-        inst = modules.browse(
-            cr, uid,
-            modules.search(cr, uid,
-                           [('name','in',modules_selected)
-                            ],
-                           context=context),
-            context=context)
-        for i in inst:
-            if i.state == 'uninstalled':
-                sect_mod_id = i.id
-                modules.state_update(cr, uid, [sect_mod_id], 'to install', ['uninstalled'], context)
+
+        module_ids = module_pool.search(cr, uid, [('name', 'in', modules_selected)], context=context)
+        for module in module_pool.browse(cr, uid, module_ids, context=context):
+            if module.state == 'uninstalled':
+                module_pool.state_update(cr, uid, [module.id], 'to install', ['uninstalled'], context)
                 cr.commit()
                 new_db, self.pool = pooler.restart_pool(cr.dbname, update_module=True)
-            elif i.state == 'installed':
-                if modules_selected:
-                    for instl in modules_selected:
-                        cr.execute("update ir_actions_todo set state='open' from ir_model_data as data where data.res_id = ir_actions_todo.id and data.model =  'ir.actions.todo' and data.module=%s", (instl, ))
-        
-        return 
+            elif module.state == 'installed':
+                cr.execute("update ir_actions_todo set state='open' \
+                                    from ir_model_data as data where data.res_id = ir_actions_todo.id \
+                                    and ir_actions_todo.type='special'\
+                                    and data.model = 'ir.actions.todo' and data.module=%s", (module.name, ))
+        return
     
 base_setup_installer()
 
