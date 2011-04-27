@@ -118,6 +118,13 @@ openerp.base.DataSet =  openerp.base.Controller.extend( /** @lends openerp.base.
             ids: ids,
             args: args
         }, callback);
+    },
+    exec_workflow: function (id, signal, callback) {
+        return this.rpc('/base/dataset/exec_workflow', {
+            model: this.model,
+            id: id,
+            signal: signal
+        }, callback);
     }
 });
 

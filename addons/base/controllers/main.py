@@ -410,6 +410,11 @@ class DataSet(openerpweb.Controller):
         return {'result': r}
 
     @openerpweb.jsonrequest
+    def exec_workflow(self, req, model, id, signal):
+        r = req.session.exec_workflow(model, id, signal)
+        return {'result': r}
+
+    @openerpweb.jsonrequest
     def default_get(self, req, model, fields, context={}):
         m = req.session.model(model)
         r = m.default_get(fields, context)
@@ -573,19 +578,22 @@ class ListView(View):
         :param int limit: search limit, for pagination
         :returns: hell if I have any idea yet
         """
-        view = self.fields_view_get(request, model, id)
+        view = self.fields_view_get(request, model, id, toolbar=True)
 
         rows = DataSet().do_search_read(request, model,
                                         offset=offset, limit=limit,
                                         domain=domain)
         eval_context = request.session.evaluation_context(
             request.context)
-        return [
-            {'data': dict((key, {'value': value})
-                          for key, value in row.iteritems()),
-             'color': self.process_colors(view, row, eval_context)}
-            for row in rows
-        ]
+        return {
+            'view': view,
+            'records': [
+                {'data': dict((key, {'value': value})
+                              for key, value in row.iteritems()),
+                 'color': self.process_colors(view, row, eval_context)}
+                for row in rows
+            ]
+        }
 
     def process_colors(self, view, row, context):
         colors = view['arch']['attrs'].get('colors')
@@ -618,5 +626,12 @@ class Action(openerpweb.Controller):
     _cp_path = "/base/action"
 
     @openerpweb.jsonrequest
-    def load(self, req, action_id):
-        return {}
+    def load(self, req, action_id, context={}):
+        Actions = req.session.model('ir.actions.actions')
+        value = False
+        action_type = Actions.read([action_id], ['type'], context)
+        if action_type:
+            action = req.session.model(action_type[0]['type']).read([action_id], False, context)
+            if action:
+                value = action[0]
+        return {'result': value}

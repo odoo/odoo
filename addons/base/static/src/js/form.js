@@ -457,16 +457,14 @@ openerp.base.form.WidgetFrame = openerp.base.form.Widget.extend({
         }
         this.add_widget(widget);
     },
-    add_widget: function(w) {
-        if (!w.invisible) {
-            var current_row = this.table[this.table.length - 1];
-            if (current_row.length && (this.x + w.colspan) > this.columns) {
-                current_row = this.add_row();
-            }
-            current_row.push(w);
-            this.x += w.colspan;
+    add_widget: function(widget) {
+        var current_row = this.table[this.table.length - 1];
+        if (current_row.length && (this.x + widget.colspan) > this.columns) {
+            current_row = this.add_row();
         }
-        return w;
+        current_row.push(widget);
+        this.x += widget.colspan;
+        return widget;
     }
 });
 
@@ -534,7 +532,7 @@ openerp.base.form.WidgetButton = openerp.base.form.Widget.extend({
     on_confirmed: function() {
         var attrs = this.node.attrs;
         if (attrs.special) {
-            this.on_button_object({
+            this.on_button_action({
                 result : { type: 'ir.actions.act_window_close' }
             });
         } else {
@@ -542,19 +540,20 @@ openerp.base.form.WidgetButton = openerp.base.form.Widget.extend({
             var context = _.extend({}, this.view.dataset.context, attrs.context || {});
             switch(type) {
                 case 'object':
-                    return this.view.dataset.call(attrs.name, [this.view.datarecord.id], [context], this.on_button_object);
-                    break;
+                    return this.view.dataset.call(attrs.name, [this.view.datarecord.id], [context], this.on_button_action);
+                case 'action':
+                    return this.rpc('/base/action/load', { action_id: parseInt(attrs.name) }, this.on_button_action);
                 default:
-                    this.log(_.sprintf("Unsupported button type : %s", type));
+                    return this.view.dataset.exec_workflow(this.view.datarecord.id, attrs.name, this.on_button_action);
             }
         }
     },
-    on_button_object: function(r) {
-        if (r.result === false) {
-            this.log("Button object returns false");
-        } else if (r.result.constructor == Object) {
+    on_button_action: function(r) {
+        console.log("Got reesonse button", r)
+        if (r.result && r.result.constructor == Object) {
             this.session.action_manager.do_action(r.result);
         } else {
+            this.log("Button returned", r.result);
             this.view.reload();
         }
     }
@@ -911,7 +910,6 @@ openerp.base.form.FieldReference = openerp.base.form.Field.extend({
  * Registry of form widgets, called by :js:`openerp.base.FormView`
  */
 openerp.base.form.widgets = new openerp.base.Registry({
-    'hpaned': 'openerp.base.form.Hpaned',
     'group' : 'openerp.base.form.WidgetFrame',
     'notebook' : 'openerp.base.form.WidgetNotebook',
     'separator' : 'openerp.base.form.WidgetSeparator',

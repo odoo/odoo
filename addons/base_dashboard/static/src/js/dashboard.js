@@ -1,89 +1,70 @@
-openerp.base_dashboard = function(openerp) {
+openerp.base_dashboard = function(openerp){
+
 QWeb.add_template('/base_dashboard/static/src/xml/base_dashboard.xml');
-openerp.base.form.Hpaned = openerp.base.form.Widget.extend({
-   init: function(view, node) {
+
+openerp.base.form.Board = openerp.base.form.Widget.extend({
+    init: function(view, node) {
         
         this._super(view, node);
-        this.template = "Hpaned";
+        this.template = "Board";
     },
     start: function() {
         this._super.apply(this, arguments);
-        this.$element.html(QWeb.render(this.template))
+        this.$element.html(QWeb.render(this.template));  
     },
     
     render: function() {
         var self = this;
         jQuery('body').append(
-            jQuery('<div>', {'id': 'dashboard_templates'}).hide()
-        );
+            jQuery('<div>', {'id': 'dashboard_template'}).load('/base_dashboard/static/src/dashboard_template.html',self.on_loaded).hide()
+        )
         
-        $("#dashboard_templates").load("/base_dashboard/static/src/dashboard_template.html", function(result){
-	        self.render_dashboard()
-        });
     },
     
-    render_dashboard: function() {
-        var self = this;
-        var data = {"layout": "layout2","data": []}
-        var get_column = ['first', 'second', 'third'];
+    on_loaded: function() {
         var children = this.node.children;
-        
-        var action = []
-        for (child in children) {
-            action.push({})
-            var ch_widget = children[child]['children'];
-            for (ch in ch_widget) {
-                if (ch_widget[ch].tag == 'action') {
-//                    var _act = new openerp.base.form.Action(this.view, ch_widget[ch]);
-//                    action[child][ch] = _act.render();
-                    data['data'].push({
-                        "title": ch_widget[ch].attrs.string,
-                        "id": ch_widget[ch].attrs.name,
-                        "column": get_column[child],
-                        "url": "/base_dashboard/static/data.html",
-                        "open": true
-                    })
-                }
-            }
-        }
-        
+        var get_column = ['first', 'second', 'third'];
         var board = jQuery('#dashboard').dashboard({
-           layoutClass:'layout',
-           json_data: data
+            layoutClass:'layout'
         });
         board.init();
+        for(var ch = 0; ch < children.length; ch++) {
+            var ch_widgets = children[ch].children;
+            for(var chld = 0; chld < ch_widgets.length; chld++) {
+                var widget_type = ch_widgets[chld].tag;
+                var board_element = board.element.find('[id=column-'+get_column[chld]+']');
+                var widget = new (openerp.base.form.widgets.get_object(widget_type)) (this.view, ch_widgets[chld], board_element);
+                board.addWidget({
+                    'id': ch_widgets[chld].attrs.name,
+                    'title': ch_widgets[chld].attrs.string,
+                    'url': widget.start()
+                }, board_element)
+            }
+        }
     }
 });
 
 openerp.base.form.Action = openerp.base.form.Widget.extend({
-    init: function(view, node) {
-        this._super(view, node);
+    init: function(view, node, column) {
+        this._super(view, node, column);
         this.template = "Action";
     },
     start: function() {
         this._super.apply(this, arguments);
+        this.rpc('/base_dashboard/dashboard/load',{
+            node_attrs: this.node.attrs
+        },
+        this.on_load_action);
     },
     
-    render: function(){
-        return QWeb.render(this.template, {'node': this.node});
+    on_load_action: function(result) {
+        var action = result.action;
+        action_manager = new openerp.base.ActionManager(this.session, this.$element.attr('id'));
+        action_manager.start();
+        action_manager.do_action(action);
     }
-    
-});
+})
 
-openerp.base.form.Vpaned = openerp.base.form.Widget.extend({
-    init: function(view, node) {
-        this._super(view, node);
-        this.template = "Vpaned";
-    },
-    start: function() {
-        this._super.apply(this, arguments);
-    },
-    
-    render: function(){
-        return QWeb.render(this.template);
-    }
-});
-
+openerp.base.form.widgets.add('hpaned', 'openerp.base.form.Board');
+openerp.base.form.widgets.add('action', 'openerp.base.form.Action');
 }
-
-

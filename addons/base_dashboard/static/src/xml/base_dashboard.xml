@@ -1,17 +1,12 @@
 <template>
-    <t t-name="Hpaned">
-        <div>HPANED>>>>>>>>>>>>>>>>>>>>>>>>></div>
+    <t t-name="Board">
         <div id="dashboard" class="dashboard">
+            <!-- this HTML covers all layouts. The 5 different layouts are handled by setting another layout classname -->
             <div class="layout">
-                <div class="column first column-first"></div>
-    	        <div class="column second column-second"></div>
-    	        <div class="column third column-third"></div>
+              <div id="column-first" class="column first column-first"></div>
+              <div id="column-second" class="column second column-second"></div>
+              <div id="column-third" class="column third column-third"></div>
             </div>
         </div>
-    </t>
-    <t t-name="Vpaned">
-    </t>
-    <t t-name="Action">
-        <t t-esc="node.attrs.string"/>
     </t>
 </template>

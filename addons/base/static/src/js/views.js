@@ -19,7 +19,6 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
      * Supported actions: act_window
      */
     do_action: function(action) {
-        this.log(action);
         var self = this;
         // instantiate the right controllers by understanding the action
         switch (action.type) {
@@ -36,14 +35,14 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
                         // When dialog is closed with ESC key or close manually, branch to act_window_close logic
                         self.do_action({ type: 'ir.actions.act_window_close' });
                     });
-                    var viewmanager = new openerp.base.ViewManagerAction(this.session ,element_id, action, false);
+                    var viewmanager = new openerp.base.ViewManagerAction(this.session, element_id, action, false);
                     viewmanager.start();
                     this.dialog_stack.push(viewmanager);
-                } else if (action.target == "current") {
+                } else {
                     if (this.viewmanager) {
                         this.viewmanager.stop();
                     }
-                    this.viewmanager = new openerp.base.ViewManagerAction(this.session,this.element_id, action, true);
+                    this.viewmanager = new openerp.base.ViewManagerAction(this.session, this.element_id, action, true);
                     this.viewmanager.start();
                 }
                 break;
@@ -211,14 +210,17 @@ openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
         // init search view
         var searchview_id = this.action.search_view_id && this.action.search_view_id[0];
 
-        var searchview_loaded = this.setup_search_view(
-                searchview_id || false, search_defaults);
+        if (searchview_id) {
+            var searchview_loaded = this.setup_search_view(
+                    searchview_id, search_defaults);
 
-        // schedule auto_search
-        if (searchview_loaded != null && this.action['auto_search']) {
-            $.when(searchview_loaded, inital_view_loaded)
-                .then(this.searchview.do_search);
+            // schedule auto_search
+            if (this.action['auto_search']) {
+                $.when(searchview_loaded, inital_view_loaded)
+                    .then(this.searchview.do_search);
+            }
         }
+
     },
     stop: function() {
         // should be replaced by automatic destruction implemented in BaseWidget

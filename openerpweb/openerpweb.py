@@ -116,6 +116,12 @@ class OpenERPSession(object):
         r = self.proxy('object').execute(self._db, self._uid, self._password, model, func, *l, **d)
         return r
 
+    def exec_workflow(self, model, id, signal):
+        if not (self._db and self._uid and self._password):
+            raise OpenERPUnboundException()
+        r = self.proxy('object').exec_workflow(self._db, self._uid, self._password, model, signal, id)
+        return r
+
     def model(self, model):
         """ Get an RPC proxy for the object ``model``, bound to this session.
 
@@ -289,13 +295,34 @@ class JsonRequest(object):
     * the json string is passed as a form parameter named "request"
     * method is currently ignored
 
-    Sucessful request:
-    --> {"jsonrpc": "2.0", "method": "call", "params": {"session_id": "SID", "context": {}, "arg1": "val1" }, "id": null}
-    <-- {"jsonrpc": "2.0", "result": { "res1": "val1" }, "id": null}
+    Sucessful request::
 
-    Request producing a error:
-    --> {"jsonrpc": "2.0", "method": "call", "params": {"session_id": "SID", "context": {}, "arg1": "val1" }, "id": null}
-    <-- {"jsonrpc": "2.0", "error": {"code": 1, "message": "End user error message.", "data": {"code": "codestring", "debug": "traceback" } }, "id": null}
+      --> {"jsonrpc": "2.0",
+           "method": "call",
+           "params": {"session_id": "SID",
+                      "context": {},
+                      "arg1": "val1" },
+           "id": null}
+
+      <-- {"jsonrpc": "2.0",
+           "result": { "res1": "val1" },
+           "id": null}
+
+    Request producing a error::
+
+      --> {"jsonrpc": "2.0",
+           "method": "call",
+           "params": {"session_id": "SID",
+                      "context": {},
+                      "arg1": "val1" },
+           "id": null}
+
+      <-- {"jsonrpc": "2.0",
+           "error": {"code": 1,
+                     "message": "End user error message.",
+                     "data": {"code": "codestring",
+                              "debug": "traceback" } },
+           "id": null}
 
     """
 
