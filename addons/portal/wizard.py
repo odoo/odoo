@@ -57,7 +57,7 @@ class wizard(osv.osv_memory):
     _columns = {
         'portal_id': fields.many2one('res.portal', required=True,
             string='Portal',
-            help="The portal where new users must be added"),
+            help="The portal in which new users must be added"),
         'user_ids': fields.one2many('res.portal.wizard.user', 'wizard_id',
             string='Users'),
     }
