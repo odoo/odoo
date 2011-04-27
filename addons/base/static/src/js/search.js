@@ -146,7 +146,6 @@ openerp.base.SearchView = openerp.base.Controller.extend({
     do_search: function (e) {
         if (e && e.preventDefault) { e.preventDefault(); }
 
-        //debugger;
         var domains = [], contexts = [];
 
         var errors = [];

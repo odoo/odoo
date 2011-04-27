@@ -183,6 +183,15 @@ openerp.base.DataSetSearch =  openerp.base.DataSet.extend({
 openerp.base.DataSetRelational =  openerp.base.DataSet.extend( /** @lends openerp.base.DataSet# */{
 });
 
+openerp.base.DataSetMany2Many = openerp.base.DataSetStatic.extend({
+    /* should extend DataSetStatic instead, but list view still does not support it
+     */
+
+    unlink: function(ids) {
+        // just do nothing
+    },
+});
+
 };
 
 // vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:
