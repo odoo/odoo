@@ -63,6 +63,36 @@ from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools import SKIPPED_ELEMENT_TYPES
 
 regex_order = re.compile('^(([a-z0-9_]+|"[a-z0-9_]+")( *desc| *asc)?( *, *|))+$', re.I)
+regex_object_name = re.compile(r'^[a-z0-9_.]+$')
+
+def check_object_name(name):
+    """ Check if the given name is a valid openerp object name.
+
+        The _name attribute in osv and osv_memory object is subject to
+        some restrictions. This function returns True or False whether
+        the given name is allowed or not.
+
+        TODO: this is an approximation. The goal in this approximation
+        is to disallow uppercase characters (in some places, we quote
+        table/column names and in other not, which leads to this kind
+        of errors:
+
+            psycopg2.ProgrammingError: relation "xxx" does not exist).
+
+        The same restriction should apply to both osv and osv_memory
+        objects for consistency.
+
+    """
+    if regex_object_name.match(name) is None:
+        return False
+    return True
+
+def raise_on_invalid_object_name(name):
+    if not check_object_name(name):
+        msg = "The _name attribute %s is not valid." % name
+        logger = netsvc.Logger()
+        logger.notifyChannel('orm', netsvc.LOG_ERROR, msg)
+        raise except_orm('ValueError', msg)
 
 POSTGRES_CONFDELTYPES = {
     'RESTRICT': 'r',
@@ -508,6 +538,7 @@ class orm_template(object):
         cr.commit()
 
     def _auto_init(self, cr, context=None):
+        raise_on_invalid_object_name(self._name)
         self._field_create(cr, context=context)
 
     def __init__(self, cr):
@@ -2363,6 +2394,7 @@ class orm(orm_template):
                                     self._table, column['attname'])
 
     def _auto_init(self, cr, context=None):
+        raise_on_invalid_object_name(self._name)
         if context is None:
             context = {}
         store_compute = False
