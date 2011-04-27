@@ -500,7 +500,7 @@ def import_documents(sugar_obj, cr, uid, context=None):
     for val in sugar_data:
         file, filename = sugar.attachment_search(PortType, sessionid, 'DocumentRevisions', val.get('document_revision_id'))
         val['datas'] = file
-        val['datas_fname'] = filename or val.get('document_name')
+        val['datas_fname'] = filename
         fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_document, context)
         attach_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', noupdate=True, context=context)
     return True
@@ -823,11 +823,11 @@ def get_attachment(sugar_obj, cr, uid, val, model, File, Filename, parent_type, 
     model_obj = sugar_obj.pool.get('ir.model.data')
     mailgate_obj = sugar_obj.pool.get('mailgate.message')
     attach_ids = attachment_obj.search(cr, uid, [('res_id','=', val.get('res_id'), ('res_model', '=', val.get('model')))])
-    if not attach_ids:
+    if not attach_ids and Filename:
         if parent_type == 'Accounts':
-            new_attachment_id = attachment_obj.create(cr, uid, {'name': Filename or val.get('name'), 'datas_fname': Filename, 'datas': File, 'res_id': val.get('res_id', False),'res_model': val.get('model',False), 'partner_id': val.get('partner_id/.id')})
+            new_attachment_id = attachment_obj.create(cr, uid, {'name': Filename, 'datas_fname': Filename, 'datas': File, 'res_id': val.get('res_id', False),'res_model': val.get('model',False), 'partner_id': val.get('partner_id/.id')})
         else:    
-            new_attachment_id = attachment_obj.create(cr, uid, {'name': Filename or val.get('name'), 'datas_fname': Filename, 'datas': File, 'res_id': val.get('res_id', False),'res_model': val.get('model',False)})
+            new_attachment_id = attachment_obj.create(cr, uid, {'name': Filename, 'datas_fname': Filename, 'datas': File, 'res_id': val.get('res_id', False),'res_model': val.get('model',False)})
         message_model_ids = find_mapped_id(sugar_obj, cr, uid, model, val.get('id'), context)
         message_xml_id = model_obj.browse(cr, uid, message_model_ids)
         if message_xml_id:
