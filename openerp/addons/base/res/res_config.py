@@ -77,7 +77,12 @@ class res_config_configurable(osv.osv_memory):
                 cr.execute("select 1 from res_groups_users_rel where uid=%s and gid IN %s",(uid, tuple(todo_groups),))
                 dont_skip_todo = bool(cr.fetchone())
             if dont_skip_todo:
-                return todos.browse(cr, uid, active_todos[0], context=None)
+                res = todos.browse(cr, uid, active_todos[0], context=None)
+                # Wizards that directly opens a form stays in Todo state even if its called, 
+                # as next_action is not called,  so, setting state as done 'manually' 
+                if res.action_id.target == 'current':
+                    res.write({'state': 'done'})
+                return res
             else:
                 todos.write(cr, uid, active_todos[0], {'state':'skip'}, context=None)
                 return self._next_action(cr, uid)
