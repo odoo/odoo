@@ -257,7 +257,7 @@
         <t t-foreach="row" t-as="td">
             <td t-att-colspan="td.colspan gt 1 ? td.colspan : undefined"
                 t-att-width="td.width ? td.width : undefined"
-                t-att-nowrap="td.is_field_label ? 'true' : undefined"
+                t-att-nowrap="td.is_field_label or td.is_field_m2o? 'true' : undefined"
                 t-att-valign="td.table ? 'top' : undefined"
                 t-att-id="td.element_id"
                 t-att-class="'oe_form_' + (td.is_field_label ? 'label' : (td.field ? 'field_' + td.type : td.type))"
@@ -343,7 +343,10 @@
         t-att-name="widget.name"
         t-att-id="widget.element_id + '_field'"
         t-att-class="'field_' + widget.type"
+		t-att-type="widget.type"
         style="width: 100%;"/>
+	<img t-att-id="widget.name + '_select'" t-att-src="'/base/static/src/img/icons/index1.jpeg'" t-att-class="'combo_img'" width="15" height="16"/>
+	<div t-att-id="'autoCompleteResults_' + widget.name" t-att-class="'autoTextResults'"></div>	
 </t>
 <t t-name="FieldOne2Many">
     <div t-att-id="widget.element_id">

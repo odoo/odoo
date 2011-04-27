@@ -824,10 +824,24 @@ openerp.base.form.FieldSelection = openerp.base.form.Field.extend({
     }
 });
 
+openerp.base.form.FieldMany2OneDatasSet = openerp.base.DataSetStatic.extend({
+    start: function() {
+    },
+    write: function (id, data, callback) {
+        this._super(id, data, callback);
+    },
+});
+
 openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
     init: function(view, node) {
         this._super(view, node);
         this.template = "FieldMany2One";
+        this.is_field_m2o = true;
+    },
+    start: function() {
+        this.$element = $('#' + this.element_id);
+        this.dataset = new openerp.base.form.FieldMany2OneDatasSet(this.session, this.field.relation);
+        new openerp.base.m2o(this.$element, this.field.relation, this.dataset)
     },
     set_value: function(value) {
         this._super.apply(this, arguments);
@@ -837,6 +851,8 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
             this.value = value[0];
         }
         this.$element.find('input').val(show_value);
+        // Need to replace this `text` with original `id` after discuss with xmo
+        this.$element.find('input').attr('text', this.value);
     }
 });
 

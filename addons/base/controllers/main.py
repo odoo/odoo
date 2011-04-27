@@ -420,6 +420,12 @@ class DataSet(openerpweb.Controller):
         r = m.default_get(fields, context)
         return {'result': r}
 
+    @openerpweb.jsonrequest
+    def name_search(self, req, model, search_str, domain=[], context={}):
+        m = req.session.model(model)
+        r = m.name_search(search_str, domain, 'ilike', context)
+        return {'result': r}
+
 class View(openerpweb.Controller):
     def fields_view_get(self, request, model, view_id, view_type,
                         transform=True, toolbar=False, submenu=False):

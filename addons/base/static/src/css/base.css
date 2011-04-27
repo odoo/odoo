@@ -779,3 +779,62 @@ body.openerp {
     background: url(http://placekitten.com/g/212/100) repeat;
 }
 
+/* Many2one Autosearch */
+
+.openerp .combo_img {
+    position: absolute;
+    margin-left: -19px;
+    margin-top: 3px;
+}
+
+.openerp .autoTextResults {
+    position: absolute;
+    z-index: 1000;
+    background-color: #fff;
+    border: 1px solid #333;
+    display: none;
+    padding: 0 2px 0 2px;
+    min-width: 132px;
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    color: #1F1F1F;
+    overflow: auto;
+}
+
+.openerp table.autoTextTable {
+    border: none;
+    font-family: arial, sans-serif;
+    font-size: 13px;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: normal;
+    width: 100%;   
+}
+
+.openerp table.autoTextTable tr.autoTextNormalRow td {
+}
+
+.openerp table.autoTextTable tr.autoTextSelectedRow td {
+    background-color: DarkGray;
+    color: #1F1F1F;
+    cursor: pointer;
+}
+
+.openerp table.autoTextTable ul{
+	list-style-image:none;
+	list-style-type:none;
+}
+
+.openerp table.autoTextTable td a.autoTextHighlight {
+    font-weight: bold;
+    text-decoration: none;
+    color: #FFF;
+}
+
+.openerp table.autoTextTable td.autoTextHidden {
+    display: none;
+}
+
+/* ------------- End autocomplete ------- */
+

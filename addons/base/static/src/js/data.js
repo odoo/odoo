@@ -118,6 +118,16 @@ openerp.base.DataSet =  openerp.base.Controller.extend( /** @lends openerp.base.
             ids: ids,
             args: args
         }, callback);
+
+    },
+    name_search: function (search_str, callback) {
+        search_str = search_str || '';
+        return this.rpc('/base/dataset/name_search', {
+            model: this.model,
+            search_str: search_str,
+            domain: this.domain || [],
+            context: this.context
+        }, callback);
     },
     exec_workflow: function (id, signal, callback) {
         return this.rpc('/base/dataset/exec_workflow', {
