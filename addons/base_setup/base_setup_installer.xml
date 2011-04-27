@@ -112,6 +112,7 @@
    <record id="migrade_application_installer_modules_todo" model="ir.actions.todo">
       <field name="action_id" ref="action_migrade_application_installer_modules"/>
       <field name="type">normal</field>
+      <field name="state">skip</field>
   </record>
   
           <!-- Import or create customers configartion view  -->
@@ -160,7 +161,7 @@
     <!--          register configuration wizard -->
 	<record id="config_wizard_res_product_installer" model="ir.actions.todo">
 	    <field name="action_id" ref="action_import_create_installer"/>
-	    <field name="type">normal_recurring</field>
+	    <field name="type">normal</field>
 	    <field name="state">skip</field>
 	</record>
 	
@@ -214,6 +215,7 @@
       <record id="config_action_user_preferences_config_form" model="ir.actions.todo">
           <field name="action_id" ref="action_user_preferences_config_form"/>
           <field name="type">normal</field>
+          <field name="state">skip</field>
       </record>
       
       <!--     Config Wiz   Give access to others users   -->
