@@ -162,7 +162,7 @@ class hr_holidays(osv.osv):
         return obj_res_leave.unlink(cr, uid, leave_ids)
 
     def onchange_type(self, cr, uid, ids, holiday_type):
-        result = {}
+        result = {'value': {'employee_id': False}}
         if holiday_type == 'employee':
             ids_employee = self.pool.get('hr.employee').search(cr, uid, [('user_id','=', uid)])
             if ids_employee:
