@@ -1030,7 +1030,10 @@ def import_leads(sugar_obj, cr, uid, context=None):
             'fax': 'phone_fax',
             'referred': 'refered_by',
             'optout': 'optout',
-            'type_id/.id': 'type_id/.id'
+            'type_id/.id': 'type_id/.id',
+            'country_id.id': 'country_id.id',
+            'state_id.id': 'state_id.id'
+            
             }
         
     lead_obj = sugar_obj.pool.get('crm.lead')
@@ -1048,6 +1051,11 @@ def import_leads(sugar_obj, cr, uid, context=None):
         stage_id = get_lead_status(sugar_obj, cr, uid, val, context)
         val['stage_id.id'] = stage_id
         val['state'] = get_lead_state(sugar_obj, cr, uid, val,context)
+        if val.get('primary_address_country'):
+            country_id = get_all_countries(sugar_obj, cr, uid, val.get('primary_address_country'), context)
+            state = get_all_states(sugar_obj,cr, uid, val.get('primary_address_state'), country_id, context)
+            val['country_id.id'] =  country_id
+            val['state_id.id'] =  state            
         fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_lead, context)
         lead_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', noupdate=True, context=context)
     return True
@@ -1074,7 +1082,7 @@ def get_opportunity_contact(sugar_obj,cr,uid, PortType, sessionid, val, partner_
                 partner_contact_name = address_id.name
                 partner_contact_email = address_id.email
             else:
-                partner_contact_name = val.get('account_name')    
+                partner_contact_name = val.get('account_name')
     return partner_contact_name, partner_contact_email
 
 def import_opportunities(sugar_obj, cr, uid, context=None):
