@@ -127,7 +127,7 @@ class hr_expense_expense(osv.osv):
     def invoice(self, cr, uid, ids, context=None):
         wf_service = netsvc.LocalService("workflow")
         mod_obj = self.pool.get('ir.model.data')
-        res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_form')
+        res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_supplier_form')
         res_id = res and res[1] or False,
         inv_ids = []
         for id in ids:

@@ -33,7 +33,9 @@ class payment_mode(osv.osv):
             required=True,help='Bank Account for the Payment Mode'),
         'journal': fields.many2one('account.journal', 'Journal', required=True,
             domain=[('type', 'in', ('bank','cash'))], help='Bank or Cash Journal for the Payment Mode'),
-        'company_id': fields.many2one('res.company', 'Company', required=True),
+        'company_id': fields.many2one('res.company', 'Company',required=True),
+        'partner_id':fields.related('company_id','partner_id',type='many2one',relation='res.partner',string='Partner',store=True,),
+        
     }
     _defaults = {
         'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id
@@ -49,6 +51,14 @@ class payment_mode(osv.osv):
             JOIN payment_mode pm ON (pm.bank_id = pb.id)
             WHERE pm.id = %s """, [payment_code])
         return [x[0] for x in cr.fetchall()]
+    
+    def onchange_company_id (self, cr, uid, ids, company_id=False, context=None):
+        result = {}
+        if company_id:
+            partner_id = self.pool.get('res.company').browse(cr, uid, company_id, context=context).partner_id.id
+            result['partner_id'] = partner_id
+        return {'value': result}
+                
 
 payment_mode()
 
@@ -328,7 +338,7 @@ class payment_line(osv.osv):
             required=True, help='Payment amount in the partner currency'),
         'currency': fields.many2one('res.currency','Partner Currency', required=True),
         'company_currency': fields.many2one('res.currency', 'Company Currency', readonly=True),
-        'bank_id': fields.many2one('res.partner.bank', 'Destination Bank account'),
+        'bank_id': fields.many2one('res.partner.bank', 'Destination Bank Account'),
         'order_id': fields.many2one('payment.order', 'Order', required=True,
             ondelete='cascade', select=True),
         'partner_id': fields.many2one('res.partner', string="Partner", required=True, help='The Ordering Customer'),
