@@ -77,20 +77,31 @@ class user_wizard(osv.osv_memory):
     ]
 
     def default_get(self, cr, uid, fields, context=None):
-        """ define the default name, login, email, address_id from the active
-            res.partner.address record """
+        """ determine default name, email, address_id and lang from the active
+            record """
         # get existing defaults
         defs = super(user_wizard, self).default_get(cr, uid, fields, context)
         
-        # override name, login, email, address_id, and lang
-        if context and ('active_id' in context):
+        # determine a res.partner.address depending on current context
+        address = None
+        if context.get('active_model') == 'res.partner.address':
             address_obj = self.pool.get('res.partner.address')
-            address = address_obj.browse(cr, uid, context['active_id'], context)
+            address = address_obj.browse(cr, uid, context.get('active_id'), context)
+        
+        elif context.get('active_model') == 'res.partner':
+            partner_obj = self.pool.get('res.partner')
+            partner = partner_obj.browse(cr, uid, context.get('active_id'), context)
+            if partner and partner.address:
+                # take default address if present, or any address otherwise
+                addresses = filter(lambda a: a.type == 'default', partner.address)
+                address = addresses[0] if addresses else partner.address[0]
+        
+        # override name, email, address_id, and lang
+        if address:
             defs['name'] = address.name
             defs['email'] = address.email
             defs['address_id'] = address.id
-            if address.partner_id and address.partner_id.lang:
-                defs['lang'] = address.partner_id.lang
+            defs['lang'] = address.partner_id and address.partner_id.lang
         
         return defs
 

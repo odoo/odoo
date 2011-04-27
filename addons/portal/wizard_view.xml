@@ -1,8 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <!-- User Wizard on res.partner.address -->
-        <act_window id="portal_user_wizard_action"
+        <!-- wizard action on res.partner -->
+        <act_window id="partner_user_wizard_action"
+            name="Create Portal User"
+            src_model="res.partner"
+            res_model="res.portal.user_wizard"
+            view_type="form" view_mode="form"
+            key2="client_action_multi" target="new"/>
+
+        <!-- wizard action on res.partner.address -->
+        <act_window id="address_user_wizard_action"
             name="Create Portal User"
             src_model="res.partner.address"
             res_model="res.portal.user_wizard"
@@ -10,7 +18,7 @@
             key2="client_action_multi" target="new"/>
 
         <!-- user_wizard view -->
-        <record id="portal_user_wizard_view" model="ir.ui.view">
+        <record id="user_wizard_view" model="ir.ui.view">
             <field name="name">Create Portal User</field>
             <field name="model">res.portal.user_wizard</field>
             <field name="type">form</field>
