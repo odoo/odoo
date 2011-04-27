@@ -20,6 +20,8 @@
 ##############################################################################
 
 import xmlrpclib
+import binascii
+import base64
 import sys
 import socket
 import os
@@ -146,6 +148,7 @@ class XMLRpcConn(object):
     	flag = False
     	new_msg =  ext_msg =""
     	message_id = referances  = None
+        context = {}
     	try:
             session = win32com.client.Dispatch("MAPI.session")
             session.Logon('Outlook')
@@ -177,10 +180,10 @@ class XMLRpcConn(object):
     	for rec in recs: #[('res.partner', 3, 'Agrolait')]
             model = rec[0]
             res_id = rec[1]
-            #Check if mailgate installed
+            #Check if mail installed
             object_id = execute ( conn,'execute',self._dbname,int(self._uid),self._pwd,'ir.model','search',[('model','=','email.message')])
             if not object_id:
-            	win32ui.MessageBox("Mailgate is not installed on your configured database '%s' !!\n\nPlease install it to archive the mail."%(self._dbname),"Mailgate not installed",win32con.MB_ICONERROR)
+            	win32ui.MessageBox("Mail is not installed on your configured database '%s' !!\n\nPlease install it to archive the mail."%(self._dbname),"Mail not installed",win32con.MB_ICONERROR)
             	return
             object_ids = execute ( conn,'execute',self._dbname,int(self._uid),self._pwd,'ir.model','search',[('model','=',model)])
             object_name  = execute( conn,'execute',self._dbname,int(self._uid),self._pwd,'ir.model','read',object_ids,['name'])[0]['name']
@@ -201,14 +204,19 @@ class XMLRpcConn(object):
             	'message-id':message_id,
             	'references':ustr(referances),
             }
-            obj_list= ['crm.lead','project.issue','hr.applicant','res.partner']
-            if rec[0] not in obj_list:
-                self.CreateEmailAttachment(rec,mail)
             result = {}
+            context['thread_model'] = model
             if attachments:
             	result = self.MakeAttachment([rec], mail)
-            attachment_ids = result.get(model, {}).get(res_id, [])
-            execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'email.thread','history',model, res_id, msg, attachment_ids)
+            execute(conn,'execute',self._dbname,int(self._uid),self._pwd, \
+                    'email.thread','history', [res_id], 'receive', \
+                    True, msg.get('subject',False),\
+                    msg.get('to'), msg.get('body', False),\
+                    msg.get('from'), msg.get('message-id'),\
+                    msg.get('references', False), result,\
+                    msg.get('cc'), False,\
+                    msg.get('date'), context)
+
             new_msg += """- {0} : {1}\n""".format(object_name,str(rec[2]))
             flag = True
 
@@ -310,39 +318,29 @@ class XMLRpcConn(object):
     		return flag
 
     def MakeAttachment(self, recs, mail):
-    	attachments = mail.Attachments
-    	result = {}
-    	conn = xmlrpclib.ServerProxy(self._uri+ '/xmlrpc/object')
-    	att_folder_path = os.path.abspath(os.path.dirname("%temp%\\"))
-    	if not os.path.exists(att_folder_path):
+        attachments = mail.Attachments
+        attachment = {}
+        conn = xmlrpclib.ServerProxy(self._uri+ '/xmlrpc/object')
+        att_folder_path = os.path.abspath(os.path.dirname("%temp%\\"))
+        if not os.path.exists(att_folder_path):
     		os.makedirs(att_folder_path)
     	for rec in recs: #[('res.partner', 3, 'Agrolait')]
-    		obj = rec[0]
-    		obj_id = rec[1]
-    		res={}
-    		res['res_model'] = obj
-    		attachment_ids = []
-    		if obj not in result:
-    			result[obj] = {}
-    		for i in xrange(1, attachments.Count+1):
-    			fn = ustr(attachments[i].FileName)
-    			if len(fn) > 64:
-    				l = 64 - len(fn)
-    				f = fn.split('.')
-    				fn = f[0][0:l] + '.' + f[-1]
-    			att_path = os.path.join(att_folder_path,fn)
-    			attachments[i].SaveAsFile(att_path)
-    			f=open(att_path,"rb")
-    			content = "".join(f.readlines()).encode('base64')
-    			f.close()
-    			res['name'] = ustr(attachments[i].DisplayName)
-    			res['datas_fname'] = ustr(fn)
-    			res['datas'] = content
-    			res['res_id'] = obj_id
-    			id = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'ir.attachment','create',res)
-    			attachment_ids.append(id)
-    		result[obj].update({obj_id: attachment_ids})
-    	return result
+            obj = rec[0]
+            obj_id = rec[1]
+            for i in xrange(1, attachments.Count+1):
+            	fn = ustr(attachments[i].FileName)
+            	if len(fn) > 64:
+            		l = 64 - len(fn)
+            		f = fn.split('.')
+            		fn = f[0][0:l] + '.' + f[-1]
+                att_path = os.path.join(att_folder_path,fn)
+                attachments[i].SaveAsFile(att_path)
+                f=open(att_path,"rb")
+                content = "".join(f.readlines()).encode('base64')
+                f.close()
+                content = content.decode('base64')
+                attachment[fn] = content
+        return attachment
 
     def CreateContact(self, res=None):
     	res=eval(str(res))
