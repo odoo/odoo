@@ -2,40 +2,67 @@
 <openerp>
     <data>
         <!-- wizard action on res.partner -->
-        <act_window id="partner_user_wizard_action"
-            name="Create Portal User"
+        <act_window id="partner_wizard_action"
+            name="Create Portal Users"
             src_model="res.partner"
-            res_model="res.portal.user_wizard"
+            res_model="res.portal.wizard"
             view_type="form" view_mode="form"
             key2="client_action_multi" target="new"/>
 
         <!-- wizard action on res.partner.address -->
-        <act_window id="address_user_wizard_action"
-            name="Create Portal User"
+        <act_window id="address_wizard_action"
+            name="Create Portal Users"
             src_model="res.partner.address"
-            res_model="res.portal.user_wizard"
+            res_model="res.portal.wizard"
             view_type="form" view_mode="form"
             key2="client_action_multi" target="new"/>
 
-        <!-- user_wizard view -->
-        <record id="user_wizard_view" model="ir.ui.view">
-            <field name="name">Create Portal User</field>
-            <field name="model">res.portal.user_wizard</field>
+        <!-- wizard view -->
+        <record id="wizard_view" model="ir.ui.view">
+            <field name="name">Create Portal Users</field>
+            <field name="model">res.portal.wizard</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Create Portal User">
+                <form string="Create Portal Users">
+                    <field name="portal_id" colspan="4"/>
+                    <field name="user_ids" nolabel="1" colspan="4"/>
+                    <label colspan="2"/>
+                    <button string="Cancel" special="cancel" icon="gtk-cancel"/>
+                    <button string="Create Users" name="do_create" type="object" icon="gtk-ok"/>
+                </form>
+            </field>
+        </record>
+
+        <!-- wizard user list view -->
+        <record id="wizard_user_tree_view" model="ir.ui.view">
+            <field name="name">Portal Users</field>
+            <field name="model">res.portal.wizard.user</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Portal Users">
+                    <field name="name"/>
+                    <field name="email"/>
+                    <field name="partner_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- wizard user form view -->
+        <record id="wizard_user_form_view" model="ir.ui.view">
+            <field name="name">Portal User</field>
+            <field name="model">res.portal.wizard.user</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Portal User">
                     <group colspan="2" col="2">
                         <field name="name"/>
                         <field name="email"/>
                         <field name="lang"/>
-                        <field name="address_id"/>
                     </group>
                     <group colspan="2" col="2">
-                        <field name="portal_id"/>
+                        <field name="address_id"/>
+                        <field name="partner_id"/>
                     </group>
-                    <label colspan="2"/>
-                    <button string="Cancel" special="cancel" icon="gtk-cancel"/>
-                    <button string="Create User" name="do_create" type="object" icon="gtk-ok"/>
                 </form>
             </field>
         </record>

@@ -45,65 +45,141 @@ def random_password():
 
 
 
-class user_wizard(osv.osv_memory):
+class wizard(osv.osv_memory):
     """
-        A wizard to create a portal user from a res.partner.address.  The use
-        case of the wizard is to provide access to a customer or supplier.
+        A wizard to create portal users from instances of either 'res.partner'
+        or 'res.partner.address'.  The purpose is to provide an OpenERP database
+        access to customers or suppliers.
     """
-    _name = 'res.portal.user_wizard'
-    _description = 'Portal User Wizard'
+    _name = 'res.portal.wizard'
+    _description = 'Portal Wizard'
     
     _columns = {
+        'portal_id': fields.many2one('res.portal', required=True,
+            string='Portal',
+            help="The portal where new users must be added"),
+        'user_ids': fields.one2many('res.portal.wizard.user', 'wizard_id',
+            string='Users'),
+    }
+
+    def default_get(self, cr, uid, fields, context=None):
+        """ determine user configs from the active records """
+        # get existing defaults
+        defs = super(wizard, self).default_get(cr, uid, fields, context)
+        
+        # determine relevant res.partner.address(es) depending on context
+        addresses = []
+        if context.get('active_model') == 'res.partner.address':
+            address_obj = self.pool.get('res.partner.address')
+            address_ids = context.get('active_ids', [])
+            addresses = address_obj.browse(cr, uid, address_ids, context)
+        elif context.get('active_model') == 'res.partner':
+            partner_obj = self.pool.get('res.partner')
+            partner_ids = context.get('active_ids', [])
+            partners = partner_obj.browse(cr, uid, partner_ids, context)
+            for p in partners:
+                if p.address:
+                    # take default address if present, or any address otherwise
+                    good = filter(lambda a: a.type == 'default', p.address)
+                    addresses.append(good[0] if good else p.address[0])
+        
+        # create user configs based on these addresses
+        defs['user_ids'] = []
+        for address in addresses:
+            user_data = {
+                'name': address.name,
+                'email': address.email,
+                'lang': address.partner_id and address.partner_id.lang,
+                'address_id': address.id,
+            }
+            defs['user_ids'].append(user_data)
+        
+        return defs
+
+    def do_create(self, cr, uid, ids, context=None):
+        """ create new users in portal(s), and notify them by email """
+        # we copy the context to change the language for translating emails
+        context0 = context or {}
+        context = context0.copy()
+        
+        user = self.pool.get('res.users').browse(cr, ROOT_UID, uid, context0)
+        if not user.user_email:
+            raise osv.except_osv(_('Email required'),
+                _('You must have an email address in your User Preferences'
+                  ' to send emails.'))
+        email_from = user.user_email
+        company_name = user.company_id.name
+        
+        portal_obj = self.pool.get('res.portal')
+        for wiz in self.browse(cr, uid, ids, context):
+            # add new users in portal
+            users_data = [ {
+                    'name': u.name,
+                    'login': u.email,
+                    'password': random_password(),
+                    'user_email': u.email,
+                    'context_lang': u.lang,
+                    'address_id': u.address_id.id,
+                } for u in wiz.user_ids ]
+            portal_obj.write(cr, ROOT_UID, [wiz.portal_id.id],
+                {'users': [(0, 0, data) for data in users_data]}, context0)
+            
+            # send email to new users (translated in their language)
+            for data in users_data:
+                context['lang'] = data['context_lang']
+                data['dbname'] = cr.dbname
+                data['url'] = "(missing url)"
+                
+                email_to = data['user_email']
+                subject = _("Your OpenERP account at %s") % company_name
+                body = _(
+                    "Dear %(name)s,\n\n"
+                    "You have been created an OpenERP account at %(url)s.\n\n"
+                    "Your login account data is:\n"
+                    "Database: %(dbname)s\n"
+                    "User:     %(login)s\n"
+                    "Password: %(password)s\n\n"
+                    "--\n"
+                    "OpenERP - Open Source Business Applications\n"
+                    "http://www.openerp.com\n"
+                    ) % data
+                res = email_send(email_from, [email_to], subject, body)
+                if not res:
+                    logging.getLogger('res.portal.wizard').warning(
+                        'Failed to send email from %s to %s', email_from, email_to)
+        
+        return {}
+
+wizard()
+
+
+
+class wizard_user(osv.osv_memory):
+    """
+        A model to configure users in the portal wizard.
+    """
+    _name = 'res.portal.wizard.user'
+    _description = 'Portal User Config'
+    
+    _columns = {
+        'wizard_id': fields.many2one('res.portal.wizard', required=True,
+            string='Wizard'),
         'name': fields.char(size=64, required=True,
             string='User Name',
-            help="The new user's real name"),
+            help="The user's real name"),
         'email': fields.char(size=64, required=True,
             string='E-mail',
-            help="A welcome e-mail will be sent to the new user, "
-                 "with the necessary information to connect to OpenERP"),
+            help="Will be used as user login.  "  
+                 "Also necessary to send the account information to new users"),
         'lang': fields.selection(_lang_get, required=True,
             string='Language',
             help="The language for the user's user interface"),
-        'address_id': fields.many2one('res.partner.address', readonly=True,
+        'address_id': fields.many2one('res.partner.address', required=True,
             string='Address'),
-        'portal_id': fields.many2one('res.portal', required=True,
-            string='Portal',
-            help="The Portal that the new user must belong to"),
+        'partner_id': fields.related('address_id', 'partner_id',
+            type='many2one', relation='res.partner', readonly=True,
+            string='Partner'),
     }
-    
-    _constraints = [
-        (lambda self,*args: self._check_email(*args), 'Invalid email address', ['email']),
-        (lambda self,*args: self._check_exist(*args), 'User login already exists', ['email']),
-    ]
-
-    def default_get(self, cr, uid, fields, context=None):
-        """ determine default name, email, address_id and lang from the active
-            record """
-        # get existing defaults
-        defs = super(user_wizard, self).default_get(cr, uid, fields, context)
-        
-        # determine a res.partner.address depending on current context
-        address = None
-        if context.get('active_model') == 'res.partner.address':
-            address_obj = self.pool.get('res.partner.address')
-            address = address_obj.browse(cr, uid, context.get('active_id'), context)
-        
-        elif context.get('active_model') == 'res.partner':
-            partner_obj = self.pool.get('res.partner')
-            partner = partner_obj.browse(cr, uid, context.get('active_id'), context)
-            if partner and partner.address:
-                # take default address if present, or any address otherwise
-                addresses = filter(lambda a: a.type == 'default', partner.address)
-                address = addresses[0] if addresses else partner.address[0]
-        
-        # override name, email, address_id, and lang
-        if address:
-            defs['name'] = address.name
-            defs['email'] = address.email
-            defs['address_id'] = address.id
-            defs['lang'] = address.partner_id and address.partner_id.lang
-        
-        return defs
 
     def _check_email(self, cr, uid, ids):
         """ check syntax of email address """
@@ -119,58 +195,12 @@ class user_wizard(osv.osv_memory):
             if user_obj.search(cr, ROOT_UID, condition): return False
         return True
 
-    def do_create(self, cr, uid, ids, context=None):
-        """ create a new user in the portal, and notify them by email """
-        # we copy the context to change the language for translating emails
-        context0 = context or {}
-        context = context0.copy()
-        
-        user = self.pool.get('res.users').browse(cr, ROOT_UID, uid, context0)
-        if not user.user_email:
-            raise osv.except_osv(_('Email required'),
-                _('You must have an email address in your User Preferences'
-                  ' to send emails.'))
-        
-        portal_obj = self.pool.get('res.portal')
-        for wizard in self.browse(cr, uid, ids, context):
-            # add a new user in wizard.portal_id
-            user_values = {
-                'name': wizard.name,
-                'login': wizard.email,
-                'password': random_password(),
-                'user_email': wizard.email,
-                'address_id': wizard.address_id.id,
-                'context_lang': wizard.lang,
-            }
-            values = {'users': [(0, 0, user_values)]}
-            portal_obj.write(cr, ROOT_UID, [wizard.portal_id.id], values, context0)
-            
-            # send email to new user (translated in language of new user)
-            context['lang'] = user_values['context_lang']
-            user_values['dbname'] = cr.dbname
-            user_values['url'] = "(missing url)"
-            
-            email_to = user_values['user_email']
-            subject = _("Your OpenERP account at %s") % user.company_id.name
-            body = _(
-                "Dear %(name)s,\n\n"
-                "You have been created an OpenERP account at %(url)s.\n\n"
-                "Your login account data is:\n"
-                "Database: %(dbname)s\n"
-                "User:     %(login)s\n"
-                "Password: %(password)s\n\n"
-                "--\n"
-                "OpenERP - Open Source Business Applications\n"
-                "http://www.openerp.com\n"
-                ) % user_values
-            res = email_send(user.user_email, [email_to], subject, body)
-            if not res:
-                logging.getLogger('res.portal.user_wizard').warning(
-                    'Failed to send email from %s to %s', user.user_email, email_to)
+    _constraints = [
+        (_check_email, 'Invalid email address', ['email']),
+        (_check_exist, 'User login already exists', ['email']),
+    ]
 
-        return {}
-
-user_wizard()
+wizard_user()
 
 
 
