@@ -31,6 +31,64 @@ def find_mapped_id(obj, cr, uid, res_model, sugar_id, context):
     model_obj = obj.pool.get('ir.model.data')
     return model_obj.search(cr, uid, [('model', '=', res_model), ('module', '=', 'sugarcrm_import'), ('name', '=', sugar_id)], context=context)
 
+def mapped_id(obj, cr, uid, res_model, sugar_id, id, context):
+    """
+        This function create the mapping between an already existing data and the similar data of sugarcrm
+        @param res_model: model of the mapped object
+        @param sugar_id: external sugar id
+        @param id: id in the database
+        
+        @return : the xml_id or sugar_id 
+    """
+    ir_model_data_obj = obj.pool.get('ir.model.data')
+    id = ir_model_data_obj._update(cr, uid, res_model,
+                     'sugarcrm_import', {}, mode='update', xml_id=sugar_id,
+                     noupdate=True, res_id=id, context=context)
+    return sugar_id
+
+def import_object(sugar_obj, cr, uid, fields, data, model, table, name, domain_search=False,  context=None):
+    """
+        This method will import an object in the openerp, usefull for field that is only a char in sugar and is an object in openerp
+        use import_data that will take care to create/update or do nothing with the data
+        this method return the xml_id
+        @param fields: list of fields needed to create the object without id
+        @param data: the list of the data, in the same order as the field
+            ex : fields = ['firstname', 'lastname'] ; data = ['John', 'Mc donalds']
+        @param model: the openerp's model of the create/update object
+        @param table: the table where data come from in sugarcrm, no need to fit the real name of openerp name, just need to be unique
+        @param unique_name: the name of the object that we want to create/update get the id
+        @param domain_search : the domain that should find the unique existing record
+        
+        @return: the xml_id of the ressources
+    """
+    domain_search = not domain_search and [('name', 'ilike', name)] or domain_search
+    obj = sugar_obj.pool.get(model)
+    xml_id = generate_xml_id(name, table)
+
+    def mapped_id_if_exist(obj, domain, xml_id):
+        ids = obj.search(cr, uid, domain, context=context)
+        if ids:
+            return mapped_id(obj, cr, uid, model, xml_id, ids[0], context=context)
+        return False
+    
+    
+    mapped_id_if_exist(obj, domain_search, xml_id)
+    fields.append('id')
+    data.append(xml_id)
+    obj.import_data(cr, uid, fields, [data], mode='update', current_module='sugarcrm_import', noupdate=True, context=context)
+    return xml_id
+
+def generate_xml_id(name, table):
+    """
+        @param name: name of the object, has to be unique in for a given table
+        @param table : table where the record we want generate come from
+        @return: a unique xml id for record, the xml_id will be the same given the same table and same name
+                 To be used to avoid duplication of data that don't have ids
+    """
+    sugar_instance = "sugarcrm" #TODO need to be changed we information is known in the wizard
+    name = name.replace('.', '_')
+    return sugar_instance + "_" + table + "_" + name
+
 def get_all(sugar_obj, cr, uid, model, sugar_val, context=None):
     models = sugar_obj.pool.get(model)
     model_code = sugar_val[0:2]
@@ -173,25 +231,7 @@ def get_lead_state(surgar_obj, cr, uid, sugar_val,context=None):
     state = state_dict['status'].get(sugar_val['status'], '')
     return state
 
-def get_opportunity_status(surgar_obj, cr, uid, sugar_val,context=None):
-    if not context:
-        context = {}
-    stage_id = False
-    stage_dict = { 'sales_stage':
-            {#Mapping of sugarcrm stage : openerp opportunity stage Mapping
-               'Need Analysis': 'New',
-               'Closed Lost': 'Lost',
-               'Closed Won': 'Won',
-               'Value Proposition': 'Proposition',
-                'Negotiation/Review': 'Negotiation'
-            },
-    }
-    stage = stage_dict['sales_stage'].get(sugar_val['sales_stage'], '')
-    stage_pool = surgar_obj.pool.get('crm.case.stage')
-    stage_ids = stage_pool.search(cr, uid, [('type', '=', 'opportunity'), ('name', '=', stage)])
-    for stage in stage_pool.browse(cr, uid, stage_ids, context):
-        stage_id = stage.id
-    return stage_id
+
 
 def get_user_address(sugar_obj, cr, uid, val, context=None):
     address_obj = sugar_obj.pool.get('res.partner.address')
@@ -465,7 +505,7 @@ def get_attendee_id(sugar_obj, cr, uid, PortType, sessionid, module_name, module
             user_id = user_resource_id[0].res_id 
             attend_ids = att_obj.search(cr, uid, [('user_id', '=', user_id)])
             if attend_ids:
-                 attendees = attend_ids[0]
+                attendees = attend_ids[0]
             else:      
                 attendees = att_obj.create(cr, uid, {'user_id': user_id, 'email': user.get('email1')})
             meeting_model_ids = find_mapped_id(sugar_obj, cr, uid, 'crm.meeting', module_id, context)
@@ -705,16 +745,14 @@ def import_employees(sugar_obj, cr, uid, context=None):
     return True
 
 def get_contact_title(sugar_obj, cr, uid, salutation, domain, context=None):
-    if not context:
-        context = {}
-    contact_title_obj = sugar_obj.pool.get('res.partner.title')
-    title_id = False            
-    title_ids = contact_title_obj.search(cr, uid, [('shortcut', '=', salutation), ('domain', '=', domain)])
-    if title_ids:
-         title_id = title_ids[0]
-    elif salutation:
-         title_id = contact_title_obj.create(cr, uid, {'name': salutation, 'shortcut': salutation, 'domain': domain})
-    return title_id
+    fields = ['shortcut', 'name', 'domain']
+    data = [salutation, salutation, domain]
+    return import_object(sugar_obj, cr, uid, fields, data, 'res.partner.title', 'contact_title', salutation, [('shortcut', '=', salutation)], context=context)
+
+
+    
+        
+    
     
 def import_emails(sugar_obj, cr, uid, context=None):
     if not context:
@@ -844,8 +882,8 @@ def import_leads(sugar_obj, cr, uid, context=None):
     for val in sugar_data:
         if val.get('opportunity_id'):
             continue
-        title_id = get_contact_title(sugar_obj, cr, uid, val.get('salutation'), 'contact', context)
-        val['title.id'] = title_id
+        title_id = get_contact_title(sugar_obj, cr, uid, val.get('salutation'), 'Contact', context)
+        val['title/id'] = title_id
         val['type'] = 'lead'
         stage_id = get_lead_status(sugar_obj, cr, uid, val, context)
         val['stage_id.id'] = stage_id
@@ -889,7 +927,7 @@ def import_opportunities(sugar_obj, cr, uid, context=None):
         'planned_revenue': 'amount',
         'date_deadline':'date_closed',
         'user_id/id' : 'assigned_user_id',
-        'stage_id.id' : 'stage_id.id',
+        'stage_id/id' : 'stage_id/id',
         'type' : 'type',
         'categ_id.id': 'categ_id.id'
     }
@@ -905,11 +943,18 @@ def import_opportunities(sugar_obj, cr, uid, context=None):
         val['partner_address_id/name'] = partner_contact_name
         val['categ_id.id'] = get_category(sugar_obj, cr, uid, 'crm.lead', val.get('opportunity_type'))                    
         val['type'] = 'opportunity'
-        stage_id = get_opportunity_status(sugar_obj, cr, uid, val, context)
-        val['stage_id.id'] = stage_id
+        val['stage_id/id'] = get_opportunity_status(sugar_obj, cr, uid, val, context)
         fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_opportunity)
         lead_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', noupdate=True, context=context)
     return True
+
+def get_opportunity_status(sugar_obj, cr, uid, sugar_val,context=None):
+    if not context:
+        context = {}
+    fields = ['name', 'type']
+    name = 'Opportunity_' + sugar_val['sales_stage']
+    data = [sugar_val['sales_stage'], 'Opportunity']
+    return import_object(sugar_obj, cr, uid, fields, data, 'crm.case.stage', 'crm_stage', name, [('type', '=', 'opportunity'), ('name', 'ilike', sugar_val['sales_stage'])], context)
 
 MAP_FIELDS = {'Opportunities':  #Object Mapping name
                     {'dependencies' : ['Users', 'Accounts', 'Contacts', 'Leads'],  #Object to import before this table
@@ -920,7 +965,7 @@ MAP_FIELDS = {'Opportunities':  #Object Mapping name
                      'process' : import_leads,
                     },
               'Contacts':
-                    {'dependencies' : ['Users'],  #Object to import before this table
+                    {'dependencies' : [],  #Object to import before this table
                      'process' : import_partner_address,
                     },
               'Accounts':
@@ -932,25 +977,17 @@ MAP_FIELDS = {'Opportunities':  #Object Mapping name
                      'process' : import_users,
                     },
               'Meetings': 
-                    {'dependencies' : ['Users', 'Tasks'],
+                    {'dependencies' : ['Accounts', 'Contacts', 'Users'],
                      'process' : import_meetings,
                     },        
               'Tasks': 
-                    {'dependencies' : ['Users', 'Accounts', 'Contacts'],
+                    {'dependencies' : ['Accounts', 'Contacts', 'Users'],
                      'process' : import_tasks,
                     },  
               'Calls': 
-                    {'dependencies' : ['Users', 'Accounts', 'Contacts', 'Leads'],
+                    {'dependencies' : ['Accounts', 'Contacts', 'Users', 'Opportunities'],
                      'process' : import_calls,
-                    },                        
-              'Employees': 
-                    {'dependencies' : ['Resources'],
-                     'process' : import_employees,
-                    },
-              'Emails': 
-                    {'dependencies' : ['Users'],
-                     'process' : import_emails,
-                    },    
+                    },  
               'Projects': 
                     {'dependencies' : ['Users', 'Accounts', 'Contacts'],
                      'process' : import_projects,
@@ -962,11 +999,21 @@ MAP_FIELDS = {'Opportunities':  #Object Mapping name
               'Bugs': 
                     {'dependencies' : ['Users', 'Projects', 'Project Tasks'],
                      'process' : import_bug,
-                    },   
+                    },                         
+              
+              'Emails': 
+                    {'dependencies' : ['Users'],
+                     'process' : import_emails,
+                    },    
+              
               'Notes': 
                     {'dependencies' : ['Users', 'Projects', 'Project Tasks', 'Accounts', 'Contacts', 'Leads', 'Opportunities', 'Meetings', 'Calls'],
                      'process' : import_history,
-                    },                    
+                    },  
+              'Employees': 
+                    {'dependencies' : ['Resources', 'Users'],
+                     'process' : import_employees,
+                    },                  
               'Resources': 
                     {'dependencies' : ['Users'],
                      'process' : import_resources,
