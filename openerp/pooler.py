@@ -61,10 +61,14 @@ def get_db_and_pool(db_name, force_demo=False, status=None, update_module=False,
     return db, pool
 
 
-def restart_pool(db_name, force_demo=False, status=None, update_module=False):
-    """Delete an existing osv_pool and return a database connection and a newly initialized osv_pool."""
+def delete_pool(db_name):
+    """Delete an existing osv_pool."""
     if db_name in pool_dic:
         del pool_dic[db_name]
+
+def restart_pool(db_name, force_demo=False, status=None, update_module=False):
+    """Delete an existing osv_pool and return a database connection and a newly initialized osv_pool."""
+    delete_pool(db_name)
     return get_db_and_pool(db_name, force_demo, status, update_module=update_module)
 
 
@@ -75,7 +79,6 @@ def get_db(db_name):
 
 def get_pool(db_name, force_demo=False, status=None, update_module=False):
     """Return an osv_pool."""
-    pool = get_db_and_pool(db_name, force_demo, status, update_module)[1]
-    return pool
+    return get_db_and_pool(db_name, force_demo, status, update_module)[1]
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
