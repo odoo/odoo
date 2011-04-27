@@ -814,20 +814,27 @@ def get_campaign_id(sugar_obj, cr, uid, val, context=None):
         cam_id = cam_obj.create(cr, uid, {'name': val})
     return cam_id
     
-def get_attachment(sugar_obj, cr, uid, val, model, File, Filename, context=None):
+def get_attachment(sugar_obj, cr, uid, val, model, File, Filename, parent_type, context=None):
     if not context:
         context = {}
     attach_ids = False    
     attachment_obj = sugar_obj.pool.get('ir.attachment')
+    partner_obj = sugar_obj.pool.get('res.partner')
     model_obj = sugar_obj.pool.get('ir.model.data')
     mailgate_obj = sugar_obj.pool.get('mailgate.message')
     attach_ids = attachment_obj.search(cr, uid, [('res_id','=', val.get('res_id'), ('res_model', '=', val.get('model')))])
     if not attach_ids:
-        new_attachment_id = attachment_obj.create(cr, uid, {'name': Filename or val.get('name'), 'datas_fname': Filename, 'datas': File, 'res_id': val.get('res_id', False),'res_model': val.get('model',False)})
+        if parent_type == 'Accounts':
+            new_attachment_id = attachment_obj.create(cr, uid, {'name': Filename or val.get('name'), 'datas_fname': Filename, 'datas': File, 'res_id': val.get('res_id', False),'res_model': val.get('model',False), 'partner_id': val.get('partner_id/.id')})
+        else:    
+            new_attachment_id = attachment_obj.create(cr, uid, {'name': Filename or val.get('name'), 'datas_fname': Filename, 'datas': File, 'res_id': val.get('res_id', False),'res_model': val.get('model',False)})
         message_model_ids = find_mapped_id(sugar_obj, cr, uid, model, val.get('id'), context)
         message_xml_id = model_obj.browse(cr, uid, message_model_ids)
         if message_xml_id:
-          mailgate_obj.write(cr, uid, [message_xml_id[0].res_id], {'attachment_ids': [(4, new_attachment_id)]})                         
+          if parent_type == 'Accounts':
+                 mailgate_obj.write(cr, uid, [message_xml_id[0].res_id], {'attachment_ids': [(4, new_attachment_id)], 'partner_id': val.get('partner_id/.id')})
+          else:
+                 mailgate_obj.write(cr, uid, [message_xml_id[0].res_id], {'attachment_ids': [(4, new_attachment_id)]})                                              
     return True    
     
 def import_history(sugar_obj, cr, uid, context=None):
@@ -858,7 +865,7 @@ def import_history(sugar_obj, cr, uid, context=None):
                 val['model'] = model.model
         fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_attachment, context)   
         mailgate_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', noupdate=True, context=context)
-        get_attachment(sugar_obj, cr, uid, val, 'mailgate.message', File, Filename, context)
+        get_attachment(sugar_obj, cr, uid, val, 'mailgate.message', File, Filename, val.get('parent_type'), context)
     return True       
     
 def import_employees(sugar_obj, cr, uid, context=None):
@@ -1182,7 +1189,7 @@ MAP_FIELDS = {'Opportunities':  #Object Mapping name
                      'process' : import_bug,
                     },   
               'Notes': 
-                    {'dependencies' : ['Users', 'Projects', 'Project Tasks', 'Accounts', 'Contacts', 'Leads', 'Opportunities', 'Meetings', 'Calls'],
+                    {'dependencies' : [],
                      'process' : import_history,
                     },                    
               'Resources': 
