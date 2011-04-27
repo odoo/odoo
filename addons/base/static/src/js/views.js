@@ -183,7 +183,14 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
 
 openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
     init: function(session, element_id, action, sidebar) {
-        var dataset = new openerp.base.DataSetSearch(session, action.res_model);
+        var dataset;
+        if(!action.res_id) {
+            dataset = new openerp.base.DataSetSearch(session, action.res_model);
+        } else {
+            dataset = new openerp.base.DataSetStatic(session, action.res_model);
+            dataset.ids = [action.res_id];
+            dataset.count = 1;
+        }
         this._super(session, element_id, dataset, action.views);
         this.action = action;
         this.sidebar = sidebar;
