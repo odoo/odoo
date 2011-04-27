@@ -251,12 +251,14 @@ class configmanager(object):
         self.parse_config()
 
     def parse_config(self, args=[]):
-        opt = self.parser.parse_args(args)[0]
+        opt, args = self.parser.parse_args()
 
         def die(cond, msg):
             if cond:
-                print msg
-                sys.exit(1)
+                self.parser.error(msg)
+
+        # Ensures no illegitimate argument is silently discarded (avoids insidious "hyphen to dash" problem)
+        die(args, "unrecognized parameters: '%s'" % " ".join(args))
 
         die(bool(opt.syslog) and bool(opt.logfile),
             "the syslog and logfile options are exclusive")

@@ -37,9 +37,10 @@
                             <field name="check_opw"/>
                         </group>
                         <group col="2" colspan="3">
-                            <button name="check_validity" string="Validate" type="object"
+                            <button name="check_validity" icon="camera_test.png
+" string="Validate" type="object"
                             attrs="{'invisible':[('state','in',['valid', 'terminated', 'canceled'])]}"/>
-                            <button name="check_validity" string="Refresh Validation Dates" type="object"
+                            <button name="check_validity" icon="camera_test.png" string="Refresh Validation Dates" type="object"
                             attrs="{'invisible':[('state','in',['unvalidated'])]}"/>
                         </group>
                     </group>

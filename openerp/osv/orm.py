@@ -1277,6 +1277,10 @@ class orm_template(object):
                 trans = self.pool.get('ir.translation')._get_source(cr, user, self._name, 'view', context['lang'], node.get('sum'))
                 if trans:
                     node.set('sum', trans)
+            if node.get('help'):
+                trans = self.pool.get('ir.translation')._get_source(cr, user, self._name, 'view', context['lang'], node.get('help'))
+                if trans:
+                    node.set('help', trans)
 
         for f in node:
             if children or (node.tag == 'field' and f.tag in ('filter','separator')):
@@ -1616,7 +1620,7 @@ class orm_template(object):
                     _rec_name = self._columns.keys()[0]
                 xml = '<?xml version="1.0" encoding="utf-8"?>' \
                        '<tree string="%s"><field name="%s"/></tree>' \
-                       % (self._description, self._rec_name)
+                       % (self._description, _rec_name)
 
             elif view_type == 'calendar':
                 xml = self.__get_default_calendar_view()
@@ -2172,6 +2176,7 @@ class orm(orm_template):
                 if fget[groupby]['type'] in ('date', 'datetime'):
                     flist = "to_char(%s,'yyyy-mm') as %s " % (qualified_groupby_field, groupby)
                     groupby = "to_char(%s,'yyyy-mm')" % (qualified_groupby_field)
+                    qualified_groupby_field = groupby
                 else:
                     flist = qualified_groupby_field
             else:

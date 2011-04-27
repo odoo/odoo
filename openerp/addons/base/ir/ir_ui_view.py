@@ -196,13 +196,10 @@ class view_sc(osv.osv):
 
     def get_sc(self, cr, uid, user_id, model='ir.ui.menu', context=None):
         ids = self.search(cr, uid, [('user_id','=',user_id),('resource','=',model)], context=context)
-        results = self.read(cr, uid, ids, ['res_id'], context=context)
-        name_map = dict(self.pool.get(model).name_get(cr, uid, [x['res_id'] for x in results], context=context))
+        results = self.read(cr, uid, ids, ['res_id','name'], context=context)
+        available_menus = self.pool.get(model).search(cr, uid, [], context=context)
         # Make sure to return only shortcuts pointing to exisintg menu items.
-        filtered_results = filter(lambda result: result['res_id'] in name_map, results)
-        for result in filtered_results:
-            result.update(name=name_map[result['res_id']])
-        return filtered_results
+        return filter(lambda result: result['res_id'] in available_menus, results)
 
     _order = 'sequence,name'
     _defaults = {
