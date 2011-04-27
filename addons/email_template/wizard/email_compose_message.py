@@ -105,7 +105,7 @@ class email_compose_message(osv.osv_memory):
                 'attachment_ids': [(6, 0, [att.id for att in record.attachment_ids])]
             }
             template_pool.create(cr, uid, values, context=context)
-        return True
+        return {'type': 'ir.actions.act_window_close'}
 
 email_compose_message()
 
