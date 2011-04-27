@@ -20,7 +20,8 @@
 ##############################################################################
 
 from osv import osv, fields
-from tools.translate import _
+
+
 
 class portal(osv.osv):
     """
@@ -34,21 +35,21 @@ class portal(osv.osv):
     _columns = {
         'group_id': fields.many2one('res.groups', required=True, ondelete='cascade',
             string='Group',
-            help=_('The group extended by this portal')),
+            help='The group extended by this portal'),
         'other_group_ids': fields.many2many('res.groups',
             'portal_group_rel', 'portal_id', 'group_id',
             string='Other User Groups',
-            help=_("Those groups are assigned to the portal's users")),
+            help="Those groups are assigned to the portal's users"),
         'menu_action_id': fields.many2one('ir.actions.act_window', readonly=True,
             # ISSUE: 'ondelete' constraints do not seem effective on this field...
             string='Menu Action',
-            help=_("If set, replaces the standard menu for the portal's users")),
+            help="If set, replaces the standard menu for the portal's users"),
         'parent_menu_id': fields.many2one('ir.ui.menu', ondelete='restrict',
             string='Parent Menu',
-            help=_('The menu action opens the submenus of this menu item')),
+            help='The menu action opens the submenus of this menu item'),
         'widget_ids': fields.one2many('res.portal.widget', 'portal_id',
             string='Widgets',
-            help=_('Widgets assigned to portal users')),
+            help='Widgets assigned to portal users'),
     }
     
     def copy(self, cr, uid, id, values, context=None):
@@ -192,7 +193,7 @@ class portal_override_menu(osv.osv):
         'override_menu': fields.function(
             _get_override_menu, fnct_inv=_set_override_menu,
             type='boolean', method=True, string='Override Users Menu Action',
-            help=_('Enable this option to create the Menu Action')),
+            help='Enable this option to create the Menu Action'),
     }
 
 portal_override_menu()
