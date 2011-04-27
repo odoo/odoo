@@ -20,7 +20,6 @@
         </record>
 
         
-            
         <record id="stock_move_memory_tree_in" model="ir.ui.view">
             <field name="name">stock.move.memory.tree</field>
             <field name="model">stock.move.memory.in</field>
@@ -30,6 +29,9 @@
                     <field name="product_id" />
                     <field name="quantity" />
                     <field name="product_uom" />
+                    <!--When you click the "Validate" button, moves disappear
+                    (product track_incoming or track_outgoing field must be True) 
+                    if "attrs="{'required'('tracking','=',True)]}" is specified in prodlot_id field of the tree view  -->
                     <field name="prodlot_id" domain="[('product_id', '=', product_id)]" groups="base.group_extended" />
                     <field name="tracking" invisible="1"/>
                     <field name="cost" />
@@ -64,6 +66,9 @@
                     <field name="product_id" />
                     <field name="quantity" />
                     <field name="product_uom" />
+                    <!--When you click the "Validate" button, all moves disappear
+                    (product track_incoming or track_outgoing field must be True)
+                    if "attrs="{'required'('tracking','=',True)]}" is specified in prodlot_id field of the tree view  -->
                     <field name="prodlot_id" domain="[('product_id', '=', product_id)]" groups="base.group_extended" />
                     <field name="tracking" invisible="1"/>
                 </tree>

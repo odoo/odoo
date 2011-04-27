@@ -156,14 +156,22 @@ class stock_partial_picking(osv.osv_memory):
             for move in moves_list:
                 move_uom = move.move_id.product_uom
                 process_uom = move.product_uom
+                #Quantiny must be Positive
                 if move.quantity <= 0:
                     raise osv.except_osv(_('Warning!'), _('Please provide Proper Quantity !'))
+
+                #category id must be same for respective move
                 if move_uom.category_id.id != process_uom.category_id.id:
                     raise osv.except_osv(_('Warning'), _('You can not process %s %s as it\'s category is different than category of %s of this move!') % (move.quantity, process_uom.name, move_uom.name))
+
+                #Pikcing move product UOM factor must be bigger with respective wizard move product uom factor
                 if move_uom.factor < process_uom.factor:
                     raise osv.except_osv(_('Warning'), _('You can not process in UOM "%s" which is smaller than UOM "%s" of the current move.') % (process_uom.name, move_uom.name))
 
+                #Compute the wizard Quantity for respective move. 
                 toprocess = uom_obj._compute_qty(cr, uid, move.product_uom.id, move.quantity, move.move_id.product_uom.id)
+
+                #Compare wizard Quantity with respective picking move quantity if wizard move quantity bigger then it's giving warning.
                 if toprocess > move.move_id.product_qty:
                     raise osv.except_osv(_('Warning'), _('You can not process "%s %s" as the qty is more than "%s %s" of respective move.') % (move.quantity, process_uom.name, move.move_id.product_qty, move_uom.name))
                 partial_datas['move%s' % (move.move_id.id)] = {
