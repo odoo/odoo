@@ -180,6 +180,8 @@ class email_thread(osv.osv):
         for thread in threads:
             attachments = []
             for fname, fcontent in attach.items():
+                if isinstance(fcontent, unicode):
+                    fcontent = fcontent.encode('utf-8')
                 data_attach = {
                     'name': fname,
                     'datas': binascii.b2a_base64(str(fcontent)),
