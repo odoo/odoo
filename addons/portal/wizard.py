@@ -30,9 +30,10 @@ from base.res.res_user import _lang_get
 
 
 
-# welcome email sent to new portal users
-WELCOME_EMAIL_SUBJECT = u"Your OpenERP account at %(company)s"
-WELCOME_EMAIL_BODY = u"""Dear %(name)s,
+# welcome email sent to new portal users (note that calling tools.translate._
+# has no effect except exporting those strings for translation)
+WELCOME_EMAIL_SUBJECT = _("Your OpenERP account at %(company)s")
+WELCOME_EMAIL_BODY = _("""Dear %(name)s,
 
 You have been created an OpenERP account at %(url)s.
 
@@ -44,7 +45,7 @@ Password: %(password)s
 --
 OpenERP - Open Source Business Applications
 http://www.openerp.com
-"""
+""")
 
 ROOT_UID = 1
 
