@@ -54,9 +54,10 @@ openerp.base.form.Action = openerp.base.form.Widget.extend({
     
     on_load_action: function(result) {
         var action = result.action;
-        if(action.search_view)
-            action.search_view = false;
+        
+        action.search_view = false;
         action.no_sidebar = true;
+        action.search_view_id = false;
         
         var node_attrs = this.node.attrs;
         var get_column = ['first', 'second', 'third'];
