@@ -144,7 +144,7 @@ class wizard(osv.osv_memory):
                     logging.getLogger('res.portal.wizard').warning(
                         'Failed to send email from %s to %s', email_from, email_to)
         
-        return {}
+        return {'type': 'ir.actions.act_window_close'}
 
 wizard()
 
