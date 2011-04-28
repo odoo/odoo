@@ -30,6 +30,22 @@ from base.res.res_user import _lang_get
 
 
 
+# welcome email sent to new portal users
+WELCOME_EMAIL_SUBJECT = u"Your OpenERP account at %(company)s"
+WELCOME_EMAIL_BODY = u"""Dear %(name)s,
+
+You have been created an OpenERP account at %(url)s.
+
+Your login account data is:
+Database: %(db)s
+User:     %(login)s
+Password: %(password)s
+
+--
+OpenERP - Open Source Business Applications
+http://www.openerp.com
+"""
+
 ROOT_UID = 1
 
 # character sets for passwords, excluding 0, O, o, 1, I, l
@@ -103,42 +119,32 @@ class wizard(osv.osv_memory):
             raise osv.except_osv(_('Email required'),
                 _('You must have an email address in your User Preferences'
                   ' to send emails.'))
-        email_from = user.user_email
-        company_name = user.company_id.name
         
         portal_obj = self.pool.get('res.portal')
         for wiz in self.browse(cr, uid, ids, context):
-            # add new users in portal
-            users_data = [ {
+            # create new users in portal
+            users_values = [ (0, 0, {
                     'name': u.name,
                     'login': u.email,
                     'password': random_password(),
                     'user_email': u.email,
                     'context_lang': u.lang,
                     'address_id': u.address_id.id,
-                } for u in wiz.user_ids ]
+                }) for u in wiz.user_ids ]
             portal_obj.write(cr, ROOT_UID, [wiz.portal_id.id],
-                {'users': [(0, 0, data) for data in users_data]}, context0)
+                {'users': users_values}, context0)
             
             # send email to new users (translated in their language)
             for data in users_data:
                 context['lang'] = data['context_lang']
-                data['dbname'] = cr.dbname
+                data['company'] = user.company_id.name
+                data['db'] = cr.dbname
                 data['url'] = "(missing url)"
                 
+                email_from = user.user_email
                 email_to = data['user_email']
-                subject = _("Your OpenERP account at %s") % company_name
-                body = _(
-                    "Dear %(name)s,\n\n"
-                    "You have been created an OpenERP account at %(url)s.\n\n"
-                    "Your login account data is:\n"
-                    "Database: %(dbname)s\n"
-                    "User:     %(login)s\n"
-                    "Password: %(password)s\n\n"
-                    "--\n"
-                    "OpenERP - Open Source Business Applications\n"
-                    "http://www.openerp.com\n"
-                    ) % data
+                subject = _(WELCOME_EMAIL_SUBJECT) % data
+                body = _(WELCOME_EMAIL_BODY) % data
                 res = email_send(email_from, [email_to], subject, body)
                 if not res:
                     logging.getLogger('res.portal.wizard').warning(
