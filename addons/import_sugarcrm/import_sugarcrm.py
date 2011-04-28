@@ -826,14 +826,9 @@ def get_job_id(sugar_obj, cr, uid, val, context=None):
 def get_campaign_id(sugar_obj, cr, uid, val, context=None):
     if not context:
         context={}
-    cam_id = False    
-    cam_obj = sugar_obj.pool.get('crm.case.resource.type')        
-    cam_ids = cam_obj.search(cr, uid, [('name', '=', val)])
-    if cam_ids:
-        cam_id = cam_ids[0]
-    else:
-        cam_id = cam_obj.create(cr, uid, {'name': val})
-    return cam_id
+    fields = ['name']
+    data = [val]
+    return import_object(sugar_obj, cr, uid, fields, data, 'crm.case.resource.type', 'crm_campaign', val, [('name', 'ilike', val)], context)
     
 def get_attachment(sugar_obj, cr, uid, val, model, File, Filename, parent_type, context=None):
     if not context:
@@ -1051,10 +1046,9 @@ def import_leads(sugar_obj, cr, uid, context=None):
             'fax': 'phone_fax',
             'referred': 'refered_by',
             'optout': 'optout',
-            'type_id/.id': 'type_id/.id',
+            'type_id/id': 'type_id/id',
             'country_id.id': 'country_id.id',
             'state_id.id': 'state_id.id'
-            
             }
     lead_obj = sugar_obj.pool.get('crm.lead')
     PortType, sessionid = sugar.login(context.get('username', ''), context.get('password', ''), context.get('url',''))
@@ -1068,7 +1062,7 @@ def import_leads(sugar_obj, cr, uid, context=None):
             title_id = get_contact_title(sugar_obj, cr, uid, val.get('salutation'), 'Contact', context)
             val['title/id'] = title_id
         val['type'] = 'lead'
-        val['type_id/.id'] = get_campaign_id(sugar_obj, cr, uid, val.get('lead_source'), context)
+        val['type_id/id'] = get_campaign_id(sugar_obj, cr, uid, val.get('lead_source'), context)
         stage_id = get_lead_status(sugar_obj, cr, uid, val, context)
         val['stage_id/id'] = stage_id
         val['state'] = get_lead_state(sugar_obj, cr, uid, val,context)
