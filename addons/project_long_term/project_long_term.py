@@ -379,8 +379,8 @@ def Phase_%d():
                 end_date = task.end.to_datetime()
                 
                 task_pool.write(cr, uid, [task_id], {
-                                      'date_start': start_date.strftime('%Y-%m-%d'),
-                                      'date_end': end_date.strftime('%Y-%m-%d')
+                                      'date_start': start_date.strftime('%Y-%m-%d %H:%M:%S'),
+                                      'date_end': end_date.strftime('%Y-%m-%d %H:%M:%S')
                                     }, context=context)
         return True
 project_phase()
@@ -570,8 +570,8 @@ def Project_%d():
 
 
                 phase_pool.write(cr, uid, [phase_id], {
-                                      'date_start': start_date.strftime('%Y-%m-%d'),
-                                      'date_end': end_date.strftime('%Y-%m-%d')
+                                        'date_start': start_date.strftime('%Y-%m-%d %H:%M:%S'),
+                                        'date_end': end_date.strftime('%Y-%m-%d %H:%M:%S')
                                     }, context=context)
         return True            
 
@@ -695,8 +695,8 @@ def Project_%d():
                 end_date = task.end.to_datetime()
                 
                 task_pool.write(cr, uid, [task_id], {
-                                      'date_start': start_date.strftime('%Y-%m-%d'),
-                                      'date_end': end_date.strftime('%Y-%m-%d')
+                                      'date_start': start_date.strftime('%Y-%m-%d %H:%M:%S'),
+                                      'date_end': end_date.strftime('%Y-%m-%d %H:%M:%S')
                                     }, context=context)
         return True
 
