@@ -336,9 +336,8 @@ class XMLRpcConn(object):
                 att_path = os.path.join(att_folder_path,fn)
                 attachments[i].SaveAsFile(att_path)
                 f=open(att_path,"rb")
-                content = "".join(f.readlines()).encode('base64')
+                content = "".join(f.readlines())
                 f.close()
-                content = content.decode('base64')
                 attachment[fn] = content
         return attachment
 
