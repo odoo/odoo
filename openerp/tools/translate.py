@@ -503,6 +503,8 @@ def trans_parse_view(de):
             res.append(de.text.encode("utf8"))
     if de.get("string"):
         res.append(de.get('string').encode("utf8"))
+    if de.get("help"):
+        res.append(de.get('help').encode("utf8"))
     if de.get("sum"):
         res.append(de.get('sum').encode("utf8"))
     if de.get("confirm"):
@@ -993,7 +995,7 @@ def resetlocale():
 def load_language(cr, lang):
     """Loads a translation terms for a language.
     Used mainly to automate language loading at db initialization.
-    
+
     :param lang: language ISO code with optional _underscore_ and l10n flavor (ex: 'fr', 'fr_BE', but not 'fr-BE')
     :type lang: str
     """

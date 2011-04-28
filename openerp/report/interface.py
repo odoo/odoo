@@ -49,6 +49,7 @@ class report_int(netsvc.Service):
         self.name = name
         self.id = 0
         self.name2 = '.'.join(name.split('.')[1:])
+        # TODO the reports have methods with a 'title' kwarg that is redundant with this attribute
         self.title = None
         #self.joinGroup('report')
         self.exportMethod(self.create)
