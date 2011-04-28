@@ -149,7 +149,7 @@ openerp.base.m2o = openerp.base.Controller.extend({
                 case 13:
                 case 1:
                     var $selectedRow = jQuery("#autoComplete" + this.name + "_" + this.selectedResultRow);
-                    this.setCompletionText($selectedRow);
+                    this.setCompletionText($selectedRow, true);
                     this.clearResults();
                     break;
 
@@ -216,10 +216,10 @@ openerp.base.m2o = openerp.base.Controller.extend({
         }
     },
 
-    setCompletionText: function ($selectedRow) {
+    setCompletionText: function ($selectedRow, flag) {
         var $cell = $selectedRow.find('td');
         var autoCompleteText = $cell.find('span').text();
-        autoCompleteText = this.lastSearch + '[' + autoCompleteText.substring(this.lastSearch.length) + ']'
+        autoCompleteText = flag ? autoCompleteText : this.lastSearch + '[' + autoCompleteText.substring(this.lastSearch.length) + ']'
         this.element.val(autoCompleteText);
         this.lastTextResult = autoCompleteText;
     },
