@@ -185,7 +185,7 @@ class email_compose_message(osv.osv_memory):
                             'object' : self.pool.get(model).browse(cr, uid, resource_id),
                           })
             if result in (None, False):
-                return str("--------")
+                return str("")
             return tools.ustr(result)
 
         com = re.compile('(\$\{.+?\})')
