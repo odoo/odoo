@@ -22,7 +22,6 @@ openerp.base.form.Board = openerp.base.form.Widget.extend({
     
     on_loaded: function() {
         var children = this.node.children;
-        
         var board = jQuery('#dashboard').dashboard({
             layoutClass:'layout'
         });
@@ -31,7 +30,8 @@ openerp.base.form.Board = openerp.base.form.Widget.extend({
             var ch_widgets = children[ch].children;
             for(var chld = 0; chld < ch_widgets.length; chld++) {
                 var widget_type = ch_widgets[chld].tag;
-                var widget = new (openerp.base.form.widgets.get_object(widget_type)) (this.view, ch_widgets[chld], board, chld);
+                var child_index = widget_type == 'action' ? chld : ch;
+                var widget = new (openerp.base.form.widgets.get_object(widget_type)) (this.view, ch_widgets[chld], board, child_index);
                 widget.start();
             }
         }
@@ -39,8 +39,8 @@ openerp.base.form.Board = openerp.base.form.Widget.extend({
 });
 
 openerp.base.form.Action = openerp.base.form.Widget.extend({
-    init: function(view, node, board,child_index) {
-        this._super(view, node, board,child_index);
+    init: function(view, node, board, child_index) {
+        this._super(view, node, board, child_index);
         this.board = board;
         this.child_index = child_index;
     },
@@ -76,6 +76,28 @@ openerp.base.form.Action = openerp.base.form.Widget.extend({
     }
 })
 
+openerp.base.form.Vpaned = openerp.base.form.Widget.extend({
+    init: function(view, node, board, child_index) {
+        
+        this._super(view, node, board, child_index);
+        this.board = board;
+        this.child_index = child_index;
+    },
+    start: function() {
+        this._super.apply(this, arguments);
+        var children = this.node.children;
+        for(var chld=0; chld<children.length; chld++) {
+            var ch_widget = children[chld].children;
+            for(var ch=0; ch<ch_widget.length; ch++) {
+                var widget_type = ch_widget[ch].tag;
+                var widget = new (openerp.base.form.widgets.get_object(widget_type)) (this.view, ch_widget[ch], this.board, this.child_index);
+                widget.start();
+            }
+        }
+    },
+})
+
 openerp.base.form.widgets.add('hpaned', 'openerp.base.form.Board');
+openerp.base.form.widgets.add('vpaned', 'openerp.base.form.Vpaned');
 openerp.base.form.widgets.add('action', 'openerp.base.form.Action');
 }
