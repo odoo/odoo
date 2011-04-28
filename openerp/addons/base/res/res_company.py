@@ -26,11 +26,10 @@ import tools
 from tools.translate import _
 from tools.safe_eval import safe_eval as eval
 from lxml import etree
+import tempfile
 
 import pooler
 import netsvc
-from report.interface import report_rml
-from tools import to_xml
 from report import report_sxw
 
 class multi_company_default(osv.osv):
@@ -302,7 +301,7 @@ class res_company(osv.osv):
         (osv.osv._check_recursion, 'Error! You can not create recursive companies.', ['parent_id'])
     ]
 
-    def createReport(self, cr, uid, ids, context=None):
+    def preview_report(self, cr, uid, ids, context=None):
         # Used new cursor as it was closed explicitly somewhere and because of this partner data was not printed
         # Tocheck: its not closed
         cr = pooler.get_db(cr.dbname).cursor()
@@ -312,6 +311,7 @@ class res_company(osv.osv):
             def __init__(self, cr, uid, name, context):
                 super(company_parser, self).__init__(cr, uid, name, context=context)
                 self.setCompany(company)
+
         rml = etree.XML(company.rml_header)
         rml = rml.getchildren()[0]
         header_xml = """<document filename="Preview Report.pdf">
@@ -319,12 +319,14 @@ class res_company(osv.osv):
           </template>
           </document>
           """
-        tempfilename= '/tmp/previews.rml'
+        tempfileid, tempfilename= tempfile.mkstemp('.rml', 'openerp_')
         fp = open(tempfilename, 'wb+')
         fp.write(header_xml)
         fp.close()
+
         if netsvc.Service._services.get('report.company.report'):
             netsvc.Service._services.pop('report.company.report')
+
         myreport = report_sxw.report_sxw('report.company.report', 'res.company', tempfilename, parser=company_parser)
         return {
                 'type': 'ir.actions.report.xml',
@@ -336,6 +338,7 @@ class res_company(osv.osv):
 res_company()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+
 
 
 
