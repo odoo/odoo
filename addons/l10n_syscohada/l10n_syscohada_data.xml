@@ -1,34 +1,40 @@
-﻿﻿<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
  <openerp> 
 <data noupdate="0">
  <record id="account_type_dettes" model="account.account.type">
   <field name="name">Dettes long terme</field> 
   <field name="code">dettes</field> 
+  <field name="report_type">liability</field>
   <field name="close_method">balance</field> 
   </record>
  <record id="account_type_immobilisations" model="account.account.type">
   <field name="name">Immobilisations</field> 
   <field name="code">immobilization</field> 
+  <field name="report_type">asset</field>
   <field name="close_method">balance</field> 
   </record> 
  <record id="account_type_stock" model="account.account.type">
   <field name="name">Stocks</field> 
-  <field name="code">stocks</field> 
+  <field name="code">stocks</field>
+  <field name="report_type">asset</field> 
   <field name="close_method">balance</field> 
   </record> 
  <record id="account_type_cloture" model="account.account.type">
   <field name="name">Cloture</field> 
   <field name="code">cloture</field> 
+  <field name="report_type">liability</field>
   <field name="close_method">balance</field> 
   </record>
   <record model="account.account.type" id="account_type_receivable">
   <field name="name">Receivable</field> 
   <field name="code">receivable</field> 
+  <field name="report_type">asset</field>
   <field name="close_method">unreconciled</field> 
   </record>
  <record model="account.account.type" id="account_type_payable">
   <field name="name">Payable</field> 
   <field name="code">payable</field> 
+  <field name="report_type">liability</field>
   <field name="close_method">unreconciled</field> 
   </record>
  <record model="account.account.type" id="account_type_view">
@@ -39,11 +45,13 @@
  <record model="account.account.type" id="account_type_income">
   <field name="name">Income</field> 
   <field name="code">income</field> 
+   <field name="report_type">income</field>
   <field name="close_method">none</field> 
   </record>
  <record model="account.account.type" id="account_type_expense">
   <field name="name">Expense</field> 
   <field name="code">expense</field> 
+   <field name="report_type">expense</field>
   <field name="close_method">none</field> 
   </record>
  <record model="account.account.type" id="account_type_tax">
@@ -54,21 +62,25 @@
  <record model="account.account.type" id="account_type_cash">
   <field name="name">Cash</field> 
   <field name="code">cash</field> 
+  <field name="report_type">asset</field>
   <field name="close_method">balance</field> 
   </record>
  <record model="account.account.type" id="account_type_asset">
   <field name="name">Asset</field> 
   <field name="code">asset</field> 
+   <field name="report_type">asset</field>
   <field name="close_method">balance</field> 
   </record>
  <record model="account.account.type" id="account_type_equity">
   <field name="name">Equity</field> 
   <field name="code">equity</field> 
+  <field name="report_type">asset</field>
   <field name="close_method">balance</field> 
   </record>
  <record model="account.account.type" id="account_type_provision">
   <field name="name">Provisions</field> 
   <field name="code">provision</field> 
+  <field name="report_type">liability</field>
   <field name="close_method">balance</field> 
   </record>
  <record model="account.account.type" id="account_type_commitment">
@@ -79,6 +91,7 @@
  <record model="account.account.type" id="account_type_stocks">
   <field name="name">Actif circulant</field> 
   <field name="code">current asset</field> 
+  <field name="report_type">asset</field>
   <field name="close_method">balance</field> 
   </record>
  <record model="account.account.type" id="account_type_special">
@@ -1804,18 +1817,6 @@
 	-->
 
       <record id="base.CFA" model="res.currency">
-      	<!-- There are in fact 2 CFA currencies:
-                  - XAF for the Central African CFA franc
-                  - XOF for the West African CFA franc
-                As they are interchangeable, we probably only need one.
-                XOF appears to have "CFA" as symbol, while "XAF" is "FCFA",
-                so let's pick XOF as the ISO Code, to have a code-symbol match.
-                We can keep CFA as XML ID to show that we only have one currency,
-                there is no possible conflict, as no other currency currently
-                has CFA as ISO Code.
-                See http://en.wikipedia.org/wiki/CFA_franc
-                    http://en.wikipedia.org/wiki/ISO_4217
-            -->
 		<field name="name">XOF</field>
 		<field name="symbol">CFA</field>
 		<field name="rounding">1</field>
@@ -1826,7 +1827,7 @@
            <field name="currency_id" ref="base.CFA"/>
            <field eval="time.strftime('%Y-01-01')" name="name"/>
        </record>
-       	<!--
+       	﻿<!--
 	#
 	# SYSCOHADA : Définition des taux de TVA SYSCOHADA
 	# Auteur : BAAMTU Sénégal
@@ -1837,47 +1838,104 @@
 	-->
        <record model="account.tax.code.template" id="vat_syscohada_tax_root">
 		<field name="parent_id" eval="False"/>
-		<field name="name">Tax</field>
+		<field name="name">Plan de Taxes SYSCOHADA</field>
 	</record>
-	
+
 	<record id="syscohada_chart_template" model="account.chart.template">
 	    <field name="name">SYSCOHADA - Plan de compte</field>
 	    <field name="account_root_id" ref="pcg_0"/>
 	    <field name="tax_code_root_id" ref="vat_syscohada_tax_root"/>
-	    <field name="bank_account_view_id" ref="pcg_521"/>
+	    <field name="bank_account_view_id" ref="pcg_5211"/>
 	    <field name="property_account_receivable" ref="pcg_4111"/>
 	    <field name="property_account_payable" ref="pcg_4011"/>
-		<field name="property_account_expense_categ" ref="pcg_601" /> 
-		<field name="property_account_income_categ" ref="pcg_701" /> 
-	</record>
+		<field name="property_account_expense_categ" ref="pcg_6011" /> 
+		<field name="property_account_income_categ" ref="pcg_7011" /> 
+	</record>	
+        
+    <record model="account.tax.code.template" id="tax_col_ht">
+      <field name="name">Base H.T. TVA collectée</field>
+      <field name="code">Base HT TVA collectée</field>
+      <field name="sign">1.00</field>
+      <field name="parent_id" ref="vat_syscohada_tax_root"/>
+    </record> 
+    <record model="account.tax.code.template" id="tax_col_18_ht">
+      <field name="name">Base H.T. 18.0%</field>
+      <field name="code">TVA collectée à 18.0% (Base H.T.)</field>
+      <field name="parent_id" ref="tax_col_ht"/>
+      <field name="sign">1.00</field>
+    </record>
+    <record model="account.tax.code.template" id="tax_col">
+      <field name="name">TVA collectée</field>
+      <field name="code">TVA collectée</field>
+      <field name="sign">1.00</field>
+      <field name="parent_id" ref="vat_syscohada_tax_root"/>
+    </record> 
+    <record model="account.tax.code.template" id="tax_col_18">
+      <field name="name">TVA 18.0%</field>
+      <field name="code">TVA collectée à 18.0%</field>
+      <field name="parent_id" ref="tax_col"/>
+      <field name="sign">1.00</field>
+    </record>
 	
-	<record model="account.tax.template" id="tva_18">
-		<field name="name">TVA 18%</field>
+    <record model="account.tax.code.template" id="tax_acq_ht">
+      <field name="name">Base H.T. TVA acquittée</field>
+      <field name="code">Base HT TVA acquittée</field>
+      <field name="sign">1.00</field>
+      <field name="parent_id" ref="vat_syscohada_tax_root"/>
+    </record> 
+    <record model="account.tax.code.template" id="tax_acq_18_ht">
+      <field name="name">Base H.T. 18.0%</field>
+      <field name="code">TVA acquittée à 18.0% (Base H.T.)</field>
+      <field name="parent_id" ref="tax_acq_ht"/>
+      <field name="sign">1.00</field>
+    </record>	
+
+    <record model="account.tax.code.template" id="tax_acq">
+      <field name="name">TVA acquittée</field>
+      <field name="code">TVA acquittée</field>
+      <field name="sign">1.00</field>
+      <field name="parent_id" ref="vat_syscohada_tax_root"/>
+    </record> 
+    <record model="account.tax.code.template" id="tax_acq_18">
+      <field name="name">TVA 18.0%</field>
+      <field name="code">TVA acquittée à 18.0%</field>
+      <field name="parent_id" ref="tax_acq"/>
+      <field name="sign">1.00</field>
+    </record>	
+	
+	<record model="account.tax.template" id="tva_sale_18">
+		<field name="name">TVA 18% (vente)</field>
 		<field name="chart_template_id" ref="syscohada_chart_template"/>
 		<field name="amount" eval="0.18"/>
 		<field name="type">percent</field>
 		<field name="account_collected_id" ref="pcg_4441"/>
 		<field name="account_paid_id" ref="pcg_4449"/>
-	</record>
-		
-	<record model="account.tax.template" id="tva_10">
-		<field name="name">TVA 10%</field>
-		<field name="chart_template_id" ref="syscohada_chart_template"/>
-		<field name="amount" eval="0.1"/>
-		<field name="type">percent</field>
-		<field name="account_collected_id" ref="pcg_4441"/>
-		<field name="account_paid_id" ref="pcg_4449"/>
+		<field name="base_code_id" ref="tax_col_18_ht"/>
+		<field name="tax_code_id" ref="tax_col_18"/>
+		<field name="type_tax_use">sale</field>		
+		<field name="ref_base_code_id" ref="tax_col_18_ht"/>
+		<field name="ref_base_sign" eval="-1"/>
+		<field name="ref_tax_code_id" ref="tax_col_18"/>
+		<field name="ref_tax_sign" eval="-1"/>		
 	</record>
 	
-	<record model="account.tax.template" id="tva_15">
-		<field name="name">TVA 15%</field>
+	
+	<record model="account.tax.template" id="tva_purchase_18">
+		<field name="name">TVA 18% (achat)</field>
 		<field name="chart_template_id" ref="syscohada_chart_template"/>
-		<field name="amount" eval="0.15"/>
+		<field name="amount" eval="0.18"/>
 		<field name="type">percent</field>
+		<field name="type_tax_use">purchase</field>	
 		<field name="account_collected_id" ref="pcg_4441"/>
 		<field name="account_paid_id" ref="pcg_4449"/>
-	</record>
-	
+		<field name="base_code_id" ref="tax_acq_18_ht"/>
+		<field name="tax_code_id" ref="tax_acq_18"/>
+		<field name="ref_base_code_id" ref="tax_acq_18_ht"/>
+		<field name="ref_base_sign" eval="-1"/>
+		<field name="ref_tax_code_id" ref="tax_acq_18"/>
+		<field name="ref_tax_sign" eval="-1"/>		
+	</record>	
+
 	<record model="account.tax.template" id="tva_exonere">
 		<field name="name">Exonéré de TVA</field>
 		<field name="chart_template_id" ref="syscohada_chart_template"/>
