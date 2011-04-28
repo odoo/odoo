@@ -22,8 +22,8 @@ import time
 
 from osv import osv, fields
 
-class account_analytic_Journal_report(osv.osv_memory):
-    _name = 'account.analytic.Journal.report'
+class account_analytic_journal_report(osv.osv_memory):
+    _name = 'account.analytic.journal.report'
     _description = 'Account Analytic Journal'
 
     _columns = {
@@ -52,5 +52,5 @@ class account_analytic_Journal_report(osv.osv_memory):
             'datas': datas,
             }
 
-account_analytic_Journal_report()
+account_analytic_journal_report()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

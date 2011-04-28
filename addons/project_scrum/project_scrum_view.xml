@@ -63,7 +63,7 @@
                         <field domain="[('project_id','=',project_id), ('state','in', ['draft','open'])]" name="sprint_id" select="1"/>
      					<button name="%(action_postpone_wizard)d" string="Postpone" type="action"
 							help="Postpone backlog" colspan="2"
-                         icon="gtk-convert"  attrs="{'invisible':[('state','=','done')]}"/>
+                         icon="gtk-convert"  attrs="{'invisible':[('state','in',['done', 'cancel'])]}"/>
                         <field name="user_id" select="1"/>
                         <field name="sequence" groups="base.group_extended"/>
                         <field name="create_date"/>
