@@ -468,16 +468,18 @@ def get_account(sugar_obj, cr, uid, val, context=None):
             
     if val.get('parent_type') == 'Contacts':
         model_ids = model_obj.search(cr, uid, [('name', '=', val.get('parent_id')), ('model', '=', 'res.partner.address')])
-        for model in model_obj.browse(cr, uid, model_ids):
+        if model_ids:
+            model = model_obj.browse(cr, uid, model_ids)[0]
             partner_address_id = model.res_id
             address_id = address_obj.browse(cr, uid, partner_address_id)
             partner_phone = address_id.phone
             partner_mobile = address_id.mobile
-            partner_id = address_id and address_id.partner_id or False
+            partner_id = address_id and address_id.partner_id.id or False
             
     if val.get('parent_type') == 'Opportunities':
         model_ids = model_obj.search(cr, uid, [('name', '=', val.get('parent_id')), ('model', '=', 'crm.lead')])
-        for model in model_obj.browse(cr, uid, model_ids):
+        if model_ids:
+            model = model_obj.browse(cr, uid, model_ids)[0]
             opportunity_id = model.res_id
             opportunity_id = crm_obj.browse(cr, uid, opportunity_id)
             partner_id = opportunity_id.partner_id.id
@@ -487,7 +489,8 @@ def get_account(sugar_obj, cr, uid, val, context=None):
             
     if val.get('parent_type') == 'Project':
         model_ids = model_obj.search(cr, uid, [('name', '=', val.get('parent_id')), ('model', '=', 'project.project')])
-        for model in model_obj.browse(cr, uid, model_ids):
+        if model_ids:
+            model = model_obj.browse(cr, uid, model_ids)[0]
             proj_ids = model.res_id
             proj_id = project_obj.browse(cr, uid, proj_ids)
             partner_id = proj_id.partner_id.id
@@ -497,14 +500,14 @@ def get_account(sugar_obj, cr, uid, val, context=None):
 
     if val.get('parent_type') == 'Bugs':
         model_ids = model_obj.search(cr, uid, [('name', '=', val.get('parent_id')), ('model', '=', 'project.issue')])
-        for model in model_obj.browse(cr, uid, model_ids):
+        if model_ids:
+            model = model_obj.browse(cr, uid, model_ids)[0]
             issue_ids = model.res_id
             issue_id = issue_obj.browse(cr, uid, issue_ids)
             partner_id = issue_id.partner_id.id
             partner_address_id =  issue_id.partner_address_id.id
             partner_phone = issue_id.partner_address_id.phone
             partner_mobile = issue_id.partner_address_id.mobile                        
-                        
     return partner_id, partner_address_id, partner_phone,partner_mobile     
 
 
