@@ -411,15 +411,13 @@
 
       <!-- Email Compose message Action-->
       <act_window
-      id="evaluation_reminders"
-      multi="True"
-      key2="client_action_multi"
-      name="Evaluation Reminders"
+      id="evaluation_reminders" name="Evaluation Reminders"
       res_model="email.compose.message"
       src_model="hr.evaluation.interview"
-      view_type="form"
-      view_mode="form"
-      target="new"/>
+      view_type="form" view_mode="form"
+      target="new" multi="True"
+      key2="client_action_multi"
+      context="{'mass_mail':True}"/>
 
       <!-- Evaluation Interviews Button on Employee Form -->
       <act_window
