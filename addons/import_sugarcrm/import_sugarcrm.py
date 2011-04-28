@@ -176,7 +176,6 @@ def import_partner_address(sugar_obj, cr, uid, context=None):
     return True
     
 
-
 def import_users(sugar_obj, cr, uid, context=None):
     map_user = {
         'id' : 'id', 
@@ -219,24 +218,13 @@ def import_users(sugar_obj, cr, uid, context=None):
         user_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', noupdate=True, context=context)
     return True
 
-def get_lead_status(surgar_obj, cr, uid, sugar_val,context=None):
+def get_lead_status(sugar_obj, cr, uid, sugar_val,context=None):
     if not context:
         context = {}
-    stage_id = False
-    stage_dict = {'status': #field in the sugarcrm database
-        { #Mapping of sugarcrm stage : openerp opportunity stage
-            'New' : 'New',
-            'Assigned':'Qualification',
-            'In Progress': 'Proposition',
-            'Recycled': 'Negotiation',
-            'Dead': 'Lost'
-        },}
-    stage = stage_dict['status'].get(sugar_val['status'], '')
-    stage_pool = surgar_obj.pool.get('crm.case.stage')
-    stage_ids = stage_pool.search(cr, uid, [('type', '=', 'lead'), ('name', '=', stage)])
-    for stage in stage_pool.browse(cr, uid, stage_ids, context):
-        stage_id = stage.id
-    return stage_id
+    fields = ['name', 'type']
+    name = 'lead_' + sugar_val['status']
+    data = [sugar_val['status'], 'lead']
+    return import_object(sugar_obj, cr, uid, fields, data, 'crm.case.stage', 'crm_lead_stage', name, [('type', '=', 'lead'), ('name', 'ilike', sugar_val['status'])], context)
 
 def get_lead_state(surgar_obj, cr, uid, sugar_val,context=None):
     if not context:
@@ -252,8 +240,6 @@ def get_lead_state(surgar_obj, cr, uid, sugar_val,context=None):
         },}
     state = state_dict['status'].get(sugar_val['status'], '')
     return state
-
-
 
 def get_user_address(sugar_obj, cr, uid, val, context=None):
     address_obj = sugar_obj.pool.get('res.partner.address')
@@ -362,16 +348,11 @@ def import_partners(sugar_obj, cr, uid, context=None):
     return True
 
 def get_category(sugar_obj, cr, uid, model, name, context=None):
-    categ_id = False
-    categ_obj = sugar_obj.pool.get('crm.case.categ')
-    categ_ids = categ_obj.search(cr, uid, [('object_id.model','=',model), ('name', 'like', name)] )
-    if categ_ids:
-        categ_id = categ_ids[0]
-    else:
-        model_ids = sugar_obj.pool.get('ir.model').search(cr, uid, [('model', '=', model)], context=context)
-        model = model_ids and model_ids[0] or False
-        categ_id = categ_obj.create(cr, uid, {'name': name, 'object_id': model})
-    return categ_id     
+    if not context:
+        context = {}
+    fields = ['name', 'object_id']
+    data = [name, model]
+    return import_object(sugar_obj, cr, uid, fields, data, 'crm.case.categ', 'crm_categ', name, [('object_id.model','=',model), ('name', 'ilike', name)], context)
 
 def get_alarm_id(sugar_obj, cr, uid, val, context=None):
     
@@ -553,7 +534,7 @@ def import_tasks(sugar_obj, cr, uid, context=None):
                 'date': ['__datetime__', 'date_start'],
                 'date_deadline' : ['__datetime__', 'date_due'],
                 'user_id/id': 'assigned_user_id',
-                'categ_id/.id': 'categ_id/.id',
+                'categ_id/id': 'categ_id/id',
                 'partner_id/.id': 'partner_id/.id',
                 'partner_address_id/.id': 'partner_address_id/.id',
                 'state': 'state'
@@ -569,7 +550,7 @@ def import_tasks(sugar_obj, cr, uid, context=None):
         partner_id, partner_address_id, partner_phone, partner_mobile = get_account(sugar_obj, cr, uid, val, context)
         val['partner_id/.id'] = partner_id
         val['partner_address_id/.id'] = partner_address_id
-        val['categ_id/.id'] = categ_id
+        val['categ_id/id'] = categ_id
         val['state'] = get_task_state(sugar_obj, cr, uid, val.get('status'), context)
         fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_task, context)
         meeting_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', noupdate=True, context=context)
@@ -649,7 +630,7 @@ def import_calls(sugar_obj, cr, uid, context=None):
                     'user_id/id': 'assigned_user_id',
                     'partner_id/.id': 'partner_id/.id',
                     'partner_address_id/.id': 'partner_address_id/.id',
-                    'categ_id/.id': 'categ_id/.id',
+                    'categ_id/id': 'categ_id/id',
                    'state': 'state',
                    'partner_phone': 'partner_phone',
                    'partner_mobile': 'partner_mobile',
@@ -665,7 +646,7 @@ def import_calls(sugar_obj, cr, uid, context=None):
             for call_opportunity in sugar_call_leads: 
                 val['opportunity_id/id'] = call_opportunity 
         categ_id = get_category(sugar_obj, cr, uid, 'crm.phonecall', val.get('direction'))         
-        val['categ_id/.id'] = categ_id
+        val['categ_id/id'] = categ_id
         partner_id, partner_address_id, partner_phone, partner_mobile = get_account(sugar_obj, cr, uid, val, context)
         
         val['partner_id/.id'] = partner_id
@@ -807,7 +788,7 @@ def import_bug(sugar_obj, cr, uid, context=None):
     map_resource = {'id' : 'id',
                     'name': 'name',
                     'project_id/.id':'project_id/.id',
-                    'categ_id.id': 'categ_id.id',
+                    'categ_id/id': 'categ_id/id',
                     'priority':'priority',
                     'description': ['__prettyprint__','description', 'bug_number', 'fixed_in_release_name', 'source', 'fixed_in_release', 'work_log', 'found_in_release', 'release_name', 'resolution'],
                     'state': 'state',
@@ -823,7 +804,7 @@ def import_bug(sugar_obj, cr, uid, context=None):
         else:
              project_id = project_obj.create(cr, uid, {'name':'sugarcrm_bugs'})    
         val['project_id/.id'] = project_id
-        val['categ_id.id'] = get_category(sugar_obj, cr, uid, 'project.issue', val.get('type'))
+        val['categ_id/id'] = get_category(sugar_obj, cr, uid, 'project.issue', val.get('type'))
         val['priority'] = get_bug_priority(sugar_obj, cr, uid, val.get('priority'),context)
         val['state'] = get_bug_state(sugar_obj, cr, uid, val.get('status'),context)
         fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_resource, context)
@@ -943,11 +924,6 @@ def get_contact_title(sugar_obj, cr, uid, salutation, domain, context=None):
     data = [salutation, salutation, domain]
     return import_object(sugar_obj, cr, uid, fields, data, 'res.partner.title', 'contact_title', salutation, [('shortcut', '=', salutation)], context=context)
 
-
-    
-        
-    
-    
 def import_emails(sugar_obj, cr, uid, context=None):
     if not context:
         context= {}
@@ -1069,7 +1045,7 @@ def import_leads(sugar_obj, cr, uid, context=None):
             'zip': 'primary_address_postalcode',
             'city':'primary_address_city',
             'user_id/id' : 'assigned_user_id',
-            'stage_id.id' : 'stage_id.id',
+            'stage_id/id' : 'stage_id/id',
             'type' : 'type',
             'state': 'state',
             'fax': 'phone_fax',
@@ -1080,7 +1056,6 @@ def import_leads(sugar_obj, cr, uid, context=None):
             'state_id.id': 'state_id.id'
             
             }
-        
     lead_obj = sugar_obj.pool.get('crm.lead')
     PortType, sessionid = sugar.login(context.get('username', ''), context.get('password', ''), context.get('url',''))
     sugar_data = sugar.search(PortType, sessionid, 'Leads')
@@ -1089,12 +1064,13 @@ def import_leads(sugar_obj, cr, uid, context=None):
             val['optout'] = '1'
         if val.get('opportunity_id'):
             continue
-        title_id = get_contact_title(sugar_obj, cr, uid, val.get('salutation'), 'Contact', context)
-        val['title/id'] = title_id
+        if val.get('salutation'):
+            title_id = get_contact_title(sugar_obj, cr, uid, val.get('salutation'), 'Contact', context)
+            val['title/id'] = title_id
         val['type'] = 'lead'
         val['type_id/.id'] = get_campaign_id(sugar_obj, cr, uid, val.get('lead_source'), context)
         stage_id = get_lead_status(sugar_obj, cr, uid, val, context)
-        val['stage_id.id'] = stage_id
+        val['stage_id/id'] = stage_id
         val['state'] = get_lead_state(sugar_obj, cr, uid, val,context)
         if val.get('primary_address_country'):
             country_id = get_all_countries(sugar_obj, cr, uid, val.get('primary_address_country'), context)
@@ -1144,7 +1120,7 @@ def import_opportunities(sugar_obj, cr, uid, context=None):
         'user_id/id' : 'assigned_user_id',
         'stage_id/id' : 'stage_id/id',
         'type' : 'type',
-        'categ_id.id': 'categ_id.id',
+        'categ_id/id': 'categ_id/id',
         'email_from': 'email_from'
     }
     lead_obj = sugar_obj.pool.get('crm.lead')
@@ -1158,7 +1134,7 @@ def import_opportunities(sugar_obj, cr, uid, context=None):
         partner_contact_name, partner_contact_email = get_opportunity_contact(sugar_obj,cr,uid, PortType, sessionid, val, partner_xml_id, context)
         val['partner_address_id/name'] = partner_contact_name
         val['email_from'] = partner_contact_email
-        val['categ_id.id'] = get_category(sugar_obj, cr, uid, 'crm.lead', val.get('opportunity_type'))                    
+        val['categ_id/id'] = get_category(sugar_obj, cr, uid, 'crm.lead', val.get('opportunity_type'))                    
         val['type'] = 'opportunity'
         val['stage_id/id'] = get_opportunity_status(sugar_obj, cr, uid, val, context)
         fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_opportunity)
@@ -1221,7 +1197,10 @@ MAP_FIELDS = {'Opportunities':  #Object Mapping name
                     {'dependencies' : ['Users', 'Projects', 'Project Tasks'],
                      'process' : import_bug,
                     },                         
-              
+              'Claims': 
+                    {'dependencies' : ['Users', 'Accounts', 'Contacts', 'Leads'],
+                     'process' : import_claims,
+                    },                         
               'Emails': 
                     {'dependencies' : ['Users', 'Projects', 'Project Tasks', 'Accounts', 'Contacts', 'Leads', 'Opportunities', 'Meetings', 'Calls'],
                      'process' : import_emails,
