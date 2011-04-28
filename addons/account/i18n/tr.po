@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-01-23 22:42+0000\n"
-"Last-Translator: Ahmet Altınışık <Unknown>\n"
+"PO-Revision-Date: 2011-04-27 21:47+0000\n"
+"Last-Translator: Ayhan KIZILTAN <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-03-18 04:55+0000\n"
-"X-Generator: Launchpad (build 12559)\n"
+"X-Launchpad-Export-Date: 2011-04-28 04:37+0000\n"
+"X-Generator: Launchpad (build 12758)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -39,8 +39,8 @@ msgid ""
 "You cannot remove/deactivate an account which is set as a property to any "
 "Partner."
 msgstr ""
-"You cannot remove/deactivate an account which is set as a property to any "
-"Partner."
+"Herhangi bir Ortağa bir özellik olarak ayarlanmış bir hesabı "
+"kaldıramaz/durdurmazsınız."
 
 #. module: account
 #: view:account.move.reconcile:0
@@ -50,7 +50,7 @@ msgstr "Yevmiye Kaydını Mutabakatla"
 #. module: account
 #: field:account.installer.modules,account_voucher:0
 msgid "Voucher Management"
-msgstr "Çek Yönetimi"
+msgstr "Fiş Yönetimi"
 
 #. module: account
 #: view:account.account:0
@@ -75,7 +75,7 @@ msgstr "Lütfen fatura dizisi tanımlayınız"
 #. module: account
 #: constraint:account.period:0
 msgid "Error ! The duration of the Period(s) is/are invalid. "
-msgstr "Hata! Dönem bilgisi hatalı "
+msgstr "Hata! Dönem(ler)in süresi geçersiz. "
 
 #. module: account
 #: field:account.analytic.line,currency_id:0
@@ -95,7 +95,7 @@ msgstr "Bugüne kadarki Yaşlandırılmış Alacak"
 #. module: account
 #: field:account.partner.ledger,reconcil:0
 msgid "Include Reconciled Entries"
-msgstr "Mutabakatlı girişler dahil"
+msgstr "Mutabakatlı girişleri içer"
 
 #. module: account
 #: view:account.pl.report:0
@@ -103,7 +103,7 @@ msgid ""
 "The Profit and Loss report gives you an overview of your company profit and "
 "loss in a single document"
 msgstr ""
-"Kar / Zarar raporu, tek sayfada şirketinizin kar ve zarar durumu ile ilgili "
+"Kar ve Zarar raporu, tek sayfada şirketinizin kar ve zarar durumu ile ilgili "
 "bilgi sunar."
 
 #. module: account
@@ -114,7 +114,7 @@ msgstr "Fatura ya da ödemeden içe aktar"
 #. module: account
 #: model:ir.model,name:account.model_wizard_multi_charts_accounts
 msgid "wizard.multi.charts.accounts"
-msgstr "wizard.multi.charts.accounts"
+msgstr "sihirbaz.çoklu.plan.hesaplar"
 
 #. module: account
 #: view:account.move:0
@@ -127,8 +127,8 @@ msgid ""
 "If you unreconciliate transactions, you must also verify all the actions "
 "that are linked to those transactions because they will not be disabled"
 msgstr ""
-"If you unreconciliate transactions, you must also verify all the actions "
-"that are linked to those transactions because they will not be disabled"
+"Bir işlemin uzlaşmasını kaldırdığınızda, o işleme bağlı eylemler devre dışı "
+"bırakılmayacağı için o işleme bağlı bütün eylemleri de kontrol etmelisiniz."
 
 #. module: account
 #: report:account.tax.code.entries:0
@@ -139,7 +139,7 @@ msgstr "Muhasebe Girdileri-"
 #: code:addons/account/account.py:1291
 #, python-format
 msgid "You can not delete posted movement: \"%s\"!"
-msgstr "You can not delete posted movement: \"%s\"!"
+msgstr "İşlenmiş hareketleri sizmezsiniz: \"%s\"!"
 
 #. module: account
 #: report:account.invoice:0
@@ -155,7 +155,7 @@ msgstr "Menşei"
 #: view:account.move.line.reconcile:0
 #: view:account.move.line.reconcile.writeoff:0
 msgid "Reconcile"
-msgstr "Reconcile"
+msgstr "Mutabakat"
 
 #. module: account
 #: field:account.bank.statement.line,ref:0
@@ -177,9 +177,7 @@ msgstr "Mali Yılı Seçin "
 msgid ""
 "If the active field is set to False, it will allow you to hide the payment "
 "term without removing it."
-msgstr ""
-"'Aktif' seçeneği işaretli değilse, ödeme bilgilerini silmeden gizlemenize "
-"izin verir."
+msgstr "Aktif seçeneği seçili değilse, Ödeme şartları silmeden gizlenir."
 
 #. module: account
 #: code:addons/account/invoice.py:1421
@@ -196,12 +194,12 @@ msgstr "Hesap Kaynağı"
 #. module: account
 #: model:ir.actions.act_window,name:account.act_acc_analytic_acc_5_report_hr_timesheet_invoice_journal
 msgid "All Analytic Entries"
-msgstr "Bütün Analiz girişleri"
+msgstr "Bütün Analitik hareketler"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_view_created_invoice_dashboard
 msgid "Invoices Created Within Past 15 Days"
-msgstr "Son 15 günde yaratılmış faturalar"
+msgstr "Son 15 Günde Oluşturulmuş Faturalar"
 
 #. module: account
 #: selection:account.account.type,sign:0
@@ -221,9 +219,9 @@ msgid ""
 "invoice) to create analytic entries, OpenERP will look for a matching "
 "journal of the same type."
 msgstr ""
-"Gives the type of the analytic journal. When it needs for a document (eg: an "
-"invoice) to create analytic entries, OpenERP will look for a matching "
-"journal of the same type."
+"Analitik yevmiye defterinin tipini belirtir. Bir belge için (ör: fatura) "
+"analitik giriş oluşturmak gerektiğinde OpenERP aynı tipe uyan yevmiye "
+"defteri arayacaktır."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_tax_template_form
@@ -234,7 +232,7 @@ msgstr "Vergi Şablonu"
 #. module: account
 #: model:ir.model,name:account.model_account_tax
 msgid "account.tax"
-msgstr "account.tax"
+msgstr "muhasebe.vergi"
 
 #. module: account
 #: code:addons/account/account.py:901
@@ -243,13 +241,13 @@ msgid ""
 "No period defined for this date: %s !\n"
 "Please create a fiscal year."
 msgstr ""
-"Bu tarih için dönem tanımlanmadı: ( %s )\n"
-"Lütfen mali yıl yaratınız."
+"Bu tarih için dönem belirtilmedi: %s !\n"
+"Lütfen bir mali yıl oluşturun."
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_line_reconcile_select
 msgid "Move line reconcile select"
-msgstr "Move line reconcile select"
+msgstr "Seçilen mutabakat satırını taşı"
 
 #. module: account
 #: help:account.model.line,sequence:0
@@ -257,8 +255,7 @@ msgid ""
 "The sequence field is used to order the resources from lower sequences to "
 "higher ones"
 msgstr ""
-"The sequence field is used to order the resources from lower sequences to "
-"higher ones"
+"Sıra alanı, kaynakları küçükten büyüğe doğru sıralamak için kullanılır."
 
 #. module: account
 #: help:account.tax.code,notprintable:0
@@ -267,24 +264,24 @@ msgid ""
 "Check this box if you don't want any VAT related to this Tax Code to appear "
 "on invoices"
 msgstr ""
-"Check this box if you don't want any VAT related to this Tax Code to appear "
-"on invoices"
+"Faturalarda bu Vergi Koduyla ilintili KDV görünmesini istemiyorsanız bu "
+"kutuyu işaretleyin."
 
 #. module: account
 #: code:addons/account/invoice.py:1210
 #, python-format
 msgid "Invoice '%s' is paid partially: %s%s of %s%s (%s%s remaining)"
-msgstr "'%s' faturası parçalı öndendi: (Ödenen %s%s Toplam %s%s Kalan %s%s)"
+msgstr "'%s' nolu fatura kısmen ödendi: (Ödenen %s%s Toplam %s%s Kalan %s%s)"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_supplierentriesreconcile0
 msgid "Accounting entries are an input of the reconciliation."
-msgstr "Accounting entries are an input of the reconciliation."
+msgstr "Hesap girişleri uzlaşmaya ait girişlerdir."
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_management_belgian_reports
 msgid "Belgian Reports"
-msgstr "Belgian Reports"
+msgstr "Belçika Raporları"
 
 #. module: account
 #: code:addons/account/account_move_line.py:1176
@@ -302,7 +299,7 @@ msgstr "Hesaplanan bakiye"
 #: model:ir.actions.act_window,name:account.action_view_account_use_model
 #: model:ir.ui.menu,name:account.menu_action_manual_recurring
 msgid "Manual Recurring"
-msgstr "Manual Recurring"
+msgstr "El ile Yineleme"
 
 #. module: account
 #: view:account.fiscalyear.close.state:0
@@ -312,7 +309,7 @@ msgstr "Mali Yılı Kapat"
 #. module: account
 #: field:account.automatic.reconcile,allow_write_off:0
 msgid "Allow write off"
-msgstr "Allow write off"
+msgstr "Borcu silmeye izin ver"
 
 #. module: account
 #: view:account.analytic.chart:0
@@ -322,7 +319,7 @@ msgstr "Analiz için dönem seçin"
 #. module: account
 #: view:account.move.line:0
 msgid "St."
-msgstr "St."
+msgstr "Ara Toplam"
 
 #. module: account
 #: code:addons/account/invoice.py:529
@@ -341,8 +338,8 @@ msgid ""
 "Installs localized accounting charts to match as closely as possible the "
 "accounting needs of your company based on your country."
 msgstr ""
-"Installs localized accounting charts to match as closely as possible the "
-"accounting needs of your company based on your country."
+"Ülkenizde kullanılan hesap planına en uygun yerelleştirilmiş hesap planını "
+"kurar."
 
 #. module: account
 #: code:addons/account/wizard/account_move_journal.py:63
@@ -391,16 +388,20 @@ msgid ""
 "OpenERP. Journal items are created by OpenERP if you use Bank Statements, "
 "Cash Registers, or Customer/Supplier payments."
 msgstr ""
+"Bu görünüm, OpenERP de kayıtların toplu olarak girilmesi için muhasebeciler "
+"tarafından kullanılır. Banka Hesap Özetleri, Kasa Kayıtları, veya "
+"Müşteri/Satıcı ödemelerine ait yevmiye girişleri OpenERP tarafından "
+"oluşturulur."
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax_template
 msgid "account.tax.template"
-msgstr "account.tax.template"
+msgstr "muhasebe.vergi.şablonu"
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_accounts_wizard
 msgid "account.bank.accounts.wizard"
-msgstr "account.bank.accounts.wizard"
+msgstr "muhasebe.banka.hesap.sihirbazı"
 
 #. module: account
 #: field:account.move.line,date_created:0
@@ -421,7 +422,7 @@ msgstr "Açma/Kapama Durumu"
 #. module: account
 #: help:account.journal,currency:0
 msgid "The currency used to enter statement"
-msgstr "The currency used to enter statement"
+msgstr "hesap özeti girişi için kullanılacak para birimi"
 
 #. module: account
 #: field:account.open.closed.fiscalyear,fyear_id:0
@@ -434,8 +435,8 @@ msgid ""
 "This field contains the informatin related to the numbering of the journal "
 "entries of this journal."
 msgstr ""
-"This field contains the informatin related to the numbering of the journal "
-"entries of this journal."
+"Bu Alan, bu yevmiyenin yevmiye girişleri numaralandırılmasıyla ilintili "
+"bilgi içerir."
 
 #. module: account
 #: field:account.journal,default_debit_account_id:0
@@ -467,7 +468,7 @@ msgstr "Hesap Planı Şablonu"
 #. module: account
 #: help:account.model.line,amount_currency:0
 msgid "The amount expressed in an optional other currency."
-msgstr "The amount expressed in an optional other currency."
+msgstr "Tutar, seçmeli olarak başka bir para birimiyle beliritlebilir."
 
 #. module: account
 #: help:account.journal.period,state:0
@@ -476,9 +477,9 @@ msgid ""
 "it comes to 'Printed' state. When all transactions are done, it comes in "
 "'Done' state."
 msgstr ""
-"When journal period is created. The state is 'Draft'. If a report is printed "
-"it comes to 'Printed' state. When all transactions are done, it comes in "
-"'Done' state."
+"Yevmiye dönemi oluşturulduğunda, durum 'Taslak' tır. Bir rapor "
+"yazdırıldığındadurum 'Yazdırılmış' halini alır. Bütün işlemlemler "
+"tamamalandığında durum 'Tamamlandı' halini alır."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_tax_chart
@@ -488,6 +489,10 @@ msgid ""
 "amount of each area of the tax declaration for your country. It’s presented "
 "in a hierarchical structure, which can be modified to fit your needs."
 msgstr ""
+"Vergi Tablosu, Vergi Durumlarını (veya vergi kodlarını) gösteren bir ağaç "
+"görünümüdür ve geçerli vergi durumunu belirtir. Vergi Tablosu, ülkenize ait "
+"vergi tutarlarını gösterir. Gereksinimlerinize göre uyarlayabileceğiniz bir "
+"sıradüzenli yapıdadır."
 
 #. module: account
 #: view:account.analytic.line:0
@@ -531,12 +536,12 @@ msgstr "Seçili faturaları onayla"
 #. module: account
 #: field:account.addtmpl.wizard,cparent_id:0
 msgid "Parent target"
-msgstr "Hedef Cari"
+msgstr "Ana Hedef"
 
 #. module: account
 #: field:account.bank.statement,account_id:0
 msgid "Account used in this journal"
-msgstr "Cari bu yevmiyede kullanıldı"
+msgstr "Bu yevmiyede kullanılan hesap"
 
 #. module: account
 #: help:account.aged.trial.balance,chart_account_id:0
@@ -575,7 +580,7 @@ msgstr "Li."
 #. module: account
 #: field:account.automatic.reconcile,unreconciled:0
 msgid "Not reconciled transactions"
-msgstr "Hareketler için mutabakat yapılmadı"
+msgstr "Mutabakat yapılmayan hareketler"
 
 #. module: account
 #: code:addons/account/account_cash_statement.py:348
@@ -599,7 +604,7 @@ msgstr "Bir Mali Yılı Kapat"
 #. module: account
 #: model:process.transition,note:account.process_transition_confirmstatementfromdraft0
 msgid "The accountant confirms the statement."
-msgstr "The accountant confirms the statement."
+msgstr "Muhasebeci hesap özetini onaylar."
 
 #. module: account
 #: selection:account.balance.report,display_account:0
@@ -1123,6 +1128,10 @@ msgid ""
 "purchase orders or receipts. This way, you can control the invoice from your "
 "supplier according to what you purchased or received."
 msgstr ""
+"Satıcı Faturaları ile satıcılarınızın kestiği faturaları girip "
+"işleyebilirsiniz. OpenERP, satınalma siparişlerinden veya satıanalma "
+"fişlerinden taslak faturalar da oluşturabilir. Bu yolla siz de satıcı "
+"faturalarını satıalınan ve teslim alınan mala göre kontrol edebilirsainiz."
 
 #. module: account
 #: view:account.invoice.cancel:0
@@ -1403,6 +1412,8 @@ msgid ""
 "entry per accounting document: invoice, refund, supplier payment, bank "
 "statements, etc."
 msgstr ""
+"Borç ya da alacak işlemi olmak üzere bir çok yevmiye kalemi içeren Yevmiye "
+"Girişidir. Her hesap belgesi için OpenERP bir tek Yevmiye girişi oluşturur."
 
 #. module: account
 #: view:account.entries.report:0
@@ -1547,6 +1558,11 @@ msgid ""
 "the Payment column of a line, you can press F1 to open the reconciliation "
 "form."
 msgstr ""
+"Banka hesap özeti, belirli bir tarih aralığında, bir mevduat hesabında, "
+"kredi kartı hesabında veya herhangi bir finansal hesapta yapılan mali "
+"işlemlerin özetidir. Açılış bakiyesi otomatik olarak belirir ve özette "
+"kapanış bakiyesi degörülmelidir. Bir satırda Ödeme kolonunda iken F1 basarak "
+"Uzlaşm Formunu açabilirsiniz."
 
 #. module: account
 #: report:account.analytic.account.cost_ledger:0
@@ -1654,6 +1670,9 @@ msgid ""
 "Have a complete tree view of all journal items per account code by clicking "
 "on an account."
 msgstr ""
+"Şirket Hesap Planı, her mali yıl için ve arama süzgeci dönemsel aramaya "
+"ayarlı olarak görünür. Bir hesaba tıklayarak o hesaba ait bütün yevmiye "
+"girişlerinin ağaç görünümü elde edilir."
 
 #. module: account
 #: constraint:account.fiscalyear:0
@@ -1786,7 +1805,7 @@ msgstr "Reserve And Profit/Loss Account"
 #. module: account
 #: sql_constraint:account.move.line:0
 msgid "Wrong credit or debit value in accounting entry !"
-msgstr ""
+msgstr "Hesap girişindeki Alacak / Borç değeri hatalı !"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -1834,7 +1853,7 @@ msgstr "Sub Total"
 #. module: account
 #: view:account.account:0
 msgid "Treasury Analysis"
-msgstr ""
+msgstr "Maliye İncelemesi"
 
 #. module: account
 #: constraint:res.company:0
@@ -1953,6 +1972,7 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the tax "
 "without removing it."
 msgstr ""
+"Aktif alan Yanlışa ayarlıysa, vergiyi silmeden gizlemenize izin verir."
 
 #. module: account
 #: help:account.bank.statement,name:0
@@ -2033,6 +2053,8 @@ msgid ""
 "Invalid period ! Some periods overlap or the date period is not in the scope "
 "of the fiscal year. "
 msgstr ""
+"Geçersiz dönem ! Bazı dönemler çakışıyor veya mali yıl tarih dönemini "
+"kapsamıyor. "
 
 #. module: account
 #: selection:account.invoice,state:0
@@ -2046,7 +2068,7 @@ msgstr "Pro-forma"
 #: code:addons/account/installer.py:348
 #, python-format
 msgid " Journal"
-msgstr ""
+msgstr " Yevmiye"
 
 #. module: account
 #: code:addons/account/account.py:1319
@@ -2055,6 +2077,8 @@ msgid ""
 "There is no default default debit account defined \n"
 "on journal \"%s\""
 msgstr ""
+"Yevmiyede \"%s\" \n"
+"Varsayılan borç hesabı tanımlanmamış"
 
 #. module: account
 #: help:account.account,type:0
@@ -2085,6 +2109,9 @@ msgid ""
 "certified Chart of Accounts exists for your specified country, a generic one "
 "can be installed and will be selected by default."
 msgstr ""
+"Varsayılan Hesap planı ülke seçiminize uyuyor. Belirlediğiniz ülke için "
+"onaylı Hesap Planı yoksa, genel bir hesap planı kurulur ve varsayılan "
+"seçilir."
 
 #. module: account
 #: view:account.account.type:0
@@ -2282,6 +2309,10 @@ msgid ""
 "You can create one in the menu: \n"
 "Configuration\\Financial Accounting\\Accounts\\Journals."
 msgstr ""
+"Bu firma için %s tipindehesap yevmiyesi bulunamadı\n"
+"\n"
+"Menüde bir tane oluşturabilirsiniz \n"
+"Konfigürason\\Mali Hesap\\Hesaplar\\evmiyeler."
 
 #. module: account
 #: field:account.invoice.tax,base_code_id:0
@@ -2312,6 +2343,11 @@ msgid ""
 "useful because it enables you to preview at any time the tax that you owe at "
 "the start and end of the month or quarter."
 msgstr ""
+"Bu menü, fatura ve ödemelere göre KDV beyanı yazdırır. Bir ya da birkaç mali "
+"yıl dönemi seçin. Vergi beyanı için gerekli bilgi OpenERP tarafından "
+"faturalardan (veya bazı ülkelerde ödemelerden) otomatik olarak çıkartılır. "
+"Bu bilgi gerçek zamana güncellenir. Bu bilgi, vergiyi ay başlarında ve ay "
+"sonlarında ya da üçer aylık sürelerde izleminiz açısından yararlıdır."
 
 #. module: account
 #: selection:account.move.line,centralisation:0
@@ -2397,7 +2433,7 @@ msgstr ""
 #: view:account.print.journal:0
 msgid ""
 "This report gives you an overview of the situation of a specific journal"
-msgstr ""
+msgstr "Bu rapor, belirli bir yevmiyenin durumuna gözatmanızı sağlar."
 
 #. module: account
 #: constraint:product.category:0
@@ -2724,7 +2760,7 @@ msgstr "Base Code Amount"
 #. module: account
 #: field:wizard.multi.charts.accounts,sale_tax:0
 msgid "Default Sale Tax"
-msgstr ""
+msgstr "Varsayılan Satış Vergisi"
 
 #. module: account
 #: help:account.model.line,date_maturity:0
@@ -2908,7 +2944,7 @@ msgstr "Görünüm"
 #: code:addons/account/account.py:2951
 #, python-format
 msgid "BNK%s"
-msgstr ""
+msgstr "BNK%s"
 
 #. module: account
 #: code:addons/account/account.py:2906
@@ -3155,7 +3191,7 @@ msgstr "Faturada Yazılamaz"
 #: report:account.vat.declaration:0
 #: field:account.vat.declaration,chart_tax_id:0
 msgid "Chart of Tax"
-msgstr ""
+msgstr "Vergi Tablosu"
 
 #. module: account
 #: view:account.journal:0
@@ -3260,7 +3296,7 @@ msgstr ""
 #. module: account
 #: report:account.general.ledger:0
 msgid "Counterpart"
-msgstr ""
+msgstr "Karşılık"
 
 #. module: account
 #: view:account.journal:0
@@ -3514,7 +3550,7 @@ msgstr "Satıcılar Hesabı"
 #: constraint:account.move:0
 msgid ""
 "You cannot create entries on different periods/journals in the same move"
-msgstr ""
+msgstr "Aynı işlemde farklı dönemlere/yevmiyelere girişler oluşturamazsınız"
 
 #. module: account
 #: model:process.node,name:account.process_node_supplierpaymentorder0
@@ -3542,7 +3578,7 @@ msgstr "Unit Price"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_tree1
 msgid "Analytic Items"
-msgstr ""
+msgstr "Çözümsel Kalemler"
 
 #. module: account
 #: code:addons/account/account_move_line.py:1128
@@ -3560,7 +3596,7 @@ msgstr "#Entries"
 #, python-format
 msgid ""
 "You selected an Unit of Measure which is not compatible with the product."
-msgstr ""
+msgstr "ürünle uyumlu olmayan bir Ölçü Birimi seçtiniz."
 
 #. module: account
 #: code:addons/account/invoice.py:473
@@ -3695,6 +3731,7 @@ msgstr "Onayla"
 #: sql_constraint:account.model.line:0
 msgid "Wrong credit or debit value in model (Credit Or Debit Must Be \"0\")!"
 msgstr ""
+"Modelde yanlış alacak veya borç değeri (Alacak veya Borç \"0\" olmalı) !"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_invoice_report_all
@@ -3771,7 +3808,7 @@ msgstr "Analytic Balance"
 #: code:addons/account/report/account_profit_loss.py:124
 #, python-format
 msgid "Net Loss"
-msgstr ""
+msgstr "Net Zarar"
 
 #. module: account
 #: help:account.account,active:0
@@ -3779,6 +3816,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the account "
 "without removing it."
 msgstr ""
+"Aktif alan Yanlış olarak ayarlıysa, hesabı silmeden gizlemenize izin "
+"verecektir."
 
 #. module: account
 #: view:account.tax.template:0
@@ -3975,7 +4014,7 @@ msgstr "Statement %s is confirmed, journal items are created."
 #. module: account
 #: constraint:account.fiscalyear:0
 msgid "Error! The duration of the Fiscal Year is invalid. "
-msgstr ""
+msgstr "Hata! Mali Yıl süresi geçersiz. "
 
 #. module: account
 #: field:report.aged.receivable,name:0
@@ -3990,7 +4029,7 @@ msgstr "Check if you want to display Accounts with 0 balance too."
 #. module: account
 #: view:account.tax:0
 msgid "Compute Code"
-msgstr ""
+msgstr "Kodu Hesapla"
 
 #. module: account
 #: view:account.account.template:0
@@ -4096,7 +4135,7 @@ msgstr "Account Journal Select"
 #. module: account
 #: view:account.invoice:0
 msgid "Print Invoice"
-msgstr ""
+msgstr "Faturayı Yazdır"
 
 #. module: account
 #: view:account.tax.template:0
@@ -4146,6 +4185,8 @@ msgid ""
 "This will automatically configure your chart of accounts, bank accounts, "
 "taxes and journals according to the selected template"
 msgstr ""
+"Bu Hesap Planınızı, banka hesaplarınızı, vergilerinizi ve yevmiyeleri "
+"seçilen şablona uygun olarak otomatikmen yapılandıracaktır."
 
 #. module: account
 #: field:account.tax,price_include:0
@@ -4229,7 +4270,7 @@ msgstr "Closing balance based on cashBox"
 #: constraint:account.account:0
 #: constraint:account.tax.code:0
 msgid "Error ! You can not create recursive accounts."
-msgstr ""
+msgstr "Hata! Yinelen hesap oluşturamazsınız."
 
 #. module: account
 #: constraint:account.account:0
@@ -4248,7 +4289,7 @@ msgstr "Generate Entries"
 #. module: account
 #: help:account.vat.declaration,chart_tax_id:0
 msgid "Select Charts of Taxes"
-msgstr ""
+msgstr "Vergi Tablosu seçin"
 
 #. module: account
 #: view:account.fiscal.position:0
@@ -9874,12 +9915,12 @@ msgstr "Maturity"
 #. module: account
 #: selection:account.aged.trial.balance,direction_selection:0
 msgid "Future"
-msgstr "Future"
+msgstr "İleri Tarihli İşlemler"
 
 #. module: account
 #: view:account.move.line:0
 msgid "Search Journal Items"
-msgstr "Search Journal Items"
+msgstr "Yevmiye Maddelerini Araştır"
 
 #. module: account
 #: help:account.tax,base_sign:0
@@ -9891,7 +9932,7 @@ msgstr "Search Journal Items"
 #: help:account.tax.template,ref_tax_sign:0
 #: help:account.tax.template,tax_sign:0
 msgid "Usually 1 or -1."
-msgstr "Usually 1 or -1."
+msgstr "Genelde 1 veya -1"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account_template
