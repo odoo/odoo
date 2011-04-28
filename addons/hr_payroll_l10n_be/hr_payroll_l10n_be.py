@@ -58,12 +58,12 @@ hr_contract_be()
 class hr_employee_be(osv.osv):
 
     _inherit = 'hr.employee'
-    _description = 'same as before'
+    _description = 'add for all Belgian users'
     _columns = {
 	'statut_fiscal':fields.selection([('without income','Without Income'),('with income','With Income')], 'Tax status for spouse'),
-	'handicap':fields.boolean('Disabled'),
-        'handicap_child':fields.boolean('Disabled Children'),
-	'resident':fields.boolean('Residente'),
+	'handicap':fields.boolean('Disabled Spouse', help="if recipient spouse is declared disabled by law"),
+        'handicap_child':fields.boolean('Disabled Children', help="if recipient children is/are declared disabled by law"),
+	'resident':fields.boolean('Nonresident', help="if recipient lives in a foreign country"),
 	'number_handicap':fields.integer('Number of disabled children'),
     }
 hr_employee_be()

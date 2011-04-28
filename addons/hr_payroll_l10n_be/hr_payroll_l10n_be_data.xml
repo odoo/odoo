@@ -75,7 +75,8 @@
 		<field name="sequence">120</field>
 		<field name="condition_select">python</field>
 		<field name="appears_on_payslip" eval="False"/>
-		<field name="condition_python">result = (employee.marital=='single') or (employee.marital=='married' and statut_fiscal=='with income')</field>
+<!--		<field name="condition_python">result = (employee.marital=='single') or (employee.marital=='married' and statut_fiscal=='with income')</field>-->
+		<field name="condition_python">result = (((employee.marital=='single') or (employee.marital=='married' and statut_fiscal=='with income')) and (employee.resident!=True))</field>
 	</record>
 
 	<record id="hr_payroll_rules_baremeII" model="hr.salary.rule">
@@ -98,27 +99,57 @@
 		<field name="amount_select">fix</field>
 		<field name="sequence">120</field>
 		<field name="condition_select">python</field>
-		<field name="condition_python">result = employee.marital=='divorced'</field>
+		<field name="condition_python">result = employee.resident==True</field>
 		<field name="appears_on_payslip" eval="False"/>
 	</record>
 
+        <record id="hr_payroll_rules_child_alw" model="hr.salary.rule">
+                <field name="category_id" ref="hr_payroll.DED"/>
+                <field name="name">Child Allowance Belgium</field>
+                <field name="code">Child.Allowance</field>
+                <field name="sequence">140</field>
+                <field name="amount_select">fix</field>
+                <field name="condition_select">none</field>
+        </record>
 
-	<record id="hr_payroll_rules_child_alw" model="hr.salary.rule">
+
+	<record id="hr_payroll_rules_child" model="hr.salary.rule">
 		<field name="category_id" ref="hr_payroll.DED"/>
+		<field name="parent_rule_id" ref="hr_payroll_rules_child_alw"/>
 		<field name="name">Child Allowance Belgium</field>
 		<field name="code">Ch.A</field>
 		<field name="amount_select">fix</field>
-		<field name="sequence">140</field>
-		<field name="note">Le bénéficiaire des revenus est un isolé OU le conjoint du bénéficiaire des revenus a également des
-					revenus professionnels (barème I/ barème II)
-					
-					A.Lorsque les rémunérations mensuelles brutes ne dépassent pas 7.500 EUR, le précompte professionnel est déterminé suivant le barème I.
-					Les réductions suivantes sont ensuite déduites du précompte professionnel déterminé suivant ce barème :
-					
-						a) Réduction pour enfants à charge</field>
+		<field name="sequence">141</field>
+		<field name="note">The recipient of income is an isolated or spouse beneficiary's income has also
+                                        earned income (Schedule I / II scale)
+
+                                        A. When the gross monthly earnings do not exceed € 7,500, the withholding tax is determined according to the Schedule I.
+                                        The following reductions are then deducted from the payroll tax determined in accordance with this schedule:
+
+                                                a) Reduction for dependent children</field>
 		<field name="condition_select">python</field>
 		<field name="condition_python">result = bool(employee.children)</field>
 	</record>
+
+	<record id="hr_payroll_rules_child_handicap" model="hr.salary.rule">
+                <field name="category_id" ref="hr_payroll.DED"/>
+		<field name="parent_rule_id" ref="hr_payroll_rules_child_alw"/>
+                <field name="name">Child Allowance for the Disabled Belgium</field>
+                <field name="code">Ch.Handicap</field>
+                <field name="amount_select">fix</field>
+                <field name="sequence">142</field>
+		<field name="note">"Disabled child" means:
+
+					the child reaches at least 66% of failure or reduced physical or mental capacity
+					the head of one or more conditions;
+
+
+					the child that is established, regardless of age, that due to developments and recognized
+					before age 65</field>
+                <field name="condition_select">python</field>
+                <field name="condition_python">result = bool(employee.number_handicap)</field>
+        </record>
+
 
 	<record id="hr_payroll_rules_company_car_parent" model="hr.salary.rule">
 		<field name="category_id" ref="hr_payroll_head_company_car"/>

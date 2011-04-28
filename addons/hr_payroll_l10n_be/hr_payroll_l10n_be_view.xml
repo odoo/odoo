@@ -45,10 +45,11 @@
             <field name="name">hr.employee.employee.inherit.form</field>
             <field name="model">hr.employee</field>
             <field name="type">form</field>
+	    <field name="priority">25</field>
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
                 <field name="marital" position="replace">
-                    <field name="marital" required="True"/>
+                   <!-- <field name="marital" required="True"/>--><!-- attrs="{'invisible':[('resident','=',True)], 'required':[('resident','!=',True)]}" colspan="1"/-->
                 </field>
             </field>
         </record>
@@ -68,12 +69,19 @@
             <field name="name">hr.hr.employee.view.for</field>
             <field name="model">hr.employee</field>
             <field name="inherit_id" ref="hr.view_employee_form"/>
-	    <field name="priority">20</field>
+	    <field name="priority">30</field>
             <field name="arch" type="xml">	
             <data>
+                <xpath expr="/form/notebook/page/group/field[@name='birthday']" position="after">
+                       	<field name="marital" required="True"/>
+                </xpath>
+
+                <xpath expr="/form/notebook/page/group/field[@name='gender']" position="before">
+			<field name="resident" eval="False"/> 
+		</xpath>
                 <xpath expr="/form/notebook/page/group/field[@name='marital']" position="after">
 			<field name="statut_fiscal" attrs="{'invisible':[('marital','!=','married')],'required':[('marital','=','married')]}" colspan="1" help="if spouse has professionnel income or not"/> 
-			<field name="handicap" attrs="{'invisible':[('marital','!=','married')]}" colspan="1" help="if spouse is declared as disabled"/>
+			<field name="handicap" attrs="{'invisible':[('marital','!=','married')]}" colspan="1"/>
 		</xpath>
 		<xpath expr="/form/notebook/page/group/field[@name='children']" position="after">
 			<field name="handicap_child"/>
