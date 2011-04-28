@@ -24,6 +24,7 @@ import sugar
 import sugarcrm_fields_mapping
 from tools.translate import _
 import pprint
+import base64
 pp = pprint.PrettyPrinter(indent=4)
 
 OPENERP_FIEDS_MAPS = {'Leads': 'crm.lead',
@@ -504,24 +505,28 @@ def get_account(sugar_obj, cr, uid, val, context=None):
             partner_phone = issue_id.partner_address_id.phone
             partner_mobile = issue_id.partner_address_id.mobile                        
                         
-    return partner_id, partner_address_id, partner_phone,partner_mobile                          
+    return partner_id, partner_address_id, partner_phone,partner_mobile     
+
 
 def import_documents(sugar_obj, cr, uid, context=None):
     if not context:
         context = {}
     map_document = {'id' : 'id', 
-             'name': 'document_name',
+             'name': 'filename',
            'description': 'description',
            'datas': 'datas',
            'datas_fname': 'datas_fname',
             } 
     attach_obj = sugar_obj.pool.get('ir.attachment')
     PortType,sessionid = sugar.login(context.get('username',''), context.get('password',''), context.get('url',''))
-    sugar_data = sugar.search(PortType,sessionid, 'Documents')
+    sugar_data = sugar.search(PortType,sessionid, 'DocumentRevisions')
     for val in sugar_data:
-        file, filename = sugar.attachment_search(PortType, sessionid, 'DocumentRevisions', val.get('document_revision_id'))
-        val['datas'] = file
-        val['datas_fname'] = filename
+        filepath = '/var/www/sugarcrm/cache/upload/'+ val.get('id')
+        f = open(filepath, "r")
+        datas = f.read()
+        f.close()
+        val['datas'] = base64.encodestring(datas)
+        val['datas_fname'] = val.get('filename')
         fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_document, context)
         attach_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', noupdate=True, context=context)
     return True
@@ -648,7 +653,6 @@ def import_calls(sugar_obj, cr, uid, context=None):
         categ_id = get_category(sugar_obj, cr, uid, 'crm.phonecall', val.get('direction'))         
         val['categ_id/id'] = categ_id
         partner_id, partner_address_id, partner_phone, partner_mobile = get_account(sugar_obj, cr, uid, val, context)
-        
         val['partner_id/.id'] = partner_id
         val['partner_address_id/.id'] = partner_address_id
         val['partner_phone'] = partner_phone
@@ -1163,7 +1167,7 @@ MAP_FIELDS = {'Opportunities':  #Object Mapping name
                      'process' : import_documents,
                     },
               'Meetings': 
-                    {'dependencies' : ['Accounts', 'Contacts', 'Users'],
+                    {'dependencies' : ['Accounts', 'Contacts', 'Users', 'Projects', 'Opportunities'],
                      'process' : import_meetings,
                     },        
               'Tasks': 
