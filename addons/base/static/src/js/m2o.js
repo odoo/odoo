@@ -8,6 +8,7 @@ openerp.base.m2o = openerp.base.Controller.extend({
         this.relation = model;
         this.dataset = dataset;
         this.name = this.element.attr('name');
+
         this.selectedResultRow = 0;
         this.selectedResult = false;
         this.numResultRows = 0;
@@ -15,9 +16,10 @@ openerp.base.m2o = openerp.base.Controller.extend({
         this.specialKeyPressed = false;
         this.lastKey = null;
         this.delayedRequest = null;
-        this.value = this.element.val();
+
         this.lastTextResult = this.element.val();
         this.lastSearch = null;
+
         this.select_img = jQuery('#'+ this.element.attr('name') + '_select');
         if(this.select_img)
             jQuery(this.select_img).click(jQuery.proxy(this, 'select'));
@@ -43,9 +45,9 @@ openerp.base.m2o = openerp.base.Controller.extend({
 
     callSearchRequest: function() {
         this.delayedRequest = null
+        this.lastSearch = this.element.val();
         var s = this.element.val();
         var val = s.lastIndexOf(',') >= 0 ? s.substring(s.lastIndexOf(',') + 1).replace(/^\s+|\s+$/g, "") : s.replace(/^\s+|\s+$/g, "");
-        this.lastSearch = this.element.val();
         var self = this;
         this.dataset.name_search(val, function(obj){
             self.displayResults(obj);
@@ -69,7 +71,6 @@ openerp.base.m2o = openerp.base.Controller.extend({
 
     displayResults : function(obj) {
         var self = this;
-        console.log('AT DISPLAY')
         var result = obj.result;
         var $fancyTable = jQuery('<table>', {
             "class": "autoTextTable",
@@ -109,38 +110,35 @@ openerp.base.m2o = openerp.base.Controller.extend({
     },
 
     on_keypress: function(evt) {
-        console.log(this.element.val().length, 'at  on_keypress', evt.which)
         if (evt.which == 9 || evt.ctrlKey) {
-        return true;
+            return true;
         }
     },
 
     on_keyup: function(evt) {
-        console.log(this.element.val().length, 'at  on_keyup',evt.which)
         if(this.specialKeyPressed || (this.element.val() == this.lastSearch)) return false;
-        try {
-            if (evt.which == 40) {
-                if (!this.element.val().length) {
-                    if (this.delayedRequest) {
-                        clearInterval(this.delayedRequest);
-                        this.clearResults();
-                        return false;
-                    }
-                }
-                if (this.delayedRequest)
-                    clearInterval(this.delayedRequest);//this.delayedRequest.cancel();
-                console.log('call')
-                this.delayedRequest = setTimeout(function(thisObj){
-                    thisObj.callSearchRequest()
-                }, this.completeDelay, this);
-            }
-            return true;
 
-        } catch (e){console.log('EEEEEEEEEEEEEEEE',e)}
+        if (evt.which == 40) {
+            if (!this.element.val().length) {
+                if (this.delayedRequest) {
+                    clearInterval(this.delayedRequest);
+                    this.clearResults();
+                    return false;
+                }
+            }
+            if (this.delayedRequest)
+                clearInterval(this.delayedRequest);
+
+            this.delayedRequest = setTimeout(function(thisObj){
+                thisObj.callSearchRequest()
+            }, this.completeDelay, this);
+        }
+        return true;
+
     },
 
     on_keydown : function(evt) {
-        console.log(this.element.val().length,'at  on_keydown',evt.which)
+
         var key = evt.which;
         this.lastKey = evt.which;
         this.specialKeyPressed = false;
@@ -168,7 +166,7 @@ openerp.base.m2o = openerp.base.Controller.extend({
 
                 // Down Key
                 case 40:
-                    console.log(this.selectedResultRow, 33333, this.numResultRows)
+
                     if(this.selectedResultRow < this.numResultRows - (this.selectedResultRow == null ? 0 : 1)) {
                         if (this.selectedResultRow == null)
                             this.selectedResultRow = 0;
@@ -182,10 +180,21 @@ openerp.base.m2o = openerp.base.Controller.extend({
                 default:
                     break;
             }
-            if(evt.which == 13 || evt.which == 27 || evt.which == 38 || evt.which == 40)
+            if(evt.which == 13 || evt.which == 27 || evt.which == 38 || evt.which == 40)//
                 this.specialKeyPressed = true;
         }
 
+        if((evt.which == 8 || evt.which == 46)) {
+            var value = this.element.val();
+            if (value.indexOf('[') > 0) {
+                this.element.val(this.lastSearch)
+                evt.stopPropagation();
+                evt.preventDefault();
+            }
+            else if (value.length == 1) {
+                this.clearResults();
+            }
+        }
         return !this.specialKeyPressed;
      },
 
@@ -208,11 +217,9 @@ openerp.base.m2o = openerp.base.Controller.extend({
     },
 
     setCompletionText: function ($selectedRow) {
-
         var $cell = $selectedRow.find('td');
-
         var autoCompleteText = $cell.find('span').text();
-        console.log('Replace...',autoCompleteText)
+        autoCompleteText = this.lastSearch + '[' + autoCompleteText.substring(this.lastSearch.length) + ']'
         this.element.val(autoCompleteText);
         this.lastTextResult = autoCompleteText;
     },
