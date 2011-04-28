@@ -7,35 +7,35 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:16+0000\n"
-"PO-Revision-Date: 2010-08-03 01:06+0000\n"
-"Last-Translator: Mantavya Gajjar (Open ERP) <Unknown>\n"
+"PO-Revision-Date: 2011-04-06 08:02+0000\n"
+"Last-Translator: Mihai Boiciuc <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-15 05:46+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-04-07 04:37+0000\n"
+"X-Generator: Launchpad (build 12735)\n"
 
 #. module: stock_location
 #: selection:product.pulled.flow,picking_type:0
 #: selection:stock.location.path,picking_type:0
 msgid "Sending Goods"
-msgstr ""
+msgstr "Trimitere bunuri"
 
 #. module: stock_location
 #: view:product.product:0
 msgid "Pulled Paths"
-msgstr ""
+msgstr "Căi aduse"
 
 #. module: stock_location
 #: selection:product.pulled.flow,type_proc:0
 msgid "Move"
-msgstr ""
+msgstr "Mișcă"
 
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_stock_location_path
 msgid "Pushed Flows"
-msgstr ""
+msgstr "Fluxuri împinse"
 
 #. module: stock_location
 #: selection:stock.location.path,auto:0
@@ -45,13 +45,12 @@ msgstr "Automatic fără adăugare de paşi"
 #. module: stock_location
 #: view:product.product:0
 msgid "Parameters"
-msgstr ""
+msgstr "Parametrii"
 
 #. module: stock_location
-#: field:product.pulled.flow,location_src_id:0
 #: field:stock.location.path,location_from_id:0
 msgid "Source Location"
-msgstr "Locaţie Sursă"
+msgstr "Amplasament Sursă"
 
 #. module: stock_location
 #: help:product.pulled.flow,cancel_cascade:0
@@ -62,12 +61,12 @@ msgstr ""
 #: model:ir.model,name:stock_location.model_product_pulled_flow
 #: field:product.product,flow_pull_ids:0
 msgid "Pulled Flows"
-msgstr ""
+msgstr "Fluxuri trase"
 
 #. module: stock_location
 #: constraint:stock.move:0
 msgid "You must assign a production lot for this product"
-msgstr ""
+msgstr "Trebuie să atribuiţi un lot de producţie pentru acest produs"
 
 #. module: stock_location
 #: help:product.pulled.flow,location_src_id:0
@@ -78,7 +77,7 @@ msgstr ""
 #: selection:product.pulled.flow,picking_type:0
 #: selection:stock.location.path,picking_type:0
 msgid "Internal"
-msgstr ""
+msgstr "Intern"
 
 #. module: stock_location
 #: code:addons/stock_location/procurement_pull.py:98
@@ -91,18 +90,19 @@ msgstr ""
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_stock_location
 msgid "Location"
-msgstr ""
+msgstr "Amplasament"
 
 #. module: stock_location
 #: field:product.pulled.flow,invoice_state:0
 #: field:stock.location.path,invoice_state:0
 msgid "Invoice Status"
-msgstr ""
+msgstr "Stare facură"
 
 #. module: stock_location
 #: help:product.pulled.flow,name:0
 msgid "This field will fill the packing Origin and the name of its moves"
 msgstr ""
+"Acest câmp va completa Originea ambalarii şi numele de miscarilor proprii"
 
 #. module: stock_location
 #: help:stock.location.path,auto:0
@@ -115,11 +115,11 @@ msgid ""
 "location is replaced in the original move."
 msgstr ""
 "Se foloseşte pentru definirea traseului de urmat pentru produs în arborele "
-"de locaţii.\n"
+"de amplasamente.\n"
 "Valoarea 'Mişcare automată' va crea o mişcare de stoc după cea curentă şi va "
 "fi validată automat. Cu 'Operare manuală', mişcarea de stoc va trebui "
-"validată de un operator. Cu 'Automat fără adăugare de paşi' locaţia este "
-"înlocuită în mişcarea originală."
+"validată de un operator. Cu 'Automat fără adăugare de paşi' amplasamentul "
+"este înlocuit în mişcarea originală."
 
 #. module: stock_location
 #: model:ir.module.module,shortdesc:stock_location.module_meta_information
@@ -129,7 +129,7 @@ msgstr ""
 #. module: stock_location
 #: view:product.product:0
 msgid "Conditions"
-msgstr ""
+msgstr "Condiţii"
 
 #. module: stock_location
 #: model:stock.location,name:stock_location.location_pack_zone
@@ -139,17 +139,17 @@ msgstr ""
 #. module: stock_location
 #: model:stock.location,name:stock_location.location_gate_b
 msgid "Gate B"
-msgstr ""
+msgstr "Poarta B"
 
 #. module: stock_location
 #: model:stock.location,name:stock_location.location_gate_a
 msgid "Gate A"
-msgstr ""
+msgstr "Poarta A"
 
 #. module: stock_location
 #: selection:product.pulled.flow,type_proc:0
 msgid "Buy"
-msgstr ""
+msgstr "Cumpără"
 
 #. module: stock_location
 #: view:product.product:0
@@ -159,12 +159,12 @@ msgstr ""
 #. module: stock_location
 #: model:stock.location,name:stock_location.location_dispatch_zone
 msgid "Dispatch Zone"
-msgstr ""
+msgstr "Zona de Expedieri"
 
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_stock_move
 msgid "Stock Move"
-msgstr ""
+msgstr "Mişcare stoc"
 
 #. module: stock_location
 #: view:product.product:0
@@ -175,7 +175,7 @@ msgstr ""
 #: field:product.pulled.flow,company_id:0
 #: field:stock.location.path,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Firmă"
 
 #. module: stock_location
 #: view:product.product:0
@@ -186,32 +186,34 @@ msgstr ""
 #: help:stock.move,cancel_cascade:0
 msgid "If checked, when this move is cancelled, cancel the linked move too"
 msgstr ""
+"Dacă este bifat, atunci când această mişcare este anulată, anulează de "
+"asemenea mișcarea legată"
 
 #. module: stock_location
 #: selection:product.pulled.flow,type_proc:0
 msgid "Produce"
-msgstr ""
+msgstr "Se produce"
 
 #. module: stock_location
 #: selection:product.pulled.flow,procure_method:0
 msgid "Make to Order"
-msgstr ""
+msgstr "Produce la comanda"
 
 #. module: stock_location
 #: selection:product.pulled.flow,procure_method:0
 msgid "Make to Stock"
-msgstr ""
+msgstr "Produce pe stoc"
 
 #. module: stock_location
 #: field:product.pulled.flow,partner_address_id:0
 msgid "Partner Address"
-msgstr ""
+msgstr "Adresă Partener"
 
 #. module: stock_location
 #: selection:product.pulled.flow,invoice_state:0
 #: selection:stock.location.path,invoice_state:0
 msgid "To Be Invoiced"
-msgstr ""
+msgstr "Pentru a fi facturat"
 
 #. module: stock_location
 #: help:stock.location.path,delay:0
@@ -309,17 +311,18 @@ msgstr ""
 #. module: stock_location
 #: field:product.pulled.flow,type_proc:0
 msgid "Type of Procurement"
-msgstr ""
+msgstr "Tipul de aprovizionare"
 
 #. module: stock_location
 #: help:product.pulled.flow,company_id:0
 msgid "Is used to know to which company belong packings and moves"
 msgstr ""
+"Este folosit pentru a şti cărei companii aparţin ambalaje şi mișcările"
 
 #. module: stock_location
 #: field:product.pulled.flow,name:0
 msgid "Name"
-msgstr ""
+msgstr "Nume"
 
 #. module: stock_location
 #: help:product.product,path_ids:0
@@ -327,7 +330,7 @@ msgid ""
 "These rules set the right path of the product in the whole location tree."
 msgstr ""
 "Aceste reguli stabilesc traseul corect spre produs în întregul arbore de "
-"locaţii."
+"amplasamente."
 
 #. module: stock_location
 #: selection:stock.location.path,auto:0
@@ -338,18 +341,18 @@ msgstr "Operare manuală"
 #: model:ir.model,name:stock_location.model_product_product
 #: field:product.pulled.flow,product_id:0
 msgid "Product"
-msgstr ""
+msgstr "Produs"
 
 #. module: stock_location
 #: field:product.pulled.flow,procure_method:0
 msgid "Procure Method"
-msgstr ""
+msgstr "Metodă procurare"
 
 #. module: stock_location
 #: field:product.pulled.flow,picking_type:0
 #: field:stock.location.path,picking_type:0
 msgid "Shipping Type"
-msgstr ""
+msgstr "Tip expediere"
 
 #. module: stock_location
 #: help:product.pulled.flow,procure_method:0
@@ -358,11 +361,14 @@ msgid ""
 "supplying. 'Make to Order': When needed, purchase or produce for the "
 "procurement request."
 msgstr ""
+"\"Produce pe stoc\": Atunci când este necesar, să ia din stoc sau să aştepte "
+"până la re-alimentare. \"Produce la comandă\": Atunci când este necesar, să "
+"cumpere sau să producă pentru cererea de aprovizionare."
 
 #. module: stock_location
 #: help:product.pulled.flow,location_id:0
 msgid "Is the destination location that needs supplying"
-msgstr ""
+msgstr "Este amplasamentul destinaţie care are nevoie de alimentare"
 
 #. module: stock_location
 #: field:stock.location.path,product_id:0
@@ -378,13 +384,13 @@ msgstr ""
 #. module: stock_location
 #: model:stock.location,name:stock_location.stock_location_qualitytest0
 msgid "Quality Control"
-msgstr ""
+msgstr "Control calitate"
 
 #. module: stock_location
 #: selection:product.pulled.flow,invoice_state:0
 #: selection:stock.location.path,invoice_state:0
 msgid "Not Applicable"
-msgstr ""
+msgstr "Neaplicabil"
 
 #. module: stock_location
 #: field:stock.location.path,delay:0
@@ -402,7 +408,7 @@ msgstr ""
 #. module: stock_location
 #: field:product.product,path_ids:0
 msgid "Pushed Flow"
-msgstr ""
+msgstr "Flux împins"
 
 #. module: stock_location
 #: code:addons/stock_location/procurement_pull.py:89
@@ -415,18 +421,17 @@ msgstr ""
 #. module: stock_location
 #: constraint:stock.move:0
 msgid "You try to assign a lot which is not from the same product"
-msgstr ""
+msgstr "Încercaţi să atribuiţi un lot care nu este din acelaşi produs"
 
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_procurement_order
 msgid "Procurement"
-msgstr ""
+msgstr "Aprovizionare"
 
 #. module: stock_location
-#: field:product.pulled.flow,location_id:0
 #: field:stock.location.path,location_dest_id:0
 msgid "Destination Location"
-msgstr "Locaţie destinaţie"
+msgstr "Amplasament destinaţie"
 
 #. module: stock_location
 #: field:stock.location.path,auto:0
@@ -438,17 +443,17 @@ msgstr "Mişcare automată"
 #: selection:product.pulled.flow,picking_type:0
 #: selection:stock.location.path,picking_type:0
 msgid "Getting Goods"
-msgstr ""
+msgstr "Obţinerea de bunuri"
 
 #. module: stock_location
 #: view:product.product:0
 msgid "Action Type"
-msgstr ""
+msgstr "Tipul acţiunii"
 
 #. module: stock_location
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
-msgstr ""
+msgstr "Eroare: cod EAN invalid"
 
 #. module: stock_location
 #: help:product.pulled.flow,picking_type:0
@@ -457,11 +462,12 @@ msgid ""
 "Depending on the company, choose whatever you want to receive or send "
 "products"
 msgstr ""
+"În funcţie de companie, alege ce vrei pentru a primi sau trimite produse"
 
 #. module: stock_location
 #: model:stock.location,name:stock_location.location_order
 msgid "Order Processing"
-msgstr ""
+msgstr "Procesare comandă"
 
 #. module: stock_location
 #: field:stock.location.path,name:0
@@ -469,27 +475,29 @@ msgid "Operation"
 msgstr "Operație"
 
 #. module: stock_location
+#: view:product.product:0
+#: field:product.product,path_ids:0
 #: view:stock.location.path:0
 msgid "Location Paths"
-msgstr "Trasee locaţii"
+msgstr "Trasee amplasamente"
 
 #. module: stock_location
 #: field:product.pulled.flow,journal_id:0
 #: field:stock.location.path,journal_id:0
 msgid "Journal"
-msgstr ""
+msgstr "Jurnal"
 
 #. module: stock_location
 #: field:product.pulled.flow,cancel_cascade:0
 #: field:stock.move,cancel_cascade:0
 msgid "Cancel Cascade"
-msgstr ""
+msgstr "Anulare în cascadă"
 
 #. module: stock_location
 #: selection:product.pulled.flow,invoice_state:0
 #: selection:stock.location.path,invoice_state:0
 msgid "Invoiced"
-msgstr ""
+msgstr "Facturat"
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "XML invalid pentru arhitectura machetei de afișare !"

@@ -38,7 +38,7 @@ class email_template_preview(osv.osv_memory):
         if context is None:
             context = {}
 
-        template_id = context.get('template_id', False)
+        template_id = context.get('active_id', False)
         if not template_id:
             return []
         template_pool = self.pool.get('email.template')
@@ -46,8 +46,9 @@ class email_template_preview(osv.osv_memory):
         template = template_pool.browse(cr, uid, int(template_id), context=context)
         template_object = template.model_id
         model =  self.pool.get(template_object.model)
-        record_ids = model.search(cr, uid, [], 0, 20, 'id', context=context)
+        record_ids = model.search(cr, uid, [], 0, 10, 'id', context=context)
         default_id = context.get('default_res_id')
+
         if default_id and default_id not in record_ids:
             record_ids.insert(0, default_id)
 
@@ -60,7 +61,7 @@ class email_template_preview(osv.osv_memory):
         result = super(email_template_preview, self).default_get(cr, uid, fields, context=context)
 
         template_pool = self.pool.get('email.template')
-        template_id = context.get('template_id',False)
+        template_id = context.get('active_id',False)
         if 'res_id' in fields:
             records = self._get_records(cr, uid, context=context)
             result['res_id'] = records and records[0][0] or False # select first record as a Default
@@ -90,10 +91,6 @@ class email_template_preview(osv.osv_memory):
         vals['email_cc'] = self.get_template_value(cr, uid, template.email_cc, model, res_id, context)
         vals['email_bcc'] = self.get_template_value(cr, uid, template.email_bcc, model, res_id, context)
         vals['reply_to'] = self.get_template_value(cr, uid, template.reply_to, model, res_id, context)
-        if template.message_id:
-            vals['message_id'] = self.get_template_value(cr, uid, message_id, model, res_id, context)
-        elif template.track_campaign_item:
-            vals['message_id'] = tools.generate_tracking_message_id(res_id)
         vals['subject'] = self.get_template_value(cr, uid, template.subject, model, res_id, context)
         description = self.get_template_value(cr, uid, template.body, model, res_id, context) or ''
         if template.user_signature:

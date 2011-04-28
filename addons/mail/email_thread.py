@@ -338,7 +338,7 @@ class email_thread(osv.osv):
                 if res_id:
                     res_id = int(res_id)
                     if model_pool.exists(cr, uid, res_id):
-                        if hasattr(model_pool, 'message_new'):
+                        if hasattr(model_pool, 'message_update'):
                             model_pool.message_update(cr, uid, [res_id], msg, {}, context=context)
 
         if not res_id:

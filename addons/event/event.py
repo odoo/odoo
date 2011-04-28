@@ -27,7 +27,6 @@ from tools.translate import _
 import decimal_precision as dp
 from crm import wizard
 
-wizard.email_compose_message.email_model.append('event.registration')
 
 class event_type(osv.osv):
     """ Event Type """

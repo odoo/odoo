@@ -72,7 +72,7 @@ def format_date_tz(date, tz=None):
 class email_message_common(osv.osv_memory):
     _name = 'email.message.common'
     _columns = {
-        'subject':fields.text('Subject', translate=True),
+        'subject':fields.text('Subject'),
         'model': fields.char('Object Name', size=128, select=1),
         'res_id': fields.integer('Resource ID', select=1),
         'date': fields.datetime('Date'),
@@ -87,13 +87,14 @@ class email_message_common(osv.osv_memory):
         'sub_type': fields.char('Sub Type', size=32),
         'headers': fields.text('x_headers'),
         'priority':fields.integer('Priority'),
-        'body': fields.text('Description', translate=True),
+        'body': fields.text('Description'),
         'body_html': fields.text('HTML', help="Contains HTML version of email"),
         'smtp_server_id':fields.many2one('ir.mail_server', 'SMTP Server'),
     }
     _rec_name = 'subject'
 
     _sql_constraints = []
+
 email_message_common()
 
 class email_message(osv.osv):
@@ -104,6 +105,19 @@ class email_message(osv.osv):
     _name = 'email.message'
     _description = 'Email Message'
     _order = 'date desc'
+
+    def _check_email_recipients(self, cr, uid, ids, context=None):
+        '''
+        checks email_to, email_cc, email_bcc
+        '''
+        for message in self.browse(cr, uid, ids, context=context):
+            if not (message.email_to or message.email_cc or message.email_bcc) and message.history:
+                return False
+        return True
+
+    _constraints = [
+        (_check_email_recipients, 'No recipients were specified. Please enter a recipient!', ['email_to', 'email_cc', 'email_bcc']),
+    ]
 
     def open_document(self, cr, uid, ids, context=None):
         """ To Open Document
@@ -168,7 +182,7 @@ class email_message(osv.osv):
         for message in self.browse(cr, uid, ids, context=context):
             msg_txt = ''
             if message.history:
-                msg_txt += (message.email_from or '/') + _(' wrote on ') + format_date_tz(message.date, tz) + ':\n\t'
+                msg_txt += _('%s wrote on %s: \n Subject: %s \n\t') % (message.email_from or '/', format_date_tz(message.date, tz), message.subject)
                 if message.body:
                     msg_txt += self.truncate_data(cr, uid, message.body, context=context)
             else:
@@ -256,8 +270,8 @@ class email_message(osv.osv):
             if context.has_key('default_type'):
                 del context['default_type']
             attachment_ids.append(attachment_obj.create(cr, uid, attachment_data, context))
-            self.write(cr, uid, email_msg_id,
-                              { 'attachment_ids': [[6, 0, attachment_ids]] }, context)
+        self.write(cr, uid, email_msg_id,
+                          { 'attachment_ids': [[6, 0, attachment_ids]] }, context)
         return email_msg_id
 
     def process_retry(self, cr, uid, ids, context=None):
