@@ -570,8 +570,8 @@ def Project_%d():
 
 
                 phase_pool.write(cr, uid, [phase_id], {
-                                        'date_start': start_date.strftime('%Y-%m-%d %H:%M:%S'),
-                                        'date_end': end_date.strftime('%Y-%m-%d %H:%M:%S')
+                                        'date_start': start_date.strftime('%Y-%m-%d'),
+                                        'date_end': end_date.strftime('%Y-%m-%d')
                                     }, context=context)
         return True            
 
