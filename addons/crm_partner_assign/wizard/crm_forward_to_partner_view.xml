@@ -46,22 +46,9 @@
                     <group col="4" colspan="4">
                         <label string="" colspan="1"/>
                         <button icon="gtk-close" special="cancel" string="Close"/>
-                        <button icon="gtk-ok" name="send_mail" string="Send now" type="object"/>
+                        <button icon="gtk-ok" name="send_mail" string="Send" type="object"/>
                     </group>
                 </form>
-            </field>
-        </record>
-
-
-        <record model="ir.ui.view" id="crm_lead_forward_to_partner_form1">
-            <field name="name">crm_lead_forward_to_partner1</field>
-            <field name="model">crm.lead.forward.to.partner</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="crm.crm_send_new_mail_view"/>
-            <field name="arch" type="xml">
-                <button name="action_send" position="replace">
-                    <button name="action_forward" string="Forward" icon="gtk-go-forward" type="object" />
-                </button>
             </field>
         </record>
 

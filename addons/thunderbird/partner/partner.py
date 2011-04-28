@@ -23,6 +23,7 @@ from osv import osv
 import base64
 import email
 import tools
+from tools.translate import _
 
 class thunderbird_partner(osv.osv_memory):
     _name = "thunderbird.partner"
