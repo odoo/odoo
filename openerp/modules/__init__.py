@@ -29,6 +29,8 @@ from os.path import join as opj
 import itertools
 import zipimport
 
+import openerp
+
 import openerp.osv as osv
 import openerp.tools as tools
 import openerp.tools.osutil as osutil
@@ -73,6 +75,13 @@ def initialize_sys_path():
             ad_cnt+=1
 
     ad_paths.append(_ad)    # for get_module_path
+
+def open_openerp_namespace():
+    # See comment for open_openerp_namespace.
+    if openerp.conf.deprecation.open_openerp_namespace:
+        for k, v in list(sys.modules.items()):
+            if k.startswith('openerp.') and sys.modules.get(k[8:]) is None:
+                sys.modules[k[8:]] = v
 
 class Graph(dict):
     """ Modules dependency graph.
@@ -457,6 +466,16 @@ def init_module_objects(cr, module_name, obj_list):
     cr.commit()
 
 
+def load_module(module_name):
+    """ Load a Python module found on the addons paths."""
+    fm = imp.find_module(module_name, ad_paths)
+    try:
+        imp.load_module(module_name, *fm)
+    finally:
+        if fm[0]:
+            fm[0].close()
+
+
 def register_class(m):
     """
     Register module named m, if not already registered
@@ -478,12 +497,7 @@ def register_class(m):
     try:
         zip_mod_path = mod_path + '.zip'
         if not os.path.isfile(zip_mod_path):
-            fm = imp.find_module(m, ad_paths)
-            try:
-                imp.load_module(m, *fm)
-            finally:
-                if fm[0]:
-                    fm[0].close()
+            load_module(m)
         else:
             zimp = zipimport.zipimporter(zip_mod_path)
             zimp.load_module(m)
@@ -834,10 +848,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
 
     initialize_sys_path()
 
-    # Backward compatibility: addons don't have to import openerp.xxx, they still can import xxx
-    for k, v in list(sys.modules.items()):
-        if k.startswith('openerp.') and sys.modules.get(k[8:]) is None:
-            sys.modules[k[8:]] = v
+    open_openerp_namespace()
 
     if not status:
         status = {}
