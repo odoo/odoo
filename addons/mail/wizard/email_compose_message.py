@@ -42,6 +42,8 @@ class email_compose_message(osv.osv_memory):
             context = {}
         result = super(email_compose_message, self).default_get(cr, uid, fields, context=context)
         vals = {}
+        if context.get('mass_mail'):
+            return result
         if context.get('active_model') and context.get('active_id') and not context.get('mail')=='reply':
             vals = self.get_value(cr, uid, context.get('active_model'), context.get('active_id'), context)
 

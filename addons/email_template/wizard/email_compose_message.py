@@ -88,7 +88,8 @@ class email_compose_message(osv.osv_memory):
         template_pool = self.pool.get('email.template')
         model_pool = self.pool.get('ir.model')
         for record in self.browse(cr, uid, ids, context=context):
-            model = model_pool.search(cr, uid, [('model','=', record.model)])[0]
+            model = context.get('active_model', record.model or False)
+            model = model_pool.search(cr, uid, [('model','=', model)])[0]
             model_name = model_pool.browse(cr, uid, model, context=context).name
             values = {
                 'name': model_name,
@@ -105,7 +106,7 @@ class email_compose_message(osv.osv_memory):
                 'attachment_ids': [(6, 0, [att.id for att in record.attachment_ids])]
             }
             template_pool.create(cr, uid, values, context=context)
-        return True
+        return {'type': 'ir.actions.act_window_close'}
 
 email_compose_message()
 
