@@ -142,8 +142,9 @@ class OpenERPSession(object):
         self.context = self.model('res.users').context_get(self.context)
         
         self.client_timezone = self.context.get("tz", False)
-        if self.client_timezone:
-            self.remote_timezone = self.execute('common', 'timezone_get')
+        # invalid code, anyway we decided the server will be in UTC
+        #if self.client_timezone:
+        #    self.remote_timezone = self.execute('common', 'timezone_get')
             
         self._locale = self.context.get('lang','en_US')
         lang_ids = self.execute('res.lang','search', [('code', '=', self._locale)])
