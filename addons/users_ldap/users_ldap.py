@@ -138,6 +138,11 @@ class users(osv.osv):
             return super(users,self).check(db, uid, passwd)
         except security.ExceptionNoTb: # AccessDenied
             pass
+
+        if not passwd:
+            # empty passwords disallowed for obvious security reasons
+            raise security.ExceptionNoTb('AccessDenied')
+
         cr = pooler.get_db(db).cursor()
         user = self.browse(cr, 1, uid)
         logger = logging.getLogger('orm.ldap')
@@ -156,6 +161,8 @@ class users(osv.osv):
                         result_type, result_data = l.result(result_id, timeout)
                         if result_data and result_type == ldap.RES_SEARCH_RESULT and len(result_data) == 1:
                             dn = result_data[0][0]
+                            # some LDAP servers allow anonymous binding with blank passwords,
+                            # but these have been rejected above, so we're safe to use bind()
                             if l.bind_s(dn, passwd):
                                 l.unbind()
                                 self._uid_cache.setdefault(db, {})[uid] = passwd
