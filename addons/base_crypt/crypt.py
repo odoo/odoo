@@ -220,6 +220,10 @@ class users(osv.osv):
             return False
 
     def check(self, db, uid, passwd):
+        if not passwd:
+            # empty passwords disallowed for obvious security reasons
+            raise security.ExceptionNoTb('AccessDenied')
+
         # Get a chance to hash all passwords in db before using the uid_cache.
         obj = pooler.get_pool(db).get('res.users')
         if not hasattr(obj, "_salt_cache"):
