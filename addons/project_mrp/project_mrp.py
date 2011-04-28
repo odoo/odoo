@@ -61,16 +61,8 @@ class sale_order(osv.osv):
     def _picked_rate(self, cr, uid, ids, name, arg, context=None):
         if not ids:
             return {}
-        temp = {}
+        res_sale = {}
         res = super(sale_order, self)._picked_rate(cr, uid, ids, name, arg, context=context)
-        for id in ids:
-            temp[id] = {}
-            temp[id]['number_of_done'] = 0
-            temp[id]['percentage'] = 0.0
-            temp[id]['number_of_stockable'] = 0.0
-            temp[id]['total_no_task'] = 0
-            temp[id]['total'] = 0
-
         cr.execute('''select so.id as sale_id, t.state as task_state ,
                     t.id as task_id, count(t.id) as total
                     from project_task as t
@@ -80,29 +72,38 @@ class sale_order(osv.osv):
 
         if not sale_task_data:
             return res
+        
+        for id in ids:
+            res_sale[id] = {}
+            res_sale[id]['number_of_done'] = 0
+            res_sale[id]['percentage'] = 0.0
+            res_sale[id]['number_of_stockable'] = 0.0
+            res_sale[id]['total_no_task'] = 0
+            res_sale[id]['total'] = 0
+
         for item in sale_task_data:
-            temp[item['sale_id']]['total_no_task'] += item['total']
+            res_sale[item['sale_id']]['total_no_task'] += item['total']
             if item['task_state'] == 'done':
-                temp[item['sale_id']]['number_of_done'] += 1
+                res_sale[item['sale_id']]['number_of_done'] += 1
             else: 
                 pass
         for sale in self.browse(cr, uid, ids, context=None):
             # Percent of service + other' Type product
-            temp[sale.id]['percentage'] = temp[sale.id]['total_no_task'] and (float(temp[sale.id]['number_of_done']) / temp[sale.id]['total_no_task']) * 100
-            temp[sale.id]['number_of_stockable'] = len(sale.order_line) - temp[sale.id]['total_no_task']
-            if temp[sale.id]['percentage'] == 100 and res[sale.id] == 100:
+            res_sale[sale.id]['percentage'] = res_sale[sale.id]['total_no_task'] and (float(res_sale[sale.id]['number_of_done']) / res_sale[sale.id]['total_no_task']) * 100
+            res_sale[sale.id]['number_of_stockable'] = len(sale.order_line) - res_sale[sale.id]['total_no_task']
+            if res_sale[sale.id]['percentage'] == 100 and res[sale.id] == 100 or res_sale[sale.id]['total_no_task'] == 0:
                 continue
-            elif temp[sale.id]['number_of_stockable'] == 0:
-                res[sale.id] = (temp[sale.id]['percentage'])
+            elif res_sale[sale.id]['number_of_stockable'] == 0:
+                res[sale.id] = (res_sale[sale.id]['percentage'])
             else:
-                res[sale.id] = round((res[sale.id] + temp[sale.id]['percentage']) / (temp[sale.id]['number_of_stockable'] + temp[sale.id]['total_no_task']), 2)
+                res[sale.id] = round((res[sale.id] + res_sale[sale.id]['percentage']) / (res_sale[sale.id]['number_of_stockable'] + res_sale[sale.id]['total_no_task']), 2)
                 if res[sale.id] > 100:
                     res[sale.id] = 100
         return res
 
     _columns = {
-                'picked_rate': fields.function(_picked_rate, method=True, string='Picked', type='float'),
-               }
+        'picked_rate': fields.function(_picked_rate, method=True, string='Picked', type='float'),
+    }
 
 sale_order()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
