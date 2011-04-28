@@ -120,6 +120,7 @@
 
 /** @namespace */
 openerp.base = function(instance) {
+    openerp.base.dates(instance);
     openerp.base.chrome(instance);
     openerp.base.data(instance);
     openerp.base.views(instance);

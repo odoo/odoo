@@ -10,7 +10,6 @@ import time
 import traceback
 import uuid
 import xmlrpclib
-import pytz
 
 import cherrypy
 import cherrypy.lib.static
@@ -142,8 +141,9 @@ class OpenERPSession(object):
         self.context = self.model('res.users').context_get(self.context)
         
         self.client_timezone = self.context.get("tz", False)
-        if self.client_timezone:
-            self.remote_timezone = self.execute('common', 'timezone_get')
+        # invalid code, anyway we decided the server will be in UTC
+        #if self.client_timezone:
+        #    self.remote_timezone = self.execute('common', 'timezone_get')
             
         self._locale = self.context.get('lang','en_US')
         lang_ids = self.execute('res.lang','search', [('code', '=', self._locale)])
@@ -498,6 +498,9 @@ class Root(object):
     default.exposed = True
 
 def main(argv):
+    # change the timezone of the program to the OpenERP server's assumed timezone
+    os.environ["TZ"] = "UTC"
+    
     # Parse config
     op = optparse.OptionParser()
     op.add_option("-p", "--port", dest="socket_port", help="listening port", metavar="NUMBER", default=8002)
