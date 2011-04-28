@@ -482,11 +482,12 @@ class hr_payslip(osv.osv):
         #we keep a dict with the result because a value can be overwritten by another rule with the same code
         result_dict = {}
         blacklist = []
+        obj_rule = self.pool.get('hr.salary.rule')
         payslip = self.pool.get('hr.payslip').browse(cr, uid, payslip_id, context=context)
         worked_days = {}
         for input_line in payslip.input_line_ids:
             worked_days[input_line.code] = input_line
-        localdict = {'rules': {}, 'heads': {}, 'payslip': payslip, 'worked_days': worked_days}
+        localdict = {'heads': {}, 'payslip': payslip, 'worked_days': worked_days}
         #get the ids of the structures on the contracts and their parent id as well
         structure_ids = self.pool.get('hr.contract').get_all_structures(cr, uid, contract_ids, context=context)
         #get the rules of the structure and thier children
@@ -497,17 +498,17 @@ class hr_payslip(osv.osv):
         for contract in self.pool.get('hr.contract').browse(cr, uid, contract_ids, context=context):
             employee = contract.employee_id
             localdict.update({'employee': employee, 'contract': contract})
-            for rule in self.pool.get('hr.salary.rule').browse(cr, uid, sorted_rule_ids, context=context):
+            for rule in obj_rule.browse(cr, uid, sorted_rule_ids, context=context):
                 key = rule.code + '-' + str(contract.id)
                 localdict['result'] = None
                 #check if the rule can be applied
-                if self.pool.get('hr.salary.rule').satisfy_condition(cr, uid, rule.id, localdict, context=context) and rule.id not in blacklist:
+                if obj_rule.satisfy_condition(cr, uid, rule.id, localdict, context=context) and rule.id not in blacklist:
                     #compute the amount of the rule
-                    amount = self.pool.get('hr.salary.rule').compute_rule(cr, uid, rule.id, localdict, context=context)
+                    amount = obj_rule.compute_rule(cr, uid, rule.id, localdict, context=context)
                     #check if there is already a rule computed with that code
-                    previous_amount = rule.code in localdict['rules'] and localdict['rules'][rule.code] or 0.0
+                    previous_amount = rule.code in localdict and localdict[rule.code] or 0.0
                     #set/overwrite the amount computed for this rule in the localdict
-                    localdict['rules'][rule.code] = amount
+                    localdict[rule.code] = amount
                     #sum the amount for its salary head
                     localdict = _sum_salary_head(localdict, rule.category_id, amount - previous_amount)
                     #create/overwrite the rule in the temporary results
@@ -679,7 +680,7 @@ class hr_salary_rule(osv.osv):
 # payslip: hr.payslip object
 # employee: hr.employee object
 # contract: hr.contract object
-# rules: dictionary containing the previsouly computed rules. Keys are the rule codes.
+# rules: rules code (previously computed)
 # heads: dictionary containing the computed heads (sum of amount of all rules belonging to that head). Keys are the head codes.
 # worked_days: dictionary containing the computed worked days. Keys are the worked days codes.
 
@@ -693,7 +694,7 @@ result = contract.wage * 0.10''',
 # payslip: hr.payslip object
 # employee: hr.employee object
 # contract: hr.contract object
-# rules: dictionary containing the previsouly computed rules. Keys are the rule codes.
+# rules: rules code (previously computed)
 # heads: dictionary containing the computed heads (sum of amount of all rules belonging to that head). Keys are the head codes.
 # worked_days: dictionary containing the computed worked days. Keys are the worked days codes.
 
