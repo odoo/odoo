@@ -22,6 +22,8 @@
 from osv import osv, fields
 from tools.translate import _
 
+import time
+
 class crm_opportunity2phonecall(osv.osv_memory):
     """Converts Opportunity to Phonecall"""
 
@@ -31,7 +33,7 @@ class crm_opportunity2phonecall(osv.osv_memory):
     _columns = {
         'name' : fields.char('Call summary', size=64, required=True, select=1),
         'user_id' : fields.many2one('res.users', "Assign To"),
-        'date': fields.datetime('Date' , required=True),
+        'date': fields.datetime('Date'),
         'section_id': fields.many2one('crm.case.section', 'Sales Team'),
         'categ_id': fields.many2one('crm.case.categ', 'Category',  \
                         domain="['|',('section_id','=',False),('section_id','=',section_id),\
@@ -59,7 +61,7 @@ class crm_opportunity2phonecall(osv.osv_memory):
 
         record_ids = context and context.get('active_ids', []) or []
         res = super(crm_opportunity2phonecall, self).default_get(cr, uid, fields, context=context)
-        res.update({'action': 'schedule'})
+        res.update({'action': 'schedule', 'date': time.strftime('%Y-%m-%d %H:%M:%S')})
         for opp in opp_obj.browse(cr, uid, record_ids, context=context):
             if 'name' in fields:
                 res.update({'name': opp.name})
