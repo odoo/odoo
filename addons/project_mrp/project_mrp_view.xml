@@ -31,8 +31,8 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="project.view_task_form2"/>
             <field name="arch" type="xml">
-            <xpath expr="/form/notebook/page[@string='Extra Info']/group/field[@name='sequence']" position="after">
-                <field name="sale_id" readonly="1"/>
+            <xpath expr="/form/notebook/page[@string='Extra Info']/separator[@string='Notes']" position="before">
+                <field name="sale_id"/>
             </xpath>    
             </field>
         </record>  
