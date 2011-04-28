@@ -42,7 +42,11 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
                     if (this.viewmanager) {
                         this.viewmanager.stop();
                     }
-                    this.viewmanager = new openerp.base.ViewManagerAction(this.session, this.element_id, action, true);
+                    var sidebar = true;
+                    if(action.no_sidebar) {
+                        sidebar = false;
+                    }
+                    this.viewmanager = new openerp.base.ViewManagerAction(this.session, this.element_id, action, sidebar);
                     this.viewmanager.start();
                 }
                 break;

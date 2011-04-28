@@ -1,4 +1,4 @@
-from base.controllers.main import View
+from base.controllers.main import View, clean_action
 import openerpweb
 
 class Dashboard(View):
@@ -7,11 +7,11 @@ class Dashboard(View):
     @openerpweb.jsonrequest
     def load(self, req, node_attrs):
         
-        self.action_id = int(node_attrs['name'])
+        action_id = int(node_attrs['name'])
         actions = req.session.model('ir.actions.actions')
-        result = actions.read([self.action_id],['type'], req.session.context)
+        result = actions.read([action_id],['type'], req.session.context)
         if not result:
             raise _('Action not found!')
-        self.action = req.session.model(result[0]['type']).read([self.action_id], False, req.session.context)[0]
-        
-        return {'action': self.action}
+        action = req.session.model(result[0]['type']).read([action_id], False, req.session.context)[0]
+        clean_action(action, req.session)
+        return {'action': action}
