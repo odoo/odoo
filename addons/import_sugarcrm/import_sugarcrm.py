@@ -882,7 +882,7 @@ def import_history(sugar_obj, cr, uid, context=None):
 def import_employees(sugar_obj, cr, uid, context=None):
     if not context:
         context = {}
-    map_employee = {'id' : 'id',
+    map_employee = {'id' : 'user_hash',
                     'resource_id/.id': 'resource_id/.id',
                     'name': ['first_name', 'last_name'],
                     'work_phone': 'phone_work',
