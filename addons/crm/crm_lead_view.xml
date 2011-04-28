@@ -183,7 +183,7 @@
                        <field colspan="4" name="email_cc" widget="char" size="512"/>
                    </group>
                     <field name="message_ids" colspan="4" nolabel="1" mode="tree,form">
-                        <tree string="Communication history">
+                        <tree string="History">
                             <field name="display_text" string="History Information"/>
                             <field name="history" invisible="1"/>
                             <button
@@ -192,32 +192,32 @@
                                 context="{'mail':'reply', 'message_id':active_id}"
                                 icon="terp-mail-replied" type="action" />
                         </tree>
-                        <form string="Communication history">
+
+                        <form string="History">
                             <group col="4" colspan="4">
                                 <field name="email_from"/>
                                 <field name="date"/>
-                                <field name="email_to" widget="char" size="512"/>
-                                <field name="email_cc" widget="char" size="512"/>
-                                <field name="subject" colspan="4" widget="char" size="512"/>
+                                <field name="email_to" size="512"/>
+                                <field name="email_cc" size="512"/>
+                                <field name="subject" colspan="4" widget="char" attrs="{'invisible': [('history', '=', False)]}" size="512"/>
+                                <field name="display_text" colspan="4"   attrs="{'invisible': [('history', '=', True)]}"/>
                                 <field name="history" invisible="1"/>
                             </group>
                             <notebook colspan="4">
                                 <page string="Details">
+                                    <field name="body" colspan="4" nolabel="1"/>
                                     <group attrs="{'invisible': [('history', '!=', True)]}">
-                                        <field name="body" colspan="4" nolabel="1" height="250"/>
                                         <button colspan="4" string="Reply"
                                             name="%(mail.action_email_compose_message_wizard)d"
-                                            context="{'mail':'reply', 'message_id':active_id}"
+                                            context="{'mail':'reply'}"
                                             icon="terp-mail-replied" type="action"/>
-                                    </group>
-                                    <group attrs="{'invisible': [('history', '=', True)]}">
-                                        <field name="display_text" colspan="4" nolabel="1"  height="250"/>
-                                    </group>
+                                        </group>
+
                                 </page>
                                 <page string="Attachments">
                                     <field name="attachment_ids" colspan="4" readonly="1" nolabel="1"/>
                                 </page>
-                            </notebook>
+                                </notebook>
                         </form>
                     </field>
                     <button string="Add Internal Note"
@@ -253,6 +253,7 @@
                 <field name="type_id" invisible="1"/>
                 <field name="referred" invisible="1"/>
                 <field name="channel_id" invisible="1"/>
+                <field name="subjects" invisible="1"/>
 
                 <field name="stage_id"/>
                 <button name="stage_previous" string="Previous Stage"
@@ -333,6 +334,7 @@
                         domain="[('user_id','=', False)]"
                         help="Unassigned Leads" />
                 </field>
+                <field name="subjects"/>
                 <field name="section_id" widget="selection"
                     context="{'invisible_section': False}">
                     <filter icon="terp-personal+" groups="base.group_extended"

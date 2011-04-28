@@ -119,7 +119,7 @@ class survey_send_invitation(osv.osv_memory):
         res_user = ""
         user_exists = False
         new_user = []
-        attachments = []
+        attachments = {}
         current_sur = survey_ref.browse(cr, uid, context.get('active_id'), context=context)
         exist_user = current_sur.invited_user_ids
         if exist_user:
@@ -134,8 +134,8 @@ class survey_send_invitation(osv.osv_memory):
                 file_data += line
                 if not line:
                     break
-            attachments.append((id.title +".pdf",file_data))
             file.close()
+            attachments[id.title +".pdf"] = file_data
             os.remove(addons.get_module_resource('survey', 'report') + id.title +".pdf")
 
         for partner in self.pool.get('res.partner').browse(cr, uid, partner_ids):

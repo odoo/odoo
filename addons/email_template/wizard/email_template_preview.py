@@ -38,7 +38,7 @@ class email_template_preview(osv.osv_memory):
         if context is None:
             context = {}
 
-        template_id = context.get('template_id', False)
+        template_id = context.get('active_id', False)
         if not template_id:
             return []
         template_pool = self.pool.get('email.template')
@@ -61,7 +61,7 @@ class email_template_preview(osv.osv_memory):
         result = super(email_template_preview, self).default_get(cr, uid, fields, context=context)
 
         template_pool = self.pool.get('email.template')
-        template_id = context.get('template_id',False)
+        template_id = context.get('active_id',False)
         if 'res_id' in fields:
             records = self._get_records(cr, uid, context=context)
             result['res_id'] = records and records[0][0] or False # select first record as a Default

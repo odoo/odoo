@@ -26,6 +26,10 @@ from datetime import datetime, date
 from tools.translate import _
 from osv import fields, osv
 
+class project_project(osv.osv):
+    _name = 'project.project'
+    
+project_project()    
 
 class project_task_type(osv.osv):
     _name = 'project.task.type'
@@ -35,6 +39,7 @@ class project_task_type(osv.osv):
         'name': fields.char('Stage Name', required=True, size=64, translate=True),
         'description': fields.text('Description'),
         'sequence': fields.integer('Sequence'),
+        'project_ids': fields.many2many('project.project', 'project_task_type_rel', 'type_id', 'project_id', 'Projects'),
     }
 
     _defaults = {
@@ -208,6 +213,7 @@ class project(osv.osv):
         default = default or {}
         context['active_test'] = False
         default['state'] = 'open'
+        proj = self.browse(cr, uid, id, context=context)
         if not default.get('name', False):
             default['name'] = proj.name + _(' (copy)')
 
@@ -399,12 +405,6 @@ class task(osv.osv):
                  default.update({'name':new_name})
         return super(task, self).copy_data(cr, uid, id, default, context)
 
-    def _check_dates(self, cr, uid, ids, context=None):
-        task = self.read(cr, uid, ids[0], ['date_start', 'date_end'])
-        if task['date_start'] and task['date_end']:
-             if task['date_start'] > task['date_end']:
-                 return False
-        return True
 
     def _is_template(self, cr, uid, ids, field_name, arg, context=None):
         res = {}

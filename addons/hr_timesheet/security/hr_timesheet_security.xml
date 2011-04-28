@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="True">
+
+        <record id="property_rule_timesheet_employee" model="ir.rule">
+            <field name="name">HR Analytic Timesheet</field>
+            <field model="ir.model" name="model_id" ref="model_hr_analytic_timesheet"/>
+            <field name="domain_force">[('user_id', '=', user.id)]</field>
+        </record>
+
+    </data>
+</openerp>
