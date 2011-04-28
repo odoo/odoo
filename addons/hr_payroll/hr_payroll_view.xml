@@ -135,15 +135,13 @@
             <field name="model">hr.payslip.line</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Salary Structure" editable="bottom">
+                <tree string="Salary Structure" editable="bottom" colors="blue:total == 0">
                     <field name="category_id"/>
                     <field name="employee_id" invisible="1"/>
                     <field name="sequence" groups="base.group_extended"/>
                     <field name="name"/>
                     <field name="code"/>
-                    <field name="amount_select"/>
-                    <field name="amount_fix"/>
-                    <field name="amount_percentage"/>
+                    <field name="total"/>
                 </tree>
             </field>
         </record>
@@ -242,7 +240,7 @@
                     <notebook colspan="4">
                         <page string="Salary Computation" >
                             <field name="line_ids" colspan="4" nolabel="1">
-                                <tree string="Salary Structure" editable="bottom">
+                                <tree string="Salary Structure" editable="bottom" colors="blue:total == 0">
                                     <field name="name"/>
                                     <field name="code"/>
                                     <field name="category_id"/>
@@ -280,7 +278,7 @@
 <!-- TODO: put me back -->
 	                    <page string="Details By Salary Head">
                             <field name="details_by_salary_head" context="{'group_by':'category_id'}" domain="[('appears_on_payslip', '=', True)]" nolabel="1">
-                                <tree string="Payslip Lines">
+                                <tree string="Payslip Lines" colors="blue:total == 0">
                                     <field name="category_id"/>
                                     <field name="name"/>
                                     <field name="code"/>
