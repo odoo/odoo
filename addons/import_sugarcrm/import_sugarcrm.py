@@ -1182,11 +1182,7 @@ MAP_FIELDS = {'Opportunities':  #Object Mapping name
                      'process' : import_leads,
                     },
               'Contacts':
-<<<<<<< TREE
                     {'dependencies' : ['Users', 'Accounts'],  #Object to import before this table
-=======
-                    {'dependencies' : [],  #Object to import before this table
->>>>>>> MERGE-SOURCE
                      'process' : import_partner_address,
                     },
               'Accounts':
@@ -1212,23 +1208,7 @@ MAP_FIELDS = {'Opportunities':  #Object Mapping name
               'Calls': 
                     {'dependencies' : ['Accounts', 'Contacts', 'Users', 'Opportunities'],
                      'process' : import_calls,
-<<<<<<< TREE
-                    }, 
-              'Claims': 
-                    {'dependencies' : ['Users', 'Accounts', 'Contacts', 'Leads'],
-                     'process' : import_claims,
-                    },
-              'Employees': 
-                    {'dependencies' : ['Resources'],
-                     'process' : import_employees,
-                    },
-              'Emails': 
-                    {'dependencies' : ['Users', 'Projects', 'Project Tasks', 'Accounts', 'Contacts', 'Leads', 'Opportunities', 'Meetings', 'Calls'],
-                     'process' : import_emails,
-                    },    
-=======
                     },  
->>>>>>> MERGE-SOURCE
               'Projects': 
                     {'dependencies' : ['Users', 'Accounts', 'Contacts'],
                      'process' : import_projects,
@@ -1243,12 +1223,12 @@ MAP_FIELDS = {'Opportunities':  #Object Mapping name
                     },                         
               
               'Emails': 
-                    {'dependencies' : ['Users'],
+                    {'dependencies' : ['Users', 'Projects', 'Project Tasks', 'Accounts', 'Contacts', 'Leads', 'Opportunities', 'Meetings', 'Calls'],
                      'process' : import_emails,
                     },    
               
               'Notes': 
-                    {'dependencies' : [],
+                    {'dependencies' : ['Users', 'Projects', 'Project Tasks', 'Accounts', 'Contacts', 'Leads', 'Opportunities', 'Meetings', 'Calls'],
                      'process' : import_history,
                     },  
               'Employees': 
