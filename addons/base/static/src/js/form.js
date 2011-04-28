@@ -912,6 +912,73 @@ openerp.base.form.FieldMany2Many = openerp.base.form.Field.extend({
     init: function(view, node) {
         this._super(view, node);
         this.template = "FieldMany2Many";
+        this.list_id = _.uniqueId("many2many");
+    },
+    start: function() {
+        this._super.apply(this, arguments);
+        this.dataset = new openerp.base.DataSetMany2Many(this.session, this.field.relation);
+        this.list_view = new openerp.base.form.Many2ManyListView(undefined, this.view.session,
+                this.list_id, this.dataset, false, {'selected': false, 'addable': 'Add'});
+        var self = this;
+        this.list_view.m2m_field = this;
+        this.list_view.start();
+    },
+    set_value: function(value) {
+        if (value != false) {
+            this.dataset.ids = value;
+            this.dataset.count = value.length;
+            this.list_view.do_reload();
+        }
+    },
+    get_value: function() {
+        return [[6,false,this.dataset.ids]];
+    }
+});
+
+openerp.base.form.Many2ManyListView = openerp.base.ListView.extend({
+    do_delete: function (e) {
+        e.stopImmediatePropagation();
+        var ids = [this.rows[$(e.currentTarget).closest('tr').prevAll().length].data.id.value];
+        this.dataset.ids = _.without.apply(null, [this.dataset.ids].concat(ids));
+        this.dataset.count = this.dataset.ids.length;
+        // there may be a faster way
+        this.do_reload();
+        
+        this.m2m_field.on_ui_change();
+    },
+    do_reload: function () {
+        /* Dear xmo, according to your comments, this method's implementation in list view seems
+         * to be a little bit bullshit.
+         * I assume the list view will be changed later, so I hope it will support static datasets.
+         */
+        return this.rpc('/base/listview/fill', {
+            'model': this.dataset.model,
+            'id': this.view_id,
+            'domain': [["id", "in", this.dataset.ids]],
+            'context': this.dataset.context
+        }, this.do_fill_table);
+    },
+    do_add_record: function (e) {
+        e.stopImmediatePropagation();
+        // TODO: need to open a popup with search view
+    },
+    on_select_row: function(event) {
+        var $target = $(event.currentTarget);
+        var row = this.rows[$target.prevAll().length];
+        var id = row.data.id.value;
+        if(! id) {
+            return;
+        }
+        var action_manager = this.m2m_field.view.session.action_manager;
+        action_manager.do_action({
+            "res_model": this.dataset.model,
+            "views":[[false,"form"]],
+            "res_id": id,
+            "type":"ir.actions.act_window",
+            "view_type":"form",
+            "view_mode":"form",
+            "target":"new"
+        });
     }
 });
 

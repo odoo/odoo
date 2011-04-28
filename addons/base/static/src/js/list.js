@@ -64,7 +64,7 @@ openerp.base.ListView = openerp.base.Controller.extend(
         return this.rpc("/base/listview/load", {
             model: this.model,
             view_id: this.view_id,
-            toolbar: !!this.view_manager.sidebar
+            toolbar: this.view_manager ? !!this.view_manager.sidebar : false
         }, this.on_loaded);
     },
     /**
@@ -168,7 +168,7 @@ openerp.base.ListView = openerp.base.Controller.extend(
                 'tr', 'click', this.on_select_row);
 
         // sidebar stuff
-        if (this.view_manager.sidebar) {
+        if (this.view_manager && this.view_manager.sidebar) {
             this.view_manager.sidebar.set_toolbar(data.fields_view.toolbar);
         }
     },
@@ -262,7 +262,9 @@ openerp.base.ListView = openerp.base.Controller.extend(
         view = view || 'form';
         this.dataset.index = index;
         _.delay(_.bind(function () {
-            this.view_manager.on_mode_switch(view);
+            if(this.view_manager) {
+                this.view_manager.on_mode_switch(view);
+            }
         }, this));
     },
     /**
