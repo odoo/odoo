@@ -39,9 +39,22 @@ class account_partner_ledger(osv.osv_memory):
     }
     _defaults = {
        'reconcil': True,
-       'initial_balance': True,
+       'initial_balance': False,
        'page_split': False,
     }
+    def onchange_initial_balance(self, cr, uid, ids, initial_balance=False, reconcil=False, context=None):
+        res = {'value': {}}
+        if initial_balance:
+            res['value'] = {
+                  'reconcil': False
+            }
+        return res
+
+    def onchange_filter(self, cr, uid, ids, filter='filter_no', fiscalyear_id=False, context=None):
+        res = super(account_partner_ledger, self).onchange_filter(cr, uid, ids, filter=filter, fiscalyear_id=fiscalyear_id, context=context)
+        if filter == 'filter_no':
+            res['value'].update({'initial_balance': False})
+        return res
 
     def _print_report(self, cr, uid, ids, data, context=None):
         if context is None:
