@@ -10,7 +10,6 @@ import time
 import traceback
 import uuid
 import xmlrpclib
-import pytz
 
 import cherrypy
 import cherrypy.lib.static
@@ -499,6 +498,9 @@ class Root(object):
     default.exposed = True
 
 def main(argv):
+    # change the timezone of the program to the OpenERP server's assumed timezone
+    os.environ["TZ"] = "UTC"
+    
     # Parse config
     op = optparse.OptionParser()
     op.add_option("-p", "--port", dest="socket_port", help="listening port", metavar="NUMBER", default=8002)
