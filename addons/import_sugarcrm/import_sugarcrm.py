@@ -251,7 +251,7 @@ def get_user_address(sugar_obj, cr, uid, val, context=None):
     'street': 'address_street',
     'zip': 'address_postalcode',
     }
-    address_ids = address_obj.search(cr, uid, [('name', 'like', val.get('first_name') +' '+ val.get('last_name'))])
+    address_ids = address_obj.search(cr, uid, [('name', 'like', val.get('first_name') or '' +' '+ val.get('last_name'))])
     if val.get('address_country'):
         country_id = get_all_countries(sugar_obj, cr, uid, val.get('address_country'), context)
         state_id = get_all_states(sugar_obj, cr, uid, val.get('address_state'), country_id, context)
@@ -814,14 +814,9 @@ def import_bug(sugar_obj, cr, uid, context=None):
 def get_job_id(sugar_obj, cr, uid, val, context=None):
     if not context:
         context={}
-    job_id = False    
-    job_obj = sugar_obj.pool.get('hr.job')        
-    job_ids = job_obj.search(cr, uid, [('name', '=', val)])
-    if job_ids:
-        job_id = job_ids[0]
-    else:
-        job_id = job_obj.create(cr, uid, {'name': val})
-    return job_id
+    fields = ['name']
+    data = [val]
+    return import_object(sugar_obj, cr, uid, fields, data, 'hr.job', 'hr_job', val, [('name', 'ilike', val)], context)
 
 def get_campaign_id(sugar_obj, cr, uid, val, context=None):
     if not context:
@@ -887,7 +882,7 @@ def import_history(sugar_obj, cr, uid, context=None):
 def import_employees(sugar_obj, cr, uid, context=None):
     if not context:
         context = {}
-    map_employee = {'id' : 'user_hash',
+    map_employee = {'id' : 'id',
                     'resource_id/.id': 'resource_id/.id',
                     'name': ['first_name', 'last_name'],
                     'work_phone': 'phone_work',
@@ -897,7 +892,7 @@ def import_employees(sugar_obj, cr, uid, context=None):
                     'notes': 'description',
                     #TODO: Creation of Employee create problem.
                  #   'coach_id/id': 'reports_to_id',
-                    'job_id/.id': 'job_id/.id'
+                    'job_id/id': 'job_id/id'
     }
     employee_obj = sugar_obj.pool.get('hr.employee')
     PortType, sessionid = sugar.login(context.get('username', ''), context.get('password', ''), context.get('url',''))
@@ -909,7 +904,7 @@ def import_employees(sugar_obj, cr, uid, context=None):
         resource_id = sugar_obj.pool.get('ir.model.data').browse(cr, uid, model_ids)
         if resource_id:
             val['resource_id/.id'] = resource_id[0].res_id
-        val['job_id/.id'] = get_job_id(sugar_obj, cr, uid, val.get('title'), context)
+        val['job_id/id'] = get_job_id(sugar_obj, cr, uid, val.get('title'), context)
         fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_employee, context)
         employee_obj.import_data(cr, uid, fields, [datas], mode='update', current_module='sugarcrm_import', noupdate=True, context=context)
     return True
