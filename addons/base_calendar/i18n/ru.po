@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-04-24 21:46+0000\n"
+"PO-Revision-Date: 2011-04-25 08:56+0000\n"
 "Last-Translator: Stanislav Hanzhin <Unknown>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-25 05:43+0000\n"
+"X-Launchpad-Export-Date: 2011-04-26 06:03+0000\n"
 "X-Generator: Launchpad (build 12758)\n"
 
 #. module: base_calendar
@@ -195,7 +195,7 @@ msgstr "Пользователи, которым был делегирован �
 #. module: base_calendar
 #: field:calendar.attendee,ref:0
 msgid "Event Ref"
-msgstr ""
+msgstr "Ссылка на событие"
 
 #. module: base_calendar
 #: field:base.calendar.set.exrule,we:0
@@ -697,7 +697,7 @@ msgstr "_OK"
 #: selection:calendar.event,byday:0
 #: selection:calendar.todo,byday:0
 msgid "First"
-msgstr ""
+msgstr "Первый"
 
 #. module: base_calendar
 #: view:calendar.event:0
@@ -967,7 +967,7 @@ msgstr "Базовое уведомление"
 #: view:base.calendar.set.exrule:0
 #: view:calendar.event:0
 msgid "The"
-msgstr ""
+msgstr "-"
 
 #. module: base_calendar
 #: view:calendar.attendee:0
@@ -1272,73 +1272,73 @@ msgstr "Ответственный пользователь"
 #: selection:calendar.todo,show_as:0
 #: selection:res.users,availability:0
 msgid "Busy"
-msgstr ""
+msgstr "Занят"
 
 #. module: base_calendar
 #: model:ir.model,name:base_calendar.model_calendar_event
 msgid "Calendar Event"
-msgstr ""
+msgstr "Событие календаря"
 
 #. module: base_calendar
 #: selection:calendar.attendee,state:0
 #: selection:calendar.event,state:0
 #: selection:calendar.todo,state:0
 msgid "Tentative"
-msgstr ""
+msgstr "Предварительное"
 
 #. module: base_calendar
 #: field:calendar.event,interval:0
 #: field:calendar.todo,interval:0
 msgid "Repeat every"
-msgstr ""
+msgstr "Повторять каждые"
 
 #. module: base_calendar
 #: selection:calendar.event,end_type:0
 #: selection:calendar.todo,end_type:0
 msgid "Fix amout of times"
-msgstr ""
+msgstr "Определенное количество раз"
 
 #. module: base_calendar
 #: field:calendar.event,recurrency:0
 #: field:calendar.todo,recurrency:0
 msgid "Recurrent"
-msgstr ""
+msgstr "Повторяющийся"
 
 #. module: base_calendar
 #: field:calendar.event,rrule_type:0
 #: field:calendar.todo,rrule_type:0
 msgid "Recurrency"
-msgstr ""
+msgstr "Повторение"
 
 #. module: base_calendar
 #: model:ir.actions.act_window,name:base_calendar.action_view_attendee_form
 #: model:ir.ui.menu,name:base_calendar.menu_attendee_invitations
 msgid "Event Invitations"
-msgstr ""
+msgstr "Приглашения"
 
 #. module: base_calendar
 #: selection:base.calendar.set.exrule,week_list:0
 #: selection:calendar.event,week_list:0
 #: selection:calendar.todo,week_list:0
 msgid "Thursday"
-msgstr ""
+msgstr "Четверг"
 
 #. module: base_calendar
 #: field:calendar.event,exrule:0
 #: field:calendar.todo,exrule:0
 msgid "Exception Rule"
-msgstr ""
+msgstr "Правило исключения"
 
 #. module: base_calendar
 #: help:calendar.attendee,language:0
 msgid ""
 "To specify the language for text values in aproperty or property parameter."
-msgstr ""
+msgstr "Указать язык для текстовых значений свойств или параметр свойства."
 
 #. module: base_calendar
 #: view:calendar.event:0
 msgid "Details"
-msgstr ""
+msgstr "Подробности"
 
 #. module: base_calendar
 #: help:calendar.event,exrule:0
@@ -1347,19 +1347,21 @@ msgid ""
 "Defines a rule or repeating pattern of time to exclude from the recurring "
 "rule."
 msgstr ""
+"Определяет правило или повторяющийся шаблон времени для исключения из правил "
+"повторения."
 
 #. module: base_calendar
 #: field:base.calendar.set.exrule,month_list:0
 #: field:calendar.event,month_list:0
 #: field:calendar.todo,month_list:0
 msgid "Month"
-msgstr ""
+msgstr "Месяц"
 
 #. module: base_calendar
 #: view:base_calendar.invite.attendee:0
 #: view:calendar.event:0
 msgid "Invite People"
-msgstr ""
+msgstr "Пригласить людей"
 
 #. module: base_calendar
 #: help:calendar.event,rrule:0
@@ -1369,11 +1371,14 @@ msgid ""
 "e.g.: Every other month on the last Sunday of the month for 10 occurrences:  "
 "      FREQ=MONTHLY;INTERVAL=2;COUNT=10;BYDAY=-1SU"
 msgstr ""
+"Определяет правила или шаблон для повторяющихся событий\n"
+"прим.: раз в два месяца в последнее воскресенье месяца 10 раз: "
+"FREQ=MONTHLY;INTERVAL=2;COUNT=10;BYDAY=-1SU"
 
 #. module: base_calendar
 #: field:calendar.attendee,dir:0
 msgid "URI Reference"
-msgstr ""
+msgstr "Связанный URI"
 
 #. module: base_calendar
 #: field:calendar.alarm,description:0
@@ -1383,36 +1388,36 @@ msgstr ""
 #: field:calendar.todo,description:0
 #: field:calendar.todo,name:0
 msgid "Description"
-msgstr ""
+msgstr "Описание"
 
 #. module: base_calendar
 #: selection:base.calendar.set.exrule,month_list:0
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
 msgid "May"
-msgstr ""
+msgstr "Май"
 
 #. module: base_calendar
 #: field:base_calendar.invite.attendee,type:0
 #: view:calendar.attendee:0
 msgid "Type"
-msgstr ""
+msgstr "Тип"
 
 #. module: base_calendar
 #: view:calendar.attendee:0
 msgid "Search Invitations"
-msgstr ""
+msgstr "Поиск приглашений"
 
 #. module: base_calendar
 #: selection:calendar.alarm,trigger_occurs:0
 #: selection:res.alarm,trigger_occurs:0
 msgid "After"
-msgstr ""
+msgstr "После"
 
 #. module: base_calendar
 #: selection:calendar.alarm,state:0
 msgid "Stop"
-msgstr ""
+msgstr "Остановлено"
 
 #. module: base_calendar
 #: model:ir.model,name:base_calendar.model_ir_values
@@ -1422,69 +1427,69 @@ msgstr "ir.values"
 #. module: base_calendar
 #: model:ir.model,name:base_calendar.model_ir_model
 msgid "Objects"
-msgstr ""
+msgstr "Объекты"
 
 #. module: base_calendar
 #: view:calendar.attendee:0
 #: selection:calendar.attendee,state:0
 msgid "Delegated"
-msgstr ""
+msgstr "Поручено"
 
 #. module: base_calendar
 #: field:base.calendar.set.exrule,sa:0
 #: field:calendar.event,sa:0
 #: field:calendar.todo,sa:0
 msgid "Sat"
-msgstr ""
+msgstr "Сб"
 
 #. module: base_calendar
 #: view:calendar.event:0
 msgid "Choose day where repeat the meeting"
-msgstr ""
+msgstr "Выбрать день повтора встречи"
 
 #. module: base_calendar
 #: selection:base.calendar.set.exrule,freq:0
 msgid "Minutely"
-msgstr ""
+msgstr "Ежеминутно"
 
 #. module: base_calendar
 #: help:calendar.attendee,sent_by:0
 msgid "Specify the user that is acting on behalf of the calendar user"
-msgstr ""
+msgstr "Пользователь, действующий от имени пользователя календаря"
 
 #. module: base_calendar
 #: view:calendar.event:0
 #: field:calendar.event.edit.all,date_deadline:0
 msgid "End Date"
-msgstr ""
+msgstr "Дата окончания"
 
 #. module: base_calendar
 #: selection:base.calendar.set.exrule,month_list:0
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
 msgid "February"
-msgstr ""
+msgstr "Февраль"
 
 #. module: base_calendar
 #: selection:calendar.event,freq:0
 #: selection:calendar.todo,freq:0
 msgid "Months"
-msgstr ""
+msgstr "Месяцы"
 
 #. module: base_calendar
 #: selection:calendar.attendee,cutype:0
 msgid "Resource"
-msgstr ""
+msgstr "Ресурс"
 
 #. module: base_calendar
 #: field:res.alarm,name:0
 msgid "Name"
-msgstr ""
+msgstr "Название"
 
 #. module: base_calendar
 #: model:ir.model,name:base_calendar.model_calendar_alarm
 msgid "Event alarm information"
-msgstr ""
+msgstr "Информация об уведомлении о событии"
 
 #. module: base_calendar
 #: help:calendar.alarm,name:0
@@ -1492,6 +1497,8 @@ msgid ""
 "Contains the text to be                      used as the message subject for "
 "email                      or contains the text to be used for display"
 msgstr ""
+"Содержит текст, используемый в качестве темы электронного письма или "
+"отображаемый текст"
 
 #. module: base_calendar
 #: field:calendar.event,alarm_id:0
@@ -1499,144 +1506,144 @@ msgstr ""
 #: field:calendar.todo,alarm_id:0
 #: field:calendar.todo,base_calendar_alarm_id:0
 msgid "Alarm"
-msgstr ""
+msgstr "Уведомление"
 
 #. module: base_calendar
 #: code:addons/base_calendar/wizard/base_calendar_set_exrule.py:90
 #, python-format
 msgid "Please Apply Recurrency before applying Exception Rule."
-msgstr ""
+msgstr "Сначала примените правила повторения, а затем правило исключения."
 
 #. module: base_calendar
 #: field:calendar.attendee,sent_by_uid:0
 msgid "Sent By User"
-msgstr ""
+msgstr "Отправлено пользователем"
 
 #. module: base_calendar
 #: selection:base.calendar.set.exrule,month_list:0
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
 msgid "April"
-msgstr ""
+msgstr "Апрель"
 
 #. module: base_calendar
 #: view:calendar.event:0
 msgid "Recurrency period"
-msgstr ""
+msgstr "Период повторения"
 
 #. module: base_calendar
 #: field:base.calendar.set.exrule,week_list:0
 #: field:calendar.event,week_list:0
 #: field:calendar.todo,week_list:0
 msgid "Weekday"
-msgstr ""
+msgstr "День недели"
 
 #. module: base_calendar
 #: field:base.calendar.set.exrule,byday:0
 #: field:calendar.event,byday:0
 #: field:calendar.todo,byday:0
 msgid "By day"
-msgstr ""
+msgstr "По дню"
 
 #. module: base_calendar
 #: field:calendar.alarm,model_id:0
 msgid "Model"
-msgstr ""
+msgstr "Модель"
 
 #. module: base_calendar
 #: selection:calendar.alarm,action:0
 msgid "Audio"
-msgstr ""
+msgstr "Звук"
 
 #. module: base_calendar
 #: field:calendar.event,id:0
 #: field:calendar.todo,id:0
 msgid "ID"
-msgstr ""
+msgstr "Идентификатор"
 
 #. module: base_calendar
 #: selection:calendar.attendee,role:0
 msgid "For information Purpose"
-msgstr ""
+msgstr "Для информационных целей"
 
 #. module: base_calendar
 #: view:base_calendar.invite.attendee:0
 msgid "Invite"
-msgstr ""
+msgstr "Пригласить"
 
 #. module: base_calendar
 #: model:ir.model,name:base_calendar.model_calendar_attendee
 msgid "Attendee information"
-msgstr ""
+msgstr "Информация об участнике"
 
 #. module: base_calendar
 #: field:calendar.alarm,res_id:0
 msgid "Resource ID"
-msgstr ""
+msgstr "Идентификатор ресурса"
 
 #. module: base_calendar
 #: selection:calendar.attendee,state:0
 msgid "Needs Action"
-msgstr ""
+msgstr "Требует действия"
 
 #. module: base_calendar
 #: field:calendar.attendee,sent_by:0
 msgid "Sent By"
-msgstr ""
+msgstr "Отправлено"
 
 #. module: base_calendar
 #: field:calendar.event,sequence:0
 #: field:calendar.todo,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Последовательность"
 
 #. module: base_calendar
 #: help:calendar.event,alarm_id:0
 #: help:calendar.todo,alarm_id:0
 msgid "Set an alarm at this time, before the event occurs"
-msgstr ""
+msgstr "Установить уведомление на это время, перед событием"
 
 #. module: base_calendar
 #: selection:base_calendar.invite.attendee,type:0
 msgid "Internal User"
-msgstr ""
+msgstr "Внутренний пользователь"
 
 #. module: base_calendar
 #: view:calendar.attendee:0
 #: view:calendar.event:0
 msgid "Accept"
-msgstr ""
+msgstr "Принять"
 
 #. module: base_calendar
 #: selection:base.calendar.set.exrule,week_list:0
 #: selection:calendar.event,week_list:0
 #: selection:calendar.todo,week_list:0
 msgid "Saturday"
-msgstr ""
+msgstr "Суббота"
 
 #. module: base_calendar
 #: view:calendar.attendee:0
 msgid "Invitation To"
-msgstr ""
+msgstr "Приглашение для"
 
 #. module: base_calendar
 #: selection:base.calendar.set.exrule,byday:0
 #: selection:calendar.event,byday:0
 #: selection:calendar.todo,byday:0
 msgid "Second"
-msgstr ""
+msgstr "Второй"
 
 #. module: base_calendar
 #: field:calendar.attendee,availability:0
 #: field:res.users,availability:0
 msgid "Free/Busy"
-msgstr ""
+msgstr "Свободен/Занят"
 
 #. module: base_calendar
 #: field:calendar.event,end_type:0
 #: field:calendar.todo,end_type:0
 msgid "Way to end reccurency"
-msgstr ""
+msgstr "Способ прекращения повторения"
 
 #. module: base_calendar
 #: field:calendar.alarm,duration:0
@@ -1647,17 +1654,17 @@ msgstr ""
 #: field:res.alarm,duration:0
 #: field:res.alarm,trigger_duration:0
 msgid "Duration"
-msgstr ""
+msgstr "Длительность"
 
 #. module: base_calendar
 #: selection:base_calendar.invite.attendee,type:0
 msgid "External Email"
-msgstr ""
+msgstr "Внешний адрес"
 
 #. module: base_calendar
 #: field:calendar.alarm,trigger_date:0
 msgid "Trigger Date"
-msgstr ""
+msgstr "Дата срабатывания"
 
 #. module: base_calendar
 #: help:calendar.alarm,attach:0
@@ -1669,10 +1676,15 @@ msgid ""
 "                    * Points to a procedure resource, which is invoked when  "
 "                    the alarm is triggered for procedure."
 msgstr ""
+"* Указывает на ресурс, который обрабатывается при срабатывании звукового "
+"уведомления,\n"
+"                    * Файл, который будет отправлен как вложение в письмо,\n"
+"                    * Указывает на процедуру, вызываемую при срабатывании "
+"уведомления."
 
 #. module: base_calendar
 #: selection:base.calendar.set.exrule,byday:0
 #: selection:calendar.event,byday:0
 #: selection:calendar.todo,byday:0
 msgid "Fifth"
-msgstr ""
+msgstr "Пятый"
