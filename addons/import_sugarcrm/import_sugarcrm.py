@@ -1170,7 +1170,7 @@ MAP_FIELDS = {'Opportunities':  #Object Mapping name
                      'process' : import_documents,
                     },
               'Meetings': 
-                    {'dependencies' : ['Accounts', 'Contacts', 'Users', 'Projects', 'Opportunities'],
+                    {'dependencies' : ['Accounts', 'Contacts', 'Users', 'Projects', 'Opportunities', 'Tasks'],
                      'process' : import_meetings,
                     },        
               'Tasks': 
