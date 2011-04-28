@@ -164,10 +164,6 @@
         });      
       } else {
         // set the layout
-//        var currentLayout;
-//        if(typeof dashboard.layout != 'undefined') {
-//            currentLayout = dashboard.layout
-//        }
         var currentLayout = (typeof dashboard.layout != 'undefined') ? dashboard.layout : getLayout(opts.json_data.layout);
         dashboard.setLayout(currentLayout);
         dashboard.loadWidgets(opts.json_data.data);
@@ -196,7 +192,10 @@
 
         // add it to the column
         wi.appendTo(column);    
-
+        
+        if(column.find('.emptycolumn').length)
+            column.find('.emptycolumn').remove();
+        
         dashboard.widgets[wid] = widget({
           id: wid,
           element: wi,
@@ -843,7 +842,6 @@
   $.fn.dashboard.defaults = {
     debuglevel:3,
     json_data: {},
-    simple_data: {},
     loadingHtml: '<div class="loading"><img alt="Loading, please wait" src="../themes/default/loading.gif" /><p>Loading...</p></div>',
     emptyColumnHtml: 'Drag your widgets here',
     widgetTemplate: 'widgettemplate',
