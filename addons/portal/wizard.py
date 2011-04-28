@@ -80,8 +80,8 @@ class wizard(osv.osv_memory):
             for p in partners:
                 if p.address:
                     # take default address if present, or any address otherwise
-                    good = filter(lambda a: a.type == 'default', p.address)
-                    addresses.append(good[0] if good else p.address[0])
+                    def_addrs = filter(lambda a: a.type == 'default', p.address)
+                    addresses.append(def_addrs[0] if def_addrs else p.address[0])
         
         # create user configs based on these addresses
         user_data = lambda address: {
