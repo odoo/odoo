@@ -124,7 +124,7 @@ class portal(osv.osv):
             # user menu action = portal menu action if set in portal
             if p.menu_action_id:
                 user_values['menu_id'] = p.menu_action_id.id
-            user_ids = [u.id for u in p.users]
+            user_ids = [u.id for u in p.users if u.id != 1]
             user_obj.write(cr, uid, user_ids, user_values, context)
 
     def _assign_widgets(self, cr, uid, ids, context=None):
@@ -133,7 +133,7 @@ class portal(osv.osv):
         for p in self.browse(cr, uid, ids, context):
             for w in p.widget_ids:
                 values = {'sequence': w.sequence, 'widget_id': w.widget_id.id}
-                for u in p.user_ids:
+                for u in p.users:
                     if u.id == 1: continue
                     values['user_id'] = u.id
                     widget_user_obj.create(cr, uid, values, context)
