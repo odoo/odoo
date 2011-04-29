@@ -44,11 +44,13 @@ OPENERP_FIEDS_MAPS = {'Leads': 'crm.lead',
                       
   }
 
-def find_mapped_id(obj, cr, uid, res_model, sugar_id, context):
+def find_mapped_id(obj, cr, uid, res_model, sugar_id, context=None):
+    if not context:
+        context = {}
     model_obj = obj.pool.get('ir.model.data')
     return model_obj.search(cr, uid, [('model', '=', res_model), ('module', '=', 'sugarcrm_import'), ('name', '=', sugar_id)], context=context)
 
-def mapped_id(obj, cr, uid, res_model, sugar_id, id, context):
+def mapped_id(obj, cr, uid, res_model, sugar_id, id, context=None):
     """
         This function create the mapping between an already existing data and the similar data of sugarcrm
         @param res_model: model of the mapped object
@@ -57,6 +59,8 @@ def mapped_id(obj, cr, uid, res_model, sugar_id, id, context):
         
         @return : the xml_id or sugar_id 
     """
+    if not context:
+        context = {}
     ir_model_data_obj = obj.pool.get('ir.model.data')
     id = ir_model_data_obj._update(cr, uid, res_model,
                      'sugarcrm_import', {}, mode='update', xml_id=sugar_id,
@@ -78,6 +82,8 @@ def import_object(sugar_obj, cr, uid, fields, data, model, table, name, domain_s
         
         @return: the xml_id of the ressources
     """
+    if not context:
+        context = {}
     domain_search = not domain_search and [('name', 'ilike', name)] or domain_search
     obj = sugar_obj.pool.get(model)
     xml_id = generate_xml_id(name, table)
@@ -107,6 +113,8 @@ def generate_xml_id(name, table):
     return sugar_instance + "_" + table + "_" + name
 
 def get_all(sugar_obj, cr, uid, model, sugar_val, context=None):
+    if not context:
+        context = {}
     models = sugar_obj.pool.get(model)
     model_code = sugar_val[0:2]
     all_model_ids = models.search(cr, uid, [('name', '=', sugar_val)]) or models.search(cr, uid, [('code', '=', model_code.upper())]) 
@@ -117,6 +125,8 @@ def get_all(sugar_obj, cr, uid, model, sugar_val, context=None):
 
 def get_all_states(sugar_obj, cr, uid, sugar_val, country_id, context=None):
     """Get states or create new state"""
+    if not context:
+        context = {}
     state_id = False
     res_country_state_obj = sugar_obj.pool.get('res.country.state')
     
@@ -130,6 +140,8 @@ def get_all_states(sugar_obj, cr, uid, sugar_val, country_id, context=None):
 
 def get_all_countries(sugar_obj, cr, uid, sugar_country_val, context=None):
     """Get Country or Create new country"""
+    if not context:
+        context = {}
     res_country_obj = sugar_obj.pool.get('res.country')
     country_id = False
     country_code = sugar_country_val[0:2]
@@ -189,14 +201,11 @@ def import_users(sugar_obj, cr, uid, context=None):
     } 
     
     def get_users_department(sugar_obj, cr, uid, val, context=None):
-        department_id = False       
-        department_obj = sugar_obj.pool.get('hr.department')
-        department_ids = department_obj.search(cr, uid, [('name', '=', val)])
-        if department_ids:
-            department_id = department_ids[0]
-        elif val:
-            department_id = department_obj.create(cr, uid, {'name': val})
-        return department_id 
+        if not context:
+            context = {}
+        fields = ['name']
+        data = [val]
+        return import_object(sugar_obj, cr, uid, fields, data, 'hr.department', 'hr_department_user', val, context=context)
     
     if not context:
         context = {}
@@ -243,6 +252,8 @@ def get_lead_state(surgar_obj, cr, uid, sugar_val,context=None):
     return state
 
 def get_user_address(sugar_obj, cr, uid, val, context=None):
+    if not context:
+        context = {}
     address_obj = sugar_obj.pool.get('res.partner.address')
     map_user_address = {
     'name': ['first_name', 'last_name'],
@@ -268,6 +279,8 @@ def get_user_address(sugar_obj, cr, uid, val, context=None):
     return True
 
 def get_address_type(sugar_obj, cr, uid, val, map_partner_address, type, context=None):
+        if not context:
+            context = {}
         address_obj = sugar_obj.pool.get('res.partner.address')
         new_address_id = False
         if type == 'invoice':
@@ -295,6 +308,8 @@ def get_address_type(sugar_obj, cr, uid, val, map_partner_address, type, context
         return new_address_id
     
 def get_address(sugar_obj, cr, uid, val, context=None):
+    if not context:
+        context = {}
     map_partner_address={}
     address_id=[]
     address_obj = sugar_obj.pool.get('res.partner.address')
@@ -356,7 +371,8 @@ def get_category(sugar_obj, cr, uid, model, name, context=None):
     return import_object(sugar_obj, cr, uid, fields, data, 'crm.case.categ', 'crm_categ', name, [('object_id.model','=',model), ('name', 'ilike', name)], context)
 
 def get_alarm_id(sugar_obj, cr, uid, val, context=None):
-    
+    if not context:
+        context = {}
     alarm_dict = {'60': '1 minute before',
                   '300': '5 minutes before',
                   '600': '10 minutes before',
@@ -823,14 +839,14 @@ def get_job_id(sugar_obj, cr, uid, val, context=None):
         context={}
     fields = ['name']
     data = [val]
-    return import_object(sugar_obj, cr, uid, fields, data, 'hr.job', 'hr_job', val, [('name', 'ilike', val)], context)
+    return import_object(sugar_obj, cr, uid, fields, data, 'hr.job', 'hr_job', val, context=context)
 
 def get_campaign_id(sugar_obj, cr, uid, val, context=None):
     if not context:
         context={}
     fields = ['name']
     data = [val]
-    return import_object(sugar_obj, cr, uid, fields, data, 'crm.case.resource.type', 'crm_campaign', val, [('name', 'ilike', val)], context)
+    return import_object(sugar_obj, cr, uid, fields, data, 'crm.case.resource.type', 'crm_campaign', val, context=context)
     
 def get_attachment(sugar_obj, cr, uid, val, model, File, Filename, parent_type, context=None):
     if not context:
