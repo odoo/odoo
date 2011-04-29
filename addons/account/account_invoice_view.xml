@@ -123,7 +123,7 @@
                     <field name="date_invoice"/>
                     <field name="number"/>
                     <field name="partner_id" groups="base.group_user"/>
-                    <field name="reference" groups="base.group_user"/>
+                    <field name="reference"/>
                     <field name="name"/>
                     <field name="journal_id" invisible="1"/>
                     <field name="period_id" invisible="1" groups="account.group_account_user"/>
@@ -376,6 +376,10 @@
                     <group col="10" colspan="4">
                         <field name="journal_id" widget="selection" select='1'/>
                         <field name="period_id" select='1' string="Period"/>
+                    </group>
+                    <newline/>
+                    <group expand="0" string="Extended Filters..." name = "extended filter" >
+                        <field name="reference" select="1" string="Invoice Reference"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">

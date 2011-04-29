@@ -312,15 +312,21 @@ class account_invoice(osv.osv):
                 journal_select = journal_obj._name_search(cr, uid, '', [('type', '=', type)], context=context, limit=None, name_get_uid=1)
                 res['fields'][field]['selection'] = journal_select
 
+        doc = etree.XML(res['arch'])
+        if view_type == 'search':
+            if context.get('type', 'in_invoice') in ('out_invoice', 'out_refund'):
+                for node in doc.xpath("//group[@name='extended filter']"):
+                    doc.remove(node)
+
         if view_type == 'tree':
-            doc = etree.XML(res['arch'])
-            nodes = doc.xpath("//field[@name='partner_id']")
-            partner_string = _('Customer')
-            if context.get('type', 'out_invoice') in ('in_invoice', 'in_refund'):
-                partner_string = _('Supplier')
-            for node in nodes:
+            partner_string = _('Supplier')
+            if context.get('type', 'in_invoice') in ('out_invoice', 'out_refund'):
+                partner_string = _('Customer')
+                for node in doc.xpath("//field[@name='reference']"):
+                    doc.remove(node)
+            for node in doc.xpath("//field[@name='partner_id']"):
                 node.set('string', partner_string)
-            res['arch'] = etree.tostring(doc)
+        res['arch'] = etree.tostring(doc)
         return res
 
     def get_log_context(self, cr, uid, context=None):
@@ -1609,17 +1615,17 @@ class res_partner(osv.osv):
     _columns = {
         'invoice_ids': fields.one2many('account.invoice.line', 'partner_id', 'Invoices', readonly=True),
     }
-    
+
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}
-            
+
         if context is None:
-            context = {}   
-             
+            context = {}
+
         default.update({'invoice_ids' : []})
         return super(res_partner, self).copy(cr, uid, id, default, context)
-      
+
 res_partner()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
