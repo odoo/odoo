@@ -121,7 +121,7 @@ class ir_attachment(osv.osv):
         return self.pool.get('ir.actions.act_window').for_xml_id(
             cr, uid, 'base', 'action_attachment', context=context)
 
-    def _name_get_resname(self, cr, uid, ids, object,method, context):
+    def _name_get_resname(self, cr, uid, ids, object, method, context):
         data = {}
         for attachment in self.browse(cr, uid, ids, context=context):
             model_object = attachment.res_model
@@ -129,7 +129,12 @@ class ir_attachment(osv.osv):
             if model_object and res_id:
                 model_pool = self.pool.get(model_object)
                 res = model_pool.name_get(cr,uid,[res_id],context)
-                data[attachment.id] = (res and res[0][1]) or False
+                res_name = res and res[0][1] or False
+                if res_name:
+                    field = self._columns.get('res_name')
+                    if len(res_name )>field.size:
+                        res_name = res_name[:field.size-3] + '...' 
+                data[attachment.id] = res_name
             else:
                  data[attachment.id] = False
         return data
