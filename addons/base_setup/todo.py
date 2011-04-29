@@ -72,7 +72,7 @@ class base_setup_company(osv.osv_memory):
             return defaults
 
         defaults['currency'] = company.currency_id.id
-        for field in ['name','logo','rml_header1','rml_footer1','rml_footer2']:
+        for field in ['name','rml_header1','rml_footer1','rml_footer2']:
             defaults[field] = company[field]
 
         if company.partner_id.address:
@@ -109,7 +109,6 @@ Web: http://openerp.com - Fax: +32.81.73.35.01 - Fortis Bank: 126-2013269-07''')
             help='''This sentence will appear at the bottom of your reports.
 We suggest you to put bank information here:
 IBAN: BE74 1262 0121 6907 - SWIFT: CPDF BE71 - VAT: BE0477.472.701'''),
-        'logo':fields.binary('Logo'),
         'account_no':fields.char('Bank Account No', size=64),
         'website': fields.char('Company Website', size=64, help="Example: http://openerp.com"),
     }
@@ -126,7 +125,6 @@ IBAN: BE74 1262 0121 6907 - SWIFT: CPDF BE71 - VAT: BE0477.472.701'''),
             'rml_header1':payload.rml_header1,
             'rml_footer1':payload.rml_footer1,
             'rml_footer2':payload.rml_footer2,
-            'logo':payload.logo,
             'currency_id':payload.currency.id,
             'account_no':payload.account_no,
         })
