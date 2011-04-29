@@ -124,16 +124,16 @@ class wizard(osv.osv_memory):
         portal_obj = self.pool.get('res.portal')
         for wiz in self.browse(cr, uid, ids, context):
             # create new users in portal
-            users_values = [ (0, 0, {
+            users_data = [ {
                     'name': u.name,
                     'login': u.email,
                     'password': random_password(),
                     'user_email': u.email,
                     'context_lang': u.lang,
                     'address_id': u.address_id.id,
-                }) for u in wiz.user_ids ]
+                } for u in wiz.user_ids ]
             portal_obj.write(cr, ROOT_UID, [wiz.portal_id.id],
-                {'users': users_values}, context0)
+                {'users': [(0, 0, data) for data in users_data]}, context0)
             
             # send email to new users (translated in their language)
             for data in users_data:
