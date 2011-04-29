@@ -710,7 +710,7 @@ class sale_order(osv.osv):
                         'note': line.notes,
                         'company_id': order.company_id.id,
                     })
-
+                    
                 if line.product_id:
                     proc_id = self.pool.get('procurement.order').create(cr, uid, {
                         'name': line.name,
@@ -1180,12 +1180,14 @@ class sale_config_picking_policy(osv.osv_memory):
         'picking_policy': fields.selection([
             ('direct', 'Direct Delivery'),
             ('one', 'All at Once')
-        ], 'Picking Default Policy', required=True, help="The Shipping Policy is used to configure per order if you want to deliver as soon as possible when one product is available or you wait that all products are available.."),
+        ], 'Picking Default Policy', required=True, help="If you are sure that you have enough stock to send complete order at once please select 'All at Once'. If you want to send the order in the partial shipments please select 'Direct Delivery'..."),
         'order_policy': fields.selection([
             ('manual', 'Invoice Based on Sales Orders'),
             ('picking', 'Invoice Based on Deliveries'),
         ], 'Shipping Default Policy', required=True,
-           help="You can generate invoices based on sales orders or based on shippings."),
+           help="""The Shipping Policy is used to synchronise invoice and delivery operations.
+        - The "Invoice Based on Sales Orders" option will create the picking order directly and wait for the user to manually click on the 'Invoice' button to generate the draft invoice.  
+        - The "Invoice Based on Deliveries" option is used to create an invoice during the picking process."""),
         'step': fields.selection([
             ('one', 'Delivery Order Only'),
             ('two', 'Picking List & Delivery Order')
@@ -1202,15 +1204,20 @@ class sale_config_picking_policy(osv.osv_memory):
     }
 
     def execute(self, cr, uid, ids, context=None):
+        ir_values_obj = self.pool.get('ir.values')
+        ir_model_data_obj = self.pool.get('ir.model.data')
+        stock_location_obj = self.pool.get('stock.location')
+        location_id = ir_model_data_obj.get_object_reference(cr, uid, 'stock', 'stock_location_output')
+        location_id = location_id and location_id[1] or False
+        chaining_type = False
         for o in self.browse(cr, uid, ids, context=context):
-            ir_values_obj = self.pool.get('ir.values')
             ir_values_obj.set(cr, uid, 'default', False, 'picking_policy', ['sale.order'], o.picking_policy)
             ir_values_obj.set(cr, uid, 'default', False, 'order_policy', ['sale.order'], o.order_policy)
-            if o.step == 'two':
-                md = self.pool.get('ir.model.data')
-                location_id = md.get_object_reference(cr, uid, 'stock', 'stock_location_output')
-                location_id = location_id and location_id[1] or False
-                self.pool.get('stock.location').write(cr, uid, [location_id], {'chained_auto_packing': 'manual'})
+            if o.step == 'one':
+                chaining_type = 'transparent'
+            else:
+                chaining_type = 'manual'
+            stock_location_obj.write(cr, uid, [location_id], {'chained_auto_packing': chaining_type})
 
 sale_config_picking_policy()
 

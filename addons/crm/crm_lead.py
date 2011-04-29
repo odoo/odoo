@@ -100,8 +100,8 @@ class crm_lead(crm_case, osv.osv):
 
     def _history_search(self, cr, uid, obj, name, args, context=None):
         res = []
-        msg_obj = self.pool.get('mailgate.message')
-        message_ids = msg_obj.search(cr, uid, [('history','=',True), ('name', args[0][1], args[0][2])], context=context)
+        msg_obj = self.pool.get('email.message')
+        message_ids = msg_obj.search(cr, uid, [('history','=',True), ('subject', args[0][1], args[0][2])], context=context)
         lead_ids = self.search(cr, uid, [('message_ids', 'in', message_ids)], context=context)
 
         if lead_ids:
@@ -115,7 +115,7 @@ class crm_lead(crm_case, osv.osv):
             res[obj.id] = ''
             for msg in obj.message_ids:
                 if msg.history:
-                    res[obj.id] = msg.name
+                    res[obj.id] = msg.subject
                     break
         return res
 
@@ -328,6 +328,13 @@ class crm_lead(crm_case, osv.osv):
                 self.write(cr, uid, ids, data)
         return stage
 
+    def unlink(self, cr, uid, ids, context=None):
+        for lead in self.browse(cr, uid, ids, context):
+            if (not lead.section_id.allow_unlink) and (lead.state <> 'draft'):
+                raise osv.except_osv(_('Warning !'),
+                    _('You can not delete this lead. You should better cancel it.'))
+        return super(crm_lead, self).unlink(cr, uid, ids, context)
+
     def message_new(self, cr, uid, msg, context=None):
         """
         Automatically calls when new email message arrives
@@ -358,7 +365,22 @@ class crm_lead(crm_case, osv.osv):
         if res:
             vals.update(res)
 
-        return self.create(cr, uid, vals, context)
+        res_id = self.create(cr, uid, vals, context)
+
+        attachments = msg.get('attachments', {})
+        self.history(cr, uid, [res_id], _('receive'), history=True,
+                            subject = msg.get('subject'),
+                            email = msg.get('to'),
+                            details = msg.get('body'),
+                            email_from = msg.get('from'),
+                            email_cc = msg.get('cc'),
+                            message_id = msg.get('message-id'),
+                            references = msg.get('references', False) or msg.get('in-reply-to', False),
+                            attach = attachments,
+                            email_date = msg.get('date'),
+                            context = context)
+
+        return res_id
 
     def message_update(self, cr, uid, ids, msg, vals={}, default_act='pending', context=None):
         """
@@ -395,6 +417,19 @@ class crm_lead(crm_case, osv.osv):
             if case.state in CRM_LEAD_PENDING_STATES:
                 values.update(state=crm.AVAILABLE_STATES[1][0]) #re-open
             res = self.write(cr, uid, [case.id], values, context=context)
+
+        attachments = msg.get('attachments', {})
+        self.history(cr, uid, ids, _('receive'), history=True,
+                            subject = msg.get('subject'),
+                            email = msg.get('to'),
+                            details = msg.get('body'),
+                            email_from = msg.get('from'),
+                            email_cc = msg.get('cc'),
+                            message_id = msg.get('message-id'),
+                            references = msg.get('references', False) or msg.get('in-reply-to', False),
+                            attach = attachments,
+                            email_date = msg.get('date'),
+                            context = context)
         return res
 
     def on_change_optin(self, cr, uid, ids, optin):

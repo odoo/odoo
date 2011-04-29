@@ -27,25 +27,14 @@ from tools.translate import _
 class email_compose_message(osv.osv_memory):
     _inherit = 'email.compose.message'
 
-    def _get_records(self, cr, uid, context=None):
-        """
-        Return Records of particular  Model
-        """
-        if context is None:
-            context = {}
-        record_ids = []
-        if context.get('email_model',False) and context.get('email_model') == 'hr.evaluation.interview':
-            model_pool =  self.pool.get(context.get('email_model'))
-            record_ids = model_pool.search(cr, uid, [('state','=','waiting_answer')])
-            return model_pool.name_get(cr, uid, record_ids, context)
-        else:
-            return super(email_compose_message, self)._get_records(cr, uid, context=context)
-
-    _columns = {
-        'res_id':fields.selection(_get_records, 'Referred Document'),
-    }
-
     def get_value(self, cr, uid, model, resource_id, context=None):
+        '''
+        To get values of the resource_id for the model
+        @param model: Object
+        @param resource_id: id of a record for which values to be read
+
+        @return: Returns a dictionary
+        '''
         if context is None:
             context = {}
         result = super(email_compose_message, self).get_value(cr, uid,  model, resource_id, context=context)
@@ -57,9 +46,10 @@ class email_compose_message(osv.osv_memory):
                 result.update({
                         'email_from': tools.config.get('email_from',''),
                         'email_to': record_data.user_to_review_id.work_email or False,
-                        'name': _("Reminder to fill up Survey"),
-                        'description': msg,
+                        'subject': _("Reminder to fill up Survey"),
+                        'body': msg,
                         'res_id': resource_id,
+                        'model': model,
                         'email_cc': False,
                         'email_bcc': False,
                         'reply_to': False,

@@ -108,7 +108,6 @@
                         <field name="email_from" widget="email"/>
                         <button string="Send Email"
                             name="%(mail.action_email_compose_message_wizard)d"
-                            context="{'email_model':'crm.lead', 'email_res_id': active_id}"
                             icon="terp-mail-message-new" type="action" colspan="1"/>
                         <newline/>
                         <field name="phone"/>
@@ -193,7 +192,8 @@
                                 context="{'mail':'reply', 'message_id':active_id}"
                                 icon="terp-mail-replied" type="action" />
                         </tree>
-                        <form string="Communication history">
+
+                        <form string="History">
                             <group col="4" colspan="4">
                                 <field name="email_from"/>
                                 <field name="date"/>
@@ -204,6 +204,7 @@
                             </group>
                             <notebook colspan="4">
                                 <page string="Details">
+                                    <field name="body" colspan="4" nolabel="1"/>
                                     <group attrs="{'invisible': [('history', '!=', True)]}">
                                         <field name="body" colspan="4" nolabel="1" height="250"/>
                                         <button colspan="4" string="Reply"
@@ -211,14 +212,11 @@
                                             context="{'mail':'reply', 'message_id':active_id}"
                                             icon="terp-mail-replied" type="action"/>
                                     </group>
-                                    <group attrs="{'invisible': [('history', '=', True)]}">
-                                        <field name="display_text" colspan="4" nolabel="1"  height="250"/>
-                                    </group>
                                 </page>
                                 <page string="Attachments">
                                     <field name="attachment_ids" colspan="4" readonly="1" nolabel="1"/>
                                 </page>
-                            </notebook>
+                                </notebook>
                         </form>
                     </field>
                     <button string="Add Internal Note"
@@ -227,7 +225,6 @@
                         icon="terp-document-new" type="action" />
                     <button string="Send New Email"
                         name="%(mail.action_email_compose_message_wizard)d"
-                        context="{'email_model':'crm.lead', 'email_res_id': active_id}"
                         icon="terp-mail-message-new" type="action"/>
                  </page>
                 </notebook>

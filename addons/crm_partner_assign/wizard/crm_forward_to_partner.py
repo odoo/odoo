@@ -76,7 +76,7 @@ class crm_lead_forward_to_partner(osv.osv_memory):
         sender = 'From: %s' %(hist.email_from or '')
         to = 'To: %s' % (hist.email_to or '')
         sentdate = 'Date: %s' % (hist.date or '')
-        desc = '\n%s'%(hist.description)
+        desc = '\n%s'%(hist.body)
         original = [header, sender, to, sentdate, desc]
         original = '\n'.join(original)
         return original
@@ -172,13 +172,6 @@ class crm_lead_forward_to_partner(osv.osv_memory):
             email = self.pool.get('res.partner.address').browse(cr, uid, address_id).email
         return {'value': {'email_to' : email}}
 
-    def save_to_drafts(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        super(crm_lead_forward_to_partner, self).save_to_drafts(cr, uid, ids, context=context)
-        self.action_forward(cr, uid, ids, context)
-        return {'type': 'ir.actions.act_window_close'}
-
     def send_mail(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
@@ -248,7 +241,7 @@ class crm_lead_forward_to_partner(osv.osv_memory):
                     body.append("%s: %s" % (field_definition.string, value or ''))
         elif lead.type == 'opportunity':
             pa = lead.partner_address_id
-            body = [
+            body += [
                 "Partner: %s" % (lead.partner_id and lead.partner_id.name_get()[0][1]),
                 "Contact: %s" % (pa.name or ''),
                 "Title: %s" % (pa.title or ''),

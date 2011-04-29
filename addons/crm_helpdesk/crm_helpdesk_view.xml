@@ -112,13 +112,13 @@
                                         <field name="date"/>
                                         <field name="email_to" widget="char" size="512"/>
                                         <field name="email_cc" widget="char" size="512"/>
-                                        <field name="name" colspan="4" widget="char" size="512"/>
+                                        <field name="subject" colspan="4" widget="char" size="512"/>
                                         <field name="history" invisible="1"/>
                                     </group>
                                     <notebook colspan="4">
                                         <page string="Details">
                                             <group attrs="{'invisible': [('history', '!=', True)]}">
-                                                <field name="description" colspan="4" nolabel="1" height="250"/>
+                                                <field name="body" colspan="4" nolabel="1" height="250"/>
 		                                        <button colspan="4" string="Reply"
 		                                            name="%(mail.action_email_compose_message_wizard)d"
 		                                            context="{'mail':'reply', 'message_id':active_id}"
@@ -140,13 +140,13 @@
                                 icon="terp-document-new" type="action" />
 		                    <button string="Send New Email"
 		                        name="%(mail.action_email_compose_message_wizard)d"
-		                        context="{'email_model':'crm.helpdesk', 'email_res_id': active_id}"
 		                        icon="terp-mail-message-new" type="action"/>
                         </page>
                         <page string="Extra Info" groups="base.group_extended">
                             <group colspan="2" col="2">
                                 <separator colspan="4" string="Dates"/>
                                 <field name="create_date"/>
+                                <field name="write_date"/>
                                 <field name="date_closed"/>
                             </group>
                             <group colspan="2" col="2">
@@ -253,6 +253,10 @@
                             help="My Sales Team(s)" />
                     </field>
                     <newline/>
+					<group  expand="0" string="Extended Filters..." groups="base.group_extended">
+                            <field name="write_date" string="Updated Date"/>
+                    </group>
+                    <newline/>                         
                     <group expand="0" string="Group By...">
                         <filter string="Partner" icon="terp-partner"
                             domain="[]" help="Partner"

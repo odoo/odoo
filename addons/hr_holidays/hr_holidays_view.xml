@@ -37,6 +37,7 @@
                     <newline />
                     <group expand="0" string="Group By...">
                         <filter name="group_employee" string="Employee" icon="terp-personal" domain="[]" context="{'group_by':'employee_id'}"/>
+                        <filter name="group_category" string="Category" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'category_id'}"/>
                         <filter string="Manager" icon="terp-personal" domain="[]" context="{'group_by':'manager_id'}"/>
                         <filter string="Department" icon="terp-personal+" domain="[]" context="{'group_by':'department_id','set_visible':True}"/>
                         <separator orientation="vertical"/>
@@ -93,7 +94,7 @@
                             <newline/>
                             <field name="state" colspan="2"/>
                             <group colspan="2" col="6">
-                                <button string="Refuse" name="refuse" states="confirm" type="workflow" icon="gtk-no" groups="base.group_hr_user,base.group_hr_manager"/>
+                                <button string="Refuse" name="refuse" states="confirm,validate1" type="workflow" icon="gtk-no" groups="base.group_hr_user,base.group_hr_manager"/>
                                 <button string="Confirm" name="confirm" states="draft" type="workflow" icon="gtk-yes"/>
                                 <button string="Approve" name="validate" states="confirm" type="workflow" icon="gtk-apply" groups="base.group_hr_user"/>
                                 <button string="Approved" name="second_validate" states="validate1" type="workflow" icon="gtk-apply" groups="base.group_hr_user"/>
@@ -139,7 +140,7 @@
                             <button string="Confirm" name="confirm" states="draft" type="workflow" icon="gtk-yes"/>
                             <button string="Approve" name="validate" states="confirm" type="workflow" icon="gtk-apply" groups="base.group_hr_user"/>
                             <button string="Approved" name="second_validate" states="validate1" type="workflow" icon="gtk-apply" groups="base.group_hr_user"/>
-                            <button string="Set to Draft" name="set_to_draft" states="cancel,validate,validate1" type="object" icon="gtk-convert" groups="base.group_hr_user"/>
+                            <button string="Set to Draft" name="set_to_draft" states="cancel,validate,validate1,refuse" type="object" icon="gtk-convert" groups="base.group_hr_user"/>
                         </group>
                     </page>
                 </notebook>
@@ -153,7 +154,9 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree colors="red:state in ('refuse');blue:state in ('draft');black:state in ('confirm','validate','validate1')" string="Leaves" >
+                    <field name="holiday_type"/>
                     <field name="employee_id"/>
+                    <field name="category_id"/>
                     <field name="department_id" invisible="1"/>
                     <field name="holiday_status_id"/>
                     <field name="name"/>
@@ -231,7 +234,9 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree colors="red:state in ('refuse');blue:state in (' draft');black:state in ('confirm','validate','validate1')">
+                    <field name="holiday_type"/>
                     <field name="employee_id"/>
+                    <field name="category_id"/>
                     <field name="department_id" invisible="not context.get('set_visible',False)"/>
                     <field name="holiday_status_id"/>
                     <field name="name"/>

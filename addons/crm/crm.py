@@ -307,14 +307,6 @@ class crm_case(object):
         else:
             return {'value': {'phone': address.phone}}
 
-    def _history(self, cr, uid, cases, keyword, history=False, subject=None, email=False, details=None, email_from=False, message_id=False, attach=[], context=None):
-        thread_pool = self.pool.get('email.thread')
-        return thread_pool.history(cr, uid, cases, keyword, history=history,\
-                                       subject=subject, email=email, \
-                                       details=details, email_from=email_from,\
-                                       message_id=message_id, attach=attach, \
-                                       context=context)
-
     def case_open(self, cr, uid, ids, *args):
         """Opens Case
         @param self: The object pointer
@@ -325,7 +317,7 @@ class crm_case(object):
         """
 
         cases = self.browse(cr, uid, ids)
-        self._history(cr, uid, cases, _('Open'))
+        self.history(cr, uid, cases, _('Open'))
         for case in cases:
             data = {'state': 'open', 'active': True}
             if not case.user_id:
@@ -346,7 +338,7 @@ class crm_case(object):
         """
         cases = self.browse(cr, uid, ids)
         cases[0].state # to fill the browse record cache
-        self._history(cr, uid, cases, _('Close'))
+        self.history(cr, uid, cases, _('Close'))
         self.write(cr, uid, ids, {'state': 'done',
                                   'date_closed': time.strftime('%Y-%m-%d %H:%M:%S'),
                                   })
@@ -377,7 +369,7 @@ class crm_case(object):
                 raise osv.except_osv(_('Error !'), _('You can not escalate, You are already at the top level regarding your sales-team category.'))
             self.write(cr, uid, [case.id], data)
         cases = self.browse(cr, uid, ids)
-        self._history(cr, uid, cases, _('Escalate'))
+        self.history(cr, uid, cases, _('Escalate'))
         self._action(cr, uid, cases, 'escalate')
         return True
 
@@ -391,7 +383,7 @@ class crm_case(object):
         """
         cases = self.browse(cr, uid, ids)
         cases[0].state # to fill the browse record cache
-        self._history(cr, uid, cases, _('Cancel'))
+        self.history(cr, uid, cases, _('Cancel'))
         self.write(cr, uid, ids, {'state': 'cancel',
                                   'active': True})
         self._action(cr, uid, cases, 'cancel')
@@ -410,7 +402,7 @@ class crm_case(object):
         """
         cases = self.browse(cr, uid, ids)
         cases[0].state # to fill the browse record cache
-        self._history(cr, uid, cases, _('Pending'))
+        self.history(cr, uid, cases, _('Pending'))
         self.write(cr, uid, ids, {'state': 'pending', 'active': True})
         self._action(cr, uid, cases, 'pending')
         return True
@@ -425,7 +417,7 @@ class crm_case(object):
         """
         cases = self.browse(cr, uid, ids)
         cases[0].state # to fill the browse record cache
-        self._history(cr, uid, cases, _('Draft'))
+        self.history(cr, uid, cases, _('Draft'))
         self.write(cr, uid, ids, {'state': 'draft', 'active': True})
         self._action(cr, uid, cases, 'draft')
         return True
@@ -479,12 +471,12 @@ class crm_case(object):
 
             body = self.format_body(body)
 
-            attach_to_send = None
+            attach_to_send = {}
 
             if attach:
                 attach_ids = self.pool.get('ir.attachment').search(cr, uid, [('res_model', '=', self._name), ('res_id', '=', case.id)])
                 attach_to_send = self.pool.get('ir.attachment').read(cr, uid, attach_ids, ['datas_fname', 'datas'])
-                attach_to_send = map(lambda x: (x['datas_fname'], base64.decodestring(x['datas'])), attach_to_send)
+                attach_to_send = dict(map(lambda x: (x['datas_fname'], base64.decodestring(x['datas'])), attach_to_send))
 
             # Send an email
             subject = "Reminder: [%s] %s" % (str(case.id), case.name, )
@@ -498,7 +490,6 @@ class crm_case(object):
                 openobject_id=str(case.id),
                 attach=attach_to_send
             )
-            self._history(cr, uid, [case], _('Send'), history=True, subject=subject, email=dest, details=body, email_from=src)
         return True
 
     def _check(self, cr, uid, ids=False, context=None):
@@ -667,7 +658,8 @@ class crm_case_section(osv.osv):
         """
         if context is None:
             context = {}
-
+        if not isinstance(ids, list) : 
+            ids = [ids]
         res = []
         if not ids:
             return res

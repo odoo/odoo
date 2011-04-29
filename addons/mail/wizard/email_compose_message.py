@@ -22,6 +22,8 @@
 from osv import osv
 from osv import fields
 import tools
+from tools.safe_eval import safe_eval as eval
+import re
 
 class email_compose_message(osv.osv_memory):
     _name = 'email.compose.message'
@@ -29,106 +31,49 @@ class email_compose_message(osv.osv_memory):
     _description = 'This is the wizard for Compose E-mail'
 
     def default_get(self, cr, uid, fields, context=None):
+        """
+        Returns default values for fields
+        @param fields: list of fields, for which default values are required to be read
+        @param context: context arguments, like lang, time zone
+
+        @return: Returns a dictionary that contains default values for fields
+        """
         if context is None:
             context = {}
         result = super(email_compose_message, self).default_get(cr, uid, fields, context=context)
         vals = {}
-        if context.get('email_model') and context.get('email_res_id'):
-            vals = self.get_value(cr, uid, context.get('email_model'), context.get('email_res_id'), context)
-        elif context.get('message_id', False):
-            vals = self.get_message_data(cr, uid, int(context.get('message_id', False)), context)
+        if context.get('mass_mail'):
+            return result
+        if context.get('active_model') and context.get('active_id') and not context.get('mail')=='reply':
+            vals = self.get_value(cr, uid, context.get('active_model'), context.get('active_id'), context)
+
+        elif context.get('mail')=='reply' and context.get('active_id', False):
+            vals = self.get_message_data(cr, uid, int(context.get('active_id', False)), context)
+
         else:
-            result['model'] = context.get('email_model', False)
+            result['model'] = context.get('active_model', False)
 
         if not vals:
             return result
 
-        if 'subject' in fields:
-            result.update({'subject' : vals.get('subject','')})
-
-        if 'email_to' in fields:
-            result.update({'email_to' : vals.get('email_to','')})
-
-        if 'email_from' in fields:
-            result.update({'email_from' : vals.get('email_from','')})
-
-        if 'body' in fields:
-            result.update({'body' : vals.get('body','')})
-
-        if 'model' in fields:
-            result.update({'model' : vals.get('model','')})
-
-        if 'email_cc' in fields:
-            result.update({'email_cc' : vals.get('email_cc','')})
-
-        if 'email_bcc' in fields:
-            result.update({'email_bcc' : vals.get('email_bcc','')})
-
-        if 'res_id' in fields:
-            result.update({'res_id' : vals.get('res_id',0)})
-
-        if 'reply_to' in fields:
-            result['reply_to'] = vals.get('reply_to','')
-
-        if 'message_id' in fields:
-            result['message_id'] =  vals.get('message_id','')
-
-        if 'attachment_ids' in fields:
-            result['attachment_ids'] = vals.get('attachment_ids',[])
-
-        if 'user_id' in fields:
-            result['user_id'] = vals.get('user_id',False)
-
-        if 'references' in fields:
-            result['references'] = vals.get('references',False)
-
-        if 'sub_type' in fields:
-            result['sub_type'] = vals.get('sub_type',False)
-
-        if 'headers' in fields:
-            result['headers'] = vals.get('headers',False)
-
-        if 'priority' in fields:
-            result['priority'] = vals.get('priority',False)
-
-        if 'debug' in fields:
-            result['debug'] = vals.get('debug',False)
-
+        for field in fields:
+            result.update({field : vals.get(field, False)})
         return result
-
-    def _get_records(self, cr, uid, context=None):
-        """
-        Return Records of particular  Model
-        """
-        if context is None:
-            context = {}
-        record_ids = []
-        model_pool = False
-        if context.get('message_id'):
-            message_pool = self.pool.get('email.message')
-            message_data = message_pool.browse(cr, uid, int(context.get('message_id')), context)
-            model_pool =  self.pool.get(message_data.model)
-            record_ids = [message_data.res_id]
-        elif context.get('email_model',False):
-            model =  context.get('email_model')
-            model_pool =  self.pool.get(model)
-            record_ids = context.get('email_res_id') and [context.get('email_res_id')] or []
-            if not record_ids:
-                record_ids = model_pool.search(cr, uid, [])
-        if model_pool:
-            return model_pool.name_get(cr, uid, record_ids, context)
-        return []
 
     _columns = {
         'attachment_ids': fields.many2many('ir.attachment','email_message_send_attachment_rel', 'wizard_id', 'attachment_id', 'Attachments'),
-        'debug':fields.boolean('Debug', readonly=True),
-        'res_id':fields.selection(_get_records, 'Referred Document'),
+        'auto_delete': fields.boolean('Auto Delete', help="Permanently delete emails after sending"),
+        'filter_id': fields.many2one('ir.filters', 'Filters'),
     }
 
     def get_value(self, cr, uid, model, res_id, context=None):
         return {}
 
     def get_message_data(self, cr, uid, message_id, context=None):
+        '''
+        Called by default_get() to get message detail
+        @param message_id: Id of the email message
+        '''
         if context is None:
             context = {}
         result = {}
@@ -136,11 +81,7 @@ class email_compose_message(osv.osv_memory):
         if message_id:
             message_data = message_pool.browse(cr, uid, message_id, context)
             subject = tools.ustr(message_data and message_data.subject or '')
-            if context.get('mail','') == 'reply':
-                subject = "Re :- " + subject
-
             description =  message_data and message_data.body  or ''
-            message_body = False
             if context.get('mail','') == 'reply':
                 header = '-------- Original Message --------'
                 sender = 'From: %s'  % tools.ustr(message_data.email_from or '')
@@ -148,12 +89,14 @@ class email_compose_message(osv.osv_memory):
                 sentdate = 'Date: %s' % message_data.date
                 desc = '\n > \t %s' % tools.ustr(description.replace('\n', "\n > \t") or '')
                 description = '\n'.join([header, sender, email_to, sentdate, desc])
+                if not subject.startswith('Re: '):
+                    subject = "Re: " + subject
 
             result.update({
                     'body' : description,
                     'subject' : subject,
                     'message_id' :  message_data and message_data.message_id or False,
-                    'attachment_ids' : message_data and message_pool.read(cr, uid, message_id, ['attachment_ids'])['attachment_ids'] or [],
+                    'attachment_ids' : [],
                     'res_id' : message_data and message_data.res_id or False,
                     'email_from' : message_data and message_data.email_to or False,
                     'email_to' : message_data and message_data.email_from or False,
@@ -171,59 +114,82 @@ class email_compose_message(osv.osv_memory):
 
         return result
 
-    def on_change_referred_doc(self, cr, uid, ids, model, resource_id, context=None):
-        if context is None:
-            context = {}
-        if context.get('mail') == 'reply':
-            return {'value':{}}
-        result = {}
-        if resource_id and model:
-            vals = self.get_value(cr, uid, model, resource_id, context)
-            if vals:
-                result.update({
-                            'email_from':  vals.get('email_from',''),
-                            'email_to':  vals.get('email_to',''),
-                            'subject':  vals.get('subject',''),
-                            'body':  vals.get('body',''),
-                            'email_cc':  vals.get('email_cc',''),
-                            'email_bcc':  vals.get('email_bcc',''),
-                            'reply_to':  vals.get('reply_to',''),
-                        })
-        return {'value': result}
-
-
-    def save_to_drafts(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        email_id = self.save_to_mailbox(cr, uid, ids, context=context)
-        self.pool.get('email.message').write(cr, uid, email_id, {'state': 'outgoing'}, context)
-        return {'type': 'ir.actions.act_window_close'}
-
     def send_mail(self, cr, uid, ids, context=None):
+        '''
+        Sends the email
+        '''
         if context is None:
             context = {}
-        email_id = self.save_to_mailbox(cr, uid, ids, context)
-        return {'type': 'ir.actions.act_window_close'}
 
-    def save_to_mailbox(self, cr, uid, ids, context=None):
-        email_ids = []
         email_message_pool = self.pool.get('email.message')
-        attachment = []
+        attachment = {}
+        email_ids = []
         for mail in self.browse(cr, uid, ids, context=context):
             for attach in mail.attachment_ids:
-                attachment.append((attach.datas_fname, attach.datas))
+                attachment[attach.datas_fname] = attach.datas
             references = False
             message_id = False
+
+            # Reply Email
             if context.get('mail',False) == 'reply' and  mail.message_id:
                 references = mail.references and mail.references + "," + mail.message_id or mail.message_id
             else:
                 message_id = mail.message_id
-            email_id = email_message_pool.schedule_with_attach(cr, uid, mail.email_from, mail.email_to, mail.subject, mail.body,
+
+            # Mass mailing
+            if context.get('mass_mail', False):
+                if context['active_ids'] and context['active_model']:
+                    active_ids = context['active_ids']
+                    active_model = context['active_model']
+
+                else:
+                    active_model = mail.model
+                    active_model_pool = self.pool.get(active_model)
+                    active_ids = active_model_pool.search(cr, uid, eval(mail.filter_id.domain), context=eval(mail.filter_id.context))
+
+                for active_id in active_ids:
+                    subject = self.get_template_value(cr, uid, mail.subject, active_model, active_id)
+                    body = self.get_template_value(cr, uid, mail.body, active_model, active_id)
+                    email_to = self.get_template_value(cr, uid, mail.email_to, active_model, active_id)
+                    email_from = self.get_template_value(cr, uid, mail.email_from, active_model, active_id)
+                    email_cc = self.get_template_value(cr, uid, mail.email_cc, active_model, active_id)
+                    email_bcc = self.get_template_value(cr, uid, mail.email_bcc, active_model, active_id)
+                    reply_to = self.get_template_value(cr, uid, mail.reply_to, active_model, active_id)
+
+                    email_id = email_message_pool.schedule_with_attach(cr, uid, email_from, email_to, subject, body,
+                        model=mail.model, email_cc=email_cc, email_bcc=email_bcc, reply_to=reply_to,
+                        attach=attachment, message_id=message_id, references=references, openobject_id=int(mail.res_id),
+                        subtype=mail.sub_type, x_headers=mail.headers, priority=mail.priority, smtp_server_id=mail.smtp_server_id and mail.smtp_server_id.id,
+                        auto_delete=mail.auto_delete or False, context=context)
+                    email_ids.append(email_id)
+
+            else:
+                email_id = email_message_pool.schedule_with_attach(cr, uid, mail.email_from, mail.email_to, mail.subject, mail.body,
                     model=mail.model, email_cc=mail.email_cc, email_bcc=mail.email_bcc, reply_to=mail.reply_to,
-                    attach=attachment, message_id=message_id, references=references, openobject_id=int(mail.res_id), debug=mail.debug,
-                    subtype=mail.sub_type, x_headers=mail.headers, priority=mail.priority, smtp_server_id=mail.smtp_server_id and mail.smtp_server_id.id, context=context)
-            email_ids.append(email_id)
-        return email_ids
+                    attach=attachment, message_id=message_id, references=references, openobject_id=int(mail.res_id),
+                    subtype=mail.sub_type, x_headers=mail.headers, priority=mail.priority, smtp_server_id=mail.smtp_server_id and mail.smtp_server_id.id,
+                    auto_delete=mail.auto_delete, context=context)
+                email_ids.append(email_id)
+        return {'type': 'ir.actions.act_window_close'}
+
+
+    def get_template_value(self, cr, uid, message, model, resource_id, context=None):
+        if context is None:
+            context = {}
+        def merge(match):
+            exp = str(match.group()[2:-1]).strip()
+            result = eval(exp,
+                          {
+                            'user' : self.pool.get('res.users').browse(cr, uid, uid, context=context),
+                            'context': dict(context), # copy context to prevent side-effects of eval
+                            'object' : self.pool.get(model).browse(cr, uid, resource_id),
+                          })
+            if result in (None, False):
+                return str("--------")
+            return tools.ustr(result)
+
+        com = re.compile('(\$\{.+?\})')
+        return message and com.sub(merge, message)
 
 email_compose_message()
 

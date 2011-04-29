@@ -28,8 +28,6 @@ import time
 import tools
 from crm import wizard
 
-wizard.email_compose_message.email_model.append('project.issue')
-
 class project_issue_version(osv.osv):
     _name = "project.issue.version"
     _order = "name desc"
@@ -45,7 +43,7 @@ project_issue_version()
 class project_issue(crm.crm_case, osv.osv):
     _name = "project.issue"
     _description = "Project Issue"
-    _order = "priority, id desc"
+    _order = "priority, create_date desc"
     _inherit = ['email.thread']
 
     def case_open(self, cr, uid, ids, *args):
@@ -214,7 +212,7 @@ class project_issue(crm.crm_case, osv.osv):
         'working_hours_open': fields.function(_compute_day, string='Working Hours to Open the Issue', \
                                 method=True, multi='compute_day', type="float", store=True),
         'working_hours_close': fields.function(_compute_day, string='Working Hours to Close the Issue', \
-                                method=True, multi='working_days_close', type="float", store=True),
+                                method=True, multi='compute_day', type="float", store=True),
         'message_ids': fields.one2many('email.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
         'date_action_last': fields.datetime('Last Action', readonly=1),
         'date_action_next': fields.datetime('Next Action', readonly=1),
@@ -374,7 +372,7 @@ class project_issue(crm.crm_case, osv.osv):
             else:
                 raise osv.except_osv(_('Warning !'), _('You cannot escalate this issue.\nThe relevant Project has not configured the Escalation Project!'))
             self.write(cr, uid, [case.id], data)
-        self._history(cr, uid, cases, _('Escalate'))
+        self.history(cr, uid, cases, _('Escalate'))
         return True
 
     def message_new(self, cr, uid, msg, context=None):
@@ -408,9 +406,23 @@ class project_issue(crm.crm_case, osv.osv):
         if res:
             vals.update(res)
         context.update({'state_to' : 'draft'})
-        res = self.create(cr, uid, vals, context=context)
-        self.convert_to_bug(cr, uid, [res], context=context)
-        return res
+
+        res_id = self.create(cr, uid, vals, context)
+
+        attachments = msg.get('attachments', {})
+        self.history(cr, uid, [res_id], _('receive'), history=True,
+                            subject = msg.get('subject'),
+                            email = msg.get('to'),
+                            details = msg.get('body'),
+                            email_from = msg.get('from'),
+                            email_cc = msg.get('cc'),
+                            message_id = msg.get('message-id'),
+                            references = msg.get('references', False) or msg.get('in-reply-to', False),
+                            attach = attachments,
+                            email_date = msg.get('date'),
+                            context = context)
+        self.convert_to_bug(cr, uid, [res_id], context=context)
+        return res_id
 
     def message_update(self, cr, uid, ids, msg, vals=None, default_act='pending', context=None):
         """
@@ -453,6 +465,19 @@ class project_issue(crm.crm_case, osv.osv):
 
         vals.update(vls)
         res = self.write(cr, uid, ids, vals)
+
+        attachments = msg.get('attachments', {})
+        self.history(cr, uid, ids, _('receive'), history=True,
+                            subject = msg.get('subject'),
+                            email = msg.get('to'),
+                            details = msg.get('body'),
+                            email_from = msg.get('from'),
+                            email_cc = msg.get('cc'),
+                            message_id = msg.get('message-id'),
+                            references = msg.get('references', False) or msg.get('in-reply-to', False),
+                            attach = attachments,
+                            email_date = msg.get('date'),
+                            context = context)
         return res
 
     def copy(self, cr, uid, id, default=None, context=None):

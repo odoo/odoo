@@ -47,7 +47,9 @@ def get_value(cr, uid, message=None, model=None, record_id=False, context=None):
                }
             templ = MakoTemplate(message, input_encoding='utf-8')
             reply = MakoTemplate(message).render_unicode(object=record, peobject=record, env=env, format_exceptions=True)
-            return reply or False
+            if reply == 'False':
+                reply = ''
+            return reply
         except Exception:
             logging.exception("can't render %r", message)
             return u""
