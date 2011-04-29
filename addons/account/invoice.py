@@ -319,11 +319,11 @@ class account_invoice(osv.osv):
                     doc.remove(node)
 
         if view_type == 'tree':
-            partner_string = _('Supplier')
-            if context.get('type', 'in_invoice') in ('out_invoice', 'out_refund'):
-                partner_string = _('Customer')
+            partner_string = _('Customer')
+            if context.get('type', 'out_invoice') in ('in_invoice', 'in_refund'):
+                partner_string = _('Supplier')
                 for node in doc.xpath("//field[@name='reference']"):
-                    doc.remove(node)
+                    node.set('invisible', '0')
             for node in doc.xpath("//field[@name='partner_id']"):
                 node.set('string', partner_string)
         res['arch'] = etree.tostring(doc)
