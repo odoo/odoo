@@ -63,6 +63,11 @@ class res_partner(osv.osv):
             if not partner.vat:
                 continue
             vat_country, vat_number = self._split_vat(partner.vat)
+            if not _ref_vat.has_key(vat_country):
+                country_code = vat_country.upper()
+                code = self.pool.get('res.country').search(cr, uid, [('code', '=', country_code)])
+                if code:
+                    continue
             if not hasattr(self, 'check_vat_' + vat_country):
                 return False
             check = getattr(self, 'check_vat_' + vat_country)
