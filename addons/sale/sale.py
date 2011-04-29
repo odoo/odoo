@@ -1017,6 +1017,10 @@ class sale_order_line(osv.osv):
         if not  partner_id:
             raise osv.except_osv(_('No Customer Defined !'), _('You have to select a customer in the sales form !\nPlease set one customer before choosing a product.'))
         warning = {}
+        msg1 = ''
+        msg2 = ''
+        msg3 = ''
+        msg4 = ''
         product_uom_obj = self.pool.get('product.uom')
         partner_obj = self.pool.get('res.partner')
         product_obj = self.pool.get('product.product')
@@ -1036,7 +1040,7 @@ class sale_order_line(osv.osv):
         if not packaging and product_obj.packaging:
             packaging = product_obj.packaging[0].id
             result['product_packaging'] = packaging
-
+        
         if packaging:
             default_uom = product_obj.uom_id and product_obj.uom_id.id
             pack = self.pool.get('product.packaging').browse(cr, uid, packaging, context=context)
@@ -1053,8 +1057,9 @@ class sale_order_line(osv.osv):
                                 (qty, ean, qty_pack, type_ul.name)
                 warning = {
                     'title': _('Picking Information !'),
-                    'message': warn_msg
+                    'message': warn_msg 
                     }
+                msg1 += warn_msg + "\n"
             result['product_uom_qty'] = qty
 
         uom2 = False
@@ -1122,7 +1127,9 @@ class sale_order_line(osv.osv):
                      max(0,product_obj.virtual_available), product_obj.uom_id.name,
                      max(0,product_obj.qty_available), product_obj.uom_id.name)
             }
+            msg2 += warning['message']+"\n"
         # get unit price
+        
         if not pricelist:
             warning = {
                 'title': 'No Pricelist !',
@@ -1130,6 +1137,7 @@ class sale_order_line(osv.osv):
                     'You have to select a pricelist or a customer in the sales form !\n'
                     'Please set one before choosing a product.'
                 }
+            msg3 += warning['message'] +"\n"
         else:
             price = self.pool.get('product.pricelist').price_get(cr, uid, [pricelist],
                     product, qty or 1.0, partner_id, {
@@ -1143,9 +1151,18 @@ class sale_order_line(osv.osv):
                         "Couldn't find a pricelist line matching this product and quantity.\n"
                         "You have to change either the product, the quantity or the pricelist."
                     }
+                msg4 += warning['message'] +"\n"
             else:
                 result.update({'price_unit': price})
-        return {'value': result, 'domain': domain, 'warning': warning}
+                
+        multi_msg = msg1 + msg2 + msg3 + msg4
+        if not multi_msg:
+            multi_msg = False
+        warning = {
+                   'title': 'Wrong Configuration Error !',
+                   'message' : multi_msg  
+                }
+        return {'value': result, 'domain': domain, 'warning':warning}
 
     def product_uom_change(self, cursor, user, ids, pricelist, product, qty=0,
             uom=False, qty_uos=0, uos=False, name='', partner_id=False,
