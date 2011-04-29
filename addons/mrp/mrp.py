@@ -243,7 +243,6 @@ class mrp_bom(osv.osv):
 
     def _check_product(self, cr, uid, ids, context=None):
         all_prod = []
-        bom_obj = self.pool.get('mrp.bom')
         boms = self.browse(cr, uid, ids, context=context)
         def check_bom(boms):
             res = True
@@ -672,10 +671,10 @@ class mrp_production(osv.osv):
         res = True
         for production in self.browse(cr, uid, ids):
             if production.move_lines:
-               res = False
+                res = False
 
             if production.move_created_ids:
-               res = False
+                res = False
         return res
 
     def action_produce(self, cr, uid, production_id, production_qty, production_mode, context=None):
@@ -748,7 +747,7 @@ class mrp_production(osv.osv):
                 produced_qty = produced_products.get(produce_product.product_id.id, 0)
                 rest_qty = production.product_qty - produced_qty
                 if rest_qty <= production_qty:
-                   production_qty = rest_qty
+                    production_qty = rest_qty
                 if rest_qty > 0 :
                     stock_mov_obj.action_consume(cr, uid, [produce_product.id], production_qty, context=context)
 

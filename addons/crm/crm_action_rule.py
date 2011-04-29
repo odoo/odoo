@@ -19,17 +19,12 @@
 #
 ##############################################################################
 
-import time
 import re
-import os
-import base64
 import tools
 
 from tools.translate import _
 from osv import fields
 from osv import osv
-from osv import orm
-from osv.orm import except_orm
 
 import crm
 
