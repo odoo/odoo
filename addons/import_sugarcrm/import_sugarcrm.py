@@ -197,7 +197,7 @@ def import_users(sugar_obj, cr, uid, context=None):
         'context_lang' : 'context_lang',
         'password' : 'password',
         '.id' : '.id',
-        'context_department_id.id': 'context_department_id.id',
+        'context_department_id/id': 'context_department_id/id',
     } 
     
     def get_users_department(sugar_obj, cr, uid, val, context=None):
@@ -221,7 +221,7 @@ def import_users(sugar_obj, cr, uid, context=None):
         else:
             val['password'] = 'sugarcrm' #default password for all user
         department_id = get_users_department(sugar_obj, cr, uid, val.get('department'), context=context)
-        val['context_department_id.id'] = department_id     
+        val['context_department_id/id'] = department_id     
         val['context_lang'] = context.get('lang','en_US')
         fields, datas = sugarcrm_fields_mapping.sugarcrm_fields_mapp(val, map_user, context)
         #All data has to be imported separatly because they don't have the same field
