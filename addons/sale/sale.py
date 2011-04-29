@@ -1017,10 +1017,7 @@ class sale_order_line(osv.osv):
         if not  partner_id:
             raise osv.except_osv(_('No Customer Defined !'), _('You have to select a customer in the sales form !\nPlease set one customer before choosing a product.'))
         warning = {}
-        packaging_msg = ''
-        quantity_msg = ''
-        pricelist_msg = ''
-        price_msg = ''
+        warning_msgs = ''
         product_uom_obj = self.pool.get('product.uom')
         partner_obj = self.pool.get('res.partner')
         product_obj = self.pool.get('product.product')
@@ -1059,7 +1056,7 @@ class sale_order_line(osv.osv):
                     'title': _('Picking Information !'),
                     'message': warn_msg 
                     }
-                packaging_msg += warn_msg + "\n"
+                warning_msgs += warn_msg + "\n"
             result['product_uom_qty'] = qty
 
         uom2 = False
@@ -1127,7 +1124,7 @@ class sale_order_line(osv.osv):
                      max(0,product_obj.virtual_available), product_obj.uom_id.name,
                      max(0,product_obj.qty_available), product_obj.uom_id.name)
             }
-            quantity_msg += warning['message']+"\n"
+            warning_msgs += warning['message']+"\n"
         # get unit price
         
         if not pricelist:
@@ -1137,7 +1134,7 @@ class sale_order_line(osv.osv):
                     'You have to select a pricelist or a customer in the sales form !\n'
                     'Please set one before choosing a product.'
                 }
-            pricelist_msg += warning['message'] +"\n"
+            warning_msgs += warning['message'] +"\n"
         else:
             price = self.pool.get('product.pricelist').price_get(cr, uid, [pricelist],
                     product, qty or 1.0, partner_id, {
@@ -1151,16 +1148,14 @@ class sale_order_line(osv.osv):
                         "Couldn't find a pricelist line matching this product and quantity.\n"
                         "You have to change either the product, the quantity or the pricelist."
                     }
-                price_msg += warning['message'] +"\n"
+                warning_msgs += warning['message'] +"\n"
             else:
                 result.update({'price_unit': price})
-                
-        multi_msg = packaging_msg + quantity_msg + pricelist_msg + price_msg
-        if not multi_msg:
-            multi_msg = False
+        if not warning_msgs:
+            warning_msgs = False
         warning = {
                    'title': 'Wrong Configuration Error !',
-                   'message' : multi_msg  
+                   'message' : warning_msgs  
                 }
         return {'value': result, 'domain': domain, 'warning':warning}
 
