@@ -148,6 +148,7 @@
                             <group colspan="2" col="2">
                                 <separator colspan="4" string="Dates"/>
                                 <field name="create_date"/>
+                                <field name="write_date"/>
                                 <field name="date_closed"/>
                             </group>
                             <group colspan="2" col="2">
@@ -254,6 +255,10 @@
                             help="My Sales Team(s)" />
                     </field>
                     <newline/>
+					<group  expand="0" string="Extended Filters..." groups="base.group_extended">
+                            <field name="write_date" string="Updated Date"/>
+                    </group>
+                    <newline/>                         
                     <group expand="0" string="Group By...">
                         <filter string="Partner" icon="terp-partner"
                             domain="[]" help="Partner"

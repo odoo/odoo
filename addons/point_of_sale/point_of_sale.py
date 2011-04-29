@@ -426,8 +426,9 @@ class pos_order(osv.osv):
         move_obj = self.pool.get('stock.move')
         pick_name = self.pool.get('ir.sequence').get(cr, uid, 'stock.picking.out')
         orders = self.browse(cr, uid, ids, context=context)
+        partner_obj = self.pool.get('res.partner')
         for order in orders:
-            addr = self.pool.get('res.partner').address_get(cr, uid, [order.partner_id.id], ['delivery'])
+            addr = order.partner_id and partner_obj.address_get(cr, uid, [order.partner_id.id], ['delivery']) or {}
             if not order.picking_id:
                 new = True
                 picking_id = picking_obj.create(cr, uid, {
