@@ -59,14 +59,13 @@ class res_partner(osv.osv):
         Check the VAT number depending of the country.
         http://sima-pc.com/nif.php
         '''
+        country_obj = self.pool.get('res.country')
         for partner in self.browse(cr, uid, ids, context=context):
             if not partner.vat:
                 continue
             vat_country, vat_number = self._split_vat(partner.vat)
             if not hasattr(self, 'check_vat_' + vat_country):
-                country_code = vat_country.upper()
-                code = self.pool.get('res.country').search(cr, uid, [('code', '=', country_code)])
-                if code:
+                if country_obj.search(cr, uid, [('code', 'ilike', vat_country)], context=context):
                     continue
                 return False
             check = getattr(self, 'check_vat_' + vat_country)
