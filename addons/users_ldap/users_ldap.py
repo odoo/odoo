@@ -127,7 +127,7 @@ class users(osv.osv):
                             cr.close()
                             return res
                     l.unbind()
-            except Exception, e:
+            except Exception:
                 logger.warning("Cannot auth", exc_info=True)
                 continue
         cr.close()
@@ -162,7 +162,7 @@ class users(osv.osv):
                                 cr.close()
                                 return True
                         l.unbind()
-                except Exception, e:
+                except Exception:
                     logger.warning('cannot check', exc_info=True)
                     pass
         cr.close()
