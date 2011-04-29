@@ -458,24 +458,25 @@ class users(osv.osv):
             raise security.ExceptionNoTb('AccessDenied')
 
     def check(self, db, uid, passwd):
+        """Verifies that the given (uid, password) pair is authorized for the database ``db`` and
+           raise an exception if it is not."""
         if not passwd:
-            return False
+            # empty passwords disallowed for obvious security reasons
+            raise security.ExceptionNoTb('AccessDenied')
         if self._uid_cache.get(db, {}).get(uid) == passwd:
-            return True
+            return
         cr = pooler.get_db(db).cursor()
         try:
             cr.execute('SELECT COUNT(1) FROM res_users WHERE id=%s AND password=%s AND active=%s',
                         (int(uid), passwd, True))
             res = cr.fetchone()[0]
-            if not bool(res):
+            if not res:
                 raise security.ExceptionNoTb('AccessDenied')
-            if res:
-                if self._uid_cache.has_key(db):
-                    ulist = self._uid_cache[db]
-                    ulist[uid] = passwd
-                else:
-                    self._uid_cache[db] = {uid:passwd}
-            return bool(res)
+            if self._uid_cache.has_key(db):
+                ulist = self._uid_cache[db]
+                ulist[uid] = passwd
+            else:
+                self._uid_cache[db] = {uid:passwd}
         finally:
             cr.close()
 
