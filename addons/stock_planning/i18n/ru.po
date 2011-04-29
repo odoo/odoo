@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-01-11 11:16+0000\n"
-"PO-Revision-Date: 2011-03-16 15:48+0000\n"
-"Last-Translator: Stanislav Hanzhin <Unknown>\n"
+"PO-Revision-Date: 2011-04-26 10:28+0000\n"
+"Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-03-17 06:12+0000\n"
-"X-Generator: Launchpad (build 12559)\n"
+"X-Launchpad-Export-Date: 2011-04-27 05:46+0000\n"
+"X-Generator: Launchpad (build 12758)\n"
 
 #. module: stock_planning
 #: code:addons/stock_planning/wizard/stock_planning_createlines.py:73
@@ -116,7 +116,7 @@ msgid "Quantity of all confirmed outgoing moves in calculated Period."
 msgstr ""
 
 #. module: stock_planning
-#: view:stock.planning.period:0
+#: view:stock.period.createlines:0
 msgid "Create Daily Periods"
 msgstr ""
 
@@ -138,6 +138,8 @@ msgid ""
 "\n"
 " Initial Stock: "
 msgstr ""
+"\n"
+" Исходные остатки: "
 
 #. module: stock_planning
 #: help:stock.planning,warehouse_forecast:0
@@ -145,6 +147,8 @@ msgid ""
 "All sales forecasts for selected Warehouse of selected Product during "
 "selected Period."
 msgstr ""
+"Прогноз всех продаж по выбранному складу выбранного товара в течение "
+"выбранного периода."
 
 #. module: stock_planning
 #: model:ir.ui.menu,name:stock_planning.menu_stock_period_creatlines
@@ -159,7 +163,7 @@ msgstr ""
 #. module: stock_planning
 #: help:stock.sale.forecast.createlines,period_id:0
 msgid "Period which forecasts will concern."
-msgstr ""
+msgstr "Период, которого касаются прогнозы"
 
 #. module: stock_planning
 #: field:stock.planning,stock_only:0
@@ -185,7 +189,7 @@ msgid "Current Period Situation"
 msgstr ""
 
 #. module: stock_planning
-#: view:stock.planning.period:0
+#: view:stock.period.createlines:0
 msgid "Create Monthly Periods"
 msgstr "Создать периоды по месяцам"
 
@@ -300,8 +304,8 @@ msgid "This User Period3"
 msgstr ""
 
 #. module: stock_planning
+#: model:ir.ui.menu,name:stock_planning.menu_stock_planning_main
 #: view:stock.planning:0
-#: view:stock.planning.sale.prevision:0
 msgid "Stock Planning"
 msgstr ""
 
@@ -351,14 +355,17 @@ msgstr ""
 
 #. module: stock_planning
 #: field:stock.planning,period_id:0
-#: field:stock.planning.sale.prevision,period_id:0
+#: field:stock.planning.createlines,period_id:0
+#: field:stock.sale.forecast,period_id:0
+#: field:stock.sale.forecast.createlines,period_id:0
 msgid "Period"
 msgstr "Период"
 
 #. module: stock_planning
+#: view:stock.period:0
 #: field:stock.period,state:0
 #: field:stock.planning,state:0
-#: field:stock.planning.sale.prevision,state:0
+#: field:stock.sale.forecast,state:0
 msgid "State"
 msgstr "Состояние"
 
@@ -379,6 +386,9 @@ msgstr "stock.sale.forecast.createlines"
 
 #. module: stock_planning
 #: field:stock.planning,warehouse_id:0
+#: field:stock.planning.createlines,warehouse_id:0
+#: field:stock.sale.forecast,warehouse_id:0
+#: field:stock.sale.forecast.createlines,warehouse_id:0
 msgid "Warehouse"
 msgstr "Склад"
 
@@ -399,8 +409,7 @@ msgid "Check this box to see the sales for whole company."
 msgstr ""
 
 #. module: stock_planning
-#: field:stock.planning,name:0
-#: field:stock.planning.sale.prevision,name:0
+#: field:stock.sale.forecast,name:0
 msgid "Name"
 msgstr ""
 
@@ -473,7 +482,7 @@ msgid "Procurement created in MPS by user: "
 msgstr ""
 
 #. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:0
+#: code:addons/stock_planning/stock_planning.py:140
 #, python-format
 msgid "Invalid action !"
 msgstr "Неверное действие !"
@@ -484,7 +493,7 @@ msgid "Stock quantity one day before current period."
 msgstr ""
 
 #. module: stock_planning
-#: view:stock.planning.period:0
+#: view:stock.period.createlines:0
 msgid "Create Weekly Periods"
 msgstr ""
 
@@ -539,13 +548,15 @@ msgid "Per User :"
 msgstr "На пользователя:"
 
 #. module: stock_planning
-#: model:ir.ui.menu,name:stock_planning.menu_stock_prevision
+#: model:ir.ui.menu,name:stock_planning.menu_stock_sale_forecast
+#: model:ir.ui.menu,name:stock_planning.menu_stock_sale_forecast_all
+#: view:stock.sale.forecast:0
 msgid "Sales Forecasts"
 msgstr ""
 
 #. module: stock_planning
 #: field:stock.period,name:0
-#: field:stock.planning.period,name:0
+#: field:stock.period.createlines,name:0
 msgid "Period Name"
 msgstr "Название периода"
 
@@ -581,7 +592,7 @@ msgstr ""
 
 #. module: stock_planning
 #: field:stock.period,date_start:0
-#: field:stock.planning.period,date_start:0
+#: field:stock.period.createlines,date_start:0
 msgid "Start Date"
 msgstr "Дата начала"
 
@@ -607,7 +618,6 @@ msgid ""
 msgstr ""
 
 #. module: stock_planning
-#: view:stock.planning:0
 #: field:stock.planning,planned_outgoing:0
 msgid "Planned Out"
 msgstr ""
@@ -625,7 +635,7 @@ msgstr ""
 #. module: stock_planning
 #: selection:stock.period,state:0
 #: selection:stock.planning,state:0
-#: selection:stock.planning.sale.prevision,state:0
+#: selection:stock.sale.forecast,state:0
 msgid "Draft"
 msgstr "Черновик"
 
@@ -996,8 +1006,7 @@ msgid "General Info"
 msgstr "Общая информация"
 
 #. module: stock_planning
-#: model:ir.actions.act_window,name:stock_planning.action_view_stock_planning_prevision_form
-#: view:stock.planning.sale.prevision:0
+#: model:ir.actions.act_window,name:stock_planning.action_view_stock_sale_forecast_form
 msgid "Sales Forecast"
 msgstr ""
 
@@ -1078,7 +1087,6 @@ msgid "Product UoM Category"
 msgstr "Категория ед. изм. ТМЦ"
 
 #. module: stock_planning
-#: view:stock.planning:0
 #: field:stock.planning,incoming:0
 msgid "Confirmed In"
 msgstr ""
@@ -1094,7 +1102,7 @@ msgid "Product UoS Category"
 msgstr ""
 
 #. module: stock_planning
-#: field:stock.planning.sale.prevision,product_qty:0
+#: field:stock.sale.forecast,product_qty:0
 msgid "Product Quantity"
 msgstr "Количество ТМЦ"
 
@@ -1114,7 +1122,7 @@ msgid "Done"
 msgstr "Сделано"
 
 #. module: stock_planning
-#: field:stock.planning.period,period_ids:0
+#: field:stock.period.createlines,period_ids:0
 msgid "Periods"
 msgstr "Периоды"
 
@@ -1131,16 +1139,21 @@ msgid "Cancel"
 msgstr "Отмена"
 
 #. module: stock_planning
+#: view:stock.period:0
 #: selection:stock.period,state:0
+#: view:stock.planning.createlines:0
+#: view:stock.sale.forecast.createlines:0
 msgid "Close"
 msgstr ""
 
 #. module: stock_planning
-#: selection:stock.planning.sale.prevision,state:0
+#: view:stock.sale.forecast:0
+#: selection:stock.sale.forecast,state:0
 msgid "Validated"
 msgstr "Утверждено"
 
 #. module: stock_planning
+#: view:stock.period:0
 #: selection:stock.period,state:0
 msgid "Open"
 msgstr ""
@@ -1315,7 +1328,7 @@ msgstr ""
 
 #. module: stock_planning
 #: field:stock.period,date_stop:0
-#: field:stock.planning.period,date_stop:0
+#: field:stock.period.createlines,date_stop:0
 msgid "End Date"
 msgstr "Дата окончания"
 
@@ -1353,8 +1366,10 @@ msgid "Calculated Period Simulation"
 msgstr ""
 
 #. module: stock_planning
+#: view:stock.planning:0
 #: field:stock.planning,product_id:0
-#: field:stock.planning.sale.prevision,product_id:0
+#: view:stock.sale.forecast:0
+#: field:stock.sale.forecast,product_id:0
 msgid "Product"
 msgstr "ТМЦ"
 
@@ -1370,7 +1385,7 @@ msgstr ""
 "Для периода: "
 
 #. module: stock_planning
-#: field:stock.planning.sale.prevision,product_uom:0
+#: field:stock.sale.forecast,product_uom:0
 msgid "Product UoM"
 msgstr "Ед. изм. ТМЦ"
 
@@ -1411,7 +1426,7 @@ msgid "Calculate Sales History"
 msgstr ""
 
 #. module: stock_planning
-#: field:stock.planning.sale.prevision,product_amt:0
+#: field:stock.sale.forecast,product_amt:0
 msgid "Product Amount"
 msgstr "Сумма ТМЦ"
 
@@ -1440,6 +1455,9 @@ msgstr "Этот склад"
 #. module: stock_planning
 #: model:ir.actions.act_window,name:stock_planning.action_stock_period_form
 #: model:ir.ui.menu,name:stock_planning.menu_stock_period
+#: model:ir.ui.menu,name:stock_planning.menu_stock_period_main
+#: view:stock.period:0
+#: view:stock.period.createlines:0
 msgid "Stock and Sales Periods"
 msgstr ""
 
