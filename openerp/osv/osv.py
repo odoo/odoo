@@ -239,10 +239,7 @@ class osv_pool(object):
         if name in self.obj_pool:
             del self.obj_pool[name]
         self.obj_pool[name] = obj_inst
-
-        module = str(obj_inst.__class__)[6:]
-        module = module[:len(module)-1]
-        module = module.split('.')[0][2:]
+        module = obj_inst.__class__.__module__.split('.')[0]
         self.module_object_list.setdefault(module, []).append(obj_inst)
 
     # Return None if object does not exist
@@ -265,9 +262,7 @@ class osv_base(object):
         super(osv_base, self).__init__(cr)
 
     def __new__(cls):
-        module = str(cls)[6:]
-        module = module[:len(module)-1]
-        module = module.split('.')[0][2:]
+        module = cls.__module__.split('.')[0]
         if not hasattr(cls, '_module'):
             cls._module = module
         module_class_list.setdefault(cls._module, []).append(cls)
