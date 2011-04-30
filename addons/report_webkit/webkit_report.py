@@ -42,6 +42,7 @@ import pooler
 from report_helper import WebKitHelper
 from report.report_sxw import *
 import addons
+import tools
 from tools.translate import _
 from osv.osv import except_osv
 
@@ -264,6 +265,7 @@ class WebKitParser(report_sxw):
             header = u"""
 <html>
     <head>
+        <meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
         <style type="text/css"> 
             ${css}
         </style>
@@ -341,7 +343,7 @@ class WebKitParser(report_sxw):
                                             time=time,
                                             helper=helper,
                                             css=css,
-                                            _debug=html.decode(),
+                                            _debug=tools.ustr(html),
                                             formatLang=self.formatLang,
                                             setLang=self.setLang,
                                             _=self.translate_call,
