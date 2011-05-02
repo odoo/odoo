@@ -42,7 +42,7 @@
             </tree>
         </field>
     </record>
-    <record model="ir.actions.act_window" id="action_account_asset_category_form">
+    <!--<record model="ir.actions.act_window" id="action_account_asset_category_form">
         <field name="name">Asset Category</field>
         <field name="res_model">account.asset.category</field>
         <field name="view_type">form</field>
@@ -50,9 +50,9 @@
     </record>
     <menuitem 
         parent="menu_finance_config_Assets"
-        id="menu_action_account_asset_category_form"
-        action="action_account_asset_category_form"/>
-
+		id="menu_action_account_asset_category_form"
+		action="action_account_asset_category_form"/>
+-->
 
 <!--    <record model="ir.ui.view" id="view_account_asset_property_tree">
         <field name="name">account.asset.property.tree</field>
@@ -84,7 +84,8 @@
                     	<field name="code" select="1"/>
 		    	<field name="purchase_value" select="1"/>
                     	<field name="currency_id" select="1"/>
-		    	<field name="company_id" select="1"/> 
+		    	<field name="company_id" select="1"/>
+			<field name="value_residual"/> 
 		   </group>
                    <!-- <field name="period_id" select="2"/>-->
 <!--    	                <field name="name" select="1" colspan="4"/>-->
@@ -109,11 +110,11 @@
 				<field name="purchase_date"/>
 
                                 <field name="method"/>
-                                <field name="method_progress_factor"/>
+                                <field name="method_progress_factor" attrs="{'invisible':[('method','=','linear')]}"/>
 				<newline/>
 				<field name="prorata" colspan="1"/>
                                 <field name="method_time"/>
-					<field name="method_period"/>
+					<field name="method_period" attrs="{'invisible':[('method_time','=','end')]}"/>
                                 <button 
                                     name="%(wizard_asset_modify)d" 
                                     states="open" 
@@ -127,25 +128,30 @@
 <!--
 			 	                        <field name="method_end"/> -->
     	                        </page>
-                            <page string="History">
-                                <field name="account_move_line_ids" colspan="4" nolabel="1" readonly="1"/>
-				<field name="history_ids" colspan="4" nolabel="1" readonly="1"/>
-                            </page>
                             <page string="Depreciation board">
-                                <field name="value_total"/>
-                                <field name="value_residual"/>
+<!--                                <field name="value_total"/>
+                                <field name="value_residual"/>-->
 				<field name="depreciation_line_ids" colspan="4" nolabel="1">
                                   <tree>
                                 <field name="name"/>
+				<field name="deprec_date"/>
                                 <field name="sequence"/>
-                                <field name="amount"/></tree>
+                                <field name="amount"/>
+				<field name="deprec_value"/></tree>
                                 </field>
                                       
-                                <button type="object" name="compute_depreciation_board" string="Compute"/>
+                                <button type="object" name="compute_depreciation_board" string="Compute" icon="terp-stock_format-scientific" colspan="2"/>
+				<button type="object" name="account_move_line_deprec" string="Create move line" icon="gtk-execute" colspan="2"/>
                             </page>
 
+			    <page string="History">
+                                <field name="account_move_line_ids" colspan="4" nolabel="1" readonly="1"/>
+                                <field name="history_ids" colspan="4" nolabel="1" readonly="1"/>
+                            </page>
+
+
 			    <page string="Notes">
-                                <field name="note"/>
+                                <field name="note" nolabel="1"/>
 			    </page>	
                             </notebook>
 	            <field name="state" readonly="1"/>
@@ -202,7 +208,7 @@
             <form string="Asset board">
                 <field name="name" select="1"/>
                 <field name="asset_id" select="1"/>
-                <field name="value_gross" select="2"/>
+       	        <field name="value_gross" select="2"/>
                 <field name="value_asset"/>
                 <field name="value_asset_cumul"/>
                 <field name="value_net"/>
