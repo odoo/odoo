@@ -4943,9 +4943,9 @@ GanttTask.prototype.createTaskItem = function()
     }
 
     var taskClick = function() {
-        self.Chart.callEvent("onTaskClick", [self]);
+        self.Chart.callEvent("onTaskDblClick", [self]);
     };
-    this.addEvent(divMove, 'click', taskClick, false);
+    this.addEvent(divMove, 'dblclick', taskClick, false);
 
     if (this.Chart.isEditable)
     {

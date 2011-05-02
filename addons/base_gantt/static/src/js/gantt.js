@@ -193,20 +193,41 @@ init: function(view_manager, session, element_id, dataset, view_id) {
         ganttChartControl.create("GanttDiv");
         ganttChartControl.attachEvent("onTaskEndResize", function(task) {self.on_resize_drag(task, "resize");})
         ganttChartControl.attachEvent("onTaskEndDrag", function(task) {self.on_resize_drag(task, "drag");})
-
+        ganttChartControl.attachEvent("onTaskDblClick", function(task){self.open_popup(task);});
     },
 
     hours_between: function(date1, date2) {
 
-        var ONE_DAY = 1000 * 60 * 60 * 24
-        var date1_ms = date1.getTime()
-        var date2_ms = date2.getTime()
-        var difference_ms = Math.abs(date1_ms - date2_ms)
+        var ONE_DAY = 1000 * 60 * 60 * 24;
+        var date1_ms = date1.getTime();
+        var date2_ms = date2.getTime();
+        var difference_ms = Math.abs(date1_ms - date2_ms);
 
-        d = Math.round(difference_ms / ONE_DAY)
+        d = Math.round(difference_ms / ONE_DAY);
         h = Math.round((difference_ms % ONE_DAY)/(1000 * 60 * 60));
         return (d * this.day_length) + h;
 
+    },
+    open_popup : function(task) {
+        var event_id = task.getId();
+        if (event_id) {
+            event_id = parseInt(event_id, 10);
+            var dataset_event_index = jQuery.inArray(event_id, this.ids);
+        } else  {
+            var dataset_event_index = null;
+        }
+        this.dataset.index = dataset_event_index;
+        var element_id = _.uniqueId("act_window_dialog");
+        var dialog = jQuery('<div>', 
+                        {'id': element_id
+                    }).dialog({
+                        title: 'Gantt Chart',
+                        modal: true,
+                        minWidth: 800,
+                        position: 'top'
+                    });
+        var event_form = new openerp.base.FormView(this.view_manager, this.session, element_id, this.dataset, false);
+        event_form.start();
     },
 
     on_resize_drag : function(task, evt) {
