@@ -49,8 +49,8 @@ class hr_contract_be(osv.osv):
 	'advantage':fields.float('Benefits of various nature ', digits=(16,2)),
 	'suppl_net':fields.float('Net supplements', digits=(16,2)),
 	'retained_net':fields.float('Net retained ', digits=(16,2)),
-	'vol_tax':fields.float('Voluntary tax ', digits=(16,2)),
-	'horaire_effectif': fields.many2one('resource.calendar','Actual Work', help="Hours of work means the actual working time elapsing between the beginning and end of the workday, regardless of where it runs, excluding the stop work devoted to meals, breaks and, more generally, any interruptions between 2 sequences of work that are not actually worked since the employee can go freely about his personal affairs"),
+#	'vol_tax':fields.float('Voluntary tax ', digits=(16,2)),
+#	'horaire_effectif': fields.many2one('resource.calendar','Actual Work', help="Hours of work means the actual working time elapsing between the beginning and end of the workday, regardless of where it runs, excluding the stop work devoted to meals, breaks and, more generally, any interruptions between 2 sequences of work that are not actually worked since the employee can go freely about his personal affairs"),
 
     }
 hr_contract_be()

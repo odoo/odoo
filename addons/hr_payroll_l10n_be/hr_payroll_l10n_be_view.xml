@@ -9,9 +9,10 @@
             <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
             <field name="arch" type="xml">
             <data>
-		 <xpath expr="/form/notebook/page/group/field[@name='working_hours']" position="after">
+<!--		 <xpath expr="/form/notebook/page/group/field[@name='working_hours']" position="after">
 		    <field name="horaire_effectif"/>
 		 </xpath>
+-->
                  <xpath expr="/form/notebook/page/group/field[@name='advantages']" position="after">
 		    <field name="reim_travel"/>
                     <field name="company_car_emp"/>
@@ -22,7 +23,7 @@
 			<separator string="Miscellaneous" colspan="2"/>
 			  <field name="suppl_net"/>
 			  <field name="retained_net"/>
-			  <field name="vol_tax"/>
+<!--			  <field name="vol_tax"/>-->
 		    </group>	
                 </xpath>
 
