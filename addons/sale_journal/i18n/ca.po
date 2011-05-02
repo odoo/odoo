@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-15 05:33+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-04-29 05:21+0000\n"
+"X-Generator: Launchpad (build 12758)\n"
 
 #. module: sale_journal
 #: field:sale_journal.invoice.type,note:0
@@ -25,17 +25,17 @@ msgstr "Nota"
 #. module: sale_journal
 #: help:res.partner,property_invoice_type:0
 msgid "The type of journal used for sales and picking."
-msgstr ""
+msgstr "El tipus de diari utilitzat per a vendes i albarans."
 
 #. module: sale_journal
 #: sql_constraint:sale.order:0
 msgid "Order Reference must be unique !"
-msgstr ""
+msgstr "La referència de la comanda ha de ser única!"
 
 #. module: sale_journal
 #: view:res.partner:0
 msgid "Invoicing"
-msgstr ""
+msgstr "Facturació"
 
 #. module: sale_journal
 #: view:res.partner:0
@@ -48,6 +48,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the invoice "
 "type without removing it."
 msgstr ""
+"Si el camp actiu es desmarca, permet ocultar el tipus de factura sense "
+"eliminar-ho."
 
 #. module: sale_journal
 #: view:sale_journal.invoice.type:0
@@ -86,6 +88,29 @@ msgid ""
 "    Some statistics by journals are provided.\n"
 "    "
 msgstr ""
+"\n"
+"    El mòdul de diari de vendes us permet categoritzar les vostres vendes\n"
+"i lliuraments (albarans) en diferents diaris.\n"
+"Aquest mòdul és molt útil per a companyies grans que\n"
+"treballen per departaments.\n"
+"\n"
+"Podeu utilitzar els diaris per a diferents propòsits, alguns exemples:\n"
+"* aïllar vendes de diferents departaments\n"
+"* diaris per a lliuraments segons camió o companyia d'enviament\n"
+"\n"
+"Els diaris tenen un responsable i evolucionen entre diferents estats:\n"
+"* esborrany, obert, cancel·lat, fet.\n"
+"\n"
+"Es poden processar operacions en lot en els diferents diaris\n"
+"per confirmar totes les vendes alhora, per validar o facturar albarans, ...\n"
+"\n"
+"També suporta mètodes de facturació en lot que poden ser configurats\n"
+"segons empresa o comandes de venda, exemples:\n"
+"* facturació diària,\n"
+"* facturació mensual, ...\n"
+"\n"
+"Es proporcionen algunes estadístiques per diari.\n"
+"    "
 
 #. module: sale_journal
 #: selection:sale_journal.invoice.type,invoicing_method:0
@@ -100,7 +125,7 @@ msgstr "Agrupat"
 #. module: sale_journal
 #: constraint:res.partner:0
 msgid "Error ! You can not create recursive associated members."
-msgstr ""
+msgstr "Error! No podeu crear membres associats recursius."
 
 #. module: sale_journal
 #: model:ir.actions.act_window,help:sale_journal.action_definition_journal_invoice_type
@@ -109,6 +134,10 @@ msgid ""
 "can create a specific invoicing journal to group your invoicing according to "
 "your customer's needs: daily, each Wednesday, monthly, etc."
 msgstr ""
+"Els tipus de factures són utilitzats per a les empreses, comandes de venda i "
+"albarans. Podeu crear un diari de facturació específic per agrupar la vostra "
+"facturació en funció de les necessitats dels vostres clients: diària, cada "
+"dimecres, mensual, etc."
 
 #. module: sale_journal
 #: field:sale_journal.invoice.type,invoicing_method:0
@@ -118,7 +147,7 @@ msgstr "Mètode de facturació"
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_sale_order
 msgid "Sales Order"
-msgstr ""
+msgstr "Comanda de venda"
 
 #. module: sale_journal
 #: field:sale.order,invoice_type_id:0
@@ -136,7 +165,7 @@ msgstr "Actiu"
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_res_partner
 msgid "Partner"
-msgstr ""
+msgstr "Empresa"
 
 #. module: sale_journal
 #: model:ir.actions.act_window,name:sale_journal.action_definition_journal_invoice_type
@@ -148,7 +177,7 @@ msgstr "Tipus de factura"
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_stock_picking
 msgid "Picking List"
-msgstr ""
+msgstr "Albarà"
 
 #. module: sale_journal
 #: model:ir.module.module,shortdesc:sale_journal.module_meta_information
