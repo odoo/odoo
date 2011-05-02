@@ -316,7 +316,8 @@ openerp.base.ListView = openerp.base.Controller.extend(
             'model': this.dataset.model,
             'id': this.view_id,
             'context': this.dataset.context,
-            'domain': this.dataset.domain
+            'domain': this.dataset.domain,
+            'ids': this.dataset.ids
         }, this.do_fill_table);
     },
     /**

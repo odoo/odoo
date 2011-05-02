@@ -9,7 +9,6 @@ openerp.base.m2o = openerp.base.Controller.extend({
         this.relation = model;
         this.dataset = dataset;
         this.name = this.element.attr('name');
-
         this.selectedResultRow = 0;
         this.selectedResult = false;
         this.numResultRows = 0;
@@ -17,7 +16,6 @@ openerp.base.m2o = openerp.base.Controller.extend({
         this.specialKeyPressed = false;
         this.lastKey = null;
         this.delayedRequest = null;
-
         this.lastTextResult = this.element.val();
         this.lastSearch = null;
 
@@ -181,8 +179,8 @@ openerp.base.m2o = openerp.base.Controller.extend({
                 case 13:
                 case 1:
                     var $selectedRow = jQuery("#autoComplete" + this.name + "_" + this.selectedResultRow);
-                    this.dataset.ids = _.without.apply(null, [this.dataset.ids].concat(this.result_ids));
-
+                    this.dataset.ids = this.result_ids;
+                    this.dataset.domain = [];
                     this.dataset.count = this.dataset.ids.length;
                     if ($selectedRow.find('td').attr('id') == 'more') {
                         var element_id = _.uniqueId("act_window_dialog");
@@ -199,6 +197,7 @@ openerp.base.m2o = openerp.base.Controller.extend({
                                        });
                         var event_list = new openerp.base.ListView(this.view_manager, this.session, element_id, this.dataset, false);
                         event_list.start();
+                        event_list.do_reload();
                     }
                     this.setCompletionText($selectedRow, true);
                     this.clearResults();
