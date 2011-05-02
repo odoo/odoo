@@ -2,52 +2,21 @@
   <data>
     <record id="view_report_designer_installer" model="ir.ui.view">
       <field name="name">report_designer.installer.view</field>
-      <field name="model">report_designer.installer</field>
+      <field name="model">base.setup.installer</field>
       <field name="type">form</field>
-      <field name="inherit_id" ref="base.res_config_installer"/>
+      <field name="inherit_id" ref="base_setup.view_base_setup_installer"/>
       <field name="arch" type="xml">
         <data>
-          <form position="attributes">
-            <attribute name="string">Reporting Tools Configuration</attribute>
-          </form>
-          <xpath expr='//separator[@string="vsep"]' position='attributes'>
-                  <attribute name='string'></attribute>
+          <xpath expr="//field[@name='product_expiry']" position="after">
+            <newline/>
+            <group attrs="{'invisible': [('report_designer', '=', False)]}" colspan="4">
+                <separator  string="Advanced Reporting Details" colspan="4" />
+            </group>
+                <field name="base_report_designer" attrs="{'invisible': [('report_designer', '=', False)]}"/>
+                <field name="base_report_creator" attrs="{'invisible': [('report_designer', '=', False)]}"/>
           </xpath>
-          <separator string="title" position="attributes">
-            <attribute name="string"
-                       >Configure Reporting Tools</attribute>
-          </separator>
-          <xpath expr="//label[@string='description']"
-                 position="attributes">
-            <attribute name="string"
-                       >OpenERP's built-in reporting abilities can be improved even further with some of the following applications</attribute>
-          </xpath>
-          <xpath expr="//button[@string='Install Modules']" position="attributes">
-                   <attribute name="string">Configure</attribute>
-          </xpath>
-          <group colspan="8">
-            <field name="base_report_designer"/>
-            <field name="base_report_creator"/>
-          </group>
         </data>
       </field>
-    </record>
-
-    <record id="action_report_designer_installer" model="ir.actions.act_window">
-      <field name="name">Reporting Tools Configuration</field>
-      <field name="type">ir.actions.act_window</field>
-      <field name="res_model">report_designer.installer</field>
-      <field name="view_id" ref="view_report_designer_installer"/>
-      <field name="view_type">form</field>
-      <field name="view_mode">form</field>
-      <field name="target">new</field>
-    </record>
-
-    <record id="report_designer_installer_todo" model="ir.actions.todo">
-      <field name="action_id" ref="action_report_designer_installer"/>
-      <field name="type">normal</field>
-      <field name="state">skip</field>
-      <field name="sequence">3</field>
     </record>
   </data>
 </openerp>
