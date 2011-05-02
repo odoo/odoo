@@ -40,11 +40,11 @@
                             </group>
 
                             <notebook colspan="4">
-		                        <page string="Body (Text)" >
-		                            <field name="body" colspan="4" widget="text" nolabel="1" attrs="{'invisible':[('sub_type','=','html')]}"/>
+		                        <page string="Body (Text)" attrs="{'invisible':[('sub_type','=','html')]}">
+		                            <field name="body" colspan="4" widget="text" nolabel="1"/>
 		                        </page>
-		                        <page string="Body (HTML)"  >
-		                            <field name="body_html" widget="text_html" nolabel="1" colspan="4" attrs="{'invisible':[('sub_type','=','plain')]}"/>
+		                        <page string="Body (HTML)" attrs="{'invisible':[('sub_type','=','plain')]}">
+		                            <field name="body_html" widget="text_html" nolabel="1" colspan="4"/>
 		                        </page>
 		                    </notebook>
 
