@@ -159,7 +159,7 @@ def import_partner_address(sugar_obj, cr, uid, context=None):
     map_partner_address = {
              'id': 'id',              
              'name': ['first_name', 'last_name'],
-             'partner_id/id': 'account_id',
+             'partner_id/id': 'partner_id/id',
             'phone': 'phone_work',
             'mobile': 'phone_mobile',
             'fax': 'phone_fax',
@@ -172,13 +172,18 @@ def import_partner_address(sugar_obj, cr, uid, context=None):
             'email': 'email',
             'type': 'type'
             }
+    model_obj = sugar_obj.pool.get('ir.model.data')    
     address_obj = sugar_obj.pool.get('res.partner.address')
     PortType, sessionid = sugar.login(context.get('username', ''), context.get('password', ''), context.get('url',''))
     sugar_data = sugar.search(PortType, sessionid, 'Contacts')
     for val in sugar_data:
+        account_xml_id = model_obj.search(cr, uid, [('model', '=', 'res.partner'), ('name', 'like', val.get('account_id'))])
+        if not account_xml_id:
+            raise osv.except_osv(_('Warning !'), _('Reference Partner %s cannot be created, due to Lower Record Limit in SugarCRM Configuration.') % val.get('account_name'))
+        else:
+            val['partner_id/id'] = val.get('account_id')
         val['type'] = 'contact'
-        contact_emails = sugar.contact_emails_search(PortType, context.get('username', ''), context.get('password', ''), email_address=val.get('email1'))
-        val['email'] = (','.join(map(lambda x : x, contact_emails)))
+        val['email'] = val.get('email1') + ','+ val.get('email2')        
         if val.get('primary_address_country'):
             country_id = get_all_countries(sugar_obj, cr, uid, val.get('primary_address_country'), context)
             state = get_all_states(sugar_obj,cr, uid, val.get('primary_address_state'), country_id, context)

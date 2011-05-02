@@ -43,15 +43,17 @@ def sugarcrm_fields_mapp(dict_sugar, openerp_dict, context=None):
                 if len(val) >= 1 and val[0] == "__prettyprint__":
                     val = val[1:]
                     data_lst.append('\n\n'.join(map(lambda x : x + ": " + dict_sugar.get(x,''), val)))
-                elif val[0] == '__datetime__' and dict_sugar.get(val[1]):
+                elif val[0] == '__datetime__':
                     val = val[1]
                     if dict_sugar.get(val) and len(dict_sugar.get(val))<=10:
-                        updated_dt = date.fromtimestamp(time.mktime(time.strptime(dict_sugar.get(val), '%Y-%m-%d')))
-                    else:
+                        updated_dt = date.fromtimestamp(time.mktime(time.strptime(dict_sugar.get(val), '%Y-%m-%d'))) or False
+                    elif  dict_sugar.get(val):
                         convert_date = datetime.strptime(dict_sugar.get(val), '%Y-%m-%d %H:%M:%S')
                         edate = convert_date.replace(tzinfo=au_tz)
                         au_dt = au_tz.normalize(edate.astimezone(au_tz))
                         updated_dt = datetime(*au_dt.timetuple()[:6]).strftime('%Y-%m-%d %H:%M:%S')
+                    else:
+                        updated_dt = False    
                     data_lst.append(updated_dt)
                 else:
                     if key == 'duration':

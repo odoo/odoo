@@ -93,18 +93,6 @@ def user_get_attendee_list(portType, sessionid, module_name=None, module_id=None
       attendee_list.append(attendee_dict)
   return attendee_list         
 
-def contact_emails_search(portType, username, password, email_address=None):
-  se_req = contact_by_emailRequest()
-  se_req._user_name = username
-  se_req._password = password
-  se_req._email_address = email_address
-  se_resp = portType.contact_by_email(se_req)
-  ans_list = []
-  for list in se_resp._return:
-      if list.Email_address and list.Email_address not in ans_list:
-          ans_list.append(list.Email_address)
-  return ans_list
-
 def search(portType, sessionid, module_name=None):
   se_req = get_entry_listRequest()
   se_req._session = sessionid
