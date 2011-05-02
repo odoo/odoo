@@ -81,7 +81,6 @@ class account_asset_asset(osv.osv):
 	date_year = 1.0
         purchase_value_board = 1.0
         amountpro = 1.0
-	#year_inc = time.strftime('%Y')
         for asset in self.browse(cr, uid, ids, context=context):
             #res[asset.id] = []
             undone_dotation_number = asset.method_delay - len(asset.account_move_line_ids) + 1
