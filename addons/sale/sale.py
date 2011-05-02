@@ -1052,11 +1052,7 @@ class sale_order_line(osv.osv):
                             "Here is a proposition of quantities according to the packaging:\n\n"
                             "EAN: %s Quantity: %s Type of ul: %s") % \
                                 (qty, ean, qty_pack, type_ul.name)
-                warning = {
-                    'title': _('Picking Information !'),
-                    'message': warn_msg 
-                    }
-                warning_msgs += warn_msg + "\n"
+                warning_msgs += "Picking Information ! : " + warn_msg + "\n"
             result['product_uom_qty'] = qty
 
         uom2 = False
@@ -1117,24 +1113,17 @@ class sale_order_line(osv.osv):
             uom2 = product_obj.uom_id
         if (product_obj.type=='product') and (product_obj.virtual_available * uom2.factor < qty * product_obj.uom_id.factor) \
           and (product_obj.procure_method=='make_to_stock'):
-            warning = {
-                'title': _('Not enough stock !'),
-                'message': _('You plan to sell %.2f %s but you only have %.2f %s available !\nThe real stock is %.2f %s. (without reservations)') %
+            warn_msg = _('You plan to sell %.2f %s but you only have %.2f %s available !\nThe real stock is %.2f %s. (without reservations)') % \
                     (qty, uom2 and uom2.name or product_obj.uom_id.name,
                      max(0,product_obj.virtual_available), product_obj.uom_id.name,
                      max(0,product_obj.qty_available), product_obj.uom_id.name)
-            }
-            warning_msgs += warning['message']+"\n"
+            warning_msgs += "Not enough stock ! : " + warn_msg + "\n"
         # get unit price
         
         if not pricelist:
-            warning = {
-                'title': 'No Pricelist !',
-                'message':
-                    'You have to select a pricelist or a customer in the sales form !\n'
-                    'Please set one before choosing a product.'
-                }
-            warning_msgs += warning['message'] +"\n"
+            warn_msg = _('You have to select a pricelist or a customer in the sales form !\n'
+                    'Please set one before choosing a product.')
+            warning_msgs += "No Pricelist ! : " + warn_msg +"\n"
         else:
             price = self.pool.get('product.pricelist').price_get(cr, uid, [pricelist],
                     product, qty or 1.0, partner_id, {
@@ -1142,21 +1131,17 @@ class sale_order_line(osv.osv):
                         'date': date_order,
                         })[pricelist]
             if price is False:
-                warning = {
-                    'title': 'No valid pricelist line found !',
-                    'message':
-                        "Couldn't find a pricelist line matching this product and quantity.\n"
-                        "You have to change either the product, the quantity or the pricelist."
-                    }
-                warning_msgs += warning['message'] +"\n"
+                warn_msg = _("Couldn't find a pricelist line matching this product and quantity.\n"
+                        "You have to change either the product, the quantity or the pricelist.")
+
+                warning_msgs += "No valid pricelist line found ! :" + warn_msg +"\n"
             else:
                 result.update({'price_unit': price})
-        if not warning_msgs:
-            warning_msgs = False
-        warning = {
-                   'title': 'Wrong Configuration Error !',
-                   'message' : warning_msgs  
-                }
+        if warning_msgs:
+            warning = {
+                       'title': 'Wrong Configuration Error !',
+                       'message' : warning_msgs  
+                    }
         return {'value': result, 'domain': domain, 'warning':warning}
 
     def product_uom_change(self, cursor, user, ids, pricelist, product, qty=0,
