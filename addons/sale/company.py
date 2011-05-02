@@ -29,7 +29,7 @@ class company(osv.osv):
             "for security purpose"),
     }
     _defaults = {
-        'security_lead': 5.0,
+        'security_lead': 1.0,
     }
     
 company()
