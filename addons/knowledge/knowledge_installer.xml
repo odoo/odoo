@@ -12,11 +12,11 @@
             <group attrs="{'invisible': [('knowledge', '=', False)]}" colspan="4">
                 <separator  string="Knowledge Management Details" colspan="4" />
             </group>
-                <field name="document_ftp"/>
-                <field name="document_webdav"/>
-                <field name="wiki"/>
-                <field name="wiki_faq"/>
-                <field name="wiki_quality_manual"/>
+                <field name="document_ftp" attrs="{'invisible': [('knowledge', '=', False)]}"/>
+                <field name="document_webdav" attrs="{'invisible': [('knowledge', '=', False)]}"/>
+                <field name="wiki" attrs="{'invisible': [('knowledge', '=', False)]}"/>
+                <field name="wiki_faq" attrs="{'invisible': [('knowledge', '=', False)]}"/>
+                <field name="wiki_quality_manual" attrs="{'invisible': [('knowledge', '=', False)]}"/>
           </xpath>
         </data>
       </field>
