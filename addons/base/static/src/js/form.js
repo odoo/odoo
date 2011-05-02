@@ -841,7 +841,7 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
     start: function() {
         this.$element = $('#' + this.element_id);
         this.dataset = new openerp.base.form.FieldMany2OneDatasSet(this.session, this.field.relation);
-        new openerp.base.m2o(this.$element, this.field.relation, this.dataset)
+        new openerp.base.m2o(this.$element, this.field.relation, this.dataset, this.session)
     },
     set_value: function(value) {
         this._super.apply(this, arguments);

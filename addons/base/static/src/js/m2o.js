@@ -1,9 +1,10 @@
 openerp.base.m2o = function(openerp) {
 
 openerp.base.m2o = openerp.base.Controller.extend({
-    init: function(element_id, model, dataset) {
-        this._super(element_id, model, dataset);
+    init: function(element_id, model, dataset, session) {
+        this._super(element_id, model, dataset, session);
 
+        this.session = session;
         this.element =  element_id.find('input');
         this.relation = model;
         this.dataset = dataset;
@@ -72,14 +73,23 @@ openerp.base.m2o = openerp.base.Controller.extend({
     displayResults : function(obj) {
         var self = this;
         var result = obj.result;
-        var $fancyTable = jQuery('<table>', {
-            "class": "autoTextTable",
-            "name": "autoCompleteTable" + self.name,
-            "id": "autoCompleteTable" + self.name});
+        var data = []
+        this.result_ids = []
+        if (result.length > 10) {
+            for (var i in result){
+                this.result_ids.push(result[i][0])
+            }
+            data = result;
+            result = data.slice(0, 10);
+        }
 
         this.numResultRows = result.length;
         this.selectedResultRow = 0;
 
+        var $fancyTable = jQuery('<table>', {
+            "class": "autoTextTable",
+            "name": "autoCompleteTable" + self.name,
+            "id": "autoCompleteTable" + self.name});
         var rowName = "autoComplete" + self.name + "_";
         var $resultsTable = jQuery('<tbody>').appendTo($fancyTable);
         jQuery.each(result, function (i, currentObject) {
@@ -97,11 +107,33 @@ openerp.base.m2o = openerp.base.Controller.extend({
                 'text': currentObject[1]
             }))).appendTo($resultsTable);
         });
+
+        if (!result.length) {
+            jQuery('<tr>', {
+                "class": "autoTextNormalRow",
+                "id": rowName + this.numResultRows++
+            }).append(jQuery('<td>', {'id':'create','class': 'm2o_coplition'
+            }).append(jQuery('<span>', {
+                'style': 'text-transform:none; white-space: nowrap',
+                'title': 'Create',
+                'text': 'Create...'}))).appendTo($resultsTable);
+        }
+
+        if (data.length) {
+            jQuery('<tr>', {
+                "class": "autoTextNormalRow",
+                "id": rowName + this.numResultRows++
+                }).append(jQuery('<td>', {'id': 'more','class': 'm2o_coplition'
+                }).append(jQuery('<span>', {
+                    'style': 'text-transform:none; white-space: nowrap',
+                    'title': 'More',
+                    'text': 'More...'}))).appendTo($resultsTable);
+        }
         // Swap out the old results with the newly created table
         var $resultsHolder = jQuery("#autoCompleteResults_" + self.name);
         if($resultsTable.children().length) {
-            result.length > 10 ? $resultsHolder.css('height', '50%') : $resultsHolder.css('height', '');
             $resultsHolder.empty().append($fancyTable);
+            this.updateSelectedResult();
             $resultsHolder.show();
         } else {
             $resultsHolder.hide();
@@ -145,10 +177,29 @@ openerp.base.m2o = openerp.base.Controller.extend({
         if(this.numResultRows > 0) {
             switch (evt.which) {
                 // Enter Key
-                //Single Click
+                // Single Click
                 case 13:
                 case 1:
                     var $selectedRow = jQuery("#autoComplete" + this.name + "_" + this.selectedResultRow);
+                    this.dataset.ids = _.without.apply(null, [this.dataset.ids].concat(this.result_ids));
+
+                    this.dataset.count = this.dataset.ids.length;
+                    if ($selectedRow.find('td').attr('id') == 'more') {
+                        var element_id = _.uniqueId("act_window_dialog");
+                        var dialog = jQuery('<div>',
+                                        {'id': element_id
+                                        }).dialog({title: 'test',
+                                            modal: true,
+                                            minWidth: 800,
+                                            buttons: {
+                                            Cancel: function() {
+                                                $(this).dialog("close");
+                                            }
+                                        }
+                                       });
+                        var event_list = new openerp.base.ListView(this.view_manager, this.session, element_id, this.dataset, false);
+                        event_list.start();
+                    }
                     this.setCompletionText($selectedRow, true);
                     this.clearResults();
                     break;
@@ -166,7 +217,6 @@ openerp.base.m2o = openerp.base.Controller.extend({
 
                 // Down Key
                 case 40:
-
                     if(this.selectedResultRow < this.numResultRows - (this.selectedResultRow == null ? 0 : 1)) {
                         if (this.selectedResultRow == null)
                             this.selectedResultRow = 0;
@@ -199,10 +249,10 @@ openerp.base.m2o = openerp.base.Controller.extend({
      },
 
     updateSelectedResult: function() {
-
         // Set classes to show currently selected row
         for(var i = 0; i < this.numResultRows; i++) {
-            var $selectedRow = jQuery('#autoComplete' + this.name + '_' + i);
+            var rowName = '#autoComplete' + this.name + '_'
+            var $selectedRow = jQuery('#autoComplete' + this.name + '_' + i)
             if(this.selectedResultRow == i) {
                 $selectedRow.addClass("autoTextSelectedRow");
                 $selectedRow.removeClass("autoTextNormalRow") ;
@@ -218,6 +268,10 @@ openerp.base.m2o = openerp.base.Controller.extend({
 
     setCompletionText: function ($selectedRow, flag) {
         var $cell = $selectedRow.find('td');
+        if ($cell.attr('id')) {
+            this.element.val('');
+            return;
+        }
         var autoCompleteText = $cell.find('span').text();
         autoCompleteText = flag ? autoCompleteText : this.lastSearch + '[' + autoCompleteText.substring(this.lastSearch.length) + ']'
         this.element.val(autoCompleteText);
