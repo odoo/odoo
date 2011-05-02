@@ -46,7 +46,6 @@ class account_invoice_with_message(report_sxw.rml_parse):
         result = []
         sub_total = {}
         info = []
-        invoice_list = []
         res = {}
         list_in_seq = {}
         ids = self.pool.get('account.invoice.line').search(self.cr, self.uid, [('invoice_id', '=', invoice.id)])

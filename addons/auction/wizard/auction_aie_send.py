@@ -103,7 +103,7 @@ class auction_lots_send_aie(osv.osv_memory):
             return val
         return post_multipart('auction-in-europe.com', "/bin/catalog.cgi", (('uname',uname),('password',passwd),('did',did),('lang',lang)),(('file',catalog),))
     
-    def _photo_bin_send(uname, passwd, ref, did, photo_name, photo_data):
+    def _photo_bin_send(self, uname, passwd, ref, did, photo_name, photo_data):
         def get_content_type(filename):
             return mimetypes.guess_type(filename)[0] or 'application/octet-stream'
     
@@ -140,7 +140,7 @@ class auction_lots_send_aie(osv.osv_memory):
         return post_multipart('auction-in-europe.com', "/bin/photo.cgi", (('uname',uname),('ref',ref),('passwd',passwd),('did',did)),(('file',photo_name,photo_data),))
     
     
-    def _photos_send(cr, uid, uname, passwd, did, ids):
+    def _photos_send(self, cr, uid, uname, passwd, did, ids):
         service = netsvc.LocalService("object_proxy")
         for (ref,id) in ids:
             datas = service.execute(cr.db_name, uid, 'auction.lots', 'read', [id], ['name','image'])
@@ -179,7 +179,7 @@ class auction_lots_send_aie(osv.osv_memory):
         }
     
     def _send(self, cr, uid, ids, context=None):
-        import pickle, thread, sql_db
+        import pickle, thread
         cr.execute('select name,aie_categ from auction_lot_category')
         vals = dict(cr.fetchall())
         cr.close()

@@ -20,7 +20,6 @@
 ##############################################################################
 
 from osv import fields,osv
-from osv import orm
 from tools.translate import _
 
 class analytic_user_funct_grid(osv.osv):
