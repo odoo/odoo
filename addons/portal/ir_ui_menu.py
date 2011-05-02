@@ -19,6 +19,8 @@
 #
 ##############################################################################
 
+import logging
+
 from osv import osv, fields
 from tools.safe_eval import safe_eval
 
@@ -41,7 +43,9 @@ class portal_menu(osv.osv):
             portal_obj = self.pool.get('res.portal')
             portal_ids = portal_obj.search(cr, uid, [('users', 'in', uid)])
             if portal_ids:
-                assert len(portal_ids) == 1
+                if len(portal_ids) > 1:
+                    log = logging.getLogger('ir.ui.menu')
+                    log.warning('User %s belongs to several portals', str(uid))
                 p = portal_obj.browse(cr, uid, portal_ids[0])
                 # if the portal overrides the menu, use its domain
                 if p.menu_action_id:
