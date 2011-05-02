@@ -1249,7 +1249,7 @@ class stock_picking(osv.osv):
                 move_obj.write(cr, uid, [c.id for c in complete], {'picking_id': new_picking})
             for move in complete:
                 if prodlot_ids.get(move.id):
-                    move_obj.write(cr, uid, move.id, {'prodlot_id': prodlot_ids[move.id]})
+                    move_obj.write(cr, uid, [move.id], {'prodlot_id': prodlot_ids[move.id]})
             for move in too_many:
                 product_qty = move_product_qty[move.id]
                 defaults = {
@@ -1825,7 +1825,7 @@ class stock_move(osv.osv):
                 old_ptype = location_obj.picking_type_get(cr, uid, picking.move_lines[0].location_id, picking.move_lines[0].location_dest_id)
                 if old_ptype != picking.type:
                     old_pick_name = seq_obj.get(cr, uid, 'stock.picking.' + old_ptype)
-                    self.pool.get('stock.picking').write(cr, uid, picking.id, {'name': old_pick_name}, context=context)
+                    self.pool.get('stock.picking').write(cr, uid, [picking.id], {'name': old_pick_name}, context=context)
             else:
                 pickid = False
             for move, (loc, dummy, delay, dummy, company_id, ptype) in todo:
@@ -2113,7 +2113,6 @@ class stock_move(osv.osv):
 
         todo = []
         for move in self.browse(cr, uid, ids, context=context):
-            #print 'DONE MOVE', move.id, move.product_id.name, move.move_dest_id.id, move.state, move.move_dest_id and move.move_dest_id.state
             if move.state=="draft":
                 todo.append(move.id)
         if todo:
@@ -2141,7 +2140,7 @@ class stock_move(osv.osv):
             prodlot_id = partial_datas and partial_datas.get('move%s_prodlot_id' % (move.id), False)
             if prodlot_id:
                 self.write(cr, uid, [move.id], {'prodlot_id': prodlot_id}, context=context)
-            if move.state not in ('confirmed','done', 'assigned'):
+            if move.state not in ('confirmed','done','assigned'):
                 todo.append(move.id)
 
         if todo:
@@ -2469,7 +2468,7 @@ class stock_move(osv.osv):
                     defaults.update(prodlot_id=prodlot_id)
                 new_move = self.copy(cr, uid, move.id, defaults)
                 complete.append(self.browse(cr, uid, new_move))
-            self.write(cr, uid, move.id,
+            self.write(cr, uid, [move.id],
                     {
                         'product_qty' : move.product_qty - product_qty,
                         'product_uos_qty':move.product_qty - product_qty,
@@ -2477,7 +2476,7 @@ class stock_move(osv.osv):
 
 
         for move in too_many:
-            self.write(cr, uid, move.id,
+            self.write(cr, uid, [move.id],
                     {
                         'product_qty': move.product_qty,
                         'product_uos_qty': move.product_qty,
@@ -2558,7 +2557,7 @@ class stock_inventory(osv.osv):
             move_ids = []
             for line in inv.inventory_line_id:
                 pid = line.product_id.id
-                product_context.update(uom=line.product_uom.id,date=inv.date)
+                product_context.update(uom=line.product_uom.id, date=inv.date, prodlot_id=line.prod_lot_id.id)
                 amount = location_obj._product_get(cr, uid, line.location_id.id, [pid], product_context)[pid]
 
                 change = line.product_qty - amount
@@ -2643,10 +2642,9 @@ class stock_inventory_line(osv.osv):
         @return:  Dictionary of changed values
         """
         if not product:
-            return {}
-        if not uom:
-            prod = self.pool.get('product.product').browse(cr, uid, [product], {'uom': uom})[0]
-            uom = prod.uom_id.id
+            return {'value': {'product_qty': 0.0, 'product_uom': False}}
+        obj_product = self.pool.get('product.product').browse(cr, uid, product)
+        uom = uom or obj_product.uom_id.id
         amount = self.pool.get('stock.location')._product_get(cr, uid, location_id, [product], {'uom': uom, 'to_date': to_date})[product]
         result = {'product_qty': amount, 'product_uom': uom}
         return {'value': result}
