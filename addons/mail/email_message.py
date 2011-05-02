@@ -399,18 +399,12 @@ class email_message(osv.osv):
                     content = part.get_payload(decode=True)
                     if filename:
                         attachments[filename] = content
-                    elif not has_plain_text:
-                        # main content parts should have 'text' maintype
-                        # and no filename. we ignore the html part if
-                        # there is already a plaintext part without filename,
-                        # because presumably these are alternatives.
-                        content = tools.ustr(content, encoding)
-                        if part.get_content_subtype() == 'html':
-                            msg['body_html'] = content
-                            body = tools.ustr(tools.html2plaintext(content))
-                        elif part.get_content_subtype() == 'plain':
-                            body = content
-                            #has_plain_text = True
+                    content = tools.ustr(content, encoding)
+                    if part.get_content_subtype() == 'html':
+                        msg['body_html'] = content
+                        body = tools.ustr(tools.html2plaintext(content))
+                    elif part.get_content_subtype() == 'plain':
+                        body = content
                 elif part.get_content_maintype() in ('application', 'image'):
                     if filename :
                         attachments[filename] = part.get_payload(decode=True)
