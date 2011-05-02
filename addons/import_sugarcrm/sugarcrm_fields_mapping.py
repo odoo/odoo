@@ -49,7 +49,7 @@ def sugarcrm_fields_mapp(dict_sugar, openerp_dict, context=None):
                         updated_dt = date.fromtimestamp(time.mktime(time.strptime(dict_sugar.get(val), '%Y-%m-%d')))
                     else:
                         convert_date = datetime.strptime(dict_sugar.get(val), '%Y-%m-%d %H:%M:%S')
-                        edate = convert_date.replace(tzinfo=dateutil.tz.gettz('UTC'))
+                        edate = convert_date.replace(tzinfo=au_tz)
                         au_dt = au_tz.normalize(edate.astimezone(au_tz))
                         updated_dt = datetime(*au_dt.timetuple()[:6]).strftime('%Y-%m-%d %H:%M:%S')
                     data_lst.append(updated_dt)
