@@ -17,6 +17,8 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
     /**
      * Process an action
      * Supported actions: act_window
+     * 
+     * If the action contains a 'no_sidebar' key, the resulting view will never contain a sidebar.
      */
     do_action: function(action) {
         var self = this;
@@ -42,7 +44,11 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
                     if (this.viewmanager) {
                         this.viewmanager.stop();
                     }
-                    this.viewmanager = new openerp.base.ViewManagerAction(this.session, this.element_id, action, true);
+                    var sidebar = true;
+                    if(action.no_sidebar) {
+                        sidebar = false;
+                    }
+                    this.viewmanager = new openerp.base.ViewManagerAction(this.session, this.element_id, action, sidebar);
                     this.viewmanager.start();
                 }
                 break;
