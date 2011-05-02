@@ -413,7 +413,7 @@ class hr_payslip(osv.osv):
         for payslip in self.browse(cr, uid, ids, context=context):
             #delete old payslip lines
             old_slipline_ids = slip_line_pool.search(cr, uid, [('slip_id', '=', payslip.id)], context=context)
-            old_slipline_ids
+#            old_slipline_ids
             if old_slipline_ids:
                 slip_line_pool.unlink(cr, uid, old_slipline_ids, context=context)
             if payslip.contract_id:
@@ -565,27 +565,28 @@ class hr_payslip(osv.osv):
         #defaults
         res = {'value':{
                       'line_ids':[],
+                      'input_line_ids': [],
                       #'details_by_salary_head':[], TODO put me back
                       'name':'',
                       'contract_id': False,
                       'struct_id': False,
                       }
-                 }
+            }
         if not employee_id:
             return res
         ttyme = datetime.fromtimestamp(time.mktime(time.strptime(date_from, "%Y-%m-%d")))
         employee_id = empolyee_obj.browse(cr, uid, employee_id, context=context)
         res['value'].update({
-                           'name': _('Salary Slip of %s for %s') % (employee_id.name, tools.ustr(ttyme.strftime('%B-%Y'))),
-                           'company_id': employee_id.company_id.id
-                           })
+                    'name': _('Salary Slip of %s for %s') % (employee_id.name, tools.ustr(ttyme.strftime('%B-%Y'))),
+                    'company_id': employee_id.company_id.id
+        })
 
         if not context.get('contract', False):
             #fill with the first contract of the employee
             contract_ids = self.get_contract(cr, uid, employee_id, date_from, date_to, context=context)
             res['value'].update({
-                    'struct_id': contract_ids and contract_obj.read(cr, uid, contract_ids[0], ['struct_id'], context=context)['struct_id'][0] or False,
-                    'contract_id': contract_ids and contract_ids[0] or False,
+                        'struct_id': contract_ids and contract_obj.read(cr, uid, contract_ids[0], ['struct_id'], context=context)['struct_id'][0] or False,
+                        'contract_id': contract_ids and contract_ids[0] or False,
             })
         else:
             if contract_id:
@@ -593,7 +594,10 @@ class hr_payslip(osv.osv):
                 contract_ids = [contract_id]
                 #fill the structure with the one on the selected contract
                 contract_record = contract_obj.browse(cr, uid, contract_id, context=context)
-                res['value'].update({'struct_id': contract_record.struct_id.id, 'contract_id': contract_id})
+                res['value'].update({
+                            'struct_id': contract_record.struct_id.id,
+                            'contract_id': contract_id
+                })
             else:
                 #if we don't give the contract, then the input to fill should be for all current contracts of the employee
                 contract_ids = self.get_contract(cr, uid, employee_id, date_from, date_to, context=context)
@@ -604,7 +608,7 @@ class hr_payslip(osv.osv):
         input_line_ids = self.get_input_lines(cr, uid, contract_ids, date_from, date_to, context=context)
         res['value'].update({
                     'input_line_ids': input_line_ids,
-            })
+        })
         return res
 
     def onchange_contract_id(self, cr, uid, ids, date_from, date_to, employee_id=False, contract_id=False, context=None):

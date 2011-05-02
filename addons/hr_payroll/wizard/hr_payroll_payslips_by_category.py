@@ -19,6 +19,10 @@
 #
 ##############################################################################
 
+import time
+from datetime import datetime
+from dateutil import relativedelta
+
 from osv import fields, osv
 from tools.translate import _
 
@@ -27,26 +31,33 @@ class hr_payslip_category(osv.osv_memory):
     _name ='hr.payslip.category'
     _description = 'Generate payslips for all employees within given category'
     _columns = {
-        'category_id': fields.many2one('hr.employee.category', 'Employee Category', required=True),
+        'employee_ids': fields.many2many('hr.employee', 'hr_employee_group_rel', 'struct_id', 'employee_id', 'Employees'),
     }
 
     def compute_sheet(self, cr, uid, ids, context=None):
         emp_pool = self.pool.get('hr.employee')
         slip_pool = self.pool.get('hr.payslip')
+        input_line_pool = self.pool.get('hr.payslip.input')
         slip_ids = []
         if context is None:
             context = {}
         data = self.read(cr, uid, ids, context=context)[0]
-        cr.execute('SELECT DISTINCT emp_id FROM employee_category_rel WHERE category_id = %s', (data['category_id'][0], ))
-        emp_ids = [x[0] for x in cr.fetchall()]
-        if not emp_ids:
-            raise osv.except_osv(_("Warning !"), _("No employee(s) found for '%s' category!") % (data['category_id'][1]))
-        for emp in emp_pool.browse(cr, uid, emp_ids, context=context):
+        if not data['employee_ids']:
+            raise osv.except_osv(_("Warning !"), _("You must select employees to generate payslip"))
+        for emp in emp_pool.browse(cr, uid, data['employee_ids'], context=context):
+            slip_data = slip_pool.onchange_employee_id(cr, uid, [], time.strftime('%Y-%m-01'), str(datetime.now() + relativedelta.relativedelta(months=+1, day=1, days=-1))[:10], emp.id, contract_id=False, context=context)
             res = {
                 'employee_id': emp.id,
+                'name': slip_data['value'].get('name', False),
+                'struct_id': slip_data['value'].get('struct_id', False),
+                'contract_id': slip_data['value'].get('contract_id', False),
                 'payslip_group_id': context.get('active_id', False),
             }
-            slip_ids.append(slip_pool.create(cr, uid, res, context=context))
+            slip_id = slip_pool.create(cr, uid, res, context=context)
+            for input in slip_data['value']['input_line_ids']:
+                input.update({'payslip_id': slip_id})
+                input_line_pool.create(cr, uid, input, context=context)
+            slip_ids.append(slip_id)
         slip_pool.compute_sheet(cr, uid, slip_ids, context=context)
         return {'type': 'ir.actions.act_window_close'}
 

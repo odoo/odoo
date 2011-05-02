@@ -12,7 +12,7 @@
                         <separator string="Payslips by employee category" colspan="4"/>
                         <label colspan="4" nolabel="1" string="This wizard will generate payslips for all employee(s), who belogs to selected category" />
                         <newline/>
-                        <field name="category_id"/>
+                        <field name="employee_ids" nolabel="1"/>
                     </group>
                     <separator string="" colspan="4" />
                     <group colspan="4" col="6">
@@ -33,14 +33,14 @@
             <field name="target">new</field>
         </record>
 
-        <record id="action_idea_post_vote_values" model="ir.values">
+<!--         <record id="action_idea_post_vote_values" model="ir.values">
             <field name="model_id" ref="model_hr_payslip_groups" />
             <field name="object" eval="1" />
             <field name="name">Generate Payslips</field>
             <field name="key2">client_action_multi</field>
             <field name="value" eval="'ir.actions.act_window,' + str(ref('action_hr_payslip_by_category'))"/>
             <field name="model">hr.payslip.groups</field>
-        </record>
+        </record> -->
 
     </data>
 </openerp>
