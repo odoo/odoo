@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-04-28 04:48+0000\n"
+"PO-Revision-Date: 2011-05-01 16:38+0000\n"
 "Last-Translator: Ayhan KIZILTAN <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 05:12+0000\n"
+"X-Launchpad-Export-Date: 2011-05-02 04:36+0000\n"
 "X-Generator: Launchpad (build 12758)\n"
 
 #. module: account
@@ -3754,6 +3754,9 @@ msgid ""
 "customer as well as payment delays. The tool search can also be used to "
 "personalise your Invoices reports and so, match this analysis to your needs."
 msgstr ""
+"Bu rapordan, müşterilerinize fatura tutarlarını ve gecikmiş ödemeleri gözden "
+"geçirebilirsiniz. Arama araçı ile fatura raporlarını da ihtiyaçlarınıza göre "
+"kişiselleştirebilirsiniz."
 
 #. module: account
 #: view:account.invoice.confirm:0
@@ -3884,6 +3887,8 @@ msgid ""
 "This account will be used to value outgoing stock for the current product "
 "category using sale price"
 msgstr ""
+"Bu hesap, satış fiyatı kullanılan geçerli üretim sınıfı için çıkan stok "
+"değerini belirlemede kullanılır"
 
 #. module: account
 #: selection:account.automatic.reconcile,power:0
@@ -3935,7 +3940,7 @@ msgstr "Month"
 #. module: account
 #: field:account.invoice.report,uom_name:0
 msgid "Reference UoM"
-msgstr ""
+msgstr "Kaynak ölçü birimi"
 
 #. module: account
 #: field:account.account,note:0
@@ -4292,6 +4297,9 @@ msgid ""
 "You cannot create an account! \n"
 "Make sure if the account has children then it should be type \"View\"!"
 msgstr ""
+"Bir hesap oluşturmazsınız! \n"
+"Hesabın alt hesaplara sahip olduğundan ve tipin de \"Gör\" olduğundan emin "
+"olun!"
 
 #. module: account
 #: view:account.subscription.generate:0
@@ -4345,6 +4353,8 @@ msgid ""
 "the account \"%s - %s\". Clear the secondary currency field of the account "
 "definition if you want to accept all currencies."
 msgstr ""
+"Para cinsi, \"%s - %s\" geçerli hesabına ait ikincil para cinsinden farklı "
+"olduğundan taşıma işlemi oluşturulamadı."
 
 #. module: account
 #: field:account.invoice.refund,date:0
@@ -4363,6 +4373,8 @@ msgid ""
 "All draft account entries in this journal and period will be validated. It "
 "means you won't be able to modify their accounting fields anymore."
 msgstr ""
+"Bu yevmiyeye döneme ait bütün taslak hesap girişleri doğrulanacaktır. Bu da "
+"hesap alanlarını değiştiremeyeceğiniz anlamına gelir."
 
 #. module: account
 #: report:account.account.balance.landscape:0
@@ -4569,6 +4581,9 @@ msgid ""
 "To print an analytics (or costs) journal for a given period. The report give "
 "code, move name, account number, general amount and analytic amount."
 msgstr ""
+"Belirtilen bir döneme ait analizleri (veya maliyetleri) yazdırmak içindir. "
+"Bu rapor kodu, hareket adını, hesap numarasını, genel miktar ve analiz "
+"miktarını verir."
 
 #. module: account
 #: help:account.journal,refund_journal:0
@@ -4695,7 +4710,7 @@ msgstr "Ödemeler"
 #. module: account
 #: view:account.tax:0
 msgid "Reverse Compute Code"
-msgstr ""
+msgstr "Ters Hesap Kodu"
 
 #. module: account
 #: field:account.subscription.line,move_id:0
@@ -4723,7 +4738,7 @@ msgstr "Kolon Adı"
 #: view:account.general.journal:0
 msgid ""
 "This report gives you an overview of the situation of your general journals"
-msgstr ""
+msgstr "Bu rapor, genel yevmiyelerinizin durumuna göatmanızı sağlar."
 
 #. module: account
 #: field:account.entries.report,year:0
@@ -4893,6 +4908,7 @@ msgstr "Çocuk vergisi"
 msgid ""
 "You can not create move line on receivable/payable account without partner"
 msgstr ""
+"Bir paydaş belirtmeden borç/alacak hesabı için hareket işlemi yapamazsınız."
 
 #. module: account
 #: code:addons/account/account.py:2067
@@ -5148,6 +5164,8 @@ msgid ""
 "There is no default default credit account defined \n"
 "on journal \"%s\""
 msgstr ""
+"\"%s\" Yevmiyesinde tanımlı bir varsayılan \n"
+"alacak hesabı yok"
 
 #. module: account
 #: field:account.entries.report,amount_currency:0
@@ -5235,6 +5253,9 @@ msgid ""
 "impossible any new entry record. Close a fiscal year when you need to "
 "finalize your end of year results definitive "
 msgstr ""
+"Bir mali yıla ait girilmiş bir kayıt yoksa, buradan o yılı kapatabilirsiniz. "
+"Bu yıla ait açık bütün dönemleri herhangi bir yeni giriş kaydı girişine "
+"olanak sağlamayacak şekilde kapatacaktır. "
 
 #. module: account
 #: field:account.central.journal,amount_currency:0
@@ -5270,7 +5291,7 @@ msgstr "Valid Up to"
 #. module: account
 #: view:board.board:0
 msgid "Aged Receivables"
-msgstr ""
+msgstr "Eskimiş Alacaklar"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_automatic_reconcile
@@ -5433,6 +5454,9 @@ msgid ""
 "document shows your debit and credit taking in consideration some criteria "
 "you can choose by using the search tool."
 msgstr ""
+"Bu görüntüden, değişik mali hesaplarınız analiz edebilirsiniz. Bu belge, "
+"arama araçını kullanarak seçeceğiniz kriterleri gözönüne alarak "
+"alacaklarınızı ve borçlarınızı gösterir."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_tax_code_list
@@ -5441,6 +5465,9 @@ msgid ""
 "OpenERP allows you to define the tax structure and manage it from this menu. "
 "You can define both numeric and alphanumeric tax codes."
 msgstr ""
+"Vergi kodu tanımı, ülkenizdeki vergi bildirimi esasına bağlıdır. OpenERP "
+"size, vergi yapısı tanımlamanızı ve bu menüden onu yönetebilmenizi sağlar. "
+"Hem sayısal hem de abecesayısal vergi kodları tanımlayabilirsiniz."
 
 #. module: account
 #: help:account.partner.reconcile.process,progress:0
@@ -5661,6 +5688,10 @@ msgid ""
 "line of the expense account. OpenERP will propose to you automatically the "
 "Tax related to this account and the counterpart \"Account Payable\"."
 msgstr ""
+"Bu görünüm, muhasebeciler tarafından OpenERP de hızlı kayıt girilmesi için "
+"kullanılabilir. Bir satıcı faturası girmek isterseniz, gider hesabı satırını "
+"kaydederek başlayın. OpenERP size bu Verginin bağlı olduğu hesabı ve karşıtı "
+"olan \"Borç Hesaplarını\" önerir."
 
 #. module: account
 #: field:account.entries.report,date_created:0
@@ -5699,7 +5730,7 @@ msgstr ""
 #: code:addons/account/invoice.py:997
 #, python-format
 msgid "Invoice  '%s' is validated."
-msgstr ""
+msgstr "Fatura '%s' onaylandı."
 
 #. module: account
 #: view:account.chart.template:0
@@ -5736,7 +5767,7 @@ msgstr "Reporting Configuration"
 #. module: account
 #: constraint:account.move.line:0
 msgid "Company must be same for its related account and period."
-msgstr ""
+msgstr "Firma bağlı olduğu hesap ve dönemle aynı olmalıdır."
 
 #. module: account
 #: field:account.tax,type:0
@@ -6024,12 +6055,12 @@ msgid ""
 "following the analytic account you defined matching your business need. Use "
 "the tool search to analyse information about analytic entries generated in "
 "the system."
-msgstr ""
+msgstr "Bu görünümde,"
 
 #. module: account
 #: sql_constraint:account.journal:0
 msgid "The name of the journal must be unique per company !"
-msgstr ""
+msgstr "Yevmiye adı her firmada benzersiz olmalı."
 
 #. module: account
 #: field:account.account.template,nocreate:0
@@ -6076,7 +6107,7 @@ msgstr "Centralisation"
 #. module: account
 #: view:wizard.multi.charts.accounts:0
 msgid "Generate Your Accounting Chart from a Chart Template"
-msgstr ""
+msgstr "Tablo Şablonuyla Hesap Tablonuzu oluşturabilirsiniz."
 
 #. module: account
 #: view:account.account:0
@@ -6200,6 +6231,7 @@ msgstr "Entries: "
 #: view:account.use.model:0
 msgid "Create manual recurring entries in a chosen journal."
 msgstr ""
+"Seçilen bir yevmiyede manuel olarak yinelen girişler yaratabilirsiniz."
 
 #. module: account
 #: code:addons/account/account.py:1393
@@ -6218,6 +6250,12 @@ msgid ""
 "account. From this view, you can create and manage the account types you "
 "need for your company."
 msgstr ""
+"Hesap türü, bir hesabın her yevmiyede nasıl kullanıldığını belirlemek için "
+"kullanılır. Bir hesap türüne ait erteleme metodu, yılsonu hesap kapatma "
+"işlemini belirler. Bilanço ve kar zarar raporu gibi raporlar, kategoriyi "
+"(kar/zarar veya bilanço) kullanır. Örneğin, hesap türü aktif hesaba, gider "
+"hesabına veya borç hesaplarına bağlı olabilir. Bu görünümden, firmanızda "
+"gereksinim duyduğunuz hesap türlerini yaratabilir ve yönetebilirsiniz."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_bank_reconcile_tree
@@ -6226,6 +6264,8 @@ msgid ""
 "corresponds with the entries (or records) of that account in your accounting "
 "system."
 msgstr ""
+"Banka uzlaşması, banka hesap özetinin muhasebe sisteminizdeki girişlerle  "
+"(ya da kayıtlarla) uyuşmasının doğrulanmasıdır."
 
 #. module: account
 #: model:process.node,note:account.process_node_draftstatement0
@@ -6369,6 +6409,10 @@ msgid ""
 "reconcile in a series of accounts. It finds entries for each partner where "
 "the amounts correspond."
 msgstr ""
+"Bir faturanın ödenmiş olarak kabul edilmesi için, fatura girişlerinin "
+"karşılıkları ile, genelde ödemelerle uyuşması gerekir. Otomatik uzlaşma "
+"fonksiyonu ile OpenERP bir hesap serisi içerisinde uzlaştırmak için kendi "
+"aramasını yapar. Her ortak için uyuşan tutarları bulur."
 
 #. module: account
 #: view:account.move:0
@@ -6397,6 +6441,8 @@ msgid ""
 "This report is an analysis done by a partner. It is a PDF report containing "
 "one line per partner representing the cumulative credit balance"
 msgstr ""
+"Bu rapor bir ortak tarafından yapılmış bir analizdir. Her ortak için tek "
+"satırda kümülatif alacak bakiyelerini gösteren bir PDF raporudur."
 
 #. module: account
 #: code:addons/account/wizard/account_validate_account_move.py:61
@@ -6481,6 +6527,9 @@ msgid ""
 "allowing you to quickly check the balance of each of your accounts in a "
 "single report"
 msgstr ""
+"Bu rapor, geçici bilançonuzu her hesabınız için tek bir raporda hızlı bir "
+"şekilde denetlemeniz için bir PDF belgesi yazdırmanızı ve oluşturmanızı "
+"sağlar."
 
 #. module: account
 #: help:account.move,to_check:0
@@ -6610,6 +6659,12 @@ msgid ""
 "you request an interval of 30 days OpenERP generates an analysis of "
 "creditors for the past month, past two months, and so on. "
 msgstr ""
+"Eskimiş Paydaş Bakiyeleri, alacaklarınızın aralıklarla gösterildiği daha "
+"ayrıntılı bir rapordur. Raporu açılırken, OpenERP firma adını, mali dönemi "
+"ve analiz edilecek aralık ölçüsünü (gün sayısı olarak) sorar. Sonra OpenERP "
+"döneme göre alacak bakiyesi listesini hesaplar. 30 günlük bir aralığı analiz "
+"etmek isterseniz, OpenERP, son yıla, son iki yıla, v.s. göre alacaklıların "
+"analizini oluşturur. "
 
 #. module: account
 #: field:account.invoice,origin:0
@@ -6656,6 +6711,10 @@ msgid ""
 "an agreement with a customer or a supplier. With Define Recurring Entries, "
 "you can create such entries to automate the postings in the system."
 msgstr ""
+"Yinelenen giriş, belirli bir tarihte, örneğin; bir alıcı ya da müşteri ile "
+"yapılan sözleşmeye uygun olarak yapılan yinelenen çeşitli girişlerdir. "
+"Yinelen Giriş Tanımlama işlemiyle sisteme otomatik olarak işlenen girişler "
+"yaratabilirsiniz."
 
 #. module: account
 #: field:account.entries.report,product_uom_id:0
@@ -6672,6 +6731,10 @@ msgid ""
 "basis. You can enter the coins that are in your cash box, and then post "
 "entries when money comes in or goes out of the cash box."
 msgstr ""
+"Kasa Kayıtı, nakit yevmiyelerine yapılan nakit girişlerini yönetmenizi "
+"sağlar. Bu özellik, nakit ödemelerin günlük olarak kolayca izlenmesini "
+"sağlar. Kasanızdaki nakit paranın girişini yapabilirsiniz, kasanıza giren, "
+"çıkan nakit parayı işleyebilirsiniz."
 
 #. module: account
 #: selection:account.automatic.reconcile,power:0
@@ -6713,6 +6776,12 @@ msgid ""
 "Most of the OpenERP operations (invoices, timesheets, expenses, etc) "
 "generate analytic entries on the related account."
 msgstr ""
+"Normal Hesap Tablosu, ülkenizdeki yasal düzenlemelerle tanımlanan bir "
+"yapıdadır. Hesap Tablosu Analizi, gider/gelir raporlarına göre "
+"gereksinimlerinizi yansıtır. Genellikle sözleşmeler, projeler, ürünler veya "
+"bölümlere göre yapılandırılır. OpenERP nin çoğu işlemleri (faturalar, zaman "
+"cetvelleri, giderler, v.s.) bağlı olduğu hesaplara göre analiz girişleri "
+"oluşturur."
 
 #. module: account
 #: field:account.analytic.journal,line_ids:0
@@ -6819,7 +6888,7 @@ msgstr ""
 msgid ""
 "You can search for individual account entries through useful information. To "
 "search for account entries, open a journal, then select a record line."
-msgstr ""
+msgstr "Yararlı bilgiler içinden bireysel hesapları araştırabilirsiniz."
 
 #. module: account
 #: report:account.invoice:0
@@ -6891,7 +6960,7 @@ msgstr "Bitiş Tarihi"
 #. module: account
 #: field:wizard.multi.charts.accounts,purchase_tax:0
 msgid "Default Purchase Tax"
-msgstr ""
+msgstr "Varsayılan Satınalma Vergisi"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -6941,7 +7010,7 @@ msgstr "Raporlama"
 #. module: account
 #: sql_constraint:account.journal:0
 msgid "The code of the journal must be unique per company !"
-msgstr ""
+msgstr "Yevmiye kodu her firma için benzersiz olmalı."
 
 #. module: account
 #: field:account.bank.statement,ending_details_ids:0
@@ -6994,6 +7063,8 @@ msgid ""
 "line of the expense account, OpenERP will propose to you automatically the "
 "Tax related to this account and the counter-part \"Account Payable\"."
 msgstr ""
+"Bu görünüm, muhasebeciler tarafından girişlerin OpenERP de toplu olarak "
+"kaydı için kullanılır."
 
 #. module: account
 #: help:res.company,property_reserve_and_surplus_account:0
@@ -7041,7 +7112,7 @@ msgstr "  day of the month= -1"
 #. module: account
 #: constraint:res.partner:0
 msgid "Error ! You can not create recursive associated members."
-msgstr ""
+msgstr "Hata ! Mükerrer ilişkili taraf ekleyemezsiniz."
 
 #. module: account
 #: help:account.journal,type:0
@@ -7053,6 +7124,10 @@ msgid ""
 "Situation' to be used at the time of new fiscal year creation or end of year "
 "entries generation."
 msgstr ""
+"Fatura keserken satış yevmiyesi için 'Satış' ı seçin. Satınalma "
+"siparişlerini onaylarken satınalma yevmiyesi için 'Satınalma' yı seçin. "
+"Diğer çeşitli işlemler için 'Genel' i seçin. Yeni mali yıl oluştururken veya "
+"yıl sonu giriş işlemleri oluştururken 'Açılış/Kapanış Durumu' nu seçin."
 
 #. module: account
 #: report:account.invoice:0
@@ -7132,7 +7207,7 @@ msgstr "Satış Günlüğü"
 #: code:addons/account/wizard/account_move_journal.py:104
 #, python-format
 msgid "Open Journal Items !"
-msgstr ""
+msgstr "Yevmiye öğelerini seç !"
 
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_tax
@@ -7154,7 +7229,7 @@ msgstr "Satış Özellikleri"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_manual_reconcile
 msgid "Manual Reconciliation"
-msgstr ""
+msgstr "Manuel Uzlaşma"
 
 #. module: account
 #: report:account.overdue:0
@@ -7214,7 +7289,7 @@ msgstr "Servis Talep Kodu"
 #. module: account
 #: view:validate.account.move:0
 msgid "Post Journal Entries of a Journal"
-msgstr ""
+msgstr "Yevmiyeye ait girişleri işle"
 
 #. module: account
 #: view:product.product:0
@@ -7297,6 +7372,10 @@ msgid ""
 "in which they will appear. Then you can create a new journal and link your "
 "view to it."
 msgstr ""
+"Burada varolan bir yevmiye görünüşünü özelleştirebilir ya da yeni bir "
+"görünüş  yaratabilirsiniz. Yevmiye görünümleri yevmiyelerinize kayıt girime "
+"yöntemini belirler. Bir yevmiyede görünmesini istediğiniz alanları seçin ve "
+"görünüş sırasını belirleyin."
 
 #. module: account
 #: view:account.payment.term.line:0
@@ -7605,11 +7684,14 @@ msgid ""
 "will see the taxes with codes related to your legal statement according to "
 "your country."
 msgstr ""
+"Vergi tablosu dönemsel vergi beyannemenizi oluşturmak için kullanılır. "
+"Ülkenizdeki yasal düzenlemelere bağlı olan vergileri kodları ile birlikte "
+"görebilirsiniz."
 
 #. module: account
 #: view:account.installer.modules:0
 msgid "Add extra Accounting functionalities to the ones already installed."
-msgstr ""
+msgstr "Kurulu durumdaki işlevlere ek olarak Muhasebe işlevleri ekle."
 
 #. module: account
 #: report:account.analytic.account.cost_ledger:0
