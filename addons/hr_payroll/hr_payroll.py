@@ -493,11 +493,12 @@ class hr_payslip(osv.osv):
         #we keep a dict with the result because a value can be overwritten by another rule with the same code
         result_dict = {}
         blacklist = []
+        obj_rule = self.pool.get('hr.salary.rule')
         payslip = self.pool.get('hr.payslip').browse(cr, uid, payslip_id, context=context)
         worked_days = {}
         for input_line in payslip.input_line_ids:
             worked_days[input_line.code] = input_line
-        localdict = {'rules': {}, 'heads': {}, 'payslip': payslip, 'worked_days': worked_days}
+        localdict = {'heads': {}, 'payslip': payslip, 'worked_days': worked_days}
         #get the ids of the structures on the contracts and their parent id as well
         structure_ids = self.pool.get('hr.contract').get_all_structures(cr, uid, contract_ids, context=context)
         #get the rules of the structure and thier children
@@ -508,17 +509,17 @@ class hr_payslip(osv.osv):
         for contract in self.pool.get('hr.contract').browse(cr, uid, contract_ids, context=context):
             employee = contract.employee_id
             localdict.update({'employee': employee, 'contract': contract})
-            for rule in self.pool.get('hr.salary.rule').browse(cr, uid, sorted_rule_ids, context=context):
+            for rule in obj_rule.browse(cr, uid, sorted_rule_ids, context=context):
                 key = rule.code + '-' + str(contract.id)
                 localdict['result'] = None
                 #check if the rule can be applied
-                if self.pool.get('hr.salary.rule').satisfy_condition(cr, uid, rule.id, localdict, context=context) and rule.id not in blacklist:
+                if obj_rule.satisfy_condition(cr, uid, rule.id, localdict, context=context) and rule.id not in blacklist:
                     #compute the amount of the rule
-                    amount = self.pool.get('hr.salary.rule').compute_rule(cr, uid, rule.id, localdict, context=context)
+                    amount = obj_rule.compute_rule(cr, uid, rule.id, localdict, context=context)
                     #check if there is already a rule computed with that code
-                    previous_amount = rule.code in localdict['rules'] and localdict['rules'][rule.code] or 0.0
+                    previous_amount = rule.code in localdict and localdict[rule.code] or 0.0
                     #set/overwrite the amount computed for this rule in the localdict
-                    localdict['rules'][rule.code] = amount
+                    localdict[rule.code] = amount
                     #sum the amount for its salary head
                     localdict = _sum_salary_head(localdict, rule.category_id, amount - previous_amount)
                     #create/overwrite the rule in the temporary results
@@ -543,10 +544,12 @@ class hr_payslip(osv.osv):
                         'register_id': rule.register_id.id,
                         'total': amount,
                         'employee_id': contract.employee_id.id,
+                        'quantity': rule.quantity,
                     }
                 else:
                     #blacklist this rule and its children
                     blacklist += [id for id, seq in self.pool.get('hr.salary.rule')._recursive_search_of_rules(cr, uid, [rule], context=context)]
+
         result = [value for code, value in result_dict.items()]
         return result
 
@@ -655,6 +658,7 @@ class hr_salary_rule(osv.osv):
         'name':fields.char('Name', size=256, required=True, readonly=False),
         'code':fields.char('Code', size=64, required=True),
         'sequence': fields.integer('Sequence', required=True, help='Use to arrange calculation sequence'),
+        'quantity': fields.char('Quantity', size=256, help="It is used in computation for percentage and fixed amount.For e.g. A rule for Meal Voucher having fixed amount of 1€ per worked day can have its quantity defined in expression like worked_days['WORK100']['number_of_days']."),
         'category_id':fields.many2one('hr.salary.head', 'Salary Head', required=True),
         'active':fields.boolean('Active', help="If the active field is set to false, it will allow you to hide the salary rule without removing it."),
         'appears_on_payslip': fields.boolean('Appears on Payslip', help="Used for the display of rule on payslip"),
@@ -694,7 +698,7 @@ class hr_salary_rule(osv.osv):
 # payslip: hr.payslip object
 # employee: hr.employee object
 # contract: hr.contract object
-# rules: dictionary containing the previsouly computed rules. Keys are the rule codes.
+# rules: rules code (previously computed)
 # heads: dictionary containing the computed heads (sum of amount of all rules belonging to that head). Keys are the head codes.
 # worked_days: dictionary containing the computed worked days. Keys are the worked days codes.
 
@@ -708,7 +712,7 @@ result = contract.wage * 0.10''',
 # payslip: hr.payslip object
 # employee: hr.employee object
 # contract: hr.contract object
-# rules: dictionary containing the previsouly computed rules. Keys are the rule codes.
+# rules: rules code (previously computed)
 # heads: dictionary containing the computed heads (sum of amount of all rules belonging to that head). Keys are the head codes.
 # worked_days: dictionary containing the computed worked days. Keys are the worked days codes.
 
@@ -726,6 +730,7 @@ result = rules['NET'] > heads['NET'] * 0.10''',
         'amount_select': 'fix',
         'amount_fix': 0.0,
         'amount_percentage': 0.0,
+        'quantity': '1',
      }
 
     def _recursive_search_of_rules(self, cr, uid, rule_ids, context=None):
@@ -748,12 +753,16 @@ result = rules['NET'] > heads['NET'] * 0.10''',
         """
         rule = self.browse(cr, uid, rule_id, context=context)
         if rule.amount_select == 'fix':
-            return rule.amount_fix
+            try:
+                return rule.amount_fix * eval(rule.quantity, localdict)
+            except:
+                raise osv.except_osv(_('Error'), _('Wrong quantity defined for salary rule %s (%s)')% (rule.name, rule.code))
         elif rule.amount_select == 'percentage':
             try:
-                return rule.amount_percentage * eval(rule.amount_percentage_base, localdict) / 100
+                amount = rule.amount_percentage * eval(rule.amount_percentage_base, localdict) / 100
+                return amount * eval(rule.quantity, localdict)
             except:
-                raise osv.except_osv(_('Error'), _('Wrong percentage base defined for salary rule %s (%s)')% (rule.name, rule.code))
+                raise osv.except_osv(_('Error'), _('Wrong percentage base or quantity defined for salary rule %s (%s)')% (rule.name, rule.code))
         else:
             try:
                 eval(rule.amount_python_compute, localdict, mode='exec', nocopy=True)
