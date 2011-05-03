@@ -96,6 +96,7 @@ class email_thread(osv.osv):
                             sub_type = msg.get('sub_type', False),
                             headers = msg.get('headers', False),
                             reply = msg.get('reply', False),
+                            priority = msg.get('priority'),
                             context = context)
         return res_id
 
@@ -125,6 +126,7 @@ class email_thread(osv.osv):
                             sub_type = msg.get('sub_type', False),
                             headers = msg.get('headers', False),
                             reply = msg.get('reply', False),
+                            priority = msg.get('priority'),
                             context = context)
         return True
 
@@ -167,8 +169,6 @@ class email_thread(osv.osv):
             context = {}
         if attach is None:
             attach = {}
-
-
 
         if email_date:
             edate = parsedate(email_date)
@@ -244,7 +244,8 @@ class email_thread(osv.osv):
                     'body_html': body_html,
                     'sub_type': sub_type,
                     'headers': headers,
-                    'reply_to': reply
+                    'reply_to': reply,
+                    'priority': priority
                 }
             obj.create(cr, uid, data, context=context)
         return True

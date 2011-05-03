@@ -60,6 +60,13 @@ email_content_types = [
     ('html', 'text/html')
 ]
 
+priorities = {
+    '1 (Highest)': '1',
+    '2 (High)': '2',
+    '3 (Normal)': '3',
+    '4 (Low)': '4',
+    '5 (Lowest)': '5',
+}
 
 LOGGER = netsvc.Logger()
 _logger = logging.getLogger('mail')
@@ -328,7 +335,6 @@ class email_message(osv.osv):
             msg_txt['message-id'] = message_id
             _logger.info('Parsing Message without message-id, generating a random one: %s', message_id)
 
-
         fields = msg_txt.keys()
         msg['id'] = message_id
         msg['message-id'] = message_id
@@ -364,7 +370,9 @@ class email_message(osv.osv):
             msg['in-reply-to'] = msg_txt.get('In-Reply-To')
 
         if 'X-Priority' in fields:
-            msg['priority'] = msg_txt.get('X-Priority', '3 (Normal)').split(' ')[0] #TOFIX:
+            msg['priority'] = priorities[msg_txt.get('X-Priority')]
+        else:
+            msg['priority'] = priorities['3 (Normal)']
 
         msg['headers'] = {}
         for item in msg_txt.items():

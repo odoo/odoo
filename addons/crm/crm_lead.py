@@ -170,6 +170,7 @@ class crm_lead(crm_case, osv.osv):
                                   \nWhen the case is over, the state is set to \'Done\'.\
                                   \nIf the case needs to be reviewed then the state is set to \'Pending\'.'),
         'message_ids': fields.one2many('email.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
+        'subjects': fields.function(_get_email_subject, fnct_search=_history_search, string='Subject of Email', method=True, type='char', size=64),
     }
 
 
@@ -381,7 +382,7 @@ class crm_lead(crm_case, osv.osv):
                             body_html= msg.get('body_html'),
                             sub_type = msg.get('sub_type'),
                             headers = msg.get('headers'),
-                            priority = msg.get('priority', False),
+                            priority = msg.get('priority'),
                             context = context)
 
         return res_id
@@ -433,6 +434,10 @@ class crm_lead(crm_case, osv.osv):
                             references = msg.get('references', False) or msg.get('in-reply-to', False),
                             attach = attachments,
                             email_date = msg.get('date'),
+                            body_html= msg.get('body_html'),
+                            sub_type = msg.get('sub_type'),
+                            headers = msg.get('headers'),
+                            priority = msg.get('priority'),
                             context = context)
         return res
 

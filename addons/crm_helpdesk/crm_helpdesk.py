@@ -141,7 +141,7 @@ class crm_helpdesk(crm.crm_case, osv.osv):
                             body_html= msg.get('body_html'),
                             sub_type = msg.get('sub_type'),
                             headers = msg.get('headers'),
-                            priority = msg.get('priority', False),
+                            priority = msg.get('priority'),
                             context = context)
 
         return res_id
@@ -193,6 +193,10 @@ class crm_helpdesk(crm.crm_case, osv.osv):
                             references = msg.get('references', False) or msg.get('in-reply-to', False),
                             attach = attachments,
                             email_date = msg.get('date'),
+                            body_html= msg.get('body_html'),
+                            sub_type = msg.get('sub_type'),
+                            headers = msg.get('headers'),
+                            priority = msg.get('priority'),
                             context = context)
         return res
 
