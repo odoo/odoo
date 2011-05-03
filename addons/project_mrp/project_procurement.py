@@ -33,10 +33,17 @@ class procurement_order(osv.osv):
         return True
 
     def action_produce_assign_service(self, cr, uid, ids, context=None):
+        task_obj = self.pool.get('project.task')
         for procurement in self.browse(cr, uid, ids, context=context):
             self.write(cr, uid, [procurement.id], {'state': 'running'})
             planned_hours = procurement.product_qty
-            task_id = self.pool.get('project.task').create(cr, uid, {
+            proj_uom = procurement.company_id.project_time_mode_id
+            if proj_uom and not proj_uom.name == procurement.product_uom.name:
+                if proj_uom.category_id == procurement.product_uom.category_id:
+                    planned_hours = procurement.product_qty * procurement.product_uom.factor_inv # Converting to the referring UoM
+                    planned_hours *= proj_uom.factor # Converting to the Project UoM
+            
+            task_id = task_obj.create(cr, uid, {
                 'name': '%s:%s' % (procurement.origin or '', procurement.name),
                 'date_deadline': procurement.date_planned,
                 'planned_hours':planned_hours,
