@@ -842,6 +842,7 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
         this.$element = $('#' + this.element_id);
         this.dataset = new openerp.base.form.FieldMany2OneDatasSet(this.session, this.field.relation);
         new openerp.base.m2o(this.$element, this.field.relation, this.dataset, this.session)
+        this.$element.find('input').change(this.on_ui_change);
     },
     set_value: function(value) {
         this._super.apply(this, arguments);
@@ -851,8 +852,16 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
             this.value = value[0];
         }
         this.$element.find('input').val(show_value);
-        // Need to replace this `text` with original `id` after discuss with xmo
-        this.$element.find('input').attr('text', this.value);
+        this.$element.find('input').attr('m2o_id', this.value);
+    },
+
+    get_value: function() {
+        var val = this.$element.find('input').attr('m2o_id') || this.value
+        return val;
+    },
+
+    on_ui_change: function() {
+        this.touched = this.view.touched = true;
     }
 });
 

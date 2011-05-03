@@ -199,6 +199,9 @@ openerp.base.m2o = openerp.base.Controller.extend({
                         event_list.start();
                         event_list.do_reload();
                     }
+                    if ($selectedRow.find('td').attr('id') == 'create') {
+
+                    }
                     this.setCompletionText($selectedRow, true);
                     this.clearResults();
                     break;
@@ -274,6 +277,7 @@ openerp.base.m2o = openerp.base.Controller.extend({
         var autoCompleteText = $cell.find('span').text();
         autoCompleteText = flag ? autoCompleteText : this.lastSearch + '[' + autoCompleteText.substring(this.lastSearch.length) + ']'
         this.element.val(autoCompleteText);
+        this.element.attr('m2o_id', $cell.attr('data-id'));
         this.lastTextResult = autoCompleteText;
     },
 
