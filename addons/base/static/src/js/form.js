@@ -969,7 +969,9 @@ openerp.base.form.Many2ManyListView = openerp.base.ListView.extend({
     },
     do_add_record: function (e) {
         e.stopImmediatePropagation();
-        // TODO: need to open a popup with search view
+        debugger;
+        var pop = new openerp.base.form.Many2XSelectPopup(null, this.m2m_field.view.session);
+        pop.select_element(null,null);
     },
     on_select_row: function(event) {
         var $target = $(event.currentTarget);
@@ -988,6 +990,20 @@ openerp.base.form.Many2ManyListView = openerp.base.ListView.extend({
             "view_mode":"form",
             "target":"new"
         });
+    }
+});
+
+openerp.base.form.Many2XSelectPopup = openerp.base.BaseWidget.extend({
+    identifier_prefix: "many2xselectpopup",
+    template: "Many2XSelectPopup",
+    select_element: function(model, callback) {
+        this.model = model;
+        this.callback = callback;
+        var html = this.render();
+        jQuery(html).dialog({title: '',
+                    modal: true,
+                    minWidth: 800});
+        this.start();
     }
 });
 
