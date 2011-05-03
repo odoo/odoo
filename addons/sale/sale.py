@@ -26,7 +26,7 @@ from osv import fields, osv
 from mx import DateTime
 from tools import config
 from tools.translate import _
-
+from datetime import datetime
 
 class sale_shop(osv.osv):
     _name = "sale.shop"
@@ -593,12 +593,17 @@ class sale_order(osv.osv):
     def action_ship_create(self, cr, uid, ids, *args):
         picking_id = False
         company = self.pool.get('res.users').browse(cr, uid, uid).company_id
+        picking_obj = self.pool.get('stock.picking')
+        sale_order_line_obj = self.pool.get('sale.order.line')
+        move_obj = self.pool.get('stock.move')
+        proc_obj = self.pool.get('mrp.procurement')
         for order in self.browse(cr, uid, ids, context={}):
             output_id = order.shop_id.warehouse_id.lot_output_id.id
             picking_id = False
+            date_order = DateTime.strptime(order.date_order, '%Y-%m-%d')
             for line in order.order_line:
                 proc_id = False
-                date_planned = DateTime.now() + DateTime.DateTimeDeltaFromDays(line.delay or 0.0)
+                date_planned = date_order + DateTime.DateTimeDeltaFromDays(line.delay or 0.0)
                 date_planned = (date_planned - DateTime.DateTimeDeltaFromDays(company.security_lead)).strftime('%Y-%m-%d %H:%M:%S')
                 if line.state == 'done':
                     continue
@@ -606,7 +611,7 @@ class sale_order(osv.osv):
                     location_id = order.shop_id.warehouse_id.lot_stock_id.id
                     if not picking_id:
                         loc_dest_id = order.partner_id.property_stock_customer.id
-                        picking_id = self.pool.get('stock.picking').create(cr, uid, {
+                        picking_id = picking_obj.create(cr, uid, {
                             'origin': order.name,
                             'type': 'out',
                             'state': 'auto',
@@ -618,7 +623,7 @@ class sale_order(osv.osv):
 
                         })
 
-                    move_id = self.pool.get('stock.move').create(cr, uid, {
+                    move_id = move_obj.create(cr, uid, {
                         'name': line.name[:64],
                         'picking_id': picking_id,
                         'product_id': line.product_id.id,
@@ -638,7 +643,7 @@ class sale_order(osv.osv):
                         #'state': 'waiting',
                         'note': line.notes,
                     })
-                    proc_id = self.pool.get('mrp.procurement').create(cr, uid, {
+                    proc_id = proc_obj.create(cr, uid, {
                         'name': order.name,
                         'origin': order.name,
                         'date_planned': date_planned,
@@ -656,9 +661,9 @@ class sale_order(osv.osv):
                     })
                     wf_service = netsvc.LocalService("workflow")
                     wf_service.trg_validate(uid, 'mrp.procurement', proc_id, 'button_confirm', cr)
-                    self.pool.get('sale.order.line').write(cr, uid, [line.id], {'procurement_id': proc_id})
+                    sale_order_line_obj.write(cr, uid, [line.id], {'procurement_id': proc_id})
                 elif line.product_id and line.product_id.product_tmpl_id.type == 'service':
-                    proc_id = self.pool.get('mrp.procurement').create(cr, uid, {
+                    proc_id = proc_obj.create(cr, uid, {
                         'name': line.name,
                         'origin': order.name,
                         'date_planned': date_planned,
@@ -669,7 +674,7 @@ class sale_order(osv.osv):
                         'procure_method': line.type,
                         'property_ids': [(6, 0, [x.id for x in line.property_ids])],
                     })
-                    self.pool.get('sale.order.line').write(cr, uid, [line.id], {'procurement_id': proc_id})
+                    sale_order_line_obj.write(cr, uid, [line.id], {'procurement_id': proc_id})
                     wf_service = netsvc.LocalService("workflow")
                     wf_service.trg_validate(uid, 'mrp.procurement', proc_id, 'button_confirm', cr)
                 else:
