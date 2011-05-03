@@ -359,11 +359,12 @@
                         <field name="parent_id" select="1"/>
                         <field name="sequence" select="1"/>
                     </group>
-                    <separator colspan="4" string="Description"/>
+                    <separator colspan="4" string="Notes"/>
                         <field name="note" colspan="4" nolabel="1"/>
                 </form>
             </field>
         </record>
+
         <record id="hr_salary_head_tree" model="ir.ui.view">
             <field name="name">hr.salary.head.tree</field>
             <field name="model">hr.salary.head</field>
@@ -371,9 +372,9 @@
             <field name="arch" type="xml">
                 <tree string="Salary Heads">
                     <field name="name"/>
-                    <field name="sequence"/>
                     <field name="code"/>
-                    <field name="parent_id"/>
+                    <field name="sequence"/>
+                    <field name="parent_id" invisible="1"/>
                 </tree>
             </field>
         </record>
