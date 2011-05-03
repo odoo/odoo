@@ -157,12 +157,12 @@
 
         <menuitem action="open_view_employee_list_my" id="menu_open_view_employee_list_my" sequence="3" parent="menu_hr_main"/>
 
-	    <record id="ir_ui_view_sc_employee" model="ir.ui.view_sc">
-	        <field name="name">Employees</field>
-	        <field name="resource">ir.ui.menu</field>
-	        <field name="user_id" ref="base.user_root"/>
-	        <field name="res_id" ref="hr.menu_open_view_employee_list_my"/>
-	    </record>
+        <record id="ir_ui_view_sc_employee" model="ir.ui.view_sc">
+            <field name="name">Employees</field>
+            <field name="resource">ir.ui.menu</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="res_id" ref="hr.menu_open_view_employee_list_my"/>
+        </record>
 
         <!--
         =======================
@@ -222,6 +222,11 @@
                     <field name="ssnid"/>
                     <field name="user_id"/>
                     <field name="address_id"/>
+                    <field name="company_id" groups="base.group_multi_company" invisible="1"/>
+                    <field name="department_id" invisible="1"/>
+                    <field name="job_id" invisible="1"/>
+                    <field name="parent_id" invisible="1"/>
+                    <field name="coach_id" invisible="1"/>
                 </tree>
             </field>
         </record>
