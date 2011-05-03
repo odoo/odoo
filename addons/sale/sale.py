@@ -1049,10 +1049,10 @@ class sale_order_line(osv.osv):
                 type_ul = pack.ul
                 warn_msg = _("You selected a quantity of %d Units.\n"
                             "But it's not compatible with the selected packaging.\n"
-                            "Here is a proposition of quantities according to the packaging:\n\n"
+                            "Here is a proposition of quantities according to the packaging:\n"
                             "EAN: %s Quantity: %s Type of ul: %s") % \
                                 (qty, ean, qty_pack, type_ul.name)
-                warning_msgs += "Picking Information ! : " + warn_msg + "\n"
+                warning_msgs += "Picking Information ! : " + warn_msg + "\n\n"
             result['product_uom_qty'] = qty
 
         uom2 = False
@@ -1117,13 +1117,13 @@ class sale_order_line(osv.osv):
                     (qty, uom2 and uom2.name or product_obj.uom_id.name,
                      max(0,product_obj.virtual_available), product_obj.uom_id.name,
                      max(0,product_obj.qty_available), product_obj.uom_id.name)
-            warning_msgs += "Not enough stock ! : " + warn_msg + "\n"
+            warning_msgs += "Not enough stock ! : " + warn_msg + "\n\n"
         # get unit price
         
         if not pricelist:
             warn_msg = _('You have to select a pricelist or a customer in the sales form !\n'
                     'Please set one before choosing a product.')
-            warning_msgs += "No Pricelist ! : " + warn_msg +"\n"
+            warning_msgs += "No Pricelist ! : " + warn_msg +"\n\n"
         else:
             price = self.pool.get('product.pricelist').price_get(cr, uid, [pricelist],
                     product, qty or 1.0, partner_id, {
@@ -1134,7 +1134,7 @@ class sale_order_line(osv.osv):
                 warn_msg = _("Couldn't find a pricelist line matching this product and quantity.\n"
                         "You have to change either the product, the quantity or the pricelist.")
 
-                warning_msgs += "No valid pricelist line found ! :" + warn_msg +"\n"
+                warning_msgs += "No valid pricelist line found ! :" + warn_msg +"\n\n"
             else:
                 result.update({'price_unit': price})
         if warning_msgs:
