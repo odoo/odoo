@@ -1439,7 +1439,8 @@
                         <page string="Submenus">
                             <!-- Note: make sure you have 'ir.ui.menu.full_list'
                                  in the context to see all submenus! -->
-                            <field name="child_id" nolabel="1">
+                            <field name="child_id" nolabel="1"
+                                    context="{'default_parent_id': active_id}">
                                 <tree string="Menu">
                                     <field name="sequence"/>
                                     <field icon="icon" name="name" string="Menu"/>
