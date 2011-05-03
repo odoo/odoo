@@ -204,14 +204,14 @@ class one2many_mod2(fields.one2many):
             res[r[self._fields_id]].append( r['id'] )
         return res
 
-class hr_payslip_groups(osv.osv):
+class hr_payslip_run(osv.osv):
 
-    _name = 'hr.payslip.groups'
+    _name = 'hr.payslip.run'
     _columns = {
         'name':fields.char('Name', size=256, required=True),
         'slip_ids':fields.one2many('hr.payslip', 'payslip_group_id', 'Payslips', required=False, readonly=True),
     }
-hr_payslip_groups()
+hr_payslip_run()
 
 class hr_payslip(osv.osv):
     '''
@@ -265,7 +265,7 @@ class hr_payslip(osv.osv):
         'contract_id': fields.many2one('hr.contract', 'Contract', required=False, readonly=True, states={'draft': [('readonly', False)]}),
         'details_by_salary_head': fields.function(_get_lines_salary_head, method=True, type='one2many', relation='hr.payslip.line', string='Details by Salary Head'),
         'credit_note': fields.boolean('Credit Note', help="Indicates this payslip has a refund of another"),
-        'payslip_group_id': fields.many2one('hr.payslip.groups', 'Payslip Group', readonly=True, states={'draft': [('readonly', False)]}),
+        'payslip_group_id': fields.many2one('hr.payslip.run', 'Payslip Run', readonly=True, states={'draft': [('readonly', False)]}),
     }
     _defaults = {
         'date_from': lambda *a: time.strftime('%Y-%m-01'),

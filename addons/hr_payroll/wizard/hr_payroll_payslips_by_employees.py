@@ -26,12 +26,12 @@ from dateutil import relativedelta
 from osv import fields, osv
 from tools.translate import _
 
-class hr_payslip_category(osv.osv_memory):
+class hr_payslip_employees(osv.osv_memory):
 
-    _name ='hr.payslip.category'
-    _description = 'Generate payslips for all employees within given category'
+    _name ='hr.payslip.employees'
+    _description = 'Generate payslips for all selected employees'
     _columns = {
-        'employee_ids': fields.many2many('hr.employee', 'hr_employee_group_rel', 'struct_id', 'employee_id', 'Employees'),
+        'employee_ids': fields.many2many('hr.employee', 'hr_employee_group_rel', 'payslip_id', 'employee_id', 'Employees'),
     }
 
     def compute_sheet(self, cr, uid, ids, context=None):
@@ -61,6 +61,6 @@ class hr_payslip_category(osv.osv_memory):
         slip_pool.compute_sheet(cr, uid, slip_ids, context=context)
         return {'type': 'ir.actions.act_window_close'}
 
-hr_payslip_category()
+hr_payslip_employees()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

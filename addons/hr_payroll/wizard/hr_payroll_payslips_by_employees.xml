@@ -2,15 +2,15 @@
 <openerp>
     <data>
 
-        <record id="view_hr_payslip_by_category" model="ir.ui.view">
-            <field name="name">hr_payroll_payslip_category</field>
-            <field name="model">hr.payslip.category</field>
+        <record id="view_hr_payslip_by_employees" model="ir.ui.view">
+            <field name="name">hr_payroll_payslip_employees</field>
+            <field name="model">hr.payslip.employees</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Employee Category">
+                <form string="Employees">
                     <group colspan="4" >
-                        <separator string="Payslips by employee category" colspan="4"/>
-                        <label colspan="4" nolabel="1" string="This wizard will generate payslips for all employee(s), who belogs to selected category" />
+                        <separator string="Payslips by Employees" colspan="4"/>
+                        <label colspan="4" nolabel="1" string="This wizard will generate payslips for all selected employee(s)" />
                         <newline/>
                         <field name="employee_ids" nolabel="1"/>
                     </group>
@@ -24,12 +24,12 @@
             </field>
         </record>
 
-        <record id="action_hr_payslip_by_category" model="ir.actions.act_window">
+        <record id="action_hr_payslip_by_employees" model="ir.actions.act_window">
             <field name="name">Generate Payslips</field>
-            <field name="res_model">hr.payslip.category</field>
+            <field name="res_model">hr.payslip.employees</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="view_hr_payslip_by_category"/>
+            <field name="view_id" ref="view_hr_payslip_by_employees"/>
             <field name="target">new</field>
         </record>
 

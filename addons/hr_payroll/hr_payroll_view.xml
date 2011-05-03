@@ -249,12 +249,12 @@
                                 </tree>
                                 <form string="Payslip Line">
                                     <group>
-	                                    <field name="name" select="1"/>
-	                                    <field name="code" select="1"/>
-	                                    <field name="category_id"/>
-	                                    <field name="sequence" groups="base.group_extended"/>
-	                                    <field name="total"/>
-	                                    <field name="salary_rule_id" groups="base.group_extended"/>
+                                        <field name="name" select="1"/>
+                                        <field name="code" select="1"/>
+                                        <field name="category_id"/>
+                                        <field name="sequence" groups="base.group_extended"/>
+                                        <field name="total"/>
+                                        <field name="salary_rule_id" groups="base.group_extended"/>
                                     </group>
                                 </form>
                             </field>
@@ -587,7 +587,7 @@
 
     <record id="hr_payslip_category_filter" model="ir.ui.view">
         <field name="name">hr.payslip.category.search</field>
-        <field name="model">hr.payslip.groups</field>
+        <field name="model">hr.payslip.run</field>
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Search Payslips Group">
@@ -598,10 +598,10 @@
 
     <record id="hr_payslip_category_tree" model="ir.ui.view">
         <field name="name">hr.payslip.category.tree</field>
-        <field name="model">hr.payslip.groups</field>
+        <field name="model">hr.payslip.run</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Payslips Group">
+            <tree string="Payslips Run">
                 <field name="name"/>
             </tree>
         </field>
@@ -609,10 +609,10 @@
 
     <record id="hr_payslip_category_form" model="ir.ui.view">
         <field name="name">hr.payslip.category.form</field>
-        <field name="model">hr.payslip.groups</field>
+        <field name="model">hr.payslip.run</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="Payslips Group">
+            <form string="Payslips Run">
                 <group col="6" colspan="6">
                     <field name="name"/>
                 </group>
@@ -621,14 +621,14 @@
                         <field name="slip_ids" colspan="4" nolabel="1"/>
                     </page>
                 </notebook>
-                <button name="%(action_hr_payslip_by_category)d" type="action" icon="terp-stock_effects-object-colorize" string="Generate Payslips" />
+                <button name="%(action_hr_payslip_by_employees)d" type="action" icon="terp-stock_effects-object-colorize" string="Generate Payslips" />
             </form>
         </field>
     </record>
 
     <record id="action_hr_payslip_category_tree" model="ir.actions.act_window">
         <field name="name">Payslip Run</field>
-        <field name="res_model">hr.payslip.groups</field>
+        <field name="res_model">hr.payslip.run</field>
         <field name="view_type">form</field>
         <field name="view_id" ref="hr_payslip_category_tree"/>
         <field name="search_view_id" ref="hr_payslip_category_filter"/>

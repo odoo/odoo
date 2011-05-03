@@ -49,7 +49,7 @@ Generic Payroll system.
     ],
     'update_xml': [
         'security/hr_security.xml',
-        'wizard/hr_payroll_payslips_by_category.xml',
+        'wizard/hr_payroll_payslips_by_employees.xml',
         'hr_payroll_view.xml',
         'hr_payroll_workflow.xml',
         'hr_payroll_sequence.xml',
