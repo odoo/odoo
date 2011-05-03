@@ -51,7 +51,7 @@ class hr_payslip_employees(osv.osv_memory):
                 'name': slip_data['value'].get('name', False),
                 'struct_id': slip_data['value'].get('struct_id', False),
                 'contract_id': slip_data['value'].get('contract_id', False),
-                'payslip_group_id': context.get('active_id', False),
+                'payslip_run_id': context.get('active_id', False),
             }
             slip_id = slip_pool.create(cr, uid, res, context=context)
             for input in slip_data['value']['input_line_ids']:

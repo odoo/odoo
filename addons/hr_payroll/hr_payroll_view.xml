@@ -288,7 +288,7 @@
                             <separator colspan="4" string="Other Information"/>
                             <group col="5" colspan="2">
                                 <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                                <field name="payslip_group_id"/>
+                                <field name="payslip_run_id"/>
                                 <field name="paid" readonly="1"/>
                             </group>
                             <newline/>
@@ -607,8 +607,8 @@
         </field>
     </record>
 
-    <record id="hr_payslip_category_form" model="ir.ui.view">
-        <field name="name">hr.payslip.category.form</field>
+    <record id="hr_payslip_run_form" model="ir.ui.view">
+        <field name="name">hr.payslip.run.form</field>
         <field name="model">hr.payslip.run</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
