@@ -51,7 +51,6 @@ class crm_merge_opportunity(osv.osv_memory):
 
     def get_attachments(self, cr, uid, id, context=None):
         attach_obj = self.pool.get('ir.attachment')
-        result = []
         attach_ids = attach_obj.search(cr, uid, [('res_model' , '=', 'crm.lead'), ('res_id', '=', id)])
         return attach_ids
 

@@ -28,10 +28,10 @@ class account_report_general_ledger(osv.osv_memory):
 
     _columns = {
         'landscape': fields.boolean("Landscape Mode"),
-        'initial_balance': fields.boolean("Include initial balances",
+        'initial_balance': fields.boolean("Include Initial Balances",
                                           help='It adds initial balance row on report which display previous sum amount of debit/credit/balance'),
         'amount_currency': fields.boolean("With Currency", help="It adds the currency column if the currency is different then the company currency"),
-        'sortby': fields.selection([('sort_date', 'Date'), ('sort_journal_partner', 'Journal & Partner')], 'Sort By', required=True),
+        'sortby': fields.selection([('sort_date', 'Date'), ('sort_journal_partner', 'Journal & Partner')], 'Sort by', required=True),
     }
     _defaults = {
         'landscape': True,

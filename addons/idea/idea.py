@@ -31,11 +31,28 @@ DefaultVoteValue = '50'
 class idea_category(osv.osv):
     """ Category of Idea """
 
+    def name_get(self, cr, uid, ids, context=None):
+        if not len(ids):
+            return []
+        reads = self.read(cr, uid, ids, ['name','parent_id'], context=context)
+        res = []
+        for record in reads:
+            name = record['name']
+            if record['parent_id']:
+                name = record['parent_id'][1]+' / '+name
+            res.append((record['id'], name))
+        return res
+
+    def _categ_name_get_fnc(self, cr, uid, ids, prop, unknow_none, context=None):
+        res = self.name_get(cr, uid, ids, context=context)
+        return dict(res)
+
     _name = "idea.category"
     _description = "Idea Category"
 
     _columns = {
         'name': fields.char('Category', size=64, required=True),
+        'complete_name': fields.function(_categ_name_get_fnc, method=True, type="char", string='Name'),
         'summary': fields.text('Summary'),
         'parent_id': fields.many2one('idea.category', 'Parent Categories', ondelete='set null'),
         'child_ids': fields.one2many('idea.category', 'parent_id', 'Child Categories'),
@@ -45,6 +62,10 @@ class idea_category(osv.osv):
         ('name', 'unique(parent_id,name)', 'The name of the category must be unique' )
     ]
     _order = 'parent_id,name asc'
+
+    _constraints = [
+        (osv.osv._check_recursion, 'Error ! You can not create recursive categories.', ['parent_id'])
+    ]
 
 idea_category()
 

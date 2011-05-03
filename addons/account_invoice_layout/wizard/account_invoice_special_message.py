@@ -30,7 +30,6 @@ class account_invoice_special_msg(osv.osv_memory):
         }
 
     def check_report(self, cr, uid, ids, context=None):
-        datas = {}
         if context is None:
             context = {}
 

@@ -29,7 +29,7 @@ class account_print_journal(osv.osv_memory):
     _columns = {
         'sort_selection': fields.selection([('date', 'Date'),
                                             ('ref', 'Reference Number'),],
-                                            'Entries Sorted By', required=True),
+                                            'Entries Sorted by', required=True),
     }
     _defaults = {
         'sort_selection': 'date',

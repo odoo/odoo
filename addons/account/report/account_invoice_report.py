@@ -89,7 +89,7 @@ class account_invoice_report(osv.osv):
                     ai.payment_term as payment_term,
                     ai.period_id as period_id,
                     (case when u.uom_type not in ('reference') then
-                        (select name from product_uom where uom_type='reference' and category_id=u.category_id)
+                        (select name from product_uom where uom_type='reference' and active and category_id=u.category_id LIMIT 1)
                     else
                         u.name
                     end) as uom_name,

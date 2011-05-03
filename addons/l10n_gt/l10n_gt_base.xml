@@ -47,7 +47,7 @@
         <record id="impuestos_plantilla_iva_por_cobrar" model="account.tax.template">
             <field name="chart_template_id" ref="cuentas_plantilla"/>
             <field name="name">IVA por Cobrar</field>
-            <field eval="0.12" name="amount"/>
+            <field name="amount" eval="0.12"/>
             <field name="type">percent</field>
             <field name="account_collected_id" ref="cta110301"/>
             <field name="account_paid_id" ref="cta110301"/>
@@ -56,6 +56,7 @@
             <field name="ref_base_code_id" ref="impuestos_base_iva_compras"/>
             <field name="ref_tax_code_id" ref="impuestos_iva_por_cobrar"/>
             <field name="type_tax_use">purchase</field>
+            <field name="price_include" eval="True"/>
         </record>
 
         <!-- Ventas e IVA por Pagar -->
@@ -63,7 +64,7 @@
         <record id="impuestos_plantilla_iva_por_pagar" model="account.tax.template">
             <field name="chart_template_id" ref="cuentas_plantilla"/>
             <field name="name">IVA por Pagar</field>
-            <field eval="0.12" name="amount"/>
+            <field name="amount" eval="0.12"/>
             <field name="type">percent</field>
             <field name="account_collected_id" ref="cta210201"/>
             <field name="account_paid_id" ref="cta210201"/>
@@ -72,6 +73,7 @@
             <field name="ref_base_code_id" ref="impuestos_base_iva_ventas"/>
             <field name="ref_tax_code_id" ref="impuestos_iva_por_pagar"/>
             <field name="type_tax_use">sale</field>
+            <field name="price_include" eval="True"/>
         </record>
 
     </data>

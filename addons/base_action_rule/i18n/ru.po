@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-13 04:39+0000\n"
-"X-Generator: Launchpad (build 12735)\n"
+"X-Launchpad-Export-Date: 2011-04-29 05:51+0000\n"
+"X-Generator: Launchpad (build 12758)\n"
 
 #. module: base_action_rule
 #: help:base.action.rule,act_mail_to_user:0
@@ -120,7 +120,7 @@ msgstr ""
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Conditions on Model Partner"
-msgstr ""
+msgstr "Условия для модели контрагента"
 
 #. module: base_action_rule
 #: selection:base.action.rule,trg_date_type:0
@@ -135,7 +135,7 @@ msgstr "Партнер"
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "%(object_subject)s = Object subject"
-msgstr ""
+msgstr "%(object_subject)s = Тема объекта"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -160,11 +160,16 @@ msgid ""
 "specific sales team, or an opportunity which still has status pending after "
 "14 days might trigger an automatic reminder email."
 msgstr ""
+"Использовуйте автоматизацию для автоматического выполнения действий на "
+"разных экранах. Например, кандидат, созданный конкретным пользователем, "
+"может быть автоматически назначен конкретной команде менеджеров по продажам, "
+"или по предложению, по истечении 14 дней находящемуся в статусе «в "
+"ожидании», автоматически будет выслано напоминание."
 
 #. module: base_action_rule
 #: help:base.action.rule,act_mail_to_email:0
 msgid "Email-id of the persons whom mail is to be sent"
-msgstr ""
+msgstr "Электронные адреса получателей почтового сообщения"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -228,6 +233,8 @@ msgid ""
 "Use a python expression to specify the right field on which one than we will "
 "use for the 'To' field of the header"
 msgstr ""
+"Используйте выражение на Python для указания поля, которое будет "
+"использовано в качестве поля заголовка «Кому»"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -257,6 +264,9 @@ msgid ""
 "string 'urgent'\n"
 "Note: This is case sensitive search."
 msgstr ""
+"Регулярное выражение для проверки названия ресурса\n"
+"напр. 'urgent.*' соответствует записям, начинающимся со строки 'urgent'.\n"
+"Прим.: поиск чувствителен к регистру."
 
 #. module: base_action_rule
 #: field:base.action.rule,act_method:0
@@ -293,6 +303,8 @@ msgid ""
 "Use a python expression to specify the right field on which one than we will "
 "use for the 'From' field of the header"
 msgstr ""
+"Используйте выражение на Python для указания поля, которое будет "
+"использовано в качестве поля заголовка «От кого»"
 
 #. module: base_action_rule
 #: field:base.action.rule,trg_date_range:0

@@ -161,6 +161,17 @@ class hr_employee(osv.osv):
         'passport_id':fields.char('Passport No', size=64)
     }
 
+    def unlink(self, cr, uid, ids, context=None):
+        resource_obj = self.pool.get('resource.resource')
+        resource_ids = []
+        for employee in self.browse(cr, uid, ids, context=context):
+            resource = employee.resource_id
+            if resource:
+                resource_ids.append(resource.id)
+        if resource_ids:
+            resource_obj.unlink(cr, uid, resource_ids, context=context)
+        return super(hr_employee, self).unlink(cr, uid, ids, context=context)
+
     def onchange_address_id(self, cr, uid, ids, address, context=None):
         if address:
             address = self.pool.get('res.partner.address').browse(cr, uid, address, context=context)
@@ -195,7 +206,6 @@ class hr_employee(osv.osv):
     _defaults = {
         'active': 1,
         'photo': _get_photo,
-        'address_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, uid, c).address_id.id
     }
 
     def _check_recursion(self, cr, uid, ids, context=None):
