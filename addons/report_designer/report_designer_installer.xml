@@ -9,11 +9,9 @@
         <data>
           <xpath expr="//field[@name='product_expiry']" position="after">
             <newline/>
-            <group attrs="{'invisible': [('report_designer', '=', False)]}" colspan="4">
-                <separator  string="Advanced Reporting Details" colspan="4" />
-            </group>
-                <field name="base_report_designer" attrs="{'invisible': [('report_designer', '=', False)]}"/>
-                <field name="base_report_creator" attrs="{'invisible': [('report_designer', '=', False)]}"/>
+            <separator  string="Advanced Reporting Details" colspan="4" />
+            <field name="base_report_designer" />
+            <field name="base_report_creator" />
           </xpath>
         </data>
       </field>
