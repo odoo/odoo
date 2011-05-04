@@ -188,7 +188,8 @@ def import_partners(sugar_obj, cr, uid, context=None):
             'ref': 'sic_code',
             'comment': ['__prettyprint__', 'description', 'employees', 'ownership', 'annual_revenue', 'rating', 'industry', 'ticker_symbol'],
             'customer': 'customer',
-            'supplier': 'supplier', 
+            'supplier': 'supplier',
+            'address/id':'address/id', 
     }
     
     def get_address_type(sugar_obj, cr, uid, val, type, context=None):
@@ -219,8 +220,7 @@ def import_partners(sugar_obj, cr, uid, context=None):
             val['state_id/id'] =  state
         val['type'] = type
         val['id_new'] = val['id'] + '_address_' + type
-        fields, datas = sugarcrm_fields_mapp(val, map_partner_address)
-        return import_object(sugar_obj, cr, uid, fields, datas, 'res.partner.address', TABLE_CONTACT, val['id_new'], DO_NOT_FIND_DOMAIN, context=context)
+        return import_object_mapping(sugar_obj, cr, uid, map_partner_address, val, 'res.partner.address', TABLE_CONTACT, val['id_new'], DO_NOT_FIND_DOMAIN, context=context) 
     
     def get_address(sugar_obj, cr, uid, val, context=None):
         address_id=[]
@@ -232,30 +232,17 @@ def import_partners(sugar_obj, cr, uid, context=None):
           
         return address_id
     
-    if not context:
-        context = {}
-    partner_obj = sugar_obj.pool.get('res.partner')
-    
-    PortType, sessionid = sugar.login(context.get('username', ''), context.get('password', ''), context.get('url',''))
-    sugar_data = sugar.search(PortType, sessionid, 'Accounts')
-    
+    sugar_data = get_sugar_data('Accounts', context)
     for val in sugar_data:
         add_id = get_address(sugar_obj, cr, uid, val, context)
         val['customer'] = '1'
         val['supplier'] = '0'
         val['user_id/id'] = xml_id_exist(sugar_obj, cr, uid, TABLE_USER, val['assigned_user_id'])
         val['id_new'] = generate_xml_id(val['id'], TABLE_ACCOUNT)
-        print "values of partner"
-        pp.pprint(val)
-        if val['parent_id']:
-            print 'parent_id', val['parent_id']
-            val['parent_id_new'] = generate_xml_id(val['parent_id'], TABLE_ACCOUNT)
+        val['parent_id_new'] = val['parent_id'] and generate_xml_id(val['parent_id'], TABLE_ACCOUNT) or ''
+        val['address/id'] = ','.join(add_id)
         
-        fields, data = sugarcrm_fields_mapp(val, map_partner)
-        fields, data = add_m2o_data(data, fields, 'address/id', add_id)
-        
-        partner_obj.import_data(cr, uid, fields, [data], mode='update', current_module=MODULE_NAME, noupdate=True, context=context)
-    import_self_dependencies(partner_obj, cr, uid, 'parent_id', sugar_data, context)
+    import_module(sugar_obj, cr, uid, 'res.partner', map_partner, sugar_data, TABLE_ACCOUNT, context)
     return True
 
 def get_category(sugar_obj, cr, uid, model, name, context=None):

@@ -40,7 +40,6 @@ def xml_id_exist(obj, cr, uid, table, sugar_id, context=None):
     id = obj.pool.get('ir.model.data')._get_id(cr, uid, MODULE_NAME, xml_id)
     return id and xml_id or False
 
-
 def mapped_id(obj, cr, uid, res_model, sugar_id, id, context=None):
     """
         This function create the mapping between an already existing data and the similar data of sugarcrm
@@ -57,9 +56,6 @@ def mapped_id(obj, cr, uid, res_model, sugar_id, id, context=None):
                      MODULE_NAME, {}, mode='update', xml_id=sugar_id,
                      noupdate=True, res_id=id, context=context)
     return sugar_id
-
-
-
 
 def mapped_id_if_exist(sugar_obj, cr, uid, model, domain, xml_id, context=None):
     """
@@ -132,21 +128,6 @@ def import_object(sugar_obj, cr, uid, fields, data, model, table, name, domain_s
     obj.import_data(cr, uid, fields, [data], mode='update', current_module=MODULE_NAME, noupdate=True, context=context)
     return xml_ref or xml_id
 
-
-def add_m2o_data(data, fields, column, xml_ids):
-    """
-        @param fields: list of fields
-        @param data: the list of the data, in the same order as the field
-            ex : fields = ['firstname', 'lastname'] ; data = ['John', 'Mc donalds']
-        @param column : name of the column that will contains the xml_id of o2m data
-            ex : contact_id/id
-        @param xml_ids : the list of xml id of the data
-        
-        @return fields and data with the last column "column", "xml_id1,xml_id2,xml_id3,.."
-    """
-    fields.append(column)
-    data.append(','.join(xml_ids))    
-    return fields, data
 
 #TODO for more then one field that need parent
 def import_self_dependencies(obj, cr, uid, parent_field, datas, context):
