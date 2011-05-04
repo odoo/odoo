@@ -40,10 +40,10 @@ class project_installer(osv.osv_memory):
         'project_issue': fields.boolean('Issues Tracker',
             help="Automatically synchronizes project tasks and crm cases."),
         # Methodologies
-        'project_scrum': fields.boolean('Methodology:SCRUM',
+        'project_scrum': fields.boolean('Methodology: SCRUM',
             help="Implements and tracks the concepts and task types defined "
                  "in the SCRUM methodology."),
-        'project_gtd': fields.boolean('Methodology:Getting Things Done',
+        'project_gtd': fields.boolean('Methodology: Getting Things Done',
             help="GTD is a methodology to efficiently organise yourself and your tasks. This module fully integrates GTD principle with OpenERP's project management."),
     }
 project_installer()
