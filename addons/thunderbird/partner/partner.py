@@ -97,7 +97,12 @@ class thunderbird_partner(osv.osv_memory):
                             message_id = msg.get('message-id'),
                             references = msg.get('references', False) or msg.get('in-reply-to', False),
                             attach = msg.get('attachments', {}),
-                            email_date = msg.get('date'))
+                            email_date = msg.get('date'),
+                            body_html= msg.get('body_html'),
+                            sub_type = msg.get('sub_type'),
+                            headers = msg.get('headers'),
+                            reply = msg.get('reply'),
+                            priority = msg.get('priority'),)
             res_ids.append(res_id)
         return len(res_ids)
 
