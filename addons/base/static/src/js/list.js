@@ -130,6 +130,13 @@ openerp.base.ListView = openerp.base.Controller.extend(
         this.$element.find('#oe-list-delete')
                 .hide()
                 .click(this.do_delete_selected);
+        this.$element.find('thead').delegate('th[data-id]', 'click', function (e) {
+            e.stopPropagation();
+
+            self.dataset.sort($(this).data('id'));
+
+            self.do_reload();
+        });
 
         var $table = this.$element.find('table');
         // Cell events
@@ -318,7 +325,8 @@ openerp.base.ListView = openerp.base.Controller.extend(
             'model': this.dataset.model,
             'id': this.view_id,
             'context': this.dataset.context,
-            'domain': this.dataset.domain
+            'domain': this.dataset.domain,
+            'sort': this.dataset.sort && this.dataset.sort()
         }, this.do_fill_table);
     },
     /**

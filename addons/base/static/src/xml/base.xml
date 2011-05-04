@@ -181,7 +181,7 @@
         <tr t-if="options.header">
             <th t-if="options.selectable"/>
             <t t-foreach="columns" t-as="column">
-                <th t-if="column.invisible !== '1'">
+                <th t-if="column.invisible !== '1'" t-att-data-id="column.id">
                     <t t-if="column.tag !== 'button'">
                         <t t-esc="column.string"/>
                     </t>
