@@ -10,14 +10,12 @@
               <data>
                 <xpath expr="//field[@name='product_expiry']" position="after">
                     <newline/>
-                    <group attrs="{'invisible': [('association', '=', False)]}" colspan="4">
-                        <separator  string="Associations Details" colspan="4" />
-                    </group>
-                    <field name="project" attrs="{'invisible': [('association', '=', False)]}"/>
-                    <field name="project_gtd" attrs="{'invisible': [('association', '=', False)]}"/>
-                    <field name="wiki" attrs="{'invisible': [('association', '=', False)]}"/>
-                    <field name="event_project" attrs="{'invisible': [('association', '=', False)]}"/>
-                    <field name="hr_expense" attrs="{'invisible': [('association', '=', False)]}"/>
+                    <separator  string="Associations Details" colspan="4" />
+                    <field name="project" />
+                    <field name="project_gtd" />
+                    <field name="wiki" />
+                    <field name="event_project" />
+                    <field name="hr_expense" />
                 </xpath>
               </data>
             </field>
