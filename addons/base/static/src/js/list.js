@@ -123,6 +123,8 @@ openerp.base.ListView = openerp.base.Controller.extend(
         this.visible_columns = _.filter(this.columns, function (column) {
             return column.invisible !== '1';
         });
+
+        if (!this.fields_view.sorted) { this.fields_view.sorted = {}; }
         this.$element.html(QWeb.render("ListView", this));
 
         // Head hook
@@ -130,6 +132,14 @@ openerp.base.ListView = openerp.base.Controller.extend(
         this.$element.find('#oe-list-delete')
                 .hide()
                 .click(this.do_delete_selected);
+        this.$element.find('thead').delegate('th[data-id]', 'click', function (e) {
+            e.stopPropagation();
+
+            self.dataset.sort($(this).data('id'));
+
+            // TODO: should only reload content (and set the right column to a sorted display state)
+            self.do_reload();
+        });
 
         var $table = this.$element.find('table');
         // Cell events
@@ -318,7 +328,8 @@ openerp.base.ListView = openerp.base.Controller.extend(
             'model': this.dataset.model,
             'id': this.view_id,
             'context': this.dataset.context,
-            'domain': this.dataset.domain
+            'domain': this.dataset.domain,
+            'sort': this.dataset.sort && this.dataset.sort()
         }, this.do_fill_table);
     },
     /**
