@@ -83,6 +83,7 @@
             <field name="name">hr.employee.tree</field>
             <field name="model">hr.employee</field>
             <field name="type">tree</field>
+            <field eval="10" name="priority"/>
             <field name="arch" type="xml">
                 <tree string="Employees">
                     <field name="name"/>
@@ -216,17 +217,13 @@
             <field name="model">hr.employee</field>
             <field name="type">tree</field>
             <field name="field_parent">child_ids</field>
+            <field eval="20" name="priority"/>
             <field name="arch" type="xml">
                 <tree string="Employees">
                     <field name="name"/>
                     <field name="ssnid"/>
                     <field name="user_id"/>
                     <field name="address_id"/>
-                    <field name="company_id" groups="base.group_multi_company" invisible="1"/>
-                    <field name="department_id" invisible="1"/>
-                    <field name="job_id" invisible="1"/>
-                    <field name="parent_id" invisible="1"/>
-                    <field name="coach_id" invisible="1"/>
                 </tree>
             </field>
         </record>
