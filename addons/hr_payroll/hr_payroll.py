@@ -612,6 +612,19 @@ class hr_payslip(osv.osv):
             res['value'].update({'struct_id': False})
         return self.onchange_employee_id(cr, uid, ids, date_from=date_from, date_to=date_to, employee_id=employee_id, contract_id=contract_id, context=context)
 
+    def payslip_sum(self, cr, uid, code, from_date, to_date=datetime.now().strftime('%Y-%m-%d'), employee, context=None):
+        if context is None:
+            context = {}
+        if not employee:
+            employee = 0
+        cr.execute("SELECT sum(pl.total) \
+                    FROM hr_payslip as hp, hr_payslip_line as pl \
+                    WHERE hp.employee_id = %s AND hp.state in ('confirm','done') \
+                    AND hp.date_from >= %s AND hp.date_to <= %s AND hp.id = pl.slip_id AND pl.code = %s",
+                   (employee, from_date, to_date, code ))
+        res = cr.fetchone()
+        return res and res[0] or 0.0
+    
 hr_payslip()
 
 class hr_payslip_input(osv.osv):
