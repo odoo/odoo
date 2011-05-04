@@ -10,16 +10,14 @@
           <data>
           <xpath expr="//field[@name='product_expiry']" position="after">
             <newline/>
-            <group attrs="{'invisible': [('project', '=', False)]}" colspan="4">
-                <separator  string="Project Management Details" colspan="4" />
-            </group>
-                <field name="project_issue" attrs="{'invisible':[('project','=',False)]}"/>
-                <field name="project_long_term" groups="base.group_extended" attrs="{'invisible':[('project','=',False)]}"/>
-                <field name="hr_timesheet_sheet" attrs="{'invisible':[('project','=',False)]}"/>
-                <field name="project_timesheet" attrs="{'invisible':[('project','=',False)]}"/>
-                <field name="account_budget" groups="base.group_extended" attrs="{'invisible':[('project','=',False)]}"/>
-                <field name="project_scrum" attrs="{'invisible':[('project','=',False)]}"/>
-                <field name="project_gtd" attrs="{'invisible':[('project','=',False)]}"/>
+            <separator  string="Project Management Details" colspan="4" />
+            <field name="project_issue" />
+            <field name="project_long_term" />
+            <field name="hr_timesheet_sheet" />
+            <field name="project_timesheet" />
+            <field name="account_budget" />
+            <field name="project_scrum" />
+            <field name="project_gtd" />
           </xpath>
         </data>
       </field>
