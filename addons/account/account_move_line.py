@@ -68,7 +68,6 @@ class account_move_line(osv.osv):
         if state:
             if state.lower() not in ['all']:
                 where_move_state= " AND "+obj+".move_id IN (SELECT id FROM account_move WHERE account_move.state = '"+state+"')"
-
         if context.get('period_from', False) and context.get('period_to', False) and not context.get('periods', False):
             if initial_bal:
                 period_company_id = fiscalperiod_obj.browse(cr, uid, context['period_from'], context=context).company_id.id
@@ -82,14 +81,7 @@ class account_move_line(osv.osv):
                 period_ids = fiscalperiod_obj.search(cr, uid, [('id', 'in', context['periods'])], order='date_start', limit=1)
                 if period_ids and period_ids[0]:
                     first_period = fiscalperiod_obj.browse(cr, uid, period_ids[0], context=context)
-                    where_move_lines_by_date = " AND " +obj+".move_id IN (SELECT id FROM account_move WHERE date < '" +first_period.date_start+"')"
-                    # Find the old periods where date start of those periods less then Start period
-                    periods = fiscalperiod_obj.search(cr, uid, [('date_start', '<', first_period.date_start)])
-                    periods = ','.join([str(x) for x in periods])
-                    if periods:
-                        query = obj+".state <> 'draft' AND "+obj+".period_id IN (SELECT id FROM account_period WHERE fiscalyear_id IN (%s) AND id IN (%s)) %s %s" % (fiscalyear_clause, periods, where_move_state, where_move_lines_by_date)
-                    else:
-                        query = obj+".state <> 'draft' AND "+obj+".period_id IN (SELECT id FROM account_period WHERE fiscalyear_id IN (%s)) %s %s" % (fiscalyear_clause, where_move_state, where_move_lines_by_date)
+                    query = obj+".state <> 'draft' AND "+obj+".period_id IN (SELECT id FROM account_period WHERE fiscalyear_id IN (%s) AND date_start <= '%s' AND id NOT IN %s) %s %s" % (fiscalyear_clause, first_period.date_start, tuple(context['periods']), where_move_state, where_move_lines_by_date)
             else:
                 ids = ','.join([str(x) for x in context['periods']])
                 query = obj+".state <> 'draft' AND "+obj+".period_id IN (SELECT id FROM account_period WHERE fiscalyear_id IN (%s) AND id IN (%s)) %s %s" % (fiscalyear_clause, ids, where_move_state, where_move_lines_by_date)
