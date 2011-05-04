@@ -9,15 +9,13 @@
         <data>
           <xpath expr="//field[@name='product_expiry']" position="after">
             <newline/>
-            <group attrs="{'invisible': [('profile_tools', '=', False)]}" colspan="4">
-                <separator  string="Extra Tools Details" colspan="4" />
-            </group>
-                <field name="share" attrs="{'invisible': [('profile_tools', '=', False)]}"/>
-                <field name="lunch" attrs="{'invisible': [('profile_tools', '=', False)]}"/>
-                <field name="idea" attrs="{'invisible': [('profile_tools', '=', False)]}"/>
-                <field name="survey" attrs="{'invisible': [('profile_tools', '=', False)]}"/>
-                <field name="subscription" groups="base.group_extended" attrs="{'invisible': [('profile_tools', '=', False)]}"/>
-                <field name="pad" attrs="{'invisible': [('profile_tools', '=', False)]}"/>            
+            <separator  string="Extra Tools Details" colspan="4" />
+            <field name="share" />
+            <field name="lunch" />
+            <field name="idea" />
+            <field name="survey" />
+            <field name="subscription" />
+            <field name="pad" />            
           </xpath>
         </data>
       </field>
