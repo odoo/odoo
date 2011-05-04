@@ -9,18 +9,16 @@
         <data>
           <xpath expr="//field[@name='product_expiry']" position="after">
             <newline/>
-            <group attrs="{'invisible': [('crm', '=', False)]}" colspan="4">
-                <separator  string="Customer Relationship Management Details" colspan="4" />
-            </group>
-                <field name="crm_claim" groups="base.group_extended" attrs="{'invisible': [('crm', '=', False)]}"/>
-                <field name="crm_helpdesk" groups="base.group_extended" attrs="{'invisible': [('crm', '=', False)]}"/>
-                <field name="crm_fundraising" groups="base.group_extended" attrs="{'invisible': [('crm', '=', False)]}"/>
-                <field name="wiki_sale_faq" groups="base.group_extended" attrs="{'invisible': [('crm', '=', False)]}"/>
-                <field name="sale_crm" invisible="1" groups="base.group_extended" attrs="{'invisible': [('crm', '=', False)]}"/>
-                <field name="crm_caldav" attrs="{'invisible': [('crm', '=', False)]}"/>
-                <field name="fetchmail" attrs="{'invisible': [('crm', '=', False)]}"/>
-                <field name="thunderbird" attrs="{'invisible': [('crm', '=', False)]}"/>
-                <field name="outlook" attrs="{'invisible': [('crm', '=', False)]}"/>
+            <separator  string="Customer Relationship Management Details" colspan="4" />
+            <field name="crm_claim" groups="base.group_extended" />
+            <field name="crm_helpdesk" groups="base.group_extended" />
+            <field name="crm_fundraising" groups="base.group_extended" />
+            <field name="wiki_sale_faq" groups="base.group_extended" />
+            <field name="sale_crm" invisible="1" groups="base.group_extended" />
+            <field name="crm_caldav" />
+            <field name="fetchmail" />
+            <field name="thunderbird" />
+            <field name="outlook" />
           </xpath>
         </data>
       </field>
