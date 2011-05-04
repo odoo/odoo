@@ -57,7 +57,7 @@ var QWeb2 = {
                     dst[p] = src[p];
                 }
             }
-            return dst
+            return dst;
         },
         arrayIndexOf : function(array, item) {
             for (var i = 0, ilen = array.length; i < ilen; i++) {
@@ -116,7 +116,7 @@ var QWeb2 = {
                     for (var i = 0; i < enu; i++) {
                         _enu.push(i);
                     }
-                    this.foreach(content, enu, as, old_dict, callback);
+                    this.foreach(context, enu, as, old_dict, callback);
                 } else {
                     var index = 0;
                     for (var k in enu) {
@@ -128,7 +128,7 @@ var QWeb2 = {
                             new_dict[as_parity] = (j % 2 == 1 ? 'odd' : 'even');
                             new_dict[as] = v;
                             callback(context, new_dict);
-                            index += 1
+                            index += 1;
                         }
                       }
                 }
@@ -191,7 +191,7 @@ QWeb2.Engine = (function() {
                         }
                         return req.responseXML;
                     } else {
-                        return this.load_xml_string(req.responseText)
+                        return this.load_xml_string(req.responseText);
                     }
                 }
             }
@@ -229,8 +229,8 @@ QWeb2.Engine = (function() {
         },
         compile : function(node) {
             var e = new QWeb2.Element(this, node);
-            var template = node.getAttribute(this.prefix + '-name')
-            var r = "(function(dict) {\n" +
+            var template = node.getAttribute(this.prefix + '-name');
+            return "(function(dict) {\n" +
                     "   /* 'this' refers to Qweb2.Engine instance */\n" +
                     "   var context = { engine : this, template : " + (this.tools.js_escape(template)) + " };\n" +
                     "   dict = dict || {};\n" +
@@ -243,7 +243,6 @@ QWeb2.Engine = (function() {
                     "   }\n" +
                     "   return r.join('');\n" +
                     "});";
-            return r;
         },
         render : function(template, dict) {
             //console.time("QWeb render template " + template);
@@ -297,7 +296,7 @@ QWeb2.Element = (function() {
             for (var j = 0, jlen = attrs.length; j < jlen; j++) {
                 var attr = attrs[j];
                 var name = attr.name;
-                var m = name.match("^" + this.engine.prefix + "-(.+)");
+                var m = name.match(new RegExp("^" + this.engine.prefix + "-(.+)"));
                 if (m) {
                     name = m[1];
                     if (name === 'name') {
@@ -375,18 +374,17 @@ QWeb2.Element = (function() {
             r = r.slice(0, -1);
             QWeb2.expressions_cache[e] = r;
             return r;
-            return e;
         },
         string_interpolation : function(s) {
             if (!s) {
               return "''";
             }
             var regex = /^{(.*)}(.*)/,
-                src = s.split(/#/);
+                src = s.split(/#/),
                 r = [];
             for (var i = 0, ilen = src.length; i < ilen; i++) {
                 var val = src[i],
-                    m = val.match(/^{(.*)}(.*)/);
+                    m = val.match(regex);
                 if (m) {
                     r.push("(" + this.format_expression(m[1]) + ")");
                     if (m[2]) {
@@ -432,7 +430,7 @@ QWeb2.Element = (function() {
                 return top.push([this.get_indent(), s]);
             }
         },
-        bottom : function(s, code) {
+        bottom : function(s) {
             return this._bottom.unshift(this.get_indent() + s + '\n');
         },
         bottom_string : function(s) {
@@ -496,7 +494,7 @@ QWeb2.Element = (function() {
             this.indent();
         },
         compile_action_call : function(value) {
-            var _import = this.actions['import'] || ''
+            var _import = this.actions['import'] || '';
             if (this.children.length === 0) {
                 return this.top("r.push(context.engine.tools.call(context, " + (this.engine.tools.js_escape(value)) + ", dict, " + (this.engine.tools.js_escape(_import)) + "));");
             } else {
