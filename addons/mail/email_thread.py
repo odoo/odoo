@@ -92,6 +92,11 @@ class email_thread(osv.osv):
                             references = msg.get('references', False) or msg.get('in-reply-to', False),
                             attach = attachments,
                             email_date = msg.get('date'),
+                            body_html= msg.get('body_html', False),
+                            sub_type = msg.get('sub_type', False),
+                            headers = msg.get('headers', False),
+                            reply = msg.get('reply', False),
+                            priority = msg.get('priority'),
                             context = context)
         return res_id
 
@@ -117,6 +122,11 @@ class email_thread(osv.osv):
                             references = msg.get('references', False) or msg.get('in-reply-to', False),
                             attach = attachments,
                             email_date = msg.get('date'),
+                            body_html= msg.get('body_html', False),
+                            sub_type = msg.get('sub_type', False),
+                            headers = msg.get('headers', False),
+                            reply = msg.get('reply', False),
+                            priority = msg.get('priority'),
                             context = context)
         return True
 
@@ -135,9 +145,11 @@ class email_thread(osv.osv):
             res[thread.id] = l
         return res
 
-    def history(self, cr, uid, threads, keyword, history=False, subject=None, email=False, details=None, \
-                    email_from=False, message_id=False, references=None, attach=None, email_cc=None, \
-                    email_bcc=None, email_date=None, context=None):
+    def history(self, cr, uid, threads, keyword, history=False, subject=None, \
+                details=None, email=False, email_from=False, email_cc=None, \
+                email_bcc=None, reply=None, email_date=None, message_id=False, \
+                references=None, attach=None, body_html=None, sub_type=None, \
+                headers=None, priority=None, context=None):
         """
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
@@ -157,8 +169,6 @@ class email_thread(osv.osv):
             context = {}
         if attach is None:
             attach = {}
-
-
 
         if email_date:
             edate = parsedate(email_date)
@@ -231,6 +241,11 @@ class email_thread(osv.osv):
                     'message_id': message_id,
                     'attachment_ids': [(6, 0, attachments)],
                     'state' : 'received',
+                    'body_html': body_html,
+                    'sub_type': sub_type,
+                    'headers': headers,
+                    'reply_to': reply,
+                    'priority': priority
                 }
             obj.create(cr, uid, data, context=context)
         return True
