@@ -18,8 +18,21 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+import tools
+import pytz
+import time
+from datetime import datetime, timedelta, date
+from dateutil import parser
+import dateutil
 
-def sugarcrm_fields_mapp(dict_sugar, openerp_dict):
+def sugarcrm_fields_mapp(dict_sugar, openerp_dict, context=None):
+    if not context:
+        context = {}
+    if 'tz' in context and context['tz']:
+          time_zone = context['tz']
+    else:
+          time_zone = tools.get_server_timezone()
+    au_tz = pytz.timezone(time_zone)
     fields=[]
     data_lst = []
     for key,val in openerp_dict.items():
@@ -30,6 +43,18 @@ def sugarcrm_fields_mapp(dict_sugar, openerp_dict):
                 if len(val) >= 1 and val[0] == "__prettyprint__":
                     val = val[1:]
                     data_lst.append('\n\n'.join(map(lambda x : x + ": " + dict_sugar.get(x,''), val)))
+                elif val[0] == '__datetime__':
+                    val = val[1]
+                    if dict_sugar.get(val) and len(dict_sugar.get(val))<=10:
+                        updated_dt = date.fromtimestamp(time.mktime(time.strptime(dict_sugar.get(val), '%Y-%m-%d'))) or False
+                    elif  dict_sugar.get(val):
+                        convert_date = datetime.strptime(dict_sugar.get(val), '%Y-%m-%d %H:%M:%S')
+                        edate = convert_date.replace(tzinfo=au_tz)
+                        au_dt = au_tz.normalize(edate.astimezone(au_tz))
+                        updated_dt = datetime(*au_dt.timetuple()[:6]).strftime('%Y-%m-%d %H:%M:%S')
+                    else:
+                        updated_dt = False    
+                    data_lst.append(updated_dt)
                 else:
                     if key == 'duration':
                         data_lst.append('.'.join(map(lambda x : dict_sugar.get(x,''), val)))

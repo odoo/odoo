@@ -70,8 +70,10 @@ def attachment_search(portType, sessionid, module_name, module_id=None):
   se_req._module_name = module_name
   se_resp = portType.get_note_attachment(se_req)
   file = False
+  filename = False
   file = se_resp._return._note_attachment.File
-  return file
+  filename = se_resp._return._note_attachment.Filename
+  return file, filename
 
 def user_get_attendee_list(portType, sessionid, module_name=None, module_id=None):
   se_req = get_attendee_listRequest()

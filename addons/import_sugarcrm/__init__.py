@@ -23,3 +23,4 @@ import import_sugarcrm
 import sugar
 import wizard
 import sugarcrm_fields_mapping
+import import_framework
