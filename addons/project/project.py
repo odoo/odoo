@@ -117,11 +117,9 @@ class project(osv.osv):
         return result.keys()
 
     def unlink(self, cr, uid, ids, *args, **kwargs):
-        analytic_obj = self.pool.get('account.analytic.account')
         for proj in self.browse(cr, uid, ids):
             if proj.tasks:
                 raise osv.except_osv(_('Operation Not Permitted !'), _('You can not delete a project with tasks. I suggest you to deactivate it.'))
-            analytic_obj.unlink(cr, uid, [proj.analytic_account_id.id])
         return super(project, self).unlink(cr, uid, ids, *args, **kwargs)
 
     _columns = {
@@ -790,6 +788,13 @@ class account_analytic_account(osv.osv):
         if vals.get('child_ids', False) and context.get('analytic_project_copy', False):
             vals['child_ids'] = []
         return super(account_analytic_account, self).create(cr, uid, vals, context=context)
+    
+    def unlink(self, cr, uid, ids, *args, **kwargs):
+        project_obj = self.pool.get('project.project')
+        analytic_ids = project_obj.search(cr, uid, [('analytic_account_id','in',ids)])
+        if analytic_ids:
+            raise osv.except_osv(_('Warning !'), _('Please delete the project linked with this account first.'))
+        return super(account_analytic_account, self).unlink(cr, uid, ids, *args, **kwargs)
 
 account_analytic_account()
 
