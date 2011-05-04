@@ -1760,7 +1760,7 @@ class stock_move(osv.osv):
         @return: Move Date
         """
         if not date_expected:
-            date_expected = time.strftime('%Y-%m-%d'),
+            date_expected = time.strftime('%Y-%m-%d %H:%M:%S')
         return {'value':{'date': date_expected}}
 
     def _chain_compute(self, cr, uid, moves, context=None):
