@@ -10,11 +10,9 @@
               <data>
           <xpath expr="//field[@name='product_expiry']" position="after">
             <newline/>
-            <group attrs="{'invisible': [('purchase', '=', False)]}" colspan="4">
-                <separator  string="Purchase Management Details" colspan="4" />
-            </group>
-                <field name="purchase_requisition" attrs="{'invisible': [('purchase', '=', False)]}"/>
-                <field name="purchase_analytic_plans" attrs="{'invisible': [('purchase', '=', False)]}"/>
+            <separator  string="Purchase Management Details" colspan="4" />
+            <field name="purchase_requisition" />
+            <field name="purchase_analytic_plans" />
           </xpath>
               </data>
             </field>
