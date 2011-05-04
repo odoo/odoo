@@ -11,18 +11,16 @@
         <data>
            <xpath expr="//field[@name='product_expiry']" position="after">
             <newline/>
-            <group attrs="{'invisible': [('hr', '=', False)]}" colspan="4">
-                <separator  string="Human Resources Details" colspan="4" />
-            </group>
-                <field name="hr_holidays" attrs="{'invisible':[('hr','=',False)]}"/>
-                <field name="hr_expense" attrs="{'invisible':[('hr','=',False)]}"/>
-                <field name="hr_recruitment" attrs="{'invisible':[('hr','=',False)]}"/>
-                <field name="hr_timesheet_sheet" attrs="{'invisible':[('hr','=',False)]}"/>
-                <field name="hr_contract" attrs="{'invisible':[('hr','=',False)]}"/>
-                <field name="hr_attendance" attrs="{'invisible':[('hr','=',False)]}"/>
-                <field name="hr_evaluation" groups="base.group_extended" attrs="{'invisible':[('hr','=',False)]}"/>
-                <field name="hr_payroll" groups="base.group_extended" attrs="{'invisible':[('hr','=',False)]}"/>
-                <field name="hr_payroll_account" groups="base.group_extended" attrs="{'invisible':[('hr','=',False)]}"/>
+            <separator  string="Human Resources Details" colspan="4" />
+            <field name="hr_holidays"/>
+            <field name="hr_expense" />
+            <field name="hr_recruitment" />
+            <field name="hr_timesheet_sheet" />
+            <field name="hr_contract" />
+            <field name="hr_attendance" />
+            <field name="hr_evaluation" />
+            <field name="hr_payroll" />
+            <field name="hr_payroll_account" groups="base.group_extended" />
            </xpath>
         </data>
       </field>
