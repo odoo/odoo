@@ -53,7 +53,7 @@ var QWeb2 = {
         },
         extend: function(dst, src, exclude) {
             for (var p in src) {
-                if (src.hasOwnProperty(p) && !(exclude && this.arrayIndexOf(exclude, p))) {
+                if (src.hasOwnProperty(p) && !(exclude && this.arrayIndexOf(exclude, p) !== -1)) {
                     dst[p] = src[p];
                 }
             }
