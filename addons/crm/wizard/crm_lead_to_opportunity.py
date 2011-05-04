@@ -65,8 +65,8 @@ class crm_lead2opportunity_partner(osv.osv_memory):
             ids = lead_obj.search(cr, uid, [('partner_id', '=', partner_id), ('type', '=', 'opportunity'), '!', ('state', 'in', ['done', 'cancel'])])
             if ids:
                 opportunities.append(ids[0])
-
-
+                
+                
         if not partner_id:
             label = False
             opp_ids = []
@@ -105,7 +105,7 @@ class crm_lead2opportunity_partner(osv.osv_memory):
 
         for lead in lead_obj.browse(cr, uid, context.get('active_ids', []), context=context):
             if lead.state in ['done', 'cancel']:
-                raise osv.except_osv(_("Warning !"), _("Closed/Cancelled Leads Could not convert into Opportunity"))
+                raise osv.except_osv(_("Warning !"), _("Closed/Cancelled Leads can not be converted into Opportunity"))
         return False
 
     def _convert(self, cr, uid, ids, lead, partner_id, stage_ids, context=None):
@@ -146,7 +146,7 @@ class crm_lead2opportunity_partner(osv.osv_memory):
             return False
         message_pool = self.pool.get('email.message')
         email_from = lead.section_id and lead.section_id.user_id and lead.section_id.user_id.user_email or email_to
-        partner = lead.partner_id and lead.partner_id.name or lead.partner_name
+        partner = lead.partner_id and lead.partner_id.name or lead.partner_name 
         subject = "lead %s converted into opportunity" % lead.name
         body = "Info \n Id : %s \n Subject: %s \n Partner: %s \n Description : %s " % (lead.id, lead.name, lead.partner_id.name, lead.description)
         return message_pool.schedule_with_attach(cr, uid, email_from, [email_to], subject, body)
