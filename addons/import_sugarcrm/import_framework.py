@@ -18,6 +18,13 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+import tools
+import pytz
+import time
+from datetime import datetime, timedelta, date
+from dateutil import parser
+import dateutil
+
 
 MODULE_NAME = 'sugarcrm_import'
 
@@ -68,6 +75,36 @@ def mapped_id_if_exist(sugar_obj, cr, uid, model, domain, xml_id, context=None):
         return mapped_id(obj, cr, uid, model, xml_id, ids[0], context=context)
     return False
 
+def import_module(obj, cr, uid, model, mapping, datas, table, context=None):
+    """
+        @param mapping : definition of the mapping
+                         @see: sugarcrm_fields_mapp
+        @param datas : list of dictionnaries 
+            datas = [data_1, data_2, ..]
+            data_i is a map external field_name => value
+            and each data_i have a external id => in data_id['id']
+    """
+    mapping['id'] = 'id_new'
+    res = []
+    for data in datas:
+        self_dependencies = []
+        for k in data.keys():
+            if '_new' in k:
+                self_dependencies.append(k[:-4])
+        
+        data['id_new'] = generate_xml_id(data['id'], table)
+        fields, values = sugarcrm_fields_mapp(data, mapping, context)
+        res.append(values)
+    
+    model_obj = obj.pool.get(model)
+    model_obj.import_data(cr, uid, fields, res, mode='update', current_module=MODULE_NAME, noupdate=True, context=context)
+    for field in self_dependencies:
+        import_self_dependencies(model_obj, cr, uid, field, datas, context)
+    
+def import_object_mapping(sugar_obj, cr, uid, mapping, data, model, table, name, domain_search=False, context=None):
+    fields, datas = sugarcrm_fields_mapp(data, mapping, context)
+    return import_object(sugar_obj, cr, uid, fields, datas, model, table, name, domain_search, context=context)
+
 def import_object(sugar_obj, cr, uid, fields, data, model, table, name, domain_search=False,  context=None):
     """
         This method will import an object in the openerp, usefull for field that is only a char in sugar and is an object in openerp
@@ -111,6 +148,7 @@ def add_m2o_data(data, fields, column, xml_ids):
     data.append(','.join(xml_ids))    
     return fields, data
 
+#TODO for more then one field that need parent
 def import_self_dependencies(obj, cr, uid, parent_field, datas, context):
     """
         @param parent_field: the name of the field that generate a self_dependencies, we call the object referenced in this
@@ -120,9 +158,9 @@ def import_self_dependencies(obj, cr, uid, parent_field, datas, context):
                 id_new : the xml_id of the object
                 field_new : the xml_id of the parent
     """
-    fields = ['id', parent_field]
+    fields = ['id', parent_field+'/id']
     for data in datas:
-        if data[parent_field + '_new']:
+        if data.get(parent_field + '_new'):
             values = [data['id_new'], data[parent_field + '_new']]
             obj.import_data(cr, uid, fields, [values], mode='update', current_module=MODULE_NAME, noupdate=True, context=context) 
     
@@ -137,3 +175,46 @@ def generate_xml_id(name, table):
     sugar_instance = "sugarcrm" #TODO need to be changed we information is known in the wizard
     name = name.replace('.', '_')
     return sugar_instance + "_" + table + "_" + name
+
+
+
+
+def sugarcrm_fields_mapp(dict_sugar, openerp_dict, context=None):
+    #TODO write documentation
+    if not context:
+        context = {}
+    if 'tz' in context and context['tz']:
+        time_zone = context['tz']
+    else:
+        time_zone = tools.get_server_timezone()
+    au_tz = pytz.timezone(time_zone)
+    fields=[]
+    data_lst = []
+    for key,val in openerp_dict.items():
+        if key not in fields and dict_sugar:
+            fields.append(key)
+            if isinstance(val, list) and val:
+                #Allow to print a bit more pretty way long list of data in the same field
+                if len(val) >= 1 and val[0] == "__prettyprint__":
+                    val = val[1:]
+                    data_lst.append('\n\n'.join(map(lambda x : x + ": " + dict_sugar.get(x,''), val)))
+                elif val[0] == '__datetime__':
+                    val = val[1]
+                    if dict_sugar.get(val) and len(dict_sugar.get(val))<=10:
+                        updated_dt = date.fromtimestamp(time.mktime(time.strptime(dict_sugar.get(val), '%Y-%m-%d'))) or False
+                    elif  dict_sugar.get(val):
+                        convert_date = datetime.strptime(dict_sugar.get(val), '%Y-%m-%d %H:%M:%S')
+                        edate = convert_date.replace(tzinfo=au_tz)
+                        au_dt = au_tz.normalize(edate.astimezone(au_tz))
+                        updated_dt = datetime(*au_dt.timetuple()[:6]).strftime('%Y-%m-%d %H:%M:%S')
+                    else:
+                        updated_dt = False    
+                    data_lst.append(updated_dt)
+                else:
+                    if key == 'duration':
+                        data_lst.append('.'.join(map(lambda x : dict_sugar.get(x,''), val)))
+                    else:
+                        data_lst.append(' '.join(map(lambda x : dict_sugar.get(x,''), val)))
+            else:
+                data_lst.append(dict_sugar.get(val,''))
+    return fields,data_lst
