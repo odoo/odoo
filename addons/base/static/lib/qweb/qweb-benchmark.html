@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html style="height: 100%">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <script type="text/javascript" src="qweb.js"></script>
+    <script type="text/javascript" src="qweb2.js"></script>
+    <script type="text/javascript">
+    var dict = {
+        session : true,
+        testing : 'yes',
+        name : 'AGR'
+    }
+    console.time("Load template with QWeb");
+    QWeb.add_template("qweb-benchmark.xml");
+    console.timeEnd("Load template with QWeb");
+
+    console.time("Load template with QWeb2");
+    var engine = new QWeb2.Engine("qweb-benchmark.xml")
+    console.timeEnd("Load template with QWeb2")
+
+    var iter = 1000;
+    console.log("Rendering...");
+    console.time("Render " + iter + " templates with QWeb");
+    for (var i = 0; i < iter; i++) {
+        var qweb = QWeb.render('benchmark', dict);
+    }
+    console.timeEnd("Render " + iter + " templates with QWeb");
+
+    console.time("Render " + iter + " templates with QWeb2");
+    for (var i = 0; i < iter; i++) {
+        var qweb2 = engine.render('benchmark', dict);
+    }
+    console.timeEnd("Render " + iter + " templates with QWeb2");
+    </script>
+</head>
+
+<body>
+Please, check your console for results
+</body>
+
+</html>
+
