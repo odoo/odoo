@@ -26,8 +26,8 @@ $(document).ready(function () {
             // views loader stuff
             window.openerp.base.data(openerp);
             window.openerp.base.views(openerp);
-            window.openerp.base.form(openerp);
             window.openerp.base.list(openerp);
+            window.openerp.base.form(openerp);
         }
     });
 

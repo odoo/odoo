@@ -40,6 +40,8 @@ openerp.base.ListView = openerp.base.Controller.extend(
      * @param {null|String} [options.addable="New"] should the new-record button be displayed, and what should its label be. Use ``null`` to hide the button.
      * @param {Boolean} [options.sortable=true] is it possible to sort the table by clicking on column headers
      * @param {Boolean} [options.reorderable=true] is it possible to reorder list rows
+     *
+     * @borrows openerp.base.ActionExecutor#execute_action as #execute_action
      */
     init: function(view_manager, session, element_id, dataset, view_id, options) {
         this._super(session, element_id);
@@ -145,20 +147,20 @@ openerp.base.ListView = openerp.base.Controller.extend(
         });
         $table.delegate(
             'td.oe-field-cell button', 'click', function (e) {
+                e.stopImmediatePropagation();
+
                 var $cell = $(e.currentTarget).closest('td');
+
                 var col_index = $cell.prevAll('td').length;
                 var field = self.visible_columns[col_index];
-                var action = field.name;
 
                 var $row = $cell.parent('tr');
                 var row = self.rows[$row.prevAll().length];
 
-                var context = _.extend(
-                        {}, self.dataset.context, field.context || {});
-                self.notification.notify(
-                    '[Dummy] Execute action', self.dataset.model + '#' + action + "([" + row.data.id.value + '])');
-                // TODO: implement actions correctly once the corresponding manager has been extracted (and filled)
-                e.stopImmediatePropagation();
+                // TODO: we should probably only reload content, also maybe diff records or something, instead of replacing every single row
+                self.execute_action(
+                    field, self.dataset, self.session.action_manager,
+                    row.data.id.value, self.do_reload);
             });
         $table.delegate(
                 'td.oe-record-delete button', 'click', this.do_delete);
@@ -393,6 +395,7 @@ openerp.base.ListView = openerp.base.Controller.extend(
     // TODO: implement sort (click on column headers), if sorted, the list can not be reordered anymore
     // TODO: implement reorder (drag and drop rows)
 });
+_.extend(openerp.base.ListView.prototype, openerp.base.ActionExecutor);
 
 openerp.base.TreeView = openerp.base.Controller.extend({
 });
