@@ -123,6 +123,8 @@ openerp.base.ListView = openerp.base.Controller.extend(
         this.visible_columns = _.filter(this.columns, function (column) {
             return column.invisible !== '1';
         });
+
+        if (!this.fields_view.sorted) { this.fields_view.sorted = {}; }
         this.$element.html(QWeb.render("ListView", this));
 
         // Head hook
@@ -135,6 +137,7 @@ openerp.base.ListView = openerp.base.Controller.extend(
 
             self.dataset.sort($(this).data('id'));
 
+            // TODO: should only reload content (and set the right column to a sorted display state)
             self.do_reload();
         });
 

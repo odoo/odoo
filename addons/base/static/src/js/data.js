@@ -197,7 +197,7 @@ openerp.base.DataSetSearch =  openerp.base.DataSet.extend({
                 if (criteria[0] === '-') {
                     return criteria.slice(1) + ' DESC';
                 }
-                return criteria;
+                return criteria + ' ASC';
             }).join(', ');
         }
 

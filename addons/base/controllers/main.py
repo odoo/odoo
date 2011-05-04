@@ -591,6 +591,16 @@ class ListView(View):
                                         domain=domain, sort=sort)
         eval_context = request.session.evaluation_context(
             request.context)
+
+        if sort:
+            sort_criteria = sort.split(',')[0].split(' ')
+            print sort, sort_criteria
+            view['sorted'] = {
+                'field': sort_criteria[0],
+                'reversed': sort_criteria[1] == 'DESC'
+            }
+        else:
+            view['sorted'] = {}
         return {
             'view': view,
             'records': [

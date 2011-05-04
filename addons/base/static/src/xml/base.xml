@@ -181,9 +181,11 @@
         <tr t-if="options.header">
             <th t-if="options.selectable"/>
             <t t-foreach="columns" t-as="column">
-                <th t-if="column.invisible !== '1'" t-att-data-id="column.id">
+                <th t-if="column.invisible !== '1'" t-att-data-id="column.id"
+                    t-att-class="((options.sortable and column.tag !== 'button') ? 'oe-sortable' : null)">
                     <t t-if="column.tag !== 'button'">
                         <t t-esc="column.string"/>
+                        <span t-att-class="(fields_view.sorted.field === column.id) ? ('ui-icon' + (fields_view.sorted.reversed ? ' ui-icon-triangle-1-n' : ' ui-icon-triangle-1-s')) : ''"/>
                     </t>
                 </th>
             </t>
