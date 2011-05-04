@@ -64,6 +64,58 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
 });
 
 /**
+ * Mixin for action-executing objects, provides handling of OpenERP actions to
+ * all clients.
+ *
+ * Mix into existing classes via ``_.extend`` of the class's prototype.
+ *
+ * @class
+ */
+openerp.base.ActionExecutor =
+/**
+ * @lends openerp.base.ActionExecutor#
+ */ {
+    /**
+     * Fetches and executes the action identified by ``action_data``.
+     *
+     * @param {Object} action_data the action descriptor data
+     * @param {String} action_data.name the action name, used to uniquely identify the action to find and execute it
+     * @param {String} [action_data.special=null] special action handlers (currently: only ``'cancel'``)
+     * @param {String} [action_data.type='workflow'] the action type, if present, one of ``'object'``, ``'action'`` or ``'workflow'``
+     * @param {Object} [action_data.context=null] additional action context, to add to the current context
+     * @param {openerp.base.DataSet} dataset a dataset object used to communicate with the server
+     * @param {openerp.base.ActionManager} action_manager object able to actually execute the action, if any is fetched
+     * @param {Number} [record_id] the identifier of the object on which the action is to be applied
+     * @param {Function} on_no_action callback to execute if the action does not generate any result (no new action)
+     */
+    execute_action: function (action_data, dataset, action_manager, record_id, on_no_action) {
+        var handler = function (r) {
+            if (r.result && r.result.constructor == Object) {
+                action_manager.do_action(r.result);
+            } else {
+                on_no_action(r.result);
+            }
+        };
+
+        if (action_data.special) {
+            handler({
+                result : { type: 'ir.actions.act_window_close' }
+            });
+        } else {
+            var context = _.extend({}, dataset.context, action_data.context || {});
+            switch(action_data.type) {
+                case 'object':
+                    return dataset.call(action_data.name, [record_id], [context], handler);
+                case 'action':
+                    return this.rpc('/base/action/load', { action_id: parseInt(action_data.name, 10) }, handler);
+                default:
+                    return dataset.exec_workflow(record_id, action_data.name, handler);
+            }
+        }
+    }
+};
+
+/**
  * Registry for all the main views
  */
 openerp.base.views = new openerp.base.Registry();
