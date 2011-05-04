@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="http://code.jquery.com/qunit/git/qunit.css" type="text/css" media="screen"/>
     <script type="text/javascript" src="http://code.jquery.com/qunit/git/qunit.js"></script>
 
-    <script type="text/javascript" src="qweb.js"></script>
+    <script type="text/javascript" src="qweb2.js"></script>
 
     <script>
         function trim(s) {
@@ -252,19 +252,19 @@
                     "each value of the sequence is also via the _value");
                 equals(QWeb.render('scope-index', {seq:seq}), '01234',
                     "the current 0-based index is available via _index");
-                equals(QWeb.render('scope-first', {seq:seq}), 'true false false false false',
+                equals(QWeb.render('scope-first', {seq:seq}), 'true false false false false ',
                     "_first says whether the current item is the first of the sequence");
-                equals(QWeb.render('scope-last', {seq:seq}), 'false false false false true',
+                equals(QWeb.render('scope-last', {seq:seq}), 'false false false false true ',
                     "_last says whether the current item is the last of the sequence");
-                equals(QWeb.render('scope-parity', {seq:seq}), 'even odd even odd even',
+                equals(QWeb.render('scope-parity', {seq:seq}), 'even odd even odd even ',
                     "the parity (odd/even) of the current row is available via _parity");
-                equals(QWeb.render('scope-size', {seq:seq}), '5 5 5 5 5',
+                equals(QWeb.render('scope-size', {seq:seq}), '5 5 5 5 5 ',
                     "the total length of the sequence is available through _size");
             });
             test('Name aliasing via t-as', function () {
                 equals(QWeb.render('aliasing', {seq:seq}), '43210',
                     "the inner value can be re-bound via t-as");
-                equals(QWeb.render('loopvars-aliasing', {seq:seq}), 'even odd even odd even',
+                equals(QWeb.render('loopvars-aliasing', {seq:seq}), 'even odd even odd even ',
                     "inner loop variables should be rebound as well");
             });
         });
