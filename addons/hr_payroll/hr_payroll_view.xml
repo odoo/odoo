@@ -585,8 +585,8 @@
 
     <act_window domain="[('slip_id', '=', active_id)]" id="act_payslip_lines" name="Payslip Lines" res_model="hr.payslip.line" src_model="hr.payslip"/>
 
-    <record id="hr_payslip_category_filter" model="ir.ui.view">
-        <field name="name">hr.payslip.category.search</field>
+    <record id="hr_payslip_run_filter" model="ir.ui.view">
+        <field name="name">hr.payslip.run.search</field>
         <field name="model">hr.payslip.run</field>
         <field name="type">search</field>
         <field name="arch" type="xml">
@@ -596,8 +596,8 @@
         </field>
     </record>
 
-    <record id="hr_payslip_category_tree" model="ir.ui.view">
-        <field name="name">hr.payslip.category.tree</field>
+    <record id="hr_payslip_run_tree" model="ir.ui.view">
+        <field name="name">hr.payslip.run.tree</field>
         <field name="model">hr.payslip.run</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
@@ -626,14 +626,15 @@
         </field>
     </record>
 
-    <record id="action_hr_payslip_category_tree" model="ir.actions.act_window">
+    <record id="action_hr_payslip_run_tree" model="ir.actions.act_window">
         <field name="name">Payslip Run</field>
         <field name="res_model">hr.payslip.run</field>
         <field name="view_type">form</field>
-        <field name="view_id" ref="hr_payslip_category_tree"/>
-        <field name="search_view_id" ref="hr_payslip_category_filter"/>
+        <field name="view_id" ref="hr_payslip_run_tree"/>
+        <field name="search_view_id" ref="hr_payslip_run_filter"/>
     </record>
-    <menuitem action="action_hr_payslip_category_tree" id="menu_hr_payslip_category" parent="menu_hr_root_payroll"/>
+    <menuitem action="action_hr_payslip_run_tree" id="menu_hr_payslip_run" parent="menu_hr_root_payroll"/>
+
     </data>
 </openerp>
 
