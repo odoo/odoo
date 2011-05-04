@@ -21,12 +21,10 @@
                 <data>
                     <xpath expr="//field[@name='product_expiry']" position="after">
                         <newline/>
-                        <group attrs="{'invisible': [('marketing', '=', False)]}" colspan="4">
-                            <separator  string="Marketing Details" colspan="4" />
-                        </group>
-                        <field name="marketing_campaign" attrs="{'invisible': [('marketing', '=', False)]}"/>
-                        <field name="email_template" attrs="{'invisible': [('marketing', '=', False)]}"/>
-                        <field name="crm_profiling" attrs="{'invisible': [('marketing', '=', False)]}"/>
+                        <separator  string="Marketing Details" colspan="4" />
+                        <field name="marketing_campaign" />
+                        <field name="email_template" />
+                        <field name="crm_profiling" />
                     </xpath>                   
                 </data>
             </field>
