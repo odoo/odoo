@@ -16,6 +16,7 @@
 
     console.time("Load template with QWeb2");
     var engine = new QWeb2.Engine("qweb-benchmark.xml")
+    engine.debug = true;
     console.timeEnd("Load template with QWeb2")
 
     var iter = 1000;

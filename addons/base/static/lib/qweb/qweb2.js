@@ -20,8 +20,8 @@ var QWeb2 = {
             }
             throw prefix + ": " + message;
         },
-        js_escape: function(s) {
-            return "'" + s.replace(/\r?\n/g, "\\n").replace(/'/g, "\\'") + "'";
+        js_escape: function(s, noquotes) {
+            return (noquotes ? '' : "'") + s.replace(/\r?\n/g, "\\n").replace(/'/g, "\\'") + (noquotes ? '' : "'");
         },
         html_escape: function(s, attribute) {
             if (s === null || s === undefined) {
@@ -143,6 +143,7 @@ QWeb2.Engine = (function() {
     function Engine() {
         // TODO: handle prefix at template level : t-prefix="x"
         this.prefix = 't';
+        this.debug = false;
         this.templates_resources = []; // TODO: implement this.reload()
         this.templates = {};
         this.compiled_templates = {};
@@ -312,6 +313,34 @@ QWeb2.Element = (function() {
 
     QWeb2.tools.extend(Element.prototype, {
         compile : function() {
+            var r = [],
+                instring = false,
+                lines = this._compile().split('\n');
+            for (var i = 0, ilen = lines.length; i < ilen; i++) {
+                var m, line = lines[i];
+                if (m = line.match(/^(\s*)\/\/@string=(.*)/)) {
+                    if (instring) {
+                        if (this.engine.debug) {
+                            // Split string lines in indented r.push arguments
+                            r.push((m[2].indexOf("\\n") != -1 ? "',\n\t" + m[1] + "'" : '') + m[2]);
+                        } else {
+                            r.push(m[2]);
+                        }
+                    } else {
+                        r.push(m[1] + "r.push('" + m[2]);
+                        instring = true;
+                    }
+                } else {
+                    if (instring) {
+                        r.push("');\n");
+                    }
+                    instring = false;
+                    r.push(line + '\n');
+                }
+            }
+            return r.join('');
+        },
+        _compile : function() {
             switch (this.node.nodeType) {
               case 3:
               case 4:
@@ -320,15 +349,15 @@ QWeb2.Element = (function() {
               case 1:
                 this.compile_element();
             }
-            var r = this.flatten_output(this._top);
+            var r = this._top.join('');
             if (this.process_children) {
                 for (var i = 0, ilen = this.children.length; i < ilen; i++) {
                     var child = this.children[i];
                     child._indent = this._indent;
-                    r += child.compile();
+                    r += child._compile();
                 }
             }
-            r += this.flatten_output(this._bottom);
+            r += this._bottom.join('');
             return r;
         },
         format_expression : function(e) {
@@ -407,39 +436,17 @@ QWeb2.Element = (function() {
         get_indent : function() {
             return new Array(this._indent + 1).join("\t");
         },
-        flatten_output : function(out) {
-            var r = '';
-            for (var i = 0, ilen = out.length; i < ilen; i++) {
-                var val = out[i];
-                if (val.constructor === Array) {
-                    r += val[0] + "r.push(" + this.engine.tools.js_escape(val[1]) + ");\n";
-                } else {
-                    r += val;
-                }
-            }
-            return r;
-        },
         top : function(s) {
             return this._top.push(this.get_indent() + s + '\n');
         },
         top_string : function(s) {
-            var top = this._top;
-            if (top.length && top[top.length - 1].constructor === Array) {
-                return top[top.length - 1][1] += s;
-            } else {
-                return top.push([this.get_indent(), s]);
-            }
+            return this._top.push(this.get_indent() + "//@string=" + this.engine.tools.js_escape(s, true) + '\n');
         },
         bottom : function(s) {
             return this._bottom.unshift(this.get_indent() + s + '\n');
         },
         bottom_string : function(s) {
-            var bottom = this._bottom;
-            if (bottom.length && bottom[0].constructor === Array) {
-                return bottom[0][1] += s;
-            } else {
-                return bottom.unshift([this.get_indent(), s]);
-            }
+            return this._bottom.unshift(this.get_indent() + "//@string=" + this.engine.tools.js_escape(s, true) + '\n');
         },
         compile_element : function() {
             for (var i = 0, ilen = QWeb2.actions_precedence.length; i < ilen; i++) {
