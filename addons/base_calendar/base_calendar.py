@@ -982,7 +982,7 @@ class calendar_event(osv.osv):
         """
         if context is None:
             context = {}
-        cr.execute('select id from %s where recurrent_uid in %s', (self._table, tuple(ids),))
+        cr.execute('select id from '+self._table+' where recurrent_uid in %s', (tuple(ids),))
         r_ids = map(lambda x: x[0], cr.fetchall())
         self.unlink(cr, uid, r_ids, context=context)
         return True
