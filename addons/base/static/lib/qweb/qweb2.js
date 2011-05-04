@@ -2,7 +2,7 @@
 var QWeb2 = {
     expressions_cache: {},
     reserved_words: 'true,false,NaN,null,undefined,debugger,in,instanceof,new,function,return,this,typeof,eval,Math,RegExp,Array,Object'.split(','),
-    actions_precedence: 'if,foreach,call,set,esc,escf,raw,rawf,js,debug,log'.split(','),
+    actions_precedence: 'foreach,if,call,set,esc,escf,raw,rawf,js,debug,log'.split(','),
     word_replacement: {
         'and': '&&',
         'or': '||',
