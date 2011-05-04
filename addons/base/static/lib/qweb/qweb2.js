@@ -126,7 +126,7 @@ var QWeb2 = {
                             new_dict[as_index] = index;
                             new_dict[as_first] = index === 0;
                             new_dict[as_parity] = (j % 2 == 1 ? 'odd' : 'even');
-                            new_dict[as] = v;
+                            new_dict[as] = k;
                             callback(context, new_dict);
                             index += 1;
                         }
