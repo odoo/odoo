@@ -560,5 +560,3 @@ QWeb2.Element = (function() {
     });
     return Element;
 })();
-
-QWeb = new QWeb2.Engine();
