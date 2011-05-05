@@ -221,16 +221,18 @@ class share_create(osv.osv_memory):
 
     def _setup_action_and_shortcut(self, cr, uid, wizard_data, user_ids, new_users, context=None):
         """Create a shortcut to reach the shared data, as well as the corresponding action, for
-           each user in ``user_ids``, and assign it as their home action."""
+           each user in ``user_ids``, and assign it as their home action.
+           Meant to be overridden for special cases.
+        """
         user_obj = self.pool.get('res.users')
-        menu_action_id = user_obj._get_menu(cr, uid, context=context)
+        values = self._shared_action_def(cr, uid, wizard_data, context=None)
         for user_id in user_ids:
-            values = self._shared_action_def(cr, uid, wizard_data, context=None)
             action_id = self._create_shortcut(cr, user_id, values)
             if new_users:
+                # We do this only for new share users, as existing ones already have their initial home
+                # action. Resetting to the default menu does not work well as the menu is rather empty
+                # and does not contain the shortcuts in most cases.
                 user_obj.write(cr, UID_ROOT, [user_id], {'action_id': action_id})
-            else:
-                user_obj.write(cr, UID_ROOT, [user_id], {'action_id': menu_action_id})
 
     def _get_recursive_relations(self, cr, uid, model, ttypes, relation_fields=None, suffix=None, context=None):
         """Returns list of tuples representing recursive relationships of type ``ttypes`` starting from
