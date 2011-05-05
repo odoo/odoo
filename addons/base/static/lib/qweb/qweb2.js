@@ -20,6 +20,16 @@ var QWeb2 = {
             }
             throw prefix + ": " + message;
         },
+        trim: function(s, mode) {
+            switch (mode) {
+                case "left":
+                    return s.replace(/^\s*/, "");
+                case "right":
+                    return s.replace(/\s*$/, "");
+                default:
+                    return s.replace(/^\s*|\s*$/g, "");
+            }
+        },
         js_escape: function(s, noquotes) {
             return (noquotes ? '' : "'") + s.replace(/\r?\n/g, "\\n").replace(/'/g, "\\'") + (noquotes ? '' : "'");
         },
@@ -177,7 +187,7 @@ QWeb2.Engine = (function() {
         },
         load_xml : function(s) {
             s = s.replace(/^\s*|\s*$/g, '');
-            if (s[0] === '<?xml') {
+            if (this.tools.trim(s)[0] === '<') {
                 return this.load_xml_string(s);
             } else {
                 var req = this.get_xhr();
