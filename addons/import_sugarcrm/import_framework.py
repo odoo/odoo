@@ -31,15 +31,22 @@ MODULE_NAME = 'sugarcrm_import'
 
 DO_NOT_FIND_DOMAIN = [('id', '=', 0)]
 
-
-def find_mapped_id(obj, cr, uid, res_model, xml_id, context=None):
-    return obj.pool.get('ir.model.data')._get_id(cr, uid, MODULE_NAME, xml_id)
-
 def xml_id_exist(obj, cr, uid, table, sugar_id, context=None):
+    if not sugar_id:
+        return False
+    
     xml_id = generate_xml_id(sugar_id, table)
-    id = obj.pool.get('ir.model.data')._get_id(cr, uid, MODULE_NAME, xml_id)
+    id = obj.pool.get('ir.model.data').search(cr, uid, [('name', '=', xml_id), ('module', '=', MODULE_NAME)])
     return id and xml_id or False
 
+def get_mapped_id(obj, cr, uid, table, sugar_id, context=None):
+    if not sugar_id:
+        return False
+    
+    xml_id = generate_xml_id(sugar_id, table)
+    return obj.pool.get('ir.model.data').get_object_reference(cr, uid, MODULE_NAME, xml_id)[1]
+
+    
 def mapped_id(obj, cr, uid, res_model, sugar_id, id, context=None):
     """
         This function create the mapping between an already existing data and the similar data of sugarcrm
@@ -89,16 +96,16 @@ def import_module(obj, cr, uid, model, mapping, datas, table, context=None):
                 self_dependencies.append(k[:-4])
         
         data['id_new'] = generate_xml_id(data['id'], table)
-        fields, values = sugarcrm_fields_mapp(data, mapping, context)
+        fields, values = _sugarcrm_fields_mapp(data, mapping, context)
         res.append(values)
     
     model_obj = obj.pool.get(model)
     model_obj.import_data(cr, uid, fields, res, mode='update', current_module=MODULE_NAME, noupdate=True, context=context)
     for field in self_dependencies:
-        import_self_dependencies(model_obj, cr, uid, field, datas, context)
+        _import_self_dependencies(model_obj, cr, uid, field, datas, context)
     
 def import_object_mapping(sugar_obj, cr, uid, mapping, data, model, table, name, domain_search=False, context=None):
-    fields, datas = sugarcrm_fields_mapp(data, mapping, context)
+    fields, datas = _sugarcrm_fields_mapp(data, mapping, context)
     return import_object(sugar_obj, cr, uid, fields, datas, model, table, name, domain_search, context=context)
 
 def import_object(sugar_obj, cr, uid, fields, data, model, table, name, domain_search=False,  context=None):
@@ -116,8 +123,6 @@ def import_object(sugar_obj, cr, uid, fields, data, model, table, name, domain_s
         
         @return: the xml_id of the ressources
     """
-    if not context:
-        context = {}
     domain_search = not domain_search and [('name', 'ilike', name)] or domain_search
     obj = sugar_obj.pool.get(model)
     xml_id = generate_xml_id(name, table)
@@ -130,7 +135,7 @@ def import_object(sugar_obj, cr, uid, fields, data, model, table, name, domain_s
 
 
 #TODO for more then one field that need parent
-def import_self_dependencies(obj, cr, uid, parent_field, datas, context):
+def _import_self_dependencies(obj, cr, uid, parent_field, datas, context):
     """
         @param parent_field: the name of the field that generate a self_dependencies, we call the object referenced in this
             field the parent of the object
@@ -154,13 +159,12 @@ def generate_xml_id(name, table):
                  To be used to avoid duplication of data that don't have ids
     """
     sugar_instance = "sugarcrm" #TODO need to be changed we information is known in the wizard
-    name = name.replace('.', '_')
+    name = name.replace('.', '_').replace(',', '_')
+    #print "generate xml_id", table, name
     return sugar_instance + "_" + table + "_" + name
 
 
-
-
-def sugarcrm_fields_mapp(dict_sugar, openerp_dict, context=None):
+def _sugarcrm_fields_mapp(dict_sugar, openerp_dict, context=None):
     #TODO write documentation
     if not context:
         context = {}
