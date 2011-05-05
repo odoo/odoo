@@ -209,9 +209,9 @@ class share_create(osv.osv_memory):
         return result
 
     def _shared_action_def(self, cr, uid, wizard_data, context=None):
-         return {
+        return {
             'name': (_('%s (Shared)') % wizard_data.action_id.name)[:64],
-            'domain': wizard_data.domain,
+            'domain': '[]',
             'context': self._cleanup_action_context(wizard_data.action_id.context, uid),
             'res_model': wizard_data.action_id.res_model,
             'view_mode': wizard_data.action_id.view_mode,
