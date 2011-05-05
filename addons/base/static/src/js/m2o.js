@@ -200,7 +200,8 @@ openerp.base.m2o = openerp.base.Controller.extend({
                     }
 
                     if ($selectedRow.find('td').attr('id') == 'create') {
-                        return this.PseudoDialogue();
+                        this.PseudoDialogue();
+                        break;
                     }
 
                     this.setCompletionText($selectedRow, true);
@@ -235,6 +236,7 @@ openerp.base.m2o = openerp.base.Controller.extend({
             }
             if(evt.which == 13 || evt.which == 27 || evt.which == 38 || evt.which == 40)//
                 this.specialKeyPressed = true;
+
         }
 
         if((evt.which == 8 || evt.which == 46)) {
@@ -272,7 +274,16 @@ openerp.base.m2o = openerp.base.Controller.extend({
     setCompletionText: function ($selectedRow, flag) {
         var $cell = $selectedRow.find('td');
         var autoCompleteText = $cell.find('span').text();
+        if ($cell.attr('id') == 'more') {
+            this.element.val('');
+            return;
+        }
+
+        if ($cell.attr('id') == 'create' || !autoCompleteText)
+            return
+
         autoCompleteText = flag ? autoCompleteText : this.lastSearch + '[' + autoCompleteText.substring(this.lastSearch.length) + ']'
+
         this.element.val(autoCompleteText);
         this.element.attr('m2o_id', $cell.attr('data-id'));
         this.lastTextResult = autoCompleteText;
@@ -329,6 +340,7 @@ openerp.base.m2o = openerp.base.Controller.extend({
         parent_element.empty().append($DiaTable);
         parent_element.show();
     },
+
     getOnclick : function(evt) {
         if(evt.currentTarget.id == 'create') {
             var self = this
@@ -340,9 +352,8 @@ openerp.base.m2o = openerp.base.Controller.extend({
             this.on_edit();
         }
 
-        var parent_element = jQuery("#autoCompleteResults_" + this.name);
-        parent_element.empty();
-        parent_element.hide();
+        jQuery("#autoCompleteResults_" + this.name).empty();
+        this.clearResults();
     },
 
     on_edit: function(r) {
