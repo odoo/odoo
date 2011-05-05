@@ -534,8 +534,11 @@
     </div>
 </t>
 <t t-name="ViewManager.sidebar.internal">
-    <t t-set="the_condition" t-value="sections.length &gt; 0 &amp;&amp; _.detect(sections, function(x)
-        {return x.elements.length &gt; 0;}) != undefined"/>
+    <t t-js="d">
+        d.the_condition = d.sections.length &gt; 0 &amp;&amp; d._.detect(d.sections, function(x) {
+            return x.elements.length &gt; 0;
+        }) != undefined
+    </t>
     <t t-if="the_condition">
         <a class="toggle-sidebar"></a>
         <div t-att-id="element_id" class="sidebar-sub-div">
@@ -564,6 +567,11 @@
             <span class="ui-icon ui-icon-circle-check" style="float:left; margin:0 7px 50px 0;"></span>
             <t t-esc="message"/>
         </p>
+    </div>
+</t>
+<t t-name="Many2XSelectPopup">
+    <div id="element_id">
+        Brian is in the kitchen.
     </div>
 </t>
 </templates>

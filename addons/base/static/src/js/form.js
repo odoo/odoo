@@ -530,34 +530,19 @@ openerp.base.form.WidgetButton = openerp.base.form.Widget.extend({
         }
     },
     on_confirmed: function() {
-        var attrs = this.node.attrs;
-        if (attrs.special) {
-            this.on_button_action({
-                result : { type: 'ir.actions.act_window_close' }
+        var self = this;
+
+        this.execute_action(
+            this.node.attrs, this.view.dataset, this.session.action_manager,
+            this.view.datarecord.id, function (result) {
+                self.log("Button returned", result);
+                self.view.reload();
             });
-        } else {
-            var type = attrs.type || 'workflow';
-            var context = _.extend({}, this.view.dataset.context, attrs.context || {});
-            switch(type) {
-                case 'object':
-                    return this.view.dataset.call(attrs.name, [this.view.datarecord.id], [context], this.on_button_action);
-                case 'action':
-                    return this.rpc('/base/action/load', { action_id: parseInt(attrs.name) }, this.on_button_action);
-                default:
-                    return this.view.dataset.exec_workflow(this.view.datarecord.id, attrs.name, this.on_button_action);
-            }
-        }
-    },
-    on_button_action: function(r) {
-        console.log("Got reesonse button", r)
-        if (r.result && r.result.constructor == Object) {
-            this.session.action_manager.do_action(r.result);
-        } else {
-            this.log("Button returned", r.result);
-            this.view.reload();
-        }
     }
 });
+// let WidgetButton execute actions
+_.extend(openerp.base.form.WidgetButton.prototype,
+         openerp.base.ActionExecutor);
 
 openerp.base.form.WidgetLabel = openerp.base.form.Widget.extend({
     init: function(view, node) {
@@ -969,7 +954,9 @@ openerp.base.form.Many2ManyListView = openerp.base.ListView.extend({
     },
     do_add_record: function (e) {
         e.stopImmediatePropagation();
-        // TODO: need to open a popup with search view
+        debugger;
+        var pop = new openerp.base.form.Many2XSelectPopup(null, this.m2m_field.view.session);
+        pop.select_element(null,null);
     },
     on_select_row: function(event) {
         var $target = $(event.currentTarget);
@@ -988,6 +975,20 @@ openerp.base.form.Many2ManyListView = openerp.base.ListView.extend({
             "view_mode":"form",
             "target":"new"
         });
+    }
+});
+
+openerp.base.form.Many2XSelectPopup = openerp.base.BaseWidget.extend({
+    identifier_prefix: "many2xselectpopup",
+    template: "Many2XSelectPopup",
+    select_element: function(model, callback) {
+        this.model = model;
+        this.callback = callback;
+        var html = this.render();
+        jQuery(html).dialog({title: '',
+                    modal: true,
+                    minWidth: 800});
+        this.start();
     }
 });
 

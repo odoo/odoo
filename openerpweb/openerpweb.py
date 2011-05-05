@@ -16,7 +16,6 @@ import cherrypy.lib.static
 import simplejson
 
 import nonliterals
-import xmlrpctimeout
 import logging
 
 #-----------------------------------------------------------
@@ -93,7 +92,7 @@ class OpenERPSession(object):
         self.client_timezone = False
 
     def proxy(self, service):
-        s = xmlrpctimeout.TimeoutServerProxy('http://%s:%s/xmlrpc/%s' % (self._server, self._port, service), timeout=5)
+        s = xmlrpclib.ServerProxy('http://%s:%s/xmlrpc/%s' % (self._server, self._port, service))
         return s
 
     def bind(self, db, uid, password):
