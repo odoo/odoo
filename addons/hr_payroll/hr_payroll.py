@@ -612,11 +612,11 @@ class hr_payslip(osv.osv):
             res['value'].update({'struct_id': False})
         return self.onchange_employee_id(cr, uid, ids, date_from=date_from, date_to=date_to, employee_id=employee_id, contract_id=contract_id, context=context)
 
-    def payslip_sum(self, cr, uid, code, from_date, to_date=datetime.now().strftime('%Y-%m-%d'), employee, context=None):
+    def payslip_sum(self, cr, uid, code, from_date, to_date=datetime.now().strftime('%Y-%m-%d'), employee=False, context=None):
         if context is None:
             context = {}
         if not employee:
-            employee = 0
+            return 0
         cr.execute("SELECT sum(pl.total) \
                     FROM hr_payslip as hp, hr_payslip_line as pl \
                     WHERE hp.employee_id = %s AND hp.state in ('confirm','done') \
@@ -625,12 +625,12 @@ class hr_payslip(osv.osv):
         res = cr.fetchone()
         return res and res[0] or 0.0
     
-    def worked_days_sum(self, cr, uid, code, field, from_date, to_date=datetime.now().strftime('%Y-%m-%d'), employee, context=None):
+    def worked_days_sum(self, cr, uid, code, field, from_date, to_date=datetime.now().strftime('%Y-%m-%d'), employee=False, context=None):
         payslip_input_obj = self.pool.get('hr.payslip.input')
         if context is None:
             context = {}
         if not employee:
-            employee = 0
+            return 0
         result = 0.0
         cr.execute("SELECT pi.id \
                     FROM hr_payslip as hp, hr_payslip_input as pi \
