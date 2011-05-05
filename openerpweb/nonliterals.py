@@ -80,10 +80,6 @@ class Domain(object):
     def get_domain_string(self):
         """ Retrieves the domain string linked to this non-literal domain in
         the provided session.
-
-        :param session: the OpenERP Session used to store the domain string in
-                        the first place.
-        :type session: openerpweb.openerpweb.OpenERPSession
         """
         return self.session.domains_store[self.key]
 
@@ -129,10 +125,6 @@ class Context(object):
     def get_context_string(self):
         """ Retrieves the context string linked to this non-literal context in
         the provided session.
-
-        :param session: the OpenERP Session used to store the context string in
-                        the first place.
-        :type session: openerpweb.openerpweb.OpenERPSession
         """
         return self.session.contexts_store[self.key]
 
