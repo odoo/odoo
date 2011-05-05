@@ -158,7 +158,7 @@ class share_create(osv.osv_memory):
         user_obj = self.pool.get('res.users')
         values = {
             'name': (_('%s (Shared)') % wizard_data.action_id.name)[:64],
-            'domain': wizard_data.domain,
+            'domain': '[]',
             'context': wizard_data.action_id.context,
             'res_model': wizard_data.action_id.res_model,
             'view_mode': wizard_data.action_id.view_mode,
