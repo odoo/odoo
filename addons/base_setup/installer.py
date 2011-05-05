@@ -230,6 +230,15 @@ class user_preferences_config(osv.osv_memory):
                'context_lang' : 'en_US',
                'menu_tips' : True
     }
+    
+    def default_get(self, cr, uid, fields, context=None):
+        if context is None:
+            context = {}
+        res = super(user_preferences_config, self).default_get(cr, uid, fields, context=context)
+        res_default = self.pool.get('ir.values').get(cr, uid, 'default', False, ['res.users'])
+        for val in range(len(res_default)):
+            res.update({res_default[val][1]:res_default[val][2]})
+        return res    
 
     def execute(self, cr, uid, ids, context=None):
         for o in self.browse(cr, uid, ids, context=context):
