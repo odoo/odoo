@@ -65,7 +65,7 @@ class partner_vat_13(osv.osv_memory):
                     break
             if not go_ahead:
                 continue
-            cursor.execute('select b.code, sum(credit)-sum(debit) from account_move_line l left join account_account a on (l.account_id=a.id) left join account_account_type b on (a.user_type=b.id) where b.code IN %s and l.partner_id=%s and l.period_id IN %s group by b.code',(('income','tax_out'),obj_partner.id,tuple(period),))
+            cursor.execute('select b.code, sum(credit)-sum(debit) from account_move_line l left join account_account a on (l.account_id=a.id) left join account_account_type b on (a.user_type=b.id) where b.code IN %s and l.partner_id=%s and l.period_id IN %s group by b.code',(('income','produit','tax'),obj_partner.id,tuple(period),))
             line_info = cursor.fetchall()
             if not line_info:
                 continue
@@ -79,7 +79,7 @@ class partner_vat_13(osv.osv_memory):
             record['turnover'] = 0
             record['name'] = obj_partner.name
             for item in line_info:
-                if item[0] == 'income':
+                if item[0] in ('income','produit'):
                     record['turnover'] += item[1]
                 else:
                     record['amount'] += item[1]
