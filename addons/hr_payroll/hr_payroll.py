@@ -625,6 +625,27 @@ class hr_payslip(osv.osv):
         res = cr.fetchone()
         return res and res[0] or 0.0
     
+    def worked_days_sum(self, cr, uid, code, field, from_date, to_date=datetime.now().strftime('%Y-%m-%d'), employee, context=None):
+        payslip_input_obj = self.pool.get('hr.payslip.input')
+        if context is None:
+            context = {}
+        if not employee:
+            employee = 0
+        result = 0.0
+        cr.execute("SELECT pi.id \
+                    FROM hr_payslip as hp, hr_payslip_input as pi \
+                    WHERE hp.employee_id = %s AND hp.state in ('confirm','done') \
+                    AND hp.date_from >= %s AND hp.date_to <= %s AND hp.id = pi.payslip_id AND pi.code = %s",
+                   (employee, from_date, to_date, code))
+        res = cr.fetchall()
+        for r in res:
+            input_line = payslip_input_obj.browse(cr, uid, r[0], context=context)
+            if field == 'number_of_days':
+                result +=  input_line.number_of_days
+            elif field == 'number_of_hours':
+                result +=  input_line.number_of_hours
+        return result
+    
 hr_payslip()
 
 class hr_payslip_input(osv.osv):
