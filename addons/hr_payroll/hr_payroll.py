@@ -658,7 +658,6 @@ class hr_payslip_input(osv.osv):
         if not employee:
             return 0.0
         result = 0.0
-        input_ids = []
         cr.execute("SELECT pi.id \
                     FROM hr_payslip as hp, hr_payslip_input as pi \
                     WHERE hp.employee_id = %s AND hp.state in ('confirm','done') \
@@ -666,7 +665,7 @@ class hr_payslip_input(osv.osv):
                    (employee, from_date, to_date, code))
         res = cr.fetchall()
         input_ids = [r[0] for r in res]
-        input_lines = self.read(cr, uid, input_ids, [field],context=context)
+        input_lines = self.read(cr, uid, input_ids, [field], context=context)
         for dict in input_lines:
            result += dict.get(field)
         return result
