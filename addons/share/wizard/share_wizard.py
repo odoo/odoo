@@ -271,21 +271,21 @@ class share_create(osv.osv_memory):
         user_obj = self.pool.get('res.users')
         rule_obj = self.pool.get('ir.rule')
         current_user = user_obj.browse(cr, uid, uid, context=context)
-        completed_models = set()
+        rules_done = set()
         for group in current_user.groups_id:
             for dummy, model in fields_relations:
-                if model.id in completed_models:
-                    continue
-                completed_models.add(model.id)
                 for rule in group.rule_groups:
-                    if rule.model_id == model.id:
+                    if rule.id in rules_done:
+                        continue
+                    rules_done.add(rule.id)
+                    if rule.model_id.id == model.id:
                         if 'user.' in rule.domain_force:
                             # Above pattern means there is likely a condition
                             # specific to current user, so we must copy the rule using
                             # the evaluated version of the domain.
                             # And it's better to copy one time too much than too few
                             rule_obj.copy(cr, 1, rule.id, default={
-                                'name': '%s (%s)' %(rule.name, _('(Copy for sharing)')),
+                                'name': '%s %s' %(rule.name, _('(Copy for sharing)')),
                                 'groups': [(6,0,[group_id])],
                                 'domain_force': rule.domain, # evaluated version!
                             })
