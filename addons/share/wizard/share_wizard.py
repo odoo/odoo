@@ -33,6 +33,9 @@ READ_WRITE_ACCESS = ('perm_read', 'perm_write')
 READ_ONLY_ACCESS = ('perm_read',)
 UID_ROOT = 1
 
+# Pseudo-domain to represent an empty filter, constructed using
+# osv.expression's DUMMY_LEAF
+DOMAIN_ALL = [(1, '=', 1)]
 
 RANDOM_PASS_CHARACTERS = [chr(x) for x in range(48, 58) + range(97, 123) + range(65, 91)]
 RANDOM_PASS_CHARACTERS.remove('l') #lowercase l, easily mistaken as one or capital i
@@ -171,7 +174,7 @@ class share_create(osv.osv_memory):
                      'icon': 'STOCK_JUSTIFY_FILL'}
         menu_obj = self.pool.get('ir.ui.menu')
         menu_id =  menu_obj.create(cr, UID_ROOT, menu_data)
-        sc_data= {'name': values['name'], 'sequence': UID_ROOT,'res_id': menu_id }
+        sc_data = {'name': values['name'], 'sequence': UID_ROOT,'res_id': menu_id }
         sc_menu_id = self.pool.get('ir.ui.view_sc').create(cr, uid, sc_data, new_context)
 
         # update menu cache
@@ -579,8 +582,9 @@ class share_create(osv.osv_memory):
             #     to uid, and it must be replaced correctly)
 
             # A.
+            main_domain = wizard_data.domain if wizard_data.domain != '[]' else DOMAIN_ALL
             self._create_or_combine_sharing_rule(cr, current_user, wizard_data,
-                         group_id, model_id=model.id, domain=wizard_data.domain,
+                         group_id, model_id=model.id, domain=main_domain,
                          context=context)
             # B.
             self._create_indirect_sharing_rules(cr, current_user, wizard_data, group_id, obj1, context=context)
