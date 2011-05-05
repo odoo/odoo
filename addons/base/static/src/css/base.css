@@ -1,8 +1,8 @@
-/* TODO: seperate openerp webclient page css from openerp views css */
+/* TODO: separate openerp web client page css from openerp views css */
 body {
     padding: 0;
     margin: 0;
-    font-family: helvetica, sans, arial;
+    font-family: helvetica, arial, sans-serif;
     font-size: 80%;
 }
 
@@ -85,7 +85,7 @@ body.openerp {
 
 /* Menu */
 .openerp .sf-menu {
-    margin-bottom: 0px;
+    margin-bottom: 0;
 }
 /*
 .sf-menu a {
@@ -169,10 +169,9 @@ body.openerp {
     border: none;
 }
 .openerp .secondary_menu h4 {
-    padding: 0 0 2px;
+    padding: 0 0 2px 10px;
     border: none;
     background: none;
-    padding-left: 10px;
 }
 .openerp .secondary_menu h3 span, .openerp .secondary_menu h4 span {
     left: 0 !important;
@@ -224,10 +223,9 @@ body.openerp {
     margin-right: 10px;
     line-height: 63px;
     text-align: center;
-    border-bottom: 1px solid black;
-    border-right: 1px solid black;
-    border-top: 1px solid white;
-    border-left: 1px solid white;
+    border: 1px solid white;
+    border-right-color: black;
+    border-bottom-color: black;
     background: #FFFFFF;
     background: -moz-linear-gradient(top, #FFFFFF 0%, #CECECE 100%);
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#FFFFFF), color-stop(100%,#CECECE));
@@ -301,7 +299,6 @@ body.openerp {
     right: 0;
     top: 5px;
     padding: 1px 4px 2px;
-    background: #333;
     background: rgba(0, 0, 0, 0.75);
     border-radius: 7px;
     -moz-border-radius: 7px;
@@ -316,9 +313,9 @@ body.openerp {
     overflow: hidden;
     padding: 5px 0;
     position: relative;
-    -moz-box-shadow: inset 0px 3px 5px rgba(0, 0, 0, 0.4);
-    -webkit-box-shadow: inset 0px 3px 5px rgba(0, 0, 0, 0.4);
-    box-shadow: inset 0px 3px 5px rgba(0, 0, 0, 0.4);
+    -moz-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.4);
+    -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.4);
+    box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.4);
 }
 .openerp div.oe_footer p.oe_footer_powered {
     left: 50%;
@@ -337,7 +334,7 @@ body.openerp {
 
 /* Main Application */
 .openerp .oe-application {
-    padding: 0px;
+    padding: 0;
     height: 100%;
 }
 
@@ -380,7 +377,7 @@ body.openerp {
     background: #AAAAAA;
 }
 .openerp .filter_icon {
-    padding: 1px 2px 0px 2px;
+    padding: 1px 2px 0 2px;
     margin-left: 0;
     margin-right: 0;
 }
@@ -544,17 +541,17 @@ body.openerp {
 
 /* Notebook */
 .openerp .oe_form_notebook {
-    padding: 0px;
+    padding: 0;
     background: none;
-    border-width: 0px;
+    border-width: 0;
 }
 .openerp .oe_form_notebook ul.ui-tabs-nav {
-    padding-left: 0px;
+    padding-left: 0;
     background: transparent;
-    border-width: 0px 0px 1px 0px;
-    border-radius: 0px;
-    -moz-border-radius: 0px;
-    -webkit-border-radius: 0px;
+    border-width: 0 0 1px 0;
+    border-radius: 0;
+    -moz-border-radius: 0;
+    -webkit-border-radius: 0;
     line-height: 0.5em;
 }
 .openerp .oe_form_notebook ul.ui-tabs-nav li {
@@ -562,7 +559,7 @@ body.openerp {
 }
 .openerp .oe_form_notebook .ui-tabs-panel {
     background: #f9f9f9;
-    border-width: 0px 1px 1px 1px;
+    border-width: 0 1px 1px 1px;
 }
 .openerp .oe_form_notebook .ui-tabs-selected {
     background: #f9f9f9;
@@ -571,7 +568,7 @@ body.openerp {
 /* Form */
 .openerp table.oe_frame td {
     color: #4c4c4c;
-    font-weight: 80%;
+    font-weight: bold;
 }
 .openerp .required.error {
     border: 1px solid #900;
@@ -700,9 +697,7 @@ body.openerp {
     padding:0;
     margin:0;
     width:180px;
-    border-left-color: #D2CFCF;
-    border-left-style: solid;
-    border-left-width: 1px;
+    border-left: 1px solid #D2CFCF;
     height:100%;
     font-family: Ubuntu, Helvetica, sans-serif;
     font-size: 0.9em;
@@ -730,17 +725,14 @@ body.openerp {
     font-family: Ubuntu, Helvetica, sans-serif;
     font-size: 1.15em;
     color: #8E8E8E;
-    text-shadow: white 0px 1px 0px;
+    text-shadow: white 0 1px 0;
     padding-left: 10px;
     padding-right: 21px;
     height: 21px;
     background: url(../img/sideheader-a-bg.png) repeat-x;
-    border-color: #D2CFCF;
-    border-style: solid;
-    border-top-width: 1px;
-    border-bottom-width: 1px;
-    border-left-width: 0;
+    border: 1px solid #D2CFCF;
     border-right-width: 0;
+    border-left-width: 0;
 }
 
 .openerp .view-manager-main-sidebar ul {
@@ -757,9 +749,7 @@ body.openerp {
 
 .openerp .toggle-sidebar {
     cursor: pointer;
-    border-color: #D2CFCF;
-    border-style: solid;
-    border-width: 1px;
+    border: 1px solid #D2CFCF;
     display: block;
     background: url(../img/toggle-a-bg.png);
     width: 21px;
