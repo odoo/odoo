@@ -817,6 +817,12 @@ openerp.base.form.FieldMany2OneDatasSet = openerp.base.DataSetStatic.extend({
     },
 });
 
+openerp.base.form.FieldMany2OneViewManager = openerp.base.ViewManager.extend({
+    init: function(session, element_id, dataset, views) {
+        this._super(session, element_id, dataset, views);
+    }
+});
+
 openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
     init: function(view, node) {
         this._super(view, node);
@@ -826,7 +832,9 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
     start: function() {
         this.$element = $('#' + this.element_id);
         this.dataset = new openerp.base.form.FieldMany2OneDatasSet(this.session, this.field.relation);
-        new openerp.base.m2o(this.$element, this.field.relation, this.dataset, this.session)
+        var views = [ [false,"list"], [false,"form"] ];
+        this.viewmanager = new openerp.base.form.FieldMany2OneViewManager(this.view.session, this.element_id, this.dataset, views);
+        new openerp.base.m2o(this.viewmanager, this.$element, this.field.relation, this.dataset, this.session)
         this.$element.find('input').change(this.on_ui_change);
     },
     set_value: function(value) {

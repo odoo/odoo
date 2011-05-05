@@ -89,12 +89,12 @@ openerp.base.DataSet =  openerp.base.Controller.extend( /** @lends openerp.base.
             context: this.context
         }, callback);
     },
-    create: function(data, callback) {
+    create: function(data, callback, error_callback) {
         return this.rpc('/base/dataset/create', {
             model: this.model,
             data: data,
             context: this.context
-        }, callback);
+        }, callback, error_callback);
     },
     write: function (id, data, callback) {
         return this.rpc('/base/dataset/save', {

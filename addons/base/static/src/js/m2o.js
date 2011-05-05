@@ -1,9 +1,10 @@
 openerp.base.m2o = function(openerp) {
 
 openerp.base.m2o = openerp.base.Controller.extend({
-    init: function(element_id, model, dataset, session) {
+    init: function(view_manager, element_id, model, dataset, session) {
         this._super(element_id, model, dataset, session);
 
+        this.view_manager = view_manager
         this.session = session;
         this.element =  element_id.find('input');
         this.relation = model;
@@ -34,7 +35,7 @@ openerp.base.m2o = openerp.base.Controller.extend({
         if(!this.relation) {
             return;
         }
-        var self = this
+        var self = this;
         this.dataset.name_search(this.element.val(),  function(response) {
             var res = response.result[0];
             self.element.val(res[1]);
@@ -133,8 +134,6 @@ openerp.base.m2o = openerp.base.Controller.extend({
             $resultsHolder.empty().append($fancyTable);
             this.updateSelectedResult();
             $resultsHolder.show();
-        } else {
-            $resultsHolder.hide();
         }
         return true;
     },
@@ -199,9 +198,11 @@ openerp.base.m2o = openerp.base.Controller.extend({
                         event_list.start();
                         event_list.do_reload();
                     }
-                    if ($selectedRow.find('td').attr('id') == 'create') {
 
+                    if ($selectedRow.find('td').attr('id') == 'create') {
+                        return this.PseudoDialogue();
                     }
+
                     this.setCompletionText($selectedRow, true);
                     this.clearResults();
                     break;
@@ -270,10 +271,6 @@ openerp.base.m2o = openerp.base.Controller.extend({
 
     setCompletionText: function ($selectedRow, flag) {
         var $cell = $selectedRow.find('td');
-        if ($cell.attr('id')) {
-            this.element.val('');
-            return;
-        }
         var autoCompleteText = $cell.find('span').text();
         autoCompleteText = flag ? autoCompleteText : this.lastSearch + '[' + autoCompleteText.substring(this.lastSearch.length) + ']'
         this.element.val(autoCompleteText);
@@ -288,6 +285,81 @@ openerp.base.m2o = openerp.base.Controller.extend({
         this.selectedResultRow = 0;
         this.numResultRows = 0;
         this.lastSearch = null;
+    },
+
+    PseudoDialogue: function(){
+        var parent_element = jQuery("#autoCompleteResults_" + this.name);
+        var $DiaTable = jQuery('<table>', {
+                                "name": "create_m2o" + this.name,
+                                "id": "create_m2o" + this.name});
+        var $tbl = jQuery('<tbody>').appendTo($DiaTable);
+        var onClick = jQuery.proxy(this, 'getOnclick');
+
+        jQuery('<tr>').append(
+            jQuery('<td>').append(
+                jQuery('<span>', {
+                            'style':'text-transform:none; white-space: nowrap',
+                            'title': 'Name',
+                            'text': 'Name :'}).after(
+                jQuery('<input>', {
+                            'id': 'm2o_' + this.name,
+                            'type': 'text',
+                            'val':this.element.val()})))).after(
+        jQuery('<tr>', {'class':'create_m2o'}).append(
+            jQuery('<td>').append(
+                jQuery('<a>',{
+                    'id':'create',
+                    'text':'Create',
+                    'href':'javascript: void(0)',
+                    'click': onClick,
+                    'class':'a_m2o'}, 'EDIT')).append(
+                jQuery('<a>',{
+                    'id':'edit',
+                    'href':'javascript: void(0)',
+                    'click':onClick,
+                    'text':'Edit',
+                    'class':'a_m2o'})).append(
+                jQuery('<a>',{
+                    'id':'close',
+                    'text':'Close',
+                    'href':'javascript: void(0)',
+                    'click':onClick,
+                    'class':'a_m2o'})))).appendTo($tbl);
+
+        parent_element.empty().append($DiaTable);
+        parent_element.show();
+    },
+    getOnclick : function(evt) {
+        if(evt.currentTarget.id == 'create') {
+            var self = this
+            this.dataset.create({'name': this.element.val()},
+                            function(r){}, function(r){self.on_edit(r)});
+        }
+
+        if(evt.currentTarget.id == 'edit') {
+            this.on_edit();
+        }
+
+        var parent_element = jQuery("#autoCompleteResults_" + this.name);
+        parent_element.empty();
+        parent_element.hide();
+    },
+
+    on_edit: function(r) {
+        var element_id = _.uniqueId("act_window_dialog");
+        var dialog = jQuery('<div>',
+                            {'id': element_id
+                            }).dialog({title: 'test',
+                                        modal: true,
+                                        minWidth: 800,
+                                        buttons: {
+                                            Cancel: function() {
+                                                $(this).dialog("close");
+                                            }
+                                        }
+                                     });
+        var event_form = new openerp.base.FormView(this.view_manager, this.session, element_id, this.dataset, false);
+        event_form.start();
     },
     })
 }
