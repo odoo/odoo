@@ -31,6 +31,9 @@ from tools.safe_eval import safe_eval
 FULL_ACCESS = ('perm_read', 'perm_write', 'perm_create', 'perm_unlink')
 READ_ONLY_ACCESS = ('perm_read',)
 
+# Pseudo-domain to represent an empty filter, constructed using
+# osv.expression's DUMMY_LEAF
+DOMAIN_ALL = [(1, '=', 1)]
 
 RANDOM_PASS_CHARACTERS = [chr(x) for x in range(48, 58) + range(97, 123) + range(65, 91)]
 RANDOM_PASS_CHARACTERS.remove('l') #lowercase l, easily mistaken as one or capital i
@@ -427,11 +430,12 @@ class share_create(osv.osv_memory):
         #     to uid, and it must be replaced correctly)
         rule_obj = self.pool.get('ir.rule')
         # A.
+        main_domain = wizard_data.domain if wizard_data.domain != '[]' else DOMAIN_ALL
         rule_obj.create(cr, 1, {
             'name': _('Sharing filter created by user %s (%s) for group %s') % \
                         (current_user.name, current_user.login, group_id),
             'model_id': model.id,
-            'domain_force': wizard_data.domain,
+            'domain_force': main_domain,
             'groups': [(4,group_id)]
             })
         # B.
