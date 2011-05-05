@@ -50,6 +50,18 @@ class share_create(osv.osv_memory):
     _name = 'share.wizard'
     _description = 'Share Wizard'
 
+    def has_group(self, cr, uid, module, group_xml_id, context=None):
+        """Returns True if current user is a member of the group identified by the module, group_xml_id pair."""
+        # if the group was deleted or does not exist, we say NO (better safe than sorry)
+        try:
+            model, group_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, module, group_xml_id)
+        except ValueError:
+            return False
+        return group_id in self.pool.get('res.users').read(cr, uid, uid, ['groups_id'], context=context)['groups_id']
+
+    def has_share(self, cr, uid, context=None):
+        return self.has_group(cr, uid, module='share', group_xml_id='group_share_user', context=context)
+
     _columns = {
         'action_id': fields.many2one('ir.actions.act_window', 'Action to share', required=True,
                 help="The action that opens the screen containing the data you wish to share."),
