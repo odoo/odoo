@@ -33,7 +33,9 @@ class ShareActionEditor(openobject.templating.TemplateEditor):
                                            domain: jQuery("#_terp_domain").val(),
                                            view_id: jQuery("#_terp_view_id").val(),
                                            action_id: jQuery("#_terp_action_id").val(),
-                                           search_domain: jQuery("#_terp_search_domain").val(),
+                                           search_domain: jQuery("#_terp_view_type").val() == "form" ? 
+                                                                  ("[('id','=',"+jQuery("#_terp_id").val()+")]") : 
+                                                                     jQuery("#_terp_search_domain").val(),
                                    }));
                                });
                            });
