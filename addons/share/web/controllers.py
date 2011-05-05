@@ -13,7 +13,7 @@ class ShareWizardController(openerp.controllers.SecuredController):
     _cp_path = "/share"
 
     @expose()
-    def index(self, domain, search_domain, context, view_id, action_id=None):
+    def index(self, domain, context, view_id, search_domain='[]', action_id=None):
         context = ast.literal_eval(context)
 
         if not action_id:
