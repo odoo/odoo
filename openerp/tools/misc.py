@@ -159,7 +159,7 @@ def exec_pg_command(name, *args):
     if not prog:
         raise Exception('Couldn\'t find %s' % name)
     args2 = (prog,) + args
-    
+
     return subprocess.call(args2)
 
 def exec_pg_command_pipe(name, *args):
@@ -1283,6 +1283,9 @@ def detect_server_timezone():
 
 def get_server_timezone():
     # timezone detection is safe in multithread, so lazy init is ok here
+    if config['timezone'] and  \
+        not isinstance(config['timezone'], basestring):
+      return 'UTC'
     if (not config['timezone']):
         config['timezone'] = detect_server_timezone()
     return config['timezone']
