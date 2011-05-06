@@ -623,10 +623,10 @@ class hr_payslip(osv.osv):
                     FROM hr_payslip as hp, hr_payslip_line as pl \
                     WHERE hp.employee_id = %s AND hp.state in ('confirm','done') \
                     AND hp.date_from >= %s AND hp.date_to <= %s AND hp.id = pl.slip_id AND pl.code = %s",
-                   (employee, from_date, to_date, code ))
+                   (employee, from_date, to_date, code))
         res = cr.fetchone()
         return res and res[0] or 0.0
-    
+
 hr_payslip()
 
 class hr_payslip_input(osv.osv):
@@ -649,7 +649,7 @@ class hr_payslip_input(osv.osv):
     _defaults = {
         'sequence': 10,
     }
-    
+
     def sum(self, cr, uid, code, field, from_date, to_date=None, employee=False, context=None):
         if not employee:
             return 0.0
@@ -663,13 +663,12 @@ class hr_payslip_input(osv.osv):
                     WHERE hp.employee_id = %s AND hp.state in ('confirm','done') \
                     AND hp.date_from >= %s AND hp.date_to <= %s AND hp.id = pi.payslip_id AND pi.code = %s",
                    (employee, from_date, to_date, code))
-        res = cr.fetchall()
-        input_ids = [r[0] for r in res]
-        input_lines = self.read(cr, uid, input_ids, [field], context=context)
-        for dict in input_lines:
-           result += dict.get(field)
+        input_ids = [r[0] for r in cr.fetchall()]
+        input_data = self.read(cr, uid, input_ids, [field], context=context)
+        for input in input_data:
+           result += input.get(field)
         return result
-    
+
 hr_payslip_input()
 
 class hr_salary_rule(osv.osv):
