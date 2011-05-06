@@ -51,6 +51,9 @@ Wizards provided by this module:
     'init_xml': [],
     'update_xml': [
                 'account_pcmn_belgium.xml',
+                'account_tax_code_template.xml',
+                'account_chart_template.xml',
+                'account_tax_template.xml',
                 'l10n_be_wizard.xml',
                 'wizard/l10n_be_account_vat_declaration_view.xml',
                 'wizard/l10n_be_vat_intra_view.xml',
