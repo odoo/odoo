@@ -85,6 +85,8 @@ class stock_change_product_qty(osv.osv_memory):
 
         res_original = prod_obj_pool.browse(cr, uid, rec_id, context=context)
         for data in self.browse(cr, uid, ids, context=context):
+            if data.new_quantity <= 0:
+                raise osv.except_osv(_('Warning!'), _('Please provide Proper Quantity !'))
             inventory_id = inventry_obj.create(cr , uid, {'name': _('INV: %s') % tools.ustr(res_original.name)}, context=context)
             line_data ={
                 'inventory_id' : inventory_id,
