@@ -65,6 +65,9 @@ openerp.base.ListView = openerp.base.Controller.extend(
             'selected': function (e, selection) {
                 self.$element.find('#oe-list-delete')
                     .toggle(!!selection.length);
+            },
+            'deleted': function (e, ids) {
+                self.do_delete(ids);
             }
         });
 
@@ -178,8 +181,6 @@ openerp.base.ListView = openerp.base.Controller.extend(
                     field, self.dataset, self.session.action_manager,
                     row.data.id.value, self.do_reload);
             });
-        $table.delegate(
-                'td.oe-record-delete button', 'click', this.do_delete);
 
         // Global rows handlers
         $table.delegate('tr', 'click', this.on_select_row);
@@ -331,13 +332,19 @@ openerp.base.ListView = openerp.base.Controller.extend(
     /**
      * Handles the signal to delete a line from the DOM
      *
-     * @param e jQuery event object
+     * @param {Array} ids the id of the object to delete
      */
-    do_delete: function (e) {
-        // don't link to forms
-        e.stopImmediatePropagation();
-        this.dataset.unlink(
-            [this.rows[$(e.currentTarget).closest('tr').prevAll().length].data.id.value]);
+    do_delete: function (ids) {
+        if (!ids.length) {
+            return;
+        }
+        var self = this;
+        return $.when(this.dataset.unlink(ids)).then(function () {
+            console.log('Removing row', ids);
+            // Find rows of ids `ids`
+            // remove
+            // tell list to refresh/remove corresponding lines (how?)
+        });
     },
     /**
      * Handles signal for the addition of a new record (can be a creation,
@@ -353,10 +360,8 @@ openerp.base.ListView = openerp.base.Controller.extend(
      * Handles deletion of all selected lines
      */
     do_delete_selected: function () {
-        var selection = this.list.get_selection();
-        if (selection.length) {
-            this.dataset.unlink(selection);
-        }
+        this.do_delete(
+            this.list.get_selection());
     }
     // TODO: implement reorder (drag and drop rows)
 });
@@ -374,8 +379,16 @@ openerp.base.ListView.List = Class.extend({
         this.$_element = $('<tbody class="ui-widget-content">')
             .appendTo(document.body)
             .delegate('th.oe-record-selector', 'click', function (e) {
-                e.stopImmediatePropagation();
+                e.stopPropagation();
                 $(self).trigger('selected', [self.get_selection()]);
+            })
+            .delegate('td.oe-record-delete button', 'click', function (e) {
+                e.stopPropagation();
+                var $row = $(e.target).closest('tr'),
+                   event = $.Event('deleted');
+                $(self).trigger(
+                    event,
+                    [[self.row_id($row)]]);
             });
     },
     move_to: function (element) {
@@ -404,6 +417,25 @@ openerp.base.ListView.List = Class.extend({
                 .closest('tr').map(function () {
             return rows[$(this).prevAll().length].data.id.value;
         }).get();
+    },
+    /**
+     * Returns the index of the row in the list of rows.
+     *
+     * @param {Object} row the selected row
+     * @returns {Number} the position of the row in this.rows
+     */
+    row_position: function (row) {
+        return $(row).prevAll().length;
+    },
+    /**
+     * Returns the identifier of the object displayed in the provided table
+     * row
+     *
+     * @param {Object} row the selected table row
+     * @returns {Number|String} the identifier of the row's object
+     */
+    row_id: function (row) {
+        return this.rows[this.row_position(row)].data.id.value;
     }
     // Click events: action, delete, row itself
     // drag and drop
