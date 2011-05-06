@@ -44,6 +44,7 @@ openerp.base.ListView = openerp.base.Controller.extend(
      * @borrows openerp.base.ActionExecutor#execute_action as #execute_action
      */
     init: function(view_manager, session, element_id, dataset, view_id, options) {
+        var self = this;
         this._super(session, element_id);
         this.view_manager = view_manager;
         this.dataset = dataset;
@@ -54,6 +55,19 @@ openerp.base.ListView = openerp.base.Controller.extend(
         this.rows = [];
 
         this.options = _.extend({}, this.defaults, options || {});
+
+        this.list = new openerp.base.ListView.List({
+            options: this.options,
+            columns: this.columns,
+            rows: this.rows
+        });
+        $(this.list).bind({
+            'selected': function (e, selection) {
+                self.$element.find('#oe-list-delete')
+                    .toggle(!!selection.length);
+            }
+        });
+
     },
     /**
      * View startup method, the default behavior is to set the ``oe-listview``
@@ -99,7 +113,9 @@ openerp.base.ListView = openerp.base.Controller.extend(
 
         var fields = this.fields_view.fields;
         var domain_computer = openerp.base.form.compute_domain;
-        this.columns = _(this.fields_view.arch.children).chain()
+
+        this.columns.splice(0, this.columns.length);
+        this.columns.push.apply(this.columns, _(this.fields_view.arch.children).chain()
             .map(function (field) {
                 var name = field.attrs.name;
                 var column = _.extend({id: name, tag: field.tag},
@@ -118,13 +134,14 @@ openerp.base.ListView = openerp.base.Controller.extend(
                     column.attrs_for = function () { return {}; };
                 }
                 return column;
-            }).value();
+            }).value());
 
         this.visible_columns = _.filter(this.columns, function (column) {
             return column.invisible !== '1';
         });
 
         if (!this.fields_view.sorted) { this.fields_view.sorted = {}; }
+
         this.$element.html(QWeb.render("ListView", this));
 
         // Head hook
@@ -142,19 +159,8 @@ openerp.base.ListView = openerp.base.Controller.extend(
         });
 
         var $table = this.$element.find('table');
+        this.list.move_to($table);
         // Cell events
-        $table.delegate(
-            'th.oe-record-selector', 'click', function (e) {
-                // TODO: ~linear performances, would a simple counter work?
-                if ($table.find('th.oe-record-selector input:checked').length) {
-                    $table.find('#oe-list-delete').show();
-                } else {
-                    $table.find('#oe-list-delete').hide();
-                }
-                // A click in the selection cell should not activate the
-                // linking feature
-                e.stopImmediatePropagation();
-        });
         $table.delegate(
             'td.oe-field-cell button', 'click', function (e) {
                 e.stopImmediatePropagation();
@@ -176,8 +182,7 @@ openerp.base.ListView = openerp.base.Controller.extend(
                 'td.oe-record-delete button', 'click', this.do_delete);
 
         // Global rows handlers
-        $table.delegate(
-                'tr', 'click', this.on_select_row);
+        $table.delegate('tr', 'click', this.on_select_row);
 
         // sidebar stuff
         if (this.view_manager && this.view_manager.sidebar) {
@@ -192,15 +197,15 @@ openerp.base.ListView = openerp.base.Controller.extend(
      * @param {Object} result filling result
      * @param {Array} [result.view] the new view (wrapped fields_view_get result)
      * @param {Array} result.records records the records to fill the list view with
-     * @returns {Promise} promise to the end of view rendering (list views are asynchronously filled for improved responsiveness)
      */
     do_fill_table: function(result) {
         if (result.view) {
             this.on_loaded({fields_view: result.view});
         }
         var records = result.records;
-        var $table = this.$element.find('table');
-        this.rows = records;
+
+        this.rows.splice(0, this.rows.length);
+        this.rows.push.apply(this.rows, records);
 
         // Keep current selected record, if it's still in our new search
         var current_record_id = this.dataset.ids[this.dataset.index];
@@ -214,46 +219,11 @@ openerp.base.ListView = openerp.base.Controller.extend(
         
         this.dataset.count = this.dataset.ids.length;
         var results = this.rows.length;
-        $table.find('.oe-pager-last').text(results);
-        $table.find('.oe-pager-total').text(results);
+        this.$element.find('table')
+            .find('.oe-pager-last').text(results).end()
+            .find('.oe-pager-total').text(results);
 
-
-        // remove all data lines
-        var $old_body = $table.find('tbody');
-
-        // add new content
-        var columns = this.columns,
-            rows = this.rows,
-            options = this.options;
-
-        // Paginate by groups of 50 for rendering
-        var PAGE_SIZE = 50,
-            bodies_count = Math.ceil(this.rows.length / PAGE_SIZE),
-            body = 0,
-            $body = $('<tbody class="ui-widget-content">').appendTo($table);
-
-        var rendered = $.Deferred();
-        var render_body = function () {
-            setTimeout(function () {
-                $body.append(
-                    QWeb.render("ListView.rows", {
-                        columns: columns,
-                        rows: rows.slice(body*PAGE_SIZE, (body+1)*PAGE_SIZE),
-                        options: options
-                }));
-                ++body;
-                if (body < bodies_count) {
-                    render_body();
-                } else {
-                    rendered.resolve();
-                }
-            }, 0);
-        };
-        render_body();
-
-        return rendered.promise().then(function () {
-            $old_body.remove();
-        });
+        this.list.refresh();
     },
     /**
      * Used to handle a click on a table row, if no other handler caught the
@@ -383,10 +353,43 @@ openerp.base.ListView = openerp.base.Controller.extend(
      * Handles deletion of all selected lines
      */
     do_delete_selected: function () {
-        var selection = this.get_selection();
+        var selection = this.list.get_selection();
         if (selection.length) {
             this.dataset.unlink(selection);
         }
+    }
+    // TODO: implement reorder (drag and drop rows)
+});
+_.extend(openerp.base.ListView.prototype, openerp.base.ActionExecutor);
+
+openerp.base.ListView.List = Class.extend({
+    init: function (opts) {
+        var self = this;
+        // columns, rows, options
+
+        this.options = opts.options;
+        this.columns = opts.columns;
+        this.rows = opts.rows;
+
+        this.$_element = $('<tbody class="ui-widget-content">')
+            .appendTo(document.body)
+            .delegate('th.oe-record-selector', 'click', function (e) {
+                e.stopImmediatePropagation();
+                $(self).trigger('selected', [self.get_selection()]);
+            });
+    },
+    move_to: function (element) {
+        this.$current = this.$_element.clone(true).appendTo(element);
+        this.render();
+        return this;
+    },
+    render: function () {
+        this.$current.empty().append($(QWeb.render('ListView.rows', this)));
+        return this;
+    },
+    refresh: function () {
+        this.render();
+        return this;
     },
     /**
      * Gets the ids of all currently selected records, if any
@@ -397,15 +400,15 @@ openerp.base.ListView = openerp.base.Controller.extend(
             return [];
         }
         var rows = this.rows;
-        return this.$element.find('th.oe-record-selector input:checked')
+        return this.$current.find('th.oe-record-selector input:checked')
                 .closest('tr').map(function () {
             return rows[$(this).prevAll().length].data.id.value;
         }).get();
     }
-    // TODO: implement sort (click on column headers), if sorted, the list can not be reordered anymore
-    // TODO: implement reorder (drag and drop rows)
+    // Click events: action, delete, row itself
+    // drag and drop
+    // editable?
 });
-_.extend(openerp.base.ListView.prototype, openerp.base.ActionExecutor);
 
 openerp.base.TreeView = openerp.base.Controller.extend({
 });
