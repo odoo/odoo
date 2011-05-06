@@ -19,14 +19,13 @@
 #
 ##############################################################################
 
-
 {
-    "name" : "Portal",
-    "version" : "0.2",
-    "depends" : ["base"],
-    "author" : "OpenERP SA",
-    "category": 'Tools',
-    "description": """
+    'name' : "Portal",
+    'version' : "1.0",
+    'depends' : ["base"],
+    'author' : "OpenERP SA",
+    'category': 'Tools',
+    'description': """
 This module defines 'portals' to customize the access to your OpenERP database
 for external users.
 
