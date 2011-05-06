@@ -312,5 +312,17 @@
             </field>
         </record>
 
+        <record id="view_account_analytic_line_percentage_form" model="ir.ui.view">
+            <field name="name">account.analytic.line.percentage.form</field>
+            <field name="model">account.analytic.line</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="account.view_account_analytic_line_form"/>
+            <field name="arch" type="xml">
+            	<field name="amount" colspan="4" position="after">
+            	    <field name="percentage" colspan="4"/>
+            	</field>
+            </field>
+        </record>
+
 </data>
 </openerp>

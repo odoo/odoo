@@ -53,20 +53,18 @@ class account_analytic_line(osv.osv):
 
     def _get_amount(self, cr, uid, ids, name, args, context=None):
         res = {}
-        currency_obj = self.pool.get('res.currency')
         if not ids:
             return res
         for id in ids:
             res.setdefault(id, 0.0)
         for line in self.browse(cr, uid, ids, context=context):
-            from_currency_id = line.company_id.currency_id.id
-            to_currency_id = line.currency_id.id
-            from_amount = line.amount
-            res[line.id] = currency_obj.compute(cr, uid, from_currency_id, to_currency_id, from_amount, round=True, context=context)
+            amount = line.move_id.amount_currency * (line.percentage / 100)
+            res[line.id] = amount
         return res
 
     _columns = {
         'amount_currency': fields.function(_get_amount, string="Amount Currency", type="float", method=True, store=True, help="The amount expressed in the related account currency if not equal to the company one.", readonly=True),
+        'percentage': fields.float('Percentage')
     }
 
 account_analytic_line()
@@ -362,6 +360,7 @@ class account_move_line(osv.osv):
                        'move_id': line.id,
                        'journal_id': line.journal_id.analytic_journal_id.id,
                        'ref': line.ref,
+                       'percentage': line2.rate
                    }
                    analytic_line_obj.create(cr, uid, al_vals, context=context)
         return True
