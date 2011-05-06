@@ -226,11 +226,14 @@ class account_move_line(osv.osv):
         # Starts: Manual entry from account.move form
         if context.get('lines',[]):
             total_new = 0.00
-            for i in context['lines']:
-                if i[2]:
-                    total_new += (i[2]['debit'] or 0.00)- (i[2]['credit'] or 0.00)
-                    for item in i[2]:
-                            data[item] = i[2][item]
+            for line_record in context['lines']:
+                if not isinstance(line_record, (tuple, list)):
+                    line_record_detail = self.read(cr, uid, line_record, ['analytic_account_id','debit','credit','name','reconcile_id','tax_code_id','tax_amount','account_id','ref','currency_id','date_maturity','amount_currency','partner_id', 'reconcile_partial_id'])
+                else:
+                    line_record_detail = line_record[2]
+                total_new += (line_record_detail['debit'] or 0.00)- (line_record_detail['credit'] or 0.00)
+                for item in line_record_detail.keys():
+                    data[item] = line_record_detail[item]
             if context['journal']:
                 journal_data = journal_obj.browse(cr, uid, context['journal'], context=context)
                 if journal_data.type == 'purchase':
