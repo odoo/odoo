@@ -460,7 +460,10 @@ class account_voucher(osv.osv):
             account_type = 'receivable'
 
         if not context.get('move_line_ids', False):
-            ids = move_line_pool.search(cr, uid, [('state','=','valid'), ('account_id.type', '=', account_type), ('reconcile_id', '=', False), ('partner_id', '=', partner_id)], context=context)
+            domain = [('state','=','valid'), ('account_id.type', '=', account_type), ('reconcile_id', '=', False), ('partner_id', '=', partner_id)]
+            if context.get('invoice_id', False):
+	            domain.append(('invoice', '=', context['invoice_id']))
+	            ids = move_line_pool.search(cr, uid, domain, context=context)    
         else:
             ids = context['move_line_ids']
         ids.reverse()

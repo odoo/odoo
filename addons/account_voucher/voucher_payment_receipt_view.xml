@@ -88,12 +88,12 @@
             <field name="arch" type="xml">
                 <form string="Bill Payment">
                     <group col="6" colspan="4">
-                        <field name="partner_id" required="1" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date)" context="{'invoice_currency':currency_id}" string="Supplier"/>
-                        <field name="amount" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date)"/>
+                        <field name="partner_id" required="1" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date, context)" context="{'invoice_currency':currency_id}" string="Supplier"/>
+                        <field name="amount" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date, context)"/>
                         <field name="journal_id"
                             domain="[('type','in',['bank', 'cash'])]"
                             widget="selection" select="1"
-                            on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date)"
+                            on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date, context)"
                             string="Payment Method"/>
                         <field name="date" select="1" on_change="onchange_date(partner_id, journal_id, amount, currency_id, type, date)"/>
                         <field name="reference" select="1" string="Payment Ref"/>
@@ -151,12 +151,12 @@
             <field name="arch" type="xml">
                 <form string="Bill Payment">
                     <group col="6" colspan="4">
-                        <field name="partner_id" domain="[('supplier','=',True)]" required="1" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date)" context="{'invoice_currency':currency_id}" string="Supplier"/>
-                        <field name="amount" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date)"/>
+                        <field name="partner_id" domain="[('supplier','=',True)]" required="1" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date, context)" context="{'invoice_currency':currency_id}" string="Supplier"/>
+                        <field name="amount" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date, context)"/>
                         <field name="journal_id"
                             domain="[('type','in',['bank', 'cash'])]"
                             widget="selection" select="1"
-                            on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date)"
+                            on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date, context)"
                             string="Payment Method"/>
                         <field name="date" select="1" on_change="onchange_date(partner_id, journal_id, amount, currency_id, type, date)"/>
                         <field name="reference" select="1" string="Payment Ref"/>
@@ -288,14 +288,14 @@
             <field name="arch" type="xml">
                 <form string="Customer Payment">
                     <group col="6" colspan="4">
-                        <field name="partner_id" required="1" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date)" string="Customer"/>
+                        <field name="partner_id" required="1" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date, context)" string="Customer"/>
                         <field name="amount"
                             string="Paid Amount"
-                            on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date)"/>
+                            on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date, context)"/>
                         <field name="journal_id"
                             domain="[('type','in',['bank', 'cash'])]"
                             widget="selection" select="1"
-                            on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date)"
+                            on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date, context)"
                             string="Payment Method"/>
                         <field name="date" select="1" on_change="onchange_date(partner_id, journal_id, amount, currency_id, type, date)"/>
                         <field name="reference" select="1" string="Payment Ref"/>
