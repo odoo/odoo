@@ -234,8 +234,11 @@ var QWeb = {
         return this.render(t_att["call"], d);
     },
     render_tag_js:function(e, t_att, g_att, v) {
+        var dict_name = t_att["js"] || "dict";
+        v[dict_name] = v;
         var r = this.eval_str(this.render_element(e, t_att, g_att, v), v);
-        return t_att["js"] != "quiet" ? r : "";
+        delete(v[dict_name]);
+        return r || '';
     },
     /**
      * Renders a foreach loop (@t-foreach).

@@ -346,12 +346,17 @@ class DataSet(openerpweb.Controller):
         :rtype: list
         """
         Model = request.session.model(model)
+
         ids = Model.search(domain or [], offset or 0, limit or False,
                            sort or False, request.context)
+
         if fields and fields == ['id']:
             # shortcut read if we only want the ids
             return map(lambda id: {'id': id}, ids)
-        return Model.read(ids, fields or False, request.context)
+
+        reads = Model.read(ids, fields or False, request.context)
+        reads.sort(key=lambda obj: ids.index(obj['id']))
+        return reads
 
     @openerpweb.jsonrequest
     def get(self, request, model, ids, fields=False):
@@ -407,6 +412,11 @@ class DataSet(openerpweb.Controller):
     def call(self, req, model, method, ids, args):
         m = req.session.model(model)
         r = getattr(m, method)(ids, *args)
+        return {'result': r}
+
+    @openerpweb.jsonrequest
+    def exec_workflow(self, req, model, id, signal):
+        r = req.session.exec_workflow(model, id, signal)
         return {'result': r}
 
     @openerpweb.jsonrequest
@@ -551,11 +561,11 @@ class ListView(View):
 
     @openerpweb.jsonrequest
     def fill(self, request, model, id, domain,
-             offset=0, limit=False):
-        return self.do_fill(request, model, id, domain, offset, limit)
+             offset=0, limit=False, sort=None):
+        return self.do_fill(request, model, id, domain, offset, limit, sort)
 
     def do_fill(self, request, model, id, domain,
-                offset=0, limit=False):
+                offset=0, limit=False, sort=None):
         """ Returns all information needed to fill a table:
 
         * view with processed ``editable`` flag
@@ -573,19 +583,33 @@ class ListView(View):
         :param int limit: search limit, for pagination
         :returns: hell if I have any idea yet
         """
-        view = self.fields_view_get(request, model, id)
+        view = self.fields_view_get(request, model, id, toolbar=True)
 
+        print sort
         rows = DataSet().do_search_read(request, model,
                                         offset=offset, limit=limit,
-                                        domain=domain)
+                                        domain=domain, sort=sort)
         eval_context = request.session.evaluation_context(
             request.context)
-        return [
-            {'data': dict((key, {'value': value})
-                          for key, value in row.iteritems()),
-             'color': self.process_colors(view, row, eval_context)}
-            for row in rows
-        ]
+
+        if sort:
+            sort_criteria = sort.split(',')[0].split(' ')
+            print sort, sort_criteria
+            view['sorted'] = {
+                'field': sort_criteria[0],
+                'reversed': sort_criteria[1] == 'DESC'
+            }
+        else:
+            view['sorted'] = {}
+        return {
+            'view': view,
+            'records': [
+                {'data': dict((key, {'value': value})
+                              for key, value in row.iteritems()),
+                 'color': self.process_colors(view, row, eval_context)}
+                for row in rows
+            ]
+        }
 
     def process_colors(self, view, row, context):
         colors = view['arch']['attrs'].get('colors')
@@ -618,5 +642,12 @@ class Action(openerpweb.Controller):
     _cp_path = "/base/action"
 
     @openerpweb.jsonrequest
-    def load(self, req, action_id):
-        return {}
+    def load(self, req, action_id, context={}):
+        Actions = req.session.model('ir.actions.actions')
+        value = False
+        action_type = Actions.read([action_id], ['type'], context)
+        if action_type:
+            action = req.session.model(action_type[0]['type']).read([action_id], False, context)
+            if action:
+                value = action[0]
+        return {'result': value}

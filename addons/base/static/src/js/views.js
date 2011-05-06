@@ -17,9 +17,10 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
     /**
      * Process an action
      * Supported actions: act_window
+     * 
+     * If the action contains a 'no_sidebar' key, the resulting view will never contain a sidebar.
      */
     do_action: function(action) {
-        this.log(action);
         var self = this;
         // instantiate the right controllers by understanding the action
         switch (action.type) {
@@ -36,14 +37,18 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
                         // When dialog is closed with ESC key or close manually, branch to act_window_close logic
                         self.do_action({ type: 'ir.actions.act_window_close' });
                     });
-                    var viewmanager = new openerp.base.ViewManagerAction(this.session ,element_id, action, false);
+                    var viewmanager = new openerp.base.ViewManagerAction(this.session, element_id, action, false);
                     viewmanager.start();
                     this.dialog_stack.push(viewmanager);
-                } else if (action.target == "current") {
+                } else {
                     if (this.viewmanager) {
                         this.viewmanager.stop();
                     }
-                    this.viewmanager = new openerp.base.ViewManagerAction(this.session,this.element_id, action, true);
+                    var sidebar = true;
+                    if(action.no_sidebar) {
+                        sidebar = false;
+                    }
+                    this.viewmanager = new openerp.base.ViewManagerAction(this.session, this.element_id, action, sidebar);
                     this.viewmanager.start();
                 }
                 break;
@@ -57,6 +62,58 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
         }
     }
 });
+
+/**
+ * Mixin for action-executing objects, provides handling of OpenERP actions to
+ * all clients.
+ *
+ * Mix into existing classes via ``_.extend`` of the class's prototype.
+ *
+ * @class
+ */
+openerp.base.ActionExecutor =
+/**
+ * @lends openerp.base.ActionExecutor#
+ */ {
+    /**
+     * Fetches and executes the action identified by ``action_data``.
+     *
+     * @param {Object} action_data the action descriptor data
+     * @param {String} action_data.name the action name, used to uniquely identify the action to find and execute it
+     * @param {String} [action_data.special=null] special action handlers (currently: only ``'cancel'``)
+     * @param {String} [action_data.type='workflow'] the action type, if present, one of ``'object'``, ``'action'`` or ``'workflow'``
+     * @param {Object} [action_data.context=null] additional action context, to add to the current context
+     * @param {openerp.base.DataSet} dataset a dataset object used to communicate with the server
+     * @param {openerp.base.ActionManager} action_manager object able to actually execute the action, if any is fetched
+     * @param {Number} [record_id] the identifier of the object on which the action is to be applied
+     * @param {Function} on_no_action callback to execute if the action does not generate any result (no new action)
+     */
+    execute_action: function (action_data, dataset, action_manager, record_id, on_no_action) {
+        var handler = function (r) {
+            if (r.result && r.result.constructor == Object) {
+                action_manager.do_action(r.result);
+            } else {
+                on_no_action(r.result);
+            }
+        };
+
+        if (action_data.special) {
+            handler({
+                result : { type: 'ir.actions.act_window_close' }
+            });
+        } else {
+            var context = _.extend({}, dataset.context, action_data.context || {});
+            switch(action_data.type) {
+                case 'object':
+                    return dataset.call(action_data.name, [record_id], [context], handler);
+                case 'action':
+                    return this.rpc('/base/action/load', { action_id: parseInt(action_data.name, 10) }, handler);
+                default:
+                    return dataset.exec_workflow(record_id, action_data.name, handler);
+            }
+        }
+    }
+};
 
 /**
  * Registry for all the main views
@@ -184,7 +241,14 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
 
 openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
     init: function(session, element_id, action, sidebar) {
-        var dataset = new openerp.base.DataSetSearch(session, action.res_model);
+        var dataset;
+        if(!action.res_id) {
+            dataset = new openerp.base.DataSetSearch(session, action.res_model);
+        } else {
+            dataset = new openerp.base.DataSetStatic(session, action.res_model);
+            dataset.ids = [action.res_id];
+            dataset.count = 1;
+        }
         this._super(session, element_id, dataset, action.views);
         this.action = action;
         this.sidebar = sidebar;
@@ -211,14 +275,17 @@ openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
         // init search view
         var searchview_id = this.action.search_view_id && this.action.search_view_id[0];
 
-        var searchview_loaded = this.setup_search_view(
-                searchview_id || false, search_defaults);
+        if (searchview_id) {
+            var searchview_loaded = this.setup_search_view(
+                    searchview_id, search_defaults);
 
-        // schedule auto_search
-        if (searchview_loaded != null && this.action['auto_search']) {
-            $.when(searchview_loaded, inital_view_loaded)
-                .then(this.searchview.do_search);
+            // schedule auto_search
+            if (this.action['auto_search']) {
+                $.when(searchview_loaded, inital_view_loaded)
+                    .then(this.searchview.do_search);
+            }
         }
+
     },
     stop: function() {
         // should be replaced by automatic destruction implemented in BaseWidget

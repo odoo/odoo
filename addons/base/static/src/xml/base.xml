@@ -18,9 +18,6 @@
         </div>
     </div>
     <div id="oe_login" class="login"></div>
-    <div style="position: absolute; right: 2px; top: 38px;">
-        <button onclick="QWeb.add_template('base.xml'); $('body').css('background-color', '#FFFF9C'); setTimeout(function() { $('body').css('background-color', '#FFF'); }, 500);">Reload QWEB</button>
-    </div>
     <table border="0" cellpadding="0" cellspacing="0" width="100%" height="100%"
         t-att-class="'main_table' + (typeof kitten == 'undefined' ? '' : ' kitten-mode-activated')">
     <tr>
@@ -33,10 +30,7 @@
         <td valign="top" id="oe_secondary_menu" class="secondary_menu">
         </td>
         <td valign="top" width="100%" height="100%">
-            <div id="oe_main" class="main">
-                <div id="oe_app" class="application"></div>
-                <div id="oe_sidebar"></div>
-            </div>
+            <div id="oe_app" class="oe-application"></div>
         </td>
     </tr>
     <tr>
@@ -135,23 +129,23 @@
 <t t-name="ViewManager">
     <table class="view-manager-main-table">
     <tr>
-    <td class="view-manager-main-content">
-    <!-- TODO prefix id with the element_id of the controller t-attf-id="#{prefix}_localid" -->
-    <div class="oe_vm_switch">
-        <t t-foreach="views" t-as="view">
-            <button type="button" t-att-data-view-type="view[1]">
-                <t t-esc="view[1]"/>
-            </button>
-        </t>
-    </div>
-    <div t-attf-id="#{prefix}_search"/>
-    <t t-foreach="views" t-as="view">
-        <div t-attf-id="#{prefix}_view_#{view[1]}"/>
-    </t>
-	</td>
-	<td class="view-manager-main-sidebar">
-	</td>
-	</tr>
+        <td class="view-manager-main-content">
+            <!-- TODO prefix id with the element_id of the controller t-attf-id="#{prefix}_localid" -->
+            <div class="oe_vm_switch">
+                <t t-foreach="views" t-as="view">
+                    <button type="button" t-att-data-view-type="view[1]">
+                        <t t-esc="view[1]"/>
+                    </button>
+                </t>
+            </div>
+            <div t-attf-id="#{prefix}_search" t-opentag="true"/>
+            <t t-foreach="views" t-as="view">
+                <div t-attf-id="#{prefix}_view_#{view[1]}"/>
+            </t>
+        </td>
+        <td class="view-manager-main-sidebar">
+        </td>
+    </tr>
     </table>
 </t>
 <table t-name="ListView">
@@ -187,9 +181,11 @@
         <tr t-if="options.header">
             <th t-if="options.selectable"/>
             <t t-foreach="columns" t-as="column">
-                <th t-if="column.invisible !== '1'">
+                <th t-if="column.invisible !== '1'" t-att-data-id="column.id"
+                    t-att-class="((options.sortable and column.tag !== 'button') ? 'oe-sortable' : null)">
                     <t t-if="column.tag !== 'button'">
                         <t t-esc="column.string"/>
+                        <span t-att-class="(fields_view.sorted.field === column.id) ? ('ui-icon' + (fields_view.sorted.reversed ? ' ui-icon-triangle-1-n' : ' ui-icon-triangle-1-s')) : ''"/>
                     </t>
                 </th>
             </t>
@@ -217,7 +213,8 @@
                 <t t-set="is_button" t-value="column.tag === 'button'"/>
                 <!-- TODO: get correct widget from form -->
                 <t t-if="!is_button and row['data'][column.id].value">
-                    <t t-esc="row['data'][column.id].value"/>
+                    <t t-set="value" t-value="row['data'][column.id].value"/>
+                    <t t-esc="value instanceof Array ? value[1] : value"/>
                 </t>
                 <button type="button" t-att-title="column.help"
                         t-if="is_button">
@@ -299,7 +296,7 @@
            t-att-ondblclick="'console.log(\'' + widget.element_id + '\', openerp.screen.' + widget.element_id + ')'">
         <t t-esc="widget.string"/>
         <span t-if="widget.help">?</span>
-        <t t-if="widget.string">:</t>
+        <t t-if="widget.string and widget.node.tag != 'label'">:</t>
     </label>
 </t>
 <t t-name="FieldChar">
@@ -356,9 +353,7 @@
     </div>
 </t>
 <t t-name="FieldMany2Many">
-    <div style="background: #ccc; padding: 20px">
-        Many2Many widget
-    </div>
+    <div t-att-id="widget.list_id"></div>
 </t>
 <t t-name="FieldReference">
     <input type="text" t-att-name="widget.name" t-att-id="widget.element_id" t-att-class="'field_' + widget.type" style="width: 100%" placeholder="Widget Reference"/>
@@ -538,8 +533,11 @@
     </div>
 </t>
 <t t-name="ViewManager.sidebar.internal">
-    <t t-set="the_condition" t-value="sections.length &gt; 0 &amp;&amp; _.detect(sections, function(x)
-        {return x.elements.length &gt; 0;}) != undefined"/>
+    <t t-js="d">
+        d.the_condition = d.sections.length &gt; 0 &amp;&amp; d._.detect(d.sections, function(x) {
+            return x.elements.length &gt; 0;
+        }) != undefined
+    </t>
     <t t-if="the_condition">
         <a class="toggle-sidebar"></a>
         <div t-att-id="element_id" class="sidebar-sub-div">

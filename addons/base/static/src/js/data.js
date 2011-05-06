@@ -118,6 +118,13 @@ openerp.base.DataSet =  openerp.base.Controller.extend( /** @lends openerp.base.
             ids: ids,
             args: args
         }, callback);
+    },
+    exec_workflow: function (id, signal, callback) {
+        return this.rpc('/base/dataset/exec_workflow', {
+            model: this.model,
+            id: id,
+            signal: signal
+        }, callback);
     }
 });
 
@@ -137,7 +144,7 @@ openerp.base.DataSetSearch =  openerp.base.DataSet.extend({
     init: function(session, model) {
         this._super(session, model);
         this.domain = [];
-        this.sort = [];
+        this._sort = [];
         this.offset = 0;
         // subset records[offset:offset+limit]
         // is it necessary ?
@@ -159,7 +166,7 @@ openerp.base.DataSetSearch =  openerp.base.DataSet.extend({
             fields: fields,
             domain: this.domain,
             context: this.context,
-            sort: this.sort,
+            sort: this.sort(),
             offset: offset,
             limit: limit
         }, function (records) {
@@ -170,10 +177,48 @@ openerp.base.DataSetSearch =  openerp.base.DataSet.extend({
             }
             callback(records);
         });
+    },
+    /**
+     * Reads or changes sort criteria on the dataset.
+     *
+     * If not provided with any argument, serializes the sort criteria to
+     * an SQL-like form usable by OpenERP's ORM.
+     *
+     * If given a field, will set that field as first sorting criteria or,
+     * if the field is already the first sorting criteria, will reverse it.
+     *
+     * @param {String} [field] field to sort on, reverses it (toggle from ASC to DESC) if already the main sort criteria
+     * @param {Boolean} [force_reverse=false] forces inserting the field as DESC
+     * @returns {String|undefined}
+     */
+    sort: function (field, force_reverse) {
+        if (!field) {
+            return _.map(this._sort, function (criteria) {
+                if (criteria[0] === '-') {
+                    return criteria.slice(1) + ' DESC';
+                }
+                return criteria + ' ASC';
+            }).join(', ');
+        }
+
+        var reverse = force_reverse || (this._sort[0] === field);
+        this._sort = _.without(this._sort, field, '-' + field);
+
+        this._sort.unshift((reverse ? '-' : '') + field);
+        return undefined;
     }
 });
 
 openerp.base.DataSetRelational =  openerp.base.DataSet.extend( /** @lends openerp.base.DataSet# */{
+});
+
+openerp.base.DataSetMany2Many = openerp.base.DataSetStatic.extend({
+    /* should extend DataSetStatic instead, but list view still does not support it
+     */
+
+    unlink: function(ids) {
+        // just do nothing
+    },
 });
 
 };

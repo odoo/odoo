@@ -31,7 +31,7 @@ Guides and main documentation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The meat and most important part of all documentation. Should be
-written in plain english, using reStructuredText_ and taking advantage
+written in plain English, using reStructuredText_ and taking advantage
 of `Sphinx's extensions`_, especially `cross-references`_.
 
 Python API Documentation
@@ -65,7 +65,7 @@ RST, using Sphinx's `Python domain`_ [#]_:
   and ``__new__``), using the `info fields`_  as well.
 
 * Attributes (class and instance) should be documented in their
-  class's docstrin via the ``.. attribute::`` directiveg, following
+  class's docstring via the ``.. attribute::`` directive, following
   the class's own documentation.
 
 * The relation between modules and module-level attributes is similar:
@@ -220,7 +220,7 @@ Roadmap
 Release notes
 +++++++++++++
 
-.. [#] because Python is the default domain, the ``py:`` markup prefix
+.. [#] Because Python is the default domain, the ``py:`` markup prefix
        is optional and should be left out.
 
 .. [#] Resig's Class still uses prototypes under the hood, it doesn't
