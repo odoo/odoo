@@ -3109,6 +3109,15 @@
             <field name="user_type" ref="user_type_view"/>
             <field ref="a41" name="parent_id"/>
         </record>
+        <record id="a411059" model="account.account.template">
+            <field name="name">T.V.A Déductible</field>
+            <field name="code">411059</field>
+            <field name="type">other</field>
+            <field name="parent_id" ref="a411"/>
+            <field name="reconcile" eval="0"/>
+            <field name="user_type" ref="user_type_tax_in"/>
+        </record>
+<!-- duplicated record? 
         <record id="a4110" model="account.account.template">
             <field name="name">T.V.A. déductible</field>
             <field name="code">4110</field>
@@ -3116,15 +3125,6 @@
             <field name="user_type" ref="user_type_view"/>
             <field ref="a411" name="parent_id"/>
         </record>
-        <record id="a411059" model="account.account.template">
-            <field name="name">T.V.A Déductible</field>
-            <field name="code">411059</field>
-            <field name="type">other</field>
-            <field name="parent_id" ref="a4110"/>
-            <field name="reconcile" eval="0"/>
-            <field name="user_type" ref="user_type_tax_in"/>
-        </record>
-<!-- duplicated record? 
         <record id="a4111" model="account.account.template">
             <field name="name">T.V.A. déductible</field>
             <field name="code">4111</field>
@@ -3719,6 +3719,7 @@
             <field name="reconcile" eval="0"/>
             <field name="user_type" ref="user_type_tax_in"/>
         </record>
+<!-- unused?
         <record id="a4510" model="account.account.template">
             <field name="name">T.V.A. due</field>
             <field name="code">4510</field>
@@ -3726,7 +3727,6 @@
             <field name="user_type" ref="user_type_view"/>
             <field ref="a451" name="parent_id"/>
         </record>
-<!-- unused?
         <record id="a4511" model="account.account.template">
             <field name="name">T.V.A. déductible</field>
             <field name="code">4511</field>
