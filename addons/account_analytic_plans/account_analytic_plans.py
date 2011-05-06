@@ -53,12 +53,10 @@ class account_analytic_line(osv.osv):
 
     def _get_amount(self, cr, uid, ids, name, args, context=None):
         res = {}
-        if not ids:
-            return res
         for id in ids:
             res.setdefault(id, 0.0)
         for line in self.browse(cr, uid, ids, context=context):
-            amount = line.move_id.amount_currency * (line.percentage / 100)
+            amount = line.move_id and line.move_id.amount_currency * (line.percentage / 100) or 0.0
             res[line.id] = amount
         return res
 
