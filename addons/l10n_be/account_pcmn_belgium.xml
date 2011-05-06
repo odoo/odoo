@@ -47,6 +47,19 @@
             <field name="name">Tax</field>
             <field name="code">tax</field>
             <field name="close_method">unreconciled</field>
+            <field name="report_type">none</field>
+        </record>
+        <record id="user_type_tax_out" model="account.account.type">
+            <field name="name">Taxes à la sortie</field>
+            <field name="code">tax_out</field>
+            <field name="close_method">unreconciled</field>
+            <field name="report_type">none</field>
+        </record>
+            <record id="user_type_tax_in" model="account.account.type">
+            <field name="name">Taxes à l'entrée</field>
+            <field name="code">tax_in</field>
+            <field name="close_method">unreconciled</field>
+            <field name="report_type">none</field>
         </record>
         <record id="user_type_financiers" model="account.account.type">
             <field name="name">Financier</field>
@@ -3103,34 +3116,15 @@
             <field name="user_type" ref="user_type_view"/>
             <field ref="a411" name="parent_id"/>
         </record>
-        <record id="vat_refund0" model="account.account.template">
-            <field name="name">T.V.A. déductible 0%</field>
-            <field name="code">411000</field>
+        <record id="a411059" model="account.account.template">
+            <field name="name">T.V.A Déductible</field>
+            <field name="code">411059</field>
             <field name="type">other</field>
-            <field name="user_type" ref="user_type_tax"/>
-            <field ref="a4110" name="parent_id"/>
+            <field name="parent_id" ref="a4110"/>
+            <field name="reconcile" eval="0"/>
+            <field name="user_type" ref="user_type_tax_in"/>
         </record>
-        <record id="vat_refund06" model="account.account.template">
-            <field name="name">T.V.A. déductible 6%</field>
-            <field name="code">4110001</field>
-            <field name="type">other</field>
-            <field name="user_type" ref="user_type_tax"/>
-            <field ref="a4110" name="parent_id"/>
-        </record>
-        <record id="vat_refund12" model="account.account.template">
-            <field name="name">T.V.A. déductible 12%</field>
-            <field name="code">4110002</field>
-            <field name="type">other</field>
-            <field name="user_type" ref="user_type_tax"/>
-            <field ref="a4110" name="parent_id"/>
-        </record>
-        <record id="vat_refund21" model="account.account.template">
-            <field name="name">T.V.A. déductible 21%</field>
-            <field name="code">4110003</field>
-            <field name="type">other</field>
-            <field name="user_type" ref="user_type_tax"/>
-            <field ref="a4110" name="parent_id"/>
-        </record>
+<!-- duplicated record? 
         <record id="a4111" model="account.account.template">
             <field name="name">T.V.A. déductible</field>
             <field name="code">4111</field>
@@ -3138,6 +3132,7 @@
             <field name="user_type" ref="user_type_tax"/>
             <field ref="a411" name="parent_id"/>
         </record>
+-->
         <record id="a4112" model="account.account.template">
             <field name="name">Compte courant administration T.V.A.</field>
             <field name="code">4112</field>
@@ -3692,6 +3687,38 @@
             <field name="user_type" ref="user_type_view"/>
             <field ref="a45" name="parent_id"/>
         </record>
+        <record id="a451054" model="account.account.template">
+            <field name="name">T.V.A. à payer</field>
+            <field name="code">451054</field>
+            <field name="type">other</field>
+            <field name="parent_id" ref="a451"/>
+            <field name="reconcile" eval="0"/>
+            <field name="user_type" ref="user_type_tax_out"/>
+        </record>
+        <record id="a451055" model="account.account.template">
+            <field name="name">T.V.A. à payer - Intra-communautaire</field>
+            <field name="code">451055</field>
+            <field name="type">other</field>
+            <field name="parent_id" ref="a451"/>
+            <field name="reconcile" eval="0"/>
+            <field name="user_type" ref="user_type_tax_in"/>
+        </record>
+        <record id="a451056" model="account.account.template">
+            <field name="name">T.V.A. à payer - Cocontractant</field>
+            <field name="code">451056</field>
+            <field name="type">other</field>
+            <field name="parent_id" ref="a451"/>
+            <field name="reconcile" eval="0"/>
+            <field name="user_type" ref="user_type_tax_in"/>
+        </record>
+        <record id="a451057" model="account.account.template">
+            <field name="name">T.V.A. à payer - Import</field>
+            <field name="code">451057</field>
+            <field name="type">other</field>
+            <field name="parent_id" ref="a451"/>
+            <field name="reconcile" eval="0"/>
+            <field name="user_type" ref="user_type_tax_in"/>
+        </record>
         <record id="a4510" model="account.account.template">
             <field name="name">T.V.A. due</field>
             <field name="code">4510</field>
@@ -3699,34 +3726,7 @@
             <field name="user_type" ref="user_type_view"/>
             <field ref="a451" name="parent_id"/>
         </record>
-        <record id="vat_payable0" model="account.account.template">
-            <field name="name">T.V.A. due 0%</field>
-            <field name="code">451000</field>
-            <field name="type">other</field>
-            <field name="user_type" ref="user_type_tax"/>
-            <field ref="a4510" name="parent_id"/>
-        </record>
-        <record id="vat_payable06" model="account.account.template">
-            <field name="name">T.V.A. due 6%</field>
-            <field name="code">4510001</field>
-            <field name="type">other</field>
-            <field name="user_type" ref="user_type_tax"/>
-            <field ref="a4510" name="parent_id"/>
-        </record>
-        <record id="vat_payable12" model="account.account.template">
-            <field name="name">T.V.A. due 12%</field>
-            <field name="code">4510002</field>
-            <field name="type">other</field>
-            <field name="user_type" ref="user_type_tax"/>
-            <field ref="a4510" name="parent_id"/>
-        </record>
-        <record id="vat_payable21" model="account.account.template">
-            <field name="name">T.V.A. due 21%</field>
-            <field name="code">4510003</field>
-            <field name="type">other</field>
-            <field name="user_type" ref="user_type_tax"/>
-            <field ref="a4510" name="parent_id"/>
-        </record>
+<!-- unused?
         <record id="a4511" model="account.account.template">
             <field name="name">T.V.A. déductible</field>
             <field name="code">4511</field>
@@ -3734,6 +3734,7 @@
             <field name="user_type" ref="user_type_tax"/>
             <field ref="a451" name="parent_id"/>
         </record>
+-->
         <record id="a4512" model="account.account.template">
             <field name="name">Compte courant administration T.V.A.</field>
             <field name="code">4512</field>
