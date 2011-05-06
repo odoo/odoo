@@ -379,6 +379,8 @@ class account_voucher(osv.osv):
             account_id = partner.property_account_payable.id
             tr_type = 'purchase'
         else:
+            if not journal.default_credit_account_id or not journal.default_debit_account_id:
+                raise osv.except_osv(_('Error !'), _('Please define default credit/debit account on the %s !') % (journal.name))
             account_id = journal.default_credit_account_id.id or journal.default_debit_account_id.id
             tr_type = 'receipt'
 

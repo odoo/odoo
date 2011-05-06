@@ -30,12 +30,11 @@ class account_partner_ledger(osv.osv_memory):
     _description = 'Account Partner Ledger'
 
     _columns = {
-        'initial_balance': fields.boolean('Include initial balances',
+        'initial_balance': fields.boolean('Include Initial Balances',
                                     help='It adds initial balance row on report which display previous sum amount of debit/credit/balance'),
         'filter': fields.selection([('filter_no', 'No Filters'), ('filter_date', 'Date'), ('filter_period', 'Periods'), ('unreconciled', 'Unreconciled Entries')], "Filter by", required=True),
         'page_split': fields.boolean('One Partner Per Page', help='Display Ledger Report with One partner per page'),
         'amount_currency': fields.boolean("With Currency", help="It adds the currency column if the currency is different then the company currency"),
-
     }
     _defaults = {
        'initial_balance': False,
