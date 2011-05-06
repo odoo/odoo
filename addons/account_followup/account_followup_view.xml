@@ -8,10 +8,9 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Follow-Up Lines">
-                    <field name="sequence"/>
                     <field name="name"/>
                     <field name="delay"/>
-                    <field name="start"/>
+                    <field name="start" groups="base.group_extended"/>
                 </tree>
             </field>
         </record>
@@ -22,10 +21,9 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Follow-Up Lines">
-                    <field name="sequence"/>
                     <field name="name" />
                     <field name="delay" />
-                    <field name="start" />
+                    <field name="start" groups="base.group_extended"/>
                     <newline/>
                     <field colspan="4" name="description" />
                     <separator string="Legend" colspan="4"/>
@@ -45,9 +43,7 @@
                 <form string="Follow-Up">
                     <field name="name" />
                     <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                    <separator colspan="4" string="Description"/>
-                    <field colspan="4" name="description" nolabel="1" />
-                    <separator colspan="4" string="Followup Lines"/>
+                    <separator colspan="4" string="" />
                     <field colspan="4" name="followup_line" nolabel="1"/>
                 </form>
             </field>
@@ -74,6 +70,10 @@
                    <group col="10" colspan="4">
                         <field name="name"/>
                         <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                   </group>
+                   <newline/>
+                   <group expand="0" string="Group By...">
+                        <filter string="Company" icon="terp-go-home" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                    </group>
                </search>
             </field>

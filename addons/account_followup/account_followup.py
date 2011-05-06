@@ -41,7 +41,6 @@ class followup_line(osv.osv):
     _description = 'Follow-Up Criteria'
     _columns = {
         'name': fields.char('Name', size=64, required=True),
-        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of follow-up lines."),
         'delay': fields.integer('Days of delay'),
         'start': fields.selection([('days','Net Days'),('end_of_month','End of Month')], 'Type of Term', size=64, required=True),
         'followup_id': fields.many2one('account_followup.followup', 'Follow Ups', required=True, ondelete="cascade"),
