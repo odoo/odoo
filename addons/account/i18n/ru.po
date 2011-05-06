@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-04-30 19:40+0000\n"
+"PO-Revision-Date: 2011-05-04 18:00+0000\n"
 "Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-05-01 06:03+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-05-05 06:00+0000\n"
+"X-Generator: Launchpad (build 12959)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -1009,7 +1009,7 @@ msgstr "Название счета."
 #: field:account.chart.template,property_reserve_and_surplus_account:0
 #: field:res.company,property_reserve_and_surplus_account:0
 msgid "Reserve and Profit/Loss Account"
-msgstr ""
+msgstr "Счет резервов и прибылей/убытков"
 
 #. module: account
 #: field:report.account.receivable,name:0
@@ -1046,7 +1046,7 @@ msgstr ""
 #. module: account
 #: view:account.tax:0
 msgid "Applicability Options"
-msgstr ""
+msgstr "Опции применимости"
 
 #. module: account
 #: report:account.partner.balance:0
@@ -1101,7 +1101,7 @@ msgstr "Подтвердить документ"
 #: field:account.fiscal.position.tax,tax_dest_id:0
 #: field:account.fiscal.position.tax.template,tax_dest_id:0
 msgid "Replacement Tax"
-msgstr ""
+msgstr "Замещающий налог"
 
 #. module: account
 #: selection:account.move.line,centralisation:0
@@ -1461,7 +1461,7 @@ msgstr "Шаблон для системы налогообложения"
 #. module: account
 #: model:account.tax.code,name:account.account_tax_code_0
 msgid "Tax Code Test"
-msgstr ""
+msgstr "Проверка налогового кода"
 
 #. module: account
 #: field:account.automatic.reconcile,reconciled:0
@@ -1633,7 +1633,7 @@ msgstr "Годовая сумма"
 #. module: account
 #: model:ir.actions.report.xml,name:account.report_account_voucher_new
 msgid "Print Voucher"
-msgstr ""
+msgstr "Печать ваучера"
 
 #. module: account
 #: view:account.change.currency:0
@@ -2332,7 +2332,7 @@ msgstr "День"
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_renew_view
 msgid "Accounts to Renew"
-msgstr ""
+msgstr "Счета для обновления"
 
 #. module: account
 #: model:ir.model,name:account.model_account_model_line
@@ -2686,7 +2686,7 @@ msgstr ""
 #. module: account
 #: view:account.payment.term.line:0
 msgid "Line 2:"
-msgstr ""
+msgstr "Строка 2:"
 
 #. module: account
 #: field:account.journal.column,required:0
@@ -2920,12 +2920,12 @@ msgstr "Кредит контрагенту"
 #. module: account
 #: model:ir.model,name:account.model_account_tax_code_template
 msgid "Tax Code Template"
-msgstr ""
+msgstr "Шаблон налогового кода"
 
 #. module: account
 #: view:account.subscription:0
 msgid "Starts on"
-msgstr ""
+msgstr "Начинается с"
 
 #. module: account
 #: model:ir.model,name:account.model_account_partner_ledger
@@ -3583,7 +3583,7 @@ msgstr ""
 #. module: account
 #: field:account.move.line,date:0
 msgid "Effective date"
-msgstr "Действительно до"
+msgstr "Дата вступления в силу"
 
 #. module: account
 #: code:addons/account/wizard/account_move_bank_reconcile.py:53
@@ -3668,6 +3668,8 @@ msgstr "Утвердить"
 #: sql_constraint:account.model.line:0
 msgid "Wrong credit or debit value in model (Credit Or Debit Must Be \"0\")!"
 msgstr ""
+"В модели указано неверное значение прихода или расхода (Приход или Расход "
+"должен быть равен \"0\")!"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_invoice_report_all
@@ -4069,7 +4071,7 @@ msgstr "Печать счета"
 #. module: account
 #: view:account.tax.template:0
 msgid "Credit Notes"
-msgstr ""
+msgstr "Кредит-ноты"
 
 #. module: account
 #: code:addons/account/account.py:2067
@@ -4220,7 +4222,7 @@ msgstr "Генерировать проводки"
 #. module: account
 #: help:account.vat.declaration,chart_tax_id:0
 msgid "Select Charts of Taxes"
-msgstr ""
+msgstr "Выбрать налоговые планы счетов"
 
 #. module: account
 #: view:account.fiscal.position:0
@@ -4439,7 +4441,7 @@ msgstr "Баланс (счета активов)"
 #. module: account
 #: report:account.tax.code.entries:0
 msgid "Third Party (Country)"
-msgstr ""
+msgstr "Третье лицо (Страна)"
 
 #. module: account
 #: code:addons/account/account.py:938
@@ -4534,7 +4536,7 @@ msgstr "Закрыть"
 #. module: account
 #: field:account.journal,allow_date:0
 msgid "Check Date not in the Period"
-msgstr ""
+msgstr "Дата проверки не входит в период"
 
 #. module: account
 #: code:addons/account/account.py:1210
@@ -4630,7 +4632,7 @@ msgstr "Проводка"
 #: field:account.tax,python_compute_inv:0
 #: field:account.tax.template,python_compute_inv:0
 msgid "Python Code (reverse)"
-msgstr ""
+msgstr "Код на Python (реверс)"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_payment_term_form
@@ -4668,7 +4670,7 @@ msgstr "Открытие кассы"
 #. module: account
 #: view:account.payment.term.line:0
 msgid "Line 1:"
-msgstr ""
+msgstr "Строка 1:"
 
 #. module: account
 #: code:addons/account/account.py:1167
@@ -5071,7 +5073,7 @@ msgstr ""
 #: field:account.model.line,amount_currency:0
 #: field:account.move.line,amount_currency:0
 msgid "Amount Currency"
-msgstr "Валюта суммы"
+msgstr "Сумма в валюте"
 
 #. module: account
 #: code:addons/account/wizard/account_validate_account_move.py:39
@@ -5105,7 +5107,7 @@ msgstr "Количество"
 #. module: account
 #: view:account.move.line:0
 msgid "Number (Move)"
-msgstr "Номер (перемещение)"
+msgstr "Номер"
 
 #. module: account
 #: view:account.invoice.refund:0
@@ -5566,6 +5568,10 @@ msgid ""
 "line of the expense account. OpenERP will propose to you automatically the "
 "Tax related to this account and the counterpart \"Account Payable\"."
 msgstr ""
+"Здесь можно быстро вводить бухгалтерские проводки. Если вы хотите отразить "
+"счет-фактуру поставщика, начните с записи движения по счету расходов. "
+"OpenERP автоматически предложит вам налог, относящийся к этому счету и "
+"корреспондирующий счет \"Кредиторская задолженность\"."
 
 #. module: account
 #: field:account.entries.report,date_created:0
@@ -8651,7 +8657,7 @@ msgstr "План счетов"
 #. module: account
 #: field:account.move.line,date_maturity:0
 msgid "Due date"
-msgstr "Срок"
+msgstr "Срок оплаты"
 
 #. module: account
 #: view:account.move.journal:0
@@ -9781,7 +9787,7 @@ msgstr ""
 #. module: account
 #: field:account.analytic.line,amount_currency:0
 msgid "Amount currency"
-msgstr "Валюта суммы"
+msgstr "Сумма в валюте"
 
 #. module: account
 #: code:addons/account/wizard/account_report_aged_partner_balance.py:55
