@@ -22,7 +22,7 @@
 from osv import fields, osv, orm
 
 import tools
-
+from tools.translate import _ 
 class procurement_order(osv.osv):
     _name = "procurement.order"
     _inherit = "procurement.order"
@@ -33,10 +33,17 @@ class procurement_order(osv.osv):
         return True
 
     def action_produce_assign_service(self, cr, uid, ids, context=None):
+        task_obj = self.pool.get('project.task')
+        uom_obj = self.pool.get('product.uom')
         for procurement in self.browse(cr, uid, ids, context=context):
             self.write(cr, uid, [procurement.id], {'state': 'running'})
             planned_hours = procurement.product_qty
-            task_id = self.pool.get('project.task').create(cr, uid, {
+            proj_uom_id = procurement.company_id.project_time_mode_id.id
+            if not proj_uom_id:
+                raise osv.except_osv(_('Configuration Error!'), _('The Project Time Unit is not configured for the Company %s!') % _(procurement.company_id.name))
+            if proj_uom_id != procurement.product_uom.id:
+                planned_hours = uom_obj._compute_qty(cr, uid, procurement.product_uom.id, planned_hours, proj_uom_id)
+            task_id = task_obj.create(cr, uid, {
                 'name': '%s:%s' % (procurement.origin or '', procurement.name),
                 'date_deadline': procurement.date_planned,
                 'planned_hours':planned_hours,
@@ -47,7 +54,6 @@ class procurement_order(osv.osv):
                 'description': procurement.note,
                 'date_deadline': procurement.date_planned,
                 'project_id': procurement.product_id.project_id and procurement.product_id.project_id.id or False,
-                'state': 'draft',
                 'company_id': procurement.company_id.id,
             },context=context)
             self.write(cr, uid, [procurement.id],{'task_id':task_id}) 
