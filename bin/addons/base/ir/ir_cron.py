@@ -85,7 +85,11 @@ class ir_cron(osv.osv, netsvc.Agent):
         (_check_args, 'Invalid arguments', ['args']),
     ]
 
-    def _callback(self, cr, uid, model, func, args):
+    def _handle_callback_exception(self, cr, uid, model, func, args, job_id, job_exception):
+        cr.rollback()
+        self._logger.exception("The Job id : %s, call of self.pool.get('%s').%s(cr, uid, *%r) failed" % (job_id, model, func, args))
+
+    def _callback(self, cr, uid, model, func, args, job_id):
         args = str2tuple(args)
         m = self.pool.get(model)
         if m and hasattr(m, func):
@@ -93,8 +97,7 @@ class ir_cron(osv.osv, netsvc.Agent):
             try:
                 f(cr, uid, *args)
             except Exception, e:
-                cr.rollback()
-                self._logger.exception("Job call of self.pool.get('%s').%s(cr, uid, *%r) failed" % (model, func, args))
+                self._handle_callback_exception(cr, uid, model, func, args, job_id, e)
 
 
     def _poolJobs(self, db_name, check=False):
@@ -116,7 +119,7 @@ class ir_cron(osv.osv, netsvc.Agent):
                         if numbercall > 0:
                             numbercall -= 1
                         if not ok or job['doall']:
-                            self._callback(cr, job['user_id'], job['model'], job['function'], job['args'])
+                            self._callback(cr, job['user_id'], job['model'], job['function'], job['args'], job['id'])
                         if numbercall:
                             nextcall += _intervalTypes[job['interval_type']](job['interval_number'])
                         ok = True
