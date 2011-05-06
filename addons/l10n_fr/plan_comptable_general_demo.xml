@@ -5276,8 +5276,8 @@
 
       <field name="parent_id" ref="pcg_511"/>
     </record>
-
-    <record id="fr_pcg_cash" model="account.account.template">
+	
+	<record id="pcg_512" model="account.account.template">
       <field name="name">Banques</field>
       <field name="code">512</field>
       <field name="type">view</field>
@@ -5285,6 +5285,16 @@
       <field name="note">Créer 1 compte par compte bancaire</field>
 
       <field name="parent_id" ref="pcg_51"/>
+    </record>
+    
+    <record id="fr_pcg_cash" model="account.account.template">
+      <field name="name">Banques</field>
+      <field name="code">5120</field>
+      <field name="type">liquidity</field>
+      <field name="user_type" ref="account_type_cash"/>
+      <field name="note">Créer 1 compte par compte bancaire</field>
+
+      <field name="parent_id" ref="pcg_512"/>
     </record>
 
 
@@ -5294,7 +5304,7 @@
       <field name="type">other</field>
       <field name="user_type" ref="account_type_cash"/>
 
-      <field name="parent_id" ref="fr_pcg_cash"/>
+      <field name="parent_id" ref="pcg_512"/>
     </record>
 
 
@@ -5304,7 +5314,7 @@
       <field name="type">other</field>
       <field name="user_type" ref="account_type_cash"/>
 
-      <field name="parent_id" ref="fr_pcg_cash"/>
+      <field name="parent_id" ref="pcg_512"/>
     </record>
 
     <record id="pcg_514" model="account.account.template">
@@ -5835,8 +5845,8 @@
 
       <field name="parent_id" ref="pcg_606"/>
     </record>
-
-    <record id="fr_pcg_expense" model="account.account.template">
+    
+    <record id="pcg_607" model="account.account.template">
       <field name="name">Achats de marchandises</field>
       <field name="code">607</field>
       <field name="type">view</field>
@@ -5846,6 +5856,16 @@
       <field name="parent_id" ref="pcg_60"/>
     </record>
 
+    <record id="fr_pcg_expense" model="account.account.template">
+      <field name="name">Achats de marchandises</field>
+      <field name="code">6070</field>
+      <field name="type">other</field>
+      <field name="user_type" ref="account_type_expense"/>
+      <field name="note">Biens revendus tels quels (7070) soit une marge</field>
+
+      <field name="parent_id" ref="pcg_607"/>
+    </record>
+
     <record id="pcg_6071" model="account.account.template">
       <field name="name">Marchandise (ou groupe) A</field>
       <field name="code">6071</field>
@@ -5853,7 +5873,7 @@
       <field name="user_type" ref="account_type_expense"/>
       <field name="note">Pour achats France</field>
 
-      <field name="parent_id" ref="fr_pcg_expense"/>
+      <field name="parent_id" ref="pcg_607"/>
     </record>
 
     <record id="pcg_6072" model="account.account.template">
@@ -5863,7 +5883,7 @@
       <field name="user_type" ref="account_type_expense"/>
       <field name="note">Pour déclaration TVA intracommunautaire</field>
 
-      <field name="parent_id" ref="fr_pcg_expense"/>
+      <field name="parent_id" ref="pcg_607"/>
     </record>
 
     <record id="pcg_608" model="account.account.template">
@@ -7991,8 +8011,8 @@
 
       <field name="parent_id" ref="pcg_70"/>
     </record>
-
-    <record id="fr_pcg_sale" model="account.account.template">
+	
+	<record id="pcg_707" model="account.account.template">
       <field name="name">Ventes de marchandises</field>
       <field name="code">707</field>
       <field name="type">view</field>
@@ -8001,6 +8021,16 @@
 
       <field name="parent_id" ref="pcg_70"/>
     </record>
+    
+    <record id="fr_pcg_sale" model="account.account.template">
+      <field name="name">Ventes de marchandises</field>
+      <field name="code">7070</field>
+      <field name="type">other</field>
+      <field name="user_type" ref="account_type_income"/>
+      <field name="note">7070-6070 = marge commerciale (contrepartie 6070)</field>
+
+      <field name="parent_id" ref="pcg_707"/>
+    </record>
 
     <record id="pcg_7071" model="account.account.template">
       <field name="name">Marchandises (ou groupe) A</field>
@@ -8008,7 +8038,7 @@
       <field name="type">other</field>
       <field name="user_type" ref="account_type_income"/>
 
-      <field name="parent_id" ref="fr_pcg_sale"/>
+      <field name="parent_id" ref="pcg_707"/>
     </record>
 
     <record id="pcg_7072" model="account.account.template">
@@ -8017,7 +8047,7 @@
       <field name="type">other</field>
       <field name="user_type" ref="account_type_income"/>
 
-      <field name="parent_id" ref="fr_pcg_sale"/>
+      <field name="parent_id" ref="pcg_707"/>
     </record>
 
     <record id="pcg_7073" model="account.account.template">
@@ -8026,7 +8056,7 @@
       <field name="type">other</field>
       <field name="user_type" ref="account_type_income"/>
 
-      <field name="parent_id" ref="fr_pcg_sale"/>
+      <field name="parent_id" ref="pcg_707"/>
     </record>
 
     <record id="pcg_708" model="account.account.template">
