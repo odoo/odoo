@@ -258,6 +258,14 @@
                 </field>
           </field>
       </record>
+
+      <!--   register Upload Logo configuration wizard  -->
+
+      <record id="config_wizard_action_res_company_logo" model="ir.actions.todo">
+          <field name="action_id" ref="action_res_company_logo"/>
+          <field name="type">normal</field>
+          <field name="state">cancel</field>
+      </record>      
        
   </data>
 </openerp>

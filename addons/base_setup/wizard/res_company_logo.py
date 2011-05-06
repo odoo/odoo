@@ -37,10 +37,11 @@ class res_company_logo(osv.osv_memory):
     def execute(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
-        record_id = context.get('active_id', False) or False
+        user_comp_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
         comp_obj = self.pool.get("res.company")
         get_val = self.browse(cr, uid, ids)[0]
-        comp_obj.write(cr, uid, record_id, {'logo': get_val.logo}, context=context)
+        if user_comp_id : 
+            comp_obj.write(cr, uid, user_comp_id, {'logo': get_val.logo}, context=context)
         return {'type': 'ir.actions.act_window_close'}
     
 res_company_logo()
