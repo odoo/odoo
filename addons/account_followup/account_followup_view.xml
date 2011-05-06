@@ -170,6 +170,27 @@
                 </field>
             </field>
         </record>
+        
+        <!--   Configure Follow-Ups  Wizard    -->
+        
+          <record id="action_view_account_followup_followup_form" model="ir.actions.act_window">
+            <field name="name">Configure Follow-Ups</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account_followup.followup</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form,tree</field>
+            <field name="view_id" ref="view_account_followup_followup_form"/>
+        </record>
+        
+         <!--      register configuration wizard -->
+        <record id="config_wizard_view_account_followup_followup_form" model="ir.actions.todo">
+            <field name="action_id" ref="action_view_account_followup_followup_form"/>
+            <field name="target">current</field>
+            <field name="type">normal</field>
+            <field name="state">skip</field>
+        </record>
+        
+        
 
     </data>
 </openerp>
