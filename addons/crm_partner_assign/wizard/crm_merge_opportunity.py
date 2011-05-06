@@ -18,6 +18,25 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+from osv import osv, fields
+from tools.translate import _
 
-import crm_forward_to_partner
-import crm_merge_opportunity
+
+class crm_merge_opportunity_assign_partner(osv.osv_memory):
+    """Merge two Opportunities"""
+
+    _inherit = 'crm.merge.opportunity'
+    
+    def _update_data(self, op_ids, oldest_opp):
+		data = super(crm_merge_opportunity_assign_partner, self)._update_data(op_ids, oldest_opp)
+			
+		new_data = {
+			'partner_latitude': self._get_first_not_null('partner_latitude', op_ids, oldest_opp),
+			'partner_longitude': self._get_first_not_null('partner_longitude', op_ids, oldest_opp),
+			'partner_assigned_id': self._get_first_not_null_id('partner_assigned_id', op_ids, oldest_opp), 
+			'date_assign' : self._get_first_not_null('date_assign', op_ids, oldest_opp),
+		}
+		data.update(new_data)
+		return data
+
+crm_merge_opportunity_assign_partner()
