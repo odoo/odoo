@@ -349,10 +349,14 @@ class DataSet(openerpweb.Controller):
         if not ids:
             ids = Model.search(domain or [], offset or 0, limit or False,
                            sort or False, request.context)
+
         if fields and fields == ['id']:
             # shortcut read if we only want the ids
             return map(lambda id: {'id': id}, ids)
-        return Model.read(ids, fields or False, request.context)
+
+        reads = Model.read(ids, fields or False, request.context)
+        reads.sort(key=lambda obj: ids.index(obj['id']))
+        return reads
 
     @openerpweb.jsonrequest
     def get(self, request, model, ids, fields=False):
@@ -563,11 +567,11 @@ class ListView(View):
 
     @openerpweb.jsonrequest
     def fill(self, request, model, id, domain,
-             offset=0, limit=False, ids=False):
-        return self.do_fill(request, model, id, domain, offset, limit, ids)
+             offset=0, limit=False, sort=None, ids=False):
+        return self.do_fill(request, model, id, domain, offset, limit, sort=sort, ids=ids)
 
     def do_fill(self, request, model, id, domain,
-                offset=0, limit=False, ids=False):
+                offset=0, limit=False, sort=None, ids=False):
         """ Returns all information needed to fill a table:
 
         * view with processed ``editable`` flag
@@ -587,11 +591,22 @@ class ListView(View):
         """
         view = self.fields_view_get(request, model, id, toolbar=True)
 
+        print sort
         rows = DataSet().do_search_read(request, model,
                                         offset=offset, limit=limit,
-                                        domain=domain, ids=ids)
+                                        domain=domain, sort=sort, ids=ids)
         eval_context = request.session.evaluation_context(
             request.context)
+
+        if sort:
+            sort_criteria = sort.split(',')[0].split(' ')
+            print sort, sort_criteria
+            view['sorted'] = {
+                'field': sort_criteria[0],
+                'reversed': sort_criteria[1] == 'DESC'
+            }
+        else:
+            view['sorted'] = {}
         return {
             'view': view,
             'records': [

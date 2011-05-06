@@ -154,7 +154,7 @@ openerp.base.DataSetSearch =  openerp.base.DataSet.extend({
     init: function(session, model) {
         this._super(session, model);
         this.domain = [];
-        this.sort = [];
+        this._sort = [];
         this.offset = 0;
         // subset records[offset:offset+limit]
         // is it necessary ?
@@ -176,7 +176,7 @@ openerp.base.DataSetSearch =  openerp.base.DataSet.extend({
             fields: fields,
             domain: this.domain,
             context: this.context,
-            sort: this.sort,
+            sort: this.sort(),
             offset: offset,
             limit: limit
         }, function (records) {
@@ -187,6 +187,35 @@ openerp.base.DataSetSearch =  openerp.base.DataSet.extend({
             }
             callback(records);
         });
+    },
+    /**
+     * Reads or changes sort criteria on the dataset.
+     *
+     * If not provided with any argument, serializes the sort criteria to
+     * an SQL-like form usable by OpenERP's ORM.
+     *
+     * If given a field, will set that field as first sorting criteria or,
+     * if the field is already the first sorting criteria, will reverse it.
+     *
+     * @param {String} [field] field to sort on, reverses it (toggle from ASC to DESC) if already the main sort criteria
+     * @param {Boolean} [force_reverse=false] forces inserting the field as DESC
+     * @returns {String|undefined}
+     */
+    sort: function (field, force_reverse) {
+        if (!field) {
+            return _.map(this._sort, function (criteria) {
+                if (criteria[0] === '-') {
+                    return criteria.slice(1) + ' DESC';
+                }
+                return criteria + ' ASC';
+            }).join(', ');
+        }
+
+        var reverse = force_reverse || (this._sort[0] === field);
+        this._sort = _.without(this._sort, field, '-' + field);
+
+        this._sort.unshift((reverse ? '-' : '') + field);
+        return undefined;
     }
 });
 
