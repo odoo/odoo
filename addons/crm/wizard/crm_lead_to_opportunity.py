@@ -140,13 +140,13 @@ class crm_lead2opportunity_partner(osv.osv_memory):
                     }, context=context)
             leads.log(cr, uid, lead.id, _("Lead '%s' has been converted to an opportunity.") % lead.name)
 
-    def send_mail_to_salesman(self, lead):
+    def send_mail_to_salesman(self, cr, uid, lead):
         email_to = lead.user_id and lead.user_id.user_email
         if not email_to:
             return False
         message_pool = self.pool.get('email.message')
         email_from = lead.section_id and lead.section_id.user_id and lead.section_id.user_id.user_email or email_to
-        partner = lead.partner_id and lead.partner_id.name or lead.partner_name 
+        partner = lead.partner_id and lead.partner_id.name or lead.partner_name
         subject = "lead %s converted into opportunity" % lead.name
         body = "Info \n Id : %s \n Subject: %s \n Partner: %s \n Description : %s " % (lead.id, lead.name, lead.partner_id.name, lead.description)
         return message_pool.schedule_with_attach(cr, uid, email_from, [email_to], subject, body)
@@ -203,7 +203,7 @@ class crm_lead2opportunity_partner(osv.osv_memory):
                 partner_id = False
 
             self._convert(cr, uid, ids, lead, partner_id, stage_ids, context=context)
-            self.send_mail_to_salesman(lead)
+            self.send_mail_to_salesman(cr, uid, lead)
             #If we convert in mass, don't merge if there is no other opportunity but no warning
             if data.name == 'merge' and (len(data.opportunity_ids) > 1 or not context.get('mass_convert') ):
                 merge_obj = self.pool.get('crm.merge.opportunity')
