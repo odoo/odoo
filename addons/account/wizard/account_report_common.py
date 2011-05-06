@@ -56,7 +56,7 @@ class account_common_report(osv.osv_memory):
         return res
 
     def onchange_filter(self, cr, uid, ids, filter='filter_no', fiscalyear_id=False, context=None):
-        res = {}
+        res = {'value': {}}
         if filter == 'filter_no':
             res['value'] = {'period_from': False, 'period_to': False, 'date_from': False ,'date_to': False}
         if filter == 'filter_date':

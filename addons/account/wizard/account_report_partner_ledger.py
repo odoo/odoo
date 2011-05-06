@@ -32,35 +32,27 @@ class account_partner_ledger(osv.osv_memory):
     _columns = {
         'initial_balance': fields.boolean('Include initial balances',
                                     help='It adds initial balance row on report which display previous sum amount of debit/credit/balance'),
-        'reconcil': fields.boolean('Include Reconciled Entries', help='Consider reconciled entries'),
+        'filter': fields.selection([('filter_no', 'No Filters'), ('filter_date', 'Date'), ('filter_period', 'Periods'), ('unreconciled', 'Unreconciled Entries')], "Filter by", required=True),
         'page_split': fields.boolean('One Partner Per Page', help='Display Ledger Report with One partner per page'),
         'amount_currency': fields.boolean("With Currency", help="It adds the currency column if the currency is different then the company currency"),
 
     }
     _defaults = {
-       'reconcil': True,
        'initial_balance': False,
        'page_split': False,
     }
-    def onchange_initial_balance(self, cr, uid, ids, initial_balance=False, reconcil=False, context=None):
-        res = {'value': {}}
-        if initial_balance:
-            res['value'] = {
-                  'reconcil': False
-            }
-        return res
 
     def onchange_filter(self, cr, uid, ids, filter='filter_no', fiscalyear_id=False, context=None):
         res = super(account_partner_ledger, self).onchange_filter(cr, uid, ids, filter=filter, fiscalyear_id=fiscalyear_id, context=context)
-        if filter == 'filter_no':
-            res['value'].update({'initial_balance': False})
+        if filter in ['filter_no', 'unreconciled']:
+            res['value'].update({'initial_balance': False, 'period_from': False, 'period_to': False, 'date_from': False ,'date_to': False})
         return res
 
     def _print_report(self, cr, uid, ids, data, context=None):
         if context is None:
             context = {}
         data = self.pre_print_report(cr, uid, ids, data, context=context)
-        data['form'].update(self.read(cr, uid, ids, ['initial_balance', 'reconcil', 'page_split', 'amount_currency'])[0])
+        data['form'].update(self.read(cr, uid, ids, ['initial_balance', 'filter', 'page_split', 'amount_currency'])[0])
         if data['form']['page_split']:
             return {
                 'type': 'ir.actions.report.xml',
