@@ -65,5 +65,22 @@
         <field name="type">normal</field>
         <field name="state">skip</field>
     </record>
+ 
+    <record id="action_base_setup_company_current_form2" model="ir.actions.act_window">
+        <field name="name">Company Configuration Current Form</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.company</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="base.view_company_form2"/>
+    </record>
+        
+    <record id="action_base_setup_company_current_form_todo" model="ir.actions.todo">
+        <field name="action_id" ref="action_base_setup_company_current_form2"/>
+        <field name="type">normal</field>
+        <field name="state">skip</field>
+        <field name="target">current</field>
+    </record>
+    
   </data>
 </openerp>
