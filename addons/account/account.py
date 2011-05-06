@@ -1554,7 +1554,8 @@ class account_tax_code(osv.osv):
                     AND move.id = line.move_id \
                     GROUP BY line.tax_code_id',
                        (parent_ids,) + where_params)
-        res=dict(cr.fetchall())
+        res = dict(cr.fetchall())
+        res2 = {}
         obj_precision = self.pool.get('decimal.precision')
         for record in self.browse(cr, uid, ids, context=context):
             def _rec_get(record):
@@ -1562,8 +1563,8 @@ class account_tax_code(osv.osv):
                 for rec in record.child_ids:
                     amount += _rec_get(rec) * rec.sign
                 return amount
-            res[record.id] = round(_rec_get(record), obj_precision.precision_get(cr, uid, 'Account'))
-        return res
+            res2[record.id] = round(_rec_get(record), obj_precision.precision_get(cr, uid, 'Account'))
+        return res2
 
     def _sum_year(self, cr, uid, ids, name, args, context=None):
         if context is None:
