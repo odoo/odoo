@@ -8,6 +8,7 @@
 #     - enforce correct vat number
 #     - support negative balance
 #     - assign amount of tax code 71-72 correclty to grid 71 or 72
+#     - support Noviat tax code scheme
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -110,7 +111,7 @@ class l10n_be_vat_declaration(osv.osv_memory):
                 #the tax code 91 can only be send for the declaration of December
                 continue
             if item['code']:
-                if item['code'] == '71-72':
+                if item['code'] == 'VI':
                     if item['sum_period'] >= 0:
                         item['code'] = '71'
                     else:
