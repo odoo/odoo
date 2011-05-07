@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-05-04 18:00+0000\n"
+"PO-Revision-Date: 2011-05-06 09:15+0000\n"
 "Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-05-05 06:00+0000\n"
+"X-Launchpad-Export-Date: 2011-05-07 06:01+0000\n"
 "X-Generator: Launchpad (build 12959)\n"
 
 #. module: account
@@ -943,7 +943,7 @@ msgstr "Выписка банка"
 #. module: account
 #: field:account.analytic.line,move_id:0
 msgid "Move Line"
-msgstr "Действие"
+msgstr "Операция"
 
 #. module: account
 #: help:account.move.line,tax_amount:0
@@ -1143,7 +1143,7 @@ msgstr ""
 #. module: account
 #: help:account.move.line,move_id:0
 msgid "The move of this entry line."
-msgstr "Перемещение этой проводки."
+msgstr "Операция этой проводки"
 
 #. module: account
 #: field:account.move.line.reconcile,trans_nbr:0
@@ -1752,7 +1752,7 @@ msgstr ""
 #: code:addons/account/account.py:499
 #, python-format
 msgid "You cannot deactivate an account that contains account moves."
-msgstr "Вы не можете отключить счет, по которому есть движение."
+msgstr "Вы не можете отключить счет, по которому есть операции."
 
 #. module: account
 #: field:account.move.line.reconcile,credit:0
@@ -1762,7 +1762,7 @@ msgstr "Сумма кредита"
 #. module: account
 #: constraint:account.move.line:0
 msgid "You can not create move line on closed account."
-msgstr "Нельзя сделать действие по закрытому счету."
+msgstr "Нельзя сделать операцию по закрытому счету."
 
 #. module: account
 #: code:addons/account/account.py:519
@@ -1958,6 +1958,9 @@ msgid ""
 "be with same name as statement name. This allows the statement entries to "
 "have the same references than the statement itself"
 msgstr ""
+"Если вы вводите название отличное от \"/\", то созданные операции проводок "
+"будут иметь названия как у документа. Это позволяет проводкам в документе "
+"иметь названия как и у самого документа"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_unreconcile
@@ -2379,7 +2382,7 @@ msgstr "Выписки"
 #. module: account
 #: report:account.analytic.account.journal:0
 msgid "Move Name"
-msgstr "Имя перемещения"
+msgstr "Название операции"
 
 #. module: account
 #: help:res.partner,property_account_position:0
@@ -2947,7 +2950,7 @@ msgstr "Налоговая декларация"
 #: help:account.account.template,currency_id:0
 #: help:account.bank.accounts.wizard,currency_id:0
 msgid "Forces all moves for this account to have this secondary currency."
-msgstr ""
+msgstr "Все операции по этому счету принудительно будут иметь вторую валюту."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_validate_account_move_line
@@ -3199,7 +3202,7 @@ msgstr "Ваши банковские и денежные счета"
 #. module: account
 #: view:account.move:0
 msgid "Search Move"
-msgstr "Искать проводку"
+msgstr "Искать операцию"
 
 #. module: account
 #: field:account.tax.code,name:0
@@ -3490,8 +3493,8 @@ msgstr "Счета к оплате"
 msgid ""
 "You cannot create entries on different periods/journals in the same move"
 msgstr ""
-"Вы не можете создавать проводки по разным периодам / журналам в одном "
-"действии."
+"Вы не можете создавать проводки по разным периодам / журналам в одной "
+"операции."
 
 #. module: account
 #: model:process.node,name:account.process_node_supplierpaymentorder0
@@ -3984,7 +3987,7 @@ msgid ""
 "When new move line is created the state will be 'Draft'.\n"
 "* When all the payments are done it will be in 'Valid' state."
 msgstr ""
-"Когда новое перемещение создается, его состояние 'Черновик'.\n"
+"Когда новая операция создается, ее состояние 'Черновик'.\n"
 "* Когда все платежи произведены состояние будет 'Проведено'."
 
 #. module: account
@@ -4520,7 +4523,7 @@ msgstr "Закрыть"
 #. module: account
 #: field:account.bank.statement.line,move_ids:0
 msgid "Moves"
-msgstr "Проводки"
+msgstr "Операции"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_vat_declaration
@@ -4604,7 +4607,7 @@ msgstr "Остаток по аналитике"
 #: report:account.third_party_ledger_other:0
 #: field:account.vat.declaration,target_move:0
 msgid "Target Moves"
-msgstr "Цель перемещений"
+msgstr "Цель операции"
 
 #. module: account
 #: field:account.subscription,period_type:0
@@ -4818,7 +4821,8 @@ msgstr "Налог на детей"
 #: constraint:account.move.line:0
 msgid ""
 "You can not create move line on receivable/payable account without partner"
-msgstr "Нельзя сделать действие по дебетовому/кредитовому счету без партнера"
+msgstr ""
+"Нельзя сделать действие по дебетовому/кредитовому счету без контрагента"
 
 #. module: account
 #: code:addons/account/account.py:2067
