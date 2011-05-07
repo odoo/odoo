@@ -19,6 +19,18 @@
       - res_company_openERP
 
 -
+  I create a test user.
+-
+  !record {model: res.users, id: user_hr_timehseet_sheet}:
+      name: HR Timesheet User
+      login: test
+      password: 'test'
+      active: True
+      company_id: res_company_openERP
+      company_ids:
+        - base.main_company
+        - res_company_openERP
+-
   I  create a new employee “Mark Johnson”.
 -
   !record {model: hr.employee, id: hr_employee_employee0}:
@@ -27,7 +39,7 @@
     gender: male
     marital: hr.hr_employee_marital_status_single
     name: Mark Johnson
-    user_id: base.user_root
+    user_id: user_hr_timehseet_sheet
 
 -
   I create new Timesheet journal for employee.
@@ -69,7 +81,7 @@
     date_to: !eval "'%s-05-31' %(datetime.now().year)"
     name: !eval "'Week-22(%s)' %(datetime.now().year)"
     state: new
-    user_id: base.user_root
+    user_id: user_hr_timehseet_sheet
     employee_id: 'hr_employee_employee0'
 -
   Now , at the time of login, I create Attendances and perform "Sign In" action.
@@ -100,7 +112,7 @@
         amount: -90.00
         product_id: hr_timesheet.product_consultant
         general_account_id: account.a_expense
-        user_id: base.user_root
+        user_id: user_hr_timehseet_sheet
         journal_id: hr_timesheet.analytic_journal
 
 -
@@ -131,7 +143,7 @@
         amount: -90.00
         product_id: hr_timesheet.product_consultant
         general_account_id: account.a_expense
-        user_id: base.user_root
+        user_id: user_hr_timehseet_sheet
         journal_id: hr_timesheet.analytic_journal
 
 -

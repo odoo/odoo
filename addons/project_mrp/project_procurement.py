@@ -19,10 +19,10 @@
 #
 ##############################################################################
 
-from osv import fields, osv, orm
+from osv import fields, osv
 
-import tools
-from tools.translate import _ 
+from tools.translate import _
+
 class procurement_order(osv.osv):
     _name = "procurement.order"
     _inherit = "procurement.order"
