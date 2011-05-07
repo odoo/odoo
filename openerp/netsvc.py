@@ -213,6 +213,19 @@ def init_logger():
     logger.addHandler(handler)
     logger.setLevel(int(tools.config['log_level'] or '0'))
 
+# A alternative logging scheme for automated runs of the
+# server intended to test it.
+def init_alternative_logger():
+    class H(logging.Handler):
+      def emit(self, record):
+        if record.levelno > 20:
+          print record.levelno, record.pathname, record.msg
+    handler = H()
+    logger = logging.getLogger()
+    logger.handlers = []
+    logger.addHandler(handler)
+    logger.setLevel(logging.ERROR)
+
 class Agent(object):
     """Singleton that keeps track of cancellable tasks to run at a given
        timestamp.

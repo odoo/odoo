@@ -89,6 +89,8 @@ logger.info('initialising distributed objects services')
 if not ( config["stop_after_init"] or \
     config["translate_in"] or \
     config["translate_out"] ):
+    openerp.osv.osv.start_object_proxy()
+    openerp.service.web_services.start_web_services()
     http_server = openerp.service.http_server
     netrpc_server = openerp.service.netrpc_server
     http_server.init_servers()

@@ -202,7 +202,6 @@ class object_proxy(netsvc.Service):
             cr.close()
         return res
 
-object_proxy()
 
 class osv_pool(object):
     """ Model registry for a particular database.
@@ -382,6 +381,9 @@ class osv(osv_base, orm.orm):
         obj.__init__(pool, cr)
         return obj
     createInstance = classmethod(createInstance)
+
+def start_object_proxy():
+    object_proxy()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

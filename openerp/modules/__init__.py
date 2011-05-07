@@ -653,7 +653,6 @@ class MigrationManager(object):
                         if mod:
                             del mod
 
-log = logging.getLogger('init')
 
 def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=None, **kwargs):
     """Migrates+Updates or Installs all module nodes from ``graph``
@@ -727,6 +726,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
         for filename in package.data.get(kind, []):
             noupdate = (kind == 'demo')
             _, ext = os.path.splitext(filename)
+            log = logging.getLogger('init')
             log.info("module %s: loading %s", module_name, filename)
             pathname = os.path.join(module_name, filename)
             file = tools.file_open(pathname)

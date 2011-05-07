@@ -348,7 +348,6 @@ class db(netsvc.ExportService):
                 l.notifyChannel('web-services', netsvc.LOG_ERROR, tb_s)
                 raise
         return True
-db()
 
 class _ObjectService(netsvc.ExportService):
      "A common base class for those who have fn(db, uid, password,...) "
@@ -580,7 +579,6 @@ GNU Public Licence.
             logger.warning("Counters of SQL will not be reliable unless DEBUG_SQL is set at the server's config.")
         return sql_db.sql_counter
 
-common()
 
 class objects_proxy(netsvc.ExportService):
     def __init__(self, name="object"):
@@ -603,8 +601,6 @@ class objects_proxy(netsvc.ExportService):
 
     def new_dispatch(self,method,auth,params):
         pass
-
-objects_proxy()
 
 
 #
@@ -666,7 +662,6 @@ class wizard(netsvc.ExportService):
                 raise Exception, 'AccessDenied'
         else:
             raise Exception, 'WizardNotFound'
-wizard()
 
 #
 # TODO: set a maximum report number per user to avoid DOS attacks
@@ -780,7 +775,13 @@ class report_spool(netsvc.ExportService):
         else:
             raise Exception, 'ReportNotFound'
 
-report_spool()
+
+def start_web_services():
+    db()
+    common()
+    objects_proxy()
+    wizard()
+    report_spool()
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
