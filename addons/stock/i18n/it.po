@@ -7,15 +7,15 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:16+0000\n"
-"PO-Revision-Date: 2011-03-31 17:09+0000\n"
+"PO-Revision-Date: 2011-05-09 03:51+0000\n"
 "Last-Translator: Lorenzo Battistini - agilebg.com "
 "<lorenzo.battistini@agilebg.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-01 06:05+0000\n"
-"X-Generator: Launchpad (build 12559)\n"
+"X-Launchpad-Export-Date: 2011-05-09 05:58+0000\n"
+"X-Generator: Launchpad (build 12959)\n"
 
 #. module: stock
 #: field:product.product,track_outgoing:0
@@ -53,7 +53,7 @@ msgstr "Azione"
 #. module: stock
 #: view:stock.production.lot:0
 msgid "Upstream Traceability"
-msgstr ""
+msgstr "Tracciabilità a monte"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_line_date
@@ -108,7 +108,7 @@ msgstr ""
 #. module: stock
 #: view:stock.picking:0
 msgid "Picking list"
-msgstr "Documento di trasporto"
+msgstr "Picking list"
 
 #. module: stock
 #: report:lot.stock.overview:0
@@ -255,7 +255,7 @@ msgstr "Riferimento"
 #: code:addons/stock/stock.py:661
 #, python-format
 msgid "Products to Process"
-msgstr "Prodotti da processare"
+msgstr "Prodotti da elaborare"
 
 #. module: stock
 #: constraint:product.category:0
@@ -534,7 +534,7 @@ msgstr "Ubicazione destinazione"
 #: code:addons/stock/stock.py:751
 #, python-format
 msgid "You can not process picking without stock moves"
-msgstr "Non è possibile processare picking senza movimenti di magazzino"
+msgstr "Non è possibile elborare picking senza movimenti di magazzino"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_product_packaging_stock_action
@@ -562,7 +562,7 @@ msgid ""
 "customer, products or sale order (using the Origin field)."
 msgstr ""
 "Troverete in questa lista tutti i prodotti che avete da consegnare ai vostri "
-"clienti. E' possibile processare le consegne direttamente da questa lista "
+"clienti. E' possibile elaborare le consegne direttamente da questa lista "
 "usando i bottoni sulla destra di ogni riga. E' possibile filtrare i prodotti "
 "da consegnare per cliente, prodotti o ordine di vendita (usando il campo "
 "origine)."
@@ -715,7 +715,7 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_partial_picking
 msgid "Process Picking"
-msgstr "Processa picking"
+msgstr "Elabora picking"
 
 #. module: stock
 #: code:addons/stock/product.py:355
@@ -1172,7 +1172,7 @@ msgstr ""
 #. module: stock
 #: view:stock.production.lot:0
 msgid "Downstream Traceability"
-msgstr ""
+msgstr "Tracciabilità a valle"
 
 #. module: stock
 #: help:product.template,property_stock_production:0
@@ -1202,6 +1202,9 @@ msgid ""
 "This is the list of all your packs. When you select a Pack, you can get the "
 "upstream or downstream traceability of the products contained in the pack."
 msgstr ""
+"Questa è la lista di tutti gli imballaggi. Quando di seleziona un "
+"imballaggio, è possibile visualizzare la tracciabilità a monte o a valle dei "
+"prodotti contenuti nell'imballaggio"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_ups_final
@@ -1395,7 +1398,7 @@ msgstr "Nessuno"
 #. module: stock
 #: view:stock.tracking:0
 msgid "Downstream traceability"
-msgstr "Tracciabilità verso il basso"
+msgstr "Tracciabilità a valle"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_invoice_onshipping.py:113
@@ -1453,7 +1456,7 @@ msgstr ""
 "* In attesa: in attesa che un altro movimento venga processato prima di "
 "diventare automaticamente disponibile (ad es. nei flussi 'Produrre su "
 "ordine')\n"
-"* Completato: è stato processato, non può più essere modificato o annullato\n"
+"* Completato: è stato elaborato, non può più essere modificato o annullato\n"
 "* Annullato: è stato annullato, non può più essere confermato"
 
 #. module: stock
@@ -1526,7 +1529,7 @@ msgid ""
 "other part that has been processed already."
 msgstr ""
 "Se questo documento è stato diviso, questo campo è collegato al documento "
-"che contiene la parte dell'ordine che è già stata processata."
+"che contiene la parte dell'ordine che è già stata elaborata."
 
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_inventory
@@ -1726,7 +1729,7 @@ msgstr "Annulla"
 #: model:ir.actions.act_window,name:stock.act_stock_return_picking
 #: model:ir.model,name:stock.model_stock_return_picking
 msgid "Return Picking"
-msgstr "Ritorno picking"
+msgstr "Ritorna picking"
 
 #. module: stock
 #: view:stock.inventory:0
@@ -1921,6 +1924,25 @@ msgid ""
 "day)\n"
 "    "
 msgstr ""
+"Il modulo di gestione magazzino può gestire magazzini multipli, punti di "
+"stoccaggio multipli e strutturati.\n"
+"Grazie alla gestione in partita doppia, il controllo del magazzino è potente "
+"e flessibile:\n"
+"* Storia dei movimenti e pianificazione,\n"
+"* Differenti metodi per le scorte (FIFO, LIFO, ...)\n"
+"* Valutazione dello stock (standard o prezzo medio, ...)\n"
+"* Robustezza confrontata con le differenze di scorte\n"
+"* Regole di riordino automatico (livello di stock, JIT, ...)\n"
+"* Supporto per i codici a barre\n"
+"* Individuazione rapida degli errori attraverso il sistema a partita doppia\n"
+"* Tracciabilità (a monte / a valle, lotti di produzione, numeri seriali, "
+"...)\n"
+"* Dashboard del magazzino che include:\n"
+"    * Prodotti da ricevere in ritardo (data < = oggi)\n"
+"    * Approvvigionamenti in errore\n"
+"    * Grafico: numero di prodotti ricevuti rispetto ai pianificati\n"
+"    * Grafico: numero di prodotti consegnati rispetto ai pianificati\n"
+"    "
 
 #. module: stock
 #: help:product.template,property_stock_inventory:0
@@ -2250,7 +2272,7 @@ msgstr ""
 #. module: stock
 #: help:stock.picking,min_date:0
 msgid "Expected date for the picking to be processed"
-msgstr "Data attesa per l'elaborazione del prelievo"
+msgstr "Data attesa per l'elaborazione del picking"
 
 #. module: stock
 #: code:addons/stock/product.py:373
@@ -2480,7 +2502,7 @@ msgstr "Visualizza giacenza prodotti"
 #. module: stock
 #: view:stock.picking:0
 msgid "Internal Picking list"
-msgstr "Lista di picking interna"
+msgstr "Picking list interna"
 
 #. module: stock
 #: view:report.stock.move:0
@@ -2786,8 +2808,7 @@ msgstr "Data Chiusura"
 msgid ""
 "Please put a partner on the picking list if you want to generate invoice."
 msgstr ""
-"Inserire un Partner nel documento di trasporto se si vuole generare la "
-"fattura."
+"Inserire un Partner nella picking list se si vuole generare la fattura."
 
 #. module: stock
 #: selection:stock.move,priority:0
@@ -3214,7 +3235,7 @@ msgstr ""
 #: code:addons/stock/wizard/stock_invoice_onshipping.py:83
 #, python-format
 msgid "This picking list does not require invoicing."
-msgstr "La lista di picking non richiede fatturazione."
+msgstr "Questa picking non richiede fatturazione."
 
 #. module: stock
 #: selection:report.stock.move,type:0
@@ -3312,7 +3333,7 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_relate_picking
 msgid "Related Picking"
-msgstr "Selezione collegata"
+msgstr "Picking collegato"
 
 #. module: stock
 #: view:report.stock.move:0
@@ -3606,12 +3627,12 @@ msgstr ""
 #: code:addons/stock/stock.py:1319
 #, python-format
 msgid "is ready to process."
-msgstr "è pronto per essere processato."
+msgstr "è pronto per essere elaborato."
 
 #. module: stock
 #: help:stock.picking,origin:0
 msgid "Reference of the document that produced this picking."
-msgstr "Riferimento al documento che ha generato questo prelievo"
+msgstr "Riferimento al documento che ha generato questo picking"
 
 #. module: stock
 #: field:stock.fill.inventory,set_stock_zero:0
@@ -3622,7 +3643,7 @@ msgstr "Imposta a zero"
 #: code:addons/stock/wizard/stock_invoice_onshipping.py:85
 #, python-format
 msgid "None of these picking lists require invoicing."
-msgstr "Nessuna di queste liste di picking richiede fatturazione."
+msgstr "Nessuna di queste picking list richiede fatturazione."
 
 #. module: stock
 #: selection:report.stock.move,month:0
@@ -3865,7 +3886,7 @@ msgstr ""
 #. module: stock
 #: view:stock.tracking:0
 msgid "Upstream traceability"
-msgstr "Tracciabilita verso l alto"
+msgstr "Tracciabilita a monte"
 
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.report_location_overview_all
