@@ -2,8 +2,14 @@
 <openerp>
     <data>
 	<record id="hr_payroll_head_major" model="hr.salary.head">
-		<field name="name">Salaire Majore</field>
+		<field name="name">Premium pay 108% Worker</field>
 		<field name="code">MAJ</field>
+	</record>
+
+
+	<record id="hr_payroll_head_employee" model="hr.salary.head">
+		<field name="name">Employee Salary</field>
+		<field name="code">NON-MAJ</field>
 	</record>
 
         <record id="hr_payroll_head_onss" model="hr.salary.head">
@@ -42,14 +48,21 @@
 
 	<record id="hr_payroll_rules_maj" model="hr.salary.rule">
 		<field name="category_id" ref="hr_payroll_head_major"/> 
-                <field name="name">Salaire Majore</field>
-		<field name="code">MAJ</field>
+                <field name="name">Premium pay 108% Worker</field>
+		<field name="code">SALARY</field>
 		<field name="condition_select">none</field>
-		<field name="amount_select">percentage</field>
-		<field name="amount_percentage_base">rules['MAJ']</field>
-		<field name="amount_percentage">108.00</field>
+		<field name="amount_select">code</field>
+		<field name="amount_python_compute">result = contract.wage * 1.08</field>
 	</record>
 
+	<record id="hr_payroll_rules_employee" model="hr.salary.rule">
+		<field name="category_id" ref="hr_payroll_head_employee"/> 
+                <field name="name">Salary Employee</field>
+		<field name="code">SALARY</field>
+		<field name="condition_select">none</field>
+		<field name="amount_select">code</field>
+		<field name="amount_python_compute">result = contract.wage * 1</field>
+	</record>
 	
         <record id="hr_payroll_rules_onss_rule" model="hr.salary.rule">
 		<field name="category_id" ref="hr_payroll_head_onss"/> 
@@ -58,9 +71,11 @@
 		<field name="sequence">41</field>
 		<field name="condition_select">none</field>
 		<field name="amount_select">percentage</field>
-		<field name="amount_percentage_base">contract.wage</field>
+		<field name="amount_percentage_base">rules['SALARY']</field>
 		<field name="amount_percentage">-13.07</field>
         </record>
+
+	
 
 	<record id="hr_payroll_rules_p_p_b1" model="hr.salary.rule">
 		<field name="category_id" ref="hr_payroll_head_pp"/> 
@@ -319,7 +334,7 @@
         <record id="hr_payroll_salary_structure_employee" model="hr.payroll.structure">
             <field name="code">C.P.218</field>
             <field name="name">Belgian Employee</field>
-	    <field eval="[(6, 0, [ref('hr_payroll_rules_onss_rule'),ref('hr_payroll_rules_p_p_b1'),ref('hr_payroll_rules_child_alw'),ref('hr_payroll_rules_parent_ch'),ref('hr_payroll_rules_reim_travel'),ref('hr_payroll_rules_mis_ex_onss'),ref('hr_payroll_rules_insurance'),ref('hr_payroll_rules_advantage'),ref('hr_payroll_rules_suppl_net'),ref('hr_payroll_rules_retained_net')])]" name="rule_ids"/>
+	    <field eval="[(6, 0, [ref('hr_payroll_rules_onss_rule'),ref('hr_payroll_rules_employee'),ref('hr_payroll_rules_p_p_b1'),ref('hr_payroll_rules_child_alw'),ref('hr_payroll_rules_parent_ch'),ref('hr_payroll_rules_reim_travel'),ref('hr_payroll_rules_mis_ex_onss'),ref('hr_payroll_rules_insurance'),ref('hr_payroll_rules_advantage'),ref('hr_payroll_rules_suppl_net'),ref('hr_payroll_rules_retained_net')])]" name="rule_ids"/>
 	    <field name="company_id" ref="base.main_company"/>	
 	    <field name="parent_id" ref="hr_payroll.structure_base"/>
         </record>
