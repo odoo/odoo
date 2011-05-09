@@ -131,13 +131,19 @@
                             <page string="Depreciation board">
 <!--                                <field name="value_total"/>
                                 <field name="value_residual"/>-->
-				<field name="depreciation_line_ids" colspan="4" nolabel="1">
+				<field name="depreciation_line_ids" colspan="4" nolabel="1" mode="tree,graph">
                                   <tree>
-                                <field name="name"/>
-				<field name="deprec_date"/>
-                                <field name="sequence"/>
+				<field name="depreciation_date"/>
+                                <field name="sequence" invisible="1"/>
                                 <field name="amount"/>
-				<field name="deprec_value"/></tree>
+				<field name="depreciated_value"/>
+				<field name="remaining_value"/>
+                                 </tree>
+                                  <graph type="bar">
+                                    <field name="name"/>
+                                    <field name="amount"/>
+				    <field name="depreciated_value"/>
+                                  </graph>
                                 </field>
                                       
                                 <button type="object" name="compute_depreciation_board" string="Compute" icon="terp-stock_format-scientific" colspan="2"/>
