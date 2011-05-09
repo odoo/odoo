@@ -449,7 +449,7 @@ class sale_order(osv.osv):
         res_id = res and res[1] or False,
 
         return {
-            'name': 'Customer Invoices',
+            'name': _('Customer Invoices'),
             'view_type': 'form',
             'view_mode': 'form',
             'view_id': [res_id],
