@@ -218,7 +218,7 @@ class product_category(osv.osv):
         'type' : lambda *a : 'normal',
     }
 
-    _order = "sequence"
+    _order = "sequence, name"
     def _check_recursion(self, cr, uid, ids, context=None):
         level = 100
         while len(ids):
