@@ -1213,14 +1213,14 @@ class stock_move(osv.osv):
             move_obj = self.pool.get('stock.move')
             for picking, todo in self._chain_compute(cr, uid, moves, context).items():
                 ptype = self.pool.get('stock.location').picking_type_get(cr, uid, todo[0][0].location_dest_id, todo[0][1][0])
-                check_picking_ids = picking_obj.search(cr, uid, [('name','=',picking.name),('origin','=',str(picking.origin or '')),('type','=',ptype),('move_type','=',picking.move_type)])
+                check_picking_ids = picking_obj.search(cr, uid, [('name','=',picking.name),('origin','=',tools.ustr(picking.origin or '')),('type','=',ptype),('move_type','=',picking.move_type)])
                 if check_picking_ids:
                     pickid = check_picking_ids[0]
                 else:
                     if picking:
                         pickid = picking_obj.create(cr, uid, {
                             'name': picking.name,
-                            'origin': str(picking.origin or ''),
+                            'origin': tools.ustr(picking.origin or ''),
                             'type': ptype,
                             'note': picking.note,
                             'move_type': picking.move_type,
