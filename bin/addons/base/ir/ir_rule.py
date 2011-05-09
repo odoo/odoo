@@ -51,13 +51,26 @@ class ir_rule(osv.osv):
                 res[rule.id] = False
         return res
 
+    def _store_get_rule_ids(self, cr, uid, ids, context=None):
+        groups = self.pool.get('res.groups')
+        result = set()
+        for g in groups.browse(cr, uid, ids, context):
+            result.update(r.id for r in g.rule_groups)
+        return result
+        
+
     def _check_model_obj(self, cr, uid, ids, context=None):
         return not any(isinstance(self.pool.get(rule.model_id.model), osv.osv_memory) for rule in self.browse(cr, uid, ids, context))
 
     _columns = {
         'name': fields.char('Name', size=128, select=1),
         'model_id': fields.many2one('ir.model', 'Object',select=1, required=True),
-        'global': fields.function(_get_value, method=True, string='Global', type='boolean', store=True, help="If no group is specified the rule is global and applied to everyone"),
+        'global': fields.function(_get_value, method=True, string='Global', type='boolean',
+                                  store={
+                                        _name: (lambda s,c,u,i,ctx=None: i, ['groups'], 10),
+                                        'res.groups': (_store_get_rule_ids, ['rule_groups'], 10),
+                                  },
+                                  help="If no group is specified the rule is global and applied to everyone"),
         'groups': fields.many2many('res.groups', 'rule_group_rel', 'rule_group_id', 'group_id', 'Groups'),
         'domain_force': fields.text('Domain'),
         'domain': fields.function(_domain_force_get, method=True, string='Domain', type='text'),
