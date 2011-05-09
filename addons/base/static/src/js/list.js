@@ -68,6 +68,16 @@ openerp.base.ListView = openerp.base.Controller.extend(
             },
             'deleted': function (e, ids) {
                 self.do_delete(ids);
+            },
+            'action': function (e, action_name, id) {
+                var action = _.detect(self.columns, function (field) {
+                    return field.name === action_name;
+                });
+                if (!action) { return; }
+                // TODO: not supposed to reload everything, I think
+                self.execute_action(
+                    action, self.dataset, self.session.action_manager,
+                    id, self.do_reload);
             }
         });
 
@@ -163,24 +173,6 @@ openerp.base.ListView = openerp.base.Controller.extend(
 
         var $table = this.$element.find('table');
         this.list.move_to($table);
-        // Cell events
-        $table.delegate(
-            'td.oe-field-cell button', 'click', function (e) {
-                e.stopImmediatePropagation();
-
-                var $cell = $(e.currentTarget).closest('td');
-
-                var col_index = $cell.prevAll('td').length;
-                var field = self.visible_columns[col_index];
-
-                var $row = $cell.parent('tr');
-                var row = self.rows[$row.prevAll().length];
-
-                // TODO: we should probably only reload content, also maybe diff records or something, instead of replacing every single row
-                self.execute_action(
-                    field, self.dataset, self.session.action_manager,
-                    row.data.id.value, self.do_reload);
-            });
 
         // Global rows handlers
         $table.delegate('tr', 'click', this.on_select_row);
@@ -397,10 +389,14 @@ openerp.base.ListView.List = Class.extend(
      * `selected`
      *   Triggered when a row is selected (using check boxes), provides an
      *   array of ids of all the selected records.
-     *
      * `deleted`
      *   Triggered when deletion buttons are hit, provide an array of ids of
      *   all the records being marked for suppression.
+     * `action`
+     *   Triggered when an action button is clicked, provides two parameters:
+     *
+     *   * The name of the action to execute (as a string)
+     *   * The id of the record to execute the action on
      *
      * @constructs
      * @param {Object} opts display options, identical to those of :js:class:`openerp.base.ListView`
@@ -421,11 +417,16 @@ openerp.base.ListView.List = Class.extend(
             })
             .delegate('td.oe-record-delete button', 'click', function (e) {
                 e.stopPropagation();
-                var $row = $(e.target).closest('tr'),
-                   event = $.Event('deleted');
-                $(self).trigger(
-                    event,
-                    [[self.row_id($row)]]);
+                var $row = $(e.target).closest('tr');
+                $(self).trigger('deleted', [[self.row_id($row)]]);
+            })
+            .delegate('td.oe-field-cell button', 'click', function (e) {
+                e.stopPropagation();
+                var $target = $(e.currentTarget),
+                      field = $target.closest('td').data('field'),
+                  record_id = self.row_id($target.closest('tr'));
+
+                $(self).trigger('action', [field, record_id]);
             });
     },
     move_to: function (element) {
