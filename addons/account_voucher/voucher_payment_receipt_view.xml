@@ -95,7 +95,7 @@
                             widget="selection" select="1"
                             on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date, context)"
                             string="Payment Method"/>
-                        <field name="date" select="1" on_change="onchange_date(partner_id, journal_id, amount, currency_id, type, date)"/>
+                        <field name="date" select="1" on_change="onchange_date(partner_id, journal_id, amount, currency_id, type, date, context)"/>
                         <field name="reference" select="1" string="Payment Ref"/>
                         <field name="name" colspan="2"/>
                         <field name="account_id"
@@ -158,7 +158,7 @@
                             widget="selection" select="1"
                             on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date, context)"
                             string="Payment Method"/>
-                        <field name="date" select="1" on_change="onchange_date(partner_id, journal_id, amount, currency_id, type, date)"/>
+                        <field name="date" select="1" on_change="onchange_date(partner_id, journal_id, amount, currency_id, type, date, context)"/>
                         <field name="reference" select="1" string="Payment Ref"/>
                         <field name="name" colspan="2"/>
                         <field name="company_id" select="1" widget="selection" groups="base.group_multi_company"/>
@@ -297,7 +297,7 @@
                             widget="selection" select="1"
                             on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date, context)"
                             string="Payment Method"/>
-                        <field name="date" select="1" on_change="onchange_date(partner_id, journal_id, amount, currency_id, type, date)"/>
+                        <field name="date" select="1" on_change="onchange_date(partner_id, journal_id, amount, currency_id, type, date, context)"/>
                         <field name="reference" select="1" string="Payment Ref"/>
                         <field name="name" colspan="2"/>
                         <field name="company_id" select="1" widget="selection" groups="base.group_multi_company"/>
