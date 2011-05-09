@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+    <record model="ir.ui.view" id="view_asset_asset_report_tree">
+	<field name="name">asset.asset.report.tree</field>
+	<field name="model">asset.asset.report</field>
+	<field name="type">tree</field>
+	<field name="arch" type="xml">
+	    <tree string="Assets">
+	    </tree>
+	</field>
+    </record>
+<!--    <record model="ir.actions.act_window" id="action_account_asset_report_form">
+	<field name="name">account.asset.report.graph</field>
+	<field name="model">account.asset.report</field>
+	<field name="type">graph</field>
+	<field name="arch" type="xml">
+	    <graph string="Assets Analysis" type="bar">
+	    </graph>
+	</field>
+    </record>
+    -->
+    <record id="view_asset_asset_report_search" model="ir.ui.view">
+        <field name="name">asset.asset.report.search</field>
+	<field name="model">asset.asset.report</field>
+	<field name="type">search</field>
+	<field name="arch" type="xml">
+	    <search string="Assets Analysis">
+	      <group col="10" colspan="12">
+	 	    <filter string="State"
+		        icon="terp-stock_effects-object-colorize"
+			domain="[('state','=','draft')]"
+			help="Draft Assets"/>
+              </group>
+	      <newline/>
+	      <group expand="1" string="Group By...">
+	          <filter string="Asset" name="asset_id" context="{'group_by':'asset_id'}"/>
+                  <filter string="Asset Category" name="asset_category"/>
+		  <separator orientation="vertical"/>
+		  <filter string="Asset Date" name="date"/>
+	      </group>
+	     </search>	
+	</field>
+    </record>
+	
+    
+    <record model="ir.actions.act_window" id="action_asset_asset_report">	
+    	<field name="name">Assets Analysis</field>
+	<field name="res_model">asset.asset.report</field>
+	<field name="view_type">form</field>
+	<field name="view_mode">tree</field>
+	<field name="search_view_id" ref="view_asset_asset_report_search"/>
+	<field name="help">From this report, you can have an overview on all depreciation. The tool search can also be used to personalise your Assets reports and so, match this analysis to your needs;</field>
+    </record>
+    <menuitem action="action_asset_asset_report"
+	       id="menu_action_asset_asset_report"
+	       parent="account.menu_finance_statistic_report_statement"
+	       />
+</data>
+</openerp>
