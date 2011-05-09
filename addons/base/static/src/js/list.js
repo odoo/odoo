@@ -383,7 +383,28 @@ openerp.base.ListView = openerp.base.Controller.extend(
 });
 _.extend(openerp.base.ListView.prototype, openerp.base.ActionExecutor);
 
-openerp.base.ListView.List = Class.extend({
+openerp.base.ListView.List = Class.extend(
+    /** @lends openerp.base.ListView.List# */{
+    /**
+     * List display for the ListView, handles basic DOM events and transforms
+     * them in the relevant higher-level events, to which the list view (or
+     * other consumers) can subscribe.
+     *
+     * Events on this object are registered via jQuery.
+     *
+     * Available events:
+     *
+     * `selected`
+     *   Triggered when a row is selected (using check boxes), provides an
+     *   array of ids of all the selected records.
+     *
+     * `deleted`
+     *   Triggered when deletion buttons are hit, provide an array of ids of
+     *   all the records being marked for suppression.
+     *
+     * @constructs
+     * @param {Object} opts display options, identical to those of :js:class:`openerp.base.ListView`
+     */
     init: function (opts) {
         var self = this;
         // columns, rows, options
@@ -453,7 +474,7 @@ openerp.base.ListView.List = Class.extend({
     row_id: function (row) {
         return this.rows[this.row_position(row)].data.id.value;
     }
-    // Click events: action, delete, row itself
+    // Click events: action, row itself
     // drag and drop
     // editable?
 });
