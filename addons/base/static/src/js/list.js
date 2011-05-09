@@ -78,6 +78,9 @@ openerp.base.ListView = openerp.base.Controller.extend(
                 self.execute_action(
                     action, self.dataset, self.session.action_manager,
                     id, self.do_reload);
+            },
+            'row_link': function (e, index) {
+                self.switch_to_record(index);
             }
         });
 
@@ -174,9 +177,6 @@ openerp.base.ListView = openerp.base.Controller.extend(
         var $table = this.$element.find('table');
         this.list.move_to($table);
 
-        // Global rows handlers
-        $table.delegate('tr', 'click', this.on_select_row);
-
         // sidebar stuff
         if (this.view_manager && this.view_manager.sidebar) {
             this.view_manager.sidebar.set_toolbar(data.fields_view.toolbar);
@@ -241,30 +241,6 @@ openerp.base.ListView = openerp.base.Controller.extend(
                 this.view_manager.on_mode_switch(view);
             }
         }, this));
-    },
-    /**
-     * Base handler for clicking on a row, discovers the index of the record
-     * corresponding to the clicked row in the list view's dataset.
-     *
-     * Should not be overridden, use
-     * :js:func:`~openerp.base.ListView.switch_to_record` to customize the
-     * behavior of the list view when clicking on a row instead.
-     *
-     * @param {Object} event jQuery DOM event object
-     */
-    on_select_row: function (event) {
-        var $target = $(event.currentTarget);
-        if (!$target.parent().is('tbody')) {
-            return;
-        }
-        // count number of preceding siblings to line clicked
-        var row = this.rows[$target.prevAll().length];
-
-        var index = _.indexOf(this.dataset.ids, row.data.id.value);
-        if (index == undefined || index === -1) {
-            return;
-        }
-        this.switch_to_record(index);
     },
     do_show: function () {
         this.$element.show();
@@ -397,6 +373,9 @@ openerp.base.ListView.List = Class.extend(
      *
      *   * The name of the action to execute (as a string)
      *   * The id of the record to execute the action on
+     * `row_link`
+     *   Triggered when a row of the table is clicked, provides the index (in
+     *   the rows array) and id of the selected record to the handle function.
      *
      * @constructs
      * @param {Object} opts display options, identical to those of :js:class:`openerp.base.ListView`
@@ -427,6 +406,13 @@ openerp.base.ListView.List = Class.extend(
                   record_id = self.row_id($target.closest('tr'));
 
                 $(self).trigger('action', [field, record_id]);
+            })
+            .delegate('tr', 'click', function (e) {
+                e.stopPropagation();
+                $(self).trigger(
+                    'row_link',
+                    [self.row_position(e.currentTarget),
+                     self.row_id(e.currentTarget)]);
             });
     },
     move_to: function (element) {
@@ -475,7 +461,6 @@ openerp.base.ListView.List = Class.extend(
     row_id: function (row) {
         return this.rows[this.row_position(row)].data.id.value;
     }
-    // Click events: action, row itself
     // drag and drop
     // editable?
 });
