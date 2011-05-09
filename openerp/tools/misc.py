@@ -1283,11 +1283,6 @@ def detect_server_timezone():
 
 def get_server_timezone():
     # timezone detection is safe in multithread, so lazy init is ok here
-    if config['timezone'] and  \
-        not isinstance(config['timezone'], basestring):
-      loglevels.Logger().notifyChannel("detect_server_timezone", loglevels.LOG_WARNING,
-        "Invalid timezone value in configuration or environment: %r, using UTC instead. Please fix this in your configuration" %(config['timezone']))
-      return 'UTC'
     if (not config['timezone']):
         config['timezone'] = detect_server_timezone()
     return config['timezone']

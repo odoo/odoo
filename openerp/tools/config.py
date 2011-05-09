@@ -32,7 +32,7 @@ def check_ssl():
     try:
         from OpenSSL import SSL
         import socket
-        
+
         return hasattr(socket, 'ssl') and hasattr(SSL, "Connection")
     except:
         return False
@@ -349,7 +349,8 @@ class configmanager(object):
         self.options['update'] = opt.update and dict.fromkeys(opt.update.split(','), 1) or {}
         self.options['translate_modules'] = opt.translate_modules and map(lambda m: m.strip(), opt.translate_modules.split(',')) or ['all']
         self.options['translate_modules'].sort()
-
+        die(self.options['timezone'] and not isinstance(self.options['timezone'], basestring),
+            "Invalid timezone value in configuration or environment: %r, Please fix this in your configuration" %(self.options['timezone']))
         if self.options['timezone']:
             # If an explicit TZ was provided in the config, make sure it is known
             try:
