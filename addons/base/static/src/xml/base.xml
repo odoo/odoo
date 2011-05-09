@@ -491,7 +491,8 @@
         <t t-set="expand" t-value="false"/>
         <t t-set="label" t-value="'Custom Filters'"/>
         <t t-set="content">
-            <div class="searchview_extended_groups_list"/>
+            <div class="searchview_extended_groups_list">
+            </div>
             <button class="searchview_extended_add_group"
                     type="button">Add group of conditions</button>
         </t>
@@ -572,8 +573,8 @@
     </div>
 </t>
 <t t-name="Many2XSelectPopup">
-    <div id="element_id">
-        Brian is in the kitchen.
+    <div t-att-id="element_id">
+        <div t-att-id="element_id + '_search'"></div>
     </div>
 </t>
 </templates>

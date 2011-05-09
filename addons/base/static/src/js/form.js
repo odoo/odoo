@@ -962,9 +962,9 @@ openerp.base.form.Many2ManyListView = openerp.base.ListView.extend({
     },
     do_add_record: function (e) {
         e.stopImmediatePropagation();
-        debugger;
         var pop = new openerp.base.form.Many2XSelectPopup(null, this.m2m_field.view.session);
-        pop.select_element(null,null);
+        pop.select_element(this.model);
+        //TODO niv: add callback
     },
     on_select_row: function(event) {
         var $target = $(event.currentTarget);
@@ -989,14 +989,33 @@ openerp.base.form.Many2ManyListView = openerp.base.ListView.extend({
 openerp.base.form.Many2XSelectPopup = openerp.base.BaseWidget.extend({
     identifier_prefix: "many2xselectpopup",
     template: "Many2XSelectPopup",
-    select_element: function(model, callback) {
+    select_element: function(model) {
         this.model = model;
-        this.callback = callback;
         var html = this.render();
         jQuery(html).dialog({title: '',
                     modal: true,
                     minWidth: 800});
         this.start();
+    },
+    start: function() {
+        this.dataset = new openerp.base.DataSetSearch(this.session, this.model);
+        this.setup_search_view();
+    },
+    setup_search_view: function() {
+        var self = this;
+        if (this.searchview) {
+            this.searchview.stop();
+        }
+        this.searchview = new openerp.base.SearchView(this, this.session, this.element_id + "_search",
+                this.dataset, false, {});
+        /*this.searchview.on_search.add(function(domains, contexts, groupbys) {
+            //TODO niv: do it correctly
+            self.views[self.active_view].controller.do_search.call(
+                self, domains, contexts, groupbys);
+        });*/
+        return this.searchview.start();
+    },
+    on_select_element: function(element_id) {
     }
 });
 
