@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-05-01 16:38+0000\n"
+"PO-Revision-Date: 2011-05-08 12:32+0000\n"
 "Last-Translator: Ayhan KIZILTAN <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-05-02 04:36+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-05-09 04:36+0000\n"
+"X-Generator: Launchpad (build 12959)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -7828,6 +7828,10 @@ msgid ""
 "can easily generate refunds and reconcile them directly from the invoice "
 "form."
 msgstr ""
+"Müşteri Geri Ödemeleri ile müşterilerinize ait alacak dekontlarını "
+"yönetebilirsiniz. Bir gerti ödeme, bir faturanın tamamına ya da kısmi olarak "
+"alacak yansıtan belgedir. Fatura formundan direkt olarak geri ödeme ve "
+"uzlaşma oluşturabilirsiniz."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_vat_declaration
@@ -7839,6 +7843,12 @@ msgid ""
 "useful because it enables you to preview at any time the tax that you owe at "
 "the start and end of the month or quarter."
 msgstr ""
+"Bu menü, faturalarınız ve ödemeleriniz baz alınarak KDV bildirimi yazdırır. "
+"Bir mali yıla ait bir ya da daha çok dönem seçebilirsiniz. Vergi bildirimi "
+"için gerekli bilgi OpenERP tarafından faturalarınızdan (veya bazı ülkelerde "
+"ödemelerden) otomatik olarak çıkartılır. Bu bilgi gerçek zamana güncellenir. "
+"Bu çok kullanışlı bir işlemdir, çünkü; ay başı ve ay sonunda ya da üç aylık "
+"dönemlere ait vergilerinizi istediğiniz zaman görmenizi sağlar."
 
 #. module: account
 #: report:account.invoice:0
@@ -7871,6 +7881,8 @@ msgid ""
 "added, Loss: Amount will be duducted), which is calculated from Profilt & "
 "Loss Report"
 msgstr ""
+"Bu hesap, Kar ve Zara Raporundan hesaplanan Kar/Zarar (Kar: Tutar eklenir, "
+"Zarar: Tutar düşülür) transferi için kullanılır."
 
 #. module: account
 #: help:account.move.line,blocked:0
@@ -7982,6 +7994,10 @@ msgid ""
 "sales orders or deliveries. You should only confirm them before sending them "
 "to your customers."
 msgstr ""
+"Müşteri Faturaları ile müşterilerinize kesilen satış faturalarını "
+"yönetebilirsiniz. OpenERP de satış siparişleri ya da teslimatlardan otomatik "
+"olarak taslak faturalar oluşturabilir. Müşteriye göndermeden önce bunları "
+"onaylamanız gerekir."
 
 #. module: account
 #: view:account.entries.report:0
@@ -8054,6 +8070,8 @@ msgstr "Suppliers"
 msgid ""
 "You cannot create more than one move per period on centralized journal"
 msgstr ""
+"Merkezilendirilmiş yevmiyelerde bir dönem için birden fazla hareket "
+"yaratamazsınız."
 
 #. module: account
 #: view:account.journal:0
@@ -8071,6 +8089,8 @@ msgid ""
 "The residual amount on a receivable or payable of a journal entry expressed "
 "in the company currency."
 msgstr ""
+"Alacak veya borç bakiyeleri yevmiye girişleri firma para birimi olarak ifade "
+"edilir."
 
 #. module: account
 #: view:account.payment.term.line:0
@@ -8174,7 +8194,7 @@ msgstr ""
 msgid ""
 "The amount of the voucher must be the same amount as the one on the "
 "statement line"
-msgstr ""
+msgstr "Fiş tutarı banka ekstresi tutarı ile aynı olmalı"
 
 #. module: account
 #: code:addons/account/account_move_line.py:1131
@@ -8192,7 +8212,7 @@ msgstr "Keep empty for all open fiscal years"
 #: code:addons/account/account_move_line.py:1056
 #, python-format
 msgid "The account move (%s) for centralisation has been confirmed!"
-msgstr ""
+msgstr "Merkezileştirme için  (% s) hesap hareketi onaylandı!"
 
 #. module: account
 #: help:account.move.line,amount_currency:0
@@ -8253,6 +8273,12 @@ msgid ""
 "would be referred to as FY 2011. You are not obliged to follow the actual "
 "calendar year."
 msgstr ""
+"Şirketinizin mali yılını İhtiyaçlarınıza göre tanımlayın. Bir mali yıl bir "
+"şirketin hesaplarının kapandığı dönemin sonudur (genellikle 12 ay). Mali yıl "
+"genellikle bitiş tarihi yılıyla adlandırılır. Örneğin; bir şirketin mali "
+"yılı 30 Kasım 2011 de biterse 1 Aralık 2010 ve 30 Kasım 2011 tarihleri "
+"​​arasındaki her şey FY 2011 olarak anılacaktır. Gerçek takvim yılını "
+"izlemek zorunda değilsiniz."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_acount_move_line_reconcile_open
@@ -8472,7 +8498,7 @@ msgstr "Dear Sir/Madam,"
 #. module: account
 #: view:account.installer.modules:0
 msgid "Configure Your Accounting Application"
-msgstr ""
+msgstr "Muhasebe Uygulamanızı Yapılandırın"
 
 #. module: account
 #: code:addons/account/account.py:2820
@@ -8593,7 +8619,7 @@ msgstr "Document: Customer account statement"
 #. module: account
 #: constraint:account.move.line:0
 msgid "You can not create move line on view account."
-msgstr ""
+msgstr "Hesap Görünümünde hareket oluşturamazsınız."
 
 #. module: account
 #: code:addons/account/wizard/account_change_currency.py:71
@@ -8609,6 +8635,10 @@ msgid ""
 "partially. You can easily generate refunds and reconcile them directly from "
 "the invoice form."
 msgstr ""
+"Tedarikçi Geri Ödemelerinde, tedarikçilerden aldığınız alacak dekontlarını "
+"yönetebilirsiniz. Bir geri ödeme belgesi bir faturanın tümüne ya da kısmi "
+"olarak alacak olarak yansıyanbir belgedir. Fatura formunda doğrudan kolayca "
+"geri ödeme oluşturabilir ve bunların uzlaşmasını yapabilirsiniz."
 
 #. module: account
 #: view:account.account.template:0
@@ -8687,6 +8717,8 @@ msgid ""
 "This report is analysis by partner. It is a PDF report containing one line "
 "per partner representing the cumulative credit balance."
 msgstr ""
+"Bu rapor ortak tarafından analiz edilmiştir. Her satırda bir paydaş (ortak) "
+"için kümülatif kredi bakiyesi içeren bir PDF raporudur."
 
 #. module: account
 #: selection:account.account,type:0
@@ -9451,7 +9483,7 @@ msgstr "Total"
 #: code:addons/account/wizard/account_move_journal.py:97
 #, python-format
 msgid "Journal: All"
-msgstr ""
+msgstr "Yevmiye: Tümü"
 
 #. module: account
 #: field:account.account,company_id:0
