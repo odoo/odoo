@@ -964,7 +964,15 @@ openerp.base.form.Many2ManyListView = openerp.base.ListView.extend({
         e.stopImmediatePropagation();
         var pop = new openerp.base.form.Many2XSelectPopup(null, this.m2m_field.view.session);
         pop.select_element(this.model);
-        //TODO niv: add callback
+        var self = this;
+        pop.on_select_element.add(function(element_id) {
+            if(! _.detect(self.dataset.ids, function(x) {return x == element_id;})) {
+                self.dataset.ids.push(element_id);
+                self.dataset.count = self.dataset.ids.length;
+                self.do_reload();
+            }
+            pop.stop();
+        });
     },
     on_select_row: function(event) {
         var $target = $(event.currentTarget);
@@ -998,8 +1006,13 @@ openerp.base.form.Many2XSelectPopup = openerp.base.BaseWidget.extend({
         this.start();
     },
     start: function() {
+        this._super();
         this.dataset = new openerp.base.DataSetSearch(this.session, this.model);
         this.setup_search_view();
+        this.view_list = new openerp.base.form.Many2XPopupListView( null, this.session,
+                this.element_id + "_view_list", this.dataset, false);
+        this.view_list.popup = this;
+        this.view_list.start();
     },
     setup_search_view: function() {
         var self = this;
@@ -1008,14 +1021,19 @@ openerp.base.form.Many2XSelectPopup = openerp.base.BaseWidget.extend({
         }
         this.searchview = new openerp.base.SearchView(this, this.session, this.element_id + "_search",
                 this.dataset, false, {});
-        /*this.searchview.on_search.add(function(domains, contexts, groupbys) {
-            //TODO niv: do it correctly
-            self.views[self.active_view].controller.do_search.call(
+        this.searchview.on_search.add(function(domains, contexts, groupbys) {
+            self.view_list.do_search.call(
                 self, domains, contexts, groupbys);
-        });*/
+        });
         return this.searchview.start();
     },
     on_select_element: function(element_id) {
+    }
+});
+
+openerp.base.form.Many2XPopupListView = openerp.base.ListView.extend({
+    switch_to_record: function(index) {
+        this.popup.on_select_element(this.dataset.ids[index]);
     }
 });
 
