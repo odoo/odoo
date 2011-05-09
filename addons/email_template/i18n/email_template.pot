@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0.0-rc2\n"
+"Project-Id-Version: OpenERP Server 6.0.2\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:15:10+0000\n"
-"PO-Revision-Date: 2011-01-11 11:15:10+0000\n"
+"POT-Creation-Date: 2011-05-09 10:18+0000\n"
+"PO-Revision-Date: 2011-05-09 10:18+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -141,11 +141,6 @@ msgstr ""
 #. module: email_template
 #: field:email.template,table_html:0
 msgid "HTML code"
-msgstr ""
-
-#. module: email_template
-#: view:email_template.mailbox:0
-msgid "Send Mail"
 msgstr ""
 
 #. module: email_template
@@ -394,12 +389,6 @@ msgid "Mako Templates"
 msgstr ""
 
 #. module: email_template
-#: help:email.template,def_body_html:0
-#: help:email.template,def_body_text:0
-msgid "The text version of the mail"
-msgstr ""
-
-#. module: email_template
 #: code:addons/email_template/email_template.py:449
 #, python-format
 msgid " (Email Attachment)"
@@ -416,8 +405,9 @@ msgid "Test Outgoing Connection"
 msgstr ""
 
 #. module: email_template
-#: model:ir.actions.act_window,name:email_template.action_email_template_mailbox
-msgid "Mailbox"
+#: help:email.template,def_body_html:0
+#: help:email.template,def_body_text:0
+msgid "The text version of the mail"
 msgstr ""
 
 #. module: email_template
@@ -791,8 +781,8 @@ msgid "Send/Receive"
 msgstr ""
 
 #. module: email_template
-#: model:ir.ui.menu,name:email_template.menu_email_template_personal_mails
-msgid "Personal Mails"
+#: view:email_template.mailbox:0
+msgid "Send Mail"
 msgstr ""
 
 #. module: email_template
@@ -875,7 +865,7 @@ msgid "Close"
 msgstr ""
 
 #. module: email_template
-#: code:addons/email_template/email_template_mailbox.py:49
+#: code:addons/email_template/email_template_mailbox.py:48
 #, python-format
 msgid "Error sending mail: %s"
 msgstr ""
@@ -956,7 +946,7 @@ msgid "Email Mailbox"
 msgstr ""
 
 #. module: email_template
-#: code:addons/email_template/email_template_mailbox.py:116
+#: code:addons/email_template/email_template_mailbox.py:104
 #, python-format
 msgid "Sending of Mail %s failed. Probable Reason:Could not login to server\n"
 "Error: %s"
@@ -1056,7 +1046,9 @@ msgstr ""
 
 #. module: email_template
 #: view:email_template.mailbox:0
+#: model:ir.actions.act_window,name:email_template.action_email_template_mailbox
 #: model:ir.ui.menu,name:email_template.menu_email_template_mails_tools
+#: model:ir.ui.menu,name:email_template.menu_email_template_personal_mails
 msgid "Emails"
 msgstr ""
 

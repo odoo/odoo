@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0.0-rc2\n"
+"Project-Id-Version: OpenERP Server 6.0.2\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:15:15+0000\n"
-"PO-Revision-Date: 2011-01-11 11:15:15+0000\n"
+"POT-Creation-Date: 2011-05-09 10:18+0000\n"
+"PO-Revision-Date: 2011-05-09 10:18+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -212,6 +212,12 @@ msgid "The accoutant validates the sheet"
 msgstr ""
 
 #. module: hr_expense
+#: code:addons/hr_expense/hr_expense.py:159
+#, python-format
+msgid "The employee's home address must have a partner linked."
+msgstr ""
+
+#. module: hr_expense
 #: field:hr.expense.report,delay_valid:0
 msgid "Delay to Valid"
 msgstr ""
@@ -241,7 +247,7 @@ msgid "State"
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:145
+#: code:addons/hr_expense/hr_expense.py:144
 #, python-format
 msgid "Please configure Default Expense account for Product purchase, `property_account_expense_categ`"
 msgstr ""
@@ -272,8 +278,9 @@ msgid "Some costs may be reinvoices to the customer"
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:145
-#: code:addons/hr_expense/hr_expense.py:158
+#: code:addons/hr_expense/hr_expense.py:144
+#: code:addons/hr_expense/hr_expense.py:157
+#: code:addons/hr_expense/hr_expense.py:159
 #, python-format
 msgid "Error !"
 msgstr ""
@@ -329,12 +336,6 @@ msgstr ""
 #. module: hr_expense
 #: model:process.node,name:hr_expense.process_node_reimbursement0
 msgid "Reimbursement"
-msgstr ""
-
-#. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:158
-#, python-format
-msgid "The employee must have a Home address"
 msgstr ""
 
 #. module: hr_expense
@@ -509,6 +510,12 @@ msgstr ""
 #. module: hr_expense
 #: view:hr.expense.report:0
 msgid "Extended Filters..."
+msgstr ""
+
+#. module: hr_expense
+#: code:addons/hr_expense/hr_expense.py:157
+#, python-format
+msgid "The employee must have a Home address."
 msgstr ""
 
 #. module: hr_expense

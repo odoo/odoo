@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0.0-rc2\n"
+"Project-Id-Version: OpenERP Server 6.0.2\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:15:48+0000\n"
-"PO-Revision-Date: 2011-01-11 11:15:48+0000\n"
+"POT-Creation-Date: 2011-05-09 10:19+0000\n"
+"PO-Revision-Date: 2011-05-09 10:19+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -97,8 +97,8 @@ msgstr ""
 
 #. module: product
 #: code:addons/product/pricelist.py:186
-#: code:addons/product/pricelist.py:339
-#: code:addons/product/pricelist.py:357
+#: code:addons/product/pricelist.py:342
+#: code:addons/product/pricelist.py:360
 #, python-format
 msgid "Warning !"
 msgstr ""
@@ -238,7 +238,7 @@ msgid "  e.g: 1 * (this unit) = ratio * (reference unit)"
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:378
+#: code:addons/product/product.py:380
 #, python-format
 msgid "Products: "
 msgstr ""
@@ -487,7 +487,7 @@ msgid "Metal Cleats"
 msgstr ""
 
 #. module: product
-#: code:addons/product/pricelist.py:340
+#: code:addons/product/pricelist.py:343
 #, python-format
 msgid "No active version for the selected pricelist !\n"
 "Please create or activate one."
@@ -1150,7 +1150,7 @@ msgid "Pallet Dimension"
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:603
+#: code:addons/product/product.py:618
 #, python-format
 msgid " (copy)"
 msgstr ""
@@ -1234,6 +1234,12 @@ msgstr ""
 #: view:product.product:0
 #: view:product.template:0
 msgid "Procurement"
+msgstr ""
+
+#. module: product
+#: view:product.product:0
+#: view:product.template:0
+msgid "Weights"
 msgstr ""
 
 #. module: product
@@ -1401,6 +1407,12 @@ msgstr ""
 #: help:product.uom,factor:0
 msgid "How many times this UoM is smaller than the reference UoM in this category:\n"
 "1 * (reference unit) = ratio * (this unit)"
+msgstr ""
+
+#. module: product
+#: model:ir.actions.act_window,name:product.product_price_type_action
+#: model:ir.ui.menu,name:product.menu_product_price_type
+msgid "Price Types"
 msgstr ""
 
 #. module: product
@@ -1579,17 +1591,12 @@ msgid "Company"
 msgstr ""
 
 #. module: product
-#: model:ir.actions.act_window,name:product.product_price_type_action
-msgid "Prices Types"
-msgstr ""
-
-#. module: product
 #: help:product.template,list_price:0
 msgid "Base price for computing the customer price. Sometimes called the catalog price."
 msgstr ""
 
 #. module: product
-#: code:addons/product/pricelist.py:515
+#: code:addons/product/pricelist.py:518
 #, python-format
 msgid "Partner section of the product form"
 msgstr ""
@@ -1841,12 +1848,6 @@ msgid "Complete PC With Peripherals"
 msgstr ""
 
 #. module: product
-#: view:product.product:0
-#: view:product.template:0
-msgid "Weigths"
-msgstr ""
-
-#. module: product
 #: constraint:res.partner:0
 msgid "Error ! You can not create recursive associated members."
 msgstr ""
@@ -1987,7 +1988,7 @@ msgid "Description"
 msgstr ""
 
 #. module: product
-#: code:addons/product/pricelist.py:358
+#: code:addons/product/pricelist.py:361
 #, python-format
 msgid "Could not resolve product category, you have defined cyclic categories of products!"
 msgstr ""
@@ -2028,7 +2029,7 @@ msgid "Shelves"
 msgstr ""
 
 #. module: product
-#: code:addons/product/pricelist.py:514
+#: code:addons/product/pricelist.py:517
 #, python-format
 msgid "Other Pricelist"
 msgstr ""

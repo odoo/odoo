@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0.0-rc2\n"
+"Project-Id-Version: OpenERP Server 6.0.2\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:14:57+0000\n"
-"PO-Revision-Date: 2011-01-11 11:14:57+0000\n"
+"POT-Creation-Date: 2011-05-09 10:18+0000\n"
+"PO-Revision-Date: 2011-05-09 10:18+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -23,6 +23,13 @@ msgstr ""
 #. module: base_setup
 #: view:base.setup.installer:0
 msgid "Install"
+msgstr ""
+
+#. module: base_setup
+#: code:addons/base_setup/__init__.py:56
+#, python-format
+msgid "The following users have been installed : \n"
+""
 msgstr ""
 
 #. module: base_setup
@@ -86,10 +93,8 @@ msgid "Helps you handle your accounting needs, if you are not an accountant, we 
 msgstr ""
 
 #. module: base_setup
-#: code:addons/base_setup/__init__.py:50
-#, python-format
-msgid "The following users have been installed : \n"
-""
+#: help:base.setup.installer,crm:0
+msgid "Helps you track and manage relations with customers such as leads, requests or issues. Can automatically send reminders, escalate requests or trigger business-specific actions based on standard events."
 msgstr ""
 
 #. module: base_setup
@@ -217,8 +222,11 @@ msgid "Allows you to create your invoices and track the payments. It is an easie
 msgstr ""
 
 #. module: base_setup
-#: model:ir.model,name:base_setup.model_base_setup_company
-msgid "base.setup.company"
+#: code:addons/base_setup/__init__.py:50
+#, python-format
+msgid "    - %s :\n"
+"		Login : %s \n"
+"		Password : %s"
 msgstr ""
 
 #. module: base_setup
@@ -297,6 +305,11 @@ msgstr ""
 #. module: base_setup
 #: help:base.setup.installer,point_of_sale:0
 msgid "Helps you get the most out of your points of sales with fast sale encoding, simplified payment mode encoding, automatic picking lists generation and more."
+msgstr ""
+
+#. module: base_setup
+#: model:ir.model,name:base_setup.model_base_setup_company
+msgid "base.setup.company"
 msgstr ""
 
 #. module: base_setup
@@ -422,8 +435,10 @@ msgid "Install Applications"
 msgstr ""
 
 #. module: base_setup
-#: help:base.setup.installer,crm:0
-msgid "Helps you track and manage relations with customers such as leads, requests or issues. Can automatically send reminders, escalate requests or trigger business-specific actions based on standard events."
+#: code:addons/base_setup/__init__.py:49
+#, python-format
+msgid "    - %s :\n"
+"		Login : %s"
 msgstr ""
 
 #. module: base_setup

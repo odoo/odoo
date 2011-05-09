@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0.0-rc2\n"
+"Project-Id-Version: OpenERP Server 6.0.2\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:16:00+0000\n"
-"PO-Revision-Date: 2011-01-11 11:16:00+0000\n"
+"POT-Creation-Date: 2011-05-09 10:19+0000\n"
+"PO-Revision-Date: 2011-05-09 10:19+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -47,6 +47,12 @@ msgid "Ledger  28  431.8 x 279.4 mm"
 msgstr ""
 
 #. module: report_webkit
+#: code:addons/report_webkit/webkit_report.py:260
+#, python-format
+msgid "No header defined for this Webkit report!"
+msgstr ""
+
+#. module: report_webkit
 #: help:ir.header_img,type:0
 msgid "Image type(png,gif,jpeg)"
 msgstr ""
@@ -63,7 +69,7 @@ msgid "Company"
 msgstr ""
 
 #. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:84
+#: code:addons/report_webkit/webkit_report.py:97
 #, python-format
 msgid "path to Wkhtmltopdf is not absolute"
 msgstr ""
@@ -79,26 +85,17 @@ msgid "B7  21  88 x 125 mm"
 msgstr ""
 
 #. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:290
-#: code:addons/report_webkit/webkit_report.py:304
-#: code:addons/report_webkit/webkit_report.py:322
+#: code:addons/report_webkit/webkit_report.py:306
+#: code:addons/report_webkit/webkit_report.py:320
 #: code:addons/report_webkit/webkit_report.py:338
+#: code:addons/report_webkit/webkit_report.py:354
 #, python-format
 msgid "Webkit render"
 msgstr ""
 
 #. module: report_webkit
-#: selection:ir.header_webkit,format:0
-msgid "Folio 27  210 x 330 mm"
-msgstr ""
-
-#. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:67
-#, python-format
-msgid "Please install executable on your system'+\n"
-"                             ' (sudo apt-get install wkhtmltopdf) or download it from here:'+\n"
-"                             ' http://code.google.com/p/wkhtmltopdf/downloads/list and set the'+\n"
-"                             ' path to the executable on the Company form."
+#: view:res.company:0
+msgid "Headers"
 msgstr ""
 
 #. module: report_webkit
@@ -107,14 +104,14 @@ msgid "Name of Image"
 msgstr ""
 
 #. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:78
+#: code:addons/report_webkit/webkit_report.py:91
 #, python-format
 msgid "Wrong Wkhtmltopdf path set in company'+\n"
 "                                'Given path is not executable or path is wrong"
 msgstr ""
 
 #. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:151
+#: code:addons/report_webkit/webkit_report.py:166
 #, python-format
 msgid "Webkit raise an error"
 msgstr ""
@@ -138,6 +135,16 @@ msgstr ""
 #. module: report_webkit
 #: selection:ir.header_webkit,format:0
 msgid "A4  0   210 x 297 mm, 8.26 x 11.69 inches"
+msgstr ""
+
+#. module: report_webkit
+#: code:addons/report_webkit/webkit_report.py:79
+#, python-format
+msgid "Please install executable on your system'+\n"
+"                             ' (sudo apt-get install wkhtmltopdf) or download it from here:'+\n"
+"                             ' http://code.google.com/p/wkhtmltopdf/downloads/list and set the'+\n"
+"                             ' path to the executable on the Company form.'+\n"
+"                             'Minimal version is 0.9.9"
 msgstr ""
 
 #. module: report_webkit
@@ -207,7 +214,7 @@ msgid "The header linked to the report"
 msgstr ""
 
 #. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:66
+#: code:addons/report_webkit/webkit_report.py:78
 #, python-format
 msgid "Wkhtmltopdf library path is not set in company"
 msgstr ""
@@ -288,12 +295,17 @@ msgid "This template will be used if the main report file is not found"
 msgstr ""
 
 #. module: report_webkit
+#: selection:ir.header_webkit,format:0
+msgid "Folio 27  210 x 330 mm"
+msgstr ""
+
+#. module: report_webkit
 #: field:ir.header_webkit,margin_top:0
 msgid "Top Margin (mm)"
 msgstr ""
 
 #. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:246
+#: code:addons/report_webkit/webkit_report.py:261
 #, python-format
 msgid "Please set a header in company settings"
 msgstr ""
@@ -439,17 +451,6 @@ msgid "A3  8   297 x 420 mm"
 msgstr ""
 
 #. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:240
-#, python-format
-msgid "'))\n"
-"        header = report_xml.webkit_header.html\n"
-"        footer = report_xml.webkit_header.footer_html\n"
-"        if not header and report_xml.header:\n"
-"          raise except_osv(\n"
-"                _('No header defined for this Webkit report!"
-msgstr ""
-
-#. module: report_webkit
 #: help:res.company,lib_path:0
 msgid "Complete (Absolute) path to the wkhtmltopdf executable."
 msgstr ""
@@ -512,7 +513,7 @@ msgid "Comm10E 25  105 x 241 mm, U.S. Common 10 Envelope"
 msgstr ""
 
 #. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:240
+#: code:addons/report_webkit/webkit_report.py:255
 #, python-format
 msgid "Webkit Report template not found !"
 msgstr ""
@@ -523,8 +524,9 @@ msgid "Left Margin (mm)"
 msgstr ""
 
 #. module: report_webkit
-#: view:res.company:0
-msgid "Headers"
+#: code:addons/report_webkit/webkit_report.py:255
+#, python-format
+msgid "Error!"
 msgstr ""
 
 #. module: report_webkit

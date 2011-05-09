@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0.0-rc2\n"
+"Project-Id-Version: OpenERP Server 6.0.2\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:16:01+0000\n"
-"PO-Revision-Date: 2011-01-11 11:16:01+0000\n"
+"POT-Creation-Date: 2011-05-09 10:19+0000\n"
+"PO-Revision-Date: 2011-05-09 10:19+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,8 +16,15 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: resource
-#: help:resource.calendar.leaves,resource_id:0
-msgid "If empty, this is a generic holiday for the company. If a resource is set, the holiday/leave is only for this resource"
+#: model:ir.module.module,description:resource.module_meta_information
+msgid "\n"
+"    Module for resource management\n"
+"     A resource represent something that can be scheduled\n"
+"     (a developer on a task or a work center on manufacturing orders).\n"
+"     This module manages a resource calendar associated to every resource.\n"
+"     It also manages the leaves of every resource.\n"
+"\n"
+"    "
 msgstr ""
 
 #. module: resource
@@ -26,8 +33,8 @@ msgid "Friday"
 msgstr ""
 
 #. module: resource
-#: field:resource.resource,resource_type:0
-msgid "Resource Type"
+#: help:resource.calendar.leaves,resource_id:0
+msgid "If empty, this is a generic holiday for the company. If a resource is set, the holiday/leave is only for this resource"
 msgstr ""
 
 #. module: resource
@@ -42,6 +49,7 @@ msgid "Resources Leaves"
 msgstr ""
 
 #. module: resource
+#: model:ir.actions.act_window,name:resource.action_resource_calendar_form
 #: view:resource.calendar:0
 #: field:resource.calendar,attendance_ids:0
 #: view:resource.calendar.attendance:0
@@ -98,6 +106,13 @@ msgstr ""
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar
 msgid "Resource Calendar"
+msgstr ""
+
+#. module: resource
+#: view:resource.calendar.leaves:0
+#: view:resource.resource:0
+#: field:resource.resource,calendar_id:0
+msgid "Working Period"
 msgstr ""
 
 #. module: resource
@@ -184,28 +199,13 @@ msgid "Name"
 msgstr ""
 
 #. module: resource
-#: model:ir.module.module,description:resource.module_meta_information
-msgid "\n"
-"    Module for resource management\n"
-"     A resource represent something that can be scheduled\n"
-"     (a developer on a task or a workcenter on manufacturing orders).\n"
-"     This module manages a resource calendar associated to every resource.\n"
-"     It also manages the leaves of every resource.\n"
-"\n"
-"    "
-msgstr ""
-
-#. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Wednesday"
 msgstr ""
 
 #. module: resource
-#: model:ir.actions.act_window,name:resource.action_resource_calendar_form
-#: view:resource.calendar.leaves:0
-#: view:resource.resource:0
-#: field:resource.resource,calendar_id:0
-msgid "Working Period"
+#: field:resource.resource,resource_type:0
+msgid "Resource Type"
 msgstr ""
 
 #. module: resource

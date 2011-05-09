@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0.0-rc2\n"
+"Project-Id-Version: OpenERP Server 6.0.2\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:15:46+0000\n"
-"PO-Revision-Date: 2011-01-11 11:15:46+0000\n"
+"POT-Creation-Date: 2011-05-09 10:19+0000\n"
+"PO-Revision-Date: 2011-05-09 10:19+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -62,7 +62,7 @@ msgid "Procurement Method"
 msgstr ""
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:298
+#: code:addons/procurement/procurement.py:304
 #, python-format
 msgid "No address defined for the supplier"
 msgstr ""
@@ -155,6 +155,11 @@ msgid "Stock Move"
 msgstr ""
 
 #. module: procurement
+#: model:ir.model,name:procurement.model_procurement_order_compute_all
+msgid "Compute all schedulers"
+msgstr ""
+
+#. module: procurement
 #: view:procurement.order:0
 msgid "Planification"
 msgstr ""
@@ -209,6 +214,12 @@ msgstr ""
 #. module: procurement
 #: constraint:res.company:0
 msgid "Error! You can not create recursive companies."
+msgstr ""
+
+#. module: procurement
+#: code:addons/procurement/procurement.py:384
+#, python-format
+msgid "Procurement '%s' is in exception: "
 msgstr ""
 
 #. module: procurement
@@ -289,7 +300,7 @@ msgid "Quantity"
 msgstr ""
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:370
+#: code:addons/procurement/procurement.py:377
 #, python-format
 msgid "Not enough stock and no minimum orderpoint rule defined."
 msgstr ""
@@ -374,11 +385,6 @@ msgid "Compute Stock"
 msgstr ""
 
 #. module: procurement
-#: view:procurement.order:0
-msgid "Late"
-msgstr ""
-
-#. module: procurement
 #: model:process.process,name:procurement.process_process_serviceproductprocess0
 msgid "Service"
 msgstr ""
@@ -416,7 +422,7 @@ msgid "plus"
 msgstr ""
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:319
+#: code:addons/procurement/procurement.py:325
 #, python-format
 msgid "Please check the Quantity in Procurement Order(s), it should not be less than 1!"
 msgstr ""
@@ -478,6 +484,12 @@ msgid "You try to assign a lot which is not from the same product"
 msgstr ""
 
 #. module: procurement
+#: code:addons/procurement/procurement.py:381
+#, python-format
+msgid "Not enough stock."
+msgstr ""
+
+#. module: procurement
 #: field:stock.warehouse.orderpoint,active:0
 msgid "Active"
 msgstr ""
@@ -495,6 +507,12 @@ msgstr ""
 #. module: procurement
 #: selection:procurement.order,state:0
 msgid "Exception"
+msgstr ""
+
+#. module: procurement
+#: code:addons/procurement/procurement.py:379
+#, python-format
+msgid "No minimum orderpoint rule defined."
 msgstr ""
 
 #. module: procurement
@@ -554,9 +572,8 @@ msgid "Date Closed"
 msgstr ""
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:372
-#, python-format
-msgid "Procurement '%s' is in exception: not enough stock."
+#: view:procurement.order:0
+msgid "Late"
 msgstr ""
 
 #. module: procurement
@@ -566,7 +583,7 @@ msgid "Cannot delete Procurement Order(s) which are in %s State!"
 msgstr ""
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:318
+#: code:addons/procurement/procurement.py:324
 #, python-format
 msgid "Data Insufficient !"
 msgstr ""
@@ -639,8 +656,9 @@ msgid "Not urgent"
 msgstr ""
 
 #. module: procurement
-#: model:ir.model,name:procurement.model_procurement_order_compute_all
-msgid "Compute all schedulers"
+#: code:addons/procurement/procurement.py:294
+#, python-format
+msgid "No default supplier defined for this product"
 msgstr ""
 
 #. module: procurement
@@ -782,7 +800,7 @@ msgid "Product UoS"
 msgstr ""
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:347
+#: code:addons/procurement/procurement.py:353
 #, python-format
 msgid "from stock: products assigned."
 msgstr ""
