@@ -43,6 +43,28 @@
 	        <field name="type">normal</field>
 	        <field name="state">skip</field>
     </record>
+ 
+        <!--  Configure Your Services Config Wiz  -->
+
+        <record model="ir.actions.act_window" id="product_services_form_view_installer">
+           <field name="name">Configure Your Services</field>
+           <field name="type">ir.actions.act_window</field>
+           <field name="res_model">product.product</field>
+           <field name="view_type">form</field>
+           <field name="view_mode">tree,form</field>
+           <field name="domain">[('type','=','service')]</field>
+           <field name="context" eval="'{\'default_type\':\'service\'}'"/>
+           <field name="view_id" ref="product.product_normal_form_view"/>
+       </record>
+
+       <record id="product_services_form_view_todo" model="ir.actions.todo">
+           <field name="action_id" ref="product_services_form_view_installer"/>
+           <field name="sequence">3</field>
+           <field name="type">normal</field>
+           <field name="state">skip</field>
+       </record>
+    
+    
 
     </data>
 </openerp>
