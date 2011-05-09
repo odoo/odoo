@@ -32,7 +32,7 @@ def check_ssl():
     try:
         from OpenSSL import SSL
         import socket
-        
+
         return hasattr(socket, 'ssl') and hasattr(SSL, "Connection")
     except:
         return False
@@ -350,7 +350,18 @@ class configmanager(object):
         self.options['translate_modules'] = opt.translate_modules and map(lambda m: m.strip(), opt.translate_modules.split(',')) or ['all']
         self.options['translate_modules'].sort()
 
+        # TODO checking the type of the parameters should be done for every
+        # parameters, not just the timezone.
+        # The call to get_server_timezone() sets the timezone; this should
+        # probably done here.
         if self.options['timezone']:
+            # Prevent the timezone to be True. (The config file parsing changes
+            # the string 'True' to the boolean value True. It would be probably
+            # be better to remove that conversion.)
+            die(not isinstance(self.options['timezone'], basestring),
+                "Invalid timezone value in configuration or environment: %r.\n"
+                "Please fix this in your configuration." %(self.options['timezone']))
+
             # If an explicit TZ was provided in the config, make sure it is known
             try:
                 import pytz

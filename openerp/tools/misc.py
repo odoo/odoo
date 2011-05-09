@@ -159,7 +159,7 @@ def exec_pg_command(name, *args):
     if not prog:
         raise Exception('Couldn\'t find %s' % name)
     args2 = (prog,) + args
-    
+
     return subprocess.call(args2)
 
 def exec_pg_command_pipe(name, *args):
