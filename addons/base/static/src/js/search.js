@@ -121,7 +121,10 @@ openerp.base.SearchView = openerp.base.Controller.extend({
             'lines': lines,
             'defaults': this.defaults
         });
-        this.$element.html(render);
+        // We don't understand why the following commented line does not work in Chrome but
+        // the non-commented line does. As far as we investigated, only God knows.
+        //this.$element.html(render);
+        jQuery(render).appendTo(this.$element);
 
         var f = this.$element.find('form');
         this.$element.find('form')
