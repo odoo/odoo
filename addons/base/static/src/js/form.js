@@ -659,15 +659,25 @@ openerp.base.form.FieldUrl = openerp.base.form.FieldChar.extend({
 openerp.base.form.FieldFloat = openerp.base.form.FieldChar.extend({
     init: function(view, node) {
         this._super(view, node);
-        this.validation_regex = /^\d+(\.\d+)?$/;
+        this.validation_regex = /^-?\d+(\.\d+)?$/;
     },
     set_value: function(value) {
-        this._super.apply(this, arguments);
-        var show_value = (value != null && value !== false) ? value.toFixed(2) : '';
+        if (!value) {
+            // As in GTK client, floats default to 0
+            value = 0;
+        }
+        this._super.apply(this, [value]);
+        var show_value = value.toFixed(2);
         this.$element.find('input').val(show_value);
     },
     set_value_from_ui: function() {
         this.value = this.$element.find('input').val().replace(/,/g, '.');
+    },
+    validate: function() {
+        this._super.apply(this, arguments);
+        if (!this.invalid) {
+            this.value = Number(this.value);
+        }
     }
 });
 
