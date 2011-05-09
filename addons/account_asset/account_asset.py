@@ -191,7 +191,7 @@ class account_asset_asset(osv.osv):
 
     _columns = {
 	#test
-#	'asset_id': fields.many2one('account.asset.asset', 'Asset', required=True, select=1),
+	'asset_id': fields.many2one('account.asset.asset', 'Asset', required=True, select=1), #TODO: remove this ?
         #analytic fields
         'journal_analytic_id': fields.many2one('account.analytic.journal', 'Analytic journal'),#FIXME: do not display if not in group analytic accounting OK
         'account_analytic_id': fields.many2one('account.analytic.account', 'Analytic account'),#FIXME: do not display if not in group analytic accounting OK
