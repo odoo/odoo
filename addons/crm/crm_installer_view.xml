@@ -66,12 +66,13 @@
     </record>
 
     <record model="ir.actions.act_window" id="crm_case_section_view_form_installer">
-        <field name="name">Create sales team</field>
+        <field name="name">Create Sales Team</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">crm.case.section</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="view_id" ref="crm.crm_case_section_view_tree"/>
+        <field name="help">Define a Sales Team to organize your different salesmen or sales departments into separate teams. Each team will work in its own list of opportunities, sales orders, etc. Each user can set a default team in his user preferences. The opportunities and sales order displayed, will automatically be filtered according to his team.</field>
     </record>
 
     <record id="crm_case_section_installer_todo" model="ir.actions.todo">
