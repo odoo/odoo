@@ -77,6 +77,41 @@ var QWeb2 = {
             }
             return -1;
         },
+        xml_node_to_string : function(node, childs_only) {
+            if (childs_only) {
+                var childs = node.childNodes, r = [];
+                for (var i = 0, ilen = childs.length; i < ilen; i++) {
+                    r.push(this.xml_node_to_string(childs[i]));
+                }
+                return r.join('');
+            } else {
+                if (node.xml !== undefined) {
+                    return node.xml;
+                } else {
+                    return (new XMLSerializer()).serializeToString(node);
+                }
+            }
+        },
+        xpath_selectNodes : function(node, expr) {
+            if (node.selectNodes !== undefined) {
+                return node.selectNodes(expr);
+            } else {
+                var xpath = new XPathEvaluator();
+                try {
+                    var result = xpath.evaluate(expr, node, null, XPathResult.ORDERED_NODE_ITERATOR_TYPE, null);
+                } catch(error) {
+                    this.exception("Error with XPath expression '" + expr + "' : " + error);
+                }
+                var r = [];
+                if (result != null) {
+                    var element;
+                    while (element = result.iterateNext()) {
+                        r.push(element);
+                    }
+                }
+                return r
+            }
+        },
         call: function(context, template, old_dict, _import, callback) {
             var new_dict = this.extend({}, old_dict);
             new_dict['__caller__'] = old_dict['__template__'];
@@ -157,8 +192,10 @@ QWeb2.Engine = (function() {
         this.templates_resources = []; // TODO: implement this.reload()
         this.templates = {};
         this.compiled_templates = {};
+        this.extend_templates = {};
         this.dict = {};
         this.tools = QWeb2.tools;
+        this.jQuery = window.jQuery;
         for (var i = 0; i < arguments.length; i++) {
             this.add_template(arguments[i]);
         }
@@ -178,8 +215,16 @@ QWeb2.Engine = (function() {
                         return this.tools.exception(node.innerText);
                     }
                     var name = node.getAttribute(this.prefix + '-name');
+                    var extend = node.getAttribute(this.prefix + '-extend');
                     if (name) {
                         this.templates[name] = node;
+                    } else if (extend) {
+                        delete(this.compiled_templates[extend]);
+                        if (this.extend_templates[extend]) {
+                            this.extend_templates[extend].push(node);
+                        } else {
+                            this.extend_templates[extend] = [node];
+                        }
                     }
                 }
             }
@@ -256,15 +301,26 @@ QWeb2.Engine = (function() {
                     "});";
         },
         render : function(template, dict) {
-            //console.time("QWeb render template " + template);
+            if (this.debug && window['console'] !== undefined) {
+                console.time("QWeb render template " + template);
+            }
             var r = this._render(template, dict);
-            //console.timeEnd("QWeb render template " + template);
+            if (this.debug && window['console'] !== undefined) {
+                console.timeEnd("QWeb render template " + template);
+            }
             return r;
         },
         _render : function(template, dict) {
             if (this.compiled_templates[template]) {
                 return this.compiled_templates[template].apply(this, [dict || {}]);
             } else if (this.templates[template]) {
+                var ext;
+                if (ext = this.extend_templates[template]) {
+                    var extend_node;
+                    while (extend_node = ext.shift()) {
+                        this.extend(template, extend_node);
+                    }
+                }
                 var code = this.compile(this.templates[template]), tcompiled;
                 try {
                     // tcompiled = new Function(code);   TODO: Check if could use this in order to avoid eval
@@ -277,6 +333,53 @@ QWeb2.Engine = (function() {
                 return this.render(template, dict);
             } else {
                 return this.tools.exception("Template '" + template + "' not found");
+            }
+        },
+        extend : function(template, extend_node) {
+            if (!this.jQuery) {
+                return this.tools.exception("Can't extend template " + template + " without jQuery");
+            }
+            for (var i = 0, ilen = extend_node.childNodes.length; i < ilen; i++) {
+                var child = extend_node.childNodes[i];
+                if (child.nodeType === 1) {
+                    var xpath = child.getAttribute(this.prefix + '-xpath'),
+                        jquery = child.getAttribute(this.prefix + '-jquery'),
+                        operation = child.getAttribute(this.prefix + '-operation'),
+                        target,
+                        error_msg = "Error while extending template '" + template;
+                    if (jquery) {
+                        target = this.jQuery(jquery, this.templates[template]);
+                    } else if (xpath) {
+                        // NOTE: due to the XPath implementation, extending a template will only work once
+                        // when using XPath because XPathResult won't match objects with other constructor than 'Element'
+                        // As jQuery will create HTMLElements, xpath will ignore them then causing problems when a
+                        // template has already been extended. XPath selectors will probably be removed in QWeb.
+                        target = this.jQuery(this.tools.xpath_selectNodes(this.templates[template], xpath));
+                    } else {
+                        this.tools.exception(error_msg + "No expression given");
+                    }
+                    error_msg += "' (expression='" + (jquery || xpath) + "') : ";
+                    var inner = this.tools.xml_node_to_string(child, true);
+                    if (operation) {
+                        var allowed_operations = "append,prepend,before,after,replace,inner".split(',');
+                        if (this.tools.arrayIndexOf(allowed_operations, operation) == -1) {
+                            this.tools.exception(error_msg + "Invalid operation : '" + operation + "'");
+                        }
+                        operation = {'replace' : 'replaceWith', 'inner' : 'html'}[operation] || operation;
+                        target[operation]($(inner));
+                    } else {
+                        try {
+                            var f = new Function(['$'], inner);
+                        } catch(error) {
+                            return this.tools.exception("Parse " + error_msg + error);
+                        }
+                        try {
+                            f.apply(target, [this.jQuery]);
+                        } catch(error) {
+                            return this.tools.exception("Runtime " + error_msg + error);
+                        }
+                    }
+                }
             }
         }
     });

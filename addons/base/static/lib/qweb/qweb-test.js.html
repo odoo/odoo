@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="http://code.jquery.com/qunit/git/qunit.css" type="text/css" media="screen"/>
     <script type="text/javascript" src="http://code.jquery.com/qunit/git/qunit.js"></script>
 
+    <script type="text/javascript" src="/base/static/lib/jquery/jquery-1.5.2.js"></script>
     <script type="text/javascript" src="qweb2.js"></script>
 
     <script>
@@ -234,6 +235,22 @@
                     "the inner value can be re-bound via t-as");
                 equals(QWeb.render('loopvars-aliasing', {seq:seq}), 'even odd even odd even ',
                     "inner loop variables should be rebound as well");
+            });
+
+            module("Template inheritance tests", {
+                setup: function () {
+                    QWeb.add_template('qweb-test-extend.xml');
+                },
+                teardown: function () {
+                    QWeb.templates = [];
+                    QWeb.tag = {};
+                    QWeb.att = {};
+                }
+            });
+
+            test("jQuery extend", function () {
+                equals(render('jquery-extend', {}), '<hr/><ul class="main"><li>1</li><li>2</li><li>3</li></ul><footer><b>END</b></footer>',
+                        "Extend template with jQuery");
             });
         });
     </script>
