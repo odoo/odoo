@@ -2127,12 +2127,11 @@ class orm(orm_template):
         :param cr: database cursor
         :param uid: current user id
         :param domain: list specifying search criteria [['field_name', 'operator', 'value'], ...]
-        :param fields: list of fields present in the list view specified on the object
-        :param groupby: list of fields on which to groupby the records
-        :type fields_list: list (example ['field_name_1', ...])
-        :param offset: optional number of records to skip
-        :param limit: optional max number of records to return
-        :param context: context arguments, like lang, time zone
+        :param list fields: list of fields present in the list view specified on the object
+        :param list groupby: fields by which the records will be grouped
+        :param int offset: optional number of records to skip
+        :param int limit: optional max number of records to return
+        :param dict context: context arguments, like lang, time zone
         :param order: optional ``order by`` specification, for overriding the natural
                       sort ordering of the groups, see also :py:meth:`~osv.osv.osv.search`
                       (supported only for many2one fields currently)
