@@ -208,7 +208,7 @@
     <t t-foreach="columns" t-as="column">
         <t t-set="attrs" t-value="column.attrs_for(row.data)"/>
         <td t-if="column.invisible !== '1'" t-att-title="column.help"
-            class="oe-field-cell">
+            class="oe-field-cell" t-att-data-field="column.id">
             <t t-if="!attrs.invisible">
                 <t t-set="is_button" t-value="column.tag === 'button'"/>
                 <!-- TODO: get correct widget from form -->
@@ -365,7 +365,9 @@
         t-att-class="'field_' + widget.type"/>
 </t>
 <t t-name="FieldProgressBar">
-    <div t-opentag="true"></div>
+    <div t-opentag="true" class="oe-progressbar">
+        <span></span>
+    </div>
 </t>
 <t t-name="WidgetButton">
     <button type="button"

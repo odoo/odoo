@@ -773,6 +773,14 @@ openerp.base.form.FieldProgressBar = openerp.base.form.Field.extend({
             value: this.value,
             disabled: this.readonly
         });
+    },
+    set_value: function(value) {
+        this._super.apply(this, arguments);
+        var show_value = Number(value);
+        if (show_value === NaN) {
+            show_value = 0;
+        }
+        this.$element.find('div').progressbar('option', 'value', show_value).find('span').html(show_value + '%');
     }
 });
 

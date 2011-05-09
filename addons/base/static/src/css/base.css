@@ -568,7 +568,6 @@ body.openerp {
 /* Form */
 .openerp table.oe_frame td {
     color: #4c4c4c;
-    font-weight: bold;
 }
 .openerp .required.error {
     border: 1px solid #900;
@@ -611,6 +610,9 @@ body.openerp {
     min-width: 90px;
     color: #1f1f1f;
 }
+.openerp textarea {
+    resize:vertical;
+}
 .openerp input[type="text"], .openerp input[type="password"], .openerp select, .openerp .button {
     height: 22px;
 }
@@ -645,6 +647,12 @@ body.openerp {
 .openerp td.invalid input, .openerp td.invalid select, .openerp td.invalid textarea {
     background-color: #F66;
     border: 1px solid #D00;
+}
+.openerp div.oe-progressbar span {
+    position: absolute;
+    margin-left: 10px;
+    margin-top: 5px;
+    font-weight: bold;
 }
 
 /* jQuery UI override */
