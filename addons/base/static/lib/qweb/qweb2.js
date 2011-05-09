@@ -216,6 +216,15 @@ QWeb2.Engine = (function() {
                     }
                     var name = node.getAttribute(this.prefix + '-name');
                     var extend = node.getAttribute(this.prefix + '-extend');
+                    if (name && extend) {
+                        // Clone template and extend it
+                        if (!this.templates[extend]) {
+                            return this.tools.exception("Can't clone undefined template " + extend);
+                        }
+                        this.templates[name] = this.templates[extend].cloneNode(true);
+                        extend = name;
+                        name = undefined;
+                    }
                     if (name) {
                         this.templates[name] = node;
                     } else if (extend) {

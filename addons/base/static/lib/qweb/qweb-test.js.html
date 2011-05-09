@@ -251,6 +251,8 @@
             test("jQuery extend", function () {
                 equals(render('jquery-extend', {}), '<hr/><ul class="main"><li>1</li><li>2</li><li>3</li></ul><footer><b>END</b></footer>',
                         "Extend template with jQuery");
+                equals(render('jquery-extend-clone', {}), '<ul><li>one</li><li>CLONED TEMPLATE</li></ul>',
+                        "Clone template");
             });
         });
     </script>
