@@ -30,6 +30,13 @@
 		<field name="code">Ch.A</field>
 		<field name="parent_id" ref="hr_payroll.DED"/>
 	</record>
+
+
+	<record id="hr_payroll_head_spouse_handicap" model="hr.salary.head">
+		<field name="name">Disabled Spouse</field>
+		<field name="code">Sp.handicap</field>
+		<field name="parent_id" ref="hr_payroll.DED"/>
+	</record>
 		
 <!-- HR SALAR RULES-->
 
@@ -39,7 +46,7 @@
 		<field name="code">MAJ</field>
 		<field name="condition_select">none</field>
 		<field name="amount_select">percentage</field>
-		<field name="amount_percentage_base">contract.wage</field>
+		<field name="amount_percentage_base">rules['MAJ']</field>
 		<field name="amount_percentage">108.00</field>
 	</record>
 
@@ -137,7 +144,7 @@
                 <field name="name">Child Allowance for the Disabled Belgium</field>
                 <field name="code">Ch.Handicap</field>
                 <field name="amount_select">fix</field>
-                <field name="sequence">142</field>
+                <field name="sequence">143</field>
 		<field name="note">"Disabled child" means:
 
 					the child reaches at least 66% of failure or reduced physical or mental capacity
@@ -149,6 +156,17 @@
                 <field name="condition_select">python</field>
                 <field name="condition_python">result = bool(employee.number_handicap)</field>
         </record>
+
+	<record id="hr_payroll_rules_spouse_handicap" model="hr.salary.rule">
+		<field name="category_id" ref="hr_payroll_head_spouse_handicap"/>
+		<field name="name">Disabled Spouse Allowance</field>
+		<field name="code">Sp.handicap</field>
+		<field name="amount_select">fix</field>
+		<field name="sequence">145</field>
+		<field name="amount_fix">31</field>
+                <field name="condition_select">python</field>
+                <field name="condition_python">result = employee.handicap==True</field>
+	</record>
 
 
 	<record id="hr_payroll_rules_company_car_parent" model="hr.salary.rule">
