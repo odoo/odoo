@@ -30,8 +30,11 @@ class account_asset_category(osv.osv):
         #'code': fields.char('Reference', size=16, select=1),
         'note': fields.text('Note'),
         #'type': fields.selection([('direct','Direct'),('indirect','Indirect')], 'Depr. method type', select=2, required=True),
+        'journal_analytic_id': fields.many2one('account.analytic.journal', 'Analytic journal'),
+        'account_analytic_id': fields.many2one('account.analytic.account', 'Analytic account'),
         'account_asset_id': fields.many2one('account.account', 'Asset Account', required=True),
         'account_depreciation_id': fields.many2one('account.account', 'Depreciation Account', required=True),
+        'account_expense_depreciation_id': fields.many2one('account.account', 'Depr. Expense Account', required=True),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True),
         'company_id': fields.many2one('res.company', 'Company'),
     }
@@ -188,29 +191,32 @@ class account_asset_asset(osv.osv):
 
     _columns = {
 	#test
-	'asset_id': fields.many2one('account.asset.asset', 'Asset', required=True, select=1),
+#	'asset_id': fields.many2one('account.asset.asset', 'Asset', required=True, select=1),
+        #analytic fields
+        'journal_analytic_id': fields.many2one('account.analytic.journal', 'Analytic journal'),#FIXME: do not display if not in group analytic accounting OK
+        'account_analytic_id': fields.many2one('account.analytic.account', 'Analytic account'),#FIXME: do not display if not in group analytic accounting OK
+        #accounting fields
 	'account_asset_id': fields.many2one('account.account', 'Asset Account', required=True),
-	'account_actif_id': fields.many2one('account.account', 'Depreciation account', required=True),
-	'journal_analytic_id': fields.many2one('account.analytic.journal', 'Analytic journal'),	
+	'account_depreciation_id': fields.many2one('account.account', 'Depreciation account', required=True),
+	'account_expense_depreciation_id': fields.many2one('account.account', 'Depr. Expense account', required=True),
+        'journal_id': fields.many2one('account.journal', 'Depreciation Entries Journal', required=True, readonly=True, states={'draft':[('readonly',False)]}),
+        'period_id': fields.many2one('account.period', 'First Period', required=True, readonly=True, states={'draft':[('readonly',False)]}),
+        'account_move_line_ids': fields.one2many('account.move.line', 'asset_id', 'Entries', readonly=True, states={'draft':[('readonly',False)]}),
 
         'name': fields.char('Asset', size=64, required=True, select=1),
         'code': fields.char('Reference ', size=16, select=1),
 	'purchase_value': fields.float('Gross value ', required=True, size=16, select=1),
 	'currency_id': fields.many2one('res.currency','Currency',required=True,size=5,select=1),
-	'company_id': fields.many2one('res.company', 'Company', required=True), #FIXME: fields.many2one !! OK
-        'note': fields.text(' '),
+	'company_id': fields.many2one('res.company', 'Company', required=True),
+        'note': fields.text('Note'),
         'category_id': fields.many2one('account.asset.category', 'Asset category',required=True, change_default=True),
         'localisation': fields.char('Localisation', size=32, select=2),
         'parent_id': fields.many2one('account.asset.asset', 'Parent Asset'),
         'child_ids': fields.one2many('account.asset.asset', 'parent_id', 'Children Assets'),
-        'purchase_date': fields.date('Purchase Date', required=True), #FIXME: date is not displayed currently OK
-        'period_id': fields.many2one('account.period', 'Period', required=True, readonly=True, states={'draft':[('readonly',False)]}),
+        'purchase_date': fields.date('Purchase Date', required=True), 
         'state': fields.selection([('view','View'),('draft','Draft'),('normal','Normal'),('close','Close')], 'state', required=True),
         'active': fields.boolean('Active', select=2),
-        'partner_id': fields.many2one('res.partner', 'Partner'),#FIXME: not displayed OK 
-        'account_move_line_ids': fields.one2many('account.move.line', 'asset_id', 'Entries', readonly=True, states={'draft':[('readonly',False)]}),
-        'journal_analytic_id': fields.many2one('account.analytic.journal', 'Analytic journal'),#FIXME: do not display if not in group analytic accounting OK
-        'account_analytic_id': fields.many2one('account.analytic.account', 'Analytic account'),#FIXME: do not display if not in group analytic accounting OK
+        'partner_id': fields.many2one('res.partner', 'Partner'),
 
         'method': fields.selection([('linear','Linear'),('progressif','Progressive')], 'Computation method', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'method_delay': fields.integer('During (interval)', readonly=True, states={'draft':[('readonly',False)]}), #FIXME: improve label OK
