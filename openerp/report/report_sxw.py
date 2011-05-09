@@ -35,6 +35,7 @@ import zipfile
 import common
 from openerp.osv.fields import float as float_class, function as function_class
 from openerp.osv.orm import browse_record
+from openerp.tools.translate import _
 
 DT_FORMAT = '%Y-%m-%d'
 DHM_FORMAT = '%Y-%m-%d %H:%M:%S'
@@ -424,7 +425,7 @@ class report_sxw(report_rml, preprocess.report):
         elif report_type=='mako2html':
             fnct = self.create_source_mako2html
         else:
-            raise 'Unknown Report Type'
+            raise NotImplementedError(_('Unknown report type: %s') % report_type)
         fnct_ret = fnct(cr, uid, ids, data, report_xml, context)
         if not fnct_ret:
             return (False,False)
