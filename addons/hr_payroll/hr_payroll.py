@@ -177,14 +177,12 @@ class hr_salary_head(osv.osv):
         'parent_id':fields.many2one('hr.salary.head', 'Parent', help="Linking a salary head to its parent is used only for the reporting purpose."),
         'note': fields.text('Description'),
         'company_id':fields.many2one('res.company', 'Company', required=False),
-        'sequence': fields.integer('Sequence', required=True, help='Display sequence order'),
     }
 
     _defaults = {
         'company_id': lambda self, cr, uid, context: \
                 self.pool.get('res.users').browse(cr, uid, uid,
                     context=context).company_id.id,
-        'sequence': 5
     }
 
 hr_salary_head()
@@ -218,7 +216,7 @@ class hr_payslip(osv.osv):
         cr.execute('''SELECT pl.slip_id, pl.id FROM hr_payslip_line AS pl \
                     LEFT JOIN hr_salary_head AS sh on (pl.category_id = sh.id) \
                     WHERE pl.slip_id in %s \
-                    GROUP BY pl.slip_id, sh.sequence, pl.sequence, pl.id ORDER BY sh.sequence, pl.sequence''',(tuple(ids),))
+                    GROUP BY pl.slip_id, pl.sequence, pl.id ORDER BY pl.sequence''',(tuple(ids),))
         res = cr.fetchall()
         for r in res:
             result.setdefault(r[0], [])

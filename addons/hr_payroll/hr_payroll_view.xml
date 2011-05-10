@@ -186,8 +186,8 @@
             <field name="arch" type="xml">
                 <search string="Search Payslip Lines">
                     <group col="8" colspan="4">
-                    	<field name="name"/>
-                    	<field name="code"/>
+                        <field name="name"/>
+                        <field name="code"/>
                         <field name="slip_id"/>
                         <field name="amount_select"/>
                     </group>
@@ -249,18 +249,18 @@
                                 </tree>
                                 <form string="Payslip Line">
                                     <group>
-	                                    <field name="name" select="1"/>
-	                                    <field name="code" select="1"/>
-	                                    <field name="category_id"/>
-	                                    <field name="sequence" groups="base.group_extended"/>
-	                                    <field name="total"/>
-	                                    <field name="salary_rule_id" groups="base.group_extended"/>
+                                        <field name="name" select="1"/>
+                                        <field name="code" select="1"/>
+                                        <field name="category_id"/>
+                                        <field name="sequence" groups="base.group_extended"/>
+                                        <field name="total"/>
+                                        <field name="salary_rule_id" groups="base.group_extended"/>
                                     </group>
                                 </form>
                             </field>
                         </page>
 <!-- TODO: put me back -->
-	                    <page string="Details By Salary Head">
+                       <page string="Details By Salary Head">
                             <field name="details_by_salary_head" context="{'group_by':'category_id'}" domain="[('appears_on_payslip', '=', True)]" nolabel="1">
                                 <tree string="Payslip Lines" colors="blue:total == 0">
                                     <field name="category_id"/>
@@ -357,7 +357,6 @@
                         <field name="name" select="1"/>
                         <field name="code" select="1"/>
                         <field name="parent_id" select="1"/>
-                        <field name="sequence" select="1"/>
                     </group>
                     <separator colspan="4" string="Notes"/>
                         <field name="note" colspan="4" nolabel="1"/>
@@ -373,7 +372,6 @@
                 <tree string="Salary Heads">
                     <field name="name"/>
                     <field name="code"/>
-                    <field name="sequence"/>
                     <field name="parent_id" invisible="1"/>
                 </tree>
             </field>
@@ -533,14 +531,14 @@
                                 <field name="quantity" attrs="{'invisible':[('amount_select','=','code')], 'required':[('amount_select','!=','code')]}"/><newline/>
                                 <field name="amount_fix"  attrs="{'invisible':[('amount_select','&lt;&gt;','fix')], 'required':[('amount_select','=','fix')]}"/>
                                 <field colspan="4" name="amount_python_compute" attrs="{'invisible':[('amount_select','&lt;&gt;','code')], 'required':[('amount_select','=','code')]}"/>
-				<field name="amount_percentage_base" attrs="{'invisible':[('amount_select','&lt;&gt;','percentage')], 'required': [('amount_select','=','percentage')]}"/>
+                                <field name="amount_percentage_base" attrs="{'invisible':[('amount_select','&lt;&gt;','percentage')], 'required': [('amount_select','=','percentage')]}"/>
                                 <field name="amount_percentage" attrs="{'invisible':[('amount_select','&lt;&gt;','percentage')], 'required':[('amount_select','=','percentage')]}"/>
                                 <separator colspan="4" string="Company contribution"/>
                                 <field name="register_id"/>
                             </group>
                     </page>
                     <page string="Child Rules">
-		       <field name="parent_rule_id"/>
+                       <field name="parent_rule_id"/>
                        <separator colspan="4" string="Children definition"/>
                        <field colspan="4" name="child_ids" nolabel="1"/>
                     </page>
