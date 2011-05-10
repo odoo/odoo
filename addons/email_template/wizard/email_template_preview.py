@@ -38,7 +38,7 @@ class email_template_preview(osv.osv_memory):
         if context is None:
             context = {}
 
-        template_id = context.get('active_id', False)
+        template_id = context.get('template_id', False)
         if not template_id:
             return []
         template_pool = self.pool.get('email.template')

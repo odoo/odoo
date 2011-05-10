@@ -45,7 +45,7 @@ class email_template(osv.osv):
         "Return Template Object"
         if context is None:
             context = {}
-        
+
         if not template_id:
             return False
 
@@ -404,7 +404,7 @@ class email_template(osv.osv):
         # Add document attachments
         for attach in template.attachment_ids:
             #attach = attahcment_obj.browse(cr, uid, attachment_id, context)
-            attachment[attach.datas_fname] = attach.datas
+            attachment[attach.datas_fname] = base64.decodestring(attach.datas)
         values['attachment'] = attachment
         return values
 

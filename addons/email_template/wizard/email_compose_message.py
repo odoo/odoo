@@ -61,22 +61,24 @@ class email_compose_message(osv.osv_memory):
         if context is None:
             context = {}
         att_ids = []
-        res_id = context.get('active_id', False)
-        values = self.pool.get('email.template').generate_email(cr, uid, template_id, res_id, context=context)
-        if values['attachment']:
-            attachment = values['attachment']
-            attachment_obj = self.pool.get('ir.attachment')
-            for fname, fcontent in attachment.items():
-                data_attach = {
-                    'name': fname,
-                    'datas': binascii.b2a_base64(str(fcontent)),
-                    'datas_fname': fname,
-                    'description': _('Mail attachment'),
-                    'res_model' : self._name,
-                    'res_id' : ids and ids[0] or False
-                }
-                att_ids.append(attachment_obj.create(cr, uid, data_attach))
-            values['attachment_ids'] = att_ids
+        values = {}
+        if template_id:
+            res_id = context.get('active_id', False)
+            values = self.pool.get('email.template').generate_email(cr, uid, template_id, res_id, context=context)
+            if values['attachment']:
+                attachment = values['attachment']
+                attachment_obj = self.pool.get('ir.attachment')
+                for fname, fcontent in attachment.items():
+                    data_attach = {
+                        'name': fname,
+                        'datas': binascii.b2a_base64(str(fcontent)),
+                        'datas_fname': fname,
+                        'description': _('Mail attachment'),
+                        'res_model' : self._name,
+                        'res_id' : ids and ids[0] or False
+                    }
+                    att_ids.append(attachment_obj.create(cr, uid, data_attach))
+                values['attachment_ids'] = att_ids
         return {'value': values}
 
     def save_as_template(self, cr, uid, ids, context=None):
