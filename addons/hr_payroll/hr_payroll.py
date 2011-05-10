@@ -641,7 +641,7 @@ class hr_salary_rule(osv.osv):
     _name = 'hr.salary.rule'
     _columns = {
         'name':fields.char('Name', size=256, required=True, readonly=False),
-        'code':fields.char('Code', size=64, required=True),
+        'code':fields.char('Code', size=64, required=True, help="The code of salary rules can be used as reference in computation of other rules. In that case, it is case sensitive."),
         'sequence': fields.integer('Sequence', required=True, help='Use to arrange calculation sequence'),
         'quantity': fields.char('Quantity', size=256, help="It is used in computation for percentage and fixed amount.For e.g. A rule for Meal Voucher having fixed amount of 1€ per worked day can have its quantity defined in expression like worked_days['WORK100']['number_of_days']."),
         'category_id':fields.many2one('hr.salary.head', 'Salary Head', required=True),
