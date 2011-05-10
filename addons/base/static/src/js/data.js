@@ -86,12 +86,12 @@ openerp.base.DataGroup =  openerp.base.Controller.extend( /** @lends openerp.bas
             var datagroup = new openerp.base.DataGroup(
                 this.session, this.model, group.__domain, child_context,
                 group.__context.group_by);
-            ifDataGroup.call(datagroup, datagroup);
+            ifDataGroup.call(this, datagroup);
         } else {
             var dataset = new openerp.base.DataSetSearch(this.session, this.model);
             dataset.domain = group.__domain;
             dataset.context = child_context;
-            ifDataSet.call(dataset, dataset);
+            ifDataSet.call(this, dataset);
         }
     },
     /**
