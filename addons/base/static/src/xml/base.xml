@@ -544,12 +544,12 @@
         <a class="toggle-sidebar"></a>
         <div t-att-id="element_id" class="sidebar-sub-div">
             <div class="sidebar-displaying-div">
-                <t t-set="i" t-value="0"/>
+                <t t-set="i" t-value="1-1"/> <!-- al do stupid things -->
                 <t t-foreach="sections" t-as="section">
                     <t t-if="section.elements.length &gt; 0">
                     <h2><t t-esc="section.label"/></h2>
                     <ul>
-                        <t t-set="j" t-value="0"/>
+                        <t t-set="j" t-value="1-1"/>
                         <t t-foreach="section.elements" t-as="element">
                             <li><a t-att-data-i="i" t-att-data-j="j" href="#"><t t-esc="element.name"/></a></li>
                             <t t-set="j" t-value="j+1"/>
