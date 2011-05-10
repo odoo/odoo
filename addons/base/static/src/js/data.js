@@ -37,7 +37,19 @@ openerp.base.DataGroup =  openerp.base.Controller.extend( /** @lends openerp.bas
                 group_by_fields: this.group_by
             }, function () { }).then(function (response) {
                 self.groups = response.result;
-                d.resolveWith(self, [response.result]);
+                // read_group results are annoying: they use the name of the
+                // field grouped on to hold the value and the count, so no
+                // generic access to those values is possible.
+                // Alias them to `value` and `length`.
+                d.resolveWith(self, [_(response.result).map(function (group) {
+                    var field_name = self.group_by[0];
+                    return _.extend({}, group, {
+                        // provide field used for grouping
+                        grouped_on: field_name,
+                        length: group[field_name + '_count'],
+                        value: group[field_name]
+                    });
+                })]);
             }, function () {
                 d.rejectWith.apply(d, self, [arguments]);
             });
@@ -52,9 +64,14 @@ openerp.base.DataGroup =  openerp.base.Controller.extend( /** @lends openerp.bas
      * :js:func:`~openerp.base.DataGroup.list` beforehand will likely result
      * in an error.
      *
+     * The resulting :js:class:`~openerp.base.DataGroup` or
+     * :js:class:`~openerp.base.DataSet` will be provided through the relevant
+     * callback function. In both functions, the current DataGroup will be
+     * provided as context (``this``)
+     *
      * @param {Number} index the index of the group to open in the datagroup's collection
-     * @param {Function} ifDataSet executed if the item results in a DataSet, provided with the dataset as parameter and as context
-     * @param {Function} ifDataGroup executed if the item results in a DataSet, provided with the datagroup as parameter and as context
+     * @param {Function} ifDataSet executed if the item results in a DataSet, provided with the new dataset as parameter
+     * @param {Function} ifDataGroup executed if the item results in a DataSet, provided with the new datagroup as parameter
      */
     get: function (index, ifDataSet, ifDataGroup) {
         var group = this.groups[index];
