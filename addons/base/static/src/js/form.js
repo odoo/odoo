@@ -915,6 +915,8 @@ openerp.base.form.FieldMany2Many = openerp.base.form.Field.extend({
         this._super(view, node);
         this.template = "FieldMany2Many";
         this.list_id = _.uniqueId("many2many");
+        this.is_started = false;
+        this.is_setted = false;
     },
     start: function() {
         this._super.apply(this, arguments);
@@ -924,16 +926,30 @@ openerp.base.form.FieldMany2Many = openerp.base.form.Field.extend({
         var self = this;
         this.list_view.m2m_field = this;
         this.list_view.start();
+        var hack = {loaded: false};
+        this.list_view.on_loaded.add_last(function() {
+            if (! hack.loaded) {
+                self.is_started = true;
+                self.check_load();
+                hack.loaded = true;
+            }
+        });
     },
     set_value: function(value) {
         if (value != false) {
             this.dataset.ids = value;
             this.dataset.count = value.length;
-            this.list_view.do_reload();
+            this.is_setted = true;
+            this.check_load();
         }
     },
     get_value: function() {
         return [[6,false,this.dataset.ids]];
+    },
+    check_load: function() {
+        if(this.is_started && this.is_setted) {
+            this.list_view.do_reload();
+        }
     }
 });
 
@@ -1009,10 +1025,6 @@ openerp.base.form.Many2XSelectPopup = openerp.base.BaseWidget.extend({
         this._super();
         this.dataset = new openerp.base.DataSetSearch(this.session, this.model);
         this.setup_search_view();
-        this.view_list = new openerp.base.form.Many2XPopupListView( null, this.session,
-                this.element_id + "_view_list", this.dataset, false);
-        this.view_list.popup = this;
-        this.view_list.start();
     },
     setup_search_view: function() {
         var self = this;
@@ -1036,9 +1048,20 @@ openerp.base.form.Many2XSelectPopup = openerp.base.BaseWidget.extend({
             $cbutton.click(function() {
                 self.stop();
             });
+            self.view_list = new openerp.base.form.Many2XPopupListView( null, self.session,
+                    self.element_id + "_view_list", self.dataset, false);
+            self.view_list.popup = self;
+            self.view_list.do_show();
+            self.view_list.start();
+            var tmphack = {"loaded": false};
+            self.view_list.on_loaded.add_last(function() {
+                if ( !tmphack.loaded ) {
+                    self.view_list.do_reload();
+                    tmphack.loaded = true;
+                };
+            });
         });
         this.searchview.start();
-        
     },
     on_select_element: function(element_id) {
     },
