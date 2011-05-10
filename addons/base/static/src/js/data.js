@@ -9,15 +9,17 @@ openerp.base.DataGroup =  openerp.base.Controller.extend( /** @lends openerp.bas
      * @constructs
      * @extends openerp.base.Controller
      *
-     * @param {Array} group_by sequence of fields by which to group
      * @param {openerp.base.Session} session Current OpenERP session
-     * @param {openerp.base.DataSet} dataset root dataset, holder of base view state
+     * @param {String} model name of the model managed by this DataGroup
+     * @param {Array} domain search domain for this DataGroup
+     * @param {Object} context context of the DataGroup's searches
+     * @param {Array} group_by sequence of fields by which to group
      */
-    init: function(session, group_by, dataset) {
+    init: function(session, model, domain, context, group_by) {
         this._super(session, null);
-        this.model = dataset.model;
-        this.context = dataset.context;
-        this.domain = dataset.domain;
+        this.model = model;
+        this.context = context;
+        this.domain = domain;
 
         this.group_by = group_by;
 
@@ -82,11 +84,8 @@ openerp.base.DataGroup =  openerp.base.Controller.extend( /** @lends openerp.bas
         var child_context = _.extend({}, this.context, group.__context);
         if (group.__context.group_by.length) {
             var datagroup = new openerp.base.DataGroup(
-                this.session, group.__context.group_by, {
-                    model: this.model,
-                    context: child_context,
-                    domain: group.__domain
-            });
+                this.session, this.model, group.__domain, child_context,
+                group.__context.group_by);
             ifDataGroup.call(datagroup, datagroup);
         } else {
             var dataset = new openerp.base.DataSetSearch(this.session, this.model);

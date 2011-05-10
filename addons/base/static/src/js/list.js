@@ -296,7 +296,9 @@ openerp.base.ListView = openerp.base.Controller.extend(
             self.dataset.domain = results.domain;
             if (results.group_by.length) {
                 self.groups.datagroup = new openerp.base.DataGroup(
-                        self.session, results.group_by, self.dataset);
+                        self.session, self.dataset.model,
+                        results.domain, results.context,
+                        results.group_by);
                 self.$element.html(self.groups.render());
                 return;
             }
