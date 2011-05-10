@@ -54,6 +54,6 @@ class google_installer_crm(osv.osv_memory):
 			self.pool.get('res.users').write(cr, uid, uid, res, context=context)
 		else:
 			raise osv.except_osv(_('Error'), _("Authentication failed! Check the user and password !"))
-		return {}
+		return self.action_next(cr, uid, ids, context=context)
 	
 google_installer_crm()

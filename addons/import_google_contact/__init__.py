@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-import sync_google_contact
+import import_google_contact
 import wizard
 import google_login_installer
 
