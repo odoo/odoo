@@ -116,9 +116,6 @@ class account_asset_asset(osv.osv):
                 depreciation_date = datetime(year + (month / 12), month % 12, day)
         return True
 
-    def account_move_line_deprec(self, cr, uid, ids, context={}):
-	print "Error !!!"
-
     def validate(self, cr, uid, ids, context={}):
         return self.write(cr, uid, ids, {
             'state':'normal'
@@ -150,14 +147,6 @@ class account_asset_asset(osv.osv):
         return res
 
     _columns = {
-        #analytic fields
-        'journal_analytic_id': fields.many2one('account.analytic.journal', 'Analytic journal'),
-        'account_analytic_id': fields.many2one('account.analytic.account', 'Analytic account'),
-        #accounting fields
-	'account_asset_id': fields.many2one('account.account', 'Asset Account', ),
-	'account_depreciation_id': fields.many2one('account.account', 'Depreciation account', ),
-	'account_expense_depreciation_id': fields.many2one('account.account', 'Depr. Expense account', ),
-        'journal_id': fields.many2one('account.journal', 'Depreciation Entries Journal', readonly=True, states={'draft':[('readonly',False)]}),
         'period_id': fields.many2one('account.period', 'First Period', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'account_move_line_ids': fields.one2many('account.move.line', 'asset_id', 'Entries', readonly=True, states={'draft':[('readonly',False)]}),
 
@@ -187,7 +176,6 @@ class account_asset_asset(osv.osv):
 	'prorata':fields.boolean('Prorata Temporis', Readonly="True", help='Si l amortissement se realise après le 1 janvier'),
         'history_ids': fields.one2many('account.asset.history', 'asset_id', 'History', readonly=True),
  	'depreciation_line_ids': fields.one2many('account.asset.depreciation.line', 'asset_id', 'Depreciation Lines', readonly=True,),
-	 
     }
     _defaults = {
         'code': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'account.asset.code'),
