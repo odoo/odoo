@@ -3,15 +3,88 @@ openerp.base.data = function(openerp) {
 
 openerp.base.DataGroup =  openerp.base.Controller.extend( /** @lends openerp.base.DataGroup# */{
     /**
-     * Management interface between views and the collection of selected OpenERP
-     * records (represents the view's state?)
+     * Management interface between views and grouped collections of OpenERP
+     * records
      *
      * @constructs
      * @extends openerp.base.Controller
+     *
+     * @param {Array} group_by sequence of fields by which to group
      * @param {openerp.base.Session} session Current OpenERP session
+     * @param {openerp.base.DataSet} dataset root dataset, holder of base view state
      */
-    init: function(session) {
+    init: function(session, group_by, dataset) {
         this._super(session, null);
+        this.model = dataset.model;
+        this.context = dataset.context;
+        this.domain = dataset.domain;
+
+        this.group_by = group_by;
+
+        this.groups = null;
+    },
+    fetch: function () {
+        var d = new $.Deferred();
+        var self = this;
+
+        if (this.groups) {
+            d.resolveWith(this, [this.groups]);
+        } else {
+            this.rpc('/base/group/read', {
+                model: this.model,
+                context: this.context,
+                domain: this.domain,
+                group_by_fields: this.group_by
+            }, function () { }).then(function (response) {
+                self.groups = response.result;
+                d.resolveWith(self, [response.result]);
+            }, function () {
+                d.rejectWith.apply(d, self, [arguments]);
+            });
+        }
+        return d.promise();
+    },
+    /**
+     * Retrieves the content of the nth-level item in the DataGroup, which
+     * results in either a DataSet or a DataGroup instance.
+     *
+     * Calling :js:func:`~openerp.base.DataGroup.get` without having called
+     * :js:func:`~openerp.base.DataGroup.list` beforehand will likely result
+     * in an error.
+     *
+     * @param {Number} index the index of the group to open in the datagroup's collection
+     * @param {Function} ifDataSet executed if the item results in a DataSet, provided with the dataset as parameter and as context
+     * @param {Function} ifDataGroup executed if the item results in a DataSet, provided with the datagroup as parameter and as context
+     */
+    get: function (index, ifDataSet, ifDataGroup) {
+        var group = this.groups[index];
+        if (!group) {
+            throw new Error("No group at index " + index);
+        }
+
+        var child_context = _.extend({}, this.context, group.__context);
+        if (group.__context.group_by.length) {
+            var datagroup = new openerp.base.DataGroup(
+                this.session, group.__context.group_by, {
+                    model: this.model,
+                    context: child_context,
+                    domain: group.__domain
+            });
+            ifDataGroup.call(datagroup, datagroup);
+        } else {
+            var dataset = new openerp.base.DataSetSearch(this.session, this.model);
+            dataset.domain = group.__domain;
+            dataset.context = child_context;
+            ifDataSet.call(dataset, dataset);
+        }
+    },
+    /**
+     * Provides a list of all top-level items of the data group.
+     *
+     * @returns {$.Deferred}
+     */
+    list: function () {
+        return this.fetch();
     }
 });
 

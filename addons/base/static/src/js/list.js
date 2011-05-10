@@ -290,6 +290,18 @@ openerp.base.ListView = openerp.base.Controller.extend(
             // TODO: handle non-empty results.group_by with read_group
             self.dataset.context = results.context;
             self.dataset.domain = results.domain;
+            if (results.group_by.length) {
+                var group = new openerp.base.DataGroup(
+                        self.session, results.group_by, self.dataset);
+                group.list().then(function (lst) {
+                    console.log(this, lst);
+                    this.get(0, function () {
+                        console.log('set', this);
+                    }, function () {
+                        console.log('group', this);
+                    });
+                });
+            }
             return self.do_reload();
         });
     },
