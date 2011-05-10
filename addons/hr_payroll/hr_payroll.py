@@ -473,7 +473,7 @@ class hr_payslip(osv.osv):
             res += [attendances] + leaves
         return res
 
-    def get_input_lines(self, cr, uid, contract_ids, date_from, date_to, context=None):
+    def get_inputs(self, cr, uid, contract_ids, date_from, date_to, context=None):
         res = []
         contract_obj = self.pool.get('hr.contract')
         rule_obj = self.pool.get('hr.salary.rule')
@@ -488,7 +488,6 @@ class hr_payslip(osv.osv):
                     for input in rule.input_ids:
                         inputs = {
                              'name': input.name,
-                             'sequence': 5,
                              'code': input.code,
                              'contract_id': contract.id,
                         }
@@ -510,10 +509,10 @@ class hr_payslip(osv.osv):
         worked_days = {}
         for worked_days_line in payslip.worked_days_line_ids:
             worked_days[worked_days_line.code] = worked_days_line
-        input_lines = {}
+        inputs = {}
         for input_line in payslip.input_line_ids:
-            input_lines[input_line.code] = input_line
-        localdict = {'heads': {}, 'payslip': payslip, 'worked_days': worked_days, 'input_lines': input_lines}
+            inputs[input_line.code] = input_line
+        localdict = {'heads': {}, 'payslip': payslip, 'worked_days': worked_days, 'inputs': inputs}
         #get the ids of the structures on the contracts and their parent id as well
         structure_ids = self.pool.get('hr.contract').get_all_structures(cr, uid, contract_ids, context=context)
         #get the rules of the structure and thier children
@@ -627,7 +626,7 @@ class hr_payslip(osv.osv):
 
         #computation of the salary input
         worked_days_line_ids = self.get_worked_day_lines(cr, uid, contract_ids, date_from, date_to, context=context)
-        input_line_ids = self.get_input_lines(cr, uid, contract_ids, date_from, date_to, context=context)
+        input_line_ids = self.get_inputs(cr, uid, contract_ids, date_from, date_to, context=context)
         res['value'].update({
                     'worked_days_line_ids': worked_days_line_ids,
                     'input_line_ids': input_line_ids,
@@ -683,7 +682,7 @@ class hr_payslip_input(osv.osv):
         'payslip_id': fields.many2one('hr.payslip', 'Pay Slip', required=True),
         'sequence': fields.integer('Sequence', required=True,),
         'code': fields.char('Code', size=52, required=True, help="The code that can be used in the salary rules"),
-        'quantity': fields.float('Quantity'),
+        'quantity': fields.float('Quantity', help="It is used in computation. For e.g. A rule for sales having 1% commission of basic salary for per product can defined in expression like result = inputs['S-ASUS']['qunatity']*contract.wage*0.01."),
         'contract_id': fields.many2one('hr.contract', 'Contract', required=True, help="The contract for which applied this input"),
     }
     _order = 'payslip_id, sequence'
@@ -744,6 +743,7 @@ class hr_salary_rule(osv.osv):
 # rules: rules code (previously computed)
 # heads: dictionary containing the computed heads (sum of amount of all rules belonging to that head). Keys are the head codes.
 # worked_days: dictionary containing the computed worked days. Keys are the worked days codes.
+# inputs: dictionary containing the computed inputs. Keys are the inputs codes.
 
 # Note: returned value have to be set in the variable 'result'
 
@@ -758,6 +758,7 @@ result = contract.wage * 0.10''',
 # rules: rules code (previously computed)
 # heads: dictionary containing the computed heads (sum of amount of all rules belonging to that head). Keys are the head codes.
 # worked_days: dictionary containing the computed worked days. Keys are the worked days codes.
+# inputs: dictionary containing the computed inputs. Keys are the inputs codes.
 
 # Note: returned value have to be set in the variable 'result'
 
