@@ -686,25 +686,25 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
                 cr.execute(new_query)
 
     def load_init_xml(cr, m, idref, mode):
-        _load_xml(cr, m, idref, mode, 'init')
+        _load_data(cr, m, idref, mode, 'init_xml')
 
     def load_update_xml(cr, m, idref, mode):
-        _load_xml(cr, m, idref, mode, 'update')
+        _load_data(cr, m, idref, mode, 'update_xml')
 
     def load_demo_xml(cr, m, idref, mode):
-        _load_xml(cr, m, idref, mode, 'demo')
+        _load_data(cr, m, idref, mode, 'demo_xml')
 
-    def load_data(cr, module_name, id_map, mode):
-        _load_data(cr, module_name, id_map, mode, 'data')
+    def load_data(cr, module_name, idref, mode):
+        _load_data(cr, module_name, idref, mode, 'data')
 
-    def load_demo(cr, module_name, id_map, mode):
-        _load_data(cr, module_name, id_map, mode, 'demo')
+    def load_demo(cr, module_name, idref, mode):
+        _load_data(cr, module_name, idref, mode, 'demo')
 
-    def load_test(cr, module_name, id_map, mode):
+    def load_test(cr, module_name, idref, mode):
         cr.commit()
         if not tools.config.options['test_disable']:
             try:
-                _load_data(cr, module_name, id_map, mode, 'test')
+                _load_data(cr, module_name, idref, mode, 'test')
             except Exception, e:
                 logging.getLogger('test').exception('Tests failed to execute in module %s', module_name)
             finally:
@@ -713,51 +713,38 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
                 else:
                     cr.rollback()
 
-    def _load_xml(cr, m, idref, mode, kind):
-        for filename in package.data.get('%s_xml' % kind, []):
-            logger.notifyChannel('init', netsvc.LOG_INFO, 'module %s: loading %s' % (m, filename))
+    def _load_data(cr, module_name, idref, mode, kind):
+        """
+
+        kind: data, demo, test, init_xml, update_xml, demo_xml.
+
+        noupdate is False, unless it is demo data or it is csv data in
+        init mode.
+
+        """
+        for filename in package.data.get(kind, []):
+            log = logging.getLogger('init')
+            log.info("module %s: loading %s", module_name, filename)
             _, ext = os.path.splitext(filename)
-            fp = tools.file_open(opj(m, filename))
+            pathname = os.path.join(module_name, filename)
+            fp = tools.file_open(pathname)
             noupdate = False
-            if kind == 'demo':
+            if kind in ('demo', 'demo_xml'):
                 noupdate = True
             try:
                 if ext == '.csv':
-                    if kind == 'init':
+                    if kind in ('init', 'init_xml'):
                         noupdate = True
-                    # i.e. noupdate == False when kind == 'update'
-                    tools.convert_csv_import(cr, m, os.path.basename(filename), fp.read(), idref, mode=mode, noupdate=noupdate)
-                elif kind != 'demo' and ext == '.sql':
+                    tools.convert_csv_import(cr, module_name, pathname, fp.read(), idref, mode, noupdate)
+                elif ext == '.sql':
                     process_sql_file(cr, fp)
                 elif ext == '.yml':
-                    tools.convert_yaml_import(cr, m, fp, idref, mode=mode, noupdate=noupdate)
+                    tools.convert_yaml_import(cr, module_name, fp, idref, mode, noupdate)
                 else:
-                    tools.convert_xml_import(cr, m, fp, idref, mode=mode, noupdate=noupdate, report=report)
+                    tools.convert_xml_import(cr, module_name, fp, idref, mode, noupdate, report)
             finally:
                 fp.close()
 
-    def _load_data(cr, module_name, id_map, mode, kind):
-        for filename in package.data.get(kind, []):
-            noupdate = (kind == 'demo')
-            _, ext = os.path.splitext(filename)
-            log = logging.getLogger('init')
-            log.info("module %s: loading %s", module_name, filename)
-            pathname = os.path.join(module_name, filename)
-            file = tools.file_open(pathname)
-            try:
-                if ext == '.sql':
-                    process_sql_file(cr, file)
-                elif ext == '.csv':
-                    noupdate = (kind == 'init')
-                    tools.convert_csv_import(cr, module_name, pathname, file.read(), id_map, mode, noupdate)
-                elif ext == '.yml':
-                    tools.convert_yaml_import(cr, module_name, file, id_map, mode, noupdate)
-                else:
-                    tools.convert_xml_import(cr, module_name, file, id_map, mode, noupdate)
-            finally:
-                file.close()
-
-    # **kwargs is passed directly to convert_xml_import
     if not status:
         status = {}
 
