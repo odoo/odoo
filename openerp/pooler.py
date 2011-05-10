@@ -27,8 +27,6 @@ pool_dic = {}
 
 def get_db_and_pool(db_name, force_demo=False, status=None, update_module=False, pooljobs=True):
     """Return a database connection and an initialized osv_pool."""
-    if not status:
-        status={}
 
     db = sql_db.db_connect(db_name)
 

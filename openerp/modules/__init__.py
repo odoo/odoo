@@ -745,10 +745,9 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
             finally:
                 fp.close()
 
-    if not status:
+    if status is None:
         status = {}
 
-    status = status.copy()
     processed_modules = []
     statusi = 0
     pool = pooler.get_pool(cr.dbname)
@@ -842,13 +841,14 @@ def _check_module_names(cr, module_names):
             logging.getLogger('init').warning('invalid module names, ignored: %s', ", ".join(incorrect_names))
 
 def load_modules(db, force_demo=False, status=None, update_module=False):
+    # TODO status['progress'] reporting is broken: used twice (and reset each
+    # time to zero) in load_module_graph, not fine-grained enough.
+    # It should be a method exposed by the pool.
 
     initialize_sys_path()
 
     open_openerp_namespace()
 
-    if not status:
-        status = {}
     cr = db.cursor()
     if cr:
         cr.execute("SELECT relname FROM pg_class WHERE relkind='r' AND relname='ir_module_module'")
