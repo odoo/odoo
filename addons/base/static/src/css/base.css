@@ -785,3 +785,32 @@ body.openerp {
     background: url(http://placekitten.com/g/212/100) repeat;
 }
 
+.openerp .kitten-mode-activated .menu {
+    background: #828282;
+    background: -moz-linear-gradient(top, #828282 0%, #4D4D4D 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#828282), color-stop(100%,#4D4D4D));
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#828282', endColorstr='#4D4D4D',GradientType=0 );
+}
+.openerp .kitten-mode-activated .menu a {
+    background: none;
+}
+.openerp .kitten-mode-activated .menu span {
+    background: none;
+}
+.openerp .kitten-mode-activated .sidebar-displaying-div li a,
+.openerp .kitten-mode-activated .view-manager-main-content h2.oe_view_title,
+.openerp .kitten-mode-activated .view-manager-main-content a.searchview_group_string,
+.openerp .kitten-mode-activated .view-manager-main-content label  {
+    color: white;
+}
+.openerp .kitten-mode-activated .menu,
+.openerp .kitten-mode-activated .header_corner,
+.openerp .kitten-mode-activated .secondary_menu div h3,
+.openerp .kitten-mode-activated .sidebar-displaying-div h2,
+.openerp .kitten-mode-activated .view-manager-main-content #oe_app_view_list,
+.openerp .kitten-mode-activated .view-manager-main-content .oe_form_notebook,
+.openerp .kitten-mode-activated .view-manager-main-content .oe_form_hpaned {
+    opacity:0.8;
+    filter:alpha(opacity=80);
+}
+
