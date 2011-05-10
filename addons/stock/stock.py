@@ -1126,7 +1126,7 @@ class stock_picking(osv.osv):
         for pick in self.browse(cr, uid, ids, context=context):
             if pick.state in ['done','cancel']:
                 raise osv.except_osv(_('Error'), _('You cannot remove the picking which is in %s state !')%(pick.state,))
-            elif pick.state in ['confirmed','assigned', 'draft']:
+            else:
                 ids2 = [move.id for move in pick.move_lines]
                 ctx = context.copy()
                 ctx.update({'call_unlink':True})
@@ -1315,6 +1315,7 @@ class stock_picking(osv.osv):
                 'assigned': _('is ready to process.'),
                 'cancel': _('is cancelled.'),
                 'done': _('is done.'),
+                'auto': _('is waiting.'),
                 'draft':_('is in draft state.'),
             }
             res = data_obj.get_object_reference(cr, uid, 'stock', view_list.get(pick.type, 'view_picking_form'))
