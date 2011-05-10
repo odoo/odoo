@@ -164,17 +164,17 @@ class contrib_register(osv.osv):
 
 contrib_register()
 
-class hr_salary_head(osv.osv):
+class hr_salary_category(osv.osv):
     """
-    HR Salary Head
+    HR Salary Category
     """
 
-    _name = 'hr.salary.head'
-    _description = 'Salary Head'
+    _name = 'hr.salary.category'
+    _description = 'Salary Category'
     _columns = {
         'name':fields.char('Name', size=64, required=True, readonly=False),
         'code':fields.char('Code', size=64, required=True, readonly=False),
-        'parent_id':fields.many2one('hr.salary.head', 'Parent', help="Linking a salary head to its parent is used only for the reporting purpose."),
+        'parent_id':fields.many2one('hr.salary.category', 'Parent', help="Linking a salary category to its parent is used only for the reporting purpose."),
         'note': fields.text('Description'),
         'company_id':fields.many2one('res.company', 'Company', required=False),
     }
@@ -185,7 +185,7 @@ class hr_salary_head(osv.osv):
                     context=context).company_id.id,
     }
 
-hr_salary_head()
+hr_salary_category()
 
 class one2many_mod2(fields.one2many):
 
@@ -210,11 +210,11 @@ class hr_payslip(osv.osv):
     _name = 'hr.payslip'
     _description = 'Pay Slip'
 
-    def _get_lines_salary_head(self, cr, uid, ids, field_names, arg=None, context=None):
+    def _get_lines_salary_category(self, cr, uid, ids, field_names, arg=None, context=None):
         result = {}
         if not ids: return result
         cr.execute('''SELECT pl.slip_id, pl.id FROM hr_payslip_line AS pl \
-                    LEFT JOIN hr_salary_head AS sh on (pl.category_id = sh.id) \
+                    LEFT JOIN hr_salary_category AS sh on (pl.category_id = sh.id) \
                     WHERE pl.slip_id in %s \
                     GROUP BY pl.slip_id, pl.sequence, pl.id ORDER BY pl.sequence''',(tuple(ids),))
         res = cr.fetchall()
@@ -251,7 +251,7 @@ class hr_payslip(osv.osv):
         'paid': fields.boolean('Made Payment Order ? ', required=False, readonly=True, states={'draft': [('readonly', False)]}),
         'note': fields.text('Description'),
         'contract_id': fields.many2one('hr.contract', 'Contract', required=False, readonly=True, states={'draft': [('readonly', False)]}),
-        'details_by_salary_head': fields.function(_get_lines_salary_head, method=True, type='one2many', relation='hr.payslip.line', string='Details by Salary Head'),
+        'details_by_salary_category': fields.function(_get_lines_salary_category, method=True, type='one2many', relation='hr.payslip.line', string='Details by Salary Head'),
         'credit_note': fields.boolean('Credit Note', help="Indicates this payslip has a refund of another"),
     }
     _defaults = {
@@ -471,10 +471,10 @@ class hr_payslip(osv.osv):
         return res
 
     def get_payslip_lines(self, cr, uid, contract_ids, payslip_id, context):
-        def _sum_salary_head(localdict, head, amount):
-            if head.parent_id:
-                localdict = _sum_salary_head(localdict, head.parent_id, amount)
-            localdict['heads'][head.code] = head.code in localdict['heads'] and localdict['heads'][head.code] + amount or amount
+        def _sum_salary_category(localdict, category, amount):
+            if category.parent_id:
+                localdict = _sum_salary_category(localdict, category.parent_id, amount)
+            localdict['categories'][category.code] = category.code in localdict['categories'] and localdict['categories'][category.code] + amount or amount
             return localdict
 
         #we keep a dict with the result because a value can be overwritten by another rule with the same code
@@ -485,7 +485,7 @@ class hr_payslip(osv.osv):
         worked_days = {}
         for input_line in payslip.input_line_ids:
             worked_days[input_line.code] = input_line
-        localdict = {'heads': {}, 'payslip': payslip, 'worked_days': worked_days}
+        localdict = {'categories': {}, 'payslip': payslip, 'worked_days': worked_days}
         #get the ids of the structures on the contracts and their parent id as well
         structure_ids = self.pool.get('hr.contract').get_all_structures(cr, uid, contract_ids, context=context)
         #get the rules of the structure and thier children
@@ -507,8 +507,8 @@ class hr_payslip(osv.osv):
                     previous_amount = rule.code in localdict and localdict[rule.code] or 0.0
                     #set/overwrite the amount computed for this rule in the localdict
                     localdict[rule.code] = amount
-                    #sum the amount for its salary head
-                    localdict = _sum_salary_head(localdict, rule.category_id, amount - previous_amount)
+                    #sum the amount for its salary category
+                    localdict = _sum_salary_category(localdict, rule.category_id, amount - previous_amount)
                     #create/overwrite the rule in the temporary results
                     result_dict[key] = {
                         'salary_rule_id': rule.id,
@@ -555,7 +555,6 @@ class hr_payslip(osv.osv):
         #defaults
         res = {'value':{
                       'line_ids':[],
-                      #'details_by_salary_head':[], TODO put me back
                       'name':'',
                       'contract_id': False,
                       'struct_id': False,
@@ -642,13 +641,13 @@ class hr_salary_rule(osv.osv):
         'code':fields.char('Code', size=64, required=True, help="The code of salary rules can be used as reference in computation of other rules. In that case, it is case sensitive."),
         'sequence': fields.integer('Sequence', required=True, help='Use to arrange calculation sequence'),
         'quantity': fields.char('Quantity', size=256, help="It is used in computation for percentage and fixed amount.For e.g. A rule for Meal Voucher having fixed amount of 1€ per worked day can have its quantity defined in expression like worked_days['WORK100']['number_of_days']."),
-        'category_id':fields.many2one('hr.salary.head', 'Salary Head', required=True),
+        'category_id':fields.many2one('hr.salary.category', 'Category', required=True),
         'active':fields.boolean('Active', help="If the active field is set to false, it will allow you to hide the salary rule without removing it."),
         'appears_on_payslip': fields.boolean('Appears on Payslip', help="Used for the display of rule on payslip"),
         'parent_rule_id':fields.many2one('hr.salary.rule', 'Parent Salary Rule', select=True),
         'company_id':fields.many2one('res.company', 'Company', required=False),
         'condition_select': fields.selection([('none', 'Always True'),('range', 'Range'), ('python', 'Python Expression')], "Condition Based on", required=True),
-        'condition_range':fields.char('Range Based on',size=1024, readonly=False, help='This will use to computer the % fields values, in general its on basic, but You can use all heads code field in small letter as a variable name i.e. hra, ma, lta, etc...., also you can use, static varible basic'),#old name = conputional expression
+        'condition_range':fields.char('Range Based on',size=1024, readonly=False, help='This will use to computer the % fields values, in general its on basic, but You can use all categories code field in small letter as a variable name i.e. hra, ma, lta, etc...., also you can use, static varible basic'),
         'condition_python':fields.text('Python Condition', required=True, readonly=False, help='Applied this rule for calculation if condition is true. You can specify condition like basic > 1000.'),#old name = conditions
         'condition_range_min': fields.float('Minimum Range', required=False, help="The minimum amount, applied for this rule."),
         'condition_range_max': fields.float('Maximum Range', required=False, help="The maximum amount, applied for this rule."),
@@ -660,7 +659,7 @@ class hr_salary_rule(osv.osv):
         'amount_fix': fields.float('Fixed Amount', digits_compute=dp.get_precision('Account'),),
         'amount_percentage': fields.float('Percentage (%)', digits_compute=dp.get_precision('Account'), help='For example, enter 50.0 to apply a percentage of 50%'),
         'amount_python_compute':fields.text('Python Code'),
-        'amount_percentage_base':fields.char('Percentage based on',size=1024, required=False, readonly=False, help='result will be affected to a variable'), #old name = expressiont
+        'amount_percentage_base':fields.char('Percentage based on',size=1024, required=False, readonly=False, help='result will be affected to a variable'),
         'child_ids':fields.one2many('hr.salary.rule', 'parent_rule_id', 'Child Salary Rule'),
         'register_id':fields.property(
             'hr.contribution.register',
@@ -682,7 +681,7 @@ class hr_salary_rule(osv.osv):
 # employee: hr.employee object
 # contract: hr.contract object
 # rules: rules code (previously computed)
-# heads: dictionary containing the computed heads (sum of amount of all rules belonging to that head). Keys are the head codes.
+# categories: dictionary containing the computed categories (sum of amount of all rules belonging to that category). Keys are the category codes.
 # worked_days: dictionary containing the computed worked days. Keys are the worked days codes.
 
 # Note: returned value have to be set in the variable 'result'
@@ -696,12 +695,12 @@ result = contract.wage * 0.10''',
 # employee: hr.employee object
 # contract: hr.contract object
 # rules: rules code (previously computed)
-# heads: dictionary containing the computed heads (sum of amount of all rules belonging to that head). Keys are the head codes.
+# categories: dictionary containing the computed categories (sum of amount of all rules belonging to that category). Keys are the category codes.
 # worked_days: dictionary containing the computed worked days. Keys are the worked days codes.
 
 # Note: returned value have to be set in the variable 'result'
 
-result = rules['NET'] > heads['NET'] * 0.10''',
+result = rules['NET'] > categories['NET'] * 0.10''',
         'condition_range': 'contract.wage',
         'sequence': 5,
         'appears_on_payslip': True,
