@@ -28,14 +28,12 @@ class account_asset_category(osv.osv):
     _description = 'Asset category'
     _columns = {
         'name': fields.char('Asset category', size=64, required=True, select=1),
-        #'code': fields.char('Reference', size=16, select=1),
         'note': fields.text('Note'),
-        #'type': fields.selection([('direct','Direct'),('indirect','Indirect')], 'Depr. method type', select=2, required=True),
-        'journal_analytic_id': fields.many2one('account.analytic.journal', 'Analytic journal'),
-        'account_analytic_id': fields.many2one('account.analytic.account', 'Analytic account'),
+        'journal_analytic_id': fields.many2one('account.analytic.journal', 'Analytic journal'), #FIXME:add in the form view  with group = analytic 
+        'account_analytic_id': fields.many2one('account.analytic.account', 'Analytic account'), #FIXME:add in the form view  with group = analytic
         'account_asset_id': fields.many2one('account.account', 'Asset Account', required=True),
         'account_depreciation_id': fields.many2one('account.account', 'Depreciation Account', required=True),
-        'account_expense_depreciation_id': fields.many2one('account.account', 'Depr. Expense Account',),
+        'account_expense_depreciation_id': fields.many2one('account.account', 'Depr. Expense Account',),#FIXME: required=True + add in the form view 
         'journal_id': fields.many2one('account.journal', 'Journal', required=True),
         'company_id': fields.many2one('res.company', 'Company'),
     }
@@ -62,23 +60,13 @@ class account_asset_asset(osv.osv):
     _name = 'account.asset.asset'
     _description = 'Asset'
 
-#   def _balance(self, cr, uid, ids, field_name, arg, context={}):
-#       acc_set = ",".join(map(str, ids))
-#       query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
-#       cr.execute(("SELECT a.id, COALESCE(SUM((l.debit-l.credit)),0) FROM account_asset_asset a LEFT JOIN account_move_line l ON (a.id=l.asset_account_id) WHERE a.id IN (%s) and "+query+" GROUP BY a.id") % (acc_set,))
-#       res = {}
-#       for account_id, sum in cr.fetchall():
-#           res[account_id] = round(sum,2)
-#       for id in ids:
-#           res[id] = round(res.get(id,0.0), 2)
-#       return res
     def _get_period(self, cr, uid, context={}):
         periods = self.pool.get('account.period').find(cr, uid)
         if periods:
             return periods[0]
         else:
             return False
-##
+
     def _get_last_depreciation_date(self, cr, uid, ids, context=None):
         """
         @param id: ids of a account.asset.asset objects
@@ -197,7 +185,7 @@ class account_asset_asset(osv.osv):
         'value_residual': fields.function(_amount_residual, method=True, digits=(16,2), string='Residual Value'),
         'method_time': fields.selection([('delay','Delay'),('end','Ending Period')], 'Time Method', required=True, readonly=True, states={'draft':[('readonly',False)]}),
 	'prorata':fields.boolean('Prorata Temporis', Readonly="True", help='Si l amortissement se realise après le 1 janvier'),
-        'history_ids': fields.one2many('account.asset.property.history', 'asset_id', 'History', readonly=True),
+        'history_ids': fields.one2many('account.asset.history', 'asset_id', 'History', readonly=True),
  	'depreciation_line_ids': fields.one2many('account.asset.depreciation.line', 'asset_id', 'Depreciation Lines', readonly=True,),
 	 
     }
@@ -213,7 +201,6 @@ class account_asset_asset(osv.osv):
 	'method_period': lambda obj, cr, uid, context: 12,
 	'method_progress_factor': lambda obj, cr, uid, context: 0.3,
 	'currency_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.currency_id.id,
-
     }
 
 
