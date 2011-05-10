@@ -85,6 +85,14 @@ class account_followup_stat_by_partner(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
     }
 
+    def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
+        if uid != 1:
+            user_obj = self.pool.get('res.users').browse(cr, uid, uid)
+            args += ['|',('company_id','=',False),('company_id','child_of',[user_obj.company_id.id])]
+        res = super(account_followup_stat_by_partner, self).search(cr, uid, args, offset, limit,
+                order, context=context, count=count)
+        return res
+
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'account_followup_stat_by_partner')
         cr.execute("""
@@ -142,31 +150,21 @@ class account_followup_print_all(osv.osv_memory):
     }
 
     def _get_partners_followp(self, cr, uid, ids, context=None):
+        obj_acc_acc = self.pool.get("account.account")
+        obj_acc_move_line = self.pool.get("account.move.line")
         data = {}
         if context is None:
             context = {}
         if ids:
             data = self.read(cr, uid, ids, [], context=context)[0]
-        cr.execute(
-            "SELECT l.partner_id, l.followup_line_id,l.date_maturity, l.date, l.id "\
-            "FROM account_move_line AS l "\
-                "LEFT JOIN account_account AS a "\
-                "ON (l.account_id=a.id) "\
-            "WHERE (l.reconcile_id IS NULL) "\
-                "AND (a.type='receivable') "\
-                "AND (l.state<>'draft') "\
-                "AND (l.partner_id is NOT NULL) "\
-                "AND (a.active) "\
-                "AND (l.debit > 0) "\
-            "ORDER BY l.date")
-        move_lines = cr.fetchall()
+        acc_ids = obj_acc_acc.search(cr, uid, [('type','=','receivable')])
+        move_line_ids = obj_acc_move_line.search(cr, uid, [('account_id','=',acc_ids),('reconcile_id','=','FALSE'),('state','=','draft'),('partner_id','!=','FALSE'),('debit','>',0)], order='date')
+        move_line_datas = obj_acc_move_line.read(cr, uid, move_line_ids)
         old = None
         fups = {}
         fup_id = 'followup_id' in context and context['followup_id'] or data['followup_id']
         date = 'date' in context and context['date'] or data['date']
-
-        current_date = datetime.date(*time.strptime(date,
-            '%Y-%m-%d')[:3])
+        current_date = datetime.date(*time.strptime(date,'%Y-%m-%d')[:3])
         cr.execute(
             "SELECT * "\
             "FROM account_followup_followup_line "\
@@ -178,26 +176,23 @@ class account_followup_print_all(osv.osv_memory):
             if result['start'] == 'end_of_month':
                 fups[old][0].replace(day=1)
             old = result['id']
-
         fups[old] = (datetime.date(datetime.MAXYEAR, 12, 31), old)
-
         partner_list = []
         to_update = {}
-        for partner_id, followup_line_id, date_maturity,date, id in move_lines:
-            if not partner_id:
+        for record in move_line_datas:
+            if not record['partner_id']:
                 continue
-            if followup_line_id not in fups:
+            if record['followup_line_id'] not in fups:
                 continue
-            if date_maturity:
-                if date_maturity <= fups[followup_line_id][0].strftime('%Y-%m-%d'):
-                    if partner_id not in partner_list:
-                        partner_list.append(partner_id)
-                    to_update[str(id)]= {'level': fups[followup_line_id][1], 'partner_id': partner_id}
-            elif date and date <= fups[followup_line_id][0].strftime('%Y-%m-%d'):
-                if partner_id not in partner_list:
-                    partner_list.append(partner_id)
-                to_update[str(id)]= {'level': fups[followup_line_id][1], 'partner_id': partner_id}
-
+            if record['date_maturity']:
+                if record['date_maturity'] <= fups[record['followup_line_id']][0].strftime('%Y-%m-%d'):
+                    if record['partner_id'] not in partner_list:
+                        partner_list.append(record['partner_id'])
+                    to_update[str(record['id'])]= {'level': fups[record['followup_line_id']][1], 'partner_id': record['partner_id']}
+            elif record['date'] and record['date'] <= fups[record['followup_line_id']][0].strftime('%Y-%m-%d'):
+                if record['partner_id'] not in partner_list:
+                    partner_list.append(record['partner_id'])
+                to_update[str(record['id'])]= {'level': fups[record['followup_line_id']][1],'partner_id': record['partner_id']}
         return {'partner_ids': partner_list, 'to_update': to_update}
 
     def do_mail(self ,cr, uid, ids, context=None):
