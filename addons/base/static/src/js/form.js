@@ -1025,9 +1025,50 @@ openerp.base.form.Many2XSelectPopup = openerp.base.BaseWidget.extend({
             self.view_list.do_search.call(
                 self, domains, contexts, groupbys);
         });
-        return this.searchview.start();
+        this.searchview.on_loaded.add_last(function () {
+            var $buttons = self.searchview.$element.find(".oe_search-view-buttons");
+            $buttons.append(QWeb.render("Many2XSelectPopup.search.buttons"));
+            var $nbutton = $buttons.find(".oe_many2xselectpopup-search-new");
+            $nbutton.click(function() {
+                self.new_object();
+            });
+            var $cbutton = $buttons.find(".oe_many2xselectpopup-search-close");
+            $cbutton.click(function() {
+                self.stop();
+            });
+        });
+        this.searchview.start();
+        
     },
     on_select_element: function(element_id) {
+    },
+    new_object: function() {
+        var self = this;
+        this.searchview.hide();
+        this.view_list.$element.hide();
+        this.dataset.index = null;
+        this.view_form = new openerp.base.FormView({}, this.session,
+                this.element_id + "_view_form", this.dataset, false);
+        this.view_form.start();
+        this.view_form.on_loaded.add_last(function() {
+            var $buttons = self.view_form.$element.find(".oe_form_buttons");
+            $buttons.html(QWeb.render("Many2XSelectPopup.form.buttons"));
+            var $nbutton = $buttons.find(".oe_many2xselectpopup-form-save");
+            $nbutton.click(function() {
+                self.view_form.do_save();
+            });
+            var $cbutton = $buttons.find(".oe_many2xselectpopup-form-close");
+            $cbutton.click(function() {
+                self.stop();
+            });
+        });
+        this.view_form.on_created.add_last(function(r, success) {
+            if (r.result) {
+                var id = arguments[0].result;
+                self.on_select_element(id);
+            }
+        });
+        this.view_form.do_show();
     }
 });
 

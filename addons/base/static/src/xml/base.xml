@@ -383,7 +383,7 @@
     <h2 class="oe_view_title"><t t-esc="view.attrs['string']"/></h2>
     <form>
         <t t-call="SearchView.render_lines"/>
-        <div style="text-align:right;">
+        <div class="oe_search-view-buttons" style="text-align:right;">
             <input type="submit" value="Search"/>
             <input type="reset" value="Clear"/>
         </div>
@@ -576,6 +576,15 @@
     <div t-att-id="element_id">
         <div t-att-id="element_id + '_search'"></div>
         <div t-att-id="element_id + '_view_list'"></div>
+        <div t-att-id="element_id + '_view_form'"></div>
     </div>
+</t>
+<t t-name="Many2XSelectPopup.search.buttons">
+    <button type="button" class="oe_many2xselectpopup-search-new">New</button>
+    <button type="button" class="oe_many2xselectpopup-search-close">Close</button>
+</t>
+<t t-name="Many2XSelectPopup.form.buttons">
+    <button type="button" class="oe_many2xselectpopup-form-save">Save</button>
+    <button type="button" class="oe_many2xselectpopup-form-close">Close</button>
 </t>
 </templates>
