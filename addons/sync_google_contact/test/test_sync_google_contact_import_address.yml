@@ -4,13 +4,13 @@
 - |
   I create a record for the gmail account for which I want to import the contacts.
 - 
-  !record {model: google.login.contact, id: google_login_contact_id0}:
+  !record {model: google.login, id: google_login_contact_id0}:
     user: testmail.openerp
     password: openerptiny
 - |
   I login into that account.
 -
-  !python {model: google.login.contact}: |
+  !python {model: google.login}: |
     self.login(cr, uid, [ref('google_login_contact_id0')], context)
 - |
   Now I select from which group I want to get the contact details.

@@ -21,6 +21,7 @@
 
 import sync_google_contact
 import wizard
+import google_login_installer
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

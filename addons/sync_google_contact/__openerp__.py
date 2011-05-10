@@ -30,6 +30,7 @@
     'depends': ['base','google_base_account'],
     'init_xml': [],
     'update_xml': [
+                  'google_login_installer.xml',
                   'wizard/google_contact_import_view.xml'
                    ],
     'demo_xml': [],
