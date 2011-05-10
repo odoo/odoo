@@ -116,7 +116,7 @@ var QWeb2 = {
             var new_dict = this.extend({}, old_dict);
             new_dict['__caller__'] = old_dict['__template__'];
             if (callback) {
-                new_dict[0] = callback(context, new_dict);
+                new_dict['__content__'] = callback(context, new_dict);
             }
             var r = context.engine._render(template, new_dict);
             if (_import) {
@@ -485,9 +485,6 @@ QWeb2.Element = (function() {
         format_expression : function(e) {
             /* Naive format expression builder. Replace reserved words and variables to dict[variable]
              * Does not handle spaces before dot yet, and causes problems for anonymous functions. Use t-js="" for that */
-            if (e === '0') {
-              return "dict['0']";
-            }
             if (QWeb2.expressions_cache[e]) {
               return QWeb2.expressions_cache[e];
             }
