@@ -669,7 +669,7 @@ class MigrationManager(object):
                             del mod
 
 
-def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=None, **kwargs):
+def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=None, report=None):
     """Migrates+Updates or Installs all module nodes from ``graph``
        :param graph: graph of module nodes to load
        :param status: status dictionary for keeping track of progress
@@ -685,38 +685,14 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
             if new_query:
                 cr.execute(new_query)
 
-    def load_init_update_xml(cr, m, idref, mode, kind):
-        for filename in package.data.get('%s_xml' % kind, []):
-            logger.notifyChannel('init', netsvc.LOG_INFO, 'module %s: loading %s' % (m, filename))
-            _, ext = os.path.splitext(filename)
-            fp = tools.file_open(opj(m, filename))
-            try:
-                if ext == '.csv':
-                    noupdate = (kind == 'init')
-                    tools.convert_csv_import(cr, m, os.path.basename(filename), fp.read(), idref, mode=mode, noupdate=noupdate)
-                elif ext == '.sql':
-                    process_sql_file(cr, fp)
-                elif ext == '.yml':
-                    tools.convert_yaml_import(cr, m, fp, idref, mode=mode, **kwargs)
-                else:
-                    tools.convert_xml_import(cr, m, fp, idref, mode=mode, **kwargs)
-            finally:
-                fp.close()
+    def load_init_xml(cr, m, idref, mode):
+        _load_xml(cr, m, idref, mode, 'init')
+
+    def load_update_xml(cr, m, idref, mode):
+        _load_xml(cr, m, idref, mode, 'update')
 
     def load_demo_xml(cr, m, idref, mode):
-        for xml in package.data.get('demo_xml', []):
-            name, ext = os.path.splitext(xml)
-            logger.notifyChannel('init', netsvc.LOG_INFO, 'module %s: loading %s' % (m, xml))
-            fp = tools.file_open(opj(m, xml))
-            try:
-                if ext == '.csv':
-                    tools.convert_csv_import(cr, m, os.path.basename(xml), fp.read(), idref, mode=mode, noupdate=True)
-                elif ext == '.yml':
-                    tools.convert_yaml_import(cr, m, fp, idref, mode=mode, noupdate=True, **kwargs)
-                else:
-                    tools.convert_xml_import(cr, m, fp, idref, mode=mode, noupdate=True, **kwargs)
-            finally:
-                fp.close()
+        _load_xml(cr, m, idref, mode, 'demo')
 
     def load_data(cr, module_name, id_map, mode):
         _load_data(cr, module_name, id_map, mode, 'data')
@@ -736,6 +712,29 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
                     cr.commit()
                 else:
                     cr.rollback()
+
+    def _load_xml(cr, m, idref, mode, kind):
+        for filename in package.data.get('%s_xml' % kind, []):
+            logger.notifyChannel('init', netsvc.LOG_INFO, 'module %s: loading %s' % (m, filename))
+            _, ext = os.path.splitext(filename)
+            fp = tools.file_open(opj(m, filename))
+            noupdate = False
+            if kind == 'demo':
+                noupdate = True
+            try:
+                if ext == '.csv':
+                    if kind == 'init':
+                        noupdate = True
+                    # i.e. noupdate == False when kind == 'update'
+                    tools.convert_csv_import(cr, m, os.path.basename(filename), fp.read(), idref, mode=mode, noupdate=noupdate)
+                elif kind != 'demo' and ext == '.sql':
+                    process_sql_file(cr, fp)
+                elif ext == '.yml':
+                    tools.convert_yaml_import(cr, m, fp, idref, mode=mode, noupdate=noupdate)
+                else:
+                    tools.convert_xml_import(cr, m, fp, idref, mode=mode, noupdate=noupdate, report=report)
+            finally:
+                fp.close()
 
     def _load_data(cr, module_name, id_map, mode, kind):
         for filename in package.data.get(kind, []):
@@ -803,11 +802,11 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
             mode = 'init'
 
         if hasattr(package, 'init') or hasattr(package, 'update') or package.state in ('to install', 'to upgrade'):
-            for kind in ('init', 'update'):
-                if package.state=='to upgrade':
-                    # upgrading the module information
-                    modobj.write(cr, 1, [mid], modobj.get_values_from_terp(package.data))
-                load_init_update_xml(cr, m, idref, mode, kind)
+            if package.state=='to upgrade':
+                # upgrading the module information
+                modobj.write(cr, 1, [mid], modobj.get_values_from_terp(package.data))
+            load_init_xml(cr, m, idref, mode)
+            load_update_xml(cr, m, idref, mode)
             load_data(cr, m, idref, mode)
             if hasattr(package, 'demo') or (package.dbdemo and package.state != 'installed'):
                 status['progress'] = (float(statusi)+0.75) / len(graph)

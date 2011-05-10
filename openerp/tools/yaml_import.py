@@ -792,7 +792,7 @@ class YamlInterpreter(object):
             is_preceded_by_comment = False
         return is_preceded_by_comment
 
-def yaml_import(cr, module, yamlfile, idref=None, mode='init', noupdate=False, report=None):
+def yaml_import(cr, module, yamlfile, idref=None, mode='init', noupdate=False):
     if idref is None:
         idref = {}
     yaml_string = yamlfile.read()
