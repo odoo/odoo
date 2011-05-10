@@ -275,17 +275,14 @@ openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
         // init search view
         var searchview_id = this.action.search_view_id && this.action.search_view_id[0];
 
-        if (searchview_id) {
-            var searchview_loaded = this.setup_search_view(
-                    searchview_id, search_defaults);
+        var searchview_loaded = this.setup_search_view(
+                searchview_id || false, search_defaults);
 
-            // schedule auto_search
-            if (this.action['auto_search']) {
-                $.when(searchview_loaded, inital_view_loaded)
-                    .then(this.searchview.do_search);
-            }
+        // schedule auto_search
+        if (searchview_loaded != null && this.action['auto_search']) {
+            $.when(searchview_loaded, inital_view_loaded)
+                .then(this.searchview.do_search);
         }
-
     },
     stop: function() {
         // should be replaced by automatic destruction implemented in BaseWidget
