@@ -369,8 +369,8 @@ class account_move_line(osv.osv):
     }
 account_move_line()
 
-class account_asset_property_history(osv.osv):
-    _name = 'account.asset.property.history'
+class account_asset_history(osv.osv):
+    _name = 'account.asset.history'
     _description = 'Asset history'
     _columns = {
         'name': fields.char('History name', size=64, select=1),
@@ -386,8 +386,7 @@ class account_asset_property_history(osv.osv):
         'date': lambda *args: time.strftime('%Y-%m-%d'),
         'user_id': lambda self,cr, uid,ctx: uid
     }
-account_asset_property_history()
-
+account_asset_history()
 
 class account_asset_board(osv.osv):
     _name = 'account.asset.board'
@@ -421,4 +420,3 @@ class account_asset_board(osv.osv):
 account_asset_board()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
