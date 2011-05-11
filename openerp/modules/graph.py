@@ -48,8 +48,6 @@ from cStringIO import StringIO
 
 import logging
 
-import openerp.modules.db
-
 logger = netsvc.Logger()
 
 
@@ -102,7 +100,7 @@ class Graph(dict):
             # This will raise an exception if no/unreadable descriptor file.
             # NOTE The call to load_information_from_description_file is already
             # done by db.initialize, so it is possible to not do it again here.
-            info = openerp.modules.load_information_from_description_file(module)
+            info = openerp.modules.module.load_information_from_description_file(module)
             if info['installable']:
                 packages.append((module, info)) # TODO directly a dict, like in get_modules_with_version
             else:

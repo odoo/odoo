@@ -135,7 +135,7 @@ def file_open(name, mode="r", subdir='addons', pathinfo=False):
     @return: fileobject if pathinfo is False else (fileobject, filepath)
     """
     import openerp.modules as addons
-    adps = addons.ad_paths
+    adps = addons.module.ad_paths
     rtp = os.path.normcase(os.path.abspath(config['root_path']))
 
     if name.replace(os.path.sep, '/').startswith('addons/'):

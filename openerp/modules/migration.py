@@ -98,7 +98,7 @@ class MigrationManager(object):
             if not (hasattr(pkg, 'update') or pkg.state == 'to upgrade'):
                 continue
 
-            get_module_filetree = openerp.modules.get_module_filetree
+            get_module_filetree = openerp.modules.module.get_module_filetree
             self.migrations[pkg.name]['module'] = get_module_filetree(pkg.name, 'migrations') or {}
             self.migrations[pkg.name]['maintenance'] = get_module_filetree('base', 'maintenance/migrations/' + pkg.name) or {}
 
