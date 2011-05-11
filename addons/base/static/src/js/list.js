@@ -1,7 +1,6 @@
 openerp.base.list = function (openerp) {
 openerp.base.views.add('list', 'openerp.base.ListView');
-openerp.base.ListView = openerp.base.Controller.extend(
-    /** @lends openerp.base.ListView# */ {
+openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListView# */ {
     defaults: {
         // records can be selected one by one
         'selectable': true,
@@ -361,10 +360,7 @@ openerp.base.ListView = openerp.base.Controller.extend(
     }
     // TODO: implement reorder (drag and drop rows)
 });
-_.extend(openerp.base.ListView.prototype, openerp.base.ActionExecutor);
-
-openerp.base.ListView.List = Class.extend(
-    /** @lends openerp.base.ListView.List# */{
+openerp.base.ListView.List = Class.extend( /** @lends openerp.base.ListView.List# */{
     /**
      * List display for the ListView, handles basic DOM events and transforms
      * them in the relevant higher-level events, to which the list view (or
@@ -476,8 +472,7 @@ openerp.base.ListView.List = Class.extend(
     // drag and drop
     // editable?
 });
-openerp.base.ListView.Groups = Class.extend(
-    /** @lends openerp.base.ListView.Groups# */{
+openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Groups# */{
     /**
      * Grouped display for the ListView. Handles basic DOM events and interacts
      * with the :js:class:`~openerp.base.DataGroup` bound to it.
@@ -525,9 +520,6 @@ openerp.base.ListView.Groups = Class.extend(
         return this.make_level(this.datagroup);
     }
 });
-openerp.base.TreeView = openerp.base.Controller.extend({
-});
-
 };
 
 // vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:

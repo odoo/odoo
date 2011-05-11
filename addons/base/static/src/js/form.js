@@ -2,7 +2,7 @@
 openerp.base.form = function (openerp) {
 
 openerp.base.views.add('form', 'openerp.base.FormView');
-openerp.base.FormView =  openerp.base.Controller.extend( /** @lends openerp.base.FormView# */{
+openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormView# */{
     /**
      * Indicates that this view is not searchable, and thus that no search
      * view should be displayed (if there is one active).
@@ -365,7 +365,8 @@ openerp.base.form.compute_domain = function(expr, fields) {
         }
     }
     return _.indexOf(stack, false) == -1;
-},
+}
+
 openerp.base.form.Widget = openerp.base.Controller.extend({
     init: function(view, node) {
         this.view = view;
@@ -532,7 +533,7 @@ openerp.base.form.WidgetButton = openerp.base.form.Widget.extend({
     on_confirmed: function() {
         var self = this;
 
-        this.execute_action(
+        this.view.execute_action(
             this.node.attrs, this.view.dataset, this.session.action_manager,
             this.view.datarecord.id, function (result) {
                 self.log("Button returned", result);
@@ -540,9 +541,6 @@ openerp.base.form.WidgetButton = openerp.base.form.Widget.extend({
             });
     }
 });
-// let WidgetButton execute actions
-_.extend(openerp.base.form.WidgetButton.prototype,
-         openerp.base.ActionExecutor);
 
 openerp.base.form.WidgetLabel = openerp.base.form.Widget.extend({
     init: function(view, node) {
