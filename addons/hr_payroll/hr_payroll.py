@@ -177,14 +177,12 @@ class hr_salary_category(osv.osv):
         'parent_id':fields.many2one('hr.salary.category', 'Parent', help="Linking a salary category to its parent is used only for the reporting purpose."),
         'note': fields.text('Description'),
         'company_id':fields.many2one('res.company', 'Company', required=False),
-        'sequence': fields.integer('Sequence', required=True, help='Display sequence order'),
     }
 
     _defaults = {
         'company_id': lambda self, cr, uid, context: \
                 self.pool.get('res.users').browse(cr, uid, uid,
                     context=context).company_id.id,
-        'sequence': 5
     }
 
 hr_salary_category()
@@ -218,7 +216,7 @@ class hr_payslip(osv.osv):
         cr.execute('''SELECT pl.slip_id, pl.id FROM hr_payslip_line AS pl \
                     LEFT JOIN hr_salary_category AS sh on (pl.category_id = sh.id) \
                     WHERE pl.slip_id in %s \
-                    GROUP BY pl.slip_id, sh.sequence, pl.sequence, pl.id ORDER BY sh.sequence, pl.sequence''',(tuple(ids),))
+                    GROUP BY pl.slip_id, pl.sequence, pl.id ORDER BY pl.sequence''',(tuple(ids),))
         res = cr.fetchall()
         for r in res:
             result.setdefault(r[0], [])
@@ -247,7 +245,7 @@ class hr_payslip(osv.osv):
             \n* If the salary is paid then state is set to \'Paid Salary\'.\
             \n* The \'Reject\' state is used when user cancel payslip.'),
 #        'line_ids': fields.one2many('hr.payslip.line', 'slip_id', 'Payslip Line', required=False, readonly=True, states={'draft': [('readonly', False)]}),
-        'line_ids': one2many_mod2('hr.payslip.line', 'slip_id', 'Payslip Line',readonly=True, states={'draft':[('readonly',False)]}),
+        'line_ids': one2many_mod2('hr.payslip.line', 'slip_id', 'Payslip Line',readonly=True),
         'company_id': fields.many2one('res.company', 'Company', required=False, readonly=True, states={'draft': [('readonly', False)]}),
         'input_line_ids': fields.one2many('hr.payslip.input', 'payslip_id', 'Payslip Inputs', required=False, readonly=True, states={'draft': [('readonly', False)]}),
         'paid': fields.boolean('Made Payment Order ? ', required=False, readonly=True, states={'draft': [('readonly', False)]}),
@@ -509,7 +507,7 @@ class hr_payslip(osv.osv):
                     previous_amount = rule.code in localdict and localdict[rule.code] or 0.0
                     #set/overwrite the amount computed for this rule in the localdict
                     localdict[rule.code] = amount
-                    #sum the amount for its salary head
+                    #sum the amount for its salary category
                     localdict = _sum_salary_category(localdict, rule.category_id, amount - previous_amount)
                     #create/overwrite the rule in the temporary results
                     result_dict[key] = {
@@ -557,7 +555,6 @@ class hr_payslip(osv.osv):
         #defaults
         res = {'value':{
                       'line_ids':[],
-                      #'details_by_salary_head':[], TODO put me back
                       'name':'',
                       'contract_id': False,
                       'struct_id': False,
@@ -641,7 +638,7 @@ class hr_salary_rule(osv.osv):
     _name = 'hr.salary.rule'
     _columns = {
         'name':fields.char('Name', size=256, required=True, readonly=False),
-        'code':fields.char('Code', size=64, required=True),
+        'code':fields.char('Code', size=64, required=True, help="The code of salary rules can be used as reference in computation of other rules. In that case, it is case sensitive."),
         'sequence': fields.integer('Sequence', required=True, help='Use to arrange calculation sequence'),
         'quantity': fields.char('Quantity', size=256, help="It is used in computation for percentage and fixed amount.For e.g. A rule for Meal Voucher having fixed amount of 1€ per worked day can have its quantity defined in expression like worked_days['WORK100']['number_of_days']."),
         'category_id':fields.many2one('hr.salary.category', 'Category', required=True),
@@ -650,7 +647,7 @@ class hr_salary_rule(osv.osv):
         'parent_rule_id':fields.many2one('hr.salary.rule', 'Parent Salary Rule', select=True),
         'company_id':fields.many2one('res.company', 'Company', required=False),
         'condition_select': fields.selection([('none', 'Always True'),('range', 'Range'), ('python', 'Python Expression')], "Condition Based on", required=True),
-        'condition_range':fields.char('Range Based on',size=1024, readonly=False, help='This will use to computer the % fields values, in general its on basic, but You can use all heads code field in small letter as a variable name i.e. hra, ma, lta, etc...., also you can use, static varible basic'),#old name = conputional expression
+        'condition_range':fields.char('Range Based on',size=1024, readonly=False, help='This will use to computer the % fields values, in general its on basic, but You can use all categories code field in small letter as a variable name i.e. hra, ma, lta, etc...., also you can use, static varible basic'),
         'condition_python':fields.text('Python Condition', required=True, readonly=False, help='Applied this rule for calculation if condition is true. You can specify condition like basic > 1000.'),#old name = conditions
         'condition_range_min': fields.float('Minimum Range', required=False, help="The minimum amount, applied for this rule."),
         'condition_range_max': fields.float('Maximum Range', required=False, help="The maximum amount, applied for this rule."),
@@ -662,7 +659,7 @@ class hr_salary_rule(osv.osv):
         'amount_fix': fields.float('Fixed Amount', digits_compute=dp.get_precision('Account'),),
         'amount_percentage': fields.float('Percentage (%)', digits_compute=dp.get_precision('Account'), help='For example, enter 50.0 to apply a percentage of 50%'),
         'amount_python_compute':fields.text('Python Code'),
-        'amount_percentage_base':fields.char('Percentage based on',size=1024, required=False, readonly=False, help='result will be affected to a variable'), #old name = expressiont
+        'amount_percentage_base':fields.char('Percentage based on',size=1024, required=False, readonly=False, help='result will be affected to a variable'),
         'child_ids':fields.one2many('hr.salary.rule', 'parent_rule_id', 'Child Salary Rule'),
         'register_id':fields.property(
             'hr.contribution.register',
