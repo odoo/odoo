@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2011-05-09 10:19+0000\n"
 "PO-Revision-Date: 2011-03-20 18:32+0000\n"
 "Last-Translator: mgaja (GrupoIsep.com) <Unknown>\n"
 "Language-Team: Catalan <ca@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-03-21 06:22+0000\n"
-"X-Generator: Launchpad (build 12559)\n"
+"X-Launchpad-Export-Date: 2011-05-10 07:37+0000\n"
+"X-Generator: Launchpad (build 12959)\n"
 
 #. module: procurement
 #: view:make.procurement:0
@@ -72,7 +72,7 @@ msgid "Procurement Method"
 msgstr "Mètode proveïment"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:298
+#: code:addons/procurement/procurement.py:304
 #, python-format
 msgid "No address defined for the supplier"
 msgstr "No s'ha definit adreça per al proveïdor"
@@ -178,6 +178,11 @@ msgid "Stock Move"
 msgstr "Moviment d'estoc"
 
 #. module: procurement
+#: model:ir.model,name:procurement.model_procurement_order_compute_all
+msgid "Compute all schedulers"
+msgstr "Calcula tots els planificadors"
+
+#. module: procurement
 #: view:procurement.order:0
 msgid "Planification"
 msgstr "Planificació"
@@ -236,6 +241,12 @@ msgstr "Ordres de proveïment a processar"
 #: constraint:res.company:0
 msgid "Error! You can not create recursive companies."
 msgstr "Error! No podeu crear empreses recursives."
+
+#. module: procurement
+#: code:addons/procurement/procurement.py:384
+#, python-format
+msgid "Procurement '%s' is in exception: "
+msgstr ""
 
 #. module: procurement
 #: field:procurement.order,priority:0
@@ -327,7 +338,7 @@ msgid "Quantity"
 msgstr "Quantitat"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:370
+#: code:addons/procurement/procurement.py:377
 #, python-format
 msgid "Not enough stock and no minimum orderpoint rule defined."
 msgstr "No hi ha suficient estoc i no s'ha definit una regla d'estoc mínim."
@@ -416,11 +427,6 @@ msgid "Compute Stock"
 msgstr "Calcula estoc"
 
 #. module: procurement
-#: view:procurement.order:0
-msgid "Late"
-msgstr "Retardat"
-
-#. module: procurement
 #: model:process.process,name:procurement.process_process_serviceproductprocess0
 msgid "Service"
 msgstr "Servei"
@@ -465,7 +471,7 @@ msgid "plus"
 msgstr "més"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:319
+#: code:addons/procurement/procurement.py:325
 #, python-format
 msgid ""
 "Please check the Quantity in Procurement Order(s), it should not be less "
@@ -551,6 +557,12 @@ msgid "You try to assign a lot which is not from the same product"
 msgstr "Esteu intentant assignar un lot que no és del mateix producte"
 
 #. module: procurement
+#: code:addons/procurement/procurement.py:381
+#, python-format
+msgid "Not enough stock."
+msgstr ""
+
+#. module: procurement
 #: field:stock.warehouse.orderpoint,active:0
 msgid "Active"
 msgstr "Actiu"
@@ -569,6 +581,12 @@ msgstr "Data planificada"
 #: selection:procurement.order,state:0
 msgid "Exception"
 msgstr "Excepció"
+
+#. module: procurement
+#: code:addons/procurement/procurement.py:379
+#, python-format
+msgid "No minimum orderpoint rule defined."
+msgstr ""
 
 #. module: procurement
 #: code:addons/procurement/schedulers.py:179
@@ -627,10 +645,9 @@ msgid "Date Closed"
 msgstr "Data tancament"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:372
-#, python-format
-msgid "Procurement '%s' is in exception: not enough stock."
-msgstr "El proveïment '%s' està en excepció: no suficient estoc."
+#: view:procurement.order:0
+msgid "Late"
+msgstr "Retardat"
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:138
@@ -639,7 +656,7 @@ msgid "Cannot delete Procurement Order(s) which are in %s State!"
 msgstr "No es pot eliminar ordre(s) de proveïment que estan en estat %s!"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:318
+#: code:addons/procurement/procurement.py:324
 #, python-format
 msgid "Data Insufficient !"
 msgstr "Dades insuficients!"
@@ -712,9 +729,10 @@ msgid "Not urgent"
 msgstr "No urgent"
 
 #. module: procurement
-#: model:ir.model,name:procurement.model_procurement_order_compute_all
-msgid "Compute all schedulers"
-msgstr "Calcula tots els planificadors"
+#: code:addons/procurement/procurement.py:294
+#, python-format
+msgid "No default supplier defined for this product"
+msgstr ""
 
 #. module: procurement
 #: view:procurement.order:0
@@ -871,7 +889,7 @@ msgid "Product UoS"
 msgstr "UdV del producte"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:347
+#: code:addons/procurement/procurement.py:353
 #, python-format
 msgid "from stock: products assigned."
 msgstr "des d'estoc: productes assignats."
@@ -949,3 +967,7 @@ msgstr "Detalls de proveïment"
 #, python-format
 msgid "SCHEDULER"
 msgstr "PLANIFICADOR"
+
+#, python-format
+#~ msgid "Procurement '%s' is in exception: not enough stock."
+#~ msgstr "El proveïment '%s' està en excepció: no suficient estoc."

@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2011-05-09 10:19+0000\n"
 "PO-Revision-Date: 2011-01-20 14:53+0000\n"
 "Last-Translator: qdp (OpenERP) <qdp-launchpad@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-25 06:56+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-05-10 07:40+0000\n"
+"X-Generator: Launchpad (build 12959)\n"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_res_users_2_project_task_opened
@@ -28,7 +28,7 @@ msgstr ""
 "Inclure de nouveau la description de la tâche dans la tâche de l'utilisateur"
 
 #. module: project
-#: code:addons/project/project.py:658
+#: code:addons/project/project.py:671
 #, python-format
 msgid "The task '%s' has been delegated to %s."
 msgstr "La tâche '%s' a été déléguée à %s."
@@ -63,7 +63,7 @@ msgid "Deadlines"
 msgstr "Date limite"
 
 #. module: project
-#: code:addons/project/project.py:121
+#: code:addons/project/project.py:118
 #, python-format
 msgid "Operation Not Permitted !"
 msgstr "Opération non permises !"
@@ -249,7 +249,7 @@ msgid "Day"
 msgstr "Jour"
 
 #. module: project
-#: code:addons/project/project.py:571
+#: code:addons/project/project.py:584
 #, python-format
 msgid "The task '%s' is done"
 msgstr "La tâche '%s' est terminée"
@@ -445,7 +445,7 @@ msgid "Reactivate Project"
 msgstr "Ré-activer le projet"
 
 #. module: project
-#: code:addons/project/project.py:553
+#: code:addons/project/project.py:562
 #, python-format
 msgid "Task '%s' closed"
 msgstr "Tâche '%s' fermée"
@@ -495,8 +495,8 @@ msgid "Error! You can not create recursive analytic accounts."
 msgstr "Erreur ! Vous ne pouvez pas créer de comptes analytiques récursifs."
 
 #. module: project
-#: code:addons/project/project.py:225
-#: code:addons/project/project.py:246
+#: code:addons/project/project.py:222
+#: code:addons/project/project.py:243
 #, python-format
 msgid " (copy)"
 msgstr " (copie)"
@@ -642,7 +642,7 @@ msgid "Reevaluate"
 msgstr "Réévaluer"
 
 #. module: project
-#: code:addons/project/project.py:531
+#: code:addons/project/project.py:539
 #, python-format
 msgid "Send Email after close task"
 msgstr "Envoyer un courriel après avoir fermé la tâche"
@@ -737,7 +737,7 @@ msgid "Starting Date"
 msgstr "Démarrage du projet"
 
 #. module: project
-#: code:addons/project/project.py:267
+#: code:addons/project/project.py:264
 #: model:ir.actions.act_window,name:project.open_view_project_all
 #: model:ir.ui.menu,name:project.menu_open_view_project_all
 #: view:project.project:0
@@ -766,7 +766,7 @@ msgstr ""
 "incident."
 
 #. module: project
-#: code:addons/project/project.py:622
+#: code:addons/project/project.py:635
 #, python-format
 msgid "The task '%s' is opened."
 msgstr "La tâche '%s' est ouverte."
@@ -1114,6 +1114,13 @@ msgid "My Task's Deadlines"
 msgstr "Les dates limites de mes tâches"
 
 #. module: project
+#: help:project.project,members:0
+msgid ""
+"Project's members are users who can have an access to the tasks related to "
+"this project."
+msgstr ""
+
+#. module: project
 #: view:project.project:0
 #: field:project.task,manager_id:0
 msgid "Project Manager"
@@ -1190,7 +1197,6 @@ msgstr "Tableau de bord de projet"
 
 #. module: project
 #: view:project.project:0
-#: field:project.project,parent_id:0
 msgid "Parent Project"
 msgstr "Projet parent"
 
@@ -1220,7 +1226,7 @@ msgid "Customer Email"
 msgstr "Courriel client"
 
 #. module: project
-#: code:addons/project/project.py:190
+#: code:addons/project/project.py:187
 #, python-format
 msgid "The project '%s' has been closed."
 msgstr "Le projet '%s' a été fermé."
@@ -1270,7 +1276,7 @@ msgid "When task is completed, it will come into the done state."
 msgstr "Quand une tâche sera finie, elle passera à l'état terminé"
 
 #. module: project
-#: code:addons/project/project.py:212
+#: code:addons/project/project.py:209
 #, python-format
 msgid "The project '%s' has been opened."
 msgstr "Le projet '%s' a été ouvert."
@@ -1357,16 +1363,6 @@ msgid "Getting Things Done"
 msgstr "Méthode \"Getting Things Done\""
 
 #. module: project
-#: help:project.project,members:0
-msgid ""
-"Project's member. Not used in any computation, just for information purpose, "
-"but a user has to be member of a project to add a the to this project."
-msgstr ""
-"Membre du projet. N'est utilisé dans aucun traitement, juste à titre "
-"indicatif, mais un utilisateur doit être membre du projet pour ajouter du "
-"temps à ce projet."
-
-#. module: project
 #: help:project.task.close,partner_warn:0
 msgid "Warn Customer by Email"
 msgstr "Avertir le client par courriel"
@@ -1425,7 +1421,7 @@ msgstr ""
 "une tâche, etc."
 
 #. module: project
-#: code:addons/project/project.py:582
+#: code:addons/project/project.py:595
 #, python-format
 msgid "Task '%s' set in progress"
 msgstr "Tâche '%s' mise \"en cours\""
@@ -1478,7 +1474,7 @@ msgid "Open"
 msgstr "Ouvert"
 
 #. module: project
-#: code:addons/project/project.py:121
+#: code:addons/project/project.py:118
 #, python-format
 msgid ""
 "You can not delete a project with tasks. I suggest you to deactivate it."
@@ -1515,6 +1511,11 @@ msgstr "Ré-activer"
 #: view:project.task.close:0
 msgid "Send Email"
 msgstr "Envoyer un courriel"
+
+#. module: project
+#: constraint:project.task:0
+msgid "Error ! Task end-date must be greater then task start-date"
+msgstr ""
 
 #. module: project
 #: view:res.users:0
@@ -1818,7 +1819,7 @@ msgid "Spent Hours"
 msgstr "Heures consommées"
 
 #. module: project
-#: code:addons/project/project.py:665
+#: code:addons/project/project.py:678
 #, python-format
 msgid "The task '%s' is pending."
 msgstr "La tâche '%s' est en attente."
@@ -1904,7 +1905,7 @@ msgid "Validation State"
 msgstr "État de Validation"
 
 #. module: project
-#: code:addons/project/project.py:602
+#: code:addons/project/project.py:615
 #, python-format
 msgid "Task '%s' cancelled"
 msgstr "Tâche '%s' annulée"
@@ -1934,7 +1935,7 @@ msgid "Create Date"
 msgstr "Date de création"
 
 #. module: project
-#: code:addons/project/project.py:610
+#: code:addons/project/project.py:623
 #, python-format
 msgid "The task '%s' is cancelled."
 msgstr "La tâche '%s' est annulée."
@@ -1981,3 +1982,11 @@ msgstr "Pied du courriel"
 #: field:project.installer,account_budget:0
 msgid "Budgets"
 msgstr "Budgets"
+
+#~ msgid ""
+#~ "Project's member. Not used in any computation, just for information purpose, "
+#~ "but a user has to be member of a project to add a the to this project."
+#~ msgstr ""
+#~ "Membre du projet. N'est utilisé dans aucun traitement, juste à titre "
+#~ "indicatif, mais un utilisateur doit être membre du projet pour ajouter du "
+#~ "temps à ce projet."

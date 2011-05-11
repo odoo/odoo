@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2011-05-09 10:18+0000\n"
 "PO-Revision-Date: 2011-03-30 08:56+0000\n"
 "Last-Translator: Ferdinand @ Camptocamp <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-03-31 06:35+0000\n"
-"X-Generator: Launchpad (build 12559)\n"
+"X-Launchpad-Export-Date: 2011-05-10 07:32+0000\n"
+"X-Generator: Launchpad (build 12959)\n"
 
 #. module: hr_timesheet_invoice
 #: view:report.timesheet.line:0
@@ -274,6 +274,11 @@ msgid "Final Invoice"
 msgstr "Schlussrechnung"
 
 #. module: hr_timesheet_invoice
+#: report:account.analytic.profit:0
+msgid "User or Journal Name"
+msgstr ""
+
+#. module: hr_timesheet_invoice
 #: view:hr.timesheet.invoice.create.final:0
 msgid "Do you want details for each line of the invoices ?"
 msgstr "Möchten Sie Details zu jeder Rechnungsposition sehen?"
@@ -308,9 +313,10 @@ msgid "Debit"
 msgstr "Soll"
 
 #. module: hr_timesheet_invoice
-#: field:hr.timesheet.analytic.profit,employee_ids:0
-msgid "Employee"
-msgstr "Mitarbeiter"
+#: view:hr.timesheet.analytic.cost.ledger:0
+#: view:hr.timesheet.analytic.profit:0
+msgid "Print"
+msgstr "Druck"
 
 #. module: hr_timesheet_invoice
 #: help:account.analytic.line,to_invoice:0
@@ -465,12 +471,18 @@ msgid "Yes (100%)"
 msgstr "100%"
 
 #. module: hr_timesheet_invoice
-#: report:account.analytic.profit:0
-msgid "Employee or Journal Name"
-msgstr "Mitarbeiter oder Journal Name"
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_final_invoice_create.py:69
+#, python-format
+msgid ""
+"Please fill in the partner and pricelist field in the analytic account:\n"
+"%s"
+msgstr ""
+"Bitte tragen Sie bei diesem analytischen Konto einen Partner und eine "
+"Preisliste ein:\n"
+"%s"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:189
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:191
 #, python-format
 msgid "Invoices"
 msgstr "Alle Rechnungen"
@@ -500,6 +512,7 @@ msgid "Currency"
 msgstr "Währung"
 
 #. module: hr_timesheet_invoice
+#: field:hr.timesheet.analytic.profit,employee_ids:0
 #: view:report.timesheet.line:0
 #: field:report.timesheet.line,user_id:0
 #: field:report_timesheet.account,user_id:0
@@ -518,6 +531,11 @@ msgstr ""
 "Komplettiere dieses Feld, wenn Sie die Benutzung eines bestimmten Produktes "
 "erzwingen wollen. Lasse leer wenn Sie das wirkliche Produkt aus der "
 "Arbeitszeiterfassung nehmen wollen."
+
+#. module: hr_timesheet_invoice
+#: view:hr.timesheet.analytic.profit:0
+msgid "Users"
+msgstr ""
 
 #. module: hr_timesheet_invoice
 #: view:report.timesheet.line:0
@@ -688,17 +706,6 @@ msgid "Credit"
 msgstr "Haben"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_final_invoice_create.py:69
-#, python-format
-msgid ""
-"Please fill in the partner and pricelist field in the analytic account:\n"
-"%s"
-msgstr ""
-"Bitte tragen Sie bei diesem analytischen Konto einen Partner und eine "
-"Preisliste ein:\n"
-"%s"
-
-#. module: hr_timesheet_invoice
 #: constraint:account.analytic.account:0
 msgid ""
 "Error! The currency has to be the same as the currency of the selected "
@@ -757,11 +764,6 @@ msgstr "Weiterberechnung"
 #: report:account.analytic.profit:0
 msgid "Totals:"
 msgstr "Summen:"
-
-#. module: hr_timesheet_invoice
-#: field:hr.timesheet.analytic.profit,date_to:0
-msgid "To"
-msgstr "An"
 
 #. module: hr_timesheet_invoice
 #: view:hr.timesheet.invoice.create:0
@@ -831,7 +833,7 @@ msgid "Timesheet Line"
 msgstr "Zeiterfassung Positionen"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_final_invoice_create.py:147
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_final_invoice_create.py:142
 #, python-format
 msgid "Balance product needed"
 msgstr "Ausgleich für dieses Produkt"
@@ -859,10 +861,9 @@ msgid "Label for the customer"
 msgstr "Bezeichnung für Kunden"
 
 #. module: hr_timesheet_invoice
-#: view:hr.timesheet.analytic.cost.ledger:0
-#: view:hr.timesheet.analytic.profit:0
-msgid "Print"
-msgstr "Druck"
+#: field:hr.timesheet.analytic.profit,date_to:0
+msgid "To"
+msgstr "An"
 
 #. module: hr_timesheet_invoice
 #: selection:report.account.analytic.line.to.invoice,month:0
@@ -1013,11 +1014,6 @@ msgid "Sale price"
 msgstr "Verkaufspreis"
 
 #. module: hr_timesheet_invoice
-#: view:hr.timesheet.analytic.profit:0
-msgid "Employees"
-msgstr "Mitarbeiter"
-
-#. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.act_res_users_2_report_timesheet_user
 msgid "Timesheets per day"
 msgstr "Zeiterfassung pro Tag"
@@ -1073,7 +1069,7 @@ msgid "Analytic Lines to Invoice"
 msgstr "Analytische Buchungen zur Abrechnung"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_final_invoice_create.py:147
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_final_invoice_create.py:142
 #, python-format
 msgid "Please fill a Balance product in the wizard"
 msgstr "Bitte geben Sie das Ausgleichsprodukt im Assistenten ein"
@@ -1102,3 +1098,12 @@ msgstr "Kosten"
 #: field:report_timesheet.user,name:0
 msgid "Year"
 msgstr "Jahr"
+
+#~ msgid "Employee or Journal Name"
+#~ msgstr "Mitarbeiter oder Journal Name"
+
+#~ msgid "Employees"
+#~ msgstr "Mitarbeiter"
+
+#~ msgid "Employee"
+#~ msgstr "Mitarbeiter"

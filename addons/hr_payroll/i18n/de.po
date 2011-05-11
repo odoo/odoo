@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2011-05-09 10:18+0000\n"
 "PO-Revision-Date: 2011-01-19 12:00+0000\n"
 "Last-Translator: Marco Dieckhoff <Unknown>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-25 06:43+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-05-10 07:30+0000\n"
+"X-Generator: Launchpad (build 12959)\n"
 
 #. module: hr_payroll
 #: report:employees.salary:0
@@ -293,6 +293,11 @@ msgid "Employee Deduction"
 msgstr "Arbeitnehmeranteil"
 
 #. module: hr_payroll
+#: field:hr.allounce.deduction.categoty,code:0
+msgid "Category Code"
+msgstr "Kategorie Kürzel"
+
+#. module: hr_payroll
 #: selection:hr.allounce.deduction.categoty,type:0
 #: selection:hr.payslip.line,type:0
 msgid "Other Deduction"
@@ -375,6 +380,11 @@ msgstr "Warte auf Genehmigung"
 #: model:ir.module.module,shortdesc:hr_payroll.module_meta_information
 msgid "Human Resource Payroll"
 msgstr "Personalabrechnung"
+
+#. module: hr_payroll
+#: view:hr.payslip:0
+msgid "Draft"
+msgstr "Entwurf"
 
 #. module: hr_payroll
 #: report:payroll.advice:0
@@ -602,12 +612,6 @@ msgid "Total Earnings"
 msgstr "Gesamtvergütung"
 
 #. module: hr_payroll
-#: model:ir.actions.act_window,name:hr_payroll.action_hr_payroll_employees_detail
-#: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_employees_detail
-msgid "Employee Salary Statement"
-msgstr "Abrechnung nach Mitarbeitern"
-
-#. module: hr_payroll
 #: selection:hr.allounce.deduction.categoty,type:0
 #: selection:hr.payslip.line,type:0
 msgid "Other Payment"
@@ -623,7 +627,7 @@ msgstr "Abzüge"
 #. module: hr_payroll
 #: report:payroll.advice:0
 msgid "C/D"
-msgstr ""
+msgstr "S/H"
 
 #. module: hr_payroll
 #: field:hr.contract,permit_no:0
@@ -653,6 +657,11 @@ msgstr "Arbeitnehmeranteil"
 #: selection:hr.payslip.line.line,amount_type:0
 msgid "Fixed Amount"
 msgstr "Fester Betrag"
+
+#. module: hr_payroll
+#: help:company.contribution,contribute_per:0
+msgid "Define Company contribution ratio 1.00=100% contribution."
+msgstr ""
 
 #. module: hr_payroll
 #: field:company.contribution.line,to_val:0
@@ -735,9 +744,9 @@ msgid "Loan Installment"
 msgstr "Rate Mitarbeiterdarlehen"
 
 #. module: hr_payroll
-#: view:hr.payroll.register:0
-msgid "Complete HR Checking"
-msgstr "Abschluss der Prüfung"
+#: report:hr.payroll.register.sheet:0
+msgid "HR Manager"
+msgstr "Personalleiter"
 
 #. module: hr_payroll
 #: report:payroll.advice:0
@@ -753,6 +762,11 @@ msgstr "SV Nr."
 #: report:payslip.pdf:0
 msgid "Net Amount"
 msgstr "Netto Betrag"
+
+#. module: hr_payroll
+#: report:payslip.pdf:0
+msgid "Leave Deductions Line:"
+msgstr "Abzüge für Abwesenheit"
 
 #. module: hr_payroll
 #: report:salary.structure:0
@@ -853,9 +867,9 @@ msgid "Print Statement"
 msgstr "Vergütungsabrechnung drucken"
 
 #. module: hr_payroll
-#: view:hr.payslip:0
-msgid "Draft"
-msgstr "Entwurf"
+#: field:hr.allounce.deduction.categoty,name:0
+msgid "Category Name"
+msgstr "Kategorie Bezeichnung"
 
 #. module: hr_payroll
 #: report:payslip.pdf:0
@@ -966,10 +980,12 @@ msgid "Compute Sheet"
 msgstr "Berechnen"
 
 #. module: hr_payroll
-#: field:company.contribution,active:0
-#: field:hr.payroll.register,active:0
-msgid "Active"
-msgstr "Aktiv"
+#: field:hr.contibution.register.line,date:0
+#: field:hr.payroll.advice,date:0
+#: field:hr.payroll.register,date:0
+#: field:hr.payslip,date:0
+msgid "Date"
+msgstr "Datum"
 
 #. module: hr_payroll
 #: help:hr.allounce.deduction.categoty,condition:0
@@ -1017,11 +1033,6 @@ msgid "Designation"
 msgstr "Abmelden"
 
 #. module: hr_payroll
-#: report:hr.payroll.register.sheet:0
-msgid "HR Manager"
-msgstr "Personalleiter"
-
-#. module: hr_payroll
 #: field:hr.contract,basic:0
 #: field:hr.employee,basic:0
 #: field:hr.payslip,basic_before_leaves:0
@@ -1030,9 +1041,10 @@ msgid "Basic Salary"
 msgstr "Basisvergütung"
 
 #. module: hr_payroll
-#: field:hr.allounce.deduction.categoty,code:0
-msgid "Category Code"
-msgstr "Kategorie Kürzel"
+#: model:ir.actions.act_window,name:hr_payroll.action_hr_payroll_employees_detail
+#: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_employees_detail
+msgid "Employee Salary Statement"
+msgstr "Abrechnung nach Mitarbeitern"
 
 #. module: hr_payroll
 #: view:hr.payroll.register:0
@@ -1040,9 +1052,9 @@ msgid "Salary Information"
 msgstr "Vergütungsinformation"
 
 #. module: hr_payroll
-#: model:ir.model,name:hr_payroll.model_company_contribution_line
-msgid "Allowance Deduction Categoty"
-msgstr "Kategorien Zulagen u. Abzüge"
+#: view:hr.payroll.register:0
+msgid "Complete HR Checking"
+msgstr "Abschluss der Prüfung"
 
 #. module: hr_payroll
 #: view:hr.payslip:0
@@ -1071,12 +1083,10 @@ msgid "Next Month Date"
 msgstr "Nächster Monat"
 
 #. module: hr_payroll
-#: field:hr.contibution.register.line,date:0
-#: field:hr.payroll.advice,date:0
-#: field:hr.payroll.register,date:0
-#: field:hr.payslip,date:0
-msgid "Date"
-msgstr "Datum"
+#: field:company.contribution,active:0
+#: field:hr.payroll.register,active:0
+msgid "Active"
+msgstr "Aktiv"
 
 #. module: hr_payroll
 #: field:hr.contract,visa_expire:0
@@ -1289,18 +1299,6 @@ msgid "Calculations"
 msgstr "Kalkulation"
 
 #. module: hr_payroll
-#: help:company.contribution,contribute_per:0
-msgid ""
-"Define Company contribution ratio 1.00=100% contribution, If Employee "
-"Contribute 5% then company will and here 0.50 defined then company will "
-"contribute 50% on employee 5% contribution"
-msgstr ""
-"Definition des Arbeitgeberanteils, z.B. 1.00=100% Arbeitgeberanteil. Wenn "
-"z.B. ein Abzug für Krankenversicherung 20% ist und an dieser Stelle 0.50 als "
-"Arbeitgeberanteil eingetragen wird ist demnach der Arbeitgeberanteil für "
-"diese Abzugsposition 10%."
-
-#. module: hr_payroll
 #: view:hr.payslip:0
 msgid "Other Informations"
 msgstr "Weitere Information"
@@ -1420,11 +1418,6 @@ msgid "The Passport No must be unique !"
 msgstr "Die Nummer des Ausweis sollte eindeutig sein !"
 
 #. module: hr_payroll
-#: field:hr.allounce.deduction.categoty,name:0
-msgid "Category Name"
-msgstr "Kategorie Bezeichnung"
-
-#. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payroll_year_salary
 msgid "hr.payroll.year.salary"
 msgstr "hr.payroll.year.salary"
@@ -1531,9 +1524,9 @@ msgid "Total Payment"
 msgstr "Auszahlungsbetrag"
 
 #. module: hr_payroll
-#: report:payslip.pdf:0
-msgid "Leave Deductions Line:"
-msgstr "Abzüge für Abwesenheit"
+#: model:ir.model,name:hr_payroll.model_company_contribution_line
+msgid "Allowance Deduction Category"
+msgstr ""
 
 #. module: hr_payroll
 #: selection:hr.payroll.register,state:0
@@ -1644,3 +1637,16 @@ msgstr "Gesamt"
 #: field:hr.allounce.deduction.categoty,contribute_ids:0
 msgid "Contributions"
 msgstr "Anteile Arbeitgeber / Arbeitnehmer"
+
+#~ msgid "Allowance Deduction Categoty"
+#~ msgstr "Kategorien Zulagen u. Abzüge"
+
+#~ msgid ""
+#~ "Define Company contribution ratio 1.00=100% contribution, If Employee "
+#~ "Contribute 5% then company will and here 0.50 defined then company will "
+#~ "contribute 50% on employee 5% contribution"
+#~ msgstr ""
+#~ "Definition des Arbeitgeberanteils, z.B. 1.00=100% Arbeitgeberanteil. Wenn "
+#~ "z.B. ein Abzug für Krankenversicherung 20% ist und an dieser Stelle 0.50 als "
+#~ "Arbeitgeberanteil eingetragen wird ist demnach der Arbeitgeberanteil für "
+#~ "diese Abzugsposition 10%."

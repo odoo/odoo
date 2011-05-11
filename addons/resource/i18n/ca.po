@@ -7,15 +7,33 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:16+0000\n"
+"POT-Creation-Date: 2011-05-09 10:19+0000\n"
 "PO-Revision-Date: 2011-03-20 22:52+0000\n"
 "Last-Translator: mgaja (GrupoIsep.com) <Unknown>\n"
 "Language-Team: Catalan <ca@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-03-21 06:22+0000\n"
-"X-Generator: Launchpad (build 12559)\n"
+"X-Launchpad-Export-Date: 2011-05-10 07:45+0000\n"
+"X-Generator: Launchpad (build 12959)\n"
+
+#. module: resource
+#: model:ir.module.module,description:resource.module_meta_information
+msgid ""
+"\n"
+"    Module for resource management\n"
+"     A resource represent something that can be scheduled\n"
+"     (a developer on a task or a work center on manufacturing orders).\n"
+"     This module manages a resource calendar associated to every resource.\n"
+"     It also manages the leaves of every resource.\n"
+"\n"
+"    "
+msgstr ""
+
+#. module: resource
+#: selection:resource.calendar.attendance,dayofweek:0
+msgid "Friday"
+msgstr "Divendres"
 
 #. module: resource
 #: help:resource.calendar.leaves,resource_id:0
@@ -25,16 +43,6 @@ msgid ""
 msgstr ""
 "Si està buit, és un dia festiu per a tota l'empresa. Si hi ha un recurs "
 "seleccionat, el festiu/absència és solament per a aquest recurs."
-
-#. module: resource
-#: selection:resource.calendar.attendance,dayofweek:0
-msgid "Friday"
-msgstr "Divendres"
-
-#. module: resource
-#: field:resource.resource,resource_type:0
-msgid "Resource Type"
-msgstr "Tipus de recurs"
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar_leaves
@@ -48,6 +56,7 @@ msgid "Resources Leaves"
 msgstr "Absències de recursos"
 
 #. module: resource
+#: model:ir.actions.act_window,name:resource.action_resource_calendar_form
 #: view:resource.calendar:0
 #: field:resource.calendar,attendance_ids:0
 #: view:resource.calendar.attendance:0
@@ -107,6 +116,13 @@ msgstr ""
 #: model:ir.model,name:resource.model_resource_calendar
 msgid "Resource Calendar"
 msgstr "Calendari del recurs"
+
+#. module: resource
+#: view:resource.calendar.leaves:0
+#: view:resource.resource:0
+#: field:resource.resource,calendar_id:0
+msgid "Working Period"
+msgstr "Horari laboral"
 
 #. module: resource
 #: field:resource.calendar,company_id:0
@@ -192,39 +208,14 @@ msgid "Name"
 msgstr "Nom"
 
 #. module: resource
-#: model:ir.module.module,description:resource.module_meta_information
-msgid ""
-"\n"
-"    Module for resource management\n"
-"     A resource represent something that can be scheduled\n"
-"     (a developer on a task or a workcenter on manufacturing orders).\n"
-"     This module manages a resource calendar associated to every resource.\n"
-"     It also manages the leaves of every resource.\n"
-"\n"
-"    "
-msgstr ""
-"\n"
-"    Mòdul per a la gestió de recursos\n"
-"     Un recurs representa alguna cosa que pot ser programat en un calendari\n"
-"     (un desenvolupador en una tasca o un centre de producció en ordres de "
-"producció).\n"
-"     Aquest mòdul gestiona un calendari associat a cada recurs.\n"
-"     També gestiona les absències de cada recurs.\n"
-"\n"
-"    "
-
-#. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Wednesday"
 msgstr "Dimecres"
 
 #. module: resource
-#: model:ir.actions.act_window,name:resource.action_resource_calendar_form
-#: view:resource.calendar.leaves:0
-#: view:resource.resource:0
-#: field:resource.resource,calendar_id:0
-msgid "Working Period"
-msgstr "Horari laboral"
+#: field:resource.resource,resource_type:0
+msgid "Resource Type"
+msgstr "Tipus de recurs"
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_resource
@@ -367,3 +358,23 @@ msgstr " (còpia)"
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Saturday"
 msgstr "Dissabte"
+
+#~ msgid ""
+#~ "\n"
+#~ "    Module for resource management\n"
+#~ "     A resource represent something that can be scheduled\n"
+#~ "     (a developer on a task or a workcenter on manufacturing orders).\n"
+#~ "     This module manages a resource calendar associated to every resource.\n"
+#~ "     It also manages the leaves of every resource.\n"
+#~ "\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "    Mòdul per a la gestió de recursos\n"
+#~ "     Un recurs representa alguna cosa que pot ser programat en un calendari\n"
+#~ "     (un desenvolupador en una tasca o un centre de producció en ordres de "
+#~ "producció).\n"
+#~ "     Aquest mòdul gestiona un calendari associat a cada recurs.\n"
+#~ "     També gestiona les absències de cada recurs.\n"
+#~ "\n"
+#~ "    "

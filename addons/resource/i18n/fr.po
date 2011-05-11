@@ -6,15 +6,33 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:16+0000\n"
+"POT-Creation-Date: 2011-05-09 10:19+0000\n"
 "PO-Revision-Date: 2011-01-19 12:00+0000\n"
 "Last-Translator: swinter <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-25 07:02+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-05-10 07:45+0000\n"
+"X-Generator: Launchpad (build 12959)\n"
+
+#. module: resource
+#: model:ir.module.module,description:resource.module_meta_information
+msgid ""
+"\n"
+"    Module for resource management\n"
+"     A resource represent something that can be scheduled\n"
+"     (a developer on a task or a work center on manufacturing orders).\n"
+"     This module manages a resource calendar associated to every resource.\n"
+"     It also manages the leaves of every resource.\n"
+"\n"
+"    "
+msgstr ""
+
+#. module: resource
+#: selection:resource.calendar.attendance,dayofweek:0
+msgid "Friday"
+msgstr "Vendredi"
 
 #. module: resource
 #: help:resource.calendar.leaves,resource_id:0
@@ -25,16 +43,6 @@ msgstr ""
 "Si vide, ceci est un congé générique valable pour toute la société. Si une "
 "ressource est définie, le congé est alors uniquement valable pour cette "
 "ressource."
-
-#. module: resource
-#: selection:resource.calendar.attendance,dayofweek:0
-msgid "Friday"
-msgstr "Vendredi"
-
-#. module: resource
-#: field:resource.resource,resource_type:0
-msgid "Resource Type"
-msgstr "Type de ressource"
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar_leaves
@@ -48,6 +56,7 @@ msgid "Resources Leaves"
 msgstr "Congés des ressources"
 
 #. module: resource
+#: model:ir.actions.act_window,name:resource.action_resource_calendar_form
 #: view:resource.calendar:0
 #: field:resource.calendar,attendance_ids:0
 #: view:resource.calendar.attendance:0
@@ -106,6 +115,13 @@ msgstr ""
 #: model:ir.model,name:resource.model_resource_calendar
 msgid "Resource Calendar"
 msgstr "Calendrier de la ressource"
+
+#. module: resource
+#: view:resource.calendar.leaves:0
+#: view:resource.resource:0
+#: field:resource.resource,calendar_id:0
+msgid "Working Period"
+msgstr "Période de travail"
 
 #. module: resource
 #: field:resource.calendar,company_id:0
@@ -191,39 +207,14 @@ msgid "Name"
 msgstr "Nom"
 
 #. module: resource
-#: model:ir.module.module,description:resource.module_meta_information
-msgid ""
-"\n"
-"    Module for resource management\n"
-"     A resource represent something that can be scheduled\n"
-"     (a developer on a task or a workcenter on manufacturing orders).\n"
-"     This module manages a resource calendar associated to every resource.\n"
-"     It also manages the leaves of every resource.\n"
-"\n"
-"    "
-msgstr ""
-"\n"
-"    Module de gestion des ressources.\n"
-"    Une ressource représente quelque chose que vous pouvez programmer\n"
-"    (un développeur sur une tâche ou un poste de charge sur un ordre de "
-"fabrication).\n"
-"    Ce module gère un calendrier associé spécifiquement à chaque ressource.\n"
-"    Il gère aussi les congés de chaque ressource.\n"
-"\n"
-"    "
-
-#. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Wednesday"
 msgstr "Mercredi"
 
 #. module: resource
-#: model:ir.actions.act_window,name:resource.action_resource_calendar_form
-#: view:resource.calendar.leaves:0
-#: view:resource.resource:0
-#: field:resource.resource,calendar_id:0
-msgid "Working Period"
-msgstr "Période de travail"
+#: field:resource.resource,resource_type:0
+msgid "Resource Type"
+msgstr "Type de ressource"
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_resource
@@ -366,3 +357,23 @@ msgstr " (copie)"
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Saturday"
 msgstr "Samedi"
+
+#~ msgid ""
+#~ "\n"
+#~ "    Module for resource management\n"
+#~ "     A resource represent something that can be scheduled\n"
+#~ "     (a developer on a task or a workcenter on manufacturing orders).\n"
+#~ "     This module manages a resource calendar associated to every resource.\n"
+#~ "     It also manages the leaves of every resource.\n"
+#~ "\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "    Module de gestion des ressources.\n"
+#~ "    Une ressource représente quelque chose que vous pouvez programmer\n"
+#~ "    (un développeur sur une tâche ou un poste de charge sur un ordre de "
+#~ "fabrication).\n"
+#~ "    Ce module gère un calendrier associé spécifiquement à chaque ressource.\n"
+#~ "    Il gère aussi les congés de chaque ressource.\n"
+#~ "\n"
+#~ "    "

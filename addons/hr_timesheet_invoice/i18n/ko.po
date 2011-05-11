@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2011-05-09 10:18+0000\n"
 "PO-Revision-Date: 2011-01-19 12:00+0000\n"
 "Last-Translator: ekodaq <ceo@ekosdaq.com>\n"
 "Language-Team: Korean <ko@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-25 06:44+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-05-10 07:32+0000\n"
+"X-Generator: Launchpad (build 12959)\n"
 
 #. module: hr_timesheet_invoice
 #: view:report.timesheet.line:0
@@ -273,6 +273,11 @@ msgid "Final Invoice"
 msgstr "최종 인보이스"
 
 #. module: hr_timesheet_invoice
+#: report:account.analytic.profit:0
+msgid "User or Journal Name"
+msgstr ""
+
+#. module: hr_timesheet_invoice
 #: view:hr.timesheet.invoice.create.final:0
 msgid "Do you want details for each line of the invoices ?"
 msgstr "각 인보이스 라인의 상세 사항을 원합니까?"
@@ -307,9 +312,10 @@ msgid "Debit"
 msgstr "차변"
 
 #. module: hr_timesheet_invoice
-#: field:hr.timesheet.analytic.profit,employee_ids:0
-msgid "Employee"
-msgstr "직원"
+#: view:hr.timesheet.analytic.cost.ledger:0
+#: view:hr.timesheet.analytic.profit:0
+msgid "Print"
+msgstr "인쇄"
 
 #. module: hr_timesheet_invoice
 #: help:account.analytic.line,to_invoice:0
@@ -451,12 +457,15 @@ msgid "Yes (100%)"
 msgstr ""
 
 #. module: hr_timesheet_invoice
-#: report:account.analytic.profit:0
-msgid "Employee or Journal Name"
-msgstr "직원 또는 저널 이름"
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_final_invoice_create.py:69
+#, python-format
+msgid ""
+"Please fill in the partner and pricelist field in the analytic account:\n"
+"%s"
+msgstr ""
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:189
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:191
 #, python-format
 msgid "Invoices"
 msgstr "인보이스"
@@ -486,6 +495,7 @@ msgid "Currency"
 msgstr "통화"
 
 #. module: hr_timesheet_invoice
+#: field:hr.timesheet.analytic.profit,employee_ids:0
 #: view:report.timesheet.line:0
 #: field:report.timesheet.line,user_id:0
 #: field:report_timesheet.account,user_id:0
@@ -501,6 +511,11 @@ msgid ""
 "Complete this field only if you want to force to use a specific product. "
 "Keep empty to use the real product that comes from the cost."
 msgstr "특정 상품을 사용하도록 하려면 이 필드를 완성하십시오. 원가로부터 도출되는 실제 상품을 이용하려면 비워 두십시오."
+
+#. module: hr_timesheet_invoice
+#: view:hr.timesheet.analytic.profit:0
+msgid "Users"
+msgstr ""
 
 #. module: hr_timesheet_invoice
 #: view:report.timesheet.line:0
@@ -671,14 +686,6 @@ msgid "Credit"
 msgstr ""
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_final_invoice_create.py:69
-#, python-format
-msgid ""
-"Please fill in the partner and pricelist field in the analytic account:\n"
-"%s"
-msgstr ""
-
-#. module: hr_timesheet_invoice
 #: constraint:account.analytic.account:0
 msgid ""
 "Error! The currency has to be the same as the currency of the selected "
@@ -737,11 +744,6 @@ msgstr "재인보이스 원가"
 #: report:account.analytic.profit:0
 msgid "Totals:"
 msgstr "합계:"
-
-#. module: hr_timesheet_invoice
-#: field:hr.timesheet.analytic.profit,date_to:0
-msgid "To"
-msgstr ""
 
 #. module: hr_timesheet_invoice
 #: view:hr.timesheet.invoice.create:0
@@ -806,7 +808,7 @@ msgid "Timesheet Line"
 msgstr ""
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_final_invoice_create.py:147
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_final_invoice_create.py:142
 #, python-format
 msgid "Balance product needed"
 msgstr "필요한 밸런스 상품"
@@ -831,10 +833,9 @@ msgid "Label for the customer"
 msgstr ""
 
 #. module: hr_timesheet_invoice
-#: view:hr.timesheet.analytic.cost.ledger:0
-#: view:hr.timesheet.analytic.profit:0
-msgid "Print"
-msgstr "인쇄"
+#: field:hr.timesheet.analytic.profit,date_to:0
+msgid "To"
+msgstr ""
 
 #. module: hr_timesheet_invoice
 #: selection:report.account.analytic.line.to.invoice,month:0
@@ -980,11 +981,6 @@ msgid "Sale price"
 msgstr "판매 가격"
 
 #. module: hr_timesheet_invoice
-#: view:hr.timesheet.analytic.profit:0
-msgid "Employees"
-msgstr ""
-
-#. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.act_res_users_2_report_timesheet_user
 msgid "Timesheets per day"
 msgstr ""
@@ -1040,7 +1036,7 @@ msgid "Analytic Lines to Invoice"
 msgstr "인보이스할 분석 라인들"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_final_invoice_create.py:147
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_final_invoice_create.py:142
 #, python-format
 msgid "Please fill a Balance product in the wizard"
 msgstr "위저드의 밸런스 상품을 기재하십시오."
@@ -1069,3 +1065,9 @@ msgstr "원가"
 #: field:report_timesheet.user,name:0
 msgid "Year"
 msgstr ""
+
+#~ msgid "Employee or Journal Name"
+#~ msgstr "직원 또는 저널 이름"
+
+#~ msgid "Employee"
+#~ msgstr "직원"

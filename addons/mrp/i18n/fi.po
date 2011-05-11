@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2011-05-09 10:19+0000\n"
 "PO-Revision-Date: 2011-01-31 12:33+0000\n"
-"Last-Translator: Sami Haahtinen <ressu@ressukka.net>\n"
+"Last-Translator: Sami Haahtinen <sami@haahtinen.name>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-02-01 05:44+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-05-10 07:34+0000\n"
+"X-Generator: Launchpad (build 12959)\n"
 
 #. module: mrp
 #: field:mrp.production,move_created_ids:0
@@ -204,12 +204,11 @@ msgid "Cost per hour"
 msgstr "Kustannukset tunnissa"
 
 #. module: mrp
-#: model:process.transition,note:mrp.process_transition_stockproduction0
+#: model:process.transition,note:mrp.process_transition_servicemts0
 msgid ""
-"In case the Supply method of the product is Produce, the system creates a "
-"production order."
+"This is used in case of a service without any impact in the system, a "
+"training session for instance."
 msgstr ""
-"Jos tuotteen hankintatapa on valmista, järjestelmä luo valmistustilauksen"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -398,11 +397,12 @@ msgstr ""
 "myydystä määrästä ja tuotteen parametreistä"
 
 #. module: mrp
-#: model:process.transition,note:mrp.process_transition_servicemts0
+#: model:process.transition,note:mrp.process_transition_stockproduction0
 msgid ""
-"This is used in case of a service without any impact in the system, a "
-"training session for instance."
+"In case the Supply method of the product is Produce, the system creates a "
+"production order."
 msgstr ""
+"Jos tuotteen hankintatapa on valmista, järjestelmä luo valmistustilauksen"
 
 #. module: mrp
 #: field:mrp.installer,mrp_repair:0
@@ -733,7 +733,7 @@ msgid "Per month"
 msgstr "Kuukaudessa"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:591
+#: code:addons/mrp/mrp.py:595
 #: code:addons/mrp/wizard/change_production_qty.py:77
 #: code:addons/mrp/wizard/change_production_qty.py:82
 #, python-format
@@ -746,7 +746,7 @@ msgid "Product Name"
 msgstr "Tuotteen nimi"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:491
+#: code:addons/mrp/mrp.py:495
 #, python-format
 msgid "Invalid action !"
 msgstr "Virheellinen toiminto!"
@@ -884,6 +884,12 @@ msgid "Search"
 msgstr ""
 
 #. module: mrp
+#: code:addons/mrp/mrp.py:619
+#, python-format
+msgid "Could not cancel manufacturing order !"
+msgstr ""
+
+#. module: mrp
 #: field:report.workcenter.load,cycle:0
 msgid "Nbr of cycle"
 msgstr "Kierrosnumero"
@@ -892,6 +898,14 @@ msgstr "Kierrosnumero"
 #: model:ir.model,name:mrp.model_res_company
 msgid "Companies"
 msgstr "Yritykset"
+
+#. module: mrp
+#: code:addons/mrp/mrp.py:620
+#, python-format
+msgid ""
+"You must first cancel related internal picking attached to this "
+"manufacturing order."
+msgstr ""
 
 #. module: mrp
 #: model:process.node,name:mrp.process_node_minimumstockrule0
@@ -1317,7 +1331,7 @@ msgid "Month -1"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:914
+#: code:addons/mrp/mrp.py:924
 #, python-format
 msgid "Manufacturing order '%s' is scheduled for the %s."
 msgstr ""
@@ -1328,7 +1342,7 @@ msgid "Production Order N° :"
 msgstr "Tuotantotilaus nro:"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:630
+#: code:addons/mrp/mrp.py:640
 #, python-format
 msgid "Manufacturing order '%s' is ready to produce."
 msgstr "Valmistustilaus '%s'on valmis tuotantoon."
@@ -1342,6 +1356,11 @@ msgstr ""
 #: help:res.company,manufacturing_lead:0
 msgid "Security days for each manufacturing operation."
 msgstr "Turvapäivät jokaiselle tuotannon toiminnolle."
+
+#. module: mrp
+#: view:mrp.bom:0
+msgid "Component Name"
+msgstr ""
 
 #. module: mrp
 #: model:process.node,name:mrp.process_node_mts0
@@ -1561,7 +1580,7 @@ msgid "Manufacturing Orders To Start"
 msgstr "Aloitettavat valmistustilaukset"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:491
+#: code:addons/mrp/mrp.py:495
 #, python-format
 msgid "Cannot delete Production Order(s) which are in %s State!"
 msgstr "Valmistustilauksia, jotka ovat %s tilassa, ei voi poistaa!"
@@ -1651,7 +1670,7 @@ msgid "Production Analysis"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:345
+#: code:addons/mrp/mrp.py:349
 #, python-format
 msgid "Copy"
 msgstr "Kopioi"
@@ -2124,6 +2143,11 @@ msgid "Parent BoM"
 msgstr "Ylempi osaluettelo"
 
 #. module: mrp
+#: view:mrp.bom:0
+msgid "Component Product"
+msgstr ""
+
+#. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_bom_form_action2
 msgid ""
 "Bills of materials components are components and sub-products used to create "
@@ -2142,7 +2166,7 @@ msgid "Product type is Stockable or Consumable."
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:591
+#: code:addons/mrp/mrp.py:595
 #: code:addons/mrp/wizard/change_production_qty.py:77
 #: code:addons/mrp/wizard/change_production_qty.py:82
 #, python-format

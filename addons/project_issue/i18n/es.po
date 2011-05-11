@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2011-05-09 10:19+0000\n"
 "PO-Revision-Date: 2011-01-19 12:00+0000\n"
 "Last-Translator: Borja López Soilán <borjalopezsoilan@gmail.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-25 06:58+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-05-10 07:41+0000\n"
+"X-Generator: Launchpad (build 12959)\n"
 
 #. module: project_issue
 #: field:project.issue.report,delay_open:0
@@ -223,7 +223,7 @@ msgid "Partner"
 msgstr "Empresa"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:464
+#: code:addons/project_issue/project_issue.py:473
 #, python-format
 msgid " (copy)"
 msgstr " (copia)"
@@ -244,6 +244,13 @@ msgid "Convert To Task"
 msgstr "Convertir a tarea"
 
 #. module: project_issue
+#: model:crm.case.categ,name:project_issue.bug_categ
+msgid "Maintenance"
+msgstr ""
+
+#. module: project_issue
+#: model:ir.actions.act_window,name:project_issue.action_project_issue_report
+#: model:ir.ui.menu,name:project_issue.menu_project_issue_report_tree
 #: view:project.issue.report:0
 msgid "Issues Analysis"
 msgstr "Análisis de incidencias"
@@ -649,9 +656,9 @@ msgid "Feature Tracker Tree"
 msgstr "Árbol de gestión de funcionalidades"
 
 #. module: project_issue
-#: model:crm.case.categ,name:project_issue.bug_categ
-msgid "Bugs"
-msgstr "Fallos"
+#: help:project.issue,email_from:0
+msgid "These people will receive email."
+msgstr "Estas personas recibirán correo electronico."
 
 #. module: project_issue
 #: view:board.board:0
@@ -802,11 +809,6 @@ msgid "Details"
 msgstr "Detalles"
 
 #. module: project_issue
-#: help:project.issue,email_from:0
-msgid "These people will receive email."
-msgstr "Estas personas recibirán correo electronico."
-
-#. module: project_issue
 #: view:project.issue:0
 msgid "Reply"
 msgstr "Responder"
@@ -836,12 +838,6 @@ msgstr "Equipo de ventas"
 #: selection:project.issue.report,month:0
 msgid "May"
 msgstr "Mayo"
-
-#. module: project_issue
-#: model:ir.actions.act_window,name:project_issue.action_project_issue_report
-#: model:ir.ui.menu,name:project_issue.menu_project_issue_report_tree
-msgid "Issue Analysis"
-msgstr "Análisis de incidencias"
 
 #. module: project_issue
 #: view:project.issue.report:0
@@ -994,3 +990,9 @@ msgstr "Duración"
 #: view:board.board:0
 msgid "My Open Issues by Creation Date"
 msgstr "Mis incidencias abiertas por fecha de creación"
+
+#~ msgid "Bugs"
+#~ msgstr "Fallos"
+
+#~ msgid "Issue Analysis"
+#~ msgstr "Análisis de incidencias"

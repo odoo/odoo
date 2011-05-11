@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2011-05-09 10:18+0000\n"
 "PO-Revision-Date: 2011-01-19 12:00+0000\n"
 "Last-Translator: NOVOTRADE RENDSZERHÁZ <openerp@novotrade.hu>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-25 06:43+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-05-10 07:31+0000\n"
+"X-Generator: Launchpad (build 12959)\n"
 
 #. module: hr_recruitment
 #: help:hr.applicant,active:0
@@ -27,7 +27,7 @@ msgstr ""
 #: view:hr.recruitment.stage:0
 #: field:hr.recruitment.stage,requirements:0
 msgid "Requirements"
-msgstr ""
+msgstr "Követelmények"
 
 #. module: hr_recruitment
 #: field:hr.recruitment.report,delay_open:0
@@ -206,7 +206,7 @@ msgstr "Partner"
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
 msgid "Avg Proposed Salary"
-msgstr "Javasolt átlagfizetés"
+msgstr "Átlagos javasolt fizetés"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -217,7 +217,7 @@ msgstr "Elérhetőség"
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Previous"
-msgstr ""
+msgstr "Előző"
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/wizard/hr_recruitment_phonecall.py:107
@@ -341,7 +341,12 @@ msgstr "Második interjú"
 #. module: hr_recruitment
 #: field:hr.recruitment.report,salary_exp:0
 msgid "Salary Expected"
-msgstr "Fizetés várható"
+msgstr "Várható fizetés"
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,name:hr_recruitment.hr_job_stage_act
+msgid "Recruitment / Applicants Stages"
+msgstr ""
 
 #. module: hr_recruitment
 #: field:hr.applicant,salary_expected:0
@@ -379,7 +384,7 @@ msgstr "Dátumok"
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
 msgid "    Month-1    "
-msgstr "    Hónap-1    "
+msgstr "    Előző hónap    "
 
 #. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_bac5
@@ -431,7 +436,7 @@ msgstr "Folyamatban"
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Jobs - Recruitment Form"
-msgstr "Állások - Felvételi űrlap"
+msgstr "Állások - Toborzási űrlap"
 
 #. module: hr_recruitment
 #: field:hr.applicant,probability:0
@@ -451,7 +456,7 @@ msgstr "December"
 #. module: hr_recruitment
 #: model:ir.module.module,shortdesc:hr_recruitment.module_meta_information
 msgid "HR - Recruitement"
-msgstr "HR - Felvétel"
+msgstr "HR - Toborzás"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -540,6 +545,11 @@ msgid ""
 msgstr ""
 
 #. module: hr_recruitment
+#: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_degree
+msgid "Degrees"
+msgstr ""
+
+#. module: hr_recruitment
 #: field:hr.applicant,date_closed:0
 #: field:hr.recruitment.report,date_closed:0
 msgid "Closed"
@@ -563,7 +573,7 @@ msgstr ""
 #. module: hr_recruitment
 #: help:hr.applicant,salary_proposed:0
 msgid "Salary Proposed by the Organisation"
-msgstr ""
+msgstr "Szervezet által javasolt fizetés"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -624,14 +634,9 @@ msgid "June"
 msgstr "Június"
 
 #. module: hr_recruitment
-#: model:ir.actions.act_window,name:hr_recruitment.hr_job_stage_act
-msgid "Applicant Stages"
-msgstr ""
-
-#. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job7
 msgid "Refused by Company"
-msgstr ""
+msgstr "Vállalat által elutasítva"
 
 #. module: hr_recruitment
 #: field:hr.applicant,day_close:0
@@ -677,7 +682,7 @@ msgstr "Licenc"
 #. module: hr_recruitment
 #: field:hr.recruitment.report,salary_prop_avg:0
 msgid "Avg Salary Proposed"
-msgstr ""
+msgstr "Átlagos javasolt fizetés"
 
 #. module: hr_recruitment
 #: view:hr.recruitment.job2phonecall:0
@@ -751,13 +756,13 @@ msgstr "Javasolt szerződés"
 #: view:hr.recruitment.report:0
 #: field:hr.recruitment.report,state:0
 msgid "State"
-msgstr ""
+msgstr "Állapot"
 
 #. module: hr_recruitment
 #: view:hr.recruitment.job2phonecall:0
 #: view:hr.recruitment.partner.create:0
 msgid "Cancel"
-msgstr "Mégsem"
+msgstr "Mégse"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_job_categ_action
@@ -767,7 +772,7 @@ msgstr "Kérelmező kategóriák"
 #. module: hr_recruitment
 #: selection:hr.recruitment.report,state:0
 msgid "Open"
-msgstr ""
+msgstr "Nyitott"
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/wizard/hr_recruitment_create_partner_job.py:57
@@ -880,7 +885,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job6
 msgid "Refused by Employee"
-msgstr ""
+msgstr "Alkalmazott által elutasítva"
 
 #. module: hr_recruitment
 #: selection:hr.applicant,priority:0

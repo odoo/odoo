@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2011-05-09 10:18+0000\n"
 "PO-Revision-Date: 2011-01-19 12:00+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Croatian <hr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-25 06:35+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-05-10 07:27+0000\n"
+"X-Generator: Launchpad (build 12959)\n"
 
 #. module: crm_claim
 #: field:crm.claim.report,nbr:0
@@ -134,11 +134,6 @@ msgid "Preventive"
 msgstr ""
 
 #. module: crm_claim
-#: model:crm.case.stage,name:crm_claim.stage_claim2
-msgid "Fixed"
-msgstr ""
-
-#. module: crm_claim
 #: field:crm.claim,partner_address_id:0
 msgid "Partner Contact"
 msgstr ""
@@ -239,6 +234,11 @@ msgid "Lowest"
 msgstr ""
 
 #. module: crm_claim
+#: view:crm.claim.report:0
+msgid "# Mails"
+msgstr ""
+
+#. module: crm_claim
 #: field:crm.claim,create_date:0
 msgid "Creation Date"
 msgstr ""
@@ -304,6 +304,7 @@ msgid "Stages"
 msgstr ""
 
 #. module: crm_claim
+#: model:ir.actions.act_window,name:crm_claim.action_report_crm_claim
 #: model:ir.ui.menu,name:crm_claim.menu_report_crm_claim_tree
 msgid "Claims Analysis"
 msgstr ""
@@ -455,8 +456,14 @@ msgid "User"
 msgstr ""
 
 #. module: crm_claim
-#: model:crm.case.stage,name:crm_claim.stage_claim5
-msgid "Awaiting Response"
+#: model:ir.module.module,description:crm_claim.module_meta_information
+msgid ""
+"\n"
+"This modules allows you to track your customers/suppliers claims and "
+"flames.\n"
+"It is fully integrated with the email gateway so that you can create\n"
+"automatically new claims based on incoming emails.\n"
+"    "
 msgstr ""
 
 #. module: crm_claim
@@ -490,17 +497,6 @@ msgid "October"
 msgstr ""
 
 #. module: crm_claim
-#: model:ir.module.module,description:crm_claim.module_meta_information
-msgid ""
-"\n"
-"This modules allows you to track your customers/suppliers claims and "
-"flames.\n"
-"It is fully integrated with the email gateway so that you can create\n"
-"automatically new claims based on incoming emails.\n"
-"    "
-msgstr ""
-
-#. module: crm_claim
 #: selection:crm.claim.report,month:0
 msgid "January"
 msgstr ""
@@ -519,7 +515,6 @@ msgstr ""
 #. module: crm_claim
 #: view:crm.claim:0
 #: view:crm.claim.report:0
-#: model:ir.actions.act_window,name:crm_claim.action_report_crm_claim
 #: model:ir.actions.act_window,name:crm_claim.crm_case_categ_claim0
 #: model:ir.ui.menu,name:crm_claim.menu_crm_case_claims
 msgid "Claims"
@@ -675,6 +670,16 @@ msgstr ""
 #. module: crm_claim
 #: field:crm.claim.report,email:0
 msgid "# Emails"
+msgstr ""
+
+#. module: crm_claim
+#: model:crm.case.stage,name:crm_claim.stage_claim2
+msgid "Actions Done"
+msgstr ""
+
+#. module: crm_claim
+#: model:crm.case.stage,name:crm_claim.stage_claim5
+msgid "Actions Defined"
 msgstr ""
 
 #. module: crm_claim

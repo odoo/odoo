@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2011-05-04 17:43+0000\n"
-"Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
+"POT-Creation-Date: 2011-05-09 10:18+0000\n"
+"PO-Revision-Date: 2011-05-09 12:48+0000\n"
+"Last-Translator: Stanislav Hanzhin <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-05-05 06:00+0000\n"
+"X-Launchpad-Export-Date: 2011-05-10 07:25+0000\n"
 "X-Generator: Launchpad (build 12959)\n"
 
 #. module: crm
@@ -124,7 +124,7 @@ msgid "The code of the sales team must be unique !"
 msgstr "Код отдела продаж должен быть уникальным !"
 
 #. module: crm
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:93
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:95
 #, python-format
 msgid "Lead '%s' has been converted to an opportunity."
 msgstr "Кандидат '%s' был преобразован в предложение."
@@ -141,8 +141,8 @@ msgid "No Repeat"
 msgstr "Не повторять"
 
 #. module: crm
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:133
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:258
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:135
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:260
 #: code:addons/crm/wizard/crm_lead_to_partner.py:55
 #: code:addons/crm/wizard/crm_phonecall_to_partner.py:52
 #, python-format
@@ -523,16 +523,6 @@ msgid "Recurrent Rule"
 msgstr "Повторяющееся правило"
 
 #. module: crm
-#: model:crm.case.resource.type,name:crm.type_lead1
-msgid "Version 4.2"
-msgstr "Версия 4.2"
-
-#. module: crm
-#: model:crm.case.resource.type,name:crm.type_lead2
-msgid "Version 4.4"
-msgstr "Версия 4.4"
-
-#. module: crm
 #: help:crm.installer,fetchmail:0
 msgid "Allows you to receive E-Mails from POP/IMAP server."
 msgstr "Позволяет получать эл. почту с POP/IMAP серверов"
@@ -549,9 +539,9 @@ msgstr "Самый первый перспективный контакт"
 
 #. module: crm
 #: code:addons/crm/crm_lead.py:278
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:195
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:229
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:297
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:197
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:231
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:299
 #: view:crm.lead2opportunity:0
 #: view:crm.partner2opportunity:0
 #: model:ir.actions.act_window,name:crm.action_crm_lead2opportunity
@@ -807,6 +797,16 @@ msgid "Partner Segmentation"
 msgstr "Классификация партнера"
 
 #. module: crm
+#: model:ir.actions.act_window,help:crm.crm_case_categ_meet
+msgid ""
+"The meeting calendar is shared between the sales teams and fully integrated "
+"with other applications such as the employee holidays or the business "
+"opportunities. You can also synchronize meetings with your mobile phone "
+"using the caldav interface.\n"
+"        "
+msgstr ""
+
+#. module: crm
 #: field:crm.lead.report,probable_revenue:0
 msgid "Probable Revenue"
 msgstr "Вероятная выручка"
@@ -834,8 +834,8 @@ msgid "Statistics Dashboard"
 msgstr "Панель статистики"
 
 #. module: crm
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:86
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:96
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:88
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:98
 #: code:addons/crm/wizard/crm_partner_to_opportunity.py:101
 #: code:addons/crm/wizard/crm_phonecall_to_opportunity.py:117
 #: view:crm.lead:0
@@ -916,41 +916,6 @@ msgstr "Предложение  '%s' выиграно."
 #: help:crm.meeting,alarm_id:0
 msgid "Set an alarm at this time, before the event occurs"
 msgstr "Установить сигнал на это время, перед событием"
-
-#. module: crm
-#: model:ir.module.module,description:crm.module_meta_information
-msgid ""
-"The generic OpenERP Customer Relationship Management\n"
-"system enables a group of people to intelligently and efficiently manage\n"
-"leads, opportunities, meeting, phonecall etc.\n"
-"It manages key tasks such as communication, identification, prioritization,\n"
-"assignment, resolution and notification.\n"
-"\n"
-"OpenERP ensures that all cases are successfully tracked by users, customers "
-"and\n"
-"suppliers. It can automatically send reminders, escalate the request, "
-"trigger\n"
-"specific methods and lots of other actions based on your own enterprise "
-"rules.\n"
-"\n"
-"The greatest thing about this system is that users don't need to do "
-"anything\n"
-"special. They can just send email to the request tracker. OpenERP will take\n"
-"care of thanking them for their message, automatically routing it to the\n"
-"appropriate staff, and make sure all future correspondence gets to the "
-"right\n"
-"place.\n"
-"\n"
-"The CRM module has a email gateway for the synchronisation interface\n"
-"between mails and OpenERP. \n"
-"Create dashboard for CRM that includes:\n"
-"    * My Leads (list)\n"
-"    * Leads by Stage (graph)\n"
-"    * My Meetings (list)\n"
-"    * Sales Pipeline by Stage (graph)\n"
-"    * My Cases (list)\n"
-"    * Jobs Tracking (graph)\n"
-msgstr ""
 
 #. module: crm
 #: field:crm.lead.report,create_date:0
@@ -1115,7 +1080,7 @@ msgstr "Подписан"
 
 #. module: crm
 #: code:addons/crm/crm_opportunity.py:208
-#: code:addons/crm/crm_phonecall.py:184
+#: code:addons/crm/crm_phonecall.py:185
 #: code:addons/crm/wizard/crm_phonecall_to_meeting.py:55
 #: code:addons/crm/wizard/crm_phonecall_to_meeting.py:137
 #: view:crm.meeting:0
@@ -1345,6 +1310,41 @@ msgstr "Пусть событие автоматически повторяет�
 #. module: crm
 #: view:base.action.rule:0
 msgid "Condition Case Fields"
+msgstr ""
+
+#. module: crm
+#: model:ir.module.module,description:crm.module_meta_information
+msgid ""
+"The generic OpenERP Customer Relationship Management\n"
+"system enables a group of people to intelligently and efficiently manage\n"
+"leads, opportunities, meeting, phonecall etc.\n"
+"It manages key tasks such as communication, identification, prioritization,\n"
+"assignment, resolution and notification.\n"
+"\n"
+"OpenERP ensures that all cases are successfully tracked by users, customers "
+"and\n"
+"suppliers. It can automatically send reminders, escalate the request, "
+"trigger\n"
+"specific methods and lots of other actions based on your own enterprise "
+"rules.\n"
+"\n"
+"The greatest thing about this system is that users don't need to do "
+"anything\n"
+"special. They can just send email to the request tracker. OpenERP will take\n"
+"care of thanking them for their message, automatically routing it to the\n"
+"appropriate staff, and make sure all future correspondence gets to the "
+"right\n"
+"place.\n"
+"\n"
+"The CRM module has a email gateway for the synchronisation interface\n"
+"between mails and OpenERP.\n"
+"Create dashboard for CRM that includes:\n"
+"    * My Leads (list)\n"
+"    * Leads by Stage (graph)\n"
+"    * My Meetings (list)\n"
+"    * Sales Pipeline by Stage (graph)\n"
+"    * My Cases (list)\n"
+"    * Jobs Tracking (graph)\n"
 msgstr ""
 
 #. module: crm
@@ -1597,6 +1597,11 @@ msgstr "Подотделы"
 #: field:crm.phonecall.report,state:0
 msgid "State"
 msgstr "Состояние"
+
+#. module: crm
+#: model:crm.case.resource.type,name:crm.type_lead1
+msgid "Telesales"
+msgstr "Продажи по телефону"
 
 #. module: crm
 #: field:crm.meeting,freq:0
@@ -1892,7 +1897,7 @@ msgstr "Вопрос '%s'  был открыт."
 #. module: crm
 #: view:crm.installer:0
 msgid "title"
-msgstr ""
+msgstr "title"
 
 #. module: crm
 #: model:crm.case.categ,name:crm.categ_phone1
@@ -1997,15 +2002,6 @@ msgid "Customer Name"
 msgstr "Имя заказчика"
 
 #. module: crm
-#: model:ir.actions.act_window,help:crm.crm_case_categ_meet
-msgid ""
-"The meeting calendar is shared between the sales teams and fully integrated "
-"with other applications such as the employee holidays or the business "
-"opportunities. You can also synchronize meetings with your mobile phone "
-"using the caldav interface."
-msgstr ""
-
-#. module: crm
 #: model:ir.model,name:crm.model_crm_phonecall2opportunity
 msgid "Phonecall To Opportunity"
 msgstr "Звонок в Предложение"
@@ -2082,6 +2078,11 @@ msgstr "crm.phonecall"
 #: model:crm.case.resource.type,name:crm.type_lead3
 msgid "Mail Campaign 2"
 msgstr "Почтовая кампания 2"
+
+#. module: crm
+#: model:crm.case.resource.type,name:crm.type_lead2
+msgid "Mail Campaign 1"
+msgstr ""
 
 #. module: crm
 #: view:crm.lead:0
@@ -2665,7 +2666,7 @@ msgid "Meeting Type"
 msgstr "Тип встречи"
 
 #. module: crm
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:312
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:314
 #, python-format
 msgid "Merge with Existing Opportunity"
 msgstr "Объединить с существующим предложением"
@@ -3210,8 +3211,8 @@ msgid "Schedule Call"
 msgstr "Запланировать звонок"
 
 #. module: crm
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:133
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:258
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:135
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:260
 #, python-format
 msgid "Closed/Cancelled Leads Could not convert into Opportunity"
 msgstr "Закрытого/отмененного кандидата нельзя преобразовать в предложение"
@@ -3961,3 +3962,9 @@ msgstr "Год"
 #: model:crm.case.resource.type,name:crm.type_lead8
 msgid "Newsletter"
 msgstr "Рассылка"
+
+#~ msgid "Version 4.2"
+#~ msgstr "Версия 4.2"
+
+#~ msgid "Version 4.4"
+#~ msgstr "Версия 4.4"

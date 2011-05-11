@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2011-03-24 16:03+0000\n"
+"POT-Creation-Date: 2011-05-09 10:19+0000\n"
+"PO-Revision-Date: 2011-05-09 12:47+0000\n"
 "Last-Translator: Stanislav Hanzhin <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-03-25 06:14+0000\n"
-"X-Generator: Launchpad (build 12559)\n"
+"X-Launchpad-Export-Date: 2011-05-10 07:34+0000\n"
+"X-Generator: Launchpad (build 12959)\n"
 
 #. module: mrp
 #: field:mrp.production,move_created_ids:0
@@ -155,7 +155,7 @@ msgstr "Конечный продукт"
 #: model:process.transition,name:mrp.process_transition_servicerfq0
 #: model:process.transition,name:mrp.process_transition_stockrfq0
 msgid "To Buy"
-msgstr ""
+msgstr "Купить"
 
 #. module: mrp
 #: view:mrp.production.order:0
@@ -203,13 +203,11 @@ msgid "Cost per hour"
 msgstr "Стоимость за час"
 
 #. module: mrp
-#: model:process.transition,note:mrp.process_transition_stockproduction0
+#: model:process.transition,note:mrp.process_transition_servicemts0
 msgid ""
-"In case the Supply method of the product is Produce, the system creates a "
-"production order."
+"This is used in case of a service without any impact in the system, a "
+"training session for instance."
 msgstr ""
-"В случае, если методом поставки продукта является \"Произвести\", система "
-"создает производственный заказ."
 
 #. module: mrp
 #: view:mrp.production:0
@@ -398,11 +396,13 @@ msgstr ""
 "проданного количества и параметров продуктов."
 
 #. module: mrp
-#: model:process.transition,note:mrp.process_transition_servicemts0
+#: model:process.transition,note:mrp.process_transition_stockproduction0
 msgid ""
-"This is used in case of a service without any impact in the system, a "
-"training session for instance."
+"In case the Supply method of the product is Produce, the system creates a "
+"production order."
 msgstr ""
+"В случае, если методом поставки продукта является \"Произвести\", система "
+"создает производственный заказ."
 
 #. module: mrp
 #: field:mrp.installer,mrp_repair:0
@@ -483,7 +483,7 @@ msgstr ""
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_bom0
 msgid "Manufacturing decomposition"
-msgstr ""
+msgstr "Декомпозиция производства"
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_serviceproduct1
@@ -568,7 +568,7 @@ msgstr "Поиск продукции"
 #: code:addons/mrp/report/price.py:130
 #, python-format
 msgid "Supplier Price per Uom"
-msgstr ""
+msgstr "Цена поставщика за ед. изм."
 
 #. module: mrp
 #: selection:mrp.production.order,month:0
@@ -578,7 +578,7 @@ msgstr "Март"
 #. module: mrp
 #: field:mrp.bom,child_complete_ids:0
 msgid "BoM Hierarchy"
-msgstr ""
+msgstr "Иерархия спецификаций"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.act_mrp_product_produce
@@ -745,7 +745,7 @@ msgid "Per month"
 msgstr "В месяц"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:591
+#: code:addons/mrp/mrp.py:595
 #: code:addons/mrp/wizard/change_production_qty.py:77
 #: code:addons/mrp/wizard/change_production_qty.py:82
 #, python-format
@@ -758,7 +758,7 @@ msgid "Product Name"
 msgstr "Название продукции"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:491
+#: code:addons/mrp/mrp.py:495
 #, python-format
 msgid "Invalid action !"
 msgstr "Неверное действие !"
@@ -901,6 +901,12 @@ msgid "Search"
 msgstr "Поиск"
 
 #. module: mrp
+#: code:addons/mrp/mrp.py:619
+#, python-format
+msgid "Could not cancel manufacturing order !"
+msgstr ""
+
+#. module: mrp
 #: field:report.workcenter.load,cycle:0
 msgid "Nbr of cycle"
 msgstr "Кол-во циклов"
@@ -909,6 +915,14 @@ msgstr "Кол-во циклов"
 #: model:ir.model,name:mrp.model_res_company
 msgid "Companies"
 msgstr "Компании"
+
+#. module: mrp
+#: code:addons/mrp/mrp.py:620
+#, python-format
+msgid ""
+"You must first cancel related internal picking attached to this "
+"manufacturing order."
+msgstr ""
 
 #. module: mrp
 #: model:process.node,name:mrp.process_node_minimumstockrule0
@@ -1042,7 +1056,7 @@ msgstr ""
 #. module: mrp
 #: report:bom.structure:0
 msgid "BOM Name"
-msgstr ""
+msgstr "Наименование спецификации"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -1091,7 +1105,7 @@ msgstr "Название"
 #. module: mrp
 #: view:mrp.installer:0
 msgid "MRP Application Configuration"
-msgstr ""
+msgstr "Конфигурация модуля ПРП"
 
 #. module: mrp
 #: help:mrp.installer,mrp_jit:0
@@ -1332,7 +1346,7 @@ msgstr "Ревизии"
 #. module: mrp
 #: view:mrp.installer:0
 msgid "Configure Your Manufacturing Resource Planning Application"
-msgstr ""
+msgstr "Настройте модуль планирования ресурсов производства"
 
 #. module: mrp
 #: field:mrp.production,priority:0
@@ -1351,7 +1365,7 @@ msgid "Month -1"
 msgstr "Месяц -1"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:914
+#: code:addons/mrp/mrp.py:924
 #, python-format
 msgid "Manufacturing order '%s' is scheduled for the %s."
 msgstr "Производственный заказ '%s' запланирован на %s."
@@ -1362,7 +1376,7 @@ msgid "Production Order N° :"
 msgstr "Заказ на производство  №"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:630
+#: code:addons/mrp/mrp.py:640
 #, python-format
 msgid "Manufacturing order '%s' is ready to produce."
 msgstr "Производственный заказ '%s' готов для производства."
@@ -1376,6 +1390,11 @@ msgstr "Производство запланированного продукт
 #: help:res.company,manufacturing_lead:0
 msgid "Security days for each manufacturing operation."
 msgstr "Дни безопасности для каждой технологической операции."
+
+#. module: mrp
+#: view:mrp.bom:0
+msgid "Component Name"
+msgstr ""
 
 #. module: mrp
 #: model:process.node,name:mrp.process_node_mts0
@@ -1433,7 +1452,7 @@ msgstr "mrp.installer"
 #. module: mrp
 #: view:mrp.production:0
 msgid "Production Work Centers"
-msgstr ""
+msgstr "Рабочие центры производства"
 
 #. module: mrp
 #: view:mrp.production.order:0
@@ -1594,7 +1613,7 @@ msgid "Manufacturing Orders To Start"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:491
+#: code:addons/mrp/mrp.py:495
 #, python-format
 msgid "Cannot delete Production Order(s) which are in %s State!"
 msgstr ""
@@ -1686,7 +1705,7 @@ msgid "Production Analysis"
 msgstr "Анализ производства"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:345
+#: code:addons/mrp/mrp.py:349
 #, python-format
 msgid "Copy"
 msgstr "Копировать"
@@ -2161,6 +2180,11 @@ msgid "Parent BoM"
 msgstr "Спецификация предка"
 
 #. module: mrp
+#: view:mrp.bom:0
+msgid "Component Product"
+msgstr ""
+
+#. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_bom_form_action2
 msgid ""
 "Bills of materials components are components and sub-products used to create "
@@ -2179,7 +2203,7 @@ msgid "Product type is Stockable or Consumable."
 msgstr "Тип продукта — Складируемый или Потребляемый."
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:591
+#: code:addons/mrp/mrp.py:595
 #: code:addons/mrp/wizard/change_production_qty.py:77
 #: code:addons/mrp/wizard/change_production_qty.py:82
 #, python-format
@@ -2210,7 +2234,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_bom_revision
 msgid "Bill of Material Revision"
-msgstr ""
+msgstr "Пересмотр спецификации"
 
 #. module: mrp
 #: view:mrp.routing.workcenter:0

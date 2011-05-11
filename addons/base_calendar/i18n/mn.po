@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"POT-Creation-Date: 2011-05-09 10:18+0000\n"
 "PO-Revision-Date: 2011-01-19 12:00+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-25 06:29+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-05-10 07:22+0000\n"
+"X-Generator: Launchpad (build 12959)\n"
 
 #. module: base_calendar
 #: selection:calendar.alarm,trigger_related:0
@@ -141,6 +141,7 @@ msgid "March"
 msgstr "3 сар"
 
 #. module: base_calendar
+#: code:addons/base_calendar/base_calendar.py:414
 #: code:addons/base_calendar/wizard/base_calendar_set_exrule.py:90
 #, python-format
 msgid "Warning !"
@@ -180,9 +181,9 @@ msgid "Indicats whether the favor of a reply is requested"
 msgstr ""
 
 #. module: base_calendar
-#: model:ir.model,name:base_calendar.model_ir_attachment
-msgid "ir.attachment"
-msgstr "ir.attachment"
+#: field:calendar.alarm,alarm_id:0
+msgid "Basic Alarm"
+msgstr "Үндсэн дохио"
 
 #. module: base_calendar
 #: help:calendar.attendee,delegated_to:0
@@ -214,17 +215,16 @@ msgid "Tue"
 msgstr "Мя"
 
 #. module: base_calendar
+#: model:ir.model,name:base_calendar.model_ir_attachment
+msgid "ir.attachment"
+msgstr "ir.attachment"
+
+#. module: base_calendar
 #: selection:base.calendar.set.exrule,freq:0
 #: selection:calendar.event,rrule_type:0
 #: selection:calendar.todo,rrule_type:0
 msgid "Yearly"
 msgstr "Жил тутам"
-
-#. module: base_calendar
-#: selection:calendar.alarm,trigger_related:0
-#: selection:res.alarm,trigger_related:0
-msgid "The event ends"
-msgstr "Үйл явдлын төгсгөл"
 
 #. module: base_calendar
 #: selection:base.calendar.set.exrule,byday:0
@@ -258,7 +258,7 @@ msgid "Invitation Detail"
 msgstr "Урилгын мэдээлэл"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:1356
+#: code:addons/base_calendar/base_calendar.py:1355
 #: code:addons/base_calendar/wizard/base_calendar_invite_attendee.py:96
 #: code:addons/base_calendar/wizard/base_calendar_invite_attendee.py:143
 #: code:addons/base_calendar/wizard/base_calendar_set_exrule.py:128
@@ -310,11 +310,10 @@ msgid "Secondly"
 msgstr "Хоёрдугаарт"
 
 #. module: base_calendar
-#: field:calendar.alarm,event_date:0
-#: field:calendar.attendee,event_date:0
-#: view:calendar.event:0
-msgid "Event Date"
-msgstr "Үйл явцын огноо"
+#: selection:calendar.alarm,trigger_related:0
+#: selection:res.alarm,trigger_related:0
+msgid "The event ends"
+msgstr "Үйл явдлын төгсгөл"
 
 #. module: base_calendar
 #: view:calendar.attendee:0
@@ -367,8 +366,8 @@ msgstr "Товлосон хугацаа"
 
 #. module: base_calendar
 #: code:addons/base_calendar/base_calendar.py:385
+#: code:addons/base_calendar/base_calendar.py:1088
 #: code:addons/base_calendar/base_calendar.py:1090
-#: code:addons/base_calendar/base_calendar.py:1092
 #, python-format
 msgid "Warning!"
 msgstr "Сануулга!"
@@ -619,6 +618,11 @@ msgid "Created"
 msgstr "Үүссэн"
 
 #. module: base_calendar
+#: model:ir.actions.act_window,name:base_calendar.action_base_calendar_set_exrule
+msgid "Set Exclude range"
+msgstr ""
+
+#. module: base_calendar
 #: selection:calendar.event,class:0
 #: selection:calendar.todo,class:0
 msgid "Private"
@@ -701,6 +705,11 @@ msgstr "Цагийн бүс"
 #: view:calendar.event:0
 msgid "Subject"
 msgstr "Сэдэв"
+
+#. module: base_calendar
+#: selection:calendar.attendee,state:0
+msgid "Needs Action"
+msgstr "Хэрэгтэй үйл ажиллагаа"
 
 #. module: base_calendar
 #: selection:base.calendar.set.exrule,month_list:0
@@ -828,7 +837,7 @@ msgid "Hours"
 msgstr "Хугацаа"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:1092
+#: code:addons/base_calendar/base_calendar.py:1090
 #, python-format
 msgid "Count can not be Negative"
 msgstr ""
@@ -878,7 +887,6 @@ msgstr "Сануулга"
 
 #. module: base_calendar
 #: view:base.calendar.set.exrule:0
-#: model:ir.actions.act_window,name:base_calendar.action_base_calendar_set_exrule
 #: model:ir.model,name:base_calendar.model_base_calendar_set_exrule
 msgid "Set Exrule"
 msgstr ""
@@ -945,9 +953,11 @@ msgid "June"
 msgstr "6 сар"
 
 #. module: base_calendar
-#: field:calendar.alarm,alarm_id:0
-msgid "Basic Alarm"
-msgstr "Үндсэн дохио"
+#: field:calendar.alarm,event_date:0
+#: field:calendar.attendee,event_date:0
+#: view:calendar.event:0
+msgid "Event Date"
+msgstr "Үйл явцын огноо"
 
 #. module: base_calendar
 #: view:base.calendar.set.exrule:0
@@ -1060,7 +1070,7 @@ msgid "Wednesday"
 msgstr "Лхагва"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:1090
+#: code:addons/base_calendar/base_calendar.py:1088
 #, python-format
 msgid "Interval can not be Negative"
 msgstr ""
@@ -1557,9 +1567,10 @@ msgid "Resource ID"
 msgstr "Нөөцийн дугаар"
 
 #. module: base_calendar
-#: selection:calendar.attendee,state:0
-msgid "Needs Action"
-msgstr "Хэрэгтэй үйл ажиллагаа"
+#: code:addons/base_calendar/base_calendar.py:414
+#, python-format
+msgid "Couldn't Invite because date is not specified!"
+msgstr ""
 
 #. module: base_calendar
 #: field:calendar.attendee,sent_by:0

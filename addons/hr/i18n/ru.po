@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2011-05-09 10:18+0000\n"
 "PO-Revision-Date: 2011-03-05 12:08+0000\n"
 "Last-Translator: Stanislav Hanzhin <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-03-06 06:10+0000\n"
-"X-Generator: Launchpad (build 12351)\n"
+"X-Launchpad-Export-Date: 2011-05-10 07:29+0000\n"
+"X-Generator: Launchpad (build 12959)\n"
 
 #. module: hr
 #: model:process.node,name:hr.process_node_openerpuser0
@@ -370,11 +370,6 @@ msgid "Expected Employees"
 msgstr "Планируется сотрудников"
 
 #. module: hr
-#: help:hr.employee,sinid:0
-msgid "Social Insurance Number"
-msgstr "Cтраховой номер индивидуального лицевого счета"
-
-#. module: hr
 #: model:hr.employee.marital.status,name:hr.hr_employee_marital_status_divorced
 msgid "Divorced"
 msgstr "В разводе"
@@ -567,6 +562,11 @@ msgstr "Активные"
 #: constraint:hr.employee:0
 msgid "Error ! You cannot create recursive Hierarchy of Employees."
 msgstr "Ошибка! Структура подчинения не может быть рекурсивной."
+
+#. module: hr
+#: field:hr.employee,bank_account_id:0
+msgid "Bank Account Number"
+msgstr ""
 
 #. module: hr
 #: view:hr.department:0
@@ -803,9 +803,9 @@ msgid "Employees"
 msgstr "Сотрудники"
 
 #. module: hr
-#: field:hr.employee,bank_account_id:0
-msgid "Bank Account"
-msgstr "Банковский счет"
+#: help:hr.employee,sinid:0
+msgid "Social Insurance Number"
+msgstr "Cтраховой номер индивидуального лицевого счета"
 
 #. module: hr
 #: field:hr.department,name:0
@@ -871,3 +871,6 @@ msgstr ""
 #: field:hr.employee,child_ids:0
 msgid "Subordinates"
 msgstr "Подчиненные"
+
+#~ msgid "Bank Account"
+#~ msgstr "Банковский счет"

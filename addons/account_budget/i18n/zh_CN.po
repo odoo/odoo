@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"POT-Creation-Date: 2011-05-09 10:18+0000\n"
 "PO-Revision-Date: 2011-01-19 12:00+0000\n"
 "Last-Translator: Black Jack <onetimespeed@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-25 06:24+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-05-10 07:20+0000\n"
+"X-Generator: Launchpad (build 12959)\n"
 
 #. module: account_budget
 #: field:crossovered.budget,creating_user_id:0
@@ -56,7 +56,7 @@ msgstr "确认用户"
 #. module: account_budget
 #: model:ir.actions.act_window,name:account_budget.action_account_budget_crossvered_summary_report
 msgid "Print Summary"
-msgstr ""
+msgstr "打印概览"
 
 #. module: account_budget
 #: field:crossovered.budget.lines,paid_date:0
@@ -135,7 +135,7 @@ msgstr ""
 #. module: account_budget
 #: view:account.budget.crossvered.summary.report:0
 msgid "This wizard is used to print summary of budgets"
-msgstr ""
+msgstr "此向导用于打印预算概览"
 
 #. module: account_budget
 #: report:account.budget:0
@@ -152,7 +152,7 @@ msgstr "说明"
 #. module: account_budget
 #: report:crossovered.budget.report:0
 msgid "Currency"
-msgstr ""
+msgstr "币种"
 
 #. module: account_budget
 #: report:crossovered.budget.report:0
@@ -164,17 +164,46 @@ msgstr "合计:"
 #: field:crossovered.budget,company_id:0
 #: field:crossovered.budget.lines,company_id:0
 msgid "Company"
+msgstr "公司"
+
+#. module: account_budget
+#: model:ir.module.module,description:account_budget.module_meta_information
+msgid ""
+"This module allows accountants to manage analytic and crossovered budgets.\n"
+"\n"
+"Once the Master Budgets and the Budgets are defined (in "
+"Accounting/Budgets/),\n"
+"the Project Managers can set the planned amount on each Analytic Account.\n"
+"\n"
+"The accountant has the possibility to see the total of amount planned for "
+"each\n"
+"Budget and Master Budget in order to ensure the total planned is not\n"
+"greater/lower than what he planned for this Budget/Master Budget. Each list "
+"of\n"
+"record can also be switched to a graphical view of it.\n"
+"\n"
+"Three reports are available:\n"
+"    1. The first is available from a list of Budgets. It gives the "
+"spreading, for these Budgets, of the Analytic Accounts per Master Budgets.\n"
+"\n"
+"    2. The second is a summary of the previous one, it only gives the "
+"spreading, for the selected Budgets, of the Analytic Accounts.\n"
+"\n"
+"    3. The last one is available from the Analytic Chart of Accounts. It "
+"gives the spreading, for the selected Analytic Accounts, of the Master "
+"Budgets per Budgets.\n"
+"\n"
 msgstr ""
 
 #. module: account_budget
 #: view:crossovered.budget:0
 msgid "To Approve"
-msgstr ""
+msgstr "待批准"
 
 #. module: account_budget
 #: view:crossovered.budget:0
 msgid "Reset to Draft"
-msgstr ""
+msgstr "重置为草稿"
 
 #. module: account_budget
 #: view:account.budget.post:0
@@ -199,7 +228,7 @@ msgstr "完成"
 #: report:account.budget:0
 #: report:crossovered.budget.report:0
 msgid "Practical Amt"
-msgstr ""
+msgstr "实际金额"
 
 #. module: account_budget
 #: view:account.analytic.account:0
@@ -219,13 +248,10 @@ msgstr "结束日期"
 #: model:ir.model,name:account_budget.model_account_budget_analytic
 #: model:ir.model,name:account_budget.model_account_budget_report
 msgid "Account Budget report for analytic account"
-msgstr ""
+msgstr "分析科目的科目预算报表"
 
 #. module: account_budget
 #: view:account.analytic.account:0
-#: view:account.budget.post:0
-#: view:crossovered.budget:0
-#: field:crossovered.budget.lines,theoritical_amount:0
 msgid "Theoritical Amount"
 msgstr "理论金额"
 
@@ -238,7 +264,7 @@ msgstr "名称"
 #. module: account_budget
 #: model:ir.model,name:account_budget.model_crossovered_budget_lines
 msgid "Budget Line"
-msgstr ""
+msgstr "预算明细"
 
 #. module: account_budget
 #: view:account.analytic.account:0
@@ -272,7 +298,7 @@ msgstr "代码"
 #: view:account.budget.analytic:0
 #: view:account.budget.crossvered.report:0
 msgid "This wizard is used to print budget"
-msgstr ""
+msgstr "此向导用于打印预算"
 
 #. module: account_budget
 #: model:ir.actions.act_window,name:account_budget.act_crossovered_budget_view
@@ -291,7 +317,7 @@ msgstr "预算"
 msgid ""
 "Error! The currency has to be the same as the currency of the selected "
 "company"
-msgstr ""
+msgstr "错误！此币种同选定公司的默认币种相同。"
 
 #. module: account_budget
 #: selection:crossovered.budget,state:0
@@ -301,7 +327,7 @@ msgstr "已取消"
 #. module: account_budget
 #: view:crossovered.budget:0
 msgid "Approve"
-msgstr ""
+msgstr "批准"
 
 #. module: account_budget
 #: field:crossovered.budget,date_from:0
@@ -333,7 +359,7 @@ msgstr ""
 #: report:account.budget:0
 #: report:crossovered.budget.report:0
 msgid "Theoretical Amt"
-msgstr ""
+msgstr "理论金额"
 
 #. module: account_budget
 #: view:account.budget.analytic:0
@@ -352,33 +378,11 @@ msgid "Print"
 msgstr "打印"
 
 #. module: account_budget
-#: model:ir.module.module,description:account_budget.module_meta_information
-msgid ""
-"This module allows accountants to manage analytic and crossovered budgets.\n"
-"\n"
-"Once the Master Budgets and the Budgets are defined (in "
-"Accounting/Budgets/),\n"
-"the Project Managers can set the planned amount on each Analytic Account.\n"
-"\n"
-"The accountant has the possibility to see the total of amount planned for "
-"each\n"
-"Budget and Master Budget in order to ensure the total planned is not\n"
-"greater/lower than what he planned for this Budget/Master Budget. Each list "
-"of\n"
-"record can also be switched to a graphical view of it.\n"
-"\n"
-"Three reports are available:\n"
-"    1. The first is available from a list of Budgets. It gives the "
-"spreading, for these Budgets, of the Analytic Accounts per Master Budgets.\n"
-"\n"
-"    2. The second is a summary of the previous one, it only gives the "
-"spreading, for the selected Budgets, of the Analytic Accounts.\n"
-"\n"
-"    3. The last one is available from the Analytic Chart of Accounts. It "
-"gives the spreading, for the selected Analytic Accounts, of the Master "
-"Budgets per Budgets.\n"
-"\n"
-msgstr ""
+#: view:account.budget.post:0
+#: view:crossovered.budget:0
+#: field:crossovered.budget.lines,theoritical_amount:0
+msgid "Theoretical Amount"
+msgstr "理论金额"
 
 #. module: account_budget
 #: field:crossovered.budget.lines,analytic_account_id:0
@@ -395,7 +399,7 @@ msgstr "预算:"
 #: report:account.budget:0
 #: report:crossovered.budget.report:0
 msgid "Planned Amt"
-msgstr ""
+msgstr "预计金额"
 
 #. module: account_budget
 #: view:account.budget.post:0
@@ -434,7 +438,7 @@ msgstr "预算管理"
 #. module: account_budget
 #: constraint:account.analytic.account:0
 msgid "Error! You can not create recursive analytic accounts."
-msgstr ""
+msgstr "错误! 您不能创建递归的辅助核算科目"
 
 #. module: account_budget
 #: report:account.budget:0

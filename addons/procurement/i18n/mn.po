@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2011-05-09 10:19+0000\n"
 "PO-Revision-Date: 2011-01-19 12:00+0000\n"
 "Last-Translator: qdp (OpenERP) <qdp-launchpad@tinyerp.com>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-25 06:54+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-05-10 07:38+0000\n"
+"X-Generator: Launchpad (build 12959)\n"
 
 #. module: procurement
 #: view:make.procurement:0
@@ -69,7 +69,7 @@ msgid "Procurement Method"
 msgstr "Нөхөн дүүргэх хэлбэр"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:298
+#: code:addons/procurement/procurement.py:304
 #, python-format
 msgid "No address defined for the supplier"
 msgstr "Нийлүүлэгчийн хаяг байхгүй"
@@ -177,6 +177,11 @@ msgid "Stock Move"
 msgstr "Барааны хөдөлгөөн"
 
 #. module: procurement
+#: model:ir.model,name:procurement.model_procurement_order_compute_all
+msgid "Compute all schedulers"
+msgstr "Бүх хуваарийг тооцоолох"
+
+#. module: procurement
 #: view:procurement.order:0
 msgid "Planification"
 msgstr "Төлөвлөлт"
@@ -234,6 +239,12 @@ msgstr ""
 #. module: procurement
 #: constraint:res.company:0
 msgid "Error! You can not create recursive companies."
+msgstr ""
+
+#. module: procurement
+#: code:addons/procurement/procurement.py:384
+#, python-format
+msgid "Procurement '%s' is in exception: "
 msgstr ""
 
 #. module: procurement
@@ -320,7 +331,7 @@ msgid "Quantity"
 msgstr "Тоо хэмжээ"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:370
+#: code:addons/procurement/procurement.py:377
 #, python-format
 msgid "Not enough stock and no minimum orderpoint rule defined."
 msgstr "Хангалттай бараа байхгүй, зохистой нөөцийн дүрэм байхгүй."
@@ -409,11 +420,6 @@ msgid "Compute Stock"
 msgstr "Үлдэгдэл тооцоолох"
 
 #. module: procurement
-#: view:procurement.order:0
-msgid "Late"
-msgstr "Хожимдсон"
-
-#. module: procurement
 #: model:process.process,name:procurement.process_process_serviceproductprocess0
 msgid "Service"
 msgstr "Үйлчилгээ"
@@ -458,7 +464,7 @@ msgid "plus"
 msgstr "нэмэх"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:319
+#: code:addons/procurement/procurement.py:325
 #, python-format
 msgid ""
 "Please check the Quantity in Procurement Order(s), it should not be less "
@@ -543,6 +549,12 @@ msgid "You try to assign a lot which is not from the same product"
 msgstr ""
 
 #. module: procurement
+#: code:addons/procurement/procurement.py:381
+#, python-format
+msgid "Not enough stock."
+msgstr ""
+
+#. module: procurement
 #: field:stock.warehouse.orderpoint,active:0
 msgid "Active"
 msgstr "Идэвхитэй"
@@ -561,6 +573,12 @@ msgstr "Төлөвлөсөн огноо"
 #: selection:procurement.order,state:0
 msgid "Exception"
 msgstr "Алдаа"
+
+#. module: procurement
+#: code:addons/procurement/procurement.py:379
+#, python-format
+msgid "No minimum orderpoint rule defined."
+msgstr ""
 
 #. module: procurement
 #: code:addons/procurement/schedulers.py:179
@@ -619,10 +637,9 @@ msgid "Date Closed"
 msgstr "Хаагдсан огноо"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:372
-#, python-format
-msgid "Procurement '%s' is in exception: not enough stock."
-msgstr "'%s' нөхөн дүүргэлтэд алдаа гарлаа: үлдэгдэл хүрэлцэхгүй."
+#: view:procurement.order:0
+msgid "Late"
+msgstr "Хожимдсон"
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:138
@@ -631,7 +648,7 @@ msgid "Cannot delete Procurement Order(s) which are in %s State!"
 msgstr "%s төлөвтэй нөхөн дүүргэлтийн захиалгыг устгах боломжгүй!"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:318
+#: code:addons/procurement/procurement.py:324
 #, python-format
 msgid "Data Insufficient !"
 msgstr "Өгөгдөл хангалтгүй !"
@@ -706,9 +723,10 @@ msgid "Not urgent"
 msgstr "Яаралтай бус"
 
 #. module: procurement
-#: model:ir.model,name:procurement.model_procurement_order_compute_all
-msgid "Compute all schedulers"
-msgstr "Бүх хуваарийг тооцоолох"
+#: code:addons/procurement/procurement.py:294
+#, python-format
+msgid "No default supplier defined for this product"
+msgstr ""
 
 #. module: procurement
 #: view:procurement.order:0
@@ -860,7 +878,7 @@ msgid "Product UoS"
 msgstr "Хоёрдогч х.нэгж"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:347
+#: code:addons/procurement/procurement.py:353
 #, python-format
 msgid "from stock: products assigned."
 msgstr "агуулахаас: бараа хувиарлагдсан."
@@ -925,3 +943,7 @@ msgstr "Нөхөн дүүргэлтийн дэлгэрэнгүй"
 #, python-format
 msgid "SCHEDULER"
 msgstr "ТӨЛӨВЛӨГЧ"
+
+#, python-format
+#~ msgid "Procurement '%s' is in exception: not enough stock."
+#~ msgstr "'%s' нөхөн дүүргэлтэд алдаа гарлаа: үлдэгдэл хүрэлцэхгүй."

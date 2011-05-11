@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2011-05-09 10:18+0000\n"
 "PO-Revision-Date: 2011-01-19 12:00+0000\n"
 "Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
 "<maxime.chambreuil@savoirfairelinux.com>\n"
@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-25 06:38+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-05-10 07:28+0000\n"
+"X-Generator: Launchpad (build 12959)\n"
 
 #. module: email_template
 #: help:email_template.account,auto_delete:0
@@ -168,11 +168,6 @@ msgstr "Compte"
 #: field:email.template,table_html:0
 msgid "HTML code"
 msgstr "Code HTML"
-
-#. module: email_template
-#: view:email_template.mailbox:0
-msgid "Send Mail"
-msgstr "Envoyer le courriel"
 
 #. module: email_template
 #: help:email_template.account,name:0
@@ -454,12 +449,6 @@ msgid "Mako Templates"
 msgstr "Modèles Mako"
 
 #. module: email_template
-#: help:email.template,def_body_html:0
-#: help:email.template,def_body_text:0
-msgid "The text version of the mail"
-msgstr "La version texte du courriel"
-
-#. module: email_template
 #: code:addons/email_template/email_template.py:449
 #, python-format
 msgid " (Email Attachment)"
@@ -476,9 +465,10 @@ msgid "Test Outgoing Connection"
 msgstr "Tester la connexion sortante"
 
 #. module: email_template
-#: model:ir.actions.act_window,name:email_template.action_email_template_mailbox
-msgid "Mailbox"
-msgstr "Boîte aux lettres"
+#: help:email.template,def_body_html:0
+#: help:email.template,def_body_text:0
+msgid "The text version of the mail"
+msgstr "La version texte du courriel"
 
 #. module: email_template
 #: help:email.template,reply_to:0
@@ -885,9 +875,9 @@ msgid "Send/Receive"
 msgstr "Envoyer/Recevoir"
 
 #. module: email_template
-#: model:ir.ui.menu,name:email_template.menu_email_template_personal_mails
-msgid "Personal Mails"
-msgstr "Courriels personnels"
+#: view:email_template.mailbox:0
+msgid "Send Mail"
+msgstr "Envoyer le courriel"
 
 #. module: email_template
 #: view:email_template.account:0
@@ -973,7 +963,7 @@ msgid "Close"
 msgstr "Fermer"
 
 #. module: email_template
-#: code:addons/email_template/email_template_mailbox.py:49
+#: code:addons/email_template/email_template_mailbox.py:48
 #, python-format
 msgid "Error sending mail: %s"
 msgstr "Erreur lors de l'envoi du courriel : %s"
@@ -1069,7 +1059,7 @@ msgid "Email Mailbox"
 msgstr "Boite de réception des courriels"
 
 #. module: email_template
-#: code:addons/email_template/email_template_mailbox.py:116
+#: code:addons/email_template/email_template_mailbox.py:104
 #, python-format
 msgid ""
 "Sending of Mail %s failed. Probable Reason:Could not login to server\n"
@@ -1190,7 +1180,9 @@ msgstr ""
 
 #. module: email_template
 #: view:email_template.mailbox:0
+#: model:ir.actions.act_window,name:email_template.action_email_template_mailbox
 #: model:ir.ui.menu,name:email_template.menu_email_template_mails_tools
+#: model:ir.ui.menu,name:email_template.menu_email_template_personal_mails
 msgid "Emails"
 msgstr "Courriels"
 
@@ -1365,3 +1357,9 @@ msgstr "Possède des pièces jointes"
 #, python-format
 msgid "No Description"
 msgstr "Pas de description"
+
+#~ msgid "Personal Mails"
+#~ msgstr "Courriels personnels"
+
+#~ msgid "Mailbox"
+#~ msgstr "Boîte aux lettres"

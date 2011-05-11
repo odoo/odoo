@@ -6,26 +6,31 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2011-05-09 10:18+0000\n"
 "PO-Revision-Date: 2011-01-19 12:00+0000\n"
 "Last-Translator: NOVOTRADE RENDSZERHÁZ <openerp@novotrade.hu>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-25 06:43+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-05-10 07:31+0000\n"
+"X-Generator: Launchpad (build 12959)\n"
 
 #. module: hr_payroll_account
-#: field:hr.payslip,move_line_ids:0
-msgid "Accounting Lines"
-msgstr "Könyvelési tételek"
+#: view:hr.employee:0
+msgid "Employee Bank Account"
+msgstr ""
 
 #. module: hr_payroll_account
 #: field:hr.payroll.register,bank_journal_id:0
 #: field:hr.payslip,bank_journal_id:0
 msgid "Bank Journal"
 msgstr "Banknapló"
+
+#. module: hr_payroll_account
+#: field:hr.payslip,move_line_ids:0
+msgid "Accounting Lines"
+msgstr "Könyvelési tételek"
 
 #. module: hr_payroll_account
 #: model:ir.model,name:hr_payroll_account.model_hr_contibution_register_line
@@ -41,6 +46,15 @@ msgstr ""
 #: help:hr.employee,analytic_account:0
 msgid "Analytic Account for Salary Analysis"
 msgstr "Munkabér elemzésére szolgáló gyűjtőkód"
+
+#. module: hr_payroll_account
+#: code:addons/hr_payroll_account/hr_payroll_account.py:430
+#: code:addons/hr_payroll_account/hr_payroll_account.py:433
+#: code:addons/hr_payroll_account/hr_payroll_account.py:540
+#: code:addons/hr_payroll_account/hr_payroll_account.py:557
+#, python-format
+msgid "Configuration Error !"
+msgstr ""
 
 #. module: hr_payroll_account
 #: field:hr.payroll.register,journal_id:0
@@ -70,19 +84,20 @@ msgstr "Bérköltség főkönyvi számla"
 
 #. module: hr_payroll_account
 #: help:hr.employee,property_bank_account:0
-msgid "Select Bank Account from where Salary Expense will be Paid"
+msgid ""
+"Select Bank Account from where Salary Expense will be Paid, to be used for "
+"payslip verification."
 msgstr ""
-"Itt lehet kiválasztani a bankszámlaszámot, ahová a munkabért átutalják."
 
 #. module: hr_payroll_account
 #: model:ir.model,name:hr_payroll_account.model_hr_payroll_register
 msgid "Payroll Register"
-msgstr ""
+msgstr "Bérszámfejtési nyilvántartás"
 
 #. module: hr_payroll_account
 #: model:ir.model,name:hr_payroll_account.model_hr_payslip_account_move
 msgid "Account Move Link to Pay Slip"
-msgstr ""
+msgstr "A fizetési jegyzékhez kapcsolódó könyvelési tétel"
 
 #. module: hr_payroll_account
 #: view:hr.payslip:0
@@ -90,18 +105,12 @@ msgid "Description"
 msgstr "Megjegyzés"
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:330
+#: code:addons/hr_payroll_account/hr_payroll_account.py:331
 #, python-format
 msgid "Please Confirm all Expense Invoice appear for Reimbursement"
 msgstr ""
 "Kérem, hagyjon jóvá minden költségszámlát, hogy meg lehessen azokat téríteni "
 "az alkalmazottaknak"
-
-#. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:432
-#, python-format
-msgid "Please defined partner in bank account for %s !"
-msgstr "Kérem, adja meg %s bankszámlaszámában a partnert!"
 
 #. module: hr_payroll_account
 #: view:hr.payslip:0
@@ -114,25 +123,15 @@ msgid "Expense account when Salary Expense will be recorded"
 msgstr "Főkönyvi számla, ahová a bérköltséget könyvelik"
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:429
+#: code:addons/hr_payroll_account/hr_payroll_account.py:433
 #, python-format
-msgid "Please defined bank account for %s !"
-msgstr "Kérem, adja meg %s bankszámlaszámát!"
-
-#. module: hr_payroll_account
-#: model:ir.module.module,description:hr_payroll_account.module_meta_information
-msgid ""
-"Generic Payroll system Integrated with Accountings\n"
-"    * Expanse Encoding\n"
-"    * Payment Encoding\n"
-"    * Comany Contribution Managemet\n"
-"    "
+msgid "Please define partner in bank account for %s !"
 msgstr ""
 
 #. module: hr_payroll_account
 #: model:ir.module.module,shortdesc:hr_payroll_account.module_meta_information
 msgid "Human Resource Payroll Accounting"
-msgstr ""
+msgstr "Bérfeladás könyvelése"
 
 #. module: hr_payroll_account
 #: view:hr.payslip:0
@@ -141,17 +140,23 @@ msgid "Payment Lines"
 msgstr "Kifizetés sorok"
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:273
-#: code:addons/hr_payroll_account/hr_payroll_account.py:444
+#: code:addons/hr_payroll_account/hr_payroll_account.py:270
+#: code:addons/hr_payroll_account/hr_payroll_account.py:445
 #, python-format
 msgid "Please define fiscal year for perticular contract"
 msgstr "Kérem, határozza meg a szerződés üzleti évét!"
 
 #. module: hr_payroll_account
+#: code:addons/hr_payroll_account/hr_payroll_account.py:297
+#, python-format
+msgid "Employee Bank Account is not defined for %s"
+msgstr ""
+
+#. module: hr_payroll_account
 #: field:hr.payslip.account.move,slip_id:0
 #: model:ir.model,name:hr_payroll_account.model_hr_payslip
 msgid "Pay Slip"
-msgstr ""
+msgstr "Fizetési jegyzék"
 
 #. module: hr_payroll_account
 #: constraint:hr.employee:0
@@ -181,9 +186,19 @@ msgid "Name"
 msgstr "Név"
 
 #. module: hr_payroll_account
+#: model:ir.module.module,description:hr_payroll_account.module_meta_information
+msgid ""
+"Generic Payroll system Integrated with Accountings\n"
+"    * Expense Encoding\n"
+"    * Payment Encoding\n"
+"    * Company Contribution Management\n"
+"    "
+msgstr ""
+
+#. module: hr_payroll_account
 #: model:ir.model,name:hr_payroll_account.model_hr_payslip_line
 msgid "Payslip Line"
-msgstr ""
+msgstr "Fizetési jegyzék sor"
 
 #. module: hr_payroll_account
 #: view:hr.payslip:0
@@ -203,6 +218,13 @@ msgstr ""
 #: help:hr.payslip,period_id:0
 msgid "Keep empty to use the period of the validation(Payslip) date."
 msgstr ""
+"Hagyja üresen, hogy a (fizetési jegyzék) jóváhagyás időszakát használja."
+
+#. module: hr_payroll_account
+#: code:addons/hr_payroll_account/hr_payroll_account.py:469
+#, python-format
+msgid "Please define Salary Account for %s."
+msgstr ""
 
 #. module: hr_payroll_account
 #: model:ir.model,name:hr_payroll_account.model_hr_payroll_advice
@@ -220,13 +242,16 @@ msgid "Accounting vouchers"
 msgstr "Könyvelési bizonylatok"
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:273
+#: code:addons/hr_payroll_account/hr_payroll_account.py:270
+#: code:addons/hr_payroll_account/hr_payroll_account.py:277
 #: code:addons/hr_payroll_account/hr_payroll_account.py:280
-#: code:addons/hr_payroll_account/hr_payroll_account.py:283
-#: code:addons/hr_payroll_account/hr_payroll_account.py:330
-#: code:addons/hr_payroll_account/hr_payroll_account.py:444
-#: code:addons/hr_payroll_account/hr_payroll_account.py:451
-#: code:addons/hr_payroll_account/hr_payroll_account.py:454
+#: code:addons/hr_payroll_account/hr_payroll_account.py:297
+#: code:addons/hr_payroll_account/hr_payroll_account.py:331
+#: code:addons/hr_payroll_account/hr_payroll_account.py:445
+#: code:addons/hr_payroll_account/hr_payroll_account.py:452
+#: code:addons/hr_payroll_account/hr_payroll_account.py:455
+#: code:addons/hr_payroll_account/hr_payroll_account.py:469
+#: code:addons/hr_payroll_account/hr_payroll_account.py:492
 #, python-format
 msgid "Warning !"
 msgstr "Vigyázat!"
@@ -263,11 +288,11 @@ msgid "Leave Type"
 msgstr "Szabadság típusa"
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:280
-#: code:addons/hr_payroll_account/hr_payroll_account.py:451
+#: code:addons/hr_payroll_account/hr_payroll_account.py:277
+#: code:addons/hr_payroll_account/hr_payroll_account.py:452
 #, python-format
 msgid "Fiscal Year is not defined for slip date %s"
-msgstr ""
+msgstr "Nem határoztak meg üzleti évet a fizetési jegyzék dátumára: %s"
 
 #. module: hr_payroll_account
 #: field:hr.contibution.register,analytic_account_id:0
@@ -284,6 +309,12 @@ msgid "Employee Payable Account"
 msgstr "Alkalmazott szállító számlája"
 
 #. module: hr_payroll_account
+#: code:addons/hr_payroll_account/hr_payroll_account.py:492
+#, python-format
+msgid "Please define Employee Payable Account for %s."
+msgstr ""
+
+#. module: hr_payroll_account
 #: field:hr.contibution.register,yearly_total_by_comp:0
 msgid "Total By Company"
 msgstr "Vállalat összesen"
@@ -294,7 +325,7 @@ msgid "Salary Structure"
 msgstr "Bérszerkezet"
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:550
+#: code:addons/hr_payroll_account/hr_payroll_account.py:557
 #, python-format
 msgid "Please Configure Partners Receivable Account!!"
 msgstr "Kérem, állítsa be a partner vevő számláját!"
@@ -305,11 +336,11 @@ msgid "Year"
 msgstr "Év"
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:283
-#: code:addons/hr_payroll_account/hr_payroll_account.py:454
+#: code:addons/hr_payroll_account/hr_payroll_account.py:280
+#: code:addons/hr_payroll_account/hr_payroll_account.py:455
 #, python-format
 msgid "Period is not defined for slip date %s"
-msgstr ""
+msgstr "Nem határoztak meg időszakot a fizetési jegyzék dátumára: %s"
 
 #. module: hr_payroll_account
 #: view:hr.payslip:0
@@ -317,16 +348,29 @@ msgid "Accounting Details"
 msgstr "Könyvelési részletek"
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:533
+#: code:addons/hr_payroll_account/hr_payroll_account.py:540
 #, python-format
 msgid "Please Configure Partners Payable Account!!"
 msgstr "Kérem, állítsa be a partner szállító számláját!"
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:429
-#: code:addons/hr_payroll_account/hr_payroll_account.py:432
-#: code:addons/hr_payroll_account/hr_payroll_account.py:533
-#: code:addons/hr_payroll_account/hr_payroll_account.py:550
+#: code:addons/hr_payroll_account/hr_payroll_account.py:430
 #, python-format
-msgid "Integrity Error !"
-msgstr "Integritás hiba!"
+msgid "Please define bank account for %s !"
+msgstr ""
+
+#, python-format
+#~ msgid "Please defined bank account for %s !"
+#~ msgstr "Kérem, adja meg %s bankszámlaszámát!"
+
+#, python-format
+#~ msgid "Please defined partner in bank account for %s !"
+#~ msgstr "Kérem, adja meg %s bankszámlaszámában a partnert!"
+
+#, python-format
+#~ msgid "Integrity Error !"
+#~ msgstr "Integritás hiba!"
+
+#~ msgid "Select Bank Account from where Salary Expense will be Paid"
+#~ msgstr ""
+#~ "Itt lehet kiválasztani a bankszámlaszámot, ahová a munkabért átutalják."

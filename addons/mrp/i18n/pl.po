@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2011-05-09 10:19+0000\n"
 "PO-Revision-Date: 2011-01-19 12:00+0000\n"
 "Last-Translator: Grzegorz Grzelak (OpenGLOBE.pl) <grzegorz@openglobe.pl>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-25 06:49+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-05-10 07:34+0000\n"
+"X-Generator: Launchpad (build 12959)\n"
 
 #. module: mrp
 #: field:mrp.production,move_created_ids:0
@@ -203,13 +203,13 @@ msgid "Cost per hour"
 msgstr "Koszt na godzinę"
 
 #. module: mrp
-#: model:process.transition,note:mrp.process_transition_stockproduction0
+#: model:process.transition,note:mrp.process_transition_servicemts0
 msgid ""
-"In case the Supply method of the product is Produce, the system creates a "
-"production order."
+"This is used in case of a service without any impact in the system, a "
+"training session for instance."
 msgstr ""
-"Jeśli metoda zaopatrzenia jest Produkcja, to system utworzy zamówienie "
-"produkcji."
+"To jest stosowane w przypadku usługi bez wpływu na system. Na przykład w "
+"trakcie szkolenia."
 
 #. module: mrp
 #: view:mrp.production:0
@@ -399,13 +399,13 @@ msgstr ""
 "ilości i parametrów produktu."
 
 #. module: mrp
-#: model:process.transition,note:mrp.process_transition_servicemts0
+#: model:process.transition,note:mrp.process_transition_stockproduction0
 msgid ""
-"This is used in case of a service without any impact in the system, a "
-"training session for instance."
+"In case the Supply method of the product is Produce, the system creates a "
+"production order."
 msgstr ""
-"To jest stosowane w przypadku usługi bez wpływu na system. Na przykład w "
-"trakcie szkolenia."
+"Jeśli metoda zaopatrzenia jest Produkcja, to system utworzy zamówienie "
+"produkcji."
 
 #. module: mrp
 #: field:mrp.installer,mrp_repair:0
@@ -746,7 +746,7 @@ msgid "Per month"
 msgstr "Na miesiąc"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:591
+#: code:addons/mrp/mrp.py:595
 #: code:addons/mrp/wizard/change_production_qty.py:77
 #: code:addons/mrp/wizard/change_production_qty.py:82
 #, python-format
@@ -759,7 +759,7 @@ msgid "Product Name"
 msgstr "Nazwa produktu"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:491
+#: code:addons/mrp/mrp.py:495
 #, python-format
 msgid "Invalid action !"
 msgstr "Niedozwolona akcja !"
@@ -900,6 +900,12 @@ msgid "Search"
 msgstr "Wyszukaj"
 
 #. module: mrp
+#: code:addons/mrp/mrp.py:619
+#, python-format
+msgid "Could not cancel manufacturing order !"
+msgstr ""
+
+#. module: mrp
 #: field:report.workcenter.load,cycle:0
 msgid "Nbr of cycle"
 msgstr "Liczba cykli"
@@ -908,6 +914,14 @@ msgstr "Liczba cykli"
 #: model:ir.model,name:mrp.model_res_company
 msgid "Companies"
 msgstr "Firmy"
+
+#. module: mrp
+#: code:addons/mrp/mrp.py:620
+#, python-format
+msgid ""
+"You must first cancel related internal picking attached to this "
+"manufacturing order."
+msgstr ""
 
 #. module: mrp
 #: model:process.node,name:mrp.process_node_minimumstockrule0
@@ -1341,7 +1355,7 @@ msgid "Month -1"
 msgstr "Miesiąc -1"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:914
+#: code:addons/mrp/mrp.py:924
 #, python-format
 msgid "Manufacturing order '%s' is scheduled for the %s."
 msgstr "Zamówienie produkcji '%s' zostało zaplanowane dla %s."
@@ -1352,7 +1366,7 @@ msgid "Production Order N° :"
 msgstr "Nr zamówienia produkcji"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:630
+#: code:addons/mrp/mrp.py:640
 #, python-format
 msgid "Manufacturing order '%s' is ready to produce."
 msgstr "Zamówienie produkcji '%s' jest gotowe do produkcji."
@@ -1366,6 +1380,11 @@ msgstr "Produkt zaplanowany do produkcji"
 #: help:res.company,manufacturing_lead:0
 msgid "Security days for each manufacturing operation."
 msgstr "Dni na wszelki wypadek dla każdej operacji produkcyjnej."
+
+#. module: mrp
+#: view:mrp.bom:0
+msgid "Component Name"
+msgstr ""
 
 #. module: mrp
 #: model:process.node,name:mrp.process_node_mts0
@@ -1585,7 +1604,7 @@ msgid "Manufacturing Orders To Start"
 msgstr "Zamówienia produkcji do rozpoczęcia"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:491
+#: code:addons/mrp/mrp.py:495
 #, python-format
 msgid "Cannot delete Production Order(s) which are in %s State!"
 msgstr "Nie można usuwać zamówień produkcji, które są w stanie %s !"
@@ -1675,7 +1694,7 @@ msgid "Production Analysis"
 msgstr "Analiza produkcji"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:345
+#: code:addons/mrp/mrp.py:349
 #, python-format
 msgid "Copy"
 msgstr "Kopiuj"
@@ -2148,6 +2167,11 @@ msgid "Parent BoM"
 msgstr "Nadrzędne Zest. Mat."
 
 #. module: mrp
+#: view:mrp.bom:0
+msgid "Component Product"
+msgstr ""
+
+#. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_bom_form_action2
 msgid ""
 "Bills of materials components are components and sub-products used to create "
@@ -2166,7 +2190,7 @@ msgid "Product type is Stockable or Consumable."
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:591
+#: code:addons/mrp/mrp.py:595
 #: code:addons/mrp/wizard/change_production_qty.py:77
 #: code:addons/mrp/wizard/change_production_qty.py:82
 #, python-format

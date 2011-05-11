@@ -6,25 +6,31 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"POT-Creation-Date: 2011-05-09 10:18+0000\n"
 "PO-Revision-Date: 2011-01-19 12:00+0000\n"
 "Last-Translator: NOVOTRADE RENDSZERHÁZ <openerp@novotrade.hu>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-25 06:32+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-05-10 07:23+0000\n"
+"X-Generator: Launchpad (build 12959)\n"
 
 #. module: base_setup
 #: field:base.setup.company,city:0
 msgid "City"
-msgstr "Helység"
+msgstr "Város"
 
 #. module: base_setup
 #: view:base.setup.installer:0
 msgid "Install"
 msgstr "Telepítés"
+
+#. module: base_setup
+#: code:addons/base_setup/__init__.py:56
+#, python-format
+msgid "The following users have been installed : \n"
+msgstr "A következő felhasználók lettek létrehozva : \n"
 
 #. module: base_setup
 #: field:base.setup.installer,account_voucher:0
@@ -49,7 +55,7 @@ msgstr "Bankszámlaszám"
 #. module: base_setup
 #: field:base.setup.installer,profile_tools:0
 msgid "Extra Tools"
-msgstr "További Eszközök"
+msgstr "További eszközök"
 
 #. module: base_setup
 #: field:base.setup.company,rml_footer1:0
@@ -95,16 +101,22 @@ msgstr ""
 "a Számlázást telepítse. "
 
 #. module: base_setup
-#: code:addons/base_setup/__init__.py:50
-#, python-format
-msgid "The following users have been installed : \n"
-msgstr "A következő felhasználók lettek létrehozva : \n"
+#: help:base.setup.installer,crm:0
+msgid ""
+"Helps you track and manage relations with customers such as leads, requests "
+"or issues. Can automatically send reminders, escalate requests or trigger "
+"business-specific actions based on standard events."
+msgstr ""
+"Segít Önnek az ügyfelekkel való kapcsolatok nyomon követésében és "
+"kezelésében, mint például találkozók, igények vagy problémák. Automatikusan "
+"küldhet emlékeztetőket, kiterjesztheti a kéréseket vagy indíthat üzlet-"
+"specifikus műveleteket az események alapján."
 
 #. module: base_setup
 #: field:base.setup.company,progress:0
 #: field:base.setup.installer,progress:0
 msgid "Configuration Progress"
-msgstr "Beállítási folyamat"
+msgstr "Beállítás előrehaladása"
 
 #. module: base_setup
 #: field:base.setup.company,rml_footer2:0
@@ -228,8 +240,8 @@ msgid ""
 "Installs a preselected set of OpenERP applications which will help you "
 "manage your industry."
 msgstr ""
-"Telepíti előre kiválasztott OpenERP modulok kombinációit, amik segítenek az "
-"üzletének a jobb kézben tartásában."
+"Telepíti az előre kiválasztott OpenERP modulok kombinációit, amelyek "
+"segítenek vállalkozása jobb kézben tartásában."
 
 #. module: base_setup
 #: help:base.setup.installer,project:0
@@ -256,8 +268,9 @@ msgid ""
 "Helps you manage your human resources by encoding your employees structure, "
 "generating work sheets, tracking attendance and more."
 msgstr ""
-"Segít Önnek a humán erőforrások kezelésében az alkalmazottak struktúrájának "
-"lekódolásával, munkalapok létrehozásával, résztvevők nyomon követésével, stb."
+"Segít Önnek a humán erőforrások kezelésében az alkalmazotti struktúra "
+"berögzítésével, munkaidő-kimutatások előállításával, jelenlét nyomon "
+"követésével, stb."
 
 #. module: base_setup
 #: help:base.setup.installer,account_voucher:0
@@ -265,13 +278,17 @@ msgid ""
 "Allows you to create your invoices and track the payments. It is an easier "
 "version of the accounting module for managers who are not accountants."
 msgstr ""
-"Lehetővé teszi számlák készítését és a fizetések követését. Ez a könyvelési "
-"modul egyszerűbb változata nem könyvelők számára."
+"Lehetővé teszi számlák készítését és a kifizetések nyomon követését. Ez a "
+"könyvelési modul egyszerűbb változata nem könyvelők számára."
 
 #. module: base_setup
-#: model:ir.model,name:base_setup.model_base_setup_company
-msgid "base.setup.company"
-msgstr "base.setup.company"
+#: code:addons/base_setup/__init__.py:50
+#, python-format
+msgid ""
+"    - %s :\n"
+"\t\tLogin : %s \n"
+"\t\tPassword : %s"
+msgstr ""
 
 #. module: base_setup
 #: help:base.setup.installer,purchase:0
@@ -279,8 +296,8 @@ msgid ""
 "Helps you manage your purchase-related processes such as requests for "
 "quotations, supplier invoices, etc..."
 msgstr ""
-"Segít Önnek a beszerzéseihez kapcsolódó folyamatainak kezelésében, mint "
-"például beszerzési igények, beszállítói számlák, stb..."
+"Segít Önnek a beszerzéshez kapcsolódó folyamatainak kezelésében, mint "
+"például ajánlatkérések, szállítói számlák, stb..."
 
 #. module: base_setup
 #: help:base.setup.company,rml_footer2:0
@@ -374,6 +391,11 @@ msgstr ""
 "szállítólevél generálással, stb..."
 
 #. module: base_setup
+#: model:ir.model,name:base_setup.model_base_setup_company
+msgid "base.setup.company"
+msgstr "base.setup.company"
+
+#. module: base_setup
 #: field:base.setup.installer,purchase:0
 msgid "Purchase Management"
 msgstr "Beszerzés kezelés"
@@ -382,7 +404,7 @@ msgstr "Beszerzés kezelés"
 #: help:base.setup.installer,sale:0
 msgid "Helps you handle your quotations, sale orders and invoicing."
 msgstr ""
-"Segít Önnek az érdeklődések, a megrendelések majd a számlázások kezelésében."
+"Segít Önnek az árajánlatok, a vevői megrendelések és a számlázás kezelésében."
 
 #. module: base_setup
 #: field:base.setup.installer,stock:0
@@ -515,16 +537,12 @@ msgid "Install Applications"
 msgstr "Alkalmazások telepítése"
 
 #. module: base_setup
-#: help:base.setup.installer,crm:0
+#: code:addons/base_setup/__init__.py:49
+#, python-format
 msgid ""
-"Helps you track and manage relations with customers such as leads, requests "
-"or issues. Can automatically send reminders, escalate requests or trigger "
-"business-specific actions based on standard events."
+"    - %s :\n"
+"\t\tLogin : %s"
 msgstr ""
-"Segít Önnek az ügyfelekkel való kapcsolatok nyomon követésében "
-"éskezelésében, mint például találkozók, igények vagy poblémák. Automatikusan "
-"küldhet emlékeztetőket, kiterjesztheti a kéréseket vagy indíthat üzlet-"
-"specifikus műveleteket az események alapján."
 
 #. module: base_setup
 #: help:base.setup.installer,stock:0
@@ -532,8 +550,8 @@ msgid ""
 "Helps you manage your inventory and main stock operations: delivery orders, "
 "receptions, etc."
 msgstr ""
-"Segít Önnek a készletek és a fő raktárkészlet műveletek kezelésében: "
-"megrendelések szállítása, átvételek, stb."
+"Segít Önnek a készletek és a fő készletműveletek kezelésében: "
+"szállítólevelek, áruátvételek, stb."
 
 #. module: base_setup
 #: model:ir.module.module,shortdesc:base_setup.module_meta_information

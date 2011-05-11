@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2011-05-09 10:18+0000\n"
 "PO-Revision-Date: 2011-01-19 12:00+0000\n"
 "Last-Translator: Black Jack <onetimespeed@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-25 06:44+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-05-10 07:32+0000\n"
+"X-Generator: Launchpad (build 12959)\n"
 
 #. module: hr_timesheet_invoice
 #: view:report.timesheet.line:0
@@ -272,6 +272,11 @@ msgid "Final Invoice"
 msgstr "最终发票"
 
 #. module: hr_timesheet_invoice
+#: report:account.analytic.profit:0
+msgid "User or Journal Name"
+msgstr ""
+
+#. module: hr_timesheet_invoice
 #: view:hr.timesheet.invoice.create.final:0
 msgid "Do you want details for each line of the invoices ?"
 msgstr "你想看详情每一发票行?"
@@ -306,9 +311,10 @@ msgid "Debit"
 msgstr "借方"
 
 #. module: hr_timesheet_invoice
-#: field:hr.timesheet.analytic.profit,employee_ids:0
-msgid "Employee"
-msgstr "员工"
+#: view:hr.timesheet.analytic.cost.ledger:0
+#: view:hr.timesheet.analytic.profit:0
+msgid "Print"
+msgstr "打印"
 
 #. module: hr_timesheet_invoice
 #: help:account.analytic.line,to_invoice:0
@@ -453,12 +459,15 @@ msgid "Yes (100%)"
 msgstr ""
 
 #. module: hr_timesheet_invoice
-#: report:account.analytic.profit:0
-msgid "Employee or Journal Name"
-msgstr "员工或记录集合名称"
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_final_invoice_create.py:69
+#, python-format
+msgid ""
+"Please fill in the partner and pricelist field in the analytic account:\n"
+"%s"
+msgstr ""
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:189
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:191
 #, python-format
 msgid "Invoices"
 msgstr ""
@@ -488,6 +497,7 @@ msgid "Currency"
 msgstr "货币"
 
 #. module: hr_timesheet_invoice
+#: field:hr.timesheet.analytic.profit,employee_ids:0
 #: view:report.timesheet.line:0
 #: field:report.timesheet.line,user_id:0
 #: field:report_timesheet.account,user_id:0
@@ -503,6 +513,11 @@ msgid ""
 "Complete this field only if you want to force to use a specific product. "
 "Keep empty to use the real product that comes from the cost."
 msgstr "如果你想强制使用特定的产品只有填入该字段.  留空使用来自成本的实际产品"
+
+#. module: hr_timesheet_invoice
+#: view:hr.timesheet.analytic.profit:0
+msgid "Users"
+msgstr ""
 
 #. module: hr_timesheet_invoice
 #: view:report.timesheet.line:0
@@ -673,14 +688,6 @@ msgid "Credit"
 msgstr "贷方"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_final_invoice_create.py:69
-#, python-format
-msgid ""
-"Please fill in the partner and pricelist field in the analytic account:\n"
-"%s"
-msgstr ""
-
-#. module: hr_timesheet_invoice
 #: constraint:account.analytic.account:0
 msgid ""
 "Error! The currency has to be the same as the currency of the selected "
@@ -739,11 +746,6 @@ msgstr "再开票成本"
 #: report:account.analytic.profit:0
 msgid "Totals:"
 msgstr "合计:"
-
-#. module: hr_timesheet_invoice
-#: field:hr.timesheet.analytic.profit,date_to:0
-msgid "To"
-msgstr "到"
 
 #. module: hr_timesheet_invoice
 #: view:hr.timesheet.invoice.create:0
@@ -808,7 +810,7 @@ msgid "Timesheet Line"
 msgstr ""
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_final_invoice_create.py:147
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_final_invoice_create.py:142
 #, python-format
 msgid "Balance product needed"
 msgstr ""
@@ -833,10 +835,9 @@ msgid "Label for the customer"
 msgstr ""
 
 #. module: hr_timesheet_invoice
-#: view:hr.timesheet.analytic.cost.ledger:0
-#: view:hr.timesheet.analytic.profit:0
-msgid "Print"
-msgstr "打印"
+#: field:hr.timesheet.analytic.profit,date_to:0
+msgid "To"
+msgstr "到"
 
 #. module: hr_timesheet_invoice
 #: selection:report.account.analytic.line.to.invoice,month:0
@@ -982,11 +983,6 @@ msgid "Sale price"
 msgstr "售价"
 
 #. module: hr_timesheet_invoice
-#: view:hr.timesheet.analytic.profit:0
-msgid "Employees"
-msgstr ""
-
-#. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.act_res_users_2_report_timesheet_user
 msgid "Timesheets per day"
 msgstr "每天时间表"
@@ -1042,7 +1038,7 @@ msgid "Analytic Lines to Invoice"
 msgstr "辅助核算的发票"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_final_invoice_create.py:147
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_final_invoice_create.py:142
 #, python-format
 msgid "Please fill a Balance product in the wizard"
 msgstr ""
@@ -1071,3 +1067,9 @@ msgstr "成本"
 #: field:report_timesheet.user,name:0
 msgid "Year"
 msgstr ""
+
+#~ msgid "Employee"
+#~ msgstr "员工"
+
+#~ msgid "Employee or Journal Name"
+#~ msgstr "员工或记录集合名称"

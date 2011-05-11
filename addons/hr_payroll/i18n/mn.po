@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2011-05-09 10:18+0000\n"
 "PO-Revision-Date: 2011-01-19 12:00+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-25 06:43+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-05-10 07:31+0000\n"
+"X-Generator: Launchpad (build 12959)\n"
 
 #. module: hr_payroll
 #: report:employees.salary:0
@@ -291,6 +291,11 @@ msgid "Employee Deduction"
 msgstr "Ажилтны суутгал"
 
 #. module: hr_payroll
+#: field:hr.allounce.deduction.categoty,code:0
+msgid "Category Code"
+msgstr ""
+
+#. module: hr_payroll
 #: selection:hr.allounce.deduction.categoty,type:0
 #: selection:hr.payslip.line,type:0
 msgid "Other Deduction"
@@ -372,6 +377,11 @@ msgstr "Хянагдахаар хүлээгдэж байгаа"
 #: model:ir.module.module,shortdesc:hr_payroll.module_meta_information
 msgid "Human Resource Payroll"
 msgstr "Хүний нөөцийн цалин"
+
+#. module: hr_payroll
+#: view:hr.payslip:0
+msgid "Draft"
+msgstr "Ноорог"
 
 #. module: hr_payroll
 #: report:payroll.advice:0
@@ -600,12 +610,6 @@ msgid "Total Earnings"
 msgstr "Нийт орлого"
 
 #. module: hr_payroll
-#: model:ir.actions.act_window,name:hr_payroll.action_hr_payroll_employees_detail
-#: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_employees_detail
-msgid "Employee Salary Statement"
-msgstr "Ажилтны цалингийн хуулга"
-
-#. module: hr_payroll
 #: selection:hr.allounce.deduction.categoty,type:0
 #: selection:hr.payslip.line,type:0
 msgid "Other Payment"
@@ -651,6 +655,11 @@ msgstr "Ажилтнаарх бүгд"
 #: selection:hr.payslip.line.line,amount_type:0
 msgid "Fixed Amount"
 msgstr "Тогтмол дүн"
+
+#. module: hr_payroll
+#: help:company.contribution,contribute_per:0
+msgid "Define Company contribution ratio 1.00=100% contribution."
+msgstr ""
 
 #. module: hr_payroll
 #: field:company.contribution.line,to_val:0
@@ -731,9 +740,9 @@ msgid "Loan Installment"
 msgstr "Зээлийн хэсэгчилсэн төлбөр"
 
 #. module: hr_payroll
-#: view:hr.payroll.register:0
-msgid "Complete HR Checking"
-msgstr "Хүний нөөцөөс хянаж дуусах"
+#: report:hr.payroll.register.sheet:0
+msgid "HR Manager"
+msgstr "Хүний нөөцийн менежер"
 
 #. module: hr_payroll
 #: report:payroll.advice:0
@@ -749,6 +758,11 @@ msgstr "Дугаар"
 #: report:payslip.pdf:0
 msgid "Net Amount"
 msgstr "Цэвэр дүн"
+
+#. module: hr_payroll
+#: report:payslip.pdf:0
+msgid "Leave Deductions Line:"
+msgstr "Амралт, чөлөөний суутгалын мөр"
 
 #. module: hr_payroll
 #: report:salary.structure:0
@@ -849,9 +863,9 @@ msgid "Print Statement"
 msgstr "Бүртгэлийг хэвлэх"
 
 #. module: hr_payroll
-#: view:hr.payslip:0
-msgid "Draft"
-msgstr "Ноорог"
+#: field:hr.allounce.deduction.categoty,name:0
+msgid "Category Name"
+msgstr ""
 
 #. module: hr_payroll
 #: report:payslip.pdf:0
@@ -962,10 +976,12 @@ msgid "Compute Sheet"
 msgstr "Тооцоолох"
 
 #. module: hr_payroll
-#: field:company.contribution,active:0
-#: field:hr.payroll.register,active:0
-msgid "Active"
-msgstr "Идэвхитэй"
+#: field:hr.contibution.register.line,date:0
+#: field:hr.payroll.advice,date:0
+#: field:hr.payroll.register,date:0
+#: field:hr.payslip,date:0
+msgid "Date"
+msgstr "Огноо"
 
 #. module: hr_payroll
 #: help:hr.allounce.deduction.categoty,condition:0
@@ -1012,11 +1028,6 @@ msgid "Designation"
 msgstr "Цалингийн албан тушаал"
 
 #. module: hr_payroll
-#: report:hr.payroll.register.sheet:0
-msgid "HR Manager"
-msgstr "Хүний нөөцийн менежер"
-
-#. module: hr_payroll
 #: field:hr.contract,basic:0
 #: field:hr.employee,basic:0
 #: field:hr.payslip,basic_before_leaves:0
@@ -1025,9 +1036,10 @@ msgid "Basic Salary"
 msgstr "Суурь цалин"
 
 #. module: hr_payroll
-#: field:hr.allounce.deduction.categoty,code:0
-msgid "Category Code"
-msgstr ""
+#: model:ir.actions.act_window,name:hr_payroll.action_hr_payroll_employees_detail
+#: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_employees_detail
+msgid "Employee Salary Statement"
+msgstr "Ажилтны цалингийн хуулга"
 
 #. module: hr_payroll
 #: view:hr.payroll.register:0
@@ -1035,9 +1047,9 @@ msgid "Salary Information"
 msgstr "Цалингийн мэдээлэл"
 
 #. module: hr_payroll
-#: model:ir.model,name:hr_payroll.model_company_contribution_line
-msgid "Allowance Deduction Categoty"
-msgstr "Олголт суутгалын ангилал"
+#: view:hr.payroll.register:0
+msgid "Complete HR Checking"
+msgstr "Хүний нөөцөөс хянаж дуусах"
 
 #. module: hr_payroll
 #: view:hr.payslip:0
@@ -1066,12 +1078,10 @@ msgid "Next Month Date"
 msgstr "Дараагийн сар(аль 1 огноо)"
 
 #. module: hr_payroll
-#: field:hr.contibution.register.line,date:0
-#: field:hr.payroll.advice,date:0
-#: field:hr.payroll.register,date:0
-#: field:hr.payslip,date:0
-msgid "Date"
-msgstr "Огноо"
+#: field:company.contribution,active:0
+#: field:hr.payroll.register,active:0
+msgid "Active"
+msgstr "Идэвхитэй"
 
 #. module: hr_payroll
 #: field:hr.contract,visa_expire:0
@@ -1281,17 +1291,6 @@ msgid "Calculations"
 msgstr "Тооцоолол"
 
 #. module: hr_payroll
-#: help:company.contribution,contribute_per:0
-msgid ""
-"Define Company contribution ratio 1.00=100% contribution, If Employee "
-"Contribute 5% then company will and here 0.50 defined then company will "
-"contribute 50% on employee 5% contribution"
-msgstr ""
-"Хэрэв ажилтан 5%-даах ба энд 0.50 гэсэн утга олгосон бол компани нь ажилтны "
-"5% дээр нэмж 50%-ийг даана гэсэн үг. 1.00 даах харьцаа тодорхойлбол компани "
-"бүрэн(100%) даана."
-
-#. module: hr_payroll
 #: view:hr.payslip:0
 msgid "Other Informations"
 msgstr "Бусад мэдээлэл"
@@ -1411,11 +1410,6 @@ msgid "The Passport No must be unique !"
 msgstr ""
 
 #. module: hr_payroll
-#: field:hr.allounce.deduction.categoty,name:0
-msgid "Category Name"
-msgstr ""
-
-#. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payroll_year_salary
 msgid "hr.payroll.year.salary"
 msgstr ""
@@ -1520,9 +1514,9 @@ msgid "Total Payment"
 msgstr "Бүх төлбөр"
 
 #. module: hr_payroll
-#: report:payslip.pdf:0
-msgid "Leave Deductions Line:"
-msgstr "Амралт, чөлөөний суутгалын мөр"
+#: model:ir.model,name:hr_payroll.model_company_contribution_line
+msgid "Allowance Deduction Category"
+msgstr ""
 
 #. module: hr_payroll
 #: selection:hr.payroll.register,state:0
@@ -1633,3 +1627,15 @@ msgstr "Нийт"
 #: field:hr.allounce.deduction.categoty,contribute_ids:0
 msgid "Contributions"
 msgstr "Ажил олгогчийн даах суутгал"
+
+#~ msgid "Allowance Deduction Categoty"
+#~ msgstr "Олголт суутгалын ангилал"
+
+#~ msgid ""
+#~ "Define Company contribution ratio 1.00=100% contribution, If Employee "
+#~ "Contribute 5% then company will and here 0.50 defined then company will "
+#~ "contribute 50% on employee 5% contribution"
+#~ msgstr ""
+#~ "Хэрэв ажилтан 5%-даах ба энд 0.50 гэсэн утга олгосон бол компани нь ажилтны "
+#~ "5% дээр нэмж 50%-ийг даана гэсэн үг. 1.00 даах харьцаа тодорхойлбол компани "
+#~ "бүрэн(100%) даана."

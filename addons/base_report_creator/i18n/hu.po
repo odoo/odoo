@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"POT-Creation-Date: 2011-05-09 10:18+0000\n"
 "PO-Revision-Date: 2011-01-19 12:00+0000\n"
 "Last-Translator: NOVOTRADE RENDSZERHÁZ <openerp@novotrade.hu>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-25 06:31+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-05-10 07:23+0000\n"
+"X-Generator: Launchpad (build 12959)\n"
 
 #. module: base_report_creator
 #: help:base_report_creator.report.filter,expression:0
@@ -23,6 +23,9 @@ msgid ""
 "records.\n"
 " e.g. res_partner.id=3"
 msgstr ""
+"Adjon meg a mezőre egy kifejezést, amely alapján szűrni szeretné a "
+"rekordokat.\n"
+" pl. res_partner.id=3"
 
 #. module: base_report_creator
 #: model:ir.model,name:base_report_creator.model_report_menu_create
@@ -37,7 +40,7 @@ msgstr "Grafikon típusa"
 #. module: base_report_creator
 #: view:base_report_creator.report:0
 msgid "Used View"
-msgstr "Felhasználói nézet"
+msgstr "Használt nézet"
 
 #. module: base_report_creator
 #: wizard_view:base_report_creator.report_filter.fields,set_value_select_field:0
@@ -50,7 +53,7 @@ msgid "Graph Mode"
 msgstr "Grafikon üzemmód"
 
 #. module: base_report_creator
-#: code:addons/base_report_creator/base_report_creator.py:320
+#: code:addons/base_report_creator/base_report_creator.py:310
 #, python-format
 msgid ""
 "These is/are model(s) (%s) in selection which is/are not related to any "
@@ -80,7 +83,7 @@ msgstr "Szűrőmezők beállítása"
 #. module: base_report_creator
 #: selection:base_report_creator.report.fields,calendar_mode:0
 msgid "Ending Date"
-msgstr "Befejező dátum"
+msgstr "Záró dátum"
 
 #. module: base_report_creator
 #: model:ir.model,name:base_report_creator.model_base_report_creator_report_filter
@@ -102,7 +105,7 @@ msgstr "Menü létrehozása"
 #. module: base_report_creator
 #: selection:base_report_creator.report.fields,group_method:0
 msgid "Minimum"
-msgstr ""
+msgstr "Minimum"
 
 #. module: base_report_creator
 #: wizard_field:base_report_creator.report_filter.fields,set_value_select_field,operator:0
@@ -113,7 +116,7 @@ msgstr "Operátor"
 #: selection:base_report_creator.report.filter,condition:0
 #: selection:base_report_creator.report_filter.fields,set_value_select_field,condition:0
 msgid "OR"
-msgstr ""
+msgstr "VAGY"
 
 #. module: base_report_creator
 #: model:ir.actions.act_window,name:base_report_creator.base_report_creator_action
@@ -121,7 +124,7 @@ msgid "Custom Reports"
 msgstr "Egyéni jelentések"
 
 #. module: base_report_creator
-#: code:addons/base_report_creator/base_report_creator.py:320
+#: code:addons/base_report_creator/base_report_creator.py:310
 #, python-format
 msgid "No Related Models!!"
 msgstr ""
@@ -129,12 +132,12 @@ msgstr ""
 #. module: base_report_creator
 #: view:report.menu.create:0
 msgid "Menu Information"
-msgstr "Menü infrormáció"
+msgstr "Menü információ"
 
 #. module: base_report_creator
 #: selection:base_report_creator.report.fields,group_method:0
 msgid "Sum"
-msgstr ""
+msgstr "Összeg"
 
 #. module: base_report_creator
 #: constraint:base_report_creator.report:0
@@ -164,14 +167,14 @@ msgstr "Szűrő hozzáadása"
 #. module: base_report_creator
 #: model:ir.actions.act_window,name:base_report_creator.action_report_menu_create
 msgid "Create Menu for Report"
-msgstr ""
+msgstr "Menü létrehozása a jelentésre"
 
 #. module: base_report_creator
 #: selection:base_report_creator.report,view_type1:0
 #: selection:base_report_creator.report,view_type2:0
 #: selection:base_report_creator.report,view_type3:0
 msgid "Form"
-msgstr "Forma"
+msgstr "Űrlap"
 
 #. module: base_report_creator
 #: selection:base_report_creator.report,view_type2:0
@@ -186,18 +189,19 @@ msgstr "/"
 #: field:base_report_creator.report.fields,report_id:0
 #: field:base_report_creator.report.filter,report_id:0
 #: model:ir.model,name:base_report_creator.model_base_report_creator_report
+#: model:ir.model,name:base_report_creator.model_base_report_creator_report_result
 msgid "Report"
 msgstr "Jelentés"
 
 #. module: base_report_creator
 #: selection:base_report_creator.report.fields,calendar_mode:0
 msgid "Starting Date"
-msgstr "Indulás dátuma"
+msgstr "Kezdő dátum"
 
 #. module: base_report_creator
 #: view:base_report_creator.report:0
 msgid "Filters on Fields"
-msgstr ""
+msgstr "A mezőre beállított szűrők"
 
 #. module: base_report_creator
 #: field:base_report_creator.report,group_ids:0
@@ -229,13 +233,13 @@ msgstr "Biztonság"
 #. module: base_report_creator
 #: field:report.menu.create,menu_name:0
 msgid "Menu Name"
-msgstr "Menü"
+msgstr "Menü neve"
 
 #. module: base_report_creator
 #: selection:base_report_creator.report.filter,condition:0
 #: selection:base_report_creator.report_filter.fields,set_value_select_field,condition:0
 msgid "AND"
-msgstr ""
+msgstr "ÉS"
 
 #. module: base_report_creator
 #: constraint:base_report_creator.report:0
@@ -250,7 +254,7 @@ msgstr "Naptár üzemmód"
 #. module: base_report_creator
 #: model:ir.model,name:base_report_creator.model_base_report_creator_report_fields
 msgid "Display Fields"
-msgstr "Kijelző mezők"
+msgstr "Mezők megjelenítése"
 
 #. module: base_report_creator
 #: selection:base_report_creator.report.fields,graph_mode:0
@@ -294,22 +298,22 @@ msgstr ""
 #. module: base_report_creator
 #: view:base_report_creator.report:0
 msgid "General Configuration"
-msgstr "Általános konfiguráció"
+msgstr "Általános beállítások"
 
 #. module: base_report_creator
 #: help:base_report_creator.report.fields,sequence:0
 msgid "Gives the sequence order when displaying a list of fields."
-msgstr ""
+msgstr "Megadja a mezők listázási sorrendjét."
 
 #. module: base_report_creator
 #: wizard_view:base_report_creator.report_filter.fields,init:0
 msgid "Select Field to filter"
-msgstr "Válassza ki a mezőszűrőt"
+msgstr "Szűrendő mezők kiválasztása"
 
 #. module: base_report_creator
 #: field:base_report_creator.report,active:0
 msgid "Active"
-msgstr "aktív"
+msgstr "Aktív"
 
 #. module: base_report_creator
 #: selection:base_report_creator.report,view_graph_orientation:0
@@ -319,13 +323,13 @@ msgstr "Vízszintes"
 #. module: base_report_creator
 #: field:base_report_creator.report.fields,group_method:0
 msgid "Grouping Method"
-msgstr "Csoportosító módszer"
+msgstr "Csoportosítási módszer"
 
 #. module: base_report_creator
 #: field:base_report_creator.report.filter,condition:0
 #: wizard_field:base_report_creator.report_filter.fields,set_value_select_field,condition:0
 msgid "Condition"
-msgstr "Kondíció"
+msgstr "Feltétel"
 
 #. module: base_report_creator
 #: selection:base_report_creator.report.fields,group_method:0
@@ -366,14 +370,14 @@ msgstr "Csoportosított"
 #: view:base_report_creator.report:0
 #: model:ir.module.module,shortdesc:base_report_creator.module_meta_information
 msgid "Report Creator"
-msgstr ""
+msgstr "Jelentéskészítő"
 
 #. module: base_report_creator
 #: wizard_button:base_report_creator.report_filter.fields,init,end:0
 #: wizard_button:base_report_creator.report_filter.fields,set_value_select_field,end:0
 #: view:report.menu.create:0
 msgid "Cancel"
-msgstr ""
+msgstr "Mégsem"
 
 #. module: base_report_creator
 #: constraint:base_report_creator.report:0
@@ -410,7 +414,7 @@ msgstr "Egyedi színek"
 msgid ""
 "If the active field is set to False, it will allow you to hide the report "
 "without removing it."
-msgstr ""
+msgstr "Ha az aktív mező nincs bejelölve, nem használható a jelentés."
 
 #. module: base_report_creator
 #: selection:base_report_creator.report,view_graph_type:0
@@ -475,7 +479,7 @@ msgstr "Második nézet"
 #. module: base_report_creator
 #: view:report.menu.create:0
 msgid "Create Menu For This Report"
-msgstr "Létrehozó menű ehhez a jelentéshez"
+msgstr "Menü létrehozása ehhez a jelentéshez"
 
 #. module: base_report_creator
 #: view:base_report_creator.report:0
@@ -496,7 +500,7 @@ msgstr "Szűrőmező"
 #: view:base_report_creator.report:0
 #: field:base_report_creator.report,field_ids:0
 msgid "Fields to Display"
-msgstr "Mezők megjelenítése"
+msgstr "Megjelenítendő mezők"
 
 #. module: base_report_creator
 #: view:base_report_creator.report:0
@@ -514,3 +518,9 @@ msgid ""
 "After installing the module, it adds a menu to define custom report in\n"
 "the \"Dashboard\" menu.\n"
 msgstr ""
+"Ez a modul lehetővé teszi bármilyen statisztikai kimutatás\n"
+"készítését különféle objektumokról. Ez egy SQL lekérdező\n"
+"és böngésző a felhasználók számára.\n"
+"\n"
+"A modul telepítése után létrejön egy menü, amellyel egyedi\n"
+"jelentéseket lehet meghatározni a vezérlőpult menüben.\n"

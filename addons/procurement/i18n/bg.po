@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2011-05-09 10:19+0000\n"
 "PO-Revision-Date: 2011-03-30 08:21+0000\n"
 "Last-Translator: Dimitar Markov <dimitar.markov@gmail.com>\n"
 "Language-Team: Bulgarian <bg@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-03-31 06:35+0000\n"
-"X-Generator: Launchpad (build 12559)\n"
+"X-Launchpad-Export-Date: 2011-05-10 07:37+0000\n"
+"X-Generator: Launchpad (build 12959)\n"
 
 #. module: procurement
 #: view:make.procurement:0
@@ -71,7 +71,7 @@ msgid "Procurement Method"
 msgstr "Начин на снабдяване"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:298
+#: code:addons/procurement/procurement.py:304
 #, python-format
 msgid "No address defined for the supplier"
 msgstr "Не е дефиниран адрес за този доставчик"
@@ -169,6 +169,11 @@ msgid "Stock Move"
 msgstr "Движение на наличности"
 
 #. module: procurement
+#: model:ir.model,name:procurement.model_procurement_order_compute_all
+msgid "Compute all schedulers"
+msgstr ""
+
+#. module: procurement
 #: view:procurement.order:0
 msgid "Planification"
 msgstr ""
@@ -225,6 +230,12 @@ msgstr ""
 #: constraint:res.company:0
 msgid "Error! You can not create recursive companies."
 msgstr "Грешка! НЕ може да създавате рекурсивни фирми"
+
+#. module: procurement
+#: code:addons/procurement/procurement.py:384
+#, python-format
+msgid "Procurement '%s' is in exception: "
+msgstr ""
 
 #. module: procurement
 #: field:procurement.order,priority:0
@@ -310,7 +321,7 @@ msgid "Quantity"
 msgstr "Количество"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:370
+#: code:addons/procurement/procurement.py:377
 #, python-format
 msgid "Not enough stock and no minimum orderpoint rule defined."
 msgstr ""
@@ -397,11 +408,6 @@ msgid "Compute Stock"
 msgstr "Изчисляване на наличност"
 
 #. module: procurement
-#: view:procurement.order:0
-msgid "Late"
-msgstr "Закъснял"
-
-#. module: procurement
 #: model:process.process,name:procurement.process_process_serviceproductprocess0
 msgid "Service"
 msgstr "Услуга"
@@ -441,7 +447,7 @@ msgid "plus"
 msgstr "плюс"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:319
+#: code:addons/procurement/procurement.py:325
 #, python-format
 msgid ""
 "Please check the Quantity in Procurement Order(s), it should not be less "
@@ -517,6 +523,12 @@ msgid "You try to assign a lot which is not from the same product"
 msgstr "Опитвате да свържете партида, която не е от същия продукт"
 
 #. module: procurement
+#: code:addons/procurement/procurement.py:381
+#, python-format
+msgid "Not enough stock."
+msgstr ""
+
+#. module: procurement
 #: field:stock.warehouse.orderpoint,active:0
 msgid "Active"
 msgstr "Активен"
@@ -535,6 +547,12 @@ msgstr ""
 #: selection:procurement.order,state:0
 msgid "Exception"
 msgstr "Грешка"
+
+#. module: procurement
+#: code:addons/procurement/procurement.py:379
+#, python-format
+msgid "No minimum orderpoint rule defined."
+msgstr ""
 
 #. module: procurement
 #: code:addons/procurement/schedulers.py:179
@@ -593,10 +611,9 @@ msgid "Date Closed"
 msgstr ""
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:372
-#, python-format
-msgid "Procurement '%s' is in exception: not enough stock."
-msgstr ""
+#: view:procurement.order:0
+msgid "Late"
+msgstr "Закъснял"
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:138
@@ -605,7 +622,7 @@ msgid "Cannot delete Procurement Order(s) which are in %s State!"
 msgstr ""
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:318
+#: code:addons/procurement/procurement.py:324
 #, python-format
 msgid "Data Insufficient !"
 msgstr "Недостатъчни данни !"
@@ -678,8 +695,9 @@ msgid "Not urgent"
 msgstr "Не е спешно"
 
 #. module: procurement
-#: model:ir.model,name:procurement.model_procurement_order_compute_all
-msgid "Compute all schedulers"
+#: code:addons/procurement/procurement.py:294
+#, python-format
+msgid "No default supplier defined for this product"
 msgstr ""
 
 #. module: procurement
@@ -829,7 +847,7 @@ msgid "Product UoS"
 msgstr "Прод. единици на продукт"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:347
+#: code:addons/procurement/procurement.py:353
 #, python-format
 msgid "from stock: products assigned."
 msgstr ""

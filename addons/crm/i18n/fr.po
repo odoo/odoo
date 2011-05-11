@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2011-05-09 10:18+0000\n"
 "PO-Revision-Date: 2011-01-19 12:00+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-25 06:34+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-05-10 07:24+0000\n"
+"X-Generator: Launchpad (build 12959)\n"
 
 #. module: crm
 #: view:crm.lead.report:0
@@ -124,7 +124,7 @@ msgid "The code of the sales team must be unique !"
 msgstr "Le code de l'équipe de vente doit être unique !"
 
 #. module: crm
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:93
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:95
 #, python-format
 msgid "Lead '%s' has been converted to an opportunity."
 msgstr "La piste \"%s\" a été convertie en opportunité."
@@ -141,8 +141,8 @@ msgid "No Repeat"
 msgstr "Aucune répetition"
 
 #. module: crm
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:133
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:258
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:135
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:260
 #: code:addons/crm/wizard/crm_lead_to_partner.py:55
 #: code:addons/crm/wizard/crm_phonecall_to_partner.py:52
 #, python-format
@@ -527,16 +527,6 @@ msgid "Recurrent Rule"
 msgstr "Règle récurrente"
 
 #. module: crm
-#: model:crm.case.resource.type,name:crm.type_lead1
-msgid "Version 4.2"
-msgstr "Version 4.2"
-
-#. module: crm
-#: model:crm.case.resource.type,name:crm.type_lead2
-msgid "Version 4.4"
-msgstr "Version 4.4"
-
-#. module: crm
 #: help:crm.installer,fetchmail:0
 msgid "Allows you to receive E-Mails from POP/IMAP server."
 msgstr "Vous permet de recevoir des courriels d'un serveur POP/IMAP"
@@ -553,9 +543,9 @@ msgstr "Tout premier contact avec un nouveau prospect"
 
 #. module: crm
 #: code:addons/crm/crm_lead.py:278
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:195
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:229
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:297
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:197
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:231
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:299
 #: view:crm.lead2opportunity:0
 #: view:crm.partner2opportunity:0
 #: model:ir.actions.act_window,name:crm.action_crm_lead2opportunity
@@ -818,6 +808,16 @@ msgid "Partner Segmentation"
 msgstr "Segmentation du partenaire"
 
 #. module: crm
+#: model:ir.actions.act_window,help:crm.crm_case_categ_meet
+msgid ""
+"The meeting calendar is shared between the sales teams and fully integrated "
+"with other applications such as the employee holidays or the business "
+"opportunities. You can also synchronize meetings with your mobile phone "
+"using the caldav interface.\n"
+"        "
+msgstr ""
+
+#. module: crm
 #: field:crm.lead.report,probable_revenue:0
 msgid "Probable Revenue"
 msgstr "Chiffre d'affaire probable"
@@ -845,8 +845,8 @@ msgid "Statistics Dashboard"
 msgstr "Tableau de bord de statistiques"
 
 #. module: crm
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:86
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:96
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:88
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:98
 #: code:addons/crm/wizard/crm_partner_to_opportunity.py:101
 #: code:addons/crm/wizard/crm_phonecall_to_opportunity.py:117
 #: view:crm.lead:0
@@ -928,72 +928,6 @@ msgstr "L'opportunité \"%s\" a été gagnée."
 msgid "Set an alarm at this time, before the event occurs"
 msgstr ""
 "Déclenche une alarme à cette heure, avant que l'événement n'ait lieu."
-
-#. module: crm
-#: model:ir.module.module,description:crm.module_meta_information
-msgid ""
-"The generic OpenERP Customer Relationship Management\n"
-"system enables a group of people to intelligently and efficiently manage\n"
-"leads, opportunities, meeting, phonecall etc.\n"
-"It manages key tasks such as communication, identification, prioritization,\n"
-"assignment, resolution and notification.\n"
-"\n"
-"OpenERP ensures that all cases are successfully tracked by users, customers "
-"and\n"
-"suppliers. It can automatically send reminders, escalate the request, "
-"trigger\n"
-"specific methods and lots of other actions based on your own enterprise "
-"rules.\n"
-"\n"
-"The greatest thing about this system is that users don't need to do "
-"anything\n"
-"special. They can just send email to the request tracker. OpenERP will take\n"
-"care of thanking them for their message, automatically routing it to the\n"
-"appropriate staff, and make sure all future correspondence gets to the "
-"right\n"
-"place.\n"
-"\n"
-"The CRM module has a email gateway for the synchronisation interface\n"
-"between mails and OpenERP. \n"
-"Create dashboard for CRM that includes:\n"
-"    * My Leads (list)\n"
-"    * Leads by Stage (graph)\n"
-"    * My Meetings (list)\n"
-"    * Sales Pipeline by Stage (graph)\n"
-"    * My Cases (list)\n"
-"    * Jobs Tracking (graph)\n"
-msgstr ""
-"Le Module Gestion de la Relation Client (CRM) d'OpenERP permet à un groupe "
-"de personnes \n"
-"de gérer efficacement et intelligemment les pistes et opportunités "
-"commerciales, les réunions,\n"
-"les appels téléphoniques, etc...\n"
-"Ce module gère les tâches clés comme la communication, l'identification, la "
-"priorisation,\n"
-"l'affectation, la résolution et la notification.\n"
-"\n"
-"OpenERP permet de vous assurer que tous les cas sont suivis par les "
-"utilisateurs, les clients\n"
-"et les fournisseurs. Le module peut envoyer automatiquement des rappels, "
-"procéder à l'escalade d'une demande, \n"
-"déclencher des procédures spécifiques et de nombreuses autres actions, en "
-"fonction des règles propres à votre entreprise.\n"
-"\n"
-"Le plus grand intérêt de ce module est que les utilisateurs n'ont rien de "
-"particulier à faire. Il leur suffit d'envoyer un courriel au gestionnaire de "
-"requêtes. OpenERP se chargera de les remercier pour leur message, le "
-"dirigera automatiquement vers l'équipe appropriée, et s'assurera que toute "
-"correspondance future sera dirigée au bon endroit.\n"
-"\n"
-"Le module CRM possède un système de messagerie de sortie pour la "
-"synchronisation de l'interface entre les courriels et OpenERP.\n"
-"Vous pouvez créer des tableaux de bord pour la CRM incluant:\n"
-"    * Mes pistes (liste)\n"
-"    * Pistes par niveau (graphique)\n"
-"    * Mes réunions (liste)\n"
-"    * Le carnet des offres, par niveau (graphique)\n"
-"    * Mes cas (liste)\n"
-"    * Avancement des tâches (graphique)\n"
 
 #. module: crm
 #: field:crm.lead.report,create_date:0
@@ -1159,7 +1093,7 @@ msgstr "Accepte la prospection"
 
 #. module: crm
 #: code:addons/crm/crm_opportunity.py:208
-#: code:addons/crm/crm_phonecall.py:184
+#: code:addons/crm/crm_phonecall.py:185
 #: code:addons/crm/wizard/crm_phonecall_to_meeting.py:55
 #: code:addons/crm/wizard/crm_phonecall_to_meeting.py:137
 #: view:crm.meeting:0
@@ -1390,6 +1324,41 @@ msgstr "Laisser l'événement se répéter automatiquement à chaque intervalle"
 #: view:base.action.rule:0
 msgid "Condition Case Fields"
 msgstr "Champs de condition des cas"
+
+#. module: crm
+#: model:ir.module.module,description:crm.module_meta_information
+msgid ""
+"The generic OpenERP Customer Relationship Management\n"
+"system enables a group of people to intelligently and efficiently manage\n"
+"leads, opportunities, meeting, phonecall etc.\n"
+"It manages key tasks such as communication, identification, prioritization,\n"
+"assignment, resolution and notification.\n"
+"\n"
+"OpenERP ensures that all cases are successfully tracked by users, customers "
+"and\n"
+"suppliers. It can automatically send reminders, escalate the request, "
+"trigger\n"
+"specific methods and lots of other actions based on your own enterprise "
+"rules.\n"
+"\n"
+"The greatest thing about this system is that users don't need to do "
+"anything\n"
+"special. They can just send email to the request tracker. OpenERP will take\n"
+"care of thanking them for their message, automatically routing it to the\n"
+"appropriate staff, and make sure all future correspondence gets to the "
+"right\n"
+"place.\n"
+"\n"
+"The CRM module has a email gateway for the synchronisation interface\n"
+"between mails and OpenERP.\n"
+"Create dashboard for CRM that includes:\n"
+"    * My Leads (list)\n"
+"    * Leads by Stage (graph)\n"
+"    * My Meetings (list)\n"
+"    * Sales Pipeline by Stage (graph)\n"
+"    * My Cases (list)\n"
+"    * Jobs Tracking (graph)\n"
+msgstr ""
 
 #. module: crm
 #: view:crm.case.section:0
@@ -1643,6 +1612,11 @@ msgstr "Equipes enfant"
 #: field:crm.phonecall.report,state:0
 msgid "State"
 msgstr "État"
+
+#. module: crm
+#: model:crm.case.resource.type,name:crm.type_lead1
+msgid "Telesales"
+msgstr "Ventes à distance"
 
 #. module: crm
 #: field:crm.meeting,freq:0
@@ -2048,19 +2022,6 @@ msgid "Customer Name"
 msgstr "Nom du client"
 
 #. module: crm
-#: model:ir.actions.act_window,help:crm.crm_case_categ_meet
-msgid ""
-"The meeting calendar is shared between the sales teams and fully integrated "
-"with other applications such as the employee holidays or the business "
-"opportunities. You can also synchronize meetings with your mobile phone "
-"using the caldav interface."
-msgstr ""
-"Le calendrier des réunions est partagé entre les équipes de vente et "
-"pleinement intégré avec d'autres applications comme les congés ou les "
-"opportunités d'affaires. On peut également synchroniser des réunions avec "
-"les téléphones mobiles en utilisant l'interface CalDAV."
-
-#. module: crm
 #: model:ir.model,name:crm.model_crm_phonecall2opportunity
 msgid "Phonecall To Opportunity"
 msgstr "Appel téléphonique pour une opportunité"
@@ -2137,6 +2098,11 @@ msgstr "crm.phonecall"
 #: model:crm.case.resource.type,name:crm.type_lead3
 msgid "Mail Campaign 2"
 msgstr "Campagne de courriels 2"
+
+#. module: crm
+#: model:crm.case.resource.type,name:crm.type_lead2
+msgid "Mail Campaign 1"
+msgstr "Campagne de courriels 1"
 
 #. module: crm
 #: view:crm.lead:0
@@ -2732,7 +2698,7 @@ msgid "Meeting Type"
 msgstr "Type de réunion"
 
 #. module: crm
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:312
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:314
 #, python-format
 msgid "Merge with Existing Opportunity"
 msgstr "Fusionner avec une opportunité existante"
@@ -3280,8 +3246,8 @@ msgid "Schedule Call"
 msgstr "Planifier un appel"
 
 #. module: crm
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:133
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:258
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:135
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:260
 #, python-format
 msgid "Closed/Cancelled Leads Could not convert into Opportunity"
 msgstr ""
@@ -4042,3 +4008,84 @@ msgstr "Année"
 #: model:crm.case.resource.type,name:crm.type_lead8
 msgid "Newsletter"
 msgstr "Lettre d'information"
+
+#~ msgid ""
+#~ "The generic OpenERP Customer Relationship Management\n"
+#~ "system enables a group of people to intelligently and efficiently manage\n"
+#~ "leads, opportunities, meeting, phonecall etc.\n"
+#~ "It manages key tasks such as communication, identification, prioritization,\n"
+#~ "assignment, resolution and notification.\n"
+#~ "\n"
+#~ "OpenERP ensures that all cases are successfully tracked by users, customers "
+#~ "and\n"
+#~ "suppliers. It can automatically send reminders, escalate the request, "
+#~ "trigger\n"
+#~ "specific methods and lots of other actions based on your own enterprise "
+#~ "rules.\n"
+#~ "\n"
+#~ "The greatest thing about this system is that users don't need to do "
+#~ "anything\n"
+#~ "special. They can just send email to the request tracker. OpenERP will take\n"
+#~ "care of thanking them for their message, automatically routing it to the\n"
+#~ "appropriate staff, and make sure all future correspondence gets to the "
+#~ "right\n"
+#~ "place.\n"
+#~ "\n"
+#~ "The CRM module has a email gateway for the synchronisation interface\n"
+#~ "between mails and OpenERP. \n"
+#~ "Create dashboard for CRM that includes:\n"
+#~ "    * My Leads (list)\n"
+#~ "    * Leads by Stage (graph)\n"
+#~ "    * My Meetings (list)\n"
+#~ "    * Sales Pipeline by Stage (graph)\n"
+#~ "    * My Cases (list)\n"
+#~ "    * Jobs Tracking (graph)\n"
+#~ msgstr ""
+#~ "Le Module Gestion de la Relation Client (CRM) d'OpenERP permet à un groupe "
+#~ "de personnes \n"
+#~ "de gérer efficacement et intelligemment les pistes et opportunités "
+#~ "commerciales, les réunions,\n"
+#~ "les appels téléphoniques, etc...\n"
+#~ "Ce module gère les tâches clés comme la communication, l'identification, la "
+#~ "priorisation,\n"
+#~ "l'affectation, la résolution et la notification.\n"
+#~ "\n"
+#~ "OpenERP permet de vous assurer que tous les cas sont suivis par les "
+#~ "utilisateurs, les clients\n"
+#~ "et les fournisseurs. Le module peut envoyer automatiquement des rappels, "
+#~ "procéder à l'escalade d'une demande, \n"
+#~ "déclencher des procédures spécifiques et de nombreuses autres actions, en "
+#~ "fonction des règles propres à votre entreprise.\n"
+#~ "\n"
+#~ "Le plus grand intérêt de ce module est que les utilisateurs n'ont rien de "
+#~ "particulier à faire. Il leur suffit d'envoyer un courriel au gestionnaire de "
+#~ "requêtes. OpenERP se chargera de les remercier pour leur message, le "
+#~ "dirigera automatiquement vers l'équipe appropriée, et s'assurera que toute "
+#~ "correspondance future sera dirigée au bon endroit.\n"
+#~ "\n"
+#~ "Le module CRM possède un système de messagerie de sortie pour la "
+#~ "synchronisation de l'interface entre les courriels et OpenERP.\n"
+#~ "Vous pouvez créer des tableaux de bord pour la CRM incluant:\n"
+#~ "    * Mes pistes (liste)\n"
+#~ "    * Pistes par niveau (graphique)\n"
+#~ "    * Mes réunions (liste)\n"
+#~ "    * Le carnet des offres, par niveau (graphique)\n"
+#~ "    * Mes cas (liste)\n"
+#~ "    * Avancement des tâches (graphique)\n"
+
+#~ msgid ""
+#~ "The meeting calendar is shared between the sales teams and fully integrated "
+#~ "with other applications such as the employee holidays or the business "
+#~ "opportunities. You can also synchronize meetings with your mobile phone "
+#~ "using the caldav interface."
+#~ msgstr ""
+#~ "Le calendrier des réunions est partagé entre les équipes de vente et "
+#~ "pleinement intégré avec d'autres applications comme les congés ou les "
+#~ "opportunités d'affaires. On peut également synchroniser des réunions avec "
+#~ "les téléphones mobiles en utilisant l'interface CalDAV."
+
+#~ msgid "Version 4.2"
+#~ msgstr "Version 4.2"
+
+#~ msgid "Version 4.4"
+#~ msgstr "Version 4.4"

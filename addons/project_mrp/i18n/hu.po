@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2011-05-09 10:19+0000\n"
 "PO-Revision-Date: 2011-01-19 12:00+0000\n"
 "Last-Translator: NOVOTRADE RENDSZERHÁZ <openerp@novotrade.hu>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-25 06:58+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-05-10 07:42+0000\n"
+"X-Generator: Launchpad (build 12959)\n"
 
 #. module: project_mrp
 #: model:process.node,note:project_mrp.process_node_procuretasktask0
@@ -34,7 +34,7 @@ msgstr ""
 #. module: project_mrp
 #: model:process.transition,note:project_mrp.process_transition_createtask0
 msgid "Product type is service, then its creates the task."
-msgstr "A terméktípus mint szolgáltatás, ez létrehozza a feladatot."
+msgstr "A termék típusa szolgáltatás, ez létrehozza a feladatot."
 
 #. module: project_mrp
 #: model:process.transition,note:project_mrp.process_transition_procuretask0
@@ -43,8 +43,13 @@ msgstr "ha a terméktípus 'szolgáltatás', ez létrehozza a feladatot."
 
 #. module: project_mrp
 #: constraint:project.task:0
-msgid "Error ! You cannot create recursive tasks."
-msgstr "Hiba! Nem hozhat létre rekurzív feladatokat."
+msgid "Error ! Task end-date must be greater then task start-date"
+msgstr ""
+
+#. module: project_mrp
+#: model:process.node,name:project_mrp.process_node_saleordertask0
+msgid "Sale Order Task"
+msgstr "Vevői megrendelési feladat"
 
 #. module: project_mrp
 #: model:ir.model,name:project_mrp.model_product_product
@@ -54,7 +59,7 @@ msgstr "Termék"
 #. module: project_mrp
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
-msgstr "Hiba: Helytelen vonalkód"
+msgstr "Hiba: Érvénytelen vonalkód"
 
 #. module: project_mrp
 #: field:product.product,project_id:0
@@ -86,9 +91,9 @@ msgid "Order Task"
 msgstr "Rendelési feladat"
 
 #. module: project_mrp
-#: model:process.node,name:project_mrp.process_node_saleordertask0
-msgid "Sale Order Task"
-msgstr "Rendelési feladat"
+#: constraint:project.task:0
+msgid "Error ! You cannot create recursive tasks."
+msgstr "Hiba! Nem hozhat létre rekurzív feladatokat."
 
 #. module: project_mrp
 #: model:process.transition,name:project_mrp.process_transition_createtask0
@@ -129,4 +134,4 @@ msgstr ""
 #. module: project_mrp
 #: model:process.node,note:project_mrp.process_node_saleordertask0
 msgid "In case you sell services on sale order"
-msgstr "Abban az esetben, ha egy szolgáltatást ad el rendelésre."
+msgstr "Abban az esetben, ha vevői megrendelésre értékesít szolgáltatásokat."

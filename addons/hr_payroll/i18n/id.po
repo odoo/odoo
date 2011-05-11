@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2011-05-09 10:18+0000\n"
 "PO-Revision-Date: 2011-02-08 07:39+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Indonesian <id@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-02-09 06:01+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-05-10 07:30+0000\n"
+"X-Generator: Launchpad (build 12959)\n"
 
 #. module: hr_payroll
 #: report:employees.salary:0
@@ -291,6 +291,11 @@ msgid "Employee Deduction"
 msgstr "Pengurangan Karyawan"
 
 #. module: hr_payroll
+#: field:hr.allounce.deduction.categoty,code:0
+msgid "Category Code"
+msgstr "Kode Kategori"
+
+#. module: hr_payroll
 #: selection:hr.allounce.deduction.categoty,type:0
 #: selection:hr.payslip.line,type:0
 msgid "Other Deduction"
@@ -373,6 +378,11 @@ msgstr "Menunggu Verifikasi"
 #: model:ir.module.module,shortdesc:hr_payroll.module_meta_information
 msgid "Human Resource Payroll"
 msgstr "Penggajian Sumber Daya Manusia"
+
+#. module: hr_payroll
+#: view:hr.payslip:0
+msgid "Draft"
+msgstr "Konsep"
 
 #. module: hr_payroll
 #: report:payroll.advice:0
@@ -591,12 +601,6 @@ msgid "Total Earnings"
 msgstr "Total Pendapatan"
 
 #. module: hr_payroll
-#: model:ir.actions.act_window,name:hr_payroll.action_hr_payroll_employees_detail
-#: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_employees_detail
-msgid "Employee Salary Statement"
-msgstr "Pernyataan Gaji Karyawan"
-
-#. module: hr_payroll
 #: selection:hr.allounce.deduction.categoty,type:0
 #: selection:hr.payslip.line,type:0
 msgid "Other Payment"
@@ -642,6 +646,11 @@ msgstr "Berdasarkan Jumlah Karyawan"
 #: selection:hr.payslip.line.line,amount_type:0
 msgid "Fixed Amount"
 msgstr "Jumlah Tetap"
+
+#. module: hr_payroll
+#: help:company.contribution,contribute_per:0
+msgid "Define Company contribution ratio 1.00=100% contribution."
+msgstr ""
 
 #. module: hr_payroll
 #: field:company.contribution.line,to_val:0
@@ -724,9 +733,9 @@ msgid "Loan Installment"
 msgstr "Kredit Angsuran"
 
 #. module: hr_payroll
-#: view:hr.payroll.register:0
-msgid "Complete HR Checking"
-msgstr "Menyelesaikan Pemeriksaan  HR"
+#: report:hr.payroll.register.sheet:0
+msgid "HR Manager"
+msgstr "Manajer HR"
 
 #. module: hr_payroll
 #: report:payroll.advice:0
@@ -742,6 +751,11 @@ msgstr ""
 #: report:payslip.pdf:0
 msgid "Net Amount"
 msgstr "Jumlah Bersih"
+
+#. module: hr_payroll
+#: report:payslip.pdf:0
+msgid "Leave Deductions Line:"
+msgstr "Baris  Pengurangan Cuti :"
 
 #. module: hr_payroll
 #: report:salary.structure:0
@@ -842,9 +856,9 @@ msgid "Print Statement"
 msgstr "Cetak Pernyataan"
 
 #. module: hr_payroll
-#: view:hr.payslip:0
-msgid "Draft"
-msgstr "Konsep"
+#: field:hr.allounce.deduction.categoty,name:0
+msgid "Category Name"
+msgstr "Nama Kategori"
 
 #. module: hr_payroll
 #: report:payslip.pdf:0
@@ -955,10 +969,12 @@ msgid "Compute Sheet"
 msgstr "Hitung Lembar"
 
 #. module: hr_payroll
-#: field:company.contribution,active:0
-#: field:hr.payroll.register,active:0
-msgid "Active"
-msgstr "Aktif"
+#: field:hr.contibution.register.line,date:0
+#: field:hr.payroll.advice,date:0
+#: field:hr.payroll.register,date:0
+#: field:hr.payslip,date:0
+msgid "Date"
+msgstr "Tanggal"
 
 #. module: hr_payroll
 #: help:hr.allounce.deduction.categoty,condition:0
@@ -1007,11 +1023,6 @@ msgid "Designation"
 msgstr "Penunjukan"
 
 #. module: hr_payroll
-#: report:hr.payroll.register.sheet:0
-msgid "HR Manager"
-msgstr "Manajer HR"
-
-#. module: hr_payroll
 #: field:hr.contract,basic:0
 #: field:hr.employee,basic:0
 #: field:hr.payslip,basic_before_leaves:0
@@ -1020,9 +1031,10 @@ msgid "Basic Salary"
 msgstr "Gaji Pokok"
 
 #. module: hr_payroll
-#: field:hr.allounce.deduction.categoty,code:0
-msgid "Category Code"
-msgstr "Kode Kategori"
+#: model:ir.actions.act_window,name:hr_payroll.action_hr_payroll_employees_detail
+#: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_employees_detail
+msgid "Employee Salary Statement"
+msgstr "Pernyataan Gaji Karyawan"
 
 #. module: hr_payroll
 #: view:hr.payroll.register:0
@@ -1030,9 +1042,9 @@ msgid "Salary Information"
 msgstr "Informasi Gaji"
 
 #. module: hr_payroll
-#: model:ir.model,name:hr_payroll.model_company_contribution_line
-msgid "Allowance Deduction Categoty"
-msgstr "Kategori Penyisihan Pengurangan"
+#: view:hr.payroll.register:0
+msgid "Complete HR Checking"
+msgstr "Menyelesaikan Pemeriksaan  HR"
 
 #. module: hr_payroll
 #: view:hr.payslip:0
@@ -1061,12 +1073,10 @@ msgid "Next Month Date"
 msgstr "Tanggal Bulan Depan"
 
 #. module: hr_payroll
-#: field:hr.contibution.register.line,date:0
-#: field:hr.payroll.advice,date:0
-#: field:hr.payroll.register,date:0
-#: field:hr.payslip,date:0
-msgid "Date"
-msgstr "Tanggal"
+#: field:company.contribution,active:0
+#: field:hr.payroll.register,active:0
+msgid "Active"
+msgstr "Aktif"
 
 #. module: hr_payroll
 #: field:hr.contract,visa_expire:0
@@ -1273,17 +1283,6 @@ msgid "Calculations"
 msgstr "Kalkulasi"
 
 #. module: hr_payroll
-#: help:company.contribution,contribute_per:0
-msgid ""
-"Define Company contribution ratio 1.00=100% contribution, If Employee "
-"Contribute 5% then company will and here 0.50 defined then company will "
-"contribute 50% on employee 5% contribution"
-msgstr ""
-"Tentukan rasio Kontribusi Perusahaan kontribusi 1,00 = 100%, Jika Karyawan "
-"5% Berkontribusi  maka perusahaan akan dan di sini 0,50  ,maka perusahaan "
-"akan memberikan kontribusi 50% pada kontribusi karyawan 5%"
-
-#. module: hr_payroll
 #: view:hr.payslip:0
 msgid "Other Informations"
 msgstr "Informasi Lainnya"
@@ -1403,11 +1402,6 @@ msgid "The Passport No must be unique !"
 msgstr "Nomor Passport Harus unik"
 
 #. module: hr_payroll
-#: field:hr.allounce.deduction.categoty,name:0
-msgid "Category Name"
-msgstr "Nama Kategori"
-
-#. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payroll_year_salary
 msgid "hr.payroll.year.salary"
 msgstr ""
@@ -1512,9 +1506,9 @@ msgid "Total Payment"
 msgstr "Total Pembayaran"
 
 #. module: hr_payroll
-#: report:payslip.pdf:0
-msgid "Leave Deductions Line:"
-msgstr "Baris  Pengurangan Cuti :"
+#: model:ir.model,name:hr_payroll.model_company_contribution_line
+msgid "Allowance Deduction Category"
+msgstr ""
 
 #. module: hr_payroll
 #: selection:hr.payroll.register,state:0
@@ -1625,3 +1619,15 @@ msgstr "Total"
 #: field:hr.allounce.deduction.categoty,contribute_ids:0
 msgid "Contributions"
 msgstr "Kontribusi"
+
+#~ msgid "Allowance Deduction Categoty"
+#~ msgstr "Kategori Penyisihan Pengurangan"
+
+#~ msgid ""
+#~ "Define Company contribution ratio 1.00=100% contribution, If Employee "
+#~ "Contribute 5% then company will and here 0.50 defined then company will "
+#~ "contribute 50% on employee 5% contribution"
+#~ msgstr ""
+#~ "Tentukan rasio Kontribusi Perusahaan kontribusi 1,00 = 100%, Jika Karyawan "
+#~ "5% Berkontribusi  maka perusahaan akan dan di sini 0,50  ,maka perusahaan "
+#~ "akan memberikan kontribusi 50% pada kontribusi karyawan 5%"

@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"POT-Creation-Date: 2011-05-09 10:18+0000\n"
 "PO-Revision-Date: 2011-01-29 12:37+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-30 05:49+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-05-10 07:23+0000\n"
+"X-Generator: Launchpad (build 12959)\n"
 
 #. module: base_calendar
 #: selection:calendar.alarm,trigger_related:0
@@ -141,6 +141,7 @@ msgid "March"
 msgstr ""
 
 #. module: base_calendar
+#: code:addons/base_calendar/base_calendar.py:414
 #: code:addons/base_calendar/wizard/base_calendar_set_exrule.py:90
 #, python-format
 msgid "Warning !"
@@ -180,8 +181,8 @@ msgid "Indicats whether the favor of a reply is requested"
 msgstr ""
 
 #. module: base_calendar
-#: model:ir.model,name:base_calendar.model_ir_attachment
-msgid "ir.attachment"
+#: field:calendar.alarm,alarm_id:0
+msgid "Basic Alarm"
 msgstr ""
 
 #. module: base_calendar
@@ -214,16 +215,15 @@ msgid "Tue"
 msgstr ""
 
 #. module: base_calendar
+#: model:ir.model,name:base_calendar.model_ir_attachment
+msgid "ir.attachment"
+msgstr ""
+
+#. module: base_calendar
 #: selection:base.calendar.set.exrule,freq:0
 #: selection:calendar.event,rrule_type:0
 #: selection:calendar.todo,rrule_type:0
 msgid "Yearly"
-msgstr ""
-
-#. module: base_calendar
-#: selection:calendar.alarm,trigger_related:0
-#: selection:res.alarm,trigger_related:0
-msgid "The event ends"
 msgstr ""
 
 #. module: base_calendar
@@ -258,7 +258,7 @@ msgid "Invitation Detail"
 msgstr ""
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:1356
+#: code:addons/base_calendar/base_calendar.py:1355
 #: code:addons/base_calendar/wizard/base_calendar_invite_attendee.py:96
 #: code:addons/base_calendar/wizard/base_calendar_invite_attendee.py:143
 #: code:addons/base_calendar/wizard/base_calendar_set_exrule.py:128
@@ -310,10 +310,9 @@ msgid "Secondly"
 msgstr ""
 
 #. module: base_calendar
-#: field:calendar.alarm,event_date:0
-#: field:calendar.attendee,event_date:0
-#: view:calendar.event:0
-msgid "Event Date"
+#: selection:calendar.alarm,trigger_related:0
+#: selection:res.alarm,trigger_related:0
+msgid "The event ends"
 msgstr ""
 
 #. module: base_calendar
@@ -367,8 +366,8 @@ msgstr ""
 
 #. module: base_calendar
 #: code:addons/base_calendar/base_calendar.py:385
+#: code:addons/base_calendar/base_calendar.py:1088
 #: code:addons/base_calendar/base_calendar.py:1090
-#: code:addons/base_calendar/base_calendar.py:1092
 #, python-format
 msgid "Warning!"
 msgstr ""
@@ -619,6 +618,11 @@ msgid "Created"
 msgstr ""
 
 #. module: base_calendar
+#: model:ir.actions.act_window,name:base_calendar.action_base_calendar_set_exrule
+msgid "Set Exclude range"
+msgstr ""
+
+#. module: base_calendar
 #: selection:calendar.event,class:0
 #: selection:calendar.todo,class:0
 msgid "Private"
@@ -700,6 +704,11 @@ msgstr ""
 #. module: base_calendar
 #: view:calendar.event:0
 msgid "Subject"
+msgstr ""
+
+#. module: base_calendar
+#: selection:calendar.attendee,state:0
+msgid "Needs Action"
 msgstr ""
 
 #. module: base_calendar
@@ -828,7 +837,7 @@ msgid "Hours"
 msgstr ""
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:1092
+#: code:addons/base_calendar/base_calendar.py:1090
 #, python-format
 msgid "Count can not be Negative"
 msgstr ""
@@ -878,7 +887,6 @@ msgstr ""
 
 #. module: base_calendar
 #: view:base.calendar.set.exrule:0
-#: model:ir.actions.act_window,name:base_calendar.action_base_calendar_set_exrule
 #: model:ir.model,name:base_calendar.model_base_calendar_set_exrule
 msgid "Set Exrule"
 msgstr ""
@@ -945,8 +953,10 @@ msgid "June"
 msgstr ""
 
 #. module: base_calendar
-#: field:calendar.alarm,alarm_id:0
-msgid "Basic Alarm"
+#: field:calendar.alarm,event_date:0
+#: field:calendar.attendee,event_date:0
+#: view:calendar.event:0
+msgid "Event Date"
 msgstr ""
 
 #. module: base_calendar
@@ -1060,7 +1070,7 @@ msgid "Wednesday"
 msgstr ""
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:1090
+#: code:addons/base_calendar/base_calendar.py:1088
 #, python-format
 msgid "Interval can not be Negative"
 msgstr ""
@@ -1555,8 +1565,9 @@ msgid "Resource ID"
 msgstr ""
 
 #. module: base_calendar
-#: selection:calendar.attendee,state:0
-msgid "Needs Action"
+#: code:addons/base_calendar/base_calendar.py:414
+#, python-format
+msgid "Couldn't Invite because date is not specified!"
 msgstr ""
 
 #. module: base_calendar

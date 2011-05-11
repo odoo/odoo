@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2011-05-09 10:18+0000\n"
 "PO-Revision-Date: 2011-01-19 12:00+0000\n"
 "Last-Translator: Goran Kliska (Aplikacija d.o.o.) <gkliska@gmail.com>\n"
 "Language-Team: <>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-25 06:40+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-05-10 07:29+0000\n"
+"X-Generator: Launchpad (build 12959)\n"
 "Language: hr\n"
 
 #. module: hr
@@ -359,11 +359,6 @@ msgid "Expected Employees"
 msgstr "Očekivano djelatnika"
 
 #. module: hr
-#: help:hr.employee,sinid:0
-msgid "Social Insurance Number"
-msgstr "JMBG"
-
-#. module: hr
 #: model:hr.employee.marital.status,name:hr.hr_employee_marital_status_divorced
 msgid "Divorced"
 msgstr "Razveden-a"
@@ -554,6 +549,11 @@ msgstr "Aktivan"
 #: constraint:hr.employee:0
 msgid "Error ! You cannot create recursive Hierarchy of Employees."
 msgstr "Pogreška ! Ne možete kreirati rekurzivnu hijerarhiju djelatnika."
+
+#. module: hr
+#: field:hr.employee,bank_account_id:0
+msgid "Bank Account Number"
+msgstr ""
 
 #. module: hr
 #: view:hr.department:0
@@ -791,9 +791,9 @@ msgid "Employees"
 msgstr "Djelatnici"
 
 #. module: hr
-#: field:hr.employee,bank_account_id:0
-msgid "Bank Account"
-msgstr "Bankovni konto"
+#: help:hr.employee,sinid:0
+msgid "Social Insurance Number"
+msgstr "JMBG"
 
 #. module: hr
 #: field:hr.department,name:0
@@ -858,3 +858,6 @@ msgstr "Opći sustav obračuna plaća integriran sa knjigovodstvom"
 #: field:hr.employee,child_ids:0
 msgid "Subordinates"
 msgstr "Podređeni djelatnici"
+
+#~ msgid "Bank Account"
+#~ msgstr "Bankovni konto"

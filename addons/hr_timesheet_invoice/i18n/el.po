@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2011-05-09 10:18+0000\n"
 "PO-Revision-Date: 2011-01-19 12:00+0000\n"
 "Last-Translator: Mantavya Gajjar (Open ERP) <Unknown>\n"
 "Language-Team: nls@hellug.gr <nls@hellug.gr>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-25 06:44+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-05-10 07:32+0000\n"
+"X-Generator: Launchpad (build 12959)\n"
 "X-Poedit-Country: GREECE\n"
 "X-Poedit-Language: Greek\n"
 "X-Poedit-SourceCharset: utf-8\n"
@@ -276,6 +276,11 @@ msgid "Final Invoice"
 msgstr "Τελικό Τιμολόγιο"
 
 #. module: hr_timesheet_invoice
+#: report:account.analytic.profit:0
+msgid "User or Journal Name"
+msgstr ""
+
+#. module: hr_timesheet_invoice
 #: view:hr.timesheet.invoice.create.final:0
 msgid "Do you want details for each line of the invoices ?"
 msgstr "Λεπτομέρειες γαι κάθε γραμμή τιμολογίου;"
@@ -310,9 +315,10 @@ msgid "Debit"
 msgstr "Χρέωση"
 
 #. module: hr_timesheet_invoice
-#: field:hr.timesheet.analytic.profit,employee_ids:0
-msgid "Employee"
-msgstr "Υπάλληλος"
+#: view:hr.timesheet.analytic.cost.ledger:0
+#: view:hr.timesheet.analytic.profit:0
+msgid "Print"
+msgstr "Εκτύπωση"
 
 #. module: hr_timesheet_invoice
 #: help:account.analytic.line,to_invoice:0
@@ -454,12 +460,18 @@ msgid "Yes (100%)"
 msgstr ""
 
 #. module: hr_timesheet_invoice
-#: report:account.analytic.profit:0
-msgid "Employee or Journal Name"
-msgstr "Υπάλληλος ή Όνομα Ημερολογίου"
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_final_invoice_create.py:69
+#, python-format
+msgid ""
+"Please fill in the partner and pricelist field in the analytic account:\n"
+"%s"
+msgstr ""
+"Παρακαλώ συμπληρώστε τα πεδία συνεργάτη και τιμοκαταλόγου στον Αναλυτικό "
+"Λογαριασμό:\n"
+"%s"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:189
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:191
 #, python-format
 msgid "Invoices"
 msgstr "Τιμολόγια"
@@ -489,6 +501,7 @@ msgid "Currency"
 msgstr "Νόμισμα"
 
 #. module: hr_timesheet_invoice
+#: field:hr.timesheet.analytic.profit,employee_ids:0
 #: view:report.timesheet.line:0
 #: field:report.timesheet.line,user_id:0
 #: field:report_timesheet.account,user_id:0
@@ -507,6 +520,11 @@ msgstr ""
 "Συμπληρώστε αυτό το πεδίο μόνο αν επιθυμείτε να χρησιμοποιείται ένα "
 "συγκεκριμένο προϊόν. Αν επιθυμείτε να χρησιμοποιέιτε το πραγματικό προϊόν "
 "που εξάγεται από το κόστος, αφήστε το κενό."
+
+#. module: hr_timesheet_invoice
+#: view:hr.timesheet.analytic.profit:0
+msgid "Users"
+msgstr ""
 
 #. module: hr_timesheet_invoice
 #: view:report.timesheet.line:0
@@ -677,17 +695,6 @@ msgid "Credit"
 msgstr "Πίστωση"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_final_invoice_create.py:69
-#, python-format
-msgid ""
-"Please fill in the partner and pricelist field in the analytic account:\n"
-"%s"
-msgstr ""
-"Παρακαλώ συμπληρώστε τα πεδία συνεργάτη και τιμοκαταλόγου στον Αναλυτικό "
-"Λογαριασμό:\n"
-"%s"
-
-#. module: hr_timesheet_invoice
 #: constraint:account.analytic.account:0
 msgid ""
 "Error! The currency has to be the same as the currency of the selected "
@@ -746,11 +753,6 @@ msgstr "Ανατιμολόγηση Κόστους"
 #: report:account.analytic.profit:0
 msgid "Totals:"
 msgstr "Σύνολα:"
-
-#. module: hr_timesheet_invoice
-#: field:hr.timesheet.analytic.profit,date_to:0
-msgid "To"
-msgstr "'Εως"
 
 #. module: hr_timesheet_invoice
 #: view:hr.timesheet.invoice.create:0
@@ -815,7 +817,7 @@ msgid "Timesheet Line"
 msgstr ""
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_final_invoice_create.py:147
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_final_invoice_create.py:142
 #, python-format
 msgid "Balance product needed"
 msgstr "Χρειάζεται προϊόν υπολοίπου"
@@ -840,10 +842,9 @@ msgid "Label for the customer"
 msgstr ""
 
 #. module: hr_timesheet_invoice
-#: view:hr.timesheet.analytic.cost.ledger:0
-#: view:hr.timesheet.analytic.profit:0
-msgid "Print"
-msgstr "Εκτύπωση"
+#: field:hr.timesheet.analytic.profit,date_to:0
+msgid "To"
+msgstr "'Εως"
 
 #. module: hr_timesheet_invoice
 #: selection:report.account.analytic.line.to.invoice,month:0
@@ -989,11 +990,6 @@ msgid "Sale price"
 msgstr "Τιμή Πώλησης"
 
 #. module: hr_timesheet_invoice
-#: view:hr.timesheet.analytic.profit:0
-msgid "Employees"
-msgstr ""
-
-#. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.act_res_users_2_report_timesheet_user
 msgid "Timesheets per day"
 msgstr ""
@@ -1049,7 +1045,7 @@ msgid "Analytic Lines to Invoice"
 msgstr "Γραμμές Αναλυτικές προς Τιμολόγηση"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_final_invoice_create.py:147
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_final_invoice_create.py:142
 #, python-format
 msgid "Please fill a Balance product in the wizard"
 msgstr "Παρακαλώ συμπληρώστε ένα Εξισορροποιητικό Προϊόν"
@@ -1078,3 +1074,9 @@ msgstr "Κόστος"
 #: field:report_timesheet.user,name:0
 msgid "Year"
 msgstr ""
+
+#~ msgid "Employee or Journal Name"
+#~ msgstr "Υπάλληλος ή Όνομα Ημερολογίου"
+
+#~ msgid "Employee"
+#~ msgstr "Υπάλληλος"

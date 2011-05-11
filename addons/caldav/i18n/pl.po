@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"POT-Creation-Date: 2011-05-09 10:18+0000\n"
 "PO-Revision-Date: 2011-01-19 12:00+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Polish <pl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-25 06:33+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-05-10 07:24+0000\n"
+"X-Generator: Launchpad (build 12959)\n"
 
 #. module: caldav
 #: view:basic.calendar:0
@@ -64,8 +64,18 @@ msgid "Can not map a field more than once"
 msgstr ""
 
 #. module: caldav
-#: code:addons/caldav/calendar.py:772
-#: code:addons/caldav/calendar.py:861
+#: model:ir.actions.act_window,help:caldav.action_caldav_form
+msgid ""
+"\"Calendars\" allow you to Customize calendar event and todo attribute with "
+"any of OpenERP model.Caledars provide iCal Import/Export "
+"functionality.Webdav server that provides remote access to calendar.Help You "
+"to synchronize Meeting with Calendars client.You can access Calendars using "
+"CalDAV clients, like sunbird, Calendar Evaluation, Mobile."
+msgstr ""
+
+#. module: caldav
+#: code:addons/caldav/calendar.py:787
+#: code:addons/caldav/calendar.py:877
 #: code:addons/caldav/wizard/calendar_event_import.py:63
 #, python-format
 msgid "Warning !"
@@ -108,7 +118,7 @@ msgid "Ok"
 msgstr ""
 
 #. module: caldav
-#: code:addons/caldav/calendar.py:861
+#: code:addons/caldav/calendar.py:877
 #, python-format
 msgid "Please provide proper configuration of \"%s\" in Calendar Lines"
 msgstr "Podaj poprawną konfigurację \"%s\" w pozycjach kalendarza"
@@ -124,15 +134,9 @@ msgid "Caldav Server"
 msgstr ""
 
 #. module: caldav
-#: code:addons/caldav/wizard/calendar_event_subscribe.py:59
-#, python-format
-msgid "Error!"
-msgstr "Błąd!"
-
-#. module: caldav
-#: help:caldav.browse,caldav_doc_file:0
-msgid "download full caldav Documentation."
-msgstr ""
+#: model:ir.module.module,shortdesc:caldav.module_meta_information
+msgid "Share Calendar using CalDAV"
+msgstr "Współdziel kalendarz stosująć CalDAV"
 
 #. module: caldav
 #: selection:user.preference,device:0
@@ -218,7 +222,7 @@ msgid "Use the field"
 msgstr "Zastosuj pole"
 
 #. module: caldav
-#: code:addons/caldav/calendar.py:772
+#: code:addons/caldav/calendar.py:787
 #, python-format
 msgid "Can not create line \"%s\" more than once"
 msgstr "Nie można tworzyć pozycji \"%s\" więcej niż raz"
@@ -290,7 +294,7 @@ msgid "Save in .ics format"
 msgstr "Zapisz w formacie .ics"
 
 #. module: caldav
-#: code:addons/caldav/calendar.py:1275
+#: code:addons/caldav/calendar.py:1291
 #, python-format
 msgid "Error !"
 msgstr "Błąd !"
@@ -386,11 +390,6 @@ msgid "Provide path for remote calendar"
 msgstr "Wporwadź ścieżkę dla drugiego kalendarza."
 
 #. module: caldav
-#: view:caldav.browse:0
-msgid "_Ok"
-msgstr ""
-
-#. module: caldav
 #: field:basic.calendar.lines,domain:0
 msgid "Domain"
 msgstr "Domena"
@@ -448,11 +447,6 @@ msgid "Message..."
 msgstr "Wiadomość..."
 
 #. module: caldav
-#: selection:user.preference,device:0
-msgid "Other"
-msgstr ""
-
-#. module: caldav
 #: view:basic.calendar:0
 #: field:basic.calendar,has_webcal:0
 msgid "WebCal"
@@ -466,7 +460,7 @@ msgid "Calendar Collections"
 msgstr "Kolekcje kalendarzy"
 
 #. module: caldav
-#: code:addons/caldav/calendar.py:798
+#: code:addons/caldav/calendar.py:813
 #: sql_constraint:basic.calendar.alias:0
 #, python-format
 msgid "The same filename cannot apply to two records!"
@@ -631,8 +625,8 @@ msgid "Select ICS file"
 msgstr "Wybierz plik ICS"
 
 #. module: caldav
-#: field:caldav.browse,caldav_doc_file:0
-msgid "Caldav Document"
+#: selection:user.preference,device:0
+msgid "Other"
 msgstr ""
 
 #. module: caldav
@@ -704,6 +698,12 @@ msgid "_Import"
 msgstr "_Importuj"
 
 #. module: caldav
+#: code:addons/caldav/wizard/calendar_event_subscribe.py:59
+#, python-format
+msgid "Error!"
+msgstr "Błąd!"
+
+#. module: caldav
 #: model:ir.model,name:caldav.model_calendar_event_import
 msgid "Event Import"
 msgstr "Import zdarzeń"
@@ -742,7 +742,7 @@ msgid "basic.calendar.alarm"
 msgstr ""
 
 #. module: caldav
-#: code:addons/caldav/calendar.py:1275
+#: code:addons/caldav/calendar.py:1291
 #, python-format
 msgid "Attendee must have an Email Id"
 msgstr "Uczestnik musi mieć id email"
@@ -774,9 +774,9 @@ msgid "Order"
 msgstr "Kolejność"
 
 #. module: caldav
-#: model:ir.module.module,shortdesc:caldav.module_meta_information
-msgid "Share Calendar using CalDAV"
-msgstr "Współdziel kalendarz stosująć CalDAV"
+#: selection:basic.calendar.fields,fn:0
+msgid "Datetime In UTC"
+msgstr ""
 
 #. module: caldav
 #: field:basic.calendar,calendar_color:0

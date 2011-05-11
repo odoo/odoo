@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2011-05-09 10:18+0000\n"
 "PO-Revision-Date: 2011-04-25 18:18+0000\n"
 "Last-Translator: simone.sandri <lexluxsox@hotmail.it>\n"
 "Language-Team: Italian <it@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-30 06:08+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-05-10 07:28+0000\n"
+"X-Generator: Launchpad (build 12959)\n"
 
 #. module: email_template
 #: help:email_template.account,auto_delete:0
@@ -168,11 +168,6 @@ msgstr "Account"
 #: field:email.template,table_html:0
 msgid "HTML code"
 msgstr "Codice HTML"
-
-#. module: email_template
-#: view:email_template.mailbox:0
-msgid "Send Mail"
-msgstr "Invia email"
 
 #. module: email_template
 #: help:email_template.account,name:0
@@ -454,12 +449,6 @@ msgid "Mako Templates"
 msgstr "Template MAKO"
 
 #. module: email_template
-#: help:email.template,def_body_html:0
-#: help:email.template,def_body_text:0
-msgid "The text version of the mail"
-msgstr "Versione in formato testo dell'email"
-
-#. module: email_template
 #: code:addons/email_template/email_template.py:449
 #, python-format
 msgid " (Email Attachment)"
@@ -476,9 +465,10 @@ msgid "Test Outgoing Connection"
 msgstr "Test su connessione in uscita"
 
 #. module: email_template
-#: model:ir.actions.act_window,name:email_template.action_email_template_mailbox
-msgid "Mailbox"
-msgstr "Casella di posta"
+#: help:email.template,def_body_html:0
+#: help:email.template,def_body_text:0
+msgid "The text version of the mail"
+msgstr "Versione in formato testo dell'email"
 
 #. module: email_template
 #: help:email.template,reply_to:0
@@ -880,9 +870,9 @@ msgid "Send/Receive"
 msgstr "Invia/Ricevi"
 
 #. module: email_template
-#: model:ir.ui.menu,name:email_template.menu_email_template_personal_mails
-msgid "Personal Mails"
-msgstr "Mail personali"
+#: view:email_template.mailbox:0
+msgid "Send Mail"
+msgstr "Invia email"
 
 #. module: email_template
 #: view:email_template.account:0
@@ -967,7 +957,7 @@ msgid "Close"
 msgstr "Chiudi"
 
 #. module: email_template
-#: code:addons/email_template/email_template_mailbox.py:49
+#: code:addons/email_template/email_template_mailbox.py:48
 #, python-format
 msgid "Error sending mail: %s"
 msgstr "Errore inviando l'email: %s"
@@ -1059,7 +1049,7 @@ msgid "Email Mailbox"
 msgstr "Email Mailbox"
 
 #. module: email_template
-#: code:addons/email_template/email_template_mailbox.py:116
+#: code:addons/email_template/email_template_mailbox.py:104
 #, python-format
 msgid ""
 "Sending of Mail %s failed. Probable Reason:Could not login to server\n"
@@ -1175,7 +1165,9 @@ msgstr ""
 
 #. module: email_template
 #: view:email_template.mailbox:0
+#: model:ir.actions.act_window,name:email_template.action_email_template_mailbox
 #: model:ir.ui.menu,name:email_template.menu_email_template_mails_tools
+#: model:ir.ui.menu,name:email_template.menu_email_template_personal_mails
 msgid "Emails"
 msgstr "Email"
 
@@ -1349,3 +1341,9 @@ msgstr "Presenta allegati"
 #, python-format
 msgid "No Description"
 msgstr "Nessuna descrizione"
+
+#~ msgid "Mailbox"
+#~ msgstr "Casella di posta"
+
+#~ msgid "Personal Mails"
+#~ msgstr "Mail personali"

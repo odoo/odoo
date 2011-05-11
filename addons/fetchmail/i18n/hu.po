@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2011-05-09 10:18+0000\n"
 "PO-Revision-Date: 2011-01-19 12:00+0000\n"
 "Last-Translator: NOVOTRADE RENDSZERHÁZ <openerp@novotrade.hu>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-25 06:39+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-05-10 07:29+0000\n"
+"X-Generator: Launchpad (build 12959)\n"
 
 #. module: fetchmail
 #: constraint:email.server:0
@@ -57,11 +57,6 @@ msgid "Not Confirmed"
 msgstr "Nincs megerősítve"
 
 #. module: fetchmail
-#: field:email.server,user:0
-msgid "User Name"
-msgstr "Felhasználónév"
-
-#. module: fetchmail
 #: view:email.server:0
 msgid "Type"
 msgstr "Típus"
@@ -100,9 +95,9 @@ msgid "# of emails"
 msgstr "E-mailek száma"
 
 #. module: fetchmail
-#: model:ir.actions.act_window,name:fetchmail.act_server_history
-msgid "Email History"
-msgstr "E-mail előzmény"
+#: field:email.server,user:0
+msgid "User Name"
+msgstr "Felhasználónév"
 
 #. module: fetchmail
 #: field:email.server,user_id:0
@@ -125,6 +120,7 @@ msgid "Password"
 msgstr "Jelszó"
 
 #. module: fetchmail
+#: model:ir.actions.act_window,name:fetchmail.act_server_history
 #: view:mailgate.message:0
 msgid "Emails"
 msgstr "E-mailek"
@@ -155,11 +151,6 @@ msgid "Mailgateway Message"
 msgstr "Mailgateway üzenet"
 
 #. module: fetchmail
-#: model:ir.actions.act_window,name:fetchmail.action_email_server_tree
-msgid "POP Servers"
-msgstr "POP Szerverek"
-
-#. module: fetchmail
 #: view:email.server:0
 msgid "Set to Draft"
 msgstr "Beállítás tervezetnek"
@@ -171,9 +162,10 @@ msgid "Messages"
 msgstr "Üzenetek"
 
 #. module: fetchmail
+#: model:ir.actions.act_window,name:fetchmail.action_email_server_tree
 #: model:ir.ui.menu,name:fetchmail.menu_action_fetchmail_server_tree
-msgid "Fetchmail Services"
-msgstr "Fetchmail szolgáltatások"
+msgid "Email Servers"
+msgstr ""
 
 #. module: fetchmail
 #: field:email.server,server:0
@@ -310,3 +302,12 @@ msgstr "Levelezőszerver"
 #: view:email.server:0
 msgid "Fetch Emails"
 msgstr "E-mailek letöltése"
+
+#~ msgid "Email History"
+#~ msgstr "E-mail előzmény"
+
+#~ msgid "Fetchmail Services"
+#~ msgstr "Fetchmail szolgáltatások"
+
+#~ msgid "POP Servers"
+#~ msgstr "POP Szerverek"

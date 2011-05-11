@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2011-02-18 14:20+0000\n"
-"Last-Translator: Özge Altınışık <Unknown>\n"
+"POT-Creation-Date: 2011-05-09 10:18+0000\n"
+"PO-Revision-Date: 2011-05-09 20:22+0000\n"
+"Last-Translator: Ayhan KIZILTAN <Unknown>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-02-19 15:17+0000\n"
-"X-Generator: Launchpad (build 12351)\n"
+"X-Launchpad-Export-Date: 2011-05-10 07:27+0000\n"
+"X-Generator: Launchpad (build 12959)\n"
 
 #. module: crm_claim
 #: field:crm.claim.report,nbr:0
@@ -139,11 +139,6 @@ msgid "Preventive"
 msgstr "Tedbir/ Önlem"
 
 #. module: crm_claim
-#: model:crm.case.stage,name:crm_claim.stage_claim2
-msgid "Fixed"
-msgstr "Onarıldı"
-
-#. module: crm_claim
 #: field:crm.claim,partner_address_id:0
 msgid "Partner Contact"
 msgstr "İş Ortağı iletişim"
@@ -244,6 +239,11 @@ msgid "Lowest"
 msgstr "En düşük"
 
 #. module: crm_claim
+#: view:crm.claim.report:0
+msgid "# Mails"
+msgstr "Posta sayısı"
+
+#. module: crm_claim
 #: field:crm.claim,create_date:0
 msgid "Creation Date"
 msgstr "Oluşturulma Tarihi"
@@ -311,6 +311,7 @@ msgid "Stages"
 msgstr "Aşamalar"
 
 #. module: crm_claim
+#: model:ir.actions.act_window,name:crm_claim.action_report_crm_claim
 #: model:ir.ui.menu,name:crm_claim.menu_report_crm_claim_tree
 msgid "Claims Analysis"
 msgstr "Şikayetlerin Analizi"
@@ -464,9 +465,21 @@ msgid "User"
 msgstr "Kullanıcı"
 
 #. module: crm_claim
-#: model:crm.case.stage,name:crm_claim.stage_claim5
-msgid "Awaiting Response"
-msgstr "Cevap Bekliyor / Bekleniyor"
+#: model:ir.module.module,description:crm_claim.module_meta_information
+msgid ""
+"\n"
+"This modules allows you to track your customers/suppliers claims and "
+"flames.\n"
+"It is fully integrated with the email gateway so that you can create\n"
+"automatically new claims based on incoming emails.\n"
+"    "
+msgstr ""
+"\n"
+"Bu modül müşterilerinizin/ tedarikçilerinizin şikayet ve kızgınlıklarını "
+"takip etmenizi sağlar. \n"
+"Tam olarak e-posta birimi ile entegre olduğundan\n"
+"gelen e-postalara otomatik olarak yeni savlar oluşturabilirsiniz.\n"
+"    "
 
 #. module: crm_claim
 #: model:ir.actions.act_window,name:crm_claim.crm_claim_categ_action
@@ -499,23 +512,6 @@ msgid "October"
 msgstr "Ekim"
 
 #. module: crm_claim
-#: model:ir.module.module,description:crm_claim.module_meta_information
-msgid ""
-"\n"
-"This modules allows you to track your customers/suppliers claims and "
-"flames.\n"
-"It is fully integrated with the email gateway so that you can create\n"
-"automatically new claims based on incoming emails.\n"
-"    "
-msgstr ""
-"\n"
-"Bu modül müşterilerinizin/ tedarikçilerinizin şikayet ve kızgınlıklarını "
-"takip etmenizi sağlar. \n"
-"Tam olarak e-posta birimi ile entegre olduğundan\n"
-"gelen e-postalara otomatik olarak yeni savlar oluşturabilirsiniz.\n"
-"    "
-
-#. module: crm_claim
 #: selection:crm.claim.report,month:0
 msgid "January"
 msgstr "Ocak"
@@ -534,7 +530,6 @@ msgstr "Bu kişilere e-posta iletilecektir"
 #. module: crm_claim
 #: view:crm.claim:0
 #: view:crm.claim.report:0
-#: model:ir.actions.act_window,name:crm_claim.action_report_crm_claim
 #: model:ir.actions.act_window,name:crm_claim.crm_case_categ_claim0
 #: model:ir.ui.menu,name:crm_claim.menu_crm_case_claims
 msgid "Claims"
@@ -698,6 +693,16 @@ msgid "# Emails"
 msgstr "E-postaların sayısı"
 
 #. module: crm_claim
+#: model:crm.case.stage,name:crm_claim.stage_claim2
+msgid "Actions Done"
+msgstr "Biten Eylemler"
+
+#. module: crm_claim
+#: model:crm.case.stage,name:crm_claim.stage_claim5
+msgid "Actions Defined"
+msgstr "Tanımlanan Eylemler"
+
+#. module: crm_claim
 #: view:crm.claim:0
 msgid "Follow Up"
 msgstr "Takip et"
@@ -776,3 +781,9 @@ msgstr "Tarih Oluştur"
 #: field:crm.claim.report,name:0
 msgid "Year"
 msgstr "Yıl"
+
+#~ msgid "Awaiting Response"
+#~ msgstr "Cevap Bekliyor / Bekleniyor"
+
+#~ msgid "Fixed"
+#~ msgstr "Onarıldı"

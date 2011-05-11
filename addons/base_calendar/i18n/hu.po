@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"POT-Creation-Date: 2011-05-09 10:18+0000\n"
 "PO-Revision-Date: 2011-01-19 12:00+0000\n"
 "Last-Translator: NOVOTRADE RENDSZERHÁZ <openerp@novotrade.hu>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-25 06:29+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-05-10 07:22+0000\n"
+"X-Generator: Launchpad (build 12959)\n"
 
 #. module: base_calendar
 #: selection:calendar.alarm,trigger_related:0
@@ -140,6 +140,7 @@ msgid "March"
 msgstr "Március"
 
 #. module: base_calendar
+#: code:addons/base_calendar/base_calendar.py:414
 #: code:addons/base_calendar/wizard/base_calendar_set_exrule.py:90
 #, python-format
 msgid "Warning !"
@@ -179,9 +180,9 @@ msgid "Indicats whether the favor of a reply is requested"
 msgstr ""
 
 #. module: base_calendar
-#: model:ir.model,name:base_calendar.model_ir_attachment
-msgid "ir.attachment"
-msgstr "ir.attachment"
+#: field:calendar.alarm,alarm_id:0
+msgid "Basic Alarm"
+msgstr ""
 
 #. module: base_calendar
 #: help:calendar.attendee,delegated_to:0
@@ -213,17 +214,16 @@ msgid "Tue"
 msgstr "K"
 
 #. module: base_calendar
+#: model:ir.model,name:base_calendar.model_ir_attachment
+msgid "ir.attachment"
+msgstr "ir.attachment"
+
+#. module: base_calendar
 #: selection:base.calendar.set.exrule,freq:0
 #: selection:calendar.event,rrule_type:0
 #: selection:calendar.todo,rrule_type:0
 msgid "Yearly"
 msgstr "Éves"
-
-#. module: base_calendar
-#: selection:calendar.alarm,trigger_related:0
-#: selection:res.alarm,trigger_related:0
-msgid "The event ends"
-msgstr "Esemény vége"
 
 #. module: base_calendar
 #: selection:base.calendar.set.exrule,byday:0
@@ -257,7 +257,7 @@ msgid "Invitation Detail"
 msgstr "Meghívó részlete"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:1356
+#: code:addons/base_calendar/base_calendar.py:1355
 #: code:addons/base_calendar/wizard/base_calendar_invite_attendee.py:96
 #: code:addons/base_calendar/wizard/base_calendar_invite_attendee.py:143
 #: code:addons/base_calendar/wizard/base_calendar_set_exrule.py:128
@@ -296,7 +296,7 @@ msgstr "Megjelenítés"
 #. module: base_calendar
 #: view:calendar.event.edit.all:0
 msgid "Edit all Occurrences"
-msgstr ""
+msgstr "Összes esemény szerkesztése"
 
 #. module: base_calendar
 #: view:calendar.attendee:0
@@ -309,11 +309,10 @@ msgid "Secondly"
 msgstr "Másodszor"
 
 #. module: base_calendar
-#: field:calendar.alarm,event_date:0
-#: field:calendar.attendee,event_date:0
-#: view:calendar.event:0
-msgid "Event Date"
-msgstr "Esemény időpontja"
+#: selection:calendar.alarm,trigger_related:0
+#: selection:res.alarm,trigger_related:0
+msgid "The event ends"
+msgstr "Esemény vége"
 
 #. module: base_calendar
 #: view:calendar.attendee:0
@@ -366,8 +365,8 @@ msgstr "Határidő"
 
 #. module: base_calendar
 #: code:addons/base_calendar/base_calendar.py:385
+#: code:addons/base_calendar/base_calendar.py:1088
 #: code:addons/base_calendar/base_calendar.py:1090
-#: code:addons/base_calendar/base_calendar.py:1092
 #, python-format
 msgid "Warning!"
 msgstr "Vigyázat!"
@@ -552,7 +551,7 @@ msgstr ""
 #: field:calendar.event,base_calendar_url:0
 #: field:calendar.todo,base_calendar_url:0
 msgid "Caldav URL"
-msgstr ""
+msgstr "CalDAV URL"
 
 #. module: base_calendar
 #: view:base.calendar.set.exrule:0
@@ -618,6 +617,11 @@ msgid "Created"
 msgstr "Létrehozás"
 
 #. module: base_calendar
+#: model:ir.actions.act_window,name:base_calendar.action_base_calendar_set_exrule
+msgid "Set Exclude range"
+msgstr ""
+
+#. module: base_calendar
 #: selection:calendar.event,class:0
 #: selection:calendar.todo,class:0
 msgid "Private"
@@ -640,7 +644,7 @@ msgstr "Nem duplikálhatja"
 #: field:calendar.event,class:0
 #: field:calendar.todo,class:0
 msgid "Mark as"
-msgstr ""
+msgstr "Megjelölés"
 
 #. module: base_calendar
 #: view:calendar.attendee:0
@@ -702,6 +706,11 @@ msgid "Subject"
 msgstr "Tárgy"
 
 #. module: base_calendar
+#: selection:calendar.attendee,state:0
+msgid "Needs Action"
+msgstr ""
+
+#. module: base_calendar
 #: selection:base.calendar.set.exrule,month_list:0
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
@@ -723,7 +732,7 @@ msgstr ""
 #. module: base_calendar
 #: view:calendar.event:0
 msgid "Availability"
-msgstr ""
+msgstr "Elérhetőség"
 
 #. module: base_calendar
 #: view:calendar.event.edit.all:0
@@ -827,7 +836,7 @@ msgid "Hours"
 msgstr "Órák"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:1092
+#: code:addons/base_calendar/base_calendar.py:1090
 #, python-format
 msgid "Count can not be Negative"
 msgstr ""
@@ -847,7 +856,7 @@ msgstr "Esemény helyszíne"
 #: field:calendar.event,rrule:0
 #: field:calendar.todo,rrule:0
 msgid "Recurrent Rule"
-msgstr ""
+msgstr "Időszakos szabály"
 
 #. module: base_calendar
 #: selection:calendar.alarm,state:0
@@ -867,7 +876,7 @@ msgstr ""
 #. module: base_calendar
 #: view:calendar.event:0
 msgid "End of recurrency"
-msgstr ""
+msgstr "Ismétlődés vége"
 
 #. module: base_calendar
 #: view:calendar.event:0
@@ -877,7 +886,6 @@ msgstr "Emlékeztető"
 
 #. module: base_calendar
 #: view:base.calendar.set.exrule:0
-#: model:ir.actions.act_window,name:base_calendar.action_base_calendar_set_exrule
 #: model:ir.model,name:base_calendar.model_base_calendar_set_exrule
 msgid "Set Exrule"
 msgstr ""
@@ -944,9 +952,11 @@ msgid "June"
 msgstr "Június"
 
 #. module: base_calendar
-#: field:calendar.alarm,alarm_id:0
-msgid "Basic Alarm"
-msgstr ""
+#: field:calendar.alarm,event_date:0
+#: field:calendar.attendee,event_date:0
+#: view:calendar.event:0
+msgid "Event Date"
+msgstr "Esemény időpontja"
 
 #. module: base_calendar
 #: view:base.calendar.set.exrule:0
@@ -1059,7 +1069,7 @@ msgid "Wednesday"
 msgstr "Szerda"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:1090
+#: code:addons/base_calendar/base_calendar.py:1088
 #, python-format
 msgid "Interval can not be Negative"
 msgstr "Az intervallum nem lehet negatív"
@@ -1162,7 +1172,7 @@ msgstr "Időszakos ID dátuma"
 #. module: base_calendar
 #: sql_constraint:res.users:0
 msgid "You can not have two users with the same login !"
-msgstr ""
+msgstr "Nem létezhet két felhasználó ugyanazzal a felhasználói névvel !"
 
 #. module: base_calendar
 #: field:calendar.alarm,state:0
@@ -1218,7 +1228,7 @@ msgstr "/"
 #: view:calendar.event:0
 #: view:calendar.event.edit.all:0
 msgid "Cancel"
-msgstr ""
+msgstr "Mégse"
 
 #. module: base_calendar
 #: model:ir.model,name:base_calendar.model_res_users
@@ -1293,7 +1303,7 @@ msgstr "Ismétlődés"
 #: model:ir.actions.act_window,name:base_calendar.action_view_attendee_form
 #: model:ir.ui.menu,name:base_calendar.menu_attendee_invitations
 msgid "Event Invitations"
-msgstr ""
+msgstr "Rendezvény meghívók"
 
 #. module: base_calendar
 #: selection:base.calendar.set.exrule,week_list:0
@@ -1338,7 +1348,7 @@ msgstr "Hónap"
 #: view:base_calendar.invite.attendee:0
 #: view:calendar.event:0
 msgid "Invite People"
-msgstr ""
+msgstr "Meghívott emberek"
 
 #. module: base_calendar
 #: help:calendar.event,rrule:0
@@ -1489,7 +1499,7 @@ msgstr ""
 #. module: base_calendar
 #: field:calendar.attendee,sent_by_uid:0
 msgid "Sent By User"
-msgstr ""
+msgstr "Küldés felhasználónként"
 
 #. module: base_calendar
 #: selection:base.calendar.set.exrule,month_list:0
@@ -1501,7 +1511,7 @@ msgstr "Április"
 #. module: base_calendar
 #: view:calendar.event:0
 msgid "Recurrency period"
-msgstr ""
+msgstr "Ismétlődő időszak"
 
 #. module: base_calendar
 #: field:base.calendar.set.exrule,week_list:0
@@ -1525,7 +1535,7 @@ msgstr "Modell"
 #. module: base_calendar
 #: selection:calendar.alarm,action:0
 msgid "Audio"
-msgstr ""
+msgstr "Hang"
 
 #. module: base_calendar
 #: field:calendar.event,id:0
@@ -1551,11 +1561,12 @@ msgstr ""
 #. module: base_calendar
 #: field:calendar.alarm,res_id:0
 msgid "Resource ID"
-msgstr ""
+msgstr "Erőforrás ID"
 
 #. module: base_calendar
-#: selection:calendar.attendee,state:0
-msgid "Needs Action"
+#: code:addons/base_calendar/base_calendar.py:414
+#, python-format
+msgid "Couldn't Invite because date is not specified!"
 msgstr ""
 
 #. module: base_calendar

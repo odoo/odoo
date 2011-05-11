@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:16+0000\n"
+"POT-Creation-Date: 2011-05-09 10:19+0000\n"
 "PO-Revision-Date: 2011-01-24 07:45+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-25 07:04+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-05-10 07:45+0000\n"
+"X-Generator: Launchpad (build 12959)\n"
 
 #. module: share
 #: code:addons/share/web/editors.py:15
@@ -24,7 +24,7 @@ msgid "Sharing"
 msgstr "Delen"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:434
+#: code:addons/share/wizard/share_wizard.py:462
 #, python-format
 msgid ""
 "This additional data has been automatically added to your current access.\n"
@@ -45,9 +45,9 @@ msgstr ""
 "met sommige gebruikers."
 
 #. module: share
-#: model:ir.module.module,shortdesc:share.module_meta_information
-msgid "Share Management"
-msgstr "Delen beheer"
+#: constraint:res.users:0
+msgid "The chosen company is not in the allowed companies for this user"
+msgstr "Het gekozen bedrijf is geen toegestaan bedrijf voor deze gebruiker"
 
 #. module: share
 #: sql_constraint:res.users:0
@@ -61,13 +61,12 @@ msgid "Sharing Wizard - Step 1"
 msgstr "Deel assistent - stap 1"
 
 #. module: share
-#: model:ir.actions.act_window,name:share.action_share_wizard
-#: model:ir.ui.menu,name:share.menu_action_share_wizard
-msgid "Share Access Rules"
-msgstr "Delen toegangregels"
+#: view:share.wizard:0
+msgid "Who would you want to share this data with?"
+msgstr "Met wie wilt u deze gegevens delen?"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:425
+#: code:addons/share/wizard/share_wizard.py:453
 #, python-format
 msgid ""
 "Dear,\n"
@@ -77,9 +76,14 @@ msgstr ""
 "\n"
 
 #. module: share
-#: constraint:res.users:0
-msgid "The chosen company is not in the allowed companies for this user"
-msgstr "Het gekozen bedrijf is geen toegestaan bedrijf voor deze gebruiker"
+#: code:addons/share/wizard/share_wizard.py:463
+#, python-format
+msgid ""
+"You may use your existing login and password to view it. As a reminder, your "
+"login is %s.\n"
+msgstr ""
+"U kunt uw bestaande login en wachtwoord gebruiken om het te bekijken. Ter "
+"herinnering, uw login is %s.\n"
 
 #. module: share
 #: model:ir.model,name:share.model_res_users
@@ -110,7 +114,7 @@ msgid "Congratulations, you have successfully setup a new shared access!"
 msgstr "Gefeliciteerd, u heeft met succes een gedeelde toegang ingesteld!"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:247
+#: code:addons/share/wizard/share_wizard.py:275
 #, python-format
 msgid "(Copy for sharing)"
 msgstr "(Kopie voor delen)"
@@ -126,7 +130,7 @@ msgid "Generic Share Access URL"
 msgstr "Generieke gedeelde toegang URL"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:429
+#: code:addons/share/wizard/share_wizard.py:457
 #, python-format
 msgid ""
 "You may use the following login and password to get access to this protected "
@@ -161,7 +165,7 @@ msgid "Share wizard: step 1"
 msgstr "Deel assistent - stap 1"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:430
+#: code:addons/share/wizard/share_wizard.py:458
 #: field:share.wizard.result.line,login:0
 #, python-format
 msgid "Username"
@@ -173,7 +177,7 @@ msgid "Share User"
 msgstr "Delen gebruiker"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:424
+#: code:addons/share/wizard/share_wizard.py:452
 #, python-format
 msgid "%s has shared OpenERP %s information with you"
 msgstr "%s heeft OpenERP %s informatie met u gedeeld"
@@ -182,12 +186,6 @@ msgstr "%s heeft OpenERP %s informatie met u gedeeld"
 #: view:share.wizard:0
 msgid "Finish"
 msgstr "Voltooien"
-
-#. module: share
-#: field:share.wizard,user_ids:0
-#: field:share.wizard.user,user_id:0
-msgid "Users"
-msgstr "Gebruikers"
 
 #. module: share
 #: code:addons/share/wizard/share_wizard.py:103
@@ -207,20 +205,10 @@ msgid "New users"
 msgstr "Nieuwe gebruikers"
 
 #. module: share
-#: model:ir.model,name:share.model_res_groups
-msgid "res.groups"
-msgstr "res.groups"
-
-#. module: share
-#: code:addons/share/wizard/share_wizard.py:121
+#: code:addons/share/wizard/share_wizard.py:149
 #, python-format
 msgid "%s (Shared)"
 msgstr "%s (Gedeeld)"
-
-#. module: share
-#: sql_constraint:res.groups:0
-msgid "The name of the group must be unique !"
-msgstr "De naam van de groep moet uniek zijn !"
 
 #. module: share
 #: selection:share.wizard,user_type:0
@@ -228,7 +216,28 @@ msgid "New users (emails required)"
 msgstr "Nieuwe gebruikers (emails verplicht)"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:390
+#: sql_constraint:res.groups:0
+msgid "The name of the group must be unique !"
+msgstr "De naam van de groep moet uniek zijn !"
+
+#. module: share
+#: model:ir.module.module,shortdesc:share.module_meta_information
+msgid "Sharing Tools"
+msgstr ""
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:460
+#, python-format
+msgid "Database"
+msgstr "Database"
+
+#. module: share
+#: view:share.wizard:0
+msgid "Send Email Notification(s)"
+msgstr "Email melding(en) versturen"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:418
 #, python-format
 msgid "Sharing filter created by user %s (%s) for group %s"
 msgstr "Deel-filter gemaakt door gebruiker %s (%s) voor groep %s"
@@ -249,37 +258,16 @@ msgid "Share Group"
 msgstr "Delen groep"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:431
+#: code:addons/share/wizard/share_wizard.py:459
 #: field:share.wizard.result.line,password:0
 #, python-format
 msgid "Password"
 msgstr "Wachtwoord"
 
 #. module: share
-#: view:share.wizard:0
-msgid "Who would you want to share this data with?"
-msgstr "Met wie wilt u deze gegevens delen?"
-
-#. module: share
-#: model:ir.module.module,description:share.module_meta_information
-msgid ""
-"The goal is to implement a generic sharing mechanism, where user of OpenERP\n"
-"can share data from OpenERP to their colleagues, customers, or friends.\n"
-"The system will work by creating new users and groups on the fly, and by\n"
-"combining the appropriate access rights and ir.rules to ensure that the "
-"/shared\n"
-"users/ will only have access to the correct data.\n"
-"    "
-msgstr ""
-"Het doel is om een generiek deelmechanisme te implementeren, waarbij OpenERP "
-"gebruikers\n"
-"gegevens uit OpenERP kunnen delen met hum collega's, klanten of vrienden.\n"
-"Het systeem werkt door meteen nieuwe gebruikers en groepen te maken en door "
-"de \n"
-"betreffende toegangsrechten en ir.rules te combineren zodat de 'gedeelde "
-"gebruikers' alleen\n"
-"toegang hebben tot de juiste gegevens.\n"
-"    "
+#: field:share.wizard,user_type:0
+msgid "Users to share with"
+msgstr "Gebruikers oom mee te delen"
 
 #. module: share
 #: code:addons/share/wizard/share_wizard.py:102
@@ -288,30 +276,14 @@ msgid "User already exists"
 msgstr "Gebruiker bestaat al"
 
 #. module: share
-#: view:share.wizard:0
-msgid "Send Email Notification(s)"
-msgstr "Email melding(en) versturen"
-
-#. module: share
-#: code:addons/share/wizard/share_wizard.py:435
-#, python-format
-msgid ""
-"You may use your existing login and password to view it. As a reminder, your "
-"login is %s.\n"
+#: field:share.wizard,user_ids:0
+msgid "Existing users"
 msgstr ""
-"U kunt uw bestaande login en wachtwoord gebruiken om het te bekijken. Ter "
-"herinnering, uw login is %s.\n"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:432
-#, python-format
-msgid "Database"
-msgstr "Database"
-
-#. module: share
-#: model:ir.model,name:share.model_share_wizard_user
-msgid "share.wizard.user"
-msgstr "share.wizard.user"
+#: model:ir.model,name:share.model_res_groups
+msgid "Access Groups"
+msgstr ""
 
 #. module: share
 #: view:share.wizard:0
@@ -334,24 +306,19 @@ msgid "Summary"
 msgstr "Samenvatting"
 
 #. module: share
-#: field:share.wizard,user_type:0
-msgid "Users to share with"
-msgstr "Gebruikers oom mee te delen"
-
-#. module: share
-#: code:addons/share/wizard/share_wizard.py:276
+#: code:addons/share/wizard/share_wizard.py:304
 #, python-format
 msgid "Indirect sharing filter created by user %s (%s) for group %s"
 msgstr "Indirect deel-filter gemaakt door gebruiker %s (%s) voor groep %s"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:420
+#: code:addons/share/wizard/share_wizard.py:448
 #, python-format
 msgid "Email required"
 msgstr "Email verplicht"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:212
+#: code:addons/share/wizard/share_wizard.py:240
 #, python-format
 msgid "Copied access for sharing"
 msgstr "Toegang gekopieerd voor delen"
@@ -371,7 +338,31 @@ msgid "New Users (please provide one e-mail address per line below)"
 msgstr "Nieuwe gebruikers (vul hieronder aub één email adres per regel in)"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:420
+#: model:ir.module.module,description:share.module_meta_information
+msgid ""
+"\n"
+"\n"
+"    This module adds generic sharing tools to your current OpenERP "
+"database,\n"
+"    and specifically a 'share' button that is available in the Web client "
+"to\n"
+"    share any kind of OpenERP data with colleagues, customers, friends, "
+"etc.\n"
+"\n"
+"    The system will work by creating new users and groups on the fly, and "
+"by\n"
+"    combining the appropriate access rights and ir.rules to ensure that the\n"
+"    shared users only have access to the data that has been shared with "
+"them.\n"
+"\n"
+"    This is extremely useful for collaborative work, knowledge sharing, \n"
+"    synchronization with other companies, etc.\n"
+"\n"
+"    "
+msgstr ""
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:448
 #, python-format
 msgid ""
 "The current user must have an email address configured in User Preferences "
@@ -396,7 +387,7 @@ msgid "Domain"
 msgstr "Domein"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:286
+#: code:addons/share/wizard/share_wizard.py:314
 #, python-format
 msgid ""
 "Sorry, the current screen and filter you are trying to share are not "
@@ -418,7 +409,7 @@ msgid "Access info"
 msgstr "Toegangsinfo"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:426
+#: code:addons/share/wizard/share_wizard.py:454
 #, python-format
 msgid ""
 "To access it, you can go to the following URL:\n"
@@ -439,7 +430,7 @@ msgid "Share"
 msgstr "Delen"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:406
+#: code:addons/share/wizard/share_wizard.py:434
 #, python-format
 msgid "Sharing Wizard - Step 2"
 msgstr "Deel assistent - stap 2"
@@ -456,16 +447,17 @@ msgid "share.wizard.result.line"
 msgstr "share.wizard.result.line"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:285
+#: code:addons/share/wizard/share_wizard.py:313
 #, python-format
 msgid "Sharing access could not be setup"
 msgstr "Gedeelde toegang kon niet worden ingesteld"
 
 #. module: share
+#: model:ir.actions.act_window,name:share.action_share_wizard
 #: model:ir.actions.act_window,name:share.action_share_wizard_step1
 #: model:ir.model,name:share.model_share_wizard
+#: model:ir.ui.menu,name:share.menu_action_share_wizard
 #: field:share.wizard.result.line,share_wizard_id:0
-#: field:share.wizard.user,share_wizard_id:0
 msgid "Share Wizard"
 msgstr "Deel assistent"
 
@@ -504,7 +496,41 @@ msgid "Read-only"
 msgstr "Alleen lezen"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:295
+#: code:addons/share/wizard/share_wizard.py:323
 #, python-format
 msgid "*usual password*"
 msgstr "*gebruikelijk wachtwoord*"
+
+#~ msgid "Users"
+#~ msgstr "Gebruikers"
+
+#~ msgid "res.groups"
+#~ msgstr "res.groups"
+
+#~ msgid "share.wizard.user"
+#~ msgstr "share.wizard.user"
+
+#~ msgid ""
+#~ "The goal is to implement a generic sharing mechanism, where user of OpenERP\n"
+#~ "can share data from OpenERP to their colleagues, customers, or friends.\n"
+#~ "The system will work by creating new users and groups on the fly, and by\n"
+#~ "combining the appropriate access rights and ir.rules to ensure that the "
+#~ "/shared\n"
+#~ "users/ will only have access to the correct data.\n"
+#~ "    "
+#~ msgstr ""
+#~ "Het doel is om een generiek deelmechanisme te implementeren, waarbij OpenERP "
+#~ "gebruikers\n"
+#~ "gegevens uit OpenERP kunnen delen met hum collega's, klanten of vrienden.\n"
+#~ "Het systeem werkt door meteen nieuwe gebruikers en groepen te maken en door "
+#~ "de \n"
+#~ "betreffende toegangsrechten en ir.rules te combineren zodat de 'gedeelde "
+#~ "gebruikers' alleen\n"
+#~ "toegang hebben tot de juiste gegevens.\n"
+#~ "    "
+
+#~ msgid "Share Management"
+#~ msgstr "Delen beheer"
+
+#~ msgid "Share Access Rules"
+#~ msgstr "Delen toegangregels"

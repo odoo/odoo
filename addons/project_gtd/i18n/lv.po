@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2011-05-09 10:19+0000\n"
 "PO-Revision-Date: 2011-01-19 12:00+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Latvian <lv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-25 06:57+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-05-10 07:41+0000\n"
+"X-Generator: Launchpad (build 12959)\n"
 
 #. module: project_gtd
 #: help:project.task,timebox_id:0
@@ -33,9 +33,9 @@ msgid "Reactivate"
 msgstr "Aktivizēt atkal"
 
 #. module: project_gtd
-#: help:project.gtd.timebox,sequence:0
-msgid "Gives the sequence order when displaying a list of timebox."
-msgstr "Attēlo laika sprīžu sarakstu secībā pēc kārtas."
+#: constraint:project.task:0
+msgid "Error ! Task end-date must be greater then task start-date"
+msgstr ""
 
 #. module: project_gtd
 #: model:project.gtd.context,name:project_gtd.context_travel
@@ -48,10 +48,9 @@ msgid "Timebox Empty Process Completed Successfully."
 msgstr "Laika sprīža iztukšošanas process noslēdzies veiksmīgi."
 
 #. module: project_gtd
-#: code:addons/project_gtd/wizard/project_gtd_empty.py:52
-#, python-format
-msgid "No timebox child of this one !"
-msgstr "Šim laika sprīdima nav pakarātotā!"
+#: view:project.task:0
+msgid "Next"
+msgstr "Nākamais"
 
 #. module: project_gtd
 #: code:addons/project_gtd/project_gtd.py:112
@@ -104,6 +103,11 @@ msgid "Error ! You cannot create recursive tasks."
 msgstr "Kļūda! Nedrīkst veidot rekursīvus uzdevumus."
 
 #. module: project_gtd
+#: model:project.gtd.timebox,name:project_gtd.timebox_weekly
+msgid "This Week"
+msgstr "Šajā nedēļā"
+
+#. module: project_gtd
 #: view:project.timebox.fill.plan:0
 msgid "_Cancel"
 msgstr "_Atcelt"
@@ -123,9 +127,9 @@ msgid ""
 msgstr ""
 
 #. module: project_gtd
-#: model:project.gtd.timebox,name:project_gtd.timebox_weekly
-msgid "This Week"
-msgstr "Šajā nedēļā"
+#: help:project.gtd.timebox,sequence:0
+msgid "Gives the sequence order when displaying a list of timebox."
+msgstr "Attēlo laika sprīžu sarakstu secībā pēc kārtas."
 
 #. module: project_gtd
 #: model:project.gtd.timebox,name:project_gtd.timebox_monthly
@@ -210,9 +214,10 @@ msgid "Context"
 msgstr "Konteksts"
 
 #. module: project_gtd
-#: view:project.task:0
-msgid "Next"
-msgstr "Nākamais"
+#: code:addons/project_gtd/wizard/project_gtd_empty.py:52
+#, python-format
+msgid "No timebox child of this one !"
+msgstr "Šim laika sprīdima nav pakarātotā!"
 
 #. module: project_gtd
 #: view:project.timebox.empty:0

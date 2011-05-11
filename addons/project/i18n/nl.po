@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2011-05-09 10:19+0000\n"
 "PO-Revision-Date: 2011-02-21 11:20+0000\n"
 "Last-Translator: Jan Verlaan (Veritos) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-02-22 14:26+0000\n"
-"X-Generator: Launchpad (build 12351)\n"
+"X-Launchpad-Export-Date: 2011-05-10 07:40+0000\n"
+"X-Generator: Launchpad (build 12959)\n"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_res_users_2_project_task_opened
@@ -27,7 +27,7 @@ msgid "Reinclude the description of the task in the task of the user"
 msgstr "De omschrijving van de taak heropnemen in de taak van de gebruiker"
 
 #. module: project
-#: code:addons/project/project.py:658
+#: code:addons/project/project.py:671
 #, python-format
 msgid "The task '%s' has been delegated to %s."
 msgstr "De taak '%s' is gedelegeerd aan %s."
@@ -61,7 +61,7 @@ msgid "Deadlines"
 msgstr "Deadlines"
 
 #. module: project
-#: code:addons/project/project.py:121
+#: code:addons/project/project.py:118
 #, python-format
 msgid "Operation Not Permitted !"
 msgstr "Operatie niet toegestaan !"
@@ -244,7 +244,7 @@ msgid "Day"
 msgstr "Dag"
 
 #. module: project
-#: code:addons/project/project.py:571
+#: code:addons/project/project.py:584
 #, python-format
 msgid "The task '%s' is done"
 msgstr "De taak '%s' is gereed"
@@ -439,7 +439,7 @@ msgid "Reactivate Project"
 msgstr "Heractiveer project"
 
 #. module: project
-#: code:addons/project/project.py:553
+#: code:addons/project/project.py:562
 #, python-format
 msgid "Task '%s' closed"
 msgstr "Taak '%s' gesloten"
@@ -489,8 +489,8 @@ msgid "Error! You can not create recursive analytic accounts."
 msgstr "Fout! U kunt geen recursieve kostenplaatsen maken."
 
 #. module: project
-#: code:addons/project/project.py:225
-#: code:addons/project/project.py:246
+#: code:addons/project/project.py:222
+#: code:addons/project/project.py:243
 #, python-format
 msgid " (copy)"
 msgstr " (kopie)"
@@ -633,7 +633,7 @@ msgid "Reevaluate"
 msgstr "Herevalueren"
 
 #. module: project
-#: code:addons/project/project.py:531
+#: code:addons/project/project.py:539
 #, python-format
 msgid "Send Email after close task"
 msgstr "Email sturen na sluiting taak"
@@ -728,7 +728,7 @@ msgid "Starting Date"
 msgstr "Begindatum"
 
 #. module: project
-#: code:addons/project/project.py:267
+#: code:addons/project/project.py:264
 #: model:ir.actions.act_window,name:project.open_view_project_all
 #: model:ir.ui.menu,name:project.menu_open_view_project_all
 #: view:project.project:0
@@ -756,7 +756,7 @@ msgstr ""
 "het verloop van een taak of probleem te volgen."
 
 #. module: project
-#: code:addons/project/project.py:622
+#: code:addons/project/project.py:635
 #, python-format
 msgid "The task '%s' is opened."
 msgstr "De taak '%s' is geopend."
@@ -1100,6 +1100,13 @@ msgid "My Task's Deadlines"
 msgstr "Mijn taken termijnen"
 
 #. module: project
+#: help:project.project,members:0
+msgid ""
+"Project's members are users who can have an access to the tasks related to "
+"this project."
+msgstr ""
+
+#. module: project
 #: view:project.project:0
 #: field:project.task,manager_id:0
 msgid "Project Manager"
@@ -1176,7 +1183,6 @@ msgstr "Project dashboard"
 
 #. module: project
 #: view:project.project:0
-#: field:project.project,parent_id:0
 msgid "Parent Project"
 msgstr "Hoofdproject"
 
@@ -1206,7 +1212,7 @@ msgid "Customer Email"
 msgstr "Klant email"
 
 #. module: project
-#: code:addons/project/project.py:190
+#: code:addons/project/project.py:187
 #, python-format
 msgid "The project '%s' has been closed."
 msgstr "Het project '%s' is gesloten."
@@ -1256,7 +1262,7 @@ msgid "When task is completed, it will come into the done state."
 msgstr "Wanneer taak is afgerond, komt deze in de status Voltooid"
 
 #. module: project
-#: code:addons/project/project.py:212
+#: code:addons/project/project.py:209
 #, python-format
 msgid "The project '%s' has been opened."
 msgstr "Het project '%s' is geopend."
@@ -1341,16 +1347,6 @@ msgid "Getting Things Done"
 msgstr "Getting Things Done"
 
 #. module: project
-#: help:project.project,members:0
-msgid ""
-"Project's member. Not used in any computation, just for information purpose, "
-"but a user has to be member of a project to add a the to this project."
-msgstr ""
-"Project lid. Niet gebruikt in berekeningen, alleen voor informatieve "
-"doeleinden; maar de gebruiker moet lid zijn van het project om er een taak "
-"aan toe te voegen."
-
-#. module: project
 #: help:project.task.close,partner_warn:0
 msgid "Warn Customer by Email"
 msgstr "Waarschuw klant per email"
@@ -1408,7 +1404,7 @@ msgstr ""
 "een taak, etc."
 
 #. module: project
-#: code:addons/project/project.py:582
+#: code:addons/project/project.py:595
 #, python-format
 msgid "Task '%s' set in progress"
 msgstr "Taak '%s' in behandeling genomen"
@@ -1461,7 +1457,7 @@ msgid "Open"
 msgstr "Open"
 
 #. module: project
-#: code:addons/project/project.py:121
+#: code:addons/project/project.py:118
 #, python-format
 msgid ""
 "You can not delete a project with tasks. I suggest you to deactivate it."
@@ -1497,6 +1493,11 @@ msgstr "Heractiveren"
 #: view:project.task.close:0
 msgid "Send Email"
 msgstr "Email verzenden"
+
+#. module: project
+#: constraint:project.task:0
+msgid "Error ! Task end-date must be greater then task start-date"
+msgstr ""
 
 #. module: project
 #: view:res.users:0
@@ -1801,7 +1802,7 @@ msgid "Spent Hours"
 msgstr "Gewerkte uren"
 
 #. module: project
-#: code:addons/project/project.py:665
+#: code:addons/project/project.py:678
 #, python-format
 msgid "The task '%s' is pending."
 msgstr "De taak '%s' is wachtend."
@@ -1886,7 +1887,7 @@ msgid "Validation State"
 msgstr "Bevestigingsstatus"
 
 #. module: project
-#: code:addons/project/project.py:602
+#: code:addons/project/project.py:615
 #, python-format
 msgid "Task '%s' cancelled"
 msgstr "Taak '%s' afgebroken"
@@ -1916,7 +1917,7 @@ msgid "Create Date"
 msgstr "Datum gemaakt"
 
 #. module: project
-#: code:addons/project/project.py:610
+#: code:addons/project/project.py:623
 #, python-format
 msgid "The task '%s' is cancelled."
 msgstr "De taak '%s' is geannuleerd."
@@ -1962,3 +1963,11 @@ msgstr "Mail voetregels"
 #: field:project.installer,account_budget:0
 msgid "Budgets"
 msgstr "Budgetten"
+
+#~ msgid ""
+#~ "Project's member. Not used in any computation, just for information purpose, "
+#~ "but a user has to be member of a project to add a the to this project."
+#~ msgstr ""
+#~ "Project lid. Niet gebruikt in berekeningen, alleen voor informatieve "
+#~ "doeleinden; maar de gebruiker moet lid zijn van het project om er een taak "
+#~ "aan toe te voegen."

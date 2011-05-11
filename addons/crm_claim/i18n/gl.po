@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2011-05-09 10:18+0000\n"
 "PO-Revision-Date: 2011-04-07 08:42+0000\n"
 "Last-Translator: Santi (Pexego) <santiago@pexego.es>\n"
 "Language-Team: Galician <gl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-08 06:12+0000\n"
-"X-Generator: Launchpad (build 12735)\n"
+"X-Launchpad-Export-Date: 2011-05-10 07:26+0000\n"
+"X-Generator: Launchpad (build 12959)\n"
 
 #. module: crm_claim
 #: field:crm.claim.report,nbr:0
@@ -139,11 +139,6 @@ msgid "Preventive"
 msgstr "Preventivo"
 
 #. module: crm_claim
-#: model:crm.case.stage,name:crm_claim.stage_claim2
-msgid "Fixed"
-msgstr "Fixo"
-
-#. module: crm_claim
 #: field:crm.claim,partner_address_id:0
 msgid "Partner Contact"
 msgstr "Contacto"
@@ -244,6 +239,11 @@ msgid "Lowest"
 msgstr "A máis baixa"
 
 #. module: crm_claim
+#: view:crm.claim.report:0
+msgid "# Mails"
+msgstr ""
+
+#. module: crm_claim
 #: field:crm.claim,create_date:0
 msgid "Creation Date"
 msgstr "Data de creación"
@@ -311,6 +311,7 @@ msgid "Stages"
 msgstr "Etapas"
 
 #. module: crm_claim
+#: model:ir.actions.act_window,name:crm_claim.action_report_crm_claim
 #: model:ir.ui.menu,name:crm_claim.menu_report_crm_claim_tree
 msgid "Claims Analysis"
 msgstr "Análise das reclamacións"
@@ -465,9 +466,21 @@ msgid "User"
 msgstr "Usuario"
 
 #. module: crm_claim
-#: model:crm.case.stage,name:crm_claim.stage_claim5
-msgid "Awaiting Response"
-msgstr "Esperando resposta"
+#: model:ir.module.module,description:crm_claim.module_meta_information
+msgid ""
+"\n"
+"This modules allows you to track your customers/suppliers claims and "
+"flames.\n"
+"It is fully integrated with the email gateway so that you can create\n"
+"automatically new claims based on incoming emails.\n"
+"    "
+msgstr ""
+"\n"
+"Este módulo permítelle realizar un seguimento das reclamacións e urxencias "
+"dos seus clientes/provedores. Está totalmente integrado na pasarela de "
+"correo electrónico para que poida crear automaticamente as novas "
+"reclamacións a partir dos correos electrónicos entrantes.\n"
+"    "
 
 #. module: crm_claim
 #: model:ir.actions.act_window,name:crm_claim.crm_claim_categ_action
@@ -500,23 +513,6 @@ msgid "October"
 msgstr "Outubro"
 
 #. module: crm_claim
-#: model:ir.module.module,description:crm_claim.module_meta_information
-msgid ""
-"\n"
-"This modules allows you to track your customers/suppliers claims and "
-"flames.\n"
-"It is fully integrated with the email gateway so that you can create\n"
-"automatically new claims based on incoming emails.\n"
-"    "
-msgstr ""
-"\n"
-"Este módulo permítelle realizar un seguimento das reclamacións e urxencias "
-"dos seus clientes/provedores. Está totalmente integrado na pasarela de "
-"correo electrónico para que poida crear automaticamente as novas "
-"reclamacións a partir dos correos electrónicos entrantes.\n"
-"    "
-
-#. module: crm_claim
 #: selection:crm.claim.report,month:0
 msgid "January"
 msgstr "Xaneiro"
@@ -535,7 +531,6 @@ msgstr "Estas persoas recibirán un e-mail."
 #. module: crm_claim
 #: view:crm.claim:0
 #: view:crm.claim.report:0
-#: model:ir.actions.act_window,name:crm_claim.action_report_crm_claim
 #: model:ir.actions.act_window,name:crm_claim.crm_case_categ_claim0
 #: model:ir.ui.menu,name:crm_claim.menu_crm_case_claims
 msgid "Claims"
@@ -700,6 +695,16 @@ msgid "# Emails"
 msgstr "Nº de emails"
 
 #. module: crm_claim
+#: model:crm.case.stage,name:crm_claim.stage_claim2
+msgid "Actions Done"
+msgstr ""
+
+#. module: crm_claim
+#: model:crm.case.stage,name:crm_claim.stage_claim5
+msgid "Actions Defined"
+msgstr ""
+
+#. module: crm_claim
 #: view:crm.claim:0
 msgid "Follow Up"
 msgstr "Seguimento"
@@ -776,3 +781,9 @@ msgstr "Crear data"
 #: field:crm.claim.report,name:0
 msgid "Year"
 msgstr "Ano"
+
+#~ msgid "Fixed"
+#~ msgstr "Fixo"
+
+#~ msgid "Awaiting Response"
+#~ msgstr "Esperando resposta"

@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2011-05-09 10:19+0000\n"
 "PO-Revision-Date: 2011-01-19 12:00+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Spanish (Ecuador) <es_EC@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-25 07:01+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-05-10 07:44+0000\n"
+"X-Generator: Launchpad (build 12959)\n"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_confirmingpurchaseorder0
@@ -23,12 +23,16 @@ msgid ""
 "The buyer has to approve the RFQ before being sent to the supplier. The RFQ "
 "becomes a confirmed Purchase Order."
 msgstr ""
+"El comprador debe aprobar la solicitud de presupuesto antes de enviar al "
+"proveedor. La solicitud de presupuesto se convertirá en un pedido de compra "
+"confirmado."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:282
+#: code:addons/purchase/purchase.py:292
 #, python-format
 msgid "You can not confirm purchase order without Purchase Order Lines."
 msgstr ""
+"No puede confirmar un pedido de compra sin líneas de pedido de compra"
 
 #. module: purchase
 #: field:purchase.order,invoiced:0
@@ -43,17 +47,19 @@ msgid "Destination"
 msgstr "Destino"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:710
+#: code:addons/purchase/purchase.py:721
 #, python-format
 msgid ""
 "You have to select a product UOM in the same category than the purchase UOM "
 "of the product"
 msgstr ""
+"Debe seleccionar una UdM del producto de la misma categoría que la UdM de "
+"compra del producto"
 
 #. module: purchase
 #: help:purchase.report,date:0
 msgid "Date on which this document has been created"
-msgstr ""
+msgstr "Fecha en el que fue creado este documento."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_rfq
@@ -67,6 +73,15 @@ msgid ""
 "supplier invoices: based on the order, based on the receptions or manual "
 "encoding."
 msgstr ""
+"Puede crear una solicitud de cotización cuando se desea comprar productos a "
+"un proveedor, pero la compra no está confirmada todavía. Utilice también "
+"este menú para ver las solicitudes de cotización creadas automáticamente "
+"basado en sus reglas de logística (stock mínimo, objetivo a medio plazo, "
+"etc.) Puede convertir la solicitud de pedido en una orden de compra una vez "
+"que la orden se confirma. Si utiliza la interfaz extendida (de las "
+"preferencias del usuario), puede seleccionar la forma de controlar sus "
+"facturas de proveedores: basado en el orden, basado en las recepciones o "
+"manualmente."
 
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
@@ -76,7 +91,7 @@ msgstr "Desde inventario"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Not Invoiced"
-msgstr ""
+msgstr "No Facturado"
 
 #. module: purchase
 #: field:purchase.order,dest_address_id:0
@@ -90,6 +105,11 @@ msgid "Validated By"
 msgstr "Validado por"
 
 #. module: purchase
+#: model:ir.model,name:purchase.model_stock_invoice_onshipping
+msgid "Stock Invoice Onshipping"
+msgstr ""
+
+#. module: purchase
 #: view:purchase.order:0
 #: field:purchase.order,partner_id:0
 #: view:purchase.order.line:0
@@ -101,7 +121,7 @@ msgstr "Proveedor"
 #. module: purchase
 #: view:purchase.order.line_invoice:0
 msgid "Do you want to generate the supplier invoices ?"
-msgstr ""
+msgstr "¿Desea generar las facturas de proveedor?"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_form_action
@@ -110,35 +130,32 @@ msgid ""
 "products, etc. For each purchase order, you can track the products received, "
 "and control the supplier invoices."
 msgstr ""
-
-#. module: purchase
-#: code:addons/purchase/purchase.py:722
-#, python-format
-msgid "The selected supplier only sells this product by %s"
-msgstr ""
+"Utilice este menú para buscar sus órdenes de compra por: referencia, "
+"proveedor, producto, etc Para cada orden de compra, usted puede rastrear los "
+"productos recibidos, y el control de las facturas de proveedores."
 
 #. module: purchase
 #: code:addons/purchase/wizard/purchase_line_invoice.py:156
 #, python-format
 msgid "Supplier Invoices"
-msgstr ""
+msgstr "Facturas de Proveedor"
 
 #. module: purchase
 #: sql_constraint:purchase.order:0
 msgid "Order Reference must be unique !"
-msgstr ""
+msgstr "¡La referencia del pedido debe ser única!"
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_packinginvoice0
 #: model:process.transition,name:purchase.process_transition_productrecept0
 msgid "From a Pick list"
-msgstr ""
+msgstr "Desde inventario"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:649
+#: code:addons/purchase/purchase.py:660
 #, python-format
 msgid "No Pricelist !"
-msgstr ""
+msgstr "¡No tarifa!"
 
 #. module: purchase
 #: field:purchase.order.line,product_qty:0
@@ -150,7 +167,7 @@ msgstr "Cantidad"
 #. module: purchase
 #: view:purchase.order.line_invoice:0
 msgid "Select an Open Sale Order"
-msgstr ""
+msgstr "Seleccione una orden de venta abierta"
 
 #. module: purchase
 #: field:purchase.order,company_id:0
@@ -158,14 +175,14 @@ msgstr ""
 #: view:purchase.report:0
 #: field:purchase.report,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Compañía"
 
 #. module: purchase
 #: view:board.board:0
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_monthly_categ_graph
 #: view:purchase.report:0
 msgid "Monthly Purchase by Category"
-msgstr ""
+msgstr "Compra mensual por categoría"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -186,7 +203,7 @@ msgstr "Tarifa de compra por defecto"
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_current_purchases
 msgid "Current purchases"
-msgstr ""
+msgstr "Compras actuales"
 
 #. module: purchase
 #: help:purchase.order,dest_address_id:0
@@ -225,18 +242,18 @@ msgstr ""
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_partial_picking
 msgid "Partial Picking"
-msgstr ""
+msgstr "Movimientos parciales"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:286
+#: code:addons/purchase/purchase.py:296
 #, python-format
 msgid "Purchase order '%s' is confirmed."
-msgstr ""
+msgstr "Pedido de compra '%s' está confirmado."
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Approve Purchase"
-msgstr "Aprovar compra"
+msgstr "Aprobar Compra"
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_approvepurchaseorder0
@@ -249,7 +266,7 @@ msgstr "Aprobado"
 #. module: purchase
 #: view:purchase.report:0
 msgid "Reference UOM"
-msgstr ""
+msgstr "Referencia UOM"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -259,12 +276,12 @@ msgstr "Origen"
 #. module: purchase
 #: field:purchase.report,product_uom:0
 msgid "Reference UoM"
-msgstr ""
+msgstr "Referencia UdM"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_line_product_tree
 msgid "Purchases"
-msgstr ""
+msgstr "Compras"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -275,12 +292,14 @@ msgid "Notes"
 msgstr "Notas"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:649
+#: code:addons/purchase/purchase.py:660
 #, python-format
 msgid ""
 "You have to select a pricelist or a supplier in the purchase form !\n"
 "Please set one before choosing a product."
 msgstr ""
+"¡Debe seleccionar una tarifa o un proveedor en el formulario de compra!\n"
+"Indique uno antes de seleccionar un producto."
 
 #. module: purchase
 #: selection:purchase.report,month:0
@@ -349,7 +368,7 @@ msgid "Cancelled"
 msgstr "Cancelado"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:305
+#: code:addons/purchase/purchase.py:315
 #, python-format
 msgid "Purchase amount over the limit"
 msgstr ""
@@ -403,7 +422,7 @@ msgid "Reference"
 msgstr "Referencia"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:237
+#: code:addons/purchase/purchase.py:244
 #, python-format
 msgid "Cannot delete Purchase Order(s) which are in %s State!"
 msgstr "No se puede borrar las Ordenes de Compra que estan en estado %s !"
@@ -425,7 +444,7 @@ msgid "Day"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:334
+#: code:addons/purchase/purchase.py:344
 #, python-format
 msgid "Purchase order '%s' has been set in draft state."
 msgstr ""
@@ -442,8 +461,8 @@ msgid "# of Lines"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:685
-#: code:addons/purchase/purchase.py:722
+#: code:addons/purchase/purchase.py:696
+#: code:addons/purchase/purchase.py:735
 #: code:addons/purchase/wizard/purchase_order_group.py:47
 #, python-format
 msgid "Warning"
@@ -480,7 +499,7 @@ msgid "It indicates that a picking has been done"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:710
+#: code:addons/purchase/purchase.py:721
 #, python-format
 msgid "Wrong Product UOM !"
 msgstr ""
@@ -580,7 +599,7 @@ msgid "Order Lines"
 msgstr "Líneas del pedido"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:651
+#: code:addons/purchase/purchase.py:662
 #, python-format
 msgid "No Partner!"
 msgstr ""
@@ -629,9 +648,9 @@ msgid "Invoices generated for a purchase order"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:282
-#: code:addons/purchase/purchase.py:352
+#: code:addons/purchase/purchase.py:292
 #: code:addons/purchase/purchase.py:362
+#: code:addons/purchase/purchase.py:372
 #: code:addons/purchase/wizard/purchase_line_invoice.py:122
 #, python-format
 msgid "Error !"
@@ -661,9 +680,10 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: view:purchase.order:0
-msgid "Approved by Supplier"
-msgstr "Aprobado por proveedor"
+#: code:addons/purchase/purchase.py:735
+#, python-format
+msgid "The selected supplier only sells this product by %s"
+msgstr "El proveedor seleccionado sólo vende este producto por %s"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_invoicefrompackinglist0
@@ -689,7 +709,7 @@ msgid "Reservation Destination"
 msgstr "Destinación de la reserva"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:237
+#: code:addons/purchase/purchase.py:244
 #, python-format
 msgid "Invalid action !"
 msgstr ""
@@ -767,9 +787,14 @@ msgid "    Month-1    "
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:363
+#: code:addons/purchase/purchase.py:373
 #, python-format
 msgid "There is no purchase journal defined for this company: \"%s\" (id:%d)"
+msgstr ""
+
+#. module: purchase
+#: selection:purchase.order,state:0
+msgid "Waiting Approval"
 msgstr ""
 
 #. module: purchase
@@ -778,7 +803,7 @@ msgid "Manual"
 msgstr "Manual"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:400
+#: code:addons/purchase/purchase.py:410
 #, python-format
 msgid "You must first cancel all picking attached to this purchase order."
 msgstr ""
@@ -894,7 +919,6 @@ msgid "Month"
 msgstr ""
 
 #. module: purchase
-#: selection:purchase.order,state:0
 #: selection:purchase.report,state:0
 msgid "Waiting Supplier Ack"
 msgstr ""
@@ -1091,7 +1115,7 @@ msgid "Manual Invoices"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:308
+#: code:addons/purchase/purchase.py:318
 #, python-format
 msgid ""
 "Somebody has just confirmed a purchase with an amount over the defined limit"
@@ -1108,14 +1132,14 @@ msgid "Extended Filters..."
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:352
+#: code:addons/purchase/purchase.py:362
 #: code:addons/purchase/wizard/purchase_line_invoice.py:123
 #, python-format
 msgid "There is no expense account defined for this product: \"%s\" (id:%d)"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:408
+#: code:addons/purchase/purchase.py:418
 #, python-format
 msgid "You must first cancel all invoices attached to this purchase order."
 msgstr ""
@@ -1162,7 +1186,7 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:685
+#: code:addons/purchase/purchase.py:696
 #, python-format
 msgid ""
 "The selected supplier has a minimal quantity set to %s, you cannot purchase "
@@ -1430,7 +1454,7 @@ msgid "Date Approved"
 msgstr "Fecha aprobación"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:407
+#: code:addons/purchase/purchase.py:417
 #, python-format
 msgid "Could not cancel this purchase order !"
 msgstr ""
@@ -1542,7 +1566,7 @@ msgid "Total Qty and Amount by month"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:399
+#: code:addons/purchase/purchase.py:409
 #, python-format
 msgid "Could not cancel purchase order !"
 msgstr ""
@@ -1686,7 +1710,7 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:414
+#: code:addons/purchase/purchase.py:424
 #, python-format
 msgid "Purchase order '%s' is cancelled."
 msgstr ""
@@ -1763,7 +1787,7 @@ msgid "Partner"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:651
+#: code:addons/purchase/purchase.py:662
 #, python-format
 msgid ""
 "You have to select a partner in the purchase form !\n"
@@ -1808,3 +1832,6 @@ msgstr ""
 #: model:ir.ui.menu,name:purchase.menu_board_purchase
 msgid "Purchase Dashboard"
 msgstr ""
+
+#~ msgid "Approved by Supplier"
+#~ msgstr "Aprobado por proveedor"

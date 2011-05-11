@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2011-01-20 14:13+0000\n"
-"Last-Translator: Numérigraphe <Unknown>\n"
+"POT-Creation-Date: 2011-05-09 10:19+0000\n"
+"PO-Revision-Date: 2011-05-10 01:43+0000\n"
+"Last-Translator: Olivier Dony (OpenERP) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-25 06:54+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-05-10 07:38+0000\n"
+"X-Generator: Launchpad (build 12959)\n"
 
 #. module: product
 #: model:product.template,name:product.product_product_ram512_product_template
@@ -115,8 +115,8 @@ msgstr "Fixé"
 
 #. module: product
 #: code:addons/product/pricelist.py:186
-#: code:addons/product/pricelist.py:339
-#: code:addons/product/pricelist.py:357
+#: code:addons/product/pricelist.py:342
+#: code:addons/product/pricelist.py:360
 #, python-format
 msgid "Warning !"
 msgstr "Avertissement !"
@@ -270,7 +270,7 @@ msgid "  e.g: 1 * (this unit) = ratio * (reference unit)"
 msgstr "  par exemple : 1 x (cette unité) = ratio x (unité de référence)"
 
 #. module: product
-#: code:addons/product/product.py:378
+#: code:addons/product/product.py:380
 #, python-format
 msgid "Products: "
 msgstr "Produits: "
@@ -559,7 +559,7 @@ msgid "Metal Cleats"
 msgstr "Taquets en métal"
 
 #. module: product
-#: code:addons/product/pricelist.py:340
+#: code:addons/product/pricelist.py:343
 #, python-format
 msgid ""
 "No active version for the selected pricelist !\n"
@@ -1347,7 +1347,7 @@ msgid "Pallet Dimension"
 msgstr "Dimension d'une Palette"
 
 #. module: product
-#: code:addons/product/product.py:603
+#: code:addons/product/product.py:618
 #, python-format
 msgid " (copy)"
 msgstr " (copie)"
@@ -1448,6 +1448,12 @@ msgstr "Le poids brut en Kg."
 #: view:product.template:0
 msgid "Procurement"
 msgstr "Besoin"
+
+#. module: product
+#: view:product.product:0
+#: view:product.template:0
+msgid "Weights"
+msgstr "Poids"
 
 #. module: product
 #: field:product.uom,category_id:0
@@ -1649,6 +1655,12 @@ msgstr ""
 "1 x (unité de référence) = ratio x (cette unité)"
 
 #. module: product
+#: model:ir.actions.act_window,name:product.product_price_type_action
+#: model:ir.ui.menu,name:product.menu_product_price_type
+msgid "Price Types"
+msgstr ""
+
+#. module: product
 #: help:product.template,uom_id:0
 msgid "Default Unit of Measure used for all stock operation."
 msgstr ""
@@ -1832,11 +1844,6 @@ msgid "Company"
 msgstr "Société"
 
 #. module: product
-#: model:ir.actions.act_window,name:product.product_price_type_action
-msgid "Prices Types"
-msgstr "Types de prix"
-
-#. module: product
 #: help:product.template,list_price:0
 msgid ""
 "Base price for computing the customer price. Sometimes called the catalog "
@@ -1845,7 +1852,7 @@ msgstr ""
 "Prix de base pour le calcul du prix client. Parfois appelé prix catalogue."
 
 #. module: product
-#: code:addons/product/pricelist.py:515
+#: code:addons/product/pricelist.py:518
 #, python-format
 msgid "Partner section of the product form"
 msgstr "Section partenaire dans le formulaire produit"
@@ -2124,12 +2131,6 @@ msgid "Complete PC With Peripherals"
 msgstr "PC complet avec périphériques"
 
 #. module: product
-#: view:product.product:0
-#: view:product.template:0
-msgid "Weights"
-msgstr "Poids"
-
-#. module: product
 #: constraint:res.partner:0
 msgid "Error ! You can not create recursive associated members."
 msgstr "Erreur ! Vous ne pouvez pas créer de membres associés récursifs."
@@ -2289,7 +2290,7 @@ msgid "Description"
 msgstr "Description"
 
 #. module: product
-#: code:addons/product/pricelist.py:358
+#: code:addons/product/pricelist.py:361
 #, python-format
 msgid ""
 "Could not resolve product category, you have defined cyclic categories of "
@@ -2338,7 +2339,7 @@ msgid "Shelves"
 msgstr "Étagères"
 
 #. module: product
-#: code:addons/product/pricelist.py:514
+#: code:addons/product/pricelist.py:517
 #, python-format
 msgid "Other Pricelist"
 msgstr "Autre liste de prix"
@@ -2425,3 +2426,9 @@ msgstr "Le volume en m³"
 #: field:product.pricelist.item,price_discount:0
 msgid "Price Discount"
 msgstr "Réduction sur le prix"
+
+#~ msgid "Prices Types"
+#~ msgstr "Types de prix"
+
+#~ msgid "Weigths"
+#~ msgstr "Poids"

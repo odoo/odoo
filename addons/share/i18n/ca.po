@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:16+0000\n"
+"POT-Creation-Date: 2011-05-09 10:19+0000\n"
 "PO-Revision-Date: 2011-03-20 19:58+0000\n"
 "Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
 "<jesteve@zikzakmedia.com>\n"
@@ -15,8 +15,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-03-21 06:22+0000\n"
-"X-Generator: Launchpad (build 12559)\n"
+"X-Launchpad-Export-Date: 2011-05-10 07:45+0000\n"
+"X-Generator: Launchpad (build 12959)\n"
 
 #. module: share
 #: code:addons/share/web/editors.py:15
@@ -25,7 +25,7 @@ msgid "Sharing"
 msgstr "Compartits"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:434
+#: code:addons/share/wizard/share_wizard.py:462
 #, python-format
 msgid ""
 "This additional data has been automatically added to your current access.\n"
@@ -46,9 +46,11 @@ msgstr ""
 "usuaris."
 
 #. module: share
-#: model:ir.module.module,shortdesc:share.module_meta_information
-msgid "Share Management"
-msgstr "Gestió de comparticions"
+#: constraint:res.users:0
+msgid "The chosen company is not in the allowed companies for this user"
+msgstr ""
+"La companyia seleccionada no està en les companyies permeses per aquest "
+"usuari"
 
 #. module: share
 #: sql_constraint:res.users:0
@@ -62,13 +64,12 @@ msgid "Sharing Wizard - Step 1"
 msgstr "Assistent compartició - Pas 1"
 
 #. module: share
-#: model:ir.actions.act_window,name:share.action_share_wizard
-#: model:ir.ui.menu,name:share.menu_action_share_wizard
-msgid "Share Access Rules"
-msgstr "Regles d'accés a comparticions"
+#: view:share.wizard:0
+msgid "Who would you want to share this data with?"
+msgstr "Amb qui voldríeu compartir aquestes dades?"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:425
+#: code:addons/share/wizard/share_wizard.py:453
 #, python-format
 msgid ""
 "Dear,\n"
@@ -78,10 +79,14 @@ msgstr ""
 "\n"
 
 #. module: share
-#: constraint:res.users:0
-msgid "The chosen company is not in the allowed companies for this user"
+#: code:addons/share/wizard/share_wizard.py:463
+#, python-format
+msgid ""
+"You may use your existing login and password to view it. As a reminder, your "
+"login is %s.\n"
 msgstr ""
-"L'empresa seleccionada no està en les empreses permeses per aquest usuari"
+"Podeu utilitzar el vostre login i contrasenya per veure-ho. Com a "
+"recordatori, el vostre login és %s.\n"
 
 #. module: share
 #: model:ir.model,name:share.model_res_users
@@ -113,7 +118,7 @@ msgid "Congratulations, you have successfully setup a new shared access!"
 msgstr "Acabeu de configurar correctament un nou accés compartit!"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:247
+#: code:addons/share/wizard/share_wizard.py:275
 #, python-format
 msgid "(Copy for sharing)"
 msgstr "(Còpia per compartir)"
@@ -129,7 +134,7 @@ msgid "Generic Share Access URL"
 msgstr "URL genèrica d'accés compartit"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:429
+#: code:addons/share/wizard/share_wizard.py:457
 #, python-format
 msgid ""
 "You may use the following login and password to get access to this protected "
@@ -164,7 +169,7 @@ msgid "Share wizard: step 1"
 msgstr "Assistent compartició: pas 1"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:430
+#: code:addons/share/wizard/share_wizard.py:458
 #: field:share.wizard.result.line,login:0
 #, python-format
 msgid "Username"
@@ -176,7 +181,7 @@ msgid "Share User"
 msgstr "Comparteix usuari"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:424
+#: code:addons/share/wizard/share_wizard.py:452
 #, python-format
 msgid "%s has shared OpenERP %s information with you"
 msgstr "%s a compartit la informació %s d'OpenERP amb tu"
@@ -185,12 +190,6 @@ msgstr "%s a compartit la informació %s d'OpenERP amb tu"
 #: view:share.wizard:0
 msgid "Finish"
 msgstr "Finalitza"
-
-#. module: share
-#: field:share.wizard,user_ids:0
-#: field:share.wizard.user,user_id:0
-msgid "Users"
-msgstr "Usuaris/es"
 
 #. module: share
 #: code:addons/share/wizard/share_wizard.py:103
@@ -210,20 +209,10 @@ msgid "New users"
 msgstr "Usuaris nous"
 
 #. module: share
-#: model:ir.model,name:share.model_res_groups
-msgid "res.groups"
-msgstr "res.grups"
-
-#. module: share
-#: code:addons/share/wizard/share_wizard.py:121
+#: code:addons/share/wizard/share_wizard.py:149
 #, python-format
 msgid "%s (Shared)"
 msgstr "%s (Compartit)"
-
-#. module: share
-#: sql_constraint:res.groups:0
-msgid "The name of the group must be unique !"
-msgstr "El nom del grup ha de ser únic!"
 
 #. module: share
 #: selection:share.wizard,user_type:0
@@ -231,7 +220,28 @@ msgid "New users (emails required)"
 msgstr "Nous usuaris (adreces de correu electrònic requerides)"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:390
+#: sql_constraint:res.groups:0
+msgid "The name of the group must be unique !"
+msgstr "El nom del grup ha de ser únic!"
+
+#. module: share
+#: model:ir.module.module,shortdesc:share.module_meta_information
+msgid "Sharing Tools"
+msgstr ""
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:460
+#, python-format
+msgid "Database"
+msgstr "Base de dades"
+
+#. module: share
+#: view:share.wizard:0
+msgid "Send Email Notification(s)"
+msgstr "Envia notificacions per correu electrònic"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:418
 #, python-format
 msgid "Sharing filter created by user %s (%s) for group %s"
 msgstr "Filtre de compartició creat per l'usuari %s (%s) per al grup %s"
@@ -252,37 +262,16 @@ msgid "Share Group"
 msgstr "Grup compartit"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:431
+#: code:addons/share/wizard/share_wizard.py:459
 #: field:share.wizard.result.line,password:0
 #, python-format
 msgid "Password"
 msgstr "Contrasenya"
 
 #. module: share
-#: view:share.wizard:0
-msgid "Who would you want to share this data with?"
-msgstr "Amb qui voldríeu compartir aquestes dades?"
-
-#. module: share
-#: model:ir.module.module,description:share.module_meta_information
-msgid ""
-"The goal is to implement a generic sharing mechanism, where user of OpenERP\n"
-"can share data from OpenERP to their colleagues, customers, or friends.\n"
-"The system will work by creating new users and groups on the fly, and by\n"
-"combining the appropriate access rights and ir.rules to ensure that the "
-"/shared\n"
-"users/ will only have access to the correct data.\n"
-"    "
-msgstr ""
-"L'objectiu és implementar un mecanisme genèric de col·laboració, on un "
-"usuari d'OpenERP\n"
-"pot compartir informació d'OpenERP amb els seus companys, clients, o amics.\n"
-"El sistema funcionarà creant nous usuaris i grups sobre la marxa, i "
-"combinant\n"
-"les regles d'accés apropiades i ir.rules per assegurar que els /usuaris "
-"compartits/ tinguin\n"
-"únicament accés a la informació adequada.\n"
-"    "
+#: field:share.wizard,user_type:0
+msgid "Users to share with"
+msgstr "Usuaris amb els quals compartir"
 
 #. module: share
 #: code:addons/share/wizard/share_wizard.py:102
@@ -291,30 +280,14 @@ msgid "User already exists"
 msgstr "L'usuari ja existeix"
 
 #. module: share
-#: view:share.wizard:0
-msgid "Send Email Notification(s)"
-msgstr "Envia notificacions per correu electrònic"
-
-#. module: share
-#: code:addons/share/wizard/share_wizard.py:435
-#, python-format
-msgid ""
-"You may use your existing login and password to view it. As a reminder, your "
-"login is %s.\n"
+#: field:share.wizard,user_ids:0
+msgid "Existing users"
 msgstr ""
-"Podeu utilitzar el vostre login i contrasenya per veure-ho. Com a "
-"recordatori, el vostre login és %s.\n"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:432
-#, python-format
-msgid "Database"
-msgstr "Base de dades"
-
-#. module: share
-#: model:ir.model,name:share.model_share_wizard_user
-msgid "share.wizard.user"
-msgstr "comparteix.assistent.usuari"
+#: model:ir.model,name:share.model_res_groups
+msgid "Access Groups"
+msgstr ""
 
 #. module: share
 #: view:share.wizard:0
@@ -337,25 +310,20 @@ msgid "Summary"
 msgstr "Resum"
 
 #. module: share
-#: field:share.wizard,user_type:0
-msgid "Users to share with"
-msgstr "Usuaris amb els quals compartir"
-
-#. module: share
-#: code:addons/share/wizard/share_wizard.py:276
+#: code:addons/share/wizard/share_wizard.py:304
 #, python-format
 msgid "Indirect sharing filter created by user %s (%s) for group %s"
 msgstr ""
 "Filtre de compartició indirecta creat per l'usuari %s (%s) per al grup %s"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:420
+#: code:addons/share/wizard/share_wizard.py:448
 #, python-format
 msgid "Email required"
 msgstr "Correu electrònic requerit"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:212
+#: code:addons/share/wizard/share_wizard.py:240
 #, python-format
 msgid "Copied access for sharing"
 msgstr "Accés copiat per a compartició"
@@ -377,7 +345,31 @@ msgstr ""
 "línia)"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:420
+#: model:ir.module.module,description:share.module_meta_information
+msgid ""
+"\n"
+"\n"
+"    This module adds generic sharing tools to your current OpenERP "
+"database,\n"
+"    and specifically a 'share' button that is available in the Web client "
+"to\n"
+"    share any kind of OpenERP data with colleagues, customers, friends, "
+"etc.\n"
+"\n"
+"    The system will work by creating new users and groups on the fly, and "
+"by\n"
+"    combining the appropriate access rights and ir.rules to ensure that the\n"
+"    shared users only have access to the data that has been shared with "
+"them.\n"
+"\n"
+"    This is extremely useful for collaborative work, knowledge sharing, \n"
+"    synchronization with other companies, etc.\n"
+"\n"
+"    "
+msgstr ""
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:448
 #, python-format
 msgid ""
 "The current user must have an email address configured in User Preferences "
@@ -402,7 +394,7 @@ msgid "Domain"
 msgstr "Domini"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:286
+#: code:addons/share/wizard/share_wizard.py:314
 #, python-format
 msgid ""
 "Sorry, the current screen and filter you are trying to share are not "
@@ -424,7 +416,7 @@ msgid "Access info"
 msgstr "Informació d'accés"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:426
+#: code:addons/share/wizard/share_wizard.py:454
 #, python-format
 msgid ""
 "To access it, you can go to the following URL:\n"
@@ -445,7 +437,7 @@ msgid "Share"
 msgstr "Comparteix"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:406
+#: code:addons/share/wizard/share_wizard.py:434
 #, python-format
 msgid "Sharing Wizard - Step 2"
 msgstr "Assistent de compartició - Pas 2"
@@ -461,16 +453,17 @@ msgid "share.wizard.result.line"
 msgstr "comparteix.assistent.resultat.línia"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:285
+#: code:addons/share/wizard/share_wizard.py:313
 #, python-format
 msgid "Sharing access could not be setup"
 msgstr "No s'ha pogut configurar l'accés compartit"
 
 #. module: share
+#: model:ir.actions.act_window,name:share.action_share_wizard
 #: model:ir.actions.act_window,name:share.action_share_wizard_step1
 #: model:ir.model,name:share.model_share_wizard
+#: model:ir.ui.menu,name:share.menu_action_share_wizard
 #: field:share.wizard.result.line,share_wizard_id:0
-#: field:share.wizard.user,share_wizard_id:0
 msgid "Share Wizard"
 msgstr "Assistent de compartició"
 
@@ -510,7 +503,41 @@ msgid "Read-only"
 msgstr "Només lectura"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:295
+#: code:addons/share/wizard/share_wizard.py:323
 #, python-format
 msgid "*usual password*"
 msgstr "*contrasenya habitual*"
+
+#~ msgid "Share Management"
+#~ msgstr "Gestió de comparticions"
+
+#~ msgid "Share Access Rules"
+#~ msgstr "Regles d'accés a comparticions"
+
+#~ msgid "Users"
+#~ msgstr "Usuaris/es"
+
+#~ msgid "res.groups"
+#~ msgstr "res.grups"
+
+#~ msgid "share.wizard.user"
+#~ msgstr "comparteix.assistent.usuari"
+
+#~ msgid ""
+#~ "The goal is to implement a generic sharing mechanism, where user of OpenERP\n"
+#~ "can share data from OpenERP to their colleagues, customers, or friends.\n"
+#~ "The system will work by creating new users and groups on the fly, and by\n"
+#~ "combining the appropriate access rights and ir.rules to ensure that the "
+#~ "/shared\n"
+#~ "users/ will only have access to the correct data.\n"
+#~ "    "
+#~ msgstr ""
+#~ "L'objectiu és implementar un mecanisme genèric de col·laboració, on un "
+#~ "usuari d'OpenERP\n"
+#~ "pot compartir informació d'OpenERP amb els seus companys, clients, o amics.\n"
+#~ "El sistema funcionarà creant nous usuaris i grups sobre la marxa, i "
+#~ "combinant\n"
+#~ "les regles d'accés apropiades i ir.rules per assegurar que els /usuaris "
+#~ "compartits/ tinguin\n"
+#~ "únicament accés a la informació adequada.\n"
+#~ "    "

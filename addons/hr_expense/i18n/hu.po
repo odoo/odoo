@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2011-05-09 10:18+0000\n"
 "PO-Revision-Date: 2011-01-19 12:00+0000\n"
 "Last-Translator: NOVOTRADE RENDSZERHÁZ <openerp@novotrade.hu>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-25 06:42+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-05-10 07:30+0000\n"
+"X-Generator: Launchpad (build 12959)\n"
 
 #. module: hr_expense
 #: model:process.node,name:hr_expense.process_node_confirmedexpenses0
@@ -76,7 +76,7 @@ msgstr "Vállalat"
 #. module: hr_expense
 #: view:hr.expense.expense:0
 msgid "Set to Draft"
-msgstr "Piszkozat"
+msgstr "Beállítás tervezetnek"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -208,7 +208,7 @@ msgstr "Sorok száma"
 #. module: hr_expense
 #: model:process.transition,name:hr_expense.process_transition_refuseexpense0
 msgid "Refuse expense"
-msgstr "Elutasított költségek"
+msgstr "Költségek elutasítása"
 
 #. module: hr_expense
 #: model:product.template,name:hr_expense.product_product_expense_car_product_template
@@ -235,6 +235,12 @@ msgstr "Megerősítés"
 #: model:process.node,note:hr_expense.process_node_supplierinvoice0
 msgid "The accoutant validates the sheet"
 msgstr "A könyvelő jóváhagyja a táblázatot"
+
+#. module: hr_expense
+#: code:addons/hr_expense/hr_expense.py:159
+#, python-format
+msgid "The employee's home address must have a partner linked."
+msgstr ""
 
 #. module: hr_expense
 #: field:hr.expense.report,delay_valid:0
@@ -266,13 +272,13 @@ msgid "State"
 msgstr "Állapot"
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:145
+#: code:addons/hr_expense/hr_expense.py:144
 #, python-format
 msgid ""
 "Please configure Default Expense account for Product purchase, "
 "`property_account_expense_categ`"
 msgstr ""
-"Kérem, állítsa be a termékbeszerzés alapértelmezett költség számláját, "
+"Kérem, állítsa be az alapértelmezett beszerzés főkönyvi számlát a termékre, "
 "`property_account_expense_categ`"
 
 #. module: hr_expense
@@ -287,22 +293,24 @@ msgstr "Alkalmazott"
 #: report:hr.expense:0
 #: field:hr.expense.report,product_qty:0
 msgid "Qty"
-msgstr "Db"
+msgstr "Menny."
 
 #. module: hr_expense
 #: view:hr.expense.report:0
 #: field:hr.expense.report,price_total:0
 msgid "Total Price"
-msgstr "Teljes ár"
+msgstr "Összérték"
 
 #. module: hr_expense
 #: model:process.node,note:hr_expense.process_node_reinvoicing0
 msgid "Some costs may be reinvoices to the customer"
-msgstr "A költségek egy részét valószínűleg ki lehet számlázni a vevőknek"
+msgstr ""
+"A költségek egy részét valószínűleg tovább lehet számlázni a vevőknek"
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:145
-#: code:addons/hr_expense/hr_expense.py:158
+#: code:addons/hr_expense/hr_expense.py:144
+#: code:addons/hr_expense/hr_expense.py:157
+#: code:addons/hr_expense/hr_expense.py:159
 #, python-format
 msgid "Error !"
 msgstr "Hiba !"
@@ -359,12 +367,6 @@ msgstr "A költségek megtérítése a számla elkészülte után"
 #: model:process.node,name:hr_expense.process_node_reimbursement0
 msgid "Reimbursement"
 msgstr "Megtérítés"
-
-#. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:158
-#, python-format
-msgid "The employee must have a Home address"
-msgstr "Az alkalmazottnak meg kell adni otthoni címet"
 
 #. module: hr_expense
 #: view:hr.expense.report:0
@@ -495,7 +497,7 @@ msgstr "Augusztus"
 #. module: hr_expense
 #: model:process.node,note:hr_expense.process_node_approved0
 msgid "The direct manager approves the sheet"
-msgstr "A közvetlen főnök jóváhagyja a táblázatot"
+msgstr "A közvetlen felettes jóváhagyja a táblázatot"
 
 #. module: hr_expense
 #: field:hr.expense.expense,amount:0
@@ -541,6 +543,12 @@ msgid "Extended Filters..."
 msgstr "Kiterjesztett szűrők…"
 
 #. module: hr_expense
+#: code:addons/hr_expense/hr_expense.py:157
+#, python-format
+msgid "The employee must have a Home address."
+msgstr ""
+
+#. module: hr_expense
 #: selection:hr.expense.report,month:0
 msgid "October"
 msgstr "Október"
@@ -569,7 +577,7 @@ msgstr "Az alkalmazott jóváhagyja a költségtáblázatát"
 #: model:process.node,note:hr_expense.process_node_refused0
 msgid "The direct manager refuses the sheet.Reset as draft."
 msgstr ""
-"A közvetlen főnök nem hagyja jóvá a táblázatot. Visszaállítás tervezet "
+"A közvetlen felettes nem hagyja jóvá a táblázatot. Visszaállítás tervezet "
 "állapotba."
 
 #. module: hr_expense
@@ -704,7 +712,7 @@ msgstr "Mennyiségek"
 #. module: hr_expense
 #: report:hr.expense:0
 msgid "Price"
-msgstr "Ár"
+msgstr "Érték"
 
 #. module: hr_expense
 #: field:hr.expense.report,no_of_account:0
@@ -874,3 +882,7 @@ msgstr ""
 #: model:process.node,name:hr_expense.process_node_reinvoicing0
 msgid "Reinvoicing"
 msgstr "Továbbszámlázás"
+
+#, python-format
+#~ msgid "The employee must have a Home address"
+#~ msgstr "Az alkalmazottnak meg kell adni otthoni címet"

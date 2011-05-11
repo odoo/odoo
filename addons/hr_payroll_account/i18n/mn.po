@@ -6,26 +6,31 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"POT-Creation-Date: 2011-05-09 10:18+0000\n"
 "PO-Revision-Date: 2011-01-19 12:00+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-25 06:43+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-05-10 07:31+0000\n"
+"X-Generator: Launchpad (build 12959)\n"
 
 #. module: hr_payroll_account
-#: field:hr.payslip,move_line_ids:0
-msgid "Accounting Lines"
-msgstr "Гүйлгээний мөрүүд"
+#: view:hr.employee:0
+msgid "Employee Bank Account"
+msgstr ""
 
 #. module: hr_payroll_account
 #: field:hr.payroll.register,bank_journal_id:0
 #: field:hr.payslip,bank_journal_id:0
 msgid "Bank Journal"
 msgstr "Банкны журнал"
+
+#. module: hr_payroll_account
+#: field:hr.payslip,move_line_ids:0
+msgid "Accounting Lines"
+msgstr "Гүйлгээний мөрүүд"
 
 #. module: hr_payroll_account
 #: model:ir.model,name:hr_payroll_account.model_hr_contibution_register_line
@@ -41,6 +46,15 @@ msgstr "Ажил олгогчийн даах суутгалын бүртгэл"
 #: help:hr.employee,analytic_account:0
 msgid "Analytic Account for Salary Analysis"
 msgstr "Цалингийн шинжилгээний аналитик данс"
+
+#. module: hr_payroll_account
+#: code:addons/hr_payroll_account/hr_payroll_account.py:430
+#: code:addons/hr_payroll_account/hr_payroll_account.py:433
+#: code:addons/hr_payroll_account/hr_payroll_account.py:540
+#: code:addons/hr_payroll_account/hr_payroll_account.py:557
+#, python-format
+msgid "Configuration Error !"
+msgstr ""
 
 #. module: hr_payroll_account
 #: field:hr.payroll.register,journal_id:0
@@ -70,7 +84,9 @@ msgstr "Цалингийн данс"
 
 #. module: hr_payroll_account
 #: help:hr.employee,property_bank_account:0
-msgid "Select Bank Account from where Salary Expense will be Paid"
+msgid ""
+"Select Bank Account from where Salary Expense will be Paid, to be used for "
+"payslip verification."
 msgstr ""
 
 #. module: hr_payroll_account
@@ -89,16 +105,10 @@ msgid "Description"
 msgstr "Тайлбар"
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:330
+#: code:addons/hr_payroll_account/hr_payroll_account.py:331
 #, python-format
 msgid "Please Confirm all Expense Invoice appear for Reimbursement"
 msgstr "Буцаалтын төлбөр болон үүссэн бүх зардлын нэхэмжлэлийг батална уу"
-
-#. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:432
-#, python-format
-msgid "Please defined partner in bank account for %s !"
-msgstr ""
 
 #. module: hr_payroll_account
 #: view:hr.payslip:0
@@ -111,19 +121,9 @@ msgid "Expense account when Salary Expense will be recorded"
 msgstr ""
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:429
+#: code:addons/hr_payroll_account/hr_payroll_account.py:433
 #, python-format
-msgid "Please defined bank account for %s !"
-msgstr ""
-
-#. module: hr_payroll_account
-#: model:ir.module.module,description:hr_payroll_account.module_meta_information
-msgid ""
-"Generic Payroll system Integrated with Accountings\n"
-"    * Expanse Encoding\n"
-"    * Payment Encoding\n"
-"    * Comany Contribution Managemet\n"
-"    "
+msgid "Please define partner in bank account for %s !"
 msgstr ""
 
 #. module: hr_payroll_account
@@ -138,11 +138,17 @@ msgid "Payment Lines"
 msgstr "Төлбөрийн мөрүүд"
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:273
-#: code:addons/hr_payroll_account/hr_payroll_account.py:444
+#: code:addons/hr_payroll_account/hr_payroll_account.py:270
+#: code:addons/hr_payroll_account/hr_payroll_account.py:445
 #, python-format
 msgid "Please define fiscal year for perticular contract"
 msgstr "Тухайн гэрээнд зориулан санхүүгийн жил тодорхойлно уу !"
+
+#. module: hr_payroll_account
+#: code:addons/hr_payroll_account/hr_payroll_account.py:297
+#, python-format
+msgid "Employee Bank Account is not defined for %s"
+msgstr ""
 
 #. module: hr_payroll_account
 #: field:hr.payslip.account.move,slip_id:0
@@ -178,6 +184,21 @@ msgid "Name"
 msgstr "Нэр"
 
 #. module: hr_payroll_account
+#: model:ir.module.module,description:hr_payroll_account.module_meta_information
+msgid ""
+"Generic Payroll system Integrated with Accountings\n"
+"    * Expense Encoding\n"
+"    * Payment Encoding\n"
+"    * Company Contribution Management\n"
+"    "
+msgstr ""
+"Санхүү бүртгэлтэй уялдаатай цалингийн ерөнхий систем\n"
+"       Зардлын бүртгэл\n"
+"       Төлбөрийн бүртгэл\n"
+"        Ажил олгогчийн даах суутгалын удирдлага\n"
+"    "
+
+#. module: hr_payroll_account
 #: model:ir.model,name:hr_payroll_account.model_hr_payslip_line
 msgid "Payslip Line"
 msgstr "Цалингийн хуудасны мөр"
@@ -201,6 +222,12 @@ msgstr ""
 "Цалингийн хуудас батламжилсан мөчлөгийг хэрэглэх бол хоосон үлдээнэ үү!"
 
 #. module: hr_payroll_account
+#: code:addons/hr_payroll_account/hr_payroll_account.py:469
+#, python-format
+msgid "Please define Salary Account for %s."
+msgstr ""
+
+#. module: hr_payroll_account
 #: model:ir.model,name:hr_payroll_account.model_hr_payroll_advice
 msgid "Bank Advice Note"
 msgstr "Банкны мэдэгдлийн тэмдэглэл"
@@ -216,13 +243,16 @@ msgid "Accounting vouchers"
 msgstr "Санхүүгийн батлан даалт(ваучер)"
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:273
+#: code:addons/hr_payroll_account/hr_payroll_account.py:270
+#: code:addons/hr_payroll_account/hr_payroll_account.py:277
 #: code:addons/hr_payroll_account/hr_payroll_account.py:280
-#: code:addons/hr_payroll_account/hr_payroll_account.py:283
-#: code:addons/hr_payroll_account/hr_payroll_account.py:330
-#: code:addons/hr_payroll_account/hr_payroll_account.py:444
-#: code:addons/hr_payroll_account/hr_payroll_account.py:451
-#: code:addons/hr_payroll_account/hr_payroll_account.py:454
+#: code:addons/hr_payroll_account/hr_payroll_account.py:297
+#: code:addons/hr_payroll_account/hr_payroll_account.py:331
+#: code:addons/hr_payroll_account/hr_payroll_account.py:445
+#: code:addons/hr_payroll_account/hr_payroll_account.py:452
+#: code:addons/hr_payroll_account/hr_payroll_account.py:455
+#: code:addons/hr_payroll_account/hr_payroll_account.py:469
+#: code:addons/hr_payroll_account/hr_payroll_account.py:492
 #, python-format
 msgid "Warning !"
 msgstr "Анхааруулга !"
@@ -259,8 +289,8 @@ msgid "Leave Type"
 msgstr "Амралт, чөлөөний төрөл"
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:280
-#: code:addons/hr_payroll_account/hr_payroll_account.py:451
+#: code:addons/hr_payroll_account/hr_payroll_account.py:277
+#: code:addons/hr_payroll_account/hr_payroll_account.py:452
 #, python-format
 msgid "Fiscal Year is not defined for slip date %s"
 msgstr ""
@@ -280,6 +310,12 @@ msgid "Employee Payable Account"
 msgstr "Ажилтны(цалингийн) өглөгийн данс"
 
 #. module: hr_payroll_account
+#: code:addons/hr_payroll_account/hr_payroll_account.py:492
+#, python-format
+msgid "Please define Employee Payable Account for %s."
+msgstr ""
+
+#. module: hr_payroll_account
 #: field:hr.contibution.register,yearly_total_by_comp:0
 msgid "Total By Company"
 msgstr "Компаний хувьд бүгд"
@@ -290,7 +326,7 @@ msgid "Salary Structure"
 msgstr "Цалингийн шатлал"
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:550
+#: code:addons/hr_payroll_account/hr_payroll_account.py:557
 #, python-format
 msgid "Please Configure Partners Receivable Account!!"
 msgstr "Харилцагчийн авлагын дансыг тодорхойлно уу!"
@@ -301,8 +337,8 @@ msgid "Year"
 msgstr "Жилийн"
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:283
-#: code:addons/hr_payroll_account/hr_payroll_account.py:454
+#: code:addons/hr_payroll_account/hr_payroll_account.py:280
+#: code:addons/hr_payroll_account/hr_payroll_account.py:455
 #, python-format
 msgid "Period is not defined for slip date %s"
 msgstr ""
@@ -313,16 +349,17 @@ msgid "Accounting Details"
 msgstr "Санхүү бүртгэлийн мэдээлэл"
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:533
+#: code:addons/hr_payroll_account/hr_payroll_account.py:540
 #, python-format
 msgid "Please Configure Partners Payable Account!!"
 msgstr "Харилцагчийн өглөгийн дансыг тодорхойлно уу!"
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:429
-#: code:addons/hr_payroll_account/hr_payroll_account.py:432
-#: code:addons/hr_payroll_account/hr_payroll_account.py:533
-#: code:addons/hr_payroll_account/hr_payroll_account.py:550
+#: code:addons/hr_payroll_account/hr_payroll_account.py:430
 #, python-format
-msgid "Integrity Error !"
-msgstr "Өгөгдөл бүрэн биш алдаа !"
+msgid "Please define bank account for %s !"
+msgstr ""
+
+#, python-format
+#~ msgid "Integrity Error !"
+#~ msgstr "Өгөгдөл бүрэн биш алдаа !"
