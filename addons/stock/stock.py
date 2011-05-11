@@ -658,6 +658,19 @@ class stock_picking(osv.osv):
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.picking', context=c)
     }
+
+    def _destination_location(self, cr, uid, ids, context=None):
+        if context is None: 
+            context = {}
+        for record in self.browse(cr, uid, ids, context=context)[0].move_lines:
+            if record.location_dest_id.usage == 'view':
+                return False
+        return True
+
+    _constraints = [
+        (_destination_location, 'You cannot put view type location as Destination location.', ['location_dest_id'])
+    ]
+
     def action_process(self, cr, uid, ids, context=None):
         if context is None: context = {}
         partial_id = self.pool.get("stock.partial.picking").create(
