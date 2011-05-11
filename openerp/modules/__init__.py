@@ -50,6 +50,8 @@ from cStringIO import StringIO
 
 import logging
 
+import openerp.modules.db
+
 logger = netsvc.Logger()
 
 _ad = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'addons') # default addons path (base)
@@ -417,6 +419,8 @@ def upgrade_graph(graph, cr, module_list, force=None):
     len_graph = len(graph)
     for module in module_list:
         # This will raise an exception if no/unreadable descriptor file.
+        # NOTE The call to load_information_from_description_file is already
+        # done by db.initialize, so it is possible to not do it again here.
         info = load_information_from_description_file(module)
         if info['installable']:
             packages.append((module, info)) # TODO directly a dict, like in get_modules_with_version
@@ -504,9 +508,13 @@ def load_module(module_name):
             fm[0].close()
 
 
-def register_class(m):
-    """
-    Register module named m, if not already registered
+def register_module_classes(m):
+    """ Register module named m, if not already registered.
+
+    This will load the module and register all of its models. (Actually, the
+    explicit constructor call of each of the models inside the module will
+    register them.)
+
     """
 
     def log(e):
@@ -773,7 +781,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
             continue
         logger.notifyChannel('init', netsvc.LOG_INFO, 'module %s: loading objects' % package.name)
         migrations.migrate_module(package, 'pre')
-        register_class(package.name)
+        register_module_classes(package.name)
         models = pool.instanciate(package.name, cr)
         if hasattr(package, 'init') or hasattr(package, 'update') or package.state in ('to install', 'to upgrade'):
             init_module_models(cr, package.name, models)
@@ -869,7 +877,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         cr.execute("SELECT relname FROM pg_class WHERE relkind='r' AND relname='ir_module_module'")
         if len(cr.fetchall())==0:
             logger.notifyChannel("init", netsvc.LOG_INFO, "init db")
-            tools.init_db(cr)
+            openerp.modules.db.initialize(cr)
             tools.config["init"]["all"] = 1
             tools.config['update']['all'] = 1
             if not tools.config['without_demo']:

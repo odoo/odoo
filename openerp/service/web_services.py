@@ -35,6 +35,7 @@ import openerp.pooler as pooler
 import openerp.release as release
 import openerp.sql_db as sql_db
 import openerp.tools as tools
+import openerp.modules
 import locale
 import logging
 from cStringIO import StringIO
@@ -92,7 +93,7 @@ class db(netsvc.ExportService):
                 try:
                     serv.actions[id]['progress'] = 0
                     cr = sql_db.db_connect(db_name).cursor()
-                    tools.init_db(cr)
+                    openerp.modules.db.initialize(cr)
                     tools.config['lang'] = lang
                     cr.commit()
                     cr.close()
