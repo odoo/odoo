@@ -50,7 +50,8 @@
         'wizard/account_followup_print_view.xml',
         'report/account_followup_report.xml',
         'account_followup_view.xml',
-        'account_followup_data.xml'
+        'account_followup_data.xml',
+        'security/account_followup_security.xml'
     ],
     'demo_xml': ['account_followup_demo.xml'],
     'test': ['test/account_followup.yml'],
