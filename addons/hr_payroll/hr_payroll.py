@@ -164,17 +164,17 @@ class contrib_register(osv.osv):
 
 contrib_register()
 
-class hr_salary_category(osv.osv):
+class hr_salary_rule_category(osv.osv):
     """
-    HR Salary Category
+    HR Salary Rule Category
     """
 
-    _name = 'hr.salary.category'
-    _description = 'Salary Category'
+    _name = 'hr.salary.rule.category'
+    _description = 'Salary Rule Category'
     _columns = {
         'name':fields.char('Name', size=64, required=True, readonly=False),
         'code':fields.char('Code', size=64, required=True, readonly=False),
-        'parent_id':fields.many2one('hr.salary.category', 'Parent', help="Linking a salary category to its parent is used only for the reporting purpose."),
+        'parent_id':fields.many2one('hr.salary.rule.category', 'Parent', help="Linking a salary category to its parent is used only for the reporting purpose."),
         'note': fields.text('Description'),
         'company_id':fields.many2one('res.company', 'Company', required=False),
     }
@@ -185,7 +185,7 @@ class hr_salary_category(osv.osv):
                     context=context).company_id.id,
     }
 
-hr_salary_category()
+hr_salary_rule_category()
 
 class one2many_mod2(fields.one2many):
 
@@ -210,11 +210,11 @@ class hr_payslip(osv.osv):
     _name = 'hr.payslip'
     _description = 'Pay Slip'
 
-    def _get_lines_salary_category(self, cr, uid, ids, field_names, arg=None, context=None):
+    def _get_lines_salary_rule_category(self, cr, uid, ids, field_names, arg=None, context=None):
         result = {}
         if not ids: return result
         cr.execute('''SELECT pl.slip_id, pl.id FROM hr_payslip_line AS pl \
-                    LEFT JOIN hr_salary_category AS sh on (pl.category_id = sh.id) \
+                    LEFT JOIN hr_salary_rule_category AS sh on (pl.category_id = sh.id) \
                     WHERE pl.slip_id in %s \
                     GROUP BY pl.slip_id, pl.sequence, pl.id ORDER BY pl.sequence''',(tuple(ids),))
         res = cr.fetchall()
@@ -252,7 +252,7 @@ class hr_payslip(osv.osv):
         'paid': fields.boolean('Made Payment Order ? ', required=False, readonly=True, states={'draft': [('readonly', False)]}),
         'note': fields.text('Description'),
         'contract_id': fields.many2one('hr.contract', 'Contract', required=False, readonly=True, states={'draft': [('readonly', False)]}),
-        'details_by_salary_category': fields.function(_get_lines_salary_category, method=True, type='one2many', relation='hr.payslip.line', string='Details by Salary Head'),
+        'details_by_salary_rule_category': fields.function(_get_lines_salary_rule_category, method=True, type='one2many', relation='hr.payslip.line', string='Details by Salary Rule Category'),
         'credit_note': fields.boolean('Credit Note', help="Indicates this payslip has a refund of another"),
     }
     _defaults = {
@@ -493,9 +493,9 @@ class hr_payslip(osv.osv):
         return res
 
     def get_payslip_lines(self, cr, uid, contract_ids, payslip_id, context):
-        def _sum_salary_category(localdict, category, amount):
+        def _sum_salary_rule_category(localdict, category, amount):
             if category.parent_id:
-                localdict = _sum_salary_category(localdict, category.parent_id, amount)
+                localdict = _sum_salary_rule_category(localdict, category.parent_id, amount)
             localdict['categories'][category.code] = category.code in localdict['categories'] and localdict['categories'][category.code] + amount or amount
             return localdict
 
@@ -533,7 +533,7 @@ class hr_payslip(osv.osv):
                     #set/overwrite the amount computed for this rule in the localdict
                     localdict[rule.code] = amount
                     #sum the amount for its salary category
-                    localdict = _sum_salary_category(localdict, rule.category_id, amount - previous_amount)
+                    localdict = _sum_salary_rule_category(localdict, rule.category_id, amount - previous_amount)
                     #create/overwrite the rule in the temporary results
                     result_dict[key] = {
                         'salary_rule_id': rule.id,
@@ -697,7 +697,7 @@ class hr_salary_rule(osv.osv):
         'code':fields.char('Code', size=64, required=True, help="The code of salary rules can be used as reference in computation of other rules. In that case, it is case sensitive."),
         'sequence': fields.integer('Sequence', required=True, help='Use to arrange calculation sequence'),
         'quantity': fields.char('Quantity', size=256, help="It is used in computation for percentage and fixed amount.For e.g. A rule for Meal Voucher having fixed amount of 1€ per worked day can have its quantity defined in expression like worked_days['WORK100']['number_of_days']."),
-        'category_id':fields.many2one('hr.salary.category', 'Category', required=True),
+        'category_id':fields.many2one('hr.salary.rule.category', 'Category', required=True),
         'active':fields.boolean('Active', help="If the active field is set to false, it will allow you to hide the salary rule without removing it."),
         'appears_on_payslip': fields.boolean('Appears on Payslip', help="Used for the display of rule on payslip"),
         'parent_rule_id':fields.many2one('hr.salary.rule', 'Parent Salary Rule', select=True),
@@ -738,7 +738,7 @@ class hr_salary_rule(osv.osv):
 # employee: hr.employee object
 # contract: hr.contract object
 # rules: rules code (previously computed)
-# categories: dictionary containing the computed categories (sum of amount of all rules belonging to that category). Keys are the category codes.
+# categories: dictionary containing the computed salary rule categories (sum of amount of all rules belonging to that category). Keys are the category codes.
 # worked_days: dictionary containing the computed worked days. Keys are the worked days codes.
 # inputs: dictionary containing the computed inputs. Keys are the inputs codes.
 
@@ -753,7 +753,7 @@ result = contract.wage * 0.10''',
 # employee: hr.employee object
 # contract: hr.contract object
 # rules: rules code (previously computed)
-# categories: dictionary containing the computed categories (sum of amount of all rules belonging to that category). Keys are the category codes.
+# categories: dictionary containing the computed salary rule categories (sum of amount of all rules belonging to that category). Keys are the category codes.
 # worked_days: dictionary containing the computed worked days. Keys are the worked days codes.
 # inputs: dictionary containing the computed inputs. Keys are the inputs codes.
 
