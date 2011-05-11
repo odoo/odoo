@@ -619,13 +619,18 @@ class hr_payslip(osv.osv):
             context = {}
         if to_date is None:
             to_date = datetime.now().strftime('%Y-%m-%d')
-        cr.execute("SELECT sum(pl.total) \
+        sum = 0.0
+        cr.execute("SELECT pl.total, hp.credit_note\
                     FROM hr_payslip as hp, hr_payslip_line as pl \
                     WHERE hp.employee_id = %s AND hp.state in ('confirm','done') \
                     AND hp.date_from >= %s AND hp.date_to <= %s AND hp.id = pl.slip_id AND pl.code = %s",
                    (employee, from_date, to_date, code))
-        res = cr.fetchone()
-        return res and res[0] or 0.0
+        for r in cr.dictfetchall():
+            if r['credit_note'] == False:
+                sum += r['total']
+            else:
+                sum -= r['total']
+        return sum
 
 hr_payslip()
 
