@@ -23,13 +23,8 @@
 from osv import osv
 from osv import fields
 import base64
-import random
 import netsvc
-import logging
-import re
 from tools.translate import _
-import tools
-import pooler
 
 class email_template(osv.osv):
     "Templates for sending Email"
@@ -355,7 +350,7 @@ class email_template(osv.osv):
         report_xml_pool = self.pool.get('ir.actions.report.xml')
         template = self.get_email_template(cr, uid, template_id, record_id, context)
         def _get_template_value(field):
-            if context.get('mass_mail',False): # Mass Mail: Gets original template values for multiple email change
+            if context.get('mass_mail', False): # Mass Mail: Gets original template values for multiple email change
                 return getattr(template, field)
             else:
                 return self.get_template_value(cr, uid, getattr(template, field), template.model, record_id, context=context)

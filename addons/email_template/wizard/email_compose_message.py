@@ -21,7 +21,6 @@
 
 from osv import osv
 from osv import fields
-import tools
 from tools.translate import _
 import binascii
 
@@ -42,10 +41,10 @@ class email_compose_message(osv.osv_memory):
             message_pool = self.pool.get('email.message')
             message_data = message_pool.browse(cr, uid, int(context.get('message_id')), context)
             model = message_data.model
-        elif context.get('active_model',False):
-            model =  context.get('active_model')
+        elif context.get('active_model', False):
+            model = context.get('active_model')
         if model:
-            record_ids = email_temp_pool.search(cr, uid, [('model','=',model)])
+            record_ids = email_temp_pool.search(cr, uid, [('model', '=', model)])
             return email_temp_pool.name_get(cr, uid, record_ids, context) + [(False,'')]
         return []
 
@@ -91,7 +90,7 @@ class email_compose_message(osv.osv_memory):
         model_pool = self.pool.get('ir.model')
         for record in self.browse(cr, uid, ids, context=context):
             model = context.get('active_model', record.model or False)
-            model = model_pool.search(cr, uid, [('model','=', model)])[0]
+            model = model_pool.search(cr, uid, [('model', '=', model)])[0]
             model_name = model_pool.browse(cr, uid, model, context=context).name
             values = {
                 'name': model_name,
