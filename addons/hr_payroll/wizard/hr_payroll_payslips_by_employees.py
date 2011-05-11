@@ -52,12 +52,9 @@ class hr_payslip_employees(osv.osv_memory):
                 'struct_id': slip_data['value'].get('struct_id', False),
                 'contract_id': slip_data['value'].get('contract_id', False),
                 'payslip_run_id': context.get('active_id', False),
+                'input_line_ids': [(0, 0, x) for x in slip_data['value'].get('input_line_ids', False)]
             }
-            slip_id = slip_pool.create(cr, uid, res, context=context)
-            for input in slip_data['value']['input_line_ids']:
-                input.update({'payslip_id': slip_id})
-                input_line_pool.create(cr, uid, input, context=context)
-            slip_ids.append(slip_id)
+            slip_ids.append(slip_pool.create(cr, uid, res, context=context))
         slip_pool.compute_sheet(cr, uid, slip_ids, context=context)
         return {'type': 'ir.actions.act_window_close'}
 

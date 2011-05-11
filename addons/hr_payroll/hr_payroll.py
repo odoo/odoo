@@ -208,9 +208,23 @@ class hr_payslip_run(osv.osv):
 
     _name = 'hr.payslip.run'
     _columns = {
-        'name':fields.char('Name', size=256, required=True),
-        'slip_ids':fields.one2many('hr.payslip', 'payslip_run_id', 'Payslips', required=False, readonly=True),
+        'name': fields.char('Name', size=256, readonly=True, states={'draft': [('readonly', False)]}),
+        'slip_ids': fields.one2many('hr.payslip', 'payslip_run_id', 'Payslips', required=False, readonly=True),
+        'state': fields.selection([
+            ('draft', 'Draft'),
+            ('close', 'Close'),
+        ], 'State', select=True, readonly=True)
     }
+    _defaults = {
+        'state': 'draft',
+    }
+
+    def draft_payslip_run(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {'state': 'draft'}, context=context)
+
+    def close_payslip_run(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {'state': 'close'}, context=context)
+
 hr_payslip_run()
 
 class hr_payslip(osv.osv):
@@ -236,7 +250,7 @@ class hr_payslip(osv.osv):
         return result
 
     _columns = {
-        'struct_id': fields.many2one('hr.payroll.structure', 'Structure', help='Defines the rules that have to be applied to this payslip, accordingly to the contract chosen. If you let empty the field contract, this field isn\'t mandatory anymore and thus the rules applied will be all the rules set on the structure of all contracts of the employee valid for the chosen period'),
+        'struct_id': fields.many2one('hr.payroll.structure', 'Structure', readonly=True, states={'draft': [('readonly', False)]}, help='Defines the rules that have to be applied to this payslip, accordingly to the contract chosen. If you let empty the field contract, this field isn\'t mandatory anymore and thus the rules applied will be all the rules set on the structure of all contracts of the employee valid for the chosen period'),
         'name': fields.char('Description', size=64, required=False, readonly=True, states={'draft': [('readonly', False)]}),
         'number': fields.char('Reference', size=64, required=False, readonly=True, states={'draft': [('readonly', False)]}),
         'employee_id': fields.many2one('hr.employee', 'Employee', required=True, readonly=True, states={'draft': [('readonly', False)]}),
@@ -257,11 +271,11 @@ class hr_payslip(osv.osv):
             \n* If the salary is paid then state is set to \'Paid Salary\'.\
             \n* The \'Reject\' state is used when user cancel payslip.'),
 #        'line_ids': fields.one2many('hr.payslip.line', 'slip_id', 'Payslip Line', required=False, readonly=True, states={'draft': [('readonly', False)]}),
-        'line_ids': one2many_mod2('hr.payslip.line', 'slip_id', 'Payslip Line',readonly=True, states={'draft':[('readonly',False)]}),
+        'line_ids': one2many_mod2('hr.payslip.line', 'slip_id', 'Payslip Line', readonly=True, states={'draft':[('readonly',False)]}),
         'company_id': fields.many2one('res.company', 'Company', required=False, readonly=True, states={'draft': [('readonly', False)]}),
         'input_line_ids': fields.one2many('hr.payslip.input', 'payslip_id', 'Payslip Inputs', required=False, readonly=True, states={'draft': [('readonly', False)]}),
         'paid': fields.boolean('Made Payment Order ? ', required=False, readonly=True, states={'draft': [('readonly', False)]}),
-        'note': fields.text('Description'),
+        'note': fields.text('Description', readonly=True, states={'draft':[('readonly',False)]}),
         'contract_id': fields.many2one('hr.contract', 'Contract', required=False, readonly=True, states={'draft': [('readonly', False)]}),
         'details_by_salary_head': fields.function(_get_lines_salary_head, method=True, type='one2many', relation='hr.payslip.line', string='Details by Salary Head'),
         'credit_note': fields.boolean('Credit Note', help="Indicates this payslip has a refund of another"),
