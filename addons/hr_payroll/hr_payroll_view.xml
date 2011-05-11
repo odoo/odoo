@@ -186,14 +186,14 @@
             <field name="arch" type="xml">
                 <search string="Search Payslip Lines">
                     <group col="8" colspan="4">
-                    	<field name="name"/>
-                    	<field name="code"/>
+                        <field name="name"/>
+                        <field name="code"/>
                         <field name="slip_id"/>
                         <field name="amount_select"/>
                     </group>
                     <newline/>
                     <group col="8" colspan="4" expand="0" string="Group By...">
-                        <filter string="Salary Head" icon="terp-camera_test" name="category_id" context="{'group_by':'category_id'}"/>
+                        <filter string="Salary Rule Category" icon="terp-camera_test" name="category_id" context="{'group_by':'category_id'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Amount Type" name="amount_select" icon="terp-stock_symbol-selection" context="{'group_by':'amount_select'}"/>
                         <separator orientation="vertical"/>
@@ -249,19 +249,19 @@
                                 </tree>
                                 <form string="Payslip Line">
                                     <group>
-	                                    <field name="name" select="1"/>
-	                                    <field name="code" select="1"/>
-	                                    <field name="category_id"/>
-	                                    <field name="sequence" groups="base.group_extended"/>
-	                                    <field name="total"/>
-	                                    <field name="salary_rule_id" groups="base.group_extended"/>
+                                        <field name="name" select="1"/>
+                                        <field name="code" select="1"/>
+                                        <field name="category_id"/>
+                                        <field name="sequence" groups="base.group_extended"/>
+                                        <field name="total"/>
+                                        <field name="salary_rule_id" groups="base.group_extended"/>
                                     </group>
                                 </form>
                             </field>
                         </page>
 <!-- TODO: put me back -->
-	                    <page string="Details By Salary Head">
-                            <field name="details_by_salary_head" context="{'group_by':'category_id'}" domain="[('appears_on_payslip', '=', True)]" nolabel="1">
+	                    <page string="Details By Salary Category">
+                            <field name="details_by_salary_category" context="{'group_by':'category_id'}" domain="[('appears_on_payslip', '=', True)]" nolabel="1">
                                 <tree string="Payslip Lines" colors="blue:total == 0">
                                     <field name="category_id"/>
                                     <field name="name"/>
@@ -346,18 +346,17 @@
         </record>
         <menuitem action="action_view_hr_payslip_form" id="menu_department_tree" parent="menu_hr_root_payroll"/>
 
-        <!-- Payment Heads -->
-        <record id="hr_salary_head_form" model="ir.ui.view">
-            <field name="name">hr.salary.head.form</field>
-            <field name="model">hr.salary.head</field>
+        <!-- Salary Category-->
+        <record id="hr_salary_category_form" model="ir.ui.view">
+            <field name="name">hr.salary.category.form</field>
+            <field name="model">hr.salary.category</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Salary Heads">
+                <form string="Salary Categories">
                     <group col="3" colspan="6">
                         <field name="name" select="1"/>
                         <field name="code" select="1"/>
                         <field name="parent_id" select="1"/>
-                        <field name="sequence" select="1"/>
                     </group>
                     <separator colspan="4" string="Notes"/>
                         <field name="note" colspan="4" nolabel="1"/>
@@ -365,46 +364,44 @@
             </field>
         </record>
 
-        <record id="hr_salary_head_tree" model="ir.ui.view">
-            <field name="name">hr.salary.head.tree</field>
-            <field name="model">hr.salary.head</field>
+        <record id="hr_salary_category_tree" model="ir.ui.view">
+            <field name="name">hr.salary.category.tree</field>
+            <field name="model">hr.salary.category</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Salary Heads">
+                <tree string="Salary Rule Categories">
                     <field name="name"/>
                     <field name="code"/>
-                    <field name="sequence"/>
                     <field name="parent_id" invisible="1"/>
                 </tree>
             </field>
         </record>
 
-        <record id="view_hr_salary_head_filter" model="ir.ui.view">
-            <field name="name">hr.salary.head.select</field>
-            <field name="model">hr.salary.head</field>
+        <record id="view_hr_salary_category_filter" model="ir.ui.view">
+            <field name="name">hr.salary.category.select</field>
+            <field name="model">hr.salary.category</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
-                <search string="Salary Heads">
+                <search string="Salary Rule Categories">
                     <field name="name" select="1"/>
                      <field name="code" select="1"/>
                </search>
             </field>
         </record>
 
-        <record id="action_hr_salary_head" model="ir.actions.act_window">
-            <field name="name">Salary Heads</field>
-            <field name="res_model">hr.salary.head</field>
+        <record id="action_hr_salary_category" model="ir.actions.act_window">
+            <field name="name">Salary Categories</field>
+            <field name="res_model">hr.salary.category</field>
             <field name="view_type">form</field>
-            <field name="view_id" ref="hr_salary_head_tree"/>
-           <field name="search_view_id" ref="view_hr_salary_head_filter"/>
+            <field name="view_id" ref="hr_salary_category_tree"/>
+           <field name="search_view_id" ref="view_hr_salary_category_filter"/>
         </record>
         <menuitem
-            id="menu_hr_salary_head"
-            action="action_hr_salary_head"
+            id="menu_hr_salary_category"
+            action="action_hr_salary_category"
             parent="payroll_configure"
             sequence="11"
         />
-        <!-- End Payment Heads -->
 
         <!--
         Contribution Register
@@ -533,14 +530,14 @@
                                 <field name="quantity" attrs="{'invisible':[('amount_select','=','code')], 'required':[('amount_select','!=','code')]}"/><newline/>
                                 <field name="amount_fix"  attrs="{'invisible':[('amount_select','&lt;&gt;','fix')], 'required':[('amount_select','=','fix')]}"/>
                                 <field colspan="4" name="amount_python_compute" attrs="{'invisible':[('amount_select','&lt;&gt;','code')], 'required':[('amount_select','=','code')]}"/>
-				<field name="amount_percentage_base" attrs="{'invisible':[('amount_select','&lt;&gt;','percentage')], 'required': [('amount_select','=','percentage')]}"/>
+                                <field name="amount_percentage_base" attrs="{'invisible':[('amount_select','&lt;&gt;','percentage')], 'required': [('amount_select','=','percentage')]}"/>
                                 <field name="amount_percentage" attrs="{'invisible':[('amount_select','&lt;&gt;','percentage')], 'required':[('amount_select','=','percentage')]}"/>
                                 <separator colspan="4" string="Company contribution"/>
                                 <field name="register_id"/>
                             </group>
                     </page>
                     <page string="Child Rules">
-		       <field name="parent_rule_id"/>
+                       <field name="parent_rule_id"/>
                        <separator colspan="4" string="Children definition"/>
                        <field colspan="4" name="child_ids" nolabel="1"/>
                     </page>
@@ -566,7 +563,7 @@
         </group>
         <newline/>
         <group col="8" colspan="4" expand="0" string="Group By...">
-            <filter string="Head" icon="terp-folder-yellow" name="head" context="{'group_by':'category_id'}"/>
+            <filter string="Category" icon="terp-folder-yellow" name="category" context="{'group_by':'category_id'}"/>
         </group>
         </search>
     </field>
