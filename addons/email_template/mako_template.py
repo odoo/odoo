@@ -20,7 +20,6 @@
 #
 ##############################################################################
 import tools
-from tools.translate import _
 import pooler
 import logging
 

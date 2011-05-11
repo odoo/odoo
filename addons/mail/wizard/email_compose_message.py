@@ -131,7 +131,7 @@ class email_compose_message(osv.osv_memory):
             message_id = False
 
             # Reply Email
-            if context.get('mail',False) == 'reply' and  mail.message_id:
+            if context.get('mail') == 'reply' and  mail.message_id:
                 references = mail.references and mail.references + "," + mail.message_id or mail.message_id
             else:
                 message_id = mail.message_id

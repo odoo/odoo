@@ -26,7 +26,6 @@ import binascii
 import email
 
 from email.utils import parsedate
-import base64
 
 from tools.translate import _
 import logging
@@ -77,7 +76,7 @@ class email_thread(osv.osv):
         model_pool = self.pool.get(model)
         fields = model_pool.fields_get(cr, uid, context=context)
         data = model_pool.default_get(cr, uid, fields, context=context)
-        if 'name' in fields and not data.get('name',False):
+        if 'name' in fields and not data.get('name', False):
             data['name'] = msg.get('from','')
         res_id = model_pool.create(cr, uid, data, context=context)
 
@@ -137,7 +136,7 @@ class email_thread(osv.osv):
         if isinstance(ids, (str, int, long)):
             ids = [long(ids)]
         for thread in self.browse(cr, uid, ids, context=context):
-            l=[]
+            l = []
             for message in thread.message_ids:
                 l.append((message.user_id and message.user_id.email) or '')
                 l.append(message.email_from or '')
