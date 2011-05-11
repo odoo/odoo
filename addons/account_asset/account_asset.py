@@ -152,9 +152,9 @@ class account_asset_asset(osv.osv):
 
         'name': fields.char('Asset', size=64, required=True, select=1),
         'code': fields.char('Reference ', size=16, select=1),
-	'purchase_value': fields.float('Gross value ', required=True, size=16, select=1),
-	'currency_id': fields.many2one('res.currency','Currency',required=True,size=5,select=1),
-	'company_id': fields.many2one('res.company', 'Company', required=True),
+        'purchase_value': fields.float('Gross value ', required=True, size=16, select=1),
+        'currency_id': fields.many2one('res.currency','Currency',required=True,size=5,select=1),
+        'company_id': fields.many2one('res.company', 'Company', required=True),
         'note': fields.text('Note'),
         'category_id': fields.many2one('account.asset.category', 'Asset category',required=True, change_default=True),
         'localisation': fields.char('Localisation', size=32, select=2),
@@ -173,9 +173,9 @@ class account_asset_asset(osv.osv):
         'method_progress_factor': fields.float('Progressif Factor', readonly=True, states={'draft':[('readonly',False)]}),
         'value_residual': fields.function(_amount_residual, method=True, digits=(16,2), string='Residual Value'),
         'method_time': fields.selection([('delay','Delay'),('end','Ending Period')], 'Time Method', required=True, readonly=True, states={'draft':[('readonly',False)]}),
-	'prorata':fields.boolean('Prorata Temporis', Readonly="True", help='Si l amortissement se realise après le 1 janvier'),
+        'prorata':fields.boolean('Prorata Temporis', Readonly="True", help='Indicates that the accounting entries for this asset have to be done from the purchase date instead of the first January'),
         'history_ids': fields.one2many('account.asset.history', 'asset_id', 'History', readonly=True),
- 	'depreciation_line_ids': fields.one2many('account.asset.depreciation.line', 'asset_id', 'Depreciation Lines', readonly=True,),
+        'depreciation_line_ids': fields.one2many('account.asset.depreciation.line', 'asset_id', 'Depreciation Lines', readonly=True,),
     }
     _defaults = {
         'code': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'account.asset.code'),
@@ -183,12 +183,12 @@ class account_asset_asset(osv.osv):
         'active': lambda obj, cr, uid, context: True,
         'state': lambda obj, cr, uid, context: 'draft',
         'period_id': _get_period,
-	'method': lambda obj, cr, uid, context: 'linear',
-	'method_delay': lambda obj, cr, uid, context: 5,
-	'method_time': lambda obj, cr, uid, context: 'delay',
-	'method_period': lambda obj, cr, uid, context: 12,
-	'method_progress_factor': lambda obj, cr, uid, context: 0.3,
-	'currency_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.currency_id.id,
+        'method': lambda obj, cr, uid, context: 'linear',
+        'method_delay': lambda obj, cr, uid, context: 5,
+        'method_time': lambda obj, cr, uid, context: 'delay',
+        'method_period': lambda obj, cr, uid, context: 12,
+        'method_progress_factor': lambda obj, cr, uid, context: 0.3,
+        'currency_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.currency_id.id,
     }
 
 
@@ -210,7 +210,6 @@ class account_asset_asset(osv.osv):
         for move in property.asset_id.entry_ids:
             total += move.debit-move.credit
         for move in property.entry_asset_ids:
-	#he s
             if move.account_id == property.account_asset_ids:
                 total += move.debit
                 total += -move.credit
@@ -255,7 +254,7 @@ class account_asset_asset(osv.osv):
             'partner_id': property.asset_id.partner_id.id,
             'date': time.strftime('%Y-%m-%d'),
         })
-	#
+    #
         self.pool.get('account.asset.asset').write(cr, uid, [property.id], {
             'entry_asset_ids': [(4, id2, False),(4,id,False)]
         })
@@ -284,9 +283,9 @@ class account_asset_depreciation_line(osv.osv):
         'sequence': fields.integer('Sequence of the depreciation', required=True),
         'asset_id': fields.many2one('account.asset.asset', 'Asset', required=True),
         'amount': fields.float('Depreciation Amount', required=True),
-	'remaining_value': fields.float('Amount to Depreciate', required=True),
-	'depreciated_value': fields.float('Amount Already Depreciated', required=True),
-	'depreciation_date': fields.char('Depreciation Date', size=64, select=1),
+        'remaining_value': fields.float('Amount to Depreciate', required=True),
+        'depreciated_value': fields.float('Amount Already Depreciated', required=True),
+        'depreciation_date': fields.char('Depreciation Date', size=64, select=1),
         'move_line_id': fields.many2one('account.move.line', 'Depreciation Entry'),
     }
 account_asset_depreciation_line()
@@ -336,16 +335,16 @@ account_asset_depreciation_line()
 #        'method_end': fields.date('Ending date'),
 #
 #        'date': fields.date('Date created'),
-#	#'test': fields.one2many('account.pre', 'asset_id',  readonly=True, states={'draft':[('readonly',False)]}),
+#    #'test': fields.one2many('account.pre', 'asset_id',  readonly=True, states={'draft':[('readonly',False)]}),
 #        'entry_asset_ids': fields.many2many('account.move.line', 'account_move_asset_entry_rel', 'asset_property_id', 'move_id', 'Asset Entries'),
 #        'board_ids': fields.one2many('account.asset.board', 'asset_id', 'Asset board'),
 #
 #        'value_total': fields.function(_amount_total, method=True, digits=(16,2),string='Gross value'),
 #        'state': fields.selection([('draft','Draft'), ('open','Open'), ('close','Close')], 'State', required=True),
 #        'history_ids': fields.one2many('account.asset.property.history', 'asset_property_id', 'History', readonly=True)
-##	'parent_id': fields.many2one('account.asset.asset', 'Parent asset'),
-##	'partner_id': fields.many2one('res.partner', 'Partner'),
-##	'note': fields.text('Note'),
+##    'parent_id': fields.many2one('account.asset.asset', 'Parent asset'),
+##    'partner_id': fields.many2one('res.partner', 'Partner'),
+##    'note': fields.text('Note'),
 #
 #    }
 #    _defaults = {
@@ -364,7 +363,7 @@ class account_move_line(osv.osv):
     _inherit = 'account.move.line'
     _columns = {
         'asset_id': fields.many2one('account.asset.asset', 'Asset'),
-        'entry_ids': fields.one2many('account.move.line', 'asset_id', 'Entries', readonly=True, states={'draft':[('readonly',False)]}),	
+        'entry_ids': fields.one2many('account.move.line', 'asset_id', 'Entries', readonly=True, states={'draft':[('readonly',False)]}),    
 
     }
 account_move_line()
