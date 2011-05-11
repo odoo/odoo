@@ -51,6 +51,7 @@ from cStringIO import StringIO
 import logging
 
 import openerp.modules.db
+import openerp.modules.graph
 
 logger = netsvc.Logger()
 
@@ -84,110 +85,6 @@ def open_openerp_namespace():
         for k, v in list(sys.modules.items()):
             if k.startswith('openerp.') and sys.modules.get(k[8:]) is None:
                 sys.modules[k[8:]] = v
-
-class Graph(dict):
-    """ Modules dependency graph.
-
-    The graph is a mapping from module name to Nodes.
-
-    """
-
-    def addNode(self, name, deps):
-        max_depth, father = 0, None
-        for n in [Node(x, self) for x in deps]:
-            if n.depth >= max_depth:
-                father = n
-                max_depth = n.depth
-        if father:
-            father.addChild(name)
-        else:
-            Node(name, self)
-
-    def update_from_db(self, cr):
-        if not len(self):
-            return
-        # update the graph with values from the database (if exist)
-        ## First, we set the default values for each package in graph
-        additional_data = dict.fromkeys(self.keys(), {'id': 0, 'state': 'uninstalled', 'dbdemo': False, 'installed_version': None})
-        ## Then we get the values from the database
-        cr.execute('SELECT name, id, state, demo AS dbdemo, latest_version AS installed_version'
-                   '  FROM ir_module_module'
-                   ' WHERE name IN %s',(tuple(additional_data),)
-                   )
-
-        ## and we update the default values with values from the database
-        additional_data.update(dict([(x.pop('name'), x) for x in cr.dictfetchall()]))
-
-        for package in self.values():
-            for k, v in additional_data[package.name].items():
-                setattr(package, k, v)
-
-    def __iter__(self):
-        level = 0
-        done = set(self.keys())
-        while done:
-            level_modules = [(name, module) for name, module in self.items() if module.depth==level]
-            for name, module in level_modules:
-                done.remove(name)
-                yield module
-            level += 1
-
-class Singleton(object):
-    def __new__(cls, name, graph):
-        if name in graph:
-            inst = graph[name]
-        else:
-            inst = object.__new__(cls)
-            inst.name = name
-            graph[name] = inst
-        return inst
-
-
-class Node(Singleton):
-    """ One module in the modules dependency graph.
-
-    Node acts as a per-module singleton.
-
-    """
-
-    def __init__(self, name, graph):
-        self.graph = graph
-        if not hasattr(self, 'children'):
-            self.children = []
-        if not hasattr(self, 'depth'):
-            self.depth = 0
-
-    def addChild(self, name):
-        node = Node(name, self.graph)
-        node.depth = self.depth + 1
-        if node not in self.children:
-            self.children.append(node)
-        for attr in ('init', 'update', 'demo'):
-            if hasattr(self, attr):
-                setattr(node, attr, True)
-        self.children.sort(lambda x, y: cmp(x.name, y.name))
-
-    def __setattr__(self, name, value):
-        super(Singleton, self).__setattr__(name, value)
-        if name in ('init', 'update', 'demo'):
-            tools.config[name][self.name] = 1
-            for child in self.children:
-                setattr(child, name, value)
-        if name == 'depth':
-            for child in self.children:
-                setattr(child, name, value + 1)
-
-    def __iter__(self):
-        return itertools.chain(iter(self.children), *map(iter, self.children))
-
-    def __str__(self):
-        return self._pprint()
-
-    def _pprint(self, depth=0):
-        s = '%s\n' % self.name
-        for c in self.children:
-            s += '%s`-> %s' % ('   ' * depth, c._pprint(depth+1))
-        return s
 
 
 def get_module_path(module, downloaded=False):
@@ -406,62 +303,6 @@ def get_modules_with_version():
         except Exception, e:
             continue
     return res
-
-def create_graph(cr, module_list, force=None):
-    graph = Graph()
-    upgrade_graph(graph, cr, module_list, force)
-    return graph
-
-def upgrade_graph(graph, cr, module_list, force=None):
-    if force is None:
-        force = []
-    packages = []
-    len_graph = len(graph)
-    for module in module_list:
-        # This will raise an exception if no/unreadable descriptor file.
-        # NOTE The call to load_information_from_description_file is already
-        # done by db.initialize, so it is possible to not do it again here.
-        info = load_information_from_description_file(module)
-        if info['installable']:
-            packages.append((module, info)) # TODO directly a dict, like in get_modules_with_version
-        else:
-            logger.notifyChannel('init', netsvc.LOG_WARNING, 'module %s: not installable, skipped' % (module))
-
-    dependencies = dict([(p, info['depends']) for p, info in packages])
-    current, later = set([p for p, info in packages]), set()
-
-    while packages and current > later:
-        package, info = packages[0]
-        deps = info['depends']
-
-        # if all dependencies of 'package' are already in the graph, add 'package' in the graph
-        if reduce(lambda x, y: x and y in graph, deps, True):
-            if not package in current:
-                packages.pop(0)
-                continue
-            later.clear()
-            current.remove(package)
-            graph.addNode(package, deps)
-            node = Node(package, graph)
-            node.data = info
-            for kind in ('init', 'demo', 'update'):
-                if package in tools.config[kind] or 'all' in tools.config[kind] or kind in force:
-                    setattr(node, kind, True)
-        else:
-            later.add(package)
-            packages.append((package, info))
-        packages.pop(0)
-
-    graph.update_from_db(cr)
-
-    for package in later:
-        unmet_deps = filter(lambda p: p not in graph, dependencies[package])
-        logger.notifyChannel('init', netsvc.LOG_ERROR, 'module %s: Unmet dependencies: %s' % (package, ', '.join(unmet_deps)))
-
-    result = len(graph) - len_graph
-    if result != len(module_list):
-        logger.notifyChannel('init', netsvc.LOG_WARNING, 'Not all modules have loaded.')
-    return result
 
 
 def init_module_models(cr, module_name, obj_list):
@@ -898,7 +739,8 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
             cr.execute("update ir_module_module set state=%s where name=%s and state=%s", ('to upgrade', 'base', 'installed'))
 
         # STEP 1: LOAD BASE (must be done before module dependencies can be computed for later steps) 
-        graph = create_graph(cr, ['base'], force)
+        graph = openerp.modules.graph.Graph()
+        graph.add_module(cr, 'base', force)
         if not graph:
             logger.notifyChannel('init', netsvc.LOG_CRITICAL, 'module base cannot be loaded! (hint: verify addons-path)')
             raise osv.osv.except_osv(_('Could not load base module'), _('module base cannot be loaded! (hint: verify addons-path)'))
@@ -946,7 +788,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
             if not module_list:
                 break
 
-            new_modules_in_graph = upgrade_graph(graph, cr, module_list, force)
+            new_modules_in_graph = graph.add_modules(cr, module_list, force)
             if new_modules_in_graph == 0:
                 # nothing to load
                 break
