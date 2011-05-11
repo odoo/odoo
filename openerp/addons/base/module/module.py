@@ -79,8 +79,7 @@ class module(osv.osv):
         info = {}
         try:
             info = addons.load_information_from_description_file(name)
-            if 'version' in info:
-                info['version'] = release.major_version + '.' + info['version']
+            info['version'] = release.major_version + '.' + info['version']
         except Exception:
             cls.__logger.debug('Error when trying to fetch informations for '
                                 'module %s', name, exc_info=True)

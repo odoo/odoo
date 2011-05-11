@@ -90,7 +90,7 @@ def init_db(cr):
 
         if not info:
             continue
-        categs = info.get('category', 'Uncategorized').split('/')
+        categs = info['category'].split('/')
         p_id = None
         while categs:
             if p_id is not None:
@@ -112,10 +112,8 @@ def init_db(cr):
             p_id = c_id
             categs = categs[1:]
 
-        active = info.get('active', False)
-        installable = info.get('installable', True)
-        if installable:
-            if active:
+        if info['installable']:
+            if info['active']:
                 state = 'to install'
             else:
                 state = 'uninstalled'
@@ -125,16 +123,16 @@ def init_db(cr):
                 (author, website, name, shortdesc, description, \
                     category_id, state, certificate, web, license) \
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING id', (
-            info.get('author', ''),
-            info.get('website', ''), i, info.get('name', False),
-            info.get('description', ''), p_id, state, info.get('certificate') or None,
-            info.get('web') or False,
-            info.get('license') or 'AGPL-3'))
+            info['author'],
+            info['website'], i, info['name'],
+            info['description'], p_id, state, info['certificate'],
+            info['web'],
+            info['license']))
         id = cr.fetchone()[0]
         cr.execute('INSERT INTO ir_model_data \
             (name,model,module, res_id, noupdate) VALUES (%s,%s,%s,%s,%s)', (
                 'module_meta_information', 'ir.module.module', i, id, True))
-        dependencies = info.get('depends', [])
+        dependencies = info['depends']
         for d in dependencies:
             cr.execute('INSERT INTO ir_module_module_dependency \
                     (module_id,name) VALUES (%s, %s)', (id, d))

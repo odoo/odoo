@@ -371,8 +371,17 @@ def load_information_from_description_file(module):
                 terp_f.close()
             # TODO the version should probably be mandatory
             info.setdefault('version', '0')
+            info.setdefault('category', 'Uncategorized')
             info.setdefault('depends', [])
+            info.setdefault('author', '')
+            info.setdefault('website', '')
+            info.setdefault('name', False)
+            info.setdefault('description', '')
+            info['certificate'] = info.get('certificate') or None
+            info['web'] = info.get('web') or False
+            info['license'] = info.get('license') or 'AGPL-3'
             info.setdefault('installable', True)
+            info.setdefault('active', False)
             for kind in ['data', 'demo', 'test',
                 'init_xml', 'update_xml', 'demo_xml']:
                 info.setdefault(kind, [])
