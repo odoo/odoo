@@ -615,8 +615,6 @@ class hr_payslip(osv.osv):
     def sum(self, cr, uid, code, from_date, to_date=None, employee=False, context=None):
         if not employee:
             return 0.0
-        if context is None:
-            context = {}
         if to_date is None:
             to_date = datetime.now().strftime('%Y-%m-%d')
         sum = 0.0
@@ -658,8 +656,6 @@ class hr_payslip_input(osv.osv):
     def sum(self, cr, uid, code, field, from_date, to_date=None, employee=False, context=None):
         if not employee:
             return 0.0
-        if context is None:
-            context = {}
         if to_date is None:
             to_date = datetime.now().strftime('%Y-%m-%d')
         result = 0.0
