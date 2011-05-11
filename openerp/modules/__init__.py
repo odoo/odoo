@@ -352,20 +352,38 @@ def load_information_from_description_file(module):
     :param module: The name of the module (sale, purchase, ...)
     """
 
-    for filename in ['__openerp__.py', '__terp__.py']:
-        description_file = get_module_resource(module, filename)
-        if description_file :
-            desc_f = tools.file_open(description_file)
+    terp_file = get_module_resource(module, '__openerp__.py')
+    if not terp_file:
+        terp_file = get_module_resource(module, '__terp__.py')
+    mod_path = get_module_path(module)
+    if terp_file:
+        info = {}
+        if os.path.isfile(terp_file) or zipfile.is_zipfile(mod_path+'.zip'):
+            terp_f = tools.file_open(terp_file)
             try:
-                return eval(desc_f.read())
+                info = eval(terp_f.read())
+            except Exception:
+                logger.notifyChannel('modules', netsvc.LOG_ERROR,
+                    'module %s: exception while evaluating file %s' %
+                    (module, terp_file))
+                raise
             finally:
-                desc_f.close()
+                terp_f.close()
+            # TODO the version should probably be mandatory
+            info.setdefault('version', '0')
+            info.setdefault('depends', [])
+            info.setdefault('installable', True)
+            for kind in ['data', 'demo', 'test',
+                'init_xml', 'update_xml', 'demo_xml']:
+                info.setdefault(kind, [])
+            return info
 
     #TODO: refactor the logger in this file to follow the logging guidelines
     #      for 6.0
-    logging.getLogger('addons').debug('The module %s does not contain a description file:'\
-                                      '__openerp__.py or __terp__.py (deprecated)', module)
+    logging.getLogger('modules').debug('module %s: no descriptor file'
+        ' found: __openerp__.py or __terp__.py (deprecated)', module)
     return {}
+
 
 def get_modules_with_version():
     modules = get_modules()
@@ -389,33 +407,19 @@ def upgrade_graph(graph, cr, module_list, force=None):
     packages = []
     len_graph = len(graph)
     for module in module_list:
-        mod_path = get_module_path(module)
-        terp_file = get_module_resource(module, '__openerp__.py')
-        if not terp_file:
-            terp_file = get_module_resource(module, '__terp__.py')
-        if not mod_path or not terp_file:
-            logger.notifyChannel('init', netsvc.LOG_WARNING, 'module %s: not found, skipped' % (module))
-            continue
+        # This will raise an exception if no/unreadable descriptor file.
+        info = load_information_from_description_file(module)
+        if info['installable']:
+            packages.append((module, info)) # TODO directly a dict, like in get_modules_with_version
+        else:
+            logger.notifyChannel('init', netsvc.LOG_WARNING, 'module %s: not installable, skipped' % (module))
 
-        if os.path.isfile(terp_file) or zipfile.is_zipfile(mod_path+'.zip'):
-            terp_f = tools.file_open(terp_file)
-            try:
-                info = eval(terp_f.read())
-            except Exception:
-                logger.notifyChannel('init', netsvc.LOG_ERROR, 'module %s: eval file %s' % (module, terp_file))
-                raise
-            finally:
-                terp_f.close()
-            if info.get('installable', True):
-                packages.append((module, info.get('depends', []), info))
-            else:
-                logger.notifyChannel('init', netsvc.LOG_WARNING, 'module %s: not installable, skipped' % (module))
-
-    dependencies = dict([(p, deps) for p, deps, data in packages])
-    current, later = set([p for p, dep, data in packages]), set()
+    dependencies = dict([(p, info['depends']) for p, info in packages])
+    current, later = set([p for p, info in packages]), set()
 
     while packages and current > later:
-        package, deps, data = packages[0]
+        package, info = packages[0]
+        deps = info['depends']
 
         # if all dependencies of 'package' are already in the graph, add 'package' in the graph
         if reduce(lambda x, y: x and y in graph, deps, True):
@@ -426,13 +430,13 @@ def upgrade_graph(graph, cr, module_list, force=None):
             current.remove(package)
             graph.addNode(package, deps)
             node = Node(package, graph)
-            node.data = data
+            node.data = info
             for kind in ('init', 'demo', 'update'):
                 if package in tools.config[kind] or 'all' in tools.config[kind] or kind in force:
                     setattr(node, kind, True)
         else:
             later.add(package)
-            packages.append((package, deps, data))
+            packages.append((package, info))
         packages.pop(0)
 
     graph.update_from_db(cr)
@@ -624,7 +628,7 @@ class MigrationManager(object):
         from openerp.tools.parse_version import parse_version
 
         parsed_installed_version = parse_version(pkg.installed_version or '')
-        current_version = parse_version(convert_version(pkg.data.get('version', '0')))
+        current_version = parse_version(convert_version(pkg.data['version']))
 
         versions = _get_migration_versions(pkg)
 
@@ -722,7 +726,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
         init mode.
 
         """
-        for filename in package.data.get(kind, []):
+        for filename in package.data[kind]:
             log = logging.getLogger('init')
             log.info("module %s: loading %s", module_name, filename)
             _, ext = os.path.splitext(filename)
@@ -754,6 +758,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
     migrations = MigrationManager(cr, graph)
     logger.notifyChannel('init', netsvc.LOG_DEBUG, 'loading %d packages..' % len(graph))
 
+    # register, instanciate and initialize models for each modules
     for package in graph:
         if skip_modules and package.name in skip_modules:
             continue
@@ -765,6 +770,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
             init_module_models(cr, package.name, models)
         cr.commit()
 
+    # load data for each modules
     modobj = pool.get('ir.module.module')
     for package in graph:
         status['progress'] = (float(statusi)+0.1) / len(graph)
@@ -807,7 +813,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
 
             migrations.migrate_module(package, 'post')
 
-            ver = release.major_version + '.' + package.data.get('version', '1.0')
+            ver = release.major_version + '.' + package.data['version']
             # Set new modules and dependencies
             modobj.write(cr, 1, [mid], {'state': 'installed', 'latest_version': ver})
             cr.commit()
@@ -888,8 +894,8 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         # STEP 2: Mark other modules to be loaded/updated
         if update_module:
             modobj = pool.get('ir.module.module')
-            logger.notifyChannel('init', netsvc.LOG_INFO, 'updating modules list')
             if ('base' in tools.config['init']) or ('base' in tools.config['update']):
+                logger.notifyChannel('init', netsvc.LOG_INFO, 'updating modules list')
                 modobj.update_list(cr, 1)
 
             _check_module_names(cr, itertools.chain(tools.config['init'].keys(), tools.config['update'].keys()))
@@ -971,6 +977,8 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
 
         cr.commit()
         if update_module:
+            # Remove records referenced from ir_model_data for modules to be
+            # removed (and removed the references from ir_model_data).
             cr.execute("select id,name from ir_module_module where state=%s", ('to remove',))
             for mod_id, mod_name in cr.fetchall():
                 cr.execute('select model,res_id from ir_model_data where noupdate=%s and module=%s order by id desc', (False, mod_name,))
@@ -978,14 +986,17 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
                     uid = 1
                     rmod_module= pool.get(rmod)
                     if rmod_module:
+                        # TODO group by module so that we can delete multiple ids in a call
                         rmod_module.unlink(cr, uid, [rid])
                     else:
                         logger.notifyChannel('init', netsvc.LOG_ERROR, 'Could not locate %s to remove res=%d' % (rmod,rid))
                 cr.execute('delete from ir_model_data where noupdate=%s and module=%s', (False, mod_name,))
                 cr.commit()
-            #
+
+            # Remove menu items that are not referenced by any of other
+            # (child) menu item, ir_values, or ir_model_data.
+            # This code could be a method of ir_ui_menu.
             # TODO: remove menu without actions of children
-            #
             while True:
                 cr.execute('''delete from
                         ir_ui_menu
@@ -1001,6 +1012,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
                 else:
                     logger.notifyChannel('init', netsvc.LOG_INFO, 'removed %d unused menus' % (cr.rowcount,))
 
+            # Pretend that modules to be removed are actually uninstalled.
             cr.execute("update ir_module_module set state=%s where state=%s", ('uninstalled', 'to remove',))
             cr.commit()
     finally:

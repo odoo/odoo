@@ -85,6 +85,7 @@ def init_db(cr):
         if not mod_path:
             continue
 
+        # This will raise an exception if no/unreadable descriptor file.
         info = addons.load_information_from_description_file(i)
 
         if not info:
