@@ -393,19 +393,21 @@ def replace_request_password(args):
         args[2] = '*'
     return args
 
-class OpenERPDispatcher:
-    def log(self, title, msg, channel=logging.DEBUG_RPC, depth=None):
-        logger = logging.getLogger(title)
-        if logger.isEnabledFor(channel):
-            for line in pformat(msg, depth=depth).split('\n'):
-                logger.log(channel, line)
+def log(title, msg, channel=logging.DEBUG_RPC, depth=None, fn=""):
+    logger = logging.getLogger(title)
+    if logger.isEnabledFor(channel):
+        indent=0
+        for line in (fn+pformat(msg, depth=depth)).split('\n'):
+            logger.log(channel, ' '*indent+line)
+            indent=len(fn)
 
+class OpenERPDispatcher:
+    def log(self, title, msg, channel=logging.DEBUG_RPC, depth=None, fn=""):
+        log(title, msg, channel=channel, depth=depth, fn=fn)
     def dispatch(self, service_name, method, params):
         try:
             logger = logging.getLogger('result')
-            self.log('service', service_name)
-            self.log('method', method)
-            self.log('params', replace_request_password(params), depth=(None if logger.isEnabledFor(logging.DEBUG_RPC_ANSWER) else 1))
+            self.log('service', tuple(replace_request_password(params)), depth=(None if logger.isEnabledFor(logging.DEBUG_RPC_ANSWER) else 1), fn='%s.%s'%(service_name,method))
             auth = getattr(self, 'auth_provider', None)
             result = ExportService.getService(service_name).dispatch(method, auth, params)
             self.log('result', result, channel=logging.DEBUG_RPC_ANSWER)
