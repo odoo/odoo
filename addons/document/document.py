@@ -63,14 +63,14 @@ class document_file(osv.osv):
         cr.execute("UPDATE ir_attachment " \
                     "SET parent_id = %s, db_datas = decode(encode(db_datas,'escape'), 'base64') " \
                     "WHERE parent_id IS NULL", (parent_id,))
-        
+
         cr.execute("ALTER TABLE ir_attachment ALTER parent_id SET NOT NULL")
-        
+
         #Proceeding to update the filesize of the corresponsing attachment
-        cr.execute('SELECT id, db_datas FROM ir_attachment WHERE file_size=0')
+        cr.execute('SELECT id, db_datas FROM ir_attachment WHERE file_size=0 AND db_datas IS NOT NULL')
         old_attachments = cr.dictfetchall()
 
-        for attachment in old_attachments: 
+        for attachment in old_attachments:
             f_size = len(attachment['db_datas'])
             cr.execute('UPDATE ir_attachment SET file_size=%s WHERE id=%s',(f_size,attachment['id']))
 
