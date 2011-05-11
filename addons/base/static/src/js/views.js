@@ -17,17 +17,22 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
     /**
      * Process an action
      * Supported actions: act_window
-     * 
-     * If the action contains a 'no_sidebar' key, the resulting view will never contain a sidebar.
      */
     do_action: function(action) {
         var self = this;
+        action.flags = _.extend({
+            sidebar : true,
+            search_view : true,
+            new_window : false,
+            toolbar : true,
+            pager : true
+        }, action.flags || {});
         // instantiate the right controllers by understanding the action
         switch (action.type) {
             case 'ir.actions.act_window':
                 if (action.target == 'new') {
                     var element_id = _.uniqueId("act_window_dialog");
-                    var dialog = $('<div id="'+element_id+'"></div>');
+                    var dialog = $('<div id="' + element_id + '"></div>');
                     dialog.dialog({
                         title: action.name,
                         modal: true,
@@ -37,18 +42,20 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
                         // When dialog is closed with ESC key or close manually, branch to act_window_close logic
                         self.do_action({ type: 'ir.actions.act_window_close' });
                     });
-                    var viewmanager = new openerp.base.ViewManagerAction(this.session, element_id, action, false);
+                    var viewmanager = new openerp.base.ViewManagerAction(this.session, element_id, action);
                     viewmanager.start();
                     this.dialog_stack.push(viewmanager);
+                } else if (action.flags.new_window) {
+                    this.rpc("/base/session/save_session_action", { the_action : action}, function(key) {
+                        var url = window.location.protocol + "//" + window.location.host +
+                                window.location.pathname + "?" + jQuery.param({ s_action : "" + key });
+                        window.open(url);
+                    });
                 } else {
                     if (this.viewmanager) {
                         this.viewmanager.stop();
                     }
-                    var sidebar = true;
-                    if(action.no_sidebar) {
-                        sidebar = false;
-                    }
-                    this.viewmanager = new openerp.base.ViewManagerAction(this.session, this.element_id, action, sidebar);
+                    this.viewmanager = new openerp.base.ViewManagerAction(this.session, this.element_id, action);
                     this.viewmanager.start();
                 }
                 break;
@@ -240,7 +247,7 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
 });
 
 openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
-    init: function(session, element_id, action, sidebar) {
+    init: function(session, element_id, action) {
         var dataset;
         if(!action.res_id) {
             dataset = new openerp.base.DataSetSearch(session, action.res_model);
@@ -251,9 +258,9 @@ openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
         }
         this._super(session, element_id, dataset, action.views);
         this.action = action;
-        this.sidebar = sidebar;
-        if (sidebar)
+        if (action.flags.sidebar) {
             this.sidebar = new openerp.base.Sidebar(null, this);
+        }
     },
     start: function() {
         var inital_view_loaded = this._super();
@@ -346,7 +353,10 @@ openerp.base.Sidebar = openerp.base.BaseWidget.extend({
             var i = $this.attr("data-i");
             var j = $this.attr("data-j");
             var action = self.sections[i].elements[j];
-            (new openerp.base.ExternalActionManager(self.view_manager.session, null)) .handle_action(action);
+            action.flags = {
+                new_window : true
+            }
+            self.session.action_manager.do_action(action);
             e.stopPropagation();
             e.preventDefault();
         });
@@ -354,31 +364,6 @@ openerp.base.Sidebar = openerp.base.BaseWidget.extend({
     start: function() {
         this._super();
         this.refresh();
-    }
-});
-
-openerp.base.ExternalActionManager = openerp.base.Controller.extend({
-    handle_action: function(action) {
-        if(action.type=="ir.actions.act_window") {
-            if(action.target=="new") {
-                var element_id = _.uniqueId("act_window_dialog");
-                var dialog = $('<div id="'+element_id+'"></div>');
-                dialog.dialog({
-                    title: action.name
-                });
-                var viewmanager = new openerp.base.ViewManagerAction(this.session ,element_id, action, false);
-                viewmanager.start();
-            } else if (action.target == "current") {
-                this.rpc("/base/session/save_session_action", {the_action:action}, function(key) {
-                    var url = window.location.protocol + "//" + window.location.host +
-                            window.location.pathname + "?" + jQuery.param({s_action:""+key});
-                    window.open(url);
-                });
-            }
-        }
-        // TODO: show an error like "not implemented" here
-        // since we don't currently have any way to handle errors do you have any better idea
-        // than using todos?
     }
 });
 
