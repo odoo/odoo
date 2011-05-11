@@ -162,7 +162,7 @@ class email_message(osv.osv):
         """
         action_data = False
         action_pool = self.pool.get('ir.actions.act_window')
-        message_pool = self.browse(cr ,uid, ids, context=context)[0]
+        message_pool = self.browse(cr, uid, ids, context=context)[0]
         att_ids = [x.id for x in message_pool.attachment_ids]
         action_ids = action_pool.search(cr, uid, [('res_model', '=', 'ir.attachment')])
         if action_ids:
@@ -309,8 +309,8 @@ class email_message(osv.osv):
             text = decode_header(text.replace('\r', ''))
             return ''.join([tools.ustr(x[0], x[1]) for x in text])
 
-    def to_email(self,text):
-        return re.findall(r'([^ ,<@]+@[^> ,]+)',text)
+    def to_email(self, text):
+        return re.findall(r'([^ ,<@]+@[^> ,]+)', text)
 
     def parse_message(self, message):
         """Return Dictionary Object after parse EML Message String
@@ -390,7 +390,6 @@ class email_message(osv.osv):
             msg['body'] = tools.ustr(body, encoding)
 
         attachments = {}
-        has_plain_text = False
         if msg_txt.is_multipart() or 'multipart/alternative' in msg.get('content-type', ''):
             body = ""
             if 'multipart/alternative' in msg.get('content-type', ''):
