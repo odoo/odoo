@@ -4,7 +4,15 @@ openerp.base.data = function(openerp) {
 openerp.base.DataGroup =  openerp.base.Controller.extend( /** @lends openerp.base.DataGroup# */{
     /**
      * Management interface between views and grouped collections of OpenERP
-     * records
+     * records.
+     *
+     * The root DataGroup is instantiated with the relevant information
+     * (a session, a model, a domain, a context and a group_by sequence), the
+     * domain and context may be empty. It is then interacted with via
+     * :js:func:`~openerp.base.DataGroup.list`, which is used to read the
+     * content of the current grouping level, and
+     * :js:func:`~openerp.base.DataGroup.get`, which is used to fetch an item
+     * of the current grouping level.
      *
      * @constructs
      * @extends openerp.base.Controller
@@ -26,6 +34,7 @@ openerp.base.DataGroup =  openerp.base.Controller.extend( /** @lends openerp.bas
         this.groups = null;
     },
     fetch: function () {
+        // internal method
         var d = new $.Deferred();
         var self = this;
 
@@ -59,8 +68,8 @@ openerp.base.DataGroup =  openerp.base.Controller.extend( /** @lends openerp.bas
         return d.promise();
     },
     /**
-     * Retrieves the content of the nth-level item in the DataGroup, which
-     * results in either a DataSet or a DataGroup instance.
+     * Retrieves the content of an item in the DataGroup, which results in
+     * either a DataSet or new DataGroup instance.
      *
      * Calling :js:func:`~openerp.base.DataGroup.get` without having called
      * :js:func:`~openerp.base.DataGroup.list` beforehand will likely result
@@ -95,7 +104,33 @@ openerp.base.DataGroup =  openerp.base.Controller.extend( /** @lends openerp.bas
         }
     },
     /**
-     * Provides a list of all top-level items of the data group.
+     * Gathers the content of the current data group (the current grouping
+     * level), and provides it via a promise object to which callbacks should
+     * be added::
+     *
+     *     datagroup.list().then(function (list) {
+     *         // manipulate list here
+     *     });
+     *
+     * The argument to the callback is the list of elements fetched, the
+     * context (``this``) is the datagroup itself.
+     *
+     * The items of a list are the standard objects returned by ``read_group``
+     * with three properties added:
+     *
+     * ``length``
+     *     the number of records contained in the group (and all of its
+     *     sub-groups). This does *not* provide the size of the "next level"
+     *     of the group, unless the group is terminal (no more groups within
+     *     it).
+     * ``grouped_on``
+     *     the name of the field this level was grouped on, this is mostly
+     *     used for display purposes, in order to know the name of the current
+     *     level of grouping. The ``grouped_on`` should be the same for all
+     *     objects of the list.
+     * ``value``
+     *     the value which led to this group (this is the value all contained
+     *     records have for the current ``grouped_on`` field name).
      *
      * @returns {$.Deferred}
      */
