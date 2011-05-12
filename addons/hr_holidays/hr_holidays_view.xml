@@ -441,6 +441,67 @@
             src_model="hr.employee"
             view_id ="view_holiday"
             id="act_hr_employee_holiday_request"/>
+            
+       <!--  Assing leave       -->
+      
+        <record id="view_hr_holidays_leaves_assign" model="ir.ui.view">
+            <field name="name">hr.employee.form.assign</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="type">form</field>
+           <field name="arch" type="xml">
+                <field name="parent_id" position="after">
+                    <newline/>
+                    <field name="remaining_leaves"/>
+                </field>
+            </field>
+        </record>
+        
+        <record id="hr_holidays_leaves_assign_tree_view" model="ir.ui.view">
+            <field name="name">hr.employee.tree</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_tree"/>
+            <field name="type">tree</field>
+            <field eval="7" name="priority"/>
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="remaining_leaves"/>
+                </field>
+                <field name="work_phone" position="replace">
+                    <field name="work_phone" invisible="1"/>
+                </field>
+                <field name="work_email" position="replace">
+                    <field name="work_email" invisible="1"/>
+                </field>
+                <field name="company_id" position="replace">
+                    <field name="company_id" invisible="1"/>
+                </field>
+                <field name="department_id" position="replace">
+                    <field name="department_id" invisible="1"/>
+                </field>
+                <field name="job_id" position="replace">
+                    <field name="job_id" invisible="1"/>
+                </field>
+                <field name="parent_id" position="replace">
+                    <field name="parent_id" invisible="1"/>
+                </field>
+            </field>
+        </record>  
+
+        <record model="ir.actions.act_window" id="hr_holidays_leaves_assign_legal">
+           <field name="name">Assign Legal Leaves to Employees</field>
+           <field name="type">ir.actions.act_window</field>
+           <field name="res_model">hr.employee</field>
+           <field name="view_type">form</field>
+           <field name="view_mode">tree,form</field>
+           <field name="view_id" ref="hr_holidays_leaves_assign_tree_view"/>
+       </record>
+
+       <record id="hr_holidays_leaves_assign_form_view_todo" model="ir.actions.todo">
+           <field name="action_id" ref="hr_holidays_leaves_assign_legal"/>
+           <field name="type">normal</field>
+           <field name="state">skip</field>
+       </record>        
 
     </data>
 </openerp>

@@ -322,3 +322,67 @@ class resource_calendar_leaves(osv.osv):
 
 resource_calendar_leaves()
 
+
+class hr_employee(osv.osv):
+   _inherit="hr.employee"
+
+   def _emp_remaining_days(self, cr, uid, ids, name, args, context=None):
+        if context is None:
+            context = {}
+        res = {}
+        emp_list = []
+        ans2 = 0.0
+        type_list = []
+        type_obj = self.pool.get('hr.holidays.status')
+        holiday_obj = self.pool.get('hr.holidays')
+        type_ids = type_obj.search(cr, uid, [], context=context)
+        false_leave_id = []
+        for type in type_obj.browse(cr, uid, type_ids, context=context):
+            if type.limit == False:
+                 false_leave_id.append(type.id)
+        holiday_ids = holiday_obj.search(cr, uid, [('type','=','add')], context=context)
+        for j in holiday_obj.browse(cr, uid, holiday_ids, context=context):
+            if j.employee_id.id not in emp_list:
+                    emp_list.append(j.employee_id.id)
+        if emp_list:
+            for c in emp_list:    
+                res[c] = 0.0
+                for b in false_leave_id:
+                        cr.execute("select sum(number_of_days_temp) from hr_holidays where employee_id=%s and holiday_status_id=%s and state='validate' and type='add'", (c,b))
+                        res3 = cr.fetchone()[0] or 0.0 
+                        ans2 = ans2 + res3
+                        res[c] = ans2
+        return res
+    
+   def _data_compute(self, cr, uid, id, name, value, arg, context=None):
+        if context is None:
+            context = {}
+        false_leave_id = []
+        emp = self.browse(cr, uid, id, context=context)
+        diff = value - emp.remaining_leaves
+        holiday_obj = self.pool.get('hr.holidays')
+        type_obj = self.pool.get('hr.holidays.status')
+        type_ids = type_obj.search(cr, uid, [], context=context)
+        for type in type_obj.browse(cr, uid, type_ids, context=context):
+            if type.limit == False:
+                 false_leave_id.append(type.id)
+        if false_leave_id:    
+            holiday_emp_id = holiday_obj.search(cr, uid, [('employee_id','=',emp.id),('type','=','add'),('state','=','validate'),('holiday_status_id','=',false_leave_id[0])], context=context)
+            if holiday_emp_id:
+                holiday_emp_id.sort()
+                prev_lv = holiday_obj.browse(cr, uid, holiday_emp_id[0], context=context).number_of_days_temp
+                new_lv = prev_lv + diff
+                holiday_obj.write(cr, uid, holiday_emp_id[0],{'number_of_days_temp': new_lv}, context=context)
+            if not holiday_emp_id:
+                desc = 'Leaves for '+ emp.name
+                holiday_obj.create(cr, uid,{'employee_id': emp.id, 'number_of_days_temp':diff, 'name':desc,'holiday_status_id':false_leave_id[0], 'type':'add','state':'validate'})
+                
+        return {}
+
+   _columns = {
+        'remaining_leaves': fields.function(_emp_remaining_days, method=True, string='Remaining Leaves',fnct_inv=_data_compute, type="float", help='Remaining Leaves', store=True, readonly=False),
+    }
+
+hr_employee()
+
+
