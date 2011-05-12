@@ -19,66 +19,50 @@
 #
 ##############################################################################
 
-import sql_db
+""" Functions kept for backward compatibility.
 
-# Mapping between db name and osv_pool.
-# Accessed through the functions below.
-pool_dic = {}
+    They are simple wrappers around a global RegistryManager methods.
+
+"""
+
+from openerp.registry.manager import RegistryManager
+
+_Registries = None
+
+
+def ensure_registries():
+    global _Registries
+    if _Registries is None:
+        _Registries = RegistryManager()
+
 
 def get_db_and_pool(db_name, force_demo=False, status=None, update_module=False, pooljobs=True):
-    """Return a database connection and an initialized osv_pool."""
-
-    db = sql_db.db_connect(db_name)
-
-    if db_name in pool_dic:
-        pool = pool_dic[db_name]
-    else:
-        import openerp.modules
-        import openerp.osv.osv as osv_osv
-        pool = osv_osv.osv_pool()
-
-        # Initializing an osv_pool will call general code which will in turn
-        # call get_db_and_pool (this function) to obtain the osv_pool being
-        # initialized. Make it available in the pool_dic then remove it if
-        # an exception is raised.
-        pool_dic[db_name] = pool
-        try:
-            openerp.modules.load_modules(db, force_demo, status, update_module)
-        except Exception:
-            del pool_dic[db_name]
-            raise
-
-        cr = db.cursor()
-        try:
-            pool.init_set(cr, False)
-            pool.get('ir.actions.report.xml').register_all(cr)
-            cr.commit()
-        finally:
-            cr.close()
-
-        if pooljobs:
-            pool.get('ir.cron').restart(db.dbname)
-    return db, pool
+    """Create and return a database connection and a newly initialized registry."""
+    ensure_registries()
+    bound_registry = _Registries.get(db_name, force_demo, status, update_module, pooljobs)
+    return bound_registry.db, bound_registry.registry
 
 
 def delete_pool(db_name):
-    """Delete an existing osv_pool."""
-    if db_name in pool_dic:
-        del pool_dic[db_name]
+    """Delete an existing registry."""
+    ensure_registries()
+    _Registries.delete(db_name)
+
 
 def restart_pool(db_name, force_demo=False, status=None, update_module=False):
-    """Delete an existing osv_pool and return a database connection and a newly initialized osv_pool."""
-    delete_pool(db_name)
-    return get_db_and_pool(db_name, force_demo, status, update_module=update_module)
+    """Delete an existing registry and return a database connection and a newly initialized registry."""
+    ensure_registries()
+    bound_registry = _Registries.new(db_name, force_demo, status, update_module, pooljobs)
+    return bound_registry.db, bound_registry.registry
 
 
 def get_db(db_name):
-    """Return a database connection. The corresponding osv_pool is initialize."""
+    """Return a database connection. The corresponding registry is initialized."""
     return get_db_and_pool(db_name)[0]
 
 
 def get_pool(db_name, force_demo=False, status=None, update_module=False):
-    """Return an osv_pool."""
+    """Return a model registry."""
     return get_db_and_pool(db_name, force_demo, status, update_module)[1]
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
