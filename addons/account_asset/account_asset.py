@@ -279,7 +279,7 @@ class account_asset_depreciation_line(osv.osv):
     _name = 'account.asset.depreciation.line'
     _description = 'Asset depreciation line'
 
-    def get_move_line(self, cr, uid, ids, name, args, context={}):
+    def _get_move_check(self, cr, uid, ids, name, args, context=None):
         res = {}
         for line in self.browse(cr, uid, ids, context=context):
             res[line.id] = line.move_id and True or False
@@ -294,7 +294,7 @@ class account_asset_depreciation_line(osv.osv):
         'depreciated_value': fields.float('Amount Already Depreciated', required=True),
         'depreciation_date': fields.char('Depreciation Date', size=64, select=1),
         'move_line_id': fields.many2one('account.move.line', 'Depreciation Entry'),
-        'move_line_present': fields.function(get_move_line, method=True, type='boolean', string='Move Line Present', store=True)
+        'move_check': fields.function(_get_move_check, method=True, type='boolean', string='Move Included', store=True)
     }
 
 account_asset_depreciation_line()
