@@ -3,6 +3,7 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2010-2011 OpenERP SA (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -225,6 +226,8 @@ class ir_ui_menu(osv.osv):
         return {'type': {'icon_pict': 'picture'}, 'value': {'icon_pict': ('stock', (icon,'ICON_SIZE_MENU'))}}
 
     def read_image(self, path):
+        if not path:
+            return False
         path_info = path.split(',')
         icon_path = addons.get_module_resource(path_info[0],path_info[1])
         icon_image = False
@@ -236,17 +239,14 @@ class ir_ui_menu(osv.osv):
                 icon_file.close()
         return icon_image
 
-    def _get_image_icon(self, cr, uid, ids, name, args, context=None):
+    def _get_image_icon(self, cr, uid, ids, names, args, context=None):
         res = {}
         for menu in self.browse(cr, uid, ids, context=context):
-            res[menu.id] = {
-                'web_icon_data': False,
-                'web_icon_hover_data': False,
-            }
-            if menu.web_icon_hover:
-                res[menu.id]['web_icon_hover_data'] = self.read_image(menu.web_icon_hover)
-            if menu.web_icon:
-                res[menu.id]['web_icon_data'] = self.read_image(menu.web_icon)
+            res[menu.id] = r = {}
+            for fn in names:
+                fn_src = fn[:-5]    # remove _data
+                r[fn] = self.read_image(menu[fn_src])
+
         return res
 
     _columns = {
