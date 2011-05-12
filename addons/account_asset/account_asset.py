@@ -286,8 +286,53 @@ class account_asset_depreciation_line(osv.osv):
         'remaining_value': fields.float('Amount to Depreciate', required=True),
         'depreciated_value': fields.float('Amount Already Depreciated', required=True),
         'depreciation_date': fields.char('Depreciation Date', size=64, select=1),
-        'move_line_id': fields.many2one('account.move.line', 'Depreciation Entry'),
+        'move_id': fields.many2one('account.move', 'Depreciation Entry'),
     }
+
+    def create_move(self, cr, uid,ids, context=None):
+        asset_obj = self.pool.get('account.asset.asset')
+        period_obj = self.pool.get('account.period')
+        move_obj = self.pool.get('account.move')
+        move_line_obj = self.pool.get('account.move.line')
+        for line in self.browse(cr, uid, ids, context=context):
+            depreciation_date = asset_obj._get_last_depreciation_date(cr, uid, [line.asset_id.id], context=context)[line.asset_id.id]
+            period_ids = period_obj.find(cr, uid, depreciation_date, context=context)
+            move_vals = {
+                'name': line.name,
+                'date': depreciation_date,
+                'period_id': period_ids and period_ids[0] or False,
+                'journal_id': line.asset_id.category_id.journal_id.id,
+                }
+            move_id = move_obj.create(cr, uid, move_vals, context=context)
+            move_line_obj.create(cr, uid, {
+                'name': line.name,
+                'move_id': move_id,
+                'account_id': line.asset_id.category_id.account_expense_depreciation_id.id,
+                'debit': 0.0,
+                'credit': line.amount,
+                'period_id': period_ids and period_ids[0] or False,
+                'journal_id': line.asset_id.category_id.journal_id.id,
+                'partner_id': line.asset_id.partner_id.id,
+                'currency_id': line.asset_id.currency_id.id,
+                'analytic_account_id': line.asset_id.category_id.account_analytic_id.id,
+                'date': depreciation_date,
+            })
+            move_line_obj.create(cr, uid, {
+                'name': line.name,
+                'move_id': move_id,
+                'account_id': line.asset_id.category_id.account_depreciation_id.id,
+                'credit': 0.0,
+                'debit': line.amount,
+                'period_id': period_ids and period_ids[0] or False,
+                'journal_id': line.asset_id.category_id.journal_id.id,
+                'partner_id': line.asset_id.partner_id.id,
+                'currency_id': line.asset_id.currency_id.id,
+                'analytic_account_id': line.asset_id.category_id.account_analytic_id.id,
+                'date': depreciation_date,
+            })
+            self.write(cr, uid, line.id, {'move_id': move_id}, context=context)
+        return True
+
 account_asset_depreciation_line()
 
 #class account_asset_property(osv.osv):
