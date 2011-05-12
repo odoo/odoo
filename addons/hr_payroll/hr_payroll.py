@@ -613,6 +613,7 @@ class hr_payslip(osv.osv):
         res = {'value':{
                       'line_ids':[],
                       'input_line_ids': [],
+                      'worked_days_line_ids': [],
                       #'details_by_salary_head':[], TODO put me back
                       'name':'',
                       'contract_id': False,
