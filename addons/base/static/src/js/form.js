@@ -143,9 +143,16 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
             var call = onchange.match(/^\s?(.*?)\((.*?)\)\s?$/);
             if (call) {
                 var method = call[1], args = [];
+                var argument_replacement = {
+                    'False' : false,
+                    'True' : true,
+                    'None' : null
+                }
                 _.each(call[2].split(','), function(a) {
                     var field = _.trim(a);
-                    if (self.fields[field]) {
+                    if (field in argument_replacement) {
+                        args.push(argument_replacement[field]);
+                    } else if (self.fields[field]) {
                         var value = self.fields[field].value;
                         args.push(value == null ? false : value);
                     } else {
