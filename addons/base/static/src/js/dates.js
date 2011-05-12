@@ -96,7 +96,7 @@ var fts = function(str, size) {
  * @returns {String} A string representing a datetime.
  */
 openerp.base.format_datetime = function(obj) {
-    if(! str) {
+    if (!obj) {
         return false;
     }
     return fts(obj.getUTCFullYear(),4) + "-" + fts(obj.getUTCMonth() + 1,2) + "-"
@@ -112,7 +112,7 @@ openerp.base.format_datetime = function(obj) {
  * @returns {String} A string representing a date.
  */
 openerp.base.format_date = function(obj) {
-    if(! str) {
+    if (!obj) {
         return false;
     }
     return fts(obj.getFullYear(),4) + "-" + fts(obj.getMonth() + 1,2) + "-"
@@ -127,7 +127,7 @@ openerp.base.format_date = function(obj) {
  * @returns {String} A string representing a time.
  */
 openerp.base.format_time = function(obj) {
-    if(! str) {
+    if (!obj) {
         return false;
     }
     return fts(obj.getHours(),2) + ":" + fts(obj.getMinutes(),2) + ":"
