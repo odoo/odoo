@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-06 05:21+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-04-29 05:31+0000\n"
+"X-Generator: Launchpad (build 12758)\n"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_action_form
@@ -23,7 +23,7 @@ msgstr ""
 #: view:mrp.production.workcenter.line:0
 #: view:mrp.workorder:0
 msgid "Work Orders"
-msgstr "Zamówienia robocze"
+msgstr "Zlecenie operacji"
 
 #. module: mrp_operations
 #: model:process.node,note:mrp_operations.process_node_canceloperation0
@@ -88,7 +88,7 @@ msgstr "Operacja produkcji"
 #. module: mrp_operations
 #: field:mrp.production,allow_reorder:0
 msgid "Free Serialisation"
-msgstr ""
+msgstr "Przypadkowa serializacja"
 
 #. module: mrp_operations
 #: model:process.process,name:mrp_operations.process_process_mrpoperationprocess0
@@ -114,7 +114,7 @@ msgstr "Wyjątek pobrania"
 #. module: mrp_operations
 #: model:process.transition,name:mrp_operations.process_transition_productionstart0
 msgid "Creation of the work order"
-msgstr ""
+msgstr "Utworzenie zlecenia operacji"
 
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:461
@@ -133,7 +133,7 @@ msgstr "Centrum robocze"
 #. module: mrp_operations
 #: model:process.transition,note:mrp_operations.process_transition_productionstart0
 msgid "The work orders are created on the basis of the production order."
-msgstr ""
+msgstr "Zlecenia operacji są tworzone na podstawie zamówienia produkcji"
 
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:133
@@ -155,7 +155,7 @@ msgstr "Anulowano"
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_confirm_action
 msgid "Confirmed Work Orders"
-msgstr "Potwierdzone zamówienia robocze"
+msgstr "Potwierdzone zlecenia operacji"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_operation_action
@@ -171,7 +171,7 @@ msgstr "Przesunięcie zapasu"
 #. module: mrp_operations
 #: field:mrp.workorder,nbr:0
 msgid "# of Lines"
-msgstr "# wierszy"
+msgstr "# pozycji"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
@@ -198,7 +198,7 @@ msgstr "Stan"
 #: model:ir.actions.act_window,name:mrp_operations.action_report_mrp_workorder
 #: model:ir.model,name:mrp_operations.model_mrp_production_workcenter_line
 msgid "Work Order"
-msgstr ""
+msgstr "Operacja"
 
 #. module: mrp_operations
 #: model:process.transition,note:mrp_operations.process_transition_workstartoperation0
@@ -206,6 +206,8 @@ msgid ""
 "There is 1 work order per work center. The information about the number of "
 "cycles or the cycle time."
 msgstr ""
+"Jedno zlecenie operacji na centrum robocze. Informacja o liczbie cykli lub "
+"czs cyklu."
 
 #. module: mrp_operations
 #: view:mrp.workorder:0
@@ -280,7 +282,7 @@ msgstr "Data zamówienia"
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_draft_action
 msgid "Future Work Orders"
-msgstr "Przyszłe zamówienia operacji"
+msgstr "Przyszłe zlecenia operacji"
 
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:457
@@ -324,7 +326,7 @@ msgstr ""
 #. module: mrp_operations
 #: model:ir.model,name:mrp_operations.model_mrp_workorder
 msgid "Work Order Report"
-msgstr ""
+msgstr "Raport zleceń operacji"
 
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,date_start:0
@@ -377,6 +379,8 @@ msgid ""
 "When the operation needs to be cancelled, you can do it in the work order "
 "form."
 msgstr ""
+"Jeśli operacja ma być anulowana, to możesz to zrobić w formularzu zlecenia "
+"operacji."
 
 #. module: mrp_operations
 #: view:mrp.production:0
@@ -473,7 +477,7 @@ msgstr "Przesunięcia podrzędne"
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_action_planning
 msgid "Work Orders Planning"
-msgstr ""
+msgstr "Planowanie zleceń operacji"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
@@ -490,6 +494,8 @@ msgstr "Listopad"
 #: help:mrp.production.workcenter.line,delay:0
 msgid "This is lead time between operation start and stop in this workcenter"
 msgstr ""
+"To jest przewidywany czas pomiędzy rozpoczęciem a zakończeniem operacji tego "
+"centrum roboczego"
 
 #. module: mrp_operations
 #: view:mrp.workorder:0
@@ -556,7 +562,7 @@ msgstr ""
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_code_action
 msgid "Operation Codes"
-msgstr ""
+msgstr "Kody operacji"
 
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,qty:0
@@ -609,7 +615,7 @@ msgstr "Informacja"
 #. module: mrp_operations
 #: model:ir.actions.report.xml,name:mrp_operations.report_wc_barcode
 msgid "Work Centers Barcode"
-msgstr ""
+msgstr "Kod kreskowy centrum roboczego"
 
 #. module: mrp_operations
 #: constraint:stock.move:0

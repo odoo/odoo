@@ -731,6 +731,7 @@ class project_task(osv.osv):
         task = self.browse(cr, uid, task_id, context=context)
         duration = str(task.planned_hours )+ 'H'
         str_resource = False
+        parent = task.parent_ids
         if task.phase_id.resource_ids:
             str_resource = ('%s | '*len(task.phase_id.resource_ids))[:-2]
             str_resource = str_resource % tuple(map(lambda x: 'Resource_%s'%x.resource_id.id, task.phase_id.resource_ids))
@@ -742,7 +743,10 @@ class project_task(osv.osv):
             effort = \'%s\'
             resource = %s
 '''%(task.id, task.name, duration, str_resource)
-            #start = datetime.strftime((datetime.strptime(start, "%Y-%m-%d")), "%Y-%m-%d")
+            if parent:
+                s +='''
+            start = up.Task_%s.end
+'''%(parent[0].id)
         else:
             s = '''
     def Task_%s():
@@ -750,6 +754,10 @@ class project_task(osv.osv):
         effort = \'%s\'
         resource = %s
 '''%(task.id, task.name, duration, str_resource)
+            if parent:
+                s +='''
+        start = up.Task_%s.end
+'''%(parent[0].id)
         s += '\n'
         return s
 project_task()

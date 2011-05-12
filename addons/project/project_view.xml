@@ -21,7 +21,8 @@
                 <form string="Project">
                     <group colspan="6" col="6">
                         <field name="name" string="Project Name" select="1"/>
-                        <field name="parent_id" string="Parent Project" domain="[('id','!=',active_id)]" context="{'current_model': 'project.project'}"/>
+                        <field name="analytic_account_id" invisible="1" required="0"/>
+                        <field name="parent_id" string="Parent" domain="[('id','!=',analytic_account_id)]" context="{'current_model': 'project.project'}"/>
                         <field name="user_id" string="Project Manager" select="1" attrs="{'readonly':[('state','in',['close', 'cancelled'])]}"/>
                         <field name="date_start" string="Start Date" attrs="{'readonly':[('state','in',['close', 'cancelled'])]}"/>
                         <field name="date" string="End Date" attrs="{'readonly':[('state','in',['close', 'cancelled'])]}"/>
@@ -122,7 +123,7 @@
                         <filter string="Manager" name="Manager"  icon="terp-personal" domain = "[]" context="{'group_by':'user_id'}"/>
                         <filter string="Partner" name="Partner" icon="terp-partner" domain = "[]" context="{'group_by':'partner_id'}"/>
                          <separator orientation="vertical"/>
-                        <filter string="Parent" name="Parent"  help="Parent Project" icon="terp-folder-blue" domain = "[]" context="{'group_by':'parent_id'}"/>
+                        <filter string="Parent" name="Parent"  help="Parent" icon="terp-folder-blue" domain = "[]" context="{'group_by':'parent_id'}"/>
                     </group>
                </search>
             </field>
@@ -140,7 +141,7 @@
                     <field name="name" string="Project Name"/>
                     <field name="user_id" string="Project Manager"/>
                     <field name="partner_id" string="Partner"/>
-                    <field name="parent_id" string="Parent Project" invisible="1"/>
+                    <field name="parent_id" string="Parent" invisible="1"/>
                     <field name="planned_hours" widget="float_time"/>
                     <field name="total_hours" widget="float_time"/>
                     <field name="effective_hours" widget="float_time"/>

@@ -926,9 +926,8 @@ class account_period(osv.osv):
 
     def action_draft(self, cr, uid, ids, *args):
         mode = 'draft'
-        for id in ids:
-            cr.execute('update account_journal_period set state=%s where period_id=%s', (mode, id))
-            cr.execute('update account_period set state=%s where id=%s', (mode, id))
+        cr.execute('update account_journal_period set state=%s where period_id in %s', (mode, tuple(ids),))
+        cr.execute('update account_period set state=%s where id in %s', (mode, tuple(ids),))
         return True
 
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
@@ -1562,14 +1561,15 @@ class account_tax_code(osv.osv):
                        (parent_ids,) + where_params)
         res=dict(cr.fetchall())
         obj_precision = self.pool.get('decimal.precision')
+        res2 = {} 
         for record in self.browse(cr, uid, ids, context=context):
             def _rec_get(record):
                 amount = res.get(record.id, 0.0)
                 for rec in record.child_ids:
                     amount += _rec_get(rec) * rec.sign
                 return amount
-            res[record.id] = round(_rec_get(record), obj_precision.precision_get(cr, uid, 'Account'))
-        return res
+            res2[record.id] = round(_rec_get(record), obj_precision.precision_get(cr, uid, 'Account'))
+        return res2
 
     def _sum_year(self, cr, uid, ids, name, args, context=None):
         if context is None:
@@ -2146,8 +2146,8 @@ class account_model_line(osv.osv):
     _description = "Account Model Entries"
     _columns = {
         'name': fields.char('Name', size=64, required=True),
-        'sequence': fields.integer('Sequence', required=True, help="The sequence field is used to order the resources from lower sequences to higher ones"),
-        'quantity': fields.float('Quantity', digits_compute=dp.get_precision('Account'), help="The optional quantity on entries"),
+        'sequence': fields.integer('Sequence', required=True, help="The sequence field is used to order the resources from lower sequences to higher ones."),
+        'quantity': fields.float('Quantity', digits_compute=dp.get_precision('Account'), help="The optional quantity on entries."),
         'debit': fields.float('Debit', digits_compute=dp.get_precision('Account')),
         'credit': fields.float('Credit', digits_compute=dp.get_precision('Account')),
         'account_id': fields.many2one('account.account', 'Account', required=True, ondelete="cascade"),
@@ -2156,7 +2156,7 @@ class account_model_line(osv.osv):
         'amount_currency': fields.float('Amount Currency', help="The amount expressed in an optional other currency."),
         'currency_id': fields.many2one('res.currency', 'Currency'),
         'partner_id': fields.many2one('res.partner', 'Partner'),
-        'date_maturity': fields.selection([('today','Date of the day'), ('partner','Partner Payment Term')], 'Maturity date', help="The maturity date of the generated entries for this model. You can choose between the creation date or the creation date of the entries plus the partner payment terms."),
+        'date_maturity': fields.selection([('today','Date of the day'), ('partner','Partner Payment Term')], 'Maturity Date', help="The maturity date of the generated entries for this model. You can choose between the creation date or the creation date of the entries plus the partner payment terms."),
     }
     _order = 'sequence'
     _sql_constraints = [
@@ -2659,8 +2659,6 @@ class wizard_multi_charts_accounts(osv.osv_memory):
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         res = super(wizard_multi_charts_accounts, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar,submenu=False)
-        configured_cmp = []
-        unconfigured_cmp = []
         cmp_select = []
         company_ids = self.pool.get('res.company').search(cr, uid, [], context=context)
         #display in the widget selection of companies, only the companies that haven't been configured yet (but don't care about the demo chart of accounts)
@@ -2668,12 +2666,12 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         configured_cmp = [r[0] for r in cr.fetchall()]
         unconfigured_cmp = list(set(company_ids)-set(configured_cmp))
         for field in res['fields']:
-           if field == 'company_id':
-               res['fields'][field]['domain'] = unconfigured_cmp
-               res['fields'][field]['selection'] = [('', '')]
-               if unconfigured_cmp:
-                   cmp_select = [(line.id, line.name) for line in self.pool.get('res.company').browse(cr, uid, unconfigured_cmp)]
-                   res['fields'][field]['selection'] = cmp_select
+            if field == 'company_id':
+                res['fields'][field]['domain'] = unconfigured_cmp
+                res['fields'][field]['selection'] = [('', '')]
+                if unconfigured_cmp:
+                    cmp_select = [(line.id, line.name) for line in self.pool.get('res.company').browse(cr, uid, unconfigured_cmp)]
+                    res['fields'][field]['selection'] = cmp_select
         return res
 
     def execute(self, cr, uid, ids, context=None):
@@ -2681,7 +2679,6 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         obj_acc = self.pool.get('account.account')
         obj_acc_tax = self.pool.get('account.tax')
         obj_journal = self.pool.get('account.journal')
-        obj_sequence = self.pool.get('ir.sequence')
         obj_acc_template = self.pool.get('account.account.template')
         obj_fiscal_position_template = self.pool.get('account.fiscal.position.template')
         obj_fiscal_position = self.pool.get('account.fiscal.position')
@@ -2689,9 +2686,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         analytic_journal_obj = self.pool.get('account.analytic.journal')
         obj_tax_code = self.pool.get('account.tax.code')
         obj_tax_code_template = self.pool.get('account.tax.code.template')
-        obj_acc_journal_view = self.pool.get('account.journal.view')
         ir_values = self.pool.get('ir.values')
-        obj_product = self.pool.get('product.product')
         # Creating Account
         obj_acc_root = obj_multi.chart_template_id.account_root_id
         tax_code_root_id = obj_multi.chart_template_id.tax_code_root_id.id
@@ -2946,8 +2941,6 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             acc_cash_id  = obj_acc.create(cr,uid,vals)
 
             #create the bank journal
-            analytical_bank_ids = analytic_journal_obj.search(cr,uid,[('type','=','situation')])
-            analytical_journal_bank = analytical_bank_ids and analytical_bank_ids[0] or False
             vals_journal = {
                 'name': vals['name'],
                 'code': _('BNK') + str(current_num),

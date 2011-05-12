@@ -19,22 +19,12 @@
 #
 ##############################################################################
 
-import datetime
-import time
 from report.interface import report_rml
-from report.interface import toxml
 import pooler
-from osv import osv,orm
-from time import strptime
 from xml.dom import minidom
-import sys
-import os
 import re
-import netsvc
 import base64
-import wizard
 import photo_shadow
-from tools import config
 import addons
 
 def _to_unicode(s):
@@ -75,11 +65,6 @@ class auction_catalog(report_rml):
         catalog=doc.createElement('catalog')
         doc.documentElement.appendChild(catalog)
 
-
-        infodb='info'
-        commdb='comm'
-        tab_avoid = []
-        tab_no_photo=[]
         auction_lot_pool = pooler.get_pool(cr.dbname).get('auction.lots')
         auction_dates_pool = pooler.get_pool(cr.dbname).get('auction.dates')
         for auction in auction_dates_pool.browse(cr, uid, ids, context=context):
@@ -89,7 +74,7 @@ class auction_catalog(report_rml):
             categ.appendChild(doc.createTextNode(_to_decode(auction.name)))
             catalog.appendChild(categ)
 
-             #Auctuion Date element
+            #Auctuion Date element
             categ = doc.createElement("AuctionDate1")
             categ.appendChild(doc.createTextNode(_to_decode(auction.auction1)))
             catalog.appendChild(categ)
@@ -133,7 +118,6 @@ class auction_catalog(report_rml):
                         infos.appendChild(lnum)
 
                     if cat.image:
-                        import random
                         import tempfile
                         limg = doc.createElement('photo_small')
 

@@ -218,7 +218,7 @@ class product_category(osv.osv):
         'type' : lambda *a : 'normal',
     }
 
-    _order = "sequence"
+    _order = "sequence, name"
     def _check_recursion(self, cr, uid, ids, context=None):
         level = 100
         while len(ids):
@@ -251,7 +251,9 @@ class product_template(osv.osv):
                 result[product.id] = {field:False}
             result[product.id]['seller_delay'] = 1
             if product.seller_ids:
-                partner_list = sorted([(partner_id.sequence, partner_id) for partner_id in  product.seller_ids if partner_id and partner_id.sequence])
+                partner_list = sorted([(partner_id.sequence, partner_id)
+                                       for partner_id in  product.seller_ids
+                                       if partner_id and isinstance(partner_id.sequence, (int, long))])
                 main_supplier = partner_list and partner_list[0] and partner_list[0][1] or False
                 result[product.id]['seller_delay'] =  main_supplier and main_supplier.delay or 1
                 result[product.id]['seller_qty'] =  main_supplier and main_supplier.qty or 0.0

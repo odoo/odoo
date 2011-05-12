@@ -26,6 +26,10 @@ from datetime import datetime, date
 from tools.translate import _
 from osv import fields, osv
 
+class project_project(osv.osv):
+    _name = 'project.project'
+    
+project_project()    
 
 class project_task_type(osv.osv):
     _name = 'project.task.type'
@@ -35,6 +39,7 @@ class project_task_type(osv.osv):
         'name': fields.char('Stage Name', required=True, size=64, translate=True),
         'description': fields.text('Description'),
         'sequence': fields.integer('Sequence'),
+        'project_ids': fields.many2many('project.project', 'project_task_type_rel', 'type_id', 'project_id', 'Projects'),
     }
 
     _defaults = {
@@ -77,7 +82,6 @@ class project(osv.osv):
 
     def _progress_rate(self, cr, uid, ids, names, arg, context=None):
         res = {}.fromkeys(ids, 0.0)
-        progress = {}
         if not ids:
             return res
         cr.execute('''SELECT
@@ -156,9 +160,9 @@ class project(osv.osv):
     # TODO: Why not using a SQL contraints ?
     def _check_dates(self, cr, uid, ids, context=None):
         for leave in self.read(cr, uid, ids, ['date_start', 'date'], context=context):
-             if leave['date_start'] and leave['date']:
-                 if leave['date_start'] > leave['date']:
-                     return False
+            if leave['date_start'] and leave['date']:
+                if leave['date_start'] > leave['date']:
+                    return False
         return True
 
     _constraints = [
@@ -208,6 +212,7 @@ class project(osv.osv):
         default = default or {}
         context['active_test'] = False
         default['state'] = 'open'
+        proj = self.browse(cr, uid, id, context=context)
         if not default.get('name', False):
             default['name'] = proj.name + _(' (copy)')
 
@@ -235,7 +240,6 @@ class project(osv.osv):
     def duplicate_template(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
-        task_pool = self.pool.get('project.task')
         data_obj = self.pool.get('ir.model.data')
         result = []
         for proj in self.browse(cr, uid, ids, context=context):
@@ -395,16 +399,10 @@ class task(osv.osv):
         if not default.get('name', False):
             default['name'] = self.browse(cr, uid, id, context=context).name or ''
             if not context.get('copy',False):
-                 new_name = _("%s (copy)")%default.get('name','')
-                 default.update({'name':new_name})
+                new_name = _("%s (copy)")%default.get('name','')
+                default.update({'name':new_name})
         return super(task, self).copy_data(cr, uid, id, default, context)
 
-    def _check_dates(self, cr, uid, ids, context=None):
-        task = self.read(cr, uid, ids[0], ['date_start', 'date_end'])
-        if task['date_start'] and task['date_end']:
-             if task['date_start'] > task['date_end']:
-                 return False
-        return True
 
     def _is_template(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
@@ -572,7 +570,7 @@ class task(osv.osv):
         project = task.project_id
         res = self.do_close(cr, uid, [project_id], context=context)
         if project.warn_manager or project.warn_customer:
-           return {
+            return {
                 'name': _('Send Email after close task'),
                 'view_type': 'form',
                 'view_mode': 'form',
