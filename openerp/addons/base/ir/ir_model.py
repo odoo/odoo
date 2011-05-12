@@ -629,6 +629,13 @@ class ir_model_data(osv.osv):
         except:
             id = False
         return id
+    
+    def unlink(self, cr, uid, ids, context=None):
+        ref_ids = self.browse(cr, uid, ids, context=context)
+        for ref_id in ref_ids:
+            self._get_id.clear_cache(cr.dbname, uid, ref_id.module, ref_id.name)
+            self.get_object_reference.clear_cache(cr.dbname, uid, ref_id.module, ref_id.name)
+        super(ir_model_data,self).unlink(cr, uid, ids, context=context)
 
     def _update(self,cr, uid, model, module, values, xml_id=False, store=True, noupdate=False, mode='init', res_id=False, context=None):
         model_obj = self.pool.get(model)
