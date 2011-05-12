@@ -13,11 +13,10 @@
                        <field name="create_partner" colspan="4"/>
                        <newline/>
                        <group attrs="{'invisible': [('create_partner','!=','create_all')]}" colspan="4" col="4">
-                            <separator string="Partner status for this group:"/>
-                            <field name="customer"/>
-                            <newline/>
-                            <label string=""/>
-                            <field name="supplier"/>
+                            <separator string="Partner status for this group:" colspan="4"/>
+                            <field name="customer" colspan="4"/>
+                            
+                            <field name="supplier"  colspan="4"/>
                        </group>
                     </group>
                     <separator string="" colspan="4"/>
@@ -31,8 +30,7 @@
                 </form>
             </field>
         </record>
-        
-        
+
         <record model="ir.actions.act_window" id="act_import_google_contacts_form">
           <field name="name">Import Contacts</field>
           <field name="type">ir.actions.act_window</field>
@@ -45,7 +43,7 @@
 
 
         <menuitem id="menu_sync_contact"
-                  parent="base.menu_address_book" 
+                  parent="base.menu_address_book"
                   action="act_import_google_contacts_form"
                   sequence="40" />
     </data>
