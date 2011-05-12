@@ -88,6 +88,8 @@
                           <field name="amount"/>
                           <field name="depreciated_value"/>
                           <field name="remaining_value"/>
+                          <field name="move_line_id" invisible="1"/>
+	 		   <button name="create_move" attrs="{'invisible':[('move_line_id','!=',False)]}" icon="terp-document-new" string="Create Move" type="object"/>
                        </tree>
                        <graph type="bar">
                           <field name="name"/>
