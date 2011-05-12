@@ -18,8 +18,7 @@
         </div>
     </div>
     <div id="oe_login" class="login"></div>
-    <table border="0" cellpadding="0" cellspacing="0" width="100%" height="100%"
-        t-att-class="'main_table' + (typeof kitten == 'undefined' ? '' : ' kitten-mode-activated')">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%" height="100%" class="main_table">
     <tr>
         <td colspan="2">
             <div id="oe_header" class="header"></div>
@@ -55,8 +54,7 @@
 </t>
 <t t-name="Header">
     <a href="/" class="company_logo_link">
-        <img t-att-src="typeof kitten == 'undefined' ? '/base/static/src/img/logo.png' :
-            'http://placekitten.com/g/179/46'" border="0" class="company_logo"/>
+        <div class="company_logo" />
     </a>
     <h1 class="header_title" t-if="session.session_is_valid()">
         <span class="company">$company</span> - (<span class="database">$database</span>)<br/>
