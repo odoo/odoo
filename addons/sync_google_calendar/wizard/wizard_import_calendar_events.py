@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,11 +15,12 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
-from osv import fields,osv
+from osv import fields
+from osv import osv
 from tools.translate import _
 import tools
 
@@ -40,6 +41,7 @@ try:
 except ImportError:
     raise osv.except_osv(_('Google Contacts Import Error!'), _('Please install gdata-python-client from http://code.google.com/p/gdata-python-client/downloads/list'))
 
+
 def _get_tinydates(self, stime, etime):
     stime = dateutil.parser.parse(stime)
     etime = dateutil.parser.parse(etime)
@@ -53,6 +55,7 @@ def _get_tinydates(self, stime, etime):
         timestring_end = datetime.datetime(*etime.timetuple()[:6]).strftime('%Y-%m-%d %H:%M:%S')
     return (timestring, timestring_end)
 
+
 def _get_rules(self, datas):
     new_val = {}
     if  datas['FREQ'] == 'WEEKLY' and datas.get('BYDAY'):
@@ -65,12 +68,12 @@ def _get_rules(self, datas):
         new_val['end_date'] = until.strftime('%Y-%m-%d')
         new_val['end_type'] = 'end_date'
         datas.pop('UNTIL')
-        
+
     if datas.get('COUNT'):
         new_val['count'] = datas.get('COUNT')
         new_val['end_type'] = 'count'
         datas.pop('COUNT')
-        
+
     if datas.get('INTERVAL'):
         new_val['interval'] = datas.get('INTERVAL')
     else:
@@ -96,6 +99,7 @@ def _get_rules(self, datas):
         datas.pop('bymonth')
     return new_val
 
+
 def _get_repeat_status(self, str_google):
     rrule = str_google[str_google.find('FREQ'):str_google.find('\nBEGIN')]
     status = {}
@@ -116,6 +120,7 @@ def _get_repeat_status(self, str_google):
         status.pop('FREQ')
     status.update(rules)
     return status
+
 
 def _get_repeat_dates(self, x):
     if len(x) > 4:
@@ -142,6 +147,7 @@ def _get_repeat_dates(self, x):
         repeat_end += ' ' + '00' + ':' + '00' + ':' + '00'
     return (repeat_start, repeat_end, tz_format)
 
+
 class google_login(osv.osv_memory):
     _inherit = 'google.login'
     _name = 'google.login'
@@ -167,9 +173,10 @@ class google_login(osv.osv_memory):
 
 google_login()
 
+
 class synchronize_google_calendar_events(osv.osv_memory):
     _name = 'synchronize.google.calendar'
-    
+
     def _get_calendars(self, cr, uid, context=None):
         user_obj = self.pool.get('res.users').browse(cr, uid, uid)
         google = self.pool.get('google.login')
@@ -181,46 +188,46 @@ class synchronize_google_calendar_events(osv.osv_memory):
                 res.append((cal.id.text, cal.title.text))
         except Exception, e:
             raise osv.except_osv('Error !', e.args[0].get('body'))
-        res.append(('all','All Calendars'))
+        res.append(('all', 'All Calendars'))
         return res
-    
+
     _columns = {
         'calendar_name': fields.selection(_get_calendars, "Calendar Name", size=32),
     }
-    
+
     _defaults = {
         'calendar_name': 'all',
     }
-    
+
     def get_events(self, cr, uid, event_feed, context=None):
         meeting_obj = self.pool.get('crm.meeting')
         categ_obj = self.pool.get('crm.case.categ')
         model_obj = self.pool.get('ir.model.data')
         object_id = self.pool.get('ir.model').search(cr, uid, [('model', '=', 'crm.meeting')])
         meeting_ids = []
-        categ_id = categ_obj.search(cr, uid, [('name','=',event_feed.title.text),('object_id','=',object_id and object_id[0]),('user_id','=',uid)])
+        categ_id = categ_obj.search(cr, uid, [('name', '=', event_feed.title.text), ('object_id', '=', object_id and object_id[0]), ('user_id', '=', uid)])
         if not categ_id:
-            categ_id.append(categ_obj.create(cr, uid, {'name': event_feed.title.text, 
+            categ_id.append(categ_obj.create(cr, uid, {'name': event_feed.title.text,
                                                        'object_id': object_id and object_id[0],
-                                                       'user_id': uid }))
+                                                       'user_id': uid}))
         if 'tz' in context and context['tz']:
             time_zone = context['tz']
         else:
             time_zone = tools.get_server_timezone()
         au_tz = timezone(time_zone)
-        
+
         for feed in event_feed.entry:
             google_id = feed.id.text
             model_data = {
                 'name': google_id,
                 'model': 'crm.meeting',
                 'module': 'sync_google_calendar',
-                'noupdate': True
+                'noupdate': True,
             }
             vals = {
                 'name': feed.title.text or '(No title)',
                 'description': feed.content.text,
-                'categ_id': categ_id and categ_id[0]
+                'categ_id': categ_id and categ_id[0],
             }
             if feed.when:
                 timestring, timestring_end = _get_tinydates(self, feed.when[0].start_time, feed.when[0].end_time)
@@ -235,7 +242,7 @@ class synchronize_google_calendar_events(osv.osv_memory):
                     vals.update(repeat_status)
 
             vals.update({'date': timestring, 'date_deadline': timestring_end})
-            data_ids = model_obj.search(cr, uid, [('model','=','crm.meeting'), ('name','=',google_id)])
+            data_ids = model_obj.search(cr, uid, [('model', '=', 'crm.meeting'), ('name', '=', google_id)])
             if data_ids:
                 res_id = model_obj.browse(cr, uid, data_ids[0], context=context).res_id
                 meeting = meeting_obj.browse(cr, uid, res_id, context=context)
@@ -252,22 +259,22 @@ class synchronize_google_calendar_events(osv.osv_memory):
                 model_data.update({'res_id': res_id})
                 model_obj.create(cr, uid, model_data, context=context)
         return meeting_ids
-    
+
     def import_calendar_events(self, cr, uid, ids, context=None):
         obj = self.browse(cr, uid, ids, context=context)[0]
         if not ids:
-            return { 'type': 'ir.actions.act_window_close' }
+            return {'type': 'ir.actions.act_window_close'}
 
         user_obj = self.pool.get('res.users').browse(cr, uid, uid)
         gmail_user = user_obj.gmail_user
         gamil_pwd = user_obj.gmail_password
-        
+
         google = self.pool.get('google.login')
         gd_client = google.google_login(cr, uid, gmail_user, gamil_pwd, type='calendar')
 
         if not gmail_user or not gamil_pwd:
             raise osv.except_osv(_('Error'), _("Please specify the user and password !"))
-        
+
         meetings = []
         if obj.calendar_name != 'all':
             events_query = gdata.calendar.service.CalendarEventQuery(user=urllib.unquote(obj.calendar_name.split('/')[~0]))
@@ -276,23 +283,22 @@ class synchronize_google_calendar_events(osv.osv_memory):
             event_feed = gd_client.GetCalendarEventFeed(events_query.ToUri())
             meetings.append(self.get_events(cr, uid, event_feed, context=context))
         else:
-            calendars = map(lambda x:x[0], [cal for cal in self._get_calendars(cr, uid, context) if cal[0] != 'all'])
+            calendars = map(lambda x: x[0], [cal for cal in self._get_calendars(cr, uid, context) if cal[0] != 'all'])
             for cal in calendars:
                 events_query = gdata.calendar.service.CalendarEventQuery(user=urllib.unquote(cal.split('/')[~0]))
                 events_query.start_index = 1
                 events_query.max_results = 1000
                 event_feed = gd_client.GetCalendarEventFeed(events_query.ToUri())
                 meetings.append(self.get_events(cr, uid, event_feed, context=context))
-        
+
         meeting_ids = []
         for meeting in meetings:
             meeting_ids += meeting
-        
+
         return {
             'type': 'ir.actions.act_window_close',
         }
-        
+
 synchronize_google_calendar_events()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

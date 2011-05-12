@@ -21,13 +21,11 @@
                 </form>
             </field>
         </record>
-        
-        
-        <!-- 
-            Login Action 
+        <!--
+            Login Action
         -->
         <record model="ir.actions.act_window" id="act_google_login_form">
-          <field name="name">Import google calendar events</field>
+          <field name="name">Import Google Calendar</field>
           <field name="type">ir.actions.act_window</field>
           <field name="res_model">google.login</field>
           <field name="view_type">form</field>
@@ -35,10 +33,8 @@
           <field name="target">new</field>
           <field name="view_id" ref="google_base_account.view_google_login_form" />
         </record>
-
-
         <menuitem id="menu_sync_contact"
-                  parent="crm.menu_meeting_sale" 
+                  parent="crm.menu_meeting_sale"
                   action="act_google_login_form"
                   sequence="20" />
     </data>
