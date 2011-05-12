@@ -346,59 +346,6 @@ class hr_payslip(osv.osv):
         }
 
     def verify_sheet(self, cr, uid, ids, context=None):
-         #TODO clean me: this function should create the register lines accordingly to the rules computed (run the compute_sheet first)
-#        holiday_pool = self.pool.get('hr.holidays')
-#        salary_rule_pool = self.pool.get('hr.salary.rule')
-#        structure_pool = self.pool.get('hr.payroll.structure')
-#        register_line_pool = self.pool.get('hr.contibution.register.line')
-#        contracts = []
-#        structures = []
-#        rules = []
-#        lines = []
-#        sal_structures =[]
-#        for slip in self.browse(cr, uid, ids, context=context):
-#            if slip.contract_id:
-#                contracts.append(slip.contract_id)
-#            else:
-#                contracts = self.get_contract(cr, uid, slip.employee_id, slip.date, context=context)
-#            for contract in contracts:
-#                structures.append(contract.struct_id.id)
-#                leave_ids = self._get_leaves(cr, uid, slip.date, slip.employee_id, contract, context)
-#                for hday in holiday_pool.browse(cr, uid, leave_ids, context=context):
-#                    salary_rules = salary_rule_pool.search(cr, uid, [('code', '=', hday.holiday_status_id.code)], context=context)
-#                    rules +=  salary_rule_pool.browse(cr, uid, salary_rules, context=context)
-#            for structure in structures:
-#                sal_structures = self._get_parent_structure(cr, uid, [structure], context=context)
-#                for struct in sal_structures:
-#                    lines = structure_pool.browse(cr, uid, struct, context=context).rule_ids
-#                    for line in lines:
-#                        if line.child_ids:
-#                            for r in line.child_ids:
-#                                lines.append(r)
-#                        rules.append(line)
-#            base = {
-#                'basic': slip.basic_amount,
-#            }
-#            if rules:
-#                for rule in rules:
-#                    if rule.company_contribution:
-#                        base[rule.code.lower()] = rule.amount
-#                        if rule.register_id:
-#                            for slip in slip.line_ids:
-#                                if slip.category_id == rule.category_id:
-#                                    line_tot = slip.total
-#                            value = eval(rule.computational_expression, base)
-#                            company_contrib = self._compute(cr, uid, rule.id, value, employee, contract, context)
-#                            reg_line = {
-#                                'name': rule.name,
-#                                'register_id': rule.register_id.id,
-#                                'code': rule.code,
-#                                'employee_id': slip.employee_id.id,
-#                                'emp_deduction': line_tot,
-#                                'comp_deduction': company_contrib,
-#                                'total': rule.amount + line_tot
-#                            }
-#                            register_line_pool.create(cr, uid, reg_line, context=context)
         return self.write(cr, uid, ids, {'state': 'confirm'}, context=context)
 
     #TODO move this function into hr_contract module, on hr.employee object
@@ -416,9 +363,9 @@ class hr_payslip(osv.osv):
         #OR if it starts between the given dates
         clause_2 = ['&',('date_start', '<=', date_to),('date_start','>=', date_from)]
         #OR if it starts before the date_from and finish after the date_end (or never finish)
-        clause_3 = [('date_start','<=', date_from),'|',('date_end', '=', False),('date_end','>=', date)]
+        clause_3 = [('date_start','<=', date_from),'|',('date_end', '=', False),('date_end','>=', date_to)]
         clause_final =  [('employee_id', '=', employee.id),'|','|'] + clause_1 + clause_2 + clause_3
-        contract_ids = contract_obj.search(cr, uid, [('employee_id', '=', employee.id),], context=context)
+        contract_ids = contract_obj.search(cr, uid, clause_final, context=context)
         return contract_ids
 
     def compute_sheet(self, cr, uid, ids, context=None):
