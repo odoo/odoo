@@ -65,7 +65,7 @@ class hr_payslip(osv.osv):
     def onchange_contract_id(self, cr, uid, ids, date_from, date_to, employee_id=False, contract_id=False, context=None):
         contract_obj = self.pool.get('hr.contract')
         res = super(hr_payslip, self).onchange_contract_id(cr, uid, ids, date_from=date_from, date_to=date_to, employee_id=employee_id, contract_id=contract_id, context=context)
-        journal_id = contract_obj.browse(cr, uid, contract_id, context=context).journal_id.id
+        journal_id = contract_id and contract_obj.browse(cr, uid, contract_id, context=context).journal_id.id or False
         res['value'].update({'journal_id': journal_id})
         return res
 
@@ -86,17 +86,12 @@ class hr_payslip(osv.osv):
         move_pool = self.pool.get('account.move')
         movel_pool = self.pool.get('account.move.line')
         invoice_pool = self.pool.get('account.invoice')
-        fiscalyear_pool = self.pool.get('account.fiscalyear')
         period_pool = self.pool.get('account.period')
+        timenow = time.strftime('%Y-%m-%d')
 
         for slip in self.browse(cr, uid, ids, context=context):
             line_ids = []
-            partner = False
-            partner_id = False
-            exp_ids = []
 
-            partner = slip.employee_id.bank_account_id.partner_id
-            partner_id = partner.id
             if not slip.period_id:
                 search_periods = period_pool.search(cr, uid, [('date_start','<=',slip.date_from),('date_stop','>=',slip.date_to)], context=context)
                 if not search_periods:
@@ -118,8 +113,8 @@ class hr_payslip(osv.osv):
                     amt = slip.credit_note and -line.total or line.total
                     partner_id = False
                     name = line.name
-                    debit_account_id = line.salary_rule_id.debit_account_id.id
-                    credit_account_id = line.salary_rule_id.credit_account_id.id
+                    debit_account_id = line.salary_rule_id.account_debit.id
+                    credit_account_id = line.salary_rule_id.account_credit.id
                     if line.salary_rule_id.accounting_select == 'third_party':
                         if line.salary_rule_id.register_id:
                             credit_account_id = line.salary_rule_id.register_id.account_id.id
@@ -130,8 +125,14 @@ class hr_payslip(osv.osv):
                         'account_id': debit_account_id,
                         'debit': amt > 0.0 and amt or 0.0,
                         'credit': amt < 0.0 and -amt or 0.0,
+                        'date': timenow,
+                        'journal_id': slip.journal_id.id,
+                        'period_id': period_id,
                     })
                     credit_line = (0,0,{
+                        'date': timenow,
+                        'journal_id': slip.journal_id.id,
+                        'period_id': period_id,
                         'name': name,
                         'partner_id': partner_id,
                         'account_id': credit_account_id,
@@ -142,7 +143,7 @@ class hr_payslip(osv.osv):
                         line_ids.append(debit_line)
                     if credit_account_id:
                         line_ids.append(credit_line)
-            move.update({'line_ids': line_ids})
+            move.update({'line_id': line_ids})
             move_id = move_pool.create(cr, uid, move, context=context)
             self.write(cr, uid, [slip.id], {'move_id': move_id}, context=context)
         return super(hr_payslip, self).process_sheet(cr, uid, [slip.id], context=context)
@@ -366,7 +367,7 @@ class hr_payslip(osv.osv):
 #            self.write(cr, uid, [slip.id], rec, context=context)
 #        return True
 #
-#hr_payslip()
+hr_payslip()
 
 #TODO: remove, i don't think it's worth having that information on the payslip line rather than on the salary rule
 #class hr_payslip_line(osv.osv):
