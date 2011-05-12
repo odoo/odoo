@@ -33,7 +33,7 @@ class account_asset_category(osv.osv):
         'account_analytic_id': fields.many2one('account.analytic.account', 'Analytic account'), #FIXME:add in the form view  with group = analytic
         'account_asset_id': fields.many2one('account.account', 'Asset Account', required=True),
         'account_depreciation_id': fields.many2one('account.account', 'Depreciation Account', required=True),
-        'account_expense_depreciation_id': fields.many2one('account.account', 'Depr. Expense Account', required=True),#FIXME: required=True + add in the form view
+        'account_expense_depreciation_id': fields.many2one('account.account', 'Depr. Expense Account', required=True),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True),
         'company_id': fields.many2one('res.company', 'Company'),
     }
@@ -300,14 +300,16 @@ class account_asset_depreciation_line(osv.osv):
             move_vals = {
                 'name': line.name,
                 'date': depreciation_date,
+                'ref': line.name,
                 'period_id': period_ids and period_ids[0] or False,
                 'journal_id': line.asset_id.category_id.journal_id.id,
                 }
             move_id = move_obj.create(cr, uid, move_vals, context=context)
             move_line_obj.create(cr, uid, {
                 'name': line.name,
+                'ref': line.name,
                 'move_id': move_id,
-                'account_id': line.asset_id.category_id.account_expense_depreciation_id.id,
+                'account_id': line.asset_id.category_id.account_depreciation_id.id,
                 'debit': 0.0,
                 'credit': line.amount,
                 'period_id': period_ids and period_ids[0] or False,
@@ -319,8 +321,9 @@ class account_asset_depreciation_line(osv.osv):
             })
             move_line_obj.create(cr, uid, {
                 'name': line.name,
+                'ref': line.name,
                 'move_id': move_id,
-                'account_id': line.asset_id.category_id.account_depreciation_id.id,
+                'account_id': line.asset_id.category_id.account_expense_depreciation_id.id,
                 'credit': 0.0,
                 'debit': line.amount,
                 'period_id': period_ids and period_ids[0] or False,
