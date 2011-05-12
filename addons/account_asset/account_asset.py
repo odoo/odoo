@@ -279,7 +279,6 @@ class account_asset_depreciation_line(osv.osv):
     _name = 'account.asset.depreciation.line'
     _description = 'Asset depreciation line'
 
-
     def get_move_line(self, cr, uid, ids, name, args, context={}):
         res = {}
         for line in self.browse(cr, uid, ids, context=context):
@@ -297,6 +296,7 @@ class account_asset_depreciation_line(osv.osv):
         'move_line_id': fields.many2one('account.move.line', 'Depreciation Entry'),
         'move_line_present': fields.function(get_move_line, method=True, type='boolean', string='Move Line Present', store=True)
     }
+
 account_asset_depreciation_line()
 
 #class account_asset_property(osv.osv):
