@@ -105,27 +105,6 @@
             <field name="user_type" ref="account.account_type_payable"/>
         </record>
 
-        <!-- Properties -->
-        <record forcecreate="True" id="property_bank_account" model="ir.property">
-            <field name="name">property_bank_account</field>
-            <field name="fields_id" search="[('model','=','hr.employee'),('name','=','property_bank_account')]"/>
-            <field eval="'account.account,'+str(bnk)" name="value"/>
-            <field name="company_id" ref="base.main_company"/>
-        </record>
-
-        <record forcecreate="True" id="salary_account" model="ir.property">
-            <field name="name">salary_account</field>
-            <field name="fields_id" search="[('model','=','hr.employee'),('name','=','salary_account')]"/>
-            <field eval="'account.account,'+str(a_salary_expense)" name="value"/>
-            <field name="company_id" ref="base.main_company"/>
-        </record>
-
-        <record forcecreate="True" id="employee_account" model="ir.property">
-            <field name="name">employee_account</field>
-            <field name="fields_id" search="[('model','=','hr.employee'),('name','=','employee_account')]"/>
-            <field eval="'account.account,'+str(a_creditors)" name="value"/>
-            <field name="company_id" ref="base.main_company"/>
-        </record>
 
     </data>
 </openerp>
