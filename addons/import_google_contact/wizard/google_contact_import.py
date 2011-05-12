@@ -70,7 +70,8 @@ class synchronize_google_contact(osv.osv_memory):
     def create_partner(self, cr, uid, data={}, context=None):
         partner_obj = self.pool.get('res.partner')
         partner_id = partner_obj.create(cr, uid, {
-                                                  'name': data.get('name',''), 
+                                                  'name': data.get('name',''),
+                                                  'user_id': uid,
                                                   'address' : [(6, 0, [data['address_id']])],
                                                   'customer': data.get('customer', False),
                                                   'supplier': data.get('supplier', False)
@@ -124,7 +125,6 @@ class synchronize_google_contact(osv.osv_memory):
         else:
             time_zone = tools.get_server_timezone()
         au_tz = timezone(time_zone)
-        
         while contact:
             for entry in contact.entry:
                 data = self._retreive_data(entry)
@@ -154,6 +154,7 @@ class synchronize_google_contact(osv.osv_memory):
                     res_id = contact_ids[0]
                 if not contact_ids:
                     #create or link to an existing partner only if it's a new contact
+                    data.update({'type': 'default'})
                     res_id = addresss_obj.create(cr, uid, data, context=context)
                     data['address_id'] = res_id
                     if option == 'create_all':
