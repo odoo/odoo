@@ -202,6 +202,29 @@ class one2many_mod2(fields.one2many):
             res[r[self._fields_id]].append( r['id'] )
         return res
 
+class hr_payslip_run(osv.osv):
+
+    _name = 'hr.payslip.run'
+    _columns = {
+        'name': fields.char('Name', size=64, required=True, readonly=True, states={'draft': [('readonly', False)]}),
+        'slip_ids': fields.one2many('hr.payslip', 'payslip_run_id', 'Payslips', required=False, readonly=True, states={'draft': [('readonly', False)]}),
+        'state': fields.selection([
+            ('draft', 'Draft'),
+            ('close', 'Close'),
+        ], 'State', select=True, readonly=True)
+    }
+    _defaults = {
+        'state': 'draft',
+    }
+
+    def draft_payslip_run(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {'state': 'draft'}, context=context)
+
+    def close_payslip_run(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {'state': 'close'}, context=context)
+
+hr_payslip_run()
+
 class hr_payslip(osv.osv):
     '''
     Pay Slip
@@ -213,18 +236,19 @@ class hr_payslip(osv.osv):
     def _get_lines_salary_rule_category(self, cr, uid, ids, field_names, arg=None, context=None):
         result = {}
         if not ids: return result
+        for id in ids:
+            result.setdefault(id, [])
         cr.execute('''SELECT pl.slip_id, pl.id FROM hr_payslip_line AS pl \
                     LEFT JOIN hr_salary_rule_category AS sh on (pl.category_id = sh.id) \
                     WHERE pl.slip_id in %s \
                     GROUP BY pl.slip_id, pl.sequence, pl.id ORDER BY pl.sequence''',(tuple(ids),))
         res = cr.fetchall()
         for r in res:
-            result.setdefault(r[0], [])
             result[r[0]].append(r[1])
         return result
 
     _columns = {
-        'struct_id': fields.many2one('hr.payroll.structure', 'Structure', help='Defines the rules that have to be applied to this payslip, accordingly to the contract chosen. If you let empty the field contract, this field isn\'t mandatory anymore and thus the rules applied will be all the rules set on the structure of all contracts of the employee valid for the chosen period'),
+        'struct_id': fields.many2one('hr.payroll.structure', 'Structure', readonly=True, states={'draft': [('readonly', False)]}, help='Defines the rules that have to be applied to this payslip, accordingly to the contract chosen. If you let empty the field contract, this field isn\'t mandatory anymore and thus the rules applied will be all the rules set on the structure of all contracts of the employee valid for the chosen period'),
         'name': fields.char('Description', size=64, required=False, readonly=True, states={'draft': [('readonly', False)]}),
         'number': fields.char('Reference', size=64, required=False, readonly=True, states={'draft': [('readonly', False)]}),
         'employee_id': fields.many2one('hr.employee', 'Employee', required=True, readonly=True, states={'draft': [('readonly', False)]}),
@@ -245,15 +269,16 @@ class hr_payslip(osv.osv):
             \n* If the salary is paid then state is set to \'Paid Salary\'.\
             \n* The \'Reject\' state is used when user cancel payslip.'),
 #        'line_ids': fields.one2many('hr.payslip.line', 'slip_id', 'Payslip Line', required=False, readonly=True, states={'draft': [('readonly', False)]}),
-        'line_ids': one2many_mod2('hr.payslip.line', 'slip_id', 'Payslip Line',readonly=True),
+        'line_ids': one2many_mod2('hr.payslip.line', 'slip_id', 'Payslip Lines', readonly=True, states={'draft':[('readonly',False)]}),
         'company_id': fields.many2one('res.company', 'Company', required=False, readonly=True, states={'draft': [('readonly', False)]}),
         'worked_days_line_ids': fields.one2many('hr.payslip.worked_days', 'payslip_id', 'Payslip Worked Days', required=False, readonly=True, states={'draft': [('readonly', False)]}),
         'input_line_ids': fields.one2many('hr.payslip.input', 'payslip_id', 'Payslip Inputs', required=False, readonly=True, states={'draft': [('readonly', False)]}),
         'paid': fields.boolean('Made Payment Order ? ', required=False, readonly=True, states={'draft': [('readonly', False)]}),
-        'note': fields.text('Description'),
+        'note': fields.text('Description', readonly=True, states={'draft':[('readonly',False)]}),
         'contract_id': fields.many2one('hr.contract', 'Contract', required=False, readonly=True, states={'draft': [('readonly', False)]}),
         'details_by_salary_rule_category': fields.function(_get_lines_salary_rule_category, method=True, type='one2many', relation='hr.payslip.line', string='Details by Salary Rule Category'),
         'credit_note': fields.boolean('Credit Note', help="Indicates this payslip has a refund of another"),
+        'payslip_run_id': fields.many2one('hr.payslip.run', 'Payslip Run', readonly=True, states={'draft': [('readonly', False)]}),
     }
     _defaults = {
         'date_from': lambda *a: time.strftime('%Y-%m-01'),
@@ -401,7 +426,7 @@ class hr_payslip(osv.osv):
         for payslip in self.browse(cr, uid, ids, context=context):
             #delete old payslip lines
             old_slipline_ids = slip_line_pool.search(cr, uid, [('slip_id', '=', payslip.id)], context=context)
-            old_slipline_ids
+#            old_slipline_ids
             if old_slipline_ids:
                 slip_line_pool.unlink(cr, uid, old_slipline_ids, context=context)
             if payslip.contract_id:
@@ -587,26 +612,29 @@ class hr_payslip(osv.osv):
         #defaults
         res = {'value':{
                       'line_ids':[],
+                      'input_line_ids': [],
+                      'worked_days_line_ids': [],
+                      #'details_by_salary_head':[], TODO put me back
                       'name':'',
                       'contract_id': False,
                       'struct_id': False,
                       }
-                 }
+            }
         if not employee_id:
             return res
         ttyme = datetime.fromtimestamp(time.mktime(time.strptime(date_from, "%Y-%m-%d")))
         employee_id = empolyee_obj.browse(cr, uid, employee_id, context=context)
         res['value'].update({
-                           'name': _('Salary Slip of %s for %s') % (employee_id.name, tools.ustr(ttyme.strftime('%B-%Y'))),
-                           'company_id': employee_id.company_id.id
-                           })
+                    'name': _('Salary Slip of %s for %s') % (employee_id.name, tools.ustr(ttyme.strftime('%B-%Y'))),
+                    'company_id': employee_id.company_id.id
+        })
 
         if not context.get('contract', False):
             #fill with the first contract of the employee
             contract_ids = self.get_contract(cr, uid, employee_id, date_from, date_to, context=context)
             res['value'].update({
-                    'struct_id': contract_ids and contract_obj.read(cr, uid, contract_ids[0], ['struct_id'], context=context)['struct_id'][0] or False,
-                    'contract_id': contract_ids and contract_ids[0] or False,
+                        'struct_id': contract_ids and contract_obj.read(cr, uid, contract_ids[0], ['struct_id'], context=context)['struct_id'][0] or False,
+                        'contract_id': contract_ids and contract_ids[0] or False,
             })
         else:
             if contract_id:
@@ -614,7 +642,10 @@ class hr_payslip(osv.osv):
                 contract_ids = [contract_id]
                 #fill the structure with the one on the selected contract
                 contract_record = contract_obj.browse(cr, uid, contract_id, context=context)
-                res['value'].update({'struct_id': contract_record.struct_id.id, 'contract_id': contract_id})
+                res['value'].update({
+                            'struct_id': contract_record.struct_id.id,
+                            'contract_id': contract_id
+                })
             else:
                 #if we don't give the contract, then the input to fill should be for all current contracts of the employee
                 contract_ids = self.get_contract(cr, uid, employee_id, date_from, date_to, context=context)
@@ -627,7 +658,7 @@ class hr_payslip(osv.osv):
         res['value'].update({
                     'worked_days_line_ids': worked_days_line_ids,
                     'input_line_ids': input_line_ids,
-            })
+        })
         return res
 
     def onchange_contract_id(self, cr, uid, ids, date_from, date_to, employee_id=False, contract_id=False, context=None):

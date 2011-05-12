@@ -1,7 +1,7 @@
 #-*- coding:utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution    
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    d$
 #
@@ -24,5 +24,5 @@
 import hr_payroll_employees_detail
 #import hr_payroll_create_analytic
 import hr_payroll_year_salary
-
+import hr_payroll_payslips_by_employees
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
