@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-05-09 10:18+0000\n"
-"PO-Revision-Date: 2011-02-07 18:00+0000\n"
-"Last-Translator: ian syah <Unknown>\n"
+"PO-Revision-Date: 2011-05-12 05:41+0000\n"
+"Last-Translator: moelyana <Unknown>\n"
 "Language-Team: Indonesian <id@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-05-10 07:14+0000\n"
+"X-Launchpad-Export-Date: 2011-05-12 05:59+0000\n"
 "X-Generator: Launchpad (build 12959)\n"
 
 #. module: account
@@ -198,7 +198,7 @@ msgstr "Seluruh Ayat Analitik"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_view_created_invoice_dashboard
 msgid "Invoices Created Within Past 15 Days"
-msgstr ""
+msgstr "Invoice/Tagihan yang Dibuat dalam 15 Hari Terakhir"
 
 #. module: account
 #: selection:account.account.type,sign:0
@@ -218,6 +218,9 @@ msgid ""
 "invoice) to create analytic entries, OpenERP will look for a matching "
 "journal of the same type."
 msgstr ""
+"Tentukan tipe jurnal analitis. Jika dibutuhkan sebuah dokumen (mis. invoice) "
+"untuk membuat berbagai entri analitis, OpenERP akan mencari jurnal yang "
+"sesuai dari tipe yang sama."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_tax_template_form
@@ -299,7 +302,7 @@ msgstr "Saldo Terhitung"
 #: model:ir.actions.act_window,name:account.action_view_account_use_model
 #: model:ir.ui.menu,name:account.menu_action_manual_recurring
 msgid "Manual Recurring"
-msgstr ""
+msgstr "Manual Operasional"
 
 #. module: account
 #: view:account.fiscalyear.close.state:0
@@ -1046,7 +1049,7 @@ msgstr "Minggu dalam setahun"
 #: field:account.pl.report,display_type:0
 #: field:account.report.general.ledger,landscape:0
 msgid "Landscape Mode"
-msgstr ""
+msgstr "Modus Datar"
 
 #. module: account
 #: view:board.board:0
@@ -1119,7 +1122,7 @@ msgstr "Awal Periode"
 #. module: account
 #: model:process.transition,name:account.process_transition_confirmstatementfromdraft0
 msgid "Confirm statement"
-msgstr ""
+msgstr "Konfirmasi pernyataan"
 
 #. module: account
 #: field:account.fiscal.position.tax,tax_dest_id:0
@@ -1193,6 +1196,7 @@ msgstr "Judul Catatan"
 #, python-format
 msgid "You can not modify/delete a journal with entries for this period !"
 msgstr ""
+"Anda tidak dapat mengubah / menghapus jurnal dengan entri untuk periode ini"
 
 #. module: account
 #: help:account.invoice,origin:0
@@ -1415,7 +1419,7 @@ msgstr "Lewati Status 'Konsep' untuk Catatan-catatan Manual"
 #: view:account.invoice.report:0
 #: field:account.invoice.report,price_total:0
 msgid "Total Without Tax"
-msgstr ""
+msgstr "Jumlah Tanpa Pajak"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_move_journal_line
@@ -1438,19 +1442,21 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_temp_range
 msgid "A Temporary table used for Dashboard view"
-msgstr ""
+msgstr "Tabel sementara yang digunakan untuk tampilan Dashboard"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_tree4
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree4
 msgid "Supplier Refunds"
-msgstr ""
+msgstr "Pengembalian Pemasok"
 
 #. module: account
 #: view:account.payment.term.line:0
 msgid ""
 "Example: at 14 net days 2 percents, remaining amount at 30 days end of month."
 msgstr ""
+"Contoh: di 14 hari bersih 2 persentase, jumlah yang tersisa  30 hari pada "
+"akhir bulan."
 
 #. module: account
 #: code:addons/account/invoice.py:823
@@ -1460,6 +1466,9 @@ msgid ""
 "The payment term defined gives a computed amount greater than the total "
 "invoiced amount."
 msgstr ""
+"Tidak dapat membuat invoice!\n"
+"Jangka waktu pembayaran pasti memberikan jumlah yang dihitung lebih besar "
+"dari jumlah total tagihan."
 
 #. module: account
 #: field:account.installer.modules,account_anglo_saxon:0
@@ -1475,17 +1484,17 @@ msgstr ""
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_recurrent_entries
 msgid "Recurring Entries"
-msgstr ""
+msgstr "Operasional Entri"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_template
 msgid "Template for Fiscal Position"
-msgstr ""
+msgstr "Template untuk Posisi Fiskal"
 
 #. module: account
 #: model:account.tax.code,name:account.account_tax_code_0
 msgid "Tax Code Test"
-msgstr ""
+msgstr "Tes Kode Pajak"
 
 #. module: account
 #: field:account.automatic.reconcile,reconciled:0
@@ -1516,23 +1525,25 @@ msgstr "Kelompok"
 #: field:account.invoice,amount_untaxed:0
 #: field:report.invoice.created,amount_untaxed:0
 msgid "Untaxed"
-msgstr ""
+msgstr "Tidak kena pajak"
 
 #. module: account
 #: view:account.partner.reconcile.process:0
 msgid "Go to next partner"
-msgstr ""
+msgstr "ke partner selanjutnya"
 
 #. module: account
 #: view:account.bank.statement:0
 msgid "Search Bank Statements"
-msgstr ""
+msgstr "Pencarian statement Bank"
 
 #. module: account
 #: sql_constraint:account.model.line:0
 msgid ""
 "Wrong credit or debit value in model (Credit + Debit Must Be greater \"0\")!"
 msgstr ""
+"Kesalahan nilai pada kredit atau debet ( kredit + debet harus lebih besar "
+"daripada \"0\" )"
 
 #. module: account
 #: view:account.chart.template:0
@@ -1550,7 +1561,7 @@ msgstr "Akun Pengembalian Pajak"
 #: view:account.bank.statement:0
 #: field:account.bank.statement,line_ids:0
 msgid "Statement lines"
-msgstr ""
+msgstr "Baris Statemen"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -1562,11 +1573,17 @@ msgid ""
 "the Payment column of a line, you can press F1 to open the reconciliation "
 "form."
 msgstr ""
+"Sebuah statement bank adalah ringkasan dari semua transaksi keuangan yang "
+"terjadi selama periode waktu tertentu pada rekening deposito, kartu kredit "
+"atau jenis lain dari akun finansial. Saldo awal akan diajukan secara "
+"otomatis dan saldo akhir dapat ditemukan pada laporan Anda. Ketika Anda "
+"berada di kolom baris Pembayaran , anda dapat menekan F1 untuk membuka "
+"bentuk rekonsiliasi."
 
 #. module: account
 #: report:account.analytic.account.cost_ledger:0
 msgid "Date/Code"
-msgstr ""
+msgstr "Tanggal / Kode"
 
 #. module: account
 #: field:account.analytic.line,general_account_id:0
@@ -1594,32 +1611,32 @@ msgstr "Tagihan"
 #: model:process.node,note:account.process_node_analytic0
 #: model:process.node,note:account.process_node_analyticcost0
 msgid "Analytic costs to invoice"
-msgstr ""
+msgstr "Analitik biaya untuk invoice"
 
 #. module: account
 #: view:ir.sequence:0
 msgid "Fiscal Year Sequence"
-msgstr ""
+msgstr "Urutan Tahun Fiskal"
 
 #. module: account
 #: field:wizard.multi.charts.accounts,seq_journal:0
 msgid "Separated Journal Sequences"
-msgstr ""
+msgstr "Urutan Jurnal yang terpisah"
 
 #. module: account
 #: view:account.invoice:0
 msgid "Responsible"
-msgstr ""
+msgstr "Bertanggung Jawab"
 
 #. module: account
 #: report:account.overdue:0
 msgid "Sub-Total :"
-msgstr ""
+msgstr "Sub Total"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_report_account_type_sales_tree_all
 msgid "Sales by Account Type"
-msgstr ""
+msgstr "Sales Berdasarkan tipe akun"
 
 #. module: account
 #: view:account.invoice.refund:0
@@ -1627,22 +1644,24 @@ msgid ""
 "Cancel Invoice: Creates the refund invoice, validate and reconcile it to "
 "cancel the current invoice."
 msgstr ""
+"Batalkan invoice : Buat invoice pengembalian, validasi dan rekonsiliasi "
+"untuk membatalkan invoice saat ini"
 
 #. module: account
 #: model:ir.ui.menu,name:account.periodical_processing_invoicing
 msgid "Invoicing"
-msgstr ""
+msgstr "Penagihan"
 
 #. module: account
 #: field:account.chart.template,tax_code_root_id:0
 msgid "Root Tax Code"
-msgstr ""
+msgstr "Root kode pajak"
 
 #. module: account
 #: field:account.partner.ledger,initial_balance:0
 #: field:account.report.general.ledger,initial_balance:0
 msgid "Include initial balances"
-msgstr ""
+msgstr "Sertakan saldo awal"
 
 #. module: account
 #: field:account.tax.code,sum:0
@@ -1652,7 +1671,7 @@ msgstr "Jumlah Setahun"
 #. module: account
 #: view:account.change.currency:0
 msgid "This wizard will change the currency of the invoice"
-msgstr ""
+msgstr "Panduan ini akan mengubah mata uang invoice"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_chart
@@ -1661,22 +1680,25 @@ msgid ""
 "Have a complete tree view of all journal items per account code by clicking "
 "on an account."
 msgstr ""
+"Tampilkan perusahaan Anda diagram akun per tahun fiskal dan filter oleh "
+"periode. Memiliki tampilan struktur pohon lengkap semua item jurnal per kode "
+"akun dengan mengklik account"
 
 #. module: account
 #: constraint:account.fiscalyear:0
 msgid "Error! You cannot define overlapping fiscal years"
-msgstr ""
+msgstr "Error! Anda tidak dapat menetapkan tumpang tindih tahun fiskal"
 
 #. module: account
 #: code:addons/account/account_move_line.py:799
 #, python-format
 msgid "The account is not defined to be reconciled !"
-msgstr ""
+msgstr "Akun ini tidak didefinisikan untuk direkonsiliasi!"
 
 #. module: account
 #: field:account.cashbox.line,pieces:0
 msgid "Values"
-msgstr ""
+msgstr "Nilai"
 
 #. module: account
 #: help:account.journal.period,active:0
@@ -1684,16 +1706,18 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the journal "
 "period without removing it."
 msgstr ""
+"Jika kolom aktif diatur ke False, itu akan memungkinkan Anda untuk "
+"menyembunyikan periode jurnal tanpa menghapusnya."
 
 #. module: account
 #: view:res.partner:0
 msgid "Supplier Debit"
-msgstr ""
+msgstr "Supplier Debet"
 
 #. module: account
 #: help:account.model.line,quantity:0
 msgid "The optional quantity on entries"
-msgstr ""
+msgstr "Jumlah pilihan di masukan"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_partner_account_move_all
@@ -1709,22 +1733,22 @@ msgstr "Anda harus menyediakan sebuah akun untuk penghapusan catatan !"
 #. module: account
 #: model:ir.model,name:account.model_account_common_journal_report
 msgid "Account Common Journal Report"
-msgstr ""
+msgstr "Laporan Rekening Jurnal Umum"
 
 #. module: account
 #: selection:account.partner.balance,display_partner:0
 msgid "All Partners"
-msgstr ""
+msgstr "Semua Partner"
 
 #. module: account
 #: view:account.analytic.chart:0
 msgid "Analytic Account Charts"
-msgstr ""
+msgstr "Grafik Akun Analitik"
 
 #. module: account
 #: view:account.analytic.line:0
 msgid "My Entries"
-msgstr ""
+msgstr "Entri Saya"
 
 #. module: account
 #: report:account.overdue:0
@@ -1735,28 +1759,28 @@ msgstr "Ref. Pelanggan:"
 #: code:addons/account/account_cash_statement.py:329
 #, python-format
 msgid "User %s does not have rights to access %s journal !"
-msgstr ""
+msgstr "User% s tidak memiliki hak untuk mengakses jurnal% s!"
 
 #. module: account
 #: help:account.period,special:0
 msgid "These periods can overlap."
-msgstr ""
+msgstr "Periode ini bisa overlap."
 
 #. module: account
 #: model:process.node,name:account.process_node_draftstatement0
 msgid "Draft statement"
-msgstr ""
+msgstr "Draft pernyataan"
 
 #. module: account
 #: view:account.tax:0
 msgid "Tax Declaration: Credit Notes"
-msgstr ""
+msgstr "Deklarasi Pajak: Catatan Kredit"
 
 #. module: account
 #: code:addons/account/account.py:509
 #, python-format
 msgid "You cannot deactivate an account that contains account moves."
-msgstr ""
+msgstr "Anda tidak dapat menonaktifkan account yang berisi akun bergerak"
 
 #. module: account
 #: field:account.move.line.reconcile,credit:0
@@ -1766,7 +1790,7 @@ msgstr "Jumlah Kredit"
 #. module: account
 #: constraint:account.move.line:0
 msgid "You can not create move line on closed account."
-msgstr ""
+msgstr "Anda tidak dapat membuat line yang berindah pada account tertutup."
 
 #. module: account
 #: code:addons/account/account.py:529
@@ -1775,11 +1799,13 @@ msgid ""
 "You cannot change the type of account from 'Closed' to any other type which "
 "contains account entries!"
 msgstr ""
+"Anda tidak dapat mengubah jenis rekening dari 'Tertutup' ke jenis lain yang "
+"berisi entri account!"
 
 #. module: account
 #: view:res.company:0
 msgid "Reserve And Profit/Loss Account"
-msgstr ""
+msgstr "Akun Cadangan Dan Laba / Rugi"
 
 #. module: account
 #: sql_constraint:account.move.line:0
@@ -1791,22 +1817,22 @@ msgstr "Nilai kredit atau debit salah dalam catatan akuntansi !"
 #: model:ir.actions.act_window,name:account.action_account_invoice_report_all
 #: model:ir.ui.menu,name:account.menu_action_account_invoice_report_all
 msgid "Invoices Analysis"
-msgstr ""
+msgstr "Analisa Invoice"
 
 #. module: account
 #: model:ir.model,name:account.model_account_period_close
 msgid "period close"
-msgstr ""
+msgstr "periode dekat"
 
 #. module: account
 #: view:account.installer:0
 msgid "Configure Fiscal Year"
-msgstr ""
+msgstr "Pengaturan Tahun Fiskal"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_project_account_analytic_line_form
 msgid "Entries By Line"
-msgstr ""
+msgstr "Entri berdasarkan baris"
 
 #. module: account
 #: report:account.tax.code.entries:0
@@ -1822,7 +1848,7 @@ msgstr "Ayat Jurnal"
 #. module: account
 #: view:account.tax:0
 msgid "Tax Declaration: Invoices"
-msgstr ""
+msgstr "Deklarasi Pajak: Invoice"
 
 #. module: account
 #: field:account.cashbox.line,subtotal:0
@@ -1837,7 +1863,7 @@ msgstr ""
 #. module: account
 #: constraint:res.company:0
 msgid "Error! You can not create recursive companies."
-msgstr ""
+msgstr "Error! Anda tidak dapat membuat perusahaan secara berulang ulang"
 
 #. module: account
 #: view:account.analytic.account:0
@@ -1848,7 +1874,7 @@ msgstr "Akun Analitik"
 #: code:addons/account/account_bank_statement.py:332
 #, python-format
 msgid "Please verify that an account is defined in the journal."
-msgstr ""
+msgstr "Harap memverifikasi bahwa account didefinisikan di dalam jurnal."
 
 #. module: account
 #: selection:account.entries.report,move_line_state:0
@@ -1860,12 +1886,12 @@ msgstr "Berlaku"
 #: model:ir.actions.act_window,name:account.action_account_print_journal
 #: model:ir.model,name:account.model_account_print_journal
 msgid "Account Print Journal"
-msgstr ""
+msgstr "Akun Cetak Jurnal"
 
 #. module: account
 #: model:ir.model,name:account.model_product_category
 msgid "Product Category"
-msgstr ""
+msgstr "Kategori Produk"
 
 #. module: account
 #: selection:account.account.type,report_type:0
@@ -1875,12 +1901,12 @@ msgstr "/"
 #. module: account
 #: field:account.bs.report,reserve_account_id:0
 msgid "Reserve & Profit/Loss Account"
-msgstr ""
+msgstr "Akun Cadangan & Laba / Rugi"
 
 #. module: account
 #: help:account.bank.statement,balance_end:0
 msgid "Closing balance based on Starting Balance and Cash Transactions"
-msgstr ""
+msgstr "Penutupan buku didasarkan pada Mulai Transaksi Saldo dan Kas"
 
 #. module: account
 #: model:process.node,note:account.process_node_reconciliation0
@@ -1900,6 +1926,9 @@ msgid ""
 "Check this box if you want to use a different sequence for each created "
 "journal. Otherwise, all will use the same sequence."
 msgstr ""
+"Centang kotak ini jika Anda ingin menggunakan urutan yang berbeda untuk "
+"setiap jurnal yang dibuat. Jika tidak, semua akan menggunakan urutan yang "
+"sama."
 
 #. module: account
 #: help:account.partner.ledger,amount_currency:0
@@ -1908,6 +1937,8 @@ msgid ""
 "It adds the currency column if the currency is different then the company "
 "currency"
 msgstr ""
+"Hal ini akan menambahkan kolom mata uang jika mata uang yang berbeda maka "
+"mata uang perusahaan"
 
 #. module: account
 #: help:account.journal,allow_date:0
@@ -1921,20 +1952,20 @@ msgstr ""
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_pl_report
 msgid "Account Profit And Loss"
-msgstr ""
+msgstr "Akun Laba Dan Rugi"
 
 #. module: account
 #: field:account.installer,config_logo:0
 #: field:account.installer.modules,config_logo:0
 #: field:wizard.multi.charts.accounts,config_logo:0
 msgid "Image"
-msgstr ""
+msgstr "Gambar"
 
 #. module: account
 #: view:account.invoice:0
 #: view:report.invoice.created:0
 msgid "Untaxed Amount"
-msgstr ""
+msgstr "Jumlah sebelum kena pajak"
 
 #. module: account
 #: help:account.tax,active:0
@@ -1942,6 +1973,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the tax "
 "without removing it."
 msgstr ""
+"Jika kolom aktif diset ke False, akan memungkinkan Anda untuk menyembunyikan "
+"pajak tanpa menghapusnya."
 
 #. module: account
 #: help:account.bank.statement,name:0
@@ -1950,13 +1983,16 @@ msgid ""
 "be with same name as statement name. This allows the statement entries to "
 "have the same references than the statement itself"
 msgstr ""
+"jika Anda memberikan Nama yang lain maka /, Akuntansi Entries Move dibuat "
+"dengan nama sama dengan nama laporan. Hal ini memungkinkan entri pernyataan "
+"untuk memiliki referensi yang sama dari pernyataan itu sendiri"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_unreconcile
 #: model:ir.actions.act_window,name:account.action_account_unreconcile_reconcile
 #: model:ir.actions.act_window,name:account.action_account_unreconcile_select
 msgid "Unreconcile Entries"
-msgstr ""
+msgstr "Unreconciled Entri"
 
 #. module: account
 #: field:account.move.reconcile,line_partial_ids:0
@@ -1972,22 +2008,22 @@ msgstr "Tahun Pembukuan"
 #: view:account.journal.select:0
 #: view:project.account.analytic.line:0
 msgid "Open Entries"
-msgstr ""
+msgstr "Entri terbuka"
 
 #. module: account
 #: field:account.automatic.reconcile,account_ids:0
 msgid "Accounts to Reconcile"
-msgstr ""
+msgstr "Akun untuk rekonsiliasi"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_filestatement0
 msgid "Import of the statement in the system from an electronic file"
-msgstr ""
+msgstr "Impor pernyataan dalam sistem dari file elektronik"
 
 #. module: account
 #: model:process.node,name:account.process_node_importinvoice0
 msgid "Import from invoice"
-msgstr ""
+msgstr "Impor dari invoice"
 
 #. module: account
 #: selection:account.entries.report,month:0
@@ -1996,12 +2032,12 @@ msgstr ""
 #: selection:report.account.sales,month:0
 #: selection:report.account_type.sales,month:0
 msgid "January"
-msgstr ""
+msgstr "Januari"
 
 #. module: account
 #: view:account.journal:0
 msgid "Validations"
-msgstr ""
+msgstr "Validasi"
 
 #. module: account
 #: view:account.entries.report:0
@@ -2011,7 +2047,7 @@ msgstr ""
 #. module: account
 #: view:account.tax.chart:0
 msgid "Account tax charts"
-msgstr ""
+msgstr "Akun grafik pajak"
 
 #. module: account
 #: constraint:account.period:0

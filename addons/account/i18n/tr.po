@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-05-09 10:18+0000\n"
-"PO-Revision-Date: 2011-05-09 20:47+0000\n"
+"PO-Revision-Date: 2011-05-11 08:48+0000\n"
 "Last-Translator: Ayhan KIZILTAN <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-05-10 07:17+0000\n"
+"X-Launchpad-Export-Date: 2011-05-12 05:59+0000\n"
 "X-Generator: Launchpad (build 12959)\n"
 
 #. module: account
@@ -4188,6 +4188,9 @@ msgid ""
 "You cannot define children to an account with internal type different of "
 "\"View\"! "
 msgstr ""
+"Yapılandırma Hatası! \n"
+"İçsel tipi \"Görünüm\" den farklı olan bir hesaba alt hesap "
+"tanımlayamazsınız! "
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_cost_ledger_journal_report
@@ -8850,6 +8853,8 @@ msgid ""
 "The journal must have centralised counterpart without the Skipping draft "
 "state option checked!"
 msgstr ""
+"Bir yevmiyenin, taslak durumu seçeneği seçilmeden geçilmiş merkezi "
+"karşıtının olması gerekir!"
 
 #. module: account
 #: model:process.node,note:account.process_node_paymententries0
@@ -9010,6 +9015,13 @@ msgid ""
 "open period. Close a period when you do not want to record new entries and "
 "want to lock this period for tax related calculation."
 msgstr ""
+"Bir dönem, mali işlemlerle ilgili eylemlerle ilintili olarak muhasebe "
+"kayıtlarının girildiği mali yıl içerisinde bir süredir. Aylık dönem "
+"standarttır, ancak; ülkenize ve firmanızın gereksinimlerine bağlıdır, üç "
+"aylık dönemlerde kullanabilirsiniz. Kapatılan bir döneme muhasebe kayıtları "
+"yapamazsınız, bütün yeni girişler sonraki açılan döneme yapılabilir. Eğer "
+"hiç bir giriş yapmayacaksınız ve vergi hesaplamalarına kapatmak "
+"istediğinizde bir dönemi kapatabilirsiniz."
 
 #. module: account
 #: view:account.analytic.account:0
@@ -9144,6 +9156,8 @@ msgid ""
 "payment term!\n"
 "Please define partner on it!"
 msgstr ""
+"Model satırı '%s' tarafından oluşturulan vade sonu giriş satırı paydaşın (iş "
+"ortağı) ödeme koşullarına bağlıdır."
 
 #. module: account
 #: field:account.cashbox.line,number:0
@@ -9226,6 +9240,8 @@ msgid ""
 "Refund invoice base on this type. You can not Modify and Cancel if the "
 "invoice is already reconciled"
 msgstr ""
+"İade faturası bu tiptedir. Eğer faturada halihazırda uzlaşma yapılmışsa "
+"Değişiklik yapamaz ve İptal edemezsiniz."
 
 #. module: account
 #: help:account.installer.modules,account_analytic_plans:0
@@ -9268,6 +9284,9 @@ msgid ""
 "and is the process of transferring debit and credit amounts from a journal "
 "of original entry to a ledger book."
 msgstr ""
+"Yevmiye onaylama işlemi, 'büyük deftere işleme' olarak da anılır ve bir "
+"yevmiyeye girilen borç/alacak tutarlarının büyük deftere transfer edilmesi "
+"işlemidir."
 
 #. module: account
 #: report:account.tax.code.entries:0
@@ -9290,6 +9309,8 @@ msgid ""
 "This report allows you to print or generate a pdf of your general ledger "
 "with details of all your account journals"
 msgstr ""
+"Bu rapor, hesaplarınıza ait bütün yevmiyelerinizin ayrıntılarını gösteren "
+"büyük defterinizi pdf olarak yazdırmanızı ve oluşturmanızı sağlar."
 
 #. module: account
 #: selection:account.account,type:0
@@ -9409,7 +9430,7 @@ msgstr "This is a model for recurring accounting entries"
 #: code:addons/account/account_analytic_line.py:99
 #, python-format
 msgid "There is no income account defined for this product: \"%s\" (id:%d)"
-msgstr ""
+msgstr "Bu ürün için tanımlanmış gelir hesabı bulunmuyor: \"%s\" (id:%d)"
 
 #. module: account
 #: report:account.general.ledger:0
@@ -9579,6 +9600,8 @@ msgid ""
 "This account will be used to value outgoing stock for the current product "
 "category using cost price"
 msgstr ""
+"Bu hesap, maliyet fiyatı kullanılan güncel ürün kategorisindeki çıkan "
+"stokları fiyatlandırmak için kullanılır."
 
 #. module: account
 #: selection:account.account,type:0
@@ -10066,6 +10089,12 @@ msgid ""
 "certain amount of information. They have to be certified by an external "
 "auditor annually."
 msgstr ""
+"Yevmiye giriş kayıtları yapmak istediğiniz hesapları oluşturun ve yönetin. "
+"Bir hesap, şirketinize ait borç ve alacak işlemlerini kayıt etmenizi "
+"sağlayan büyük defterin bir parçasıdır. Firmalar, yıllık hesaplarını iki ana "
+"bölümde tutar: bilanço ve gelir tablosu (kar ve zarar hesabı). Bir firmanın "
+"yıllık hesapları, yasal olarak belirli bir miktarda bilgi içermelidir. Bir "
+"dış denetçi tarafından da onaylanmalıdır."
 
 #. module: account
 #: help:account.move.line,amount_residual_currency:0
@@ -10073,6 +10102,8 @@ msgid ""
 "The residual amount on a receivable or payable of a journal entry expressed "
 "in its currency (maybe different of the company currency)."
 msgstr ""
+"Alıcılar ya da satıcılar hesabına ait bir yevmiyede bakiye tutarı, bakiye "
+"para cinsi ile belirtilir (firma para cinsinden belki farklı olabilir)."
 
 #~ msgid "Print Voucher"
 #~ msgstr "Print Voucher"
