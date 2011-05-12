@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -29,11 +29,11 @@ class account_asset_category(osv.osv):
     _columns = {
         'name': fields.char('Asset category', size=64, required=True, select=1),
         'note': fields.text('Note'),
-        'journal_analytic_id': fields.many2one('account.analytic.journal', 'Analytic journal'), #FIXME:add in the form view  with group = analytic 
+        'journal_analytic_id': fields.many2one('account.analytic.journal', 'Analytic journal'), #FIXME:add in the form view  with group = analytic
         'account_analytic_id': fields.many2one('account.analytic.account', 'Analytic account'), #FIXME:add in the form view  with group = analytic
         'account_asset_id': fields.many2one('account.account', 'Asset Account', required=True),
         'account_depreciation_id': fields.many2one('account.account', 'Depreciation Account', required=True),
-        'account_expense_depreciation_id': fields.many2one('account.account', 'Depr. Expense Account',),#FIXME: required=True + add in the form view 
+        'account_expense_depreciation_id': fields.many2one('account.account', 'Depr. Expense Account', required=True),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True),
         'company_id': fields.many2one('res.company', 'Company'),
     }
@@ -52,7 +52,7 @@ account_asset_category()
 #        #compute depreciation board
 #        depreciation_line_ids = obj.pool.get('account.asset.asset').compute_depreciation_board(cr, user, ids, context=context)
 #        for key, value in depreciation_line_ids.items():
-#            #write values on asset 
+#            #write values on asset
 #            obj.pool.get(self._obj).write(cr, user, key, {'depreciation_line_ids': [6,0,value]})
 #        return depreciation_line_ids
 
@@ -76,14 +76,14 @@ class account_asset_asset(osv.osv):
             SELECT a.id as id, COALESCE(MAX(l.date),a.purchase_date) AS date
             FROM account_asset_asset a
             LEFT JOIN account_move_line l ON (l.asset_id = a.id)
-            WHERE a.id IN %s 
+            WHERE a.id IN %s
             GROUP BY a.id, a.purchase_date """, (tuple(ids),))
         return dict(cr.fetchall())
 
     def compute_depreciation_board(self, cr, uid,ids, context=None):
         depreciation_lin_obj = self.pool.get('account.asset.depreciation.line')
         for asset in self.browse(cr, uid, ids, context=context):
-            old_depreciation_line_ids = depreciation_lin_obj.search(cr, uid, [('asset_id', '=', asset.id), ('move_line_id', '=', False)])
+            old_depreciation_line_ids = depreciation_lin_obj.search(cr, uid, [('asset_id', '=', asset.id), ('move_id', '=', False)])
             if old_depreciation_line_ids:
                 depreciation_lin_obj.unlink(cr, uid, old_depreciation_line_ids, context=context)
 
@@ -103,14 +103,14 @@ class account_asset_asset(osv.osv):
                         amount = residual_amount * asset.method_progress_factor
                 residual_amount -= amount
                 vals = {
-                     'amount': amount, 
-                     'asset_id': asset.id, 
-                     'sequence':i, 
+                     'amount': amount,
+                     'asset_id': asset.id,
+                     'sequence':i,
                      'name': str(asset.id) +'/'+ str(i),
                      'remaining_value': residual_amount,
                      'depreciated_value': asset.purchase_value - residual_amount,
                      'depreciation_date': depreciation_date.strftime('%Y-%m-%d'),
-                } 
+                }
                 self.pool.get('account.asset.depreciation.line').create(cr, uid, vals)
                 month += asset.method_period
                 depreciation_date = datetime(year + (month / 12), month % 12, day)
@@ -124,7 +124,7 @@ class account_asset_asset(osv.osv):
     def _amount_total(self, cr, uid, ids, name, args, context={}):
         #FIXME: function not working²
         id_set=",".join(map(str,ids))
-        cr.execute("""SELECT l.asset_id,abs(SUM(l.debit-l.credit)) AS amount FROM 
+        cr.execute("""SELECT l.asset_id,abs(SUM(l.debit-l.credit)) AS amount FROM
                 account_move_line l
             WHERE l.asset_id IN ("""+id_set+") GROUP BY l.asset_id ")
         res=dict(cr.fetchall())
@@ -133,7 +133,7 @@ class account_asset_asset(osv.osv):
         return res
 
     def _amount_residual(self, cr, uid, ids, name, args, context={}):
-        cr.execute("""SELECT 
+        cr.execute("""SELECT
                 l.asset_id as id, SUM(abs(l.debit-l.credit)) AS amount
             FROM
                 account_move_line l
@@ -160,7 +160,7 @@ class account_asset_asset(osv.osv):
         'localisation': fields.char('Localisation', size=32, select=2),
         'parent_id': fields.many2one('account.asset.asset', 'Parent Asset'),
         'child_ids': fields.one2many('account.asset.asset', 'parent_id', 'Children Assets'),
-        'purchase_date': fields.date('Purchase Date', required=True), 
+        'purchase_date': fields.date('Purchase Date', required=True),
         'state': fields.selection([('view','View'),('draft','Draft'),('normal','Normal'),('close','Close')], 'state', required=True),
         'active': fields.boolean('Active', select=2),
         'partner_id': fields.many2one('res.partner', 'Partner'),
@@ -264,7 +264,7 @@ class account_asset_asset(osv.osv):
         return result
 
     def _compute_entries(self, cr, uid, asset, period_id, context={}):
-        #FIXME: function not working CHECK all res 
+        #FIXME: function not working CHECK all res
         result = []
         date_start = self.pool.get('account.period').browse(cr, uid, period_id, context).date_start
         for property in asset.property_ids:
@@ -286,14 +286,72 @@ class account_asset_depreciation_line(osv.osv):
         'remaining_value': fields.float('Amount to Depreciate', required=True),
         'depreciated_value': fields.float('Amount Already Depreciated', required=True),
         'depreciation_date': fields.char('Depreciation Date', size=64, select=1),
-        'move_line_id': fields.many2one('account.move.line', 'Depreciation Entry'),
+        'move_id': fields.many2one('account.move', 'Depreciation Entry'),
     }
+
+    def create_move(self, cr, uid,ids, context=None):
+        if context is None:
+            context = {}
+        asset_obj = self.pool.get('account.asset.asset')
+        period_obj = self.pool.get('account.period')
+        move_obj = self.pool.get('account.move')
+        move_line_obj = self.pool.get('account.move.line')
+        currency_obj = self.pool.get('res.currency')
+        for line in self.browse(cr, uid, ids, context=context):
+            depreciation_date = asset_obj._get_last_depreciation_date(cr, uid, [line.asset_id.id], context=context)[line.asset_id.id]
+            period_ids = period_obj.find(cr, uid, depreciation_date, context=context)
+            company_currency = line.asset_id.company_id.currency_id.id
+            current_currency = line.asset_id.currency_id.id
+            context.update({'date': depreciation_date})
+            amount = currency_obj.compute(cr, uid, current_currency, company_currency, line.amount, context=context)
+            sign = line.asset_id.category_id.journal_id.type = 'purchase' and 1 or -1
+            move_vals = {
+                'name': line.name,
+                'date': depreciation_date,
+                'ref': line.name,
+                'period_id': period_ids and period_ids[0] or False,
+                'journal_id': line.asset_id.category_id.journal_id.id,
+                }
+            move_id = move_obj.create(cr, uid, move_vals, context=context)
+            move_line_obj.create(cr, uid, {
+                'name': line.name,
+                'ref': line.name,
+                'move_id': move_id,
+                'account_id': line.asset_id.category_id.account_depreciation_id.id,
+                'debit': 0.0,
+                'credit': amount,
+                'period_id': period_ids and period_ids[0] or False,
+                'journal_id': line.asset_id.category_id.journal_id.id,
+                'partner_id': line.asset_id.partner_id.id,
+                'currency_id': company_currency <> current_currency and  current_currency or False,
+                'amount_currency': company_currency <> current_currency and - sign * line.amount or 0.0,
+                'analytic_account_id': line.asset_id.category_id.account_analytic_id.id,
+                'date': depreciation_date,
+            })
+            move_line_obj.create(cr, uid, {
+                'name': line.name,
+                'ref': line.name,
+                'move_id': move_id,
+                'account_id': line.asset_id.category_id.account_expense_depreciation_id.id,
+                'credit': 0.0,
+                'debit': amount,
+                'period_id': period_ids and period_ids[0] or False,
+                'journal_id': line.asset_id.category_id.journal_id.id,
+                'partner_id': line.asset_id.partner_id.id,
+                'currency_id': company_currency <> current_currency and  current_currency or False,
+                'amount_currency': company_currency <> current_currency and sign * line.amount or 0.0,
+                'analytic_account_id': line.asset_id.category_id.account_analytic_id.id,
+                'date': depreciation_date,
+            })
+            self.write(cr, uid, line.id, {'move_id': move_id}, context=context)
+        return True
+
 account_asset_depreciation_line()
 
 #class account_asset_property(osv.osv):
 #    def _amount_total(self, cr, uid, ids, name, args, context={}):
 #        id_set=",".join(map(str,ids))
-#        cr.execute("""SELECT l.asset_id,abs(SUM(l.debit-l.credit)) AS amount FROM 
+#        cr.execute("""SELECT l.asset_id,abs(SUM(l.debit-l.credit)) AS amount FROM
 #                account_asset_property p
 #            left join
 #                account_move_line l on (p.asset_id=l.asset_id)
@@ -363,7 +421,7 @@ class account_move_line(osv.osv):
     _inherit = 'account.move.line'
     _columns = {
         'asset_id': fields.many2one('account.asset.asset', 'Asset'),
-        'entry_ids': fields.one2many('account.move.line', 'asset_id', 'Entries', readonly=True, states={'draft':[('readonly',False)]}),    
+        'entry_ids': fields.one2many('account.move.line', 'asset_id', 'Entries', readonly=True, states={'draft':[('readonly',False)]}),
 
     }
 account_move_line()

@@ -16,6 +16,7 @@
                 <field name="journal_id"/>
                 <field name="account_asset_id"/>
                 <field name="account_depreciation_id"/>
+                <field name="account_expense_depreciation_id"/>
            </group>
         <group col="6" colspan="4" groups="analytic.group_analytic_accounting">
         <separator string="Accounts information" colspan="4" />
@@ -88,6 +89,8 @@
                           <field name="amount"/>
                           <field name="depreciated_value"/>
                           <field name="remaining_value"/>
+                          <field name="move_id" invisible="1"/>
+	 		   <button name="create_move" attrs="{'invisible':[('move_id','!=',False)]}" icon="gtk-execute" string="Create Move" type="object"/>
                        </tree>
                        <graph type="bar">
                           <field name="name"/>
