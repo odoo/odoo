@@ -35,31 +35,6 @@ from osv import fields,osv
 from tools.translate import _
 import tools
 
-class google_contact_import(osv.osv_memory):
-    _inherit = 'google.login'
-    _name = 'google.login.contact'
-
-    def _get_next_action(self, cr, uid, context=None):
-        data_obj = self.pool.get('ir.model.data')
-        data_id = data_obj._get_id(cr, uid, 'sync_google_contact', 'view_synchronize_google_contact_import_form')
-        view_id = False
-        if data_id:
-            view_id = data_obj.browse(cr, uid, data_id, context=context).res_id
-        value = {
-            'name': _('Import Contact'),
-            'view_type': 'form',
-            'view_mode': 'form,tree',
-            'res_model': 'synchronize.google.contact.import',
-            'view_id': False,
-            'context': context,
-            'views': [(view_id, 'form')],
-            'type': 'ir.actions.act_window',
-            'target': 'new',
-        }
-        return value
-
-google_contact_import()
-
 class synchronize_google_contact(osv.osv_memory):
     _name = 'synchronize.google.contact.import'
 

@@ -1,0 +1,65 @@
+<openerp>
+  <data>
+    <record id="view_crm_inherit_id" model="ir.ui.view">
+      <field name="name">Google From</field>
+      <field name="model">google.installer.crm</field>
+      <field name="type">form</field>
+      <field name="inherit_id" ref="base.res_config_installer"/>
+      <field name="arch" type="xml">
+        
+          <form position="attributes">
+            <attribute name="string">Import your contacts from Google</attribute>
+          </form>
+		 <separator string="title" position="attributes">
+            <attribute name="string">Enter Your Google Connection Data</attribute>
+          </separator>
+		<xpath expr="//label[@string='description']" position="attributes">
+            <attribute name="string">Enter your Google login and password. It will give you the possibility to import and synchronize your Gmail contacts.</attribute>
+        </xpath>
+
+		 
+        <xpath expr="//button[@string='Install Modules']" position="replace">
+            <button name="login" icon="gtk-go-forward" type="object" string="Configure" colspan="1"/>
+        </xpath>
+
+        <xpath expr="//button[@string='Skip']" position="replace">
+                <button name="action_skip" icon="gtk-jump-to" special="cancel" type="object" string="Skip" colspan="1" invisible="context.get('menu',False)"/>
+        </xpath>
+
+		<xpath expr='//separator[@string="vsep"]' position='attributes'>
+		  		<attribute name='string'></attribute>
+		  		<attribute name='rowspan'>5</attribute>
+		</xpath>
+ 			 	<group colspan="8" position="replace">
+             	 <group colspan="8" height="50" width="350">
+                     <field name="user"/>
+                        <newline/>
+                        <label string="ex: usr@gmail.com" align="1.0" colspan="2"/>
+                        <newline/>
+                        <field name="password" password="True"/>
+                  </group>
+              </group>
+            </field>
+	 </record>
+
+   
+
+	<record id="act_google_installer" model="ir.actions.act_window">
+      <field name="name">Google Login View</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="res_model">google.installer.crm</field>
+      <field name="view_id" ref="view_crm_inherit_id"/>
+      <field name="view_type">form</field>
+      <field name="view_mode">form</field>
+      <field name="target">new</field>
+    </record>
+
+	<record id="google_installer_todo" model="ir.actions.todo">
+        <field name="action_id" ref="act_google_installer"/>
+        <field name="restart">always</field>
+        <field name="sequence">3</field>
+		<field eval="[(6,0,[ref('base.group_extended')])]" name="groups_id"/>
+	</record>
+
+	</data>
+</openerp>
