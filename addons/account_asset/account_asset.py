@@ -278,6 +278,13 @@ account_asset_asset()
 class account_asset_depreciation_line(osv.osv):
     _name = 'account.asset.depreciation.line'
     _description = 'Asset depreciation line'
+
+    def _get_move_check(self, cr, uid, ids, name, args, context=None):
+        res = {}
+        for line in self.browse(cr, uid, ids, context=context):
+            res[line.id] = bool(line.move_id)
+        return res
+
     _columns = {
         'name': fields.char('Depreciation Name', size=64, required=True, select=1),
         'sequence': fields.integer('Sequence of the depreciation', required=True),
@@ -287,6 +294,7 @@ class account_asset_depreciation_line(osv.osv):
         'depreciated_value': fields.float('Amount Already Depreciated', required=True),
         'depreciation_date': fields.char('Depreciation Date', size=64, select=1),
         'move_id': fields.many2one('account.move', 'Depreciation Entry'),
+        'move_check': fields.function(_get_move_check, method=True, type='boolean', string='Move Included', store=True)
     }
 
     def create_move(self, cr, uid,ids, context=None):
