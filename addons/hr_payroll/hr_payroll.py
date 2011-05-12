@@ -485,12 +485,13 @@ class hr_payslip(osv.osv):
         #we keep a dict with the result because a value can be overwritten by another rule with the same code
         result_dict = {}
         blacklist = []
+        payslip_obj = self.pool.get('hr.payslip')
         obj_rule = self.pool.get('hr.salary.rule')
-        payslip = self.pool.get('hr.payslip').browse(cr, uid, payslip_id, context=context)
+        payslip = payslip_obj.browse(cr, uid, payslip_id, context=context)
         worked_days = {}
         for input_line in payslip.input_line_ids:
             worked_days[input_line.code] = input_line
-        localdict = {'categories': {}, 'payslip': payslip, 'worked_days': worked_days}
+        localdict = {'categories': {}, 'payslip': payslip, 'worked_days': worked_days, 'payslip_obj': payslip_obj}
         #get the ids of the structures on the contracts and their parent id as well
         structure_ids = self.pool.get('hr.contract').get_all_structures(cr, uid, contract_ids, context=context)
         #get the rules of the structure and thier children
