@@ -150,7 +150,7 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
                         args.push(value == null ? false : value);
                     } else {
                         args.push(false);
-                        this.log("warning : on_change can't find field " + field, onchange);
+                        self.log("warning : on_change can't find field " + field, onchange);
                     }
                 });
                 var ajax = {
@@ -718,6 +718,28 @@ openerp.base.form.FieldDate = openerp.base.form.FieldDatetime.extend({
     format: openerp.base.parse_date
 });
 
+openerp.base.form.FieldFloatTime = openerp.base.form.FieldChar.extend({
+    init: function(view, node) {
+        this._super(view, node);
+        this.validation_regex = /^\d+:\d+$/;
+    },
+    set_value: function(value) {
+        value = value || 0;
+        this._super.apply(this, [value]);
+        var show_value = _.sprintf("%02d:%02d", Math.floor(value), Math.round((value % 1) * 60));
+        this.$element.find('input').val(show_value);
+    },
+    validate: function() {
+        if (typeof(this.value) == "string") {
+            this._super.apply(this, arguments);
+            if (!this.invalid) {
+                var time = this.value.split(':');
+                this.value = parseInt(time[0], 10) + parseInt(time[1], 10) / 60;
+            }
+        }
+    }
+});
+
 openerp.base.form.FieldText = openerp.base.form.Field.extend({
     init: function(view, node) {
         this._super(view, node);
@@ -1005,7 +1027,7 @@ openerp.base.form.widgets = new openerp.base.Registry({
     'float' : 'openerp.base.form.FieldFloat',
     'integer': 'openerp.base.form.FieldFloat',
     'progressbar': 'openerp.base.form.FieldProgressBar',
-    'float_time': 'openerp.base.form.FieldFloat'
+    'float_time': 'openerp.base.form.FieldFloatTime'
 });
 
 };
