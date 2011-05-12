@@ -476,6 +476,47 @@ class hr_payslip(osv.osv):
             localdict['categories'][category.code] = category.code in localdict['categories'] and localdict['categories'][category.code] + amount or amount
             return localdict
 
+        class InputLine(object):
+            """a class that will be used into the python code, mainly for usability purposes"""
+            def __init__(self, pool, cr, uid, employee_id, dict):
+                self.pool = pool
+                self.cr = cr
+                self.uid = uid
+                self.employee_id = employee_id
+                self.dict = dict
+            def __getattr__(self, attr):
+                return self.dict.__getitem__(attr)
+            def sum(self, code, from_date, to_date=None):
+                if to_date is None:
+                    to_date = datetime.now().strftime('%Y-%m-%d')
+                result = 0.0
+                self.cr.execute("SELECT sum(quantity) as sum\
+                            FROM hr_payslip as hp, hr_payslip_input as pi \
+                            WHERE hp.employee_id = %s AND hp.state in ('confirm','done') \
+                            AND hp.date_from >= %s AND hp.date_to <= %s AND hp.id = pi.payslip_id AND pi.code = %s",
+                           (self.employee_id, from_date, to_date, code))
+                res = self.cr.fetchone()[0]
+                return res or 0.0
+
+        class WorkedDays(InputLine):
+            """a class that will be used into the python code, mainly for usability purposes"""
+            def _sum(self, code, from_date, to_date=None):
+                if to_date is None:
+                    to_date = datetime.now().strftime('%Y-%m-%d')
+                result = 0.0
+                self.cr.execute("SELECT sum(number_of_days) as number_of_days, sum(number_of_hours) as number_of_hours\
+                            FROM hr_payslip as hp, hr_payslip_worked_days as pi \
+                            WHERE hp.employee_id = %s AND hp.state in ('confirm','done') \
+                            AND hp.date_from >= %s AND hp.date_to <= %s AND hp.id = pi.payslip_id AND pi.code = %s",
+                           (self.employee_id, from_date, to_date, code))
+                return self.cr.fetchone()
+            def sum(self, code, from_date, to_date=None):
+                res = self._sum(code, from_date, to_date)
+                return res and res[0] or 0.0
+            def sum_hours(self, code, from_date, to_date=None):
+                res = self._sum(code, from_date, to_date, )
+                return res and res[1] or 0.0
+
         #we keep a dict with the result because a value can be overwritten by another rule with the same code
         result_dict = {}
         blacklist = []
@@ -489,7 +530,9 @@ class hr_payslip(osv.osv):
         inputs = {}
         for input_line in payslip.input_line_ids:
             inputs[input_line.code] = input_line
-        localdict = {'categories': {}, 'payslip': payslip, 'worked_days': worked_days, 'inputs': inputs, 'payslip_obj': payslip_obj, 'inputs_obj':inputs_obj}
+        input_obj = InputLine(self.pool, cr, uid, payslip.employee_id.id, inputs)
+        worked_days_obj = WorkedDays(self.pool, cr, uid, payslip.employee_id.id,worked_days)
+        localdict = {'categories': {}, 'payslip': payslip, 'worked_days': worked_days_obj, 'inputs': input_obj, 'payslip_obj': payslip_obj}
         #get the ids of the structures on the contracts and their parent id as well
         structure_ids = self.pool.get('hr.contract').get_all_structures(cr, uid, contract_ids, context=context)
         #get the rules of the structure and thier children
@@ -671,35 +714,6 @@ class hr_payslip_worked_days(osv.osv):
     _defaults = {
         'sequence': 10,
     }
-    def __init__(self, pool, cr):
-        super(hr_payslip_worked_days, self).__init__(pool, cr)
-        self.cr = cr
-
-    def sum(self, code, field, from_date, to_date=None, employee=False, context=None):
-        if not employee:
-            return 0.0
-        if to_date is None:
-            to_date = datetime.now().strftime('%Y-%m-%d')
-        result = 0.0
-        cr = pooler.get_db(self.cr.dbname).cursor()
-        cr.execute("SELECT pi.id\
-                    FROM hr_payslip as hp, hr_payslip_worked_days as pi \
-                    WHERE hp.employee_id = %s AND hp.state in ('confirm','done') \
-                    AND hp.date_from >= %s AND hp.date_to <= %s AND hp.id = pi.payslip_id AND pi.code = %s",
-                   (employee, from_date, to_date, code))
-        input_ids = [r[0] for r in cr.fetchall()]
-        if len(input_ids) == 1:
-            input_ids = tuple(input_ids[0],)
-        else:
-            input_ids = tuple(input_ids)
-#        input_data = self.read(cr, uid, input_ids, [field], context=context)
-        cr = pooler.get_db(self.cr.dbname).cursor()
-        cr.execute("select %s from hr_payslip_worked_days as wd where wd.id in %s"%(field, input_ids))
-        input_data = cr.dictfetchall()
-        for input in input_data:
-           result += input.get(field)
-        cr.close()
-        return result
 hr_payslip_worked_days()
 
 class hr_payslip_input(osv.osv):
