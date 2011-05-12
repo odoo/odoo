@@ -7,7 +7,7 @@
             <field name="model">hr.payslip.employees</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Employees">
+                <form string="Payslips by Employees">
                     <group colspan="4" >
                         <separator string="Payslips by Employees" colspan="4"/>
                         <label colspan="4" nolabel="1" string="This wizard will generate payslips for all selected employee(s)" />
@@ -18,7 +18,7 @@
                     <group colspan="4" col="6">
                         <label string ="" colspan="2"/>
                         <button icon="gtk-cancel" special="cancel" string="Cancel"/>
-                        <button  icon="terp-gtk-go-back-rtl" string="Generate" name="compute_sheet" type="object"/>
+                        <button  icon="gtk-execute" string="Generate" name="compute_sheet" type="object"/>
                     </group>
                </form>
             </field>

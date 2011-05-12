@@ -206,8 +206,8 @@ class hr_payslip_run(osv.osv):
 
     _name = 'hr.payslip.run'
     _columns = {
-        'name': fields.char('Name', size=256, readonly=True, states={'draft': [('readonly', False)]}),
-        'slip_ids': fields.one2many('hr.payslip', 'payslip_run_id', 'Payslips', required=False, readonly=True),
+        'name': fields.char('Name', size=64, readonly=True, states={'draft': [('readonly', False)]}),
+        'slip_ids': fields.one2many('hr.payslip', 'payslip_run_id', 'Payslips', required=False, readonly=True, states={'draft': [('readonly', False)]}),
         'state': fields.selection([
             ('draft', 'Draft'),
             ('close', 'Close'),
