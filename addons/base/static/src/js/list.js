@@ -83,7 +83,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
                     id, self.do_reload);
             },
             'row_link': function (e, index) {
-                self.switch_to_record(index);
+                self.select_record(index);
             }
         });
 
@@ -236,7 +236,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
      * @param {Number|null} index the record index (in the current dataset) to switch to
      * @param {String} [view="form"] the view type to switch to
      */
-    switch_to_record:function (index, view) {
+    select_record:function (index, view) {
         view = view || 'form';
         this.dataset.index = index;
         _.delay(_.bind(function () {
@@ -349,7 +349,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
      */
     do_add_record: function () {
         this.notification.notify('Add', "New record");
-        this.switch_to_record(null);
+        this.select_record(null);
     },
     /**
      * Handles deletion of all selected lines

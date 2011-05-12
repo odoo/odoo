@@ -921,9 +921,7 @@ openerp.base.form.FieldMany2Many = openerp.base.form.Field.extend({
 });
 
 openerp.base.form.Many2ManyListView = openerp.base.ListView.extend({
-    do_delete: function (e) {
-        e.stopImmediatePropagation();
-        var ids = [this.rows[$(e.currentTarget).closest('tr').prevAll().length].data.id.value];
+    do_delete: function (ids) {
         this.dataset.ids = _.without.apply(null, [this.dataset.ids].concat(ids));
         this.dataset.count = this.dataset.ids.length;
         // there may be a faster way
@@ -943,14 +941,11 @@ openerp.base.form.Many2ManyListView = openerp.base.ListView.extend({
             'context': this.dataset.context
         }, this.do_fill_table);
     },
-    do_add_record: function (e) {
-        e.stopImmediatePropagation();
+    do_add_record: function () {
         // TODO: need to open a popup with search view
     },
-    on_select_row: function(event) {
-        var $target = $(event.currentTarget);
-        var row = this.rows[$target.prevAll().length];
-        var id = row.data.id.value;
+    select_record: function(index) {
+        var id = this.rows[index].data.id.value;
         if(! id) {
             return;
         }
