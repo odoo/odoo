@@ -52,13 +52,38 @@
         </record>
 
         <record id="hr_salary_rule_meal_voucher" model="hr.salary.rule">
-            <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = worked_days['WORK100']['number_of_days'] * 1</field>
+            <field name="amount_select">fix</field>
+            <field eval="1" name="amount_fix"/>
+            <field name="quantity">worked_days['WORK100']['number_of_days']</field>
             <field name="code">MA</field>
             <field name="category_id" ref="hr_payroll.ALW"/>
             <field name="name">Meal Voucher</field>
             <field name="sequence" eval="16"/>
          </record>
+
+        <record id="hr_salary_rule_sales_commission" model="hr.salary.rule">
+            <field name="amount_select">code</field>
+            <field name="code">SALE</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="name">Get 1% of sales</field>
+            <field name="sequence" eval="17"/>
+            <field name="amount_python_compute">result = (inputs['S-ASUS']['quantity'] + inputs['S-CHINA']['quantity']) * contract.wage * 0.01</field>
+         </record>
+
+        <!-- Rule Inputs -->
+
+        <record id="hr_rule_input_sale_a" model="hr.rule.input">
+            <field name="code">S-ASUS</field>
+            <field name="name">Sale to ASUStek</field>
+            <field name="input_id" ref="hr_salary_rule_sales_commission"/>
+        </record>
+
+        <record id="hr_rule_input_sale_b" model="hr.rule.input">
+            <field name="code">S-CHINA</field>
+            <field name="name">Sale to China Export</field>
+            <field name="input_id" ref="hr_salary_rule_sales_commission"/>
+        </record>
+
         <!-- Salary Structure -->
 
          <record id="structure_001" model="hr.payroll.structure">
