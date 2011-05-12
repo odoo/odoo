@@ -59,11 +59,17 @@ class res_partner(osv.osv):
         Check the VAT number depending of the country.
         http://sima-pc.com/nif.php
         '''
+        country_obj = self.pool.get('res.country')
         for partner in self.browse(cr, uid, ids, context=context):
             if not partner.vat:
                 continue
             vat_country, vat_number = self._split_vat(partner.vat)
             if not hasattr(self, 'check_vat_' + vat_country):
+                #We didn't find the validation method for the country code. If that country code can be found in openerp, this means that it is a valid country code 
+                #and we simply didn't have implemented that function. In that case we continue.
+                if country_obj.search(cr, uid, [('code', 'ilike', vat_country)], context=context):
+                    continue
+                #Otherwise, it means that the country code isn't valid and we return False.
                 return False
             check = getattr(self, 'check_vat_' + vat_country)
             if not check(vat_number):

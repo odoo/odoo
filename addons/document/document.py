@@ -49,6 +49,7 @@ class document_file(osv.osv):
         It also establishes the parent_id NOT NULL constraint that ir.attachment
         should have had (but would have failed if plain attachments contained null
         values).
+        It also updates the  File Size for the previously created attachments.
         """
 
         parent_id = self.pool.get('document.directory')._get_root_directory(cr,uid)
@@ -62,7 +63,11 @@ class document_file(osv.osv):
         cr.execute("UPDATE ir_attachment " \
                     "SET parent_id = %s, db_datas = decode(encode(db_datas,'escape'), 'base64') " \
                     "WHERE parent_id IS NULL", (parent_id,))
+
+        cr.execute("UPDATE ir_attachment SET file_size=length(db_datas) WHERE file_size = 0;")
+
         cr.execute("ALTER TABLE ir_attachment ALTER parent_id SET NOT NULL")
+
         return True
 
     def _get_filestore(self, cr):

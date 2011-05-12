@@ -51,7 +51,6 @@ class crm_merge_opportunity(osv.osv_memory):
 
     def get_attachments(self, cr, uid, id, context=None):
         attach_obj = self.pool.get('ir.attachment')
-        result = []
         attach_ids = attach_obj.search(cr, uid, [('res_model' , '=', 'crm.lead'), ('res_id', '=', id)])
         return attach_ids
 
@@ -70,6 +69,44 @@ class crm_merge_opportunity(osv.osv_memory):
         op_id = lead_obj.search(cr, uid, [('id', 'in', ids)], order='create_date' , context=context)
         opps = lead_obj.browse(cr, uid, [op_id[0]], context=context)
         return opps[0]
+        
+    def _update_data(self, op_ids, oldest_opp):
+		data = {
+                'partner_id': self._get_first_not_null_id('partner_id', op_ids, oldest_opp),  # !!
+                'title': self._get_first_not_null_id('title', op_ids, oldest_opp),
+                'name' : self._get_first_not_null('name', op_ids, oldest_opp),  #not lost
+                'categ_id' : self._get_first_not_null_id('categ_id', op_ids, oldest_opp), # !!
+                'channel_id' : self._get_first_not_null_id('channel_id', op_ids, oldest_opp), # !!
+                'city' : self._get_first_not_null('city', op_ids, oldest_opp),  # !!
+                'company_id' : self._get_first_not_null_id('company_id', op_ids, oldest_opp), #!!
+                'contact_name' : self._get_first_not_null('contact_name', op_ids, oldest_opp), #not lost
+                'country_id' : self._get_first_not_null_id('country_id', op_ids, oldest_opp), #!!
+                'partner_address_id' : self._get_first_not_null_id('partner_address_id', op_ids, oldest_opp), #!!
+                'type_id' : self._get_first_not_null_id('type_id', op_ids, oldest_opp), #!!
+                'user_id' : self._get_first_not_null_id('user_id', op_ids, oldest_opp), #!!
+                'section_id' : self._get_first_not_null_id('section_id', op_ids, oldest_opp), #!!
+                'state_id' : self._get_first_not_null_id('state_id', op_ids, oldest_opp),
+                'description' : self._concat_all('description', op_ids),  #not lost
+                'email' : self._get_first_not_null('email', op_ids, oldest_opp), # !!
+                'fax' : self._get_first_not_null('fax', op_ids, oldest_opp),
+                'mobile' : self._get_first_not_null('mobile', op_ids, oldest_opp),
+                'partner_name' : self._get_first_not_null('partner_name', op_ids, oldest_opp),
+                'phone' : self._get_first_not_null('phone', op_ids, oldest_opp),
+                'probability' : self._get_first_not_null('probability', op_ids, oldest_opp),
+                'planned_revenue' : self._get_first_not_null('planned_revenue', op_ids, oldest_opp),
+                'street' : self._get_first_not_null('street', op_ids, oldest_opp),
+                'street2' : self._get_first_not_null('street2', op_ids, oldest_opp),
+                'zip' : self._get_first_not_null('zip', op_ids, oldest_opp),
+                'state' : 'open',
+                'create_date' : self._get_first_not_null('create_date', op_ids, oldest_opp),
+                'date_action_last': self._get_first_not_null('date_action_last', op_ids, oldest_opp),
+                'date_action_next': self._get_first_not_null('date_action_next', op_ids, oldest_opp),
+                'email_from' : self._get_first_not_null('email_from', op_ids, oldest_opp),
+                'email_cc' : self._get_first_not_null('email_cc', op_ids, oldest_opp),
+                'partner_name' : self._get_first_not_null('partner_name', op_ids, oldest_opp),
+
+            }
+		return data
 
     def merge(self, cr, uid, op_ids, context=None):
         """
@@ -94,45 +131,8 @@ class crm_merge_opportunity(osv.osv_memory):
             tail_opportunities = opportunities_list[1:]
             
 
-        data = {
-                'partner_id': self._get_first_not_null_id('partner_id', op_ids, oldest_opp),  # !!
-                'title': self._get_first_not_null_id('title', op_ids, oldest_opp),
-                'name' : self._get_first_not_null('name', op_ids, oldest_opp),  #not lost
-                'categ_id' : self._get_first_not_null_id('categ_id', op_ids, oldest_opp), # !!
-                'channel_id' : self._get_first_not_null_id('channel_id', op_ids, oldest_opp), # !!
-                'city' : self._get_first_not_null('city', op_ids, oldest_opp),  # !!
-                'company_id' : self._get_first_not_null_id('company_id', op_ids, oldest_opp), #!!
-                'contact_name' : self._get_first_not_null('contact_name', op_ids, oldest_opp), #not lost
-                'country_id' : self._get_first_not_null_id('country_id', op_ids, oldest_opp), #!!
-                'partner_address_id' : self._get_first_not_null_id('partner_address_id', op_ids, oldest_opp), #!!
-                'partner_assigned_id' : hasattr(opp_obj,'partner_assigned_id') and self._get_first_not_null_id('partner_assigned_id', op_ids, oldest_opp), #!!
-                'type_id' : self._get_first_not_null_id('type_id', op_ids, oldest_opp), #!!
-                'user_id' : self._get_first_not_null_id('user_id', op_ids, oldest_opp), #!!
-                'section_id' : self._get_first_not_null_id('section_id', op_ids, oldest_opp), #!!
-                'state_id' : self._get_first_not_null_id('state_id', op_ids, oldest_opp),
-                'description' : self._concat_all('description', op_ids),  #not lost
-                'email' : self._get_first_not_null('email', op_ids, oldest_opp), # !!
-                'fax' : self._get_first_not_null('fax', op_ids, oldest_opp),
-                'mobile' : self._get_first_not_null('mobile', op_ids, oldest_opp),
-                'partner_latitude' : hasattr(opp_obj,'partner_latitude') and self._get_first_not_null('partner_latitude', op_ids, oldest_opp),
-                'partner_longitude' : hasattr(opp_obj,'partner_longitude') and self._get_first_not_null('partner_longitude', op_ids, oldest_opp),
-                'partner_name' : self._get_first_not_null('partner_name', op_ids, oldest_opp),
-                'phone' : self._get_first_not_null('phone', op_ids, oldest_opp),
-                'probability' : self._get_first_not_null('probability', op_ids, oldest_opp),
-                'planned_revenue' : self._get_first_not_null('planned_revenue', op_ids, oldest_opp),
-                'street' : self._get_first_not_null('street', op_ids, oldest_opp),
-                'street2' : self._get_first_not_null('street2', op_ids, oldest_opp),
-                'zip' : self._get_first_not_null('zip', op_ids, oldest_opp),
-                'state' : 'open',
-                'create_date' : self._get_first_not_null('create_date', op_ids, oldest_opp),
-                'date_action_last': self._get_first_not_null('date_action_last', op_ids, oldest_opp),
-                'date_action_next': self._get_first_not_null('date_action_nexte', op_ids, oldest_opp),
-                'email_from' : self._get_first_not_null('email_from', op_ids, oldest_opp),
-                'email_cc' : self._get_first_not_null('email_cc', op_ids, oldest_opp),
-                'partner_name' : self._get_first_not_null('partner_name', op_ids, oldest_opp),
-
-            }
         
+        data = self._update_data(op_ids, oldest_opp)
         #copy message into the first opportunity + merge attachement
         
         for opp in tail_opportunities + [first_opportunity]:

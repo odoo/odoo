@@ -118,7 +118,7 @@ class third_party_ledger(report_sxw.rml_parse, common_report_header):
         else:
             amount = str(amount)
         if (amount == '0'):
-             return ' '
+            return ' '
         orig = amount
         new = re.sub("^(-?\d+)(\d{3})", "\g<1>'\g<2>", amount)
         if orig == new:
@@ -402,14 +402,14 @@ class third_party_ledger(report_sxw.rml_parse, common_report_header):
             return currency_total
 
     def _display_initial_balance(self, data):
-         if self.initial_balance:
-             return True
-         return False
+        if self.initial_balance:
+            return True
+        return False
 
     def _display_currency(self, data):
-         if self.amount_currency:
-             return True
-         return False
+        if self.amount_currency:
+            return True
+        return False
 
 report_sxw.report_sxw('report.account.third_party_ledger', 'res.partner',
         'addons/account/report/account_partner_ledger.rml',parser=third_party_ledger,

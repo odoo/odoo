@@ -4,7 +4,7 @@
 
 		<record id="account_analytic_journal_view" model="ir.ui.view">
 			<field name="name">Account Analytic Journal</field>
-			<field name="model">account.analytic.Journal.report</field>
+			<field name="model">account.analytic.journal.report</field>
 			<field name="type">form</field>
 			<field name="arch" type="xml">
 				<form string="Select Period">
@@ -24,7 +24,7 @@
 		<record id="action_account_analytic_journal" model="ir.actions.act_window">
 			<field name="name">Analytic Journal</field>
 			<field name="type">ir.actions.act_window</field>
-			<field name="res_model">account.analytic.Journal.report</field>
+			<field name="res_model">account.analytic.journal.report</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">form</field>
 			<field name="view_id" ref="account_analytic_journal_view"/>

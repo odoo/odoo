@@ -6,21 +6,62 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-28 00:58+0000\n"
-"PO-Revision-Date: 2010-01-26 11:45+0000\n"
-"Last-Translator: Jordi Esteve - http://www.zikzakmedia.com "
+"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"PO-Revision-Date: 2011-03-26 18:22+0000\n"
+"Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
 "<jesteve@zikzakmedia.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-04-24 04:03+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-03-27 06:28+0000\n"
+"X-Generator: Launchpad (build 12559)\n"
+
+#. module: base_module_doc_rst
+#: view:ir.module.module:0
+msgid "You can save this image as .png file"
+msgstr "Podeu desar aquesta imatge com un fitxer. png"
 
 #. module: base_module_doc_rst
 #: wizard_view:tech.guide.rst,init:0
 msgid "Technical Guide in rst format"
 msgstr "Guia tècnica en format RST"
+
+#. module: base_module_doc_rst
+#: wizard_button:create.relation.graph,init,end:0
+msgid "Ok"
+msgstr "D'acord"
+
+#. module: base_module_doc_rst
+#: wizard_view:create.relation.graph,init:0
+msgid "(Relationship Graphs generated)"
+msgstr "(Gràfics de relacions generats)"
+
+#. module: base_module_doc_rst
+#: wizard_view:tech.guide.rst,init:0
+msgid "Please choose a file where the Technical Guide will be written."
+msgstr "Seleccioneu un fitxer on la guia tècnica serà escrita."
+
+#. module: base_module_doc_rst
+#: model:ir.module.module,description:base_module_doc_rst.module_meta_information
+msgid ""
+"\n"
+"    * This module generates the Technical Guides of selected modules in "
+"Restructured Text format (RST)\n"
+"    * It uses the Sphinx (http://sphinx.pocoo.org) implementation of RST\n"
+"    * It creates a tarball (.tgz file suffix) containing an index file and "
+"one file per module\n"
+"    * Generates Relationship Graph\n"
+"    "
+msgstr ""
+"\n"
+"    * Aquest mòdul genera les guies tècniques dels mòduls seleccionats en "
+"RST (Restructured Text format).\n"
+"    * Utilitza la implementació Sphinx d'RST (http://sphinx.pocoo.org).\n"
+"    * Crea un arxiu comprimit (amb extensió .tgz) que conté un fitxer índex "
+"i un fitxer per mòdul.\n"
+"    * Genera un gràfic de relacions.\n"
+"    "
 
 #. module: base_module_doc_rst
 #: wizard_field:tech.guide.rst,init,name:0
@@ -33,9 +74,21 @@ msgid "Create RST Technical Guide"
 msgstr "Crea guia tècnica RST"
 
 #. module: base_module_doc_rst
-#: wizard_view:tech.guide.rst,init:0
-msgid "Please choose a file where the Technical Guide will be written."
-msgstr "Seleccioneu un fitxer on la guia tècnica serà escrita."
+#: model:ir.actions.wizard,name:base_module_doc_rst.wiz_gen_graph
+msgid "Generate Relationship Graph"
+msgstr "Genera gràfic de relacions"
+
+#. module: base_module_doc_rst
+#: wizard_view:create.relation.graph,init:0
+#: view:ir.module.module:0
+#: field:ir.module.module,file_graph:0
+msgid "Relationship Graph"
+msgstr "Gràfic de relacions"
+
+#. module: base_module_doc_rst
+#: model:ir.model,name:base_module_doc_rst.model_ir_module_module
+msgid "Module"
+msgstr "Mòdul"
 
 #. module: base_module_doc_rst
 #: wizard_field:tech.guide.rst,init,rst_file:0
@@ -51,6 +104,11 @@ msgstr "Tanca"
 #: model:ir.module.module,shortdesc:base_module_doc_rst.module_meta_information
 msgid "Module Technical Guide in Restructured Text "
 msgstr "Guia tècnica d'un mòdul en text reestructurat (RST) "
+
+#. module: base_module_doc_rst
+#: model:ir.actions.report.xml,name:base_module_doc_rst.report_proximity_graph
+msgid "Proximity graph"
+msgstr "Gràfic de proximitat"
 
 #. module: base_module_doc_rst
 #: wizard_view:tech.guide.rst,init:0

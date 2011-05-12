@@ -13,7 +13,7 @@
                    <filter string="Stockable" icon="terp-accessories-archiver" domain="['|',('type','=','product'),('type','=','consu')]"/>
                    <separator orientation="vertical"/>
                    <filter string="To Sell" icon="terp-accessories-archiver-minus" domain="[('sale_ok','=',1)]"/>
-                   <filter string="To Purchase" icon="terp-accessories-archiver+" domain="[('purchase_ok', '=', 1)]" />
+                   <filter name="filter_to_purchase" string="To Purchase" icon="terp-accessories-archiver+" domain="[('purchase_ok', '=', 1)]" />
                    <separator orientation="vertical"/>
                    <field name="default_code"/>
                    <field name="name"/>
@@ -204,7 +204,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">product.product</field>
             <field name="view_type">form</field>
-            <field name="domain">[('purchase_ok','=',1)]</field>
+            <field name="context">{"search_default_filter_to_purchase":1}</field>
             <field name="view_id" ref="product_product_tree_view"/>
             <field name="search_view_id" ref="product_search_form_view"/>
             <field name="help">Products can be purchased and/or sold. They can be raw materials, stockable products, consumables or services. The Product form contains detailed information about your products related to procurement logistics, sales price, product category, suppliers and so on.</field>
