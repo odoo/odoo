@@ -8,10 +8,9 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Follow-Up Lines">
-                    <field name="sequence"/>
                     <field name="name"/>
                     <field name="delay"/>
-                    <field name="start"/>
+                    <field name="start" groups="base.group_extended"/>
                 </tree>
             </field>
         </record>
@@ -22,12 +21,12 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Follow-Up Lines">
-                    <field name="sequence"/>
                     <field name="name" />
                     <field name="delay" />
-                    <field name="start" />
+                    <field name="start" groups="base.group_extended"/>
                     <newline/>
-                    <field colspan="4" name="description" />
+                    <separator string="" colspan="4"/>
+                    <field colspan="4" name="description" nolabel="1"/>
                     <separator string="Legend" colspan="4"/>
                     <label string="%%(partner_name)s: Partner Name" colspan="2"/>
                     <label string="%%(date)s: Current Date" colspan="2"/>
@@ -45,9 +44,7 @@
                 <form string="Follow-Up">
                     <field name="name" />
                     <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                    <separator colspan="4" string="Description"/>
-                    <field colspan="4" name="description" nolabel="1" />
-                    <separator colspan="4" string="Followup Lines"/>
+                    <separator colspan="4" string="" />
                     <field colspan="4" name="followup_line" nolabel="1"/>
                 </form>
             </field>
@@ -74,6 +71,10 @@
                    <group col="10" colspan="4">
                         <field name="name"/>
                         <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                   </group>
+                   <newline/>
+                   <group expand="0" string="Group By...">
+                        <filter string="Company" icon="terp-go-home" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                    </group>
                </search>
             </field>
@@ -170,6 +171,27 @@
                 </field>
             </field>
         </record>
+        
+        <!--   Configure Follow-Ups  Wizard    -->
+        
+          <record id="action_view_account_followup_followup_form" model="ir.actions.act_window">
+            <field name="name">Configure Follow-Ups</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account_followup.followup</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form,tree</field>
+            <field name="view_id" ref="view_account_followup_followup_form"/>
+        </record>
+        
+         <!--      register configuration wizard -->
+        <record id="config_wizard_view_account_followup_followup_form" model="ir.actions.todo">
+            <field name="action_id" ref="action_view_account_followup_followup_form"/>
+            <field name="target">current</field>
+            <field name="type">normal</field>
+            <field name="state">skip</field>
+        </record>
+        
+        
 
     </data>
 </openerp>

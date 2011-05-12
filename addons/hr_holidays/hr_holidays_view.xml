@@ -441,6 +441,35 @@
             src_model="hr.employee"
             view_id ="view_holiday"
             id="act_hr_employee_holiday_request"/>
+            
+       <!--  Assing leave       -->
+        
+        <record id="hr_holidays_leaves_assign_tree_view" model="ir.ui.view">
+            <field name="name">hr.employee.leave.tree</field>
+            <field name="model">hr.employee</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Assign Leaves" editable="top">
+                    <field name="name" string="Employee"/>
+                    <field name="remaining_leaves"/>
+                </tree>
+            </field>
+        </record>  
+
+        <record model="ir.actions.act_window" id="hr_holidays_leaves_assign_legal">
+           <field name="name">Assign Legal Leaves to Employees</field>
+           <field name="type">ir.actions.act_window</field>
+           <field name="res_model">hr.employee</field>
+           <field name="view_type">form</field>
+           <field name="view_mode">tree,form</field>
+           <field name="view_id" ref="hr_holidays_leaves_assign_tree_view"/>
+       </record>
+
+       <record id="hr_holidays_leaves_assign_form_view_todo" model="ir.actions.todo">
+           <field name="action_id" ref="hr_holidays_leaves_assign_legal"/>
+           <field name="type">normal</field>
+           <field name="state">skip</field>
+       </record>        
 
     </data>
 </openerp>
