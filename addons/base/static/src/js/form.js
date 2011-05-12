@@ -1013,6 +1013,17 @@ openerp.base.form.FieldReference = openerp.base.form.Field.extend({
     }
 });
 
+openerp.base.form.FieldImage = openerp.base.form.Field.extend({
+    init: function(view, node) {
+        this._super(view, node);
+        this.template = "FieldImage";
+    },
+    set_value: function(value) {
+        this._super.apply(this, arguments);
+        this.$element.find('img').show().attr('src', 'data:image/png;base64,' + this.value);
+    }
+});
+
 /**
  * Registry of form widgets, called by :js:`openerp.base.FormView`
  */
@@ -1039,7 +1050,8 @@ openerp.base.form.widgets = new openerp.base.Registry({
     'float' : 'openerp.base.form.FieldFloat',
     'integer': 'openerp.base.form.FieldFloat',
     'progressbar': 'openerp.base.form.FieldProgressBar',
-    'float_time': 'openerp.base.form.FieldFloatTime'
+    'float_time': 'openerp.base.form.FieldFloatTime',
+    'image': 'openerp.base.form.FieldImage'
 });
 
 };
