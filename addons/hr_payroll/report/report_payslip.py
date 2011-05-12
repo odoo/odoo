@@ -37,7 +37,8 @@ class payslip_report(report_sxw.rml_parse):
                 'get_deductions':self.get_deductions,
                 'get_leave': self.get_leave,
                 'get_payslip_lines': self.get_payslip_lines,
-                'get_details_by_salary_head': self.get_details_by_salary_head,
+                'get_details_by_rule_category': self.get_details_by_rule_category,
+                'get_lines_by_contribution_register': self.get_lines_by_contribution_register,
         })
 
     def convert(self, amount, cur):
@@ -96,57 +97,77 @@ class payslip_report(report_sxw.rml_parse):
             res = payslip_line.browse(self.cr, self.uid, ids)
         return res
 
-    def get_recursive_parent(self, heads):
-        if not heads:
+    def get_recursive_parent(self, rule_categories):
+        if not rule_categories:
             return []
-        if heads[0].parent_id:
-            heads.insert(0, heads[0].parent_id)
-            self.get_recursive_parent(heads)
-        return heads
+        if rule_categories[0].parent_id:
+            rule_categories.insert(0, rule_categories[0].parent_id)
+            self.get_recursive_parent(rule_categories)
+        return rule_categories
 
-    def get_details_by_salary_head(self, obj):
+    def get_details_by_rule_category(self, obj):
         payslip_line = self.pool.get('hr.payslip.line')
-        salary_head = self.pool.get('hr.salary.head')
+        rule_cate_obj = self.pool.get('hr.salary.rule.category')
         res = []
         result = {}
         ids = []
-      
+
         for id in range(len(obj)):
             ids.append(obj[id].id)
         if ids:
             self.cr.execute('''SELECT pl.id, pl.category_id FROM hr_payslip_line as pl \
-                LEFT JOIN hr_salary_head AS sh on (pl.category_id = sh.id) \
+                LEFT JOIN hr_salary_rule_category AS rc on (pl.category_id = rc.id) \
                 WHERE pl.id in %s \
-                GROUP BY sh.parent_id, sh.sequence, pl.sequence, pl.id, pl.category_id \
-                ORDER BY sh.sequence, pl.sequence, sh.parent_id''',(tuple(ids),))
+                GROUP BY rc.parent_id, pl.sequence, pl.id, pl.category_id \
+                ORDER BY pl.sequence, rc.parent_id''',(tuple(ids),))
             for x in self.cr.fetchall():
                 result.setdefault(x[1], [])
                 result[x[1]].append(x[0])
             for key, value in result.iteritems():
-                heads = salary_head.browse(self.cr, self.uid, [key])
-                parents = self.get_recursive_parent(heads)
-                head_total = 0
+                rule_categories = rule_cate_obj.browse(self.cr, self.uid, [key])
+                parents = self.get_recursive_parent(rule_categories)
+                category_total = 0
                 for line in payslip_line.browse(self.cr, self.uid, value):
-                    head_total += line.total
+                    category_total += line.total
                 level = 0
                 for parent in parents:
                     res.append({
-                                'salary_head': parent.name,
+                                'rule_category': parent.name,
                                 'name': parent.name,
                                 'code': parent.code,
                                 'level': level,
-                                'total': head_total,
+                                'total': category_total,
                     })
                     level += 1
-                lines = payslip_line.browse(self.cr, self.uid, value)
-                for line in lines:
+                for line in payslip_line.browse(self.cr, self.uid, value):
                     res.append({
-                                'salary_head': line.name,
+                                'rule_category': line.name,
                                 'name': line.name,
                                 'code': line.code,
                                 'total': line.total,
                                 'level': level
                     })
+        return res
+
+    def get_lines_by_contribution_register(self, obj):
+        payslip_line = self.pool.get('hr.payslip.line')
+        result = {}
+        res = []
+
+        for id in range(len(obj)):
+            if obj[id].register_id:
+                result.setdefault(obj[id].register_id.name, [])
+                result[obj[id].register_id.name].append(obj[id].id)
+        for key, value in result.iteritems():
+            res.append({
+                'register_name': key,
+            })
+            for line in payslip_line.browse(self.cr, self.uid, value):
+                res.append({
+                            'name': line.name,
+                            'code': line.code,
+                            'total': line.total,
+                })
         return res
 
 #report_sxw.report_sxw('report.payslip.pdf', 'hr.payslip', 'hr_payroll/report/payslip.rml', parser=payslip_report)
