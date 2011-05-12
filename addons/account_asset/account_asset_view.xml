@@ -2,7 +2,6 @@
 <openerp>
 <data>
 
-    <menuitem id="menu_finance_config_Assets" name="Assets" parent="account.menu_finance_configuration"/>
     <record model="ir.ui.view" id="view_account_asset_category_form">
         <field name="name">account.asset.category.form</field>
         <field name="model">account.asset.category</field>
@@ -99,7 +98,6 @@
                        </graph>
                     </field>
                     <button type="object" name="compute_depreciation_board" string="Compute" icon="terp-stock_format-scientific" colspan="2"/>
-                    <button type="object" name="account_move_line_deprec" string="Create move line" icon="gtk-execute" colspan="2"/>
                  </page>
                  <page string="History">
                     <field name="account_move_line_ids" colspan="4" nolabel="1" readonly="1"/>
@@ -200,17 +198,22 @@
             </tree>
         </field>
     </record>
-
+    <menuitem id="menu_finance_assets" name="Assets" parent="account.menu_finance"/>
+    <menuitem
+        parent="menu_finance_assets"
+        id="menu_action_account_asset_asset_tree"
+        action="action_account_asset_asset_tree"/>
       <record model="ir.actions.act_window" id="action_account_asset_asset_form">
-        <field name="name">Asset</field>
+        <field name="name">Assets</field>
         <field name="res_model">account.asset.asset</field>
         <field name="view_type">form</field>
     </record>
 
     <menuitem 
-        parent="menu_finance_config_Assets" 
+        parent="menu_finance_assets" 
         id="menu_action_account_asset_asset_form"
         action="action_account_asset_asset_form"/>
+
 
     <record model="ir.actions.act_window" id="action_account_asset_asset_tree">
         <field name="name">Asset Hierarchy</field>
@@ -220,21 +223,16 @@
         <field name="view_id" ref="view_account_asset_asset_tree"/>
     </record>
 
-    <menuitem id="menu_finance_Assets" name="Assets" parent="account.menu_finance"/>
-    <menuitem
-        parent="menu_finance_Assets"
-        id="menu_action_account_asset_asset_tree"
-        action="action_account_asset_asset_tree"/>
-
+    <menuitem id="menu_finance_config_assets" name="Assets" parent="account.menu_finance_accounting"/>
     <record model="ir.actions.act_window" id="action_account_asset_asset_list_normal">
-        <field name="name">Assets</field>
-        <field name="res_model">account.asset.asset</field>
+        <field name="name">Asset Categories</field>
+        <field name="res_model">account.asset.category</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
     </record>
 
     <menuitem
-        parent="menu_finance_Assets"
+        parent="menu_finance_config_assets"
         id="menu_action_account_asset_asset_list_normal"
         action="action_account_asset_asset_list_normal"/>
 </data>
