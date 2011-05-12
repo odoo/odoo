@@ -229,6 +229,15 @@ class hr_payslip(osv.osv):
         res['value'].update({'journal_id': journal_id})
         return res
 
+#    def onchange_employee_id(self, cr, uid, ids, date_from, date_to, employee_id=False, contract_id=False, context=None):
+#        contract_obj = self.pool.get('hr.contract')
+#        res = super(hr_payslip, self).onchange_employee_id(cr, uid, ids, date_from=date_from, date_to=date_to, employee_id=employee_id, contract_id=contract_id, context=context)
+#        contract_id = res['value']['contract_id']
+#        if res['value']['contract_id']:
+#            journal_id = contract_obj.browse(cr, uid, res['value']['contract_id'], context=context).journal_id.id
+#            res['value'].update({'journal_id': journal_id})
+#        return res
+
     def get_payslip_lines(self, cr, uid, contract_ids, payslip_id, context):
         journal_obj = self.pool.get('account.journal')
         rule_obj = self.pool.get('hr.salary.rule')
@@ -240,14 +249,17 @@ class hr_payslip(osv.osv):
         #get the rules of the structure and thier children
         rule_ids = structure_obj.get_all_rules(cr, uid, structure_ids, context=context)
         sorted_rule_ids = [id for id, sequence in sorted(rule_ids, key=lambda x:x[1])]
+        #Fetching Debit/Credit account of the payslip journal. 
         journal = self.browse(cr, uid, payslip_id, context=context).journal_id
         credit_account = journal.default_credit_account_id and journal.default_credit_account_id.id or False
         debit_account = journal.default_debit_account_id and journal.default_debit_account_id.id or False
+        # Assigning above fetched Debit/Credit account on salary rules if not specified 
         for rule in rule_obj.browse(cr, uid, sorted_rule_ids, context=context):
             if not rule.account_debit.id:
                 rule_obj.write(cr, uid, [rule.id], {'account_debit': debit_account})
             if not rule.account_credit.id:
                 rule_obj.write(cr, uid, [rule.id], {'account_credit': credit_account})
+            #Assigning Debit/Credit account on payslip lines
             for value in result:
                 if value['salary_rule_id'] == rule.id:
                     if rule.category_id.name == 'Deduction':
