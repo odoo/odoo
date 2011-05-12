@@ -29,11 +29,11 @@ class account_asset_category(osv.osv):
     _columns = {
         'name': fields.char('Asset category', size=64, required=True, select=1),
         'note': fields.text('Note'),
-        'journal_analytic_id': fields.many2one('account.analytic.journal', 'Analytic journal'), #FIXME:add in the form view  with group = analytic 
+        'journal_analytic_id': fields.many2one('account.analytic.journal', 'Analytic journal'), #FIXME:add in the form view  with group = analytic
         'account_analytic_id': fields.many2one('account.analytic.account', 'Analytic account'), #FIXME:add in the form view  with group = analytic
         'account_asset_id': fields.many2one('account.account', 'Asset Account', required=True),
         'account_depreciation_id': fields.many2one('account.account', 'Depreciation Account', required=True),
-        'account_expense_depreciation_id': fields.many2one('account.account', 'Depr. Expense Account',),#FIXME: required=True + add in the form view 
+        'account_expense_depreciation_id': fields.many2one('account.account', 'Depr. Expense Account', required=True),#FIXME: required=True + add in the form view
         'journal_id': fields.many2one('account.journal', 'Journal', required=True),
         'company_id': fields.many2one('res.company', 'Company'),
     }
@@ -76,14 +76,14 @@ class account_asset_asset(osv.osv):
             SELECT a.id as id, COALESCE(MAX(l.date),a.purchase_date) AS date
             FROM account_asset_asset a
             LEFT JOIN account_move_line l ON (l.asset_id = a.id)
-            WHERE a.id IN %s 
+            WHERE a.id IN %s
             GROUP BY a.id, a.purchase_date """, (tuple(ids),))
         return dict(cr.fetchall())
 
     def compute_depreciation_board(self, cr, uid,ids, context=None):
         depreciation_lin_obj = self.pool.get('account.asset.depreciation.line')
         for asset in self.browse(cr, uid, ids, context=context):
-            old_depreciation_line_ids = depreciation_lin_obj.search(cr, uid, [('asset_id', '=', asset.id), ('move_line_id', '=', False)])
+            old_depreciation_line_ids = depreciation_lin_obj.search(cr, uid, [('asset_id', '=', asset.id), ('move_id', '=', False)])
             if old_depreciation_line_ids:
                 depreciation_lin_obj.unlink(cr, uid, old_depreciation_line_ids, context=context)
 
