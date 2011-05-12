@@ -654,7 +654,24 @@ openerp.base.form.FieldChar = openerp.base.form.Field.extend({
 openerp.base.form.FieldEmail = openerp.base.form.FieldChar.extend({
     init: function(view, node) {
         this._super(view, node);
+        this.template = "FieldEmail";
         this.validation_regex = /@/;
+    },
+    start: function() {
+        this._super.apply(this, arguments);
+        this.$element.find('button').click(this.on_button_clicked);
+    },
+    on_button_clicked: function() {
+        if (!this.value || this.invalid) {
+            this.notification.warn("E-mail error", "Can't send email to invalid e-mail address");
+        } else {
+            location.href = 'mailto:' + this.value;
+        }
+    },
+    set_value: function(value) {
+        this._super.apply(this, arguments);
+        var show_value = (value != null && value !== false) ? value : '';
+        this.$element.find('a').attr('href', 'mailto:' + show_value);
     }
 });
 

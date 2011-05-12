@@ -304,6 +304,20 @@
         t-att-class="'field_' + widget.type" style="width: 100%"
     />
 </t>
+<t t-name="FieldEmail">
+    <table cellpadding="0" cellspacing="0" border="0" width="100%">
+    <tr>
+        <td width="100%">
+            <t t-call="FieldChar"/>
+        </td>
+        <td width="16">
+            <button class="button" title="Send an e-mail with your default e-mail client">
+                <img src="/base/static/src/img/icons/terp-mail-message-new.png"/>
+            </button>
+        </td>
+    </tr>
+    </table>
+</t>
 <t t-name="FieldText">
     <textarea rows="6" style="width: 100%;"
         t-att-name="widget.name"
