@@ -370,7 +370,9 @@ class hr_payslip(osv.osv):
 
     def compute_sheet(self, cr, uid, ids, context=None):
         slip_line_pool = self.pool.get('hr.payslip.line')
+        sequence_obj = self.pool.get('ir.sequence')
         for payslip in self.browse(cr, uid, ids, context=context):
+            number = sequence_obj.get(cr, uid, 'salary.slip')
             #delete old payslip lines
             old_slipline_ids = slip_line_pool.search(cr, uid, [('slip_id', '=', payslip.id)], context=context)
 #            old_slipline_ids
@@ -383,7 +385,7 @@ class hr_payslip(osv.osv):
                 #if we don't give the contract, then the rules to apply should be for all current contracts of the employee
                 contract_ids = self.get_contract(cr, uid, payslip.employee_id, payslip.date_from, payslip.date_to, context=context)
             lines = [(0,0,line) for line in self.pool.get('hr.payslip').get_payslip_lines(cr, uid, contract_ids, payslip.id, context=context)]
-            self.write(cr, uid, [payslip.id], {'line_ids': lines}, context=context)
+            self.write(cr, uid, [payslip.id], {'line_ids': lines, 'number': number,}, context=context)
         return True
 
     def get_worked_day_lines(self, cr, uid, contract_ids, date_from, date_to, context=None):

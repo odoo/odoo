@@ -42,11 +42,10 @@ Generic Payroll system Integrated with Accountings.
     'init_xml': [
     ],
     'update_xml': [
-        "security/ir.model.access.csv",
         "hr_payroll_account_view.xml",
     ],
     'demo_xml': [
-        'hr_payroll_demo.xml'
+        'hr_payroll_account_demo.xml'
     ],
     'installable': True,
     'active': False,
