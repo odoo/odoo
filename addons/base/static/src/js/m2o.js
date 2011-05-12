@@ -14,7 +14,7 @@ openerp.base.m2o = function(openerp){
             this.result_ids = []
             var self = this
 
-            this.element.autocomplete({
+            var $input = this.element.autocomplete({
                 source: function(request, response){
                     var search_val = request.term;
                     if (search_val in cache) {
@@ -50,32 +50,66 @@ openerp.base.m2o = function(openerp){
                 },
 
                 select: function(event, ui){
+
                     if (ui.item.id == 'more') {
                         self.dataset.ids = self.result_ids;
                         self.dataset.count = self.dataset.ids.length;
                         self.dataset.domain = []
+                        self.element.val('')
                         var pop = new openerp.base.form.Many2XSelectPopup(null, self.session);
                         pop.select_element(self.relation, self.dataset);
-                        self.element.val('')
                         return;
                     }
 
                     if (ui.item.id == 'create') {
-                        var element_id = _.uniqueId("act_window_dialog");
-                        var dialog = jQuery('<div>',
-                                            {'id': element_id
-                                            }).dialog({
-                                                        modal: true,
-                                                        minWidth: 800
-                                                     });
-                        var event_form = new openerp.base.FormView(self.view_manager, self.session, element_id, self.dataset, false);
-                        event_form.start();
-                        self.element.val('')
-                        return;
+
+                        var val = self.element.val()
+                        self.dataset.create({'name': self.element.val()},
+                            function(r){}, function(r){
+                                var element_id = _.uniqueId("act_window_dialog");
+                                var dialog = jQuery('<div>',
+                                                        {'id': element_id
+                                                    }).dialog({
+                                                                modal: true,
+                                                                minWidth: 800
+                                                             });
+                                self.element.val('')
+                                var event_form = new openerp.base.FormView(self.view_manager, self.session, element_id, self.dataset, false);
+                                event_form.start();
+                                return true;
+                        });
+                        console.log(id_2.result,'56576777878787878',val, self.element.data( "autocomplete" ).term)
+                        console.log(this)
+                        $( this ).val( "" );
+                        self.element.val(self.element.data( "autocomplete" ).term);
                     }
                     self.element.attr('m2o_id', ui.item.id);
-                }
+                },
+                minLength: 0
             });
+
+            $("<div type='button' class='ui_combo'>&nbsp;</div>")
+                    .attr("tabIndex", -1)
+                    .attr("title", "Show All Items")
+                    .insertAfter($input)
+                    .button({
+                        icons: {
+                            primary: "ui-icon-triangle-1-s"
+                        },
+                        text: false
+                    })
+                    .removeClass("ui-corner-all")
+                    .addClass("ui-corner-right ui-button-icon")
+                    .click(function() {
+                        // close if already visible
+                        if ($input.autocomplete("widget").is(":visible")) {
+                            $input.autocomplete( "close" );
+                            return;
+                        }
+                        $(this).blur();
+                        $input.autocomplete("search", "" );
+                        $input.focus();
+                    });
         }
     });
 }
