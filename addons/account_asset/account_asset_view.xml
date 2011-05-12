@@ -55,8 +55,8 @@
                  <field name="code" select="1"/>
                  <field name="purchase_value" select="1"/>
                  <field name="currency_id" select="1"/>
-                 <field name="company_id" select="1"/>
-                 <field name="value_residual"/> 
+                 <field name="company_id" select="1" groups="base.group_multi_company"/>
+                 <field name="value_residual"/>
               </group>
               <notebook colspan="4">
                  <page string="Depreciation">
@@ -193,6 +193,7 @@
                 <field name="code"/>
                 <field name="value_total"/>
                 <field name="purchase_date"/>
+                <field name="company_id" groups="base.group_multi_company"/>
                 <field name="state"/>
             </tree>
         </field>
