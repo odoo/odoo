@@ -21,6 +21,7 @@
 ##############################################################################
 
 import time
+import pooler
 from datetime import date
 from datetime import datetime
 from datetime import timedelta
@@ -210,6 +211,10 @@ class hr_payslip(osv.osv):
     _name = 'hr.payslip'
     _description = 'Pay Slip'
 
+    def __init__(self, pool, cr):
+        super(hr_payslip, self).__init__(pool, cr)
+        self.cr = cr
+        
     def _get_lines_salary_category(self, cr, uid, ids, field_names, arg=None, context=None):
         result = {}
         if not ids: return result
@@ -609,24 +614,26 @@ class hr_payslip(osv.osv):
             res['value'].update({'struct_id': False})
         return self.onchange_employee_id(cr, uid, ids, date_from=date_from, date_to=date_to, employee_id=employee_id, contract_id=contract_id, context=context)
 
-    def sum(self, cr, uid, code, from_date, to_date=None, employee=False, context=None):
+    def sum(self, code, from_date, to_date=None, employee=False, context=None):
+        sum = 0.0
         if not employee:
             return 0.0
         if to_date is None:
             to_date = datetime.now().strftime('%Y-%m-%d')
-        sum = 0.0
+        cr = pooler.get_db(self.cr.dbname).cursor()
         cr.execute("SELECT pl.total, hp.credit_note\
                     FROM hr_payslip as hp, hr_payslip_line as pl \
                     WHERE hp.employee_id = %s AND hp.state in ('confirm','done') \
                     AND hp.date_from >= %s AND hp.date_to <= %s AND hp.id = pl.slip_id AND pl.code = %s",
-                   (employee, from_date, to_date, code))
+                    (employee, from_date, to_date, code))
         for r in cr.dictfetchall():
             if r['credit_note'] == False:
                 sum += r['total']
             else:
                 sum -= r['total']
+        cr.close()
         return sum
-
+    
 hr_payslip()
 
 class hr_payslip_input(osv.osv):
@@ -649,7 +656,7 @@ class hr_payslip_input(osv.osv):
     _defaults = {
         'sequence': 10,
     }
-
+  
     def sum(self, cr, uid, code, field, from_date, to_date=None, employee=False, context=None):
         if not employee:
             return 0.0
