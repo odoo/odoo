@@ -15,7 +15,7 @@ openerp.base.parse_datetime = function(str) {
     if(!str) {
         return str;
     }
-    var regex = /\d\d\d\d-\d\d-\d\) \d\d:\d\d:\d\d/;
+    var regex = /\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d/;
     var res = regex.exec(str);
     if ( res[0] != str ) {
         throw "'" + str + "' is not a valid datetime";
