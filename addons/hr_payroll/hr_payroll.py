@@ -609,6 +609,7 @@ class hr_payslip(osv.osv):
         return res
 
     def onchange_contract_id(self, cr, uid, ids, date_from, date_to, employee_id=False, contract_id=False, context=None):
+#TODO it seems to be the mess in the onchanges, we should have onchange_employee => onchange_contract => doing all the things
         if context is None:
             context = {}
         res = {'value':{
