@@ -679,33 +679,43 @@ openerp.base.form.FieldFloat = openerp.base.form.FieldChar.extend({
     }
 });
 
-openerp.base.form.FieldDate = openerp.base.form.FieldChar.extend({
+openerp.base.form.FieldDatetime = openerp.base.form.Field.extend({
     init: function(view, node) {
         this._super(view, node);
         this.template = "FieldDate";
-        this.validation_regex = /^\d+-\d+-\d+$/;
+        this.jqueryui_object = 'datetimepicker';
     },
     start: function() {
         this._super.apply(this, arguments);
-        this.$element.find('input').change(this.on_ui_change).datepicker({
-            dateFormat: 'yy-mm-dd'
-        });
-    }
-});
-
-openerp.base.form.FieldDatetime = openerp.base.form.FieldChar.extend({
-    init: function(view, node) {
-        this._super(view, node);
-        this.template = "FieldDatetime";
-        this.validation_regex = /^\d+-\d+-\d+( \d+:\d+(:\d+)?)?$/;
-    },
-    start: function() {
-        this._super.apply(this, arguments);
-        this.$element.find('input').change(this.on_ui_change).datetimepicker({
+        this.$element.find('input').change(this.on_ui_change)[this.jqueryui_object]({
             dateFormat: 'yy-mm-dd',
             timeFormat: 'hh:mm:ss'
         });
-    }
+    },
+    set_value: function(value) {
+        this._super.apply(this, arguments);
+        if (value == null || value == false) {
+            this.$element.find('input').val('');
+        } else {
+            this.value = this.format(value);
+            this.$element.find('input')[this.jqueryui_object]('setDate', this.value);
+        }
+    },
+    set_value_from_ui: function() {
+        this.value = this.$element.find('input')[this.jqueryui_object]('getDate') || false;
+    },
+    validate: function() {
+        this.invalid = this.required && this.value === false;
+    },
+    format: openerp.base.parse_datetime
+});
+
+openerp.base.form.FieldDate = openerp.base.form.FieldDatetime.extend({
+    init: function(view, node) {
+        this._super(view, node);
+        this.jqueryui_object = 'datepicker';
+    },
+    format: openerp.base.parse_date
 });
 
 openerp.base.form.FieldText = openerp.base.form.Field.extend({
