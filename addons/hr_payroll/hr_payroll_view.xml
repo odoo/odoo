@@ -209,7 +209,7 @@
             <field name="model">hr.payslip</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state in ('confirm','hr_check','accont_check');black:state in ('new');gray:state in('cancel')" string="Payslip">
+                <tree colors="blue:state in ('confirm','hr_check','accont_check');black:state in ('new');gray:state in('cancel')" string="Payslips">
                     <field name="number"/>
                     <field name="employee_id"/>
                     <field name="name"/>
@@ -260,8 +260,8 @@
                             </field>
                         </page>
 <!-- TODO: put me back -->
-	                    <page string="Details By Salary Category">
-                            <field name="details_by_salary_category" context="{'group_by':'category_id'}" domain="[('appears_on_payslip', '=', True)]" nolabel="1">
+                        <page string="Details By Salary Rule Category">
+                            <field name="details_by_salary_rule_category" context="{'group_by':'category_id'}" domain="[('appears_on_payslip', '=', True)]" nolabel="1">
                                 <tree string="Payslip Lines" colors="blue:total == 0">
                                     <field name="category_id"/>
                                     <field name="name"/>
@@ -272,7 +272,7 @@
                        </page>
 
                        <page string="Worked Days">
-                            <field name="input_line_ids" colspan="4" nolabel="1" mode="tree">
+                            <field name="worked_days_line_ids" colspan="4" nolabel="1">
                                 <tree string="Worked Days" editable="bottom">
                                     <field name="name"/>
                                     <field name="code"/>
@@ -281,6 +281,36 @@
                                     <field name="contract_id" groups="base.group_extended"/>
                                     <field name="sequence" invisible="True"/>
                                 </tree>
+                                <form string="Worked Day">
+                                    <group>
+                                        <field name="name" select="1"/>
+                                        <field name="code" select="1"/>
+                                        <field name="payslip_id"/>
+                                        <field name="sequence" groups="base.group_extended"/>
+                                        <field name="number_of_days"/>
+                                        <field name="number_of_hours"/>
+                                        <field name="contract_id" groups="base.group_extended"/>
+                                    </group>
+                                </form>
+                            </field>
+                            <field name="input_line_ids" colspan="4" nolabel="1">
+                                <tree string="Input Data" editable="bottom">
+                                    <field name="name"/>
+                                    <field name="code"/>
+                                    <field name="quantity"/>
+                                    <field name="contract_id" groups="base.group_extended"/>
+                                    <field name="sequence" invisible="True"/>
+                                </tree>
+                                <form string="Payslip Line">
+                                    <group>
+                                        <field name="name" select="1"/>
+                                        <field name="code" select="1"/>
+                                        <field name="payslip_id"/>
+                                        <field name="sequence" groups="base.group_extended"/>
+                                        <field name="quantity"/>
+                                        <field name="contract_id" groups="base.group_extended"/>
+                                    </group>
+                                </form>
                             </field>
                        </page>
 
@@ -288,6 +318,7 @@
                             <separator colspan="4" string="Other Information"/>
                             <group col="5" colspan="2">
                                 <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                                <field name="payslip_run_id" domain="[('state','=','draft')]"/>
                                 <field name="paid" readonly="1"/>
                             </group>
                             <newline/>
@@ -347,9 +378,9 @@
         <menuitem action="action_view_hr_payslip_form" id="menu_department_tree" parent="menu_hr_root_payroll"/>
 
         <!-- Salary Category-->
-        <record id="hr_salary_category_form" model="ir.ui.view">
-            <field name="name">hr.salary.category.form</field>
-            <field name="model">hr.salary.category</field>
+        <record id="hr_salary_rule_category_form" model="ir.ui.view">
+            <field name="name">hr.salary.rule.category.form</field>
+            <field name="model">hr.salary.rule.category</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Salary Categories">
@@ -364,9 +395,9 @@
             </field>
         </record>
 
-        <record id="hr_salary_category_tree" model="ir.ui.view">
-            <field name="name">hr.salary.category.tree</field>
-            <field name="model">hr.salary.category</field>
+        <record id="hr_salary_rule_category_tree" model="ir.ui.view">
+            <field name="name">hr.salary.rule.category.tree</field>
+            <field name="model">hr.salary.rule.category</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Salary Rule Categories">
@@ -377,9 +408,9 @@
             </field>
         </record>
 
-        <record id="view_hr_salary_category_filter" model="ir.ui.view">
-            <field name="name">hr.salary.category.select</field>
-            <field name="model">hr.salary.category</field>
+        <record id="view_hr_salary_rule_category_filter" model="ir.ui.view">
+            <field name="name">hr.salary.rule.category.select</field>
+            <field name="model">hr.salary.rule.category</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Salary Rule Categories">
@@ -389,16 +420,16 @@
             </field>
         </record>
 
-        <record id="action_hr_salary_category" model="ir.actions.act_window">
-            <field name="name">Salary Categories</field>
-            <field name="res_model">hr.salary.category</field>
+        <record id="action_hr_salary_rule_category" model="ir.actions.act_window">
+            <field name="name">Salary Rule Categories</field>
+            <field name="res_model">hr.salary.rule.category</field>
             <field name="view_type">form</field>
-            <field name="view_id" ref="hr_salary_category_tree"/>
-           <field name="search_view_id" ref="view_hr_salary_category_filter"/>
+            <field name="view_id" ref="hr_salary_rule_category_tree"/>
+           <field name="search_view_id" ref="view_hr_salary_rule_category_filter"/>
         </record>
         <menuitem
-            id="menu_hr_salary_category"
-            action="action_hr_salary_category"
+            id="menu_hr_salary_rule_category"
+            action="action_hr_salary_rule_category"
             parent="payroll_configure"
             sequence="11"
         />
@@ -487,7 +518,7 @@
 
     <!-- Salary Rules -->
 
-    <record id="hr_salary_rule_tree" model="ir.ui.view">
+        <record id="hr_salary_rule_tree" model="ir.ui.view">
             <field name="name">hr.salary.rule.tree</field>
             <field name="model">hr.salary.rule</field>
             <field name="type">tree</field>
@@ -501,86 +532,149 @@
                 </tree>
             </field>
         </record>
-    <record id="hr_salary_rule_form" model="ir.ui.view">
-        <field name="name">hr.salary.rule.form</field>
-        <field name="model">hr.salary.rule</field>
+        <record id="hr_salary_rule_form" model="ir.ui.view">
+            <field name="name">hr.salary.rule.form</field>
+            <field name="model">hr.salary.rule</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Salary Rules">
+                    <group col="6" colspan="6">
+                       <field name="name"/>
+                       <field name="code" select="1"/>
+                       <field name="category_id"/>
+                       <field name="sequence" />
+                       <field name="active"/>
+                       <field name="appears_on_payslip" attrs="{'readonly':[('company_contribution','=', True)]}" />
+                       <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                    </group>
+                    <notebook colspan="6">
+                        <page string="General">
+                                <group col="4" colspan="6">
+                                    <separator colspan="4" string="Conditions"/>
+                                    <field name="condition_select"/><newline/>
+                                    <field name="condition_python" attrs="{'invisible':[('condition_select','&lt;&gt;','python')], 'required': [('condition_select','=','python')]}" colspan="4"/> <newline/>
+                                    <field name="condition_range" attrs="{'invisible':[('condition_select','&lt;&gt;','range')], 'required':[('condition_select','=','range')]}"/><newline/>
+                                    <field name="condition_range_min" colspan="2" attrs="{'invisible':[('condition_select','&lt;&gt;','range')], 'required':[('condition_select','=','range')]}"/>
+                                    <field name="condition_range_max" colspan="2" attrs="{'invisible':[('condition_select','&lt;&gt;','range')], 'required':[('condition_select','=','range')]}"/>
+                                    <separator colspan="4" string="Computation"/>
+                                    <field name="amount_select"/>
+                                    <field name="quantity" attrs="{'invisible':[('amount_select','=','code')], 'required':[('amount_select','!=','code')]}"/><newline/>
+                                    <field name="amount_fix"  attrs="{'invisible':[('amount_select','&lt;&gt;','fix')], 'required':[('amount_select','=','fix')]}"/>
+                                    <field colspan="4" name="amount_python_compute" attrs="{'invisible':[('amount_select','&lt;&gt;','code')], 'required':[('amount_select','=','code')]}"/>
+                                    <field name="amount_percentage_base" attrs="{'invisible':[('amount_select','&lt;&gt;','percentage')], 'required': [('amount_select','=','percentage')]}"/>
+                                    <field name="amount_percentage" attrs="{'invisible':[('amount_select','&lt;&gt;','percentage')], 'required':[('amount_select','=','percentage')]}"/>
+                                    <separator colspan="4" string="Company contribution"/>
+                                    <field name="register_id"/>
+                                </group>
+                        </page>
+                        <page string="Child Rules">
+                           <field name="parent_rule_id"/>
+                           <separator colspan="4" string="Children definition"/>
+                           <field colspan="4" name="child_ids" nolabel="1"/>
+                        </page>
+                           <page string="Inputs">
+                                <field name="input_ids" colspan="4" nolabel="1" mode="tree, form">
+                                    <tree string="Input Data" editable="bottom">
+                                        <field name="name"/>
+                                        <field name="code"/>
+                                    </tree>
+                                </field>
+                           </page>
+                        <page string="Description">
+                            <field name="note" colspan="4" nolabel="1"/>
+                        </page>
+                    </notebook>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_hr_rule_filter" model="ir.ui.view">
+            <field name="name">hr.salary.rule.select</field>
+            <field name="model">hr.salary.rule</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Salary Rule">
+                    <group col="8" colspan="4">
+                        <field name="name"/>
+                        <field name="code" select="1"/>
+                        <field name="category_id"/>
+                        <field name="condition_range_min"/>
+                    </group>
+                    <newline/>
+                    <group col="8" colspan="4" expand="0" string="Group By...">
+                        <filter string="Head" icon="terp-folder-yellow" name="head" context="{'group_by':'category_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_salary_rule_form" model="ir.actions.act_window">
+            <field name="name">Salary Rules</field>
+            <field name="res_model">hr.salary.rule</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="hr_salary_rule_tree"/>
+            <field name="domain">[('parent_rule_id','=',False)]</field>
+            <field name="search_view_id" ref="view_hr_rule_filter"/>
+        </record>
+
+        <menuitem id="menu_action_hr_salary_rule_form" action="action_salary_rule_form" parent="payroll_configure" sequence="12"/>
+
+        <act_window domain="[('slip_id', '=', active_id)]" id="act_payslip_lines" name="Payslip Lines" res_model="hr.payslip.line" src_model="hr.payslip"/>
+
+    <record id="hr_payslip_run_filter" model="ir.ui.view">
+        <field name="name">hr.payslip.run.search</field>
+        <field name="model">hr.payslip.run</field>
+        <field name="type">search</field>
+        <field name="arch" type="xml">
+            <search string="Search Payslips Group">
+                <field name="name"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="hr_payslip_run_tree" model="ir.ui.view">
+        <field name="name">hr.payslip.run.tree</field>
+        <field name="model">hr.payslip.run</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Payslips Run">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="hr_payslip_run_form" model="ir.ui.view">
+        <field name="name">hr.payslip.run.form</field>
+        <field name="model">hr.payslip.run</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="Salary Rules">
+            <form string="Payslips Run">
                 <group col="6" colspan="6">
-                   <field name="name"/>
-                   <field name="code" select="1"/>
-                   <field name="category_id"/>
-                   <field name="sequence" />
-                   <field name="active"/>
-                   <field name="appears_on_payslip" attrs="{'readonly':[('company_contribution','=', True)]}" />
-                   <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                    <field name="name"/>
                 </group>
                 <notebook colspan="6">
-                    <page string="General">
-                            <group col="4" colspan="6">
-                                <separator colspan="4" string="Conditions"/>
-                                <field name="condition_select"/><newline/>
-                                <field name="condition_python" attrs="{'invisible':[('condition_select','&lt;&gt;','python')], 'required': [('condition_select','=','python')]}" colspan="4"/> <newline/>
-                                <field name="condition_range" attrs="{'invisible':[('condition_select','&lt;&gt;','range')], 'required':[('condition_select','=','range')]}"/><newline/>
-                                <field name="condition_range_min" colspan="2" attrs="{'invisible':[('condition_select','&lt;&gt;','range')], 'required':[('condition_select','=','range')]}"/>
-                                <field name="condition_range_max" colspan="2" attrs="{'invisible':[('condition_select','&lt;&gt;','range')], 'required':[('condition_select','=','range')]}"/>
-                                <separator colspan="4" string="Computation"/>
-                                <field name="amount_select"/>
-                                <field name="quantity" attrs="{'invisible':[('amount_select','=','code')], 'required':[('amount_select','!=','code')]}"/><newline/>
-                                <field name="amount_fix"  attrs="{'invisible':[('amount_select','&lt;&gt;','fix')], 'required':[('amount_select','=','fix')]}"/>
-                                <field colspan="4" name="amount_python_compute" attrs="{'invisible':[('amount_select','&lt;&gt;','code')], 'required':[('amount_select','=','code')]}"/>
-                                <field name="amount_percentage_base" attrs="{'invisible':[('amount_select','&lt;&gt;','percentage')], 'required': [('amount_select','=','percentage')]}"/>
-                                <field name="amount_percentage" attrs="{'invisible':[('amount_select','&lt;&gt;','percentage')], 'required':[('amount_select','=','percentage')]}"/>
-                                <separator colspan="4" string="Company contribution"/>
-                                <field name="register_id"/>
-                            </group>
-                    </page>
-                    <page string="Child Rules">
-                       <field name="parent_rule_id"/>
-                       <separator colspan="4" string="Children definition"/>
-                       <field colspan="4" name="child_ids" nolabel="1"/>
-                    </page>
-                    <page string="Description">
-                        <field name="note" colspan="4" nolabel="1"/>
+                    <page string="Payslips">
+                        <field name="slip_ids" colspan="4" nolabel="1"/>
                     </page>
                 </notebook>
+                <group col="6" colspan="6">
+                    <field name="state"/>
+                    <button name="%(action_hr_payslip_by_employees)d" type="action" states="draft" icon="gtk-execute" string="Generate Payslips" />
+                    <button name="close_payslip_run" type="object" icon="gtk-jump-to" string="Close" states="draft"/>
+                    <button string="Set to Draft" icon="terp-stock_effects-object-colorize" name="draft_payslip_run" type="object" states="close"/>
+                </group>
             </form>
         </field>
     </record>
 
-    <record id="view_hr_rule_filter" model="ir.ui.view">
-    <field name="name">hr.salary.rule.select</field>
-    <field name="model">hr.salary.rule</field>
-    <field name="type">search</field>
-    <field name="arch" type="xml">
-        <search string="Search Salary Rule">
-        <group col="8" colspan="4">
-            <field name="name"/>
-            <field name="code" select="1"/>
-            <field name="category_id"/>
-            <field name="condition_range_min"/>
-        </group>
-        <newline/>
-        <group col="8" colspan="4" expand="0" string="Group By...">
-            <filter string="Category" icon="terp-folder-yellow" name="category" context="{'group_by':'category_id'}"/>
-        </group>
-        </search>
-    </field>
-    </record>
-
-    <record id="action_salary_rule_form" model="ir.actions.act_window">
-        <field name="name">Salary Rules</field>
-        <field name="res_model">hr.salary.rule</field>
+    <record id="action_hr_payslip_run_tree" model="ir.actions.act_window">
+        <field name="name">Payslips Run</field>
+        <field name="res_model">hr.payslip.run</field>
         <field name="view_type">form</field>
-        <field name="view_id" ref="hr_salary_rule_tree"/>
-        <field name="domain">[('parent_rule_id','=',False)]</field>
-        <field name="search_view_id" ref="view_hr_rule_filter"/>
+        <field name="view_id" ref="hr_payslip_run_tree"/>
+        <field name="search_view_id" ref="hr_payslip_run_filter"/>
     </record>
-
-    <menuitem id="menu_action_hr_salary_rule_form" action="action_salary_rule_form" parent="payroll_configure" sequence="12"/>
-
-    <act_window domain="[('slip_id', '=', active_id)]" id="act_payslip_lines" name="Payslip Lines" res_model="hr.payslip.line" src_model="hr.payslip"/>
+    <menuitem action="action_hr_payslip_run_tree" id="menu_hr_payslip_run" parent="menu_hr_root_payroll"/>
 
     </data>
 </openerp>
