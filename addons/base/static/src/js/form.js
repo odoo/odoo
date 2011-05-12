@@ -697,17 +697,21 @@ openerp.base.form.FieldDatetime = openerp.base.form.Field.extend({
         if (value == null || value == false) {
             this.$element.find('input').val('');
         } else {
-            this.value = this.format(value);
+            this.value = this.parse(value);
             this.$element.find('input')[this.jqueryui_object]('setDate', this.value);
         }
     },
     set_value_from_ui: function() {
         this.value = this.$element.find('input')[this.jqueryui_object]('getDate') || false;
+        if (this.value) {
+            this.value = this.format(this.value);
+        }
     },
     validate: function() {
         this.invalid = this.required && this.value === false;
     },
-    format: openerp.base.parse_datetime
+    parse: openerp.base.parse_datetime,
+    format: openerp.base.format_datetime
 });
 
 openerp.base.form.FieldDate = openerp.base.form.FieldDatetime.extend({
@@ -715,7 +719,8 @@ openerp.base.form.FieldDate = openerp.base.form.FieldDatetime.extend({
         this._super(view, node);
         this.jqueryui_object = 'datepicker';
     },
-    format: openerp.base.parse_date
+    parse: openerp.base.parse_date,
+    format: openerp.base.format_date
 });
 
 openerp.base.form.FieldFloatTime = openerp.base.form.FieldChar.extend({
