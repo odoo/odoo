@@ -8,21 +8,20 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Asset category">
-           <group col="6" colspan="4">
-                <field name="name" select="1" colspan="4"/>
+                <field name="name" select="1"/>
                 <field name="company_id" groups="base.group_multi_company"/>
-                <newline/>
+                <separator string="Accounting information" colspan="4" />
                 <field name="journal_id"/>
                 <field name="account_asset_id"/>
                 <field name="account_depreciation_id"/>
                 <field name="account_expense_depreciation_id"/>
-           </group>
-        <group col="6" colspan="4" groups="analytic.group_analytic_accounting">
-        <separator string="Accounts information" colspan="4" />
+        <group col="4" colspan="4" groups="analytic.group_analytic_accounting">
+        <separator string="Analytic information" colspan="4" />
+        <newline/>
         <field name="account_analytic_id" />
         <field name="journal_analytic_id" />
         </group>
-                <separator string="Note"/>
+                <separator string="Notes" colspan="4"/>
                 <field name="note" colspan="4" nolabel="1"/>
             </form>
         </field>
