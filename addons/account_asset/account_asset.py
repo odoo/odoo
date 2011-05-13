@@ -26,17 +26,23 @@ from datetime import datetime
 class account_asset_category(osv.osv):
     _name = 'account.asset.category'
     _description = 'Asset category'
+
     _columns = {
         'name': fields.char('Asset category', size=64, required=True, select=1),
         'note': fields.text('Note'),
-        'journal_analytic_id': fields.many2one('account.analytic.journal', 'Analytic journal'), #FIXME:add in the form view  with group = analytic
-        'account_analytic_id': fields.many2one('account.analytic.account', 'Analytic account'), #FIXME:add in the form view  with group = analytic
+        'journal_analytic_id': fields.many2one('account.analytic.journal', 'Analytic journal'),
+        'account_analytic_id': fields.many2one('account.analytic.account', 'Analytic account'),
         'account_asset_id': fields.many2one('account.account', 'Asset Account', required=True),
         'account_depreciation_id': fields.many2one('account.account', 'Depreciation Account', required=True),
         'account_expense_depreciation_id': fields.many2one('account.account', 'Depr. Expense Account', required=True),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True),
-        'company_id': fields.many2one('res.company', 'Company'),
+        'company_id': fields.many2one('res.company', 'Company', required=True),
     }
+
+    _defaults = {
+        'company_id': lambda self, cr, uid, context: self.pool.get('res.company')._company_default_get(cr, uid, 'account.asset.category', context=context),
+    }
+
 account_asset_category()
 
 #class one2many_mod_asset(fields.one2many):
@@ -189,6 +195,7 @@ class account_asset_asset(osv.osv):
         'method_period': lambda obj, cr, uid, context: 12,
         'method_progress_factor': lambda obj, cr, uid, context: 0.3,
         'currency_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.currency_id.id,
+        'company_id': lambda self, cr, uid, context: self.pool.get('res.company')._company_default_get(cr, uid, 'account.asset.asset',context=context),
     }
 
 
