@@ -329,7 +329,7 @@ class DataSet(openerpweb.Controller):
     @openerpweb.jsonrequest
     def search_read(self, request, model, fields=False, offset=0, limit=False, domain=None, context=None, sort=None):
         return self.do_search_read(request, model, fields, offset, limit, domain, context, sort)
-    def do_search_read(self, request, model, fields=False, offset=0, limit=False, domain=None, context=None, sort=None, ids=False):
+    def do_search_read(self, request, model, fields=False, offset=0, limit=False, domain=None, context=None, sort=None):
         """ Performs a search() followed by a read() (if needed) using the
         provided search criteria
 
@@ -346,13 +346,35 @@ class DataSet(openerpweb.Controller):
         :rtype: list
         """
         Model = request.session.model(model)
-        if not ids:
-            ids = Model.search(domain or [], offset or 0, limit or False,
+
+        ids = Model.search(domain or [], offset or 0, limit or False,
                            sort or False, request.context)
 
         if fields and fields == ['id']:
             # shortcut read if we only want the ids
             return map(lambda id: {'id': id}, ids)
+
+        reads = Model.read(ids, fields or False, request.context)
+        reads.sort(key=lambda obj: ids.index(obj['id']))
+        return reads
+    
+    @openerpweb.jsonrequest
+    def read(self, request, model, ids, fields=False):
+        return self.do_search_read(request, model, ids, fields)
+    def search_read(self, request, model, ids, fields=False):
+        """ Performs a read()
+
+        :param request: a JSON-RPC request object
+        :type request: openerpweb.JsonRequest
+        :param str model: the name of the model to search on
+        :param ids: the ids of the records
+        :type ids: [?]
+        :param fields: a list of the fields to return in the result records
+        :type fields: [str]
+        :returns: a list of result records
+        :rtype: list
+        """
+        Model = request.session.model(model)
 
         reads = Model.read(ids, fields or False, request.context)
         reads.sort(key=lambda obj: ids.index(obj['id']))
