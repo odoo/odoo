@@ -104,14 +104,14 @@ class delivery_carrier(osv.osv):
         grid_line_pool = self.pool.get('delivery.grid.line')
         grid_pool = self.pool.get('delivery.grid')
         for record in self.browse(cr, uid, ids, context=context):
-            grid_id = grid_pool.search(cr, uid, [('carrier_id', '=', record.id)])
+            grid_id = grid_pool.search(cr, uid, [('carrier_id', '=', record.id)], context=context)
             if not grid_id:
                 record_data = {
                     'name': vals.get('name', False),
                     'carrier_id': record.id,
                     'seqeunce': 10,
                 }
-                new_grid_id = grid_pool.create(cr, uid, record_data)
+                new_grid_id = grid_pool.create(cr, uid, record_data, context=context)
                 grid_id = [new_grid_id]
 
             if record.free_if_more_than:
@@ -119,7 +119,7 @@ class delivery_carrier(osv.osv):
                 for line in grid_pool.browse(cr, uid, grid_id[0]).line_ids:
                     if line.type == 'price':
                         grid_lines.append(line.id)
-                grid_line_pool.unlink(cr, uid, grid_lines)
+                grid_line_pool.unlink(cr, uid, grid_lines, context=context)
                 data = {
                     'grid_id': grid_id and grid_id[0],
                     'name': _('Free if more than %d') % record.amount,
@@ -129,20 +129,20 @@ class delivery_carrier(osv.osv):
                     'standard_price': 0.0,
                     'list_price': 0.0,
                 }
-                grid_line_pool.create(cr, uid, data)
+                grid_line_pool.create(cr, uid, data, context=context)
             else:
                 _lines = []
-                for line in grid_pool.browse(cr, uid, grid_id[0]).line_ids:
+                for line in grid_pool.browse(cr, uid, grid_id[0], context=context).line_ids:
                     if line.type == 'price':
                         _lines.append(line.id)
-                grid_line_pool.unlink(cr, uid, _lines)
+                grid_line_pool.unlink(cr, uid, _lines, context=context)
 
             if record.international_price:
                 lines = []
-                for line in grid_pool.browse(cr, uid, grid_id[0]).line_ids:
+                for line in grid_pool.browse(cr, uid, grid_id[0], context=context).line_ids:
                     if line.type == 'country':
                         lines.append(line.id)
-                grid_line_pool.unlink(cr, uid, lines)
+                grid_line_pool.unlink(cr, uid, lines, context=context)
                 for country_rec in record.delivery_country_ids:
                     for country in country_rec.country:
                         values = {
@@ -155,25 +155,25 @@ class delivery_carrier(osv.osv):
                             'operator': '==',
                             'max_value': 0.0
                         }
-                        grid_line_pool.create(cr, uid, values)
+                        grid_line_pool.create(cr, uid, values, context=context)
             else:
                 l = []
                 for line in grid_pool.browse(cr, uid, grid_id[0]).line_ids:
                     if line.type == 'country':
                         l.append(line.id)
-                grid_line_pool.unlink(cr, uid, l)
+                grid_line_pool.unlink(cr, uid, l, context=context)
 
             if record.normal_price:
                 default_data = {
                     'grid_id': grid_id and grid_id[0],
                     'name': _('Default price'),
                     'type': 'price',
-                    'operator': '==',
-                    'max_value': record.normal_price,
+                    'operator': '>=',
+                    'max_value': 0.0,
                     'standard_price': record.normal_price,
                     'list_price': record.normal_price,
                 }
-                grid_line_pool.create(cr, uid, default_data)
+                grid_line_pool.create(cr, uid, default_data, context=context)
 
         return True
 
@@ -187,7 +187,7 @@ class delivery_carrier(osv.osv):
     def create(self, cr, uid, vals, context=None):
         if context == None:
             context = {}
-        res_id = super(delivery_carrier, self).create(cr, uid, vals, context)
+        res_id = super(delivery_carrier, self).create(cr, uid, vals, context=context)
         self.create_grid_lines(cr, uid, [res_id], vals, context=context)
         return res_id
 
@@ -293,7 +293,7 @@ class delivery_grid_line(osv.osv):
     def on_change_type(self, cr, uid, ids, type):
         if type == 'country':
             return {'value': {'operator': '=='}}
-        return True
+        return {}
 
 
 delivery_grid_line()

@@ -137,12 +137,13 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Grid Lines">
-                    <group colspan="4" col="4">
+                    <group colspan="5" col="5">
                         <field colspan="4" name="name" select="1"/>
+                        <newline/>
                         <field name="type" string="Condition" on_change="on_change_type(type)"/>
-                        <field name="operator" nolabel="1"/>
+                        <field name="operator" nolabel="1" attrs="{'readonly':[('type','=','country')]}"/>
                         <field name="max_value" nolabel="1" attrs="{'invisible':[('type','=','country')]}"/>
-                        <field name="country_id" attrs="{'invisible':[('type','!=','country')]}" colspan="2"/>
+                        <field name="country_id" attrs="{'invisible':[('type','!=','country')], 'required':[('type','=','country')]}" nolabel="1"/>
                     </group>
                     <newline/>
                     <field name="list_price"/>
