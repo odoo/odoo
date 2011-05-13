@@ -519,6 +519,26 @@ class hr_payslip(osv.osv):
                 res = self._sum(code, from_date, to_date, )
                 return res and res[1] or 0.0
 
+        class Payslips(InputLine):
+            """a class that will be used into the python code, mainly for usability purposes"""
+
+            def sum(self, code, from_date, to_date=None):
+                if to_date is None:
+                    to_date = datetime.now().strftime('%Y-%m-%d')
+                sum = 0.0
+                self.cr.execute("SELECT pl.total, hp.credit_note\
+                            FROM hr_payslip as hp, hr_payslip_line as pl \
+                            WHERE hp.employee_id = %s AND hp.state in ('confirm','done') \
+                            AND hp.date_from >= %s AND hp.date_to <= %s AND hp.id = pl.slip_id AND pl.code = %s",
+                            (self.employee_id, from_date, to_date, code))
+                for r in cr.dictfetchall():
+                    print r
+                    if not r['credit_note']:
+                        sum += r['total']
+                    else:
+                        sum -= r['total']
+                return sum
+
         #we keep a dict with the result because a value can be overwritten by another rule with the same code
         result_dict = {}
         blacklist = []
@@ -532,9 +552,12 @@ class hr_payslip(osv.osv):
         inputs = {}
         for input_line in payslip.input_line_ids:
             inputs[input_line.code] = input_line
+
         input_obj = InputLine(self.pool, cr, uid, payslip.employee_id.id, inputs)
-        worked_days_obj = WorkedDays(self.pool, cr, uid, payslip.employee_id.id,worked_days)
-        localdict = {'categories': {}, 'payslip': payslip, 'worked_days': worked_days_obj, 'inputs': input_obj, 'payslip_obj': payslip_obj}
+        worked_days_obj = WorkedDays(self.pool, cr, uid, payslip.employee_id.id, worked_days)
+        payslip_obj = Payslips(self.pool, cr, uid, payslip.employee_id.id, payslip)
+
+        localdict = {'categories': {}, 'payslip': payslip_obj, 'worked_days': worked_days_obj, 'inputs': input_obj}
         #get the ids of the structures on the contracts and their parent id as well
         structure_ids = self.pool.get('hr.contract').get_all_structures(cr, uid, contract_ids, context=context)
         #get the rules of the structure and thier children
@@ -738,7 +761,7 @@ class hr_payslip_input(osv.osv):
         'sequence': 10,
         'quantity': 0.0,
     }
-    
+
 hr_payslip_input()
 
 class hr_salary_rule(osv.osv):
