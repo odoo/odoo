@@ -52,7 +52,7 @@ def delete_pool(db_name):
 def restart_pool(db_name, force_demo=False, status=None, update_module=False):
     """Delete an existing registry and return a database connection and a newly initialized registry."""
     ensure_registries()
-    bound_registry = _Registries.new(db_name, force_demo, status, update_module, pooljobs)
+    bound_registry = _Registries.new(db_name, force_demo, status, update_module, True)
     return bound_registry.db, bound_registry.registry
 
 
