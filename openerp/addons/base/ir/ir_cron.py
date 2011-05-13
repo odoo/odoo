@@ -20,6 +20,7 @@
 ##############################################################################
 
 import time
+import logging
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 import netsvc
@@ -91,10 +92,13 @@ class ir_cron(osv.osv, netsvc.Agent):
         if m and hasattr(m, func):
             f = getattr(m, func)
             try:
+                netsvc.log('cron', (cr.dbname,uid,'*',model,func)+tuple(args), channel=logging.DEBUG,
+                            depth=(None if self._logger.isEnabledFor(logging.DEBUG_RPC_ANSWER) else 1), fn='object.execute')
                 f(cr, uid, *args)
             except Exception, e:
                 cr.rollback()
-                self._logger.exception("Job call of self.pool.get('%s').%s(cr, uid, *%r) failed" % (model, func, args))
+                logger=logging.getLogger('cron')
+                logger.exception("Job call of self.pool.get('%s').%s(cr, uid, *%r) failed" % (model, func, args))
 
 
     def _poolJobs(self, db_name, check=False):
