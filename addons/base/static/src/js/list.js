@@ -329,8 +329,7 @@ openerp.base.ListView = openerp.base.Controller.extend(
             'id': this.view_id,
             'context': this.dataset.context,
             'domain': this.dataset.domain,
-            'sort': this.dataset.sort && this.dataset.sort(),
-            'ids': this.dataset.ids
+            'sort': this.dataset.sort && this.dataset.sort()
         }, this.do_fill_table);
     },
     /**

@@ -589,11 +589,11 @@ class ListView(View):
 
     @openerpweb.jsonrequest
     def fill(self, request, model, id, domain,
-             offset=0, limit=False, sort=None, ids=False):
-        return self.do_fill(request, model, id, domain, offset, limit, sort=sort, ids=ids)
+             offset=0, limit=False, sort=None):
+        return self.do_fill(request, model, id, domain, offset, limit, sort)
 
     def do_fill(self, request, model, id, domain,
-                offset=0, limit=False, sort=None, ids=False):
+                offset=0, limit=False, sort=None):
         """ Returns all information needed to fill a table:
 
         * view with processed ``editable`` flag
@@ -616,7 +616,7 @@ class ListView(View):
         print sort
         rows = DataSet().do_search_read(request, model,
                                         offset=offset, limit=limit,
-                                        domain=domain, sort=sort, ids=ids)
+                                        domain=domain, sort=sort)
         eval_context = request.session.evaluation_context(
             request.context)
 
