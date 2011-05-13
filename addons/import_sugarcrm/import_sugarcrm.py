@@ -63,7 +63,6 @@ class sugar_import(import_framework):
         self.context['session_id'] = sessionid
         
     def get_data(self, table):
-        
         return sugar.search(self.context.get('port'), self.context.get('session_id'), table)
     """
         Common import method
@@ -75,8 +74,9 @@ class sugar_import(import_framework):
 
     def get_job_title(self, dict, salutation):
         fields = ['shortcut', 'name', 'domain']
-        data = [salutation, salutation, 'Contact']
-        return self.import_object(fields, data, 'res.partner.title', 'contact_title', salutation, [('shortcut', '=', salutation)])
+        if salutation:
+            data = [salutation, salutation, 'Contact']
+            return self.import_object(fields, data, 'res.partner.title', 'contact_title', salutation, [('shortcut', '=', salutation)])
 
     def get_campaign_id(self, dict, val):
         fields = ['name']
@@ -90,7 +90,6 @@ class sugar_import(import_framework):
         data = [country_id, external_val, state_code]
         if country_id:
             return self.import_object(fields, data, 'res.country.state', 'country_state', external_val) 
-         
         return False
 
     def get_all_countries(self, val):
@@ -100,6 +99,103 @@ class sugar_import(import_framework):
     def get_float_time(self, dict, hour, min):
         min = int(min) * 100 / 60
         return "%s.%i" % (hour, min)
+    """
+    import Projects
+    """
+    project_state = {
+            'Draft' : 'draft',
+            'In Review': 'open',
+            'Published': 'close'
+     }
+    def import_project_account(self, val):
+        partner_id = False
+        partner_invoice_id = False        
+        model_obj = self.obj.pool.get('ir.model.data')
+        partner_obj = self.obj.pool.get('res.partner')
+        partner_address_obj = self.obj.pool.get('res.partner.address')
+        sugar_project_account = sugar.relation_search(self.context.get('port'), self.context.get('session_id'), 'Project', module_id=val.get('id'), related_module='Accounts', query=None, deleted=None)
+        for account_id in sugar_project_account:
+            partner_id = self.get_mapped_id(self.TABLE_ACCOUNT, account_id)
+            partner_invoice_ids= partner_address_obj.search(self.cr, self.uid, [('partner_id', '=', partner_id), ('type', '=', 'invoice')])
+            if partner_invoice_ids:
+                partner_invoice_id = partner_invoice_ids[0] 
+        return partner_id, partner_invoice_id
+           
+    def import_project(self, val):
+        partner_id, partner_invoice_id = self.import_project_account(val)    
+        val['partner_id/.id'] = partner_id
+        val['contact_id/.id'] = partner_invoice_id
+        return val
+    
+    def get_project_mapping(self):
+        return { 
+                'model' : 'project.project',
+                'dependencies' : [self.TABLE_CONTACT, self.TABLE_ACCOUNT, self.TABLE_USER],
+                'hook' : self.import_project,
+                'map' : {
+                    'name': 'name',
+                    'date_start': 'estimated_start_date',
+                    'date': 'estimated_end_date',
+                    'user_id/id': ref(self.TABLE_USER, 'assigned_user_id'),
+                    'partner_id/.id': 'partner_id/.id',
+                    'contact_id/.id': 'contact_id/.id',
+                    'state': map_val('status', self.project_state)
+                }
+            }
+    
+    """
+    import Tasks
+    """
+    task_state = {
+            'Completed' : 'done',
+            'Not Started':'draft',
+            'In Progress': 'open',
+            'Pending Input': 'draft',
+            'deferred': 'cancel'
+        }
+        
+    def get_task_mapping(self):
+        return { 
+                'model' : 'crm.meeting',
+                'dependencies' : [self.TABLE_CONTACT, self.TABLE_ACCOUNT, self.TABLE_USER],
+                'map' : {
+                    'name': 'name',
+                    'date': 'date_start' or datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+                    'date_deadline': 'date_due' or datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+                    'user_id/id': ref(self.TABLE_USER, 'assigned_user_id'),
+                    'categ_id/id': call(self.get_category, 'crm.meeting', 'Tasks'),
+                    'partner_id/id': related_ref(self.TABLE_ACCOUNT),
+                    'partner_address_id/id': related_ref(self.TABLE_CONTACT),
+                    'state': map_val('status', self.task_state)
+                }
+            }
+       
+    """
+    import Calls
+    """     
+    call_state = {   
+            'Planned' : 'open',
+            'Held':'done',
+            'Not Held': 'pending',
+        }
+    
+    def get_calls_mapping(self):
+        return { 
+                'model' : 'crm.phonecall',
+                'dependencies' : [self.TABLE_ACCOUNT, self.TABLE_CONTACT, self.TABLE_OPPORTUNITY, self.TABLE_LEAD],
+                'map' : {
+                    'name': 'name',
+                    'date': 'date_start',
+                    'duration': call(self.get_float_time, value('duration_hours'), value('duration_minutes')),
+                    'user_id/id':  ref(self.TABLE_USER, 'assigned_user_id'),
+                    'partner_id/id': related_ref(self.TABLE_ACCOUNT),
+                    'partner_address_id/id': related_ref(self.TABLE_CONTACT),
+                    'categ_id/id': call(self.get_category, 'crm.phonecall', value('direction')),
+                    'opportunity_id/id': related_ref(self.TABLE_OPPORTUNITY),
+                    'description': 'description',   
+                    'state': map_val('status', self.call_state)                      
+                }
+            }        
         
     """
         import meeting
@@ -122,7 +218,6 @@ class sugar_import(import_framework):
         return self.mapped_id_if_exist('res.alarm', [('name', 'like', alarm_dict.get(val))], 'alarm', val)
     
     #TODO attendees
-    
     def get_meeting_mapping(self):
         return { 
                 'model' : 'crm.meeting',
@@ -221,7 +316,6 @@ class sugar_import(import_framework):
     def import_lead(self, val):
         if val.get('opportunity_id'): #if lead is converted into opp, don't import as lead
             return False
-        
         if val.get('primary_address_country'):
             country_id = self.get_all_countries(val.get('primary_address_country'))
             val['country_id/id'] =  country_id
@@ -316,7 +410,6 @@ class sugar_import(import_framework):
              'country_id/id': 'country_id/id',
              'type': 'type',
             }
-        
         
         if val.get(type_address +'_address_country'):
             country_id = self.get_all_countries(val.get(type_address +'_address_country'))
@@ -449,6 +542,9 @@ class sugar_import(import_framework):
             self.TABLE_LEAD : self.get_lead_mapping(),
             self.TABLE_OPPORTUNITY : self.get_opp_mapping(),
             self.TABLE_MEETING : self.get_meeting_mapping(),
+            self.TABLE_CALL : self.get_calls_mapping(),
+            self.TABLE_TASK : self.get_task_mapping(),
+            self.TABLE_PROJECT : self.get_project_mapping(),
         }
 
 
@@ -524,7 +620,7 @@ class import_sugarcrm(osv.osv):
             if current.email:
                 key_list.append('Emails') 
             if current.project:
-                key_list.append('Projects')
+                key_list.append('Project')
             if current.project_task:
                 key_list.append('Project Tasks')
             if current.bug:
@@ -539,7 +635,6 @@ class import_sugarcrm(osv.osv):
         
 #        """Import all sugarcrm data into openerp module"""
         keys = self.get_key(cr, uid, ids, context)
-
         imp = sugar_import(self, cr, uid, "sugarcrm", "import_sugarcrm", context)
         imp.import_all(keys)
         
