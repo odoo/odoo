@@ -728,7 +728,7 @@ class hr_payslip_input(osv.osv):
         'payslip_id': fields.many2one('hr.payslip', 'Pay Slip', required=True),
         'sequence': fields.integer('Sequence', required=True,),
         'code': fields.char('Code', size=52, required=True, help="The code that can be used in the salary rules"),
-        'quantity': fields.float('Quantity', help="It is used in computation. For e.g. A rule for sales having 1% commission of basic salary for per product can defined in expression like result = inputs['S-ASUS']['qunatity']*contract.wage*0.01."),
+        'quantity': fields.float('Quantity', help="It is used in computation. For e.g. A rule for sales having 1% commission of basic salary for per product can defined in expression like result = inputs.SASUS.qunatity * contract.wage*0.01."),
         'contract_id': fields.many2one('hr.contract', 'Contract', required=True, help="The contract for which applied this input"),
     }
     _order = 'payslip_id, sequence'
@@ -746,7 +746,7 @@ class hr_salary_rule(osv.osv):
         'name':fields.char('Name', size=256, required=True, readonly=False),
         'code':fields.char('Code', size=64, required=True, help="The code of salary rules can be used as reference in computation of other rules. In that case, it is case sensitive."),
         'sequence': fields.integer('Sequence', required=True, help='Use to arrange calculation sequence'),
-        'quantity': fields.char('Quantity', size=256, help="It is used in computation for percentage and fixed amount.For e.g. A rule for Meal Voucher having fixed amount of 1€ per worked day can have its quantity defined in expression like worked_days['WORK100']['number_of_days']."),
+        'quantity': fields.char('Quantity', size=256, help="It is used in computation for percentage and fixed amount.For e.g. A rule for Meal Voucher having fixed amount of 1€ per worked day can have its quantity defined in expression like worked_days.WORK100.number_of_days."),
         'category_id':fields.many2one('hr.salary.rule.category', 'Category', required=True),
         'active':fields.boolean('Active', help="If the active field is set to false, it will allow you to hide the salary rule without removing it."),
         'appears_on_payslip': fields.boolean('Appears on Payslip', help="Used for the display of rule on payslip"),
@@ -784,13 +784,13 @@ class hr_salary_rule(osv.osv):
         'amount_python_compute': '''
 # Available variables:
 #----------------------
-# payslip: hr.payslip object
+# payslip: object containing the payslips
 # employee: hr.employee object
 # contract: hr.contract object
 # rules: rules code (previously computed)
 # categories: dictionary containing the computed salary rule categories (sum of amount of all rules belonging to that category). Keys are the category codes.
-# worked_days: dictionary containing the computed worked days. Keys are the worked days codes.
-# inputs: dictionary containing the computed inputs. Keys are the inputs codes.
+# worked_days: object containing the computed worked days.
+# inputs: object containing the computed inputs.
 
 # Note: returned value have to be set in the variable 'result'
 
@@ -799,13 +799,13 @@ result = contract.wage * 0.10''',
 '''
 # Available variables:
 #----------------------
-# payslip: hr.payslip object
+# payslip: object containing the payslips
 # employee: hr.employee object
 # contract: hr.contract object
 # rules: rules code (previously computed)
 # categories: dictionary containing the computed salary rule categories (sum of amount of all rules belonging to that category). Keys are the category codes.
-# worked_days: dictionary containing the computed worked days. Keys are the worked days codes.
-# inputs: dictionary containing the computed inputs. Keys are the inputs codes.
+# worked_days: object containing the computed worked days
+# inputs: object containing the computed inputs
 
 # Note: returned value have to be set in the variable 'result'
 
