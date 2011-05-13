@@ -8,21 +8,20 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Asset category">
-           <group col="6" colspan="4">
-                <field name="name" select="1" colspan="4"/>
+                <field name="name" select="1"/>
                 <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                <newline/>
+                <separator string="Accounting information" colspan="4" />
                 <field name="journal_id"/>
                 <field name="account_asset_id"/>
                 <field name="account_depreciation_id"/>
                 <field name="account_expense_depreciation_id"/>
-           </group>
-        <group col="6" colspan="4" groups="analytic.group_analytic_accounting">
-        <separator string="Accounts information" colspan="4" />
-        <field name="account_analytic_id" />
-        <field name="journal_analytic_id" />
-        </group>
-                <separator string="Note"/>
+        	<group col="4" colspan="4" groups="analytic.group_analytic_accounting">
+        	    <separator string="Analytic information" colspan="4" />
+        	    <newline/>
+        	    <field name="account_analytic_id" />
+        	    <field name="journal_analytic_id" />
+        	</group>
+                <separator string="Notes" colspan="4"/>
                 <field name="note" colspan="4" nolabel="1"/>
             </form>
         </field>
@@ -199,6 +198,15 @@
             </tree>
         </field>
     </record>
+
+    <record model="ir.actions.act_window" id="action_account_asset_asset_tree">
+        <field name="name">Asset Hierarchy</field>
+        <field name="res_model">account.asset.asset</field>
+        <field name="view_type">tree</field>
+        <field name="domain">[('parent_id','=',False)]</field>
+        <field name="view_id" ref="view_account_asset_asset_tree"/>
+    </record>
+
     <menuitem id="menu_finance_assets" name="Assets" parent="account.menu_finance"/>
     <menuitem
         parent="menu_finance_assets"
@@ -210,19 +218,10 @@
         <field name="view_type">form</field>
     </record>
 
-    <menuitem 
-        parent="menu_finance_assets" 
+    <menuitem
+        parent="menu_finance_assets"
         id="menu_action_account_asset_asset_form"
         action="action_account_asset_asset_form"/>
-
-
-    <record model="ir.actions.act_window" id="action_account_asset_asset_tree">
-        <field name="name">Asset Hierarchy</field>
-        <field name="res_model">account.asset.asset</field>
-        <field name="view_type">tree</field>
-        <field name="domain">[('parent_id','=',False)]</field>
-        <field name="view_id" ref="view_account_asset_asset_tree"/>
-    </record>
 
     <menuitem id="menu_finance_config_assets" name="Assets" parent="account.menu_finance_accounting"/>
     <record model="ir.actions.act_window" id="action_account_asset_asset_list_normal">
