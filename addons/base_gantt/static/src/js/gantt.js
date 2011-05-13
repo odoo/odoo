@@ -283,34 +283,28 @@ init: function(view_manager, session, element_id, dataset, view_id) {
     },
 
     convert_str_date: function (str){
-        var self = this;
-
         if (str.length == 19){
-            self.format = "yyyy-MM-dd HH:mm:ss";
+            this.format = "yyyy-MM-dd HH:mm:ss";
             return openerp.base.parse_datetime(str);
-        }
-        if (str.length == 10){
-            self.format = "yyyy-MM-dd";
+        } else if (str.length == 10){
+            this.format = "yyyy-MM-dd";
             return openerp.base.parse_date(str);
-        }
-        if (str.length == 8){
-            self.format = "HH:mm:ss";
+        } else if (str.length == 8){
+            this.format = "HH:mm:ss";
             return openerp.base.parse_time(str);
         }
+        throw "Unrecognized date/time format";
     },
 
     convert_date_str: function(full_date) {
-        var self = this;
-
-        if (self.format == "yyyy-MM-dd HH:mm:ss"){
-                return openerp.base.format_datetime(full_date);
+        if (this.format == "yyyy-MM-dd HH:mm:ss"){
+            return openerp.base.format_datetime(full_date);
+        } else if (this.format == "yyyy-MM-dd"){
+            return openerp.base.format_date(full_date);
+        } else if (this.format == "HH:mm:ss"){
+            return openerp.base.format_time(full_date);
         }
-        if (self.format == "yyyy-MM-dd"){
-                return openerp.base.format_date(full_date);
-        }
-        if (self.format == "HH:mm:ss"){
-                return openerp.base.format_time(full_date);
-        }
+        throw "Unrecognized date/time format";
     },
 
     reload_gantt: function(domain) {
