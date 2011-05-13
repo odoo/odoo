@@ -396,10 +396,11 @@ def replace_request_password(args):
 def log(title, msg, channel=logging.DEBUG_RPC, depth=None, fn=""):
     logger = logging.getLogger(title)
     if logger.isEnabledFor(channel):
-        indent=0
+        indent=''
+        indent_after=' '*len(fn)
         for line in (fn+pformat(msg, depth=depth)).split('\n'):
-            logger.log(channel, ' '*indent+line)
-            indent=len(fn)
+            logger.log(channel, indent+line)
+            indent=indent_after
 
 class OpenERPDispatcher:
     def log(self, title, msg, channel=logging.DEBUG_RPC, depth=None, fn=""):

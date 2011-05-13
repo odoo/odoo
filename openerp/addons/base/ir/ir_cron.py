@@ -20,10 +20,7 @@
 ##############################################################################
 
 import time
-import sys
-import traceback
 import logging
-from pprint import pformat
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 import netsvc
@@ -95,8 +92,8 @@ class ir_cron(osv.osv, netsvc.Agent):
         if m and hasattr(m, func):
             f = getattr(m, func)
             try:
-                depth=(None if self._logger.isEnabledFor(logging.DEBUG_RPC_ANSWER) else 1)
-                netsvc.log('cron', (cr.dbname,uid,'*',model,func)+tuple(args), channel=logging.DEBUG, depth=(None if self._logger.isEnabledFor(logging.DEBUG_RPC_ANSWER) else 1), fn='object.execute')
+                netsvc.log('cron', (cr.dbname,uid,'*',model,func)+tuple(args), channel=logging.DEBUG,
+                            depth=(None if self._logger.isEnabledFor(logging.DEBUG_RPC_ANSWER) else 1), fn='object.execute')
                 f(cr, uid, *args)
             except Exception, e:
                 cr.rollback()
