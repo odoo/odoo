@@ -1180,7 +1180,7 @@ class sale_config_picking_policy(osv.osv_memory):
         'order_policy': fields.selection([
             ('manual', 'Invoice Based on Sales Orders'),
             ('picking', 'Invoice Based on Deliveries'),
-        ], 'Invoice Method', required=True,
+        ], 'Invoicing Method', required=True,
            help="You can generate invoices based on sales orders or based on shippings."),
         'step': fields.selection([
             ('one', 'Delivery Order Only'),

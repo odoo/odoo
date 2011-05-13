@@ -221,8 +221,8 @@ class user_preferences_config(osv.osv_memory):
                  "translations are available"),
         'view': fields.selection([('simple','Simplified'),
                                   ('extended','Extended')],
-                                 'Interface', required=True ),
-        'menu_tips': fields.boolean('Menu Tips', help="Check out this box if you want to always display tips on each menu action"),
+                                 'Interface', required=True, help= "If you use OpenERP for the first time we strongly advise you to select the simplified interface, which has less features but is easier. You can always switch later from the user preferences." ),
+        'menu_tips': fields.boolean('Display Tips', help="Check out this box if you want to always display tips on each menu action"),
                                  
     }
     _defaults={
@@ -230,6 +230,15 @@ class user_preferences_config(osv.osv_memory):
                'context_lang' : 'en_US',
                'menu_tips' : True
     }
+    
+    def default_get(self, cr, uid, fields, context=None):
+        if context is None:
+            context = {}
+        res = super(user_preferences_config, self).default_get(cr, uid, fields, context=context)
+        res_default = self.pool.get('ir.values').get(cr, uid, 'default', False, ['res.users'])
+        for id, field, value in res_default:
+            res.update({field: value})
+        return res
 
     def execute(self, cr, uid, ids, context=None):
         for o in self.browse(cr, uid, ids, context=context):
