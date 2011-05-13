@@ -178,12 +178,12 @@ class YamlInterpreter(object):
                 _, id = self.pool.get('ir.model.data').get_object_reference(self.cr, self.uid, module, checked_xml_id)
                 self.id_map[xml_id] = id
             except ValueError, e:
+                self.logger.exception(e)
                 raise YamlImportException(""" This Yaml file appears to depend on data that is missing. This often happens for
                                         tests that belong to a module's test suite and depend on each other
                                         (they are supposed to be executed in batch, not standalone).
                                         You might solve the issue by first forcing the other tests to commit
                                         their changes using --test-commit during a module update.""")
-                self.logger.exception(e)
 
         return id
 
