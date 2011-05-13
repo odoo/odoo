@@ -482,8 +482,10 @@ class hr_payslip(osv.osv):
                 self.uid = uid
                 self.employee_id = employee_id
                 self.dict = dict
+
             def __getattr__(self, attr):
                 return self.dict.__getitem__(attr)
+
             def sum(self, code, from_date, to_date=None):
                 if to_date is None:
                     to_date = datetime.now().strftime('%Y-%m-%d')
@@ -508,11 +510,13 @@ class hr_payslip(osv.osv):
                             AND hp.date_from >= %s AND hp.date_to <= %s AND hp.id = pi.payslip_id AND pi.code = %s",
                            (self.employee_id, from_date, to_date, code))
                 return self.cr.fetchone()
+
             def sum(self, code, from_date, to_date=None):
                 res = self._sum(code, from_date, to_date)
                 return res and res[0] or 0.0
+
             def sum_hours(self, code, from_date, to_date=None):
-                res = self._sum(code, from_date, to_date, )
+                res = self._sum(code, from_date, to_date)
                 return res and res[1] or 0.0
 
         class Payslips(InputLine):
