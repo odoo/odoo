@@ -357,6 +357,28 @@ class DataSet(openerpweb.Controller):
         reads = Model.read(ids, fields or False, request.context)
         reads.sort(key=lambda obj: ids.index(obj['id']))
         return reads
+    
+    @openerpweb.jsonrequest
+    def read(self, request, model, ids, fields=False):
+        return self.do_search_read(request, model, ids, fields)
+    def search_read(self, request, model, ids, fields=False):
+        """ Performs a read()
+
+        :param request: a JSON-RPC request object
+        :type request: openerpweb.JsonRequest
+        :param str model: the name of the model to search on
+        :param ids: the ids of the records
+        :type ids: [?]
+        :param fields: a list of the fields to return in the result records
+        :type fields: [str]
+        :returns: a list of result records
+        :rtype: list
+        """
+        Model = request.session.model(model)
+
+        reads = Model.read(ids, fields or False, request.context)
+        reads.sort(key=lambda obj: ids.index(obj['id']))
+        return reads
 
     @openerpweb.jsonrequest
     def get(self, request, model, ids, fields=False):
@@ -424,6 +446,19 @@ class DataSet(openerpweb.Controller):
         m = req.session.model(model)
         r = m.default_get(fields, context)
         return {'result': r}
+    
+    @openerpweb.jsonrequest
+    def name_search(self, req, model, search_str, domain=[], context={}):
+        m = req.session.model(model)
+        r = m.name_search(search_str+'%', domain, '=ilike', context)
+        return {'result': r}
+
+class DataGroup(openerpweb.Controller):
+    _cp_path = "/base/group"
+    @openerpweb.jsonrequest
+    def read(self, request, model, group_by_fields, domain=None, context=None):
+        Model = request.session.model(model)
+        return Model.read_group(domain or False, False, group_by_fields, 0, False, context or False)
 
 class View(openerpweb.Controller):
     def fields_view_get(self, request, model, view_id, view_type,

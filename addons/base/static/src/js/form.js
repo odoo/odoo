@@ -2,7 +2,7 @@
 openerp.base.form = function (openerp) {
 
 openerp.base.views.add('form', 'openerp.base.FormView');
-openerp.base.FormView =  openerp.base.Controller.extend( /** @lends openerp.base.FormView# */{
+openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormView# */{
     /**
      * Indicates that this view is not searchable, and thus that no search
      * view should be displayed (if there is one active).
@@ -143,14 +143,21 @@ openerp.base.FormView =  openerp.base.Controller.extend( /** @lends openerp.base
             var call = onchange.match(/^\s?(.*?)\((.*?)\)\s?$/);
             if (call) {
                 var method = call[1], args = [];
+                var argument_replacement = {
+                    'False' : false,
+                    'True' : true,
+                    'None' : null
+                }
                 _.each(call[2].split(','), function(a) {
                     var field = _.trim(a);
-                    if (self.fields[field]) {
+                    if (field in argument_replacement) {
+                        args.push(argument_replacement[field]);
+                    } else if (self.fields[field]) {
                         var value = self.fields[field].value;
                         args.push(value == null ? false : value);
                     } else {
                         args.push(false);
-                        this.log("warning : on_change can't find field " + field, onchange);
+                        self.log("warning : on_change can't find field " + field, onchange);
                     }
                 });
                 var ajax = {
@@ -365,7 +372,8 @@ openerp.base.form.compute_domain = function(expr, fields) {
         }
     }
     return _.indexOf(stack, false) == -1;
-},
+}
+
 openerp.base.form.Widget = openerp.base.Controller.extend({
     init: function(view, node) {
         this.view = view;
@@ -532,7 +540,7 @@ openerp.base.form.WidgetButton = openerp.base.form.Widget.extend({
     on_confirmed: function() {
         var self = this;
 
-        this.execute_action(
+        this.view.execute_action(
             this.node.attrs, this.view.dataset, this.session.action_manager,
             this.view.datarecord.id, function (result) {
                 self.log("Button returned", result);
@@ -540,9 +548,6 @@ openerp.base.form.WidgetButton = openerp.base.form.Widget.extend({
             });
     }
 });
-// let WidgetButton execute actions
-_.extend(openerp.base.form.WidgetButton.prototype,
-         openerp.base.ActionExecutor);
 
 openerp.base.form.WidgetLabel = openerp.base.form.Widget.extend({
     init: function(view, node) {
@@ -649,7 +654,24 @@ openerp.base.form.FieldChar = openerp.base.form.Field.extend({
 openerp.base.form.FieldEmail = openerp.base.form.FieldChar.extend({
     init: function(view, node) {
         this._super(view, node);
+        this.template = "FieldEmail";
         this.validation_regex = /@/;
+    },
+    start: function() {
+        this._super.apply(this, arguments);
+        this.$element.find('button').click(this.on_button_clicked);
+    },
+    on_button_clicked: function() {
+        if (!this.value || this.invalid) {
+            this.notification.warn("E-mail error", "Can't send email to invalid e-mail address");
+        } else {
+            location.href = 'mailto:' + this.value;
+        }
+    },
+    set_value: function(value) {
+        this._super.apply(this, arguments);
+        var show_value = (value != null && value !== false) ? value : '';
+        this.$element.find('a').attr('href', 'mailto:' + show_value);
     }
 });
 
@@ -659,44 +681,91 @@ openerp.base.form.FieldUrl = openerp.base.form.FieldChar.extend({
 openerp.base.form.FieldFloat = openerp.base.form.FieldChar.extend({
     init: function(view, node) {
         this._super(view, node);
-        this.validation_regex = /^\d+(\.\d+)?$/;
+        this.validation_regex = /^-?\d+(\.\d+)?$/;
     },
     set_value: function(value) {
-        this._super.apply(this, arguments);
-        var show_value = (value != null && value !== false) ? value.toFixed(2) : '';
+        if (!value) {
+            // As in GTK client, floats default to 0
+            value = 0;
+        }
+        this._super.apply(this, [value]);
+        var show_value = value.toFixed(2);
         this.$element.find('input').val(show_value);
     },
     set_value_from_ui: function() {
         this.value = this.$element.find('input').val().replace(/,/g, '.');
+    },
+    validate: function() {
+        this._super.apply(this, arguments);
+        if (!this.invalid) {
+            this.value = Number(this.value);
+        }
     }
 });
 
-openerp.base.form.FieldDate = openerp.base.form.FieldChar.extend({
+openerp.base.form.FieldDatetime = openerp.base.form.Field.extend({
     init: function(view, node) {
         this._super(view, node);
         this.template = "FieldDate";
-        this.validation_regex = /^\d+-\d+-\d+$/;
+        this.jqueryui_object = 'datetimepicker';
     },
     start: function() {
         this._super.apply(this, arguments);
-        this.$element.find('input').change(this.on_ui_change).datepicker({
-            dateFormat: 'yy-mm-dd'
-        });
-    }
-});
-
-openerp.base.form.FieldDatetime = openerp.base.form.FieldChar.extend({
-    init: function(view, node) {
-        this._super(view, node);
-        this.template = "FieldDatetime";
-        this.validation_regex = /^\d+-\d+-\d+( \d+:\d+(:\d+)?)?$/;
-    },
-    start: function() {
-        this._super.apply(this, arguments);
-        this.$element.find('input').change(this.on_ui_change).datetimepicker({
+        this.$element.find('input').change(this.on_ui_change)[this.jqueryui_object]({
             dateFormat: 'yy-mm-dd',
             timeFormat: 'hh:mm:ss'
         });
+    },
+    set_value: function(value) {
+        this._super.apply(this, arguments);
+        if (value == null || value == false) {
+            this.$element.find('input').val('');
+        } else {
+            this.value = this.parse(value);
+            this.$element.find('input')[this.jqueryui_object]('setDate', this.value);
+        }
+    },
+    set_value_from_ui: function() {
+        this.value = this.$element.find('input')[this.jqueryui_object]('getDate') || false;
+        if (this.value) {
+            this.value = this.format(this.value);
+        }
+    },
+    validate: function() {
+        this.invalid = this.required && this.value === false;
+    },
+    parse: openerp.base.parse_datetime,
+    format: openerp.base.format_datetime
+});
+
+openerp.base.form.FieldDate = openerp.base.form.FieldDatetime.extend({
+    init: function(view, node) {
+        this._super(view, node);
+        this.jqueryui_object = 'datepicker';
+    },
+    parse: openerp.base.parse_date,
+    format: openerp.base.format_date
+});
+
+openerp.base.form.FieldFloatTime = openerp.base.form.FieldChar.extend({
+    init: function(view, node) {
+        this._super(view, node);
+        this.validation_regex = /^\d+:\d+$/;
+    },
+    set_value: function(value) {
+        value = value || 0;
+        this._super.apply(this, [value]);
+        var show_value = _.sprintf("%02d:%02d", Math.floor(value), Math.round((value % 1) * 60));
+        this.$element.find('input').val(show_value);
+    },
+    validate: function() {
+        if (typeof(this.value) == "string") {
+            this._super.apply(this, arguments);
+            if (!this.invalid) {
+                var time = this.value.split(':');
+                this.value = parseInt(time[0], 10) + parseInt(time[1], 10) / 60;
+            }
+        }
     }
 });
 
@@ -817,10 +886,33 @@ openerp.base.form.FieldSelection = openerp.base.form.Field.extend({
     }
 });
 
+openerp.base.form.FieldMany2OneDatasSet = openerp.base.DataSetStatic.extend({
+    start: function() {
+    },
+    write: function (id, data, callback) {
+        this._super(id, data, callback);
+    },
+});
+
+openerp.base.form.FieldMany2OneViewManager = openerp.base.ViewManager.extend({
+    init: function(session, element_id, dataset, views) {
+        this._super(session, element_id, dataset, views);
+    }
+});
+
 openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
     init: function(view, node) {
         this._super(view, node);
         this.template = "FieldMany2One";
+        this.is_field_m2o = true;
+    },
+    start: function() {
+        this.$element = $('#' + this.element_id);
+        this.dataset = new openerp.base.form.FieldMany2OneDatasSet(this.session, this.field.relation);
+        var views = [ [false,"list"], [false,"form"] ];
+        this.viewmanager = new openerp.base.form.FieldMany2OneViewManager(this.view.session, this.element_id, this.dataset, views);
+        new openerp.base.m2o(this.viewmanager, this.$element, this.field.relation, this.dataset, this.session)
+        this.$element.find('input').change(this.on_ui_change);
     },
     set_value: function(value) {
         this._super.apply(this, arguments);
@@ -830,6 +922,16 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
             this.value = value[0];
         }
         this.$element.find('input').val(show_value);
+        this.$element.find('input').attr('m2o_id', this.value);
+    },
+
+    get_value: function() {
+        var val = this.$element.find('input').attr('m2o_id') || this.value
+        return val;
+    },
+
+    on_ui_change: function() {
+        this.touched = this.view.touched = true;
     }
 });
 
@@ -890,6 +992,8 @@ openerp.base.form.FieldMany2Many = openerp.base.form.Field.extend({
         this._super(view, node);
         this.template = "FieldMany2Many";
         this.list_id = _.uniqueId("many2many");
+        this.is_started = false;
+        this.is_setted = false;
     },
     start: function() {
         this._super.apply(this, arguments);
@@ -899,23 +1003,35 @@ openerp.base.form.FieldMany2Many = openerp.base.form.Field.extend({
         var self = this;
         this.list_view.m2m_field = this;
         this.list_view.start();
+        var hack = {loaded: false};
+        this.list_view.on_loaded.add_last(function() {
+            if (! hack.loaded) {
+                self.is_started = true;
+                self.check_load();
+                hack.loaded = true;
+            }
+        });
     },
     set_value: function(value) {
         if (value != false) {
             this.dataset.ids = value;
             this.dataset.count = value.length;
-            this.list_view.do_reload();
+            this.is_setted = true;
+            this.check_load();
         }
     },
     get_value: function() {
         return [[6,false,this.dataset.ids]];
+    },
+    check_load: function() {
+        if(this.is_started && this.is_setted) {
+            this.list_view.do_reload();
+        }
     }
 });
 
 openerp.base.form.Many2ManyListView = openerp.base.ListView.extend({
-    do_delete: function (e) {
-        e.stopImmediatePropagation();
-        var ids = [this.rows[$(e.currentTarget).closest('tr').prevAll().length].data.id.value];
+    do_delete: function (ids) {
         this.dataset.ids = _.without.apply(null, [this.dataset.ids].concat(ids));
         this.dataset.count = this.dataset.ids.length;
         // there may be a faster way
@@ -937,12 +1053,20 @@ openerp.base.form.Many2ManyListView = openerp.base.ListView.extend({
     },
     do_add_record: function (e) {
         e.stopImmediatePropagation();
-        // TODO: need to open a popup with search view
+        var pop = new openerp.base.form.Many2XSelectPopup(null, this.m2m_field.view.session);
+        pop.select_element(this.model);
+        var self = this;
+        pop.on_select_element.add(function(element_id) {
+            if(! _.detect(self.dataset.ids, function(x) {return x == element_id;})) {
+                self.dataset.ids.push(element_id);
+                self.dataset.count = self.dataset.ids.length;
+                self.do_reload();
+            }
+            pop.stop();
+        });
     },
-    on_select_row: function(event) {
-        var $target = $(event.currentTarget);
-        var row = this.rows[$target.prevAll().length];
-        var id = row.data.id.value;
+    select_record: function(index) {
+        var id = this.rows[index].data.id.value;
         if(! id) {
             return;
         }
@@ -959,10 +1083,112 @@ openerp.base.form.Many2ManyListView = openerp.base.ListView.extend({
     }
 });
 
+openerp.base.form.Many2XSelectPopup = openerp.base.BaseWidget.extend({
+    identifier_prefix: "many2xselectpopup",
+    template: "Many2XSelectPopup",
+    select_element: function(model) {
+        this.model = model;
+        var html = this.render();
+        jQuery(html).dialog({title: '',
+                    modal: true,
+                    minWidth: 800});
+        this.start();
+    },
+    start: function() {
+        this._super();
+        this.dataset = new openerp.base.DataSetSearch(this.session, this.model);
+        this.setup_search_view();
+    },
+    setup_search_view: function() {
+        var self = this;
+        if (this.searchview) {
+            this.searchview.stop();
+        }
+        this.searchview = new openerp.base.SearchView(this, this.session, this.element_id + "_search",
+                this.dataset, false, {});
+        this.searchview.on_search.add(function(domains, contexts, groupbys) {
+            self.view_list.do_search.call(
+                self, domains, contexts, groupbys);
+        });
+        this.searchview.on_loaded.add_last(function () {
+            var $buttons = self.searchview.$element.find(".oe_search-view-buttons");
+            $buttons.append(QWeb.render("Many2XSelectPopup.search.buttons"));
+            var $nbutton = $buttons.find(".oe_many2xselectpopup-search-new");
+            $nbutton.click(function() {
+                self.new_object();
+            });
+            var $cbutton = $buttons.find(".oe_many2xselectpopup-search-close");
+            $cbutton.click(function() {
+                self.stop();
+            });
+            self.view_list = new openerp.base.form.Many2XPopupListView( null, self.session,
+                    self.element_id + "_view_list", self.dataset, false);
+            self.view_list.popup = self;
+            self.view_list.do_show();
+            self.view_list.start();
+            var tmphack = {"loaded": false};
+            self.view_list.on_loaded.add_last(function() {
+                if ( !tmphack.loaded ) {
+                    self.view_list.do_reload();
+                    tmphack.loaded = true;
+                };
+            });
+        });
+        this.searchview.start();
+    },
+    on_select_element: function(element_id) {
+    },
+    new_object: function() {
+        var self = this;
+        this.searchview.hide();
+        this.view_list.$element.hide();
+        this.dataset.index = null;
+        this.view_form = new openerp.base.FormView({}, this.session,
+                this.element_id + "_view_form", this.dataset, false);
+        this.view_form.start();
+        this.view_form.on_loaded.add_last(function() {
+            var $buttons = self.view_form.$element.find(".oe_form_buttons");
+            $buttons.html(QWeb.render("Many2XSelectPopup.form.buttons"));
+            var $nbutton = $buttons.find(".oe_many2xselectpopup-form-save");
+            $nbutton.click(function() {
+                self.view_form.do_save();
+            });
+            var $cbutton = $buttons.find(".oe_many2xselectpopup-form-close");
+            $cbutton.click(function() {
+                self.stop();
+            });
+        });
+        this.view_form.on_created.add_last(function(r, success) {
+            if (r.result) {
+                var id = arguments[0].result;
+                self.on_select_element(id);
+            }
+        });
+        this.view_form.do_show();
+    }
+});
+
+openerp.base.form.Many2XPopupListView = openerp.base.ListView.extend({
+    switch_to_record: function(index) {
+        this.popup.on_select_element(this.dataset.ids[index]);
+    }
+});
+
 openerp.base.form.FieldReference = openerp.base.form.Field.extend({
     init: function(view, node) {
         this._super(view, node);
         this.template = "FieldReference";
+    }
+});
+
+openerp.base.form.FieldImage = openerp.base.form.Field.extend({
+    init: function(view, node) {
+        this._super(view, node);
+        this.template = "FieldImage";
+    },
+    set_value: function(value) {
+        this._super.apply(this, arguments);
+        this.$element.find('img').show().attr('src', 'data:image/png;base64,' + this.value);
     }
 });
 
@@ -992,7 +1218,8 @@ openerp.base.form.widgets = new openerp.base.Registry({
     'float' : 'openerp.base.form.FieldFloat',
     'integer': 'openerp.base.form.FieldFloat',
     'progressbar': 'openerp.base.form.FieldProgressBar',
-    'float_time': 'openerp.base.form.FieldFloat'
+    'float_time': 'openerp.base.form.FieldFloatTime',
+    'image': 'openerp.base.form.FieldImage'
 });
 
 };

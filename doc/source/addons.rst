@@ -307,8 +307,6 @@ Javascript
 
         :returns: the dataset's current active id
 
-.. js:class:: openerp.base.DataRecord(session, model, fields, values)
-
 Ad-hoc objects and structural types
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
