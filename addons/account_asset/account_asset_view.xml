@@ -197,6 +197,15 @@
             </tree>
         </field>
     </record>
+
+    <record model="ir.actions.act_window" id="action_account_asset_asset_tree">
+        <field name="name">Asset Hierarchy</field>
+        <field name="res_model">account.asset.asset</field>
+        <field name="view_type">tree</field>
+        <field name="domain">[('parent_id','=',False)]</field>
+        <field name="view_id" ref="view_account_asset_asset_tree"/>
+    </record>
+
     <menuitem id="menu_finance_assets" name="Assets" parent="account.menu_finance"/>
     <menuitem
         parent="menu_finance_assets"
@@ -208,19 +217,10 @@
         <field name="view_type">form</field>
     </record>
 
-    <menuitem 
-        parent="menu_finance_assets" 
+    <menuitem
+        parent="menu_finance_assets"
         id="menu_action_account_asset_asset_form"
         action="action_account_asset_asset_form"/>
-
-
-    <record model="ir.actions.act_window" id="action_account_asset_asset_tree">
-        <field name="name">Asset Hierarchy</field>
-        <field name="res_model">account.asset.asset</field>
-        <field name="view_type">tree</field>
-        <field name="domain">[('parent_id','=',False)]</field>
-        <field name="view_id" ref="view_account_asset_asset_tree"/>
-    </record>
 
     <menuitem id="menu_finance_config_assets" name="Assets" parent="account.menu_finance_accounting"/>
     <record model="ir.actions.act_window" id="action_account_asset_asset_list_normal">
