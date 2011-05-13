@@ -532,7 +532,6 @@ class hr_payslip(osv.osv):
                             AND hp.date_from >= %s AND hp.date_to <= %s AND hp.id = pl.slip_id AND pl.code = %s",
                             (self.employee_id, from_date, to_date, code))
                 for r in cr.dictfetchall():
-                    print r
                     if not r['credit_note']:
                         sum += r['total']
                     else:
