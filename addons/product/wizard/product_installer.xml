@@ -23,21 +23,21 @@
             <!--        Ptoduct Terminology-->
 
      <record id="view_product_terminology_config_form" model="ir.ui.view">
-          <field name="name">Specify your terminology</field>
+          <field name="name">Specify Your Terminology</field>
           <field name="model">specify.product.terminology</field>
           <field name="type">form</field>
           <field name="inherit_id" ref="base.res_config_view_base"/>
          <field name="arch" type="xml">
             <data>
               <form position="attributes">
-                <attribute name="string">Specify your terminology</attribute>
+                <attribute name="string">Specify Your Terminology</attribute>
               </form>
             <xpath expr='//separator[@string="title"]' position='attributes'>
-                  <attribute name='string'>Specify your terminology</attribute>
+                  <attribute name='string'>Specify Your Terminology</attribute>
             </xpath>
             <xpath expr="//label[@string='description']"
                position="attributes">
-              <attribute name="string">Specify your terminology.</attribute>
+              <attribute name="string">Specify Your Terminology.</attribute>
             </xpath>
             <xpath expr='//separator[@string="vsep"]' position='attributes'>
                   <attribute name='string'></attribute>
@@ -48,11 +48,11 @@
                         <field colspan="4" name="partner" on_change="onchange_partner_product_term(partner,products)" />
                         <field colspan="4" name="products" on_change="onchange_partner_product_term(partner,products)"/>
                         <field colspan="4" name="terminolgy_ids" nolabel="1" mode="tree,form" groups="base.group_extended">
-                            <tree string="Specify Terminology"  editable="top">
+                            <tree string="Selected Terminology"  editable="top">
                                 <field name="old_name"/>
                                 <field name="new_name"/>
                              </tree>
-                             <form string="Specify terminology">
+                             <form string="Selected Terminology">
                                 <field name="old_name"/>
                                 <field name="new_name"/>
                              </form>
@@ -64,7 +64,7 @@
       </record>
 
       <record id="action_product_terminology_config_form" model="ir.actions.act_window">
-          <field name="name">Specify your terminology</field>
+          <field name="name">Specify Your Terminology</field>
           <field name="type">ir.actions.act_window</field>
           <field name="res_model">specify.product.terminology</field>
           <field name="view_type">form</field>
