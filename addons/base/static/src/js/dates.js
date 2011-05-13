@@ -133,6 +133,5 @@ openerp.base.format_time = function(obj) {
     return fts(obj.getHours(),2) + ":" + fts(obj.getMinutes(),2) + ":"
         + fts(obj.getSeconds(),2);
 };
-
+    
 };
-
