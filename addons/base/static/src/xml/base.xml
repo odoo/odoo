@@ -257,7 +257,7 @@
         <t t-foreach="row" t-as="td">
             <td t-att-colspan="td.colspan gt 1 ? td.colspan : undefined"
                 t-att-width="td.width ? td.width : undefined"
-                t-att-nowrap="td.is_field_label ? 'true' : undefined"
+                t-att-nowrap="td.is_field_label or td.is_field_m2o? 'true' : undefined"
                 t-att-valign="td.table ? 'top' : undefined"
                 t-att-id="td.element_id"
                 t-att-class="'oe_form_' + (td.is_field_label ? 'label' : (td.field ? 'field_' + td.type : td.type))"
@@ -350,7 +350,9 @@
         t-att-name="widget.name"
         t-att-id="widget.element_id + '_field'"
         t-att-class="'field_' + widget.type"
+		t-att-type="widget.type"
         style="width: 100%;"/>
+
 </t>
 <t t-name="FieldOne2Many">
     <div t-att-id="widget.element_id">
@@ -396,7 +398,7 @@
     <h2 class="oe_view_title"><t t-esc="view.attrs['string']"/></h2>
     <form>
         <t t-call="SearchView.render_lines"/>
-        <div style="text-align:right;">
+        <div class="oe_search-view-buttons" style="text-align:right;">
             <input type="submit" value="Search"/>
             <input type="reset" value="Clear"/>
         </div>
@@ -504,7 +506,8 @@
         <t t-set="expand" t-value="false"/>
         <t t-set="label" t-value="'Custom Filters'"/>
         <t t-set="content">
-            <div class="searchview_extended_groups_list"/>
+            <div class="searchview_extended_groups_list">
+            </div>
             <button class="searchview_extended_add_group"
                     type="button"><span>Add group of conditions</span></button>
         </t>
@@ -583,5 +586,20 @@
             <t t-esc="message"/>
         </p>
     </div>
+</t>
+<t t-name="Many2XSelectPopup">
+    <div t-att-id="element_id">
+        <div t-att-id="element_id + '_search'"></div>
+        <div t-att-id="element_id + '_view_list'"></div>
+        <div t-att-id="element_id + '_view_form'"></div>
+    </div>
+</t>
+<t t-name="Many2XSelectPopup.search.buttons">
+    <button type="button" class="oe_many2xselectpopup-search-new">New</button>
+    <button type="button" class="oe_many2xselectpopup-search-close">Close</button>
+</t>
+<t t-name="Many2XSelectPopup.form.buttons">
+    <button type="button" class="oe_many2xselectpopup-form-save">Save</button>
+    <button type="button" class="oe_many2xselectpopup-form-close">Close</button>
 </t>
 </templates>

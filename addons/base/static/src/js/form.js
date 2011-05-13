@@ -886,10 +886,33 @@ openerp.base.form.FieldSelection = openerp.base.form.Field.extend({
     }
 });
 
+openerp.base.form.FieldMany2OneDatasSet = openerp.base.DataSetStatic.extend({
+    start: function() {
+    },
+    write: function (id, data, callback) {
+        this._super(id, data, callback);
+    },
+});
+
+openerp.base.form.FieldMany2OneViewManager = openerp.base.ViewManager.extend({
+    init: function(session, element_id, dataset, views) {
+        this._super(session, element_id, dataset, views);
+    }
+});
+
 openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
     init: function(view, node) {
         this._super(view, node);
         this.template = "FieldMany2One";
+        this.is_field_m2o = true;
+    },
+    start: function() {
+        this.$element = $('#' + this.element_id);
+        this.dataset = new openerp.base.form.FieldMany2OneDatasSet(this.session, this.field.relation);
+        var views = [ [false,"list"], [false,"form"] ];
+        this.viewmanager = new openerp.base.form.FieldMany2OneViewManager(this.view.session, this.element_id, this.dataset, views);
+        new openerp.base.m2o(this.viewmanager, this.$element, this.field.relation, this.dataset, this.session)
+        this.$element.find('input').change(this.on_ui_change);
     },
     set_value: function(value) {
         this._super.apply(this, arguments);
@@ -899,6 +922,16 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
             this.value = value[0];
         }
         this.$element.find('input').val(show_value);
+        this.$element.find('input').attr('m2o_id', this.value);
+    },
+
+    get_value: function() {
+        var val = this.$element.find('input').attr('m2o_id') || this.value
+        return val;
+    },
+
+    on_ui_change: function() {
+        this.touched = this.view.touched = true;
     }
 });
 
@@ -959,6 +992,8 @@ openerp.base.form.FieldMany2Many = openerp.base.form.Field.extend({
         this._super(view, node);
         this.template = "FieldMany2Many";
         this.list_id = _.uniqueId("many2many");
+        this.is_started = false;
+        this.is_setted = false;
     },
     start: function() {
         this._super.apply(this, arguments);
@@ -968,16 +1003,30 @@ openerp.base.form.FieldMany2Many = openerp.base.form.Field.extend({
         var self = this;
         this.list_view.m2m_field = this;
         this.list_view.start();
+        var hack = {loaded: false};
+        this.list_view.on_loaded.add_last(function() {
+            if (! hack.loaded) {
+                self.is_started = true;
+                self.check_load();
+                hack.loaded = true;
+            }
+        });
     },
     set_value: function(value) {
         if (value != false) {
             this.dataset.ids = value;
             this.dataset.count = value.length;
-            this.list_view.do_reload();
+            this.is_setted = true;
+            this.check_load();
         }
     },
     get_value: function() {
         return [[6,false,this.dataset.ids]];
+    },
+    check_load: function() {
+        if(this.is_started && this.is_setted) {
+            this.list_view.do_reload();
+        }
     }
 });
 
@@ -1002,8 +1051,19 @@ openerp.base.form.Many2ManyListView = openerp.base.ListView.extend({
             'context': this.dataset.context
         }, this.do_fill_table);
     },
-    do_add_record: function () {
-        // TODO: need to open a popup with search view
+    do_add_record: function (e) {
+        e.stopImmediatePropagation();
+        var pop = new openerp.base.form.Many2XSelectPopup(null, this.m2m_field.view.session);
+        pop.select_element(this.model);
+        var self = this;
+        pop.on_select_element.add(function(element_id) {
+            if(! _.detect(self.dataset.ids, function(x) {return x == element_id;})) {
+                self.dataset.ids.push(element_id);
+                self.dataset.count = self.dataset.ids.length;
+                self.do_reload();
+            }
+            pop.stop();
+        });
     },
     select_record: function(index) {
         var id = this.rows[index].data.id.value;
@@ -1020,6 +1080,97 @@ openerp.base.form.Many2ManyListView = openerp.base.ListView.extend({
             "view_mode":"form",
             "target":"new"
         });
+    }
+});
+
+openerp.base.form.Many2XSelectPopup = openerp.base.BaseWidget.extend({
+    identifier_prefix: "many2xselectpopup",
+    template: "Many2XSelectPopup",
+    select_element: function(model) {
+        this.model = model;
+        var html = this.render();
+        jQuery(html).dialog({title: '',
+                    modal: true,
+                    minWidth: 800});
+        this.start();
+    },
+    start: function() {
+        this._super();
+        this.dataset = new openerp.base.DataSetSearch(this.session, this.model);
+        this.setup_search_view();
+    },
+    setup_search_view: function() {
+        var self = this;
+        if (this.searchview) {
+            this.searchview.stop();
+        }
+        this.searchview = new openerp.base.SearchView(this, this.session, this.element_id + "_search",
+                this.dataset, false, {});
+        this.searchview.on_search.add(function(domains, contexts, groupbys) {
+            self.view_list.do_search.call(
+                self, domains, contexts, groupbys);
+        });
+        this.searchview.on_loaded.add_last(function () {
+            var $buttons = self.searchview.$element.find(".oe_search-view-buttons");
+            $buttons.append(QWeb.render("Many2XSelectPopup.search.buttons"));
+            var $nbutton = $buttons.find(".oe_many2xselectpopup-search-new");
+            $nbutton.click(function() {
+                self.new_object();
+            });
+            var $cbutton = $buttons.find(".oe_many2xselectpopup-search-close");
+            $cbutton.click(function() {
+                self.stop();
+            });
+            self.view_list = new openerp.base.form.Many2XPopupListView( null, self.session,
+                    self.element_id + "_view_list", self.dataset, false);
+            self.view_list.popup = self;
+            self.view_list.do_show();
+            self.view_list.start();
+            var tmphack = {"loaded": false};
+            self.view_list.on_loaded.add_last(function() {
+                if ( !tmphack.loaded ) {
+                    self.view_list.do_reload();
+                    tmphack.loaded = true;
+                };
+            });
+        });
+        this.searchview.start();
+    },
+    on_select_element: function(element_id) {
+    },
+    new_object: function() {
+        var self = this;
+        this.searchview.hide();
+        this.view_list.$element.hide();
+        this.dataset.index = null;
+        this.view_form = new openerp.base.FormView({}, this.session,
+                this.element_id + "_view_form", this.dataset, false);
+        this.view_form.start();
+        this.view_form.on_loaded.add_last(function() {
+            var $buttons = self.view_form.$element.find(".oe_form_buttons");
+            $buttons.html(QWeb.render("Many2XSelectPopup.form.buttons"));
+            var $nbutton = $buttons.find(".oe_many2xselectpopup-form-save");
+            $nbutton.click(function() {
+                self.view_form.do_save();
+            });
+            var $cbutton = $buttons.find(".oe_many2xselectpopup-form-close");
+            $cbutton.click(function() {
+                self.stop();
+            });
+        });
+        this.view_form.on_created.add_last(function(r, success) {
+            if (r.result) {
+                var id = arguments[0].result;
+                self.on_select_element(id);
+            }
+        });
+        this.view_form.do_show();
+    }
+});
+
+openerp.base.form.Many2XPopupListView = openerp.base.ListView.extend({
+    switch_to_record: function(index) {
+        this.popup.on_select_element(this.dataset.ids[index]);
     }
 });
 

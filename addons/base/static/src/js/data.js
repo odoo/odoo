@@ -213,12 +213,12 @@ openerp.base.DataSet =  openerp.base.Controller.extend( /** @lends openerp.base.
             context: this.context
         }, callback);
     },
-    create: function(data, callback) {
+    create: function(data, callback, error_callback) {
         return this.rpc('/base/dataset/create', {
             model: this.model,
             data: data,
             context: this.context
-        }, callback);
+        }, callback, error_callback);
     },
     write: function (id, data, callback) {
         return this.rpc('/base/dataset/save', {
@@ -241,6 +241,15 @@ openerp.base.DataSet =  openerp.base.Controller.extend( /** @lends openerp.base.
             method: method,
             ids: ids,
             args: args
+        }, callback);
+    },
+    name_search: function (search_str, callback) {
+        search_str = search_str || '';
+        return this.rpc('/base/dataset/name_search', {
+            model: this.model,
+            search_str: search_str,
+            domain: this.domain || [],
+            context: this.context
         }, callback);
     },
     exec_workflow: function (id, signal, callback) {
