@@ -20,9 +20,6 @@
 #
 ##############################################################################
 
-""" We assume that, just like the OpenERP server, the python part of the client
- doesn't need to handle timezone-aware datetimes, this could be changed in the future. """
-
 import datetime
 
 DEFAULT_SERVER_DATE_FORMAT = "%Y-%m-%d"
@@ -32,31 +29,60 @@ DEFAULT_SERVER_DATETIME_FORMAT = "%s %s" % (
     DEFAULT_SERVER_TIME_FORMAT)
 
 def parse_datetime(str):
+    """
+    Converts a string to a datetime object using OpenERP's
+    datetime string format (exemple: '2011-12-01 15:12:35').
+    
+    No timezone information is added, the datetime is a naive instance, but
+    according to OpenERP 6.1 specification the timezone is always UTC.
+    """
     if not str:
         return str
     return datetime.datetime.strptime(str, DEFAULT_SERVER_DATETIME_FORMAT)
 
 def parse_date(str):
+    """
+    Converts a string to a date object using OpenERP's
+    date string format (exemple: '2011-12-01').
+    """
     if not str:
         return str
     return datetime.datetime.strptime(str, DEFAULT_SERVER_DATE_FORMAT).date()
 
 def parse_time(str):
+    """
+    Converts a string to a time object using OpenERP's
+    time string format (exemple: '15:12:35').
+    """
     if not str:
         return str
     return datetime.datetime.strptime(str, DEFAULT_SERVER_TIME_FORMAT).time()
 
 def format_datetime(obj):
+    """
+    Converts a datetime object to a string using OpenERP's
+    datetime string format (exemple: '2011-12-01 15:12:35').
+    
+    The datetime instance should not have an attached timezone and be in UTC.
+    """
     if not obj:
         return False
     return obj.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
 
 def format_date(obj):
+    """
+    Converts a date object to a string using OpenERP's
+    date string format (exemple: '2011-12-01').
+    """
     if not obj:
         return False
     return obj.strftime(DEFAULT_SERVER_DATE_FORMAT)
 
 def format_time(obj):
+    """
+    Converts a time object to a string using OpenERP's
+    time string format (exemple: '15:12:35').
+    """
     if not obj:
         return False
     return obj.strftime(DEFAULT_SERVER_TIME_FORMAT)

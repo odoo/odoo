@@ -3,15 +3,139 @@ openerp.base.data = function(openerp) {
 
 openerp.base.DataGroup =  openerp.base.Controller.extend( /** @lends openerp.base.DataGroup# */{
     /**
-     * Management interface between views and the collection of selected OpenERP
-     * records (represents the view's state?)
+     * Management interface between views and grouped collections of OpenERP
+     * records.
+     *
+     * The root DataGroup is instantiated with the relevant information
+     * (a session, a model, a domain, a context and a group_by sequence), the
+     * domain and context may be empty. It is then interacted with via
+     * :js:func:`~openerp.base.DataGroup.list`, which is used to read the
+     * content of the current grouping level, and
+     * :js:func:`~openerp.base.DataGroup.get`, which is used to fetch an item
+     * of the current grouping level.
      *
      * @constructs
      * @extends openerp.base.Controller
+     *
      * @param {openerp.base.Session} session Current OpenERP session
+     * @param {String} model name of the model managed by this DataGroup
+     * @param {Array} domain search domain for this DataGroup
+     * @param {Object} context context of the DataGroup's searches
+     * @param {Array} group_by sequence of fields by which to group
      */
-    init: function(session) {
+    init: function(session, model, domain, context, group_by) {
         this._super(session, null);
+        this.model = model;
+        this.context = context;
+        this.domain = domain;
+
+        this.group_by = group_by;
+
+        this.groups = null;
+    },
+    fetch: function () {
+        // internal method
+        var d = new $.Deferred();
+        var self = this;
+
+        if (this.groups) {
+            d.resolveWith(this, [this.groups]);
+        } else {
+            this.rpc('/base/group/read', {
+                model: this.model,
+                context: this.context,
+                domain: this.domain,
+                group_by_fields: this.group_by
+            }, function () { }).then(function (response) {
+                self.groups = response.result;
+                // read_group results are annoying: they use the name of the
+                // field grouped on to hold the value and the count, so no
+                // generic access to those values is possible.
+                // Alias them to `value` and `length`.
+                d.resolveWith(self, [_(response.result).map(function (group) {
+                    var field_name = self.group_by[0];
+                    return _.extend({}, group, {
+                        // provide field used for grouping
+                        grouped_on: field_name,
+                        length: group[field_name + '_count'],
+                        value: group[field_name]
+                    });
+                })]);
+            }, function () {
+                d.rejectWith.apply(d, self, [arguments]);
+            });
+        }
+        return d.promise();
+    },
+    /**
+     * Retrieves the content of an item in the DataGroup, which results in
+     * either a DataSet or new DataGroup instance.
+     *
+     * Calling :js:func:`~openerp.base.DataGroup.get` without having called
+     * :js:func:`~openerp.base.DataGroup.list` beforehand will likely result
+     * in an error.
+     *
+     * The resulting :js:class:`~openerp.base.DataGroup` or
+     * :js:class:`~openerp.base.DataSet` will be provided through the relevant
+     * callback function. In both functions, the current DataGroup will be
+     * provided as context (``this``)
+     *
+     * @param {Number} index the index of the group to open in the datagroup's collection
+     * @param {Function} ifDataSet executed if the item results in a DataSet, provided with the new dataset as parameter
+     * @param {Function} ifDataGroup executed if the item results in a DataSet, provided with the new datagroup as parameter
+     */
+    get: function (index, ifDataSet, ifDataGroup) {
+        var group = this.groups[index];
+        if (!group) {
+            throw new Error("No group at index " + index);
+        }
+
+        var child_context = _.extend({}, this.context, group.__context);
+        if (group.__context.group_by.length) {
+            var datagroup = new openerp.base.DataGroup(
+                this.session, this.model, group.__domain, child_context,
+                group.__context.group_by);
+            ifDataGroup.call(this, datagroup);
+        } else {
+            var dataset = new openerp.base.DataSetSearch(this.session, this.model);
+            dataset.domain = group.__domain;
+            dataset.context = child_context;
+            ifDataSet.call(this, dataset);
+        }
+    },
+    /**
+     * Gathers the content of the current data group (the current grouping
+     * level), and provides it via a promise object to which callbacks should
+     * be added::
+     *
+     *     datagroup.list().then(function (list) {
+     *         // manipulate list here
+     *     });
+     *
+     * The argument to the callback is the list of elements fetched, the
+     * context (``this``) is the datagroup itself.
+     *
+     * The items of a list are the standard objects returned by ``read_group``
+     * with three properties added:
+     *
+     * ``length``
+     *     the number of records contained in the group (and all of its
+     *     sub-groups). This does *not* provide the size of the "next level"
+     *     of the group, unless the group is terminal (no more groups within
+     *     it).
+     * ``grouped_on``
+     *     the name of the field this level was grouped on, this is mostly
+     *     used for display purposes, in order to know the name of the current
+     *     level of grouping. The ``grouped_on`` should be the same for all
+     *     objects of the list.
+     * ``value``
+     *     the value which led to this group (this is the value all contained
+     *     records have for the current ``grouped_on`` field name).
+     *
+     * @returns {$.Deferred}
+     */
+    list: function () {
+        return this.fetch();
     }
 });
 

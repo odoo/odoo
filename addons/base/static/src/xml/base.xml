@@ -18,8 +18,7 @@
         </div>
     </div>
     <div id="oe_login" class="login"></div>
-    <table border="0" cellpadding="0" cellspacing="0" width="100%" height="100%"
-        t-att-class="'main_table' + (typeof kitten == 'undefined' ? '' : ' kitten-mode-activated')">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%" height="100%" class="main_table">
     <tr>
         <td colspan="2">
             <div id="oe_header" class="header"></div>
@@ -55,8 +54,7 @@
 </t>
 <t t-name="Header">
     <a href="/" class="company_logo_link">
-        <img t-att-src="typeof kitten == 'undefined' ? '/base/static/src/img/logo.png' :
-            'http://placekitten.com/g/179/46'" border="0" class="company_logo"/>
+        <div class="company_logo" />
     </a>
     <h1 class="header_title" t-if="session.session_is_valid()">
         <span class="company">$company</span> - (<span class="database">$database</span>)<br/>
@@ -208,7 +206,7 @@
     <t t-foreach="columns" t-as="column">
         <t t-set="attrs" t-value="column.attrs_for(row.data)"/>
         <td t-if="column.invisible !== '1'" t-att-title="column.help"
-            class="oe-field-cell">
+            class="oe-field-cell" t-att-data-field="column.id">
             <t t-if="!attrs.invisible">
                 <t t-set="is_button" t-value="column.tag === 'button'"/>
                 <!-- TODO: get correct widget from form -->
@@ -306,6 +304,20 @@
         t-att-class="'field_' + widget.type" style="width: 100%"
     />
 </t>
+<t t-name="FieldEmail">
+    <table cellpadding="0" cellspacing="0" border="0" width="100%">
+    <tr>
+        <td width="100%">
+            <t t-call="FieldChar"/>
+        </td>
+        <td width="16">
+            <button class="button" title="Send an e-mail with your default e-mail client">
+                <img src="/base/static/src/img/icons/terp-mail-message-new.png"/>
+            </button>
+        </td>
+    </tr>
+    </table>
+</t>
 <t t-name="FieldText">
     <textarea rows="6" style="width: 100%;"
         t-att-name="widget.name"
@@ -314,13 +326,6 @@
     ></textarea>
 </t>
 <t t-name="FieldDate">
-    <input type="text" style="width: 100%"
-        t-att-name="widget.name"
-        t-att-id="widget.element_id + '_field'"
-        t-att-class="'field_' + widget.type"
-    />
-</t>
-<t t-name="FieldDatetime">
     <input type="text" style="width: 100%"
         t-att-name="widget.name"
         t-att-id="widget.element_id + '_field'"
@@ -367,7 +372,18 @@
         t-att-class="'field_' + widget.type"/>
 </t>
 <t t-name="FieldProgressBar">
-    <div t-opentag="true"></div>
+    <div t-opentag="true" class="oe-progressbar">
+        <span></span>
+    </div>
+</t>
+<t t-name="FieldImage">
+    <img align="left" border="1" style="display: none"
+        t-att-id="widget.element_id + '_field'"
+        t-att-name="widget.name"
+        t-att-class="'field_' + widget.type"
+        t-att-width="widget.node.attrs.img_width || widget.node.attrs.width"
+        t-att-height="widget.node.attrs.img_height || widget.node.attrs.height"
+    />
 </t>
 <t t-name="WidgetButton">
     <button type="button"
@@ -418,7 +434,7 @@
         <span t-if="attrs.help">(?)</span>
     </label>
     <div style="white-space: nowrap;">
-        <input type="text" t-att-name="attrs.name"
+        <input type="text" size="15" t-att-name="attrs.name"
                t-att-autofocus="attrs.default_focus === '1' ? 'autofocus' : undefined"
                t-att-id="element_id"
                t-att-value="defaults[attrs.name] || ''"/>
@@ -493,7 +509,7 @@
             <div class="searchview_extended_groups_list">
             </div>
             <button class="searchview_extended_add_group"
-                    type="button">Add group of conditions</button>
+                    type="button"><span>Add group of conditions</span></button>
         </t>
     </t>
 </t>
@@ -505,10 +521,10 @@
             <option value="none">None of the following conditions must match</option>
         </select>
         <button class="searchview_extended_delete_group"
-                type="button">Delete this group of conditions</button>
+                type="button"><span>Delete this group of conditions</span></button>
         <div class="searchview_extended_propositions_list">
         </div>
-        <button class="searchview_extended_add_proposition" type="button">Add condition</button>
+        <button class="searchview_extended_add_proposition" type="button"><span>Add condition</span></button>
     </div>
 </t>
 <t t-name="SearchView.extended_search.proposition">
@@ -524,7 +540,7 @@
         <select class="searchview_extended_prop_op"/>
         <span class="searchview_extended_prop_value"/>
         <button class="searchview_extended_delete_prop"
-                type="button">Delete this condition</button>
+                type="button"><span>Delete this condition</span></button>
     </div>
 </t>
 <t t-name="SearchView.extended_search.proposition.char">
@@ -545,12 +561,12 @@
         <a class="toggle-sidebar"></a>
         <div t-att-id="element_id" class="sidebar-sub-div">
             <div class="sidebar-displaying-div">
-                <t t-set="i" t-value="0"/>
+                <t t-set="i" t-value="1-1"/> <!-- al do stupid things -->
                 <t t-foreach="sections" t-as="section">
                     <t t-if="section.elements.length &gt; 0">
                     <h2><t t-esc="section.label"/></h2>
                     <ul>
-                        <t t-set="j" t-value="0"/>
+                        <t t-set="j" t-value="1-1"/>
                         <t t-foreach="section.elements" t-as="element">
                             <li><a t-att-data-i="i" t-att-data-j="j" href="#"><t t-esc="element.name"/></a></li>
                             <t t-set="j" t-value="j+1"/>
