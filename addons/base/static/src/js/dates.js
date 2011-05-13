@@ -5,7 +5,7 @@ openerp.base.parse_datetime = function(str) {
     if(!str) {
         return str;
     }
-    var regex = /\d\d\d\d-\d\d-\d\) \d\d:\d\d:\d\d/;
+    var regex = /\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d/;
     var res = regex.exec(str);
     if ( res[0] != str ) {
         throw "'" + str + "' is not a valid datetime";
@@ -62,7 +62,7 @@ var fts = function(str, size) {
 };
 
 openerp.base.format_datetime = function(obj) {
-    if(! str) {
+    if(! obj) {
         return false;
     }
     return fts(obj.getUTCFullYear(),4) + "-" + fts(obj.getUTCMonth() + 1,2) + "-"
@@ -71,7 +71,7 @@ openerp.base.format_datetime = function(obj) {
 };
 
 openerp.base.format_date = function(obj) {
-    if(! str) {
+    if(! obj) {
         return false;
     }
     return fts(obj.getFullYear(),4) + "-" + fts(obj.getMonth() + 1,2) + "-"
@@ -79,11 +79,11 @@ openerp.base.format_date = function(obj) {
 };
 
 openerp.base.format_time = function(obj) {
-    if(! str) {
+    if(! obj) {
         return false;
     }
     return fts(obj.getHours(),2) + ":" + fts(obj.getMinutes(),2) + ":"
         + fts(obj.getSeconds(),2);
 };
-    
+
 };
