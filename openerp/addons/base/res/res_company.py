@@ -78,6 +78,36 @@ class res_company(osv.osv):
     _name = "res.company"
     _description = 'Companies'
     _order = 'name'
+
+    def _get_address_data(self, cr, uid, ids, name, arg, context=None):
+        result = {}
+        for company in self.browse(cr, uid, ids, context=context):
+            result[company.id] = {}
+            for field in name:
+                result[company.id][field] = False
+            if company.partner_id:
+                part_obj = self.pool.get('res.partner')
+                address_obj = self.pool.get('res.partner.address')
+                address_data = part_obj.address_get(cr, uid, [company.partner_id.id], adr_pref=['default'])
+                if address_data['default']:
+                    address = address_obj.read(cr, uid, address_data['default'], [], context=context)
+                    for field in name:
+                        result[company.id][field] = address[field] or False
+        return result
+
+    def _set_address_data(self, cr, uid, company_id, name, value, arg, context=None):
+        company = self.browse(cr, uid, company_id, context=context)
+        if company.partner_id:
+            part_obj = self.pool.get('res.partner')
+            address_obj = self.pool.get('res.partner.address')
+            address_data = part_obj.address_get(cr, uid, [company.partner_id.id], adr_pref=['default'])
+            address = address_data['default']
+            if address:
+                address_obj.write(cr, uid, [address], {name: value or False})
+            else:
+                address_obj.create(cr, uid, {name: value or False, 'partner_id': company.partner_id.id}, context=context)
+        return True
+
     _columns = {
         'name': fields.char('Company Name', size=64, required=True),
         'parent_id': fields.many2one('res.company', 'Parent Company', select=True),
@@ -94,6 +124,14 @@ class res_company(osv.osv):
         'currency_ids': fields.one2many('res.currency', 'company_id', 'Currency'),
         'user_ids': fields.many2many('res.users', 'res_company_users_rel', 'cid', 'user_id', 'Accepted Users'),
         'account_no':fields.char('Account No.', size=64),
+        'street' : fields.function(_get_address_data, fnct_inv=_set_address_data, size=128, type='char',  method=True, string="Street", multi='address'), 
+        'street2' : fields.function(_get_address_data, fnct_inv=_set_address_data, size=128, type='char',  method=True, string="Street2", multi='address'), 
+        'zip' : fields.function(_get_address_data, fnct_inv=_set_address_data, size=24, type='char',  method=True, string="Zip", multi='address'), 
+        'city' : fields.function(_get_address_data, fnct_inv=_set_address_data, size=24, type='char',  method=True, string="City", multi='address'),         
+        'state_id' : fields.function(_get_address_data, fnct_inv=_set_address_data, type='many2one', domain="[('country_id', '=', country_id)]", relation='res.country.state', method=True, string="State", multi='address'), 
+        'country_id' : fields.function(_get_address_data, fnct_inv=_set_address_data, type='many2one', relation='res.country',  method=True, string="Country", multi='address'), 
+        'email' : fields.function(_get_address_data, fnct_inv=_set_address_data, size=64, type='char',  method=True, string="Email", multi='address'), 
+        'phone' : fields.function(_get_address_data, fnct_inv=_set_address_data, size=64, type='char',  method=True, string="Phone", multi='address'), 
     }
 
     def _search(self, cr, uid, args, offset=0, limit=None, order=None,

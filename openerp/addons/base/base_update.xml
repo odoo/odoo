@@ -193,16 +193,31 @@
             <field name="arch" type="xml">
                 <form string="Company">
                     <group colspan="4" col="6">
-                        <field colspan="4" name="name" select="1"/>
-                        <field name="partner_id" readonly="1" select="1" required="0"/>
-                        <field name="parent_id" select="1" groups="base.group_multi_company"/>
+                        <group colspan="4" col="4">
+                            <field name="name" select="1"/>
+                            <field name="partner_id" readonly="1" select="1" required="0"/>
+                            <field name="parent_id" select="1" groups="base.group_multi_company"/>
+                        </group>
+                        <group colspan="2" col="2">
+                            <field name="logo" nolabel="1" widget="image"/>
+                        </group>
                     </group>
                     <notebook colspan="4">
                         <page string="General Information">
+                            <separator string="Address Information" colspan="4"/>
+                            <field name="street"/>
+                            <field name="street2"/>
+                            <field name="zip"/>
+                            <field name="city"/>
+                            <field name="country_id"/>
+                            <field name="state_id"/>
+                            <field name="phone"/>
+                            <field name="email"/>
+                            <field name="currency_id" colspan="2"/>
+                            <separator string="Reporting Information" colspan="4"/>
                             <field name="rml_header1" colspan="4"/>
                             <field name="rml_footer1" colspan="4"/>
                             <field name="rml_footer2" colspan="4"/>
-                            <field name="currency_id" colspan="2"/>
                         </page>
                         <page string="Header/Footer" groups="base.group_extended">
                             <field colspan="4" name="rml_header" nolabel="1"/>
