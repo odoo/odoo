@@ -25,6 +25,12 @@ import os
 import tools
 from tools.translate import _
 from tools.safe_eval import safe_eval as eval
+from lxml import etree
+import tempfile
+
+import pooler
+import netsvc
+from report import report_sxw
 
 class multi_company_default(osv.osv):
     """
@@ -137,7 +143,7 @@ class res_company(osv.osv):
             return []
         ids =  self.search(cr, uid, [('parent_id','child_of',[company])])
         return ids
-    
+
 #  For Report
 
     def createReport(cr, uid, report, ids, name=False):
@@ -153,9 +159,9 @@ class res_company(osv.osv):
                 fp = open(report_file,'wb+')
                 fp.write(result);
                 fp.close();
-                files += [report_file]    
+                files += [report_file]
             except Exception,e:
-                continue        
+                continue
         return files
 
     def _get_partner_hierarchy(self, cr, uid, company_id, context={}):
@@ -294,6 +300,40 @@ class res_company(osv.osv):
     _constraints = [
         (osv.osv._check_recursion, 'Error! You can not create recursive companies.', ['parent_id'])
     ]
+
+    def preview_report(self, cr, uid, ids, context=None):
+        # Used new cursor as it was closed explicitly somewhere and because of this partner data was not printed
+        # Tocheck: its not closed
+        cr = pooler.get_db(cr.dbname).cursor()
+        company = self.browse(cr, uid, ids, context=context)[0]
+
+        class company_parser(report_sxw.rml_parse):
+            def __init__(self, cr, uid, name, context):
+                super(company_parser, self).__init__(cr, uid, name, context=context)
+                self.setCompany(company)
+
+        rml = etree.XML(company.rml_header)
+        rml = rml.getchildren()[0]
+        header_xml = """<document filename="Preview Report.pdf">
+        <template pageSize="(595.0,842.0)" title="Preview Report" author="OpenERP S.A.(sales@openerp.com)" allowSplitting="20">""" + etree.tostring(rml) +  """
+          </template>
+          </document>
+          """
+        tempfileid, tempfilename= tempfile.mkstemp('.rml', 'openerp_')
+        fp = open(tempfilename, 'wb+')
+        fp.write(header_xml)
+        fp.close()
+
+        if netsvc.Service._services.get('report.company.report'):
+            netsvc.Service._services.pop('report.company.report')
+
+        myreport = report_sxw.report_sxw('report.company.report', 'res.company', tempfilename, parser=company_parser)
+        return {
+                'type': 'ir.actions.report.xml',
+                'report_name': 'company.report',
+                'datas': {'ids': ids, 'model': 'res.company'},
+                'nodestroy': True
+            }
 
 res_company()
 
