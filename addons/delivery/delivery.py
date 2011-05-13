@@ -23,20 +23,6 @@ import time
 from osv import fields,osv
 from tools.translate import _
 
-class delivery_carrier_country(osv.osv):
-    _name = "delivery.carrier.country"
-    _description = "Delivery Carrier Country"
-
-    _columns = {
-        'country' : fields.many2many('res.country', 'delivery_country_rel',\
-                        'delivery_id', 'country_id', 'Country'),
-        'price': fields.float('Price'),
-        'delivery_carrier_id': fields.many2one('delivery.carrier', 'Carrier'),
-    }
-
-
-delivery_carrier_country()
-
 class delivery_carrier(osv.osv):
     _name = "delivery.carrier"
     _description = "Carrier"
@@ -87,11 +73,13 @@ class delivery_carrier(osv.osv):
         'amount': fields.float('Amount'),
 
     }
+
     _defaults = {
         'active': lambda *args:1,
         'international_price': lambda *args: False,
         'free_if_more_than': lambda *args: False
     }
+
     def grid_get(self, cr, uid, ids, contact_id, context=None):
         contact = self.pool.get('res.partner.address').browse(cr, uid, contact_id, context=context)
         for carrier in self.browse(cr, uid, ids, context=context):
@@ -204,6 +192,20 @@ class delivery_carrier(osv.osv):
         return res_id
 
 delivery_carrier()
+
+
+class delivery_carrier_country(osv.osv):
+    _name = "delivery.carrier.country"
+    _description = "Delivery Carrier Country"
+
+    _columns = {
+        'country' : fields.many2many('res.country', 'delivery_country_rel',\
+                        'delivery_id', 'country_id', 'Country'),
+        'price': fields.float('Price'),
+        'delivery_carrier_id': fields.many2one('delivery.carrier', 'Carrier'),
+    }
+
+delivery_carrier_country()
 
 class delivery_grid(osv.osv):
     _name = "delivery.grid"

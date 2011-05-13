@@ -4,21 +4,6 @@
         <!-- Delivery Carriers -->
         <menuitem id="menu_delivery" name="Delivery" parent="stock.menu_stock_configuration" sequence="4"/>
 
-		<record id="view_delivery_country_form" model="ir.ui.view">
-            <field name="name">delivery.carrier.country.form</field>
-            <field name="model">delivery.carrier.country</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Carrier Country">
-                	<group colspan="4" col="2">
-	                	<field name="price" colspan="2"/>
-	                	<newline/>
-	                    <field name="country" nolabel="1"/>
-                    </group>
-                </form>
-            </field>
-        </record>
-
         <record id="view_delivery_carrier_tree" model="ir.ui.view">
             <field name="name">delivery.carrier.tree</field>
             <field name="model">delivery.carrier</field>
@@ -37,29 +22,28 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Carrier">
-                	<group colspan="4" col="4" name="general">
-	                    <field name="name" select="1"/>
-	                    <field name="active" select="1"/>
-	                    <field name="partner_id" select="1"/>
-	                    <field name="product_id" select="1"/>
-	                    <separator string="Pricing Information" colspan="6"/>
-	                    <group colspan="2" col="4">
-	                    	<field name="normal_price" select="1" colspan="4"/>
-	                    	<newline/>
-	                    	<field name="free_if_more_than"/>
-		                    <field name="amount" attrs="{'invisible':[('free_if_more_than','=',False)]}"/>
-		                </group>
+                    <group colspan="4" col="4" name="general">
+                        <field name="name" select="1"/>
+                        <field name="active" select="1"/>
+                        <field name="partner_id" select="1"/>
+                        <field name="product_id" select="1"/>
+                        <separator string="Pricing Information" colspan="6"/>
+                        <group colspan="2" col="4">
+                            <field name="normal_price" select="1" colspan="4"/>
+                            <newline/>
+                            <field name="free_if_more_than"/>
+                            <field name="amount" attrs="{'invisible':[('free_if_more_than','=',False)]}"/>
+                        </group>
+                        <newline/>
+                        <field name="international_price"/>
                     </group>
-                    <group colspan="4" col="4" name="inter">
-                    	<field name="international_price"/>
-	                    <field name="delivery_country_ids" nolabel="1" attrs="{'invisible':[('international_price','=',False)]}" mode="tree,form" colspan="6">
-	                    	<tree string="Delivery countries">
-	                    		<field name="price"/>
-	                    		<field name="country"/>
-	                    		<field name="delivery_carrier_id" invisible="1"/>
-	                    	</tree>
-	                    </field>
-                    </group>
+                    <field name="delivery_country_ids" nolabel="1" attrs="{'invisible':[('international_price','=',False)]}" mode="tree,form" colspan="6">
+                        <tree string="Delivery countries" editable="top">
+                            <field name="price"/>
+                            <field name="country"/>
+                            <field name="delivery_carrier_id" invisible="1"/>
+                        </tree>
+                    </field>
                 </form>
             </field>
         </record>
@@ -71,7 +55,31 @@
             <field name="view_mode">tree,form</field>
             <field name="help">Create and manage the delivery methods you need for your sales activities. Each delivery method can be assigned to a price list which computes the price of the delivery according to the products sold or delivered.</field>
         </record>
+
+        <record id="action_delivery_carrier_form1" model="ir.actions.act_window">
+            <field name="name">Delivery Method</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">delivery.carrier</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+        </record>
+
         <menuitem action="action_delivery_carrier_form" id="menu_action_delivery_carrier_form" parent="menu_delivery" groups="base.group_extended"/>
+
+        <record id="view_delivery_country_form" model="ir.ui.view">
+            <field name="name">delivery.carrier.country.form</field>
+            <field name="model">delivery.carrier.country</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Carrier Country">
+                    <group colspan="4" col="4">
+                        <field name="price"/>
+                    </group>
+                    <separator string="Countries" colspan="6"/>
+                    <field name="country" nolabel="1"/>
+                </form>
+            </field>
+        </record>
 
         <!-- Delivery Grids -->
         <record id="view_delivery_grid_tree" model="ir.ui.view">
@@ -129,12 +137,12 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Grid Lines">
-                	<group colspan="4" col="4">
-	                    <field colspan="4" name="name" select="1"/>
-	                    <field name="type" string="Condition" on_change="on_change_type(type)"/>
-	                    <field name="operator" nolabel="1"/>
-	                    <field name="max_value" nolabel="1" attrs="{'invisible':[('type','=','country')]}"/>
-	                    <field name="country_id" attrs="{'invisible':[('type','!=','country')]}" colspan="2"/>
+                    <group colspan="4" col="4">
+                        <field colspan="4" name="name" select="1"/>
+                        <field name="type" string="Condition" on_change="on_change_type(type)"/>
+                        <field name="operator" nolabel="1"/>
+                        <field name="max_value" nolabel="1" attrs="{'invisible':[('type','=','country')]}"/>
+                        <field name="country_id" attrs="{'invisible':[('type','!=','country')]}" colspan="2"/>
                     </group>
                     <newline/>
                     <field name="list_price"/>
@@ -323,7 +331,7 @@
         </record>
 
        <record id="delivery_method_form_view_todo" model="ir.actions.todo">
-           <field name="action_id" ref="action_delivery_carrier_form"/>
+           <field name="action_id" ref="action_delivery_carrier_form1"/>
            <field name="sequence">10</field>
            <field name="type">normal</field>
            <field name="state">skip</field>
