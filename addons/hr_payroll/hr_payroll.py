@@ -524,18 +524,13 @@ class hr_payslip(osv.osv):
             def sum(self, code, from_date, to_date=None):
                 if to_date is None:
                     to_date = datetime.now().strftime('%Y-%m-%d')
-                sum = 0.0
-                self.cr.execute("SELECT pl.total, hp.credit_note\
+                self.cr.execute("SELECT sum(case when hp.credit_note = False then (pl.total) else (-pl.total) end)\
                             FROM hr_payslip as hp, hr_payslip_line as pl \
                             WHERE hp.employee_id = %s AND hp.state in ('confirm','done') \
                             AND hp.date_from >= %s AND hp.date_to <= %s AND hp.id = pl.slip_id AND pl.code = %s",
                             (self.employee_id, from_date, to_date, code))
-                for r in cr.dictfetchall():
-                    if not r['credit_note']:
-                        sum += r['total']
-                    else:
-                        sum -= r['total']
-                return sum
+                res = self.cr.fetchone()
+                return res and res[0] or 0.0
 
         #we keep a dict with the result because a value can be overwritten by another rule with the same code
         result_dict = {}
