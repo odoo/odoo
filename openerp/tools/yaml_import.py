@@ -114,7 +114,7 @@ class RecordDictWrapper(dict):
     records do not strictly behave like dict, so we force them to.
     """
     def __init__(self, record):
-        self.record = record 
+        self.record = record
     def __getitem__(self, key):
         if key in self.record:
             return self.record[key]
@@ -174,10 +174,19 @@ class YamlInterpreter(object):
             else:
                 module = self.module
                 checked_xml_id = xml_id
-            _, id = self.pool.get('ir.model.data').get_object_reference(self.cr, self.uid, module, checked_xml_id)
-            self.id_map[xml_id] = id
+            try:
+                _, id = self.pool.get('ir.model.data').get_object_reference(self.cr, self.uid, module, checked_xml_id)
+                self.id_map[xml_id] = id
+            except ValueError, e:
+                raise YamlImportException(""" This Yaml file appears to depend on data that is missing. This often happens for
+                                        tests that belong to a module's test suite and depend on each other
+                                        (they are supposed to be executed in batch, not standalone).
+                                        You might solve the issue by first forcing the other tests to commit
+                                        their changes using --test-commit during a module update.""")
+                self.logger.exception(e)
+
         return id
-    
+
     def get_context(self, node, eval_dict):
         context = self.context.copy()
         if node.context:
@@ -186,7 +195,7 @@ class YamlInterpreter(object):
 
     def isnoupdate(self, node):
         return self.noupdate or node.noupdate or False
-    
+
     def _get_first_result(self, results, default=False):
         if len(results):
             value = results[0]
@@ -195,7 +204,7 @@ class YamlInterpreter(object):
         else:
             value = default
         return value
-    
+
     def process_comment(self, node):
         return node
 
@@ -419,7 +428,7 @@ class YamlInterpreter(object):
             raise
         else:
             self.assert_report.record(True, python.severity)
-    
+
     def process_workflow(self, node):
         workflow, values = node.items()[0]
         if self.isnoupdate(workflow) and self.mode != 'init':
@@ -438,7 +447,7 @@ class YamlInterpreter(object):
             local_context = {'obj': lambda x: value_model.browse(self.cr, self.uid, x, context=self.context)}
             local_context.update(self.id_map)
             id = eval(value['eval'], self.eval_context, local_context)
-        
+
         if workflow.uid is not None:
             uid = workflow.uid
         else:
@@ -450,7 +459,7 @@ class YamlInterpreter(object):
         import openerp.netsvc as netsvc
         wf_service = netsvc.LocalService("workflow")
         wf_service.trg_validate(uid, workflow.model, id, workflow.action, self.cr)
-    
+
     def _eval_params(self, model, params):
         args = []
         for i, param in enumerate(params):
@@ -476,7 +485,7 @@ class YamlInterpreter(object):
                 value = param # scalar value
             args.append(value)
         return args
-        
+
     def process_function(self, node):
         function, params = node.items()[0]
         if self.isnoupdate(function) and self.mode != 'init':
@@ -489,7 +498,7 @@ class YamlInterpreter(object):
             args = self._eval_params(function.model, params)
         method = function.name
         getattr(model, method)(self.cr, self.uid, *args)
-    
+
     def _set_group_values(self, node, values):
         if node.groups:
             group_names = node.groups.split(',')
@@ -570,7 +579,7 @@ class YamlInterpreter(object):
             values['icon'] = node.icon
 
         self._set_group_values(node, values)
-        
+
         pid = self.pool.get('ir.model.data')._update(self.cr, 1, \
                 'ir.ui.menu', self.module, values, node.id, mode=self.mode, \
                 noupdate=self.isnoupdate(node), res_id=res and res[0] or False)
@@ -640,7 +649,7 @@ class YamlInterpreter(object):
                 self.pool.get('ir.model.data')._unlink(self.cr, 1, node.model, ids)
         else:
             self.logger.log(logging.TEST, "Record not deleted.")
-    
+
     def process_url(self, node):
         self.validate_xml_id(node.id)
 
@@ -657,7 +666,7 @@ class YamlInterpreter(object):
             self.pool.get('ir.model.data').ir_set(self.cr, 1, 'action', \
                     keyword, node.url, ["ir.actions.url"], value, replace=replace, \
                     noupdate=self.isnoupdate(node), isobject=True, xml_id=node.id)
-    
+
     def process_ir_set(self, node):
         if not self.mode == 'init':
             return False
@@ -708,13 +717,13 @@ class YamlInterpreter(object):
             replace = node.replace or True
             self.pool.get('ir.model.data').ir_set(self.cr, 1, 'action', \
                     keyword, values['name'], [values['model']], value, replace=replace, isobject=True, xml_id=xml_id)
-            
+
     def process_none(self):
         """
         Empty node or commented node should not pass silently.
         """
         self._log_assert_failure(logging.WARNING, "You have an empty block in your tests.")
-        
+
 
     def process(self, yaml_string):
         """
@@ -732,7 +741,7 @@ class YamlInterpreter(object):
             except Exception, e:
                 self.logger.exception(e)
                 raise
-    
+
     def _process_node(self, node):
         if is_comment(node):
             self.process_comment(node)
@@ -770,7 +779,7 @@ class YamlInterpreter(object):
             self.process_none()
         else:
             raise YamlImportException("Can not process YAML block: %s" % node)
-    
+
     def _log(self, node, is_preceded_by_comment):
         if is_comment(node):
             is_preceded_by_comment = True
