@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-05-09 10:19+0000\n"
-"PO-Revision-Date: 2011-05-05 17:31+0000\n"
+"PO-Revision-Date: 2011-05-13 12:40+0000\n"
 "Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-05-10 07:46+0000\n"
+"X-Launchpad-Export-Date: 2011-05-14 05:53+0000\n"
 "X-Generator: Launchpad (build 12959)\n"
 
 #. module: stock
@@ -386,7 +386,7 @@ msgstr "Состояние"
 #. module: stock
 #: view:stock.location:0
 msgid "Accounting Information"
-msgstr ""
+msgstr "Бухгалтерская информация"
 
 #. module: stock
 #: field:stock.location,stock_real_value:0
@@ -514,6 +514,7 @@ msgstr "Фильтр партий продукции"
 msgid ""
 "You can not cancel inventory which has any account move with posted state."
 msgstr ""
+"Ytkmpz отменить инвентаризацию, которая имеет проведенную операцию по счету."
 
 #. module: stock
 #: report:lot.stock.overview:0
@@ -1454,6 +1455,7 @@ msgstr "Приход"
 msgid ""
 "By unchecking the active field, you may hide an INCOTERM without deleting it."
 msgstr ""
+"Сняв пометку с поля \"Активно\", вы можете скрыть ИНКОТЕРМС без его удаления."
 
 #. module: stock
 #: view:stock.move:0
@@ -1528,7 +1530,7 @@ msgstr ""
 " После этого состояние становится \"Не доступно\", если планировщик на нашел "
 "ТМЦ.\n"
 " Когда ТМЦ зарезервированы состояние \"Доступно\".\n"
-" Когда комплектование выполнено, то состояние \"Готово\".\n"
+" Когда комплектование выполнено, то состояние \"Сделано\".\n"
 "Состояние \"В ожидании\", если перемещение ожидает другого перемещения."
 
 #. module: stock
@@ -3150,7 +3152,7 @@ msgstr "В счет"
 #: code:addons/stock/wizard/stock_return_picking.py:115
 #, python-format
 msgid "Return lines"
-msgstr ""
+msgstr "Позиции для возврата"
 
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_lines_date
@@ -3426,7 +3428,7 @@ msgstr "Категория ТМЦ"
 #: code:addons/stock/wizard/stock_change_product_qty.py:88
 #, python-format
 msgid "INV: "
-msgstr ""
+msgstr "ИНВ: "
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.next_id_61
@@ -3684,7 +3686,7 @@ msgstr ""
 "Когда перемещение ТМЦ создано, оно находится в состоянии \"Черновик\".\n"
 " После этого состояние становится \"Подтверждено\".\n"
 " Если ТМЦ доступны состояние становится \"Доступно\".\n"
-" Когда комплектование выполнено, то состояние \"Готово\".              \n"
+" Когда комплектование выполнено, то состояние \"Сделано\".              \n"
 "Состояние \"В ожидании\", если перемещение ожидает другого перемещения."
 
 #. module: stock
@@ -3951,6 +3953,9 @@ msgid ""
 "This account will be used to value stock moves that have this location as "
 "destination, instead of the stock output account from the product."
 msgstr ""
+"Этот счет будет использоваться для учета перемещений ТМЦ, которые "
+"перемещаются в это место хранения, вместо счета исходящих ТМЦ из настроек "
+"ТМЦ."
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_split

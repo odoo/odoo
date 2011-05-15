@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-05-09 10:18+0000\n"
-"PO-Revision-Date: 2011-05-10 07:19+0000\n"
+"PO-Revision-Date: 2011-05-14 16:59+0000\n"
 "Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-05-11 05:43+0000\n"
+"X-Launchpad-Export-Date: 2011-05-15 05:38+0000\n"
 "X-Generator: Launchpad (build 12959)\n"
 
 #. module: account
@@ -330,8 +330,8 @@ msgid ""
 "Installs localized accounting charts to match as closely as possible the "
 "accounting needs of your company based on your country."
 msgstr ""
-"Устанавливает локализованный план счетов, чтобы соответствовать как можно "
-"ближе потребностям учета вашей компании на основе учета в вашей стране."
+"Устанавливает локализованный план счетов для наибольшего соответствия "
+"потребностям учёта в вашей организации для вашей страны."
 
 #. module: account
 #: code:addons/account/wizard/account_move_journal.py:63
@@ -686,7 +686,8 @@ msgstr "Период журнала"
 #: code:addons/account/account_move_line.py:767
 #, python-format
 msgid "To reconcile the entries company should be the same for all entries"
-msgstr "Для сверки проводок компания должна быть одна во всех проводках."
+msgstr ""
+"Для проведения сверки, организация в проводках не должна различаться."
 
 #. module: account
 #: view:account.account:0
@@ -723,7 +724,7 @@ msgstr "Проверка"
 #. module: account
 #: field:account.partner.reconcile.process,today_reconciled:0
 msgid "Partners Reconciled Today"
-msgstr "Партнеры сверенные сегодня"
+msgstr "Контрагенты сверенные сегодня"
 
 #. module: account
 #: code:addons/account/account_bank_statement.py:306
@@ -834,6 +835,8 @@ msgid ""
 "Can not %s invoice which is already reconciled, invoice should be "
 "unreconciled first. You can only Refund this invoice"
 msgstr ""
+"Нельзя \"%s\" счет, который уже сверен, сначала надо отменить сверку. Вы "
+"можете только вернуть счет."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_subscription_form_new
@@ -848,7 +851,7 @@ msgstr "Вычисления"
 #. module: account
 #: view:account.move.line:0
 msgid "Next Partner to reconcile"
-msgstr "Следующий партнер для сверки"
+msgstr "Следующий контрагент для сверки"
 
 #. module: account
 #: code:addons/account/account_move_line.py:1197
@@ -1528,6 +1531,11 @@ msgid ""
 "the Payment column of a line, you can press F1 to open the reconciliation "
 "form."
 msgstr ""
+"Банковская выписка является отражением всех финансовых операций, прошедших в "
+"течение определенного периода по банковскому счету, кредитной карте или "
+"любому другому виду финансового счета. Начальный баланс будет предложен "
+"автоматически, а конечное сальдо должно быть в выписке. Когда вы находитесь "
+"в столбце Оплата, вы можете нажать F1, чтобы открыть форму сверки."
 
 #. module: account
 #: report:account.analytic.account.cost_ledger:0
@@ -1629,7 +1637,7 @@ msgid ""
 "Have a complete tree view of all journal items per account code by clicking "
 "on an account."
 msgstr ""
-"Отображение плана счетов вашей компании на финансовый год с фильтром по "
+"Отображение плана счетов вашей организации на финансовый год с фильтром по "
 "периодам. Отображается как древовидная структура всех элементов журнала по "
 "коду счета при нажатии на счет."
 
@@ -1812,7 +1820,7 @@ msgstr "Финансовый анализ"
 #. module: account
 #: constraint:res.company:0
 msgid "Error! You can not create recursive companies."
-msgstr "Ошибка! Вы не можете создавать рекурсивные компании."
+msgstr "Ошибка ! Нельзя создать организации рекурсивно."
 
 #. module: account
 #: view:account.analytic.account:0
@@ -1885,7 +1893,8 @@ msgid ""
 "It adds the currency column if the currency is different then the company "
 "currency"
 msgstr ""
-"Добавляет столбец валюты , если валюта отличается, от валюты компании."
+"Добавляет столбец валюты. Если валюта отличается — указывается валюта "
+"организации"
 
 #. module: account
 #: help:account.journal,allow_date:0
@@ -2431,8 +2440,8 @@ msgid ""
 "You cannot modify company of this journal as its related record exist in "
 "Entry Lines"
 msgstr ""
-"Вы не можете изменить компанию этого журнала, так как существуют связанные с "
-"ним проводки."
+"Вы не можете изменять организацию, связанную с этим журналом, так как "
+"существуют связанные с ним проводки."
 
 #. module: account
 #: report:account.journal.period.print:0
@@ -2563,7 +2572,7 @@ msgstr ""
 #: model:ir.actions.server,name:account.ir_actions_server_action_wizard_multi_chart
 #: model:ir.ui.menu,name:account.menu_act_ir_actions_bleble
 msgid "New Company Financial Setting"
-msgstr "Финансовые настройки новой компании"
+msgstr "Финансовые настройки новой организации"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_report_account_sales_tree_all
@@ -3856,7 +3865,7 @@ msgstr "Позиции налога"
 #. module: account
 #: field:account.tax,base_code_id:0
 msgid "Account Base Code"
-msgstr ""
+msgstr "Основной код счёта"
 
 #. module: account
 #: help:account.move,state:0
@@ -4005,7 +4014,7 @@ msgstr "Банковские выписки введены в систему."
 #: code:addons/account/wizard/account_reconcile.py:133
 #, python-format
 msgid "Reconcile Writeoff"
-msgstr ""
+msgstr "Сверить списание"
 
 #. module: account
 #: field:account.model.line,date_maturity:0
@@ -4658,7 +4667,7 @@ msgstr "Описание счетов"
 #. module: account
 #: field:account.partner.reconcile.process,next_partner_id:0
 msgid "Next Partner to Reconcile"
-msgstr "Следующий партнер для сверки"
+msgstr "Следующий контрагент для сверки"
 
 #. module: account
 #: field:account.invoice.tax,account_id:0
@@ -5310,6 +5319,9 @@ msgid ""
 "Shows you the progress made today on the reconciliation process. Given by \n"
 "Partners Reconciled Today \\ (Remaining Partners + Partners Reconciled Today)"
 msgstr ""
+"Показывает прогресс, достигнутый сегодня по сверке. Определяется как\n"
+"Контрагенты сверенные сегодня / (Оставшиеся контрагенты + Контрагенты "
+"сверенные сегодня)"
 
 #. module: account
 #: help:account.payment.term.line,value:0
@@ -5470,7 +5482,7 @@ msgstr "не реализовано"
 #. module: account
 #: help:account.journal,company_id:0
 msgid "Company related to this journal"
-msgstr "Компания связанная с этим журналом"
+msgstr "Организация, связанная с этим журналом"
 
 #. module: account
 #: code:addons/account/wizard/account_invoice_state.py:44
@@ -5595,7 +5607,7 @@ msgstr "Настройка отчетов"
 #. module: account
 #: constraint:account.move.line:0
 msgid "Company must be same for its related account and period."
-msgstr "Для счета и периода должна быть одна компания."
+msgstr "Для счета и периода должна быть одна организация."
 
 #. module: account
 #: field:account.tax,type:0
@@ -5617,7 +5629,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_res_company
 msgid "Companies"
-msgstr "Компании"
+msgstr "Организации"
 
 #. module: account
 #: code:addons/account/account.py:546
@@ -5878,7 +5890,7 @@ msgstr ""
 #. module: account
 #: sql_constraint:account.journal:0
 msgid "The name of the journal must be unique per company !"
-msgstr "Название журнала должно быть уникальным по компании !"
+msgstr "Название журнала должно быть уникальным внутри организации!"
 
 #. module: account
 #: field:account.account.template,nocreate:0
@@ -5892,7 +5904,7 @@ msgstr ""
 #, python-format
 msgid "Can not find account chart for this company, Please Create account."
 msgstr ""
-"Не удалось найти план счетов для компании. Пожалуйста, создайте счет."
+"Не удалось найти план счетов для организации. Пожалуйста, создайте счет."
 
 #. module: account
 #: code:addons/account/wizard/account_report_aged_partner_balance.py:57
@@ -6053,7 +6065,7 @@ msgstr "Создать вручную повторяющиеся проводк�
 #: code:addons/account/account.py:1407
 #, python-format
 msgid "Couldn't create move between different companies"
-msgstr "Нельзя сделать операцию между разными компаниями"
+msgstr "Нельзя создать перемещение между разными организациями"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_type_form
@@ -6217,6 +6229,10 @@ msgid ""
 "reconcile in a series of accounts. It finds entries for each partner where "
 "the amounts correspond."
 msgstr ""
+"Для счета, который считается оплаченным, проводки на основе этого счета "
+"должны сверяться с их корреспондирующими частями, обычно платежами. В "
+"процессе автоматической сверки, OpenERP ищет проводки в ряде счетов. Система "
+"ищет проводки с соответствующей суммой для каждого контрагента."
 
 #. module: account
 #: view:account.move:0
@@ -6578,8 +6594,8 @@ msgid ""
 "Can not find account chart for this company in invoice line account, Please "
 "Create account."
 msgstr ""
-"Не могу найти план счетов для этой компании в позиции счета, пожалуйста "
-"создайте бух. счет."
+"Невозможно найти план счетов для этой организации в позиции счёта. "
+"Пожалуйста, создайте счёт."
 
 #. module: account
 #: view:account.tax.template:0
@@ -6768,7 +6784,7 @@ msgstr "Отчетность"
 #. module: account
 #: sql_constraint:account.journal:0
 msgid "The code of the journal must be unique per company !"
-msgstr "Код журнала должен быть уникальным для компании !"
+msgstr "Код журнала должен быть уникальным внутри организации!"
 
 #. module: account
 #: field:account.bank.statement,ending_details_ids:0
@@ -6793,6 +6809,8 @@ msgid ""
 "the system to go through the reconciliation process, based on the latest day "
 "it have been reconciled."
 msgstr ""
+"Это поле показывает вам следующего контрагента, который автоматически выбран "
+"системой для сверки. Выбор основан на дате последней сверки."
 
 #. module: account
 #: field:account.move.line.reconcile.writeoff,comment:0
@@ -7575,7 +7593,7 @@ msgstr "Тел. :"
 #. module: account
 #: field:account.account,company_currency_id:0
 msgid "Company Currency"
-msgstr "Валюта компании"
+msgstr "Валюта организации"
 
 #. module: account
 #: report:account.general.ledger:0
@@ -7716,7 +7734,7 @@ msgstr ""
 #: view:board.board:0
 #: model:ir.actions.act_window,name:account.action_company_analysis_tree
 msgid "Company Analysis"
-msgstr "Анализ компании"
+msgstr "Анализ организации"
 
 #. module: account
 #: help:account.invoice,account_id:0
@@ -7826,7 +7844,7 @@ msgstr "Закрыть финансовый год"
 #. module: account
 #: sql_constraint:account.account:0
 msgid "The code of the account must be unique per company !"
-msgstr "Код счета должен быть уникальным для компании !"
+msgstr "Код счета должен быть уникальным внутри организации!"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_journal_2_account_invoice_opened
@@ -8245,7 +8263,7 @@ msgstr "Направление анализа"
 #. module: account
 #: field:res.partner,ref_companies:0
 msgid "Companies that refers to partner"
-msgstr "Ссылающиеся на партнера компании"
+msgstr "Связанные с партнёром организации"
 
 #. module: account
 #: view:account.journal:0
@@ -9179,7 +9197,7 @@ msgstr "Журнал: Все"
 #: field:analytic.entries.report,company_id:0
 #: field:wizard.multi.charts.accounts,company_id:0
 msgid "Company"
-msgstr "Компания"
+msgstr "Организация"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_subscription_form
@@ -9479,12 +9497,12 @@ msgid ""
 "may keep several types of specialized journals such as a cash journal, "
 "purchase journal, sales journal..."
 msgstr ""
-"Создание и управление журналами вашей компании. Журнал используется для "
-"записи всех операций учета данных связанных с ежедневной деятельностью вашей "
-"компании используя двойную запись. В зависимости от характера  деятельности "
-"и количества ежедневных операций, компания может использовать несколько "
-"типов специализированных журналов таких, как кассовый журнал, журнал "
-"покупок, журнал продаж..."
+"Создавайте журналы организации и управляйте ими в этом меню. Журнал "
+"используется для отражения всех данных операций бухгалтерского учёта, "
+"связанных с повседневной деятельностью вашей организации по принципу двойной "
+"записи. В зависимости от характера деятельности и количества операций, "
+"организация может вести несколько типов специализированных журналов, таких "
+"как кассовый журнал, журнал покупок, журнал продаж…"
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_chart
