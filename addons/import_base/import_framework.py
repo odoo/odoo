@@ -20,12 +20,20 @@
 ##############################################################################
 import pprint
 import mapper
+import pooler
+import tools
+
+
+from threading import Thread
+import datetime
+from reportlab.lib import logger
+import logging
 pp = pprint.PrettyPrinter(indent=4)
 
 
 
 
-class import_framework():
+class import_framework(Thread):
     """
         This class should be extends,
         get_data and get_mapping have to extends
@@ -39,13 +47,15 @@ class import_framework():
     """
     DO_NOT_FIND_DOMAIN = [('id', '=', 0)]
   
-    def __init__(self, obj, cr, uid, instance_name, module_name, context):
+    def __init__(self, obj, cr, uid, instance_name, module_name, email_to_notify=False, context=None):
+        Thread.__init__(self)
         self.obj = obj
         self.cr = cr
         self.uid = uid
         self.instance_name = instance_name
         self.module_name = module_name
         self.context = context or {}
+        self.email = email_to_notify
         self.initialize()
         
       
@@ -115,7 +125,7 @@ class import_framework():
             res = hook(val)
             if res:
                 final_data.append(res)
-        self._save_data(model, map, final_data, table)
+        return self._save_data(model, map, final_data, table)
         
     def _save_data(self, model, mapping, datas, table):
         """
@@ -149,9 +159,10 @@ class import_framework():
         if not model_obj:
             raise ValueError("%s is not a valid model name" % model)
         
-        model_obj.import_data(self.cr, self.uid, fields, res, mode='update', current_module=self.module_name, noupdate=True, context=self.context)
+        (p, r, warning, s) = model_obj.import_data(self.cr, self.uid, fields, res, mode='update', current_module=self.module_name, noupdate=True, context=self.context)
         for field in self_dependencies:
             self._import_self_dependencies(model_obj, field, datas)
+        return (len(res), warning)
             
     def _import_self_dependencies(self, obj, parent_field, datas):
         """
@@ -313,22 +324,38 @@ class import_framework():
         return False
     
     
-    def import_all(self, table_list):
+    def set_table_list(self, table_list):
+        self.table_list = table_list
+    
+    def run(self):
         """Import all data into openerp, 
            this is the Entry point to launch the process of import
            @param table_list: the list of external table to import
                ['Leads', 'Opportunity']
         
         """
-        imported = set() #to invoid importing 2 times the sames modules
-        for table in table_list:
-            to_import = self.get_mapping()[table].get('import', True)
-            if not table in imported:
-                self._resolve_dependencies(self.get_mapping()[table].get('dependencies', []), imported)
-                if to_import:
-                    self._import_table(table)
-                imported.add(table)
-
+        
+        self.data_started = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        self.cr = pooler.get_db(self.cr.dbname).cursor()
+        try:
+            result = []
+            imported = set() #to invoid importing 2 times the sames modules
+            for table in self.table_list:
+                to_import = self.get_mapping()[table].get('import', True)
+                if not table in imported:
+                    self._resolve_dependencies(self.get_mapping()[table].get('dependencies', []), imported)
+                    if to_import:
+                        (position, warning) = self._import_table(table)
+                        result.append((table, position, warning))
+                    imported.add(table)
+            self.cr.commit()
+            
+        finally:
+            self.cr.close()
+        self.date_ended = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        self._send_notification_email(result)
+        
+        
     def _resolve_dependencies(self, dep, imported):
         """ 
             import dependencies recursively
@@ -341,8 +368,30 @@ class import_framework():
                 if to_import:
                     self._import_table(dependency)
                 imported.add(dependency)
+                
+    def _send_notification_email(self, result):
+		if not self.email:
+			return
+        subject = "Openerp has finish to import your data at %s" % self.date_ended
+        tools.email_send(
+                'import_sugarcrm@module.openerp',
+                self.email,
+                subject,
+                self._get_email_body(result),
+            )
+        logger = logging.getLogger('import_sugarcam')
+        logger.info("Import finished, notification email sended")
     
-    
+    def _get_email_body(self, result):
+        header = "The import of sugarcrm data \n instance name : %s \n started at %s is finished at %s" % (self.instance_name, self.data_started, self.date_ended)
+        body = ""
+        for (table, nb, warning) in result:
+            if not warning:
+                warning = "with no warning"
+            else:
+                warning = "with warning : %s" % warning
+            body += "%s records were imported from table %s, %s \n" % (nb, table, warning)
+        return header + "\n\n" + body
     
     
 class dummy_import(import_framework):
