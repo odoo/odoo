@@ -70,7 +70,7 @@
                     <button string="Convert to Opportunity"
                         name="%(phonecall2opportunity_act)d"
                         icon="gtk-index" type="action"
-                        attrs="{'invisible':['|', ('opportunity_id','!=',False), ('state','=','done')]}" />
+                        attrs="{'invisible':[('opportunity_id','!=',False)]}" />
                     <label colspan="6"  string=""/>
                     <button string="Schedule Other Call"
                      icon="terp-call-start"
