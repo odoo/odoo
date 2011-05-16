@@ -639,12 +639,14 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="base.view_company_form"/>
             <field name="arch" type="xml">
-                <notebook position="inside">
-                    <page string="Other">
-                      <field  name="company_discount" colspan="4"/>
-                      <field  name="max_diff" colspan="4"/>
-                    </page>
-                </notebook>
+				<page string="Configuration" position="inside">
+                    <separator string="Other Information" colspan="4"/>
+					<group colspan="4" col="2" >
+                      <field  name="company_discount" />
+					  <newline/>
+                      <field  name="max_diff" />
+					</group>
+				</page>
             </field>
            </record>
 

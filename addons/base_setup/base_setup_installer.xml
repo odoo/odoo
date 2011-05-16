@@ -217,13 +217,13 @@
           <field name="type">form</field>
           <field name="inherit_id" ref="base.view_company_form" />
           <field name="arch" type="xml">
-                <field name="rml_footer2" position="after">
-                     <newline/>
-                     <separator string="" colspan="4"/>
-                     <group colspan="4" col="2">
-                     <button name="preview_report" string="Preview Report" type="object" icon="gtk-print"/>
-                     </group>
-                </field>
+            <xpath expr="/form/notebook/page/field[@name='rml_header']" position="before">
+                <group colspan="4" col="8">
+					<label string="" colspan="7"/>
+                    <button name="preview_report" string="Preview Report" type="object" icon="gtk-print"/>
+                </group>
+                 <separator string="Header/Footer of Reports" colspan="4"/>
+            </xpath>
           </field>
       </record>
 
