@@ -22,6 +22,7 @@
 import locale
 import logging
 import itertools
+import re
 
 from osv import fields, osv
 from locale import localeconv
@@ -257,27 +258,6 @@ def original_group(s, grouping, thousands_sep=''):
         seps += 1
     return result + spaces, seps
 
-def take_left_padding(string):
-    """
-    >>> take_left_padding("   hello world ")
-    ('   ', 'hello world ')
-
-    """
-    padding = ''.join(itertools.takewhile(lambda c: c.isspace(), string))
-    rest = string[len(padding):]
-    return padding, rest
-
-def take_right_padding(string):
-    """
-
-    >>> take_right_padding("   hello world ")
-    (' ', '   hello world')
-
-    """
-    def reverse(s): return s[::-1]
-    padding, rest = take_left_padding(reverse(string))
-    return reverse(padding), reverse(rest)
-
 def split(l, counts):
     """
 
@@ -312,20 +292,19 @@ def split(l, counts):
         res.append(l)
     return res
 
+intersperse_pat = re.compile('([^0-9]*)([^ ]*)(.*)')
+
 def intersperse(string, counts, separator=''):
     """
 
     See the asserts below for examples.
 
     """
-    left_padding, rest = take_left_padding(string)
-    padding = ''.join(itertools.takewhile(lambda c: not c.isdigit(), rest))
-    rest = rest[len(padding):]
-    right_padding, rest = take_right_padding(rest)
+    left, rest, right = intersperse_pat.match(string).groups()
     def reverse(s): return s[::-1]
     splits = split(reverse(rest), counts)
     res = separator.join(map(reverse, reverse(splits)))
-    return left_padding + padding + res + right_padding, len(splits) > 0 and len(splits) -1 or 0
+    return left + res + right, len(splits) > 0 and len(splits) -1 or 0
 
 # TODO rewrite this with a unit test library
 def _group_examples():
