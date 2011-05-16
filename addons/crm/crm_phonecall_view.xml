@@ -67,15 +67,15 @@
                     <field name="date"/>
                     <field name="user_id"/>
                     <field name="section_id" colspan="1" widget="selection" />
-                    <button string="Convert to Opportunity"
-                        name="%(phonecall2opportunity_act)d"
-                        icon="gtk-index" type="action"
-                        attrs="{'invisible':[('opportunity_id','!=',False)]}" />
-                    <label colspan="6"  string=""/>
                     <button string="Schedule Other Call"
                      icon="terp-call-start"
                     name="%(phonecall_to_phonecall_act)d"
                     type="action"  />
+                    <label colspan="6"  string=""/>
+                    <button string="Convert to Opportunity"
+                        name="%(phonecall2opportunity_act)d"
+                        icon="gtk-index" type="action"
+                        attrs="{'invisible':[('opportunity_id','!=',False)]}" />
 
                 </group>
 
