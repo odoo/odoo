@@ -23,7 +23,7 @@ import sugar
 from tools.translate import _
 from import_base.import_framework import *
 from import_base.mapper import *
-
+from datetime import datetime
 import base64
 import pprint
 pp = pprint.PrettyPrinter(indent=4)
@@ -99,6 +99,48 @@ class sugar_import(import_framework):
     def get_float_time(self, dict, hour, min):
         min = int(min) * 100 / 60
         return "%s.%i" % (hour, min)
+
+
+    """
+    import Project Tasks
+    """
+    project_task_state = {
+            'Not Started': 'draft',
+            'In Progress': 'open',
+            'Completed': 'done',
+            'Pending Input': 'pending',
+            'Deferred': 'cancelled',
+     }
+    
+    def get_project_task_priority(self, val):
+      priority_dict = {
+            'High': '0',
+            'Medium': '2',
+            'Low': '3'
+        }
+      return priority_dict.get(val.get('priority'), '')
+
+    def get_project_task_mapping(self):
+        return { 
+                'model' : 'project.task',
+                'dependencies' : [self.TABLE_USER, self.TABLE_PROJECT],
+                'map' : {
+                    'name': 'name',
+                    'date_start': 'date_start',
+                    'date_end': 'date_finish',
+                    'progress': 'progress',
+                    'project_id/id': ref(self.TABLE_PROJECT, 'project_id'),
+                    'planned_hours': 'planned_hours',
+                    'total_hours': 'total_hours',        
+                    'priority': self.get_project_task_priority,
+                    'description': 'description',
+                    'user_id/id': ref(self.TABLE_USER, 'assigned_user_id'),
+                    'partner_id/id': 'partner_id/id',
+                    'contact_id/id': 'contact_id/id',
+                    'state': map_val('status', self.project_task_state)
+                }
+            }
+
     """
     import Projects
     """
@@ -113,16 +155,16 @@ class sugar_import(import_framework):
         model_obj = self.obj.pool.get('ir.model.data')
         partner_obj = self.obj.pool.get('res.partner')
         partner_address_obj = self.obj.pool.get('res.partner.address')
-        sugar_project_account = sugar.relation_search(self.context.get('port'), self.context.get('session_id'), 'Project', module_id=val.get('id'), related_module='Accounts', query=None, deleted=None)
+        sugar_project_account = sugar.relation_search(self.context.get('port'), self.context.get('session_id'), 'Project', module_id=val.get('id'), related_module=self.TABLE_ACCOUNT, query=None, deleted=None)
+        sugar_project_contact = sugar.relation_search(self.context.get('port'), self.context.get('session_id'), 'Project', module_id=val.get('id'), related_module=self.TABLE_CONTACT, query=None, deleted=None)
+        for contact_id in sugar_project_contact:
+            partner_invoice_id = self.get_mapped_id(self.TABLE_CONTACT, contact_id)
         for account_id in sugar_project_account:
             partner_id = self.get_mapped_id(self.TABLE_ACCOUNT, account_id)
-            partner_invoice_ids= partner_address_obj.search(self.cr, self.uid, [('partner_id', '=', partner_id), ('type', '=', 'invoice')])
-            if partner_invoice_ids:
-                partner_invoice_id = partner_invoice_ids[0] 
-        return partner_id, partner_invoice_id
+        return partner_id, partner_invoice_id      
            
     def import_project(self, val):
-        partner_id, partner_invoice_id = self.import_project_account(val)    
+        partner_id, partner_invoice_id  = self.import_project_account(val)    
         val['partner_id/.id'] = partner_id
         val['contact_id/.id'] = partner_invoice_id
         return val
@@ -153,19 +195,25 @@ class sugar_import(import_framework):
             'Pending Input': 'draft',
             'deferred': 'cancel'
         }
-        
+
+    def import_task(self, val):
+	    val['date'] = val.get('date_start') or datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+	    val['date_deadline'] = val.get('date_due') or datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+	    return val
+
     def get_task_mapping(self):
         return { 
                 'model' : 'crm.meeting',
                 'dependencies' : [self.TABLE_CONTACT, self.TABLE_ACCOUNT, self.TABLE_USER],
+	            'hook' : self.import_task,
                 'map' : {
                     'name': 'name',
-                    'date': 'date_start' or datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-                    'date_deadline': 'date_due' or datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+                    'date': 'date',
+                    'date_deadline': 'date_deadline',
                     'user_id/id': ref(self.TABLE_USER, 'assigned_user_id'),
-                    'categ_id/id': call(self.get_category, 'crm.meeting', 'Tasks'),
+                    'categ_id/id': call(self.get_category, 'crm.meeting', const('Tasks')),
                     'partner_id/id': related_ref(self.TABLE_ACCOUNT),
-                    'partner_address_id/id': related_ref(self.TABLE_CONTACT),
+                    'partner_address_id/id': ref(self.TABLE_CONTACT,'contact_id'),
                     'state': map_val('status', self.task_state)
                 }
             }
@@ -178,7 +226,7 @@ class sugar_import(import_framework):
             'Held':'done',
             'Not Held': 'pending',
         }
-    
+
     def get_calls_mapping(self):
         return { 
                 'model' : 'crm.phonecall',
@@ -545,6 +593,7 @@ class sugar_import(import_framework):
             self.TABLE_CALL : self.get_calls_mapping(),
             self.TABLE_TASK : self.get_task_mapping(),
             self.TABLE_PROJECT : self.get_project_mapping(),
+            self.TABLE_PROJECT_TASK: self.get_project_task_mapping()
         }
 
 
@@ -622,7 +671,7 @@ class import_sugarcrm(osv.osv):
             if current.project:
                 key_list.append('Project')
             if current.project_task:
-                key_list.append('Project Tasks')
+                key_list.append('ProjectTask')
             if current.bug:
                 key_list.append('Bugs')
             if current.attachment:
