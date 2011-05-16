@@ -62,7 +62,8 @@
                     <separator string="Other information" colspan="4"/>
                     <field name="partner_id"/>
                     <field name="purchase_date"/>
-                    <separator string="Depreciation duration" colspan="4"/>
+                    <separator string="Depreciation Dates" colspan="2" />
+					<separator string="Depreciation Method" colspan="2" />
                     <button 
                          name="%(wizard_asset_modify)d" 
                          states="open" 
@@ -70,13 +71,22 @@
                          type="action" 
                          colspan="2"/>
                     <newline/>
-                    <field name="method"/>
-                    <field name="method_progress_factor" attrs="{'invisible':[('method','=','linear')]}"/>
-                    <newline/>
-                    <field name="method_time"/>
-                    <field name="method_period" attrs="{'invisible':[('method_time','=','end')]}"/>
-                    <field name="prorata" colspan="1"/>
-                    <field name="method_delay"/>
+					
+
+					<group colspan="2" col="2">
+    					<field name="method_time"/>
+						<field name="method_delay"/>
+                   		<field name="method_period" attrs="{'invisible':[('method_time','=','end')]}"/>                
+               		</group>
+
+					<group colspan="2" col="3">
+    					<field name="method"/>
+						<newline/>
+	                    <field name="method_progress_factor" attrs="{'invisible':[('method','=','linear')]}"/>
+						<newline/>
+						<field name="prorata" colspan="1"/>
+               		</group>
+                    
                     <newline/>
                  </page>
                  <page string="Depreciation board">
