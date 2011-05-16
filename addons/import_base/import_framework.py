@@ -47,7 +47,7 @@ class import_framework(Thread):
     """
     DO_NOT_FIND_DOMAIN = [('id', '=', 0)]
   
-    def __init__(self, obj, cr, uid, instance_name, module_name, email_to_notify, context):
+    def __init__(self, obj, cr, uid, instance_name, module_name, email_to_notify=False, context=None):
         Thread.__init__(self)
         self.obj = obj
         self.cr = cr
@@ -370,6 +370,8 @@ class import_framework(Thread):
                 imported.add(dependency)
                 
     def _send_notification_email(self, result):
+		if not self.email:
+			return
         subject = "Openerp has finish to import your data at %s" % self.date_ended
         tools.email_send(
                 'import_sugarcrm@module.openerp',
