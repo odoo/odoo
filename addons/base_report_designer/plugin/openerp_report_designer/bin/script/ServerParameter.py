@@ -135,7 +135,7 @@ class ServerParameter( unohelper.Base, XJobExecutor ):
             ids_module =self.sock.execute(sDatabase, UID, sPassword, 'ir.module.module', 'search', [('name','=','base_report_designer'),('state', '=', 'installed')])
             info = reduce(lambda x, y: x+y, traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback))
             self.logobj.log_write('ServerParameter', LOG_ERROR, info)
-    
+            ErrorDialog(info, "", "Module Uninstalled Error")
             if not len(ids_module):
                 ErrorDialog("Please Install base_report_designer module", "", "Module Uninstalled Error")
                 self.logobj.log_write('Module Not Found',LOG_WARNING, ':base_report_designer not install in  database %s' % (sDatabase))
@@ -164,6 +164,8 @@ class ServerParameter( unohelper.Base, XJobExecutor ):
         except :
             import traceback,sys
             info = reduce(lambda x, y: x+y, traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback))
+            self.logobj.log_write('ServerParameter', LOG_ERROR, info)     
+            ErrorDialog("Connection Refuse...","Connection to server fail")
     def btnCancel_clicked( self, oActionEvent ):
         self.win.endExecute()
 
