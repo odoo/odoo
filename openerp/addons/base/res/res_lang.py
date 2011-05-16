@@ -21,6 +21,7 @@
 
 import locale
 import logging
+import re
 
 from osv import fields, osv
 from locale import localeconv
@@ -181,46 +182,6 @@ class lang(osv.osv):
             trans_obj.unlink(cr, uid, trans_ids, context=context)
         return super(lang, self).unlink(cr, uid, ids, context=context)
 
-    def _group(self, cr, uid, ids, s, monetary=False, grouping=False, thousands_sep=''):
-        grouping = eval(grouping)
-
-        if not grouping:
-            return (s, 0)
-
-        result = ""
-        seps = 0
-        spaces = ""
-
-        if s[-1] == ' ':
-            sp = s.find(' ')
-            spaces = s[sp:]
-            s = s[:sp]
-
-        while s and grouping:
-            # if grouping is -1, we are done
-            if grouping[0] == -1:
-                break
-            # 0: re-use last group ad infinitum
-            elif grouping[0] != 0:
-                #process last group
-                group = grouping[0]
-                grouping = grouping[1:]
-            if result:
-                result = s[-group:] + thousands_sep + result
-                seps += 1
-            else:
-                result = s[-group:]
-            s = s[:-group]
-            if s and s[-1] not in "0123456789":
-                # the leading string is only spaces and signs
-                return s + result + spaces, seps
-        if not result:
-            return s + spaces, seps
-        if s:
-            result = s + thousands_sep + result
-            seps += 1
-        return result + spaces, seps
-
     def format(self, cr, uid, ids, percent, value, grouping=False, monetary=False):
         """ Format() will return the language-specific output for float values"""
 
@@ -228,6 +189,7 @@ class lang(osv.osv):
             raise ValueError("format() must be given exactly one %char format specifier")
 
         lang_grouping, thousands_sep, decimal_point = self._lang_data_get(cr, uid, ids[0], monetary)
+        eval_lang_grouping = eval(lang_grouping)
 
         formatted = percent % value
         # floats and decimal ints need special action!
@@ -236,7 +198,7 @@ class lang(osv.osv):
             parts = formatted.split('.')
 
             if grouping:
-                parts[0], seps = self._group(cr,uid,ids,parts[0], monetary=monetary, grouping=lang_grouping, thousands_sep=thousands_sep)
+                parts[0], seps = intersperse(parts[0], eval_lang_grouping, thousands_sep)
 
             formatted = decimal_point.join(parts)
             while seps:
@@ -246,7 +208,7 @@ class lang(osv.osv):
                 seps -= 1
         elif percent[-1] in 'diu':
             if grouping:
-                formatted = self._group(cr,uid,ids,formatted, monetary=monetary, grouping=lang_grouping, thousands_sep=thousands_sep)[0]
+                formatted = intersperse(formatted, eval_lang_grouping, thousands_sep)[0]
 
         return formatted
 
@@ -255,6 +217,140 @@ class lang(osv.osv):
 #                             r'(?P<modifiers>[-#0-9 +*.hlL]*?)[eEfFgGdiouxXcrs%]')
 
 lang()
+
+def original_group(s, grouping, thousands_sep=''):
+
+    if not grouping:
+        return (s, 0)
+
+    result = ""
+    seps = 0
+    spaces = ""
+
+    if s[-1] == ' ':
+        sp = s.find(' ')
+        spaces = s[sp:]
+        s = s[:sp]
+
+    while s and grouping:
+        # if grouping is -1, we are done
+        if grouping[0] == -1:
+            break
+        # 0: re-use last group ad infinitum
+        elif grouping[0] != 0:
+            #process last group
+            group = grouping[0]
+            grouping = grouping[1:]
+        if result:
+            result = s[-group:] + thousands_sep + result
+            seps += 1
+        else:
+            result = s[-group:]
+        s = s[:-group]
+        if s and s[-1] not in "0123456789":
+            # the leading string is only spaces and signs
+            return s + result + spaces, seps
+    if not result:
+        return s + spaces, seps
+    if s:
+        result = s + thousands_sep + result
+        seps += 1
+    return result + spaces, seps
+
+def split(l, counts):
+    """
+
+    >>> split("hello world", [])
+    ['hello world']
+    >>> split("hello world", [1])
+    ['h', 'ello world']
+    >>> split("hello world", [2])
+    ['he', 'llo world']
+    >>> split("hello world", [2,3])
+    ['he', 'llo', ' world']
+    >>> split("hello world", [2,3,0])
+    ['he', 'llo', ' wo', 'rld']
+    >>> split("hello world", [2,-1,3])
+    ['he', 'llo world']
+
+    """
+    res = []
+    saved_count = len(l) # count to use when encoutering a zero
+    for count in counts:
+        if count == -1:
+            break
+        if count == 0:
+            while l:
+                res.append(l[:saved_count])
+                l = l[saved_count:]
+            break
+        res.append(l[:count])
+        l = l[count:]
+        saved_count = count
+    if l:
+        res.append(l)
+    return res
+
+intersperse_pat = re.compile('([^0-9]*)([^ ]*)(.*)')
+
+def intersperse(string, counts, separator=''):
+    """
+
+    See the asserts below for examples.
+
+    """
+    left, rest, right = intersperse_pat.match(string).groups()
+    def reverse(s): return s[::-1]
+    splits = split(reverse(rest), counts)
+    res = separator.join(map(reverse, reverse(splits)))
+    return left + res + right, len(splits) > 0 and len(splits) -1 or 0
+
+# TODO rewrite this with a unit test library
+def _group_examples():
+    for g in [original_group, intersperse]:
+        # print "asserts on", g.func_name
+        assert g("", []) == ("", 0)
+        assert g("0", []) == ("0", 0)
+        assert g("012", []) == ("012", 0)
+        assert g("1", []) == ("1", 0)
+        assert g("12", []) == ("12", 0)
+        assert g("123", []) == ("123", 0)
+        assert g("1234", []) == ("1234", 0)
+        assert g("123456789", []) == ("123456789", 0)
+        assert g("&ab%#@1", []) == ("&ab%#@1", 0)
+
+        assert g("0", []) == ("0", 0)
+        assert g("0", [1]) == ("0", 0)
+        assert g("0", [2]) == ("0", 0)
+        assert g("0", [200]) == ("0", 0)
+
+        # breaks original_group:
+        if g.func_name == 'intersperse':
+            assert g("12345678", [0], '.') == ('12345678', 0)
+            assert g("", [1], '.') == ('', 0)
+        assert g("12345678", [1], '.') == ('1234567.8', 1)
+        assert g("12345678", [1], '.') == ('1234567.8', 1)
+        assert g("12345678", [2], '.') == ('123456.78', 1)
+        assert g("12345678", [2,1], '.') == ('12345.6.78', 2)
+        assert g("12345678", [2,0], '.') == ('12.34.56.78', 3)
+        assert g("12345678", [-1,2], '.') == ('12345678', 0)
+        assert g("12345678", [2,-1], '.') == ('123456.78', 1)
+        assert g("12345678", [2,0,1], '.') == ('12.34.56.78', 3)
+        assert g("12345678", [2,0,0], '.') == ('12.34.56.78', 3)
+        assert g("12345678", [2,0,-1], '.') == ('12.34.56.78', 3)
+
+
+    assert original_group("abc1234567xy", [2], '.') == ('abc1234567.xy', 1)
+    assert original_group("abc1234567xy8", [2], '.') == ('abc1234567xy8', 0) # difference here...
+    assert original_group("abc12", [3], '.') == ('abc12', 0)
+    assert original_group("abc12", [2], '.') == ('abc12', 0)
+    assert original_group("abc12", [1], '.') == ('abc1.2', 1)
+
+    assert intersperse("abc1234567xy", [2], '.') == ('abc1234567.xy', 1)
+    assert intersperse("abc1234567xy8", [2], '.') == ('abc1234567x.y8', 1) # ... w.r.t. here.
+    assert intersperse("abc12", [3], '.') == ('abc12', 0)
+    assert intersperse("abc12", [2], '.') == ('abc12', 0)
+    assert intersperse("abc12", [1], '.') == ('abc1.2', 1)
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
