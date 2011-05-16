@@ -2686,7 +2686,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         analytic_journal_obj = self.pool.get('account.analytic.journal')
         obj_tax_code = self.pool.get('account.tax.code')
         obj_tax_code_template = self.pool.get('account.tax.code.template')
-        ir_values = self.pool.get('ir.values')
+        ir_values_obj = self.pool.get('ir.values')
         # Creating Account
         obj_acc_root = obj_multi.chart_template_id.account_root_id
         tax_code_root_id = obj_multi.chart_template_id.tax_code_root_id.id
@@ -3022,10 +3022,10 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                     obj_ac_fp.create(cr, uid, vals_acc)
 
         if obj_multi.sale_tax:
-            ir_values.set(cr, uid, key='default', key2=False, name="taxes_id", company=obj_multi.company_id.id,
+            ir_values_obj.set(cr, uid, key='default', key2=False, name="taxes_id", company=obj_multi.company_id.id,
                             models =[('product.product',False)], value=[tax_template_to_tax[obj_multi.sale_tax.id]])
         if obj_multi.purchase_tax:
-            ir_values.set(cr, uid, key='default', key2=False, name="supplier_taxes_id", company=obj_multi.company_id.id,
+            ir_values_obj.set(cr, uid, key='default', key2=False, name="supplier_taxes_id", company=obj_multi.company_id.id,
                             models =[('product.product',False)], value=[tax_template_to_tax[obj_multi.purchase_tax.id]])
 
 wizard_multi_charts_accounts()

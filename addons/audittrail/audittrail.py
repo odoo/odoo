@@ -105,7 +105,7 @@ class audittrail_rule(osv.osv):
         @return: True
         """
         obj_action = self.pool.get('ir.actions.act_window')
-        val_obj = self.pool.get('ir.values')
+        ir_values_obj = self.pool.get('ir.values')
         value=''
         #start Loop
         for thisrule in self.browse(cr, uid, ids):
@@ -116,7 +116,7 @@ class audittrail_rule(osv.osv):
             if w_id:
                 obj_action.unlink(cr, uid, w_id)
                 value = "ir.actions.act_window" + ',' + str(w_id[0])
-            val_id = val_obj.search(cr, uid, [('model', '=', thisrule.object_id.model), ('value', '=', value)])
+            val_id = ir_values_obj.search(cr, uid, [('model', '=', thisrule.object_id.model), ('value', '=', value)])
             if val_id:
                 res = ir.ir_del(cr, uid, val_id[0])
             self.write(cr, uid, [thisrule.id], {"state": "draft"})
