@@ -21,7 +21,6 @@
 
 import locale
 import logging
-import itertools
 import re
 
 from osv import fields, osv
