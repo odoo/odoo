@@ -602,7 +602,6 @@ class ListView(View):
         """
         view = self.fields_view_get(request, model, id, toolbar=True)
 
-        print sort
         rows = DataSet().do_search_read(request, model,
                                         offset=offset, limit=limit,
                                         domain=domain, sort=sort)
@@ -611,7 +610,6 @@ class ListView(View):
 
         if sort:
             sort_criteria = sort.split(',')[0].split(' ')
-            print sort, sort_criteria
             view['sorted'] = {
                 'field': sort_criteria[0],
                 'reversed': sort_criteria[1] == 'DESC'
