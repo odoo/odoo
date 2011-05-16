@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-05-09 10:19+0000\n"
-"PO-Revision-Date: 2011-05-14 17:46+0000\n"
+"PO-Revision-Date: 2011-05-15 19:06+0000\n"
 "Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-05-15 05:38+0000\n"
+"X-Launchpad-Export-Date: 2011-05-16 05:37+0000\n"
 "X-Generator: Launchpad (build 12959)\n"
 
 #. module: product
@@ -105,7 +105,7 @@ msgstr ""
 #. module: product
 #: field:product.template,seller_qty:0
 msgid "Supplier Quantity"
-msgstr ""
+msgstr "Количество поставщика"
 
 #. module: product
 #: selection:product.template,mes_type:0
@@ -421,6 +421,10 @@ msgid ""
 "information about your products related to procurement logistics, sales "
 "price, product category, suppliers and so on."
 msgstr ""
+"ТМЦ могут продаваться и покупаться. ТМЦ могут быть сырьем, складируемым "
+"товаром, расходными материалами или услугами. Форма ввода ТМЦ содержит "
+"подробную информацию о правилах снабжения, цене продажи, категории ТМЦ, "
+"поставщиках и т.д."
 
 #. module: product
 #: view:product.pricelist:0
@@ -577,7 +581,7 @@ msgstr "Можно закупать"
 #. module: product
 #: model:product.template,name:product.product_product_cpu2_product_template
 msgid "High speed processor config"
-msgstr ""
+msgstr "Конфигурация быстрого процессора"
 
 #. module: product
 #: model:process.transition,note:product.process_transition_supplierofproduct0
@@ -665,6 +669,9 @@ msgid ""
 "not overlaps with original version. You should change the dates and "
 "reactivate the pricelist"
 msgstr ""
+"Когда версия дублируется она устанавливается в не активную, таким образом, "
+"даты не пересекаются с оригиналом. Вы должны изменить даты и активировать "
+"прайс-лист."
 
 #. module: product
 #: model:product.template,name:product.product_product_kitshelfofcm0_product_template
@@ -986,6 +993,9 @@ msgid ""
 "manage new versions of a price list. Some examples of versions: 2010, 2011, "
 "Summer Promotion, etc."
 msgstr ""
+"Может быть более одной версии прайс-листа. Здесь вы можете создавать и "
+"управлять новыми версиями прайс-листа. Пример версии: 2010, 2011, Летнее "
+"предложение и т.д."
 
 #. module: product
 #: selection:product.template,type:0
@@ -1120,6 +1130,10 @@ msgid ""
 "contains detailed information about your products related to procurement "
 "logistics, sales price, product category, suppliers and so on."
 msgstr ""
+"Вы должны определить ТМЦ для всего, что вы покупаете или продаете. ТМЦ могут "
+"быть сырьем, складируемым товаром, расходными материалами или услугами. "
+"Форма ввода ТМЦ содержит подробную информацию о правилах снабжения, цене "
+"продажи, категории ТМЦ, поставщиках и т.д."
 
 #. module: product
 #: model:product.uom,name:product.product_uom_kgm
@@ -1584,7 +1598,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:product.product_price_type_action
 #: model:ir.ui.menu,name:product.menu_product_price_type
 msgid "Price Types"
-msgstr ""
+msgstr "Типы цен"
 
 #. module: product
 #: help:product.template,uom_id:0
@@ -1704,7 +1718,7 @@ msgstr "Категории ТМЦ"
 #. module: product
 #: field:product.template,uos_coeff:0
 msgid "UOM -> UOS Coeff"
-msgstr ""
+msgstr "Ед.изм -> Ед.прод. Коэфф"
 
 #. module: product
 #: help:product.supplierinfo,sequence:0
@@ -2326,6 +2340,8 @@ msgid ""
 "Coefficient to convert UOM to UOS\n"
 " uos = uom * coeff"
 msgstr ""
+"Коэффициент преобразования Ед.изм. в Ед.Прод.\n"
+" ед.изм. = ед.прод. * К"
 
 #. module: product
 #: help:product.template,volume:0
