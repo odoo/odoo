@@ -53,6 +53,7 @@ openerp.base.DataGroup =  openerp.base.Controller.extend( /** @lends openerp.bas
                 // generic access to those values is possible.
                 // Alias them to `value` and `length`.
                 d.resolveWith(self, [_(response.result).map(function (group) {
+                    console.log(group);
                     var field_name = self.group_by[0];
                     return _.extend({}, group, {
                         // provide field used for grouping
