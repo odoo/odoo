@@ -16,7 +16,8 @@
                     <field name="name"/>
                     <field name="date" string="Planned Date" attrs="{'invisible': [('action','=','log')]}"/>
                     <newline/>
-                    <field name="user_id" />
+                    <field name="user_id" />                    
+                    <field name="partner_id" readonly="True"/>
                     <field name="section_id" widget="selection" />
                     <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'crm.phonecall')]"/>
                     <separator string="" colspan="4"/>
