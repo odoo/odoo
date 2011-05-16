@@ -28,7 +28,7 @@
     When a purchase order is created, you now have the opportunity to save the related requisition.
     This new object will regroup and will allow you to easily keep track and order all your purchase orders.
 """,
-    "depends" : ["purchase","mrp"],
+    "depends" : ["purchase"],
     "init_xml" : [],
     "demo_xml" : ['purchase_requisition_demo.xml'],
     "update_xml" : ["security/purchase_tender.xml",

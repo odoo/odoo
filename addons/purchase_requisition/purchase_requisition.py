@@ -123,6 +123,7 @@ class purchase_order(osv.osv):
     def wkf_confirm_order(self, cr, uid, ids, context=None):
         res = super(purchase_order, self).wkf_confirm_order(cr, uid, ids, context=context)
         proc_obj = self.pool.get('procurement.order')
+        requisition_obj = self.pool.get('purchase.requisition')
         for po in self.browse(cr, uid, ids, context=context):
             if po.requisition_id and (po.requisition_id.exclusive=='exclusive'):
                 for order in po.requisition_id.purchase_ids:
@@ -132,7 +133,7 @@ class purchase_order(osv.osv):
                             proc_obj.write(cr,uid,proc_ids,{'purchase_id':po.id})
                         wf_service = netsvc.LocalService("workflow")
                         wf_service.trg_validate(uid, 'purchase.order', order.id, 'purchase_cancel', cr)
-                    self.pool.get('purchase.requisition').write(cr, uid, [po.requisition_id.id], {'state':'done','date_end':time.strftime('%Y-%m-%d %H:%M:%S')})
+                    requisition_obj.write(cr, uid, [po.requisition_id.id], {'state':'done','date_end':time.strftime('%Y-%m-%d %H:%M:%S')})
         return res
 
 purchase_order()
@@ -157,12 +158,13 @@ class procurement_order(osv.osv):
     }
     def make_po(self, cr, uid, ids, context=None):
         sequence_obj = self.pool.get('ir.sequence')
+        requisition_obj = self.pool.get('purchase.requisition')
         res = super(procurement_order, self).make_po(cr, uid, ids, context=context)
         for proc_id, po_id in res.items():
             procurement = self.browse(cr, uid, proc_id, context=context)
             requisition_id=False
             if procurement.product_id.purchase_requisition:
-                requisition_id=self.pool.get('purchase.requisition').create(cr, uid, {
+                requisition_id = requisition_obj.create(cr, uid, {
                     'name': sequence_obj.get(cr, uid, 'purchase.order.requisition'),
                     'origin': procurement.name,
                     'date_end': procurement.date_planned,
