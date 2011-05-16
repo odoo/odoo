@@ -33,7 +33,6 @@ class contrib_register(osv.osv):
     _description = 'Contribution Register'
 
     _columns = {
-        'account_id': fields.many2one('account.account', 'Account'),
         'analytic_account_id':fields.many2one('account.analytic.account', 'Analytic Account'),
     }
 contrib_register()
@@ -109,40 +108,34 @@ class hr_payslip(osv.osv):
                 'narration': name
             }
             for line in slip.line_ids:
-                if line.salary_rule_id.accounting_select != 'none':
-                    amt = slip.credit_note and -line.total or line.total
-                    partner_id = False
-                    name = line.name
-                    debit_account_id = line.salary_rule_id.account_debit.id
-                    credit_account_id = line.salary_rule_id.account_credit.id
-                    if line.salary_rule_id.accounting_select == 'third_party':
-                        if line.salary_rule_id.register_id:
-                            credit_account_id = line.salary_rule_id.register_id.account_id.id
-                        else:
-                            partner_id = slip.employee_id.partner_id.id
-                    debit_line = (0,0,{
-                        'name': line.name,
-                        'account_id': debit_account_id,
-                        'debit': amt > 0.0 and amt or 0.0,
-                        'credit': amt < 0.0 and -amt or 0.0,
-                        'date': timenow,
-                        'journal_id': slip.journal_id.id,
-                        'period_id': period_id,
-                    })
-                    credit_line = (0,0,{
-                        'date': timenow,
-                        'journal_id': slip.journal_id.id,
-                        'period_id': period_id,
-                        'name': name,
-                        'partner_id': partner_id,
-                        'account_id': credit_account_id,
-                        'debit': amt < 0.0 and -amt or 0.0,
-                        'credit': amt > 0.0 and amt or 0.0,
-                    })
-                    if debit_account_id:
-                        line_ids.append(debit_line)
-                    if credit_account_id:
-                        line_ids.append(credit_line)
+                amt = slip.credit_note and -line.total or line.total
+                partner_id = False
+                name = line.name
+                debit_account_id = line.salary_rule_id.account_debit.id
+                credit_account_id = line.salary_rule_id.account_credit.id
+                debit_line = (0,0,{
+                    'name': line.name,
+                    'account_id': debit_account_id,
+                    'debit': amt > 0.0 and amt or 0.0,
+                    'credit': amt < 0.0 and -amt or 0.0,
+                    'date': timenow,
+                    'journal_id': slip.journal_id.id,
+                    'period_id': period_id,
+                })
+                credit_line = (0,0,{
+                    'date': timenow,
+                    'journal_id': slip.journal_id.id,
+                    'period_id': period_id,
+                    'name': name,
+                    'partner_id': partner_id,
+                    'account_id': credit_account_id,
+                    'debit': amt < 0.0 and -amt or 0.0,
+                    'credit': amt > 0.0 and amt or 0.0,
+                })
+                if debit_account_id:
+                    line_ids.append(debit_line)
+                if credit_account_id:
+                    line_ids.append(credit_line)
             move.update({'line_id': line_ids})
             move_id = move_pool.create(cr, uid, move, context=context)
             self.write(cr, uid, [slip.id], {'move_id': move_id}, context=context)
@@ -381,7 +374,6 @@ hr_payslip()
 class hr_salary_rule(osv.osv):
     _inherit = 'hr.salary.rule'
     _columns = {
-        'accounting_select':fields.selection([('none', 'No Accounting Entries'), ('third_party', 'To Employee or contribution Register'), ('yes','Regular Entries')], 'Accounting Entries Option'),
         'analytic_account_id':fields.many2one('account.analytic.account', 'Analytic Account'),
         'account_tax_id':fields.many2one('account.tax.code', 'Tax Code'),
         'account_debit': fields.many2one('account.account', 'Debit Account'),

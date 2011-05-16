@@ -26,7 +26,6 @@
             <field name="arch" type="xml">
              <xpath expr="/form/notebook" position="before">
                 <newline/>
-                <field name="account_id" />
                 <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
              </xpath>
             </field>
@@ -41,7 +40,6 @@
             <field name="arch" type="xml">
               <xpath expr="/form/notebook/page[@string='Child Rules']" position="after">
                     <page string="Accounting">
-	                    <field name="accounting_select" />
 	                    <field name="account_debit" />
 	                    <field name="account_credit"/>
 	                    <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
