@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -64,11 +64,22 @@ class delivery_carrier(osv.osv):
         'product_id': fields.many2one('product.product', 'Delivery Product', required=True),
         'grids_id': fields.one2many('delivery.grid', 'carrier_id', 'Delivery Grids'),
         'price' : fields.function(get_price, method=True,string='Price'),
-        'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the delivery carrier without removing it.")
+        'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the delivery carrier without removing it."),
+        'normal_price': fields.float('Normal Price'),
+        'international_price': fields.boolean('International Price'),
+        'free_if_more_than': fields.boolean('Free If More Than'),
+        'delivery_country_ids': fields.one2many('delivery.carrier.country',\
+                            'delivery_carrier_id', 'Delivery Country'),
+        'amount': fields.float('Amount'),
+
     }
+
     _defaults = {
-        'active': lambda *args:1
+        'active': lambda *args:1,
+        'international_price': lambda *args: False,
+        'free_if_more_than': lambda *args: False
     }
+
     def grid_get(self, cr, uid, ids, contact_id, context=None):
         contact = self.pool.get('res.partner.address').browse(cr, uid, contact_id, context=context)
         for carrier in self.browse(cr, uid, ids, context=context):
@@ -86,7 +97,115 @@ class delivery_carrier(osv.osv):
                     continue
                 return grid.id
         return False
+
+    def create_grid_lines(self, cr, uid, ids, vals, context=None):
+        if context == None:
+            context = {}
+        grid_line_pool = self.pool.get('delivery.grid.line')
+        grid_pool = self.pool.get('delivery.grid')
+        for record in self.browse(cr, uid, ids, context=context):
+            grid_id = grid_pool.search(cr, uid, [('carrier_id', '=', record.id)], context=context)
+            if not grid_id:
+                record_data = {
+                    'name': vals.get('name', False),
+                    'carrier_id': record.id,
+                    'seqeunce': 10,
+                }
+                new_grid_id = grid_pool.create(cr, uid, record_data, context=context)
+                grid_id = [new_grid_id]
+
+            if record.free_if_more_than:
+                grid_lines = []
+                for line in grid_pool.browse(cr, uid, grid_id[0]).line_ids:
+                    if line.type == 'price':
+                        grid_lines.append(line.id)
+                grid_line_pool.unlink(cr, uid, grid_lines, context=context)
+                data = {
+                    'grid_id': grid_id and grid_id[0],
+                    'name': _('Free if more than %d') % record.amount,
+                    'type': 'price',
+                    'operator': '>=',
+                    'max_value': record.amount,
+                    'standard_price': 0.0,
+                    'list_price': 0.0,
+                }
+                grid_line_pool.create(cr, uid, data, context=context)
+            else:
+                _lines = []
+                for line in grid_pool.browse(cr, uid, grid_id[0], context=context).line_ids:
+                    if line.type == 'price':
+                        _lines.append(line.id)
+                grid_line_pool.unlink(cr, uid, _lines, context=context)
+
+            if record.international_price:
+                lines = []
+                for line in grid_pool.browse(cr, uid, grid_id[0], context=context).line_ids:
+                    if line.type == 'country':
+                        lines.append(line.id)
+                grid_line_pool.unlink(cr, uid, lines, context=context)
+                for country_rec in record.delivery_country_ids:
+                    for country in country_rec.country:
+                        values = {
+                            'grid_id': grid_id[0],
+                            'name': _('Country is %s') %country.name,
+                            'country_id': country.id,
+                            'type': 'country',
+                            'standard_price': country_rec.price,
+                            'list_price': 0.0,
+                            'operator': '==',
+                            'max_value': 0.0
+                        }
+                        grid_line_pool.create(cr, uid, values, context=context)
+            else:
+                l = []
+                for line in grid_pool.browse(cr, uid, grid_id[0]).line_ids:
+                    if line.type == 'country':
+                        l.append(line.id)
+                grid_line_pool.unlink(cr, uid, l, context=context)
+
+            if record.normal_price:
+                default_data = {
+                    'grid_id': grid_id and grid_id[0],
+                    'name': _('Default price'),
+                    'type': 'price',
+                    'operator': '>=',
+                    'max_value': 0.0,
+                    'standard_price': record.normal_price,
+                    'list_price': record.normal_price,
+                }
+                grid_line_pool.create(cr, uid, default_data, context=context)
+
+        return True
+
+    def write(self, cr, uid, ids, vals, context=None):
+        if context == None:
+            context = {}
+        res_id = super(delivery_carrier, self).write(cr, uid, ids, vals, context=context)
+        self.create_grid_lines(cr, uid, ids, vals, context=context)
+        return res_id
+
+    def create(self, cr, uid, vals, context=None):
+        if context == None:
+            context = {}
+        res_id = super(delivery_carrier, self).create(cr, uid, vals, context=context)
+        self.create_grid_lines(cr, uid, [res_id], vals, context=context)
+        return res_id
+
 delivery_carrier()
+
+
+class delivery_carrier_country(osv.osv):
+    _name = "delivery.carrier.country"
+    _description = "Delivery Carrier Country"
+
+    _columns = {
+        'country' : fields.many2many('res.country', 'delivery_country_rel',\
+                        'delivery_id', 'country_id', 'Country'),
+        'price': fields.float('Price'),
+        'delivery_carrier_id': fields.many2one('delivery.carrier', 'Carrier'),
+    }
+
+delivery_carrier_country()
 
 class delivery_grid(osv.osv):
     _name = "delivery.grid"
@@ -151,13 +270,17 @@ class delivery_grid_line(osv.osv):
     _columns = {
         'name': fields.char('Name', size=32, required=True),
         'grid_id': fields.many2one('delivery.grid', 'Grid',required=True),
-        'type': fields.selection([('weight','Weight'),('volume','Volume'),('wv','Weight * Volume'), ('price','Price')], 'Variable', required=True),
+        'type': fields.selection([('weight','Weight'),('volume','Volume'),\
+                                  ('wv','Weight * Volume'), ('price','Price'),\
+                                  ('country', 'Country')],\
+                                  'Variable', required=True),
         'operator': fields.selection([('==','='),('<=','<='),('>=','>=')], 'Operator', required=True),
         'max_value': fields.float('Maximum Value', required=True),
         'price_type': fields.selection([('fixed','Fixed'),('variable','Variable')], 'Price Type', required=True),
         'variable_factor': fields.selection([('weight','Weight'),('volume','Volume'),('wv','Weight * Volume'), ('price','Price')], 'Variable Factor', required=True),
         'list_price': fields.float('Sale Price', required=True),
         'standard_price': fields.float('Cost Price', required=True),
+        'country_id': fields.many2one('res.country', 'Country'),
     }
     _defaults = {
         'type': lambda *args: 'weight',
@@ -166,6 +289,11 @@ class delivery_grid_line(osv.osv):
         'variable_factor': lambda *args: 'weight',
     }
     _order = 'list_price'
+
+    def on_change_type(self, cr, uid, ids, type):
+        if type == 'country':
+            return {'value': {'operator': '=='}}
+        return {}
 
 
 delivery_grid_line()
