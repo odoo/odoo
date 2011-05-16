@@ -45,18 +45,8 @@
             </xpath>
              <group string="res_config_contents" position="replace">
                     <group colspan="4">
-                        <field colspan="4" name="partner" on_change="onchange_partner_product_term(partner,products)" />
-                        <field colspan="4" name="products" on_change="onchange_partner_product_term(partner,products)"/>
-                        <field colspan="4" name="terminolgy_ids" nolabel="1" mode="tree,form" groups="base.group_extended">
-                            <tree string="Selected Terminology"  editable="top">
-                                <field name="old_name"/>
-                                <field name="new_name"/>
-                             </tree>
-                             <form string="Selected Terminology">
-                                <field name="old_name"/>
-                                <field name="new_name"/>
-                             </form>
-                        </field>
+                        <field colspan="4" name="partner" />
+                        <field colspan="4" name="products" />
                   </group>
               </group>
             </data>
