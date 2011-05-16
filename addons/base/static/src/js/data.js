@@ -33,6 +33,55 @@ openerp.base.DataGroup =  openerp.base.Controller.extend( /** @lends openerp.bas
 
         this.groups = null;
     },
+    /**
+     * The format returned by ``read_group`` is absolutely dreadful:
+     *
+     * * A ``__context`` key provides future grouping levels
+     * * A ``__domain`` key provides the domain for the next search
+     * * The current grouping value is provided through the name of the
+     *   current grouping name e.g. if currently grouping on ``user_id``, then
+     *   the ``user_id`` value for this group will be provided through the
+     *   ``user_id`` key.
+     * * Similarly, the number of items in the group (not necessarily direct)
+     *   is provided via ``${current_field}_count``
+     * * Other aggregate fields are just dumped there
+     *
+     * This function slightly improves the grouping records by:
+     *
+     * * Adding a ``grouped_on`` property providing the current grouping field
+     * * Adding a ``value`` and a ``length`` properties which replace the
+     *   ``$current_field`` and ``${current_field}_count`` ones
+     * * Moving aggregate values into an ``aggregates`` property object
+     *
+     * Context and domain keys remain as-is, they should not be used externally
+     * but in case they're needed...
+     *
+     * @param {Object} group ``read_group`` record
+     */
+    transform_group: function (group) {
+        var field_name = this.group_by[0];
+
+        var aggregates = {};
+        _(group).each(function (value, key) {
+            if (key.indexOf('__') === 0
+                    || key === field_name
+                    || key === field_name + '_count') {
+                return;
+            }
+            aggregates[key] = value;
+        });
+
+        return {
+            __context: group.__context,
+            __domain: group.__domain,
+
+            grouped_on: field_name,
+            length: group[field_name + '_count'],
+            value: group[field_name],
+
+            aggregates: aggregates
+        };
+    },
     fetch: function () {
         // internal method
         var d = new $.Deferred();
@@ -47,21 +96,10 @@ openerp.base.DataGroup =  openerp.base.Controller.extend( /** @lends openerp.bas
                 domain: this.domain,
                 group_by_fields: this.group_by
             }, function () { }).then(function (response) {
-                self.groups = response.result;
-                // read_group results are annoying: they use the name of the
-                // field grouped on to hold the value and the count, so no
-                // generic access to those values is possible.
-                // Alias them to `value` and `length`.
-                d.resolveWith(self, [_(response.result).map(function (group) {
-                    console.log(group);
-                    var field_name = self.group_by[0];
-                    return _.extend({}, group, {
-                        // provide field used for grouping
-                        grouped_on: field_name,
-                        length: group[field_name + '_count'],
-                        value: group[field_name]
-                    });
-                })]);
+                var data_groups = _(response.result).map(
+                        _.bind(self.transform_group, self));
+                self.groups = data_groups;
+                d.resolveWith(self, [data_groups]);
             }, function () {
                 d.rejectWith.apply(d, self, [arguments]);
             });
@@ -116,8 +154,7 @@ openerp.base.DataGroup =  openerp.base.Controller.extend( /** @lends openerp.bas
      * The argument to the callback is the list of elements fetched, the
      * context (``this``) is the datagroup itself.
      *
-     * The items of a list are the standard objects returned by ``read_group``
-     * with three properties added:
+     * The items of a list have the following properties:
      *
      * ``length``
      *     the number of records contained in the group (and all of its
@@ -132,6 +169,8 @@ openerp.base.DataGroup =  openerp.base.Controller.extend( /** @lends openerp.bas
      * ``value``
      *     the value which led to this group (this is the value all contained
      *     records have for the current ``grouped_on`` field name).
+     * ``aggregates``
+     *     a mapping of other aggregation fields provided by ``read_group``
      *
      * @returns {$.Deferred}
      */
