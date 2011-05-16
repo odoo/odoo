@@ -41,12 +41,12 @@ class lang(osv.osv):
         if not lang:
             return False
         lang_ids = self.search(cr, uid, [('code','=', lang)])
-        values_obj = self.pool.get('ir.values')
+        ir_values_obj = self.pool.get('ir.values')
         if not lang_ids:
             lang_id = self.load_lang(cr, uid, lang)
-        default_value = values_obj.get(cr, uid, 'default', False, 'res.partner')
+        default_value = ir_values_obj.get(cr, uid, 'default', False, 'res.partner')
         if not default_value:
-            values_obj.set(cr, uid, 'default', False, 'lang', ['res.partner'], lang)
+            ir_values_obj.set(cr, uid, 'default', False, 'lang', ['res.partner'], lang)
         return True
 
     def load_lang(self, cr, uid, lang, lang_name=None):
