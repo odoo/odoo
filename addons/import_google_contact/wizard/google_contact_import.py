@@ -22,7 +22,6 @@ import datetime
 import dateutil
 from dateutil.parser import *
 from pytz import timezone
-import os
 
 try:
     import gdata
@@ -41,7 +40,8 @@ class synchronize_google_contact(osv.osv_memory):
     def _get_group(self, cr, uid, context=None):
         user_obj = self.pool.get('res.users').browse(cr, uid, uid)
         google=self.pool.get('google.login')
-        
+        if not user_obj.gmail_user or not user_obj.gmail_password:
+            raise osv.except_osv(_('Warning !'), _("No Google Username or password Defined for user.\nPlease define in user view"))
         gd_client = google.google_login(user_obj.gmail_user,user_obj.gmail_password,type='group')
         if not gd_client:
             raise osv.except_osv(_('Error'), _("Authentication fail check the user and password !"))
@@ -68,9 +68,18 @@ class synchronize_google_contact(osv.osv_memory):
     }
 
     def create_partner(self, cr, uid, data={}, context=None):
-        partner_obj = self.pool.get('res.partner')
-        partner_id = partner_obj.create(cr, uid, {
-                                                  'name': data.get('name',''), 
+        if context == None:
+            context = {}
+        if not data:
+            return False
+        partner_pool = self.pool.get('res.partner')
+        company_pool = self.pool.get('res.company')        
+        if 'company_id' in data:
+            company = company_pool.browse(cr, uid, data.get('company_id'), context=context)
+            return company.partner_id.id
+        partner_id = partner_pool.create(cr, uid, {
+                                                  'name': data.get('name',''),
+                                                  'user_id': uid,
                                                   'address' : [(6, 0, [data['address_id']])],
                                                   'customer': data.get('customer', False),
                                                   'supplier': data.get('supplier', False)
@@ -113,6 +122,16 @@ class synchronize_google_contact(osv.osv_memory):
                 'type': 'ir.actions.act_window',
         }
 
+    def getCompanyId(self, cr, uid, company, context=None):
+        if context == None:
+            context = {}
+        company_pool = self.pool.get('res.company')
+        company_id = company_pool.search(cr, uid, [('name', '=', company)])
+        if company_id:
+            return company_id[0]
+        new_cid = company_pool.create(cr, uid, {'name': company})
+        return new_cid
+
     def create_contact(self, cr, uid, ids, gd_client, contact, option,context=None):
         model_obj = self.pool.get('ir.model.data')
         addresss_obj = self.pool.get('res.partner.address')
@@ -124,10 +143,13 @@ class synchronize_google_contact(osv.osv_memory):
         else:
             time_zone = tools.get_server_timezone()
         au_tz = timezone(time_zone)
-        
         while contact:
             for entry in contact.entry:
                 data = self._retreive_data(entry)
+                if 'company' in data:
+                    company = data.pop('company')
+                    if company:
+                        data.update({'company_id': self.getCompanyId(cr, uid, company, context=context)})
                 google_id = data.pop('id')
                 model_data = {
                     'name':  google_id,
@@ -154,6 +176,7 @@ class synchronize_google_contact(osv.osv_memory):
                     res_id = contact_ids[0]
                 if not contact_ids:
                     #create or link to an existing partner only if it's a new contact
+                    data.update({'type': 'default'})
                     res_id = addresss_obj.create(cr, uid, data, context=context)
                     data['address_id'] = res_id
                     if option == 'create_all':
@@ -162,8 +185,9 @@ class synchronize_google_contact(osv.osv_memory):
                         data['supplier'] = obj.supplier
                         partner_id = self.create_partner(cr, uid, data, context=context)
                         partner_ids.append(partner_id)
+                        addresss_obj.write(cr, uid, [res_id], {'partner_id': partner_id}, context=context)
                     addresses.append(res_id)
-                        
+
                 if not data_ids: #link to google_id if it was not the case before            
                     model_data.update({'res_id': res_id})
                     model_obj.create(cr, uid, model_data, context=context)
@@ -185,7 +209,13 @@ class synchronize_google_contact(osv.osv_memory):
         data['name'] = name
         emails = ','.join(email.address for email in entry.email)
         data['email'] = emails
-        
+        if entry.organization:
+            if entry.organization.org_name:
+                data.update({'company': entry.organization.org_name.text})
+            if entry.organization.org_title:
+                data.update ({'function': entry.organization.org_title.text})
+
+
         if entry.phone_number:
             for phone in entry.phone_number:
                 if phone.rel == gdata.contacts.REL_WORK:
