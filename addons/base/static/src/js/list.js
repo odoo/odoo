@@ -1,4 +1,5 @@
 openerp.base.list = function (openerp) {
+'use strict';
 openerp.base.views.add('list', 'openerp.base.ListView');
 openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListView# */ {
     defaults: {
@@ -506,7 +507,6 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
                             });
                         });
                     }, function (new_datagroup) {
-                        console.log(new_datagroup);
                         $('<dd>')
                             .insertAfter($title)
                             .append(self.make_level(new_datagroup));
