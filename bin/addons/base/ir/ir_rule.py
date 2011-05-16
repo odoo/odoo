@@ -126,10 +126,11 @@ class ir_rule(osv.osv):
                 if group_domain:
                     group_domains += group_domain
                     count += 1
-            if count and global_domain:
-                return ['&'] + global_domain + ['|'] * (count-1) + group_domains
             if count:
-                return ['|'] * (count-1) + group_domains
+                 dom = ['&'] * (count-1) + group_domains
+                 if global_domain:
+                     return ['&'] + global_domain + dom
+                 return dom
             return global_domain
         return []
 
