@@ -53,6 +53,7 @@ class sugar_import(import_framework):
     TABLE_TASK = 'Tasks'
     TABLE_PROJECT = 'Project'
     TABLE_PROJECT_TASK = 'ProjectTask'
+    TABLE_BUG = 'Bugs'
     TABLE_CASE = 'Cases'
     
     
@@ -99,8 +100,95 @@ class sugar_import(import_framework):
     def get_float_time(self, dict, hour, min):
         min = int(min) * 100 / 60
         return "%s.%i" % (hour, min)
-
-
+    """
+    import Claims(Cases)
+    """
+    def get_claim_priority(self, val):
+        priority_dict = {            
+                'High': '2',
+                'Medium': '3',
+                'Low': '4'
+        }
+        return priority_dict.get(val.get('priority'), '')
+        
+    def get_contact_info_from_account(self, val):
+        partner_id = self.get_mapped_id(self.TABLE_ACCOUNT, val.get('account_id'))
+        partner_address_id = False
+        partner_phone = False
+        partner_email = False
+        partner = self.obj.pool.get('res.partner').browse(self.cr, self.uid, [partner_id])[0]
+        if partner.address and partner.address[0]:
+            address = partner.address[0]
+            partner_address_id = address.id
+            partner_phone = address.phone
+            partner_email = address.email
+        return partner_address_id, partner_phone,partner_email
+    
+    def import_crm_claim(self, val):
+        partner_address_id, partner_phone,partner_email =  self.get_contact_info_from_account(val)
+        val['partner_address_id/.id'] = partner_address_id
+        val['partner_address_id/.id'] = partner_address_id
+        val['partner_phone'] = partner_phone
+        val['email_from'] = partner_email
+        return val
+    
+    def get_crm_claim_mapping(self): 
+        return { 
+                'model' : 'crm.claim',
+                'dependencies' : [self.TABLE_USER, self.TABLE_ACCOUNT, self.TABLE_CONTACT, self.TABLE_LEAD],
+                'hook' : self.import_crm_claim,
+                'map' : {
+                    'name': 'name',
+                    'date': 'date_entered',
+                    'user_id/id': ref(self.TABLE_USER, 'assigned_user_id'),
+                    'description': 'description',
+                    'partner_id/id': ref(self.TABLE_ACCOUNT, 'account_id'),
+                    'partner_address_id/.id': 'partner_address_id/.id',
+                    'partner_phone': 'partner_phone',
+                    'email_from': 'email_from',                                        
+                    'priority': self.get_claim_priority,
+                    'state': map_val('status', self.project_issue_state)
+                }
+            }    
+    """
+    Import Project Issue(Bugs)
+    """
+    project_issue_state = {
+            'New' : 'draft',
+            'Assigned':'open',
+            'Closed': 'done',
+            'Pending': 'pending',
+            'Rejected': 'cancel',
+    }
+     
+    def get_project_issue_priority(self, val):
+        priority_dict = {
+                'Urgent': '1',
+                'High': '2',
+                'Medium': '3',
+                'Low': '4'
+         }
+        return priority_dict.get(val.get('priority'), '')     
+      
+    def get_bug_project_id(self, dict, val):
+        fields = ['name']
+        data = [val]
+        return self.import_object(fields, data, 'project.project', 'project_issue', val)    
+    
+    def get_project_issue_mapping(self):
+        return { 
+                'model' : 'project.issue',
+                'dependencies' : [self.TABLE_USER, self.TABLE_PROJECT, self.TABLE_PROJECT_TASK],
+                'map' : {
+                    'name': 'name',
+                    'project_id/id': call(self.get_bug_project_id, 'sugarcrm_bugs'),
+                    'categ_id/id': call(self.get_category, 'project.issue', value('type')),
+                    'description': ppconcat('__prettyprint__','description', 'bug_number', 'fixed_in_release_name', 'source', 'fixed_in_release', 'work_log', 'found_in_release', 'release_name', 'resolution'),
+                    'priority': self.get_project_issue_priority,
+                    'state': map_val('status', self.project_issue_state)
+                }
+            }
+    
     """
     import Project Tasks
     """
@@ -197,15 +285,15 @@ class sugar_import(import_framework):
         }
 
     def import_task(self, val):
-	    val['date'] = val.get('date_start') or datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-	    val['date_deadline'] = val.get('date_due') or datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-	    return val
+        val['date'] = val.get('date_start') or datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+        val['date_deadline'] = val.get('date_due') or datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+        return val
 
     def get_task_mapping(self):
         return { 
                 'model' : 'crm.meeting',
                 'dependencies' : [self.TABLE_CONTACT, self.TABLE_ACCOUNT, self.TABLE_USER],
-	            'hook' : self.import_task,
+                'hook' : self.import_task,
                 'map' : {
                     'name': 'name',
                     'date': 'date',
@@ -593,7 +681,9 @@ class sugar_import(import_framework):
             self.TABLE_CALL : self.get_calls_mapping(),
             self.TABLE_TASK : self.get_task_mapping(),
             self.TABLE_PROJECT : self.get_project_mapping(),
-            self.TABLE_PROJECT_TASK: self.get_project_task_mapping()
+            self.TABLE_PROJECT_TASK: self.get_project_task_mapping(),
+            self.TABLE_BUG: self.get_project_issue_mapping(),
+            self.TABLE_CASE: self.get_crm_claim_mapping()
         }
 
 
@@ -665,7 +755,7 @@ class import_sugarcrm(osv.osv):
             if current.call:
                 key_list.append('Calls')
             if current.claim:
-                key_list.append('Claims')                
+                key_list.append('Cases')                
             if current.email:
                 key_list.append('Emails') 
             if current.project:
