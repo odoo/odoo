@@ -75,8 +75,10 @@ class account_payment_populate_statement(osv.osv_memory):
             amount = currency_obj.compute(cr, uid, line.currency.id,
                     statement.currency.id, line.amount_currency, context=ctx)
 
-            context.update({'move_line_ids': [line.move_line_id.id]})
-            result = voucher_obj.onchange_partner_id(cr, uid, [], partner_id=line.partner_id.id, journal_id=statement.journal_id.id, price=abs(amount), currency_id= statement.currency.id, ttype='payment', context=context)
+            if line.move_line_id.id:
+                context.update({'move_line_ids': [line.move_line_id.id]})
+
+            result = voucher_obj.onchange_partner_id(cr, uid, [], partner_id=line.partner_id.id, journal_id=statement.journal_id.id, price=abs(amount), currency_id= statement.currency.id, ttype='payment', date=line.date, context=context)
 
             if line.move_line_id:
                 voucher_res = {
