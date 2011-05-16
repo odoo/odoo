@@ -198,7 +198,7 @@ class lang(osv.osv):
             parts = formatted.split('.')
 
             if grouping:
-                parts[0], seps = original_group(parts[0], eval_lang_grouping, thousands_sep)
+                parts[0], seps = intersperse(parts[0], eval_lang_grouping, thousands_sep)
 
             formatted = decimal_point.join(parts)
             while seps:
@@ -208,7 +208,7 @@ class lang(osv.osv):
                 seps -= 1
         elif percent[-1] in 'diu':
             if grouping:
-                formatted = original_group(formatted, eval_lang_grouping, thousands_sep)[0]
+                formatted = intersperse(formatted, eval_lang_grouping, thousands_sep)[0]
 
         return formatted
 
@@ -217,9 +217,6 @@ class lang(osv.osv):
 #                             r'(?P<modifiers>[-#0-9 +*.hlL]*?)[eEfFgGdiouxXcrs%]')
 
 lang()
-
-# TODO intersperse is more general than original_group, maybe
-# this is a problem and the loop should really stops on non-digits.
 
 def original_group(s, grouping, thousands_sep=''):
 
