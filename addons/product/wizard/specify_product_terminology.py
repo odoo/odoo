@@ -27,23 +27,36 @@ class specify_product_terminology(osv.osv_memory):
     _name = 'specify.product.terminology'
     _inherit = 'res.config'
     _columns = {
-        'partner': fields.selection([('customers','Customers'),
-                                  ('clients','Clients'),
-                                  ('members','Members'),
-                                  ('patients','Patients'),
-                                  ('partners','Partners'),
-                                  ('donors','Donors'),
-                                  ('guests','Guests'),
-                                  ('tenants','Tenants')
+        'partner': fields.selection([('Customers','Customers'),
+                                  ('Clients','Clients'),
+                                  ('Members','Members'),
+                                  ('Patients','Patients'),
+                                  ('Partners','Partners'),
+                                  ('Donors','Donors'),
+                                  ('Guests','Guests'),
+                                  ('Tenants','Tenants')
                                   ],
-                                 'Choose how to call a Customer', required=True ),
+                                 'Choose how to call a customer', required=True ),
                                  
         'products' : fields.char('Choose how to call a Product', size=64),
         
     }
     _defaults={
-               'partner' :'partners',
+               'partner' :'Partners',
     }
+    
+    def execute(self, cr, uid, ids, context=None):
+        for o in self.browse(cr, uid, ids, context=context):
+            user_obj = self.pool.get('res.users')
+            trans_obj = self.pool.get('ir.translation')
+            browse_val = user_obj.browse(cr ,uid ,uid , context=context)
+            name = browse_val.name
+            context_lang = browse_val.context_lang
+            name_prt = 'res.partner,name'
+            name_prod = 'product.template,name'
+            trans_obj.create(cr, uid, {'name': name_prt ,'lang': context_lang, 'type': 'field',  'src': 'Name', 'value': o.partner}, context=context)
+            trans_obj.create(cr, uid, {'name': name_prod ,'lang': context_lang, 'type': 'field',  'src': 'Name', 'value': o.products}, context=context)
+        return {}
     
 specify_product_terminology()
 
