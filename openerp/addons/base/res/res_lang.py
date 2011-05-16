@@ -21,6 +21,7 @@
 
 import locale
 import logging
+import itertools
 
 from osv import fields, osv
 from locale import localeconv
@@ -259,8 +260,6 @@ def original_group(s, grouping, thousands_sep=''):
         seps += 1
     return result + spaces, seps
 
-import itertools
-
 def take_left_padding(string):
     """
     >>> take_left_padding("   hello world ")
@@ -319,17 +318,20 @@ def split(l, counts):
 def intersperse(string, counts, separator=''):
     """
 
-    See the assert below for examples.
+    See the asserts below for examples.
 
     """
     left_padding, rest = take_left_padding(string)
+    padding = ''.join(itertools.takewhile(lambda c: not c.isdigit(), rest))
+    rest = rest[len(padding):]
     right_padding, rest = take_right_padding(rest)
     def reverse(s): return s[::-1]
     splits = split(reverse(rest), counts)
     res = separator.join(map(reverse, reverse(splits)))
-    return left_padding + res + right_padding, len(splits) > 0 and len(splits) -1 or 0
+    return left_padding + padding + res + right_padding, len(splits) > 0 and len(splits) -1 or 0
 
-def _group_examples_():
+# TODO rewrite this with a unit test library
+def _group_examples():
     for g in [original_group, intersperse]:
         # print "asserts on", g.func_name
         assert g("", []) == ("", 0)
@@ -347,9 +349,9 @@ def _group_examples_():
         assert g("0", [2]) == ("0", 0)
         assert g("0", [200]) == ("0", 0)
 
-        # breaks _group:
-        if g.func_name == 'my_group':
-            assert g("12345678", [0], '.')
+        # breaks original_group:
+        if g.func_name == 'intersperse':
+            assert g("12345678", [0], '.') == ('12345678', 0)
             assert g("", [1], '.') == ('', 0)
         assert g("12345678", [1], '.') == ('1234567.8', 1)
         assert g("12345678", [1], '.') == ('1234567.8', 1)
@@ -361,6 +363,19 @@ def _group_examples_():
         assert g("12345678", [2,0,1], '.') == ('12.34.56.78', 3)
         assert g("12345678", [2,0,0], '.') == ('12.34.56.78', 3)
         assert g("12345678", [2,0,-1], '.') == ('12.34.56.78', 3)
+
+
+    assert original_group("abc1234567xy", [2], '.') == ('abc1234567.xy', 1)
+    assert original_group("abc1234567xy8", [2], '.') == ('abc1234567xy8', 0) # difference here...
+    assert original_group("abc12", [3], '.') == ('abc12', 0)
+    assert original_group("abc12", [2], '.') == ('abc12', 0)
+    assert original_group("abc12", [1], '.') == ('abc1.2', 1)
+
+    assert intersperse("abc1234567xy", [2], '.') == ('abc1234567.xy', 1)
+    assert intersperse("abc1234567xy8", [2], '.') == ('abc1234567x.y8', 1) # ... w.r.t. here.
+    assert intersperse("abc12", [3], '.') == ('abc12', 0)
+    assert intersperse("abc12", [2], '.') == ('abc12', 0)
+    assert intersperse("abc12", [1], '.') == ('abc1.2', 1)
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
