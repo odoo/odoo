@@ -26,7 +26,6 @@ from osv import fields, osv
 from mx import DateTime
 from tools import config
 from tools.translate import _
-from datetime import datetime
 
 class sale_shop(osv.osv):
     _name = "sale.shop"
@@ -600,10 +599,9 @@ class sale_order(osv.osv):
         for order in self.browse(cr, uid, ids, context={}):
             output_id = order.shop_id.warehouse_id.lot_output_id.id
             picking_id = False
-            date_order = DateTime.strptime(order.date_order, '%Y-%m-%d')
             for line in order.order_line:
                 proc_id = False
-                date_planned = date_order + DateTime.DateTimeDeltaFromDays(line.delay or 0.0)
+                date_planned = DateTime.now() + DateTime.DateTimeDeltaFromDays(line.delay or 0.0)
                 date_planned = (date_planned - DateTime.DateTimeDeltaFromDays(company.security_lead)).strftime('%Y-%m-%d %H:%M:%S')
                 if line.state == 'done':
                     continue
