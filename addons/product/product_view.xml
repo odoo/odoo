@@ -280,8 +280,7 @@
             <field name="res_model">product.product</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('categ_id','child_of',[active_id])]</field>
-            <field name="context">{'categ_id':active_id}</field>
+            <field name="context">{'categ_id':active_id, 'search_default_categ_id':active_id}</field>
         </record>
         <record id="ir_product_category_open" model="ir.values">
             <field eval="'tree_but_open'" name="key2"/>
