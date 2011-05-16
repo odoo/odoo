@@ -370,8 +370,8 @@ class import_framework(Thread):
                 imported.add(dependency)
                 
     def _send_notification_email(self, result):
-		if not self.email:
-			return
+        if not self.email:
+            return 		 
         subject = "Openerp has finish to import your data at %s" % self.date_ended
         tools.email_send(
                 'import_sugarcrm@module.openerp',
