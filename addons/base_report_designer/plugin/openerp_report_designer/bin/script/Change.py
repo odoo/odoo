@@ -44,36 +44,49 @@
 #
 #
 ##############################################################################
-
+import uno
+import string
+import unohelper
+import xmlrpclib
+from com.sun.star.task import XJobExecutor
 if __name__<>"package":
     from lib.gui import *
+    from lib.error import ErrorDialog
     from lib.functions import *
+    from lib.logreport import *
     from lib.rpc import *
+    from ServerParameter import *
+    database="test"
 
-class Change:
-    def __init__(self, aVal= None, sURL=""):
+class Change( unohelper.Base, XJobExecutor ):
+    def __init__(self,ctx):
+        self.ctx     = ctx
+        self.module  = "openerp_report"
+        self.version = "0.1"
+        desktop=getDesktop()
+        log_detail(self)
+        self.logobj=Logger()
+        doc = desktop.getCurrentComponent()
+        docinfo=doc.getDocumentInfo()
         self.win=DBModalDialog(60, 50, 120, 90, "Connect to Open ERP Server")
 
         self.win.addFixedText("lblVariable", 38, 12, 25, 15, "Server  ")
-
-        self.win.addEdit("txtHost",-2,9,60,15,sURL[sURL.find("/")+2:sURL.rfind(":")])
+        self.win.addEdit("txtHost",-2,9,60,15,'localhost')
 
         self.win.addFixedText("lblReportName",45 , 31, 15, 15, "Port  ")
-        self.win.addEdit("txtPort",-2,28,60,15,sURL[sURL.rfind(":")+1:])
+        self.win.addEdit("txtPort",-2,28,60,15,"8069")
 
         self.win.addFixedText("lblLoginName", 2, 51, 60, 15, "Protocol Connection")
 
         self.win.addComboListBox("lstProtocol", -2, 48, 60, 15, True)
         self.lstProtocol = self.win.getControl( "lstProtocol" )
 
-#        self.lstProtocol.addItem( "XML-RPC", 0)
-        #self.lstProtocol.addItem( "XML-RPC secure", 1)
-        #self.lstProtocol.addItem( "NET-RPC (faster)", 2)
-
-        self.win.addButton( 'btnOK', -2, -5, 30, 15, 'Ok', actionListenerProc = self.btnOk_clicked )
+        self.win.addButton( 'btnNext', -2, -5, 30, 15, 'Next', actionListenerProc = self.btnNext_clicked )
 
         self.win.addButton( 'btnCancel', -2 - 30 - 5 ,-5, 30, 15, 'Cancel', actionListenerProc = self.btnCancel_clicked )
+        aVal=''
         self.aVal=aVal
+        sValue=''
         self.protocol = {
             'XML-RPC': 'http://',
             'XML-RPC secure': 'https://',
@@ -81,31 +94,32 @@ class Change:
         }
         for i in self.protocol.keys():
             self.lstProtocol.addItem(i,self.lstProtocol.getItemCount() )
-
-        sValue=self.protocol.keys()[0]
-        if sURL<>"":
-            sValue=self.protocol.keys()[self.protocol.values().index(sURL[:sURL.find("/")+2])]
-
         self.win.doModalDialog( "lstProtocol", sValue)
 
-    def btnOk_clicked(self,oActionEvent):
+    def btnNext_clicked(self,oActionEvent):
         global url
-        url = self.protocol[self.win.getListBoxSelectedItem("lstProtocol")]+self.win.getEditText("txtHost")+":"+self.win.getEditText("txtPort")
-        self.sock=RPCSession(url)
-        desktop=getDesktop()
-        doc = desktop.getCurrentComponent()
-        docinfo=doc.getDocumentInfo()        
-        docinfo.setUserFieldValue(0,url)
-        res=self.sock.listdb()
-        if res == -1:
-            self.aVal.append(url)
-        elif res == 0:
-            self.aVal.append("No Database found !!!")
-        else:
-            self.aVal.append(url)
-        self.aVal.append(res)
+        aVal=''
+        #aVal= Fetature used 
+        try:
+            url = self.protocol[self.win.getListBoxSelectedItem("lstProtocol")]+self.win.getEditText("txtHost")+":"+self.win.getEditText("txtPort")
+            self.sock=RPCSession(url)
+            desktop=getDesktop()
+            doc = desktop.getCurrentComponent()
+            docinfo=doc.getDocumentInfo()        
+            docinfo.setUserFieldValue(0,url)
+            res=self.sock.listdb()
+            self.win.endExecute()
+            ServerParameter(aVal,url)
+        except :
+            import traceback,sys 
+            info = reduce(lambda x, y: x+y, traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback))
+            self.logobj.log_write('ServerParameter', LOG_ERROR, info)            
+    def btnCancel_clicked(self,oActionEvent):
         self.win.endExecute()
+        
 
-    def btnCancel_clicked( self, oActionEvent ):
-        self.win.endExecute()
+if __name__<>"package" and __name__=="__main__":
+    Change(None)
+elif __name__=="package":
+    g_ImplementationHelper.addImplementation( Change, "org.openoffice.openerp.report.change", ("com.sun.star.task.Job",),)
 
