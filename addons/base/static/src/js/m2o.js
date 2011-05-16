@@ -55,7 +55,7 @@ openerp.base.m2o = function(openerp){
                     if (ui.item.id == 'more') {
                         self.dataset.ids = self.result_ids;
                         self.dataset.count = self.dataset.ids.length;
-                        self.dataset.domain = [];
+                        self.dataset.domain = self.result_ids.length ? [["id", "in", self.dataset.ids]] : []
                         self.element.val('');
                         var pop = new openerp.base.form.Many2XSelectPopup(null, self.session);
                         pop.select_element(self.relation, self.dataset);

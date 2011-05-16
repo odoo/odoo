@@ -1086,8 +1086,9 @@ openerp.base.form.Many2ManyListView = openerp.base.ListView.extend({
 openerp.base.form.Many2XSelectPopup = openerp.base.BaseWidget.extend({
     identifier_prefix: "many2xselectpopup",
     template: "Many2XSelectPopup",
-    select_element: function(model) {
+    select_element: function(model, dataset) {
         this.model = model;
+        this.dataset = dataset
         var html = this.render();
         jQuery(html).dialog({title: '',
                     modal: true,
@@ -1096,7 +1097,9 @@ openerp.base.form.Many2XSelectPopup = openerp.base.BaseWidget.extend({
     },
     start: function() {
         this._super();
-        this.dataset = new openerp.base.DataSetSearch(this.session, this.model);
+        if (!this.dataset) {
+            this.dataset = new openerp.base.DataSetSearch(this.session, this.model);
+        }
         this.setup_search_view();
     },
     setup_search_view: function() {
