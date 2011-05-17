@@ -17,17 +17,23 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
     /**
      * Process an action
      * Supported actions: act_window
-     * 
-     * If the action contains a 'no_sidebar' key, the resulting view will never contain a sidebar.
      */
     do_action: function(action) {
         var self = this;
+        action.flags = _.extend({
+            sidebar : true,
+            search_view : true,
+            new_window : false,
+            views_switcher : true,
+            toolbar : true,
+            pager : true
+        }, action.flags || {});
         // instantiate the right controllers by understanding the action
         switch (action.type) {
             case 'ir.actions.act_window':
                 if (action.target == 'new') {
                     var element_id = _.uniqueId("act_window_dialog");
-                    var dialog = $('<div id="'+element_id+'"></div>');
+                    var dialog = $('<div id="' + element_id + '"></div>');
                     dialog.dialog({
                         title: action.name,
                         modal: true,
@@ -37,18 +43,21 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
                         // When dialog is closed with ESC key or close manually, branch to act_window_close logic
                         self.do_action({ type: 'ir.actions.act_window_close' });
                     });
-                    var viewmanager = new openerp.base.ViewManagerAction(this.session, element_id, action, false);
+                    var viewmanager = new openerp.base.ViewManagerAction(this.session, element_id, action);
                     viewmanager.start();
                     this.dialog_stack.push(viewmanager);
+                } else if (action.flags.new_window) {
+                    action.flags.new_window = false;
+                    this.rpc("/base/session/save_session_action", { the_action : action}, function(key) {
+                        var url = window.location.protocol + "//" + window.location.host +
+                                window.location.pathname + "?" + jQuery.param({ s_action : "" + key });
+                        window.open(url);
+                    });
                 } else {
                     if (this.viewmanager) {
                         this.viewmanager.stop();
                     }
-                    var sidebar = true;
-                    if(action.no_sidebar) {
-                        sidebar = false;
-                    }
-                    this.viewmanager = new openerp.base.ViewManagerAction(this.session, this.element_id, action, sidebar);
+                    this.viewmanager = new openerp.base.ViewManagerAction(this.session, this.element_id, action);
                     this.viewmanager.start();
                 }
                 break;
@@ -63,63 +72,6 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
     }
 });
 
-/**
- * Mixin for action-executing objects, provides handling of OpenERP actions to
- * all clients.
- *
- * Mix into existing classes via ``_.extend`` of the class's prototype.
- *
- * @class
- */
-openerp.base.ActionExecutor =
-/**
- * @lends openerp.base.ActionExecutor#
- */ {
-    /**
-     * Fetches and executes the action identified by ``action_data``.
-     *
-     * @param {Object} action_data the action descriptor data
-     * @param {String} action_data.name the action name, used to uniquely identify the action to find and execute it
-     * @param {String} [action_data.special=null] special action handlers (currently: only ``'cancel'``)
-     * @param {String} [action_data.type='workflow'] the action type, if present, one of ``'object'``, ``'action'`` or ``'workflow'``
-     * @param {Object} [action_data.context=null] additional action context, to add to the current context
-     * @param {openerp.base.DataSet} dataset a dataset object used to communicate with the server
-     * @param {openerp.base.ActionManager} action_manager object able to actually execute the action, if any is fetched
-     * @param {Number} [record_id] the identifier of the object on which the action is to be applied
-     * @param {Function} on_no_action callback to execute if the action does not generate any result (no new action)
-     */
-    execute_action: function (action_data, dataset, action_manager, record_id, on_no_action) {
-        var handler = function (r) {
-            if (r.result && r.result.constructor == Object) {
-                action_manager.do_action(r.result);
-            } else {
-                on_no_action(r.result);
-            }
-        };
-
-        if (action_data.special) {
-            handler({
-                result : { type: 'ir.actions.act_window_close' }
-            });
-        } else {
-            var context = _.extend({}, dataset.context, action_data.context || {});
-            switch(action_data.type) {
-                case 'object':
-                    return dataset.call(action_data.name, [record_id], [context], handler);
-                case 'action':
-                    return this.rpc('/base/action/load', { action_id: parseInt(action_data.name, 10) }, handler);
-                default:
-                    return dataset.exec_workflow(record_id, action_data.name, handler);
-            }
-        }
-    }
-};
-
-/**
- * Registry for all the main views
- */
-openerp.base.views = new openerp.base.Registry();
-
 openerp.base.ViewManager =  openerp.base.Controller.extend({
     init: function(session, element_id, dataset, views) {
         this._super(session, element_id);
@@ -129,6 +81,7 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
         this.active_view = null;
         this.views_src = views;
         this.views = {};
+        this.flags = this.flags || {};
     },
     /**
      * @returns {jQuery.Deferred} initial view loading promise
@@ -143,6 +96,9 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
         _.each(this.views_src, function(view) {
             self.views[view[1]] = { view_id: view[0], controller: null };
         });
+        if (this.flags.views_switcher === false) {
+            this.$element.find('.oe_vm_switch').hide();
+        }
         // switch to the first one in sequence
         return this.on_mode_switch(this.views_src[0][1]);
     },
@@ -166,7 +122,7 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
             this.views[view_type].controller = controller;
         }
 
-        if(this.searchview) {
+        if (this.searchview) {
             if (view.controller.searchable === false) {
                 this.searchview.hide();
             } else {
@@ -202,6 +158,9 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
             this.searchview.stop();
         }
         this.searchview = new openerp.base.SearchView(this, this.session, this.element_id + "_search", this.dataset, view_id, search_defaults);
+        if (this.flags.search_view === false) {
+            this.searchview.hide();
+        }
         this.searchview.on_search.add(function(domains, contexts, groupbys) {
             self.views[self.active_view].controller.do_search.call(
                 self, domains.concat(self.domains()),
@@ -240,7 +199,7 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
 });
 
 openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
-    init: function(session, element_id, action, sidebar) {
+    init: function(session, element_id, action) {
         var dataset;
         if(!action.res_id) {
             dataset = new openerp.base.DataSetSearch(session, action.res_model);
@@ -251,9 +210,10 @@ openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
         }
         this._super(session, element_id, dataset, action.views);
         this.action = action;
-        this.sidebar = sidebar;
-        if (sidebar)
+        this.flags = this.action.flags || {};
+        if (this.flags.sidebar) {
             this.sidebar = new openerp.base.Sidebar(null, this);
+        }
     },
     start: function() {
         var inital_view_loaded = this._super();
@@ -346,7 +306,10 @@ openerp.base.Sidebar = openerp.base.BaseWidget.extend({
             var i = $this.attr("data-i");
             var j = $this.attr("data-j");
             var action = self.sections[i].elements[j];
-            (new openerp.base.ExternalActionManager(self.view_manager.session, null)) .handle_action(action);
+            action.flags = {
+                new_window : true
+            }
+            self.session.action_manager.do_action(action);
             e.stopPropagation();
             e.preventDefault();
         });
@@ -357,89 +320,51 @@ openerp.base.Sidebar = openerp.base.BaseWidget.extend({
     }
 });
 
-openerp.base.ExternalActionManager = openerp.base.Controller.extend({
-    handle_action: function(action) {
-        if(action.type=="ir.actions.act_window") {
-            if(action.target=="new") {
-                var element_id = _.uniqueId("act_window_dialog");
-                var dialog = $('<div id="'+element_id+'"></div>');
-                dialog.dialog({
-                    title: action.name
-                });
-                var viewmanager = new openerp.base.ViewManagerAction(this.session ,element_id, action, false);
-                viewmanager.start();
-            } else if (action.target == "current") {
-                this.rpc("/base/session/save_session_action", {the_action:action}, function(key) {
-                    var url = window.location.protocol + "//" + window.location.host +
-                            window.location.pathname + "?" + jQuery.param({s_action:""+key});
-                    window.open(url);
-                });
+openerp.base.View = openerp.base.Controller.extend({
+    /**
+     * Fetches and executes the action identified by ``action_data``.
+     *
+     * @param {Object} action_data the action descriptor data
+     * @param {String} action_data.name the action name, used to uniquely identify the action to find and execute it
+     * @param {String} [action_data.special=null] special action handlers (currently: only ``'cancel'``)
+     * @param {String} [action_data.type='workflow'] the action type, if present, one of ``'object'``, ``'action'`` or ``'workflow'``
+     * @param {Object} [action_data.context=null] additional action context, to add to the current context
+     * @param {openerp.base.DataSet} dataset a dataset object used to communicate with the server
+     * @param {openerp.base.ActionManager} action_manager object able to actually execute the action, if any is fetched
+     * @param {Number} [record_id] the identifier of the object on which the action is to be applied
+     * @param {Function} on_no_action callback to execute if the action does not generate any result (no new action)
+     */
+    execute_action: function (action_data, dataset, action_manager, record_id, on_no_action) {
+        var handler = function (r) {
+            if (r.result && r.result.constructor == Object) {
+                action_manager.do_action(r.result);
+            } else {
+                on_no_action(r.result);
+            }
+        };
+
+        if (action_data.special) {
+            handler({
+                result : { type: 'ir.actions.act_window_close' }
+            });
+        } else {
+            var context = _.extend({}, dataset.context, action_data.context || {});
+            switch(action_data.type) {
+                case 'object':
+                    return dataset.call(action_data.name, [record_id], [context], handler);
+                case 'action':
+                    return this.rpc('/base/action/load', { action_id: parseInt(action_data.name, 10) }, handler);
+                default:
+                    return dataset.exec_workflow(record_id, action_data.name, handler);
             }
         }
-        // TODO: show an error like "not implemented" here
-        // since we don't currently have any way to handle errors do you have any better idea
-        // than using todos?
     }
 });
 
-openerp.base.views.add('calendar', 'openerp.base.CalendarView');
-openerp.base.CalendarView = openerp.base.Controller.extend({
-    start: function () {
-        this._super();
-        this.$element.append('Calendar view');
-    },
-    do_show: function () {
-        this.$element.show();
-    },
-    do_hide: function () {
-        this.$element.hide();
-    }
-});
-
-openerp.base.views.add('gantt', 'openerp.base.GanttView');
-openerp.base.GanttView = openerp.base.Controller.extend({
-    start: function () {
-        this._super();
-        this.$element.append('Gantt view');
-    },
-    do_show: function () {
-        this.$element.show();
-    },
-    do_hide: function () {
-        this.$element.hide();
-    }
-});
-
-openerp.base.views.add('tree', 'openerp.base.TreeView');
-openerp.base.TreeView = openerp.base.Controller.extend({
 /**
- * Genuine tree view (the one displayed as a tree, not the list)
+ * Registry for all the main views
  */
-    start: function () {
-        this._super();
-        this.$element.append('Tree view');
-    },
-    do_show: function () {
-        this.$element.show();
-    },
-    do_hide: function () {
-        this.$element.hide();
-    }
-});
-
-openerp.base.views.add('graph', 'openerp.base.GraphView');
-openerp.base.GraphView = openerp.base.Controller.extend({
-    start: function () {
-        this._super();
-        this.$element.append('Graph view');
-    },
-    do_show: function () {
-        this.$element.show();
-    },
-    do_hide: function () {
-        this.$element.hide();
-    }
-});
+openerp.base.views = new openerp.base.Registry();
 
 openerp.base.ProcessView = openerp.base.Controller.extend({
 });

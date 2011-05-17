@@ -10,5 +10,6 @@
         'static/src/js/web_chat.js'
     ],
     "css": [],
+#    'active': True,
     'active': False,
 }

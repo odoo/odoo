@@ -500,30 +500,42 @@ def main(argv):
     # change the timezone of the program to the OpenERP server's assumed timezone
     os.environ["TZ"] = "UTC"
     
-    # Parse config
-    op = optparse.OptionParser()
-    op.add_option("-p", "--port", dest="socket_port", help="listening port", metavar="NUMBER", default=8002)
-    op.add_option("-s", "--session-path", dest="storage_path",
-                  help="directory used for session storage", metavar="DIR",
-                  default=os.path.join(tempfile.gettempdir(), "cpsessions"))
-    (o, args) = op.parse_args(argv[1:])
-
-    # Prepare cherrypy config from options
-    if not os.path.exists(o.storage_path):
-        os.mkdir(o.storage_path, 0700)
-    config = {
-        'server.socket_port': int(o.socket_port),
+    DEFAULT_CONFIG = {
+        'server.socket_port': 8002,
         'server.socket_host': '0.0.0.0',
-        #'server.thread_pool' = 10,
         'tools.sessions.on': True,
         'tools.sessions.storage_type': 'file',
-        'tools.sessions.storage_path': o.storage_path,
+        'tools.sessions.storage_path': os.path.join(tempfile.gettempdir(), "cpsessions"),
         'tools.sessions.timeout': 60
     }
+    
+    # Parse config
+    op = optparse.OptionParser()
+    op.add_option("-p", "--port", dest="server.socket_port", help="listening port",
+                  type="int", metavar="NUMBER")
+    op.add_option("-s", "--session-path", dest="tools.sessions.storage_path",
+                  help="directory used for session storage", metavar="DIR")
+    (o, args) = op.parse_args(argv[1:])
+    o = vars(o)
+    for k in o.keys():
+        if o[k] == None:
+            del(o[k])
 
     # Setup and run cherrypy
     cherrypy.tree.mount(Root())
-    cherrypy.config.update(config)
+    
+    cherrypy.config.update(config=DEFAULT_CONFIG)
+    if os.path.exists(os.path.join(os.path.dirname(
+                os.path.dirname(__file__)),'openerp-web.cfg')):
+        cherrypy.config.update(os.path.join(os.path.dirname(
+                    os.path.dirname(__file__)),'openerp-web.cfg'))
+    if os.path.exists(os.path.expanduser('~/.openerp_webrc')):
+        cherrypy.config.update(os.path.expanduser('~/.openerp_webrc'))
+    cherrypy.config.update(o)
+    
+    if not os.path.exists(cherrypy.config['tools.sessions.storage_path']):
+        os.mkdir(cherrypy.config['tools.sessions.storage_path'], 0700)
+    
     cherrypy.server.subscribe()
     cherrypy.engine.start()
     cherrypy.engine.block()

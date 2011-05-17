@@ -18,8 +18,7 @@
         </div>
     </div>
     <div id="oe_login" class="login"></div>
-    <table border="0" cellpadding="0" cellspacing="0" width="100%" height="100%"
-        t-att-class="'main_table' + (typeof kitten == 'undefined' ? '' : ' kitten-mode-activated')">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%" height="100%" class="main_table">
     <tr>
         <td colspan="2">
             <div id="oe_header" class="header"></div>
@@ -55,8 +54,7 @@
 </t>
 <t t-name="Header">
     <a href="/" class="company_logo_link">
-        <img t-att-src="typeof kitten == 'undefined' ? '/base/static/src/img/logo.png' :
-            'http://placekitten.com/g/179/46'" border="0" class="company_logo"/>
+        <div class="company_logo" />
     </a>
     <h1 class="header_title" t-if="session.session_is_valid()">
         <span class="company">$company</span> - (<span class="database">$database</span>)<br/>
@@ -259,7 +257,7 @@
         <t t-foreach="row" t-as="td">
             <td t-att-colspan="td.colspan gt 1 ? td.colspan : undefined"
                 t-att-width="td.width ? td.width : undefined"
-                t-att-nowrap="td.is_field_label ? 'true' : undefined"
+                t-att-nowrap="td.is_field_label or td.is_field_m2o? 'true' : undefined"
                 t-att-valign="td.table ? 'top' : undefined"
                 t-att-id="td.element_id"
                 t-att-class="'oe_form_' + (td.is_field_label ? 'label' : (td.field ? 'field_' + td.type : td.type))"
@@ -306,6 +304,20 @@
         t-att-class="'field_' + widget.type" style="width: 100%"
     />
 </t>
+<t t-name="FieldEmail">
+    <table cellpadding="0" cellspacing="0" border="0" width="100%">
+    <tr>
+        <td width="100%">
+            <t t-call="FieldChar"/>
+        </td>
+        <td width="16">
+            <button class="button" title="Send an e-mail with your default e-mail client">
+                <img src="/base/static/src/img/icons/terp-mail-message-new.png"/>
+            </button>
+        </td>
+    </tr>
+    </table>
+</t>
 <t t-name="FieldText">
     <textarea rows="6" style="width: 100%;"
         t-att-name="widget.name"
@@ -314,13 +326,6 @@
     ></textarea>
 </t>
 <t t-name="FieldDate">
-    <input type="text" style="width: 100%"
-        t-att-name="widget.name"
-        t-att-id="widget.element_id + '_field'"
-        t-att-class="'field_' + widget.type"
-    />
-</t>
-<t t-name="FieldDatetime">
     <input type="text" style="width: 100%"
         t-att-name="widget.name"
         t-att-id="widget.element_id + '_field'"
@@ -345,7 +350,9 @@
         t-att-name="widget.name"
         t-att-id="widget.element_id + '_field'"
         t-att-class="'field_' + widget.type"
+		t-att-type="widget.type"
         style="width: 100%;"/>
+
 </t>
 <t t-name="FieldOne2Many">
     <div t-att-id="widget.element_id">
@@ -369,6 +376,15 @@
         <span></span>
     </div>
 </t>
+<t t-name="FieldImage">
+    <img align="left" border="1" style="display: none"
+        t-att-id="widget.element_id + '_field'"
+        t-att-name="widget.name"
+        t-att-class="'field_' + widget.type"
+        t-att-width="widget.node.attrs.img_width || widget.node.attrs.width"
+        t-att-height="widget.node.attrs.img_height || widget.node.attrs.height"
+    />
+</t>
 <t t-name="WidgetButton">
     <button type="button"
         t-att-id="widget.element_id + '_button'"
@@ -382,7 +398,7 @@
     <h2 class="oe_view_title"><t t-esc="view.attrs['string']"/></h2>
     <form>
         <t t-call="SearchView.render_lines"/>
-        <div style="text-align:right;">
+        <div class="oe_search-view-buttons" style="text-align:right;">
             <input type="submit" value="Search"/>
             <input type="reset" value="Clear"/>
         </div>
@@ -418,7 +434,7 @@
         <span t-if="attrs.help">(?)</span>
     </label>
     <div style="white-space: nowrap;">
-        <input type="text" t-att-name="attrs.name"
+        <input type="text" size="15" t-att-name="attrs.name"
                t-att-autofocus="attrs.default_focus === '1' ? 'autofocus' : undefined"
                t-att-id="element_id"
                t-att-value="defaults[attrs.name] || ''"/>
@@ -490,7 +506,8 @@
         <t t-set="expand" t-value="false"/>
         <t t-set="label" t-value="'Custom Filters'"/>
         <t t-set="content">
-            <div class="searchview_extended_groups_list"/>
+            <div class="searchview_extended_groups_list">
+            </div>
             <button class="searchview_extended_add_group"
                     type="button"><span>Add group of conditions</span></button>
         </t>
@@ -569,5 +586,20 @@
             <t t-esc="message"/>
         </p>
     </div>
+</t>
+<t t-name="Many2XSelectPopup">
+    <div t-att-id="element_id">
+        <div t-att-id="element_id + '_search'"></div>
+        <div t-att-id="element_id + '_view_list'"></div>
+        <div t-att-id="element_id + '_view_form'"></div>
+    </div>
+</t>
+<t t-name="Many2XSelectPopup.search.buttons">
+    <button type="button" class="oe_many2xselectpopup-search-new">New</button>
+    <button type="button" class="oe_many2xselectpopup-search-close">Close</button>
+</t>
+<t t-name="Many2XSelectPopup.form.buttons">
+    <button type="button" class="oe_many2xselectpopup-form-save">Save</button>
+    <button type="button" class="oe_many2xselectpopup-form-close">Close</button>
 </t>
 </templates>

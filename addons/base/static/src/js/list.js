@@ -1,7 +1,6 @@
 openerp.base.list = function (openerp) {
 openerp.base.views.add('list', 'openerp.base.ListView');
-openerp.base.ListView = openerp.base.Controller.extend(
-    /** @lends openerp.base.ListView# */ {
+openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListView# */ {
     defaults: {
         // records can be selected one by one
         'selectable': true,
@@ -61,7 +60,11 @@ openerp.base.ListView = openerp.base.Controller.extend(
             columns: this.columns,
             rows: this.rows
         });
-        $(this.list).bind({
+        this.groups = new openerp.base.ListView.Groups({
+            options: this.options,
+            columns: this.columns
+        });
+        $([this.list, this.groups]).bind({
             'selected': function (e, selection) {
                 self.$element.find('#oe-list-delete')
                     .toggle(!!selection.length);
@@ -80,7 +83,7 @@ openerp.base.ListView = openerp.base.Controller.extend(
                     id, self.do_reload);
             },
             'row_link': function (e, index) {
-                self.switch_to_record(index);
+                self.select_record(index);
             }
         });
 
@@ -233,7 +236,7 @@ openerp.base.ListView = openerp.base.Controller.extend(
      * @param {Number|null} index the record index (in the current dataset) to switch to
      * @param {String} [view="form"] the view type to switch to
      */
-    switch_to_record:function (index, view) {
+    select_record:function (index, view) {
         view = view || 'form';
         this.dataset.index = index;
         _.delay(_.bind(function () {
@@ -290,6 +293,14 @@ openerp.base.ListView = openerp.base.Controller.extend(
             // TODO: handle non-empty results.group_by with read_group
             self.dataset.context = results.context;
             self.dataset.domain = results.domain;
+            if (results.group_by.length) {
+                self.groups.datagroup = new openerp.base.DataGroup(
+                        self.session, self.dataset.model,
+                        results.domain, results.context,
+                        results.group_by);
+                self.$element.html(self.groups.render());
+                return;
+            }
             return self.do_reload();
         });
     },
@@ -338,7 +349,7 @@ openerp.base.ListView = openerp.base.Controller.extend(
      */
     do_add_record: function () {
         this.notification.notify('Add', "New record");
-        this.switch_to_record(null);
+        this.select_record(null);
     },
     /**
      * Handles deletion of all selected lines
@@ -349,10 +360,7 @@ openerp.base.ListView = openerp.base.Controller.extend(
     }
     // TODO: implement reorder (drag and drop rows)
 });
-_.extend(openerp.base.ListView.prototype, openerp.base.ActionExecutor);
-
-openerp.base.ListView.List = Class.extend(
-    /** @lends openerp.base.ListView.List# */{
+openerp.base.ListView.List = Class.extend( /** @lends openerp.base.ListView.List# */{
     /**
      * List display for the ListView, handles basic DOM events and transforms
      * them in the relevant higher-level events, to which the list view (or
@@ -464,10 +472,54 @@ openerp.base.ListView.List = Class.extend(
     // drag and drop
     // editable?
 });
-
-openerp.base.TreeView = openerp.base.Controller.extend({
+openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Groups# */{
+    /**
+     * Grouped display for the ListView. Handles basic DOM events and interacts
+     * with the :js:class:`~openerp.base.DataGroup` bound to it.
+     *
+     * Provides events similar to those of
+     * :js:class:`~openerp.base.ListView.List`
+     */
+    init: function (opts) {
+        this.options = opts.options;
+        this.columns = opts.columns;
+        this.datagroup = {};
+    },
+    make_level: function (datagroup) {
+        var self = this, $root = $('<dl>');
+        datagroup.list().then(function (list) {
+            _(list).each(function (group, index) {
+                var $title = $('<dt>')
+                    .text(group.grouped_on + ': ' + group.value + ' (' + group.length + ')')
+                    .appendTo($root);
+                $title.click(function () {
+                    datagroup.get(index, function (new_dataset) {
+                        var $content = $('<ul>').appendTo(
+                            $('<dd>').insertAfter($title));
+                        new_dataset.read_slice([], null, null, function (records) {
+                            _(records).each(function (record) {
+                                $('<li>')
+                                    .appendTo($content)
+                                    .text(_(record).map(function (value, key) {
+                                        return key + ': ' + value;
+                                }).join(', '));
+                            });
+                        });
+                    }, function (new_datagroup) {
+                        console.log(new_datagroup);
+                        $('<dd>')
+                            .insertAfter($title)
+                            .append(self.make_level(new_datagroup));
+                    });
+                });
+            });
+        });
+        return $root;
+    },
+    render: function () {
+        return this.make_level(this.datagroup);
+    }
 });
-
 };
 
 // vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:

@@ -107,9 +107,11 @@ openerp.base.form.Action = openerp.base.form.Widget.extend({
     
     on_load_action: function(result) {
         var action = result.action;
-        action.search_view = action.search_view_id = false;
-        action.no_sidebar = true;
-        
+        action.flags = {
+            search_view : false,
+            sidebar : false,
+            views_switcher : false
+        }
         var node_attrs = this.node.attrs;
         var content_id = jQuery('#'+node_attrs.name).find('.portlet-content').attr('id')
         var action_manager = new openerp.base.ActionManager(this.session, content_id);
