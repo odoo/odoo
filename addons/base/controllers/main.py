@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import base64
 import glob, os
 import pprint
 from xml.etree import ElementTree
@@ -553,6 +554,21 @@ class FormView(View):
     def load(self, req, model, view_id, toolbar=False):
         fields_view = self.fields_view_get(req, model, view_id, 'form', toolbar=toolbar)
         return {'fields_view': fields_view}
+
+    @openerpweb.httprequest
+    def image(self, request, session_id, model, id, field):
+        cherrypy.response.headers['Content-Type'] = 'image/png'
+        Model = request.session.model(model)
+        try:
+            if not id:
+                res = Model.default_get([field], request.context).get(field, '')
+            else:
+                res = Model.read([id], [field], request.context)[0].get(field, '')
+            return base64.decodestring(res)
+        except:
+            return self.placeholder()
+    def placeholder(self):
+        return open(os.path.join(openerpweb.path_addons, 'base', 'static', 'src', 'img', 'placeholder.png'), 'rb').read()
 
 class ListView(View):
     _cp_path = "/base/listview"

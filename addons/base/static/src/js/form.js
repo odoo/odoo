@@ -1188,7 +1188,9 @@ openerp.base.form.FieldImage = openerp.base.form.Field.extend({
     },
     set_value: function(value) {
         this._super.apply(this, arguments);
-        this.$element.find('img').show().attr('src', 'data:image/png;base64,' + this.value);
+        var url = '/base/formview/image?session_id=' + this.session.session_id + '&model=' +
+            this.view.dataset.model +'&id=' + this.view.datarecord.id + '&field=' + this.name
+        this.$element.find('img').show().attr('src', url);
     }
 });
 

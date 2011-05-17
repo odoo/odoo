@@ -274,7 +274,7 @@ openerp.base.Session = openerp.base.BasicController.extend( /** @lends openerp.b
         this.session_id = false;
         this.module_list = [];
         this.module_loaded = {"base": true};
-        this.context = {};
+        this.context = { bin_size : true };
     },
     start: function() {
         this.session_restore();
