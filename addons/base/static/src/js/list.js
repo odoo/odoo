@@ -284,7 +284,9 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
                 self.session, self.dataset.model,
                 results.domain, results.context,
                 results.group_by);
-            self.do_reload(results.group_by);
+            self.do_reload(results.group_by).then(function () {
+                self.$element.find('table').append(self.groups.render());
+            });
         });
     },
     /**
@@ -402,14 +404,13 @@ openerp.base.ListView.List = Class.extend( /** @lends openerp.base.ListView.List
                      self.row_id(e.currentTarget)]);
             });
     },
-    move_to: function (element) {
-        this.$current = this.$_element.clone(true).appendTo(element);
-        this.render();
-        return this;
-    },
     render: function () {
+        if (this.$current) {
+            this.$current.remove();
+        }
+        this.$current = this.$_element.clone(true);
         this.$current.empty().append($(QWeb.render('ListView.rows', this)));
-        return this;
+        return this.$current;
     },
     refresh: function () {
         this.render();
@@ -464,38 +465,62 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
         this.columns = opts.columns;
         this.datagroup = {};
     },
-    make_level: function (datagroup) {
-        var self = this, $root = $('<dl>');
-        datagroup.list().then(function (list) {
-            _(list).each(function (group, index) {
-                var $title = $('<dt>')
-                    .text(group.grouped_on + ': ' + group.value + ' (' + group.length + ')')
-                    .appendTo($root);
-                $title.click(function () {
-                    datagroup.get(index, function (new_dataset) {
-                        var $content = $('<ul>').appendTo(
-                            $('<dd>').insertAfter($title));
-                        new_dataset.read_slice([], null, null, function (records) {
-                            _(records).each(function (record) {
-                                $('<li>')
-                                    .appendTo($content)
-                                    .text(_(record).map(function (value, key) {
-                                        return key + ': ' + value;
-                                }).join(', '));
-                            });
-                        });
-                    }, function (new_datagroup) {
-                        $('<dd>')
-                            .insertAfter($title)
-                            .append(self.make_level(new_datagroup));
-                    });
+    pad: function ($row) {
+        if (this.options.selectable) {
+            $row.append('<td>');
+        }
+    },
+    make_fragment: function () {
+        return this.$element[0].ownerDocument.createDocumentFragment();
+    },
+    render_groups: function (datagroups) {
+        var self = this;
+        var placeholder = this.make_fragment();
+        _(datagroups).each(function (group) {
+            var $row = $('<tr>').click(function () {
+                group.list(function (groups) {
+                    $row.parent()[0].insertBefore(
+                        self.render_groups(groups),
+                        $row[0].nextSibling);
+                }, function (dataset) {
+                    $row.parent()[0].insertBefore(
+                        self.render_dataset(dataset),
+                        $row[0].nextSibling);
                 });
             });
+            placeholder.appendChild($row[0]);
+            self.pad($row);
+
+            var title_column = _(self.columns).chain()
+                .filter(function (column) {return !column.invisible;})
+                .pluck('id')
+                .indexOf(group.grouped_on)
+                .value();
+            while (title_column--) {
+                $row.append('<td>');
+            }
+            $('<td>')
+                .text(_.sprintf("%s (%d)", group.value instanceof Array ? group.value[1] : group.value, group.length))
+                .appendTo($row);
+            // TODO: aggregate fields
         });
-        return $root;
+        return placeholder;
+    },
+    render_dataset: function (dataset) {
+        return new openerp.base.ListView.List({
+            options: this.options,
+            columns: this.columns,
+            rows: [] // insert *processed* rows here
+        }).render();
     },
     render: function () {
-        return this.make_level(this.datagroup);
+        var self = this;
+        this.$element = $('<tbody>');
+        this.datagroup.list(function (groups) {
+            self.$element.empty()[0].appendChild(
+                self.render_groups(groups));
+        }, $.proxy(this, 'render_dataset'));
+        return this.$element;
     }
 });
 };
