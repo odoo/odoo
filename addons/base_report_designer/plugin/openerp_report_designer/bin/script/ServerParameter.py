@@ -131,41 +131,33 @@ class ServerParameter( unohelper.Base, XJobExecutor ):
         if not UID or UID==-1 :
             ErrorDialog("Connection Refuse...","Please enter valid Login/Password")
             self.win.endExecute()
-        try:
-            ids_module =self.sock.execute(sDatabase, UID, sPassword, 'ir.module.module', 'search', [('name','=','base_report_designer'),('state', '=', 'installed')])
-            info = reduce(lambda x, y: x+y, traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback))
-            self.logobj.log_write('ServerParameter', LOG_ERROR, info)
-            ErrorDialog(info, "", "Module Uninstalled Error")
-            if not len(ids_module):
-                ErrorDialog("Please Install base_report_designer module", "", "Module Uninstalled Error")
-                self.logobj.log_write('Module Not Found',LOG_WARNING, ':base_report_designer not install in  database %s' % (sDatabase))
-                self.win.endExecute()
-            else:
-                desktop=getDesktop()
-                doc = desktop.getCurrentComponent()
-                docinfo=doc.getDocumentInfo()
-                docinfo.setUserFieldValue(0,self.win.getEditText("txtHost"))
-                docinfo.setUserFieldValue(1,self.win.getEditText("txtLoginName"))
-                global passwd
-                passwd=self.win.getEditText("txtPassword")
-                global loginstatus
-                loginstatus=True
-                global database
-                database=sDatabase
-                global uid
-                uid=UID
-                #docinfo.setUserFieldValue(2,self.win.getListBoxSelectedItem("lstDatabase"))
-                #docinfo.setUserFieldValue(3,"")
-    
-                ErrorDialog(" You can start creating your report in \n  \t the current document.","After Creating  sending to the server.","Message")
-                self.logobj.log_write('successful login',LOG_INFO, ':successful login from %s  using database %s' % (sLogin, sDatabase))
-                self.win.endExecute()
+        ids_module =self.sock.execute(sDatabase, UID, sPassword, 'ir.module.module', 'search', [('name','=','base_report_designer'),('state', '=', 'installed')])
+        if not len(ids_module):
+            ErrorDialog("Please Install base_report_designer module", "", "Module Uninstalled Error")
+            self.logobj.log_write('Module Not Found',LOG_WARNING, ':base_report_designer not install in  database %s' % (sDatabase))
+            self.win.endExecute()
+        else:
+            desktop=getDesktop()
+            doc = desktop.getCurrentComponent()
+            docinfo=doc.getDocumentInfo()
+            docinfo.setUserFieldValue(0,self.win.getEditText("txtHost"))
+            docinfo.setUserFieldValue(1,self.win.getEditText("txtLoginName"))
+            global passwd
+            passwd=self.win.getEditText("txtPassword")
+            global loginstatus
+            loginstatus=True
+            global database
+            database=sDatabase
+            global uid
+            uid=UID
+            #docinfo.setUserFieldValue(2,self.win.getListBoxSelectedItem("lstDatabase"))
+            #docinfo.setUserFieldValue(3,"")
 
-        except :
-            import traceback,sys
-            info = reduce(lambda x, y: x+y, traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback))
-            self.logobj.log_write('ServerParameter', LOG_ERROR, info)     
-            ErrorDialog("Connection Refuse...","Connection to server fail")
+            ErrorDialog(" You can start creating your report in \n  \t the current document.","After Creating  sending to the server.","Message")
+            self.logobj.log_write('successful login',LOG_INFO, ':successful login from %s  using database %s' % (sLogin, sDatabase))
+            self.win.endExecute()
+
+      
     def btnCancel_clicked( self, oActionEvent ):
         self.win.endExecute()
 
