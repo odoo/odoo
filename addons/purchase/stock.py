@@ -91,7 +91,10 @@ class stock_picking(osv.osv):
 
     def _get_price_unit_invoice(self, cursor, user, move_line, type):
         if move_line.purchase_line_id:
-            return move_line.purchase_line_id.price_unit
+            if move_line.purchase_line_id.order_id.invoice_method == 'picking':
+                return move_line.price_unit
+            else:
+                return move_line.purchase_line_id.price_unit
         return super(stock_picking, self)._get_price_unit_invoice(cursor, user, move_line, type)
 
     def _get_discount_invoice(self, cursor, user, move_line):
