@@ -24,6 +24,7 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
             sidebar : true,
             search_view : true,
             new_window : false,
+            views_switcher : true,
             toolbar : true,
             pager : true
         }, action.flags || {});
@@ -46,6 +47,7 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
                     viewmanager.start();
                     this.dialog_stack.push(viewmanager);
                 } else if (action.flags.new_window) {
+                    action.flags.new_window = false;
                     this.rpc("/base/session/save_session_action", { the_action : action}, function(key) {
                         var url = window.location.protocol + "//" + window.location.host +
                                 window.location.pathname + "?" + jQuery.param({ s_action : "" + key });
@@ -79,6 +81,7 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
         this.active_view = null;
         this.views_src = views;
         this.views = {};
+        this.flags = this.flags || {};
     },
     /**
      * @returns {jQuery.Deferred} initial view loading promise
@@ -93,6 +96,9 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
         _.each(this.views_src, function(view) {
             self.views[view[1]] = { view_id: view[0], controller: null };
         });
+        if (this.flags.views_switcher === false) {
+            this.$element.find('.oe_vm_switch').hide();
+        }
         // switch to the first one in sequence
         return this.on_mode_switch(this.views_src[0][1]);
     },
@@ -116,7 +122,7 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
             this.views[view_type].controller = controller;
         }
 
-        if(this.searchview) {
+        if (this.searchview) {
             if (view.controller.searchable === false) {
                 this.searchview.hide();
             } else {
@@ -152,6 +158,9 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
             this.searchview.stop();
         }
         this.searchview = new openerp.base.SearchView(this, this.session, this.element_id + "_search", this.dataset, view_id, search_defaults);
+        if (this.flags.search_view === false) {
+            this.searchview.hide();
+        }
         this.searchview.on_search.add(function(domains, contexts, groupbys) {
             self.views[self.active_view].controller.do_search.call(
                 self, domains.concat(self.domains()),
@@ -201,7 +210,8 @@ openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
         }
         this._super(session, element_id, dataset, action.views);
         this.action = action;
-        if (action.flags.sidebar) {
+        this.flags = this.action.flags || {};
+        if (this.flags.sidebar) {
             this.sidebar = new openerp.base.Sidebar(null, this);
         }
     },

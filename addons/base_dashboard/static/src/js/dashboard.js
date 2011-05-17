@@ -55,10 +55,11 @@ openerp.base.form.Action = openerp.base.form.Widget.extend({
     on_load_action: function(result) {
         var action = result.action;
         
-        action.search_view = false;
-        action.no_sidebar = true;
-        action.search_view_id = false;
-        
+        action.flags = {
+            search_view : false,
+            sidebar : false,
+            views_switcher : false
+        }
         var node_attrs = this.node.attrs;
         var get_column = ['first', 'second', 'third'];
         var board_element = this.board.element.find('[id=column-'+get_column[this.child_index]+']');
