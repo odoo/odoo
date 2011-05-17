@@ -41,7 +41,7 @@ class account_invoice_line(osv.osv):
         asset_obj = self.pool.get('account.asset.asset')
         if line.asset_category_id.id:
             vals = {
-                'name': line.name + ": " + (line.product_id and line.product_id.name),
+                'name': line.product_id and (line.name + ": " + line.product_id.name) or line.name,
                 'category_id': line.asset_category_id.id,
                 'purchase_value': line.price_subtotal
             }
