@@ -52,20 +52,14 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
         this.view_id = view_id;
 
         this.columns = [];
-        this.rows = [];
 
         this.options = _.extend({}, this.defaults, options || {});
 
-        this.list = new openerp.base.ListView.List({
-            options: this.options,
-            columns: this.columns,
-            rows: this.rows
-        });
         this.groups = new openerp.base.ListView.Groups({
             options: this.options,
             columns: this.columns
         });
-        $([this.list, this.groups]).bind({
+        $(this.groups).bind({
             'selected': function (e, selection) {
                 self.$element.find('#oe-list-delete')
                     .toggle(!!selection.length);
@@ -124,41 +118,15 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
      * @param {Object} data.fields_view fields_view_get result (processed)
      * @param {Object} data.fields_view.fields mapping of fields for the current model
      * @param {Object} data.fields_view.arch current list view descriptor
+     * @param {Array} columns columns to move to the front (and make visible)
      */
-    on_loaded: function(data) {
+    on_loaded: function(data, columns) {
         var self = this;
         this.fields_view = data.fields_view;
         //this.log(this.fields_view);
         this.name = "" + this.fields_view.arch.attrs.string;
 
-        var fields = this.fields_view.fields;
-        var domain_computer = openerp.base.form.compute_domain;
-
-        this.columns.splice(0, this.columns.length);
-        this.columns.push.apply(this.columns, _(this.fields_view.arch.children).chain()
-            .map(function (field) {
-                var name = field.attrs.name;
-                var column = _.extend({id: name, tag: field.tag},
-                                      field.attrs, fields[name]);
-                // attrs computer
-                if (column.attrs) {
-                    var attrs = eval('(' + column.attrs + ')');
-                    column.attrs_for = function (fields) {
-                        var result = {};
-                        for (var attr in attrs) {
-                            result[attr] = domain_computer(attrs[attr], fields);
-                        }
-                        return result;
-                    };
-                } else {
-                    column.attrs_for = function () { return {}; };
-                }
-                return column;
-            }).value());
-
-        this.visible_columns = _.filter(this.columns, function (column) {
-            return column.invisible !== '1';
-        });
+        this.setup_columns(this.fields_view.fields, columns);
 
         if (!this.fields_view.sorted) { this.fields_view.sorted = {}; }
 
@@ -178,49 +146,51 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
             self.do_reload();
         });
 
-        var $table = this.$element.find('table');
-        this.list.move_to($table);
-
         // sidebar stuff
         if (this.view_manager && this.view_manager.sidebar) {
             this.view_manager.sidebar.set_toolbar(data.fields_view.toolbar);
         }
     },
-    /**
-     * Fills the table with the provided records after emptying it
-     *
-     * TODO: should also re-load the table itself, as e.g. columns may have changed
-     *
-     * @param {Object} result filling result
-     * @param {Array} [result.view] the new view (wrapped fields_view_get result)
-     * @param {Array} result.records records the records to fill the list view with
-     */
-    do_fill_table: function(result) {
-        if (result.view) {
-            this.on_loaded({fields_view: result.view});
-        }
-        var records = result.records;
+    setup_columns: function (fields, groupby_columns) {
+        var self = this;
+        var domain_computer = openerp.base.form.compute_domain;
 
-        this.rows.splice(0, this.rows.length);
-        this.rows.push.apply(this.rows, records);
-
-        // Keep current selected record, if it's still in our new search
-        var current_record_id = this.dataset.ids[this.dataset.index];
-        this.dataset.ids = _(records).chain().map(function (record) {
-            return record.data.id.value;
-        }).value();
-        this.dataset.index = _.indexOf(this.dataset.ids, current_record_id);
-        if (this.dataset.index < 0) {
-            this.dataset.index = 0;
-        }
+        var field_to_column = function (field) {
+            var name = field.attrs.name;
+            var column = _.extend({id: name, tag: field.tag},
+                    field.attrs, fields[name]);
+            // attrs computer
+            if (column.attrs) {
+                var attrs = eval('(' + column.attrs + ')');
+                column.attrs_for = function (fields) {
+                    var result = {};
+                    for (var attr in attrs) {
+                        result[attr] = domain_computer(attrs[attr], fields);
+                    }
+                    return result;
+                };
+            } else {
+                column.attrs_for = function () { return {}; };
+            }
+            return column;
+        };
         
-        this.dataset.count = this.dataset.ids.length;
-        var results = this.rows.length;
-        this.$element.find('table')
-            .find('.oe-pager-last').text(results).end()
-            .find('.oe-pager-total').text(results);
+        this.columns.splice(0, this.columns.length);
+        this.columns.push.apply(
+                this.columns,
+                _(this.fields_view.arch.children).map(field_to_column));
 
-        this.list.refresh();
+        _(groupby_columns).each(function (column_id, index) {
+            var column_index = _(self.columns).chain()
+                    .pluck('id').indexOf(column_id).value();
+            var column = self.columns.splice(column_index, 1)[0];
+            delete column.invisible;
+            self.columns.splice(index, 0, column);
+        });
+
+        this.visible_columns = _.filter(this.columns, function (column) {
+            return column.invisible !== '1';
+        });
     },
     /**
      * Used to handle a click on a table row, if no other handler caught the
@@ -259,12 +229,16 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
     },
     /**
      * Reloads the search view based on the current settings (dataset & al)
+     *
+     * @param {Array} [primary_columns] columns to bring to the front of the
+     *                                  sequence
      */
-    do_reload: function () {
+    do_reload: function (primary_columns) {
         // TODO: need to do 5 billion tons of pre-processing, bypass
         // DataSet for now
         //self.dataset.read_slice(self.dataset.fields, 0, self.limit,
         // self.do_fill_table);
+        var self = this;
         this.dataset.offset = 0;
         this.dataset.limit = false;
         return this.rpc('/base/listview/fill', {
@@ -273,7 +247,11 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
             'context': this.dataset.context,
             'domain': this.dataset.domain,
             'sort': this.dataset.sort && this.dataset.sort()
-        }, this.do_fill_table);
+        }, function (result) {
+            if (result.view) {
+                self.on_loaded({fields_view: result.view}, primary_columns);
+            }
+        });
     },
     /**
      * Event handler for a search, asks for the computation/folding of domains
@@ -291,23 +269,14 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
             contexts: contexts,
             group_by_seq: groupbys
         }, function (results) {
-            // TODO: handle non-empty results.group_by with read_group
             self.dataset.context = results.context;
             self.dataset.domain = results.domain;
-            if (results.group_by.length) {
-                self.groups.datagroup = new openerp.base.DataGroup(
-                        self.session, self.dataset.model,
-                        results.domain, results.context,
-                        results.group_by);
-                self.$element.html(self.groups.render());
-                return;
-            }
-            return self.do_reload();
+            self.groups.datagroup = new openerp.base.DataGroup(
+                self.session, self.dataset.model,
+                results.domain, results.context,
+                results.group_by);
+            self.do_reload(results.group_by);
         });
-    },
-    do_update: function () {
-        var self = this;
-        //self.dataset.read_ids(self.dataset.ids, self.dataset.fields, self.do_fill_table);
     },
     /**
      * Handles the signal to delete a line from the DOM
