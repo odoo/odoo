@@ -15,6 +15,8 @@
                 <field name="account_asset_id"/>
                 <field name="account_depreciation_id"/>
                 <field name="account_expense_depreciation_id"/>
+                <field name="method"/>
+                <field name="method_delay"/>
         	<group col="4" colspan="4" groups="analytic.group_analytic_accounting">
         	    <separator string="Analytic information" colspan="4" />
         	    <newline/>
@@ -50,7 +52,7 @@
            <form string="Asset">
               <group col="6" colspan="4">
                  <field name="name" select="1"/>
-                 <field name="category_id" select="1"/>
+                 <field name="category_id" select="1" on_change="onchange_category_id(category_id)"/>
                  <field name="code" select="1"/>
                  <field name="purchase_value" select="1"/>
                  <field name="currency_id" select="1"/>

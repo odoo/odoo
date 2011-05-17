@@ -37,6 +37,8 @@ class account_asset_category(osv.osv):
         'account_expense_depreciation_id': fields.many2one('account.account', 'Depr. Expense Account', required=True),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True),
         'company_id': fields.many2one('res.company', 'Company', required=True),
+        'method': fields.selection([('linear','Linear'),('progressif','Progressive')], 'Computation method', required=True),
+        'method_delay': fields.integer('During (interval)'),
     }
 
     _defaults = {
@@ -198,7 +200,13 @@ class account_asset_asset(osv.osv):
         'company_id': lambda self, cr, uid, context: self.pool.get('res.company')._company_default_get(cr, uid, 'account.asset.asset',context=context),
     }
 
-
+    def onchange_category_id(self, cr, uid, ids, category_id, context=None):
+        res = {'value':{}}
+        if category_id:
+            category_obj = self.pool.get('account.asset.category').browse(cr, uid, category_id, context=context)
+            res['value'] = {'method': category_obj.method, 'method_delay': category_obj.method_delay}
+        return res
+    
     def _compute_period(self, cr, uid, property, context={}):
         if (len(property.entry_asset_ids or [])/2)>=property.method_delay:
             return False
