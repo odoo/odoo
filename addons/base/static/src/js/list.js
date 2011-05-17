@@ -151,10 +151,19 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
             this.view_manager.sidebar.set_toolbar(data.fields_view.toolbar);
         }
     },
+    /**
+     * Sets up the listview's columns: merges view and fields data, move
+     * grouped-by columns to the front of the columns list and make them all
+     * visible.
+     *
+     * @param {Object} fields fields_view_get's fields section
+     * @param {Array} groupby_columns columns the ListView is grouped by
+     */
     setup_columns: function (fields, groupby_columns) {
         var self = this;
         var domain_computer = openerp.base.form.compute_domain;
 
+        var noop = function () { return {}; };
         var field_to_column = function (field) {
             var name = field.attrs.name;
             var column = _.extend({id: name, tag: field.tag},
@@ -170,7 +179,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
                     return result;
                 };
             } else {
-                column.attrs_for = function () { return {}; };
+                column.attrs_for = noop;
             }
             return column;
         };
