@@ -47,11 +47,11 @@ class account_asset_category(osv.osv):
 
     _defaults = {
         'company_id': lambda self, cr, uid, context: self.pool.get('res.company')._company_default_get(cr, uid, 'account.asset.category', context=context),
-        'method': lambda obj, cr, uid, context: 'linear',
-        'method_delay': lambda obj, cr, uid, context: 5,
-        'method_time': lambda obj, cr, uid, context: 'delay',
-        'method_period': lambda obj, cr, uid, context: 12,
-        'method_progress_factor': lambda obj, cr, uid, context: 0.3,
+        'method': 'linear',
+        'method_delay': 5,
+        'method_time': 'delay',
+        'method_period': 12,
+        'method_progress_factor': 0.3,
     }
 
 account_asset_category()
@@ -211,15 +211,17 @@ class account_asset_asset(osv.osv):
 
     def onchange_category_id(self, cr, uid, ids, category_id, context=None):
         res = {'value':{}}
+        asset_categ_obj = self.pool.get('account.asset.category')
         if category_id:
-            category_obj = self.pool.get('account.asset.category').browse(cr, uid, category_id, context=context)
-            res['value'] = {'method': category_obj.method, 
+            category_obj = asset_categ_obj.browse(cr, uid, category_id, context=context)
+            res['value'] = {
+                            'method': category_obj.method, 
                             'method_delay': category_obj.method_delay,
                             'method_time': category_obj.method_time,
                             'method_period': category_obj.method_period,
                             'method_progress_factor': category_obj.method_progress_factor,
                             'prorata': category_obj.prorata,
-                            }
+            }
         return res
     
     def _compute_period(self, cr, uid, property, context={}):
