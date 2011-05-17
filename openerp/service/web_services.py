@@ -92,12 +92,7 @@ class db(netsvc.ExportService):
                 cr = None
                 try:
                     serv.actions[id]['progress'] = 0
-                    cr = sql_db.db_connect(db_name).cursor()
-                    openerp.modules.db.initialize(cr)
                     tools.config['lang'] = lang
-                    cr.commit()
-                    cr.close()
-                    cr = None
                     pool = pooler.restart_pool(db_name, demo, serv.actions[id],
                             update_module=True)[1]
 

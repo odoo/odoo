@@ -22,6 +22,15 @@
 
 import openerp.modules
 
+def is_initialized(cr):
+    """ Check if a database has been initialized for the ORM.
+
+    The database can be initialized with the 'initialize' function below.
+
+    """
+    cr.execute("SELECT relname FROM pg_class WHERE relkind='r' AND relname='ir_module_module'")
+    return len(cr.fetchall()) > 0
+
 def initialize(cr):
     """ Initialize a database with for the ORM.
 
