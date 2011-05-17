@@ -90,7 +90,7 @@ openerp.base.m2o = function(openerp){
                         return true;
                     }
                     ui.item.value = self.element.data("autocomplete").term.length ? self.element.val() + '[' + ui.item.orig_val.substring(self.element.data("autocomplete").term.length) + ']' : this.lastSearch
-                },
+                }
 
             });
 
