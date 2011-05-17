@@ -109,7 +109,6 @@ class sugar_import(import_framework):
     """
     
     def import_document(self, val):
-        
         filepath = '/var/www/sugarcrm/cache/upload/'+ val.get('id')
         f = open(filepath, "r")
         datas = f.read()
@@ -137,7 +136,6 @@ class sugar_import(import_framework):
     def import_email(self, val):
         model_obj =  self.obj.pool.get('ir.model.data')
         xml_id = self.xml_id_exist(val.get('parent_type'), val.get('parent_type'))
-        xml_id = self.xml_id_exist(history_attachment, val.get('parent_type'))
         model_ids = model_obj.search(self.cr, self.uid, [('name', 'like', xml_id)])
         if model_ids:
               model = model_obj.browse(self.cr, self.uid, model_ids)[0]
@@ -146,6 +144,8 @@ class sugar_import(import_framework):
               else:    
                     val['res_id'] = model.res_id
                     val['model'] = model.model
+        attach_id = self.get_attachment(val)
+        val['attachment_ids/id'] = attach_id
         return val   
         
     def get_email_mapping(self): 
@@ -163,6 +163,7 @@ class sugar_import(import_framework):
                         'res_id': 'res_id',
                         'model': 'model',
                         'partner_id/.id': 'partner_id/.id',                         
+                        'attachment_ids/id': 'attachment_ids/id',
                         'user_id/id': ref(self.TABLE_USER, 'assigned_user_id'),
                         'description': ppconcat('__prettyprint__','description', 'description_html'),
                 }
@@ -177,10 +178,11 @@ class sugar_import(import_framework):
         attachment_obj = self.obj.pool.get('ir.attachment')
         model_obj = self.obj.pool.get('ir.model.data')
         mailgate_obj = self.obj.pool.get('mailgate.message')
-        fields = ['name', 'datas', 'res_id', 'res_model']
-        datas = [val.get('name'), File, val.get('res_id'),val.get('model',False)]
+        fields = ['name', 'datas', 'datas_fname','res_id', 'res_model']
+        datas = [val.get('name'), File, Filename, val.get('res_id'),val.get('model',False)]
         self.import_object(fields, datas, 'ir.attachment', 'history_attachment', val.get('name'), [('res_id', '=', val.get('res_id'), ('model', '=', val.get('model')))])
-        return True    
+        attach_id = self.xml_id_exist('history_attachment', val.get('name'))
+        return attach_id
 
     def import_history(self, val):
         model_obj =  self.obj.pool.get('ir.model.data')
@@ -193,7 +195,8 @@ class sugar_import(import_framework):
               else:    
                     val['res_id'] = model.res_id
                     val['model'] = model.model
-        get_attachment(val)            
+        attach_id = self.get_attachment(val)
+        val['attachment_ids/id'] = attach_id
         return val    
     
     def get_history_mapping(self): 
@@ -208,6 +211,7 @@ class sugar_import(import_framework):
                       'description': ppconcat('__prettyprint__','description', 'description_html'),
                       'res_id': 'res_id',
                       'model': 'model',
+                      'attachment_ids/id': 'attachment_ids/id',
                       'partner_id/.id' : 'partner_id/.id',
                 }
             }     
