@@ -232,6 +232,16 @@ class user_preferences_config(osv.osv_memory):
 
     def execute(self, cr, uid, ids, context=None):
         for o in self.browse(cr, uid, ids, context=context):
+            ir_user_obj = self.pool.get('res.users')
+            ids = ir_user_obj.search(cr, uid, [], context=context)
+            line_datas ={
+                'context_tz' : o.context_tz,
+                'context_lang' : o.context_lang,
+                'view' : o.view,
+                'menu_tips' : o.menu_tips,
+            }
+            ir_user_obj.write(cr , uid, ids , line_datas, context=context)
+            
             ir_values_obj = self.pool.get('ir.values')
             ir_values_obj.set(cr, uid, 'default', False, 'context_tz', ['res.users'], o.context_tz)
             ir_values_obj.set(cr, uid, 'default', False, 'context_lang', ['res.users'], o.context_lang)
