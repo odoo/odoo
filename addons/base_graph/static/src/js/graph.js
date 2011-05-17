@@ -72,6 +72,8 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
 
     schedule_chart: function(result) {
         this.$element.html(QWeb.render("GraphView", {"fields_view": this.fields_view, "chart": this.chart}));
+        this.opration_fld = {};
+        this.group_list = [];
 
         if (result.length){
             for(res in result) {
@@ -82,9 +84,34 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
                 }
             }
 
+            for (i in result){
+                var gen_key = result[i][this.chart_info_fields]+"_"+result[i][this.group_field]
+                if (this.opration_fld[gen_key] == undefined){
+                    var map_val = {}
+                    map_val[this.operator_field] = result[i][this.operator_field];
+                    map_val[this.chart_info_fields] = result[i][this.chart_info_fields];
+                    if (this.group_field){
+                        map_val[this.group_field] = result[i][this.group_field].replace(" ", "_");
+                    }else{
+                        map_val[this.group_field] = result[i][this.group_field];
+                    }
+                    this.opration_fld[gen_key] = map_val;
+                }else{
+                    map_val = this.opration_fld[gen_key];
+                    map_val[this.operator_field] = map_val[this.operator_field] + result[i][this.operator_field];
+                    this.opration_fld[gen_key] = map_val;
+                }
+            }
+
+            result = []
+            for (i in this.opration_fld){
+                result.push(this.opration_fld[i]);
+            }
+
             if(this.chart == 'bar') {
                 return this.schedule_bar(result);
             } else if(this.chart == "pie") {
+                console.log("test");
                 return this.schedule_pie(result);
             }
         }
@@ -96,75 +123,50 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
         var xystr = {};
         var xyname = {};
         var res = [];
-        var group_list = [];
-        var opration_fld = {};
 
-        for (i in result){
-            var gen_key = result[i][self.chart_info_fields]+"_"+result[i][self.group_field]
-            if (opration_fld[gen_key] == undefined){
-                var map_val = {}
-                map_val[self.operator_field] = result[i][self.operator_field];
-                map_val[self.chart_info_fields] = result[i][self.chart_info_fields];
-                if (this.group_field){
-                    map_val[self.group_field] = result[i][self.group_field].replace(" ", "_");
-                }else{
-                    map_val[self.group_field] = result[i][self.group_field];
-                }
-                opration_fld[gen_key] = map_val;
-            }else{
-                map_val = opration_fld[gen_key];
-                map_val[self.operator_field] = map_val[self.operator_field] + result[i][self.operator_field];
-                opration_fld[gen_key] = map_val;
-            }
-        }
-
-        result = []
-        for (i in opration_fld){
-            result.push(opration_fld[i]);
-        }
 
         var COLOR_PALETTE = ['#ff8e00', '#ff0000', '#b0008c', '#9000ff', '#0078ff', '#00ff00', '#e6ff00', '#ffff00',
                      '#905000', '#9b0000', '#840067', '#9abe00', '#ffc900', '#510090', '#0000c9', '#009b00',
                      '#75507b', '#3465a4', '#73d216', '#c17d11', '#edd400', '#fcaf3e', '#ef2929', '#ff00c9',
                      '#ad7fa8', '#729fcf', '#8ae234', '#e9b96e', '#fce94f', '#f57900', '#cc0000', '#d400a8'];
 
-        if(this.group_field){
-            view_chart = this.orientation == 'horizontal'? 'stackedBarH' : 'stackedBar';
+        if(self.group_field){
+            view_chart = self.orientation == 'horizontal'? 'stackedBarH' : 'stackedBar';
         }else{
-            view_chart = this.orientation == 'horizontal'? 'barH' : 'bar';
+            view_chart = self.orientation == 'horizontal'? 'barH' : 'bar';
         }
 
         for (i in result){
-            if (this.group_field){
-                var newkey =result[i][this.group_field].replace(" ", "_");
+            if (self.group_field){
+                var newkey =result[i][self.group_field].replace(" ", "_");
             }else{
-                var newkey =result[i][this.group_field];
+                var newkey =result[i][self.group_field];
             }
-            if (jQuery.inArray(newkey, group_list) == -1){
-                group_list.push(newkey);
+            if (jQuery.inArray(newkey, self.group_list) == -1){
+                self.group_list.push(newkey);
             }
         }
 
         for (i in result){
-            var xystring = result[i][this.chart_info_fields];
-             if (this.group_field){
-                var newkey =result[i][this.group_field].replace(" ", "_");
+            var xystring = result[i][self.chart_info_fields];
+            if (self.group_field){
+                var newkey =result[i][self.group_field].replace(" ", "_");
             }else{
-                var newkey =result[i][this.group_field];
+                var newkey =result[i][self.group_field];
             }
             if (xystr[xystring] == undefined){
                 xyname = {};
                 xyname['name'] = xystring;
-                for (j in group_list){
-                    xyname[group_list[j]] = 0.0001;
+                for (j in self.group_list){
+                    xyname[self.group_list[j]] = 0.0001;
                 }
-                xyname[newkey] = result[i][this.operator_field];
+                xyname[newkey] = result[i][self.operator_field];
                 xystr[xystring] = xyname;
             }
             else{
                 xyname = {};
                 xyname = xystr[xystring];
-                xyname[newkey] = result[i][this.operator_field];
+                xyname[newkey] = result[i][self.operator_field];
                 xystr[xystring] = xyname;
             }
         }
@@ -175,12 +177,12 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
 
         //for legend color
         var grp_color = [];
-        for (i in group_list){
+        for (i in self.group_list){
             var legend = {};
-            if (group_list[i] == undefined){
+            if (self.group_list[i] == undefined){
                 legend['text'] = self.fields[self.operator_field]['string']
             }else{
-                legend['text'] = group_list[i];
+                legend['text'] = self.group_list[i];
             }
             legend['color'] = COLOR_PALETTE[i];
             grp_color.push(legend);
@@ -190,11 +192,9 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
         var oth_ax = {};
 
         temp_ax['template'] = "#name#";
-        temp_ax['lines'] = true;
-
         oth_ax['lines'] = true;
 
-        if (this.orientation == 'horizontal'){
+        if (self.orientation == 'horizontal'){
              var x_ax = oth_ax;
              var y_ax = temp_ax;
         }else{
@@ -205,10 +205,10 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
         var bar_chart = new dhtmlxchartChart({
             view: view_chart,
             container: "barchart",
-            value:"#"+group_list[0]+"#",
+            value:"#"+self.group_list[0]+"#",
             gradient: "3d",
             border: false,
-            width: 30,
+            width: 50,
             color:grp_color[0]['color'],
             origin:0,
             xAxis: x_ax,
@@ -223,7 +223,7 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
                 },
             }
         });
-        for (var i = 1; i<group_list.length;i++){
+        for (var i = 1; i<self.group_list.length;i++){
             bar_chart.addSeries({
                 value: "#"+grp_color[i]['text']+"#",
                 color: grp_color[i]['color']
@@ -234,23 +234,28 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
     },
 
     schedule_pie: function(result) {
+        var self = this;
+
         var chart =  new dhtmlxchartChart({
-            view:"pie",
+            view:"pie3D",
             container:"piechart",
-            value:"#"+this.operator_field+"#",
-            color:"#d2ed7e",
-            label:"#"+this.chart_info_fields[0]+"#",
-            pieInnerText:"<b>#"+this.operator_field+"#</b>",
+            value:"#"+self.operator_field+"#",
+            pieInnerText:function(obj) {
+                var sum = chart.sum("#"+self.operator_field+"#");
+                var val = obj[self.operator_field] / sum * 100 ;
+                return Math.round(val * 10)/10 + "%";
+            },
+            label:"<b>#"+self.chart_info_fields[0]+"#</b>",
             gradient:"3d",
             legend: {
-                width: 100,
+                width: 300,
                 align:"right",
                 valign:"top",
                 marker:{
                     type:"round",
                     width:12
                 },
-                template:"#"+this.chart_info_fields[0]+"#"
+                template:"#"+self.chart_info_fields[0]+"#"
             }
         });
         chart.parse(result,"json");
@@ -265,15 +270,15 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
             group_by_seq: groupbys
         }, function (results) {
             // TODO: handle non-empty results.group_by with read_group
-            if(contexts[0]['group_by']){
-                self.chart_info_fields = contexts[0]['group_by'];
+            if(contexts[0]['group_by'] && contexts[0]['group_by'] != ''){
+                self.chart_info_fields[0] = contexts[0]['group_by'];
             }
             else{
-                self.chart_info_fields = self.chart_info;
+                self.chart_info_fields[0] = self.chart_info;
             }
             self.dataset.context = self.context = results.context;
             self.dataset.domain = self.domain = results.domain;
-            self.dataset.read_slice(self.fields, 0, self.limit,function(result){
+            self.dataset.read_slice({}, 0, self.limit,function(result){
                 self.load_chart(result);
             });
         });
