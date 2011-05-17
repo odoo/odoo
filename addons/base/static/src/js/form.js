@@ -321,7 +321,7 @@ openerp.base.form.compute_domain = function(expr, fields) {
         var ex = expr[i];
         if (ex.length == 1) {
             var top = stack.pop();
-            switch (ex[0]) {
+            switch (ex) {
                 case '|':
                     stack.push(stack.pop() || top);
                     continue;
@@ -332,7 +332,7 @@ openerp.base.form.compute_domain = function(expr, fields) {
                     stack.push(!top);
                     continue;
                 default:
-                    throw new Error('Unknown domain operator ' + ex[0]);
+                    throw new Error('Unknown domain operator ' + ex);
             }
         }
 
@@ -362,17 +362,17 @@ openerp.base.form.compute_domain = function(expr, fields) {
                 stack.push(field >= val);
                 break;
             case 'in':
-                stack.push(_.indexOf(val, field) > -1);
+                stack.push(_(val).contains(field));
                 break;
             case 'not in':
-                stack.push(_.indexOf(val, field) == -1);
+                stack.push(!_(val).contains(field));
                 break;
             default:
                 this.log("Unsupported operator in attrs :", op);
         }
     }
-    return _.indexOf(stack, false) == -1;
-}
+    return _.all(stack);
+};
 
 openerp.base.form.Widget = openerp.base.Controller.extend({
     init: function(view, node) {
