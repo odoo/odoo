@@ -56,6 +56,8 @@ class sugar_import(import_framework):
     TABLE_BUG = 'Bugs'
     TABLE_CASE = 'Cases'
     TABLE_NOTE = 'Notes'
+    TABLE_EMAIL = 'Emails'
+    TABLE_DOCUMENT = 'DocumentRevisions'
     
     
     def initialize(self):
@@ -101,27 +103,41 @@ class sugar_import(import_framework):
     def get_float_time(self, dict, hour, min):
         min = int(min) * 100 / 60
         return "%s.%i" % (hour, min)
+    
+    """
+    import Documents
+    """
+    
+    def import_document(self, val):
+        
+        filepath = '/var/www/sugarcrm/cache/upload/'+ val.get('id')
+        f = open(filepath, "r")
+        datas = f.read()
+        f.close()
+        val['datas'] = base64.encodestring(datas)
+        val['datas_fname'] = val.get('filename')
+        return val   
+        
+    def get_document_mapping(self): 
+        return { 
+                'model' : 'ir.attachment',
+                'dependencies' : [self.TABLE_USER],
+                'hook' : self.import_document,
+                'map' : {'name':'filename',
+                         'description': 'description',
+                         'datas': 'datas',
+                         'datas_fname': 'datas_fname',
+                }
+            }     
 
     """
-    import History(Notes)
+    import Emails
     """
-def get_attachment(sugar_obj, cr, uid, val, model, File, context=None):
-    if not context:
-        context = {}
-    attachment_obj = sugar_obj.pool.get('ir.attachment')
-    model_obj = sugar_obj.pool.get('ir.model.data')
-    mailgate_obj = sugar_obj.pool.get('mailgate.message')
-    new_attachment_id = attachment_obj.create(cr, uid, {'name': val.get('name'), 'datas': File, 'res_id': val.get('res_id',False),'res_model': val.get('model',False)})
-    message_model_ids = find_mapped_id(sugar_obj, cr, uid, model, context.get('instance_name')+'_note_'+val.get('id'), context)
-    message_xml_id = model_obj.browse(cr, uid, message_model_ids)
-    if message_xml_id:
-        mailgate_obj.write(cr, uid, [message_xml_id[0].res_id], {'attachment_ids': [(4, new_attachment_id)]})             
-
-    return True    
-
-    def import_history(self, val):
+    
+    def import_email(self, val):
         model_obj =  self.obj.pool.get('ir.model.data')
         xml_id = self.xml_id_exist(val.get('parent_type'), val.get('parent_type'))
+        xml_id = self.xml_id_exist(history_attachment, val.get('parent_type'))
         model_ids = model_obj.search(self.cr, self.uid, [('name', 'like', xml_id)])
         if model_ids:
               model = model_obj.browse(self.cr, self.uid, model_ids)[0]
@@ -130,12 +146,60 @@ def get_attachment(sugar_obj, cr, uid, val, model, File, context=None):
               else:    
                     val['res_id'] = model.res_id
                     val['model'] = model.model
+        return val   
+        
+    def get_email_mapping(self): 
+        return { 
+                'model' : 'mailgate.message',
+                'dependencies' : [self.TABLE_USER, self.TABLE_PROJECT, self.TABLE_PROJECT_TASK, self.TABLE_ACCOUNT, self.TABLE_CONTACT, self.TABLE_LEAD, self.TABLE_OPPORTUNITY, self.TABLE_MEETING, self.TABLE_CALL],
+                'hook' : self.import_email,
+                'map' : {'name':'name',
+                        'date':'date_sent',
+                        'email_from': 'from_addr_name',
+                        'email_to': 'reply_to_addr',
+                        'email_cc': 'cc_addrs_names',
+                        'email_bcc': 'bcc_addrs_names',
+                        'message_id': 'message_id',
+                        'res_id': 'res_id',
+                        'model': 'model',
+                        'partner_id/.id': 'partner_id/.id',                         
+                        'user_id/id': ref(self.TABLE_USER, 'assigned_user_id'),
+                        'description': ppconcat('__prettyprint__','description', 'description_html'),
+                }
+            } 
+    
+    
+    """
+    import History(Notes)
+    """
+    def get_attachment(self, val):
+        File, Filename = sugar.attachment_search(self.context.get('port'), self.context.get('session_id'), self.TABLE_NOTE, val.get('id'))    
+        attachment_obj = self.obj.pool.get('ir.attachment')
+        model_obj = self.obj.pool.get('ir.model.data')
+        mailgate_obj = self.obj.pool.get('mailgate.message')
+        fields = ['name', 'datas', 'res_id', 'res_model']
+        datas = [val.get('name'), File, val.get('res_id'),val.get('model',False)]
+        self.import_object(fields, datas, 'ir.attachment', 'history_attachment', val.get('name'), [('res_id', '=', val.get('res_id'), ('model', '=', val.get('model')))])
+        return True    
+
+    def import_history(self, val):
+        model_obj =  self.obj.pool.get('ir.model.data')
+        xml_id = self.xml_id_exist(val.get('parent_type'), val.get('parent_id'))
+        model_ids = model_obj.search(self.cr, self.uid, [('name', 'like', xml_id)])
+        if model_ids:
+              model = model_obj.browse(self.cr, self.uid, model_ids)[0]
+              if model.model == 'res.partner':
+                    val['partner_id/.id'] = model.res_id
+              else:    
+                    val['res_id'] = model.res_id
+                    val['model'] = model.model
+        get_attachment(val)            
         return val    
     
     def get_history_mapping(self): 
         return { 
                 'model' : 'mailgate.message',
-                'dependencies' : [],
+                'dependencies' : [self.TABLE_USER, self.TABLE_PROJECT, self.TABLE_PROJECT_TASK, self.TABLE_ACCOUNT, self.TABLE_CONTACT, self.TABLE_LEAD, self.TABLE_OPPORTUNITY, self.TABLE_MEETING, self.TABLE_CALL],
                 'hook' : self.import_history,
                 'map' : {
                       'name':'name',
@@ -732,7 +796,10 @@ def get_attachment(sugar_obj, cr, uid, val, model, File, context=None):
             self.TABLE_PROJECT_TASK: self.get_project_task_mapping(),
             self.TABLE_BUG: self.get_project_issue_mapping(),
             self.TABLE_CASE: self.get_crm_claim_mapping(),
-            self.TABLE_NOTE: self.get_history_mapping()
+            self.TABLE_NOTE: self.get_history_mapping(),
+            self.TABLE_EMAIL: self.get_email_mapping(),
+            self.TABLE_DOCUMENT: self.get_document_mapping()
+            
         }
 
 
@@ -745,6 +812,7 @@ class import_sugarcrm(osv.osv):
     _name = "import.sugarcrm"
     _description = __doc__
     _columns = {
+                
         'opportunity': fields.boolean('Leads and Opportunities', help="If Opportunities are checked, SugarCRM opportunities data imported in OpenERP crm-Opportunity form"),
         'user': fields.boolean('Users', help="If Users  are checked, SugarCRM Users data imported in OpenERP Users form"),
         'contact': fields.boolean('Contacts', help="If Contacts are checked, SugarCRM Contacts data imported in OpenERP partner address form"),
@@ -816,14 +884,13 @@ class import_sugarcrm(osv.osv):
             if current.attachment:
                 key_list.append('Notes')     
             if current.document:
-                key_list.append('Documents')                                                  
+                key_list.append('DocumentRevisions')                                                  
         return key_list
 
     def import_all(self, cr, uid, ids, context=None):
         
 #        """Import all sugarcrm data into openerp module"""
         keys = self.get_key(cr, uid, ids, context)
-
         imp = sugar_import(self, cr, uid, "sugarcrm", "import_sugarcrm", ["tfr@openerp.com"], context)
         imp.set_table_list(keys)
         imp.start()
