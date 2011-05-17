@@ -43,15 +43,11 @@ class account_asset_category(osv.osv):
         'company_id': lambda self, cr, uid, context: self.pool.get('res.company')._company_default_get(cr, uid, 'account.asset.category', context=context),
     }
 
-    def onchange_account_depreciation_id(self, cr, uid, ids, account_asset_id, context=None):
-        if context is None:
-            context = {}
-        account_depreciation_id = self.pool.get('account.account').browse(cr, uid, account_asset_id,
-        context=context).id
-        return {'value': {
-            'account_depreciation_id': account_depreciation_id,
-            }
-        }
+    def onchange_account_asset(self, cr, uid, ids, account_asset_id, context=None):
+        res = {'value':{}}
+        if account_asset:
+           res['value'] = {'account_depreciation_id': account_asset_id}
+        return res
 
 account_asset_category()
 

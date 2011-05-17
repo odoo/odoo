@@ -12,7 +12,7 @@
                 <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                 <separator string="Accounting information" colspan="4" />
                 <field name="journal_id"/>
-                <field name="account_asset_id" on_change="onchange_account_depreciation_id(account_asset_id)"/>
+                <field name="account_asset_id" on_change="onchange_account_asset(account_asset_id)"/>
                 <field name="account_depreciation_id"/>
                 <field name="account_expense_depreciation_id"/>
         	<group col="4" colspan="4" groups="analytic.group_analytic_accounting">
