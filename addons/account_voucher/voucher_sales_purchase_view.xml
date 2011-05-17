@@ -177,7 +177,7 @@
 
         <!-- Sales Voucher -->
         <record id="action_sale_receipt" model="ir.actions.act_window">
-            <field name="name">Sales Receipt</field>
+            <field name="name">Customer Receipts</field>
             <field name="res_model">account.voucher</field>
             <field name="view_type">form</field>
             <field name="domain">[('journal_id.type','in',['sale','sale_refund']), ('type','=','sale')]</field>
