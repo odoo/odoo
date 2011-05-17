@@ -823,8 +823,10 @@ class import_sugarcrm(osv.osv):
         
 #        """Import all sugarcrm data into openerp module"""
         keys = self.get_key(cr, uid, ids, context)
-        imp = sugar_import(self, cr, uid, "sugarcrm", "import_sugarcrm", context)
-        imp.import_all(keys)
+
+        imp = sugar_import(self, cr, uid, "sugarcrm", "import_sugarcrm", ["tfr@openerp.com"], context)
+        imp.set_table_list(keys)
+        imp.start()
         
         obj_model = self.pool.get('ir.model.data')
         model_data_ids = obj_model.search(cr,uid,[('model','=','ir.ui.view'),('name','=','import.message.form')])
