@@ -15,7 +15,13 @@
                 <field name="account_asset_id"/>
                 <field name="account_depreciation_id"/>
                 <field name="account_expense_depreciation_id"/>
+                <separator string="Depreciation duration" colspan="4"/>
                 <field name="method"/>
+                <field name="method_progress_factor" attrs="{'invisible':[('method','=','linear')]}"/>
+                <newline/>
+                <field name="method_time"/>
+                <field name="method_period" attrs="{'invisible':[('method_time','=','end')]}"/>
+                <field name="prorata" colspan="1"/>
                 <field name="method_delay"/>
         	<group col="4" colspan="4" groups="analytic.group_analytic_accounting">
         	    <separator string="Analytic information" colspan="4" />

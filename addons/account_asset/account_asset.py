@@ -39,10 +39,19 @@ class account_asset_category(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'method': fields.selection([('linear','Linear'),('progressif','Progressive')], 'Computation method', required=True),
         'method_delay': fields.integer('During (interval)'),
+        'method_period': fields.integer('Depre. all (period)'),
+        'method_progress_factor': fields.float('Progressif Factor'),
+        'method_time': fields.selection([('delay','Delay'),('end','Ending Period')], 'Time Method', required=True),
+        'prorata':fields.boolean('Prorata Temporis', help='Indicates that the accounting entries for this asset have to be done from the purchase date instead of the first January'),
     }
 
     _defaults = {
         'company_id': lambda self, cr, uid, context: self.pool.get('res.company')._company_default_get(cr, uid, 'account.asset.category', context=context),
+        'method': lambda obj, cr, uid, context: 'linear',
+        'method_delay': lambda obj, cr, uid, context: 5,
+        'method_time': lambda obj, cr, uid, context: 'delay',
+        'method_period': lambda obj, cr, uid, context: 12,
+        'method_progress_factor': lambda obj, cr, uid, context: 0.3,
     }
 
 account_asset_category()
@@ -204,7 +213,13 @@ class account_asset_asset(osv.osv):
         res = {'value':{}}
         if category_id:
             category_obj = self.pool.get('account.asset.category').browse(cr, uid, category_id, context=context)
-            res['value'] = {'method': category_obj.method, 'method_delay': category_obj.method_delay}
+            res['value'] = {'method': category_obj.method, 
+                            'method_delay': category_obj.method_delay,
+                            'method_time': category_obj.method_time,
+                            'method_period': category_obj.method_period,
+                            'method_progress_factor': category_obj.method_progress_factor,
+                            'prorata': category_obj.prorata,
+                            }
         return res
     
     def _compute_period(self, cr, uid, property, context={}):
