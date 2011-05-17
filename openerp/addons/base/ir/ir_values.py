@@ -176,7 +176,9 @@ class ir_values(osv.osv):
             if key == 'default':
                 # Make sure we get first the values for specific users, then
                 # the global values. The map/filter below will retain the first
-                # value for any given name.
+                # value for any given name. The 'order by' will put the null
+                # values last; this may be postgres specific (it is the
+                # behavior in postgres at least since 8.2).
                 order = 'user_id'
             where.append('(user_id=%s or (user_id IS NULL)) order by '+ order)
             params.append(uid)
