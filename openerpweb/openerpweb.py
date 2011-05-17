@@ -422,6 +422,8 @@ class HttpRequest(object):
         self.applicationsession = applicationsession
         self.httpsession_id = "cookieid"
         self.httpsession = cherrypy.session
+        self.context = kw.get('context', {})
+        self.session = self.httpsession.setdefault(kw.get('session_id', None), OpenERPSession())
         self.result = ""
         print "GET/POST --> %s.%s %s %r" % (controller.__class__.__name__, f.__name__, request, kw)
         r = f(controller, self, **kw)
