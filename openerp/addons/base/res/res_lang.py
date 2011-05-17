@@ -37,6 +37,15 @@ class lang(osv.osv):
     _disallowed_datetime_patterns.remove('%y') # this one is in fact allowed, just not good practice
 
     def install_lang(self, cr, uid, **args):
+        """
+
+        This method is called from openerp/addons/base/base_data.xml to load
+        some language and set it as the default for every partners. The
+        language is set via tools.config by the RPC 'create' method on the
+        'db' object. This is a fragile solution and something else should be
+        found.
+
+        """
         lang = tools.config.get('lang')
         if not lang:
             return False
@@ -44,7 +53,7 @@ class lang(osv.osv):
         ir_values_obj = self.pool.get('ir.values')
         if not lang_ids:
             lang_id = self.load_lang(cr, uid, lang)
-        default_value = ir_values_obj.get(cr, uid, 'default', False, 'res.partner')
+        default_value = ir_values_obj.get(cr, uid, 'default', False, ['res.partner'])
         if not default_value:
             ir_values_obj.set(cr, uid, 'default', False, 'lang', ['res.partner'], lang)
         return True
