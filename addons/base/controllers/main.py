@@ -385,7 +385,7 @@ class DataSet(openerpweb.Controller):
         :rtype: list
         """
         Model = request.session.model(model)
-        records = Model.read(ids, fields)
+        records = Model.read(ids, fields, request.context)
 
         record_map = dict((record['id'], record) for record in records)
 
