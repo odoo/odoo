@@ -35,16 +35,16 @@
                 <field name="create_date" invisible="1"/>
                 <button string="Convert to Opportunity"
                     name="%(phonecall2opportunity_act)d"
-                    states="draft,open,pending"
+                    states="open,pending"
                     icon="gtk-index"
                     type="action" attrs="{'invisible':[('opportunity_id','!=',False)]}" />
                 <button string="Meeting"
-                    states="draft,open,pending" icon="gtk-redo"
+                    states="open,pending" icon="gtk-redo"
                      name="action_make_meeting" type="object" />
                 <field name="state"/>
-                <button name="case_cancel" string="Cancel" states="draft,open,pending" type="object" icon="gtk-cancel"/>
-                <button name="case_open" string="Todo" states="draft,pending" type="object" icon="gtk-go-forward"/>
-                <button name="case_close" string="Held" states="open,draft,pending" type="object" icon="gtk-jump-to"/>
+                <button name="case_cancel" string="Cancel" states="open,pending" type="object" icon="gtk-cancel"/>
+                <button name="case_open" string="Todo" states="pending" type="object" icon="gtk-go-forward"/>
+                <button name="case_close" string="Held" states="open,pending" type="object" icon="gtk-jump-to"/>
                 <button name="case_pending" string="Not Held" states="open" type="object" icon="gtk-media-pause"/>
             </tree>
         </field>
@@ -67,15 +67,15 @@
                     <field name="date"/>
                     <field name="user_id"/>
                     <field name="section_id" colspan="1" widget="selection" />
-                    <button string="Convert to Opportunity"
-                        name="%(phonecall2opportunity_act)d"
-                        icon="gtk-index" type="action"
-                        attrs="{'invisible':['|', ('opportunity_id','!=',False), ('state','=','done')]}" />
-                    <label colspan="6"  string=""/>
                     <button string="Schedule Other Call"
                      icon="terp-call-start"
                     name="%(phonecall_to_phonecall_act)d"
                     type="action"  />
+                    <label colspan="6"  string=""/>
+                    <button string="Convert to Opportunity"
+                        name="%(phonecall2opportunity_act)d"
+                        icon="gtk-index" type="action"
+                        attrs="{'invisible':[('opportunity_id','!=',False)]}" />
 
                 </group>
 
@@ -108,17 +108,17 @@
                 <group col="8" colspan="4">
                     <field name="state" select="1" />
                     <button name="case_cancel" string="Cancel"
-                        states="draft,open,pending" type="object"
+                        states="open,pending" type="object"
                         icon="gtk-cancel" />
                     <button name="case_open" string="Todo"
-                        states="draft,pending" type="object"
+                        states="pending" type="object"
                         icon="gtk-go-forward" />
                     <button name="case_pending" string="Not Held"
                         states="open" type="object" icon="gtk-media-pause" />
                     <button name="case_close" string="Held"
-                        states="open,draft,pending" type="object"
+                        states="open,pending" type="object"
                         icon="gtk-jump-to" />
-                    <button name="case_reset" string="Reset to Draft"
+                    <button name="case_reset" string="Reset to Todo"
                         states="cancel" type="object"
                         icon="gtk-convert" />
                 </group>
@@ -183,7 +183,7 @@
             <search string="Search Phonecalls">
                <filter icon="terp-check" string="Current"
                    name="current"
-                   domain="[('state','in', ('draft','open','pending'))]"/>
+                   domain="[('state','in', ('open','pending'))]"/>
                <filter icon="terp-go-today" string="Today"
                    domain="[('date','&lt;', time.strftime('%%Y-%%m-%%d 23:59:59')),
                     ('date','&gt;=',time.strftime('%%Y-%%m-%%d 00:00:00'))]"

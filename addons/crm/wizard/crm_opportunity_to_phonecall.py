@@ -33,6 +33,7 @@ class crm_opportunity2phonecall(osv.osv_memory):
     _columns = {
         'name' : fields.char('Call summary', size=64, required=True, select=1),
         'user_id' : fields.many2one('res.users', "Assign To"),
+        'partner_id' : fields.many2one('res.partner', "Partner"),
         'date': fields.datetime('Date'),
         'section_id': fields.many2one('crm.case.section', 'Sales Team'),
         'categ_id': fields.many2one('crm.case.categ', 'Category',  \
@@ -71,6 +72,8 @@ class crm_opportunity2phonecall(osv.osv_memory):
                 res.update({'section_id': opp.section_id and opp.section_id.id or False})
             if 'categ_id' in fields:
                 res.update({'categ_id': categ_id})
+            if 'partner_id' in fields:
+                res.update({'partner_id': opp.partner_id and opp.partner_id.id or False})
         return res
 
     def action_cancel(self, cr, uid, ids, context=None):

@@ -114,6 +114,7 @@ class crm_phonecall2phonecall(osv.osv_memory):
                 'date': fields.datetime('Date'),
                 'section_id':fields.many2one('crm.case.section','Sales Team'),
                 'action': fields.selection([('schedule','Schedule a call'), ('log','Log a call')], 'Action', required=True),
+                'partner_id' : fields.many2one('res.partner', "Partner"),
                 }
 
     def default_get(self, cr, uid, fields, context=None):
@@ -149,6 +150,8 @@ class crm_phonecall2phonecall(osv.osv_memory):
                 res.update({'section_id': phonecall.section_id and phonecall.section_id.id or False})
             if 'categ_id' in fields:
                 res.update({'categ_id': categ_id})
+            if 'partner_id' in fields:
+                res.update({'partner_id': phonecall.partner_id and phonecall.partner_id.id or False})
         return res
 
 crm_phonecall2phonecall()
