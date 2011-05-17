@@ -171,7 +171,7 @@ class account_asset_asset(osv.osv):
         'active': fields.boolean('Active', select=2),
         'partner_id': fields.many2one('res.partner', 'Partner'),
 
-        'method': fields.selection([('linear','Linear'),('progressif','Progressive')], 'Computation method', required=True, readonly=True, states={'draft':[('readonly',False)]}),
+        'method': fields.selection([('linear','Linear'),('progressif','Progressive')], 'Computation Method', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'method_delay': fields.integer('During (interval)', readonly=True, states={'draft':[('readonly',False)]}),
         'method_period': fields.integer('Depre. all (period)', readonly=True, states={'draft':[('readonly',False)]}),
         'method_end': fields.date('Ending date'),
