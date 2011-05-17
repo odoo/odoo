@@ -131,13 +131,13 @@ class res_partner_address(osv.osv):
         if not len(ids):
             return []
         res = []
-        if context is None: 
+        if context is None:
             context = {}
-        for r in self.read(cr, user, ids, ['zip', 'city', 'partner_id', 'street']):
+        for r in self.read(cr, user, ids, ['zip', 'city', 'partner_id', 'street', 'name']):
             if context.get('contact_display', 'contact')=='partner' and r['partner_id']:
                 res.append((r['id'], r['partner_id'][1]))
             else:
-                addr = str('')
+                addr = r['name'] or ''
                 addr += "%s %s %s" % (r.get('street', '') or '', r.get('zip', '') \
                                     or '', r.get('city', '') or '')
                 res.append((r['id'], addr.strip() or '/'))
