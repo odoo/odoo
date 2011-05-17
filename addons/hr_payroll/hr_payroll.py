@@ -255,12 +255,16 @@ class hr_payslip(osv.osv):
         'date_from': fields.date('Date From', readonly=True, states={'draft': [('readonly', False)]}, required=True),
         'date_to': fields.date('Date To', readonly=True, states={'draft': [('readonly', False)]}, required=True),
         'state': fields.selection([
-            ('draft', 'Waiting for Verification'),
-            ('hr_check', 'Waiting for HR Verification'),
-            ('accont_check', 'Waiting for Account Verification'),
-            ('confirm', 'Confirm Sheet'),
-            ('done', 'Paid Salary'),
+            ('draft', 'Draft'),
+            ('verify', 'Verify'),
+            ('done', 'Done'),
             ('cancel', 'Reject'),
+#            ('draft', 'Waiting for Verification'),
+#            ('hr_check', 'Waiting for HR Verification'),
+#            ('accont_check', 'Waiting for Account Verification'),
+#            ('confirm', 'Confirm Sheet'),
+#            ('done', 'Paid Salary'),
+#            ('cancel', 'Reject'),
         ], 'State', select=True, readonly=True,
             help=' * When the payslip is created the state is \'Waiting for verification\'.\
             \n* It is varified by the user and payslip is sent for HR varification, the state is \'Waiting for HR Verification\'. \
@@ -310,21 +314,23 @@ class hr_payslip(osv.osv):
 
     def account_check_sheet(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'accont_check'}, context=context)
-
+    
     def hr_check_sheet(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'hr_check'}, context=context)
-
+    
     def process_sheet(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'paid': True, 'state': 'done'}, context=context)
 
+    def hr_verify_sheet(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {'state': 'verify'}, context=context)
+    
     def refund_sheet(self, cr, uid, ids, context=None):
         mod_obj = self.pool.get('ir.model.data')
         wf_service = netsvc.LocalService("workflow")
         for id in ids:
             id_copy = self.copy(cr, uid, id, {'credit_note': True}, context=context)
             self.compute_sheet(cr, uid, [id_copy], context=context)
-            wf_service.trg_validate(uid, 'hr.payslip', id_copy, 'verify_sheet', cr)
-            wf_service.trg_validate(uid, 'hr.payslip', id_copy, 'final_verify_sheet', cr)
+            wf_service.trg_validate(uid, 'hr.payslip', id_copy, 'hr_verify_sheet', cr)
             wf_service.trg_validate(uid, 'hr.payslip', id_copy, 'process_sheet', cr)
 
         form_id = mod_obj.get_object_reference(cr, uid, 'hr_payroll', 'view_hr_payslip_form')
@@ -347,6 +353,9 @@ class hr_payslip(osv.osv):
 
     def verify_sheet(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'confirm'}, context=context)
+    
+    def check(self, cr, uid, ids, context=None):
+        return True
 
     #TODO move this function into hr_contract module, on hr.employee object
     def get_contract(self, cr, uid, employee, date_from, date_to, context=None):
