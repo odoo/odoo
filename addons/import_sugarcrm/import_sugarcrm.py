@@ -55,6 +55,7 @@ class sugar_import(import_framework):
     TABLE_PROJECT_TASK = 'ProjectTask'
     TABLE_BUG = 'Bugs'
     TABLE_CASE = 'Cases'
+    TABLE_NOTE = 'Notes'
     
     
     def initialize(self):
@@ -100,6 +101,53 @@ class sugar_import(import_framework):
     def get_float_time(self, dict, hour, min):
         min = int(min) * 100 / 60
         return "%s.%i" % (hour, min)
+
+    """
+    import History(Notes)
+    """
+def get_attachment(sugar_obj, cr, uid, val, model, File, context=None):
+    if not context:
+        context = {}
+    attachment_obj = sugar_obj.pool.get('ir.attachment')
+    model_obj = sugar_obj.pool.get('ir.model.data')
+    mailgate_obj = sugar_obj.pool.get('mailgate.message')
+    new_attachment_id = attachment_obj.create(cr, uid, {'name': val.get('name'), 'datas': File, 'res_id': val.get('res_id',False),'res_model': val.get('model',False)})
+    message_model_ids = find_mapped_id(sugar_obj, cr, uid, model, context.get('instance_name')+'_note_'+val.get('id'), context)
+    message_xml_id = model_obj.browse(cr, uid, message_model_ids)
+    if message_xml_id:
+        mailgate_obj.write(cr, uid, [message_xml_id[0].res_id], {'attachment_ids': [(4, new_attachment_id)]})             
+
+    return True    
+
+    def import_history(self, val):
+        model_obj =  self.obj.pool.get('ir.model.data')
+        xml_id = self.xml_id_exist(val.get('parent_type'), val.get('parent_type'))
+        model_ids = model_obj.search(self.cr, self.uid, [('name', 'like', xml_id)])
+        if model_ids:
+              model = model_obj.browse(self.cr, self.uid, model_ids)[0]
+              if model.model == 'res.partner':
+                    val['partner_id/.id'] = model.res_id
+              else:    
+                    val['res_id'] = model.res_id
+                    val['model'] = model.model
+        return val    
+    
+    def get_history_mapping(self): 
+        return { 
+                'model' : 'mailgate.message',
+                'dependencies' : [],
+                'hook' : self.import_history,
+                'map' : {
+                      'name':'name',
+                      'date': 'date_entered',
+                      'user_id/id': ref(self.TABLE_USER, 'assigned_user_id'),
+                      'description': ppconcat('__prettyprint__','description', 'description_html'),
+                      'res_id': 'res_id',
+                      'model': 'model',
+                      'partner_id/.id' : 'partner_id/.id',
+                }
+            }     
+    
     """
     import Claims(Cases)
     """
@@ -683,7 +731,8 @@ class sugar_import(import_framework):
             self.TABLE_PROJECT : self.get_project_mapping(),
             self.TABLE_PROJECT_TASK: self.get_project_task_mapping(),
             self.TABLE_BUG: self.get_project_issue_mapping(),
-            self.TABLE_CASE: self.get_crm_claim_mapping()
+            self.TABLE_CASE: self.get_crm_claim_mapping(),
+            self.TABLE_NOTE: self.get_history_mapping()
         }
 
 
