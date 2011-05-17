@@ -1,4 +1,5 @@
 // TODO: trim support
+// TODO: line number -> https://bugzilla.mozilla.org/show_bug.cgi?id=618650
 var QWeb2 = {
     expressions_cache: {},
     reserved_words: 'true,false,NaN,null,undefined,debugger,in,instanceof,new,function,return,this,typeof,eval,Math,RegExp,Array,Object'.split(','),
@@ -295,8 +296,7 @@ QWeb2.Engine = (function() {
         compile : function(node) {
             var e = new QWeb2.Element(this, node);
             var template = node.getAttribute(this.prefix + '-name');
-            return "(function(dict) {\n" +
-                    "   /* 'this' refers to Qweb2.Engine instance */\n" +
+            return  "   /* 'this' refers to Qweb2.Engine instance */\n" +
                     "   var context = { engine : this, template : " + (this.tools.js_escape(template)) + " };\n" +
                     "   dict = dict || {};\n" +
                     "   dict['__template__'] = '" + template + "';\n" +
@@ -306,8 +306,7 @@ QWeb2.Engine = (function() {
                     "   /* END OF TEMPLATE */ } catch(error) {\n" +
                     "       context.engine.tools.exception('Runtime Error: ' + error, context);\n" +
                     "   }\n" +
-                    "   return r.join('');\n" +
-                    "});";
+                    "   return r.join('');";
         },
         render : function(template, dict) {
             if (this.debug && window['console'] !== undefined) {
@@ -332,11 +331,15 @@ QWeb2.Engine = (function() {
                 }
                 var code = this.compile(this.templates[template]), tcompiled;
                 try {
-                    // tcompiled = new Function(code);   TODO: Check if could use this in order to avoid eval
-                    tcompiled = eval(code);
+                    tcompiled = new Function(['dict'], code);
                 } catch (error) {
-                    console.log(code);
+                    if (this.debug && window.console) {
+                        console.log(code);
+                    }
                     this.tools.exception("Error evaluating template: " + error, { template: name });
+                }
+                if (!tcompiled) {
+                    this.tools.exception("Error evaluating template: (IE?)" + error, { template: name });
                 }
                 this.compiled_templates[template] = tcompiled;
                 return this.render(template, dict);
