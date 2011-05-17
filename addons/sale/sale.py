@@ -131,7 +131,7 @@ class sale_order(osv.osv):
             tot = 0.0
             for invoice in sale.invoice_ids:
                 if invoice.state not in ('draft', 'cancel'):
-                    tot += invoice.amount_untaxed
+                    tot += invoice.amount_untaxed - invoice.residual
             if tot:
                 res[sale.id] = min(100.0, tot * 100.0 / (sale.amount_untaxed or 1.00))
             else:
@@ -870,7 +870,7 @@ class sale_order_line(osv.osv):
                     \n* The \'Cancelled\' state is set when a user cancel the sales order related.'),
         'order_partner_id': fields.related('order_id', 'partner_id', type='many2one', relation='res.partner', store=True, string='Customer'),
         'salesman_id':fields.related('order_id', 'user_id', type='many2one', relation='res.users', store=True, string='Salesman'),
-        'company_id': fields.related('order_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True, states={'draft': [('readonly', False)]}),
+        'company_id': fields.related('order_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),
     }
     _order = 'sequence, id desc'
     _defaults = {
