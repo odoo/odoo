@@ -85,13 +85,17 @@
     </div>
 </t>
 <t t-name="Menu">
-    <ul>
-        <li t-foreach="data.children" t-as="menu">
-            <a href="#" t-att-data-menu="menu.id">
-                <span><t t-esc="menu.name"/></span>
-            </a>
-        </li>
-    </ul>
+    <table align="center">
+        <tr>
+        <t t-foreach="data.children" t-as="menu">
+            <td>
+                <a href="#" t-att-data-menu="menu.id">
+                    <span><t t-esc="menu.name"/></span>
+                </a>
+            </td>
+        </t>
+        </tr>
+    </table>
 </t>
 <t t-name="Menu.secondary">
     <div style="display: none" class="menu_accordion" t-att-data-menu-parent="menu.id">

@@ -891,7 +891,7 @@ openerp.base.form.FieldMany2OneDatasSet = openerp.base.DataSetStatic.extend({
     },
     write: function (id, data, callback) {
         this._super(id, data, callback);
-    },
+    }
 });
 
 openerp.base.form.FieldMany2OneViewManager = openerp.base.ViewManager.extend({
