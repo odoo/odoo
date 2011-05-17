@@ -68,13 +68,30 @@ class Change( unohelper.Base, XJobExecutor ):
         self.logobj=Logger()
         doc = desktop.getCurrentComponent()
         docinfo=doc.getDocumentInfo()
+        self.protocol = {
+            'XML-RPC': 'http://',
+            'XML-RPC secure': 'https://',
+            'NET-RPC': 'socket://',
+        }  
+        host=port=protocol=''
+        if docinfo.getUserFieldValue(0):
+            m = re.match('^(http[s]?://|socket://)([\w.\-]+):(\d{1,5})$',  docinfo.getUserFieldValue(0) or '')
+            host = m.group(2)
+            port = m.group(3)
+            protocol = m.group(1)
+        if  protocol:
+            for (key, value) in self.protocol.iteritems(): 
+                if value==protocol:
+                    protocol=key
+                    break
+                
         self.win=DBModalDialog(60, 50, 120, 90, "Connect to Open ERP Server")
 
         self.win.addFixedText("lblVariable", 38, 12, 25, 15, "Server  ")
-        self.win.addEdit("txtHost",-2,9,60,15,'localhost')
+        self.win.addEdit("txtHost",-2,9,60,15, host or 'localhost')
 
         self.win.addFixedText("lblReportName",45 , 31, 15, 15, "Port  ")
-        self.win.addEdit("txtPort",-2,28,60,15,"8069")
+        self.win.addEdit("txtPort",-2,28,60,15, port or "8069")
 
         self.win.addFixedText("lblLoginName", 2, 51, 60, 15, "Protocol Connection")
 
@@ -84,17 +101,10 @@ class Change( unohelper.Base, XJobExecutor ):
         self.win.addButton( 'btnNext', -2, -5, 30, 15, 'Next', actionListenerProc = self.btnNext_clicked )
 
         self.win.addButton( 'btnCancel', -2 - 30 - 5 ,-5, 30, 15, 'Cancel', actionListenerProc = self.btnCancel_clicked )
-        aVal=''
-        self.aVal=aVal
-        sValue=''
-        self.protocol = {
-            'XML-RPC': 'http://',
-            'XML-RPC secure': 'https://',
-            'NET-RPC': 'socket://',
-        }
+ 
         for i in self.protocol.keys():
             self.lstProtocol.addItem(i,self.lstProtocol.getItemCount() )
-        self.win.doModalDialog( "lstProtocol", sValue)
+        self.win.doModalDialog( "lstProtocol",  protocol)
 
     def btnNext_clicked(self,oActionEvent):
         global url
@@ -114,7 +124,7 @@ class Change( unohelper.Base, XJobExecutor ):
             import traceback,sys 
             info = reduce(lambda x, y: x+y, traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback))
             self.logobj.log_write('ServerParameter', LOG_ERROR, info)     
-            ErrorDialog("Connection to server fail", "", "Error")
+            ErrorDialog("Connection to server fail. please check your Server Parameter", "", "Error")
             self.win.endExecute()
                  
     def btnCancel_clicked(self,oActionEvent):

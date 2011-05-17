@@ -164,6 +164,7 @@ class ServerParameter( unohelper.Base, XJobExecutor ):
     def btnPrevious_clicked(self,oActionEvent):
         self.win.endExecute()
         Change(None)
+        self.win.endExecute()
         
 
 if __name__<>"package" and __name__=="__main__":
