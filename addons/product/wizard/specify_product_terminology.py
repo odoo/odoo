@@ -27,14 +27,14 @@ class specify_product_terminology(osv.osv_memory):
     _name = 'specify.product.terminology'
     _inherit = 'res.config'
     _columns = {
-        'partner': fields.selection([('Customers','Customers'),
-                                  ('Clients','Clients'),
-                                  ('Members','Members'),
-                                  ('Patients','Patients'),
-                                  ('Partners','Partners'),
-                                  ('Donors','Donors'),
-                                  ('Guests','Guests'),
-                                  ('Tenants','Tenants')
+        'partner': fields.selection([('Customer','Customer'),
+                                  ('Client','Client'),
+                                  ('Member','Member'),
+                                  ('Patient','Patient'),
+                                  ('Partner','Partner'),
+                                  ('Donor','Donor'),
+                                  ('Guest','Guest'),
+                                  ('Tenant','Tenant')
                                   ],
                                  'Choose how to call a customer', required=True ),
                                  
@@ -43,19 +43,48 @@ class specify_product_terminology(osv.osv_memory):
     }
     _defaults={
                'partner' :'Partners',
+               'products' :'Product'
     }
     
     def execute(self, cr, uid, ids, context=None):
         for o in self.browse(cr, uid, ids, context=context):
             user_obj = self.pool.get('res.users')
             trans_obj = self.pool.get('ir.translation')
+            ir_model = self.pool.get('ir.model.fields')
+            ir_model_prod_id = ir_model.search(cr,uid, [('field_description','like','Product')])
+            ir_model_partner_id = ir_model.search(cr,uid, [('field_description','like','Partner')])
+            trans_id = trans_obj.search(cr,uid, [],context=context)
             browse_val = user_obj.browse(cr ,uid ,uid , context=context)
-            name = browse_val.name
             context_lang = browse_val.context_lang
-            name_prt = 'res.partner,name'
-            name_prod = 'product.template,name'
-            trans_obj.create(cr, uid, {'name': name_prt ,'lang': context_lang, 'type': 'field',  'src': 'Name', 'value': o.partner}, context=context)
-            trans_obj.create(cr, uid, {'name': name_prod ,'lang': context_lang, 'type': 'field',  'src': 'Name', 'value': o.products}, context=context)
+            # For Partner Translation
+            if ir_model_prod_id:
+                for p_id in ir_model_partner_id:
+                    brw_ir_model = ir_model.browse(cr ,uid ,p_id , context=context)
+                    name1 = brw_ir_model.field_description
+                    name2 = name1.replace('Partner',o.partner)
+                    obj2 = brw_ir_model.model_id.model
+                    field = brw_ir_model.name
+                    partner_name = obj2 +',' + field
+                    already_id = trans_obj.search(cr,uid, [('name','=',partner_name)])
+                    if already_id:
+                        for un_id in already_id:
+                            trans_obj.unlink(cr ,uid, un_id, context=context )
+                    created_id = trans_obj.create(cr, uid, {'name': partner_name ,'lang': context_lang, 'type': 'field',  'src': name1, 'value': name2}, context=context)
+            # For Product Translation
+            if ir_model_prod_id:
+                for prd_id in ir_model_prod_id:
+                    brw_prod_ir_model = ir_model.browse(cr ,uid ,prd_id , context=context)
+                    name_prod1 = brw_prod_ir_model.field_description
+                    name_prod2 = name_prod1.replace('Product',o.products)
+                    obj_prod = brw_prod_ir_model.model_id.model
+                    prod_field = brw_prod_ir_model.name
+                    product_name = obj_prod +',' + prod_field
+                    already_prod_id = trans_obj.search(cr,uid, [('name','=',product_name)])
+                    if already_prod_id:
+                        for un_id in already_prod_id:
+                            trans_obj.unlink(cr ,uid, un_id, context=context )
+                    created_id = trans_obj.create(cr, uid, {'name': product_name ,'lang': context_lang, 'type': 'field',  'src': name_prod1, 'value': name_prod2}, context=context)
+            
         return {}
     
 specify_product_terminology()
