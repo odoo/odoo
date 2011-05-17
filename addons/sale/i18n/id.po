@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-01-11 11:16+0000\n"
-"PO-Revision-Date: 2011-05-14 14:15+0000\n"
+"PO-Revision-Date: 2011-05-16 06:47+0000\n"
 "Last-Translator: moelyana <Unknown>\n"
 "Language-Team: Indonesian <id@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-05-15 05:38+0000\n"
+"X-Launchpad-Export-Date: 2011-05-17 06:05+0000\n"
 "X-Generator: Launchpad (build 12959)\n"
 
 #. module: sale
@@ -121,7 +121,7 @@ msgstr ""
 #. module: sale
 #: model:process.node,name:sale.process_node_saleprocurement0
 msgid "Procurement Order"
-msgstr ""
+msgstr "Order procurement"
 
 #. module: sale
 #: view:sale.report:0
@@ -280,7 +280,7 @@ msgstr "Kemasan"
 #. module: sale
 #: model:process.transition,name:sale.process_transition_saleinvoice0
 msgid "From a sales order"
-msgstr "Daftar order penjualan"
+msgstr "Dari Sales Order"
 
 #. module: sale
 #: field:sale.shop,name:0
@@ -296,7 +296,7 @@ msgstr "Nama konsumen tidak ditemukan"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree2
 msgid "Sales in Exception"
-msgstr ""
+msgstr "Sales dalam Pengecualian"
 
 #. module: sale
 #: view:sale.order:0
@@ -322,6 +322,19 @@ msgid ""
 "  - The 'Invoice From The Picking' choice is used to create an invoice "
 "during the picking process."
 msgstr ""
+"Kebijakan Pengiriman digunakan untuk menyinkronkan operasi dan pengiriman "
+"invoice.\n"
+"- The 'Pembayaran Sebelum pengiriman' pilihan pertama akan menghasilkan "
+"invoice dan kemudian menghasilkan urutan pengambilan setelah pembayaran "
+"invoice ini.\n"
+"- The 'Pengiriman & Manual invoice' akan menciptakan urutan pengambilan "
+"langsung dan menunggu pengguna untuk secara manual klik tombol 'invoice' "
+"untuk menghasilkan invoice draft.\n"
+"- The 'invoice On Delivery Order Setelah' pilihan akan menghasilkan invoice "
+"draft berdasarkan pesanan sales setelah semua daftar pengambilan telah "
+"selesai.\n"
+"- 'invoice Dari Picking' Pilihan ini digunakan untuk membuat invoice selama "
+"proses pengambilan."
 
 #. module: sale
 #: code:addons/sale/sale.py:939
@@ -336,7 +349,7 @@ msgstr ""
 #. module: sale
 #: view:sale.installer:0
 msgid "Configure"
-msgstr "Konfigurasi"
+msgstr "Pengaturan"
 
 #. module: sale
 #: constraint:stock.move:0
@@ -353,7 +366,7 @@ msgstr "mode tidak sah untuk test_state"
 #. module: sale
 #: selection:sale.report,month:0
 msgid "June"
-msgstr ""
+msgstr "Juni"
 
 #. module: sale
 #: code:addons/sale/sale.py:584
@@ -387,7 +400,7 @@ msgstr "Penawaran"
 #. module: sale
 #: help:sale.order,pricelist_id:0
 msgid "Pricelist for current sales order."
-msgstr ""
+msgstr "Daftar  harga sales order untuk saat ini"
 
 #. module: sale
 #: selection:sale.config.picking_policy,step:0
@@ -440,6 +453,8 @@ msgid ""
 "The salesman confirms the quotation. The state of the sales order becomes "
 "'In progress' or 'Manual in progress'."
 msgstr ""
+"Salesman ini mengkonfirmasikan penawaran.status  penjualan menjadi 'Dalam "
+"proses \"atau\" Proses manual'."
 
 #. module: sale
 #: code:addons/sale/sale.py:971
@@ -461,6 +476,8 @@ msgid ""
 "Select a product of type service which is called 'Advance Product'. You may "
 "have to create it and set it as a default value on this field."
 msgstr ""
+"Pilih produk jenis layanan  yang disebut 'Advanced Produk'. Anda mungkin "
+"harus membuat  dan mengaturnya  sebagai  nilai  default  pada bagian ini"
 
 #. module: sale
 #: report:sale.order:0
@@ -474,6 +491,8 @@ msgid ""
 "You cannot make an advance on a sales order                              "
 "that is defined as 'Automatic Invoice after delivery'."
 msgstr ""
+"Anda tidak dapat membuat  pesanan penjualan yang diartikan sebagai  'invoice "
+"Otomatis  setelah pengiriman'."
 
 #. module: sale
 #: view:sale.order:0
@@ -523,7 +542,7 @@ msgstr "Referensi order harus unik !"
 #. module: sale
 #: selection:sale.report,month:0
 msgid "March"
-msgstr ""
+msgstr "Maret"
 
 #. module: sale
 #: help:sale.order,amount_total:0
@@ -629,7 +648,7 @@ msgstr "Kuantitas"
 #. module: sale
 #: field:sale.order,create_date:0
 msgid "Creation Date"
-msgstr ""
+msgstr "Tanggal Pembuatan"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_line_tree3

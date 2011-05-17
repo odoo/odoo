@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-05-09 10:18+0000\n"
-"PO-Revision-Date: 2011-05-14 16:59+0000\n"
+"PO-Revision-Date: 2011-05-16 19:16+0000\n"
 "Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-05-15 05:38+0000\n"
+"X-Launchpad-Export-Date: 2011-05-17 06:05+0000\n"
 "X-Generator: Launchpad (build 12959)\n"
 
 #. module: account
@@ -213,6 +213,8 @@ msgid ""
 "invoice) to create analytic entries, OpenERP will look for a matching "
 "journal of the same type."
 msgstr ""
+"Дает тип журнала аналитики. Когда для документа (для счета) надо создать "
+"проводки аналитики, OpenERP будет искать подходящий журнал такого типа."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_tax_template_form
@@ -342,6 +344,10 @@ msgid ""
 "You can create one in the menu: \n"
 "Configuration/Financial Accounting/Accounts/Journals."
 msgstr ""
+"Не найден журнал счета типа %s для этой компании.\n"
+"\n"
+"Вы можете создать его в меню:\n"
+"Настройки/Финансы и бухгалтерия/Журналы"
 
 #. module: account
 #: model:ir.model,name:account.model_account_unreconcile
@@ -806,7 +812,7 @@ msgstr "Вычисление срока"
 #. module: account
 #: report:account.analytic.account.quantity_cost_ledger:0
 msgid "J.C./Move name"
-msgstr ""
+msgstr "Код журн./Операция"
 
 #. module: account
 #: selection:account.entries.report,month:0
@@ -1674,7 +1680,7 @@ msgstr "Дебет по поставщику"
 #. module: account
 #: help:account.model.line,quantity:0
 msgid "The optional quantity on entries"
-msgstr ""
+msgstr "Необязательное количество проводок"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_partner_account_move_all
@@ -1779,7 +1785,7 @@ msgstr "Анализ счетов"
 #. module: account
 #: model:ir.model,name:account.model_account_period_close
 msgid "period close"
-msgstr ""
+msgstr "закрытие периода"
 
 #. module: account
 #: view:account.installer:0
@@ -2330,7 +2336,7 @@ msgstr "Проводки модели счета"
 #: code:addons/account/installer.py:454
 #, python-format
 msgid "EXJ"
-msgstr ""
+msgstr "ЖР"
 
 #. module: account
 #: field:product.template,supplier_taxes_id:0
