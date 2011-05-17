@@ -39,41 +39,19 @@ openerp.base.form.Dashbar = openerp.base.form.Widget.extend({
     init: function(view, node, dashboard) {
         this._super(view, node, dashboard);
         this.dashboard = dashboard;
+        this.template = 'Portlet'
     },
     start: function() {
         var $dashboard = this.dashboard;
         var children = this.node.children;
-        $dashboard.append(
-                jQuery('<div>',{
-                    'class': 'column',
-                    'id': this.node.tag
-                })
-        )
+        $dashboard.append(QWeb.render(this.template, {widget: this, 'children': children}))
+        
         for(var chld=0; chld < children.length;chld++) {
             var child = children[chld];
             var widget = new (openerp.base.form.widgets.get_object(child.tag)) (this.view, child);
             widget.start()
-            $dashboard.find('#'+this.node.tag).append(
-                jQuery('<div>',{
-                            'class': 'portlet',
-                            'id': child.attrs.name
-                                }
-                ).append(
-                    jQuery('<div>',{
-                            'class': 'portlet-header'
-                    }).html(child.attrs.string).append(
-                        jQuery('<span>',{
-                            'class': 'ui-icon ui-icon-minusthick'
-                        })
-                    ),
-                    jQuery('<div>',{
-                            'class': 'portlet-content',
-                            'id': child.attrs.name+'-portlet-content'
-                    })
-                )
-            )
         }
-        
+         
         $( ".column" ).sortable({
 			connectWith: ".column"
 		});
@@ -83,14 +61,14 @@ openerp.base.form.Dashbar = openerp.base.form.Widget.extend({
 				.addClass( "ui-widget-header ui-corner-all" )
 				.end()
 			.find( ".portlet-content" );
-
+            
 		$( ".portlet-header .ui-icon" ).click(function() {
 			$( this ).toggleClass( "ui-icon-minusthick" ).toggleClass( "ui-icon-plusthick" );
 			$( this ).parents( ".portlet:first" ).find( ".portlet-content" ).toggle();
 		});
 
         $( ".column" ).disableSelection();
-    },
+    }
 })
 
 openerp.base.form.Action = openerp.base.form.Widget.extend({
@@ -113,7 +91,7 @@ openerp.base.form.Action = openerp.base.form.Widget.extend({
             views_switcher : false
         }
         var node_attrs = this.node.attrs;
-        var content_id = jQuery('#'+node_attrs.name).find('.portlet-content').attr('id')
+        var content_id = 'portlet-content-'+node_attrs.name;
         var action_manager = new openerp.base.ActionManager(this.session, content_id);
         action_manager.start();
         action_manager.do_action(action);
