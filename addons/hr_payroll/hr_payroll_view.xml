@@ -217,6 +217,7 @@
                     <field name="date_to"/>
                     <field name="state"/>
                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                    <field name="payslip_run_id" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -354,6 +355,7 @@
                         <separator orientation="vertical"/>
                         <field name="name"/>
                         <field name="employee_id"/>
+                        <field name="payslip_run_id"/>
                         <field name="number"/>
                         <field name="date_from"/>
                     </group>
@@ -364,6 +366,8 @@
                         <filter string="Companies" name="company_id"  icon="terp-go-home" context="{'group_by':'company_id'}"/>
                         <separator orientation="vertical"/>
                         <filter string="States" name="state" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
+                        <separator orientation="vertical"/>
+                        <filter string="PaySlip Run" name="payslip_run_id" icon="terp-folder-orange" context="{'group_by':'payslip_run_id'}"/>
                     </group>
                 </search>
             </field>
