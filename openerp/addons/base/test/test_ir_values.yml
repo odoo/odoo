@@ -1,0 +1,24 @@
+    Create some default value for some (non-existing) model, for all users.
+-
+    !python {model: ir.values }: |
+        self.set(cr, uid, 'default', False, 'my_test_ir_value',['unexisting_model'], 'global value')
+-
+    Retrieve it.
+-
+    !python {model: ir.values }: |
+        # d is a list of triple (id, name, value)
+        d = self.get(cr, uid, 'default', False, ['unexisting_model'])
+        assert d[1] == 'my_test_ir_value'
+        assert d[2] == 'global_value'
+-
+    Do it again but for a specific user.
+-
+    !python {model: ir.values }: |
+        self.set(cr, uid, 'default', False, 'my_test_ir_value',['unexisting_model'], 'specific value', preserve_user=True)
+-
+    Retrieve it and check it is the one for the current user.
+-
+    !python {model: ir.values }: |
+        d = self.get(cr, uid, 'default', False, ['unexisting_model'])
+        assert d[1] == 'my_test_ir_value'
+        assert d[2] == 'specific_value'
