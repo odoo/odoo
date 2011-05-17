@@ -71,7 +71,7 @@ class ServerParameter( unohelper.Base, XJobExecutor ):
         self.win.addFixedText("lblVariable", 2, 12, 35, 15, "Server URL")
         if docinfo.getUserFieldValue(0)=="":
            docinfo.setUserFieldValue(0,"http://localhost:8069")
-        self.win.addEdit("txtHost",-20,9,105,15,sURL)
+        self.win.addFixedText("txtHost",-20,12,105,15,sURL)
         self.win.addFixedText("lblDatabaseName", 6, 31, 31, 15, "Database")
 
 
