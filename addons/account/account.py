@@ -2926,17 +2926,15 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             #create the account_account for this bank journal
             tmp = line.acc_name
             dig = obj_multi.code_digits
-            if ref_acc_bank.code:
-                while valid:
-                    try:
-                        new_code = str(int(ref_acc_bank.code.ljust(dig, '0')) + current_num)
-                    except:
-                        new_code = str(ref_acc_bank.code.ljust(dig-len(str(current_num)), '0')) + str(current_num)
-                    ids = obj_acc.search(cr, uid, [('code', '=', new_code)])
-                    if not ids:
-                        valid = False
-                    else:
-                        current_num += 1
+            if not ref_acc_bank.code:
+                raise osv.except_osv(_('Configuration Error !'), _('The bank account defined on the selected chart of account hasn\'t a code.'))
+            while True:
+                new_code = str(ref_acc_bank.code.ljust(dig-len(str(current_num)), '0')) + str(current_num)
+                ids = obj_acc.search(cr, uid, [('code', '=', new_code), ('company_id', '=', company_id)])
+                if not ids:
+                    break
+                else:
+                    current_num += 1
             vals = {
                 'name': tmp,
                 'currency_id': line.currency_id and line.currency_id.id or False,
