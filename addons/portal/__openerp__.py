@@ -21,7 +21,7 @@
 
 {
     'name' : "Portal",
-    'version' : "1.0",
+    'version' : "0.9",
     'depends' : ["base"],
     'author' : "OpenERP SA",
     'category': 'Tools',
