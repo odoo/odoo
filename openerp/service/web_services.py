@@ -29,7 +29,6 @@ import sys
 import platform
 from openerp.tools.translate import _
 import openerp.addons as addons
-import openerp.ir
 import openerp.netsvc as netsvc
 import openerp.pooler as pooler
 import openerp.release as release
@@ -369,8 +368,6 @@ class common(_ObjectService):
 
     def dispatch(self, method, auth, params):
         logger = netsvc.Logger()
-        if method in [ 'ir_set','ir_del', 'ir_get' ]:
-            return self.common_dispatch(method,auth,params)
         if method == 'login':
             # At this old dispatcher, we do NOT update the auth proxy
             res = security.login(params[0], params[1], params[2])
@@ -400,22 +397,6 @@ class common(_ObjectService):
 
     def new_dispatch(self,method,auth,params):
         pass
-
-    def exp_ir_set(self, cr, uid, keys, args, name, value, replace=True, isobject=False):
-        res = ir.ir_set(cr,uid, keys, args, name, value, replace, isobject)
-        return res
-
-    def exp_ir_del(self, cr, uid, id):
-        res = ir.ir_del(cr,uid, id)
-        return res
-
-    def exp_ir_get(self, cr, uid, keys, args=None, meta=None, context=None):
-        if not args:
-            args=[]
-        if not context:
-            context={}
-        res = ir.ir_get(cr,uid, keys, args, meta, context)
-        return res
 
     def exp_about(self, extended=False):
         """Return information about the OpenERP Server.
