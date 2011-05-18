@@ -18,11 +18,7 @@
         </div>
     </div>
     <div id="oe_login" class="login"></div>
-    <div style="position: absolute; right: 2px; top: 38px;">
-        <button onclick="QWeb.add_template('base.xml'); $('body').css('background-color', '#FFFF9C'); setTimeout(function() { $('body').css('background-color', '#FFF'); }, 500);">Reload QWEB</button>
-    </div>
-    <table border="0" cellpadding="0" cellspacing="0" width="100%" height="100%"
-        t-att-class="'main_table' + (typeof kitten == 'undefined' ? '' : ' kitten-mode-activated')">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%" height="100%" class="main_table">
     <tr>
         <td colspan="2">
             <div id="oe_header" class="header"></div>
@@ -32,11 +28,8 @@
     <tr>
         <td valign="top" id="oe_secondary_menu" class="secondary_menu">
         </td>
-        <td valign="top" width="100%" height="100%">
-            <div id="oe_main" class="main">
-                <div id="oe_app" class="application"></div>
-                <div id="oe_sidebar"></div>
-            </div>
+        <td valign="top" height="100%">
+            <div id="oe_app" class="oe-application"></div>
         </td>
     </tr>
     <tr>
@@ -61,8 +54,7 @@
 </t>
 <t t-name="Header">
     <a href="/" class="company_logo_link">
-        <img t-att-src="typeof kitten == 'undefined' ? '/base/static/src/img/logo.png' :
-            'http://placekitten.com/g/179/46'" border="0" class="company_logo"/>
+        <div class="company_logo" />
     </a>
     <h1 class="header_title" t-if="session.session_is_valid()">
         <span class="company">$company</span> - (<span class="database">$database</span>)<br/>
@@ -93,13 +85,17 @@
     </div>
 </t>
 <t t-name="Menu">
-    <ul>
-        <li t-foreach="data.children" t-as="menu">
-            <a href="#" t-att-data-menu="menu.id">
-                <span><t t-esc="menu.name"/></span>
-            </a>
-        </li>
-    </ul>
+    <table align="center">
+        <tr>
+        <t t-foreach="data.children" t-as="menu">
+            <td>
+                <a href="#" t-att-data-menu="menu.id">
+                    <span><t t-esc="menu.name"/></span>
+                </a>
+            </td>
+        </t>
+        </tr>
+    </table>
 </t>
 <t t-name="Menu.secondary">
     <div style="display: none" class="menu_accordion" t-att-data-menu-parent="menu.id">
@@ -135,23 +131,23 @@
 <t t-name="ViewManager">
     <table class="view-manager-main-table">
     <tr>
-    <td class="view-manager-main-content">
-    <!-- TODO prefix id with the element_id of the controller t-attf-id="#{prefix}_localid" -->
-    <div class="oe_vm_switch">
-        <t t-foreach="views" t-as="view">
-            <button type="button" t-att-data-view-type="view[1]">
-                <t t-esc="view[1]"/>
-            </button>
-        </t>
-    </div>
-    <div t-attf-id="#{prefix}_search"/>
-    <t t-foreach="views" t-as="view">
-        <div t-attf-id="#{prefix}_view_#{view[1]}"/>
-    </t>
-	</td>
-	<td class="view-manager-main-sidebar">
-	</td>
-	</tr>
+        <td class="view-manager-main-content">
+            <!-- TODO prefix id with the element_id of the controller t-attf-id="#{prefix}_localid" -->
+            <div class="oe_vm_switch">
+                <t t-foreach="views" t-as="view">
+                    <button type="button" t-att-data-view-type="view[1]">
+                        <t t-esc="view[1]"/>
+                    </button>
+                </t>
+            </div>
+            <div t-attf-id="#{prefix}_search" t-opentag="true"/>
+            <t t-foreach="views" t-as="view">
+                <div t-attf-id="#{prefix}_view_#{view[1]}"/>
+            </t>
+        </td>
+        <td class="view-manager-main-sidebar">
+        </td>
+    </tr>
     </table>
 </t>
 <table t-name="ListView">
@@ -187,9 +183,11 @@
         <tr t-if="options.header">
             <th t-if="options.selectable"/>
             <t t-foreach="columns" t-as="column">
-                <th t-if="column.invisible !== '1'">
+                <th t-if="column.invisible !== '1'" t-att-data-id="column.id"
+                    t-att-class="((options.sortable and column.tag !== 'button') ? 'oe-sortable' : null)">
                     <t t-if="column.tag !== 'button'">
                         <t t-esc="column.string"/>
+                        <span t-att-class="(fields_view.sorted.field === column.id) ? ('ui-icon' + (fields_view.sorted.reversed ? ' ui-icon-triangle-1-n' : ' ui-icon-triangle-1-s')) : ''"/>
                     </t>
                 </th>
             </t>
@@ -212,12 +210,13 @@
     <t t-foreach="columns" t-as="column">
         <t t-set="attrs" t-value="column.attrs_for(row.data)"/>
         <td t-if="column.invisible !== '1'" t-att-title="column.help"
-            class="oe-field-cell">
+            class="oe-field-cell" t-att-data-field="column.id">
             <t t-if="!attrs.invisible">
                 <t t-set="is_button" t-value="column.tag === 'button'"/>
                 <!-- TODO: get correct widget from form -->
                 <t t-if="!is_button and row['data'][column.id].value">
-                    <t t-esc="row['data'][column.id].value"/>
+                    <t t-set="value" t-value="row['data'][column.id].value"/>
+                    <t t-esc="value instanceof Array ? value[1] : value"/>
                 </t>
                 <button type="button" t-att-title="column.help"
                         t-if="is_button">
@@ -262,7 +261,7 @@
         <t t-foreach="row" t-as="td">
             <td t-att-colspan="td.colspan gt 1 ? td.colspan : undefined"
                 t-att-width="td.width ? td.width : undefined"
-                t-att-nowrap="td.is_field_label ? 'true' : undefined"
+                t-att-nowrap="td.is_field_label or td.is_field_m2o? 'true' : undefined"
                 t-att-valign="td.table ? 'top' : undefined"
                 t-att-id="td.element_id"
                 t-att-class="'oe_form_' + (td.is_field_label ? 'label' : (td.field ? 'field_' + td.type : td.type))"
@@ -299,7 +298,7 @@
            t-att-ondblclick="'console.log(\'' + widget.element_id + '\', openerp.screen.' + widget.element_id + ')'">
         <t t-esc="widget.string"/>
         <span t-if="widget.help">?</span>
-        <t t-if="widget.string">:</t>
+        <t t-if="widget.string and widget.node.tag != 'label'">:</t>
     </label>
 </t>
 <t t-name="FieldChar">
@@ -309,6 +308,20 @@
         t-att-class="'field_' + widget.type" style="width: 100%"
     />
 </t>
+<t t-name="FieldEmail">
+    <table cellpadding="0" cellspacing="0" border="0" width="100%">
+    <tr>
+        <td width="100%">
+            <t t-call="FieldChar"/>
+        </td>
+        <td width="16">
+            <button class="button" title="Send an e-mail with your default e-mail client">
+                <img src="/base/static/src/img/icons/terp-mail-message-new.png"/>
+            </button>
+        </td>
+    </tr>
+    </table>
+</t>
 <t t-name="FieldText">
     <textarea rows="6" style="width: 100%;"
         t-att-name="widget.name"
@@ -317,13 +330,6 @@
     ></textarea>
 </t>
 <t t-name="FieldDate">
-    <input type="text" style="width: 100%"
-        t-att-name="widget.name"
-        t-att-id="widget.element_id + '_field'"
-        t-att-class="'field_' + widget.type"
-    />
-</t>
-<t t-name="FieldDatetime">
     <input type="text" style="width: 100%"
         t-att-name="widget.name"
         t-att-id="widget.element_id + '_field'"
@@ -348,7 +354,9 @@
         t-att-name="widget.name"
         t-att-id="widget.element_id + '_field'"
         t-att-class="'field_' + widget.type"
+        t-att-type="widget.type"
         style="width: 100%;"/>
+    <div type='button' class='ui_combo' tabindex="'-1'" title="'Show All Items'"></div>
 </t>
 <t t-name="FieldOne2Many">
     <div t-att-id="widget.element_id">
@@ -356,9 +364,7 @@
     </div>
 </t>
 <t t-name="FieldMany2Many">
-    <div style="background: #ccc; padding: 20px">
-        Many2Many widget
-    </div>
+    <div t-att-id="widget.list_id"></div>
 </t>
 <t t-name="FieldReference">
     <input type="text" t-att-name="widget.name" t-att-id="widget.element_id" t-att-class="'field_' + widget.type" style="width: 100%" placeholder="Widget Reference"/>
@@ -370,7 +376,18 @@
         t-att-class="'field_' + widget.type"/>
 </t>
 <t t-name="FieldProgressBar">
-    <div t-opentag="true"></div>
+    <div t-opentag="true" class="oe-progressbar">
+        <span></span>
+    </div>
+</t>
+<t t-name="FieldImage">
+    <img align="left" border="1" style="display: none"
+        t-att-id="widget.element_id + '_field'"
+        t-att-name="widget.name"
+        t-att-class="'field_' + widget.type"
+        t-att-width="widget.node.attrs.img_width || widget.node.attrs.width"
+        t-att-height="widget.node.attrs.img_height || widget.node.attrs.height"
+    />
 </t>
 <t t-name="WidgetButton">
     <button type="button"
@@ -385,7 +402,7 @@
     <h2 class="oe_view_title"><t t-esc="view.attrs['string']"/></h2>
     <form>
         <t t-call="SearchView.render_lines"/>
-        <div style="text-align:right;">
+        <div class="oe_search-view-buttons" style="text-align:right;">
             <input type="submit" value="Search"/>
             <input type="reset" value="Clear"/>
         </div>
@@ -421,7 +438,7 @@
         <span t-if="attrs.help">(?)</span>
     </label>
     <div style="white-space: nowrap;">
-        <input type="text" t-att-name="attrs.name"
+        <input type="text" size="15" t-att-name="attrs.name"
                t-att-autofocus="attrs.default_focus === '1' ? 'autofocus' : undefined"
                t-att-id="element_id"
                t-att-value="defaults[attrs.name] || ''"/>
@@ -493,9 +510,10 @@
         <t t-set="expand" t-value="false"/>
         <t t-set="label" t-value="'Custom Filters'"/>
         <t t-set="content">
-            <div class="searchview_extended_groups_list"/>
+            <div class="searchview_extended_groups_list">
+            </div>
             <button class="searchview_extended_add_group"
-                    type="button">Add group of conditions</button>
+                    type="button"><span>Add group of conditions</span></button>
         </t>
     </t>
 </t>
@@ -507,10 +525,10 @@
             <option value="none">None of the following conditions must match</option>
         </select>
         <button class="searchview_extended_delete_group"
-                type="button">Delete this group of conditions</button>
+                type="button"><span>Delete this group of conditions</span></button>
         <div class="searchview_extended_propositions_list">
         </div>
-        <button class="searchview_extended_add_proposition" type="button">Add condition</button>
+        <button class="searchview_extended_add_proposition" type="button"><span>Add condition</span></button>
     </div>
 </t>
 <t t-name="SearchView.extended_search.proposition">
@@ -526,7 +544,7 @@
         <select class="searchview_extended_prop_op"/>
         <span class="searchview_extended_prop_value"/>
         <button class="searchview_extended_delete_prop"
-                type="button">Delete this condition</button>
+                type="button"><span>Delete this condition</span></button>
     </div>
 </t>
 <t t-name="SearchView.extended_search.proposition.char">
@@ -538,18 +556,21 @@
     </div>
 </t>
 <t t-name="ViewManager.sidebar.internal">
-    <t t-set="the_condition" t-value="sections.length &gt; 0 &amp;&amp; _.detect(sections, function(x)
-        {return x.elements.length &gt; 0;}) != undefined"/>
+    <t t-js="d">
+        d.the_condition = d.sections.length &gt; 0 &amp;&amp; d._.detect(d.sections, function(x) {
+            return x.elements.length &gt; 0;
+        }) != undefined
+    </t>
     <t t-if="the_condition">
         <a class="toggle-sidebar"></a>
         <div t-att-id="element_id" class="sidebar-sub-div">
             <div class="sidebar-displaying-div">
-                <t t-set="i" t-value="0"/>
+                <t t-set="i" t-value="1-1"/> <!-- al do stupid things -->
                 <t t-foreach="sections" t-as="section">
                     <t t-if="section.elements.length &gt; 0">
                     <h2><t t-esc="section.label"/></h2>
                     <ul>
-                        <t t-set="j" t-value="0"/>
+                        <t t-set="j" t-value="1-1"/>
                         <t t-foreach="section.elements" t-as="element">
                             <li><a t-att-data-i="i" t-att-data-j="j" href="#"><t t-esc="element.name"/></a></li>
                             <t t-set="j" t-value="j+1"/>
@@ -569,5 +590,20 @@
             <t t-esc="message"/>
         </p>
     </div>
+</t>
+<t t-name="Many2XSelectPopup">
+    <div t-att-id="element_id">
+        <div t-att-id="element_id + '_search'"></div>
+        <div t-att-id="element_id + '_view_list'"></div>
+        <div t-att-id="element_id + '_view_form'"></div>
+    </div>
+</t>
+<t t-name="Many2XSelectPopup.search.buttons">
+    <button type="button" class="oe_many2xselectpopup-search-new">New</button>
+    <button type="button" class="oe_many2xselectpopup-search-close">Close</button>
+</t>
+<t t-name="Many2XSelectPopup.form.buttons">
+    <button type="button" class="oe_many2xselectpopup-form-save">Save</button>
+    <button type="button" class="oe_many2xselectpopup-form-close">Close</button>
 </t>
 </templates>

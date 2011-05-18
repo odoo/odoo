@@ -296,6 +296,9 @@ openerp.base.Session = openerp.base.BasicController.extend( /** @lends openerp.b
         // Construct a JSON-RPC2 request, method is currently unused
         params.session_id = this.session_id;
         params.context = typeof(params.context) != "undefined" ? params.context  : this.context;
+        if (!params.context.bin_size) {
+            params.context.bin_size = true;
+        }
 
         // Use a default error handler unless defined
         error_callback = typeof(error_callback) != "undefined" ? error_callback : this.on_rpc_error;
@@ -790,10 +793,6 @@ openerp.base.Header =  openerp.base.Controller.extend({
         this.do_update();
     },
     do_update: function() {
-        if(jQuery.param != undefined &&
-                jQuery.deparam(jQuery.param.querystring()).kitten != undefined) {
-            this.kitten = 1;
-        }
         this.$element.html(QWeb.render("Header", this));
     }
 });
@@ -897,7 +896,7 @@ openerp.base.WebClient = openerp.base.Controller.extend({
         var params = {};
         if(jQuery.param != undefined &&
                 jQuery.deparam(jQuery.param.querystring()).kitten != undefined) {
-            params = {kitten:1};
+            this.$element.addClass("kitten-mode-activated");
         }
         this.$element.html(QWeb.render("Interface", params));
 

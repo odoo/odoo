@@ -44,8 +44,11 @@
     // The dummy class constructor
     function Class() {
       // All construction is actually done in the init method
-      if ( !initializing && this.init )
-        this.init.apply(this, arguments);
+      if ( !initializing && this.init ) {
+        var ret = this.init.apply(this, arguments);
+        if (ret) { return ret; }
+      }
+      return this;
     }
 
     // Populate our constructed prototype object
@@ -120,11 +123,13 @@
 
 /** @namespace */
 openerp.base = function(instance) {
+    openerp.base.dates(instance);
     openerp.base.chrome(instance);
     openerp.base.data(instance);
     openerp.base.views(instance);
     openerp.base.search(instance);
     openerp.base.list(instance);
+    openerp.base.m2o(instance);
     openerp.base.form(instance);
 };
 

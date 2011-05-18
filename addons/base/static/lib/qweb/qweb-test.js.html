@@ -5,9 +5,11 @@
     <link rel="stylesheet" href="http://code.jquery.com/qunit/git/qunit.css" type="text/css" media="screen"/>
     <script type="text/javascript" src="http://code.jquery.com/qunit/git/qunit.js"></script>
 
-    <script type="text/javascript" src="qweb.js"></script>
+    <script type="text/javascript" src="/base/static/lib/jquery/jquery-1.5.2.js"></script>
+    <script type="text/javascript" src="qweb2.js"></script>
 
     <script>
+        QWeb = new QWeb2.Engine();
         function trim(s) {
             return s.replace(/(^\s+|\s+$)/g, '');
         }
@@ -193,39 +195,6 @@
                     "Call with t-import (calls in current context)");
             });
 
-            module("Trim", {
-                setup: function () {
-                    QWeb.add_template('qweb-test-trim.xml');
-                },
-                teardown: function () {
-                    QWeb.templates = [];
-                    QWeb.tag = {};
-                    QWeb.att = {};
-                }
-            });
-            test('Trim content', function () {
-                equals(QWeb.render('trim-content-both', {}), 'ok',
-                    "Trims before and after content");
-                equals(QWeb.render('trim-content-before', {}), 'ok ',
-                    "Trims before content");
-                equals(QWeb.render('trim-content-after', {}), ' ok',
-                    "Trims after content");
-                raises(function () {QWeb.render('trim-content-unknown', {});},
-                    "Trims with an unknown mode");
-            });
-            test('Trim content *and* children', function () {
-                equals(QWeb.render('trim-children-text', {}), 'o k',
-                    "Trims text children");
-                equals(QWeb.render('trim-children-elements', {}), '<foo/><bar/>',
-                    "Full trim");
-                equals(QWeb.render('trim-mixed-children', {}), '[<foo/>]',
-                    "Trims mixed content of text and elements");
-                equals(QWeb.render('trim-children-left', {}), '<foo/><bar/> ',
-                    "Trims children and left of content");
-                equals(QWeb.render('trim-children-right', {}), ' <foo/><bar/>',
-                    "Trims children and right of content");
-            });
-
             module("Foreach", {
                 setup: function () {
                     QWeb.add_template('qweb-test-foreach.xml');
@@ -252,20 +221,38 @@
                     "each value of the sequence is also via the _value");
                 equals(QWeb.render('scope-index', {seq:seq}), '01234',
                     "the current 0-based index is available via _index");
-                equals(QWeb.render('scope-first', {seq:seq}), 'true false false false false',
+                equals(QWeb.render('scope-first', {seq:seq}), 'true false false false false ',
                     "_first says whether the current item is the first of the sequence");
-                equals(QWeb.render('scope-last', {seq:seq}), 'false false false false true',
+                equals(QWeb.render('scope-last', {seq:seq}), 'false false false false true ',
                     "_last says whether the current item is the last of the sequence");
-                equals(QWeb.render('scope-parity', {seq:seq}), 'even odd even odd even',
+                equals(QWeb.render('scope-parity', {seq:seq}), 'even odd even odd even ',
                     "the parity (odd/even) of the current row is available via _parity");
-                equals(QWeb.render('scope-size', {seq:seq}), '5 5 5 5 5',
+                equals(QWeb.render('scope-size', {seq:seq}), '5 5 5 5 5 ',
                     "the total length of the sequence is available through _size");
             });
             test('Name aliasing via t-as', function () {
                 equals(QWeb.render('aliasing', {seq:seq}), '43210',
                     "the inner value can be re-bound via t-as");
-                equals(QWeb.render('loopvars-aliasing', {seq:seq}), 'even odd even odd even',
+                equals(QWeb.render('loopvars-aliasing', {seq:seq}), 'even odd even odd even ',
                     "inner loop variables should be rebound as well");
+            });
+
+            module("Template inheritance tests", {
+                setup: function () {
+                    QWeb.add_template('qweb-test-extend.xml');
+                },
+                teardown: function () {
+                    QWeb.templates = [];
+                    QWeb.tag = {};
+                    QWeb.att = {};
+                }
+            });
+
+            test("jQuery extend", function () {
+                equals(render('jquery-extend', {}), '<hr/><ul class="main"><li>1</li><li>2</li><li>3</li></ul><footer><b>END</b></footer>',
+                        "Extend template with jQuery");
+                equals(render('jquery-extend-clone', {}), '<ul><li>one</li><li>CLONED TEMPLATE</li></ul>',
+                        "Clone template");
             });
         });
     </script>

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import base64
 import glob, os
 import pprint
 from xml.etree import ElementTree
@@ -346,12 +347,21 @@ class DataSet(openerpweb.Controller):
         :rtype: list
         """
         Model = request.session.model(model)
+
         ids = Model.search(domain or [], offset or 0, limit or False,
                            sort or False, request.context)
+
         if fields and fields == ['id']:
             # shortcut read if we only want the ids
             return map(lambda id: {'id': id}, ids)
-        return Model.read(ids, fields or False, request.context)
+
+        reads = Model.read(ids, fields or False, request.context)
+        reads.sort(key=lambda obj: ids.index(obj['id']))
+        return reads
+    
+    @openerpweb.jsonrequest
+    def read(self, request, model, ids, fields=False):
+        return self.do_search_read(request, model, ids, fields)
 
     @openerpweb.jsonrequest
     def get(self, request, model, ids, fields=False):
@@ -376,7 +386,7 @@ class DataSet(openerpweb.Controller):
         :rtype: list
         """
         Model = request.session.model(model)
-        records = Model.read(ids, fields)
+        records = Model.read(ids, fields, request.context)
 
         record_map = dict((record['id'], record) for record in records)
 
@@ -410,10 +420,28 @@ class DataSet(openerpweb.Controller):
         return {'result': r}
 
     @openerpweb.jsonrequest
+    def exec_workflow(self, req, model, id, signal):
+        r = req.session.exec_workflow(model, id, signal)
+        return {'result': r}
+
+    @openerpweb.jsonrequest
     def default_get(self, req, model, fields, context={}):
         m = req.session.model(model)
         r = m.default_get(fields, context)
         return {'result': r}
+    
+    @openerpweb.jsonrequest
+    def name_search(self, req, model, search_str, domain=[], context={}):
+        m = req.session.model(model)
+        r = m.name_search(search_str+'%', domain, '=ilike', context)
+        return {'result': r}
+
+class DataGroup(openerpweb.Controller):
+    _cp_path = "/base/group"
+    @openerpweb.jsonrequest
+    def read(self, request, model, group_by_fields, domain=None, context=None):
+        Model = request.session.model(model)
+        return Model.read_group(domain or False, False, group_by_fields, 0, False, context or False)
 
 class View(openerpweb.Controller):
     def fields_view_get(self, request, model, view_id, view_type,
@@ -527,6 +555,21 @@ class FormView(View):
         fields_view = self.fields_view_get(req, model, view_id, 'form', toolbar=toolbar)
         return {'fields_view': fields_view}
 
+    @openerpweb.httprequest
+    def image(self, request, session_id, model, id, field):
+        cherrypy.response.headers['Content-Type'] = 'image/png'
+        Model = request.session.model(model)
+        try:
+            if not id:
+                res = Model.default_get([field], request.context).get(field, '')
+            else:
+                res = Model.read([id], [field], request.context)[0].get(field, '')
+            return base64.decodestring(res)
+        except:
+            return self.placeholder()
+    def placeholder(self):
+        return open(os.path.join(openerpweb.path_addons, 'base', 'static', 'src', 'img', 'placeholder.png'), 'rb').read()
+
 class ListView(View):
     _cp_path = "/base/listview"
 
@@ -551,11 +594,11 @@ class ListView(View):
 
     @openerpweb.jsonrequest
     def fill(self, request, model, id, domain,
-             offset=0, limit=False):
-        return self.do_fill(request, model, id, domain, offset, limit)
+             offset=0, limit=False, sort=None):
+        return self.do_fill(request, model, id, domain, offset, limit, sort)
 
     def do_fill(self, request, model, id, domain,
-                offset=0, limit=False):
+                offset=0, limit=False, sort=None):
         """ Returns all information needed to fill a table:
 
         * view with processed ``editable`` flag
@@ -573,19 +616,33 @@ class ListView(View):
         :param int limit: search limit, for pagination
         :returns: hell if I have any idea yet
         """
-        view = self.fields_view_get(request, model, id)
+        view = self.fields_view_get(request, model, id, toolbar=True)
 
+        print sort
         rows = DataSet().do_search_read(request, model,
                                         offset=offset, limit=limit,
-                                        domain=domain)
+                                        domain=domain, sort=sort)
         eval_context = request.session.evaluation_context(
             request.context)
-        return [
-            {'data': dict((key, {'value': value})
-                          for key, value in row.iteritems()),
-             'color': self.process_colors(view, row, eval_context)}
-            for row in rows
-        ]
+
+        if sort:
+            sort_criteria = sort.split(',')[0].split(' ')
+            print sort, sort_criteria
+            view['sorted'] = {
+                'field': sort_criteria[0],
+                'reversed': sort_criteria[1] == 'DESC'
+            }
+        else:
+            view['sorted'] = {}
+        return {
+            'view': view,
+            'records': [
+                {'data': dict((key, {'value': value})
+                              for key, value in row.iteritems()),
+                 'color': self.process_colors(view, row, eval_context)}
+                for row in rows
+            ]
+        }
 
     def process_colors(self, view, row, context):
         colors = view['arch']['attrs'].get('colors')
@@ -618,5 +675,12 @@ class Action(openerpweb.Controller):
     _cp_path = "/base/action"
 
     @openerpweb.jsonrequest
-    def load(self, req, action_id):
-        return {}
+    def load(self, req, action_id, context={}):
+        Actions = req.session.model('ir.actions.actions')
+        value = False
+        action_type = Actions.read([action_id], ['type'], context)
+        if action_type:
+            action = req.session.model(action_type[0]['type']).read([action_id], False, context)
+            if action:
+                value = action[0]
+        return {'result': value}

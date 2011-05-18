@@ -10,14 +10,12 @@ import time
 import traceback
 import uuid
 import xmlrpclib
-import pytz
 
 import cherrypy
 import cherrypy.lib.static
 import simplejson
 
 import nonliterals
-import xmlrpctimeout
 import logging
 
 #-----------------------------------------------------------
@@ -94,7 +92,7 @@ class OpenERPSession(object):
         self.client_timezone = False
 
     def proxy(self, service):
-        s = xmlrpctimeout.TimeoutServerProxy('http://%s:%s/xmlrpc/%s' % (self._server, self._port, service), timeout=5)
+        s = xmlrpclib.ServerProxy('http://%s:%s/xmlrpc/%s' % (self._server, self._port, service))
         return s
 
     def bind(self, db, uid, password):
@@ -114,6 +112,12 @@ class OpenERPSession(object):
         if not (self._db and self._uid and self._password):
             raise OpenERPUnboundException()
         r = self.proxy('object').execute(self._db, self._uid, self._password, model, func, *l, **d)
+        return r
+
+    def exec_workflow(self, model, id, signal):
+        if not (self._db and self._uid and self._password):
+            raise OpenERPUnboundException()
+        r = self.proxy('object').exec_workflow(self._db, self._uid, self._password, model, signal, id)
         return r
 
     def model(self, model):
@@ -136,8 +140,9 @@ class OpenERPSession(object):
         self.context = self.model('res.users').context_get(self.context)
         
         self.client_timezone = self.context.get("tz", False)
-        if self.client_timezone:
-            self.remote_timezone = self.execute('common', 'timezone_get')
+        # invalid code, anyway we decided the server will be in UTC
+        #if self.client_timezone:
+        #    self.remote_timezone = self.execute('common', 'timezone_get')
             
         self._locale = self.context.get('lang','en_US')
         lang_ids = self.execute('res.lang','search', [('code', '=', self._locale)])
@@ -289,13 +294,34 @@ class JsonRequest(object):
     * the json string is passed as a form parameter named "request"
     * method is currently ignored
 
-    Sucessful request:
-    --> {"jsonrpc": "2.0", "method": "call", "params": {"session_id": "SID", "context": {}, "arg1": "val1" }, "id": null}
-    <-- {"jsonrpc": "2.0", "result": { "res1": "val1" }, "id": null}
+    Sucessful request::
 
-    Request producing a error:
-    --> {"jsonrpc": "2.0", "method": "call", "params": {"session_id": "SID", "context": {}, "arg1": "val1" }, "id": null}
-    <-- {"jsonrpc": "2.0", "error": {"code": 1, "message": "End user error message.", "data": {"code": "codestring", "debug": "traceback" } }, "id": null}
+      --> {"jsonrpc": "2.0",
+           "method": "call",
+           "params": {"session_id": "SID",
+                      "context": {},
+                      "arg1": "val1" },
+           "id": null}
+
+      <-- {"jsonrpc": "2.0",
+           "result": { "res1": "val1" },
+           "id": null}
+
+    Request producing a error::
+
+      --> {"jsonrpc": "2.0",
+           "method": "call",
+           "params": {"session_id": "SID",
+                      "context": {},
+                      "arg1": "val1" },
+           "id": null}
+
+      <-- {"jsonrpc": "2.0",
+           "error": {"code": 1,
+                     "message": "End user error message.",
+                     "data": {"code": "codestring",
+                              "debug": "traceback" } },
+           "id": null}
 
     """
 
@@ -396,6 +422,8 @@ class HttpRequest(object):
         self.applicationsession = applicationsession
         self.httpsession_id = "cookieid"
         self.httpsession = cherrypy.session
+        self.context = kw.get('context', {})
+        self.session = self.httpsession.setdefault(kw.get('session_id', None), OpenERPSession())
         self.result = ""
         print "GET/POST --> %s.%s %s %r" % (controller.__class__.__name__, f.__name__, request, kw)
         r = f(controller, self, **kw)
@@ -471,30 +499,45 @@ class Root(object):
     default.exposed = True
 
 def main(argv):
-    # Parse config
-    op = optparse.OptionParser()
-    op.add_option("-p", "--port", dest="socket_port", help="listening port", metavar="NUMBER", default=8002)
-    op.add_option("-s", "--session-path", dest="storage_path",
-                  help="directory used for session storage", metavar="DIR",
-                  default=os.path.join(tempfile.gettempdir(), "cpsessions"))
-    (o, args) = op.parse_args(argv[1:])
-
-    # Prepare cherrypy config from options
-    if not os.path.exists(o.storage_path):
-        os.mkdir(o.storage_path, 0700)
-    config = {
-        'server.socket_port': int(o.socket_port),
+    # change the timezone of the program to the OpenERP server's assumed timezone
+    os.environ["TZ"] = "UTC"
+    
+    DEFAULT_CONFIG = {
+        'server.socket_port': 8002,
         'server.socket_host': '0.0.0.0',
-        #'server.thread_pool' = 10,
         'tools.sessions.on': True,
         'tools.sessions.storage_type': 'file',
-        'tools.sessions.storage_path': o.storage_path,
+        'tools.sessions.storage_path': os.path.join(tempfile.gettempdir(), "cpsessions"),
         'tools.sessions.timeout': 60
     }
+    
+    # Parse config
+    op = optparse.OptionParser()
+    op.add_option("-p", "--port", dest="server.socket_port", help="listening port",
+                  type="int", metavar="NUMBER")
+    op.add_option("-s", "--session-path", dest="tools.sessions.storage_path",
+                  help="directory used for session storage", metavar="DIR")
+    (o, args) = op.parse_args(argv[1:])
+    o = vars(o)
+    for k in o.keys():
+        if o[k] == None:
+            del(o[k])
 
     # Setup and run cherrypy
     cherrypy.tree.mount(Root())
-    cherrypy.config.update(config)
+    
+    cherrypy.config.update(config=DEFAULT_CONFIG)
+    if os.path.exists(os.path.join(os.path.dirname(
+                os.path.dirname(__file__)),'openerp-web.cfg')):
+        cherrypy.config.update(os.path.join(os.path.dirname(
+                    os.path.dirname(__file__)),'openerp-web.cfg'))
+    if os.path.exists(os.path.expanduser('~/.openerp_webrc')):
+        cherrypy.config.update(os.path.expanduser('~/.openerp_webrc'))
+    cherrypy.config.update(o)
+    
+    if not os.path.exists(cherrypy.config['tools.sessions.storage_path']):
+        os.mkdir(cherrypy.config['tools.sessions.storage_path'], 0700)
+    
     cherrypy.server.subscribe()
     cherrypy.engine.start()
     cherrypy.engine.block()

@@ -111,7 +111,6 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
             if(this.chart == 'bar') {
                 return this.schedule_bar(result);
             } else if(this.chart == "pie") {
-                console.log("test");
                 return this.schedule_pie(result);
             }
         }
@@ -125,7 +124,7 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
         var res = [];
 
 
-        var COLOR_PALETTE = ['#ff8e00', '#ff0000', '#b0008c', '#9000ff', '#0078ff', '#00ff00', '#e6ff00', '#ffff00',
+        var COLOR_PALETTE = ['#cc99ff', '#75507b', '#ccccff', '#b0008c', '#ff0000', '#ff8e00', '#9000ff', '#0078ff', '#00ff00', '#e6ff00', '#ffff00',
                      '#905000', '#9b0000', '#840067', '#9abe00', '#ffc900', '#510090', '#0000c9', '#009b00',
                      '#75507b', '#3465a4', '#73d216', '#c17d11', '#edd400', '#fcaf3e', '#ef2929', '#ff00c9',
                      '#ad7fa8', '#729fcf', '#8ae234', '#e9b96e', '#fce94f', '#f57900', '#cc0000', '#d400a8'];
@@ -245,8 +244,8 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
                 var val = obj[self.operator_field] / sum * 100 ;
                 return Math.round(val * 10)/10 + "%";
             },
-            label:"<b>#"+self.chart_info_fields[0]+"#</b>",
             gradient:"3d",
+            height: 20,
             legend: {
                 width: 300,
                 align:"right",
