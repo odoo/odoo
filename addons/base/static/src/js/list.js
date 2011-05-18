@@ -55,7 +55,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
 
         this.options = _.extend({}, this.defaults, options || {});
 
-        this.groups = new openerp.base.ListView.Groups({
+        this.groups = new openerp.base.ListView.Groups(this, {
             options: this.options,
             columns: this.columns
         });
@@ -410,11 +410,6 @@ openerp.base.ListView.List = Class.extend( /** @lends openerp.base.ListView.List
         }
         this.$current = this.$_element.clone(true);
         this.$current.empty().append($(QWeb.render('ListView.rows', this)));
-        return this.$current;
-    },
-    refresh: function () {
-        this.render();
-        return this;
     },
     /**
      * Gets the ids of all currently selected records, if any
@@ -460,7 +455,8 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
      * Provides events similar to those of
      * :js:class:`~openerp.base.ListView.List`
      */
-    init: function (opts) {
+    init: function (view, opts) {
+        this.view = view;
         this.options = opts.options;
         this.columns = opts.columns;
         this.datagroup = {};
@@ -483,9 +479,22 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
                         self.render_groups(groups),
                         $row[0].nextSibling);
                 }, function (dataset) {
-                    $row.parent()[0].insertBefore(
-                        self.render_dataset(dataset),
-                        $row[0].nextSibling);
+                    // Now we need to split the current tbody in order to
+                    // insert the list's
+
+                    // Create new tbody after current one
+                    var $current_body = $row.closest('tbody');
+
+                    var $next_siblings = $row.nextAll();
+                    if ($next_siblings.length) {
+                        var $split = $('<tbody>').insertAfter($current_body);
+                        // Move all following siblings of current row to split
+                        $split.append($row.nextAll());
+                    }
+                    // Insert list rendering after current tbody
+                    self.render_dataset(dataset).then(function (list) {
+                        $current_body.after(list.$current);
+                    });
                 });
             });
             placeholder.appendChild($row[0]);
@@ -507,11 +516,28 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
         return placeholder;
     },
     render_dataset: function (dataset) {
-        return new openerp.base.ListView.List({
+        var self = this;
+        var rows = [];
+        var list = new openerp.base.ListView.List({
             options: this.options,
             columns: this.columns,
-            rows: [] // insert *processed* rows here
-        }).render();
+            rows: rows
+        });
+
+        var d = new $.Deferred();
+        this.view.rpc('/base/listview/fill', {
+            model: dataset.model,
+            id: this.view.view_id,
+            context: dataset.context,
+            domain: dataset.domain,
+            sort: dataset.sort && dataset.sort()
+        }, function (result) {
+            rows.splice(0, rows.length);
+            rows.push.apply(rows, result.records);
+            list.render();
+            d.resolve(list);
+        });
+        return d.promise();
     },
     render: function () {
         var self = this;
@@ -519,7 +545,11 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
         this.datagroup.list(function (groups) {
             self.$element.empty()[0].appendChild(
                 self.render_groups(groups));
-        }, $.proxy(this, 'render_dataset'));
+        }, function (dataset) {
+            self.render_dataset(dataset).then(function (list) {
+                self.$element.empty().after(list.$current);
+            });
+        });
         return this.$element;
     }
 });
