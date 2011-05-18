@@ -51,11 +51,11 @@ openerp.base.form.Dashbar = openerp.base.form.Widget.extend({
             var widget = new (openerp.base.form.widgets.get_object(child.tag)) (this.view, child);
             widget.start()
         }
-         
         $( ".column" ).sortable({
-			connectWith: ".column"
-		});
-        
+            connectWith: ".column",
+            scroll: false
+        });
+
         $( ".portlet" ).addClass( "ui-widget ui-widget-content ui-helper-clearfix ui-corner-all" )
 			.find( ".portlet-header" )
 				.addClass( "ui-widget-header ui-corner-all" )
