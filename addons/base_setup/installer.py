@@ -294,8 +294,7 @@ class specify_partner_terminology(osv.osv_memory):
                 already_id = trans_obj.search(cr,uid, [('name','=',menu_partnr_name),('res_id','=',m_id)])
                 if already_id:
                     menu_partner_name1 = trans_obj.browse(cr, uid, already_id[0], context=context).src
-                menu_partner_name2 = menu_partner_name1.replace('Partner',o.partner)
-                self.translations_done(cr, uid, ids, menu_partnr_name, 'model', menu_partner_name1 , menu_partner_name2, m_id ,context=context )
+                self.translations_done(cr, uid, ids, menu_partnr_name, 'model', menu_partner_name1 , menu_partner_name1.replace('Partner',o.partner), m_id ,context=context )
                     
         return {}
     
