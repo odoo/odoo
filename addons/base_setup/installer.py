@@ -284,12 +284,8 @@ class specify_partner_terminology(osv.osv_memory):
             # For Partner Translation
             for p_id in model_partner_ids:
                 brw_fields_obj = fields_obj.browse(cr ,uid ,p_id , context=context)
-                name1 = brw_fields_obj.field_description
-                name2 = name1.replace('Partner',o.partner)
-                obj2 = brw_fields_obj.model_id.model
-                field = brw_fields_obj.name
-                partner_name = obj2 +',' + field
-                self.translations_done(cr, uid, ids, partner_name, 'field', name1 ,name2 ,context=context )
+                partner_name = brw_fields_obj.model_id.model +',' + brw_fields_obj.name
+                self.translations_done(cr, uid, ids, partner_name, 'field', brw_fields_obj.field_description ,brw_fields_obj.field_description.replace('Partner',o.partner) ,context=context )
                     
             for m_id in menu_partner_ids:
                 brw_menu_obj = menu_obj.browse(cr ,uid ,m_id , context=context)
