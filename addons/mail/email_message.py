@@ -53,21 +53,6 @@ from email.header import decode_header
 #import tools
 #import logging
 
-email_content_types = [
-    ('mixed', 'multipart/mixed'),
-    ('alternative', 'multipart/alternative'),
-    ('plain', 'text/plain'),
-    ('html', 'text/html')
-]
-
-priorities = {
-    '1 (Highest)': '1',
-    '2 (High)': '2',
-    '3 (Normal)': '3',
-    '4 (Low)': '4',
-    '5 (Lowest)': '5',
-}
-
 LOGGER = netsvc.Logger()
 _logger = logging.getLogger('mail')
 
@@ -80,24 +65,22 @@ def format_date_tz(date, tz=None):
 class email_message_common(osv.osv_memory):
     _name = 'email.message.common'
     _columns = {
-        'subject':fields.text('Subject'),
+        'subject':fields.char('Subject', size=512),
         'model': fields.char('Object Name', size=128, select=1),
         'res_id': fields.integer('Resource ID', select=1),
         'date': fields.datetime('Date'),
         'user_id': fields.many2one('res.users', 'User Responsible'),
-        'email_from': fields.char('From', size=128, help="Email From"),
-        'email_to': fields.char('To', help="Email Recipients", size=256),
-        'email_cc': fields.char('Cc', help="Carbon Copy Email Recipients", size=256),
-        'email_bcc': fields.char('Bcc', help='Blind Carbon Copy Email Recipients', size=256),
-        'message_id': fields.char('Message Id', size=1024, help="Message Id on Email.", select=1),
-        'references': fields.text('References', help="References emails."),
-        'reply_to':fields.char('Reply-To', size=250),
-        'sub_type': fields.selection(email_content_types, 'Sub Type'),
+        'email_from': fields.char('From', size=128, help='Email From'),
+        'email_to': fields.char('To', size=256, help='Email Recipients'),
+        'email_cc': fields.char('Cc', size=256, help='Carbon Copy Email Recipients'),
+        'email_bcc': fields.char('Bcc', size=256, help='Blind Carbon Copy Email Recipients'),
+        'email_reply_to':fields.char('Reply-To', size=256),
         'headers': fields.text('x_headers'),
-        'priority':fields.integer('Priority'),
-        'body': fields.text('Description'),
+        'message_id': fields.char('Message Id', size=256, help='Message Id on Email.', select=1),
+        'references': fields.text('References', help='References emails.'),
+        'body_text': fields.text('Description'),
         'body_html': fields.text('HTML', help="Contains HTML version of email"),
-        'smtp_server_id':fields.many2one('ir.mail_server', 'SMTP Server'),
+        'original': fields.text('Original Email'),
     }
     _rec_name = 'subject'
 
@@ -202,7 +185,6 @@ class email_message(osv.osv):
         'partner_id': fields.many2one('res.partner', 'Partner'),
         'attachment_ids': fields.many2many('ir.attachment', 'message_attachment_rel', 'message_id', 'attachment_id', 'Attachments'),
         'display_text': fields.function(_get_display_text, method=True, type='text', size="512", string='Display Text'),
-        'debug':fields.boolean('Debug', readonly=True),
         'history': fields.boolean('History', readonly=True),
         'state':fields.selection([
                         ('outgoing', 'Outgoing'),
@@ -212,6 +194,7 @@ class email_message(osv.osv):
                         ('cancel', 'Cancelled'),
                         ], 'State', readonly=True),
         'auto_delete': fields.boolean('Auto Delete', help="Permanently delete emails after sending"),
+        'smtp_server_id':fields.many2one('ir.mail_server', 'SMTP Server'),
     }
 
     _defaults = {
