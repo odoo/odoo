@@ -649,8 +649,11 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Payslips Run">
-                <group col="6" colspan="6">
+                <group col="4" colspan="2">
                     <field name="name"/>
+                    <field name="credit_note"/>
+                    <field name="date_start"/>
+                    <field name="date_end"/>
                 </group>
                 <notebook colspan="6">
                     <page string="Payslips">

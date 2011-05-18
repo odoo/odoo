@@ -211,7 +211,10 @@ class hr_payslip_run(osv.osv):
         'state': fields.selection([
             ('draft', 'Draft'),
             ('close', 'Close'),
-        ], 'State', select=True, readonly=True)
+        ], 'State', select=True, readonly=True),
+        'date_start': fields.date('Date From', required=False),
+        'date_end': fields.date('Date To', required=False),
+        'credit_note': fields.boolean('Credit Note', help="Indicates this payslip has a refund of another"),
     }
     _defaults = {
         'state': 'draft',
