@@ -469,33 +469,38 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
     make_fragment: function () {
         return this.$element[0].ownerDocument.createDocumentFragment();
     },
+    open_group: function (e, group) {
+        var self = this,
+            $row = $(e.currentTarget);
+        group.list(function (groups) {
+            $row.parent()[0].insertBefore(
+                self.render_groups(groups),
+                $row[0].nextSibling);
+        }, function (dataset) {
+            // Now we need to split the current tbody in order to
+            // insert the list's
+
+            // Create new tbody after current one
+            var $current_body = $row.closest('tbody');
+
+            var $next_siblings = $row.nextAll();
+            if ($next_siblings.length) {
+                var $split = $('<tbody>').insertAfter($current_body);
+                // Move all following siblings of current row to split
+                $split.append($row.nextAll());
+            }
+            // Insert list rendering after current tbody
+            self.render_dataset(dataset).then(function (list) {
+                $current_body.after(list.$current);
+            });
+        });
+    },
     render_groups: function (datagroups) {
         var self = this;
         var placeholder = this.make_fragment();
         _(datagroups).each(function (group) {
-            var $row = $('<tr>').click(function () {
-                group.list(function (groups) {
-                    $row.parent()[0].insertBefore(
-                        self.render_groups(groups),
-                        $row[0].nextSibling);
-                }, function (dataset) {
-                    // Now we need to split the current tbody in order to
-                    // insert the list's
-
-                    // Create new tbody after current one
-                    var $current_body = $row.closest('tbody');
-
-                    var $next_siblings = $row.nextAll();
-                    if ($next_siblings.length) {
-                        var $split = $('<tbody>').insertAfter($current_body);
-                        // Move all following siblings of current row to split
-                        $split.append($row.nextAll());
-                    }
-                    // Insert list rendering after current tbody
-                    self.render_dataset(dataset).then(function (list) {
-                        $current_body.after(list.$current);
-                    });
-                });
+            var $row = $('<tr>').click(function (e) {
+                self.open_group(e, group);
             });
             placeholder.appendChild($row[0]);
             self.pad($row);
@@ -516,12 +521,23 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
         return placeholder;
     },
     render_dataset: function (dataset) {
-        var self = this;
-        var rows = [];
-        var list = new openerp.base.ListView.List({
+        var self = this,
+           $self = $(self),
+            rows = [],
+            list = new openerp.base.ListView.List({
             options: this.options,
             columns: this.columns,
             rows: rows
+        });
+        $(list).bind('selected deleted action row_link', function (e) {
+            // additional positional parameters are provided to trigger as an
+            // Array, following the event type or event object, but are
+            // provided to the .bind event handler as *args.
+            // Convert our *args back into an Array in order to trigger them
+            // on the group itself, so it can ultimately be forwarded wherever
+            // it's supposed to go.
+            var args = Array.prototype.slice.call(arguments, 1);
+            $self.trigger.call($self, e, args);
         });
 
         var d = new $.Deferred();
