@@ -241,4 +241,68 @@ class user_preferences_config(osv.osv_memory):
 
 user_preferences_config()
 
+# Specify Your Terminology
+
+class specify_partner_terminology(osv.osv_memory):
+    _name = 'specify.partner.terminology'
+    _inherit = 'res.config'
+    _columns = {
+        'partner': fields.selection([('Customer','Customer'),
+                                  ('Client','Client'),
+                                  ('Member','Member'),
+                                  ('Patient','Patient'),
+                                  ('Partner','Partner'),
+                                  ('Donor','Donor'),
+                                  ('Guest','Guest'),
+                                  ('Tenant','Tenant')
+                                  ],
+                                 'Choose how to call a customer', required=True ),
+    }
+    _defaults={
+               'partner' :'Partner',
+    }
+    
+    def translations_done(self, cr, uid, ids, name, type, src, value,res_id = 0, context=None):
+        trans_obj = self.pool.get('ir.translation')
+        user_obj = self.pool.get('res.users')
+        context_lang = user_obj.browse(cr ,uid ,uid , context=context).context_lang
+        already_id = trans_obj.search(cr,uid, [('name','=',name),('res_id','=',res_id)])
+        for un_id in already_id:
+            trans_obj.write(cr ,uid, un_id, {'name': name ,'lang': context_lang, 'type': type,  'src': src, 'value': value , 'res_id':res_id}, context=context)
+        if not already_id:
+            create_id = trans_obj.create(cr, uid, {'name': name ,'lang': context_lang, 'type': type,  'src': src, 'value': value , 'res_id':res_id}, context=context)
+        return {}
+    
+    
+    def execute(self, cr, uid, ids, context=None):
+        trans_obj = self.pool.get('ir.translation')
+        fields_obj = self.pool.get('ir.model.fields')
+        menu_obj= self.pool.get('ir.ui.menu')
+        for o in self.browse(cr, uid, ids, context=context):
+            model_partner_ids = fields_obj.search(cr,uid, [('field_description','ilike','Partner')])
+            menu_partner_ids = menu_obj.search(cr,uid, [('name','ilike','Partner')])
+            # For Partner Translation
+            for p_id in model_partner_ids:
+                brw_fields_obj = fields_obj.browse(cr ,uid ,p_id , context=context)
+                name1 = brw_fields_obj.field_description
+                name2 = name1.replace('Partner',o.partner)
+                obj2 = brw_fields_obj.model_id.model
+                field = brw_fields_obj.name
+                partner_name = obj2 +',' + field
+                self.translations_done(cr, uid, ids, partner_name, 'field', name1 ,name2 ,context=context )
+                    
+            for m_id in menu_partner_ids:
+                brw_menu_obj = menu_obj.browse(cr ,uid ,m_id , context=context)
+                menu_partner_name1 = brw_menu_obj.name
+                menu_partnr_name = 'ir.ui.menu' + ',' + 'name'
+                already_id = trans_obj.search(cr,uid, [('name','=',menu_partnr_name),('res_id','=',m_id)])
+                if already_id:
+                    menu_partner_name1 = trans_obj.browse(cr, uid, already_id[0], context=context).src
+                menu_partner_name2 = menu_partner_name1.replace('Partner',o.partner)
+                self.translations_done(cr, uid, ids, menu_partnr_name, 'model', menu_partner_name1 , menu_partner_name2, m_id ,context=context )
+                    
+        return {}
+    
+specify_partner_terminology()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
