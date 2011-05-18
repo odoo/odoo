@@ -319,7 +319,6 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
                     self.rows.splice(record.index, 1);
                 });
             // TODO only refresh modified rows
-            self.list.refresh();
         });
     },
     /**
@@ -336,8 +335,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
      * Handles deletion of all selected lines
      */
     do_delete_selected: function () {
-        this.do_delete(
-            this.list.get_selection());
+        this.do_delete(this.groups.get_selection());
     }
     // TODO: implement reorder (drag and drop rows)
 });
@@ -460,6 +458,8 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
         this.options = opts.options;
         this.columns = opts.columns;
         this.datagroup = {};
+
+        this.lists = {};
     },
     pad: function ($row) {
         if (this.options.selectable) {
@@ -491,6 +491,11 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
             }
             // Insert list rendering after current tbody
             self.render_dataset(dataset).then(function (list) {
+                if (self.lists[group.value]) {
+                    self.lists[group.value].$current.remove();
+                    delete self.lists[group.value];
+                }
+                self.lists[group.value] = list;
                 $current_body.after(list.$current);
             });
         });
@@ -520,16 +525,13 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
         });
         return placeholder;
     },
-    render_dataset: function (dataset) {
-        var self = this,
-           $self = $(self),
-            rows = [],
-            list = new openerp.base.ListView.List({
-            options: this.options,
-            columns: this.columns,
-            rows: rows
-        });
-        $(list).bind('selected deleted action row_link', function (e) {
+    bind_list_events: function (list) {
+        var $this = $(this),
+             self = this;
+        $(list).bind('selected', function (e) {
+            // can have selections spanning multiple links
+            $this.trigger(e, [self.get_selection()]);
+        }).bind('deleted action row_link', function (e) {
             // additional positional parameters are provided to trigger as an
             // Array, following the event type or event object, but are
             // provided to the .bind event handler as *args.
@@ -537,8 +539,17 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
             // on the group itself, so it can ultimately be forwarded wherever
             // it's supposed to go.
             var args = Array.prototype.slice.call(arguments, 1);
-            $self.trigger.call($self, e, args);
+            $this.trigger.call($this, e, args);
         });
+    },
+    render_dataset: function (dataset) {
+        var rows = [],
+            list = new openerp.base.ListView.List({
+                options: this.options,
+                columns: this.columns,
+                rows: rows
+            });
+        this.bind_list_events(list);
 
         var d = new $.Deferred();
         this.view.rpc('/base/listview/fill', {
@@ -567,6 +578,17 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
             });
         });
         return this.$element;
+    },
+    /**
+     * Returns the ids of all selected records for this group
+     */
+    get_selection: function () {
+        return _(this.lists).chain()
+            .map(function (list) {
+                return list.get_selection();
+            })
+            .flatten()
+            .value();
     }
 });
 };
