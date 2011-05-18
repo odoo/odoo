@@ -59,6 +59,7 @@ class sugar_import(import_framework):
     TABLE_NOTE = 'Notes'
     TABLE_EMAIL = 'Emails'
     TABLE_DOCUMENT = 'DocumentRevisions'
+    TABLE_COMPAIGN = 'Campaigns'
     
     
     def initialize(self):
@@ -83,10 +84,10 @@ class sugar_import(import_framework):
             data = [salutation, salutation, 'Contact']
             return self.import_object(fields, data, 'res.partner.title', 'contact_title', salutation, [('shortcut', '=', salutation)])
 
-    def get_campaign_id(self, dict, val):
+    def get_channel_id(self, dict, val):
         fields = ['name']
         data = [val]
-        return self.import_object(fields, data, 'crm.case.resource.type', 'crm_campaign', val)
+        return self.import_object(fields, data, 'res.partner.canal', 'crm_channel', val)
     
     def get_all_states(self, external_val, country_id):
         """Get states or create new state unless country_id is False"""
@@ -124,7 +125,7 @@ class sugar_import(import_framework):
                 'dependencies' : [self.TABLE_USER],
                 'hook' : self.import_document,
                 'map' : {'name':'filename',
-                         'description': 'description',
+                         'description': ppconcat('__prettyprint__','description'),
                          'datas': 'datas',
                          'datas_fname': 'datas_fname',
                 }
@@ -175,14 +176,15 @@ class sugar_import(import_framework):
     import History(Notes)
     """
     def get_attachment(self, val):
-        File, Filename = sugar.attachment_search(self.context.get('port'), self.context.get('session_id'), self.TABLE_NOTE, val.get('id'))    
+        File, Filename = sugar.attachment_search(self.context.get('port'), self.context.get('session_id'), self.TABLE_NOTE, val.get('id')) 
         attachment_obj = self.obj.pool.get('ir.attachment')
         model_obj = self.obj.pool.get('ir.model.data')
         mailgate_obj = self.obj.pool.get('mailgate.message')
         fields = ['name', 'datas', 'datas_fname','res_id', 'res_model']
-        datas = [val.get('name'), File, Filename, val.get('res_id'),val.get('model',False)]
-        self.import_object(fields, datas, 'ir.attachment', 'history_attachment', val.get('name'), [('res_id', '=', val.get('res_id'), ('model', '=', val.get('model')))])
-        attach_id = self.xml_id_exist('history_attachment', val.get('name'))
+        name = 'attachment_'+ (Filename or val.get('name'))
+        datas = [Filename or val.get('name'), File, Filename, val.get('res_id'),val.get('model',False)]
+        self.import_object(fields, datas, 'ir.attachment', 'history_attachment', name, [('res_id', '=', val.get('res_id'), ('model', '=', val.get('model')))])
+        attach_id = self.xml_id_exist('history_attachment', name)
         return attach_id
 
     def import_history(self, val):
@@ -258,7 +260,7 @@ class sugar_import(import_framework):
                     'name': 'name',
                     'date': 'date_entered',
                     'user_id/id': ref(self.TABLE_USER, 'assigned_user_id'),
-                    'description': 'description',
+                    'description': ppconcat('__prettyprint__','description'),
                     'partner_id/id': ref(self.TABLE_ACCOUNT, 'account_id'),
                     'partner_address_id/.id': 'partner_address_id/.id',
                     'partner_phone': 'partner_phone',
@@ -324,7 +326,7 @@ class sugar_import(import_framework):
             'Low': '3'
         }
       return priority_dict.get(val.get('priority'), '')
-
+    
     def get_project_task_mapping(self):
         return { 
                 'model' : 'project.task',
@@ -338,7 +340,7 @@ class sugar_import(import_framework):
                     'planned_hours': 'planned_hours',
                     'total_hours': 'total_hours',        
                     'priority': self.get_project_task_priority,
-                    'description': 'description',
+                    'description': ppconcat('__prettyprint__','description','milestone_flag', 'project_task_id', 'task_number'),
                     'user_id/id': ref(self.TABLE_USER, 'assigned_user_id'),
                     'partner_id/id': 'partner_id/id',
                     'contact_id/id': 'contact_id/id',
@@ -445,7 +447,7 @@ class sugar_import(import_framework):
                     'partner_address_id/id': related_ref(self.TABLE_CONTACT),
                     'categ_id/id': call(self.get_category, 'crm.phonecall', value('direction')),
                     'opportunity_id/id': related_ref(self.TABLE_OPPORTUNITY),
-                    'description': 'description',   
+                    'description': ppconcat('__prettyprint__','description'),   
                     'state': map_val('status', self.call_state)                      
                 }
             }        
@@ -495,7 +497,7 @@ class sugar_import(import_framework):
     def get_meeting_mapping(self):
         return { 
                 'model' : 'crm.meeting',
-                'dependencies' : [self.TABLE_CONTACT, self.TABLE_OPPORTUNITY, self.TABLE_LEAD],
+                'dependencies' : [self.TABLE_CONTACT, self.TABLE_OPPORTUNITY, self.TABLE_LEAD, self.TABLE_COMPAIGN],
                 'hook': self.import_meeting,
                 'map' : {
                     'name': 'name',
@@ -514,6 +516,14 @@ class sugar_import(import_framework):
     """
         import Opportunity
     """
+    opp_state = {
+            'Need Analysis' : 'New',
+            'Closed Lost': 'Lost',
+            'Closed Won': 'Won', 
+            'Value Proposition': 'Proposition',
+            'Negotiation/Review': 'Negotiation'
+        }
+        
     def get_opportunity_status(self, sugar_val):
         fields = ['name', 'type']
         name = 'Opportunity_' + sugar_val['sales_stage']
@@ -566,10 +576,22 @@ class sugar_import(import_framework):
                 'type' : const('opportunity'),
                 'categ_id/id': call(self.get_category, 'crm.lead', value('opportunity_type')),
                 'email_from': 'email_from',
-                'state' : const('open'), #TODO
+                'state': map_val('status', self.opp_state)  , #TODO
             }
         }
+        
+    """
+    import campaign
+    """
     
+    def get_compaign_mapping(self):
+        return {
+            'model' : 'crm.case.resource.type',
+            'map' : {
+                'name': 'name',
+                } 
+        }    
+        
     """
         import lead
     """
@@ -601,11 +623,12 @@ class sugar_import(import_framework):
     def get_lead_mapping(self):
         return {
             'model' : 'crm.lead',
+            'dependencies' : [self.TABLE_COMPAIGN],
             'hook' : self.import_lead,
             'map' : {
                 'name': concat('first_name', 'last_name'),
                 'contact_name': concat('first_name', 'last_name'),
-                'description': ppconcat('description', 'refered_by', 'lead_source', 'lead_source_description', 'website', 'email2', 'status_description', 'lead_source_description', 'do_not_call'),
+                'description': ppconcat('__prettyprint__','description', 'refered_by', 'lead_source', 'lead_source_description', 'website', 'email2', 'status_description', 'lead_source_description', 'do_not_call'),
                 'partner_name': 'account_name',
                 'email_from': 'email1',
                 'phone': 'phone_work',
@@ -623,7 +646,8 @@ class sugar_import(import_framework):
                 'fax': 'phone_fax',
                 'referred': 'refered_by',
                 'optout': 'do_not_call',
-                'type_id/id': call(self.get_campaign_id, value('lead_source')),
+                'channel_id/id': call(self.get_channel_id, value('lead_source')),
+                'type_id/id': ref(self.TABLE_COMPAIGN, 'campaign_id'),
                 'country_id/id': 'country_id/id',
                 'state_id/id': 'state_id/id'
                 } 
@@ -715,7 +739,7 @@ class sugar_import(import_framework):
                     'website': 'website',
                     'user_id/id': ref(self.TABLE_USER,'assigned_user_id'),
                     'ref': 'sic_code',
-                    'comment': ppconcat('description', 'employees', 'ownership', 'annual_revenue', 'rating', 'industry', 'ticker_symbol'),
+                    'comment': ppconcat('__prettyprint__','description', 'employees', 'ownership', 'annual_revenue', 'rating', 'industry', 'ticker_symbol'),
                     'customer': const('1'),
                     'supplier': const('0'),
                     'address/id':'address/id', 
@@ -747,6 +771,9 @@ class sugar_import(import_framework):
             'street': 'address_street',
             'zip': 'address_postalcode',
             'fax': 'fax',
+            'phone': 'phone_work',
+            'mobile':'phone_mobile',
+            'email': 'email1'
         }
         
         if val.get('address_country'):
@@ -756,7 +783,7 @@ class sugar_import(import_framework):
             val['state_id/id'] =  state_id
             
         return self.import_object_mapping(map_user_address, val, 'res.partner.address', self.TABLE_CONTACT, val['id'], self.DO_NOT_FIND_DOMAIN)
-    
+
     def get_employee_mapping(self):
         return {
             'model' : 'hr.employee',
@@ -768,7 +795,7 @@ class sugar_import(import_framework):
                 'mobile_phone':  'phone_mobile',
                 'user_id/id': ref(self.TABLE_USER, 'id'), 
                 'address_home_id/id': self.get_user_address,
-                'notes': 'description',
+                'notes': ppconcat('messenger_type', 'messenger_id', 'description'),
                 'job_id/id': self.get_job_id,
             }
      }
@@ -826,7 +853,8 @@ class sugar_import(import_framework):
             self.TABLE_CASE: self.get_crm_claim_mapping(),
             self.TABLE_NOTE: self.get_history_mapping(),
             self.TABLE_EMAIL: self.get_email_mapping(),
-            self.TABLE_DOCUMENT: self.get_document_mapping()
+            self.TABLE_DOCUMENT: self.get_document_mapping(),
+            self.TABLE_COMPAIGN: self.get_compaign_mapping()
             
         }
 
