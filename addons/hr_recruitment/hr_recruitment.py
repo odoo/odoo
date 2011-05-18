@@ -319,7 +319,7 @@ class hr_applicant(crm.crm_case, osv.osv):
         if res:
             vals.update(res)
         res = self.create(cr, uid, vals, context=context)
-
+        att_ids = []
         attachents = msg.get('attachments', [])
         for attactment in attachents or []:
             data_attach = {
@@ -330,9 +330,9 @@ class hr_applicant(crm.crm_case, osv.osv):
                 'res_model': self._name,
                 'res_id': res,
             }
-            attach_obj.create(cr, uid, data_attach, context=context)
+            att_ids.append(attach_obj.create(cr, uid, data_attach, context=context))
 
-        return res
+        return res,att_ids
 
     def message_update(self, cr, uid, ids, vals={}, msg="", default_act='pending', context=None):
         """

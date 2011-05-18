@@ -127,9 +127,12 @@ class mailgate_thread(osv.osv):
 
         for case in cases:
             attachments = []
-            for att in attach:
-                    attachments.append(att_obj.create(cr, uid, {'res_model':case._name,'res_id':case.id,'name': att[0], 'datas': base64.encodestring(att[1])}))
-
+            if attach:
+                for att in attach:
+                    if isinstance(att,(int,long)):
+                        attachments.append(att)
+                    elif isinstance(att,dict):
+                        attachments.append(att_obj.create(cr, uid, {'res_model':case._name,'res_id':case.id,'name': att[0], 'datas': base64.encodestring(att[1])}))
             partner_id = hasattr(case, 'partner_id') and (case.partner_id and case.partner_id.id or False) or False
             if not partner_id and case._name == 'res.partner':
                 partner_id = case.id
@@ -220,7 +223,7 @@ class mailgate_message(osv.osv):
         action_data = False
         action_pool = self.pool.get('ir.actions.act_window')
         message_pool = self.browse(cr ,uid, ids, context=context)[0]
-        att_ids = [x.id for x in message_pool.attachment_ids] 
+        att_ids = [x.id for x in message_pool.attachment_ids]
         action_ids = action_pool.search(cr, uid, [('res_model', '=', 'ir.attachment')])
         if action_ids:
             action_data = action_pool.read(cr, uid, action_ids[0], context=context)
@@ -356,8 +359,8 @@ class mailgate_tool(osv.osv_memory):
         @param msg: email.message.Message to forward
         @param email_error: Default Email address in case of any Problem
         """
-        model_pool = self.pool.get(model)
 
+        model_pool = self.pool.get(model)
         for res in model_pool.browse(cr, uid, res_ids, context=context):
             message_followers = model_pool.message_followers(cr, uid, [res.id])[res.id]
             message_followers_emails = self.to_email(','.join(filter(None, message_followers)))
@@ -410,7 +413,7 @@ class mailgate_tool(osv.osv_memory):
         def create_record(msg):
             att_ids = []
             if hasattr(model_pool, 'message_new'):
-                res_id = model_pool.message_new(cr, uid, msg, context=context)
+                res_id,att_ids = model_pool.message_new(cr, uid, msg, context=context)
                 if custom_values:
                     model_pool.write(cr, uid, [res_id], custom_values, context=context)
             else:
@@ -436,7 +439,6 @@ class mailgate_tool(osv.osv_memory):
                             'res_id': res_id,
                         }
                         att_ids.append(self.pool.get('ir.attachment').create(cr, uid, data_attach))
-
             return res_id, att_ids
 
         # Warning: message_from_string doesn't always work correctly on unicode,
@@ -574,7 +576,7 @@ class mailgate_tool(osv.osv_memory):
                             email_cc = msg.get('cc'),
                             message_id = msg.get('message-id'),
                             references = msg.get('references', False) or msg.get('in-reply-to', False),
-                            attach = attachments.items(),
+                            attach = attachment_ids or attachments.items(),
                             email_date = msg.get('date'),
                             context = context)
         else:
