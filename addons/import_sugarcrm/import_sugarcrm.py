@@ -48,6 +48,7 @@ class sugar_import(import_framework):
     TABLE_OPPORTUNITY = 'Opportunities'
     TABLE_LEAD = 'Leads'
     TABLE_STAGE = 'crm_stage'
+    TABLE_ATTENDEE = 'calendar_attendee'
     TABLE_CALL = 'Calls'
     TABLE_MEETING = 'Meetings'
     TABLE_TASK = 'Tasks'
@@ -457,6 +458,22 @@ class sugar_import(import_framework):
             'Held': 'open',
             'Not Held': 'draft', 
         }
+#TODO    
+    def get_attendee_id(self, cr, uid, module_name, module_id):
+        model_obj = self.obj.pool.get('ir.model.data')
+        att_obj = self.obj.pool.get('calendar.attendee')
+        meeting_obj = self.obj.pool.get('crm.meeting')
+        user_dict = sugar.user_get_attendee_list(self.context.get('port'), self.context.get('session_id'), module_name, module_id)
+        #TODO there is more then just user in attendee list
+        #there is contact, partner, lead (but we don't import the link) and user
+        for user in user_dict: 
+            continue
+            user_id = self.get_mapped_id(self.TABLE_USER, user.get('id'))
+            fields = ['user_id', 'email1']
+            data = [user_id, user.get('email1')]
+            self.import_object(fields, data, 'calendar.attendee', self.TABLE_ATTENDEE, user_id, [('user_id', '=', user_id)])
+            attendee_id = self.xml_id_exist(self.TABLE_ATTENDEE, user_id)
+            return attendee_id    
     
     def get_alarm_id(self, dict_val, val):
         alarm_dict = {
@@ -470,15 +487,22 @@ class sugar_import(import_framework):
         return self.mapped_id_if_exist('res.alarm', [('name', 'like', alarm_dict.get(val))], 'alarm', val)
     
     #TODO attendees
+    def import_meeting(self, val):
+        attendee_id = self.get_attendee_id(self.cr, self.uid, 'Meetings', val.get('id')) #TODO               
+        val['attendee_ids/id'] = attendee_id
+        return val
+
     def get_meeting_mapping(self):
         return { 
                 'model' : 'crm.meeting',
                 'dependencies' : [self.TABLE_CONTACT, self.TABLE_OPPORTUNITY, self.TABLE_LEAD],
+                'hook': self.import_meeting,
                 'map' : {
                     'name': 'name',
                     'date': 'date_start',
                     'duration': call(self.get_float_time, value('duration_hours'), value('duration_minutes')),
                     'location': 'location',
+                    'attendee_ids/id':'attendee_ids/id',
                     'alarm_id/id': call(self.get_alarm_id, value('reminder_time')),
                     'user_id/id': ref(self.TABLE_USER, 'assigned_user_id'),
                     'partner_id/id': related_ref(self.TABLE_ACCOUNT),
