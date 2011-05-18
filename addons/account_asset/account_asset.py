@@ -94,7 +94,9 @@ class account_asset_asset(osv.osv):
 
     def compute_depreciation_board(self, cr, uid,ids, context=None):
         depreciation_lin_obj = self.pool.get('account.asset.depreciation.line')
+      
         for asset in self.browse(cr, uid, ids, context=context):
+      
             old_depreciation_line_ids = depreciation_lin_obj.search(cr, uid, [('asset_id', '=', asset.id), ('move_id', '=', False)])
             if old_depreciation_line_ids:
                 depreciation_lin_obj.unlink(cr, uid, old_depreciation_line_ids, context=context)
@@ -173,7 +175,7 @@ class account_asset_asset(osv.osv):
         'parent_id': fields.many2one('account.asset.asset', 'Parent Asset'),
         'child_ids': fields.one2many('account.asset.asset', 'parent_id', 'Children Assets'),
         'purchase_date': fields.date('Purchase Date', required=True),
-        'state': fields.selection([('view','View'),('draft','Draft'),('normal','Normal'),('close','Close')], 'state', required=True),
+        'state': fields.selection([('view','View'),('draft','Draft'),('normal','Normal'),('close','Close')], 'State', required=True),
         'active': fields.boolean('Active', select=2),
         'partner_id': fields.many2one('res.partner', 'Partner'),
 
