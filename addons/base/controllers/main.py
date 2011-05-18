@@ -570,6 +570,34 @@ class FormView(View):
     def placeholder(self):
         return open(os.path.join(openerpweb.path_addons, 'base', 'static', 'src', 'img', 'placeholder.png'), 'rb').read()
 
+    @openerpweb.httprequest
+    def upload(self, request, session_id, callback, ufile):
+        try:
+            out = """<script language="javascript" type="text/javascript">
+                        var win = window.top.window,
+                            callback = win[%s];
+                        if (typeof(callback) === 'function') {
+                            callback.apply(this, %s);
+                        } else {
+                            win.jQuery('#oe_notification', win.document).notify('create', {
+                                title: "Ajax File Upload",
+                                text: "Could not find callback"
+                            });
+                        }
+                    </script>"""
+            size = 0
+            while True:
+                data = ufile.file.read(8192)
+                if not data:
+                    break
+                size += len(data)
+            filename = ufile.filename
+            # TODO: write file to tmp file
+        except Exception as e:
+            size = False
+            filename = e.message
+        return out % (simplejson.dumps(callback), simplejson.dumps([size, filename, ufile.headers.getheader('Content-Type')]))
+
 class ListView(View):
     _cp_path = "/base/listview"
 
