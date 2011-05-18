@@ -321,7 +321,7 @@ openerp.base.form.compute_domain = function(expr, fields) {
         var ex = expr[i];
         if (ex.length == 1) {
             var top = stack.pop();
-            switch (ex[0]) {
+            switch (ex) {
                 case '|':
                     stack.push(stack.pop() || top);
                     continue;
@@ -332,7 +332,7 @@ openerp.base.form.compute_domain = function(expr, fields) {
                     stack.push(!top);
                     continue;
                 default:
-                    throw new Error('Unknown domain operator ' + ex[0]);
+                    throw new Error('Unknown domain operator ' + ex);
             }
         }
 
@@ -362,17 +362,17 @@ openerp.base.form.compute_domain = function(expr, fields) {
                 stack.push(field >= val);
                 break;
             case 'in':
-                stack.push(_.indexOf(val, field) > -1);
+                stack.push(_(val).contains(field));
                 break;
             case 'not in':
-                stack.push(_.indexOf(val, field) == -1);
+                stack.push(!_(val).contains(field));
                 break;
             default:
                 this.log("Unsupported operator in attrs :", op);
         }
     }
-    return _.indexOf(stack, false) == -1;
-}
+    return _.all(stack);
+};
 
 openerp.base.form.Widget = openerp.base.Controller.extend({
     init: function(view, node) {
@@ -891,7 +891,7 @@ openerp.base.form.FieldMany2OneDatasSet = openerp.base.DataSetStatic.extend({
     },
     write: function (id, data, callback) {
         this._super(id, data, callback);
-    },
+    }
 });
 
 openerp.base.form.FieldMany2OneViewManager = openerp.base.ViewManager.extend({
@@ -1086,8 +1086,9 @@ openerp.base.form.Many2ManyListView = openerp.base.ListView.extend({
 openerp.base.form.Many2XSelectPopup = openerp.base.BaseWidget.extend({
     identifier_prefix: "many2xselectpopup",
     template: "Many2XSelectPopup",
-    select_element: function(model) {
+    select_element: function(model, dataset) {
         this.model = model;
+        this.dataset = dataset
         var html = this.render();
         jQuery(html).dialog({title: '',
                     modal: true,
@@ -1096,7 +1097,9 @@ openerp.base.form.Many2XSelectPopup = openerp.base.BaseWidget.extend({
     },
     start: function() {
         this._super();
-        this.dataset = new openerp.base.DataSetSearch(this.session, this.model);
+        if (!this.dataset) {
+            this.dataset = new openerp.base.DataSetSearch(this.session, this.model);
+        }
         this.setup_search_view();
     },
     setup_search_view: function() {
@@ -1188,7 +1191,9 @@ openerp.base.form.FieldImage = openerp.base.form.Field.extend({
     },
     set_value: function(value) {
         this._super.apply(this, arguments);
-        this.$element.find('img').show().attr('src', 'data:image/png;base64,' + this.value);
+        var url = '/base/formview/image?session_id=' + this.session.session_id + '&model=' +
+            this.view.dataset.model +'&id=' + (this.view.datarecord.id || '') + '&field=' + this.name
+        this.$element.find('img').show().attr('src', url);
     }
 });
 

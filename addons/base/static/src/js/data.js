@@ -351,7 +351,7 @@ openerp.base.DataSetMany2Many = openerp.base.DataSetStatic.extend({
 
     unlink: function(ids) {
         // just do nothing
-    },
+    }
 });
 
 };
