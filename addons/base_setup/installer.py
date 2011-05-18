@@ -282,19 +282,17 @@ class specify_partner_terminology(osv.osv_memory):
             model_partner_ids = fields_obj.search(cr,uid, [('field_description','ilike','Partner')])
             menu_partner_ids = menu_obj.search(cr,uid, [('name','ilike','Partner')])
             # For Partner Translation
-            for p_id in model_partner_ids:
-                brw_fields_obj = fields_obj.browse(cr ,uid ,p_id , context=context)
-                partner_name = brw_fields_obj.model_id.model +',' + brw_fields_obj.name
-                self.translations_done(cr, uid, ids, partner_name, 'field', brw_fields_obj.field_description ,brw_fields_obj.field_description.replace('Partner',o.partner) ,context=context )
+            for p_id in fields_obj.browse(cr ,uid ,model_partner_ids , context=context):
+                partner_name = p_id.model_id.model +',' + p_id.name
+                self.translations_done(cr, uid, ids, partner_name, 'field', p_id.field_description ,p_id.field_description.replace('Partner',o.partner) ,context=context )
                     
-            for m_id in menu_partner_ids:
-                brw_menu_obj = menu_obj.browse(cr ,uid ,m_id , context=context)
-                menu_partner_name1 = brw_menu_obj.name
+            for m_id in menu_obj.browse(cr ,uid ,menu_partner_ids , context=context):
+                menu_partner_name1 = m_id.name
                 menu_partnr_name = 'ir.ui.menu' + ',' + 'name'
-                already_id = trans_obj.search(cr,uid, [('name','=',menu_partnr_name),('res_id','=',m_id)])
+                already_id = trans_obj.search(cr,uid, [('name','=',menu_partnr_name),('res_id','=',m_id.id)])
                 if already_id:
                     menu_partner_name1 = trans_obj.browse(cr, uid, already_id[0], context=context).src
-                self.translations_done(cr, uid, ids, menu_partnr_name, 'model', menu_partner_name1 , menu_partner_name1.replace('Partner',o.partner), m_id ,context=context )
+                self.translations_done(cr, uid, ids, menu_partnr_name, 'model', menu_partner_name1 , menu_partner_name1.replace('Partner',o.partner), m_id.id ,context=context )
                     
         return {}
     
