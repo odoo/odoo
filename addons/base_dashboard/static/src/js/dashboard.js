@@ -88,7 +88,8 @@ openerp.base.form.Action = openerp.base.form.Widget.extend({
         action.flags = {
             search_view : false,
             sidebar : false,
-            views_switcher : false
+            views_switcher : false,
+            action_buttons : false
         }
         var node_attrs = this.node.attrs;
         var content_id = 'portlet-content-'+node_attrs.name;

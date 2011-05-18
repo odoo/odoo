@@ -25,7 +25,7 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
             search_view : true,
             new_window : false,
             views_switcher : true,
-            toolbar : true,
+            action_buttons : true,
             pager : true
         }, action.flags || {});
         // instantiate the right controllers by understanding the action
@@ -211,6 +211,10 @@ openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
         this._super(session, element_id, dataset, action.views);
         this.action = action;
         this.flags = this.action.flags || {};
+        if (action.res_model == 'board.board' && action.views.length == 1 && action.views) {
+            // Not elegant but allows to avoid flickering of SearchView#do_hide
+            this.flags.search_view = this.flags.pager = this.flags.action_buttons = false;
+        }
         if (this.flags.sidebar) {
             this.sidebar = new openerp.base.Sidebar(null, this);
         }
