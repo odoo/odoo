@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-05-09 10:18+0000\n"
-"PO-Revision-Date: 2011-05-16 19:16+0000\n"
+"PO-Revision-Date: 2011-05-17 19:54+0000\n"
 "Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-05-17 06:05+0000\n"
+"X-Launchpad-Export-Date: 2011-05-18 06:22+0000\n"
 "X-Generator: Launchpad (build 12959)\n"
 
 #. module: account
@@ -3465,7 +3465,7 @@ msgstr "Судебный спор"
 #. module: account
 #: view:account.analytic.line:0
 msgid "Search Analytic Lines"
-msgstr ""
+msgstr "Искать проводки аналитики"
 
 #. module: account
 #: field:res.partner,property_account_payable:0
@@ -3602,6 +3602,7 @@ msgid ""
 "Print Report with the currency column if the currency is different then the "
 "company currency"
 msgstr ""
+"Печать отчета с колонкой валюты, если валюта отличается от валюты компании"
 
 #. module: account
 #: view:account.analytic.line:0
@@ -3795,6 +3796,8 @@ msgid ""
 "This account will be used to value outgoing stock for the current product "
 "category using sale price"
 msgstr ""
+"Этот счет будет использоваться для стоимости исходящих ТМЦ для текущей "
+"категории ТМЦ продажной цене"
 
 #. module: account
 #: selection:account.automatic.reconcile,power:0
@@ -3807,6 +3810,8 @@ msgid ""
 "Analytic costs (timesheets, some purchased products, ...) come from analytic "
 "accounts. These generate draft supplier invoices."
 msgstr ""
+"Анализ себестоимости (учет времени, некоторой закупаемой продукции, ...) "
+"берется из счетов аналитики. Генерирует черновик счетов поставщика."
 
 #. module: account
 #: view:account.bank.statement:0
@@ -3937,7 +3942,7 @@ msgstr "Ошибка ! Неверная продолжительность фи�
 #. module: account
 #: field:report.aged.receivable,name:0
 msgid "Month Range"
-msgstr ""
+msgstr "Месячный период"
 
 #. module: account
 #: help:account.analytic.balance,empty_acc:0
@@ -3982,7 +3987,7 @@ msgstr "Режим вывода"
 #. module: account
 #: model:process.node,note:account.process_node_importinvoice0
 msgid "Statement from invoice or payment"
-msgstr ""
+msgstr "Документ из счета или платежа"
 
 #. module: account
 #: view:account.payment.term.line:0
@@ -4120,6 +4125,8 @@ msgid ""
 "You cannot define children to an account with internal type different of "
 "\"View\"! "
 msgstr ""
+"Ошибка конфигурации! \n"
+"Нельзя определить субсчет для счета с типом отличным от \"Вид\" ! "
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_cost_ledger_journal_report
@@ -4161,7 +4168,7 @@ msgstr "UserError"
 #. module: account
 #: field:account.journal,type_control_ids:0
 msgid "Type Controls"
-msgstr ""
+msgstr "Контроль типа"
 
 #. module: account
 #: help:account.journal,default_credit_account_id:0
@@ -4216,7 +4223,7 @@ msgstr "Выбрать налоговые планы счетов"
 #: field:account.fiscal.position,account_ids:0
 #: field:account.fiscal.position.template,account_ids:0
 msgid "Account Mapping"
-msgstr ""
+msgstr "Отображение счета"
 
 #. module: account
 #: selection:account.bank.statement.line,type:0
@@ -4251,6 +4258,9 @@ msgid ""
 "the account \"%s - %s\". Clear the secondary currency field of the account "
 "definition if you want to accept all currencies."
 msgstr ""
+"Нельзя сделать операцию по счету с валютой  отличной от второй валюты счета "
+"\"%s - %s\". Очистите поле ввода второй валюты в форме ввода счета, если "
+"желаете использовать все валюты."
 
 #. module: account
 #: field:account.invoice.refund,date:0
@@ -4496,7 +4506,7 @@ msgstr "Операции"
 #: model:ir.actions.act_window,name:account.action_account_vat_declaration
 #: model:ir.model,name:account.model_account_vat_declaration
 msgid "Account Vat Declaration"
-msgstr ""
+msgstr "Декларация НДС счета"
 
 #. module: account
 #: view:account.period:0
@@ -4620,7 +4630,7 @@ msgstr "Название столбца"
 #: view:account.general.journal:0
 msgid ""
 "This report gives you an overview of the situation of your general journals"
-msgstr ""
+msgstr "Этот доклад дает вам обзор ситуации по общим журналам"
 
 #. module: account
 #: field:account.entries.report,year:0
@@ -5557,6 +5567,7 @@ msgid ""
 "The code will be used to generate the numbers of the journal entries of this "
 "journal."
 msgstr ""
+"Код будет использоваться для генерации номеров записей этого журнала."
 
 #. module: account
 #: view:account.invoice:0
@@ -5592,7 +5603,7 @@ msgstr "Дата последней сверки"
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_line
 msgid "Analytic Line"
-msgstr ""
+msgstr "Позиция аналитики"
 
 #. module: account
 #: field:product.template,taxes_id:0
@@ -5630,7 +5641,7 @@ msgstr "Счет: Шаблоны"
 #. module: account
 #: report:account.vat.declaration:0
 msgid "Tax Statement"
-msgstr ""
+msgstr "Налоговая декларация"
 
 #. module: account
 #: model:ir.model,name:account.model_res_company
@@ -5768,7 +5779,7 @@ msgstr "  количество дней: 30"
 #. module: account
 #: help:account.analytic.line,currency_id:0
 msgid "The related account currency if not equal to the company one."
-msgstr ""
+msgstr "Валюта связанного счета, если не одинакова с валютой компании."
 
 #. module: account
 #: view:account.analytic.account:0
@@ -5901,7 +5912,7 @@ msgstr "Название журнала должно быть уникальны
 #. module: account
 #: field:account.account.template,nocreate:0
 msgid "Optional create"
-msgstr ""
+msgstr "Создать дополнительно"
 
 #. module: account
 #: code:addons/account/invoice.py:409
@@ -6150,6 +6161,8 @@ msgstr "Код на Python"
 msgid ""
 "Please define the Reserve and Profit/Loss account for current user company !"
 msgstr ""
+"Пожалуйста, определите счет резервов и прибылей/убытков для компании "
+"пользователя !"
 
 #. module: account
 #: help:account.journal,update_posted:0
@@ -6263,7 +6276,7 @@ msgstr "Вывести отчет по регистру с одним партн
 #. module: account
 #: report:account.general.ledger_landscape:0
 msgid "JRNL"
-msgstr ""
+msgstr "ЖРНЛ"
 
 #. module: account
 #: view:account.partner.balance:0
@@ -6386,7 +6399,7 @@ msgstr "Параметры"
 #. module: account
 #: model:ir.model,name:account.model_account_tax_chart
 msgid "Account tax chart"
-msgstr ""
+msgstr "План налоговых счетов"
 
 #. module: account
 #: report:account.analytic.account.cost_ledger:0
@@ -6428,13 +6441,13 @@ msgstr "Счета доходов"
 #. module: account
 #: help:report.invoice.created,origin:0
 msgid "Reference of the document that generated this invoice report."
-msgstr ""
+msgstr "Ссылка на документ, создавший этот отчет о счете."
 
 #. module: account
 #: field:account.tax.code,child_ids:0
 #: field:account.tax.code.template,child_ids:0
 msgid "Child Codes"
-msgstr ""
+msgstr "Субкоды"
 
 #. module: account
 #: code:addons/account/invoice.py:476
@@ -6521,7 +6534,7 @@ msgstr "Налоги"
 #. module: account
 #: help:account.tax,amount:0
 msgid "For taxes of type percentage, enter % ratio between 0-1."
-msgstr ""
+msgstr "Для процентных налогов, введите % как число от 0 до 1."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_subscription_form
