@@ -229,9 +229,9 @@ class expression(object):
                 #FIXME
                 if operator == 'child_of':
                     if isinstance(right, basestring):
-                        ids2 = [x[0] for x in field_obj.name_search(cr, uid, right, [], 'like', context=context, limit=None)]
+                        ids2 = [x[0] for x in field_obj.name_search(cr, uid, right, [], 'ilike', context=context, limit=None)]
                     else:
-                        ids2 = list(right)
+                        ids2 = [right]
 
                     def _rec_convert(ids):
                         if field_obj == table:
@@ -292,12 +292,12 @@ class expression(object):
                 else:
                     def _get_expression(field_obj,cr, uid, left, right, operator, context=None):
                         if context is None:
-                            context = {}                        
+                            context = {}
                         c = context.copy()
                         c['active_test'] = False
                         #Special treatment to ill-formed domains
                         operator = ( operator in ['<','>','<=','>='] ) and 'in' or operator
-                        
+
                         dict_op = {'not in':'!=','in':'=','=':'in','!=':'not in','<>':'not in'}
                         if isinstance(right,tuple):
                             right = list(right)
@@ -319,7 +319,7 @@ class expression(object):
                         elif isinstance(right,(list,tuple)):
                             m2o_str = True
                             for ele in right:
-                                if not isinstance(ele, basestring): 
+                                if not isinstance(ele, basestring):
                                     m2o_str = False
                                     break
                     elif right == []:
@@ -335,7 +335,7 @@ class expression(object):
                             new_op = '!='
                         #Is it ok to put 'left' and not 'id' ?
                         self.__exp[i] = (left,new_op,False)
-                        
+
                     if m2o_str:
                         self.__exp[i] = _get_expression(field_obj,cr, uid, left, right, operator, context=context)
             else:
