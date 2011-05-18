@@ -1191,12 +1191,35 @@ openerp.base.form.FieldImage = openerp.base.form.Field.extend({
     init: function(view, node) {
         this._super(view, node);
         this.template = "FieldImage";
+        this.iframe = this.element_id + '_iframe';
     },
     start: function() {
         this._super.apply(this, arguments);
+        this.$element.find('input.oe-binary-file').change(this.on_file_change);
         this.$element.find('button.oe-binary-image-clear').click(this.on_clear);
     },
     set_value_from_ui: function() {
+    },
+    on_file_change: function() {
+        window[this.iframe] = this.on_file_uploaded;
+        this.$element.find('form.oe-binary-form input[name=session_id]').val(this.session.session_id);
+        this.$element.find('form.oe-binary-form').submit();
+        this.toggle_throbbler();
+    },
+    toggle_throbbler: function() {
+        this.$element.find('div.oe-binary-progress, div.oe-binary-image-buttons').toggle();
+    },
+    on_file_uploaded: function(size, name, content_type) {
+        delete(window[this.iframe]);
+        if (size === false) {
+            this.notification.warn("File Upload", "There was a problem while uploading your file");
+            // TODO: use openerp web exception handler
+            console.log("Error while uploading file : ", name);
+        } else {
+            alert('File uploaded')
+            console.log("Size", size, "Name", name, "Content", content_type);
+        }
+        this.toggle_throbbler();
     },
     on_clear: function() {
         if (this.value !== false) {
