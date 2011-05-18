@@ -146,7 +146,6 @@
                                                 domain="[('product_id','=',product_id)]"
                                                 groups="base.group_extended"/>
 
-                                            <field name="company_id" groups="base.group_multi_company" readonly="1"/>
                                             <field colspan="4" name="name"/>
                                             <field name="price_unit"/>
                                             <field name="discount"/>
@@ -224,7 +223,7 @@
                                 <field name="incoterm" widget="selection"/>
                                 <field name="picking_policy" required="True"/>
                                 <field name="order_policy" on_change="shipping_policy_change(order_policy)"/>
-                                <field name="invoice_quantity" attrs="{'readonly':[('order_policy','=','prepaid'),('order_policy','=','picking')]}"/>
+                                <field name="invoice_quantity" attrs="{'readonly':['|',('order_policy','in',['prepaid','picking']),('state','!=','draft')]}"/>
                             </group>
                             <group colspan="2" col="2">
                                 <separator string="References" colspan="2"/>
