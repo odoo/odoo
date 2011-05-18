@@ -1192,11 +1192,24 @@ openerp.base.form.FieldImage = openerp.base.form.Field.extend({
         this._super(view, node);
         this.template = "FieldImage";
     },
+    start: function() {
+        this._super.apply(this, arguments);
+        this.$element.find('button.oe-binary-image-clear').click(this.on_clear);
+    },
+    set_value_from_ui: function() {
+    },
+    on_clear: function() {
+        if (this.value !== false) {
+            this.value = false;
+            this.$element.find('img.oe-binary-image').attr('src', '/base/static/src/img/placeholder.png');
+            this.on_ui_change();
+        }
+    },
     set_value: function(value) {
         this._super.apply(this, arguments);
         var url = '/base/formview/image?session_id=' + this.session.session_id + '&model=' +
-            this.view.dataset.model +'&id=' + (this.view.datarecord.id || '') + '&field=' + this.name
-        this.$element.find('img').show().attr('src', url);
+            this.view.dataset.model +'&id=' + (this.view.datarecord.id || '') + '&field=' + this.name + '&t=' + (new Date().getTime())
+        this.$element.find('img.oe-binary-image').attr('src', url);
     }
 });
 

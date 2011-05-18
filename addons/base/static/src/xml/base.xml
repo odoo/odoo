@@ -321,7 +321,7 @@
             <t t-call="FieldChar"/>
         </td>
         <td width="16">
-            <button class="button" title="Send an e-mail with your default e-mail client">
+            <button type="button" class="button" title="Send an e-mail with your default e-mail client">
                 <img src="/base/static/src/img/icons/terp-mail-message-new.png"/>
             </button>
         </td>
@@ -387,13 +387,32 @@
     </div>
 </t>
 <t t-name="FieldImage">
-    <img align="left" border="1" style="display: none"
-        t-att-id="widget.element_id + '_field'"
-        t-att-name="widget.name"
-        t-att-class="'field_' + widget.type"
-        t-att-width="widget.node.attrs.img_width || widget.node.attrs.width"
-        t-att-height="widget.node.attrs.img_height || widget.node.attrs.height"
-    />
+    <table cellpadding="0" cellspacing="0" border="0">
+    <tr>
+        <td align="center">
+            <img src="/base/static/src/img/placeholder.png" class="oe-binary-image" border="1"
+                t-att-id="widget.element_id + '_field'"
+                t-att-name="widget.name"
+                t-att-class="'field_' + widget.type"
+                t-att-width="widget.node.attrs.img_width || widget.node.attrs.width"
+                t-att-height="widget.node.attrs.img_height || widget.node.attrs.height"
+            />
+        </td>
+    </tr>
+    <tr>
+        <td align="center" valign="bottom" height="25">
+            <button class="button oe-binary-image-set" type="button" title="Set Image">
+                <img src="/base/static/src/img/icons/STOCK_DIRECTORY.png"/>
+            </button>
+            <!--<button class="button oe-binary-image-save" type="button" title="Save As">
+                <img src="/base/static/src/img/icons/gtk-save.png"/>
+            </button>-->
+            <button class="button oe-binary-image-clear" type="button" title="Clear">
+                <img src="/base/static/src/img/icons/STOCK_MISSING_IMAGE.png"/>
+            </button>
+        </td>
+    </tr>
+    </table>
 </t>
 <t t-name="WidgetButton">
     <button type="button"
@@ -408,7 +427,7 @@
     <h2 class="oe_view_title"><t t-esc="view.attrs['string']"/></h2>
     <form>
         <t t-call="SearchView.render_lines"/>
-        <div class="oe_search-view-buttons" style="text-align:right;">
+        <div class="oe_search-view-buttons" style="text-align: right;">
             <input type="submit" value="Search"/>
             <input type="reset" value="Clear"/>
         </div>

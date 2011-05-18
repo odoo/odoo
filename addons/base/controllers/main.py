@@ -556,7 +556,7 @@ class FormView(View):
         return {'fields_view': fields_view}
 
     @openerpweb.httprequest
-    def image(self, request, session_id, model, id, field):
+    def image(self, request, session_id, model, id, field, **kw):
         cherrypy.response.headers['Content-Type'] = 'image/png'
         Model = request.session.model(model)
         try:
