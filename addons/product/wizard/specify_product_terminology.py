@@ -46,17 +46,19 @@ class specify_product_terminology(osv.osv_memory):
                'products' :'Product'
     }
     
-    def trnslate_create(self, cr, uid, ids, name, type, src, value, context=None):
+    def trnslate_create(self, cr, uid, ids, name, type, src, value,res_id = False, context=None):
         if context is None:
             context = {}
         trans_obj = self.pool.get('ir.translation')
         user_obj = self.pool.get('res.users')
         context_lang = user_obj.browse(cr ,uid ,uid , context=context).context_lang
-        already_id = trans_obj.search(cr,uid, [('name','=',name)])
+        if res_id == False :
+            res_id = 0
+        already_id = trans_obj.search(cr,uid, [('name','=',name),('res_id','=',res_id)])
         if already_id:
             for un_id in already_id:
                 trans_obj.unlink(cr ,uid, un_id, context=context )
-        create_id = trans_obj.create(cr, uid, {'name': name ,'lang': context_lang, 'type': type,  'src': src, 'value': value}, context=context)
+        create_id = trans_obj.create(cr, uid, {'name': name ,'lang': context_lang, 'type': type,  'src': src, 'value': value , 'res_id':res_id}, context=context)
         return {}
     
     
@@ -66,8 +68,11 @@ class specify_product_terminology(osv.osv_memory):
         for o in self.browse(cr, uid, ids, context=context):
             trans_obj = self.pool.get('ir.translation')
             ir_model = self.pool.get('ir.model.fields')
+            ir_menu = self.pool.get('ir.ui.menu')
             ir_model_prod_id = ir_model.search(cr,uid, [('field_description','like','Product')])
             ir_model_partner_id = ir_model.search(cr,uid, [('field_description','like','Partner')])
+            ir_menu_product_id = ir_menu.search(cr,uid, [('name','like','Product')])
+            ir_menu_partner_id = ir_menu.search(cr,uid, [('name','like','Partner')])
             # For Partner Translation
             if ir_model_prod_id:
                 for p_id in ir_model_partner_id:
@@ -78,6 +83,16 @@ class specify_product_terminology(osv.osv_memory):
                     field = brw_ir_model.name
                     partner_name = obj2 +',' + field
                     self.trnslate_create(cr, uid, ids, partner_name, 'field', name1 ,name2 ,context=context )
+                    
+            if ir_menu_partner_id:
+                for m_id in ir_menu_partner_id:
+                    brw_partner_menu = ir_menu.browse(cr ,uid ,m_id , context=context)
+                    menu_partner_name1 = brw_partner_menu.name
+                    menu_partner_name2 = menu_partner_name1.replace('Partner',o.partner)
+                    res_id = m_id
+                    menu_partnr_name = 'ir.ui.menu' + ',' + 'name'
+                    self.trnslate_create(cr, uid, ids, menu_partnr_name, 'model', menu_partner_name1 , menu_partner_name2, res_id ,context=context )
+                    
             # For Product Translation
             if ir_model_prod_id:
                 for prd_id in ir_model_prod_id:
@@ -88,7 +103,16 @@ class specify_product_terminology(osv.osv_memory):
                     prod_field = brw_prod_ir_model.name
                     product_name = obj_prod +',' + prod_field
                     self.trnslate_create(cr, uid, ids, product_name, 'field', name_prod1 ,name_prod2 ,context=context )
-            
+                    
+            if ir_menu_product_id:
+                for m_id in ir_menu_product_id:
+                    brw_menu = ir_menu.browse(cr ,uid ,m_id , context=context)
+                    menu_name1 = brw_menu.name
+                    menu_name2 = menu_name1.replace('Product',o.products)
+                    res_id = m_id
+                    menu_name = 'ir.ui.menu' + ',' + 'name'
+                    self.trnslate_create(cr, uid, ids, menu_name, 'model', menu_name1 , menu_name2, res_id ,context=context )
+                    
         return {}
     
 specify_product_terminology()
