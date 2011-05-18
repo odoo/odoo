@@ -58,10 +58,13 @@ class third_party_ledger(report_sxw.rml_parse, common_report_header):
         obj_partner = self.pool.get('res.partner')
         self.query = obj_move._query_get(self.cr, self.uid, obj='l', context=data['form'].get('used_context', {}))
         ctx2 = data['form'].get('used_context',{}).copy()
-        ctx2.update({'initial_bal': True})
-        self.init_query = obj_move._query_get(self.cr, self.uid, obj='l', context=ctx2)
-        self.reconcil = data['form'].get('reconcil', True)
         self.initial_balance = data['form'].get('initial_balance', True)
+        if self.initial_balance:
+            ctx2.update({'initial_bal': True})
+        self.init_query = obj_move._query_get(self.cr, self.uid, obj='l', context=ctx2)
+        self.reconcil = True
+        if data['form']['filter'] == 'unreconciled':
+            self.reconcil = False
         self.result_selection = data['form'].get('result_selection', 'customer')
         self.amount_currency = data['form'].get('amount_currency', False)
         self.target_move = data['form'].get('target_move', 'all')
@@ -169,7 +172,6 @@ class third_party_ledger(report_sxw.rml_parse, common_report_header):
             RECONCILE_TAG = " "
         else:
             RECONCILE_TAG = "AND l.reconcile_id IS NULL"
-
         self.cr.execute(
             "SELECT COALESCE(SUM(l.debit),0.0), COALESCE(SUM(l.credit),0.0), COALESCE(sum(debit-credit), 0.0) " \
             "FROM account_move_line AS l,  " \
