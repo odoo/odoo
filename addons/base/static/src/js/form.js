@@ -71,6 +71,9 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
         } else {
             this.dataset.read_index(_.keys(this.fields_view.fields), this.on_record_loaded);
         }
+        if (this.view_manager && this.view_manager.sidebar) {
+            this.view_manager.sidebar.refresh(true);
+        }
     },
     do_hide: function () {
         this.$element.hide();
