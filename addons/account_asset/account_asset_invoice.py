@@ -46,7 +46,7 @@ class account_invoice_line(osv.osv):
                 'purchase_value': line.price_subtotal
             }
             asset_id = asset_obj.create(cr, uid, vals, context=context)
-            if line.asset_category_id.skip_draft_state:
+            if line.asset_category_id.on_change_state:
                 asset_obj.validate(cr, uid, [asset_id], context=context)
         return res
 account_invoice_line()
