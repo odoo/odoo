@@ -22,7 +22,6 @@
 from osv import fields, osv
 from osv.osv import osv_pool, object_proxy
 from tools.translate import _
-import ir
 import pooler
 import time
 import tools
@@ -118,7 +117,8 @@ class audittrail_rule(osv.osv):
                 value = "ir.actions.act_window" + ',' + str(w_id[0])
             val_id = ir_values_obj.search(cr, uid, [('model', '=', thisrule.object_id.model), ('value', '=', value)])
             if val_id:
-                res = ir.ir_del(cr, uid, val_id[0])
+                ir_values_obj = pooler.get_pool(cr.dbname).get('ir.values')
+                res = ir_values_obj.unlink(cr, uid, [val_id[0]])
             self.write(cr, uid, [thisrule.id], {"state": "draft"})
         #End Loop
         return True
