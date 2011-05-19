@@ -670,6 +670,12 @@ class SearchView(View):
     def load(self, req, model, view_id):
         fields_view = self.fields_view_get(req, model, view_id, 'search')
         return {'fields_view': fields_view}
+    
+    @openerpweb.jsonrequest
+    def fields_get(self, req, model):
+        Model = req.session.model(model)
+        fields = Model.fields_get()
+        return {'fields': fields}
 
 class Action(openerpweb.Controller):
     _cp_path = "/base/action"
