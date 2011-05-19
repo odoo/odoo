@@ -38,25 +38,4 @@ class sugarcrm_login(osv.osv):
        'url':  "http://localhost/sugarcrm/soap.php"
     }
 
-    def open_import(self, cr, uid, ids, context=None):
-
-        for current in self.browse(cr, uid, ids, context):
-            PortType,sessionid = sugar.login(current.username, current.password, current.url)
-            if sessionid == '-1':
-                raise osv.except_osv(_('Error !'), _('Authentication error !\nBad Username or Password !'))
-
-            obj_model = self.pool.get('ir.model.data')
-            model_data_ids = obj_model.search(cr,uid,[('model','=','ir.ui.view'),('name','=','import.sugarcrm.form')])
-            resource_id = obj_model.read(cr, uid, model_data_ids, fields=['res_id'])
-            context.update({'rec_id': ids, 'username': current.username, 'password': current.password, 'url': current.url})
-        return {
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': 'import.sugarcrm',
-            'views': [(resource_id,'form')],
-            'type': 'ir.actions.act_window',
-            'target': 'new',
-            'context': context
-        }
-
 sugarcrm_login()
