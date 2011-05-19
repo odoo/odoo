@@ -25,7 +25,7 @@
 
 """
 
-from openerp.registry.manager import RegistryManager
+from openerp.modules.registry import RegistryManager
 
 _Registries = None
 

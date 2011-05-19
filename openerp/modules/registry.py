@@ -19,10 +19,7 @@
 #
 ##############################################################################
 
-""" Model registries manager.
-
-    The manager is responsible for creation and deletion of bound model
-    registries (essentially database connection/model registry pairs).
+""" Models registries.
 
 """
 
@@ -37,7 +34,12 @@ class BoundRegistry(object):
 
 
 class RegistryManager(object):
+    """ Model registries manager.
 
+        The manager is responsible for creation and deletion of bound model
+        registries (essentially database connection/model registry pairs).
+
+    """
 
     # TODO maybe should receive the addons paths
     def __init__(self):

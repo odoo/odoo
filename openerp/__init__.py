@@ -32,7 +32,6 @@ import netsvc
 import osv
 import pooler
 import pychart
-import registry
 import release
 import report
 import run_tests
