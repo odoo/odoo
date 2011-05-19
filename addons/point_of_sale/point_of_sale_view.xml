@@ -654,12 +654,15 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
-                  <field name="active" position="after">
-                      <field name="income_pdt"/>
-                      <field name="expense_pdt"/>
-                      <field name="am_out"/>
-                      <field name="disc_controle"/>
-                  </field>
+                <xpath expr="/form/notebook/page/group[@name='misc']" position="before">
+                    <group colspan="2" col="2">
+                        <separator string="Point of Sale" colspan="2"/>
+                        <field name="income_pdt"/>
+                        <field name="expense_pdt"/>
+                        <field name="am_out"/>
+                        <field name="disc_controle"/>
+                    </group>
+                </xpath>
             </field>
         </record>
 
