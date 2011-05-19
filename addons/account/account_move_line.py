@@ -1107,6 +1107,7 @@ class account_move_line(osv.osv):
         journal_obj = self.pool.get('account.journal')
         period_obj = self.pool.get('account.period')
         journal_id = False
+        period_id = False
         if 'date' in vals.keys():
             if 'journal_id' in vals and 'journal_id' not in context:
                 journal_id = vals['journal_id']
