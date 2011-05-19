@@ -843,5 +843,47 @@ body.openerp {
     vertical-align: middle;
     cursor: pointer;
 }
+/*----- End Many2one Autosearch ------- */
 
-/*----- End autocomplete ------- */
+/* Many2one Contextmenu */
+div.contextmenu {
+    background-color: #444;
+    border: 1px solid #000;
+    white-space: nowrap;
+    position: absolute;
+    padding: 2px;
+    z-index: 100;
+}
+
+div.contextmenu a,
+div.contextmenu span {
+    display: block;
+    text-align: left;
+    text-decoration: none;
+    white-space: nowrap;
+    padding: 2px;
+    color: #FFF;
+    cursor: pointer;
+}
+
+div.contextmenu hr {
+    margin: 1px 0 !important;
+}
+
+div.contextmenu td {
+    padding: 1px;
+}
+
+div.contextmenu a:hover,
+div.contextmenu span:hover {
+    color: #FFF;
+    background-color: #505050;
+    text-decoration: none;
+}
+
+div.contextmenu a.disabled,
+div.contextmenu span.disabled {
+    color: #C0C0C0;
+}
+
+/*----- End Many2one Contextmenu ------- */
