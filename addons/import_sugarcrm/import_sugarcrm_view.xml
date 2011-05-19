@@ -9,7 +9,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Import Data From SugarCRM">
-                    <group colspan="4" width="700">
+                    <group colspan="4" width="800">
                     	<separator string="Login Information" colspan="4"/>
                     	 <field name="url" colspan="4" widget="url"/>
                          <field name="username"/>
@@ -17,7 +17,13 @@
                          <field name="password" password="True" />
                          <separator string="Choose  Data You Want to Import" colspan="4"/>
                          <group colspan="4" col="6">
-                            <group colspan="2" col="3">    
+                            <group colspan="1" col="2">    
+                                <separator string="Module: Base" colspan="4"/>
+                                <field name="user" />                           
+                                <field name= "account" />
+                                <field name= "contact" />
+                            </group>                         
+                            <group colspan="3" col="4">    
                                 <separator string="Module: CRM" colspan="4"/>
                              	<field name="opportunity" />
                              	<field name= "meeting" />
@@ -26,25 +32,17 @@
                              	<field name= "claim" />
                                 <field name= "email" />
                              </group>
-                            <group colspan="2" col="2">
-                                <separator string="Module: HR" colspan="4"/>
-    	                         <field name= "employee" />  
-                            </group>   
-                            <newline/>
-                            <group colspan="2" col="3">    
-                                <separator string="Module: Base" colspan="4"/>                           
-                                <field name= "account" />
-                                <field name= "contact" />
-                                <field name="user" />
-                            </group>
-                            <group colspan="2" col="3"> 
+                             <group colspan="2" col="2"> 
                                 <separator string="Module: Project" colspan="4"/>       
 	                             <field name= "project" />
 	                             <field name= "project_task" />
 	                             <field name= "bug" string="Project Issue"/>
                             </group>
-                            <newline/> 
-                            <group colspan="2" col="3">
+                            <group colspan="1" col="2">
+                                <separator string="Module: HR" colspan="4"/>
+    	                         <field name= "employee" />  
+                            </group>   
+                            <group colspan="2" col="4">
                                 <separator string="Module: Document" colspan="4"/>
 	                             <field name= "document" />
 	                             <field name= "attachment" string="History and Attachment" />
@@ -52,18 +50,18 @@
                           </group>  
 	                         <group colspan="4">
 	                         	<separator string="Email Notification When Import is finished" colspan="4"/>
-	                     		<field name="email_from" widget="email" string="Email Address to Notify" colspan="4"/>
+	                     		<field name="email_from" widget="email" string="Email Address to Notify"/>
 	                     	</group>
 	                     	<group colspan="4">   
 	                   			<separator string="Multi Instance Management" colspan="4"/>
-	                       		<field name="instance_name" colspan="4"/>
+	                       		<field name="instance_name"/>
 	                       </group>
 	                       <group colspan="4">
                             	<separator string="" colspan="4"/>	 
                             	<button name="import_from_scheduler_all" string="Create Recurrent Report"
                                    type="object" icon="terp-camera_test"/>
+                                <label string="" colspan="2"/>   
 							</group> 
-                          
                     </group>
                         <separator string="" colspan="4" />
                     <group colspan="4" >

@@ -61,8 +61,6 @@ class sugar_import(import_framework):
     TABLE_DOCUMENT = 'DocumentRevisions'
     TABLE_COMPAIGN = 'Campaigns'
     TABLE_HISTORY_ATTACHMNET = 'history_attachment'
-
-    
     
     def initialize(self):
         #login
@@ -131,7 +129,7 @@ class sugar_import(import_framework):
                 'dependencies' : [self.TABLE_USER],
                 'hook' : self.import_document,
                 'map' : {'name':'filename',
-                         'description': ppconcat('__prettyprint__','description'),
+                         'description': ppconcat('description'),
                          'datas': 'datas',
                          'datas_fname': 'datas_fname',
                 }
@@ -173,10 +171,9 @@ class sugar_import(import_framework):
                         'partner_id/.id': 'partner_id/.id',                         
                         'attachment_ids/id': 'attachment_ids/id',
                         'user_id/id': ref(self.TABLE_USER, 'assigned_user_id'),
-                        'description': ppconcat('__prettyprint__','description', 'description_html'),
+                        'description': ppconcat('description', 'description_html'),
                 }
             } 
-    
     
     """
     import History(Notes)
@@ -190,7 +187,6 @@ class sugar_import(import_framework):
         name = 'attachment_'+ (Filename or val.get('name'))
         datas = [Filename or val.get('name'), File, Filename, val.get('res_id'),val.get('model',False)]
         attach_xml_id = self.import_object(fields, datas, 'ir.attachment', self.TABLE_HISTORY_ATTACHMNET, name, [('res_id', '=', val.get('res_id'), ('model', '=', val.get('model')))])
-        #attach_id = self.xml_id_exist(self.TABLE_HISTORY_ATTACHMNET, name)
         return attach_xml_id
 
     def import_history(self, val):
@@ -217,7 +213,7 @@ class sugar_import(import_framework):
                       'name':'name',
                       'date': 'date_entered',
                       'user_id/id': ref(self.TABLE_USER, 'assigned_user_id'),
-                      'description': ppconcat('__prettyprint__','description', 'description_html'),
+                      'description': ppconcat('description', 'description_html'),
                       'res_id': 'res_id',
                       'model': 'model',
                       'attachment_ids/id': 'attachment_ids/id',
@@ -266,7 +262,7 @@ class sugar_import(import_framework):
                     'name': 'name',
                     'date': 'date_entered',
                     'user_id/id': ref(self.TABLE_USER, 'assigned_user_id'),
-                    'description': ppconcat('__prettyprint__','description'),
+                    'description': ppconcat('description'),
                     'partner_id/id': ref(self.TABLE_ACCOUNT, 'account_id'),
                     'partner_address_id/.id': 'partner_address_id/.id',
                     'partner_phone': 'partner_phone',
@@ -308,7 +304,7 @@ class sugar_import(import_framework):
                     'name': 'name',
                     'project_id/id': call(self.get_bug_project_id, 'sugarcrm_bugs'),
                     'categ_id/id': call(self.get_category, 'project.issue', value('type')),
-                    'description': ppconcat('__prettyprint__','description', 'bug_number', 'fixed_in_release_name', 'source', 'fixed_in_release', 'work_log', 'found_in_release', 'release_name', 'resolution'),
+                    'description': ppconcat('description', 'bug_number', 'fixed_in_release_name', 'source', 'fixed_in_release', 'work_log', 'found_in_release', 'release_name', 'resolution'),
                     'priority': self.get_project_issue_priority,
                     'state': map_val('status', self.project_issue_state)
                 }
@@ -346,7 +342,7 @@ class sugar_import(import_framework):
                     'planned_hours': 'planned_hours',
                     'total_hours': 'total_hours',        
                     'priority': self.get_project_task_priority,
-                    'description': ppconcat('__prettyprint__','description','milestone_flag', 'project_task_id', 'task_number'),
+                    'description': ppconcat('description','milestone_flag', 'project_task_id', 'task_number'),
                     'user_id/id': ref(self.TABLE_USER, 'assigned_user_id'),
                     'partner_id/id': 'partner_id/id',
                     'contact_id/id': 'contact_id/id',
@@ -453,7 +449,7 @@ class sugar_import(import_framework):
                     'partner_address_id/id': related_ref(self.TABLE_CONTACT),
                     'categ_id/id': call(self.get_category, 'crm.phonecall', value('direction')),
                     'opportunity_id/id': related_ref(self.TABLE_OPPORTUNITY),
-                    'description': ppconcat('__prettyprint__','description'),   
+                    'description': ppconcat('description'),   
                     'state': map_val('status', self.call_state)                      
                 }
             }        
@@ -468,28 +464,24 @@ class sugar_import(import_framework):
         }
 #TODO    
     def get_attendee_id(self, cr, uid, module_name, module_id):
+        contact_id = False
+        user_id = False
+        attendee_id= []
         model_obj = self.obj.pool.get('ir.model.data')
-        user_obj = self.obj.pool.get('res.users')
         address_obj = self.obj.pool.get('res.partner.address')
         att_obj = self.obj.pool.get('calendar.attendee')
-        meeting_obj = self.obj.pool.get('crm.meeting')
         attendee_dict = sugar.user_get_attendee_list(self.context.get('port'), self.context.get('session_id'), module_name, module_id)
-        contact_id = False
-        user_id = False    
         for attendee in attendee_dict:
-            model_ids = model_obj.search(self.cr, self.uid, [('name', 'like', attendee.get('id'))])
-            if model_ids:
-              model = model_obj.browse(self.cr, self.uid, model_ids)[0]
-              if model.model == 'res.users':
-                user_id = self.get_mapped_id(self.TABLE_USER, attendee.get('id', False))
-              elif model.model == 'res.partner.address':
-                contact_id = self.get_mapped_id(self.TABLE_CONTACT, attendee.get('id', False))
-            fields = ['user_id', 'email1', 'contact_id']
-            name = 'attendee_'+ attendee.get('id')
+            user_id = self.xml_id_exist(self.TABLE_USER, attendee.get('id', False))
+            if user_id:
+                contact_id = False
+            else:    
+                contact_id = self.xml_id_exist(self.TABLE_CONTACT, attendee.get('id', False))
+            fields = ['user_id/id', 'email', 'partner_address_id/id']
             data = [user_id or False, attendee.get('email1'), contact_id]
-            attendee_xml_id = self.import_object(fields, data, 'calendar.attendee', self.TABLE_ATTENDEE, name, [('user_id', '=', user_id)])
-            #attendee_id = self.xml_id_exist(self.TABLE_ATTENDEE, name)
-            return attendee_xml_id 
+            attendee_xml_id = self.import_object(fields, data, 'calendar.attendee', self.TABLE_ATTENDEE, user_id or contact_id or attendee.get('email1'), ['|',('user_id', '=', attendee.get('id')),('partner_address_id','=',attendee.get('id')),('email', '=', attendee.get('email1'))])
+            attendee_id.append(attendee_xml_id)
+        return ','.join(attendee_id) 
     
     def get_alarm_id(self, dict_val, val):
         alarm_dict = {
@@ -642,7 +634,7 @@ class sugar_import(import_framework):
             'map' : {
                 'name': concat('first_name', 'last_name'),
                 'contact_name': concat('first_name', 'last_name'),
-                'description': ppconcat('__prettyprint__','description', 'refered_by', 'lead_source', 'lead_source_description', 'website', 'email2', 'status_description', 'lead_source_description', 'do_not_call'),
+                'description': ppconcat('description', 'refered_by', 'lead_source', 'lead_source_description', 'website', 'email2', 'status_description', 'lead_source_description', 'do_not_call'),
                 'partner_name': 'account_name',
                 'email_from': 'email1',
                 'phone': 'phone_work',
@@ -753,7 +745,7 @@ class sugar_import(import_framework):
                     'website': 'website',
                     'user_id/id': ref(self.TABLE_USER,'assigned_user_id'),
                     'ref': 'sic_code',
-                    'comment': ppconcat('__prettyprint__','description', 'employees', 'ownership', 'annual_revenue', 'rating', 'industry', 'ticker_symbol'),
+                    'comment': ppconcat('description', 'employees', 'ownership', 'annual_revenue', 'rating', 'industry', 'ticker_symbol'),
                     'customer': const('1'),
                     'supplier': const('0'),
                     'address/id':'address/id', 
@@ -918,6 +910,8 @@ class import_sugarcrm(osv.osv):
         'project_task': False,     
         'bug': False,
         'document': False,
+        'instance_name': 'sugarcrm',
+        'email_from': 'tfr@tinyerp.com',
         'username' : 'tfr',
         'password' : 'a',
         'url':  "http://localhost/sugarcrm/soap.php"        
@@ -963,6 +957,7 @@ class import_sugarcrm(osv.osv):
                 key_list.append('DocumentRevisions')                                                  
         return key_list
 
+
     def do_import_all(self, cr, uid, *args):
         """
         scheduler Method
@@ -989,8 +984,11 @@ class import_sugarcrm(osv.osv):
         field = ['username', 'password', 'url']
         datas = [context.get('username'), context.get('password'), context.get('url')]
         name = 'login_user_'+ context.get('username')
-        self.import_object(fields, datas, 'sugarcrm.login', 'sugarcrm_login', name, [('username', '=', context.get('username'))])
-        login_id = self.xml_id_exist('sugarcrm_login', name)
+        login_ids = login_obj.search(cr, uid, [('username', '=', context.get('username'))])
+        if login_ids:
+            login_id = login_ids[0]
+        else:
+            login_id = login_obj.create(cr, uid, {'username': context.get('username'), 'password': context.get('password'), 'url': context.get('url')})    
         args = (keys, login_id, context.get('email_user'), context.get('instance_name'))
         for current in self.browse(cr, uid, ids):
             new_create_id = cron_obj.create(cr, uid, {'name': 'Import SugarCRM datas','interval_type': 'hours','interval_number': 1, 'numbercall': -1,'model': 'import.sugarcrm','function': 'do_import_sugarcrm_data', 'args': args, 'active': False})
