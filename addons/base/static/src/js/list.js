@@ -441,6 +441,13 @@ openerp.base.ListView.List = Class.extend( /** @lends openerp.base.ListView.List
      */
     row_id: function (row) {
         return this.rows[this.row_position(row)].data.id.value;
+    },
+    /**
+     * Death signal, cleans up list
+     */
+    apoptosis: function () {
+        this.$current.remove();
+        this.$current = null;
     }
     // drag and drop
     // editable?
@@ -459,7 +466,8 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
         this.columns = opts.columns;
         this.datagroup = {};
 
-        this.lists = {};
+        this.sections = [];
+        this.children = {};
     },
     pad: function ($row) {
         if (this.options.selectable) {
@@ -467,38 +475,49 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
         }
     },
     make_fragment: function () {
-        return this.$element[0].ownerDocument.createDocumentFragment();
+        return document.createDocumentFragment();
+    },
+    /**
+     * Returns a DOM node after which a new tbody can be inserted, so that it
+     * follows the provided row.
+     *
+     * Necessary to insert the result of a new group or list view within an
+     * existing groups render, without losing track of the groups's own
+     * elements
+     *
+     * @param {HTMLTableRowElement} row the row after which the caller wants to insert a body
+     * @returns {HTMLTableSectionElement} element after which a tbody can be inserted
+     */
+    point_insertion: function (row) {
+        var $row = $(row);
+        var red_letter_tbody = $row.closest('tbody')[0];
+
+        var $next_siblings = $row.nextAll();
+        if ($next_siblings.length) {
+            var $root_kanal = $('<tbody>').insertAfter(red_letter_tbody);
+
+            $root_kanal.append($next_siblings);
+            this.elements.splice(
+                _.indexOf(this.elements, red_letter_tbody),
+                0,
+                $root_kanal[0]);
+        }
+        return red_letter_tbody;
     },
     open_group: function (e, group) {
-        var self = this,
-            $row = $(e.currentTarget);
-        group.list(function (groups) {
-            $row.parent()[0].insertBefore(
-                self.render_groups(groups),
-                $row[0].nextSibling);
-        }, function (dataset) {
-            // Now we need to split the current tbody in order to
-            // insert the list's
+        var row = e.currentTarget;
 
-            // Create new tbody after current one
-            var $current_body = $row.closest('tbody');
-
-            var $next_siblings = $row.nextAll();
-            if ($next_siblings.length) {
-                var $split = $('<tbody>').insertAfter($current_body);
-                // Move all following siblings of current row to split
-                $split.append($row.nextAll());
-            }
-            // Insert list rendering after current tbody
-            self.render_dataset(dataset).then(function (list) {
-                if (self.lists[group.value]) {
-                    self.lists[group.value].$current.remove();
-                    delete self.lists[group.value];
-                }
-                self.lists[group.value] = list;
-                $current_body.after(list.$current);
-            });
+        if (this.children[group.value]) {
+            this.children[group.value].apoptosis();
+            delete this.children[group.value];
+        }
+        var prospekt = this.children[group.value] = new openerp.base.ListView.Groups(this.view, {
+            options: this.options,
+            columns: this.columns
         });
+        prospekt.datagroup = group;
+        prospekt.render().insertAfter(
+            this.point_insertion(row));
     },
     render_groups: function (datagroups) {
         var self = this;
@@ -525,10 +544,10 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
         });
         return placeholder;
     },
-    bind_list_events: function (list) {
+    bind_child_events: function (child) {
         var $this = $(this),
              self = this;
-        $(list).bind('selected', function (e) {
+        $(child).bind('selected', function (e) {
             // can have selections spanning multiple links
             $this.trigger(e, [self.get_selection()]);
         }).bind('deleted action row_link', function (e) {
@@ -549,7 +568,7 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
                 columns: this.columns,
                 rows: rows
             });
-        this.bind_list_events(list);
+        this.bind_child_events(list);
 
         var d = new $.Deferred();
         this.view.rpc('/base/listview/fill', {
@@ -568,27 +587,37 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
     },
     render: function () {
         var self = this;
-        this.$element = $('<tbody>');
+        var $element = $('<tbody>');
+        this.elements = [$element[0]];
         this.datagroup.list(function (groups) {
-            self.$element.empty()[0].appendChild(
+            $element[0].appendChild(
                 self.render_groups(groups));
         }, function (dataset) {
             self.render_dataset(dataset).then(function (list) {
-                self.$element.empty().after(list.$current);
+                self.elements =
+                    [list.$current.replaceAll($element)[0]];
             });
         });
-        return this.$element;
+        return $element;
     },
     /**
      * Returns the ids of all selected records for this group
      */
     get_selection: function () {
-        return _(this.lists).chain()
-            .map(function (list) {
-                return list.get_selection();
+        return _(this.children).chain()
+            .map(function (child) {
+                return child.get_selection();
             })
             .flatten()
             .value();
+    },
+    apoptosis: function () {
+        _(this.children).each(function (child) {
+            child.apoptosis();
+        });
+        $(this.elements).each(function (i, body) {
+            $(body).remove();
+        });
     }
 });
 };
