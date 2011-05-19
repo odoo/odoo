@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import base64
 import glob, os
 import pprint
 from xml.etree import ElementTree
@@ -361,24 +362,6 @@ class DataSet(openerpweb.Controller):
     @openerpweb.jsonrequest
     def read(self, request, model, ids, fields=False):
         return self.do_search_read(request, model, ids, fields)
-    def search_read(self, request, model, ids, fields=False):
-        """ Performs a read()
-
-        :param request: a JSON-RPC request object
-        :type request: openerpweb.JsonRequest
-        :param str model: the name of the model to search on
-        :param ids: the ids of the records
-        :type ids: [?]
-        :param fields: a list of the fields to return in the result records
-        :type fields: [str]
-        :returns: a list of result records
-        :rtype: list
-        """
-        Model = request.session.model(model)
-
-        reads = Model.read(ids, fields or False, request.context)
-        reads.sort(key=lambda obj: ids.index(obj['id']))
-        return reads
 
     @openerpweb.jsonrequest
     def get(self, request, model, ids, fields=False):
@@ -403,7 +386,7 @@ class DataSet(openerpweb.Controller):
         :rtype: list
         """
         Model = request.session.model(model)
-        records = Model.read(ids, fields)
+        records = Model.read(ids, fields, request.context)
 
         record_map = dict((record['id'], record) for record in records)
 
@@ -571,6 +554,48 @@ class FormView(View):
     def load(self, req, model, view_id, toolbar=False):
         fields_view = self.fields_view_get(req, model, view_id, 'form', toolbar=toolbar)
         return {'fields_view': fields_view}
+
+    @openerpweb.httprequest
+    def image(self, request, session_id, model, id, field, **kw):
+        cherrypy.response.headers['Content-Type'] = 'image/png'
+        Model = request.session.model(model)
+        try:
+            if not id:
+                res = Model.default_get([field], request.context).get(field, '')
+            else:
+                res = Model.read([id], [field], request.context)[0].get(field, '')
+            return base64.decodestring(res)
+        except:
+            return self.placeholder()
+    def placeholder(self):
+        return open(os.path.join(openerpweb.path_addons, 'base', 'static', 'src', 'img', 'placeholder.png'), 'rb').read()
+
+    @openerpweb.httprequest
+    def upload(self, request, session_id, callback, ufile=None):
+        cherrypy.response.timeout = 500
+        headers = {}
+        for key, val in cherrypy.request.headers.iteritems():
+            headers[key.lower()] = val
+        size = int(headers.get('content-length', 0))
+        # TODO: might be usefull to have a configuration flag for max-lenght file uploads
+        try:
+            out = """<script language="javascript" type="text/javascript">
+                        var win = window.top.window,
+                            callback = win[%s];
+                        if (typeof(callback) === 'function') {
+                            callback.apply(this, %s);
+                        } else {
+                            win.jQuery('#oe_notification', win.document).notify('create', {
+                                title: "Ajax File Upload",
+                                text: "Could not find callback"
+                            });
+                        }
+                    </script>"""
+            data = ufile.file.read()
+            args = [size, ufile.filename, ufile.headers.getheader('Content-Type'), base64.encodestring(data)]
+        except Exception as e:
+            args = [False, e.message]
+        return out % (simplejson.dumps(callback), simplejson.dumps(args))
 
 class ListView(View):
     _cp_path = "/base/listview"

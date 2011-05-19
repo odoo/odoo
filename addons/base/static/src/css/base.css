@@ -95,57 +95,40 @@ body.openerp {
 
 .openerp .menu {
     height: 34px;
-    position: relative;
-    white-space: nowrap;
     background: url(../img/menu-bg.png) repeat-x;
-}
-.openerp .menu ul {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    overflow: hidden;
-    position: absolute;
-    left: 0;
-    right: 0;
-    text-align: center;
-}
-.openerp .menu li {
-    display: -moz-inline-stack;
-    display: inline; /*IE7 */
-    display: inline-block;
-    margin: 6px 1px;
-    text-align: center;
-    text-transform: uppercase;
 }
 .openerp .menu a {
     display: block;
-    float: left;
     padding: 0 0 0 3px;
     background: url(../img/menu-item.png) no-repeat;
     color: #eee;
     text-shadow: #222 0 1px 0;
     text-decoration: none;
+    
+    text-align: center;
+    text-transform: uppercase;
+    margin: 2px 1px;
+    height: 23px;
 }
 .openerp .menu span {
     display: block;
-    float: left;
     min-width: 60px;
     height: 23px;
     padding: 0 9px 0 6px;
     background: url(../img/menu-item.png) 100% 0 no-repeat;
-    line-height: 22px;
+    line-height: 23px;
     font-weight: bold;
     font-size: 85%;
 }
-.openerp .menu ul li a:hover,
-.openerp .menu li a:focus,
-.openerp .menu ul li a.active {
+.openerp .menu a:hover,
+.openerp .menu a:focus,
+.openerp .menu a.active {
     background-position: 0 -23px;
     color: #fff;
 }
-.openerp .menu ul li a:hover span,
-.openerp .menu ul li a:focus span,
-.openerp .menu ul li a.active span {
+.openerp .menu a:hover span,
+.openerp .menu a:focus span,
+.openerp .menu a.active span {
     background-position: 100% -23px;
 }
 /* Secondary Menu */
@@ -156,6 +139,7 @@ body.openerp {
     border-bottom: 1px solid #5A5858;
     background: #5A5858;
     vertical-align: top;
+    height: 100%;
 }
 .openerp .secondary_menu .menu_content {
     padding: 0;
@@ -637,6 +621,27 @@ body.openerp {
     -moz-background-origin: content-box;
     -webkit-background-origin: content-box;
 }
+/* http://www.quirksmode.org/dom/inputfile.html
+ * http://stackoverflow.com/questions/2855589/replace-input-type-file-by-an-image
+ */
+.openerp button.oe-binary-file-set {
+    overflow: hidden;
+    position: relative;
+}
+.openerp input.oe-binary-file {
+    z-index: 2;
+    line-height: 0;
+    font-size: 50px;
+    position: absolute;
+    /* Should be adjusted for all browsers */
+    top: -2px;
+    left: -700px;
+    opacity: 0;
+    filter: alpha(opacity = 0);
+    -ms-filter: "alpha(opacity=0)";
+    margin: 0;
+    padding:0;
+}
 
 /* Widgets */
 .openerp .separator {
@@ -827,10 +832,11 @@ body.openerp {
 
 /* Many2one Autosearch */
 .openerp .ui_combo {
-    height: 20px;
-    margin-right: 1px;
-    top: 4px;
-    width: 22px;
+    height: 19px;
+    top: 6px;
+    width: 20px;
+    position: relative;
+    margin-left: -26px;
 }
-/* ------------- End autocomplete ------- */
+/*------------- End autocomplete ------- */
 

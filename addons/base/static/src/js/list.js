@@ -251,6 +251,9 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
             this.do_reload();
             this.hidden = false;
         }
+        if (this.view_manager && this.view_manager.sidebar) {
+            this.view_manager.sidebar.refresh(true);
+        }
     },
     do_hide: function () {
         this.$element.hide();
