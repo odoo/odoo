@@ -766,7 +766,6 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
     statusi = 0
     pool = pooler.get_pool(cr.dbname)
     migrations = MigrationManager(cr, graph)
-    modobj = None
     logger.notifyChannel('init', netsvc.LOG_DEBUG, 'loading %d packages..' % len(graph))
 
     for package in graph:
@@ -780,6 +779,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
             init_module_models(cr, package.name, models)
         cr.commit()
 
+    modobj = pool.get('ir.module.module')
     for package in graph:
         status['progress'] = (float(statusi)+0.1) / len(graph)
         m = package.name
@@ -788,10 +788,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
         if skip_modules and m in skip_modules:
             continue
 
-        if modobj is None:
-            modobj = pool.get('ir.module.module')
-
-        if modobj and perform_checks:
+        if perform_checks:
             modobj.check(cr, 1, [mid])
 
         idref = {}
@@ -824,14 +821,13 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
 
             migrations.migrate_module(package, 'post')
 
-            if modobj:
-                ver = release.major_version + '.' + package.data.get('version', '1.0')
-                # Set new modules and dependencies
-                modobj.write(cr, 1, [mid], {'state': 'installed', 'latest_version': ver})
-                cr.commit()
-                # Update translations for all installed languages
-                modobj.update_translations(cr, 1, [mid], None, {'overwrite': tools.config['overwrite_existing_translations']})
-                cr.commit()
+            ver = release.major_version + '.' + package.data.get('version', '1.0')
+            # Set new modules and dependencies
+            modobj.write(cr, 1, [mid], {'state': 'installed', 'latest_version': ver})
+            cr.commit()
+            # Update translations for all installed languages
+            modobj.update_translations(cr, 1, [mid], None)
+            cr.commit()
 
             package.state = 'installed'
             for kind in ('init', 'demo', 'update'):
