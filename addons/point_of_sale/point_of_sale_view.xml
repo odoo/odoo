@@ -654,7 +654,8 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
-                  <field name="property_stock_inventory" position="after">
+            <xpath expr="/form/notebook/page/group[@name='misc']" position="after">
+                  <!--<field name="active" position="after">-->
                     <group colspan="2" col="2">
                         <separator string="Point of Sale" colspan="4"/>
                             <field name="income_pdt"/>
@@ -662,7 +663,7 @@
                             <field name="am_out"/>
                             <field name="disc_controle"/>
                     </group>
-                  </field>
+            </xpath>
             </field>
         </record>
 
