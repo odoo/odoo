@@ -830,6 +830,9 @@ openerp.base.search.ExtendedSearchProposition = openerp.base.BaseWidget.extend({
         }
         this.value = new (openerp.base.search.custom_filters.get_object(type))
                           (this);
+        if(this.value.set_field) {
+            this.value.set_field(field);
+        }
         _.each(this.value.operators, function(operator) {
             var option = jQuery('<option>', {value: operator.value})
                 .text(operator.text)
@@ -951,6 +954,31 @@ openerp.base.search.ExtendedSearchProposition.Float = openerp.base.BaseWidget.ex
         return val2;
     }
 });
+openerp.base.search.ExtendedSearchProposition.Selection = openerp.base.BaseWidget.extend({
+    template: 'SearchView.extended_search.proposition.selection',
+    identifier_prefix: 'extended-search-proposition-selection',
+    operators: [
+        {value: "=", text: "is"},
+        {value: "!=", text: "is not"}
+    ],
+    set_field: function(field) {
+        this.field = field;
+    },
+    get_value: function() {
+        return this.$element.val();
+    }
+});
+openerp.base.search.ExtendedSearchProposition.Boolean = openerp.base.BaseWidget.extend({
+    template: 'SearchView.extended_search.proposition.boolean',
+    identifier_prefix: 'extended-search-proposition-boolean',
+    operators: [
+        {value: "=", text: "is true"},
+        {value: "!=", text: "is false"}
+    ],
+    get_value: function() {
+        return true;
+    }
+});
 
 openerp.base.search.custom_filters = new openerp.base.Registry({
     'char': 'openerp.base.search.ExtendedSearchProposition.Char',
@@ -963,9 +991,8 @@ openerp.base.search.custom_filters = new openerp.base.Registry({
     'date': 'openerp.base.search.ExtendedSearchProposition.Date',
     'integer': 'openerp.base.search.ExtendedSearchProposition.Integer',
     'float': 'openerp.base.search.ExtendedSearchProposition.Float',
-    
-    'selection': 'openerp.base.search.ExtendedSearchProposition.Char',
-    'boolean': 'openerp.base.search.ExtendedSearchProposition.Char',
+    'boolean': 'openerp.base.search.ExtendedSearchProposition.Boolean',
+    'selection': 'openerp.base.search.ExtendedSearchProposition.Selection'
 });
 
 };
