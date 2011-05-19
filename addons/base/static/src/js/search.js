@@ -696,11 +696,6 @@ openerp.base.search.ManyToManyField = openerp.base.search.IntegerField.extend({
     // TODO: .related_columns (Array), .context, .domain
 });
 
-openerp.base.search.custom_filters = new openerp.base.Registry({
-    'char': 'openerp.base.search.ExtendedSearchProposition.Char',
-    'datetime': 'openerp.base.search.ExtendedSearchProposition.DateTime'
-});
-
 openerp.base.search.ExtendedSearch = openerp.base.BaseWidget.extend({
     template: 'SearchView.extended_search',
     identifier_prefix: 'extended-search',
@@ -873,7 +868,7 @@ openerp.base.search.ExtendedSearchProposition.Char = openerp.base.BaseWidget.ext
     }
 });
 openerp.base.search.ExtendedSearchProposition.DateTime = openerp.base.BaseWidget.extend({
-    template: 'SearchView.extended_search.proposition.char',
+    template: 'SearchView.extended_search.proposition.datetime',
     identifier_prefix: 'extended-search-proposition-datetime',
     operators: [
         {value: "=", text: "is equal to"},
@@ -884,17 +879,43 @@ openerp.base.search.ExtendedSearchProposition.DateTime = openerp.base.BaseWidget
         {value: "<=", text: "less or equal than"}
     ],
     get_value: function() {
-        var val = this.$element.val();
-        debugger;
-        return val;
+        return this.$element.val();
     },
-    render: function(add) {
-        this._super(add);
-        this.$element.find('input').datetimepicker({
+    start: function() {
+        this._super();
+        this.$element.datetimepicker({
             dateFormat: 'yy-mm-dd',
             timeFormat: 'hh:mm:ss'
         });
     }
+});
+openerp.base.search.ExtendedSearchProposition.Date = openerp.base.BaseWidget.extend({
+    template: 'SearchView.extended_search.proposition.date',
+    identifier_prefix: 'extended-search-proposition-date',
+    operators: [
+        {value: "=", text: "is equal to"},
+        {value: "!=", text: "is not equal to"},
+        {value: ">", text: "greater than"},
+        {value: "<", text: "less than"},
+        {value: ">=", text: "greater or equal than"},
+        {value: "<=", text: "less or equal than"}
+    ],
+    get_value: function() {
+        return this.$element.val();
+    },
+    start: function() {
+        this._super();
+        this.$element.datepicker({
+            dateFormat: 'yy-mm-dd',
+            timeFormat: 'hh:mm:ss'
+        });
+    }
+});
+
+openerp.base.search.custom_filters = new openerp.base.Registry({
+    'char': 'openerp.base.search.ExtendedSearchProposition.Char',
+    'datetime': 'openerp.base.search.ExtendedSearchProposition.DateTime',
+    'date': 'openerp.base.search.ExtendedSearchProposition.Date'
 });
 
 };
