@@ -294,6 +294,8 @@ class WebKitParser(report_sxw):
         #default_filters=['unicode', 'entity'] can be used to set global filter
         body_mako_tpl = mako_template(template)
         helper = WebKitHelper(cursor, uid, report_xml.id, context)
+        self.parser_instance.localcontext.update({'setLang':self.setLang})
+        self.parser_instance.localcontext.update({'formatLang':self.formatLang})
         try :
             html = body_mako_tpl.render(     helper=helper,
                                              css=css,
