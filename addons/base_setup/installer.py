@@ -207,8 +207,7 @@ class user_preferences_config(osv.osv_memory):
             help="Set default for new user's timezone, used to perform timezone conversions "
                  "between the server and the client."),
         'context_lang': fields.selection(_lang_get, 'Language', required=True,
-            help="Sets default language for the  new user's user interface, when UI "
-                 "translations are available"),
+            help="Where we go if we want another languages ?"),
         'view': fields.selection([('simple','Simplified'),
                                   ('extended','Extended')],
                                  'Interface', required=True, help= "If you use OpenERP for the first time we strongly advise you to select the simplified interface, which has less features but is easier. You can always switch later from the user preferences." ),
