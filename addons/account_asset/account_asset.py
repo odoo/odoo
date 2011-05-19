@@ -45,7 +45,7 @@ class account_asset_category(osv.osv):
 
     def onchange_account_asset(self, cr, uid, ids, account_asset_id, context=None):
         res = {'value':{}}
-        if account_asset:
+        if account_asset_id:
            res['value'] = {'account_depreciation_id': account_asset_id}
         return res
 
