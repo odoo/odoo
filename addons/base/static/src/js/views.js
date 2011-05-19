@@ -24,7 +24,8 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
             sidebar : true,
             search_view : true,
             new_window : false,
-            toolbar : true,
+            views_switcher : true,
+            action_buttons : true,
             pager : true
         }, action.flags || {});
         // instantiate the right controllers by understanding the action
@@ -46,6 +47,7 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
                     viewmanager.start();
                     this.dialog_stack.push(viewmanager);
                 } else if (action.flags.new_window) {
+                    action.flags.new_window = false;
                     this.rpc("/base/session/save_session_action", { the_action : action}, function(key) {
                         var url = window.location.protocol + "//" + window.location.host +
                                 window.location.pathname + "?" + jQuery.param({ s_action : "" + key });
@@ -79,6 +81,7 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
         this.active_view = null;
         this.views_src = views;
         this.views = {};
+        this.flags = this.flags || {};
     },
     /**
      * @returns {jQuery.Deferred} initial view loading promise
@@ -93,6 +96,9 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
         _.each(this.views_src, function(view) {
             self.views[view[1]] = { view_id: view[0], controller: null };
         });
+        if (this.flags.views_switcher === false) {
+            this.$element.find('.oe_vm_switch').hide();
+        }
         // switch to the first one in sequence
         return this.on_mode_switch(this.views_src[0][1]);
     },
@@ -116,7 +122,7 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
             this.views[view_type].controller = controller;
         }
 
-        if(this.searchview) {
+        if (this.searchview) {
             if (view.controller.searchable === false) {
                 this.searchview.hide();
             } else {
@@ -152,6 +158,9 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
             this.searchview.stop();
         }
         this.searchview = new openerp.base.SearchView(this, this.session, this.element_id + "_search", this.dataset, view_id, search_defaults);
+        if (this.flags.search_view === false) {
+            this.searchview.hide();
+        }
         this.searchview.on_search.add(function(domains, contexts, groupbys) {
             self.views[self.active_view].controller.do_search.call(
                 self, domains.concat(self.domains()),
@@ -201,7 +210,12 @@ openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
         }
         this._super(session, element_id, dataset, action.views);
         this.action = action;
-        if (action.flags.sidebar) {
+        this.flags = this.action.flags || {};
+        if (action.res_model == 'board.board' && action.views.length == 1 && action.views) {
+            // Not elegant but allows to avoid flickering of SearchView#do_hide
+            this.flags.search_view = this.flags.pager = this.flags.action_buttons = false;
+        }
+        if (this.flags.sidebar) {
             this.sidebar = new openerp.base.Sidebar(null, this);
         }
     },
@@ -281,17 +295,31 @@ openerp.base.Sidebar = openerp.base.BaseWidget.extend({
             var section = {elements:toolbar[type[0]], label:type[1]};
             self.sections.push(section);
         });
-        this.refresh();
+        this.refresh(true);
     },
-    refresh: function() {
-        this.$element.html(QWeb.render("ViewManager.sidebar.internal", _.extend({_:_}, this)));
+    refresh: function(new_view) {
+        var view = this.view_manager.active_view;
+        the_condition = this.sections.length > 0 && _.detect(this.sections,
+            function(x) {return x.elements.length > 0;}) != undefined
+            && (!new_view || view != 'list');
+        if (!the_condition) {
+            this.$element.addClass('closed-sidebar');
+            this.$element.removeClass('open-sidebar');
+        } else {
+            this.$element.addClass('open-sidebar');
+            this.$element.removeClass('closed-sidebar');
+        }
+        
+        this.$element.html(QWeb.render("ViewManager.sidebar.internal",this));
+        
         var self = this;
         this.$element.find(".toggle-sidebar").click(function(e) {
             self.$element.toggleClass('open-sidebar closed-sidebar');
             e.stopPropagation();
             e.preventDefault();
         });
-        this.$element.find("a").click(function(e) {
+        
+        this.$element.find("a.oe_sidebar_action_a").click(function(e) {
             var $this = jQuery(this);
             var i = $this.attr("data-i");
             var j = $this.attr("data-j");
@@ -306,7 +334,7 @@ openerp.base.Sidebar = openerp.base.BaseWidget.extend({
     },
     start: function() {
         this._super();
-        this.refresh();
+        this.refresh(false);
     }
 });
 

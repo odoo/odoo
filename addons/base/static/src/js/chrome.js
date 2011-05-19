@@ -296,6 +296,9 @@ openerp.base.Session = openerp.base.BasicController.extend( /** @lends openerp.b
         // Construct a JSON-RPC2 request, method is currently unused
         params.session_id = this.session_id;
         params.context = typeof(params.context) != "undefined" ? params.context  : this.context;
+        if (!params.context.bin_size) {
+            params.context.bin_size = true;
+        }
 
         // Use a default error handler unless defined
         error_callback = typeof(error_callback) != "undefined" ? error_callback : this.on_rpc_error;

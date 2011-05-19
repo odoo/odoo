@@ -242,7 +242,6 @@ openerp.base.DataSet =  openerp.base.Controller.extend( /** @lends openerp.base.
             ids: ids,
             args: args
         }, callback);
-
     },
     name_search: function (search_str, callback) {
         search_str = search_str || '';
@@ -352,7 +351,7 @@ openerp.base.DataSetMany2Many = openerp.base.DataSetStatic.extend({
 
     unlink: function(ids) {
         // just do nothing
-    },
+    }
 });
 
 };
