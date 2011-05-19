@@ -15,6 +15,15 @@ openerp.base.m2o = function(openerp){
             this.relation = model;
             this.result_ids = [];
             this.create_option = jQuery('#'+this.element.attr('name')+ '_open');
+            if (this.create_option) {
+                var defaults = [
+                    {'text': 'Go to..', 'action': "call_Actions()"},
+                    {'text': 'Choose..', 'action': "call_Actions()"}
+                ]
+                jQuery(this.create_option).click(jQuery.proxy(function(evt){
+                    on_context_menu(evt, this.element, defaults);
+                }, this));
+            }
             var self = this;
 
             this.$input = this.element.autocomplete ({
@@ -84,7 +93,7 @@ openerp.base.m2o = function(openerp){
             if (ui.item.id == 'more') {
                 this.dataset.ids = this.result_ids;
                 this.dataset.count = this.dataset.ids.length;
-                this.dataset.domain = this.result_ids.length ? [["id", "in", this.dataset.ids]] : []
+                this.dataset.domain = this.result_ids.length ? [["id", "in", this.dataset.ids]] : [];
                 this.element.val('');
                 var pop = new openerp.base.form.Many2XSelectPopup(null, this.session);
                 pop.select_element(this.relation, this.dataset);
@@ -92,7 +101,7 @@ openerp.base.m2o = function(openerp){
             }
 
             if (ui.item.id == 'create') {
-                this.openRecords(event, ui)
+                this.openRecords(event, ui);
             }
             this.element.attr('m2o_id', ui.item.id);
         },
@@ -107,7 +116,7 @@ openerp.base.m2o = function(openerp){
 
         openRecords: function(event, ui) {
             var val = this.element.val();
-            var self = this
+            var self = this;
                 this.dataset.create({'name': ui.item.value},
                     function(r){}, function(r){
                         var element_id = _.uniqueId("act_window_dialog");
@@ -125,4 +134,107 @@ openerp.base.m2o = function(openerp){
                 return true;
         }
     });
+}
+
+function call_Actions() {
+
+}
+
+function on_context_menu(evt, target, defaults){
+
+    var $target = jQuery(target || evt.target);
+    var kind = $target.attr('type');
+    if (!(kind && $target.is(':input, :enabled'))) {
+        return;
+    }
+    var $menu = jQuery('#contextmenu').show();
+    if (!$menu.length) {
+        $menu = jQuery('<div id="contextmenu" class="contextmenu">')
+                .css({position: 'absolute'})
+                .hover(showContextMenu, hideContextMenu)
+                .appendTo(document.body).show();
+
+        if (jQuery(document.documentElement).hasClass('ie')) {
+            jQuery('<iframe id="contextmenu_frm" src="#" frameborder="0" scrolling="no">')
+                    .css({position: 'absolute'})
+                    .hide().appendTo(document.body);
+        }
+    }
+
+    var src = $target.attr('id');
+    if (kind == 'many2one' || kind == 'reference') {
+        src = src.slice(0, -5);
+    }
+    var $src = jQuery('[id="' + src + '"]');
+
+    var click_position = mousePositionDammit(evt);
+    $menu.offset({top: 0, left: 0});
+    $menu.offset({top: click_position.y - 5, left: click_position.x - 5});
+    $menu.hide();
+    makeContextMenu(src, kind, $src.attr('relation'), $src.val(), defaults);
+
+    if(evt.stop) {
+        evt.stop();
+    }
+    evt.stopPropagation();
+    evt.preventDefault();
+}
+
+
+function makeContextMenu(id, kind, relation, val, defaults){
+        var $tbody = jQuery('<tbody>');
+        jQuery.each(defaults, function (_, default_) {
+            jQuery('<tr>').append(jQuery('<td>').append(
+                jQuery('<span>').click(function () {
+                    hideContextMenu();
+                    return eval(default_.action);
+                }).text(default_.text))).appendTo($tbody);
+        });
+
+        var $menu = jQuery('#contextmenu');
+        $menu.empty().append(
+            jQuery('<table cellpadding="0" cellspacing="0">').append($tbody));
+
+        var menu_width = $menu.width();
+        var body_width = jQuery(document.body).width();
+        if (parseInt($menu.css("left")) + menu_width > body_width) {
+            $menu.offset({ left: body_width - menu_width - 10 });
+        }
+        showContextMenu();
+}
+
+function showContextMenu(){
+    var $menu = jQuery('#contextmenu');
+    var $ifrm = jQuery('#contextmenu_frm');
+    console.log($menu, 8888888, $ifrm)
+    $menu.show();
+    if ($ifrm.length) {
+        $ifrm.offset($menu.offset())
+             .css({
+                  width: $menu.offsetWidth(),
+                  height: $menu.offsetHeight(),
+                  zIndex: 6
+              }).show();
+    }
+}
+
+function hideContextMenu(){
+    jQuery('#contextmenu, #contextmenu_frm').hide();
+}
+
+/**
+ * Adapts mouse position on page for functions which may be bound using both
+ * jQuery and MochiKit event handlers
+ *
+ * @param evt the library's events
+ */
+function mousePositionDammit(evt) {
+    if(evt.mouse) {
+        // mochikit
+        return evt.mouse().page;
+    }
+    return {
+        x: evt.pageX,
+        y: evt.pageY
+    }
 }
