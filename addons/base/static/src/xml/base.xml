@@ -386,7 +386,7 @@
         <span></span>
     </div>
 </t>
-<t t-name="FieldImage">
+<t t-name="FieldBinaryImage">
     <table cellpadding="0" cellspacing="0" border="0">
     <tr>
         <td align="center">
@@ -423,6 +423,45 @@
                 <img src="/base/static/src/img/throbber.gif" width="16" height="16"/>
                 <b>Uploading ...</b>
             </div>
+            <iframe t-att-id="widget.iframe" t-att-name="widget.iframe" style="display: none"> </iframe>
+        </td>
+    </tr>
+    </table>
+</t>
+<t t-name="FieldBinaryFile">
+    <table cellpadding="0" cellspacing="0" border="0" width="100%">
+    <tr>
+        <td width="100%">
+            <input type="text"
+                t-att-name="widget.name"
+                t-att-id="widget.element_id + '_field'"
+                t-att-class="'field_' + widget.type" style="width: 100%"
+            />
+        </td>
+        <td class="oe-binary" nowrap="true">
+            <!-- TODO: input@type=file inside a button won't work in firefox. Use links instead -->
+            <button class="button oe-binary-file-set" type="button" title="Select file">
+                <img src="/base/static/src/img/icons/STOCK_DIRECTORY.png"/>
+                <span>Select</span>
+                <form class="oe-binary-form" t-att-target="widget.iframe"
+                        method="post" enctype="multipart/form-data" action="/base/formview/upload">
+                    <input type="hidden" name="session_id" value=""/>
+                    <input type="hidden" name="callback" t-att-value="widget.iframe"/>
+                    <input type="file" class="oe-binary-file" name="ufile"/>
+                </form>
+            </button>
+            <button class="button oe-binary-file-save" type="button" title="Save As">
+                <img src="/base/static/src/img/icons/gtk-save.png"/>
+                <span>Save As</span>
+            </button>
+            <button class="button oe-binary-file-clear" type="button" title="Clear">
+                <img src="/base/static/src/img/icons/STOCK_MISSING_IMAGE.png"/>
+                <span>Clear</span>
+            </button>
+        </td>
+        <td class="oe-binary-progress" style="display: none" nowrap="true">
+            <img src="/base/static/src/img/throbber.gif" width="16" height="16"/>
+            <b>Uploading ...</b>
             <iframe t-att-id="widget.iframe" t-att-name="widget.iframe" style="display: none"> </iframe>
         </td>
     </tr>
