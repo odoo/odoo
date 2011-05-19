@@ -401,9 +401,9 @@
     </tr>
     <tr>
         <td align="center" valign="bottom" height="25">
-            <div class="oe-binary-image-buttons">
+            <div class="oe-binary">
                 <!-- TODO: input@type=file inside a button won't work in firefox. Use links instead -->
-                <button class="button oe-binary-image-set" type="button" title="Set Image">
+                <button class="button oe-binary-file-set" type="button" title="Set Image">
                     <img src="/base/static/src/img/icons/STOCK_DIRECTORY.png"/>
                     <form class="oe-binary-form" t-att-target="widget.iframe"
                             method="post" enctype="multipart/form-data" action="/base/formview/upload">
@@ -412,10 +412,10 @@
                         <input type="file" class="oe-binary-file" name="ufile"/>
                     </form>
                 </button>
-                <!--<button class="button oe-binary-image-save" type="button" title="Save As">
+                <button class="button oe-binary-file-save" type="button" title="Save As">
                     <img src="/base/static/src/img/icons/gtk-save.png"/>
-                </button>-->
-                <button class="button oe-binary-image-clear" type="button" title="Clear">
+                </button>
+                <button class="button oe-binary-file-clear" type="button" title="Clear">
                     <img src="/base/static/src/img/icons/STOCK_MISSING_IMAGE.png"/>
                 </button>
             </div>

@@ -1196,7 +1196,7 @@ openerp.base.form.FieldImage = openerp.base.form.Field.extend({
     start: function() {
         this._super.apply(this, arguments);
         this.$element.find('input.oe-binary-file').change(this.on_file_change);
-        this.$element.find('button.oe-binary-image-clear').click(this.on_clear);
+        this.$element.find('button.oe-binary-file-clear').click(this.on_clear);
     },
     set_value_from_ui: function() {
     },
@@ -1211,10 +1211,10 @@ openerp.base.form.FieldImage = openerp.base.form.Field.extend({
         window[this.iframe] = this.on_file_uploaded;
         this.$element.find('form.oe-binary-form input[name=session_id]').val(this.session.session_id);
         this.$element.find('form.oe-binary-form').submit();
-        this.toggle_throbber();
+        this.toggle_progress();
     },
-    toggle_throbber: function() {
-        this.$element.find('div.oe-binary-progress, div.oe-binary-image-buttons').toggle();
+    toggle_progress: function() {
+        this.$element.find('div.oe-binary-progress, div.oe-binary').toggle();
     },
     on_file_uploaded: function(size, name, content_type, img) {
         delete(window[this.iframe]);
@@ -1227,7 +1227,7 @@ openerp.base.form.FieldImage = openerp.base.form.Field.extend({
             this.$element.find('img.oe-binary-image').attr('src', 'data:' + (content_type || 'image/png') + ';base64,' + img);
             this.on_ui_change();
         }
-        this.toggle_throbber();
+        this.toggle_progress();
     },
     on_clear: function() {
         if (this.value !== false) {
