@@ -328,6 +328,20 @@
     </tr>
     </table>
 </t>
+<t t-name="FieldUrl">
+    <table cellpadding="0" cellspacing="0" border="0" width="100%">
+    <tr>
+        <td width="100%">
+            <t t-call="FieldChar"/>
+        </td>
+        <td width="16">
+            <button type="button" class="button" title="Open this resource">
+                <img src="/base/static/src/img/icons/gtk-ok.png"/>
+            </button>
+        </td>
+    </tr>
+    </table>
+</t>
 <t t-name="FieldText">
     <textarea rows="6" style="width: 100%;"
         t-att-name="widget.name"

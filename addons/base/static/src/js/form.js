@@ -679,6 +679,21 @@ openerp.base.form.FieldEmail = openerp.base.form.FieldChar.extend({
 });
 
 openerp.base.form.FieldUrl = openerp.base.form.FieldChar.extend({
+    init: function(view, node) {
+        this._super(view, node);
+        this.template = "FieldUrl";
+    },
+    start: function() {
+        this._super.apply(this, arguments);
+        this.$element.find('button').click(this.on_button_clicked);
+    },
+    on_button_clicked: function() {
+        if (!this.value) {
+            this.notification.warn("Resource error", "This resource is empty");
+        } else {
+            window.open(this.value);
+        }
+    }
 });
 
 openerp.base.form.FieldFloat = openerp.base.form.FieldChar.extend({
