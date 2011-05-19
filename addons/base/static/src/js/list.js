@@ -54,6 +54,10 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
         this.rows = [];
 
         this.options = _.extend({}, this.defaults, options || {});
+        this.flags = {};
+        if (view_manager && view_manager.action) {
+            this.flags =  view_manager.action.flags;
+        }
 
         this.list = new openerp.base.ListView.List({
             options: this.options,

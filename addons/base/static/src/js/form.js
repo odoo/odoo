@@ -29,6 +29,7 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
         this.ready = false;
         this.show_invalid = true;
         this.touched = false;
+        this.flags = view_manager.action.flags || {};
     },
     start: function() {
         //this.log('Starting FormView '+this.model+this.view_id)
@@ -41,7 +42,7 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
 
         var frame = new openerp.base.form.WidgetFrame(this, this.fields_view.arch);
 
-        this.$element.html(QWeb.render("FormView", { "frame": frame, "view": this }));
+        this.$element.html(QWeb.render("FormView", { 'frame': frame, 'view': this }));
         _.each(this.widgets, function(w) {
             w.start();
         });
