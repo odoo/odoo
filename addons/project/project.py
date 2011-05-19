@@ -449,7 +449,7 @@ class task(osv.osv):
                 'project.task': (lambda self, cr, uid, ids, c={}: ids, ['work_ids', 'remaining_hours', 'planned_hours'], 10),
                 'project.task.work': (_get_task, ['hours'], 10),
             }),
-        'progress': fields.function(_hours_get, method=True, string='Progress (%)', multi='hours', group_operator="avg", help="Computed as: Time Spent / Total Time.",
+        'progress': fields.function(_hours_get, method=True, string='Progress (%)', multi='hours', group_operator="avg", help="If the task has a progress of 99.99% you should close the task if it's finished or reevaluate the time",
             store = {
                 'project.task': (lambda self, cr, uid, ids, c={}: ids, ['work_ids', 'remaining_hours', 'planned_hours','state'], 10),
                 'project.task.work': (_get_task, ['hours'], 10),
@@ -788,6 +788,13 @@ class account_analytic_account(osv.osv):
         if vals.get('child_ids', False) and context.get('analytic_project_copy', False):
             vals['child_ids'] = []
         return super(account_analytic_account, self).create(cr, uid, vals, context=context)
+    
+    def unlink(self, cr, uid, ids, *args, **kwargs):
+        project_obj = self.pool.get('project.project')
+        analytic_ids = project_obj.search(cr, uid, [('analytic_account_id','in',ids)])
+        if analytic_ids:
+            raise osv.except_osv(_('Warning !'), _('Please delete the project linked with this account first.'))
+        return super(account_analytic_account, self).unlink(cr, uid, ids, *args, **kwargs)
 
 account_analytic_account()
 

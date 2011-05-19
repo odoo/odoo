@@ -66,7 +66,8 @@ class report_webkit_actions(osv.osv_memory):
                                                     context.get('active_id'), 
                                                     context=context
                                                 )
-        ids = self.pool.get('ir.values').search(
+        ir_values_obj = self.pool.get('ir.values')
+        ids = ir_values_obj.search(
                             cr, 
                             uid, 
                             [('value','=',report.type+','+str(context.get('active_id')))]
