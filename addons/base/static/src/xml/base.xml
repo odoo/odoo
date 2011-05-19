@@ -573,13 +573,19 @@
     </div>
 </t>
 <t t-name="SearchView.extended_search.proposition.char">
-    <input t-att-id="element_id"/>
+    <input t-att-id="element_id" class="field_char"/>
 </t>
 <t t-name="SearchView.extended_search.proposition.datetime">
     <input t-att-id="element_id" class="field_datetime"/>
 </t>
 <t t-name="SearchView.extended_search.proposition.date">
     <input t-att-id="element_id" class="field_date"/>
+</t>
+<t t-name="SearchView.extended_search.proposition.integer">
+    <input type="number" t-att-id="element_id" class="field_integer" step="1"/>
+</t>
+<t t-name="SearchView.extended_search.proposition.float">
+    <input type="number" t-att-id="element_id" class="field_float" step="0.01"/>
 </t>
 <t t-name="ViewManager.sidebar">
     <div t-att-id="element_id" class="sidebar-main-div closed-sidebar">
