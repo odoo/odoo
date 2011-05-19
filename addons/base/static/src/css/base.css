@@ -1,4 +1,5 @@
 /* TODO: separate openerp web client page css from openerp views css */
+
 body {
     padding: 0;
     margin: 0;
@@ -95,8 +96,6 @@ body.openerp {
 
 .openerp .menu {
     height: 34px;
-    position: relative;
-    white-space: nowrap;
     background: url(../img/menu-bg.png) repeat-x;
 }
 .openerp .menu a {
@@ -141,6 +140,7 @@ body.openerp {
     border-bottom: 1px solid #5A5858;
     background: #5A5858;
     vertical-align: top;
+    height: 100%;
 }
 .openerp .secondary_menu .menu_content {
     padding: 0;
@@ -621,6 +621,27 @@ body.openerp {
     -moz-background-origin: content;
     -moz-background-origin: content-box;
     -webkit-background-origin: content-box;
+}
+/* http://www.quirksmode.org/dom/inputfile.html
+ * http://stackoverflow.com/questions/2855589/replace-input-type-file-by-an-image
+ */
+.openerp button.oe-binary-image-set {
+    overflow: hidden;
+    position: relative;
+}
+.openerp input.oe-binary-file {
+    z-index: 2;
+    line-height: 0;
+    font-size: 50px;
+    position: absolute;
+    /* Should be adjusted for all browsers */
+    top: -2px;
+    left: -700px;
+    opacity: 0;
+    filter: alpha(opacity = 0);
+    -ms-filter: "alpha(opacity=0)";
+    margin: 0;
+    padding:0;
 }
 
 /* Widgets */

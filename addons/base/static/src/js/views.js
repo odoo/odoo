@@ -25,7 +25,7 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
             search_view : true,
             new_window : false,
             views_switcher : true,
-            toolbar : true,
+            action_buttons : true,
             pager : true
         }, action.flags || {});
         // instantiate the right controllers by understanding the action
@@ -211,6 +211,10 @@ openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
         this._super(session, element_id, dataset, action.views);
         this.action = action;
         this.flags = this.action.flags || {};
+        if (action.res_model == 'board.board' && action.views.length == 1 && action.views) {
+            // Not elegant but allows to avoid flickering of SearchView#do_hide
+            this.flags.search_view = this.flags.pager = this.flags.action_buttons = false;
+        }
         if (this.flags.sidebar) {
             this.sidebar = new openerp.base.Sidebar(null, this);
         }
@@ -291,17 +295,31 @@ openerp.base.Sidebar = openerp.base.BaseWidget.extend({
             var section = {elements:toolbar[type[0]], label:type[1]};
             self.sections.push(section);
         });
-        this.refresh();
+        this.refresh(true);
     },
-    refresh: function() {
-        this.$element.html(QWeb.render("ViewManager.sidebar.internal", _.extend({_:_}, this)));
+    refresh: function(new_view) {
+        var view = this.view_manager.active_view;
+        the_condition = this.sections.length > 0 && _.detect(this.sections,
+            function(x) {return x.elements.length > 0;}) != undefined
+            && (!new_view || view != 'list');
+        if (!the_condition) {
+            this.$element.addClass('closed-sidebar');
+            this.$element.removeClass('open-sidebar');
+        } else {
+            this.$element.addClass('open-sidebar');
+            this.$element.removeClass('closed-sidebar');
+        }
+        
+        this.$element.html(QWeb.render("ViewManager.sidebar.internal",this));
+        
         var self = this;
         this.$element.find(".toggle-sidebar").click(function(e) {
             self.$element.toggleClass('open-sidebar closed-sidebar');
             e.stopPropagation();
             e.preventDefault();
         });
-        this.$element.find("a").click(function(e) {
+        
+        this.$element.find("a.oe_sidebar_action_a").click(function(e) {
             var $this = jQuery(this);
             var i = $this.attr("data-i");
             var j = $this.attr("data-j");
@@ -316,7 +334,7 @@ openerp.base.Sidebar = openerp.base.BaseWidget.extend({
     },
     start: function() {
         this._super();
-        this.refresh();
+        this.refresh(false);
     }
 });
 

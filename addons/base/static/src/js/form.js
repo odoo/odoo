@@ -71,6 +71,9 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
         } else {
             this.dataset.read_index(_.keys(this.fields_view.fields), this.on_record_loaded);
         }
+        if (this.view_manager && this.view_manager.sidebar) {
+            this.view_manager.sidebar.refresh(true);
+        }
     },
     do_hide: function () {
         this.$element.hide();
@@ -1188,12 +1191,48 @@ openerp.base.form.FieldImage = openerp.base.form.Field.extend({
     init: function(view, node) {
         this._super(view, node);
         this.template = "FieldImage";
+        this.iframe = this.element_id + '_iframe';
+    },
+    start: function() {
+        this._super.apply(this, arguments);
+        this.$element.find('input.oe-binary-file').change(this.on_file_change);
+        this.$element.find('button.oe-binary-image-clear').click(this.on_clear);
+    },
+    set_value_from_ui: function() {
+    },
+    on_file_change: function() {
+        window[this.iframe] = this.on_file_uploaded;
+        this.$element.find('form.oe-binary-form input[name=session_id]').val(this.session.session_id);
+        this.$element.find('form.oe-binary-form').submit();
+        this.toggle_throbbler();
+    },
+    toggle_throbbler: function() {
+        this.$element.find('div.oe-binary-progress, div.oe-binary-image-buttons').toggle();
+    },
+    on_file_uploaded: function(size, name, content_type) {
+        delete(window[this.iframe]);
+        if (size === false) {
+            this.notification.warn("File Upload", "There was a problem while uploading your file");
+            // TODO: use openerp web exception handler
+            console.log("Error while uploading file : ", name);
+        } else {
+            alert('File uploaded')
+            console.log("Size", size, "Name", name, "Content", content_type);
+        }
+        this.toggle_throbbler();
+    },
+    on_clear: function() {
+        if (this.value !== false) {
+            this.value = false;
+            this.$element.find('img.oe-binary-image').attr('src', '/base/static/src/img/placeholder.png');
+            this.on_ui_change();
+        }
     },
     set_value: function(value) {
         this._super.apply(this, arguments);
         var url = '/base/formview/image?session_id=' + this.session.session_id + '&model=' +
-            this.view.dataset.model +'&id=' + (this.view.datarecord.id || '') + '&field=' + this.name
-        this.$element.find('img').show().attr('src', url);
+            this.view.dataset.model +'&id=' + (this.view.datarecord.id || '') + '&field=' + this.name + '&t=' + (new Date().getTime())
+        this.$element.find('img.oe-binary-image').attr('src', url);
     }
 });
 
