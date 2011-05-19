@@ -21,6 +21,8 @@
 
 import sql_db
 
+# Mapping between db name and osv_pool.
+# Accessed through the functions below.
 pool_dic = {}
 
 def get_db_and_pool(db_name, force_demo=False, status=None, update_module=False, pooljobs=True):
@@ -38,7 +40,7 @@ def get_db_and_pool(db_name, force_demo=False, status=None, update_module=False,
         pool = osv_osv.osv_pool()
 
         # Initializing an osv_pool will call general code which will in turn
-        # call get_db_and_pool (this function) to obtain the osv_pool begin
+        # call get_db_and_pool (this function) to obtain the osv_pool being
         # initialized. Make it available in the pool_dic then remove it if
         # an exception is raised.
         pool_dic[db_name] = pool

@@ -33,7 +33,7 @@ from psycopg2 import IntegrityError, errorcodes
 from openerp.tools.func import wraps
 from openerp.tools.translate import translate
 
-module_list = []
+# Mapping between openerp module names and their osv classes.
 module_class_list = {}
 
 class except_osv(Exception):
@@ -205,16 +205,20 @@ class object_proxy(netsvc.Service):
 object_proxy()
 
 class osv_pool(object):
+    """ Model registry for a particular database.
+
+    The registry is essentially a mapping between model names and model
+    instances. There is one registry instance per database.
+
+    """
+
     def __init__(self):
         self._ready = False
-        self.obj_pool = {}
-        self.module_object_list = {}
-        self.created = []
+        self.obj_pool = {} # model name/model instance mapping
         self._sql_error = {}
         self._store_function = {}
         self._init = True
         self._init_parent = {}
-        self.logger = logging.getLogger("pool")
 
     def init_set(self, cr, mode):
         different = mode != self._init
@@ -229,23 +233,17 @@ class osv_pool(object):
         self._ready = True
         return different
 
-
     def obj_list(self):
+        """ Return the list of model names in this registry."""
         return self.obj_pool.keys()
 
-    # adds a new object instance to the object pool.
-    # if it already existed, the instance is replaced
-    def add(self, name, obj_inst):
-        if name in self.obj_pool:
-            del self.obj_pool[name]
-        self.obj_pool[name] = obj_inst
-        module = obj_inst.__class__.__module__.split('.')[0]
-        self.module_object_list.setdefault(module, []).append(obj_inst)
+    def add(self, model_name, model):
+        """ Add or replace a model in the registry."""
+        self.obj_pool[model_name] = model
 
-    # Return None if object does not exist
     def get(self, name):
-        obj = self.obj_pool.get(name, None)
-        return obj
+        """ Return a model for a given name or None if it doesn't exist."""
+        return self.obj_pool.get(name)
 
     #TODO: pass a list of modules to load
     def instanciate(self, module, cr):
@@ -256,18 +254,49 @@ class osv_pool(object):
         return res
 
 class osv_base(object):
+    """ Base class for openerp models.
+
+    OpenERP models are created by inheriting from this class (although
+    not directly; more specifically by inheriting from osv or
+    osv_memory). The constructor is called once, usually directly
+    after the class definition, e.g.:
+
+        class user(osv):
+            ...
+        user()
+
+    The system will later instanciate the class once per database (on
+    which the class' module is installed).
+
+    """
+
     def __init__(self, pool, cr):
+        """ Initialize a model and make it part of the given registry."""
         pool.add(self._name, self)
         self.pool = pool
         super(osv_base, self).__init__(cr)
 
     def __new__(cls):
+        """ Register this model.
+
+        This doesn't create an instance but simply register the model
+        as being part of the module where it is defined.
+
+        TODO make it possible to not even have to call the constructor
+        to be registered.
+
+        """
+
+        # Set the module name (e.g. base, sale, accounting, ...) on the class.
         module = cls.__module__.split('.')[0]
         if not hasattr(cls, '_module'):
             cls._module = module
+
+        # Remember which models to instanciate for this module.
         module_class_list.setdefault(cls._module, []).append(cls)
-        if module not in module_list:
-            module_list.append(cls._module)
+
+        # Since we don't return an instance here, the __init__
+        # method won't be called.
         return None
 
 class osv_memory(osv_base, orm.orm_memory):
