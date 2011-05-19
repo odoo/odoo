@@ -1,12 +1,6 @@
 <template>
     <t t-name="GraphView">
         <h2 class="oe_view_title"><t t-esc="fields_view.arch.attrs.string"/></h2>
-        <table width="100%" height="100%" cellspacing="0" cellpadding="0">
-            <tr>
-                <td>
-                    <div t-att-id="chart+'chart'" style="width:900px;height:500px;border:1px solid #A4BED4;"></div>
-                </td>
-            </tr>
-        </table>
+        <div t-att-id="chart+'chart'" style="height:300px;position:relative;border:1px solid #A4BED4;"></div>
     </t>
 </template>

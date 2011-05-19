@@ -27,6 +27,7 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
     },
     on_loaded: function(data) {
         var self = this;
+        this.all_fields = data.all_fields;
         this.fields_view = data.fields_view;
         this.name = this.fields_view.name || this.fields_view.arch.attrs.string;
         this.view_id = this.fields_view.view_id;
@@ -52,12 +53,16 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
             this.operator_field = this.chart_info_fields[1];
         }
         this.chart_info = this.chart_info_fields[0];
+        this.x_title = this.fields[this.chart_info_fields[0]]['string'];
+        this.y_title = this.fields[this.operator_field]['string'];
         this.load_chart();
     },
 
     load_chart: function(result) {
         var self = this;
         if(result){
+            this.x_title = this.all_fields[this.chart_info_fields[0]]['string'];
+            this.y_title = this.all_fields[this.operator_field]['string'];
             self.schedule_chart(result);
         }else{
             this.dataset.read_ids(
@@ -191,7 +196,9 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
         var oth_ax = {};
 
         temp_ax['template'] = "#name#";
+        temp_ax['title'] = "<b>"+self.x_title+"</b>" ;
         oth_ax['lines'] = true;
+        oth_ax['title'] = "<b>"+self.y_title+"</b>";
 
         if (self.orientation == 'horizontal'){
              var x_ax = oth_ax;
@@ -212,10 +219,14 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
             origin:0,
             xAxis: x_ax,
             yAxis: y_ax,
+            padding: {
+                left: 75
+            },
             legend: {
                 values: grp_color,
-                align:"right",
+                align:"left",
                 valign:"top",
+                layout: "x",
                 marker:{
                     type:"round",
                     width:12
@@ -246,10 +257,12 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
             },
             gradient:"3d",
             height: 20,
+            radius: 200,
             legend: {
                 width: 300,
-                align:"right",
+                align:"left",
                 valign:"top",
+                layout: "x",
                 marker:{
                     type:"round",
                     width:12
