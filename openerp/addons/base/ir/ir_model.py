@@ -24,7 +24,6 @@ import time
 from operator import itemgetter
 
 from osv import fields,osv
-import ir
 import netsvc
 from osv.orm import except_orm, browse_record
 import tools
@@ -746,7 +745,8 @@ class ir_model_data(osv.osv):
         cr.execute('select * from ir_values where model=%s and key=%s and name=%s'+where,(model, key, name))
         res = cr.fetchone()
         if not res:
-            res = ir.ir_set(cr, uid, key, key2, name, models, value, replace, isobject, meta)
+            ir_values_obj = pooler.get_pool(cr.dbname).get('ir.values')
+            res = ir_values_obj.set(cr, uid, key, key2, name, models, value, replace, isobject, meta)
         elif xml_id:
             cr.execute('UPDATE ir_values set value=%s WHERE model=%s and key=%s and name=%s'+where,(value, model, key, name))
         return True
