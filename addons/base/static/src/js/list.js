@@ -67,15 +67,18 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
             'deleted': function (e, ids) {
                 self.do_delete(ids);
             },
-            'action': function (e, action_name, id) {
+            'action': function (e, action_name, id, callback) {
                 var action = _.detect(self.columns, function (field) {
                     return field.name === action_name;
                 });
                 if (!action) { return; }
-                // TODO: not supposed to reload everything, I think
                 self.execute_action(
                     action, self.dataset, self.session.action_manager,
-                    id, self.do_reload);
+                    id, function () {
+                        if (callback) {
+                            callback();
+                        }
+                });
             },
             'row_link': function (e, index) {
                 self.select_record(index);
@@ -515,6 +518,7 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
             options: this.options,
             columns: this.columns
         });
+        this.bind_child_events(prospekt);
         prospekt.datagroup = group;
         prospekt.render().insertAfter(
             this.point_insertion(row));
@@ -550,7 +554,21 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
         $(child).bind('selected', function (e) {
             // can have selections spanning multiple links
             $this.trigger(e, [self.get_selection()]);
-        }).bind('deleted action row_link', function (e) {
+        }).bind('action', function (e, name, id, callback) {
+            if (!callback) {
+                callback = function () {
+                    var $prev = child.$current.prev();
+                    if (!$prev.is('tbody')) {
+                        // ungrouped
+                        $(self.elements[0]).replaceWith(self.render());
+                    } else {
+                        // ghetto reload child (and its siblings)
+                        $prev.children().last().click();
+                    }
+                };
+            }
+            $this.trigger(e, [name, id, callback]);
+        }).bind('deleted row_link', function (e) {
             // additional positional parameters are provided to trigger as an
             // Array, following the event type or event object, but are
             // provided to the .bind event handler as *args.
@@ -594,6 +612,7 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
                 self.render_groups(groups));
         }, function (dataset) {
             self.render_dataset(dataset).then(function (list) {
+                self.children[null] = list;
                 self.elements =
                     [list.$current.replaceAll($element)[0]];
             });
