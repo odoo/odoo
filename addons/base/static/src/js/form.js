@@ -1200,26 +1200,34 @@ openerp.base.form.FieldImage = openerp.base.form.Field.extend({
     },
     set_value_from_ui: function() {
     },
+    set_image_maxwidth: function() {
+        this.$element.find('img.oe-binary-image').css('max-width', this.$element.width());
+    },
     on_file_change: function() {
+        this.set_image_maxwidth();
+        // TODO: on modern browsers, we could directly read the file locally on client ready to be used on image cropper
+        // http://www.html5rocks.com/tutorials/file/dndfiles/
+        // http://deepliquid.com/projects/Jcrop/demos.php?demo=handler
         window[this.iframe] = this.on_file_uploaded;
         this.$element.find('form.oe-binary-form input[name=session_id]').val(this.session.session_id);
         this.$element.find('form.oe-binary-form').submit();
-        this.toggle_throbbler();
+        this.toggle_throbber();
     },
-    toggle_throbbler: function() {
+    toggle_throbber: function() {
         this.$element.find('div.oe-binary-progress, div.oe-binary-image-buttons').toggle();
     },
-    on_file_uploaded: function(size, name, content_type) {
+    on_file_uploaded: function(size, name, content_type, img) {
         delete(window[this.iframe]);
         if (size === false) {
             this.notification.warn("File Upload", "There was a problem while uploading your file");
             // TODO: use openerp web exception handler
             console.log("Error while uploading file : ", name);
         } else {
-            alert('File uploaded')
-            console.log("Size", size, "Name", name, "Content", content_type);
+            this.value = img;
+            this.$element.find('img.oe-binary-image').attr('src', 'data:' + (content_type || 'image/png') + ';base64,' + img);
+            this.on_ui_change();
         }
-        this.toggle_throbbler();
+        this.toggle_throbber();
     },
     on_clear: function() {
         if (this.value !== false) {
@@ -1227,9 +1235,11 @@ openerp.base.form.FieldImage = openerp.base.form.Field.extend({
             this.$element.find('img.oe-binary-image').attr('src', '/base/static/src/img/placeholder.png');
             this.on_ui_change();
         }
+        return false;
     },
     set_value: function(value) {
         this._super.apply(this, arguments);
+        this.set_image_maxwidth();
         var url = '/base/formview/image?session_id=' + this.session.session_id + '&model=' +
             this.view.dataset.model +'&id=' + (this.view.datarecord.id || '') + '&field=' + this.name + '&t=' + (new Date().getTime())
         this.$element.find('img.oe-binary-image').attr('src', url);

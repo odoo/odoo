@@ -571,7 +571,13 @@ class FormView(View):
         return open(os.path.join(openerpweb.path_addons, 'base', 'static', 'src', 'img', 'placeholder.png'), 'rb').read()
 
     @openerpweb.httprequest
-    def upload(self, request, session_id, callback, ufile):
+    def upload(self, request, session_id, callback, ufile=None):
+        cherrypy.response.timeout = 500
+        headers = {}
+        for key, val in cherrypy.request.headers.iteritems():
+            headers[key.lower()] = val
+        size = int(headers.get('content-length', 0))
+        # TODO: might be usefull to have a configuration flag for max-lenght file uploads
         try:
             out = """<script language="javascript" type="text/javascript">
                         var win = window.top.window,
@@ -585,18 +591,11 @@ class FormView(View):
                             });
                         }
                     </script>"""
-            size = 0
-            while True:
-                data = ufile.file.read(8192)
-                if not data:
-                    break
-                size += len(data)
-            filename = ufile.filename
-            # TODO: write file to tmp file
+            data = ufile.file.read()
+            args = [size, ufile.filename, ufile.headers.getheader('Content-Type'), base64.encodestring(data)]
         except Exception as e:
-            size = False
-            filename = e.message
-        return out % (simplejson.dumps(callback), simplejson.dumps([size, filename, ufile.headers.getheader('Content-Type')]))
+            args = [False, e.message]
+        return out % (simplejson.dumps(callback), simplejson.dumps(args))
 
 class ListView(View):
     _cp_path = "/base/listview"
