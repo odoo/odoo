@@ -447,11 +447,26 @@ def upgrade_graph(graph, cr, module_list, force=None):
     return result
 
 
-def init_module_objects(cr, module_name, obj_list):
-    logger.notifyChannel('init', netsvc.LOG_INFO, 'module %s: creating or updating database tables' % module_name)
+def init_module_models(cr, module_name, obj_list):
+    """ Initialize a list of models.
+
+    Call _auto_init and init on each model to create or update the
+    database tables supporting the models.
+
+    TODO better explanation of _auto_init and init.
+
+    """
+
+    logger.notifyChannel('init', netsvc.LOG_INFO,
+        'module %s: creating or updating database tables' % module_name)
+    # TODO _auto_init doesn't seem to return anything
+    # so this todo list would be useless.
     todo = []
     for obj in obj_list:
         try:
+            # TODO the module in the context doesn't seem usefull:
+            # it is available (at least) in the class' _module attribute.
+            # (So module_name would be useless too.)
             result = obj._auto_init(cr, {'module': module_name})
         except Exception, e:
             raise
@@ -761,9 +776,9 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
         logger.notifyChannel('init', netsvc.LOG_INFO, 'module %s: loading objects' % package.name)
         migrations.migrate_module(package, 'pre')
         register_class(package.name)
-        modules = pool.instanciate(package.name, cr)
+        models = pool.instanciate(package.name, cr)
         if hasattr(package, 'init') or hasattr(package, 'update') or package.state in ('to install', 'to upgrade'):
-            init_module_objects(cr, package.name, modules)
+            init_module_models(cr, package.name, models)
         cr.commit()
 
     for package in graph:

@@ -23,6 +23,8 @@
 # OSV: Objects Services
 #
 
+import sys
+import inspect
 import orm
 import openerp.netsvc as netsvc
 import openerp.pooler as pooler
@@ -246,10 +248,14 @@ class osv_pool(object):
 
     #TODO: pass a list of modules to load
     def instanciate(self, module, cr):
+        """ Instanciate all the classes of a given module for a particular db."""
+
         res = []
-        class_list = module_class_list.get(module, [])
-        for klass in class_list:
+
+        # instanciate classes registered through their constructor
+        for klass in module_class_list.get(module, []):
             res.append(klass.createInstance(self, module, cr))
+
         return res
 
 class osv_base(object):
