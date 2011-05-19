@@ -797,8 +797,7 @@ class _rml_flowable(object):
                     import base64
                     if self.localcontext:
                         newtext = utils._process_text(self, node.text or '')
-                        node.text = newtext
-                    image_data = base64.decodestring(node.text)
+                    image_data = base64.decodestring(newtext)
                 if not image_data:
                     self._logger.debug("No inline image data")
                     return False
