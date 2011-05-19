@@ -1642,5 +1642,20 @@
            <field name="currency_id" ref="CFA"/>
            <field eval="time.strftime('%Y-01-01')" name="name"/>
        </record>
+
+        <record id="UGX" model="res.currency">
+            <field name="name">UGX</field>
+            <field name="symbol">/=</field>
+            <field name="rounding">1</field>
+            <field name="accuracy">4</field>
+            <field name="company_id" ref="main_company"/>
+            <field name="company_id" eval="non"/>
+        </record>
+        <record id="rateUGX" model="res.currency.rate">
+            <field name="rate">3401.91388</field>
+            <field name="currency_id" ref="UGX"/>
+            <field eval="time.strftime('%Y-01-01')" name="name"/>
+        </record>
+
     </data>
 </openerp>
