@@ -911,11 +911,61 @@ openerp.base.search.ExtendedSearchProposition.Date = openerp.base.BaseWidget.ext
         });
     }
 });
+openerp.base.search.ExtendedSearchProposition.Integer = openerp.base.BaseWidget.extend({
+    template: 'SearchView.extended_search.proposition.integer',
+    identifier_prefix: 'extended-search-proposition-integer',
+    operators: [
+        {value: "=", text: "is equal to"},
+        {value: "!=", text: "is not equal to"},
+        {value: ">", text: "greater than"},
+        {value: "<", text: "less than"},
+        {value: ">=", text: "greater or equal than"},
+        {value: "<=", text: "less or equal than"}
+    ],
+    get_value: function() {
+        val = this.$element.val();
+        val2 = parseFloat(val);
+        if(val2 != 0 && !val2) {
+            return "";
+        }
+        return Math.round(val2);
+    }
+});
+openerp.base.search.ExtendedSearchProposition.Float = openerp.base.BaseWidget.extend({
+    template: 'SearchView.extended_search.proposition.float',
+    identifier_prefix: 'extended-search-proposition-float',
+    operators: [
+        {value: "=", text: "is equal to"},
+        {value: "!=", text: "is not equal to"},
+        {value: ">", text: "greater than"},
+        {value: "<", text: "less than"},
+        {value: ">=", text: "greater or equal than"},
+        {value: "<=", text: "less or equal than"}
+    ],
+    get_value: function() {
+        val = this.$element.val();
+        val2 = parseFloat(val);
+        if(val2 != 0 && !val2) {
+            return "";
+        }
+        return val2;
+    }
+});
 
 openerp.base.search.custom_filters = new openerp.base.Registry({
     'char': 'openerp.base.search.ExtendedSearchProposition.Char',
+    'text': 'openerp.base.search.ExtendedSearchProposition.Char',
+    'one2many': 'openerp.base.search.ExtendedSearchProposition.Char',
+    'many2one': 'openerp.base.search.ExtendedSearchProposition.Char',
+    'many2many': 'openerp.base.search.ExtendedSearchProposition.Char',
+    
     'datetime': 'openerp.base.search.ExtendedSearchProposition.DateTime',
-    'date': 'openerp.base.search.ExtendedSearchProposition.Date'
+    'date': 'openerp.base.search.ExtendedSearchProposition.Date',
+    'integer': 'openerp.base.search.ExtendedSearchProposition.Integer',
+    'float': 'openerp.base.search.ExtendedSearchProposition.Float',
+    
+    'selection': 'openerp.base.search.ExtendedSearchProposition.Char',
+    'boolean': 'openerp.base.search.ExtendedSearchProposition.Char',
 });
 
 };
