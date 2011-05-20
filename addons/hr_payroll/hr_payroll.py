@@ -268,7 +268,7 @@ class hr_payslip(osv.osv):
         ], 'State', select=True, readonly=True,
             help='* When the payslip is created the state is \'Draft\'.\
             \n* If a condition is not satisfied, the state is \'Verify\'. \
-            \n* If a condition is satisfied then state is set to \'Done\'.\
+            \n* If a condition is satisfied and salary is paid then state is set to \'Done\'.\
             \n* When user cancel payslip the state is \'Reject\'.'),
 #        'line_ids': fields.one2many('hr.payslip.line', 'slip_id', 'Payslip Line', required=False, readonly=True, states={'draft': [('readonly', False)]}),
         'line_ids': one2many_mod2('hr.payslip.line', 'slip_id', 'Payslip Lines', readonly=True, states={'draft':[('readonly',False)]}),
