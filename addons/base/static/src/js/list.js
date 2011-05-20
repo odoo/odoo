@@ -449,6 +449,7 @@ openerp.base.ListView.List = Class.extend( /** @lends openerp.base.ListView.List
      * Death signal, cleans up list
      */
     apoptosis: function () {
+        if (!this.$current) { return; }
         this.$current.remove();
         this.$current = null;
     }
@@ -531,7 +532,16 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
         var placeholder = this.make_fragment();
         _(datagroups).each(function (group) {
             var $row = $('<tr>').click(function (e) {
-                self.open_group(e, group);
+                if (!$row.data('open')) {
+                    $row.data('open', true);
+                    self.open_group(e, group);
+                } else {
+                    $row.removeData('open')
+                        .find('span.ui-icon')
+                            .removeClass('ui-icon-triangle-1-s')
+                            .addClass('ui-icon-triangle-1-e');
+                    _(self.children).each(function (child) {child.apoptosis();});
+                }
             });
             placeholder.appendChild($row[0]);
             self.pad($row);
@@ -650,9 +660,7 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
         _(this.children).each(function (child) {
             child.apoptosis();
         });
-        $(this.elements).each(function (i, body) {
-            $(body).remove();
-        });
+        $(this.elements).remove();
     }
 });
 };
