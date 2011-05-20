@@ -522,6 +522,9 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
         prospekt.datagroup = group;
         prospekt.render().insertAfter(
             this.point_insertion(row));
+        $(row).find('span.ui-icon')
+                .removeClass('ui-icon-triangle-1-e')
+                .addClass('ui-icon-triangle-1-s');
     },
     render_groups: function (datagroups) {
         var self = this;
@@ -537,10 +540,11 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
                 .filter(function (column) {return !column.invisible;})
                 .each(function (column) {
                     if (column.id === group.grouped_on) {
-                        $('<td>')
+                        $('<th>')
                             .text(_.sprintf("%s (%d)",
                                 group.value instanceof Array ? group.value[1] : group.value,
                                 group.length))
+                            .prepend('<span class="ui-icon ui-icon-triangle-1-e">')
                             .appendTo($row);
                     } else if (column.id in group.aggregates) {
                         var value = group.aggregates[column.id];
