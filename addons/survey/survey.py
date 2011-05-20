@@ -97,9 +97,8 @@ class survey(osv.osv):
         vals = {}
         current_rec = self.read(cr, uid, ids, context=context)
         if current_rec.has_key('state'):
-            val = current_rec['state']
-            if val['state'] in ('open'):
-                raise osv.except_osv(_('Error!'),_('Cannot open the  duplicate survey in open state'))
+            if current_rec['state'] in ('open'):
+                raise osv.except_osv(_('Error!'),_("Cannot create the  duplicate  survey in open state"))
         title = current_rec.get('title') + ' (Copy)'
         vals.update({'title':title})
         vals.update({'history':[],'tot_start_survey':0,'tot_comp_survey':0})
