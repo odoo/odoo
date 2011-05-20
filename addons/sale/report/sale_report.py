@@ -91,7 +91,7 @@ class sale_report(osv.osv):
                     select l.id as id,
                         l.product_id as product_id,
                         (case when u.uom_type not in ('reference') then
-                            (select name from product_uom where uom_type='reference' and category_id=u.category_id)
+                            (select name from product_uom where uom_type='reference' and category_id=u.category_id and active LIMIT 1)
                         else
                             u.name
                         end) as uom_name,
