@@ -88,11 +88,12 @@ class ir_mail_server(osv.osv):
                         size=120,
                         required=False, help="Password for SMTP authentication"),
         'smtp_tls': fields.boolean('TLS', help="If True, TLS encryption will be requested at \
-                  beginning of SMTP transactions. Do not use if SSL is \
-                  enabled, or if the server does not support it."),
-        'smtp_ssl':fields.boolean('SSL/TLS', help="If True, SMTPS (Secure SMTP over SSL encryption) \
-                  will be used. When selected, change smtp_port to 465. \
-                  Do not use with TLS or if the server does not support it."),
+beginning of SMTP transactions. \nDo not use if SSL is \
+enabled, or if the server does not support it."),
+        'smtp_ssl':fields.boolean('SSL/TLS', readonly='SMTP_SSL' not in smtplib.__all__, help="If True, SMTPS (Secure SMTP over SSL encryption) will be used. \
+When selected, change smtp_port to 465. \
+\nDo not use with TLS or if the server does not support it. \
+%s" %('SMTP_SSL' not in smtplib.__all__ and '\nNote: This is a Readonly. You should Install Python2.6 if need Secure SMTP' or '')),
         'priority': fields.integer('Priority', help="If no specific \
                   server is requested for a mail, the highest priority one \
                   is used. Default priority is 10"),
