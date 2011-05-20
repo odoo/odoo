@@ -706,7 +706,7 @@ openerp.base.search.ExtendedSearch = openerp.base.BaseWidget.extend({
     },
     add_group: function() {
         var group = new openerp.base.search.ExtendedSearchGroup(this, this.fields);
-        var render = group.render({});
+        var render = group.render({'index': this.children.length - 1});
         this.$element.find('.searchview_extended_groups_list').append(render);
         group.start();
     },
@@ -759,7 +759,7 @@ openerp.base.search.ExtendedSearchGroup = openerp.base.BaseWidget.extend({
     },
     add_prop: function() {
         var prop = new openerp.base.search.ExtendedSearchProposition(this, this.fields);
-        var render = prop.render({});
+        var render = prop.render({'index': this.children.length - 1});
         this.$element.find('.searchview_extended_propositions_list').append(render);
         prop.start();
     },

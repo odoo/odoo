@@ -617,7 +617,7 @@
             <option value="any">Any of the following conditions must match</option>
             <option value="none">None of the following conditions must match</option>
         </select>
-        <button class="searchview_extended_delete_group"
+        <button t-if="index > 0" class="searchview_extended_delete_group"
                 type="button"><span>Delete this group of conditions</span></button>
         <div class="searchview_extended_propositions_list">
         </div>
@@ -636,7 +636,7 @@
         </select>
         <select class="searchview_extended_prop_op"/>
         <span class="searchview_extended_prop_value"/>
-        <button class="searchview_extended_delete_prop"
+        <button t-if="index > 0" class="searchview_extended_delete_prop"
                 type="button"><span>Delete this condition</span></button>
     </div>
 </t>
