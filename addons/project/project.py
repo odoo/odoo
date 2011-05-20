@@ -715,51 +715,35 @@ class task(osv.osv):
         return True
 
     def next_type(self, cr, uid, ids, *args):
-        for task in self.browse(cr, uid, ids):
-            typeid = task.type_id.id
-            types = map(lambda x:x.id, task.project_id.type_ids or [])
-            l = []
-            from operator import itemgetter
-            if types:
-                for type in task.project_id.type_ids:
-                    l.append([type.sequence, type.id])
-                l.sort(key=itemgetter(0))
-                if type:
-                    if not typeid:
-                        self.write(cr, uid, task.id, {'type_id': l[0][1]})
-                    else:
-                        for o,sublist in enumerate(l):
-                            position = o
-                            if typeid in sublist:
-                                if position >= len(l)-1:
-                                    return False
-                                else:
-                                    self.write(cr, uid, task.id, {'type_id': l[position+1][1]})
-        return True
+         for task in self.browse(cr, uid, ids):
+             if  task.project_id.type_ids:
+                 typeid = task.type_id.id
+                 types_seq={}
+                 for type in task.project_id.type_ids :
+                     types_seq[type.id] = type.sequence
+                 types = sorted(types_seq.items(), lambda x, y: cmp(x[1], y[1]))
+                 sorted_types = [x[0] for x in types]
+                 if not typeid:
+                    self.write(cr, uid, task.id, {'type_id': sorted_types[0]})
+                 elif typeid and typeid in sorted_types and sorted_types.index(typeid) != len(sorted_types)-1:
+                    index = sorted_types.index(typeid)
+                    self.write(cr, uid, task.id, {'type_id': sorted_types[index+1]})
+         return True
 
     def prev_type(self, cr, uid, ids, *args):
         for task in self.browse(cr, uid, ids):
-            typeid = task.type_id.id
-            types = map(lambda x:x.id, task.project_id and task.project_id.type_ids or [])
-            l = []
-            from operator import itemgetter
-            if types:
-                for type in task.project_id.type_ids:
-                    l.append([type.sequence, type.id])
-                l.sort(key=itemgetter(0))
-                if type:
-                    if not typeid:
-                        self.write(cr, uid, task.id, {'type_id': False})
-                    else:
-                        for o,sublist in enumerate(l):
-                            position = o
-                            if typeid in sublist:
-                                self.write(cr, uid, task.id, {'type_id': l[position-1][1]})
-                                position = position-1
-                                if position < 0:
-                                    self.write(cr, uid, task.id, {'type_id': False})
-                                else:
-                                    return True
+             if  task.project_id.type_ids:
+                 typeid = task.type_id.id
+                 types_seq={}
+                 for type in task.project_id.type_ids :
+                     types_seq[type.id] = type.sequence
+                 types = sorted(types_seq.items(), lambda x, y: cmp(x[1], y[1]))
+                 sorted_types = [x[0] for x in types]
+                 if not typeid or sorted_types.index(typeid) <= 0 or [] :
+                    self.write(cr, uid, task.id, {'type_id': False})
+                 elif typeid and typeid in sorted_types and sorted_types.index(typeid) <= len(sorted_types)-1:
+                    index = sorted_types.index(typeid)
+                    self.write(cr, uid, task.id, {'type_id': sorted_types[index-1]})
         return True
 
 task()
