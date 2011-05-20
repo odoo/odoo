@@ -210,7 +210,7 @@
             <t t-if="!attrs.invisible">
                 <t t-set="is_button" t-value="column.tag === 'button'"/>
                 <!-- TODO: get correct widget from form -->
-                <t t-if="!is_button and row['data'][column.id].value">
+                <t t-if="!is_button and row['data'][column.id].value !== false">
                     <t t-set="value" t-value="row['data'][column.id].value"/>
                     <t t-esc="value instanceof Array ? value[1] : value"/>
                 </t>
