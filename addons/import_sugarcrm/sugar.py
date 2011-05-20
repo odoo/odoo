@@ -93,6 +93,23 @@ def user_get_attendee_list(portType, sessionid, module_name=None, module_id=None
       attendee_list.append(attendee_dict)
   return attendee_list         
 
+def get_contact_by_email(portType, username, password, email_address=None):
+    se_req = contact_by_emailRequest()
+    se_req._user_name = username
+    se_req._password = password
+    se_req._email_address = email_address
+    try:
+        se_resp = portType.contact_by_email(se_req)
+        email_list = []
+        for list in se_resp.get_element_return():
+            if list.Email_address in email_list:
+                continue
+            elif list.Email_address:
+                email_list.append(list.Email_address)
+        return email_list
+    except Exception,e:
+        return 'Exception: %s\n' % (tools.ustr(e))
+
 def search(portType, sessionid, module_name=None):
   se_req = get_entry_listRequest()
   se_req._session = sessionid

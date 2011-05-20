@@ -110,6 +110,19 @@ class sugar_import(import_framework):
         min = int(min) * 100 / 60
         return "%s.%i" % (hour, min)
     
+    def get_attachment(self, val):
+        File, Filename = sugar.attachment_search(self.context.get('port'), self.context.get('session_id'), self.TABLE_NOTE, val.get('id')) 
+        attach_xml_id = False
+        attachment_obj = self.obj.pool.get('ir.attachment')
+        model_obj = self.obj.pool.get('ir.model.data')
+        mailgate_obj = self.obj.pool.get('mailgate.message')
+        if File:
+            fields = ['name', 'datas', 'datas_fname','res_id', 'res_model']
+            name = 'attachment_'+ (Filename or val.get('name'))
+            datas = [Filename or val.get('name'), File, Filename, val.get('res_id'),val.get('model',False)]
+            attach_xml_id = self.import_object(fields, datas, 'ir.attachment', self.TABLE_HISTORY_ATTACHMNET, name, [('res_id', '=', val.get('res_id'), ('model', '=', val.get('model')))])
+        return attach_xml_id    
+    
     """
     import Documents
     """
@@ -150,8 +163,6 @@ class sugar_import(import_framework):
               else:    
                     val['res_id'] = model.res_id
                     val['model'] = model.model
-        attach_id = self.get_attachment(val)
-        val['attachment_ids/id'] = attach_id
         return val   
         
     def get_email_mapping(self): 
@@ -169,7 +180,7 @@ class sugar_import(import_framework):
                         'res_id': 'res_id',
                         'model': 'model',
                         'partner_id/.id': 'partner_id/.id',                         
-                        'attachment_ids/id': 'attachment_ids/id',
+                        'attachment_ids/id': self.get_attachment,
                         'user_id/id': ref(self.TABLE_USER, 'assigned_user_id'),
                         'description': ppconcat('description', 'description_html'),
                 }
@@ -178,18 +189,6 @@ class sugar_import(import_framework):
     """
     import History(Notes)
     """
-    def get_attachment(self, val):
-        File, Filename = sugar.attachment_search(self.context.get('port'), self.context.get('session_id'), self.TABLE_NOTE, val.get('id')) 
-        attach_xml_id = False
-        attachment_obj = self.obj.pool.get('ir.attachment')
-        model_obj = self.obj.pool.get('ir.model.data')
-        mailgate_obj = self.obj.pool.get('mailgate.message')
-        if File:
-            fields = ['name', 'datas', 'datas_fname','res_id', 'res_model']
-            name = 'attachment_'+ (Filename or val.get('name'))
-            datas = [Filename or val.get('name'), File, Filename, val.get('res_id'),val.get('model',False)]
-            attach_xml_id = self.import_object(fields, datas, 'ir.attachment', self.TABLE_HISTORY_ATTACHMNET, name, [('res_id', '=', val.get('res_id'), ('model', '=', val.get('model')))])
-        return attach_xml_id
 
     def import_history(self, val):
         model_obj =  self.obj.pool.get('ir.model.data')
@@ -202,8 +201,6 @@ class sugar_import(import_framework):
               else:    
                     val['res_id'] = model.res_id
                     val['model'] = model.model
-        attach_id = self.get_attachment(val)
-        val['attachment_ids/id'] = attach_id
         return val    
     
     def get_history_mapping(self): 
@@ -218,7 +215,7 @@ class sugar_import(import_framework):
                       'description': ppconcat('description', 'description_html'),
                       'res_id': 'res_id',
                       'model': 'model',
-                      'attachment_ids/id': 'attachment_ids/id',
+                      'attachment_ids/id': self.get_attachment,
                       'partner_id/.id' : 'partner_id/.id',
                 }
             }     
@@ -665,14 +662,16 @@ class sugar_import(import_framework):
         import contact
     """
     def get_email(self, val):
-        return val.get('email1') + ','+ val.get('email2')
+        email_address = sugar.get_contact_by_email(self.context.get('port'), self.context.get('username'), self.context.get('password'), val.get('email1'))
+        if email_address:
+            return ','.join(email_address) 
     
     def import_contact(self, val):
         if val.get('primary_address_country'):
             country_id = self.get_all_countries(val.get('primary_address_country'))
             state = self.get_all_states(val.get('primary_address_state'), country_id)
             val['country_id/id'] =  country_id
-            val['state_id/id'] =  state  
+            val['state_id/id'] =  state
         return val    
         
     def get_contact_mapping(self):
