@@ -718,22 +718,48 @@ class task(osv.osv):
         for task in self.browse(cr, uid, ids):
             typeid = task.type_id.id
             types = map(lambda x:x.id, task.project_id.type_ids or [])
+            l = []
+            from operator import itemgetter
             if types:
-                if not typeid:
-                    self.write(cr, uid, task.id, {'type_id': types[0]})
-                elif typeid and typeid in types and types.index(typeid) != len(types)-1:
-                    index = types.index(typeid)
-                    self.write(cr, uid, task.id, {'type_id': types[index+1]})
+                for type in task.project_id.type_ids:
+                    l.append([type.sequence, type.id])
+                l.sort(key=itemgetter(0))
+                if type:
+                    if not typeid:
+                        self.write(cr, uid, task.id, {'type_id': l[0][1]})
+                    else:
+                        for o,sublist in enumerate(l):
+                            position = o
+                            if typeid in sublist:
+                                if position >= len(l)-1:
+                                    return False
+                                else:
+                                    self.write(cr, uid, task.id, {'type_id': l[position+1][1]})
         return True
 
     def prev_type(self, cr, uid, ids, *args):
         for task in self.browse(cr, uid, ids):
             typeid = task.type_id.id
             types = map(lambda x:x.id, task.project_id and task.project_id.type_ids or [])
+            l = []
+            from operator import itemgetter
             if types:
-                if typeid and typeid in types:
-                    index = types.index(typeid)
-                    self.write(cr, uid, task.id, {'type_id': index and types[index-1] or False})
+                for type in task.project_id.type_ids:
+                    l.append([type.sequence, type.id])
+                l.sort(key=itemgetter(0))
+                if type:
+                    if not typeid:
+                        self.write(cr, uid, task.id, {'type_id': False})
+                    else:
+                        for o,sublist in enumerate(l):
+                            position = o
+                            if typeid in sublist:
+                                self.write(cr, uid, task.id, {'type_id': l[position-1][1]})
+                                position = position-1
+                                if position < 0:
+                                    self.write(cr, uid, task.id, {'type_id': False})
+                                else:
+                                    return True
         return True
 
 task()
