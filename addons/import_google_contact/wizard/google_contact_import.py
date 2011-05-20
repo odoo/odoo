@@ -73,10 +73,6 @@ class synchronize_google_contact(osv.osv_memory):
         if not data:
             return False
         partner_pool = self.pool.get('res.partner')
-        company_pool = self.pool.get('res.company')        
-        if 'company_id' in data:
-            company = company_pool.browse(cr, uid, data.get('company_id'), context=context)
-            return company.partner_id.id
         partner_id = partner_pool.create(cr, uid, {
                                                   'name': data.get('name',''),
                                                   'user_id': uid,
@@ -129,12 +125,12 @@ class synchronize_google_contact(osv.osv_memory):
         company_id = company_pool.search(cr, uid, [('name', '=', company)])
         if company_id:
             return company_id[0]
-        new_cid = company_pool.create(cr, uid, {'name': company})
-        return new_cid
+        return False
 
     def create_contact(self, cr, uid, ids, gd_client, contact, option,context=None):
         model_obj = self.pool.get('ir.model.data')
         addresss_obj = self.pool.get('res.partner.address')
+        company_pool = self.pool.get('res.company')
         addresses = []
         partner_ids = []
         contact_ids = []
@@ -147,9 +143,7 @@ class synchronize_google_contact(osv.osv_memory):
             for entry in contact.entry:
                 data = self._retreive_data(entry)
                 if 'company' in data:
-                    company = data.pop('company')
-                    if company:
-                        data.update({'company_id': self.getCompanyId(cr, uid, company, context=context)})
+                    data.update({'company_id': self.getCompanyId(cr, uid, data.get('company', False), context=context)})
                 google_id = data.pop('id')
                 model_data = {
                     'name':  google_id,
@@ -183,9 +177,13 @@ class synchronize_google_contact(osv.osv_memory):
                         obj = self.browse(cr, uid, ids, context=context)[0]
                         data['customer'] = obj.customer
                         data['supplier'] = obj.supplier
-                        partner_id = self.create_partner(cr, uid, data, context=context)
-                        partner_ids.append(partner_id)
-                        addresss_obj.write(cr, uid, [res_id], {'partner_id': partner_id}, context=context)
+                        if 'company' in data and data.get('company_id'):
+                            company = company_pool.browse(cr, uid, data.get('company_id'))
+                            partner_ids.append(company.partner_id.id)
+                            addresss_obj.write(cr, uid, [res_id], {'partner_id': company.partner_id.id}, context=context)
+                        elif 'company' not in data:
+                            partner_id = self.create_partner(cr, uid, data, context=context)
+                            partner_ids.append(partner_id)
                     addresses.append(res_id)
 
                 if not data_ids: #link to google_id if it was not the case before            
