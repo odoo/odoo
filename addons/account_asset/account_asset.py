@@ -37,7 +37,7 @@ class account_asset_category(osv.osv):
         'account_expense_depreciation_id': fields.many2one('account.account', 'Depr. Expense Account', required=True),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True),
         'company_id': fields.many2one('res.company', 'Company', required=True),
-        'on_change_state': fields.boolean('Skip Draft State', help="Check this if you want to skip draft state for asset when it is created by invoice."),
+        'asset_normal': fields.boolean('Skip Draft State', help="Check this if you want to skip draft state for asset when it is created by invoice."),
     }
 
     _defaults = {
