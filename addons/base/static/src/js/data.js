@@ -112,7 +112,8 @@ openerp.base.ContainerDataGroup = openerp.base.DataGroup.extend(
         var d = new $.Deferred();
         var self = this;
 
-        if (this.groups) {
+        // disable caching for now, not sure what I should do there
+        if (false && this.groups) {
             d.resolveWith(this, [this.groups]);
         } else {
             this.rpc('/base/group/read', {
@@ -350,6 +351,7 @@ openerp.base.DataSetSearch =  openerp.base.DataSet.extend({
             offset: offset,
             limit: limit
         }, function (records) {
+            self.ids.splice(0, self.ids.length);
             self.offset = offset;
             self.count = records.length;    // TODO: get real count
             for (var i=0; i < records.length; i++ ) {

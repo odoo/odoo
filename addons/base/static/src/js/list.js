@@ -80,8 +80,13 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
                         }
                 });
             },
-            'row_link': function (e, index) {
-                self.select_record(index);
+            'row_link': function (e, index, id, dataset) {
+                _.extend(self.dataset, {
+                    domain: dataset.domain,
+                    context: dataset.context
+                }).read_slice([], null, null, function () {
+                    self.select_record(index);
+                });
             }
         });
 
@@ -231,7 +236,8 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
     do_show: function () {
         this.$element.show();
         if (this.hidden) {
-            this.do_reload();
+            this.$element.find('table').append(
+                this.groups.apoptosis().render());
             this.hidden = false;
         }
     },
@@ -376,6 +382,7 @@ openerp.base.ListView.List = Class.extend( /** @lends openerp.base.ListView.List
 
         this.options = opts.options;
         this.columns = opts.columns;
+        this.dataset = opts.dataset;
         this.rows = opts.rows;
 
         this.$_element = $('<tbody class="ui-widget-content">')
@@ -402,7 +409,8 @@ openerp.base.ListView.List = Class.extend( /** @lends openerp.base.ListView.List
                 $(self).trigger(
                     'row_link',
                     [self.row_position(e.currentTarget),
-                     self.row_id(e.currentTarget)]);
+                     self.row_id(e.currentTarget),
+                     self.dataset]);
             });
     },
     render: function () {
@@ -610,6 +618,7 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
             list = new openerp.base.ListView.List({
                 options: this.options,
                 columns: this.columns,
+                dataset: dataset,
                 rows: rows
             });
         this.bind_child_events(list);
@@ -661,6 +670,7 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
             child.apoptosis();
         });
         $(this.elements).remove();
+        return this;
     }
 });
 };
