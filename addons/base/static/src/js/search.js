@@ -125,6 +125,7 @@ openerp.base.SearchView = openerp.base.Controller.extend({
         // the non-commented line does. As far as we investigated, only God knows.
         //this.$element.html(render);
         jQuery(render).appendTo(this.$element);
+        this.$element.find(".oe_search-view-custom-filter-btn").click(ext.on_activate);
 
         var f = this.$element.find('form');
         this.$element.find('form')
@@ -711,6 +712,7 @@ openerp.base.search.ExtendedSearch = openerp.base.BaseWidget.extend({
     },
     start: function () {
         this._super();
+        this.$element.closest("table.oe-searchview-render-line").css("display", "none");
         var self = this;
         this.rpc("/base/searchview/fields_get",
             {"model": this.model}, function(data) {
@@ -726,11 +728,25 @@ openerp.base.search.ExtendedSearch = openerp.base.BaseWidget.extend({
         return null;
     },
     get_domain: function() {
-        if(this.$element.hasClass("folded")) {
+        if(this.$element.closest("table.oe-searchview-render-line").css("display") == "none") {
             return null;
         }
         return _.reduce(this.children,
             function(mem, x) { return mem.concat(x.get_domain());}, []);
+    },
+    on_activate: function() {
+        var table = this.$element.closest("table.oe-searchview-render-line");
+        if (table.css("display") == "none") {
+            table.css("display", "");
+            if(this.$element.hasClass("folded")) {
+                this.$element.toggleClass("folded expanded");
+            }
+        } else {
+            table.css("display", "none");
+            if(this.$element.hasClass("expanded")) {
+                this.$element.toggleClass("folded expanded");
+            }
+        }
     }
 });
 
