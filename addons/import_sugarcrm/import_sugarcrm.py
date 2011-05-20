@@ -180,13 +180,15 @@ class sugar_import(import_framework):
     """
     def get_attachment(self, val):
         File, Filename = sugar.attachment_search(self.context.get('port'), self.context.get('session_id'), self.TABLE_NOTE, val.get('id')) 
+        attach_xml_id = False
         attachment_obj = self.obj.pool.get('ir.attachment')
         model_obj = self.obj.pool.get('ir.model.data')
         mailgate_obj = self.obj.pool.get('mailgate.message')
-        fields = ['name', 'datas', 'datas_fname','res_id', 'res_model']
-        name = 'attachment_'+ (Filename or val.get('name'))
-        datas = [Filename or val.get('name'), File, Filename, val.get('res_id'),val.get('model',False)]
-        attach_xml_id = self.import_object(fields, datas, 'ir.attachment', self.TABLE_HISTORY_ATTACHMNET, name, [('res_id', '=', val.get('res_id'), ('model', '=', val.get('model')))])
+        if File:
+            fields = ['name', 'datas', 'datas_fname','res_id', 'res_model']
+            name = 'attachment_'+ (Filename or val.get('name'))
+            datas = [Filename or val.get('name'), File, Filename, val.get('res_id'),val.get('model',False)]
+            attach_xml_id = self.import_object(fields, datas, 'ir.attachment', self.TABLE_HISTORY_ATTACHMNET, name, [('res_id', '=', val.get('res_id'), ('model', '=', val.get('model')))])
         return attach_xml_id
 
     def import_history(self, val):
