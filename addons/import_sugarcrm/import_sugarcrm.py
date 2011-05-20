@@ -38,7 +38,6 @@ class related_ref(dbmapper):
             return self.parent.xml_id_exist(external_val['parent_type'], external_val['parent_id'])
         return ''
 
-
 class sugar_import(import_framework):
     TABLE_CONTACT = 'Contacts'
     TABLE_ACCOUNT = 'Accounts'
@@ -969,10 +968,9 @@ class import_sugarcrm(osv.osv):
         if args[1]:
             login_id = login_obj.browse(cr, uid, args[1])
             context.update({'username': login_id.username, 'password': login_id.password, 'url': login_id.url, 'instance_name': args[3]}) 
-        for key in args[0]:
-            imp = sugar_import(self, cr, uid, context.get('instance_name'), "import_sugarcrm", [context.get('email_from', 'tfr@openerp.com')], context)
-            imp.set_table_list(keys)
-            imp.start()
+        imp = sugar_import(self, cr, uid, context.get('instance_name'), "import_sugarcrm", [context.get('email_from', 'tfr@openerp.com')], context)
+        imp.set_table_list(args[0])
+        imp.start()
         return True 
 
     def import_from_scheduler_all(self, cr, uid, ids, context=None):
@@ -992,7 +990,7 @@ class import_sugarcrm(osv.osv):
             login_id = login_obj.create(cr, uid, {'username': context.get('username'), 'password': context.get('password'), 'url': context.get('url')})    
         args = (keys, login_id, context.get('email_user'), context.get('instance_name'))
         for current in self.browse(cr, uid, ids):
-            new_create_id = cron_obj.create(cr, uid, {'name': 'Import SugarCRM datas','interval_type': 'hours','interval_number': 1, 'numbercall': -1,'model': 'import.sugarcrm','function': 'do_import_sugarcrm_data', 'args': args, 'active': False})
+            new_create_id = cron_obj.create(cr, uid, {'name': 'Import SugarCRM datas','interval_type': 'hours','interval_number': 1, 'numbercall': -1,'model': 'import.sugarcrm','function': 'do_import_all', 'args': args, 'active': False})
             return {
                 'name': 'SugarCRM Scheduler',
                 'view_type': 'form',
