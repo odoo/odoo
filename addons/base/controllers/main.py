@@ -565,7 +565,7 @@ class FormView(View):
             else:
                 res = Model.read([int(id)], [field], request.context)[0].get(field, '')
             return base64.decodestring(res)
-        except:
+        except: # TODO: what's the exception here?
             return self.placeholder()
     def placeholder(self):
         return open(os.path.join(openerpweb.path_addons, 'base', 'static', 'src', 'img', 'placeholder.png'), 'rb').read()
@@ -608,7 +608,7 @@ class FormView(View):
                     </script>"""
             data = ufile.file.read()
             args = [size, ufile.filename, ufile.headers.getheader('Content-Type'), base64.encodestring(data)]
-        except Exception as e:
+        except Exception, e:
             args = [False, e.message]
         return out % (simplejson.dumps(callback), simplejson.dumps(args))
 
