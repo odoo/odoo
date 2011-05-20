@@ -38,7 +38,7 @@ class account_invoice_line(osv.osv):
     def move_line_get_item(self, cr, uid, line, context={}):
         asset_obj = self.pool.get('account.asset.asset')
         res = super(account_invoice_line, self).move_line_get_item(cr, uid, line, context)
-        if line.asset_category_id and line.asset_category_id.id:
+        if line.asset_category_id:
             vals = {
                 'name': line.product_id and (line.name + ": " + line.product_id.name) or line.name,
                 'category_id': line.asset_category_id.id,
