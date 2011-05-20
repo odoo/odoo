@@ -118,20 +118,23 @@ class account_voucher(osv.osv):
     def fields_view_get(self, cr, uid, view_id=None, view_type=False, context=None, toolbar=False, submenu=False):
         mod_obj = self.pool.get('ir.model.data')
         if context is None: context = {}
+        
+        def get_res_id(view_type, condition):
+            result = False
+            if view_type == 'tree':
+                result = mod_obj.get_object_reference(cr, uid, 'account_voucher', 'view_voucher_tree')
+            elif view_type == 'form':
+                if condition:
+                    result = mod_obj.get_object_reference(cr, uid, 'account_voucher', 'view_vendor_receipt_form')
+                else:
+                    result = mod_obj.get_object_reference(cr, uid, 'account_voucher', 'view_vendor_payment_form')
+            return result and result[1] or False
+
         if not view_id and context.get('invoice_type', False):
-            if context.get('invoice_type', False) in ('out_invoice', 'out_refund'):
-                result = mod_obj.get_object_reference(cr, uid, 'account_voucher', 'view_vendor_receipt_form')
-            else:
-                result = mod_obj.get_object_reference(cr, uid, 'account_voucher', 'view_vendor_payment_form')
-            result = result and result[1] or False
-            view_id = result
+            view_id = get_res_id(view_type,context.get('invoice_type', False) in ('out_invoice', 'out_refund'))
+
         if not view_id and context.get('line_type', False):
-            if context.get('line_type', False) == 'customer':
-                result = mod_obj.get_object_reference(cr, uid, 'account_voucher', 'view_vendor_receipt_form')
-            else:
-                result = mod_obj.get_object_reference(cr, uid, 'account_voucher', 'view_vendor_payment_form')
-            result = result and result[1] or False
-            view_id = result
+            view_id = get_res_id(view_type,context.get('line_type', False) == 'customer')
 
         res = super(account_voucher, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
         doc = etree.XML(res['arch'])
