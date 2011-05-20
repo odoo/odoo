@@ -440,7 +440,7 @@ class DataGroup(openerpweb.Controller):
     @openerpweb.jsonrequest
     def read(self, request, model, group_by_fields, domain=None, context=None):
         Model = request.session.model(model)
-        return Model.read_group(domain or False, False, group_by_fields, 0, False, context or False)
+        return Model.read_group(domain or [], False, group_by_fields, 0, False, context or {})
 
 class View(openerpweb.Controller):
     def fields_view_get(self, request, model, view_id, view_type,
