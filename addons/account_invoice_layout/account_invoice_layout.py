@@ -165,9 +165,11 @@ class account_invoice_line(osv.osv):
     }
 
     def _default_account(self, cr, uid, context=None):
-        cr.execute("select id from account_account where parent_id IS NULL LIMIT 1")
-        res = cr.fetchone()
-        return res[0]
+        if context is None:
+            context = {}
+        current_company = self.pool.get('res.users').browse(cr,uid,uid).company_id.id
+        account_id = self.pool.get('account.account').search(cr, uid, [('company_id','=',current_company),('parent_id','=',False)], limit=1,context=context)
+        return account_id and account_id[0] or False
 
     _defaults = {
         'state': 'article',
