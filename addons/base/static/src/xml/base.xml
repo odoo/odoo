@@ -159,7 +159,7 @@
         <tr t-if="options.selectable">
             <th t-if="actions_span" t-att-colspan="actions_span"
                 class="oe-actions">
-                <t t-if="view_manager.action.flags.action_buttons !== false">
+                <t t-if="flags.action_buttons !== false">
                     <button type="button" id="oe-list-add"
                             t-if="options.addable">
                         <t t-esc="options.addable"/>
@@ -172,7 +172,7 @@
             </th>
             <th t-att-colspan="columns_count - actions_span"
                 class="oe-list-pager">
-                <t t-if="view_manager.action.flags.pager !== false">
+                <t t-if="flags.pager !== false">
                     <button type="button" data-pager-action="first">First</button>
                     <button type="button" data-pager-action="previous"
                             >&lt;&lt;</button>
@@ -239,13 +239,13 @@
 <t t-name="FormView">
     <h2 class="oe_view_title"><t t-esc="view.fields_view.arch.attrs.string"/></h2>
     <div class="oe_form_header" t-att-id="view.element_id + '_header'">
-        <div class="oe_form_buttons" t-if="view.view_manager.action.flags.action_buttons !== false">
+        <div class="oe_form_buttons" t-if="view.flags.action_buttons !== false">
             <!--<button type="button" class="oe_form_button_save">Save</button>-->
             <button type="button" class="oe_form_button_save_edit">Save &amp; Edit</button>
             <!--<button type="button" class="oe_form_button_cancel">Cancel</button>-->
             <button type="button" class="oe_form_button_new">New</button>
         </div>
-        <div class="oe_form_pager" t-if="view.view_manager.action.flags.pager !== false">
+        <div class="oe_form_pager" t-if="view.flags.pager !== false">
             <button type="button" data-pager-action="first">First</button>
             <button type="button" data-pager-action="previous">&lt;&lt;</button>
 
@@ -328,6 +328,20 @@
     </tr>
     </table>
 </t>
+<t t-name="FieldUrl">
+    <table cellpadding="0" cellspacing="0" border="0" width="100%">
+    <tr>
+        <td width="100%">
+            <t t-call="FieldChar"/>
+        </td>
+        <td width="16">
+            <button type="button" class="button" title="Open this resource">
+                <img src="/base/static/src/img/icons/gtk-ok.png"/>
+            </button>
+        </td>
+    </tr>
+    </table>
+</t>
 <t t-name="FieldText">
     <textarea rows="6" style="width: 100%;"
         t-att-name="widget.name"
@@ -386,7 +400,7 @@
         <span></span>
     </div>
 </t>
-<t t-name="FieldImage">
+<t t-name="FieldBinaryImage">
     <table cellpadding="0" cellspacing="0" border="0">
     <tr>
         <td align="center">
@@ -401,15 +415,68 @@
     </tr>
     <tr>
         <td align="center" valign="bottom" height="25">
-            <button class="button oe-binary-image-set" type="button" title="Set Image">
+            <div class="oe-binary">
+                <!-- TODO: input@type=file inside a button won't work in firefox. Use links instead -->
+                <button class="button oe-binary-file-set" type="button" title="Set Image">
+                    <img src="/base/static/src/img/icons/STOCK_DIRECTORY.png"/>
+                    <form class="oe-binary-form" t-att-target="widget.iframe"
+                            method="post" enctype="multipart/form-data" action="/base/formview/upload">
+                        <input type="hidden" name="session_id" value=""/>
+                        <input type="hidden" name="callback" t-att-value="widget.iframe"/>
+                        <input type="file" class="oe-binary-file" name="ufile"/>
+                    </form>
+                </button>
+                <button class="button oe-binary-file-save" type="button" title="Save As">
+                    <img src="/base/static/src/img/icons/gtk-save.png"/>
+                </button>
+                <button class="button oe-binary-file-clear" type="button" title="Clear">
+                    <img src="/base/static/src/img/icons/STOCK_MISSING_IMAGE.png"/>
+                </button>
+            </div>
+            <div class="oe-binary-progress" style="display: none">
+                <img src="/base/static/src/img/throbber.gif" width="16" height="16"/>
+                <b>Uploading ...</b>
+            </div>
+            <iframe t-att-id="widget.iframe" t-att-name="widget.iframe" style="display: none"> </iframe>
+        </td>
+    </tr>
+    </table>
+</t>
+<t t-name="FieldBinaryFile">
+    <table cellpadding="0" cellspacing="0" border="0" width="100%">
+    <tr>
+        <td width="100%">
+            <input type="text"
+                t-att-name="widget.name"
+                t-att-id="widget.element_id + '_field'"
+                t-att-class="'field_' + widget.type" style="width: 100%"
+            />
+        </td>
+        <td class="oe-binary" nowrap="true">
+            <!-- TODO: input@type=file inside a button won't work in firefox. Use links instead -->
+            <button class="button oe-binary-file-set" type="button" title="Select file">
                 <img src="/base/static/src/img/icons/STOCK_DIRECTORY.png"/>
+                <span>Select</span>
+                <form class="oe-binary-form" t-att-target="widget.iframe"
+                        method="post" enctype="multipart/form-data" action="/base/formview/upload">
+                    <input type="hidden" name="session_id" value=""/>
+                    <input type="hidden" name="callback" t-att-value="widget.iframe"/>
+                    <input type="file" class="oe-binary-file" name="ufile"/>
+                </form>
             </button>
-            <!--<button class="button oe-binary-image-save" type="button" title="Save As">
+            <button class="button oe-binary-file-save" type="button" title="Save As">
                 <img src="/base/static/src/img/icons/gtk-save.png"/>
-            </button>-->
-            <button class="button oe-binary-image-clear" type="button" title="Clear">
-                <img src="/base/static/src/img/icons/STOCK_MISSING_IMAGE.png"/>
+                <span>Save As</span>
             </button>
+            <button class="button oe-binary-file-clear" type="button" title="Clear">
+                <img src="/base/static/src/img/icons/STOCK_MISSING_IMAGE.png"/>
+                <span>Clear</span>
+            </button>
+        </td>
+        <td class="oe-binary-progress" style="display: none" nowrap="true">
+            <img src="/base/static/src/img/throbber.gif" width="16" height="16"/>
+            <b>Uploading ...</b>
+            <iframe t-att-id="widget.iframe" t-att-name="widget.iframe" style="display: none"> </iframe>
         </td>
     </tr>
     </table>

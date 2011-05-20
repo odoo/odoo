@@ -563,12 +563,54 @@ class FormView(View):
             if not id:
                 res = Model.default_get([field], request.context).get(field, '')
             else:
-                res = Model.read([id], [field], request.context)[0].get(field, '')
+                res = Model.read([int(id)], [field], request.context)[0].get(field, '')
             return base64.decodestring(res)
-        except:
+        except: # TODO: what's the exception here?
             return self.placeholder()
     def placeholder(self):
         return open(os.path.join(openerpweb.path_addons, 'base', 'static', 'src', 'img', 'placeholder.png'), 'rb').read()
+
+    @openerpweb.httprequest
+    def saveas(self, request, session_id, model, id, field, fieldname, **kw):
+        Model = request.session.model(model)
+        res = Model.read([int(id)], [field, fieldname])[0]
+        filecontent = res.get(field, '')
+        if not filecontent:
+            raise cherrypy.NotFound
+        else:
+            cherrypy.response.headers['Content-Type'] = 'application/octet-stream'
+            filename = '%s_%s' % (model.replace('.', '_'), id)
+            if fieldname:
+                filename = res.get(fieldname, '') or filename
+            cherrypy.response.headers['Content-Disposition'] = 'attachment; filename=' +  filename
+            return base64.decodestring(filecontent)
+
+    @openerpweb.httprequest
+    def upload(self, request, session_id, callback, ufile=None):
+        cherrypy.response.timeout = 500
+        headers = {}
+        for key, val in cherrypy.request.headers.iteritems():
+            headers[key.lower()] = val
+        size = int(headers.get('content-length', 0))
+        # TODO: might be usefull to have a configuration flag for max-lenght file uploads
+        try:
+            out = """<script language="javascript" type="text/javascript">
+                        var win = window.top.window,
+                            callback = win[%s];
+                        if (typeof(callback) === 'function') {
+                            callback.apply(this, %s);
+                        } else {
+                            win.jQuery('#oe_notification', win.document).notify('create', {
+                                title: "Ajax File Upload",
+                                text: "Could not find callback"
+                            });
+                        }
+                    </script>"""
+            data = ufile.file.read()
+            args = [size, ufile.filename, ufile.headers.getheader('Content-Type'), base64.encodestring(data)]
+        except Exception, e:
+            args = [False, e.message]
+        return out % (simplejson.dumps(callback), simplejson.dumps(args))
 
 class ListView(View):
     _cp_path = "/base/listview"
