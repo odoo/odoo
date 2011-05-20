@@ -3,7 +3,6 @@
 -
   !python {model: res.config.users}: |
     default_value = self.default_get(cr, uid, ['name','login','password','active','context_lang','active','menu_id','company_id','address_id','menu_tips'])
-    print "default_value::",default_value
     default_value.update({
               'name' : 'test1',
               'login' : 'test1',
