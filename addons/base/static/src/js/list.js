@@ -533,18 +533,30 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
             placeholder.appendChild($row[0]);
             self.pad($row);
 
-            var title_column = _(self.columns).chain()
+            _(self.columns).chain()
                 .filter(function (column) {return !column.invisible;})
-                .pluck('id')
-                .indexOf(group.grouped_on)
-                .value();
-            while (title_column--) {
-                $row.append('<td>');
-            }
-            $('<td>')
-                .text(_.sprintf("%s (%d)", group.value instanceof Array ? group.value[1] : group.value, group.length))
-                .appendTo($row);
-            // TODO: aggregate fields
+                .each(function (column) {
+                    if (column.id === group.grouped_on) {
+                        $('<td>')
+                            .text(_.sprintf("%s (%d)",
+                                group.value instanceof Array ? group.value[1] : group.value,
+                                group.length))
+                            .appendTo($row);
+                    } else if (column.id in group.aggregates) {
+                        var value = group.aggregates[column.id];
+                        var format;
+                        if (column.type === 'integer') {
+                            format = "%.0f";
+                        } else if (column.type === 'float') {
+                            format = "%.2f";
+                        }
+                        $('<td>')
+                            .text(_.sprintf(format, value))
+                            .appendTo($row);
+                    } else {
+                        $row.append('<td>');
+                    }
+                });
         });
         return placeholder;
     },
