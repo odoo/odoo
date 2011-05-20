@@ -266,12 +266,10 @@ class hr_payslip(osv.osv):
 #            ('done', 'Paid Salary'),
 #            ('cancel', 'Reject'),
         ], 'State', select=True, readonly=True,
-            help=' * When the payslip is created the state is \'Waiting for verification\'.\
-            \n* It is varified by the user and payslip is sent for HR varification, the state is \'Waiting for HR Verification\'. \
-            \n* If HR varify the payslip, it is sent for account verification, the state is \'Waiting for Account Verification\'. \
-            \n* It is confirmed by the accountant and the state set to \'Confirm Sheet\'.\
-            \n* If the salary is paid then state is set to \'Paid Salary\'.\
-            \n* The \'Reject\' state is used when user cancel payslip.'),
+            help='* When the payslip is created the state is \'Draft\'.\
+            \n* If a condition is not satisfied, the state is \'Verify\'. \
+            \n* If a condition is satisfied then state is set to \'Done\'.\
+            \n* When user cancel payslip the state is \'Reject\'.'),
 #        'line_ids': fields.one2many('hr.payslip.line', 'slip_id', 'Payslip Line', required=False, readonly=True, states={'draft': [('readonly', False)]}),
         'line_ids': one2many_mod2('hr.payslip.line', 'slip_id', 'Payslip Lines', readonly=True, states={'draft':[('readonly',False)]}),
         'company_id': fields.many2one('res.company', 'Company', required=False, readonly=True, states={'draft': [('readonly', False)]}),
@@ -354,7 +352,7 @@ class hr_payslip(osv.osv):
     def verify_sheet(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'confirm'}, context=context)
     
-    def check(self, cr, uid, ids, context=None):
+    def check_done(self, cr, uid, ids, context=None):
         return True
 
     #TODO move this function into hr_contract module, on hr.employee object
