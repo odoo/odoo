@@ -58,7 +58,7 @@ class hr_payslip_employees(osv.osv_memory):
                 'worked_days_line_ids': [(0, 0, x) for x in slip_data['value'].get('worked_days_line_ids', False)]
             }
             slip_ids.append(slip_pool.create(cr, uid, res, context=context))
-            run_pool.write(cr, uid, context.get('active_ids', []), {'date_start': from_date, 'date_end': to_date})
+        run_pool.write(cr, uid, context.get('active_ids', []), {'date_start': from_date, 'date_end': to_date})
         slip_pool.compute_sheet(cr, uid, slip_ids, context=context)
         return {'type': 'ir.actions.act_window_close'}
 
