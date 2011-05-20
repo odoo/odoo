@@ -213,7 +213,6 @@
                             <field name="state_id"/>
                             <field name="phone"/>
                             <field name="email"/>
-                            <field name="currency_id" colspan="2"/>
                             <separator string="Reporting Information" colspan="4"/>
                             <field name="rml_header1" colspan="4"/>
                             <field name="rml_footer1" colspan="4"/>
@@ -229,6 +228,9 @@
                             <field colspan="2" name="rml_header3" nolabel="1"/>
                         </page>
                         <page string="Configuration">
+                            <separator string="Currency Information" colspan="4"/>
+                            <field name="currency_id" colspan="2"/>
+                            <newline/>
                         </page>
                     </notebook>
                 </form>
