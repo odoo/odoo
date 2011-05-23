@@ -7,26 +7,26 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2010-10-30 10:58+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"PO-Revision-Date: 2011-05-22 17:11+0000\n"
+"Last-Translator: Ayhan KIZILTAN <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 04:59+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-05-23 04:37+0000\n"
+"X-Generator: Launchpad (build 12959)\n"
 
 #. module: crm
 #: view:crm.lead.report:0
 msgid "# Leads"
-msgstr "# Talepler"
+msgstr "Aday Sayısı"
 
 #. module: crm
 #: view:crm.lead:0
 #: selection:crm.lead,type:0
 #: selection:crm.lead.report,type:0
 msgid "Lead"
-msgstr "Talep"
+msgstr "Aday"
 
 #. module: crm
 #: model:crm.case.categ,name:crm.categ_oppor3
@@ -46,7 +46,7 @@ msgstr "Telefon görüşmesi planla"
 #. module: crm
 #: model:ir.model,name:crm.model_crm_case_stage
 msgid "Stage of case"
-msgstr "Vak'anın durumu"
+msgstr "Durum Aşaması"
 
 #. module: crm
 #: view:crm.meeting:0
@@ -56,12 +56,12 @@ msgstr "Görünürlük"
 #. module: crm
 #: field:crm.lead,title:0
 msgid "Title"
-msgstr "Başlık"
+msgstr "Unvan"
 
 #. module: crm
 #: field:crm.meeting,show_as:0
 msgid "Show as"
-msgstr "Göster"
+msgstr "Farklı Göster"
 
 #. module: crm
 #: field:crm.meeting,day:0
@@ -103,7 +103,7 @@ msgstr "Önceki Aşama"
 #: code:addons/crm/wizard/crm_add_note.py:26
 #, python-format
 msgid "Can not add note!"
-msgstr "Not ekleyemiyor!"
+msgstr "Not eklenemiyor!"
 
 #. module: crm
 #: field:crm.case.stage,name:0
@@ -124,7 +124,7 @@ msgid "The code of the sales team must be unique !"
 msgstr "Satış temsilcisinin kodu tek olmalı !"
 
 #. module: crm
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:93
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:95
 #, python-format
 msgid "Lead '%s' has been converted to an opportunity."
 msgstr "'%s' talebi fırsata dönüştürüldü."
@@ -133,7 +133,7 @@ msgstr "'%s' talebi fırsata dönüştürüldü."
 #: code:addons/crm/crm_lead.py:228
 #, python-format
 msgid "The lead '%s' has been closed."
-msgstr "'%s' talepi kapandı."
+msgstr "Aday '%s' kapatılmıştır."
 
 #. module: crm
 #: selection:crm.meeting,freq:0
@@ -141,8 +141,8 @@ msgid "No Repeat"
 msgstr "Tekrar yok"
 
 #. module: crm
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:133
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:258
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:135
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:260
 #: code:addons/crm/wizard/crm_lead_to_partner.py:55
 #: code:addons/crm/wizard/crm_phonecall_to_partner.py:52
 #, python-format
@@ -172,12 +172,12 @@ msgstr "Kampanya"
 #. module: crm
 #: selection:crm.lead2opportunity.partner,action:0
 msgid "Do not create a partner"
-msgstr "İş ortağı oluşturma"
+msgstr "Paydaş oluşturma"
 
 #. module: crm
 #: view:crm.lead:0
 msgid "Search Opportunities"
-msgstr "Fırsatlarda Ara"
+msgstr "Fırsatları Ara"
 
 #. module: crm
 #: code:addons/crm/wizard/crm_merge_opportunities.py:46
@@ -185,13 +185,14 @@ msgstr "Fırsatlarda Ara"
 msgid ""
 "Opportunity must have Partner assigned before merging with other Opportunity."
 msgstr ""
+"Diğer Fırsatlarla birleştirilmeden önce Fırsatın atanmış bir Paydaşı olmalı."
 
 #. module: crm
 #: code:addons/crm/wizard/crm_merge_opportunities.py:46
 #: code:addons/crm/wizard/crm_merge_opportunities.py:53
 #, python-format
 msgid "Warning!"
-msgstr "Dikkat!"
+msgstr "Uyarı!"
 
 #. module: crm
 #: view:crm.lead.report:0
@@ -219,7 +220,7 @@ msgstr "Fırsat Analizi"
 #: model:ir.model,name:crm.model_res_partner
 #: model:process.node,name:crm.process_node_partner0
 msgid "Partner"
-msgstr "Ortak"
+msgstr "Paydaş"
 
 #. module: crm
 #: field:crm.meeting,organizer:0
@@ -233,12 +234,12 @@ msgstr "Düzenleyici"
 #: model:ir.actions.act_window,name:crm.phonecall_to_phonecall_act
 #: view:res.partner:0
 msgid "Schedule Other Call"
-msgstr "Başka bir görüşme planla"
+msgstr "Başka bir çağrı planla"
 
 #. module: crm
 #: help:crm.meeting,edit_all:0
 msgid "Edit all Occurrences  of recurrent Meeting."
-msgstr ""
+msgstr "Yinelenen Toplantıya ait bütün Olayları Düzenle."
 
 #. module: crm
 #: code:addons/crm/wizard/crm_opportunity_to_phonecall.py:134
@@ -249,12 +250,12 @@ msgstr ""
 #: view:res.partner:0
 #, python-format
 msgid "Phone Call"
-msgstr "Telefon Görüşmesi"
+msgstr "Telefon Çağrısı"
 
 #. module: crm
 #: field:crm.lead,optout:0
 msgid "Opt-Out"
-msgstr "Üyelikten çık"
+msgstr "Çekildi"
 
 #. module: crm
 #: code:addons/crm/crm_opportunity.py:108
@@ -279,7 +280,7 @@ msgstr ""
 #. module: crm
 #: view:crm.lead:0
 msgid "Send New Email"
-msgstr "Yeni e-posta gönder"
+msgstr "Yeni Eposta gönder"
 
 #. module: crm
 #: field:crm.segmentation,segmentation_line:0
@@ -306,7 +307,7 @@ msgstr "_Birleştir"
 #: model:ir.actions.act_window,name:crm.action_report_crm_lead
 #: model:ir.ui.menu,name:crm.menu_report_crm_leads_tree
 msgid "Leads Analysis"
-msgstr "Talep Analizi"
+msgstr "Adayların Analizi"
 
 #. module: crm
 #: view:crm.lead2opportunity.action:0
@@ -319,7 +320,7 @@ msgstr ""
 #. module: crm
 #: selection:crm.meeting,class:0
 msgid "Public"
-msgstr ""
+msgstr "Genel"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_case_resource_type_act
@@ -332,7 +333,7 @@ msgstr "Kampanyalar"
 #: model:ir.ui.menu,name:crm.menu_crm_case_phonecall-act
 #: model:ir.ui.menu,name:crm.menu_crm_lead_categ
 msgid "Categories"
-msgstr "Kategoriler"
+msgstr "Sınıflar"
 
 #. module: crm
 #: selection:crm.meeting,end_type:0
@@ -345,32 +346,32 @@ msgid ""
 "If opt-out is checked, this contact has refused to receive emails or "
 "unsubscribed to a campaign."
 msgstr ""
-"Eğer vazgeç işaretlendiyse, bu kişi e-mail almayı reddediyor ya da kampanya "
+"Eğer çekildi işaretlendiyse, bu kişi e-mail almayı reddediyor ya da kampanya "
 "üyeliğini iptal etmiş."
 
 #. module: crm
 #: model:process.transition,name:crm.process_transition_leadpartner0
 msgid "Prospect Partner"
-msgstr "Olası İş Ortağı"
+msgstr "Olası Paydaş"
 
 #. module: crm
 #: field:crm.lead,contact_name:0
 msgid "Contact Name"
-msgstr "İletişim Ad, Soyad"
+msgstr "İlgili Adı"
 
 #. module: crm
 #: selection:crm.lead2opportunity.partner,action:0
 #: selection:crm.lead2partner,action:0
 #: selection:crm.phonecall2partner,action:0
 msgid "Link to an existing partner"
-msgstr "Varolan İş ortağına bağla"
+msgstr "Varolan paydaşa bağlan"
 
 #. module: crm
 #: view:crm.lead:0
 #: view:crm.meeting:0
 #: field:crm.phonecall,partner_contact:0
 msgid "Contact"
-msgstr "İletişim"
+msgstr "İlgili"
 
 #. module: crm
 #: view:crm.installer:0
@@ -391,7 +392,7 @@ msgstr ""
 #: code:addons/crm/crm_lead.py:209
 #, python-format
 msgid "The lead '%s' has been opened."
-msgstr "'%s' talepi açıldı."
+msgstr "Aday '%s' açılmıştır."
 
 #. module: crm
 #: model:process.transition,name:crm.process_transition_opportunitymeeting0
@@ -418,7 +419,7 @@ msgstr "Kaynak Geliştirme"
 #: view:res.partner:0
 #: field:res.partner,opportunity_ids:0
 msgid "Leads and Opportunities"
-msgstr "Talepler ve Fırsatlar"
+msgstr "Adaylar ve Fırsatlar"
 
 #. module: crm
 #: view:crm.send.mail:0
@@ -453,7 +454,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead2opportunity_action
 msgid "Convert/Merge Opportunity"
-msgstr "Fırsatı dönüştür/birleştir"
+msgstr "Fırsatı Dönüştür/Birleştir"
 
 #. module: crm
 #: field:crm.lead,write_date:0
@@ -464,7 +465,7 @@ msgstr "Güncelleme Tarihi"
 #: view:crm.lead2opportunity.action:0
 #: field:crm.lead2opportunity.action,name:0
 msgid "Select Action"
-msgstr "Faaliyet seç"
+msgstr "Eylem Seç"
 
 #. module: crm
 #: field:base.action.rule,trg_categ_id:0
@@ -497,7 +498,7 @@ msgstr "Kampanya 2"
 #. module: crm
 #: view:crm.meeting:0
 msgid "Privacy"
-msgstr "Kişiye Özel"
+msgstr "Gizlilik"
 
 #. module: crm
 #: view:crm.lead.report:0
@@ -507,12 +508,12 @@ msgstr "Fırsat Analizi"
 #. module: crm
 #: help:crm.meeting,location:0
 msgid "Location of Event"
-msgstr "Olay yeri"
+msgstr "Olay Konumu"
 
 #. module: crm
 #: field:crm.meeting,rrule:0
 msgid "Recurrent Rule"
-msgstr "Tekrarlanan Kural"
+msgstr "Yinelenen Kural"
 
 #. module: crm
 #: model:crm.case.resource.type,name:crm.type_lead1
@@ -527,23 +528,23 @@ msgstr "Versiyon 4.4"
 #. module: crm
 #: help:crm.installer,fetchmail:0
 msgid "Allows you to receive E-Mails from POP/IMAP server."
-msgstr "POP/IMAP sunucusu üzerinden e-posta almanıza izin verir."
+msgstr "POP/IMAP sunucusu üzerinden E-posta almanıza izin verir."
 
 #. module: crm
 #: model:process.transition,note:crm.process_transition_opportunitymeeting0
 msgid "Normal or phone meeting for opportunity"
-msgstr "Fırsat için yüz yüze veya telefonla toplantı"
+msgstr "Fırsat için normal ya da telefonla toplantı"
 
 #. module: crm
 #: model:process.node,note:crm.process_node_leads0
 msgid "Very first contact with new prospect"
-msgstr ""
+msgstr "Yeni olası adayla ilk iletişim"
 
 #. module: crm
 #: code:addons/crm/crm_lead.py:278
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:195
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:229
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:297
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:197
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:231
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:299
 #: view:crm.lead2opportunity:0
 #: view:crm.partner2opportunity:0
 #: model:ir.actions.act_window,name:crm.action_crm_lead2opportunity
@@ -587,12 +588,12 @@ msgstr "Çalışmıyor"
 #: view:crm.send.mail:0
 #: model:ir.actions.act_window,name:crm.action_crm_reply_mail
 msgid "Reply to last Mail"
-msgstr "Son e-postaya cevap ver"
+msgstr "Son postayı yanıtla"
 
 #. module: crm
 #: field:crm.lead,email:0
 msgid "E-Mail"
-msgstr "E-posta"
+msgstr "E-Posta"
 
 #. module: crm
 #: field:crm.installer,wiki_sale_faq:0
@@ -614,7 +615,7 @@ msgstr "Ekim"
 #. module: crm
 #: view:crm.segmentation:0
 msgid "Included Answers :"
-msgstr "Dahil olan yanıtlar :"
+msgstr "İçerilen Yanıtlar :"
 
 #. module: crm
 #: help:crm.meeting,email_from:0
@@ -631,7 +632,7 @@ msgstr "Özet"
 #. module: crm
 #: view:crm.segmentation:0
 msgid "State of Mind Computation"
-msgstr "Ruhsal Durum Hesaplanması"
+msgstr "Zihin Hesaplama Durumu"
 
 #. module: crm
 #: help:crm.case.section,change_responsible:0
@@ -653,7 +654,7 @@ msgstr ""
 #. module: crm
 #: view:crm.case.categ:0
 msgid "Case Category"
-msgstr "Servis Talep Kategorisi"
+msgstr "Durum Kategorisi"
 
 #. module: crm
 #: help:crm.segmentation,som_interval_default:0
@@ -814,8 +815,8 @@ msgid "Statistics Dashboard"
 msgstr "İstatistiksel Kontrol Paneli"
 
 #. module: crm
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:86
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:96
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:88
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:98
 #: code:addons/crm/wizard/crm_partner_to_opportunity.py:101
 #: code:addons/crm/wizard/crm_phonecall_to_opportunity.py:117
 #: view:crm.lead:0
@@ -1121,7 +1122,7 @@ msgstr "Üye olmak istiyorum"
 
 #. module: crm
 #: code:addons/crm/crm_opportunity.py:208
-#: code:addons/crm/crm_phonecall.py:184
+#: code:addons/crm/crm_phonecall.py:185
 #: code:addons/crm/wizard/crm_phonecall_to_meeting.py:55
 #: code:addons/crm/wizard/crm_phonecall_to_meeting.py:137
 #: view:crm.meeting:0
@@ -2630,7 +2631,7 @@ msgid "Meeting Type"
 msgstr "Toplantı Türü"
 
 #. module: crm
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:312
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:314
 #, python-format
 msgid "Merge with Existing Opportunity"
 msgstr ""
@@ -3140,8 +3141,8 @@ msgid "Schedule Call"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:133
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:258
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:135
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:260
 #, python-format
 msgid "Closed/Cancelled Leads Could not convert into Opportunity"
 msgstr ""
