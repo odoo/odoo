@@ -94,6 +94,8 @@ class account_asset_asset(osv.osv):
                 depreciation_lin_obj.unlink(cr, uid, old_depreciation_line_ids, context=context)
 
             undone_dotation_number = asset.method_delay - len(asset.account_move_line_ids)
+            if asset.method == 'linear' and asset.prorata:
+                undone_dotation_number += 1
             residual_amount = asset.value_residual
             depreciation_date = datetime.strptime(self._get_last_depreciation_date(cr, uid, [asset.id], context)[asset.id], '%Y-%m-%d')
             day = depreciation_date.day
@@ -102,9 +104,14 @@ class account_asset_asset(osv.osv):
             for i in range(1,undone_dotation_number+1):
                 if i == undone_dotation_number + 1:
                     amount = residual_amount
+                    if asset.prorata:
+                        amount = (asset.purchase_value / undone_dotation_number)/364 * 364
                 else:
                     if asset.method == 'linear':
                         amount = asset.purchase_value / undone_dotation_number
+                        if asset.prorata and i == 1:
+                            amount = (asset.purchase_value / undone_dotation_number)/365
+                            day = 1
                     else:
                         amount = residual_amount * asset.method_progress_factor
                 residual_amount -= amount
@@ -119,7 +126,7 @@ class account_asset_asset(osv.osv):
                 }
                 self.pool.get('account.asset.depreciation.line').create(cr, uid, vals)
                 month += asset.method_period
-                depreciation_date = datetime(year + (month / 12), month % 12, day)
+                depreciation_date = datetime(year + (month / 12), (month % 12 or 1), day)
         return True
 
     def validate(self, cr, uid, ids, context={}):
@@ -198,6 +205,16 @@ class account_asset_asset(osv.osv):
         'company_id': lambda self, cr, uid, context: self.pool.get('res.company')._company_default_get(cr, uid, 'account.asset.asset',context=context),
     }
 
+    def _check_prorata(self, cr, uid, ids, context=None):
+        assets = self.browse(cr, uid, ids, context=context)
+        for asset in assets:
+            if asset.purchase_date != time.strftime('%Y-12-30'):
+                return False
+        return True
+
+    _constraints = [
+        (_check_prorata, '\nAsset is not purchased at the end of the year!\nPlease check the purchase date.', ['prorata']),
+    ]
 
     def _compute_period(self, cr, uid, property, context={}):
         if (len(property.entry_asset_ids or [])/2)>=property.method_delay:
