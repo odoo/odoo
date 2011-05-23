@@ -1212,7 +1212,6 @@ openerp.base.form.FieldBinary = openerp.base.form.Field.extend({
     start: function() {
         this._super.apply(this, arguments);
         this.$element.find('input.oe-binary-file').change(this.on_file_change);
-        this.$element.find('button.oe-binary-file-save').click(this.on_save_as);
         this.$element.find('.oe-binary-file-clear').click(this.on_clear);
     },
     set_value_from_ui: function() {
@@ -1251,12 +1250,6 @@ openerp.base.form.FieldBinary = openerp.base.form.Field.extend({
         this.toggle_progress();
     },
     on_file_uploaded_and_valid: function(size, name, content_type, file_base64) {
-    },
-    on_save_as: function() {
-        var url = '/base/formview/saveas?session_id=' + this.session.session_id + '&model=' +
-            this.view.dataset.model +'&id=' + (this.view.datarecord.id || '') + '&field=' + this.name +
-            '&fieldname=' + (this.node.attrs.filename || '') + '&t=' + (new Date().getTime())
-        window.open(url);
     },
     on_clear: function() {
         if (this.value !== false) {
