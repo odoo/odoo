@@ -1255,7 +1255,7 @@ openerp.base.form.FieldBinary = openerp.base.form.Field.extend({
     on_file_uploaded_and_valid: function(size, name, content_type, file_base64) {
     },
     on_save_as: function() {
-        var url = '/base/formview/saveas?session_id=' + this.session.session_id + '&model=' +
+        var url = '/base/binary/saveas?session_id=' + this.session.session_id + '&model=' +
             this.view.dataset.model +'&id=' + (this.view.datarecord.id || '') + '&field=' + this.name +
             '&fieldname=' + (this.node.attrs.filename || '') + '&t=' + (new Date().getTime())
         window.open(url);
@@ -1329,7 +1329,7 @@ openerp.base.form.FieldBinaryImage = openerp.base.form.FieldBinary.extend({
     set_value: function(value) {
         this._super.apply(this, arguments);
         this.set_image_maxwidth();
-        var url = '/base/formview/image?session_id=' + this.session.session_id + '&model=' +
+        var url = '/base/binary/image?session_id=' + this.session.session_id + '&model=' +
             this.view.dataset.model +'&id=' + (this.view.datarecord.id || '') + '&field=' + this.name + '&t=' + (new Date().getTime())
         this.$image.attr('src', url);
     }
