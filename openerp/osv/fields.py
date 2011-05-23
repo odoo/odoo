@@ -687,12 +687,19 @@ class many2many(_column):
 
 def get_nice_size(a):
     (x,y) = a
+    size = 0
+    if y and isinstance(y, dict):
+        if y.keys() and isinstance(y.get(y.keys()[0]), (int,long)):
+            size = y.get(y.keys()[0],0)
+        elif y.keys() and y.get(y.keys()[0]):
+            size = len(y.get(y.keys()[0]))
+        y.update({y.keys()[0]: tools.human_size(size)})
+        return (x, y)
+
     if isinstance(y, (int,long)):
         size = y
     elif y:
         size = len(y)
-    else:
-        size = 0
     return (x, tools.human_size(size))
 
 def sanitize_binary_value(dict_item):
@@ -833,9 +840,9 @@ class function(_column):
                 # Converting value into string so that it does not affect XML-RPC Limits
                 if isinstance(res[r],dict): # To treat integer values with _multi attribute
                     for record in res[r].keys():
-                        res[r][record] = str(res[r][record])
+                        res[r][record] = tools.ustr(res[r][record])
                 else:
-                    res[r] = str(res[r])
+                    res[r] = tools.ustr(res[r])
         return res
     get_memory = get
 
