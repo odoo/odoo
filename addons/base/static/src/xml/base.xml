@@ -416,19 +416,28 @@
     <tr>
         <td align="center" valign="bottom" height="25">
             <div class="oe-binary">
-                <!-- TODO: input@type=file inside a button won't work in firefox. Use links instead -->
-                <button class="button oe-binary-file-set" type="button" title="Set Image">
-                    <img src="/base/static/src/img/icons/STOCK_DIRECTORY.png"/>
-                    <form class="oe-binary-form" t-att-target="widget.iframe"
-                            method="post" enctype="multipart/form-data" action="/base/formview/upload">
-                        <input type="hidden" name="session_id" value=""/>
-                        <input type="hidden" name="callback" t-att-value="widget.iframe"/>
-                        <input type="file" class="oe-binary-file" name="ufile"/>
-                    </form>
-                </button>
-                <button class="button oe-binary-file-clear" type="button" title="Clear">
-                    <img src="/base/static/src/img/icons/STOCK_MISSING_IMAGE.png"/>
-                </button>
+                <table cellspacing="0" cellpadding="0" border="0">
+                <tr>
+                    <td>
+                        <div class="oe-binary-file-set" style="width: 40px; height:22px;">
+                            <form class="oe-binary-form" t-att-target="widget.iframe"
+                                method="post" enctype="multipart/form-data" action="/base/formview/upload">
+                                <input type="hidden" name="session_id" value=""/>
+                                <input type="hidden" name="callback" t-att-value="widget.iframe"/>
+                                <button class="button" type="button" title="Set Image">
+                                    <img src="/base/static/src/img/icons/STOCK_DIRECTORY.png"/>
+                                </button>
+                                <input type="file" class="oe-binary-file" name="ufile"/>
+                            </form>
+                        </div>
+                    </td>
+                    <td>
+                        <button class="button oe-binary-file-clear" type="button" title="Clear">
+                            <img src="/base/static/src/img/icons/STOCK_MISSING_IMAGE.png"/>
+                        </button>
+                    </td>
+                </tr>
+                </table>
             </div>
             <div class="oe-binary-progress" style="display: none">
                 <img src="/base/static/src/img/throbber.gif" width="16" height="16"/>
@@ -450,25 +459,36 @@
             />
         </td>
         <td class="oe-binary" nowrap="true">
-            <!-- TODO: input@type=file inside a button won't work in firefox. Use links instead -->
-            <button class="button oe-binary-file-set" type="button" title="Select file">
-                <img src="/base/static/src/img/icons/STOCK_DIRECTORY.png"/>
-                <span>Select</span>
-                <form class="oe-binary-form" t-att-target="widget.iframe"
-                        method="post" enctype="multipart/form-data" action="/base/formview/upload">
-                    <input type="hidden" name="session_id" value=""/>
-                    <input type="hidden" name="callback" t-att-value="widget.iframe"/>
-                    <input type="file" class="oe-binary-file" name="ufile"/>
-                </form>
-            </button>
-            <button class="button oe-binary-file-save" type="button" title="Save As">
-                <img src="/base/static/src/img/icons/gtk-save.png"/>
-                <span>Save As</span>
-            </button>
-            <button class="button oe-binary-file-clear" type="button" title="Clear">
-                <img src="/base/static/src/img/icons/STOCK_MISSING_IMAGE.png"/>
-                <span>Clear</span>
-            </button>
+            <table cellspacing="0" cellpadding="0" border="0">
+            <tr>
+                <td>
+                    <div class="oe-binary-file-set" style="width: 80px; height:22px;">
+                        <form class="oe-binary-form" t-att-target="widget.iframe"
+                            method="post" enctype="multipart/form-data" action="/base/formview/upload">
+                            <input type="hidden" name="session_id" value=""/>
+                            <input type="hidden" name="callback" t-att-value="widget.iframe"/>
+                            <button class="button" type="button" title="Set Image">
+                                <img src="/base/static/src/img/icons/STOCK_DIRECTORY.png"/>
+                                <span>Select</span>
+                            </button>
+                            <input type="file" class="oe-binary-file" name="ufile"/>
+                        </form>
+                    </div>
+                </td>
+                <td>
+                    <button class="button oe-binary-file-save" type="button" title="Save As">
+                        <img src="/base/static/src/img/icons/gtk-save.png"/>
+                        <span>Save As</span>
+                    </button>
+                </td>
+                <td>
+                    <button class="button oe-binary-file-clear" type="button" title="Clear">
+                        <img src="/base/static/src/img/icons/STOCK_MISSING_IMAGE.png"/>
+                        <span>Clear</span>
+                    </button>
+                </td>
+            </tr>
+            </table>
         </td>
         <td class="oe-binary-progress" style="display: none" nowrap="true">
             <img src="/base/static/src/img/throbber.gif" width="16" height="16"/>
