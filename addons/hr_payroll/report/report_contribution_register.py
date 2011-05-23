@@ -33,7 +33,6 @@ class contribution_register_report(report_sxw.rml_parse):
         super(contribution_register_report, self).__init__(cr, uid, name, context)
         self.localcontext.update({
             'get_payslip_lines': self._get_payslip_lines,
-            'get_registers': self._get_registers,
         })
 
     def set_context(self, objects, data, ids, report_type=None):
@@ -41,15 +40,7 @@ class contribution_register_report(report_sxw.rml_parse):
         self.date_to = data['form'].get('date_to', str(datetime.now() + relativedelta.relativedelta(months=+1, day=1, days=-1))[:10])
         return super(contribution_register_report, self).set_context(objects, data, ids, report_type=report_type)
 
-    def _get_registers(self,form):
-        result = []
-        periods = []
-        register_obj = self.pool.get('hr.contribution.register')
-        register_ids = form['contribution_register']
-        result = register_obj.browse(self.cr,self.uid, register_ids)
-        return result
-
-    def _get_payslip_lines(self, obj, form):
+    def _get_payslip_lines(self, obj):
         payslip_obj = self.pool.get('hr.payslip')
         payslip_line = self.pool.get('hr.payslip.line')
         res = []
