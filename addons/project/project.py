@@ -82,7 +82,6 @@ class project(osv.osv):
 
     def _progress_rate(self, cr, uid, ids, names, arg, context=None):
         res = {}.fromkeys(ids, 0.0)
-        progress = {}
         if not ids:
             return res
         cr.execute('''SELECT
@@ -161,9 +160,9 @@ class project(osv.osv):
     # TODO: Why not using a SQL contraints ?
     def _check_dates(self, cr, uid, ids, context=None):
         for leave in self.read(cr, uid, ids, ['date_start', 'date'], context=context):
-             if leave['date_start'] and leave['date']:
-                 if leave['date_start'] > leave['date']:
-                     return False
+            if leave['date_start'] and leave['date']:
+                if leave['date_start'] > leave['date']:
+                    return False
         return True
 
     _constraints = [
@@ -241,7 +240,6 @@ class project(osv.osv):
     def duplicate_template(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
-        task_pool = self.pool.get('project.task')
         data_obj = self.pool.get('ir.model.data')
         result = []
         for proj in self.browse(cr, uid, ids, context=context):
@@ -401,8 +399,8 @@ class task(osv.osv):
         if not default.get('name', False):
             default['name'] = self.browse(cr, uid, id, context=context).name or ''
             if not context.get('copy',False):
-                 new_name = _("%s (copy)")%default.get('name','')
-                 default.update({'name':new_name})
+                new_name = _("%s (copy)")%default.get('name','')
+                default.update({'name':new_name})
         return super(task, self).copy_data(cr, uid, id, default, context)
 
 
@@ -451,7 +449,7 @@ class task(osv.osv):
                 'project.task': (lambda self, cr, uid, ids, c={}: ids, ['work_ids', 'remaining_hours', 'planned_hours'], 10),
                 'project.task.work': (_get_task, ['hours'], 10),
             }),
-        'progress': fields.function(_hours_get, method=True, string='Progress (%)', multi='hours', group_operator="avg", help="Computed as: Time Spent / Total Time.",
+        'progress': fields.function(_hours_get, method=True, string='Progress (%)', multi='hours', group_operator="avg", help="If the task has a progress of 99.99% you should close the task if it's finished or reevaluate the time",
             store = {
                 'project.task': (lambda self, cr, uid, ids, c={}: ids, ['work_ids', 'remaining_hours', 'planned_hours','state'], 10),
                 'project.task.work': (_get_task, ['hours'], 10),
@@ -572,7 +570,7 @@ class task(osv.osv):
         project = task.project_id
         res = self.do_close(cr, uid, [project_id], context=context)
         if project.warn_manager or project.warn_customer:
-           return {
+            return {
                 'name': _('Send Email after close task'),
                 'view_type': 'form',
                 'view_mode': 'form',
@@ -790,6 +788,13 @@ class account_analytic_account(osv.osv):
         if vals.get('child_ids', False) and context.get('analytic_project_copy', False):
             vals['child_ids'] = []
         return super(account_analytic_account, self).create(cr, uid, vals, context=context)
+    
+    def unlink(self, cr, uid, ids, *args, **kwargs):
+        project_obj = self.pool.get('project.project')
+        analytic_ids = project_obj.search(cr, uid, [('analytic_account_id','in',ids)])
+        if analytic_ids:
+            raise osv.except_osv(_('Warning !'), _('Please delete the project linked with this account first.'))
+        return super(account_analytic_account, self).unlink(cr, uid, ids, *args, **kwargs)
 
 account_analytic_account()
 

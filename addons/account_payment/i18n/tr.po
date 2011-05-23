@@ -7,24 +7,24 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2010-09-09 07:16+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"PO-Revision-Date: 2011-05-16 21:36+0000\n"
+"Last-Translator: Ayhan KIZILTAN <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 05:21+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-05-17 04:40+0000\n"
+"X-Generator: Launchpad (build 12959)\n"
 
 #. module: account_payment
 #: field:payment.order,date_scheduled:0
 msgid "Scheduled date if fixed"
-msgstr ""
+msgstr "Sabitlenmişse Planlanan tarih"
 
 #. module: account_payment
 #: field:payment.line,currency:0
 msgid "Partner Currency"
-msgstr ""
+msgstr "Paydaş Para Birimi"
 
 #. module: account_payment
 #: view:payment.order:0
@@ -34,13 +34,13 @@ msgstr "Taslak olarak Ayarla"
 #. module: account_payment
 #: help:payment.order,mode:0
 msgid "Select the Payment Mode to be applied."
-msgstr ""
+msgstr "Uygulanacak Ödeme Şeklini Seç"
 
 #. module: account_payment
 #: view:payment.mode:0
 #: view:payment.order:0
 msgid "Group By..."
-msgstr ""
+msgstr "Gruplandır..."
 
 #. module: account_payment
 #: model:ir.module.module,description:account_payment.module_meta_information
@@ -51,18 +51,23 @@ msgid ""
 "* a basic mechanism to easily plug various automated payment.\n"
 "    "
 msgstr ""
+"\n"
+"Bu modül şunları sağlar :\n"
+"* a fatura ödemelerini daha verimli yönetmek.\n"
+"* a çeşitli otomatik ödemeleri kolaylıkla uygulayan bir temel mekanizma.\n"
+"    "
 
 #. module: account_payment
 #: field:payment.order,line_ids:0
 msgid "Payment lines"
-msgstr ""
+msgstr "Ödeme kalemleri"
 
 #. module: account_payment
 #: view:payment.line:0
 #: field:payment.line,info_owner:0
 #: view:payment.order:0
 msgid "Owner Account"
-msgstr ""
+msgstr "Hesap Sahibi"
 
 #. module: account_payment
 #: help:payment.order,state:0
@@ -71,6 +76,9 @@ msgid ""
 " Once the bank is confirmed the state is set to 'Confirmed'.\n"
 " Then the order is paid the state is 'Done'."
 msgstr ""
+"Bir emir durumu 'Taslak' olarak belirlenmişse.\n"
+" Banka durumun 'Onaylı' olarak ayarlanmasını onaylamışsa.\n"
+" Sonra emir ödendi ve durum 'Bitti' olur."
 
 #. module: account_payment
 #: help:account.invoice,amount_to_pay:0
@@ -82,27 +90,27 @@ msgstr ""
 #. module: account_payment
 #: field:payment.mode,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Firma"
 
 #. module: account_payment
 #: field:payment.order,date_prefered:0
 msgid "Preferred date"
-msgstr ""
+msgstr "İstenen Tarih"
 
 #. module: account_payment
 #: selection:payment.line,state:0
 msgid "Free"
-msgstr ""
+msgstr "Boş"
 
 #. module: account_payment
 #: field:payment.order.create,entries:0
 msgid "Entries"
-msgstr "Kayıtlar"
+msgstr "Girişler"
 
 #. module: account_payment
 #: report:payment.order:0
 msgid "Used Account"
-msgstr ""
+msgstr "Kullanılmış Hesap"
 
 #. module: account_payment
 #: field:payment.line,ml_maturity_date:0
@@ -113,17 +121,17 @@ msgstr "Vade Tarihi"
 #. module: account_payment
 #: constraint:account.move.line:0
 msgid "You can not create move line on closed account."
-msgstr ""
+msgstr "Kapalı hesaplarda hareket satırı oluşturamazsınız."
 
 #. module: account_payment
 #: view:account.move.line:0
 msgid "Account Entry Line"
-msgstr ""
+msgstr "Hesap Giriş Satırı"
 
 #. module: account_payment
 #: view:payment.order.create:0
 msgid "_Add to payment order"
-msgstr ""
+msgstr "_Ödeme emrine ekle"
 
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_account_payment_populate_statement

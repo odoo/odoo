@@ -295,9 +295,8 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
 
         eview = etree.fromstring(res['arch'])
         placeholder = eview.xpath("group[@name='placeholder1']")
-        placeholder = len(placeholder) and placeholder[0] or None
-
-        if placeholder:
+        if len(placeholder):
+            placeholder = placeholder[0]
             if step == 'new_window' and state == 'clear':
                 # clicked in the menu and the fields are not anonymized: warn the admin that backuping the db is very important
                 placeholder.addnext(etree.Element('field', {'name': 'msg', 'colspan': '4', 'nolabel': '1'}))

@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 #-*- coding:utf-8 -*-
 
 ##############################################################################
@@ -119,4 +118,3 @@ class year_salary_report(report_sxw.rml_parse):
 report_sxw.report_sxw('report.year.salary', 'hr.payslip', 'hr_payroll/report/report_year_report.rml', parser=year_salary_report,header='internal landscape')
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

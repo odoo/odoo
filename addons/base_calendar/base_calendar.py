@@ -982,10 +982,9 @@ class calendar_event(osv.osv):
         """
         if context is None:
             context = {}
-        for event_id in ids:
-            cr.execute("select id from %s where recurrent_uid=%%s" % (self._table), (event_id,))
-            r_ids = map(lambda x: x[0], cr.fetchall())
-            self.unlink(cr, uid, r_ids, context=context)
+        cr.execute('select id from '+self._table+' where recurrent_uid in %s', (tuple(ids),))
+        r_ids = map(lambda x: x[0], cr.fetchall())
+        self.unlink(cr, uid, r_ids, context=context)
         return True
 
     def _set_rrulestring(self, cr, uid, id, name, value, arg, context=None):
@@ -1208,7 +1207,7 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         value = {}
         if edit_all and rrule_type:
             for id in ids:
-              base_calendar_id2real_id(id)
+                base_calendar_id2real_id(id)
         return value              
 
     def modify_all(self, cr, uid, event_ids, defaults, context=None, *args):

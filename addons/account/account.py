@@ -102,7 +102,7 @@ class account_payment_term_line(osv.osv):
                                    ('fixed', 'Fixed Amount')], 'Valuation',
                                    required=True, help="""Select here the kind of valuation related to this payment term line. Note that you should have your last line with the type 'Balance' to ensure that the whole amount will be threated."""),
 
-        'value_amount': fields.float('Value Amount', help="For Value percent enter % ratio between 0-1."),
+        'value_amount': fields.float('Value Amount', digits_compute=dp.get_precision('Payment Term'), help="For Value percent enter % ratio between 0-1."),
         'days': fields.integer('Number of Days', required=True, help="Number of days to add before computation of the day of month." \
             "If Date=15/01, Number of Days=22, Day of Month=-1, then the due date is 28/02."),
         'days2': fields.integer('Day of the Month', required=True, help="Day of the month, set -1 for the last day of the current month. If it's positive, it gives the day of the next month. Set 0 for net days (otherwise it's based on the beginning of the month)."),
@@ -879,7 +879,7 @@ class account_period(osv.osv):
     _defaults = {
         'state': 'draft',
     }
-    _order = "date_start"
+    _order = "date_start, special desc"
 
     def _check_duration(self,cr,uid,ids,context=None):
         obj_period = self.browse(cr, uid, ids[0], context=context)
@@ -926,9 +926,8 @@ class account_period(osv.osv):
 
     def action_draft(self, cr, uid, ids, *args):
         mode = 'draft'
-        for id in ids:
-            cr.execute('update account_journal_period set state=%s where period_id=%s', (mode, id))
-            cr.execute('update account_period set state=%s where id=%s', (mode, id))
+        cr.execute('update account_journal_period set state=%s where period_id in %s', (mode, tuple(ids),))
+        cr.execute('update account_period set state=%s where id in %s', (mode, tuple(ids),))
         return True
 
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
@@ -961,7 +960,10 @@ class account_period(osv.osv):
             raise osv.except_osv(_('Error'), _('You should have chosen periods that belongs to the same company'))
         if period_date_start > period_date_stop:
             raise osv.except_osv(_('Error'), _('Start period should be smaller then End period'))
-        return self.search(cr, uid, [('date_start', '>=', period_date_start), ('date_stop', '<=', period_date_stop), ('company_id', '=', company1_id)])
+        #for period from = january, we want to exclude the opening period (but it has same date_from, so we have to check if period_from is special or not to include that clause or not in the search).
+        if period_from.special:
+            return self.search(cr, uid, [('date_start', '>=', period_date_start), ('date_stop', '<=', period_date_stop), ('company_id', '=', company1_id)])
+        return self.search(cr, uid, [('date_start', '>=', period_date_start), ('date_stop', '<=', period_date_stop), ('company_id', '=', company1_id), ('special', '=', False)])
 
 account_period()
 
@@ -1562,14 +1564,15 @@ class account_tax_code(osv.osv):
                        (parent_ids,) + where_params)
         res=dict(cr.fetchall())
         obj_precision = self.pool.get('decimal.precision')
+        res2 = {} 
         for record in self.browse(cr, uid, ids, context=context):
             def _rec_get(record):
                 amount = res.get(record.id, 0.0)
                 for rec in record.child_ids:
                     amount += _rec_get(rec) * rec.sign
                 return amount
-            res[record.id] = round(_rec_get(record), obj_precision.precision_get(cr, uid, 'Account'))
-        return res
+            res2[record.id] = round(_rec_get(record), obj_precision.precision_get(cr, uid, 'Account'))
+        return res2
 
     def _sum_year(self, cr, uid, ids, name, args, context=None):
         if context is None:
@@ -2659,8 +2662,6 @@ class wizard_multi_charts_accounts(osv.osv_memory):
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         res = super(wizard_multi_charts_accounts, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar,submenu=False)
-        configured_cmp = []
-        unconfigured_cmp = []
         cmp_select = []
         company_ids = self.pool.get('res.company').search(cr, uid, [], context=context)
         #display in the widget selection of companies, only the companies that haven't been configured yet (but don't care about the demo chart of accounts)
@@ -2668,12 +2669,12 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         configured_cmp = [r[0] for r in cr.fetchall()]
         unconfigured_cmp = list(set(company_ids)-set(configured_cmp))
         for field in res['fields']:
-           if field == 'company_id':
-               res['fields'][field]['domain'] = unconfigured_cmp
-               res['fields'][field]['selection'] = [('', '')]
-               if unconfigured_cmp:
-                   cmp_select = [(line.id, line.name) for line in self.pool.get('res.company').browse(cr, uid, unconfigured_cmp)]
-                   res['fields'][field]['selection'] = cmp_select
+            if field == 'company_id':
+                res['fields'][field]['domain'] = unconfigured_cmp
+                res['fields'][field]['selection'] = [('', '')]
+                if unconfigured_cmp:
+                    cmp_select = [(line.id, line.name) for line in self.pool.get('res.company').browse(cr, uid, unconfigured_cmp)]
+                    res['fields'][field]['selection'] = cmp_select
         return res
 
     def execute(self, cr, uid, ids, context=None):
@@ -2681,7 +2682,6 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         obj_acc = self.pool.get('account.account')
         obj_acc_tax = self.pool.get('account.tax')
         obj_journal = self.pool.get('account.journal')
-        obj_sequence = self.pool.get('ir.sequence')
         obj_acc_template = self.pool.get('account.account.template')
         obj_fiscal_position_template = self.pool.get('account.fiscal.position.template')
         obj_fiscal_position = self.pool.get('account.fiscal.position')
@@ -2689,9 +2689,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         analytic_journal_obj = self.pool.get('account.analytic.journal')
         obj_tax_code = self.pool.get('account.tax.code')
         obj_tax_code_template = self.pool.get('account.tax.code.template')
-        obj_acc_journal_view = self.pool.get('account.journal.view')
-        ir_values = self.pool.get('ir.values')
-        obj_product = self.pool.get('product.product')
+        ir_values_obj = self.pool.get('ir.values')
         # Creating Account
         obj_acc_root = obj_multi.chart_template_id.account_root_id
         tax_code_root_id = obj_multi.chart_template_id.tax_code_root_id.id
@@ -2924,15 +2922,20 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         ref_acc_bank = obj_multi.chart_template_id.bank_account_view_id
 
         current_num = 1
+        valid = True
         for line in obj_multi.bank_accounts_id:
             #create the account_account for this bank journal
             tmp = line.acc_name
             dig = obj_multi.code_digits
-            if ref_acc_bank.code:
-                try:
-                    new_code = str(int(ref_acc_bank.code.ljust(dig,'0')) + current_num)
-                except:
-                    new_code = str(ref_acc_bank.code.ljust(dig-len(str(current_num)),'0')) + str(current_num)
+            if not ref_acc_bank.code:
+                raise osv.except_osv(_('Configuration Error !'), _('The bank account defined on the selected chart of account hasn\'t a code.'))
+            while True:
+                new_code = str(ref_acc_bank.code.ljust(dig-len(str(current_num)), '0')) + str(current_num)
+                ids = obj_acc.search(cr, uid, [('code', '=', new_code), ('company_id', '=', company_id)])
+                if not ids:
+                    break
+                else:
+                    current_num += 1
             vals = {
                 'name': tmp,
                 'currency_id': line.currency_id and line.currency_id.id or False,
@@ -2946,8 +2949,6 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             acc_cash_id  = obj_acc.create(cr,uid,vals)
 
             #create the bank journal
-            analytical_bank_ids = analytic_journal_obj.search(cr,uid,[('type','=','situation')])
-            analytical_journal_bank = analytical_bank_ids and analytical_bank_ids[0] or False
             vals_journal = {
                 'name': vals['name'],
                 'code': _('BNK') + str(current_num),
@@ -2965,6 +2966,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             vals_journal['default_debit_account_id'] = acc_cash_id
             obj_journal.create(cr, uid, vals_journal)
             current_num += 1
+            valid = True
 
         #create the properties
         property_obj = self.pool.get('ir.property')
@@ -3029,10 +3031,10 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                     obj_ac_fp.create(cr, uid, vals_acc)
 
         if obj_multi.sale_tax:
-            ir_values.set(cr, uid, key='default', key2=False, name="taxes_id", company=obj_multi.company_id.id,
+            ir_values_obj.set(cr, uid, key='default', key2=False, name="taxes_id", company=obj_multi.company_id.id,
                             models =[('product.product',False)], value=[tax_template_to_tax[obj_multi.sale_tax.id]])
         if obj_multi.purchase_tax:
-            ir_values.set(cr, uid, key='default', key2=False, name="supplier_taxes_id", company=obj_multi.company_id.id,
+            ir_values_obj.set(cr, uid, key='default', key2=False, name="supplier_taxes_id", company=obj_multi.company_id.id,
                             models =[('product.product',False)], value=[tax_template_to_tax[obj_multi.purchase_tax.id]])
 
 wizard_multi_charts_accounts()
