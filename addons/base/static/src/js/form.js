@@ -782,7 +782,7 @@ openerp.base.form.FieldFloatTime = openerp.base.form.FieldChar.extend({
             this._super.apply(this, arguments);
             if (!this.invalid) {
                 var time = this.value.split(':');
-                this.value = parseInt(time[0], 10) + parseInt(time[1], 10) / 60;
+                this.set_value(parseInt(time[0], 10) + parseInt(time[1], 10) / 60);
             }
         }
     }
