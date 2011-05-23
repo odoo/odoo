@@ -838,14 +838,15 @@ class orm_template(object):
                     res = line[i] and float(line[i]) or 0.0
                 elif fields_def[field[len(prefix)]]['type'] == 'selection':
                     for key, val in fields_def[field[len(prefix)]]['selection']:
-                        if line[i] in [tools.ustr(key), tools.ustr(val)]:
+                        if tools.ustr(line[i]) in [tools.ustr(key), tools.ustr(val)]:
                             res = key
                             break
                     if line[i] and not res:
                         logger.notifyChannel("import", netsvc.LOG_WARNING,
                                 _("key '%s' not found in selection field '%s'") % \
-                                        (line[i], field[len(prefix)]))
-                        warning += [_("Key/value '%s' not found in selection field '%s'") % (line[i], field[len(prefix)])]
+                                        (tools.ustr(line[i]), tools.ustr(field[len(prefix)])))
+                        warning += [_("Key/value '%s' not found in selection field '%s'") % (tools.ustr(line[i]), tools.ustr(field[len(prefix)]))]
+
                 else:
                     res = line[i]
 
@@ -3229,7 +3230,7 @@ class orm(orm_template):
 
         self.check_access_rule(cr, uid, ids, 'unlink', context=context)
         pool_model_data = self.pool.get('ir.model.data')
-        pool_ir_values = self.pool.get('ir.values')
+        ir_values_obj = self.pool.get('ir.values')
         for sub_ids in cr.split_for_in_conditions(ids):
             cr.execute('delete from ' + self._table + ' ' \
                        'where id IN %s', (sub_ids,))
@@ -3242,11 +3243,11 @@ class orm(orm_template):
             pool_model_data.unlink(cr, uid, referenced_ids, context=context)
 
             # For the same reason, removing the record relevant to ir_values
-            ir_value_ids = pool_ir_values.search(cr, uid,
+            ir_value_ids = ir_values_obj.search(cr, uid,
                     ['|',('value','in',['%s,%s' % (self._name, sid) for sid in sub_ids]),'&',('res_id','in',list(sub_ids)),('model','=',self._name)],
                     context=context)
             if ir_value_ids:
-                pool_ir_values.unlink(cr, uid, ir_value_ids, context=context)
+                ir_values_obj.unlink(cr, uid, ir_value_ids, context=context)
 
         for order, object, store_ids, fields in result_store:
             if object != self._name:

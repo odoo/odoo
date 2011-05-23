@@ -177,13 +177,13 @@ class ir_ui_menu(osv.osv):
 
     def _action(self, cursor, user, ids, name, arg, context=None):
         res = {}
-        values_obj = self.pool.get('ir.values')
-        value_ids = values_obj.search(cursor, user, [
+        ir_values_obj = self.pool.get('ir.values')
+        value_ids = ir_values_obj.search(cursor, user, [
             ('model', '=', self._name), ('key', '=', 'action'),
             ('key2', '=', 'tree_but_open'), ('res_id', 'in', ids)],
             context=context)
         values_action = {}
-        for value in values_obj.browse(cursor, user, value_ids, context=context):
+        for value in ir_values_obj.browse(cursor, user, value_ids, context=context):
             values_action[value.res_id] = value.value
         for menu_id in ids:
             res[menu_id] = values_action.get(menu_id, False)
@@ -195,16 +195,16 @@ class ir_ui_menu(osv.osv):
         ctx = context.copy()
         if self.CONCURRENCY_CHECK_FIELD in ctx:
             del ctx[self.CONCURRENCY_CHECK_FIELD]
-        values_obj = self.pool.get('ir.values')
-        values_ids = values_obj.search(cursor, user, [
+        ir_values_obj = self.pool.get('ir.values')
+        values_ids = ir_values_obj.search(cursor, user, [
             ('model', '=', self._name), ('key', '=', 'action'),
             ('key2', '=', 'tree_but_open'), ('res_id', '=', menu_id)],
             context=context)
         if values_ids:
-            values_obj.write(cursor, user, values_ids, {'value': value},
+            ir_values_obj.write(cursor, user, values_ids, {'value': value},
                     context=ctx)
         else:
-            values_obj.create(cursor, user, {
+            ir_values_obj.create(cursor, user, {
                 'name': 'Menuitem',
                 'model': self._name,
                 'value': value,
