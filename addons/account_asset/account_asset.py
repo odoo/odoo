@@ -207,9 +207,8 @@ class account_asset_asset(osv.osv):
     }
 
     def _check_prorata(self, cr, uid, ids, context=None):
-        assets = self.browse(cr, uid, ids, context=context)
-        for asset in assets:
-            if asset.method != 'linear':
+        for asset in self.browse(cr, uid, ids, context=context):
+            if asset.prorata and asset.method != 'linear':
                 return False
         return True
 
