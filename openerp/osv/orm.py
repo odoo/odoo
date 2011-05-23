@@ -762,10 +762,12 @@ class orm_template(object):
             done = {}
             for i in range(len(fields)):
                 res = False
+                if i >= len(line):
+                    raise Exception(_('Please check that all your lines have %d columns.'
+                        'Stopped around line %d having %d columns.') % \
+                            (len(fields), position+2, len(line)))
                 if not line[i]:
                     continue
-                if i >= len(line):
-                    raise Exception(_('Please check that all your lines have %d columns.') % (len(fields),))
 
                 field = fields[i]
                 if field[:len(prefix)] <> prefix:
