@@ -473,8 +473,7 @@ class hr_payslip(osv.osv):
             localdict['categories'][category.code] = category.code in localdict['categories'] and localdict['categories'][category.code] + amount or amount
             return localdict
 
-        class InputLine(object):
-            """a class that will be used into the python code, mainly for usability purposes"""
+        class BrowsableObject(object):
             def __init__(self, pool, cr, uid, employee_id, dict):
                 self.pool = pool
                 self.cr = cr
@@ -485,6 +484,8 @@ class hr_payslip(osv.osv):
             def __getattr__(self, attr):
                 return self.dict.__getitem__(attr)
 
+        class InputLine(BrowsableObject):
+            """a class that will be used into the python code, mainly for usability purposes"""
             def sum(self, code, from_date, to_date=None):
                 if to_date is None:
                     to_date = datetime.now().strftime('%Y-%m-%d')
@@ -497,7 +498,7 @@ class hr_payslip(osv.osv):
                 res = self.cr.fetchone()[0]
                 return res or 0.0
 
-        class WorkedDays(InputLine):
+        class WorkedDays(BrowsableObject):
             """a class that will be used into the python code, mainly for usability purposes"""
             def _sum(self, code, from_date, to_date=None):
                 if to_date is None:
@@ -518,7 +519,7 @@ class hr_payslip(osv.osv):
                 res = self._sum(code, from_date, to_date)
                 return res and res[1] or 0.0
 
-        class Payslips(InputLine):
+        class Payslips(BrowsableObject):
             """a class that will be used into the python code, mainly for usability purposes"""
 
             def sum(self, code, from_date, to_date=None):
