@@ -838,14 +838,15 @@ class orm_template(object):
                     res = line[i] and float(line[i]) or 0.0
                 elif fields_def[field[len(prefix)]]['type'] == 'selection':
                     for key, val in fields_def[field[len(prefix)]]['selection']:
-                        if line[i] in [tools.ustr(key), tools.ustr(val)]:
+                        if tools.ustr(line[i]) in [tools.ustr(key), tools.ustr(val)]:
                             res = key
                             break
                     if line[i] and not res:
                         logger.notifyChannel("import", netsvc.LOG_WARNING,
                                 _("key '%s' not found in selection field '%s'") % \
-                                        (line[i], field[len(prefix)]))
-                        warning += [_("Key/value '%s' not found in selection field '%s'") % (line[i], field[len(prefix)])]
+                                        (tools.ustr(line[i]), tools.ustr(field[len(prefix)])))
+                        warning += [_("Key/value '%s' not found in selection field '%s'") % (tools.ustr(line[i]), tools.ustr(field[len(prefix)]))]
+
                 else:
                     res = line[i]
 
