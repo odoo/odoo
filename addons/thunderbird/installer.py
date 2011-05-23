@@ -21,11 +21,9 @@
 
 from osv import fields
 from osv import osv
-from tools import config
 
 import base64
 import addons
-import difflib
 
 class thunderbird_installer(osv.osv_memory):
     _name = 'thunderbird.installer'
