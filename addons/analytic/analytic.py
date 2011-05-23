@@ -236,6 +236,13 @@ class account_analytic_account(osv.osv):
             res['value']['partner_id'] = partner
         return res
 
+    def onchange_partner_id(self, cr, uid, ids, partner, context=None):
+        partner_obj = self.pool.get('res.partner')
+        if not partner:
+            return {'value':{'contact_id': False}}
+        address = partner_obj.address_get(cr, uid, [partner], ['contact'])
+        return {'value':{'contact_id': address['contact']}}
+
     def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
         if not args:
             args=[]

@@ -88,7 +88,8 @@
                     </group>
                     <notebook colspan="4">
                         <page string="Account Data">
-                            <field name="partner_id" select="1"/>
+                            <field name="partner_id" select="1" on_change="onchange_partner_id(partner_id)"/>
+                            <field name="contact_id" invisible="1"/>
                             <field name="currency_id" select="1"/>
                             <newline/>
                             <field name="date_start"/>
