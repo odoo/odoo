@@ -107,12 +107,13 @@ class account_asset_asset(osv.osv):
                     amount = residual_amount
                 else:
                     if asset.method == 'linear':
-                        amount = asset.purchase_value / asset.method_delay
-                        if asset.prorata and i == 1:
-                            days = float(total_days) - float(depreciation_date.strftime('%j'))
-                            first_amount = amount = (asset.purchase_value / asset.method_delay)/total_days * days
-                        elif asset.prorata and i == undone_dotation_number:
-                            amount = (asset.purchase_value / asset.method_delay) - first_amount
+                        amount = asset.purchase_value / undone_dotation_number
+                        if asset.prorata:
+                            if i == 1:
+                                days = float(total_days) - float(depreciation_date.strftime('%j'))
+                                amount = (asset.purchase_value / asset.method_delay) / total_days * days
+                            elif i == undone_dotation_number:
+                                amount = (asset.purchase_value / asset.method_delay) / total_days * (total_days - days)
                     else:
                         amount = residual_amount * asset.method_progress_factor
                 residual_amount -= amount
