@@ -212,9 +212,9 @@ class hr_payslip_run(osv.osv):
             ('draft', 'Draft'),
             ('close', 'Close'),
         ], 'State', select=True, readonly=True),
-        'date_start': fields.date('Date From', required=False),
-        'date_end': fields.date('Date To', required=False),
-        'credit_note': fields.boolean('Credit Note', help="If its checked, indicates that all payslips generated from here will be refundable payslips."),
+        'date_start': fields.date('Date From', required=False, readonly=True, states={'draft': [('readonly', False)]}),
+        'date_end': fields.date('Date To', required=False, readonly=True, states={'draft': [('readonly', False)]}),
+        'credit_note': fields.boolean('Credit Note', readonly=True, states={'draft': [('readonly', False)]}, help="If its checked, indicates that all payslips generated from here are refund payslips."),
     }
     _defaults = {
         'state': 'draft',
