@@ -468,17 +468,10 @@ class hr_payslip(osv.osv):
 
     def get_payslip_lines(self, cr, uid, contract_ids, payslip_id, context):
         
-        class Categories(object):
-            def __init__(self, pool, cr, uid, employee_id, dict):
-                self.pool = pool
-                self.cr = cr
-                self.uid = uid
-                self.employee_id = employee_id
-                self.dict = dict
+        class Categories(InputLine):
 
             def __getattr__(self, key):
-                value = self.dict[key]
-                return value
+                return self.dict[key]
             
         def _sum_salary_rule_category(categories_dict, category, amount):
             if category.parent_id:
@@ -734,7 +727,7 @@ class hr_salary_rule(osv.osv):
 # employee: hr.employee object
 # contract: hr.contract object
 # rules: rules code (previously computed)
-# categories: dictionary containing the computed salary rule categories (sum of amount of all rules belonging to that category). Keys are the category codes.
+# categories: object containing the computed salary rule categories.
 # worked_days: dictionary containing the computed worked days. Keys are the worked days codes.
 # inputs: dictionary containing the computed inputs. Keys are the inputs codes.
 
@@ -749,7 +742,7 @@ result = contract.wage * 0.10''',
 # employee: hr.employee object
 # contract: hr.contract object
 # rules: rules code (previously computed)
-# categories: dictionary containing the computed salary rule categories (sum of amount of all rules belonging to that category). Keys are the category codes.
+# categories: object containing the computed salary rule categories.
 # worked_days: dictionary containing the computed worked days. Keys are the worked days codes.
 # inputs: dictionary containing the computed inputs. Keys are the inputs codes.
 
