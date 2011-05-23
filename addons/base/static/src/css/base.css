@@ -1,5 +1,4 @@
 /* TODO: separate openerp web client page css from openerp views css */
-
 body {
     padding: 0;
     margin: 0;
@@ -448,6 +447,10 @@ body.openerp {
     padding-left: 18px;
 }
 
+.openerp .searchview_extended_delete_group {
+    float:right;
+}
+
 .openerp .searchview_extended_delete_group span, .openerp .searchview_extended_delete_prop span {
     background: url(../img/icons/gtk-remove.png) repeat-y;
     padding-left: 18px;
@@ -625,7 +628,7 @@ body.openerp {
 /* http://www.quirksmode.org/dom/inputfile.html
  * http://stackoverflow.com/questions/2855589/replace-input-type-file-by-an-image
  */
-.openerp button.oe-binary-image-set {
+.openerp button.oe-binary-file-set {
     overflow: hidden;
     position: relative;
 }

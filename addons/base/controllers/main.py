@@ -563,15 +563,36 @@ class FormView(View):
             if not id:
                 res = Model.default_get([field], request.context).get(field, '')
             else:
-                res = Model.read([id], [field], request.context)[0].get(field, '')
+                res = Model.read([int(id)], [field], request.context)[0].get(field, '')
             return base64.decodestring(res)
-        except:
+        except: # TODO: what's the exception here?
             return self.placeholder()
     def placeholder(self):
         return open(os.path.join(openerpweb.path_addons, 'base', 'static', 'src', 'img', 'placeholder.png'), 'rb').read()
 
     @openerpweb.httprequest
-    def upload(self, request, session_id, callback, ufile):
+    def saveas(self, request, session_id, model, id, field, fieldname, **kw):
+        Model = request.session.model(model)
+        res = Model.read([int(id)], [field, fieldname])[0]
+        filecontent = res.get(field, '')
+        if not filecontent:
+            raise cherrypy.NotFound
+        else:
+            cherrypy.response.headers['Content-Type'] = 'application/octet-stream'
+            filename = '%s_%s' % (model.replace('.', '_'), id)
+            if fieldname:
+                filename = res.get(fieldname, '') or filename
+            cherrypy.response.headers['Content-Disposition'] = 'attachment; filename=' +  filename
+            return base64.decodestring(filecontent)
+
+    @openerpweb.httprequest
+    def upload(self, request, session_id, callback, ufile=None):
+        cherrypy.response.timeout = 500
+        headers = {}
+        for key, val in cherrypy.request.headers.iteritems():
+            headers[key.lower()] = val
+        size = int(headers.get('content-length', 0))
+        # TODO: might be usefull to have a configuration flag for max-lenght file uploads
         try:
             out = """<script language="javascript" type="text/javascript">
                         var win = window.top.window,
@@ -585,18 +606,11 @@ class FormView(View):
                             });
                         }
                     </script>"""
-            size = 0
-            while True:
-                data = ufile.file.read(8192)
-                if not data:
-                    break
-                size += len(data)
-            filename = ufile.filename
-            # TODO: write file to tmp file
-        except Exception as e:
-            size = False
-            filename = e.message
-        return out % (simplejson.dumps(callback), simplejson.dumps([size, filename, ufile.headers.getheader('Content-Type')]))
+            data = ufile.file.read()
+            args = [size, ufile.filename, ufile.headers.getheader('Content-Type'), base64.encodestring(data)]
+        except Exception, e:
+            args = [False, e.message]
+        return out % (simplejson.dumps(callback), simplejson.dumps(args))
 
 class ListView(View):
     _cp_path = "/base/listview"
@@ -698,6 +712,12 @@ class SearchView(View):
     def load(self, req, model, view_id):
         fields_view = self.fields_view_get(req, model, view_id, 'search')
         return {'fields_view': fields_view}
+    
+    @openerpweb.jsonrequest
+    def fields_get(self, req, model):
+        Model = req.session.model(model)
+        fields = Model.fields_get()
+        return {'fields': fields}
 
 class Action(openerpweb.Controller):
     _cp_path = "/base/action"

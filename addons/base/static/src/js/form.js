@@ -29,6 +29,7 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
         this.ready = false;
         this.show_invalid = true;
         this.touched = false;
+        this.flags = view_manager.action.flags || {};
     },
     start: function() {
         //this.log('Starting FormView '+this.model+this.view_id)
@@ -41,7 +42,7 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
 
         var frame = new openerp.base.form.WidgetFrame(this, this.fields_view.arch);
 
-        this.$element.html(QWeb.render("FormView", { "frame": frame, "view": this }));
+        this.$element.html(QWeb.render("FormView", { 'frame': frame, 'view': this }));
         _.each(this.widgets, function(w) {
             w.start();
         });
@@ -679,6 +680,21 @@ openerp.base.form.FieldEmail = openerp.base.form.FieldChar.extend({
 });
 
 openerp.base.form.FieldUrl = openerp.base.form.FieldChar.extend({
+    init: function(view, node) {
+        this._super(view, node);
+        this.template = "FieldUrl";
+    },
+    start: function() {
+        this._super.apply(this, arguments);
+        this.$element.find('button').click(this.on_button_clicked);
+    },
+    on_button_clicked: function() {
+        if (!this.value) {
+            this.notification.warn("Resource error", "This resource is empty");
+        } else {
+            window.open(this.value);
+        }
+    }
 });
 
 openerp.base.form.FieldFloat = openerp.base.form.FieldChar.extend({
@@ -1187,52 +1203,133 @@ openerp.base.form.FieldReference = openerp.base.form.Field.extend({
     }
 });
 
-openerp.base.form.FieldImage = openerp.base.form.Field.extend({
+openerp.base.form.FieldBinary = openerp.base.form.Field.extend({
     init: function(view, node) {
         this._super(view, node);
-        this.template = "FieldImage";
         this.iframe = this.element_id + '_iframe';
+        this.binary_value = false;
     },
     start: function() {
         this._super.apply(this, arguments);
         this.$element.find('input.oe-binary-file').change(this.on_file_change);
-        this.$element.find('button.oe-binary-image-clear').click(this.on_clear);
+        this.$element.find('button.oe-binary-file-save').click(this.on_save_as);
+        this.$element.find('.oe-binary-file-clear').click(this.on_clear);
     },
     set_value_from_ui: function() {
     },
+    human_filesize : function(size) {
+        var units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+        var i = 0;
+        while (size >= 1024) {
+            size /= 1024;
+            ++i;
+        }
+        return size.toFixed(2) + ' ' + units[i];
+    },
     on_file_change: function() {
+        // TODO: on modern browsers, we could directly read the file locally on client ready to be used on image cropper
+        // http://www.html5rocks.com/tutorials/file/dndfiles/
+        // http://deepliquid.com/projects/Jcrop/demos.php?demo=handler
         window[this.iframe] = this.on_file_uploaded;
         this.$element.find('form.oe-binary-form input[name=session_id]').val(this.session.session_id);
         this.$element.find('form.oe-binary-form').submit();
-        this.toggle_throbbler();
+        this.toggle_progress();
     },
-    toggle_throbbler: function() {
-        this.$element.find('div.oe-binary-progress, div.oe-binary-image-buttons').toggle();
+    toggle_progress: function() {
+        this.$element.find('.oe-binary-progress, .oe-binary').toggle();
     },
-    on_file_uploaded: function(size, name, content_type) {
+    on_file_uploaded: function(size, name, content_type, file_base64) {
         delete(window[this.iframe]);
         if (size === false) {
             this.notification.warn("File Upload", "There was a problem while uploading your file");
             // TODO: use openerp web exception handler
             console.log("Error while uploading file : ", name);
         } else {
-            alert('File uploaded')
-            console.log("Size", size, "Name", name, "Content", content_type);
+            this.on_file_uploaded_and_valid.apply(this, arguments);
+            this.on_ui_change();
         }
-        this.toggle_throbbler();
+        this.toggle_progress();
+    },
+    on_file_uploaded_and_valid: function(size, name, content_type, file_base64) {
+    },
+    on_save_as: function() {
+        var url = '/base/formview/saveas?session_id=' + this.session.session_id + '&model=' +
+            this.view.dataset.model +'&id=' + (this.view.datarecord.id || '') + '&field=' + this.name +
+            '&fieldname=' + (this.node.attrs.filename || '') + '&t=' + (new Date().getTime())
+        window.open(url);
     },
     on_clear: function() {
         if (this.value !== false) {
             this.value = false;
-            this.$element.find('img.oe-binary-image').attr('src', '/base/static/src/img/placeholder.png');
+            this.binary_value = false;
             this.on_ui_change();
         }
+        return false;
+    }
+});
+
+openerp.base.form.FieldBinaryFile = openerp.base.form.FieldBinary.extend({
+    init: function(view, node) {
+        this._super(view, node);
+        this.template = "FieldBinaryFile";
     },
     set_value: function(value) {
         this._super.apply(this, arguments);
+        var show_value = (value != null && value !== false) ? value : '';
+        this.$element.find('input').eq(0).val(show_value);
+    },
+    on_file_uploaded_and_valid: function(size, name, content_type, file_base64) {
+        this.value = file_base64;
+        this.binary_value = true;
+        var show_value = this.human_filesize(size);
+        this.$element.find('input').eq(0).val(show_value);
+        this.set_filename(name);
+    },
+    set_filename: function(value) {
+        var filename = this.node.attrs.filename;
+        if (this.view.fields[filename]) {
+            this.view.fields[filename].set_value(value);
+            this.view.fields[filename].on_ui_change();
+        }
+    },
+    on_clear: function() {
+        this._super.apply(this, arguments);
+        this.$element.find('input').eq(0).val('');
+        this.set_filename('');
+    }
+});
+
+openerp.base.form.FieldBinaryImage = openerp.base.form.FieldBinary.extend({
+    init: function(view, node) {
+        this._super(view, node);
+        this.template = "FieldBinaryImage";
+    },
+    start: function() {
+        this._super.apply(this, arguments);
+        this.$image = this.$element.find('img.oe-binary-image');
+    },
+    set_image_maxwidth: function() {
+        this.$image.css('max-width', this.$element.width());
+    },
+    on_file_change: function() {
+        this.set_image_maxwidth();
+        this._super.apply(this, arguments);
+    },
+    on_file_uploaded_and_valid: function(size, name, content_type, file_base64) {
+        this.value = file_base64;
+        this.binary_value = true;
+        this.$image.attr('src', 'data:' + (content_type || 'image/png') + ';base64,' + file_base64);
+    },
+    on_clear: function() {
+        this._super.apply(this, arguments);
+        this.$image.attr('src', '/base/static/src/img/placeholder.png');
+    },
+    set_value: function(value) {
+        this._super.apply(this, arguments);
+        this.set_image_maxwidth();
         var url = '/base/formview/image?session_id=' + this.session.session_id + '&model=' +
             this.view.dataset.model +'&id=' + (this.view.datarecord.id || '') + '&field=' + this.name + '&t=' + (new Date().getTime())
-        this.$element.find('img.oe-binary-image').attr('src', url);
+        this.$image.attr('src', url);
     }
 });
 
@@ -1263,7 +1360,8 @@ openerp.base.form.widgets = new openerp.base.Registry({
     'integer': 'openerp.base.form.FieldFloat',
     'progressbar': 'openerp.base.form.FieldProgressBar',
     'float_time': 'openerp.base.form.FieldFloatTime',
-    'image': 'openerp.base.form.FieldImage'
+    'image': 'openerp.base.form.FieldBinaryImage',
+    'binary': 'openerp.base.form.FieldBinaryFile'
 });
 
 };
