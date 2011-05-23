@@ -23,6 +23,7 @@ import time
 import re
 from report import report_sxw
 from common_report_header import common_report_header
+from tools.translate import _
 
 class third_party_ledger(report_sxw.rml_parse, common_report_header):
 
@@ -52,6 +53,11 @@ class third_party_ledger(report_sxw.rml_parse, common_report_header):
             'display_currency':self._display_currency,
             'get_target_move': self._get_target_move,
         })
+
+    def _get_filter(self, data):
+        if data['form']['filter'] == 'unreconciled':
+            return _('Unreconciled Entries')
+        return super(third_party_ledger, self)._get_filter(data)
 
     def set_context(self, objects, data, ids, report_type=None):
         obj_move = self.pool.get('account.move.line')
