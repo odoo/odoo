@@ -3532,7 +3532,10 @@ class orm(orm_template):
     #
     def create(self, cr, user, vals, context=None):
         """
-        Create new record with specified value
+        Create a new record for the model.
+
+        The values for the new record are initialized using the ``vals``
+        argument, and if necessary the result of ``default_get()``.
 
         :param cr: database cursor
         :param user: current user id
