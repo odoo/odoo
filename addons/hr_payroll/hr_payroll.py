@@ -489,7 +489,6 @@ class hr_payslip(osv.osv):
         #we keep a dict with the result because a value can be overwritten by another rule with the same code
         result_dict = {}
         blacklist = []
-        categories_dict = {}
         obj_rule = self.pool.get('hr.salary.rule')
         payslip = self.pool.get('hr.payslip').browse(cr, uid, payslip_id, context=context)
         worked_days = {}
@@ -498,7 +497,9 @@ class hr_payslip(osv.osv):
         inputs = {}
         for input_line in payslip.input_line_ids:
             inputs[input_line.code] = input_line
-        localdict = {'payslip': payslip, 'worked_days': worked_days, 'inputs': inputs}
+        categories_dict = {}
+        categories_obj = Categories(self.pool, cr, uid, payslip.employee_id.id, categories_dict)
+        localdict = {'payslip': payslip, 'worked_days': worked_days, 'inputs': inputs, 'categories': categories_obj}
         #get the ids of the structures on the contracts and their parent id as well
         structure_ids = self.pool.get('hr.contract').get_all_structures(cr, uid, contract_ids, context=context)
         #get the rules of the structure and thier children
@@ -522,8 +523,6 @@ class hr_payslip(osv.osv):
                     localdict[rule.code] = amount
                     #sum the amount for its salary category
                     categories_dict = _sum_salary_rule_category(categories_dict, rule.category_id, amount - previous_amount)
-                    categories_obj = Categories(self.pool, cr, uid, payslip.employee_id.id, categories_dict)
-                    localdict['categories'] = categories_obj
                     #create/overwrite the rule in the temporary results
                     result_dict[key] = {
                         'salary_rule_id': rule.id,
