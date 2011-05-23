@@ -30,8 +30,8 @@ class payslip_details_report(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
         super(payslip_details_report, self).__init__(cr, uid, name, context)
         self.localcontext.update({
-                'get_details_by_rule_category': self.get_details_by_rule_category,
-                'get_lines_by_contribution_register': self.get_lines_by_contribution_register,
+            'get_details_by_rule_category': self.get_details_by_rule_category,
+            'get_lines_by_contribution_register': self.get_lines_by_contribution_register,
         })
 
     def get_details_by_rule_category(self, obj):
@@ -70,20 +70,20 @@ class payslip_details_report(report_sxw.rml_parse):
                 level = 0
                 for parent in parents:
                     res.append({
-                                'rule_category': parent.name,
-                                'name': parent.name,
-                                'code': parent.code,
-                                'level': level,
-                                'total': category_total,
+                        'rule_category': parent.name,
+                        'name': parent.name,
+                        'code': parent.code,
+                        'level': level,
+                        'total': category_total,
                     })
                     level += 1
                 for line in payslip_line.browse(self.cr, self.uid, value):
                     res.append({
-                                'rule_category': line.name,
-                                'name': line.name,
-                                'code': line.code,
-                                'total': line.total,
-                                'level': level
+                        'rule_category': line.name,
+                        'name': line.name,
+                        'code': line.code,
+                        'total': line.total,
+                        'level': level
                     })
         return res
 
@@ -102,9 +102,9 @@ class payslip_details_report(report_sxw.rml_parse):
             })
             for line in payslip_line.browse(self.cr, self.uid, value):
                 res.append({
-                            'name': line.name,
-                            'code': line.code,
-                            'total': line.total,
+                    'name': line.name,
+                    'code': line.code,
+                    'total': line.total,
                 })
         return res
 

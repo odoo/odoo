@@ -30,7 +30,7 @@ class payslip_report(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
         super(payslip_report, self).__init__(cr, uid, name, context)
         self.localcontext.update({
-                'get_payslip_lines': self.get_payslip_lines,
+            'get_payslip_lines': self.get_payslip_lines,
         })
 
     def get_payslip_lines(self, obj):
