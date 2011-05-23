@@ -221,7 +221,7 @@ class configmanager(object):
         group.add_option("--modules", dest="translate_modules",
                          help="specify modules to export. Use in combination with --i18n-export")
         group.add_option("--addons-path", dest="addons_path",
-                         help="specify an alternative addons path.",
+                         help="specify additional addons paths (separated by commas).",
                          action="callback", callback=self._check_addons_path, nargs=1, type="string")
         parser.add_option_group(group)
 
@@ -435,26 +435,28 @@ class configmanager(object):
             import stat
             os.chmod(filename, stat.S_IRUSR + stat.S_IWUSR)
 
+    def _is_addons_path(self, path):
+        for f in os.listdir(path):
+            modpath = os.path.join(path, f)
+            if os.path.isdir(modpath):
+                def hasfile(filename):
+                    return os.path.isfile(os.path.join(modpath, filename))
+                if hasfile('__init__.py') and (hasfile('__openerp__.py') or hasfile('__terp__.py')):
+                    return True
+        return False
+
     def _check_addons_path(self, option, opt, value, parser):
-        res = os.path.abspath(os.path.expanduser(value))
-        if not os.path.exists(res):
-            raise optparse.OptionValueError("option %s: no such directory: %r" % (opt, value))
+        ad_paths = []
+        for path in value.split(','):
+            path = path.strip()
+            res = os.path.abspath(os.path.expanduser(path))
+            if not os.path.isdir(res):
+                raise optparse.OptionValueError("option %s: no such directory: %r" % (opt, path))
+            if not self._is_addons_path(res):
+                raise optparse.OptionValueError("option %s: The addons-path %r does not seem to a be a valid Addons Directory!" % (opt, path))
+            ad_paths.append(res)
 
-        contains_addons = False
-        for f in os.listdir(res):
-            modpath = os.path.join(res, f)
-            if os.path.isdir(modpath) and \
-               os.path.exists(os.path.join(modpath, '__init__.py')) and \
-               (os.path.exists(os.path.join(modpath, '__openerp__.py')) or \
-                os.path.exists(os.path.join(modpath, '__terp__.py'))):
-
-                contains_addons = True
-                break
-
-        if not contains_addons:
-            raise optparse.OptionValueError("option %s: The addons-path %r does not seem to a be a valid Addons Directory!" % (opt, value))
-
-        setattr(parser.values, option.dest, res)
+        setattr(parser.values, option.dest, ",".join(ad_paths))
 
     def load(self):
         p = ConfigParser.ConfigParser()
