@@ -101,24 +101,25 @@ class account_asset_asset(osv.osv):
             day = depreciation_date.day
             month = depreciation_date.month
             year = depreciation_date.year
+            total_days = (year % 4) and 365 or 366
             for i in range(1,undone_dotation_number+1):
                 if i == undone_dotation_number + 1:
                     amount = residual_amount
-                    if asset.prorata:
-                        amount = (asset.purchase_value / undone_dotation_number)/364 * 364
                 else:
                     if asset.method == 'linear':
-                        amount = asset.purchase_value / undone_dotation_number
+                        amount = asset.purchase_value / asset.method_delay
                         if asset.prorata and i == 1:
-                            amount = (asset.purchase_value / undone_dotation_number)/365
-                            day = 1
+                            days = float(total_days) - float(depreciation_date.strftime('%j'))
+                            first_amount = amount = (asset.purchase_value / asset.method_delay)/total_days * days
+                        elif asset.prorata and i == undone_dotation_number:
+                            amount = (asset.purchase_value / asset.method_delay) - first_amount
                     else:
                         amount = residual_amount * asset.method_progress_factor
                 residual_amount -= amount
                 vals = {
                      'amount': amount,
                      'asset_id': asset.id,
-                     'sequence':i,
+                     'sequence': i,
                      'name': str(asset.id) +'/'+ str(i),
                      'remaining_value': residual_amount,
                      'depreciated_value': asset.purchase_value - residual_amount,
@@ -208,12 +209,12 @@ class account_asset_asset(osv.osv):
     def _check_prorata(self, cr, uid, ids, context=None):
         assets = self.browse(cr, uid, ids, context=context)
         for asset in assets:
-            if asset.purchase_date != time.strftime('%Y-12-30'):
+            if asset.method != 'linear':
                 return False
         return True
 
     _constraints = [
-        (_check_prorata, '\nAsset is not purchased at the end of the year!\nPlease check the purchase date.', ['prorata']),
+        (_check_prorata, '\nProrata Temporis can be applied only for Linear method.', ['prorata']),
     ]
 
     def _compute_period(self, cr, uid, property, context={}):
