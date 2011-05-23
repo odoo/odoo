@@ -130,12 +130,12 @@ class ServerParameter( unohelper.Base, XJobExecutor ):
         UID = self.sock.login(sDatabase,sLogin,sPassword)
         if not UID or UID==-1 :
             ErrorDialog("Connection Refuse...","Please enter valid Login/Password")
-            self.win.endExecute()
+          #  self.win.endExecute()
         ids_module =self.sock.execute(sDatabase, UID, sPassword, 'ir.module.module', 'search', [('name','=','base_report_designer'),('state', '=', 'installed')])
         if not len(ids_module):
             ErrorDialog("Please Install base_report_designer module", "", "Module Uninstalled Error")
             self.logobj.log_write('Module Not Found',LOG_WARNING, ':base_report_designer not install in  database %s' % (sDatabase))
-            self.win.endExecute()
+            #self.win.endExecute()
         else:
             desktop=getDesktop()
             doc = desktop.getCurrentComponent()
