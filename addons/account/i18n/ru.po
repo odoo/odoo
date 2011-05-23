@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-05-09 10:18+0000\n"
-"PO-Revision-Date: 2011-05-19 18:19+0000\n"
+"PO-Revision-Date: 2011-05-21 20:16+0000\n"
 "Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-05-20 05:51+0000\n"
+"X-Launchpad-Export-Date: 2011-05-22 05:57+0000\n"
 "X-Generator: Launchpad (build 12959)\n"
 
 #. module: account
@@ -64,7 +64,7 @@ msgstr "Остаток"
 #: code:addons/account/invoice.py:793
 #, python-format
 msgid "Please define sequence on invoice journal"
-msgstr "Пожалуйста, определите последовательность в журнале счетов"
+msgstr "Пожалуйста, определите нумерацию в журнале счетов"
 
 #. module: account
 #: constraint:account.period:0
@@ -248,8 +248,7 @@ msgid ""
 "The sequence field is used to order the resources from lower sequences to "
 "higher ones"
 msgstr ""
-"Поле \"последовательность\" используется для сортировки. От младшего к "
-"старшему."
+"Поле \"нумерация\" используется для сортировки. От младшего к старшему."
 
 #. module: account
 #: help:account.tax.code,notprintable:0
@@ -1584,7 +1583,7 @@ msgstr "Последовательность финансовых лет"
 #. module: account
 #: field:wizard.multi.charts.accounts,seq_journal:0
 msgid "Separated Journal Sequences"
-msgstr "Отдельные последовательности журнала"
+msgstr "Раздельные нумерации журнала"
 
 #. module: account
 #: view:account.invoice:0
@@ -5636,7 +5635,7 @@ msgstr "Тип налога"
 #: model:ir.actions.act_window,name:account.action_account_template_form
 #: model:ir.ui.menu,name:account.menu_action_account_template_form
 msgid "Account Templates"
-msgstr "Счет: Шаблоны"
+msgstr "Шаблоны счетов"
 
 #. module: account
 #: report:account.vat.declaration:0
@@ -5891,6 +5890,10 @@ msgid ""
 "year. Note that you can run this wizard many times for the same fiscal year: "
 "it will simply replace the old opening entries with the new ones."
 msgstr ""
+"Этот мастер генерирует проводки конца года в журнале для выбранного "
+"финансового года. Заметим, что вы можете запустить этот мастер много раз для "
+"того же финансового года: старые проводки открытия просто будут заменены на "
+"новые."
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_bank_and_cash
@@ -7113,7 +7116,7 @@ msgstr "Оплата счетов"
 #: field:account.tax,sequence:0
 #: field:account.tax.template,sequence:0
 msgid "Sequence"
-msgstr "Последовательность"
+msgstr "Нумерация"
 
 #. module: account
 #: model:ir.model,name:account.model_account_bs_report
@@ -8074,7 +8077,7 @@ msgstr "неизвестен"
 #. module: account
 #: field:account.fiscalyear.close,journal_id:0
 msgid "Opening Entries Journal"
-msgstr "Открытие журнала проводок"
+msgstr "Журнал проводок открытия"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_customerinvoice0
@@ -8746,7 +8749,7 @@ msgstr "Плохой итог !"
 #. module: account
 #: field:account.journal,sequence_id:0
 msgid "Entry Sequence"
-msgstr "Последовательный номер проводки"
+msgstr "Нумерация проводок"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_period_tree
@@ -9116,7 +9119,7 @@ msgstr "Дата окончания"
 #: model:ir.actions.act_window,name:account.action_account_open_closed_fiscalyear
 #: model:ir.ui.menu,name:account.menu_wizard_account_open_closed_fiscalyear
 msgid "Cancel Opening Entries"
-msgstr "Отмена открывающих проводок"
+msgstr "Отмена проводок открытия"
 
 #. module: account
 #: field:account.payment.term.line,days2:0
