@@ -152,29 +152,6 @@ openerp.base.Registry = Class.extend( /** @lends openerp.base.Registry# */ {
     }
 });
 
-/**
- * Generates an inherited class that replaces all the methods by null methods (methods
- * that does nothing and always return undefined).
- * 
- * @param {Class} claz
- * @param {dict} add Additional functions to override.
- * @return {Class}
- */
-openerp.base.generate_null_object_class = function(claz, add) {
-    var newer = {};
-    var copy_proto = function(prototype) {
-        for (var name in prototype) {
-            if(typeof prototype[name] == "function") {
-                newer[name] = function() {};
-            }
-        }
-        if (prototype.prototype)
-            copy_proto(prototype.prototype);
-    }
-    copy_proto(claz.prototype);
-    return claz.extend(_.extend({}, newer, add || {}));
-}
-
 openerp.base.BasicController = Class.extend( /** @lends openerp.base.BasicController# */{
     /**
      * rpc operations, event binding and callback calling should be done in
@@ -253,6 +230,32 @@ openerp.base.BasicController = Class.extend( /** @lends openerp.base.BasicContro
 
     }
 });
+
+/**
+ * Generates an inherited class that replaces all the methods by null methods (methods
+ * that does nothing and always return undefined).
+ * 
+ * @param {Class} claz
+ * @param {dict} add Additional functions to override.
+ * @return {Class}
+ */
+openerp.base.generate_null_object_class = function(claz, add) {
+    var newer = {};
+    var copy_proto = function(prototype) {
+        for (var name in prototype) {
+            if(typeof prototype[name] == "function") {
+                newer[name] = function() {};
+            }
+        }
+        if (prototype.prototype)
+            copy_proto(prototype.prototype);
+    }
+    copy_proto(claz.prototype);
+    var init = openerp.base.BasicController.prototype.init;
+    newer.init = init;
+    var tmpclass = claz.extend(newer);
+    return tmpclass.extend(add || {});
+}
 
 openerp.base.Notification =  openerp.base.BasicController.extend({
     init: function(element_id) {
