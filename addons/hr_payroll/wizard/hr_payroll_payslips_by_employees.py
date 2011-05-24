@@ -32,9 +32,9 @@ class hr_payslip_employees(osv.osv_memory):
     _description = 'Generate payslips for all selected employees'
     _columns = {
         'employee_ids': fields.many2many('hr.employee', 'hr_employee_group_rel', 'payslip_id', 'employee_id', 'Employees'),
-        'date_from': fields.date('Date From', readonly=True, help='Starting date of the payslips generated from here.'),
-        'date_to': fields.date('Date To', readonly=True, help='Ending date of the payslips generated from here.'),
-        'credit_note': fields.boolean('Credit Note', readonly=True, help='If its checked, indicates that generated payslips are refund payslips.'),
+        'date_from': fields.date('Date From', readonly=False, help='Starting date of the payslips generated from here.'),
+        'date_to': fields.date('Date To', readonly=False, help='Ending date of the payslips generated from here.'),
+        'credit_note': fields.boolean('Credit Note', readonly=False, help='If its checked, indicates that generated payslips are refund payslips.'),
     }
     
     def default_get(self, cr, uid, fields, context=None):
@@ -54,12 +54,12 @@ class hr_payslip_employees(osv.osv_memory):
         active_id = context and context.get('active_id', False)
         if active_id:
             data = run_pool.read(cr, uid, active_id, ['date_start', 'date_end', 'credit_note'])
-        if 'date_from' in fields:
-            res.update({'date_from': data['date_start']})
-        if 'date_to' in fields:
-            res.update({'date_to': data['date_end']})
-        if 'credit_note' in fields:
-            res.update({'credit_note': data['credit_note']})
+            if 'date_from' in fields:
+                res.update({'date_from': data['date_start']})
+            if 'date_to' in fields:
+                res.update({'date_to': data['date_end']})
+            if 'credit_note' in fields:
+                res.update({'credit_note': data['credit_note']})
         return res
 
     def compute_sheet(self, cr, uid, ids, context=None):
@@ -70,8 +70,8 @@ class hr_payslip_employees(osv.osv_memory):
         if context is None:
             context = {}
         data = self.read(cr, uid, ids, context=context)[0]
-        from_date =  data.get('date_from')
-        to_date = data.get('date_to')
+        from_date =  data.get('date_from', False)
+        to_date = data.get('date_to', False)
         if not data['employee_ids']:
             raise osv.except_osv(_("Warning !"), _("You must select employee(s) to generate payslip(s)"))
         for emp in emp_pool.browse(cr, uid, data['employee_ids'], context=context):
