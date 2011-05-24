@@ -552,7 +552,7 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
         var placeholder = this.make_fragment();
         _(datagroups).each(function (group) {
             var $row = $('<tr>');
-            if (group.has_leaves) {
+            if (group.openable) {
                 $row.click(function (e) {
                     if (!$row.data('open')) {
                         $row.data('open', true);
@@ -576,14 +576,13 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
                         var $group_column = $('<th>')
                                 .text((group.value instanceof Array ? group.value[1] : group.value))
                                 .appendTo($row);
-                        if (group.has_leaves) {
+                        if (group.openable) {
                             $group_column
                                 .prepend('<span class="ui-icon ui-icon-triangle-1-e">');
                         }
                         self.indent($group_column, group.level);
                     } else if (column.id === '_count') {
-                        $('<td>').text(group.has_leaves ? group.length : '')
-                                 .appendTo($row);
+                        $('<td>').text(group.length).appendTo($row);
                     } else if (column.id in group.aggregates) {
                         var value = group.aggregates[column.id];
                         var format;

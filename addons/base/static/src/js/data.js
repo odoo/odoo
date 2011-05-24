@@ -106,11 +106,12 @@ openerp.base.ContainerDataGroup = openerp.base.DataGroup.extend(
             __domain: group.__domain,
 
             grouped_on: field_name,
-            // if terminal group and group_by_no_leaf => use group.__count
+            // if terminal group (or no group) and group_by_no_leaf => use group.__count
             length: group[field_name + '_count'] || group.__count,
             value: group[field_name],
 
-            has_leaves: _.isUndefined(group.__count),
+            openable: !(this.context['group_by_no_leaf']
+                       && group.__context.group_by.length === 0),
 
             aggregates: aggregates
         };
