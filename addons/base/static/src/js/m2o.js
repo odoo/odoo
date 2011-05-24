@@ -73,7 +73,7 @@ openerp.base.m2o = function(openerp){
                                                                 minWidth: 800
                                                              });
                                 self.element.val('');
-                                var event_form = new openerp.base.FormView(new openerp.base.DummyViewManager(),
+                                var event_form = new openerp.base.FormView(null,
                                         self.session, element_id, self.dataset, false);
                                 event_form.start();
                         });

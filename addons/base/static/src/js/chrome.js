@@ -153,14 +153,14 @@ openerp.base.Registry = Class.extend( /** @lends openerp.base.Registry# */ {
 });
 
 /**
- * Generates an inherited class that replaces all the methods by dummy methods (methods
+ * Generates an inherited class that replaces all the methods by null methods (methods
  * that does nothing and always return undefined).
  * 
  * @param {Class} claz
  * @param {dict} add Additional functions to override.
  * @return {Class}
  */
-openerp.base.generate_dummy = function(claz, add) {
+openerp.base.generate_null_object_class = function(claz, add) {
     var newer = {};
     var copy_proto = function(prototype) {
         for (var name in prototype) {

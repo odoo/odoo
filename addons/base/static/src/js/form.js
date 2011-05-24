@@ -17,7 +17,7 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
      */
     init: function(view_manager, session, element_id, dataset, view_id) {
         this._super(session, element_id);
-        this.view_manager = view_manager;
+        this.view_manager = view_manager || new openerp.base.NullViewManager();
         this.dataset = dataset;
         this.model = dataset.model;
         this.view_id = view_id;
@@ -29,12 +29,12 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
         this.ready = false;
         this.show_invalid = true;
         this.touched = false;
-        this.flags = view_manager.action.flags || {};
+        this.flags = this.view_manager.action.flags || {};
     },
     start: function() {
         //this.log('Starting FormView '+this.model+this.view_id)
         return this.rpc("/base/formview/load", {"model": this.model, "view_id": this.view_id,
-            toolbar:!!this.view_manager.sidebar}, this.on_loaded);
+            toolbar:!!this.flags.sidebar}, this.on_loaded);
     },
     on_loaded: function(data) {
         var self = this;
@@ -56,10 +56,7 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
         this.$element.find('#' + this.element_id + '_header button.oe_form_button_cancel').click(this.do_cancel);
         this.$element.find('#' + this.element_id + '_header button.oe_form_button_new').click(this.on_button_new);
 
-        // sidebar stuff
-        if (this.view_manager.sidebar) {
-            this.view_manager.sidebar.set_toolbar(data.fields_view.toolbar);
-        }
+        this.view_manager.sidebar.set_toolbar(data.fields_view.toolbar);
     },
     do_show: function () {
         var self = this;
@@ -72,9 +69,7 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
         } else {
             this.dataset.read_index(_.keys(this.fields_view.fields), this.on_record_loaded);
         }
-        if (this.view_manager && this.view_manager.sidebar) {
-            this.view_manager.sidebar.refresh(true);
-        }
+        this.view_manager.sidebar.refresh(true);
     },
     do_hide: function () {
         this.$element.hide();
@@ -961,6 +956,7 @@ openerp.base.form.FieldOne2ManyDatasSet = openerp.base.DataSetStatic.extend({
 openerp.base.form.FieldOne2ManyViewManager = openerp.base.ViewManager.extend({
     init: function(session, element_id, dataset, views) {
         this._super(session, element_id, dataset, views);
+        this.action = {flags:{}};
     }
 });
 
@@ -1010,8 +1006,10 @@ openerp.base.form.FieldMany2Many = openerp.base.form.Field.extend({
     start: function() {
         this._super.apply(this, arguments);
         this.dataset = new openerp.base.DataSetMany2Many(this.session, this.field.relation);
-        this.list_view = new openerp.base.form.Many2ManyListView(undefined, this.view.session,
-                this.list_id, this.dataset, false, {'selected': false, 'addable': 'Add'});
+        //TODO: switch to non selectable once xmo has corrected the bug related to that
+        this.list_view = new openerp.base.form.Many2ManyListView(null, this.view.session,
+                this.list_id, this.dataset, false, {'selectable-': false,
+                'addable': 'Add'});
         var self = this;
         this.list_view.m2m_field = this;
         this.list_view.start();
@@ -1119,8 +1117,8 @@ openerp.base.form.Many2XSelectPopup = openerp.base.BaseWidget.extend({
         if (this.searchview) {
             this.searchview.stop();
         }
-        this.searchview = new openerp.base.SearchView(this, this.session, this.element_id + "_search",
-                this.dataset, false, {});
+        this.searchview = new openerp.base.SearchView(null, this.session,
+                this.element_id + "_search", this.dataset, false, {});
         this.searchview.on_search.add(function(domains, contexts, groupbys) {
             self.view_list.do_search.call(
                 self, domains, contexts, groupbys);
@@ -1137,7 +1135,8 @@ openerp.base.form.Many2XSelectPopup = openerp.base.BaseWidget.extend({
                 self.stop();
             });
             self.view_list = new openerp.base.form.Many2XPopupListView( null, self.session,
-                    self.element_id + "_view_list", self.dataset, false);
+                    self.element_id + "_view_list", self.dataset, false,
+                    {'deletable': false});
             self.view_list.popup = self;
             self.view_list.do_show();
             self.view_list.start();
@@ -1158,7 +1157,7 @@ openerp.base.form.Many2XSelectPopup = openerp.base.BaseWidget.extend({
         this.searchview.hide();
         this.view_list.$element.hide();
         this.dataset.index = null;
-        this.view_form = new openerp.base.FormView(new openerp.base.DummyViewManager(), this.session,
+        this.view_form = new openerp.base.FormView(null, this.session,
                 this.element_id + "_view_form", this.dataset, false);
         this.view_form.start();
         this.view_form.on_loaded.add_last(function() {

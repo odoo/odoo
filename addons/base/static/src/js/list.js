@@ -45,7 +45,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
     init: function(view_manager, session, element_id, dataset, view_id, options) {
         var self = this;
         this._super(session, element_id);
-        this.view_manager = view_manager;
+        this.view_manager = view_manager || new openerp.base.NullViewManager();
         this.dataset = dataset;
         this.model = dataset.model;
         this.view_id = view_id;
@@ -54,10 +54,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
         this.rows = [];
 
         this.options = _.extend({}, this.defaults, options || {});
-        this.flags = {};
-        if (view_manager && view_manager.action) {
-            this.flags =  view_manager.action.flags;
-        }
+        this.flags =  this.view_manager.action.flags;
 
         this.list = new openerp.base.ListView.List({
             options: this.options,
@@ -103,7 +100,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
         return this.rpc("/base/listview/load", {
             model: this.model,
             view_id: this.view_id,
-            toolbar: this.view_manager ? !!this.view_manager.sidebar : false
+            toolbar: !!this.flags.sidebar
         }, this.on_loaded);
     },
     /**
@@ -184,10 +181,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
         var $table = this.$element.find('table');
         this.list.move_to($table);
 
-        // sidebar stuff
-        if (this.view_manager && this.view_manager.sidebar) {
-            this.view_manager.sidebar.set_toolbar(data.fields_view.toolbar);
-        }
+        this.view_manager.sidebar.set_toolbar(data.fields_view.toolbar);
     },
     /**
      * Fills the table with the provided records after emptying it
@@ -255,9 +249,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
             this.do_reload();
             this.hidden = false;
         }
-        if (this.view_manager && this.view_manager.sidebar) {
-            this.view_manager.sidebar.refresh(true);
-        }
+        this.view_manager.sidebar.refresh(true);
     },
     do_hide: function () {
         this.$element.hide();

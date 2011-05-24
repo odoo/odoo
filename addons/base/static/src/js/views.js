@@ -82,6 +82,7 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
         this.views_src = views;
         this.views = {};
         this.flags = this.flags || {};
+        this.sidebar = new openerp.base.NullSidebar();
     },
     /**
      * @returns {jQuery.Deferred} initial view loading promise
@@ -198,9 +199,10 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
     }
 });
 
-openerp.base.DummyViewManager = openerp.base.generate_dummy(openerp.base.ViewManager, {
+openerp.base.NullViewManager = openerp.base.generate_null_object_class(openerp.base.ViewManager, {
     init: function() {
-        this.action = {};
+        this.action = {flags: {}};
+        this.sidebar = new openerp.base.NullSidebar();
     }
 });
 
@@ -229,7 +231,7 @@ openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
         var inital_view_loaded = this._super();
 
         // init sidebar
-        if (this.sidebar) {
+        if (this.flags.sidebar) {
             this.$element.find('.view-manager-main-sidebar').html(this.sidebar.render());
             this.sidebar.start();
         }
@@ -256,9 +258,7 @@ openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
     },
     stop: function() {
         // should be replaced by automatic destruction implemented in BaseWidget
-        if (this.sidebar) {
-            this.sidebar.stop();
-        }
+        this.sidebar.stop();
         this._super();
     },
     /**
@@ -342,6 +342,8 @@ openerp.base.Sidebar = openerp.base.BaseWidget.extend({
         this.refresh(false);
     }
 });
+
+openerp.base.NullSidebar = openerp.base.generate_null_object_class(openerp.base.Sidebar);
 
 openerp.base.View = openerp.base.Controller.extend({
     /**
