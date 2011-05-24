@@ -110,7 +110,7 @@ class account_asset_asset(osv.osv):
                         amount = asset.purchase_value / undone_dotation_number
                         if asset.prorata:
                             if i == 1:
-                                days = float(total_days) - float(depreciation_date.strftime('%j'))
+                                days = total_days - float(depreciation_date.strftime('%j'))
                                 amount = (asset.purchase_value / asset.method_delay) / total_days * days
                             elif i == undone_dotation_number:
                                 amount = (asset.purchase_value / asset.method_delay) / total_days * (total_days - days)
@@ -128,7 +128,7 @@ class account_asset_asset(osv.osv):
                 }
                 self.pool.get('account.asset.depreciation.line').create(cr, uid, vals)
                 month += asset.method_period
-                depreciation_date = datetime(year + (month / 12), (month % 12 or 1), day)
+                depreciation_date = datetime(year + (month / 12), (month % 12 or 12), day)
         return True
 
     def validate(self, cr, uid, ids, context={}):
@@ -214,7 +214,7 @@ class account_asset_asset(osv.osv):
         return True
 
     _constraints = [
-        (_check_prorata, '\nProrata Temporis can be applied only for Linear method.', ['prorata']),
+        (_check_prorata, '\nProrata temporis can be applied only for linear method.', ['prorata']),
     ]
 
     def _compute_period(self, cr, uid, property, context={}):
