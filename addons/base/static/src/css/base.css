@@ -758,25 +758,25 @@ background: linear-gradient(top, #ffffff 0%,#d8d8d8 11%,#afafaf 86%,#333333 91%,
 }
 
 .openerp .sidebar-main-div {
-    height:100%;
+    height: 100%;
+    border-left: 1px solid #D2CFCF;
 }
 
-.openerp .sidebar-sub-div {
-    padding:0;
-    margin:0;
-    width:180px;
-    border-left: 1px solid #D2CFCF;
-    height:100%;
+.openerp .sidebar-content {
+    padding: 0;
+    margin: 0;
+    width: 180px;
+    height: 100%;
     font-family: Ubuntu, Helvetica, sans-serif;
     font-size: 0.9em;
 }
 
-.openerp .closed-sidebar .sidebar-sub-div {
-    width:22px;
+.openerp .closed-sidebar .sidebar-content {
+    width: 22px;
 }
 
-.openerp .closed-sidebar .sidebar-displaying-div {
-    display:none;
+.openerp .closed-sidebar .sidebar-content {
+    display: none;
 }
 
 .openerp .sidebar-main-div a {
@@ -831,12 +831,15 @@ background: linear-gradient(top, #ffffff 0%,#ebe9e9 100%); /* W3C */
     background: url(../img/toggle-a-bg.png);
     width: 21px;
     height: 21px;
-    position: absolute;
     z-index: 10;
 }
 .openerp .open-sidebar .toggle-sidebar {
     margin-left: 158px;
     background-position: 21px 0;
+    position: absolute;
+}
+.openerp .closed-sidebar .toggle-sidebar {
+    border-left: none;
 }
 
 .openerp.kitten-mode-activated .main_table {
@@ -863,7 +866,7 @@ background: linear-gradient(top, #ffffff 0%,#ebe9e9 100%); /* W3C */
 .openerp.kitten-mode-activated .menu span {
     background: none;
 }
-.openerp.kitten-mode-activated .sidebar-displaying-div li a,
+.openerp.kitten-mode-activated .sidebar-content li a,
 .openerp.kitten-mode-activated .oe-application .view-manager-main-content h2.oe_view_title,
 .openerp.kitten-mode-activated .oe-application .view-manager-main-content a.searchview_group_string,
 .openerp.kitten-mode-activated .oe-application .view-manager-main-content label  {

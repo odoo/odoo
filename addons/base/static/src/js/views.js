@@ -302,9 +302,9 @@ openerp.base.Sidebar = openerp.base.BaseWidget.extend({
             var section = {elements:toolbar[type[0]], label:type[1]};
             self.sections.push(section);
         });
-        this.refresh(true);
+        this.do_refresh(true);
     },
-    refresh: function(new_view) {
+    do_refresh: function(new_view) {
         var view = this.view_manager.active_view;
         the_condition = this.sections.length > 0 && _.detect(this.sections,
             function(x) {return x.elements.length > 0;}) != undefined
@@ -340,7 +340,7 @@ openerp.base.Sidebar = openerp.base.BaseWidget.extend({
     },
     start: function() {
         this._super();
-        this.refresh(false);
+        this.do_refresh(false);
     }
 });
 

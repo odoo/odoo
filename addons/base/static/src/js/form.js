@@ -57,6 +57,7 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
         this.$element.find('#' + this.element_id + '_header button.oe_form_button_new').click(this.on_button_new);
 
         this.view_manager.sidebar.set_toolbar(data.fields_view.toolbar);
+        this.view_manager.sidebar.do_refresh.add_last(this.on_sidebar_refreshed);
     },
     do_show: function () {
         var self = this;
@@ -69,7 +70,7 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
         } else {
             this.dataset.read_index(_.keys(this.fields_view.fields), this.on_record_loaded);
         }
-        this.view_manager.sidebar.refresh(true);
+        this.view_manager.sidebar.do_refresh(true);
     },
     do_hide: function () {
         this.$element.hide();
@@ -301,6 +302,10 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
     },
     do_cancel: function () {
         this.notification.notify("Cancelling form");
+    },
+    on_sidebar_refreshed: function(new_view) {
+        var sidebar = this.view_manager.sidebar;
+        // TODO: Add attachment WIP
     },
     reload: function() {
         if (this.datarecord.id) {
