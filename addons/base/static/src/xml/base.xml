@@ -690,20 +690,15 @@
     <a class="toggle-sidebar"></a>
     <div t-att-id="element_id" class="sidebar-sub-div">
         <div class="sidebar-displaying-div">
-            <t t-set="i" t-value="1-1"/> <!-- al do stupid things -->
-            <t t-foreach="sections" t-as="section">
-                <t t-if="section.elements.length &gt; 0">
+            <t t-foreach="sections" t-as="section" t-if="section.elements.length">
                 <h2><t t-esc="section.label"/></h2>
                 <ul>
-                    <t t-set="j" t-value="1-1"/>
-                    <t t-foreach="section.elements" t-as="element">
-                        <li><a class="oe_sidebar_action_a" t-att-data-i="i" t-att-data-j="j" href="#">
-                            <t t-esc="element.name"/></a></li>
-                        <t t-set="j" t-value="j+1"/>
-                    </t>
+                    <li t-foreach="section.elements" t-as="element">
+                        <a class="oe_sidebar_action_a" t-attf-data-index="#{section_index}-#{element_index}" href="#">
+                            <t t-esc="element.name"/>
+                        </a>
+                    </li>
                 </ul>
-                </t>
-                <t t-set="i" t-value="i+1"/>
             </t>
         </div>
     </div>

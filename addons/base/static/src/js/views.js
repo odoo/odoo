@@ -315,21 +315,20 @@ openerp.base.Sidebar = openerp.base.BaseWidget.extend({
             this.$element.addClass('open-sidebar');
             this.$element.removeClass('closed-sidebar');
         }
-        
+
         this.$element.html(QWeb.render("ViewManager.sidebar.internal",this));
-        
+
         var self = this;
         this.$element.find(".toggle-sidebar").click(function(e) {
             self.$element.toggleClass('open-sidebar closed-sidebar');
             e.stopPropagation();
             e.preventDefault();
         });
-        
+
         this.$element.find("a.oe_sidebar_action_a").click(function(e) {
             var $this = jQuery(this);
-            var i = $this.attr("data-i");
-            var j = $this.attr("data-j");
-            var action = self.sections[i].elements[j];
+            var index = $this.attr("data-index").split('-');
+            var action = self.sections[index[0]].elements[index[1]];
             action.flags = {
                 new_window : true
             }
