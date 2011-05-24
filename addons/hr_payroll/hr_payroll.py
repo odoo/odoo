@@ -468,11 +468,6 @@ class hr_payslip(osv.osv):
 
     def get_payslip_lines(self, cr, uid, contract_ids, payslip_id, context):
         
-        class Categories(InputLine):
-
-            def __getattr__(self, key):
-                return self.dict[key]
-            
         def _sum_salary_rule_category(categories_dict, category, amount):
             if category.parent_id:
                 categories_dict = _sum_salary_rule_category(categories_dict, category.parent_id, amount)
@@ -553,7 +548,7 @@ class hr_payslip(osv.osv):
         for input_line in payslip.input_line_ids:
             inputs[input_line.code] = input_line
         categories_dict = {}
-        categories_obj = Categories(self.pool, cr, uid, payslip.employee_id.id, categories_dict)
+        categories_obj = BrowsableObject(self.pool, cr, uid, payslip.employee_id.id, categories_dict)
         input_obj = InputLine(self.pool, cr, uid, payslip.employee_id.id, inputs)
         worked_days_obj = WorkedDays(self.pool, cr, uid, payslip.employee_id.id, worked_days)
         payslip_obj = Payslips(self.pool, cr, uid, payslip.employee_id.id, payslip)
