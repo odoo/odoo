@@ -219,7 +219,7 @@ openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
         this.flags = this.action.flags || {};
         if (action.res_model == 'board.board' && action.views.length == 1 && action.views) {
             // Not elegant but allows to avoid flickering of SearchView#do_hide
-            this.flags.search_view = this.flags.pager = this.flags.action_buttons = false;
+            this.flags.search_view = this.flags.pager = this.flags.sidebar = this.flags.action_buttons = false;
         }
         if (this.flags.sidebar) {
             this.sidebar = new openerp.base.Sidebar(null, this);
