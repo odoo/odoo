@@ -439,9 +439,12 @@ class DataSet(openerpweb.Controller):
 class DataGroup(openerpweb.Controller):
     _cp_path = "/base/group"
     @openerpweb.jsonrequest
-    def read(self, request, model, group_by_fields, domain=None, context=None):
+    def read(self, request, model, group_by_fields, domain=None):
         Model = request.session.model(model)
-        return Model.read_group(domain or False, False, group_by_fields, 0, False, context or False)
+
+        return Model.read_group(
+            domain or [], False, group_by_fields, 0, False,
+            dict(request.context, group_by=group_by_fields))
 
 class View(openerpweb.Controller):
     def fields_view_get(self, request, model, view_id, view_type,
@@ -603,7 +606,6 @@ class ListView(View):
         """
         view = self.fields_view_get(request, model, id, toolbar=True)
 
-        print sort
         rows = DataSet().do_search_read(request, model,
                                         offset=offset, limit=limit,
                                         domain=domain, sort=sort)
@@ -612,7 +614,6 @@ class ListView(View):
 
         if sort:
             sort_criteria = sort.split(',')[0].split(' ')
-            print sort, sort_criteria
             view['sorted'] = {
                 'field': sort_criteria[0],
                 'reversed': sort_criteria[1] == 'DESC'
