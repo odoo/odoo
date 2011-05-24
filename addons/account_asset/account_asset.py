@@ -357,6 +357,7 @@ class account_asset_depreciation_line(osv.osv):
                 'amount_currency': company_currency <> current_currency and sign * line.amount or 0.0,
                 'analytic_account_id': line.asset_id.category_id.account_analytic_id.id,
                 'date': depreciation_date,
+                'asset_id': line.asset_id.id
             })
             self.write(cr, uid, line.id, {'move_id': move_id}, context=context)
         return True
