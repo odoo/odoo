@@ -198,6 +198,12 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
     }
 });
 
+openerp.base.DummyViewManager = openerp.base.generate_dummy(openerp.base.ViewManager, {
+    init: function() {
+        this.action = {};
+    }
+});
+
 openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
     init: function(session, element_id, action) {
         var dataset;

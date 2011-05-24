@@ -1,10 +1,9 @@
 openerp.base.m2o = function(openerp){
 
     openerp.base.m2o = openerp.base.Controller.extend({
-        init: function(view_manager, element_id, model, dataset, session){
+        init: function(element_id, model, dataset, session){
             this._super(element_id, model, dataset, session);
 
-            this.view_manager = view_manager
             this.session = session;
             this.element = element_id.find('input');
             this.button = element_id.find('div');
@@ -74,7 +73,8 @@ openerp.base.m2o = function(openerp){
                                                                 minWidth: 800
                                                              });
                                 self.element.val('');
-                                var event_form = new openerp.base.FormView(self.view_manager, self.session, element_id, self.dataset, false);
+                                var event_form = new openerp.base.FormView(new openerp.base.DummyViewManager(),
+                                        self.session, element_id, self.dataset, false);
                                 event_form.start();
                         });
                         $input.val(self.element.data( "autocomplete" ).term);
