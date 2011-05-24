@@ -1107,7 +1107,6 @@ class account_move_line(osv.osv):
         journal_obj = self.pool.get('account.journal')
         period_obj = self.pool.get('account.period')
         journal_id = False
-        period_id = False
         if 'date' in vals.keys():
             if 'journal_id' in vals and 'journal_id' not in context:
                 journal_id = vals['journal_id']
@@ -1223,7 +1222,6 @@ class account_move_line(osv.osv):
             company_id = self.pool.get('account.move').read(cr, uid, vals['move_id'], ['company_id']).get('company_id', False)
             if company_id:
                 vals['company_id'] = company_id[0]
-        self._check_date(cr, uid, vals, context, check)
         if ('account_id' in vals) and not account_obj.read(cr, uid, vals['account_id'], ['active'])['active']:
             raise osv.except_osv(_('Bad account!'), _('You can not use an inactive account!'))
         if 'journal_id' in vals:
@@ -1234,7 +1232,7 @@ class account_move_line(osv.osv):
             m = move_obj.browse(cr, uid, vals['move_id'])
             context['journal_id'] = m.journal_id.id
             context['period_id'] = m.period_id.id
-
+        self._check_date(cr, uid, vals, context, check)
         self._update_journal_check(cr, uid, context['journal_id'], context['period_id'], context)
         move_id = vals.get('move_id', False)
         journal = journal_obj.browse(cr, uid, context['journal_id'], context=context)
