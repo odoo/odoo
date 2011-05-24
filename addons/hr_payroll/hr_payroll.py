@@ -212,12 +212,14 @@ class hr_payslip_run(osv.osv):
             ('draft', 'Draft'),
             ('close', 'Close'),
         ], 'State', select=True, readonly=True),
-        'date_start': fields.date('Date From', required=False, readonly=True, states={'draft': [('readonly', False)]}),
-        'date_end': fields.date('Date To', required=False, readonly=True, states={'draft': [('readonly', False)]}),
+        'date_start': fields.date('Date From', required=True, readonly=True, states={'draft': [('readonly', False)]}),
+        'date_end': fields.date('Date To', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'credit_note': fields.boolean('Credit Note', readonly=True, states={'draft': [('readonly', False)]}, help="If its checked, indicates that all payslips generated from here are refund payslips."),
     }
     _defaults = {
         'state': 'draft',
+        'date_start': lambda *a: time.strftime('%Y-%m-01'),
+        'date_end': lambda *a: str(datetime.now() + relativedelta.relativedelta(months=+1, day=1, days=-1))[:10],
     }
 
     def draft_payslip_run(self, cr, uid, ids, context=None):
