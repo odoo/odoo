@@ -92,7 +92,7 @@
         <t t-foreach="data.children" t-as="menu">
             <td>
                 <a href="#" t-att-data-menu="menu.id">
-                    <span><t t-esc="menu.name"/></span>
+                    <t t-esc="menu.name"/>
                 </a>
             </td>
         </t>
