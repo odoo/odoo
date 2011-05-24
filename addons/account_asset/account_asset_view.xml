@@ -80,8 +80,8 @@
                     <newline/>
                  </page>
                  <page string="Depreciation board">
-                    <field name="depreciation_line_ids" colspan="4" nolabel="1" mode="tree,graph">
-                       <tree>
+                    <field name="depreciation_line_ids" colspan="4" nolabel="1" mode="tree,graph" >
+                       <tree colors="blue:(move_check == False);black:(move_check == True)">
                           <field name="depreciation_date"/>
                           <field name="sequence" invisible="1"/>
                           <field name="amount"/>
@@ -96,7 +96,7 @@
                           <field name="depreciated_value"/>
                        </graph>
                     </field>
-                    <button type="object" name="compute_depreciation_board" string="Compute" icon="terp-stock_format-scientific" colspan="2"/>
+                    <button type="object" attrs="{'invisible':[('state','&lt;&gt;','open')]}" name="compute_depreciation_board" string="Compute" icon="terp-stock_format-scientific" colspan="2"/>
                  </page>
                  <page string="History">
                     <field name="account_move_line_ids" colspan="4" nolabel="1" readonly="1"/>
