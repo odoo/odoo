@@ -135,7 +135,7 @@ class account_asset_asset(osv.osv):
 
     def validate(self, cr, uid, ids, context={}):
         return self.write(cr, uid, ids, {
-            'state':'normal'
+            'state':'open'
         }, context)
 
     def _amount_total(self, cr, uid, ids, name, args, context={}):
@@ -178,7 +178,7 @@ class account_asset_asset(osv.osv):
         'parent_id': fields.many2one('account.asset.asset', 'Parent Asset'),
         'child_ids': fields.one2many('account.asset.asset', 'parent_id', 'Children Assets'),
         'purchase_date': fields.date('Purchase Date', required=True),
-        'state': fields.selection([('view','View'),('draft','Draft'),('normal','Normal'),('close','Close')], 'state', required=True),
+        'state': fields.selection([('draft','Draft'),('open','Running'),('close','Close')], 'state', required=True),
         'active': fields.boolean('Active', select=2),
         'partner_id': fields.many2one('res.partner', 'Partner'),
 
@@ -326,7 +326,7 @@ class account_asset_depreciation_line(osv.osv):
         'depreciated_value': fields.float('Amount Already Depreciated', required=True),
         'depreciation_date': fields.char('Depreciation Date', size=64, select=1),
         'move_id': fields.many2one('account.move', 'Depreciation Entry'),
-        'move_check': fields.function(_get_move_check, method=True, type='boolean', string='Move Included', store=True)
+        'move_check': fields.function(_get_move_check, method=True, type='boolean', string='Posted', store=True)
     }
 
     def create_move(self, cr, uid,ids, context=None):
