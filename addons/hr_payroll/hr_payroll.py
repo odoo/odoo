@@ -473,18 +473,85 @@ class hr_payslip(osv.osv):
             localdict['categories'][category.code] = category.code in localdict['categories'] and localdict['categories'][category.code] + amount or amount
             return localdict
 
+        class BrowsableObject(object):
+            def __init__(self, pool, cr, uid, employee_id, dict):
+                self.pool = pool
+                self.cr = cr
+                self.uid = uid
+                self.employee_id = employee_id
+                self.dict = dict
+
+            def __getattr__(self, attr):
+                return self.dict.__getitem__(attr)
+
+        class InputLine(BrowsableObject):
+            """a class that will be used into the python code, mainly for usability purposes"""
+            def sum(self, code, from_date, to_date=None):
+                if to_date is None:
+                    to_date = datetime.now().strftime('%Y-%m-%d')
+                result = 0.0
+                self.cr.execute("SELECT sum(quantity) as sum\
+                            FROM hr_payslip as hp, hr_payslip_input as pi \
+                            WHERE hp.employee_id = %s AND hp.state in ('confirm','done') \
+                            AND hp.date_from >= %s AND hp.date_to <= %s AND hp.id = pi.payslip_id AND pi.code = %s",
+                           (self.employee_id, from_date, to_date, code))
+                res = self.cr.fetchone()[0]
+                return res or 0.0
+
+        class WorkedDays(BrowsableObject):
+            """a class that will be used into the python code, mainly for usability purposes"""
+            def _sum(self, code, from_date, to_date=None):
+                if to_date is None:
+                    to_date = datetime.now().strftime('%Y-%m-%d')
+                result = 0.0
+                self.cr.execute("SELECT sum(number_of_days) as number_of_days, sum(number_of_hours) as number_of_hours\
+                            FROM hr_payslip as hp, hr_payslip_worked_days as pi \
+                            WHERE hp.employee_id = %s AND hp.state in ('confirm','done') \
+                            AND hp.date_from >= %s AND hp.date_to <= %s AND hp.id = pi.payslip_id AND pi.code = %s",
+                           (self.employee_id, from_date, to_date, code))
+                return self.cr.fetchone()
+
+            def sum(self, code, from_date, to_date=None):
+                res = self._sum(code, from_date, to_date)
+                return res and res[0] or 0.0
+
+            def sum_hours(self, code, from_date, to_date=None):
+                res = self._sum(code, from_date, to_date)
+                return res and res[1] or 0.0
+
+        class Payslips(BrowsableObject):
+            """a class that will be used into the python code, mainly for usability purposes"""
+
+            def sum(self, code, from_date, to_date=None):
+                if to_date is None:
+                    to_date = datetime.now().strftime('%Y-%m-%d')
+                self.cr.execute("SELECT sum(case when hp.credit_note = False then (pl.total) else (-pl.total) end)\
+                            FROM hr_payslip as hp, hr_payslip_line as pl \
+                            WHERE hp.employee_id = %s AND hp.state in ('confirm','done') \
+                            AND hp.date_from >= %s AND hp.date_to <= %s AND hp.id = pl.slip_id AND pl.code = %s",
+                            (self.employee_id, from_date, to_date, code))
+                res = self.cr.fetchone()
+                return res and res[0] or 0.0
+
         #we keep a dict with the result because a value can be overwritten by another rule with the same code
         result_dict = {}
         blacklist = []
+        payslip_obj = self.pool.get('hr.payslip')
+        inputs_obj = self.pool.get('hr.payslip.worked_days')
         obj_rule = self.pool.get('hr.salary.rule')
-        payslip = self.pool.get('hr.payslip').browse(cr, uid, payslip_id, context=context)
+        payslip = payslip_obj.browse(cr, uid, payslip_id, context=context)
         worked_days = {}
         for worked_days_line in payslip.worked_days_line_ids:
             worked_days[worked_days_line.code] = worked_days_line
         inputs = {}
         for input_line in payslip.input_line_ids:
             inputs[input_line.code] = input_line
-        localdict = {'categories': {}, 'payslip': payslip, 'worked_days': worked_days, 'inputs': inputs}
+
+        input_obj = InputLine(self.pool, cr, uid, payslip.employee_id.id, inputs)
+        worked_days_obj = WorkedDays(self.pool, cr, uid, payslip.employee_id.id, worked_days)
+        payslip_obj = Payslips(self.pool, cr, uid, payslip.employee_id.id, payslip)
+
+        localdict = {'categories': {}, 'payslip': payslip_obj, 'worked_days': worked_days_obj, 'inputs': input_obj}
         #get the ids of the structures on the contracts and their parent id as well
         structure_ids = self.pool.get('hr.contract').get_all_structures(cr, uid, contract_ids, context=context)
         #get the rules of the structure and thier children
@@ -660,7 +727,7 @@ class hr_payslip_input(osv.osv):
         'payslip_id': fields.many2one('hr.payslip', 'Pay Slip', required=True),
         'sequence': fields.integer('Sequence', required=True,),
         'code': fields.char('Code', size=52, required=True, help="The code that can be used in the salary rules"),
-        'quantity': fields.float('Amount', help="It is used in computation. For e.g. A rule for sales having 1% commission of basic salary for per product can defined in expression like result = inputs['S-ASUS']['qunatity']*contract.wage*0.01."),
+        'quantity': fields.float('Quantity', help="It is used in computation. For e.g. A rule for sales having 1% commission of basic salary for per product can defined in expression like result = inputs.SASUS.qunatity * contract.wage*0.01."),
         'contract_id': fields.many2one('hr.contract', 'Contract', required=True, help="The contract for which applied this input"),
     }
     _order = 'payslip_id, sequence'
@@ -668,6 +735,7 @@ class hr_payslip_input(osv.osv):
         'sequence': 10,
         'quantity': 0.0,
     }
+
 hr_payslip_input()
 
 class hr_salary_rule(osv.osv):
@@ -677,7 +745,7 @@ class hr_salary_rule(osv.osv):
         'name':fields.char('Name', size=256, required=True, readonly=False),
         'code':fields.char('Code', size=64, required=True, help="The code of salary rules can be used as reference in computation of other rules. In that case, it is case sensitive."),
         'sequence': fields.integer('Sequence', required=True, help='Use to arrange calculation sequence'),
-        'quantity': fields.char('Quantity', size=256, help="It is used in computation for percentage and fixed amount.For e.g. A rule for Meal Voucher having fixed amount of 1€ per worked day can have its quantity defined in expression like worked_days['WORK100']['number_of_days']."),
+        'quantity': fields.char('Quantity', size=256, help="It is used in computation for percentage and fixed amount.For e.g. A rule for Meal Voucher having fixed amount of 1€ per worked day can have its quantity defined in expression like worked_days.WORK100.number_of_days."),
         'category_id':fields.many2one('hr.salary.rule.category', 'Category', required=True),
         'active':fields.boolean('Active', help="If the active field is set to false, it will allow you to hide the salary rule without removing it."),
         'appears_on_payslip': fields.boolean('Appears on Payslip', help="Used for the display of rule on payslip"),
@@ -715,13 +783,13 @@ class hr_salary_rule(osv.osv):
         'amount_python_compute': '''
 # Available variables:
 #----------------------
-# payslip: hr.payslip object
+# payslip: object containing the payslips
 # employee: hr.employee object
 # contract: hr.contract object
 # rules: rules code (previously computed)
 # categories: dictionary containing the computed salary rule categories (sum of amount of all rules belonging to that category). Keys are the category codes.
-# worked_days: dictionary containing the computed worked days. Keys are the worked days codes.
-# inputs: dictionary containing the computed inputs. Keys are the inputs codes.
+# worked_days: object containing the computed worked days.
+# inputs: object containing the computed inputs.
 
 # Note: returned value have to be set in the variable 'result'
 
@@ -730,13 +798,13 @@ result = contract.wage * 0.10''',
 '''
 # Available variables:
 #----------------------
-# payslip: hr.payslip object
+# payslip: object containing the payslips
 # employee: hr.employee object
 # contract: hr.contract object
 # rules: rules code (previously computed)
 # categories: dictionary containing the computed salary rule categories (sum of amount of all rules belonging to that category). Keys are the category codes.
-# worked_days: dictionary containing the computed worked days. Keys are the worked days codes.
-# inputs: dictionary containing the computed inputs. Keys are the inputs codes.
+# worked_days: object containing the computed worked days
+# inputs: object containing the computed inputs
 
 # Note: returned value have to be set in the variable 'result'
 
