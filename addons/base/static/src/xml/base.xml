@@ -210,12 +210,12 @@
             <t t-if="!attrs.invisible">
                 <t t-set="is_button" t-value="column.tag === 'button'"/>
                 <!-- TODO: get correct widget from form -->
-                <t t-if="!is_button and row['data'][column.id].value !== false">
+                <t t-if="!is_button and !column.meta and row['data'][column.id].value !== false">
                     <t t-set="value" t-value="row['data'][column.id].value"/>
                     <t t-esc="value instanceof Array ? value[1] : value"/>
                 </t>
                 <button type="button" t-att-title="column.help"
-                        t-if="is_button">
+                        t-if="is_button and !column.meta">
                     <img t-att-src="'/base/static/src/img/icons/' + column.icon + '.png'"
                          t-att-alt="column.string"/>
                 </button>

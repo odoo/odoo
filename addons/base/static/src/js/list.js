@@ -196,14 +196,15 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
         this.columns.push.apply(
                 this.columns,
                 _(this.fields_view.arch.children).map(field_to_column));
-
-        _(groupby_columns).each(function (column_id, index) {
-            var column_index = _(self.columns).chain()
-                    .pluck('id').indexOf(column_id).value();
-            var column = self.columns.splice(column_index, 1)[0];
-            delete column.invisible;
-            self.columns.splice(index, 0, column);
-        });
+        if (groupby_columns && groupby_columns.length) {
+            this.columns.unshift({
+                id: '_group', tag: '', string: "Group", meta: true,
+                attrs_for: function () { return {}; }
+            }, {
+                id: '_count', tag: '', string: '#', meta: true,
+                attrs_for: function () { return {}; }
+            });
+        }
 
         this.visible_columns = _.filter(this.columns, function (column) {
             return column.invisible !== '1';
@@ -535,6 +536,20 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
                 .removeClass('ui-icon-triangle-1-e')
                 .addClass('ui-icon-triangle-1-s');
     },
+    /**
+     * Prefixes ``$node`` with floated spaces in order to indent it relative
+     * to its own left margin/baseline
+     *
+     * @param {jQuery} $node jQuery object to indent
+     * @param {Number} level current nesting level, >= 1
+     * @returns {jQuery} the indentation node created
+     */
+    indent: function ($node, level) {
+        return $('<span>')
+                .css({'float': 'left', 'white-space': 'pre'})
+                .text(new Array(level).join('   '))
+                .prependTo($node);
+    },
     render_groups: function (datagroups) {
         var self = this;
         var placeholder = this.make_fragment();
@@ -557,13 +572,13 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
             _(self.columns).chain()
                 .filter(function (column) {return !column.invisible;})
                 .each(function (column) {
-                    if (column.id === group.grouped_on) {
-                        $('<th>')
-                            .text(_.sprintf("%s (%d)",
-                                group.value instanceof Array ? group.value[1] : group.value,
-                                group.length))
+                    if (column.id === '_group') {
+                        self.indent($('<th>')
+                            .text((group.value instanceof Array ? group.value[1] : group.value))
                             .prepend('<span class="ui-icon ui-icon-triangle-1-e">')
-                            .appendTo($row);
+                            .appendTo($row), group.level);
+                    } else if (column.id === '_count') {
+                        $('<td>').text(group.length).appendTo($row);
                     } else if (column.id in group.aggregates) {
                         var value = group.aggregates[column.id];
                         var format;

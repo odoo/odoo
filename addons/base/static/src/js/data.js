@@ -22,15 +22,16 @@ openerp.base.DataGroup =  openerp.base.Controller.extend( /** @lends openerp.bas
      * @param {Array} domain search domain for this DataGroup
      * @param {Object} context context of the DataGroup's searches
      * @param {Array} group_by sequence of fields by which to group
+     * @param {Number} [level=0] nesting level of the group
      */
-    init: function(session, model, domain, context, group_by) {
+    init: function(session, model, domain, context, group_by, level) {
         if (group_by) {
             if (group_by.length) {
                 return new openerp.base.ContainerDataGroup(
-                        session, model, domain, context, group_by);
+                        session, model, domain, context, group_by, level);
             } else {
                 return new openerp.base.GrouplessDataGroup(
-                        session, model, domain, context);
+                        session, model, domain, context, level);
             }
         }
 
@@ -38,7 +39,10 @@ openerp.base.DataGroup =  openerp.base.Controller.extend( /** @lends openerp.bas
         this.model = model;
         this.context = context;
         this.domain = domain;
-    }
+
+        this.level = level || 0;
+    },
+    cls: 'DataGroup'
 });
 openerp.base.ContainerDataGroup = openerp.base.DataGroup.extend(
     /** @lends openerp.base.ContainerDataGroup# */ {
@@ -52,9 +56,10 @@ openerp.base.ContainerDataGroup = openerp.base.DataGroup.extend(
      * @param domain
      * @param context
      * @param group_by
+     * @param level
      */
-    init: function (session, model, domain, context, group_by) {
-        this._super(session, model, domain, context);
+    init: function (session, model, domain, context, group_by, level) {
+        this._super(session, model, domain, context, null, level);
 
         this.group_by = group_by;
     },
@@ -159,7 +164,8 @@ openerp.base.ContainerDataGroup = openerp.base.DataGroup.extend(
                 return _.extend(
                     new openerp.base.DataGroup(
                         self.session, self.model, group.__domain,
-                        child_context, child_context.group_by),
+                        child_context, child_context.group_by,
+                        self.level + 1),
                     group);
             }));
         });
@@ -176,9 +182,10 @@ openerp.base.GrouplessDataGroup = openerp.base.DataGroup.extend(
      * @param model
      * @param domain
      * @param context
+     * @param level
      */
-    init: function (session, model, domain, context) {
-        this._super(session, model, domain, context);
+    init: function (session, model, domain, context, level) {
+        this._super(session, model, domain, context, null, level);
     },
     list: function (ifGroups, ifRecords) {
         ifRecords(_.extend(
@@ -400,7 +407,7 @@ openerp.base.DataSetMany2Many = openerp.base.DataSetStatic.extend({
 
     unlink: function(ids) {
         // just do nothing
-    },
+    }
 });
 
 };
