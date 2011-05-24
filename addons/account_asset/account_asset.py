@@ -43,6 +43,7 @@ class account_asset_category(osv.osv):
         'method_progress_factor': fields.float('Progressif Factor'),
         'method_time': fields.selection([('delay','Delay'),('end','Ending Period')], 'Time Method', required=True),
         'prorata':fields.boolean('Prorata Temporis', help='Indicates that the accounting entries for this asset have to be done from the purchase date instead of the first January'),
+        'open_asset': fields.boolean('Skip Draft State', help="Check this if you want to automatically confirm the assets of this category when created by invoice."),
     }
 
     _defaults = {

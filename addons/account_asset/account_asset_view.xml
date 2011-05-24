@@ -21,13 +21,12 @@
                     <field name="method_delay"/>
                     <field name="method_period" attrs="{'invisible':[('method_time','=','end')]}"/>                
                 </group>
-                <group colspan="2" col="3">
-                    <separator string="Depreciation Method" colspan="4" />
+                <group colspan="2" col="2">
+                    <separator string="Depreciation Method" colspan="2" />
                     <field name="method"/>
-                    <newline/>
                     <field name="method_progress_factor" attrs="{'invisible':[('method','=','linear')]}"/>
-                    <newline/>
-                    <field name="prorata" colspan="1"/>
+                    <field name="prorata"/>
+                    <field name="open_asset"/>
                 </group>
         	<group col="4" colspan="4" groups="analytic.group_analytic_accounting">
         	    <separator string="Analytic information" colspan="4" />
