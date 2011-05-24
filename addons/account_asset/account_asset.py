@@ -128,7 +128,6 @@ class account_asset_asset(osv.osv):
         }, context)
 
     def _amount_total(self, cr, uid, ids, name, args, context={}):
-        #FIXME: function not working²
         id_set=",".join(map(str,ids))
         cr.execute("""SELECT l.asset_id,abs(SUM(l.debit-l.credit)) AS amount FROM
                 account_move_line l
