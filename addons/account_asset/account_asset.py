@@ -94,7 +94,7 @@ class account_asset_asset(osv.osv):
                 depreciation_lin_obj.unlink(cr, uid, old_depreciation_line_ids, context=context)
 
             undone_dotation_number = asset.method_delay - len(asset.account_move_line_ids)
-            if asset.method == 'linear' and asset.prorata:
+            if asset.prorata and asset.method == 'linear':
                 undone_dotation_number += 1
             residual_amount = asset.value_residual
             depreciation_date = datetime.strptime(self._get_last_depreciation_date(cr, uid, [asset.id], context)[asset.id], '%Y-%m-%d')
