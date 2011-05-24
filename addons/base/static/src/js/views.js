@@ -21,7 +21,7 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
     do_action: function(action) {
         var self = this;
         action.flags = _.extend({
-            sidebar : true,
+            sidebar : action.target != 'new',
             search_view : true,
             new_window : false,
             views_switcher : true,
