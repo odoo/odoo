@@ -1191,7 +1191,7 @@ openerp.base.form.Many2XSelectPopup = openerp.base.BaseWidget.extend({
 });
 
 openerp.base.form.Many2XPopupListView = openerp.base.ListView.extend({
-    switch_to_record: function(index) {
+    select_record: function(index) {
         this.popup.on_select_element(this.dataset.ids[index]);
     }
 });
