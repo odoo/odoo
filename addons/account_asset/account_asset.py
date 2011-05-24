@@ -127,15 +127,7 @@ class account_asset_asset(osv.osv):
             'state':'normal'
         }, context)
 
-    def _amount_total(self, cr, uid, ids, name, args, context={}):
-        id_set=",".join(map(str,ids))
-        cr.execute("""SELECT l.asset_id,abs(SUM(l.debit-l.credit)) AS amount FROM
-                account_move_line l
-            WHERE l.asset_id IN ("""+id_set+") GROUP BY l.asset_id ")
-        res=dict(cr.fetchall())
-        for id in ids:
-            res.setdefault(id, 0.0)
-        return res
+    
 
     def _amount_residual(self, cr, uid, ids, name, args, context={}):
         cr.execute("""SELECT
@@ -174,7 +166,6 @@ class account_asset_asset(osv.osv):
         'method_delay': fields.integer('During (interval)', readonly=True, states={'draft':[('readonly',False)]}),
         'method_period': fields.integer('Depre. all (period)', readonly=True, states={'draft':[('readonly',False)]}),
         'method_end': fields.date('Ending date'),
-        'value_total': fields.function(_amount_total, method=True, digits=(16,2),string='Total'),
         'method_progress_factor': fields.float('Progressif Factor', readonly=True, states={'draft':[('readonly',False)]}),
         'value_residual': fields.function(_amount_residual, method=True, digits=(16,2), string='Residual Value'),
         'method_time': fields.selection([('delay','Delay'),('end','Ending Period')], 'Time Method', required=True, readonly=True, states={'draft':[('readonly',False)]}),
