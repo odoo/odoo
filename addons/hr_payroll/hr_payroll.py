@@ -491,7 +491,7 @@ class hr_payslip(osv.osv):
                 if to_date is None:
                     to_date = datetime.now().strftime('%Y-%m-%d')
                 result = 0.0
-                self.cr.execute("SELECT sum(quantity) as sum\
+                self.cr.execute("SELECT sum(amount) as sum\
                             FROM hr_payslip as hp, hr_payslip_input as pi \
                             WHERE hp.employee_id = %s AND hp.state in ('confirm','done') \
                             AND hp.date_from >= %s AND hp.date_to <= %s AND hp.id = pi.payslip_id AND pi.code = %s",
@@ -728,13 +728,13 @@ class hr_payslip_input(osv.osv):
         'payslip_id': fields.many2one('hr.payslip', 'Pay Slip', required=True),
         'sequence': fields.integer('Sequence', required=True,),
         'code': fields.char('Code', size=52, required=True, help="The code that can be used in the salary rules"),
-        'quantity': fields.float('Quantity', help="It is used in computation. For e.g. A rule for sales having 1% commission of basic salary for per product can defined in expression like result = inputs.SASUS.qunatity * contract.wage*0.01."),
+        'amount': fields.float('Amount', help="It is used in computation. For e.g. A rule for sales having 1% commission of basic salary for per product can defined in expression like result = inputs.SALEURO.amount * contract.wage*0.01."),
         'contract_id': fields.many2one('hr.contract', 'Contract', required=True, help="The contract for which applied this input"),
     }
     _order = 'payslip_id, sequence'
     _defaults = {
         'sequence': 10,
-        'quantity': 0.0,
+        'amount': 0.0,
     }
 
 hr_payslip_input()
