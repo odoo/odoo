@@ -26,7 +26,7 @@ openerp.base.DataGroup =  openerp.base.Controller.extend( /** @lends openerp.bas
      */
     init: function(session, model, domain, context, group_by, level) {
         if (group_by) {
-            if (group_by.length) {
+            if (group_by.length || context['group_by_no_leaf']) {
                 return new openerp.base.ContainerDataGroup(
                         session, model, domain, context, group_by, level);
             } else {
@@ -90,9 +90,15 @@ openerp.base.ContainerDataGroup = openerp.base.DataGroup.extend(
      */
     transform_group: function (group) {
         var field_name = this.group_by[0];
+        // In cases where group_by_no_leaf and no group_by, the result of
+        // read_group has aggregate fields but no __context or __domain.
+        // Create default (empty) values for those so that things don't break
+        var fixed_group = _.extend(
+                {__context: {group_by: []}, __domain: []},
+                group);
 
         var aggregates = {};
-        _(group).each(function (value, key) {
+        _(fixed_group).each(function (value, key) {
             if (key.indexOf('__') === 0
                     || key === field_name
                     || key === field_name + '_count') {
@@ -102,16 +108,16 @@ openerp.base.ContainerDataGroup = openerp.base.DataGroup.extend(
         });
 
         return {
-            __context: group.__context,
-            __domain: group.__domain,
+            __context: fixed_group.__context,
+            __domain: fixed_group.__domain,
 
             grouped_on: field_name,
             // if terminal group (or no group) and group_by_no_leaf => use group.__count
-            length: group[field_name + '_count'] || group.__count,
-            value: group[field_name],
+            length: fixed_group[field_name + '_count'] || fixed_group.__count,
+            value: fixed_group[field_name],
 
             openable: !(this.context['group_by_no_leaf']
-                       && group.__context.group_by.length === 0),
+                       && fixed_group.__context.group_by.length === 0),
 
             aggregates: aggregates
         };

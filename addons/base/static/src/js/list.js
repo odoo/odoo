@@ -168,7 +168,6 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
      * @param {Array} groupby_columns columns the ListView is grouped by
      */
     setup_columns: function (fields, groupby_columns) {
-        var self = this;
         var domain_computer = openerp.base.form.compute_domain;
 
         var noop = function () { return {}; };
@@ -196,7 +195,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
         this.columns.push.apply(
                 this.columns,
                 _(this.fields_view.arch.children).map(field_to_column));
-        if (groupby_columns && groupby_columns.length) {
+        if (groupby_columns) {
             this.columns.unshift({
                 id: '_group', tag: '', string: "Group", meta: true,
                 attrs_for: function () { return {}; }
@@ -291,6 +290,10 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
                 self.session, self.dataset.model,
                 results.domain, results.context,
                 results.group_by);
+
+            if (_.isEmpty(results.group_by) && !results.context['group_by_no_leaf']) {
+                results.group_by = null;
+            }
             self.do_reload(results.group_by).then(function () {
                 self.$element.find('table').append(self.groups.render());
             });
@@ -569,12 +572,16 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
             placeholder.appendChild($row[0]);
 
 
-            var $group_column = $('<th>')
-                    .text((group.value instanceof Array ? group.value[1] : group.value))
-                    .appendTo($row);
-            if (group.openable) {
+            var $group_column = $('<th>').appendTo($row);
+            if (group.grouped_on) {
+                // Don't fill this if group_by_no_leaf but no group_by
                 $group_column
-                    .prepend('<span class="ui-icon ui-icon-triangle-1-e">');
+                    .text((group.value instanceof Array ? group.value[1] : group.value));
+                if (group.openable) {
+                    // Make openable if not terminal group & group_by_no_leaf
+                    $group_column
+                        .prepend('<span class="ui-icon ui-icon-triangle-1-e">');
+                }
             }
             self.indent($group_column, group.level);
             // count column
