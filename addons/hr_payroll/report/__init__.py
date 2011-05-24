@@ -23,6 +23,7 @@
 ##############################################################################
 
 import report_payslip
+import report_payslip_details
 import report_payroll_advice
 import report_year_salary
 import report_payroll_register
