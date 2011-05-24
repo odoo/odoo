@@ -767,17 +767,6 @@ class hr_salary_rule(osv.osv):
         'amount_percentage_base':fields.char('Percentage based on',size=1024, required=False, readonly=False, help='result will be affected to a variable'),
         'child_ids':fields.one2many('hr.salary.rule', 'parent_rule_id', 'Child Salary Rule'),
         'register_id':fields.many2one('hr.contribution.register', 'Contribution Register', help="Contribution register based on company", required=False),
-#        'register_id':fields.property(
-#            'hr.contribution.register',
-#            type='many2one',
-#            relation='hr.contribution.register',
-#            string="Contribution Register",
-#            method=True,
-#            view_load=True,
-#            help="Contribution register based on company",
-#            required=False
-#        ),
-
         'input_ids': fields.one2many('hr.rule.input', 'input_id', 'Inputs'),
         'note':fields.text('Description'),
      }
