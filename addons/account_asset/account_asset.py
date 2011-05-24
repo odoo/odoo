@@ -110,13 +110,13 @@ class account_asset_asset(osv.osv):
                 vals = {
                      'amount': amount,
                      'asset_id': asset.id,
-                     'sequence':i,
+                     'sequence': i,
                      'name': str(asset.id) +'/'+ str(i),
                      'remaining_value': residual_amount,
                      'depreciated_value': asset.purchase_value - residual_amount,
                      'depreciation_date': depreciation_date.strftime('%Y-%m-%d'),
                 }
-                self.pool.get('account.asset.depreciation.line').create(cr, uid, vals)
+                depreciation_lin_obj.create(cr, uid, vals, context=context)
                 month += asset.method_period
                 depreciation_date = datetime(year + (month / 12), month % 12, day)
         return True
