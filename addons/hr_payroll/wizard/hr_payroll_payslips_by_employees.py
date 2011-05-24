@@ -32,9 +32,9 @@ class hr_payslip_employees(osv.osv_memory):
     _description = 'Generate payslips for all selected employees'
     _columns = {
         'employee_ids': fields.many2many('hr.employee', 'hr_employee_group_rel', 'payslip_id', 'employee_id', 'Employees'),
-        'date_from': fields.date('Date From', readonly=True),
-        'date_to': fields.date('Date To', readonly=True),
-        'credit_note': fields.boolean('Credit Note', readonly=True),
+        'date_from': fields.date('Date From', readonly=True, help='Starting date of the payslips generated from here.'),
+        'date_to': fields.date('Date To', readonly=True, help='Ending date of the payslips generated from here.'),
+        'credit_note': fields.boolean('Credit Note', readonly=True, help='If its checked, indicates that generated payslips are refund payslips.'),
     }
     
     def default_get(self, cr, uid, fields, context=None):
