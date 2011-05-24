@@ -92,7 +92,6 @@ class account_asset_asset(osv.osv):
             old_depreciation_line_ids = depreciation_lin_obj.search(cr, uid, [('asset_id', '=', asset.id), ('move_id', '=', False)])
             if old_depreciation_line_ids:
                 depreciation_lin_obj.unlink(cr, uid, old_depreciation_line_ids, context=context)
-
             undone_dotation_number = asset.method_delay - len(asset.account_move_line_ids)
             residual_amount = asset.value_residual
             depreciation_date = datetime.strptime(self._get_last_depreciation_date(cr, uid, [asset.id], context)[asset.id], '%Y-%m-%d')
@@ -104,7 +103,7 @@ class account_asset_asset(osv.osv):
                     amount = residual_amount
                 else:
                     if asset.method == 'linear':
-                        amount = asset.purchase_value / undone_dotation_number
+                        amount = asset.value_residual / undone_dotation_number
                     else:
                         amount = residual_amount * asset.method_progress_factor
                 residual_amount -= amount
@@ -357,6 +356,7 @@ class account_asset_depreciation_line(osv.osv):
                 'amount_currency': company_currency <> current_currency and sign * line.amount or 0.0,
                 'analytic_account_id': line.asset_id.category_id.account_analytic_id.id,
                 'date': depreciation_date,
+                'asset_id': line.asset_id.id
             })
             self.write(cr, uid, line.id, {'move_id': move_id}, context=context)
         return True
