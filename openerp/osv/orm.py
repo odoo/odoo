@@ -3053,6 +3053,9 @@ class orm(orm_template):
         for key, val in todo.items():
             if key:
                 res2 = self._columns[val[0]].get(cr, self, ids, val, user, context=context, values=res)
+                assert res2 is not None, \
+                    'The function field "%s" on the "%s" model returned None\n' \
+                    '(a dictionary was expected).' % (val[0], self._name)
                 for pos in val:
                     for record in res:
                         if isinstance(res2[record['id']], str): res2[record['id']] = eval(res2[record['id']]) #TOCHECK : why got string instend of dict in python2.6
