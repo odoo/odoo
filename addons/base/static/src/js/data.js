@@ -104,7 +104,7 @@ openerp.base.ContainerDataGroup = openerp.base.DataGroup.extend(
                     || key === field_name + '_count') {
                 return;
             }
-            aggregates[key] = value;
+            aggregates[key] = value || 0;
         });
 
         return {
