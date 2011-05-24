@@ -253,10 +253,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
      *                                  sequence
      */
     do_reload: function (primary_columns) {
-        // TODO: need to do 5 billion tons of pre-processing, bypass
-        // DataSet for now
-        //self.dataset.read_slice(self.dataset.fields, 0, self.limit,
-        // self.do_fill_table);
+        // TODO: should just fields_view_get I think
         var self = this;
         this.dataset.offset = 0;
         this.dataset.limit = false;
@@ -554,18 +551,21 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
         var self = this;
         var placeholder = this.make_fragment();
         _(datagroups).each(function (group) {
-            var $row = $('<tr>').click(function (e) {
-                if (!$row.data('open')) {
-                    $row.data('open', true);
-                    self.open_group(e, group);
-                } else {
-                    $row.removeData('open')
-                        .find('span.ui-icon')
-                            .removeClass('ui-icon-triangle-1-s')
-                            .addClass('ui-icon-triangle-1-e');
-                    _(self.children).each(function (child) {child.apoptosis();});
-                }
-            });
+            var $row = $('<tr>');
+            if (group.has_leaves) {
+                $row.click(function (e) {
+                    if (!$row.data('open')) {
+                        $row.data('open', true);
+                        self.open_group(e, group);
+                    } else {
+                        $row.removeData('open')
+                            .find('span.ui-icon')
+                                .removeClass('ui-icon-triangle-1-s')
+                                .addClass('ui-icon-triangle-1-e');
+                        _(self.children).each(function (child) {child.apoptosis();});
+                    }
+                });
+            }
             placeholder.appendChild($row[0]);
             self.pad($row);
 
@@ -573,12 +573,17 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
                 .filter(function (column) {return !column.invisible;})
                 .each(function (column) {
                     if (column.id === '_group') {
-                        self.indent($('<th>')
-                            .text((group.value instanceof Array ? group.value[1] : group.value))
-                            .prepend('<span class="ui-icon ui-icon-triangle-1-e">')
-                            .appendTo($row), group.level);
+                        var $group_column = $('<th>')
+                                .text((group.value instanceof Array ? group.value[1] : group.value))
+                                .appendTo($row);
+                        if (group.has_leaves) {
+                            $group_column
+                                .prepend('<span class="ui-icon ui-icon-triangle-1-e">');
+                        }
+                        self.indent($group_column, group.level);
                     } else if (column.id === '_count') {
-                        $('<td>').text(group.length).appendTo($row);
+                        $('<td>').text(group.has_leaves ? group.length : '')
+                                 .appendTo($row);
                     } else if (column.id in group.aggregates) {
                         var value = group.aggregates[column.id];
                         var format;
