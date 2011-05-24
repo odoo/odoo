@@ -567,22 +567,25 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
                 });
             }
             placeholder.appendChild($row[0]);
-            self.pad($row);
 
+
+            var $group_column = $('<th>')
+                    .text((group.value instanceof Array ? group.value[1] : group.value))
+                    .appendTo($row);
+            if (group.openable) {
+                $group_column
+                    .prepend('<span class="ui-icon ui-icon-triangle-1-e">');
+            }
+            self.indent($group_column, group.level);
+            // count column
+            $('<td>').text(group.length).appendTo($row);
+                    
+            self.pad($row);
             _(self.columns).chain()
                 .filter(function (column) {return !column.invisible;})
                 .each(function (column) {
-                    if (column.id === '_group') {
-                        var $group_column = $('<th>')
-                                .text((group.value instanceof Array ? group.value[1] : group.value))
-                                .appendTo($row);
-                        if (group.openable) {
-                            $group_column
-                                .prepend('<span class="ui-icon ui-icon-triangle-1-e">');
-                        }
-                        self.indent($group_column, group.level);
-                    } else if (column.id === '_count') {
-                        $('<td>').text(group.length).appendTo($row);
+                    if (column.meta) {
+                        // do not do anything
                     } else if (column.id in group.aggregates) {
                         var value = group.aggregates[column.id];
                         var format;

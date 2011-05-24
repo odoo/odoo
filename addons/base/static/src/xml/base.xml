@@ -177,9 +177,14 @@
             </th>
         </tr>
         <tr t-if="options.header">
+            <t t-foreach="columns" t-as="column">
+                <th t-if="column.meta">
+                    <t t-esc="column.string"/>
+                </th>
+            </t>
             <th t-if="options.selectable"/>
             <t t-foreach="columns" t-as="column">
-                <th t-if="column.invisible !== '1'" t-att-data-id="column.id"
+                <th t-if="!column.meta and column.invisible !== '1'" t-att-data-id="column.id"
                     t-att-class="((options.sortable and column.tag !== 'button') ? 'oe-sortable' : null)">
                     <t t-if="column.tag !== 'button'">
                         <t t-esc="column.string"/>
@@ -200,22 +205,27 @@
     </t>
 </t>
 <tr t-name="ListView.row" t-att-style="style" t-att-class="row_parity">
+    <t t-foreach="columns" t-as="column">
+        <td t-if="column.meta">
+            
+        </td>
+    </t>
     <th t-if="options.selectable" class="oe-record-selector">
         <input type="checkbox"/>
     </th>
     <t t-foreach="columns" t-as="column">
-        <t t-set="attrs" t-value="column.attrs_for(row.data)"/>
-        <td t-if="column.invisible !== '1'" t-att-title="column.help"
+        <td t-if="!column.meta and column.invisible !== '1'" t-att-title="column.help"
             class="oe-field-cell" t-att-data-field="column.id">
+            <t t-set="attrs" t-value="column.attrs_for(row.data)"/>
             <t t-if="!attrs.invisible">
                 <t t-set="is_button" t-value="column.tag === 'button'"/>
                 <!-- TODO: get correct widget from form -->
-                <t t-if="!is_button and !column.meta and row['data'][column.id].value !== false">
+                <t t-if="!is_button and row['data'][column.id].value !== false">
                     <t t-set="value" t-value="row['data'][column.id].value"/>
                     <t t-esc="value instanceof Array ? value[1] : value"/>
                 </t>
                 <button type="button" t-att-title="column.help"
-                        t-if="is_button and !column.meta">
+                        t-if="is_button">
                     <img t-att-src="'/base/static/src/img/icons/' + column.icon + '.png'"
                          t-att-alt="column.string"/>
                 </button>
