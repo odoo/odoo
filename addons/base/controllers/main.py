@@ -438,9 +438,12 @@ class DataSet(openerpweb.Controller):
 class DataGroup(openerpweb.Controller):
     _cp_path = "/base/group"
     @openerpweb.jsonrequest
-    def read(self, request, model, group_by_fields, domain=None, context=None):
+    def read(self, request, model, group_by_fields, domain=None):
         Model = request.session.model(model)
-        return Model.read_group(domain or [], False, group_by_fields, 0, False, context or {})
+
+        return Model.read_group(
+            domain or [], False, group_by_fields, 0, False,
+            dict(request.context, group_by=group_by_fields))
 
 class View(openerpweb.Controller):
     def fields_view_get(self, request, model, view_id, view_type,
