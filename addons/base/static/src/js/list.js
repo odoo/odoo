@@ -175,7 +175,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
                     field.attrs, fields[name]);
             // attrs computer
             if (column.attrs) {
-                var attrs = eval('(' + column.attrs + ')');
+                var attrs = JSON.parse(column.attrs);
                 column.attrs_for = function (fields) {
                     var result = {};
                     for (var attr in attrs) {

@@ -382,7 +382,7 @@ openerp.base.form.Widget = openerp.base.Controller.extend({
     init: function(view, node) {
         this.view = view;
         this.node = node;
-        this.attrs = eval('(' + (this.node.attrs.attrs || '{}') + ')');
+        this.attrs = JSON.parse(this.node.attrs.attrs || '{}');
         this.type = this.type || node.tag;
         this.element_name = this.element_name || this.type;
         this.element_id = [this.view.element_id, this.element_name, this.view.widgets_counter++].join("_");
