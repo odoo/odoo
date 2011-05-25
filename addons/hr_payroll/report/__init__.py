@@ -3,7 +3,7 @@
 
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution    
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    d$
 #
@@ -23,6 +23,7 @@
 ##############################################################################
 
 import report_payslip
+import report_payslip_details
 import report_payroll_advice
 import report_year_salary
 import report_payroll_register
