@@ -22,23 +22,113 @@ openerp.base.DataGroup =  openerp.base.Controller.extend( /** @lends openerp.bas
      * @param {Array} domain search domain for this DataGroup
      * @param {Object} context context of the DataGroup's searches
      * @param {Array} group_by sequence of fields by which to group
+     * @param {Number} [level=0] nesting level of the group
      */
-    init: function(session, model, domain, context, group_by) {
+    init: function(session, model, domain, context, group_by, level) {
+        if (group_by) {
+            if (group_by.length || context['group_by_no_leaf']) {
+                return new openerp.base.ContainerDataGroup(
+                        session, model, domain, context, group_by, level);
+            } else {
+                return new openerp.base.GrouplessDataGroup(
+                        session, model, domain, context, level);
+            }
+        }
+
         this._super(session, null);
         this.model = model;
         this.context = context;
         this.domain = domain;
 
-        this.group_by = group_by;
+        this.level = level || 0;
+    },
+    cls: 'DataGroup'
+});
+openerp.base.ContainerDataGroup = openerp.base.DataGroup.extend(
+    /** @lends openerp.base.ContainerDataGroup# */ {
+    /**
+     *
+     * @constructs
+     * @extends openerp.base.DataGroup
+     *
+     * @param session
+     * @param model
+     * @param domain
+     * @param context
+     * @param group_by
+     * @param level
+     */
+    init: function (session, model, domain, context, group_by, level) {
+        this._super(session, model, domain, context, null, level);
 
-        this.groups = null;
+        this.group_by = group_by;
+    },
+    /**
+     * The format returned by ``read_group`` is absolutely dreadful:
+     *
+     * * A ``__context`` key provides future grouping levels
+     * * A ``__domain`` key provides the domain for the next search
+     * * The current grouping value is provided through the name of the
+     *   current grouping name e.g. if currently grouping on ``user_id``, then
+     *   the ``user_id`` value for this group will be provided through the
+     *   ``user_id`` key.
+     * * Similarly, the number of items in the group (not necessarily direct)
+     *   is provided via ``${current_field}_count``
+     * * Other aggregate fields are just dumped there
+     *
+     * This function slightly improves the grouping records by:
+     *
+     * * Adding a ``grouped_on`` property providing the current grouping field
+     * * Adding a ``value`` and a ``length`` properties which replace the
+     *   ``$current_field`` and ``${current_field}_count`` ones
+     * * Moving aggregate values into an ``aggregates`` property object
+     *
+     * Context and domain keys remain as-is, they should not be used externally
+     * but in case they're needed...
+     *
+     * @param {Object} group ``read_group`` record
+     */
+    transform_group: function (group) {
+        var field_name = this.group_by[0];
+        // In cases where group_by_no_leaf and no group_by, the result of
+        // read_group has aggregate fields but no __context or __domain.
+        // Create default (empty) values for those so that things don't break
+        var fixed_group = _.extend(
+                {__context: {group_by: []}, __domain: []},
+                group);
+
+        var aggregates = {};
+        _(fixed_group).each(function (value, key) {
+            if (key.indexOf('__') === 0
+                    || key === field_name
+                    || key === field_name + '_count') {
+                return;
+            }
+            aggregates[key] = value;
+        });
+
+        return {
+            __context: fixed_group.__context,
+            __domain: fixed_group.__domain,
+
+            grouped_on: field_name,
+            // if terminal group (or no group) and group_by_no_leaf => use group.__count
+            length: fixed_group[field_name + '_count'] || fixed_group.__count,
+            value: fixed_group[field_name],
+
+            openable: !(this.context['group_by_no_leaf']
+                       && fixed_group.__context.group_by.length === 0),
+
+            aggregates: aggregates
+        };
     },
     fetch: function () {
         // internal method
         var d = new $.Deferred();
         var self = this;
 
-        if (this.groups) {
+        // disable caching for now, not sure what I should do there
+        if (false && this.groups) {
             d.resolveWith(this, [this.groups]);
         } else {
             this.rpc('/base/group/read', {
@@ -47,20 +137,10 @@ openerp.base.DataGroup =  openerp.base.Controller.extend( /** @lends openerp.bas
                 domain: this.domain,
                 group_by_fields: this.group_by
             }, function () { }).then(function (response) {
-                self.groups = response.result;
-                // read_group results are annoying: they use the name of the
-                // field grouped on to hold the value and the count, so no
-                // generic access to those values is possible.
-                // Alias them to `value` and `length`.
-                d.resolveWith(self, [_(response.result).map(function (group) {
-                    var field_name = self.group_by[0];
-                    return _.extend({}, group, {
-                        // provide field used for grouping
-                        grouped_on: field_name,
-                        length: group[field_name + '_count'],
-                        value: group[field_name]
-                    });
-                })]);
+                var data_groups = _(response.result).map(
+                        _.bind(self.transform_group, self));
+                self.groups = data_groups;
+                d.resolveWith(self, [data_groups]);
             }, function () {
                 d.rejectWith.apply(d, self, [arguments]);
             });
@@ -68,55 +148,7 @@ openerp.base.DataGroup =  openerp.base.Controller.extend( /** @lends openerp.bas
         return d.promise();
     },
     /**
-     * Retrieves the content of an item in the DataGroup, which results in
-     * either a DataSet or new DataGroup instance.
-     *
-     * Calling :js:func:`~openerp.base.DataGroup.get` without having called
-     * :js:func:`~openerp.base.DataGroup.list` beforehand will likely result
-     * in an error.
-     *
-     * The resulting :js:class:`~openerp.base.DataGroup` or
-     * :js:class:`~openerp.base.DataSet` will be provided through the relevant
-     * callback function. In both functions, the current DataGroup will be
-     * provided as context (``this``)
-     *
-     * @param {Number} index the index of the group to open in the datagroup's collection
-     * @param {Function} ifDataSet executed if the item results in a DataSet, provided with the new dataset as parameter
-     * @param {Function} ifDataGroup executed if the item results in a DataSet, provided with the new datagroup as parameter
-     */
-    get: function (index, ifDataSet, ifDataGroup) {
-        var group = this.groups[index];
-        if (!group) {
-            throw new Error("No group at index " + index);
-        }
-
-        var child_context = _.extend({}, this.context, group.__context);
-        if (group.__context.group_by.length) {
-            var datagroup = new openerp.base.DataGroup(
-                this.session, this.model, group.__domain, child_context,
-                group.__context.group_by);
-            ifDataGroup.call(this, datagroup);
-        } else {
-            var dataset = new openerp.base.DataSetSearch(this.session, this.model);
-            dataset.domain = group.__domain;
-            dataset.context = child_context;
-            ifDataSet.call(this, dataset);
-        }
-    },
-    /**
-     * Gathers the content of the current data group (the current grouping
-     * level), and provides it via a promise object to which callbacks should
-     * be added::
-     *
-     *     datagroup.list().then(function (list) {
-     *         // manipulate list here
-     *     });
-     *
-     * The argument to the callback is the list of elements fetched, the
-     * context (``this``) is the datagroup itself.
-     *
-     * The items of a list are the standard objects returned by ``read_group``
-     * with three properties added:
+     * The items of a list have the following properties:
      *
      * ``length``
      *     the number of records contained in the group (and all of its
@@ -131,11 +163,44 @@ openerp.base.DataGroup =  openerp.base.Controller.extend( /** @lends openerp.bas
      * ``value``
      *     the value which led to this group (this is the value all contained
      *     records have for the current ``grouped_on`` field name).
-     *
-     * @returns {$.Deferred}
+     * ``aggregates``
+     *     a mapping of other aggregation fields provided by ``read_group``
      */
-    list: function () {
-        return this.fetch();
+    list: function (ifGroups, ifRecords) {
+        var self = this;
+        this.fetch().then(function (group_records) {
+            ifGroups(_(group_records).map(function (group) {
+                var child_context = _.extend({}, self.context, group.__context);
+                return _.extend(
+                    new openerp.base.DataGroup(
+                        self.session, self.model, group.__domain,
+                        child_context, child_context.group_by,
+                        self.level + 1),
+                    group);
+            }));
+        });
+    }
+});
+openerp.base.GrouplessDataGroup = openerp.base.DataGroup.extend(
+    /** @lends openerp.base.GrouplessDataGroup# */ {
+    /**
+     *
+     * @constructs
+     * @extends openerp.base.DataGroup
+     *
+     * @param session
+     * @param model
+     * @param domain
+     * @param context
+     * @param level
+     */
+    init: function (session, model, domain, context, level) {
+        this._super(session, model, domain, context, null, level);
+    },
+    list: function (ifGroups, ifRecords) {
+        ifRecords(_.extend(
+                new openerp.base.DataSetSearch(this.session, this.model),
+                {domain: this.domain, context: this.context}));
     }
 });
 
@@ -303,6 +368,7 @@ openerp.base.DataSetSearch =  openerp.base.DataSet.extend({
             offset: offset,
             limit: limit
         }, function (records) {
+            self.ids.splice(0, self.ids.length);
             self.offset = offset;
             self.count = records.length;    // TODO: get real count
             for (var i=0; i < records.length; i++ ) {

@@ -21,7 +21,7 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
     do_action: function(action) {
         var self = this;
         action.flags = _.extend({
-            sidebar : true,
+            sidebar : action.target != 'new',
             search_view : true,
             new_window : false,
             views_switcher : true,
@@ -82,6 +82,7 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
         this.views_src = views;
         this.views = {};
         this.flags = this.flags || {};
+        this.sidebar = new openerp.base.NullSidebar();
     },
     /**
      * @returns {jQuery.Deferred} initial view loading promise
@@ -198,6 +199,14 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
     }
 });
 
+openerp.base.NullViewManager = openerp.base.generate_null_object_class(openerp.base.ViewManager, {
+    init: function() {
+        this._super();
+        this.action = {flags: {}};
+        this.sidebar = new openerp.base.NullSidebar();
+    }
+});
+
 openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
     init: function(session, element_id, action) {
         var dataset;
@@ -213,7 +222,7 @@ openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
         this.flags = this.action.flags || {};
         if (action.res_model == 'board.board' && action.views.length == 1 && action.views) {
             // Not elegant but allows to avoid flickering of SearchView#do_hide
-            this.flags.search_view = this.flags.pager = this.flags.action_buttons = false;
+            this.flags.search_view = this.flags.pager = this.flags.sidebar = this.flags.action_buttons = false;
         }
         if (this.flags.sidebar) {
             this.sidebar = new openerp.base.Sidebar(null, this);
@@ -223,7 +232,7 @@ openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
         var inital_view_loaded = this._super();
 
         // init sidebar
-        if (this.sidebar) {
+        if (this.flags.sidebar) {
             this.$element.find('.view-manager-main-sidebar').html(this.sidebar.render());
             this.sidebar.start();
         }
@@ -250,9 +259,7 @@ openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
     },
     stop: function() {
         // should be replaced by automatic destruction implemented in BaseWidget
-        if (this.sidebar) {
-            this.sidebar.stop();
-        }
+        this.sidebar.stop();
         this._super();
     },
     /**
@@ -295,9 +302,9 @@ openerp.base.Sidebar = openerp.base.BaseWidget.extend({
             var section = {elements:toolbar[type[0]], label:type[1]};
             self.sections.push(section);
         });
-        this.refresh(true);
+        this.do_refresh(true);
     },
-    refresh: function(new_view) {
+    do_refresh: function(new_view) {
         var view = this.view_manager.active_view;
         the_condition = this.sections.length > 0 && _.detect(this.sections,
             function(x) {return x.elements.length > 0;}) != undefined
@@ -309,21 +316,20 @@ openerp.base.Sidebar = openerp.base.BaseWidget.extend({
             this.$element.addClass('open-sidebar');
             this.$element.removeClass('closed-sidebar');
         }
-        
+
         this.$element.html(QWeb.render("ViewManager.sidebar.internal",this));
-        
+
         var self = this;
         this.$element.find(".toggle-sidebar").click(function(e) {
             self.$element.toggleClass('open-sidebar closed-sidebar');
             e.stopPropagation();
             e.preventDefault();
         });
-        
+
         this.$element.find("a.oe_sidebar_action_a").click(function(e) {
             var $this = jQuery(this);
-            var i = $this.attr("data-i");
-            var j = $this.attr("data-j");
-            var action = self.sections[i].elements[j];
+            var index = $this.attr("data-index").split('-');
+            var action = self.sections[index[0]].elements[index[1]];
             action.flags = {
                 new_window : true
             }
@@ -334,9 +340,11 @@ openerp.base.Sidebar = openerp.base.BaseWidget.extend({
     },
     start: function() {
         this._super();
-        this.refresh(false);
+        this.do_refresh(false);
     }
 });
+
+openerp.base.NullSidebar = openerp.base.generate_null_object_class(openerp.base.Sidebar);
 
 openerp.base.View = openerp.base.Controller.extend({
     /**

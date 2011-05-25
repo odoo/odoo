@@ -2,7 +2,7 @@
  * OpenERP base library
  *---------------------------------------------------------*/
 
-openerp.base.view_tree = function(openerp) {
+openerp.base.tree = function(openerp) {
 
 openerp.base.views.add('tree', 'openerp.base.TreeView');
 openerp.base.TreeView = openerp.base.Controller.extend({

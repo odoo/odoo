@@ -439,9 +439,12 @@ class DataSet(openerpweb.Controller):
 class DataGroup(openerpweb.Controller):
     _cp_path = "/base/group"
     @openerpweb.jsonrequest
-    def read(self, request, model, group_by_fields, domain=None, context=None):
+    def read(self, request, model, group_by_fields, domain=None):
         Model = request.session.model(model)
-        return Model.read_group(domain or False, False, group_by_fields, 0, False, context or False)
+
+        return Model.read_group(
+            domain or [], False, group_by_fields, 0, False,
+            dict(request.context, group_by=group_by_fields))
 
 class View(openerpweb.Controller):
     def fields_view_get(self, request, model, view_id, view_type,
@@ -555,6 +558,113 @@ class FormView(View):
         fields_view = self.fields_view_get(req, model, view_id, 'form', toolbar=toolbar)
         return {'fields_view': fields_view}
 
+class ListView(View):
+    _cp_path = "/base/listview"
+
+    @openerpweb.jsonrequest
+    def load(self, req, model, view_id, toolbar=False):
+        fields_view = self.fields_view_get(req, model, view_id, 'tree', toolbar=toolbar)
+        return {'fields_view': fields_view}
+
+    def fields_view_get(self, request, model, view_id, view_type="tree",
+                        transform=True, toolbar=False, submenu=False):
+        """ Sets @editable on the view's arch if it isn't already set and
+        ``set_editable`` is present in the request context
+        """
+        view = super(ListView, self).fields_view_get(
+            request, model, view_id, view_type, transform, toolbar, submenu)
+
+        view_attributes = view['arch']['attrs']
+        if request.context.get('set_editable')\
+                and 'editable' not in view_attributes:
+            view_attributes['editable'] = 'bottom'
+        return view
+
+    @openerpweb.jsonrequest
+    def fill(self, request, model, id, domain,
+             offset=0, limit=False, sort=None):
+        return self.do_fill(request, model, id, domain, offset, limit, sort)
+
+    def do_fill(self, request, model, id, domain,
+                offset=0, limit=False, sort=None):
+        """ Returns all information needed to fill a table:
+
+        * view with processed ``editable`` flag
+        * fields (columns) with processed ``invisible`` flag
+        * rows with processed ``attrs`` and ``colors``
+
+        .. note:: context is passed through ``request`` parameter
+
+        :param request: OpenERP request
+        :type request: openerpweb.openerpweb.JsonRequest
+        :type str model: OpenERP model for this list view
+        :type int id: view_id, or False if none provided
+        :param list domain: the search domain to search for
+        :param int offset: search offset, for pagination
+        :param int limit: search limit, for pagination
+        :returns: hell if I have any idea yet
+        """
+        view = self.fields_view_get(request, model, id, toolbar=True)
+
+        rows = DataSet().do_search_read(request, model,
+                                        offset=offset, limit=limit,
+                                        domain=domain, sort=sort)
+        eval_context = request.session.evaluation_context(
+            request.context)
+
+        if sort:
+            sort_criteria = sort.split(',')[0].split(' ')
+            view['sorted'] = {
+                'field': sort_criteria[0],
+                'reversed': sort_criteria[1] == 'DESC'
+            }
+        else:
+            view['sorted'] = {}
+        return {
+            'view': view,
+            'records': [
+                {'data': dict((key, {'value': value})
+                              for key, value in row.iteritems()),
+                 'color': self.process_colors(view, row, eval_context)}
+                for row in rows
+            ]
+        }
+
+    def process_colors(self, view, row, context):
+        colors = view['arch']['attrs'].get('colors')
+
+        if not colors:
+            return None
+
+        color = [
+            pair.split(':')[0]
+            for pair in colors.split(';')
+            if eval(pair.split(':')[1], dict(context, **row))
+        ]
+
+        if not color:
+            return None
+        elif len(color) == 1:
+            return color[0]
+        return 'maroon'
+
+class SearchView(View):
+    _cp_path = "/base/searchview"
+
+    @openerpweb.jsonrequest
+    def load(self, req, model, view_id):
+        fields_view = self.fields_view_get(req, model, view_id, 'search')
+        return {'fields_view': fields_view}
+
+    @openerpweb.jsonrequest
+    def fields_get(self, req, model):
+        Model = req.session.model(model)
+        fields = Model.fields_get()
+        return {'fields': fields}
+
+class Binary(openerpweb.Controller):
+    _cp_path = "/base/binary"
+
     @openerpweb.httprequest
     def image(self, request, session_id, model, id, field, **kw):
         cherrypy.response.headers['Content-Type'] = 'image/png'
@@ -611,113 +721,6 @@ class FormView(View):
         except Exception, e:
             args = [False, e.message]
         return out % (simplejson.dumps(callback), simplejson.dumps(args))
-
-class ListView(View):
-    _cp_path = "/base/listview"
-
-    @openerpweb.jsonrequest
-    def load(self, req, model, view_id, toolbar=False):
-        fields_view = self.fields_view_get(req, model, view_id, 'tree', toolbar=toolbar)
-        return {'fields_view': fields_view}
-
-    def fields_view_get(self, request, model, view_id, view_type="tree",
-                        transform=True, toolbar=False, submenu=False):
-        """ Sets @editable on the view's arch if it isn't already set and
-        ``set_editable`` is present in the request context
-        """
-        view = super(ListView, self).fields_view_get(
-            request, model, view_id, view_type, transform, toolbar, submenu)
-
-        view_attributes = view['arch']['attrs']
-        if request.context.get('set_editable')\
-                and 'editable' not in view_attributes:
-            view_attributes['editable'] = 'bottom'
-        return view
-
-    @openerpweb.jsonrequest
-    def fill(self, request, model, id, domain,
-             offset=0, limit=False, sort=None):
-        return self.do_fill(request, model, id, domain, offset, limit, sort)
-
-    def do_fill(self, request, model, id, domain,
-                offset=0, limit=False, sort=None):
-        """ Returns all information needed to fill a table:
-
-        * view with processed ``editable`` flag
-        * fields (columns) with processed ``invisible`` flag
-        * rows with processed ``attrs`` and ``colors``
-
-        .. note:: context is passed through ``request`` parameter
-
-        :param request: OpenERP request
-        :type request: openerpweb.openerpweb.JsonRequest
-        :type str model: OpenERP model for this list view
-        :type int id: view_id, or False if none provided
-        :param list domain: the search domain to search for
-        :param int offset: search offset, for pagination
-        :param int limit: search limit, for pagination
-        :returns: hell if I have any idea yet
-        """
-        view = self.fields_view_get(request, model, id, toolbar=True)
-
-        print sort
-        rows = DataSet().do_search_read(request, model,
-                                        offset=offset, limit=limit,
-                                        domain=domain, sort=sort)
-        eval_context = request.session.evaluation_context(
-            request.context)
-
-        if sort:
-            sort_criteria = sort.split(',')[0].split(' ')
-            print sort, sort_criteria
-            view['sorted'] = {
-                'field': sort_criteria[0],
-                'reversed': sort_criteria[1] == 'DESC'
-            }
-        else:
-            view['sorted'] = {}
-        return {
-            'view': view,
-            'records': [
-                {'data': dict((key, {'value': value})
-                              for key, value in row.iteritems()),
-                 'color': self.process_colors(view, row, eval_context)}
-                for row in rows
-            ]
-        }
-
-    def process_colors(self, view, row, context):
-        colors = view['arch']['attrs'].get('colors')
-
-        if not colors:
-            return None
-
-        color = [
-            pair.split(':')[0]
-            for pair in colors.split(';')
-            if eval(pair.split(':')[1], dict(context, **row))
-        ]
-
-        if not color:
-            return None
-        elif len(color) == 1:
-            return color[0]
-        return 'maroon'
-
-
-class SearchView(View):
-    _cp_path = "/base/searchview"
-
-    @openerpweb.jsonrequest
-    def load(self, req, model, view_id):
-        fields_view = self.fields_view_get(req, model, view_id, 'search')
-        return {'fields_view': fields_view}
-    
-    @openerpweb.jsonrequest
-    def fields_get(self, req, model):
-        Model = req.session.model(model)
-        fields = Model.fields_get()
-        return {'fields': fields}
 
 class Action(openerpweb.Controller):
     _cp_path = "/base/action"
