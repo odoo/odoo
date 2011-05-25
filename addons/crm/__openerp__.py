@@ -65,7 +65,6 @@ Create dashboard for CRM that includes:
         'crm_data.xml',
         'crm_meeting_data.xml',
         'crm_lead_data.xml',
-        'crm_meeting_data.xml',
         'crm_opportunity_data.xml',
         'crm_phonecall_data.xml',
     ],
