@@ -19,8 +19,14 @@
 #
 ##############################################################################
 
+""" OpenERP core library.
+
+"""
+
 import addons
+import conf
 import loglevels
+import modules
 import netsvc
 import osv
 import pooler

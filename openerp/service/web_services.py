@@ -28,12 +28,12 @@ import time
 import sys
 import platform
 from openerp.tools.translate import _
-import openerp.addons as addons
 import openerp.netsvc as netsvc
 import openerp.pooler as pooler
 import openerp.release as release
 import openerp.sql_db as sql_db
 import openerp.tools as tools
+import openerp.modules
 import locale
 import logging
 from cStringIO import StringIO
@@ -90,12 +90,7 @@ class db(netsvc.ExportService):
                 cr = None
                 try:
                     serv.actions[id]['progress'] = 0
-                    cr = sql_db.db_connect(db_name).cursor()
-                    tools.init_db(cr)
                     tools.config['lang'] = lang
-                    cr.commit()
-                    cr.close()
-                    cr = None
                     pool = pooler.restart_pool(db_name, demo, serv.actions[id],
                             update_module=True)[1]
 
@@ -138,7 +133,7 @@ class db(netsvc.ExportService):
 
     def exp_get_progress(self, id):
         if self.actions[id]['thread'].isAlive():
-#           return addons.init_progress[db_name]
+#           return openerp.modules.init_progress[db_name]
             return (min(self.actions[id].get('progress', 0),0.95), [])
         else:
             clean = self.actions[id]['clean']
@@ -153,6 +148,7 @@ class db(netsvc.ExportService):
 
     def exp_drop(self, db_name):
         sql_db.close_db(db_name)
+        openerp.netsvc.Agent.cancel(db_name)
         logger = netsvc.Logger()
 
         db = sql_db.db_connect('template1')
@@ -255,6 +251,7 @@ class db(netsvc.ExportService):
 
     def exp_rename(self, old_name, new_name):
         sql_db.close_db(old_name)
+        openerp.netsvc.Agent.cancel(db_name)
         logger = netsvc.Logger()
 
         db = sql_db.db_connect('template1')
@@ -345,7 +342,6 @@ class db(netsvc.ExportService):
                 l.notifyChannel('web-services', netsvc.LOG_ERROR, tb_s)
                 raise
         return True
-db()
 
 class _ObjectService(netsvc.ExportService):
      "A common base class for those who have fn(db, uid, password,...) "
@@ -428,7 +424,7 @@ GNU Public Licence.
             if not rc.id:
                 raise tm.RemoteContractException('This contract does not exist or is not active')
 
-            return rc.get_available_updates(rc.id, addons.get_modules_with_version())
+            return rc.get_available_updates(rc.id, openerp.modules.get_modules_with_version())
 
         except tm.RemoteContractException, e:
             self.abortResponse(1, 'Migration Error', 'warning', str(e))
@@ -446,7 +442,7 @@ GNU Public Licence.
 
             l.notifyChannel('migration', netsvc.LOG_INFO, 'starting migration with contract %s' % (rc.name,))
 
-            zips = rc.retrieve_updates(rc.id, addons.get_modules_with_version())
+            zips = rc.retrieve_updates(rc.id, openerp.modules.get_modules_with_version())
 
             from shutil import rmtree, copytree, copy
 
@@ -458,7 +454,7 @@ GNU Public Licence.
 
             for module in zips:
                 l.notifyChannel('migration', netsvc.LOG_INFO, 'upgrade module %s' % (module,))
-                mp = addons.get_module_path(module)
+                mp = openerp.modules.get_module_path(module)
                 if mp:
                     if os.path.isdir(mp):
                         copytree(mp, os.path.join(backup_directory, module))
@@ -559,7 +555,6 @@ GNU Public Licence.
             logger.warning("Counters of SQL will not be reliable unless DEBUG_SQL is set at the server's config.")
         return sql_db.sql_counter
 
-common()
 
 class objects_proxy(netsvc.ExportService):
     def __init__(self, name="object"):
@@ -582,8 +577,6 @@ class objects_proxy(netsvc.ExportService):
 
     def new_dispatch(self,method,auth,params):
         pass
-
-objects_proxy()
 
 
 #
@@ -645,7 +638,6 @@ class wizard(netsvc.ExportService):
                 raise Exception, 'AccessDenied'
         else:
             raise Exception, 'WizardNotFound'
-wizard()
 
 #
 # TODO: set a maximum report number per user to avoid DOS attacks
@@ -759,7 +751,13 @@ class report_spool(netsvc.ExportService):
         else:
             raise Exception, 'ReportNotFound'
 
-report_spool()
+
+def start_web_services():
+    db()
+    common()
+    objects_proxy()
+    wizard()
+    report_spool()
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

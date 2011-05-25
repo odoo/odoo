@@ -3,6 +3,7 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2010-2011 OpenERP s.a. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,15 +20,25 @@
 #
 ##############################################################################
 
-from simple import simple
-from rml import rml, rml2html, rml2txt, odt2odt , html2html, makohtml2html
-from render import render
+""" Modules (also called addons) management.
 
-try:
-    import Image
-except ImportError:
-    import logging
-    logging.warning('Python Imaging not installed, you can use only .JPG pictures !')
+"""
+
+import openerp.modules.db
+import openerp.modules.graph
+import openerp.modules.loading
+import openerp.modules.migration
+import openerp.modules.module
+
+# TODO temporarily expose those things
+from openerp.modules.module import \
+    get_modules, get_modules_with_version, \
+    load_information_from_description_file, \
+    get_module_resource, zip_directory, \
+    get_module_path, initialize_sys_path, \
+    register_module_classes, init_module_models
+
+from openerp.modules.loading import load_modules
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
