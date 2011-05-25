@@ -126,7 +126,7 @@ class import_framework(Thread):
             res = hook(val)
             if res:
                 final_data.append(res)
-        return self._save_data(model, map, final_data, table)
+        return self._save_data(model, dict(map), final_data, table)
         
     def _save_data(self, model, mapping, datas, table):
         """
@@ -143,14 +143,16 @@ class import_framework(Thread):
             return
         mapping['id'] = 'id_new'
         res = []
+        
+        
+        self_dependencies = []
+        for k in mapping.keys():
+            if '_parent' in k:
+                self_dependencies.append((k[:-7], mapping.pop(k)))
+        
         for data in datas:
-            
-            self_dependencies = []
-            for k in mapping.keys():
-                if '_parent' in k:
-                    self_dependencies.append(k[:-7])
-                    field_name = mapping.pop(k)
-                    data[k] = data.get(field_name) and self._generate_xml_id(data.get(field_name), table)
+            for k, field_name in self_dependencies:
+                data[k] = data.get(field_name) and self._generate_xml_id(data.get(field_name), table)
                     
             data['id_new'] = self._generate_xml_id(data['id'], table)
             fields, values = self._fields_mapp(data, mapping, table)
@@ -161,7 +163,7 @@ class import_framework(Thread):
             raise ValueError("%s is not a valid model name" % model)
         
         (p, r, warning, s) = model_obj.import_data(self.cr, self.uid, fields, res, mode='update', current_module=self.module_name, noupdate=True, context=self.context)
-        for field in self_dependencies:
+        for (field, field_name) in self_dependencies:
             self._import_self_dependencies(model_obj, field, datas)
         return (len(res), warning)
             
@@ -176,8 +178,8 @@ class import_framework(Thread):
         """
         fields = ['id', parent_field]
         for data in datas:
-            if data.get(parent_field + '_parent'):
-                values = [data['id_new'], data[parent_field + '_parent']]
+            if data.get(parent_field):
+                values = [data['id_new'], data[parent_field]]
                 obj.import_data(self.cr, self.uid, fields, [values], mode='update', current_module=self.module_name, noupdate=True, context=self.context) 
     
     def _preprocess_mapping(self, mapping):
