@@ -7,9 +7,9 @@
       <field name="inherit_id" ref="base_setup.view_base_setup_installer"/>
       <field name="arch" type="xml">
         <data>
-          <xpath expr="//field[@name='product_expiry']" position="after">
+          <xpath expr="//field[@name='report_designer']" position="after">
             <newline/>
-            <separator  string="Customer Relationship Management Details" colspan="4" />
+            <separator  string="Customer Relationship Management Features" colspan="4" />
             <field name="crm_claim" groups="base.group_extended" />
             <field name="crm_helpdesk" groups="base.group_extended" />
             <field name="crm_fundraising" groups="base.group_extended" />
@@ -31,7 +31,7 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="view_id" ref="crm.crm_case_section_view_tree"/>
-        <field name="help">Define a Sales Team to organize your different salesmen or sales departments into separate teams. Each team will work in its own list of opportunities, sales orders, etc. Each user can set a default team in his user preferences. The opportunities and sales order displayed, will automatically be filtered according to his team.</field>
+        <field name="help">Define sales teams to structure your sales organization and assign users  to each team. You should also define the sales stage to each team. As  an example, if you use Solutions Selling techniques to track your  opportunities, you can assign the following stage to the team: Territory, Qualified, Qualified Sponsors, Proposition, Negociaton, Won/Lost.</field>
     </record>
 
     <record id="crm_case_section_installer_todo" model="ir.actions.todo">
@@ -48,7 +48,7 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="view_id" ref="crm.crm_case_stage_tree"/>
-        <field name="help">Add specific stages to leads and opportunities allowing your sales to better organise their sales pipeline. Stages will allow them to easily track how a specific lead or opportunity is positioned in the sales cycle.</field>
+        <field name="help">Stages will allow salesmen to easily track  how a specific opportunity is positioned in the sales cycle. In order to  efficiently manage your sales pipeline, it's important to define  conditions to go to the next step. Example: to set an opportunity as  'Qualified', you must set the "Expected Revenue" and the "Expected  Closing Date." You should also have a look at the tooltip of the field  "Change Probability Automatically".</field>
     </record>
 
     <record id="crm_case_stage_installer_todo" model="ir.actions.todo">
