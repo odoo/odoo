@@ -26,7 +26,6 @@ import tools
 
 from threading import Thread
 import datetime
-from reportlab.lib import logger
 import logging
 pp = pprint.PrettyPrinter(indent=4)
 
@@ -56,7 +55,9 @@ class import_framework(Thread):
         self.module_name = module_name
         self.context = context or {}
         self.email = email_to_notify
+        self.table_list = []
         self.initialize()
+        
         
       
     """
@@ -221,7 +222,7 @@ class import_framework(Thread):
             @return: a unique xml id for record, the xml_id will be the same given the same table and same name
                      To be used to avoid duplication of data that don't have ids
         """
-        sugar_instance = "sugarcrm" #TODO need to be changed we information is known in the wizard
+        sugar_instance = self.instance_name
         name = name.replace('.', '_').replace(',', '_')
         return sugar_instance + "_" + table + "_" + name
     
@@ -325,13 +326,18 @@ class import_framework(Thread):
     
     
     def set_table_list(self, table_list):
+        """
+            Set the list of table to import, this method should be call before run
+            @param table_list: the list of external table to import
+               ['Leads', 'Opportunity']
+        """
         self.table_list = table_list
     
     def run(self):
-        """Import all data into openerp, 
-           this is the Entry point to launch the process of import
-           @param table_list: the list of external table to import
-               ['Leads', 'Opportunity']
+        """
+            Import all data into openerp, 
+            this is the Entry point to launch the process of import
+            
         
         """
         
@@ -343,7 +349,8 @@ class import_framework(Thread):
             for table in self.table_list:
                 to_import = self.get_mapping()[table].get('import', True)
                 if not table in imported:
-                    self._resolve_dependencies(self.get_mapping()[table].get('dependencies', []), imported)
+                    res = self._resolve_dependencies(self.get_mapping()[table].get('dependencies', []), imported)
+                    result.extend(res)
                     if to_import:
                         (position, warning) = self._import_table(table)
                         result.append((table, position, warning))
@@ -361,109 +368,63 @@ class import_framework(Thread):
             import dependencies recursively
             and avoid to import twice the same table
         """
+        result = []
         for dependency in dep:
             if not dependency in imported:
                 to_import = self.get_mapping()[dependency].get('import', True)
                 self._resolve_dependencies(self.get_mapping()[dependency].get('dependencies', []), imported)
                 if to_import:
-                    self._import_table(dependency)
+                    (position, warning) = self._import_table(dependency)
+                    result.append((dependency, position, warning))
                 imported.add(dependency)
+        return result
                 
     def _send_notification_email(self, result):
-		if not self.email:
-			return
-        subject = "Openerp has finish to import your data at %s" % self.date_ended
+        if not self.email:
+            return 		 
         tools.email_send(
                 'import_sugarcrm@module.openerp',
                 self.email,
-                subject,
-                self._get_email_body(result),
+                self.get_email_subject(result),
+                self.get_email_body(result),
             )
         logger = logging.getLogger('import_sugarcam')
         logger.info("Import finished, notification email sended")
     
-    def _get_email_body(self, result):
-        header = "The import of sugarcrm data \n instance name : %s \n started at %s is finished at %s" % (self.instance_name, self.data_started, self.date_ended)
-        body = ""
+    def get_email_subject(self, result):
+        """
+            This method define the subject of the email send by openerp at the end of import
+            @param result: a list of tuple 
+                (table_name, number_of_record_created/updated, warning) for each table
+            @return the subject of the mail
+        
+        """
+        return "Import of your data finished at %s" % self.date_ended
+    
+    def get_email_body(self, result):
+        """
+            This method define the body of the email send by openerp at the end of import. The body is separated in two part
+            the header (@see get_body_header), and the generate body with the list of table and number of record imported.
+            If you want to keep this it's better to overwrite get_body_header
+            @param result: a list of tuple 
+                (table_name, number_of_record_created/updated, warning) for each table
+            @return the subject of the mail
+        
+        """
+        
+        body = "started at %s and finished at %s \n" % (self.data_started, self.date_ended)
         for (table, nb, warning) in result:
             if not warning:
                 warning = "with no warning"
             else:
                 warning = "with warning : %s" % warning
             body += "%s records were imported from table %s, %s \n" % (nb, table, warning)
-        return header + "\n\n" + body
+        return self.get_body_header(result) + "\n\n" + body
     
+    def get_body_header(self, result):
+        """
+            @return the first sentences written in the mail's body
+        """
+        return "The import of data \n instance name : %s \n" % self.instance_name
     
-class dummy_import(import_framework):
-    """
-        this is a really simple exemple to show how to use the framework
-    """
-    
-    TABLE_LEAD = 'Leads'
-    TABLE_STAGE = 'Stage'
-    TABLE_USER = 'User'
-    
-    def get_lead_status(self, sugar_val):
-        fields = ['name', 'type']
-        name = 'lead_' + sugar_val.get('status', '')
-        data = [sugar_val.get('status', ''), 'lead']
-        return self.import_object(fields, data, 'crm.case.stage', self.TABLE_STAGE, name, [('type', '=', 'lead'), ('name', 'ilike', sugar_val.get('status', ''))])
-
-    
-    
-  
-    lead_state =  {
-            'New' : 'draft',
-            'Assigned':'open',
-            'In Progress': 'open',
-            'Recycled': 'cancel',
-            'Dead': 'done',
-        }
-    
-    def get_mapping(self):
-        return {
-                self.TABLE_LEAD : {
-                    'model' : 'crm.lead',
-                    'dependencies' : [self.TABLE_USER],
-                    'map' : {
-                            'name' : 'name',
-                            'stage_id/id' : self.get_lead_status, 
-                            'state' : mapper.map_val('status', self.lead_state),
-                            'user_id/id' : mapper.ref(self.TABLE_USER, 'assigned_user_id'),
-                    }         
-                              
-                },
-                self.TABLE_USER : {
-                    'model' : 'res.users',
-                    'map' : {
-                             'name' : 'name',
-                             'login' : 'name'
-                    }              
-                }
-        }
-        
-       
-    #DUMMY way to get data, just demonstration 
-    def get_data(self, table):
-        if table == self.TABLE_LEAD:
-            return self.get_lead()
-        if table == self.TABLE_USER:
-            return self.get_user()
-        
-    
-    def get_lead(self):
-        return [
-                {'id' : 'lead1',
-                 'name' : 'name1',
-                 'status' : 'Assigned',
-                 'assigned_user_id' : 'user1'},
-                {'id' : 'lead2',
-                 'name' : 'name2'
-                 },
-                ]
-        
-    def get_user(self):
-        return [{
-            'id' : 'user1',
-            'name' : 'name1',
-                }]
+#For example of use see import_sugarcrm    
