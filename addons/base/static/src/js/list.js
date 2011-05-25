@@ -451,12 +451,13 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
         return aggregator;
     },
     display_aggregates: function (aggregation) {
-        var $footer = this.$element.find('.oe-list-footer');
-        $footer.text(
-            _(this.aggregate_columns).map(function (column) {
-                return _.sprintf(
-                        "%s: %.2f", column.label, aggregation[column.field]);
-            }).join(' '));
+        var $footer = this.$element.find('.oe-list-footer').empty();
+        _(this.aggregate_columns).each(function (column) {
+            $(_.sprintf(
+                    "<span>%s: %.2f</span>",
+                    column.label, aggregation[column.field]))
+                .appendTo($footer);
+        });
     }
     // TODO: implement reorder (drag and drop rows)
 });
