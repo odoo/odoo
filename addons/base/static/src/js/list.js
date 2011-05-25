@@ -306,10 +306,9 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
                 results.group_by = null;
             }
             self.do_reload(results.group_by).then(function () {
-                self.$element.find('table').append(self.groups.render());
-            }).then(function () {
-                self.compute_aggregates();
-            });
+                self.$element.find('table').append(
+                        self.groups.render(function () {
+                            self.compute_aggregates();}));});
         });
     },
     /**
@@ -797,18 +796,20 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
         });
         return d.promise();
     },
-    render: function () {
+    render: function (post_render) {
         var self = this;
         var $element = $('<tbody>');
         this.elements = [$element[0]];
         this.datagroup.list(function (groups) {
             $element[0].appendChild(
                 self.render_groups(groups));
+            if (post_render) { post_render(); }
         }, function (dataset) {
             self.render_dataset(dataset).then(function (list) {
                 self.children[null] = list;
                 self.elements =
                     [list.$current.replaceAll($element)[0]];
+                if (post_render) { post_render(); }
             });
         });
         return $element;
