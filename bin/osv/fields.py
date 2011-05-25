@@ -66,8 +66,8 @@ class _column(object):
     def __init__(self, string='unknown', required=False, readonly=False, domain=None, context=None, states=None, priority=0, change_default=False, size=None, ondelete="set null", translate=False, select=False, manual=False, **args):
         """
 
-        The 'manual' kayword argument specify if the field is a custom one. It
-        correspond to the 'state' column in ir_model_fields.
+        The 'manual' keyword argument specifies if the field is a custom one.
+        It corresponds to the 'state' column in ir_model_fields.
 
         """
         if domain is None:
