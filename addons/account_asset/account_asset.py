@@ -37,10 +37,22 @@ class account_asset_category(osv.osv):
         'account_expense_depreciation_id': fields.many2one('account.account', 'Depr. Expense Account', required=True),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True),
         'company_id': fields.many2one('res.company', 'Company', required=True),
+        'method': fields.selection([('linear','Linear'),('progressif','Progressive')], 'Computation method', required=True),
+        'method_delay': fields.integer('During (interval)'),
+        'method_period': fields.integer('Depre. all (period)'),
+        'method_progress_factor': fields.float('Progressif Factor'),
+        'method_time': fields.selection([('delay','Delay'),('end','Ending Period')], 'Time Method', required=True),
+        'prorata':fields.boolean('Prorata Temporis', help='Indicates that the accounting entries for this asset have to be done from the purchase date instead of the first January'),
+        'open_asset': fields.boolean('Skip Draft State', help="Check this if you want to automatically confirm the assets of this category when created by invoice."),
     }
 
     _defaults = {
         'company_id': lambda self, cr, uid, context: self.pool.get('res.company')._company_default_get(cr, uid, 'account.asset.category', context=context),
+        'method': 'linear',
+        'method_delay': 5,
+        'method_time': 'delay',
+        'method_period': 12,
+        'method_progress_factor': 0.3,
     }
 
 account_asset_category()
@@ -124,7 +136,7 @@ class account_asset_asset(osv.osv):
 
     def validate(self, cr, uid, ids, context={}):
         return self.write(cr, uid, ids, {
-            'state':'normal'
+            'state':'open'
         }, context)
 
     def _amount_total(self, cr, uid, ids, name, args, context={}):
@@ -198,7 +210,21 @@ class account_asset_asset(osv.osv):
         'company_id': lambda self, cr, uid, context: self.pool.get('res.company')._company_default_get(cr, uid, 'account.asset.asset',context=context),
     }
 
-
+    def onchange_category_id(self, cr, uid, ids, category_id, context=None):
+        res = {'value':{}}
+        asset_categ_obj = self.pool.get('account.asset.category')
+        if category_id:
+            category_obj = asset_categ_obj.browse(cr, uid, category_id, context=context)
+            res['value'] = {
+                            'method': category_obj.method, 
+                            'method_delay': category_obj.method_delay,
+                            'method_time': category_obj.method_time,
+                            'method_period': category_obj.method_period,
+                            'method_progress_factor': category_obj.method_progress_factor,
+                            'prorata': category_obj.prorata,
+            }
+        return res
+    
     def _compute_period(self, cr, uid, property, context={}):
         if (len(property.entry_asset_ids or [])/2)>=property.method_delay:
             return False
@@ -301,7 +327,7 @@ class account_asset_depreciation_line(osv.osv):
         'depreciated_value': fields.float('Amount Already Depreciated', required=True),
         'depreciation_date': fields.char('Depreciation Date', size=64, select=1),
         'move_id': fields.many2one('account.move', 'Depreciation Entry'),
-        'move_check': fields.function(_get_move_check, method=True, type='boolean', string='Move Included', store=True)
+        'move_check': fields.function(_get_move_check, method=True, type='boolean', string='Posted', store=True)
     }
 
     def create_move(self, cr, uid,ids, context=None):
