@@ -762,10 +762,12 @@ class orm_template(object):
             done = {}
             for i in range(len(fields)):
                 res = False
+                if i >= len(line):
+                    raise Exception(_('Please check that all your lines have %d columns.'
+                        'Stopped around line %d having %d columns.') % \
+                            (len(fields), position+2, len(line)))
                 if not line[i]:
                     continue
-                if i >= len(line):
-                    raise Exception(_('Please check that all your lines have %d columns.') % (len(fields),))
 
                 field = fields[i]
                 if field[:len(prefix)] <> prefix:
@@ -838,14 +840,15 @@ class orm_template(object):
                     res = line[i] and float(line[i]) or 0.0
                 elif fields_def[field[len(prefix)]]['type'] == 'selection':
                     for key, val in fields_def[field[len(prefix)]]['selection']:
-                        if line[i] in [tools.ustr(key), tools.ustr(val)]:
+                        if tools.ustr(line[i]) in [tools.ustr(key), tools.ustr(val)]:
                             res = key
                             break
                     if line[i] and not res:
                         logger.notifyChannel("import", netsvc.LOG_WARNING,
                                 _("key '%s' not found in selection field '%s'") % \
-                                        (line[i], field[len(prefix)]))
-                        warning += [_("Key/value '%s' not found in selection field '%s'") % (line[i], field[len(prefix)])]
+                                        (tools.ustr(line[i]), tools.ustr(field[len(prefix)])))
+                        warning += [_("Key/value '%s' not found in selection field '%s'") % (tools.ustr(line[i]), tools.ustr(field[len(prefix)]))]
+
                 else:
                     res = line[i]
 
@@ -2826,6 +2829,7 @@ class orm(orm_template):
                     'size': field['size'],
                     'ondelete': field['on_delete'],
                     'translate': (field['translate']),
+                    'manual': True,
                     #'select': int(field['select_level'])
                 }
 
@@ -3050,6 +3054,9 @@ class orm(orm_template):
         for key, val in todo.items():
             if key:
                 res2 = self._columns[val[0]].get(cr, self, ids, val, user, context=context, values=res)
+                assert res2 is not None, \
+                    'The function field "%s" on the "%s" model returned None\n' \
+                    '(a dictionary was expected).' % (val[0], self._name)
                 for pos in val:
                     for record in res:
                         if isinstance(res2[record['id']], str): res2[record['id']] = eval(res2[record['id']]) #TOCHECK : why got string instend of dict in python2.6
@@ -3531,7 +3538,10 @@ class orm(orm_template):
     #
     def create(self, cr, user, vals, context=None):
         """
-        Create new record with specified value
+        Create a new record for the model.
+
+        The values for the new record are initialized using the ``vals``
+        argument, and if necessary the result of ``default_get()``.
 
         :param cr: database cursor
         :param user: current user id
