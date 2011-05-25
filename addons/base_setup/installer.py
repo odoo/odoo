@@ -262,33 +262,54 @@ class specify_partner_terminology(osv.osv_memory):
                'partner' :'Partner',
     }
     
-    def translations_done(self, cr, uid, ids, name, type, src, value, res_id = 0, context=None):
+    def make_translations(self, cr, uid, ids, name, type, src, value, res_id=0, context=None):
         trans_obj = self.pool.get('ir.translation')
         user_obj = self.pool.get('res.users')
         context_lang = user_obj.browse(cr, uid, uid, context=context).context_lang
-        already_id = trans_obj.search(cr, uid, [('name','=',name),('res_id','=',res_id)])
-        for un_id in already_id:
-            trans_obj.write(cr, uid, un_id, {'name': name, 'lang': context_lang, 'type': type, 'src': src, 'value': value , 'res_id':res_id }, context=context)
-        if not already_id:
-            create_id = trans_obj.create(cr, uid, {'name': name,'lang': context_lang, 'type': type, 'src': src, 'value': value , 'res_id':res_id}, context=context)
+        existing_trans_ids = trans_obj.search(cr, uid, [('name','=',name), ('lang','=',context_lang), ('type','=',type), ('src','=',src)])
+        if existing_trans_ids:
+            trans_obj.write(cr, uid, existing_trans_ids, {'value': value}, context=context)
+        else:
+            create_id = trans_obj.create(cr, uid, {'name': name,'lang': context_lang, 'type': type, 'src': src, 'value': value , 'res_id': res_id}, context=context)
         return {}
     
-    
     def execute(self, cr, uid, ids, context=None):
+        def _case_insensitive_replace(ref_string, src, value):
+            import re
+            pattern = re.compile(src, re.IGNORECASE)
+            return pattern.sub(value, ref_string)
         trans_obj = self.pool.get('ir.translation')
         fields_obj = self.pool.get('ir.model.fields')
         menu_obj = self.pool.get('ir.ui.menu')
+        act_window_obj = self.pool.get('ir.actions.act_window')
         for o in self.browse(cr, uid, ids, context=context):
-            model_partner_ids = fields_obj.search(cr, uid, [('field_description','ilike','Partner')])
-            menu_partner_ids = menu_obj.search(cr,uid, [('name','ilike','Partner')])
-            for p_id in fields_obj.browse(cr ,uid ,model_partner_ids, context=context):
-                partner_name = p_id.model_id.model +',' + p_id.name
-                self.translations_done(cr, uid, ids, partner_name, 'field', p_id.field_description, p_id.field_description.replace('Partner',o.partner), context=context)
-            for m_id in menu_obj.browse(cr, uid, menu_partner_ids, context=context):
-                menu_partner_name1 = m_id.name
-                menu_partnr_name = 'ir.ui.menu' + ',' + 'name'
-                already_id = trans_obj.search(cr, uid, [('name','=',menu_partnr_name), ('res_id','=',m_id.id)])
-                self.translations_done(cr, uid, ids, menu_partnr_name, 'model', menu_partner_name1, menu_partner_name1.replace('Partner',o.partner), m_id.id, context=context)
+            #translate label of field
+            field_ids = fields_obj.search(cr, uid, [('field_description','ilike','Customer')])
+            for f_id in fields_obj.browse(cr ,uid, field_ids, context=context):
+                field_ref = f_id.model_id.model + ',' + f_id.name
+                self.make_translations(cr, uid, ids, field_ref, 'field', f_id.field_description, _case_insensitive_replace(f_id.field_description,'Customer',o.partner), context=context)
+            #translate help tooltip of field
+            for obj in self.pool.obj_pool.values():
+                for field_name, field_rec in obj._columns.items():
+                    if field_rec.help.lower().count('customer'):
+                        field_ref = obj._name + ',' + field_name
+                        self.make_translations(cr, uid, ids, field_ref, 'help', field_rec.help, _case_insensitive_replace(field_rec.help,'Customer',o.partner), context=context)
+            #translate menuitems
+            menu_ids = menu_obj.search(cr,uid, [('name','ilike','Customer')])
+            for m_id in menu_obj.browse(cr, uid, menu_ids, context=context):
+                menu_name = m_id.name
+                menu_ref = 'ir.ui.menu' + ',' + 'name'
+                self.make_translations(cr, uid, ids, menu_ref, 'model', menu_name, _case_insensitive_replace(menu_name,'Customer',o.partner), res_id=m_id.id, context=context)
+            #translate act window name
+            act_window_ids = act_window_obj.search(cr, uid, [('name','ilike','Customer')])
+            for act_id in act_window_obj.browse(cr ,uid, act_window_ids, context=context):
+                act_ref = 'ir.actions.act_window' + ',' + 'name'
+                self.make_translations(cr, uid, ids, act_ref, 'model', act_id.name, _case_insensitive_replace(act_id.name,'Customer',o.partner), res_id=act_id.id, context=context)
+            #translate act window tooltips
+            act_window_ids = act_window_obj.search(cr, uid, [('help','ilike','Customer')])
+            for act_id in act_window_obj.browse(cr ,uid, act_window_ids, context=context):
+                act_ref = 'ir.actions.act_window' + ',' + 'help'
+                self.make_translations(cr, uid, ids, act_ref, 'model', act_id.help, _case_insensitive_replace(act_id.help,'Customer',o.partner), res_id=act_id.id, context=context)
         return {}
     
 specify_partner_terminology()
