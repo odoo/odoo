@@ -621,8 +621,8 @@ class stock_picking(osv.osv):
         'state': fields.selection([
             ('draft', 'Draft'),
             ('auto', 'Waiting'),
-            ('confirmed', 'Confirmed'),
-            ('assigned', 'Available'),
+            ('confirmed', 'Waiting Availability'),
+            ('assigned', 'Ready to Process'),
             ('done', 'Done'),
             ('cancel', 'Cancelled'),
             ], 'State', readonly=True, select=True,
