@@ -800,6 +800,14 @@ class act_window_close(osv.osv):
     }
 act_window_close()
 
+class ir_actions_todo_category(osv.osv):
+    _name = 'ir.actions.todo.category'
+    _columns = {
+         'name':fields.char('Name', size=64, required=True),       
+         'sequence': fields.integer('Sequence'),
+    }
+ir_actions_todo_category()
+
 # This model use to register action services.
 TODO_STATES = [('open', 'To Do'),
                ('done', 'Done'),
@@ -818,6 +826,7 @@ class ir_actions_todo(osv.osv):
         'type': fields.selection([('special','Special'),('normal','Normal'),('normal_recurring','Normal Recurring')],'Type',required=True),
         'groups_id':fields.many2many('res.groups', 'res_groups_action_rel', 'uid', 'gid', 'Groups'),
         'note':fields.text('Text', translate=True),
+        'category_id': fields.many2one('ir.actions.todo.category','Category'),
     }
     _defaults={
         'state': 'open',

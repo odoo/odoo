@@ -1899,6 +1899,7 @@
                         <field name="action_id"/>
                         <field name="type"/>
                         <field name="sequence"/>
+                        <field name="category_id"/>
                     </group>
                     <separator string="Groups" colspan="4"/>
                     <field name="groups_id" nolabel="1" colspan="4"/>
@@ -1952,6 +1953,30 @@
             <field name="model">osv_memory.autovacuum</field>
             <field name="function">power_on</field>
             <field name="args">()</field>
+        </record>
+        
+        <record id="ir_actions_todo_category_form" model="ir.ui.view">
+            <field name="name">ir.actions.todo.category.form</field>
+            <field name="model">ir.actions.todo.category</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Wizard Category">
+                        <field name="name"/>
+                        <field name="sequence"/>
+                </form>
+            </field>
+        </record>
+        
+        <record id="ir_actions_todo_category_tree" model="ir.ui.view">
+            <field name="name">ir.actions.todo.category.tree</field>
+            <field name="model">ir.actions.todo.category</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Wizard Category">
+                        <field name="name"/>
+                        <field name="sequence"/>
+                </tree>
+            </field>
         </record>
 
     </data>

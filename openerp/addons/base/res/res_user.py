@@ -508,58 +508,6 @@ class users(osv.osv):
 
 users()
 
-class config_users(osv.osv_memory):
-    _name = 'res.config.users'
-    _inherit = ['res.users', 'res.config']
-
-    def _generate_signature(self, cr, name, email, context=None):
-        return _('--\n%(name)s %(email)s\n') % {
-            'name': name or '',
-            'email': email and ' <'+email+'>' or '',
-            }
-
-    def create_user(self, cr, uid, new_id, context=None):
-        """ create a new res.user instance from the data stored
-        in the current res.config.users.
-
-        If an email address was filled in for the user, sends a mail
-        composed of the return values of ``get_welcome_mail_subject``
-        and ``get_welcome_mail_body`` (which should be unicode values),
-        with the user's data %-formatted into the mail body
-        """
-        base_data = self.read(cr, uid, new_id, context=context)
-        partner_id = self.pool.get('res.partner').main_partner(cr, uid)
-        address = self.pool.get('res.partner.address').create(
-            cr, uid, {'name': base_data['name'],
-                      'email': base_data['email'],
-                      'partner_id': partner_id,},
-            context)
-        user_data = dict(
-            base_data,
-            signature=self._generate_signature(
-                cr, base_data['name'], base_data['email'], context=context),
-            address_id=address,
-            )
-        new_user = self.pool.get('res.users').create(
-            cr, uid, user_data, context)
-        self.send_welcome_email(cr, uid, new_user, context=context)
-    def execute(self, cr, uid, ids, context=None):
-        'Do nothing on execution, just launch the next action/todo'
-        pass
-    def action_add(self, cr, uid, ids, context=None):
-        'Create a user, and re-display the view'
-        self.create_user(cr, uid, ids[0], context=context)
-        return {
-            'view_type': 'form',
-            "view_mode": 'form',
-            'res_model': 'res.config.users',
-            'view_id':self.pool.get('ir.ui.view')\
-                .search(cr,uid,[('name','=','res.config.users.confirm.form')]),
-            'type': 'ir.actions.act_window',
-            'target':'new',
-            }
-config_users()
-
 class groups2(osv.osv): ##FIXME: Is there a reason to inherit this object ?
     _inherit = 'res.groups'
     _columns = {
