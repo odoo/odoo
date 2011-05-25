@@ -234,6 +234,56 @@
           <field name="type">normal</field>
           <field name="state">cancel</field>
       </record>      
+
+            <!--        Specify Your Terminology Config Wiz-->
+
+     <record id="view_partner_terminology_config_form" model="ir.ui.view">
+          <field name="name">Specify Your Terminology</field>
+          <field name="model">specify.partner.terminology</field>
+          <field name="type">form</field>
+          <field name="inherit_id" ref="base.res_config_view_base"/>
+         <field name="arch" type="xml">
+            <data>
+              <form position="attributes">
+                <attribute name="string">Specify Your Terminology</attribute>
+              </form>
+            <xpath expr='//separator[@string="title"]' position='attributes'>
+                  <attribute name='string'>Specify Your Terminology</attribute>
+            </xpath>
+            <xpath expr="//label[@string='description']"
+               position="attributes">
+              <attribute name="string">Based on the industry needs you can use this wizard to change the terminologies for Partners. </attribute>
+            </xpath>
+            <xpath expr='//separator[@string="vsep"]' position='attributes'>
+                  <attribute name='string'></attribute>
+                 <attribute name='rowspan'>12</attribute>
+            </xpath>
+             <group string="res_config_contents" position="replace">
+                    <group colspan="4">
+                        <field colspan="4" name="partner" />
+                  </group>
+              </group>
+            </data>
+          </field>
+      </record>
+
+      <record id="action_partner_terminology_config_form" model="ir.actions.act_window">
+          <field name="name">Specify Your Terminology</field>
+          <field name="type">ir.actions.act_window</field>
+          <field name="res_model">specify.partner.terminology</field>
+          <field name="view_type">form</field>
+          <field name="view_id" ref="view_partner_terminology_config_form"/>
+          <field name="view_mode">form</field>
+          <field name="target">new</field>
+      </record>
+
+      <!--   Register configuration wizard -->
+     
+      <record id="config_action_partner_terminology_config_form" model="ir.actions.todo">
+          <field name="action_id" ref="action_partner_terminology_config_form"/>
+          <field name="type">normal</field>
+          <field name="state">skip</field>
+      </record>      
        
   </data>
 </openerp>
