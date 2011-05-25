@@ -84,22 +84,18 @@
                          type="action" 
                          colspan="2"/>
                     <newline/>
-					
-
-					<group colspan="2" col="2">
-    					<field name="method_time"/>
-						<field name="method_delay"/>
-                   		<field name="method_period" attrs="{'invisible':[('method_time','=','end')]}"/>                
-               		</group>
-
-					<group colspan="2" col="3">
-    					<field name="method"/>
-						<newline/>
-	                    <field name="method_progress_factor" attrs="{'invisible':[('method','=','linear')]}"/>
-						<newline/>
-						<field name="prorata" colspan="1"/>
-               		</group>
-                    
+                    <group colspan="2" col="2">
+                        <field name="method_time"/>
+                        <field name="method_delay"/>
+                        <field name="method_period" attrs="{'invisible':[('method_time','=','end')]}"/>                
+                    </group>
+                    <group colspan="2" col="3">
+                        <field name="method"/>
+                        <newline/>
+                        <field name="method_progress_factor" attrs="{'invisible':[('method','=','linear')]}"/>
+                        <newline/>
+                        <field name="prorata" colspan="1"/>
+                    </group>
                     <newline/>
                  </page>
                  <page string="Depreciation board">
