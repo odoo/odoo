@@ -61,9 +61,8 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
             columns: this.columns
         });
         $(this.groups).bind({
-            'selected': function (e, selection) {
-                self.$element.find('#oe-list-delete')
-                    .toggle(!!selection.length);
+            'selected': function (e, ids, records) {
+                self.do_select(ids, records);
             },
             'deleted': function (e, ids) {
                 self.do_delete(ids);
@@ -331,6 +330,16 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
         });
     },
     /**
+     * Handles the signal indicating that a new record has been selected
+     *
+     * @param {Array} ids selected record ids
+     * @param {Array} records selected record values
+     */
+    do_select: function (ids, records) {
+        this.$element.find('#oe-list-delete')
+            .toggle(!!ids.length);
+    },
+    /**
      * Handles signal for the addition of a new record (can be a creation,
      * can be the addition from a remote source, ...)
      *
@@ -344,7 +353,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
      * Handles deletion of all selected lines
      */
     do_delete_selected: function () {
-        this.do_delete(this.groups.get_selection());
+        this.do_delete(this.groups.get_selection().ids);
     }
     // TODO: implement reorder (drag and drop rows)
 });
@@ -389,7 +398,8 @@ openerp.base.ListView.List = Class.extend( /** @lends openerp.base.ListView.List
             .appendTo(document.body)
             .delegate('th.oe-record-selector', 'click', function (e) {
                 e.stopPropagation();
-                $(self).trigger('selected', [self.get_selection()]);
+                var selection = self.get_selection();
+                $(self).trigger('selected', [selection.ids, selection.records]);
             })
             .delegate('td.oe-record-delete button', 'click', function (e) {
                 e.stopPropagation();
@@ -422,17 +432,24 @@ openerp.base.ListView.List = Class.extend( /** @lends openerp.base.ListView.List
     },
     /**
      * Gets the ids of all currently selected records, if any
-     * @returns {Array} empty if no record is selected (or the list view is not selectable)
+     * @returns {Object} object with the keys ``ids`` and ``records``, holding respectively the ids of all selected records and the records themselves.
      */
     get_selection: function () {
         if (!this.options.selectable) {
             return [];
         }
         var rows = this.rows;
-        return this.$current.find('th.oe-record-selector input:checked')
-                .closest('tr').map(function () {
-            return rows[$(this).prevAll().length].data.id.value;
-        }).get();
+        var result = {ids: [], records: []};
+        this.$current.find('th.oe-record-selector input:checked')
+                .closest('tr').each(function () {
+            var record = {};
+            _(rows[$(this).prevAll().length].data).each(function (obj, key) {
+                record[key] = obj.value;
+            });
+            result.ids.push(record.id);
+            result.records.push(record);
+        });
+        return result;
     },
     /**
      * Returns the index of the row in the list of rows.
@@ -615,7 +632,8 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
              self = this;
         $(child).bind('selected', function (e) {
             // can have selections spanning multiple links
-            $this.trigger(e, [self.get_selection()]);
+            var selection = self.get_selection();
+            $this.trigger(e, [selection.ids, selection.records]);
         }).bind('action', function (e, name, id, callback) {
             if (!callback) {
                 callback = function () {
@@ -683,15 +701,20 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
         return $element;
     },
     /**
-     * Returns the ids of all selected records for this group
+     * Returns the ids of all selected records for this group, and the records
+     * themselves
      */
     get_selection: function () {
-        return _(this.children).chain()
-            .map(function (child) {
-                return child.get_selection();
-            })
-            .flatten()
-            .value();
+        var ids = [], records = [];
+
+        _(this.children)
+            .each(function (child) {
+                var selection = child.get_selection();
+                ids.push.apply(ids, selection.ids);
+                records.push.apply(records, selection.records);
+            });
+
+        return {ids: ids, records: records};
     },
     apoptosis: function () {
         _(this.children).each(function (child) {
