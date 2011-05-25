@@ -36,8 +36,10 @@ upload the report using the same wizard.
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['base'],
-    'init_xml': ['wizard/base_report_design_view.xml'],
-    'update_xml': ['base_report_designer_installer.xml'],
+    'init_xml': [],
+    'update_xml': ['base_report_designer_installer.xml',
+                   'wizard/base_report_design_view.xml'
+            ],
     'demo_xml': [],
     'installable': True,
     'active': False,
