@@ -806,6 +806,7 @@ class sugar_import(import_framework):
         import user
     """  
     def import_user(self, val):
+        print 'user_val', val
         user_obj = self.obj.pool.get('res.users')
         user_ids = user_obj.search(self.cr, self.uid, [('login', '=', val.get('user_name'))])
         if user_ids: 
@@ -835,6 +836,7 @@ class sugar_import(import_framework):
                 'password' : 'password',
                 '.id' : '.id',
                 'context_department_id/id': self.get_users_department,
+                'user_email' : 'email1',
             }
         }
 
