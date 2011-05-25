@@ -623,7 +623,7 @@ class sugar_import(import_framework):
     def get_lead_mapping(self):
         return {
             'model' : 'crm.lead',
-            'dependencies' : [self.TABLE_COMPAIGN],
+            'dependencies' : [self.TABLE_COMPAIGN, self.TABLE_USER],
             'hook' : self.import_lead,
             'map' : {
                 'name': concat('first_name', 'last_name'),
@@ -656,11 +656,6 @@ class sugar_import(import_framework):
     """
         import contact
     """
-    def get_email(self, val):
-        email_address = sugar.get_contact_by_email(self.context.get('port'), self.context.get('username'), self.context.get('password'), val.get('email1'))
-        if email_address:
-            return ','.join(email_address) 
-    
     def import_contact(self, val):
         if val.get('primary_address_country'):
             country_id = self.get_all_countries(val.get('primary_address_country'))
@@ -686,7 +681,7 @@ class sugar_import(import_framework):
                 'city': 'primary_address_city',
                 'country_id/id': 'country_id/id',
                 'state_id/id': 'state_id/id',
-                'email': self.get_email,
+                'email': concat('email1', 'email2', delimiter=','),
                 'type': const('contact')
             }
         }
@@ -772,7 +767,7 @@ class sugar_import(import_framework):
             'state_id/id': 'state_id/id',
             'street': 'address_street',
             'zip': 'address_postalcode',
-            'fax': 'fax',
+            'fax': 'phone_fax',
             'phone': 'phone_work',
             'mobile':'phone_mobile',
             'email': 'email1'
@@ -799,6 +794,8 @@ class sugar_import(import_framework):
                 'address_home_id/id': self.get_user_address,
                 'notes': ppconcat('messenger_type', 'messenger_id', 'description'),
                 'job_id/id': self.get_job_id,
+                'work_email' : 'email1',
+                'coach_id/id_parent' : 'reports_to_id',
             }
      }
     
@@ -806,7 +803,6 @@ class sugar_import(import_framework):
         import user
     """  
     def import_user(self, val):
-        print 'user_val', val
         user_obj = self.obj.pool.get('res.users')
         user_ids = user_obj.search(self.cr, self.uid, [('login', '=', val.get('user_name'))])
         if user_ids: 
@@ -840,6 +836,7 @@ class sugar_import(import_framework):
             }
         }
 
+
     def get_mapping(self):
         return {
             self.TABLE_USER : self.get_user_mapping(),
@@ -861,6 +858,10 @@ class sugar_import(import_framework):
             self.TABLE_COMPAIGN: self.get_compaign_mapping()
             
         }
+        
+    """
+        Email notification
+    """   
     def get_email_subject(self, result):
         return "your sugarcrm data were successfully imported at %s" % self.date_ended 
     
