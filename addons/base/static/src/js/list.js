@@ -205,6 +205,19 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
         this.visible_columns = _.filter(this.columns, function (column) {
             return column.invisible !== '1';
         });
+
+        this.aggregate_columns = _(this.columns).chain()
+            .filter(function (column) {
+                    return column['sum'] || column['avg'];})
+            .map(function (column) {
+                var func = column['sum'] ? 'sum' : 'avg';
+                return {
+                    field: column.id,
+                    type: column.type,
+                    'function': func,
+                    label: column[func]
+                };
+            }).value();
     },
     /**
      * Used to handle a click on a table row, if no other handler caught the
@@ -294,6 +307,8 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
             }
             self.do_reload(results.group_by).then(function () {
                 self.$element.find('table').append(self.groups.render());
+            }).then(function () {
+                self.compute_aggregates();
             });
         });
     },
@@ -338,6 +353,12 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
     do_select: function (ids, records) {
         this.$element.find('#oe-list-delete')
             .toggle(!!ids.length);
+
+        if (!records.length) {
+            this.compute_aggregates();
+            return;
+        }
+        this.compute_aggregates(records);
     },
     /**
      * Handles signal for the addition of a new record (can be a creation,
@@ -354,6 +375,89 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
      */
     do_delete_selected: function () {
         this.do_delete(this.groups.get_selection().ids);
+    },
+    /**
+     * Computes the aggregates for the current list view, either on the
+     * records provided or on the records of the internal
+     * :js:class:`~openerp.base.ListView.Group`, by calling
+     * :js:func:`~openerp.base.ListView.group.get_records`.
+     *
+     * Then displays the aggregates in the table through
+     * :js:method:`~openerp.base.ListView.display_aggregates`.
+     *
+     * @param {Array} [records]
+     */
+    compute_aggregates: function (records) {
+        if (_.isEmpty(this.aggregate_columns)) {
+            return;
+        }
+        if (_.isEmpty(records)) {
+            records = this.groups.get_records();
+        }
+
+        var aggregator = this.build_aggregator(this.aggregate_columns);
+        this.display_aggregates(
+            _(records).reduce(aggregator, aggregator).value());
+    },
+    /**
+     * Creates a stateful callable aggregator object, which can be reduced over
+     * a collection of records in order to build the aggregations described
+     * by the parameter
+     *
+     * @param {Array} aggregation_descriptors
+     */
+    build_aggregator: function (aggregation_descriptors) {
+        var values = {};
+        var descriptors = {};
+        _(aggregation_descriptors).each(function (descriptor) {
+            values[descriptor.field] = [];
+            descriptors[descriptor.field] = descriptor;
+        });
+
+        var aggregator = function (_i, record) {
+            _(values).each(function (collection, key) {
+                collection.push(record[key]);
+            });
+
+            return aggregator;
+        };
+        aggregator.value = function () {
+            var result = {};
+
+            _(values).each(function (collection, key) {
+                var value;
+                switch(descriptors[key]['function']) {
+                    case 'avg':
+                        value = (_(collection).chain()
+                                .filter(function (item) {
+                                    return !_.isUndefined(item); })
+                                .reduce(function (total, item) {
+                                    return total + item; }, 0).value()
+                            / collection.length);
+                        break;
+                    case 'sum':
+                         value = (_(collection).chain()
+                            .filter(function (item) {
+                                return !_.isUndefined(item); })
+                            .reduce(function (total, item) {
+                                return total + item; }, 0).value());
+                        break;
+                }
+                result[key] = value;
+            });
+
+            return result;
+        };
+        
+        return aggregator;
+    },
+    display_aggregates: function (aggregation) {
+        var $footer = this.$element.find('.oe-list-footer');
+        $footer.text(
+            _(this.aggregate_columns).map(function (column) {
+                return _.sprintf(
+                        "%s: %.2f", column.label, aggregation[column.field]);
+            }).join(' '));
     }
     // TODO: implement reorder (drag and drop rows)
 });
@@ -477,6 +581,15 @@ openerp.base.ListView.List = Class.extend( /** @lends openerp.base.ListView.List
         if (!this.$current) { return; }
         this.$current.remove();
         this.$current = null;
+    },
+    get_records: function () {
+        return _(this.rows).map(function (row) {
+            var record = {};
+            _(row.data).each(function (obj, key) {
+                record[key] = obj.value;
+            });
+            return record;
+        });
     }
     // drag and drop
     // editable?
@@ -722,6 +835,12 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
         });
         $(this.elements).remove();
         return this;
+    },
+    get_records: function () {
+        return _(this.children).chain()
+            .map(function (child) {
+                return child.get_records();
+            }).flatten().value();
     }
 });
 };

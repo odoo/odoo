@@ -205,6 +205,13 @@
             <th t-if="options.deletable"/>
         </tr>
     </thead>
+    <tfoot class="ui-widget-header" t-if="aggregate_columns.length">
+        <tr>
+            <td t-att-colspan="columns_count" class='oe-list-footer'>
+                
+            </td>
+        </tr>
+    </tfoot>
 </table>
 <t t-name="ListView.rows" t-foreach="rows" t-as="row">
     <t t-call="ListView.row">
