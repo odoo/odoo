@@ -298,6 +298,11 @@ class osv_memory(osv_base, orm.orm_memory):
                 nattr = {}
                 for s in ('_columns', '_defaults'):
                     new = copy.copy(getattr(pool.get(parent_name), s))
+                    if s == '_columns':
+                        # Don't _inherit custom fields.
+                        for c in new.keys():
+                            if new[c].manual:
+                                del new[c]
                     if hasattr(new, 'update'):
                         new.update(cls.__dict__.get(s, {}))
                     else:
@@ -332,6 +337,11 @@ class osv(osv_base, orm.orm):
                 nattr = {}
                 for s in ('_columns', '_defaults', '_inherits', '_constraints', '_sql_constraints'):
                     new = copy.copy(getattr(pool.get(parent_name), s))
+                    if s == '_columns':
+                        # Don't _inherit custom fields.
+                        for c in new.keys():
+                            if new[c].manual:
+                                del new[c]
                     if hasattr(new, 'update'):
                         new.update(cls.__dict__.get(s, {}))
                     else:

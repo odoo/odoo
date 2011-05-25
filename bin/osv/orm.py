@@ -2826,6 +2826,7 @@ class orm(orm_template):
                     'size': field['size'],
                     'ondelete': field['on_delete'],
                     'translate': (field['translate']),
+                    'manual': True,
                     #'select': int(field['select_level'])
                 }
 

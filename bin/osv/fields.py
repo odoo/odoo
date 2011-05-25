@@ -63,7 +63,13 @@ class _column(object):
     _symbol_set = (_symbol_c, _symbol_f)
     _symbol_get = None
 
-    def __init__(self, string='unknown', required=False, readonly=False, domain=None, context=None, states=None, priority=0, change_default=False, size=None, ondelete="set null", translate=False, select=False, **args):
+    def __init__(self, string='unknown', required=False, readonly=False, domain=None, context=None, states=None, priority=0, change_default=False, size=None, ondelete="set null", translate=False, select=False, manual=False, **args):
+        """
+
+        The 'manual' kayword argument specify if the field is a custom one. It
+        correspond to the 'state' column in ir_model_fields.
+
+        """
         if domain is None:
             domain = []
         if context is None:
@@ -84,6 +90,7 @@ class _column(object):
         self.read = False
         self.view_load = 0
         self.select = select
+        self.manual = manual
         self.selectable = True
         self.group_operator = args.get('group_operator', False)
         for a in args:
