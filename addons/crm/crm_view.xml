@@ -137,6 +137,23 @@
                 </form>
             </field>
         </record>
+        
+        <!--  CRM Stage Search View -->
+        
+		<record model="ir.ui.view" id="crm_case_stage_search_view">
+		    <field name="name">crm.case.stage.search.view</field>
+		    <field name="model">crm.case.stage</field>
+		    <field name="type">search</field>
+		    <field name="arch" type="xml">
+		        <search string="Stages">
+		            <group col="4" >
+		                <filter string="Lead" domain="[('type','=', 'lead')]" icon="terp-stage" help="Lead Stage"/>
+		                <filter string="Opportunity" domain="[('type','=', 'opportunity')]" icon="terp-stage" help="Opportunity Stage"/>
+		                <field name="name" select="1"/>
+		            </group>
+		        </search>
+        	</field>
+		</record>
 
         <!-- CRM Stage Action -->
 
