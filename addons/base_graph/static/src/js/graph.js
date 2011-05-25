@@ -304,8 +304,8 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
             group_by_seq: groupbys
         }, function (results) {
             // TODO: handle non-empty results.group_by with read_group
-            if(contexts[0]['group_by'] && contexts[0]['group_by'] != ''){
-                self.chart_info_fields[0] = contexts[0]['group_by'];
+            if(results.context['group_by']){
+                self.chart_info_fields[0] = results.context['group_by'];
             }
             else{
                 self.chart_info_fields[0] = self.chart_info;
