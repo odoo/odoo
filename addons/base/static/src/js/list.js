@@ -581,6 +581,7 @@ openerp.base.ListView.List = Class.extend( /** @lends openerp.base.ListView.List
         if (!this.$current) { return; }
         this.$current.remove();
         this.$current = null;
+        this.$_element.remove();
     },
     get_records: function () {
         return _(this.rows).map(function (row) {
