@@ -84,7 +84,8 @@ class Change( unohelper.Base, XJobExecutor ):
                 if value==protocol:
                     protocol=key
                     break
-                
+        else:
+            protocol='XML-RPC'
         self.win=DBModalDialog(60, 50, 120, 90, "Connect to Open ERP Server")
 
         self.win.addFixedText("lblVariable", 38, 12, 25, 15, "Server  ")
@@ -101,7 +102,7 @@ class Change( unohelper.Base, XJobExecutor ):
         self.win.addButton( 'btnNext', -2, -5, 30, 15, 'Next', actionListenerProc = self.btnNext_clicked )
 
         self.win.addButton( 'btnCancel', -2 - 30 - 5 ,-5, 30, 15, 'Cancel', actionListenerProc = self.btnCancel_clicked )
- 
+       
         for i in self.protocol.keys():
             self.lstProtocol.addItem(i,self.lstProtocol.getItemCount() )
         self.win.doModalDialog( "lstProtocol",  protocol)
