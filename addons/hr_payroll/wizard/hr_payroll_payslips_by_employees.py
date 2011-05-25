@@ -32,8 +32,8 @@ class hr_payslip_employees(osv.osv_memory):
     _description = 'Generate payslips for all selected employees'
     _columns = {
         'employee_ids': fields.many2many('hr.employee', 'hr_employee_group_rel', 'payslip_id', 'employee_id', 'Employees'),
-        'date_from': fields.date('Date From', readonly=False, help='Starting date of the payslips generated from here.'),
-        'date_to': fields.date('Date To', readonly=False, help='Ending date of the payslips generated from here.'),
+        'date_from': fields.date('Date From', required=True, help='Starting date of the payslips generated from here.'),
+        'date_to': fields.date('Date To', required=True, help='Ending date of the payslips generated from here.'),
         'credit_note': fields.boolean('Credit Note', readonly=False, help='If its checked, indicates that generated payslips are refund payslips.'),
     }
     
@@ -51,15 +51,14 @@ class hr_payslip_employees(osv.osv_memory):
             context = {}
         run_pool = self.pool.get('hr.payslip.run')
         res = super(hr_payslip_employees, self).default_get(cr, uid, fields, context=context)
-        active_id = context and context.get('active_id', False)
-        if active_id:
-            data = run_pool.read(cr, uid, active_id, ['date_start', 'date_end', 'credit_note'])
+        if context and context.get('active_id', False):
+            data = run_pool.read(cr, uid, context['active_id'], ['date_start', 'date_end', 'credit_note'])
             if 'date_from' in fields:
-                res.update({'date_from': data['date_start']})
+                res.update({'date_from': data.get('date_start', False)})
             if 'date_to' in fields:
-                res.update({'date_to': data['date_end']})
+                res.update({'date_to': data.get('date_end', False)})
             if 'credit_note' in fields:
-                res.update({'credit_note': data['credit_note']})
+                res.update({'credit_note': data.get('credit_note', False)})
         return res
 
     def compute_sheet(self, cr, uid, ids, context=None):
