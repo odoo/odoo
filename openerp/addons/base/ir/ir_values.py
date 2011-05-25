@@ -144,7 +144,9 @@ class ir_values(osv.osv):
             ids_res.append(self.create(cr, uid, vals))
         return ids_res
 
-    def get(self, cr, uid, key, key2, models, meta=False, context={}, res_id_req=False, without_user=True, key2_req=True):
+    def get(self, cr, uid, key, key2, models, meta=False, context=None, res_id_req=False, without_user=True, key2_req=True):
+        if context is None:
+            context = {}
         result = []
         for m in models:
             if isinstance(m, (list, tuple)):

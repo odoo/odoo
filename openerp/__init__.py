@@ -20,7 +20,6 @@
 ##############################################################################
 
 import addons
-import ir
 import loglevels
 import netsvc
 import osv
