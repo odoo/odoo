@@ -27,12 +27,14 @@ from datetime import datetime
 from dateutil import relativedelta
 
 from report import report_sxw
+from tools.safe_eval import safe_eval as eval
 
 class contribution_register_report(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
         super(contribution_register_report, self).__init__(cr, uid, name, context)
         self.localcontext.update({
             'get_payslip_lines': self._get_payslip_lines,
+            'sum_total': self.sum_total,
         })
 
     def set_context(self, objects, data, ids, report_type=None):
@@ -40,12 +42,16 @@ class contribution_register_report(report_sxw.rml_parse):
         self.date_to = data['form'].get('date_to', str(datetime.now() + relativedelta.relativedelta(months=+1, day=1, days=-1))[:10])
         return super(contribution_register_report, self).set_context(objects, data, ids, report_type=report_type)
 
+    def sum_total(self):
+        return self.regi_total
+
     def _get_payslip_lines(self, obj):
         payslip_obj = self.pool.get('hr.payslip')
         payslip_line = self.pool.get('hr.payslip.line')
+        localdict = {}
         res = []
         result = {}
-
+        self.regi_total = 0.0
         self.cr.execute("SELECT pl.id, pl.slip_id from hr_payslip_line as pl "\
                         "LEFT JOIN hr_payslip AS hp on (pl.slip_id = hp.id) "\
                         "WHERE (hp.date_from >= %s) AND (hp.date_to <= %s) "\
@@ -57,15 +63,15 @@ class contribution_register_report(report_sxw.rml_parse):
             result.setdefault(x[1], [])
             result[x[1]].append(x[0])
         for key, value in result.iteritems():
-            res.append({
-                'payslip_name': payslip_obj.browse(self.cr, self.uid, [key])[0].name,
-            })
             for line in payslip_line.browse(self.cr, self.uid, value):
                 res.append({
+                            'payslip_name': payslip_obj.browse(self.cr, self.uid, [key])[0].name,
                             'name': line.name,
                             'code': line.code,
                             'total': line.total,
+                            'quantity': line.quantity
                 })
+                self.regi_total += line.total
         return res
 
 report_sxw.report_sxw('report.contribution.register.lines', 'hr.contribution.register', 'hr_payroll/report/report_contribution_register.rml', parser=contribution_register_report)
