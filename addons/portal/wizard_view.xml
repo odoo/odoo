@@ -27,9 +27,15 @@
             <field name="arch" type="xml">
                 <form string="Create Portal Users">
                     <field name="portal_id" widget="selection" colspan="4"/>
-                    <field name="message" colspan="4"/>
-                    <separator string="Users to create" colspan="4"/>
-                    <field name="user_ids" nolabel="1" colspan="4"/>
+                    <notebook colspan="4">
+                        <page string="Users">
+                            <field name="user_ids" nolabel="1" colspan="4"/>
+                        </page>
+                        <page string="Invitation message">
+                            <label string="The following text will be included in the welcome email sent to users."/>
+                            <field name="message" nolabel="1" colspan="4"/>
+                        </page>
+                    </notebook>
                     <label colspan="2"/>
                     <button string="Cancel" special="cancel" icon="gtk-cancel"/>
                     <button string="Create Users"
