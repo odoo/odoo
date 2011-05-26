@@ -57,7 +57,6 @@ class sugar_import(import_framework):
     TABLE_CASE = 'Cases'
     TABLE_NOTE = 'Notes'
     TABLE_EMAIL = 'Emails'
-    TABLE_DOCUMENT = 'DocumentRevisions'
     TABLE_COMPAIGN = 'Campaigns'
     TABLE_HISTORY_ATTACHMNET = 'history_attachment'
     
@@ -70,7 +69,6 @@ class sugar_import(import_framework):
         self.context['session_id'] = sessionid
         
     def get_data(self, table):
-        
         return sugar.search(self.context.get('port'), self.context.get('session_id'), table)
     """
     Common import method
@@ -123,41 +121,13 @@ class sugar_import(import_framework):
         return attach_xml_id    
     
     """
-    import Documents
-    """
-    #THIS IS A JOKE ? NOT FUNNY
-    def import_document(self, val):
-        filepath = '/home/openerp/Public/sugarcrm/cache/upload/'+ val.get('id')
-        f = open(filepath, "r")
-        datas = f.read()
-        f.close()
-        val['datas'] = base64.encodestring(datas)
-        val['datas_fname'] = val.get('filename')
-        return val   
-        
-    def get_document_mapping(self): 
-        return { 
-                'model' : 'ir.attachment',
-                'dependencies' : [self.TABLE_USER],
-                'hook' : self.import_document,
-                'map' : {'name':'filename',
-                         'description': ppconcat('description'),
-                         'datas': 'datas',
-                         'datas_fname': 'datas_fname',
-                }
-            }     
-    
-    """
     import Emails
     """
-    
     def import_email(self, val):
-        print 'import email'
         model_obj =  self.obj.pool.get('ir.model.data')
         xml_id = self.xml_id_exist(val.get('parent_type'), val.get('parent_id'))
         model_ids = model_obj.search(self.cr, self.uid, [('name', 'like', xml_id)])
         if model_ids:
-            print 'model_id', xml_id, model_ids
             model = model_obj.browse(self.cr, self.uid, model_ids)[0]
             if model.model == 'res.partner':
                 val['partner_id/.id'] = model.res_id
@@ -449,8 +419,8 @@ class sugar_import(import_framework):
                     'description': ppconcat('description'),   
                     'state': map_val('status', self.call_state)                      
                 }
-            }        
-        
+            }       
+         
     """
         import meeting
     """
@@ -489,6 +459,7 @@ class sugar_import(import_framework):
         return self.mapped_id_if_exist('res.alarm', [('name', 'like', alarm_dict.get(val))], 'alarm', val)
     
     #TODO attendees
+
     def import_meeting(self, val):
         attendee_id = self.get_attendee_id(self.cr, self.uid, 'Meetings', val.get('id')) #TODO
         val['attendee_ids/id'] = attendee_id
@@ -497,7 +468,7 @@ class sugar_import(import_framework):
     def get_meeting_mapping(self):
         return { 
                 'model' : 'crm.meeting',
-                'dependencies' : [self.TABLE_CONTACT, self.TABLE_OPPORTUNITY, self.TABLE_LEAD],
+                'dependencies' : [self.TABLE_CONTACT, self.TABLE_OPPORTUNITY, self.TABLE_LEAD, self.TABLE_TASK],
                 'hook': self.import_meeting,
                 'map' : {
                     'name': 'name',
@@ -553,8 +524,8 @@ class sugar_import(import_framework):
         return partner_contact_id, partner_contact_email
 
     def import_opp(self, val):    
-        partner_contact_name, partner_contact_email = self.import_opportunity_contact(val)
-        val['partner_address_id/id'] = partner_contact_name
+        partner_contact_id, partner_contact_email = self.import_opportunity_contact(val)
+        val['partner_address_id/id'] = partner_contact_id
         val['email_from'] = partner_contact_email
         return val
     
@@ -740,7 +711,7 @@ class sugar_import(import_framework):
                     'customer': const('1'),
                     'supplier': const('0'),
                     'address/id':'address/id', 
-                    'parent_id/id_parent' : 'parent_id',
+                    'parent_id/id_parent' : ref(self.TABLE_ACCOUNT,'parent_id'),
                     'address/id' : self.get_partner_address,
                 }
         }
@@ -854,9 +825,7 @@ class sugar_import(import_framework):
             self.TABLE_CASE: self.get_crm_claim_mapping(),
             self.TABLE_NOTE: self.get_history_mapping(),
             self.TABLE_EMAIL: self.get_email_mapping(),
-            self.TABLE_DOCUMENT: self.get_document_mapping(),
             self.TABLE_COMPAIGN: self.get_compaign_mapping()
-            
         }
         
     """
@@ -878,47 +847,41 @@ class import_sugarcrm(osv.osv):
                
         'username': fields.char('User Name', size=64, required=True),
         'password': fields.char('Password', size=24,required=True),
-         'url' : fields.char('Service', size=264, required=True, help="Connection with Sugarcrm Using Soap Protocol Services and For that Path should be 'http://localhost/sugarcrm/soap.php' Format."),
+         'url' : fields.char('SugarSoap Api url:', size=264, required=True, help="Webservice's url where to get the data.'\
+                                            exemple : http://example.com/sugarcrm/soap.php, or any address you see in your address bar http://trial.sugarcrm.com/qbquyj4802/index.php?module=Home&action=index"),
                 
         'opportunity': fields.boolean('Leads and Opportunities', help="If Opportunities are checked, SugarCRM opportunities data imported in OpenERP crm-Opportunity form"),
-        'user': fields.boolean('Users', help="If Users  are checked, SugarCRM Users data imported in OpenERP Users form"),
         'contact': fields.boolean('Contacts', help="If Contacts are checked, SugarCRM Contacts data imported in OpenERP partner address form"),
         'account': fields.boolean('Accounts', help="If Accounts are checked, SugarCRM  Accounts data imported in OpenERP partners form"),
         'employee': fields.boolean('Employee', help="If Employees is checked, SugarCRM Employees data imported in OpenERP employees form"),
-        'meeting': fields.boolean('Meetings', help="If Meetings is checked, SugarCRM Meetings data imported in OpenERP meetings form"),
+        'meeting': fields.boolean('Meetings', help="If Meetings is checked, SugarCRM Meetings and Meeting Tasks data imported in OpenERP meetings form"),
         'call': fields.boolean('Calls', help="If Calls is checked, SugarCRM Calls data imported in OpenERP phonecalls form"),
-        'claim': fields.boolean('Claims', help="If Claims is checked, SugarCRM Claims data imported in OpenERP Claims form"),
-        'email': fields.boolean('Emails', help="If Emails is checked, SugarCRM Emails data imported in OpenERP Emails form"),
+        'claim': fields.boolean('Cases', help="If Cases is checked, SugarCRM Cases data imported in OpenERP Claims form"),
+        'email_history': fields.boolean('Email and History',help="If Email and History is checked, SugarCRM Notes and Emails data imported in OpenERP's Related module's History with attachment"),
         'project': fields.boolean('Projects', help="If Projects is checked, SugarCRM Projects data imported in OpenERP Projects form"),
         'project_task': fields.boolean('Project Tasks', help="If Project Tasks is checked, SugarCRM Project Tasks data imported in OpenERP Project Tasks form"),
-        'task': fields.boolean('Tasks', help="If Tasks is checked, SugarCRM Tasks data imported in OpenERP Meetings form"),
         'bug': fields.boolean('Bugs', help="If Bugs is checked, SugarCRM Bugs data imported in OpenERP Project Issues form"),
-        'attachment': fields.boolean('Attachments', help="If Attachments is checked, SugarCRM Notes data imported in OpenERP's Related module's History with attachment"),
-        'document': fields.boolean('Documents', help="If Documents is checked, SugarCRM Documents data imported in OpenERP Document Form"),
         'email_from': fields.char('Notify End Of Import To:', size=128),
         'instance_name': fields.char("Instance's Name", size=64, help="Prefix of SugarCRM id to differentiate xml_id of SugarCRM models datas come from different server."),
         
     }
     _defaults = {#to be set to true, but easier for debugging
        'opportunity': False,
-       'user' : False,
        'contact' : False,
        'account' : False,
         'employee' : False,
         'meeting' : False,
-        'task' : False,
         'call' : False,
         'claim' : False,    
-        'email' : False, 
+        'email_history' : False, 
         'project' : False,   
         'project_task': False,     
         'bug': False,
-        'document': False,
         'instance_name': 'sugarcrm',
         'email_from': 'tfr@openerp.com',
         'username' : 'tfr',
         'password' : 'a',
-        'url':  "http://localhost/sugarcrm/soap.php"        
+        'url':  "http://trial.sugarcrm.com/qbquyj4802/index.php?module=Home&action=index"        
     }
     
     def get_key(self, cr, uid, ids, context=None):
@@ -931,8 +894,6 @@ class import_sugarcrm(osv.osv):
             if current.opportunity:
                 key_list.append('Leads')
                 key_list.append('Opportunities')
-            if current.user:
-                key_list.append('Users')
             if current.contact:
                 key_list.append('Contacts')
             if current.account:
@@ -941,24 +902,19 @@ class import_sugarcrm(osv.osv):
                 key_list.append('Employees')  
             if current.meeting:
                 key_list.append('Meetings')
-            if current.task:
-                key_list.append('Tasks')
             if current.call:
                 key_list.append('Calls')
             if current.claim:
                 key_list.append('Cases')                
-            if current.email:
+            if current.email_history:
                 key_list.append('Emails') 
+                key_list.append('Notes') 
             if current.project:
                 key_list.append('Project')
             if current.project_task:
                 key_list.append('ProjectTask')
             if current.bug:
                 key_list.append('Bugs')
-            if current.attachment:
-                key_list.append('Notes')     
-            if current.document:
-                key_list.append('DocumentRevisions')                                                  
         return key_list
 
 
@@ -966,9 +922,7 @@ class import_sugarcrm(osv.osv):
         """
         scheduler Method
         """
-        print 'args of schedule method', args
         context = {'username': args[4], 'password': args[5], 'url': args[3], 'instance_name': args[3]}
-        print context
         imp = sugar_import(self, cr, uid, args[2], "import_sugarcrm", [args[1]], context)
         imp.set_table_list(args[0])
         imp.start()

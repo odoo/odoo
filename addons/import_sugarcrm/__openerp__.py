@@ -29,7 +29,7 @@
     'website': 'http://www.openerp.com',
     'depends': ['import_base', 'crm_claim', 'project', 'project_issue', 'hr', 'document'],
     'init_xml': [],
-    'update_xml': [
+    'update_xml': ["security/import_sugarcrm_security.xml",
                    "wizard/import_message_view.xml",
                    "import_sugarcrm_view.xml"],
     'demo_xml': [],
