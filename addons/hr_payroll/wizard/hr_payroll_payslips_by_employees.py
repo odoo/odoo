@@ -32,35 +32,8 @@ class hr_payslip_employees(osv.osv_memory):
     _description = 'Generate payslips for all selected employees'
     _columns = {
         'employee_ids': fields.many2many('hr.employee', 'hr_employee_group_rel', 'payslip_id', 'employee_id', 'Employees'),
-        'date_from': fields.date('Date From', required=True, help='Starting date of the payslips generated from here.'),
-        'date_to': fields.date('Date To', required=True, help='Ending date of the payslips generated from here.'),
-        'credit_note': fields.boolean('Credit Note', readonly=False, help='If its checked, indicates that generated payslips are refund payslips.'),
     }
     
-    def default_get(self, cr, uid, fields, context=None):
-        """
-         To get default values for the object.
-         @param self: The object pointer.
-         @param cr: A database cursor
-         @param uid: ID of the user currently logged in
-         @param fields: List of fields for which we want default values
-         @param context: A standard dictionary
-         @return: A dictionary which of fields with values.
-        """
-        if context is None:
-            context = {}
-        run_pool = self.pool.get('hr.payslip.run')
-        res = super(hr_payslip_employees, self).default_get(cr, uid, fields, context=context)
-        if context and context.get('active_id', False):
-            data = run_pool.read(cr, uid, context['active_id'], ['date_start', 'date_end', 'credit_note'])
-            if 'date_from' in fields:
-                res.update({'date_from': data.get('date_start', False)})
-            if 'date_to' in fields:
-                res.update({'date_to': data.get('date_end', False)})
-            if 'credit_note' in fields:
-                res.update({'credit_note': data.get('credit_note', False)})
-        return res
-
     def compute_sheet(self, cr, uid, ids, context=None):
         emp_pool = self.pool.get('hr.employee')
         slip_pool = self.pool.get('hr.payslip')
@@ -69,8 +42,11 @@ class hr_payslip_employees(osv.osv_memory):
         if context is None:
             context = {}
         data = self.read(cr, uid, ids, context=context)[0]
-        from_date =  data.get('date_from', False)
-        to_date = data.get('date_to', False)
+        if context and context.get('active_id', False):
+            run_data = run_pool.read(cr, uid, context['active_id'], ['date_start', 'date_end', 'credit_note'])
+            from_date =  run_data.get('date_start', False)
+            to_date = run_data.get('date_end', False)
+            credit_note = run_data.get('credit_note', False)
         if not data['employee_ids']:
             raise osv.except_osv(_("Warning !"), _("You must select employee(s) to generate payslip(s)"))
         for emp in emp_pool.browse(cr, uid, data['employee_ids'], context=context):
@@ -85,7 +61,7 @@ class hr_payslip_employees(osv.osv_memory):
                 'worked_days_line_ids': [(0, 0, x) for x in slip_data['value'].get('worked_days_line_ids', False)],
                 'date_from': from_date,
                 'date_to': to_date,
-                'credit_note': data.get('credit_note'),
+                'credit_note': credit_note,
             }
             slip_ids.append(slip_pool.create(cr, uid, res, context=context))
         slip_pool.compute_sheet(cr, uid, slip_ids, context=context)
