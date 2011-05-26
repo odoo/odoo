@@ -378,7 +378,7 @@ QWeb2.Engine = (function() {
                             this.tools.exception(error_msg + "Invalid operation : '" + operation + "'");
                         }
                         operation = {'replace' : 'replaceWith', 'inner' : 'html'}[operation] || operation;
-                        target[operation]($(inner));
+                        target[operation](this.jQuery(inner));
                     } else {
                         try {
                             var f = new Function(['$'], inner);
