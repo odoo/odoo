@@ -791,7 +791,7 @@ class hr_salary_rule(osv.osv):
 # employee: hr.employee object
 # contract: hr.contract object
 # rules: rules code (previously computed)
-# categories: object containing the computed salary rule categories.
+# rule_categories: object containing the computed salary rule categories.
 # worked_days: object containing the computed worked days.
 # inputs: object containing the computed inputs.
 
@@ -806,7 +806,7 @@ result = contract.wage * 0.10''',
 # employee: hr.employee object
 # contract: hr.contract object
 # rules: rules code (previously computed)
-# categories: object containing the computed salary rule categories.
+# rule_categories: object containing the computed salary rule categories.
 # worked_days: object containing the computed worked days
 # inputs: object containing the computed inputs
 
