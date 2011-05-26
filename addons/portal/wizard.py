@@ -140,7 +140,7 @@ class wizard(osv.osv_memory):
                 context['lang'] = data['context_lang']
                 data['company'] = user.company_id.name
                 data['db'] = cr.dbname
-                data['url'] = "(missing url)"
+                data['url'] = wiz.portal_id.url or "(missing url)"
                 
                 email_from = user.user_email
                 email_to = data['user_email']

@@ -42,16 +42,25 @@ the portal's users.
             <field name="arch" type="xml">
                 <page string="Users" position="before">
                     <page string="Portal">
-                        <separator string="Portal Menu" colspan="4"/>
-                        <field name="menu_action_id"/>
-                        <field name="override_menu"/>
-                        <field name="parent_menu_id"
-                            context="{'ir.ui.menu.full_list': True}"/>
-                        <button name="do_create_menu" type="object"
-                            string="Create Parent Menu"/>
+                        <group colspan="2" col="2">
+                            <separator string="Website" colspan="2"/>
+                            <field name="url"/>
+                        </group>
+                        <group colspan="2" col="2">
+                            <separator string="Portal Menu" colspan="2"/>
+                            <field name="override_menu"/>
+                            <field name="parent_menu_id"
+                                context="{'ir.ui.menu.full_list': True}"/>
+                            <label colspan="1"/>
+                            <button name="do_create_menu" type="object"
+                                string="Create Parent Menu"/>
+                        </group>
                         <separator string="Other Groups assigned to Users" colspan="2"/>
                         <separator string="Widgets assigned to Users" colspan="2"/>
-                        <field name="other_group_ids" nolabel="1" colspan="2"/>
+                        <!-- load group_id in order to exclude it from other_group_ids -->
+                        <field name="group_id" invisible="1"/>
+                        <field name="other_group_ids" nolabel="1" colspan="2"
+                            domain="[('id', '!=', group_id)]"/>
                         <field name="widget_ids" nolabel="1" colspan="2">
                             <tree string="Widgets" editable="bottom">
                                 <field name="sequence"/>

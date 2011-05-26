@@ -40,6 +40,8 @@ class portal(osv.osv):
             'portal_group_rel', 'portal_id', 'group_id',
             string='Other User Groups',
             help="Those groups are assigned to the portal's users"),
+        'url': fields.char('URL', size=64,
+            help="The url where portal users can connect to the server"),
         'menu_action_id': fields.many2one('ir.actions.act_window', readonly=True,
             # ISSUE: 'ondelete' constraints do not seem effective on this field...
             string='Menu Action',
@@ -192,8 +194,8 @@ class portal_override_menu(osv.osv):
     _columns = {
         'override_menu': fields.function(
             _get_override_menu, fnct_inv=_set_override_menu,
-            type='boolean', method=True, string='Override Users Menu Action',
-            help='Enable this option to create the Menu Action'),
+            type='boolean', method=True, string='Override Menu Action of Users',
+            help='Enable this option to override the Menu Action of portal users'),
     }
 
 portal_override_menu()
