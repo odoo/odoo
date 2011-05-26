@@ -94,7 +94,7 @@ class account_asset_asset(osv.osv):
                 depreciation_lin_obj.unlink(cr, uid, old_depreciation_line_ids, context=context)
 
             undone_dotation_number = asset.method_delay - len(asset.account_move_line_ids)
-            residual_amount = asset.value_residual
+            residual_amount = asset.value_residual - asset.salvage_value
             depreciation_date = datetime.strptime(self._get_last_depreciation_date(cr, uid, [asset.id], context)[asset.id], '%Y-%m-%d')
             day = depreciation_date.day
             month = depreciation_date.month
@@ -104,7 +104,7 @@ class account_asset_asset(osv.osv):
                     amount = residual_amount
                 else:
                     if asset.method == 'linear':
-                        amount = asset.purchase_value / undone_dotation_number
+                        amount = (asset.purchase_value - asset.salvage_value) / undone_dotation_number
                     else:
                         amount = residual_amount * asset.method_progress_factor
                 residual_amount -= amount
@@ -172,6 +172,7 @@ class account_asset_asset(osv.osv):
         'prorata':fields.boolean('Prorata Temporis', Readonly="True", help='Indicates that the accounting entries for this asset have to be done from the purchase date instead of the first January'),
         'history_ids': fields.one2many('account.asset.history', 'asset_id', 'History', readonly=True),
         'depreciation_line_ids': fields.one2many('account.asset.depreciation.line', 'asset_id', 'Depreciation Lines', readonly=True,),
+        'salvage_value': fields.float('Salvage Value', digits=(16,2), required=True, help="It is the amount you plan to have that you can't depreciate."),
     }
     _defaults = {
         'code': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'account.asset.code'),
