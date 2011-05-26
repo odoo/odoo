@@ -468,12 +468,11 @@ class hr_payslip(osv.osv):
         return res
 
     def get_payslip_lines(self, cr, uid, contract_ids, payslip_id, context):
-        
-        def _sum_salary_rule_category(categories_dict, category, amount):
+        def _sum_salary_rule_category(localdict, category, amount):
             if category.parent_id:
-                categories_dict = _sum_salary_rule_category(categories_dict, category.parent_id, amount)
-            categories_dict[category.code] = category.code in categories_dict and categories_dict[category.code] + amount or amount
-            return categories_dict
+                localdict = _sum_salary_rule_category(localdict, category.parent_id, amount)
+            localdict['categories'][category.code] = category.code in localdict['categories'] and localdict['categories'][category.code] + amount or amount
+            return localdict
 
         class BrowsableObject(object):
             def __init__(self, pool, cr, uid, employee_id, dict):
@@ -537,6 +536,7 @@ class hr_payslip(osv.osv):
 
         #we keep a dict with the result because a value can be overwritten by another rule with the same code
         result_dict = {}
+        categories_dict = {}
         blacklist = []
         payslip_obj = self.pool.get('hr.payslip')
         inputs_obj = self.pool.get('hr.payslip.worked_days')
@@ -548,13 +548,13 @@ class hr_payslip(osv.osv):
         inputs = {}
         for input_line in payslip.input_line_ids:
             inputs[input_line.code] = input_line
-        categories_dict = {}
+        
         categories_obj = BrowsableObject(self.pool, cr, uid, payslip.employee_id.id, categories_dict)
         input_obj = InputLine(self.pool, cr, uid, payslip.employee_id.id, inputs)
         worked_days_obj = WorkedDays(self.pool, cr, uid, payslip.employee_id.id, worked_days)
         payslip_obj = Payslips(self.pool, cr, uid, payslip.employee_id.id, payslip)
 
-        localdict = {'payslip': payslip_obj, 'worked_days': worked_days_obj, 'inputs': input_obj, 'categories': categories_obj}
+        localdict = {'categories': {}, 'payslip': payslip_obj, 'worked_days': worked_days_obj, 'inputs': input_obj, 'rule_categories': categories_obj}
         #get the ids of the structures on the contracts and their parent id as well
         structure_ids = self.pool.get('hr.contract').get_all_structures(cr, uid, contract_ids, context=context)
         #get the rules of the structure and thier children
@@ -577,7 +577,8 @@ class hr_payslip(osv.osv):
                     #set/overwrite the amount computed for this rule in the localdict
                     localdict[rule.code] = amount
                     #sum the amount for its salary category
-                    categories_dict = _sum_salary_rule_category(categories_dict, rule.category_id, amount - previous_amount)
+                    localdict = _sum_salary_rule_category(localdict, rule.category_id, amount - previous_amount)
+                    categories_dict.update(localdict['categories'])
                     #create/overwrite the rule in the temporary results
                     result_dict[key] = {
                         'salary_rule_id': rule.id,
