@@ -2,7 +2,7 @@
 // TODO: line number -> https://bugzilla.mozilla.org/show_bug.cgi?id=618650
 var QWeb2 = {
     expressions_cache: {},
-    reserved_words: 'true,false,NaN,null,undefined,debugger,in,instanceof,new,function,return,this,typeof,eval,Math,RegExp,Array,Object'.split(','),
+    reserved_words: 'true,false,NaN,null,undefined,debugger,in,instanceof,new,function,return,this,typeof,eval,Math,RegExp,Array,Object,Date'.split(','),
     actions_precedence: 'foreach,if,call,set,esc,escf,raw,rawf,js,debug,log'.split(','),
     word_replacement: {
         'and': '&&',
@@ -635,17 +635,18 @@ QWeb2.Element = (function() {
             }
         },
         compile_action_set : function(value) {
+            var variable = this.format_expression(value);
             if (this.actions['value']) {
-                this.top("dict['" + value + "'] = (" + (this.format_expression(this.actions['value'])) + ");");
+                this.top(variable + " = (" + (this.format_expression(this.actions['value'])) + ");");
                 this.process_children = false;
             } else {
                 if (this.children.length === 0) {
-                    this.top("dict['" + value + "'] = '';");
+                    this.top(variable + " = '';");
                 } else if (this.children.length === 1 && this.children[0].node.nodeType === 3) {
-                    this.top("dict['" + value + "'] = " + (this.engine.tools.js_escape(this.children[0].node.data)) + ";");
+                    this.top(variable + " = " + (this.engine.tools.js_escape(this.children[0].node.data)) + ";");
                     this.process_children = false;
                 } else {
-                    this.top("dict['" + value + "'] = (function(dict) {");
+                    this.top(variable + " = (function(dict) {");
                     this.bottom("})(dict);");
                     this.indent();
                     this.top("var r = [];");
