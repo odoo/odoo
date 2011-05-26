@@ -414,6 +414,11 @@ class DataSet(openerpweb.Controller):
         return {'result': r}
 
     @openerpweb.jsonrequest
+    def unlink(self, request, model, ids=[]):
+        Model = request.session.model(model)
+        return Model.unlink(ids)
+
+    @openerpweb.jsonrequest
     def call(self, req, model, method, ids, args):
         m = req.session.model(model)
         r = getattr(m, method)(ids, *args)
@@ -720,6 +725,32 @@ class Binary(openerpweb.Controller):
             args = [size, ufile.filename, ufile.headers.getheader('Content-Type'), base64.encodestring(data)]
         except Exception, e:
             args = [False, e.message]
+        return out % (simplejson.dumps(callback), simplejson.dumps(args))
+
+    @openerpweb.httprequest
+    def upload_attachment(self, request, session_id, callback, model, id, ufile=None):
+        cherrypy.response.timeout = 500
+        Model = request.session.model('ir.attachment')
+        try:
+            out = """<script language="javascript" type="text/javascript">
+                        var win = window.top.window,
+                            callback = win[%s];
+                        if (typeof(callback) === 'function') {
+                            callback.call(this, %s);
+                        }
+                    </script>"""
+            attachment_id = Model.create({
+                'name': ufile.filename,
+                'datas': base64.encodestring(ufile.file.read()),
+                'res_model': model,
+                'res_id': int(id)
+            })
+            args = {
+                'filename': ufile.filename,
+                'id':  attachment_id
+            }
+        except Exception, e:
+            args = { 'error': e.message }
         return out % (simplejson.dumps(callback), simplejson.dumps(args))
 
 class Action(openerpweb.Controller):
