@@ -193,7 +193,7 @@ class account_asset_asset(osv.osv):
             default = {}
         if context is None:
             context = {}
-        default['depreciation_line_ids'] = []
+        default.update({'depreciation_line_ids': []})
         return super(account_asset_asset, self).copy(cr, uid, id, default, context=context)
 
     def _compute_period(self, cr, uid, property, context={}):
