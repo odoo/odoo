@@ -8,28 +8,60 @@
             <field name="model">import.sugarcrm</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Import SugarCRM">
-                    <group colspan="4" width="700">
-                         <separator string="Select SugarCRM Module Name" colspan="4"/>
+                <form string="Import Data From SugarCRM">
+                    <group colspan="4" width="800">
+                    	<separator string="Login Information" colspan="4"/>
+                    	 <field name="url" colspan="4" widget="url"/>
+                         <field name="username"/>
+                         <newline/>
+                         <field name="password" password="True" />
+                         <separator string="Choose  Data You Want to Import" colspan="4"/>
                          <group colspan="4" col="6">
-                         	<field name="opportunity" />
-                         	<field name= "meeting" />
-                         	<field name= "task" string="Meeting Tasks"/>
-                         	<field name= "call" />
-                         	<field name= "claim" />
-	                         <field name= "account" />
-	                         <field name= "contact" />
-	                         <field name="user" />
-	                         <field name= "employee" />
-	                         <field name= "email" />
-	                         <field name= "project" />
-	                         <field name= "project_task" />
-	                         <field name= "bug" string="Project Issue"/>
-	                         <field name= "document" />
-	                         <field name= "attachment" string="History and Attachment" />
-                         </group>
-                         <field name="username" invisible="1"/>
-                         <field name="password" invisible="1"/>
+                            <group colspan="1" col="2">    
+                                <separator string="Module: Base" colspan="4"/>
+                                <field name="user" />                           
+                                <field name= "account" />
+                                <field name= "contact" />
+                            </group>                         
+                            <group colspan="3" col="4">    
+                                <separator string="Module: CRM" colspan="4"/>
+                             	<field name="opportunity" />
+                             	<field name= "meeting" />
+                             	<field name= "task" string="Meeting Tasks"/>
+                             	<field name= "call" />
+                             	<field name= "claim" />
+                                <field name= "email" />
+                             </group>
+                             <group colspan="2" col="2"> 
+                                <separator string="Module: Project" colspan="4"/>       
+	                             <field name= "project" />
+	                             <field name= "project_task" />
+	                             <field name= "bug" string="Project Issue"/>
+                            </group>
+                            <group colspan="1" col="2">
+                                <separator string="Module: HR" colspan="4"/>
+    	                         <field name= "employee" />  
+                            </group>   
+                            <group colspan="2" col="4">
+                                <separator string="Module: Document" colspan="4"/>
+	                             <field name= "document" />
+	                             <field name= "attachment" string="History and Attachment" />
+                            </group>
+                          </group>  
+	                         <group colspan="4">
+	                         	<separator string="Email Notification When Import is finished" colspan="4"/>
+	                     		<field name="email_from" widget="email" string="Email Address to Notify"/>
+	                     	</group>
+	                     	<group colspan="4">   
+	                   			<separator string="Multi Instance Management" colspan="4"/>
+	                       		<field name="instance_name"/>
+	                       </group>
+	                       <group colspan="4">
+                            	<separator string="" colspan="4"/>	 
+                            	<button name="import_from_scheduler_all" string="Create Recurrent Report"
+                                   type="object" icon="terp-camera_test"/>
+                                <label string="" colspan="2"/>   
+							</group> 
                     </group>
                         <separator string="" colspan="4" />
                     <group colspan="4" >
@@ -53,6 +85,8 @@
         <field name="target">new</field>
     </record>
 
+    <menuitem name="SugarCRM"  id="menu_sugarcrm" parent="base.menu_base_partner"/>
+    <menuitem name="Import SugarCRM" id="menu_sugarcrm_import" parent="menu_sugarcrm" action="action_import_sugarcrm" icon="STOCK_EXECUTE"/>
 
     </data>
 </openerp>
