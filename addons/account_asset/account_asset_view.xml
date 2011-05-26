@@ -81,14 +81,14 @@
                  </page>
                  <page string="Depreciation board">
                     <field name="depreciation_line_ids" colspan="4" nolabel="1" mode="tree,graph">
-                       <tree>
+                       <tree string="Depreciation Lines">
                           <field name="depreciation_date"/>
                           <field name="sequence" invisible="1"/>
                           <field name="amount"/>
                           <field name="depreciated_value"/>
                           <field name="remaining_value"/>
                           <field name="move_check"/>
-	 		  <button name="create_move" attrs="{'invisible':[('move_check','!=',False)]}" icon="gtk-execute" string="Create Move" type="object"/>
+                          <button name="create_move" attrs="{'invisible':[('move_check','!=',False)]}" icon="gtk-execute" string="Create Move" type="object"/>
                        </tree>
                        <graph type="bar">
                           <field name="name"/>
