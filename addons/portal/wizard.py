@@ -42,6 +42,8 @@ Database: %(db)s
 User:     %(login)s
 Password: %(password)s
 
+%(message)s
+
 --
 OpenERP - Open Source Business Applications
 http://www.openerp.com
@@ -60,6 +62,11 @@ def random_password():
     random.shuffle(chars)
     return ''.join(chars)
 
+def extract_email(user_email):
+    """ extract the email address from a user-friendly email address """
+    m = email_re.search(user_email)
+    return m and m.group(0) or ""
+
 
 
 class wizard(osv.osv_memory):
@@ -77,9 +84,8 @@ class wizard(osv.osv_memory):
             help="The portal in which new users must be added"),
         'user_ids': fields.one2many('res.portal.wizard.user', 'wizard_id',
             string='Users'),
-    }
-    _defaults = {
-        'user_ids': (lambda self, *args: self._default_user_ids(*args))
+        'message': fields.text(string='Invitation message',
+            help="This text is included in the welcome email sent to the users"),
     }
 
     def _default_user_ids(self, cr, uid, context):
@@ -103,11 +109,16 @@ class wizard(osv.osv_memory):
         # create user configs based on these addresses
         user_data = lambda address: {
                         'name': address.name,
-                        'email': address.email,
+                        'email': extract_email(address.email),
                         'lang': address.partner_id and address.partner_id.lang,
                         'address_id': address.id,
+                        'partner_id': address.partner_id and address.partner_id.id,
                     }
         return map(user_data, addresses)
+
+    _defaults = {
+        'user_ids': _default_user_ids
+    }
 
     def action_create(self, cr, uid, ids, context=None):
         """ create new users in portal(s), and notify them by email """
@@ -141,6 +152,7 @@ class wizard(osv.osv_memory):
                 data['company'] = user.company_id.name
                 data['db'] = cr.dbname
                 data['url'] = wiz.portal_id.url or "(missing url)"
+                data['message'] = wiz.message or ""
                 
                 email_from = user.user_email
                 email_to = data['user_email']

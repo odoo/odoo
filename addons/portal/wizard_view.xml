@@ -26,7 +26,9 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Create Portal Users">
-                    <field name="portal_id" colspan="4"/>
+                    <field name="portal_id" widget="selection" colspan="4"/>
+                    <field name="message" colspan="4"/>
+                    <separator string="Users to create" colspan="4"/>
                     <field name="user_ids" nolabel="1" colspan="4"/>
                     <label colspan="2"/>
                     <button string="Cancel" special="cancel" icon="gtk-cancel"/>
