@@ -639,7 +639,6 @@ class orm_template(object):
 
     def __init__(self, pool, cr):
         """ Initialize a model and make it part of the given registry."""
-        pool.add(self._name, self)
         self.pool = pool
 
         if not self._name and not hasattr(self, '_inherit'):

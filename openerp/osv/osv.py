@@ -117,7 +117,7 @@ class object_proxy(netsvc.Service):
                 return tr(src, 'code')
 
             try:
-                if not pooler.get_pool(dbname)._ready:
+                if pooler.get_pool(dbname)._init:
                     raise except_osv('Database not ready', 'Currently, this database is not fully loaded and can not be used.')
                 return f(self, dbname, *args, **kwargs)
             except orm.except_orm, inst:
@@ -212,25 +212,16 @@ class osv_pool(object):
     """
 
     def __init__(self):
-        self._ready = False
         self.obj_pool = {} # model name/model instance mapping
         self._sql_error = {}
         self._store_function = {}
         self._init = True
         self._init_parent = {}
 
-    def init_set(self, cr, mode):
-        different = mode != self._init
-        if different:
-            if mode:
-                self._init_parent = {}
-            if not mode:
-                for o in self._init_parent:
-                    self.get(o)._parent_store_compute(cr)
-            self._init = mode
-
-        self._ready = True
-        return different
+    def do_parent_store(self, cr):
+        for o in self._init_parent:
+            self.get(o)._parent_store_compute(cr)
+        self._init = False
 
     def obj_list(self):
         """ Return the list of model names in this registry."""
@@ -249,9 +240,12 @@ class osv_pool(object):
 
         res = []
 
-        # instanciate classes registered through their constructor
+        # Instanciate classes registered through their constructor and
+        # add them to the pool.
         for klass in module_class_list.get(module, []):
-            res.append(klass.createInstance(self, module, cr))
+            inst = klass.createInstance(self, module, cr)
+            self.add(inst._name, inst)
+            res.append(inst)
 
         return res
 
