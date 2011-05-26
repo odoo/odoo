@@ -304,12 +304,12 @@ class osv_base(object):
         # method won't be called.
         return None
 
-class osv_memory(osv_base, orm.orm_memory):
     #
-    # Goal: try to apply inheritancy at the instanciation level and
+    # Goal: try to apply inheritance at the instanciation level and
     #       put objects in the pool var
     #
-    def createInstance(cls, pool, module, cr):
+    @classmethod
+    def makeInstance(cls, pool, module, cr, attributes):
         parent_names = getattr(cls, '_inherit', None)
         if parent_names:
             if isinstance(parent_names, (str, unicode)):
@@ -317,6 +317,7 @@ class osv_memory(osv_base, orm.orm_memory):
                 parent_names = [parent_names]
             else:
                 name = cls._name
+
             if not name:
                 raise TypeError('_name is mandatory in case of multiple inheritance')
 
@@ -324,7 +325,7 @@ class osv_memory(osv_base, orm.orm_memory):
                 parent_class = pool.get(parent_name).__class__
                 assert pool.get(parent_name), "parent class %s does not exist in module %s !" % (parent_name, module)
                 nattr = {}
-                for s in ('_columns', '_defaults'):
+                for s in attributes:
                     new = copy.copy(getattr(pool.get(parent_name), s))
                     if s == '_columns':
                         # Don't _inherit custom fields.
@@ -333,70 +334,45 @@ class osv_memory(osv_base, orm.orm_memory):
                                 del new[c]
                     if hasattr(new, 'update'):
                         new.update(cls.__dict__.get(s, {}))
+                    elif s=='_constraints':
+                        for c in cls.__dict__.get(s, []):
+                            exist = False
+                            for c2 in range(len(new)):
+                                 #For _constraints, we should check field and methods as well
+                                 if new[c2][2]==c[2] and (new[c2][0] == c[0] \
+                                        or getattr(new[c2][0],'__name__', True) == \
+                                            getattr(c[0],'__name__', False)):
+                                    # If new class defines a constraint with
+                                    # same function name, we let it override
+                                    # the old one.
+                                    new[c2] = c
+                                    exist = True
+                                    break
+                            if not exist:
+                                new.append(c)
                     else:
                         new.extend(cls.__dict__.get(s, []))
                     nattr[s] = new
                 cls = type(name, (cls, parent_class), nattr)
-
         obj = object.__new__(cls)
         obj.__init__(pool, cr)
         return obj
-    createInstance = classmethod(createInstance)
+
+
+class osv_memory(osv_base, orm.orm_memory):
+
+    @classmethod
+    def createInstance(cls, pool, module, cr):
+        return cls.makeInstance(pool, module, cr, ['_columns', '_defaults'])
+
 
 class osv(osv_base, orm.orm):
-    #
-    # Goal: try to apply inheritancy at the instanciation level and
-    #       put objects in the pool var
-    #
-    def createInstance(cls, pool, module, cr):
-        parent_names = getattr(cls, '_inherit', None)
-        if parent_names:
-            if isinstance(parent_names, (str, unicode)):
-                name = cls._name or parent_names
-                parent_names = [parent_names]
-            else:
-                name = cls._name
-            if not name:
-                raise TypeError('_name is mandatory in case of multiple inheritance')
 
-            for parent_name in ((type(parent_names)==list) and parent_names or [parent_names]):
-                parent_class = pool.get(parent_name).__class__
-                assert pool.get(parent_name), "parent class %s does not exist in module %s !" % (parent_name, module)
-                nattr = {}
-                for s in ('_columns', '_defaults', '_inherits', '_constraints', '_sql_constraints'):
-                    new = copy.copy(getattr(pool.get(parent_name), s))
-                    if s == '_columns':
-                        # Don't _inherit custom fields.
-                        for c in new.keys():
-                            if new[c].manual:
-                                del new[c]
-                    if hasattr(new, 'update'):
-                        new.update(cls.__dict__.get(s, {}))
-                    else:
-                        if s=='_constraints':
-                            for c in cls.__dict__.get(s, []):
-                                exist = False
-                                for c2 in range(len(new)):
-                                     #For _constraints, we should check field and methods as well
-                                     if new[c2][2]==c[2] and (new[c2][0] == c[0] \
-                                            or getattr(new[c2][0],'__name__', True) == \
-                                                getattr(c[0],'__name__', False)):
-                                        # If new class defines a constraint with
-                                        # same function name, we let it override
-                                        # the old one.
-                                        new[c2] = c
-                                        exist = True
-                                        break
-                                if not exist:
-                                    new.append(c)
-                        else:
-                            new.extend(cls.__dict__.get(s, []))
-                    nattr[s] = new
-                cls = type(name, (cls, parent_class), nattr)
-        obj = object.__new__(cls)
-        obj.__init__(pool, cr)
-        return obj
-    createInstance = classmethod(createInstance)
+    @classmethod
+    def createInstance(cls, pool, module, cr):
+        return cls.makeInstance(pool, module, cr, ['_columns', '_defaults',
+            '_inherits', '_constraints', '_sql_constraints'])
+
 
 def start_object_proxy():
     object_proxy()
