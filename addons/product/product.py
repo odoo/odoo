@@ -563,8 +563,7 @@ class product_product(osv.osv):
             if not len(ids):
                 ids = self.search(cr, user, [('ean13','=',name)]+ args, limit=limit, context=context)
             if not len(ids):
-                ids = self.search(cr, user, [('default_code',operator,name)]+ args, limit=limit, context=context)
-                ids += self.search(cr, user, [('name',operator,name)]+ args, limit=limit, context=context)
+                ids = self.search(cr, user, ['|',('name',operator,name),('default_code',operator,name)] + args, limit=limit, context=context)
             if not len(ids):
                ptrn=re.compile('(\[(.*?)\])')
                res = ptrn.search(name)
