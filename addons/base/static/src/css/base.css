@@ -666,7 +666,7 @@ background: linear-gradient(top, #ffffff 0%,#d8d8d8 11%,#afafaf 86%,#333333 91%,
 }
 .openerp .button span {
     position: relative;
-    top: -3px;
+    vertical-align: top;
 }
 .openerp input.field_date, .openerp input.field_datetime {
     background: #fff url('../img/ui/field_calendar.png') no-repeat right center;
@@ -791,6 +791,41 @@ background: linear-gradient(top, #ffffff 0%,#d8d8d8 11%,#afafaf 86%,#333333 91%,
 
 .openerp .sidebar-main-div a:hover {
     color: black;
+}
+
+.openerp .oe-sidebar-attachments-toolbar {
+    margin: 4px 0 0 4px;
+}
+.openerp .oe-sidebar-attachments-items {
+    clear: both;
+    padding-top: 5px !important;
+}
+.openerp .oe-sidebar-attachments-items li {
+    position: relative;
+    padding: 0 0 3px 10px !important;
+}
+.openerp .oe-sidebar-attachments-items li:hover {
+    background: #ddd;
+}
+.openerp .oe-sidebar-attachments-link {
+    display: block;
+    margin-right: 15px;
+    overflow: hidden;
+}
+.openerp .oe-sidebar-attachment-delete {
+    position: absolute;
+    right: 2px;
+    top: 1px;
+    overflow: hidden;
+    width: 15px;
+    height: 15px;
+    padding: 1px;
+    border-radius: 7px;
+    -moz-border-radius: 7px;
+    -webkit-border-radius: 7px;
+}
+.openerp .oe-sidebar-attachment-delete:hover {
+    background-color: white;
 }
 
 .openerp .view-manager-main-sidebar h2 {

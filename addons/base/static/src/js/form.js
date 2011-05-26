@@ -57,7 +57,6 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
         this.$element.find('#' + this.element_id + '_header button.oe_form_button_new').click(this.on_button_new);
 
         this.view_manager.sidebar.set_toolbar(data.fields_view.toolbar);
-        this.view_manager.sidebar.do_refresh.add_last(this.on_sidebar_refreshed);
     },
     do_show: function () {
         var self = this;
@@ -99,6 +98,7 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
             this.log("No record received");
         }
         this.do_update_pager(record.id == null);
+        this.do_update_sidebar();
     },
     on_form_changed: function(widget) {
         if (widget && widget.node.attrs.on_change) {
@@ -288,6 +288,7 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
             this.dataset.index = this.dataset.ids.length - 1;
             this.dataset.count++;
             this.do_update_pager();
+            this.do_update_sidebar();
             this.notification.notify("Record created", "The record has been created with id #" + this.datarecord.id);
             if (success) {
                 success(r);
@@ -303,9 +304,49 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
     do_cancel: function () {
         this.notification.notify("Cancelling form");
     },
-    on_sidebar_refreshed: function(new_view) {
-        var sidebar = this.view_manager.sidebar;
-        // TODO: Add attachment WIP
+    do_update_sidebar: function() {
+        if (this.view_manager.action.flags.sidebar === false) {
+            return;
+        }
+        if (!this.datarecord.id) {
+            this.on_attachments_loaded([]);
+        } else {
+            this.rpc('/base/dataset/search_read', {
+                model: 'ir.attachment',
+                fields: ['name', 'url', 'type'],
+                domain: [['res_model', '=', this.dataset.model], ['res_id', '=', this.datarecord.id], ['type', 'in', ['binary', 'url']]],
+                context: this.dataset.context
+            }, this.on_attachments_loaded);
+        }
+    },
+    on_attachments_loaded: function(attachments) {
+        this.$sidebar = this.view_manager.sidebar.$element.find('.sidebar-attachments');
+        this.attachments = attachments;
+        this.$sidebar.html(QWeb.render('FormView.sidebar.attachments', this));
+        this.$sidebar.find('.oe-sidebar-attachment-delete').click(this.on_attachment_delete);
+        this.$sidebar.find('.oe-binary-file').change(this.on_attachment_changed);
+    },
+    on_attachment_changed: function(e) {
+        window[this.element_id + '_iframe'] = this.do_update_sidebar;
+        var $e = $(e.target);
+        if ($e.val() != '') {
+            this.$sidebar.find('form.oe-binary-form').submit();
+            $e.parent().find('input[type=file]').attr('disabled', 'true');
+            $e.parent().find('button').attr('disabled', 'true').find('img, span').toggle();
+        }
+    },
+    on_attachment_delete: function(e) {
+        var self = this, $e = $(e.currentTarget);
+        var name = _.trim($e.parent().find('a.oe-sidebar-attachments-link').text());
+        if (confirm("Do you really want to delete the attachment " + name + " ?")) {
+            this.rpc('/base/dataset/unlink', {
+                model: 'ir.attachment',
+                ids: [parseInt($e.attr('data-id'))]
+            }, function(r) {
+                $e.parent().remove();
+                self.notification.notify("Delete an attachment", "The attachment '" + name + "' has been deleted");
+            });
+        }
     },
     reload: function() {
         if (this.datarecord.id) {
@@ -1251,10 +1292,14 @@ openerp.base.form.FieldBinary = openerp.base.form.Field.extend({
     on_file_uploaded_and_valid: function(size, name, content_type, file_base64) {
     },
     on_save_as: function() {
-        var url = '/base/binary/saveas?session_id=' + this.session.session_id + '&model=' +
-            this.view.dataset.model +'&id=' + (this.view.datarecord.id || '') + '&field=' + this.name +
-            '&fieldname=' + (this.node.attrs.filename || '') + '&t=' + (new Date().getTime())
-        window.open(url);
+        if (!this.view.datarecord.id) {
+            this.notification.warn("Can't save file", "The record has not yet been saved");
+        } else {
+            var url = '/base/binary/saveas?session_id=' + this.session.session_id + '&model=' +
+                this.view.dataset.model +'&id=' + (this.view.datarecord.id || '') + '&field=' + this.name +
+                '&fieldname=' + (this.node.attrs.filename || '') + '&t=' + (new Date().getTime())
+            window.open(url);
+        }
     },
     on_clear: function() {
         if (this.value !== false) {
