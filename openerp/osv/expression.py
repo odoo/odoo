@@ -105,6 +105,14 @@ class expression(object):
                     return ids + rg(ids2, table, parent)
                 return [(left, 'in', rg(ids, table, parent or table._parent_name))]
 
+        def get_child_of_result(value):
+            if isinstance(value, basestring):
+                return [x[0] for x in field_obj.name_search(cr, uid, value, [], 'ilike', context=context, limit=None)]
+            elif isinstance(value, (int, long)):
+                return list([value])
+            else:
+                return list(value)
+
         self.__main_table = table
         self.__all_tables.add(table)
 
@@ -181,10 +189,7 @@ class expression(object):
             elif field._type == 'one2many':
                 # Applying recursivity on field(one2many)
                 if operator == 'child_of':
-                    if isinstance(right, basestring):
-                        ids2 = [x[0] for x in field_obj.name_search(cr, uid, right, [], 'like', context=context, limit=None)]
-                    else:
-                        ids2 = list(right)
+                    ids2 = get_child_of_result(right)
                     if field._obj != working_table._name:
                         dom = _rec_get(ids2, field_obj, left=left, prefix=field._obj)
                     else:
@@ -228,11 +233,7 @@ class expression(object):
             elif field._type == 'many2many':
                 #FIXME
                 if operator == 'child_of':
-                    if isinstance(right, basestring):
-                        ids2 = [x[0] for x in field_obj.name_search(cr, uid, right, [], 'ilike', context=context, limit=None)]
-                    else:
-                        ids2 = [right]
-
+                    ids2 = get_child_of_result(right)
                     def _rec_convert(ids):
                         if field_obj == table:
                             return ids
@@ -276,13 +277,7 @@ class expression(object):
 
             elif field._type == 'many2one':
                 if operator == 'child_of':
-                    if isinstance(right, basestring):
-                        ids2 = [x[0] for x in field_obj.name_search(cr, uid, right, [], 'like', limit=None)]
-                    elif isinstance(right, (int, long)):
-                        ids2 = list([right])
-                    else:
-                        ids2 = list(right)
-
+                    ids2 = get_child_of_result(right)
                     self.__operator = 'in'
                     if field._obj != working_table._name:
                         dom = _rec_get(ids2, field_obj, left=left, prefix=field._obj)
