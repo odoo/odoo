@@ -17,7 +17,7 @@
             <field name="search_view_id" ref="product.product_search_form_view"/>            
             <field name="help">You must define a Product for everything you buy or sell. Products can be raw materials, stockable products, consumables or services. The Product form contains detailed information about your products related to procurement logistics, sales price, product category, suppliers and so on.</field>
         </record>
-        <menuitem action="product.product_normal_action_sell" id="product.menu_products" parent="base.menu_product" sequence="1"/>          
+        <menuitem action="product_normal_action_sell" id="product.menu_products" parent="base.menu_product" sequence="1"/>          
 
         <record id="view_shop_form" model="ir.ui.view">
             <field name="name">sale.shop</field>
