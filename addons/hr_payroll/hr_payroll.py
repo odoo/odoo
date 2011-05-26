@@ -803,7 +803,7 @@ result = contract.wage * 0.10''',
 
 # Note: returned value have to be set in the variable 'result'
 
-result = rules['NET'] > categories['NET'] * 0.10''',
+result = rules['NET'] > rule_categories.NET * 0.10''',
         'condition_range': 'contract.wage',
         'sequence': 5,
         'appears_on_payslip': True,
