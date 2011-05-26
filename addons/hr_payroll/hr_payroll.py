@@ -255,19 +255,15 @@ class hr_payslip(osv.osv):
         'date_from': fields.date('Date From', readonly=True, states={'draft': [('readonly', False)]}, required=True),
         'date_to': fields.date('Date To', readonly=True, states={'draft': [('readonly', False)]}, required=True),
         'state': fields.selection([
-            ('draft', 'Waiting for Verification'),
-            ('hr_check', 'Waiting for HR Verification'),
-            ('accont_check', 'Waiting for Account Verification'),
-            ('confirm', 'Confirm Sheet'),
-            ('done', 'Paid Salary'),
-            ('cancel', 'Reject'),
+            ('draft', 'Draft'),
+            ('verify', 'Waiting'),
+            ('done', 'Done'),
+            ('cancel', 'Rejected'),
         ], 'State', select=True, readonly=True,
-            help=' * When the payslip is created the state is \'Waiting for verification\'.\
-            \n* It is varified by the user and payslip is sent for HR varification, the state is \'Waiting for HR Verification\'. \
-            \n* If HR varify the payslip, it is sent for account verification, the state is \'Waiting for Account Verification\'. \
-            \n* It is confirmed by the accountant and the state set to \'Confirm Sheet\'.\
-            \n* If the salary is paid then state is set to \'Paid Salary\'.\
-            \n* The \'Reject\' state is used when user cancel payslip.'),
+            help='* When the payslip is created the state is \'Draft\'.\
+            \n* If the payslip is under verification, the state is \'Waiting\'. \
+            \n* If the payslip is confirmed then state is set to \'Done\'.\
+            \n* When user cancel payslip the state is \'Rejected\'.'),
 #        'line_ids': fields.one2many('hr.payslip.line', 'slip_id', 'Payslip Line', required=False, readonly=True, states={'draft': [('readonly', False)]}),
         'line_ids': one2many_mod2('hr.payslip.line', 'slip_id', 'Payslip Lines', readonly=True, states={'draft':[('readonly',False)]}),
         'company_id': fields.many2one('res.company', 'Company', required=False, readonly=True, states={'draft': [('readonly', False)]}),
@@ -308,23 +304,19 @@ class hr_payslip(osv.osv):
     def cancel_sheet(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'cancel'}, context=context)
 
-    def account_check_sheet(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'state': 'accont_check'}, context=context)
-
-    def hr_check_sheet(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'state': 'hr_check'}, context=context)
-
     def process_sheet(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'paid': True, 'state': 'done'}, context=context)
 
+    def hr_verify_sheet(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {'state': 'verify'}, context=context)
+    
     def refund_sheet(self, cr, uid, ids, context=None):
         mod_obj = self.pool.get('ir.model.data')
         wf_service = netsvc.LocalService("workflow")
         for id in ids:
             id_copy = self.copy(cr, uid, id, {'credit_note': True}, context=context)
             self.compute_sheet(cr, uid, [id_copy], context=context)
-            wf_service.trg_validate(uid, 'hr.payslip', id_copy, 'verify_sheet', cr)
-            wf_service.trg_validate(uid, 'hr.payslip', id_copy, 'final_verify_sheet', cr)
+            wf_service.trg_validate(uid, 'hr.payslip', id_copy, 'hr_verify_sheet', cr)
             wf_service.trg_validate(uid, 'hr.payslip', id_copy, 'process_sheet', cr)
 
         form_id = mod_obj.get_object_reference(cr, uid, 'hr_payroll', 'view_hr_payslip_form')
@@ -345,8 +337,8 @@ class hr_payslip(osv.osv):
             'context': {}
         }
 
-    def verify_sheet(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'state': 'confirm'}, context=context)
+    def check_done(self, cr, uid, ids, context=None):
+        return True
 
     #TODO move this function into hr_contract module, on hr.employee object
     def get_contract(self, cr, uid, employee, date_from, date_to, context=None):
@@ -490,9 +482,9 @@ class hr_payslip(osv.osv):
                 if to_date is None:
                     to_date = datetime.now().strftime('%Y-%m-%d')
                 result = 0.0
-                self.cr.execute("SELECT sum(quantity) as sum\
+                self.cr.execute("SELECT sum(amount) as sum\
                             FROM hr_payslip as hp, hr_payslip_input as pi \
-                            WHERE hp.employee_id = %s AND hp.state in ('confirm','done') \
+                            WHERE hp.employee_id = %s AND hp.state = 'done' \
                             AND hp.date_from >= %s AND hp.date_to <= %s AND hp.id = pi.payslip_id AND pi.code = %s",
                            (self.employee_id, from_date, to_date, code))
                 res = self.cr.fetchone()[0]
@@ -506,7 +498,7 @@ class hr_payslip(osv.osv):
                 result = 0.0
                 self.cr.execute("SELECT sum(number_of_days) as number_of_days, sum(number_of_hours) as number_of_hours\
                             FROM hr_payslip as hp, hr_payslip_worked_days as pi \
-                            WHERE hp.employee_id = %s AND hp.state in ('confirm','done') \
+                            WHERE hp.employee_id = %s AND hp.state = 'done'\
                             AND hp.date_from >= %s AND hp.date_to <= %s AND hp.id = pi.payslip_id AND pi.code = %s",
                            (self.employee_id, from_date, to_date, code))
                 return self.cr.fetchone()
@@ -527,7 +519,7 @@ class hr_payslip(osv.osv):
                     to_date = datetime.now().strftime('%Y-%m-%d')
                 self.cr.execute("SELECT sum(case when hp.credit_note = False then (pl.total) else (-pl.total) end)\
                             FROM hr_payslip as hp, hr_payslip_line as pl \
-                            WHERE hp.employee_id = %s AND hp.state in ('confirm','done') \
+                            WHERE hp.employee_id = %s AND hp.state = 'done' \
                             AND hp.date_from >= %s AND hp.date_to <= %s AND hp.id = pl.slip_id AND pl.code = %s",
                             (self.employee_id, from_date, to_date, code))
                 res = self.cr.fetchone()
@@ -727,13 +719,13 @@ class hr_payslip_input(osv.osv):
         'payslip_id': fields.many2one('hr.payslip', 'Pay Slip', required=True),
         'sequence': fields.integer('Sequence', required=True,),
         'code': fields.char('Code', size=52, required=True, help="The code that can be used in the salary rules"),
-        'quantity': fields.float('Quantity', help="It is used in computation. For e.g. A rule for sales having 1% commission of basic salary for per product can defined in expression like result = inputs.SASUS.qunatity * contract.wage*0.01."),
+        'amount': fields.float('Amount', help="It is used in computation. For e.g. A rule for sales having 1% commission of basic salary for per product can defined in expression like result = inputs.SALEURO.amount * contract.wage*0.01."),
         'contract_id': fields.many2one('hr.contract', 'Contract', required=True, help="The contract for which applied this input"),
     }
     _order = 'payslip_id, sequence'
     _defaults = {
         'sequence': 10,
-        'quantity': 0.0,
+        'amount': 0.0,
     }
 
 hr_payslip_input()
