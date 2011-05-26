@@ -65,6 +65,9 @@ from openerp.tools import SKIPPED_ELEMENT_TYPES
 regex_order = re.compile('^(([a-z0-9_]+|"[a-z0-9_]+")( *desc| *asc)?( *, *|))+$', re.I)
 regex_object_name = re.compile(r'^[a-z0-9_.]+$')
 
+# Mapping between openerp module names and their osv classes.
+module_class_list = {}
+
 def check_object_name(name):
     """ Check if the given name is a valid openerp object name.
 
@@ -414,6 +417,21 @@ def get_pg_type(f):
 
 
 class orm_template(object):
+    """ Base class for OpenERP models.
+
+    OpenERP models are created by inheriting from this class (although
+    not directly; more specifically by inheriting from osv or
+    osv_memory). The constructor is called once, usually directly
+    after the class definition, e.g.:
+
+        class user(osv):
+            ...
+        user()
+
+    The system will later instanciate the class once per database (on
+    which the class' module is installed).
+
+    """
     _name = None
     _columns = {}
     _constraints = []
@@ -542,7 +560,88 @@ class orm_template(object):
         raise_on_invalid_object_name(self._name)
         self._field_create(cr, context=context)
 
-    def __init__(self, cr):
+    #
+    # Goal: try to apply inheritance at the instanciation level and
+    #       put objects in the pool var
+    #
+    @classmethod
+    def makeInstance(cls, pool, module, cr, attributes):
+        parent_names = getattr(cls, '_inherit', None)
+        if parent_names:
+            if isinstance(parent_names, (str, unicode)):
+                name = cls._name or parent_names
+                parent_names = [parent_names]
+            else:
+                name = cls._name
+
+            if not name:
+                raise TypeError('_name is mandatory in case of multiple inheritance')
+
+            for parent_name in ((type(parent_names)==list) and parent_names or [parent_names]):
+                parent_class = pool.get(parent_name).__class__
+                assert pool.get(parent_name), "parent class %s does not exist in module %s !" % (parent_name, module)
+                nattr = {}
+                for s in attributes:
+                    new = copy.copy(getattr(pool.get(parent_name), s))
+                    if s == '_columns':
+                        # Don't _inherit custom fields.
+                        for c in new.keys():
+                            if new[c].manual:
+                                del new[c]
+                    if hasattr(new, 'update'):
+                        new.update(cls.__dict__.get(s, {}))
+                    elif s=='_constraints':
+                        for c in cls.__dict__.get(s, []):
+                            exist = False
+                            for c2 in range(len(new)):
+                                 #For _constraints, we should check field and methods as well
+                                 if new[c2][2]==c[2] and (new[c2][0] == c[0] \
+                                        or getattr(new[c2][0],'__name__', True) == \
+                                            getattr(c[0],'__name__', False)):
+                                    # If new class defines a constraint with
+                                    # same function name, we let it override
+                                    # the old one.
+                                    new[c2] = c
+                                    exist = True
+                                    break
+                            if not exist:
+                                new.append(c)
+                    else:
+                        new.extend(cls.__dict__.get(s, []))
+                    nattr[s] = new
+                cls = type(name, (cls, parent_class), nattr)
+        obj = object.__new__(cls)
+        obj.__init__(pool, cr)
+        return obj
+
+    def __new__(cls):
+        """ Register this model.
+
+        This doesn't create an instance but simply register the model
+        as being part of the module where it is defined.
+
+        TODO make it possible to not even have to call the constructor
+        to be registered.
+
+        """
+
+        # Set the module name (e.g. base, sale, accounting, ...) on the class.
+        module = cls.__module__.split('.')[0]
+        if not hasattr(cls, '_module'):
+            cls._module = module
+
+        # Remember which models to instanciate for this module.
+        module_class_list.setdefault(cls._module, []).append(cls)
+
+        # Since we don't return an instance here, the __init__
+        # method won't be called.
+        return None
+
+    def __init__(self, pool, cr):
+        """ Initialize a model and make it part of the given registry."""
+        pool.add(self._name, self)
+        self.pool = pool
+
         if not self._name and not hasattr(self, '_inherit'):
             name = type(self).__name__.split('.')[0]
             msg = "The class %s has to have a _name attribute" % name
@@ -1931,8 +2030,12 @@ class orm_memory(orm_template):
     _max_hours = config.get('osv_memory_age_limit')
     _check_time = 20
 
-    def __init__(self, cr):
-        super(orm_memory, self).__init__(cr)
+    @classmethod
+    def createInstance(cls, pool, module, cr):
+        return cls.makeInstance(pool, module, cr, ['_columns', '_defaults'])
+
+    def __init__(self, pool, cr):
+        super(orm_memory, self).__init__(pool, cr)
         self.datas = {}
         self.next_id = 0
         self.check_id = 0
@@ -2804,8 +2907,13 @@ class orm(orm_template):
             cr.commit()
         return todo_end
 
-    def __init__(self, cr):
-        super(orm, self).__init__(cr)
+    @classmethod
+    def createInstance(cls, pool, module, cr):
+        return cls.makeInstance(pool, module, cr, ['_columns', '_defaults',
+            '_inherits', '_constraints', '_sql_constraints'])
+
+    def __init__(self, pool, cr):
+        super(orm, self).__init__(pool, cr)
 
         if not hasattr(self, '_log_access'):
             # if not access is not specify, it is the same value as _auto

@@ -34,9 +34,7 @@ import logging
 from psycopg2 import IntegrityError, errorcodes
 from openerp.tools.func import wraps
 from openerp.tools.translate import translate
-
-# Mapping between openerp module names and their osv classes.
-module_class_list = {}
+from openerp.osv.orm import module_class_list
 
 class except_osv(Exception):
     def __init__(self, name, value, exc_type='warning'):
@@ -246,7 +244,6 @@ class osv_pool(object):
         """ Return a model for a given name or None if it doesn't exist."""
         return self.obj_pool.get(name)
 
-    #TODO: pass a list of modules to load
     def instanciate(self, module, cr):
         """ Instanciate all the classes of a given module for a particular db."""
 
@@ -258,120 +255,15 @@ class osv_pool(object):
 
         return res
 
-class osv_base(object):
-    """ Base class for openerp models.
 
-    OpenERP models are created by inheriting from this class (although
-    not directly; more specifically by inheriting from osv or
-    osv_memory). The constructor is called once, usually directly
-    after the class definition, e.g.:
-
-        class user(osv):
-            ...
-        user()
-
-    The system will later instanciate the class once per database (on
-    which the class' module is installed).
-
-    """
-
-    def __init__(self, pool, cr):
-        """ Initialize a model and make it part of the given registry."""
-        pool.add(self._name, self)
-        self.pool = pool
-        super(osv_base, self).__init__(cr)
-
-    def __new__(cls):
-        """ Register this model.
-
-        This doesn't create an instance but simply register the model
-        as being part of the module where it is defined.
-
-        TODO make it possible to not even have to call the constructor
-        to be registered.
-
-        """
-
-        # Set the module name (e.g. base, sale, accounting, ...) on the class.
-        module = cls.__module__.split('.')[0]
-        if not hasattr(cls, '_module'):
-            cls._module = module
-
-        # Remember which models to instanciate for this module.
-        module_class_list.setdefault(cls._module, []).append(cls)
-
-        # Since we don't return an instance here, the __init__
-        # method won't be called.
-        return None
-
-    #
-    # Goal: try to apply inheritance at the instanciation level and
-    #       put objects in the pool var
-    #
-    @classmethod
-    def makeInstance(cls, pool, module, cr, attributes):
-        parent_names = getattr(cls, '_inherit', None)
-        if parent_names:
-            if isinstance(parent_names, (str, unicode)):
-                name = cls._name or parent_names
-                parent_names = [parent_names]
-            else:
-                name = cls._name
-
-            if not name:
-                raise TypeError('_name is mandatory in case of multiple inheritance')
-
-            for parent_name in ((type(parent_names)==list) and parent_names or [parent_names]):
-                parent_class = pool.get(parent_name).__class__
-                assert pool.get(parent_name), "parent class %s does not exist in module %s !" % (parent_name, module)
-                nattr = {}
-                for s in attributes:
-                    new = copy.copy(getattr(pool.get(parent_name), s))
-                    if s == '_columns':
-                        # Don't _inherit custom fields.
-                        for c in new.keys():
-                            if new[c].manual:
-                                del new[c]
-                    if hasattr(new, 'update'):
-                        new.update(cls.__dict__.get(s, {}))
-                    elif s=='_constraints':
-                        for c in cls.__dict__.get(s, []):
-                            exist = False
-                            for c2 in range(len(new)):
-                                 #For _constraints, we should check field and methods as well
-                                 if new[c2][2]==c[2] and (new[c2][0] == c[0] \
-                                        or getattr(new[c2][0],'__name__', True) == \
-                                            getattr(c[0],'__name__', False)):
-                                    # If new class defines a constraint with
-                                    # same function name, we let it override
-                                    # the old one.
-                                    new[c2] = c
-                                    exist = True
-                                    break
-                            if not exist:
-                                new.append(c)
-                    else:
-                        new.extend(cls.__dict__.get(s, []))
-                    nattr[s] = new
-                cls = type(name, (cls, parent_class), nattr)
-        obj = object.__new__(cls)
-        obj.__init__(pool, cr)
-        return obj
+class osv_memory(orm.orm_memory):
+    """ Deprecated class. """
+    pass
 
 
-class osv_memory(osv_base, orm.orm_memory):
-
-    @classmethod
-    def createInstance(cls, pool, module, cr):
-        return cls.makeInstance(pool, module, cr, ['_columns', '_defaults'])
-
-
-class osv(osv_base, orm.orm):
-
-    @classmethod
-    def createInstance(cls, pool, module, cr):
-        return cls.makeInstance(pool, module, cr, ['_columns', '_defaults',
-            '_inherits', '_constraints', '_sql_constraints'])
+class osv(orm.orm):
+    """ Deprecated class. """
+    pass
 
 
 def start_object_proxy():
