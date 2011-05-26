@@ -90,7 +90,8 @@ class hr_payslip(osv.osv):
 
         for slip in self.browse(cr, uid, ids, context=context):
             line_ids = []
-
+            debit_sum = 0.0
+            credit_sum = 0.0
             if not slip.period_id:
                 search_periods = period_pool.search(cr, uid, [('date_start','<=',slip.date_from),('date_stop','>=',slip.date_to)], context=context)
                 if not search_periods:
@@ -122,6 +123,7 @@ class hr_payslip(osv.osv):
                     'journal_id': slip.journal_id.id,
                     'period_id': period_id,
                 })
+                debit_sum += debit_line[2]['debit']
                 credit_line = (0,0,{
                     'date': timenow,
                     'journal_id': slip.journal_id.id,
@@ -132,10 +134,37 @@ class hr_payslip(osv.osv):
                     'debit': amt < 0.0 and -amt or 0.0,
                     'credit': amt > 0.0 and amt or 0.0,
                 })
+                credit_sum += debit_line[2]['credit']
                 if debit_account_id:
                     line_ids.append(debit_line)
                 if credit_account_id:
                     line_ids.append(credit_line)
+            
+            if debit_sum > credit_sum:
+                bal_credit_line = (0,0,{
+                    'date': timenow,
+                    'journal_id': slip.journal_id.id,
+                    'period_id': period_id,
+                    'name': 'Balancing Entry',
+                    'partner_id': partner_id,
+                    'account_id': slip.journal_id.default_credit_account_id.id,
+                    'debit': 0.0,
+                    'credit': debit_sum - credit_sum,
+                })
+                line_ids.append(bal_credit_line)
+            else:
+                bal_debit_line = (0,0,{
+                    'date': timenow,
+                    'journal_id': slip.journal_id.id,
+                    'period_id': period_id,
+                    'name': 'Balancing Entry',
+                    'partner_id': partner_id,
+                    'account_id': slip.journal_id.default_debit_account_id.id,
+                    'debit': 0.0,
+                    'credit': credit_sum - debit_sum,
+                })
+                line_ids.append(bal_debit_line)
+                
             move.update({'line_id': line_ids})
             move_id = move_pool.create(cr, uid, move, context=context)
             self.write(cr, uid, [slip.id], {'move_id': move_id}, context=context)
