@@ -706,7 +706,7 @@ openerp.base.search.ExtendedSearch = openerp.base.BaseWidget.extend({
     },
     add_group: function() {
         var group = new openerp.base.search.ExtendedSearchGroup(this, this.fields);
-        var render = group.render({'index': this.children.length - 1});
+        var render = group.render();
         this.$element.find('.searchview_extended_groups_list').append(render);
         group.start();
     },
@@ -718,7 +718,6 @@ openerp.base.search.ExtendedSearch = openerp.base.BaseWidget.extend({
             {"model": this.model}, function(data) {
             self.fields = data.fields;
             openerp.base.search.add_expand_listener(self.$element);
-            self.add_group();
             self.$element.find('.searchview_extended_add_group').click(function (e) {
                 self.add_group();
             });
@@ -735,17 +734,20 @@ openerp.base.search.ExtendedSearch = openerp.base.BaseWidget.extend({
             function(mem, x) { return mem.concat(x.get_domain());}, []);
     },
     on_activate: function() {
+        this.add_group();
         var table = this.$element.closest("table.oe-searchview-render-line");
-        if (table.css("display") == "none") {
+        if(table.css("display") == "none") {
             table.css("display", "");
             if(this.$element.hasClass("folded")) {
                 this.$element.toggleClass("folded expanded");
             }
-        } else {
-            table.css("display", "none");
-            if(this.$element.hasClass("expanded")) {
-                this.$element.toggleClass("folded expanded");
-            }
+        }
+    },
+    hide: function() {
+        var table = this.$element.closest("table.oe-searchview-render-line");
+        table.css("display", "none");
+        if(this.$element.hasClass("expanded")) {
+            this.$element.toggleClass("folded expanded");
         }
     }
 });
@@ -772,6 +774,9 @@ openerp.base.search.ExtendedSearchGroup = openerp.base.BaseWidget.extend({
         });
         var delete_btn = this.$element.find('.searchview_extended_delete_group');
         delete_btn.click(function (e) {
+            if (_this.parent.children.length == 1)  {
+                _this.parent.hide();
+            }
             _this.stop();
         });
     },
