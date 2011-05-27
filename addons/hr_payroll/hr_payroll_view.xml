@@ -141,6 +141,8 @@
                     <field name="sequence" groups="base.group_extended"/>
                     <field name="name"/>
                     <field name="code"/>
+                    <field name="quantity"/>
+                    <field name="amount"/>
                     <field name="total"/>
                 </tree>
             </field>
@@ -246,6 +248,8 @@
                                     <field name="code"/>
                                     <field name="category_id"/>
                                     <field name="sequence" invisible="1"/>
+                                    <field name="quantity"/>
+                                    <field name="amount"/>
                                     <field name="total"/>
                                 </tree>
                                 <form string="Payslip Line">
@@ -254,13 +258,14 @@
                                         <field name="code" select="1"/>
                                         <field name="category_id"/>
                                         <field name="sequence" groups="base.group_extended"/>
+                                        <field name="quantity"/>
+                                        <field name="amount"/>
                                         <field name="total"/>
                                         <field name="salary_rule_id" groups="base.group_extended"/>
                                     </group>
                                 </form>
                             </field>
                         </page>
-<!-- TODO: put me back -->
                         <page string="Details By Salary Rule Category">
                             <field name="details_by_salary_rule_category" context="{'group_by':'category_id'}" domain="[('appears_on_payslip', '=', True)]" nolabel="1">
                                 <tree string="Payslip Lines" colors="blue:total == 0">
