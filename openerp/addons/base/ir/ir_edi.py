@@ -74,7 +74,7 @@ class ir_edi_document(osv.osv):
         edi_list = []
         for record in browse_record_list:
             edi_struct = edi.edi_export(record)
-            edi_list.append(edi_struct[0])
+            edi_list.append(edi_struct)
         return self.serialize(edi_list)
     
     def get_document(self,cr,uid,ids,edi_token,context=None):
@@ -193,8 +193,8 @@ class edi(object):
         """
         # generic implementation!
         
-        edi_struct = {
-                      'Openerp_fields':'',
+        self.edi_document = {
+                      
                       '__model':'',
                       '__module':'',
                       '__id':'',
@@ -203,10 +203,31 @@ class edi(object):
                       '__attachments':'',
                       
                       }
-        
-        
-            
-        return edi_struct
+        data_object = self.pool.get('ir.model.data')
+        fields_object = self.pool.get('ir.model.fields')
+        for field in edi_struct.keys():
+            if field in self.edi_document.keys():
+                if field == 'model':
+                    model_name = edi_struct['model']
+                    
+                    record_ids = data_object.search(cr,uid,[('model','=','hr.holidays')])
+                    for fname in data_object.browse(cr,uid,record_ids):
+                        if fname.name:
+                            xml_ID = fname.name
+                    self.edi_metadata(field,model_name)
+                else:
+                    self.metadata(field)
+            else:
+                
+                f_ids = fields_object.search(cr,uid,[('name','=',field),('model','=',model_name)],context=context)
+                for fname in fields_object.browse(cr,uid,f_ids):
+                    if fname.ttype == 'many2one':
+                        self.edi_document[field] = self.edi_m2o(edi_struct[field])
+                    elif fname.ttype == 'one2many':
+                        self.edi_ducument[field] = self.edi_o2m(edi_struct[field])
+                    elif fname.ttype == 'many2many':        
+                        self.edi_document[field] = self.edi_m2m(edi_struct[field])
+        return self.edi_document
     def edi_import(self, cr, uid, edi_document, context=None):
         """Imports a list of dicts representing an edi.document, using the
            generic algorithm.
