@@ -243,9 +243,7 @@ class osv_pool(object):
         # Instanciate classes registered through their constructor and
         # add them to the pool.
         for klass in module_class_list.get(module, []):
-            inst = klass.createInstance(self, module, cr)
-            self.add(inst._name, inst)
-            res.append(inst)
+            res.append(klass.createInstance(self, module, cr))
 
         return res
 
