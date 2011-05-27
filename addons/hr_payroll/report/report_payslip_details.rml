@@ -237,7 +237,7 @@
         </td>
       </tr>
     </blockTable>
-    <blockTable colWidths="63.0,475.0" style="Table3">
+    <blockTable colWidths="63.0,476.0" style="Table3">
       <tr>
         <td>
           <para style="terp_default_Bold_8">
@@ -267,7 +267,7 @@
         </td>
       </tr>
     </blockTable>
-    <blockTable colWidths="63.0,205.0,89.0,181.0" style="Table5">
+    <blockTable colWidths="63.0,206.0,89.0,181.0" style="Table5">
       <tr>
         <td>
           <para style="P19">Reference</para>
@@ -283,7 +283,7 @@
         </td>
       </tr>
     </blockTable>
-    <blockTable colWidths="63.0,205.0,89.0,181.0" style="Table6">
+    <blockTable colWidths="63.0,206.0,89.0,181.0" style="Table6">
       <tr>
         <td>
           <para style="P19">Date From</para>
@@ -327,7 +327,7 @@
           <para style="P17">Name</para>
         </td>
         <td>
-          <para style="P18">Amount<font face="Helvetica">(in [[o.company_id and o.company_id.currency_id.symbol or '']])</font></para>
+          <para style="P18">Total</para>
         </td>
       </tr>
     </blockTable>
@@ -351,7 +351,7 @@
             <para style="P21">[[ h['name'] ]]<font face="Helvetica">[[ h['level']!=0 and ( setTag('para','para',{'style':'terp_default_8'})) or removeParentNode('font')]]</font></para>
           </td>
           <td>
-            <para style="P7">[[ h['total'] ]] <font face="Helvetica" size="8.0">[[ h['level']!=0 and ( setTag('para','para',{'style':'terp_default_10'})) or removeParentNode('font') ]]</font></para>
+            <para style="P7">[[ h['total'] ]] [[o.company_id and o.company_id.currency_id.symbol or '']] <font face="Helvetica" size="8.0">[[ h['level']!=0 and ( setTag('para','para',{'style':'terp_default_10'})) or removeParentNode('font') ]]</font></para>
           </td>
         </tr>
       </blockTable>
@@ -379,7 +379,7 @@
           <para style="P15">Name</para>
         </td>
         <td>
-          <para style="P16">Amount (in [[o.company_id and o.company_id.currency_id.symbol or '']])</para>
+          <para style="P16">Total</para>
         </td>
       </tr>
     </blockTable>
@@ -397,7 +397,7 @@
             <para style="P6">[[ r['name'] ]]</para>
           </td>
           <td>
-            <para style="P7">[[ r['total'] or '0.0']]</para>
+            <para style="P7">[[ r['total'] or '0.0']] [[o.company_id and o.company_id.currency_id.symbol or '']]</para>
           </td>
         </tr>
       </blockTable>
@@ -428,4 +428,3 @@
     </para>
   </story>
 </document>
-
