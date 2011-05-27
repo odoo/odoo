@@ -145,8 +145,6 @@ class synchronize_google_contact(osv.osv_memory):
         while contact:
             for entry in contact.entry:
                 data = self._retreive_data(entry)
-                if 'company' in data:
-                    print data['company']
                 google_id = data.pop('id')
                 model_data = {
                     'name':  google_id,
