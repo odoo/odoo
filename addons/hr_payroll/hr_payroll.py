@@ -568,7 +568,7 @@ class hr_payslip(osv.osv):
                     previous_amount = rule.code in localdict and localdict[rule.code] or 0.0
                     #set/overwrite the amount computed for this rule in the localdict
                     localdict[rule.code] = amount
-                    rules[rule.code] = amount
+                    rules[rule.code] = rule
                     #sum the amount for its salary category
                     localdict = _sum_salary_rule_category(localdict, rule.category_id, amount - previous_amount)
                     #create/overwrite the rule in the temporary results
@@ -797,7 +797,7 @@ result = contract.wage * 0.10''',
 # payslip: object containing the payslips
 # employee: hr.employee object
 # contract: hr.contract object
-# rules: object containing the rules code (previously computed)
+# rules: object containing the rules code (as hr.salary.rule object)
 # categories: dictionary containing the computed salary rule categories (sum of amount of all rules belonging to that category). Keys are the category codes.
 # worked_days: object containing the computed worked days
 # inputs: object containing the computed inputs
