@@ -356,7 +356,7 @@ openerp.base.View = openerp.base.Controller.extend({
      * @param {Object} [action_data.context=null] additional action context, to add to the current context
      * @param {openerp.base.DataSet} dataset a dataset object used to communicate with the server
      * @param {openerp.base.ActionManager} action_manager object able to actually execute the action, if any is fetched
-     * @param {Number} [record_id] the identifier of the object on which the action is to be applied
+     * @param {Object} [record_id] the identifier of the object on which the action is to be applied
      * @param {Function} on_no_action callback to execute if the action does not generate any result (no new action)
      */
     execute_action: function (action_data, dataset, action_manager, record_id, on_no_action) {

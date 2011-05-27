@@ -78,25 +78,10 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
                 self.do_delete(ids);
             },
             'action': function (e, action_name, id, callback) {
-                var action = _.detect(self.columns, function (field) {
-                    return field.name === action_name;
-                });
-                if (!action) { return; }
-                self.execute_action(
-                    action, self.dataset, self.session.action_manager,
-                    id, function () {
-                        if (callback) {
-                            callback();
-                        }
-                });
+                self.do_action(action_name, id, callback);
             },
             'row_link': function (e, index, id, dataset) {
-                _.extend(self.dataset, {
-                    domain: dataset.domain,
-                    context: dataset.context
-                }).read_slice([], null, null, function () {
-                    self.select_record(index);
-                });
+                self.do_activate_record(index, id, dataset);
             }
         });
     },
@@ -357,6 +342,42 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
             return;
         }
         this.compute_aggregates(records);
+    },
+    /**
+     * Handles action button signals on a record
+     *
+     * @param {String} name action name
+     * @param {Object} id id of the record the action should be called on
+     * @param {Function} callback should be called after the action is executed, if non-null
+     */
+    do_action: function (name, id, callback) {
+        var action = _.detect(this.columns, function (field) {
+            return field.name === name;
+        });
+        if (!action) { return; }
+        this.execute_action(
+            action, this.dataset, this.session.action_manager,
+            id, function () {
+                if (callback) {
+                    callback();
+                }
+        });
+    },
+    /**
+     * Handles the activation of a record (clicking on it)
+     *
+     * @param {Number} index index of the record in the dataset
+     * @param {Object} id identifier of the activated record
+     * @param {openobject.base.DataSet} dataset dataset in which the record is available (may not be the listview's dataset in case of nested groups)
+     */
+    do_activate_record: function (index, id, dataset) {
+        var self = this;
+        _.extend(this.dataset, {
+            domain: dataset.domain,
+            context: dataset.context
+        }).read_slice([], 0, false, function () {
+            self.select_record(index);
+        });
     },
     /**
      * Handles signal for the addition of a new record (can be a creation,
