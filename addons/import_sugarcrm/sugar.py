@@ -31,8 +31,8 @@ import tools
 class LoginError(Exception): pass
 
 def login(username, password, url):
+    
     loc = sugarsoapLocator()
-
     portType = loc.getsugarsoapPortType(url)
     request = loginRequest()
     uauth = ns0.user_auth_Def(request)
@@ -126,4 +126,3 @@ def search(portType, sessionid, module_name=None):
           ans_list.append(ans_dir)
     #end for
   return ans_list
-

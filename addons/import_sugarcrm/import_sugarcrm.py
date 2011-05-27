@@ -1,4 +1,4 @@
-e# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
@@ -27,8 +27,8 @@ from datetime import datetime
 import base64
 import pprint
 pp = pprint.PrettyPrinter(indent=4)
-
 #copy old import here
+
 class related_ref(dbmapper):
     def __init__(self, type):
         self.type = type
@@ -39,6 +39,7 @@ class related_ref(dbmapper):
         return ''
 
 class sugar_import(import_framework):
+    URL = False   
     TABLE_CONTACT = 'Contacts'
     TABLE_ACCOUNT = 'Accounts'
     TABLE_USER = 'Users'
@@ -62,7 +63,18 @@ class sugar_import(import_framework):
     
     def initialize(self):
         #login
-        PortType,sessionid = sugar.login(self.context.get('username',''), self.context.get('password',''), self.context.get('url',''))
+        global URL
+        url = self.context.get('url','')
+        url_sting = []
+        for url in str(url).split('/'):
+            if url.startswith('index.php'):
+                url_soap = url.replace(url, 'soap.php')
+                url_sting.append(url_soap)
+            else:
+                url_sting.append(url)
+        URL = '/'.join(url_sting)
+        
+        PortType,sessionid = sugar.login(self.context.get('username',''), self.context.get('password',''), URL)
         if sessionid == '-1':
             raise osv.except_osv(_('Error !'), _('Authentication error !\nBad Username or Password !'))
         self.context['port'] = PortType
@@ -166,7 +178,6 @@ class sugar_import(import_framework):
         if model_ids:
             model = model_obj.browse(self.cr, self.uid, model_ids)[0]
             if model.model == 'res.partner':
-                print "res partner"
                 val['partner_id/.id'] = model.res_id
                 val['history'] = "1"
             else:    
@@ -253,7 +264,6 @@ class sugar_import(import_framework):
     }
      
     def get_project_issue_priority(self, val):
-        print "project issue value"
         pp.pprint(val)
         priority_dict = {
                 'Urgent': '1',
@@ -850,8 +860,8 @@ class import_sugarcrm(osv.osv):
                
         'username': fields.char('User Name', size=64, required=True),
         'password': fields.char('Password', size=24,required=True),
-         'url' : fields.char('SugarSoap Api url:', size=264, required=True, help="Webservice's url where to get the data.'\
-                                            exemple : http://example.com/sugarcrm/soap.php, or any address you see in your address bar http://trial.sugarcrm.com/qbquyj4802/index.php?module=Home&action=index"),
+         'url' : fields.char('SugarSoap Api url:', size=264, required=True, help="Webservice's url where to get the data.\
+                      'exemple : http://example.com/sugarcrm/soap.php, or copy the address of your sugarcrm application http://trial.sugarcrm.com/qbquyj4802/index.php?module=Home&action=index"),
                 
         'opportunity': fields.boolean('Leads and Opportunities', help="If Opportunities are checked, SugarCRM opportunities data imported in OpenERP crm-Opportunity form"),
         'contact': fields.boolean('Contacts', help="If Contacts are checked, SugarCRM Contacts data imported in OpenERP partner address form"),
@@ -884,9 +894,8 @@ class import_sugarcrm(osv.osv):
         'email_from': 'tfr@openerp.com',
         'username' : 'tfr',
         'password' : 'a',
-        'url':  "http://trial.sugarcrm.com/qbquyj4802/index.php?module=Home&action=index"        
+        'url':  "http://example.com/sugarcrm/soap.php"        
     }
-    
     def get_key(self, cr, uid, ids, context=None):
         """Select Key as For which Module data we want import data."""
         if not context:
@@ -946,7 +955,7 @@ class import_sugarcrm(osv.osv):
             'res_id': new_create_id,
             'type': 'ir.actions.act_window',
         }
-
+    
     def import_all(self, cr, uid, ids, context=None):
         
 #        """Import all sugarcrm data into openerp module"""
