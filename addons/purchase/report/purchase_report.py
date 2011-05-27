@@ -93,7 +93,7 @@ class purchase_report(osv.osv):
                     l.product_id,
                     t.categ_id as category_id,
                     (case when u.uom_type not in ('reference') then
-                            (select id from product_uom where uom_type='reference' and category_id = 1)
+                            (select id from product_uom where uom_type='reference' and category_id = u.category_id and active LIMIT 1)
                     else
                         u.id
                     end) as product_uom,
