@@ -939,5 +939,52 @@ background: linear-gradient(top, #ffffff 0%,#ebe9e9 100%); /* W3C */
     position: relative;
     margin-left: -26px;
 }
-/*------------- End autocomplete ------- */
 
+.openerp img.m2o_open {
+    vertical-align: middle;
+    cursor: pointer;
+}
+/*----- End Many2one Autosearch ------- */
+
+/* Many2one Contextmenu */
+.openerp div.m2o_contextmenu {
+    background-color: #444;
+    border: 1px solid #000;
+    white-space: nowrap;
+    position: absolute;
+    padding: 2px;
+    z-index: 100;
+}
+
+.openerp div.m2o_contextmenu a,
+.openerp div.m2o_contextmenu span {
+    display: block;
+    text-align: left;
+    text-decoration: none;
+    white-space: nowrap;
+    padding: 2px;
+    color: #FFF;
+    cursor: pointer;
+}
+
+.openerp div.m2o_contextmenu hr {
+    margin: 1px 0 !important;
+}
+
+.openerp div.m2o_contextmenu td {
+    padding: 1px;
+}
+
+.openerp div.m2o_contextmenu a:hover,
+.openerp div.m2o_contextmenu span:hover {
+    color: #FFF;
+    background-color: #505050;
+    text-decoration: none;
+}
+
+.openerp div.m2o_contextmenu a.disabled,
+.openerp div.m2o_contextmenu span.disabled {
+    color: #C0C0C0;
+}
+
+/*----- End Many2one Contextmenu ------- */
