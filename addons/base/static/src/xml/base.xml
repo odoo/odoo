@@ -156,7 +156,7 @@
     <t t-set="columns_count" t-value="visible_columns.length + (options.selectable ? 1 : 0) + (options.deletable ? 1 : 0)"/>
     <t t-set="actions_span" t-value="Math.floor((options.deletable or options.addable) ? columns_count/2 : 0)"/>
     <thead class="ui-widget-header">
-        <tr t-if="options.selectable">
+        <tr>
             <th t-if="actions_span" t-att-colspan="actions_span"
                 class="oe-actions">
                 <t t-if="flags.action_buttons !== false">
@@ -165,7 +165,7 @@
                         <t t-esc="options.addable"/>
                     </button>
                     <button type="button" id="oe-list-delete"
-                            t-if="options.deletable">
+                            t-if="options.selectable and options.deletable">
                         Delete
                     </button>
                 </t>
