@@ -104,7 +104,6 @@ class account_asset_asset(osv.osv):
             old_depreciation_line_ids = depreciation_lin_obj.search(cr, uid, [('asset_id', '=', asset.id), ('move_id', '=', False)])
             if old_depreciation_line_ids:
                 depreciation_lin_obj.unlink(cr, uid, old_depreciation_line_ids, context=context)
-
             undone_dotation_number = asset.method_delay - len(asset.account_move_line_ids)
             residual_amount = asset.value_residual
             depreciation_date = datetime.strptime(self._get_last_depreciation_date(cr, uid, [asset.id], context)[asset.id], '%Y-%m-%d')
@@ -116,20 +115,20 @@ class account_asset_asset(osv.osv):
                     amount = residual_amount
                 else:
                     if asset.method == 'linear':
-                        amount = asset.purchase_value / undone_dotation_number
+                        amount = asset.value_residual / undone_dotation_number
                     else:
                         amount = residual_amount * asset.method_progress_factor
                 residual_amount -= amount
                 vals = {
                      'amount': amount,
                      'asset_id': asset.id,
-                     'sequence':i,
+                     'sequence': i,
                      'name': str(asset.id) +'/'+ str(i),
                      'remaining_value': residual_amount,
                      'depreciated_value': asset.purchase_value - residual_amount,
                      'depreciation_date': depreciation_date.strftime('%Y-%m-%d'),
                 }
-                self.pool.get('account.asset.depreciation.line').create(cr, uid, vals)
+                depreciation_lin_obj.create(cr, uid, vals, context=context)
                 month += asset.method_period
                 depreciation_date = datetime(year + (month / 12), month % 12, day)
         return True
