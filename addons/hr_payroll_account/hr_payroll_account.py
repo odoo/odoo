@@ -141,29 +141,29 @@ class hr_payslip(osv.osv):
                     line_ids.append(credit_line)
             
             if debit_sum > credit_sum:
-                bal_credit_line = (0,0,{
+                adjust_credit = (0,0,{
                     'date': timenow,
                     'journal_id': slip.journal_id.id,
                     'period_id': period_id,
-                    'name': 'Balancing Entry',
+                    'name': 'Adjustment Entry',
                     'partner_id': partner_id,
                     'account_id': slip.journal_id.default_credit_account_id.id,
                     'debit': 0.0,
                     'credit': debit_sum - credit_sum,
                 })
-                line_ids.append(bal_credit_line)
+                line_ids.append(adjust_credit)
             else:
-                bal_debit_line = (0,0,{
+                adjust_debit = (0,0,{
                     'date': timenow,
                     'journal_id': slip.journal_id.id,
                     'period_id': period_id,
-                    'name': 'Balancing Entry',
+                    'name': 'Adjustment Entry',
                     'partner_id': partner_id,
                     'account_id': slip.journal_id.default_debit_account_id.id,
                     'debit': 0.0,
                     'credit': credit_sum - debit_sum,
                 })
-                line_ids.append(bal_debit_line)
+                line_ids.append(adjust_debit)
                 
             move.update({'line_id': line_ids})
             move_id = move_pool.create(cr, uid, move, context=context)
