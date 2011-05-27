@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+e# -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
@@ -110,16 +110,13 @@ class sugar_import(import_framework):
     def get_attachment(self, val):
         File, Filename = sugar.attachment_search(self.context.get('port'), self.context.get('session_id'), self.TABLE_NOTE, val.get('id')) 
         attach_xml_id = False
-        attachment_obj = self.obj.pool.get('ir.attachment')
-        model_obj = self.obj.pool.get('ir.model.data')
-        mailgate_obj = self.obj.pool.get('mailgate.message')
         if File:
             fields = ['name', 'datas', 'datas_fname','res_id', 'res_model']
             name = 'attachment_'+ (Filename or val.get('name'))
             datas = [Filename or val.get('name'), File, Filename, val.get('res_id'),val.get('model',False)]
             attach_xml_id = self.import_object(fields, datas, 'ir.attachment', self.TABLE_HISTORY_ATTACHMNET, name, [('res_id', '=', val.get('res_id'), ('model', '=', val.get('model')))])
-        return attach_xml_id    
-    
+        return attach_xml_id
+        
     """
     import Emails
     """
@@ -142,6 +139,7 @@ class sugar_import(import_framework):
                 'dependencies' : [self.TABLE_USER, self.TABLE_PROJECT, self.TABLE_PROJECT_TASK, self.TABLE_ACCOUNT, self.TABLE_CONTACT, self.TABLE_LEAD, self.TABLE_OPPORTUNITY, self.TABLE_MEETING, self.TABLE_CALL],
                 'hook' : self.import_email,
                 'map' : {'name':'name',
+                         'history' : const("1"),
                         'date':'date_sent',
                         'email_from': 'from_addr_name',
                         'email_to': 'reply_to_addr',
@@ -166,12 +164,14 @@ class sugar_import(import_framework):
         xml_id = self.xml_id_exist(val.get('parent_type'), val.get('parent_id'))
         model_ids = model_obj.search(self.cr, self.uid, [('name', 'like', xml_id)])
         if model_ids:
-              model = model_obj.browse(self.cr, self.uid, model_ids)[0]
-              if model.model == 'res.partner':
-                    val['partner_id/.id'] = model.res_id
-              else:    
-                    val['res_id'] = model.res_id
-                    val['model'] = model.model
+            model = model_obj.browse(self.cr, self.uid, model_ids)[0]
+            if model.model == 'res.partner':
+                print "res partner"
+                val['partner_id/.id'] = model.res_id
+                val['history'] = "1"
+            else:    
+                val['res_id'] = model.res_id
+                val['model'] = model.model
         return val    
     
     def get_history_mapping(self): 
@@ -188,6 +188,7 @@ class sugar_import(import_framework):
                       'model': 'model',
                       'attachment_ids/id': self.get_attachment,
                       'partner_id/.id' : 'partner_id/.id',
+                      'history' : 'history',
                 }
             }     
     
@@ -196,9 +197,9 @@ class sugar_import(import_framework):
     """
     def get_claim_priority(self, val):
         priority_dict = {            
-                'High': '2',
-                'Medium': '3',
-                'Low': '4'
+                'P1': '2',
+                'P2': '3',
+                'P3': '4'
         }
         return priority_dict.get(val.get('priority'), '')
         
@@ -218,7 +219,6 @@ class sugar_import(import_framework):
     def import_crm_claim(self, val):
         partner_address_id, partner_phone,partner_email =  self.get_contact_info_from_account(val)
         val['partner_address_id/.id'] = partner_address_id
-        val['partner_address_id/.id'] = partner_address_id
         val['partner_phone'] = partner_phone
         val['email_from'] = partner_email
         return val
@@ -229,10 +229,10 @@ class sugar_import(import_framework):
                 'dependencies' : [self.TABLE_USER, self.TABLE_ACCOUNT, self.TABLE_CONTACT, self.TABLE_LEAD],
                 'hook' : self.import_crm_claim,
                 'map' : {
-                    'name': 'name',
+                    'name': concat('case_number','name', delimiter='-'),
                     'date': 'date_entered',
                     'user_id/id': ref(self.TABLE_USER, 'assigned_user_id'),
-                    'description': ppconcat('description'),
+                    'description': ppconcat('description', 'resolution', 'work_log'),
                     'partner_id/id': ref(self.TABLE_ACCOUNT, 'account_id'),
                     'partner_address_id/.id': 'partner_address_id/.id',
                     'partner_phone': 'partner_phone',
@@ -253,6 +253,8 @@ class sugar_import(import_framework):
     }
      
     def get_project_issue_priority(self, val):
+        print "project issue value"
+        pp.pprint(val)
         priority_dict = {
                 'Urgent': '1',
                 'High': '2',
@@ -269,14 +271,15 @@ class sugar_import(import_framework):
     def get_project_issue_mapping(self):
         return { 
                 'model' : 'project.issue',
-                'dependencies' : [self.TABLE_USER, self.TABLE_PROJECT, self.TABLE_PROJECT_TASK],
+                'dependencies' : [self.TABLE_USER],
                 'map' : {
-                    'name': 'name',
+                    'name': concat('bug_number', 'name', delimiter='-'),
                     'project_id/id': call(self.get_bug_project_id, 'sugarcrm_bugs'),
                     'categ_id/id': call(self.get_category, 'project.issue', value('type')),
-                    'description': ppconcat('description', 'bug_number', 'fixed_in_release_name', 'source', 'fixed_in_release', 'work_log', 'found_in_release', 'release_name', 'resolution'),
+                    'description': ppconcat('description', 'source', 'resolution', 'work_log', 'found_in_release', 'release_name', 'fixed_in_release_name', 'fixed_in_release'),
                     'priority': self.get_project_issue_priority,
-                    'state': map_val('status', self.project_issue_state)
+                    'state': map_val('status', self.project_issue_state),
+                    'assigned_to/id' : ref(self.TABLE_USER, 'assigned_user_id'),
                 }
             }
     
@@ -292,12 +295,12 @@ class sugar_import(import_framework):
      }
     
     def get_project_task_priority(self, val):
-      priority_dict = {
+        priority_dict = {
             'High': '0',
             'Medium': '2',
             'Low': '3'
         }
-      return priority_dict.get(val.get('priority'), '')
+        return priority_dict.get(val.get('priority'), '')
     
     def get_project_task_mapping(self):
         return { 
@@ -307,12 +310,10 @@ class sugar_import(import_framework):
                     'name': 'name',
                     'date_start': 'date_start',
                     'date_end': 'date_finish',
-                    'progress': 'progress',
                     'project_id/id': ref(self.TABLE_PROJECT, 'project_id'),
-                    'planned_hours': 'planned_hours',
-                    'total_hours': 'total_hours',        
+                    'planned_hours': 'estimated_effort',
                     'priority': self.get_project_task_priority,
-                    'description': ppconcat('description','milestone_flag', 'project_task_id', 'task_number'),
+                    'description': ppconcat('description','milestone_flag', 'project_task_id', 'task_number', 'percent_complete'),
                     'user_id/id': ref(self.TABLE_USER, 'assigned_user_id'),
                     'partner_id/id': 'partner_id/id',
                     'contact_id/id': 'contact_id/id',
@@ -328,6 +329,7 @@ class sugar_import(import_framework):
             'In Review': 'open',
             'Published': 'close'
      }
+    
     def import_project_account(self, val):
         partner_id = False
         partner_invoice_id = False        
@@ -396,7 +398,8 @@ class sugar_import(import_framework):
        
     """
     import Calls
-    """     
+    """  
+    #TODO adapt with project trunk-crm-imp   
     call_state = {   
             'Planned' : 'open',
             'Held':'done',
