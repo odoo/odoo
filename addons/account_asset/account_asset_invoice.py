@@ -38,15 +38,16 @@ class account_invoice_line(osv.osv):
     def move_line_get_item(self, cr, uid, line, context={}):
         asset_obj = self.pool.get('account.asset.asset')
         res = super(account_invoice_line, self).move_line_get_item(cr, uid, line, context)
-        if line.asset_category_id:
-            vals = {
-                'name': line.product_id and (line.name + ": " + line.product_id.name) or line.name,
-                'category_id': line.asset_category_id.id,
-                'purchase_value': line.price_subtotal
-            }
-            asset_id = asset_obj.create(cr, uid, vals, context=context)
-            if line.asset_category_id.open_asset:
-                asset_obj.validate(cr, uid, [asset_id], context=context)
+        if line.invoice_id and line.invoice_id.type not in ['out_invoice', 'out_refund']: 
+            if line.asset_category_id:
+                vals = {
+                    'name': line.product_id and (line.name + ": " + line.product_id.name) or line.name,
+                    'category_id': line.asset_category_id.id,
+                    'purchase_value': line.price_subtotal
+                }
+                asset_id = asset_obj.create(cr, uid, vals, context=context)
+                if line.asset_category_id.open_asset:
+                    asset_obj.validate(cr, uid, [asset_id], context=context)
         return res
 account_invoice_line()
 
