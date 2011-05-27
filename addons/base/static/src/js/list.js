@@ -630,19 +630,19 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
      */
     point_insertion: function (row) {
         var $row = $(row);
-        var red_letter_tbody = $row.closest('tbody')[0];
+        var red_letter_tboday = $row.closest('tbody')[0];
 
         var $next_siblings = $row.nextAll();
         if ($next_siblings.length) {
-            var $root_kanal = $('<tbody>').insertAfter(red_letter_tbody);
+            var $root_kanal = $('<tbody>').insertAfter(red_letter_tboday);
 
             $root_kanal.append($next_siblings);
             this.elements.splice(
-                _.indexOf(this.elements, red_letter_tbody),
+                _.indexOf(this.elements, red_letter_tboday),
                 0,
                 $root_kanal[0]);
         }
-        return red_letter_tbody;
+        return red_letter_tboday;
     },
     open_group: function (e, group) {
         var row = e.currentTarget;
