@@ -351,7 +351,7 @@
             <para style="P21">[[ h['name'] ]]<font face="Helvetica">[[ h['level']!=0 and ( setTag('para','para',{'style':'terp_default_8'})) or removeParentNode('font')]]</font></para>
           </td>
           <td>
-            <para style="P7">[[ h['total'] ]] [[o.company_id and o.company_id.currency_id.symbol or '']] <font face="Helvetica" size="8.0">[[ h['level']!=0 and ( setTag('para','para',{'style':'terp_default_10'})) or removeParentNode('font') ]]</font></para>
+            <para style="P7">[[ h['total'] or '0.0' ]] [[o.company_id and o.company_id.currency_id.symbol or '']] <font face="Helvetica" size="8.0">[[ h['level']!=0 and ( setTag('para','para',{'style':'terp_default_10'})) or removeParentNode('font') ]]</font></para>
           </td>
         </tr>
       </blockTable>

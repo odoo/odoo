@@ -312,10 +312,10 @@
             <para style="P4">[[ p.name ]]</para>
           </td>
           <td>
-            <para style="P4">[[ p.quantity ]]</para>
+            <para style="P4">[[ p.quantity or '0.0']]</para>
           </td>
           <td>
-            <para style="P4">[[ p.amount ]]</para>
+            <para style="P4">[[ p.amount or '0.0']]</para>
           </td>
           <td>
             <para style="P5">[[ p.total or '0.0']] [[o.company_id and o.company_id.currency_id.symbol or '']]</para>
