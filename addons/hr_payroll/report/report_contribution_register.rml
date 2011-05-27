@@ -65,6 +65,8 @@
     <blockTableStyle id="Table5">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="1,0" stop="1,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="2,0" stop="2,0"/>
     </blockTableStyle>
     <initialize>
       <paraStyle name="all" alignment="justify"/>
@@ -81,15 +83,13 @@
     <paraStyle name="P10" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="RIGHT"/>
     <paraStyle name="P11" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="RIGHT"/>
     <paraStyle name="P12" rightIndent="0.0" leftIndent="0.0" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="P13" rightIndent="0.0" leftIndent="0.0" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P13" rightIndent="0.0" leftIndent="0.0" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="P14" rightIndent="0.0" leftIndent="0.0" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="P15" fontName="Helvetica" fontSize="2.0" leading="3" alignment="LEFT"/>
-    <paraStyle name="P16" fontName="Helvetica" fontSize="2.0" leading="3"/>
-    <paraStyle name="P17" rightIndent="0.0" leftIndent="0.0" fontName="Helvetica" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="P18" rightIndent="0.0" leftIndent="0.0" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="P19" rightIndent="0.0" leftIndent="0.0" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="P20" rightIndent="0.0" leftIndent="0.0" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="P21" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="LEFT"/>
+    <paraStyle name="P15" rightIndent="0.0" leftIndent="0.0" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P16" rightIndent="0.0" leftIndent="0.0" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P17" fontName="Helvetica" fontSize="2.0" leading="3"/>
+    <paraStyle name="P18" fontName="Helvetica" fontSize="2.0" leading="3" alignment="LEFT"/>
+    <paraStyle name="P19" rightIndent="0.0" leftIndent="0.0" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="Standard" fontName="Helvetica"/>
     <paraStyle name="Heading" fontName="Helvetica" fontSize="14.0" leading="17" spaceBefore="12.0" spaceAfter="6.0"/>
     <paraStyle name="Text body" fontName="Helvetica" spaceBefore="0.0" spaceAfter="6.0"/>
@@ -128,17 +128,17 @@
     <para style="P5">
       <font color="white"> </font>
     </para>
-    <para style="P18"/>
+    <para style="P15"/>
     <blockTable colWidths="254.0,143.0,141.0" style="Table3">
       <tr>
         <td>
-          <para style="P19">Register Name</para>
+          <para style="P16">Register Name</para>
         </td>
         <td>
-          <para style="P14">Date From</para>
+          <para style="P13">Date From</para>
         </td>
         <td>
-          <para style="P20">Date To</para>
+          <para style="P14">Date To</para>
         </td>
       </tr>
     </blockTable>
@@ -162,7 +162,7 @@
     <para style="P8">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="194.0,35.0,167.0,46.0,48.0,48.0" style="Table2">
+    <blockTable colWidths="194.0,35.0,142.0,56.0,43.0,69.0" style="Table2">
       <tr>
         <td>
           <para style="P9">PaySlip Name</para>
@@ -186,7 +186,7 @@
     </blockTable>
     <section>
       <para style="P2">[[repeatIn(get_payslip_lines(o),'r') ]]</para>
-      <blockTable colWidths="195.0,35.0,166.0,47.0,48.0,48.0" style="Table16">
+      <blockTable colWidths="194.0,35.0,142.0,56.0,43.0,68.0" style="Table16">
         <tr>
           <td>
             <para style="P12">[[ r.get('payslip_name', False) ]]<font face="Helvetica">[[ r.get('payslip_name', False) and ( setTag('para','para',{'style':'terp_default_8'})) or removeParentNode('font')]]</font></para>
@@ -198,10 +198,10 @@
             <para style="P2">[[ r['name'] ]]</para>
           </td>
           <td>
-            <para style="P2">[[ r['quantity'] ]]</para>
+            <para style="P2">[[ r['quantity'] or '0.0']]</para>
           </td>
           <td>
-            <para style="P2">[[ r['amount'] ]]</para>
+            <para style="P2">[[ r['amount'] or '0.0']]</para>
           </td>
           <td>
             <para style="P3">[[ r['total'] or '0.0']] [[o.company_id and o.company_id.currency_id.symbol or '']]</para>
@@ -209,16 +209,24 @@
         </tr>
       </blockTable>
     </section>
-    <blockTable colWidths="479.0,60.0" style="Table5">
+    <blockTable colWidths="397.0,31.0,111.0" style="Table5">
       <tr>
         <td>
-          <para style="P13">Total:</para>
+          <para style="P19">
+            <font color="white"> </font>
+          </para>
+        </td>
+        <td>
+          <para style="P19">Total:</para>
         </td>
         <td>
           <para style="P11">[[ sum_total() or 0.0]] [[o.company_id and o.company_id.currency_id.symbol or '']]</para>
         </td>
       </tr>
     </blockTable>
+    <para style="Standard">
+      <font color="white"> </font>
+    </para>
   </story>
 </document>
 
