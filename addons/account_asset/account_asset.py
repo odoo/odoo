@@ -22,6 +22,7 @@
 from osv import osv, fields
 import time
 from datetime import datetime
+import decimal_precision as dp
 
 class account_asset_category(osv.osv):
     _name = 'account.asset.category'
@@ -172,7 +173,7 @@ class account_asset_asset(osv.osv):
         'prorata':fields.boolean('Prorata Temporis', Readonly="True", help='Indicates that the accounting entries for this asset have to be done from the purchase date instead of the first January'),
         'history_ids': fields.one2many('account.asset.history', 'asset_id', 'History', readonly=True),
         'depreciation_line_ids': fields.one2many('account.asset.depreciation.line', 'asset_id', 'Depreciation Lines', readonly=True,),
-        'salvage_value': fields.float('Salvage Value', digits=(16,2), required=True, help="It is the amount you plan to have that you can't depreciate."),
+        'salvage_value': fields.float('Salvage Value', digits_compute=dp.get_precision('Account'), help="It is the remaining value of an asset after it has been fully depreciated."),
     }
     _defaults = {
         'code': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'account.asset.code'),
