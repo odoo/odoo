@@ -1,4 +1,24 @@
 -
+    Testing for hierarchical search in M2M
+-
+    !python {model: res.partner }: |
+        ids = self.search(cr, uid, [('category_id', 'child_of','supplier')])
+        assert len(ids) >= 1, ids
+
+-
+    Test hierarchical search in M2M with child ID1
+-
+    !python {model: res.partner }: |
+        ids = self.search(cr, uid, [('category_id', 'child_of','Components Supplier')])
+        assert len(ids) >= 1, ids
+-
+    Test hierarchical search in M2M with child ID2
+-
+    !python {model: res.partner }: |
+        ids = self.search(cr, uid, [('category_id', 'child_of','Miscellaneous Suppliers')])
+        assert len(ids) >= 1, ids
+
+-
     Testing that some domain expressions work
 -
     !python {model: res.partner.address }: |
@@ -40,7 +60,7 @@
 -
     !assert {model: res.partner, search: "[('category_id', '=', False)]"}:
         - category_id in (False, None, [])
-- 
+-
     Filtering on invalid value across x2many relationship should return an empty set
 -
     !assert {model: res.partner, search: "[('address.city','=','foo')]", count: 0, string: "Searching for address.city = foo should give empty results"}
