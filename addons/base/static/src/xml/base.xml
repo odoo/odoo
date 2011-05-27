@@ -566,7 +566,13 @@
         <div class="oe_search-view-buttons" style="text-align: right;">
             <input type="submit" value="Search"/>
             <input type="reset" value="Clear"/>
-            <button class="oe_search-view-custom-filter-btn">Custom Filters</button>
+            <button class="oe_search-view-custom-filter-btn"><span>Advanced Filter</span></button>
+            <select class="oe_search-view-filters-management">
+                <option value="_filters">-- Filters --</option>
+                <option value="_actions">-- Actions --</option>
+                <option value="save_filter">Save Filter</option>
+                <option value="manage_filters">Manage Filters</option>
+            </select>
         </div>
     </form>
 </t>
@@ -670,12 +676,10 @@
 <t t-name="SearchView.extended_search">
     <t t-call="SearchView.util.expand">
         <t t-set="expand" t-value="false"/>
-        <t t-set="label" t-value="'Custom Filters'"/>
+        <t t-set="label" t-value="'Advanced Filters'"/>
         <t t-set="content">
             <div class="searchview_extended_groups_list">
             </div>
-            <button class="searchview_extended_add_group"
-                    type="button"><span>Add group of conditions</span></button>
         </t>
     </t>
 </t>
@@ -686,11 +690,12 @@
             <option value="any">Any of the following conditions must match</option>
             <option value="none">None of the following conditions must match</option>
         </select>
-        <button class="searchview_extended_delete_group"
-                type="button"><span></span></button>
+        <a class="searchview_extended_delete_group" 
+                href="javascript:void(0)"><span></span></a>
         <div class="searchview_extended_propositions_list">
         </div>
-        <button class="searchview_extended_add_proposition" type="button"><span>Add condition</span></button>
+        <a class="searchview_extended_add_proposition" href="javascript:void(0)">
+            <span>Add condition</span></a>
     </div>
 </t>
 <t t-name="SearchView.extended_search.proposition">
@@ -705,8 +710,8 @@
         </select>
         <select class="searchview_extended_prop_op"/>
         <span class="searchview_extended_prop_value"/>
-        <button class="searchview_extended_delete_prop"
-                type="button"><span>Delete this condition</span></button>
+        <a class="searchview_extended_delete_prop"
+                href="javascript:void(0)"><span></span></a>
     </div>
 </t>
 <t t-name="SearchView.extended_search.proposition.char">

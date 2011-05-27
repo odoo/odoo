@@ -135,6 +135,28 @@ openerp.base.SearchView = openerp.base.Controller.extend({
         _(lines).chain().flatten().each(function (widget) {
             widget.start();
         });
+        
+        // filters management
+        this.$element.find(".oe_search-view-filters-management").change(this.on_filters_management);
+    },
+    /**
+     * Handle event when the user make a selection in the filters management select box.
+     */
+    on_filters_management: function(e) {
+        var select = this.$element.find(".oe_search-view-filters-management");
+        var val = select.val();
+        select.val("_filters");
+        
+        if (val.slice(0,1) == "_") // useless action
+            return;
+        if (val.slice(0, "get:".length) == "get:") {
+            val = val.slice("get:".length);
+            //TODO niv
+        } else if (val == "save_filter") {
+            //TODO niv
+        } else { // manage_filters
+            //TODO niv
+        }
     },
     /**
      * Performs the search view collection of widget data.
