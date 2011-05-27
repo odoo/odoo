@@ -469,6 +469,18 @@ class orm_template(object):
         raise NotImplementedError(_('The read_group method is not implemented on this object !'))
 
     def _field_create(self, cr, context=None):
+        """
+
+        Create/update entries in ir_model, ir_model_data, and ir_model_fields.
+
+        - create an entry in ir_model (if there is not already one),
+        - create an entry in ir_model_data (if there is not already one, and if
+          'module' is in the context),
+        - update ir_model_fields with the fields found in _columns
+          (TODO there is some redundancy as _columns is updated from
+          ir_model_fields in __init__).
+
+        """
         if context is None:
             context = {}
         cr.execute("SELECT id FROM ir_model WHERE model=%s", (self._name,))
@@ -565,7 +577,21 @@ class orm_template(object):
     #       put objects in the pool var
     #
     @classmethod
-    def makeInstance(cls, pool, module, cr, attributes):
+    def makeInstance(cls, pool, cr, attributes):
+        """ Instanciate a given model.
+
+        This class method instanciates the class of some model (i.e. a class
+        deriving from osv or osv_memory). The class might be the class passed
+        in argument or, if it inherits from another class, a class constructed
+        by combining the two classes.
+
+        The ``attributes`` argument specifies which parent class attributes
+        have to be combined.
+
+        TODO: the creation of the combined class is repeated at each call of
+        this method. This is probably unnecessary.
+
+        """
         parent_names = getattr(cls, '_inherit', None)
         if parent_names:
             if isinstance(parent_names, (str, unicode)):
@@ -579,7 +605,9 @@ class orm_template(object):
 
             for parent_name in ((type(parent_names)==list) and parent_names or [parent_names]):
                 parent_class = pool.get(parent_name).__class__
-                assert pool.get(parent_name), "parent class %s does not exist in module %s !" % (parent_name, module)
+                if not pool.get(parent_name):
+                    raise TypeError('The model "%s" specifies an unexisting parent class "%s"\n'
+                        'You may need to add a dependency on the parent class\' module.' % (name, parent_name))
                 nattr = {}
                 for s in attributes:
                     new = copy.copy(getattr(pool.get(parent_name), s))
@@ -2031,8 +2059,8 @@ class orm_memory(orm_template):
     _check_time = 20
 
     @classmethod
-    def createInstance(cls, pool, module, cr):
-        return cls.makeInstance(pool, module, cr, ['_columns', '_defaults'])
+    def createInstance(cls, pool, cr):
+        return cls.makeInstance(pool, cr, ['_columns', '_defaults'])
 
     def __init__(self, pool, cr):
         super(orm_memory, self).__init__(pool, cr)
@@ -2501,6 +2529,21 @@ class orm(orm_template):
                                     self._table, column['attname'])
 
     def _auto_init(self, cr, context=None):
+        """
+
+        Call _field_create and, unless _auto is False:
+
+        - create the corresponding table in database for the model,
+        - possibly add the parent columns in database,
+        - possibly add the columns 'create_uid', 'create_date', 'write_uid',
+          'write_date' in database if _log_access is True (the default),
+        - report on database columns no more existing in _columns,
+        - remove no more existing not null constraints,
+        - alter existing database columns to match _columns,
+        - create database tables to match _columns,
+        - add database indices to match _columns,
+
+        """
         raise_on_invalid_object_name(self._name)
         if context is None:
             context = {}
@@ -2908,11 +2951,20 @@ class orm(orm_template):
         return todo_end
 
     @classmethod
-    def createInstance(cls, pool, module, cr):
-        return cls.makeInstance(pool, module, cr, ['_columns', '_defaults',
+    def createInstance(cls, pool, cr):
+        return cls.makeInstance(pool, cr, ['_columns', '_defaults',
             '_inherits', '_constraints', '_sql_constraints'])
 
     def __init__(self, pool, cr):
+        """
+
+        - copy the stored fields' functions in the osv_pool,
+        - update the _columns with the fields found in ir_model_fields,
+        - ensure there is a many2one for each _inherits'd parent,
+        - update the children's _columns,
+        - give a chance to each field to initialize itself.
+
+        """
         super(orm, self).__init__(pool, cr)
 
         if not hasattr(self, '_log_access'):
@@ -2997,6 +3049,8 @@ class orm(orm_template):
             assert (k in self._columns) or (k in self._inherit_fields), 'Default function defined in %s but field %s does not exist !' % (self._name, k,)
         for f in self._columns:
             self._columns[f].restart()
+
+    __init__.__doc__ = orm_template.__init__.__doc__ + __init__.__doc__
 
     #
     # Update objects that uses this one to update their _inherits fields
