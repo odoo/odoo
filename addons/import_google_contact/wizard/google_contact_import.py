@@ -68,7 +68,7 @@ class synchronize_google_contact(osv.osv_memory):
         gd_client = google.google_login(user_obj.gmail_user,user_obj.gmail_password,type='group')
         if not gd_client:
             raise osv.except_osv(_('Error'), _("Authentication fail check the user and password !"))
-        
+
         res = []
         query = gdata.contacts.service.GroupsQuery(feed='/m8/feeds/groups/default/full')
         if gd_client:
@@ -105,7 +105,7 @@ class synchronize_google_contact(osv.osv_memory):
                                                   'supplier': data.get('supplier', False)
                                         }, context=context)
         return partner_id
-    
+
     def set_partner(self, cr, uid, name, address_id, context=None):
         partner_pool = self.pool.get('res.partner')
         partner_ids = partner_pool.search(cr, uid, [('name', '=', name)], context=context)
@@ -213,7 +213,7 @@ class synchronize_google_contact(osv.osv_memory):
                             partner_ids.append(partner_id)
                     addresses.append(res_id)
 
-                if not data_ids: #link to google_id if it was not the case before            
+                if not data_ids: #link to google_id if it was not the case before
                     model_data.update({'res_id': res_id})
                     model_obj.create(cr, uid, model_data, context=context)
 
@@ -224,7 +224,7 @@ class synchronize_google_contact(osv.osv_memory):
             return partner_ids
         else:
             return addresses
-        
+
     def _retreive_data(self, entry):
         data = {}
         data['id'] = entry.id.text
@@ -267,7 +267,7 @@ class synchronize_google_contact(osv.osv_memory):
             vals['phone'] = data.get('phone','')
         if addr.fax != data.get('fax'):
             vals['fax'] = data.get('fax','')
-        
+
         addresss_obj.write(cr, uid, contact_ids, vals, context=context)
         return {'type': 'ir.actions.act_window_close'}
 
