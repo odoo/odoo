@@ -1080,7 +1080,7 @@ openerp.base.form.FieldMany2Many = openerp.base.form.Field.extend({
     },
     check_load: function() {
         if(this.is_started && this.is_setted) {
-            this.list_view.do_reload();
+            this.list_view.reload_view();
         }
     }
 });
@@ -1090,11 +1090,11 @@ openerp.base.form.Many2ManyListView = openerp.base.ListView.extend({
         this.dataset.ids = _.without.apply(null, [this.dataset.ids].concat(ids));
         this.dataset.count = this.dataset.ids.length;
         // there may be a faster way
-        this.do_reload();
+        this.reload_view();
         
         this.m2m_field.on_ui_change();
     },
-    do_reload: function () {
+    reload_view: function () {
         /* Dear xmo, according to your comments, this method's implementation in list view seems
          * to be a little bit bullshit.
          * I assume the list view will be changed later, so I hope it will support static datasets.
@@ -1115,7 +1115,7 @@ openerp.base.form.Many2ManyListView = openerp.base.ListView.extend({
             if(! _.detect(self.dataset.ids, function(x) {return x == element_id;})) {
                 self.dataset.ids.push(element_id);
                 self.dataset.count = self.dataset.ids.length;
-                self.do_reload();
+                self.reload_view();
             }
             pop.stop();
         });
@@ -1188,7 +1188,7 @@ openerp.base.form.Many2XSelectPopup = openerp.base.BaseWidget.extend({
             var tmphack = {"loaded": false};
             self.view_list.on_loaded.add_last(function() {
                 if ( !tmphack.loaded ) {
-                    self.view_list.do_reload();
+                    self.view_list.reload_view();
                     tmphack.loaded = true;
                 };
             });
