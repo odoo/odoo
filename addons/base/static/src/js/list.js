@@ -44,7 +44,6 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
      * @borrows openerp.base.ActionExecutor#execute_action as #execute_action
      */
     init: function(view_manager, session, element_id, dataset, view_id, options) {
-        var self = this;
         this._super(session, element_id);
         this.view_manager = view_manager || new openerp.base.NullViewManager();
         this.dataset = dataset;
@@ -56,10 +55,21 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
         this.options = _.extend({}, this.defaults, options || {});
         this.flags =  this.view_manager.action.flags;
 
-        this.groups = new openerp.base.ListView.Groups(this, {
-            options: this.options,
-            columns: this.columns
-        });
+        this.set_groups(new openerp.base.ListView.Groups(this));
+    },
+    /**
+     * Set a custom Group construct as the root of the List View.
+     *
+     * @param {openerp.base.ListView.Groups} groups
+     */
+    set_groups: function (groups) {
+        var self = this;
+        if (this.groups) {
+            $(this.groups).unbind("selected deleted action row_link");
+            delete this.groups;
+        }
+
+        this.groups = groups;
         $(this.groups).bind({
             'selected': function (e, ids, records) {
                 self.do_select(ids, records);
@@ -89,7 +99,6 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
                 });
             }
         });
-
     },
     /**
      * View startup method, the default behavior is to set the ``oe-listview``
@@ -99,11 +108,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
      */
     start: function() {
         this.$element.addClass('oe-listview');
-        return this.rpc("/base/listview/load", {
-            model: this.model,
-            view_id: this.view_id,
-            toolbar: !!this.flags.sidebar
-        }, this.on_loaded);
+        return this.reload_view();
     },
     /**
      * Called after loading the list view's description, sets up such things
@@ -126,15 +131,15 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
      * @param {Object} data.fields_view fields_view_get result (processed)
      * @param {Object} data.fields_view.fields mapping of fields for the current model
      * @param {Object} data.fields_view.arch current list view descriptor
-     * @param {Array} columns columns to move to the front (and make visible)
+     * @param {Boolean} grouped Is the list view grouped
      */
-    on_loaded: function(data, columns) {
+    on_loaded: function(data, grouped) {
         var self = this;
         this.fields_view = data.fields_view;
         //this.log(this.fields_view);
         this.name = "" + this.fields_view.arch.attrs.string;
 
-        this.setup_columns(this.fields_view.fields, columns);
+        this.setup_columns(this.fields_view.fields, grouped);
 
         if (!this.fields_view.sorted) { this.fields_view.sorted = {}; }
 
@@ -151,7 +156,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
             self.dataset.sort($(this).data('id'));
 
             // TODO: should only reload content (and set the right column to a sorted display state)
-            self.do_reload();
+            self.reload_view();
         });
 
         this.view_manager.sidebar.set_toolbar(data.fields_view.toolbar);
@@ -162,9 +167,9 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
      * visible.
      *
      * @param {Object} fields fields_view_get's fields section
-     * @param {Array} groupby_columns columns the ListView is grouped by
+     * @param {Boolean} [grouped] Should the grouping columns (group and count) be displayed
      */
-    setup_columns: function (fields, groupby_columns) {
+    setup_columns: function (fields, grouped) {
         var domain_computer = openerp.base.form.compute_domain;
 
         var noop = function () { return {}; };
@@ -192,7 +197,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
         this.columns.push.apply(
                 this.columns,
                 _(this.fields_view.arch.children).map(field_to_column));
-        if (groupby_columns) {
+        if (grouped) {
             this.columns.unshift({
                 id: '_group', tag: '', string: "Group", meta: true,
                 attrs_for: function () { return {}; }
@@ -257,26 +262,20 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
         this.hidden = true;
     },
     /**
-     * Reloads the search view based on the current settings (dataset & al)
+     * Reloads the list view based on the current settings (dataset & al)
      *
-     * @param {Array} [primary_columns] columns to bring to the front of the
-     *                                  sequence
+     * @param {Boolean} [grouped] Should the list be displayed grouped
      */
-    do_reload: function (primary_columns) {
-        // TODO: should just fields_view_get I think
+    reload_view: function (grouped) {
         var self = this;
         this.dataset.offset = 0;
         this.dataset.limit = false;
-        return this.rpc('/base/listview/fill', {
-            'model': this.dataset.model,
-            'id': this.view_id,
-            'context': this.dataset.context,
-            'domain': this.dataset.domain,
-            'sort': this.dataset.sort && this.dataset.sort()
-        }, function (result) {
-            if (result.view) {
-                self.on_loaded({fields_view: result.view}, primary_columns);
-            }
+        return this.rpc('/base/listview/load', {
+            model: this.model,
+            view_id: this.view_id,
+            toolbar: !!this.flags.sidebar
+        }, function (field_view_get) {
+            self.on_loaded(field_view_get, grouped);
         });
     },
     /**
@@ -298,17 +297,17 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
             self.dataset.context = results.context;
             self.dataset.domain = results.domain;
             self.groups.datagroup = new openerp.base.DataGroup(
-                self.session, self.dataset.model,
+                self.session, self.model,
                 results.domain, results.context,
                 results.group_by);
 
             if (_.isEmpty(results.group_by) && !results.context['group_by_no_leaf']) {
                 results.group_by = null;
             }
-            self.do_reload(results.group_by).then(function () {
+            self.reload_view(!!results.group_by).then(function () {
                 self.$element.find('table').append(
-                        self.groups.render(function () {
-                            self.compute_aggregates();}));});
+                    self.groups.render(function () {
+                        self.compute_aggregates();}));});
         });
     },
     /**
@@ -366,7 +365,6 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
      * The default implementation is to switch to a new record on the form view
      */
     do_add_record: function () {
-        this.notification.notify('Add', "New record");
         this.select_record(null);
     },
     /**
@@ -435,7 +433,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
                             / collection.length);
                         break;
                     case 'sum':
-                         value = (_(collection).chain()
+                        value = (_(collection).chain()
                             .filter(function (item) {
                                 return !_.isUndefined(item); })
                             .reduce(function (total, item) {
@@ -491,7 +489,6 @@ openerp.base.ListView.List = Class.extend( /** @lends openerp.base.ListView.List
      */
     init: function (opts) {
         var self = this;
-        // columns, rows, options
 
         this.options = opts.options;
         this.columns = opts.columns;
@@ -603,11 +600,11 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
      * Provides events similar to those of
      * :js:class:`~openerp.base.ListView.List`
      */
-    init: function (view, opts) {
+    init: function (view) {
         this.view = view;
-        this.options = opts.options;
-        this.columns = opts.columns;
-        this.datagroup = {};
+        this.options = view.options;
+        this.columns = view.columns;
+        this.datagroup = null;
 
         this.sections = [];
         this.children = {};
@@ -701,7 +698,6 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
             }
             placeholder.appendChild($row[0]);
 
-
             var $group_column = $('<th>').appendTo($row);
             if (group.grouped_on) {
                 // Don't fill this if group_by_no_leaf but no group_by
@@ -784,18 +780,27 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
         this.bind_child_events(list);
 
         var d = new $.Deferred();
-        this.view.rpc('/base/listview/fill', {
-            model: dataset.model,
-            id: this.view.view_id,
-            context: dataset.context,
-            domain: dataset.domain,
-            sort: dataset.sort && dataset.sort()
-        }, function (result) {
-            rows.splice(0, rows.length);
-            rows.push.apply(rows, result.records);
-            list.render();
-            d.resolve(list);
-        });
+        dataset.read_slice(
+            _.filter(_.pluck(this.columns, 'name'), _.identity),
+            0, false,
+            function (records) {
+                var form_records = _(records).map(function (record) {
+                    // TODO: colors handling
+                    var form_data = {},
+                      form_record = {data: form_data};
+
+                    _(record).each(function (value, key) {
+                        form_data[key] = {value: value};
+                    });
+
+                    return form_record;
+                });
+
+                rows.splice(0, rows.length);
+                rows.push.apply(rows, form_records);
+                list.render();
+                d.resolve(list);
+            });
         return d.promise();
     },
     render: function (post_render) {

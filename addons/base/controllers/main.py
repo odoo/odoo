@@ -580,56 +580,6 @@ class ListView(View):
             view_attributes['editable'] = 'bottom'
         return view
 
-    @openerpweb.jsonrequest
-    def fill(self, request, model, id, domain,
-             offset=0, limit=False, sort=None):
-        return self.do_fill(request, model, id, domain, offset, limit, sort)
-
-    def do_fill(self, request, model, id, domain,
-                offset=0, limit=False, sort=None):
-        """ Returns all information needed to fill a table:
-
-        * view with processed ``editable`` flag
-        * fields (columns) with processed ``invisible`` flag
-        * rows with processed ``attrs`` and ``colors``
-
-        .. note:: context is passed through ``request`` parameter
-
-        :param request: OpenERP request
-        :type request: openerpweb.openerpweb.JsonRequest
-        :type str model: OpenERP model for this list view
-        :type int id: view_id, or False if none provided
-        :param list domain: the search domain to search for
-        :param int offset: search offset, for pagination
-        :param int limit: search limit, for pagination
-        :returns: hell if I have any idea yet
-        """
-        view = self.fields_view_get(request, model, id, toolbar=True)
-
-        rows = DataSet().do_search_read(request, model,
-                                        offset=offset, limit=limit,
-                                        domain=domain, sort=sort)
-        eval_context = request.session.evaluation_context(
-            request.context)
-
-        if sort:
-            sort_criteria = sort.split(',')[0].split(' ')
-            view['sorted'] = {
-                'field': sort_criteria[0],
-                'reversed': sort_criteria[1] == 'DESC'
-            }
-        else:
-            view['sorted'] = {}
-        return {
-            'view': view,
-            'records': [
-                {'data': dict((key, {'value': value})
-                              for key, value in row.iteritems()),
-                 'color': self.process_colors(view, row, eval_context)}
-                for row in rows
-            ]
-        }
-
     def process_colors(self, view, row, context):
         colors = view['arch']['attrs'].get('colors')
 
