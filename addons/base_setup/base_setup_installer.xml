@@ -217,12 +217,12 @@
           <field name="type">form</field>
           <field name="inherit_id" ref="base.view_company_form" />
           <field name="arch" type="xml">
-                <field name="rml_footer2" position="after">
-                     <newline/>
-                     <separator string="" colspan="4"/>
-                     <group colspan="4" col="2">
-                     <button name="preview_report" string="Preview Report" type="object" icon="gtk-print"/>
-                     </group>
+                <field name="rml_header" position="before">
+                    <group colspan="4" col="8">
+                        <label string="" colspan="7"/>
+                        <button name="preview_report" string="Preview Report" type="object" icon="gtk-print"/>
+                        <separator string="" colspan="8"/>
+                    </group>
                 </field>
           </field>
       </record>
