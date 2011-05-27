@@ -216,6 +216,14 @@ class account_asset_asset(osv.osv):
             }
         return res
     
+    def copy(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        if context is None:
+            context = {}
+        default.update({'depreciation_line_ids': [], 'state': 'draft'})
+        return super(account_asset_asset, self).copy(cr, uid, id, default, context=context)
+
     def _compute_period(self, cr, uid, property, context={}):
         if (len(property.entry_asset_ids or [])/2)>=property.method_delay:
             return False
