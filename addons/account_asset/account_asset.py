@@ -95,7 +95,7 @@ class account_asset_asset(osv.osv):
                 depreciation_lin_obj.unlink(cr, uid, old_depreciation_line_ids, context=context)
 
             undone_dotation_number = asset.method_delay - len(asset.account_move_line_ids)
-            residual_amount = asset.value_residual - asset.salvage_value
+            salvage_amount = residual_amount = asset.value_residual - asset.salvage_value
             depreciation_date = datetime.strptime(self._get_last_depreciation_date(cr, uid, [asset.id], context)[asset.id], '%Y-%m-%d')
             day = depreciation_date.day
             month = depreciation_date.month
@@ -105,7 +105,7 @@ class account_asset_asset(osv.osv):
                     amount = residual_amount
                 else:
                     if asset.method == 'linear':
-                        amount = (asset.purchase_value - asset.salvage_value) / undone_dotation_number
+                        amount = salvage_amount / undone_dotation_number
                     else:
                         amount = residual_amount * asset.method_progress_factor
                 residual_amount -= amount
@@ -115,7 +115,7 @@ class account_asset_asset(osv.osv):
                      'sequence':i,
                      'name': str(asset.id) +'/'+ str(i),
                      'remaining_value': residual_amount,
-                     'depreciated_value': asset.purchase_value - residual_amount,
+                     'depreciated_value': salvage_amount - residual_amount,
                      'depreciation_date': depreciation_date.strftime('%Y-%m-%d'),
                 }
                 self.pool.get('account.asset.depreciation.line').create(cr, uid, vals)
