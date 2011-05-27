@@ -21,7 +21,6 @@
 
 import import_google_contact
 import wizard
-import import_google_contact_installer
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

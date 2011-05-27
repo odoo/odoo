@@ -1,6 +1,17 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
+
+		<record model="ir.ui.view" id="view_google_login_contact_form">
+			<field name="name">google.login.contact.form</field>
+			<field name="model">google.login.contact</field>
+			<field name="type">form</field>
+			<field name="inherit_id" ref="google_base_account.view_google_login_form" />
+			<field name="arch" type="xml">
+				<data> </data>
+			</field>
+		</record>
+
         <record model="ir.ui.view" id="view_synchronize_google_contact_import_form">
             <field name="name">synchronize.base.form</field>
             <field name="model">synchronize.google.contact.import</field>
@@ -30,10 +41,10 @@
             </field>
         </record>
 
-        <record model="ir.actions.act_window" id="act_import_google_contacts_form">
+        <record model="ir.actions.act_window" id="act_google_login_contact_form">
           <field name="name">Import Contacts</field>
           <field name="type">ir.actions.act_window</field>
-          <field name="res_model">synchronize.google.contact.import</field>
+          <field name="res_model">google.login.contact</field>
           <field name="view_type">form</field>
           <field name="view_mode">form</field>
           <field name="target">new</field>
