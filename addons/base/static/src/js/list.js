@@ -264,6 +264,14 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
         });
     },
     /**
+     * re-renders the content of the list view
+     */
+    reload_content: function () {
+        this.$element.find('table').append(
+            this.groups.render(
+                $.proxy(this, 'compute_aggregates')));
+    },
+    /**
      * Event handler for a search, asks for the computation/folding of domains
      * and contexts (and group-by), then reloads the view's content.
      *
@@ -289,10 +297,8 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
             if (_.isEmpty(results.group_by) && !results.context['group_by_no_leaf']) {
                 results.group_by = null;
             }
-            self.reload_view(!!results.group_by).then(function () {
-                self.$element.find('table').append(
-                    self.groups.render(function () {
-                        self.compute_aggregates();}));});
+            self.reload_view(!!results.group_by).then(
+                $.proxy(self, 'reload_content'));
         });
     },
     /**
@@ -875,3 +881,4 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
 };
 
 // vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:
+
