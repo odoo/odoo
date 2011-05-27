@@ -333,6 +333,8 @@ class hr_employee(osv.osv):
         holiday_obj = self.pool.get('hr.holidays')
         # Find for holidays status
         status_ids = type_obj.search(cr, uid, [('limit', '=', False)], context=context)
+        if len(status_ids) != 1 :
+            raise osv.except_osv(('warning !'),_("You should have only one leave type without allowing override limit, %s Found !") % (len(status_ids)))
         status_id = status_ids and status_ids[0] or False
         if not status_id or diff <= 0:
             return False
