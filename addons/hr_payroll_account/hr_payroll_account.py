@@ -160,8 +160,8 @@ class hr_payslip(osv.osv):
                     'name': 'Adjustment Entry',
                     'partner_id': partner_id,
                     'account_id': slip.journal_id.default_debit_account_id.id,
-                    'debit': 0.0,
-                    'credit': credit_sum - debit_sum,
+                    'debit': credit_sum - debit_sum,
+                    'credit': 0.0
                 })
                 line_ids.append(adjust_debit)
                 
