@@ -309,7 +309,7 @@ class hr_payslip(osv.osv):
 
     def hr_verify_sheet(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'verify'}, context=context)
-    
+
     def refund_sheet(self, cr, uid, ids, context=None):
         mod_obj = self.pool.get('ir.model.data')
         wf_service = netsvc.LocalService("workflow")
@@ -759,7 +759,7 @@ class hr_salary_rule(osv.osv):
         'amount_python_compute':fields.text('Python Code'),
         'amount_percentage_base':fields.char('Percentage based on',size=1024, required=False, readonly=False, help='result will be affected to a variable'),
         'child_ids':fields.one2many('hr.salary.rule', 'parent_rule_id', 'Child Salary Rule'),
-        'register_id':fields.many2one('hr.contribution.register', 'Contribution Register', help="Contribution register based on company", required=False),
+        'register_id':fields.many2one('hr.contribution.register', 'Contribution Register', help="Contribution register based on company"),
         'input_ids': fields.one2many('hr.rule.input', 'input_id', 'Inputs'),
         'note':fields.text('Description'),
      }

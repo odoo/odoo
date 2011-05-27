@@ -39,17 +39,16 @@ class payslip_lines_contribution_register(osv.osv_memory):
     }
 
     def print_report(self, cr, uid, ids, context=None):
-        data = self.read(cr, uid, ids, [], context=context)[0]
         datas = {
              'ids': context.get('active_ids', []),
              'model': 'hr.contribution.register',
-             'form': data
-            }
+             'form': self.read(cr, uid, ids, [], context=context)[0]
+        }
         return {
             'type': 'ir.actions.report.xml',
             'report_name': 'contribution.register.lines',
             'datas': datas,
-            }
+        }
 
 payslip_lines_contribution_register()
 

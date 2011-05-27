@@ -27,7 +27,6 @@ from datetime import datetime
 from dateutil import relativedelta
 
 from report import report_sxw
-from tools.safe_eval import safe_eval as eval
 
 class contribution_register_report(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
@@ -48,7 +47,6 @@ class contribution_register_report(report_sxw.rml_parse):
     def _get_payslip_lines(self, obj):
         payslip_obj = self.pool.get('hr.payslip')
         payslip_line = self.pool.get('hr.payslip.line')
-        localdict = {}
         res = []
         result = {}
         self.regi_total = 0.0
