@@ -65,11 +65,12 @@ class contribution_register_report(report_sxw.rml_parse):
         for key, value in result.iteritems():
             for line in payslip_line.browse(self.cr, self.uid, value):
                 res.append({
-                            'payslip_name': payslip_obj.browse(self.cr, self.uid, [key])[0].name,
-                            'name': line.name,
-                            'code': line.code,
-                            'total': line.total,
-                            'quantity': line.quantity
+                    'payslip_name': payslip_obj.browse(self.cr, self.uid, [key])[0].name,
+                    'name': line.name,
+                    'code': line.code,
+                    'quantity': line.quantity,
+                    'amount': line.amount,
+                    'total': line.total,
                 })
                 self.regi_total += line.total
         return res
