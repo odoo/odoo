@@ -33,13 +33,20 @@ account_invoice()
 class account_invoice_line(osv.osv):
     _inherit = 'account.invoice.line'
     _columns = {
-        'asset_id': fields.many2one('account.asset.asset', 'Asset'),
+        'asset_category_id': fields.many2one('account.asset.category', 'Asset Category'),
     }
     def move_line_get_item(self, cr, uid, line, context={}):
+        asset_obj = self.pool.get('account.asset.asset')
         res = super(account_invoice_line, self).move_line_get_item(cr, uid, line, context)
-        res['asset_id'] = line.asset_id.id or False
-        if line.asset_id.id and (line.asset_id.state=='draft'):
-            self.pool.get('account.asset.asset').validate(cr, uid, [line.asset_id.id], context)
+        if line.asset_category_id:
+            vals = {
+                'name': line.product_id and (line.name + ": " + line.product_id.name) or line.name,
+                'category_id': line.asset_category_id.id,
+                'purchase_value': line.price_subtotal
+            }
+            asset_id = asset_obj.create(cr, uid, vals, context=context)
+            if line.asset_category_id.open_asset:
+                asset_obj.validate(cr, uid, [asset_id], context=context)
         return res
 account_invoice_line()
 
