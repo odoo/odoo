@@ -557,10 +557,11 @@ class hr_payslip(osv.osv):
             for rule in obj_rule.browse(cr, uid, sorted_rule_ids, context=context):
                 key = rule.code + '-' + str(contract.id)
                 localdict['result'] = None
+                localdict['result_qty'] = 1.0
                 #check if the rule can be applied
                 if obj_rule.satisfy_condition(cr, uid, rule.id, localdict, context=context) and rule.id not in blacklist:
                     #compute the amount of the rule
-                    amount = obj_rule.compute_rule(cr, uid, rule.id, localdict, context=context)
+                    amount, qty = obj_rule.compute_rule(cr, uid, rule.id, localdict, context=context)
                     #check if there is already a rule computed with that code
                     previous_amount = rule.code in localdict and localdict[rule.code] or 0.0
                     #set/overwrite the amount computed for this rule in the localdict
@@ -587,9 +588,9 @@ class hr_payslip(osv.osv):
                         'amount_percentage': rule.amount_percentage,
                         'amount_percentage_base': rule.amount_percentage_base,
                         'register_id': rule.register_id.id,
-                        'total': amount,
+                        'amount': amount,
                         'employee_id': contract.employee_id.id,
-                        'quantity': rule.quantity,
+                        'quantity': qty,
                     }
                 else:
                     #blacklist this rule and its children
@@ -812,7 +813,7 @@ result = rules['NET'] > categories['NET'] * 0.10''',
         'amount_select': 'fix',
         'amount_fix': 0.0,
         'amount_percentage': 0.0,
-        'quantity': '1',
+        'quantity': '1.0',
      }
 
     def _recursive_search_of_rules(self, cr, uid, rule_ids, context=None):
@@ -831,24 +832,24 @@ result = rules['NET'] > categories['NET'] * 0.10''',
         """
         @param rule_id: id of rule to compute
         @param localdict: dictionary containing the environement in which to compute the rule
-        @return: returns the result of computation as float
+        @return: returns the result of computation and the quantity as floats
         """
         rule = self.browse(cr, uid, rule_id, context=context)
         if rule.amount_select == 'fix':
             try:
-                return rule.amount_fix * eval(rule.quantity, localdict)
+                return rule.amount_fix, eval(rule.quantity, localdict)
             except:
                 raise osv.except_osv(_('Error'), _('Wrong quantity defined for salary rule %s (%s)')% (rule.name, rule.code))
         elif rule.amount_select == 'percentage':
             try:
                 amount = rule.amount_percentage * eval(rule.amount_percentage_base, localdict) / 100
-                return amount * eval(rule.quantity, localdict)
+                return amount, eval(rule.quantity, localdict)
             except:
                 raise osv.except_osv(_('Error'), _('Wrong percentage base or quantity defined for salary rule %s (%s)')% (rule.name, rule.code))
         else:
             try:
                 eval(rule.amount_python_compute, localdict, mode='exec', nocopy=True)
-                return localdict['result']
+                return localdict['result'], 'result_qty' in localdict and localdict['result_qty'] or 1.0
             except:
                 raise osv.except_osv(_('Error'), _('Wrong python code defined for salary rule %s (%s) ')% (rule.name, rule.code))
 
@@ -902,13 +903,22 @@ class hr_payslip_line(osv.osv):
     _description = 'Payslip Line'
     _order = 'contract_id, sequence'
 
+    def _calculate_total(self, cr, uid, ids, name, args, context):
+        if not ids: return {}
+        res = {}
+        for line in self.browse(cr, uid, ids, context=context):
+            res[line.id] = float(line.quantity) * line.amount
+        return res
+
     _columns = {
         'slip_id':fields.many2one('hr.payslip', 'Pay Slip', required=True),
         'salary_rule_id':fields.many2one('hr.salary.rule', 'Rule', required=True),
         'employee_id':fields.many2one('hr.employee', 'Employee', required=True),
         'contract_id':fields.many2one('hr.contract', 'Contract', required=True),
-        'total': fields.float('Amount', digits_compute=dp.get_precision('Account')),
+        'amount': fields.float('Amount', digits_compute=dp.get_precision('Account')),
+        'quantity': fields.float('Quantity', digits_compute=dp.get_precision('Account')),
         'company_contrib': fields.float('Company Contribution', readonly=True, digits_compute=dp.get_precision('Account')),
+        'total': fields.function(_calculate_total, method=True, type='float', string='Total', digits_compute=dp.get_precision('Account'),store=True ),
     }
 
 hr_payslip_line()
