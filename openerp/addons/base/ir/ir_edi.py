@@ -147,12 +147,16 @@ class edi(object):
        specific behavior, based on the primitives provided by this superclass."""
     
     
-    def edi_metadata(self, cr, uid, browse_rec_list, context=None):
+    def edi_metadata(self, cr, uid, browse_rec_list,model=None, context=None):
         """Return a list representing the boilerplate EDI structure for
            exporting the record in the given browse_rec_list, including
            the metadata fields"""
         # generic implementation!
-        return
+        if model is not None:
+            self.edi_document['__model'] = model
+        
+            
+        return True
 
     def edi_m2o(self, browse_rec, context=None):
         """Return a list representing a M2O EDI value for
@@ -195,28 +199,30 @@ class edi(object):
         
         self.edi_document = {
                       
-                      '__model':'',
-                      '__module':'',
-                      '__id':'',
-                      '__last_update':'',
-                      '__version':'',
-                      '__attachments':'',
+                      'model':'',
+                      'module':'',
+                      'id':'',
+                      'last_update':'',
+                      'version':'',
+                      'attachments':'',
                       
                       }
+        if 'model' not in edi_struct.keys():
+            return False
         data_object = self.pool.get('ir.model.data')
+      
         fields_object = self.pool.get('ir.model.fields')
-        for field in edi_struct.keys():
-            if field in self.edi_document.keys():
+        
+        for field in self.edi_document.keys():
+            
+            if field in edi_struct.keys():
                 if field == 'model':
                     model_name = edi_struct['model']
-                    
-                    record_ids = data_object.search(cr,uid,[('model','=','hr.holidays')])
+                    record_ids = data_object.search(cr,uid,[('model','=',model_name)])
                     for fname in data_object.browse(cr,uid,record_ids):
                         if fname.name:
                             xml_ID = fname.name
-                    self.edi_metadata(field,model_name)
-                else:
-                    self.metadata(field)
+                    
             else:
                 
                 f_ids = fields_object.search(cr,uid,[('name','=',field),('model','=',model_name)],context=context)
@@ -229,6 +235,7 @@ class edi(object):
                         self.edi_document[field] = self.edi_m2m(edi_struct[field])
         return self.edi_document
     def edi_import(self, cr, uid, edi_document, context=None):
+    
         """Imports a list of dicts representing an edi.document, using the
            generic algorithm.
         """
