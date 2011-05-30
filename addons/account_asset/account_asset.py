@@ -38,11 +38,11 @@ class account_asset_category(osv.osv):
         'account_expense_depreciation_id': fields.many2one('account.account', 'Depr. Expense Account', required=True),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True),
         'company_id': fields.many2one('res.company', 'Company', required=True),
-        'method': fields.selection([('linear','Linear'),('progressif','Progressive')], 'Computation Method', required=True, readonly=True, states={'draft':[('readonly',False)]}),
-        'method_delay': fields.integer('During (interval)', readonly=True, states={'draft':[('readonly',False)]}),
+        'method': fields.selection([('linear','Linear'),('progressif','Progressive')], 'Computation method', required=True),
+        'method_delay': fields.integer('Number of Depreciation'),
         'method_period': fields.integer('Period Length'),
         'method_progress_factor': fields.float('Progressif Factor'),
-        'method_time': fields.selection([('delay','Delay'),('end','Ending Period')], 'Time Method', required=True, readonly=True, states={'draft':[('readonly',False)]}),
+        'method_time': fields.selection([('delay','Delay'),('end','Ending Period')], 'Time Method', required=True),
         'prorata':fields.boolean('Prorata Temporis', help='Indicates that the accounting entries for this asset have to be done from the purchase date instead of the first January'),
         'open_asset': fields.boolean('Skip Draft State', help="Check this if you want to automatically confirm the assets of this category when created by invoice."),
     }
@@ -175,7 +175,7 @@ class account_asset_asset(osv.osv):
         'partner_id': fields.many2one('res.partner', 'Partner'),
 
         'method': fields.selection([('linear','Linear'),('progressif','Progressive')], 'Computation method', required=True, readonly=True, states={'draft':[('readonly',False)]}, help="Linear: Calculated on basis of Gross Value/During (interval) \
-            \nProgressive: Calculated on basis of Gross Value * Progressif Factor"),
+         \nProgressive: Calculated on basis of Gross Value * Progressif Factor"),
         'method_delay': fields.integer('During (interval)', readonly=True, states={'draft':[('readonly',False)]}, help="Calculates Depreciation within specified interval"),
         'method_period': fields.integer('Depre. all (period)', readonly=True, states={'draft':[('readonly',False)]}),
         'method_end': fields.date('Ending date'),
