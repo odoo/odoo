@@ -1484,6 +1484,7 @@ function upload_archivemail()
     strobj.data = 'thunderbird.partner';
     var resobj = xmlRpcClient.createType(xmlRpcClient.STRING,{});
 
+	
     for(i=0;i<cnt;i++)
     {   
         var object = list_documents.getSelectedItem(i);
@@ -1497,7 +1498,6 @@ function upload_archivemail()
     var a = ['ref_ids','message'];
     var b = [ref_ids, eml_string];
     var arrofarr = dictcontact(a,b);
-
     xmlRpcClient.asyncCall(listArchiveHandler,null,'execute',[strDbName,struids,strpass,strobj,strmethod,arrofarr],6);
      
 }
