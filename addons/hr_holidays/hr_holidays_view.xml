@@ -470,6 +470,20 @@
            <field name="type">normal</field>
            <field name="state">skip</field>
        </record>        
+       
+        <!-- Hr employee inherit Legal Leaves -->
+    
+        <record id="view_employee_form_leave_inherit" model="ir.ui.view">
+            <field name="name">hr.employee.leave.form.inherit</field>
+            <field name="model">hr.employee</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                <field name="coach_id" position="after">
+                    <field name="remaining_leaves" string="Remaining Legal Leaves"/>
+                </field>
+            </field>
+        </record>
 
     </data>
 </openerp>
