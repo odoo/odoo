@@ -43,7 +43,7 @@ init: function(view_manager, session, element_id, dataset, view_id) {
         var self = this;
         this.fields_view = data.fields_view;
 
-        this.name = this.fields_view.name || this.fields_view.arch.attrs.string;
+        this.name =  this.fields_view.arch.attrs.string;
         this.view_id = this.fields_view.view_id;
 
         this.date_start = this.fields_view.arch.attrs.date_start;
@@ -90,116 +90,71 @@ init: function(view_manager, session, element_id, dataset, view_id) {
     load_event: function(events) {
 
         var self = this;
-
         var result = events;
         var project = {};
-        var project_smalldate = {};
-        var proj_id = [];
-        var proj_id_text = [];
+        var smalldate = "";
 
         COLOR_PALETTE = ['#ccccff', '#cc99ff', '#75507b', '#3465a4', '#73d216', '#c17d11', '#edd400',
                  '#fcaf3e', '#ef2929', '#ff00c9', '#ad7fa8', '#729fcf', '#8ae234', '#e9b96e', '#fce94f',
                  '#ff8e00', '#ff0000', '#b0008c', '#9000ff', '#0078ff', '#00ff00', '#e6ff00', '#ffff00',
                  '#905000', '#9b0000', '#840067', '#510090', '#0000c9', '#009b00', '#9abe00', '#ffc900']
 
-        //Smallest date of child is parent start date
-        for (i in result){
-            var res = result[i];
-
-            if (res[this.date_start] != false){
-
-                var parent_id =  res[this.parent][0] || res[this.parent];
-                var parent_name = res[this.parent][1];
-                var start_date = this.convert_str_date(res[this.date_start]);
-
-                if (project_smalldate[parent_id] == undefined){
-                    project_smalldate[parent_id] = start_date;
-                    proj_id.push(parent_id);
-
-                    if (parent_name != undefined){
-                        proj_id_text.push(res[this.parent]);
-                    }
-                }
-                else{
-                    if (start_date < project_smalldate[parent_id]){
-                        project_smalldate[parent_id] = start_date;
-                    }
-                }
-
-            }
-        }
-
-        //get parent text
-        if (parent_name == undefined){
-
-            var ajax = {
-                url: '/base/dataset/call',
-                async: false
-            };
-
-            this.rpc(ajax, {
-                model: this.dataset.model,
-                method: "name_get",
-                ids: proj_id,
-                args: ""
-            }, function(response) {
-               proj_id_text = response.result;
-
-            });
-        }
-
-        //create parents
-        for (i in proj_id){
-
-            var id = proj_id_text[i][0];
-            var text = proj_id_text[i][1];
-
-            project[id] = new GanttProjectInfo(id, text, project_smalldate[id]);
-        }
-
-        //create childs
-        var k = 0;
-        var color_box = {};
-        for (i in result) {
-
-            var res = result[i];
-            if (res[this.date_start] != false){
-
-                var parent_id = res[this.parent][0] || res[this.parent];
-                var id = res['id'];
-                var text = res[this.text];
-
-                var start_date = this.convert_str_date(res[this.date_start]);
-
-                var color = res[this.color_field][0] || res[this.color_field];
-                if (color_box[color] == undefined){
-                    color_box[color] = COLOR_PALETTE[k];
-                    k = k + 1;
-                }
-
-                if (this.date_stop != undefined){
-                    if (res[this.date_stop] != false){
-                        var stop_date = this.convert_str_date(res[this.date_stop]);
-                        var duration= self.hours_between(start_date, stop_date);
+        if (result.length != 0){
+            var show_event = [];
+            for (i in result){
+                var res = result[i];
+                if (res[this.date_start] != false){
+                    
+                    var start_date = this.convert_str_date(res[this.date_start]);
+                    res[this.date_start] = start_date;
+                    show_event.push(res);
+                    if (smalldate == ""){
+                        smalldate = start_date;
                     }
                     else{
-                        var duration = 0;
+                        if (start_date < smalldate){
+                            smalldate = start_date;
+                        }
                     }
                 }
-                else{
-                    var duration = res[this.date_delay];
-                }
-                if (duration == false)
-                    duration = 0
-                task = new GanttTaskInfo(id, text, start_date, duration, 100, "", color_box[color]);
-                project[parent_id].addTask(task);
-
             }
+        project = new GanttProjectInfo(1, self.name, smalldate);
+        ganttChartControl.addProject(project);
         }
 
-        //Add parent
-        for (i in proj_id){
-            ganttChartControl.addProject(project[proj_id[i]]);
+        //create child
+        var k = 0;
+        var color_box = {};
+        for (i in show_event) {
+
+            var res = show_event[i];
+
+            var id = res['id'];
+            var text = res[this.text];
+            var start_date = res[this.date_start];
+
+            var color = res[this.color_field][0] || res[this.color_field];
+            if (color_box[color] == undefined){
+                color_box[color] = COLOR_PALETTE[k];
+                k = k + 1;
+            }
+
+            if (this.date_stop != undefined){
+                if (res[this.date_stop] != false){
+                    var stop_date = this.convert_str_date(res[this.date_stop]);
+                    var duration= self.hours_between(start_date, stop_date);
+                }
+                else{
+                    var duration = 0;
+                }
+            }
+            else{
+                var duration = res[this.date_delay];
+            }
+            if (duration == false)
+                duration = 0
+            task = new GanttTaskInfo(id, text, start_date, duration, 100, "", color_box[color]);
+            project.addTask(task);
         }
 
         ganttChartControl.create("GanttDiv");
