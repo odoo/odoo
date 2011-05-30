@@ -105,7 +105,7 @@ class account_asset_asset(osv.osv):
             old_depreciation_line_ids = depreciation_lin_obj.search(cr, uid, [('asset_id', '=', asset.id), ('move_id', '=', False)])
             if old_depreciation_line_ids:
                 depreciation_lin_obj.unlink(cr, uid, old_depreciation_line_ids, context=context)
-            undone_dotation_number = asset.method_delay - len(asset.account_move_line_ids)
+            delay_interval = undone_dotation_number = asset.method_delay - len(asset.account_move_line_ids) or 1
             if asset.prorata and asset.method == 'linear':
                 undone_dotation_number += 1
             residual_amount = asset.value_residual
@@ -119,13 +119,13 @@ class account_asset_asset(osv.osv):
                     amount = residual_amount
                 else:
                     if asset.method == 'linear':
-                        amount = asset.value_residual / undone_dotation_number
+                        amount = asset.value_residual / delay_interval
                         if asset.prorata:
                             if i == 1:
                                 days = total_days - float(depreciation_date.strftime('%j'))
-                                amount = (asset.value_residual / asset.method_delay) / total_days * days
+                                amount = (asset.value_residual / delay_interval) / total_days * days
                             elif i == undone_dotation_number:
-                                amount = (asset.value_residual / asset.method_delay) / total_days * (total_days - days)
+                                amount = (asset.value_residual / delay_interval) / total_days * (total_days - days)
                     else:
                         amount = residual_amount * asset.method_progress_factor
                 residual_amount -= amount
@@ -135,7 +135,7 @@ class account_asset_asset(osv.osv):
                      'sequence': i,
                      'name': str(asset.id) +'/'+ str(i),
                      'remaining_value': residual_amount,
-                     'depreciated_value': asset.purchase_value - residual_amount,
+                     'depreciated_value': asset.value_residual - residual_amount,
                      'depreciation_date': depreciation_date.strftime('%Y-%m-%d'),
                 }
                 depreciation_lin_obj.create(cr, uid, vals, context=context)
