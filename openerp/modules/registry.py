@@ -90,7 +90,7 @@ class RegistryManager(object):
 
         cr = db.cursor()
         try:
-            pool.init_set(cr, False)
+            pool.do_parent_store(cr)
             pool.get('ir.actions.report.xml').register_all(cr)
             cr.commit()
         finally:
