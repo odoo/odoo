@@ -78,7 +78,7 @@ class _format(object):
 class _float_format(float, _format):
     def __init__(self,value):
         super(_float_format, self).__init__()
-        self.val = value
+        self.val = value or 0.0
 
     def __str__(self):
         digits = 2
@@ -91,7 +91,7 @@ class _float_format(float, _format):
 class _int_format(int, _format):
     def __init__(self,value):
         super(_int_format, self).__init__()
-        self.val = value
+        self.val = value or 0
 
     def __str__(self):
         if hasattr(self,'lang_obj'):
