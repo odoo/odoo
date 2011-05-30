@@ -86,7 +86,7 @@ class _float_format(float, _format):
             digits = self._field.digits[1]
         if hasattr(self, 'lang_obj'):
             return self.lang_obj.format('%.' + str(digits) + 'f', self.name, True)
-        return self.val
+        return str(self.val)
 
 class _int_format(int, _format):
     def __init__(self,value):
