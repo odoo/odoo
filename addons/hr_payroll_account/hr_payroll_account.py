@@ -123,7 +123,6 @@ class hr_payslip(osv.osv):
                     'journal_id': slip.journal_id.id,
                     'period_id': period_id,
                 })
-                debit_sum += debit_line[2]['debit']
                 credit_line = (0,0,{
                     'date': timenow,
                     'journal_id': slip.journal_id.id,
@@ -134,30 +133,31 @@ class hr_payslip(osv.osv):
                     'debit': amt < 0.0 and -amt or 0.0,
                     'credit': amt > 0.0 and amt or 0.0,
                 })
-                credit_sum += debit_line[2]['credit']
                 if debit_account_id:
                     line_ids.append(debit_line)
+                    debit_sum += debit_line[2]['debit']
                 if credit_account_id:
                     line_ids.append(credit_line)
+                    credit_sum += credit_line[2]['credit']
             
             if debit_sum > credit_sum:
                 adjust_credit = (0,0,{
                     'date': timenow,
                     'journal_id': slip.journal_id.id,
                     'period_id': period_id,
-                    'name': 'Adjustment Entry',
+                    'name': _('Adjustment Entry'),
                     'partner_id': partner_id,
                     'account_id': slip.journal_id.default_credit_account_id.id,
                     'debit': 0.0,
                     'credit': debit_sum - credit_sum,
                 })
                 line_ids.append(adjust_credit)
-            else:
+            elif debit_sum < credit_sum:
                 adjust_debit = (0,0,{
                     'date': timenow,
                     'journal_id': slip.journal_id.id,
                     'period_id': period_id,
-                    'name': 'Adjustment Entry',
+                    'name': _('Adjustment Entry'),
                     'partner_id': partner_id,
                     'account_id': slip.journal_id.default_debit_account_id.id,
                     'debit': credit_sum - debit_sum,
