@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-05-19 13:55+0000\n"
+"PO-Revision-Date: 2011-05-29 23:23+0000\n"
 "Last-Translator: Phong Nguyen-Thanh <Unknown>\n"
 "Language-Team: Vietnamese <vi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-05-20 05:51+0000\n"
+"X-Launchpad-Export-Date: 2011-05-30 04:58+0000\n"
 "X-Generator: Launchpad (build 12959)\n"
 
 #. module: base
@@ -24,7 +24,7 @@ msgstr ""
 #: field:ir.rule,domain_force:0
 #: field:res.partner.title,domain:0
 msgid "Domain"
-msgstr "Vùng"
+msgstr "Miền"
 
 #. module: base
 #: model:res.country,name:base.sh
@@ -48,6 +48,8 @@ msgid ""
 "The second argument of the many2many field %s must be a SQL table !You used "
 "%s, which is not a valid SQL table name."
 msgstr ""
+"Đối số thứ hai trong quan hệ nhiều-nhiều %s phải là một bảng SQL ! Bạn đã "
+"dùng %s, đó không phải là một tên bảng SQL hợp lệ."
 
 #. module: base
 #: view:ir.values:0
@@ -104,7 +106,7 @@ msgstr "Quy trình công việc cho"
 #. module: base
 #: field:ir.actions.act_window,display_menu_tip:0
 msgid "Display Menu Tips"
-msgstr ""
+msgstr "Hiện chỉ dẫn trình đơn"
 
 #. module: base
 #: view:ir.module.module:0
@@ -128,6 +130,9 @@ msgid ""
 "specified as a Python expression defining a list of triplets. For example: "
 "[('color','=','red')]"
 msgstr ""
+"Miền tùy chọn dùng để giới hạn các giá trị có thể đối với các trường quan "
+"hệ, được chỉ định bởi một biểu thức Python định nghĩa một danh sách của các "
+"bộ ba. Ví dụ: [('màu'='đỏ')]"
 
 #. module: base
 #: field:res.partner,ref:0
@@ -152,8 +157,9 @@ msgid ""
 "Properties of base fields cannot be altered in this manner! Please modify "
 "them through Python code, preferably through a custom addon!"
 msgstr ""
-"các thuộc tính cơ bản không thể thay đổi theo cách này  ! hãy thay đổi chúng "
-"thông qua Python mã, tốt hơn thông qua một addon tùy chỉnh!"
+"Các thuộc tính của trường cơ bản không thể thay đổi theo cách này ! Vui lòng "
+"thay đổi chúng thông qua mã Python, tốt nhất là  thông qua một addon tùy "
+"chỉnh!"
 
 #. module: base
 #: code:addons/osv.py:133
@@ -229,7 +235,7 @@ msgstr "mới"
 #. module: base
 #: field:ir.actions.report.xml,multi:0
 msgid "On multiple doc."
-msgstr ""
+msgstr "Trong nhiều tài liệu."
 
 #. module: base
 #: field:ir.module.category,module_nr:0
@@ -239,7 +245,7 @@ msgstr "Số lượng mô-đun"
 #. module: base
 #: help:multi_company.default,company_dest_id:0
 msgid "Company to store the current record"
-msgstr ""
+msgstr "Công ty lưu trữ bản ghi hiện tại"
 
 #. module: base
 #: field:res.partner.bank.type.field,size:0
@@ -258,6 +264,8 @@ msgid ""
 "Save this document to a %s file and edit it with a specific software or a "
 "text editor. The file encoding is UTF-8."
 msgstr ""
+"Lưu tài liệu này thành tập tin %s và chỉnh sửa bằng một phần mềm phù hợp "
+"hoặc trình soạnh thảo văn bản. Tập tin mã hóa dạng UTF-8"
 
 #. module: base
 #: sql_constraint:res.lang:0
@@ -393,12 +401,14 @@ msgid ""
 "If you check this, then the second time the user prints with same attachment "
 "name, it returns the previous report."
 msgstr ""
+"Nếu bạn đánh dấu mục này, khi người sử dụng in lần thứ hai với cùng tên tập "
+"tin đính kèm, hệ thống sẽ trả về báo cáo trước đó."
 
 #. module: base
 #: code:addons/orm.py:904
 #, python-format
 msgid "The read method is not implemented on this object !"
-msgstr ""
+msgstr "Phương thức đọc không được hiện thực trên đối tượng này !"
 
 #. module: base
 #: help:res.lang,iso_code:0
@@ -414,7 +424,7 @@ msgstr "Hệ thống của bạn sẽ được cập nhật"
 #: field:ir.actions.todo,note:0
 #: selection:ir.property,type:0
 msgid "Text"
-msgstr "Chữ"
+msgstr "Văn bản"
 
 #. module: base
 #: field:res.country,name:0
@@ -435,7 +445,7 @@ msgstr "Lên kế hoạch nâng cấp"
 #: code:addons/orm.py:838
 #, python-format
 msgid "Key/value '%s' not found in selection field '%s'"
-msgstr ""
+msgstr "Khóa/giá trị '%s' không tìm thấy trong trường được chọn '%s'"
 
 #. module: base
 #: help:res.country,code:0
@@ -466,6 +476,7 @@ msgstr "Chưa được dịch"
 msgid ""
 "Context dictionary as Python expression, empty by default (Default: {})"
 msgstr ""
+"Từ điển bối cảnh là biểu thức Python, mặc định để trống (Mặc định: {})"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_action_wizard
@@ -477,13 +488,13 @@ msgstr ""
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_miscellaneoussuppliers0
 msgid "Miscellaneous Suppliers"
-msgstr ""
+msgstr "Các nhà cung cấp khác"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:255
 #, python-format
 msgid "Custom fields must have a name that starts with 'x_' !"
-msgstr ""
+msgstr "Các trường được tùy chỉnh phải có tên bắt đầu bằng 'x_' !"
 
 #. module: base
 #: help:ir.actions.server,action_id:0
@@ -503,13 +514,13 @@ msgstr "Trích xuất hoàn tất"
 #. module: base
 #: view:ir.model:0
 msgid "Model Description"
-msgstr ""
+msgstr "Mô tả mô hình"
 
 #. module: base
 #: help:ir.actions.act_window,src_model:0
 msgid ""
 "Optional model name of the objects on which this action should be visible"
-msgstr ""
+msgstr "Tùy chọn tên mô hình của đối tượng cho phép hiện hành động này"
 
 #. module: base
 #: field:workflow.transition,trigger_expr_id:0
@@ -571,12 +582,12 @@ msgstr ""
 #. module: base
 #: field:res.partner,title:0
 msgid "Partner Form"
-msgstr ""
+msgstr "Mẫu đối tác"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Swedish / svenska"
-msgstr ""
+msgstr "Tiếng Thụy điển"
 
 #. module: base
 #: model:res.country,name:base.rs
@@ -635,6 +646,7 @@ msgstr "Pa-pu-a Niu Ghi-nê"
 #: help:ir.actions.report.xml,report_type:0
 msgid "Report Type, e.g. pdf, html, raw, sxw, odt, html2html, mako2html, ..."
 msgstr ""
+"Loại Báo cáo, ví dụ pdf, html, raw, sxw, odt, html2html, mako2html, ..."
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_4
@@ -736,7 +748,7 @@ msgstr ""
 #: code:addons/orm.py:1043
 #, python-format
 msgid "The unlink method is not implemented on this object !"
-msgstr ""
+msgstr "Phương thức unlink không được hiện thực trên đối tượng này !"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.act_menu_create
@@ -779,7 +791,7 @@ msgstr "ir.config_parameter"
 #. module: base
 #: selection:base.language.export,format:0
 msgid "TGZ Archive"
-msgstr ""
+msgstr "Lưu trữ TGZ"
 
 #. module: base
 #: view:res.lang:0
@@ -14814,3 +14826,6 @@ msgstr "Tiếng Nga"
 
 #~ msgid "Corporation"
 #~ msgstr "Công ty"
+
+#~ msgid "Ltd."
+#~ msgstr "TNHH"
