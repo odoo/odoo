@@ -199,7 +199,7 @@ class res_company(osv.osv):
         <setFont name="DejaVu Sans" size="8"/>
         <drawString x="25" y="555"> [[ formatLang(time.strftime("%Y-%m-%d"), date=True) ]]  [[ time.strftime("%H:%M") ]]</drawString>
         <setFont name="DejaVu Sans Bold" size="10"/>
-        <drawString x="382" y="555">[[ company.partner_id.name ]]</drawString>
+        <drawCentredString x="440" y="555">[[ company.partner_id.name ]]</drawCentredString>
         <stroke color="#000000"/>
         <lines>25 550 818 550</lines>
     </pageGraphics>
@@ -216,7 +216,7 @@ class res_company(osv.osv):
         <setFont name="DejaVu Sans" size="8"/>
         <drawString x="1.0cm" y="28.3cm"> [[ formatLang(time.strftime("%Y-%m-%d"), date=True) ]]  [[ time.strftime("%H:%M") ]]</drawString>
         <setFont name="DejaVu Sans Bold" size="10"/>
-        <drawString x="9.3cm" y="28.3cm">[[ company.partner_id.name ]]</drawString>
+        <drawCentredString x="11.1cm" y="28.3cm">[[ company.partner_id.name ]]</drawCentredString>
         <stroke color="#000000"/>
         <lines>1.0cm 28.1cm 20.1cm 28.1cm</lines>
         </pageGraphics>
