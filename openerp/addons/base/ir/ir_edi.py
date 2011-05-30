@@ -26,6 +26,20 @@ import time
 import base64
 import urllib2
 
+def safe_unique_id(model, database_id):
+
+    """Generate a unique string to represent a (model,database id) pair
+    without being too long, without revealing the database id, and
+    with a very low probability of collisions.
+    """
+    msg = "%s-%s-%s" % (model, time.time(), database_id)
+    digest = hashlib.sha1(msg).digest()
+    digest = ''.join(chr(ord(x) ^ ord(y)) for (x,y) in zip(digest[:9], digest[9:-2]))
+    # finally, use the b64-encoded folded digest as ID part of the unique ID:
+    digest = base64.urlsafe_b64encode(digest)
+        
+    return '%s' % (digest)
+
 class ir_edi_document(osv.osv):
     _name = 'ir.edi.document'
     _description = 'ir_edi_document'
@@ -35,25 +49,13 @@ class ir_edi_document(osv.osv):
                 
     }
     
-    def safe_unique_id(model, database_id):
-
-        """Generate a unique string to represent a (model,database id) pair
-          without being too long, without revealing the database id, and
-          with a very low probability of collisions.
-       """
-        msg = "%s-%s-%s" % (model, time.time(), database_id)
-        digest = hashlib.sha1(msg).digest()
-        digest = ''.join(chr(ord(x) ^ ord(y)) for (x,y) in zip(digest[:9], digest[9:-2]))
-        # finally, use the b64-encoded folded digest as ID part of the unique ID:
-        digest = base64.urlsafe_b64encode(digest)
-        
-        return '%s' % (digest)
+    
     
     def new_edi_token(self,cr,uid,ids,browse_records,database_id,context=None):
         
         """Generate new unique tokent value to uniquely identify each edi_document"""
         
-        db_uuid = self.safe_unique_id(browse_records, database_id)
+        db_uuid = safe_unique_id(browse_records, database_id)
         edi_token = hashlib.sha256('%s-%s-%s' % (time.time(),db_uuid,time.time())).hexdigest()
 
 
@@ -88,7 +90,7 @@ class ir_edi_document(osv.osv):
             raise osv.except_osv(_('Error !'),
                 _('Desired EDI Document does not Exist'))  
         
-        return True
+        return doc_string
     
     def load_edi(self,cr,uid,ids,edi_list_of_dicts,context=None):
         
@@ -147,34 +149,91 @@ class edi(object):
        specific behavior, based on the primitives provided by this superclass."""
     
     
-    def edi_metadata(self, cr, uid, browse_rec_list,model=None, context=None):
+    def edi_metadata(self, cr, uid, ids, browse_rec_list, context=None):
         """Return a list representing the boilerplate EDI structure for
            exporting the record in the given browse_rec_list, including
            the metadata fields"""
         # generic implementation!
-        if model is not None:
-            self.edi_document['__model'] = model
+        data_object = self.pool.get('ir.model.data')
         
+        if self.edi_document['__model'] is not None:
+            model_ids = data_object.search(cr,uid,[('model','=',self.edi_document['__model'])],context=context)
+            for data in data_object.browse(cr,uid,model_ids):
+                self.edi_document['__module'] = data.module
+                if data.name is not None:
+                    self.edi_document['__id'] = context['active_id']+':'+data.name
+                self.edi_document['__last_updata'] = context['__last_update'].values()[0]
             
         return True
 
-    def edi_m2o(self, browse_rec, context=None):
+    def edi_m2o(self, cr, uid, ids, browse_rec,model=None,context=None):
         """Return a list representing a M2O EDI value for
            the given browse_record."""
         # generic implementation!
-        return
+        res = []
+        data_object = self.pool.get('ir.model.data')
+        uu_id = data_model.search(cr,uid,[('model','=',model)])
+        for xml in data_model.browse(cr,uid,uu_id):
+            if xml:
+                xml_ID = xml.name
+            else:
+                xml_ID = None
+        for data in browse_rec:
+            if data.name is not None:
+                if xml_ID is not None:
+                    res.append(safe_unique_id(model,data.id)+':'+xml_ID)
+                else:
+                    res.append(safe_unique_id(model,data.id)+':'+model+'-'+safe_unique_id(model,data.id))
+                res.append(data.name)
+        return res
 
-    def edi_o2m(self, browse_rec_list, context=None):
+    def edi_o2m(self, cr, uid, ids, browse_rec_list, model=None, context=None):
         """Return a list representing a O2M EDI value for
            the browse_records from the given browse_record_list."""
         # generic implementation!
-        return
+        res = []
+        init_data = {}
+        data_object = self.pool.get('ir.model.data')
+        uu_id = data_model.search(cr,uid,[('model','=',model)])
+        for xml in data_model.browse(cr,uid,uu_id):
+            if xml:
+                xml_ID = xml.name
+            else:
+                xml_ID = None
+        data_model = self.pool.get(model)
+        for record in browse_rec_list:
+            if xml_ID is not None:
+                init_data['__id'] = safe_unique_id(model,record.id)+':'+xml_ID
+            else:
+                init_data['__id'] = safe_unique_id(model,record.id)+':'+model+'-'+safe_unique_id(model,record.id)  
+            init_data['__last_update'] =record.write_date
+            init_data.update(datamodel.read(cr,uid,[record],[],context=context)[0])
+            res.append(init_data)
+        return res
 
-    def edi_m2m(self, browse_rec_list, context=None):
+    def edi_m2m(self, cr, uid, ids, browse_rec_list,model=None, context=None):
         """Return a list representing a M2M EDI value for
            the browse_records from the given browse_record_list."""
         # generic implementation!
-        return
+        res = []
+        init_data = []
+        data_object = self.pool.get('ir.model.data')
+        uu_id = data_model.search(cr,uid,[('model','=',model)])
+        for xml in data_model.browse(cr,uid,uu_id):
+            if xml:
+                xml_ID = xml.name
+            else:
+                xml_ID = None
+        data_model = self.pool.get(model)
+        for record in browse_rec_list:
+            if xml_ID is not None:
+                init_data.append(safe_unique_id(model,record.id)+':'+xml_ID)
+            else:
+                init_data.append(safe_unique_id(model,record.id)+':'+model+'-'+safe_unique_id(model,record.id))
+            if record.name is not None:
+                init_data.append('name:'+record.name)
+            res.append(init_data)    
+        return res
 
     def edi_export(self, cr, uid, ids, edi_struct=None, context=None):
         """Returns a list of dicts representing an edi.document containing the
@@ -199,40 +258,32 @@ class edi(object):
         
         self.edi_document = {
                       
-                      'model':'',
-                      'module':'',
-                      'id':'',
-                      'last_update':'',
-                      'version':'',
-                      'attachments':'',
+                      '__model':'',
+                      '__module':'',
+                      '__id':'',
+                      '__last_update':'',
+                      '__version':'',
+                      '__attachments':'',
                       
                       }
-        if 'model' not in edi_struct.keys():
-            return False
-        data_object = self.pool.get('ir.model.data')
-      
-        fields_object = self.pool.get('ir.model.fields')
+        self.edi_document['__model'] = self._name
         
-        for field in self.edi_document.keys():
-            
-            if field in edi_struct.keys():
-                if field == 'model':
-                    model_name = edi_struct['model']
-                    record_ids = data_object.search(cr,uid,[('model','=',model_name)])
-                    for fname in data_object.browse(cr,uid,record_ids):
-                        if fname.name:
-                            xml_ID = fname.name
+        
+        fields_object = self.pool.get('ir.model.fields')
+        model_object = self.pool.get(self.edi_document['__model'])
+        edi_metadata(context=context)
+        for field in self.edi_struct.keys():
+            f_ids = fields_object.search(cr,uid,[('name','=',field),('model','=',self.edi_document['__model'])],context=context)
+            for fname in fields_object.browse(cr,uid,f_ids):
+                if fname.ttype == 'many2one':
                     
-            else:
-                
-                f_ids = fields_object.search(cr,uid,[('name','=',field),('model','=',model_name)],context=context)
-                for fname in fields_object.browse(cr,uid,f_ids):
-                    if fname.ttype == 'many2one':
-                        self.edi_document[field] = self.edi_m2o(edi_struct[field])
-                    elif fname.ttype == 'one2many':
-                        self.edi_ducument[field] = self.edi_o2m(edi_struct[field])
-                    elif fname.ttype == 'many2many':        
-                        self.edi_document[field] = self.edi_m2m(edi_struct[field])
+                    self.edi_document[field] = self.edi_m2o(edi_struct[field],fname.relation)
+                elif fname.ttype == 'one2many':
+                    self.edi_ducument[field] = self.edi_o2m(edi_struct[field],fname.relation)
+                elif fname.ttype == 'many2many':        
+                    self.edi_document[field] = self.edi_m2m(edi_struct[field],fname.relation)
+                else:
+                    self.edi_document[field] = model_object.read(cr,uid,[context['active_id']],[field],context=context)
         return self.edi_document
     def edi_import(self, cr, uid, edi_document, context=None):
     
@@ -240,4 +291,6 @@ class edi(object):
            generic algorithm.
         """
         # generic implementation!
+        for field in edi_document.keys():
+            
         pass
