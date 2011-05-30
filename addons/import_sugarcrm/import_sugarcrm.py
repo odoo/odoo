@@ -63,18 +63,7 @@ class sugar_import(import_framework):
     
     def initialize(self):
         #login
-        global URL
-        url = self.context.get('url','')
-        url_sting = []
-        for url in str(url).split('/'):
-            if url.startswith('index.php'):
-                url_soap = url.replace(url, 'soap.php')
-                url_sting.append(url_soap)
-            else:
-                url_sting.append(url)
-        URL = '/'.join(url_sting)
-        
-        PortType,sessionid = sugar.login(self.context.get('username',''), self.context.get('password',''), URL)
+        PortType,sessionid = sugar.login(self.context.get('username',''), self.context.get('password',''), self.context.get('url',''))
         if sessionid == '-1':
             raise osv.except_osv(_('Error !'), _('Authentication error !\nBad Username or Password !'))
         self.context['port'] = PortType
@@ -857,7 +846,6 @@ class import_sugarcrm(osv.osv):
     _name = "import.sugarcrm"
     _description = __doc__
     _columns = {
-               
         'username': fields.char('User Name', size=64, required=True),
         'password': fields.char('Password', size=24,required=True),
          'url' : fields.char('SugarSoap Api url:', size=264, required=True, help="Webservice's url where to get the data.\
@@ -896,6 +884,24 @@ class import_sugarcrm(osv.osv):
         'password' : 'a',
         'url':  "http://example.com/sugarcrm/soap.php"        
     }
+    
+    def parse_valid_url(self, cr, uid, ids, context=None):
+        if not context:
+            context = {}
+        global URL
+        url = context.get('url')
+        url_string = []
+        for url in str(url).split('/'):
+            if url.startswith('index.php'):
+                url_soap = url.replace(url, 'soap.php')
+                url_string.append(url_soap)
+            else:    
+                url_string.append(url)
+        if 'soap.php' not in url_string:
+            url_string.append('soap.php')
+        URL = '/'.join(url_string)
+        return URL            
+            
     def get_key(self, cr, uid, ids, context=None):
         """Select Key as For which Module data we want import data."""
         if not context:
@@ -945,7 +951,8 @@ class import_sugarcrm(osv.osv):
         if not keys:
             raise osv.except_osv(_('Warning !'), _('Select Module to Import.'))
         cron_obj = self.pool.get('ir.cron')
-        args = (keys,context.get('email_user'), context.get('instance_name'), context.get('url'), context.get('username'), context.get('password') )
+        url = self.parse_valid_url(cr, uid, ids, context)
+        args = (keys,context.get('email_user'), context.get('instance_name'), url, context.get('username'), context.get('password') )
         new_create_id = cron_obj.create(cr, uid, {'name': 'Import SugarCRM datas','interval_type': 'hours','interval_number': 1, 'numbercall': -1,'model': 'import.sugarcrm','function': 'do_import_all', 'args': args, 'active': False})
         return {
             'name': 'SugarCRM Scheduler',
@@ -956,10 +963,14 @@ class import_sugarcrm(osv.osv):
             'type': 'ir.actions.act_window',
         }
     
+    
+    
     def import_all(self, cr, uid, ids, context=None):
         
 #        """Import all sugarcrm data into openerp module"""
         keys = self.get_key(cr, uid, ids, context)
+        url = self.parse_valid_url(cr, uid, ids, context)
+        context.update({'url': url})
         imp = sugar_import(self, cr, uid, context.get('instance_name'), "import_sugarcrm", [context.get('email_user')], context)
         imp.set_table_list(keys)
         imp.start()
