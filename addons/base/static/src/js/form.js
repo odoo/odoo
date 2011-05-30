@@ -1050,11 +1050,16 @@ openerp.base.form.FieldMany2Many = openerp.base.form.Field.extend({
     },
     start: function() {
         this._super.apply(this, arguments);
-        this.dataset = new openerp.base.DataSetMany2Many(this.session, this.field.relation);
-        //TODO: switch to non selectable once xmo has corrected the bug related to that
-        this.list_view = new openerp.base.form.Many2ManyListView(null, this.view.session,
-                this.list_id, this.dataset, false, {'selectable-': false,
-                'addable': 'Add'});
+        this.dataset = new openerp.base.DataSetStatic(
+                this.session, this.field.relation);
+
+        this.list_view = new openerp.base.form.Many2ManyListView(
+                null, this.view.session, this.list_id, this.dataset, false, {
+                    'selectable': false,
+                    'addable': 'Add'
+            });
+        this.list_view.groups.datagroup = (
+                new openerp.base.StaticDataGroup(this.dataset));
         var self = this;
         this.list_view.m2m_field = this;
         this.list_view.start();
@@ -1080,7 +1085,7 @@ openerp.base.form.FieldMany2Many = openerp.base.form.Field.extend({
     },
     check_load: function() {
         if(this.is_started && this.is_setted) {
-            this.list_view.reload_view();
+            this.list_view.reload_content();
         }
     }
 });
@@ -1089,44 +1094,26 @@ openerp.base.form.Many2ManyListView = openerp.base.ListView.extend({
     do_delete: function (ids) {
         this.dataset.ids = _.without.apply(null, [this.dataset.ids].concat(ids));
         this.dataset.count = this.dataset.ids.length;
-        // there may be a faster way
-        this.reload_view();
+        this.reload_content();
         
         this.m2m_field.on_ui_change();
     },
-    reload_view: function () {
-        /* Dear xmo, according to your comments, this method's implementation in list view seems
-         * to be a little bit bullshit.
-         * I assume the list view will be changed later, so I hope it will support static datasets.
-         */
-        return this.rpc('/base/listview/fill', {
-            'model': this.dataset.model,
-            'id': this.view_id,
-            'domain': [["id", "in", this.dataset.ids]],
-            'context': this.dataset.context
-        }, this.do_fill_table);
-    },
-    do_add_record: function (e) {
-        e.stopImmediatePropagation();
-        var pop = new openerp.base.form.Many2XSelectPopup(null, this.m2m_field.view.session);
+    do_add_record: function () {
+        var pop = new openerp.base.form.Many2XSelectPopup(
+                null, this.m2m_field.view.session);
         pop.select_element(this.model);
         var self = this;
         pop.on_select_element.add(function(element_id) {
             if(! _.detect(self.dataset.ids, function(x) {return x == element_id;})) {
                 self.dataset.ids.push(element_id);
                 self.dataset.count = self.dataset.ids.length;
-                self.reload_view();
+                self.reload_content();
             }
             pop.stop();
         });
     },
-    select_record: function(index) {
-        var id = this.rows[index].data.id.value;
-        if(! id) {
-            return;
-        }
-        var action_manager = this.m2m_field.view.session.action_manager;
-        action_manager.do_action({
+    do_activate_record: function(index, id) {
+        this.m2m_field.view.session.action_manager.do_action({
             "res_model": this.dataset.model,
             "views":[[false,"form"]],
             "res_id": id,
@@ -1143,9 +1130,8 @@ openerp.base.form.Many2XSelectPopup = openerp.base.BaseWidget.extend({
     template: "Many2XSelectPopup",
     select_element: function(model, dataset) {
         this.model = model;
-        this.dataset = dataset
-        var html = this.render();
-        jQuery(html).dialog({title: '',
+        this.dataset = dataset;
+        jQuery(this.render()).dialog({title: '',
                     modal: true,
                     minWidth: 800});
         this.start();

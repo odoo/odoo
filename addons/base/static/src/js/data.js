@@ -10,9 +10,7 @@ openerp.base.DataGroup =  openerp.base.Controller.extend( /** @lends openerp.bas
      * (a session, a model, a domain, a context and a group_by sequence), the
      * domain and context may be empty. It is then interacted with via
      * :js:func:`~openerp.base.DataGroup.list`, which is used to read the
-     * content of the current grouping level, and
-     * :js:func:`~openerp.base.DataGroup.get`, which is used to fetch an item
-     * of the current grouping level.
+     * content of the current grouping level.
      *
      * @constructs
      * @extends openerp.base.Controller
@@ -204,6 +202,24 @@ openerp.base.GrouplessDataGroup = openerp.base.DataGroup.extend(
     }
 });
 
+openerp.base.StaticDataGroup = openerp.base.GrouplessDataGroup.extend(
+    /** @lends openerp.base.StaticDataGroup# */ {
+    /**
+     * A specialization of groupless data groups, relying on a single static
+     * dataset as its records provider.
+     *
+     * @constructs
+     * @extends openerp.base.GrouplessDataGroup
+     * @param {openep.base.DataSetStatic} dataset a static dataset backing the groups
+     */
+    init: function (dataset) {
+        this.dataset = dataset;
+    },
+    list: function (ifGroups, ifRecords) {
+        ifRecords(this.dataset);
+    }
+});
+
 openerp.base.DataSet =  openerp.base.Controller.extend( /** @lends openerp.base.DataSet# */{
     /**
      * DateaManagement interface between views and the collection of selected
@@ -334,7 +350,8 @@ openerp.base.DataSetStatic =  openerp.base.DataSet.extend({
         this.count = 0;
     },
     read_slice: function (fields, offset, limit, callback) {
-        this.read_ids(this.ids.slice(offset, offset + limit));
+        var end_pos = limit && limit !== -1 ? offset + limit : undefined;
+        this.read_ids(this.ids.slice(offset, end_pos), fields, callback);
     }
 });
 
@@ -405,18 +422,6 @@ openerp.base.DataSetSearch =  openerp.base.DataSet.extend({
 
         this._sort.unshift((reverse ? '-' : '') + field);
         return undefined;
-    }
-});
-
-openerp.base.DataSetRelational =  openerp.base.DataSet.extend( /** @lends openerp.base.DataSet# */{
-});
-
-openerp.base.DataSetMany2Many = openerp.base.DataSetStatic.extend({
-    /* should extend DataSetStatic instead, but list view still does not support it
-     */
-
-    unlink: function(ids) {
-        // just do nothing
     }
 });
 
