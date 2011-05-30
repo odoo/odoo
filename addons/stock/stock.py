@@ -113,6 +113,9 @@ class stock_location(osv.osv):
         """
         prod_id = context and context.get('product_id', False)
 
+        if not prod_id:
+            return dict([(i, {}.fromkeys(field_names, 0.0)) for i in ids])
+
         product_product_obj = self.pool.get('product.product')
 
         cr.execute('select distinct product_id, location_id from stock_move where location_id in %s', (tuple(ids), ))
