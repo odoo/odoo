@@ -3,7 +3,7 @@
     <data>
         <!-- wizard action on res.partner -->
         <act_window id="partner_wizard_action"
-            name="Create Portal Users"
+            name="Add Portal Access"
             src_model="res.partner"
             res_model="res.portal.wizard"
             view_type="form" view_mode="form"
@@ -12,7 +12,7 @@
 
         <!-- wizard action on res.partner.address -->
         <act_window id="address_wizard_action"
-            name="Create Portal Users"
+            name="Add Portal Access"
             src_model="res.partner.address"
             res_model="res.portal.wizard"
             view_type="form" view_mode="form"
@@ -21,12 +21,13 @@
 
         <!-- wizard view -->
         <record id="wizard_view" model="ir.ui.view">
-            <field name="name">Create Portal Users</field>
+            <field name="name">Add Portal Access</field>
             <field name="model">res.portal.wizard</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Create Portal Users">
-                    <field name="portal_id" widget="selection" colspan="4"/>
+                <form string="Add Portal Access">
+                    <field name="portal_id" widget="selection"/>
+                    <newline/>
                     <notebook colspan="4">
                         <page string="Users">
                             <field name="user_ids" nolabel="1" colspan="4"/>
@@ -38,7 +39,7 @@
                     </notebook>
                     <label colspan="2"/>
                     <button string="Cancel" special="cancel" icon="gtk-cancel"/>
-                    <button string="Create Users"
+                    <button string="Send Invitations"
                         name="action_create" type="object" icon="gtk-ok"/>
                 </form>
             </field>
@@ -52,10 +53,9 @@
             <field name="arch" type="xml">
                 <!-- the attribute 'editable' is set below to make the elements
                      editable in the web client 6.0 -->
-                <tree string="Portal Users" editable="bottom">
+                <tree string="Portal Users" editable="bottom" colors="red:exists==True">
                     <field name="name"/>
-                    <field name="email"/>
-                    <field name="lang"/>
+                    <field name="user_email"/>
                     <field name="partner_id"/>
                 </tree>
             </field>
@@ -70,11 +70,8 @@
                 <form string="Portal User">
                     <group colspan="2" col="2">
                         <field name="name"/>
-                        <field name="email"/>
+                        <field name="user_email"/>
                         <field name="lang"/>
-                    </group>
-                    <group colspan="2" col="2">
-                        <field name="address_id"/>
                         <field name="partner_id"/>
                     </group>
                 </form>

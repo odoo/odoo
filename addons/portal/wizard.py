@@ -64,7 +64,7 @@ def random_password():
 
 def extract_email(user_email):
     """ extract the email address from a user-friendly email address """
-    m = email_re.search(user_email)
+    m = email_re.search(user_email or "")
     return m and m.group(0) or ""
 
 
@@ -90,31 +90,33 @@ class wizard(osv.osv_memory):
 
     def _default_user_ids(self, cr, uid, context):
         """ determine default user_ids from the active records """
-        # determine relevant res.partner.address(es) depending on context
-        addresses = []
+        def create_user_from_address(address):
+            return {    # a user config based on a contact (address)
+                'name': address.name,
+                'user_email': extract_email(address.email),
+                'lang': address.partner_id and address.partner_id.lang or 'en_US',
+                'partner_id': address.partner_id and address.partner_id.id,
+            }
+        
+        user_ids = []
         if context.get('active_model') == 'res.partner.address':
             address_obj = self.pool.get('res.partner.address')
             address_ids = context.get('active_ids', [])
             addresses = address_obj.browse(cr, uid, address_ids, context)
+            user_ids = map(create_user_from_address, addresses)
+        
         elif context.get('active_model') == 'res.partner':
             partner_obj = self.pool.get('res.partner')
             partner_ids = context.get('active_ids', [])
             partners = partner_obj.browse(cr, uid, partner_ids, context)
             for p in partners:
+                # add one user per contact, or one user if no contact
                 if p.address:
-                    # take default address if present, or any address otherwise
-                    def_addrs = filter(lambda a: a.type == 'default', p.address)
-                    addresses.append(def_addrs[0] if def_addrs else p.address[0])
+                    user_ids.extend(map(create_user_from_address, p.address))
+                else:
+                    user_ids.append({'lang': p.lang or 'en_US', 'partner_id': p.id})
         
-        # create user configs based on these addresses
-        user_data = lambda address: {
-                        'name': address.name,
-                        'email': extract_email(address.email),
-                        'lang': address.partner_id and address.partner_id.lang,
-                        'address_id': address.id,
-                        'partner_id': address.partner_id and address.partner_id.id,
-                    }
-        return map(user_data, addresses)
+        return user_ids
 
     _defaults = {
         'user_ids': _default_user_ids
@@ -126,7 +128,8 @@ class wizard(osv.osv_memory):
         context0 = context or {}
         context = context0.copy()
         
-        user = self.pool.get('res.users').browse(cr, ROOT_UID, uid, context0)
+        user_obj = self.pool.get('res.users')
+        user = user_obj.browse(cr, ROOT_UID, uid, context0)
         if not user.user_email:
             raise osv.except_osv(_('Email required'),
                 _('You must have an email address in your User Preferences'
@@ -134,28 +137,41 @@ class wizard(osv.osv_memory):
         
         portal_obj = self.pool.get('res.portal')
         for wiz in self.browse(cr, uid, ids, context):
-            # create new users in portal
-            users_data = [ {
-                    'name': u.name,
-                    'login': u.email,
-                    'password': random_password(),
-                    'user_email': u.email,
-                    'context_lang': u.lang,
-                    'address_id': u.address_id.id,
-                } for u in wiz.user_ids ]
-            portal_obj.write(cr, ROOT_UID, [wiz.portal_id.id],
-                {'users': [(0, 0, data) for data in users_data]}, context0)
+            # determine existing users
+            login_cond = [('login', 'in', [u.user_email for u in wiz.user_ids])]
+            user_ids = user_obj.search(cr, ROOT_UID, login_cond)
+            users = user_obj.browse(cr, ROOT_UID, user_ids)
+            logins = [u.login for u in users]
             
-            # send email to new users (translated in their language)
-            for data in users_data:
-                context['lang'] = data['context_lang']
-                data['company'] = user.company_id.name
-                data['db'] = cr.dbname
-                data['url'] = wiz.portal_id.url or "(missing url)"
-                data['message'] = wiz.message or ""
+            # create new users in portal (skip existing logins)
+            new_users_data = [ {
+                    'name': u.name,
+                    'login': u.user_email,
+                    'password': random_password(),
+                    'user_email': u.user_email,
+                    'context_lang': u.lang,
+                    'partner_id': u.partner_id and u.partner_id.id,
+                } for u in wiz.user_ids if u.user_email not in logins ]
+            portal_obj.write(cr, ROOT_UID, [wiz.portal_id.id],
+                {'users': [(0, 0, data) for data in new_users_data]}, context0)
+            
+            # send email to all users (translated in their language)
+            data = {
+                'company': user.company_id.name,
+                'message': wiz.message or "",
+                'url': wiz.portal_id.url or "(missing url)",
+                'db': cr.dbname,
+            }
+            user_ids = user_obj.search(cr, ROOT_UID, login_cond)
+            users = user_obj.browse(cr, ROOT_UID, user_ids)
+            for dest_user in users:
+                context['lang'] = dest_user.context_lang
+                data['login'] = dest_user.login
+                data['password'] = dest_user.password
+                data['name'] = dest_user.name
                 
                 email_from = user.user_email
-                email_to = data['user_email']
+                email_to = dest_user.user_email
                 subject = _(WELCOME_EMAIL_SUBJECT) % data
                 body = _(WELCOME_EMAIL_BODY) % data
                 res = email_send(email_from, [email_to], subject, body)
@@ -175,44 +191,32 @@ class wizard_user(osv.osv_memory):
     """
     _name = 'res.portal.wizard.user'
     _description = 'Portal User Config'
-    
+
     _columns = {
         'wizard_id': fields.many2one('res.portal.wizard', required=True,
             string='Wizard'),
         'name': fields.char(size=64, required=True,
             string='User Name',
             help="The user's real name"),
-        'email': fields.char(size=64, required=True,
+        'user_email': fields.char(size=64, required=True,
             string='E-mail',
             help="Will be used as user login.  "  
                  "Also necessary to send the account information to new users"),
         'lang': fields.selection(_lang_get, required=True,
             string='Language',
             help="The language for the user's user interface"),
-        'address_id': fields.many2one('res.partner.address', required=True,
-            string='Address'),
-        'partner_id': fields.related('address_id', 'partner_id',
-            type='many2one', relation='res.partner', readonly=True,
+        'partner_id': fields.many2one('res.partner',
             string='Partner'),
     }
 
     def _check_email(self, cr, uid, ids):
         """ check syntax of email address """
-        for wizard in self.browse(cr, uid, ids):
-            if not email_re.match(wizard.email): return False
-        return True
-
-    def _check_exist(self, cr, uid, ids):
-        """ check whether login (email) already in use """
-        user_obj = self.pool.get('res.users')
-        for wizard in self.browse(cr, uid, ids):
-            condition = [('login', '=', wizard.email)]
-            if user_obj.search(cr, ROOT_UID, condition): return False
+        for wuser in self.browse(cr, uid, ids):
+            if not email_re.match(wuser.user_email): return False
         return True
 
     _constraints = [
         (_check_email, 'Invalid email address', ['email']),
-        (_check_exist, 'User login already exists', ['email']),
     ]
 
 wizard_user()
