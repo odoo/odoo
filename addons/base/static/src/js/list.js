@@ -268,7 +268,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
      */
     reload_content: function () {
         this.$element.find('table').append(
-            this.groups.render(
+            this.groups.apoptosis().render(
                 $.proxy(this, 'compute_aggregates')));
     },
     /**
