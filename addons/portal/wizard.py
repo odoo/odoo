@@ -162,9 +162,9 @@ class wizard(osv.osv_memory):
                 'url': wiz.portal_id.url or "(missing url)",
                 'db': cr.dbname,
             }
-            user_ids = user_obj.search(cr, ROOT_UID, login_cond)
-            users = user_obj.browse(cr, ROOT_UID, user_ids)
-            for dest_user in users:
+            dest_uids = user_obj.search(cr, ROOT_UID, login_cond)
+            dest_users = user_obj.browse(cr, ROOT_UID, user_ids)
+            for dest_user in dest_users:
                 context['lang'] = dest_user.context_lang
                 data['login'] = dest_user.login
                 data['password'] = dest_user.password
