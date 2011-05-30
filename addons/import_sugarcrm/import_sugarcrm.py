@@ -108,8 +108,12 @@ class sugar_import(import_framework):
         min = int(min) * 100 / 60
         return "%s.%i" % (hour, min)
     
-    def get_attachment(self, val):
-        File, Filename = sugar.attachment_search(self.context.get('port'), self.context.get('session_id'), self.TABLE_NOTE, val.get('id')) 
+    """
+    import Emails
+    """
+
+    def get_email_attachment(self, val):
+        File, Filename = sugar.attachment_search(self.context.get('port'), self.context.get('session_id'), self.TABLE_EMAIL, val.get('id')) 
         attach_xml_id = False
         if File:
             fields = ['name', 'datas', 'datas_fname','res_id', 'res_model']
@@ -117,10 +121,7 @@ class sugar_import(import_framework):
             datas = [Filename or val.get('name'), File, Filename, val.get('res_id'),val.get('model',False)]
             attach_xml_id = self.import_object(fields, datas, 'ir.attachment', self.TABLE_HISTORY_ATTACHMNET, name, [('res_id', '=', val.get('res_id'), ('model', '=', val.get('model')))])
         return attach_xml_id
-        
-    """
-    import Emails
-    """
+    
     def import_email(self, val):
         model_obj =  self.obj.pool.get('ir.model.data')
         xml_id = self.xml_id_exist(val.get('parent_type'), val.get('parent_id'))
@@ -150,7 +151,7 @@ class sugar_import(import_framework):
                         'res_id': 'res_id',
                         'model': 'model',
                         'partner_id/.id': 'partner_id/.id',                         
-                        'attachment_ids/id': self.get_attachment,
+                        'attachment_ids/id': self.get_email_attachment,
                         'user_id/id': ref(self.TABLE_USER, 'assigned_user_id'),
                         'description': ppconcat('description', 'description_html'),
                 }
@@ -159,6 +160,15 @@ class sugar_import(import_framework):
     """
     import History(Notes)
     """
+    def get_note_attachment(self, val):
+        File, Filename = sugar.attachment_search(self.context.get('port'), self.context.get('session_id'), self.TABLE_NOTE, val.get('id')) 
+        attach_xml_id = False
+        if File:
+            fields = ['name', 'datas', 'datas_fname','res_id', 'res_model']
+            name = 'attachment_'+ (Filename or val.get('name'))
+            datas = [Filename or val.get('name'), File, Filename, val.get('res_id'),val.get('model',False)]
+            attach_xml_id = self.import_object(fields, datas, 'ir.attachment', self.TABLE_HISTORY_ATTACHMNET, name, [('res_id', '=', val.get('res_id'), ('model', '=', val.get('model')))])
+        return attach_xml_id
 
     def import_history(self, val):
         model_obj =  self.obj.pool.get('ir.model.data')
@@ -186,7 +196,7 @@ class sugar_import(import_framework):
                       'description': ppconcat('description', 'description_html'),
                       'res_id': 'res_id',
                       'model': 'model',
-                      'attachment_ids/id': self.get_attachment,
+                      'attachment_ids/id': self.get_note_attachment,
                       'partner_id/.id' : 'partner_id/.id',
                       'history' : 'history',
                 }
@@ -849,7 +859,7 @@ class import_sugarcrm(osv.osv):
         'username': fields.char('User Name', size=64, required=True),
         'password': fields.char('Password', size=24,required=True),
          'url' : fields.char('SugarSoap Api url:', size=264, required=True, help="Webservice's url where to get the data.\
-                      'exemple : http://example.com/sugarcrm/soap.php, or copy the address of your sugarcrm application http://trial.sugarcrm.com/qbquyj4802/index.php?module=Home&action=index"),
+                      'example : http://example.com/sugarcrm/soap.php, or copy the address of your sugarcrm application http://trial.sugarcrm.com/qbquyj4802/index.php?module=Home&action=index"),
                 
         'opportunity': fields.boolean('Leads and Opportunities', help="If Opportunities are checked, SugarCRM opportunities data imported in OpenERP crm-Opportunity form"),
         'contact': fields.boolean('Contacts', help="If Contacts are checked, SugarCRM Contacts data imported in OpenERP partner address form"),
