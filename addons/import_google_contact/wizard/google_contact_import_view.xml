@@ -1,16 +1,6 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-		<record model="ir.ui.view" id="view_google_login_contact_form">
-			<field name="name">google.login.contact.form</field>
-			<field name="model">google.login.contact</field>
-			<field name="type">form</field>
-			<field name="inherit_id" ref="google_base_account.view_google_login_form" />
-			<field name="arch" type="xml">
-				<data> </data>
-			</field>
-		</record>
-
         <record model="ir.ui.view" id="view_synchronize_google_contact_import_form">
             <field name="name">synchronize.base.form</field>
             <field name="model">synchronize.google.contact.import</field>
@@ -47,9 +37,8 @@
           <field name="view_type">form</field>
           <field name="view_mode">form</field>
           <field name="target">new</field>
-          <field name="view_id" ref="view_google_login_contact_form" />
+          <field name="view_id" ref="google_base_account.view_google_login_form" />
         </record>
-
 
         <menuitem id="menu_sync_contact"
                   parent="base.menu_address_book"
