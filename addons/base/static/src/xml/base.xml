@@ -92,7 +92,7 @@
         <t t-foreach="data.children" t-as="menu">
             <td>
                 <a href="#" t-att-data-menu="menu.id">
-                    <span><t t-esc="menu.name"/></span>
+                    <t t-esc="menu.name"/>
                 </a>
             </td>
         </t>
@@ -147,7 +147,7 @@
                 <div t-attf-id="#{prefix}_view_#{view[1]}"/>
             </t>
         </td>
-        <td class="view-manager-main-sidebar">
+        <td class="view-manager-main-sidebar" height="100%">
         </td>
     </tr>
     </table>
@@ -156,23 +156,23 @@
     <t t-set="columns_count" t-value="visible_columns.length + (options.selectable ? 1 : 0) + (options.deletable ? 1 : 0)"/>
     <t t-set="actions_span" t-value="Math.floor((options.deletable or options.addable) ? columns_count/2 : 0)"/>
     <thead class="ui-widget-header">
-        <tr t-if="options.selectable">
+        <tr>
             <th t-if="actions_span" t-att-colspan="actions_span"
                 class="oe-actions">
-                <t t-if="view_manager.action.flags.action_buttons !== false">
+                <t t-if="flags.action_buttons !== false">
                     <button type="button" id="oe-list-add"
                             t-if="options.addable">
                         <t t-esc="options.addable"/>
                     </button>
                     <button type="button" id="oe-list-delete"
-                            t-if="options.deletable">
+                            t-if="options.selectable and options.deletable">
                         Delete
                     </button>
                 </t>
             </th>
             <th t-att-colspan="columns_count - actions_span"
                 class="oe-list-pager">
-                <t t-if="view_manager.action.flags.pager !== false">
+                <t t-if="flags.pager !== false">
                     <button type="button" data-pager-action="first">First</button>
                     <button type="button" data-pager-action="previous"
                             >&lt;&lt;</button>
@@ -187,9 +187,14 @@
             </th>
         </tr>
         <tr t-if="options.header">
+            <t t-foreach="columns" t-as="column">
+                <th t-if="column.meta">
+                    <t t-esc="column.string"/>
+                </th>
+            </t>
             <th t-if="options.selectable"/>
             <t t-foreach="columns" t-as="column">
-                <th t-if="column.invisible !== '1'" t-att-data-id="column.id"
+                <th t-if="!column.meta and column.invisible !== '1'" t-att-data-id="column.id"
                     t-att-class="((options.sortable and column.tag !== 'button') ? 'oe-sortable' : null)">
                     <t t-if="column.tag !== 'button'">
                         <t t-esc="column.string"/>
@@ -200,6 +205,13 @@
             <th t-if="options.deletable"/>
         </tr>
     </thead>
+    <tfoot class="ui-widget-header" t-if="aggregate_columns.length">
+        <tr>
+            <td t-att-colspan="columns_count" class='oe-list-footer'>
+                
+            </td>
+        </tr>
+    </tfoot>
 </table>
 <t t-name="ListView.rows" t-foreach="rows" t-as="row">
     <t t-call="ListView.row">
@@ -210,17 +222,22 @@
     </t>
 </t>
 <tr t-name="ListView.row" t-att-style="style" t-att-class="row_parity">
+    <t t-foreach="columns" t-as="column">
+        <td t-if="column.meta">
+            
+        </td>
+    </t>
     <th t-if="options.selectable" class="oe-record-selector">
         <input type="checkbox"/>
     </th>
     <t t-foreach="columns" t-as="column">
-        <t t-set="attrs" t-value="column.attrs_for(row.data)"/>
-        <td t-if="column.invisible !== '1'" t-att-title="column.help"
+        <td t-if="!column.meta and column.invisible !== '1'" t-att-title="column.help"
             class="oe-field-cell" t-att-data-field="column.id">
+            <t t-set="attrs" t-value="column.attrs_for(row.data)"/>
             <t t-if="!attrs.invisible">
                 <t t-set="is_button" t-value="column.tag === 'button'"/>
                 <!-- TODO: get correct widget from form -->
-                <t t-if="!is_button and row['data'][column.id].value">
+                <t t-if="!is_button and row['data'][column.id].value !== false">
                     <t t-set="value" t-value="row['data'][column.id].value"/>
                     <t t-esc="value instanceof Array ? value[1] : value"/>
                 </t>
@@ -239,13 +256,13 @@
 <t t-name="FormView">
     <h2 class="oe_view_title"><t t-esc="view.fields_view.arch.attrs.string"/></h2>
     <div class="oe_form_header" t-att-id="view.element_id + '_header'">
-        <div class="oe_form_buttons" t-if="view.view_manager.action.flags.action_buttons !== false">
+        <div class="oe_form_buttons" t-if="view.flags.action_buttons !== false">
             <!--<button type="button" class="oe_form_button_save">Save</button>-->
             <button type="button" class="oe_form_button_save_edit">Save &amp; Edit</button>
             <!--<button type="button" class="oe_form_button_cancel">Cancel</button>-->
             <button type="button" class="oe_form_button_new">New</button>
         </div>
-        <div class="oe_form_pager" t-if="view.view_manager.action.flags.pager !== false">
+        <div class="oe_form_pager" t-if="view.flags.pager !== false">
             <button type="button" data-pager-action="first">First</button>
             <button type="button" data-pager-action="previous">&lt;&lt;</button>
 
@@ -256,6 +273,41 @@
         </div>
     </div>
     <t t-raw="frame.render()"/>
+</t>
+<t t-name="FormView.sidebar.attachments">
+    <h2>Attachments</h2>
+    <div class="oe-sidebar-attachments-toolbar">
+        <div class="oe-binary-file-set" style="float: right">
+            <form class="oe-binary-form" t-attf-target="#{element_id}_iframe"
+                method="post" enctype="multipart/form-data" action="/base/binary/upload_attachment">
+                <input type="hidden" name="session_id" t-att-value="session.session_id"/>
+                <input type="hidden" name="callback" t-attf-value="#{element_id}_iframe"/>
+                <input type="hidden" name="model" t-att-value="dataset.model"/>
+                <input type="hidden" name="id" t-att-value="datarecord.id"/>
+                <button class="button" type="button">
+                    <img src="/base/static/src/img/throbber.gif" width="16" height="16" style="display: none"/>
+                    <span>Add</span>
+                </button>
+                <input type="file" class="oe-binary-file" name="ufile" title="Add attachment"
+                    t-att-onclick="datarecord.id ? null : 'alert(\'No record selected ! You can only attach to existing record.\'); return false;'"/>
+            </form>
+            <iframe t-attf-id="#{element_id}_iframe" t-attf-name="#{element_id}_iframe" style="display: none"> </iframe>
+        </div>
+    </div>
+    <br style="clear: both"/>
+    <ul class="oe-sidebar-attachments-items">
+        <li t-foreach="attachments" t-as="attachment">
+            <t t-if="attachment.type == 'binary'" t-set="attachment.url" t-value="'/base/binary/saveas?session_id='
+                + session.session_id + '&amp;model=ir.attachment&amp;id=' + attachment.id
+                + '&amp;field=datas' + '&amp;fieldname=name' + '&amp;t=' + (new Date().getTime())"/>
+            <a class="oe-sidebar-attachments-link" t-att-href="attachment.url" target="_blank">
+                <t t-esc="attachment.name"/>
+            </a>
+            <a href="#" class="oe-sidebar-attachment-delete" t-att-data-id="attachment.id" t-attf-title="Delete the attachment #{attachment.name}">
+                <img src="/base/static/src/img/attachments-close.png" width="15" height="15" border="0"/>
+            </a>
+        </li>
+    </ul>
 </t>
 <t t-name="Widget">
     Unhandled widget
@@ -328,6 +380,20 @@
     </tr>
     </table>
 </t>
+<t t-name="FieldUrl">
+    <table cellpadding="0" cellspacing="0" border="0" width="100%">
+    <tr>
+        <td width="100%">
+            <t t-call="FieldChar"/>
+        </td>
+        <td width="16">
+            <button type="button" class="button" title="Open this resource">
+                <img src="/base/static/src/img/icons/gtk-ok.png"/>
+            </button>
+        </td>
+    </tr>
+    </table>
+</t>
 <t t-name="FieldText">
     <textarea rows="6" style="width: 100%;"
         t-att-name="widget.name"
@@ -356,13 +422,16 @@
     </select>
 </t>
 <t t-name="FieldMany2One">
-    <input type="text"
-        t-att-name="widget.name"
-        t-att-id="widget.element_id + '_field'"
-        t-att-class="'field_' + widget.type"
-        t-att-type="widget.type"
-        style="width: 100%;"/>
-    <div type='button' class='ui_combo' tabindex="'-1'" title="'Show All Items'"></div>
+    <div style="padding-right: 16px;white-space: nowrap;">
+        <input type="text"
+            t-att-name="widget.name"
+            t-att-id="widget.element_id + '_field'"
+            t-att-class="'field_' + widget.type"
+            t-att-type="widget.type"
+            style="width: 100%;"/>
+        <span type='button' t-att-class="'ui_combo'" tabindex="'-1'" title="'Show All Items'"></span>
+        <img t-att-id="widget.name + '_open'" t-att-alt="'Open'" t-att-title="'Create'" t-att-src="'/base/static/src/img/iconset-d-drop.gif'" t-att-class="'m2o_open'"/>
+    </div>
 </t>
 <t t-name="FieldOne2Many">
     <div t-att-id="widget.element_id">
@@ -386,7 +455,7 @@
         <span></span>
     </div>
 </t>
-<t t-name="FieldImage">
+<t t-name="FieldBinaryImage">
     <table cellpadding="0" cellspacing="0" border="0">
     <tr>
         <td align="center">
@@ -402,27 +471,83 @@
     <tr>
         <td align="center" valign="bottom" height="25">
             <div class="oe-binary">
-                <!-- TODO: input@type=file inside a button won't work in firefox. Use links instead -->
-                <button class="button oe-binary-file-set" type="button" title="Set Image">
-                    <img src="/base/static/src/img/icons/STOCK_DIRECTORY.png"/>
-                    <form class="oe-binary-form" t-att-target="widget.iframe"
-                            method="post" enctype="multipart/form-data" action="/base/formview/upload">
-                        <input type="hidden" name="session_id" value=""/>
-                        <input type="hidden" name="callback" t-att-value="widget.iframe"/>
-                        <input type="file" class="oe-binary-file" name="ufile"/>
-                    </form>
-                </button>
-                <button class="button oe-binary-file-save" type="button" title="Save As">
-                    <img src="/base/static/src/img/icons/gtk-save.png"/>
-                </button>
-                <button class="button oe-binary-file-clear" type="button" title="Clear">
-                    <img src="/base/static/src/img/icons/STOCK_MISSING_IMAGE.png"/>
-                </button>
+                <table cellspacing="0" cellpadding="0" border="0">
+                <tr>
+                    <td>
+                        <div class="oe-binary-file-set" style="width: 40px; height:22px;">
+                            <form class="oe-binary-form" t-att-target="widget.iframe"
+                                method="post" enctype="multipart/form-data" action="/base/binary/upload">
+                                <input type="hidden" name="session_id" value=""/>
+                                <input type="hidden" name="callback" t-att-value="widget.iframe"/>
+                                <button class="button" type="button" title="Set Image">
+                                    <img src="/base/static/src/img/icons/STOCK_DIRECTORY.png"/>
+                                </button>
+                                <input type="file" class="oe-binary-file" name="ufile"/>
+                            </form>
+                        </div>
+                    </td>
+                    <td>
+                        <button class="button oe-binary-file-clear" type="button" title="Clear">
+                            <img src="/base/static/src/img/icons/STOCK_MISSING_IMAGE.png"/>
+                        </button>
+                    </td>
+                </tr>
+                </table>
             </div>
             <div class="oe-binary-progress" style="display: none">
                 <img src="/base/static/src/img/throbber.gif" width="16" height="16"/>
                 <b>Uploading ...</b>
             </div>
+            <iframe t-att-id="widget.iframe" t-att-name="widget.iframe" style="display: none"> </iframe>
+        </td>
+    </tr>
+    </table>
+</t>
+<t t-name="FieldBinaryFile">
+    <table cellpadding="0" cellspacing="0" border="0" width="100%">
+    <tr>
+        <td width="100%">
+            <input type="text"
+                t-att-name="widget.name"
+                t-att-id="widget.element_id + '_field'"
+                t-att-class="'field_' + widget.type" style="width: 100%"
+            />
+        </td>
+        <td class="oe-binary" nowrap="true">
+            <table cellspacing="0" cellpadding="0" border="0">
+            <tr>
+                <td>
+                    <div class="oe-binary-file-set" style="width: 80px; height:22px;">
+                        <form class="oe-binary-form" t-att-target="widget.iframe"
+                            method="post" enctype="multipart/form-data" action="/base/binary/upload">
+                            <input type="hidden" name="session_id" value=""/>
+                            <input type="hidden" name="callback" t-att-value="widget.iframe"/>
+                            <button class="button" type="button" title="Set Image">
+                                <img src="/base/static/src/img/icons/STOCK_DIRECTORY.png"/>
+                                <span>Select</span>
+                            </button>
+                            <input type="file" class="oe-binary-file" name="ufile"/>
+                        </form>
+                    </div>
+                </td>
+                <td>
+                    <button class="button oe-binary-file-save" type="button" title="Save As">
+                        <img src="/base/static/src/img/icons/gtk-save.png"/>
+                        <span>Save As</span>
+                    </button>
+                </td>
+                <td>
+                    <button class="button oe-binary-file-clear" type="button" title="Clear">
+                        <img src="/base/static/src/img/icons/STOCK_MISSING_IMAGE.png"/>
+                        <span>Clear</span>
+                    </button>
+                </td>
+            </tr>
+            </table>
+        </td>
+        <td class="oe-binary-progress" style="display: none" nowrap="true">
+            <img src="/base/static/src/img/throbber.gif" width="16" height="16"/>
+            <b>Uploading ...</b>
             <iframe t-att-id="widget.iframe" t-att-name="widget.iframe" style="display: none"> </iframe>
         </td>
     </tr>
@@ -444,6 +569,13 @@
         <div class="oe_search-view-buttons" style="text-align: right;">
             <input type="submit" value="Search"/>
             <input type="reset" value="Clear"/>
+            <button class="oe_search-view-custom-filter-btn"><span>Advanced Filter</span></button>
+            <select class="oe_search-view-filters-management">
+                <option value="_filters">-- Filters --</option>
+                <option value="_actions">-- Actions --</option>
+                <option value="save_filter">Save Filter</option>
+                <option value="manage_filters">Manage Filters</option>
+            </select>
         </div>
     </form>
 </t>
@@ -547,12 +679,10 @@
 <t t-name="SearchView.extended_search">
     <t t-call="SearchView.util.expand">
         <t t-set="expand" t-value="false"/>
-        <t t-set="label" t-value="'Custom Filters'"/>
+        <t t-set="label" t-value="'Advanced Filters'"/>
         <t t-set="content">
             <div class="searchview_extended_groups_list">
             </div>
-            <button class="searchview_extended_add_group"
-                    type="button"><span>Add group of conditions</span></button>
         </t>
     </t>
 </t>
@@ -563,11 +693,12 @@
             <option value="any">Any of the following conditions must match</option>
             <option value="none">None of the following conditions must match</option>
         </select>
-        <button class="searchview_extended_delete_group"
-                type="button"><span>Delete this group of conditions</span></button>
+        <a class="searchview_extended_delete_group" 
+                href="javascript:void(0)"><span></span></a>
         <div class="searchview_extended_propositions_list">
         </div>
-        <button class="searchview_extended_add_proposition" type="button"><span>Add condition</span></button>
+        <a class="searchview_extended_add_proposition" href="javascript:void(0)">
+            <span>Add condition</span></a>
     </div>
 </t>
 <t t-name="SearchView.extended_search.proposition">
@@ -582,12 +713,33 @@
         </select>
         <select class="searchview_extended_prop_op"/>
         <span class="searchview_extended_prop_value"/>
-        <button class="searchview_extended_delete_prop"
-                type="button"><span>Delete this condition</span></button>
+        <a class="searchview_extended_delete_prop"
+                href="javascript:void(0)"><span></span></a>
     </div>
 </t>
 <t t-name="SearchView.extended_search.proposition.char">
-    <input t-att-id="element_id"/>
+    <input t-att-id="element_id" class="field_char"/>
+</t>
+<t t-name="SearchView.extended_search.proposition.datetime">
+    <input t-att-id="element_id" class="field_datetime"/>
+</t>
+<t t-name="SearchView.extended_search.proposition.date">
+    <input t-att-id="element_id" class="field_date"/>
+</t>
+<t t-name="SearchView.extended_search.proposition.integer">
+    <input type="number" t-att-id="element_id" class="field_integer" step="1"/>
+</t>
+<t t-name="SearchView.extended_search.proposition.float">
+    <input type="number" t-att-id="element_id" class="field_float" step="0.01"/>
+</t>
+<t t-name="SearchView.extended_search.proposition.boolean">
+</t>
+<t t-name="SearchView.extended_search.proposition.selection">
+    <select t-att-id="element_id">
+        <t t-foreach="field.selection" t-as="element">
+        <option t-att-value="element[0]"><t t-esc="element[1]"/></option>
+        </t>
+    </select>
 </t>
 <t t-name="ViewManager.sidebar">
     <div t-att-id="element_id" class="sidebar-main-div closed-sidebar">
@@ -596,22 +748,18 @@
 </t>
 <t t-name="ViewManager.sidebar.internal">
     <a class="toggle-sidebar"></a>
-    <div t-att-id="element_id" class="sidebar-sub-div">
-        <div class="sidebar-displaying-div">
-            <t t-set="i" t-value="1-1"/> <!-- al do stupid things -->
-            <t t-foreach="sections" t-as="section">
-                <t t-if="section.elements.length &gt; 0">
+    <div class="sidebar-content">
+        <div class="sidebar-attachments" t-if="view == 'form'"> </div>
+        <div class="sidebar-actions">
+            <t t-foreach="sidebar.sections" t-as="section" t-if="section.elements.length">
                 <h2><t t-esc="section.label"/></h2>
                 <ul>
-                    <t t-set="j" t-value="1-1"/>
-                    <t t-foreach="section.elements" t-as="element">
-                        <li><a class="oe_sidebar_action_a" t-att-data-i="i" t-att-data-j="j" href="#">
-                            <t t-esc="element.name"/></a></li>
-                        <t t-set="j" t-value="j+1"/>
-                    </t>
+                    <li t-foreach="section.elements" t-as="element">
+                        <a class="oe_sidebar_action_a" t-attf-data-index="#{section_index}-#{element_index}" href="#">
+                            <t t-esc="element.name"/>
+                        </a>
+                    </li>
                 </ul>
-                </t>
-                <t t-set="i" t-value="i+1"/>
             </t>
         </div>
     </div>

@@ -425,7 +425,11 @@ class HttpRequest(object):
         self.context = kw.get('context', {})
         self.session = self.httpsession.setdefault(kw.get('session_id', None), OpenERPSession())
         self.result = ""
-        print "GET/POST --> %s.%s %s %r" % (controller.__class__.__name__, f.__name__, request, kw)
+        if request.method == 'GET':
+            print "GET --> %s.%s %s %r" % (controller.__class__.__name__, f.__name__, request, kw)
+        else:
+            akw = dict([(key, kw[key] if isinstance(kw[key], basestring) else type(kw[key])) for key in kw.keys()])
+            print "POST --> %s.%s %s %r" % (controller.__class__.__name__, f.__name__, request, akw)
         r = f(controller, self, **kw)
         print "<--", r
         print

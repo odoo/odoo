@@ -281,6 +281,105 @@ abstract types, used to implement input widgets:
 
 .. TODO: insert Input, Field, Filter, and just about every Field subclass
 
+List View
++++++++++
+
+OpenERP Web's list views don't actually exist as such in OpenERP itself: a
+list view is an OpenERP tree view in the ``view_mode`` form.
+
+The overall purpose of a list view is to display collections of objects in two
+main forms: per-object, where each object is a row in and of itself, and
+grouped, where multiple objects are represented with a single row providing
+an aggregated view of all grouped objects.
+
+These two forms can be mixed within a single list view, if needed.
+
+The root of a list view is :js:class:`openerp.base.ListView`, which may need
+to be overridden (partially or fully) to control list behavior in non-view
+cases (when using a list view as sub-component of a form widget for instance).
+
+Creation and Initialization
+"""""""""""""""""""""""""""
+
+As with most OpenERP Web views, the list view's
+:js:func:`~openerp.base.ListView.init` takes quite a number of arguments.
+
+While most of them are the standard view constructor arguments
+(``view_manager``, ``session``, ``element_id``, ``dataset`` and an
+optional ``view_id``), the list view adds a number of options for basic
+customization (without having to override methods or templates):
+
+``selectable`` (default: ``true``)
+    Indicates that the list view should allow records to be selected
+    individually. Displays selection check boxes to the left of all record rows,
+    and allows for the triggering of the
+    :ref:`selection event <listview-events-selection>`.
+``deletable`` (default: ``true``)
+    Indicates that the list view should allow records to be removed
+    individually. Displays a deletion button to the right of all record rows,
+    and allows for the triggering of the
+    :ref:`deletion event <listview-events-deletion>`.
+``header`` (default: ``true``)
+    Indicates that list columns should bear a header sporting their name (for
+    non-action columns).
+``addable`` (default: ``"New"``)
+    Indicates that a record addition/creation button should be displayed in
+    the list's header, along with its label. Also allows for the triggering of
+    the :ref:`record addition event <listview-events-addition>`.
+``sortable`` (default: ``true``)
+    Indicates that the list view can be sorted per-column (by clicking on its
+    column headers).
+
+    .. TODO: event?
+``reorderable`` (default: ``true``)
+    Indicates that the list view records can be reordered (and re-sequenced)
+    by drag and drop.
+
+    .. TODO: event?
+
+Events
+""""""
+.. _listview-events-addition:
+
+Addition
+''''''''
+The addition event is used to add a record to an existing list view. The
+default behavior is to switch to the form view, on a new record.
+
+Addition behavior can be overridden by replacing the
+:js:func:`~openerp.base.ListView.do_add_record` method.
+
+.. _listview-events-selection:
+
+Selection
+'''''''''
+The selection event is triggered when a given record is selected in the list
+view.
+
+It can be overridden by replacing the
+:js:func:`~openerp.base.ListView.do_select` method.
+
+The default behavior is simply to hide or display the list-wise deletion button
+depending on whether there are selected records or not.
+
+.. _listview-events-deletion:
+
+Deletion
+''''''''
+The deletion event is triggered when the user tries to remove 1..n records from
+the list view, either individually or globally (via the header button).
+
+Deletion can be overridden by replacing the
+:js:func:`~openerp.base.ListView.do_delete` method. By default, this method
+calls :js:func:`~openerp.base.DataSet.unlink` in order to remove the records
+entirely.
+
+.. note:: the list-wise deletion button (next to the record addition button)
+          simply proxies to :js:func:`~openerp.base.ListView.do_delete` after
+          obtaining all selected record ids, but it is possible to override it
+          alone by replacing
+          :js:func:`~openerp.base.ListView.do_delete_selected`.
+
 Internal API Doc
 ----------------
 

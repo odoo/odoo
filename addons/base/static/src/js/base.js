@@ -129,6 +129,7 @@ openerp.base = function(instance) {
     openerp.base.views(instance);
     openerp.base.search(instance);
     openerp.base.list(instance);
+    openerp.base.tree(instance);
     openerp.base.m2o(instance);
     openerp.base.form(instance);
 };

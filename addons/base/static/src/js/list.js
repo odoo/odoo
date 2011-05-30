@@ -1,4 +1,5 @@
 openerp.base.list = function (openerp) {
+'use strict';
 openerp.base.views.add('list', 'openerp.base.ListView');
 openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListView# */ {
     defaults: {
@@ -43,50 +44,46 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
      * @borrows openerp.base.ActionExecutor#execute_action as #execute_action
      */
     init: function(view_manager, session, element_id, dataset, view_id, options) {
-        var self = this;
         this._super(session, element_id);
-        this.view_manager = view_manager;
+        this.view_manager = view_manager || new openerp.base.NullViewManager();
         this.dataset = dataset;
         this.model = dataset.model;
         this.view_id = view_id;
 
         this.columns = [];
-        this.rows = [];
 
         this.options = _.extend({}, this.defaults, options || {});
+        this.flags =  this.view_manager.action.flags;
 
-        this.list = new openerp.base.ListView.List({
-            options: this.options,
-            columns: this.columns,
-            rows: this.rows
-        });
-        this.groups = new openerp.base.ListView.Groups({
-            options: this.options,
-            columns: this.columns
-        });
-        $([this.list, this.groups]).bind({
-            'selected': function (e, selection) {
-                self.$element.find('#oe-list-delete')
-                    .toggle(!!selection.length);
+        this.set_groups(new openerp.base.ListView.Groups(this));
+    },
+    /**
+     * Set a custom Group construct as the root of the List View.
+     *
+     * @param {openerp.base.ListView.Groups} groups
+     */
+    set_groups: function (groups) {
+        var self = this;
+        if (this.groups) {
+            $(this.groups).unbind("selected deleted action row_link");
+            delete this.groups;
+        }
+
+        this.groups = groups;
+        $(this.groups).bind({
+            'selected': function (e, ids, records) {
+                self.do_select(ids, records);
             },
             'deleted': function (e, ids) {
                 self.do_delete(ids);
             },
-            'action': function (e, action_name, id) {
-                var action = _.detect(self.columns, function (field) {
-                    return field.name === action_name;
-                });
-                if (!action) { return; }
-                // TODO: not supposed to reload everything, I think
-                self.execute_action(
-                    action, self.dataset, self.session.action_manager,
-                    id, self.do_reload);
+            'action': function (e, action_name, id, callback) {
+                self.do_action(action_name, id, callback);
             },
-            'row_link': function (e, index) {
-                self.select_record(index);
+            'row_link': function (e, index, id, dataset) {
+                self.do_activate_record(index, id, dataset);
             }
         });
-
     },
     /**
      * View startup method, the default behavior is to set the ``oe-listview``
@@ -96,11 +93,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
      */
     start: function() {
         this.$element.addClass('oe-listview');
-        return this.rpc("/base/listview/load", {
-            model: this.model,
-            view_id: this.view_id,
-            toolbar: this.view_manager ? !!this.view_manager.sidebar : false
-        }, this.on_loaded);
+        return this.reload_view();
     },
     /**
      * Called after loading the list view's description, sets up such things
@@ -123,41 +116,15 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
      * @param {Object} data.fields_view fields_view_get result (processed)
      * @param {Object} data.fields_view.fields mapping of fields for the current model
      * @param {Object} data.fields_view.arch current list view descriptor
+     * @param {Boolean} grouped Is the list view grouped
      */
-    on_loaded: function(data) {
+    on_loaded: function(data, grouped) {
         var self = this;
         this.fields_view = data.fields_view;
         //this.log(this.fields_view);
         this.name = "" + this.fields_view.arch.attrs.string;
 
-        var fields = this.fields_view.fields;
-        var domain_computer = openerp.base.form.compute_domain;
-
-        this.columns.splice(0, this.columns.length);
-        this.columns.push.apply(this.columns, _(this.fields_view.arch.children).chain()
-            .map(function (field) {
-                var name = field.attrs.name;
-                var column = _.extend({id: name, tag: field.tag},
-                                      field.attrs, fields[name]);
-                // attrs computer
-                if (column.attrs) {
-                    var attrs = eval('(' + column.attrs + ')');
-                    column.attrs_for = function (fields) {
-                        var result = {};
-                        for (var attr in attrs) {
-                            result[attr] = domain_computer(attrs[attr], fields);
-                        }
-                        return result;
-                    };
-                } else {
-                    column.attrs_for = function () { return {}; };
-                }
-                return column;
-            }).value());
-
-        this.visible_columns = _.filter(this.columns, function (column) {
-            return column.invisible !== '1';
-        });
+        this.setup_columns(this.fields_view.fields, grouped);
 
         if (!this.fields_view.sorted) { this.fields_view.sorted = {}; }
 
@@ -174,52 +141,73 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
             self.dataset.sort($(this).data('id'));
 
             // TODO: should only reload content (and set the right column to a sorted display state)
-            self.do_reload();
+            self.reload_view();
         });
 
-        var $table = this.$element.find('table');
-        this.list.move_to($table);
-
-        // sidebar stuff
-        if (this.view_manager && this.view_manager.sidebar) {
-            this.view_manager.sidebar.set_toolbar(data.fields_view.toolbar);
-        }
+        this.view_manager.sidebar.set_toolbar(data.fields_view.toolbar);
     },
     /**
-     * Fills the table with the provided records after emptying it
+     * Sets up the listview's columns: merges view and fields data, move
+     * grouped-by columns to the front of the columns list and make them all
+     * visible.
      *
-     * TODO: should also re-load the table itself, as e.g. columns may have changed
-     *
-     * @param {Object} result filling result
-     * @param {Array} [result.view] the new view (wrapped fields_view_get result)
-     * @param {Array} result.records records the records to fill the list view with
+     * @param {Object} fields fields_view_get's fields section
+     * @param {Boolean} [grouped] Should the grouping columns (group and count) be displayed
      */
-    do_fill_table: function(result) {
-        if (result.view) {
-            this.on_loaded({fields_view: result.view});
-        }
-        var records = result.records;
+    setup_columns: function (fields, grouped) {
+        var domain_computer = openerp.base.form.compute_domain;
 
-        this.rows.splice(0, this.rows.length);
-        this.rows.push.apply(this.rows, records);
-
-        // Keep current selected record, if it's still in our new search
-        var current_record_id = this.dataset.ids[this.dataset.index];
-        this.dataset.ids = _(records).chain().map(function (record) {
-            return record.data.id.value;
-        }).value();
-        this.dataset.index = _.indexOf(this.dataset.ids, current_record_id);
-        if (this.dataset.index < 0) {
-            this.dataset.index = 0;
-        }
+        var noop = function () { return {}; };
+        var field_to_column = function (field) {
+            var name = field.attrs.name;
+            var column = _.extend({id: name, tag: field.tag},
+                    field.attrs, fields[name]);
+            // attrs computer
+            if (column.attrs) {
+                var attrs = JSON.parse(column.attrs);
+                column.attrs_for = function (fields) {
+                    var result = {};
+                    for (var attr in attrs) {
+                        result[attr] = domain_computer(attrs[attr], fields);
+                    }
+                    return result;
+                };
+            } else {
+                column.attrs_for = noop;
+            }
+            return column;
+        };
         
-        this.dataset.count = this.dataset.ids.length;
-        var results = this.rows.length;
-        this.$element.find('table')
-            .find('.oe-pager-last').text(results).end()
-            .find('.oe-pager-total').text(results);
+        this.columns.splice(0, this.columns.length);
+        this.columns.push.apply(
+                this.columns,
+                _(this.fields_view.arch.children).map(field_to_column));
+        if (grouped) {
+            this.columns.unshift({
+                id: '_group', tag: '', string: "Group", meta: true,
+                attrs_for: function () { return {}; }
+            }, {
+                id: '_count', tag: '', string: '#', meta: true,
+                attrs_for: function () { return {}; }
+            });
+        }
 
-        this.list.refresh();
+        this.visible_columns = _.filter(this.columns, function (column) {
+            return column.invisible !== '1';
+        });
+
+        this.aggregate_columns = _(this.columns).chain()
+            .filter(function (column) {
+                    return column['sum'] || column['avg'];})
+            .map(function (column) {
+                var func = column['sum'] ? 'sum' : 'avg';
+                return {
+                    field: column.id,
+                    type: column.type,
+                    'function': func,
+                    label: column[func]
+                };
+            }).value();
     },
     /**
      * Used to handle a click on a table row, if no other handler caught the
@@ -248,34 +236,40 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
     do_show: function () {
         this.$element.show();
         if (this.hidden) {
-            this.do_reload();
+            this.$element.find('table').append(
+                this.groups.apoptosis().render());
             this.hidden = false;
         }
-        if (this.view_manager && this.view_manager.sidebar) {
-            this.view_manager.sidebar.refresh(true);
-        }
+        this.view_manager.sidebar.do_refresh(true);
     },
     do_hide: function () {
         this.$element.hide();
         this.hidden = true;
     },
     /**
-     * Reloads the search view based on the current settings (dataset & al)
+     * Reloads the list view based on the current settings (dataset & al)
+     *
+     * @param {Boolean} [grouped] Should the list be displayed grouped
      */
-    do_reload: function () {
-        // TODO: need to do 5 billion tons of pre-processing, bypass
-        // DataSet for now
-        //self.dataset.read_slice(self.dataset.fields, 0, self.limit,
-        // self.do_fill_table);
+    reload_view: function (grouped) {
+        var self = this;
         this.dataset.offset = 0;
         this.dataset.limit = false;
-        return this.rpc('/base/listview/fill', {
-            'model': this.dataset.model,
-            'id': this.view_id,
-            'context': this.dataset.context,
-            'domain': this.dataset.domain,
-            'sort': this.dataset.sort && this.dataset.sort()
-        }, this.do_fill_table);
+        return this.rpc('/base/listview/load', {
+            model: this.model,
+            view_id: this.view_id,
+            toolbar: !!this.flags.sidebar
+        }, function (field_view_get) {
+            self.on_loaded(field_view_get, grouped);
+        });
+    },
+    /**
+     * re-renders the content of the list view
+     */
+    reload_content: function () {
+        this.$element.find('table').append(
+            this.groups.apoptosis().render(
+                $.proxy(this, 'compute_aggregates')));
     },
     /**
      * Event handler for a search, asks for the computation/folding of domains
@@ -293,23 +287,19 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
             contexts: contexts,
             group_by_seq: groupbys
         }, function (results) {
-            // TODO: handle non-empty results.group_by with read_group
             self.dataset.context = results.context;
             self.dataset.domain = results.domain;
-            if (results.group_by.length) {
-                self.groups.datagroup = new openerp.base.DataGroup(
-                        self.session, self.dataset.model,
-                        results.domain, results.context,
-                        results.group_by);
-                self.$element.html(self.groups.render());
-                return;
+            self.groups.datagroup = new openerp.base.DataGroup(
+                self.session, self.model,
+                results.domain, results.context,
+                results.group_by);
+
+            if (_.isEmpty(results.group_by) && !results.context['group_by_no_leaf']) {
+                results.group_by = null;
             }
-            return self.do_reload();
+            self.reload_view(!!results.group_by).then(
+                $.proxy(self, 'reload_content'));
         });
-    },
-    do_update: function () {
-        var self = this;
-        //self.dataset.read_ids(self.dataset.ids, self.dataset.fields, self.do_fill_table);
     },
     /**
      * Handles the signal to delete a line from the DOM
@@ -341,7 +331,58 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
                     self.rows.splice(record.index, 1);
                 });
             // TODO only refresh modified rows
-            self.list.refresh();
+        });
+    },
+    /**
+     * Handles the signal indicating that a new record has been selected
+     *
+     * @param {Array} ids selected record ids
+     * @param {Array} records selected record values
+     */
+    do_select: function (ids, records) {
+        this.$element.find('#oe-list-delete')
+            .toggle(!!ids.length);
+
+        if (!records.length) {
+            this.compute_aggregates();
+            return;
+        }
+        this.compute_aggregates(records);
+    },
+    /**
+     * Handles action button signals on a record
+     *
+     * @param {String} name action name
+     * @param {Object} id id of the record the action should be called on
+     * @param {Function} callback should be called after the action is executed, if non-null
+     */
+    do_action: function (name, id, callback) {
+        var action = _.detect(this.columns, function (field) {
+            return field.name === name;
+        });
+        if (!action) { return; }
+        this.execute_action(
+            action, this.dataset, this.session.action_manager,
+            id, function () {
+                if (callback) {
+                    callback();
+                }
+        });
+    },
+    /**
+     * Handles the activation of a record (clicking on it)
+     *
+     * @param {Number} index index of the record in the dataset
+     * @param {Object} id identifier of the activated record
+     * @param {openobject.base.DataSet} dataset dataset in which the record is available (may not be the listview's dataset in case of nested groups)
+     */
+    do_activate_record: function (index, id, dataset) {
+        var self = this;
+        _.extend(this.dataset, {
+            domain: dataset.domain,
+            context: dataset.context
+        }).read_slice([], 0, false, function () {
+            self.select_record(index);
         });
     },
     /**
@@ -351,15 +392,96 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
      * The default implementation is to switch to a new record on the form view
      */
     do_add_record: function () {
-        this.notification.notify('Add', "New record");
         this.select_record(null);
     },
     /**
      * Handles deletion of all selected lines
      */
     do_delete_selected: function () {
-        this.do_delete(
-            this.list.get_selection());
+        this.do_delete(this.groups.get_selection().ids);
+    },
+    /**
+     * Computes the aggregates for the current list view, either on the
+     * records provided or on the records of the internal
+     * :js:class:`~openerp.base.ListView.Group`, by calling
+     * :js:func:`~openerp.base.ListView.group.get_records`.
+     *
+     * Then displays the aggregates in the table through
+     * :js:method:`~openerp.base.ListView.display_aggregates`.
+     *
+     * @param {Array} [records]
+     */
+    compute_aggregates: function (records) {
+        if (_.isEmpty(this.aggregate_columns)) {
+            return;
+        }
+        if (_.isEmpty(records)) {
+            records = this.groups.get_records();
+        }
+
+        var aggregator = this.build_aggregator(this.aggregate_columns);
+        this.display_aggregates(
+            _(records).reduce(aggregator, aggregator).value());
+    },
+    /**
+     * Creates a stateful callable aggregator object, which can be reduced over
+     * a collection of records in order to build the aggregations described
+     * by the parameter
+     *
+     * @param {Array} aggregation_descriptors
+     */
+    build_aggregator: function (aggregation_descriptors) {
+        var values = {};
+        var descriptors = {};
+        _(aggregation_descriptors).each(function (descriptor) {
+            values[descriptor.field] = [];
+            descriptors[descriptor.field] = descriptor;
+        });
+
+        var aggregator = function (_i, record) {
+            _(values).each(function (collection, key) {
+                collection.push(record[key]);
+            });
+
+            return aggregator;
+        };
+        aggregator.value = function () {
+            var result = {};
+
+            _(values).each(function (collection, key) {
+                var value;
+                switch(descriptors[key]['function']) {
+                    case 'avg':
+                        value = (_(collection).chain()
+                                .filter(function (item) {
+                                    return !_.isUndefined(item); })
+                                .reduce(function (total, item) {
+                                    return total + item; }, 0).value()
+                            / collection.length);
+                        break;
+                    case 'sum':
+                        value = (_(collection).chain()
+                            .filter(function (item) {
+                                return !_.isUndefined(item); })
+                            .reduce(function (total, item) {
+                                return total + item; }, 0).value());
+                        break;
+                }
+                result[key] = value;
+            });
+
+            return result;
+        };
+        return aggregator;
+    },
+    display_aggregates: function (aggregation) {
+        var $footer = this.$element.find('.oe-list-footer').empty();
+        _(this.aggregate_columns).each(function (column) {
+            $(_.sprintf(
+                    "<span>%s: %.2f</span>",
+                    column.label, aggregation[column.field]))
+                .appendTo($footer);
+        });
     }
     // TODO: implement reorder (drag and drop rows)
 });
@@ -393,17 +515,19 @@ openerp.base.ListView.List = Class.extend( /** @lends openerp.base.ListView.List
      */
     init: function (opts) {
         var self = this;
-        // columns, rows, options
 
         this.options = opts.options;
         this.columns = opts.columns;
+        this.dataset = opts.dataset;
         this.rows = opts.rows;
 
         this.$_element = $('<tbody class="ui-widget-content">')
             .appendTo(document.body)
             .delegate('th.oe-record-selector', 'click', function (e) {
                 e.stopPropagation();
-                $(self).trigger('selected', [self.get_selection()]);
+                var selection = self.get_selection();
+                $(self).trigger(
+                        'selected', [selection.ids, selection.records]);
             })
             .delegate('td.oe-record-delete button', 'click', function (e) {
                 e.stopPropagation();
@@ -423,35 +547,37 @@ openerp.base.ListView.List = Class.extend( /** @lends openerp.base.ListView.List
                 $(self).trigger(
                     'row_link',
                     [self.row_position(e.currentTarget),
-                     self.row_id(e.currentTarget)]);
+                     self.row_id(e.currentTarget),
+                     self.dataset]);
             });
     },
-    move_to: function (element) {
-        this.$current = this.$_element.clone(true).appendTo(element);
-        this.render();
-        return this;
-    },
     render: function () {
+        if (this.$current) {
+            this.$current.remove();
+        }
+        this.$current = this.$_element.clone(true);
         this.$current.empty().append($(QWeb.render('ListView.rows', this)));
-        return this;
-    },
-    refresh: function () {
-        this.render();
-        return this;
     },
     /**
      * Gets the ids of all currently selected records, if any
-     * @returns {Array} empty if no record is selected (or the list view is not selectable)
+     * @returns {Object} object with the keys ``ids`` and ``records``, holding respectively the ids of all selected records and the records themselves.
      */
     get_selection: function () {
         if (!this.options.selectable) {
             return [];
         }
         var rows = this.rows;
-        return this.$current.find('th.oe-record-selector input:checked')
-                .closest('tr').map(function () {
-            return rows[$(this).prevAll().length].data.id.value;
-        }).get();
+        var result = {ids: [], records: []};
+        this.$current.find('th.oe-record-selector input:checked')
+                .closest('tr').each(function () {
+            var record = {};
+            _(rows[$(this).prevAll().length].data).each(function (obj, key) {
+                record[key] = obj.value;
+            });
+            result.ids.push(record.id);
+            result.records.push(record);
+        });
+        return result;
     },
     /**
      * Returns the index of the row in the list of rows.
@@ -471,6 +597,24 @@ openerp.base.ListView.List = Class.extend( /** @lends openerp.base.ListView.List
      */
     row_id: function (row) {
         return this.rows[this.row_position(row)].data.id.value;
+    },
+    /**
+     * Death signal, cleans up list
+     */
+    apoptosis: function () {
+        if (!this.$current) { return; }
+        this.$current.remove();
+        this.$current = null;
+        this.$_element.remove();
+    },
+    get_records: function () {
+        return _(this.rows).map(function (row) {
+            var record = {};
+            _(row.data).each(function (obj, key) {
+                record[key] = obj.value;
+            });
+            return record;
+        });
     }
     // drag and drop
     // editable?
@@ -483,46 +627,258 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
      * Provides events similar to those of
      * :js:class:`~openerp.base.ListView.List`
      */
-    init: function (opts) {
-        this.options = opts.options;
-        this.columns = opts.columns;
-        this.datagroup = {};
+    init: function (view) {
+        this.view = view;
+        this.options = view.options;
+        this.columns = view.columns;
+        this.datagroup = null;
+
+        this.sections = [];
+        this.children = {};
     },
-    make_level: function (datagroup) {
-        var self = this, $root = $('<dl>');
-        datagroup.list().then(function (list) {
-            _(list).each(function (group, index) {
-                var $title = $('<dt>')
-                    .text(group.grouped_on + ': ' + group.value + ' (' + group.length + ')')
-                    .appendTo($root);
-                $title.click(function () {
-                    datagroup.get(index, function (new_dataset) {
-                        var $content = $('<ul>').appendTo(
-                            $('<dd>').insertAfter($title));
-                        new_dataset.read_slice([], null, null, function (records) {
-                            _(records).each(function (record) {
-                                $('<li>')
-                                    .appendTo($content)
-                                    .text(_(record).map(function (value, key) {
-                                        return key + ': ' + value;
-                                }).join(', '));
-                            });
-                        });
-                    }, function (new_datagroup) {
-                        console.log(new_datagroup);
-                        $('<dd>')
-                            .insertAfter($title)
-                            .append(self.make_level(new_datagroup));
-                    });
+    pad: function ($row) {
+        if (this.options.selectable) {
+            $row.append('<td>');
+        }
+    },
+    make_fragment: function () {
+        return document.createDocumentFragment();
+    },
+    /**
+     * Returns a DOM node after which a new tbody can be inserted, so that it
+     * follows the provided row.
+     *
+     * Necessary to insert the result of a new group or list view within an
+     * existing groups render, without losing track of the groups's own
+     * elements
+     *
+     * @param {HTMLTableRowElement} row the row after which the caller wants to insert a body
+     * @returns {HTMLTableSectionElement} element after which a tbody can be inserted
+     */
+    point_insertion: function (row) {
+        var $row = $(row);
+        var red_letter_tboday = $row.closest('tbody')[0];
+
+        var $next_siblings = $row.nextAll();
+        if ($next_siblings.length) {
+            var $root_kanal = $('<tbody>').insertAfter(red_letter_tboday);
+
+            $root_kanal.append($next_siblings);
+            this.elements.splice(
+                _.indexOf(this.elements, red_letter_tboday),
+                0,
+                $root_kanal[0]);
+        }
+        return red_letter_tboday;
+    },
+    open_group: function (e, group) {
+        var row = e.currentTarget;
+
+        if (this.children[group.value]) {
+            this.children[group.value].apoptosis();
+            delete this.children[group.value];
+        }
+        var prospekt = this.children[group.value] = new openerp.base.ListView.Groups(this.view, {
+            options: this.options,
+            columns: this.columns
+        });
+        this.bind_child_events(prospekt);
+        prospekt.datagroup = group;
+        prospekt.render().insertAfter(
+            this.point_insertion(row));
+        $(row).find('span.ui-icon')
+                .removeClass('ui-icon-triangle-1-e')
+                .addClass('ui-icon-triangle-1-s');
+    },
+    /**
+     * Prefixes ``$node`` with floated spaces in order to indent it relative
+     * to its own left margin/baseline
+     *
+     * @param {jQuery} $node jQuery object to indent
+     * @param {Number} level current nesting level, >= 1
+     * @returns {jQuery} the indentation node created
+     */
+    indent: function ($node, level) {
+        return $('<span>')
+                .css({'float': 'left', 'white-space': 'pre'})
+                .text(new Array(level).join('   '))
+                .prependTo($node);
+    },
+    render_groups: function (datagroups) {
+        var self = this;
+        var placeholder = this.make_fragment();
+        _(datagroups).each(function (group) {
+            var $row = $('<tr>');
+            if (group.openable) {
+                $row.click(function (e) {
+                    if (!$row.data('open')) {
+                        $row.data('open', true);
+                        self.open_group(e, group);
+                    } else {
+                        $row.removeData('open')
+                            .find('span.ui-icon')
+                                .removeClass('ui-icon-triangle-1-s')
+                                .addClass('ui-icon-triangle-1-e');
+                        _(self.children).each(function (child) {child.apoptosis();});
+                    }
                 });
+            }
+            placeholder.appendChild($row[0]);
+
+            var $group_column = $('<th>').appendTo($row);
+            if (group.grouped_on) {
+                // Don't fill this if group_by_no_leaf but no group_by
+                $group_column
+                    .text((group.value instanceof Array ? group.value[1] : group.value));
+                if (group.openable) {
+                    // Make openable if not terminal group & group_by_no_leaf
+                    $group_column
+                        .prepend('<span class="ui-icon ui-icon-triangle-1-e" style="float: left;">');
+                }
+            }
+            self.indent($group_column, group.level);
+            // count column
+            $('<td>').text(group.length).appendTo($row);
+                    
+            self.pad($row);
+            _(self.columns).chain()
+                .filter(function (column) {return !column.invisible;})
+                .each(function (column) {
+                    if (column.meta) {
+                        // do not do anything
+                    } else if (column.id in group.aggregates) {
+                        var value = group.aggregates[column.id];
+                        var format;
+                        if (column.type === 'integer') {
+                            format = "%.0f";
+                        } else if (column.type === 'float') {
+                            format = "%.2f";
+                        }
+                        $('<td>')
+                            .text(_.sprintf(format, value))
+                            .appendTo($row);
+                    } else {
+                        $row.append('<td>');
+                    }
+                });
+        });
+        return placeholder;
+    },
+    bind_child_events: function (child) {
+        var $this = $(this),
+             self = this;
+        $(child).bind('selected', function (e) {
+            // can have selections spanning multiple links
+            var selection = self.get_selection();
+            $this.trigger(e, [selection.ids, selection.records]);
+        }).bind('action', function (e, name, id, callback) {
+            if (!callback) {
+                callback = function () {
+                    var $prev = child.$current.prev();
+                    if (!$prev.is('tbody')) {
+                        // ungrouped
+                        $(self.elements[0]).replaceWith(self.render());
+                    } else {
+                        // ghetto reload child (and its siblings)
+                        $prev.children().last().click();
+                    }
+                };
+            }
+            $this.trigger(e, [name, id, callback]);
+        }).bind('deleted row_link', function (e) {
+            // additional positional parameters are provided to trigger as an
+            // Array, following the event type or event object, but are
+            // provided to the .bind event handler as *args.
+            // Convert our *args back into an Array in order to trigger them
+            // on the group itself, so it can ultimately be forwarded wherever
+            // it's supposed to go.
+            var args = Array.prototype.slice.call(arguments, 1);
+            $this.trigger.call($this, e, args);
+        });
+    },
+    render_dataset: function (dataset) {
+        var rows = [],
+            list = new openerp.base.ListView.List({
+                options: this.options,
+                columns: this.columns,
+                dataset: dataset,
+                rows: rows
+            });
+        this.bind_child_events(list);
+
+        var d = new $.Deferred();
+        dataset.read_slice(
+            _.filter(_.pluck(this.columns, 'name'), _.identity),
+            0, false,
+            function (records) {
+                var form_records = _(records).map(function (record) {
+                    // TODO: colors handling
+                    var form_data = {},
+                      form_record = {data: form_data};
+
+                    _(record).each(function (value, key) {
+                        form_data[key] = {value: value};
+                    });
+
+                    return form_record;
+                });
+
+                rows.splice(0, rows.length);
+                rows.push.apply(rows, form_records);
+                list.render();
+                d.resolve(list);
+            });
+        return d.promise();
+    },
+    render: function (post_render) {
+        var self = this;
+        var $element = $('<tbody>');
+        this.elements = [$element[0]];
+        this.datagroup.list(function (groups) {
+            $element[0].appendChild(
+                self.render_groups(groups));
+            if (post_render) { post_render(); }
+        }, function (dataset) {
+            self.render_dataset(dataset).then(function (list) {
+                self.children[null] = list;
+                self.elements =
+                    [list.$current.replaceAll($element)[0]];
+                if (post_render) { post_render(); }
             });
         });
-        return $root;
+        return $element;
     },
-    render: function () {
-        return this.make_level(this.datagroup);
+    /**
+     * Returns the ids of all selected records for this group, and the records
+     * themselves
+     */
+    get_selection: function () {
+        var ids = [], records = [];
+
+        _(this.children)
+            .each(function (child) {
+                var selection = child.get_selection();
+                ids.push.apply(ids, selection.ids);
+                records.push.apply(records, selection.records);
+            });
+
+        return {ids: ids, records: records};
+    },
+    apoptosis: function () {
+        _(this.children).each(function (child) {
+            child.apoptosis();
+        });
+        $(this.elements).remove();
+        return this;
+    },
+    get_records: function () {
+        return _(this.children).chain()
+            .map(function (child) {
+                return child.get_records();
+            }).flatten().value();
     }
 });
 };
 
 // vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:
+
