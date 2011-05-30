@@ -212,7 +212,7 @@ class portal_widget(osv.osv):
     _order = 'sequence'
     _columns = {
         'sequence': fields.integer('Sequence'),
-        'portal_id': fields.many2one('res.portal', select=1,
+        'portal_id': fields.many2one('res.portal', select=1, ondelete='cascade',
             string='Portal'),
         'widget_id': fields.many2one('res.widget', required=True, ondelete='cascade',
             string='Widget'),
