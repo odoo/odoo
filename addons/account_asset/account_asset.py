@@ -174,7 +174,7 @@ class account_asset_asset(osv.osv):
         'active': fields.boolean('Active', select=2),
         'partner_id': fields.many2one('res.partner', 'Partner'),
 
-        'method': fields.selection([('linear','Linear'),('progressif','Progressive')], 'Computation method', required=True, readonly=True, states={'draft':[('readonly',False)]}, help="Linear: Calculated on basis of Gross Value/During (interval) \
+        'method': fields.selection([('linear','Linear'),('progressif','Progressive')], 'Computation Method', required=True, readonly=True, states={'draft':[('readonly',False)]}, help="Linear: Calculated on basis of Gross Value/During (interval) \
          \nProgressive: Calculated on basis of Gross Value * Progressif Factor"),
         'method_delay': fields.integer('During (interval)', readonly=True, states={'draft':[('readonly',False)]}, help="Calculates Depreciation within specified interval"),
         'method_period': fields.integer('Depre. all (period)', readonly=True, states={'draft':[('readonly',False)]}),
