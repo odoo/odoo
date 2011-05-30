@@ -28,11 +28,15 @@ from tools.translate import _
 import base64
 from lxml import etree
 import tools
+
+
+
+
 class LoginError(Exception): pass
 
 def login(username, password, url):
+    setURL(url)
     loc = sugarsoapLocator()
-
     portType = loc.getsugarsoapPortType(url)
     request = loginRequest()
     uauth = ns0.user_auth_Def(request)
@@ -44,9 +48,10 @@ def login(username, password, url):
     try:
         response = portType.login(request)
     except:
-        raise osv.except_osv(_('Error !'), _('Authentication error !\nBad Username or Password !'))
+        raise osv.except_osv(_('Error !'), _('Authentication error !\nBad Username or Password bad SugarSoap Api url !'))
     if -1 == response._return._id:
         raise LoginError(response._return._error._description)
+    
     return (portType, response._return._id)
 
 def relation_search(portType, sessionid, module_name=None, module_id=None, related_module=None, query=None, deleted=None):
@@ -76,22 +81,21 @@ def attachment_search(portType, sessionid, module_name, module_id=None):
   return file, filename
 
 def user_get_attendee_list(portType, sessionid, module_name=None, module_id=None):
-  se_req = get_attendee_listRequest()
-  se_req._session = sessionid
-  se_req._module_name = module_name
-  se_req._id = module_id
-  se_resp = portType.get_attendee_list(se_req)
-  list = se_resp.get_element_return()
-  arch = base64.decodestring(list.Result)
-  eview = False
-  eview = etree.XML(arch)
-  attendee_list = []
-  for child in eview:
-      attendee_dict = {}
-      for ch in child.getchildren():
-           attendee_dict[ch.tag] = tools.ustr(ch.text)
-      attendee_list.append(attendee_dict)
-  return attendee_list         
+    se_req = get_attendee_listRequest()
+    se_req._session = sessionid
+    se_req._module_name = module_name
+    se_req._id = module_id
+    se_resp = portType.get_attendee_list(se_req)
+    list = se_resp.get_element_return()
+    arch = base64.decodestring(list.Result)
+    eview = etree.XML(arch)
+    attendee_list = []
+    for child in eview:
+        attendee_dict = {}
+        for ch in child.getchildren():
+            attendee_dict[ch.tag] = tools.ustr(ch.text)
+        attendee_list.append(attendee_dict)
+    return attendee_list         
 
 def get_contact_by_email(portType, username, password, email_address=None):
     se_req = contact_by_emailRequest()
@@ -126,4 +130,3 @@ def search(portType, sessionid, module_name=None):
           ans_list.append(ans_dir)
     #end for
   return ans_list
-
