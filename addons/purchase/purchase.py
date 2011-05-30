@@ -188,7 +188,7 @@ class purchase_order(osv.osv):
         'shipped_rate': fields.function(_shipped_rate, method=True, string='Received', type='float'),
         'invoiced': fields.function(_invoiced, method=True, string='Invoiced & Paid', type='boolean', help="It indicates that an invoice has been paid"),
         'invoiced_rate': fields.function(_invoiced_rate, method=True, string='Invoiced', type='float'),
-        'invoice_method': fields.selection([('manual','Manual'),('order','From Order'),('picking','From Picking')], 'Invoicing Control', required=True,
+        'invoice_method': fields.selection([('manual','Manual'),('order','From Order'),('picking','From Reception')], 'Invoicing Control', required=True,
             help="From Order: a draft invoice will be pre-generated based on the purchase order. The accountant " \
                 "will just have to validate this invoice for control.\n" \
                 "From Picking: a draft invoice will be pre-generated based on validated receptions.\n" \
