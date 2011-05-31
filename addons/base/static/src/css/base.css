@@ -487,7 +487,13 @@ background: linear-gradient(top, #ffffff 0%,#d8d8d8 11%,#afafaf 86%,#333333 91%,
     margin: 2px;
 }
 
-.openerp .searchview_extended_add_proposition span, .openerp .searchview_extended_add_group span {
+.openerp .oe_search-view-custom-filter-btn span {
+    background: url(../img/icons/gtk-add.png) repeat-y;
+    padding-left: 18px;
+}
+
+.openerp .searchview_extended_add_proposition span {
+    font-size: 0.9em;
     background: url(../img/icons/gtk-add.png) repeat-y;
     padding-left: 18px;
 }
@@ -496,8 +502,10 @@ background: linear-gradient(top, #ffffff 0%,#d8d8d8 11%,#afafaf 86%,#333333 91%,
     float:right;
 }
 
-.openerp .searchview_extended_delete_group span, .openerp .searchview_extended_delete_prop span {
-    background: url(../img/icons/gtk-remove.png) repeat-y;
+.openerp .searchview_extended_delete_group span,
+.openerp .searchview_extended_delete_prop span {
+    font-size: 0.9em;
+    background: url(../img/icons/gtk-close.png) repeat-y;
     padding-left: 18px;
 }
 /* List */
@@ -547,6 +555,17 @@ background: linear-gradient(top, #ffffff 0%,#d8d8d8 11%,#afafaf 86%,#333333 91%,
     text-align: right;
 }
 
+.openerp .oe-listview tfoot td {
+    padding: 3px 3px 0;
+}
+.openerp .oe-listview .oe-list-footer {
+    text-align: center;
+    white-space: nowrap;
+}
+.openerp .oe-listview .oe-list-footer span {
+    margin: 0 1em;
+}
+
 /** list rounded corners
 
     rounded corners are a pain on tables: need to round not only table, but
@@ -567,11 +586,13 @@ background: linear-gradient(top, #ffffff 0%,#d8d8d8 11%,#afafaf 86%,#333333 91%,
     -moz-border-radius-topright: 7px;
     border-top-right-radius: 7px;
 }
+.openerp .oe-listview table tfoot td:first-child,
 .openerp .oe-listview table tbody:last-child tr:last-child th:first-child {
     -webkit-border-bottom-left-radius: 7px;
     -moz-border-radius-bottomleft: 7px;
     border-bottom-left-radius: 7px;
 }
+.openerp .oe-listview table tfoot td:last-child,
 .openerp .oe-listview table tbody:last-child tr:last-child td:last-child {
     -webkit-border-bottom-right-radius: 7px;
     -moz-border-radius-bottomright: 7px;
@@ -661,7 +682,7 @@ background: linear-gradient(top, #ffffff 0%,#d8d8d8 11%,#afafaf 86%,#333333 91%,
 }
 .openerp .button span {
     position: relative;
-    top: -3px;
+    vertical-align: top;
 }
 .openerp input.field_date, .openerp input.field_datetime {
     background: #fff url('../img/ui/field_calendar.png') no-repeat right center;
@@ -788,6 +809,41 @@ background: linear-gradient(top, #ffffff 0%,#d8d8d8 11%,#afafaf 86%,#333333 91%,
     color: black;
 }
 
+.openerp .oe-sidebar-attachments-toolbar {
+    margin: 4px 0 0 4px;
+}
+.openerp .oe-sidebar-attachments-items {
+    clear: both;
+    padding-top: 5px !important;
+}
+.openerp .oe-sidebar-attachments-items li {
+    position: relative;
+    padding: 0 0 3px 10px !important;
+}
+.openerp .oe-sidebar-attachments-items li:hover {
+    background: #ddd;
+}
+.openerp .oe-sidebar-attachments-link {
+    display: block;
+    margin-right: 15px;
+    overflow: hidden;
+}
+.openerp .oe-sidebar-attachment-delete {
+    position: absolute;
+    right: 2px;
+    top: 1px;
+    overflow: hidden;
+    width: 15px;
+    height: 15px;
+    padding: 1px;
+    border-radius: 7px;
+    -moz-border-radius: 7px;
+    -webkit-border-radius: 7px;
+}
+.openerp .oe-sidebar-attachment-delete:hover {
+    background-color: white;
+}
+
 .openerp .view-manager-main-sidebar h2 {
     margin:0;
     font-family: Ubuntu, Helvetica, sans-serif;
@@ -899,5 +955,52 @@ background: linear-gradient(top, #ffffff 0%,#ebe9e9 100%); /* W3C */
     position: relative;
     margin-left: -26px;
 }
-/*------------- End autocomplete ------- */
 
+.openerp img.m2o_open {
+    vertical-align: middle;
+    cursor: pointer;
+}
+/*----- End Many2one Autosearch ------- */
+
+/* Many2one Contextmenu */
+.openerp div.m2o_contextmenu {
+    background-color: #444;
+    border: 1px solid #000;
+    white-space: nowrap;
+    position: absolute;
+    padding: 2px;
+    z-index: 100;
+}
+
+.openerp div.m2o_contextmenu a,
+.openerp div.m2o_contextmenu span {
+    display: block;
+    text-align: left;
+    text-decoration: none;
+    white-space: nowrap;
+    padding: 2px;
+    color: #FFF;
+    cursor: pointer;
+}
+
+.openerp div.m2o_contextmenu hr {
+    margin: 1px 0 !important;
+}
+
+.openerp div.m2o_contextmenu td {
+    padding: 1px;
+}
+
+.openerp div.m2o_contextmenu a:hover,
+.openerp div.m2o_contextmenu span:hover {
+    color: #FFF;
+    background-color: #505050;
+    text-decoration: none;
+}
+
+.openerp div.m2o_contextmenu a.disabled,
+.openerp div.m2o_contextmenu span.disabled {
+    color: #C0C0C0;
+}
+
+/*----- End Many2one Contextmenu ------- */

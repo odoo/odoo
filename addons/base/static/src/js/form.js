@@ -57,7 +57,6 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
         this.$element.find('#' + this.element_id + '_header button.oe_form_button_new').click(this.on_button_new);
 
         this.view_manager.sidebar.set_toolbar(data.fields_view.toolbar);
-        this.view_manager.sidebar.do_refresh.add_last(this.on_sidebar_refreshed);
     },
     do_show: function () {
         var self = this;
@@ -99,6 +98,7 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
             this.log("No record received");
         }
         this.do_update_pager(record.id == null);
+        this.do_update_sidebar();
     },
     on_form_changed: function(widget) {
         if (widget && widget.node.attrs.on_change) {
@@ -288,6 +288,7 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
             this.dataset.index = this.dataset.ids.length - 1;
             this.dataset.count++;
             this.do_update_pager();
+            this.do_update_sidebar();
             this.notification.notify("Record created", "The record has been created with id #" + this.datarecord.id);
             if (success) {
                 success(r);
@@ -303,9 +304,49 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
     do_cancel: function () {
         this.notification.notify("Cancelling form");
     },
-    on_sidebar_refreshed: function(new_view) {
-        var sidebar = this.view_manager.sidebar;
-        // TODO: Add attachment WIP
+    do_update_sidebar: function() {
+        if (this.view_manager.action.flags.sidebar === false) {
+            return;
+        }
+        if (!this.datarecord.id) {
+            this.on_attachments_loaded([]);
+        } else {
+            this.rpc('/base/dataset/search_read', {
+                model: 'ir.attachment',
+                fields: ['name', 'url', 'type'],
+                domain: [['res_model', '=', this.dataset.model], ['res_id', '=', this.datarecord.id], ['type', 'in', ['binary', 'url']]],
+                context: this.dataset.context
+            }, this.on_attachments_loaded);
+        }
+    },
+    on_attachments_loaded: function(attachments) {
+        this.$sidebar = this.view_manager.sidebar.$element.find('.sidebar-attachments');
+        this.attachments = attachments;
+        this.$sidebar.html(QWeb.render('FormView.sidebar.attachments', this));
+        this.$sidebar.find('.oe-sidebar-attachment-delete').click(this.on_attachment_delete);
+        this.$sidebar.find('.oe-binary-file').change(this.on_attachment_changed);
+    },
+    on_attachment_changed: function(e) {
+        window[this.element_id + '_iframe'] = this.do_update_sidebar;
+        var $e = $(e.target);
+        if ($e.val() != '') {
+            this.$sidebar.find('form.oe-binary-form').submit();
+            $e.parent().find('input[type=file]').attr('disabled', 'true');
+            $e.parent().find('button').attr('disabled', 'true').find('img, span').toggle();
+        }
+    },
+    on_attachment_delete: function(e) {
+        var self = this, $e = $(e.currentTarget);
+        var name = _.trim($e.parent().find('a.oe-sidebar-attachments-link').text());
+        if (confirm("Do you really want to delete the attachment " + name + " ?")) {
+            this.rpc('/base/dataset/unlink', {
+                model: 'ir.attachment',
+                ids: [parseInt($e.attr('data-id'))]
+            }, function(r) {
+                $e.parent().remove();
+                self.notification.notify("Delete an attachment", "The attachment '" + name + "' has been deleted");
+            });
+        }
     },
     reload: function() {
         if (this.datarecord.id) {
@@ -382,7 +423,7 @@ openerp.base.form.Widget = openerp.base.Controller.extend({
     init: function(view, node) {
         this.view = view;
         this.node = node;
-        this.attrs = eval('(' + (this.node.attrs.attrs || '{}') + ')');
+        this.attrs = JSON.parse(this.node.attrs.attrs || '{}');
         this.type = this.type || node.tag;
         this.element_name = this.element_name || this.type;
         this.element_id = [this.view.element_id, this.element_name, this.view.widgets_counter++].join("_");
@@ -1009,11 +1050,16 @@ openerp.base.form.FieldMany2Many = openerp.base.form.Field.extend({
     },
     start: function() {
         this._super.apply(this, arguments);
-        this.dataset = new openerp.base.DataSetMany2Many(this.session, this.field.relation);
-        //TODO: switch to non selectable once xmo has corrected the bug related to that
-        this.list_view = new openerp.base.form.Many2ManyListView(null, this.view.session,
-                this.list_id, this.dataset, false, {'selectable-': false,
-                'addable': 'Add'});
+        this.dataset = new openerp.base.DataSetStatic(
+                this.session, this.field.relation);
+
+        this.list_view = new openerp.base.form.Many2ManyListView(
+                null, this.view.session, this.list_id, this.dataset, false, {
+                    'selectable': false,
+                    'addable': 'Add'
+            });
+        this.list_view.groups.datagroup = (
+                new openerp.base.StaticDataGroup(this.dataset));
         var self = this;
         this.list_view.m2m_field = this;
         this.list_view.start();
@@ -1039,7 +1085,7 @@ openerp.base.form.FieldMany2Many = openerp.base.form.Field.extend({
     },
     check_load: function() {
         if(this.is_started && this.is_setted) {
-            this.list_view.do_reload();
+            this.list_view.reload_content();
         }
     }
 });
@@ -1048,44 +1094,26 @@ openerp.base.form.Many2ManyListView = openerp.base.ListView.extend({
     do_delete: function (ids) {
         this.dataset.ids = _.without.apply(null, [this.dataset.ids].concat(ids));
         this.dataset.count = this.dataset.ids.length;
-        // there may be a faster way
-        this.do_reload();
+        this.reload_content();
         
         this.m2m_field.on_ui_change();
     },
-    do_reload: function () {
-        /* Dear xmo, according to your comments, this method's implementation in list view seems
-         * to be a little bit bullshit.
-         * I assume the list view will be changed later, so I hope it will support static datasets.
-         */
-        return this.rpc('/base/listview/fill', {
-            'model': this.dataset.model,
-            'id': this.view_id,
-            'domain': [["id", "in", this.dataset.ids]],
-            'context': this.dataset.context
-        }, this.do_fill_table);
-    },
-    do_add_record: function (e) {
-        e.stopImmediatePropagation();
-        var pop = new openerp.base.form.Many2XSelectPopup(null, this.m2m_field.view.session);
+    do_add_record: function () {
+        var pop = new openerp.base.form.Many2XSelectPopup(
+                null, this.m2m_field.view.session);
         pop.select_element(this.model);
         var self = this;
         pop.on_select_element.add(function(element_id) {
             if(! _.detect(self.dataset.ids, function(x) {return x == element_id;})) {
                 self.dataset.ids.push(element_id);
                 self.dataset.count = self.dataset.ids.length;
-                self.do_reload();
+                self.reload_content();
             }
             pop.stop();
         });
     },
-    select_record: function(index) {
-        var id = this.rows[index].data.id.value;
-        if(! id) {
-            return;
-        }
-        var action_manager = this.m2m_field.view.session.action_manager;
-        action_manager.do_action({
+    do_activate_record: function(index, id) {
+        this.m2m_field.view.session.action_manager.do_action({
             "res_model": this.dataset.model,
             "views":[[false,"form"]],
             "res_id": id,
@@ -1102,9 +1130,8 @@ openerp.base.form.Many2XSelectPopup = openerp.base.BaseWidget.extend({
     template: "Many2XSelectPopup",
     select_element: function(model, dataset) {
         this.model = model;
-        this.dataset = dataset
-        var html = this.render();
-        jQuery(html).dialog({title: '',
+        this.dataset = dataset;
+        jQuery(this.render()).dialog({title: '',
                     modal: true,
                     minWidth: 800});
         this.start();
@@ -1147,7 +1174,7 @@ openerp.base.form.Many2XSelectPopup = openerp.base.BaseWidget.extend({
             var tmphack = {"loaded": false};
             self.view_list.on_loaded.add_last(function() {
                 if ( !tmphack.loaded ) {
-                    self.view_list.do_reload();
+                    self.view_list.reload_view();
                     tmphack.loaded = true;
                 };
             });
@@ -1251,10 +1278,14 @@ openerp.base.form.FieldBinary = openerp.base.form.Field.extend({
     on_file_uploaded_and_valid: function(size, name, content_type, file_base64) {
     },
     on_save_as: function() {
-        var url = '/base/binary/saveas?session_id=' + this.session.session_id + '&model=' +
-            this.view.dataset.model +'&id=' + (this.view.datarecord.id || '') + '&field=' + this.name +
-            '&fieldname=' + (this.node.attrs.filename || '') + '&t=' + (new Date().getTime())
-        window.open(url);
+        if (!this.view.datarecord.id) {
+            this.notification.warn("Can't save file", "The record has not yet been saved");
+        } else {
+            var url = '/base/binary/saveas?session_id=' + this.session.session_id + '&model=' +
+                this.view.dataset.model +'&id=' + (this.view.datarecord.id || '') + '&field=' + this.name +
+                '&fieldname=' + (this.node.attrs.filename || '') + '&t=' + (new Date().getTime())
+            window.open(url);
+        }
     },
     on_clear: function() {
         if (this.value !== false) {

@@ -414,6 +414,11 @@ class DataSet(openerpweb.Controller):
         return {'result': r}
 
     @openerpweb.jsonrequest
+    def unlink(self, request, model, ids=[]):
+        Model = request.session.model(model)
+        return Model.unlink(ids)
+
+    @openerpweb.jsonrequest
     def call(self, req, model, method, ids, args):
         m = req.session.model(model)
         r = getattr(m, method)(ids, *args)
@@ -580,56 +585,6 @@ class ListView(View):
             view_attributes['editable'] = 'bottom'
         return view
 
-    @openerpweb.jsonrequest
-    def fill(self, request, model, id, domain,
-             offset=0, limit=False, sort=None):
-        return self.do_fill(request, model, id, domain, offset, limit, sort)
-
-    def do_fill(self, request, model, id, domain,
-                offset=0, limit=False, sort=None):
-        """ Returns all information needed to fill a table:
-
-        * view with processed ``editable`` flag
-        * fields (columns) with processed ``invisible`` flag
-        * rows with processed ``attrs`` and ``colors``
-
-        .. note:: context is passed through ``request`` parameter
-
-        :param request: OpenERP request
-        :type request: openerpweb.openerpweb.JsonRequest
-        :type str model: OpenERP model for this list view
-        :type int id: view_id, or False if none provided
-        :param list domain: the search domain to search for
-        :param int offset: search offset, for pagination
-        :param int limit: search limit, for pagination
-        :returns: hell if I have any idea yet
-        """
-        view = self.fields_view_get(request, model, id, toolbar=True)
-
-        rows = DataSet().do_search_read(request, model,
-                                        offset=offset, limit=limit,
-                                        domain=domain, sort=sort)
-        eval_context = request.session.evaluation_context(
-            request.context)
-
-        if sort:
-            sort_criteria = sort.split(',')[0].split(' ')
-            view['sorted'] = {
-                'field': sort_criteria[0],
-                'reversed': sort_criteria[1] == 'DESC'
-            }
-        else:
-            view['sorted'] = {}
-        return {
-            'view': view,
-            'records': [
-                {'data': dict((key, {'value': value})
-                              for key, value in row.iteritems()),
-                 'color': self.process_colors(view, row, eval_context)}
-                for row in rows
-            ]
-        }
-
     def process_colors(self, view, row, context):
         colors = view['arch']['attrs'].get('colors')
 
@@ -720,6 +675,32 @@ class Binary(openerpweb.Controller):
             args = [size, ufile.filename, ufile.headers.getheader('Content-Type'), base64.encodestring(data)]
         except Exception, e:
             args = [False, e.message]
+        return out % (simplejson.dumps(callback), simplejson.dumps(args))
+
+    @openerpweb.httprequest
+    def upload_attachment(self, request, session_id, callback, model, id, ufile=None):
+        cherrypy.response.timeout = 500
+        Model = request.session.model('ir.attachment')
+        try:
+            out = """<script language="javascript" type="text/javascript">
+                        var win = window.top.window,
+                            callback = win[%s];
+                        if (typeof(callback) === 'function') {
+                            callback.call(this, %s);
+                        }
+                    </script>"""
+            attachment_id = Model.create({
+                'name': ufile.filename,
+                'datas': base64.encodestring(ufile.file.read()),
+                'res_model': model,
+                'res_id': int(id)
+            })
+            args = {
+                'filename': ufile.filename,
+                'id':  attachment_id
+            }
+        except Exception, e:
+            args = { 'error': e.message }
         return out % (simplejson.dumps(callback), simplejson.dumps(args))
 
 class Action(openerpweb.Controller):
