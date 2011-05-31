@@ -989,14 +989,14 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
 });
 
 openerp.base.form.FieldOne2ManyDatasSet = openerp.base.DataSetStatic.extend({
-    start: function() {
+    /*start: function() {
     },
     write: function (id, data, callback) {
         this._super(id, data, callback);
     },
     unlink: function() {
         this.notification.notify('Unlinking o2m ' + this.ids);
-    }
+    }*/
 });
 
 openerp.base.form.FieldOne2ManyViewManager = openerp.base.ViewManager.extend({
@@ -1010,33 +1010,52 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
     init: function(view, node) {
         this._super(view, node);
         this.template = "FieldOne2Many";
-        this.operations = [];
     },
     start: function() {
         this._super.apply(this, arguments);
-        this.log("o2m.start");
         var views = [ [false,"list"], [false,"form"] ];
         this.dataset = new openerp.base.form.FieldOne2ManyDatasSet(this.session, this.field.relation);
-        this.viewmanager = new openerp.base.form.FieldOne2ManyViewManager(this.view.session, this.element_id, this.dataset, views);
+        this.dataset.ids = [];
+        this.dataset.count = 0;
+        this.viewmanager = new openerp.base.form.FieldOne2ManyViewManager(this.view.session,
+            this.element_id, this.dataset, views);
         this.viewmanager.start();
+        
+        var self = this;
+        var hack = {loaded: false};
+        var view = this.viewmanager.views[this.viewmanager.active_view].controller;
+        view.on_loaded.add_last(function() {
+            if (! hack.loaded) {
+                self.is_started = true;
+                self.check_load();
+                hack.loaded = true;
+            }
+        });
     },
     set_value: function(value) {
-        this.value = value;
-        if (value != false) {
-            this.log("o2m.set_value",value);
-            this.viewmanager.dataset.ids = value;
-            this.viewmanager.dataset.count = value.length;
+        if(value != false) {
+            this.dataset.ids = value;
+            this.dataset.count = value.length;
+            this.is_setted = true;
+            this.check_load();
         }
     },
     get_value: function(value) {
-        return this.operations;
+        //TODO
+        return [];
     },
-    update_dom: function() {
+    /*update_dom: function() {
         this._super.apply(this, arguments);
         this.$element.toggleClass('disabled', this.readonly);
         this.$element.toggleClass('required', this.required);
     },
     on_ui_change: function() {
+    },*/
+    check_load: function() {
+        if(this.is_started && this.is_setted) {
+            var view = this.viewmanager.views[this.viewmanager.active_view].controller;
+            view.reload_view();
+        }
     }
 });
 
@@ -1074,8 +1093,7 @@ openerp.base.form.FieldMany2Many = openerp.base.form.Field.extend({
     },
     set_value: function(value) {
         if (value != false) {
-            this.dataset.ids = value;
-            this.dataset.count = value.length;
+            this.dataset.set_ids(value);
             this.is_setted = true;
             this.check_load();
         }
@@ -1092,8 +1110,7 @@ openerp.base.form.FieldMany2Many = openerp.base.form.Field.extend({
 
 openerp.base.form.Many2ManyListView = openerp.base.ListView.extend({
     do_delete: function (ids) {
-        this.dataset.ids = _.without.apply(null, [this.dataset.ids].concat(ids));
-        this.dataset.count = this.dataset.ids.length;
+        this.dataset.set_ids(_.without.apply(null, [this.dataset.ids].concat(ids)));
         this.reload_content();
         
         this.m2m_field.on_ui_change();
@@ -1105,8 +1122,7 @@ openerp.base.form.Many2ManyListView = openerp.base.ListView.extend({
         var self = this;
         pop.on_select_element.add(function(element_id) {
             if(! _.detect(self.dataset.ids, function(x) {return x == element_id;})) {
-                self.dataset.ids.push(element_id);
-                self.dataset.count = self.dataset.ids.length;
+                self.dataset.ids.set_ids([].concat(self.dataset.ids, [element_id]));
                 self.reload_content();
             }
             pop.stop();
@@ -1174,7 +1190,7 @@ openerp.base.form.Many2XSelectPopup = openerp.base.BaseWidget.extend({
             var tmphack = {"loaded": false};
             self.view_list.on_loaded.add_last(function() {
                 if ( !tmphack.loaded ) {
-                    self.view_list.reload_view();
+                    self.searchview.do_search();
                     tmphack.loaded = true;
                 };
             });
