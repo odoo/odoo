@@ -30,3 +30,5 @@ class res_users(osv.osv):
             string='Related Partner'),
     }
 
+res_users()
+
