@@ -1,5 +1,4 @@
 openerp.base.list = function (openerp) {
-'use strict';
 openerp.base.views.add('list', 'openerp.base.ListView');
 openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListView# */ {
     defaults: {
@@ -868,6 +867,7 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
         _(this.children).each(function (child) {
             child.apoptosis();
         });
+        this.children = {};
         $(this.elements).remove();
         return this;
     },
