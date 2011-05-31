@@ -55,6 +55,10 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
         this.flags =  this.view_manager.action.flags;
 
         this.set_groups(new openerp.base.ListView.Groups(this));
+        
+        if (this.dataset instanceof openerp.base.DataSetStatic) {
+            this.groups.datagroup = new openerp.base.StaticDataGroup(this.dataset);
+        }
     },
     /**
      * Set a custom Group construct as the root of the List View.

@@ -988,17 +988,6 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
     }
 });
 
-openerp.base.form.FieldOne2ManyDatasSet = openerp.base.DataSetStatic.extend({
-    /*start: function() {
-    },
-    write: function (id, data, callback) {
-        this._super(id, data, callback);
-    },
-    unlink: function() {
-        this.notification.notify('Unlinking o2m ' + this.ids);
-    }*/
-});
-
 openerp.base.form.FieldOne2ManyViewManager = openerp.base.ViewManager.extend({
     init: function(session, element_id, dataset, views) {
         this._super(session, element_id, dataset, views);
@@ -1014,9 +1003,7 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
     start: function() {
         this._super.apply(this, arguments);
         var views = [ [false,"list"], [false,"form"] ];
-        this.dataset = new openerp.base.form.FieldOne2ManyDatasSet(this.session, this.field.relation);
-        this.dataset.ids = [];
-        this.dataset.count = 0;
+        this.dataset = new openerp.base.DataSetStatic(this.session, this.field.relation);
         this.viewmanager = new openerp.base.form.FieldOne2ManyViewManager(this.view.session,
             this.element_id, this.dataset, views);
         this.viewmanager.start();
@@ -1034,16 +1021,21 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
     },
     set_value: function(value) {
         if(value != false) {
-            this.dataset.ids = value;
-            this.dataset.count = value.length;
+            this.dataset.set_ids(value);
             this.is_setted = true;
             this.check_load();
+        }
+    },
+    check_load: function() {
+        if(this.is_started && this.is_setted) {
+            var view = this.viewmanager.views[this.viewmanager.active_view].controller;
+            view.reload_content();
         }
     },
     get_value: function(value) {
         //TODO
         return [];
-    },
+    }
     /*update_dom: function() {
         this._super.apply(this, arguments);
         this.$element.toggleClass('disabled', this.readonly);
@@ -1051,12 +1043,6 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
     },
     on_ui_change: function() {
     },*/
-    check_load: function() {
-        if(this.is_started && this.is_setted) {
-            var view = this.viewmanager.views[this.viewmanager.active_view].controller;
-            view.reload_view();
-        }
-    }
 });
 
 openerp.base.form.FieldMany2Many = openerp.base.form.Field.extend({
@@ -1077,8 +1063,6 @@ openerp.base.form.FieldMany2Many = openerp.base.form.Field.extend({
                     'selectable': false,
                     'addable': 'Add'
             });
-        this.list_view.groups.datagroup = (
-                new openerp.base.StaticDataGroup(this.dataset));
         var self = this;
         this.list_view.m2m_field = this;
         this.list_view.start();
