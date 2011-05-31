@@ -140,7 +140,7 @@ class import_framework(Thread):
                 and each data_i have a external id => in data_id['id']
         """
         if not datas:
-            return
+            return (0, 'No data in this table')
         mapping['id'] = 'id_new'
         res = []
         
@@ -374,9 +374,11 @@ class import_framework(Thread):
         for dependency in dep:
             if not dependency in imported:
                 to_import = self.get_mapping()[dependency].get('import', True)
-                self._resolve_dependencies(self.get_mapping()[dependency].get('dependencies', []), imported)
+                res = self._resolve_dependencies(self.get_mapping()[dependency].get('dependencies', []), imported)
+                result.extend(res)
                 if to_import:
-                    (position, warning) = self._import_table(dependency)
+                    r = self._import_table(dependency)
+                    (position, warning) = r
                     result.append((dependency, position, warning))
                 imported.add(dependency)
         return result
