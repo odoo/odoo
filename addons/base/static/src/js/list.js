@@ -52,7 +52,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
         this.columns = [];
 
         this.options = _.extend({}, this.defaults, options || {});
-        this.flags =  this.view_manager.action.flags;
+        this.flags =  this.view_manager.flags || {};
 
         this.set_groups(new openerp.base.ListView.Groups(this));
         

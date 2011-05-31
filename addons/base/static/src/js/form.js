@@ -29,7 +29,7 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
         this.ready = false;
         this.show_invalid = true;
         this.touched = false;
-        this.flags = this.view_manager.action.flags || {};
+        this.flags = this.view_manager.flags || {};
     },
     start: function() {
         //this.log('Starting FormView '+this.model+this.view_id)
@@ -305,7 +305,7 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
         this.notification.notify("Cancelling form");
     },
     do_update_sidebar: function() {
-        if (this.view_manager.action.flags.sidebar === false) {
+        if (this.flags.sidebar === false) {
             return;
         }
         if (!this.datarecord.id) {
@@ -988,13 +988,6 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
     }
 });
 
-openerp.base.form.FieldOne2ManyViewManager = openerp.base.ViewManager.extend({
-    init: function(session, element_id, dataset, views) {
-        this._super(session, element_id, dataset, views);
-        this.action = {flags:{}};
-    }
-});
-
 openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
     init: function(view, node) {
         this._super(view, node);
@@ -1002,13 +995,23 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
     },
     start: function() {
         this._super.apply(this, arguments);
-        var views = [ [false,"list"], [false,"form"] ];
+        
+        var self = this;
+        
         this.dataset = new openerp.base.DataSetStatic(this.session, this.field.relation);
-        this.viewmanager = new openerp.base.form.FieldOne2ManyViewManager(this.view.session,
+        this.dataset.on_unlink.add_last(function(ids) {
+            // TODO niv check form view
+            var view = self.viewmanager.views[self.viewmanager.active_view].controller;
+            view.reload_content();
+            // TODO niv make real suppression (list or direct)
+            self.on_ui_change();
+        });
+        
+        var views = [ [false,"list"], [false,"form"] ];
+        this.viewmanager = new openerp.base.ViewManager(this.view.session,
             this.element_id, this.dataset, views);
         this.viewmanager.start();
         
-        var self = this;
         var hack = {loaded: false};
         var view = this.viewmanager.views[this.viewmanager.active_view].controller;
         view.on_loaded.add_last(function() {
@@ -1036,13 +1039,6 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
         //TODO
         return [];
     }
-    /*update_dom: function() {
-        this._super.apply(this, arguments);
-        this.$element.toggleClass('disabled', this.readonly);
-        this.$element.toggleClass('required', this.required);
-    },
-    on_ui_change: function() {
-    },*/
 });
 
 openerp.base.form.FieldMany2Many = openerp.base.form.Field.extend({
@@ -1055,15 +1051,22 @@ openerp.base.form.FieldMany2Many = openerp.base.form.Field.extend({
     },
     start: function() {
         this._super.apply(this, arguments);
+        
+        var self = this;
+        
         this.dataset = new openerp.base.DataSetStatic(
                 this.session, this.field.relation);
+        this.dataset.on_unlink.add_last(function(ids) {
+            self.list_view.reload_content();
+            
+            self.on_ui_change();
+        });
 
         this.list_view = new openerp.base.form.Many2ManyListView(
                 null, this.view.session, this.list_id, this.dataset, false, {
                     'selectable': false,
                     'addable': 'Add'
             });
-        var self = this;
         this.list_view.m2m_field = this;
         this.list_view.start();
         var hack = {loaded: false};
@@ -1093,12 +1096,6 @@ openerp.base.form.FieldMany2Many = openerp.base.form.Field.extend({
 });
 
 openerp.base.form.Many2ManyListView = openerp.base.ListView.extend({
-    do_delete: function (ids) {
-        this.dataset.set_ids(_.without.apply(null, [this.dataset.ids].concat(ids)));
-        this.reload_content();
-        
-        this.m2m_field.on_ui_change();
-    },
     do_add_record: function () {
         var pop = new openerp.base.form.Many2XSelectPopup(
                 null, this.m2m_field.view.session);
