@@ -40,7 +40,8 @@ class stock_move(osv.osv):
             # no average price costing or cost not specified during picking validation, we will
             # plug the purchase line values if they are found.
             if move.purchase_line_id and move.picking_id.purchase_id.pricelist_id:
-                reference_amount, reference_currency_id = move.purchase_line_id.price_unit, move.picking_id.purchase_id.pricelist_id.currency_id.id
+                qty = self.pool.get('product.uom')._compute_qty(cr, uid, move.product_uom.id, move.product_qty, move.product_id.uom_id.id)
+                reference_amount, reference_currency_id = move.purchase_line_id.price_unit * qty, move.picking_id.purchase_id.pricelist_id.currency_id.id
         return reference_amount, reference_currency_id
 
 stock_move()
