@@ -1,127 +1,108 @@
-openerp.base_dashboard = function(openerp){
+openerp.base_dashboard = function(openerp) {
 
 QWeb.add_template('/base_dashboard/static/src/xml/base_dashboard.xml');
 
-openerp.base.form.Board = openerp.base.form.Widget.extend({
+openerp.base.form.DashBoard = openerp.base.form.Widget.extend({
     init: function(view, node) {
-        
         this._super(view, node);
-        this.template = "Board";
+        this.template = "DashBoard";
     },
     start: function() {
+        var self = this;
         this._super.apply(this, arguments);
-        
-        this.$element.html(QWeb.render(this.template));
-        var $dashboard =  this.$element.find('#dashboard');
-        var children = this.node.children;
-        
-        for(var ch=0; ch < children.length; ch++) {
-            var node = children[ch];
-            
-            var widget;
-            if(node.tag.indexOf('child') >= 0) {
-                widget = new (openerp.base.form.widgets.get_object('child')) (this.view, node, $dashboard);
-            } else {
-                //Vpaned
-                widget = new (openerp.base.form.widgets.get_object(node.tag)) (this.view, node, $dashboard);
-            }
-            
-            widget.start();
-            
-        }
-        
-        jQuery('.column').css('width', 100/children.length+'%');
-    },
-});
-
-
-openerp.base.form.Dashbar = openerp.base.form.Widget.extend({
-    init: function(view, node, dashboard) {
-        this._super(view, node, dashboard);
-        this.dashboard = dashboard;
-        this.template = 'Portlet'
-    },
-    start: function() {
-        var $dashboard = this.dashboard;
-        var children = this.node.children;
-        $dashboard.append(QWeb.render(this.template, {widget: this, 'children': children}))
-        
-        for(var chld=0; chld < children.length;chld++) {
-            var child = children[chld];
-            var widget = new (openerp.base.form.widgets.get_object(child.tag)) (this.view, child);
-            widget.start()
-        }
-        $( ".column" ).sortable({
-            connectWith: ".column",
+        this.$element.find(".oe-dashboard-column").sortable({
+            connectWith: ".oe-dashboard-column",
             scroll: false
+        }).disableSelection().bind('sortstop', self.do_save_dashboard);
+        this.$element.find('.oe-dashboard-link-add_widget').click(this.on_add_widget);
+        this.$element.find('.oe-dashboard-link-edit_layout').click(this.on_edit_layout);
+
+        this.$element.find('.oe-dashboard-column .ui-icon-minusthick').click(function() {
+            $(this).toggleClass('ui-icon-minusthick').toggleClass('ui-icon-plusthick');
+            $(this).parents('.oe-dashboard-action:first .oe-dashboard-action-content').toggle();
         });
 
-        $( ".portlet" ).addClass( "ui-widget ui-widget-content ui-helper-clearfix ui-corner-all" )
-			.find( ".portlet-header" )
-				.addClass( "ui-widget-header ui-corner-all" )
-				.end()
-			.find( ".portlet-content" );
-            
-		$( ".portlet-header .ui-icon" ).click(function() {
-			$( this ).toggleClass( "ui-icon-minusthick" ).toggleClass( "ui-icon-plusthick" );
-			$( this ).parents( ".portlet:first" ).find( ".portlet-content" ).toggle();
-		});
+        $('.oe-dashboard-column .ui-icon-closethick').click(function() {
+            $(this).parents('.oe-dashboard-action:first').remove();
+            self.do_save_dashboard();
+        });
 
-        $( ".column" ).disableSelection();
-    }
-})
-
-openerp.base.form.Action = openerp.base.form.Widget.extend({
-    init: function(view, node) {
-        this._super(view, node);
+        this.actions_attrs = {};
+        // Init actions
+        _.each(this.node.children, function(column) {
+            _.each(column.children, function(action) {
+                delete(action.attrs.width);
+                delete(action.attrs.height);
+                delete(action.attrs.colspan);
+                self.actions_attrs[action.attrs.name] = action.attrs;
+                self.rpc('/base/action/load', {
+                    action_id: parseInt(action.attrs.name, 10)
+                }, self.on_load_action);
+            });
+        });
     },
-    start: function() {
-        this._super.apply(this, arguments);
-        this.rpc('/base_dashboard/dashboard/load',{
-            node_attrs: this.node.attrs
-        },
-        this.on_load_action);
+    on_add_widget: function() {
     },
-    
+    on_edit_layout: function() {
+    },
+    do_save_dashboard: function() {
+        var self = this;
+        var board = {
+                style : this.$element.find('.oe-dashboard').attr('data-layout'),
+                columns : []
+            };
+        this.$element.find('.oe-dashboard-column').each(function() {
+            var actions = [];
+            $(this).find('.oe-dashboard-action').each(function() {
+                var action_id = $(this).attr('data-id');
+                actions.push(self.actions_attrs[action_id]);
+            });
+            board.columns.push(actions);
+        });
+        var xml = QWeb.render('DashBoard.xml', board);
+    },
     on_load_action: function(result) {
-        var action = result.action;
+        var action = result.result;
         action.flags = {
             search_view : false,
             sidebar : false,
             views_switcher : false,
-            action_buttons : false
+            action_buttons : false,
+            pager: false
         }
-        var node_attrs = this.node.attrs;
-        var content_id = 'portlet-content-'+node_attrs.name;
-        var action_manager = new openerp.base.ActionManager(this.session, content_id);
-        action_manager.start();
-        action_manager.do_action(action);
+        var element_id = this.view.element_id + '_action_' + action.id;
+        var view = new openerp.base.ViewManagerAction(this.session, element_id, action);
+        view.start();
+    },
+    render: function() {
+        return QWeb.render(this.template, this);
     }
-})
-
-openerp.base.form.Vpaned = openerp.base.form.Widget.extend({
-    init: function(view, node, board, child_index) {
-        
-        this._super(view, node, board, child_index);
-        this.board = board;
-        this.child_index = child_index;
-    },
-    start: function() {
-        this._super.apply(this, arguments);
-        var children = this.node.children;
-        for(var chld=0; chld<children.length; chld++) {
-            var ch_widget = children[chld].children;
-            for(var ch=0; ch<ch_widget.length; ch++) {
-                var widget_type = ch_widget[ch].tag;
-                var widget = new (openerp.base.form.widgets.get_object(widget_type)) (this.view, ch_widget[ch], this.board, this.child_index);
-                widget.start();
-            }
+});
+openerp.base.form.DashBoardLegacy = openerp.base.form.DashBoard.extend({
+    render: function() {
+        if (this.node.tag == 'hpaned') {
+            this.node.attrs.style = '1-1';
+        } else if (this.node.tag == 'vpaned') {
+            this.node.attrs.style = '1';
         }
-    },
-})
+        this.node.tag = 'board';
+        _.each(this.node.children, function(child) {
+            if (child.tag.indexOf('child') == 0) {
+                child.tag = 'column';
+                var actions = [], first_child = child.children[0];
+                if (first_child && first_child.tag == 'vpaned') {
+                    _.each(first_child.children, function(subchild) {
+                        actions.push.apply(actions, subchild.children);
+                    });
+                    child.children = actions;
+                }
+            }
+        });
+        return QWeb.render(this.template, this);
+    }
+});
 
-openerp.base.form.widgets.add('hpaned', 'openerp.base.form.Board');
-openerp.base.form.widgets.add('child', 'openerp.base.form.Dashbar');
-openerp.base.form.widgets.add('vpaned', 'openerp.base.form.Vpaned');
-openerp.base.form.widgets.add('action', 'openerp.base.form.Action');
+openerp.base.form.widgets.add('hpaned', 'openerp.base.form.DashBoardLegacy');
+openerp.base.form.widgets.add('vpaned', 'openerp.base.form.DashBoardLegacy');
+openerp.base.form.widgets.add('board', 'openerp.base.form.DashBoard');
 }
