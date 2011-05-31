@@ -312,13 +312,20 @@ class account_invoice(osv.osv):
                 journal_select = journal_obj._name_search(cr, uid, '', [('type', '=', type)], context=context, limit=None, name_get_uid=1)
                 res['fields'][field]['selection'] = journal_select
 
+        doc = etree.XML(res['arch'])
+        if view_type == 'search':
+            if context.get('type', 'in_invoice') in ('out_invoice', 'out_refund'):
+                for node in doc.xpath("//group[@name='extended filter']"):
+                    doc.remove(node)
+            res['arch'] = etree.tostring(doc)
+
         if view_type == 'tree':
-            doc = etree.XML(res['arch'])
-            nodes = doc.xpath("//field[@name='partner_id']")
             partner_string = _('Customer')
             if context.get('type', 'out_invoice') in ('in_invoice', 'in_refund'):
                 partner_string = _('Supplier')
-            for node in nodes:
+                for node in doc.xpath("//field[@name='reference']"):
+                    node.set('invisible', '0')
+            for node in doc.xpath("//field[@name='partner_id']"):
                 node.set('string', partner_string)
             res['arch'] = etree.tostring(doc)
         return res
@@ -542,7 +549,8 @@ class account_invoice(osv.osv):
             journal_ids = obj_journal.search(cr, uid, [('company_id','=',company_id), ('type', '=', journal_type)])
             if journal_ids:
                 val['journal_id'] = journal_ids[0]
-            res_journal_default = self.pool.get('ir.values').get(cr, uid, 'default', 'type=%s' % (type), ['account.invoice'])
+            ir_values_obj = self.pool.get('ir.values')
+            res_journal_default = ir_values_obj.get(cr, uid, 'default', 'type=%s' % (type), ['account.invoice'])
             for r in res_journal_default:
                 if r[1] == 'journal_id' and r[2] in journal_ids:
                     val['journal_id'] = r[2]
@@ -1258,7 +1266,7 @@ class account_invoice_line(osv.osv):
                     t = t - (p * l[2].get('quantity'))
                     taxes = l[2].get('invoice_line_tax_id')
                     if len(taxes[0]) >= 3 and taxes[0][2]:
-                        taxes = tax_obj.browse(cr, uid, taxes[0][2])
+                        taxes = tax_obj.browse(cr, uid, list(taxes[0][2]))
                         for tax in tax_obj.compute_all(cr, uid, taxes, p,l[2].get('quantity'), context.get('address_invoice_id', False), l[2].get('product_id', False), context.get('partner_id', False))['taxes']:
                             t = t - tax['amount']
             return t
@@ -1609,17 +1617,17 @@ class res_partner(osv.osv):
     _columns = {
         'invoice_ids': fields.one2many('account.invoice.line', 'partner_id', 'Invoices', readonly=True),
     }
-    
+
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}
-            
+
         if context is None:
-            context = {}   
-             
+            context = {}
+
         default.update({'invoice_ids' : []})
         return super(res_partner, self).copy(cr, uid, id, default, context)
-      
+
 res_partner()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

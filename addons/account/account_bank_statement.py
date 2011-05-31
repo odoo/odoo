@@ -161,6 +161,7 @@ class account_bank_statement(osv.osv):
         'balance_start': _default_balance_start,
         'journal_id': _default_journal_id,
         'period_id': _get_period,
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.bank.statement',context=c),
     }
 
     def onchange_date(self, cr, user, ids, date, context=None):
@@ -460,7 +461,7 @@ class account_bank_statement_line(osv.osv):
             select=True, required=True, ondelete='cascade'),
         'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account'),
         'move_ids': fields.many2many('account.move',
-            'account_bank_statement_line_move_rel', 'statement_id','move_id',
+            'account_bank_statement_line_move_rel', 'statement_line_id','move_id',
             'Moves'),
         'ref': fields.char('Reference', size=32),
         'note': fields.text('Notes'),

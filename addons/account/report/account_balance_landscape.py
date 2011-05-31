@@ -98,7 +98,6 @@ class account_balance_landscape(report_sxw.rml_parse):
             ref_bal='nothing'
 
 
-        total_for_perc=[]
         self.done_total=1
         self.total_for_perc=self.linesForTotal(form, ids={}, doneAccount={}, level=1)
         self.done_total=0
@@ -116,9 +115,7 @@ class account_balance_landscape(report_sxw.rml_parse):
 
 
     def linesForTotal(self, form, ids={}, doneAccount={}, level=1):
-        if self.done_total==1:
-            self.done_total==1
-        else:
+        if not self.done_total==1:
             return [self.result_total]
         accounts=[]
         if not ids:
@@ -127,7 +124,6 @@ class account_balance_landscape(report_sxw.rml_parse):
             return []
 
         ctx = self.context.copy()
-        result_total_parent=[]
 
         for id in form['fiscalyear']:
             tmp=[]
@@ -142,7 +138,7 @@ class account_balance_landscape(report_sxw.rml_parse):
                 accounts.append(tmp)
 
         merged_accounts=zip(*accounts)
-         # used to check for the frst record so all sum_credit and sum_debit r set to 0.00
+        # used to check for the frst record so all sum_credit and sum_debit r set to 0.00
         if level==1:
             doneAccount={}
         for entry in merged_accounts:
@@ -345,7 +341,6 @@ class account_balance_landscape(report_sxw.rml_parse):
 
     def get_lines(self, year_dict, form):
         final_result = []
-        line_l =[]
         res = {}
         line_l = self.lines(form)
         self.cal_total(year_dict)
@@ -357,21 +352,21 @@ class account_balance_landscape(report_sxw.rml_parse):
                 res['level'] = l['level']
                 for k,v in l.items():
                     if k.startswith('debit'+str(year_dict['last_str'])):
-                     res['debit'] = v
+                        res['debit'] = v
                     if k.startswith('credit'+str(year_dict['last_str'])):
-                     res['credit'] = v
+                        res['credit'] = v
                     if k.startswith('balance'+str(year_dict['last_str'])) and not k.startswith('balance_perc'+str(year_dict['last_str'])):
-                     res['balance'] =v
+                        res['balance'] =v
                     if k.startswith('balance_perc'+str(year_dict['last_str'])) and not k.startswith('balance'+str(year_dict['last_str'])):
-                     res['balance_perc'] = v
+                        res['balance_perc'] = v
                     if form['compare_pattern'] == 'bal_perc':
                         if k.startswith('bal_perc'+str(year_dict['last_str'])):
-                         res['pattern'] = v
+                            res['pattern'] = v
                     elif form['compare_pattern'] == 'bal_cash':
                         if k.startswith('bal_cash'+str(year_dict['last_str'])):
-                         res['pattern'] = v
+                            res['pattern'] = v
                     else:
-                         res['pattern'] = ''
+                        res['pattern'] = ''
                 final_result.append(res)
         return final_result
 

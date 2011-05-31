@@ -21,10 +21,9 @@
 ##############################################################################
 import time
 import netsvc
-from datetime import date, datetime, timedelta
+from datetime import date, timedelta
 
 from osv import fields, osv
-from tools import config
 from tools.translate import _
 
 def prev_bounds(cdate=False):
@@ -107,8 +106,6 @@ class payroll_register(osv.osv):
     def compute_sheet(self, cr, uid, ids, context=None):
         emp_pool = self.pool.get('hr.employee')
         slip_pool = self.pool.get('hr.payslip')
-        func_pool = self.pool.get('hr.payroll.structure')
-        slip_line_pool = self.pool.get('hr.payslip.line')
         wf_service = netsvc.LocalService("workflow")
         vals = self.browse(cr, uid, ids, context=context)[0]
         emp_ids = emp_pool.search(cr, uid, [])
@@ -295,10 +292,8 @@ class hr_payslip(osv.osv):
             self.create_voucher(cr, uid, [slip.id], name, move_id)
 
             name = "To %s account" % (slip.employee_id.name)
-
             if not slip.employee_id.property_bank_account.id:
                 raise osv.except_osv(_('Warning !'), _('Employee Bank Account is not defined for %s') % slip.employee_id.name)
-
             ded_rec = {
                 'move_id': move_id,
                 'name': name,
@@ -430,10 +425,10 @@ class hr_payslip(osv.osv):
             partner_id = False
 
             if not slip.employee_id.bank_account_id:
-                raise osv.except_osv(_('Integrity Error !'), _('Please define bank account for %s !') % (slip.employee_id.name))
+                raise osv.except_osv(_('Configuration Error !'), _('Please define bank account for %s !') % (slip.employee_id.name))
 
             if not slip.employee_id.bank_account_id.partner_id:
-                raise osv.except_osv(_('Integrity Error !'), _('Please define partner in bank account for %s !') % (slip.employee_id.name))
+                raise osv.except_osv(_('Configuration Error !'), _('Please define partner in bank account for %s !') % (slip.employee_id.name))
 
             partner = slip.employee_id.bank_account_id.partner_id
             partner_id = slip.employee_id.bank_account_id.partner_id.id
@@ -467,10 +462,8 @@ class hr_payslip(osv.osv):
             }
             move_id = move_pool.create(cr, uid, move, context=context)
             self.create_voucher(cr, uid, [slip.id], slip.name, move_id)
-
             if not slip.employee_id.salary_account.id:
                 raise osv.except_osv(_('Warning !'), _('Please define Salary Account for %s.') % slip.employee_id.name)
-
             line = {
                 'move_id':move_id,
                 'name': "By Basic Salary / " + slip.employee_id.name,
@@ -484,7 +477,6 @@ class hr_payslip(osv.osv):
                 'analytic_account_id': False,
                 'ref':slip.number
             }
-
             #Setting Analysis Account for Basic Salary
             if slip.employee_id.analytic_account:
                 line['analytic_account_id'] = slip.employee_id.analytic_account.id
@@ -494,10 +486,9 @@ class hr_payslip(osv.osv):
 
             if not slip.employee_id.employee_account.id:
                 raise osv.except_osv(_('Warning !'), _('Please define Employee Payable Account for %s.') % slip.employee_id.name)
-
             line = {
                 'move_id':move_id,
-                'name': "To Basic Payble Salary / " + slip.employee_id.name,
+                'name': "To Basic Payable Salary / " + slip.employee_id.name,
                 'partner_id': partner_id,
                 'date': slip.date,
                 'account_id': slip.employee_id.employee_account.id,
@@ -508,6 +499,7 @@ class hr_payslip(osv.osv):
                 'period_id': period_id,
                 'ref':slip.number
             }
+
             line_ids += [movel_pool.create(cr, uid, line, context=context)]
 
             for line in slip.line_ids:
@@ -540,7 +532,7 @@ class hr_payslip(osv.osv):
                 if line.type == 'allowance' or line.type == 'otherpay':
                     rec['debit'] = amount
                     if not partner.property_account_payable:
-                        raise osv.except_osv(_('Integrity Error !'), _('Please Configure Partners Payable Account!!'))
+                        raise osv.except_osv(_('Configuration Error !'), _('Please Configure Partners Payable Account!!'))
                     ded_rec = {
                         'move_id': move_id,
                         'name': name,
@@ -557,7 +549,7 @@ class hr_payslip(osv.osv):
                     line_ids += [movel_pool.create(cr, uid, ded_rec, context=context)]
                 elif line.type == 'deduction' or line.type == 'otherdeduct':
                     if not partner.property_account_receivable:
-                        raise osv.except_osv(_('Integrity Error !'), _('Please Configure Partners Receivable Account!!'))
+                        raise osv.except_osv(_('Configuration Error !'), _('Please Configure Partners Receivable Account!!'))
                     rec['credit'] = amount
                     total_deduct += amount
                     ded_rec = {
