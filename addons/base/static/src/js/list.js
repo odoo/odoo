@@ -14,7 +14,9 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
         // sorted it can not be reordered anymore
         'sortable': true,
         // whether the view rows can be reordered (via vertical drag & drop)
-        'reorderable': true
+        'reorderable': true,
+        // editability status of list rows
+        'editable': null
     },
     /**
      * Core class for list-type displays.
@@ -39,6 +41,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
      * @param {null|String} [options.addable="New"] should the new-record button be displayed, and what should its label be. Use ``null`` to hide the button.
      * @param {Boolean} [options.sortable=true] is it possible to sort the table by clicking on column headers
      * @param {Boolean} [options.reorderable=true] is it possible to reorder list rows
+     * @param {null|"bottom"|"top"} [options.editable=null] can rows be edited, and do new rows appear at the top or the bottom of the list
      *
      * @borrows openerp.base.ActionExecutor#execute_action as #execute_action
      */
@@ -271,6 +274,21 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
                 $.proxy(this, 'compute_aggregates')));
     },
     /**
+     * Sets editability status for the list, based on defaults, view
+     * architecture and the provided flag, if any.
+     *
+     * @param {Boolean} [force] forces the list to editability. Sets new row edition status to "bottom".
+     */
+    set_editable: function (force) {
+        // If ``force``, set editability to bottom
+        // else if editability flag in view arch, use that
+        // otherwise rely on view default
+        this.options.editable = (
+                (force && "bottom")
+                || this.fields_view.arch.attrs.editable
+                || this.defaults.editable);
+    },
+    /**
      * Event handler for a search, asks for the computation/folding of domains
      * and contexts (and group-by), then reloads the view's content.
      *
@@ -296,6 +314,8 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
             if (_.isEmpty(results.group_by) && !results.context['group_by_no_leaf']) {
                 results.group_by = null;
             }
+            self.set_editable(results.context['set_editable']);
+
             self.reload_view(!!results.group_by).then(
                 $.proxy(self, 'reload_content'));
         });
