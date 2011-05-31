@@ -67,7 +67,7 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
                 dialog.stop();
                 break;
             default:
-                console.log(_.sprintf("Action manager can't handle action of type %s", action.type), action);
+                console.log("Action manager can't handle action of type " + action.type, action);
         }
     }
 });
