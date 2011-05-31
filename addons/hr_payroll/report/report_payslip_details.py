@@ -64,9 +64,8 @@ class payslip_details_report(report_sxw.rml_parse):
             for key, value in result.iteritems():
                 rule_categories = rule_cate_obj.browse(self.cr, self.uid, [key])
                 parents = get_recursive_parent(rule_categories)
-                category_total = 0
-                for line in payslip_line.browse(self.cr, self.uid, value):
-                    category_total += line.total
+                self.cr.execute('''SELECT SUM(pl.total) FROM hr_payslip_line pl\
+                        WHERE pl.id in %s''',(tuple(value),))
                 level = 0
                 for parent in parents:
                     res.append({
@@ -74,7 +73,7 @@ class payslip_details_report(report_sxw.rml_parse):
                         'name': parent.name,
                         'code': parent.code,
                         'level': level,
-                        'total': category_total,
+                        'total': self.cr.fetchone()[0] or 0.0,
                     })
                     level += 1
                 for line in payslip_line.browse(self.cr, self.uid, value):
@@ -97,13 +96,18 @@ class payslip_details_report(report_sxw.rml_parse):
                 result.setdefault(obj[id].register_id.name, [])
                 result[obj[id].register_id.name].append(obj[id].id)
         for key, value in result.iteritems():
+            self.cr.execute('''SELECT SUM(pl.total) FROM hr_payslip_line pl\
+                    WHERE pl.id in %s''',(tuple(value),))
             res.append({
                 'register_name': key,
+                'total': self.cr.fetchone()[0] or 0.0,
             })
             for line in payslip_line.browse(self.cr, self.uid, value):
                 res.append({
                     'name': line.name,
                     'code': line.code,
+                    'quantity': line.quantity,
+                    'amount': line.amount,
                     'total': line.total,
                 })
         return res
