@@ -3,7 +3,7 @@ openerp.base.search = function(openerp) {
 openerp.base.SearchView = openerp.base.Controller.extend({
     init: function(view_manager, session, element_id, dataset, view_id, defaults) {
         this._super(session, element_id);
-        this.view_manager = view_manager;
+        this.view_manager = view_manager || new openerp.base.NullViewManager();
         this.dataset = dataset;
         this.model = dataset.model;
         this.view_id = view_id;
