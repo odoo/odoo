@@ -8,8 +8,13 @@ from sugarsoap_services_types import *
 from osv import osv
 from tools.translate import _
 import socket
- 
+import import_sugarcrm
+
+
+
 IP = socket.gethostbyname(socket.gethostname())
+URL = False
+
 try:
     import ZSI
     from ZSI.TCcompound import Struct
@@ -17,12 +22,13 @@ try:
 except ImportError:
     raise osv.except_osv(_('ZSI Import Error!'), _('Please install SOAP for python - ZSI-2.0-rc3.tar.gz - python-zci'))
 
-
-
+def setURL(url):
+    global URL
+    URL = url
 
 # Locator
 class sugarsoapLocator:
-    sugarsoapPortType_address = "http://"+ IP + "/sugarcrm/soap.php"
+    sugarsoapPortType_address = URL
     def getsugarsoapPortTypeAddress(self):
         return sugarsoapLocator.sugarsoapPortType_address
     def getsugarsoapPortType(self, url=None, **kw):
@@ -43,7 +49,7 @@ class sugarsoapBindingSOAP:
             raise TypeError, "%s incorrect request type" % (request.__class__)
         kw = {}
         # no input wsaction
-        self.binding.Send(None, None, request, soapaction="http://"+ IP + "/sugarcrm/soap.php/create_session", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
+        self.binding.Send(None, None, request, soapaction= URL+"/create_session", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
         # no output wsaction
         typecode = Struct(pname=None, ofwhat=create_sessionResponse.typecode.ofwhat, pyclass=create_sessionResponse.typecode.pyclass)
         response = self.binding.Receive(typecode)
@@ -55,7 +61,7 @@ class sugarsoapBindingSOAP:
             raise TypeError, "%s incorrect request type" % (request.__class__)
         kw = {}
         # no input wsaction
-        self.binding.Send(None, None, request, soapaction="http://" + IP + "/sugarcrm/soap.php/end_session", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
+        self.binding.Send(None, None, request, soapaction=URL+"/end_session", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
         # no output wsaction
         typecode = Struct(pname=None, ofwhat=end_sessionResponse.typecode.ofwhat, pyclass=end_sessionResponse.typecode.pyclass)
         response = self.binding.Receive(typecode)
@@ -67,7 +73,7 @@ class sugarsoapBindingSOAP:
             raise TypeError, "%s incorrect request type" % (request.__class__)
         kw = {}
         # no input wsaction
-        self.binding.Send(None, None, request, soapaction="http://" + IP + "/sugarcrm/soap.php/contact_by_email", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
+        self.binding.Send(None, None, request, soapaction=URL+"/contact_by_email", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
         # no output wsaction
         typecode = Struct(pname=None, ofwhat=contact_by_emailResponse.typecode.ofwhat, pyclass=contact_by_emailResponse.typecode.pyclass)
         response = self.binding.Receive(typecode)
@@ -79,7 +85,7 @@ class sugarsoapBindingSOAP:
             raise TypeError, "%s incorrect request type" % (request.__class__)
         kw = {}
         # no input wsaction
-        self.binding.Send(None, None, request, soapaction="http://" + IP + "/sugarcrm/soap.php/user_list", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
+        self.binding.Send(None, None, request, soapaction=URL+"/user_list", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
         # no output wsaction
         typecode = Struct(pname=None, ofwhat=user_listResponse.typecode.ofwhat, pyclass=user_listResponse.typecode.pyclass)
         response = self.binding.Receive(typecode)
@@ -91,7 +97,7 @@ class sugarsoapBindingSOAP:
             raise TypeError, "%s incorrect request type" % (request.__class__)
         kw = {}
         # no input wsaction
-        self.binding.Send(None, None, request, soapaction="http://"+ IP +"/sugarcrm/soap.php/search", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
+        self.binding.Send(None, None, request, soapaction=URL+"/search", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
         # no output wsaction
         typecode = Struct(pname=None, ofwhat=searchResponse.typecode.ofwhat, pyclass=searchResponse.typecode.pyclass)
         response = self.binding.Receive(typecode)
@@ -103,7 +109,7 @@ class sugarsoapBindingSOAP:
             raise TypeError, "%s incorrect request type" % (request.__class__)
         kw = {}
         # no input wsaction
-        self.binding.Send(None, None, request, soapaction="http://"+ IP +"/sugarcrm/soap.php/track_email", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
+        self.binding.Send(None, None, request, soapaction=URL+"/track_email", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
         # no output wsaction
         typecode = Struct(pname=None, ofwhat=track_emailResponse.typecode.ofwhat, pyclass=track_emailResponse.typecode.pyclass)
         response = self.binding.Receive(typecode)
@@ -115,7 +121,7 @@ class sugarsoapBindingSOAP:
             raise TypeError, "%s incorrect request type" % (request.__class__)
         kw = {}
         # no input wsaction
-        self.binding.Send(None, None, request, soapaction="http://"+ IP +"/sugarcrm/soap.php/create_contact", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
+        self.binding.Send(None, None, request, soapaction=URL+"/create_contact", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
         # no output wsaction
         typecode = Struct(pname=None, ofwhat=create_contactResponse.typecode.ofwhat, pyclass=create_contactResponse.typecode.pyclass)
         response = self.binding.Receive(typecode)
@@ -127,7 +133,7 @@ class sugarsoapBindingSOAP:
             raise TypeError, "%s incorrect request type" % (request.__class__)
         kw = {}
         # no input wsaction
-        self.binding.Send(None, None, request, soapaction="http://"+ IP +"/sugarcrm/soap.php/create_lead", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
+        self.binding.Send(None, None, request, soapaction=URL+"/create_lead", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
         # no output wsaction
         typecode = Struct(pname=None, ofwhat=create_leadResponse.typecode.ofwhat, pyclass=create_leadResponse.typecode.pyclass)
         response = self.binding.Receive(typecode)
@@ -139,7 +145,7 @@ class sugarsoapBindingSOAP:
             raise TypeError, "%s incorrect request type" % (request.__class__)
         kw = {}
         # no input wsaction
-        self.binding.Send(None, None, request, soapaction="http://"+ IP +"/sugarcrm/soap.php/create_account", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
+        self.binding.Send(None, None, request, soapaction=URL+"/create_account", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
         # no output wsaction
         typecode = Struct(pname=None, ofwhat=create_accountResponse.typecode.ofwhat, pyclass=create_accountResponse.typecode.pyclass)
         response = self.binding.Receive(typecode)
@@ -151,7 +157,7 @@ class sugarsoapBindingSOAP:
             raise TypeError, "%s incorrect request type" % (request.__class__)
         kw = {}
         # no input wsaction
-        self.binding.Send(None, None, request, soapaction="http://"+ IP +"/sugarcrm/soap.php/create_opportunity", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
+        self.binding.Send(None, None, request, soapaction=URL+"/create_opportunity", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
         # no output wsaction
         typecode = Struct(pname=None, ofwhat=create_opportunityResponse.typecode.ofwhat, pyclass=create_opportunityResponse.typecode.pyclass)
         response = self.binding.Receive(typecode)
@@ -163,7 +169,7 @@ class sugarsoapBindingSOAP:
             raise TypeError, "%s incorrect request type" % (request.__class__)
         kw = {}
         # no input wsaction
-        self.binding.Send(None, None, request, soapaction="http://"+ IP +"/sugarcrm/soap.php/create_case", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
+        self.binding.Send(None, None, request, soapaction=URL+"/create_case", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
         # no output wsaction
         typecode = Struct(pname=None, ofwhat=create_caseResponse.typecode.ofwhat, pyclass=create_caseResponse.typecode.pyclass)
         response = self.binding.Receive(typecode)
@@ -174,8 +180,9 @@ class sugarsoapBindingSOAP:
         if isinstance(request, loginRequest) is False:
             raise TypeError, "%s incorrect request type" % (request.__class__)
         kw = {}
+        
         # no input wsaction
-        self.binding.Send(None, None, request, soapaction="http://"+ IP +"/sugarcrm/soap.php/login", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
+        self.binding.Send(None, None, request, soapaction=URL+"/login", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
         # no output wsaction
         typecode = Struct(pname=None, ofwhat=loginResponse.typecode.ofwhat, pyclass=loginResponse.typecode.pyclass)
         response = self.binding.Receive(typecode)
@@ -187,7 +194,7 @@ class sugarsoapBindingSOAP:
             raise TypeError, "%s incorrect request type" % (request.__class__)
         kw = {}
         # no input wsaction
-        self.binding.Send(None, None, request, soapaction="http://"+ IP +"/sugarcrm/soap.php/is_loopback", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
+        self.binding.Send(None, None, request, soapaction=URL+"/is_loopback", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
         # no output wsaction
         typecode = Struct(pname=None, ofwhat=is_loopbackResponse.typecode.ofwhat, pyclass=is_loopbackResponse.typecode.pyclass)
         response = self.binding.Receive(typecode)
@@ -199,7 +206,7 @@ class sugarsoapBindingSOAP:
             raise TypeError, "%s incorrect request type" % (request.__class__)
         kw = {}
         # no input wsaction
-        self.binding.Send(None, None, request, soapaction="http://"+ IP +"/sugarcrm/soap.php/seamless_login", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
+        self.binding.Send(None, None, request, soapaction=URL+"/seamless_login", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
         # no output wsaction
         typecode = Struct(pname=None, ofwhat=seamless_loginResponse.typecode.ofwhat, pyclass=seamless_loginResponse.typecode.pyclass)
         response = self.binding.Receive(typecode)
@@ -211,7 +218,7 @@ class sugarsoapBindingSOAP:
             raise TypeError, "%s incorrect request type" % (request.__class__)
         kw = {}
         # no input wsaction
-        self.binding.Send(None, None, request, soapaction="http://"+ IP +"/sugarcrm/soap.php/get_entry_list", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
+        self.binding.Send(None, None, request, soapaction=URL+"/get_entry_list", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
         # no output wsaction
         typecode = Struct(pname=None, ofwhat=get_entry_listResponse.typecode.ofwhat, pyclass=get_entry_listResponse.typecode.pyclass)
         try:
@@ -226,7 +233,7 @@ class sugarsoapBindingSOAP:
             raise TypeError, "%s incorrect request type" % (request.__class__)
         kw = {}
         # no input wsaction
-        self.binding.Send(None, None, request, soapaction="http://"+ IP +"/sugarcrm/soap.php/get_entry", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
+        self.binding.Send(None, None, request, soapaction=URL+"/get_entry", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
         # no output wsaction
         typecode = Struct(pname=None, ofwhat=get_entryResponse.typecode.ofwhat, pyclass=get_entryResponse.typecode.pyclass)
         response = self.binding.Receive(typecode)
@@ -238,7 +245,7 @@ class sugarsoapBindingSOAP:
             raise TypeError, "%s incorrect request type" % (request.__class__)
         kw = {}
         # no input wsaction
-        self.binding.Send(None, None, request, soapaction="http://"+ IP +"/sugarcrm/soap.php/get_entries", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
+        self.binding.Send(None, None, request, soapaction=URL+"/get_entries", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
         # no output wsaction
         typecode = Struct(pname=None, ofwhat=get_entriesResponse.typecode.ofwhat, pyclass=get_entriesResponse.typecode.pyclass)
         response = self.binding.Receive(typecode)
@@ -250,7 +257,7 @@ class sugarsoapBindingSOAP:
             raise TypeError, "%s incorrect request type" % (request.__class__)
         kw = {}
         # no input wsaction
-        self.binding.Send(None, None, request, soapaction="http://"+ IP +"/sugarcrm/soap.php/set_entry", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
+        self.binding.Send(None, None, request, soapaction=URL+"/set_entry", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
         # no output wsaction
         typecode = Struct(pname=None, ofwhat=set_entryResponse.typecode.ofwhat, pyclass=set_entryResponse.typecode.pyclass)
         response = self.binding.Receive(typecode)
@@ -262,7 +269,7 @@ class sugarsoapBindingSOAP:
             raise TypeError, "%s incorrect request type" % (request.__class__)
         kw = {}
         # no input wsaction
-        self.binding.Send(None, None, request, soapaction="http://"+ IP +"/sugarcrm/soap.php/set_entries", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
+        self.binding.Send(None, None, request, soapaction=URL+"/set_entries", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
         # no output wsaction
         typecode = Struct(pname=None, ofwhat=set_entriesResponse.typecode.ofwhat, pyclass=set_entriesResponse.typecode.pyclass)
         response = self.binding.Receive(typecode)
@@ -274,7 +281,7 @@ class sugarsoapBindingSOAP:
             raise TypeError, "%s incorrect request type" % (request.__class__)
         kw = {}
         # no input wsaction
-        self.binding.Send(None, None, request, soapaction="http://"+ IP +"/sugarcrm/soap.php/set_note_attachment", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
+        self.binding.Send(None, None, request, soapaction=URL+"/set_note_attachment", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
         # no output wsaction
         typecode = Struct(pname=None, ofwhat=set_note_attachmentResponse.typecode.ofwhat, pyclass=set_note_attachmentResponse.typecode.pyclass)
         response = self.binding.Receive(typecode)
@@ -286,7 +293,7 @@ class sugarsoapBindingSOAP:
             raise TypeError, "%s incorrect request type" % (request.__class__)
         kw = {}
         # no input wsaction
-        self.binding.Send(None, None, request, soapaction="http://"+ IP +"/sugarcrm/soap.php/get_note_attachment", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
+        self.binding.Send(None, None, request, soapaction=URL+"/get_note_attachment", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
         # no output wsaction
         typecode = Struct(pname=None, ofwhat=get_note_attachmentResponse.typecode.ofwhat, pyclass=get_note_attachmentResponse.typecode.pyclass)
         response = self.binding.Receive(typecode)
@@ -298,7 +305,7 @@ class sugarsoapBindingSOAP:
             raise TypeError, "%s incorrect request type" % (request.__class__)
         kw = {}
         # no input wsaction
-        self.binding.Send(None, None, request, soapaction="http://"+ IP +"/sugarcrm/soap.php/relate_note_to_module", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
+        self.binding.Send(None, None, request, soapaction=URL+"/relate_note_to_module", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
         # no output wsaction
         typecode = Struct(pname=None, ofwhat=relate_note_to_moduleResponse.typecode.ofwhat, pyclass=relate_note_to_moduleResponse.typecode.pyclass)
         response = self.binding.Receive(typecode)
@@ -310,7 +317,7 @@ class sugarsoapBindingSOAP:
             raise TypeError, "%s incorrect request type" % (request.__class__)
         kw = {}
         # no input wsaction
-        self.binding.Send(None, None, request, soapaction="http://"+ IP +"/sugarcrm/soap.php/get_related_notes", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
+        self.binding.Send(None, None, request, soapaction=URL+"/get_related_notes", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
         # no output wsaction
         typecode = Struct(pname=None, ofwhat=get_related_notesResponse.typecode.ofwhat, pyclass=get_related_notesResponse.typecode.pyclass)
         response = self.binding.Receive(typecode)
@@ -322,7 +329,7 @@ class sugarsoapBindingSOAP:
             raise TypeError, "%s incorrect request type" % (request.__class__)
         kw = {}
         # no input wsaction
-        self.binding.Send(None, None, request, soapaction="http://"+ IP +"/sugarcrm/soap.php/logout", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
+        self.binding.Send(None, None, request, soapaction=URL+"/logout", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
         # no output wsaction
         typecode = Struct(pname=None, ofwhat=logoutResponse.typecode.ofwhat, pyclass=logoutResponse.typecode.pyclass)
         response = self.binding.Receive(typecode)
@@ -334,7 +341,7 @@ class sugarsoapBindingSOAP:
             raise TypeError, "%s incorrect request type" % (request.__class__)
         kw = {}
         # no input wsaction
-        self.binding.Send(None, None, request, soapaction="http://"+ IP +"/sugarcrm/soap.php/get_module_fields", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
+        self.binding.Send(None, None, request, soapaction=URL+"/get_module_fields", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
         # no output wsaction
         typecode = Struct(pname=None, ofwhat=get_module_fieldsResponse.typecode.ofwhat, pyclass=get_module_fieldsResponse.typecode.pyclass)
         response = self.binding.Receive(typecode)
@@ -346,7 +353,7 @@ class sugarsoapBindingSOAP:
             raise TypeError, "%s incorrect request type" % (request.__class__)
         kw = {}
         # no input wsaction
-        self.binding.Send(None, None, request, soapaction="http://"+ IP +"/sugarcrm/soap.php/get_available_modules", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
+        self.binding.Send(None, None, request, soapaction=URL+"/get_available_modules", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
         # no output wsaction
         typecode = Struct(pname=None, ofwhat=get_available_modulesResponse.typecode.ofwhat, pyclass=get_available_modulesResponse.typecode.pyclass)
         response = self.binding.Receive(typecode)
@@ -358,7 +365,7 @@ class sugarsoapBindingSOAP:
             raise TypeError, "%s incorrect request type" % (request.__class__)
         kw = {}
         # no input wsaction
-        self.binding.Send(None, None, request, soapaction="http://"+ IP +"/sugarcrm/soap.php/update_portal_user", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
+        self.binding.Send(None, None, request, soapaction=URL+"/update_portal_user", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
         # no output wsaction
         typecode = Struct(pname=None, ofwhat=update_portal_userResponse.typecode.ofwhat, pyclass=update_portal_userResponse.typecode.pyclass)
         response = self.binding.Receive(typecode)
@@ -370,7 +377,7 @@ class sugarsoapBindingSOAP:
             raise TypeError, "%s incorrect request type" % (request.__class__)
         kw = {}
         # no input wsaction
-        self.binding.Send(None, None, request, soapaction="http://"+ IP +"/sugarcrm/soap.php/test", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
+        self.binding.Send(None, None, request, soapaction=URL+"/test", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
         # no output wsaction
         typecode = Struct(pname=None, ofwhat=testResponse.typecode.ofwhat, pyclass=testResponse.typecode.pyclass)
         response = self.binding.Receive(typecode)
@@ -382,7 +389,7 @@ class sugarsoapBindingSOAP:
             raise TypeError, "%s incorrect request type" % (request.__class__)
         kw = {}
         # no input wsaction
-        self.binding.Send(None, None, request, soapaction="http://"+ IP +"/sugarcrm/soap.php/get_user_id", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
+        self.binding.Send(None, None, request, soapaction=URL+"/get_user_id", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
         # no output wsaction
         typecode = Struct(pname=None, ofwhat=get_user_idResponse.typecode.ofwhat, pyclass=get_user_idResponse.typecode.pyclass)
         response = self.binding.Receive(typecode)
@@ -394,7 +401,7 @@ class sugarsoapBindingSOAP:
             raise TypeError, "%s incorrect request type" % (request.__class__)
         kw = {}
         # no input wsaction
-        self.binding.Send(None, None, request, soapaction="http://"+ IP +"/sugarcrm/soap.php/get_user_team_id", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
+        self.binding.Send(None, None, request, soapaction=URL+"/get_user_team_id", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
         # no output wsaction
         typecode = Struct(pname=None, ofwhat=get_user_team_idResponse.typecode.ofwhat, pyclass=get_user_team_idResponse.typecode.pyclass)
         response = self.binding.Receive(typecode)
@@ -406,7 +413,7 @@ class sugarsoapBindingSOAP:
             raise TypeError, "%s incorrect request type" % (request.__class__)
         kw = {}
         # no input wsaction
-        self.binding.Send(None, None, request, soapaction="http://"+ IP +"/sugarcrm/soap.php/get_server_time", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
+        self.binding.Send(None, None, request, soapaction=URL+"/get_server_time", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
         # no output wsaction
         typecode = Struct(pname=None, ofwhat=get_server_timeResponse.typecode.ofwhat, pyclass=get_server_timeResponse.typecode.pyclass)
         response = self.binding.Receive(typecode)
@@ -418,7 +425,7 @@ class sugarsoapBindingSOAP:
             raise TypeError, "%s incorrect request type" % (request.__class__)
         kw = {}
         # no input wsaction
-        self.binding.Send(None, None, request, soapaction="http://"+ IP +"/sugarcrm/soap.php/get_gmt_time", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
+        self.binding.Send(None, None, request, soapaction=URL+"/get_gmt_time", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
         # no output wsaction
         typecode = Struct(pname=None, ofwhat=get_gmt_timeResponse.typecode.ofwhat, pyclass=get_gmt_timeResponse.typecode.pyclass)
         response = self.binding.Receive(typecode)
@@ -430,7 +437,7 @@ class sugarsoapBindingSOAP:
             raise TypeError, "%s incorrect request type" % (request.__class__)
         kw = {}
         # no input wsaction
-        self.binding.Send(None, None, request, soapaction="http://"+ IP +"/sugarcrm/soap.php/get_sugar_flavor", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
+        self.binding.Send(None, None, request, soapaction=URL+"/get_sugar_flavor", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
         # no output wsaction
         typecode = Struct(pname=None, ofwhat=get_sugar_flavorResponse.typecode.ofwhat, pyclass=get_sugar_flavorResponse.typecode.pyclass)
         response = self.binding.Receive(typecode)
@@ -442,7 +449,7 @@ class sugarsoapBindingSOAP:
             raise TypeError, "%s incorrect request type" % (request.__class__)
         kw = {}
         # no input wsaction
-        self.binding.Send(None, None, request, soapaction="http://"+ IP +"/sugarcrm/soap.php/get_server_version", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
+        self.binding.Send(None, None, request, soapaction=URL+"/get_server_version", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
         # no output wsaction
         typecode = Struct(pname=None, ofwhat=get_server_versionResponse.typecode.ofwhat, pyclass=get_server_versionResponse.typecode.pyclass)
         response = self.binding.Receive(typecode)
@@ -454,7 +461,7 @@ class sugarsoapBindingSOAP:
             raise TypeError, "%s incorrect request type" % (request.__class__)
         kw = {}
         # no input wsaction
-        self.binding.Send(None, None, request, soapaction="http://"+ IP +"/sugarcrm/soap.php/get_relationships", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
+        self.binding.Send(None, None, request, soapaction=URL+"/get_relationships", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
         # no output wsaction
         typecode = Struct(pname=None, ofwhat=get_relationshipsResponse.typecode.ofwhat, pyclass=get_relationshipsResponse.typecode.pyclass)
         response = self.binding.Receive(typecode)
@@ -466,7 +473,7 @@ class sugarsoapBindingSOAP:
             raise TypeError, "%s incorrect request type" % (request.__class__)
         kw = {}
         # no input wsaction
-        self.binding.Send(None, None, request, soapaction="http://"+ IP +"/sugarcrm/soap.php/set_relationship", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
+        self.binding.Send(None, None, request, soapaction=URL+"/set_relationship", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
         # no output wsaction
         typecode = Struct(pname=None, ofwhat=set_relationshipResponse.typecode.ofwhat, pyclass=set_relationshipResponse.typecode.pyclass)
         response = self.binding.Receive(typecode)
@@ -478,7 +485,7 @@ class sugarsoapBindingSOAP:
             raise TypeError, "%s incorrect request type" % (request.__class__)
         kw = {}
         # no input wsaction
-        self.binding.Send(None, None, request, soapaction="http://"+ IP +"/sugarcrm/soap.php/set_relationships", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
+        self.binding.Send(None, None, request, soapaction=URL+"/set_relationships", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
         # no output wsaction
         typecode = Struct(pname=None, ofwhat=set_relationshipsResponse.typecode.ofwhat, pyclass=set_relationshipsResponse.typecode.pyclass)
         response = self.binding.Receive(typecode)
@@ -490,7 +497,7 @@ class sugarsoapBindingSOAP:
             raise TypeError, "%s incorrect request type" % (request.__class__)
         kw = {}
         # no input wsaction
-        self.binding.Send(None, None, request, soapaction="http://"+ IP +"/sugarcrm/soap.php/set_document_revision", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
+        self.binding.Send(None, None, request, soapaction=URL+"/set_document_revision", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
         # no output wsaction
         typecode = Struct(pname=None, ofwhat=set_document_revisionResponse.typecode.ofwhat, pyclass=set_document_revisionResponse.typecode.pyclass)
         response = self.binding.Receive(typecode)
@@ -502,7 +509,7 @@ class sugarsoapBindingSOAP:
             raise TypeError, "%s incorrect request type" % (request.__class__)
         kw = {}
         # no input wsaction
-        self.binding.Send(None, None, request, soapaction="http://"+ IP +"/sugarcrm/soap.php/search_by_module", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
+        self.binding.Send(None, None, request, soapaction=URL+"/search_by_module", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
         # no output wsaction
         typecode = Struct(pname=None, ofwhat=search_by_moduleResponse.typecode.ofwhat, pyclass=search_by_moduleResponse.typecode.pyclass)
         response = self.binding.Receive(typecode)
@@ -514,7 +521,7 @@ class sugarsoapBindingSOAP:
             raise TypeError, "%s incorrect request type" % (request.__class__)
         kw = {}
         # no input wsaction
-        self.binding.Send(None, None, request, soapaction="http://"+ IP +"/sugarcrm/soap.php/sync_get_modified_relationships", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
+        self.binding.Send(None, None, request, soapaction=URL+"/sync_get_modified_relationships", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
         # no output wsaction
         typecode = Struct(pname=None, ofwhat=sync_get_modified_relationshipsResponse.typecode.ofwhat, pyclass=sync_get_modified_relationshipsResponse.typecode.pyclass)
         response = self.binding.Receive(typecode)
@@ -526,7 +533,7 @@ class sugarsoapBindingSOAP:
             raise TypeError, "%s incorrect request type" % (request.__class__)
         kw = {}
         # no input wsaction
-        self.binding.Send(None, None, request, soapaction="http://"+ IP +"/sugarcrm/soap.php/get_modified_entries", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
+        self.binding.Send(None, None, request, soapaction=URL+"/get_modified_entries", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
         # no output wsaction
         typecode = Struct(pname=None, ofwhat=get_modified_entriesResponse.typecode.ofwhat, pyclass=get_modified_entriesResponse.typecode.pyclass)
         response = self.binding.Receive(typecode)
@@ -538,7 +545,7 @@ class sugarsoapBindingSOAP:
             raise TypeError, "%s incorrect request type" % (request.__class__)
         kw = {}
         # no input wsaction
-        self.binding.Send(None, None, request, soapaction="http://"+ IP +"/sugarcrm/soap.php/get_attendee_list", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
+        self.binding.Send(None, None, request, soapaction=URL+"/get_attendee_list", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
         # no output wsaction
         typecode = Struct(pname=None, ofwhat=get_attendee_listResponse.typecode.ofwhat, pyclass=get_attendee_listResponse.typecode.pyclass)
         response = self.binding.Receive(typecode)
