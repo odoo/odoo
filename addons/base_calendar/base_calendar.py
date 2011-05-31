@@ -415,7 +415,7 @@ property or property parameter."),
         cal = vobject.iCalendar()
         event = cal.add('vevent')
         if not event_obj.date_deadline or not event_obj.date:
-              raise osv.except_osv(_('Warning !'),_("Couldn't Invite because date is not specified!"))
+            raise osv.except_osv(_('Warning !'),_("Couldn't Invite because date is not specified!"))
         event.add('created').value = ics_datetime(time.strftime('%Y-%m-%d %H:%M:%S'))
         event.add('dtstart').value = ics_datetime(event_obj.date)
         event.add('dtend').value = ics_datetime(event_obj.date_deadline)
@@ -940,7 +940,7 @@ class calendar_event(osv.osv):
             value['duration'] = duration
 
         if allday: # For all day event
-            value = {'duration': 24}
+            value = {'duration': 24.0}
             duration = 24.0
             if start_date:
                 start = datetime.strptime(start_date, "%Y-%m-%d %H:%M:%S")
@@ -1264,26 +1264,47 @@ rule or repeating pattern of time to exclude from the recurring rule."),
         else: #it's a recurrent event and edit_all is already check
             return meeting['recurrency'] and meeting['edit_all']
 
-
-
+    def _get_data(self, cr, uid, id, context=None):
+        res = self.read(cr, uid, [id],['date', 'date_deadline'])
+        return res[0]
+    
+    def need_to_update(self, event_id, vals):
+        split_id = str(event_id).split("-")
+        if len(split_id) < 2:
+            return False 
+        else:
+            date_start = vals.get('date', '')
+            try:
+                date_start = datetime.strptime(date_start, '%Y-%m-%d %H:%M:%S').strftime("%Y%m%d%H%M%S")
+                return date_start == split_id[1]
+            except Exception:
+                return True
+  
+        
 
     def write(self, cr, uid, ids, vals, context=None, check=True, update_check=True):
         if context is None:
             context = {}
+            
         if isinstance(ids, (str, int, long)):
             select = [ids]
         else:
             select = ids
+            
         new_ids = []
         res = False
         for event_id in select:
             real_event_id = base_calendar_id2real_id(event_id)
-
-            if(self.get_edit_all(cr, uid, event_id, vals=vals)):
+            
+            edit_all = self.get_edit_all(cr, uid, event_id, vals=vals)
+            if edit_all:
+                if self.need_to_update(event_id, vals):
+                    res = self._get_data(cr, uid, real_event_id, context=context)
+                    vals.update(res)
                 event_id = real_event_id
 
             #if edit one instance of a reccurrent id
-            if len(str(event_id).split('-')) > 1:
+            if len(str(event_id).split('-')) > 1 and not edit_all:
                 data = self.read(cr, uid, event_id, ['date', 'date_deadline', \
                                                     'rrule', 'duration', 'exdate'])
                 if data.get('rrule'):
@@ -1321,8 +1342,6 @@ rule or repeating pattern of time to exclude from the recurring rule."),
             context=context)
         vals.update(updated_vals.get('value', {}))
 
-        if not 'edit_all' in vals:
-            vals['edit_all'] = False
 
         if new_ids:
             res = super(calendar_event, self).write(cr, uid, new_ids, vals, context=context)
@@ -1352,7 +1371,7 @@ rule or repeating pattern of time to exclude from the recurring rule."),
             context = {}
             
         if 'date' in groupby:
-             raise osv.except_osv(_('Warning !'), _('Group by date not supported, use the calendar view instead'))
+            raise osv.except_osv(_('Warning !'), _('Group by date not supported, use the calendar view instead'))
          
         virtual_id = context.get('virtual_id', False)
         
@@ -1406,28 +1425,14 @@ rule or repeating pattern of time to exclude from the recurring rule."),
     def copy(self, cr, uid, id, default=None, context=None):
         if context is None:
             context = {}
+            
         res = super(calendar_event, self).copy(cr, uid, base_calendar_id2real_id(id), default, context)
         alarm_obj = self.pool.get('res.alarm')
         alarm_obj.do_alarm_create(cr, uid, [res], self._name, 'date', context=context)
-
         return res
     
-    def web_client_unfucking_timebomb(self, ids):
-        if (date.today() < date(2011, 5, 1)):
-            import re
-            if isinstance(ids, list) and len(ids) == 1:
-                string = ids[0]
-                if isinstance(string, str) and string.startswith('[') and string.endswith(']'):
-                    string = string[1:-1]
-                    list_ids = re.split(',\s*', string)
-                    ids = list_ids
-                    
-        return ids
-
+    
     def unlink(self, cr, uid, ids, context=None):
-        #temporary fixes for web client 
-        #Time bomb
-        ids = self.web_client_unfucking_timebomb(ids)
         if not isinstance(ids, list):
             ids = [ids]
             
@@ -1461,8 +1466,6 @@ rule or repeating pattern of time to exclude from the recurring rule."),
     def create(self, cr, uid, vals, context=None):
         if context is None:
             context = {}
-
-        virtual_id = context.get('virtual_id', False)
 
         if vals.get('vtimezone', '') and vals.get('vtimezone', '').startswith('/freeassociation.sourceforge.net/tzfile/'):
             vals['vtimezone'] = vals['vtimezone'][40:]

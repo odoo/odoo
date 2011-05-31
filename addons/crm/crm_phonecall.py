@@ -19,20 +19,19 @@
 #
 ##############################################################################
 
-from crm import crm_case
+from crm import crm_base
 from osv import fields, osv
 from tools.translate import _
 import crm
 import time
 from datetime import datetime, timedelta
 
-class crm_phonecall(crm_case, osv.osv):
+class crm_phonecall(crm_base, osv.osv):
     """ Phonecall Cases """
 
     _name = "crm.phonecall"
     _description = "Phonecall"
     _order = "id desc"
-    _inherit = ['mailgate.thread']
     _columns = {
         # From crm.case
         'id': fields.integer('ID'),
