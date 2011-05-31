@@ -144,7 +144,9 @@ class ir_values(osv.osv):
             ids_res.append(self.create(cr, uid, vals))
         return ids_res
 
-    def get(self, cr, uid, key, key2, models, meta=False, context={}, res_id_req=False, without_user=True, key2_req=True):
+    def get(self, cr, uid, key, key2, models, meta=False, context=None, res_id_req=False, without_user=True, key2_req=True):
+        if context is None:
+            context = {}
         result = []
         for m in models:
             if isinstance(m, (list, tuple)):
@@ -172,8 +174,15 @@ class ir_values(osv.osv):
                 else:
                     where.append('res_id=%s')
                     params.append(res_id)
-
-            where.append('(user_id=%s or (user_id IS NULL)) order by id')
+            order = 'id'
+            if key == 'default':
+                # Make sure we get first the values for specific users, then
+                # the global values. The map/filter below will retain the first
+                # value for any given name. The 'order by' will put the null
+                # values last; this may be postgres specific (it is the
+                # behavior in postgres at least since 8.2).
+                order = 'user_id'
+            where.append('(user_id=%s or (user_id IS NULL)) order by '+ order)
             params.append(uid)
             clause = ' and '.join(where)
             cr.execute('select id,name,value,object,meta, key from ir_values where ' + clause, params)
