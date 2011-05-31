@@ -462,7 +462,7 @@ class hr_payslip(osv.osv):
         def _sum_salary_rule_category(localdict, category, amount):
             if category.parent_id:
                 localdict = _sum_salary_rule_category(localdict, category.parent_id, amount)
-            localdict['categories'][category.code] = category.code in localdict['categories'] and localdict['categories'][category.code] + amount or amount
+            localdict['categories'].dict[category.code] = category.code in localdict['categories'].dict and localdict['categories'].dict[category.code] + amount or amount
             return localdict
 
         class BrowsableObject(object):
@@ -474,7 +474,7 @@ class hr_payslip(osv.osv):
                 self.dict = dict
 
             def __getattr__(self, attr):
-                return self.dict.__getitem__(attr)
+                return attr in self.dict and self.dict.__getitem__(attr) or 0.0
 
         class InputLine(BrowsableObject):
             """a class that will be used into the python code, mainly for usability purposes"""
@@ -527,6 +527,8 @@ class hr_payslip(osv.osv):
 
         #we keep a dict with the result because a value can be overwritten by another rule with the same code
         result_dict = {}
+        rules = {}
+        categories_dict = {}
         blacklist = []
         payslip_obj = self.pool.get('hr.payslip')
         inputs_obj = self.pool.get('hr.payslip.worked_days')
@@ -538,12 +540,14 @@ class hr_payslip(osv.osv):
         inputs = {}
         for input_line in payslip.input_line_ids:
             inputs[input_line.code] = input_line
-
+        
+        categories_obj = BrowsableObject(self.pool, cr, uid, payslip.employee_id.id, categories_dict)
         input_obj = InputLine(self.pool, cr, uid, payslip.employee_id.id, inputs)
         worked_days_obj = WorkedDays(self.pool, cr, uid, payslip.employee_id.id, worked_days)
         payslip_obj = Payslips(self.pool, cr, uid, payslip.employee_id.id, payslip)
+        rules_obj = BrowsableObject(self.pool, cr, uid, payslip.employee_id.id, rules)
 
-        localdict = {'categories': {}, 'payslip': payslip_obj, 'worked_days': worked_days_obj, 'inputs': input_obj}
+        localdict = {'categories': categories_obj, 'rules': rules_obj, 'payslip': payslip_obj, 'worked_days': worked_days_obj, 'inputs': input_obj}
         #get the ids of the structures on the contracts and their parent id as well
         structure_ids = self.pool.get('hr.contract').get_all_structures(cr, uid, contract_ids, context=context)
         #get the rules of the structure and thier children
@@ -565,9 +569,10 @@ class hr_payslip(osv.osv):
                     #check if there is already a rule computed with that code
                     previous_amount = rule.code in localdict and localdict[rule.code] or 0.0
                     #set/overwrite the amount computed for this rule in the localdict
-                    localdict[rule.code] = amount
+                    localdict[rule.code] = amount * qty
+                    rules[rule.code] = rule
                     #sum the amount for its salary category
-                    localdict = _sum_salary_rule_category(localdict, rule.category_id, amount - previous_amount)
+                    localdict = _sum_salary_rule_category(localdict, rule.category_id, (amount * qty) - previous_amount)
                     #create/overwrite the rule in the temporary results
                     result_dict[key] = {
                         'salary_rule_id': rule.id,
@@ -779,8 +784,8 @@ class hr_salary_rule(osv.osv):
 # payslip: object containing the payslips
 # employee: hr.employee object
 # contract: hr.contract object
-# rules: rules code (previously computed)
-# categories: dictionary containing the computed salary rule categories (sum of amount of all rules belonging to that category). Keys are the category codes.
+# rules: object containing the rules code (previously computed)
+# categories: object containing the computed salary rule categories (sum of amount of all rules belonging to that category). 
 # worked_days: object containing the computed worked days.
 # inputs: object containing the computed inputs.
 
@@ -794,14 +799,14 @@ result = contract.wage * 0.10''',
 # payslip: object containing the payslips
 # employee: hr.employee object
 # contract: hr.contract object
-# rules: rules code (previously computed)
-# categories: dictionary containing the computed salary rule categories (sum of amount of all rules belonging to that category). Keys are the category codes.
+# rules: object containing the rules code (previously computed)
+# categories: object containing the computed salary rule categories (sum of amount of all rules belonging to that category). 
 # worked_days: object containing the computed worked days
 # inputs: object containing the computed inputs
 
 # Note: returned value have to be set in the variable 'result'
 
-result = rules['NET'] > categories['NET'] * 0.10''',
+result = rules.NET > categories.NET * 0.10''',
         'condition_range': 'contract.wage',
         'sequence': 5,
         'appears_on_payslip': True,
