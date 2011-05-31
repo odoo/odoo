@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2011 OpenERP s.a. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,15 +19,12 @@
 #
 ##############################################################################
 
-from simple import simple
-from rml import rml, rml2html, rml2txt, odt2odt , html2html, makohtml2html
-from render import render
+""" Lower-level database access.
 
-try:
-    import Image
-except ImportError:
-    import logging
-    logging.warning('Python Imaging not installed, you can use only .JPG pictures !')
+This module provides access to the underlying database without going
+through the ORM. The goal is to gather sql_db.py and other various db
+code.
+
+"""
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

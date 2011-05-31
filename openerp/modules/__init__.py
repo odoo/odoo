@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2010-2011 OpenERP s.a. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -15,26 +16,29 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
-import pickle
-import openerp.osv as osv
-import openerp.pooler as pooler
+""" Modules (also called addons) management.
 
-def ir_set(cr, uid, key, key2, name, models, value, replace=True, isobject=False, meta=None):
-    obj = pooler.get_pool(cr.dbname).get('ir.values')
-    return obj.set(cr, uid, key, key2, name, models, value, replace, isobject, meta)
+"""
 
-def ir_del(cr, uid, id):
-    obj = pooler.get_pool(cr.dbname).get('ir.values')
-    return obj.unlink(cr, uid, [id])
+import openerp.modules.db
+import openerp.modules.graph
+import openerp.modules.loading
+import openerp.modules.migration
+import openerp.modules.module
 
-def ir_get(cr, uid, key, key2, models, meta=False, context=None, res_id_req=False):
-    obj = pooler.get_pool(cr.dbname).get('ir.values')
-    res = obj.get(cr, uid, key, key2, models, meta=meta, context=context, res_id_req=res_id_req)
-    return res
+# TODO temporarily expose those things
+from openerp.modules.module import \
+    get_modules, get_modules_with_version, \
+    load_information_from_description_file, \
+    get_module_resource, zip_directory, \
+    get_module_path, initialize_sys_path, \
+    register_module_classes, init_module_models
+
+from openerp.modules.loading import load_modules
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

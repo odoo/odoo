@@ -19,64 +19,50 @@
 #
 ##############################################################################
 
-pool_dic = {}
+""" Functions kept for backward compatibility.
+
+    They are simple wrappers around a global RegistryManager methods.
+
+"""
+
+from openerp.modules.registry import RegistryManager
+
+_Registries = None
+
+
+def ensure_registries():
+    global _Registries
+    if _Registries is None:
+        _Registries = RegistryManager()
+
 
 def get_db_and_pool(db_name, force_demo=False, status=None, update_module=False, pooljobs=True):
-    if not status:
-        status={}
+    """Create and return a database connection and a newly initialized registry."""
+    ensure_registries()
+    bound_registry = _Registries.get(db_name, force_demo, status, update_module, pooljobs)
+    return bound_registry.db, bound_registry.registry
 
-    db = get_db_only(db_name)
 
-    if db_name in pool_dic:
-        pool = pool_dic[db_name]
-    else:
-        import openerp.addons as addons
-        import openerp.osv.osv as osv_osv
-        pool = osv_osv.osv_pool()
-        pool_dic[db_name] = pool
-
-        try:
-            addons.load_modules(db, force_demo, status, update_module)
-        except Exception:
-            del pool_dic[db_name]
-            raise
-
-        cr = db.cursor()
-        try:
-            pool.init_set(cr, False)
-            pool.get('ir.actions.report.xml').register_all(cr)
-            cr.commit()
-        finally:
-            cr.close()
-
-        if pooljobs:
-            pool.get('ir.cron').restart(db.dbname)
-    return db, pool
+def delete_pool(db_name):
+    """Delete an existing registry."""
+    ensure_registries()
+    _Registries.delete(db_name)
 
 
 def restart_pool(db_name, force_demo=False, status=None, update_module=False):
-    if db_name in pool_dic:
-        del pool_dic[db_name]
-    return get_db_and_pool(db_name, force_demo, status, update_module=update_module)
-
-
-def get_db_only(db_name):
-    # ATTENTION:
-    # do not put this import outside this function
-    # sql_db must not be loaded before the logger is initialized.
-    # sql_db import psycopg2.tool which create a default logger if there is not.
-    # this resulting of having the logs outputed twice...
-    import openerp.sql_db as sql_db
-    db = sql_db.db_connect(db_name)
-    return db
+    """Delete an existing registry and return a database connection and a newly initialized registry."""
+    ensure_registries()
+    bound_registry = _Registries.new(db_name, force_demo, status, update_module, True)
+    return bound_registry.db, bound_registry.registry
 
 
 def get_db(db_name):
+    """Return a database connection. The corresponding registry is initialized."""
     return get_db_and_pool(db_name)[0]
 
 
 def get_pool(db_name, force_demo=False, status=None, update_module=False):
-    pool = get_db_and_pool(db_name, force_demo, status, update_module)[1]
-    return pool
+    """Return a model registry."""
+    return get_db_and_pool(db_name, force_demo, status, update_module)[1]
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

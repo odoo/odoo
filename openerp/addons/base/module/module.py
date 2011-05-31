@@ -30,7 +30,7 @@ import urllib
 import zipfile
 import zipimport
 
-import addons
+import openerp.modules as addons
 import pooler
 import release
 import tools
@@ -79,8 +79,7 @@ class module(osv.osv):
         info = {}
         try:
             info = addons.load_information_from_description_file(name)
-            if 'version' in info:
-                info['version'] = release.major_version + '.' + info['version']
+            info['version'] = release.major_version + '.' + info['version']
         except Exception:
             cls.__logger.debug('Error when trying to fetch informations for '
                                 'module %s', name, exc_info=True)
@@ -479,7 +478,9 @@ class module(osv.osv):
                 categs = categs[1:]
             self.write(cr, uid, [mod_browse.id], {'category_id': p_id})
 
-    def update_translations(self, cr, uid, ids, filter_lang=None, context={}):
+    def update_translations(self, cr, uid, ids, filter_lang=None, context=None):
+        if context is None:
+            context = {}
         logger = logging.getLogger('i18n')
         if not filter_lang:
             pool = pooler.get_pool(cr.dbname)

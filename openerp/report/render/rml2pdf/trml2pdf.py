@@ -451,7 +451,7 @@ class _rml_canvas(object):
                     res = utils._regex.findall(node.text)
                     for key in res:
                         newtext = eval(key, {}, self.localcontext)
-                        node.text = newtext
+                        node.text = newtext or ''
                 image_data = None
                 if node.text:
                     image_data = base64.decodestring(node.text)
@@ -795,10 +795,10 @@ class _rml_flowable(object):
                         return False
                 else:
                     import base64
+                    newtext = node.text
                     if self.localcontext:
                         newtext = utils._process_text(self, node.text or '')
-                        node.text = newtext
-                    image_data = base64.decodestring(node.text)
+                    image_data = base64.decodestring(newtext)
                 if not image_data:
                     self._logger.debug("No inline image data")
                     return False

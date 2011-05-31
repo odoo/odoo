@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2011 OpenERP s.a. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,15 +19,17 @@
 #
 ##############################################################################
 
-from simple import simple
-from rml import rml, rml2html, rml2txt, odt2odt , html2html, makohtml2html
-from render import render
+""" Library-wide configuration variables.
 
-try:
-    import Image
-except ImportError:
-    import logging
-    logging.warning('Python Imaging not installed, you can use only .JPG pictures !')
+For now, configuration code is in openerp.tools.config. It is in mainly
+unprocessed form, e.g. addons_path is a string with commas-separated
+paths. The aim is to have code related to configuration (command line
+parsing, configuration file loading and saving, ...) in this module
+and provide real Python variables, e.g. addons_paths is really a list
+of paths.
+
+"""
+
+import deprecation
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

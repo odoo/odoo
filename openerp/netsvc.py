@@ -213,6 +213,19 @@ def init_logger():
     logger.addHandler(handler)
     logger.setLevel(int(tools.config['log_level'] or '0'))
 
+# A alternative logging scheme for automated runs of the
+# server intended to test it.
+def init_alternative_logger():
+    class H(logging.Handler):
+      def emit(self, record):
+        if record.levelno > 20:
+          print record.levelno, record.pathname, record.msg
+    handler = H()
+    logger = logging.getLogger()
+    logger.handlers = []
+    logger.addHandler(handler)
+    logger.setLevel(logging.ERROR)
+
 class Agent(object):
     """Singleton that keeps track of cancellable tasks to run at a given
        timestamp.
@@ -277,12 +290,13 @@ class Agent(object):
                 time.sleep(1)
             time.sleep(60)
 
-agent_runner = threading.Thread(target=Agent.runner, name="netsvc.Agent.runner")
-# the agent runner is a typical daemon thread, that will never quit and must be
-# terminated when the main process exits - with no consequence (the processing
-# threads it spawns are not marked daemon)
-agent_runner.setDaemon(True)
-agent_runner.start()
+def start_agent():
+    agent_runner = threading.Thread(target=Agent.runner, name="netsvc.Agent.runner")
+    # the agent runner is a typical daemon thread, that will never quit and must be
+    # terminated when the main process exits - with no consequence (the processing
+    # threads it spawns are not marked daemon)
+    agent_runner.setDaemon(True)
+    agent_runner.start()
 
 import traceback
 
@@ -393,19 +407,22 @@ def replace_request_password(args):
         args[2] = '*'
     return args
 
-class OpenERPDispatcher:
-    def log(self, title, msg, channel=logging.DEBUG_RPC, depth=None):
-        logger = logging.getLogger(title)
-        if logger.isEnabledFor(channel):
-            for line in pformat(msg, depth=depth).split('\n'):
-                logger.log(channel, line)
+def log(title, msg, channel=logging.DEBUG_RPC, depth=None, fn=""):
+    logger = logging.getLogger(title)
+    if logger.isEnabledFor(channel):
+        indent=''
+        indent_after=' '*len(fn)
+        for line in (fn+pformat(msg, depth=depth)).split('\n'):
+            logger.log(channel, indent+line)
+            indent=indent_after
 
+class OpenERPDispatcher:
+    def log(self, title, msg, channel=logging.DEBUG_RPC, depth=None, fn=""):
+        log(title, msg, channel=channel, depth=depth, fn=fn)
     def dispatch(self, service_name, method, params):
         try:
             logger = logging.getLogger('result')
-            self.log('service', service_name)
-            self.log('method', method)
-            self.log('params', replace_request_password(params), depth=(None if logger.isEnabledFor(logging.DEBUG_RPC_ANSWER) else 1))
+            self.log('service', tuple(replace_request_password(params)), depth=(None if logger.isEnabledFor(logging.DEBUG_RPC_ANSWER) else 1), fn='%s.%s'%(service_name,method))
             auth = getattr(self, 'auth_provider', None)
             result = ExportService.getService(service_name).dispatch(method, auth, params)
             self.log('result', result, channel=logging.DEBUG_RPC_ANSWER)

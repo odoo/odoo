@@ -304,9 +304,10 @@ form: module.record_id""" % (xml_id,)
             self.pool.get('ir.model.data')._unlink(cr, self.uid, d_model, ids)
 
     def _remove_ir_values(self, cr, name, value, model):
-        ir_value_ids = self.pool.get('ir.values').search(cr, self.uid, [('name','=',name),('value','=',value),('model','=',model)])
+        ir_values_obj = self.pool.get('ir.values')
+        ir_value_ids = ir_values_obj.search(cr, self.uid, [('name','=',name),('value','=',value),('model','=',model)])
         if ir_value_ids:
-            self.pool.get('ir.values').unlink(cr, self.uid, ir_value_ids)
+            ir_values_obj.unlink(cr, self.uid, ir_value_ids)
             self.pool.get('ir.model.data')._unlink(cr, self.uid, 'ir.values', ir_value_ids)
 
         return True

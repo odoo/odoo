@@ -23,18 +23,18 @@
 # OSV: Objects Services
 #
 
+import sys
+import inspect
 import orm
 import openerp.netsvc as netsvc
 import openerp.pooler as pooler
+import openerp.sql_db as sql_db
 import copy
 import logging
 from psycopg2 import IntegrityError, errorcodes
 from openerp.tools.func import wraps
 from openerp.tools.translate import translate
-
-module_list = []
-module_class_list = {}
-class_pool = {}
+from openerp.osv.orm import module_class_list
 
 class except_osv(Exception):
     def __init__(self, name, value, exc_type='warning'):
@@ -92,7 +92,7 @@ class object_proxy(netsvc.Service):
                                 ids = args[3]
                             else:
                                 ids = []
-                        cr = pooler.get_db_only(dbname).cursor()
+                        cr = sql_db.db_connect(db_name).cursor()
                         return src(obj, cr, uid, ids, context=(ctx or {}))
                     except Exception:
                         pass
@@ -103,7 +103,7 @@ class object_proxy(netsvc.Service):
                                  # be returned, it is the best we have.
 
                 try:
-                    cr = pooler.get_db_only(dbname).cursor()
+                    cr = sql_db.db_connect(db_name).cursor()
                     res = translate(cr, name=False, source_type=ttype,
                                     lang=lang, source=src)
                     if res:
@@ -117,7 +117,7 @@ class object_proxy(netsvc.Service):
                 return tr(src, 'code')
 
             try:
-                if not pooler.get_pool(dbname)._ready:
+                if pooler.get_pool(dbname)._init:
                     raise except_osv('Database not ready', 'Currently, this database is not fully loaded and can not be used.')
                 return f(self, dbname, *args, **kwargs)
             except orm.except_orm, inst:
@@ -202,163 +202,64 @@ class object_proxy(netsvc.Service):
             cr.close()
         return res
 
-object_proxy()
 
 class osv_pool(object):
+    """ Model registry for a particular database.
+
+    The registry is essentially a mapping between model names and model
+    instances. There is one registry instance per database.
+
+    """
+
     def __init__(self):
-        self._ready = False
-        self.obj_pool = {}
-        self.module_object_list = {}
-        self.created = []
+        self.obj_pool = {} # model name/model instance mapping
         self._sql_error = {}
         self._store_function = {}
         self._init = True
         self._init_parent = {}
-        self.logger = logging.getLogger("pool")
 
-    def init_set(self, cr, mode):
-        different = mode != self._init
-        if different:
-            if mode:
-                self._init_parent = {}
-            if not mode:
-                for o in self._init_parent:
-                    self.get(o)._parent_store_compute(cr)
-            self._init = mode
-
-        self._ready = True
-        return different
-
+    def do_parent_store(self, cr):
+        for o in self._init_parent:
+            self.get(o)._parent_store_compute(cr)
+        self._init = False
 
     def obj_list(self):
+        """ Return the list of model names in this registry."""
         return self.obj_pool.keys()
 
-    # adds a new object instance to the object pool.
-    # if it already existed, the instance is replaced
-    def add(self, name, obj_inst):
-        if name in self.obj_pool:
-            del self.obj_pool[name]
-        self.obj_pool[name] = obj_inst
+    def add(self, model_name, model):
+        """ Add or replace a model in the registry."""
+        self.obj_pool[model_name] = model
 
-        module = str(obj_inst.__class__)[6:]
-        module = module[:len(module)-1]
-        module = module.split('.')[0][2:]
-        self.module_object_list.setdefault(module, []).append(obj_inst)
-
-    # Return None if object does not exist
     def get(self, name):
-        obj = self.obj_pool.get(name, None)
-        return obj
+        """ Return a model for a given name or None if it doesn't exist."""
+        return self.obj_pool.get(name)
 
-    #TODO: pass a list of modules to load
     def instanciate(self, module, cr):
+        """ Instanciate all the classes of a given module for a particular db."""
+
         res = []
-        class_list = module_class_list.get(module, [])
-        for klass in class_list:
-            res.append(klass.createInstance(self, module, cr))
+
+        # Instanciate classes registered through their constructor and
+        # add them to the pool.
+        for klass in module_class_list.get(module, []):
+            res.append(klass.createInstance(self, cr))
+
         return res
 
-class osv_base(object):
-    def __init__(self, pool, cr):
-        pool.add(self._name, self)
-        self.pool = pool
-        super(osv_base, self).__init__(cr)
 
-    def __new__(cls):
-        module = str(cls)[6:]
-        module = module[:len(module)-1]
-        module = module.split('.')[0][2:]
-        if not hasattr(cls, '_module'):
-            cls._module = module
-        module_class_list.setdefault(cls._module, []).append(cls)
-        class_pool[cls._name] = cls
-        if module not in module_list:
-            module_list.append(cls._module)
-        return None
+class osv_memory(orm.orm_memory):
+    """ Deprecated class. """
+    pass
 
-class osv_memory(osv_base, orm.orm_memory):
-    #
-    # Goal: try to apply inheritancy at the instanciation level and
-    #       put objects in the pool var
-    #
-    def createInstance(cls, pool, module, cr):
-        parent_names = getattr(cls, '_inherit', None)
-        if parent_names:
-            if isinstance(parent_names, (str, unicode)):
-                name = cls._name or parent_names
-                parent_names = [parent_names]
-            else:
-                name = cls._name
-            if not name:
-                raise TypeError('_name is mandatory in case of multiple inheritance')
 
-            for parent_name in ((type(parent_names)==list) and parent_names or [parent_names]):
-                parent_class = pool.get(parent_name).__class__
-                assert pool.get(parent_name), "parent class %s does not exist in module %s !" % (parent_name, module)
-                nattr = {}
-                for s in ('_columns', '_defaults'):
-                    new = copy.copy(getattr(pool.get(parent_name), s))
-                    if hasattr(new, 'update'):
-                        new.update(cls.__dict__.get(s, {}))
-                    else:
-                        new.extend(cls.__dict__.get(s, []))
-                    nattr[s] = new
-                cls = type(name, (cls, parent_class), nattr)
+class osv(orm.orm):
+    """ Deprecated class. """
+    pass
 
-        obj = object.__new__(cls)
-        obj.__init__(pool, cr)
-        return obj
-    createInstance = classmethod(createInstance)
 
-class osv(osv_base, orm.orm):
-    #
-    # Goal: try to apply inheritancy at the instanciation level and
-    #       put objects in the pool var
-    #
-    def createInstance(cls, pool, module, cr):
-        parent_names = getattr(cls, '_inherit', None)
-        if parent_names:
-            if isinstance(parent_names, (str, unicode)):
-                name = cls._name or parent_names
-                parent_names = [parent_names]
-            else:
-                name = cls._name
-            if not name:
-                raise TypeError('_name is mandatory in case of multiple inheritance')
-
-            for parent_name in ((type(parent_names)==list) and parent_names or [parent_names]):
-                parent_class = pool.get(parent_name).__class__
-                assert pool.get(parent_name), "parent class %s does not exist in module %s !" % (parent_name, module)
-                nattr = {}
-                for s in ('_columns', '_defaults', '_inherits', '_constraints', '_sql_constraints'):
-                    new = copy.copy(getattr(pool.get(parent_name), s))
-                    if hasattr(new, 'update'):
-                        new.update(cls.__dict__.get(s, {}))
-                    else:
-                        if s=='_constraints':
-                            for c in cls.__dict__.get(s, []):
-                                exist = False
-                                for c2 in range(len(new)):
-                                     #For _constraints, we should check field and methods as well
-                                     if new[c2][2]==c[2] and (new[c2][0] == c[0] \
-                                            or getattr(new[c2][0],'__name__', True) == \
-                                                getattr(c[0],'__name__', False)):
-                                        # If new class defines a constraint with
-                                        # same function name, we let it override
-                                        # the old one.
-                                        new[c2] = c
-                                        exist = True
-                                        break
-                                if not exist:
-                                    new.append(c)
-                        else:
-                            new.extend(cls.__dict__.get(s, []))
-                    nattr[s] = new
-                cls = type(name, (cls, parent_class), nattr)
-        obj = object.__new__(cls)
-        obj.__init__(pool, cr)
-        return obj
-    createInstance = classmethod(createInstance)
+def start_object_proxy():
+    object_proxy()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
