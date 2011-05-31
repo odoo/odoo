@@ -18,19 +18,6 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="hr_contibution_register_inherit_form">
-            <field name="name">hr.contribution.register.inherit.form</field>
-            <field name="model">hr.contribution.register</field>
-            <field name="inherit_id" ref="hr_payroll.hr_contribution_register_form"/>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-             <xpath expr="/form/notebook" position="before">
-                <newline/>
-                <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
-             </xpath>
-            </field>
-        </record>
-
     <!-- Adding Account fields to the Salary Rules -->
 
         <record id="hr_salary_rule_form_inherit" model="ir.ui.view">
@@ -40,10 +27,10 @@
             <field name="arch" type="xml">
               <xpath expr="/form/notebook/page[@string='Child Rules']" position="after">
                     <page string="Accounting">
-	                    <field name="account_debit" />
-	                    <field name="account_credit"/>
-	                    <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
-	                    <field name="account_tax_id"/>
+                        <field name="account_debit" />
+                        <field name="account_credit"/>
+                        <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
+                        <field name="account_tax_id"/>
                     </page>
                 </xpath>
             </field>
@@ -57,11 +44,11 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
             <field name="arch" type="xml">
-	            <xpath expr="/form/notebook/page/group/field[@name='advantages']" position="after">
-	               <separator colspan="4" string="Accounting"/>
-	                <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
-	                <field name="journal_id"/>
-	            </xpath>
+                <xpath expr="/form/notebook/page/group/field[@name='advantages']" position="after">
+                   <separator colspan="4" string="Accounting"/>
+                    <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
+                    <field name="journal_id"/>
+                </xpath>
             </field>
         </record>
 

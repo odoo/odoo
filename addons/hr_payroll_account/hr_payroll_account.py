@@ -27,16 +27,6 @@ from osv import fields, osv
 from tools import config
 from tools.translate import _
 
-
-class contrib_register(osv.osv):
-    _inherit = 'hr.contribution.register'
-    _description = 'Contribution Register'
-
-    _columns = {
-        'analytic_account_id':fields.many2one('account.analytic.account', 'Analytic Account'),
-    }
-contrib_register()
-
 #class account_move_line(osv.osv):
 #
 #    _inherit = 'account.move.line'
@@ -83,8 +73,6 @@ class hr_payslip(osv.osv):
 #TODO: to correct
     def process_sheet(self, cr, uid, ids, context=None):
         move_pool = self.pool.get('account.move')
-        movel_pool = self.pool.get('account.move.line')
-        invoice_pool = self.pool.get('account.invoice')
         period_pool = self.pool.get('account.period')
         timenow = time.strftime('%Y-%m-%d')
 
@@ -102,34 +90,34 @@ class hr_payslip(osv.osv):
 
             name = _('Payslip of %s') % (slip.employee_id.name)
             move = {
+                'narration': name,
+                'date': timenow,
+                'ref': slip.number,
                 'journal_id': slip.journal_id.id,
                 'period_id': period_id,
-                'date': timenow,
-                'ref':slip.number,
-                'narration': name
             }
             for line in slip.line_ids:
                 amt = slip.credit_note and -line.total or line.total
                 partner_id = False
-                name = line.name
                 debit_account_id = line.salary_rule_id.account_debit.id
                 credit_account_id = line.salary_rule_id.account_credit.id
-                debit_line = (0,0,{
+                debit_line = (0, 0, {
                     'name': line.name,
+                    'date': timenow,
+                    'partner_id': partner_id,
                     'account_id': debit_account_id,
+                    'journal_id': slip.journal_id.id,
+                    'period_id': period_id,
                     'debit': amt > 0.0 and amt or 0.0,
                     'credit': amt < 0.0 and -amt or 0.0,
-                    'date': timenow,
-                    'journal_id': slip.journal_id.id,
-                    'period_id': period_id,
                 })
-                credit_line = (0,0,{
+                credit_line = (0, 0, {
+                    'name': line.name,
                     'date': timenow,
-                    'journal_id': slip.journal_id.id,
-                    'period_id': period_id,
-                    'name': name,
                     'partner_id': partner_id,
                     'account_id': credit_account_id,
+                    'journal_id': slip.journal_id.id,
+                    'period_id': period_id,
                     'debit': amt < 0.0 and -amt or 0.0,
                     'credit': amt > 0.0 and amt or 0.0,
                 })
@@ -139,35 +127,37 @@ class hr_payslip(osv.osv):
                 if credit_account_id:
                     line_ids.append(credit_line)
                     credit_sum += credit_line[2]['credit']
-            
+
             if debit_sum > credit_sum:
-                adjust_credit = (0,0,{
-                    'date': timenow,
-                    'journal_id': slip.journal_id.id,
-                    'period_id': period_id,
+                adjust_credit = (0, 0, {
                     'name': _('Adjustment Entry'),
+                    'date': timenow,
                     'partner_id': partner_id,
                     'account_id': slip.journal_id.default_credit_account_id.id,
+                    'journal_id': slip.journal_id.id,
+                    'period_id': period_id,
                     'debit': 0.0,
                     'credit': debit_sum - credit_sum,
                 })
                 line_ids.append(adjust_credit)
             elif debit_sum < credit_sum:
-                adjust_debit = (0,0,{
-                    'date': timenow,
-                    'journal_id': slip.journal_id.id,
-                    'period_id': period_id,
+                adjust_debit = (0, 0, {
                     'name': _('Adjustment Entry'),
+                    'date': timenow,
                     'partner_id': partner_id,
                     'account_id': slip.journal_id.default_debit_account_id.id,
+                    'journal_id': slip.journal_id.id,
+                    'period_id': period_id,
                     'debit': credit_sum - debit_sum,
                     'credit': 0.0
                 })
                 line_ids.append(adjust_debit)
-                
+
             move.update({'line_id': line_ids})
             move_id = move_pool.create(cr, uid, move, context=context)
             self.write(cr, uid, [slip.id], {'move_id': move_id}, context=context)
+            if slip.journal_id.entry_posted:
+                move_pool.post(cr, uid, [move_id], context=context)
         return super(hr_payslip, self).process_sheet(cr, uid, [slip.id], context=context)
 
 #TODO: to clean: the verofying doesn't do anything in the accounting..
