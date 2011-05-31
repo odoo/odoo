@@ -183,7 +183,7 @@ class account_asset_asset(osv.osv):
         'method_time': fields.selection([('delay','Delay'),('end','Ending Period')], 'Time Method', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'prorata':fields.boolean('Prorata Temporis', Readonly="True", help='Indicates that the accounting entries for this asset have to be done from the purchase date instead of the first January'),
         'history_ids': fields.one2many('account.asset.history', 'asset_id', 'History', readonly=True),
-        'depreciation_line_ids': fields.one2many('account.asset.depreciation.line', 'asset_id', 'Depreciation Lines', readonly=True,),
+        'depreciation_line_ids': fields.one2many('account.asset.depreciation.line', 'asset_id', 'Depreciation Lines'),
         'salvage_value': fields.float('Salvage Value', digits_compute=dp.get_precision('Account'), help="It is the amount you plan to have that you cannot depreciate."),
     }
     _defaults = {
