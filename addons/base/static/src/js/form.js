@@ -1122,7 +1122,7 @@ openerp.base.form.Many2ManyListView = openerp.base.ListView.extend({
         var self = this;
         pop.on_select_element.add(function(element_id) {
             if(! _.detect(self.dataset.ids, function(x) {return x == element_id;})) {
-                self.dataset.ids.set_ids([].concat(self.dataset.ids, [element_id]));
+                self.dataset.set_ids([].concat(self.dataset.ids, [element_id]));
                 self.reload_content();
             }
             pop.stop();
