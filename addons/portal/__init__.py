@@ -21,5 +21,6 @@
 
 import portal
 import wizard
+import res_user
 import ir_ui_menu
 

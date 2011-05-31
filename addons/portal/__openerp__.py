@@ -39,7 +39,7 @@ module 'share'.
     'demo_xml': [],
     'data': [
         'security/portal_security.xml', 'security/ir.model.access.csv',
-        'portal_view.xml', 'wizard_view.xml',
+        'portal_view.xml', 'wizard_view.xml', 'res_user_view.xml',
     ],
     'installable': True,
     'certificate' : '',
