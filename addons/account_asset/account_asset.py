@@ -105,9 +105,11 @@ class account_asset_asset(osv.osv):
             old_depreciation_line_ids = depreciation_lin_obj.search(cr, uid, [('asset_id', '=', asset.id), ('move_id', '=', False)])
             if old_depreciation_line_ids:
                 depreciation_lin_obj.unlink(cr, uid, old_depreciation_line_ids, context=context)
-            delay_interval = undone_dotation_number = asset.method_delay - len(asset.account_move_line_ids) or 1
-            if asset.prorata and asset.method == 'linear':
-                undone_dotation_number += 1
+            undone_dotation_number = asset.method_delay - len(asset.account_move_line_ids)
+            if asset.account_move_line_ids and asset.prorata and asset.method == 'linear':
+                undone_dotation_number = (asset.method_delay - len(asset.account_move_line_ids)) + 1
+            elif asset.prorata and asset.method == 'linear':
+                undone_dotation_number = asset.method_delay + 1
             residual_amount = asset.value_residual
             depreciation_date = datetime.strptime(self._get_last_depreciation_date(cr, uid, [asset.id], context)[asset.id], '%Y-%m-%d')
             day = depreciation_date.day
@@ -119,13 +121,14 @@ class account_asset_asset(osv.osv):
                     amount = residual_amount
                 else:
                     if asset.method == 'linear':
-                        amount = asset.value_residual / delay_interval
-                        if asset.prorata:
+                        amount = asset.value_residual / undone_dotation_number
+                        if asset.prorata and not asset.account_move_line_ids:
+                            amount = asset.value_residual / asset.method_delay
                             if i == 1:
                                 days = total_days - float(depreciation_date.strftime('%j'))
-                                amount = (asset.value_residual / delay_interval) / total_days * days
+                                amount = (asset.value_residual / asset.method_delay) / total_days * days
                             elif i == undone_dotation_number:
-                                amount = (asset.value_residual / delay_interval) / total_days * (total_days - days)
+                                amount = (asset.value_residual / asset.method_delay) / total_days * (total_days - days)
                     else:
                         amount = residual_amount * asset.method_progress_factor
                 residual_amount -= amount
