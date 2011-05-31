@@ -162,7 +162,9 @@ openerp.base.BasicController = Class.extend( /** @lends openerp.base.BasicContro
     init: function(element_id) {
         this.element_id = element_id;
         this.$element = $('#' + element_id);
-        openerp.screen[element_id] = this;
+        if (element_id) {
+            openerp.screen[element_id] = this;
+        }
 
         // Transform on_* method into openerp.base.callbacks
         for (var name in this) {
