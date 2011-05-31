@@ -992,6 +992,8 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
     init: function(view, node) {
         this._super(view, node);
         this.template = "FieldOne2Many";
+        this.is_started = $.Deferred();
+        this.is_setted = $.Deferred();
     },
     start: function() {
         this._super.apply(this, arguments);
@@ -1011,32 +1013,28 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
         this.viewmanager = new openerp.base.ViewManager(this.view.session,
             this.element_id, this.dataset, views);
         this.viewmanager.start();
-        
-        var hack = {loaded: false};
-        var view = this.viewmanager.views[this.viewmanager.active_view].controller;
-        view.on_loaded.add_last(function() {
-            if (! hack.loaded) {
-                self.is_started = true;
-                self.check_load();
-                hack.loaded = true;
+        this.viewmanager.on_controller_inited.add_last(function(view_type) {
+            if (view_type == "list") {
+                self.is_started.resolve();
+                // TODO niv
+            } else {
+                // TODO niv
             }
+        });
+        
+        $.when(this.is_started, this.is_setted).then(function() {
+            var view = self.viewmanager.views[self.viewmanager.active_view].controller;
+            view.reload_content();
         });
     },
     set_value: function(value) {
         if(value != false) {
             this.dataset.set_ids(value);
-            this.is_setted = true;
-            this.check_load();
-        }
-    },
-    check_load: function() {
-        if(this.is_started && this.is_setted) {
-            var view = this.viewmanager.views[this.viewmanager.active_view].controller;
-            view.reload_content();
+            this.is_setted.resolve();
         }
     },
     get_value: function(value) {
-        //TODO
+        //TODO niv
         return [];
     }
 });
@@ -1046,8 +1044,8 @@ openerp.base.form.FieldMany2Many = openerp.base.form.Field.extend({
         this._super(view, node);
         this.template = "FieldMany2Many";
         this.list_id = _.uniqueId("many2many");
-        this.is_started = false;
-        this.is_setted = false;
+        this.is_started = $.Deferred();
+        this.is_setted = $.Deferred();
     },
     start: function() {
         this._super.apply(this, arguments);
@@ -1069,29 +1067,21 @@ openerp.base.form.FieldMany2Many = openerp.base.form.Field.extend({
             });
         this.list_view.m2m_field = this;
         this.list_view.start();
-        var hack = {loaded: false};
         this.list_view.on_loaded.add_last(function() {
-            if (! hack.loaded) {
-                self.is_started = true;
-                self.check_load();
-                hack.loaded = true;
-            }
+            self.is_started.resolve();
+        });
+        $.when(this.is_started, this.is_setted).then(function() {
+            self.list_view.reload_content();
         });
     },
     set_value: function(value) {
         if (value != false) {
             this.dataset.set_ids(value);
-            this.is_setted = true;
-            this.check_load();
+            this.is_setted.resolve();
         }
     },
     get_value: function() {
         return [[6,false,this.dataset.ids]];
-    },
-    check_load: function() {
-        if(this.is_started && this.is_setted) {
-            this.list_view.reload_content();
-        }
     }
 });
 
