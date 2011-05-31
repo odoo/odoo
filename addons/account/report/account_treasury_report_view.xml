@@ -15,7 +15,7 @@
                 <field name="balance"/>
                 <field name="starting_balance"/>
                 <field name="ending_balance"/>
-                <field name="company_id" invisible="1" groups="base.group_multi_company"/>
+                <field name="company_id" groups="base.group_multi_company"/>
            </tree>
         </field>
     </record>
@@ -39,6 +39,7 @@
                 <group colspan="10" col="12">
                     <field name="fiscalyear_id"/>
                     <field name="period_id"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                 </group>
                  <newline/>
             </search>

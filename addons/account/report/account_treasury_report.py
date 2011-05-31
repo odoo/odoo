@@ -31,7 +31,6 @@ class account_treasury_report(osv.osv):
     def _compute_balances(self, cr, uid, ids, field_names, arg=None, context=None,
                   query='', query_params=()):
         all_treasury_lines = self.search(cr, uid, [], context=context)
-        ref_dict = {}
         current_sum = 0
         res = dict((id, dict((fn, 0.0) for fn in field_names)) for id in all_treasury_lines)
         for record in self.browse(cr, uid, all_treasury_lines, context=context):
