@@ -176,8 +176,8 @@ class account_asset_asset(osv.osv):
 
         'method': fields.selection([('linear','Linear'),('progressif','Progressive')], 'Computation Method', required=True, readonly=True, states={'draft':[('readonly',False)]}, help="Linear: Calculated on basis of Gross Value/During (interval) \
          \nProgressive: Calculated on basis of Gross Value * Progressif Factor"),
-        'method_delay': fields.integer('During (interval)', readonly=True, states={'draft':[('readonly',False)]}, help="Calculates Depreciation within specified interval"),
-        'method_period': fields.integer('Depre. all (period)', readonly=True, states={'draft':[('readonly',False)]}),
+        'method_delay': fields.integer('Number of Depreciation', readonly=True, states={'draft':[('readonly',False)]}, help="Calculates Depreciation within specified interval"),
+        'method_period': fields.integer('Period Length', readonly=True, states={'draft':[('readonly',False)]}),
         'method_end': fields.date('Ending date'),
         'method_progress_factor': fields.float('Progressif Factor', readonly=True, states={'draft':[('readonly',False)]}),
         'value_residual': fields.function(_amount_residual, method=True, digits_compute=dp.get_precision('Account'), string='Residual Value'),
