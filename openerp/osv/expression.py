@@ -27,6 +27,69 @@ NOT_OPERATOR = '!'
 OR_OPERATOR = '|'
 AND_OPERATOR = '&'
 
+TRUE_DOMAIN = [(1,'=',1)]
+FALSE_DOMAIN = [(0,'=',1)]
+
+def normalize(domain):
+    """Returns a normalized version of ``domain_expr``, where all implicit '&' operators
+       have been made explicit. One property of normalized domain expressions is that they
+       can be easily combined together as if they were single domain components.
+    """
+    assert isinstance(domain, (list, tuple)), "Domains to normalize must have a 'domain' form: a list or tuple of domain components"
+    if not domain:
+        return TRUE_DOMAIN
+    result = []
+    expected = 1                            # expected number of expressions
+    op_arity = {NOT_OPERATOR: 1, AND_OPERATOR: 2, OR_OPERATOR: 2}
+    for token in domain:
+        if expected == 0:                   # more than expected, like in [A, B]
+            result[0:0] = ['&']             # put an extra '&' in front
+            expected = 1
+        result.append(token)
+        if isinstance(token, (list,tuple)): # domain term
+            expected -= 1
+        else:
+            expected += op_arity.get(token, 0) - 1
+    assert expected == 0
+    return result
+
+def combine(operator, unit, zero, domains):
+    """Returns a new domain expression where all domain components from ``domains``
+       have been added together using the binary operator ``operator``.
+
+       :param unit: the identity element of the domains "set" with regard to the operation
+                    performed by ``operator``, i.e the domain component ``i`` which, when
+                    combined with any domain ``x`` via ``operator``, yields ``x``. 
+                    E.g. [(1,'=',1)] is the typical unit for AND_OPERATOR: adding it
+                    to any domain component gives the same domain.
+       :param zero: the absorbing element of the domains "set" with regard to the operation
+                    performed by ``operator``, i.e the domain component ``z`` which, when
+                    combined with any domain ``x`` via ``operator``, yields ``z``. 
+                    E.g. [(1,'=',1)] is the typical zero for OR_OPERATOR: as soon as
+                    you see it in a domain component the resulting domain is the zero.
+    """
+    result = []
+    count = 0
+    for domain in domains:
+        if domain == unit:
+            continue
+        if domain == zero:
+            return zero
+        if domain:
+            result += domain
+            count += 1
+    result = [operator] * (count - 1) + result
+    return result
+
+def AND(domains):
+    """ AND([D1,D2,...]) returns a domain representing D1 and D2 and ... """
+    return combine(AND_OPERATOR, TRUE_DOMAIN, FALSE_DOMAIN, domains)
+
+def OR(domains):
+    """ OR([D1,D2,...]) returns a domain representing D1 or D2 or ... """
+    return combine(OR_OPERATOR, FALSE_DOMAIN, TRUE_DOMAIN, domains)
+
+
 class expression(object):
     """
     parse a domain expression
@@ -47,30 +110,6 @@ class expression(object):
            and len(element) == 3 \
            and (((not internal) and element[1] in OPS) \
                 or (internal and element[1] in INTERNAL_OPS))
-
-    @classmethod
-    def normalize_domain(cls, domain_expr):
-        """Returns a normalized version of ``domain_expr``, where all implicit '&' operators
-           have been made explicit. One property of normalized domain expressions is that they
-           can be easily combined together as if they were single domain components.
-        """
-        assert isinstance(domain_expr, (list, tuple)), "Domain to normalize must have a 'domain' form: a list or tuple of domain components"
-        missing_operators = -1
-        for item in domain_expr:
-            if cls._is_operator(item):
-                if item != NOT_OPERATOR:
-                    missing_operators -= 1
-            else:
-                missing_operators += 1
-        return [AND_OPERATOR] * missing_operators + domain_expr
-
-    def normalize(self):
-        """Make this expression normalized, i.e. change it so that all implicit '&'
-           operator become explicit. If the expression had already been parsed,
-           there is no need to do it again.
-        """
-        self.__exp = expression.normalize_domain(self.__exp)
-        return self
 
     def __execute_recursive_in(self, cr, s, f, w, ids, op, type):
         # todo: merge into parent query as sub-query

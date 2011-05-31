@@ -27,6 +27,8 @@ import tools
 from tools.safe_eval import safe_eval as eval
 from tools.misc import unquote as unquote
 
+SUPERUSER_UID = 1
+
 class ir_rule(osv.osv):
     _name = 'ir.rule'
     _order = 'name'
@@ -46,31 +48,12 @@ class ir_rule(osv.osv):
         return {'user': self.pool.get('res.users').browse(cr, 1, uid),
                 'time':time}
 
-    def domain_binary_operation(self, cr, uid, str_domain_1, str_domain_2, operator):
-        """Returns the string representation of the binary operation designated by
-          ``operator`` (should be '|' or '&') for the two string domains ``str_domain_1``
-          and ``str_domain_2``  """
-        eval_context = self._eval_context_for_combinations()
-        canonical_domain_1 = expression.expression.normalize_domain(eval(str_domain_1 or '[]', eval_context))
-        canonical_domain_2 = expression.expression.normalize_domain(eval(str_domain_2 or '[]', eval_context))
-        return str([operator] + canonical_domain_1 + canonical_domain_1)
-
-    def domain_conjunction(self, cr, uid, str_domain_1, str_domain_2):
-        """Returns the string representation of the conjunction (AND) of the
-           two string domains ``str_domain_1`` and ``str_domain_2``"""
-        return self.domain_binary_operation(cr, uid, str_domain_1, str_domain_2, expression.AND_OPERATOR)
-
-    def domain_disjunction(self, cr, uid, str_domain_1, str_domain_2):
-        """Returns the string representation of the disjunction (OR) of the
-           two string domains ``str_domain_1`` and ``str_domain_2``"""
-        return self.domain_binary_operation(cr, uid, str_domain_1, str_domain_2, expression.OR_OPERATOR)
-
     def _domain_force_get(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
         eval_context = self._eval_context(cr, uid)
         for rule in self.browse(cr, uid, ids, context):
             if rule.domain_force:
-                res[rule.id] = expression.expression.normalize_domain(eval(rule.domain_force, eval_context))
+                res[rule.id] = expression.normalize(eval(rule.domain_force, eval_context))
             else:
                 res[rule.id] = []
         return res
@@ -116,25 +99,12 @@ class ir_rule(osv.osv):
         (_check_model_obj, 'Rules are not supported for osv_memory objects !', ['model_id'])
     ]
 
-    def domain_create(self, cr, uid, rule_ids):
-        count = 0
-        dom = []
-        for rule in self.browse(cr, uid, rule_ids):
-            if rule.domain:
-                dom += rule.domain
-                count += 1
-        if count:
-            return [expression.AND_OPERATOR] * (count-1) + dom
-        return []
-
     @tools.cache()
     def _compute_domain(self, cr, uid, model_name, mode="read"):
         if mode not in self._MODES:
             raise ValueError('Invalid mode: %r' % (mode,))
-        group_rule = {}
-        global_rules = []
 
-        if uid == 1:
+        if uid == SUPERUSER_UID:
             return None
         cr.execute("""SELECT r.id
                 FROM ir_rule r
@@ -144,26 +114,26 @@ class ir_rule(osv.osv):
                 AND (r.id IN (SELECT rule_group_id FROM rule_group_rel g_rel
                             JOIN res_groups_users_rel u_rel ON (g_rel.group_id = u_rel.gid)
                             WHERE u_rel.uid = %s) OR r.global)""", (model_name, uid))
-        ids = map(lambda x: x[0], cr.fetchall())
-        if ids:
-            for rule in self.browse(cr, uid, ids):
+        rule_ids = [x[0] for x in cr.fetchall()]
+        if rule_ids:
+            # browse user as super-admin root to avoid access errors!
+            user = self.pool.get('res.users').browse(cr, SUPERUSER_UID, uid)
+            global_domains = []                 # list of domains
+            group_domains = {}                  # map: group -> list of domains
+            for rule in self.browse(cr, SUPERUSER_UID, rule_ids):
+                dom = expression.normalize(rule.domain)
                 for group in rule.groups:
-                    group_rule.setdefault(group.id, []).append(rule.id)
+                    if group in user.groups_id:
+                        group_domains.setdefault(group, []).append(dom)
                 if not rule.groups:
-                  global_rules.append(rule.id)
-            global_domain = self.domain_create(cr, uid, global_rules)
-            count = 0
-            group_domains = []
-            for value in group_rule.values():
-                group_domain = self.domain_create(cr, uid, value)
-                if group_domain:
-                    group_domains += group_domain
-                    count += 1
-            if count and global_domain:
-                return [expression.AND_OPERATOR] + global_domain + [expression.OR_OPERATOR] * (count-1) + group_domains
-            if count:
-                return [expression.OR_OPERATOR] * (count-1) + group_domains
-            return global_domain
+                    global_domains.append(dom)
+            # combine global domains and group domains
+            if group_domains:
+                group_domain = expression.OR(map(expression.AND, group_domains.values()))
+            else:
+                group_domain = []
+            domain = expression.AND(global_domains + [group_domain])
+            return domain
         return []
 
     def clear_cache(self, cr, uid):
