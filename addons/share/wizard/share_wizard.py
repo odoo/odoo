@@ -83,9 +83,9 @@ class share_create(osv.osv_memory):
 
     def _user_type_selection(self, cr, uid, context=None):
         result = [('new','New users (emails required)'),
-                   ('existing','Existing external users')]
+                   ('existing','Users you already shared with')]
         if self.has_extended_share(cr, uid, context=context):
-            result.append(('groups','Existing groups of users'))
+            result.append(('groups','Existing groups (Portals setup only)'))
         return result
 
     """Override of create() to auto-compute the action name"""
@@ -123,7 +123,7 @@ class share_create(osv.osv_memory):
     def go_step_1(self, cr, uid, ids, context=None):
         dummy, step1_form_view_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'share', 'share_step1_form')
         return {
-            'name': _('Configure shared access'),
+            'name': _('Grant instant access to your documents'),
             'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'share.wizard',
