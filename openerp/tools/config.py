@@ -258,8 +258,10 @@ class configmanager(object):
 
         self.parse_config()
 
-    def parse_config(self, args=[]):
-        opt, args = self.parser.parse_args()
+    def parse_config(self, args=None):
+        if args is None:
+            args = []
+        opt, args = self.parser.parse_args(args)
 
         def die(cond, msg):
             if cond:
