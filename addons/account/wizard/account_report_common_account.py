@@ -28,7 +28,7 @@ class account_common_account_report(osv.osv_memory):
     _columns = {
         'display_account': fields.selection([('bal_all','All'), ('bal_movement','With movements'),
                                             ('bal_solde','With balance is not equal to 0'),
-                                            ],'Display accounts', required=True),
+                                            ],'Display Accounts', required=True),
 
     }
     _defaults = {

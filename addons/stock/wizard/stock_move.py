@@ -304,7 +304,7 @@ class stock_move_split_lines_exist(osv.osv_memory):
         'prodlot_id': fields.many2one('stock.production.lot', 'Production Lot'),
     }
     _defaults = {
-        'quantity': lambda *x: 1.0,
+        'quantity': 1.0,
     }
 
 stock_move_split_lines_exist()
@@ -320,7 +320,7 @@ class stock_move_split_lines(osv.osv_memory):
         'action': fields.selection([('split','Split'),('keepinone','Keep in one lot')],'Action'),
     }
     _defaults = {
-        'quantity': lambda *x: 1.0,
-        'action' : lambda *x: 'split',
+        'quantity': 1.00,
+        'action' : 'split',
     }
 stock_move_split_lines()

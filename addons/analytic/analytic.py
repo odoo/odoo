@@ -150,7 +150,7 @@ class account_analytic_account(osv.osv):
     _columns = {
         'name': fields.char('Account Name', size=128, required=True),
         'complete_name': fields.function(_complete_name_calc, method=True, type='char', string='Full Account Name'),
-        'code': fields.char('Account Code', size=24),
+        'code': fields.char('Account Code', size=24, select=True),
         'type': fields.selection([('view','View'), ('normal','Normal')], 'Account Type', help='If you select the View Type, it means you won\'t allow to create journal entries using that account.'),
         'description': fields.text('Description'),
         'parent_id': fields.many2one('account.analytic.account', 'Parent Analytic Account', select=2),
@@ -205,7 +205,7 @@ class account_analytic_account(osv.osv):
     def check_recursion(self, cr, uid, ids, parent=None):
         return super(account_analytic_account, self)._check_recursion(cr, uid, ids, parent=parent)
 
-    _order = 'date_start desc,parent_id desc,code'
+    _order = 'name asc'
     _constraints = [
         (check_recursion, 'Error! You can not create recursive analytic accounts.', ['parent_id']),
     ]
@@ -245,13 +245,23 @@ class account_analytic_account(osv.osv):
             cr.execute("select analytic_account_id from project_project")
             project_ids = [x[0] for x in cr.fetchall()]
             return self.name_get(cr, uid, project_ids, context=context)
-        account = self.search(cr, uid, [('code', '=', name)] + args, limit=limit, context=context)
-        if not account:
-            account = self.search(cr, uid, [('name', 'ilike', '%%%s%%' % name)] + args, limit=limit, context=context)
-            newacc = account
-            while newacc:
-                newacc = self.search(cr, uid, [('parent_id', 'in', newacc)]+args, limit=limit, context=context)
-                account += newacc
+        if name:
+            account = self.search(cr, uid, [('code', '=', name)] + args, limit=limit, context=context)
+            if not account:
+                names=map(lambda i : i.strip(),name.split('/'))
+                for i in range(len(names)):
+                    dom=[('name', operator, names[i])]
+                    if i>0:
+                        dom+=[('id','child_of',account)]
+                    account = self.search(cr, uid, dom, limit=limit, context=context)
+                newacc = account
+                while newacc:
+                    newacc = self.search(cr, uid, [('parent_id', 'in', newacc)], limit=limit, context=context)
+                    account += newacc
+                if args:
+                    account = self.search(cr, uid, [('id', 'in', account)] + args, limit=limit, context=context)
+        else:
+            account = self.search(cr, uid, args, limit=limit, context=context)
         return self.name_get(cr, uid, account, context=context)
 
 account_analytic_account()

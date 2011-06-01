@@ -284,14 +284,14 @@ class Partner(osv.osv):
                  'membership_cancel': False
             }
             if name == 'membership_start':
-                line_id = member_line_obj.search(cr, uid, [('partner', '=', partner_id)],
+                line_id = member_line_obj.search(cr, uid, [('partner', '=', partner_id),('date_cancel','=',False)],
                             limit=1, order='date_from', context=context)
                 if line_id:
                         res[partner.id]['membership_start'] = member_line_obj.read(cr, uid, line_id[0],
                                 ['date_from'], context=context)['date_from']
 
             if name == 'membership_stop':
-                line_id1 = member_line_obj.search(cr, uid, [('partner', '=', partner_id)],
+                line_id1 = member_line_obj.search(cr, uid, [('partner', '=', partner_id),('date_cancel','=',False)],
                             limit=1, order='date_to desc', context=context)
                 if line_id1:
                       res[partner.id]['membership_stop'] = member_line_obj.read(cr, uid, line_id1[0],

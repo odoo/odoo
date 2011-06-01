@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-03-18 04:54+0000\n"
-"X-Generator: Launchpad (build 12559)\n"
+"X-Launchpad-Export-Date: 2011-04-29 05:11+0000\n"
+"X-Generator: Launchpad (build 12758)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -30,7 +30,7 @@ msgstr "Övrig konfiguration"
 #: code:addons/account/wizard/account_open_closed_fiscalyear.py:40
 #, python-format
 msgid "No End of year journal defined for the fiscal year"
-msgstr "Inget slutdatum definierat för bokföringsåret"
+msgstr "Slutdatum saknas för bokföringsåret"
 
 #. module: account
 #: code:addons/account/account.py:506
@@ -44,12 +44,12 @@ msgstr ""
 #. module: account
 #: view:account.move.reconcile:0
 msgid "Journal Entry Reconcile"
-msgstr "Gournal transaktion avstämning"
+msgstr "Avstämning av journalpost"
 
 #. module: account
 #: field:account.installer.modules,account_voucher:0
 msgid "Voucher Management"
-msgstr "Kuponghantering"
+msgstr "Verifikatregistrering"
 
 #. module: account
 #: view:account.account:0
@@ -69,7 +69,7 @@ msgstr "Kvarvarande"
 #: code:addons/account/invoice.py:785
 #, python-format
 msgid "Please define sequence on invoice journal"
-msgstr "Vänligen definera en sekvens på fakturajournalen"
+msgstr "Vänligen definiera en nummerserie för fakturajournalen"
 
 #. module: account
 #: constraint:account.period:0
@@ -471,11 +471,11 @@ msgid ""
 "amount of each area of the tax declaration for your country. It’s presented "
 "in a hierarchical structure, which can be modified to fit your needs."
 msgstr ""
-"Diagram på Skatter är en trädvy som återspeglar strukturen i Skatter (eller "
-"skatt koder) och visar den aktuella skattesituationen. Skattediagrammet "
-"representerar den mängd varje område i deklarationen för ditt land. Det "
-"presenteras i en hierarkisk struktur, som kan modifieras för att passa dina "
-"behov."
+"Momstabell är en trädvy som återspeglar strukturen i momssatser (eller "
+"momskoder) och visar den aktuella skattesituationen. Momstabellen "
+"representerar de avsnitt som skall redovisas på skattedeklarationen för ditt "
+"land. Den presenteras i en hierarkisk struktur, som kan modifieras för att "
+"passa dina behov."
 
 #. module: account
 #: view:account.analytic.line:0
@@ -736,7 +736,7 @@ msgstr "Procent"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_charts
 msgid "Charts"
-msgstr "Grafer"
+msgstr "Kontoplaner"
 
 #. module: account
 #: code:addons/account/project/wizard/project_account_analytic_line.py:47
@@ -869,7 +869,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_tax_code_tree
 #: model:ir.ui.menu,name:account.menu_action_tax_code_tree
 msgid "Chart of Taxes"
-msgstr "Chart of Taxes"
+msgstr "Momssatser"
 
 #. module: account
 #: view:account.fiscalyear:0
@@ -1640,9 +1640,9 @@ msgid ""
 "Have a complete tree view of all journal items per account code by clicking "
 "on an account."
 msgstr ""
-"Visa ditt företagskontoplan per bokföringsår och selektera på period.  Du "
-"får en komplett trädvy över alla verifikationer per konto genom att klicka "
-"på ett konto."
+"Visar företagets kontoplan per bokföringsår och selekterat på period. Du får "
+"en komplett trädvy över alla verifikationer per konto genom att klicka på "
+"ett konto."
 
 #. module: account
 #: constraint:account.fiscalyear:0
@@ -1706,7 +1706,7 @@ msgstr "Ref. :"
 #. module: account
 #: view:account.analytic.chart:0
 msgid "Analytic Account Charts"
-msgstr "Analytic Account Charts"
+msgstr "Objektkontoplan"
 
 #. module: account
 #: view:account.analytic.line:0
@@ -2005,7 +2005,7 @@ msgstr "Innevarande bokf.år"
 #. module: account
 #: view:account.tax.chart:0
 msgid "Account tax charts"
-msgstr ""
+msgstr "Momskonton"
 
 #. module: account
 #: constraint:account.period:0
@@ -3161,7 +3161,7 @@ msgstr ""
 #. module: account
 #: view:account.chart:0
 msgid "Account charts"
-msgstr "Account charts"
+msgstr "Kontoplan"
 
 #. module: account
 #: report:account.vat.declaration:0
@@ -3271,7 +3271,7 @@ msgstr "VAT :"
 #: model:ir.actions.act_window,name:account.action_account_tree
 #: model:ir.ui.menu,name:account.menu_action_account_tree2
 msgid "Chart of Accounts"
-msgstr "Kontotabell"
+msgstr "Kontoplan"
 
 #. module: account
 #: view:account.tax.chart:0
@@ -3356,7 +3356,7 @@ msgstr "The journal must have default credit and debit account"
 #. module: account
 #: view:account.chart.template:0
 msgid "Chart of Accounts Template"
-msgstr "Kontotabell template"
+msgstr "Förlaga för kontoplan"
 
 #. module: account
 #: code:addons/account/account.py:2095
@@ -3979,7 +3979,7 @@ msgstr "  dag i månaden: 0"
 #. module: account
 #: model:ir.model,name:account.model_account_chart
 msgid "Account chart"
-msgstr "Konto plan"
+msgstr "Kontoplan"
 
 #. module: account
 #: report:account.account.balance.landscape:0
@@ -4629,7 +4629,7 @@ msgstr "År"
 #. module: account
 #: field:account.bank.statement,starting_details_ids:0
 msgid "Opening Cashbox"
-msgstr ""
+msgstr "Öppna kassalåda"
 
 #. module: account
 #: view:account.payment.term.line:0
