@@ -29,7 +29,7 @@ class hr_action_reason(osv.osv):
     _description = "Action Reason"
     _columns = {
         'name': fields.char('Reason', size=64, required=True, help='Specifies the reason for Signing In/Signing Out.'),
-        'action_type': fields.selection([('sign_in', 'Sign in'), ('sign_out', 'Sign out')], "Action's type"),
+        'action_type': fields.selection([('sign_in', 'Sign in'), ('sign_out', 'Sign out')], "Action Type"),
     }
     _defaults = {
         'action_type': 'sign_in',
@@ -137,7 +137,7 @@ class hr_employee(osv.osv):
 
             res = {'action': type, 'employee_id': emp['id']}
             if dt:
-                res['name'] = dt   
+                res['name'] = dt
         id = obj_attendance.create(cr, uid, res, context=context)
 
         if type != 'action':

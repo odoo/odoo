@@ -92,8 +92,8 @@ class hr_job(osv.osv):
     _description = "Job Description"
     _columns = {
         'name': fields.char('Job Name', size=128, required=True, select=True),
-        'expected_employees': fields.function(_no_of_employee, method=True, string='Expected Employees', help='Required number of Employees in total for that job.', multi="no_of_employee"),
-        'no_of_employee': fields.function(_no_of_employee, method=True, string="No of Employee", help='Number of employee with that job.', multi="no_of_employee"),
+        'expected_employees': fields.function(_no_of_employee, method=True, string='Expected Employees', help='Required number of Employees in total for that job.', multi="no_of_employee", store=True),
+        'no_of_employee': fields.function(_no_of_employee, method=True, string="No of Employee", help='Number of employee with that job.', multi="no_of_employee", store=True),
         'no_of_recruitment': fields.float('Expected in Recruitment'),
         'employee_ids': fields.one2many('hr.employee', 'job_id', 'Employees'),
         'description': fields.text('Job Description'),
@@ -161,6 +161,17 @@ class hr_employee(osv.osv):
         'passport_id':fields.char('Passport No', size=64)
     }
 
+    def unlink(self, cr, uid, ids, context=None):
+        resource_obj = self.pool.get('resource.resource')
+        resource_ids = []
+        for employee in self.browse(cr, uid, ids, context=context):
+            resource = employee.resource_id
+            if resource:
+                resource_ids.append(resource.id)
+        if resource_ids:
+            resource_obj.unlink(cr, uid, resource_ids, context=context)
+        return super(hr_employee, self).unlink(cr, uid, ids, context=context)
+
     def onchange_address_id(self, cr, uid, ids, address, context=None):
         if address:
             address = self.pool.get('res.partner.address').browse(cr, uid, address, context=context)
@@ -195,7 +206,6 @@ class hr_employee(osv.osv):
     _defaults = {
         'active': 1,
         'photo': _get_photo,
-        'address_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, uid, c).address_id.id
     }
 
     def _check_recursion(self, cr, uid, ids, context=None):

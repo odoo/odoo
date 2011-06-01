@@ -3,6 +3,12 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    
+#    Adapted by Noviat to 
+#     - enforce correct vat number
+#     - support negative balance
+#     - assign amount of tax code 71-72 correclty to grid 71 or 72
+#     - support Noviat tax code scheme
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -39,7 +45,7 @@ class l10n_be_vat_declaration(osv.osv_memory):
         'tax_code_id': fields.many2one('account.tax.code', 'Tax Code', domain=[('parent_id', '=', False)]),
         'msg': fields.text('File created', size=64, readonly=True),
         'file_save': fields.binary('Save File'),
-        'ask_resitution': fields.boolean('Ask Restitution',help='It indicates whether a resitution is to made or not?'),
+        'ask_restitution': fields.boolean('Ask Restitution',help='It indicates whether a resitution is to made or not?'),
         'ask_payment': fields.boolean('Ask Payment',help='It indicates whether a payment is to made or not?'),
         'client_nihil': fields.boolean('Last Declaration of Enterprise',help='Tick this case only if it concerns only the last statement on the civil or cessation of activity'),
     }
@@ -58,13 +64,13 @@ class l10n_be_vat_declaration(osv.osv_memory):
         if context is None:
             context = {}
 
-        list_of_tags = ['00','01','02','03','44','45','46','47','48','49','54','55','56','57','59','61','62','63','64','71','81','82','83','84','85','86','87','88','91']
+        list_of_tags = ['00','01','02','03','44','45','46','47','48','49','54','55','56','57','59','61','62','63','64','71','72','81','82','83','84','85','86','87','88','91']
         data_tax = self.browse(cr, uid, ids[0])
         if data_tax.tax_code_id:
             obj_company = data_tax.tax_code_id.company_id
         else:
             obj_company = obj_user.browse(cr, uid, uid, context=context).company_id
-        vat_no = obj_company.partner_id.vat
+        vat_no = obj_company.partner_id.vat.replace(' ','').upper()
         if not vat_no:
             raise osv.except_osv(_('Data Insufficient'), _('No VAT Number Associated with Main Company!'))
 
@@ -94,19 +100,27 @@ class l10n_be_vat_declaration(osv.osv_memory):
             data_of_file += '<QUARTER>'+quarter+'</QUARTER>\n\t\t\t'
         else:
             data_of_file += '<MONTH>'+starting_month+'</MONTH>\n\t\t\t'
-        data_of_file += '<YEAR>' + str(account_period.date_stop[:4]) + '</YEAR>\n\t\t</DPERIODE>\n\t\t<ASK RESTITUTION="NO" PAYMENT="NO"/>'
+        data_of_file += '<YEAR>' + str(account_period.date_stop[:4]) + '</YEAR>\n\t\t</DPERIODE>\n'
+        data_of_file += '\t\t<ASK RESTITUTION="' + (data['ask_restitution'] and 'YES' or 'NO') + '" PAYMENT="' + (data['ask_payment'] and 'YES' or 'NO') +'"/>'
         data_of_file += '\n\t\t<ClientListingNihil>'+ (data['client_nihil'] and 'YES' or 'NO') +'</ClientListingNihil>'
         data_of_file +='\n\t\t<DATA>\n\t\t\t<DATA_ELEM>'
 
+        cases_list = []
         for item in tax_info:
             if item['code'] == '91' and ending_month != 12:
                 #the tax code 91 can only be send for the declaration of December
                 continue
             if item['code']:
-                if item['code'] == '71-72':
-                    item['code']='71'
+                if item['code'] == 'VI':
+                    if item['sum_period'] >= 0:
+                        item['code'] = '71'
+                    else:
+                        item['code'] = '72'
                 if item['code'] in list_of_tags:
-                    data_of_file +='\n\t\t\t\t<D'+str(int(item['code'])) +'>' + str(abs(int(round(item['sum_period']*100)))) +  '</D'+str(int(item['code'])) +'>'
+                    cases_list.append(item)
+        cases_list.sort()
+        for item in cases_list:
+            data_of_file +='\n\t\t\t\t<D'+str(int(item['code'])) +'>' + str(abs(int(round(item['sum_period']*100)))) +  '</D'+str(int(item['code'])) +'>'
 
         data_of_file += '\n\t\t\t</DATA_ELEM>\n\t\t</DATA>\n\t</VATRECORD>\n</VATSENDING>'
         model_data_ids = mod_obj.search(cr, uid,[('model','=','ir.ui.view'),('name','=','view_vat_save')], context=context)

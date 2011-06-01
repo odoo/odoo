@@ -51,7 +51,7 @@ class crm_lead2partner(osv.osv_memory):
         rec_ids = context and context.get('active_ids', [])
         for lead in lead_obj.browse(cr, uid, rec_ids, context=context):
             if lead.partner_id:
-                     raise osv.except_osv(_('Warning !'),
+                raise osv.except_osv(_('Warning !'),
                         _('A partner is already defined on this lead.'))
 
     def default_get(self, cr, uid, fields, context=None):
@@ -68,7 +68,6 @@ class crm_lead2partner(osv.osv_memory):
 
         lead_obj = self.pool.get('crm.lead')
         partner_obj = self.pool.get('res.partner')
-        contact_obj = self.pool.get('res.partner.address')
         partner_id = False
 
         data = list(context and context.get('active_ids', []) or [])
@@ -203,10 +202,7 @@ class crm_lead2partner(osv.osv_memory):
         if context is None:
             context = {}
 
-        self._create_partner(cr, uid, ids, context=context)
-        mod_obj = self.pool.get('ir.model.data')
-        result = mod_obj._get_id(cr, uid, 'base', 'view_res_partner_filter')
-        res = mod_obj.read(cr, uid, result, ['res_id'])
+        partner_ids = self._create_partner(cr, uid, ids, context=context)
         return {'type': 'ir.actions.act_window_close'}
 
 crm_lead2partner()

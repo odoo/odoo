@@ -40,9 +40,10 @@ class general_ledger(report_sxw.rml_parse, common_report_header):
         self.sortby = data['form'].get('sortby', 'sort_date')
         self.query = obj_move._query_get(self.cr, self.uid, obj='l', context=data['form'].get('used_context',{}))
         ctx2 = data['form'].get('used_context',{}).copy()
-        ctx2.update({'initial_bal': True})
+        self.init_balance = data['form'].get('initial_balance', True)
+        if self.init_balance:
+            ctx2.update({'initial_bal': True})
         self.init_query = obj_move._query_get(self.cr, self.uid, obj='l', context=ctx2)
-        self.init_balance = data['form']['initial_balance']
         self.display_account = data['form']['display_account']
         self.target_move = data['form'].get('target_move', 'all')
         ctx = self.context.copy()

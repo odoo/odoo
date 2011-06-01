@@ -267,7 +267,7 @@ class pos_order(osv.osv):
         'lines': fields.one2many('pos.order.line', 'order_id', 'Order Lines', states={'draft': [('readonly', False)]}, readonly=True),
         'price_type': fields.selection([
                                 ('tax_excluded','Tax excluded')],
-                                 'Price method', required=True),
+                                 'Price Method', required=True),
         'statement_ids': fields.one2many('account.bank.statement.line', 'pos_statement_id', 'Payments', states={'draft': [('readonly', False)]}, readonly=True),
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', required=True, states={'draft': [('readonly', False)]}, readonly=True),
         'partner_id': fields.many2one('res.partner', 'Customer', change_default=True, select=1, states={'draft': [('readonly', False)], 'paid': [('readonly', False)]}),
@@ -426,12 +426,15 @@ class pos_order(osv.osv):
         move_obj = self.pool.get('stock.move')
         pick_name = self.pool.get('ir.sequence').get(cr, uid, 'stock.picking.out')
         orders = self.browse(cr, uid, ids, context=context)
+        partner_obj = self.pool.get('res.partner')
         for order in orders:
+            addr = order.partner_id and partner_obj.address_get(cr, uid, [order.partner_id.id], ['delivery']) or {}
             if not order.picking_id:
                 new = True
                 picking_id = picking_obj.create(cr, uid, {
                     'name': pick_name,
                     'origin': order.name,
+                    'address_id': addr.get('delivery',False),
                     'type': 'out',
                     'state': 'draft',
                     'move_type': 'direct',

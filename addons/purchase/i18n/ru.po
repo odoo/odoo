@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-03-25 04:40+0000\n"
-"X-Generator: Launchpad (build 12559)\n"
+"X-Launchpad-Export-Date: 2011-04-29 04:52+0000\n"
+"X-Generator: Launchpad (build 12758)\n"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_confirmingpurchaseorder0
@@ -715,7 +715,7 @@ msgstr "Неверное действие !"
 #: selection:purchase.order.line,state:0
 #: selection:purchase.report,state:0
 msgid "Done"
-msgstr "Выполнено"
+msgstr "Сделано"
 
 #. module: purchase
 #: selection:purchase.report,month:0
@@ -1157,7 +1157,7 @@ msgstr "Комплектовочный лист создан"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Exception"
-msgstr "Исключительная ситуация"
+msgstr "Исключение"
 
 #. module: purchase
 #: selection:purchase.report,month:0
@@ -1282,7 +1282,7 @@ msgstr ""
 "на закупку в состоянии 'Черновик'. Когда заказ подтвержден пользователем, "
 "статус меняется на 'Подтверждено'. Затем поставщик должен подтвердить заказ "
 "для изменения состояния в 'Утверждено'. Когда заказ на закупку оплачен и "
-"получен, состояние меняется на 'Выполнено'. Если возникает отмена в процессе "
+"получен, состояние меняется на 'Сделано'. Если возникает отмена в процессе "
 "расчетов или поставки товаров, состояние устанавливается в 'Исключительная "
 "ситуация'."
 
@@ -1708,6 +1708,14 @@ msgid ""
 "                                      \n"
 "* The 'Cancelled' state is set automatically when user cancel purchase order."
 msgstr ""
+" * Состояние 'Черновик' устанавливается автоматически, когда заказ на "
+"закупку в состоянии черновик.\n"
+"* Состояние 'Подтверждено' устанавливается автоматически, когда заказ на "
+"закупку в состоянии подтверждено.\n"
+"* Состояние 'Сделано' устанавливается автоматически, когда заказ на закупку "
+"в состоянии сделано.\n"
+"* Состояние 'Отменено' устанавливается автоматически, при отмене "
+"пользователем заказа на закупку."
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:414
