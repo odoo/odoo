@@ -133,21 +133,22 @@
         ids = self.search(cr, ref('base.user_demo'), [])
         assert ids, "Demo user should see some partner."
 -
-    Modify the ir_rule for employee so that demo is not
-    allowed to see partners anymore. We use a domain
-    with implicit AND operator for later tests on normalization.
+    Modify the ir_rule for employee to have a rule that fordids
+    seeing any record.
+    We use a domain with implicit AND operator for later tests
+    on normalization.
 -
     !record {model: ir.rule, id: test_rule2}:
         domain_force: "[('id','=',False),('name','=',False)]"
 -
-    Check that demo user does not see partners anymore.
+    Check that demo user still sees partners, because group-rules are OR'ed.
 -
     !python {model: res.partner }: |
         ids = self.search(cr, ref('base.user_demo'), [])
-        assert (not ids), "Demo user should not see any partner anymore"
+        assert ids, "Demo user should see some partner."
 -
-    Create a new group with demo user in it, and a complex  rule that should
-    re-allow demo to see partners, because he belongs to both groups.
+    Create a new group with demo user in it, and a complex rule.
+    Demo should still see partners.
 -
     !record {model: res.groups, id: test_group}:
         name: Test Group
@@ -168,11 +169,11 @@
         perm_read: 1
         perm_create: 1
 -
-    Read the partners again as demo user, which should give results again.
+    Read the partners again as demo user, which should give results.
 -
     !python {model: res.partner }: |
         ids = self.search(cr, ref('base.user_demo'), [])
-        assert ids, "Demo user should see some partners again, due to combined rules."
+        assert ids, "Demo user should see partners even with the combined rules."
 -
     Delete global domains (to combine only group domains).
 -
