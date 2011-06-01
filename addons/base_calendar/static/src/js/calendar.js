@@ -69,25 +69,21 @@ openerp.base_calendar.CalendarView = openerp.base.Controller.extend({
 	
     load_scheduler: function() {
         var self = this;
-        this.dataset.read_ids(
-            this.ids, 
-            this.fields,
-            function(events){
-                if (self.session.locale_code) {
-                    
-                    $LAB.setOptions({AlwaysPreserveOrder: true})
-                    .script([
-                        '/base_calendar/static/lib/dhtmlxScheduler/sources/locale_'+self.session.locale_code+'.js',
-                        '/base_calendar/static/lib/dhtmlxScheduler/sources/locale_recurring_'+self.session.locale_code+'.js'
-                    ])
-                    .wait(function() {
-                        self.schedule_events(events);        
-                    });
-                    
-                } else {
-                    self.schedule_events(events);
-                }
-            });
+        this.dataset.read_slice([], 0, false, function(events) {
+            if (self.session.locale_code) {
+                $LAB.setOptions({AlwaysPreserveOrder: true})
+                .script([
+                    '/base_calendar/static/lib/dhtmlxScheduler/sources/locale_'+self.session.locale_code+'.js',
+                    '/base_calendar/static/lib/dhtmlxScheduler/sources/locale_recurring_'+self.session.locale_code+'.js'
+                ])
+                .wait(function() {
+                    self.schedule_events(events);        
+                });
+                
+            } else {
+                self.schedule_events(events);
+            }
+        });
     },
     
     schedule_events: function(events) {
