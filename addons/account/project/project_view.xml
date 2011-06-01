@@ -17,6 +17,7 @@
                     <field name="user_id" invisible="1"/>
                     <field name="parent_id" invisible="1"/>
                     <field name="partner_id" invisible="1"/>
+                    <field name="state" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -44,6 +45,7 @@
                         <filter string="Associated Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Parent" icon="terp-folder-orange" domain="[]" context="{'group_by':'parent_id'}"/>
+                        <filter string="State" icon="terp-folder-green" domain="[]" context="{'group_by':'state'}"/>
                     </group>
                 </search>
             </field>

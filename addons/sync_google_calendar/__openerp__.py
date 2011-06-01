@@ -19,29 +19,21 @@
 #
 ##############################################################################
 
-import account_central_journal
-import account_general_journal
-import account_journal
-import account_balance
-import account_partner_balance
-import account_general_ledger
-import account_partner_ledger
-#import invoice
-import account_print_invoice
-#import overdue
-import account_print_overdue
-import account_aged_partner_balance
-#import tax_report
-import account_tax_report
-import account_tax_code
-import account_balance_landscape
-import account_invoice_report
-import account_report
-import account_entries_report
-import account_analytic_entries_report
-import account_balance_sheet
-import account_profit_loss
-import account_treasury_report
 
+{
+    'name': 'Google Calendar',
+    'version': '1.0',
+    'category': 'Generic Modules/Others',
+    'description': """The module adds google calendar events to meetings.""",
+    'author': 'OpenERP SA',
+    'website': 'http://www.openerp.com',
+    'depends': ['base','google_base_account', 'crm'],
+    'init_xml': [],
+    'update_xml': ['wizard/wizard_import_calendar_events_view.xml', 'sync_google_calendar_view.xml'],
+    'test': ['test/test_sync_google_calendar.yml'],
+    'demo_xml': [],
+    'installable': True,
+    'active': False,
+    'certificate': '',
+}
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

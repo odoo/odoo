@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
@@ -139,7 +138,7 @@ class crm_merge_opportunity(osv.osv_memory):
             attach_ids = self.get_attachments(cr, uid, opp, context=context)
             self.set_attachements_res_id(cr, uid, first_opportunity.id, attach_ids)
             for history in opp.message_ids:
-                new_history = message_obj.write(cr, uid, history.id, {'res_id': first_opportunity.id, 'name' : _("From %s : %s") % (opp.name, history.name) }, context=context)
+   message_obj.write(cr, uid, history.id, {'res_id': first_opportunity.id, 'name' : _("From %s : %s") % (opp.name, history.name) }, context=context)
 
         #Notification about loss of information
         details = []
@@ -225,7 +224,7 @@ class crm_merge_opportunity(osv.osv_memory):
         This function gets default values
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
+        @param uid: the current users ID for security checks,
         @param fields: List of fields for default value
         @param context: A standard dictionary for contextual values
 
