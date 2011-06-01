@@ -10,7 +10,7 @@ class FormEditor(openobject.templating.TemplateEditor):
         # but only if the user is a member of the sharing group 
         share_opener_insertion = output.index('% endif', output.index(
                 '/view_diagram/process',
-                output.index(self.MAIN_FORM_BODY))) - 1
+                output.index(self.MAIN_FORM_BODY))) + len('% endif')
         return output[:share_opener_insertion] + '''
     <%
         if 'has_share' not in cp.session:
