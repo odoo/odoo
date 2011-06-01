@@ -259,8 +259,9 @@ openerp.base_calendar.CalendarView = openerp.base.Controller.extend({
     },
     
     popup_event: function(event_id) {
-        var action_manager = this.view_manager.session.action_manager;
         
+    	if(event_id) event_id = parseInt(event_id, 10);
+    	
         var action = {
     		"res_model": this.dataset.model,
     		"res_id": event_id,
