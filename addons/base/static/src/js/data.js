@@ -310,6 +310,7 @@ openerp.base.DataSet =  openerp.base.Controller.extend( /** @lends openerp.base.
         }, callback);
     },
     unlink: function(ids) {
+        // to implement in children
         this.notification.notify("Unlink", ids);
     },
     call: function (method, ids, args, callback) {
@@ -343,15 +344,25 @@ openerp.base.DataSet =  openerp.base.Controller.extend( /** @lends openerp.base.
 });
 
 openerp.base.DataSetStatic =  openerp.base.DataSet.extend({
-    init: function(session, model) {
+    init: function(session, model, ids) {
         this._super(session, model);
         // all local records
-        this.ids = [];
-        this.count = 0;
+        this.ids = ids || [];
+        this.count = this.ids.length;
     },
     read_slice: function (fields, offset, limit, callback) {
         var end_pos = limit && limit !== -1 ? offset + limit : undefined;
         this.read_ids(this.ids.slice(offset, end_pos), fields, callback);
+    },
+    set_ids: function (ids) {
+        this.ids = ids;
+        this.count = this.ids.length;
+    },
+    unlink: function(ids) {
+        this.on_unlink(ids);
+    },
+    on_unlink: function(ids) {
+        // event
     }
 });
 
