@@ -98,8 +98,14 @@
             <field name="target">new</field>
         </record>
 
+        <record id="category_account_configuration_installer" model="ir.actions.todo.category">
+            <field name="name">Account</field>
+            <field name="sequence">1</field>
+        </record>    
+
         <record id="account_configuration_installer_todo" model="ir.actions.todo">
             <field name="action_id" ref="action_account_configuration_installer"/>
+            <field name="category_id" ref="category_account_configuration_installer"/>
             <field name="sequence">3</field>
             <field name="type">special</field>
         </record>
