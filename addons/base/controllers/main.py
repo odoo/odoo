@@ -241,7 +241,10 @@ def clean_action(action, session):
             action['domain'],
             session.evaluation_context(
                 action['context'])) or []
-    fix_view_modes(action)
+    if not action.has_key('flags'):
+        # Set empty flags dictionary for web client.
+        action['flags'] = dict()
+    return fix_view_modes(action)
 
 def fix_view_modes(action):
     """ For historical reasons, OpenERP has weird dealings in relation to
@@ -271,6 +274,7 @@ def fix_view_modes(action):
         [id, mode if mode != 'tree' else 'list']
         for id, mode in action['views']
     ]
+    return action
 
 class Menu(openerpweb.Controller):
     _cp_path = "/base/menu"
@@ -707,12 +711,12 @@ class Action(openerpweb.Controller):
     _cp_path = "/base/action"
 
     @openerpweb.jsonrequest
-    def load(self, req, action_id, context={}):
+    def load(self, req, action_id):
         Actions = req.session.model('ir.actions.actions')
         value = False
-        action_type = Actions.read([action_id], ['type'], context)
+        action_type = Actions.read([action_id], ['type'], req.session.context)
         if action_type:
-            action = req.session.model(action_type[0]['type']).read([action_id], False, context)
+            action = req.session.model(action_type[0]['type']).read([action_id], False, req.session.context)
             if action:
-                value = action[0]
+                value = clean_action(action[0], req.session)
         return {'result': value}

@@ -1,36 +1,61 @@
-.column {
-    float: left; 
+.openerp .oe-dashboard-links {
+    text-align: right;
+    margin: -2em 1em 1em 0;
+}
+.openerp .oe-dashboard-column {
+    float: left;
     padding-bottom: 100px;
 }
-
-.portlet { 
+.openerp .oe-dashboard-action {
     margin: 0 1em 1em 0;
 }
-
-.portlet-header { 
-    margin: 0.3em; 
-    padding-bottom: 4px; 
-    padding-left: 0.2em;
+.openerp .oe-dashboard-action .oe-dashboard-action-header {
+    margin: 0.3em;
+    padding-bottom: 4px;
+    padding-left: 0.2em
 }
 
-.portlet-header:hover {
+.openerp .oe-dashboard-action .oe-dashboard-action-header:hover {
     cursor: move;
 }
 
-.portlet-header .ui-icon { 
+.openerp .oe-dashboard-action .oe-dashboard-action-header .ui-icon {
     float: right;
 }
 
-.portlet-content { 
+.openerp .oe-dashboard-action .oe-dashboard-action-content {
     padding: 0.4em;
 }
 
-.ui-sortable-placeholder { 
-    border: 1px dotted black; 
-    visibility: visible !important; 
+.openerp .oe-dashboard .ui-sortable-placeholder {
+    border: 1px dotted black;
+    visibility: visible !important;
     height: 50px !important;
 }
 
-.ui-sortable-placeholder * { 
+.openerp .oe-dashboard .ui-sortable-placeholder * {
     visibility: hidden;
-} 
+}
+
+/* Layouts */
+.openerp .oe-dashboard-layout_1 .oe-dashboard-column {
+    width: 100%;
+}
+.openerp .oe-dashboard-layout_1-1 .oe-dashboard-column {
+    width: 50%;
+}
+.openerp .oe-dashboard-layout_1-1-1 .oe-dashboard-column {
+    width: 33%;
+}
+.openerp .oe-dashboard-layout_2-1 .oe-dashboard-column.index_0 {
+    width: 70%;
+}
+.openerp .oe-dashboard-layout_2-1 .oe-dashboard-column.index_1 {
+    width: 30%;
+}
+.openerp .oe-dashboard-layout_1-2 .oe-dashboard-column.index_0 {
+    width: 30%;
+}
+.openerp .oe-dashboard-layout_1-2 .oe-dashboard-column.index_1 {
+    width: 70%;
+}

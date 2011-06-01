@@ -1,17 +1,49 @@
 <template>
-    <t t-name="Board">
-        <div id="dashboard" class="demo">
-        </div>
-    </t>
-    <t t-name="Portlet">
-            <div t-att-id="widget.node.tag" class="column">
-                <div class="portlet" t-foreach="children" t-as="child" t-att-id="child.attrs.name">
-                    <div class="portlet-header">
-                        <t t-esc="child.attrs.string"/>
-                        <span class="ui-icon ui-icon-minusthick"></span>
-                    </div>
-                    <div class="portlet-content" t-att-id="'portlet-content-'+child.attrs.name"></div>
+<t t-name="DashBoard">
+    <div class="oe-dashboard-links">
+        <button type="button" class="button oe-dashboard-link-add_widget">
+            Add Widget
+        </button>
+        <button type="button" class="button oe-dashboard-link-edit_layout">
+            Edit layout
+        </button>
+    </div>
+    <div t-att-data-layout="node.attrs.style" t-attf-class="oe-dashboard oe-dashboard-layout_#{node.attrs.style}">
+        <div t-foreach="node.children" t-as="column" t-if="column.tag == 'column'"
+             t-att-id="view.element_id + '_column_' + column_index" t-attf-class="oe-dashboard-column index_#{column_index}">
+
+            <div t-foreach="column.children" t-as="action" t-if="action.tag == 'action'" t-att-data-id="action.attrs.name"
+                class="oe-dashboard-action ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
+
+                <div class="oe-dashboard-action-header ui-widget-header ui-corner-all">
+                    <t t-esc="action.attrs.string"/>
+                    <span class='ui-icon ui-icon-closethick'></span>
+                    <span class='ui-icon ui-icon-minusthick'></span>
                 </div>
+                <div t-att-id="view.element_id + '_action_' + action.attrs.name" class="oe-dashboard-action-content"></div>
             </div>
-    </t>
+        </div>
+    </div>
+</t>
+<t t-name="DashBoard.layouts">
+    <div class="oe-dashboard-layout-selector">
+        <p>
+            <strong>Choose dashboard layout</strong>
+        </p>
+        <ul class="layoutselection">
+            <li id="layout1" class="layoutchoice" layout-style="1"></li>
+            <li id="layout2" class="layoutchoice" layout-style="1-1"></li>
+            <li id="layout3" class="layoutchoice" layout-style="1-1-1"></li>
+            <li id="layout4" class="layoutchoice" layout-style="1-2"></li>
+            <li id="layout5" class="layoutchoice" layout-style="2-1"></li>
+        </ul>
+    </div>
+</t>
+<t t-name="DashBoard.xml">
+    <board t-att-style="style">
+        <column t-foreach="columns" t-as="column">
+            <action t-foreach="column" t-as="action" t-att="action"/>
+        </column>
+    </board>
+</t>
 </template>
