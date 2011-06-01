@@ -38,7 +38,7 @@ def safe_unique_id(model, database_id):
     # finally, use the b64-encoded folded digest as ID part of the unique ID:
     digest = base64.urlsafe_b64encode(digest)
         
-    return '%s' % (digest)
+    return '%s-%s' % (model,digest)
 
 class ir_edi_document(osv.osv):
     _name = 'ir.edi.document'
@@ -51,7 +51,7 @@ class ir_edi_document(osv.osv):
     
     
     
-    def new_edi_token(self,cr,uid,ids,browse_records,database_id,context=None):
+    def new_edi_token(self,browse_records,database_id):
         
         """Generate new unique tokent value to uniquely identify each edi_document"""
         
@@ -71,15 +71,14 @@ class ir_edi_document(osv.osv):
     def generate_edi(self,browse_record_list):
         
         """ Generate the list of dictionaries using edi_export method of edi class """
-        
-        edi = edi()
+                
         edi_list = []
         for record in browse_record_list:
-            edi_struct = edi.edi_export(record)
+            edi_struct = record.edi_export(record)
             edi_list.append(edi_struct)
         return self.serialize(edi_list)
     
-    def get_document(self,cr,uid,ids,edi_token,context=None):
+    def get_document(self,cr,uid,edi_token,context=None):
         
         """Get the edi document from database using given edi token """
         
@@ -96,21 +95,21 @@ class ir_edi_document(osv.osv):
         
         """loads the values from list of dictionaries to the corresponding OpenERP records
             using the edi_import method of edi class"""
-        edi = edi()
+       
         edi_list = []
         for record in edi_list_of_dicts:
-            edi_record = edi.edi_import(record)
+            edi_record = record.edi_import(record)
             
         
         return True
     
-    def deserialize(self,edi_document_string):
+    def deserialize(self,cr,uid,edi_document_string,context=None):
         """ Deserialized the edi document string"""
         
         deserialize_string = json.loads(edi_document_string)
-        return self.load_edi(deserialize_string)
+        return self.load_edi(cr,uid,deserialize_string,context=context)
     
-    def export_doc(self, cr, uid, ids,browse_records,database_id,context=None):
+    def export_doc(self, cr, uid, browse_records, database_id, context=None):
         """the method handles the flow of the edi document generation and store it in 
             the database and return the edi_token of the particular document"""
         
@@ -129,10 +128,10 @@ class ir_edi_document(osv.osv):
             edi_loads method """
         
         if edi_document is not None:
-            self.deserialize(edi_document)
+            self.deserialize(cr,uid,edi_document,context=context)
         elif edi_url is not None:
             edi_document = urllib2.urlopen(edi_url).read()
-            self.deserialize(edi_document)
+            self.deserialize(cr,uid,edi_document,context=context)
 
         return True
     
@@ -149,7 +148,7 @@ class edi(object):
        specific behavior, based on the primitives provided by this superclass."""
     
     
-    def edi_metadata(self, cr, uid, ids, browse_rec_list, context=None):
+    def edi_metadata(self, cr, uid,browse_rec_list, context=None):
         """Return a list representing the boilerplate EDI structure for
            exporting the record in the given browse_rec_list, including
            the metadata fields"""
@@ -162,14 +161,18 @@ class edi(object):
                 self.edi_document['__module'] = data.module
                 if data.name is not None:
                     self.edi_document['__id'] = context['active_id']+':'+data.name
+                else:
+                    self.edi_document['__id'] = context['active_id']+':'+safe_unique_id(data.model,)
                 self.edi_document['__last_updata'] = context['__last_update'].values()[0]
             
         return True
 
-    def edi_m2o(self, cr, uid, ids, browse_rec,model=None,context=None):
+    def edi_m2o(self, cr, uid,browse_rec):
         """Return a list representing a M2O EDI value for
            the given browse_record."""
         # generic implementation!
+      
+        model = browse_rec._name           
         res = []
         data_object = self.pool.get('ir.model.data')
         uu_id = data_model.search(cr,uid,[('model','=',model)])
@@ -183,23 +186,26 @@ class edi(object):
                 if xml_ID is not None:
                     res.append(safe_unique_id(model,data.id)+':'+xml_ID)
                 else:
-                    res.append(safe_unique_id(model,data.id)+':'+model+'-'+safe_unique_id(model,data.id))
+                    res.append(safe_unique_id(model,data.id)+':'+safe_unique_id(model,data.id))
                 res.append(data.name)
         return res
 
-    def edi_o2m(self, cr, uid, ids, browse_rec_list, model=None, context=None):
+    def edi_o2m(self, cr, uid,line = None,browse_rec_list, context=None):
         """Return a list representing a O2M EDI value for
            the browse_records from the given browse_record_list."""
         # generic implementation!
         res = []
         init_data = {}
+        model = browse_rec_list._name
         data_object = self.pool.get('ir.model.data')
         uu_id = data_model.search(cr,uid,[('model','=',model)])
+         
         for xml in data_model.browse(cr,uid,uu_id):
             if xml:
                 xml_ID = xml.name
             else:
                 xml_ID = None
+            
         data_model = self.pool.get(model)
         for record in browse_rec_list:
             if xml_ID is not None:
@@ -207,14 +213,16 @@ class edi(object):
             else:
                 init_data['__id'] = safe_unique_id(model,record.id)+':'+model+'-'+safe_unique_id(model,record.id)  
             init_data['__last_update'] =record.write_date
-            init_data.update(datamodel.read(cr,uid,[record],[],context=context)[0])
+            init_data.update(self.determine_type(cr,uid,ids,line,record,context=context))
+            
             res.append(init_data)
         return res
 
-    def edi_m2m(self, cr, uid, ids, browse_rec_list,model=None, context=None):
+    def edi_m2m(self, cr, uid, line = None, browse_rec_list, context=None):
         """Return a list representing a M2M EDI value for
            the browse_records from the given browse_record_list."""
         # generic implementation!
+        model = browse_rec_list[0]._name
         res = []
         init_data = []
         data_object = self.pool.get('ir.model.data')
@@ -271,20 +279,43 @@ class edi(object):
         
         fields_object = self.pool.get('ir.model.fields')
         model_object = self.pool.get(self.edi_document['__model'])
-        edi_metadata(context=context)
-        for field in self.edi_struct.keys():
+        edi_metadata(edi_struct,context=context)
+        record = model_object.read(cr,uid,ids,[],context=context)
+        for field in edi_struct.keys():
             f_ids = fields_object.search(cr,uid,[('name','=',field),('model','=',self.edi_document['__model'])],context=context)
+            
             for fname in fields_object.browse(cr,uid,f_ids):
                 if fname.ttype == 'many2one':
                     
-                    self.edi_document[field] = self.edi_m2o(edi_struct[field],fname.relation)
+                    self.edi_document[field] = self.edi_m2o(cr, uid, browse_rec = record[0][field])
                 elif fname.ttype == 'one2many':
-                    self.edi_ducument[field] = self.edi_o2m(edi_struct[field],fname.relation)
+                    
+                    self.edi_ducument[field] = self.edi_o2m(cr,uid,line = edi_struct[field],browse_rec_list = record[0][field])
                 elif fname.ttype == 'many2many':        
-                    self.edi_document[field] = self.edi_m2m(edi_struct[field],fname.relation)
+                    self.edi_document[field] = self.edi_m2m(cr,uid,line = edi_struct[field],browse_rec_list = record[0][field])
                 else:
-                    self.edi_document[field] = model_object.read(cr,uid,[context['active_id']],[field],context=context)
+                    self.edi_document[field] = record[0][field]
+        
+            
         return self.edi_document
+    def determine_type(self,cr,uid,ids,record_line,browse_record=None,context=None):
+        model = browse_record._name
+        fields_object = self.pool.get('ir.model.fields')
+        obj = self.pool.get(model)
+        field_data = obj.read(cr,uid,browse_record.id,record_line.keys())[0]
+        for field in field_data.keys():
+            field_ids = field_object.search(cr,uid,[field])
+            for field_type in field_object.browse(cr,uid,field_ids): 
+                if field_type.ttype == 'many2one':
+                    record_line.update(field,self.edi_m2o(cr,uid,browse_rec = field_data[field]))
+                elif field_type.ttype == 'one2many':
+                    pass
+                elif field_type.ttype == 'many2many':
+                    pass
+                else:
+                    record_line.update(field,field_data[field])
+        return record_line
+        
     def edi_import(self, cr, uid, edi_document, context=None):
     
         """Imports a list of dicts representing an edi.document, using the
