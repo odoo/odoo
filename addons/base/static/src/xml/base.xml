@@ -253,6 +253,9 @@
         <button type="button" name="delete">♻</button>
     </td>
 </tr>
+<t t-name="ListView.row.form">
+    <t t-raw="frame.render()"/>
+</t>
 <t t-name="FormView">
     <h2 class="oe_view_title"><t t-esc="view.fields_view.arch.attrs.string"/></h2>
     <div class="oe_form_header" t-att-id="view.element_id + '_header'">

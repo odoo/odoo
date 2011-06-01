@@ -8,6 +8,7 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
      * view should be displayed (if there is one active).
      */
     searchable: false,
+    template: "FormView",
     /**
      * @constructs
      * @param {openerp.base.Session} session the current openerp session
@@ -42,7 +43,7 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
 
         var frame = new openerp.base.form.WidgetFrame(this, this.fields_view.arch);
 
-        this.$element.html(QWeb.render("FormView", { 'frame': frame, 'view': this }));
+        this.$element.html(QWeb.render(this.template, { 'frame': frame, 'view': this }));
         _.each(this.widgets, function(w) {
             w.start();
         });
@@ -449,6 +450,9 @@ openerp.base.form.Widget = openerp.base.Controller.extend({
         }
     },
     update_dom: function() {
+        if (this.attrs.name === 'someval') {
+            console.log(this.invisible);
+        }
         this.$element.toggle(!this.invisible);
     },
     render: function() {

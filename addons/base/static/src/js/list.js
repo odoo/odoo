@@ -532,8 +532,9 @@ openerp.base.ListView.List = Class.extend( /** @lends openerp.base.ListView.List
      * @constructs
      * @param {Object} opts display options, identical to those of :js:class:`openerp.base.ListView`
      */
-    init: function (opts) {
+    init: function (group, opts) {
         var self = this;
+        this.group = group;
 
         this.options = opts.options;
         this.columns = opts.columns;
@@ -563,11 +564,18 @@ openerp.base.ListView.List = Class.extend( /** @lends openerp.base.ListView.List
             })
             .delegate('tr', 'click', function (e) {
                 e.stopPropagation();
-                $(self).trigger(
-                    'row_link',
-                    [self.row_position(e.currentTarget),
-                     self.row_id(e.currentTarget),
-                     self.dataset]);
+                var index = self.row_position(e.currentTarget);
+                self.dataset.index = index;
+                if (self.options.editable) {
+                    self.render_row_as_form(
+                        index, e.currentTarget);
+                } else {
+                    $(self).trigger(
+                        'row_link',
+                        [index,
+                         self.rows[index].data.id.value,
+                         self.dataset]);
+                }
             });
     },
     render: function () {
@@ -576,6 +584,41 @@ openerp.base.ListView.List = Class.extend( /** @lends openerp.base.ListView.List
         }
         this.$current = this.$_element.clone(true);
         this.$current.empty().append($(QWeb.render('ListView.rows', this)));
+    },
+    get_fields_view: function () {
+        // deep copy of view
+        var view = $.extend(true, {}, this.group.view.fields_view);
+        _(view.arch.children).each(function (widget) {
+            widget.attrs.nolabel = true;
+            if (widget.tag === 'button') {
+                delete widget.attrs.string;
+            }
+        });
+        view.arch.attrs.col = 2 * view.arch.children.length;
+        return view;
+    },
+    render_row_as_form: function (row_num, row) {
+        var $new_row = $('<tr>', {
+                id: _.uniqueId('oe-editable-row-'),
+                'class': $(row).attr('class'),
+                onclick: function (e) {e.stopPropagation();}
+            }).replaceAll(row);
+        var editable_row_form = new openerp.base.FormView(
+                null, this.group.view.session, $new_row.attr('id'),
+                this.dataset, false);
+        editable_row_form.template = 'ListView.row.form';
+        editable_row_form.on_loaded({fields_view: this.get_fields_view()});
+        editable_row_form.on_record_loaded.add({
+            position: 'last',
+            unique: true,
+            callback: function () {
+                editable_row_form.$element.find('td')
+                    // remove tr, tbody, table
+                    .unwrap().unwrap().unwrap()
+                    .removeAttr('width');
+            }
+        });
+        editable_row_form.do_show();
     },
     /**
      * Gets the ids of all currently selected records, if any
@@ -817,7 +860,7 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
     },
     render_dataset: function (dataset) {
         var rows = [],
-            list = new openerp.base.ListView.List({
+            list = new openerp.base.ListView.List(this, {
                 options: this.options,
                 columns: this.columns,
                 dataset: dataset,
