@@ -129,7 +129,7 @@ class ir_rule(osv.osv):
                     global_domains.append(dom)
             # combine global domains and group domains
             if group_domains:
-                group_domain = expression.OR(map(expression.AND, group_domains.values()))
+                group_domain = expression.OR(map(expression.OR, group_domains.values()))
             else:
                 group_domain = []
             domain = expression.AND(global_domains + [group_domain])
