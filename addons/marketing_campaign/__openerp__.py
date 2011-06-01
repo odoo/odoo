@@ -61,6 +61,6 @@ Note: If you need demo data, you can install the marketing_campaign_crm_demo mod
     'installable': True,
     'active': False,
     'certificate' : '00421723279617928365',
-    'images': ['images/campaigns.jpeg','images/email_account.jpeg','images/email_templates.jpeg','images/segments.jpeg'],
+    'images': ['images/campaign.png', 'images/campaigns.jpeg','images/email_account.jpeg','images/email_templates.jpeg','images/segments.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

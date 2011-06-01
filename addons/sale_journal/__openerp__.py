@@ -40,8 +40,7 @@ Journals have a responsible and evolves between different status:
 Batch operations can be processed on the different journals to
 confirm all sales at once, to validate or invoice packing, ...
 
-It also supports batch invoicing methods that can be configured by
-partners and sales orders, examples:
+It also supports batch invoicing methods that can be configured by partners and sales orders, examples:
     * daily invoicing,
     * monthly invoicing, ...
 

@@ -30,6 +30,18 @@
     "description": """
 This is the module for computing Procurements.
 ==============================================
+
+In the MRP process, procurements orders are created to launch manufacturing
+orders, purchase orders, stock allocations, etc. Procurement orders are
+generated automatically by the system and unless there is a problem, the
+user will not be notified. In case of problems, the system will raise some
+procurement exceptions to inform the user about blocking problems that need
+to be resolved manually (like, missing BoM structure or missing supplier).
+
+The procurement order will schedule a proposal for automatic procurement
+for the product which needs replenishment. This procurement will start a
+task, either a purchase order form for the supplier, or a production order
+depending on the product's configuration.
     """,
     'init_xml': [],
     'update_xml': [

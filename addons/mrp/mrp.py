@@ -243,7 +243,6 @@ class mrp_bom(osv.osv):
 
     def _check_product(self, cr, uid, ids, context=None):
         all_prod = []
-        bom_obj = self.pool.get('mrp.bom')
         boms = self.browse(cr, uid, ids, context=context)
         def check_bom(boms):
             res = True
@@ -269,6 +268,10 @@ class mrp_bom(osv.osv):
         @param product_id: Changed product_id
         @return:  Dictionary of changed values
         """
+        if context is None:
+            context = {}
+            context['lang'] = self.pool.get('res.users').browse(cr,uid,uid).context_lang
+            
         if product_id:
             prod = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
             v = {'product_uom': prod.uom_id.id}
@@ -443,16 +446,16 @@ class mrp_production(osv.osv):
         'origin': fields.char('Source Document', size=64, help="Reference of the document that generated this production order request."),
         'priority': fields.selection([('0','Not urgent'),('1','Normal'),('2','Urgent'),('3','Very Urgent')], 'Priority'),
 
-        'product_id': fields.many2one('product.product', 'Product', required=True, ),
+        'product_id': fields.many2one('product.product', 'Product', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'product_qty': fields.float('Product Qty', required=True, states={'draft':[('readonly',False)]}, readonly=True),
         'product_uom': fields.many2one('product.uom', 'Product UOM', required=True, states={'draft':[('readonly',False)]}, readonly=True),
         'product_uos_qty': fields.float('Product UoS Qty', states={'draft':[('readonly',False)]}, readonly=True),
         'product_uos': fields.many2one('product.uom', 'Product UoS', states={'draft':[('readonly',False)]}, readonly=True),
 
         'location_src_id': fields.many2one('stock.location', 'Raw Materials Location', required=True,
-            help="Location where the system will look for components."),
+            readonly=True, states={'draft':[('readonly',False)]}, help="Location where the system will look for components."),
         'location_dest_id': fields.many2one('stock.location', 'Finished Products Location', required=True,
-            help="Location where the system will stock the finished products."),
+            readonly=True, states={'draft':[('readonly',False)]}, help="Location where the system will stock the finished products."),
 
         'date_planned_end': fields.function(_production_date_end, method=True, type='date', string='Scheduled End Date'),
         'date_planned_date': fields.function(_production_date, method=True, type='date', string='Scheduled Date'),
@@ -460,8 +463,8 @@ class mrp_production(osv.osv):
         'date_start': fields.datetime('Start Date', select=True),
         'date_finished': fields.datetime('End Date', select=True),
 
-        'bom_id': fields.many2one('mrp.bom', 'Bill of Material', domain=[('bom_id','=',False)]),
-        'routing_id': fields.many2one('mrp.routing', string='Routing', on_delete='set null', help="The list of operations (list of work centers) to produce the finished product. The routing is mainly used to compute work center costs during operations and to plan future loads on work centers based on production plannification."),
+        'bom_id': fields.many2one('mrp.bom', 'Bill of Material', domain=[('bom_id','=',False)], readonly=True, states={'draft':[('readonly',False)]}),
+        'routing_id': fields.many2one('mrp.routing', string='Routing', on_delete='set null', readonly=True, states={'draft':[('readonly',False)]}, help="The list of operations (list of work centers) to produce the finished product. The routing is mainly used to compute work center costs during operations and to plan future loads on work centers based on production plannification."),
 
         'picking_id': fields.many2one('stock.picking', 'Picking list', readonly=True, ondelete="restrict",
             help="This is the internal picking list that brings the finished product to the production plan"),
@@ -672,10 +675,10 @@ class mrp_production(osv.osv):
         res = True
         for production in self.browse(cr, uid, ids):
             if production.move_lines:
-               res = False
+                res = False
 
             if production.move_created_ids:
-               res = False
+                res = False
         return res
 
     def action_produce(self, cr, uid, production_id, production_qty, production_mode, context=None):
@@ -728,7 +731,7 @@ class mrp_production(osv.osv):
                         if consumed_qty == 0:
                             consumed_qty = production_qty * f.product_qty / production.product_qty
                         if consumed_qty > 0:
-                            stock_mov_obj.action_consume(cr, uid, [raw_product.id], consumed_qty, production.location_src_id.id, context=context)
+                            stock_mov_obj.action_consume(cr, uid, [raw_product.id], consumed_qty, raw_product.location_id.id, context=context)
 
         if production_mode == 'consume_produce':
             # To produce remaining qty of final product
@@ -748,7 +751,7 @@ class mrp_production(osv.osv):
                 produced_qty = produced_products.get(produce_product.product_id.id, 0)
                 rest_qty = production.product_qty - produced_qty
                 if rest_qty <= production_qty:
-                   production_qty = rest_qty
+                    production_qty = rest_qty
                 if rest_qty > 0 :
                     stock_mov_obj.action_consume(cr, uid, [produce_product.id], production_qty, context=context)
 

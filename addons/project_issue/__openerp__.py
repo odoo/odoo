@@ -25,8 +25,13 @@
     'version': '1.0',
     'category': 'Project Management',
     'description': """
-This module provide Issues/Bugs Management in Project.
-======================================================
+This module provides Issues/Bugs Management in Project.
+=======================================================
+
+OpenERP allows you to manage the issues you might face in a project
+like bugs in a system, client complaints or material breakdowns. A
+list view allows the manager to quickly check the issues, assign them
+and decide on their status as they evolve.
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',

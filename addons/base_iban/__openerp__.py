@@ -26,6 +26,7 @@
 This module installs the base for IBAN (International Bank Account Number) bank accounts and checks for its validity.
 =====================================================================================================================
 
+The ability to extract the correctly represented local accounts from IBAN accounts with a single statement.
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',

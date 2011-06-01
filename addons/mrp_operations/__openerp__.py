@@ -30,8 +30,10 @@ This module adds state, date_start,date_stop in production order operation lines
 
 State: draft, confirm, done, cancel
 When finishing/confirming,cancelling production orders set all state lines to the according state
+
 Create menus:
     Manufacturing > Manufacturing > Work Orders
+
 Which is a view on "Work Centers" lines in production order.
 
 Add buttons in the form view of production order under workcenter tab:

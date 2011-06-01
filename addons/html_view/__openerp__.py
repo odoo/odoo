@@ -9,6 +9,8 @@
     "description": """
 This is the test module which shows HTML tag support in normal XML form view.
 =============================================================================
+
+Creates a sample form-view using HTML tags. It is visible only in OpenERP Web.
     """,
     'update_xml': ['security/ir.model.access.csv','html_view.xml',],
     'installable': True,

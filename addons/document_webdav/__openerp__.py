@@ -42,6 +42,7 @@ You can then use any compatible browser to remotely see the attachments of OpenO
 
 After installation, the WebDAV server can be controlled by a [webdav] section in the server's config.
 Server Configuration Parameter:
+
     [webdav]
     ; enable = True ; Serve webdav over the http(s) servers
     ; vdir = webdav ; the directory that webdav will be served at

@@ -22,7 +22,6 @@
 
 import wizard
 import pooler
-import time
 
 def _open_history_event(self, cr, uid, data, context=None):
     pool = pooler.get_pool(cr.dbname)

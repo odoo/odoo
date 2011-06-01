@@ -42,11 +42,11 @@ Note that:
                 Human Resources/Reporting/Holidays/Leaves by Department
         * The second will allow you to choose the holidays report for specific employees. Go on the list
                 Human Resources/Human Resources/Employees
-        then select the ones you want to choose, click on the print icon and select the option
+                then select the ones you want to choose, click on the print icon and select the option
                 'Employee's Holidays'
     - The wizard allows you to choose if you want to print either the Confirmed & Validated holidays or only the Validated ones. These states must be set up by a user from the group 'HR'. You can define these features in the security tab from the user data in
                 Administration / Users / Users
-        for example, you maybe will do it for the user 'admin'.
+                for example, you maybe will do it for the user 'admin'.
 """,
     'images': ['images/hr_allocation_requests.jpeg', 'images/hr_leave_requests.jpeg', 'images/leaves_analysis.jpeg'],
     'depends': ['hr', 'crm', 'process', 'resource'],

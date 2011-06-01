@@ -27,8 +27,8 @@
     "images":["images/master_procurement_schedule.jpeg","images/sales_forecast.jpeg","images/stock_planning_line.jpeg","images/stock_sales_period.jpeg"],
     "depends":["hr","stock","sale"],
     "description": """
-Purpose of MPS is to allow create a manual procurement (requisition) apart of MRP scheduler (which works automatically on minimum stock rules).
-===============================================================================================================================================
+Purpose of MPS is to allow create a manual procurement apart of MRP scheduler (which works automatically on minimum stock rules).
+=================================================================================================================================
 
 This module is based on original OpenERP SA module stock_planning version 1.0 of the same name Master Procurement Schedule.
 Terms used in the module:
@@ -109,12 +109,14 @@ All values on the form are expressed in unit of measure selected on form. You ca
 How Stock Simulation field is calculated:
 Generally Stock Simulation shows the stock for end of the calculated period according to some planned or confirmed stock moves. Calculation always starts with quantity of real stock of beginning of current period. Then calculation adds or subtracts quantities of calculated period or periods before calculated.
 When you are in the same period (current period is the same as calculated) Stock Simulation is calculated as follows:
+
 Stock Simulation =
 	Stock of beginning of current Period
 	- Planned Out
 	+ Planned In
 
 When you calculate period next to current:
+
 Stock Simulation =
 	Stock of beginning of current Period
 	- Planned Out of current Period
@@ -125,6 +127,7 @@ Stock Simulation =
 As you see calculated Period is taken the same way like in case above. But calculation of current Period are made a little bit different. First you should note that system takes for current Period only Confirmed In moves. It means that you have to make planning and procurement for current Period before this calculation (for Period next to current).
 
 When you calculate Period ahead:
+
 Stock Simulation =
 	Stock of beginning of current Period
 	- Sum of Planned Out of Periods before calculated

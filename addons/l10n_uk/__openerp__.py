@@ -64,6 +64,8 @@
     'description': """
 This is the base module to manage the accounting chart for United Kingdom in OpenERP.
 =====================================================================================
+
+British accounting chart and localization.
     """,
     'author': 'Seath Solutions Ltd',
     'website': 'http://www.seathsolutions.com',

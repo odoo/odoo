@@ -29,6 +29,8 @@
     "description": """
 This is the module to manage the accounting chart, VAT structure and Registration Number for Romania in OpenERP.
 ================================================================================================================
+
+Romanian accounting chart and localization.
     """,
     "demo_xml" : [],
     "update_xml" : ['partner_view.xml','account_tax_code.xml','account_chart.xml','account_tax.xml','l10n_chart_ro_wizard.xml'],

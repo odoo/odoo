@@ -27,6 +27,9 @@
     'description': """
 The base module to manage analytic distribution and purchase orders.
 ====================================================================
+
+Allows the user to maintain several analysis plans. These let you split
+a line on a supplier purchase order into several accounts and analytic plans.
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',

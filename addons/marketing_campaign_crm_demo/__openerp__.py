@@ -31,6 +31,8 @@
     "description": """
 Demo data for the module marketing_campaign.
 ============================================
+
+Creates demo data like leads, campaigns and segments for the module marketing_campaign.
     """,
     'website': 'http://www.openerp.com',
     'init_xml': [],

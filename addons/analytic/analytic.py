@@ -22,6 +22,7 @@
 import time
 
 from osv import fields, osv
+from tools.translate import _
 import decimal_precision as dp
 
 class account_analytic_account(osv.osv):
@@ -120,11 +121,36 @@ class account_analytic_account(osv.osv):
 
         return result
 
+    def _get_analytic_account(self, cr, uid, ids, context=None):
+        company_obj = self.pool.get('res.company')
+        analytic_obj = self.pool.get('account.analytic.account')
+        accounts = []
+        for company in company_obj.browse(cr, uid, ids, context=context):
+            accounts += analytic_obj.search(cr, uid, [('company_id', '=', company.id)])
+        return accounts
+
+    def _set_company_currency(self, cr, uid, ids, name, value, arg, context=None):
+        if type(ids) != type([]):
+            ids=[ids]
+        for account in self.browse(cr, uid, ids, context=context):
+            if account.company_id:
+                if account.company_id.currency_id.id != value:
+                    raise osv.except_osv(_('Error !'), _("If you set a company, the currency selected has to be the same as it's currency. \nYou can remove the company belonging, and thus change the currency, only on analytic account of type 'view'. This can be really usefull for consolidation purposes of several companies charts with different currencies, for example."))
+        return cr.execute("""update account_analytic_account set currency_id=%s where id=%s""", (value, account.id, ))
+
+    def _currency(self, cr, uid, ids, field_name, arg, context=None):
+        result = {}
+        for rec in self.browse(cr, uid, ids, context=context):
+            if rec.company_id:
+                result[rec.id] = rec.company_id.currency_id.id
+            else:
+                result[rec.id] = rec.currency_id.id
+        return result
 
     _columns = {
         'name': fields.char('Account Name', size=128, required=True),
         'complete_name': fields.function(_complete_name_calc, method=True, type='char', string='Full Account Name'),
-        'code': fields.char('Account Code', size=24),
+        'code': fields.char('Account Code', size=24, select=True),
         'type': fields.selection([('view','View'), ('normal','Normal')], 'Account Type', help='If you select the View Type, it means you won\'t allow to create journal entries using that account.'),
         'description': fields.text('Description'),
         'parent_id': fields.many2one('account.analytic.account', 'Parent Analytic Account', select=2),
@@ -149,7 +175,10 @@ class account_analytic_account(osv.osv):
                                   \n* And finally when all the transactions are over, it can be in \'Close\' state. \
                                   \n* The project can be in either if the states \'Template\' and \'Running\'.\n If it is template then we can make projects based on the template projects. If its in \'Running\' state it is a normal project.\
                                  \n If it is to be reviewed then the state is \'Pending\'.\n When the project is completed the state is set to \'Done\'.'),
-       'currency_id': fields.many2one('res.currency', 'Account currency', required=True),
+        'currency_id': fields.function(_currency, fnct_inv=_set_company_currency, method=True,
+            store = {
+                'res.company': (_get_analytic_account, ['currency_id'], 10),
+            }, string='Currency', type='many2one', relation='res.currency'),
     }
 
     def _default_company(self, cr, uid, context=None):
@@ -173,20 +202,12 @@ class account_analytic_account(osv.osv):
         'currency_id': _get_default_currency,
     }
 
-    def check_currency(self, cr, uid, ids, context=None):
-        obj = self.browse(cr, uid, ids[0], context=context)
-        if obj.company_id:
-            if obj.currency_id.id != self.pool.get('res.company').browse(cr, uid, obj.company_id.id, context=context).currency_id.id:
-                return False
-        return True
-
     def check_recursion(self, cr, uid, ids, parent=None):
         return super(account_analytic_account, self)._check_recursion(cr, uid, ids, parent=parent)
 
-    _order = 'date_start desc,parent_id desc,code'
+    _order = 'name asc'
     _constraints = [
         (check_recursion, 'Error! You can not create recursive analytic accounts.', ['parent_id']),
-        (check_currency, 'Error! The currency has to be the same as the currency of the selected company', ['currency_id', 'company_id']),
     ]
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -224,13 +245,23 @@ class account_analytic_account(osv.osv):
             cr.execute("select analytic_account_id from project_project")
             project_ids = [x[0] for x in cr.fetchall()]
             return self.name_get(cr, uid, project_ids, context=context)
-        account = self.search(cr, uid, [('code', '=', name)] + args, limit=limit, context=context)
-        if not account:
-            account = self.search(cr, uid, [('name', 'ilike', '%%%s%%' % name)] + args, limit=limit, context=context)
-            newacc = account
-            while newacc:
-                newacc = self.search(cr, uid, [('parent_id', 'in', newacc)]+args, limit=limit, context=context)
-                account += newacc
+        if name:
+            account = self.search(cr, uid, [('code', '=', name)] + args, limit=limit, context=context)
+            if not account:
+                names=map(lambda i : i.strip(),name.split('/'))
+                for i in range(len(names)):
+                    dom=[('name', operator, names[i])]
+                    if i>0:
+                        dom+=[('id','child_of',account)]
+                    account = self.search(cr, uid, dom, limit=limit, context=context)
+                newacc = account
+                while newacc:
+                    newacc = self.search(cr, uid, [('parent_id', 'in', newacc)], limit=limit, context=context)
+                    account += newacc
+                if args:
+                    account = self.search(cr, uid, [('id', 'in', account)] + args, limit=limit, context=context)
+        else:
+            account = self.search(cr, uid, args, limit=limit, context=context)
         return self.name_get(cr, uid, account, context=context)
 
 account_analytic_account()

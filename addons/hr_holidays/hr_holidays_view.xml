@@ -37,6 +37,7 @@
                     <newline />
                     <group expand="0" string="Group By...">
                         <filter name="group_employee" string="Employee" icon="terp-personal" domain="[]" context="{'group_by':'employee_id'}"/>
+                        <filter name="group_category" string="Category" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'category_id'}"/>
                         <filter string="Manager" icon="terp-personal" domain="[]" context="{'group_by':'manager_id'}"/>
                         <filter string="Department" icon="terp-personal+" domain="[]" context="{'group_by':'department_id','set_visible':True}"/>
                         <separator orientation="vertical"/>
@@ -155,7 +156,9 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree colors="red:state in ('refuse');blue:state in ('draft');black:state in ('confirm','validate','validate1')" string="Leaves" >
+                    <field name="holiday_type"/>
                     <field name="employee_id"/>
+                    <field name="category_id"/>
                     <field name="department_id" invisible="1"/>
                     <field name="holiday_status_id"/>
                     <field name="name"/>
@@ -233,7 +236,9 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree colors="red:state in ('refuse');blue:state in (' draft');black:state in ('confirm','validate','validate1')">
+                    <field name="holiday_type"/>
                     <field name="employee_id"/>
+                    <field name="category_id"/>
                     <field name="department_id" invisible="not context.get('set_visible',False)"/>
                     <field name="holiday_status_id"/>
                     <field name="name"/>
@@ -392,6 +397,18 @@
                 </tree>
             </field>
         </record>
+        <record model="ir.ui.view" id="view_holiday_status_normal_tree">
+            <field name="name">hr.holidays.status.normal.tree</field>
+            <field name="model">hr.holidays.status</field>
+            <field name="type">tree</field>
+            <field name="priority">35</field>
+            <field name="arch" type="xml">
+                <tree string="Leave Type">
+                    <field name="name"/>
+                    <field name="limit" />
+                </tree>
+            </field>
+        </record>
 
         <record id="view_hr_holidays_status_search" model="ir.ui.view">
             <field name="name">hr.holidays.status.search</field>
@@ -411,7 +428,7 @@
             <field name="res_model">hr.holidays.status</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="view_id" eval="view_holiday_status_tree"/>
+            <field name="view_id" eval="view_holiday_status_normal_tree"/>
             <field name="search_view_id" ref="view_hr_holidays_status_search"/>
         </record>
 

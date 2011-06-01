@@ -43,6 +43,7 @@ Pricelists support:
         * Cost price,
         * List price,
         * Supplier price, ...
+
 Pricelists preferences by product and/or partners.
 
 Print product labels with barcode.

@@ -113,6 +113,9 @@ class stock_location(osv.osv):
         """
         prod_id = context and context.get('product_id', False)
 
+        if not prod_id:
+            return dict([(i, {}.fromkeys(field_names, 0.0)) for i in ids])
+
         product_product_obj = self.pool.get('product.product')
 
         cr.execute('select distinct product_id, location_id from stock_move where location_id in %s', (tuple(ids), ))
@@ -621,8 +624,8 @@ class stock_picking(osv.osv):
         'state': fields.selection([
             ('draft', 'Draft'),
             ('auto', 'Waiting'),
-            ('confirmed', 'Confirmed'),
-            ('assigned', 'Available'),
+            ('confirmed', 'Waiting Availability'),
+            ('assigned', 'Ready to Process'),
             ('done', 'Done'),
             ('cancel', 'Cancelled'),
             ], 'State', readonly=True, select=True,
@@ -1126,7 +1129,7 @@ class stock_picking(osv.osv):
         for pick in self.browse(cr, uid, ids, context=context):
             if pick.state in ['done','cancel']:
                 raise osv.except_osv(_('Error'), _('You cannot remove the picking which is in %s state !')%(pick.state,))
-            elif pick.state in ['confirmed','assigned', 'draft']:
+            else:
                 ids2 = [move.id for move in pick.move_lines]
                 ctx = context.copy()
                 ctx.update({'call_unlink':True})
@@ -1249,7 +1252,7 @@ class stock_picking(osv.osv):
                 move_obj.write(cr, uid, [c.id for c in complete], {'picking_id': new_picking})
             for move in complete:
                 if prodlot_ids.get(move.id):
-                    move_obj.write(cr, uid, move.id, {'prodlot_id': prodlot_ids[move.id]})
+                    move_obj.write(cr, uid, [move.id], {'prodlot_id': prodlot_ids[move.id]})
             for move in too_many:
                 product_qty = move_product_qty[move.id]
                 defaults = {
@@ -1315,7 +1318,8 @@ class stock_picking(osv.osv):
                 'assigned': _('is ready to process.'),
                 'cancel': _('is cancelled.'),
                 'done': _('is done.'),
-                'draft':_('is in draft state.'),
+                'auto': _('is waiting.'),
+                'draft': _('is in draft state.'),
             }
             res = data_obj.get_object_reference(cr, uid, 'stock', view_list.get(pick.type, 'view_picking_form'))
             context.update({'view_id': res and res[1] or False})
@@ -1610,6 +1614,8 @@ class stock_move(osv.osv):
     }
 
     def write(self, cr, uid, ids, vals, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
         if uid != 1:
             frozen_fields = set(['product_qty', 'product_uom', 'product_uos_qty', 'product_uos', 'location_id', 'location_dest_id', 'product_id'])
             for move in self.browse(cr, uid, ids, context=context):
@@ -1823,7 +1829,7 @@ class stock_move(osv.osv):
                 old_ptype = location_obj.picking_type_get(cr, uid, picking.move_lines[0].location_id, picking.move_lines[0].location_dest_id)
                 if old_ptype != picking.type:
                     old_pick_name = seq_obj.get(cr, uid, 'stock.picking.' + old_ptype)
-                    self.pool.get('stock.picking').write(cr, uid, picking.id, {'name': old_pick_name}, context=context)
+                    self.pool.get('stock.picking').write(cr, uid, [picking.id], {'name': old_pick_name}, context=context)
             else:
                 pickid = False
             for move, (loc, dummy, delay, dummy, company_id, ptype) in todo:
@@ -2088,7 +2094,7 @@ class stock_move(osv.osv):
             move_obj = self.pool.get('account.move')
             for j_id, move_lines in account_moves:
                 move_obj.create(cr, uid,
-                        {'name': move.name,
+                        {
                          'journal_id': j_id,
                          'line_id': move_lines,
                          'ref': move.picking_id and move.picking_id.name})
@@ -2111,7 +2117,6 @@ class stock_move(osv.osv):
 
         todo = []
         for move in self.browse(cr, uid, ids, context=context):
-            #print 'DONE MOVE', move.id, move.product_id.name, move.move_dest_id.id, move.state, move.move_dest_id and move.move_dest_id.state
             if move.state=="draft":
                 todo.append(move.id)
         if todo:
@@ -2139,13 +2144,13 @@ class stock_move(osv.osv):
             prodlot_id = partial_datas and partial_datas.get('move%s_prodlot_id' % (move.id), False)
             if prodlot_id:
                 self.write(cr, uid, [move.id], {'prodlot_id': prodlot_id}, context=context)
-            if move.state not in ('confirmed','done', 'assigned'):
+            if move.state not in ('confirmed','done','assigned'):
                 todo.append(move.id)
 
         if todo:
             self.action_confirm(cr, uid, todo, context=context)
 
-        self.write(cr, uid, move_ids, {'state': 'done', 'date_planned': time.strftime('%Y-%m-%d %H:%M:%S')}, context=context)
+        self.write(cr, uid, move_ids, {'state': 'done', 'date': time.strftime('%Y-%m-%d %H:%M:%S')}, context=context)
         for id in move_ids:
              wf_service.trg_trigger(uid, 'stock.move', id, cr)
 
@@ -2358,12 +2363,8 @@ class stock_move(osv.osv):
                     'state': move.state,
                     'location_id': location_id or move.location_id.id,
                 }
-                if (not move.prodlot_id.id) and (move.product_id.track_production and location_id):
-                    # IF product has checked track for production lot, move lines will be split by 1
-                    res += self.action_split(cr, uid, [move.id], quantity, split_by_qty=1, context=context)
-                else:
-                    current_move = self.copy(cr, uid, move.id, default_val)
-                    res += [current_move]
+                current_move = self.copy(cr, uid, move.id, default_val)
+                res += [current_move]
                 update_val = {}
                 update_val['product_qty'] = quantity_rest
                 update_val['product_uos_qty'] = uos_qty_rest
@@ -2372,16 +2373,13 @@ class stock_move(osv.osv):
             else:
                 quantity_rest = quantity
                 uos_qty_rest =  uos_qty
-                if (not move.prodlot_id.id) and (move.product_id.track_production and location_id):
-                    res += self.action_split(cr, uid, [move.id], quantity_rest, split_by_qty=1, context=context)
-                else:
-                    res += [move.id]
-                    update_val = {
+                res += [move.id]
+                update_val = {
                         'product_qty' : quantity_rest,
                         'product_uos_qty' : uos_qty_rest,
                         'location_id': location_id or move.location_id.id
-                    }
-                    self.write(cr, uid, [move.id], update_val)
+                }
+                self.write(cr, uid, [move.id], update_val)
 
             product_obj = self.pool.get('product.product')
             for new_move in self.browse(cr, uid, res, context=context):
@@ -2474,7 +2472,7 @@ class stock_move(osv.osv):
                     defaults.update(prodlot_id=prodlot_id)
                 new_move = self.copy(cr, uid, move.id, defaults)
                 complete.append(self.browse(cr, uid, new_move))
-            self.write(cr, uid, move.id,
+            self.write(cr, uid, [move.id],
                     {
                         'product_qty' : move.product_qty - product_qty,
                         'product_uos_qty':move.product_qty - product_qty,
@@ -2482,7 +2480,7 @@ class stock_move(osv.osv):
 
 
         for move in too_many:
-            self.write(cr, uid, move.id,
+            self.write(cr, uid, [move.id],
                     {
                         'product_qty': move.product_qty,
                         'product_uos_qty': move.product_qty,
@@ -2563,7 +2561,7 @@ class stock_inventory(osv.osv):
             move_ids = []
             for line in inv.inventory_line_id:
                 pid = line.product_id.id
-                product_context.update(uom=line.product_uom.id,date=inv.date)
+                product_context.update(uom=line.product_uom.id, date=inv.date, prodlot_id=line.prod_lot_id.id)
                 amount = location_obj._product_get(cr, uid, line.location_id.id, [pid], product_context)[pid]
 
                 change = line.product_qty - amount
@@ -2588,11 +2586,6 @@ class stock_inventory(osv.osv):
                             'product_qty': -change,
                             'location_id': line.location_id.id,
                             'location_dest_id': location_id,
-                        })
-                    if lot_id:
-                        value.update({
-                            'prodlot_id': lot_id,
-                            'product_qty': line.product_qty
                         })
                     move_ids.append(self._inventory_line_hook(cr, uid, line, value))
             message = _("Inventory '%s' is done.") %(inv.name)
@@ -2634,6 +2627,7 @@ stock_inventory()
 class stock_inventory_line(osv.osv):
     _name = "stock.inventory.line"
     _description = "Inventory Line"
+    _rec_name = "inventory_id"
     _columns = {
         'inventory_id': fields.many2one('stock.inventory', 'Inventory', ondelete='cascade', select=True),
         'location_id': fields.many2one('stock.location', 'Location', required=True),
@@ -2653,10 +2647,9 @@ class stock_inventory_line(osv.osv):
         @return:  Dictionary of changed values
         """
         if not product:
-            return {}
-        if not uom:
-            prod = self.pool.get('product.product').browse(cr, uid, [product], {'uom': uom})[0]
-            uom = prod.uom_id.id
+            return {'value': {'product_qty': 0.0, 'product_uom': False}}
+        obj_product = self.pool.get('product.product').browse(cr, uid, product)
+        uom = uom or obj_product.uom_id.id
         amount = self.pool.get('stock.location')._product_get(cr, uid, location_id, [product], {'uom': uom, 'to_date': to_date})[product]
         result = {'product_qty': amount, 'product_uom': uom}
         return {'value': result}

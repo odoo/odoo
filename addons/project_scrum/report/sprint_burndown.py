@@ -62,7 +62,7 @@ class report_tasks(report_int):
                 return result
 
             guideline__data=[(datas[0][0],max_hour), (datas[-1][0],0)]
-
+            
             ar = area.T(x_grid_style=line_style.gray50_dash1,
                 x_axis=axis.X(label="Date", format=int_to_date),
                 y_axis=axis.Y(label="Burndown Chart - Planned Hours"),

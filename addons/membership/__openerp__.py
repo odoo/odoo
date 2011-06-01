@@ -30,8 +30,7 @@ This module allows you to manage all operations for managing memberships.
 
 It supports different kind of members:
 * Free member
-* Associated member (eg.: a group subscribes to a membership for all
-  subsidiaries)
+* Associated member (eg.: a group subscribes to a membership for all subsidiaries)
 * Paid members,
 * Special member prices, ...
 

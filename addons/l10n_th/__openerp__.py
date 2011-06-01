@@ -26,6 +26,8 @@
     'description': """
 Chart of Accounts for Thailand.
 ===============================
+
+Thai accounting chart and localization.
     """,
     'author': 'Almacom',
     'website': 'http://almacom.co.th/',

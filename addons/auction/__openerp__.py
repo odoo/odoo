@@ -31,6 +31,7 @@ This module manages the records of artists, auction articles, buyers and sellers
 It completely manages an auction such as managing bids,
 keeping track of the sold articles along with the paid
 and unpaid objects including delivery of the articles.
+
 The dashboard for auction includes:
     * Latest Objects (list)
     * Latest Deposits (list)

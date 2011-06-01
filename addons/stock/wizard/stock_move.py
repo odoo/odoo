@@ -161,9 +161,9 @@ class stock_move_scrap(osv.osv_memory):
             context = {}
         move_obj = self.pool.get('stock.move')
         move_ids = context['active_ids']
-        for data in self.read(cr, uid, ids):
+        for data in self.browse(cr, uid, ids):
             move_obj.action_scrap(cr, uid, move_ids,
-                             data['product_qty'], data['location_id'],
+                             data.product_qty, data.location_id.id,
                              context=context)
         return {'type': 'ir.actions.act_window_close'}
 
@@ -304,7 +304,7 @@ class stock_move_split_lines_exist(osv.osv_memory):
         'prodlot_id': fields.many2one('stock.production.lot', 'Production Lot'),
     }
     _defaults = {
-        'quantity': lambda *x: 1.0,
+        'quantity': 1.0,
     }
 
 stock_move_split_lines_exist()
@@ -320,7 +320,7 @@ class stock_move_split_lines(osv.osv_memory):
         'action': fields.selection([('split','Split'),('keepinone','Keep in one lot')],'Action'),
     }
     _defaults = {
-        'quantity': lambda *x: 1.0,
-        'action' : lambda *x: 'split',
+        'quantity': 1.00,
+        'action' : 'split',
     }
 stock_move_split_lines()

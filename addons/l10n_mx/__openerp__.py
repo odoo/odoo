@@ -27,6 +27,8 @@
     "description": """
 This is the module to manage the accounting chart for Mexico in OpenERP.
 ========================================================================
+
+Mexican accounting chart and localization.
     """,
     "depends" : ["account", "base_vat", "account_chart"],
     "demo_xml" : [],

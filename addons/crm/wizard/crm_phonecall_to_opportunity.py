@@ -55,7 +55,7 @@ class crm_phonecall2opportunity(osv.osv_memory):
         case = phonecall_obj.browse(cr, uid, record_id, context=context)
         if case.state in ['done', 'cancel']:
                 raise osv.except_osv(_("Warning"), _("Closed/Cancelled Phone \
-Call Could not convert into Opportunity"))
+Call can not be converted into Opportunity"))
 
 
     def action_apply(self, cr, uid, ids, context=None):

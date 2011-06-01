@@ -36,5 +36,5 @@ Invite OpenERP user feedback, powered by uservoice.
     'active': False,
     'web': True,
     'certificate': '0040452504963885',
-    'images': ['images/resource_leaves_calendar.jpeg','images/resource_leaves_form.jpeg'],
+    'images': ['images/submit_an_idea.jpeg','images/web_uservoice_feedback.jpeg'],
 }

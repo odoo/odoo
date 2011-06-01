@@ -27,6 +27,12 @@
     'description': """
 Fundraising.
 ============
+
+When you wish to support your organization or a campaign, you can trace
+all your activities for collecting money. The menu opens a search list
+where you can find fund descriptions, email, history and probability of
+success. Several action buttons allow you to easily modify your different
+fund status.
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',

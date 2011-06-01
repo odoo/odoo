@@ -163,11 +163,11 @@ class stock_return_picking(osv.osv_memory):
         
         val_id = data['product_return_moves']
         for v in val_id:
-            data_get = data_obj.read(cr, uid, v)
-            mov_id = data_get['move_id']
-            new_qty = data_get['quantity']
+            data_get = data_obj.browse(cr, uid, v, context=context)
+            mov_id = data_get.move_id.id
+            new_qty = data_get.quantity
             move = move_obj.browse(cr, uid, mov_id, context=context)
-            new_location=move.location_dest_id.id
+            new_location = move.location_dest_id.id
             returned_qty = move.product_qty
             for rec in move.move_history_ids2:
                 returned_qty -= rec.product_qty
