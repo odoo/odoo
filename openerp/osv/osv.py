@@ -79,7 +79,7 @@ class object_proxy(netsvc.Service):
                 # We open a *new* cursor here, one reason is that failed SQL
                 # queries (as in IntegrityError) will invalidate the current one.
                 cr = False
-                
+
                 if hasattr(src, '__call__'):
                     # callable. We need to find the right parameters to call
                     # the  orm._sql_message(self, cr, uid, ids, context) function,
@@ -92,18 +92,18 @@ class object_proxy(netsvc.Service):
                                 ids = args[3]
                             else:
                                 ids = []
-                        cr = sql_db.db_connect(db_name).cursor()
+                        cr = sql_db.db_connect(dbname).cursor()
                         return src(obj, cr, uid, ids, context=(ctx or {}))
                     except Exception:
                         pass
                     finally:
                         if cr: cr.close()
-                   
+
                     return False # so that the original SQL error will
                                  # be returned, it is the best we have.
 
                 try:
-                    cr = sql_db.db_connect(db_name).cursor()
+                    cr = sql_db.db_connect(dbname).cursor()
                     res = translate(cr, name=False, source_type=ttype,
                                     lang=lang, source=src)
                     if res:
