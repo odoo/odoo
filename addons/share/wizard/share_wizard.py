@@ -88,6 +88,13 @@ class share_create(osv.osv_memory):
             result.append(('groups','Existing groups of users'))
         return result
 
+    """Override of create() to auto-compute the action name"""
+    def create(self, cr, uid, values, context=None):
+        if 'action_id' in values and not 'name' in values:
+            action = self.pool.get('ir.actions.actions').browse(cr, uid, values['action_id'], context=context)
+            values['name'] = action.name
+        return super(share_create,self).create(cr, uid, values, context=context)
+
     _columns = {
         'action_id': fields.many2one('ir.actions.act_window', 'Action to share', required=True,
                 help="The action that opens the screen containing the data you wish to share."),
@@ -100,6 +107,7 @@ class share_create(osv.osv_memory):
         'access_mode': fields.selection([('readwrite','Read & Write'),('readonly','Read-only')],'Access Mode'),
         'result_line_ids': fields.one2many('share.wizard.result.line', 'share_wizard_id', 'Summary', readonly=True),
         'share_root_url': fields.char('Generic Share Access URL', size=512, readonly=True, tooltip='Main access page for users that are granted shared access'),
+        'name': fields.char('Title', size=64, required=True, help="Title for the shared view, to be displayed as the name of the shortcut in the user's menu"),
 
         # used to display a warning message at first step
         'has_user_email': fields.function(_has_email, string='Has email', method=True, type="boolean"),
@@ -210,7 +218,7 @@ class share_create(osv.osv_memory):
 
     def _shared_action_def(self, cr, uid, wizard_data, context=None):
         return {
-            'name': (_('%s (Shared)') % wizard_data.action_id.name)[:64],
+            'name': wizard_data.name,
             'domain': '[]',
             'context': self._cleanup_action_context(wizard_data.action_id.context, uid),
             'res_model': wizard_data.action_id.res_model,
