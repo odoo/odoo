@@ -52,8 +52,8 @@ class sale_order_line(osv.osv):
 
             if res_dict.get('item_id',False) and res_dict['item_id'].get(pricelist,False):
                 item = res_dict['item_id'].get(pricelist,False)
-                item_base = item_obj.read(cr, uid, [item], ['base'])[0]['base']
-                if item_base > 0:
+                item_base = item_obj.read(cr, uid, [item], ['base'])
+                if item_base and item_base[0]['base'] > 0:
                     field_name = price_type_obj.browse(cr, uid, item_base).field
 
             product = product_obj.browse(cr, uid, product_id, context)
@@ -74,13 +74,13 @@ class sale_order_line(osv.osv):
             lang, update_tax,date_order,fiscal_position=fiscal_position,flag=flag)
 
         context = {'lang': lang, 'partner_id': partner_id}
-        result=res['value']
-        pricelist_obj=self.pool.get('product.pricelist')
+        result = res['value']
+        pricelist_obj = self.pool.get('product.pricelist')
         product_obj = self.pool.get('product.product')
         product_uom_obj = self.pool.get('product.uom')
         if product:
             if result.get('price_unit',False):
-                price=result['price_unit']
+                price = result['price_unit']
             else:
                 return res
 
@@ -114,11 +114,10 @@ class account_invoice_line(osv.osv):
             product_obj = self.pool.get('product.product')
             template_obj = self.pool.get('product.template')
             field_name = 'list_price'
-
             if res_dict.get('item_id',False) and res_dict['item_id'].get(pricelist,False):
                 item = res_dict['item_id'].get(pricelist,False)
-                item_base = item_obj.read(cr, uid, [item], ['base'])[0]['base']
-                if item_base > 0:
+                item_base = item_obj.read(cr, uid, [item], ['base'])
+                if item_base and item_base[0]['base'] > 0:
                     field_name = price_type_obj.browse(cr, uid, item_base).field
 
             product = product_obj.browse(cr, uid, product_id, context)
@@ -142,7 +141,7 @@ class account_invoice_line(osv.osv):
             real_price = 0.00
             if type in ('in_invoice', 'in_refund'):
                 if not price_unit and partner_id:
-                    pricelist =partner_obj.browse(cr, uid, partner_id).property_product_pricelist_purchase.id
+                    pricelist = partner_obj.browse(cr, uid, partner_id).property_product_pricelist_purchase.id
                     if not pricelist:
                         raise osv.except_osv(_('No Purchase Pricelist Found !'),_("You must first define a pricelist for Supplier !"))
                     price_unit_res = pricelist_obj.price_get(cr, uid, [pricelist], product.id, qty or 1.0, partner_id, {'uom': uom})
@@ -158,13 +157,13 @@ class account_invoice_line(osv.osv):
 
                     real_price = get_real_price(price_unit_res, product.id, qty, uom, pricelist)
             if pricelist:
-                pricelists=pricelist_obj.read(cr,uid,[pricelist],['visible_discount'])
+                pricelists = pricelist_obj.read(cr,uid,[pricelist],['visible_discount'])
                 if(len(pricelists)>0 and pricelists[0]['visible_discount'] and real_price != 0):
                     discount=(real_price-price_unit) / real_price * 100
                     result['price_unit'] = real_price
                     result['discount'] = discount
                 else:
-                    result['discount']=0.0
+                    result['discount'] = 0.0
         return res
 
 account_invoice_line()
