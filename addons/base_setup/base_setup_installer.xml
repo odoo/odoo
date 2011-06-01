@@ -198,11 +198,18 @@
           <field name="view_mode">form</field>
           <field name="target">new</field>
       </record>
+      
+    <record id="category_user_preferences_config_form" model="ir.actions.todo.category">
+      <field name="name">Admin</field>
+      <field name="sequence">4</field>
+    </record>    
+      
 
       <!--   Register configuration wizard -->
       
       <record id="config_action_user_preferences_config_form" model="ir.actions.todo">
           <field name="action_id" ref="action_user_preferences_config_form"/>
+          <field name="category_id" ref="category_user_preferences_config_form"/>
           <field name="type">normal</field>
           <field name="state">skip</field>
       </record>
