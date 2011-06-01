@@ -10,22 +10,18 @@ openerp.base.form.DashBoard = openerp.base.form.Widget.extend({
     start: function() {
         var self = this;
         this._super.apply(this, arguments);
+
         this.$element.find(".oe-dashboard-column").sortable({
             connectWith: ".oe-dashboard-column",
             scroll: false
         }).disableSelection().bind('sortstop', self.do_save_dashboard);
+
+        // Events
+        this.$element.find('.oe-dashboard-link-undo').click(this.on_undo);
         this.$element.find('.oe-dashboard-link-add_widget').click(this.on_add_widget);
         this.$element.find('.oe-dashboard-link-edit_layout').click(this.on_edit_layout);
-
-        this.$element.find('.oe-dashboard-column .ui-icon-minusthick').click(function() {
-            $(this).toggleClass('ui-icon-minusthick').toggleClass('ui-icon-plusthick');
-            $(this).parents('.oe-dashboard-action:first .oe-dashboard-action-content').toggle();
-        });
-
-        $('.oe-dashboard-column .ui-icon-closethick').click(function() {
-            $(this).parents('.oe-dashboard-action:first').remove();
-            self.do_save_dashboard();
-        });
+        this.$element.find('.oe-dashboard-column .ui-icon-minusthick').click(this.on_fold_action);
+        this.$element.find('.oe-dashboard-column .ui-icon-closethick').click(this.on_close_action);
 
         this.actions_attrs = {};
         // Init actions
@@ -41,13 +37,28 @@ openerp.base.form.DashBoard = openerp.base.form.Widget.extend({
             });
         });
     },
+    on_undo: function() {
+        this.rpc('/base/view/undo_custom', {
+            view_id: this.view.fields_view.view_id
+        }, this.do_reload);
+    },
     on_add_widget: function() {
     },
     on_edit_layout: function() {
     },
+    on_fold_action: function(e) {
+        var $e = $(e.currentTarget);
+        $e.toggleClass('ui-icon-minusthick ui-icon-plusthick');
+        $e.parents('.oe-dashboard-action:first').find('.oe-dashboard-action-content').toggle();
+    },
+    on_close_action: function(e) {
+        $(e.currentTarget).parents('.oe-dashboard-action:first').remove();
+        this.do_save_dashboard();
+    },
     do_save_dashboard: function() {
         var self = this;
         var board = {
+                form_title : this.view.fields_view.arch.attrs.string,
                 style : this.$element.find('.oe-dashboard').attr('data-layout'),
                 columns : []
             };
@@ -59,7 +70,13 @@ openerp.base.form.DashBoard = openerp.base.form.Widget.extend({
             });
             board.columns.push(actions);
         });
-        var xml = QWeb.render('DashBoard.xml', board);
+        var arch = QWeb.render('DashBoard.xml', board);
+        this.rpc('/base/view/add_custom', {
+            view_id: this.view.fields_view.view_id,
+            arch: arch
+        }, function() {
+            self.$element.find('.oe-dashboard-link-undo').show();
+        });
     },
     on_load_action: function(result) {
         var action = result.result;
@@ -76,6 +93,10 @@ openerp.base.form.DashBoard = openerp.base.form.Widget.extend({
     },
     render: function() {
         return QWeb.render(this.template, this);
+    },
+    do_reload: function() {
+        this.view.view_manager.stop();
+        this.view.view_manager.start();
     }
 });
 openerp.base.form.DashBoardLegacy = openerp.base.form.DashBoard.extend({
