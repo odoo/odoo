@@ -57,9 +57,15 @@
         <field name="view_id" ref="crm.crm_case_stage_tree"/>
         <field name="help">Stages will allow salesmen to easily track  how a specific opportunity is positioned in the sales cycle. In order to  efficiently manage your sales pipeline, it's important to define  conditions to go to the next step. Example: to set an opportunity as  'Qualified', you must set the "Expected Revenue" and the "Expected  Closing Date." You should also have a look at the tooltip of the field  "Change Probability Automatically".</field>
     </record>
+    
+    <record id="category_crm_case_stage_form_installer" model="ir.actions.todo.category">
+        <field name="name">Sale</field>
+        <field name="sequence">4</field>
+    </record>    
 
     <record id="crm_case_stage_installer_todo" model="ir.actions.todo">
         <field name="action_id" ref="crm_case_stage_form_installer"/>
+        <field name="category_id" ref="category_crm_case_stage_form_installer"/>
         <field name="sequence">10</field>
         <field name="type">normal</field>
         <field name="state">skip</field>
