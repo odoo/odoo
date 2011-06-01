@@ -144,27 +144,13 @@ class account_voucher(osv.osv):
 
     def _check_paid(self, cr, uid, ids, name, args, context=None):
         res = {}
-        for id in ids:
-            for voucher in self.browse(cr, uid, ids, context=context):
-                for line in voucher.move_ids:
-                    if (line.account_id.type, 'in', ('receivable', 'payable')) and line.reconcile_id:
-                        res[id] = True
+        ok = False
+        for voucher in self.browse(cr, uid, ids, context=context):
+            for line in voucher.move_ids:
+                if (line.account_id.type, 'in', ('receivable', 'payable')) and line.reconcile_id:
+                    ok = True
+            res[voucher.id] = ok
         return res
-
-#    def test_paid(self, cr, uid, ids, context):
-#        ok = False
-#        for voucher in self.browse(cr, uid, ids, context=context):
-#            for line in voucher.move_ids:
-#                if line.amount_residual:
-#                    print ">>>", line.amount_residual
-#                    ok = True
-#            if voucher.pay_now == 'pay_later':
-#                for line in voucher.move_ids:
-#                    if (line.account_id.type, 'in', ('receivable', 'payable')) and line.reconcile_id:
-#                        ok = True
-#            elif voucher.pay_now == 'pay_now' and voucher.state == 'posted':
-#                ok = True
-        return ok
 
     def _compute_writeoff_amount(self, cr, uid, line_dr_ids, line_cr_ids, amount):
         debit = credit = 0.0
