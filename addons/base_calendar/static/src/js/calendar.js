@@ -260,6 +260,7 @@ openerp.base_calendar.CalendarView = openerp.base.Controller.extend({
     
     popup_event: function(event_id) {
         
+    	var self = this;
     	if(event_id) event_id = parseInt(event_id, 10);
     	
         var action = {
@@ -279,14 +280,27 @@ openerp.base_calendar.CalendarView = openerp.base.Controller.extend({
             pager: false
             }
         var element_id = _.uniqueId("act_window_dialog");
+        
         var dialog = jQuery('<div>', {
             'id': element_id
             }).dialog({
                 modal: true,
                 width: 'auto',
-                height: 'auto'
-            });
-        
+                height: 'auto',
+                buttons: {
+            		Cancel: function() {
+            			$(this).dialog("destroy");
+            		},
+            		Save: function() {
+            			var view_manager = action_manager.viewmanager;
+            			var _dialog = this;
+            			view_manager.views[view_manager.active_view].controller.do_save(function(r) {
+            				$(_dialog).dialog("destroy");
+            				self.start();
+            			})
+            		}
+            	}
+        });
         var action_manager = new openerp.base.ActionManager(this.session, element_id);
         action_manager.start();
         action_manager.do_action(action);
