@@ -44,7 +44,7 @@ class purchase_requisition(osv.osv):
         'state': fields.selection([('draft','Draft'),('in_progress','In Progress'),('cancel','Cancelled'),('done','Done')], 'State', required=True)
     }
     _defaults = {
-        'date_start': time.strftime('%Y-%m-%d %H:%M:%S'),
+        'date_start': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'state': 'draft',
         'exclusive': 'multiple',
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'purchase.requisition', context=c),
