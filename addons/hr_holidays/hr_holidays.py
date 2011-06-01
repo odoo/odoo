@@ -333,10 +333,17 @@ class hr_employee(osv.osv):
         holiday_obj = self.pool.get('hr.holidays')
         # Find for holidays status
         status_ids = type_obj.search(cr, uid, [('limit', '=', False)], context=context)
+        if len(status_ids) != 1 :
+            raise osv.except_osv(('warning !'),_("To use this feature, you should have only one leave type without the option 'Allow to Override Limit' set (%s Found).") % (len(status_ids)))
         status_id = status_ids and status_ids[0] or False
-        if not status_id or diff <= 0:
+        if not status_id:
             return False
-        leave_id = holiday_obj.create(cr, uid, {'name': 'Allocation for ' + employee.name,'employee_id': employee.id, 'holiday_status_id': status_id, 'type': 'add', 'holiday_type': 'employee', 'number_of_days_temp': diff}, context=context)
+        if diff > 0:
+            leave_id = holiday_obj.create(cr, uid, {'name': _('Allocation for %s') % employee.name, 'employee_id': employee.id, 'holiday_status_id': status_id, 'type': 'add', 'holiday_type': 'employee', 'number_of_days_temp': diff}, context=context)
+        elif diff < 0:
+            leave_id = holiday_obj.create(cr, uid, {'name': _('Leave Request for %s') % employee.name, 'employee_id': employee.id, 'holiday_status_id': status_id, 'type': 'remove', 'holiday_type': 'employee', 'number_of_days_temp': abs(diff)}, context=context)
+        else:
+            return False
         holiday_obj.holidays_confirm(cr, uid, [leave_id])
         holiday_obj.holidays_validate2(cr, uid, [leave_id])
         return True

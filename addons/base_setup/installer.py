@@ -207,8 +207,8 @@ class user_preferences_config(osv.osv_memory):
             help="Set default for new user's timezone, used to perform timezone conversions "
                  "between the server and the client."),
         'context_lang': fields.selection(_lang_get, 'Language', required=True,
-            help="Sets default language for the  new user's user interface, when UI "
-                 "translations are available"),
+            help="Sets default language for the all user interface, when UI "
+                "translations are available. If you want to Add new Language, you can add it from 'Load an Official Translation' wizard  from 'Administration' menu."),
         'view': fields.selection([('simple','Simplified'),
                                   ('extended','Extended')],
                                  'Interface', required=True, help= "If you use OpenERP for the first time we strongly advise you to select the simplified interface, which has less features but is easier. You can always switch later from the user preferences." ),
@@ -231,17 +231,10 @@ class user_preferences_config(osv.osv_memory):
         return res
 
     def execute(self, cr, uid, ids, context=None):
+        user_obj = self.pool.get('res.users')
+        user_ids = user_obj.search(cr, uid, [], context=context)
         for o in self.browse(cr, uid, ids, context=context):
-            ir_user_obj = self.pool.get('res.users')
-            ids = ir_user_obj.search(cr, uid, [], context=context)
-            line_datas ={
-                'context_tz' : o.context_tz,
-                'context_lang' : o.context_lang,
-                'view' : o.view,
-                'menu_tips' : o.menu_tips,
-            }
-            ir_user_obj.write(cr , uid, ids , line_datas, context=context)
-            
+            user_obj.write(cr , uid, user_ids ,{'context_tz' : o.context_tz, 'context_lang' : o.context_lang, 'view' : o.view, 'menu_tips' : o.menu_tips}, context=context)
             ir_values_obj = self.pool.get('ir.values')
             ir_values_obj.set(cr, uid, 'default', False, 'context_tz', ['res.users'], o.context_tz)
             ir_values_obj.set(cr, uid, 'default', False, 'context_lang', ['res.users'], o.context_lang)
@@ -250,5 +243,78 @@ class user_preferences_config(osv.osv_memory):
         return {}
 
 user_preferences_config()
+
+# Specify Your Terminology
+
+class specify_partner_terminology(osv.osv_memory):
+    _name = 'specify.partner.terminology'
+    _inherit = 'res.config'
+    _columns = {
+        'partner': fields.selection([('Customer','Customer'),
+                                  ('Client','Client'),
+                                  ('Member','Member'),
+                                  ('Patient','Patient'),
+                                  ('Partner','Partner'),
+                                  ('Donor','Donor'),
+                                  ('Guest','Guest'),
+                                  ('Tenant','Tenant')
+                                  ],
+                                 'Choose how to call a customer', required=True ),
+    }
+    _defaults={
+               'partner' :'Partner',
+    }
+    
+    def make_translations(self, cr, uid, ids, name, type, src, value, res_id=0, context=None):
+        trans_obj = self.pool.get('ir.translation')
+        user_obj = self.pool.get('res.users')
+        context_lang = user_obj.browse(cr, uid, uid, context=context).context_lang
+        existing_trans_ids = trans_obj.search(cr, uid, [('name','=',name), ('lang','=',context_lang), ('type','=',type), ('src','=',src)])
+        if existing_trans_ids:
+            trans_obj.write(cr, uid, existing_trans_ids, {'value': value}, context=context)
+        else:
+            create_id = trans_obj.create(cr, uid, {'name': name,'lang': context_lang, 'type': type, 'src': src, 'value': value , 'res_id': res_id}, context=context)
+        return {}
+    
+    def execute(self, cr, uid, ids, context=None):
+        def _case_insensitive_replace(ref_string, src, value):
+            import re
+            pattern = re.compile(src, re.IGNORECASE)
+            return pattern.sub(value, ref_string)
+        trans_obj = self.pool.get('ir.translation')
+        fields_obj = self.pool.get('ir.model.fields')
+        menu_obj = self.pool.get('ir.ui.menu')
+        act_window_obj = self.pool.get('ir.actions.act_window')
+        for o in self.browse(cr, uid, ids, context=context):
+            #translate label of field
+            field_ids = fields_obj.search(cr, uid, [('field_description','ilike','Customer')])
+            for f_id in fields_obj.browse(cr ,uid, field_ids, context=context):
+                field_ref = f_id.model_id.model + ',' + f_id.name
+                self.make_translations(cr, uid, ids, field_ref, 'field', f_id.field_description, _case_insensitive_replace(f_id.field_description,'Customer',o.partner), context=context)
+            #translate help tooltip of field
+            for obj in self.pool.obj_pool.values():
+                for field_name, field_rec in obj._columns.items():
+                    if field_rec.help.lower().count('customer'):
+                        field_ref = obj._name + ',' + field_name
+                        self.make_translations(cr, uid, ids, field_ref, 'help', field_rec.help, _case_insensitive_replace(field_rec.help,'Customer',o.partner), context=context)
+            #translate menuitems
+            menu_ids = menu_obj.search(cr,uid, [('name','ilike','Customer')])
+            for m_id in menu_obj.browse(cr, uid, menu_ids, context=context):
+                menu_name = m_id.name
+                menu_ref = 'ir.ui.menu' + ',' + 'name'
+                self.make_translations(cr, uid, ids, menu_ref, 'model', menu_name, _case_insensitive_replace(menu_name,'Customer',o.partner), res_id=m_id.id, context=context)
+            #translate act window name
+            act_window_ids = act_window_obj.search(cr, uid, [('name','ilike','Customer')])
+            for act_id in act_window_obj.browse(cr ,uid, act_window_ids, context=context):
+                act_ref = 'ir.actions.act_window' + ',' + 'name'
+                self.make_translations(cr, uid, ids, act_ref, 'model', act_id.name, _case_insensitive_replace(act_id.name,'Customer',o.partner), res_id=act_id.id, context=context)
+            #translate act window tooltips
+            act_window_ids = act_window_obj.search(cr, uid, [('help','ilike','Customer')])
+            for act_id in act_window_obj.browse(cr ,uid, act_window_ids, context=context):
+                act_ref = 'ir.actions.act_window' + ',' + 'help'
+                self.make_translations(cr, uid, ids, act_ref, 'model', act_id.help, _case_insensitive_replace(act_id.help,'Customer',o.partner), res_id=act_id.id, context=context)
+        return {}
+    
+specify_partner_terminology()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
