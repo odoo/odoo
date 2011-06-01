@@ -13,29 +13,19 @@ openerp.base_calendar.CalendarView = openerp.base.Controller.extend({
         this.dataset = dataset;
         this.model = dataset.model;
         this.view_id = view_id;
-        this.fields_view = {};
-        this.widgets = {};
-        this.widgets_counter = 0;
-        this.fields = this.dataset.fields ? this.dataset.fields: {};
-        this.ids = this.dataset.ids;
-		this.name = "";
-		this.date_start = "";
-		this.date_delay = "";
-		this.date_stop = "";
-		this.color_field = "";
-		this.day_lenth = 8;
-		this.colors = [];
-		this.color_values = [];
-		this.calendar_fields = {};
-		this.info_fields = [];
-		this.domain = this.dataset._domain ? this.dataset._domain: [];
-		this.context = {};
+        this.domain = this.dataset.domain || [];
+		this.context = this.dataset.context || {};
 	},
 	start: function() {
 		this.rpc("/base_calendar/calendarview/load", {"model": this.model, "view_id": this.view_id}, this.on_loaded);
 	},
     on_loaded: function(data) {
-        
+		this.calendar_fields = {};
+		this.ids = this.dataset.ids;
+		this.day_lenth = 8;
+		this.color_values = [];
+		this.info_fields = [];
+		
         this.fields_view = data.fields_view;
         this.name = this.fields_view.name || this.fields_view.arch.attrs.string;
 		this.view_id = this.fields_view.view_id;
