@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-05-09 10:18+0000\n"
-"PO-Revision-Date: 2011-05-30 06:24+0000\n"
-"Last-Translator: Ahmet Altınışık <Unknown>\n"
+"PO-Revision-Date: 2011-05-31 15:15+0000\n"
+"Last-Translator: Ayhan KIZILTAN <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-05-31 05:53+0000\n"
+"X-Launchpad-Export-Date: 2011-06-01 05:42+0000\n"
 "X-Generator: Launchpad (build 12959)\n"
 
 #. module: document
@@ -24,7 +24,7 @@ msgstr "Üst dizin"
 #. module: document
 #: model:ir.model,name:document.model_document_configuration
 msgid "Auto Directory Configuration"
-msgstr ""
+msgstr "Otomatik Klasör Yapılandırması"
 
 #. module: document
 #: field:document.directory,resource_field:0
@@ -52,12 +52,14 @@ msgid ""
 "Field to be used as name on resource directories. If empty, the \"name\" "
 "will be used."
 msgstr ""
+"Kaynak klasörleri adı olarak kullanılacak alan. Boşsai \"adı\" "
+"kullanılacaktır."
 
 #. module: document
 #: code:addons/document/document_directory.py:276
 #, python-format
 msgid "Directory name contains special characters!"
-msgstr ""
+msgstr "Klasör adında özel karakterler var!"
 
 #. module: document
 #: view:document.directory:0
@@ -111,7 +113,7 @@ msgstr "Klasör İçeriği"
 #. module: document
 #: view:document.directory:0
 msgid "Dynamic context"
-msgstr ""
+msgstr "Dinamik İçerik"
 
 #. module: document
 #: model:ir.ui.menu,name:document.menu_document_management_configuration
@@ -125,6 +127,9 @@ msgid ""
 "You can use 'dir_id' for current dir, 'res_id', 'res_model' as a reference "
 "to the current record, in dynamic folders"
 msgstr ""
+"Bu alanı değerlendirmek için bir python ifadesi kullanın.\n"
+"Geçerli klasör için 'dir_id', Dinamik dosyalardaki geçerli kayıta referans "
+"olarak 'res_id', 'res_model' i kullan"
 
 #. module: document
 #: view:report.document.user:0
@@ -167,7 +172,7 @@ msgstr "Klasörler"
 #. module: document
 #: field:document.configuration,sale_order:0
 msgid "Sale Order"
-msgstr ""
+msgstr "Satış Siparişi"
 
 #. module: document
 #: model:ir.model,name:document.model_report_document_user
