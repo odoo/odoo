@@ -213,10 +213,18 @@ class res_partner_job(osv.osv):
         'sequence_contact' : lambda *a: 0,
         'state': lambda *a: 'current',
     }
-    
-    def onchange_name(self, cr, uid, ids, address_id='', name='', context=None):    
-        return {'value': {'address_id': address_id}, 'domain':{'partner_id':'name'}}     
-    
+
+    def onchange_name(self, cr, uid, ids, partner_id='', address_id='', context=None):
+        address_id = False
+        if partner_id:
+            partner = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
+            addresses = [a.id for a in partner.address if a.type == 'contact'] or [a.id for a in partner.address]
+            address_id = addresses and addresses[0] or False
+
+        domain = partner_id and [('partner_id', '=', partner_id)] or []
+
+        return {'value': {'address_id': address_id}, 'domain': {'address_id': domain}}
+
     def onchange_partner(self, cr, uid, _, partner_id, context=None):
         """
             @param self: The object pointer
@@ -228,7 +236,7 @@ class res_partner_job(osv.osv):
         """
         return {'value': {'address_id': False}}
 
-    def onchange_address(self, cr, uid, _, address_id, context=None):
+    def onchange_address(self, cr, uid, _, name, address_id, context=None):
         """
             @@param self: The object pointer
             @param cr: the current row, from the database cursor,
@@ -239,11 +247,13 @@ class res_partner_job(osv.osv):
         """
         partner_id = False
         if address_id:
-            address = self.pool.get('res.partner.address')\
-                        .browse(cr, uid, address_id, context=context)
+            address = self.pool.get('res.partner.address').browse(cr, uid, address_id, context=context)
             partner_id = address.partner_id.id
-        return {'value': {'name': partner_id}}
-    
+
+        domain = name and [('partner_id', '=', name)] or []
+
+        return {'value': {'name': partner_id}, 'domain': {'address_id': domain}}
+
 res_partner_job()
 
 
