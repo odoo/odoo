@@ -34,19 +34,12 @@ class google_login(osv.osv_memory):
         'password': fields.char('Google Password', size=64),
     }
 
-    def google_login(self,cr,uid,user,password,type='',context=None):
-        gd_client=False
-        if type == 'group': 
-            gd_client = gdata.contacts.client.ContactsClient(source='OpenERP')
-        if type == 'contact' :   
-            gd_client = gdata.contacts.service.ContactsService()
-        if type == 'calendar':
-            gd_client = gdata.calendar.service.CalendarService()
+    def google_login(self, user, password, type='group', context=None):
+        gd_client = gdata.contacts.service.ContactsService()
         try:    
             gd_client.ClientLogin(user, password,gd_client.source)
-
-        except Exception, e:
-            raise osv.except_osv(_('Error'), _(e))            
+        except Exception:
+            return False
         return gd_client
 
 
@@ -58,19 +51,12 @@ class google_login(osv.osv_memory):
         if 'password' in fields:
             res.update({'password': user_obj.gmail_password})
         return res
-
-    def check_login(self, cr, uid, ids, context=None):
-        if context == None:
-            context = {}
+    
+    def login(self, cr, uid, ids, context=None):
         data = self.read(cr, uid, ids)[0]
         user = data['user']
         password = data['password']
-        gd_client = gdata.contacts.service.ContactsService()
-        gd_client.email = user
-        gd_client.password = password
-        gd_client.source = 'OpenERP'
-        try:
-            gd_client.ProgrammaticLogin()
+        if self.google_login(user, password):
             res = {
                    'gmail_user': user,
                    'gmail_password': password
@@ -78,7 +64,6 @@ class google_login(osv.osv_memory):
             self.pool.get('res.users').write(cr, uid, uid, res, context=context)
         else:
             raise osv.except_osv(_('Error'), _("Authentication fail check the user and password !"))
-
 
         return self._get_next_action(cr, uid, context=context)
 
