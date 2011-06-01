@@ -182,8 +182,6 @@ class crm_merge_opportunity(osv.osv_memory):
 
 
         # Get Opportunity views
-        result = models_data._get_id(
-            cr, uid, 'crm', 'view_crm_case_opportunities_filter')
         opportunity_view_form = models_data._get_id(
             cr, uid, 'crm', 'crm_case_form_view_oppor')
         opportunity_view_tree = models_data._get_id(
