@@ -385,39 +385,26 @@ class share_create(osv.osv_memory):
 
     def _create_or_combine_sharing_rule(self, cr, current_user, wizard_data, group_id, model_id, domain, rule_name=None, context=None):
         rule_obj = self.pool.get('ir.rule')
-        if rule_name is None:
-            rule_name = _('Sharing filter created by user %s (%s) for group %s') % \
-                            (current_user.name, current_user.login, group_id)
-        # if the target group already has one or more rules for the given model,
-        # we should instead add the new domain to each rule with OR operator to
-        # achieve the desired effect, otherwise they would be AND'ed as happens
-        # for any pair of rules on the same group for the same model.
-        # Indeed, A v (B /\ C) == (A v B) /\ (A v C)
         rule_ids = rule_obj.search(cr, UID_ROOT, [('groups', 'in', group_id), ('model_id', '=', model_id)])
         if rule_ids:
             for rule in rule_obj.browse(cr, UID_ROOT, rule_ids, context=context):
                 if rule.domain_force == domain:
-                    # skip identical ones!
-                    continue
-                # sanity check: the rule we are about to modify must not be used by another group
-                self._assert(len(rule.groups) == 1,
-                             _('Sorry, the selected group(s) currently have security rules in conflict with '\
-                               'the access point you are adding, and these rules cannot be altered because they are used '\
-                               'by other groups as well. Please correct it and make sure each group does not share any '\
-                               'security rule with other groups (global rules are fine).'), context=context)
-                # combine both domains with 'OR'
-                combined_domain = rule_obj.domain_disjunction(cr, UID_ROOT, rule.domain_force, domain)
-                rule.write({'domain_force': combined_domain}, context=context)
-                self.__logger.debug("Combined new sharing rule on model %s with domain: %s with existing one(s): %r", model_id, domain, combined_domain)
-        else:
-            rule_obj.create(cr, UID_ROOT, {
-                'name': rule_name,
-                'model_id': model_id,
-                'domain_force': domain,
-                'groups': [(4,group_id)]
-                })
-            self.__logger.debug("Created sharing rule on model %s with domain: %s", model_id, domain)
-
+                    # don't create it twice!
+                    self.__logger.debug("Ignoring sharing rule on model %s with domain: %s because the same rule exists already", model_id, domain)
+                    return
+        if rule_name is None:
+            rule_name = _('Sharing filter created by user %s (%s) for group %s') % \
+                            (current_user.name, current_user.login, group_id)
+        # Adding the new rule in the group is fine in all cases, because rules
+        # in the same group and for the same model will be combined with OR
+        # (as of v6.1), so the desired effect is achieved.
+        rule_obj.create(cr, UID_ROOT, {
+            'name': rule_name,
+            'model_id': model_id,
+            'domain_force': domain,
+            'groups': [(4,group_id)]
+            })
+        self.__logger.debug("Created sharing rule on model %s with domain: %s", model_id, domain)
 
     def _create_indirect_sharing_rules(self, cr, current_user, wizard_data, group_id, fields_relations, context=None):
         rule_obj = self.pool.get('ir.rule')
