@@ -138,7 +138,7 @@ class crm_merge_opportunity(osv.osv_memory):
             attach_ids = self.get_attachments(cr, uid, opp, context=context)
             self.set_attachements_res_id(cr, uid, first_opportunity.id, attach_ids)
             for history in opp.message_ids:
-   message_obj.write(cr, uid, history.id, {'res_id': first_opportunity.id, 'name' : _("From %s : %s") % (opp.name, history.name) }, context=context)
+                message_obj.write(cr, uid, history.id, {'res_id': first_opportunity.id, 'name' : _("From %s : %s") % (opp.name, history.name) }, context=context)
 
         #Notification about loss of information
         details = []
