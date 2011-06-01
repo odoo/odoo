@@ -122,7 +122,7 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
             view_promise = controller.start();
             var self = this;
             $.when(view_promise).then(function() {
-                self.on_controller_inited(view_type);
+                self.on_controller_inited(view_type, controller);
             });
             this.views[view_type].controller = controller;
         }
@@ -155,8 +155,9 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
      * Event launched when a controller has been inited.
      * 
      * @param {String} view_type type of view
+     * @param {String} view the inited controller
      */
-    on_controller_inited: function(view_type) {},
+    on_controller_inited: function(view_type, view) {},
     /**
      * Sets up the current viewmanager's search view.
      *

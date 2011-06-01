@@ -31,10 +31,14 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
         this.touched = false;
         this.flags = this.view_manager.flags || {};
     },
-    start: function() {
+    start: function(fields_view) {
         //this.log('Starting FormView '+this.model+this.view_id)
-        return this.rpc("/base/formview/load", {"model": this.model, "view_id": this.view_id,
-            toolbar:!!this.flags.sidebar}, this.on_loaded);
+        if (fields_view) {
+            return $.Deferred().then(this.on_loaded).resolve({fields_view: fields_view});
+        } else {
+            return this.rpc("/base/formview/load", {"model": this.model, "view_id": this.view_id,
+                toolbar:!!this.flags.sidebar}, this.on_loaded);
+        }
     },
     on_loaded: function(data) {
         var self = this;
@@ -991,6 +995,7 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
 openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
     init: function(view, node) {
         this._super(view, node);
+        debugger;
         this.template = "FieldOne2Many";
         this.is_started = $.Deferred();
         this.is_setted = $.Deferred();
@@ -1013,13 +1018,13 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
         this.viewmanager = new openerp.base.ViewManager(this.view.session,
             this.element_id, this.dataset, views);
         this.viewmanager.start();
-        this.viewmanager.on_controller_inited.add_last(function(view_type) {
+        this.viewmanager.on_controller_inited.add_last(function(view_type, controller) {
             if (view_type == "list") {
-                self.is_started.resolve();
                 // TODO niv
-            } else {
+            } else if (view_type == "form") {
                 // TODO niv
             }
+            self.is_started.resolve();
         });
         
         $.when(this.is_started, this.is_setted).then(function() {
