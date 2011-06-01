@@ -36,7 +36,7 @@ def _reconstruct_invoice_ref(cursor, user, reference, context=None):
     user_current=user_obj.browse(cursor, user, user)
 
     ##
-    cursor.execute("SELECT inv.id,inv.number from account_invoice AS inv where inv.company_id = %s" ,(user_current.company_id.id,))
+    cursor.execute("SELECT inv.id,inv.number from account_invoice AS inv where inv.company_id = %s and type='out_invoice'" ,(user_current.company_id.id,))
     result_invoice = cursor.fetchall()
     REF = re.compile('[^0-9]')
     for inv_id,inv_name in result_invoice:
