@@ -133,7 +133,7 @@ class stock_planning_createlines(osv.osv_memory):
         return {
             'domain': "[('id','in', ["+','.join(map(str, planning_lines))+"])]",
             'view_type': 'form',
-            "view_mode": 'tree, form',
+            "view_mode": 'tree,form',
             'res_model': 'stock.planning',
             'type': 'ir.actions.act_window',
             'search_view_id': id['res_id'],
