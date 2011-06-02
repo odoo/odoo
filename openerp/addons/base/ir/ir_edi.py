@@ -240,7 +240,9 @@ class edi(object):
                 init_data.append(safe_unique_id(model,record.id)+':'+model+'-'+safe_unique_id(model,record.id))
             if record.name is not None:
                 init_data.append('name:'+record.name)
-            res.append(init_data)    
+            res.append(init_data) 
+            
+            # blob:   
         return res
 
     def edi_export(self, cr, uid, ids, edi_struct=None, context=None):
@@ -279,7 +281,7 @@ class edi(object):
         
         fields_object = self.pool.get('ir.model.fields')
         model_object = self.pool.get(self.edi_document['__model'])
-        edi_metadata(edi_struct,context=context)
+        edi_metadata(cr, uid, edi_struct, context=context)
         record = model_object.read(cr,uid,ids,[],context=context)
         for field in edi_struct.keys():
             f_ids = fields_object.search(cr,uid,[('name','=',field),('model','=',self.edi_document['__model'])],context=context)
@@ -322,6 +324,76 @@ class edi(object):
            generic algorithm.
         """
         # generic implementation!
+        new = True
+        resource = {}
+        model = edi_document['__model']
+        model_object = self.pool.get(model)
+        data_model = self.pool.get('ir.model.data')
+        field_model = self.pool.get('ir.model.fields')
         for field in edi_document.keys():
+            if field == '__id':
+                db_id , xml_ID = edi_document[field].split(':')
+                self.data_ids = data_model.search(cr,uid,[('name','=',xml_ID)])
             
-        pass
+               
+            f_ids = fields_object.search(cr,uid,[('name','=',field),('model','=',model)],context=context)
+            for fname in fields_object.browse(cr,uid,f_ids):
+                
+                if fname.ttype == 'many2one':
+                    field_ids,field_xml = edi_document[field][0].split(':')
+                    field_ids = int(field_ids)
+                    model_ids = data_model.search(cr,uid,[('name','=',field_xml)])
+                    if not len(model_ids):
+                        obj = self.pool.get(fname.relation)
+                        model1_ids = obj.search(cr,uid,[('name','=',edi_document[field][1])])
+                        if len(model1_ids) == 1:
+                            resourse[field] = data_model.create(cr,uid,{'module':'edi_import','name':field_xml,'res_id':model1_ids})[0]
+                          
+                        elif not len(model1_ids) or len(model1_ids) > 1:
+                            edi_document[field][1] = obj.create(cr,uid,{'name':edi_document[field][1]})
+                            resource[field] = data_model.create(cr,uid,{'module':'edi_import','name':field_xml,'res_id':edi_document[field][0]})[0]   
+                    else:
+                        resource[field] = model_ids[0]
+                                
+                elif fname.ttype == 'one2many':
+                    for records in edi_document[field]:
+                        res = {}
+                        field_ids,field_xml = records['__id'].split(':')
+                        field_ids = int(field_ids)
+                        model3_ids = data_model.search(cr,uid,[('name','=',field_xml)])
+                        for fields in records.keys():
+                            if fields != '__id' or fields != '__last_update':
+                                res[fields] = records[fields]
+                        if not len(model3_ids):
+                            resource[field][records] = (4,self.edi_import(cr,uid,res,context = context)[0])
+                        else:
+                            resource[field][records] = (4,model3_ids[0])obj = self.pool.get(model)
+                record_ids = obj.create(cr,uid,resource,context=context)
+                return record_ids
+                        
+                elif fname.ttype == 'many2many':        
+                    for records in edi_document[field]:
+                        field_ids,field_xml = records[0].split(':')
+                        field_ids = int(field_ids)
+                        model4_ids = data_model.search(cr,uid,[('name','=',field_xml)])
+                        if not len(model4_ids):
+                            obj = self.pool.get(fname.relation)
+                            name,value = records[1].split(':')
+                            model5_ids = obj.search(cr,uid,[(name,'=',value)])
+                            if len(model5_ids) == 1:
+                                resource[field][records] = data_model.create(cr,uid,{'module':'edi_import','name':field_xml,'res_id':model5_ids})[0]
+                            elif not len(model5_ids) or len(model5_ids) > 1:
+                                edi_document[field][records][1] = obj.create(cr,uid,{'name':edi_document[field][1]})
+                                resource[field] = (4,data_model.create(cr,uid,{'module':'edi_import','name':field_xml,'res_id':edi_document[field][records][1]})[0])  
+                        else:
+                            resource[field] = (4,model4_ids[0])
+                else:
+                    resource[field] = edi_document[field]
+        if len(self.data_ids):
+            obj = self.pool.get(model)
+            record_ids = obj.write(cr,uid,resource,context=context)
+            return record_ids
+        else:
+            obj = self.pool.get(model)
+            record_ids = obj.create(cr,uid,resource,context=context)
+            return record_ids
