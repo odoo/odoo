@@ -1,60 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 <data>
+
     <record model="ir.ui.view" id="view_asset_asset_report_tree">
-	<field name="name">asset.asset.report.tree</field>
-	<field name="model">asset.asset.report</field>
-	<field name="type">tree</field>
-	<field name="arch" type="xml">
-	    <tree string="Assets">
-	    </tree>
-	</field>
+		<field name="name">asset.asset.report.tree</field>
+		<field name="model">asset.asset.report</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+		    <tree string="Assets">
+				<field name="name" invisible="1"/>
+				<field name="asset_id" invisible="1"/>
+				<field name="asset_category_id" invisible="1"/>
+				<field name="state"  invisible="1"/>
+				<field name="month" invisible="1"/>
+				<field name="date" invisible="1"/>
+				<field name="day" invisible="1"/>
+				<field name="purchase_date" invisible="1"/>
+				<field name="date" invisible="1"/>
+				<field name="move_check" invisible="1"/>
+				<field name="nbr" sum="# of Depreciation Lines"/>
+				<field name="remaining_value" sum="# Amount to Depreciate"/>
+				<field name="depreciated_value" sum="# Amount Already Depreciated"/>
+		    </tree>
+		</field>
     </record>
-<!--    <record model="ir.actions.act_window" id="action_account_asset_report_form">
-	<field name="name">account.asset.report.graph</field>
-	<field name="model">account.asset.report</field>
-	<field name="type">graph</field>
-	<field name="arch" type="xml">
-	    <graph string="Assets Analysis" type="bar">
-	    </graph>
-	</field>
+    
+    <record model="ir.ui.view" id="action_account_asset_report_form">
+		<field name="name">asset.asset.report.graph</field>
+		<field name="model">asset.asset.report</field>
+		<field name="type">graph</field>
+		<field name="arch" type="xml">
+			<graph string="Assets Analysis" type="bar">
+				<field name="asset_id"/>
+				<field name="remaining_value"/>
+			</graph>
+		</field>
     </record>
-    -->
+    
     <record id="view_asset_asset_report_search" model="ir.ui.view">
         <field name="name">asset.asset.report.search</field>
-	<field name="model">asset.asset.report</field>
-	<field name="type">search</field>
-	<field name="arch" type="xml">
-	    <search string="Assets Analysis">
-	      <group col="10" colspan="12">
-	 	    <filter string="State"
-		        icon="terp-stock_effects-object-colorize"
-			domain="[('state','=','draft')]"
-			help="Draft Assets"/>
-              </group>
-	      <newline/>
-	      <group expand="1" string="Group By...">
-	          <filter string="Asset" name="asset_id" context="{'group_by':'asset_id'}"/>
-                  <filter string="Asset Category" name="asset_category"/>
-		  <separator orientation="vertical"/>
-		  <filter string="Asset Date" name="date"/>
-	      </group>
+		<field name="model">asset.asset.report</field>
+		<field name="type">search</field>
+		<field name="arch" type="xml">
+		    <search string="Assets Analysis">
+		      <group col="10" colspan="12">
+	                <filter string="Draft" icon="terp-document-new" domain="[('state','=','draft')]" help="Draft Assets"/>
+	                <filter string="Open" icon="terp-check" domain="[('state','=','open')]" help="Open Assets"/>
+	                <separator orientation="vertical"/>
+	                <filter string="Posted" name="posted" icon="terp-camera_test" domain="[('move_check','=',True)]" help="Posted moves for assets."/>
+	                <separator orientation="vertical"/>
+	                <filter string="Year" icon="terp-go-year"
+	                    domain="[('purchase_date','&lt;=', time.strftime('%%Y-%%m-%%d')),('purchase_date','&gt;=',time.strftime('%%Y-01-01'))]"
+	                    help="Assets purchased in current year"/>
+	                <filter string="Month" icon="terp-go-month" name="this_month"
+	                    domain="[('purchase_date','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('purchase_date','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"
+	                    help="Assets purchased in current month"/>
+	                <filter icon="terp-go-month" string="Month-1" separator="1"
+	                    domain="[('purchase_date','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('purchase_date','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
+	                    help="Assets purchased in last month"/>
+	                <separator orientation="vertical"/>
+	                <field name="asset_id"/>
+	                <field name="asset_category_id"/>
+	          </group>
+		      <newline/>
+		      <group expand="1" string="Group By...">
+	                <filter string="Asset" name="asset" context="{'group_by':'asset_id'}"/>
+	                <filter string="Asset Category" name="asset_category" icon="terp-stock_symbol-selection" context="{'group_by':'asset_category_id'}"/>
+	                <separator orientation="vertical"/>
+	                <filter string="Asset Date" icon="terp-go-today" context="{'group_by':'purchase_date'}"/>
+	                <separator orientation="vertical" />
+	                <filter string="Day" icon="terp-go-today"
+	                        domain="[]" context="{'group_by':'day'}" help="Day on which assets are purchased."/>
+	                <filter string="Month" icon="terp-go-month"
+	                        domain="[]" context="{'group_by':'month'}" help="Month in which assets are purchased."/>
+	                <filter string="Year" icon="terp-go-year"
+	                        domain="[]" context="{'group_by':'name'}" help="Year in which assets are purchased."/>
+		      </group>
 	     </search>	
-	</field>
+	   </field>
     </record>
 	
-    
     <record model="ir.actions.act_window" id="action_asset_asset_report">	
     	<field name="name">Assets Analysis</field>
-	<field name="res_model">asset.asset.report</field>
-	<field name="view_type">form</field>
-	<field name="view_mode">tree</field>
-	<field name="search_view_id" ref="view_asset_asset_report_search"/>
-	<field name="help">From this report, you can have an overview on all depreciation. The tool search can also be used to personalise your Assets reports and so, match this analysis to your needs;</field>
+		<field name="res_model">asset.asset.report</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,graph</field>
+		<field name="search_view_id" ref="view_asset_asset_report_search"/>
+		<field name="context">{'search_default_asset_category':1, 'search_default_posted':1, 'group_by':[], 'group_by_no_leaf':1}</field>
+		<field name="help">From this report, you can have an overview on all depreciation. The tool search can also be used to personalise your Assets reports and so, match this analysis to your needs;</field>
     </record>
+    
     <menuitem action="action_asset_asset_report"
-	       id="menu_action_asset_asset_report"
-	       parent="account.menu_finance_statistic_report_statement"
-	       />
+	          id="menu_action_asset_asset_report"
+	          parent="account.menu_finance_statistic_report_statement"/>
 </data>
 </openerp>
