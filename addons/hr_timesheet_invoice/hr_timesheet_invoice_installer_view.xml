@@ -77,9 +77,15 @@
            <field name="context" eval="'{\'default_type\':\'service\', \'default_sale_ok\':True, \'default_hr_expense_ok\':False,}'"/>
            <field name="view_id" ref="product_timesheet_invoice_tree_view"/>
        </record>
+       
+      <record id="category_product_services_form_view_installer" model="ir.actions.todo.category">
+          <field name="name">Product</field>
+          <field name="sequence">2</field>
+     </record>           
 
        <record id="product_services_form_view_todo" model="ir.actions.todo">
            <field name="action_id" ref="product_services_form_view_installer"/>
+           <field name="category_id" ref="category_product_services_form_view_installer"/>
            <field name="sequence">3</field>
            <field name="type">normal</field>
            <field name="state">skip</field>
