@@ -20,6 +20,7 @@
 ##############################################################################
 
 from osv import fields, osv
+from tools.translate import _
 
 import decimal_precision as dp
 
@@ -197,6 +198,8 @@ class split_in_production_lot(osv.osv_memory):
                 res.update({'qty': move.product_qty})
             if 'use_exist' in fields:
                 res.update({'use_exist': (move.picking_id and move.picking_id.type=='out' and True) or False})
+            if 'location_id' in fields:
+                res.update({'location_id': move.location_id.id})
         return res
 
     _columns = {
@@ -206,6 +209,7 @@ class split_in_production_lot(osv.osv_memory):
         'line_ids': fields.one2many('stock.move.split.lines', 'lot_id', 'Production Lots'),
         'line_exist_ids': fields.one2many('stock.move.split.lines.exist', 'lot_id', 'Production Lots'),
         'use_exist' : fields.boolean('Existing Lots', help="Check this option to select existing lots in the list below, otherwise you should enter new ones line by line."),
+        'location_id': fields.many2one('stock.location', 'Source Location', required=True, select=True),
      }
 
     def split_lot(self, cr, uid, ids, context=None):
@@ -306,6 +310,13 @@ class stock_move_split_lines_exist(osv.osv_memory):
     _defaults = {
         'quantity': lambda *x: 1.00,
     }
+
+    def onchange_lot_id(self, cr, uid, ids, prodlot_id=False, product_qty=False,
+                        loc_id=False, product_id=False, uom_id=False, context=None):
+        stock_move_obj = self.pool.get('stock.move')
+        res = stock_move_obj.onchange_lot_id(cr, uid, ids, prodlot_id, product_qty,
+                        loc_id, product_id, uom_id, context=context)
+        return res
 
 stock_move_split_lines_exist()
 
