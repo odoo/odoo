@@ -464,9 +464,15 @@
            <field name="view_mode">tree,form</field>
            <field name="view_id" ref="hr_holidays_leaves_assign_tree_view"/>
        </record>
+       
+      <record id="category_holidays_leaves_assign_legal" model="ir.actions.todo.category">
+          <field name="name">Human Resource</field>
+          <field name="sequence">4</field>
+     </record>    
 
        <record id="hr_holidays_leaves_assign_form_view_todo" model="ir.actions.todo">
            <field name="action_id" ref="hr_holidays_leaves_assign_legal"/>
+           <field name="category_id" ref="category_holidays_leaves_assign_legal"/>
            <field name="type">normal</field>
            <field name="state">skip</field>
        </record>        
