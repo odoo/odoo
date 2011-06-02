@@ -11,7 +11,7 @@
   I login into that account.
 -
   !python {model: google.login}: |
-    self.check_login(cr, uid, [ref('google_login_contact_id0')], context)
+    self.login(cr, uid, [ref('google_login_contact_id0')], context)
 - |
   Now I want to import all the events from all the calendars in the user account.
 - |

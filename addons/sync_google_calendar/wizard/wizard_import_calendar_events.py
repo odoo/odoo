@@ -182,7 +182,7 @@ class synchronize_google_calendar_events(osv.osv_memory):
         google = self.pool.get('google.login')
         res = []
         try:
-            gd_client = google.google_login(cr, uid, user_obj.gmail_user, user_obj.gmail_password, type='calendar')
+            gd_client = google.google_login(user_obj.gmail_user, user_obj.gmail_password, type='calendar')
             calendars = gd_client.GetAllCalendarsFeed()
             for cal in calendars.entry:
                 res.append((cal.id.text, cal.title.text))
@@ -270,7 +270,7 @@ class synchronize_google_calendar_events(osv.osv_memory):
         gamil_pwd = user_obj.gmail_password
 
         google = self.pool.get('google.login')
-        gd_client = google.google_login(cr, uid, gmail_user, gamil_pwd, type='calendar')
+        gd_client = google.google_login(gmail_user, gamil_pwd, type='calendar')
 
         if not gmail_user or not gamil_pwd:
             raise osv.except_osv(_('Error'), _("Please specify the user and password !"))
