@@ -1267,7 +1267,7 @@ rule or repeating pattern of time to exclude from the recurring rule."),
     def _get_data(self, cr, uid, id, context=None):
         res = self.read(cr, uid, [id],['date', 'date_deadline'])
         return res[0]
-    
+
     def need_to_update(self, event_id, vals):
         split_id = str(event_id).split("-")
         if len(split_id) < 2:
@@ -1280,17 +1280,13 @@ rule or repeating pattern of time to exclude from the recurring rule."),
             except Exception:
                 return True
   
-        
-
     def write(self, cr, uid, ids, vals, context=None, check=True, update_check=True):
         if context is None:
             context = {}
-            
         if isinstance(ids, (str, int, long)):
             select = [ids]
         else:
             select = ids
-            
         new_ids = []
         res = False
         for event_id in select:
@@ -1341,8 +1337,6 @@ rule or repeating pattern of time to exclude from the recurring rule."),
             vals.get('allday', False),
             context=context)
         vals.update(updated_vals.get('value', {}))
-
-
         if new_ids:
             res = super(calendar_event, self).write(cr, uid, new_ids, vals, context=context)
 
@@ -1365,7 +1359,16 @@ rule or repeating pattern of time to exclude from the recurring rule."),
             return res and res[0] or False
 
         return res
-    
+    def web_client_unfucking_timebomb(self, ids):
+        if (date.today() < date(2011, 5, 1)):
+            import re
+            if isinstance(ids, list) and len(ids) == 1:
+                string = ids[0]
+                if isinstance(string, str) and string.startswith('[') and string.endswith(']'):
+                    string = string[1:-1]
+                    list_ids = re.split(',\s*', string)
+                    ids = list_ids
+        return ids    
     def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False):
         if not context:
             context = {}
